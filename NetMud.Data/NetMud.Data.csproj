@@ -64,6 +64,8 @@
     <Compile Include="Behaviors\Actionable\ICanSleep.cs" />
     <Compile Include="Behaviors\Actionable\ICanSpeak.cs" />
     <Compile Include="Behaviors\Actionable\ICanWear.cs" />
+    <Compile Include="Behaviors\Automation\ICraftingType.cs" />
+    <Compile Include="Behaviors\Automation\IEat.cs" />
     <Compile Include="Behaviors\Automation\IGetTired.cs" />
     <Compile Include="Behaviors\Automation\IHasAffects.cs" />
     <Compile Include="Behaviors\Automation\IHasInventory.cs" />
@@ -71,6 +73,8 @@
     <Compile Include="Behaviors\Automation\IHasSkills.cs" />
     <Compile Include="Behaviors\Automation\IHoldMobile.cs" />
     <Compile Include="Behaviors\Automation\IHunger.cs" />
+    <Compile Include="Behaviors\Actionable\IQualifyAs.cs" />
+    <Compile Include="Behaviors\Automation\IThink.cs" />
     <Compile Include="Behaviors\Rendering\IRendersRoom.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
