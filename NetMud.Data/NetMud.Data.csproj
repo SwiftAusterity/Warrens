@@ -39,6 +39,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base\Supporting\IDimensionalModel.cs" />
+    <Compile Include="Base\Supporting\IMaterial.cs" />
+    <Compile Include="Base\Supporting\IPath.cs" />
+    <Compile Include="Base\Supporting\ITranslation.cs" />
     <Compile Include="Base\World\IEconomy.cs" />
     <Compile Include="Base\Entity\IIntelligence.cs" />
     <Compile Include="Base\Supporting\IMobile.cs" />
@@ -49,15 +53,24 @@
     <Compile Include="Base\Skills\ISkillLeaf.cs" />
     <Compile Include="Base\Skills\ISkillTree.cs" />
     <Compile Include="Base\Place\IZone.cs" />
+    <Compile Include="Base\World\ILanguage.cs" />
     <Compile Include="Base\World\IWeatherPattern.cs" />
+    <Compile Include="Behaviors\Actionable\ICanBreathe.cs" />
+    <Compile Include="Behaviors\Actionable\ICanConsume.cs" />
+    <Compile Include="Behaviors\Actionable\ICanHear.cs" />
+    <Compile Include="Behaviors\Actionable\ICanHold.cs" />
     <Compile Include="Behaviors\Actionable\ICanMove.cs" />
+    <Compile Include="Behaviors\Actionable\ICanSee.cs" />
+    <Compile Include="Behaviors\Actionable\ICanSleep.cs" />
     <Compile Include="Behaviors\Actionable\ICanSpeak.cs" />
     <Compile Include="Behaviors\Actionable\ICanWear.cs" />
+    <Compile Include="Behaviors\Automation\IGetTired.cs" />
     <Compile Include="Behaviors\Automation\IHasAffects.cs" />
     <Compile Include="Behaviors\Automation\IHasInventory.cs" />
     <Compile Include="Behaviors\Automation\IDecays.cs" />
     <Compile Include="Behaviors\Automation\IHasSkills.cs" />
     <Compile Include="Behaviors\Automation\IHoldMobile.cs" />
+    <Compile Include="Behaviors\Automation\IHunger.cs" />
     <Compile Include="Behaviors\Rendering\IRendersRoom.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
