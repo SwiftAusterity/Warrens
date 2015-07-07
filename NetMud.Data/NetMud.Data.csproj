@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base\Skills\ISkill.cs" />
     <Compile Include="Base\Supporting\IDimensionalModel.cs" />
     <Compile Include="Base\Supporting\IMaterial.cs" />
     <Compile Include="Base\Supporting\IPath.cs" />
@@ -55,6 +56,7 @@
     <Compile Include="Base\Place\IZone.cs" />
     <Compile Include="Base\World\ILanguage.cs" />
     <Compile Include="Base\World\IWeatherPattern.cs" />
+    <Compile Include="Behaviors\Actionable\IAmCasted.cs" />
     <Compile Include="Behaviors\Actionable\ICanBreathe.cs" />
     <Compile Include="Behaviors\Actionable\ICanConsume.cs" />
     <Compile Include="Behaviors\Actionable\ICanHear.cs" />
@@ -74,6 +76,7 @@
     <Compile Include="Behaviors\Automation\IHoldMobile.cs" />
     <Compile Include="Behaviors\Automation\IHunger.cs" />
     <Compile Include="Behaviors\Actionable\IQualifyAs.cs" />
+    <Compile Include="Behaviors\Automation\IHasStats.cs" />
     <Compile Include="Behaviors\Automation\IThink.cs" />
     <Compile Include="Behaviors\Rendering\IRendersRoom.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
