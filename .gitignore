@@ -4,3 +4,4 @@ packages
 NetMud/obj
 *.user
 *.suo
+*/obj/*
