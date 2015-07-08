@@ -2,3 +2,4 @@ NetMud/bin
 NetMud.Tests/obj
 packages
 NetMud/obj
+*.user
