@@ -1,2 +1,26 @@
-﻿body {
+﻿.textParserClient {
+    background-color: black;
+    font-family: Courier New, Courier, monospace;
+    height: 750px;
+}
+
+.parserOutput {
+    color: white;
+    height: 100%;
+    width: 100%;
+    margin-top: 15px;
+    overflow-y: scroll;
+    padding: 5px;
+}
+
+.parserInput {
+    background-color: black;
+    color: lightgreen;
+    width: 100%;
+    max-width: inherit;
+    font-family: Courier New, Courier, monospace
+}
+
+a#clearInput {
+    color: red;
 }
