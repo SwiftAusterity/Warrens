@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NetMud.Data.Behaviors.Actionable
 {
-    interface ICanHear
+    public interface ICanHear
     {
     }
 }

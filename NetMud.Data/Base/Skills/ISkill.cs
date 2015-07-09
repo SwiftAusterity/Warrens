@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NetMud.Data.Base.Skills
 {
-    interface ISkill
+    public interface ISkill
     {
     }
 }

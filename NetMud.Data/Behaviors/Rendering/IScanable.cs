@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NetMud.Data.Behaviors.Rendering
 {
-    interface IScanable
+    public interface IScanable
     {
     }
 }

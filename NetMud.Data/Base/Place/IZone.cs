@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NetMud.Data.Base.Place
 {
-    interface IZone
+    public interface IZone
     {
     }
 }

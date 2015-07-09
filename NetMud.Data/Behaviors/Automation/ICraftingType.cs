@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NetMud.Data.Behaviors.Automation
 {
-    interface ICraftingType
+    public interface ICraftingType
     {
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NetMud.Data.Base.Supporting
 {
-    interface ITranslation
+    public interface ITranslation
     {
     }
 }

@@ -7,7 +7,7 @@ using NetMud.Data.Base.Supporting;
 
 namespace NetMud.Data.Behaviors.Actionable
 {
-    interface ICanBreathe<IMaterial>
+    public interface ICanBreathe<IMaterial>
     {
     }
 }

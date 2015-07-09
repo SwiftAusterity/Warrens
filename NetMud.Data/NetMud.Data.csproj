@@ -88,6 +88,7 @@
     <Compile Include="Behaviors\Actionable\IQualifyAs.cs" />
     <Compile Include="Behaviors\Automation\IHasStats.cs" />
     <Compile Include="Behaviors\Automation\IThink.cs" />
+    <Compile Include="Behaviors\Rendering\IActor.cs" />
     <Compile Include="Behaviors\Rendering\IInspectable.cs" />
     <Compile Include="Behaviors\Rendering\IRenderable.cs" />
     <Compile Include="Behaviors\Rendering\IRendersRoom.cs" />

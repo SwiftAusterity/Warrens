@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NetMud.Data.Base.World
 {
-    interface IWeatherPattern
+    public interface IWeatherPattern
     {
     }
 }

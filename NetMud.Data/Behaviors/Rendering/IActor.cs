@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NetMud.Data.Behaviors.Automation
+namespace NetMud.Data.Behaviors.Rendering
 {
-    public interface IHasSkills
+    public interface IActor
     {
     }
 }

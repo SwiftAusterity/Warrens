@@ -7,7 +7,7 @@ using NetMud.Data.Behaviors.Automation;
 
 namespace NetMud.Data.Behaviors.Actionable
 {
-    interface IQualifyAs<ICraftingType>
+    public interface IQualifyAs<ICraftingType>
     {
     }
 }

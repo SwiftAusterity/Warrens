@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 
 using NetMud.Data.Behaviors.Rendering;
 
-namespace NetMud.Data.Base.Place
+namespace NetMud.Interp
 {
-    public interface IRoom : IActor
+    public class Context
     {
+        public new(IActor actor)
+        {
+        }
     }
 }

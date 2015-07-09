@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NetMud.Data.Base.System
 {
-    interface ICharacter
+    public interface ICharacter
     {
     }
 }
