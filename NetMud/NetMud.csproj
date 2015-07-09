@@ -186,6 +186,7 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\GameClient.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -193,6 +194,7 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\GameClient.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -250,6 +252,20 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NetMud.Data\NetMud.Data.csproj">
+      <Project>{88b7a648-fe23-4e88-9b60-ae17c8858af4}</Project>
+      <Name>NetMud.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NetMud.Interp\NetMud.Interp.csproj">
+      <Project>{0c46dab6-27fd-4117-acf6-0b8440614aa0}</Project>
+      <Name>NetMud.Interp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NetMud.Utility\NetMud.Utility.csproj">
+      <Project>{9f3caec0-73dc-463c-8ef7-13b83bc8fb12}</Project>
+      <Name>NetMud.Utility</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

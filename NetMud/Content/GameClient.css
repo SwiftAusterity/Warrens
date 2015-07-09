@@ -11,6 +11,13 @@
     margin-top: 15px;
     overflow-y: scroll;
     padding: 5px;
+    vertical-align: bottom;
+    text-align: left;
+}
+
+.parserOutput p {
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
 
 .parserInput {

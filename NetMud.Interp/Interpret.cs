@@ -17,7 +17,9 @@ namespace NetMud.Interp
             //Need some way to build a context object to work off of
                         
 
-            return returnString.ToString();
+
+            //return returnString.ToString();
+            return "<p>Pong</p><p>pong2</p>";
         }
     }
 }
