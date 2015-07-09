@@ -3,3 +3,4 @@ packages
 *.suo
 */obj/*
 */bin/*
+*.suo
