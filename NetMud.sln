@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.Interp", "NetMud.Int
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.Utility", "NetMud.Utility\NetMud.Utility.csproj", "{9F3CAEC0-73DC-463C-8EF7-13B83BC8FB12}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud", "NetMud\NetMud.csproj", "{9593D1E5-E956-4F00-B946-F0C28F993976}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.Tests", "NetMud.Tests\NetMud.Tests.csproj", "{F545EB95-C39A-4F78-9009-8EE6877DA18D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{9F3CAEC0-73DC-463C-8EF7-13B83BC8FB12}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F3CAEC0-73DC-463C-8EF7-13B83BC8FB12}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9F3CAEC0-73DC-463C-8EF7-13B83BC8FB12}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9593D1E5-E956-4F00-B946-F0C28F993976}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9593D1E5-E956-4F00-B946-F0C28F993976}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9593D1E5-E956-4F00-B946-F0C28F993976}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9593D1E5-E956-4F00-B946-F0C28F993976}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F545EB95-C39A-4F78-9009-8EE6877DA18D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F545EB95-C39A-4F78-9009-8EE6877DA18D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F545EB95-C39A-4F78-9009-8EE6877DA18D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F545EB95-C39A-4F78-9009-8EE6877DA18D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

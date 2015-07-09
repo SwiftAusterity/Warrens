@@ -6,3 +6,4 @@ NetMud/obj
 *.suo
 */obj/*
 */obj/*
+*/bin/*
