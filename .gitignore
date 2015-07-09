@@ -1,7 +1,22 @@
+#ignore thumbnails created by windows
+Thumbs.db
+#Ignore files build by Visual Studio
 packages
 *.user
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
 *.suo
-*/obj/*
-*/bin/*
-*.suo
-**/bin/**
+*.bak
+*.cache
+*.ilk
+*.log
+[Bb]in
+[Dd]ebug*/
+*.sbr
+obj/
+[Rr]elease*/
+_ReSharper*/
