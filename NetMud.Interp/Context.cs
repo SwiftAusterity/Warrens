@@ -10,8 +10,5 @@ namespace NetMud.Interp
 {
     public class Context
     {
-        public new(IActor actor)
-        {
-        }
     }
 }
