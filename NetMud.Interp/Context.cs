@@ -48,6 +48,8 @@ namespace NetMud.Interp
                 return;
             }
 
+            //TODO: This works for commands targetting things not existing in the world
+            //      existing objects must have an alternate path
             try
             {
                 //find the parameters
