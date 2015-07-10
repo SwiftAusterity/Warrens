@@ -24,12 +24,12 @@ namespace NetMud.Data.Commands
         public Help(IEnumerable<object> parms)
         {
             if(parms.Count() == 0)
-                throw new MissingMethodException("Bad help subject.");
+                throw new MethodAccessException("Bad help subject.");
 
             if (parms.First().GetType().GetInterfaces().Contains(typeof(IHelpful)))
                 Topic = parms.First() as IHelpful;
             else
-                throw new MissingMethodException("Bad help subject.");
+                throw new MethodAccessException("Bad help subject.");
         }
 
         public Help(IHelpful subject)
@@ -68,6 +68,15 @@ namespace NetMud.Data.Commands
 
             sb.Add(titleLine);
             sb.Add(String.Empty.PadLeft(7 + subjectName.Length, '-'));
+
+            return sb;
+        }
+
+        public IEnumerable<string> RenderSyntaxHelp()
+        {
+            var sb = new List<string>();
+
+            sb.Add(String.Format("Valid Syntax: help &lt;topic&gt;"));
 
             return sb;
         }

@@ -9,5 +9,7 @@ namespace NetMud.Data.Base.System
     public interface ICommand
     {
         IEnumerable<string> Execute();
+
+        IEnumerable<string> RenderSyntaxHelp();
     }
 }

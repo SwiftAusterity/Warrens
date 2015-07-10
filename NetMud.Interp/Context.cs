@@ -48,24 +48,36 @@ namespace NetMud.Interp
                 return;
             }
 
-            //find the parameters
-            var neededParms = commandType.GetCustomAttributes<CommandParameterAttribute>();
-            if (neededParms.Count() == 0)
+            try
+            {
+                //find the parameters
+                var neededParms = commandType.GetCustomAttributes<CommandParameterAttribute>();
+                if (neededParms.Count() == 0)
+                {
+                    Command = Activator.CreateInstance(commandType) as ICommand;
+                }
+                else
+                {
+                    var parms = ParseParamaters(commandType, neededParms);
+
+                    if (parms.Count() < neededParms.Count())
+                    {
+                        Command = Activator.CreateInstance(commandType) as ICommand;
+
+                        AccessErrors.Add("Invalid command targets specified.");
+                        AccessErrors = AccessErrors.Concat(Command.RenderSyntaxHelp()).ToList();
+                        return;
+                    }
+
+                    //Invoke the constructor
+                    Command = Activator.CreateInstance(commandType, parms) as ICommand;
+                }
+            }
+            catch(MethodAccessException mEx)
             {
                 Command = Activator.CreateInstance(commandType) as ICommand;
-            }
-            else
-            {
-                var parms = ParseParamaters(commandType, neededParms);
-
-                if(parms.Count() < neededParms.Count())
-                {
-                    AccessErrors.Add("Invalid number of parameters."); //TODO: Add generic errors class for rando error messages
-                    return;
-                }
-
-                //Invoke the constructor
-                Command = Activator.CreateInstance(commandType, parms) as ICommand;
+                AccessErrors.Add(mEx.Message);
+                AccessErrors = AccessErrors.Concat(Command.RenderSyntaxHelp()).ToList();
             }
         }
 
