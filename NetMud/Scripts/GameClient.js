@@ -21,11 +21,9 @@ function submitCommand()
         }
     }).done(function (output) {
         var $outputArea = $("#OutputArea");
-        var outputMap = {};
 
-        $(output).each(function (_, node) {
-            $outputArea.append("<" + node.nodeName + ">" + node.textContent + "</" + node.nodeName + ">");
-            $outputArea[0].scrollTop = $outputArea[0].scrollHeight;
-        });
+        $outputArea.append(output);
+
+        $outputArea[0].scrollTop = $outputArea[0].scrollHeight;
     });
 }

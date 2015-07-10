@@ -10,7 +10,66 @@ using System.Threading.Tasks;
 namespace NetMud.Data.Commands
 {
     [CommandKeyword("Help")]
-    class Help : ICommand, IHelpful
+    [CommandPermission(StaffRank.Player)]
+    [CommandParameter(CommandUsage.Subject, typeof(IHelpful))] //Really help can be invoked on anything that is helpful, even itself
+    public class Help : ICommand, IHelpful
     {
+        private IHelpful Topic;
+
+        public Help()
+        {
+            //Generic constructor for all IHelpfuls is needed
+        }
+
+        public Help(IEnumerable<object> parms)
+        {
+            if(parms.Count() == 0)
+                throw new MissingMethodException("Bad help subject.");
+
+            if (parms.First().GetType().GetInterfaces().Contains(typeof(IHelpful)))
+                Topic = parms.First() as IHelpful;
+            else
+                throw new MissingMethodException("Bad help subject.");
+        }
+
+        public Help(IHelpful subject)
+        {
+            Topic = subject;
+        }
+
+        public IEnumerable<string> Execute()
+        {
+            var sb = GetHelpHeader(Topic);
+
+            return sb.Concat(Topic.RenderHelpBody()); ;
+        }
+
+        /// <summary>
+        /// Renders the help text for the help command itself
+        /// </summary>
+        /// <returns>string</returns>
+        public IEnumerable<string> RenderHelpBody()
+        {
+            var sb = new List<string>();
+
+            sb.Add(String.Format("Help provides useful information and syntax for the various commands you can use in the world."));
+            sb.Add(String.Empty);
+            sb.Add(String.Format("Valid Syntax: "));
+            sb.Add(String.Format("help &lt;topic&gt;"));
+
+            return sb;
+        }
+
+        private IEnumerable<string> GetHelpHeader(IHelpful subject)
+        {
+            var sb = new List<string>();
+            var subjectName = subject.GetType().Name;
+            var titleLine = String.Format("Help - <span style=\"color: orange\">{0}</span>", subjectName);
+
+            sb.Add(titleLine);
+            sb.Add(String.Empty.PadLeft(7 + subjectName.Length, '-'));
+
+            return sb;
+        }
     }
 }

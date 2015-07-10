@@ -8,6 +8,6 @@ namespace NetMud.Data.Behaviors.Rendering
 {
     public interface IHelpful
     {
-
+        IEnumerable<string> RenderHelpBody();
     }
 }

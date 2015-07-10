@@ -21,3 +21,6 @@ obj/
 bin/
 [Rr]elease*/
 _ReSharper*/
+NetMud.Data/bin/*
+NetMud.Interp/bin/*
+NetMud.Utility/obj/*
