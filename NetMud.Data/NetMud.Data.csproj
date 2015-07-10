@@ -90,10 +90,14 @@
     <Compile Include="Behaviors\Automation\IHasStats.cs" />
     <Compile Include="Behaviors\Automation\IThink.cs" />
     <Compile Include="Behaviors\Rendering\IActor.cs" />
+    <Compile Include="Behaviors\Rendering\IAudible.cs" />
+    <Compile Include="Behaviors\Rendering\IDescribable.cs" />
+    <Compile Include="Behaviors\Rendering\IHelpful.cs" />
     <Compile Include="Behaviors\Rendering\IInspectable.cs" />
     <Compile Include="Behaviors\Rendering\ILocation.cs" />
     <Compile Include="Behaviors\Rendering\IRenderable.cs" />
-    <Compile Include="Behaviors\Rendering\IRendersRoom.cs" />
+    <Compile Include="Behaviors\Rendering\IRenderInLocation.cs" />
+    <Compile Include="Behaviors\Rendering\IRendersLocation.cs" />
     <Compile Include="Behaviors\Rendering\IScanable.cs" />
     <Compile Include="Behaviors\Rendering\ISensible.cs" />
     <Compile Include="Behaviors\Rendering\ISmellable.cs" />

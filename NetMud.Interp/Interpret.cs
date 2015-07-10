@@ -15,7 +15,6 @@ namespace NetMud.Interp
             var returnString = new StringBuilder();
 
             //Need some way to build a context object to work off of
-                        
 
 
             //return returnString.ToString();
