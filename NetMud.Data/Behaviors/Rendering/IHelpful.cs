@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace NetMud.Data.Behaviors.Rendering
 {
-    interface IHelpful
+    public interface IHelpful
     {
+
     }
 }
