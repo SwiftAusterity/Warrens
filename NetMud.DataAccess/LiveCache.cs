@@ -84,7 +84,19 @@ namespace NetMud.DataAccess
 
         public string KeyHash()
         {
-            return String.Format("{0}.{1}", ObjectType.Name, EntityMarker.ToString());
+            return String.Format("{0}.{1}", ObjectType.Name, BirthMark.ToString());
+        }
+    }
+
+    public static class Birthmarker
+    {
+        /// <summary>
+        /// Gets birthmarks for live entities
+        /// </summary>
+        /// <returns>the birthmark string</returns>
+        public static string GetBirthmark()
+        {
+            return String.Format("{0}.{1}", DateTime.Now.ToBinary(), Guid.NewGuid().ToString().Replace("-", String.Empty()));
         }
     }
 }
