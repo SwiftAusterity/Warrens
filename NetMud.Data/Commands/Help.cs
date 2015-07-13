@@ -44,6 +44,15 @@ namespace NetMud.Data.Commands
             return sb.Concat(Topic.RenderHelpBody()); ;
         }
 
+        public IEnumerable<string> RenderSyntaxHelp()
+        {
+            var sb = new List<string>();
+
+            sb.Add(String.Format("Valid Syntax: help &lt;topic&gt;"));
+
+            return sb;
+        }
+
         /// <summary>
         /// Renders the help text for the help command itself
         /// </summary>
@@ -68,15 +77,6 @@ namespace NetMud.Data.Commands
 
             sb.Add(titleLine);
             sb.Add(String.Empty.PadLeft(7 + subjectName.Length, '-'));
-
-            return sb;
-        }
-
-        public IEnumerable<string> RenderSyntaxHelp()
-        {
-            var sb = new List<string>();
-
-            sb.Add(String.Format("Valid Syntax: help &lt;topic&gt;"));
 
             return sb;
         }

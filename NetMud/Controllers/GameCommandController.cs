@@ -9,7 +9,6 @@ namespace Controllers
     {
         [HttpGet]
         [AllowAnonymous]//for testing
-        // GET: api/Default/5
         public string RenderCommand(string command)
         {
             return Interpret.Render(command, null);
