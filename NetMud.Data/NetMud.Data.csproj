@@ -52,6 +52,7 @@
     <Compile Include="Base\System\ICommand.cs" />
     <Compile Include="Base\System\IEntity.cs" />
     <Compile Include="Base\System\IMessage.cs" />
+    <Compile Include="Base\System\IReference.cs" />
     <Compile Include="Base\World\IEconomy.cs" />
     <Compile Include="Base\Entity\IIntelligence.cs" />
     <Compile Include="Base\Supporting\IMobile.cs" />

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.22823.1
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.Data", "NetMud.Data\NetMud.Data.csproj", "{88B7A648-FE23-4E88-9B60-AE17C8858AF4}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud", "NetMud\NetMud.csproj", "{9593D1E5-E956-4F00-B946-F0C28F993976}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.Tests", "NetMud.Tests\NetMud.Tests.csproj", "{F545EB95-C39A-4F78-9009-8EE6877DA18D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.DataAccess", "NetMud.DataAccess\NetMud.DataAccess.csproj", "{25B53EF7-E51C-4EE5-A04C-DD8797CFF58F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{F545EB95-C39A-4F78-9009-8EE6877DA18D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F545EB95-C39A-4F78-9009-8EE6877DA18D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F545EB95-C39A-4F78-9009-8EE6877DA18D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{25B53EF7-E51C-4EE5-A04C-DD8797CFF58F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25B53EF7-E51C-4EE5-A04C-DD8797CFF58F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25B53EF7-E51C-4EE5-A04C-DD8797CFF58F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25B53EF7-E51C-4EE5-A04C-DD8797CFF58F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
