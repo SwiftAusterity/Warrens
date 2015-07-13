@@ -44,6 +44,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NetMud.DataAccess\NetMud.DataAccess.csproj">
+      <Project>{25b53ef7-e51c-4ee5-a04c-dd8797cff58f}</Project>
+      <Name>NetMud.DataAccess</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NetMud.Data\NetMud.Data.csproj">
       <Project>{88b7a648-fe23-4e88-9b60-ae17c8858af4}</Project>
       <Name>NetMud.Data</Name>

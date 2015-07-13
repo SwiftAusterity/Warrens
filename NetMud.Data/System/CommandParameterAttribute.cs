@@ -11,11 +11,13 @@ namespace NetMud.Data.System
     {
         public CommandUsage Usage { get; private set; }
         public Type ParameterType { get; private set; }
+        public CacheReferenceType[] CacheTypes { get; private set; }
 
-        public CommandParameterAttribute(CommandUsage usage, Type type)
+        public CommandParameterAttribute(CommandUsage usage, Type type, CacheReferenceType[] cacheTypes)
         {
             Usage = usage;
             ParameterType = type;
+            CacheTypes = cacheTypes;
         }
     }
 
@@ -24,5 +26,12 @@ namespace NetMud.Data.System
         Subject,
         Target,
         Container
+    }
+
+    public enum CacheReferenceType
+    {
+        Entity,
+        Reference,
+        Code
     }
 }

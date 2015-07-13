@@ -8,6 +8,7 @@ using NetMud.Data.Behaviors.Rendering;
 using NetMud.Data.Base.System;
 using System.Reflection;
 using NetMud.Data.System;
+using NetMud.DataAccess;
 
 namespace NetMud.Interp
 {
@@ -15,7 +16,11 @@ namespace NetMud.Interp
     {
         public string OriginalCommandString { get; private set; }
         public IEnumerable<string> CommandStringRemainder { get; private set; }
+
         private Assembly commandsAssembly;
+        private Assembly entitiesAssembly;
+
+        private LiveCache liveWorld;
 
         public IActor Actor { get; private set; }
         public ICommand Command { get; private set; }
@@ -32,6 +37,8 @@ namespace NetMud.Interp
         public Context(string fullCommand, IActor actor)
         {
             commandsAssembly = Assembly.GetAssembly(typeof(ICommand));
+            entitiesAssembly = Assembly.GetAssembly(typeof(IEntity));
+            liveWorld = new LiveCache();
 
             OriginalCommandString = fullCommand;
             Actor = actor;
@@ -42,7 +49,7 @@ namespace NetMud.Interp
 
             //find out command's type
             var commandType = ParseCommand();
-            if(commandType == null)
+            if (commandType == null)
             {
                 AccessErrors.Add("Unknown Command."); //TODO: Add generic errors class for rando error messages
                 return;
@@ -75,7 +82,7 @@ namespace NetMud.Interp
                     Command = Activator.CreateInstance(commandType, parms) as ICommand;
                 }
             }
-            catch(MethodAccessException mEx)
+            catch (MethodAccessException mEx)
             {
                 Command = Activator.CreateInstance(commandType) as ICommand;
                 AccessErrors.Add(mEx.Message);
@@ -97,24 +104,24 @@ namespace NetMud.Interp
             //Find the command we're trying to do
 
             //Split out the string
-            var parsedWords = currentString.Split(new char[] {' '}, StringSplitOptions.RemoveEmptyEntries);
+            var parsedWords = currentString.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
             var commandWords = parsedWords.Length;
             Type command = null;
 
-            while(commandWords > 0)
+            while (commandWords > 0)
             {
                 var currentCommandString = String.Join(" ", parsedWords.Take(commandWords)).ToLower();
 
                 var validCommands = LoadedCommands.Where(comm => comm.GetCustomAttributes<CommandKeywordAttribute>().Any(att => att.Keyword.Equals(currentCommandString)));
 
-                if(validCommands.Count() > 1)
+                if (validCommands.Count() > 1)
                 {
                     //TODO: Need to disambiguate help text here
                     AccessErrors.Add("DISAMBIGUATE ME");
                     break;
                 }
-                else if(validCommands.Count() == 1)
+                else if (validCommands.Count() == 1)
                 {
                     command = validCommands.First();
                     CommandStringRemainder = parsedWords.Skip(commandWords);
@@ -132,28 +139,104 @@ namespace NetMud.Interp
             var returnedParms = new List<object>();
 
             //Flip through each remaining word and parse them
-            foreach(var currentNeededParm in neededParms)
+            foreach (var currentNeededParm in neededParms)
             {
-                var validTargetTypes = commandsAssembly.GetTypes().Where(t => t.GetInterfaces().Contains(currentNeededParm.ParameterType));
-
-                var parmWords = CommandStringRemainder.Count();
-                Type parm = null;
-
-                while (parmWords > 0)
+                foreach (var seekType in currentNeededParm.CacheTypes)
                 {
-                    var currentParmString = String.Join(" ", CommandStringRemainder.Take(parmWords));
+                    switch (seekType)
+                    {
+                        case CacheReferenceType.Code:
+                            SeekInCode(returnedParms, currentNeededParm);
+                            break;
+                        case CacheReferenceType.Entity:
+                            SeekInLiveWorld(returnedParms, currentNeededParm, commandType.GetCustomAttribute<CommandRangeAttribute>(););
+                            break;
+                        case CacheReferenceType.Reference:
+                            break;
+                    }
+                }
+            }
 
-                    var validParms = validTargetTypes.Where(comm => comm.GetCustomAttributes<CommandKeywordAttribute>().Any(att => att.Keyword.Equals(currentParmString)));
+            return returnedParms;
+        }
 
-                    if (validParms.Count() > 1)
+        private void SeekInCode(IEnumerable<object> returnedParms, CommandParameterAttribute currentNeededParm)
+        {
+            var validTargetTypes = commandsAssembly.GetTypes().Where(t => t.GetInterfaces().Contains(currentNeededParm.ParameterType));
+            var internalCommandString = CommandStringRemainder.ToArray();
+
+            var parmWords = internalCommandString.Count();
+            Type parm = null;
+
+            while (parmWords > 0)
+            {
+                var currentParmString = String.Join(" ", internalCommandString.Take(parmWords));
+
+                var validParms = validTargetTypes.Where(comm => comm.GetCustomAttributes<CommandKeywordAttribute>().Any(att => att.Keyword.Equals(currentParmString)));
+
+                if (validParms.Count() > 1)
+                {
+                    //TODO: Need to disambiguate help text here
+                    AccessErrors.Add("DISAMBIGUATE ME");
+                    break;
+                }
+                else if (validParms.Count() == 1)
+                {
+                    parm = validParms.First();
+
+                    if (parm != null)
+                    {
+                        switch (currentNeededParm.Usage)
+                        {
+                            case CommandUsage.Container:
+                                Container = Activator.CreateInstance(parm);
+                                returnedParms.Add(Container);
+                                break;
+                            case CommandUsage.Subject:
+                                Subject = Activator.CreateInstance(parm);
+                                returnedParms.Add(Subject);
+                                break;
+                            case CommandUsage.Target:
+                                Target = Activator.CreateInstance(parm);
+                                returnedParms.Add(Target);
+                                break;
+                        }
+                    }
+
+                    internalCommandString = internalCommandString.Skip(parmWords);
+                    parmWords = internalCommandString.Count();
+                }
+
+                parmWords--;
+            }
+        }
+
+        //TODO: Make this work, we need far more stuff to do this (location for one)
+        private void SeekInLiveWorld(IEnumerable<object> returnedParms, CommandParameterAttribute currentNeededParm, CommandRangeAttribute seekRange)
+        {
+            var internalCommandString = CommandStringRemainder.ToArray();
+
+            var parmWords = internalCommandString.Count();
+            Type parm = null;
+
+            while (parmWords > 0)
+            {
+                var currentParmString = String.Join(" ", internalCommandString.Take(parmWords));
+                Type seekType = currentNeededParm.ParameterType;
+
+                var validObjects = liveWorld.GetAll<seekType>();
+
+                if (validObjects.Count() > 0)
+                {
+                    if (validObjects.Count() > 1)
                     {
                         //TODO: Need to disambiguate help text here
                         AccessErrors.Add("DISAMBIGUATE ME");
                         break;
                     }
-                    else if (validParms.Count() == 1)
+                    else if (validObjects.Count() == 1)
                     {
-                        parm = validParms.First();
+                        parm = validObjects.First();
 
                         if (parm != null)
                         {
@@ -164,7 +247,7 @@ namespace NetMud.Interp
                                     returnedParms.Add(Container);
                                     break;
                                 case CommandUsage.Subject:
-                                    Subject =  Activator.CreateInstance(parm);
+                                    Subject = Activator.CreateInstance(parm);
                                     returnedParms.Add(Subject);
                                     break;
                                 case CommandUsage.Target:
@@ -174,15 +257,19 @@ namespace NetMud.Interp
                             }
                         }
 
-                        CommandStringRemainder = CommandStringRemainder.Skip(parmWords);
-                        parmWords = CommandStringRemainder.Count();
+                        internalCommandString = internalCommandString.Skip(parmWords);
+                        parmWords = internalCommandString.Count();
                     }
 
                     parmWords--;
                 }
             }
 
-            return returnedParms;
+        }
+
+        private void SeekInReferenceData(IEnumerable<object> returnedParms)
+        {
+
         }
     }
 }
