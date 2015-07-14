@@ -14,6 +14,16 @@ namespace NetMud.Data.System
     {
         public string GlobalIdentityHandle { get; set; }
 
+        public Account()
+        {
+            GlobalIdentityHandle = "Nobody";
+        }
+
+        public Account(string handle)
+        {
+            GlobalIdentityHandle = handle;
+        }
+
         private IList<ICharacter> _characters;
         public IEnumerable<ICharacter> Characters 
         { 
@@ -69,9 +79,7 @@ namespace NetMud.Data.System
             string outHandle = default(string);
             DataUtility.GetFromDataRow<string>(dr, "GlobalIdentityHandle", ref outHandle);
 
-            var account = new Account();
-            account.GlobalIdentityHandle = outHandle;
-            return account;
+            return new Account(outHandle);
         }
     }
 }

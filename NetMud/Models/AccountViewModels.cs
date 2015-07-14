@@ -79,6 +79,12 @@ namespace NetMud.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        [DataType(DataType.Text)]
+        [Display(Name = "Global User Handle")]
+        [StringLength(200, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 4)]
+        public string GlobalUserHandle { get; set; }
     }
 
     public class ResetPasswordViewModel

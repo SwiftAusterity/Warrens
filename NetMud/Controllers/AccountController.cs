@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using NetMud.Models;
+using NetMud.Data.System;
 
 namespace NetMud.Controllers
 {
@@ -149,10 +150,17 @@ namespace NetMud.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
+            //dupe handles
+            if (Account.GetByHandle(model.GlobalUserHandle) != null)
+                ModelState.AddModelError("GlobalUserHandle", "That handle already exists in the system. Please choose another.");
+
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var newGameAccount = new Account(model.GlobalUserHandle);
+
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, GameAccount = newGameAccount };
                 var result = await UserManager.CreateAsync(user, model.Password);
+
                 if (result.Succeeded)
                 {
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
@@ -165,6 +173,7 @@ namespace NetMud.Controllers
 
                     return RedirectToAction("Index", "Home");
                 }
+
                 AddErrors(result);
             }
 

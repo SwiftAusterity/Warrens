@@ -184,6 +184,7 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\dbo.Character.sql" />
     <Content Include="App_Data\dbo.Help.sql" />
     <Content Include="App_Data\testingDB.mdf" />
     <Content Include="App_Data\testingDB_log.ldf">
