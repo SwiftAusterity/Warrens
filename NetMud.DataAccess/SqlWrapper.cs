@@ -10,7 +10,7 @@ namespace NetMud.DataAccess
 {
     public static class SqlWrapper
     {
-        private static string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ReferenceData"].ConnectionString;
+        private static string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
         public static void RunNonQuery(string sqlText, CommandType commandType)
         {
@@ -67,7 +67,7 @@ namespace NetMud.DataAccess
 
         public static DataTable RunDataset(string sqlString, CommandType commandType, IDictionary<string, object> args)
         {
-            DataTable dt = null;
+            DataTable dt = new DataTable();
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             using (SqlCommand cmd = conn.CreateCommand())

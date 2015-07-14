@@ -105,12 +105,18 @@
     <Compile Include="Behaviors\Rendering\ITrackable.cs" />
     <Compile Include="Commands\Help.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReferenceData\Help.cs" />
     <Compile Include="System\CommandRangeAttribute.cs" />
     <Compile Include="System\CommandPermissionAttribute.cs" />
     <Compile Include="System\CommandParameterAttribute.cs" />
     <Compile Include="System\CommandKeywordAttribute.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\NetMud.Utility\NetMud.Utility.csproj">
+      <Project>{9f3caec0-73dc-463c-8ef7-13b83bc8fb12}</Project>
+      <Name>NetMud.Utility</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

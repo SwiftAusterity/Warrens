@@ -32,6 +32,7 @@ namespace NetMud.Data.System
     {
         Entity,
         Reference,
-        Code
+        Code,
+        Help //hacky add for help specifically
     }
 }

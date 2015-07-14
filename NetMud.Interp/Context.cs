@@ -160,6 +160,9 @@ namespace NetMud.Interp
                                                          .MakeGenericMethod(new Type[] { currentNeededParm.ParameterType });
                             referenceMethod.Invoke(this, new object[] { returnedParms, currentNeededParm }); 
                             break;
+                        case CacheReferenceType.Help:
+                            SeekInReferenceData<NetMud.Data.ReferenceData.Help>(returnedParms, currentNeededParm);
+                            break;
                     }
                 }
             }
@@ -167,7 +170,7 @@ namespace NetMud.Interp
             return returnedParms;
         }
 
-        private void SeekInCode(IList<object> returnedParms, CommandParameterAttribute currentNeededParm)
+        public void SeekInCode(IList<object> returnedParms, CommandParameterAttribute currentNeededParm)
         {
             var validTargetTypes = commandsAssembly.GetTypes().Where(t => t.GetInterfaces().Contains(currentNeededParm.ParameterType));
             var internalCommandString = CommandStringRemainder.ToList();
@@ -220,7 +223,7 @@ namespace NetMud.Interp
         }
 
         //TODO: Make this work, we need far more stuff to do this (location for one)
-        private void SeekInLiveWorld<T>(IList<object> returnedParms, CommandParameterAttribute currentNeededParm, CommandRangeAttribute seekRange) where T : Type
+        public void SeekInLiveWorld<T>(IList<object> returnedParms, CommandParameterAttribute currentNeededParm, CommandRangeAttribute seekRange) where T : Type
         {
             var internalCommandString = CommandStringRemainder.ToList();
 
@@ -275,13 +278,12 @@ namespace NetMud.Interp
 
         }
 
-        private void SeekInReferenceData<T>(IList<object> returnedParms, CommandParameterAttribute currentNeededParm) where T : IReference
+        public void SeekInReferenceData<T>(IList<object> returnedParms, CommandParameterAttribute currentNeededParm) where T : IReference
         {
             var referenceContext = new ReferenceAccess();
             var internalCommandString = CommandStringRemainder.ToList();
 
             var parmWords = internalCommandString.Count();
-            Type parm = null;
 
             while (parmWords > 0)
             {
@@ -289,17 +291,20 @@ namespace NetMud.Interp
 
                 var validObject = referenceContext.GetOneReference<T>(currentParmString);
 
-                if (!validObject.Equals(default(T)))
+                if (validObject != null && !validObject.Equals(default(T)))
                 {
                     switch (currentNeededParm.Usage)
                     {
                         case CommandUsage.Container:
+                            Container = validObject;
                             returnedParms.Add(validObject);
                             break;
                         case CommandUsage.Subject:
-                            returnedParms.Add(validObject);
+                             Subject = validObject;
+                           returnedParms.Add(validObject);
                             break;
                         case CommandUsage.Target:
+                            Target = validObject;
                             returnedParms.Add(validObject);
                             break;
                     }

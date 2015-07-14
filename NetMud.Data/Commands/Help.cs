@@ -12,7 +12,7 @@ namespace NetMud.Data.Commands
     //Really help can be invoked on anything that is helpful, even itself
     [CommandKeyword("Help")]
     [CommandPermission(StaffRank.Player)]
-    [CommandParameter(CommandUsage.Subject, typeof(IHelpful), new CacheReferenceType[] { CacheReferenceType.Reference, CacheReferenceType.Code } )] 
+    [CommandParameter(CommandUsage.Subject, typeof(IHelpful), new CacheReferenceType[] { CacheReferenceType.Help, CacheReferenceType.Code } )] 
     public class Help : ICommand, IHelpful
     {
         private IHelpful Topic;
