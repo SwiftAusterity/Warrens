@@ -11,6 +11,10 @@ namespace NetMud.Data.Base.System
         /// <summary>
         /// Indelible guid that helps the system figure out where stuff is, generated when the object is spawned into the world
         /// </summary>
-        String BirthMark { get; }
+        string BirthMark { get; }
+        DateTime Birthdate { get; }
+        string Keywords { get; set; }
+
+        IReference ReferenceTemplate { get; }
     }
 }

@@ -10,9 +10,14 @@ namespace NetMud.DataAccess
 {
     public static class SqlWrapper
     {
-        private const string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ReferenceData"];
+        private static string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ReferenceData"].ConnectionString;
 
-        public void RunNonQuery(string sqlText, CommandType commandType, IDictionary<string, object> args)
+        public static void RunNonQuery(string sqlText, CommandType commandType)
+        {
+            RunNonQuery(sqlText, commandType, new Dictionary<string, object>());
+        }
+
+        public static void RunNonQuery(string sqlText, CommandType commandType, IDictionary<string, object> args)
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
             using (SqlCommand cmd = conn.CreateCommand())
@@ -29,15 +34,19 @@ namespace NetMud.DataAccess
                 cmd.ExecuteNonQuery();
             }
         }
-
-        public T RunScalar<T>(string storedProcName, CommandType commandType, IDictionary<string, object> args)
+        public static T RunScalar<T>(string sqlText, CommandType commandType)
         {
-            T returnThing = null;
+            return RunScalar<T>(sqlText, commandType, new Dictionary<string, object>());
+        }
+
+        public static T RunScalar<T>(string sqlText, CommandType commandType, IDictionary<string, object> args)
+        {
+            T returnThing;
  
             using (SqlConnection conn = new SqlConnection(connectionString))
             using (SqlCommand cmd = conn.CreateCommand())
             {
-                cmd.CommandText = storedProcName;
+                cmd.CommandText = sqlText;
                 cmd.CommandType = commandType;
 
                 foreach (KeyValuePair<string, object> kvp in args)
@@ -51,15 +60,19 @@ namespace NetMud.DataAccess
 
             return returnThing;
         }
-
-        public DataSet RunDataset(string storedProcName, CommandType commandType, IDictionary<string, object> args)
+        public static DataTable RunDataset(string sqlString, CommandType commandType)
         {
-            DataSet ds = null;
+            return RunDataset(sqlString, commandType, new Dictionary<string, object>());
+        }
+
+        public static DataTable RunDataset(string sqlString, CommandType commandType, IDictionary<string, object> args)
+        {
+            DataTable dt = null;
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             using (SqlCommand cmd = conn.CreateCommand())
             {
-                cmd.CommandText = storedProcName;
+                cmd.CommandText = sqlString;
                 cmd.CommandType = commandType;
 
                 foreach (KeyValuePair<string, object> kvp in args)
@@ -71,11 +84,11 @@ namespace NetMud.DataAccess
 
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
-                    ds.Load(reader);
+                    dt.Load(reader);
                 }
             }
 
-            return ds;
+            return dt;
         }
     }
 }

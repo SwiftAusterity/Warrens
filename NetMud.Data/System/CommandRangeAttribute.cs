@@ -12,7 +12,7 @@ namespace NetMud.Data.System
         public CommandRangeType Type { get; private set; }
         public int Value { get; private set; }
 
-        public CommandParameterAttribute(CommandRangeType type, int value)
+        public CommandRangeAttribute(CommandRangeType type, int value)
         {
             Type = type;
             Value = value;

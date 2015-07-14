@@ -149,9 +149,16 @@ namespace NetMud.Interp
                             SeekInCode(returnedParms, currentNeededParm);
                             break;
                         case CacheReferenceType.Entity:
-                            SeekInLiveWorld(returnedParms, currentNeededParm, commandType.GetCustomAttribute<CommandRangeAttribute>(););
+                            //So damn ugly, make this not use reflection if possible
+                            MethodInfo entityMethod = GetType().GetMethod("SeekInLiveWorld")
+                                                         .MakeGenericMethod(new Type[] { currentNeededParm.ParameterType });
+                            entityMethod.Invoke(this, new object[] { returnedParms, currentNeededParm, commandType.GetCustomAttribute<CommandRangeAttribute>() });
                             break;
                         case CacheReferenceType.Reference:
+                            //So damn ugly, make this not use reflection if possible
+                            MethodInfo referenceMethod = GetType().GetMethod("SeekInReferenceData")
+                                                         .MakeGenericMethod(new Type[] { currentNeededParm.ParameterType });
+                            referenceMethod.Invoke(this, new object[] { returnedParms, currentNeededParm }); 
                             break;
                     }
                 }
@@ -160,10 +167,10 @@ namespace NetMud.Interp
             return returnedParms;
         }
 
-        private void SeekInCode(IEnumerable<object> returnedParms, CommandParameterAttribute currentNeededParm)
+        private void SeekInCode(IList<object> returnedParms, CommandParameterAttribute currentNeededParm)
         {
             var validTargetTypes = commandsAssembly.GetTypes().Where(t => t.GetInterfaces().Contains(currentNeededParm.ParameterType));
-            var internalCommandString = CommandStringRemainder.ToArray();
+            var internalCommandString = CommandStringRemainder.ToList();
 
             var parmWords = internalCommandString.Count();
             Type parm = null;
@@ -203,8 +210,9 @@ namespace NetMud.Interp
                         }
                     }
 
-                    internalCommandString = internalCommandString.Skip(parmWords);
+                    internalCommandString = internalCommandString.Skip(parmWords).ToList();
                     parmWords = internalCommandString.Count();
+                    return;
                 }
 
                 parmWords--;
@@ -212,9 +220,9 @@ namespace NetMud.Interp
         }
 
         //TODO: Make this work, we need far more stuff to do this (location for one)
-        private void SeekInLiveWorld(IEnumerable<object> returnedParms, CommandParameterAttribute currentNeededParm, CommandRangeAttribute seekRange)
+        private void SeekInLiveWorld<T>(IList<object> returnedParms, CommandParameterAttribute currentNeededParm, CommandRangeAttribute seekRange) where T : Type
         {
-            var internalCommandString = CommandStringRemainder.ToArray();
+            var internalCommandString = CommandStringRemainder.ToList();
 
             var parmWords = internalCommandString.Count();
             Type parm = null;
@@ -222,21 +230,20 @@ namespace NetMud.Interp
             while (parmWords > 0)
             {
                 var currentParmString = String.Join(" ", internalCommandString.Take(parmWords));
-                Type seekType = currentNeededParm.ParameterType;
 
-                var validObjects = liveWorld.GetAll<seekType>();
+                var validObjects = liveWorld.GetAll<T>();
 
-                if (validObjects.Count() > 0)
+                if (validObjects.Count<T>() > 0)
                 {
-                    if (validObjects.Count() > 1)
+                    if (validObjects.Count<T>() > 1)
                     {
                         //TODO: Need to disambiguate help text here
                         AccessErrors.Add("DISAMBIGUATE ME");
                         break;
                     }
-                    else if (validObjects.Count() == 1)
+                    else if (validObjects.Count<T>() == 1)
                     {
-                        parm = validObjects.First();
+                        parm = validObjects.First<T>();
 
                         if (parm != null)
                         {
@@ -257,8 +264,9 @@ namespace NetMud.Interp
                             }
                         }
 
-                        internalCommandString = internalCommandString.Skip(parmWords);
+                        internalCommandString = internalCommandString.Skip(parmWords).ToList();
                         parmWords = internalCommandString.Count();
+                        return;
                     }
 
                     parmWords--;
@@ -267,8 +275,42 @@ namespace NetMud.Interp
 
         }
 
-        private void SeekInReferenceData(IEnumerable<object> returnedParms)
+        private void SeekInReferenceData<T>(IList<object> returnedParms, CommandParameterAttribute currentNeededParm) where T : IReference
         {
+            var referenceContext = new ReferenceAccess();
+            var internalCommandString = CommandStringRemainder.ToList();
+
+            var parmWords = internalCommandString.Count();
+            Type parm = null;
+
+            while (parmWords > 0)
+            {
+                var currentParmString = String.Join(" ", internalCommandString.Take(parmWords));
+
+                var validObject = referenceContext.GetOneReference<T>(currentParmString);
+
+                if (!validObject.Equals(default(T)))
+                {
+                    switch (currentNeededParm.Usage)
+                    {
+                        case CommandUsage.Container:
+                            returnedParms.Add(validObject);
+                            break;
+                        case CommandUsage.Subject:
+                            returnedParms.Add(validObject);
+                            break;
+                        case CommandUsage.Target:
+                            returnedParms.Add(validObject);
+                            break;
+                    }
+
+                    internalCommandString = internalCommandString.Skip(parmWords).ToList();
+                    parmWords = internalCommandString.Count();
+                    return;
+                }
+
+                parmWords--;
+            }
 
         }
     }
