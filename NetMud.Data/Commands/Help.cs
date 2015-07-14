@@ -42,6 +42,9 @@ namespace NetMud.Data.Commands
         {
             var sb = GetHelpHeader(Topic);
 
+            sb = sb.Concat(Topic.RenderHelpBody());
+
+            //If it's a command render the syntax help at the bottom
             if (Topic.GetType().GetInterfaces().Contains(typeof(ICommand)))
             {
                var subject = (ICommand)Topic;
@@ -49,7 +52,7 @@ namespace NetMud.Data.Commands
                sb = sb.Concat(subject.RenderSyntaxHelp()).ToList();
             }
 
-            return sb.Concat(Topic.RenderHelpBody()); ;
+            return sb;
         }
 
         public IEnumerable<string> RenderSyntaxHelp()
