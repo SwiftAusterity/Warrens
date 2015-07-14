@@ -42,7 +42,7 @@ namespace NetMud.Data.Commands
         {
             var sb = GetHelpHeader(Topic);
 
-            sb = sb.Concat(Topic.RenderHelpBody());
+            sb = sb.Concat(Topic.RenderHelpBody()).ToList();
 
             //If it's a command render the syntax help at the bottom
             if (Topic.GetType().GetInterfaces().Contains(typeof(ICommand)))

@@ -8,5 +8,6 @@ namespace NetMud.Data.Base.System
 {
     public interface IAccount
     {
+        string Username { get; set; }
     }
 }
