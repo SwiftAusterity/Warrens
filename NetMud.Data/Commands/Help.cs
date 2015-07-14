@@ -42,6 +42,13 @@ namespace NetMud.Data.Commands
         {
             var sb = GetHelpHeader(Topic);
 
+            if (Topic.GetType().GetInterfaces().Contains(typeof(ICommand)))
+            {
+               var subject = (ICommand)Topic;
+               sb.Add(String.Empty);
+               sb = sb.Concat(subject.RenderSyntaxHelp()).ToList();
+            }
+
             return sb.Concat(Topic.RenderHelpBody()); ;
         }
 
@@ -63,21 +70,30 @@ namespace NetMud.Data.Commands
             var sb = new List<string>();
 
             sb.Add(String.Format("Help provides useful information and syntax for the various commands you can use in the world."));
-            sb.Add(String.Empty);
-            sb.Add(String.Format("Valid Syntax: "));
-            sb.Add(String.Format("help &lt;topic&gt;"));
 
             return sb;
         }
 
-        private IEnumerable<string> GetHelpHeader(IHelpful subject)
+        private IList<string> GetHelpHeader(IHelpful subject)
         {
             var sb = new List<string>();
             var subjectName = subject.GetType().Name;
-            var titleLine = String.Format("Help - <span style=\"color: orange\">{0}</span>", subjectName);
+            var typeName = "Help";
 
-            sb.Add(titleLine);
-            sb.Add(String.Empty.PadLeft(7 + subjectName.Length, '-'));
+            if(subject.GetType().GetInterfaces().Contains(typeof(IReference)))
+            {
+                var refSubject = (IReference)subject;
+
+                subjectName = refSubject.Name;
+                typeName = "Reference";
+            }
+            else if(subject.GetType().GetInterfaces().Contains(typeof(ICommand)))
+            {
+                typeName = "Commands";
+            }
+
+            sb.Add(String.Format("{0} - <span style=\"color: orange\">{1}</span>", typeName, subjectName));
+            sb.Add(String.Empty.PadLeft(typeName.Length + 3 + subjectName.Length, '-'));
 
             return sb;
         }
