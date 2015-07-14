@@ -257,9 +257,9 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NetMud.Data\NetMud.Data.csproj">
+    <ProjectReference Include="..\NetMud.DataStructure\NetMud.DataStructure.csproj">
       <Project>{88b7a648-fe23-4e88-9b60-ae17c8858af4}</Project>
-      <Name>NetMud.Data</Name>
+      <Name>NetMud.DataStructure</Name>
     </ProjectReference>
     <ProjectReference Include="..\NetMud.Interp\NetMud.Interp.csproj">
       <Project>{0c46dab6-27fd-4117-acf6-0b8440614aa0}</Project>

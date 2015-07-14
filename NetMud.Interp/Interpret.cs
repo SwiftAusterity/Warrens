@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using NetMud.Data.Behaviors.Rendering;
+using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.Utility;
 
 namespace NetMud.Interp

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.Data", "NetMud.Data\NetMud.Data.csproj", "{88B7A648-FE23-4E88-9B60-AE17C8858AF4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.DataStructure", "NetMud.DataStructure\NetMud.DataStructure.csproj", "{88B7A648-FE23-4E88-9B60-AE17C8858AF4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.Interp", "NetMud.Interp\NetMud.Interp.csproj", "{0C46DAB6-27FD-4117-ACF6-0B8440614AA0}"
 EndProject

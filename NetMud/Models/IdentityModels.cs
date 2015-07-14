@@ -3,6 +3,8 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using NetMud.DataStructure.Base.System;
+using System.Collections.Generic;
 
 namespace NetMud.Models
 {
@@ -16,6 +18,8 @@ namespace NetMud.Models
             // Add custom user claims here
             return userIdentity;
         }
+
+       // public virtual Account GameAccount { get; set; }
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>

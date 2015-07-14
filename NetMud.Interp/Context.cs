@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using NetMud.Data.Behaviors.Rendering;
-using NetMud.Data.Base.System;
+using NetMud.DataStructure.Behaviors.Rendering;
+using NetMud.DataStructure.Base.System;
 using System.Reflection;
-using NetMud.Data.System;
+using NetMud.DataStructure.System;
 using NetMud.DataAccess;
 
 namespace NetMud.Interp
@@ -161,7 +161,7 @@ namespace NetMud.Interp
                             referenceMethod.Invoke(this, new object[] { returnedParms, currentNeededParm }); 
                             break;
                         case CacheReferenceType.Help:
-                            SeekInReferenceData<NetMud.Data.ReferenceData.Help>(returnedParms, currentNeededParm);
+                            SeekInReferenceData<NetMud.DataStructure.ReferenceData.Help>(returnedParms, currentNeededParm);
                             break;
                     }
                 }
