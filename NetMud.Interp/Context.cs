@@ -161,7 +161,7 @@ namespace NetMud.Interp
                             referenceMethod.Invoke(this, new object[] { returnedParms, currentNeededParm }); 
                             break;
                         case CacheReferenceType.Help:
-                            SeekInReferenceData<NetMud.DataStructure.ReferenceData.Help>(returnedParms, currentNeededParm);
+                            SeekInReferenceData<NetMud.Data.Reference.Help>(returnedParms, currentNeededParm);
                             break;
                     }
                 }

@@ -7,8 +7,8 @@
     <ProjectGuid>{88B7A648-FE23-4E88-9B60-AE17C8858AF4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NetMud.Data</RootNamespace>
-    <AssemblyName>NetMud.Data</AssemblyName>
+    <RootNamespace>NetMud.DataStructure</RootNamespace>
+    <AssemblyName>NetMud.DataStructure</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -105,8 +105,6 @@
     <Compile Include="Behaviors\Rendering\ITrackable.cs" />
     <Compile Include="Commands\Help.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReferenceData\Help.cs" />
-    <Compile Include="SystemData\Account.cs" />
     <Compile Include="System\CommandRangeAttribute.cs" />
     <Compile Include="System\CommandPermissionAttribute.cs" />
     <Compile Include="System\CommandParameterAttribute.cs" />

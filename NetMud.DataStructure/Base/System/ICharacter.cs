@@ -11,5 +11,7 @@ namespace NetMud.DataStructure.Base.System
     {
         string SurName { get; set; }
         string GivenName { get; set; }
+        string AccountHandle { get; set; }
+        IAccount Account { get; }
     }
 }

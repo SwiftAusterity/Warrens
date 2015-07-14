@@ -1,5 +1,4 @@
 ﻿using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.Utility;
 using System;
 using System.Collections.Generic;
@@ -7,31 +6,38 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NetMud.DataStructure.ReferenceData
+namespace NetMud.Data.Game
 {
-    public class Help : IReference
+    public class Character : ICharacter
     {
-        public Help()
-        {
-            ID = -1;
-            Created = DateTime.UtcNow;
-            LastRevised = DateTime.UtcNow;
-            Name = "NotImpl";
-            HelpText = "NotImpl";
-        }
-
+        public string SurName { get; set; }
+        public string GivenName { get; set; }
         public long ID { get; set; }
         public DateTime Created { get; set; }
         public DateTime LastRevised { get; set; }
         public string Name { get; set; }
+        public string AccountHandle { get; set; }
 
-        public string HelpText { get; private set; }
+        private IAccount _account;
+        public IAccount Account
+        {
+            get 
+            {
+                if (_account == null && !String.IsNullOrWhiteSpace(AccountHandle))
+                    _account = NetMud.Data.System.Account.GetByHandle(AccountHandle);
 
+                return _account;
+            }
+        }
         public void Fill(global::System.Data.DataRow dr)
         {
             int outId = default(int);
             DataUtility.GetFromDataRow<int>(dr, "ID", ref outId);
             ID = outId;
+
+            string outAccountHandle = default(string);
+            DataUtility.GetFromDataRow<string>(dr, "AccountHandle", ref outAccountHandle);
+            AccountHandle = outAccountHandle;
 
             DateTime outCreated = default(DateTime);
             DataUtility.GetFromDataRow<DateTime>(dr, "Created", ref outCreated);
@@ -45,26 +51,27 @@ namespace NetMud.DataStructure.ReferenceData
             DataUtility.GetFromDataRow<string>(dr, "Name", ref outName);
             Name = outName;
 
-            string outHelpText = default(string);
-            DataUtility.GetFromDataRow<string>(dr, "HelpText", ref outHelpText);
-            HelpText = outHelpText;
+            string outSurName = default(string);
+            DataUtility.GetFromDataRow<string>(dr, "SurName", ref outSurName);
+            SurName = outSurName;
+
+            string outGivenName = default(string);
+            DataUtility.GetFromDataRow<string>(dr, "GivenName", ref outGivenName);
+            GivenName = outGivenName;
         }
 
-         /// <summary>
-         /// -99 = null input
-         /// -1 = wrong type
-         /// 0 = same type, wrong id
-         /// 1 = same reference (same id, same type)
-         /// </summary>
-         /// <param name="obj"></param>
-         /// <returns></returns>
+        public IEnumerable<string> RenderHelpBody()
+        {
+            throw new NotImplementedException();
+        }
+
         public int CompareTo(object obj)
         {
             if (obj != null)
             {
                 try
                 {
-                    if (obj.GetType() != typeof(Help))
+                    if (obj.GetType() != typeof(Character))
                         return -1;
 
                     IReference otherObj = obj as IReference;
@@ -89,7 +96,7 @@ namespace NetMud.DataStructure.ReferenceData
             {
                 try
                 {
-                    return other.GetType() == typeof(Help) && other.ID.Equals(this.ID);
+                    return other.GetType() == typeof(Character) && other.ID.Equals(this.ID);
                 }
                 catch
                 {
@@ -98,15 +105,6 @@ namespace NetMud.DataStructure.ReferenceData
             }
 
             return false;
-        }
-
-        public IEnumerable<string> RenderHelpBody()
-        {
-            var sb = new List<string>();
-
-            sb.Add(HelpText);
-
-            return sb;
         }
     }
 }
