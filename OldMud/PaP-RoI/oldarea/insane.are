@@ -1,0 +1,1169 @@
+#AREADATA
+Name        Prison MDA complex~
+Levels      5 15
+Builders    Flux~
+VNUMs       700 799
+Security    1
+Recall      25000
+Flags       16
+Color       9
+Sounds      A &Wbone&C c&Bh&Ci&Bl&Cl&Bi&Cn&Bg&G &YS&RC&YR&RE&YA&RM&G pierces your ears.~
+Temporal    0
+Weather     0
+End
+
+
+
+#MOBILES
+#0
+
+
+
+#OBJECTS
+#700
+key ring~
+a ring of keys~
+A ring of keys has been left here.~
+13 0 1 1
+0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~
+2 0 0 0
+0 0
+reserved~
+0 0
+0 0 0
+#0
+
+
+
+#ROOMDATA
+#700
+MDA main gate~
+A large &Csign&R hangs loosly over the rusted gate.  To the south lies
+the prison's MDA complex, which despite many petitions still operates.  
+~
+0 2
+Rd     0
+E
+sign~
+Prison Mental Disturbance Assistance Complex
+~
+D2
+A large, &Orusty&w iron gate.
+~
+gate~
+3 0 701
+S
+#701
+A dirt path~
+The grounds of the complex aren't kept up very well, weeds seem to be the
+most prevelant plant life here.  North of you lies the main gate, south the
+complex.  
+~
+0 2
+Rd     0
+D0
+~
+gate~
+3 0 700
+D2
+~
+~
+0 0 702
+S
+#702
+MDA main door~
+The main door to the MDA complex is in concurrence with the rest of the
+grounds, riddled with weeds and nearly falling apart.  The building itself
+looks as if it were abandoned, but the screams and lights tell you
+otherwise.  
+~
+0 2
+Rd     0
+D0
+~
+~
+0 0 701
+D2
+~
+door~
+3 0 703
+S
+#703
+MDA lobby~
+In theory this is the MDA complex lobby, but it's only a hallway that
+leads to and from the main door.  A large directory &Csign&R has been bolted
+to the wall.  
+~
+8 0
+Rd     0
+E
+sign~
+MDA Director:          Dr. Friezen  -- Room 100
+MDA Medical Head:      Dr. Nayvelt  -- Room 101
+MDA Medical Assistant: Dr. Crocker  -- Room 102
+MDA Security Head:     Jack Deth    -- Room 103
+MDA Food Preparation:  Rosa Bella   -- Room 104
+MDA Groundskeeper:     Samuel Smith -- Room 105
+~
+D0
+~
+door~
+3 0 702
+D2
+~
+~
+0 0 704
+S
+#704
+MDA main hallway~
+The walls seem to have several layers of paint on them, most of them
+white or off-white by now.  The hallway is only about 3 or 4 feet in width,
+barely enough for a stretcher and a person.  
+~
+8 0
+Rd     0
+E
+door~
+Room 100
+~
+D0
+~
+~
+0 0 703
+D1
+~
+door~
+3 0 711
+D2
+~
+~
+0 0 705
+S
+#705
+MDA main hallway~
+The walls seem to have several layers of paint on them, most of them
+white or off-white by now.  The hallway is only about 3 or 4 feet in width,
+barely enough for a stretcher and a person.  
+~
+8 0
+Rd     0
+E
+door~
+Room 101
+~
+D0
+~
+~
+0 0 704
+D1
+~
+door~
+3 0 712
+D2
+~
+~
+0 0 706
+S
+#706
+MDA main hallway~
+The walls seem to have several layers of paint on them, most of them
+white or off-white by now.  The hallway is only about 3 or 4 feet in width,
+barely enough for a stretcher and a person.  
+~
+8 0
+Rd     0
+E
+door~
+Room 102
+~
+D0
+~
+~
+0 0 705
+D1
+~
+door~
+3 0 713
+D2
+~
+~
+0 0 707
+S
+#707
+MDA main hallway~
+The walls seem to have several layers of paint on them, most of them
+white or off-white by now.  The hallway is only about 3 or 4 feet in width,
+barely enough for a stretcher and a person.  
+~
+8 0
+Rd     0
+E
+door~
+Room 103
+~
+D0
+~
+~
+0 0 706
+D1
+~
+door~
+3 0 714
+D2
+~
+~
+0 0 708
+S
+#708
+MDA main hallway~
+The walls seem to have several layers of paint on them, most of them
+white or off-white by now.  The hallway is only about 3 or 4 feet in width,
+barely enough for a stretcher and a person.  
+~
+8 0
+Rd     0
+E
+door~
+Room 104
+~
+D0
+~
+~
+0 0 707
+D1
+~
+door~
+3 0 715
+D2
+~
+~
+0 0 709
+S
+#709
+MDA main hallway~
+The walls seem to have several layers of paint on them, most of them
+white or off-white by now.  The hallway is only about 3 or 4 feet in width,
+barely enough for a stretcher and a person.  
+~
+8 0
+Rd     0
+E
+door~
+Room 105
+~
+D0
+~
+~
+0 0 708
+D1
+~
+door~
+3 0 716
+D2
+~
+~
+0 0 710
+S
+#710
+Ward 1~
+The walls seem to have several layers of paint on them, most of them
+white or off-white by now.  The hallway is only about 3 or 4 feet in width,
+barely enough for a stretcher and a person.  
+~
+8 0
+Rd     0
+D0
+~
+~
+0 0 709
+D1
+~
+~
+0 0 717
+D3
+~
+~
+0 0 722
+S
+#711
+Director's office, Room 100~
+The Director's room is filled with ego memorabilia.  Diplomas, awards,
+plaques, even a golden shovel from the groundbreaking of this very
+institution.  
+~
+8 0
+Rd     0
+D3
+~
+door~
+3 0 704
+S
+#712
+Medical Head's office, Room 101~
+As with many medical professionals, this room is lined with bookshelves. 
+Mostly medical journals and medical texts, but the occasional novel seems to
+have found it's way here.  
+~
+8 0
+Rd     0
+D3
+~
+door~
+3 0 705
+D5
+~
+trapdoor~
+514 0 760
+S
+#713
+Medical Assistant's office, Room 102~
+As with the medical head, the medical assistant also has lined his office
+with bookshelves.  More novels than medical texts, however, and most of them
+are pop.  
+~
+8 0
+Rd     0
+D3
+~
+door~
+3 0 706
+S
+#714
+Security Head's office, Room 103~
+Monitors line the walls, one for each patient room.  The rest of the room
+is filled with large cabinets.  
+~
+8 0
+Rd     0
+D3
+~
+door~
+3 0 707
+S
+#715
+Food Preparation, Room 104~
+Stoves, sinks, shelves filled with oversized cans of mush, and of course
+an amplke supply of hairnets.  
+~
+8 0
+Rd     0
+D3
+~
+door~
+3 0 708
+S
+#716
+Groundskeeping, Room 105~
+This room is filled with linens, tools, cleaning products, and even an
+economy sized washer and dryer.  
+~
+8 0
+Rd     0
+D3
+~
+door~
+3 0 709
+S
+#717
+Ward 1 hallway~
+The walls seem to have several layers of paint on them, most of them
+white or off-white by now.  The hallway is only about 3 or 4 feet in width,
+barely enough for a stretcher and a person.
+~
+8 0
+Rd     0
+D1
+~
+~
+0 0 718
+D2
+~
+door~
+7 700 751
+D3
+~
+~
+0 0 710
+S
+#718
+Ward 1 hallway~
+The walls seem to have several layers of paint on them, most of them
+white or off-white by now.  The hallway is only about 3 or 4 feet in width,
+barely enough for a stretcher and a person.
+~
+8 0
+Rd     0
+D1
+~
+~
+0 0 719
+D2
+~
+door~
+7 700 752
+D3
+~
+~
+0 0 717
+S
+#719
+Ward 1 hallway~
+The walls seem to have several layers of paint on them, most of them
+white or off-white by now.  The hallway is only about 3 or 4 feet in width,
+barely enough for a stretcher and a person.
+~
+8 0
+Rd     0
+D1
+~
+~
+0 0 720
+D2
+~
+door~
+7 700 753
+D3
+~
+~
+0 0 718
+S
+#720
+Ward 1 hallway~
+The walls seem to have several layers of paint on them, most of them
+white or off-white by now.  The hallway is only about 3 or 4 feet in width,
+barely enough for a stretcher and a person.  The hallway leads north towards
+a darkened stairwell.  
+~
+8 0
+Rd     0
+D0
+~
+~
+0 0 721
+D3
+~
+~
+0 0 719
+S
+#721
+Stairwell~
+This stairwell doesn't seem to accomadate stretchers or wheelchairs, it's
+more like a fire escape that an actual set of stairs.  
+~
+8 0
+Rd     0
+D2
+~
+~
+0 0 720
+D5
+~
+~
+0 0 727
+S
+#722
+Ward 1 hallway~
+The walls seem to have several layers of paint on them, most of them
+white or off-white by now.  The hallway is only about 3 or 4 feet in width,
+barely enough for a stretcher and a person.
+~
+8 0
+Rd     0
+D1
+~
+~
+0 0 710
+D2
+~
+door~
+7 700 754
+D3
+~
+~
+0 0 723
+S
+#723
+Ward 1 hallway~
+The walls seem to have several layers of paint on them, most of them
+white or off-white by now.  The hallway is only about 3 or 4 feet in width,
+barely enough for a stretcher and a person.
+~
+8 0
+Rd     0
+D1
+~
+~
+0 0 722
+D2
+~
+door~
+7 700 755
+D3
+~
+~
+0 0 724
+S
+#724
+Ward 1 hallway~
+The walls seem to have several layers of paint on them, most of them
+white or off-white by now.  The hallway is only about 3 or 4 feet in width,
+barely enough for a stretcher and a person.
+~
+8 0
+Rd     0
+D1
+~
+~
+0 0 723
+D2
+~
+door~
+7 700 756
+D3
+~
+~
+0 0 725
+S
+#725
+Ward 1 hallway~
+The walls seem to have several layers of paint on them, most of them
+white or off-white by now.  The hallway is only about 3 or 4 feet in width,
+barely enough for a stretcher and a person.  The hallway leads north to a
+stairwell.  
+~
+8 0
+Rd     0
+D0
+~
+~
+0 0 726
+D1
+~
+~
+0 0 724
+S
+#726
+Stairwell~
+This stairwell doesn't seem to accomadate stretchers or wheelchairs, it's
+more like a fire escape that an actual set of stairs.
+~
+8 0
+Rd     0
+D2
+~
+~
+0 0 725
+D4
+~
+~
+0 0 728
+S
+#727
+Stairwell~
+This stairwell doesn't seem to accomadate stretchers or wheelchairs, it's
+more like a fire escape that an actual set of stairs.  
+~
+32 0
+Rd     0
+D2
+~
+~
+0 0 729
+D4
+~
+~
+0 0 721
+S
+#728
+Stairwell~
+This stairwell doesn't seem to accomadate stretchers or wheelchairs, it's
+more like a fire escape that an actual set of stairs.
+~
+8 0
+Rd     0
+D1
+~
+~
+0 0 735
+D5
+~
+~
+0 0 726
+S
+#729
+Ward 2~
+The walls seem to have several layers of paint on them, most of them
+white or off-white by now.  The hallway is only about 3 or 4 feet in width,
+barely enough for a stretcher and a person.
+~
+32 0
+Rd     0
+D0
+~
+~
+0 0 727
+D3
+~
+~
+0 0 730
+S
+#730
+Ward 2 hallway~
+The walls seem to have several layers of paint on them, most of them
+white or off-white by now.  The hallway is only about 3 or 4 feet in width,
+barely enough for a stretcher and a person.
+~
+32 0
+Rd     0
+D0
+~
+door~
+7 700 746
+D1
+~
+~
+0 0 729
+D3
+~
+~
+0 0 731
+S
+#731
+Ward 2 hallway~
+The walls seem to have several layers of paint on them, most of them
+white or off-white by now.  The hallway is only about 3 or 4 feet in width,
+barely enough for a stretcher and a person.
+~
+32 0
+Rd     0
+D0
+~
+door~
+7 700 747
+D1
+~
+~
+0 0 730
+D3
+~
+~
+0 0 732
+S
+#732
+Ward 2 hallway~
+The walls seem to have several layers of paint on them, most of them
+white or off-white by now.  The hallway is only about 3 or 4 feet in width,
+barely enough for a stretcher and a person.
+~
+32 0
+Rd     0
+D0
+~
+door~
+7 700 748
+D1
+~
+~
+0 0 731
+D3
+~
+~
+0 0 733
+S
+#733
+Ward 2 hallway~
+The walls seem to have several layers of paint on them, most of them
+white or off-white by now.  The hallway is only about 3 or 4 feet in width,
+barely enough for a stretcher and a person.
+~
+32 0
+Rd     0
+D0
+~
+door~
+7 700 749
+D1
+~
+~
+0 0 732
+D3
+~
+~
+0 0 734
+S
+#734
+Ward 2 hallway~
+The walls seem to have several layers of paint on them, most of them
+white or off-white by now.  The hallway is only about 3 or 4 feet in width,
+barely enough for a stretcher and a person.
+~
+32 0
+Rd     0
+D0
+~
+door~
+7 700 750
+D1
+~
+~
+0 0 733
+S
+#735
+Ward 3~
+The walls seem to have several layers of paint on them, most of them
+white or off-white by now.  The hallway is only about 3 or 4 feet in width,
+barely enough for a stretcher and a person.
+~
+8 0
+Rd     0
+D1
+~
+~
+0 0 736
+D3
+~
+~
+0 0 728
+S
+#736
+Ward 3 hallway~
+The walls seem to have several layers of paint on them, most of them
+white or off-white by now.  The hallway is only about 3 or 4 feet in width,
+barely enough for a stretcher and a person.
+~
+8 0
+Rd     0
+D1
+~
+~
+0 0 737
+D2
+~
+door~
+7 700 741
+D3
+~
+~
+0 0 735
+S
+#737
+Ward 3 hallway~
+The walls seem to have several layers of paint on them, most of them
+white or off-white by now.  The hallway is only about 3 or 4 feet in width,
+barely enough for a stretcher and a person.
+~
+8 0
+Rd     0
+D1
+~
+~
+0 0 738
+D2
+~
+door~
+7 700 742
+D3
+~
+~
+0 0 736
+S
+#738
+Ward 3 hallway~
+The walls seem to have several layers of paint on them, most of them
+white or off-white by now.  The hallway is only about 3 or 4 feet in width,
+barely enough for a stretcher and a person.
+~
+8 0
+Rd     0
+D1
+~
+~
+0 0 739
+D2
+~
+door~
+7 700 743
+D3
+~
+~
+0 0 737
+S
+#739
+Ward 3 hallway~
+The walls seem to have several layers of paint on them, most of them
+white or off-white by now.  The hallway is only about 3 or 4 feet in width,
+barely enough for a stretcher and a person.
+~
+8 0
+Rd     0
+D1
+~
+~
+0 0 740
+D2
+~
+door~
+7 700 744
+D3
+~
+~
+0 0 738
+S
+#740
+Ward 3 hallway~
+The walls seem to have several layers of paint on them, most of them
+white or off-white by now.  The hallway is only about 3 or 4 feet in width,
+barely enough for a stretcher and a person.
+~
+8 0
+Rd     0
+D2
+~
+door~
+7 700 745
+D3
+~
+~
+0 0 739
+S
+#741
+Ward 3 patient room~
+All four walls, including the inside of the door, celing and floor, are
+padded white.  There is nothing save a small hole in the right corner of the
+room, which by the smell of things seems to be a makeshift toilet.  
+~
+8 0
+Rd     0
+D0
+~
+door~
+7 0 736
+S
+#742
+Ward 3 patient room~
+All four walls, including the inside of the door, celing and floor, are
+padded white.  There is nothing save a small hole in the right corner of the
+room, which by the smell of things seems to be a makeshift toilet.
+~
+8 0
+Rd     0
+D0
+~
+door~
+7 0 737
+S
+#743
+Ward 3 patient room~
+All four walls, including the inside of the door, celing and floor, are
+padded white.  There is nothing save a small hole in the right corner of the
+room, which by the smell of things seems to be a makeshift toilet.
+~
+8 0
+Rd     0
+D0
+~
+door~
+7 0 738
+S
+#744
+Ward 3 patient room~
+All four walls, including the inside of the door, celing and floor, are
+padded white.  There is nothing save a small hole in the right corner of the
+room, which by the smell of things seems to be a makeshift toilet.
+~
+8 0
+Rd     0
+D0
+~
+door~
+7 0 739
+S
+#745
+Ward 3 patient room~
+All four walls, including the inside of the door, celing and floor, are
+padded white.  There is nothing save a small hole in the right corner of the
+room, which by the smell of things seems to be a makeshift toilet.
+~
+8 0
+Rd     0
+D0
+~
+door~
+7 0 740
+S
+#746
+Ward 2 patient room~
+All four walls, including the inside of the door, celing and floor, are
+padded white.  There is nothing save a small hole in the right corner of the
+room, which by the smell of things seems to be a makeshift toilet.
+~
+32 0
+Rd     0
+D2
+~
+door~
+7 0 730
+S
+#747
+Ward 2 patient room~
+All four walls, including the inside of the door, celing and floor, are
+padded white.  There is nothing save a small hole in the right corner of the
+room, which by the smell of things seems to be a makeshift toilet.
+~
+32 0
+Rd     0
+D2
+~
+door~
+7 0 731
+S
+#748
+Ward 2 patient room~
+All four walls, including the inside of the door, celing and floor, are
+padded white.  There is nothing save a small hole in the right corner of the
+room, which by the smell of things seems to be a makeshift toilet.
+~
+32 0
+Rd     0
+E
+floor~
+The ground seems to decline towards the bed, as if there were a hole
+under it.  
+~
+D2
+~
+door~
+7 0 732
+D5
+~
+hole~
+512 0 757
+S
+#749
+Ward 2 patient room~
+All four walls, including the inside of the door, celing and floor, are
+padded white.  There is nothing save a small hole in the right corner of the
+room, which by the smell of things seems to be a makeshift toilet.
+~
+32 0
+Rd     0
+D2
+~
+door~
+7 0 733
+S
+#750
+Ward 2 patient room~
+All four walls, including the inside of the door, celing and floor, are
+padded white.  There is nothing save a small hole in the right corner of the
+room, which by the smell of things seems to be a makeshift toilet.
+~
+32 0
+Rd     0
+D2
+~
+door~
+7 0 734
+S
+#751
+Ward 1 patient room~
+All four walls, including the inside of the door, celing and floor, are
+padded white.  There is nothing save a small hole in the right corner of the
+room, which by the smell of things seems to be a makeshift toilet.
+~
+8 0
+Rd     0
+D0
+~
+door~
+7 0 717
+S
+#752
+Ward 1 patient room~
+All four walls, including the inside of the door, celing and floor, are
+padded white.  There is nothing save a small hole in the right corner of the
+room, which by the smell of things seems to be a makeshift toilet.
+~
+8 0
+Rd     0
+D0
+~
+door~
+7 0 718
+S
+#753
+Ward 1 patient room~
+All four walls, including the inside of the door, celing and floor, are
+padded white.  There is nothing save a small hole in the right corner of the
+room, which by the smell of things seems to be a makeshift toilet.
+~
+8 0
+Rd     0
+D0
+~
+door~
+7 0 719
+S
+#754
+Ward 1 patient room~
+All four walls, including the inside of the door, celing and floor, are
+padded white.  There is nothing save a small hole in the right corner of the
+room, which by the smell of things seems to be a makeshift toilet.
+~
+8 0
+Rd     0
+D0
+~
+door~
+7 0 722
+S
+#755
+Ward 1 patient room~
+All four walls, including the inside of the door, celing and floor, are
+padded white.  There is nothing save a small hole in the right corner of the
+room, which by the smell of things seems to be a makeshift toilet.
+~
+8 0
+Rd     0
+D0
+~
+door~
+7 0 723
+S
+#756
+Ward 1 patient room~
+All four walls, including the inside of the door, celing and floor, are
+padded white.  There is nothing save a small hole in the right corner of the
+room, which by the smell of things seems to be a makeshift toilet.
+~
+8 0
+Rd     0
+D0
+~
+door~
+7 0 724
+S
+#757
+A secret underground passageway~
+You can hear screaming coming from above.  A cloth hangs above you over a
+crude hole in the celing of the tunnel.  
+~
+32 11
+Rd     0
+E
+cloth~
+A cloth covers the hole above you.  You can see the light filtering
+through it.  
+~
+D0
+~
+~
+0 0 758
+D4
+~
+hole~
+512 0 748
+S
+#758
+A secret underground passageway~
+You are in a crudely dug dirt tunnel, and by the markings on the walls,
+it seems to have been dug by hand.  
+~
+32 11
+Rd     0
+D0
+~
+~
+0 0 759
+D2
+~
+~
+0 0 757
+S
+#759
+A secret underground passageway~
+You are in the entrance of a crudely dug dirt tunnel, and by the markings
+on the walls, it seems to have been dug by hand.  
+~
+32 11
+Rd     0
+D0
+~
+~
+0 0 513
+D2
+~
+~
+0 0 758
+S
+#760
+A secret room~
+You are under the MDA medical head's office.  There are bookshelves
+lining all of the walls, and some crude rusty medical instruments are
+hanging from the celing.  
+~
+32 0
+Rd     0
+D2
+~
+~
+0 0 761
+D4
+~
+trapdoor~
+514 0 712
+S
+#761
+A laboratory~
+It's almost like a scene out of the old Frankenstien movies.  Beakers
+filled with colorful liquids, bubbling over.  Even a jacob's ladder in the
+corner.  
+~
+0 0
+Rd     0
+D0
+~
+~
+0 0 760
+D1
+~
+false wall~
+515 0 762
+S
+#762
+A torture room~
+A horrifying scene.  Racks, Iron Maidens, electric chairs, everything a
+proper torture master would need.  
+~
+0 0
+Rd     0
+D3
+~
+false wall~
+515 0 761
+S
+#0
+
+
+
+#SPECIALS
+S
+
+
+
+#RESETS
+S
+
+
+
+#SHOPS
+0
+
+
+
+#ARTISTS
+0
+
+
+
+#$

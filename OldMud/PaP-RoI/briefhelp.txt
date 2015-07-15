@@ -1,0 +1,654 @@
+156 ALIST~
+&BSyntax: &WALIST
+ 
+This command gives you a listing of all the areas along with their
+vnum assignments and the builder(s) assigned to editing them.
+ 
+~
+156 AEDIT~
+&BSyntax: &Waedit            -Enters the editor for the current area.
+&BSyntax: &Waedit <vnum>     -Enters the editor for the selected area.
+ 
+The follow commands are available from within the &PAEDITOR&W:
+
+&Gage <number>        &W- set the age of the area
+&Gbuilder <player>    &W- toggle that builders access
+&Gbuilder all         &W- allows all builders to edit area
+&Gcommands            &W- prints a list of possible commands
+&Gcreate              &W- create a brand new area and switches to it
+&Gfilename <filename> &W- change the file name for the area (be careful)
+&Gname <name>         &W- change the 'AREAS' name of this area
+&Greset               &W- resets the current area
+&Gsecurity <rating>   &W- set the security rating for this area
+&Gllevel&W              - set the lower suggested level for the area.
+&Gulevel&W              - set the upper suggested level for the area.
+&Gvnum <lower> <upper>&W- set the lower and upper vnum's
+&G<flags>             &W- area flags, type ? AREA for a list
+&Gpurge               &W- purges everything in current area
+&Gtemporal&W            - sets the temporal reference for the area <past, present, future>
+&Gweather&W             - sets the prevailing weather for the area <? weather for a list>
+~
+156 REDIT~
+&BSyntax: &Wredit           -Enters the editor for the current room.
+&BSyntax: &Wredit create    -Creates a new room using first available vnum
+ 
+The following commands are available from within the &PREDITOR&W:
+&Gcommands            &W- prints a list of possible commands
+&Gcreate <vnum>       &W- creates a room with a certain vnum
+&Gdesc                &W- edit description of room
+&Ged                  &W- type this command for additonal extra-description help
+&Gformat              &W- format(wordwrap) the room description
+&Gname <room title>   &W- changes the room title
+&Goshow <vnum>        &W- shows an object with given vnum
+&Golist               &W- lists objects in this area.
+&Gmshow <vnum>        &W- shows a mobile with given vnum
+&Gmlist               &W- lists mobiles in this area.
+&G<room-flags>        &W- room attributes, type ? ROOM for a list
+&G<sector>            &W- terrain of room, type ? SECTOR for a list
+&G<direction>         &W- see help EXIT, or type <dir> ?
+&Gwalk <direction>    &W- allows you to move within the editor
+&Grlist               &W- lists all the rooms in this area.
+ 
+&WTo access help on sectors, please type &G'help redit sector'&W
+~
+156 EXITS~
+&WFor &Pexits&W, type the direction (north/s/e/w) followed by:
+ 
+&Gdig <vnum>         &W- creates the room and makes a two way link
+&Glink <room vnum>   &W- make a two way link
+&Groom <room vnum>   &W- make a one way link (use with caution)
+&Gkey <object vnum>  &W- makes specified object the vnum of the key required
+&Gname <door name>   &W- makes the door's name/keywords = to the given name
+&Gdesc               &W- edit the description of the exit
+&Gdelete             &W- delete this exit
+&G<exit-flags>       &W- type ? EXIT for a list(make exit door, locked etc.)
+ 
+The exit flags are presented in the following manner.  The capitalized
+flags are ones not included in the reset info.  i.e. closed is due to
+a player closing the door and not due to the door being set to be closed.
+ 
+&RExample:&W
+-South to [ 3744] Key: [   -1] Exit flags: [door CLOSED bashed pickproof]
+~
+156 OEDIT~
+&BSyntax: &Woedit create     -Creates first available vnum within that range
+&BSyntax: &Woedit <vnum>     -Enters edit mode for the specified object
+ 
+The following commands are available from within the &POEDITOR&W:
+ 
+&Gaddaffect           &W- applies an affect to an object, no args for help
+&Gdelaffect           &W- removes an affect to an object, no args for help
+&Gcommands            &W- prints a list of possible commands
+&Gcost gold <amount>  &W- sets gold value of object
+&Gcost silver <amount>&W- sets silver value of object
+&Gcost copper <amount>&W- sets copper value of object
+&Gcreate <vnum>       &W- creates object with specified vnum
+&Ged                  &W- type this for info on adding/editing extended descripts
+&Glong                &W- edit long description (the one in the room)
+&Gname <keywords>     &W- sets the keywords on an object
+&Gshort <desc>        &W- sets the 'name' of an object (a sword, a fish etc)
+&Gv0 <num>            &W- sets the value '0' on the object
+&Gv1 <num>            &W- sets the value '1' on the object
+&Gv2 <num>            &W- sets the value '2' on the object
+&Gv3 <num>            &W- sets the value '3' on the object
+&Gv4 <num>&W            - sets the value '4' on the object
+&Gv5 <num>&W            - sets the value '5' on the object
+&Gv6 <num>&W            - sets the value '6' on the object
+&Gv7 <num>&W            - sets the value '7' on the object
+&Gv8 <num>&W            - sets the value '8' on the object
+&Gv9 <num>&W            - sets the value '9' on the object
+&Gweight <num>        &W- sets the weight of the object in kg's
+&Gtype                &W- type of object, type ? TYPE for a list
+&Gextra               &W- attributes of object, type ? EXTRA for a list
+&Gwear                &W- where object is worn, type ? WEAR for a list
+ 
+&GTo access help on specific object types please type 'help oedit <object type>'
+~
+156 MEDIT~
+&BSyntax: &Wmedit create    -Creates first available mob within area vnum range
+&BSyntax: &Wmedit <vnum>    -Enters editor for specified mobile
+ 
+The following commands are available from within the &PMEDITOR&W:
+ 
+&Galignment <value>   &W- set the mobile's alignment
+&Gcommands            &W- prints a list of possible commands
+&Gcreate <vnum>       &W- creates mobile with specified vnum
+&Gdesc                &W- edit the mobile's description (when looked at)
+&Glevel <level>       &W- set the mobile's level
+&Glong                &W- edit long description (the one in the room)
+&Gname <keywords>     &W- sets the keywords on an mobile
+&Gshop                &W- type this command for further information
+&Gshort <desc>        &W- sets the 'name' of an mobile (a sword, a fish etc)
+&Gspec                &W- sets a mobiles spec proc, type ? SPEC for a list
+&Gsex                 &W- set the mobile's sex, type ? SEX for a list
+&Gact                 &W- mobiles actions, type ? ACT for a list
+&Gaffect              &W- mobile affects, type ? AFFECT for a list
+&Gimm                 &W- mobile is immune to, type ? IMM for a list
+&Gres&W                 - mobile is resistant to, type ? RES for a list
+&Gvuln&W                - mobile is vulnerable to, type ? VULN for a list
+&Gstat <value>&W        - changes stat values for mobs, < stat = str, agi, dex, con, int, wis >
+&Ghit <value>&W         - alters the hitpoint modifier <1, 2, 3, 4, 5>
+&Gskin <value>&W        - alters the natural defense < 1, 2, 3, 4, 5, 6 >
+&Glimb <value>&W        - limb status < limb = rarm, larm, rleg, lleg > < value = 0, 1 >
+&Gmdamp<value>&W        - magical dampener field, value = 0-100, 0 being the least protection
+&Gpdamp<value>&W        - physical dampener, value = 0-100, 0 being the least protection
+&Ghitroll <value>&W     - this is for extra hitroll, hitroll counts for a lot, use it wisely
+~
+156 RESETS~
+&BSyntax&W: RESETS                &C-Shows current resets in room
+&BSyntax&W: RED RESET             &C-Resets current room
+&BSyntax&W: RESET # DELETE        &C-Deletes specified reset
+&YMaking new resets:
+&BSyntax&W: Mreset <vnum> <max#>                &C-Resets specified mobile into room
+&BSyntax&W: Oreset <amount> <vnum> &P<args>       &C-Object formatting&B
+&P        -no_args                            &C-into room
+&P        -mob_name                           &C-into mob's eq
+&P        -mob_name inventory                 &C-into mob's inventory
+ 
+&Y**It is important when making new resets that they are done in the above
+  order, over-looking steps that are not included.**
+ 
+&GThe &C# &Gof the reset is the first value shown when typing RESETS.
+&GThe &Cvnum &Gis the number of the specified mobile/object.
+&GThe &Cmax# &Gis the maximum number of mobiles/objects to be loaded into the
+room per reset (only include when there is more than one to be loaded)
+
+When using the RESET # DELETE command, be sure to purge all specified mobiles/
+objects in order to keep the MUD clean. Before using RED RESET, you must already
+be in REDIT mode and likewise for making new resets.
+156 ASTAT~
+&RSyntax: &wastat     astat <vnum>     astat <playername>/<mobname>
+ 
+&WThis command gives you area information of the requested area. Typing ASTAT
+by itself will give you information on the area you are currently in. Typing
+ASTAT <VNUM> will give you information on the area in which that specific vnum
+is in. Typing ASTAT <PLAYERNAME>/<MOBNAME> will give you area information of
+the area which that player/mob is in.
+-1 SUMMARY~
+MOVEMENT                          GROUP
+north south east west up down     follow group gtell split
+exits recall
+sleep wake rest stand
+
+OBJECTS                           INFORMATION / COMMUNICATION
+get put drop give sacrifice       help credits areas commands socials
+wear wield hold                   report score time weather where who
+recite quaff zap brandish         channels config description password title
+lock unlock open close pick bash  auction chat music question answer shout yell
+inventory equipment look compare  emote pose say tell
+eat drink fill                    bug idea typo
+list buy sell value               note wizlist slist spells autoexit
+				  autoloot autosac blank brief combine prompt
+
+COMBAT                            OTHER
+kill flee kick rescue disarm      ! save quit pagelength
+backstab cast wimpy               practice train
+
+For more help, type 'help <topic>' for any command, skill, or spell.
+Also help on: DAMAGE DEATH EXPERIENCE NEWS STORY TICK
+
+156 MSET OSET RSET SSET~
+Syntax: mset <character> <field> <value>
+Syntax: oset <object>    <field> <value>
+Syntax: rset <location>  <field> <value>
+Syntax: sset <character> <skill> <value>
+Syntax: sset <character> all     <value>
+
+MSET, OSET, and RSET set the properties of mobiles, objects, and rooms,
+respectively.  SSET sets a skill or spell level on a PC.  Do NOT sset
+all on an immortal (including yourself) or that person will immediately
+lose all immortal abilities.
+
+There is currently no way to enter more than one line of text for a
+string-valued option.  In this case, MSET <character> description is
+not supported.
+
+156 MLOAD OLOAD~
+Syntax: mload <vnum>
+Syntax: oload <vnum>
+
+MLOAD loads a mobile given its vnum (virtual number).  The vnum's are just
+the #NNNN numbers that appear in world.obj.
+
+OLOAD loads an object given its vnum.
+
+156 PURGE~
+Syntax: purge
+Syntax: purge <character>
+
+PURGE is used to clean up the world.  PURGE with no arguments removes all the
+NPC's and objects in the current room.  PURGE with an argument purges one
+character from anywhere in the world.
+
+PURGE will not get rid of PC's.
+
+156 MFIND OFIND~
+Syntax: mfind <name>
+Syntax: ofind <name>
+
+MFIND finds all mobile types with a particular name.
+
+OFIND finds all object types with a particular name.
+~
+156 MSTAT OSTAT RSTAT~
+Syntax: mstat <character>
+Syntax: ostat <object>
+Syntax: rstat <location>
+Syntax: rstat
+
+MSTAT shows you statistics on a character.
+
+OSTAT shows you statistics on an object.
+
+RSTAT shows you statistics on a location. The location may be specified as
+a vnum, as the name of a mobile, or as the name of an object.
+
+156 OWHERE~
+Syntax: owhere <object>
+
+OWHERE shows you the locations of all objects with a perticular name.
+~
+156 MWHERE~
+Syntax: mwhere <name>
+
+MWHERE shows you the locations of all mobiles with a particular name.
+
+156 AT~
+Syntax: at <location> <command>
+
+AT executes the given command (which may have arguments) at the given
+location.  The location may be specified as a vnum, as the name of
+a mobile, or as the name of an object.
+
+AT works by temporarily moving you to that location, executing the
+command, and then moving you back (if the command didn't change your
+location).  Thus, AT will not work to private locations.
+~
+156 BAMFIN BAMFOUT~
+Syntax: bamfin
+Syntax: bamfin  <message>
+Syntax: bamfout
+Syntax: bamfout <message>
+
+The standard messages for GOTO are 'arrives in a swirling mist' and
+'leaves in a swirling mist'.  You can replace these messages with messages of
+your own choosing using the BAMFIN and BAMFOUT commands.  Without arguments,
+these reset the messages to their defaults.
+
+156 GOTO~
+Syntax: goto <location>
+
+GOTO takes you to a location.  The location may be specified as a vnum,
+as the name of a mobile, or as the name of an object.
+
+You may not GOTO a room if it is PRIVATE and has two (or more) characters
+already present, or if it is SOLITARY and has one (or more) characters
+already present.
+~
+156 HOLYLIGHT WIZINVIS~
+Syntax: holylight
+Syntax: wizinvis
+
+HOLYLIGHT is a toggle that allows you to see (almost) every character and
+mobile in the game.  With holy light, you can see what's in the game more
+easily.  Without holy light, you can see what mortal players see.
+
+WIZINVIS is a toggle which makes you completely invisible to all player
+characters of lower level than you, and to all mobiles.
+
+HOLYLIGHT will not allow you to see immortal WIZINVIS characters who are
+higher level than you.
+~
+156 IMMTALK :~
+Syntax: immtalk <message>
+
+IMMTALK sends a message to all immortals.  ':' is a synonym for IMMTALK.
+
+156 BUILDER~
+&B             Welcome to the builder's help network
+
+&GTo access help on:
+&RAreas type&C        'help aedit'
+&RRooms type        &C'help redit'     &RRoom programs type     &C'help rpedit'
+&RMobiles type      &C'help medit'     &RMob  programs type     &C'help mpedit'
+&RObjects type      &C'help oedit'     &RObj  programs type     &C'help opedit'
+&R&RSocials type&C      'help sedit'
+&RHelp editing type&C 'help hedit'
+&RResets type       &C'help resets'
+ 
+&GEach of these editors is a shell where normal commands can cause things to happen.
+So please try to avoid communicating or doing socials within the editor shells.
+To exit an editor type done, to delete an object, mob or room type delete in the shell.
+&GThe program editors can only be accessed within their respective editor shell.
+
+To access the conventions and averages for each editor, use 'help <editor> conventions'
+
+To see a list of our areas, type alist.
+
+&GPlease omit apostrophies when accessing the help network's files.
+Thank you, and have a nice day.
+
+51 CLONE~
+Syntax:
+  clone obj <object>
+  clone mob <mobile>
+  clone <name>
+
+The clone command duplicates an object or mobile.  The level of item or mobile
+that may be cloned depends on your level.  The target object or mob must be in
+the same room as you, or in your posession.  Strung and set information is
+preserved by clone, as well as any spell effects and container contents or
+mobile inventory, except for items which are too high for you to clone.  
+Strung extended descriptions on objects are not kept, however.
+
+156 VUSED~
+Vused simply lists all the blocks of vnums which have been created to date.
+The last line it shows tells you just how many free vnums there are. :)
+
+205 VARIABLES~
+Here is a list of variables that can possibly be used in most mobprog commands
+, etc.
+ $i   the name of the mob being triggered
+ $I   the mobs short description
+ $n   the name of the mob/pc triggering the mobprog
+ $N   the short description of the person triggering the mobprog if it
+      is a mob, or the name of the trigger person plus their title if it
+      is a pc
+ $t   the name of the victim
+ $T   the same as $N except for the victim
+ $r   the name of a pc/npc taken from random in the room
+ $R   the same as $N except the random person is used
+ $e   returns he/she/it according to the sex of the trigger person
+ $m   returns him/her/it according to the sex of the trigger person
+ $s   returns his/her/its according to the sex of the trigger person
+ $E   same as $e except for victim
+ $M   same as $m except for victim
+ $S   same as $s except for victim
+ $j   returns he/she/it for t
+ $k   returns him/her/its for t
+ $l   returns his/her/its for t
+ $J   returns he/she/it for the random char
+ $K   returns him/her/it for the random char
+ $L   returns his/hers/its for the random char
+ $o   returns the name of an object
+ $O   returns the short description of an object
+ $p   returns the name of a secondary object
+ $P   returns the short description of a secondary object
+ $a   returns a/an according to the first letter of an objects name
+ $A   returns a/an according to the first letter of a secondary objects name
+
+201 SPEC~
+Special mobile programs
+ 
+Specs are used to add flavor or certain qualities to a mob.
+Many are combat related, but some, such as spec_repairman, will do useful things
+such as repair broken doors.
+ 
+Syntax: spec <special function>
+
+201 MPSTAT~
+Syntax: mpstat <mobname>
+ 
+This command gives some general stats on <mobname> and then lists all of the
+mobprograms which are currently assigned to it.
+
+205 MPASOUND~
+Syntax: mpasound $? message
+ 
+This command echos a message to all the characters in the rooms surrounding
+the room in which $? is in. (One room in each direction from $?'s room.)
+
+205 MPJUNK~
+Syntax: mpjunk <objname>
+Syntax: mpjunk <#.objname>
+Syntax: mpjunk <all.objname>
+Syntax: mpjunk all
+ 
+This command purges objects from a mob's inventory/equipped.  The syntaxes
+are self explanitory.  (Note: the command does not tell anyone in the room
+that the mob has junked an item, perhaps use mpecho if you need a message.)
+
+205 MPECHO~
+Syntax: mpecho message
+ 
+This command echos a message to all the characters in the room in which
+the mob with the mobprog is in.
+
+205 MPECHOAT~
+Syntax: mpechoat $? message
+ 
+This command sends a message only to $?.
+~
+205 MPECHOAROUND~
+Syntax: mpechoaround $? message
+ 
+This command sends a message to all the characters in the room of the mob
+with the mobprog except for $?.
+~
+205 MPKILL~
+Syntax: mpkill <$?/moborplayername>
+ 
+This is a mobs version of kill which bypasses checks on clan, pc, etc so
+that the mob doesn't have to 'MURDER' $?/moborplayername.
+~
+205 MPMLOAD~
+Syntax: mpmload vnum
+ 
+This command works exactly the same as the imm command mload.
+~
+205 MPOLOAD~
+Syntax: mpoload vnum
+ 
+This command works in exactly the same fashion as the imm command oload.
+~
+205 MPPURGE~
+Syntax: mppurge <mobname/objname>
+ 
+This command works the same as the imm command purge, it purges an object/
+mob from the room.  This command must be used instead of purge if the mob
+needs to purge something.
+~
+205 MPGOTO~
+Syntax: mpgoto vnum
+ 
+This command works exactly the same as the imm command goto.
+~
+205 MPAT~
+Syntax: mpat vnum commandstring
+ 
+This command works exactly the same as the imm command 'AT'.
+~
+205 MPTRANSFER~
+Syntax: mptransfer <mob/playername> [vnum]
+Syntax: mptransfer all <vnum>
+ 
+This command works exactly the same as the imm command transfer, except
+that 'mptransfer all' will only affect the characters in the room with
+the mob which has the mobprog.
+ 
+If you put -1 as the vnum, it will send the victim to a random location.
+~
+205 MPFORCE~
+Syntax: mpforce <$?> <commandstring>
+ 
+This command works exactly the same as the imm command force.
+~
+205 MPTELEPORT~
+Syntax: mpteleport
+ 
+This will cause the mob to teleport to another room within the same area.
+~
+205 MPCOMMANDS~
+Syntax: mpcommands
+ 
+This command will list all the mpcommands which can be used in
+mobprogs.
+
+201 OVARS OVARIABLES~
+All obj_progs may use these variables:
+  $i, $n, $o, $r, and modifications of these (like $e for $n)
+ 
+prog name     | param type | useable variables
+--------------+------------+------------------
+get_prog      | percent    | (none)
+get_from_prog | percent    | $p
+drop_prog     | percent    | (none)
+put_prog      | percent    | $p
+give_prog     | percent    | $t
+fill_prog     | percent    | $p
+wear_prog     | percent    | (none)
+look_prog     | percent    | (none)
+look_in_prog  | percent    | (none)
+invoke_prog   | percent    | see below
+use_prog      | percent    | see below
+cast_prog     | percent    | (none)
+cast_sn_prog  | slot       | (none)
+join_prog     | percent    | $p
+separate_prog | percent    | (none)
+buy_prog      | percent    | $t
+sell_prog     | percent    | $t
+store_prog    | percent    | (none)
+retrieve_prog | percent    | (none)
+open_prog     | percent    | (none)
+close_prog    | percent    | (none)
+lock_prog     | percent    | $p
+unlock_prog   | percent    | $p
+pick_prog     | percent    | (none)
+throw_prog    | percent    | (none)
+rand_prog     | percent    | (none)
+ 
+Note: rand_prog does *NOT* have a $n variable available.
+for invoke_prog, variables are determined by type
+  Type 1 (ObjLoad): $p
+  Type 2 (MobLoad): $t
+  Type 3 (Transfer): (none)
+  Type 4 (ObjMorph): $p - $o is original object, $p is new object
+  Type 5 (Spell): Same as for use_prog
+ 
+For use_prog, variables are determined by spell target
+  Target Offensive (Attack): $t
+  Target Defensive (Shield): $t
+  Target Self (Personal): (none)
+  Target Object: $p
+  Target Ignore (Out of room; eg: Astral Walk): (none)
+
+201 RVARS RVARIABLES~
+All room_progs may use the following variables:
+  $i, $n, $r, and modifications of these (like $e for $n)
+ 
+prog name    | param type | useable variables
+-------------+------------+------------------
+enter_prog   | percent    | (none)
+exit_prog    | percent    | (none)
+pass_prog    | percent    | (none)
+cast_prog    | percent    | (none)
+cast_sn_prog | slot       | see below
+sleep_prog   | percent    | (none)
+wake_prog    | percent    | (none)
+rest_prog    | percent    | (none)
+death_prog   | percent    | (none)
+time_prog    | hour       | (none)
+rand_prog    | percent    | (none)
+ 
+Note: rand_prog and time_prog do *NOT* have a $n variable available.
+ 
+For cast_sn_prog, variables are determined by spell target
+  Target Offensive (Attack): $t
+  Target Defensive (Shield): $t
+  Target Self (Personal): (none)
+  Target Object: $o
+  Target Ignore (Out of room; eg: Astral Walk): (none)
+
+205 EVARS EVARIABLES~
+All exit_progs may use the following variables:
+  $i, $n, $r, and modifications of these (like $e for $n)
+ 
+prog name   | param type | useable variables
+------------+------------+------------------
+enter_prog  | percent    | (none)
+exit_prog   | percent    | (none)
+pass_prog   | percent    | (none)
+look_prog   | percent    | (none)
+scry_prog   | percent    | (none)
+open_prog   | percent    | (none)
+close_prog  | percent    | (none)
+lock_prog   | percent    | $o
+unlock_prog | percent    | $o
+pick_prog   | percent    | (none)
+
+205 PARAMTYPES PTYPES~
+All x_progs are triggered by certain actions, and then are passed through
+a check to see if the trigger is activated.  There are various types
+of parameters based on these checks, which are compared to the information
+received by the game driver.
+ 
+Percent Parameters:
+  These are the most common kind of checks.  The parameter is a number
+between 0 and 100, 0 meaning the trigger will never activate, and 100
+meaning the trigger will activated every time it is called.
+ 
+Word Parameters:
+  These parameters may be specified in one of two ways: As a word list or
+as a phrase.  As a word list, each word of the parameter is check against
+each word of the incoming data, and if any of the words match, the trigger
+will be activated.  A phrase parameter starts off with the letter 'p' as
+the first word, followed by the phrase to be compared.  In a phrase, all
+words compared much match (excluding the initial 'p').
+ 
+Slot Parameters:
+  These indicate a spell slot.  Spell slots may be found by using the
+'slookup' command.  Be careful to use the SLOT and not the SN, as they
+are two different numbers, used for different purposes.
+ 
+Hour Parameters:
+  This type takes two arguments: The starting hour and the finishing
+hour.  These are called every game hour, and if the time is between the
+two numbers, the trigger will activate.  Numbers must be in 24 hour format,
+and may wrap around midnight.  (ie: '20 8' would activate every hour between
+8:00pm and 8:00am, game time, every game night.)
+ 
+Hitpoints Parameters:
+  The parameters for this trigger is a number between 0 and 100, indicating
+the percentage of hitpoints the mob has from its max hitpoints.  The trigger
+is activated when the mobile's hitpoints to max hitpoints percentage fall
+below the specified percentage.
+ 
+Itemlist Parameters:
+  This is a list of items which may activate the trigger.  Use quotation
+marks (' or ") if you wish to use items with more than one keyword.
+eg: 'orange dagger' as opposed to orange dagger.  The first example would
+need an item with both names to activate the trigger, and the second
+example would need an item with either name to activate.
+ 
+Goldpieces Parameters:
+  The ammount specified in the single parameter is the minimum ammount
+of gold needed to activate the trigger.
+
+201 MVARS MVARIABLES~
+All mob_progs may use the following variables:
+  $i, $n, $r, and modifications of these (like $e for $n)
+ 
+prog name      | param type | useable variables
+---------------+------------+------------------
+act_prog       | word       | see below
+speech_prog    | word       | (none)
+rand_prog      | percent    | (none)
+fight_prog     | percent    | (none)
+death_prog     | percent    | (none)
+hitprcnt_prog  | hitpoints  | (none)
+entry_prog     | percent    | (none)
+greet_prog     | percent    | (none)
+all_greet_prog | percent    | (none)
+give_prog      | itemlist   | $o
+bribe_prog     | goldpieces | (none)
+ 
+Note: rand_prog and entry_prog do *NOT* have a $n variable available.
+ 
+For act_prog, the variables depend on the information received
+Any action that involves an object may use $o.
+Any action that involves two or more objects may use $o and $p.
+Any action that involves a third party may use $t.
+These actions do not have to be done by the programmed mobile.
+ie: A person types 'give <object> <target>'.  $o becomes <object>, and
+$t becomes <target>.  $t may be the same as $i if the mobile itself is
+the target of the action.

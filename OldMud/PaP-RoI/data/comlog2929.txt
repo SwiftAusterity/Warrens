@@ -1,0 +1,6996 @@
+Mon Jun  4 19:48:32 2001
+: EnvyMud is ready to rock on ports 2929 and 9292.
+Mon Jun  4 19:50:12 2001
+: (Unknown): y
+Mon Jun  4 19:50:12 2001
+: (Unknown): y
+Mon Jun  4 19:50:15 2001
+: (Unknown): Flux
+Mon Jun  4 19:50:15 2001
+: Flux: verite
+Mon Jun  4 19:50:16 2001
+: Flux:  
+Mon Jun  4 19:50:17 2001
+: Flux: wh
+Mon Jun  4 19:50:20 2001
+: Flux: imm hmmph
+Mon Jun  4 19:50:23 2001
+: Flux: quit
+Mon Jun  4 20:01:26 2001
+: (Unknown): y
+Mon Jun  4 20:01:28 2001
+: (Unknown): tsuke
+Mon Jun  4 20:01:29 2001
+: Tsuke: daini
+Mon Jun  4 20:01:29 2001
+: Tsuke:  
+Mon Jun  4 20:01:30 2001
+: Tsuke: who
+Mon Jun  4 20:31:15 2001
+: (Unknown): y
+Mon Jun  4 20:31:16 2001
+: (Unknown): sin
+Mon Jun  4 20:31:16 2001
+: Sin: panther
+Mon Jun  4 20:31:17 2001
+: Sin:  
+Mon Jun  4 20:31:17 2001
+: Sin:  
+Mon Jun  4 20:31:17 2001
+: Sin: who
+Mon Jun  4 20:31:27 2001
+: Sin: title isn't just a four letter word.
+Mon Jun  4 20:31:27 2001
+: Sin: who
+Mon Jun  4 20:32:27 2001
+: Sin: newlock
+Mon Jun  4 20:32:30 2001
+: Sin: newlock
+Mon Jun  4 20:32:58 2001
+: Sin: users
+Mon Jun  4 20:33:38 2001
+: Sin: users
+Mon Jun  4 20:35:14 2001
+: (Unknown): n
+Mon Jun  4 20:35:16 2001
+: (Unknown): hugh
+Mon Jun  4 20:35:25 2001
+: (Unknown): n
+Mon Jun  4 20:35:26 2001
+: (Unknown): hugh
+Mon Jun  4 20:35:31 2001
+: Sin: users
+Mon Jun  4 20:35:47 2001
+: Sin: newlock
+Mon Jun  4 20:35:50 2001
+: Sin: newlock 0
+Mon Jun  4 20:36:03 2001
+: Sin: help
+Mon Jun  4 20:36:04 2001
+: Sin:  
+Mon Jun  4 20:36:06 2001
+: Sin: wizhelp
+Mon Jun  4 20:36:14 2001
+: Sin: help ban
+Mon Jun  4 20:36:18 2001
+: Sin: help newlock
+Mon Jun  4 20:36:37 2001
+: Sin: newlock off
+Mon Jun  4 20:36:42 2001
+: Sin: numlock 0
+Mon Jun  4 20:36:44 2001
+: (Unknown): n
+Mon Jun  4 20:36:45 2001
+: (Unknown): hugh
+Mon Jun  4 20:36:46 2001
+: Hugh: y
+Mon Jun  4 20:36:50 2001
+: Hugh: jav2vii
+Mon Jun  4 20:36:50 2001
+: Hugh: jav2vii
+Mon Jun  4 20:36:51 2001
+: Hugh: m
+Mon Jun  4 20:37:01 2001
+: Hugh:  
+Mon Jun  4 20:37:08 2001
+: Sin: who
+Mon Jun  4 20:37:09 2001
+: Hugh: assassom
+Mon Jun  4 20:37:09 2001
+: Sin: look
+Mon Jun  4 20:37:12 2001
+: Hugh: assassin
+Mon Jun  4 20:38:04 2001
+: Sin: who
+Mon Jun  4 20:38:36 2001
+: Sin: who
+Mon Jun  4 20:38:41 2001
+: Hugh: yes
+Mon Jun  4 20:38:46 2001
+: Hugh:  
+Mon Jun  4 20:38:57 2001
+: Sin: who
+Mon Jun  4 20:39:16 2001
+: Sin: note list
+Mon Jun  4 20:39:18 2001
+: Sin: change list
+Mon Jun  4 20:39:20 2001
+: Sin: idea list
+Mon Jun  4 20:39:29 2001
+: Hugh:  
+Mon Jun  4 20:39:46 2001
+: Sin: who
+Mon Jun  4 20:39:48 2001
+: Sin: look
+Mon Jun  4 20:39:50 2001
+: Sin: transfer hugh
+Mon Jun  4 20:39:53 2001
+: Hugh: smi
+Mon Jun  4 20:39:55 2001
+: Sin: score mes
+Mon Jun  4 20:39:57 2001
+: Hugh: smile
+Mon Jun  4 20:39:58 2001
+: Hugh: who
+Mon Jun  4 20:40:04 2001
+: Hugh: title the Hand
+Mon Jun  4 20:41:04 2001
+: Sin: say ooh much better
+Mon Jun  4 20:41:08 2001
+: Hugh: say agreed
+Mon Jun  4 20:41:26 2001
+: (Unknown): y
+Mon Jun  4 20:41:26 2001
+: (Unknown): sin
+Mon Jun  4 20:41:26 2001
+: Sin: panther
+Mon Jun  4 20:41:27 2001
+: Sin:  
+Mon Jun  4 20:41:27 2001
+: Sin: look
+Mon Jun  4 20:41:33 2001
+: Sin: say hit the wrong x when closing pbox
+Mon Jun  4 20:41:39 2001
+: Sin: say because i'm an idiot
+Mon Jun  4 20:41:39 2001
+: Sin: who
+Mon Jun  4 20:42:02 2001
+: Hugh: snick
+Mon Jun  4 20:42:33 2001
+: Hugh: who
+Mon Jun  4 20:42:47 2001
+: Hugh: who wdn
+Mon Jun  4 20:42:50 2001
+: Sin: bear hugh
+Mon Jun  4 20:42:56 2001
+: Hugh: smi
+Mon Jun  4 20:43:01 2001
+: Hugh: prac
+Mon Jun  4 20:43:34 2001
+: Sin: say i'm so happy to see you but i gotta run for a bit
+Mon Jun  4 20:43:37 2001
+: Hugh: nod
+Mon Jun  4 20:43:41 2001
+: Hugh: say Actually I do too
+Mon Jun  4 20:43:42 2001
+: Sin: say log in and look for me ok? or email me
+Mon Jun  4 20:43:44 2001
+: Sin: bear hugh
+Mon Jun  4 20:43:53 2001
+: Sin: say oh shit wait
+Mon Jun  4 20:43:54 2001
+: Hugh: say I'll see you around here and I'll email you
+Mon Jun  4 20:43:54 2001
+: Sin: advance hugh 2
+Mon Jun  4 20:43:58 2001
+: Sin: say ok it'll save you now
+Mon Jun  4 20:44:00 2001
+: Hugh: chuck
+Mon Jun  4 20:44:03 2001
+: Hugh: save
+Mon Jun  4 20:44:15 2001
+: Sin: say ok bye
+Mon Jun  4 20:44:16 2001
+: Sin: quit
+Tue Jun  5 00:13:49 2001
+: (Unknown): y
+Tue Jun  5 00:13:50 2001
+: (Unknown): tsuke
+Tue Jun  5 00:13:51 2001
+: Tsuke: spressa
+Tue Jun  5 00:14:19 2001
+: (Unknown): y
+Tue Jun  5 00:14:24 2001
+: (Unknown): tsuke
+Tue Jun  5 00:14:26 2001
+: Tsuke: daini
+Tue Jun  5 00:17:16 2001
+: (Unknown): y
+Tue Jun  5 00:17:17 2001
+: (Unknown): tsuke
+Tue Jun  5 00:17:19 2001
+: Tsuke: daini
+Tue Jun  5 00:17:20 2001
+: Tsuke:  
+Tue Jun  5 00:17:22 2001
+: Tsuke: who
+Tue Jun  5 00:53:54 2001
+: Tsuke:  
+Tue Jun  5 00:57:31 2001
+: Tsuke: motd
+Tue Jun  5 01:09:16 2001
+: Tsuke: help quest
+Tue Jun  5 03:28:08 2001
+: (Unknown): y
+Tue Jun  5 03:28:09 2001
+: (Unknown): tsuke
+Tue Jun  5 03:28:10 2001
+: Tsuke: daini
+Tue Jun  5 03:28:11 2001
+: Tsuke:  
+Tue Jun  5 03:28:11 2001
+: Tsuke: who
+Tue Jun  5 03:28:28 2001
+: Tsuke: title could have gotten cancer from his bong full of antifreeze.
+Tue Jun  5 03:28:28 2001
+: Tsuke: who
+Tue Jun  5 07:46:49 2001
+: (Unknown): y
+Tue Jun  5 07:46:50 2001
+: (Unknown): tsuke
+Tue Jun  5 07:46:51 2001
+: Tsuke: spressa
+Tue Jun  5 07:46:55 2001
+: (Unknown): y
+Tue Jun  5 07:46:56 2001
+: (Unknown): tsuke
+Tue Jun  5 07:46:57 2001
+: Tsuke: daini
+Tue Jun  5 07:46:57 2001
+: Tsuke:  
+Tue Jun  5 07:46:58 2001
+: Tsuke: who
+Tue Jun  5 14:41:11 2001
+: (Unknown): y
+Tue Jun  5 14:41:12 2001
+: (Unknown): Flux
+Tue Jun  5 14:41:13 2001
+: Flux: verite
+Tue Jun  5 14:41:15 2001
+: Flux:  
+Tue Jun  5 14:41:19 2001
+: Flux: wh
+Tue Jun  5 14:56:14 2001
+: Flux: note list
+Tue Jun  5 14:56:18 2001
+: Flux: note to all
+Tue Jun  5 14:56:23 2001
+: Flux: note subject Myself
+Tue Jun  5 14:56:24 2001
+: Flux: note write
+Tue Jun  5 15:16:19 2001
+: Flux: note post
+Tue Jun  5 15:16:19 2001
+: Flux: wh
+Tue Jun  5 15:16:22 2001
+: Flux: note to all
+Tue Jun  5 15:16:25 2001
+: Flux: note subject Quests
+Tue Jun  5 15:16:26 2001
+: Flux: note write
+Tue Jun  5 15:49:06 2001
+: Flux: note post
+Tue Jun  5 15:49:07 2001
+: Flux: wh
+Tue Jun  5 15:49:10 2001
+: Flux: asave world
+Tue Jun  5 15:49:11 2001
+: Flux: quit
+Tue Jun  5 16:43:26 2001
+: (Unknown): No
+Tue Jun  5 16:43:29 2001
+: (Unknown): Aloran
+Tue Jun  5 16:43:30 2001
+: Aloran: aloran27
+Tue Jun  5 16:43:31 2001
+: Aloran: who
+Tue Jun  5 16:43:33 2001
+: Aloran:  
+Tue Jun  5 16:43:34 2001
+: Aloran: who
+Tue Jun  5 16:43:35 2001
+: Aloran: note list
+Tue Jun  5 16:43:37 2001
+: Aloran: note read 1
+Tue Jun  5 16:44:07 2001
+: Aloran: note read 3
+Tue Jun  5 16:44:11 2001
+: Aloran: note read 2
+Tue Jun  5 16:49:02 2001
+: (Unknown): Yes
+Tue Jun  5 16:49:04 2001
+: (Unknown): Aloran
+Tue Jun  5 16:49:06 2001
+: Aloran: aloran27
+Tue Jun  5 16:49:06 2001
+: Aloran:  
+Tue Jun  5 16:49:07 2001
+: Aloran: who
+Tue Jun  5 16:49:12 2001
+: Aloran: note list
+Tue Jun  5 16:49:44 2001
+: Aloran: who
+Tue Jun  5 16:49:47 2001
+: Aloran: note list
+Tue Jun  5 16:49:51 2001
+: Aloran: note read 2
+Tue Jun  5 16:50:18 2001
+: Aloran: note read 1
+Tue Jun  5 16:51:34 2001
+: Aloran: prac
+Tue Jun  5 16:51:38 2001
+: Aloran:  
+Tue Jun  5 16:51:47 2001
+: Aloran: score
+Tue Jun  5 16:51:52 2001
+: Aloran: save
+Tue Jun  5 16:51:58 2001
+: Aloran: look
+Tue Jun  5 16:52:00 2001
+: Aloran: s
+Tue Jun  5 16:52:04 2001
+: Aloran: who
+Tue Jun  5 16:52:10 2001
+: Aloran: goto 143
+Tue Jun  5 16:52:12 2001
+: Aloran: save
+Tue Jun  5 16:52:18 2001
+: Aloran: note to all
+Tue Jun  5 16:52:21 2001
+: Aloran: note subject Exams
+Tue Jun  5 16:52:34 2001
+: Aloran: note + Well, school's almost out for me, and finals are almost upon me.  Hurrah.
+Tue Jun  5 16:53:01 2001
+: Aloran: note + Next week (June 11-15) is my last week, and during that week, are, of course, exams.
+Tue Jun  5 16:53:17 2001
+: Aloran: note + Just letting you all know that if I'm not around much then, that'll be the reason.
+Tue Jun  5 16:53:51 2001
+: Aloran: note + Anyway, talk to ya all later. =)
+Tue Jun  5 16:53:52 2001
+: Aloran: note + 
+Tue Jun  5 16:53:55 2001
+: Aloran: note + -- Aloran
+Tue Jun  5 16:54:02 2001
+: Aloran: note post
+Tue Jun  5 16:54:04 2001
+: Aloran: save
+Tue Jun  5 16:54:05 2001
+: Aloran: note list
+Tue Jun  5 16:54:07 2001
+: Aloran: note read 3
+Tue Jun  5 16:54:17 2001
+: Aloran: note read 2
+Tue Jun  5 16:54:21 2001
+: Aloran:  
+Tue Jun  5 16:54:23 2001
+: Aloran: save
+Tue Jun  5 16:54:24 2001
+: Aloran: quit
+Tue Jun  5 18:10:59 2001
+: (Unknown): y
+Tue Jun  5 18:11:03 2001
+: (Unknown): tsuke
+Tue Jun  5 18:11:05 2001
+: Tsuke: daini
+Tue Jun  5 18:11:05 2001
+: Tsuke:  
+Tue Jun  5 18:11:06 2001
+: Tsuke: who
+Tue Jun  5 18:11:07 2001
+: Tsuke: note
+Tue Jun  5 18:12:36 2001
+: Tsuke: note
+Tue Jun  5 18:12:48 2001
+: Tsuke:  
+Tue Jun  5 18:12:59 2001
+: Tsuke: note
+Tue Jun  5 18:13:04 2001
+: Tsuke: note
+Tue Jun  5 18:19:24 2001
+: Tsuke: prac
+Tue Jun  5 18:23:38 2001
+: Tsuke: help shocking grasp
+Tue Jun  5 18:23:44 2001
+: Tsuke: c shocking grasp
+Tue Jun  5 18:23:47 2001
+: Tsuke: c 'shocking grasp'
+Tue Jun  5 18:23:51 2001
+: Tsuke: help 'shocking grasp'
+Tue Jun  5 18:24:00 2001
+: Tsuke: shocking grasp
+Tue Jun  5 18:24:07 2001
+: Tsuke: c shock
+Tue Jun  5 18:24:08 2001
+: Tsuke: spells
+Tue Jun  5 18:24:36 2001
+: Tsuke: help raise skeleton
+Tue Jun  5 18:24:38 2001
+: Tsuke: help raise
+Tue Jun  5 18:25:03 2001
+: Tsuke: help wake dead
+Tue Jun  5 18:25:06 2001
+: Tsuke: c 'wake dead'
+Tue Jun  5 18:25:09 2001
+: Tsuke: l
+Tue Jun  5 18:25:44 2001
+: Tsuke: help summon mummy
+Tue Jun  5 18:25:58 2001
+: Tsuke: c 'raise bloodborn'
+Tue Jun  5 18:26:04 2001
+: Tsuke: help wretch bone
+Tue Jun  5 18:26:08 2001
+: Tsuke: c 'wretch bone'
+Tue Jun  5 18:26:09 2001
+: Tsuke: l
+Tue Jun  5 18:26:17 2001
+: Tsuke: olist bone
+Tue Jun  5 18:26:19 2001
+: Tsuke: owhere bone
+Tue Jun  5 18:26:23 2001
+: Tsuke: wizhelp
+Tue Jun  5 18:26:28 2001
+: Tsuke: ofind bone
+Tue Jun  5 18:26:31 2001
+: Tsuke: oload 7
+Tue Jun  5 18:26:38 2001
+: Tsuke: c 'wretch bone' bone
+Tue Jun  5 18:26:44 2001
+: Tsuke: restore tsuke
+Tue Jun  5 18:26:46 2001
+: Tsuke: c 'wretch bone' bone
+Tue Jun  5 18:26:51 2001
+: Tsuke: i
+Tue Jun  5 18:26:54 2001
+: Tsuke: help wrtech bone
+Tue Jun  5 18:27:00 2001
+: Tsuke: stat bone
+Tue Jun  5 18:27:02 2001
+: Tsuke: lore bone
+Tue Jun  5 18:27:09 2001
+: Tsuke: exam bone
+Tue Jun  5 18:27:22 2001
+: Tsuke: help armor
+Tue Jun  5 18:27:33 2001
+: Tsuke: c armor
+Tue Jun  5 18:27:35 2001
+: Tsuke: af
+Tue Jun  5 18:27:49 2001
+: Tsuke: c 'astral rift'
+Tue Jun  5 18:27:53 2001
+: Tsuke: restore tsuke
+Tue Jun  5 18:27:54 2001
+: Tsuke: c 'astral rift'
+Tue Jun  5 18:28:00 2001
+: Tsuke: l
+Tue Jun  5 18:28:00 2001
+: Tsuke: help astral
+Tue Jun  5 18:28:07 2001
+: Tsuke: help astral rift
+Tue Jun  5 18:28:10 2001
+: Tsuke: c 'astral rift'
+Tue Jun  5 18:28:16 2001
+: Tsuke: enter rift
+Tue Jun  5 18:28:17 2001
+: Tsuke: enter gate
+Tue Jun  5 18:28:18 2001
+: Tsuke: l
+Tue Jun  5 18:28:20 2001
+: Tsuke: enter portal
+Tue Jun  5 18:28:21 2001
+: Tsuke: l
+Tue Jun  5 18:28:23 2001
+: Tsuke: goto
+Tue Jun  5 18:28:30 2001
+: Tsuke: rhwere dojo
+Tue Jun  5 18:28:33 2001
+: Tsuke: goto 123
+Tue Jun  5 18:28:43 2001
+: Tsuke: help bless
+Tue Jun  5 18:28:46 2001
+: Tsuke: help blindness
+Tue Jun  5 18:29:13 2001
+: Tsuke: help call lightning
+Tue Jun  5 18:29:19 2001
+: Tsuke: help change sex
+Tue Jun  5 18:29:23 2001
+: Tsuke: help facade
+Tue Jun  5 18:29:38 2001
+: Tsuke: c facade
+Tue Jun  5 18:29:43 2001
+: Tsuke: restore tsuke
+Tue Jun  5 18:29:44 2001
+: Tsuke: c facade
+Tue Jun  5 18:29:48 2001
+: Tsuke: restore tsuke
+Tue Jun  5 18:29:48 2001
+: Tsuke: c facade
+Tue Jun  5 18:29:52 2001
+: Tsuke: restore tsuke
+Tue Jun  5 18:29:52 2001
+: Tsuke: c facade
+Tue Jun  5 18:29:56 2001
+: Tsuke: restore tsuke
+Tue Jun  5 18:29:56 2001
+: Tsuke: c facade
+Tue Jun  5 18:30:13 2001
+: Tsuke: help call rod of thorns
+Tue Jun  5 18:30:20 2001
+: Tsuke: help call
+Tue Jun  5 18:30:28 2001
+: Tsuke: help polymorph red dragon
+Tue Jun  5 18:30:39 2001
+: Tsuke: help call blazing sword
+Tue Jun  5 18:31:03 2001
+: Tsuke: c 'polymorph red dragon'
+Tue Jun  5 18:31:06 2001
+: Tsuke: restore tsuke
+Tue Jun  5 18:31:07 2001
+: Tsuke: c 'polymorph red dragon'
+Tue Jun  5 18:31:31 2001
+: Tsuke: help polymorph great dragon
+Tue Jun  5 18:31:41 2001
+: Tsuke: help polymorph demon
+Tue Jun  5 18:31:48 2001
+: Tsuke: help polymorph siren
+Tue Jun  5 18:32:07 2001
+: Tsuke: help polymorph beholder
+Tue Jun  5 18:32:15 2001
+: Tsuke: help polymorph angel
+Tue Jun  5 18:32:26 2001
+: Tsuke: help polymorph gaiaen paladin
+Tue Jun  5 18:32:45 2001
+: Tsuke: help charm person
+Tue Jun  5 18:32:48 2001
+: Tsuke: help charm
+Tue Jun  5 18:32:56 2001
+: Tsuke: help continual light
+Tue Jun  5 18:33:01 2001
+: Tsuke: help tattoo
+Tue Jun  5 18:33:49 2001
+: Tsuke: help control weather
+Tue Jun  5 18:33:54 2001
+: Tsuke: help create food
+Tue Jun  5 18:33:59 2001
+: Tsuke: help create spring
+Tue Jun  5 18:34:11 2001
+: Tsuke: help create water
+Tue Jun  5 18:34:21 2001
+: Tsuke: help cure blindness
+Tue Jun  5 18:34:26 2001
+: Tsuke: help heal blindness
+Tue Jun  5 18:34:41 2001
+: Tsuke: c 'heal blindness'
+Tue Jun  5 18:34:58 2001
+: Tsuke: help cure
+Tue Jun  5 18:35:03 2001
+: Tsuke: help cure critical
+Tue Jun  5 18:35:47 2001
+: Tsuke: help cure poison
+Tue Jun  5 18:35:53 2001
+: Tsuke: help cure disease
+Tue Jun  5 18:35:56 2001
+: Tsuke: help cure clap
+Tue Jun  5 18:36:07 2001
+: Tsuke: c 'cure clap'
+Tue Jun  5 18:36:24 2001
+: Tsuke: help remove plasma
+Tue Jun  5 18:36:37 2001
+: Tsuke: help heal critical
+Tue Jun  5 18:36:47 2001
+: Tsuke: c 'heal critical'
+Tue Jun  5 18:37:21 2001
+: Tsuke: help curse
+Tue Jun  5 18:37:33 2001
+: Tsuke: help detect hidden
+Tue Jun  5 18:37:41 2001
+: Tsuke: help detect invis
+Tue Jun  5 18:37:45 2001
+: Tsuke: help detect magic
+Tue Jun  5 18:37:57 2001
+: Tsuke: help detect poison
+Tue Jun  5 18:38:02 2001
+: Tsuke: help dispel magic
+Tue Jun  5 18:38:07 2001
+: Tsuke: help earthquake
+Tue Jun  5 18:38:19 2001
+: Tsuke: help enchant weapon
+Tue Jun  5 18:38:25 2001
+: Tsuke: help energy drain
+Tue Jun  5 18:38:28 2001
+: Tsuke: help faerie fire
+Tue Jun  5 18:38:38 2001
+: Tsuke: help faerie fog
+Tue Jun  5 18:38:43 2001
+: Tsuke: help fireshield
+Tue Jun  5 18:38:45 2001
+: Tsuke: help fly
+Tue Jun  5 18:38:55 2001
+: Tsuke: help temporal field
+Tue Jun  5 18:39:02 2001
+: Tsuke: c 'temporal field'
+Tue Jun  5 18:39:06 2001
+: Tsuke: aff
+Tue Jun  5 18:39:36 2001
+: Tsuke: healp breathe water
+Tue Jun  5 18:39:40 2001
+: Tsuke: help breathe water
+Tue Jun  5 18:39:48 2001
+: Tsuke: c 'breathe water'
+Tue Jun  5 18:39:52 2001
+: Tsuke: restore tsuke
+Tue Jun  5 18:39:53 2001
+: Tsuke: c 'breathe water'
+Tue Jun  5 18:39:57 2001
+: Tsuke:  
+Tue Jun  5 18:39:57 2001
+: Tsuke: aff
+Tue Jun  5 18:40:50 2001
+: Tsuke: help gate
+Tue Jun  5 18:41:06 2001
+: Tsuke: help giant strength
+Tue Jun  5 18:41:18 2001
+: Tsuke: help eternal intellect
+Tue Jun  5 18:41:28 2001
+: Tsuke: help goodberry
+Tue Jun  5 18:41:50 2001
+: Tsuke: help iceshield
+Tue Jun  5 18:42:02 2001
+: Tsuke: help incinerate
+Tue Jun  5 18:42:12 2001
+: Tsuke: help plasma burst
+Tue Jun  5 18:42:56 2001
+: Tsuke: help spread disease
+Tue Jun  5 18:43:04 2001
+: Tsuke: help pyromaniac
+Tue Jun  5 18:43:10 2001
+: Tsuke: c pyromaniac
+Tue Jun  5 18:43:16 2001
+: Tsuke: mfind dog
+Tue Jun  5 18:43:20 2001
+: Tsuke: mfind pist
+Tue Jun  5 18:43:26 2001
+: Tsuke: mfind pistachio
+Tue Jun  5 18:43:29 2001
+: Tsuke: mload 100
+Tue Jun  5 18:43:34 2001
+: Tsuke: c pyromaniac pist
+Tue Jun  5 18:43:38 2001
+: Tsuke: c pyromaniac pistachio
+Tue Jun  5 18:43:46 2001
+: Tsuke: peace
+Tue Jun  5 18:43:49 2001
+: Tsuke: restore
+Tue Jun  5 18:43:53 2001
+: Tsuke: restore tsuke
+Tue Jun  5 18:44:00 2001
+: Tsuke: help identify
+Tue Jun  5 18:44:30 2001
+: Tsuke: help vibrate
+Tue Jun  5 18:44:35 2001
+: Tsuke: help infravision
+Tue Jun  5 18:44:39 2001
+: Tsuke: help invis
+Tue Jun  5 18:44:48 2001
+: Tsuke: help locate object
+Tue Jun  5 18:44:51 2001
+: Tsuke: help color snap
+Tue Jun  5 18:44:55 2001
+: Tsuke: help color bont
+Tue Jun  5 18:44:59 2001
+: Tsuke: help color bolt
+Tue Jun  5 18:45:14 2001
+: Tsuke: c 'color snap'
+Tue Jun  5 18:45:20 2001
+: Tsuke: c 'color snap' pistachio
+Tue Jun  5 18:45:22 2001
+: Tsuke: peace
+Tue Jun  5 18:45:27 2001
+: Tsuke: c 'color bolt' pistachio
+Tue Jun  5 18:45:29 2001
+: Tsuke: peace
+Tue Jun  5 18:45:50 2001
+: Tsuke: help color blast
+Tue Jun  5 18:45:58 2001
+: Tsuke: help positronic snap
+Tue Jun  5 18:46:01 2001
+: Tsuke: help chaos snap
+Tue Jun  5 18:46:06 2001
+: Tsuke: help fire snap
+Tue Jun  5 18:46:07 2001
+: Tsuke: help snap
+Tue Jun  5 18:46:18 2001
+: Tsuke: help fire stream
+Tue Jun  5 18:46:29 2001
+: Tsuke: help mana
+Tue Jun  5 18:46:31 2001
+: Tsuke: c mana
+Tue Jun  5 18:47:14 2001
+: Tsuke: help pass door
+Tue Jun  5 18:47:20 2001
+: Tsuke: help aura of peace
+Tue Jun  5 18:47:31 2001
+: Tsuke: help permenancy
+Tue Jun  5 18:47:35 2001
+: Tsuke: help poison
+Tue Jun  5 18:47:38 2001
+: Tsuke: help portal
+Tue Jun  5 18:47:45 2001
+: Tsuke: help refresh
+Tue Jun  5 18:47:49 2001
+: Tsuke: help remove curse
+Tue Jun  5 18:47:53 2001
+: Tsuke: help sanctuary
+Tue Jun  5 18:47:57 2001
+: Tsuke: help scry
+Tue Jun  5 18:47:59 2001
+: Tsuke: help shield
+Tue Jun  5 18:48:03 2001
+: Tsuke: help shockshield
+Tue Jun  5 18:48:07 2001
+: Tsuke: help sleep
+Tue Jun  5 18:48:18 2001
+: Tsuke: help 'sleep'
+Tue Jun  5 18:48:22 2001
+: Tsuke: help spell bind
+Tue Jun  5 18:48:27 2001
+: Tsuke: help stone skin
+Tue Jun  5 18:48:41 2001
+: Tsuke: help teleport
+Tue Jun  5 18:48:44 2001
+: Tsuke: help ventriloquate
+Tue Jun  5 18:48:47 2001
+: Tsuke: help weaken
+Tue Jun  5 18:48:52 2001
+: Tsuke: help word of recall
+Tue Jun  5 18:48:56 2001
+: Tsuke: help acid spray
+Tue Jun  5 18:49:02 2001
+: Tsuke: help acid breath
+Tue Jun  5 18:49:32 2001
+: Tsuke: help cataclysm
+Tue Jun  5 18:51:34 2001
+: Tsuke: help strike of thorns
+Tue Jun  5 18:51:56 2001
+: Tsuke: help summon swarm
+Tue Jun  5 18:52:00 2001
+: Tsuke: help carbon copy
+Tue Jun  5 18:52:05 2001
+: Tsuke: help army of illusion
+Tue Jun  5 18:52:17 2001
+: Tsuke: help sphere of solitude
+Tue Jun  5 18:52:21 2001
+: Tsuke: help forcefield
+Tue Jun  5 18:52:24 2001
+: Tsuke: help summon pack
+Tue Jun  5 18:52:35 2001
+: Tsuke: help summon demon
+Tue Jun  5 18:52:40 2001
+: Tsuke: help backstab
+Tue Jun  5 18:52:48 2001
+: Tsuke: help double backstab
+Tue Jun  5 18:53:03 2001
+: Tsuke: wield bone
+Tue Jun  5 18:53:08 2001
+: Tsuke: backstab pistachio
+Tue Jun  5 18:53:12 2001
+: Tsuke: peace
+Tue Jun  5 18:53:19 2001
+: Tsuke: help throttle
+Tue Jun  5 18:53:24 2001
+: Tsuke: help organ donor
+Tue Jun  5 18:53:30 2001
+: Tsuke: help twin circle
+Tue Jun  5 18:53:36 2001
+: Tsuke: help pam
+Tue Jun  5 18:53:40 2001
+: Tsuke: help bacsh
+Tue Jun  5 18:53:43 2001
+: Tsuke: help palm
+Tue Jun  5 18:53:48 2001
+: Tsuke: help bash
+Tue Jun  5 18:53:54 2001
+: Tsuke: help disarm
+Tue Jun  5 18:54:49 2001
+: Tsuke: help chain attack
+Tue Jun  5 18:54:55 2001
+: Tsuke: help enchanced damage
+Tue Jun  5 18:54:58 2001
+: Tsuke: help pain tolerance
+Tue Jun  5 18:55:13 2001
+: Tsuke: help armor knowledge
+Tue Jun  5 18:56:20 2001
+: Tsuke: help armor knowledge
+Tue Jun  5 18:56:22 2001
+: Tsuke: help blade clash
+Tue Jun  5 18:56:27 2001
+: Tsuke: help weapons mastery
+Tue Jun  5 18:56:32 2001
+: Tsuke: help place force
+Tue Jun  5 18:56:38 2001
+: Tsuke: help redirect
+Tue Jun  5 18:56:43 2001
+: Tsuke: help fisticuffs
+Tue Jun  5 18:56:53 2001
+: Tsuke: help parlay
+Tue Jun  5 18:56:59 2001
+: Tsuke: help riposte
+Tue Jun  5 18:57:05 2001
+: Tsuke: help desperation
+Tue Jun  5 18:57:15 2001
+: Tsuke: help superior damaage
+Tue Jun  5 18:57:17 2001
+: Tsuke: help superior damage
+Tue Jun  5 18:57:22 2001
+: Tsuke: help enhanced hit
+Tue Jun  5 18:57:27 2001
+: Tsuke: help hide
+Tue Jun  5 18:57:39 2001
+: Tsuke: help shroud
+Tue Jun  5 18:57:45 2001
+: Tsuke: help flury
+Tue Jun  5 18:57:47 2001
+: Tsuke: help wire
+Tue Jun  5 18:57:59 2001
+: Tsuke: help masterstrike
+Tue Jun  5 18:58:05 2001
+: Tsuke: help kick
+Tue Jun  5 18:58:07 2001
+: Tsuke: help charge
+Tue Jun  5 18:58:15 2001
+: Tsuke: help gaze
+Tue Jun  5 18:58:16 2001
+: Tsuke: help wrack
+Tue Jun  5 18:58:18 2001
+: Tsuke: help torture
+Tue Jun  5 18:58:25 2001
+: Tsuke: help whirl
+Tue Jun  5 18:58:28 2001
+: Tsuke: help high kick
+Tue Jun  5 18:58:37 2001
+: Tsuke: help peek
+Tue Jun  5 18:58:39 2001
+: Tsuke: help pick lock
+Tue Jun  5 18:58:49 2001
+: Tsuke: help poison weapon
+Tue Jun  5 18:58:55 2001
+: Tsuke: help punch
+Tue Jun  5 18:59:00 2001
+: Tsuke: help jab punch
+Tue Jun  5 18:59:14 2001
+: Tsuke: help rescue
+Tue Jun  5 18:59:15 2001
+: Tsuke: help sneak
+Tue Jun  5 18:59:20 2001
+: Tsuke: help steal
+Tue Jun  5 18:59:26 2001
+: Tsuke: help general purpose
+Tue Jun  5 18:59:32 2001
+: Tsuke: help high explosive
+Tue Jun  5 19:00:09 2001
+: Tsuke: help adrenaline control
+Tue Jun  5 19:00:18 2001
+: Tsuke: help gaiaen power
+Tue Jun  5 19:00:22 2001
+: Tsuke: help awe
+Tue Jun  5 19:00:28 2001
+: Tsuke: help biofeedbackl
+Tue Jun  5 19:00:30 2001
+: Tsuke: help biofeedback
+Tue Jun  5 19:00:35 2001
+: Tsuke: help crystal flesh
+Tue Jun  5 19:00:42 2001
+: Tsuke: help cell adjustment
+Tue Jun  5 19:01:00 2001
+: Tsuke: help chameleon power
+Tue Jun  5 19:01:04 2001
+: Tsuke: help chaos field
+Tue Jun  5 19:01:08 2001
+: Tsuke: help combat mind
+Tue Jun  5 19:01:14 2001
+: Tsuke: help complete healing
+Tue Jun  5 19:01:19 2001
+: Tsuke: help create sound
+Tue Jun  5 19:01:24 2001
+: Tsuke: help death field
+Tue Jun  5 19:01:39 2001
+: Tsuke: c 'death field'
+Tue Jun  5 19:01:43 2001
+: Tsuke: peace
+Tue Jun  5 19:01:44 2001
+: Tsuke: l
+Tue Jun  5 19:01:59 2001
+: Tsuke: help displacement
+Tue Jun  5 19:02:04 2001
+: Tsuke: help domination
+Tue Jun  5 19:02:10 2001
+: Tsuke: help ectoplasmic form
+Tue Jun  5 19:02:17 2001
+: Tsuke: help ego whip
+Tue Jun  5 19:02:23 2001
+: Tsuke: help energy containment
+Tue Jun  5 19:02:30 2001
+: Tsuke: help enhance armor
+Tue Jun  5 19:02:37 2001
+: Tsuke: help enhanced strength
+Tue Jun  5 19:02:43 2001
+: Tsuke: help flesh armor
+Tue Jun  5 19:02:50 2001
+: Tsuke: help heigten sense
+Tue Jun  5 19:02:55 2001
+: Tsuke: help heighten senses
+Tue Jun  5 19:03:12 2001
+: Tsuke: help holy wrath
+Tue Jun  5 19:03:21 2001
+: Tsuke: help lend health
+Tue Jun  5 19:03:26 2001
+: Tsuke: help levitation
+Tue Jun  5 19:03:30 2001
+: Tsuke: help mental barrier
+Tue Jun  5 19:03:35 2001
+: Tsuke: help sonic wave
+Tue Jun  5 19:03:45 2001
+: Tsuke: help psychic healing
+Tue Jun  5 19:03:49 2001
+: Tsuke: help shadow form
+Tue Jun  5 19:03:57 2001
+: Tsuke: help share strength
+Tue Jun  5 19:04:04 2001
+: Tsuke: help thought shield
+Tue Jun  5 19:04:07 2001
+: Tsuke: help cancellation
+Tue Jun  5 19:05:13 2001
+: Tsuke: help turn undead
+Tue Jun  5 19:05:18 2001
+: Tsuke: help mental block
+Tue Jun  5 19:05:27 2001
+: Tsuke: help repair
+Tue Jun  5 19:06:40 2001
+: Tsuke: slay pistachio
+Tue Jun  5 19:06:41 2001
+: Tsuke: l
+Tue Jun  5 19:06:44 2001
+: Tsuke: eat corpse
+Tue Jun  5 19:06:46 2001
+: Tsuke: get all
+Tue Jun  5 19:06:47 2001
+: Tsuke: eat corpse
+Tue Jun  5 19:06:48 2001
+: Tsuke: i
+Tue Jun  5 19:06:50 2001
+: Tsuke: eat gun
+Tue Jun  5 19:09:30 2001
+: Tsuke: help prompt
+Tue Jun  5 19:09:47 2001
+: Tsuke: help color
+Tue Jun  5 19:11:08 2001
+: Tsuke: prompt <&R%h &C%m &G%v %c %C %R>
+Tue Jun  5 19:11:24 2001
+: Tsuke: prompt <&R%hh &C%mm &G%vv %c %C %R>
+Tue Jun  5 19:56:55 2001
+: (Unknown): y
+Tue Jun  5 19:56:55 2001
+: (Unknown): sin
+Tue Jun  5 19:56:55 2001
+: Sin: panther
+Tue Jun  5 19:56:56 2001
+: Sin:  
+Tue Jun  5 19:56:57 2001
+: Sin: who
+Tue Jun  5 19:56:58 2001
+: Sin: note
+Tue Jun  5 19:57:30 2001
+: Sin: note
+Tue Jun  5 19:57:48 2001
+: Sin: note
+Tue Jun  5 19:58:04 2001
+: Sin: quit
+Tue Jun  5 21:03:28 2001
+: (Unknown): y
+Tue Jun  5 21:03:29 2001
+: (Unknown): Flux
+Tue Jun  5 21:03:30 2001
+: Flux: verite
+Tue Jun  5 21:03:31 2001
+: Flux:  
+Tue Jun  5 21:03:33 2001
+: Flux: note
+Tue Jun  5 21:03:42 2001
+: Flux: wh
+Tue Jun  5 21:07:20 2001
+: Flux: help
+Tue Jun  5 21:24:46 2001
+: Flux: quit
+Tue Jun  5 23:37:13 2001
+: (Unknown): y
+Tue Jun  5 23:37:14 2001
+: (Unknown): tsuke
+Tue Jun  5 23:37:15 2001
+: Tsuke: daini
+Tue Jun  5 23:37:16 2001
+: Tsuke:  
+Tue Jun  5 23:37:17 2001
+: Tsuke: who
+Tue Jun  5 23:51:01 2001
+: (Unknown): n
+Tue Jun  5 23:51:03 2001
+: (Unknown): hugh
+Tue Jun  5 23:51:05 2001
+: Hugh: jav2vii
+Tue Jun  5 23:51:12 2001
+: Hugh:  
+Tue Jun  5 23:51:16 2001
+: Hugh: who
+Tue Jun  5 23:51:18 2001
+: Hugh: note
+Tue Jun  5 23:51:39 2001
+: Hugh: note
+Tue Jun  5 23:52:48 2001
+: Hugh: note
+Tue Jun  5 23:53:33 2001
+: Hugh: note
+Tue Jun  5 23:53:37 2001
+: Hugh: who
+Tue Jun  5 23:53:39 2001
+: Hugh: i
+Tue Jun  5 23:53:40 2001
+: Hugh: sc
+Tue Jun  5 23:53:48 2001
+: Hugh: eq
+Tue Jun  5 23:53:50 2001
+: Hugh: i
+Tue Jun  5 23:53:51 2001
+: Hugh: l
+Tue Jun  5 23:53:53 2001
+: Hugh: st
+Tue Jun  5 23:53:56 2001
+: Hugh: reca
+Tue Jun  5 23:53:57 2001
+: Hugh: recall 
+Tue Jun  5 23:53:58 2001
+: Hugh: l
+Tue Jun  5 23:53:59 2001
+: Hugh: n
+Tue Jun  5 23:53:59 2001
+: Hugh: s
+Tue Jun  5 23:54:00 2001
+: Hugh: e
+Tue Jun  5 23:54:00 2001
+: Hugh: w
+Tue Jun  5 23:54:01 2001
+: Hugh: u
+Tue Jun  5 23:54:01 2001
+: Hugh: d
+Tue Jun  5 23:54:04 2001
+: Hugh: prac
+Tue Jun  5 23:54:07 2001
+: Hugh: skills
+Tue Jun  5 23:54:09 2001
+: Hugh: skill
+Tue Jun  5 23:54:09 2001
+: Hugh: i
+Tue Jun  5 23:54:12 2001
+: Hugh: skills
+Tue Jun  5 23:54:14 2001
+: Hugh: i
+Tue Jun  5 23:54:15 2001
+: Hugh: help
+Tue Jun  5 23:54:20 2001
+: Hugh: exit
+Tue Jun  5 23:54:22 2001
+: Hugh: recall 
+Tue Jun  5 23:54:24 2001
+: Hugh: help recall
+Tue Jun  5 23:54:35 2001
+: Hugh: ponder
+Tue Jun  5 23:54:36 2001
+: Hugh: l
+Tue Jun  5 23:54:37 2001
+: Hugh: e
+Tue Jun  5 23:54:38 2001
+: Hugh: w
+Tue Jun  5 23:54:38 2001
+: Hugh: s
+Tue Jun  5 23:54:39 2001
+: Hugh: n
+Tue Jun  5 23:54:39 2001
+: Hugh: d
+Tue Jun  5 23:54:40 2001
+: Hugh: u
+Tue Jun  5 23:54:43 2001
+: Hugh: l
+Tue Jun  5 23:54:44 2001
+: Hugh: who
+Tue Jun  5 23:54:59 2001
+: Hugh: gossip Tsuke, you mind transfering out of this place?
+Tue Jun  5 23:55:02 2001
+: Hugh: help channels
+Tue Jun  5 23:55:04 2001
+: Hugh: channels
+Tue Jun  5 23:55:11 2001
+: Hugh: ooc Hi Tsuke.
+Tue Jun  5 23:55:12 2001
+: Hugh: who
+Tue Jun  5 23:56:05 2001
+: Hugh: i
+Tue Jun  5 23:56:06 2001
+: Hugh: who
+Tue Jun  5 23:56:08 2001
+: Hugh: eq
+Tue Jun  5 23:56:09 2001
+: Hugh: i
+Tue Jun  5 23:56:09 2001
+: Hugh: l
+Tue Jun  5 23:56:11 2001
+: Hugh: prac
+Tue Jun  5 23:56:13 2001
+: Hugh: train
+Tue Jun  5 23:56:14 2001
+: Hugh: sc
+Tue Jun  5 23:56:24 2001
+: Hugh: help attitude
+Tue Jun  5 23:56:50 2001
+: Hugh: help
+Tue Jun  5 23:56:54 2001
+: Hugh: motd
+Tue Jun  5 23:56:55 2001
+: Hugh: help motd
+Tue Jun  5 23:56:59 2001
+: Hugh: who
+Tue Jun  5 23:57:04 2001
+: Hugh: help
+Tue Jun  5 23:57:11 2001
+: Hugh: help credits
+Tue Jun  5 23:57:16 2001
+: Hugh: help merc
+Tue Jun  5 23:57:52 2001
+: Hugh: who
+Tue Jun  5 23:57:53 2001
+: Hugh: help
+Tue Jun  5 23:57:57 2001
+: Hugh: help combine
+Tue Jun  5 23:58:01 2001
+: Hugh: combine
+Tue Jun  5 23:58:02 2001
+: Hugh: combine
+Tue Jun  5 23:58:04 2001
+: Hugh: sc
+Tue Jun  5 23:58:08 2001
+: Hugh: help famp
+Tue Jun  5 23:58:10 2001
+: Hugh: help damp
+Tue Jun  5 23:58:18 2001
+: Hugh: wimpy 20
+Tue Jun  5 23:58:20 2001
+: Hugh: wimpy 50
+Tue Jun  5 23:58:21 2001
+: Hugh: sc
+Tue Jun  5 23:59:09 2001
+: Hugh: who
+Tue Jun  5 23:59:16 2001
+: Hugh: ooc You around Tsuke?
+Tue Jun  5 23:59:17 2001
+: Hugh: help
+Tue Jun  5 23:59:21 2001
+: Hugh: wizlist
+Tue Jun  5 23:59:41 2001
+: Hugh: spells
+Tue Jun  5 23:59:43 2001
+: Hugh: help spells
+Tue Jun  5 23:59:45 2001
+: Hugh: help skills
+Tue Jun  5 23:59:47 2001
+: Hugh: slist
+Tue Jun  5 23:59:55 2001
+: Hugh: slist
+Tue Jun  5 23:59:57 2001
+: Hugh: help
+Wed Jun  6 00:00:01 2001
+: Hugh: help pick
+Wed Jun  6 00:00:04 2001
+: Hugh: help backstab
+Wed Jun  6 00:00:06 2001
+: Hugh: help combat
+Wed Jun  6 00:00:09 2001
+: Hugh: help
+Wed Jun  6 00:00:18 2001
+: Hugh: help COMBAT
+Wed Jun  6 00:00:21 2001
+: Hugh: help C
+Wed Jun  6 00:00:26 2001
+: Hugh: help
+Wed Jun  6 00:00:28 2001
+: Hugh: who
+Wed Jun  6 00:00:29 2001
+: Hugh: eq
+Wed Jun  6 00:05:19 2001
+: Hugh: who
+Wed Jun  6 00:05:22 2001
+: Hugh: l
+Wed Jun  6 00:05:24 2001
+: Hugh: recall 
+Wed Jun  6 00:05:25 2001
+: Hugh: enter
+Wed Jun  6 00:05:32 2001
+: Hugh: l chair
+Wed Jun  6 00:05:33 2001
+: Hugh: l lights
+Wed Jun  6 00:05:35 2001
+: Hugh: enter lights
+Wed Jun  6 00:05:36 2001
+: Hugh: l
+Wed Jun  6 00:07:13 2001
+: Hugh: who
+Wed Jun  6 00:07:13 2001
+: Hugh: i
+Wed Jun  6 00:07:14 2001
+: Hugh: l
+Wed Jun  6 00:27:14 2001
+: (Unknown): n
+Wed Jun  6 00:27:15 2001
+: (Unknown): hugh
+Wed Jun  6 00:27:16 2001
+: Hugh: jav2vii
+Wed Jun  6 00:27:17 2001
+: Hugh:  
+Wed Jun  6 00:27:18 2001
+: Hugh:  
+Wed Jun  6 00:27:18 2001
+: Hugh: who
+Wed Jun  6 00:27:20 2001
+: Hugh:  
+Wed Jun  6 00:27:20 2001
+: Hugh: i
+Wed Jun  6 00:27:23 2001
+: Hugh: recall 
+Wed Jun  6 00:27:24 2001
+: Hugh: l
+Wed Jun  6 00:27:25 2001
+: Hugh: e
+Wed Jun  6 00:27:25 2001
+: Hugh: w
+Wed Jun  6 00:27:26 2001
+: Hugh: n
+Wed Jun  6 00:27:26 2001
+: Hugh: s
+Wed Jun  6 00:27:26 2001
+: Hugh: u
+Wed Jun  6 00:27:27 2001
+: Hugh: d
+Wed Jun  6 00:27:29 2001
+: Hugh: who
+Wed Jun  6 05:13:14 2001
+: (Unknown): y
+Wed Jun  6 05:13:16 2001
+: (Unknown): tsuke
+Wed Jun  6 05:13:16 2001
+: Tsuke: daini
+Wed Jun  6 05:13:17 2001
+: Tsuke:  
+Wed Jun  6 05:13:19 2001
+: Tsuke: who
+Wed Jun  6 05:13:28 2001
+: Tsuke: unread
+Wed Jun  6 05:13:31 2001
+: Tsuke: note list
+Wed Jun  6 05:13:38 2001
+: Tsuke: quit
+Wed Jun  6 17:38:06 2001
+: (Unknown): y
+Wed Jun  6 17:38:07 2001
+: (Unknown): sin
+Wed Jun  6 17:38:07 2001
+: Sin: panther
+Wed Jun  6 17:38:07 2001
+: Sin:  
+Wed Jun  6 17:38:08 2001
+: Sin: who
+Wed Jun  6 17:38:10 2001
+: Sin: finger hugh
+Wed Jun  6 17:38:14 2001
+: Sin: who
+Wed Jun  6 17:39:27 2001
+: Sin: who
+Thu Jun  7 04:20:41 2001
+: (Unknown): y
+Thu Jun  7 04:20:42 2001
+: (Unknown): tsuke
+Thu Jun  7 04:20:42 2001
+: Tsuke: daini
+Thu Jun  7 04:20:43 2001
+: Tsuke:  
+Thu Jun  7 04:20:44 2001
+: Tsuke: who
+Thu Jun  7 19:14:22 2001
+: (Unknown): No
+Thu Jun  7 19:14:23 2001
+: (Unknown): Aloran
+Thu Jun  7 19:14:24 2001
+: Aloran: aloran27
+Thu Jun  7 19:14:24 2001
+: Aloran:  
+Thu Jun  7 19:14:25 2001
+: Aloran: who
+Thu Jun  7 19:14:27 2001
+: Aloran: note list
+Thu Jun  7 19:14:27 2001
+: Aloran: save
+Thu Jun  7 19:14:28 2001
+: Aloran: quit
+Thu Jun  7 21:25:21 2001
+: (Unknown): No
+Thu Jun  7 21:25:22 2001
+: (Unknown): Aloran
+Thu Jun  7 21:25:24 2001
+: Aloran: aloran27
+Thu Jun  7 21:25:24 2001
+: Aloran:  
+Thu Jun  7 21:25:25 2001
+: Aloran: who
+Thu Jun  7 21:26:28 2001
+: Aloran: who
+Thu Jun  7 21:26:29 2001
+: Aloran: note list
+Thu Jun  7 21:26:31 2001
+: Aloran: finger Flux
+Thu Jun  7 21:26:32 2001
+: Aloran: finger Sin
+Thu Jun  7 21:26:38 2001
+: Aloran: finger Aloran
+Thu Jun  7 21:26:46 2001
+: Aloran: finger Tsuke
+Thu Jun  7 21:26:53 2001
+: Aloran: save
+Thu Jun  7 21:26:56 2001
+: Aloran: qiot
+Thu Jun  7 21:26:59 2001
+: Aloran: quit
+Thu Jun  7 23:35:51 2001
+: (Unknown): y
+Thu Jun  7 23:35:52 2001
+: (Unknown): tsuke
+Thu Jun  7 23:35:54 2001
+: Tsuke: daini
+Thu Jun  7 23:35:54 2001
+: Tsuke:  
+Thu Jun  7 23:35:55 2001
+: Tsuke: who
+Fri Jun  8 00:54:13 2001
+: (Unknown): n
+Fri Jun  8 00:54:15 2001
+: (Unknown): hugh
+Fri Jun  8 00:54:16 2001
+: Hugh: jav2vii
+Fri Jun  8 00:54:17 2001
+: Hugh:  
+Fri Jun  8 00:54:18 2001
+: Hugh: who
+Fri Jun  8 00:54:22 2001
+: Hugh: l
+Fri Jun  8 00:54:25 2001
+: Hugh: sl
+Fri Jun  8 00:54:26 2001
+: Hugh: who
+Fri Jun  8 01:06:46 2001
+: Hugh: who
+Fri Jun  8 01:06:47 2001
+: Hugh: i
+Fri Jun  8 01:06:48 2001
+: Hugh: eq
+Fri Jun  8 01:12:23 2001
+: Hugh: who
+Fri Jun  8 01:19:06 2001
+: Hugh: who
+Fri Jun  8 15:05:38 2001
+: (Unknown): y
+Fri Jun  8 15:05:39 2001
+: (Unknown): y
+Fri Jun  8 15:05:39 2001
+: (Unknown): bloodstone
+Fri Jun  8 15:05:39 2001
+: Bloodstone: darkarchon
+Fri Jun  8 15:05:43 2001
+: Bloodstone: who
+Fri Jun  8 15:05:47 2001
+: Bloodstone: who
+Fri Jun  8 15:05:50 2001
+: Bloodstone: note
+Fri Jun  8 15:06:29 2001
+: Bloodstone: note
+Fri Jun  8 15:08:57 2001
+: Bloodstone: note
+Fri Jun  8 15:09:12 2001
+: Bloodstone: note
+Fri Jun  8 15:09:13 2001
+: Bloodstone: note
+Fri Jun  8 15:09:15 2001
+: Bloodstone:  m?
+Fri Jun  8 15:09:20 2001
+: Bloodstone: note ?
+Fri Jun  8 15:09:24 2001
+: Bloodstone: help note
+Fri Jun  8 15:09:39 2001
+: Bloodstone: quit
+Fri Jun  8 19:06:38 2001
+: (Unknown): y
+Fri Jun  8 19:06:38 2001
+: (Unknown): sin
+Fri Jun  8 19:06:38 2001
+: Sin: panther
+Fri Jun  8 19:06:39 2001
+: Sin:  
+Fri Jun  8 19:06:40 2001
+: Sin: who
+Fri Jun  8 19:06:42 2001
+: Sin: finger hugh
+Fri Jun  8 19:06:49 2001
+: Sin: finger aloran
+Fri Jun  8 19:06:54 2001
+: Sin: finger tsuke
+Fri Jun  8 19:06:58 2001
+: Sin: finger flux
+Fri Jun  8 19:06:59 2001
+: Sin: who
+Fri Jun  8 23:32:08 2001
+: (Unknown): y
+Fri Jun  8 23:32:08 2001
+: (Unknown): sin
+Fri Jun  8 23:32:08 2001
+: Sin: panther
+Fri Jun  8 23:32:09 2001
+: Sin:  
+Fri Jun  8 23:32:10 2001
+: Sin: who
+Fri Jun  8 23:32:12 2001
+: Sin: score mes
+Fri Jun  8 23:32:56 2001
+: Sin: who
+Fri Jun  8 23:32:59 2001
+: Sin: look
+Fri Jun  8 23:33:15 2001
+: Sin: who
+Fri Jun  8 23:33:17 2001
+: Sin: sc
+Fri Jun  8 23:33:19 2001
+: Sin: eq
+Fri Jun  8 23:33:24 2001
+: Sin: eq
+Fri Jun  8 23:33:27 2001
+: Sin: eq tat
+Fri Jun  8 23:33:34 2001
+: Sin: look self
+Fri Jun  8 23:33:53 2001
+: Sin: vnum pin
+Fri Jun  8 23:33:57 2001
+: Sin: redit
+Fri Jun  8 23:33:59 2001
+: Sin: mlist all
+Fri Jun  8 23:34:02 2001
+: Sin: done
+Fri Jun  8 23:34:04 2001
+: Sin: qui
+Fri Jun  8 23:34:06 2001
+: Sin: quit
+Sat Jun  9 00:15:52 2001
+: (Unknown): y
+Sat Jun  9 00:15:53 2001
+: (Unknown): Flux
+Sat Jun  9 00:15:54 2001
+: Flux: verite
+Sat Jun  9 00:15:56 2001
+: Flux:  
+Sat Jun  9 00:15:58 2001
+: Flux: wh
+Sat Jun  9 00:16:00 2001
+: Flux: imm pfft
+Sat Jun  9 00:16:09 2001
+: Flux: title is in another window, beep if needed.
+Sat Jun  9 01:32:15 2001
+: (Unknown): y
+Sat Jun  9 01:32:16 2001
+: (Unknown): tsuke
+Sat Jun  9 01:32:19 2001
+: Tsuke: daini
+Sat Jun  9 01:32:20 2001
+: Tsuke:  
+Sat Jun  9 01:32:21 2001
+: Tsuke: who
+Sat Jun  9 02:45:41 2001
+: Flux: quit
+Sat Jun  9 07:13:25 2001
+: (Unknown): y
+Sat Jun  9 07:13:27 2001
+: (Unknown): tsuke
+Sat Jun  9 07:13:27 2001
+: Tsuke: daini
+Sat Jun  9 07:13:28 2001
+: Tsuke:  
+Sat Jun  9 07:13:28 2001
+: Tsuke: who
+Sat Jun  9 07:13:35 2001
+: Tsuke: note
+Sat Jun  9 07:13:38 2001
+: Tsuke: skills
+Sat Jun  9 07:13:40 2001
+: Tsuke: skill
+Sat Jun  9 07:13:41 2001
+: Tsuke: prac
+Sat Jun  9 07:28:52 2001
+: Tsuke: help backstab
+Sat Jun  9 07:29:06 2001
+: Tsuke: help bash
+Sat Jun  9 07:29:51 2001
+: Tsuke: help shocking grasp
+Sat Jun  9 07:30:00 2001
+: Tsuke: glist 700 800
+Sat Jun  9 07:30:03 2001
+: Tsuke: hlist 700 800
+Sat Jun  9 07:30:07 2001
+: Tsuke: hlist 600 700
+Sat Jun  9 07:30:13 2001
+: Tsuke: hedit 630
+Sat Jun  9 07:30:16 2001
+: Tsuke: hedit create 630
+Sat Jun  9 07:30:39 2001
+: Tsuke: keyword SHOCKING GRASP
+Sat Jun  9 07:30:39 2001
+: Tsuke:  
+Sat Jun  9 07:30:44 2001
+: Tsuke: keyword 'SHOCKING GRASP'
+Sat Jun  9 07:30:44 2001
+: Tsuke:  
+Sat Jun  9 07:30:53 2001
+: Tsuke: hlist 650 700
+Sat Jun  9 07:30:56 2001
+: Tsuke: done
+Sat Jun  9 07:30:57 2001
+: Tsuke: hlist 650 700
+Sat Jun  9 07:31:02 2001
+: Tsuke: hlist 600 700
+Sat Jun  9 07:31:07 2001
+: Tsuke: hedit 630
+Sat Jun  9 07:31:12 2001
+: Tsuke: hedit shocking grasp
+Sat Jun  9 07:31:15 2001
+: Tsuke: level 0
+Sat Jun  9 07:31:19 2001
+: Tsuke: desc
+Sat Jun  9 07:31:22 2001
+: Tsuke: l
+Sat Jun  9 07:31:24 2001
+: Tsuke: done
+Sat Jun  9 07:31:26 2001
+: Tsuke: l tsuk
+Sat Jun  9 07:31:29 2001
+: Tsuke: l 2.
+Sat Jun  9 07:31:30 2001
+: Tsuke: l
+Sat Jun  9 07:31:35 2001
+: Tsuke: desck
+Sat Jun  9 07:31:37 2001
+: Tsuke: desc
+Sat Jun  9 07:31:53 2001
+: Tsuke: hedit shocking grasp
+Sat Jun  9 07:31:55 2001
+: Tsuke: desc
+Sat Jun  9 07:32:00 2001
+: Tsuke: done
+Sat Jun  9 07:32:01 2001
+: Tsuke: l
+Sat Jun  9 07:32:07 2001
+: Tsuke: mload 100
+Sat Jun  9 07:32:08 2001
+: Tsuke: l
+Sat Jun  9 07:32:14 2001
+: Tsuke: c 'shocking grasp' pistachio
+Sat Jun  9 07:32:19 2001
+: Tsuke: c shock pist
+Sat Jun  9 07:32:22 2001
+: Tsuke: shock pist
+Sat Jun  9 07:32:27 2001
+: Tsuke: shocking grasp
+Sat Jun  9 07:32:30 2001
+: Tsuke: shocking
+Sat Jun  9 07:32:36 2001
+: Tsuke: edit shocking grasp
+Sat Jun  9 07:32:39 2001
+: Tsuke: hedit shocking grasp
+Sat Jun  9 07:32:54 2001
+: Tsuke: done
+Sat Jun  9 07:32:57 2001
+: Tsuke: help hedit
+Sat Jun  9 07:33:11 2001
+: Tsuke: help backstab
+Sat Jun  9 07:33:12 2001
+: Tsuke: help back
+Sat Jun  9 07:33:23 2001
+: Tsuke: hedit shocking grasp
+Sat Jun  9 07:33:32 2001
+: Tsuke: done
+Sat Jun  9 07:33:35 2001
+: Tsuke: help double backstab
+Sat Jun  9 07:33:43 2001
+: Tsuke: hedit shocking grasb
+Sat Jun  9 07:33:46 2001
+: Tsuke: hedit shocking grasp
+Sat Jun  9 07:33:50 2001
+: Tsuke: key backstab
+Sat Jun  9 07:33:54 2001
+: Tsuke: key BACKSTAB
+Sat Jun  9 07:33:57 2001
+: Tsuke:  
+Sat Jun  9 07:34:01 2001
+: Tsuke: key foot
+Sat Jun  9 07:34:02 2001
+: Tsuke:  
+Sat Jun  9 07:34:05 2001
+: Tsuke: key BACKSTAB
+Sat Jun  9 07:34:07 2001
+: Tsuke:  
+Sat Jun  9 07:34:28 2001
+: Tsuke: desc
+Sat Jun  9 07:38:03 2001
+: Tsuke:  
+Sat Jun  9 07:38:06 2001
+: Tsuke: done
+Sat Jun  9 07:38:08 2001
+: Tsuke: asave changed
+Sat Jun  9 07:38:09 2001
+: Tsuke:  
+Sat Jun  9 07:38:13 2001
+: Tsuke: hlist 600 700
+Sat Jun  9 07:38:15 2001
+: Tsuke: help backstab
+Sat Jun  9 07:38:18 2001
+: Tsuke: help double backsta
+Sat Jun  9 07:38:20 2001
+: Tsuke: help double backstab
+Sat Jun  9 11:05:01 2001
+: (Unknown): y
+Sat Jun  9 11:05:02 2001
+: (Unknown): Flux
+Sat Jun  9 11:05:02 2001
+: Flux: verite
+Sat Jun  9 11:05:03 2001
+: Flux:  
+Sat Jun  9 11:05:04 2001
+: Flux: wh
+Sat Jun  9 11:10:59 2001
+: (Unknown): y
+Sat Jun  9 11:10:59 2001
+: (Unknown): bloodstone
+Sat Jun  9 11:10:59 2001
+: Bloodstone: darkarchon
+Sat Jun  9 11:11:09 2001
+: Bloodstone:  
+Sat Jun  9 11:11:11 2001
+: Bloodstone: who
+Sat Jun  9 11:11:32 2001
+: Bloodstone: go head warden
+Sat Jun  9 11:11:38 2001
+: Bloodstone: fo flux
+Sat Jun  9 11:11:43 2001
+: Bloodstone: go flux
+Sat Jun  9 11:11:44 2001
+: Flux: imm heyas
+Sat Jun  9 11:11:49 2001
+: Bloodstone: say hey
+Sat Jun  9 11:11:57 2001
+: Flux: say im in a few other windows :)
+Sat Jun  9 11:11:58 2001
+: Bloodstone: who
+Sat Jun  9 11:12:03 2001
+: Bloodstone: woo imm
+Sat Jun  9 11:12:06 2001
+: Bloodstone: who imm
+Sat Jun  9 11:12:21 2001
+: Bloodstone: wiz hey
+Sat Jun  9 11:12:23 2001
+: Bloodstone: wiz hey
+Sat Jun  9 11:12:29 2001
+: Bloodstone: wizsay  hey
+Sat Jun  9 11:12:33 2001
+: Bloodstone: wizsay hey
+Sat Jun  9 11:12:39 2001
+: Bloodstone: wiznet hey
+Sat Jun  9 11:12:44 2001
+: Bloodstone: wiznet ?
+Sat Jun  9 11:12:57 2001
+: Bloodstone: immtalk hello
+Sat Jun  9 11:13:13 2001
+: Bloodstone: immtalk how are you doing?
+Sat Jun  9 11:13:25 2001
+: Bloodstone: note
+Sat Jun  9 11:13:34 2001
+: Flux: imm I'm ok, just woke up
+Sat Jun  9 11:14:00 2001
+: Bloodstone: immtalk getting ready for my daughters Birthday party
+Sat Jun  9 11:14:51 2001
+: Bloodstone: immtalk there playing with the party ballons at the moment
+Sat Jun  9 11:14:54 2001
+: Flux: imm cool
+Sat Jun  9 11:15:00 2001
+: Flux: imm hehe
+Sat Jun  9 11:15:05 2001
+: Flux: imm how old?
+Sat Jun  9 11:15:28 2001
+: Bloodstone: immtalk shes 5 my son is only 3 will be 4 in september
+Sat Jun  9 11:17:02 2001
+: Bloodstone: immtalk I got this cold the otherday, it just wont go away
+Sat Jun  9 11:17:14 2001
+: Flux: imm icky :(
+Sat Jun  9 11:17:25 2001
+: Bloodstone: immtalk I would be in bed right now, but the wife had to go out and get party stuff
+Sat Jun  9 11:17:33 2001
+: Flux: imm ahh
+Sat Jun  9 11:17:53 2001
+: Flux: imm i hope ya feel better soon, im always stuffed and have a high temperature, I know how it feels :(
+Sat Jun  9 11:18:19 2001
+: Bloodstone: immtalk been busy though, found a creative writing site, well kina.
+Sat Jun  9 11:18:31 2001
+: Bloodstone: immtalk let me get the url
+Sat Jun  9 11:18:34 2001
+: Flux: imm cool, I been working on a new book
+Sat Jun  9 11:18:48 2001
+: Flux: imm and another story on the side besides ;)
+Sat Jun  9 11:19:03 2001
+: Bloodstone: immtalk http://home.golden.net/mcocker/ToT/
+Sat Jun  9 11:19:20 2001
+: Bloodstone: immtalk http://home.golden.net/tildamcocker/ToT/
+Sat Jun  9 11:19:30 2001
+: Bloodstone: immtalk http://home.golden.net/'tilda'mcocker/ToT/
+Sat Jun  9 11:19:48 2001
+: Bloodstone: immtalk theres a tilda in there
+Sat Jun  9 11:19:53 2001
+: Flux: imm tilde
+Sat Jun  9 11:20:01 2001
+: Flux: imm :)
+Sat Jun  9 11:20:07 2001
+: Flux: imm ill check it out
+Sat Jun  9 11:20:15 2001
+: Bloodstone: immtalk my character isnt listed yet, maybey issued 9
+Sat Jun  9 11:20:57 2001
+: Bloodstone: immtalk I needed to get back into writing, this seemed like a good way to do it
+Sat Jun  9 11:21:07 2001
+: Bloodstone: immtalk and have some fun
+Sat Jun  9 11:21:11 2001
+: Flux: imm any writing is positive
+Sat Jun  9 11:22:48 2001
+: Bloodstone: say I am learning. My daugher put her blanket over the balloon so it doesn't float away
+Sat Jun  9 11:23:06 2001
+: Bloodstone: immtalk I am learning.(laugh) My daugher put her blanket over the balloon so it doesn't float away
+Sat Jun  9 11:23:31 2001
+: Flux: say hehe
+Sat Jun  9 11:23:40 2001
+: Flux: say kids are fun
+Sat Jun  9 11:24:10 2001
+: Bloodstone: immtalk only when they are not moody, or throwing a temper tantrum
+Sat Jun  9 11:25:11 2001
+: Bloodstone: immtalk I was wondering, in the quests, can undo a stage?
+Sat Jun  9 11:27:41 2001
+: Bloodstone: immtalk well I am going go lie down on the couch, ill catch up with you later.
+Sat Jun  9 12:09:01 2001
+: (Unknown): n
+Sat Jun  9 12:09:03 2001
+: (Unknown): hugh
+Sat Jun  9 12:09:04 2001
+: Hugh: jav2vii
+Sat Jun  9 12:09:05 2001
+: Hugh:  
+Sat Jun  9 12:09:06 2001
+: Hugh: who
+Sat Jun  9 12:09:11 2001
+: Hugh: sc
+Sat Jun  9 12:53:07 2001
+: Flux: wh
+Sat Jun  9 13:31:12 2001
+: Flux: wh
+Sat Jun  9 13:43:12 2001
+: (Unknown): y
+Sat Jun  9 13:43:13 2001
+: (Unknown): sin
+Sat Jun  9 13:43:13 2001
+: Sin: panther
+Sat Jun  9 13:43:13 2001
+: Sin:  
+Sat Jun  9 13:43:14 2001
+: Sin: who
+Sat Jun  9 13:43:42 2001
+: Sin: : well, i'm sorry for whatever it is that i did to deserve the silent treatment. let me know how i can remedy it, please.
+Sat Jun  9 13:43:51 2001
+: Sin: quit
+Sat Jun  9 14:18:06 2001
+: (Unknown): y
+Sat Jun  9 14:18:06 2001
+: (Unknown): sin
+Sat Jun  9 14:18:06 2001
+: Sin: panther
+Sat Jun  9 14:18:07 2001
+: Sin:  
+Sat Jun  9 14:18:07 2001
+: Sin:  
+Sat Jun  9 14:18:08 2001
+: Sin: who
+Sat Jun  9 14:18:09 2001
+: Sin: look
+Sat Jun  9 14:18:14 2001
+: Sin: note list
+Sat Jun  9 14:18:17 2001
+: Sin: note read 0
+Sat Jun  9 14:18:21 2001
+: Sin: note read 2
+Sat Jun  9 14:18:57 2001
+: Sin: : i know you're not listening to me or going to repsond, but do you think you could change the speed at which notes disappear? all those old notes would be really useful for reference.
+Sat Jun  9 14:19:08 2001
+: Sin: note read 2
+Sat Jun  9 14:20:24 2001
+: Flux: imm im here
+Sat Jun  9 14:20:33 2001
+: Flux: imm well, just got back here
+Sat Jun  9 14:20:50 2001
+: Flux: imm and yes I can give some sort of permenancy to them
+Sat Jun  9 14:21:12 2001
+: Sin: : all those old notes where you explained things, are gone.. so I'm back to not understanding anything because theres nothing for reference.
+Sat Jun  9 14:21:13 2001
+: Flux: imm dont know why I didnt get a noise from the ICQ thing
+Sat Jun  9 14:21:22 2001
+: Flux: note list
+Sat Jun  9 14:21:42 2001
+: Flux: imm icky, ok I'll make a way to store notes
+Sat Jun  9 14:22:00 2001
+: Sin: : maybe you could set an expiration or maybe have a way for us to view expired notes
+Sat Jun  9 14:22:18 2001
+: Sin: : imms only.. like because i know the notes stay in that spool dont they?
+Sat Jun  9 14:22:25 2001
+: Flux: imm well, expired in the system means expunged here
+Sat Jun  9 14:22:32 2001
+: Sin: : sigh, that sucks.
+Sat Jun  9 14:22:43 2001
+: Flux: imm so they're dead and buried.. but there is a way to save them for posterity
+Sat Jun  9 14:22:47 2001
+: Sin: : i'm used to them staying in the notes file.
+Sat Jun  9 14:22:54 2001
+: Sin: : even if they dont show in note list anymore
+Sat Jun  9 14:23:33 2001
+: Flux: imm this system kills them when they leave the in-game list... here lemme see if I can hack together how to save notes
+Sat Jun  9 14:23:50 2001
+: Sin: : its not a big deal if i'm the only person concerned.
+Sat Jun  9 14:23:52 2001
+: Flux: imm i know it exists here somewhere already, just gotten check how
+Sat Jun  9 14:24:02 2001
+: Flux: imm you arent, Ive run into the situation recently too
+Sat Jun  9 14:24:15 2001
+: Flux: imm forgetting what I actually planned for things ;)
+Sat Jun  9 14:24:16 2001
+: Sin: finger hugh
+Sat Jun  9 14:24:25 2001
+: Flux: imm hugh was here earlier
+Sat Jun  9 14:24:48 2001
+: Flux: imm left before I could say anything tho, was writing, didnt notice it ;)
+Sat Jun  9 14:24:50 2001
+: Sin: : what i suggest is having an imm-setable note command as you write it that can give it permanency
+Sat Jun  9 14:25:11 2001
+: Sin: : and then if you or i decide that a note really is done, we can purge it
+Sat Jun  9 14:25:32 2001
+: Flux: imm ok, well lemme see what I have here already, i know there's something, probably inadequate in its base form tho
+Sat Jun  9 14:25:36 2001
+: Sin: : hugh is a darling. i met him on my old mud, bout 5 years ago.
+Sat Jun  9 14:25:41 2001
+: Flux: imm cool :)
+Sat Jun  9 14:25:54 2001
+: Sin: : maybe 4, something like that. lost touch with him for a cpl years
+Sat Jun  9 14:26:01 2001
+: Flux: imm probably just lookin for you, he left without saying anything
+Sat Jun  9 14:26:06 2001
+: Flux: imm i was idling anyways ;)
+Sat Jun  9 14:26:11 2001
+: Sin: : chris told me he was lookin for me on that old mud the other night so i got on, caught him, and gave him this addy to find me
+Sat Jun  9 14:26:15 2001
+: Sin: : yah.. shock suprise =b
+Sat Jun  9 14:26:45 2001
+: Flux: imm and bnet is totally screwed for the weekend, me and Zam and Disco were in a game together and Zam couldn't hear disco or see him in the game
+Sat Jun  9 14:27:05 2001
+: Flux: imm very odd with the maintence
+Sat Jun  9 14:27:15 2001
+: Sin: : i'd kinda like to get some stuff done here this weekend
+Sat Jun  9 14:27:57 2001
+: Flux: imm just was referring to the ignoring you in coop thing, I couldn't make out anything just now, so much little kiddy spam and netsplitting
+Sat Jun  9 14:28:09 2001
+: Flux: inv
+Sat Jun  9 14:28:13 2001
+: Flux: help note
+Sat Jun  9 14:28:16 2001
+: Sin: : btw, your twinmud concept won extremely high approval from nyarl. (he'll keep the secret, trust me). i was quite amused, hes so jaded and bitter about muds and this idea made him excited on the phone
+Sat Jun  9 14:28:40 2001
+: Sin: : oh, it was like an hour ago you were talkin about druids and wolves being so fast.
+Sat Jun  9 14:28:42 2001
+: Flux: imm heh, yeah he doesn't like the skills-based system tho ;)
+Sat Jun  9 14:28:57 2001
+: Flux: imm hmm, were you on as kitty jade? I didnt see you :(
+Sat Jun  9 14:29:00 2001
+: Sin: : he could learn to ;) i'm gonna make him give it a shot
+Sat Jun  9 14:29:13 2001
+: Sin: : yah. i was pokin you, sayin hi, you just kept on talkin about druids and how cool they'll be
+Sat Jun  9 14:29:23 2001
+: Flux: imm wierd, i didnt see you at all
+Sat Jun  9 14:29:34 2001
+: Sin: : its ok. disco was ignoring me too.
+Sat Jun  9 14:29:45 2001
+: Flux: imm maybe you were split on the server
+Sat Jun  9 14:29:52 2001
+: Sin: : others saw me..
+Sat Jun  9 14:30:16 2001
+: Flux: imm maybe we were hehe, dunno, I dont trust bnet on the weekends even without badly carried out repairs going on
+Sat Jun  9 14:30:35 2001
+: Sin: : my drunken self was attempting to play last night
+Sat Jun  9 14:30:43 2001
+: Sin: : kittie is so poor now she cant buy potions. she died like 10 times.
+Sat Jun  9 14:30:53 2001
+: Flux: imm icky :(
+Sat Jun  9 14:30:58 2001
+: Sin: title is a bleeding soul.
+Sat Jun  9 14:31:00 2001
+: Sin: who
+Sat Jun  9 14:31:08 2001
+: Sin: title . Bleeding soul becomes a Bitter Mind.
+Sat Jun  9 14:31:09 2001
+: Sin: who
+Sat Jun  9 14:31:10 2001
+: Flux: imm ive got lots of cash with oppo on any given night, i can give you some stuff
+Sat Jun  9 14:31:35 2001
+: Sin: : thats not needed. i whined to jay last night, hes gonna give me a couple SOJs.. I'll be rich. RICH I tell you.
+Sat Jun  9 14:31:40 2001
+: Sin: smirk flux
+Sat Jun  9 14:31:48 2001
+: Flux: imm heh ;)
+Sat Jun  9 14:32:06 2001
+: Sin: : i've got so many crap rares I can recube.
+Sat Jun  9 14:32:25 2001
+: Flux: imm I'm just glad I found a umes for my druid, I dont deal much in the high class merchandise ;)
+Sat Jun  9 14:32:37 2001
+: Sin: : i'm pretty set for my lance. tho. a 298 GIAS with poison dmg.
+Sat Jun  9 14:32:46 2001
+: Flux: imm wow
+Sat Jun  9 14:32:52 2001
+: Sin: : kittie does like 850 dmg now
+Sat Jun  9 14:32:58 2001
+: Sin: : over 400 hp.. level 37
+Sat Jun  9 14:33:04 2001
+: Flux: imm until jab gets killed with weapon speed hehe
+Sat Jun  9 14:33:16 2001
+: Flux: imm ooo, pretty snazzy, no stun lock for you
+Sat Jun  9 14:33:18 2001
+: Sin: : umm.. its a GIAS lance. and shes got SIAS gloves.
+Sat Jun  9 14:33:34 2001
+: Flux: imm whats gias on a lance tho? fast? I thought lance base was slow
+Sat Jun  9 14:33:42 2001
+: Sin: : shes VF with her gloves on.
+Sat Jun  9 14:34:06 2001
+: Flux: imm ahh.. wonder how many frames that is.. dont know the jab base modifier anyways
+Sat Jun  9 14:34:15 2001
+: Sin: : and she only uses jab against single foes. she uses fend against multi
+Sat Jun  9 14:34:18 2001
+: Flux: imm probably work out to near 7, which is what jab is now
+Sat Jun  9 14:34:25 2001
+: Sin: : and fend, which doenst increase speed, goes really fast
+Sat Jun  9 14:34:37 2001
+: Flux: imm fend actually does have a faster base modifier :)
+Sat Jun  9 14:34:47 2001
+: Sin: : not that i ever saw.
+Sat Jun  9 14:34:57 2001
+: Sin: : whatever it is, it isnt significant
+Sat Jun  9 14:35:09 2001
+: Flux: imm it does, with harps aussie gets a 3 frame attack if she wears sias gloves
+Sat Jun  9 14:35:28 2001
+: Sin: : ok, this whole 'frame attack' thing is way over my head.
+Sat Jun  9 14:35:32 2001
+: Flux: imm sorry hehe
+Sat Jun  9 14:35:35 2001
+: Sin: : a little annoying =b
+Sat Jun  9 14:35:43 2001
+: Flux: imm diablo runs on 25 frames per second
+Sat Jun  9 14:35:46 2001
+: Sin: : i'm so happy with my char and everyone tries to talk her down to me.
+Sat Jun  9 14:35:56 2001
+: Flux: imm I'm not talking her down :)
+Sat Jun  9 14:36:10 2001
+: Flux: imm im just speed obssessed personally, i like the war forks :)
+Sat Jun  9 14:36:14 2001
+: Sin: : its like dammit, shes got the fastest lance possible and it still has high damage and shes wearin SIAS gloves and still people tell me how slow she must be
+Sat Jun  9 14:36:23 2001
+: Flux:  
+Sat Jun  9 14:36:39 2001
+: Flux: imm if you're killin stuff, you're fine ;)
+Sat Jun  9 14:36:40 2001
+: Sin: : as long as shes fast enough to tank, thats all i care about. and she is.
+Sat Jun  9 14:37:19 2001
+: Flux: imm I was killing stuff with a 120 pike in hell/hell with fend and impale on open
+Sat Jun  9 14:37:38 2001
+: Flux: imm pretty low str for where she was too, never seen a problem with it
+Sat Jun  9 14:37:39 2001
+: Sin: : if i were obsessed with speed she'd be wearing twitch
+Sat Jun  9 14:38:10 2001
+: Flux: imm yah, and you'd have goldwrap and a war fork too... speed isnt everything, I use impale with my spearer ;)
+Sat Jun  9 14:38:20 2001
+: Sin: : i dont really like impale.
+Sat Jun  9 14:38:25 2001
+: Flux: imm its a bad skill
+Sat Jun  9 14:38:28 2001
+: Flux: imm very useless
+Sat Jun  9 14:38:29 2001
+: Sin: : she needs to be fast enough to defend if shes surrounded.
+Sat Jun  9 14:38:35 2001
+: Flux:  
+Sat Jun  9 14:38:39 2001
+: Sin: : fend is useless if shes not fast enough to actually hit everyone
+Sat Jun  9 14:38:43 2001
+: Flux: imm well, i make bad variants, you know me
+Sat Jun  9 14:38:57 2001
+: Sin: : thats why i traded my dual leech ring for that lance.
+Sat Jun  9 14:39:08 2001
+: Flux: imm it sounds very nice, high damage
+Sat Jun  9 14:39:08 2001
+: Sin: : the fact that its a 298 + poison dmg makes it even cooler
+Sat Jun  9 14:39:32 2001
+: Flux: imm i look at a 80 damage monster flee pike on my spearazon ;)
+Sat Jun  9 14:39:49 2001
+: Flux: imm so i dont see a problem with it hehe
+Sat Jun  9 14:39:53 2001
+: Sin: : ooh wait just a minute. lemme load up my inv database
+Sat Jun  9 14:40:07 2001
+: Flux: imm she uses SIAS gloves, no other mods
+Sat Jun  9 14:40:39 2001
+: Flux: imm a crappy great helm with no mods, rockfleece, boots with no mods at all
+Sat Jun  9 14:41:06 2001
+: Flux: imm and 2 rings that have 1 mod each, 5% life leech and 7% mana ;)
+Sat Jun  9 14:41:21 2001
+: Sin: : i have a lance with knockback and -40 req
+Sat Jun  9 14:41:31 2001
+: Sin: : 133
+Sat Jun  9 14:41:40 2001
+: Sin: : 101 ar and 10-13 fire
+Sat Jun  9 14:41:50 2001
+: Flux:  
+Sat Jun  9 14:41:59 2001
+: Sin: : plus barbie skills too heh
+Sat Jun  9 14:42:03 2001
+: Flux: imm i need increased durability on any spear I give her :(
+Sat Jun  9 14:42:21 2001
+: Flux: imm kinda kills her for just about anything I find
+Sat Jun  9 14:42:22 2001
+: Sin: : and an 8% life leech pike
+Sat Jun  9 14:42:30 2001
+: Sin: : with other mods.. 
+Sat Jun  9 14:43:24 2001
+: Flux: imm ahh thats the note permenancy system in place
+Sat Jun  9 14:43:31 2001
+: Flux: imm postal paper
+Sat Jun  9 14:43:47 2001
+: Flux: l
+Sat Jun  9 14:43:56 2001
+: Sin: help secondportgreeting
+Sat Jun  9 14:44:02 2001
+: Flux: imm you can enscribe notes to objects in the game
+Sat Jun  9 14:44:18 2001
+: Flux: imm and just read them, it makes it an extra description
+Sat Jun  9 14:44:22 2001
+: Sin: : when are we going to be implementing all these things?
+Sat Jun  9 14:44:34 2001
+: Sin: : i mean.. a lot of the stuff you say its like i already think its in, but its not, and then it seems to get forgotten
+Sat Jun  9 14:45:26 2001
+: Flux: imm which things are you referring to? And I'm working on my scheduling habits monday, gonna set time tables for everything, a lot less bnetting
+Sat Jun  9 14:46:34 2001
+: Sin: : well, like the whole mob ai thing, quest systems, no levels, no classes.. post offices..
+Sat Jun  9 14:46:42 2001
+: Flux: imm havent tried to put my activities to a schedule in a while
+Sat Jun  9 14:46:52 2001
+: Sin: : the additional port dualities like no global channels, etc
+Sat Jun  9 14:47:32 2001
+: Flux: imm quest system and the mobile race system will be in by the end of the coming week
+Sat Jun  9 14:47:44 2001
+: Flux: imm perhaps even by monday or tuesday
+Sat Jun  9 14:48:42 2001
+: Sin: : have you had the chance to talk to chris about what he should be doing?
+Sat Jun  9 14:48:44 2001
+: Flux: imm the new note/board/mail system is later on the list
+Sat Jun  9 14:48:59 2001
+: Flux: imm and yeah, I outlined for him what I wanted him to be doing currently
+Sat Jun  9 14:50:05 2001
+: Flux: imm levels and classes entails a solid week or two of madness, after the mobile race system is in that's next
+Sat Jun  9 14:51:14 2001
+: Flux: imm I know I've been really off and on lately, mostly off
+Sat Jun  9 14:53:19 2001
+: Flux: imm I've been trying to escape the problems my solutions to old problems have created, and a father who ceaseless accuses me of not going about repairing my own sanity correctly
+Sat Jun  9 14:53:27 2001
+: Sin: : i was worried you were giving up on this and ready to shut it down
+Sat Jun  9 14:54:41 2001
+: Flux: imm he wants to put me into mental health care for a while, its been taking a lot out of me
+Sat Jun  9 14:55:15 2001
+: Sin: : well, thats a decision for you to make. whatever you decide you know i and your other friends still care for you.
+Sat Jun  9 14:56:03 2001
+: Flux: imm im not giving up here in any way, ive just been engaging in too many distractions to forget that there's someone who wants to have me drugged up in some facility
+Sat Jun  9 14:56:26 2001
+: Sin: : danny, i'm sure thats not what he's viewing it as.
+Sat Jun  9 14:56:44 2001
+: Sin: : he is concerned for you, and feels that you need more professional help than the counselor you're seeing
+Sat Jun  9 14:57:04 2001
+: Flux: imm all he ever talks about is finding the "right" doctor to diagnose me the "correct" way and prescribe the medicine I need
+Sat Jun  9 14:57:42 2001
+: Flux: imm I finally take some initative with myself and he just comes to ruin that too
+Sat Jun  9 14:57:53 2001
+: Flux: imm and it hurts dena...
+Sat Jun  9 14:58:02 2001
+: Sin: : it hurts that he cares for you?
+Sat Jun  9 14:58:22 2001
+: Flux: imm it hurts that he never listens to me
+Sat Jun  9 14:58:30 2001
+: Sin: : danny, stop taking it so personally. now that you're admitting you need help, he'd like you to get what he believes is the best possible help for you.
+Sat Jun  9 14:59:41 2001
+: Flux: imm he doesn't listen to me though, I've told him what's bothering me, and all he sees is depressed = medication
+Sat Jun  9 14:59:44 2001
+: Sin: : he doesn't want to lose his son. i understand that you're feeling intimdated and pushed into something you're scared of, but don't hold it against him for caring about you
+Sat Jun  9 15:00:04 2001
+: Sin: : look at it from his perspective. he just got you back after years of you isolating yourself from them.
+Sat Jun  9 15:00:55 2001
+: Sin: : and medication CAN help keep you stable while the counselor helps you get to the root of things and figure it all out. i've never believed that just one Or the other on its own will do much good
+Sat Jun  9 15:02:38 2001
+: Flux: imm I just... I don't know anymore. I'm such a mess.. i'm sorry dena
+Sat Jun  9 15:02:50 2001
+: Sin: : danny.. i'm going to say this once so listen up. I love you like the brother I wish I had instead of the one I'm stuck with. It KILLS me to see you like this.
+Sat Jun  9 15:03:09 2001
+: Sin: : people love you, and people care for you. you cannot continue to wallow and push them off for trying to help you.
+Sat Jun  9 15:03:49 2001
+: Sin: : everyone is going to have their opinion on what you should do to best help yourself. some of them will be a little more vocal about it. don't take it as an insult, don't take it as them assuming they know whats best for you.
+Sat Jun  9 15:04:07 2001
+: Sin: : they CARE for you and want to help. some just don't know how to express it as such. if they didnt care they wouldnt even bother trying to give you advice.
+Sat Jun  9 15:04:28 2001
+: Flux: imm I don't want to be like this...
+Sat Jun  9 15:05:25 2001
+: Sin: : then keep getting help. i agree seeing a counselor is a wonderful idea. but maybe, just maybe, there IS some merits to medication in the time it takes to get things worked out. its going to be a long process, and you might be a little better off with s
+Sat Jun  9 15:05:43 2001
+: Sin: : some peace of mind and stability when your emotions are roller coastering you all over the world.
+Sat Jun  9 15:07:05 2001
+: Flux: imm it's frightening though.. and all this pushing just makes it scarier and hurt more
+Sat Jun  9 15:07:27 2001
+: Sin: : i know its terrifying. thats good, though. it means you're still feeling things and havent shut everything down in defense yet.
+Sat Jun  9 15:07:48 2001
+: Flux: imm i just wish he would listen to me some time
+Sat Jun  9 15:08:03 2001
+: Sin: : i'm not telling you either way what to do. but i am saying that its not a stigma, and the people who are suggesting it to you arent doing it to control you. they're doing it because they love you and don't want to lose such a wonderful person.
+Sat Jun  9 15:08:30 2001
+: Sin: : your father loves you, danny. he may not have the best way of expressing it, but both of your parents do. i do. krista does. all your friends do. we want you happy and healthy.
+Sat Jun  9 15:08:52 2001
+: Flux: imm im trying to be
+Sat Jun  9 15:08:55 2001
+: Sin: : and as long as you GET happy and healthy, in the fastest and safest way possible, i know i for one am going to be here for you every step of the way.
+Sat Jun  9 15:09:30 2001
+: Flux: imm thanks dena.. that means a lot to me
+Sat Jun  9 15:09:36 2001
+: Sin: embra flux
+Sat Jun  9 15:10:06 2001
+: Sin: : i meant what i said and i say what i mean. get better. if it takes 2 weeks of time off in a safe place, then do it. whatever it takes, just do it and get better.
+Sat Jun  9 15:10:26 2001
+: Flux: imm keeping up appearances hurts too.. you and krista are the only ones who know
+Sat Jun  9 15:10:41 2001
+: Sin: : well, you can be damn sure i wont tell anyone. not even jay.
+Sat Jun  9 15:10:44 2001
+: Flux: imm my parents would know, if they'd listen
+Sat Jun  9 15:11:08 2001
+: Sin: : well.. heres an idea. write them a letter. they can't interupt your speaking if its in a letter.
+Sat Jun  9 15:11:44 2001
+: Sin: : taht way you can get it all down and in a coherent form..
+Sat Jun  9 15:11:48 2001
+: Flux: imm i do write them, ive email my mom a lot, but no matter what I tell her she just keeps asking when I'm moving back with them
+Sat Jun  9 15:11:57 2001
+: Sin: : they love you danny.
+Sat Jun  9 15:12:08 2001
+: Sin: : whats the main reason you wont move back with them?
+Sat Jun  9 15:12:38 2001
+: Flux: imm the top thing is I literally can't coexist with my mother in the same house
+Sat Jun  9 15:12:49 2001
+: Sin: : have you told her that?
+Sat Jun  9 15:12:55 2001
+: Flux: imm she chain smokes all day and she wont stop
+Sat Jun  9 15:12:59 2001
+: Flux: imm yes, several times
+Sat Jun  9 15:13:18 2001
+: Flux: imm and she just ignores it, she knows I'm allergic to it too
+Sat Jun  9 15:13:56 2001
+: Sin: : well, not trying to defend her but its very hard to quit even after just a year of smoking. if shes dont it her whole life.. its most likely not even something she can consider.
+Sat Jun  9 15:14:39 2001
+: Flux: imm I gave up on asking her to quit a while ago, but she wont even walk outside or sit downwind
+Sat Jun  9 15:14:55 2001
+: Flux: imm and she goes through sometimes 3 or 4 packs a day
+Sat Jun  9 15:15:30 2001
+: Sin: : reiterate that to her. the next time she asks, say very bluntly that you cant move home if she continues to smoke inside. you have your health to watch out for.
+Sat Jun  9 15:15:52 2001
+: Flux: imm ill try
+Sat Jun  9 15:16:47 2001
+: Flux: imm the household is also very ineffectual, we're all completely offish to one another, we can barely stand each other for more than a few days at a time :(
+Sat Jun  9 15:17:26 2001
+: Flux: imm my father works between 60-80 hours a week still, i know its to get away from my mother at times
+Sat Jun  9 15:18:08 2001
+: Sin: : find something that will keep you away from her. writing. go to a quiet place and write. theres any number of things you can do. living at home does not necessarily mean spending 100% of your time there.
+Sat Jun  9 15:18:18 2001
+: Sin: : it will definitely cut back on your level of supporting yourself stress
+Sat Jun  9 15:18:34 2001
+: Flux: imm i know.. this money thing is killing me
+Sat Jun  9 15:18:59 2001
+: Flux: imm theres stuff I don't want to give up here though.. my job with the newspaper is the most enjoyable thing ive ever done
+Sat Jun  9 15:19:28 2001
+: Flux: imm and around 40 of my credits at this college wont transfer to another school
+Sat Jun  9 15:20:28 2001
+: Flux: imm i just want to figure out where I'm at before I go anywhere...
+Sat Jun  9 15:20:49 2001
+: Sin: : *nod*
+Sat Jun  9 15:21:18 2001
+: Flux: imm everything is trying to uproot me, and i just dont know what roots I want to keep yet
+Sat Jun  9 15:22:22 2001
+: Sin: : well, get it all figured out then.
+Sat Jun  9 15:22:28 2001
+: Sin: : just don't let it get so bleak that you give up
+Sat Jun  9 15:23:04 2001
+: Flux: imm I'm not, I wouldnt be writing this book if I was giving up
+Sat Jun  9 15:23:12 2001
+: Flux: imm or seeing tara
+Sat Jun  9 15:24:06 2001
+: Sin: music practically every one of the top 40 records being played on every radio statyion in the united states is a communication to the children to take a trip; to cop out; to groove..
+Sat Jun  9 15:24:24 2001
+: Sin: : well.. *sigh* dont know what to say
+Sat Jun  9 15:24:37 2001
+: Flux: imm its ok
+Sat Jun  9 15:24:46 2001
+: Sin: music the psychadelic jackets on the record albums have their own hidden symbols and messages; as well as all the lyrics in all the top rock songs. and they all sing the same refrain
+Sat Jun  9 15:24:58 2001
+: Sin: music its fun to take a trip, put acid in your veins..
+Sat Jun  9 15:25:03 2001
+: Sin: : sorry, love this song.
+Sat Jun  9 15:25:08 2001
+: Flux: imm its ok
+Sat Jun  9 15:25:22 2001
+: Flux: imm i need to work on something for tara
+Sat Jun  9 15:25:33 2001
+: Sin: : can you tell me something before you go?
+Sat Jun  9 15:25:40 2001
+: Flux: imm what is it?
+Sat Jun  9 15:25:47 2001
+: Sin: : what do you want me to work on today?
+Sat Jun  9 15:25:55 2001
+: Sin: : all your notes telling me such have been nuked
+Sat Jun  9 15:26:39 2001
+: Flux: imm ahh.. well, we need areas. just basic work on the city is all
+Sat Jun  9 15:26:48 2001
+: Sin: : okie.
+Sat Jun  9 15:26:58 2001
+: Sin: : be well hon.. i'm here if you need something
+Sat Jun  9 15:27:03 2001
+: Flux: imm ill still be here too
+Sat Jun  9 15:27:05 2001
+: Flux: beep self
+Sat Jun  9 15:27:09 2001
+: Flux: imm beep works ;)
+Sat Jun  9 15:27:16 2001
+: Sin: : i dont wanna bother you tho
+Sat Jun  9 15:27:34 2001
+: Flux: imm thanks dena.. its ok, I only get miffed if I'm bugged while writing
+Sat Jun  9 15:27:43 2001
+: Sin: : well i never know what you're doing
+Sat Jun  9 15:27:48 2001
+: Sin: : for all i know writing is all you do
+Sat Jun  9 15:28:16 2001
+: Flux: imm im working on some homework for my counselor... ill try to make it more known
+Sat Jun  9 15:28:26 2001
+: Sin: : does walmart sell microphones for computers?
+Sat Jun  9 15:28:42 2001
+: Flux: imm i bet they do, but you'd be lucky to find one in that store
+Sat Jun  9 15:28:51 2001
+: Sin: : hastings?
+Sat Jun  9 15:28:51 2001
+: Flux: imm they're so damn big
+Sat Jun  9 15:29:04 2001
+: Sin: : oh, i can find a fucking needle in walmart. its my store.
+Sat Jun  9 15:29:15 2001
+: Flux: imm i always rely on little software stores like EB... i know target didnt have them
+Sat Jun  9 15:29:25 2001
+: Sin: : hmm.. the mall is 20 miles from here
+Sat Jun  9 15:29:31 2001
+: Flux: imm i dont like big stores myself
+Sat Jun  9 15:29:44 2001
+: Flux: imm they dont pay attention to their electronics sections
+Sat Jun  9 15:29:45 2001
+: Sin: : i guess i could hit the new mall, only 10 from here.. never been there
+Sat Jun  9 15:30:08 2001
+: Sin: : i drive past it every day on the way to work tho =)
+Sat Jun  9 15:30:13 2001
+: Sin: : did i tell you? i work for kraft now
+Sat Jun  9 15:30:18 2001
+: Flux: imm Kraft?
+Sat Jun  9 15:30:21 2001
+: Flux: imm like foods?
+Sat Jun  9 15:30:22 2001
+: Sin: : the food company.
+Sat Jun  9 15:30:30 2001
+: Flux: imm ooo
+Sat Jun  9 15:30:32 2001
+: Sin: : i'm still a consultant but my position is with them
+Sat Jun  9 15:30:37 2001
+: Flux: imm they have good cheese
+Sat Jun  9 15:30:39 2001
+: Sin: : and its long term.. 6 mos to 2 years
+Sat Jun  9 15:31:01 2001
+: Flux: imm whatcha doin with them,?
+Sat Jun  9 15:31:29 2001
+: Sin: : umm.. hard to explain. basically (very basically), validating bills.
+Sat Jun  9 15:31:49 2001
+: Flux: imm okies.. well its likely over my head ;)
+Sat Jun  9 15:32:02 2001
+: Sin: : i'm gonna shower and probably head to the mall
+Sat Jun  9 15:32:04 2001
+: Flux: imm my math is theoretical, i dont like all those real applications
+Sat Jun  9 15:32:04 2001
+: Sin: : afk a bit =)
+Sat Jun  9 15:32:07 2001
+: Sin: embra flux
+Sat Jun  9 15:32:11 2001
+: Flux: imm :)
+Sat Jun  9 15:32:21 2001
+: Sin: title shower and perhaps mall.
+Sat Jun  9 15:32:21 2001
+: Sin: afk
+Sat Jun  9 15:37:22 2001
+: Flux: note list
+Sat Jun  9 15:37:24 2001
+: Flux: note read 1
+Sat Jun  9 16:58:35 2001
+: Flux: quit
+Sat Jun  9 17:15:52 2001
+: (Unknown): No
+Sat Jun  9 17:15:55 2001
+: (Unknown): Aloran
+Sat Jun  9 17:15:56 2001
+: Aloran: aloran27
+Sat Jun  9 17:15:57 2001
+: Aloran:  
+Sat Jun  9 17:15:58 2001
+: Aloran: who
+Sat Jun  9 17:16:00 2001
+: Aloran: save
+Sat Jun  9 17:16:00 2001
+: Aloran: note list
+Sat Jun  9 17:16:02 2001
+: Aloran: save
+Sat Jun  9 17:16:02 2001
+: Aloran: quit
+Sat Jun  9 17:50:13 2001
+: (Unknown): y
+Sat Jun  9 17:50:13 2001
+: (Unknown): sin
+Sat Jun  9 17:50:13 2001
+: Sin: panther
+Sat Jun  9 17:50:14 2001
+: Sin:  
+Sat Jun  9 17:50:15 2001
+: Sin: who
+Sat Jun  9 17:50:17 2001
+: Sin: unread
+Sat Jun  9 18:19:22 2001
+: Sin: who
+Sat Jun  9 18:31:30 2001
+: Sin: title is here, type beep sin
+Sat Jun  9 18:31:31 2001
+: Sin: who
+Sat Jun  9 18:31:33 2001
+: Sin: commands
+Sat Jun  9 18:37:01 2001
+: Sin: who
+Sat Jun  9 18:42:35 2001
+: Sin: eq
+Sat Jun  9 18:42:42 2001
+: Sin: look self
+Sat Jun  9 18:42:52 2001
+: Sin: eq tat
+Sat Jun  9 18:42:59 2001
+: Sin: wizh
+Sat Jun  9 18:43:03 2001
+: Sin: remtattoo
+Sat Jun  9 18:43:09 2001
+: Sin: remtattoo chest sin
+Sat Jun  9 18:43:11 2001
+: Sin: look self
+Sat Jun  9 18:43:13 2001
+: Sin: eq tat
+Sat Jun  9 18:51:05 2001
+: Sin: title brb!
+Sat Jun  9 18:51:06 2001
+: Sin: afk
+Sat Jun  9 19:22:23 2001
+: Sin: title is here, beep sin
+Sat Jun  9 21:06:19 2001
+: Sin: who
+Sun Jun 10 00:16:11 2001
+: (Unknown): y
+Sun Jun 10 00:16:15 2001
+: (Unknown): Flux
+Sun Jun 10 00:16:15 2001
+: Flux: verite
+Sun Jun 10 00:16:16 2001
+: Flux:  
+Sun Jun 10 00:16:17 2001
+: Flux: wh
+Sun Jun 10 00:16:27 2001
+: Flux: imm ooo, shopping spree for the kitten ;)
+Sun Jun 10 00:17:19 2001
+: Sin: : slightly
+Sun Jun 10 00:17:29 2001
+: Sin: : my dumb ass went into the disney store
+Sun Jun 10 00:17:42 2001
+: Flux: imm the disney store? ;)
+Sun Jun 10 00:18:05 2001
+: Flux: imm no microphones in there, impulse cutsy shopping is a bane of mine too
+Sun Jun 10 00:19:32 2001
+: Flux: imm ive got to obsess over page views on my new story for a moment, having an audience is a bad thing sometimes ;)
+Sun Jun 10 00:20:26 2001
+: Sin: : ..ok.
+Sun Jun 10 00:21:21 2001
+: Flux: imm eh, itll get read by people in the morning, i guess people sleep at some points ;)
+Sun Jun 10 00:21:46 2001
+: Sin: : i got a stuffed eeyore dressed like a swashbuckler
+Sun Jun 10 00:22:12 2001
+: Sin: : and an eeyore mug thats got "pessimistically optimistic" written all over it
+Sun Jun 10 00:22:27 2001
+: Flux: imm heh, I love the depressed donkey :)
+Sun Jun 10 00:22:43 2001
+: Flux: imm got eeyore philosophy books on the shelf
+Sun Jun 10 00:23:33 2001
+: Sin: : and i prebought the expack
+Sun Jun 10 00:23:46 2001
+: Sin: : and the dnd defenders of the faith ..
+Sun Jun 10 00:24:01 2001
+: Flux: imm i gotta do that at some point.. best buy has it for cheapo and it comes with a CD
+Sun Jun 10 00:24:24 2001
+: Flux: imm I can't afford rule books much anymore :(
+Sun Jun 10 00:24:32 2001
+: Sin: : and i bought a DVD
+Sun Jun 10 00:24:36 2001
+: Flux: imm got all the WW stuff except for changeling tho
+Sun Jun 10 00:24:52 2001
+: Sin: : all i have WW is MtA
+Sun Jun 10 00:25:36 2001
+: Flux: imm ive got the entirety of the mage books, and the core hardbacks for everything else, including the vastly underplayed wraith and the psonic one.. forgot the name.. I was very into WW for a while ;)
+Sun Jun 10 00:26:06 2001
+: Flux: imm which DVD did ya grab?
+Sun Jun 10 00:26:53 2001
+: Sin: : cecil b demented
+Sun Jun 10 00:27:01 2001
+: Flux: imm i wanted to see that :(
+Sun Jun 10 00:27:14 2001
+: Sin: : its very good
+Sun Jun 10 00:27:34 2001
+: Flux: imm havent seen a movie in a while.. before Hidden tiger it was around 2 years since i had seen a movie
+Sun Jun 10 00:27:57 2001
+: Flux: imm and I was dragged to HTCD by my roommate for my birthday ;)
+Sun Jun 10 00:30:40 2001
+: Sin: : heh
+Sun Jun 10 00:30:52 2001
+: Sin: : i've never seen crouching tiger
+Sun Jun 10 00:31:05 2001
+: Flux: imm uh? It's a really good movie
+Sun Jun 10 00:31:37 2001
+: Flux: imm ranks up there in the must see catagory for me, I think that list is only around 7 or 8 movies long
+Sun Jun 10 00:32:11 2001
+: Sin: :http://www.furrygames.com/weirdness.html
+Sun Jun 10 00:32:16 2001
+: Sin: : a weirdness test =)
+Sun Jun 10 00:32:58 2001
+: Flux: imm you surf sillyness too much ;)... I'll look at it in a sec, gotta finish posting on the warcraft site
+Sun Jun 10 00:37:43 2001
+: Sin: : i live for sillyness
+Sun Jun 10 00:38:10 2001
+: Flux: imm apparently I'm only half wierd, mainly due to my terrible memory retention of fiction I've read ;)
+Sun Jun 10 00:38:31 2001
+: Flux: imm I remember reading books about a lotta stuff, just can't remember anything else but having read them
+Sun Jun 10 00:39:50 2001
+: Flux: imm almost forgot today is sunday
+Sun Jun 10 00:42:34 2001
+: Sin: : heh i'm 66% weird
+Sun Jun 10 00:42:48 2001
+: Sin: : 66% pure to think of it too.. i took a purity test today as well. coincidence?
+Sun Jun 10 00:44:21 2001
+: Flux: imm so youre 34% random impurities?
+Sun Jun 10 00:44:41 2001
+: Flux: imm ;
+Sun Jun 10 00:44:43 2001
+: Flux: imm ;)
+Sun Jun 10 00:44:56 2001
+: Sin: : apparently so
+Sun Jun 10 00:45:45 2001
+: Flux: imm ack ive got 3 seconds of lag
+Sun Jun 10 00:46:00 2001
+: Flux: imm wierd.. im not downloading or anything
+Sun Jun 10 00:46:02 2001
+: Sin: : and a partridge in a pear tree
+Sun Jun 10 00:46:46 2001
+: Flux: imm since I actually paid the ISP I'm just gonna complain ;) Silly isps
+Sun Jun 10 00:48:37 2001
+: Sin: : hehe
+Sun Jun 10 02:43:28 2001
+: Flux: quit
+Sun Jun 10 11:45:42 2001
+: (Unknown): y
+Sun Jun 10 11:45:43 2001
+: (Unknown): Flux
+Sun Jun 10 11:45:44 2001
+: Flux: verite
+Sun Jun 10 11:45:46 2001
+: Flux:  
+Sun Jun 10 11:46:08 2001
+: Flux: title is elsewhere, more than likely away from the computer.
+Sun Jun 10 11:46:13 2001
+: Flux: title is elsewhere.
+Sun Jun 10 11:46:15 2001
+: Flux: afk
+Sun Jun 10 11:50:18 2001
+: Flux: wh
+Sun Jun 10 11:50:19 2001
+: Flux: afk
+Sun Jun 10 12:10:05 2001
+: (Unknown): y
+Sun Jun 10 12:10:05 2001
+: (Unknown): sin
+Sun Jun 10 12:10:05 2001
+: Sin: panther
+Sun Jun 10 12:10:19 2001
+: Sin:  
+Sun Jun 10 12:10:19 2001
+: Sin:  
+Sun Jun 10 12:10:23 2001
+: Sin: who
+Sun Jun 10 12:10:28 2001
+: Sin: finger hugh
+Sun Jun 10 13:04:27 2001
+: Flux: imm I'm going out.. maybe eating something will wake me up
+Sun Jun 10 13:04:29 2001
+: Flux: wh
+Sun Jun 10 13:05:33 2001
+: Flux: imm just glad its sunday, bastard baseball team better get their game done before I get to work today... they should pay me to be their press manager for all the trouble I go through to hunting down a box score
+Sun Jun 10 13:05:52 2001
+: Flux: imm AFK/BuBbLe in any case
+Sun Jun 10 13:07:24 2001
+: Flux: afk
+Sun Jun 10 16:36:13 2001
+: Flux: quit
+Sun Jun 10 18:03:35 2001
+: (Unknown): y
+Sun Jun 10 18:03:35 2001
+: (Unknown): sin
+Sun Jun 10 18:03:35 2001
+: Sin: panther
+Sun Jun 10 18:03:36 2001
+: Sin:  
+Sun Jun 10 18:03:36 2001
+: Sin: who
+Sun Jun 10 18:03:42 2001
+: Sin: finger hugh
+Sun Jun 10 18:21:22 2001
+: Sin: who
+Sun Jun 10 18:43:59 2001
+: Sin: who
+Sun Jun 10 21:32:41 2001
+: Sin: who
+Sun Jun 10 23:29:17 2001
+: (Unknown): y
+Sun Jun 10 23:29:18 2001
+: (Unknown): Flux
+Sun Jun 10 23:29:19 2001
+: Flux: verite
+Sun Jun 10 23:29:41 2001
+: Flux:  
+Sun Jun 10 23:29:42 2001
+: Flux: wh
+Sun Jun 10 23:31:43 2001
+: Sin: : i got kittie up to 47
+Sun Jun 10 23:31:55 2001
+: Flux: imm ooo
+Sun Jun 10 23:31:58 2001
+: Sin: : and dedjhet gave her goldwrap for free, so nows shes got the GIAS lance, sias gloves and goldwrap
+Sun Jun 10 23:32:09 2001
+: Sin: : i gave him a belt anyways, even tho he gave it free
+Sun Jun 10 23:32:11 2001
+: Flux: imm neat
+Sun Jun 10 23:32:27 2001
+: Flux: imm that man still bugs the crap out of me
+Sun Jun 10 23:32:58 2001
+: Sin: : me too, but i'm all for milking things to get free shit. why not, he fucks with so many people.
+Sun Jun 10 23:33:43 2001
+: Flux: imm I just squelch him when I hear his name... he threatened one of maryas friends, he was blackmailing her
+Sun Jun 10 23:34:09 2001
+: Sin: : he threatened saz, i know.
+Sun Jun 10 23:34:28 2001
+: Flux: imm so I just dont consort with sociopaths like him
+Sun Jun 10 23:34:52 2001
+: Sin: : yah well saz isnt very high on my list of people to believe right now
+Sun Jun 10 23:35:03 2001
+: Sin: : i dont even believe shes a she.
+Sun Jun 10 23:35:56 2001
+: Flux: imm well, you can believe what you will, I talk to very few people on bnet anyways, having 1 more person squelched is just a penny in a jar for me
+Sun Jun 10 23:36:14 2001
+: Sin: : why are you getting pissed at me?
+Sun Jun 10 23:36:22 2001
+: Flux: imm im not pissed at you
+Sun Jun 10 23:36:32 2001
+: Sin: : its not like i banged the guy or even talked to him. i was in a game, someone asked me if i had goldwrap, i said no, he gave me one.
+Sun Jun 10 23:36:33 2001
+: Flux: imm I was referring to dedj
+Sun Jun 10 23:36:47 2001
+: Flux: imm I dont squelch you on bnet
+Sun Jun 10 23:37:09 2001
+: Sin: :  you're getting upset about the fact that i got an item from him tho
+Sun Jun 10 23:37:57 2001
+: Flux: imm I'm upset at a whole host of things tonight, and you're not one of them dena, I'm just frustrated from some things left on my message machine
+Sun Jun 10 23:38:18 2001
+: Sin: : well i'm sorry to hear that.
+Sun Jun 10 23:39:22 2001
+: Flux: note to all
+Sun Jun 10 23:39:26 2001
+: Flux: note subject test
+Sun Jun 10 23:39:28 2001
+: Flux: note protect
+Sun Jun 10 23:39:30 2001
+: Sin: embra flux
+Sun Jun 10 23:39:34 2001
+: Flux: imm figured it out
+Sun Jun 10 23:39:35 2001
+: Sin: : i'm goin to bed, i have to get up in 5 hours.
+Sun Jun 10 23:39:39 2001
+: Sin: : figured what out?
+Sun Jun 10 23:39:40 2001
+: Flux: imm hold a sec ;)
+Sun Jun 10 23:39:47 2001
+: Flux: imm type note protect real quick
+Sun Jun 10 23:39:50 2001
+: Flux: note clear
+Sun Jun 10 23:39:52 2001
+: Sin: note protect
+Sun Jun 10 23:40:00 2001
+: Sin: help note protect
+Sun Jun 10 23:40:04 2001
+: Sin: help protect
+Sun Jun 10 23:40:09 2001
+: Sin: : hmm.
+Sun Jun 10 23:40:16 2001
+: Flux: imm as much as I'd love to claim credit for coding that at work, I cant ;)
+Sun Jun 10 23:40:18 2001
+: Sin: : damn the help for protect is ugly colored
+Sun Jun 10 23:40:26 2001
+: Flux: imm its inherent in the system.... didnt write it
+Sun Jun 10 23:40:37 2001
+: Flux: imm i checked it out, it prevents removal
+Sun Jun 10 23:40:42 2001
+: Sin: : cool, thanks =)
+Sun Jun 10 23:40:52 2001
+: Flux: imm ill revamp it when I redo the new note system later to hold it in a diff file
+Sun Jun 10 23:41:07 2001
+: Flux: imm so we have an "archive" of notes seperated from regular ones :)
+Sun Jun 10 23:41:24 2001
+: Flux: imm ill protect the quest system notes
+Sun Jun 10 23:41:26 2001
+: Flux: note list
+Sun Jun 10 23:41:32 2001
+: Flux: note protect 2
+Sun Jun 10 23:41:34 2001
+: Flux: note list
+Sun Jun 10 23:41:42 2001
+: Flux: imm okies :)
+Sun Jun 10 23:41:47 2001
+: Flux: imm dream well dena
+Sun Jun 10 23:42:12 2001
+: Sin: : gnite
+Sun Jun 10 23:42:16 2001
+: Sin: quit
+Sun Jun 10 23:42:19 2001
+: Flux: quit
+Mon Jun 11 10:16:26 2001
+: (Unknown): y
+Mon Jun 11 10:16:27 2001
+: (Unknown): tsuke
+Mon Jun 11 10:16:28 2001
+: Tsuke: daini
+Mon Jun 11 10:16:28 2001
+: Tsuke:  
+Mon Jun 11 10:16:29 2001
+: Tsuke: who
+Mon Jun 11 10:16:36 2001
+: Tsuke: slay pist
+Mon Jun 11 10:16:40 2001
+: Tsuke: slay pistachio
+Mon Jun 11 10:16:41 2001
+: Tsuke: l
+Mon Jun 11 10:16:44 2001
+: Tsuke: eat cor
+Mon Jun 11 10:16:48 2001
+: Tsuke: sac cor
+Mon Jun 11 10:16:50 2001
+: Tsuke: drink blood
+Mon Jun 11 10:16:52 2001
+: Tsuke: sac corpse
+Mon Jun 11 10:16:54 2001
+: Tsuke: l
+Mon Jun 11 12:18:01 2001
+: (Unknown): No
+Mon Jun 11 12:18:04 2001
+: (Unknown): Aloran
+Mon Jun 11 12:18:06 2001
+: Aloran: aloran27
+Mon Jun 11 12:18:07 2001
+: Aloran:  
+Mon Jun 11 12:18:08 2001
+: Aloran: who
+Mon Jun 11 12:18:10 2001
+: Aloran: save
+Mon Jun 11 12:18:11 2001
+: Aloran: note list
+Mon Jun 11 12:18:12 2001
+: Aloran: who
+Mon Jun 11 12:18:14 2001
+: Aloran: save
+Mon Jun 11 12:18:14 2001
+: Aloran: quit
+Mon Jun 11 16:44:57 2001
+: (Unknown): y
+Mon Jun 11 16:44:57 2001
+: (Unknown): sin
+Mon Jun 11 16:44:57 2001
+: Sin: panther
+Mon Jun 11 16:44:58 2001
+: Sin:  
+Mon Jun 11 16:44:59 2001
+: Sin: who
+Mon Jun 11 16:45:01 2001
+: Sin: finger hugh
+Mon Jun 11 16:48:08 2001
+: Sin: who
+Mon Jun 11 16:54:49 2001
+: Sin: quit
+Mon Jun 11 19:59:17 2001
+: (Unknown): y
+Mon Jun 11 19:59:18 2001
+: (Unknown): sin
+Mon Jun 11 19:59:18 2001
+: Sin: panther
+Mon Jun 11 19:59:19 2001
+: Sin:  
+Mon Jun 11 19:59:19 2001
+: Sin: who
+Mon Jun 11 19:59:53 2001
+: Sin: quit
+Tue Jun 12 00:16:29 2001
+: (Unknown): y
+Tue Jun 12 00:16:30 2001
+: (Unknown): Flux
+Tue Jun 12 00:16:30 2001
+: Flux: verite
+Tue Jun 12 00:16:31 2001
+: Flux:  
+Tue Jun 12 00:16:32 2001
+: Flux: wh
+Tue Jun 12 00:16:39 2001
+: Flux: quit
+Tue Jun 12 05:20:42 2001
+: (Unknown): y
+Tue Jun 12 05:20:45 2001
+: (Unknown): tsuke
+Tue Jun 12 05:20:45 2001
+: Tsuke: daini
+Tue Jun 12 12:47:14 2001
+: (Unknown): No
+Tue Jun 12 12:47:15 2001
+: (Unknown): Aloran
+Tue Jun 12 12:47:16 2001
+: Aloran: aloran27
+Tue Jun 12 12:47:16 2001
+: Aloran:  
+Tue Jun 12 12:47:17 2001
+: Aloran: who
+Tue Jun 12 12:47:18 2001
+: Aloran: save
+Tue Jun 12 12:47:19 2001
+: Aloran: note list
+Tue Jun 12 12:47:20 2001
+: Aloran: save
+Tue Jun 12 12:47:21 2001
+: Aloran: qui9
+Tue Jun 12 12:47:22 2001
+: Aloran: quit
+Tue Jun 12 16:00:21 2001
+: (Unknown): No
+Tue Jun 12 16:00:22 2001
+: (Unknown): Aloran
+Tue Jun 12 16:00:23 2001
+: Aloran: aloran27
+Tue Jun 12 16:00:24 2001
+: Aloran:  
+Tue Jun 12 16:00:24 2001
+: Aloran: who
+Tue Jun 12 16:00:25 2001
+: Aloran: save
+Tue Jun 12 16:00:27 2001
+: Aloran: quit
+Tue Jun 12 18:22:28 2001
+: (Unknown): y
+Tue Jun 12 18:22:28 2001
+: (Unknown): sin
+Tue Jun 12 18:22:28 2001
+: Sin: panther
+Tue Jun 12 18:22:29 2001
+: Sin:  
+Tue Jun 12 18:22:29 2001
+: Sin: who
+Tue Jun 12 18:22:32 2001
+: Sin: finger hugh
+Tue Jun 12 18:22:33 2001
+: Sin: who
+Tue Jun 12 18:22:34 2001
+: Sin: afk
+Tue Jun 12 18:41:23 2001
+: Sin: title bbl
+Tue Jun 12 18:41:24 2001
+: Sin: afk
+Tue Jun 12 20:35:17 2001
+: Sin: quit
+Tue Jun 12 23:48:22 2001
+: (Unknown): y
+Tue Jun 12 23:48:23 2001
+: (Unknown): Flux
+Tue Jun 12 23:48:23 2001
+: Flux: verite
+Tue Jun 12 23:48:24 2001
+: Flux:  
+Tue Jun 12 23:48:25 2001
+: Flux: wh
+Tue Jun 12 23:50:07 2001
+: Flux: quit
+Wed Jun 13 00:50:21 2001
+: (Unknown): y
+Wed Jun 13 00:50:22 2001
+: (Unknown): tsuke
+Wed Jun 13 00:50:23 2001
+: Tsuke: spressa
+Wed Jun 13 00:50:28 2001
+: (Unknown): y
+Wed Jun 13 00:50:29 2001
+: (Unknown): tsuke
+Wed Jun 13 00:50:30 2001
+: Tsuke: daini
+Wed Jun 13 00:50:30 2001
+: Tsuke:  
+Wed Jun 13 00:50:31 2001
+: Tsuke: who
+Wed Jun 13 00:50:32 2001
+: Tsuke: note
+Wed Jun 13 00:52:24 2001
+: Tsuke: who
+Wed Jun 13 00:52:30 2001
+: Tsuke: hlist 600 700
+Wed Jun 13 00:52:38 2001
+: Tsuke: help backstab
+Wed Jun 13 00:52:44 2001
+: Tsuke: help double backsta
+Wed Jun 13 00:52:48 2001
+: Tsuke: help double backstab
+Wed Jun 13 01:05:49 2001
+: Tsuke: l
+Wed Jun 13 12:35:01 2001
+: (Unknown): y
+Wed Jun 13 12:35:25 2001
+: (Unknown): sLiVeRwOrM
+Wed Jun 13 12:35:28 2001
+: SLiVeRwOrM: y
+Wed Jun 13 12:35:32 2001
+: SLiVeRwOrM: anarkist
+Wed Jun 13 12:35:35 2001
+: SLiVeRwOrM: anarkist
+Wed Jun 13 12:35:38 2001
+: SLiVeRwOrM: n
+Wed Jun 13 12:35:51 2001
+: SLiVeRwOrM: help Quicksilver
+Wed Jun 13 12:35:57 2001
+: SLiVeRwOrM: Quicksilver
+Wed Jun 13 12:36:15 2001
+: SLiVeRwOrM: y
+Wed Jun 13 14:46:24 2001
+: (Unknown): No
+Wed Jun 13 14:46:25 2001
+: (Unknown): Aloran
+Wed Jun 13 14:46:26 2001
+: Aloran: aloran27
+Wed Jun 13 14:46:27 2001
+: Aloran:  
+Wed Jun 13 14:46:27 2001
+: Aloran: who
+Wed Jun 13 14:46:34 2001
+: Aloran: note list
+Wed Jun 13 14:54:40 2001
+: Aloran: save
+Wed Jun 13 14:54:43 2001
+: Aloran: quit
+Wed Jun 13 20:43:17 2001
+: (Unknown): y
+Wed Jun 13 20:43:17 2001
+: (Unknown): sin
+Wed Jun 13 20:43:17 2001
+: Sin: panther
+Wed Jun 13 20:43:18 2001
+: Sin:  
+Wed Jun 13 20:43:20 2001
+: Sin: who
+Wed Jun 13 20:43:25 2001
+: Sin: help secondportgreeting
+Wed Jun 13 20:44:45 2001
+: Sin: help greeting
+Thu Jun 14 14:48:28 2001
+: (Unknown): y
+Thu Jun 14 14:48:29 2001
+: (Unknown): Flux
+Thu Jun 14 14:48:29 2001
+: Flux: verite
+Thu Jun 14 14:48:30 2001
+: Flux:  
+Thu Jun 14 14:48:31 2001
+: Flux: wh
+Thu Jun 14 14:48:42 2001
+: Flux: title is coding, in another window :)
+Thu Jun 14 18:01:10 2001
+: (Unknown): y
+Thu Jun 14 18:01:12 2001
+: (Unknown): tsuke
+Thu Jun 14 18:01:13 2001
+: Tsuke: daini
+Thu Jun 14 18:01:14 2001
+: Tsuke:  
+Thu Jun 14 18:01:16 2001
+: Tsuke: who
+Thu Jun 14 18:01:18 2001
+: Tsuke: note
+Thu Jun 14 18:02:16 2001
+: Tsuke: title has cleaned his bong.
+Thu Jun 14 18:03:23 2001
+: Tsuke: who
+Thu Jun 14 18:06:42 2001
+: (Unknown): y
+Thu Jun 14 18:06:43 2001
+: (Unknown): Flux
+Thu Jun 14 18:06:43 2001
+: Flux: verite
+Thu Jun 14 18:13:43 2001
+: Tsuke: who
+Thu Jun 14 18:19:29 2001
+: (Unknown): y
+Thu Jun 14 18:19:30 2001
+: (Unknown): tsuke
+Thu Jun 14 18:19:31 2001
+: Tsuke: daini
+Thu Jun 14 18:19:32 2001
+: Tsuke: who
+Thu Jun 14 18:25:19 2001
+: Tsuke: who
+Thu Jun 14 18:38:45 2001
+: Tsuke:  
+Thu Jun 14 18:38:46 2001
+: Tsuke:  
+Thu Jun 14 18:39:34 2001
+: (Unknown): y
+Thu Jun 14 18:39:36 2001
+: (Unknown): tsuke
+Thu Jun 14 18:39:37 2001
+: Tsuke: daini
+Thu Jun 14 18:39:37 2001
+: Tsuke:  
+Thu Jun 14 18:39:38 2001
+: Tsuke: who
+Thu Jun 14 18:59:25 2001
+: Tsuke: who
+Thu Jun 14 18:59:36 2001
+: Tsuke: wizhelp
+Thu Jun 14 18:59:51 2001
+: Tsuke:  
+Thu Jun 14 18:59:53 2001
+: Tsuke:  
+Thu Jun 14 19:00:42 2001
+: (Unknown): y
+Thu Jun 14 19:00:43 2001
+: (Unknown): tsuke
+Thu Jun 14 19:00:44 2001
+: Tsuke: daini
+Thu Jun 14 19:00:44 2001
+: Tsuke:  
+Thu Jun 14 19:00:46 2001
+: Tsuke: wizhelp
+Thu Jun 14 19:00:47 2001
+: Tsuke: who
+Thu Jun 14 19:01:07 2001
+: Tsuke: help color
+Thu Jun 14 19:01:23 2001
+: Tsuke: whotype &OStinky
+Thu Jun 14 19:01:24 2001
+: Tsuke: who
+Thu Jun 14 20:10:56 2001
+: (Unknown): No
+Thu Jun 14 20:10:57 2001
+: (Unknown): Aloran
+Thu Jun 14 20:10:58 2001
+: Aloran: aloran27
+Thu Jun 14 20:10:59 2001
+: Aloran:  
+Thu Jun 14 20:10:59 2001
+: Aloran: who
+Thu Jun 14 20:11:01 2001
+: Aloran: save
+Thu Jun 14 20:11:02 2001
+: Aloran: notelist
+Thu Jun 14 20:11:03 2001
+: Aloran: save
+Thu Jun 14 20:11:04 2001
+: Aloran: note list
+Thu Jun 14 20:11:04 2001
+: Aloran: save
+Thu Jun 14 20:11:05 2001
+: Aloran: quit
+Thu Jun 14 20:36:03 2001
+: (Unknown): y
+Thu Jun 14 20:36:19 2001
+: (Unknown): y
+Thu Jun 14 20:36:20 2001
+: (Unknown): Flux
+Thu Jun 14 20:36:20 2001
+: Flux: verite
+Thu Jun 14 20:36:21 2001
+: Flux:  
+Thu Jun 14 20:36:23 2001
+: Flux: wh
+Thu Jun 14 21:18:17 2001
+: (Unknown): y
+Thu Jun 14 21:18:18 2001
+: (Unknown): Flux
+Thu Jun 14 21:18:19 2001
+: Flux: verite
+Thu Jun 14 21:19:01 2001
+: (Unknown): yyes
+Thu Jun 14 21:19:04 2001
+: (Unknown): y
+Thu Jun 14 21:19:15 2001
+: (Unknown): yes
+Thu Jun 14 21:19:22 2001
+: (Unknown): Talon
+Thu Jun 14 21:19:25 2001
+: Talon: y
+Thu Jun 14 21:19:29 2001
+: Talon: wolfwolf
+Thu Jun 14 21:19:31 2001
+: Talon: wolfwolf
+Thu Jun 14 21:19:36 2001
+: Talon: m
+Thu Jun 14 21:19:54 2001
+: (Unknown): DelDDelArin
+Thu Jun 14 21:20:58 2001
+: Talon: /comands
+Thu Jun 14 21:23:07 2001
+: (Unknown): y
+Thu Jun 14 21:23:24 2001
+: (Unknown): DelArin
+Thu Jun 14 21:23:28 2001
+: DelArin: y
+Thu Jun 14 21:23:32 2001
+: DelArin: smokey
+Thu Jun 14 21:23:34 2001
+: DelArin: smokey
+Thu Jun 14 21:23:37 2001
+: DelArin: M
+Thu Jun 14 21:23:55 2001
+: Talon: say hey
+Thu Jun 14 21:23:59 2001
+: Talon: say hey
+Thu Jun 14 21:32:55 2001
+: Flux: wh
+Thu Jun 14 21:33:00 2001
+: DelArin:  
+Thu Jun 14 21:35:01 2001
+: (Unknown): yes
+Thu Jun 14 21:35:05 2001
+: (Unknown): y
+Thu Jun 14 21:35:18 2001
+: (Unknown): Talon
+Thu Jun 14 21:35:21 2001
+: Talon: y
+Thu Jun 14 21:35:23 2001
+: (Unknown): Del'Arin
+Thu Jun 14 21:35:23 2001
+: Talon: wolfwolf
+Thu Jun 14 21:35:25 2001
+: Talon: wolfwolf
+Thu Jun 14 21:35:27 2001
+: (Unknown): DelArin
+Thu Jun 14 21:35:27 2001
+: Talon: m
+Thu Jun 14 21:35:31 2001
+: DelArin: y
+Thu Jun 14 21:35:31 2001
+: Talon: elf
+Thu Jun 14 21:35:34 2001
+: DelArin: smokey
+Thu Jun 14 21:35:36 2001
+: DelArin: smokey
+Thu Jun 14 21:35:50 2001
+: DelArin: M
+Thu Jun 14 21:35:57 2001
+: DelArin: Elf
+Thu Jun 14 21:36:27 2001
+: DelArin:  
+Thu Jun 14 21:36:29 2001
+: DelArin: y
+Thu Jun 14 21:36:40 2001
+: DelArin: Rogue
+Thu Jun 14 21:36:51 2001
+: DelArin: y
+Thu Jun 14 21:36:54 2001
+: DelArin:  
+Thu Jun 14 21:36:59 2001
+: DelArin: y
+Thu Jun 14 21:37:06 2001
+: Flux: goto del
+Thu Jun 14 21:37:07 2001
+: Talon: yes
+Thu Jun 14 21:37:10 2001
+: Flux: say boo
+Thu Jun 14 21:37:13 2001
+: Flux: ofind fire
+Thu Jun 14 21:37:16 2001
+: Flux: oload 101
+Thu Jun 14 21:37:24 2001
+: Flux: say type "say <<message>>" to speak
+Thu Jun 14 21:37:39 2001
+: DelArin: say hehe
+Thu Jun 14 21:37:42 2001
+: Talon: Naturalist
+Thu Jun 14 21:37:44 2001
+: Talon: yes
+Thu Jun 14 21:37:46 2001
+: Talon: y
+Thu Jun 14 21:37:48 2001
+: Talon:  
+Thu Jun 14 21:37:53 2001
+: Flux: smile
+Thu Jun 14 21:37:57 2001
+: Flux: eq
+Thu Jun 14 21:38:05 2001
+: Flux: unsheath gun belt
+Thu Jun 14 21:38:09 2001
+: Flux: wield gun
+Thu Jun 14 21:38:12 2001
+: Talon: say uh oh
+Thu Jun 14 21:38:23 2001
+: DelArin: say yikes?
+Thu Jun 14 21:38:32 2001
+: Talon: : test
+Thu Jun 14 21:38:37 2001
+: DelArin: say how do I do that funky stuff?
+Thu Jun 14 21:38:44 2001
+: Talon: say what is it for actions/poses?
+Thu Jun 14 21:38:51 2001
+: Flux: say lemme help tas get on
+Thu Jun 14 21:38:54 2001
+: (Unknown): y
+Thu Jun 14 21:38:55 2001
+: Talon: say k
+Thu Jun 14 21:39:10 2001
+: Talon: say Del, what are you? Elf? Drow?
+Thu Jun 14 21:39:14 2001
+: Flux: wh
+Thu Jun 14 21:39:16 2001
+: Flux: say type who
+Thu Jun 14 21:39:17 2001
+: Talon: look at Del
+Thu Jun 14 21:39:22 2001
+: Talon: who del
+Thu Jun 14 21:39:29 2001
+: (Unknown): tsuke
+Thu Jun 14 21:39:31 2001
+: Tsuke: daini
+Thu Jun 14 21:39:32 2001
+: DelArin: who huh?
+Thu Jun 14 21:39:34 2001
+: Talon: say ooo Del the rogue
+Thu Jun 14 21:39:35 2001
+: Flux: say im not sure if you see me on there tho.. im working on the 2 system duality
+Thu Jun 14 21:39:35 2001
+: Tsuke:  
+Thu Jun 14 21:39:37 2001
+: Tsuke: who
+Thu Jun 14 21:39:41 2001
+: Flux: imm heyas chris :)
+Thu Jun 14 21:39:41 2001
+: DelArin: who Flux
+Thu Jun 14 21:39:44 2001
+: DelArin: who Flux
+Thu Jun 14 21:39:45 2001
+: Tsuke: immtalk lo :)
+Thu Jun 14 21:40:01 2001
+: Talon: who talon
+Thu Jun 14 21:40:07 2001
+: DelArin: say I'm in normal crappy telnet
+Thu Jun 14 21:40:21 2001
+: DelArin: who
+Thu Jun 14 21:40:24 2001
+: Tsuke: immtalk at work, so afkish off and on
+Thu Jun 14 21:40:25 2001
+: Tsuke: who
+Thu Jun 14 21:40:30 2001
+: DelArin: imn
+Thu Jun 14 21:40:55 2001
+: Talon: say I wish there was a list of all the commands
+Thu Jun 14 21:40:58 2001
+: Talon: list commands
+Thu Jun 14 21:41:00 2001
+: Flux: say type help
+Thu Jun 14 21:41:03 2001
+: DelArin: say Pat, what's this Simple thing?
+Thu Jun 14 21:41:10 2001
+: Talon: It's a client Del
+Thu Jun 14 21:41:12 2001
+: Talon: Simple
+Thu Jun 14 21:41:14 2001
+: DelArin: htlp
+Thu Jun 14 21:41:16 2001
+: Talon: say it's a client
+Thu Jun 14 21:41:34 2001
+: DelArin: help
+Thu Jun 14 21:41:54 2001
+: Talon: help
+Thu Jun 14 21:42:01 2001
+: Flux: say its a face, makes it prettier and easier to mud ;)
+Thu Jun 14 21:42:32 2001
+: Talon: rescue del
+Thu Jun 14 21:42:39 2001
+: DelArin: practice
+Thu Jun 14 21:42:42 2001
+: DelArin: train
+Thu Jun 14 21:42:57 2001
+: DelArin: yell HELLO!
+Thu Jun 14 21:43:00 2001
+: Talon: /rescue del
+Thu Jun 14 21:43:02 2001
+: DelArin: say hehe
+Thu Jun 14 21:43:02 2001
+: Flux: say ok he's coming
+Thu Jun 14 21:43:09 2001
+: Talon: say cool
+Thu Jun 14 21:43:17 2001
+: Flux: imm just some friends who wanted to see what muds were aboot
+Thu Jun 14 21:43:25 2001
+: Talon: say did anything show up for you guys. Anything about rescue del?
+Thu Jun 14 21:43:26 2001
+: Flux: ofind food
+Thu Jun 14 21:43:29 2001
+: Flux: say yeah
+Thu Jun 14 21:43:34 2001
+: Tsuke: immtalk ahh
+Thu Jun 14 21:43:35 2001
+: Talon: say sweet :-)
+Thu Jun 14 21:43:38 2001
+: Flux: say you must have put somthing before it
+Thu Jun 14 21:43:41 2001
+: DelArin: say yeah
+Thu Jun 14 21:43:44 2001
+: Flux: say you accessed the gratz channel
+Thu Jun 14 21:44:02 2001
+: (Unknown): noODOCODOBOAnjnnoeinsdnnnnnnn
+Thu Jun 14 21:44:07 2001
+: Talon: say ....
+Thu Jun 14 21:44:18 2001
+: Flux: say del, in the window there should be a way to turn on local echo
+Thu Jun 14 21:44:24 2001
+: (Unknown): nn
+Thu Jun 14 21:44:29 2001
+: (Unknown): n
+Thu Jun 14 21:44:32 2001
+: Talon: WHO
+Thu Jun 14 21:44:33 2001
+: Flux: unsheath knife boot
+Thu Jun 14 21:44:36 2001
+: Flux: dual knife
+Thu Jun 14 21:44:39 2001
+: Flux: dual knife slash
+Thu Jun 14 21:44:46 2001
+: Flux: say hmm
+Thu Jun 14 21:44:50 2001
+: Talon: wield knife
+Thu Jun 14 21:44:57 2001
+: Talon: inventory
+Thu Jun 14 21:44:59 2001
+: DelArin: say yep
+Thu Jun 14 21:45:04 2001
+: Flux: ponder
+Thu Jun 14 21:45:12 2001
+: (Unknown): Alex
+Thu Jun 14 21:45:13 2001
+: DelArin: say thaOC
+Thu Jun 14 21:45:14 2001
+: Talon: say is a bit confused
+Thu Jun 14 21:45:19 2001
+: DelArin: hehe
+Thu Jun 14 21:45:19 2001
+: Alex: y
+Thu Jun 14 21:45:25 2001
+: DelArin: say whoops :)
+Thu Jun 14 21:45:26 2001
+: Alex: jason
+Thu Jun 14 21:45:26 2001
+: Flux: say thAC0 doesnt exist
+Thu Jun 14 21:45:29 2001
+: Alex: jason
+Thu Jun 14 21:45:32 2001
+: Alex: m
+Thu Jun 14 21:45:39 2001
+: Flux: say there's tas :)
+Thu Jun 14 21:45:41 2001
+: DelArin: say I was attempting to say thanks
+Thu Jun 14 21:45:43 2001
+: Alex: Kender
+Thu Jun 14 21:45:45 2001
+: Flux: say ahh
+Thu Jun 14 21:45:47 2001
+: Talon: say this stuff is a fair bit different from the mush I was in
+Thu Jun 14 21:45:54 2001
+: DelArin: /help
+Thu Jun 14 21:45:56 2001
+: Flux: say mushes are mostly for chatting
+Thu Jun 14 21:46:14 2001
+: Alex: yes
+Thu Jun 14 21:46:23 2001
+: Talon: say ah
+Thu Jun 14 21:46:29 2001
+: Talon: help
+Thu Jun 14 21:46:40 2001
+: DelArin: /help
+Thu Jun 14 21:46:48 2001
+: DelArin: say I can't get the help thing up anymore
+Thu Jun 14 21:46:54 2001
+: Flux: say just type help
+Thu Jun 14 21:46:58 2001
+: Alex: Rogue
+Thu Jun 14 21:47:01 2001
+: Flux: say you dont need anything before the word help
+Thu Jun 14 21:47:16 2001
+: Talon: say so there's nothing before any of the commands like ; or / ?
+Thu Jun 14 21:47:22 2001
+: Flux: say nope
+Thu Jun 14 21:47:29 2001
+: Flux: say because you have to type "say" to speak
+Thu Jun 14 21:47:30 2001
+: Alex: `back
+Thu Jun 14 21:47:31 2001
+: Talon: practice
+Thu Jun 14 21:47:34 2001
+: Alex: BACK
+Thu Jun 14 21:47:36 2001
+: Talon: train
+Thu Jun 14 21:47:38 2001
+: Alex: BACK
+Thu Jun 14 21:47:39 2001
+: Tsuke: who
+Thu Jun 14 21:47:40 2001
+: Talon: look
+Thu Jun 14 21:47:42 2001
+: Flux: say most of the game is action, speaking is tertiary ;)
+Thu Jun 14 21:47:42 2001
+: Tsuke: at delarin l
+Thu Jun 14 21:47:44 2001
+: Alex: y
+Thu Jun 14 21:47:52 2001
+: Alex:  
+Thu Jun 14 21:48:02 2001
+: Flux: say there he is
+Thu Jun 14 21:48:12 2001
+: DelArin: htlp
+Thu Jun 14 21:48:15 2001
+: DelArin: help
+Thu Jun 14 21:48:17 2001
+: Flux: say well soon anyways
+Thu Jun 14 21:48:20 2001
+: Talon: say so if there's no exits... where do we go?
+Thu Jun 14 21:48:24 2001
+: Alex: BACK
+Thu Jun 14 21:48:27 2001
+: DelArin: wield 
+Thu Jun 14 21:48:30 2001
+: DelArin: sword
+Thu Jun 14 21:48:35 2001
+: DelArin: wield sword
+Thu Jun 14 21:48:38 2001
+: DelArin: help
+Thu Jun 14 21:48:39 2001
+: Talon: who alex
+Thu Jun 14 21:48:45 2001
+: Flux: say i can transport you to a place for now, i told you we're alpha stage, I can show you some features, but very little areas ;)
+Thu Jun 14 21:48:53 2001
+: DelArin: c
+Thu Jun 14 21:48:53 2001
+: Flux: ofind couch
+Thu Jun 14 21:48:55 2001
+: Flux: oload 145
+Thu Jun 14 21:48:57 2001
+: Talon: say oh ok
+Thu Jun 14 21:48:58 2001
+: Flux: rest couch
+Thu Jun 14 21:48:59 2001
+: DelArin:  
+Thu Jun 14 21:49:03 2001
+: DelArin: inventory
+Thu Jun 14 21:49:06 2001
+: DelArin:  
+Thu Jun 14 21:49:09 2001
+: DelArin: say I'm naked!
+Thu Jun 14 21:49:09 2001
+: Talon: say what is it for doing poses?
+Thu Jun 14 21:49:09 2001
+: Alex: who is flux
+Thu Jun 14 21:49:16 2001
+: Flux: say there are no poses
+Thu Jun 14 21:49:21 2001
+: DelArin: help
+Thu Jun 14 21:49:24 2001
+: Alex: ]hullo
+Thu Jun 14 21:49:27 2001
+: Flux: say deleted that feature, since we have no classes ;)
+Thu Jun 14 21:49:27 2001
+: Talon: say aka actions like you just did "flux rests on a..."
+Thu Jun 14 21:49:33 2001
+: DelArin: commands
+Thu Jun 14 21:49:36 2001
+: Flux: say type "say <<message>> tas"
+Thu Jun 14 21:49:43 2001
+: Flux: say rest couch
+Thu Jun 14 21:49:45 2001
+: DelArin: say whoa! COMMANDS
+Thu Jun 14 21:49:49 2001
+: Alex: rest couch
+Thu Jun 14 21:49:52 2001
+: Alex: hey
+Thu Jun 14 21:49:58 2001
+: Flux: say tas got the groove ;)
+Thu Jun 14 21:50:10 2001
+: Talon: say rest couch tas
+Thu Jun 14 21:50:11 2001
+: Alex: yes i do
+Thu Jun 14 21:50:16 2001
+: Talon: say ...
+Thu Jun 14 21:50:18 2001
+: Alex: help me
+Thu Jun 14 21:50:29 2001
+: Talon: say oh
+Thu Jun 14 21:50:35 2001
+: Flux: wake
+Thu Jun 14 21:50:41 2001
+: Alex: Alex says hey
+Thu Jun 14 21:50:45 2001
+: Talon: rest couch
+Thu Jun 14 21:50:47 2001
+: Alex: how do i dalk
+Thu Jun 14 21:50:49 2001
+: Flux: smile
+Thu Jun 14 21:50:52 2001
+: Talon: stand
+Thu Jun 14 21:50:52 2001
+: Alex: grrr
+Thu Jun 14 21:50:58 2001
+: Flux: say now you got it
+Thu Jun 14 21:51:01 2001
+: Talon: walk
+Thu Jun 14 21:51:06 2001
+: DelArin: say but I dont :)
+Thu Jun 14 21:51:12 2001
+: Alex: ihisdfg 
+Thu Jun 14 21:51:12 2001
+: Flux: say just type the action del
+Thu Jun 14 21:51:18 2001
+: Talon: punch alex
+Thu Jun 14 21:51:21 2001
+: Flux: say without linking words like the or and
+Thu Jun 14 21:51:25 2001
+: Alex: stand
+Thu Jun 14 21:51:25 2001
+: DelArin:  
+Thu Jun 14 21:51:33 2001
+: DelArin: action stands up
+Thu Jun 14 21:51:37 2001
+: Alex: ii need help
+Thu Jun 14 21:51:38 2001
+: Talon: say how do you know what actions are possible?
+Thu Jun 14 21:51:42 2001
+: Talon: says hi
+Thu Jun 14 21:51:43 2001
+: Alex: talk
+Thu Jun 14 21:51:43 2001
+: Flux: say you try them out
+Thu Jun 14 21:51:44 2001
+: DelArin: stand
+Thu Jun 14 21:51:47 2001
+: DelArin: sit
+Thu Jun 14 21:51:51 2001
+: Flux: say commands works too
+Thu Jun 14 21:51:51 2001
+: DelArin: hehe
+Thu Jun 14 21:51:52 2001
+: Flux: command
+Thu Jun 14 21:51:53 2001
+: Alex: ask
+Thu Jun 14 21:51:55 2001
+: Flux:  
+Thu Jun 14 21:51:57 2001
+: Alex: run
+Thu Jun 14 21:52:02 2001
+: Alex: flip
+Thu Jun 14 21:52:03 2001
+: DelArin: say I love the little error messages you have :)
+Thu Jun 14 21:52:04 2001
+: Flux: say command is a long list tho
+Thu Jun 14 21:52:06 2001
+: Alex: steal
+Thu Jun 14 21:52:10 2001
+: Flux: say it randomizes itself :)
+Thu Jun 14 21:52:15 2001
+: Alex: steal from flux
+Thu Jun 14 21:52:23 2001
+: Talon: say so there's no way to do, for example "pat jumps of the cliff and cries out, "mwahahaha""
+Thu Jun 14 21:52:29 2001
+: Flux: say type emote
+Thu Jun 14 21:52:32 2001
+: Flux: emote emotes
+Thu Jun 14 21:52:34 2001
+: Alex: emote
+Thu Jun 14 21:52:37 2001
+: Talon: emote
+Thu Jun 14 21:52:40 2001
+: Alex: i dunno
+Thu Jun 14 21:52:47 2001
+: DelArin: emote
+Thu Jun 14 21:52:49 2001
+: Talon: emote test
+Thu Jun 14 21:52:52 2001
+: Alex: alex cant talk
+Thu Jun 14 21:52:54 2001
+: DelArin: emote test too
+Thu Jun 14 21:52:55 2001
+: Talon: say ah, thanks
+Thu Jun 14 21:52:56 2001
+: Flux: say wont affect the game in anyway but its a custom social
+Thu Jun 14 21:52:56 2001
+: Alex: says help
+Thu Jun 14 21:53:10 2001
+: DelArin: say cool
+Thu Jun 14 21:53:14 2001
+: Talon: say yeah, that's the kind thing I'm used to
+Thu Jun 14 21:53:21 2001
+: Flux: say tas you still having trouble speaking?
+Thu Jun 14 21:53:25 2001
+: Talon: say more typing and being social
+Thu Jun 14 21:53:30 2001
+: Talon: say not so much actions
+Thu Jun 14 21:53:40 2001
+: Alex: say hullo
+Thu Jun 14 21:53:50 2001
+: Alex: say it works
+Thu Jun 14 21:53:50 2001
+: Flux: say this is mostly action related, but you automatically gain xp just sitting there idling
+Thu Jun 14 21:53:56 2001
+: Talon: say Owww...
+Thu Jun 14 21:54:04 2001
+: Flux: say so you can be here for social
+Thu Jun 14 21:54:05 2001
+: DelArin: say that's a little different 
+Thu Jun 14 21:54:07 2001
+: Talon: say I just fell back in my chair onto the floor
+Thu Jun 14 21:54:14 2001
+: Flux: say icky :(
+Thu Jun 14 21:54:14 2001
+: Alex: runs around DelArin
+Thu Jun 14 21:54:20 2001
+: DelArin: commands
+Thu Jun 14 21:54:20 2001
+: Flux: say and yeah, we hear ya tas :)
+Thu Jun 14 21:54:26 2001
+: Alex: says your game is inuslting me
+Thu Jun 14 21:54:36 2001
+: DelArin: say are you going to make a FAQ?
+Thu Jun 14 21:54:38 2001
+: Flux: mfind stern
+Thu Jun 14 21:54:42 2001
+: Alex: says youre game is insulting me
+Thu Jun 14 21:54:43 2001
+: Flux: say for the mud?
+Thu Jun 14 21:54:47 2001
+: DelArin: say yep
+Thu Jun 14 21:54:48 2001
+: Flux: say there will be a newbie area
+Thu Jun 14 21:54:49 2001
+: Alex: says your
+Thu Jun 14 21:54:51 2001
+: Talon: emote demands Flux give him a bow
+Thu Jun 14 21:54:52 2001
+: Talon: say :P
+Thu Jun 14 21:54:57 2001
+: Flux: say itll acclamate everyone to the game
+Thu Jun 14 21:54:59 2001
+: Alex: says game
+Thu Jun 14 21:55:01 2001
+: DelArin: say say I mean like list all the options
+Thu Jun 14 21:55:06 2001
+: Flux: say my spelling is way off...
+Thu Jun 14 21:55:06 2001
+: Alex: says game
+Thu Jun 14 21:55:07 2001
+: DelArin: say oops :)
+Thu Jun 14 21:55:07 2001
+: Talon: say yeah
+Thu Jun 14 21:55:09 2001
+: Flux: say type command del
+Thu Jun 14 21:55:14 2001
+: Alex: say game
+Thu Jun 14 21:55:14 2001
+: DelArin: say I have
+Thu Jun 14 21:55:15 2001
+: Talon: command
+Thu Jun 14 21:55:19 2001
+: Alex: sayinsult
+Thu Jun 14 21:55:22 2001
+: DelArin: say there's a shitload of em there :)
+Thu Jun 14 21:55:27 2001
+: Alex: say game
+Thu Jun 14 21:55:32 2001
+: Talon: high kick
+Thu Jun 14 21:55:32 2001
+: Alex: say insult
+Thu Jun 14 21:55:34 2001
+: Flux: say yeah, type help <command> most of them have helps
+Thu Jun 14 21:55:36 2001
+: Alex: say me
+Thu Jun 14 21:55:43 2001
+: Flux: say the game insulted you?
+Thu Jun 14 21:55:45 2001
+: Alex: say game insults me
+Thu Jun 14 21:55:46 2001
+: Talon: gust of wind
+Thu Jun 14 21:55:56 2001
+: Alex: say every time i try to do something
+Thu Jun 14 21:56:01 2001
+: DelArin: game
+Thu Jun 14 21:56:03 2001
+: Talon: terrorize alex
+Thu Jun 14 21:56:04 2001
+: Flux: say its just the typo message ;)
+Thu Jun 14 21:56:05 2001
+: DelArin: shit
+Thu Jun 14 21:56:11 2001
+: Alex: say he called me a typo demon
+Thu Jun 14 21:56:21 2001
+: Alex: say and a drunk
+Thu Jun 14 21:56:26 2001
+: Talon: follow del
+Thu Jun 14 21:56:27 2001
+: DelArin: say you should include an insult for swearing
+Thu Jun 14 21:56:28 2001
+: Alex: say among other things
+Thu Jun 14 21:56:37 2001
+: DelArin: say gotta have lunch
+Thu Jun 14 21:56:44 2001
+: Alex: hpo
+Thu Jun 14 21:56:48 2001
+: Talon: crush del
+Thu Jun 14 21:56:51 2001
+: Alex: walk
+Thu Jun 14 21:56:54 2001
+: Flux: say its the system tas, its a fickle mistress when it comes to typos hehe
+Thu Jun 14 21:56:55 2001
+: DelArin: say back soon
+Thu Jun 14 21:56:59 2001
+: Talon: disguise
+Thu Jun 14 21:57:00 2001
+: Flux: say byby del :)
+Thu Jun 14 21:57:04 2001
+: Talon: say later
+Thu Jun 14 21:57:05 2001
+: Flux: disguise del
+Thu Jun 14 21:57:13 2001
+: Alex: say i try to do something and it wont let me
+Thu Jun 14 21:57:15 2001
+: Flux: say actually I'm going to stay right here
+Thu Jun 14 21:57:23 2001
+: Talon: say I guess this will take some time to getting used to
+Thu Jun 14 21:57:23 2001
+: Alex: say i cant even walk
+Thu Jun 14 21:57:29 2001
+: Flux: revert
+Thu Jun 14 21:57:36 2001
+: Alex: say type walk
+Thu Jun 14 21:57:44 2001
+: Talon: command
+Thu Jun 14 21:57:45 2001
+: Flux: say there's no where to walk yet tas... we're in a early stage of development
+Thu Jun 14 21:57:51 2001
+: Alex: flip
+Thu Jun 14 21:57:58 2001
+: Alex: say that is all i can do
+Thu Jun 14 21:58:02 2001
+: Flux: walk
+Thu Jun 14 21:58:02 2001
+: Alex: say flip
+Thu Jun 14 21:58:06 2001
+: Flux: flip
+Thu Jun 14 21:58:10 2001
+: Talon: say so you're just redoing the mud? I thought it was running for 7 years?
+Thu Jun 14 21:58:26 2001
+: Alex: say i'm frustrated
+Thu Jun 14 21:58:28 2001
+: Talon: sneak alex
+Thu Jun 14 21:58:29 2001
+: Flux: say its run before under different basic principles, and yeah I'm recoding it again
+Thu Jun 14 21:58:38 2001
+: Alex: say i cant even see my typos
+Thu Jun 14 21:58:44 2001
+: Flux: say ok here... ill send you to the prelim newbie area tas :)
+Thu Jun 14 21:58:51 2001
+: Talon: trip alex
+Thu Jun 14 21:58:52 2001
+: Alex: say i think that i type better this way
+Thu Jun 14 21:58:53 2001
+: Flux: say oh i can fix that
+Thu Jun 14 21:58:55 2001
+: Talon: trip
+Thu Jun 14 21:59:03 2001
+: Alex: say cool
+Thu Jun 14 21:59:13 2001
+: Flux: say go to terminal and preferences
+Thu Jun 14 21:59:19 2001
+: Talon: stance defensive
+Thu Jun 14 21:59:23 2001
+: Talon: say wooo
+Thu Jun 14 21:59:32 2001
+: Flux: say where it says "local echo" check that box
+Thu Jun 14 21:59:51 2001
+: Flux: eq
+Thu Jun 14 21:59:52 2001
+: Talon: examine flux
+Thu Jun 14 21:59:54 2001
+: Flux: ponder
+Thu Jun 14 21:59:54 2001
+: Alex: OC yes
+Thu Jun 14 21:59:57 2001
+: Flux: ofind knife
+Thu Jun 14 21:59:58 2001
+: Talon: sit
+Thu Jun 14 22:00:02 2001
+: Flux: oload 133
+Thu Jun 14 22:00:02 2001
+: Alex: sleep
+Thu Jun 14 22:00:02 2001
+: Flux: oload 133
+Thu Jun 14 22:00:08 2001
+: Talon: get knife
+Thu Jun 14 22:00:09 2001
+: Alex: cast
+Thu Jun 14 22:00:16 2001
+: Talon: command
+Thu Jun 14 22:00:17 2001
+: Alex: backstab
+Thu Jun 14 22:00:21 2001
+: Flux: ooc well, you figured that one out ;)
+Thu Jun 14 22:00:23 2001
+: Alex: fart
+Thu Jun 14 22:00:24 2001
+: Talon: get knife
+Thu Jun 14 22:00:26 2001
+: Flux: drop knife
+Thu Jun 14 22:00:26 2001
+: Alex: eat
+Thu Jun 14 22:00:26 2001
+: Flux: drop knife
+Thu Jun 14 22:00:31 2001
+: Alex: sleep
+Thu Jun 14 22:00:32 2001
+: Talon: get knife
+Thu Jun 14 22:00:37 2001
+: Talon: say woo again
+Thu Jun 14 22:00:37 2001
+: Flux: ooc type "wake" to wake up
+Thu Jun 14 22:00:38 2001
+: Alex: wake up
+Thu Jun 14 22:00:41 2001
+: Alex: wake
+Thu Jun 14 22:00:41 2001
+: Talon: wield knife
+Thu Jun 14 22:00:47 2001
+: Alex: fart
+Thu Jun 14 22:00:48 2001
+: Talon: pierce
+Thu Jun 14 22:00:55 2001
+: Alex: say hehe
+Thu Jun 14 22:00:57 2001
+: Flux: say thats an interesting one ;)
+Thu Jun 14 22:01:02 2001
+: Flux: ofind shirt
+Thu Jun 14 22:01:03 2001
+: Talon: wield knife
+Thu Jun 14 22:01:05 2001
+: Flux: oload 109
+Thu Jun 14 22:01:08 2001
+: Flux: drop shirt
+Thu Jun 14 22:01:09 2001
+: Alex: say just testing the water
+Thu Jun 14 22:01:11 2001
+: Talon: slash
+Thu Jun 14 22:01:12 2001
+: Flux: smile
+Thu Jun 14 22:01:18 2001
+: Talon: wield knife slash
+Thu Jun 14 22:01:24 2001
+: Alex: say do i have any shoes
+Thu Jun 14 22:01:27 2001
+: Flux: ofind shoe
+Thu Jun 14 22:01:29 2001
+: Talon: say I'm so tempted right now...
+Thu Jun 14 22:01:33 2001
+: Flux: oload 803
+Thu Jun 14 22:01:35 2001
+: Flux: drop shoe
+Thu Jun 14 22:01:37 2001
+: Alex: say to wat
+Thu Jun 14 22:01:43 2001
+: Alex: say to what
+Thu Jun 14 22:01:44 2001
+: Talon: say guess
+Thu Jun 14 22:01:44 2001
+: Flux: say no PvP combat in system yet ;)
+Thu Jun 14 22:01:53 2001
+: Flux: mfind all
+Thu Jun 14 22:01:54 2001
+: Talon: emote is holding knife
+Thu Jun 14 22:01:57 2001
+: Alex: say i can run like a girl
+Thu Jun 14 22:01:57 2001
+: Flux: say hmm
+Thu Jun 14 22:02:03 2001
+: Talon: kill alex
+Thu Jun 14 22:02:07 2001
+: Alex:  run like a girl
+Thu Jun 14 22:02:10 2001
+: Flux: say where did my clone go hmm
+Thu Jun 14 22:02:11 2001
+: DelArin: say how do I get items?
+Thu Jun 14 22:02:14 2001
+: Talon: say can I have a hat?
+Thu Jun 14 22:02:18 2001
+: Alex: say ditto
+Thu Jun 14 22:02:18 2001
+: Flux: say type get <item>
+Thu Jun 14 22:02:20 2001
+: Flux: ofind hat
+Thu Jun 14 22:02:27 2001
+: Alex: get shoes
+Thu Jun 14 22:02:29 2001
+: Talon: say when it's dropped type get (name)
+Thu Jun 14 22:02:29 2001
+: DelArin: get sword
+Thu Jun 14 22:02:29 2001
+: Flux: ofind cap
+Thu Jun 14 22:02:33 2001
+: Flux: say hmm no hates
+Thu Jun 14 22:02:36 2001
+: Flux: say hats
+Thu Jun 14 22:02:39 2001
+: DelArin: look
+Thu Jun 14 22:02:43 2001
+: Talon: say can I have some pants?
+Thu Jun 14 22:02:43 2001
+: Flux: say i can make a hat ;)
+Thu Jun 14 22:02:45 2001
+: DelArin: get knife
+Thu Jun 14 22:02:46 2001
+: Alex: say no hats?
+Thu Jun 14 22:02:47 2001
+: Flux: ofind slacks
+Thu Jun 14 22:02:51 2001
+: Flux: oload 802
+Thu Jun 14 22:02:51 2001
+: Flux: oload 802
+Thu Jun 14 22:02:52 2001
+: Flux: drop all
+Thu Jun 14 22:02:55 2001
+: Alex: get hat
+Thu Jun 14 22:02:56 2001
+: DelArin: get shirt
+Thu Jun 14 22:03:03 2001
+: Flux: ofind 104
+Thu Jun 14 22:03:03 2001
+: Flux: ofind 104
+Thu Jun 14 22:03:03 2001
+: Flux: ofind 104
+Thu Jun 14 22:03:04 2001
+: Talon: get putrid green slacks
+Thu Jun 14 22:03:06 2001
+: Flux: oload 104
+Thu Jun 14 22:03:06 2001
+: Flux: oload 104
+Thu Jun 14 22:03:06 2001
+: Flux: oload 104
+Thu Jun 14 22:03:07 2001
+: Alex: get underwair
+Thu Jun 14 22:03:08 2001
+: Flux: drop all
+Thu Jun 14 22:03:12 2001
+: DelArin: get pants
+Thu Jun 14 22:03:17 2001
+: DelArin: get slacks
+Thu Jun 14 22:03:19 2001
+: Alex: get pants
+Thu Jun 14 22:03:21 2001
+: Flux: say not that much in the system yet... lemme see what else we have
+Thu Jun 14 22:03:24 2001
+: Talon: get a pair of well pressed pleated slacks
+Thu Jun 14 22:03:28 2001
+: Alex: get shirt
+Thu Jun 14 22:03:28 2001
+: Flux: trans stern
+Thu Jun 14 22:03:30 2001
+: Flux: l stern
+Thu Jun 14 22:03:33 2001
+: Talon: get well pressed pleasted slaks
+Thu Jun 14 22:03:35 2001
+: Flux: slay stern
+Thu Jun 14 22:03:37 2001
+: Alex: get hoophack
+Thu Jun 14 22:03:39 2001
+: Flux: get all corpse
+Thu Jun 14 22:03:42 2001
+: Flux: drop rifle
+Thu Jun 14 22:03:44 2001
+: Alex: say no hoophack
+Thu Jun 14 22:03:46 2001
+: Flux: purge corpse
+Thu Jun 14 22:03:46 2001
+: Talon: say how do I know the exact name of the object?
+Thu Jun 14 22:03:48 2001
+: DelArin: say cool!
+Thu Jun 14 22:03:59 2001
+: Flux: say i know I made a command for that
+Thu Jun 14 22:04:01 2001
+: Flux: say hmm
+Thu Jun 14 22:04:02 2001
+: Flux: scan
+Thu Jun 14 22:04:06 2001
+: Flux: l
+Thu Jun 14 22:04:11 2001
+: Flux: say you could type "get all"
+Thu Jun 14 22:04:17 2001
+: DelArin: get all
+Thu Jun 14 22:04:17 2001
+: Alex: say how do i get pants
+Thu Jun 14 22:04:22 2001
+: Flux: l
+Thu Jun 14 22:04:24 2001
+: Alex: get all
+Thu Jun 14 22:04:28 2001
+: Flux: ofind slack
+Thu Jun 14 22:04:30 2001
+: Flux: oload 104
+Thu Jun 14 22:04:32 2001
+: Flux: drop slack
+Thu Jun 14 22:04:32 2001
+: DelArin: say oops I took everything
+Thu Jun 14 22:04:35 2001
+: Alex: get pants
+Thu Jun 14 22:04:35 2001
+: Flux: say they're slacks
+Thu Jun 14 22:04:37 2001
+: DelArin: drop slacks
+Thu Jun 14 22:04:39 2001
+: Flux: say so get slack
+Thu Jun 14 22:04:42 2001
+: DelArin: drop slacks
+Thu Jun 14 22:04:43 2001
+: Talon: get A pair of well pressed pleated slacks
+Thu Jun 14 22:04:46 2001
+: Alex: get pants
+Thu Jun 14 22:04:46 2001
+: DelArin: drop slacks
+Thu Jun 14 22:04:50 2001
+: DelArin: drop slacks
+Thu Jun 14 22:04:53 2001
+: Alex: get pants
+Thu Jun 14 22:04:55 2001
+: Flux: sheath knife boot
+Thu Jun 14 22:04:57 2001
+: Alex: get slacks
+Thu Jun 14 22:04:59 2001
+: Talon: get a pair of well pressed pleated slacks.
+Thu Jun 14 22:05:00 2001
+: Flux: rem knife
+Thu Jun 14 22:05:02 2001
+: Alex: say ysee
+Thu Jun 14 22:05:02 2001
+: Talon: say ack!
+Thu Jun 14 22:05:04 2001
+: Flux: sheath knife boot
+Thu Jun 14 22:05:07 2001
+: Alex: say yes
+Thu Jun 14 22:05:09 2001
+: Flux: sheath gun boot
+Thu Jun 14 22:05:11 2001
+: Talon: say what's the name of the pants
+Thu Jun 14 22:05:12 2001
+: Flux: sheath gun belt
+Thu Jun 14 22:05:12 2001
+: DelArin: draw knife
+Thu Jun 14 22:05:15 2001
+: Flux: say slack
+Thu Jun 14 22:05:17 2001
+: Alex: say slacks
+Thu Jun 14 22:05:17 2001
+: Talon: say it says "I see no pair here"
+Thu Jun 14 22:05:23 2001
+: Flux: say try slack ;)
+Thu Jun 14 22:05:28 2001
+: Talon: get slack
+Thu Jun 14 22:05:30 2001
+: Alex: ge
+Thu Jun 14 22:05:35 2001
+: Alex: get weapon
+Thu Jun 14 22:05:40 2001
+: Flux: c 'mirror images'
+Thu Jun 14 22:05:41 2001
+: Alex: geat knife
+Thu Jun 14 22:05:47 2001
+: Alex: get knife
+Thu Jun 14 22:05:49 2001
+: DelArin: commands
+Thu Jun 14 22:05:54 2001
+: Talon: get all
+Thu Jun 14 22:06:07 2001
+: Alex: trips falODODOtalon
+Thu Jun 14 22:06:10 2001
+: DelArin: say I need to connect with a better telnet thing
+Thu Jun 14 22:06:11 2001
+: Alex: Trip
+Thu Jun 14 22:06:12 2001
+: Talon: drop slackss
+Thu Jun 14 22:06:25 2001
+: Flux: say hmm
+Thu Jun 14 22:06:27 2001
+: DelArin: say when I type "command" it skips past 2/3 of the list
+Thu Jun 14 22:06:27 2001
+: Talon: drop putrid slacks
+Thu Jun 14 22:06:32 2001
+: Flux: say there's clients around
+Thu Jun 14 22:06:41 2001
+: DelArin: say I'll have a look
+Thu Jun 14 22:06:42 2001
+: Talon: say arg
+Thu Jun 14 22:06:46 2001
+: Flux: say but the mud really isnt able to be played, i can only show you the features
+Thu Jun 14 22:06:50 2001
+: Alex: say this is murder on the old eyes
+Thu Jun 14 22:07:01 2001
+: Talon: say how do I know the name of the putrid green slackss etc.
+Thu Jun 14 22:07:01 2001
+: DelArin: say ahahaha
+Thu Jun 14 22:07:03 2001
+: Flux: say it takes some getting used to :)
+Thu Jun 14 22:07:14 2001
+: DelArin: look
+Thu Jun 14 22:07:22 2001
+: Flux: say you can't.. i need to recode it so you can.. the name is "slack"
+Thu Jun 14 22:07:33 2001
+: Talon: emote sits quietly on a barrel near the tavern
+Thu Jun 14 22:07:33 2001
+: Alex: say my eyes are guODODhurnig and its only 11 pm here
+Thu Jun 14 22:07:43 2001
+: Alex: say what was that
+Thu Jun 14 22:07:48 2001
+: DelArin: say eek!
+Thu Jun 14 22:07:48 2001
+: Flux: say thats an odd word there
+Thu Jun 14 22:07:48 2001
+: Talon: say but there are different kinds of slacks
+Thu Jun 14 22:07:57 2001
+: Flux: say 1.slack, 2.slack
+Thu Jun 14 22:08:00 2001
+: Alex: say i have no idea how i got that
+Thu Jun 14 22:08:02 2001
+: DelArin: say it takes the best first right?
+Thu Jun 14 22:08:02 2001
+: Flux: say green probably works
+Thu Jun 14 22:08:09 2001
+: DelArin: get green
+Thu Jun 14 22:08:18 2001
+: Flux: say there is no best ;)
+Thu Jun 14 22:08:22 2001
+: Talon: drop green slack
+Thu Jun 14 22:08:27 2001
+: Flux: say it takes the last seeded in the room
+Thu Jun 14 22:08:38 2001
+: Talon: command
+Thu Jun 14 22:08:42 2001
+: Flux: owhere rifle
+Thu Jun 14 22:08:46 2001
+: Flux: say ack
+Thu Jun 14 22:08:47 2001
+: Talon: push del
+Thu Jun 14 22:08:49 2001
+: Alex: say whenever somebody does dODsome thing it moves the screen up so i canno get my eroOrors and it messed up that word
+Thu Jun 14 22:08:49 2001
+: Flux: say that rifle is loaded
+Thu Jun 14 22:08:59 2001
+: DelArin: slay Talon
+Thu Jun 14 22:08:59 2001
+: Talon: unsheath knife
+Thu Jun 14 22:09:06 2001
+: Flux: say yeah, telnet is bad like that tas :(
+Thu Jun 14 22:09:07 2001
+: DelArin: kill Talon
+Thu Jun 14 22:09:11 2001
+: Talon: get rifle
+Thu Jun 14 22:09:13 2001
+: DelArin: push Talon
+Thu Jun 14 22:09:21 2001
+: Talon: say I want a rifle
+Thu Jun 14 22:09:24 2001
+: Talon: say or bow
+Thu Jun 14 22:09:28 2001
+: DelArin: say I got one :)
+Thu Jun 14 22:09:30 2001
+: Alex: slap Delarin
+Thu Jun 14 22:09:33 2001
+: DelArin: /inventory
+Thu Jun 14 22:09:34 2001
+: Flux: say when I get some more areas in and we go beta I can get you guys some better clients
+Thu Jun 14 22:09:38 2001
+: DelArin: inventory
+Thu Jun 14 22:09:41 2001
+: Flux: ofind bow
+Thu Jun 14 22:09:44 2001
+: DelArin: wield rifle
+Thu Jun 14 22:09:44 2001
+: Flux: oload 127
+Thu Jun 14 22:09:46 2001
+: Flux: oload 128
+Thu Jun 14 22:09:50 2001
+: Flux: oload 129 15
+Thu Jun 14 22:09:51 2001
+: Alex: s
+Thu Jun 14 22:09:54 2001
+: Flux: say woops
+Thu Jun 14 22:10:02 2001
+: Flux: say i dont need 15 clocks
+Thu Jun 14 22:10:02 2001
+: Alex: slap DelArin
+Thu Jun 14 22:10:04 2001
+: Talon: get all
+Thu Jun 14 22:10:04 2001
+: Flux: eat clock
+Thu Jun 14 22:10:05 2001
+: Flux: eat clock
+Thu Jun 14 22:10:05 2001
+: Flux: eat clock
+Thu Jun 14 22:10:05 2001
+: Flux: eat clock
+Thu Jun 14 22:10:07 2001
+: Flux: eat clock
+Thu Jun 14 22:10:07 2001
+: Flux: eat clock
+Thu Jun 14 22:10:07 2001
+: DelArin: say can I have a bastard sword
+Thu Jun 14 22:10:07 2001
+: Flux: eat clock
+Thu Jun 14 22:10:09 2001
+: Flux: eat clock
+Thu Jun 14 22:10:09 2001
+: Flux: eat clock
+Thu Jun 14 22:10:09 2001
+: Flux: eat clock
+Thu Jun 14 22:10:09 2001
+: Flux: eat clock
+Thu Jun 14 22:10:11 2001
+: Flux: eat clock
+Thu Jun 14 22:10:11 2001
+: Flux: eat clock
+Thu Jun 14 22:10:11 2001
+: Flux: eat clock
+Thu Jun 14 22:10:12 2001
+: Flux: eat clock
+Thu Jun 14 22:10:13 2001
+: Flux: eat clock
+Thu Jun 14 22:10:13 2001
+: Flux: eat clock
+Thu Jun 14 22:10:13 2001
+: Flux: eat clock
+Thu Jun 14 22:10:17 2001
+: Flux: say had to eat the clocks
+Thu Jun 14 22:10:18 2001
+: DelArin: eat knife
+Thu Jun 14 22:10:20 2001
+: Flux: ofind arrow
+Thu Jun 14 22:10:23 2001
+: DelArin: hehe
+Thu Jun 14 22:10:23 2001
+: Flux: oload 132 15
+Thu Jun 14 22:10:25 2001
+: Alex: say i want a scimitar
+Thu Jun 14 22:10:25 2001
+: Flux: drop all
+Thu Jun 14 22:10:26 2001
+: Talon: get all
+Thu Jun 14 22:10:37 2001
+: Flux: say grabby arent we ;)
+Thu Jun 14 22:10:39 2001
+: Talon: wear uniform
+Thu Jun 14 22:10:41 2001
+: Flux: ofind sword
+Thu Jun 14 22:10:43 2001
+: Talon: say very
+Thu Jun 14 22:10:44 2001
+: Alex: say gimmie
+Thu Jun 14 22:10:45 2001
+: Talon: say :P
+Thu Jun 14 22:10:45 2001
+: Flux: say hmm
+Thu Jun 14 22:10:51 2001
+: Flux: c 'call blazing sword'
+Thu Jun 14 22:10:52 2001
+: Talon: fix uniform
+Thu Jun 14 22:10:59 2001
+: Flux: drop sword
+Thu Jun 14 22:11:02 2001
+: Alex: cast
+Thu Jun 14 22:11:06 2001
+: Alex: sa
+Thu Jun 14 22:11:07 2001
+: DelArin: get all
+Thu Jun 14 22:11:09 2001
+: Alex: cast
+Thu Jun 14 22:11:10 2001
+: Talon: wield bow
+Thu Jun 14 22:11:11 2001
+: Flux: say theres an easy way to get a sword ;)
+Thu Jun 14 22:11:17 2001
+: Talon: shoot bow
+Thu Jun 14 22:11:20 2001
+: DelArin: say woohoo!
+Thu Jun 14 22:11:25 2001
+: Alex: cast fireball at Flux
+Thu Jun 14 22:11:29 2001
+: Talon: shoot bow with arrows
+Thu Jun 14 22:11:30 2001
+: DelArin: wield sword
+Thu Jun 14 22:11:30 2001
+: Alex: Cast fireball
+Thu Jun 14 22:11:34 2001
+: Alex: Cast sleep
+Thu Jun 14 22:11:34 2001
+: Flux: oedit create
+Thu Jun 14 22:11:37 2001
+: Flux: name sword
+Thu Jun 14 22:11:38 2001
+: Talon: shoot bow with arrow
+Thu Jun 14 22:11:40 2001
+: Flux: weapon
+Thu Jun 14 22:11:40 2001
+: Flux:  
+Thu Jun 14 22:11:41 2001
+: DelArin: wield blazing sword
+Thu Jun 14 22:11:42 2001
+: Alex: cast stupid
+Thu Jun 14 22:11:43 2001
+: Flux: take
+Thu Jun 14 22:11:44 2001
+: Flux: wield
+Thu Jun 14 22:11:46 2001
+: Flux: dual
+Thu Jun 14 22:11:48 2001
+: DelArin: say my sword is broken :(
+Thu Jun 14 22:11:49 2001
+: Flux: double
+Thu Jun 14 22:11:55 2001
+: Alex: say it wont let me cast things
+Thu Jun 14 22:11:55 2001
+: Talon: say how do I shoot this baby
+Thu Jun 14 22:11:55 2001
+: Flux: say it loaded broken?
+Thu Jun 14 22:12:03 2001
+: Flux: say hmm...
+Thu Jun 14 22:12:05 2001
+: DelArin: say yeah
+Thu Jun 14 22:12:07 2001
+: Talon: say same with my uniform
+Thu Jun 14 22:12:10 2001
+: Flux: say you have no spells yet tas :)
+Thu Jun 14 22:12:17 2001
+: Alex: say maybe it is becaus of im a kender
+Thu Jun 14 22:12:21 2001
+: Talon: shoot bow with 1 arrow
+Thu Jun 14 22:12:25 2001
+: Flux: say ill advance you guys so you can check out the skpells
+Thu Jun 14 22:12:27 2001
+: DelArin: say and my old style rifle
+Thu Jun 14 22:12:33 2001
+: Alex: say kewl
+Thu Jun 14 22:12:38 2001
+: Flux: advance alex 100
+Thu Jun 14 22:12:43 2001
+: Flux: advance delarin 100
+Thu Jun 14 22:12:47 2001
+: Alex: say i am the man
+Thu Jun 14 22:12:48 2001
+: Flux: advance talon 100
+Thu Jun 14 22:12:56 2001
+: Talon: shoot bow with arrow
+Thu Jun 14 22:12:57 2001
+: Alex: cast demon
+Thu Jun 14 22:13:01 2001
+: Talon: say nice!
+Thu Jun 14 22:13:04 2001
+: Alex: cast fireball
+Thu Jun 14 22:13:05 2001
+: Talon: practice with bow
+Thu Jun 14 22:13:10 2001
+: Alex: cast gear
+Thu Jun 14 22:13:12 2001
+: Flux: say and ranged weapons can oinly act as ranged weapons, no same room shooting :)
+Thu Jun 14 22:13:12 2001
+: Talon: look
+Thu Jun 14 22:13:17 2001
+: Alex: cast sleep
+Thu Jun 14 22:13:19 2001
+: DelArin: say WHOA!
+Thu Jun 14 22:13:24 2001
+: Alex: cast dog
+Thu Jun 14 22:13:28 2001
+: Alex: cast sword
+Thu Jun 14 22:13:30 2001
+: Flux: sset alex all 100
+Thu Jun 14 22:13:31 2001
+: DelArin: say I'm all powerful now :)
+Thu Jun 14 22:13:36 2001
+: Flux: sset delarin all 100
+Thu Jun 14 22:13:36 2001
+: Talon: say can I have a sword too then
+Thu Jun 14 22:13:37 2001
+: Alex: cast spell
+Thu Jun 14 22:13:38 2001
+: Alex: cast
+Thu Jun 14 22:13:41 2001
+: Flux: sset talon all 100
+Thu Jun 14 22:13:43 2001
+: Flux: say sure
+Thu Jun 14 22:13:46 2001
+: Flux: say lemme find one
+Thu Jun 14 22:13:48 2001
+: Flux: ofind sword
+Thu Jun 14 22:13:52 2001
+: Flux: oedit 28
+Thu Jun 14 22:13:53 2001
+: Alex: say it still wont let me cast a fireball
+Thu Jun 14 22:13:55 2001
+: Talon: say a magical one
+Thu Jun 14 22:14:00 2001
+: Flux: delete
+Thu Jun 14 22:14:05 2001
+: Talon: cast trees
+Thu Jun 14 22:14:06 2001
+: DelArin: cast
+Thu Jun 14 22:14:09 2001
+: Flux: say fireball isnt an existing spell ;)
+Thu Jun 14 22:14:10 2001
+: DelArin: cast fireball
+Thu Jun 14 22:14:14 2001
+: Alex: say doh
+Thu Jun 14 22:14:18 2001
+: DelArin: command
+Thu Jun 14 22:14:22 2001
+: Flux: say try casting "armor"
+Thu Jun 14 22:14:24 2001
+: Alex: say i can
+Thu Jun 14 22:14:27 2001
+: DelArin: cast armor
+Thu Jun 14 22:14:28 2001
+: Flux: say gotta see if it works
+Thu Jun 14 22:14:28 2001
+: Talon: cast armor
+Thu Jun 14 22:14:30 2001
+: Alex: cast armor
+Thu Jun 14 22:14:35 2001
+: Flux: say cast 'armor' works
+Thu Jun 14 22:14:37 2001
+: DelArin: cast shield
+Thu Jun 14 22:14:37 2001
+: Alex: cast armor
+Thu Jun 14 22:14:41 2001
+: Alex: say nope
+Thu Jun 14 22:14:46 2001
+: Flux: snoop alex
+Thu Jun 14 22:14:48 2001
+: Alex: cast armor works
+Thu Jun 14 22:14:52 2001
+: Alex: say nope
+Thu Jun 14 22:14:56 2001
+: Flux: force alex prac
+Thu Jun 14 22:14:57 2001
+: Alex: say grrr
+Thu Jun 14 22:15:01 2001
+: Flux: snoop self
+Thu Jun 14 22:15:02 2001
+: Talon: say I need a shortsword
+Thu Jun 14 22:15:07 2001
+: Flux: say ok, i have a solution...
+Thu Jun 14 22:15:09 2001
+: Talon: command
+Thu Jun 14 22:15:09 2001
+: Flux: help wiz
+Thu Jun 14 22:15:14 2001
+: Alex: say i need a hoophack
+Thu Jun 14 22:15:15 2001
+: Talon: spit del
+Thu Jun 14 22:15:15 2001
+: Flux: advance talon 151
+Thu Jun 14 22:15:16 2001
+: DelArin: say I'm having a hard time casting too heeh
+Thu Jun 14 22:15:19 2001
+: Flux: advance alex 151
+Thu Jun 14 22:15:24 2001
+: Flux: advance delarin 151
+Thu Jun 14 22:15:26 2001
+: Talon: command
+Thu Jun 14 22:15:30 2001
+: Alex: say i am even more the man
+Thu Jun 14 22:15:32 2001
+: Flux: sset delarin all 100
+Thu Jun 14 22:15:34 2001
+: Flux: sset alex all 100
+Thu Jun 14 22:15:38 2001
+: Talon: who talon
+Thu Jun 14 22:15:38 2001
+: Flux: sset talon all 100
+Thu Jun 14 22:15:43 2001
+: Flux: snoop alex
+Thu Jun 14 22:15:46 2001
+: Alex: cast hoophack
+Thu Jun 14 22:15:46 2001
+: Flux: force alex prac
+Thu Jun 14 22:15:47 2001
+: Talon: spells
+Thu Jun 14 22:15:50 2001
+: Flux: say arg...
+Thu Jun 14 22:15:51 2001
+: Talon: inventory
+Thu Jun 14 22:15:55 2001
+: Flux: prac
+Thu Jun 14 22:16:02 2001
+: Flux: force alex prac
+Thu Jun 14 22:16:03 2001
+: Talon: drop green slack
+Thu Jun 14 22:16:04 2001
+: Alex: say grrreeeaaattas;dhf 
+Thu Jun 14 22:16:06 2001
+: Flux: sset alex all 100
+Thu Jun 14 22:16:09 2001
+: Talon: drop green slack
+Thu Jun 14 22:16:09 2001
+: Flux: force alex prac
+Thu Jun 14 22:16:13 2001
+: Flux: snoop self
+Thu Jun 14 22:16:16 2001
+: Flux: advance alex 156
+Thu Jun 14 22:16:19 2001
+: Alex: say the stupid thing keeps moving up
+Thu Jun 14 22:16:19 2001
+: Flux: sset alex all 100
+Thu Jun 14 22:16:22 2001
+: Flux: snoop alex
+Thu Jun 14 22:16:24 2001
+: Talon: drop pleated slack
+Thu Jun 14 22:16:25 2001
+: Flux: force alex prac
+Thu Jun 14 22:16:29 2001
+: Talon: drop slack
+Thu Jun 14 22:16:31 2001
+: Flux: force alex q
+Thu Jun 14 22:16:36 2001
+: Flux: snoop self
+Thu Jun 14 22:16:38 2001
+: Flux: say ok
+Thu Jun 14 22:16:43 2001
+: Flux: advance talon 156
+Thu Jun 14 22:16:43 2001
+: Talon: say get simple MU
+Thu Jun 14 22:16:50 2001
+: Flux: advance delarin 156
+Thu Jun 14 22:16:53 2001
+: Alex:  
+Thu Jun 14 22:16:53 2001
+: Alex:  
+Thu Jun 14 22:16:53 2001
+: Alex:  
+Thu Jun 14 22:16:53 2001
+: DelArin: say where from?
+Thu Jun 14 22:16:54 2001
+: Flux: sset talon 156
+Thu Jun 14 22:16:58 2001
+: Flux: sset talon all 100
+Thu Jun 14 22:17:02 2001
+: Flux: sset delarin all 100
+Thu Jun 14 22:17:07 2001
+: Alex: cast change sex
+Thu Jun 14 22:17:08 2001
+: Flux: say ok you have the skills and spells now ;)
+Thu Jun 14 22:17:16 2001
+: Alex: cast change sex
+Thu Jun 14 22:17:20 2001
+: Talon: http://simplemu.onlineroleplay.com/
+Thu Jun 14 22:17:23 2001
+: Talon: say http://simplemu.onlineroleplay.com/
+Thu Jun 14 22:17:25 2001
+: Alex: sayy
+Thu Jun 14 22:17:35 2001
+: Alex: say it wont let me change my sex
+Thu Jun 14 22:17:38 2001
+: Flux: say havent had players in a few weeks, i forgot what levels i needed to have you guys at
+Thu Jun 14 22:17:42 2001
+: Flux: wh
+Thu Jun 14 22:17:45 2001
+: Alex: say that is the only spell i could see
+Thu Jun 14 22:17:46 2001
+: Talon: say how can we find out what we have as skills and spells etc
+Thu Jun 14 22:17:47 2001
+: Flux: say to what alex? ;)
+Thu Jun 14 22:17:51 2001
+: Flux: say type prac
+Thu Jun 14 22:18:06 2001
+: Flux: ofind knife
+Thu Jun 14 22:18:07 2001
+: Alex: say to female obviously
+Thu Jun 14 22:18:08 2001
+: Flux: oload 133
+Thu Jun 14 22:18:12 2001
+: Talon: prac
+Thu Jun 14 22:18:13 2001
+: Alex: say im male
+Thu Jun 14 22:18:17 2001
+: Flux: mset alex sex female
+Thu Jun 14 22:18:22 2001
+: Flux: say i set ya
+Thu Jun 14 22:18:31 2001
+: Flux: say there's neuter too
+Thu Jun 14 22:18:31 2001
+: Alex: say do you have a hoophack
+Thu Jun 14 22:18:39 2001
+: Flux: say what is a hoophack?
+Thu Jun 14 22:18:43 2001
+: Talon: cast summon mummy
+Thu Jun 14 22:18:48 2001
+: DelArin: say staff with a sling
+Thu Jun 14 22:18:49 2001
+: Flux: oset knife name sword short shortsword
+Thu Jun 14 22:18:51 2001
+: Flux: say ahh
+Thu Jun 14 22:18:56 2001
+: DelArin: say Y shaped at top
+Thu Jun 14 22:18:59 2001
+: Talon: say so to cast.. I just type in the spell name?
+Thu Jun 14 22:18:59 2001
+: Flux: say i could make one
+Thu Jun 14 22:19:05 2001
+: Alex: say you don't know waht a hoophack is buy you use kender?
+Thu Jun 14 22:19:10 2001
+: Flux: say yeah talon, "cast <<spell>>"
+Thu Jun 14 22:19:17 2001
+: Flux: say i dont use kenders myself
+Thu Jun 14 22:19:17 2001
+: DelArin: hehesay hehe :)
+Thu Jun 14 22:19:21 2001
+: Talon: cast create food
+Thu Jun 14 22:19:24 2001
+: DelArin: say hehe
+Thu Jun 14 22:19:29 2001
+: DelArin: kill flesh
+Thu Jun 14 22:19:29 2001
+: Talon: say coolio!
+Thu Jun 14 22:19:32 2001
+: Alex: say did you read any dragonlance novel
+Thu Jun 14 22:19:42 2001
+: Talon: cast polymorph great dragon
+Thu Jun 14 22:19:46 2001
+: Flux: say nope, i had an advisor on the kender
+Thu Jun 14 22:19:53 2001
+: Alex: say ah
+Thu Jun 14 22:20:04 2001
+: Talon: cast raise skeleton
+Thu Jun 14 22:20:05 2001
+: Flux: say i find the DL series too contrived, never read much of it
+Thu Jun 14 22:20:16 2001
+: Alex: say a hoophack is the traditional kender weapon
+Thu Jun 14 22:20:17 2001
+: Talon: say only some of the spells are working, right?
+Thu Jun 14 22:20:25 2001
+: Flux: say almost all work talon
+Thu Jun 14 22:20:29 2001
+: DelArin: slepp
+Thu Jun 14 22:20:31 2001
+: Alex: say thanks it is only one of my favorite series
+Thu Jun 14 22:20:31 2001
+: DelArin: spell
+Thu Jun 14 22:20:33 2001
+: Talon: cast firehshield
+Thu Jun 14 22:20:34 2001
+: DelArin: cast
+Thu Jun 14 22:20:38 2001
+: DelArin: cast help
+Thu Jun 14 22:20:47 2001
+: Flux: say I didnt say it was bad, I just dont go for that kinda thing
+Thu Jun 14 22:21:06 2001
+: Alex: say i nanamed myself after a charater for crying out loud
+Thu Jun 14 22:21:08 2001
+: Talon: say it's saying stuff like "you cannot cast this spell on another', "You can't find that", "You can't do that" etc.
+Thu Jun 14 22:21:09 2001
+: DelArin: say I'm getting simpleMU now
+Thu Jun 14 22:21:11 2001
+: Flux: say i hate tolkien and jordan too, but they're obviously successful ;)
+Thu Jun 14 22:21:28 2001
+: Flux: say some require components or special situations talon :)
+Thu Jun 14 22:21:30 2001
+: Alex: say do you like thomas covenant
+Thu Jun 14 22:21:30 2001
+: DelArin: say Tolkien is boring
+Thu Jun 14 22:21:37 2001
+: DelArin: say I'm reading Jordan at the moment
+Thu Jun 14 22:21:40 2001
+: Talon: say ah, ok
+Thu Jun 14 22:21:40 2001
+: Alex: say yes it is
+Thu Jun 14 22:21:41 2001
+: DelArin: say he's boring too
+Thu Jun 14 22:21:51 2001
+: Talon: prac
+Thu Jun 14 22:22:08 2001
+: Alex: say flux?
+Thu Jun 14 22:22:10 2001
+: DelArin: kill self
+Thu Jun 14 22:22:16 2001
+: Flux: say not sure ive read covenant, i dont read much fantasy beyond zelazny and pratchett and zimmer
+Thu Jun 14 22:22:21 2001
+: Flux:  
+Thu Jun 14 22:22:24 2001
+: Flux: inv
+Thu Jun 14 22:22:34 2001
+: DelArin: say ready Terry Brooks
+Thu Jun 14 22:22:34 2001
+: Alex: say im pretty sure that you would remember
+Thu Jun 14 22:22:35 2001
+: Flux: oset knife short short sword
+Thu Jun 14 22:22:40 2001
+: Talon: cast divine stream
+Thu Jun 14 22:22:42 2001
+: Flux: oset sword short short sword
+Thu Jun 14 22:22:43 2001
+: Alex: say he's good to
+Thu Jun 14 22:22:43 2001
+: Flux:  
+Thu Jun 14 22:22:44 2001
+: Talon: prac
+Thu Jun 14 22:22:45 2001
+: Flux: inv
+Thu Jun 14 22:22:57 2001
+: Flux: give sword talon
+Thu Jun 14 22:23:12 2001
+: Alex: say thomas covenant is the name of a charater
+Thu Jun 14 22:23:16 2001
+: Flux: say ahh
+Thu Jun 14 22:23:27 2001
+: Alex: say the name of the author is Stephin R donaldson
+Thu Jun 14 22:23:28 2001
+: Talon:  
+Thu Jun 14 22:23:42 2001
+: Talon: practice bark skin
+Thu Jun 14 22:23:46 2001
+: Talon: look
+Thu Jun 14 22:23:51 2001
+: DelArin: say ok guys
+Thu Jun 14 22:23:53 2001
+: Flux: say i read mostly non-fantasy fiction, a lot of russian works
+Thu Jun 14 22:23:54 2001
+: Talon: eat food
+Thu Jun 14 22:23:56 2001
+: DelArin: say I'm outta here
+Thu Jun 14 22:23:58 2001
+: Talon: get food
+Thu Jun 14 22:24:01 2001
+: DelArin: say I'll be back in chat
+Thu Jun 14 22:24:09 2001
+: Alex: say but the books are so completely based around thomas that i always called them that
+Thu Jun 14 22:24:12 2001
+: Flux: say ok... some day later in the month ill show you guys around a more developed place
+Thu Jun 14 22:24:15 2001
+: Talon: sit couch
+Thu Jun 14 22:24:19 2001
+: Talon: rest couch
+Thu Jun 14 22:24:20 2001
+: Alex: say ok
+Thu Jun 14 22:24:31 2001
+: Alex: say im going to leave too
+Thu Jun 14 22:24:35 2001
+: Flux: say we're lacking in staff, so its slow going :)
+Thu Jun 14 22:24:57 2001
+: Flux: say ill see you guys in chat
+Thu Jun 14 22:25:01 2001
+: Talon: say ok
+Thu Jun 14 22:25:07 2001
+: Talon: emote flies away
+Thu Jun 14 22:25:26 2001
+: Flux: say need to delete these chars now ;)
+Thu Jun 14 22:25:36 2001
+: Talon: say nah
+Thu Jun 14 22:25:43 2001
+: Talon: say you can leave us all nice and powerful
+Thu Jun 14 22:25:46 2001
+: Flux: say ill keep the off topic board posted on the status
+Thu Jun 14 22:25:58 2001
+: Talon: say ok, I'll try and remember to read
+Thu Jun 14 22:25:59 2001
+: Flux: say i need to delete them simply because we're wiping the files soon ;)
+Thu Jun 14 22:26:11 2001
+: Talon: say ok
+Thu Jun 14 22:26:57 2001
+: Flux: say see you back in chat pat :)
+Thu Jun 14 22:26:58 2001
+: Flux: l
+Thu Jun 14 22:27:03 2001
+: Flux: disco alex
+Thu Jun 14 22:27:09 2001
+: Flux: force alex quit
+Thu Jun 14 22:27:53 2001
+: Flux: force all quit
+Fri Jun 15 01:43:05 2001
+: (Unknown): n
+Fri Jun 15 01:43:05 2001
+: (Unknown): hugh
+Fri Jun 15 01:43:07 2001
+: Hugh: jav2vii
+Fri Jun 15 01:43:07 2001
+: Hugh:  
+Fri Jun 15 01:43:08 2001
+: Hugh:  
+Fri Jun 15 01:43:09 2001
+: Hugh: who
+Fri Jun 15 01:43:14 2001
+: Hugh: l
+Fri Jun 15 01:43:15 2001
+: Hugh: st
+Fri Jun 15 01:43:15 2001
+: Hugh: l
+Fri Jun 15 01:43:17 2001
+: Hugh: who
+Fri Jun 15 01:47:02 2001
+: Hugh: who
+Fri Jun 15 01:50:49 2001
+: Hugh: who
+Fri Jun 15 01:50:50 2001
+: Hugh: sc
+Fri Jun 15 01:50:57 2001
+: Hugh: who
+Fri Jun 15 06:45:28 2001
+: (Unknown): No
+Fri Jun 15 06:45:30 2001
+: (Unknown): Aloran
+Fri Jun 15 06:45:32 2001
+: Aloran: aloran27
+Fri Jun 15 06:45:32 2001
+: Aloran:  
+Fri Jun 15 06:45:34 2001
+: Aloran: note list
+Fri Jun 15 06:45:35 2001
+: Aloran: who
+Fri Jun 15 06:45:40 2001
+: Aloran: save
+Fri Jun 15 06:45:40 2001
+: Aloran: quit
+Fri Jun 15 11:17:33 2001
+: (Unknown): No
+Fri Jun 15 11:17:34 2001
+: (Unknown): Aloran
+Fri Jun 15 11:17:35 2001
+: Aloran: aloran27
+Fri Jun 15 11:17:35 2001
+: Aloran:  
+Fri Jun 15 11:17:36 2001
+: Aloran: who
+Fri Jun 15 11:17:37 2001
+: Aloran: note to all
+Fri Jun 15 11:17:41 2001
+: Aloran: note subject Exams: Ove
+Fri Jun 15 11:17:43 2001
+: Aloran: note clear
+Fri Jun 15 11:17:44 2001
+: Aloran: note to all
+Fri Jun 15 11:17:52 2001
+: Aloran: note subject Exams: Over
+Fri Jun 15 11:17:58 2001
+: Aloran: note + Woooooooooooooooohoooooooooooooooooooooooooooooo!
+Fri Jun 15 11:17:59 2001
+: Aloran: note +
+Fri Jun 15 11:18:02 2001
+: Aloran: note + -- Aloran
+Fri Jun 15 11:18:03 2001
+: Aloran: note show
+Fri Jun 15 11:18:14 2001
+: Aloran: note post
+Fri Jun 15 11:18:15 2001
+: Aloran: note list
+Fri Jun 15 11:18:18 2001
+: Aloran: note read 3
+Fri Jun 15 11:18:22 2001
+: Aloran: save
+Fri Jun 15 11:18:23 2001
+: Aloran: quit
+Fri Jun 15 14:41:20 2001
+: (Unknown): No
+Fri Jun 15 14:41:21 2001
+: (Unknown): Aloran
+Fri Jun 15 14:41:21 2001
+: Aloran: a
+Fri Jun 15 14:41:27 2001
+: (Unknown): NO
+Fri Jun 15 14:41:28 2001
+: (Unknown): Aloran
+Fri Jun 15 14:41:29 2001
+: Aloran: aloran27
+Fri Jun 15 14:41:29 2001
+: Aloran:  
+Fri Jun 15 14:41:30 2001
+: Aloran: who
+Fri Jun 15 14:41:31 2001
+: Aloran: save
+Fri Jun 15 14:41:32 2001
+: Aloran: quiit
+Fri Jun 15 14:41:33 2001
+: Aloran: quit
+Fri Jun 15 16:53:05 2001
+: (Unknown): n
+Fri Jun 15 16:53:05 2001
+: (Unknown): hugh
+Fri Jun 15 16:53:06 2001
+: Hugh: jav2vii
+Fri Jun 15 16:53:07 2001
+: Hugh:  
+Fri Jun 15 16:53:07 2001
+: Hugh:  
+Fri Jun 15 16:53:08 2001
+: Hugh: who
+Fri Jun 15 16:53:54 2001
+: Hugh:  
+Fri Jun 15 16:53:55 2001
+: Hugh: who
+Fri Jun 15 16:53:56 2001
+: Hugh: sc
+Fri Jun 15 16:53:59 2001
+: Hugh: st
+Fri Jun 15 16:54:00 2001
+: Hugh: l
+Fri Jun 15 16:54:01 2001
+: Hugh: eq
+Fri Jun 15 16:54:02 2001
+: Hugh: l
+Fri Jun 15 16:54:03 2001
+: Hugh: n
+Fri Jun 15 16:54:04 2001
+: Hugh: s
+Fri Jun 15 16:54:04 2001
+: Hugh: e
+Fri Jun 15 16:54:05 2001
+: Hugh: w
+Fri Jun 15 16:54:05 2001
+: Hugh: u
+Fri Jun 15 16:54:06 2001
+: Hugh: d
+Fri Jun 15 16:54:07 2001
+: Hugh: recall 
+Fri Jun 15 16:54:08 2001
+: Hugh: l
+Fri Jun 15 16:54:09 2001
+: Hugh: e
+Fri Jun 15 16:54:10 2001
+: Hugh: ne
+Fri Jun 15 16:54:10 2001
+: Hugh: nw
+Fri Jun 15 16:54:15 2001
+: Hugh: l sinner
+Fri Jun 15 16:54:17 2001
+: Hugh: l book
+Fri Jun 15 16:54:18 2001
+: Hugh: l sticker
+Fri Jun 15 16:54:19 2001
+: Hugh: who
+Fri Jun 15 16:55:53 2001
+: Hugh: who
+Fri Jun 15 17:03:24 2001
+: Hugh: i
+Fri Jun 15 17:10:39 2001
+: Hugh: who
+Fri Jun 15 17:10:40 2001
+: Hugh: eq
+Fri Jun 15 17:10:49 2001
+: Hugh: who wdn
+Fri Jun 15 17:10:52 2001
+: Hugh: who wdn
+Fri Jun 15 17:10:55 2001
+: Hugh: who wdn>
+Fri Jun 15 17:10:58 2001
+: Hugh: who
+Fri Jun 15 18:40:00 2001
+: (Unknown): No
+Fri Jun 15 18:40:01 2001
+: (Unknown): Aloran
+Fri Jun 15 18:40:02 2001
+: Aloran: aloran27
+Fri Jun 15 18:40:03 2001
+: Aloran:  
+Fri Jun 15 18:40:04 2001
+: Aloran: who
+Fri Jun 15 18:40:10 2001
+: Aloran: save
+Fri Jun 15 18:40:11 2001
+: Aloran: quit
+Fri Jun 15 19:10:16 2001
+: (Unknown): No
+Fri Jun 15 19:10:17 2001
+: (Unknown): Aloran
+Fri Jun 15 19:10:18 2001
+: Aloran: aloran27
+Fri Jun 15 19:10:18 2001
+: Aloran:  
+Fri Jun 15 19:10:19 2001
+: Aloran: who
+Fri Jun 15 19:10:22 2001
+: Aloran: save
+Fri Jun 15 19:10:22 2001
+: Aloran: quit
+Fri Jun 15 19:35:29 2001
+: (Unknown): y
+Fri Jun 15 19:35:31 2001
+: (Unknown): tsuke
+Fri Jun 15 19:35:31 2001
+: Tsuke: daini
+Fri Jun 15 19:35:32 2001
+: Tsuke:  
+Fri Jun 15 19:35:32 2001
+: Tsuke: who
+Fri Jun 15 19:35:35 2001
+: Tsuke: note
+Fri Jun 15 20:12:52 2001
+: (Unknown): No
+Fri Jun 15 20:12:54 2001
+: (Unknown): Aloran
+Fri Jun 15 20:12:55 2001
+: Aloran: aloran27
+Fri Jun 15 20:12:55 2001
+: Aloran:  
+Fri Jun 15 20:12:55 2001
+: Aloran: who
+Fri Jun 15 20:12:56 2001
+: Aloran: save
+Fri Jun 15 20:12:57 2001
+: Aloran: quit
+Fri Jun 15 20:58:26 2001
+: (Unknown): y
+Fri Jun 15 20:58:26 2001
+: (Unknown): sin
+Fri Jun 15 20:58:26 2001
+: Sin: panther
+Fri Jun 15 20:58:27 2001
+: Sin:  
+Fri Jun 15 20:58:32 2001
+: Sin: note
+Fri Jun 15 20:58:34 2001
+: Sin: who
+Fri Jun 15 20:58:38 2001
+: Sin: note to all
+Fri Jun 15 20:58:41 2001
+: Sin: note subject re: Aloran
+Fri Jun 15 20:58:45 2001
+: Sin: note + WWWOOOOHOOOOO!!!
+Fri Jun 15 20:58:50 2001
+: Sin: note + *strikes up the band*
+Fri Jun 15 20:58:51 2001
+: Sin: note show
+Fri Jun 15 20:58:55 2001
+: Sin: note +
+Fri Jun 15 20:59:00 2001
+: Sin: note + Sin is the Mother of all Invention
+Fri Jun 15 20:59:01 2001
+: Sin: note show
+Fri Jun 15 20:59:07 2001
+: Sin: note post
+Fri Jun 15 20:59:10 2001
+: Sin: finger hugh
+Fri Jun 15 20:59:11 2001
+: Sin: who
+Fri Jun 15 20:59:13 2001
+: Sin: quit
+Sat Jun 16 08:56:00 2001
+: (Unknown): y
+Sat Jun 16 08:56:01 2001
+: (Unknown): Flux
+Sat Jun 16 08:56:02 2001
+: Flux: verite
+Sat Jun 16 08:56:02 2001
+: Flux:  
+Sat Jun 16 08:56:03 2001
+: Flux: wh
+Sat Jun 16 08:56:06 2001
+: Flux: note
+Sat Jun 16 08:56:08 2001
+: Flux: note
+Sat Jun 16 08:56:16 2001
+: Flux: purge
+Sat Jun 16 08:56:16 2001
+: Flux: whj
+Sat Jun 16 08:56:17 2001
+: Flux: wh
+Sat Jun 16 09:55:38 2001
+: Flux: l
+Sat Jun 16 09:56:56 2001
+: (Unknown): y
+Sat Jun 16 09:56:56 2001
+: (Unknown): sin
+Sat Jun 16 09:56:56 2001
+: Sin: panther
+Sat Jun 16 09:56:58 2001
+: Sin:  
+Sat Jun 16 09:57:00 2001
+: Sin: who
+Sat Jun 16 09:57:19 2001
+: Flux: imm boo
+Sat Jun 16 09:57:21 2001
+: Flux: home
+Sat Jun 16 09:57:25 2001
+: Sin: : guess what guess what guess what
+Sat Jun 16 09:58:28 2001
+: Flux: imm what?
+Sat Jun 16 09:58:40 2001
+: Sin: : i got an apartment! i move in on the 24th
+Sat Jun 16 09:58:53 2001
+: Flux: imm ooo :)
+Sat Jun 16 09:59:07 2001
+: Flux: imm a one bedroom?
+Sat Jun 16 09:59:23 2001
+: Sin: : i went in and looked at one thursday night, applied, and got accepted on the spot! yes a very very nice one beroom
+Sat Jun 16 09:59:33 2001
+: Flux: imm neato
+Sat Jun 16 10:01:39 2001
+: Flux: imm I remember apartment hunting long ago
+Sat Jun 16 10:01:50 2001
+: Sin: : i looked at a couple that were SO old and grody
+Sat Jun 16 10:01:51 2001
+: Flux: imm gonna have to be doing it again soon too :(
+Sat Jun 16 10:02:01 2001
+: Flux: imm icky
+Sat Jun 16 10:02:03 2001
+: Sin: : this one is built within the past 3-4 years, in a very nice suburb..
+Sat Jun 16 10:03:09 2001
+: (Unknown): n
+Sat Jun 16 10:03:12 2001
+: (Unknown): hugh
+Sat Jun 16 10:03:13 2001
+: Hugh: jav2vii
+Sat Jun 16 10:03:14 2001
+: Hugh:  
+Sat Jun 16 10:03:15 2001
+: Hugh: who
+Sat Jun 16 10:03:20 2001
+: Sin: smile
+Sat Jun 16 10:03:21 2001
+: Hugh: yawn
+Sat Jun 16 10:03:22 2001
+: Flux: imm :)
+Sat Jun 16 10:03:24 2001
+: Sin: bear hugh
+Sat Jun 16 10:03:25 2001
+: Sin: who
+Sat Jun 16 10:03:26 2001
+: Hugh: hug sin
+Sat Jun 16 10:03:30 2001
+: Hugh: say Howdy
+Sat Jun 16 10:03:32 2001
+: Hugh: who
+Sat Jun 16 10:03:34 2001
+: Hugh: eq
+Sat Jun 16 10:03:34 2001
+: Hugh: i
+Sat Jun 16 10:03:35 2001
+: Sin: say hi there darlin!
+Sat Jun 16 10:03:42 2001
+: Sin: title is the Mother of Invention
+Sat Jun 16 10:03:43 2001
+: Sin: who
+Sat Jun 16 10:03:50 2001
+: Flux: imm i remember the old grody duplexes I had to bear through to find this hellhole
+Sat Jun 16 10:03:55 2001
+: Flux: imm stupid roommate
+Sat Jun 16 10:04:11 2001
+: Sin: : this place is so nice, the kind of apt you'd expect to spend 1000 for a one bedroom
+Sat Jun 16 10:04:18 2001
+: Sin: : but i'm at 590 =)
+Sat Jun 16 10:04:27 2001
+: Sin: say so how are you?
+Sat Jun 16 10:04:28 2001
+: Hugh: say well this is going to be a quick visit, my brother just showed up and I'm off to see my dad for fathers day
+Sat Jun 16 10:04:32 2001
+: Flux: imm ack.. 1000 for a one bedroomer
+Sat Jun 16 10:04:40 2001
+: Sin: nod
+Sat Jun 16 10:04:43 2001
+: Hugh: chuck
+Sat Jun 16 10:04:49 2001
+: Sin: say i got an apartment!! thats it for news
+Sat Jun 16 10:04:49 2001
+: Sin: gig
+Sat Jun 16 10:04:50 2001
+: Flux: imm gotta get in that city mindset, people get 4 bedroom houses for less than that here ;)
+Sat Jun 16 10:04:53 2001
+: Hugh: cheer sin
+Sat Jun 16 10:05:05 2001
+: Sin: : =b
+Sat Jun 16 10:05:06 2001
+: Hugh: say That is cool.  when do you move in?
+Sat Jun 16 10:05:18 2001
+: Sin: say 24th. i got approved on the spot when i applied for the apt
+Sat Jun 16 10:05:22 2001
+: Sin: say signed the lease that very night
+Sat Jun 16 10:05:29 2001
+: Hugh: say Wow
+Sat Jun 16 10:05:39 2001
+: Hugh: say Same city you're in now?
+Sat Jun 16 10:05:41 2001
+: Sin: say so i'm floating on a cloud of happiness
+Sat Jun 16 10:05:44 2001
+: Hugh: chuck
+Sat Jun 16 10:05:51 2001
+: Sin: say well, dallas.. different suburb. much nicer and closer suburb
+Sat Jun 16 10:05:52 2001
+: Hugh: congrat sin
+Sat Jun 16 10:05:57 2001
+: Hugh: congradulation sin
+Sat Jun 16 10:06:04 2001
+: Hugh: nod
+Sat Jun 16 10:06:05 2001
+: Flux: imm im gonna be in the same boat.... I talked with tara for a while aboot what we talked on
+Sat Jun 16 10:06:12 2001
+: Hugh: say That is really great.
+Sat Jun 16 10:06:21 2001
+: Sin: say plus.. 
+Sat Jun 16 10:06:23 2001
+: Hugh: eye
+Sat Jun 16 10:06:26 2001
+: Flux: imm aboot moving back with my parents
+Sat Jun 16 10:06:28 2001
+: Hugh: emote raises his eyebrow.
+Sat Jun 16 10:06:37 2001
+: Sin: say well.. someones coming to visit me for 2 weeks in july
+Sat Jun 16 10:06:42 2001
+: Hugh: chuck
+Sat Jun 16 10:06:42 2001
+: Sin: : aboot? ;)
+Sat Jun 16 10:06:48 2001
+: Hugh: say That special someone, eh...
+Sat Jun 16 10:06:50 2001
+: Sin: nod
+Sat Jun 16 10:06:50 2001
+: Flux: imm pfft, I say it like that ;)
+Sat Jun 16 10:07:01 2001
+: Sin: : canadian=b
+Sat Jun 16 10:07:05 2001
+: Flux: imm I say ruff for roof too
+Sat Jun 16 10:07:08 2001
+: Hugh: say Ok, I gotta jet but I'll stop by later and chat
+Sat Jun 16 10:07:13 2001
+: Sin: say ok, have fun
+Sat Jun 16 10:07:14 2001
+: Hugh: say You want to do me a favor before I leave?
+Sat Jun 16 10:07:17 2001
+: Sin: say sure
+Sat Jun 16 10:07:31 2001
+: Hugh: say Can you trans me out of here so I can walk around when no one is on...  ;)
+Sat Jun 16 10:07:32 2001
+: Hugh: wink sin
+Sat Jun 16 10:07:48 2001
+: Sin: snick
+Sat Jun 16 10:07:50 2001
+: Hugh: say I log on and no one is around and it's no recall..
+Sat Jun 16 10:07:55 2001
+: Hugh: say Sucks real bad.
+Sat Jun 16 10:07:56 2001
+: Sin: say sec
+Sat Jun 16 10:07:57 2001
+: Hugh: who
+Sat Jun 16 10:08:02 2001
+: Sin: : whats the first room of the trainer?
+Sat Jun 16 10:08:11 2001
+: Sin: : hugh wants in there so he can wander around when noone is on
+Sat Jun 16 10:08:32 2001
+: Sin: say tryin to find a good room for you
+Sat Jun 16 10:08:32 2001
+: Sin: who
+Sat Jun 16 10:08:34 2001
+: Flux: imm ahh
+Sat Jun 16 10:08:36 2001
+: Flux: imm hmm
+Sat Jun 16 10:08:37 2001
+: Hugh: smi
+Sat Jun 16 10:08:37 2001
+: Flux: alist
+Sat Jun 16 10:08:40 2001
+: Hugh: smile
+Sat Jun 16 10:08:40 2001
+: Flux: imm 200
+Sat Jun 16 10:08:44 2001
+: Sin: transfer hugh 200
+Sat Jun 16 10:08:47 2001
+: Sin: at 200 look
+Sat Jun 16 10:08:54 2001
+: Hugh: l
+Sat Jun 16 10:08:56 2001
+: Hugh: l
+Sat Jun 16 10:08:57 2001
+: Hugh: e
+Sat Jun 16 10:08:59 2001
+: Hugh: w
+Sat Jun 16 10:09:00 2001
+: Hugh: w
+Sat Jun 16 10:09:02 2001
+: Flux: imm oops
+Sat Jun 16 10:09:03 2001
+: Sin: gos have fun ;)
+Sat Jun 16 10:09:03 2001
+: Hugh: sca
+Sat Jun 16 10:09:05 2001
+: Hugh: recall 
+Sat Jun 16 10:09:06 2001
+: Sin: ooc have fun ;)
+Sat Jun 16 10:09:06 2001
+: Flux: imm well thats the main prison town
+Sat Jun 16 10:09:07 2001
+: Hugh: l
+Sat Jun 16 10:09:14 2001
+: Flux: imm the trainer is actually 800
+Sat Jun 16 10:09:15 2001
+: Sin: : no prob, just somewhere he can wander
+Sat Jun 16 10:09:19 2001
+: Hugh: ooc Heh, its really dark here...
+Sat Jun 16 10:09:21 2001
+: Flux: imm the town is much bigger
+Sat Jun 16 10:09:24 2001
+: Flux: goto hugh
+Sat Jun 16 10:09:25 2001
+: Hugh: l
+Sat Jun 16 10:09:28 2001
+: Hugh: s
+Sat Jun 16 10:09:29 2001
+: Hugh: ex
+Sat Jun 16 10:09:30 2001
+: Flux: cast 'continual light'
+Sat Jun 16 10:09:30 2001
+: Hugh: n
+Sat Jun 16 10:09:35 2001
+: Hugh: smi
+Sat Jun 16 10:09:35 2001
+: Flux: get ball
+Sat Jun 16 10:09:36 2001
+: Hugh: get ball
+Sat Jun 16 10:09:38 2001
+: Flux: give ball hugh
+Sat Jun 16 10:09:40 2001
+: Flux: home
+Sat Jun 16 10:09:41 2001
+: Sin: ooc its nighttime, dink =b
+Sat Jun 16 10:09:41 2001
+: Hugh: wear ball
+Sat Jun 16 10:09:46 2001
+: Hugh: ooc Thanks.  ;)
+Sat Jun 16 10:09:53 2001
+: Hugh: ooc Ok, off to see my papa...
+Sat Jun 16 10:09:57 2001
+: Hugh: ooc L8r all.
+Sat Jun 16 10:09:58 2001
+: Sin: ooc happy one =)
+Sat Jun 16 10:10:27 2001
+: Sin: : i have a massive headache from oversleeping
+Sat Jun 16 10:10:28 2001
+: Sin: who
+Sat Jun 16 10:10:44 2001
+: Sin: goto flux
+Sat Jun 16 10:10:50 2001
+: Sin: score mes
+Sat Jun 16 10:11:44 2001
+: Flux: say aww :(
+Sat Jun 16 10:11:46 2001
+: Sin: say ok, i have something i wanna tell you.. not sure if i should or if it even matters to you but i dont want you to hear it from someone else and get iupset..
+Sat Jun 16 10:11:58 2001
+: Flux: say ok
+Sat Jun 16 10:13:16 2001
+: Sin: say i've gotten really close to jay.. nyarl.. and hes coming to visit me for a couple of weeks in july
+Sat Jun 16 10:13:32 2001
+: Flux: say I already knew that, that you had gotten close
+Sat Jun 16 10:14:13 2001
+: Flux: say I'm good at deducing certain things on my own ;)
+Sat Jun 16 10:14:18 2001
+: Sin: nod
+Sat Jun 16 10:14:48 2001
+: Sin: say i didnt want you to hear flat out from someone else.. you're like my brother and i dont like hiding things from you.
+Sat Jun 16 10:15:16 2001
+: Flux: say it still hurts inside, I can't lie and say that I'm fine
+Sat Jun 16 10:15:45 2001
+: Sin: say i'm sorry for that..
+Sat Jun 16 10:15:51 2001
+: Flux: say I've had enough of lying already... I'm just trying to deal with things as they come
+Sat Jun 16 10:16:18 2001
+: Sin: say thats kind of why i wanted to tell you.. you need honesty, and you deserve honesty
+Sat Jun 16 10:16:55 2001
+: Flux: say im not sure I talk to anyone that would have known really, I rarely ever see him on bnet, usually just talk to disco and krista
+Sat Jun 16 10:17:09 2001
+: Flux: say but I appreciate you telling me a lot :)
+Sat Jun 16 10:17:29 2001
+: Sin: say well, with him being here for 2 weeks in july, it'll become apparent really fast in coop.. and you know how gossip travels
+Sat Jun 16 10:17:46 2001
+: Flux: say I just hope you find happiness
+Sat Jun 16 10:18:06 2001
+: Sin: say and you also dont deserve to hear the day of him coming 'oh guess what jays coming to visit'.. 
+Sat Jun 16 10:19:16 2001
+: Flux: say I'm just a bitter lonely geek hiding in a cave, I need a lot of time to find myself, and I'm trying to take that time now
+Sat Jun 16 10:19:39 2001
+: Sin: say i'm a geek myself, bitter too.. insanely so
+Sat Jun 16 10:19:42 2001
+: Flux: say maybe a little late in life for such things, but it's got to be done
+Sat Jun 16 10:20:07 2001
+: Sin: say its never too late
+Sat Jun 16 10:20:08 2001
+: Sin: who
+Sat Jun 16 10:20:42 2001
+: Flux: say it feels like it, I've allowed myself to destroy so many chances I've had to excel
+Sat Jun 16 10:20:56 2001
+: Sin: say you feel old, but you're not.. you're quite young darlin..
+Sat Jun 16 10:21:15 2001
+: Sin: say theres always time to start over, and you're doing a good job at getting the ball in motion
+Sat Jun 16 10:22:18 2001
+: Flux: say I'm just trying to pick up the pieces and start again... I'm 23 and I've squandered such possibilities.. in the age of computing I could have been a millionaire by now
+Sat Jun 16 10:22:52 2001
+: Sin: say dont waste your time worrying about the what ifs..
+Sat Jun 16 10:22:58 2001
+: Flux: say it's just the way I feel a lot of the time.. chasing a dream and forgetting that there's other things
+Sat Jun 16 10:23:19 2001
+: Sin: hug flux
+Sat Jun 16 10:23:57 2001
+: Flux: say it's hard being so alone.. in a few months I wont know anyone but my parents again
+Sat Jun 16 10:24:12 2001
+: Sin: say but you can work on meeting people
+Sat Jun 16 10:24:22 2001
+: Sin: say thats how it works. you move, you start over, you make new friends
+Sat Jun 16 10:25:29 2001
+: Flux: say its just hard sometimes.. a lot of the time I don't feel like I'm worth having friends
+Sat Jun 16 10:26:02 2001
+: Flux: say but im working on it
+Sat Jun 16 10:26:16 2001
+: Sin: nod
+Sat Jun 16 10:26:28 2001
+: Sin: say i gotta run for about a half hour
+Sat Jun 16 10:26:32 2001
+: Flux: nod
+Sat Jun 16 10:26:35 2001
+: Sin: say dad just left and i need to take the chance to go get his gift
+Sat Jun 16 10:26:41 2001
+: Sin: who
+Sat Jun 16 10:26:44 2001
+: Sin: hug flux
+Sat Jun 16 10:26:50 2001
+: Sin: say be well, i'll talk to you in a bit
+Sat Jun 16 10:27:09 2001
+: Flux: say ok
+Sat Jun 16 10:27:14 2001
+: Sin: quit
+Sat Jun 16 10:30:51 2001
+: Flux: title is lamenting
+Sat Jun 16 10:31:38 2001
+: Flux: title is lamenting in another window...
+Sat Jun 16 11:43:51 2001
+: (Unknown): y
+Sat Jun 16 11:43:51 2001
+: (Unknown): sin
+Sat Jun 16 11:43:51 2001
+: Sin: panther
+Sat Jun 16 11:43:52 2001
+: Sin:  
+Sat Jun 16 11:43:53 2001
+: Sin: who
+Sat Jun 16 11:43:58 2001
+: Sin: tickle flux
+Sat Jun 16 11:44:02 2001
+: Sin: beep flux
+Sat Jun 16 11:44:19 2001
+: Flux: say heyas :)
+Sat Jun 16 11:44:19 2001
+: Sin: beep self
+Sat Jun 16 11:45:25 2001
+: Sin: say what are you lamenting?
+Sat Jun 16 11:45:26 2001
+: Sin: beep self
+Sat Jun 16 11:45:48 2001
+: Flux: say dunno.. krista cheered me up, i forgot to change it
+Sat Jun 16 11:46:14 2001
+: Sin: sigh
+Sat Jun 16 11:46:16 2001
+: Flux: title is here, somewhere, coding, elsewhere
+Sat Jun 16 11:46:18 2001
+: Sin: say i hate myself now.
+Sat Jun 16 11:46:22 2001
+: Flux: say why?
+Sat Jun 16 11:47:18 2001
+: Sin: say i shouldnt have said anything..
+Sat Jun 16 11:48:10 2001
+: Flux: say don't say that.. I have a lot of things that trouble me, you happen to be a part of one of them but it's not your fault
+Sat Jun 16 11:48:55 2001
+: Sin: say i dont need to add to them.. and i feel guilty as hell because i dont feel what you wanted me to
+Sat Jun 16 11:49:54 2001
+: Flux: hug sin
+Sat Jun 16 11:50:10 2001
+: Flux: say you shouldn't.. you're you and I'm me
+Sat Jun 16 11:50:18 2001
+: Flux: say and that's how it's meant to be
+Sat Jun 16 11:50:54 2001
+: Flux: say im working through being alone and having feelings of inadequacies
+Sat Jun 16 11:51:25 2001
+: Flux: say you're a minor part of that, it would have been anyone, it has nothing to do with you specifically
+Sat Jun 16 11:55:38 2001
+: Flux: say Dena.. I really think you're one of the most beautiful people I've had the pleasure to meet
+Sat Jun 16 11:55:54 2001
+: Flux: say and I don't want to keep making you sad like this :(
+Sat Jun 16 11:57:45 2001
+: Sin: say i just feel guilty, danny..
+Sat Jun 16 11:57:47 2001
+: Sin: hug flux
+Sat Jun 16 11:57:55 2001
+: Sin: say i'm ok, dont go worrying about me
+Sat Jun 16 11:58:12 2001
+: Flux: say I can't help it
+Sat Jun 16 11:58:53 2001
+: Sin: say why not
+Sat Jun 16 11:59:06 2001
+: Flux: say I'm good at worrying.. so I do it. I care about you
+Sat Jun 16 12:03:01 2001
+: Flux: say i don't find many people worth caring about, so I like to hold onto the few Ive got
+Sat Jun 16 12:04:40 2001
+: Sin: say well, theres nothing to worry about where i'm concerned
+Sat Jun 16 12:04:45 2001
+: Sin: say life is pulling together
+Sat Jun 16 12:05:29 2001
+: Flux: say i'm glad
+Sat Jun 16 12:05:29 2001
+: Sin: say my job is great, i got a great apartment, my commute is going to be cut in half..
+Sat Jun 16 12:05:40 2001
+: Sin: say only 12 miles from my new place
+Sat Jun 16 12:05:48 2001
+: Sin: say currently i'm 32
+Sat Jun 16 12:05:49 2001
+: Flux: smile
+Sat Jun 16 12:06:15 2001
+: Sin: say and other things are going great for me as well
+Sat Jun 16 12:06:16 2001
+: Sin: who
+Sat Jun 16 12:08:10 2001
+: Flux: say im just trying to figure out who I am.. or am supposed to be
+Sat Jun 16 12:08:23 2001
+: Sin: say it doesnt matter who you're supposed to be
+Sat Jun 16 12:08:27 2001
+: Sin: say it matters who you are and who you want to be
+Sat Jun 16 12:09:15 2001
+: Flux: say ive got to figure that out then
+Sat Jun 16 12:09:50 2001
+: Flux: say maybe I'll get my toe fixed in the process too.. it's been bothering me today
+Sat Jun 16 12:10:54 2001
+: Sin: nod
+Sat Jun 16 12:11:37 2001
+: Flux: say telling your toe to stop bleeding at 7 am doesn't work apparently ;)
+Sat Jun 16 12:12:17 2001
+: Flux: I might even get a bed when I move
+Sat Jun 16 12:12:21 2001
+: Flux: say I might even get a bed when I move
+Sat Jun 16 12:12:33 2001
+: Flux: say havent had a bed in like 4 years
+Sat Jun 16 12:13:41 2001
+: Flux: say little things like that going on
+Sat Jun 16 12:14:08 2001
+: Flux: say maybe a real computer desk instead of a pile of yaffa blocks
+Sat Jun 16 12:19:40 2001
+: Flux: say I hope my mother and I can get along
+Sat Jun 16 12:19:48 2001
+: Flux: say I'm really worried about that :(
+Sat Jun 16 15:31:11 2001
+: (Unknown): Talon
+Sat Jun 16 15:31:12 2001
+: (Unknown): wolfwolf
+Sat Jun 16 15:31:15 2001
+: (Unknown): yes
+Sat Jun 16 15:31:20 2001
+: (Unknown): Talon
+Sat Jun 16 15:31:22 2001
+: Talon: y
+Sat Jun 16 15:31:25 2001
+: Talon: wolfwolf
+Sat Jun 16 15:31:29 2001
+: Talon: wolfwolf
+Sat Jun 16 15:31:31 2001
+: Talon: m
+Sat Jun 16 15:31:36 2001
+: Talon: elf
+Sat Jun 16 15:31:51 2001
+: Talon: yes
+Sat Jun 16 15:32:02 2001
+: Talon: rogue
+Sat Jun 16 15:32:06 2001
+: Talon: rogue
+Sat Jun 16 15:32:08 2001
+: Talon: yes
+Sat Jun 16 15:32:10 2001
+: Talon: y
+Sat Jun 16 15:32:12 2001
+: Talon:  
+Sat Jun 16 15:32:17 2001
+: Talon: look
+Sat Jun 16 15:34:39 2001
+: Talon: say anyone here?
+Sat Jun 16 16:09:01 2001
+: (Unknown): y
+Sat Jun 16 16:09:03 2001
+: (Unknown): Flux
+Sat Jun 16 16:09:03 2001
+: Flux: verite
+Sat Jun 16 16:09:05 2001
+: Flux:  
+Sat Jun 16 16:09:06 2001
+: Flux: wh
+Sat Jun 16 16:09:10 2001
+: Flux: diceroll 2 20
+Sat Jun 16 16:12:52 2001
+: Flux: quit
+Sat Jun 16 20:21:00 2001
+: (Unknown): y
+Sat Jun 16 20:21:00 2001
+: (Unknown): sin
+Sat Jun 16 20:21:00 2001
+: Sin: panther
+Sat Jun 16 20:21:01 2001
+: Sin:  
+Sat Jun 16 20:21:02 2001
+: Sin: who
+Sat Jun 16 20:21:04 2001
+: Sin: goto 111
+Sat Jun 16 22:34:24 2001
+: (Unknown): n
+Sat Jun 16 22:34:25 2001
+: (Unknown): hugh
+Sat Jun 16 22:34:28 2001
+: Hugh: jav2vii
+Sat Jun 16 22:34:28 2001
+: Hugh:  
+Sat Jun 16 22:34:28 2001
+: Hugh:  
+Sat Jun 16 22:34:29 2001
+: Hugh: who
+Sat Jun 16 22:34:32 2001
+: Hugh: note
+Sat Jun 16 22:34:34 2001
+: Hugh: note
+Sat Jun 16 22:34:35 2001
+: Hugh: who
+Sat Jun 16 22:34:37 2001
+: Hugh: sl
+Sat Jun 16 22:34:38 2001
+: Hugh: sc
+Sat Jun 16 22:34:41 2001
+: Hugh: st
+Sat Jun 16 22:34:41 2001
+: Hugh: l
+Sat Jun 16 22:34:45 2001
+: Hugh: e
+Sat Jun 16 22:34:48 2001
+: Hugh: e
+Sat Jun 16 22:34:54 2001
+: Hugh: ex
+Sat Jun 16 22:34:56 2001
+: Hugh: e
+Sat Jun 16 22:34:57 2001
+: Hugh: e
+Sat Jun 16 22:34:58 2001
+: Hugh: ex
+Sat Jun 16 22:35:02 2001
+: Hugh: w
+Sat Jun 16 22:35:03 2001
+: Hugh: ex
+Sat Jun 16 22:35:04 2001
+: Hugh: w
+Sat Jun 16 22:35:05 2001
+: Hugh: ex
+Sat Jun 16 22:35:07 2001
+: Hugh: l
+Sat Jun 16 22:35:07 2001
+: Hugh: st
+Sat Jun 16 22:35:08 2001
+: Hugh: e
+Sat Jun 16 22:35:10 2001
+: Hugh: l
+Sat Jun 16 22:35:12 2001
+: Hugh: e
+Sat Jun 16 22:35:14 2001
+: Hugh: ex
+Sat Jun 16 22:35:16 2001
+: Hugh: e
+Sat Jun 16 22:35:17 2001
+: Hugh: ex
+Sat Jun 16 22:35:18 2001
+: Hugh: sl
+Sat Jun 16 22:35:18 2001
+: Hugh: who
+Sat Jun 16 22:35:20 2001
+: Hugh:  
+Sat Jun 16 22:37:34 2001
+: Hugh: st
+Sat Jun 16 22:37:34 2001
+: Hugh: lk
+Sat Jun 16 22:37:35 2001
+: Hugh: l
+Sat Jun 16 22:37:36 2001
+: Hugh: e
+Sat Jun 16 22:37:37 2001
+: Hugh: ex
+Sat Jun 16 22:37:38 2001
+: Hugh: e
+Sat Jun 16 22:37:39 2001
+: Hugh: ex
+Sat Jun 16 22:37:39 2001
+: Hugh: e
+Sat Jun 16 22:37:41 2001
+: Hugh: w
+Sat Jun 16 22:37:42 2001
+: Hugh: e
+Sat Jun 16 22:37:42 2001
+: Hugh: s
+Sat Jun 16 22:37:43 2001
+: Hugh: s
+Sat Jun 16 22:37:44 2001
+: Hugh: w
+Sat Jun 16 22:37:45 2001
+: Hugh: w
+Sat Jun 16 22:37:45 2001
+: Hugh: w
+Sat Jun 16 22:37:46 2001
+: Hugh: e
+Sat Jun 16 22:37:47 2001
+: Hugh: ex
+Sat Jun 16 22:37:47 2001
+: Hugh: s
+Sat Jun 16 22:37:48 2001
+: Hugh: s
+Sat Jun 16 22:37:49 2001
+: Hugh: s
+Sat Jun 16 22:37:51 2001
+: Hugh: l
+Sat Jun 16 22:37:52 2001
+: Hugh: l
+Sat Jun 16 22:37:53 2001
+: Hugh: s
+Sat Jun 16 22:37:54 2001
+: Hugh: w
+Sat Jun 16 22:37:55 2001
+: Hugh: w
+Sat Jun 16 22:37:58 2001
+: Hugh: e
+Sat Jun 16 22:37:58 2001
+: Hugh: e
+Sat Jun 16 22:38:01 2001
+: Hugh: w
+Sat Jun 16 22:38:01 2001
+: Hugh: s
+Sat Jun 16 22:38:02 2001
+: Hugh: e
+Sat Jun 16 22:38:03 2001
+: Hugh: e
+Sat Jun 16 22:38:04 2001
+: Hugh: e
+Sat Jun 16 22:38:05 2001
+: Hugh: n
+Sat Jun 16 22:38:06 2001
+: Hugh: n
+Sat Jun 16 22:38:07 2001
+: Hugh: w
+Sat Jun 16 22:38:08 2001
+: Hugh: w
+Sat Jun 16 22:38:09 2001
+: Hugh: n
+Sat Jun 16 22:38:10 2001
+: Hugh: n
+Sat Jun 16 22:38:10 2001
+: Hugh: n
+Sat Jun 16 22:38:11 2001
+: Hugh: n
+Sat Jun 16 22:38:12 2001
+: Hugh: n
+Sat Jun 16 22:38:13 2001
+: Hugh: w
+Sat Jun 16 22:38:14 2001
+: Hugh: w
+Sat Jun 16 22:38:23 2001
+: Hugh: w
+Sat Jun 16 22:38:25 2001
+: Hugh: w
+Sat Jun 16 22:38:26 2001
+: Hugh: w
+Sat Jun 16 22:38:27 2001
+: Hugh: s
+Sat Jun 16 22:38:28 2001
+: Hugh: s
+Sat Jun 16 22:38:30 2001
+: Hugh: e
+Sat Jun 16 22:38:31 2001
+: Hugh: e
+Sat Jun 16 22:38:31 2001
+: Hugh: e
+Sat Jun 16 22:38:32 2001
+: Hugh: w
+Sat Jun 16 22:38:33 2001
+: Hugh: ex
+Sat Jun 16 22:38:34 2001
+: Hugh: n
+Sat Jun 16 22:38:34 2001
+: Hugh: s
+Sat Jun 16 22:38:35 2001
+: Hugh: e
+Sat Jun 16 22:38:35 2001
+: Hugh: e
+Sat Jun 16 22:38:36 2001
+: Hugh: e
+Sat Jun 16 22:38:36 2001
+: Hugh: e
+Sat Jun 16 22:38:37 2001
+: Hugh: e
+Sat Jun 16 22:38:38 2001
+: Hugh: s
+Sat Jun 16 22:38:39 2001
+: Hugh: s
+Sat Jun 16 22:38:41 2001
+: Hugh: s
+Sat Jun 16 22:38:42 2001
+: Hugh: s
+Sat Jun 16 22:38:43 2001
+: Hugh: s
+Sat Jun 16 22:38:44 2001
+: Hugh: w
+Sat Jun 16 22:38:44 2001
+: Hugh: w
+Sat Jun 16 22:38:46 2001
+: Hugh: w
+Sat Jun 16 22:38:47 2001
+: Hugh: w
+Sat Jun 16 22:38:48 2001
+: Hugh: w
+Sat Jun 16 22:38:49 2001
+: Hugh: w
+Sat Jun 16 22:38:50 2001
+: Hugh: n
+Sat Jun 16 22:38:51 2001
+: Hugh: n
+Sat Jun 16 22:38:52 2001
+: Hugh: n
+Sat Jun 16 22:38:52 2001
+: Hugh: n
+Sat Jun 16 22:38:53 2001
+: Hugh: n
+Sat Jun 16 22:38:54 2001
+: Hugh: n
+Sat Jun 16 22:38:55 2001
+: Hugh: n
+Sat Jun 16 22:38:55 2001
+: Hugh: e
+Sat Jun 16 22:38:56 2001
+: Hugh: e
+Sat Jun 16 22:38:56 2001
+: Hugh: e
+Sat Jun 16 22:38:57 2001
+: Hugh: e
+Sat Jun 16 22:38:57 2001
+: Hugh: e
+Sat Jun 16 22:38:58 2001
+: Hugh: e
+Sat Jun 16 22:38:58 2001
+: Hugh: e
+Sat Jun 16 22:38:59 2001
+: Hugh: s
+Sat Jun 16 22:38:59 2001
+: Hugh: s
+Sat Jun 16 22:39:00 2001
+: Hugh: s
+Sat Jun 16 22:39:01 2001
+: Hugh: s
+Sat Jun 16 22:39:03 2001
+: Hugh: w
+Sat Jun 16 22:39:03 2001
+: Hugh: w
+Sat Jun 16 22:39:04 2001
+: Hugh: w
+Sat Jun 16 22:39:06 2001
+: Hugh: w
+Sat Jun 16 22:39:07 2001
+: Hugh: rest
+Sat Jun 16 22:39:07 2001
+: Hugh: whpo
+Sat Jun 16 22:39:08 2001
+: Hugh: who
+Sun Jun 17 00:15:01 2001
+: (Unknown): y
+Sun Jun 17 00:15:01 2001
+: (Unknown): sin
+Sun Jun 17 00:15:01 2001
+: Sin: panther
+Sun Jun 17 00:15:03 2001
+: Sin:  
+Sun Jun 17 00:15:03 2001
+: Sin: who
+Sun Jun 17 12:57:57 2001
+: (Unknown): y
+Sun Jun 17 12:57:58 2001
+: (Unknown): Flux
+Sun Jun 17 12:57:59 2001
+: Flux: verite
+Sun Jun 17 12:58:00 2001
+: Flux:  
+Sun Jun 17 12:58:01 2001
+: Flux: time
+Sun Jun 17 12:58:05 2001
+: Flux: mem
+Sun Jun 17 12:58:09 2001
+: Flux: wh
+Sun Jun 17 13:14:35 2001
+: (Unknown): Talon
+Sun Jun 17 13:14:35 2001
+: (Unknown): wolfwolf
+Sun Jun 17 13:17:30 2001
+: (Unknown): y
+Sun Jun 17 13:17:30 2001
+: (Unknown):  
+Sun Jun 17 13:17:43 2001
+: (Unknown): Talon
+Sun Jun 17 13:17:43 2001
+: (Unknown): wolfwolf
+Sun Jun 17 13:17:44 2001
+: (Unknown): y
+Sun Jun 17 13:17:49 2001
+: (Unknown): Talon
+Sun Jun 17 13:17:54 2001
+: Talon: y
+Sun Jun 17 13:17:57 2001
+: Talon: wolfwolf
+Sun Jun 17 13:18:00 2001
+: Talon: wolfwolf
+Sun Jun 17 13:18:02 2001
+: Talon: m
+Sun Jun 17 13:18:15 2001
+: Talon: elf
+Sun Jun 17 13:18:34 2001
+: Talon: yes
+Sun Jun 17 13:18:45 2001
+: Talon: naturalist
+Sun Jun 17 13:18:53 2001
+: Talon: naturalist
+Sun Jun 17 13:19:03 2001
+: Talon: wdruid
+Sun Jun 17 13:19:06 2001
+: Talon: y
+Sun Jun 17 13:19:08 2001
+: Talon: y
+Sun Jun 17 13:19:12 2001
+: Talon: yes
+Sun Jun 17 13:19:18 2001
+: Talon: WDruid
+Sun Jun 17 13:19:40 2001
+: (Unknown): Talon
+Sun Jun 17 13:19:41 2001
+: (Unknown): wolfwolf
+Sun Jun 17 13:19:42 2001
+: (Unknown): y
+Sun Jun 17 13:19:45 2001
+: (Unknown): Talon
+Sun Jun 17 13:19:46 2001
+: Talon: y
+Sun Jun 17 13:19:49 2001
+: Talon: wolfwolf
+Sun Jun 17 13:19:51 2001
+: Talon: wolfwolf
+Sun Jun 17 13:19:52 2001
+: Talon: m
+Sun Jun 17 13:19:56 2001
+: Talon: drow
+Sun Jun 17 13:19:59 2001
+: Talon: y
+Sun Jun 17 13:20:05 2001
+: Talon: back
+Sun Jun 17 13:20:08 2001
+: Talon: elf
+Sun Jun 17 13:20:10 2001
+: Talon: y
+Sun Jun 17 13:20:21 2001
+: Talon: wnaturalist
+Sun Jun 17 13:20:26 2001
+: Talon: Naturalist
+Sun Jun 17 13:20:27 2001
+: Talon: y
+Sun Jun 17 13:20:29 2001
+: Talon:  
+Sun Jun 17 13:20:39 2001
+: Talon: y
+Sun Jun 17 13:20:46 2001
+: Talon: look
+Sun Jun 17 13:20:53 2001
+: Talon: say Hello?
+Sun Jun 17 13:20:59 2001
+: Talon: commands
+Sun Jun 17 13:21:07 2001
+: Talon: hide couch
+Sun Jun 17 13:21:18 2001
+: Talon: ; hello
+Sun Jun 17 13:21:25 2001
+: Talon: ;
+Sun Jun 17 13:21:33 2001
+: Talon: ] hmmm
+Sun Jun 17 13:21:40 2001
+: Talon: , test
+Sun Jun 17 13:21:44 2001
+: Talon: , test
+Sun Jun 17 13:21:54 2001
+: Talon: . test
+Sun Jun 17 13:22:01 2001
+: Talon: < tst
+Sun Jun 17 13:24:32 2001
+: Talon: talk nonesense
+Sun Jun 17 13:24:38 2001
+: Talon: say ack ack ack ack 
+Sun Jun 17 13:24:52 2001
+: Talon: prac
+Sun Jun 17 13:25:06 2001
+: Talon: test grounc
+Sun Jun 17 13:26:58 2001
+: Flux: ooc heyas
+Sun Jun 17 13:27:12 2001
+: Flux: ooc sorry.. was off on the website ;)
+Sun Jun 17 13:27:12 2001
+: Flux: wh
+Sun Jun 17 13:27:32 2001
+: Talon: , hey
+Sun Jun 17 13:27:47 2001
+: Talon: say what's the OOC again? I was just foolin
+Sun Jun 17 13:28:07 2001
+: Talon: ] hi
+Sun Jun 17 13:28:13 2001
+: Talon: ] just checkin up
+Sun Jun 17 13:28:14 2001
+: Flux: l
+Sun Jun 17 13:28:20 2001
+: Flux: ooc not much has been done yet hehe
+Sun Jun 17 13:28:38 2001
+: Talon: ] get a move on it! :P j/k
+Sun Jun 17 13:28:44 2001
+: Flux: ooc heh
+Sun Jun 17 13:28:47 2001
+: Talon: ] so, when is it going to be playable?
+Sun Jun 17 13:28:52 2001
+: Talon: ] so to speak
+Sun Jun 17 13:29:08 2001
+: Flux: ooc it depends on how fast the building goes too... maybe end of summer, im hoping
+Sun Jun 17 13:29:25 2001
+: Talon: ] ahhh
+Sun Jun 17 13:29:37 2001
+: Talon: ] and so that's when beta will be or is that before?
+Sun Jun 17 13:29:55 2001
+: Flux: ooc nono.. thats beta
+Sun Jun 17 13:30:23 2001
+: Talon: ] heh, well I'll let you get back to work. later
+Sun Jun 17 14:15:43 2001
+: Flux: quit
+Sun Jun 17 16:14:54 2001
+: (Unknown): y
+Sun Jun 17 16:14:55 2001
+: (Unknown): Flux
+Sun Jun 17 16:14:55 2001
+: Flux: verite
+Sun Jun 17 16:14:56 2001
+: Flux:  
+Sun Jun 17 16:14:57 2001
+: Flux: wh
+Sun Jun 17 16:21:54 2001
+: Flux: quit
+Sun Jun 17 23:08:47 2001
+: (Unknown): No
+Sun Jun 17 23:08:48 2001
+: (Unknown): Aloran
+Sun Jun 17 23:08:50 2001
+: Aloran: aloran27
+Sun Jun 17 23:08:50 2001
+: Aloran:  
+Sun Jun 17 23:08:51 2001
+: Aloran: who
+Sun Jun 17 23:08:52 2001
+: Aloran: note list
+Sun Jun 17 23:08:54 2001
+: Aloran: note read 4
+Sun Jun 17 23:09:00 2001
+: Aloran: save
+Sun Jun 17 23:09:02 2001
+: Aloran: quit
+Sun Jun 17 23:09:18 2001
+: (Unknown): No
+Sun Jun 17 23:09:18 2001
+: (Unknown): Aloran
+Sun Jun 17 23:09:20 2001
+: Aloran: aloran27
+Sun Jun 17 23:09:21 2001
+: Aloran: note read 
+Sun Jun 17 23:09:22 2001
+: Aloran: note read 3
+Sun Jun 17 23:09:24 2001
+: Aloran: note read 4
+Sun Jun 17 23:09:25 2001
+: Aloran: save
+Sun Jun 17 23:09:27 2001
+: Aloran: quit
+Sun Jun 17 23:12:16 2001
+: (Unknown): y
+Sun Jun 17 23:12:17 2001
+: (Unknown): tsuke
+Sun Jun 17 23:12:18 2001
+: Tsuke: daini
+Sun Jun 17 23:12:19 2001
+: Tsuke:  
+Sun Jun 17 23:12:20 2001
+: Tsuke: who
+Sun Jun 17 23:12:23 2001
+: Tsuke: note
+Sun Jun 17 23:12:25 2001
+: Tsuke: note
+Sun Jun 17 23:16:15 2001
+: Tsuke: hlist 600 650
+Mon Jun 18 01:25:33 2001
+: (Unknown): y
+Mon Jun 18 01:25:35 2001
+: (Unknown): tsuke
+Mon Jun 18 01:25:35 2001
+: Tsuke: daini
+Mon Jun 18 01:25:36 2001
+: Tsuke:  
+Mon Jun 18 01:25:37 2001
+: Tsuke: who
+Mon Jun 18 01:25:39 2001
+: Tsuke: quir
+Mon Jun 18 01:25:41 2001
+: Tsuke: quit
+Mon Jun 18 17:40:09 2001
+: (Unknown): y
+Mon Jun 18 17:40:09 2001
+: (Unknown): sin
+Mon Jun 18 17:40:09 2001
+: Sin: panther
+Mon Jun 18 17:40:10 2001
+: Sin:  
+Mon Jun 18 17:40:11 2001
+: Sin: who
+Mon Jun 18 17:40:14 2001
+: Sin: finger aloran
+Mon Jun 18 17:40:16 2001
+: Sin: finger tsuke
+Mon Jun 18 17:40:19 2001
+: Sin: finger flux
+Mon Jun 18 17:40:21 2001
+: Sin: finger hugh
+Mon Jun 18 17:40:23 2001
+: Sin: who
+Tue Jun 19 00:55:13 2001
+: (Unknown): y
+Tue Jun 19 00:55:16 2001
+: (Unknown): tsuke
+Tue Jun 19 00:55:16 2001
+: Tsuke: daini
+Tue Jun 19 00:56:39 2001
+: (Unknown): y
+Tue Jun 19 00:56:41 2001
+: (Unknown): tsuke
+Tue Jun 19 00:56:41 2001
+: Tsuke: daini
+Tue Jun 19 00:56:42 2001
+: Tsuke:  
+Tue Jun 19 00:56:43 2001
+: Tsuke: who
+Tue Jun 19 09:27:41 2001
+: (Unknown): No
+Tue Jun 19 09:27:42 2001
+: (Unknown): Aloran
+Tue Jun 19 09:27:44 2001
+: Aloran: aloran27
+Tue Jun 19 09:27:44 2001
+: Aloran:  
+Tue Jun 19 09:27:44 2001
+: Aloran: who
+Tue Jun 19 09:27:50 2001
+: Aloran: alist
+Tue Jun 19 09:28:04 2001
+: Aloran: goto 800
+Tue Jun 19 09:28:10 2001
+: Aloran: w
+Tue Jun 19 09:28:12 2001
+: Aloran: s
+Tue Jun 19 09:28:14 2001
+: Aloran: s
+Tue Jun 19 09:28:17 2001
+: Aloran: n
+Tue Jun 19 09:28:20 2001
+: Aloran: goto 800
+Tue Jun 19 09:28:22 2001
+: Aloran: n
+Tue Jun 19 09:28:24 2001
+: Aloran: open n
+Tue Jun 19 09:28:27 2001
+: Aloran: unlock n
+Tue Jun 19 09:28:36 2001
+: Aloran: goto 400
+Tue Jun 19 09:28:39 2001
+: Aloran: alist
+Tue Jun 19 09:28:43 2001
+: Aloran: goto 200
+Tue Jun 19 09:29:09 2001
+: Aloran: look blood
+Tue Jun 19 09:29:24 2001
+: Aloran: e
+Tue Jun 19 09:29:28 2001
+: Aloran: e
+Tue Jun 19 09:29:30 2001
+: Aloran: e
+Tue Jun 19 09:29:41 2001
+: Aloran: e
+Tue Jun 19 09:29:41 2001
+: Aloran: e
+Tue Jun 19 09:29:42 2001
+: Aloran: e
+Tue Jun 19 09:29:43 2001
+: Aloran: s
+Tue Jun 19 09:29:43 2001
+: Aloran: s
+Tue Jun 19 09:29:44 2001
+: Aloran: s
+Tue Jun 19 09:29:44 2001
+: Aloran: s
+Tue Jun 19 09:29:45 2001
+: Aloran: s
+Tue Jun 19 09:29:46 2001
+: Aloran: s
+Tue Jun 19 09:29:47 2001
+: Aloran: s
+Tue Jun 19 09:29:47 2001
+: Aloran: w
+Tue Jun 19 09:29:48 2001
+: Aloran: w
+Tue Jun 19 09:29:49 2001
+: Aloran: w
+Tue Jun 19 09:29:49 2001
+: Aloran: w
+Tue Jun 19 09:29:50 2001
+: Aloran: w
+Tue Jun 19 09:29:50 2001
+: Aloran: w
+Tue Jun 19 09:29:52 2001
+: Aloran: n
+Tue Jun 19 09:29:52 2001
+: Aloran: n
+Tue Jun 19 09:29:53 2001
+: Aloran: n
+Tue Jun 19 09:29:54 2001
+: Aloran: n
+Tue Jun 19 09:29:54 2001
+: Aloran: n
+Tue Jun 19 09:29:55 2001
+: Aloran: n
+Tue Jun 19 09:29:56 2001
+: Aloran: n
+Tue Jun 19 09:29:56 2001
+: Aloran: e
+Tue Jun 19 09:29:57 2001
+: Aloran: e
+Tue Jun 19 09:30:17 2001
+: Aloran: s
+Tue Jun 19 09:30:18 2001
+: Aloran: n
+Tue Jun 19 09:30:19 2001
+: Aloran: e
+Tue Jun 19 09:30:20 2001
+: Aloran: e
+Tue Jun 19 09:30:20 2001
+: Aloran: s
+Tue Jun 19 09:30:21 2001
+: Aloran: n
+Tue Jun 19 09:30:22 2001
+: Aloran: w
+Tue Jun 19 09:30:28 2001
+: Aloran: save
+Tue Jun 19 09:30:28 2001
+: Aloran: quit
+Tue Jun 19 14:40:15 2001
+: (Unknown): No
+Tue Jun 19 14:40:16 2001
+: (Unknown): Aloran
+Tue Jun 19 14:40:17 2001
+: Aloran: aloran27
+Tue Jun 19 14:40:17 2001
+: Aloran:  
+Tue Jun 19 14:40:17 2001
+: Aloran: who
+Tue Jun 19 14:40:19 2001
+: Aloran: save
+Tue Jun 19 14:40:24 2001
+: Aloran: e
+Tue Jun 19 14:40:24 2001
+: Aloran: e
+Tue Jun 19 14:40:25 2001
+: Aloran: w
+Tue Jun 19 14:40:25 2001
+: Aloran: w
+Tue Jun 19 14:40:26 2001
+: Aloran: s
+Tue Jun 19 14:40:27 2001
+: Aloran: w
+Tue Jun 19 14:40:28 2001
+: Aloran: s
+Tue Jun 19 14:40:29 2001
+: Aloran: n
+Tue Jun 19 14:40:31 2001
+: Aloran: redit
+Tue Jun 19 14:40:33 2001
+: Aloran: done
+Tue Jun 19 14:40:34 2001
+: Aloran: save
+Tue Jun 19 14:40:34 2001
+: Aloran: quit
+Tue Jun 19 18:37:09 2001
+: (Unknown): y
+Tue Jun 19 18:37:10 2001
+: (Unknown): sin
+Tue Jun 19 18:37:10 2001
+: Sin: panther
+Tue Jun 19 18:37:11 2001
+: Sin:  
+Tue Jun 19 18:37:11 2001
+: Sin: who
+Tue Jun 19 18:37:13 2001
+: Sin: finger hugh
+Tue Jun 19 18:37:15 2001
+: Sin: finger aloran
+Tue Jun 19 18:37:17 2001
+: Sin: finger tsuke
+Tue Jun 19 18:37:18 2001
+: Sin: finger flux
+Wed Jun 20 12:52:02 2001
+: (Unknown): n
+Wed Jun 20 12:52:03 2001
+: (Unknown): hugh
+Wed Jun 20 12:52:04 2001
+: Hugh: jav2vii
+Wed Jun 20 12:52:05 2001
+: Hugh:  
+Wed Jun 20 12:52:06 2001
+: Hugh:  
+Wed Jun 20 12:52:06 2001
+: Hugh: who
+Wed Jun 20 12:52:08 2001
+: Hugh: l
+Wed Jun 20 12:52:08 2001
+: Hugh: n
+Wed Jun 20 12:52:10 2001
+: Hugh: st
+Wed Jun 20 12:52:10 2001
+: Hugh: n
+Wed Jun 20 12:52:11 2001
+: Hugh: n
+Wed Jun 20 12:52:12 2001
+: Hugh: n
+Wed Jun 20 12:52:13 2001
+: Hugh: n
+Wed Jun 20 12:52:15 2001
+: Hugh: n
+Wed Jun 20 12:52:15 2001
+: Hugh: e
+Wed Jun 20 12:52:17 2001
+: Hugh: e
+Wed Jun 20 12:52:18 2001
+: Hugh: e
+Wed Jun 20 12:52:20 2001
+: Hugh: e
+Wed Jun 20 12:52:21 2001
+: Hugh: s
+Wed Jun 20 12:52:22 2001
+: Hugh: n
+Wed Jun 20 12:52:22 2001
+: Hugh: w
+Wed Jun 20 12:52:24 2001
+: Hugh: e
+Wed Jun 20 12:52:26 2001
+: Hugh: w
+Wed Jun 20 12:52:27 2001
+: Hugh: w
+Wed Jun 20 12:52:29 2001
+: Hugh: s
+Wed Jun 20 12:52:30 2001
+: Hugh: s
+Wed Jun 20 12:52:31 2001
+: Hugh: e
+Wed Jun 20 12:52:32 2001
+: Hugh: e
+Wed Jun 20 12:52:32 2001
+: Hugh: e
+Wed Jun 20 12:52:33 2001
+: Hugh: s
+Wed Jun 20 12:52:34 2001
+: Hugh: s
+Wed Jun 20 12:52:35 2001
+: Hugh: s
+Wed Jun 20 12:52:36 2001
+: Hugh: s
+Wed Jun 20 12:52:37 2001
+: Hugh: w
+Wed Jun 20 12:52:38 2001
+: Hugh: w
+Wed Jun 20 12:52:39 2001
+: Hugh: w
+Wed Jun 20 12:52:40 2001
+: Hugh: w
+Wed Jun 20 12:52:41 2001
+: Hugh: w
+Wed Jun 20 12:52:41 2001
+: Hugh: w
+Wed Jun 20 12:52:42 2001
+: Hugh: n
+Wed Jun 20 12:52:43 2001
+: Hugh: n
+Wed Jun 20 12:52:44 2001
+: Hugh: n
+Wed Jun 20 12:52:45 2001
+: Hugh: n
+Wed Jun 20 12:52:47 2001
+: Hugh: n
+Wed Jun 20 12:52:47 2001
+: Hugh: n
+Wed Jun 20 12:52:48 2001
+: Hugh: n
+Wed Jun 20 12:52:49 2001
+: Hugh: e
+Wed Jun 20 12:52:50 2001
+: Hugh: n
+Wed Jun 20 12:52:50 2001
+: Hugh: e
+Wed Jun 20 12:52:51 2001
+: Hugh: s
+Wed Jun 20 12:52:52 2001
+: Hugh: s
+Wed Jun 20 12:52:53 2001
+: Hugh: e
+Wed Jun 20 12:52:54 2001
+: Hugh: w
+Wed Jun 20 12:52:54 2001
+: Hugh: w
+Wed Jun 20 12:52:55 2001
+: Hugh: s
+Wed Jun 20 12:52:56 2001
+: Hugh: e
+Wed Jun 20 12:52:56 2001
+: Hugh: s
+Wed Jun 20 12:52:57 2001
+: Hugh: s
+Wed Jun 20 12:52:59 2001
+: Hugh: w
+Wed Jun 20 12:53:00 2001
+: Hugh: w
+Wed Jun 20 12:53:01 2001
+: Hugh: n
+Wed Jun 20 12:53:02 2001
+: Hugh: n
+Wed Jun 20 12:53:03 2001
+: Hugh: n
+Wed Jun 20 12:53:04 2001
+: Hugh: n
+Wed Jun 20 12:53:05 2001
+: Hugh: n
+Wed Jun 20 12:53:05 2001
+: Hugh: e
+Wed Jun 20 12:53:06 2001
+: Hugh: e
+Wed Jun 20 12:53:07 2001
+: Hugh: e
+Wed Jun 20 12:53:08 2001
+: Hugh: e
+Wed Jun 20 12:53:09 2001
+: Hugh: s
+Wed Jun 20 12:53:11 2001
+: Hugh: s
+Wed Jun 20 12:53:12 2001
+: Hugh: w
+Wed Jun 20 12:53:14 2001
+: Hugh: e
+Wed Jun 20 12:53:15 2001
+: Hugh: n
+Wed Jun 20 12:53:17 2001
+: Hugh: n
+Wed Jun 20 12:53:18 2001
+: Hugh: e
+Wed Jun 20 12:53:19 2001
+: Hugh: e
+Wed Jun 20 12:53:21 2001
+: Hugh: s
+Wed Jun 20 12:53:22 2001
+: Hugh: s
+Wed Jun 20 12:53:23 2001
+: Hugh: e
+Wed Jun 20 12:53:23 2001
+: Hugh: s
+Wed Jun 20 12:53:24 2001
+: Hugh: who
+Wed Jun 20 14:28:21 2001
+: (Unknown): y
+Wed Jun 20 14:28:25 2001
+: (Unknown): blood-stone
+Wed Jun 20 14:28:30 2001
+: (Unknown):  
+Wed Jun 20 14:28:39 2001
+: (Unknown): y
+Wed Jun 20 14:28:43 2001
+: (Unknown): bloodstone
+Wed Jun 20 14:28:49 2001
+: Bloodstone: lightning
+Wed Jun 20 14:29:00 2001
+: (Unknown): y
+Wed Jun 20 14:29:05 2001
+: (Unknown): bloodstone
+Wed Jun 20 14:29:15 2001
+: Bloodstone: Dragon!light
+Wed Jun 20 14:29:25 2001
+: (Unknown): y
+Wed Jun 20 14:29:30 2001
+: (Unknown): bloodstone
+Wed Jun 20 14:29:35 2001
+: Bloodstone: bunny1rabbit
+Wed Jun 20 14:29:47 2001
+: (Unknown): y
+Wed Jun 20 14:29:50 2001
+: (Unknown): bloodstone
+Wed Jun 20 14:29:54 2001
+: Bloodstone: rednova
+Wed Jun 20 14:30:14 2001
+: (Unknown): y
+Wed Jun 20 14:30:19 2001
+: (Unknown): bloodstone
+Wed Jun 20 14:30:56 2001
+: Bloodstone: RedNova
+Wed Jun 20 14:31:04 2001
+: (Unknown): y
+Wed Jun 20 14:31:08 2001
+: (Unknown): blood
+Wed Jun 20 14:31:11 2001
+: Blood: y
+Wed Jun 20 14:31:17 2001
+: Blood: stone
+Wed Jun 20 14:31:20 2001
+: Blood: stone
+Wed Jun 20 14:31:23 2001
+: Blood: m
+Wed Jun 20 14:31:27 2001
+: Blood: elf
+Wed Jun 20 14:31:31 2001
+: Blood: y
+Wed Jun 20 14:31:38 2001
+: Blood: toad
+Wed Jun 20 14:31:45 2001
+: Blood: Fruit
+Wed Jun 20 14:31:49 2001
+: Blood: warrior
+Wed Jun 20 14:31:54 2001
+: Blood: Warrior
+Wed Jun 20 14:31:58 2001
+: Blood: y
+Wed Jun 20 14:31:59 2001
+: Blood:  
+Wed Jun 20 14:32:01 2001
+: Blood:  
+Wed Jun 20 14:32:04 2001
+: Blood: l
+Wed Jun 20 14:32:06 2001
+: Blood: who
+Wed Jun 20 14:32:14 2001
+: Blood: wiz
+Wed Jun 20 14:32:16 2001
+: Blood: exit
+Wed Jun 20 14:32:19 2001
+: Blood: quit
+Thu Jun 21 00:09:58 2001
+: (Unknown): n
+Thu Jun 21 00:09:59 2001
+: (Unknown): hugh
+Thu Jun 21 00:10:00 2001
+: Hugh: jav2vii
+Thu Jun 21 00:10:01 2001
+: Hugh:  
+Thu Jun 21 00:10:01 2001
+: Hugh:  
+Thu Jun 21 00:10:03 2001
+: Hugh: who
+Thu Jun 21 15:17:50 2001
+: (Unknown): y
+Thu Jun 21 15:17:51 2001
+: (Unknown): sin
+Thu Jun 21 15:17:51 2001
+: Sin: panther
+Thu Jun 21 15:17:52 2001
+: Sin:  
+Thu Jun 21 15:17:53 2001
+: Sin: who
+Thu Jun 21 15:17:55 2001
+: Sin: finger hugh
+Thu Jun 21 15:17:57 2001
+: Sin: finger tsuke
+Thu Jun 21 15:18:00 2001
+: Sin: finger flux
+Thu Jun 21 15:18:01 2001
+: Sin: finger aloran
+Thu Jun 21 15:18:02 2001
+: Sin: who
+Thu Jun 21 15:18:17 2001
+: Sin: quit
+Thu Jun 21 18:53:06 2001
+: (Unknown): y
+Thu Jun 21 18:53:09 2001
+: (Unknown): bloodstone
+Thu Jun 21 18:53:09 2001
+: Bloodstone: darkarchon
+Thu Jun 21 18:53:16 2001
+: Bloodstone: who
+Thu Jun 21 18:53:20 2001
+: Bloodstone: who
+Thu Jun 21 18:53:26 2001
+: Bloodstone: notes
+Thu Jun 21 18:53:31 2001
+: Bloodstone: note
+Thu Jun 21 18:53:36 2001
+: Bloodstone: note
+Thu Jun 21 18:53:39 2001
+: Bloodstone: note
+Thu Jun 21 18:53:43 2001
+: Bloodstone: imm
+Thu Jun 21 18:53:47 2001
+: Bloodstone: who imm
+Thu Jun 21 18:53:54 2001
+: Bloodstone: imm
+Thu Jun 21 18:53:57 2001
+: Bloodstone: wiz
+Thu Jun 21 18:54:16 2001
+: Bloodstone: help password
+Thu Jun 21 20:19:15 2001
+: (Unknown): No
+Thu Jun 21 20:19:16 2001
+: (Unknown): Aloran
+Thu Jun 21 20:19:17 2001
+: Aloran: aloran27
+Thu Jun 21 20:19:18 2001
+: Aloran:  
+Thu Jun 21 20:19:18 2001
+: Aloran: who
+Thu Jun 21 20:19:19 2001
+: Aloran: save
+Thu Jun 21 20:19:20 2001
+: Aloran: quit
+Sat Jun 23 12:28:27 2001
+: (Unknown): y
+Sat Jun 23 12:28:28 2001
+: (Unknown): sin
+Sat Jun 23 12:28:29 2001
+: Sin: panther
+Sat Jun 23 12:28:30 2001
+: Sin:  
+Sat Jun 23 12:28:31 2001
+: Sin: who
+Sat Jun 23 12:28:33 2001
+: Sin: finger flux
+Sat Jun 23 12:28:34 2001
+: Sin: finger hugh
+Sat Jun 23 12:28:36 2001
+: Sin: finger aloran
+Sat Jun 23 12:28:40 2001
+: Sin: finger tsuke
+Sat Jun 23 12:29:27 2001
+: Sin: sc
+Sat Jun 23 12:29:44 2001
+: Sin: look self
+Sat Jun 23 14:00:09 2001
+: (Unknown): y
+Sat Jun 23 14:00:09 2001
+: (Unknown): bloodstone
+Sat Jun 23 14:00:10 2001
+: Bloodstone: darkarchon
+Sat Jun 23 14:00:40 2001
+: Bloodstone: w
+Sat Jun 23 14:00:44 2001
+: Bloodstone: who imm
+Sat Jun 23 14:01:05 2001
+: Bloodstone: exit
+Sat Jun 23 22:46:09 2001
+: (Unknown): y
+Sat Jun 23 22:46:09 2001
+: (Unknown): sin
+Sat Jun 23 22:46:09 2001
+: Sin: panther
+Sat Jun 23 22:46:10 2001
+: Sin:  
+Sat Jun 23 22:46:11 2001
+: Sin: who
+Sat Jun 23 22:46:12 2001
+: Sin: finger hugh
+Sat Jun 23 22:46:15 2001
+: Sin: finger flux
+Sat Jun 23 22:46:16 2001
+: Sin: finger aloran
+Sat Jun 23 22:46:19 2001
+: Sin: finger tsuke
+Sat Jun 23 22:51:46 2001
+: Sin: who
+Sat Jun 23 22:54:51 2001
+: Sin: title , the Wicked Bitch of the South
+Sat Jun 23 22:54:52 2001
+: Sin: who
+Sat Jun 23 23:01:03 2001
+: Sin: users
+Sat Jun 23 23:19:20 2001
+: Sin: note to hugh
+Sat Jun 23 23:19:23 2001
+: Sin: note subject *hugs*
+Sat Jun 23 23:19:38 2001
+: Sin: note + Hi there.. just wanted to say hi. I seem to miss you all the time.
+Sat Jun 23 23:19:49 2001
+: Sin: note + So, HI!!!
+Sat Jun 23 23:19:50 2001
+: Sin: note show
+Sat Jun 23 23:19:51 2001
+: Sin: note +
+Sat Jun 23 23:19:52 2001
+: Sin: note + Dena
+Sat Jun 23 23:19:53 2001
+: Sin: note show
+Sat Jun 23 23:19:54 2001
+: Sin: note post
+Sat Jun 23 23:19:55 2001
+: Sin: note to all
+Sat Jun 23 23:19:59 2001
+: Sin: note subject wee!
+Sat Jun 23 23:20:13 2001
+: Sin: note + I'm moving this week into my new apartment, so my connection will be erratic
+Sat Jun 23 23:20:24 2001
+: Sin: note + to say the least. Next week my cable will be back up and you'll see my lovely face
+Sat Jun 23 23:20:27 2001
+: Sin: note + around a lot more.
+Sat Jun 23 23:20:29 2001
+: Sin: note +
+Sat Jun 23 23:20:32 2001
+: Sin: note + Be well!
+Sat Jun 23 23:20:33 2001
+: Sin: note + Sinner
+Sat Jun 23 23:20:34 2001
+: Sin: note show
+Sat Jun 23 23:20:36 2001
+: Sin: note post
+Sat Jun 23 23:20:36 2001
+: Sin: who
+Sat Jun 23 23:20:59 2001
+: Sin: quit
+Sun Jun 24 20:10:12 2001
+: (Unknown): NO
+Sun Jun 24 20:10:15 2001
+: (Unknown): Aloran
+Sun Jun 24 20:10:16 2001
+: Aloran: aloran27
+Sun Jun 24 20:10:17 2001
+: Aloran:  
+Sun Jun 24 20:10:19 2001
+: Aloran: who
+Sun Jun 24 20:10:20 2001
+: Aloran: note list
+Sun Jun 24 20:10:22 2001
+: Aloran: note read 5
+Sun Jun 24 20:10:37 2001
+: Aloran: save
+Sun Jun 24 20:10:38 2001
+: Aloran: quit
+Mon Jun 25 20:07:11 2001
+: (Unknown): No
+Mon Jun 25 20:07:12 2001
+: (Unknown): Aloran
+Mon Jun 25 20:07:13 2001
+: Aloran: alora
+Mon Jun 25 20:07:18 2001
+: (Unknown): No
+Mon Jun 25 20:07:19 2001
+: (Unknown): Aloran
+Mon Jun 25 20:07:20 2001
+: Aloran: aloran27
+Mon Jun 25 20:07:20 2001
+: Aloran:  
+Mon Jun 25 20:07:21 2001
+: Aloran: who
+Mon Jun 25 20:07:23 2001
+: Aloran: save
+Mon Jun 25 20:07:23 2001
+: Aloran: quit
+Mon Jun 25 21:11:38 2001
+: (Unknown): y
+Mon Jun 25 21:11:39 2001
+: (Unknown): sin
+Mon Jun 25 21:11:39 2001
+: Sin: panther
+Mon Jun 25 21:11:40 2001
+: Sin:  
+Mon Jun 25 21:11:41 2001
+: Sin: who
+Mon Jun 25 21:11:42 2001
+: Sin: finger hugh
+Mon Jun 25 21:11:47 2001
+: Sin: finger aloran
+Mon Jun 25 21:11:50 2001
+: Sin: finger flux
+Mon Jun 25 21:11:53 2001
+: Sin: finger tsuke
+Mon Jun 25 21:41:23 2001
+: (Unknown): No
+Mon Jun 25 21:41:24 2001
+: (Unknown): Aloran
+Mon Jun 25 21:41:25 2001
+: Aloran: aloran27
+Mon Jun 25 21:41:25 2001
+: Aloran:  
+Mon Jun 25 21:41:26 2001
+: Aloran: who
+Mon Jun 25 21:41:31 2001
+: Aloran: note to all
+Mon Jun 25 21:41:39 2001
+: Aloran: note subject Summah School
+Mon Jun 25 21:41:54 2001
+: Aloran: note + Well, I decided to take chemistry in summer school...
+Mon Jun 25 21:42:08 2001
+: Aloran: note + It's supposed to be really poorly taught at our school or something
+Mon Jun 25 21:42:24 2001
+: Sin: :hihi
+Mon Jun 25 21:42:28 2001
+: Aloran: note + Anyways, for the next 33 days you won't see much of me, heh.... it's a week a day =\
+Mon Jun 25 21:42:37 2001
+: Aloran: note + I can make it on aftrerwards though (typing with telnet)
+Mon Jun 25 21:42:43 2001
+: Aloran: note + So, anyways, see you around
+Mon Jun 25 21:42:45 2001
+: Aloran: immt Hey
+Mon Jun 25 21:42:50 2001
+: Aloran: note clear
+Mon Jun 25 21:42:58 2001
+: Aloran: note + Well, I'm taking chemistry in summer school =
+Mon Jun 25 21:43:17 2001
+: Aloran: immt It's supposed to be really poorly taught at our school, so I decided, why not
+Mon Jun 25 21:43:24 2001
+: Sin: : What is?
+Mon Jun 25 21:43:25 2001
+: Sin: unread
+Mon Jun 25 21:43:27 2001
+: Sin: note
+Mon Jun 25 21:43:28 2001
+: Aloran: note + Wow, my first message didn't get through =P
+Mon Jun 25 21:43:29 2001
+: Sin: who
+Mon Jun 25 21:43:34 2001
+: Aloran: immt Oops
+Mon Jun 25 21:43:37 2001
+: Aloran: immt Messed up first message =P
+Mon Jun 25 21:43:48 2001
+: Aloran: immt It was "I'm taking chemistry in summer schoool"
+Mon Jun 25 21:44:01 2001
+: Aloran: immt So I don't have to take it net year
+Mon Jun 25 21:44:06 2001
+: Aloran: immt next*
+Mon Jun 25 21:44:10 2001
+: Aloran: immt Stupid telnet =P
+Mon Jun 25 21:44:39 2001
+: Aloran: note show
+Mon Jun 25 21:44:42 2001
+: Aloran: note clear
+Mon Jun 25 21:45:00 2001
+: Aloran: immt It goes a week a day.  That's crazy =P
+Mon Jun 25 21:56:04 2001
+: Aloran: save
+Mon Jun 25 21:56:06 2001
+: Aloran: quit
+Tue Jun 26 12:55:04 2001
+: (Unknown): No
+Tue Jun 26 12:55:05 2001
+: (Unknown): Aloran
+Tue Jun 26 12:55:06 2001
+: Aloran: aloran27
+Tue Jun 26 12:55:06 2001
+: Aloran:  
+Tue Jun 26 12:55:06 2001
+: Aloran: who
+Tue Jun 26 12:55:08 2001
+: Aloran: save
+Tue Jun 26 12:55:09 2001
+: Aloran: note to all
+Tue Jun 26 12:55:13 2001
+: Aloran: note subject Summer School
+Tue Jun 26 12:55:22 2001
+: Aloran: note + Well, I decided to take chemistry in summer school
+Tue Jun 26 12:55:28 2001
+: Aloran: note + so I wouldn't have to take it next year.
+Tue Jun 26 12:55:47 2001
+: Aloran: note + This really shouldn't affect my afternoon schedule that much... but mornings are farked =P
+Tue Jun 26 12:55:48 2001
+: Aloran: note +
+Tue Jun 26 12:56:01 2001
+: Aloran: note + --Aloran
+Tue Jun 26 12:56:03 2001
+: Aloran: note post
+Tue Jun 26 12:56:06 2001
+: Aloran: note list
+Tue Jun 26 12:56:07 2001
+: Aloran: note read 6
+Tue Jun 26 12:57:15 2001
+: Aloran: save
+Tue Jun 26 12:57:16 2001
+: Aloran: quit
+Tue Jun 26 16:24:44 2001
+: (Unknown): NO
+Tue Jun 26 16:24:49 2001
+: (Unknown): Aloran
+Tue Jun 26 16:24:50 2001
+: Aloran: aloran27
+Tue Jun 26 16:24:51 2001
+: Aloran:  
+Tue Jun 26 16:24:51 2001
+: Aloran: who
+Tue Jun 26 16:24:52 2001
+: Aloran: note list
+Tue Jun 26 16:24:53 2001
+: Aloran: save
+Tue Jun 26 16:24:53 2001
+: Aloran: quit
+Tue Jun 26 22:00:36 2001
+: (Unknown): y
+Tue Jun 26 22:00:36 2001
+: (Unknown): sin
+Tue Jun 26 22:00:36 2001
+: Sin: panther
+Tue Jun 26 22:00:37 2001
+: Sin:  
+Tue Jun 26 22:00:38 2001
+: Sin: who
+Tue Jun 26 22:00:39 2001
+: Sin: note
+Tue Jun 26 22:00:49 2001
+: Sin: finger hugh
+Tue Jun 26 22:00:52 2001
+: Sin: finger aloran
+Tue Jun 26 22:00:54 2001
+: Sin: finger tsuke
+Tue Jun 26 22:00:55 2001
+: Sin: finger flux
+Tue Jun 26 22:02:50 2001
+: Sin: quit
+Thu Jun 28 23:40:58 2001
+: (Unknown): y
+Thu Jun 28 23:40:58 2001
+: (Unknown): sin
+Thu Jun 28 23:40:58 2001
+: Sin: panther
+Thu Jun 28 23:40:59 2001
+: Sin:  
+Thu Jun 28 23:41:00 2001
+: Sin: who
+Thu Jun 28 23:41:02 2001
+: Sin: finger hugh
+Thu Jun 28 23:41:04 2001
+: Sin: finger aloran
+Thu Jun 28 23:41:07 2001
+: Sin: finger tsuke
+Thu Jun 28 23:41:08 2001
+: Sin: finger flux
+Thu Jun 28 23:41:09 2001
+: Sin: who
+Fri Jun 29 14:02:57 2001
+: (Unknown): No
+Fri Jun 29 14:03:03 2001
+: (Unknown): Aloran
+Fri Jun 29 14:03:04 2001
+: Aloran: aloran27
+Fri Jun 29 14:03:06 2001
+: Aloran:  
+Fri Jun 29 14:03:07 2001
+: Aloran: who
+Fri Jun 29 14:03:14 2001
+: Aloran: note list
+Fri Jun 29 14:03:19 2001
+: Aloran: note read 6
+Fri Jun 29 14:03:28 2001
+: Aloran: save
+Fri Jun 29 14:03:34 2001
+: Aloran: quit
+Fri Jun 29 22:44:45 2001
+: (Unknown): y
+Fri Jun 29 22:44:45 2001
+: (Unknown): sin
+Fri Jun 29 22:44:45 2001
+: Sin: panther
+Fri Jun 29 22:44:46 2001
+: Sin:  
+Fri Jun 29 22:44:47 2001
+: Sin: who
+Fri Jun 29 22:44:49 2001
+: Sin: quit
+Sat Jun 30 15:59:05 2001
+: (Unknown): y
+Sat Jun 30 15:59:05 2001
+: (Unknown): sin
+Sat Jun 30 15:59:05 2001
+: Sin: panther
+Sat Jun 30 15:59:06 2001
+: Sin:  
+Sat Jun 30 15:59:06 2001
+: Sin: who
+Sat Jun 30 15:59:09 2001
+: Sin: finger flux
+Sat Jun 30 15:59:10 2001
+: Sin: finger hugh
+Sat Jun 30 15:59:12 2001
+: Sin: finger aloran
+Sat Jun 30 15:59:14 2001
+: Sin: finger tsuke
+Sat Jun 30 15:59:15 2001
+: Sin: who
+Sat Jun 30 15:59:47 2001
+: Sin: quit
+Mon Jul  2 18:53:16 2001
+: (Unknown): y
+Mon Jul  2 18:53:17 2001
+: (Unknown): sin
+Mon Jul  2 18:53:17 2001
+: Sin: panther
+Mon Jul  2 18:53:18 2001
+: Sin:  
+Mon Jul  2 18:53:19 2001
+: Sin: who
+Mon Jul  2 18:53:21 2001
+: Sin: finger hugh
+Mon Jul  2 18:53:23 2001
+: Sin: finger tuske

@@ -1,0 +1,100 @@
+Wed Jul 21 07:08:46 1999
+: EnvyMud is ready to rock on port 3000.
+Wed Jul 21 07:08:49 1999
+: (Unknown): y
+Wed Jul 21 07:08:50 1999
+: (Unknown): Flux
+Wed Jul 21 07:08:51 1999
+: Flux: verite
+Wed Jul 21 07:08:52 1999
+: Flux:  
+Wed Jul 21 07:08:53 1999
+: Flux: wh
+Wed Jul 21 07:08:56 1999
+: Flux: goto stern
+Wed Jul 21 07:09:00 1999
+: Flux: rem galaxy
+Wed Jul 21 07:09:00 1999
+: Flux: rem galaxy
+Wed Jul 21 07:09:02 1999
+: Flux: k stern
+Wed Jul 21 07:09:12 1999
+: Flux: wear galaxy
+Wed Jul 21 07:09:12 1999
+: Flux: wear galaxy
+Wed Jul 21 07:09:23 1999
+: Flux: get all
+Wed Jul 21 07:09:27 1999
+: Flux: wield axe
+Wed Jul 21 07:09:32 1999
+: Flux: mload 1
+Wed Jul 21 07:09:36 1999
+: Flux: rem axe
+Wed Jul 21 07:09:36 1999
+: Flux: rem axe
+Wed Jul 21 07:09:40 1999
+: Flux: eq
+Wed Jul 21 07:09:43 1999
+: Flux: l
+Wed Jul 21 07:09:45 1999
+: Flux: k puff
+Wed Jul 21 07:09:49 1999
+: Flux: c fire snap
+Wed Jul 21 07:09:49 1999
+: Flux: rem axe
+Wed Jul 21 07:09:53 1999
+: Flux: c fire snap
+Wed Jul 21 07:10:01 1999
+: Flux: c 'fire snap'
+Wed Jul 21 07:10:04 1999
+: Flux: mload 1
+Wed Jul 21 07:10:09 1999
+: Flux: k puff
+Wed Jul 21 07:10:13 1999
+: Flux: c 'fire snap
+Wed Jul 21 07:10:15 1999
+: Flux: c 'fire snap
+Wed Jul 21 07:10:17 1999
+: Flux: c 'fire snap
+Wed Jul 21 07:10:20 1999
+: Flux: eq
+Wed Jul 21 07:10:25 1999
+: Flux: examine black
+Wed Jul 21 07:10:28 1999
+: Flux: inv
+Wed Jul 21 07:10:33 1999
+: Flux: sheath axe
+Wed Jul 21 07:10:33 1999
+: Flux: sheath axe
+Wed Jul 21 07:10:35 1999
+: Flux: drop all
+Wed Jul 21 07:10:37 1999
+: Flux: sac all
+Wed Jul 21 07:10:37 1999
+: Flux: eq
+Wed Jul 21 07:10:42 1999
+: Flux: asave world
+Wed Jul 21 07:10:43 1999
+: Flux: save
+Wed Jul 21 07:10:44 1999
+: Flux: quit
+Wed Jul 21 08:00:58 1999
+: (Unknown): y
+Wed Jul 21 08:01:02 1999
+: (Unknown): Flux
+Wed Jul 21 08:01:02 1999
+: Flux: verite
+Wed Jul 21 08:01:05 1999
+: Flux:  
+Wed Jul 21 08:01:06 1999
+: Flux: wh
+Wed Jul 21 08:02:06 1999
+: Flux: cinfo
+Wed Jul 21 08:02:08 1999
+: Flux: cinfo 1
+Wed Jul 21 08:08:56 1999
+: Flux: wh
+Wed Jul 21 08:09:05 1999
+: Flux: l
+Wed Jul 21 08:09:13 1999
+: Flux: k stern

@@ -1,0 +1,1915 @@
+#AREADATA
+Name        The Catacombs of the Damned~
+Levels      25 50
+Builders    Onegative~
+VNUMs       300 399
+Security    1
+Recall      25000
+Flags       0
+Color       6
+Sounds      The only sound you can hear is your heartbeat within your ears.~
+Temporal    0
+Weather     0
+End
+
+
+
+#MOBILES
+#300
+0 The Head~
+The Human Head~
+Here lies the poor chap's head.
+~
+~
+3 0 0 -1000 S
+25 0 5 3 3 1
+20 20 0 1
+0 256 128
+15 15 15 15 15 15
+0 0 0 0
+>fight_prog 60~
+bite
+~
+|
+#301
+0 a headless zombie~
+a headless zombie~
+This zombie cradles his own severed head.
+~
+~
+3 0 0 -1000 S
+30 0 2 7 3 2
+30 30 0 1
+2 4 0
+15 15 15 15 15 15
+1 1 1 1
+>fight_prog 20~
+c 'ego whip'
+~
+|
+#302
+0 bastard human~
+a Bastard Human~
+This creature is a bastardized human.
+~
+~
+131 269484032 0 -1000 S
+30 0 7 5 3 1
+0 0 100 1
+0 0 0
+20 15 15 15 15 15
+1 1 1 1
+#303
+0 Mayor~
+The Mayor of Bethahven~
+A large, rough looking civil servant is here.
+~
+~
+3 16512 0 -1000 S
+35 0 8 0 3 1
+0 0 0 1
+0 16 4
+15 15 15 15 15 15
+1 1 1 1
+>greet_prog 100~
+say Hello, $n, It's a wonderful day out today isn't it?
+~
+>fight_prog 15~
+say You Naughty Citizen!
+stun
+~
+|
+#304
+0 dwarf zombie~
+An incinerated Dwarf~
+The zombified corpse before you is more charcoal than lifeform.
+~
+~
+3 0 0 -1000 S
+30 0 7 2 3 4
+30 30 0 1
+0 128 256
+15 15 15 15 15 15
+1 1 1 1
+>fight_prog 13~
+zap
+~
+|
+#305
+0 a dwarf~
+a sun blistered dwarf.~
+This poor dwarf writhes in the continual light of this room.
+~
+~
+3 1 0 -100 S
+33 0 8 1 3 5
+33 33 0 1
+0 128 256
+15 15 15 15 10 15
+1 1 1 1
+#306
+0 zombie dwarf smithy~
+a zombie smithy~
+This dwarven zombie toils for eternity over the forge.
+~
+~
+3 0 0 -1000 S
+35 0 8 1 4 3
+35 35 0 1
+128 0 256
+25 10 15 15 15 15
+1 1 1 1
+#307
+0 Necromancer~
+Drow Necromancer~
+This drow necromancer could snuff your life out at will.
+~
+~
+3 268435456 0 -2000 S
+50 0 1 12 3 6
+50 100 0 1
+0 4 0
+15 15 15 15 15 15
+1 1 1 1
+>fight_prog 12~
+c acid
+say There are many ways to die $n!
+~
+|
+#308
+0 Mother~
+a Elven mother~
+This elven maiden is heavy with child. 
+~
+~
+131 0 0 -100 S
+45 0 6 2 3 1
+1 0 0 2
+0 0 0
+15 15 15 15 15 15
+1 1 1 1
+>fight_prog 20~
+c ego whip
+~
+|
+#309
+0 Ogre~
+an Ogre child~
+This child looks much more Ogre than Elf.
+~
+~
+3 65536 0 -100 S
+40 0 8 3 3 1
+0 1 1 1
+0 0 0
+18 15 15 15 15 15
+1 1 1 1
+#310
+0 insane elf~
+an Insane Elf~
+This elf has been driven mad by the shadows in his head.
+~
+~
+35 16384 0 -1000 S
+48 0 12 0 5 1
+48 96 0 1
+0 4 0
+15 15 15 15 15 15
+1 1 1 1
+#311
+0 A beast~
+a Pit beast~
+These beasts look to devour you.
+~
+~
+35 0 0 -1200 S
+30 0 7 0 5 1
+0 0 0 0
+0 0 164
+15 15 15 15 15 15
+1 1 1 1
+>death_prog 100~
+say You have Survived the Pit of Beasts.. Be Gone.
+mptransfer $n 300
+~
+|
+#312
+0 Troll Zombie~
+A Trollish Zombie~
+This Trollish Zombie hates all living things.
+~
+~
+5 0 0 -1000 S
+25 0 6 1 3 1
+0 0 1 1
+0 0 0
+15 15 15 15 15 15
+1 1 1 1
+#313
+0 Ogre Zombie~
+an Ogrish Zombie~
+This Ogre zombie eyes you while testing the sharpness of his blade.
+~
+~
+5 0 0 -2000 S
+35 0 8 3 4 3
+1 0 0 0
+0 32 0
+15 15 15 15 23 15
+1 1 1 1
+#314
+0 Minotaur Zombie~
+a Minotaur Zombie~
+The blank eyes of a Minotaur Zombie stare at you.
+~
+~
+1 0 0 0 S
+45 1 11 4 3 4
+30 0 0 0
+0 0 4
+25 15 15 15 15 15
+1 1 1 1
+#315
+0 hell Guard~
+The Guardian of Hell~
+This damnation is charged with guarding the gates of Hell.
+~
+~
+3 16384 0 -2000 S
+50 2 12 5 5 6
+50 100 0 0
+0 4 0
+25 15 15 15 25 15
+1 1 1 1
+#316
+0 Parastie Zombie~
+A Parasitic Zombie~
+This creature seeks out a new host from which to feed.
+~
+~
+5 268435456 0 -200 S
+45 0 11 6 3 1
+45 90 0 0
+16384 0 0
+15 15 15 15 15 15
+1 1 1 1
+#317
+0 Ghoul~
+A Gaurdian Ghoul~
+This ghoul blocks further passage.
+~
+~
+3 0 0 -1000 S
+47 1 11 10 4 4
+47 0 0 0
+2 0 0
+15 15 15 15 15 15
+1 1 1 1
+>speech_prog price~
+say I require 150 gold coins for passage.
+~
+>death_prog 100~
+say Those Who Break the Rules Go Back to the House of Pain!
+mptransfer $n 399
+~
+>bribe_prog 150~
+mpoload 313 
+give key $n
+~
+|
+#318
+0 no name~
+(no short description)~
+(no long description)
+~
+~
+1 0 0 0 S
+0 0 0 0 3 1
+0 0 0 0
+0 0 0
+15 15 15 15 15 15
+1 1 1 1
+#319
+0 dwarf romeo~
+Dwarven Romeo~
+The cursed remanents of a star crossed lover lies prostrate before you.
+~
+~
+3 1024 0 -1000 S
+35 2 8 5 4 2
+0 0 0 1
+0 168 18
+15 15 15 15 15 15
+1 1 1 1
+>fight_prog 1~
+say You will now join me in my torture, Defiler!
+c 'curse'
+c 'spread disease'
+~
+|
+#320
+0 statue of swift~
+Statue of Swift~
+A living statue of the great Head Warden Swift monitors your progress.
+~
+~
+65 0 0 0 S
+100 0 25 25 3 1
+0 0 0 1
+0 0 0
+15 15 15 15 15 15
+1 1 1 1
+#0
+
+
+
+#OBJECTS
+#300
+Human Arm~
+a Human Arm~
+These arms have been torn from their sockets~
+14 0 1 0
+1~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~
+3 0 0 0
+0 0
+reserved~
+0 0
+0 0 0
+#301
+A leg~
+a Human Leg~
+The legs of this human still have ropes attached.~
+14 0 1 0
+1~ 0~ 0~ 1~ 0~ 0~ 0~ 0~ 0~ 0~
+4 0 0 0
+0 0
+reserved~
+0 0
+0 0 0
+#302
+Zombie Head~
+a zombie head~
+This is the poor hollow head of a zombie.~
+11 0 1 30
+49~ 1~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~
+0 100 300 0
+0 0
+reserved~
+0 0
+0 0 0
+#303
+Big Ol Sword~
+a Big Ol' Sword~
+A long sword used to enforce the law is here.~
+4 0 8193 35
+8193~ 0~ 0~ 3~ 3~ 100~ 0~ 0~ 2~ 15~
+6 200 100 0
+0 0
+reserved~
+0 0
+0 0 0
+A
+10 10
+A
+9 -2
+A
+8 -1
+#304
+charcoal~
+a charcoal briquette~
+A small cube of smoldering charcoal is here.~
+2 0 16385 30
+30~ 5~ 5~ incinerate~ 0~ 0~ 0~ 0~ 0~ 0~
+1 0 0 0
+0 0
+reserved~
+0 0
+0 0 0
+#305
+Hammer~
+a Smithy's Hammer~
+A well tempered hammer is here.~
+4 0 8193 0
+8193~ 0~ 0~ 4~ 1~ 100~ 0~ 0~ 2~ 15~
+4 100 30 0
+0 0
+reserved~
+0 0
+0 0 0
+A
+9 4
+A
+10 6
+A
+19 50
+#306
+ribcage~
+a &.P&.i&.x&.i&.e&.'&.s &RRibcage~
+The skeletal remains of a pixie torso rots here.~
+6 64 4097 0
+4097~ 0~ 0~ 0~ 7~ 100~ 0~ 0~ 0~ 14~
+3 200 400 0
+0 0
+reserved~
+0 0
+0 0 0
+A
+18 20
+A
+3 2
+A
+12 40
+>wear_prog 100~
+0
+mpechoat $n The death cries of a million Pixies fill your mind.
+stun
+~
+|
+#307
+rattle~
+a bone rattle~
+This baby rattle is covered with razor sharp spikes.~
+4 16388 8193 1
+8193~ 0~ 0~ 4~ 1~ 66~ 0~ 0~ 2~ 14~
+3 70 140 0
+0 0
+reserved~
+0 0
+0 0 0
+A
+10 2
+A
+9 12
+A
+18 15
+#308
+chain vest~
+an elven chain vest~
+This chain vest is of fine elven make~
+6 4096 9 0
+9~ 0~ 0~ 0~ 5~ 100~ 0~ 0~ 0~ 15~
+7 0 0 0
+0 0
+reserved~
+0 0
+0 0 0
+A
+6 2
+>wear_prog 100~
+0
+mpechoat $n You feel the pattern of the chain burned into your soul.
+~
+|
+#309
+skinning blade~
+a skinning blade~
+This very sharp blade easily separates skin from flesh.~
+4 67108864 8193 30
+8193~ 0~ 0~ 3~ 1~ 100~ 0~ 0~ 0~ 16~
+3 35 70 0
+0 0
+reserved~
+0 0
+0 0 0
+A
+9 3
+A
+10 5
+#310
+Human skin~
+human skin~
+Skin split from the flesh of a human lies here.~
+6 0 9 11
+65537~ 0~ 0~ 0~ 0~ 100~ 0~ 0~ 0~ 0~
+0 0 0 0
+0 0
+reserved~
+0 0
+0 0 0
+A
+3 -2
+A
+1 2
+A
+10 3
+#311
+eyes~
+eyes of despair~
+These eyes see only darkness and despair.~
+6 4096 131073 1
+131073~ 0~ 0~ 0~ 7~ 88~ 0~ 0~ 0~ 19~
+1 45 90 0
+0 0
+reserved~
+0 0
+0 0 0
+A
+7 -2
+A
+8 3
+A
+12 25
+A
+104 -1
+#312
+Ankh~
+a golden ankh~
+A golden symbol of sanctuary glimmers in the fading light.~
+10 0 16385 0
+16385~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~
+0 50 0 0
+0 0
+reserved~
+0 0
+0 0 0
+>get_prog 100~
+0
+mpechoat $n You meditate and seek inner sanctum.
+mptransfer $n 300
+~
+|
+#313
+Key~
+a skeleton key~
+A prized possession of a guardian ghoul is here.~
+13 0 16385 0
+1~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~
+0 0 0 0
+0 0
+reserved~
+0 0
+0 0 0
+#314
+hands~
+hands of the Damned~
+The severed hand of a great demon lies here in black puddles of blood.~
+6 268439744 1048577 30
+1048577~ 0~ 0~ 0~ 2~ 100~ 0~ 0~ 0~ 19~
+4 200 0 0
+0 0
+reserved~
+0 0
+0 0 0
+A
+6 -1
+A
+9 10
+A
+10 10
+>wear_prog 100~
+0
+mpechoat $n The hands tightly grab your ankles and drag you off to &R Hell
+~
+|
+#315
+noose~
+a &YHangman's &wnoose~
+A long rope used to execute prisoners looks well used.~
+6 0 5 0
+5~ 0~ 0~ 0~ 0~ 55~ 0~ 0~ 0~ 0~
+0 34 50 0
+0 0
+reserved~
+0 0
+0 0 0
+A
+26 -20
+A
+10 10
+#316
+Rose~
+a rose~
+A rose, token of a cursed love.~
+2 4224 16385 35
+50~ 1~ 1~ dispel magic~ 0~ 0~ 0~ 0~ 0~ 0~
+1 1 1 0
+5 0
+reserved~
+0 0
+0 0 0
+>wear_prog 100~
+0
+mpechoat $n The rose quickly coils itself around your arm, its thorns &Rtearing away&w your flesh.
+~
+|
+#0
+
+
+
+#ROOMDATA
+#300
+Inside a Dusty Hole.~
+You climb down into this dusty hole with some trepidation.  The
+Illumination from your light seems to be struggling to fight back the
+pervading darkness.  Small swirls of dust kicked up by your footsteps, tells
+you you are the first to pass this way in quite some time.  You take one
+last look up at the hole from which you entered and wonder if you shall see
+it again.  
+~
+36 3
+Rd     0
+D2
+~
+~
+0 0 301
+S
+#301
+Along the Dusty Hall~
+You walk further into the tunnel, and you light struggles on against the
+dark.  You examine the dusty walls and ceiling, and are utterly surprised to
+notice the complete lack of spiderwebs, moths or even plant life.  You
+silently wonder if it is due to a magical spell, or if the darkness has
+sucked the life out of everything.  
+~
+36 0
+Rd     0
+D0
+~
+~
+0 0 300
+D2
+~
+~
+0 0 302
+S
+#302
+At the Entrance to the Catacombs of the Damned.~
+The smell of death literally knocks you onto the floor as soon as you
+enter into this huge room.  The small tunnel in which you have been
+travelling has entered into a room dominated by a wall of terraces so vast
+that you cannot ascertain how far above and below this stone bridge they go.
+It is as if you are looking upon a tall building buried here beneath the
+earth.  
+~
+32 0
+Rd     0
+D0
+~
+~
+0 0 301
+D2
+~
+~
+0 0 305
+S
+#303
+First Lower Terrace~
+The sense of evilness is magnified as you descend the last steps from the
+stair and set foot on this terrace.  The skull arch that you have just
+passed under is made of a multitude of skulls from all matter of beasts. 
+Not even one appears to be humanoid.  You shudder to think of what damnation
+might bring to a creature already of evil nature.  
+~
+32 11
+Rd     0
+D1
+~
+~
+0 0 337
+D3
+~
+~
+0 0 336
+D4
+~
+~
+0 0 305
+S
+#304
+The First Upper Terrace~
+You step through an archway of skulls as you exit the spiral stair.  You
+glance at them as you pass through, and realize they are all of one race,
+Human.  Dark archways are visible to the east and west of the atrocious
+arch.  These must hold those humans that have been damned.  Or should it be
+what is Left of those humans.  
+~
+32 0
+Rd     0
+D1
+~
+~
+0 0 306
+D3
+~
+~
+0 0 307
+D5
+~
+~
+0 0 305
+S
+#305
+Crossing the Stone Bridge~
+As you step out across the bridge, you are mortified to feel a cold
+breath on the back of your neck.  You spin around to see what fate befalls
+you, only to find the gloom and darkness behind you.  You pause and realize
+the cold breeze whirls about coming from the chasm which this brdge spans. 
+You realize you must be feeling the restless souls passing close by in their
+eternal damnation within these catacombs.  The first two levels of the
+catacombs lie just above and below the landing of the bridge.  A rune is
+carved into one of the posts of the bridge.  
+~
+36 11
+Rd     0
+E
+si~
+~
+E
+rune~
+BE DULY WARNED TRAVELER!  If you have accidentally found your way here,
+dear soul, RUN Away Now!  For before you is the Catacombs of the Damned. 
+This is the final resting place for those fools who have brought insult to
+the wardens and to their race.  They were killed in an evil ritual to ensure
+their eternal torture.  They roam these halls in various levels of death and
+decay.  If you choose to press forward, you take your life in your own hands
+, for many are the ways to find death here.  YOU HAVE BEEN WARNED..  THE
+WARDENS.  
+~
+D0
+~
+~
+0 0 302
+D4
+~
+~
+0 0 304
+D5
+~
+~
+0 0 303
+S
+#306
+The Human Catacombs~
+A darkened room lies to the south, and holds the remains of one of the
+damned.  
+~
+32 0
+Rd     0
+D1
+~
+~
+0 0 309
+D2
+~
+~
+0 0 308
+D3
+~
+~
+0 0 304
+S
+#307
+The Human Catacombs~
+A very dark tomb lies to the south.  The archway is covered with magical
+runes which prevent the being within from leaving its final resting place.  
+~
+0 0
+Rd     0
+D1
+~
+~
+0 0 304
+D2
+~
+~
+0 0 315
+S
+#308
+A Human's Tomb~
+This human must have tried to escape the Paradox.  The manner in which he
+was killed is uncertain, but somewhere along the way he was drawn and
+quartered.  
+~
+32 0
+Rd     0
+D0
+~
+~
+0 0 306
+S
+#309
+The Human Catacombs~
+The dark archway south holds another one of the unfortunates.  
+~
+32 0
+Rd     0
+D1
+~
+~
+0 0 311
+D2
+~
+~
+0 0 310
+D3
+~
+~
+0 0 306
+S
+#310
+A Human Crypt~
+The walls of this crypt are covered with scrolls and books of untold
+knowledge and power. This poor creature before you must have thought he was
+smarter than the Wardens.  So They prompty removed his head, and emptied it
+of its contents.  Now this poor soul must spend eternity surrounded by the
+knowledge he so desperately desired, yet unable to add anything to the empty
+head he holds.  
+~
+8224 0
+Rd     0
+D0
+~
+~
+0 0 309
+S
+#311
+The Human Catacombs~
+Yet another archways lies to the south.  The only noticible change is the
+stone spiral staircase which heads up to the next terrace.  
+~
+36 0
+Rd     0
+D2
+~
+~
+0 0 312
+D3
+~
+~
+0 0 309
+D4
+~
+~
+0 0 313
+S
+#312
+A Human's Grave.~
+You step into this tomb and find it literally covered in filth.  Mixtures
+of extrement, bones and festering piles of rubbish lie about the room.  You
+see the occupant of this tomb cringing in the corner, and as you approach
+you try to stifle a gasp of astonishment.  This human must have practiced
+dark arts of magic and beastiality.  His association with the dregs of the
+less civilized and evil races made him shunned among his race, and he was
+difgured into a bastardization of a human with all the dark races.  
+~
+32 0
+Rd     0
+D0
+~
+~
+0 0 311
+D5
+~
+grate~
+3 0 314
+S
+#313
+Halfway up the Spiral Stair~
+You begin to climb to the second level of terraces.  This old stone
+staircase crumbles in its old age.  
+~
+32 0
+Rd     0
+D4
+~
+~
+0 0 316
+D5
+~
+~
+0 0 311
+S
+#314
+Within the Tomb~
+The coffin on the center dias of this room has been defiled.  Loose bits
+of cloth, bone and teeth lie strewn about.  
+~
+32 11
+Rd     0
+D0
+~
+~
+0 0 337
+D4
+~
+grate~
+3 0 312
+S
+#315
+A Regal Tomb~
+This tomb looks very much like any office that a high ranking city
+official would occupy.  The plaques on the wall inform you that this is the
+Mayor's office.  It seems not all fools here did evil things, some were just
+plain annoying!  
+~
+32 0
+Rd     0
+D0
+~
+~
+0 0 307
+D3
+~
+bookcase~
+3 0 317
+S
+#316
+The Stairs Collapse...~
+Without warning the stone crumbles to dust before your feet and you begin
+to fall.  But unlike your dreams of this nature, you eventually hit bottom..
+And awake in your very own catacomb..  The ways to die are many.  
+~
+4 0
+Rd     0
+S
+#317
+Secret Stair~
+A secret stairway behind the boocase..  Very interesting.  
+~
+32 0
+Rd     0
+D1
+~
+door~
+2 0 315
+D4
+~
+grate~
+3 0 318
+S
+#318
+The Second Terrace~
+You pass beneath another hideous skull arch.  These skulls are somewhat
+more squat in nature and of heavier build.  Must be Dwarven.  
+~
+0 0
+Rd     0
+D1
+~
+~
+0 0 320
+D3
+~
+~
+0 0 319
+D5
+~
+~
+3 0 317
+S
+#319
+A Dark Corner of the Terrace~
+You have wandered into a very dark corner of the terrace.  To your south
+is the archway to another tomb.  The stone is nearly black and in the dim
+torchlight, you can barely make out runes carved heavily on it surface.  The
+runes are Dwarven, but on one edge you recognized the word 'cursed elves'.  
+~
+32 11
+Rd     0
+D1
+~
+~
+0 0 318
+D2
+~
+~
+0 0 365
+S
+#320
+The Second Terrace~
+To the south, a dark archway looms gloomily.  To the east and west are
+more silent catacombs and tombs.  
+~
+0 0
+Rd     0
+D1
+~
+~
+0 0 322
+D2
+~
+~
+0 0 321
+D3
+~
+~
+0 0 318
+S
+#321
+Within the Crypt~
+The crime of this corpse must have truly been a grievous one.  The
+dwarf's small body is black and crisp from either the flames of a great
+forge or a great dragon.  Either prospect is not very hospitible.  
+~
+32 0
+Rd     0
+D0
+~
+~
+0 0 320
+S
+#322
+The Second Terrace~
+Unlike other tombs the one to your south is very brightly lit.  So bright
+in fact that you cannot makeout just what is inside.  The terrace continues
+east and west .  
+~
+32 0
+Rd     0
+D1
+~
+~
+0 0 323
+D2
+~
+~
+0 0 324
+D3
+~
+~
+0 0 320
+S
+#323
+The Second Terrace~
+The crypt to the south is dark and foreboding, but you hear a steady
+ringing of metal coming from inside.  The terrace continues to the east and
+west from this point.  
+~
+32 0
+Rd     0
+D1
+~
+~
+0 0 326
+D2
+~
+~
+0 0 325
+D3
+~
+~
+0 0 322
+S
+#324
+Within the Bright Tomb~
+Upon entering this room , you are struck nearly blind by coming from the
+extreme dark into the full focus of the light.  Once you become somewhat
+accustomed, you see the occupant of this brightly lit tomb.  This dwarf at
+one time shunned the dark, underground life of the dwarf and was ostracized
+by his people.  His penalty is to be in full sunlight for the rest of
+eternity.  His skin is blistered, his lips cracked and dry and his milky
+white eyes are unseeing.  
+~
+0 8
+Rd     0
+D0
+~
+~
+0 0 322
+S
+#325
+Within the Crypt~
+The sound of hammer ringing on steel becomes louder the deeper you go
+into the crypt. Soon, you enter a larger part of the crypt, which holds
+massive forge.  Huge piles of half completed armor and swords lie about. 
+This dwarf must have been lazy and unproductive when he was alive, for now
+he spends eternity working at the forge.  The piles of work will never be
+completed as new items magically appear to replace the old ones he has just
+completed.  
+~
+32 0
+Rd     0
+D0
+~
+~
+0 0 323
+S
+#326
+The Second Terrace~
+You stand at the foot of a stone spiral staircase.  Crypts lie in a long
+row to the west.  
+~
+32 0
+Rd     0
+D3
+~
+~
+0 0 323
+D4
+~
+~
+0 0 327
+S
+#327
+On the Spiral Stair~
+You climb the stairs, and you are suddenly very concious of the sound of
+your footsteps echoing about the cavernous expanse.  Just above you can see
+another archway.  
+~
+0 0
+Rd     0
+D4
+~
+~
+0 0 328
+D5
+~
+~
+0 0 326
+S
+#328
+The Third Terrace~
+This arch of skulls required many more sacrifices than the previous ones
+you have seen.  The skulls are smaller and of lighter build.  Most of the
+skulls seem to be elven, however a few seem to be faerie.  The terrace heads
+of to the west.  
+~
+32 0
+Rd     0
+D3
+~
+~
+0 0 329
+D5
+~
+~
+0 0 327
+S
+#329
+The Third Terrace~
+A pitch black tomb lies to the south and the terrace continues west.  An
+unbearable sense of evil creeps out from the nearby tomb.  
+~
+0 0
+Rd     0
+D1
+~
+~
+0 0 328
+D2
+~
+~
+0 0 330
+D3
+~
+~
+0 0 331
+S
+#330
+Within the Tomb~
+This tomb is eerie to behold.  The walls are all painted pitch black is
+irredescent silver runes painted on every surface.  You dont know too much
+about them, except to know they hold powerful magics.  Perhaps they are the
+only powers that hold the tombs occupant here.  Out of the corner of your
+eye, you see a gaunt drow elf emerge from the shadows.  This elf must have
+made too many bargains with the minions of hell, and his punishment is to
+have phenominal power, but be unable to leave this crypt in order to use it.
+~
+32 0
+Rd     0
+D0
+~
+~
+0 0 329
+S
+#331
+The Third Terrace~
+The Terrace continues to the west, and you think you can make out a stair
+in the distance.  To the south a dark tomb awaits your entry.  
+~
+32 0
+Rd     0
+D1
+~
+~
+0 0 329
+D2
+~
+~
+0 0 332
+D3
+~
+~
+0 0 333
+S
+#332
+Inside the Tomb~
+Much to your amazement, this room very much resembles a nursery.  Cribs
+of varying sizes line the walls all with wailing zombie babies within.  A
+small figure races from crib to crib in desperate attempts to pacify each of
+the babies.  She turns to face you and you are astonished at the size of her
+abdomen.  This elven maiden chose to pollute the pure elven line by marrying
+a human.  Her pennance now given her by her angry race is to bear and care
+for babies of each of the major races of the earth.  It seems she is
+expecting a minotaur.  
+~
+32 11
+Rd     0
+D0
+~
+~
+0 0 331
+S
+#333
+The Third Terrace~
+A spiral staircase is directly to the west, and another crypt is due
+south.  
+~
+32 11
+Rd     0
+D1
+~
+~
+0 0 331
+D2
+~
+~
+0 0 334
+D3
+~
+~
+0 0 335
+S
+#334
+Inside the Crypt~
+As you enter you are attacked by a insane elf warrior zombie.  In his
+living years he refuted the magical powers of the Elven race and they
+stripped evry ounce of magic from him.  This has driven him mad.  
+~
+0 0
+Rd     0
+D0
+~
+~
+0 0 333
+S
+#335
+The End of the Third Terrace.~
+You stand at the base of the spiral staircase.  The thrid terrace is to
+the east, and your further adventures lie upwards.  
+~
+32 11
+Rd     0
+D1
+~
+~
+0 0 333
+D4
+~
+~
+0 0 366
+S
+#336
+On the First Lower Terrace~
+The opressive darkness allows you to see very little besides the exits to
+the east and west and the crypt to the south.  The shadows in the distance
+morph into walls, archways or zombies whichever the case may be.  
+ 
+~
+32 11
+Rd     0
+D1
+~
+~
+0 0 303
+D2
+~
+~
+0 0 339
+D3
+~
+~
+0 0 338
+S
+#337
+First Lower Terrace~
+The extreme darkness makes every subtle shape you see seem like a
+creature waiting to spring forth and attack you.  More darkness and shadows
+lie to the west and south.  
+~
+36 11
+Rd     0
+D2
+~
+~
+0 0 314
+D3
+~
+~
+0 0 303
+S
+#338
+First Lower Terrace~
+In the shadows to the west you can make out a stair heading deeper into
+the catacombs.  To the south another inky black archway.  
+~
+32 11
+Rd     0
+D1
+~
+~
+0 0 336
+D2
+~
+~
+0 0 340
+D3
+~
+~
+0 0 341
+S
+#339
+Inside the Crypt~
+This crypt is in shambles.  The sarcophogous that dominated the room lies
+in shards on the floor.  From the way the peices lay, it looks as if
+something burst forth from the stone coffin.  
+~
+0 0
+Rd     0
+D0
+~
+~
+0 0 336
+S
+#340
+Inside the Crypt~
+This crypt seems to be a bedding ground for the wandering zombies you
+have encountered.  
+~
+32 11
+Rd     0
+D0
+~
+~
+0 0 338
+S
+#341
+To the Second Lower Terrace.~
+This stairway heading down into the mouth of darkness seems to be well
+travelled.  It seems the evil and the damned are doomed to forever wander.  
+~
+32 11
+Rd     0
+D1
+~
+~
+0 0 338
+D5
+~
+~
+0 0 342
+S
+#342
+Second Lower Terrace~
+At the foot of these stairs sits a darkened archway.  The terrace
+continues east.  These lower levels of the catacombs lack any semblance of
+peace and order you would hope to see in a respectful afterlife.  
+~
+32 11
+Rd     0
+D1
+~
+~
+0 0 344
+D2
+~
+~
+0 0 343
+D4
+~
+~
+0 0 341
+S
+#343
+Inside the Crypt~
+This crypt looks very much like the ones on the level above, save one
+noticible difference.  The stone coffins is larger than those you have
+previously seen.  
+~
+32 11
+Rd     0
+D0
+~
+~
+0 0 342
+S
+#344
+Second Lower Terrace~
+This terrace is alive with the shuffling of zombies feet.  The solitude
+of the upper levels is a far cry from the teeming masses found here.  
+~
+32 11
+Rd     0
+D1
+~
+~
+0 0 346
+D2
+~
+~
+0 0 345
+D3
+~
+~
+0 0 342
+S
+#345
+Inside the Tomb~
+Your feet crunch through the rubble of what is left of the stone coffin
+that once stood here.  The occupant burst forth with such force as to
+pulverize the stone to gravel.  
+~
+32 11
+Rd     0
+D0
+~
+~
+0 0 344
+S
+#346
+Second Lower Terrace~
+The terrace continues east and west into the darkness.  To the south lies
+a silent tomb.  
+~
+32 11
+Rd     0
+D1
+~
+~
+0 0 348
+D2
+~
+~
+0 0 347
+D3
+~
+~
+0 0 344
+S
+#347
+Inside the Tomb~
+this tomb is dusty silent.  A quick search of the room yields only
+old cloth and bone.  These creatures were not buried among items of worth.  
+~
+0 0
+Rd     0
+D0
+~
+~
+0 0 346
+S
+#348
+Second Lower Terrace~
+This part of the terrace is very much like all the others.  Dark, Dreaery
+and hopeless.  Exits lie to the east and west and a crypt south.  
+~
+32 11
+Rd     0
+D1
+~
+~
+0 0 350
+D2
+~
+~
+0 0 349
+D3
+~
+~
+0 0 346
+S
+#349
+~
+~
+0 0
+Rd     0
+D0
+~
+~
+0 0 348
+S
+#350
+Second Lower Terrace~
+A silent row of crypts lies to your west.  Below you, a spiral staircase
+takes you to the next sublevel.  
+~
+32 11
+Rd     0
+D3
+~
+~
+0 0 348
+D5
+~
+~
+0 0 351
+S
+#351
+The Third Lower Terrace~
+An opressive stench of death and decay rushes to meet you upon stepping
+off of the stair.  There are corpses and skeletal remains of all sorts of
+creatures here.  The third terrace continues west, and a rancid crypt lies
+to the south.  
+~
+32 11
+Rd     0
+D2
+~
+~
+0 0 353
+D3
+~
+~
+0 0 354
+D4
+~
+~
+0 0 350
+S
+#352
+~
+~
+0 0
+Rd     0
+D1
+~
+~
+0 0 351
+S
+#353
+In the Crypt~
+The corpses and remains in this room are in various states of decay.  One
+common thing almost escapes your attention.  The corpses seemed to have
+every bit of their life essence removed.  As if something has fed off of
+their lifeforce.  
+~
+0 11
+Rd     0
+D0
+~
+~
+0 0 351
+S
+#354
+The Third Lower Terrace.~
+The carnage continues here along the terrace.  Corpses half consumed by
+some creature, lie strewn about.  The unpleasant odor from the tomb to the
+south makes you reluctant to enter it.  The terrace continues west.  
+~
+32 11
+Rd     0
+D1
+~
+~
+0 0 351
+D2
+~
+~
+0 0 355
+D3
+~
+~
+0 0 356
+S
+#355
+Inside the Crypt.~
+The floor of this tomb is covered one inch thick with a gelatinous slime
+that defies description.  The creatures here don't seem to notice the
+unnerving crackles and crunches as they step on bits of bone that are
+encapsulated in the muck.  
+~
+32 11
+Rd     0
+D0
+~
+~
+0 0 354
+S
+#356
+The Third Lower Terrace~
+Yet another putid tomb lies to the south, and this makes you look
+longingly at the stairs to the west in hopes that it will lead to a more
+hospitible place.  
+~
+32 11
+Rd     0
+D1
+~
+~
+0 0 354
+D2
+~
+~
+0 0 357
+D3
+~
+~
+0 0 358
+S
+#357
+Inside the Crypt~
+The corpses and remains in this room are in various states of decay.  One
+common thing almost escapes your attention.  The corpses seemed to have
+every bit of their life essence removed.  As if something has fed off of
+their lifeforce.  
+~
+0 0
+Rd     0
+D0
+~
+~
+0 0 356
+S
+#358
+The End of The Third Lower Terrace.~
+The cold chilling breeze you have felt at various times in these
+catacombs seems to find its origin in the depths to which this stair leads. 
+~
+32 11
+Rd     0
+D1
+~
+~
+0 0 356
+D5
+~
+~
+0 0 359
+S
+#359
+On the Spiral Stair~
+It feels as if this stair is magically held aloft on top of the cold
+blast of air that races by you.  Your light source allows you to see only
+the next few steps, with the rest of the details of your surroundings go
+unseen.  
+~
+0 0
+Rd     0
+D4
+~
+~
+0 0 358
+D5
+~
+~
+0 0 360
+S
+#360
+On the Spiral Stair.~
+The combination of rushing wind and dim lighting almost makes you miss
+seeing an item of interest.  A small golden ankh glimmers in the flickering
+light.  The stairs continue their downward spiral.  
+~
+36 11
+Rd     0
+D4
+~
+~
+0 0 359
+D5
+~
+~
+0 0 361
+S
+#361
+Nearing the Bottom of the Spiral.~
+You walk silently down the stair, and just begin to notice a dark figure
+standing on a small landing below you.  You pause attempting to discern what
+creature it is and determine its intentions.  If it is infact alive, it
+shows no signs and does not advance at you presence.
+~
+0 11
+Rd     0
+D4
+~
+~
+0 0 360
+D5
+~
+~
+0 0 362
+S
+#362
+On a Small Landing.~
+The shadowy figure is in fact alive.  This ghoul turns its glowing eyes
+towards you.  He growls to you, "For a Price I give my Prize."  
+~
+32 11
+Rd     0
+D4
+~
+~
+0 0 361
+D5
+~
+barrier~
+119 313 363
+S
+#363
+At the Gates of Hell~
+You have finally arrived at the bottom of the very long spiral stair. 
+This cavern must truly be massive as your light source hits no objects that
+reflect its luminence.  You carefully look the room over, and notice a set
+of huge iron gates set into the stone floor.  You touch the handles to the
+gates, and draw back in pain, they a very hot.  This must truly be one of
+the gates to hell.  
+~
+32 11
+Rd     0
+D4
+~
+~
+119 0 362
+D5
+~
+gates~
+3 0 364
+S
+#364
+In the Hall of Wailing Souls~
+It now seems entirely logical that a place like these catacombs would
+have a direct link to the underworld.  It makes for a shorter trip for the
+armies of evil to recruit an army.  
+~
+32 11
+Rd     0
+D4
+~
+~
+0 0 363
+S
+#365
+In the Cursed Tomb.~
+Evilness and damnation prevades your very being as you enter this tomb. 
+You had never know Dwarves to have much magical prowess, but in the case of
+this catacomb, they must have sold some souls to create such a curse.  In
+the center of the room on a pitch black atlar sits a sickly dwarf.  As you
+approach you notice that he fiercely clutches an object, that appears to
+have been a humanoid at some point.  Long flowing golden hair is still
+matted to its skull, and and judging by its slight build, you conclude that
+the remains are of an elven female.  Low moans and sobs float across the
+room from this poor plague ridden Dwarf who rocks silently in his sorrow. 
+Such is the eternal punishment for a Dwarf who secretly marries and elf. 
+Eternity together, but forever apart.  Her soul in the afterlife, his stuck
+here in mortal pain, only wishing to die to rejoin his love.  
+~
+32 0
+Rd     0
+D0
+~
+~
+0 0 319
+S
+#366
+On the Dark Spiral Stair~
+You silently pad your way up the stair, trying to not disturb more of the
+death sleepers.  But to your dismay, your footfalls reverberate throughout
+the cavern announcing youre presence.  A few steps further and suddenly you
+are enveloped in extreme darkness.  In fact you are not sure which way to
+go.  You feel a strong presence looming in the darkness above you, and cold
+breezes in the cardinal directions, although you can not make out any doors.
+~
+36 0
+Rd     0
+D0
+~
+~
+512 0 368
+D1
+~
+~
+512 0 368
+D3
+~
+~
+512 0 368
+D4
+~
+~
+512 0 367
+D5
+~
+~
+0 0 335
+S
+#367
+The Altar of the Wardens~
+You have stumbled into the private chamber of the warden who oversees
+these catacombs.  He look bemused that you have made it this far.  His mirth
+is not from aknowledging your accomplishment, but more from the knowledge of
+what other horrors await you.  But, for now he beckons you to rest for a
+moment.  
+~
+0 0
+Rd     0
+D5
+~
+~
+512 0 366
+S
+#368
+Falling.~
+Falling
+        Falling
+                 Falling
+You thought you had stepped out onto a landing
+but you wont be landing for some time, and
+there wont be much for your relatives to
+identify.  There are many ways to die.
+~
+33824804 0
+Rd     0
+S
+#399
+The Pit of Beasts.~
+Through a slipped step you go hurtling off into the chasm and land with a
+dull thud.  Although the pit is not a trap , you will have to fight your way
+out.  There are many ways to die here in the Catacombs.  
+~
+36 11
+Rd     0
+S
+#0
+
+
+
+#SPECIALS
+M 307 spec_cast_undead
+M 308 spec_guard
+M 309 spec_thief
+M 311 spec_fido
+M 314 spec_guard
+M 315 spec_cast_undead
+M 320 spec_healer
+S
+
+
+
+#RESETS
+M 312 1 303
+M 300 1 308
+O 301 0 308
+O 301 0 308
+O 300 0 308
+O 300 0 308
+M 301 1 310
+E 302 0 23
+M 302 1 312
+M 312 3 314
+M 303 1 315
+E 303 0 21
+E 315 0 2
+M 304 1 321
+E 304 0 23
+M 305 1 324
+M 306 1 325
+E 305 0 21
+M 307 1 330
+E 306 0 19
+E 306 0 20
+M 308 1 332
+M 309 1 332
+E 307 0 21
+M 310 1 334
+E 308 0 5
+M 312 2 339
+M 312 1 340
+M 313 2 343
+E 309 0 21
+E 310 0 9
+M 313 2 345
+E 310 0 9
+E 309 0 21
+M 313 2 346
+E 310 0 9
+E 309 0 21
+M 314 4 347
+E 311 0 8
+M 316 2 353
+M 316 2 355
+M 316 2 357
+O 312 0 360
+M 317 1 362
+G 313 0
+M 315 1 363
+E 314 0 27
+E 314 0 26
+M 319 1 365
+E 316 0 23
+M 320 1 367
+M 311 3 399
+S
+
+
+
+#SHOPS
+0
+
+
+
+#ARTISTS
+0
+
+
+
+#$

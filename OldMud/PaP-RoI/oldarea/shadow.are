@@ -1,0 +1,557 @@
+#AREADATA
+Name        The Shadow Realm~
+Levels      1 205
+Builders    Flux~
+VNUMs       800 899
+Security    1
+Recall      800
+Flags       16
+Color       7
+Sounds      &zA shadow skirts past ahead of you, vanishing into the darkness.&G~
+Temporal    0
+Weather     1
+End
+
+
+
+#MOBILES
+#0
+
+
+
+#OBJECTS
+#0
+
+
+
+#ROOMDATA
+#800
+Nothingness~
+~
+37 15
+Rd     0
+D0
+~
+~
+0 0 801
+S
+#801
+Nothingness~
+~
+33 15
+Rd     0
+D0
+~
+~
+0 0 802
+D1
+~
+~
+0 0 803
+D2
+~
+~
+0 0 800
+D3
+~
+~
+0 0 804
+S
+#802
+Nothingness~
+~
+33 15
+Rd     0
+D0
+~
+~
+0 0 805
+D2
+~
+~
+0 0 801
+S
+#803
+Nothingness~
+~
+33 15
+Rd     0
+D3
+~
+~
+0 0 801
+S
+#804
+Nothingness~
+~
+33 15
+Rd     0
+D1
+~
+~
+0 0 801
+S
+#805
+A dark road~
+A slightly less black road is set upon the otherwise totally black
+nothingness that exists in this realm.  It extends to the north for as far
+as you can see.  
+~
+33 15
+Rd     0
+D0
+~
+~
+0 0 806
+D2
+~
+~
+0 0 802
+S
+#806
+A dark road~
+A slightly less black road is set upon the otherwise totally black
+nothingness that exists in this realm.  It extends to the north for as far
+as you can see.  
+~
+33 15
+Rd     0
+D0
+~
+~
+0 0 807
+D2
+~
+~
+0 0 805
+S
+#807
+A castle gate~
+The dark road suddenly ends in front of an even darker castle gate. 
+There seems to be no ground, but it feels solid enough regardless.  
+~
+33 15
+Rd     0
+D0
+~
+Gate~
+1 0 808
+D2
+~
+~
+0 0 806
+S
+#808
+The entrance of a hedge maze~
+North lies the castle's hedge maze.  Much akin to the rest of this realm,
+the hedges that form the maze are black.  South lies the castle gate.  
+~
+33 15
+Rd     0
+D0
+~
+~
+0 0 809
+D2
+~
+Gate~
+1 0 807
+S
+#809
+A black hedge maze~
+Black hedges surround you, they seem to be moving, but there is no wind
+about you.  
+~
+33 15
+Rd     0
+D0
+~
+~
+0 0 810
+D2
+~
+~
+0 0 808
+S
+#810
+A black hedge maze~
+Black hedges surround you, they seem to be moving, but there is no wind
+about you.
+~
+33 15
+Rd     0
+D1
+~
+~
+0 0 811
+D2
+~
+~
+0 0 809
+S
+#811
+A black hedge maze~
+Black hedges surround you, they seem to be moving, but there is no wind
+about you.
+~
+33 15
+Rd     0
+D1
+~
+~
+0 0 813
+D2
+~
+~
+0 0 812
+D3
+~
+~
+0 0 810
+S
+#812
+A black hedge maze~
+Black hedges surround you, they seem to be moving, but there is no wind
+about you.
+~
+33 15
+Rd     0
+D0
+~
+~
+0 0 811
+S
+#813
+A black hedge maze~
+Black hedges surround you, they seem to be moving, but there is no wind
+about you.
+~
+33 15
+Rd     0
+D0
+~
+~
+0 0 817
+D1
+~
+~
+0 0 814
+D3
+~
+~
+0 0 811
+S
+#814
+A black hedge maze~
+Black hedges surround you, they seem to be moving, but there is no wind
+about you.
+~
+33 15
+Rd     0
+D1
+~
+~
+0 0 815
+D2
+~
+~
+0 0 816
+D3
+~
+~
+0 0 813
+S
+#815
+A black hedge maze~
+Black hedges surround you, they seem to be moving, but there is no wind
+about you.
+~
+33 15
+Rd     0
+D3
+~
+~
+0 0 814
+S
+#816
+A black hedge maze~
+Black hedges surround you, they seem to be moving, but there is no wind
+about you.
+~
+33 15
+Rd     0
+D0
+~
+~
+0 0 814
+S
+#817
+A black hedge maze~
+Black hedges surround you, they seem to be moving, but there is no wind
+about you.
+~
+33 15
+Rd     0
+D2
+~
+~
+0 0 813
+D3
+~
+~
+0 0 818
+S
+#818
+A black hedge maze~
+Black hedges surround you, they seem to be moving, but there is no wind
+about you.
+~
+33 15
+Rd     0
+D0
+~
+~
+0 0 820
+D1
+~
+~
+0 0 817
+D3
+~
+~
+0 0 819
+S
+#819
+A black hedge maze~
+Black hedges surround you, they seem to be moving, but there is no wind
+about you.
+~
+33 15
+Rd     0
+D1
+~
+~
+0 0 818
+S
+#820
+A black hedge maze~
+Black hedges surround you, they seem to be moving, but there is no wind
+about you.
+~
+33 15
+Rd     0
+D0
+~
+~
+0 0 821
+D2
+~
+~
+0 0 818
+S
+#821
+Entrance to a dark hedge maze~
+South lies the castle's hedge maze.  Much akin to the rest of this realm,
+the hedges that form the maze are black.  North lies the door to the castle.
+~
+33 15
+Rd     0
+D0
+~
+~
+0 0 822
+D2
+~
+~
+0 0 820
+S
+#822
+The entrance to the dark castle~
+The castle's walls tower above you, stretching as far as you can see into
+the infinate blackness.  The door extends at least a few stories above you. 
+The hedge maze lies south.  
+~
+33 15
+Rd     0
+D0
+~
+Door~
+1 0 823
+D2
+~
+~
+0 0 821
+S
+#823
+Inside the castle~
+You strain your eyes trying to make out everything within the castle. 
+Almost every object is as black as the next.  South of you lies the castle
+door, which seems no taller than an inch or two.  The rest of the castle is
+to the north.  
+~
+49 15
+Rd     0
+D0
+~
+~
+0 0 824
+D2
+~
+Door~
+1 0 822
+S
+#824
+The Throne Room~
+All you can make out is the throne itself, although from the acoustics of
+this chamber it would appear that its topography remains otherwise.  
+~
+49 15
+Rd     0
+D0
+~
+Tapestry~
+512 0 825
+D2
+~
+~
+0 0 823
+S
+#825
+A secret room~
+This room actually has some light in it, the light seems to be eminating
+from a burning pattern etched into the ground.  South of you behind the
+tapestry is the throne room, north lies the pattern.  
+~
+49 15
+Rd     0
+D0
+~
+~
+0 0 826
+D2
+~
+~
+512 0 824
+S
+#826
+Within the pattern~
+You seem to be walking on nothing, but your footing is solid.  The
+pattern burns with a fire that is neither hot nor seemingly of a mortal
+origin.  
+~
+49 15
+Rd     0
+D0
+~
+~
+0 0 827
+D2
+~
+~
+0 0 825
+S
+#827
+Within the pattern~
+You seem to be walking on nothing, but your footing is solid.  The
+pattern burns with a fire that is neither hot nor seemingly of a mortal
+origin.
+~
+49 15
+Rd     0
+D2
+~
+~
+0 0 826
+D3
+~
+~
+0 0 828
+S
+#828
+Within the pattern~
+You seem to be walking on nothing, but your footing is solid.  The
+pattern burns with a fire that is neither hot nor seemingly of a mortal
+origin.
+~
+49 15
+Rd     0
+D0
+~
+~
+0 0 829
+D1
+~
+~
+0 0 827
+S
+#829
+Within the pattern~
+You seem to be walking on nothing, but your footing is solid.  The
+pattern burns with a fire that is neither hot nor seemingly of a mortal
+origin.
+~
+49 15
+Rd     0
+D1
+~
+~
+0 0 830
+D2
+~
+~
+0 0 828
+S
+#830
+Within the pattern~
+You seem to be walking on nothing, but your footing is solid.  The
+pattern burns with a fire that is neither hot nor seemingly of a mortal
+origin.
+~
+49 15
+Rd     0
+D0
+~
+~
+0 0 831
+D3
+~
+~
+0 0 829
+S
+#831
+The center of the pattern~
+You stand in the middle of the pattern.  Your path ahead is blocked by
+the mystical fire.  
+~
+49 15
+Rd     0
+D2
+~
+~
+0 0 830
+S
+#0
+
+
+
+#SPECIALS
+S
+
+
+
+#RESETS
+S
+
+
+
+#SHOPS
+0
+
+
+
+#ARTISTS
+0
+
+
+
+#$

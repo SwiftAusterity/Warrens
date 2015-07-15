@@ -1,0 +1,543 @@
+#AREADATA
+Name        Neon wasteland~
+Levels      50 100
+Builders    Swift/flux~
+VNUMs       25150 25199
+Security    1
+Recall      2
+Flags       16
+Color       6
+Sounds      &wThe buzzing of &.n&.e&.o&.n&w assails your ears.~
+Temporal    0
+Weather     0
+End
+
+
+
+#MOBILES
+#0
+
+
+
+#OBJECTS
+#25150
+poison green flask~
+a flask filled with a greenish liquid~
+A flask filled with a greenish liquid lies here.~
+7 268435456 16385 0
+213~ poison~ poison~ poison~ 0~ 0~ 0~ 0~ 0~ 0~
+4 0 47 45
+0 0
+reserved~
+0 0
+0 0 0
+#25151
+bottle whisky~
+a bottle of whisky~
+A bottle filled with a clear liquid lies here.~
+12 0 16385 1
+5~ 5~ 5~ 0~ 0~ 0~ 0~ 0~ 0~ 0~
+1 0 0 25
+0 0
+reserved~
+0 0
+0 0 0
+#25152
+dirty oil rag~
+a dirty oily rag~
+A dirty oily rag has been left here.~
+10 0 0 1
+0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~
+0 0 0 0
+0 0
+reserved~
+0 0
+0 0 0
+#25153
+white liquid flask~
+a flask filled with a white liquid~
+A flask filled with a white liquid has been left here.~
+10 0 16385 1
+0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~
+1 1 28 10
+0 0
+reserved~
+0 0
+0 0 0
+#25154
+plastique grey clay~
+a block of grey clay~
+A block of grey clay-like substance lies here.~
+10 0 16385 1
+0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~
+2 5 19 0
+0 0
+reserved~
+0 0
+0 0 0
+#25155
+flask red liquid~
+a flask filled with red liquid~
+A flask filled with red liquid lies here.~
+10 0 1 1
+0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~
+1 10 40 75
+0 0
+reserved~
+0 0
+0 0 0
+#25156
+no name~
+(no short description)~
+(no description)~
+10 0 0 0
+0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~
+0 0 0 0
+0 0
+reserved~
+0 0
+0 0 0
+#25157
+old clock~
+an old clock~
+An old clock lies here, still ticking.~
+10 0 1 1
+0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~
+0 1 0 0
+0 0
+reserved~
+0 0
+0 0 0
+#25158
+pile wire~
+a pile of loose wires~
+A pile of loose wires lies on the ground.~
+10 0 1 1
+0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~
+0 0 0 30
+0 0
+reserved~
+0 0
+0 25158 25158
+#25159
+thin wire~
+a thin metal wire~
+A thin metal wire lies here.~
+10 0 1 1
+0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~
+0 0 0 10
+0 0
+reserved~
+0 0
+0 0 0
+#25160
+tool pack~
+a tool pack~
+A pack of tools has been left here.~
+10 0 2049 1
+0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~
+0 10 48 0
+0 0
+reserved~
+0 0
+0 0 0
+#0
+
+
+
+#ROOMDATA
+#25150
+A street lit by neon~
+~
+32 0
+Rd     0
+D2
+~
+~
+0 0 25151
+S
+#25151
+A street lit by neon~
+~
+32 0
+Rd     0
+D0
+~
+~
+0 0 25150
+D2
+~
+~
+0 0 25153
+D3
+~
+~
+0 0 25152
+S
+#25152
+An eerie shop~
+~
+32 0
+Rd     0
+D1
+~
+~
+0 0 25151
+S
+#25153
+A street lit by neon~
+~
+32 0
+Rd     0
+D0
+~
+~
+0 0 25151
+D1
+~
+~
+0 0 25154
+D2
+~
+~
+0 0 25157
+S
+#25154
+A soot covered house~
+~
+32 0
+Rd     0
+D3
+~
+~
+0 0 25153
+D4
+~
+~
+0 0 25155
+S
+#25155
+A soot covered house~
+~
+32 0
+Rd     0
+D0
+~
+~
+0 0 25156
+D5
+~
+~
+0 0 25154
+S
+#25156
+A bathroom~
+~
+32 0
+Rd     0
+D2
+~
+~
+0 0 25155
+S
+#25157
+A street lit by neon~
+~
+32 0
+Rd     0
+D0
+~
+~
+0 0 25153
+D1
+~
+~
+0 0 25166
+D3
+~
+~
+0 0 25158
+S
+#25158
+A street lit by neon~
+~
+32 0
+Rd     0
+D1
+~
+~
+0 0 25157
+D3
+~
+~
+0 0 25159
+S
+#25159
+A street lit by neon~
+~
+32 0
+Rd     0
+D1
+~
+~
+0 0 25158
+D3
+~
+~
+0 0 25160
+S
+#25160
+A street lit by neon~
+~
+32 0
+Rd     0
+D1
+~
+~
+0 0 25159
+D2
+~
+~
+0 0 25161
+S
+#25161
+A destroyed building~
+~
+32 0
+Rd     0
+D0
+~
+~
+0 0 25160
+D1
+~
+~
+0 0 25162
+S
+#25162
+A destroyed building~
+~
+32 0
+Rd     0
+D3
+~
+~
+0 0 25161
+D4
+~
+~
+0 0 25164
+S
+#25163
+A destroyed building~
+~
+32 0
+Rd     0
+D0
+~
+~
+0 0 25164
+S
+#25164
+A destroyed building~
+~
+32 0
+Rd     0
+D1
+~
+~
+0 0 25165
+D2
+~
+~
+0 0 25163
+D5
+~
+~
+0 0 25162
+S
+#25165
+A destroyed building~
+~
+32 0
+Rd     0
+D3
+~
+~
+0 0 25164
+S
+#25166
+A street lit by neon~
+~
+32 0
+Rd     0
+D1
+~
+~
+0 0 25167
+D3
+~
+~
+0 0 25157
+S
+#25167
+A street lit by neon~
+~
+32 0
+Rd     0
+D1
+~
+~
+0 0 25168
+D3
+~
+~
+0 0 25166
+S
+#25168
+A street lit by neon~
+~
+32 0
+Rd     0
+D2
+~
+~
+0 0 25169
+D3
+~
+~
+0 0 25167
+S
+#25169
+A bomb shelter stairwell~
+~
+32 0
+Rd     0
+D0
+~
+~
+0 0 25168
+D5
+~
+~
+0 0 25170
+S
+#25170
+A bomb shelter stairwell~
+~
+32 0
+Rd     0
+D4
+~
+~
+0 0 25169
+D5
+~
+~
+0 0 25171
+S
+#25171
+A bomb shelter stairwell~
+~
+32 0
+Rd     0
+D4
+~
+~
+0 0 25170
+D5
+~
+~
+0 0 25172
+S
+#25172
+A bomb shelter stairwell~
+~
+32 0
+Rd     0
+D4
+~
+~
+0 0 25171
+D5
+~
+~
+0 0 25173
+S
+#25173
+A bomb shelter~
+~
+32 0
+Rd     0
+D1
+~
+~
+0 0 25174
+D4
+~
+~
+0 0 25172
+S
+#25174
+A bomb shelter~
+~
+32 0
+Rd     0
+D1
+~
+~
+0 0 25175
+D3
+~
+~
+0 0 25173
+S
+#25175
+A bomb shelter~
+~
+32 0
+Rd     0
+D1
+~
+~
+0 0 25176
+D3
+~
+~
+0 0 25174
+S
+#25176
+A strange room~
+~
+32 0
+Rd     0
+D3
+~
+~
+0 0 25175
+S
+#0
+
+
+
+#SPECIALS
+S
+
+
+
+#RESETS
+S
+
+
+
+#SHOPS
+0
+
+
+
+#ARTISTS
+0
+
+
+
+#$

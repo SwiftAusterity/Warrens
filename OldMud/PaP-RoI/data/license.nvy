@@ -1,0 +1,69 @@
+EnvyMud Release 2.2
+Friday, 14th February 1997
+
+Kahn		envy@envy.com
+
+
+
+=== Copyright and License Terms
+
+Diku Mud is copyright (C) 1990, 1991 by Sebastian Hammer, Michael Seifert,
+Hans Henrik St{rfeldt, Tom Madsen, and Katja Nyboe.  Their license agreement
+is in the file 'license.doc'.
+
+Merc Diku Mud is a derivative of the original Diku Mud and is subject to their
+copyright and license agreement.  Merc Diku Mud contains substantial
+enhancements to Diku Mud.  These enhancements are copyright (C) 1992, 1993 by
+Michael Chastain, Michael Quan, and Mitchell Tse.  Their license agreement is
+in the file 'license.txt'.
+
+EnvyMud 1.0 is a derivative of Merc Diku Mud, version 2.2, and is subject to 
+the copyright and license agreements for both Diku Mud and Merc Diku Mud.
+The modifications and improvements contained in EnvyMud are copyright (C) 1994
+by Michael Quan, David Love, Guilherme 'Willie' Arnold, and Mitchell Tse.
+
+EnvyMud 2.0 is a derivative of EnvyMud, version 1.0, and is subject to 
+the copyright and license agreements for both Diku Mud, Merc Diku Mud,
+and Envy Mud.  The modifications and improvements contained in EnvyMud 2.0
+are copyright (C) 1995 by Michael Quan and Mitchell Tse.
+
+EnvyMud 2.2 is a derivative of EnvyMud, version 2.0, and is subject to 
+the copyright and license agreements for both Diku Mud, Merc Diku Mud,
+and Envy Mud.  The modifications and improvements contained in EnvyMud 2.2
+are copyright (C) 1996, 1997 by Michael Quan.
+
+In order to use EnvyMud you must follow the Diku license, the Merc license,
+and our license.  The exact terms of the Diku license are in the file
+'license.doc'.  A summary of these terms is:
+
+	-- No resale or operation for profit.
+	-- Original author's names must appear in login sequence.
+	-- The 'credits' command must report original authors.
+	-- You must notify the Diku creators that you are operating a Diku mud.
+
+The exact terms of the Merc license are in the file 'license.txt'.  A summary
+of these terms is:
+
+	-- Copyrights must remain in original source.
+	-- 'Help merc' must report Merc help text, as shipped.
+
+Our terms are:
+
+	-- Copyrights must remain in original source.
+	-- 'Help envy' must report our help text, as shipped.
+
+Neither the Merc nor EnvyMud license terms require keeping our names in the
+'greeting' text.  If you want to include a reference to Merc and its authors
+(Furey, Hatchet, and Kahn) or EnvyMud and its authors (Kahn and
+Hatchet), we'd appreciate it, but we do not require it.  However, you
+must keep the original Diku authors in the login sequence.
+
+If you do not follow these license terms, we will ask you to comply.  If that
+doesn't work, then we will talk to your system administrators (not about your
+running a mud, but on the grounds that you're using our copyrighted software
+without permission).  We are in a position to pursue legal action with
+monetary damages as a last resort should you not comply.
+
+These are very generous terms for any software.  If you don't want to accept
+them, feel free to run some other software, or write your own.
+

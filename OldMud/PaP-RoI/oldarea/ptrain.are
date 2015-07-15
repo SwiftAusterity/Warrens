@@ -1,0 +1,1533 @@
+#AREADATA
+Name        New Recruit Training~
+Levels      1 5
+Builders    Flux~
+VNUMs       600 699
+Security    1
+Recall      600
+Flags       128
+Color       6
+Sounds      &cYou can almost feel the &Ysharp &rsting&c on your back as you hear the &Ycrack&c of a whip echoing through the halls.&G~
+Temporal    0
+Weather     0
+End
+
+
+
+#MOBILES
+#600
+0 guard stern~
+Stern~
+A very large man in a guard uniform stands here.
+~
+Stern is huge, nono I mean really huge.  Eight feet tall, chest like
+brick wall, arms like steel girder beams.  I wouldn't mess with him.  
+~
+1703939 744 134479872 0 S
+213 0 30 30 5 6
+0 0 0 1
+0 0 0
+15 15 15 15 15 15
+1 1 1 1
+>greet_prog 100~
+tell $n You must be the new punk.
+tell $n Well then, you better shape up, or...
+whipcrack $n
+tell $n You'd better read all the signs, or you wont last very long.
+muhaha
+~
+|
+#601
+0 trainer tim~
+Tim~
+Tim the trainer stands here, training new recruits.
+~
+Tim isn't very tall, but if you are up on your cheesy Kung Fu movies then
+you'd know that size is no determinant of power or ability...
+~
+1966595 0 0 0 S
+213 0 0 0 3 6
+0 0 0 1
+0 0 0
+15 15 15 15 15 15
+1 1 1 1
+#602
+0 practice paul~
+Paul~
+Paul, the practiceman stands here, teaching some punks.
+~
+Paul may look like Ichabod Crane, but he's wiry, remember that.
+~
+1027 0 0 0 S
+213 0 0 0 3 1
+0 0 0 1
+0 0 0
+15 15 15 15 15 15
+1 1 1 1
+#603
+0 guard Walter waterman~
+Walter~
+Walter, the water guard stands stalwart, giving out water.
+~
+Walter doesn't look very happy, maybe if you gave him a hug, or even
+flashed him a smile he would be happy.  
+~
+1966083 0 0 0 S
+213 0 0 0 3 1
+0 0 0 1
+0 0 0
+15 15 15 15 15 15
+1 1 1 1
+>rand_prog 5~
+frown
+~
+>act_prog 'smiles at you.'~
+smile $n
+mpoload 608
+give skin $n
+tell $n Don't tell the other guards about this, please.
+~
+>act_prog 'hugs you.'~
+hug $n
+mpoload 609
+give canteen $n
+tell $n Please don't tell the other guards about this.
+~
+>act_prog 'kisses you.'~
+blush
+mpoload 610
+give bottle $n
+tell $n PLEASE don't tell the other guards about this!
+~
+|
+#604
+0 fighting trainer guard~
+A fighting trainer guard~
+A man stands here, instructing in the ways of combat.
+~
+This man will teach you how to fight effectively, all you have to do is
+poke him.  
+~
+3 0 0 0 S
+0 0 0 0 3 1
+0 0 0 1
+0 0 0
+15 15 15 15 15 15
+1 1 1 1
+>act_prog 'pokes you'~
+mpforce $n help fight
+~
+|
+#605
+0 one guard~
+Guard one~
+Guard one stands here, rhyming away.
+~
+Guard one is one tough cookie, even though he may be into poetry.
+~
+3 0 0 0 S
+7 0 0 0 3 1
+0 0 0 1
+0 0 0
+10 15 15 10 15 10
+1 1 1 1
+>rand_prog 7~
+say one fish, two fish, three fish, &Bfish&X.
+~
+>rand_prog 7~
+say Horton heard a who!
+~
+|
+#606
+0 two guard~
+Guard two~
+Guard two stands here, holding his ears.
+~
+Guard two hates poetry, poor guy.
+~
+3 0 0 0 S
+15 0 0 0 3 1
+0 0 0 1
+0 0 0
+10 15 15 10 15 10
+1 1 1 1
+>speech_prog 'one fish, two fish, three fish, &Bfish&X.'~
+slap $n
+say shutup!
+~
+|
+#607
+0 defenseless dave~
+Defenseless Dave~
+Defenseless Dave is lying on the ground here.
+~
+Dave has no arms or legs, it's a miserable existance.
+~
+3 0 0 0 S
+5 0 0 0 1 1
+0 0 0 0
+0 0 0
+10 15 15 10 15 10
+0 0 0 0
+#608
+5 giant crescent spider~
+A crescent spider~
+A giant crescent spider is here, looking for something to bite.
+~
+A giant spider with a yellow crescent on its abdomen, its fangs are
+dripping some green stuff.  
+~
+33 0 33554432 0 S
+2 0 0 0 3 1
+0 0 0 0
+128 0 0
+10 15 15 10 15 10
+1 1 1 1
+#609
+0 crazy coot~
+A crazy coot~
+A crazy old coot is here, talking to himself.
+~
+He just keeps chattering to himself, he doesn't seem all together.  
+~
+33 0 0 0 S
+4 0 0 0 3 1
+0 2 16 0
+0 0 0
+10 15 15 10 15 10
+1 0 1 0
+>fight_prog 25~
+say I am the queen!
+bite $n
+~
+>hitprcnt_prog 5~
+say I am the lizard king!
+whirl
+~
+|
+#610
+0 guard larry~
+Larry~
+Larry the light guard stands here.
+~
+All he wants you to do is ask him, otherwise he wont pay attention to you.  
+~
+3 0 0 0 S
+213 0 0 0 3 1
+0 0 0 0
+0 0 0
+15 15 15 15 15 15
+1 1 1 1
+>speech_prog lamp~
+mpoload 620
+give lamp $n
+say There ya go, thanks for asking.
+~
+|
+#611
+3 bat~
+A bat~
+A bat is gliding around your head here.
+~
+A standard, small black bat.
+~
+1 524288 0 0 S
+2 -20 0 0 3 1
+0 0 0 0
+0 0 0
+10 15 15 10 15 10
+1 1 1 1
+#612
+4 0 lizard glowing~
+A lizard~
+A rather large lizard is resting here.
+~
+This lizard is a bit bigger than the ones you might be used to.  It's
+about the size of a large dog, and it's eyes look like baseballs.  
+~
+1 608 0 0 S
+2 -50 0 0 3 2
+0 0 0 0
+0 0 0
+10 15 15 10 15 10
+1 1 1 1
+#613
+5 crescent spider~
+A crescent spider~
+A crescent spider scurries about here.
+~
+A small spider with a yellow crescent on its abdomen, it seems quite
+aggressive.  
+~
+33 0 33554432 0 S
+1 0 0 0 1 1
+0 0 0 0
+128 0 1
+10 10 15 10 10 10
+1 1 1 1
+#614
+0 0 bear~
+A bear~
+A large bear is here.
+~
+This large bear looks a little sluggish, it must be tired.
+~
+3 131072 0 0 S
+4 -5 0 0 4 2
+0 0 0 0
+0 0 0
+10 10 10 10 15 10
+1 1 1 1
+#615
+0 wizard~
+A wizard~
+A wizard is here, contemplating spells.
+~
+He looks quite frightening, especially with that magic missile in his
+hands.  
+~
+33 0 0 0 S
+3 -35 0 0 3 1
+0 0 0 0
+0 0 0
+10 15 15 15 15 10
+1 1 1 1
+>fight_prog 5~
+c 'magic missile' $n
+~
+|
+#616
+0 princess~
+A princess~
+A princess is lying here, awaiting rescue.
+~
+She seems a bit tattered, she looks as if she has been thrown in a
+dungeon for quite a while.  
+~
+3 0 0 0 S
+2 0 0 0 3 1
+0 2 0 0
+0 0 0
+10 15 15 15 15 10
+1 1 1 1
+>greet_prog 100~
+tell $n Please rescue me!
+tell $n I'll give you anything, I'm really rich!
+tell $n Just prove to me that the evil wizard is dead.
+~
+>give_prog 626~
+say Oh, thank you, the wizard is finally dead!
+say Here, oh wait, I don't have any gold with me.
+say Perhaps this will do.
+mpoload 627
+give ball $n
+mpecho The princess runs out of the room.
+mppurge self
+~
+|
+#0
+
+
+
+#OBJECTS
+#600
+amber light prison~
+an amber prison lamp~
+A lamp sunk into the celing flickers above you.~
+9 1 0 0
+0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~
+0 0 0 0
+0 0
+reserved~
+0 0
+0 0 0
+#601
+pill detect hidden~
+a pill~
+A small pill lies here, waiting to be taken.~
+22 64 1 1
+1~ detect hidden~ reserved~ reserved~ 0~ 0~ 0~ 0~ 0~ 0~
+0 0 0 0
+0 0
+reserved~
+0 0
+0 0 0
+#602
+desk~
+a desk~
+A wooden desk is bolted to the floor in the middle of the room.~
+9 0 0 1
+0~ 4~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~
+0 0 0 0
+0 0
+reserved~
+0 0
+0 0 0
+#603
+gum sticky~
+a sticky mass of gum~
+A sticky mass of gum has been left here.~
+6 83890304 129 0
+0~ 0~ 0~ 0~ 7~ 5~ 0~ 0~ 0~ 12~
+0 0 0 0
+0 0
+reserved~
+0 0
+0 0 0
+>get_from_prog 100~
+0
+mpechoat $n The gum gets all tangled and stuck to your hands,
+mpechoat $n you can't get it off!
+mpechoaround $n $n gets gum all stuck in $s hands!
+~
+>get_prog 100~
+0
+mpechoat $n The gum gets all tangled and stuck to your hands,
+mpechoat $n you can't get it off!
+mpechoaround $n $n gets gum all stuck in $s hands!
+mpforce $n wear sticky
+~
+|
+#604
+conveyor belt~
+a conveyor belt~
+A really &Orusty&X looking conveyor belt looms above you.~
+9 2 0 0
+0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~
+0 0 0 0
+0 0
+reserved~
+0 0
+0 0 0
+>rand_prog 2~
+0
+mpoload 606
+drop leg
+~
+>rand_prog 2~
+0
+mpoload 605
+drop arm
+~
+|
+#605
+arm~
+a severed arm~
+A severed arm lies here still bleeding.~
+10 0 1 1
+0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~
+2 0 0 0
+0 0
+reserved~
+0 0
+0 7 20
+#606
+leg~
+a severed leg~
+A severed leg lies here, still bleeding.~
+10 0 1 0
+0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~
+3 0 0 0
+0 0
+reserved~
+0 0
+0 7 20
+#607
+water hole~
+dirty water hole~
+A hole in the ground oozes some brown water here.~
+21 0 0 0
+0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~
+0 0 0 0
+0 0
+reserved~
+0 0
+0 0 0
+#608
+water skin waterskin~
+a water skin~
+A small waterskin has been left here.~
+12 0 1 1
+10~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~
+0 0 0 2
+0 0
+reserved~
+0 0
+0 0 0
+#609
+canteen~
+a small canteen~
+A small canteen has been left here.~
+12 0 1 1
+25~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~
+1 0 0 0
+0 0
+reserved~
+0 0
+0 0 0
+#610
+black hole bottle~
+the black hole bottle~
+A water bottle has been left here, it looks really nifty.~
+12 64 1 1
+100~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~
+1 0 0 0
+0 0
+reserved~
+0 0
+0 0 0
+#611
+blade~
+a sharp blade~
+A small blade lies here.~
+4 0 8193 2
+0~ 0~ 0~ 2~ 1~ 76~ 0~ 0~ 6~ 8~
+1 0 0 10
+0 0
+reserved~
+0 0
+0 0 0
+#612
+tree hole~
+tree hole~
+A large tree with a hole in its trunk stands here.~
+25 0 0 0
+620~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~
+0 0 0 0
+0 0
+reserved~
+0 0
+0 0 0
+#613
+egg sac~
+an egg sac~
+An egg sac lies here.~
+11 0 1 1
+10~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~
+0 0 0 0
+0 0
+reserved~
+0 0
+0 0 0
+#614
+Spider web~
+a spider's web~
+A spider's web is here.~
+6 4224 9 1
+0~ 0~ 0~ 0~ 0~ 64~ 0~ 0~ 0~ 0~
+0 0 0 0
+0 0
+reserved~
+0 0
+0 0 0
+A
+5 1
+A
+6 -1
+A
+25 -10
+#615
+spider abdomen~
+a giant spider's abdomen~
+A giant crescent spider's abdomen lies here.~
+6 0 9 0
+0~ 0~ 0~ 0~ 6~ 0~ 0~ 0~ 0~ 0~
+0 0 0 0
+0 0
+reserved~
+0 0
+0 0 0
+A
+6 1
+A
+25 -10
+#616
+tree hole~
+a tree hole~
+In the middle of the trunk is a hole to the outside.~
+25 0 0 0
+618~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~
+0 0 0 0
+0 0
+reserved~
+0 0
+0 0 0
+#617
+flickering lamp~
+a flickering lamp~
+A lamp hangs from the celing, flickering.~
+9 1 0 0
+0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~
+0 0 0 0
+0 0
+reserved~
+0 0
+0 0 0
+#618
+iron pipe~
+an iron pipe~
+An iron pipe has been left here.~
+4 0 8193 0
+0~ 0~ 0~ 4~ 3~ 57~ 0~ 0~ 2~ 8~
+0 0 0 0
+0 0
+reserved~
+0 0
+0 0 0
+A
+10 2
+A
+1 1
+A
+4 1
+A
+3 -1
+#619
+bone~
+a sharp bone~
+A sharp bone lies here.~
+4 0 8193 2
+0~ 0~ 0~ 3~ 2~ 24~ 0~ 0~ 1~ 14~
+0 0 0 0
+0 0
+reserved~
+0 0
+0 0 0
+A
+10 3
+A
+9 2
+#620
+lamp~
+a lamp~
+A lamp has been left here.~
+9 1 16385 1
+0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~
+1 0 0 1
+0 0
+reserved~
+0 0
+0 0 0
+#621
+lizard skin~
+lizard skin~
+A pile of lizard skin lies here.~
+6 0 33 1
+0~ 0~ 0~ 0~ 0~ 75~ 0~ 0~ 0~ 0~
+0 0 0 0
+0 0
+reserved~
+0 0
+0 0 0
+A
+6 1
+#622
+Lamp~
+a magic lamp~
+A large, ornate lamp stands here.~
+9 1 0 0
+0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~
+0 0 0 0
+0 0
+reserved~
+0 0
+0 0 0
+#623
+blue beaker~
+a blue beaker~
+A blue beaker sits here.~
+7 268435456 1 1
+2~ cure light~ detect hidden~ reserved~ 0~ 0~ 0~ 0~ 0~ 0~
+0 0 0 5
+0 0
+reserved~
+0 0
+0 0 0
+#624
+green beaker~
+a green beaker~
+A green beaker sits here.~
+7 268435456 1 1
+1~ cure poison~ cure disease~ reserved~ 0~ 0~ 0~ 0~ 0~ 0~
+0 0 0 2
+0 0
+reserved~
+0 0
+0 0 0
+#625
+jacobs ladder~
+a Jacob's ladder~
+A Jacob's ladder has been left here.~
+13 1 16385 1
+0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~ 0~
+0 0 0 30
+5 0
+electric snap~
+5 5
+0 0 0
+#626
+wizard robe astral~
+an astral robe~
+A robe seems to float here, it has stars printed all over it.~
+6 64 1025 2
+0~ 0~ 0~ 0~ 0~ 95~ 0~ 0~ 0~ 22~
+0 0 2 0
+5 0
+magic missile~
+5 5
+0 0 0
+A
+4 2
+A
+12 20
+#627
+glowing ball~
+a small glowing ball~
+A small glowing ball floats here.~
+6 65 32769 2
+0~ 0~ 0~ 0~ 7~ 100~ 0~ 0~ 0~ 10~
+0 0 5 0
+0 0
+reserved~
+0 0
+0 0 0
+A
+5 2
+A
+11 10
+#0
+
+
+
+#ROOMDATA
+#600
+A dank, dark room~
+You are pushed into this dank, dark room, the door is slammed behind you.
+You look back to find that the door has vanished, and only a grey wall
+remains.  All that's left is to go foward.  
+~
+12 0
+Rd     0
+D2
+~
+~
+0 0 601
+S
+#601
+A dank, dark room~
+As you walk into this room, the way you came suddenly becomes blocked off
+by a large grey wall, a wall very similar to the one that appeared when the
+door was closed before.  There is a &Rsign&c on the wall next to you.  
+~
+8 0
+Rd     0
+E
+sign~
+Isn't Stern an ass?  Well, most of the mobs around here are.  Oh wait, I
+feel a definition and a description coming on, oh oh, here it is: Mob -
+
+short for Mobile; mobs are the computer borne creatures and people found in
+a mud.  Stern here is a mob.  To gain levels (which is the point of the
+game) you must kill mobs, or people, but mobs are generally easier and more
+legal to kill.  Mobs are also reffered to as NPC's or Non Player Characters.
+That makes you a PC or Player Character.  Every PC in the mud is a real
+person, sitting at a computer just like you.  
+ 
+Type 'who' without the ' to find out what other PC's are in the game.
+ 
+By the way, don't attack Stern, he's really powerful compared to,
+well, everyone in the mud. ;)
+~
+D2
+~
+~
+0 0 602
+S
+#602
+A &Cs&Bw&Ci&Br&Cl&Bi&Cn&Bg &Yv&Ro&Yr&Rt&Ye&Rx&W~
+This isn't really a room, it's more of a Twilight Zone kinda vortex.  
+~
+8 0
+Rd     0
+D5
+~
+~
+0 0 603
+S
+>enter_prog 100~
+0
+push $n down
+~
+|
+#603
+A slightly more dank, dark room~
+After being pushed through that painful vortex, it vanishes and gets
+replaced by another grey wall.  A &Rsign&c hangs on the wall.  
+~
+8 0
+Rd     0
+E
+sign~
+Well then, I suppose the rooms can be asses too.  Oh yeah, that just begs
+for description: 
+ 
+Room - One space in a mud which can be occupied by PC's, NPC's and objects.
+You are in a room, this room is one of thousands in the mud.
+ 
+Groups of rooms are areas. Type &Carea&W to see the list of areas.
+Those two numbers in the area listing make up the suggested level range.
+This means that if you are within that level range, going there
+to kill mobs and level is suggested by whoever built the area.
+~
+D2
+~
+~
+0 0 604
+D5
+~
+falsefloor~
+513 0 605
+S
+>enter_prog 100~
+0
+force $n look
+~
+|
+#604
+Another dank, dark room~
+Expecting that grey wall to follow you, it doesn't.  Is that good or bad?
+Another &Rsign&c hangs on the wall.  
+~
+8 0
+Rd     0
+E
+sign~
+Actually, it's good.  Now we can have a lesson in exits.  Exits are
+exactly what they sound like.  Exits link rooms together.  Without them you
+couldn't go north or south.  There are three main types of exits: non-doors,
+doors and secret.  Non-doors are simply links, you don't have to open or
+close anything, just go.  Doors are like RL doors, you can open and close
+them.  Doors are listed under your autoexits display in &Bblue&W.  Type open
+<doorname> to open them.  Once you open a door, if you look at the room
+again, the doorname will have been replaced by a direction.  Secret exits
+are secrets.  If you can't detect hidden, you wont find them.  Of course,
+you could keep bumping into the wall until you fall through. 
+ 
+Now back to why going north would be a good idea:
+Go north and then go down again, its really a secret false floor.
+~
+D0
+~
+~
+0 0 603
+D1
+~
+irondoor~
+3 0 607
+D2
+~
+~
+0 0 608
+D3
+~
+paperwall~
+3 0 606
+S
+#605
+Ultra-high security top secret room~
+There is a sign on the wall, it reads:
+
+Congrats, you either read the note, which was good, or you went down on
+your own.  This sign really doesn't have much value, but you should try
+eating that pill on the floor, no it isn't dirty we just had this room
+cleaned.  It is a detect hidden pill, it won't last long, but type look so
+you can see the hidden door.  
+~
+8 0
+Rd     0
+D4
+~
+falseceling~
+513 0 603
+S
+#606
+Training Area~
+This room is actually quite clean compared to the rest of the compound. 
+A bunch of wooden dummies are standing up or suspended from the celing.  
+A &Rsign&c hangs here.
+~
+8 0
+Rd     0
+E
+sign~
+This is where you, the newbie, can train your stats such as strength.
+First off, type &Cscore&W. This is your masterlist of stats. Then, type
+&Cscore imm&W, those are your various immunities. You want them to be lower
+the more negative, the better. Next type &Cscore mes&W, this is your list
+of messages. You wont be able to set your walkin or walkout until you
+remort, so that's a later lesson. You may be wondering why you have
+your limbs listed at the bottom of the score, well that is because they
+can come off. Yes, you can be left without an arm or leg from combat.
+Don't worry, it doesn't happen all that often.
+ 
+For now, type &Ctrain&W or help train if you are unclear on the process.
+~
+D1
+~
+paperwall~
+3 0 604
+S
+#607
+Practice Area~
+This room is more like a classroom than the training area.  It has a
+blackboard, some desks, a practice ring, and, of course, a &Rsign&c.  
+~
+8 0
+Rd     0
+E
+sign~
+Ahh, the practice room. This is where you can practice your skills.
+That % by the skill name is the percentage of how often it will work.
+You'll never hit 100%, unless a warden sets it (him)herself for you.
+Practicing isn't the only way to improve skills, however, if you
+use them often enough, they will improve themselves.
+
+If you would like to know what skills and spells you will get in
+later levels, type &Cslist&W. To find out what other criminal types get,
+type &Cslist <crime>&W.
+~
+D3
+~
+irondoor~
+3 0 604
+S
+#608
+Mess Hall~
+As you enter the room, you can start to hear blood curdling screams
+echoing through the hall to the south.  Too bad there isn't anywhere else to
+go but towards them.  A &Rsign&c hangs on the wall.  
+~
+8 0
+Rd     0
+E
+sign~
+I bet you see that conveyor belt above you, well its dropping food. 
+Granted it may not be the best food, or the most appetizing, or even fit for
+sentient being consumption, but it's all you get.  Now then, in its current
+state it's just a leg or an arm, and you don't want to eat a large bone, you
+want the disgusting flesh.  To get the flesh, type &Cseparate <object name>&W in
+this case, its arm or leg.  When you seperate it, you get the flesh and the
+bone.  The bone also doubles as a weapon, so congrats, you now have food and
+an implement to aid you in procuring more.  For future note, every part that
+comes off of an NPC or PC, be it arm leg or head, can be seperated.  
+~
+D0
+~
+~
+0 0 604
+D2
+~
+~
+0 0 609
+S
+#609
+Watering Hole~
+This room is similar to the others, except that the screaming has gotten
+louder and someone has stuck a large hole in the middle of the floor.
+A &Rsign&c hangs above you, as usual.
+~
+8 0
+Rd     0
+E
+sign~
+Well then, the water might be a bit brackish, actually it's more of a 
+sewage consistancy, but at least it's water. To drink it, simply type
+&Cdrink <source>&W in this case, the source is the hole in the ground.
+ 
+You may also notice the guard standing by the water. No, he isn't there
+preventing people from doing their buisness in the hole, actually it's
+encouraged, but he is there to hand out water containers. To acquire one
+simply show him some compassion, he's a lonely guy.
+ 
+To fill your container, type &Cfill <container name> <water source>&W.
+~
+D0
+~
+~
+0 0 608
+D2
+~
+~
+0 0 610
+S
+#610
+A room with a stairwell~
+Nothing spectacular here, but a metallic ladder leads down, the same
+direction the screams are coming from.  Some sign company is doing well, a
+&Rsign&c hangs here, and it looks really important, for some reason or the
+other.  
+~
+8 0
+Rd     0
+E
+sign~
+Yeah, this sign is really important.  Even to you veteran mudders who
+probably have skipped all the signs before this.  Just to make sure you are
+reading these signs, the most important thing in your PaP education will
+come when you go south.  Yeah, I know there is a wall there, but go south
+anyways.  
+~
+D0
+~
+~
+0 0 609
+D2
+~
+falsewall~
+512 0 612
+D5
+~
+~
+0 0 611
+S
+#611
+A room~
+It's just a room.  Not even a sign.  A small &Rpipe&c is sunk into the
+wall here.  
+~
+8 0
+Rd     0
+E
+pipe~
+Through the pipe you can hear the screams that you heard echoing
+through the halls. They aren't even really coming from this room.
+Suspcious, eh?
+~
+D4
+~
+~
+0 0 610
+S
+#612
+A sacred sign~
+The wall is painted with really obvious paint, it reads:
+ 
+This is where the core of your existance is taught, how to fight.
+Go south, and learn the ways of combat.
+
+Before you do, however, make sure to ask Larry for a lamp, it's
+dark out there.
+ 
+Other than that, a &Rsign&c hangs here.
+~
+8 0
+Rd     0
+E
+sign~
+Larry will give you a lamp, it will provide light for you.
+If you notice, the lamp has a glowing flag, denoted by the
+(glowing) before the name of the object. Any object with that
+flag will provide light to a room, no matter what type of object
+it is or where it is worn.
+~
+D0
+~
+falsewall~
+512 0 610
+D2
+~
+~
+0 0 613
+S
+#613
+A prison yard~
+You stand admist broken rocks and tattered ground.  This soil won't ever
+produce food, no matter how much tilling is involved.  A &Rsign&c has been
+planted into the ground here.  
+~
+0 2
+Rd     0
+E
+sign~
+Fighting is the most important thing you'll learn about here.  Even if
+you are an experienced mudder, you'd better go through this process, there
+are many things that are done differently here, and fighting is one of them.
+For now, Don't go killing anything, you need to learn what to attack and
+what not to.  There are two mobs here, one named &GGuard one&W and one named
+&GGuard two&W.  &CConsider&W both of them, to do this type &Ccons <mob>&W. 
+This works on PC's as well.  Consider will give you its opinion of the
+likelihood of your victory.  
+ 
+You'll notice that they give different messages.
+Guard one gives a more favorable message than Guard two.
+Now go back and consider one of the guards, like Walter.
+That's probably the worst message to get. Go ahead
+south for something you can kill.
+
+For you experienced mudders: Cons does take into consideration
+damage shields and things such as sanctuary as well as whether
+or not the mob is wielding a weapon.
+~
+D0
+~
+~
+0 0 612
+D2
+~
+~
+0 0 614
+S
+#614
+A prison yard~
+Rocks, dirt, nothing else, except a &Rsign&c.
+~
+0 2
+Rd     0
+E
+sign~
+You were promised some blood, so here it is. To kill the creature, type
+&Ckill <victim>&W.  In this case the victim is Dave.  You might notice that
+Dave keeps bleeding from his legs and arms, it's because he has none. 
+Having no arms will prevent him from hitting you, it also makes a large
+mess.  
+ 
+After you kill Dave, make sure to sacrifice his corpse. Doing this
+will reward you with extra hp, mana, movement points or money.
+To sacrifice the corpse, type &Csac <object>&W or simply turn on
+your &Gautosac&W by typing &Cautosac&W. Autosac causes the system
+to automatically sacrifice all corpses after combat.
+ 
+If you have autosac on, you might also want to have &Gautoloot&W on,
+this will cause you to loot the corpse of all objects before you sac it.
+&GAutocoins&W is also a good thing to have on, it will make the system
+take all of the gold from the corpse before you sac it.
+ 
+One more autoconfig option that is important &Gcombat&W.
+Normally, you want to have combat off. Having it on will show
+you EVERY message in the combat sequence, the spam would be
+tremendous. To check if it is on or off, type auto.
+~
+D0
+~
+~
+0 0 613
+D1
+~
+~
+0 0 615
+S
+#615
+A prison yard~
+Rocks, dirt, nothing else, except a &Rsign&c.
+~
+0 2
+Rd     0
+E
+sign~
+Well, you know how to kill, so there are only two things left.  You need
+to know about equipment, and about all those stats in your score display. 
+
+Type &Ceq&W, you should have nothing there.  When you get weapons and armor,
+you will be able to wear or wield it using the &Cwear&W command.  You can
+also type &Cwear all&W to attempt to wear or wield everything in your
+inventory.  Type &Cinv&W to see your inventory, or all of the items you are
+holding.  You should have the water bottle you got from Walter and whatever
+limbs you have picked up.  If you still have an arm or a leg, you can try
+and wield the bone using the wear command.  
+ 
+To learn about the stats in your score display, type &Chelp <stat>&W
+ 
+From now on, you're on your own. If you need help, try the help
+files or &Cooc&W/&Ctell&W one of the wardens with your question.
+~
+D0
+~
+~
+0 0 616
+D1
+~
+~
+0 0 617
+D2
+~
+~
+0 0 618
+D3
+~
+~
+0 0 614
+S
+#616
+A prison yard~
+Rocks, dirt, not much else.  You can see a cavern ahead to the north.  
+~
+4 2
+Rd     0
+D0
+~
+~
+0 0 625
+D2
+~
+~
+0 0 615
+S
+#617
+A prison yard~
+Rocks, dirt, and a door to a small, broken down house.
+~
+0 2
+Rd     0
+D1
+~
+door~
+3 0 622
+D3
+~
+~
+0 0 615
+S
+#618
+A prison yard~
+Rocks, dirt, and a tree.  Well, it is a dead tree, but it has a hole
+large enough for you to fit through.  
+~
+0 2
+Rd     0
+D0
+~
+~
+0 0 615
+S
+#619
+The bottom of a tree trunk~
+You've hit the ground, and it seems to be filled with strange egg
+sac-like objects.  
+~
+9 11
+Rd     0
+D4
+~
+~
+0 0 620
+S
+#620
+The middle of a tree trunk~
+There isn't much around, some bugs, some worms, lots of wood.  The trunk
+continues up and down.  You can hear some shuffling towards the bottom of
+the trunk.  
+~
+9 11
+Rd     0
+D4
+~
+~
+0 0 621
+D5
+~
+~
+0 0 619
+S
+#621
+The top of the tree~
+You've reached the top of the tree trunk and have found a huge spider's
+web.  It's strands seem fairly sturdy, maybe even as sturdy as leather.  
+~
+8 11
+Rd     0
+D5
+~
+~
+0 0 620
+S
+#622
+The main room of a small shack~
+It doesn't really look like anyone could live here.  There are no
+pieces of furniture, no electrical outlets, nothing.  
+~
+8 0
+Rd     0
+D0
+~
+~
+0 0 623
+D3
+~
+door~
+3 0 617
+S
+#623
+A dark stairwell~
+No furniture here either, just a damp stairwell leading down.
+~
+8 0
+Rd     0
+D2
+~
+~
+0 0 622
+D5
+~
+~
+0 0 624
+S
+#624
+A celler~
+This celler has nothing in it, it seems the decorator was minimilistic.  
+~
+0 0
+Rd     0
+D4
+~
+~
+0 0 623
+S
+#625
+The mouth of a cavern~
+It's hard to tell what's ahead in the cavern, although it looks as if it
+forks into two paths.  You can hear rushing water from inside.  
+~
+9 11
+Rd     0
+D0
+~
+~
+0 0 626
+D2
+~
+~
+0 0 616
+S
+#626
+Inside the cavern~
+Just ahead the cavern forks, the sound of rushing water is getting louder.  
+~
+9 11
+Rd     0
+D0
+~
+~
+0 0 627
+D2
+~
+~
+0 0 625
+S
+#627
+Inside the cavern~
+The cavern splits here to the east and west, the sound of water eminates
+from the east.  
+~
+9 11
+Rd     0
+D1
+~
+~
+0 0 628
+D2
+~
+~
+0 0 626
+D3
+~
+~
+0 0 629
+S
+#628
+Above the sewers~
+You stand above a ladder that leads into a sewer system. The sound of
+rushing water echoes through the stairwell.
+~
+13 11
+Rd     0
+D3
+~
+~
+0 0 627
+D5
+~
+~
+0 0 500
+S
+#629
+Inside a cavern~
+The cavern splits again here.  You can hear some low growling to the
+north.  
+~
+9 11
+Rd     0
+D0
+~
+~
+0 0 630
+D1
+~
+~
+0 0 627
+D3
+~
+~
+0 0 632
+S
+#630
+Inside a cavern~
+The growling has gotten louder, but it sounds more like snoring as you
+get closer.  
+~
+9 11
+Rd     0
+D0
+~
+~
+0 0 631
+D2
+~
+~
+0 0 629
+S
+#631
+A bear's den~
+You seem to have happened upon a bear's den.  There are a few bones
+scattered about, but it doesn't seem that the bear has been active lately.  
+~
+9 11
+Rd     0
+D2
+~
+~
+0 0 630
+S
+#632
+Inside the cavern~
+The cavern continues to the west and the east.  It almost sounds as if
+you can hear muffled screams coming from the west.  
+~
+9 11
+Rd     0
+D1
+~
+~
+0 0 629
+D3
+~
+~
+0 0 633
+S
+#633
+Before a large door~
+A huge stone door has been built here, probably to prevent animals from
+entering whatever is behind it.
+~
+9 11
+Rd     0
+D0
+~
+Stonedoor~
+3 0 634
+D1
+~
+~
+0 0 632
+S
+#634
+A strange room~
+This room looks as if it is out of a fantasy movie.  Beakers are set upon
+various tables, and small fires are lit keeping them bubbling.  There is
+even a Jacob's ladder in the corner.  
+~
+9 11
+Rd     0
+D2
+~
+stonedoor~
+3 0 633
+D5
+~
+Electricfield~
+519 625 635
+S
+#635
+A secret cell~
+This seems to be a prison cell of some kind built into the floor.
+~
+0 0
+Rd     0
+D4
+~
+electricfield~
+519 625 634
+S
+#0
+
+
+
+#SPECIALS
+S
+
+
+
+#RESETS
+O 600 0 600
+O 600 0 601
+M 600 1 601
+O 600 0 602
+O 600 0 603
+O 600 0 604
+O 601 0 605
+O 600 0 605
+O 600 0 606
+M 601 1 606
+O 600 0 607
+M 602 1 607
+O 602 0 607
+P 603 0 602
+O 600 0 608
+O 604 0 608
+O 607 0 609
+M 603 1 609
+O 600 0 609
+O 600 0 610
+O 600 0 611
+O 600 0 612
+M 610 1 612
+M 605 1 613
+M 606 1 613
+M 607 1 614
+O 612 0 618
+O 613 0 619
+M 613 1 619
+O 616 0 620
+O 614 0 621
+M 608 1 621
+O 617 0 622
+O 617 0 623
+O 617 0 624
+M 609 1 624
+E 618 0 21
+M 611 2 625
+M 611 1 626
+M 612 1 626
+E 621 0 12
+O 619 0 631
+M 614 1 631
+O 625 0 634
+O 624 0 634
+O 623 0 634
+M 615 1 634
+E 626 0 17
+M 616 1 635
+S
+
+
+
+#SHOPS
+0
+
+
+
+#ARTISTS
+0
+
+
+
+#$

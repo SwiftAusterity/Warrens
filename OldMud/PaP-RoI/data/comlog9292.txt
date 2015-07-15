@@ -1,0 +1,50 @@
+Sat Jun 29 15:50:46 2002
+: EnvyMud is ready to rock on ports 9292 and 2929.
+Sat Jun 29 15:50:47 2002
+: (Unknown): y
+Sat Jun 29 15:50:49 2002
+: (Unknown): Flux
+Sat Jun 29 15:50:50 2002
+: Flux: verite
+Sat Jun 29 15:50:51 2002
+: Flux:  
+Sat Jun 29 15:50:52 2002
+: Flux: score
+Sat Jun 29 15:51:46 2002
+: Flux: quit
+Sun Jun 30 00:00:11 2002
+: (Unknown): y
+Sun Jun 30 00:00:13 2002
+: (Unknown): Flux
+Sun Jun 30 00:00:14 2002
+: Flux: y
+Sun Jun 30 00:00:17 2002
+: (Unknown): y
+Sun Jun 30 00:00:19 2002
+: (Unknown): Flux
+Sun Jun 30 00:00:20 2002
+: Flux: verite
+Sun Jun 30 00:00:21 2002
+: Flux:  
+Sun Jun 30 00:00:22 2002
+: Flux: wh
+Sun Jun 30 00:00:23 2002
+: Flux: quit
+Sun Jun 30 14:26:39 2002
+: (Unknown): y
+Sun Jun 30 14:26:41 2002
+: (Unknown): Flux
+Sun Jun 30 14:26:42 2002
+: Flux: verite
+Sun Jun 30 14:26:43 2002
+: Flux:  
+Sun Jun 30 14:26:45 2002
+: Flux: wh
+Sun Jun 30 15:07:30 2002
+: Flux: note list
+Sun Jun 30 15:07:34 2002
+: Flux: note read 7
+Sun Jun 30 15:55:29 2002
+: Flux: note list
+Sun Jun 30 15:55:33 2002
+: Flux: note read 8
