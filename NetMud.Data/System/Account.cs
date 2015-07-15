@@ -1,4 +1,5 @@
-﻿using NetMud.DataAccess;
+﻿using NetMud.Data.Game;
+using NetMud.DataAccess;
 using NetMud.DataStructure.Base.System;
 using NetMud.Utility;
 using System;
@@ -24,6 +25,8 @@ namespace NetMud.Data.System
             GlobalIdentityHandle = handle;
         }
 
+        public long CurrentlySelectedCharacter { get; set; }
+
         private IList<ICharacter> _characters;
         public IEnumerable<ICharacter> Characters 
         { 
@@ -31,11 +34,14 @@ namespace NetMud.Data.System
             {
                 if(_characters == null)
                 {
-                    var refWrapper = new ReferenceAccess();
-                    var systemChars = refWrapper.GetAllReference<ICharacter>();
-
-                    _characters = systemChars.Where(c => c.AccountHandle.Equals(GlobalIdentityHandle)).ToList();
+                    var dataWrapper = new DataWrapper();
+                    IEnumerable<ICharacter> returnValue = dataWrapper.GetAllBySharedKey<Character>("AccountHandle", GlobalIdentityHandle);
+                    _characters = returnValue.ToList();
                 }
+
+                //Cause there are none
+                if (_characters == null)
+                    _characters = new List<ICharacter>();
 
                 return _characters;
             }
@@ -43,6 +49,22 @@ namespace NetMud.Data.System
             {
                 _characters = value.ToList();
             }
+        }
+
+        public string AddCharacter(ICharacter newChar)
+        {
+            var dataWrapper = new DataWrapper();
+            IEnumerable<ICharacter> systemChars = dataWrapper.GetAll<Character>();
+
+            if (systemChars.Any(ch => ch.GivenName.Equals(newChar.GivenName) && newChar.SurName.Equals(newChar.SurName)))
+                return "A character with that name already exists, please choose another.";
+
+            newChar.AccountHandle = GlobalIdentityHandle;
+            newChar.Create();
+
+            _characters.Add(newChar);
+
+            return String.Empty;
         }
 
         public static IAccount GetByHandle(string handle)

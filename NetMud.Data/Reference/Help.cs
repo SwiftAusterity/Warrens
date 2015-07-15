@@ -108,5 +108,15 @@ namespace NetMud.Data.Reference
 
             return sb;
         }
+
+        public IData Create()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Remove()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

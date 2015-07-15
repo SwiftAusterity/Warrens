@@ -1,7 +1,9 @@
-﻿using NetMud.DataStructure.Base.System;
+﻿using NetMud.DataAccess;
+using NetMud.DataStructure.Base.System;
 using NetMud.Utility;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,12 +12,12 @@ namespace NetMud.Data.Game
 {
     public class Character : ICharacter
     {
-        public string SurName { get; set; }
-        public string GivenName { get; set; }
         public long ID { get; set; }
         public DateTime Created { get; set; }
         public DateTime LastRevised { get; set; }
-        public string Name { get; set; }
+
+        public string SurName { get; set; }
+        public string GivenName { get; set; }
         public string AccountHandle { get; set; }
 
         private IAccount _account;
@@ -29,6 +31,12 @@ namespace NetMud.Data.Game
                 return _account;
             }
         }
+
+        public string FullName()
+        {
+            return String.Format("{0} {1}", GivenName, SurName);
+        }
+
         public void Fill(global::System.Data.DataRow dr)
         {
             int outId = default(int);
@@ -47,10 +55,6 @@ namespace NetMud.Data.Game
             DataUtility.GetFromDataRow<DateTime>(dr, "LastRevised", ref outRevised);
             LastRevised = outRevised;
 
-            string outName = default(string);
-            DataUtility.GetFromDataRow<string>(dr, "Name", ref outName);
-            Name = outName;
-
             string outSurName = default(string);
             DataUtility.GetFromDataRow<string>(dr, "SurName", ref outSurName);
             SurName = outSurName;
@@ -58,11 +62,6 @@ namespace NetMud.Data.Game
             string outGivenName = default(string);
             DataUtility.GetFromDataRow<string>(dr, "GivenName", ref outGivenName);
             GivenName = outGivenName;
-        }
-
-        public IEnumerable<string> RenderHelpBody()
-        {
-            throw new NotImplementedException();
         }
 
         public int CompareTo(object obj)
@@ -105,6 +104,72 @@ namespace NetMud.Data.Game
             }
 
             return false;
+        }
+
+        public IData Create()
+        {
+            ICharacter returnValue = default(ICharacter);
+            var sql = new StringBuilder();
+            sql.Append("insert into [dbo].[Character]([SurName], [GivenName], [AccountHandle])");
+            sql.AppendFormat(" values('{0}','{1}','{2}')", SurName, GivenName, AccountHandle);
+            sql.Append(" select * from [dbo].[Character] where ID = Scope_Identity()");
+
+            var ds = SqlWrapper.RunDataset(sql.ToString(), CommandType.Text);
+
+            if (ds.HasErrors)
+            {
+                //TODO: Error handling logging?
+            }
+            else if (ds.Rows != null)
+            {
+                foreach (DataRow dr in ds.Rows)
+                {
+                    try
+                    {
+                        Fill(dr);
+                        returnValue = this;
+                    }
+                    catch
+                    {
+                        //error logging
+                    }
+                }
+            }
+
+            return returnValue;
+
+        }
+
+        public bool Remove()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string BirthMark
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public DateTime Birthdate
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public string Keywords
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public IReference ReferenceTemplate
+        {
+            get { throw new NotImplementedException(); }
         }
     }
 }

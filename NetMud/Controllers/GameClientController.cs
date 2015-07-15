@@ -1,21 +1,39 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using NetMud.Models;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security;
+using NetMud.Models;
+using NetMud;
 
 namespace Controllers
 {
     public class GameClientController : Controller
     {
-        /// <summary>
-        /// Application DB context
-        /// </summary>
-        protected ApplicationDbContext ApplicationDbContext { get; set; }
+        private ApplicationUserManager _userManager;
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+            private set
+            {
+                _userManager = value;
+            }
+        }
 
-        /// <summary>
-        /// User manager - attached to application DB context
-        /// </summary>
-        protected UserManager<ApplicationUser> UserManager { get; set; }
+        public GameClientController()
+        {
+        }
+
+        public GameClientController(ApplicationUserManager userManager)
+        {
+            UserManager = userManager;
+        }
 
         // GET: GameClient
         public ActionResult Index()
@@ -24,12 +42,6 @@ namespace Controllers
             model.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             return View(model);
-        }
-
-        private void GetCurrentUserContext()
-        {
-            this.ApplicationDbContext = new ApplicationDbContext();
-            this.UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(this.ApplicationDbContext));
         }
     }
 }

@@ -50,6 +50,7 @@
     <Compile Include="Base\System\IAccount.cs" />
     <Compile Include="Base\System\ICharacter.cs" />
     <Compile Include="Base\System\ICommand.cs" />
+    <Compile Include="Base\System\IData.cs" />
     <Compile Include="Base\System\IEntity.cs" />
     <Compile Include="Base\System\IMessage.cs" />
     <Compile Include="Base\System\IReference.cs" />

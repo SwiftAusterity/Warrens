@@ -186,6 +186,7 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\dbo.Account.sql" />
     <Content Include="App_Data\dbo.Character.sql" />
     <Content Include="App_Data\dbo.Help.sql" />
     <Content Include="App_Data\testingDB.mdf" />
@@ -250,6 +251,7 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\GameClient\Index.cshtml" />
+    <Content Include="Views\Manage\ManageCharacters.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

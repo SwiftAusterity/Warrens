@@ -7,6 +7,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using NetMud.Models;
+using NetMud.Data.Game;
 
 namespace NetMud.Controllers
 {
@@ -32,9 +33,9 @@ namespace NetMud.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -64,17 +65,51 @@ namespace NetMud.Controllers
                 : "";
 
             var userId = User.Identity.GetUserId();
-            var model = new IndexViewModel
+            var model = new ManageAccountViewModel
             {
                 HasPassword = HasPassword(),
                 PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
                 TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
                 Logins = await UserManager.GetLoginsAsync(userId),
-                BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
+                BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId),
+                authedUser = UserManager.FindById(userId)
             };
             return View(model);
         }
 
+        public ActionResult ManageCharacters(string message)
+        {
+            ViewBag.StatusMessage = message;
+
+            var userId = User.Identity.GetUserId();
+            var model = new ManageCharactersViewModel
+             {
+                 authedUser = UserManager.FindById(userId)
+             };
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> AddCharacter(string newGivenName, string newSurName)
+        {
+            string message = String.Empty;
+            var userId = User.Identity.GetUserId();
+            var model = new ManageCharactersViewModel
+            {
+                authedUser = UserManager.FindById(userId)
+            };
+
+            var newChar = new Character();
+            newChar.GivenName = newGivenName;
+            newChar.SurName = newSurName;
+
+            message = model.authedUser.GameAccount.AddCharacter(newChar);
+
+            return RedirectToAction("ManageCharacters", new { Message = message });
+        }
+
+        #region AuthStuff
         //
         // POST: /Manage/RemoveLogin
         [HttpPost]
@@ -330,8 +365,9 @@ namespace NetMud.Controllers
 
             base.Dispose(disposing);
         }
+        #endregion
 
-#region Helpers
+        #region Helpers
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
 
@@ -382,6 +418,6 @@ namespace NetMud.Controllers
             Error
         }
 
-#endregion
+        #endregion
     }
 }

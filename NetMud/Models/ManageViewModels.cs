@@ -2,16 +2,23 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
+using NetMud.DataStructure.Base.System;
 
 namespace NetMud.Models
 {
-    public class IndexViewModel
+    public class ManageAccountViewModel : BaseViewModel
     {
         public bool HasPassword { get; set; }
         public IList<UserLoginInfo> Logins { get; set; }
         public string PhoneNumber { get; set; }
         public bool TwoFactor { get; set; }
         public bool BrowserRemembered { get; set; }
+    }
+
+    public class ManageCharactersViewModel : BaseViewModel
+    {
+        public string NewGivenName { get; set; }
+        public string NewSurName { get; set; }
     }
 
     public class ManageLoginsViewModel

@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="LiveCache.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="DataAccess.cs" />
     <Compile Include="ReferenceAccess.cs" />
     <Compile Include="SqlWrapper.cs" />
   </ItemGroup>

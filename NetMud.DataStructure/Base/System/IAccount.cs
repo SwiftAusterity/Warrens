@@ -11,5 +11,8 @@ namespace NetMud.DataStructure.Base.System
         string GlobalIdentityHandle { get; set; }
 
         IEnumerable<ICharacter> Characters { get; set; }
+        long CurrentlySelectedCharacter { get; set; }
+
+        string AddCharacter(ICharacter newCharacter);
     }
 }
