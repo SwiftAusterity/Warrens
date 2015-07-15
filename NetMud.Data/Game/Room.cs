@@ -219,6 +219,11 @@ namespace NetMud.Data.Game
             throw new NotImplementedException();
         }
 
+        public bool Save()
+        {
+            throw new NotImplementedException();
+        }
+
         public int CompareTo(IData other)
         {
             if (other != null)

@@ -158,5 +158,22 @@ namespace NetMud.Data.Game
 
             return true;
         }
+
+        public bool Save()
+        {
+            var sql = new StringBuilder();
+            sql.Append("update [dbo].[Character] set ");
+            sql.AppendFormat(" [SurName] = '{0}' ", SurName);
+            sql.AppendFormat(" , [GivenName] = '{0}' ", GivenName);
+            sql.AppendFormat(" , [AccountHandle] = '{0}' ", AccountHandle);
+            sql.AppendFormat(" , [LastKnownLocation] = {0} ", LastKnownLocation);
+            sql.AppendFormat(" , [LastKnownLocationType] = '{0}' ", LastKnownLocationType);
+            sql.AppendFormat(" , [LastRevised] = GetUTCDate()");
+            sql.AppendFormat(" where ID = {0}", ID);
+
+            SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text);
+
+            return true;
+        }
     }
 }

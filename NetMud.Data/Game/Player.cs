@@ -34,7 +34,7 @@ namespace NetMud.Data.Game
             var liveWorld = new LiveCache();
 
             //Try to see if they are already there
-            var me = liveWorld.Get<IPlayer>(DataTemplate.ID);
+            var me = liveWorld.Get<Player>(DataTemplate.ID);
 
             //Isn't in the world currently
             if (me == default(IPlayer))
@@ -73,6 +73,7 @@ namespace NetMud.Data.Game
                 //Set the data context's stuff too so we don't have to do this over again
                 ch.LastKnownLocation = lastKnownLoc.DataTemplate.ID;
                 ch.LastKnownLocationType = lastKnownLoc.GetType().Name;
+                ch.Save();
                 lastKnownLoc.MoveTo<IPlayer>(this);
             }
 

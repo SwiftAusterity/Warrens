@@ -16,5 +16,6 @@ namespace NetMud.DataStructure.Base.System
         void Fill(DataRow dr);
         IData Create();
         bool Remove();
+        bool Save();
     }
 }
