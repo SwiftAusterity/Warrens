@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace NetMud.DataStructure.Base.System
 {
-    public interface IData
+    public interface IData : IComparable<IData>, IEquatable<IData>
     {
         long ID { get; set; }
         DateTime Created { get; set; }

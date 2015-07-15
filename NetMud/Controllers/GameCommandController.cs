@@ -9,6 +9,7 @@ using NetMud.Models;
 using NetMud;
 using NetMud.Interp;
 using System.Web.Http;
+using NetMud.Data.Game;
 
 namespace Controllers
 {
@@ -47,7 +48,9 @@ namespace Controllers
             if(currentCharacter == null)
                 return "<p>No character selected</p>";
 
-            return Interpret.Render(command, currentCharacter);
+            var player = new Player(currentCharacter);
+
+            return Interpret.Render(command, player);
         }
     }
 }

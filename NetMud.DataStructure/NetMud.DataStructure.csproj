@@ -83,10 +83,9 @@
     <Compile Include="Behaviors\Automation\IEnchantable.cs" />
     <Compile Include="Behaviors\Automation\IGetTired.cs" />
     <Compile Include="Behaviors\Automation\IHasAffects.cs" />
-    <Compile Include="Behaviors\Automation\IHasInventory.cs" />
+    <Compile Include="Behaviors\Automation\IEntityContainer.cs" />
     <Compile Include="Behaviors\Automation\IDecays.cs" />
     <Compile Include="Behaviors\Automation\IHasSkills.cs" />
-    <Compile Include="Behaviors\Automation\IHoldMobile.cs" />
     <Compile Include="Behaviors\Automation\IHunger.cs" />
     <Compile Include="Behaviors\Actionable\IQualifyAs.cs" />
     <Compile Include="Behaviors\Automation\IHasStats.cs" />

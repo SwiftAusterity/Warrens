@@ -42,6 +42,9 @@ namespace NetMud.Interp
 
             OriginalCommandString = fullCommand;
             Actor = actor;
+
+            Location = Actor.CurrentLocation;
+
             AccessErrors = new List<string>();
             CommandStringRemainder = Enumerable.Empty<string>();
 

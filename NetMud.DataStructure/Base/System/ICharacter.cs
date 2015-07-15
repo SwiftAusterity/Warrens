@@ -7,12 +7,14 @@ using System.Threading.Tasks;
 
 namespace NetMud.DataStructure.Base.System
 {
-    public interface ICharacter : IData, IActor
+    public interface ICharacter : IData
     {
         string SurName { get; set; }
         string GivenName { get; set; }
         string AccountHandle { get; set; }
         IAccount Account { get; }
+        long LastKnownLocation { get; set; }
+        string LastKnownLocationType { get; set; }
         string FullName();
     }
 }

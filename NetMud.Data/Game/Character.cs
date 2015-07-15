@@ -20,6 +20,9 @@ namespace NetMud.Data.Game
         public string GivenName { get; set; }
         public string AccountHandle { get; set; }
 
+        public long LastKnownLocation { get; set; }
+        public string LastKnownLocationType { get; set; }
+
         private IAccount _account;
         public IAccount Account
         {
@@ -62,20 +65,27 @@ namespace NetMud.Data.Game
             string outGivenName = default(string);
             DataUtility.GetFromDataRow<string>(dr, "GivenName", ref outGivenName);
             GivenName = outGivenName;
+
+            int outLKL = default(int);
+            DataUtility.GetFromDataRow<int>(dr, "LastKnownLocation", ref outLKL);
+            LastKnownLocation = outLKL;
+
+            string outLKLT = default(string);
+            DataUtility.GetFromDataRow<string>(dr, "LastKnownLocationType", ref outLKLT);
+            LastKnownLocationType = outLKLT;
         }
 
-        public int CompareTo(object obj)
+
+        public int CompareTo(IData other)
         {
-            if (obj != null)
+            if (other != null)
             {
                 try
                 {
-                    if (obj.GetType() != typeof(Character))
+                    if (other.GetType() != typeof(Character))
                         return -1;
 
-                    IReference otherObj = obj as IReference;
-
-                    if (otherObj.ID.Equals(this.ID))
+                    if (other.ID.Equals(this.ID))
                         return 1;
 
                     return 0;
@@ -89,9 +99,9 @@ namespace NetMud.Data.Game
             return -99;
         }
 
-        public bool Equals(IReference other)
+        public bool Equals(IData other)
         {
-            if (other != default(IReference))
+            if (other != default(IData))
             {
                 try
                 {
@@ -137,39 +147,16 @@ namespace NetMud.Data.Game
             }
 
             return returnValue;
-
         }
 
         public bool Remove()
         {
-            throw new NotImplementedException();
-        }
+            var sql = new StringBuilder();
+            sql.AppendFormat("remove from [dbo].[Character] where ID = {0}", ID);
 
-        public string BirthMark
-        {
-            get { throw new NotImplementedException(); }
-        }
+            SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text);
 
-        public DateTime Birthdate
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public string Keywords
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public IReference ReferenceTemplate
-        {
-            get { throw new NotImplementedException(); }
+            return true;
         }
     }
 }

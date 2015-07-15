@@ -1,4 +1,6 @@
-﻿using NetMud.DataStructure.Base.System;
+﻿using NetMud.DataStructure.Base.Entity;
+using NetMud.DataStructure.Base.Place;
+using NetMud.DataStructure.Base.System;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,6 +35,26 @@ namespace NetMud.DataAccess
             globalPolicy = new CacheItemPolicy();
         }
 
+        public bool PreLoadAll<T>() where T : IData
+        {
+            if (!typeof(T).GetInterfaces().Contains(typeof(IEntity)))
+                return false;
+
+            var dataBacker = new DataAccess.DataWrapper();
+
+            foreach(IData thing in dataBacker.GetAll<T>())
+            {
+                var typeT = typeof(T);
+                var entityThing = Activator.CreateInstance(typeT, new object[] { (T)thing }) as IEntity;
+
+                var cacheKey = new LiveCacheKey(typeof(T), entityThing.BirthMark);
+
+                globalCache.AddOrGetExisting(cacheKey.KeyHash(), entityThing, globalPolicy);
+            }
+
+            return true;
+        }
+
         public T Add<T>(T objectToCache) where T : IEntity
         {
             var cacheKey = new LiveCacheKey(typeof(T), objectToCache.BirthMark);
@@ -45,11 +67,56 @@ namespace NetMud.DataAccess
             return globalCache.Where(keyValuePair => keyValuePair.Value.GetType() == typeof(T)).Select(kvp => (T)kvp.Value);
         }
 
+        /// <summary>
+        /// When base type and maintype want to be less ambigious
+        /// </summary>
+        /// <typeparam name="T">The base type (like ILocation)</typeparam>
+        /// <param name="mainType">The inheriting type (like IRoom)</param>
+        /// <returns>all the stuff and things</returns>
+        public IEnumerable<T> GetAll<T>(Type mainType)
+        {
+            return globalCache.Where(keyValuePair => keyValuePair.Value.GetType().GetInterfaces().Contains(typeof(T)) && keyValuePair.Value.GetType().GetInterfaces().Contains(mainType)).Select(kvp => (T)kvp.Value);
+        }
+
         public T Get<T>(LiveCacheKey key) where T : IEntity
         {
             try
             {
                 return (T)globalCache[key.KeyHash()];
+            }
+            catch
+            {
+                //TODO: Logging, why were we looking for something that didn't exist?
+            }
+
+            return default(T);
+        }
+
+        public T Get<T>(long id) where T : IPlayer
+        {
+            try
+            {
+                var allPlayers = GetAll<T>();
+
+                if (allPlayers.Any(p => p.DataTemplate.ID.Equals(id)))
+                    return allPlayers.First(p => p.DataTemplate.ID.Equals(id));
+            }
+            catch
+            {
+                //TODO: Logging, why were we looking for something that didn't exist?
+            }
+
+            return default(T);
+        }
+
+        public T Get<T>(long id, Type mainType) where T : IEntity
+        {
+            try
+            {
+                var allTheStuff = GetAll<T>(mainType);
+
+                if (allTheStuff.Any(p => p.DataTemplate.ID.Equals(id)))
+                    return allTheStuff.First(p => p.DataTemplate.ID.Equals(id));
             }
             catch
             {
@@ -94,9 +161,9 @@ namespace NetMud.DataAccess
         /// Gets birthmarks for live entities
         /// </summary>
         /// <returns>the birthmark string</returns>
-        public static string GetBirthmark()
+        public static string GetBirthmark(IData obj)
         {
-            return String.Format("{0}.{1}", DateTime.Now.ToBinary(), Guid.NewGuid().ToString().Replace("-", String.Empty));
+            return String.Format("{0}.{1}.{2}", obj.ID, DateTime.Now.ToBinary(), Guid.NewGuid().ToString().Replace("-", String.Empty));
         }
     }
 }

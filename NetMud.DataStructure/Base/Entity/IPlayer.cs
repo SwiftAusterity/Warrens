@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace NetMud.DataStructure.Base.Entity
 {
-    public interface IPlayer : IMobile, ICharacter
+    public interface IPlayer : IMobile
     {
     }
 }

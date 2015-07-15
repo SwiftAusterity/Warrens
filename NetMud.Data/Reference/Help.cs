@@ -58,7 +58,7 @@ namespace NetMud.Data.Reference
          /// </summary>
          /// <param name="obj"></param>
          /// <returns></returns>
-        public int CompareTo(object obj)
+        public int CompareTo(IData obj)
         {
             if (obj != null)
             {
@@ -67,9 +67,7 @@ namespace NetMud.Data.Reference
                     if (obj.GetType() != typeof(Help))
                         return -1;
 
-                    IReference otherObj = obj as IReference;
-
-                    if (otherObj.ID.Equals(this.ID))
+                    if (obj.ID.Equals(this.ID))
                         return 1;
 
                     return 0;
@@ -83,9 +81,9 @@ namespace NetMud.Data.Reference
             return -99;
         }
 
-        public bool Equals(IReference other)
+        public bool Equals(IData other)
         {
-            if (other != default(IReference))
+            if (other != default(IData))
             {
                 try
                 {

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace NetMud.DataStructure.Base.System
 {
-    public interface IReference : IData, IHelpful, IComparable, IEquatable<IReference>
+    public interface IReference : IData, IHelpful
     {
         string Name { get; set; }
 
