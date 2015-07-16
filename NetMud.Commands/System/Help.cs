@@ -1,53 +1,40 @@
 ﻿using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
-using NetMud.DataStructure.System;
+using NutMud.Commands.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace NetMud.DataStructure.Commands
+namespace NutMud.Commands.System
 {
     //Really help can be invoked on anything that is helpful, even itself
     [CommandKeyword("Help")]
     [CommandPermission(StaffRank.Player)]
-    [CommandParameter(CommandUsage.Subject, typeof(IHelpful), new CacheReferenceType[] { CacheReferenceType.Help, CacheReferenceType.Code } )] 
+    [CommandParameter(CommandUsage.Subject, typeof(IHelpful), new CacheReferenceType[] { CacheReferenceType.Help, CacheReferenceType.Code }, false )] 
     public class Help : ICommand, IHelpful
     {
-        private IHelpful Topic;
+        public object Subject { get; set; }
+        public object Target { get; set; }
+        public object Supporting { get; set; }
+        public ILocation OriginLocation { get; set; }
+        public IEnumerable<ILocation> Surroundings { get; set; }
 
         public Help()
         {
             //Generic constructor for all IHelpfuls is needed
         }
 
-        public Help(IEnumerable<object> parms)
-        {
-            if(parms.Count() == 0)
-                throw new MethodAccessException("Bad help subject.");
-
-            if (parms.First().GetType().GetInterfaces().Contains(typeof(IHelpful)))
-                Topic = parms.First() as IHelpful;
-            else
-                throw new MethodAccessException("Bad help subject.");
-        }
-
-        public Help(IHelpful subject)
-        {
-            Topic = subject;
-        }
-
         public IEnumerable<string> Execute()
         {
-            var sb = GetHelpHeader(Topic);
+            var topic = (IHelpful)Subject;
+            var sb = GetHelpHeader(topic);
 
-            sb = sb.Concat(Topic.RenderHelpBody()).ToList();
+            sb = sb.Concat(topic.RenderHelpBody()).ToList();
 
             //If it's a command render the syntax help at the bottom
-            if (Topic.GetType().GetInterfaces().Contains(typeof(ICommand)))
+            if (topic.GetType().GetInterfaces().Contains(typeof(ICommand)))
             {
-               var subject = (ICommand)Topic;
+               var subject = (ICommand)topic;
                sb.Add(String.Empty);
                sb = sb.Concat(subject.RenderSyntaxHelp()).ToList();
             }
@@ -95,7 +82,7 @@ namespace NetMud.DataStructure.Commands
                 typeName = "Commands";
             }
 
-            sb.Add(String.Format("{0} - <span style=\"color: orange\">{1}</span>", typeName, subjectName));
+            sb.Add(string.Format("{0} - <span style=\"color: orange\">{1}</span>", typeName, subjectName));
             sb.Add(String.Empty.PadLeft(typeName.Length + 3 + subjectName.Length, '-'));
 
             return sb;

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace NetMud.DataStructure.Base.System
 {
-    public interface IEntity : IComparable<IEntity>, IEquatable<IEntity>
+    public interface IEntity : ILookable, IComparable<IEntity>, IEquatable<IEntity>
     {
         /// <summary>
         /// Indelible guid that helps the system figure out where stuff is, generated when the object is spawned into the world

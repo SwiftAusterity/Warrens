@@ -91,7 +91,7 @@ namespace NetMud.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> AddCharacter(string newGivenName, string newSurName)
+        public ActionResult AddCharacter(string newGivenName, string newSurName)
         {
             string message = String.Empty;
             var userId = User.Identity.GetUserId();

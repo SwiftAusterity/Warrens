@@ -25,11 +25,15 @@ namespace NetMud.Data.Game
 
         public Room()
         {
-
+            ObjectsInRoom = new EntityContainer<IObject>();
+            MobilesInRoom = new EntityContainer<IMobile>();
         }
 
         public Room(IRoom room)
         {
+            ObjectsInRoom = new EntityContainer<IObject>();
+            MobilesInRoom = new EntityContainer<IMobile>();
+
             //Yes it's its own datatemplate and currentLocation
             DataTemplate = room;
             
@@ -39,12 +43,9 @@ namespace NetMud.Data.Game
             Title = room.Title;
 
             CurrentLocation = room;
+
             GetFromWorldOrSpawn();
         }
-
-        public IEntityContainer<IObject> ObjectsInRoom { get; set; }
-
-        public IEntityContainer<IMobile> MobilesInRoom { get; set; }
 
         public string BirthMark { get; private set; }
 
@@ -56,6 +57,35 @@ namespace NetMud.Data.Game
 
         public ILocation CurrentLocation { get; set; }
 
+        #region Container
+        public EntityContainer<IObject> ObjectsInRoom { get; set; }
+        public EntityContainer<IMobile> MobilesInRoom { get; set; }
+
+        public IEnumerable<T> GetContents<T>()
+        {
+            if (typeof(T).GetInterfaces().Contains(typeof(IMobile)))
+                return GetContents<T>("mobiles");
+            else if (typeof(T).GetInterfaces().Contains(typeof(IObject)))
+                return GetContents<T>("objects");
+            else if (typeof(T).GetInterfaces().Contains(typeof(IEntity)))
+                return GetContents<T>("mobiles").Concat(GetContents<T>("objects"));
+
+                return Enumerable.Empty<T>();
+        }
+
+        public IEnumerable<T> GetContents<T>(string containerName)
+        {
+            switch(containerName)
+            {
+                case "mobiles":
+                    return ObjectsInRoom.EntitiesContained.Select(ent => (T)ent);
+                case "objects":
+                    return MobilesInRoom.EntitiesContained.Select(ent => (T)ent);
+            }
+
+            return Enumerable.Empty<T>();
+        }
+
         public string MoveTo<T>(T thing)
         {
             return MoveTo<T>(thing, String.Empty);
@@ -63,7 +93,7 @@ namespace NetMud.Data.Game
 
         public string MoveTo<T>(T thing, string containerName)
         {
-            if(typeof(T) == typeof(IObject))
+            if(typeof(T).GetInterfaces().Contains(typeof(IObject)))
             {
                 var obj = (IObject)thing;
 
@@ -73,7 +103,7 @@ namespace NetMud.Data.Game
                 ObjectsInRoom.Add(obj);
                 return String.Empty;
             }
-            else if(typeof(T) == typeof(IMobile))
+            else if(typeof(T).GetInterfaces().Contains(typeof(IMobile)))
             {
                 var mob = (IMobile)thing;
 
@@ -94,7 +124,7 @@ namespace NetMud.Data.Game
 
         public string MoveFrom<T>(T thing, string containerName)
         {
-            if (typeof(T) == typeof(IObject))
+            if (typeof(T).GetInterfaces().Contains(typeof(IObject)))
             {
                 var obj = (IObject)thing;
 
@@ -104,7 +134,7 @@ namespace NetMud.Data.Game
                 ObjectsInRoom.Remove(obj);
                 return String.Empty;
             }
-            else if (typeof(T) == typeof(IMobile))
+            if (typeof(T).GetInterfaces().Contains(typeof(IMobile)))
             {
                 var mob = (IMobile)thing;
 
@@ -116,6 +146,17 @@ namespace NetMud.Data.Game
             }
 
             return "Invalid type to move from container.";
+        }
+        #endregion
+
+        public IEnumerable<string> RenderToLook()
+        {
+            var sb = new List<string>();
+
+            sb.Add(string.Format("<span style=\"color: orange\">{0}</span>", Title));
+            sb.Add(string.Empty.PadLeft(Title.Length, '-'));
+
+            return sb;
         }
 
         public void GetFromWorldOrSpawn()

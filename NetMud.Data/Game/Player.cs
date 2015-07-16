@@ -1,13 +1,13 @@
-﻿using NetMud.DataAccess;
+﻿using NetMud.Data;
+using NetMud.DataAccess;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Behaviors.Automation;
 using NetMud.DataStructure.Behaviors.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NetMud.Data.Game
 {
@@ -15,6 +15,7 @@ namespace NetMud.Data.Game
     {
         public Player(ICharacter character)
         {
+            Inventory = new EntityContainer<IObject>();
             DataTemplate = character;
             GetFromWorldOrSpawn();
         }
@@ -28,6 +29,82 @@ namespace NetMud.Data.Game
         public IData DataTemplate { get; private set; }
 
         public ILocation CurrentLocation { get; set; }
+
+        public IEnumerable<string> RenderToLook()
+        {
+            var sb = new List<string>();
+            var ch = (ICharacter)DataTemplate;
+
+            sb.Add(string.Format("This is {0}", ch.FullName()));
+
+            return sb;
+        }
+
+
+        #region Container
+        public EntityContainer<IObject> Inventory { get; set; }
+
+        public IEnumerable<T> GetContents<T>()
+        {
+            if (typeof(T).GetInterfaces().Contains(typeof(IObject)))
+                return GetContents<T>("objects");
+
+            return Enumerable.Empty<T>();
+        }
+
+        public IEnumerable<T> GetContents<T>(string containerName)
+        {
+            switch (containerName)
+            {
+                case "objects":
+                    return Inventory.EntitiesContained.Select(ent => (T)ent);
+            }
+
+            return Enumerable.Empty<T>();
+        }
+
+        public string MoveTo<T>(T thing)
+        {
+            return MoveTo<T>(thing, String.Empty);
+        }
+
+        public string MoveTo<T>(T thing, string containerName)
+        {
+            if (typeof(T).GetInterfaces().Contains(typeof(IObject)))
+            {
+                var obj = (IObject)thing;
+
+                if (Inventory.Contains(obj))
+                    return "That is already in the container";
+
+                Inventory.Add(obj);
+                return String.Empty;
+            }
+
+            return "Invalid type to move to container.";
+        }
+
+        public string MoveFrom<T>(T thing)
+        {
+            return MoveFrom<T>(thing, String.Empty);
+        }
+
+        public string MoveFrom<T>(T thing, string containerName)
+        {
+            if (typeof(T).GetInterfaces().Contains(typeof(IObject)))
+            {
+                var obj = (IObject)thing;
+
+                if (!Inventory.Contains(obj))
+                    return "That is not in the container";
+
+                Inventory.Remove(obj);
+                return String.Empty;
+            }
+
+            return "Invalid type to move from container.";
+        }
+        #endregion
 
         public void GetFromWorldOrSpawn()
         {
@@ -78,6 +155,8 @@ namespace NetMud.Data.Game
             }
 
             CurrentLocation = lastKnownLoc;
+
+            Inventory.EntitiesContained = Enumerable.Empty<IObject>();
 
             liveWorld.Add<IPlayer>(this);
         }

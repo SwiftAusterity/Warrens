@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace NetMud.DataStructure.Behaviors.Rendering
 {
-    public interface IRenderable
+    public interface ILookable
     {
+        IEnumerable<string> RenderToLook();
     }
 }

@@ -92,23 +92,19 @@
     <Compile Include="Behaviors\Automation\IThink.cs" />
     <Compile Include="Behaviors\Rendering\IActor.cs" />
     <Compile Include="Behaviors\Rendering\IAudible.cs" />
+    <Compile Include="Behaviors\Rendering\IContains.cs" />
     <Compile Include="Behaviors\Rendering\IDescribable.cs" />
     <Compile Include="Behaviors\Rendering\IHelpful.cs" />
     <Compile Include="Behaviors\Rendering\IInspectable.cs" />
     <Compile Include="Behaviors\Rendering\ILocation.cs" />
-    <Compile Include="Behaviors\Rendering\IRenderable.cs" />
+    <Compile Include="Behaviors\Rendering\ILookable.cs" />
     <Compile Include="Behaviors\Rendering\IRenderInLocation.cs" />
     <Compile Include="Behaviors\Rendering\IRendersLocation.cs" />
     <Compile Include="Behaviors\Rendering\IScanable.cs" />
     <Compile Include="Behaviors\Rendering\ISensible.cs" />
     <Compile Include="Behaviors\Rendering\ISmellable.cs" />
     <Compile Include="Behaviors\Rendering\ITrackable.cs" />
-    <Compile Include="Commands\Help.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="System\CommandRangeAttribute.cs" />
-    <Compile Include="System\CommandPermissionAttribute.cs" />
-    <Compile Include="System\CommandParameterAttribute.cs" />
-    <Compile Include="System\CommandKeywordAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NetMud.Utility\NetMud.Utility.csproj">

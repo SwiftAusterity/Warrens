@@ -1,11 +1,6 @@
-﻿using NetMud.DataStructure.Base.Entity;
-using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.Behaviors.Rendering;
-using System;
+﻿using NetMud.DataStructure.Base.System;
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NetMud.DataStructure.Behaviors.Automation
 {
@@ -14,7 +9,7 @@ namespace NetMud.DataStructure.Behaviors.Automation
         long CapacityVolume { get; set; }
         long CapacityWeight { get; set; }
 
-        IEnumerable<T> EntitiesContained { get; }
+        IEnumerable<T> EntitiesContained { get; set; }
 
         bool Remove(string birthMark);
         bool Remove(T entity);

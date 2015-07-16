@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace NetMud.DataStructure.System
+namespace NutMud.Commands.Attributes
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple=true)]
     public class CommandParameterAttribute : Attribute
@@ -12,12 +8,14 @@ namespace NetMud.DataStructure.System
         public CommandUsage Usage { get; private set; }
         public Type ParameterType { get; private set; }
         public CacheReferenceType[] CacheTypes { get; private set; }
+        public bool Optional { get; private set; }
 
-        public CommandParameterAttribute(CommandUsage usage, Type type, CacheReferenceType[] cacheTypes)
+        public CommandParameterAttribute(CommandUsage usage, Type type, CacheReferenceType[] cacheTypes, bool optional)
         {
             Usage = usage;
             ParameterType = type;
             CacheTypes = cacheTypes;
+            Optional = optional;
         }
     }
 
@@ -25,7 +23,8 @@ namespace NetMud.DataStructure.System
     {
         Subject,
         Target,
-        Container
+        Supporting,
+        Location
     }
 
     public enum CacheReferenceType
@@ -33,6 +32,7 @@ namespace NetMud.DataStructure.System
         Entity,
         Reference,
         Code,
+        Container,
         Help //hacky add for help specifically
     }
 }
