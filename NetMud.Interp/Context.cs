@@ -176,6 +176,12 @@ namespace NetMud.Interp
                         case CacheReferenceType.Help:
                             SeekInReferenceData<Data.Reference.Help>(currentNeededParm);
                             break;
+                        case CacheReferenceType.Data:
+                            //So damn ugly, make this not use reflection if possible
+                            MethodInfo dataMethod = GetType().GetMethod("SeekInBackingData")
+                                                         .MakeGenericMethod(new Type[] { currentNeededParm.ParameterType });
+                            dataMethod.Invoke(this, new object[] { currentNeededParm });
+                            break;
                     }
                 }
             }
@@ -333,7 +339,43 @@ namespace NetMud.Interp
 
                 parmWords--;
             }
+        }
 
+        public void SeekInBackingData<T>(CommandParameterAttribute currentNeededParm) where T : IData
+        {
+            var dataContext = new DataWrapper();
+            var internalCommandString = CommandStringRemainder.ToList();
+
+            var parmWords = internalCommandString.Count();
+
+            while (parmWords > 0)
+            {
+                var currentParmString = String.Join(" ", internalCommandString.Take(parmWords));
+
+                var validObject = dataContext.GetOne<T>(long.Parse(currentParmString));
+
+                if (validObject != null && !validObject.Equals(default(T)))
+                {
+                    switch (currentNeededParm.Usage)
+                    {
+                        case CommandUsage.Supporting:
+                            Supporting = validObject;
+                            break;
+                        case CommandUsage.Subject:
+                            Subject = validObject;
+                            break;
+                        case CommandUsage.Target:
+                            Target = validObject;
+                            break;
+                    }
+
+                    internalCommandString = internalCommandString.Skip(parmWords).ToList();
+                    parmWords = internalCommandString.Count();
+                    return;
+                }
+
+                parmWords--;
+            }
         }
     }
 }

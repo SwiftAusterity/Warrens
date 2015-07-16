@@ -184,12 +184,19 @@ namespace NetMud.Data.Game
 
         public void SpawnNewInWorld()
         {
+            //TODO: will rooms ever be contained by something else?
+            SpawnNewInWorld(this);
+        }
+
+        public void SpawnNewInWorld(ILocation spawnTo)
+        {
             var liveWorld = new LiveCache();
             var roomTemplate = (IRoom)DataTemplate;
 
             BirthMark = Birthmarker.GetBirthmark(roomTemplate);
             Keywords = new string[] { roomTemplate.Title.ToLower() };
             Birthdate = DateTime.Now;
+            CurrentLocation = spawnTo;
 
             liveWorld.Add<IRoom>(this);
         }

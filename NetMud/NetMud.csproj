@@ -190,6 +190,8 @@
     <Content Include="App_Data\dbo.Account.sql" />
     <Content Include="App_Data\dbo.Character.sql" />
     <Content Include="App_Data\dbo.Help.sql" />
+    <Content Include="App_Data\dbo.Object.sql" />
+    <Content Include="App_Data\dbo.Room.sql" />
     <Content Include="App_Data\testingDB.mdf" />
     <Content Include="App_Data\testingDB_log.ldf">
       <DependentUpon>testingDB.mdf</DependentUpon>

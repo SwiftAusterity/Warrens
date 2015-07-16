@@ -16,7 +16,7 @@ namespace NetMud.Utility
         {
             var returnString = new StringBuilder();
 
-            foreach(var line in lines)
+            foreach (var line in lines)
             {
                 if (!String.IsNullOrWhiteSpace(line))
                     returnString.AppendFormat("<{0}>{1}</{0}>", encapsulationElement, line);
@@ -25,6 +25,20 @@ namespace NetMud.Utility
             }
 
             return returnString.ToString();
+        }
+        public static string PadWithString(this string str, int padAmount, string padString, bool toTheLeft)
+        {
+            while (padAmount > 0)
+            {
+                if (toTheLeft)
+                    str = padString + str;
+                else
+                    str = str + padString;
+
+                padAmount--;
+            }
+
+            return str;
         }
     }
 }

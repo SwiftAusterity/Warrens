@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using NetMud.Utility;
+
 namespace NutMud.Commands.System
 {
     //Really help can be invoked on anything that is helpful, even itself
@@ -47,8 +49,8 @@ namespace NutMud.Commands.System
         {
             var sb = new List<string>();
 
-            sb.Add(String.Format("Valid Syntax: look"));
-            sb.Add(String.Format("              look &lt;target&gt;"));
+            sb.Add("Valid Syntax: look");
+            sb.Add("look &lt;target&gt;".PadWithString(14, "&nbsp;", true));
 
             return sb;
         }

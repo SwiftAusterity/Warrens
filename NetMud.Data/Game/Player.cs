@@ -42,7 +42,6 @@ namespace NetMud.Data.Game
             return sb;
         }
 
-
         #region Container
         public EntityContainer<IObject> Inventory { get; set; }
 
@@ -136,29 +135,38 @@ namespace NetMud.Data.Game
             var liveWorld = new LiveCache();
             var ch = (ICharacter)DataTemplate;
 
-            BirthMark = Birthmarker.GetBirthmark(ch);
-            Keywords = new string[] { ch.GivenName.ToLower(), ch.SurName.ToLower() };
-            Birthdate = DateTime.Now;
-
             if (ch.LastKnownLocationType == null)
                 ch.LastKnownLocationType = typeof(IRoom).Name;
 
             var lastKnownLocType = Type.GetType(ch.LastKnownLocationType);
             ILocation lastKnownLoc = liveWorld.Get<ILocation>(ch.LastKnownLocation, lastKnownLocType);
 
-            if(lastKnownLoc == null)
-            {
-                //TODO: Not hardcode the zeroth room
-                lastKnownLoc = liveWorld.Get<ILocation>(0, typeof(IRoom));
+            SpawnNewInWorld(lastKnownLoc);
+        }
 
-                //Set the data context's stuff too so we don't have to do this over again
-                ch.LastKnownLocation = lastKnownLoc.DataTemplate.ID;
-                ch.LastKnownLocationType = lastKnownLoc.GetType().Name;
-                ch.Save();
-                lastKnownLoc.MoveTo<IPlayer>(this);
+        public void SpawnNewInWorld(ILocation spawnTo)
+        {
+            var liveWorld = new LiveCache();
+            var ch = (ICharacter)DataTemplate;
+
+            BirthMark = Birthmarker.GetBirthmark(ch);
+            Keywords = new string[] { ch.GivenName.ToLower(), ch.SurName.ToLower() };
+            Birthdate = DateTime.Now;
+
+            //TODO: Not hardcode the zeroth room
+            if (spawnTo == null)
+            {
+                spawnTo = liveWorld.Get<ILocation>(0, typeof(IRoom));
             }
 
-            CurrentLocation = lastKnownLoc;
+            CurrentLocation = spawnTo;
+
+            //Set the data context's stuff too so we don't have to do this over again
+            ch.LastKnownLocation = spawnTo.DataTemplate.ID;
+            ch.LastKnownLocationType = spawnTo.GetType().Name;
+            ch.Save();
+
+            spawnTo.MoveTo<IPlayer>(this);
 
             Inventory = new EntityContainer<IObject>();
 

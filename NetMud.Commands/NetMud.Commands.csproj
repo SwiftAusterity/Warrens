@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Administrative\SpawnNewObject.cs" />
     <Compile Include="Attributes\CommandKeywordAttribute.cs" />
     <Compile Include="Attributes\CommandParameterAttribute.cs" />
     <Compile Include="Attributes\CommandPermissionAttribute.cs" />

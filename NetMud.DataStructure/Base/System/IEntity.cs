@@ -22,5 +22,6 @@ namespace NetMud.DataStructure.Base.System
 
         void GetFromWorldOrSpawn();
         void SpawnNewInWorld();
+        void SpawnNewInWorld(ILocation spawnTo);
     }
 }

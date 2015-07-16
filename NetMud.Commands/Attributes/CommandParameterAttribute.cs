@@ -33,6 +33,7 @@ namespace NutMud.Commands.Attributes
         Reference,
         Code,
         Container,
+        Data,
         Help //hacky add for help specifically
     }
 }
