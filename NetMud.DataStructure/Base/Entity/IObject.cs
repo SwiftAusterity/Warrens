@@ -1,10 +1,11 @@
 ﻿using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.Behaviors.Automation;
+using NetMud.DataStructure.SupportingClasses;
 
 namespace NetMud.DataStructure.Base.Entity
 {
     public interface IObject : IActor, ILocation
     {
-        IEntityContainer<IObject> Contains { get; set; }
+        EntityContainer<IObject> Contains { get; set; }
     }
 }

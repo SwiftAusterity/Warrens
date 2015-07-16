@@ -39,7 +39,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EntityContainer\EntityContainer.cs" />
     <Compile Include="Game\Character.cs" />
     <Compile Include="Game\Player.cs" />
     <Compile Include="Game\Room.cs" />

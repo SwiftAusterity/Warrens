@@ -5,6 +5,8 @@ using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Automation;
 using NetMud.DataStructure.Behaviors.Rendering;
+using NetMud.DataStructure.SupportingClasses;
+using NetMud.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +26,7 @@ namespace NetMud.Data.Game
 
         public DateTime Birthdate { get; private set; }
 
-        public string Keywords { get; set; }
+        public string[] Keywords { get; set; }
 
         public IData DataTemplate { get; private set; }
 
@@ -46,7 +48,9 @@ namespace NetMud.Data.Game
 
         public IEnumerable<T> GetContents<T>()
         {
-            if (typeof(T).GetInterfaces().Contains(typeof(IObject)))
+            var implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
+
+            if (implimentedTypes.Contains(typeof(IObject)))
                 return GetContents<T>("objects");
 
             return Enumerable.Empty<T>();
@@ -133,7 +137,7 @@ namespace NetMud.Data.Game
             var ch = (ICharacter)DataTemplate;
 
             BirthMark = Birthmarker.GetBirthmark(ch);
-            Keywords = String.Format("{0}, {1}", ch.GivenName, ch.SurName);
+            Keywords = new string[] { ch.GivenName.ToLower(), ch.SurName.ToLower() };
             Birthdate = DateTime.Now;
 
             if (ch.LastKnownLocationType == null)
@@ -156,7 +160,7 @@ namespace NetMud.Data.Game
 
             CurrentLocation = lastKnownLoc;
 
-            Inventory.EntitiesContained = Enumerable.Empty<IObject>();
+            Inventory = new EntityContainer<IObject>();
 
             liveWorld.Add<IPlayer>(this);
         }

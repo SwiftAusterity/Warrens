@@ -3,23 +3,23 @@ using NetMud.DataStructure.Behaviors.Automation;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NetMud.Data
+namespace NetMud.DataStructure.SupportingClasses
 {
-    public class EntityContainer<T> : IEntityContainer<IEntity>
+    public class EntityContainer<T> where T : IEntity
     {
         public long CapacityVolume { get; set; }
         public long CapacityWeight { get; set; }
 
-        public IEnumerable<IEntity> EntitiesContained { get; set; }
+        public IList<IEntity> EntitiesContained { get; set; }
 
         public EntityContainer()
         {
-            EntitiesContained = Enumerable.Empty<IEntity>();
+            EntitiesContained = new List<IEntity>();
         }
 
         public bool Add(IEntity entity)
         {
-            EntitiesContained.ToList().Add(entity);
+            EntitiesContained.Add(entity);
 
             return true;
         }
@@ -31,7 +31,7 @@ namespace NetMud.Data
 
         public bool Remove(IEntity entity)
         {
-            EntitiesContained.ToList().Remove(entity);
+            EntitiesContained.Remove(entity);
 
             return true;
         }

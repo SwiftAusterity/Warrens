@@ -14,7 +14,7 @@ namespace NetMud.DataStructure.Base.System
         /// </summary>
         string BirthMark { get; }
         DateTime Birthdate { get; }
-        string Keywords { get; set; }
+        string[] Keywords { get; set; }
 
         IData DataTemplate { get; }
 

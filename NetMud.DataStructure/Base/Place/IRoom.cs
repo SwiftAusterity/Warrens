@@ -3,6 +3,7 @@ using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Automation;
+using NetMud.DataStructure.SupportingClasses;
 
 namespace NetMud.DataStructure.Base.Place
 {
@@ -10,7 +11,7 @@ namespace NetMud.DataStructure.Base.Place
     {
         string Title { get; set; }
 
-        IEntityContainer<IObject> ObjectsInRoom { get; set; }
-        IEntityContainer<IMobile> MobilesInRoom { get; set; }
+        EntityContainer<IObject> ObjectsInRoom { get; set; }
+        EntityContainer<IMobile> MobilesInRoom { get; set; }
     }
 }

@@ -5,6 +5,7 @@ using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Automation;
 using NetMud.DataStructure.Behaviors.Rendering;
+using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
 using System;
 using System.Collections.Generic;
@@ -36,7 +37,7 @@ namespace NetMud.Data.Game
 
             //Yes it's its own datatemplate and currentLocation
             DataTemplate = room;
-            
+
             ID = room.ID;
             Created = room.Created;
             LastRevised = room.LastRevised;
@@ -51,7 +52,7 @@ namespace NetMud.Data.Game
 
         public DateTime Birthdate { get; private set; }
 
-        public string Keywords { get; set; }
+        public string[] Keywords { get; set; }
 
         public IData DataTemplate { get; private set; }
 
@@ -63,24 +64,26 @@ namespace NetMud.Data.Game
 
         public IEnumerable<T> GetContents<T>()
         {
-            if (typeof(T).GetInterfaces().Contains(typeof(IMobile)))
-                return GetContents<T>("mobiles");
-            else if (typeof(T).GetInterfaces().Contains(typeof(IObject)))
-                return GetContents<T>("objects");
-            else if (typeof(T).GetInterfaces().Contains(typeof(IEntity)))
-                return GetContents<T>("mobiles").Concat(GetContents<T>("objects"));
+            var implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
 
-                return Enumerable.Empty<T>();
+            if (implimentedTypes.Contains(typeof(IEntity)))
+                return GetContents<T>("mobiles").Concat(GetContents<T>("objects"));
+            else if (implimentedTypes.Contains(typeof(IMobile)))
+                return GetContents<T>("mobiles");
+            else if (implimentedTypes.Contains(typeof(IObject)))
+                return GetContents<T>("objects");
+
+            return Enumerable.Empty<T>();
         }
 
         public IEnumerable<T> GetContents<T>(string containerName)
         {
-            switch(containerName)
+            switch (containerName)
             {
                 case "mobiles":
-                    return ObjectsInRoom.EntitiesContained.Select(ent => (T)ent);
-                case "objects":
                     return MobilesInRoom.EntitiesContained.Select(ent => (T)ent);
+                case "objects":
+                    return ObjectsInRoom.EntitiesContained.Select(ent => (T)ent);
             }
 
             return Enumerable.Empty<T>();
@@ -93,26 +96,26 @@ namespace NetMud.Data.Game
 
         public string MoveTo<T>(T thing, string containerName)
         {
-            if(typeof(T).GetInterfaces().Contains(typeof(IObject)))
+            if (typeof(T).GetInterfaces().Contains(typeof(IObject)))
             {
                 var obj = (IObject)thing;
 
-                if(ObjectsInRoom.Contains(obj))
+                if (ObjectsInRoom.Contains(obj))
                     return "That is already in the container";
 
                 ObjectsInRoom.Add(obj);
                 return String.Empty;
             }
-            else if(typeof(T).GetInterfaces().Contains(typeof(IMobile)))
+            else if (typeof(T).GetInterfaces().Contains(typeof(IMobile)))
             {
                 var mob = (IMobile)thing;
 
-                if(MobilesInRoom.Contains(mob))
+                if (MobilesInRoom.Contains(mob))
                     return "That is already in the container";
 
                 MobilesInRoom.Add(mob);
                 return String.Empty;
-           }
+            }
 
             return "Invalid type to move to container.";
         }
@@ -128,7 +131,7 @@ namespace NetMud.Data.Game
             {
                 var obj = (IObject)thing;
 
-                if(!ObjectsInRoom.Contains(obj))
+                if (!ObjectsInRoom.Contains(obj))
                     return "That is not in the container";
 
                 ObjectsInRoom.Remove(obj);
@@ -138,7 +141,7 @@ namespace NetMud.Data.Game
             {
                 var mob = (IMobile)thing;
 
-                if(!MobilesInRoom.Contains(mob))
+                if (!MobilesInRoom.Contains(mob))
                     return "That is not in the container";
 
                 MobilesInRoom.Remove(mob);
@@ -185,7 +188,7 @@ namespace NetMud.Data.Game
             var roomTemplate = (IRoom)DataTemplate;
 
             BirthMark = Birthmarker.GetBirthmark(roomTemplate);
-            Keywords = String.Format("{0}", roomTemplate.Title);
+            Keywords = new string[] { roomTemplate.Title.ToLower() };
             Birthdate = DateTime.Now;
 
             liveWorld.Add<IRoom>(this);

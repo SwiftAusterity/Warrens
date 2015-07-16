@@ -64,6 +64,8 @@ namespace NetMud.Interp
                 var parmList = commandType.GetCustomAttributes<CommandParameterAttribute>();
                 ParseParamaters(commandType, parmList);
 
+                Command = Activator.CreateInstance(commandType) as ICommand;
+
                 if (
                     (parmList.Any(parm => !parm.Optional && parm.Usage == CommandUsage.Subject) && Subject == null)
                     || (parmList.Any(parm => !parm.Optional && parm.Usage == CommandUsage.Target) && Target == null)
@@ -75,7 +77,18 @@ namespace NetMud.Interp
                     return;
                 }
 
-                Command = Activator.CreateInstance(commandType) as ICommand;
+                var foundParmCount = (int)(Subject == null ? 0 : 1)
+                                    + (int)(Target == null ? 0 : 1)
+                                    + (int)(Supporting == null ? 0 : 1);
+
+                //Parms we got doesn't equal parms we loaded
+                if (foundParmCount != CommandStringRemainder.Count())
+                {
+                    AccessErrors.Add(String.Format("I could not find {0}.", String.Join(" ", CommandStringRemainder)));
+                    AccessErrors = AccessErrors.Concat(Command.RenderSyntaxHelp()).ToList();
+                    return;
+                }
+                
 
                 Command.OriginLocation = Location;
                 Command.Surroundings = Surroundings;
@@ -178,7 +191,7 @@ namespace NetMud.Interp
 
             while (parmWords > 0)
             {
-                var currentParmString = String.Join(" ", internalCommandString.Take(parmWords));
+                var currentParmString = String.Join(" ", internalCommandString.Take(parmWords)).ToLower();
 
                 var validParms = validTargetTypes.Where(comm => comm.GetCustomAttributes<CommandKeywordAttribute>().Any(att => att.Keyword.Equals(currentParmString)));
 
@@ -226,7 +239,7 @@ namespace NetMud.Interp
 
             while (parmWords > 0)
             {
-                var currentParmString = String.Join(" ", internalCommandString.Take(parmWords));
+                var currentParmString = String.Join(" ", internalCommandString.Take(parmWords)).ToLower();
                 var validObjects = new List<T>();
 
                 switch(seekRange.Type)
@@ -235,7 +248,7 @@ namespace NetMud.Interp
                         validObjects.Add((T)Actor);
                         break;
                     case CommandRangeType.Touch:
-                        validObjects.AddRange(Actor.CurrentLocation.GetContents<T>().Where(ent => ((IEntity)ent).Keywords.Equals(parmWords)));
+                        validObjects.AddRange(Actor.CurrentLocation.GetContents<T>().Where(ent => ((IEntity)ent).Keywords.Contains(currentParmString)));
                         break;
                     case CommandRangeType.Local:
                         break;
@@ -278,9 +291,9 @@ namespace NetMud.Interp
                         parmWords = internalCommandString.Count();
                         return;
                     }
-
-                    parmWords--;
                 }
+
+                parmWords--;
             }
 
         }

@@ -83,7 +83,6 @@
     <Compile Include="Behaviors\Automation\IEnchantable.cs" />
     <Compile Include="Behaviors\Automation\IGetTired.cs" />
     <Compile Include="Behaviors\Automation\IHasAffects.cs" />
-    <Compile Include="Behaviors\Automation\IEntityContainer.cs" />
     <Compile Include="Behaviors\Automation\IDecays.cs" />
     <Compile Include="Behaviors\Automation\IHasSkills.cs" />
     <Compile Include="Behaviors\Automation\IHunger.cs" />
@@ -105,6 +104,7 @@
     <Compile Include="Behaviors\Rendering\ISmellable.cs" />
     <Compile Include="Behaviors\Rendering\ITrackable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SupportingClasses\EntityContainer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NetMud.Utility\NetMud.Utility.csproj">
