@@ -249,9 +249,9 @@ namespace NetMud.Interp
                     case CommandRangeType.Touch:
                         validObjects.AddRange(Actor.CurrentLocation.GetContents<T>().Where(ent => ((IEntity)ent).Keywords.Contains(currentParmString)));
                         break;
-                    case CommandRangeType.Local:
+                    case CommandRangeType.Local: //requires Range to be working
                         break;
-                    case CommandRangeType.Regional:
+                    case CommandRangeType.Regional: //requires range to be working
                         break;
                     case CommandRangeType.Global:
                         validObjects.AddRange(liveWorld.GetAll<T>());
