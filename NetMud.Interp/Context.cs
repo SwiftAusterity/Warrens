@@ -77,12 +77,8 @@ namespace NetMud.Interp
                     return;
                 }
 
-                var foundParmCount = (int)(Subject == null ? 0 : 1)
-                                    + (int)(Target == null ? 0 : 1)
-                                    + (int)(Supporting == null ? 0 : 1);
-
                 //Parms we got doesn't equal parms we loaded
-                if (foundParmCount != CommandStringRemainder.Count())
+                if (CommandStringRemainder.Count() != 0)
                 {
                     AccessErrors.Add(String.Format("I could not find {0}.", String.Join(" ", CommandStringRemainder)));
                     AccessErrors = AccessErrors.Concat(Command.RenderSyntaxHelp()).ToList();
@@ -152,7 +148,7 @@ namespace NetMud.Interp
         private void ParseParamaters(Type commandType, IEnumerable<CommandParameterAttribute> neededParms)
         {
             //Flip through each remaining word and parse them
-            foreach (var currentNeededParm in neededParms)
+            foreach (var currentNeededParm in neededParms.OrderBy(parm => parm.Usage))
             {
                 foreach (var seekType in currentNeededParm.CacheTypes)
                 {
@@ -168,7 +164,6 @@ namespace NetMud.Interp
                             entityMethod.Invoke(this, new object[] { currentNeededParm, commandType.GetCustomAttribute<CommandRangeAttribute>() });
                             break;
                         case CacheReferenceType.Reference:
-                            //So damn ugly, make this not use reflection if possible
                             MethodInfo referenceMethod = GetType().GetMethod("SeekInReferenceData")
                                                          .MakeGenericMethod(new Type[] { currentNeededParm.ParameterType });
                             referenceMethod.Invoke(this, new object[] { currentNeededParm });
@@ -177,7 +172,6 @@ namespace NetMud.Interp
                             SeekInReferenceData<Data.Reference.Help>(currentNeededParm);
                             break;
                         case CacheReferenceType.Data:
-                            //So damn ugly, make this not use reflection if possible
                             MethodInfo dataMethod = GetType().GetMethod("SeekInBackingData")
                                                          .MakeGenericMethod(new Type[] { currentNeededParm.ParameterType });
                             dataMethod.Invoke(this, new object[] { currentNeededParm });
@@ -227,8 +221,7 @@ namespace NetMud.Interp
                         }
                     }
 
-                    internalCommandString = internalCommandString.Skip(parmWords).ToList();
-                    parmWords = internalCommandString.Count();
+                    CommandStringRemainder = CommandStringRemainder.Skip(parmWords);
                     return;
                 }
 
@@ -293,8 +286,7 @@ namespace NetMud.Interp
                             }
                         }
 
-                        internalCommandString = internalCommandString.Skip(parmWords).ToList();
-                        parmWords = internalCommandString.Count();
+                        CommandStringRemainder = CommandStringRemainder.Skip(parmWords);
                         return;
                     }
                 }
@@ -332,8 +324,7 @@ namespace NetMud.Interp
                             break;
                     }
 
-                    internalCommandString = internalCommandString.Skip(parmWords).ToList();
-                    parmWords = internalCommandString.Count();
+                    CommandStringRemainder = CommandStringRemainder.Skip(parmWords);
                     return;
                 }
 
@@ -369,8 +360,7 @@ namespace NetMud.Interp
                             break;
                     }
 
-                    internalCommandString = internalCommandString.Skip(parmWords).ToList();
-                    parmWords = internalCommandString.Count();
+                    CommandStringRemainder = CommandStringRemainder.Skip(parmWords);
                     return;
                 }
 

@@ -16,6 +16,12 @@ namespace NetMud.Data.Game
 {
     public class Object : IObject
     {
+        public Object()
+        {
+            //IDatas need parameterless constructors
+            Contents = new EntityContainer<IObject>();
+        }
+
         public Object(IObject backingStore)
         {
             Contents = new EntityContainer<IObject>();
@@ -137,7 +143,7 @@ namespace NetMud.Data.Game
             var backingStore = (IObject)DataTemplate;
 
             BirthMark = Birthmarker.GetBirthmark(backingStore);
-            Keywords = new string[] { backingStore.Name };
+            Keywords = new string[] { backingStore.Name.ToLower() };
             Birthdate = DateTime.Now;
 
             //TODO: People get a base spawn but live objects need to be spawnable to a specific location or not at all really
@@ -190,6 +196,8 @@ namespace NetMud.Data.Game
             string outLKLT = default(string);
             DataUtility.GetFromDataRow<string>(dr, "LastKnownLocationType", ref outLKLT);
             LastKnownLocationType = outLKLT;
+
+            DataTemplate = this;
         }
 
         public IData Create()

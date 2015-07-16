@@ -96,7 +96,9 @@ namespace NetMud.Data.Game
 
         public string MoveTo<T>(T thing, string containerName)
         {
-            if (typeof(T).GetInterfaces().Contains(typeof(IObject)))
+            var implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
+
+            if (implimentedTypes.Contains(typeof(IObject)))
             {
                 var obj = (IObject)thing;
 
@@ -106,7 +108,7 @@ namespace NetMud.Data.Game
                 ObjectsInRoom.Add(obj);
                 return String.Empty;
             }
-            else if (typeof(T).GetInterfaces().Contains(typeof(IMobile)))
+            else if (implimentedTypes.Contains(typeof(IMobile)))
             {
                 var mob = (IMobile)thing;
 
@@ -127,7 +129,9 @@ namespace NetMud.Data.Game
 
         public string MoveFrom<T>(T thing, string containerName)
         {
-            if (typeof(T).GetInterfaces().Contains(typeof(IObject)))
+            var implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
+
+            if (implimentedTypes.Contains(typeof(IObject)))
             {
                 var obj = (IObject)thing;
 
@@ -137,7 +141,7 @@ namespace NetMud.Data.Game
                 ObjectsInRoom.Remove(obj);
                 return String.Empty;
             }
-            if (typeof(T).GetInterfaces().Contains(typeof(IMobile)))
+            if (implimentedTypes.Contains(typeof(IMobile)))
             {
                 var mob = (IMobile)thing;
 

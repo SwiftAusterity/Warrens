@@ -14,7 +14,6 @@ namespace NutMud.Commands.System
     [CommandKeyword("look")]
     [CommandPermission(StaffRank.Player)]
     [CommandParameter(CommandUsage.Subject, typeof(ILookable), new CacheReferenceType[] { CacheReferenceType.Entity }, true )]
-    [CommandParameter(CommandUsage.Location, typeof(ILocation), new CacheReferenceType[] { CacheReferenceType.Container }, false)]
     [CommandRange(CommandRangeType.Touch, 0)]
     public class Look : ICommand, IHelpful
     {

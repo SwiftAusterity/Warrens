@@ -19,12 +19,11 @@ namespace NutMud.Commands.Attributes
         }
     }
 
-    public enum CommandUsage
+    public enum CommandUsage : short
     {
-        Subject,
-        Target,
-        Supporting,
-        Location
+        Subject = 0,
+        Target = 1,
+        Supporting = 2
     }
 
     public enum CacheReferenceType

@@ -47,7 +47,7 @@ namespace NetMud.Utility
 
         public static IEnumerable<Type> GetAllImplimentingedTypes(Type t)
         {
-            var implimentedTypes = t.Assembly.GetTypes().Where(ty => ty.GetInterfaces().Contains(t));
+            var implimentedTypes = t.Assembly.GetTypes().Where(ty => ty.GetInterfaces().Contains(t) || ty == t);
             return implimentedTypes.Concat(t.GetInterfaces());
         }
     }

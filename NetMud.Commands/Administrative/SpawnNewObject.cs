@@ -13,8 +13,8 @@ namespace NutMud.Commands.System
     //Really help can be invoked on anything that is helpful, even itself
     [CommandKeyword("SpawnNewObject")]
     [CommandPermission(StaffRank.Admin)]
-    [CommandParameter(CommandUsage.Subject, typeof(IObject), new CacheReferenceType[] { CacheReferenceType.Data }, true )]
-    [CommandParameter(CommandUsage.Target, typeof(ILocation), new CacheReferenceType[] { CacheReferenceType.Entity }, false)]
+    [CommandParameter(CommandUsage.Subject, typeof(NetMud.Data.Game.Object), new CacheReferenceType[] { CacheReferenceType.Data }, false)]
+    [CommandParameter(CommandUsage.Target, typeof(ILocation), new CacheReferenceType[] { CacheReferenceType.Entity }, true)]
     [CommandRange(CommandRangeType.Touch, 0)]
     public class SpawnNewObject : ICommand, IHelpful
     {
