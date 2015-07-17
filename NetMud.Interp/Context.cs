@@ -7,6 +7,7 @@ using NetMud.DataStructure.Base.System;
 using System.Reflection;
 using NetMud.DataAccess;
 using NutMud.Commands.Attributes;
+using System.Text.RegularExpressions;
 
 namespace NetMud.Interp
 {
@@ -28,9 +29,11 @@ namespace NetMud.Interp
         public ILocation Location { get; private set; }
         public IEnumerable<ILocation> Surroundings { get; private set; }
 
-        public IList<string> AccessErrors { get; private set; }
+        public List<string> AccessErrors { get; private set; }
 
         private IEnumerable<Type> LoadedCommands;
+
+        private const string LiveWorldDisambiguationSyntax = "[0-9]{1,9}[.][a-zA-z0-9]+";
 
         public Context(string fullCommand, IActor actor)
         {
@@ -77,7 +80,7 @@ namespace NetMud.Interp
                     )
                 {
                     AccessErrors.Add("Invalid command targets specified.");
-                    AccessErrors = AccessErrors.Concat(Command.RenderSyntaxHelp()).ToList();
+                    AccessErrors.AddRange(Command.RenderSyntaxHelp());
                     return;
                 }
 
@@ -85,7 +88,7 @@ namespace NetMud.Interp
                 if (CommandStringRemainder.Count() != 0)
                 {
                     AccessErrors.Add(String.Format("I could not find {0}.", String.Join(" ", CommandStringRemainder)));
-                    AccessErrors = AccessErrors.Concat(Command.RenderSyntaxHelp()).ToList();
+                    AccessErrors.AddRange(Command.RenderSyntaxHelp());
                     return;
                 }
                 
@@ -132,8 +135,16 @@ namespace NetMud.Interp
 
                 if (validCommands.Count() > 1)
                 {
-                    //TODO: Need to disambiguate help text here
-                    AccessErrors.Add("DISAMBIGUATE ME");
+                    AccessErrors.Add(String.Format("There are {0} potential commands with that name and parameter structure."));
+
+                    foreach(var cmd in validCommands)
+                    {
+                        var currentCommand = Activator.CreateInstance(cmd) as ICommand;
+
+                        AccessErrors.AddRange(currentCommand.RenderSyntaxHelp());
+                        AccessErrors.Add(String.Empty);
+                    }
+
                     break;
                 }
                 else if (validCommands.Count() == 1)
@@ -159,33 +170,33 @@ namespace NetMud.Interp
                     switch (seekType)
                     {
                         case CacheReferenceType.Code:
-                            SeekInCode(currentNeededParm);
+                            SeekInCode(commandType, currentNeededParm);
                             break;
                         case CacheReferenceType.Entity:
                             //So damn ugly, make this not use reflection if possible
                             MethodInfo entityMethod = GetType().GetMethod("SeekInLiveWorld")
                                                          .MakeGenericMethod(new Type[] { currentNeededParm.ParameterType });
-                            entityMethod.Invoke(this, new object[] { currentNeededParm, commandType.GetCustomAttribute<CommandRangeAttribute>() });
+                            entityMethod.Invoke(this, new object[] { commandType, currentNeededParm, commandType.GetCustomAttribute<CommandRangeAttribute>() });
                             break;
                         case CacheReferenceType.Reference:
                             MethodInfo referenceMethod = GetType().GetMethod("SeekInReferenceData")
                                                          .MakeGenericMethod(new Type[] { currentNeededParm.ParameterType });
-                            referenceMethod.Invoke(this, new object[] { currentNeededParm });
+                            referenceMethod.Invoke(this, new object[] { commandType, currentNeededParm });
                             break;
                         case CacheReferenceType.Help:
-                            SeekInReferenceData<Data.Reference.Help>(currentNeededParm);
+                            SeekInReferenceData<Data.Reference.Help>(commandType, currentNeededParm);
                             break;
                         case CacheReferenceType.Data:
                             MethodInfo dataMethod = GetType().GetMethod("SeekInBackingData")
                                                          .MakeGenericMethod(new Type[] { currentNeededParm.ParameterType });
-                            dataMethod.Invoke(this, new object[] { currentNeededParm });
+                            dataMethod.Invoke(this, new object[] { commandType, currentNeededParm });
                             break;
                     }
                 }
             }
         }
 
-        public void SeekInCode(CommandParameterAttribute currentNeededParm)
+        public void SeekInCode(Type commandType, CommandParameterAttribute currentNeededParm)
         {
             var validTargetTypes = commandsAssembly.GetTypes().Where(t => t.GetInterfaces().Contains(currentNeededParm.ParameterType));
             var internalCommandString = CommandStringRemainder.ToList();
@@ -207,8 +218,10 @@ namespace NetMud.Interp
 
                 if (validParms.Count() > 1)
                 {
-                    //TODO: Need to disambiguate help text here
-                    AccessErrors.Add("DISAMBIGUATE ME");
+                    AccessErrors.Add(String.Format("There are {0} potential targets with that name for the {1} command.", validParms.Count(), commandType.Name));
+
+                    AccessErrors.AddRange(validParms.Select(typ => typ.Name));
+
                     break;
                 }
                 else if (validParms.Count() == 1)
@@ -240,15 +253,22 @@ namespace NetMud.Interp
         }
 
         //TODO: Make this work, we need far more stuff to do this (location for one)
-        public void SeekInLiveWorld<T>(CommandParameterAttribute currentNeededParm, CommandRangeAttribute seekRange)
+        public void SeekInLiveWorld<T>(Type commandType, CommandParameterAttribute currentNeededParm, CommandRangeAttribute seekRange)
         {
             var internalCommandString = CommandStringRemainder.ToList();
-
+            var disambiguator = -1;
             var parmWords = internalCommandString.Count();
 
             while (parmWords > 0)
             {
                 var currentParmString = String.Join(" ", internalCommandString.Take(parmWords)).ToLower();
+
+                //We have disambiguation here, we need to pick the first object we get back in the list
+                if (Regex.IsMatch(currentParmString, LiveWorldDisambiguationSyntax))
+                {
+                    disambiguator = int.Parse(currentParmString.Substring(0, currentParmString.IndexOf(".")));
+                    currentParmString = currentParmString.Substring(currentParmString.IndexOf(".") + 1);
+                }
 
                 if (!currentNeededParm.MatchesPattern(currentParmString))
                 {
@@ -277,10 +297,22 @@ namespace NetMud.Interp
 
                 if (validObjects.Count() > 0)
                 {
+                    //Skip everything up to the right guy and then take the one we want so we don't have to horribly alter the following logic flows
+                    if (disambiguator > -1 && validObjects.Count() > 1)
+                        validObjects = validObjects.Skip(disambiguator - 1).Take(1).ToList();
+
                     if (validObjects.Count() > 1)
                     {
-                        //TODO: Need to disambiguate help text here
-                        AccessErrors.Add("DISAMBIGUATE ME");
+                        AccessErrors.Add(String.Format("There are {0} potential targets with that name for the {1} command. Try using one of the following disambiguators:", validObjects.Count(), commandType.Name));
+
+                        int iterator = 1;
+                        foreach(var obj in validObjects)
+                        {
+                            var entityObject = (IEntity)obj;
+
+                            AccessErrors.Add(String.Format("{0}.{1}", iterator++, entityObject.DataTemplate.Name));
+                        }
+
                         break;
                     }
                     else if (validObjects.Count() == 1)
@@ -313,7 +345,7 @@ namespace NetMud.Interp
 
         }
 
-        public void SeekInReferenceData<T>(CommandParameterAttribute currentNeededParm) where T : IReference
+        public void SeekInReferenceData<T>(Type commandType, CommandParameterAttribute currentNeededParm) where T : IReference
         {
             var referenceContext = new ReferenceAccess();
             
@@ -356,7 +388,7 @@ namespace NetMud.Interp
             }
         }
 
-        public void SeekInBackingData<T>(CommandParameterAttribute currentNeededParm) where T : IData
+        public void SeekInBackingData<T>(Type commandType, CommandParameterAttribute currentNeededParm) where T : IData
         {
             var dataContext = new DataWrapper();
             var internalCommandString = CommandStringRemainder.ToList();
