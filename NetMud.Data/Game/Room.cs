@@ -1,5 +1,6 @@
 ﻿using NetMud.DataAccess;
 using NetMud.DataStructure.Base.Entity;
+using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
@@ -17,20 +18,13 @@ namespace NetMud.Data.Game
 {
     public class Room : IRoom
     {
-        //DataFields
-
-        public long ID { get; set; }
-        public DateTime Created { get; set; }
-        public DateTime LastRevised { get; set; }
-        public string Title { get; set; }
-
         public Room()
         {
             ObjectsInRoom = new EntityContainer<IObject>();
             MobilesInRoom = new EntityContainer<IMobile>();
         }
 
-        public Room(IRoom room)
+        public Room(IRoomData room)
         {
             ObjectsInRoom = new EntityContainer<IObject>();
             MobilesInRoom = new EntityContainer<IMobile>();
@@ -38,12 +32,7 @@ namespace NetMud.Data.Game
             //Yes it's its own datatemplate and currentLocation
             DataTemplate = room;
 
-            ID = room.ID;
-            Created = room.Created;
-            LastRevised = room.LastRevised;
-            Title = room.Title;
-
-            CurrentLocation = room;
+            CurrentLocation = this;
 
             GetFromWorldOrSpawn();
         }
@@ -160,8 +149,8 @@ namespace NetMud.Data.Game
         {
             var sb = new List<string>();
 
-            sb.Add(string.Format("<span style=\"color: orange\">{0}</span>", Title));
-            sb.Add(string.Empty.PadLeft(Title.Length, '-'));
+            sb.Add(string.Format("<span style=\"color: orange\">{0}</span>", DataTemplate.Name));
+            sb.Add(string.Empty.PadLeft(DataTemplate.Name.Length, '-'));
 
             return sb;
         }
@@ -195,10 +184,10 @@ namespace NetMud.Data.Game
         public void SpawnNewInWorld(ILocation spawnTo)
         {
             var liveWorld = new LiveCache();
-            var roomTemplate = (IRoom)DataTemplate;
+            var roomTemplate = (IRoomData)DataTemplate;
 
             BirthMark = Birthmarker.GetBirthmark(roomTemplate);
-            Keywords = new string[] { roomTemplate.Title.ToLower() };
+            Keywords = new string[] { roomTemplate.Name.ToLower() };
             Birthdate = DateTime.Now;
             CurrentLocation = spawnTo;
 
@@ -245,78 +234,5 @@ namespace NetMud.Data.Game
             return false;
         }
 
-        public void Fill(global::System.Data.DataRow dr)
-        {
-            int outId = default(int);
-            DataUtility.GetFromDataRow<int>(dr, "ID", ref outId);
-            ID = outId;
-
-            DateTime outCreated = default(DateTime);
-            DataUtility.GetFromDataRow<DateTime>(dr, "Created", ref outCreated);
-            Created = outCreated;
-
-            DateTime outRevised = default(DateTime);
-            DataUtility.GetFromDataRow<DateTime>(dr, "LastRevised", ref outRevised);
-            LastRevised = outRevised;
-
-            string outTitle = default(string);
-            DataUtility.GetFromDataRow<string>(dr, "Title", ref outTitle);
-            Title = outTitle;
-        }
-
-        public IData Create()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Remove()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Save()
-        {
-            throw new NotImplementedException();
-        }
-
-        public int CompareTo(IData other)
-        {
-            if (other != null)
-            {
-                try
-                {
-                    if (other.GetType() != typeof(Room))
-                        return -1;
-
-                    if (other.ID.Equals(this.ID))
-                        return 1;
-
-                    return 0;
-                }
-                catch
-                {
-                    //Minor error logging
-                }
-            }
-
-            return -99;
-        }
-
-        public bool Equals(IData other)
-        {
-            if (other != default(IData))
-            {
-                try
-                {
-                    return other.GetType() == typeof(Room) && other.ID.Equals(this.ID);
-                }
-                catch
-                {
-                    //Minor error logging
-                }
-            }
-
-            return false;
-        }
     }
 }

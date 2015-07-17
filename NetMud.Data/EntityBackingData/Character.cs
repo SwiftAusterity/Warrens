@@ -1,4 +1,5 @@
 ﻿using NetMud.DataAccess;
+using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.System;
 using NetMud.Utility;
 using System;
@@ -8,16 +9,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NetMud.Data.Game
+namespace NetMud.Data.EntityBackingData
 {
     public class Character : ICharacter
     {
+        public Type EntityClass
+        {
+            get { return typeof(NetMud.Data.Game.Player); }
+        }
+
         public long ID { get; set; }
         public DateTime Created { get; set; }
         public DateTime LastRevised { get; set; }
+        public string Name { get; set; }
 
         public string SurName { get; set; }
-        public string GivenName { get; set; }
         public string AccountHandle { get; set; }
 
         public long LastKnownLocation { get; set; }
@@ -37,7 +43,7 @@ namespace NetMud.Data.Game
 
         public string FullName()
         {
-            return String.Format("{0} {1}", GivenName, SurName);
+            return String.Format("{0} {1}", Name, SurName);
         }
 
         public void Fill(global::System.Data.DataRow dr)
@@ -63,8 +69,8 @@ namespace NetMud.Data.Game
             SurName = outSurName;
 
             string outGivenName = default(string);
-            DataUtility.GetFromDataRow<string>(dr, "GivenName", ref outGivenName);
-            GivenName = outGivenName;
+            DataUtility.GetFromDataRow<string>(dr, "Name", ref outGivenName);
+            Name = outGivenName;
 
             int outLKL = default(int);
             DataUtility.GetFromDataRow<int>(dr, "LastKnownLocation", ref outLKL);
@@ -120,8 +126,8 @@ namespace NetMud.Data.Game
         {
             ICharacter returnValue = default(ICharacter);
             var sql = new StringBuilder();
-            sql.Append("insert into [dbo].[Character]([SurName], [GivenName], [AccountHandle])");
-            sql.AppendFormat(" values('{0}','{1}','{2}')", SurName, GivenName, AccountHandle);
+            sql.Append("insert into [dbo].[Character]([SurName], [Name], [AccountHandle])");
+            sql.AppendFormat(" values('{0}','{1}','{2}')", SurName, Name, AccountHandle);
             sql.Append(" select * from [dbo].[Character] where ID = Scope_Identity()");
 
             var ds = SqlWrapper.RunDataset(sql.ToString(), CommandType.Text);
@@ -164,7 +170,7 @@ namespace NetMud.Data.Game
             var sql = new StringBuilder();
             sql.Append("update [dbo].[Character] set ");
             sql.AppendFormat(" [SurName] = '{0}' ", SurName);
-            sql.AppendFormat(" , [GivenName] = '{0}' ", GivenName);
+            sql.AppendFormat(" , [Name] = '{0}' ", Name);
             sql.AppendFormat(" , [AccountHandle] = '{0}' ", AccountHandle);
             sql.AppendFormat(" , [LastKnownLocation] = {0} ", LastKnownLocation);
             sql.AppendFormat(" , [LastKnownLocationType] = '{0}' ", LastKnownLocationType);

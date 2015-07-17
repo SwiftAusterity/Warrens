@@ -7,13 +7,14 @@ using System.Collections.Generic;
 using System.Linq;
 
 using NetMud.Utility;
+using NetMud.DataStructure.Base.EntityBackingData;
 
 namespace NutMud.Commands.System
 {
     //Really help can be invoked on anything that is helpful, even itself
     [CommandKeyword("SpawnNewObject")]
     [CommandPermission(StaffRank.Admin)]
-    [CommandParameter(CommandUsage.Subject, typeof(NetMud.Data.Game.Object), new CacheReferenceType[] { CacheReferenceType.Data }, false)]
+    [CommandParameter(CommandUsage.Subject, typeof(NetMud.Data.EntityBackingData.ObjectData), new CacheReferenceType[] { CacheReferenceType.Data }, false)]
     [CommandParameter(CommandUsage.Target, typeof(ILocation), new CacheReferenceType[] { CacheReferenceType.Entity }, true)]
     [CommandRange(CommandRangeType.Touch, 0)]
     public class SpawnNewObject : ICommand, IHelpful
@@ -31,7 +32,7 @@ namespace NutMud.Commands.System
 
         public IEnumerable<string> Execute()
         {
-            var newObject = (IObject)Subject;
+            var newObject = (IObjectData)Subject;
             var sb = new List<string>();
             var spawnTo = OriginLocation;
 
@@ -39,10 +40,10 @@ namespace NutMud.Commands.System
             if (Target != null)
                 spawnTo = (ILocation)Target;
 
-            newObject.SpawnNewInWorld(spawnTo);
+            var entityObject = new NetMud.Data.Game.Object(newObject, spawnTo);
 
             //TODO: keywords is janky, location should have its own identifier name somehow for output purposes
-            sb.Add(String.Format("{0} spawned to {1}", newObject.Name, spawnTo.Keywords[0]));
+            sb.Add(String.Format("{0} spawned to {1}", entityObject.DataTemplate.Name, spawnTo.Keywords[0]));
 
             return sb;
         }

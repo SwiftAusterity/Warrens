@@ -5,10 +5,10 @@ using NetMud.DataStructure.Base.System;
 
 namespace NetMud.DataStructure.Base.Entity
 {
-    public interface IObject : IActor, ILocation, IData
+    public interface IObject : IActor, ILocation
     {
         EntityContainer<IObject> Contents { get; set; }
-        string Name { get; set; }
+
         long LastKnownLocation { get; set; }
         string LastKnownLocationType { get; set; }
     }

@@ -7,10 +7,8 @@ using NetMud.DataStructure.SupportingClasses;
 
 namespace NetMud.DataStructure.Base.Place
 {
-    public interface IRoom : IActor, ILocation, IData
+    public interface IRoom : IActor, ILocation
     {
-        string Title { get; set; }
-
         EntityContainer<IObject> ObjectsInRoom { get; set; }
         EntityContainer<IMobile> MobilesInRoom { get; set; }
     }

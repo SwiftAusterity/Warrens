@@ -37,17 +37,17 @@ namespace NetMud.DataAccess
 
         public bool PreLoadAll<T>() where T : IData
         {
-            if (!typeof(T).GetInterfaces().Contains(typeof(IEntity)))
-                return false;
+            var backingClass = Activator.CreateInstance(typeof(T)) as IEntityBackingData;
+
+            var implimentingEntityClass = backingClass.EntityClass;
 
             var dataBacker = new DataAccess.DataWrapper();
 
             foreach(IData thing in dataBacker.GetAll<T>())
             {
-                var typeT = typeof(T);
-                var entityThing = Activator.CreateInstance(typeT, new object[] { (T)thing }) as IEntity;
+                var entityThing = Activator.CreateInstance(implimentingEntityClass, new object[] { (T)thing }) as IEntity;
 
-                var cacheKey = new LiveCacheKey(typeof(T), entityThing.BirthMark);
+                var cacheKey = new LiveCacheKey(implimentingEntityClass, entityThing.BirthMark);
 
                 globalCache.AddOrGetExisting(cacheKey.KeyHash(), entityThing, globalPolicy);
             }

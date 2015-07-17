@@ -12,6 +12,7 @@ namespace NetMud.DataStructure.Base.System
         long ID { get; set; }
         DateTime Created { get; set; }
         DateTime LastRevised { get; set; }
+        string Name { get; set; }
 
         void Fill(DataRow dr);
         IData Create();

@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace NetMud.DataStructure.Base.System
 {
-    public interface IMessage
+    public interface IEntityBackingData : IData
     {
+        Type EntityClass { get; }
     }
 }

@@ -8,6 +8,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using NetMud.Models;
 using NetMud.Data.Game;
+using NetMud.Data.EntityBackingData;
 
 namespace NetMud.Controllers
 {
@@ -101,7 +102,7 @@ namespace NetMud.Controllers
             };
 
             var newChar = new Character();
-            newChar.GivenName = newGivenName;
+            newChar.Name = newGivenName;
             newChar.SurName = newSurName;
 
             message = model.authedUser.GameAccount.AddCharacter(newChar);

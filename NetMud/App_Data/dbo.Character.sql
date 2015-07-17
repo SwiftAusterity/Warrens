@@ -3,7 +3,7 @@
     [Created]       DATETIME      DEFAULT (getutcdate()) NOT NULL,
     [LastRevised]   DATETIME      DEFAULT (getutcdate()) NOT NULL,
     [SurName]       VARCHAR (200) NOT NULL,
-    [GivenName]     VARCHAR (200) NOT NULL,
+    [Name]     VARCHAR (200) NOT NULL,
     [AccountHandle] VARCHAR (200) NOT NULL,
 	[LastKnownLocation]		BIGINT		  DEFAULT(-1) NOT NULL,
 	[LastKnownLocationType]	VARCHAR(MAX)  DEFAULT('') NOT NULL,

@@ -1,4 +1,5 @@
-﻿using NetMud.Data.Game;
+﻿using NetMud.Data.EntityBackingData;
+using NetMud.Data.Game;
 using NetMud.DataAccess;
 using NetMud.DataStructure.Base.Place;
 using System;
@@ -14,7 +15,7 @@ namespace NetMud
         {
             var liveWorld = new LiveCache();
 
-            liveWorld.PreLoadAll<Room>();
+            liveWorld.PreLoadAll<RoomData>();
         }
     }
 }

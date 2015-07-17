@@ -11,7 +11,5 @@ namespace NetMud.DataStructure.Base.System
 {
     public interface IReference : IData, IHelpful
     {
-        string Name { get; set; }
-
     }
 }

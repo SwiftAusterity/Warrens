@@ -39,8 +39,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Game\Character.cs" />
+    <Compile Include="EntityBackingData\Character.cs" />
+    <Compile Include="EntityBackingData\ObjectData.cs" />
+    <Compile Include="EntityBackingData\PathData.cs" />
+    <Compile Include="EntityBackingData\RoomData.cs" />
     <Compile Include="Game\Object.cs" />
+    <Compile Include="Game\Path.cs" />
     <Compile Include="Game\Player.cs" />
     <Compile Include="Game\Room.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

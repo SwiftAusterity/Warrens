@@ -1,5 +1,6 @@
 ﻿using NetMud.DataAccess;
 using NetMud.DataStructure.Base.Entity;
+using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
@@ -22,21 +23,23 @@ namespace NetMud.Data.Game
             Contents = new EntityContainer<IObject>();
         }
 
-        public Object(IObject backingStore)
+        public Object(IObjectData backingStore)
         {
             Contents = new EntityContainer<IObject>();
             DataTemplate = backingStore;
             GetFromWorldOrSpawn();
         }
 
-        public long ID { get; set; }
-        public DateTime Created { get; set; }
-        public DateTime LastRevised { get; set; }
+        public Object(IObjectData backingStore, ILocation spawnTo)
+        {
+            Contents = new EntityContainer<IObject>();
+            DataTemplate = backingStore;
+            GetFromWorldOrSpawn(spawnTo);
+        }
 
         public string BirthMark { get; private set; }
         public DateTime Birthdate { get; private set; }
         public string[] Keywords { get; set; }
-        public string Name { get; set; }
 
         public IData DataTemplate { get; private set; }
 
@@ -132,6 +135,27 @@ namespace NetMud.Data.Game
             }
         }
 
+        public void GetFromWorldOrSpawn(ILocation spawnTo)
+        {
+            var liveWorld = new LiveCache();
+
+            //Try to see if they are already there
+            var me = liveWorld.Get<IObject>(DataTemplate.ID, typeof(IObject));
+
+            //Isn't in the world currently
+            if (me == default(IObject))
+                SpawnNewInWorld(spawnTo);
+            else
+            {
+                BirthMark = me.BirthMark;
+                Keywords = me.Keywords;
+                Birthdate = me.Birthdate;
+                CurrentLocation = me.CurrentLocation;
+                DataTemplate = me.DataTemplate;
+                CurrentLocation.MoveTo<IObject>(this);
+            }
+        }
+
         public void SpawnNewInWorld()
         {
             throw new NotImplementedException("Objects can't spawn to nothing");
@@ -140,7 +164,7 @@ namespace NetMud.Data.Game
         public void SpawnNewInWorld(ILocation spawnTo)
         {
             var liveWorld = new LiveCache();
-            var backingStore = (IObject)DataTemplate;
+            var backingStore = (IObjectData)DataTemplate;
 
             BirthMark = Birthmarker.GetBirthmark(backingStore);
             Keywords = new string[] { backingStore.Name.ToLower() };
@@ -164,138 +188,11 @@ namespace NetMud.Data.Game
         public IEnumerable<string> RenderToLook()
         {
             var sb = new List<string>();
-            var backingStore = (IObject)DataTemplate;
+            var backingStore = (IObjectData)DataTemplate;
 
             sb.Add(string.Format("There is a {0} here", backingStore.Name));
 
             return sb;
-        }
-
-        public void Fill(global::System.Data.DataRow dr)
-        {
-            int outId = default(int);
-            DataUtility.GetFromDataRow<int>(dr, "ID", ref outId);
-            ID = outId;
-
-            DateTime outCreated = default(DateTime);
-            DataUtility.GetFromDataRow<DateTime>(dr, "Created", ref outCreated);
-            Created = outCreated;
-
-            DateTime outRevised = default(DateTime);
-            DataUtility.GetFromDataRow<DateTime>(dr, "LastRevised", ref outRevised);
-            LastRevised = outRevised;
-
-            string outName = default(string);
-            DataUtility.GetFromDataRow<string>(dr, "Name", ref outName);
-            Name = outName;
-
-            int outLKL = default(int);
-            DataUtility.GetFromDataRow<int>(dr, "LastKnownLocation", ref outLKL);
-            LastKnownLocation = outLKL;
-
-            string outLKLT = default(string);
-            DataUtility.GetFromDataRow<string>(dr, "LastKnownLocationType", ref outLKLT);
-            LastKnownLocationType = outLKLT;
-
-            DataTemplate = this;
-        }
-
-        public IData Create()
-        {
-            IObject returnValue = default(IObject);
-            var sql = new StringBuilder();
-            sql.Append("insert into [dbo].[Object]([Name])");
-            sql.AppendFormat(" values('{0}')", Name);
-            sql.Append(" select * from [dbo].[Object] where ID = Scope_Identity()");
-
-            var ds = SqlWrapper.RunDataset(sql.ToString(), CommandType.Text);
-
-            if (ds.HasErrors)
-            {
-                //TODO: Error handling logging?
-            }
-            else if (ds.Rows != null)
-            {
-                foreach (DataRow dr in ds.Rows)
-                {
-                    try
-                    {
-                        Fill(dr);
-                        returnValue = this;
-                    }
-                    catch
-                    {
-                        //error logging
-                    }
-                }
-            }
-
-            return returnValue;
-        }
-
-        public bool Remove()
-        {
-            var sql = new StringBuilder();
-            sql.AppendFormat("remove from [dbo].[Object] where ID = {0}", ID);
-
-            SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text);
-
-            return true;
-        }
-
-        public bool Save()
-        {
-            var sql = new StringBuilder();
-            sql.Append("update [dbo].[Object] set ");
-            sql.AppendFormat(" [Name] = '{0}' ", Name);
-            sql.AppendFormat(" , [LastKnownLocation] = {0} ", LastKnownLocation);
-            sql.AppendFormat(" , [LastKnownLocationType] = '{0}' ", LastKnownLocationType);
-            sql.AppendFormat(" , [LastRevised] = GetUTCDate()");
-            sql.AppendFormat(" where ID = {0}", ID);
-
-            SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text);
-
-            return true;
-        }
-
-        public int CompareTo(IData other)
-        {
-            if (other != null)
-            {
-                try
-                {
-                    if (other.GetType() != typeof(Object))
-                        return -1;
-
-                    if (other.ID.Equals(this.ID))
-                        return 1;
-
-                    return 0;
-                }
-                catch
-                {
-                    //Minor error logging
-                }
-            }
-
-            return -99;
-        }
-
-        public bool Equals(IData other)
-        {
-            if (other != default(IData))
-            {
-                try
-                {
-                    return other.GetType() == typeof(Object) && other.ID.Equals(this.ID);
-                }
-                catch
-                {
-                    //Minor error logging
-                }
-            }
-
-            return false;
         }
 
         public int CompareTo(IEntity other)

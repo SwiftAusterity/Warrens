@@ -1,6 +1,7 @@
 ﻿using NetMud.Data;
 using NetMud.DataAccess;
 using NetMud.DataStructure.Base.Entity;
+using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Automation;
@@ -150,7 +151,7 @@ namespace NetMud.Data.Game
             var ch = (ICharacter)DataTemplate;
 
             BirthMark = Birthmarker.GetBirthmark(ch);
-            Keywords = new string[] { ch.GivenName.ToLower(), ch.SurName.ToLower() };
+            Keywords = new string[] { ch.Name.ToLower(), ch.SurName.ToLower() };
             Birthdate = DateTime.Now;
 
             //TODO: Not hardcode the zeroth room

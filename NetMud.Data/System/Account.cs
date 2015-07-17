@@ -1,5 +1,7 @@
-﻿using NetMud.Data.Game;
+﻿using NetMud.Data.EntityBackingData;
+using NetMud.Data.Game;
 using NetMud.DataAccess;
+using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.System;
 using NetMud.Utility;
 using System;
@@ -56,7 +58,7 @@ namespace NetMud.Data.System
             var dataWrapper = new DataWrapper();
             IEnumerable<ICharacter> systemChars = dataWrapper.GetAll<Character>();
 
-            if (systemChars.Any(ch => ch.GivenName.Equals(newChar.GivenName) && newChar.SurName.Equals(newChar.SurName)))
+            if (systemChars.Any(ch => ch.Name.Equals(newChar.Name) && newChar.SurName.Equals(newChar.SurName)))
                 return "A character with that name already exists, please choose another.";
 
             newChar.AccountHandle = GlobalIdentityHandle;
