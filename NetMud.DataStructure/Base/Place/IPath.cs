@@ -12,8 +12,8 @@ namespace NetMud.DataStructure.Base.Place
 {
     public interface IPath : IActor, ISpawnAsSingleton
     {
-        IRoom ToRoom { get; set; }
-        IRoom FromRoom { get; set; }
+        ILocation ToLocation { get; set; }
+        ILocation FromLocation { get; set; }
 
         MessageCluster Enter { get; set; }
     }

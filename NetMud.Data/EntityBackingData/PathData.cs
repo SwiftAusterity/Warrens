@@ -24,8 +24,13 @@ namespace NetMud.Data.EntityBackingData
         public DateTime LastRevised { get; set; }
         public string Name { get; set; }
 
-        public long ToRoomID { get; set; }
-        public long FromRoomID { get; set; }
+        public long ToLocationID { get; set; }
+        public string ToLocationType { get; set; }
+
+
+        public long FromLocationID { get; set; }
+        public string FromLocationType { get; set; }
+
         public string MessageToActor { get; set; }
         public string MessageToOrigin { get; set; }
         public string MessageToDestination { get; set; }
@@ -54,12 +59,20 @@ namespace NetMud.Data.EntityBackingData
 
 
             long outToRoomID = default(long);
-            DataUtility.GetFromDataRow<long>(dr, "ToRoomID", ref outToRoomID);
-            ToRoomID = outToRoomID;
+            DataUtility.GetFromDataRow<long>(dr, "ToLocationID", ref outToRoomID);
+            ToLocationID = outToRoomID;
 
             long outFromRoomID = default(long);
-            DataUtility.GetFromDataRow<long>(dr, "FromRoomID", ref outFromRoomID);
-            FromRoomID = outFromRoomID;
+            DataUtility.GetFromDataRow<long>(dr, "FromLocationID", ref outFromRoomID);
+            FromLocationID = outFromRoomID;
+
+            string outToRoomType = default(string);
+            DataUtility.GetFromDataRow<string>(dr, "ToLocationType", ref outToRoomType);
+            ToLocationType = outToRoomType;
+
+            string outFromRoomType = default(string);
+            DataUtility.GetFromDataRow<string>(dr, "FromLocationType", ref outFromRoomType);
+            FromLocationType = outFromRoomType;
 
             string outMessageToDestination = default(string);
             DataUtility.GetFromDataRow<string>(dr, "MessageToDestination", ref outMessageToDestination);
@@ -94,10 +107,11 @@ namespace NetMud.Data.EntityBackingData
         {
             IPathData returnValue = default(IPathData);
             var sql = new StringBuilder();
-            sql.Append("insert into [dbo].[Path]([Name],[ToRoomID],[FromRoomID],[MessageToDestination],[MessageToOrigin],[MessageToActor],[AudibleToSurroundings]");
-            sql.Append(",[VisibleToSurroundings],[AudibleStrength],[VisibleStrength])");
-            sql.AppendFormat(" values('{0}',{1},{2},'{3}','{4}','{5}','{6}','{7}',{8},{9})"
-                , Name, ToRoomID, FromRoomID, MessageToDestination, MessageToOrigin, MessageToActor, AudibleToSurroundings, VisibleToSurroundings, AudibleStrength, VisibleStrength);
+            sql.Append("insert into [dbo].[Path]([Name],[ToLocationID],[FromLocationID],[ToLocationType],[FromLocationType],[MessageToDestination],[MessageToOrigin]");
+            sql.Append(",[MessageToActor],[AudibleToSurroundings],[VisibleToSurroundings],[AudibleStrength],[VisibleStrength])");
+            sql.AppendFormat(" values('{0}',{1},{2},'{3}','{4}','{5}','{6}','{7}','{8}','{9}',{10},{11})"
+                , Name, ToLocationID, FromLocationID, ToLocationType, FromLocationType, MessageToDestination, MessageToOrigin
+                , MessageToActor, AudibleToSurroundings, VisibleToSurroundings, AudibleStrength, VisibleStrength);
             sql.Append(" select * from [dbo].[Path] where ID = Scope_Identity()");
 
             var ds = SqlWrapper.RunDataset(sql.ToString(), CommandType.Text);
@@ -141,15 +155,17 @@ namespace NetMud.Data.EntityBackingData
             var sql = new StringBuilder();
             sql.Append("update [dbo].[Path] set ");
             sql.AppendFormat(" [Name] = '{0}' ", Name);
-            sql.AppendFormat(", [ToRoomID] = '{0}' ", Name);
-            sql.AppendFormat(", [FromRoomID] = '{0}' ", Name);
-            sql.AppendFormat(", [MessageToDestination] = '{0}' ", Name);
-            sql.AppendFormat(", [MessageToOrigin] = '{0}' ", Name);
-            sql.AppendFormat(", [MessageToActor] = '{0}' ", Name);
-            sql.AppendFormat(", [AudibleToSurroundings] = '{0}' ", Name);
-            sql.AppendFormat(", [VisibleToSurroundings] = '{0}' ", Name);
-            sql.AppendFormat(", [AudibleStrength] = '{0}' ", Name);
-            sql.AppendFormat(", [VisibleStrength] = '{0}' ", Name);
+            sql.AppendFormat(", [ToLocationID] = {0} ", ToLocationID);
+            sql.AppendFormat(", [FromLocationID] = {0} ", FromLocationID);
+            sql.AppendFormat(", [ToLocationType] = '{0}' ", ToLocationType);
+            sql.AppendFormat(", [FromLocationType] = '{0}' ", FromLocationType);
+            sql.AppendFormat(", [MessageToDestination] = '{0}' ", MessageToDestination);
+            sql.AppendFormat(", [MessageToOrigin] = '{0}' ", MessageToOrigin);
+            sql.AppendFormat(", [MessageToActor] = '{0}' ", MessageToActor);
+            sql.AppendFormat(", [AudibleToSurroundings] = '{0}' ", AudibleToSurroundings);
+            sql.AppendFormat(", [VisibleToSurroundings] = '{0}' ", VisibleToSurroundings);
+            sql.AppendFormat(", [AudibleStrength] = {0} ", AudibleStrength);
+            sql.AppendFormat(", [VisibleStrength] = {0} ", VisibleStrength);
             sql.AppendFormat(", [LastRevised] = GetUTCDate()");
             sql.AppendFormat(" where ID = {0}", ID);
 

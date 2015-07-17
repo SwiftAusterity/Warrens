@@ -1,4 +1,7 @@
 ﻿using NetMud.DataStructure.Base.Place;
+using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Behaviors.Rendering;
+using NetMud.DataStructure.SupportingClasses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,80 +12,16 @@ namespace NetMud.Data.Game
 {
     public class Path : IPath
     {
-        public IRoom ToRoom
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
+        public ILocation ToLocation { get; set; }
+        public ILocation FromLocation { get; set; }
+        public MessageCluster Enter { get; set; }
 
-        public IRoom FromRoom
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
+        public string BirthMark { get; private set; }
+        public DateTime Birthdate { get; private set; }
+        public string[] Keywords { get; set; }
+        public IData DataTemplate { get; private set; }
 
-        public DataStructure.SupportingClasses.MessageCluster Enter
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public string BirthMark
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public DateTime Birthdate
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public string[] Keywords
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public DataStructure.Base.System.IData DataTemplate
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public DataStructure.Behaviors.Rendering.ILocation CurrentLocation
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
+        public ILocation CurrentLocation { get; set; }
 
         public void GetFromWorldOrSpawn()
         {
@@ -94,7 +33,7 @@ namespace NetMud.Data.Game
             throw new NotImplementedException();
         }
 
-        public void SpawnNewInWorld(DataStructure.Behaviors.Rendering.ILocation spawnTo)
+        public void SpawnNewInWorld(ILocation spawnTo)
         {
             throw new NotImplementedException();
         }
@@ -104,12 +43,12 @@ namespace NetMud.Data.Game
             throw new NotImplementedException();
         }
 
-        public int CompareTo(DataStructure.Base.System.IEntity other)
+        public int CompareTo(IEntity other)
         {
             throw new NotImplementedException();
         }
 
-        public bool Equals(DataStructure.Base.System.IEntity other)
+        public bool Equals(IEntity other)
         {
             throw new NotImplementedException();
         }
