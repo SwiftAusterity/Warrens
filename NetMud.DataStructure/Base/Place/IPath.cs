@@ -15,6 +15,8 @@ namespace NetMud.DataStructure.Base.Place
         ILocation ToLocation { get; set; }
         ILocation FromLocation { get; set; }
 
+        MovementDirectionType MovementDirection { get; }
+
         MessageCluster Enter { get; set; }
     }
 }

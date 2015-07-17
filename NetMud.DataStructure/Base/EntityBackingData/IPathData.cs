@@ -9,10 +9,14 @@ namespace NetMud.DataStructure.Base.EntityBackingData
 {
     public interface IPathData : IEntityBackingData
     {
-        long ToLocationID { get; set; }
+        long PassingWidth { get; set; }
+        long PassingHeight { get; set; }
+        int DegreesFromNorth { get; set; }
+
+        string ToLocationID { get; set; }
         string ToLocationType { get; set; }
 
-        long FromLocationID { get; set; }
+        string FromLocationID { get; set; }
         string FromLocationType { get; set; }
 
         string MessageToActor { get; set; }

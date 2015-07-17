@@ -24,11 +24,14 @@ namespace NetMud.Data.EntityBackingData
         public DateTime LastRevised { get; set; }
         public string Name { get; set; }
 
-        public long ToLocationID { get; set; }
+        public long PassingWidth { get; set; }
+        public long PassingHeight { get; set; }
+        public int DegreesFromNorth { get; set; }
+
+        public string ToLocationID { get; set; }
         public string ToLocationType { get; set; }
 
-
-        public long FromLocationID { get; set; }
+        public string FromLocationID { get; set; }
         public string FromLocationType { get; set; }
 
         public string MessageToActor { get; set; }
@@ -58,12 +61,12 @@ namespace NetMud.Data.EntityBackingData
             Name = outTitle;
 
 
-            long outToRoomID = default(long);
-            DataUtility.GetFromDataRow<long>(dr, "ToLocationID", ref outToRoomID);
+            string outToRoomID = default(string);
+            DataUtility.GetFromDataRow<string>(dr, "ToLocationID", ref outToRoomID);
             ToLocationID = outToRoomID;
 
-            long outFromRoomID = default(long);
-            DataUtility.GetFromDataRow<long>(dr, "FromLocationID", ref outFromRoomID);
+            string outFromRoomID = default(string);
+            DataUtility.GetFromDataRow<string>(dr, "FromLocationID", ref outFromRoomID);
             FromLocationID = outFromRoomID;
 
             string outToRoomType = default(string);
@@ -109,7 +112,7 @@ namespace NetMud.Data.EntityBackingData
             var sql = new StringBuilder();
             sql.Append("insert into [dbo].[Path]([Name],[ToLocationID],[FromLocationID],[ToLocationType],[FromLocationType],[MessageToDestination],[MessageToOrigin]");
             sql.Append(",[MessageToActor],[AudibleToSurroundings],[VisibleToSurroundings],[AudibleStrength],[VisibleStrength])");
-            sql.AppendFormat(" values('{0}',{1},{2},'{3}','{4}','{5}','{6}','{7}','{8}','{9}',{10},{11})"
+            sql.AppendFormat(" values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}',{10},{11})"
                 , Name, ToLocationID, FromLocationID, ToLocationType, FromLocationType, MessageToDestination, MessageToOrigin
                 , MessageToActor, AudibleToSurroundings, VisibleToSurroundings, AudibleStrength, VisibleStrength);
             sql.Append(" select * from [dbo].[Path] where ID = Scope_Identity()");
@@ -155,8 +158,8 @@ namespace NetMud.Data.EntityBackingData
             var sql = new StringBuilder();
             sql.Append("update [dbo].[Path] set ");
             sql.AppendFormat(" [Name] = '{0}' ", Name);
-            sql.AppendFormat(", [ToLocationID] = {0} ", ToLocationID);
-            sql.AppendFormat(", [FromLocationID] = {0} ", FromLocationID);
+            sql.AppendFormat(", [ToLocationID] = '{0}' ", ToLocationID);
+            sql.AppendFormat(", [FromLocationID] = '{0}' ", FromLocationID);
             sql.AppendFormat(", [ToLocationType] = '{0}' ", ToLocationType);
             sql.AppendFormat(", [FromLocationType] = '{0}' ", FromLocationType);
             sql.AppendFormat(", [MessageToDestination] = '{0}' ", MessageToDestination);

@@ -44,6 +44,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RenderUtility.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NetMud.DataStructure\NetMud.DataStructure.csproj">
+      <Project>{88b7a648-fe23-4e88-9b60-ae17c8858af4}</Project>
+      <Name>NetMud.DataStructure</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

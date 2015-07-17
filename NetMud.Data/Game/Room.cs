@@ -22,12 +22,14 @@ namespace NetMud.Data.Game
         {
             ObjectsInRoom = new EntityContainer<IObject>();
             MobilesInRoom = new EntityContainer<IMobile>();
+            Pathways = new EntityContainer<IPath>();
         }
 
         public Room(IRoomData room)
         {
             ObjectsInRoom = new EntityContainer<IObject>();
             MobilesInRoom = new EntityContainer<IMobile>();
+            Pathways = new EntityContainer<IPath>();
 
             //Yes it's its own datatemplate and currentLocation
             DataTemplate = room;
@@ -50,6 +52,7 @@ namespace NetMud.Data.Game
         #region Container
         public EntityContainer<IObject> ObjectsInRoom { get; set; }
         public EntityContainer<IMobile> MobilesInRoom { get; set; }
+        public EntityContainer<IPath> Pathways { get; set; }
 
         public IEnumerable<T> GetContents<T>()
         {
@@ -63,6 +66,9 @@ namespace NetMud.Data.Game
             if (implimentedTypes.Contains(typeof(IObject)))
                 contents.AddRange(GetContents<T>("objects"));
 
+            if (implimentedTypes.Contains(typeof(IPath)))
+                contents.AddRange(GetContents<T>("pathways"));
+
             return contents;
         }
 
@@ -74,6 +80,8 @@ namespace NetMud.Data.Game
                     return MobilesInRoom.EntitiesContained.Select(ent => (T)ent);
                 case "objects":
                     return ObjectsInRoom.EntitiesContained.Select(ent => (T)ent);
+                case "pathways":
+                    return Pathways.EntitiesContained.Select(ent => (T)ent);
             }
 
             return Enumerable.Empty<T>();
@@ -98,16 +106,29 @@ namespace NetMud.Data.Game
                 ObjectsInRoom.Add(obj);
                 return String.Empty;
             }
-            else if (implimentedTypes.Contains(typeof(IMobile)))
-            {
-                var mob = (IMobile)thing;
 
-                if (MobilesInRoom.Contains(mob))
+            if (implimentedTypes.Contains(typeof(IMobile)))
+            {
+                var obj = (IMobile)thing;
+
+                if (MobilesInRoom.Contains(obj))
                     return "That is already in the container";
 
-                MobilesInRoom.Add(mob);
+                MobilesInRoom.Add(obj);
                 return String.Empty;
             }
+
+            if (implimentedTypes.Contains(typeof(IPath)))
+            {
+                var obj = (IPath)thing;
+
+                if (Pathways.Contains(obj))
+                    return "That is already in the container";
+
+                Pathways.Add(obj);
+                return String.Empty;
+            }
+
 
             return "Invalid type to move to container.";
         }
@@ -131,14 +152,26 @@ namespace NetMud.Data.Game
                 ObjectsInRoom.Remove(obj);
                 return String.Empty;
             }
+
             if (implimentedTypes.Contains(typeof(IMobile)))
             {
-                var mob = (IMobile)thing;
+                var obj = (IMobile)thing;
 
-                if (!MobilesInRoom.Contains(mob))
+                if (!MobilesInRoom.Contains(obj))
                     return "That is not in the container";
 
-                MobilesInRoom.Remove(mob);
+                MobilesInRoom.Remove(obj);
+                return String.Empty;
+            }
+
+            if (implimentedTypes.Contains(typeof(IPath)))
+            {
+                var obj = (IPath)thing;
+
+                if (!Pathways.Contains(obj))
+                    return "That is not in the container";
+
+                Pathways.Remove(obj);
                 return String.Empty;
             }
 

@@ -12,5 +12,6 @@ namespace NetMud.DataStructure.Base.Place
     {
         EntityContainer<IObject> ObjectsInRoom { get; set; }
         EntityContainer<IMobile> MobilesInRoom { get; set; }
+        EntityContainer<IPath> Pathways { get; set; }
     }
 }

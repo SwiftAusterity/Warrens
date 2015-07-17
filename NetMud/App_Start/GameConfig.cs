@@ -15,7 +15,9 @@ namespace NetMud
         {
             var liveWorld = new LiveCache();
 
+            //Rooms, paths, spawns (objs then mobs)
             liveWorld.PreLoadAll<RoomData>();
+            liveWorld.PreLoadAll<PathData>();
         }
     }
 }
