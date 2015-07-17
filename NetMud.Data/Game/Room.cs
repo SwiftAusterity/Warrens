@@ -55,14 +55,15 @@ namespace NetMud.Data.Game
         {
             var implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
 
-            if (implimentedTypes.Contains(typeof(IEntity)))
-                return GetContents<T>("mobiles").Concat(GetContents<T>("objects"));
-            else if (implimentedTypes.Contains(typeof(IMobile)))
-                return GetContents<T>("mobiles");
-            else if (implimentedTypes.Contains(typeof(IObject)))
-                return GetContents<T>("objects");
+            var contents = new List<T>();
 
-            return Enumerable.Empty<T>();
+            if (implimentedTypes.Contains(typeof(IMobile)))
+                contents.AddRange(GetContents<T>("mobiles"));
+            
+            if (implimentedTypes.Contains(typeof(IObject)))
+                contents.AddRange(GetContents<T>("objects"));
+
+            return contents;
         }
 
         public IEnumerable<T> GetContents<T>(string containerName)

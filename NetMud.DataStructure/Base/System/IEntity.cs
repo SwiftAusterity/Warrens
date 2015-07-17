@@ -20,7 +20,6 @@ namespace NetMud.DataStructure.Base.System
 
         ILocation CurrentLocation { get; set; }
 
-        void GetFromWorldOrSpawn();
         void SpawnNewInWorld();
         void SpawnNewInWorld(ILocation spawnTo);
     }

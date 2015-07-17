@@ -27,14 +27,14 @@ namespace NetMud.Data.Game
         {
             Contents = new EntityContainer<IObject>();
             DataTemplate = backingStore;
-            GetFromWorldOrSpawn();
+            SpawnNewInWorld();
         }
 
         public Object(IObjectData backingStore, ILocation spawnTo)
         {
             Contents = new EntityContainer<IObject>();
             DataTemplate = backingStore;
-            GetFromWorldOrSpawn(spawnTo);
+            SpawnNewInWorld(spawnTo);
         }
 
         public string BirthMark { get; private set; }
@@ -114,48 +114,6 @@ namespace NetMud.Data.Game
         }
         #endregion
 
-        public void GetFromWorldOrSpawn()
-        {
-            var liveWorld = new LiveCache();
-
-            //Try to see if they are already there
-            var me = liveWorld.Get<IObject>(DataTemplate.ID, typeof(IObject));
-
-            //Isn't in the world currently
-            if (me == default(IObject))
-                SpawnNewInWorld();
-            else
-            {
-                BirthMark = me.BirthMark;
-                Keywords = me.Keywords;
-                Birthdate = me.Birthdate;
-                CurrentLocation = me.CurrentLocation;
-                DataTemplate = me.DataTemplate;
-                CurrentLocation.MoveTo<IObject>(this);
-            }
-        }
-
-        public void GetFromWorldOrSpawn(ILocation spawnTo)
-        {
-            var liveWorld = new LiveCache();
-
-            //Try to see if they are already there
-            var me = liveWorld.Get<IObject>(DataTemplate.ID, typeof(IObject));
-
-            //Isn't in the world currently
-            if (me == default(IObject))
-                SpawnNewInWorld(spawnTo);
-            else
-            {
-                BirthMark = me.BirthMark;
-                Keywords = me.Keywords;
-                Birthdate = me.Birthdate;
-                CurrentLocation = me.CurrentLocation;
-                DataTemplate = me.DataTemplate;
-                CurrentLocation.MoveTo<IObject>(this);
-            }
-        }
-
         public void SpawnNewInWorld()
         {
             throw new NotImplementedException("Objects can't spawn to nothing");
@@ -163,6 +121,10 @@ namespace NetMud.Data.Game
 
         public void SpawnNewInWorld(ILocation spawnTo)
         {
+            //We can't even try this until we know if the data is there
+            if (DataTemplate == null)
+                throw new InvalidOperationException("Missing backing data store on object spawn event.");
+
             var liveWorld = new LiveCache();
             var backingStore = (IObjectData)DataTemplate;
 

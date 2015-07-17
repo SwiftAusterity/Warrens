@@ -1,6 +1,7 @@
 ﻿using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Behaviors.System;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -75,7 +76,9 @@ namespace NetMud.DataAccess
         /// <returns>all the stuff and things</returns>
         public IEnumerable<T> GetAll<T>(Type mainType)
         {
-            return globalCache.Where(keyValuePair => keyValuePair.Value.GetType().GetInterfaces().Contains(typeof(T)) && keyValuePair.Value.GetType().GetInterfaces().Contains(mainType)).Select(kvp => (T)kvp.Value);
+            return globalCache.Where(keyValuePair => keyValuePair.Value.GetType().GetInterfaces()
+                .Contains(typeof(T)) && keyValuePair.Value.GetType().GetInterfaces().Contains(mainType))
+                .Select(kvp => (T)kvp.Value);
         }
 
         public T Get<T>(LiveCacheKey key) where T : IEntity
@@ -92,14 +95,14 @@ namespace NetMud.DataAccess
             return default(T);
         }
 
-        public T Get<T>(long id) where T : IPlayer
+        public T Get<T>(long id) where T : IEntity
         {
             try
             {
                 var allPlayers = GetAll<T>();
 
-                if (allPlayers.Any(p => p.DataTemplate.ID.Equals(id)))
-                    return allPlayers.First(p => p.DataTemplate.ID.Equals(id));
+                if (allPlayers.Any(p => ((IEntity)p).DataTemplate.ID.Equals(id)))
+                    return allPlayers.First(p => ((IEntity)p).DataTemplate.ID.Equals(id));
             }
             catch
             {
@@ -115,8 +118,8 @@ namespace NetMud.DataAccess
             {
                 var allTheStuff = GetAll<T>(mainType);
 
-                if (allTheStuff.Any(p => p.DataTemplate.ID.Equals(id)))
-                    return allTheStuff.First(p => p.DataTemplate.ID.Equals(id));
+                if (allTheStuff.Any(p => ((IEntity)p).DataTemplate.ID.Equals(id)))
+                    return allTheStuff.First(p => ((IEntity)p).DataTemplate.ID.Equals(id));
             }
             catch
             {

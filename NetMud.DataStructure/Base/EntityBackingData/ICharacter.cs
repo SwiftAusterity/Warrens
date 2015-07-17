@@ -13,7 +13,7 @@ namespace NetMud.DataStructure.Base.EntityBackingData
         string SurName { get; set; }
         string AccountHandle { get; set; }
         IAccount Account { get; }
-        long LastKnownLocation { get; set; }
+        string LastKnownLocation { get; set; }
         string LastKnownLocationType { get; set; }
         string FullName();
     }

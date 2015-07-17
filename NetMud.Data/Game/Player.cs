@@ -6,6 +6,7 @@ using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Automation;
 using NetMud.DataStructure.Behaviors.Rendering;
+using NetMud.DataStructure.Behaviors.System;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
 using System;
@@ -140,8 +141,22 @@ namespace NetMud.Data.Game
                 ch.LastKnownLocationType = typeof(IRoom).Name;
 
             var lastKnownLocType = Type.GetType(ch.LastKnownLocationType);
-            ILocation lastKnownLoc = liveWorld.Get<ILocation>(ch.LastKnownLocation, lastKnownLocType);
 
+
+            ILocation lastKnownLoc = null;
+            if (lastKnownLocType != null && !String.IsNullOrWhiteSpace(ch.LastKnownLocation))
+            {
+                if (lastKnownLocType.GetInterfaces().Contains(typeof(ISpawnAsSingleton)))
+                {
+                    long lastKnownLocID = long.Parse(ch.LastKnownLocation);
+                    lastKnownLoc = liveWorld.Get<ILocation>(lastKnownLocID, lastKnownLocType);
+                }
+                else
+                {
+                    var cacheKey = new LiveCacheKey(lastKnownLocType, ch.LastKnownLocation);
+                    lastKnownLoc = liveWorld.Get<ILocation>(cacheKey);
+                }
+            }
             SpawnNewInWorld(lastKnownLoc);
         }
 
@@ -163,7 +178,7 @@ namespace NetMud.Data.Game
             CurrentLocation = spawnTo;
 
             //Set the data context's stuff too so we don't have to do this over again
-            ch.LastKnownLocation = spawnTo.DataTemplate.ID;
+            ch.LastKnownLocation = spawnTo.DataTemplate.ID.ToString();
             ch.LastKnownLocationType = spawnTo.GetType().Name;
             ch.Save();
 

@@ -78,6 +78,39 @@ namespace NetMud.DataAccess
             return returnList;
         }
 
+        public T GetOneBySharedKey<T>(string sharedKeyName, string sharedKeyValue) where T : IData
+        {
+            IData returnValue = default(T);
+            var sql = String.Format("select * from [dbo].[{0}] where {1} = '{2}'", typeof(T).Name, sharedKeyName, sharedKeyValue);
+
+            var ds = SqlWrapper.RunDataset(sql, CommandType.Text);
+
+            if (ds.HasErrors)
+            {
+                //TODO: Error handling logging?
+            }
+            else if (ds.Rows != null)
+            {
+                if(ds.Rows.Count > 1)
+                    throw new InvalidOperationException("More than one row returned for shared key.");
+
+                foreach (DataRow dr in ds.Rows)
+                {
+                    try
+                    {
+                        returnValue = Activator.CreateInstance(typeof(T)) as IData;
+                        returnValue.Fill(dr);
+                    }
+                    catch
+                    {
+                        //error logging
+                    }
+                }
+            }
+
+            return (T)returnValue;
+        }
+
         public T GetOne<T>(long id) where T : IData
         {
             IData returnValue = default(T);

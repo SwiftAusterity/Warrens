@@ -64,6 +64,10 @@ namespace NetMud.Interp
                 var parmList = commandType.GetCustomAttributes<CommandParameterAttribute>();
                 ParseParamaters(commandType, parmList);
 
+                //Did we get errors from the parameter parser? if so bail
+                if(AccessErrors.Count > 0)
+                    return;
+
                 Command = Activator.CreateInstance(commandType) as ICommand;
 
                 if (
@@ -193,6 +197,12 @@ namespace NetMud.Interp
             {
                 var currentParmString = String.Join(" ", internalCommandString.Take(parmWords)).ToLower();
 
+                if (!currentNeededParm.MatchesPattern(currentParmString))
+                {
+                    parmWords--;
+                    continue;
+                }
+
                 var validParms = validTargetTypes.Where(comm => comm.GetCustomAttributes<CommandKeywordAttribute>().Any(att => att.Keyword.Equals(currentParmString)));
 
                 if (validParms.Count() > 1)
@@ -239,6 +249,13 @@ namespace NetMud.Interp
             while (parmWords > 0)
             {
                 var currentParmString = String.Join(" ", internalCommandString.Take(parmWords)).ToLower();
+
+                if (!currentNeededParm.MatchesPattern(currentParmString))
+                {
+                    parmWords--;
+                    continue;
+                }
+
                 var validObjects = new List<T>();
 
                 switch(seekRange.Type)
@@ -299,6 +316,7 @@ namespace NetMud.Interp
         public void SeekInReferenceData<T>(CommandParameterAttribute currentNeededParm) where T : IReference
         {
             var referenceContext = new ReferenceAccess();
+            
             var internalCommandString = CommandStringRemainder.ToList();
 
             var parmWords = internalCommandString.Count();
@@ -306,6 +324,12 @@ namespace NetMud.Interp
             while (parmWords > 0)
             {
                 var currentParmString = String.Join(" ", internalCommandString.Take(parmWords));
+
+                if (!currentNeededParm.MatchesPattern(currentParmString))
+                {
+                    parmWords--;
+                    continue;
+                }
 
                 var validObject = referenceContext.GetOneReference<T>(currentParmString);
 
@@ -343,7 +367,19 @@ namespace NetMud.Interp
             {
                 var currentParmString = String.Join(" ", internalCommandString.Take(parmWords));
 
-                var validObject = dataContext.GetOne<T>(long.Parse(currentParmString));
+                if (!currentNeededParm.MatchesPattern(currentParmString))
+                {
+                    parmWords--;
+                    continue;
+                }
+
+                var validObject = default(T);
+
+                long parmID = -1;
+                if(!long.TryParse(currentParmString, out parmID))
+                    validObject = dataContext.GetOneBySharedKey<T>("Name", currentParmString);
+                else
+                    validObject = dataContext.GetOne<T>(parmID);
 
                 if (validObject != null && !validObject.Equals(default(T)))
                 {
