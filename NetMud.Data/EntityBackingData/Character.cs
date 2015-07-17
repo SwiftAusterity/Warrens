@@ -48,8 +48,8 @@ namespace NetMud.Data.EntityBackingData
 
         public void Fill(global::System.Data.DataRow dr)
         {
-            int outId = default(int);
-            DataUtility.GetFromDataRow<int>(dr, "ID", ref outId);
+            long outId = default(long);
+            DataUtility.GetFromDataRow<long>(dr, "ID", ref outId);
             ID = outId;
 
             string outAccountHandle = default(string);

@@ -9,6 +9,7 @@ using NetMud.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -69,9 +70,24 @@ namespace NetMud.Data.Game
             var liveWorld = new LiveCache();
             var bS = (IPathData)DataTemplate;
 
+            SpawnNewInWorld(null);
+        }
+
+        public void SpawnNewInWorld(ILocation spawnTo)
+        {
+            var liveWorld = new LiveCache();
+            var bS = (IPathData)DataTemplate;
+            var locationAssembly = Assembly.GetAssembly(typeof(ILocation));
+
+            MovementDirection = RenderUtility.TranslateDegreesToDirection(bS.DegreesFromNorth);
+
+            BirthMark = Birthmarker.GetBirthmark(bS);
+            Keywords = new string[] { bS.Name.ToLower(), MovementDirection.ToString().ToLower() };
+            Birthdate = DateTime.Now;
+
             //paths need two locations
             ILocation fromLocation = null;
-            var fromLocationType = Type.GetType(bS.FromLocationType);
+            var fromLocationType = locationAssembly.DefinedTypes.FirstOrDefault(tp => tp.Name.Equals(bS.FromLocationType));
 
             if (fromLocationType != null && !String.IsNullOrWhiteSpace(bS.FromLocationID))
             {
@@ -87,25 +103,8 @@ namespace NetMud.Data.Game
                 }
             }
 
-            SpawnNewInWorld(fromLocation);
-        }
-
-        public void SpawnNewInWorld(ILocation spawnTo)
-        {
-            if (spawnTo == null)
-                throw new NotImplementedException("Objects can't spawn to nothing");
-
-            var liveWorld = new LiveCache();
-            var bS = (IPathData)DataTemplate;
-
-            MovementDirection = RenderUtility.TranslateDegreesToDirection(bS.DegreesFromNorth);
-
-            BirthMark = Birthmarker.GetBirthmark(bS);
-            Keywords = new string[] { bS.Name, MovementDirection.ToString() };
-            Birthdate = DateTime.Now;
-
             ILocation toLocation = null;
-            var toLocationType = Type.GetType(bS.ToLocationType);
+            var toLocationType = locationAssembly.DefinedTypes.FirstOrDefault(tp => tp.Name.Equals(bS.ToLocationType));
 
             if (toLocationType != null && !String.IsNullOrWhiteSpace(bS.ToLocationID))
             {
@@ -121,13 +120,13 @@ namespace NetMud.Data.Game
                 }
             }
 
-            CurrentLocation = spawnTo;
-            FromLocation = spawnTo;
+            CurrentLocation = fromLocation;
+            FromLocation = fromLocation;
             ToLocation = toLocation;
 
             Enter = new MessageCluster(bS.MessageToActor, String.Empty, String.Empty, bS.MessageToOrigin, bS.MessageToDestination);
 
-            spawnTo.MoveTo<IPath>(this);
+            fromLocation.MoveTo<IPath>(this);
 
             liveWorld.Add<IPath>(this);
         }

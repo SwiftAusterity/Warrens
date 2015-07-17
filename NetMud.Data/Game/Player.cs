@@ -12,6 +12,7 @@ using NetMud.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace NetMud.Data.Game
 {
@@ -136,12 +137,12 @@ namespace NetMud.Data.Game
         {
             var liveWorld = new LiveCache();
             var ch = (ICharacter)DataTemplate;
+            var locationAssembly = Assembly.GetAssembly(typeof(ILocation));
 
             if (ch.LastKnownLocationType == null)
                 ch.LastKnownLocationType = typeof(IRoom).Name;
 
-            var lastKnownLocType = Type.GetType(ch.LastKnownLocationType);
-
+            var lastKnownLocType = locationAssembly.DefinedTypes.FirstOrDefault(tp => tp.Name.Equals(ch.LastKnownLocationType));
 
             ILocation lastKnownLoc = null;
             if (lastKnownLocType != null && !String.IsNullOrWhiteSpace(ch.LastKnownLocation))
@@ -172,7 +173,7 @@ namespace NetMud.Data.Game
             //TODO: Not hardcode the zeroth room
             if (spawnTo == null)
             {
-                spawnTo = liveWorld.Get<ILocation>(0, typeof(IRoom));
+                spawnTo = liveWorld.Get<ILocation>(1, typeof(IRoom));
             }
 
             CurrentLocation = spawnTo;
