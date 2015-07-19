@@ -3,20 +3,19 @@ using NetMud.DataStructure.Behaviors.Rendering;
 using NutMud.Commands.Attributes;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 using NetMud.Utility;
 
 namespace NutMud.Commands.System
 {
     //Really help can be invoked on anything that is helpful, even itself
-    [CommandKeyword("look")]
+    [CommandKeyword("look", false)]
     [CommandPermission(StaffRank.Player)]
     [CommandParameter(CommandUsage.Subject, typeof(ILookable), new CacheReferenceType[] { CacheReferenceType.Entity }, true )]
     [CommandRange(CommandRangeType.Touch, 0)]
     public class Look : ICommand, IHelpful
     {
+        public IActor Actor { get; set; }
         public object Subject { get; set; }
         public object Target { get; set; }
         public object Supporting { get; set; }

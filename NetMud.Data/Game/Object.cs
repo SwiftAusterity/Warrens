@@ -1,7 +1,6 @@
 ﻿using NetMud.DataAccess;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.SupportingClasses;
@@ -10,12 +9,10 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NetMud.Data.Game
 {
-    public class Object : IObject
+    public class Object : EntityPartial, IObject
     {
         public Object()
         {
@@ -36,14 +33,7 @@ namespace NetMud.Data.Game
             DataTemplate = backingStore;
             SpawnNewInWorld(spawnTo);
         }
-
-        public string BirthMark { get; private set; }
-        public DateTime Birthdate { get; private set; }
-        public string[] Keywords { get; set; }
-
-        public IData DataTemplate { get; private set; }
-
-        public IContains CurrentLocation { get; set; }
+     
         public long LastKnownLocation { get; set; }
         public string LastKnownLocationType { get; set; }
 
@@ -86,6 +76,7 @@ namespace NetMud.Data.Game
                     return "That is already in the container";
 
                 Contents.Add(obj);
+                obj.CurrentLocation = this;
                 return String.Empty;
             }
 
@@ -107,6 +98,7 @@ namespace NetMud.Data.Game
                     return "That is not in the container";
 
                 Contents.Remove(obj);
+                obj.CurrentLocation = null;
                 return String.Empty;
             }
 
@@ -114,12 +106,12 @@ namespace NetMud.Data.Game
         }
         #endregion
 
-        public void SpawnNewInWorld()
+        public override void SpawnNewInWorld()
         {
             throw new NotImplementedException("Objects can't spawn to nothing");
         }
 
-        public void SpawnNewInWorld(IContains spawnTo)
+        public override void SpawnNewInWorld(IContains spawnTo)
         {
             //We can't even try this until we know if the data is there
             if (DataTemplate == null)
@@ -144,10 +136,10 @@ namespace NetMud.Data.Game
 
             Contents = new EntityContainer<IObject>();
 
-            liveWorld.Add<IObject>(this);
+            liveWorld.Add(this);
         }
 
-        public IEnumerable<string> RenderToLook()
+        public override IEnumerable<string> RenderToLook()
         {
             var sb = new List<string>();
             var backingStore = (IObjectData)DataTemplate;
@@ -155,46 +147,6 @@ namespace NetMud.Data.Game
             sb.Add(string.Format("There is a {0} here", backingStore.Name));
 
             return sb;
-        }
-
-        public int CompareTo(IEntity other)
-        {
-            if (other != null)
-            {
-                try
-                {
-                    if (other.GetType() != typeof(Object))
-                        return -1;
-
-                    if (other.BirthMark.Equals(this.BirthMark))
-                        return 1;
-
-                    return 0;
-                }
-                catch
-                {
-                    //Minor error logging
-                }
-            }
-
-            return -99;
-        }
-
-        public bool Equals(IEntity other)
-        {
-            if (other != default(IEntity))
-            {
-                try
-                {
-                    return other.GetType() == typeof(Object) && other.BirthMark.Equals(this.BirthMark);
-                }
-                catch
-                {
-                    //Minor error logging
-                }
-            }
-
-            return false;
         }
     }
 }

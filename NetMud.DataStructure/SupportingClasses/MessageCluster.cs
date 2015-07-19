@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace NetMud.DataStructure.SupportingClasses
 {
     public class MessageCluster
     {
-        string Actor { get; set; }
-        string Subject { get; set; }
-        string Target { get; set; }
-        string Origin { get; set; }
-        string Destination { get; set; }
-        Dictionary<int, string> Surrounding { get; set; }
+        public string Actor { get; set; }
+        public string Subject { get; set; }
+        public string Target { get; set; }
+        public string Origin { get; set; }
+        public string Destination { get; set; }
+        public Dictionary<int, string> Surrounding { get; set; }
 
         public MessageCluster()
         {

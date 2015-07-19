@@ -10,24 +10,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NetMud.Data.Game
 {
-    public class Path : IPath
+    public class Path : EntityPartial, IPath
     {
         public ILocation ToLocation { get; set; }
         public ILocation FromLocation { get; set; }
         public MessageCluster Enter { get; set; }
         public MovementDirectionType MovementDirection { get; private set; }
-
-        public string BirthMark { get; private set; }
-        public DateTime Birthdate { get; private set; }
-        public string[] Keywords { get; set; }
-        public IData DataTemplate { get; private set; }
-
-        public IContains CurrentLocation { get; set; }
 
         public Path()
         {
@@ -65,7 +56,7 @@ namespace NetMud.Data.Game
             }
         }
 
-        public void SpawnNewInWorld()
+        public override void SpawnNewInWorld()
         {
             var liveWorld = new LiveCache();
             var bS = (IPathData)DataTemplate;
@@ -73,7 +64,7 @@ namespace NetMud.Data.Game
             SpawnNewInWorld(null);
         }
 
-        public void SpawnNewInWorld(IContains spawnTo)
+        public override void SpawnNewInWorld(IContains spawnTo)
         {
             var liveWorld = new LiveCache();
             var bS = (IPathData)DataTemplate;
@@ -120,18 +111,16 @@ namespace NetMud.Data.Game
                 }
             }
 
-            CurrentLocation = fromLocation;
             FromLocation = fromLocation;
             ToLocation = toLocation;
+            CurrentLocation = fromLocation;
 
             Enter = new MessageCluster(bS.MessageToActor, String.Empty, String.Empty, bS.MessageToOrigin, bS.MessageToDestination);
 
             fromLocation.MoveTo<IPath>(this);
-
-            liveWorld.Add<IPath>(this);
         }
 
-        public IEnumerable<string> RenderToLook()
+        public override IEnumerable<string> RenderToLook()
         {
             var sb = new List<string>();
             var bS = (IPathData)DataTemplate;
@@ -139,46 +128,6 @@ namespace NetMud.Data.Game
             sb.Add(string.Format("{0} heads in the direction of {1} from {2} to {3}", bS.Name, MovementDirection.ToString(), FromLocation.DataTemplate.Name, ToLocation.DataTemplate.Name));
 
             return sb;
-        }
-
-        public int CompareTo(IEntity other)
-        {
-            if (other != null)
-            {
-                try
-                {
-                    if (other.GetType() != typeof(Path))
-                        return -1;
-
-                    if (other.BirthMark.Equals(this.BirthMark))
-                        return 1;
-
-                    return 0;
-                }
-                catch
-                {
-                    //Minor error logging
-                }
-            }
-
-            return -99;
-        }
-
-        public bool Equals(IEntity other)
-        {
-            if (other != default(IEntity))
-            {
-                try
-                {
-                    return other.GetType() == typeof(Path) && other.BirthMark.Equals(this.BirthMark);
-                }
-                catch
-                {
-                    //Minor error logging
-                }
-            }
-
-            return false;
         }
     }
 }

@@ -8,11 +8,12 @@ using System.Linq;
 namespace NutMud.Commands.System
 {
     //Really help can be invoked on anything that is helpful, even itself
-    [CommandKeyword("Help")]
+    [CommandKeyword("Help", false)]
     [CommandPermission(StaffRank.Player)]
     [CommandParameter(CommandUsage.Subject, typeof(IHelpful), new CacheReferenceType[] { CacheReferenceType.Help, CacheReferenceType.Code }, false )] 
     public class Help : ICommand, IHelpful
     {
+        public IActor Actor { get; set; }
         public object Subject { get; set; }
         public object Target { get; set; }
         public object Supporting { get; set; }

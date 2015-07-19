@@ -1,10 +1,8 @@
-﻿using NetMud.DataStructure.Base.Entity;
-using NetMud.DataStructure.Base.System;
+﻿using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NutMud.Commands.Attributes;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 using NetMud.Utility;
 using NetMud.DataStructure.Base.EntityBackingData;
@@ -12,7 +10,7 @@ using NetMud.DataStructure.Base.EntityBackingData;
 namespace NutMud.Commands.System
 {
     //Really help can be invoked on anything that is helpful, even itself
-    [CommandKeyword("SpawnNewObject")]
+    [CommandKeyword("SpawnNewObject", false)]
     [CommandPermission(StaffRank.Admin)]
     [CommandParameter(CommandUsage.Subject, typeof(NetMud.Data.EntityBackingData.ObjectData), new CacheReferenceType[] { CacheReferenceType.Data }, "[0-9]+", false)] //for IDs
     [CommandParameter(CommandUsage.Subject, typeof(NetMud.Data.EntityBackingData.ObjectData), new CacheReferenceType[] { CacheReferenceType.Data }, "[a-zA-z]+", false)] //for names
@@ -20,6 +18,7 @@ namespace NutMud.Commands.System
     [CommandRange(CommandRangeType.Touch, 0)]
     public class SpawnNewObject : ICommand, IHelpful
     {
+        public IActor Actor { get; set; }
         public object Subject { get; set; }
         public object Target { get; set; }
         public object Supporting { get; set; }

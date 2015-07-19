@@ -1,9 +1,5 @@
 ﻿using NetMud.DataStructure.Behaviors.Rendering;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NetMud.DataStructure.Base.System
 {
@@ -22,5 +18,7 @@ namespace NetMud.DataStructure.Base.System
 
         void SpawnNewInWorld();
         void SpawnNewInWorld(IContains spawnTo);
+
+        void UpsertToLiveWorldCache();
     }
 }

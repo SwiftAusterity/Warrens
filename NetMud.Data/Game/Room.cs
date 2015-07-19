@@ -3,20 +3,16 @@ using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.Behaviors.Automation;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NetMud.Data.Game
 {
-    public class Room : IRoom
+    public class Room : EntityPartial, IRoom
     {
         public Room()
         {
@@ -34,21 +30,9 @@ namespace NetMud.Data.Game
             //Yes it's its own datatemplate and currentLocation
             DataTemplate = room;
 
-            CurrentLocation = this;
-
             GetFromWorldOrSpawn();
         }
-
-        public string BirthMark { get; private set; }
-
-        public DateTime Birthdate { get; private set; }
-
-        public string[] Keywords { get; set; }
-
-        public IData DataTemplate { get; private set; }
-
-        public IContains CurrentLocation { get; set; }
-
+        
         #region Container
         public EntityContainer<IObject> ObjectsInRoom { get; set; }
         public EntityContainer<IMobile> MobilesInRoom { get; set; }
@@ -104,6 +88,7 @@ namespace NetMud.Data.Game
                     return "That is already in the container";
 
                 ObjectsInRoom.Add(obj);
+                obj.CurrentLocation = this;
                 return String.Empty;
             }
 
@@ -115,6 +100,7 @@ namespace NetMud.Data.Game
                     return "That is already in the container";
 
                 MobilesInRoom.Add(obj);
+                obj.CurrentLocation = this;
                 return String.Empty;
             }
 
@@ -126,6 +112,7 @@ namespace NetMud.Data.Game
                     return "That is already in the container";
 
                 Pathways.Add(obj);
+                obj.CurrentLocation = this;
                 return String.Empty;
             }
 
@@ -150,6 +137,7 @@ namespace NetMud.Data.Game
                     return "That is not in the container";
 
                 ObjectsInRoom.Remove(obj);
+                obj.CurrentLocation = null;
                 return String.Empty;
             }
 
@@ -161,6 +149,7 @@ namespace NetMud.Data.Game
                     return "That is not in the container";
 
                 MobilesInRoom.Remove(obj);
+                obj.CurrentLocation = null;
                 return String.Empty;
             }
 
@@ -172,6 +161,7 @@ namespace NetMud.Data.Game
                     return "That is not in the container";
 
                 Pathways.Remove(obj);
+                obj.CurrentLocation = null;
                 return String.Empty;
             }
 
@@ -179,7 +169,7 @@ namespace NetMud.Data.Game
         }
         #endregion
 
-        public IEnumerable<string> RenderToLook()
+        public override IEnumerable<string> RenderToLook()
         {
             var sb = new List<string>();
 
@@ -209,13 +199,13 @@ namespace NetMud.Data.Game
             }
         }
 
-        public void SpawnNewInWorld()
+        public override void SpawnNewInWorld()
         {
             //TODO: will rooms ever be contained by something else?
             SpawnNewInWorld(this);
         }
 
-        public void SpawnNewInWorld(IContains spawnTo)
+        public override void SpawnNewInWorld(IContains spawnTo)
         {
             var liveWorld = new LiveCache();
             var roomTemplate = (IRoomData)DataTemplate;
@@ -224,49 +214,6 @@ namespace NetMud.Data.Game
             Keywords = new string[] { roomTemplate.Name.ToLower() };
             Birthdate = DateTime.Now;
             CurrentLocation = spawnTo;
-
-            liveWorld.Add<IRoom>(this);
         }
-
-        public int CompareTo(IEntity other)
-        {
-            if (other != null)
-            {
-                try
-                {
-                    if (other.GetType() != typeof(Room))
-                        return -1;
-
-                    if (other.BirthMark.Equals(this.BirthMark))
-                        return 1;
-
-                    return 0;
-                }
-                catch
-                {
-                    //Minor error logging
-                }
-            }
-
-            return -99;
-        }
-
-        public bool Equals(IEntity other)
-        {
-            if (other != default(IEntity))
-            {
-                try
-                {
-                    return other.GetType() == typeof(Room) && other.BirthMark.Equals(this.BirthMark);
-                }
-                catch
-                {
-                    //Minor error logging
-                }
-            }
-
-            return false;
-        }
-
     }
 }

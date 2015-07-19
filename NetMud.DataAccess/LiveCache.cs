@@ -42,9 +42,9 @@ namespace NetMud.DataAccess
 
             var implimentingEntityClass = backingClass.EntityClass;
 
-            var dataBacker = new DataAccess.DataWrapper();
+            var dataBacker = new DataWrapper();
 
-            foreach(IData thing in dataBacker.GetAll<T>())
+            foreach (IData thing in dataBacker.GetAll<T>())
             {
                 var entityThing = Activator.CreateInstance(implimentingEntityClass, new object[] { (T)thing }) as IEntity;
 
@@ -56,11 +56,15 @@ namespace NetMud.DataAccess
             return true;
         }
 
-        public T Add<T>(T objectToCache) where T : IEntity
+        public void Add(object objectToCache)
         {
-            var cacheKey = new LiveCacheKey(typeof(T), objectToCache.BirthMark);
+            var entityToCache = (IEntity)objectToCache;
+            var cacheKey = new LiveCacheKey(objectToCache.GetType(), entityToCache.BirthMark);
 
-           return (T)globalCache.AddOrGetExisting(cacheKey.KeyHash(), objectToCache, globalPolicy);
+            if (!globalCache.Contains(cacheKey.KeyHash()))
+                globalCache.AddOrGetExisting(cacheKey.KeyHash(), objectToCache, globalPolicy);
+            else
+                globalCache.Set(cacheKey.KeyHash(), objectToCache, globalPolicy);
         }
 
         public IEnumerable<T> GetAll<T>()

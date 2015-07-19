@@ -94,8 +94,9 @@ namespace NetMud.Interp
                     AccessErrors.AddRange(Command.RenderSyntaxHelp());
                     return;
                 }
-                
 
+
+                Command.Actor = Actor;
                 Command.OriginLocation = Location;
                 Command.Surroundings = Surroundings;
 
@@ -153,7 +154,13 @@ namespace NetMud.Interp
                 else if (validCommands.Count() == 1)
                 {
                     command = validCommands.First();
-                    CommandStringRemainder = parsedWords.Skip(commandWords);
+
+                    //Kinda janky but we need a way to tell the system "north" is both the command and the target
+                    if (!command.GetCustomAttributes<CommandKeywordAttribute>().Single(att => att.Keyword.Equals(currentCommandString)).IsAlsoSubject)
+                        CommandStringRemainder = parsedWords.Skip(commandWords);
+                    else
+                        CommandStringRemainder = parsedWords;
+
                     break;
                 }
 
@@ -217,7 +224,8 @@ namespace NetMud.Interp
                     continue;
                 }
 
-                var validParms = validTargetTypes.Where(comm => comm.GetCustomAttributes<CommandKeywordAttribute>().Any(att => att.Keyword.Equals(currentParmString)));
+                var validParms = validTargetTypes.Where(comm => comm.GetCustomAttributes<CommandKeywordAttribute>()
+                                                                .Any(att => att.Keyword.Equals(currentParmString)));
 
                 if (validParms.Count() > 1)
                 {
@@ -439,11 +447,45 @@ namespace NetMud.Interp
         }
 
         /// <summary>
-        /// Scrubs "s out and figures out what the parameters really are
+        /// Massages the original command string
         /// </summary>
         /// <returns>the right parameters</returns>
         private IEnumerable<string> ParseInitialCommandString()
         {
+            List<string> returnParams = ParseQuotesOut();
+
+            RemoveGrammaticalNiceities(returnParams);
+
+            //TODOs: Pluralizations, "all.", targetting more than one thing at once
+
+            return returnParams;
+        }
+
+        /// <summary>
+        /// Removes stuff we don't care about like to, into, the, etc
+        /// </summary>
+        /// <param name="currentParams">The current set of params</param>
+        /// <returns>the scrubbed params</returns>
+        private IList<string> RemoveGrammaticalNiceities(List<string> currentParams)
+        {
+            currentParams.RemoveAll(str => str.Equals("the", StringComparison.InvariantCulture)
+                                        || str.Equals("of", StringComparison.InvariantCulture)
+                                        || str.Equals("to", StringComparison.InvariantCulture)
+                                        || str.Equals("into", StringComparison.InvariantCulture)
+                                        || str.Equals("from", StringComparison.InvariantCulture)
+                                        || str.Equals("inside", StringComparison.InvariantCulture)
+                                        || str.Equals("at", StringComparison.InvariantCulture)
+                                    );
+
+            return currentParams;
+        }
+
+        /// <summary>
+        /// Scrubs "s out and figures out what the parameters really are
+        /// </summary>
+        /// <returns>the right parameters</returns>
+        private List<string> ParseQuotesOut()
+        { 
             var originalStrings = new List<string>();
             var baseString = OriginalCommandString;
 

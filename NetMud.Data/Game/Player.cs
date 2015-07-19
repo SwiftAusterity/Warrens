@@ -1,10 +1,7 @@
-﻿using NetMud.Data;
-using NetMud.DataAccess;
+﻿using NetMud.DataAccess;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
-using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.Behaviors.Automation;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.Behaviors.System;
 using NetMud.DataStructure.SupportingClasses;
@@ -16,7 +13,7 @@ using System.Reflection;
 
 namespace NetMud.Data.Game
 {
-    public class Player : IPlayer
+    public class Player : EntityPartial, IPlayer
     {
         public Player(ICharacter character)
         {
@@ -25,17 +22,8 @@ namespace NetMud.Data.Game
             GetFromWorldOrSpawn();
         }
 
-        public string BirthMark { get; private set; }
-
-        public DateTime Birthdate { get; private set; }
-
-        public string[] Keywords { get; set; }
-
-        public IData DataTemplate { get; private set; }
-
-        public IContains CurrentLocation { get; set; }
-
-        public IEnumerable<string> RenderToLook()
+        #region Rendering
+        public override IEnumerable<string> RenderToLook()
         {
             var sb = new List<string>();
             var ch = (ICharacter)DataTemplate;
@@ -44,6 +32,7 @@ namespace NetMud.Data.Game
 
             return sb;
         }
+        #endregion
 
         #region Container
         public EntityContainer<IObject> Inventory { get; set; }
@@ -84,6 +73,7 @@ namespace NetMud.Data.Game
                     return "That is already in the container";
 
                 Inventory.Add(obj);
+                obj.CurrentLocation = this;
                 return String.Empty;
             }
 
@@ -105,6 +95,7 @@ namespace NetMud.Data.Game
                     return "That is not in the container";
 
                 Inventory.Remove(obj);
+                obj.CurrentLocation = null;
                 return String.Empty;
             }
 
@@ -112,6 +103,7 @@ namespace NetMud.Data.Game
         }
         #endregion
 
+        #region SpawnBehavior
         public void GetFromWorldOrSpawn()
         {
             var liveWorld = new LiveCache();
@@ -129,11 +121,10 @@ namespace NetMud.Data.Game
                 Birthdate = me.Birthdate;
                 CurrentLocation = me.CurrentLocation;
                 DataTemplate = me.DataTemplate;
-                CurrentLocation.MoveTo<IPlayer>(this);
             }
         }
 
-        public void SpawnNewInWorld()
+        public override void SpawnNewInWorld()
         {
             var liveWorld = new LiveCache();
             var ch = (ICharacter)DataTemplate;
@@ -161,7 +152,7 @@ namespace NetMud.Data.Game
             SpawnNewInWorld(lastKnownLoc);
         }
 
-        public void SpawnNewInWorld(IContains spawnTo)
+        public override void SpawnNewInWorld(IContains spawnTo)
         {
             var liveWorld = new LiveCache();
             var ch = (ICharacter)DataTemplate;
@@ -187,47 +178,8 @@ namespace NetMud.Data.Game
 
             Inventory = new EntityContainer<IObject>();
 
-            liveWorld.Add<IPlayer>(this);
+            liveWorld.Add(this);
         }
-
-        public int CompareTo(IEntity other)
-        {
-            if (other != null)
-            {
-                try
-                {
-                    if (other.GetType() != typeof(Player))
-                        return -1;
-
-                    if (other.BirthMark.Equals(this.BirthMark))
-                        return 1;
-
-                    return 0;
-                }
-                catch
-                {
-                    //Minor error logging
-                }
-            }
-
-            return -99;
-        }
-
-        public bool Equals(IEntity other)
-        {
-            if (other != default(IEntity))
-            {
-                try
-                {
-                    return other.GetType() == typeof(Player) && other.BirthMark.Equals(this.BirthMark);
-                }
-                catch
-                {
-                    //Minor error logging
-                }
-            }
-
-            return false;
-        }
+        #endregion
     }
 }
