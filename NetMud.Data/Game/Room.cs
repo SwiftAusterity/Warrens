@@ -47,7 +47,7 @@ namespace NetMud.Data.Game
 
         public IData DataTemplate { get; private set; }
 
-        public ILocation CurrentLocation { get; set; }
+        public IContains CurrentLocation { get; set; }
 
         #region Container
         public EntityContainer<IObject> ObjectsInRoom { get; set; }
@@ -215,7 +215,7 @@ namespace NetMud.Data.Game
             SpawnNewInWorld(this);
         }
 
-        public void SpawnNewInWorld(ILocation spawnTo)
+        public void SpawnNewInWorld(IContains spawnTo)
         {
             var liveWorld = new LiveCache();
             var roomTemplate = (IRoomData)DataTemplate;

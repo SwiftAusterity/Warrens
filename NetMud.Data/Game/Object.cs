@@ -30,7 +30,7 @@ namespace NetMud.Data.Game
             SpawnNewInWorld();
         }
 
-        public Object(IObjectData backingStore, ILocation spawnTo)
+        public Object(IObjectData backingStore, IContains spawnTo)
         {
             Contents = new EntityContainer<IObject>();
             DataTemplate = backingStore;
@@ -43,7 +43,7 @@ namespace NetMud.Data.Game
 
         public IData DataTemplate { get; private set; }
 
-        public ILocation CurrentLocation { get; set; }
+        public IContains CurrentLocation { get; set; }
         public long LastKnownLocation { get; set; }
         public string LastKnownLocationType { get; set; }
 
@@ -119,7 +119,7 @@ namespace NetMud.Data.Game
             throw new NotImplementedException("Objects can't spawn to nothing");
         }
 
-        public void SpawnNewInWorld(ILocation spawnTo)
+        public void SpawnNewInWorld(IContains spawnTo)
         {
             //We can't even try this until we know if the data is there
             if (DataTemplate == null)

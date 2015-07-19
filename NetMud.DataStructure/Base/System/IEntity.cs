@@ -18,9 +18,9 @@ namespace NetMud.DataStructure.Base.System
 
         IData DataTemplate { get; }
 
-        ILocation CurrentLocation { get; set; }
+        IContains CurrentLocation { get; set; }
 
         void SpawnNewInWorld();
-        void SpawnNewInWorld(ILocation spawnTo);
+        void SpawnNewInWorld(IContains spawnTo);
     }
 }

@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using NetMud.DataStructure.Base.System;
+using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Behaviors.Rendering
 {
-    public interface IContains
+    public interface IContains : IEntity
     {
         string MoveTo<T>(T thing);
         string MoveTo<T>(T thing, string containerName);

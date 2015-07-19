@@ -16,7 +16,7 @@ namespace NutMud.Commands.System
     [CommandPermission(StaffRank.Admin)]
     [CommandParameter(CommandUsage.Subject, typeof(NetMud.Data.EntityBackingData.ObjectData), new CacheReferenceType[] { CacheReferenceType.Data }, "[0-9]+", false)] //for IDs
     [CommandParameter(CommandUsage.Subject, typeof(NetMud.Data.EntityBackingData.ObjectData), new CacheReferenceType[] { CacheReferenceType.Data }, "[a-zA-z]+", false)] //for names
-    [CommandParameter(CommandUsage.Target, typeof(ILocation), new CacheReferenceType[] { CacheReferenceType.Entity }, true)]
+    [CommandParameter(CommandUsage.Target, typeof(IContains), new CacheReferenceType[] { CacheReferenceType.Entity }, true)]
     [CommandRange(CommandRangeType.Touch, 0)]
     public class SpawnNewObject : ICommand, IHelpful
     {
@@ -35,11 +35,13 @@ namespace NutMud.Commands.System
         {
             var newObject = (IObjectData)Subject;
             var sb = new List<string>();
-            var spawnTo = OriginLocation;
+            IContains spawnTo;
 
             //No target = spawn to room you're in
             if (Target != null)
-                spawnTo = (ILocation)Target;
+                spawnTo = (IContains)Target;
+            else
+                spawnTo = OriginLocation;
 
             var entityObject = new NetMud.Data.Game.Object(newObject, spawnTo);
 

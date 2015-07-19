@@ -44,7 +44,7 @@ namespace NetMud.Interp
             OriginalCommandString = fullCommand;
             Actor = actor;
 
-            Location = Actor.CurrentLocation;
+            Location = (ILocation)Actor.CurrentLocation;
 
             AccessErrors = new List<string>();
             CommandStringRemainder = Enumerable.Empty<string>();
@@ -65,7 +65,10 @@ namespace NetMud.Interp
             {
                 //find the parameters
                 var parmList = commandType.GetCustomAttributes<CommandParameterAttribute>();
-                ParseParamaters(commandType, parmList);
+
+                //why bother if we have no parms to find?
+                if(CommandStringRemainder.Count() > 0)
+                    ParseParamaters(commandType, parmList);
 
                 //Did we get errors from the parameter parser? if so bail
                 if(AccessErrors.Count > 0)
@@ -122,9 +125,9 @@ namespace NetMud.Interp
             //Find the command we're trying to do
 
             //Split out the string
-            var parsedWords = currentString.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var parsedWords = ParseInitialCommandString();
 
-            var commandWords = parsedWords.Length;
+            var commandWords = parsedWords.Count();
             Type command = null;
 
             while (commandWords > 0)
@@ -252,7 +255,6 @@ namespace NetMud.Interp
             }
         }
 
-        //TODO: Make this work, we need far more stuff to do this (location for one)
         public void SeekInLiveWorld<T>(Type commandType, CommandParameterAttribute currentNeededParm, CommandRangeAttribute seekRange)
         {
             var internalCommandString = CommandStringRemainder.ToList();
@@ -434,6 +436,61 @@ namespace NetMud.Interp
 
                 parmWords--;
             }
+        }
+
+        /// <summary>
+        /// Scrubs "s out and figures out what the parameters really are
+        /// </summary>
+        /// <returns>the right parameters</returns>
+        private IEnumerable<string> ParseInitialCommandString()
+        {
+            var originalStrings = new List<string>();
+            var baseString = OriginalCommandString;
+
+            int foundStringIterator = 0;
+            var foundStrings = new List<string>();
+
+            //Do we have magic string collectors? quotation marks demarcate a single parameter being passed in
+            while(baseString.Contains("\""))
+            {
+                var firstQuoteIndex = baseString.IndexOf('"');
+                var secondQuoteIndex = baseString.IndexOf('"', firstQuoteIndex + 1);
+
+                //What? Why would this even happen
+                if (firstQuoteIndex < 0)
+                    break;
+
+                //Only one means let's just kill the stupid quotemark and move on
+                if (secondQuoteIndex < 0)
+                {
+                    baseString = baseString.Replace("\"", String.Empty);
+                    break;
+                }
+
+                var foundString = baseString.Substring(firstQuoteIndex + 1, secondQuoteIndex - firstQuoteIndex - 1);
+
+                foundStrings.Add(foundString);
+                baseString = baseString.Replace(String.Format("\"{0}\"", foundString), "%%" + foundStringIterator.ToString() + "%%");
+                foundStringIterator++;
+            }
+
+            originalStrings.AddRange(baseString.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
+
+            //Either add the modified one or add the normal one
+            var iterator = 0;
+            var returnStrings = new List<string>();
+            foreach(var returnString in originalStrings)
+            {
+                if (returnString.Equals("%%" + iterator.ToString() + "%%"))
+                {
+                    returnStrings.Add(foundStrings[iterator]);
+                    iterator++;
+                }
+                else
+                    returnStrings.Add(returnString);
+            }
+
+            return returnStrings;
         }
     }
 }

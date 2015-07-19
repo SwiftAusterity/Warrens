@@ -27,7 +27,7 @@ namespace NetMud.Data.Game
         public string[] Keywords { get; set; }
         public IData DataTemplate { get; private set; }
 
-        public ILocation CurrentLocation { get; set; }
+        public IContains CurrentLocation { get; set; }
 
         public Path()
         {
@@ -73,7 +73,7 @@ namespace NetMud.Data.Game
             SpawnNewInWorld(null);
         }
 
-        public void SpawnNewInWorld(ILocation spawnTo)
+        public void SpawnNewInWorld(IContains spawnTo)
         {
             var liveWorld = new LiveCache();
             var bS = (IPathData)DataTemplate;

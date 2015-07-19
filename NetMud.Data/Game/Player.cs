@@ -33,7 +33,7 @@ namespace NetMud.Data.Game
 
         public IData DataTemplate { get; private set; }
 
-        public ILocation CurrentLocation { get; set; }
+        public IContains CurrentLocation { get; set; }
 
         public IEnumerable<string> RenderToLook()
         {
@@ -161,7 +161,7 @@ namespace NetMud.Data.Game
             SpawnNewInWorld(lastKnownLoc);
         }
 
-        public void SpawnNewInWorld(ILocation spawnTo)
+        public void SpawnNewInWorld(IContains spawnTo)
         {
             var liveWorld = new LiveCache();
             var ch = (ICharacter)DataTemplate;
