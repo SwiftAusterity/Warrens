@@ -12,7 +12,7 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using NetMud.Models;
 
-namespace NetMud
+namespace NetMud.Authentication
 {
     public class EmailService : IIdentityMessageService
     {

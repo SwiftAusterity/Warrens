@@ -10,6 +10,7 @@ using NetMud;
 using NetMud.Interp;
 using System.Web.Http;
 using NetMud.Data.Game;
+using NetMud.Authentication;
 
 namespace Controllers
 {

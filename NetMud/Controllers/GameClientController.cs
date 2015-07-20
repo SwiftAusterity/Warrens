@@ -8,6 +8,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using NetMud.Models;
 using NetMud;
+using NetMud.Authentication;
 
 namespace Controllers
 {
@@ -37,6 +38,14 @@ namespace Controllers
 
         // GET: GameClient
         public ActionResult Index()
+        {
+            var model = new GameContextModel();
+            model.authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            return View(model);
+        }
+
+        public ActionResult WebSockets()
         {
             var model = new GameContextModel();
             model.authedUser = UserManager.FindById(User.Identity.GetUserId());

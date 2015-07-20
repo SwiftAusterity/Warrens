@@ -18,6 +18,8 @@ namespace NetMud
             //Rooms, paths, spawns (objs then mobs)
             liveWorld.PreLoadAll<RoomData>();
             liveWorld.PreLoadAll<PathData>();
+
+            NetMud.Websock.Server.StartServer("localhost", 2929);
         }
     }
 }

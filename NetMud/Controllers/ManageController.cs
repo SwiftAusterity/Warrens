@@ -9,6 +9,7 @@ using Microsoft.Owin.Security;
 using NetMud.Models;
 using NetMud.Data.Game;
 using NetMud.Data.EntityBackingData;
+using NetMud.Authentication;
 
 namespace NetMud.Controllers
 {

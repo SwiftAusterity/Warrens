@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using NetMud.Models;
 using NetMud.Data.System;
+using NetMud.Authentication;
 
 namespace NetMud.Controllers
 {

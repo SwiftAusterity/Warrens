@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.22823.1
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.DataStructure", "NetMud.DataStructure\NetMud.DataStructure.csproj", "{88B7A648-FE23-4E88-9B60-AE17C8858AF4}"
 EndProject
@@ -18,6 +18,16 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.Data", "NetMud.Data\NetMud.Data.csproj", "{8B2CB5F6-65CA-4458-856B-6957E9309DBB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.Commands", "NetMud.Commands\NetMud.Commands.csproj", "{39B7F303-CF48-41DF-B56B-325987E7F7E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.Websock", "NetMud.Websock\NetMud.Websock.csproj", "{AFCDE9D8-2E19-4CD0-95B7-FE40E3575149}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExternalLibraries", "ExternalLibraries", "{6A8D6257-A77D-4E2F-9636-2673B68F442F}"
+	ProjectSection(SolutionItems) = preProject
+		ExternalLibraries\websocket-sharp.dll = ExternalLibraries\websocket-sharp.dll
+		ExternalLibraries\websocket-sharp.pdb = ExternalLibraries\websocket-sharp.pdb
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.Authentication", "NetMud.Authentication\NetMud.Authentication.csproj", "{DBC07A3D-3A1E-48C1-9A72-D115FF3E4349}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +67,14 @@ Global
 		{39B7F303-CF48-41DF-B56B-325987E7F7E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39B7F303-CF48-41DF-B56B-325987E7F7E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39B7F303-CF48-41DF-B56B-325987E7F7E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFCDE9D8-2E19-4CD0-95B7-FE40E3575149}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFCDE9D8-2E19-4CD0-95B7-FE40E3575149}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFCDE9D8-2E19-4CD0-95B7-FE40E3575149}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFCDE9D8-2E19-4CD0-95B7-FE40E3575149}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBC07A3D-3A1E-48C1-9A72-D115FF3E4349}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBC07A3D-3A1E-48C1-9A72-D115FF3E4349}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBC07A3D-3A1E-48C1-9A72-D115FF3E4349}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBC07A3D-3A1E-48C1-9A72-D115FF3E4349}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
