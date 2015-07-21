@@ -69,7 +69,7 @@ namespace NetMud.Data.Game
             var bS = (IPathData)DataTemplate;
             var locationAssembly = Assembly.GetAssembly(typeof(ILocation));
 
-            MovementDirection = RenderUtility.TranslateDegreesToDirection(bS.DegreesFromNorth);
+            MovementDirection = MessagingUtility.TranslateDegreesToDirection(bS.DegreesFromNorth);
 
             BirthMark = Birthmarker.GetBirthmark(bS);
             Keywords = new string[] { bS.Name.ToLower(), MovementDirection.ToString().ToLower() };
@@ -114,7 +114,9 @@ namespace NetMud.Data.Game
             ToLocation = toLocation;
             CurrentLocation = fromLocation;
 
-            Enter = new MessageCluster(bS.MessageToActor, String.Empty, String.Empty, bS.MessageToOrigin, bS.MessageToDestination);
+            Enter = new MessageCluster(bS.MessageToActor, "$A$ enters you", String.Empty, bS.MessageToOrigin, bS.MessageToDestination);
+            Enter.ToSurrounding.Add(bS.VisibleStrength, new Tuple<MessagingType, string>(MessagingType.Visible, bS.VisibleToSurroundings));
+            Enter.ToSurrounding.Add(bS.AudibleStrength, new Tuple<MessagingType, string>(MessagingType.Visible, bS.AudibleToSurroundings));
 
             fromLocation.MoveTo<IPath>(this);
         }

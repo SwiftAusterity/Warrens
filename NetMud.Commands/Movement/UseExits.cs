@@ -40,11 +40,7 @@ namespace NetMud.Commands.Movement
             targetPath.FromLocation.MoveFrom((IMobile)Actor);
             targetPath.ToLocation.MoveTo((IMobile)Actor);
 
-            //TODO: keywords is janky, location should have its own identifier name somehow for output purposes
-            sb.Add(targetPath.Enter.Actor);
-
-
-            Actor.WriteTo(sb);
+            targetPath.Enter.ExecuteMessaging(Actor, targetPath, null, targetPath.FromLocation, targetPath.ToLocation);
         }
 
         public IEnumerable<string> RenderSyntaxHelp()

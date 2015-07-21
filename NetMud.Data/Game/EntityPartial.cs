@@ -25,7 +25,26 @@ namespace NetMud.Data.Game
         }
         #endregion
 
-        public Func<IEnumerable<string>, bool> WriteTo { get; set; }
+        private Func<IEnumerable<string>, bool> _writeTo;
+        public Func<IEnumerable<string>, bool> WriteTo 
+        { 
+            get
+            {
+                var output = true;
+
+                if (_writeTo != null)
+                {
+                    var pred = new Predicate<IEnumerable<string>>(_writeTo);
+                    return new Func<IEnumerable<string>, bool>(pred);
+                }
+
+                return (input) => TriggerAIAction(input);
+            }
+            set
+            {
+                _writeTo = value;
+            }
+        }
 
         private IContains _currentLocation;
         public IContains CurrentLocation
@@ -46,6 +65,11 @@ namespace NetMud.Data.Game
         {
             var liveWorld = new LiveCache();
             liveWorld.Add(this);
+        }
+
+        public bool TriggerAIAction(IEnumerable<string> input, AITriggerType trigger = AITriggerType.Seen)
+        {
+            return true;
         }
 
         public abstract IEnumerable<string> RenderToLook();

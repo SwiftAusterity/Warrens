@@ -22,6 +22,18 @@ namespace NetMud.DataStructure.Base.System
 
         void UpsertToLiveWorldCache();
 
+        bool TriggerAIAction(IEnumerable<string> input, AITriggerType trigger = AITriggerType.Seen);
+
         Func<IEnumerable<string>, bool> WriteTo { get; set; }
+    }
+
+    public enum AITriggerType
+    {
+        SpokenTo,
+        Heard,
+        Seen,
+        Sensed,
+        PassiveActAt,
+        AggressiveActAt
     }
 }

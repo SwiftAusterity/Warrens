@@ -1,4 +1,5 @@
-﻿using NetMud.DataStructure.Base.System;
+﻿using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace NetMud.DataStructure.Base.EntityBackingData
 {
-    public interface ICharacter : IEntityBackingData
+    public interface ICharacter : IEntityBackingData, IGender
     {
         string SurName { get; set; }
         string AccountHandle { get; set; }

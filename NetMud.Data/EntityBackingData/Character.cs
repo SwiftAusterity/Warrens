@@ -22,6 +22,7 @@ namespace NetMud.Data.EntityBackingData
         public DateTime Created { get; set; }
         public DateTime LastRevised { get; set; }
         public string Name { get; set; }
+        public string Gender { get; set; }
 
         public string SurName { get; set; }
         public string AccountHandle { get; set; }
@@ -71,6 +72,10 @@ namespace NetMud.Data.EntityBackingData
             string outGivenName = default(string);
             DataUtility.GetFromDataRow<string>(dr, "Name", ref outGivenName);
             Name = outGivenName;
+
+            string outGender = default(string);
+            DataUtility.GetFromDataRow<string>(dr, "Gender", ref outGender);
+            Gender = outGender;
 
             string outLKL = default(string);
             DataUtility.GetFromDataRow<string>(dr, "LastKnownLocation", ref outLKL);

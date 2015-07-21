@@ -18,7 +18,7 @@ function TestBrowser()
 
         connection.onopen = function () {
             //Send a small message to the console once the connection is established
-            AppendOutput('Welcome to TwinMUD!');
+            AppendOutput('Connection established.');
         }
 
         connection.onclose = function () {

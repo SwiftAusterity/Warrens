@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 
 using NetMud.Utility;
+using NetMud.DataStructure.SupportingClasses;
 
 namespace NutMud.Commands.System
 {
@@ -40,7 +41,9 @@ namespace NutMud.Commands.System
                 sb.AddRange(lookTarget.RenderToLook());
             }
 
-            Actor.WriteTo(sb);
+            var messagingObject = new MessageCluster(RenderUtility.EncapsulateOutput(sb), String.Empty, String.Empty, "$A$ looks around the room.", String.Empty);
+
+            messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation, null);
         }
 
         public IEnumerable<string> RenderSyntaxHelp()

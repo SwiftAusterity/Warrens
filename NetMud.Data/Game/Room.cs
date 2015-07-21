@@ -173,7 +173,7 @@ namespace NetMud.Data.Game
         {
             var sb = new List<string>();
 
-            sb.Add(string.Format("<span style=\"color: orange\">{0}</span>", DataTemplate.Name));
+            sb.Add(string.Format("%O%{0}%O%", DataTemplate.Name));
             sb.Add(string.Empty.PadLeft(DataTemplate.Name.Length, '-'));
 
             return sb;
