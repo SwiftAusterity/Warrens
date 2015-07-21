@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 using NetMud.Utility;
 using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.DataStructure.SupportingClasses;
 
 namespace NutMud.Commands.System
 {
@@ -47,7 +48,9 @@ namespace NutMud.Commands.System
             //TODO: keywords is janky, location should have its own identifier name somehow for output purposes
             sb.Add(String.Format("{0} spawned to {1}", entityObject.DataTemplate.Name, spawnTo.Keywords[0]));
 
-            Actor.WriteTo(sb);
+            var messagingObject = new MessageCluster(RenderUtility.EncapsulateOutput(sb), "You are ALIVE", "You have been given $S$", "$S$ appears in the $T$.", String.Empty);
+
+            messagingObject.ExecuteMessaging(Actor, entityObject, spawnTo, OriginLocation, null);
         }
 
         public IEnumerable<string> RenderSyntaxHelp()

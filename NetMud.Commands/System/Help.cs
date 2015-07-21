@@ -1,5 +1,7 @@
 ﻿using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
+using NetMud.DataStructure.SupportingClasses;
+using NetMud.Utility;
 using NutMud.Commands.Attributes;
 using System;
 using System.Collections.Generic;
@@ -40,8 +42,9 @@ namespace NutMud.Commands.System
                sb = sb.Concat(subject.RenderSyntaxHelp()).ToList();
             }
 
+            var messagingObject = new MessageCluster(RenderUtility.EncapsulateOutput(sb), String.Empty, String.Empty, String.Empty, String.Empty);
 
-            Actor.WriteTo(sb);
+            messagingObject.ExecuteMessaging(Actor, null, null, null, null);
         }
 
         public IEnumerable<string> RenderSyntaxHelp()
