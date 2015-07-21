@@ -26,5 +26,3 @@ NetMud.Interp/bin/*
 NetMud.Utility/obj/*
 NetMud/App_Data/testingDB.mdf
 NetMud/App_Data/testingDB_log.ldf
-*.dll
-*.pdb
