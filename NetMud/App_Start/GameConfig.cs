@@ -1,18 +1,19 @@
-﻿using NetMud.Data.EntityBackingData;
-using NetMud.DataAccess;
-
+﻿using NetMud.LiveData;
+using System.Threading;
+using System.Threading.Tasks;
 namespace NetMud
 {
     public class GameConfig
     {
         public static void PreloadSupportingEntities()
         {
-            var liveWorld = new LiveCache();
+            var hotBack = new HotBackup(System.Web.Hosting.HostingEnvironment.MapPath("/HotBackup/"));
+
+            //Our live data restore failed, reload the entire world from backing data
+            if (!hotBack.RestoreLiveBackup())
+                hotBack.NewWorldFallback();
 
             //Rooms, paths, spawns (objs then mobs)
-            liveWorld.PreLoadAll<RoomData>();
-            liveWorld.PreLoadAll<PathData>();
-
             Websock.Server.StartServer("localhost", 2929);
         }
     }

@@ -113,5 +113,9 @@ namespace NetMud.Data.Game
             return false;
         }
         #endregion
+
+        public abstract byte[] Serialize();
+
+        public abstract IEntity DeSerialize(byte[] bytes);
     }
 }

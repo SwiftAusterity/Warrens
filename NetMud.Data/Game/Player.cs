@@ -2,6 +2,7 @@
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
+using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.Behaviors.System;
 using NetMud.DataStructure.SupportingClasses;
@@ -184,5 +185,15 @@ namespace NetMud.Data.Game
             liveWorld.Add(this);
         }
         #endregion
+
+        public override byte[] Serialize()
+        {
+            return new byte[0];
+        }
+
+        public override IEntity DeSerialize(byte[] bytes)
+        {
+            return null;
+        }
     }
 }

@@ -22,6 +22,9 @@ namespace NetMud.DataStructure.Base.System
 
         void UpsertToLiveWorldCache();
 
+        byte[] Serialize();
+        IEntity DeSerialize(byte[] bytes);
+
         bool TriggerAIAction(IEnumerable<string> input, AITriggerType trigger = AITriggerType.Seen);
 
         Func<IEnumerable<string>, bool> WriteTo { get; set; }

@@ -1,14 +1,20 @@
-﻿using NetMud.DataAccess;
+﻿using NetMud.Data.EntityBackingData;
+using NetMud.DataAccess;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace NetMud.Data.Game
 {
@@ -215,5 +221,60 @@ namespace NetMud.Data.Game
             Birthdate = DateTime.Now;
             CurrentLocation = spawnTo;
         }
+
+        #region HotBackup
+        public override byte[] Serialize()
+        {
+            var settings = new XmlWriterSettings { OmitXmlDeclaration = true, Encoding = Encoding.UTF8 };
+            var charData = (IRoomData)DataTemplate;
+
+            var entityData = new XDocument(
+                                new XElement("root",
+                                    new XAttribute("Birthmark", BirthMark),
+                                    new XAttribute("Birthdate", Birthdate),
+                                    new XElement("BackingData",
+                                        new XAttribute("ID", charData.ID),
+                                        new XAttribute("Name", charData.Name),
+                                        new XAttribute("LastRevised", charData.LastRevised),
+                                        new XAttribute("Created", charData.Created),
+                                    new XElement("LiveData",
+                                        new XAttribute("Keywords", String.Join(",", Keywords))))));
+
+            var entityBinaryConvert = new NetMud.Utility.DataUtility.EntityFileData(entityData);
+
+            using (var memoryStream = new MemoryStream())
+            using (var xmlWriter = XmlWriter.Create(memoryStream, settings))
+            {
+                entityData.WriteTo(xmlWriter);
+                xmlWriter.Flush();
+                entityBinaryConvert.XmlBinary = memoryStream.ToArray();
+            }
+
+            return entityBinaryConvert.XmlBinary;
+        }
+
+        public override IEntity DeSerialize(byte[] bytes)
+        {
+            var entityBinaryConvert = new NetMud.Utility.DataUtility.EntityFileData(bytes);
+            var xDoc = entityBinaryConvert.XDoc;
+
+            var backingData = new RoomData();
+            var newEntity = new Room();
+            newEntity.BirthMark = xDoc.Root.Attribute("Birthmark").Value;
+            newEntity.Birthdate = DateTime.Parse(xDoc.Root.Attribute("Birthdate").Value);
+
+            backingData.ID = long.Parse(xDoc.Root.Element("BackingData").Attribute("ID").Value);
+            backingData.Name = xDoc.Root.Element("BackingData").Attribute("Name").Value;
+            backingData.LastRevised = DateTime.Parse(xDoc.Root.Element("BackingData").Attribute("LastRevised").Value);
+            backingData.Created = DateTime.Parse(xDoc.Root.Element("BackingData").Attribute("Created").Value);
+
+            newEntity.DataTemplate = backingData;
+
+            //keywords is last
+            newEntity.Keywords = xDoc.Root.Element("LiveData").Attribute("Keywords").Value.Split(new char[] { ',' });
+
+            return newEntity;
+        }
+        #endregion
     }
 }

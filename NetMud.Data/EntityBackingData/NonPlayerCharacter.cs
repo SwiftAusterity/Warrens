@@ -26,9 +26,6 @@ namespace NetMud.Data.EntityBackingData
 
         public string SurName { get; set; }
 
-        public string LastKnownLocation { get; set; }
-        public string LastKnownLocationType { get; set; }
-
         public string FullName()
         {
             return String.Format("{0} {1}", Name, SurName);
@@ -59,14 +56,6 @@ namespace NetMud.Data.EntityBackingData
             string outGender = default(string);
             DataUtility.GetFromDataRow<string>(dr, "Gender", ref outGender);
             Gender = outGender;
-
-            string outLKL = default(string);
-            DataUtility.GetFromDataRow<string>(dr, "LastKnownLocation", ref outLKL);
-            LastKnownLocation = outLKL;
-
-            string outLKLT = default(string);
-            DataUtility.GetFromDataRow<string>(dr, "LastKnownLocationType", ref outLKLT);
-            LastKnownLocationType = outLKLT;
         }
 
 
@@ -160,8 +149,6 @@ namespace NetMud.Data.EntityBackingData
             sql.AppendFormat(" [SurName] = '{0}' ", SurName);
             sql.AppendFormat(" , [Name] = '{0}' ", Name);
             sql.AppendFormat(" , [Gender] = '{0}' ", Gender);
-            sql.AppendFormat(" , [LastKnownLocation] = '{0}' ", LastKnownLocation);
-            sql.AppendFormat(" , [LastKnownLocationType] = '{0}' ", LastKnownLocationType);
             sql.AppendFormat(" , [LastRevised] = GetUTCDate()");
             sql.AppendFormat(" where ID = {0}", ID);
 

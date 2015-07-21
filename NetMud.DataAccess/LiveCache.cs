@@ -73,6 +73,15 @@ namespace NetMud.DataAccess
         }
 
         /// <summary>
+        /// Only for the hotbackup procedure
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<IEntity> GetAll()
+        {
+            return globalCache.Where(keyValuePair => keyValuePair.Value.GetType().GetInterfaces().Contains(typeof(IEntity))).Select(kvp => (IEntity)kvp.Value);
+        }
+
+        /// <summary>
         /// When base type and maintype want to be less ambigious
         /// </summary>
         /// <typeparam name="T">The base type (like ILocation)</typeparam>
