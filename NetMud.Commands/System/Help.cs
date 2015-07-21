@@ -25,7 +25,7 @@ namespace NutMud.Commands.System
             //Generic constructor for all IHelpfuls is needed
         }
 
-        public IEnumerable<string> Execute()
+        public void Execute()
         {
             var topic = (IHelpful)Subject;
             var sb = GetHelpHeader(topic);
@@ -40,7 +40,8 @@ namespace NutMud.Commands.System
                sb = sb.Concat(subject.RenderSyntaxHelp()).ToList();
             }
 
-            return sb;
+
+            Actor.WriteTo(sb);
         }
 
         public IEnumerable<string> RenderSyntaxHelp()

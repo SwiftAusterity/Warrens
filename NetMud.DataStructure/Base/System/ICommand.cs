@@ -5,7 +5,7 @@ namespace NetMud.DataStructure.Base.System
 {
     public interface ICommand
     {
-        IEnumerable<string> Execute();
+        void Execute();
 
         IEnumerable<string> RenderSyntaxHelp();
 

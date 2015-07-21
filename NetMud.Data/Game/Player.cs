@@ -22,6 +22,9 @@ namespace NetMud.Data.Game
             GetFromWorldOrSpawn();
         }
 
+        public string DescriptorID { get; set; }
+        public DescriptorType Descriptor { get; set; }
+
         #region Rendering
         public override IEnumerable<string> RenderToLook()
         {

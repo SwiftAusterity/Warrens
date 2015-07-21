@@ -32,7 +32,7 @@ namespace NetMud.Data.Game
 
             GetFromWorldOrSpawn();
         }
-        
+
         #region Container
         public EntityContainer<IObject> ObjectsInRoom { get; set; }
         public EntityContainer<IMobile> MobilesInRoom { get; set; }

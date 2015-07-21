@@ -1,29 +1,21 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 
-using NetMud;
 using NetMud.Data.Game;
-using NetMud.Models;
 using NetMud.Interp;
 
 using WebSocketSharp;
-using WebSocketSharp.Net;
 using WebSocketSharp.Server;
 using NetMud.Authentication;
 
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
-using Microsoft.Owin;
-using System.Text;
 using System.Security.Claims;
-using System.Web.Security;
-using Microsoft.Owin.Security.Cookies;
-using Microsoft.Owin.Security.DataHandler.Serializer;
 using System.IO;
 using System.IO.Compression;
+using Microsoft.AspNet.Identity.EntityFramework;
+using NetMud.Models;
+using NetMud.Utility;
+using System.Collections.Generic;
 
 namespace NetMud.Websock
 {
@@ -47,18 +39,7 @@ namespace NetMud.Websock
 
         public class Echo : WebSocketBehavior
         {
-            private ApplicationUserManager _userManager;
-            public ApplicationUserManager UserManager
-            {
-                get
-                {
-                    return _userManager;
-                }
-                private set
-                {
-                    _userManager = value;
-                }
-            }
+            public ApplicationUserManager UserManager { get; set; }
 
             private string _userId;
 
@@ -77,8 +58,7 @@ namespace NetMud.Websock
 
                 GetUserIDFromCookie(authTicketValue);
 
-                IOwinContext owin = new OwinContext();
-                UserManager = owin.GetUserManager<ApplicationUserManager>();
+                UserManager = new ApplicationUserManager(new UserStore<ApplicationUser>(new ApplicationDbContext()));
             }
 
             protected override void OnMessage(MessageEventArgs e)
@@ -94,9 +74,21 @@ namespace NetMud.Websock
                 }
 
                 var player = new Player(currentCharacter);
+                player.Descriptor = DataStructure.Base.Entity.DescriptorType.WebSockets;
+                player.DescriptorID = ID;
+                player.WriteTo = (strings) => SendWrapper(strings);
 
+                //It only sends the errors
                 Send(Interpret.Render(e.Data, player));
             }
+
+            public bool SendWrapper(IEnumerable<string> strings)
+            {
+                Send(RenderUtility.EncapsulateOutput(strings));
+
+                return true;
+            }
+
 
             private void GetUserIDFromCookie(string authTicketValue)
             {

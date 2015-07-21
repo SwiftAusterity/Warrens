@@ -21,7 +21,9 @@ namespace NetMud.Interp
             if (commandContext.AccessErrors.Count() > 0)
                 return RenderUtility.EncapsulateOutput(commandContext.AccessErrors);
 
-            return RenderUtility.EncapsulateOutput(commandContext.Command.Execute());
+            commandContext.Command.Execute();
+
+            return String.Empty;
         }
     }
 }

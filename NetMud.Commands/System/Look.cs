@@ -27,7 +27,7 @@ namespace NutMud.Commands.System
             //Generic constructor for all IHelpfuls is needed
         }
 
-        public IEnumerable<string> Execute()
+        public void Execute()
         {
             var sb = new List<string>();
 
@@ -40,7 +40,7 @@ namespace NutMud.Commands.System
                 sb.AddRange(lookTarget.RenderToLook());
             }
 
-            return sb;
+            Actor.WriteTo(sb);
         }
 
         public IEnumerable<string> RenderSyntaxHelp()

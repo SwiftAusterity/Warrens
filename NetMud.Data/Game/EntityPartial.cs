@@ -25,6 +25,8 @@ namespace NetMud.Data.Game
         }
         #endregion
 
+        public Func<IEnumerable<string>, bool> WriteTo { get; set; }
+
         private IContains _currentLocation;
         public IContains CurrentLocation
         {

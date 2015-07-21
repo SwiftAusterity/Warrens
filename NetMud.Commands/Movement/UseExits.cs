@@ -32,7 +32,7 @@ namespace NetMud.Commands.Movement
         public object Target { get; set; }
         public IActor Actor { get; set; }
 
-        public IEnumerable<string> Execute()
+        public void Execute()
         {
             var sb = new List<string>();
             IPath targetPath=(IPath)Subject;
@@ -43,7 +43,8 @@ namespace NetMud.Commands.Movement
             //TODO: keywords is janky, location should have its own identifier name somehow for output purposes
             sb.Add(targetPath.Enter.Actor);
 
-            return sb;
+
+            Actor.WriteTo(sb);
         }
 
         public IEnumerable<string> RenderSyntaxHelp()

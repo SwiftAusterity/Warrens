@@ -1,5 +1,6 @@
 ﻿using NetMud.DataStructure.Behaviors.Rendering;
 using System;
+using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Base.System
 {
@@ -20,5 +21,7 @@ namespace NetMud.DataStructure.Base.System
         void SpawnNewInWorld(IContains spawnTo);
 
         void UpsertToLiveWorldCache();
+
+        Func<IEnumerable<string>, bool> WriteTo { get; set; }
     }
 }

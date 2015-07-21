@@ -30,7 +30,7 @@ namespace NutMud.Commands.System
             //Generic constructor for all IHelpfuls is needed
         }
 
-        public IEnumerable<string> Execute()
+        public void Execute()
         {
             var newObject = (IObjectData)Subject;
             var sb = new List<string>();
@@ -47,7 +47,7 @@ namespace NutMud.Commands.System
             //TODO: keywords is janky, location should have its own identifier name somehow for output purposes
             sb.Add(String.Format("{0} spawned to {1}", entityObject.DataTemplate.Name, spawnTo.Keywords[0]));
 
-            return sb;
+            Actor.WriteTo(sb);
         }
 
         public IEnumerable<string> RenderSyntaxHelp()
