@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace NetMud.Data.EntityBackingData
 {
-    public class Character : ICharacter
+    public class NonPlayerCharacter : INonPlayerCharacter
     {
         public Type EntityClass
         {
-            get { return typeof(NetMud.Data.Game.Player); }
+            get { return typeof(NetMud.Data.Game.Intelligence); }
         }
 
         public long ID { get; set; }
@@ -25,22 +25,9 @@ namespace NetMud.Data.EntityBackingData
         public string Gender { get; set; }
 
         public string SurName { get; set; }
-        public string AccountHandle { get; set; }
 
         public string LastKnownLocation { get; set; }
         public string LastKnownLocationType { get; set; }
-
-        private IAccount _account;
-        public IAccount Account
-        {
-            get 
-            {
-                if (_account == null && !String.IsNullOrWhiteSpace(AccountHandle))
-                    _account = NetMud.Data.System.Account.GetByHandle(AccountHandle);
-
-                return _account;
-            }
-        }
 
         public string FullName()
         {
@@ -52,10 +39,6 @@ namespace NetMud.Data.EntityBackingData
             long outId = default(long);
             DataUtility.GetFromDataRow<long>(dr, "ID", ref outId);
             ID = outId;
-
-            string outAccountHandle = default(string);
-            DataUtility.GetFromDataRow<string>(dr, "AccountHandle", ref outAccountHandle);
-            AccountHandle = outAccountHandle;
 
             DateTime outCreated = default(DateTime);
             DataUtility.GetFromDataRow<DateTime>(dr, "Created", ref outCreated);
@@ -93,7 +76,7 @@ namespace NetMud.Data.EntityBackingData
             {
                 try
                 {
-                    if (other.GetType() != typeof(Character))
+                    if (other.GetType() != typeof(NonPlayerCharacter))
                         return -1;
 
                     if (other.ID.Equals(this.ID))
@@ -116,7 +99,7 @@ namespace NetMud.Data.EntityBackingData
             {
                 try
                 {
-                    return other.GetType() == typeof(Character) && other.ID.Equals(this.ID);
+                    return other.GetType() == typeof(NonPlayerCharacter) && other.ID.Equals(this.ID);
                 }
                 catch
                 {
@@ -129,11 +112,11 @@ namespace NetMud.Data.EntityBackingData
 
         public IData Create()
         {
-            ICharacter returnValue = default(ICharacter);
+            INonPlayerCharacter returnValue = default(INonPlayerCharacter);
             var sql = new StringBuilder();
-            sql.Append("insert into [dbo].[Character]([SurName], [Name], [AccountHandle], [Gender])");
-            sql.AppendFormat(" values('{0}','{1}','{2}', '{3}')", SurName, Name, AccountHandle, Gender);
-            sql.Append(" select * from [dbo].[Character] where ID = Scope_Identity()");
+            sql.Append("insert into [dbo].[NonPlayerCharacter]([SurName], [Name], [Gender])");
+            sql.AppendFormat(" values('{0}','{1}','{2}')", SurName, Name, Gender);
+            sql.Append(" select * from [dbo].[NonPlayerCharacter] where ID = Scope_Identity()");
 
             var ds = SqlWrapper.RunDataset(sql.ToString(), CommandType.Text);
 
@@ -163,7 +146,7 @@ namespace NetMud.Data.EntityBackingData
         public bool Remove()
         {
             var sql = new StringBuilder();
-            sql.AppendFormat("remove from [dbo].[Character] where ID = {0}", ID);
+            sql.AppendFormat("remove from [dbo].[NonPlayerCharacter] where ID = {0}", ID);
 
             SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text);
 
@@ -173,10 +156,9 @@ namespace NetMud.Data.EntityBackingData
         public bool Save()
         {
             var sql = new StringBuilder();
-            sql.Append("update [dbo].[Character] set ");
+            sql.Append("update [dbo].[NonPlayerCharacter] set ");
             sql.AppendFormat(" [SurName] = '{0}' ", SurName);
             sql.AppendFormat(" , [Name] = '{0}' ", Name);
-            sql.AppendFormat(" , [AccountHandle] = '{0}' ", AccountHandle);
             sql.AppendFormat(" , [Gender] = '{0}' ", Gender);
             sql.AppendFormat(" , [LastKnownLocation] = '{0}' ", LastKnownLocation);
             sql.AppendFormat(" , [LastKnownLocationType] = '{0}' ", LastKnownLocationType);

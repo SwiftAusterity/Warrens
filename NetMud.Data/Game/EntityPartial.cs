@@ -30,8 +30,6 @@ namespace NetMud.Data.Game
         { 
             get
             {
-                var output = true;
-
                 if (_writeTo != null)
                 {
                     var pred = new Predicate<IEnumerable<string>>(_writeTo);

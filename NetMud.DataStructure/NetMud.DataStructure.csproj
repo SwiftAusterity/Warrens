@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base\EntityBackingData\INonPlayerCharacter.cs" />
     <Compile Include="Base\EntityBackingData\IObjectData.cs" />
     <Compile Include="Base\EntityBackingData\IRoomData.cs" />
     <Compile Include="Base\Skills\ISkill.cs" />
