@@ -187,6 +187,7 @@
     <Content Include="App_Data\dbo.Account.sql" />
     <Content Include="App_Data\dbo.Character.sql" />
     <Content Include="App_Data\dbo.Help.sql" />
+    <Content Include="App_Data\dbo.NonPlayerCharacter.sql" />
     <Content Include="App_Data\dbo.Object.sql" />
     <Content Include="App_Data\dbo.PathData.sql" />
     <Content Include="App_Data\dbo.Room.sql" />
