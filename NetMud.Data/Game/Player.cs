@@ -147,6 +147,10 @@ namespace NetMud.Data.Game
 
         public override void SpawnNewInWorld()
         {
+            var hotBack = new HotBackup(System.Web.Hosting.HostingEnvironment.MapPath("/HotBackup/"));
+
+            var savedPlayer = RestorePlayer(string accountHandle)
+
             var liveWorld = new LiveCache();
             var ch = (ICharacter)DataTemplate;
             var locationAssembly = Assembly.GetAssembly(typeof(ILocation));

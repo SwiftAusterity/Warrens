@@ -11,6 +11,7 @@ using System.Linq;
 using System.Web.Hosting;
 using NetMud.Utility;
 using NetMud.DataStructure.Base.Place;
+using NetMud.DataStructure.Base.EntityBackingData;
 
 namespace NetMud.LiveData
 {
@@ -31,6 +32,7 @@ namespace NetMud.LiveData
 
         public bool NewWorldFallback()
         {
+            //Only load in stuff that is static and spawns as singleton
             LiveWorld.PreLoadAll<RoomData>();
             LiveWorld.PreLoadAll<PathData>();
 
@@ -73,7 +75,7 @@ namespace NetMud.LiveData
                 var entities = LiveWorld.GetAll();
 
                 //Dont save players to the hot section, there's another place for them
-                foreach (var entity in entities.Where(ent => ent.GetType() != typeof(Player))
+                foreach (var entity in entities.Where(ent => ent.GetType() != typeof(Player)))
                 {
                     var baseTypeName = entity.GetType().Name;
 
@@ -91,11 +93,74 @@ namespace NetMud.LiveData
 
                     WriteEntity(entityDirectory, entity);
                 }
+
+                return WritePlayers();
             }
             catch
             {
                 //logging
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// Players are written to their own private directories, with the full current/dated backup cycle for each dude
+        /// </summary>
+        /// <returns></returns>
+        public bool WritePlayers()
+        {
+            try
+            {
+                //Need the base dir
+                if (!Directory.Exists(BaseDirectory))
+                    Directory.CreateDirectory(BaseDirectory);
+
+                var playersDir = BaseDirectory + "Players/";
+
+                //and the base players dir
+                if (!Directory.Exists(playersDir))
+                    Directory.CreateDirectory(playersDir);
+
+                //Get all the players
+                var entities = LiveWorld.GetAll<Player>();
+
+                foreach (var entity in entities)
+                {
+                    var charData = (ICharacter)entity.DataTemplate;
+
+                    var myDirName = playersDir + charData.AccountHandle + "/";
+
+                    //Wipe out the existing one so we can create all new files
+                    if (Directory.Exists(myDirName + "Current/"))
+                    {
+                        var currentRoot = new DirectoryInfo(myDirName + "Current/");
+
+                        if (!Directory.Exists(myDirName + "Backups/"))
+                            Directory.CreateDirectory(myDirName + "Backups/");
+
+                        var newBackupName = String.Format("{0}Backups/{1}{2}{3}_{4}{5}{6}/",
+                                            myDirName
+                                            , DateTime.Now.Year
+                                            , DateTime.Now.Month
+                                            , DateTime.Now.Day
+                                            , DateTime.Now.Hour
+                                            , DateTime.Now.Minute
+                                            , DateTime.Now.Second);
+
+                        //move is literal move, no need to delete afterwards
+                        currentRoot.MoveTo(newBackupName);
+                    }
+
+                    var currentBackupDirectory = myDirName + "Current/";
+                    DirectoryInfo entityDirectory = Directory.CreateDirectory(currentBackupDirectory);
+
+                    WritePlayer(entityDirectory, entity);
+                }
+            }
+            catch(Exception ex)
+            {
+                //let the upper caller handle the error itself
+                throw ex;
             }
 
             return true;
@@ -213,6 +278,66 @@ namespace NetMud.LiveData
             return true;
         }
 
+        private IPlayer RestorePlayer(string accountHandle)
+        {
+            var currentBackupDirectory = BaseDirectory + "Players/" + accountHandle + "/";
+
+            //No backup directory? No live data.
+            if (!Directory.Exists(currentBackupDirectory))
+                return null;
+
+            var playerDirectory = new DirectoryInfo(currentBackupDirectory);
+
+            //no player file to load, derp
+            if(!File.Exists(playerDirectory + accountHandle + ".Player"))
+                return null;
+
+            var blankEntity = Activator.CreateInstance(typeof(IPlayer)) as IPlayer;
+            IPlayer newPlayerToLoad;
+
+            using (var stream = File.OpenRead(playerDirectory + accountHandle + ".Player"))
+            {
+                byte[] bytes = new byte[stream.Length];
+                stream.Read(bytes, 0, (int)stream.Length);
+                newPlayerToLoad = (IPlayer)blankEntity.DeSerialize(bytes);
+            }
+
+            //bad load, dump it
+            if (newPlayerToLoad == null)
+                return null;
+
+            //We'll need one of these per container on players
+            if (Directory.Exists(playerDirectory + "Inventory/"))
+            {
+                var inventoryDirectory = new DirectoryInfo(playerDirectory + "Inventory/");
+
+                foreach (var file in inventoryDirectory.EnumerateFiles())
+                {
+                    var blankObject = Activator.CreateInstance(typeof(IEntity)) as IEntity;
+
+                    using (var stream = file.Open(FileMode.Open))
+                    {
+                        byte[] bytes = new byte[stream.Length];
+                        stream.Read(bytes, 0, (int)stream.Length);
+                        var newObj = blankObject.DeSerialize(bytes);
+                        newObj.UpsertToLiveWorldCache();
+                    }
+                }
+
+                IEntity[] objectsContained = new IEntity[newPlayerToLoad.Inventory.EntitiesContained.Count];
+                newPlayerToLoad.Inventory.EntitiesContained.CopyTo(objectsContained, 0);
+
+                foreach (IObject obj in objectsContained)
+                {
+                    var fullObj = LiveWorld.Get<IObject>(new LiveCacheKey(typeof(NetMud.Data.Game.Object), obj.BirthMark));
+                    newPlayerToLoad.MoveFrom<IObject>(obj);
+                    newPlayerToLoad.MoveInto<IObject>(fullObj);
+                }
+            }
+
+            return newPlayerToLoad;
+        }
+
         private void WriteEntity(DirectoryInfo dir, IEntity entity)
         {
             var entityFileName = GetEntityFilename(entity);
@@ -249,10 +374,68 @@ namespace NetMud.LiveData
             }
         }
 
+        private void WritePlayer(DirectoryInfo dir, IPlayer entity)
+        {
+            var entityFileName = GetPlayerFilename(entity);
+
+            if (string.IsNullOrWhiteSpace(entityFileName))
+                return;
+
+            var fullFileName = dir.FullName + "/" + entityFileName;
+
+            FileStream entityFile = null;
+
+            try
+            {
+                if (File.Exists(fullFileName))
+                    entityFile = File.Open(fullFileName, FileMode.Truncate);
+                else
+                    entityFile = File.Create(fullFileName);
+
+                var bytes = entity.Serialize();
+                entityFile.Write(bytes, 0, bytes.Length);
+
+                //Don't forget to write the file out
+                entityFile.Flush();
+
+                //We also need to write out all the inventory
+                foreach (var obj in entity.Inventory.EntitiesContained)
+                {
+                    var baseTypeName = "Inventory";
+
+                    DirectoryInfo entityDirectory;
+
+                    //Is there a directory for this entity type? If not, then create it
+                    if (!Directory.Exists(dir.FullName + baseTypeName))
+                        entityDirectory = Directory.CreateDirectory(dir.FullName + baseTypeName);
+                    else
+                        entityDirectory = new DirectoryInfo(dir.FullName + baseTypeName);
+
+                    WriteEntity(entityDirectory, obj);
+                }
+            }
+            catch
+            {
+                //boogey boogey
+            }
+            finally
+            {
+                //dont not do this everEVERVERRFCFEVVEEV
+                if (entityFile != null)
+                    entityFile.Dispose();
+            }
+        }
+
         private string GetEntityFilename(IEntity entity)
         {
             return string.Format("{0}.{1}", entity.BirthMark, entity.GetType().Name);
         }
 
+        private string GetPlayerFilename(IPlayer entity)
+        {
+            var charData = (ICharacter)entity.DataTemplate;
+
+            return string.Format("{0}.Player", charData.AccountHandle);
+        }
     }
 }
