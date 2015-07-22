@@ -52,9 +52,8 @@ namespace NetMud.LiveData
                                     , DateTime.Now.Minute
                                     , DateTime.Now.Second);
 
+                //move is literal move, no need to delete afterwards
                 currentRoot.MoveTo(newBackupName);
-
-                Directory.Delete(BaseDirectory + "Current/", true);
             }
 
             var currentBackupDirectory = BaseDirectory + "Current/";

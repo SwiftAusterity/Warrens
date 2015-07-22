@@ -95,6 +95,7 @@ namespace NetMud.Data.Game
 
                 ObjectsInRoom.Add(obj);
                 obj.CurrentLocation = this;
+                this.UpsertToLiveWorldCache();
                 return string.Empty;
             }
 
@@ -107,6 +108,7 @@ namespace NetMud.Data.Game
 
                 MobilesInRoom.Add(obj);
                 obj.CurrentLocation = this;
+                this.UpsertToLiveWorldCache();
                 return string.Empty;
             }
 
@@ -119,6 +121,7 @@ namespace NetMud.Data.Game
 
                 Pathways.Add(obj);
                 obj.CurrentLocation = this;
+                this.UpsertToLiveWorldCache();
                 return string.Empty;
             }
 
@@ -144,6 +147,7 @@ namespace NetMud.Data.Game
 
                 ObjectsInRoom.Remove(obj);
                 obj.CurrentLocation = null;
+                this.UpsertToLiveWorldCache();
                 return string.Empty;
             }
 
@@ -156,6 +160,7 @@ namespace NetMud.Data.Game
 
                 MobilesInRoom.Remove(obj);
                 obj.CurrentLocation = null;
+                this.UpsertToLiveWorldCache();
                 return string.Empty;
             }
 
@@ -168,6 +173,7 @@ namespace NetMud.Data.Game
 
                 Pathways.Remove(obj);
                 obj.CurrentLocation = null;
+                this.UpsertToLiveWorldCache();
                 return string.Empty;
             }
 
@@ -246,7 +252,7 @@ namespace NetMud.Data.Game
             foreach (var item in ObjectsInRoom.EntitiesContained)
                 entityData.Root.Element("ObjectsInRoom").Add(new XElement("Item", item.BirthMark));
 
-            foreach (var item in MobilesInRoom.EntitiesContained)
+            foreach (var item in MobilesInRoom.EntitiesContained.Where(ent => ent.GetType() != typeof(Player)))
                 entityData.Root.Element("MobilesInRoom").Add(new XElement("Item", item.BirthMark));
 
             //pathways will load themselves

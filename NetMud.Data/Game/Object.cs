@@ -84,6 +84,7 @@ namespace NetMud.Data.Game
 
                 Contents.Add(obj);
                 obj.CurrentLocation = this;
+                this.UpsertToLiveWorldCache();
                 return string.Empty;
             }
 
@@ -108,6 +109,7 @@ namespace NetMud.Data.Game
 
                 Contents.Remove(obj);
                 obj.CurrentLocation = null;
+                this.UpsertToLiveWorldCache();
                 return string.Empty;
             }
 
