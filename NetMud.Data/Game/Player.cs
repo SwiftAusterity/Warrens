@@ -1,4 +1,5 @@
-﻿using NetMud.DataAccess;
+﻿using NetMud.Data.EntityBackingData;
+using NetMud.DataAccess;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
@@ -9,13 +10,22 @@ using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace NetMud.Data.Game
 {
     public class Player : EntityPartial, IPlayer
     {
+        public Player()
+        {
+            Inventory = new EntityContainer<IObject>();
+        }
+
         public Player(ICharacter character)
         {
             Inventory = new EntityContainer<IObject>();
@@ -69,7 +79,9 @@ namespace NetMud.Data.Game
 
         public string MoveInto<T>(T thing, string containerName)
         {
-            if (typeof(T).GetInterfaces().Contains(typeof(IObject)))
+            var implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
+
+            if (implimentedTypes.Contains(typeof(IObject)))
             {
                 var obj = (IObject)thing;
 
@@ -91,7 +103,9 @@ namespace NetMud.Data.Game
 
         public string MoveFrom<T>(T thing, string containerName)
         {
-            if (typeof(T).GetInterfaces().Contains(typeof(IObject)))
+            var implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
+
+            if (implimentedTypes.Contains(typeof(IObject)))
             {
                 var obj = (IObject)thing;
 
@@ -186,14 +200,80 @@ namespace NetMud.Data.Game
         }
         #endregion
 
+        #region HotBackup
         public override byte[] Serialize()
         {
-            return new byte[0];
+            var settings = new XmlWriterSettings { OmitXmlDeclaration = true, Encoding = Encoding.UTF8 };
+            var charData = (ICharacter)DataTemplate;
+
+            var entityData = new XDocument(
+                                new XElement("root",
+                                    new XAttribute("Birthmark", BirthMark),
+                                    new XAttribute("Birthdate", Birthdate),
+                                    new XElement("BackingData",
+                                        new XAttribute("ID", charData.ID),
+                                        new XAttribute("Name", charData.Name),
+                                        new XAttribute("Surname", charData.SurName),
+                                        new XAttribute("AccountHandle", charData.AccountHandle),
+                                        new XAttribute("LastRevised", charData.LastRevised),
+                                        new XAttribute("Created", charData.Created),
+                                        new XAttribute("Gender", charData.Gender)),
+                                    new XElement("LiveData",
+                                        new XAttribute("Keywords", string.Join(",", Keywords))),
+                                    new XElement("Inventory")
+                                    ));
+
+            foreach (var item in Inventory.EntitiesContained)
+                entityData.Root.Element("Inventory").Add(new XElement("Item", item.BirthMark));
+
+            var entityBinaryConvert = new DataUtility.EntityFileData(entityData);
+
+            using (var memoryStream = new MemoryStream())
+            using (var xmlWriter = XmlWriter.Create(memoryStream, settings))
+            {
+                entityData.WriteTo(xmlWriter);
+                xmlWriter.Flush();
+                entityBinaryConvert.XmlBinary = memoryStream.ToArray();
+            }
+
+            return entityBinaryConvert.XmlBinary;
         }
 
         public override IEntity DeSerialize(byte[] bytes)
         {
-            return null;
+            var entityBinaryConvert = new DataUtility.EntityFileData(bytes);
+            var xDoc = entityBinaryConvert.XDoc;
+
+            var backingData = new Character();
+            var newEntity = new Player();
+
+            newEntity.BirthMark = xDoc.Root.Attribute("Birthmark").Value;
+            newEntity.Birthdate = DateTime.Parse(xDoc.Root.Attribute("Birthdate").Value);
+
+            backingData.ID = long.Parse(xDoc.Root.Element("BackingData").Attribute("ID").Value);
+            backingData.Name = xDoc.Root.Element("BackingData").Attribute("Name").Value;
+            backingData.SurName = xDoc.Root.Element("BackingData").Attribute("Surname").Value;
+            backingData.AccountHandle = xDoc.Root.Element("BackingData").Attribute("AccountHandle").Value;
+            backingData.LastRevised = DateTime.Parse(xDoc.Root.Element("BackingData").Attribute("LastRevised").Value);
+            backingData.Created = DateTime.Parse(xDoc.Root.Element("BackingData").Attribute("Created").Value);
+            backingData.Gender = xDoc.Root.Element("BackingData").Attribute("Gender").Value;
+
+            //Add a fake entity to get the birthmark over to the next place
+            foreach (var item in xDoc.Root.Element("Inventory").Elements("Item"))
+            {
+                var obj = new Object();
+                obj.BirthMark = item.Value;
+
+                newEntity.Inventory.Add(obj);
+            }
+
+            newEntity.DataTemplate = backingData;
+
+            //keywords is last
+            newEntity.Keywords = xDoc.Root.Element("LiveData").Attribute("Keywords").Value.Split(new char[] { ',' });
+
+            return newEntity;
         }
+        #endregion
     }
 }

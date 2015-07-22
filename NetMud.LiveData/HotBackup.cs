@@ -31,25 +31,54 @@ namespace NetMud.LiveData
 
         public bool WriteLiveBackup()
         {
-            //No backup directory? Make it
+            //Need the base dir
             if (!Directory.Exists(BaseDirectory))
                 Directory.CreateDirectory(BaseDirectory);
+
+            //Wipe out the existing one so we can create all new files
+            if (Directory.Exists(BaseDirectory + "Current/"))
+            {
+                var currentRoot = new DirectoryInfo(BaseDirectory + "Current/");
+
+                if (!Directory.Exists(BaseDirectory + "Backups/"))
+                    Directory.CreateDirectory(BaseDirectory + "Backups/");
+
+                var newBackupName = String.Format("{0}Backups/{1}{2}{3}_{4}{5}{6}/",
+                                    BaseDirectory
+                                    , DateTime.Now.Year
+                                    , DateTime.Now.Month
+                                    , DateTime.Now.Day
+                                    , DateTime.Now.Hour
+                                    , DateTime.Now.Minute
+                                    , DateTime.Now.Second);
+
+                currentRoot.MoveTo(newBackupName);
+
+                Directory.Delete(BaseDirectory + "Current/", true);
+            }
+
+            var currentBackupDirectory = BaseDirectory + "Current/";
+            Directory.CreateDirectory(currentBackupDirectory);
 
             //Get all the entities (which should be a ton of stuff)
             var entities = LiveWorld.GetAll();
 
             //Dont save players to the hot section
-            foreach(var entity in entities.Where(ent => !ent.GetType().GetInterfaces().Contains(typeof(IPlayer))))
+            foreach(var entity in entities)
             {
                 var baseTypeName = entity.GetType().Name;
 
                 DirectoryInfo entityDirectory;
 
                 //Is there a directory for this entity type? If not, then create it
-                if (!Directory.Exists(HostingEnvironment.MapPath(BaseDirectory + baseTypeName)))
-                    entityDirectory = Directory.CreateDirectory(BaseDirectory + baseTypeName);
+                if (!Directory.Exists(currentBackupDirectory + baseTypeName))
+                    entityDirectory = Directory.CreateDirectory(currentBackupDirectory + baseTypeName);
                 else
-                    entityDirectory = new DirectoryInfo(BaseDirectory + baseTypeName);
+                    entityDirectory = new DirectoryInfo(currentBackupDirectory + baseTypeName);
+
+                //Don't write objects that are on live players, player backup does that itself
+                if (entity.CurrentLocation != null && entity.CurrentLocation.GetType() == typeof(Player))
+                    continue;
 
                 WriteEntity(entityDirectory, entity);
             }
@@ -100,22 +129,24 @@ namespace NetMud.LiveData
 
         public bool RestoreLiveBackup()
         {
+            var currentBackupDirectory = BaseDirectory + "Current/";
+
             //No backup directory? No live data.
-            if (!Directory.Exists(BaseDirectory))
+            if (!Directory.Exists(currentBackupDirectory))
                 return false;
 
             try
             {
-
+                //dont load players here
                 var entitiesToLoad = new List<IEntity>();
-                var implimentedTypes = typeof(EntityPartial).Assembly.GetTypes().Where(ty => ty.GetInterfaces().Contains(typeof(IEntity)) && ty.IsClass && !ty.IsAbstract);
+                var implimentedTypes = typeof(EntityPartial).Assembly.GetTypes().Where(ty => ty.GetInterfaces().Contains(typeof(IEntity)) && ty.IsClass && !ty.IsAbstract && !ty.Name.Equals("Player"));
 
                 foreach (var type in implimentedTypes)
                 {
                     if (!Directory.Exists(BaseDirectory + type.Name))
                         continue;
 
-                    var entityFilesDirectory = new DirectoryInfo(BaseDirectory + type.Name);
+                    var entityFilesDirectory = new DirectoryInfo(currentBackupDirectory + type.Name);
 
                     foreach (var file in entityFilesDirectory.EnumerateFiles())
                     {
@@ -131,9 +162,7 @@ namespace NetMud.LiveData
                 }
 
                 foreach (var entity in entitiesToLoad.OrderBy(ent => ent.Birthdate))
-                {
                     entity.UpsertToLiveWorldCache();
-                }
 
                 //We have the containers contents and the birthmarks from the deserial
                 //I don't know how we can even begin to do this type agnostically since the collections are held on type specific objects without some super ugly reflection

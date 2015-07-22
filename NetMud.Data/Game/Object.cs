@@ -73,7 +73,9 @@ namespace NetMud.Data.Game
 
         public string MoveInto<T>(T thing, string containerName)
         {
-            if (typeof(T).GetInterfaces().Contains(typeof(IObject)))
+            var implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
+
+            if (implimentedTypes.Contains(typeof(IObject)))
             {
                 var obj = (IObject)thing;
 
@@ -95,7 +97,9 @@ namespace NetMud.Data.Game
 
         public string MoveFrom<T>(T thing, string containerName)
         {
-            if (typeof(T).GetInterfaces().Contains(typeof(IObject)))
+            var implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
+
+            if (implimentedTypes.Contains(typeof(IObject)))
             {
                 var obj = (IObject)thing;
 
