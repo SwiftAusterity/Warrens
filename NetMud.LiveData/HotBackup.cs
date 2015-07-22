@@ -10,7 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Web.Hosting;
 using NetMud.Utility;
-using NetMud.DataStructure.Base.Place; 
+using NetMud.DataStructure.Base.Place;
 
 namespace NetMud.LiveData
 {
@@ -29,101 +29,76 @@ namespace NetMud.LiveData
             BaseDirectory = baseDirectory;
         }
 
-        public bool WriteLiveBackup()
+        public bool NewWorldFallback()
         {
-            //Need the base dir
-            if (!Directory.Exists(BaseDirectory))
-                Directory.CreateDirectory(BaseDirectory);
-
-            //Wipe out the existing one so we can create all new files
-            if (Directory.Exists(BaseDirectory + "Current/"))
-            {
-                var currentRoot = new DirectoryInfo(BaseDirectory + "Current/");
-
-                if (!Directory.Exists(BaseDirectory + "Backups/"))
-                    Directory.CreateDirectory(BaseDirectory + "Backups/");
-
-                var newBackupName = String.Format("{0}Backups/{1}{2}{3}_{4}{5}{6}/",
-                                    BaseDirectory
-                                    , DateTime.Now.Year
-                                    , DateTime.Now.Month
-                                    , DateTime.Now.Day
-                                    , DateTime.Now.Hour
-                                    , DateTime.Now.Minute
-                                    , DateTime.Now.Second);
-
-                //move is literal move, no need to delete afterwards
-                currentRoot.MoveTo(newBackupName);
-            }
-
-            var currentBackupDirectory = BaseDirectory + "Current/";
-            Directory.CreateDirectory(currentBackupDirectory);
-
-            //Get all the entities (which should be a ton of stuff)
-            var entities = LiveWorld.GetAll();
-
-            //Dont save players to the hot section
-            foreach(var entity in entities)
-            {
-                var baseTypeName = entity.GetType().Name;
-
-                DirectoryInfo entityDirectory;
-
-                //Is there a directory for this entity type? If not, then create it
-                if (!Directory.Exists(currentBackupDirectory + baseTypeName))
-                    entityDirectory = Directory.CreateDirectory(currentBackupDirectory + baseTypeName);
-                else
-                    entityDirectory = new DirectoryInfo(currentBackupDirectory + baseTypeName);
-
-                //Don't write objects that are on live players, player backup does that itself
-                if (entity.CurrentLocation != null && entity.CurrentLocation.GetType() == typeof(Player))
-                    continue;
-
-                WriteEntity(entityDirectory, entity);
-            }
+            LiveWorld.PreLoadAll<RoomData>();
+            LiveWorld.PreLoadAll<PathData>();
 
             return true;
         }
 
-        private void WriteEntity(DirectoryInfo dir, IEntity entity)
+        public bool WriteLiveBackup()
         {
-            var entityFileName = GetEntityFilename(entity);
-
-            if(string.IsNullOrWhiteSpace(entityFileName))
-                return;
-
-            var fullFileName = dir.FullName + "/" + entityFileName;
-
-            FileStream entityFile = null;
-
             try
             {
-                if (File.Exists(fullFileName))
-                    entityFile = File.Open(fullFileName, FileMode.Truncate);
-                else
-                    entityFile = File.Create(fullFileName);
+                //Need the base dir
+                if (!Directory.Exists(BaseDirectory))
+                    Directory.CreateDirectory(BaseDirectory);
 
-                var bytes = entity.Serialize();
-                entityFile.Write(bytes, 0, bytes.Length);
+                //Wipe out the existing one so we can create all new files
+                if (Directory.Exists(BaseDirectory + "Current/"))
+                {
+                    var currentRoot = new DirectoryInfo(BaseDirectory + "Current/");
 
-                //Don't forget to write the file out
-                entityFile.Flush();
+                    if (!Directory.Exists(BaseDirectory + "Backups/"))
+                        Directory.CreateDirectory(BaseDirectory + "Backups/");
+
+                    var newBackupName = String.Format("{0}Backups/{1}{2}{3}_{4}{5}{6}/",
+                                        BaseDirectory
+                                        , DateTime.Now.Year
+                                        , DateTime.Now.Month
+                                        , DateTime.Now.Day
+                                        , DateTime.Now.Hour
+                                        , DateTime.Now.Minute
+                                        , DateTime.Now.Second);
+
+                    //move is literal move, no need to delete afterwards
+                    currentRoot.MoveTo(newBackupName);
+                }
+
+                var currentBackupDirectory = BaseDirectory + "Current/";
+                Directory.CreateDirectory(currentBackupDirectory);
+
+                //Get all the entities (which should be a ton of stuff)
+                var entities = LiveWorld.GetAll();
+
+                //Dont save players to the hot section, there's another place for them
+                foreach (var entity in entities.Where(ent => ent.GetType() != typeof(Player))
+                {
+                    var baseTypeName = entity.GetType().Name;
+
+                    DirectoryInfo entityDirectory;
+
+                    //Is there a directory for this entity type? If not, then create it
+                    if (!Directory.Exists(currentBackupDirectory + baseTypeName))
+                        entityDirectory = Directory.CreateDirectory(currentBackupDirectory + baseTypeName);
+                    else
+                        entityDirectory = new DirectoryInfo(currentBackupDirectory + baseTypeName);
+
+                    //Don't write objects that are on live players, player backup does that itself
+                    if (entity.CurrentLocation != null && entity.CurrentLocation.GetType() == typeof(Player))
+                        continue;
+
+                    WriteEntity(entityDirectory, entity);
+                }
             }
             catch
             {
-                //boogey boogey
+                //logging
+                return false;
             }
-            finally
-            {
-                //dont not do this everEVERVERRFCFEVVEEV
-                if(entityFile != null)
-                    entityFile.Dispose();
-            }
-        }
 
-        private string GetEntityFilename(IEntity entity)
-        {
-             return string.Format("{0}.{1}", entity.BirthMark, entity.GetType().Name);
+            return true;
         }
 
         public bool RestoreLiveBackup()
@@ -238,12 +213,46 @@ namespace NetMud.LiveData
             return true;
         }
 
-        public bool NewWorldFallback()
+        private void WriteEntity(DirectoryInfo dir, IEntity entity)
         {
-            LiveWorld.PreLoadAll<RoomData>();
-            LiveWorld.PreLoadAll<PathData>();
+            var entityFileName = GetEntityFilename(entity);
 
-            return true;
+            if (string.IsNullOrWhiteSpace(entityFileName))
+                return;
+
+            var fullFileName = dir.FullName + "/" + entityFileName;
+
+            FileStream entityFile = null;
+
+            try
+            {
+                if (File.Exists(fullFileName))
+                    entityFile = File.Open(fullFileName, FileMode.Truncate);
+                else
+                    entityFile = File.Create(fullFileName);
+
+                var bytes = entity.Serialize();
+                entityFile.Write(bytes, 0, bytes.Length);
+
+                //Don't forget to write the file out
+                entityFile.Flush();
+            }
+            catch
+            {
+                //boogey boogey
+            }
+            finally
+            {
+                //dont not do this everEVERVERRFCFEVVEEV
+                if (entityFile != null)
+                    entityFile.Dispose();
+            }
         }
+
+        private string GetEntityFilename(IEntity entity)
+        {
+            return string.Format("{0}.{1}", entity.BirthMark, entity.GetType().Name);
+        }
+
     }
 }
