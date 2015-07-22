@@ -124,7 +124,7 @@ namespace NetMud.Data.Game
             Enter.ToSurrounding.Add(bS.VisibleStrength, new Tuple<MessagingType, string>(MessagingType.Visible, bS.VisibleToSurroundings));
             Enter.ToSurrounding.Add(bS.AudibleStrength, new Tuple<MessagingType, string>(MessagingType.Visible, bS.AudibleToSurroundings));
 
-            fromLocation.MoveTo<IPath>(this);
+            fromLocation.MoveInto<IPath>(this);
         }
 
         public override IEnumerable<string> RenderToLook()
@@ -167,7 +167,10 @@ namespace NetMud.Data.Game
                                         new XAttribute("VisibleToSurroundings", charData.VisibleToSurroundings),
                                         new XAttribute("VisibleStrength", charData.VisibleStrength)),
                                     new XElement("LiveData",
-                                        new XAttribute("Keywords", string.Join(",", Keywords)))));
+                                        new XAttribute("Keywords", string.Join(",", Keywords)),
+                                        new XAttribute("RoomTo", ToLocation.BirthMark),
+                                        new XAttribute("RoomFrom", FromLocation.BirthMark))
+                                    ));
 
             var entityBinaryConvert = new DataUtility.EntityFileData(entityData);
 
@@ -189,6 +192,7 @@ namespace NetMud.Data.Game
 
             var backingData = new PathData();
             var newEntity = new Path();
+
             newEntity.BirthMark = xDoc.Root.Attribute("Birthmark").Value;
             newEntity.Birthdate = DateTime.Parse(xDoc.Root.Attribute("Birthdate").Value);
 
@@ -212,6 +216,16 @@ namespace NetMud.Data.Game
             backingData.VisibleStrength = int.Parse(xDoc.Root.Element("BackingData").Attribute("VisibleStrength").Value);
 
             newEntity.DataTemplate = backingData;
+
+            var obj = new Room();
+            obj.BirthMark = xDoc.Root.Element("LiveData").Attribute("RoomFrom").Value;
+
+            newEntity.FromLocation = obj;
+
+            var toObj = new Room();
+            toObj.BirthMark = xDoc.Root.Element("LiveData").Attribute("RoomTo").Value;
+
+            newEntity.ToLocation = toObj;
 
             //keywords is last
             newEntity.Keywords = xDoc.Root.Element("LiveData").Attribute("Keywords").Value.Split(new char[] { ',' });

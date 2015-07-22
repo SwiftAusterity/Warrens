@@ -9,7 +9,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web.Hosting;
-using static NetMud.Utility.DataUtility;
+using NetMud.Utility;
+using NetMud.DataStructure.Base.Place; 
 
 namespace NetMud.LiveData
 {
@@ -103,35 +104,110 @@ namespace NetMud.LiveData
             if (!Directory.Exists(BaseDirectory))
                 return false;
 
-            var entitiesToLoad = new List<IEntity>();
-            var implimentedTypes = typeof(EntityPartial).Assembly.GetTypes().Where(ty => ty.GetInterfaces().Contains(typeof(IEntity)) && ty.IsClass && !ty.IsAbstract);
-
-            foreach(var type in implimentedTypes)
+            try
             {
-                if (!Directory.Exists(BaseDirectory + type.Name))
-                    continue;
-                      
-                var entityFilesDirectory = new DirectoryInfo(BaseDirectory + type.Name);
-                
-                foreach(var file in entityFilesDirectory.EnumerateFiles())
-                {
-                    var blankEntity = Activator.CreateInstance(type) as IEntity;
 
-                    using (var stream = file.Open(FileMode.Open))
+                var entitiesToLoad = new List<IEntity>();
+                var implimentedTypes = typeof(EntityPartial).Assembly.GetTypes().Where(ty => ty.GetInterfaces().Contains(typeof(IEntity)) && ty.IsClass && !ty.IsAbstract);
+
+                foreach (var type in implimentedTypes)
+                {
+                    if (!Directory.Exists(BaseDirectory + type.Name))
+                        continue;
+
+                    var entityFilesDirectory = new DirectoryInfo(BaseDirectory + type.Name);
+
+                    foreach (var file in entityFilesDirectory.EnumerateFiles())
                     {
-                        byte[] bytes = new byte[stream.Length];
-                        stream.Read(bytes, 0, (int)stream.Length);
-                        entitiesToLoad.Add(blankEntity.DeSerialize(bytes));
+                        var blankEntity = Activator.CreateInstance(type) as IEntity;
+
+                        using (var stream = file.Open(FileMode.Open))
+                        {
+                            byte[] bytes = new byte[stream.Length];
+                            stream.Read(bytes, 0, (int)stream.Length);
+                            entitiesToLoad.Add(blankEntity.DeSerialize(bytes));
+                        }
+                    }
+                }
+
+                foreach (var entity in entitiesToLoad.OrderBy(ent => ent.Birthdate))
+                {
+                    entity.UpsertToLiveWorldCache();
+                }
+
+                //We have the containers contents and the birthmarks from the deserial
+                //I don't know how we can even begin to do this type agnostically since the collections are held on type specific objects without some super ugly reflection
+                foreach (Room entity in entitiesToLoad.Where(ent => ent.GetType() == typeof(Room)))
+                {
+                    IEntity[] objectsContained = new IEntity[entity.ObjectsInRoom.EntitiesContained.Count];
+                    entity.ObjectsInRoom.EntitiesContained.CopyTo(objectsContained, 0);
+
+                    foreach (IObject obj in objectsContained)
+                    {
+                        var fullObj = LiveWorld.Get<IObject>(new LiveCacheKey(typeof(NetMud.Data.Game.Object), obj.BirthMark));
+                        entity.MoveFrom<IObject>(obj);
+                        entity.MoveInto<IObject>(fullObj);
+                    }
+
+                    IEntity[] mobilesContained = new IEntity[entity.MobilesInRoom.EntitiesContained.Count];
+                    entity.MobilesInRoom.EntitiesContained.CopyTo(mobilesContained, 0);
+
+                    foreach (IIntelligence obj in mobilesContained)
+                    {
+                        var fullObj = LiveWorld.Get<IIntelligence>(new LiveCacheKey(typeof(Intelligence), obj.BirthMark));
+                        entity.MoveFrom<IIntelligence>(obj);
+                        entity.MoveInto<IIntelligence>(fullObj);
+                    }
+                }
+
+                foreach (Intelligence entity in entitiesToLoad.Where(ent => ent.GetType() == typeof(Intelligence)))
+                {
+                    IEntity[] objectsContained = new IEntity[entity.Inventory.EntitiesContained.Count];
+                    entity.Inventory.EntitiesContained.CopyTo(objectsContained, 0);
+
+                    foreach (IObject obj in objectsContained)
+                    {
+                        var fullObj = LiveWorld.Get<IObject>(new LiveCacheKey(typeof(NetMud.Data.Game.Object), obj.BirthMark));
+                        entity.MoveFrom<IObject>(obj);
+                        entity.MoveInto<IObject>(fullObj);
+                    }
+                }
+
+                foreach (NetMud.Data.Game.Object entity in entitiesToLoad.Where(ent => ent.GetType() == typeof(NetMud.Data.Game.Object)))
+                {
+                    IEntity[] objectsContained = new IEntity[entity.Contents.EntitiesContained.Count];
+                    entity.Contents.EntitiesContained.CopyTo(objectsContained, 0);
+
+                    foreach (IObject obj in objectsContained)
+                    {
+                        var fullObj = LiveWorld.Get<IObject>(new LiveCacheKey(typeof(NetMud.Data.Game.Object), obj.BirthMark));
+                        entity.MoveFrom<IObject>(obj);
+                        entity.MoveInto<IObject>(fullObj);
+                    }
+                }
+
+                //paths load themselves to their room
+                foreach (NetMud.Data.Game.Path entity in entitiesToLoad.Where(ent => ent.GetType() == typeof(NetMud.Data.Game.Path)))
+                {
+                    IRoom roomTo = LiveWorld.Get<IRoom>(new LiveCacheKey(typeof(NetMud.Data.Game.Room), entity.ToLocation.BirthMark));
+                    IRoom roomFrom = LiveWorld.Get<IRoom>(new LiveCacheKey(typeof(NetMud.Data.Game.Room), entity.FromLocation.BirthMark));
+
+                    if (roomTo != null && roomFrom != null)
+                    {
+                        entity.ToLocation = roomTo;
+                        entity.FromLocation = roomFrom;
+                        entity.CurrentLocation = roomFrom;
+                        roomFrom.MoveInto<IPath>(entity);
                     }
                 }
             }
-
-            foreach(var entity in entitiesToLoad.OrderBy(ent => ent.Birthdate))
+            catch
             {
-                entity.UpsertToLiveWorldCache();
+                //TODO: Logging
+                return false;
             }
 
-            return false;
+            return true;
         }
 
         public bool NewWorldFallback()

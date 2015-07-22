@@ -38,7 +38,7 @@ namespace NetMud.Commands.Movement
             IPath targetPath=(IPath)Subject;
 
             targetPath.FromLocation.MoveFrom((IMobile)Actor);
-            targetPath.ToLocation.MoveTo((IMobile)Actor);
+            targetPath.ToLocation.MoveInto((IMobile)Actor);
 
             targetPath.Enter.ExecuteMessaging(Actor, targetPath, null, targetPath.FromLocation, targetPath.ToLocation);
         }

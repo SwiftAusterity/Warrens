@@ -66,12 +66,12 @@ namespace NetMud.Data.Game
             return Enumerable.Empty<T>();
         }
 
-        public string MoveTo<T>(T thing)
+        public string MoveInto<T>(T thing)
         {
-            return MoveTo<T>(thing, string.Empty);
+            return MoveInto<T>(thing, string.Empty);
         }
 
-        public string MoveTo<T>(T thing, string containerName)
+        public string MoveInto<T>(T thing, string containerName)
         {
             if (typeof(T).GetInterfaces().Contains(typeof(IObject)))
             {
@@ -137,7 +137,7 @@ namespace NetMud.Data.Game
 
             CurrentLocation = spawnTo;
 
-            spawnTo.MoveTo<IObject>(this);
+            spawnTo.MoveInto<IObject>(this);
 
             Contents = new EntityContainer<IObject>();
 
@@ -195,8 +195,9 @@ namespace NetMud.Data.Game
             var entityBinaryConvert = new DataUtility.EntityFileData(bytes);
             var xDoc = entityBinaryConvert.XDoc;
 
-            var backingData = new NonPlayerCharacter();
+            var backingData = new ObjectData();
             var newEntity = new Object();
+
             newEntity.BirthMark = xDoc.Root.Attribute("Birthmark").Value;
             newEntity.Birthdate = DateTime.Parse(xDoc.Root.Attribute("Birthdate").Value);
 

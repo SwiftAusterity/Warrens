@@ -77,12 +77,12 @@ namespace NetMud.Data.Game
             return Enumerable.Empty<T>();
         }
 
-        public string MoveTo<T>(T thing)
+        public string MoveInto<T>(T thing)
         {
-            return MoveTo<T>(thing, string.Empty);
+            return MoveInto<T>(thing, string.Empty);
         }
 
-        public string MoveTo<T>(T thing, string containerName)
+        public string MoveInto<T>(T thing, string containerName)
         {
             var implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
 

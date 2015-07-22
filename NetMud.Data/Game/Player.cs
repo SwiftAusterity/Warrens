@@ -62,12 +62,12 @@ namespace NetMud.Data.Game
             return Enumerable.Empty<T>();
         }
 
-        public string MoveTo<T>(T thing)
+        public string MoveInto<T>(T thing)
         {
-            return MoveTo<T>(thing, string.Empty);
+            return MoveInto<T>(thing, string.Empty);
         }
 
-        public string MoveTo<T>(T thing, string containerName)
+        public string MoveInto<T>(T thing, string containerName)
         {
             if (typeof(T).GetInterfaces().Contains(typeof(IObject)))
             {
@@ -178,7 +178,7 @@ namespace NetMud.Data.Game
             ch.LastKnownLocationType = spawnTo.GetType().Name;
             ch.Save();
 
-            spawnTo.MoveTo<IPlayer>(this);
+            spawnTo.MoveInto<IPlayer>(this);
 
             Inventory = new EntityContainer<IObject>();
 
