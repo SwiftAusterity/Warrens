@@ -141,16 +141,12 @@ namespace NetMud.Data.Game
                 DataTemplate = me.DataTemplate;
                 Inventory = me.Inventory;
                 Keywords = me.Keywords;
-                CurrentLocation = me.CurrentLocation;
+                me.CurrentLocation.MoveInto<IPlayer>(this);
             }
         }
 
         public override void SpawnNewInWorld()
         {
-            var hotBack = new HotBackup(System.Web.Hosting.HostingEnvironment.MapPath("/HotBackup/"));
-
-            var savedPlayer = RestorePlayer(string accountHandle)
-
             var liveWorld = new LiveCache();
             var ch = (ICharacter)DataTemplate;
             var locationAssembly = Assembly.GetAssembly(typeof(ILocation));
@@ -174,6 +170,7 @@ namespace NetMud.Data.Game
                     lastKnownLoc = liveWorld.Get<ILocation>(cacheKey);
                 }
             }
+
             SpawnNewInWorld(lastKnownLoc);
         }
 
@@ -224,7 +221,9 @@ namespace NetMud.Data.Game
                                         new XAttribute("AccountHandle", charData.AccountHandle),
                                         new XAttribute("LastRevised", charData.LastRevised),
                                         new XAttribute("Created", charData.Created),
-                                        new XAttribute("Gender", charData.Gender)),
+                                        new XAttribute("Gender", charData.Gender),
+                                        new XAttribute("LastKnownLocationType", charData.LastKnownLocationType),
+                                        new XAttribute("LastKnownLocation", charData.LastKnownLocation)),
                                     new XElement("LiveData",
                                         new XAttribute("Keywords", string.Join(",", Keywords))),
                                     new XElement("Inventory")
@@ -264,6 +263,8 @@ namespace NetMud.Data.Game
             backingData.LastRevised = DateTime.Parse(xDoc.Root.Element("BackingData").Attribute("LastRevised").Value);
             backingData.Created = DateTime.Parse(xDoc.Root.Element("BackingData").Attribute("Created").Value);
             backingData.Gender = xDoc.Root.Element("BackingData").Attribute("Gender").Value;
+            backingData.LastKnownLocation = xDoc.Root.Element("BackingData").Attribute("LastKnownLocation").Value;
+            backingData.LastKnownLocationType = xDoc.Root.Element("BackingData").Attribute("LastKnownLocationType").Value;
 
             //Add a fake entity to get the birthmark over to the next place
             foreach (var item in xDoc.Root.Element("Inventory").Elements("Item"))

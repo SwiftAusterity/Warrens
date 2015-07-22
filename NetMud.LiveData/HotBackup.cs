@@ -12,6 +12,8 @@ using System.Web.Hosting;
 using NetMud.Utility;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.EntityBackingData;
+using System.Reflection;
+using NetMud.DataStructure.Behaviors.System;
 
 namespace NetMud.LiveData
 {
@@ -157,7 +159,7 @@ namespace NetMud.LiveData
                     WritePlayer(entityDirectory, entity);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 //let the upper caller handle the error itself
                 throw ex;
@@ -182,7 +184,7 @@ namespace NetMud.LiveData
 
                 foreach (var type in implimentedTypes)
                 {
-                    if (!Directory.Exists(BaseDirectory + type.Name))
+                    if (!Directory.Exists(currentBackupDirectory + type.Name))
                         continue;
 
                     var entityFilesDirectory = new DirectoryInfo(currentBackupDirectory + type.Name);
@@ -278,61 +280,98 @@ namespace NetMud.LiveData
             return true;
         }
 
-        private IPlayer RestorePlayer(string accountHandle)
+        public Player RestorePlayer(string accountHandle)
         {
-            var currentBackupDirectory = BaseDirectory + "Players/" + accountHandle + "/";
+            Player newPlayerToLoad = null;
 
-            //No backup directory? No live data.
-            if (!Directory.Exists(currentBackupDirectory))
-                return null;
-
-            var playerDirectory = new DirectoryInfo(currentBackupDirectory);
-
-            //no player file to load, derp
-            if(!File.Exists(playerDirectory + accountHandle + ".Player"))
-                return null;
-
-            var blankEntity = Activator.CreateInstance(typeof(IPlayer)) as IPlayer;
-            IPlayer newPlayerToLoad;
-
-            using (var stream = File.OpenRead(playerDirectory + accountHandle + ".Player"))
+            try
             {
-                byte[] bytes = new byte[stream.Length];
-                stream.Read(bytes, 0, (int)stream.Length);
-                newPlayerToLoad = (IPlayer)blankEntity.DeSerialize(bytes);
-            }
+                var currentBackupDirectory = BaseDirectory + "Players/" + accountHandle + "/Current/";
 
-            //bad load, dump it
-            if (newPlayerToLoad == null)
-                return null;
+                //No backup directory? No live data.
+                if (!Directory.Exists(currentBackupDirectory))
+                    return null;
 
-            //We'll need one of these per container on players
-            if (Directory.Exists(playerDirectory + "Inventory/"))
-            {
-                var inventoryDirectory = new DirectoryInfo(playerDirectory + "Inventory/");
+                var playerDirectory = new DirectoryInfo(currentBackupDirectory);
 
-                foreach (var file in inventoryDirectory.EnumerateFiles())
+                //no player file to load, derp
+                if (!File.Exists(playerDirectory + accountHandle + ".Player"))
+                    return null;
+
+                var blankEntity = Activator.CreateInstance(typeof(Player)) as Player;
+
+                using (var stream = File.OpenRead(playerDirectory + accountHandle + ".Player"))
                 {
-                    var blankObject = Activator.CreateInstance(typeof(IEntity)) as IEntity;
+                    byte[] bytes = new byte[stream.Length];
+                    stream.Read(bytes, 0, (int)stream.Length);
+                    newPlayerToLoad = (Player)blankEntity.DeSerialize(bytes);
+                }
 
-                    using (var stream = file.Open(FileMode.Open))
+                //bad load, dump it
+                if (newPlayerToLoad == null)
+                    return null;
+
+                //abstract this out to a helper maybe?
+                var locationAssembly = Assembly.GetAssembly(typeof(ILocation));
+
+                var ch = (ICharacter)newPlayerToLoad.DataTemplate;
+                if (ch.LastKnownLocationType == null)
+                    ch.LastKnownLocationType = typeof(IRoom).Name;
+
+                var lastKnownLocType = locationAssembly.DefinedTypes.FirstOrDefault(tp => tp.Name.Equals(ch.LastKnownLocationType));
+
+                ILocation lastKnownLoc = null;
+                if (lastKnownLocType != null && !string.IsNullOrWhiteSpace(ch.LastKnownLocation))
+                {
+                    if (lastKnownLocType.GetInterfaces().Contains(typeof(ISpawnAsSingleton)))
                     {
-                        byte[] bytes = new byte[stream.Length];
-                        stream.Read(bytes, 0, (int)stream.Length);
-                        var newObj = blankObject.DeSerialize(bytes);
-                        newObj.UpsertToLiveWorldCache();
+                        long lastKnownLocID = long.Parse(ch.LastKnownLocation);
+                        lastKnownLoc = LiveWorld.Get<ILocation>(lastKnownLocID, lastKnownLocType);
+                    }
+                    else
+                    {
+                        var cacheKey = new LiveCacheKey(lastKnownLocType, ch.LastKnownLocation);
+                        lastKnownLoc = LiveWorld.Get<ILocation>(cacheKey);
                     }
                 }
 
+                newPlayerToLoad.CurrentLocation = lastKnownLoc;
+
+                //We have the player in live cache now so make it move to the right place
+                newPlayerToLoad.GetFromWorldOrSpawn();
+
+                newPlayerToLoad.UpsertToLiveWorldCache();
+
+                //remove all the ghost objects in the player inventory
                 IEntity[] objectsContained = new IEntity[newPlayerToLoad.Inventory.EntitiesContained.Count];
                 newPlayerToLoad.Inventory.EntitiesContained.CopyTo(objectsContained, 0);
 
                 foreach (IObject obj in objectsContained)
-                {
-                    var fullObj = LiveWorld.Get<IObject>(new LiveCacheKey(typeof(NetMud.Data.Game.Object), obj.BirthMark));
                     newPlayerToLoad.MoveFrom<IObject>(obj);
-                    newPlayerToLoad.MoveInto<IObject>(fullObj);
+
+                //We'll need one of these per container on players
+                if (Directory.Exists(playerDirectory + "Inventory/"))
+                {
+                    var inventoryDirectory = new DirectoryInfo(playerDirectory + "Inventory/");
+
+                    foreach (var file in inventoryDirectory.EnumerateFiles())
+                    {
+                        var blankObject = Activator.CreateInstance(typeof(NetMud.Data.Game.Object)) as NetMud.Data.Game.Object;
+
+                        using (var stream = file.Open(FileMode.Open))
+                        {
+                            byte[] bytes = new byte[stream.Length];
+                            stream.Read(bytes, 0, (int)stream.Length);
+                            var newObj = (IObject)blankObject.DeSerialize(bytes);
+                            newObj.UpsertToLiveWorldCache();
+                            newPlayerToLoad.MoveInto<IObject>(newObj);
+                        }
+                    }
                 }
+            }
+            catch
+            {
+                //logging
             }
 
             return newPlayerToLoad;

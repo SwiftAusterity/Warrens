@@ -16,6 +16,8 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using NetMud.Models;
 using NetMud.Utility;
 using System.Collections.Generic;
+using NetMud.LiveData;
+using NetMud.DataAccess;
 
 
 namespace NetMud.Websock
@@ -66,13 +68,27 @@ namespace NetMud.Websock
                 Send("<p>No character selected</p>");
                 return;
             }
+            var liveWorld = new LiveCache();
 
-            var player = new Player(currentCharacter);
-            player.Descriptor = DataStructure.Base.Entity.DescriptorType.WebSockets;
-            player.DescriptorID = ID;
-            player.WriteTo = (strings) => SendWrapper(strings);
+            //Try to see if they are already live
+            Player newPlayer = liveWorld.Get<Player>(currentCharacter.ID);
 
-            var errors = Interpret.Render(e.Data, player);
+            //Check the backup
+            if (newPlayer == null)
+            {
+                var hotBack = new HotBackup(System.Web.Hosting.HostingEnvironment.MapPath("/HotBackup/"));
+                newPlayer = hotBack.RestorePlayer(currentCharacter.AccountHandle);
+            }
+
+            //else new them up
+            if (newPlayer == null)
+                newPlayer = new Player(currentCharacter);
+
+            newPlayer.Descriptor = DataStructure.Base.Entity.DescriptorType.WebSockets;
+            newPlayer.DescriptorID = ID;
+            newPlayer.WriteTo = (strings) => SendWrapper(strings);
+
+            var errors = Interpret.Render(e.Data, newPlayer);
 
             //It only sends the errors
             if (!string.IsNullOrWhiteSpace(errors))
