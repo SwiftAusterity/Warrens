@@ -64,7 +64,10 @@ namespace NetMud.DataAccess
             if (!globalCache.Contains(cacheKey.KeyHash()))
                 globalCache.AddOrGetExisting(cacheKey.KeyHash(), objectToCache, globalPolicy);
             else
-                globalCache.Set(cacheKey.KeyHash(), objectToCache, globalPolicy);
+            {
+                globalCache.Remove(cacheKey.KeyHash());
+                globalCache.Add(cacheKey.KeyHash(), objectToCache, globalPolicy);
+            }
         }
 
         public IEnumerable<T> GetAll<T>()

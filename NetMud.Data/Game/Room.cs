@@ -204,10 +204,13 @@ namespace NetMud.Data.Game
             else
             {
                 BirthMark = me.BirthMark;
-                Keywords = me.Keywords;
                 Birthdate = me.Birthdate;
-                CurrentLocation = me.CurrentLocation;
                 DataTemplate = me.DataTemplate;
+                ObjectsInRoom = me.ObjectsInRoom;
+                MobilesInRoom = me.MobilesInRoom;
+                Pathways = me.Pathways;
+                Keywords = me.Keywords;
+                CurrentLocation = me.CurrentLocation;
             }
         }
 
