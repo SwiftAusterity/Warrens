@@ -95,7 +95,7 @@ namespace NetMud.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult AddCharacter(string newGivenName, string newSurName)
         {
-            string message = String.Empty;
+            string message = string.Empty;
             var userId = User.Identity.GetUserId();
             var model = new ManageCharactersViewModel
             {

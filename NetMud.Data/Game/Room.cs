@@ -79,7 +79,7 @@ namespace NetMud.Data.Game
 
         public string MoveTo<T>(T thing)
         {
-            return MoveTo<T>(thing, String.Empty);
+            return MoveTo<T>(thing, string.Empty);
         }
 
         public string MoveTo<T>(T thing, string containerName)
@@ -95,7 +95,7 @@ namespace NetMud.Data.Game
 
                 ObjectsInRoom.Add(obj);
                 obj.CurrentLocation = this;
-                return String.Empty;
+                return string.Empty;
             }
 
             if (implimentedTypes.Contains(typeof(IMobile)))
@@ -107,7 +107,7 @@ namespace NetMud.Data.Game
 
                 MobilesInRoom.Add(obj);
                 obj.CurrentLocation = this;
-                return String.Empty;
+                return string.Empty;
             }
 
             if (implimentedTypes.Contains(typeof(IPath)))
@@ -119,7 +119,7 @@ namespace NetMud.Data.Game
 
                 Pathways.Add(obj);
                 obj.CurrentLocation = this;
-                return String.Empty;
+                return string.Empty;
             }
 
 
@@ -128,7 +128,7 @@ namespace NetMud.Data.Game
 
         public string MoveFrom<T>(T thing)
         {
-            return MoveFrom<T>(thing, String.Empty);
+            return MoveFrom<T>(thing, string.Empty);
         }
 
         public string MoveFrom<T>(T thing, string containerName)
@@ -144,7 +144,7 @@ namespace NetMud.Data.Game
 
                 ObjectsInRoom.Remove(obj);
                 obj.CurrentLocation = null;
-                return String.Empty;
+                return string.Empty;
             }
 
             if (implimentedTypes.Contains(typeof(IMobile)))
@@ -156,7 +156,7 @@ namespace NetMud.Data.Game
 
                 MobilesInRoom.Remove(obj);
                 obj.CurrentLocation = null;
-                return String.Empty;
+                return string.Empty;
             }
 
             if (implimentedTypes.Contains(typeof(IPath)))
@@ -168,7 +168,7 @@ namespace NetMud.Data.Game
 
                 Pathways.Remove(obj);
                 obj.CurrentLocation = null;
-                return String.Empty;
+                return string.Empty;
             }
 
             return "Invalid type to move from container.";
@@ -236,11 +236,22 @@ namespace NetMud.Data.Game
                                         new XAttribute("ID", charData.ID),
                                         new XAttribute("Name", charData.Name),
                                         new XAttribute("LastRevised", charData.LastRevised),
-                                        new XAttribute("Created", charData.Created),
+                                        new XAttribute("Created", charData.Created)),
                                     new XElement("LiveData",
-                                        new XAttribute("Keywords", String.Join(",", Keywords))))));
+                                        new XAttribute("Keywords", string.Join(",", Keywords))),
+                                    new XElement("ObjectsInRoom"),
+                                    new XElement("MobilesInRoom")
+                                    ));
 
-            var entityBinaryConvert = new NetMud.Utility.DataUtility.EntityFileData(entityData);
+            foreach (var item in ObjectsInRoom.EntitiesContained)
+                entityData.Root.Element("ObjectsInRoom").Add(new XElement("Item", item.BirthMark));
+
+            foreach (var item in MobilesInRoom.EntitiesContained)
+                entityData.Root.Element("MobilesInRoom").Add(new XElement("Item", item.BirthMark));
+
+            //pathways will load themselves
+
+            var entityBinaryConvert = new DataUtility.EntityFileData(entityData);
 
             using (var memoryStream = new MemoryStream())
             using (var xmlWriter = XmlWriter.Create(memoryStream, settings))
@@ -255,11 +266,12 @@ namespace NetMud.Data.Game
 
         public override IEntity DeSerialize(byte[] bytes)
         {
-            var entityBinaryConvert = new NetMud.Utility.DataUtility.EntityFileData(bytes);
+            var entityBinaryConvert = new DataUtility.EntityFileData(bytes);
             var xDoc = entityBinaryConvert.XDoc;
 
             var backingData = new RoomData();
             var newEntity = new Room();
+
             newEntity.BirthMark = xDoc.Root.Attribute("Birthmark").Value;
             newEntity.Birthdate = DateTime.Parse(xDoc.Root.Attribute("Birthdate").Value);
 
@@ -269,6 +281,24 @@ namespace NetMud.Data.Game
             backingData.Created = DateTime.Parse(xDoc.Root.Element("BackingData").Attribute("Created").Value);
 
             newEntity.DataTemplate = backingData;
+
+            //Add a fake entity to get the birthmark over to the next place
+            foreach(var item in xDoc.Root.Element("ObjectsInRoom").Elements("Item"))
+            {
+                var obj = new Object();
+                obj.BirthMark = item.Value;
+
+                newEntity.ObjectsInRoom.Add(obj);
+            }
+
+            //Add a fake entity to get the birthmark over to the next place
+            foreach (var item in xDoc.Root.Element("MobilesInRoom").Elements("Item"))
+            {
+                var obj = new Intelligence();
+                obj.BirthMark = item.Value;
+
+                newEntity.MobilesInRoom.Add(obj);
+            }
 
             //keywords is last
             newEntity.Keywords = xDoc.Root.Element("LiveData").Attribute("Keywords").Value.Split(new char[] { ',' });

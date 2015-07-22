@@ -1,18 +1,15 @@
 ﻿using NetMud.Data.EntityBackingData;
+using NetMud.Data.Game;
 using NetMud.DataAccess;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Behaviors.Rendering;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Web;
 using System.Web.Hosting;
-using System.Xml;
-using System.Xml.Linq;
+using static NetMud.Utility.DataUtility;
 
 namespace NetMud.LiveData
 {
@@ -63,7 +60,7 @@ namespace NetMud.LiveData
         {
             var entityFileName = GetEntityFilename(entity);
 
-            if(String.IsNullOrWhiteSpace(entityFileName))
+            if(string.IsNullOrWhiteSpace(entityFileName))
                 return;
 
             var fullFileName = dir.FullName + "/" + entityFileName;
@@ -97,7 +94,7 @@ namespace NetMud.LiveData
 
         private string GetEntityFilename(IEntity entity)
         {
-             return String.Format("{0}.{1}", entity.BirthMark, entity.GetType().Name);
+             return string.Format("{0}.{1}", entity.BirthMark, entity.GetType().Name);
         }
 
         public bool RestoreLiveBackup()
@@ -105,6 +102,34 @@ namespace NetMud.LiveData
             //No backup directory? No live data.
             if (!Directory.Exists(BaseDirectory))
                 return false;
+
+            var entitiesToLoad = new List<IEntity>();
+            var implimentedTypes = typeof(EntityPartial).Assembly.GetTypes().Where(ty => ty.GetInterfaces().Contains(typeof(IEntity)) && ty.IsClass && !ty.IsAbstract);
+
+            foreach(var type in implimentedTypes)
+            {
+                if (!Directory.Exists(BaseDirectory + type.Name))
+                    continue;
+                      
+                var entityFilesDirectory = new DirectoryInfo(BaseDirectory + type.Name);
+                
+                foreach(var file in entityFilesDirectory.EnumerateFiles())
+                {
+                    var blankEntity = Activator.CreateInstance(type) as IEntity;
+
+                    using (var stream = file.Open(FileMode.Open))
+                    {
+                        byte[] bytes = new byte[stream.Length];
+                        stream.Read(bytes, 0, (int)stream.Length);
+                        entitiesToLoad.Add(blankEntity.DeSerialize(bytes));
+                    }
+                }
+            }
+
+            foreach(var entity in entitiesToLoad.OrderBy(ent => ent.Birthdate))
+            {
+                entity.UpsertToLiveWorldCache();
+            }
 
             return false;
         }

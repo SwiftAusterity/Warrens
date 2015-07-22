@@ -35,7 +35,7 @@ namespace NetMud.Data.EntityBackingData
         {
             get 
             {
-                if (_account == null && !String.IsNullOrWhiteSpace(AccountHandle))
+                if (_account == null && !string.IsNullOrWhiteSpace(AccountHandle))
                     _account = NetMud.Data.System.Account.GetByHandle(AccountHandle);
 
                 return _account;
@@ -44,7 +44,7 @@ namespace NetMud.Data.EntityBackingData
 
         public string FullName()
         {
-            return String.Format("{0} {1}", Name, SurName);
+            return string.Format("{0} {1}", Name, SurName);
         }
 
         public void Fill(global::System.Data.DataRow dr)

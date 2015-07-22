@@ -85,7 +85,7 @@ namespace NetMud.Data.Game
             ILocation fromLocation = null;
             var fromLocationType = locationAssembly.DefinedTypes.FirstOrDefault(tp => tp.Name.Equals(bS.FromLocationType));
 
-            if (fromLocationType != null && !String.IsNullOrWhiteSpace(bS.FromLocationID))
+            if (fromLocationType != null && !string.IsNullOrWhiteSpace(bS.FromLocationID))
             {
                 if (fromLocationType.GetInterfaces().Contains(typeof(ISpawnAsSingleton)))
                 {
@@ -102,7 +102,7 @@ namespace NetMud.Data.Game
             ILocation toLocation = null;
             var toLocationType = locationAssembly.DefinedTypes.FirstOrDefault(tp => tp.Name.Equals(bS.ToLocationType));
 
-            if (toLocationType != null && !String.IsNullOrWhiteSpace(bS.ToLocationID))
+            if (toLocationType != null && !string.IsNullOrWhiteSpace(bS.ToLocationID))
             {
                 if (toLocationType.GetInterfaces().Contains(typeof(ISpawnAsSingleton)))
                 {
@@ -120,7 +120,7 @@ namespace NetMud.Data.Game
             ToLocation = toLocation;
             CurrentLocation = fromLocation;
 
-            Enter = new MessageCluster(bS.MessageToActor, "$A$ enters you", String.Empty, bS.MessageToOrigin, bS.MessageToDestination);
+            Enter = new MessageCluster(bS.MessageToActor, "$A$ enters you", string.Empty, bS.MessageToOrigin, bS.MessageToDestination);
             Enter.ToSurrounding.Add(bS.VisibleStrength, new Tuple<MessagingType, string>(MessagingType.Visible, bS.VisibleToSurroundings));
             Enter.ToSurrounding.Add(bS.AudibleStrength, new Tuple<MessagingType, string>(MessagingType.Visible, bS.AudibleToSurroundings));
 
@@ -165,11 +165,11 @@ namespace NetMud.Data.Game
                                         new XAttribute("AudibleToSurroundings", charData.AudibleToSurroundings),
                                         new XAttribute("AudibleStrength", charData.AudibleStrength),
                                         new XAttribute("VisibleToSurroundings", charData.VisibleToSurroundings),
-                                        new XAttribute("VisibleStrength", charData.VisibleStrength),
+                                        new XAttribute("VisibleStrength", charData.VisibleStrength)),
                                     new XElement("LiveData",
-                                        new XAttribute("Keywords", String.Join(",", Keywords))))));
+                                        new XAttribute("Keywords", string.Join(",", Keywords)))));
 
-            var entityBinaryConvert = new NetMud.Utility.DataUtility.EntityFileData(entityData);
+            var entityBinaryConvert = new DataUtility.EntityFileData(entityData);
 
             using (var memoryStream = new MemoryStream())
             using (var xmlWriter = XmlWriter.Create(memoryStream, settings))
@@ -184,7 +184,7 @@ namespace NetMud.Data.Game
 
         public override IEntity DeSerialize(byte[] bytes)
         {
-            var entityBinaryConvert = new NetMud.Utility.DataUtility.EntityFileData(bytes);
+            var entityBinaryConvert = new DataUtility.EntityFileData(bytes);
             var xDoc = entityBinaryConvert.XDoc;
 
             var backingData = new PathData();

@@ -26,7 +26,7 @@ namespace NutMud.Commands.Attributes
             Usage = usage;
             ParameterType = type;
             CacheTypes = cacheTypes;
-            RegExPattern = String.Empty;
+            RegExPattern = string.Empty;
             Optional = optional;
         }
 

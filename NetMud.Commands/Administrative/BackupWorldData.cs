@@ -3,10 +3,8 @@ using NetMud.DataStructure.Behaviors.Rendering;
 using NutMud.Commands.Attributes;
 using System;
 using System.Collections.Generic;
-using System.Web;
 
 using NetMud.Utility;
-using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.LiveData;
 
@@ -42,7 +40,7 @@ namespace NutMud.Commands.System
             //TODO: keywords is janky, location should have its own identifier name somehow for output purposes
             sb.Add("You have backed the world up");
 
-            var messagingObject = new MessageCluster(RenderUtility.EncapsulateOutput(sb), String.Empty, String.Empty, String.Empty, String.Empty);
+            var messagingObject = new MessageCluster(RenderUtility.EncapsulateOutput(sb), string.Empty, string.Empty, string.Empty, string.Empty);
 
             messagingObject.ExecuteMessaging(Actor, null, null, null, null);
         }
@@ -51,7 +49,7 @@ namespace NutMud.Commands.System
         {
             var sb = new List<string>();
 
-            sb.Add(String.Format("Valid Syntax: backupworldata"));
+            sb.Add(string.Format("Valid Syntax: backupworldata"));
 
             return sb;
         }
@@ -64,7 +62,7 @@ namespace NutMud.Commands.System
         {
             var sb = new List<string>();
 
-            sb.Add(String.Format("BackupWorldData backs up all the live data."));
+            sb.Add(string.Format("BackupWorldData backs up all the live data."));
 
             return sb;
         }

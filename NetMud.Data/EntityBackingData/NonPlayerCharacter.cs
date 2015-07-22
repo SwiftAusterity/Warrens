@@ -28,7 +28,7 @@ namespace NetMud.Data.EntityBackingData
 
         public string FullName()
         {
-            return String.Format("{0} {1}", Name, SurName);
+            return string.Format("{0} {1}", Name, SurName);
         }
 
         public void Fill(global::System.Data.DataRow dr)

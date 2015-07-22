@@ -18,7 +18,7 @@ namespace NetMud.Utility
 
             foreach (var line in lines)
             {
-                if (!String.IsNullOrWhiteSpace(line))
+                if (!string.IsNullOrWhiteSpace(line))
                     returnString.AppendFormat("<{0}>{1}</{0}>", encapsulationElement, line);
                 else
                     returnString.Append(bumperElement); //blank strings mean carriage returns

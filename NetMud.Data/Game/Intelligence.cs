@@ -79,7 +79,7 @@ namespace NetMud.Data.Game
 
         public string MoveTo<T>(T thing)
         {
-            return MoveTo<T>(thing, String.Empty);
+            return MoveTo<T>(thing, string.Empty);
         }
 
         public string MoveTo<T>(T thing, string containerName)
@@ -93,7 +93,7 @@ namespace NetMud.Data.Game
 
                 Inventory.Add(obj);
                 obj.CurrentLocation = this;
-                return String.Empty;
+                return string.Empty;
             }
 
             return "Invalid type to move to container.";
@@ -101,7 +101,7 @@ namespace NetMud.Data.Game
 
         public string MoveFrom<T>(T thing)
         {
-            return MoveFrom<T>(thing, String.Empty);
+            return MoveFrom<T>(thing, string.Empty);
         }
 
         public string MoveFrom<T>(T thing, string containerName)
@@ -115,7 +115,7 @@ namespace NetMud.Data.Game
 
                 Inventory.Remove(obj);
                 obj.CurrentLocation = null;
-                return String.Empty;
+                return string.Empty;
             }
 
             return "Invalid type to move from container.";
@@ -175,9 +175,14 @@ namespace NetMud.Data.Game
                                         new XAttribute("Created", charData.Created),
                                         new XAttribute("Gender", charData.Gender)),
                                     new XElement("LiveData",
-                                        new XAttribute("Keywords", String.Join(",", Keywords)))));
+                                        new XAttribute("Keywords", string.Join(",", Keywords))),
+                                    new XElement("Inventory")
+                                    ));
 
-            var entityBinaryConvert = new NetMud.Utility.DataUtility.EntityFileData(entityData);
+            foreach(var item in Inventory.EntitiesContained)
+                entityData.Root.Element("Inventory").Add(new XElement("Item", item.BirthMark));
+
+            var entityBinaryConvert = new DataUtility.EntityFileData(entityData);
 
             using (var memoryStream = new MemoryStream())
                 using (var xmlWriter = XmlWriter.Create(memoryStream, settings))
@@ -192,7 +197,7 @@ namespace NetMud.Data.Game
 
         public override IEntity DeSerialize(byte[] bytes)
         {
-            var entityBinaryConvert = new NetMud.Utility.DataUtility.EntityFileData(bytes);
+            var entityBinaryConvert = new DataUtility.EntityFileData(bytes);
             var xDoc = entityBinaryConvert.XDoc;
 
             var backingData = new NonPlayerCharacter();
@@ -206,6 +211,15 @@ namespace NetMud.Data.Game
             backingData.LastRevised = DateTime.Parse(xDoc.Root.Element("BackingData").Attribute("LastRevised").Value);
             backingData.Created = DateTime.Parse(xDoc.Root.Element("BackingData").Attribute("Created").Value);
             backingData.Gender = xDoc.Root.Element("BackingData").Attribute("Gender").Value;
+
+            //Add a fake entity to get the birthmark over to the next place
+            foreach (var item in xDoc.Root.Element("Inventory").Elements("Item"))
+            {
+                var obj = new Object();
+                obj.BirthMark = item.Value;
+
+                newEntity.Inventory.Add(obj);
+            }
 
             newEntity.DataTemplate = backingData;
 

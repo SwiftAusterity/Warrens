@@ -23,7 +23,7 @@ namespace NetMud.Interp
 
             commandContext.Command.Execute();
 
-            return String.Empty;
+            return string.Empty;
         }
     }
 }

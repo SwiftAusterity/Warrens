@@ -41,16 +41,16 @@ namespace NetMud.DataStructure.SupportingClasses
             entities.Add(MessagingTargetType.OriginLocation, new IEntity[] { OriginLocation });
             entities.Add(MessagingTargetType.DestinationLocation, new IEntity[] { DestinationLocation });
 
-            if (Actor != null && !String.IsNullOrWhiteSpace(ToActor))
+            if (Actor != null && !string.IsNullOrWhiteSpace(ToActor))
                 Actor.WriteTo(TranslateOutput(ToActor, entities));
 
-            if (Subject != null && !String.IsNullOrWhiteSpace(ToSubject))
+            if (Subject != null && !string.IsNullOrWhiteSpace(ToSubject))
                 Subject.WriteTo(TranslateOutput(ToSubject, entities));
 
-            if (Target != null && !String.IsNullOrWhiteSpace(ToTarget))
+            if (Target != null && !string.IsNullOrWhiteSpace(ToTarget))
                 Target.WriteTo(TranslateOutput(ToTarget, entities));
 
-            if (OriginLocation != null && !String.IsNullOrWhiteSpace(ToOrigin))
+            if (OriginLocation != null && !string.IsNullOrWhiteSpace(ToOrigin))
             {
                 var oLoc = (IContains)OriginLocation;
 
@@ -59,7 +59,7 @@ namespace NetMud.DataStructure.SupportingClasses
                     dude.WriteTo(TranslateOutput(ToOrigin, entities));
             }
 
-            if (DestinationLocation != null && !String.IsNullOrWhiteSpace(ToDestination))
+            if (DestinationLocation != null && !string.IsNullOrWhiteSpace(ToDestination))
             {
                 var oLoc = (IContains)DestinationLocation;
 

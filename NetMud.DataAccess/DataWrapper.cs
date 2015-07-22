@@ -19,7 +19,7 @@ namespace NetMud.DataAccess
         public IEnumerable<T> GetAll<T>() where T : IData
         {
             var returnList = new List<T>();
-            var sql = String.Format("select * from [dbo].[{0}]", typeof(T).Name);
+            var sql = string.Format("select * from [dbo].[{0}]", typeof(T).Name);
 
             var ds = SqlWrapper.RunDataset(sql, CommandType.Text);
 
@@ -50,7 +50,7 @@ namespace NetMud.DataAccess
         public IEnumerable<T> GetAllBySharedKey<T>(string sharedKeyName, string sharedKeyValue) where T : IData
         {
             var returnList = new List<T>();
-            var sql = String.Format("select * from [dbo].[{0}] where {1} = '{2}'", typeof(T).Name, sharedKeyName, sharedKeyValue);
+            var sql = string.Format("select * from [dbo].[{0}] where {1} = '{2}'", typeof(T).Name, sharedKeyName, sharedKeyValue);
 
             var ds = SqlWrapper.RunDataset(sql, CommandType.Text);
 
@@ -81,7 +81,7 @@ namespace NetMud.DataAccess
         public T GetOneBySharedKey<T>(string sharedKeyName, string sharedKeyValue) where T : IData
         {
             IData returnValue = default(T);
-            var sql = String.Format("select * from [dbo].[{0}] where {1} = '{2}'", typeof(T).Name, sharedKeyName, sharedKeyValue);
+            var sql = string.Format("select * from [dbo].[{0}] where {1} = '{2}'", typeof(T).Name, sharedKeyName, sharedKeyValue);
 
             var ds = SqlWrapper.RunDataset(sql, CommandType.Text);
 
@@ -114,7 +114,7 @@ namespace NetMud.DataAccess
         public T GetOne<T>(long id) where T : IData
         {
             IData returnValue = default(T);
-            var sql = String.Format("select * from [dbo].[{0}] where ID = {1}", typeof(T).Name, id);
+            var sql = string.Format("select * from [dbo].[{0}] where ID = {1}", typeof(T).Name, id);
 
             var ds = SqlWrapper.RunDataset(sql, CommandType.Text);
 

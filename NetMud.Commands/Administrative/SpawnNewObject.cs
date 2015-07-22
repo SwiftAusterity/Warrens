@@ -46,9 +46,9 @@ namespace NutMud.Commands.System
             var entityObject = new NetMud.Data.Game.Object(newObject, spawnTo);
 
             //TODO: keywords is janky, location should have its own identifier name somehow for output purposes
-            sb.Add(String.Format("{0} spawned to {1}", entityObject.DataTemplate.Name, spawnTo.Keywords[0]));
+            sb.Add(string.Format("{0} spawned to {1}", entityObject.DataTemplate.Name, spawnTo.Keywords[0]));
 
-            var messagingObject = new MessageCluster(RenderUtility.EncapsulateOutput(sb), "You are ALIVE", "You have been given $S$", "$S$ appears in the $T$.", String.Empty);
+            var messagingObject = new MessageCluster(RenderUtility.EncapsulateOutput(sb), "You are ALIVE", "You have been given $S$", "$S$ appears in the $T$.", string.Empty);
 
             messagingObject.ExecuteMessaging(Actor, entityObject, spawnTo, OriginLocation, null);
         }
@@ -57,7 +57,7 @@ namespace NutMud.Commands.System
         {
             var sb = new List<string>();
 
-            sb.Add(String.Format("Valid Syntax: spawnNewObject &lt;object name&gt;"));
+            sb.Add(string.Format("Valid Syntax: spawnNewObject &lt;object name&gt;"));
             sb.Add("spawnNewObject  &lt;object name&gt;  &lt;location name to spawn to&gt;".PadWithString(14, "&nbsp;", true));
 
             return sb;
@@ -71,7 +71,7 @@ namespace NutMud.Commands.System
         {
             var sb = new List<string>();
 
-            sb.Add(String.Format("SpawnNewObject spawns a new object from its data template into the room or into a specified inventory."));
+            sb.Add(string.Format("SpawnNewObject spawns a new object from its data template into the room or into a specified inventory."));
 
             return sb;
         }

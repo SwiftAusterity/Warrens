@@ -66,12 +66,12 @@ namespace NetMud.Data.System
 
             _characters.Add(newChar);
 
-            return String.Empty;
+            return string.Empty;
         }
 
         public static IAccount GetByHandle(string handle)
         {
-            var sql = String.Format("select * from [dbo].[Account] where GlobalIdentityHandle = '{0}'", handle);
+            var sql = string.Format("select * from [dbo].[Account] where GlobalIdentityHandle = '{0}'", handle);
 
             var ds = SqlWrapper.RunDataset(sql, CommandType.Text);
             IAccount account = null;

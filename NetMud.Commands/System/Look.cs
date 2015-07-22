@@ -41,7 +41,7 @@ namespace NutMud.Commands.System
                 sb.AddRange(lookTarget.RenderToLook());
             }
 
-            var messagingObject = new MessageCluster(RenderUtility.EncapsulateOutput(sb), String.Empty, String.Empty, "$A$ looks around the room.", String.Empty);
+            var messagingObject = new MessageCluster(RenderUtility.EncapsulateOutput(sb), string.Empty, string.Empty, "$A$ looks around the room.", string.Empty);
 
             messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation, null);
         }
@@ -64,7 +64,7 @@ namespace NutMud.Commands.System
         {
             var sb = new List<string>();
 
-            sb.Add(String.Format("Look provides useful information about the location you are in or a target object or mobile."));
+            sb.Add(string.Format("Look provides useful information about the location you are in or a target object or mobile."));
 
             return sb;
         }

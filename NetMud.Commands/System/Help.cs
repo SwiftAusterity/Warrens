@@ -38,11 +38,11 @@ namespace NutMud.Commands.System
             if (topic.GetType().GetInterfaces().Contains(typeof(ICommand)))
             {
                var subject = (ICommand)topic;
-               sb.Add(String.Empty);
+               sb.Add(string.Empty);
                sb = sb.Concat(subject.RenderSyntaxHelp()).ToList();
             }
 
-            var messagingObject = new MessageCluster(RenderUtility.EncapsulateOutput(sb), String.Empty, String.Empty, String.Empty, String.Empty);
+            var messagingObject = new MessageCluster(RenderUtility.EncapsulateOutput(sb), string.Empty, string.Empty, string.Empty, string.Empty);
 
             messagingObject.ExecuteMessaging(Actor, null, null, null, null);
         }
@@ -51,7 +51,7 @@ namespace NutMud.Commands.System
         {
             var sb = new List<string>();
 
-            sb.Add(String.Format("Valid Syntax: help &lt;topic&gt;"));
+            sb.Add(string.Format("Valid Syntax: help &lt;topic&gt;"));
 
             return sb;
         }
@@ -64,7 +64,7 @@ namespace NutMud.Commands.System
         {
             var sb = new List<string>();
 
-            sb.Add(String.Format("Help provides useful information and syntax for the various commands you can use in the world."));
+            sb.Add(string.Format("Help provides useful information and syntax for the various commands you can use in the world."));
 
             return sb;
         }
@@ -88,7 +88,7 @@ namespace NutMud.Commands.System
             }
 
             sb.Add(string.Format("{0} - <span style=\"color: orange\">{1}</span>", typeName, subjectName));
-            sb.Add(String.Empty.PadLeft(typeName.Length + 3 + subjectName.Length, '-'));
+            sb.Add(string.Empty.PadLeft(typeName.Length + 3 + subjectName.Length, '-'));
 
             return sb;
         }

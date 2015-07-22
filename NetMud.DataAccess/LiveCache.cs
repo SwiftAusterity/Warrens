@@ -157,7 +157,7 @@ namespace NetMud.DataAccess
     public class LiveCacheKey
     {
         public Type ObjectType { get; set; }
-        public String BirthMark { get; set; }
+        public string BirthMark { get; set; }
 
         public LiveCacheKey(Type objectType, string marker)
         {
@@ -167,7 +167,7 @@ namespace NetMud.DataAccess
 
         public string KeyHash()
         {
-            return String.Format("{0}.{1}", ObjectType.Name, BirthMark.ToString());
+            return string.Format("{0}.{1}", ObjectType.Name, BirthMark.ToString());
         }
     }
 
@@ -179,7 +179,7 @@ namespace NetMud.DataAccess
         /// <returns>the birthmark string</returns>
         public static string GetBirthmark(IData obj)
         {
-            return String.Format("{0}.{1}.{2}", obj.ID, DateTime.Now.ToBinary(), Guid.NewGuid().ToString().Replace("-", String.Empty));
+            return string.Format("{0}.{1}.{2}", obj.ID, DateTime.Now.ToBinary(), Guid.NewGuid().ToString().Replace("-", string.Empty));
         }
     }
 }

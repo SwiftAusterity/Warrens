@@ -174,7 +174,7 @@ namespace NetMud.DataStructure.SupportingClasses
 
         private static string ReplaceColor(string originalString, string formatToReplace, string styleElement)
         {
-            if (String.IsNullOrWhiteSpace(originalString) || String.IsNullOrWhiteSpace(formatToReplace) || String.IsNullOrWhiteSpace(styleElement))
+            if (string.IsNullOrWhiteSpace(originalString) || string.IsNullOrWhiteSpace(formatToReplace) || string.IsNullOrWhiteSpace(styleElement))
                 return originalString;
 
             var firstIndex = originalString.IndexOf(formatToReplace);
@@ -186,11 +186,11 @@ namespace NetMud.DataStructure.SupportingClasses
 
             //Yes 1st instance but no second instance? replace them all with empty string to scrub the string.
             if (secondIndex < 1)
-                return originalString.Replace(formatToReplace, String.Empty);
+                return originalString.Replace(formatToReplace, string.Empty);
 
             var lengthToSkip = formatToReplace.Length;
 
-            return String.Format("{0}<span style=\"{3}\">{1}</span>{2}"
+            return string.Format("{0}<span style=\"{3}\">{1}</span>{2}"
                     , originalString.Substring(0, firstIndex)
                     , originalString.Substring(firstIndex + lengthToSkip, secondIndex - firstIndex - lengthToSkip)
                     , originalString.Substring(secondIndex + lengthToSkip)

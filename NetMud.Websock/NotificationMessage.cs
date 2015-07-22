@@ -11,7 +11,7 @@ namespace NetMud.Websock
 
     public override string ToString ()
     {
-      return String.Format ("{0}: {1}", Summary, Body);
+      return string.Format ("{0}: {1}", Summary, Body);
     }
   }
 }

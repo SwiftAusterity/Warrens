@@ -75,7 +75,7 @@ namespace NetMud.Websock
             var errors = Interpret.Render(e.Data, player);
 
             //It only sends the errors
-            if (!String.IsNullOrWhiteSpace(errors))
+            if (!string.IsNullOrWhiteSpace(errors))
                 Send(errors);
         }
 

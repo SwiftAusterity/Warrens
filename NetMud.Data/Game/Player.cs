@@ -64,7 +64,7 @@ namespace NetMud.Data.Game
 
         public string MoveTo<T>(T thing)
         {
-            return MoveTo<T>(thing, String.Empty);
+            return MoveTo<T>(thing, string.Empty);
         }
 
         public string MoveTo<T>(T thing, string containerName)
@@ -78,7 +78,7 @@ namespace NetMud.Data.Game
 
                 Inventory.Add(obj);
                 obj.CurrentLocation = this;
-                return String.Empty;
+                return string.Empty;
             }
 
             return "Invalid type to move to container.";
@@ -86,7 +86,7 @@ namespace NetMud.Data.Game
 
         public string MoveFrom<T>(T thing)
         {
-            return MoveFrom<T>(thing, String.Empty);
+            return MoveFrom<T>(thing, string.Empty);
         }
 
         public string MoveFrom<T>(T thing, string containerName)
@@ -100,7 +100,7 @@ namespace NetMud.Data.Game
 
                 Inventory.Remove(obj);
                 obj.CurrentLocation = null;
-                return String.Empty;
+                return string.Empty;
             }
 
             return "Invalid type to move from container.";
@@ -140,7 +140,7 @@ namespace NetMud.Data.Game
             var lastKnownLocType = locationAssembly.DefinedTypes.FirstOrDefault(tp => tp.Name.Equals(ch.LastKnownLocationType));
 
             ILocation lastKnownLoc = null;
-            if (lastKnownLocType != null && !String.IsNullOrWhiteSpace(ch.LastKnownLocation))
+            if (lastKnownLocType != null && !string.IsNullOrWhiteSpace(ch.LastKnownLocation))
             {
                 if (lastKnownLocType.GetInterfaces().Contains(typeof(ISpawnAsSingleton)))
                 {

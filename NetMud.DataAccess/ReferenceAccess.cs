@@ -19,7 +19,7 @@ namespace NetMud.DataAccess
         public IEnumerable<T> GetAllReference<T>() where T : IReference
         {
             var returnList = new List<T>();
-            var sql = String.Format("select * from [dbo].[{0}]", typeof(T).Name);
+            var sql = string.Format("select * from [dbo].[{0}]", typeof(T).Name);
 
             var ds = SqlWrapper.RunDataset(sql, CommandType.Text);
 
@@ -50,7 +50,7 @@ namespace NetMud.DataAccess
         public T GetOneReference<T>(string keyword) where T : IReference
         {
             IReference returnValue = default(T);
-            var sql = String.Format("select * from [dbo].[{0}] where Name = '{1}'", typeof(T).Name, keyword);
+            var sql = string.Format("select * from [dbo].[{0}] where Name = '{1}'", typeof(T).Name, keyword);
 
             var ds = SqlWrapper.RunDataset(sql, CommandType.Text);
 

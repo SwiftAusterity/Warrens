@@ -47,7 +47,7 @@ namespace NetMud.Commands.Movement
         {
             var sb = new List<string>();
 
-            sb.Add(String.Format("Valid Syntax:"));
+            sb.Add(string.Format("Valid Syntax:"));
             sb.Add("north".PadWithString(14, "&nbsp;", true));
             sb.Add("northeast".PadWithString(14, "&nbsp;", true));
             sb.Add("east".PadWithString(14, "&nbsp;", true));
@@ -65,7 +65,7 @@ namespace NetMud.Commands.Movement
         {
             var sb = new List<string>();
 
-            sb.Add(String.Format("These are all directions, need better help text for movements."));
+            sb.Add(string.Format("These are all directions, need better help text for movements."));
 
             return sb;
         }

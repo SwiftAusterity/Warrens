@@ -90,7 +90,7 @@ namespace NetMud.Interp
                 //Parms we got doesn't equal parms we loaded
                 if (CommandStringRemainder.Count() != 0)
                 {
-                    AccessErrors.Add(String.Format("I could not find {0}.", String.Join(" ", CommandStringRemainder)));
+                    AccessErrors.Add(string.Format("I could not find {0}.", string.Join(" ", CommandStringRemainder)));
                     AccessErrors.AddRange(Command.RenderSyntaxHelp());
                     return;
                 }
@@ -133,20 +133,20 @@ namespace NetMud.Interp
 
             while (commandWords > 0)
             {
-                var currentCommandString = String.Join(" ", parsedWords.Take(commandWords)).ToLower();
+                var currentCommandString = string.Join(" ", parsedWords.Take(commandWords)).ToLower();
 
                 var validCommands = LoadedCommands.Where(comm => comm.GetCustomAttributes<CommandKeywordAttribute>().Any(att => att.Keyword.Equals(currentCommandString)));
 
                 if (validCommands.Count() > 1)
                 {
-                    AccessErrors.Add(String.Format("There are {0} potential commands with that name and parameter structure."));
+                    AccessErrors.Add(string.Format("There are {0} potential commands with that name and parameter structure."));
 
                     foreach(var cmd in validCommands)
                     {
                         var currentCommand = Activator.CreateInstance(cmd) as ICommand;
 
                         AccessErrors.AddRange(currentCommand.RenderSyntaxHelp());
-                        AccessErrors.Add(String.Empty);
+                        AccessErrors.Add(string.Empty);
                     }
 
                     break;
@@ -216,7 +216,7 @@ namespace NetMud.Interp
 
             while (parmWords > 0)
             {
-                var currentParmString = String.Join(" ", internalCommandString.Take(parmWords)).ToLower();
+                var currentParmString = string.Join(" ", internalCommandString.Take(parmWords)).ToLower();
 
                 if (!currentNeededParm.MatchesPattern(currentParmString))
                 {
@@ -229,7 +229,7 @@ namespace NetMud.Interp
 
                 if (validParms.Count() > 1)
                 {
-                    AccessErrors.Add(String.Format("There are {0} potential targets with that name for the {1} command.", validParms.Count(), commandType.Name));
+                    AccessErrors.Add(string.Format("There are {0} potential targets with that name for the {1} command.", validParms.Count(), commandType.Name));
 
                     AccessErrors.AddRange(validParms.Select(typ => typ.Name));
 
@@ -271,7 +271,7 @@ namespace NetMud.Interp
 
             while (parmWords > 0)
             {
-                var currentParmString = String.Join(" ", internalCommandString.Take(parmWords)).ToLower();
+                var currentParmString = string.Join(" ", internalCommandString.Take(parmWords)).ToLower();
 
                 //We have disambiguation here, we need to pick the first object we get back in the list
                 if (Regex.IsMatch(currentParmString, LiveWorldDisambiguationSyntax))
@@ -313,14 +313,14 @@ namespace NetMud.Interp
 
                     if (validObjects.Count() > 1)
                     {
-                        AccessErrors.Add(String.Format("There are {0} potential targets with that name for the {1} command. Try using one of the following disambiguators:", validObjects.Count(), commandType.Name));
+                        AccessErrors.Add(string.Format("There are {0} potential targets with that name for the {1} command. Try using one of the following disambiguators:", validObjects.Count(), commandType.Name));
 
                         int iterator = 1;
                         foreach(var obj in validObjects)
                         {
                             var entityObject = (IEntity)obj;
 
-                            AccessErrors.Add(String.Format("{0}.{1}", iterator++, entityObject.DataTemplate.Name));
+                            AccessErrors.Add(string.Format("{0}.{1}", iterator++, entityObject.DataTemplate.Name));
                         }
 
                         break;
@@ -365,7 +365,7 @@ namespace NetMud.Interp
 
             while (parmWords > 0)
             {
-                var currentParmString = String.Join(" ", internalCommandString.Take(parmWords));
+                var currentParmString = string.Join(" ", internalCommandString.Take(parmWords));
 
                 if (!currentNeededParm.MatchesPattern(currentParmString))
                 {
@@ -407,7 +407,7 @@ namespace NetMud.Interp
 
             while (parmWords > 0)
             {
-                var currentParmString = String.Join(" ", internalCommandString.Take(parmWords));
+                var currentParmString = string.Join(" ", internalCommandString.Take(parmWords));
 
                 if (!currentNeededParm.MatchesPattern(currentParmString))
                 {
@@ -505,14 +505,14 @@ namespace NetMud.Interp
                 //Only one means let's just kill the stupid quotemark and move on
                 if (secondQuoteIndex < 0)
                 {
-                    baseString = baseString.Replace("\"", String.Empty);
+                    baseString = baseString.Replace("\"", string.Empty);
                     break;
                 }
 
                 var foundString = baseString.Substring(firstQuoteIndex + 1, secondQuoteIndex - firstQuoteIndex - 1);
 
                 foundStrings.Add(foundString);
-                baseString = baseString.Replace(String.Format("\"{0}\"", foundString), "%%" + foundStringIterator.ToString() + "%%");
+                baseString = baseString.Replace(string.Format("\"{0}\"", foundString), "%%" + foundStringIterator.ToString() + "%%");
                 foundStringIterator++;
             }
 
