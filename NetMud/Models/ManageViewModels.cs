@@ -2,7 +2,6 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
-using NetMud.DataStructure.Base.System;
 
 namespace NetMud.Models
 {
@@ -17,8 +16,9 @@ namespace NetMud.Models
 
     public class ManageCharactersViewModel : BaseViewModel
     {
-        public string NewGivenName { get; set; }
+        public string NewName { get; set; }
         public string NewSurName { get; set; }
+        public string NewGender { get; set; }
     }
 
     public class ManageLoginsViewModel

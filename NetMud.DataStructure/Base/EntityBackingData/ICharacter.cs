@@ -1,11 +1,5 @@
 ﻿using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.Behaviors.Rendering;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NetMud.DataStructure.Base.EntityBackingData
 {
@@ -14,6 +8,7 @@ namespace NetMud.DataStructure.Base.EntityBackingData
         string SurName { get; set; }
         string AccountHandle { get; set; }
         IAccount Account { get; }
+
         string LastKnownLocation { get; set; }
         string LastKnownLocationType { get; set; }
         string FullName();

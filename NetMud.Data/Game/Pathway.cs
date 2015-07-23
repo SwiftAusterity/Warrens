@@ -18,19 +18,19 @@ using System.Xml.Linq;
 
 namespace NetMud.Data.Game
 {
-    public class Path : EntityPartial, IPath
+    public class Pathway : EntityPartial, IPathway
     {
         public ILocation ToLocation { get; set; }
         public ILocation FromLocation { get; set; }
         public MessageCluster Enter { get; set; }
         public MovementDirectionType MovementDirection { get; private set; }
 
-        public Path()
+        public Pathway()
         {
             Enter = new MessageCluster();
         }
 
-        public Path(IPathData backingStore)
+        public Pathway(IPathwayData backingStore)
         {
             Enter = new MessageCluster();
             DataTemplate = backingStore;
@@ -42,10 +42,10 @@ namespace NetMud.Data.Game
             var liveWorld = new LiveCache();
 
             //Try to see if they are already there
-            var me = liveWorld.Get<Path>(DataTemplate.ID);
+            var me = liveWorld.Get<Pathway>(DataTemplate.ID);
 
             //Isn't in the world currently
-            if (me == default(IPath))
+            if (me == default(IPathway))
                 SpawnNewInWorld();
             else
             {
@@ -64,7 +64,7 @@ namespace NetMud.Data.Game
         public override void SpawnNewInWorld()
         {
             var liveWorld = new LiveCache();
-            var bS = (IPathData)DataTemplate;
+            var bS = (IPathwayData)DataTemplate;
 
             SpawnNewInWorld(null);
         }
@@ -72,7 +72,7 @@ namespace NetMud.Data.Game
         public override void SpawnNewInWorld(IContains spawnTo)
         {
             var liveWorld = new LiveCache();
-            var bS = (IPathData)DataTemplate;
+            var bS = (IPathwayData)DataTemplate;
             var locationAssembly = Assembly.GetAssembly(typeof(ILocation));
 
             MovementDirection = MessagingUtility.TranslateDegreesToDirection(bS.DegreesFromNorth);
@@ -124,13 +124,13 @@ namespace NetMud.Data.Game
             Enter.ToSurrounding.Add(bS.VisibleStrength, new Tuple<MessagingType, string>(MessagingType.Visible, bS.VisibleToSurroundings));
             Enter.ToSurrounding.Add(bS.AudibleStrength, new Tuple<MessagingType, string>(MessagingType.Visible, bS.AudibleToSurroundings));
 
-            fromLocation.MoveInto<IPath>(this);
+            fromLocation.MoveInto<IPathway>(this);
         }
 
         public override IEnumerable<string> RenderToLook()
         {
             var sb = new List<string>();
-            var bS = (IPathData)DataTemplate;
+            var bS = (IPathwayData)DataTemplate;
 
             sb.Add(string.Format("{0} heads in the direction of {1} from {2} to {3}", bS.Name, MovementDirection.ToString(), FromLocation.DataTemplate.Name, ToLocation.DataTemplate.Name));
 
@@ -141,7 +141,7 @@ namespace NetMud.Data.Game
         public override byte[] Serialize()
         {
             var settings = new XmlWriterSettings { OmitXmlDeclaration = true, Encoding = Encoding.UTF8 };
-            var charData = (IPathData)DataTemplate;
+            var charData = (IPathwayData)DataTemplate;
 
             var entityData = new XDocument(
                                 new XElement("root",
@@ -190,8 +190,8 @@ namespace NetMud.Data.Game
             var entityBinaryConvert = new DataUtility.EntityFileData(bytes);
             var xDoc = entityBinaryConvert.XDoc;
 
-            var backingData = new PathData();
-            var newEntity = new Path();
+            var backingData = new PathwayData();
+            var newEntity = new Pathway();
 
             newEntity.BirthMark = xDoc.Root.Attribute("Birthmark").Value;
             newEntity.Birthdate = DateTime.Parse(xDoc.Root.Attribute("Birthdate").Value);

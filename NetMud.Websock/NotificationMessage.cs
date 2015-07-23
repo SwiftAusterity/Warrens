@@ -1,8 +1,6 @@
-using System;
-
 namespace NetMud.Websock
 {
-  internal class NotificationMessage
+    internal class NotificationMessage
   {
     public string Body { get; set; }
     public string Icon { get; set; }

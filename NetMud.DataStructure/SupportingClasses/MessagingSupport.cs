@@ -2,13 +2,9 @@
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
-using NetMud.Utility;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace NetMud.DataStructure.SupportingClasses
 {
@@ -243,10 +239,10 @@ namespace NetMud.DataStructure.SupportingClasses
                         break;
                     case MessagingTargetType.Direction:
                     case MessagingTargetType.ReverseDirection:
-                        if (!thing.GetType().GetInterfaces().Contains(typeof(IPath)))
+                        if (!thing.GetType().GetInterfaces().Contains(typeof(IPathway)))
                             break;
 
-                        IPathData pathData = (IPathData)thing.DataTemplate;
+                        IPathwayData pathData = (IPathwayData)thing.DataTemplate;
                         message = message.Replace("$DIR$", TranslateDegreesToDirection(pathData.DegreesFromNorth, kvp.Key == MessagingTargetType.ReverseDirection).ToString());
                         break;
                 }

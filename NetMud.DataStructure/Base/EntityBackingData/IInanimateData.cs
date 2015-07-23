@@ -2,7 +2,7 @@
 
 namespace NetMud.DataStructure.Base.EntityBackingData
 {
-    public interface IRoomData : IEntityBackingData
+    public interface IInanimateData : IEntityBackingData
     {
     }
 }

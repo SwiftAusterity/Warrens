@@ -1,21 +1,7 @@
 using System;
-using System.Linq;
-
-using NetMud.Data.Game;
-using NetMud.Interp;
 
 using WebSocketSharp;
 using WebSocketSharp.Server;
-using NetMud.Authentication;
-
-using Microsoft.AspNet.Identity;
-using System.Security.Claims;
-using System.IO;
-using System.IO.Compression;
-using Microsoft.AspNet.Identity.EntityFramework;
-using NetMud.Models;
-using NetMud.Utility;
-using System.Collections.Generic;
 
 namespace NetMud.Websock
 {

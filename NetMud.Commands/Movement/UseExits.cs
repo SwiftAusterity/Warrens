@@ -1,5 +1,4 @@
 ﻿using NetMud.DataStructure.Base.System;
-using System;
 using System.Collections.Generic;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NutMud.Commands.Attributes;
@@ -20,7 +19,7 @@ namespace NetMud.Commands.Movement
     [CommandKeyword("northwest", true)]
     [CommandKeyword("enter", false)]
     [CommandPermission(StaffRank.Player)]
-    [CommandParameter(CommandUsage.Subject, typeof(IPath), new CacheReferenceType[] { CacheReferenceType.Entity }, "[a-zA-z]+", true)]
+    [CommandParameter(CommandUsage.Subject, typeof(IPathway), new CacheReferenceType[] { CacheReferenceType.Entity }, "[a-zA-z]+", true)]
     [CommandRange(CommandRangeType.Touch, 0)]
     public class UseExits : ICommand, IHelpful
     {
@@ -35,7 +34,7 @@ namespace NetMud.Commands.Movement
         public void Execute()
         {
             var sb = new List<string>();
-            IPath targetPath=(IPath)Subject;
+            IPathway targetPath=(IPathway)Subject;
 
             targetPath.FromLocation.MoveFrom((IMobile)Actor);
             targetPath.ToLocation.MoveInto((IMobile)Actor);

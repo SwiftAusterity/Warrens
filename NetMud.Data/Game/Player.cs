@@ -23,12 +23,12 @@ namespace NetMud.Data.Game
     {
         public Player()
         {
-            Inventory = new EntityContainer<IObject>();
+            Inventory = new EntityContainer<IInanimate>();
         }
 
         public Player(ICharacter character)
         {
-            Inventory = new EntityContainer<IObject>();
+            Inventory = new EntityContainer<IInanimate>();
             DataTemplate = character;
             GetFromWorldOrSpawn();
         }
@@ -49,13 +49,13 @@ namespace NetMud.Data.Game
         #endregion
 
         #region Container
-        public EntityContainer<IObject> Inventory { get; set; }
+        public EntityContainer<IInanimate> Inventory { get; set; }
 
         public IEnumerable<T> GetContents<T>()
         {
             var implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
 
-            if (implimentedTypes.Contains(typeof(IObject)))
+            if (implimentedTypes.Contains(typeof(IInanimate)))
                 return GetContents<T>("objects");
 
             return Enumerable.Empty<T>();
@@ -81,9 +81,9 @@ namespace NetMud.Data.Game
         {
             var implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
 
-            if (implimentedTypes.Contains(typeof(IObject)))
+            if (implimentedTypes.Contains(typeof(IInanimate)))
             {
-                var obj = (IObject)thing;
+                var obj = (IInanimate)thing;
 
                 if (Inventory.Contains(obj))
                     return "That is already in the container";
@@ -106,9 +106,9 @@ namespace NetMud.Data.Game
         {
             var implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
 
-            if (implimentedTypes.Contains(typeof(IObject)))
+            if (implimentedTypes.Contains(typeof(IInanimate)))
             {
-                var obj = (IObject)thing;
+                var obj = (IInanimate)thing;
 
                 if (!Inventory.Contains(obj))
                     return "That is not in the container";
@@ -198,7 +198,7 @@ namespace NetMud.Data.Game
 
             spawnTo.MoveInto<IPlayer>(this);
 
-            Inventory = new EntityContainer<IObject>();
+            Inventory = new EntityContainer<IInanimate>();
 
             liveWorld.Add(this);
         }
@@ -269,7 +269,7 @@ namespace NetMud.Data.Game
             //Add a fake entity to get the birthmark over to the next place
             foreach (var item in xDoc.Root.Element("Inventory").Elements("Item"))
             {
-                var obj = new Object();
+                var obj = new Inanimate();
                 obj.BirthMark = item.Value;
 
                 newEntity.Inventory.Add(obj);

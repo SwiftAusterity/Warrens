@@ -1,4 +1,4 @@
-﻿CREATE TABLE [dbo].[PathData]
+﻿CREATE TABLE [dbo].[PathwayData]
 (
     [Id]                    BIGINT        IDENTITY (1, 1) NOT NULL,
     [Created]               DATETIME      DEFAULT (getutcdate()) NOT NULL,

@@ -1,7 +1,6 @@
 ﻿using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NutMud.Commands.Attributes;
-using System;
 using System.Collections.Generic;
 
 using NetMud.Utility;
@@ -13,8 +12,8 @@ namespace NutMud.Commands.System
     //Really help can be invoked on anything that is helpful, even itself
     [CommandKeyword("SpawnNewObject", false)]
     [CommandPermission(StaffRank.Admin)]
-    [CommandParameter(CommandUsage.Subject, typeof(NetMud.Data.EntityBackingData.ObjectData), new CacheReferenceType[] { CacheReferenceType.Data }, "[0-9]+", false)] //for IDs
-    [CommandParameter(CommandUsage.Subject, typeof(NetMud.Data.EntityBackingData.ObjectData), new CacheReferenceType[] { CacheReferenceType.Data }, "[a-zA-z]+", false)] //for names
+    [CommandParameter(CommandUsage.Subject, typeof(NetMud.Data.EntityBackingData.InanimateData), new CacheReferenceType[] { CacheReferenceType.Data }, "[0-9]+", false)] //for IDs
+    [CommandParameter(CommandUsage.Subject, typeof(NetMud.Data.EntityBackingData.InanimateData), new CacheReferenceType[] { CacheReferenceType.Data }, "[a-zA-z]+", false)] //for names
     [CommandParameter(CommandUsage.Target, typeof(IContains), new CacheReferenceType[] { CacheReferenceType.Entity }, true)]
     [CommandRange(CommandRangeType.Touch, 0)]
     public class SpawnNewObject : ICommand, IHelpful
@@ -33,7 +32,7 @@ namespace NutMud.Commands.System
 
         public void Execute()
         {
-            var newObject = (IObjectData)Subject;
+            var newObject = (IInanimateData)Subject;
             var sb = new List<string>();
             IContains spawnTo;
 
@@ -43,7 +42,7 @@ namespace NutMud.Commands.System
             else
                 spawnTo = OriginLocation;
 
-            var entityObject = new NetMud.Data.Game.Object(newObject, spawnTo);
+            var entityObject = new NetMud.Data.Game.Inanimate(newObject, spawnTo);
 
             //TODO: keywords is janky, location should have its own identifier name somehow for output purposes
             sb.Add(string.Format("{0} spawned to {1}", entityObject.DataTemplate.Name, spawnTo.Keywords[0]));

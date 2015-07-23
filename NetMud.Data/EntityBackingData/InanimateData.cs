@@ -3,19 +3,16 @@ using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.System;
 using NetMud.Utility;
 using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace NetMud.Data.EntityBackingData
 {
-    public class ObjectData : IObjectData
+    public class InanimateData : IInanimateData
     {        
         public Type EntityClass
         {
-            get { return typeof(NetMud.Data.Game.Object); }
+            get { return typeof(Game.Inanimate); }
         }
 
         public long ID { get; set; }
@@ -44,11 +41,11 @@ namespace NetMud.Data.EntityBackingData
 
         public IData Create()
         {
-            IObjectData returnValue = default(IObjectData);
+            IInanimateData returnValue = default(IInanimateData);
             var sql = new StringBuilder();
-            sql.Append("insert into [dbo].[Object]([Name])");
+            sql.Append("insert into [dbo].[InanimateData]([Name])");
             sql.AppendFormat(" values('{0}')", Name);
-            sql.Append(" select * from [dbo].[Object] where ID = Scope_Identity()");
+            sql.Append(" select * from [dbo].[InanimateData] where ID = Scope_Identity()");
 
             var ds = SqlWrapper.RunDataset(sql.ToString(), CommandType.Text);
 
@@ -78,7 +75,7 @@ namespace NetMud.Data.EntityBackingData
         public bool Remove()
         {
             var sql = new StringBuilder();
-            sql.AppendFormat("remove from [dbo].[Object] where ID = {0}", ID);
+            sql.AppendFormat("remove from [dbo].[InanimateData] where ID = {0}", ID);
 
             SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text);
 
@@ -88,7 +85,7 @@ namespace NetMud.Data.EntityBackingData
         public bool Save()
         {
             var sql = new StringBuilder();
-            sql.Append("update [dbo].[Object] set ");
+            sql.Append("update [dbo].[InanimateData] set ");
             sql.AppendFormat(" [Name] = '{0}' ", Name);
             sql.AppendFormat(" , [LastRevised] = GetUTCDate()");
             sql.AppendFormat(" where ID = {0}", ID);

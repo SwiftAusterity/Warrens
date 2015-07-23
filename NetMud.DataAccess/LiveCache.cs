@@ -1,13 +1,8 @@
-﻿using NetMud.DataStructure.Base.Entity;
-using NetMud.DataStructure.Base.Place;
-using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.Behaviors.System;
+﻿using NetMud.DataStructure.Base.System;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Caching;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NetMud.DataAccess
 {

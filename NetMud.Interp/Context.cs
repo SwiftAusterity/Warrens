@@ -139,7 +139,7 @@ namespace NetMud.Interp
 
                 if (validCommands.Count() > 1)
                 {
-                    AccessErrors.Add(string.Format("There are {0} potential commands with that name and parameter structure."));
+                    AccessErrors.Add(string.Format("There are {0} potential commands with that name and parameter structure.", validCommands.Count()));
 
                     foreach(var cmd in validCommands)
                     {

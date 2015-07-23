@@ -1,15 +1,11 @@
 ﻿using NetMud.Data.EntityBackingData;
-using NetMud.Data.Game;
 using NetMud.DataAccess;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.System;
 using NetMud.Utility;
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NetMud.Data.System
 {
@@ -30,7 +26,7 @@ namespace NetMud.Data.System
         public long CurrentlySelectedCharacter { get; set; }
 
         private IList<ICharacter> _characters;
-        public IEnumerable<ICharacter> Characters 
+        public IList<ICharacter> Characters 
         { 
             get
             {
@@ -64,7 +60,7 @@ namespace NetMud.Data.System
             newChar.AccountHandle = GlobalIdentityHandle;
             newChar.Create();
 
-            _characters.Add(newChar);
+            Characters.Add(newChar);
 
             return string.Empty;
         }

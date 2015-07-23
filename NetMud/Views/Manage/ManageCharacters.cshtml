@@ -15,8 +15,9 @@
                 @foreach (var ch in Model.authedUser.GameAccount.Characters)
                 {
                     <tr>
-                        <td>@ch.GivenName</td>
+                        <td>@ch.Name</td>
                         <td>@ch.SurName</td>
+                        <td>@ch.Gender</td>
                     </tr>
                 }
             </tbody>
@@ -30,10 +31,10 @@
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <div class="form-group">
-                @Html.LabelFor(m => m.NewGivenName, new { @class = "col-md-2 control-label" })
+                @Html.LabelFor(m => m.NewName, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
-                    @Html.TextBoxFor(m => m.NewGivenName, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.NewGivenName, "", new { @class = "text-danger" })
+                    @Html.TextBoxFor(m => m.NewName, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.NewName, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
@@ -41,6 +42,13 @@
                 <div class="col-md-10">
                     @Html.TextBoxFor(m => m.NewSurName, new { @class = "form-control" })
                     @Html.ValidationMessageFor(m => m.NewSurName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.NewGender, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.NewGender, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.NewGender, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">

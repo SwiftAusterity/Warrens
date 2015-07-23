@@ -40,7 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Base\EntityBackingData\INonPlayerCharacter.cs" />
-    <Compile Include="Base\EntityBackingData\IObjectData.cs" />
+    <Compile Include="Base\EntityBackingData\IInanimateData.cs" />
     <Compile Include="Base\EntityBackingData\IRoomData.cs" />
     <Compile Include="Base\Skills\ISkill.cs" />
     <Compile Include="Base\Supporting\IDamage.cs" />
@@ -48,7 +48,7 @@
     <Compile Include="Base\Supporting\IElement.cs" />
     <Compile Include="Base\Supporting\IGender.cs" />
     <Compile Include="Base\Supporting\IMaterial.cs" />
-    <Compile Include="Base\Place\IPath.cs" />
+    <Compile Include="Base\Place\IPathway.cs" />
     <Compile Include="Base\Supporting\IStat.cs" />
     <Compile Include="Base\Supporting\ITranslation.cs" />
     <Compile Include="Base\System\IAccount.cs" />
@@ -56,13 +56,13 @@
     <Compile Include="Base\System\ICommand.cs" />
     <Compile Include="Base\System\IData.cs" />
     <Compile Include="Base\System\IEntity.cs" />
-    <Compile Include="Base\EntityBackingData\IPathData.cs" />
+    <Compile Include="Base\EntityBackingData\IPathwayData.cs" />
     <Compile Include="Base\System\IEntityBackingData.cs" />
     <Compile Include="Base\System\IReference.cs" />
     <Compile Include="Base\World\IEconomy.cs" />
     <Compile Include="Base\Entity\IIntelligence.cs" />
     <Compile Include="Base\Supporting\IMobile.cs" />
-    <Compile Include="Base\Entity\IObject.cs" />
+    <Compile Include="Base\Entity\IInanimate.cs" />
     <Compile Include="Base\Entity\IPlayer.cs" />
     <Compile Include="Base\Supporting\IRace.cs" />
     <Compile Include="Base\Place\IRoom.cs" />

@@ -1,5 +1,4 @@
 ﻿using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.Behaviors.Automation;
 using System.Collections.Generic;
 using System.Linq;
 

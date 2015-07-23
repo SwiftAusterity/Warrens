@@ -17,24 +17,24 @@ using System.Xml.Linq;
 
 namespace NetMud.Data.Game
 {
-    public class Object : EntityPartial, IObject
+    public class Inanimate : EntityPartial, IInanimate
     {
-        public Object()
+        public Inanimate()
         {
             //IDatas need parameterless constructors
-            Contents = new EntityContainer<IObject>();
+            Contents = new EntityContainer<IInanimate>();
         }
 
-        public Object(IObjectData backingStore)
+        public Inanimate(IInanimateData backingStore)
         {
-            Contents = new EntityContainer<IObject>();
+            Contents = new EntityContainer<IInanimate>();
             DataTemplate = backingStore;
             SpawnNewInWorld();
         }
 
-        public Object(IObjectData backingStore, IContains spawnTo)
+        public Inanimate(IInanimateData backingStore, IContains spawnTo)
         {
-            Contents = new EntityContainer<IObject>();
+            Contents = new EntityContainer<IInanimate>();
             DataTemplate = backingStore;
             SpawnNewInWorld(spawnTo);
         }
@@ -43,13 +43,13 @@ namespace NetMud.Data.Game
         public string LastKnownLocationType { get; set; }
 
         #region Container
-        public EntityContainer<IObject> Contents { get; set; }
+        public EntityContainer<IInanimate> Contents { get; set; }
 
         public IEnumerable<T> GetContents<T>()
         {
             var implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
 
-            if (implimentedTypes.Contains(typeof(IObject)))
+            if (implimentedTypes.Contains(typeof(IInanimate)))
                 return GetContents<T>("objects");
 
             return Enumerable.Empty<T>();
@@ -75,9 +75,9 @@ namespace NetMud.Data.Game
         {
             var implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
 
-            if (implimentedTypes.Contains(typeof(IObject)))
+            if (implimentedTypes.Contains(typeof(IInanimate)))
             {
-                var obj = (IObject)thing;
+                var obj = (IInanimate)thing;
 
                 if (Contents.Contains(obj))
                     return "That is already in the container";
@@ -100,9 +100,9 @@ namespace NetMud.Data.Game
         {
             var implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
 
-            if (implimentedTypes.Contains(typeof(IObject)))
+            if (implimentedTypes.Contains(typeof(IInanimate)))
             {
-                var obj = (IObject)thing;
+                var obj = (IInanimate)thing;
 
                 if (!Contents.Contains(obj))
                     return "That is not in the container";
@@ -129,7 +129,7 @@ namespace NetMud.Data.Game
                 throw new InvalidOperationException("Missing backing data store on object spawn event.");
 
             var liveWorld = new LiveCache();
-            var backingStore = (IObjectData)DataTemplate;
+            var backingStore = (IInanimateData)DataTemplate;
 
             BirthMark = Birthmarker.GetBirthmark(backingStore);
             Keywords = new string[] { backingStore.Name.ToLower() };
@@ -143,9 +143,9 @@ namespace NetMud.Data.Game
 
             CurrentLocation = spawnTo;
 
-            spawnTo.MoveInto<IObject>(this);
+            spawnTo.MoveInto<IInanimate>(this);
 
-            Contents = new EntityContainer<IObject>();
+            Contents = new EntityContainer<IInanimate>();
 
             liveWorld.Add(this);
         }
@@ -153,7 +153,7 @@ namespace NetMud.Data.Game
         public override IEnumerable<string> RenderToLook()
         {
             var sb = new List<string>();
-            var backingStore = (IObjectData)DataTemplate;
+            var backingStore = (IInanimateData)DataTemplate;
 
             sb.Add(string.Format("There is a {0} here", backingStore.Name));
 
@@ -164,7 +164,7 @@ namespace NetMud.Data.Game
         public override byte[] Serialize()
         {
             var settings = new XmlWriterSettings { OmitXmlDeclaration = true, Encoding = Encoding.UTF8 };
-            var charData = (IObjectData)DataTemplate;
+            var charData = (IInanimateData)DataTemplate;
 
             var entityData = new XDocument(
                                 new XElement("root",
@@ -201,8 +201,8 @@ namespace NetMud.Data.Game
             var entityBinaryConvert = new DataUtility.EntityFileData(bytes);
             var xDoc = entityBinaryConvert.XDoc;
 
-            var backingData = new ObjectData();
-            var newEntity = new Object();
+            var backingData = new InanimateData();
+            var newEntity = new Inanimate();
 
             newEntity.BirthMark = xDoc.Root.Attribute("Birthmark").Value;
             newEntity.Birthdate = DateTime.Parse(xDoc.Root.Attribute("Birthdate").Value);
@@ -215,7 +215,7 @@ namespace NetMud.Data.Game
             //Add a fake entity to get the birthmark over to the next place
             foreach (var item in xDoc.Root.Element("Contents").Elements("Item"))
             {
-                var obj = new Object();
+                var obj = new Inanimate();
                 obj.BirthMark = item.Value;
 
                 newEntity.Contents.Add(obj);

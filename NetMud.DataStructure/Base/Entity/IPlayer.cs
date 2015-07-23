@@ -9,7 +9,7 @@ namespace NetMud.DataStructure.Base.Entity
         string DescriptorID { get; set; }
         DescriptorType Descriptor { get; set; }
 
-        EntityContainer<IObject> Inventory { get; set; }
+        EntityContainer<IInanimate> Inventory { get; set; }
     }
 
     public enum DescriptorType

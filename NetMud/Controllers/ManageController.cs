@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -7,7 +6,6 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using NetMud.Models;
-using NetMud.Data.Game;
 using NetMud.Data.EntityBackingData;
 using NetMud.Authentication;
 
@@ -93,7 +91,7 @@ namespace NetMud.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddCharacter(string newGivenName, string newSurName)
+        public ActionResult AddCharacter(string newName, string newSurName, string newGender)
         {
             string message = string.Empty;
             var userId = User.Identity.GetUserId();
@@ -103,8 +101,9 @@ namespace NetMud.Controllers
             };
 
             var newChar = new Character();
-            newChar.Name = newGivenName;
+            newChar.Name = newName;
             newChar.SurName = newSurName;
+            newChar.Gender = newGender;
 
             message = model.authedUser.GameAccount.AddCharacter(newChar);
 

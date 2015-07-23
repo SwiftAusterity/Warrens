@@ -2,17 +2,14 @@
 using NetMud.DataAccess;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
-using NetMud.DataStructure.Behaviors.System;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
@@ -24,19 +21,19 @@ namespace NetMud.Data.Game
         public Intelligence()
         {
             //IDatas need parameterless constructors
-            Inventory = new EntityContainer<IObject>();
+            Inventory = new EntityContainer<IInanimate>();
         }
 
         public Intelligence(INonPlayerCharacter backingStore)
         {
-            Inventory = new EntityContainer<IObject>();
+            Inventory = new EntityContainer<IInanimate>();
             DataTemplate = backingStore;
             SpawnNewInWorld();
         }
 
         public Intelligence(INonPlayerCharacter backingStore, IContains spawnTo)
         {
-            Inventory = new EntityContainer<IObject>();
+            Inventory = new EntityContainer<IInanimate>();
             DataTemplate = backingStore;
             SpawnNewInWorld(spawnTo);
         }
@@ -54,13 +51,13 @@ namespace NetMud.Data.Game
         #endregion
 
         #region Container
-        public EntityContainer<IObject> Inventory { get; set; }
+        public EntityContainer<IInanimate> Inventory { get; set; }
 
         public IEnumerable<T> GetContents<T>()
         {
             var implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
 
-            if (implimentedTypes.Contains(typeof(IObject)))
+            if (implimentedTypes.Contains(typeof(IInanimate)))
                 return GetContents<T>("objects");
 
             return Enumerable.Empty<T>();
@@ -86,9 +83,9 @@ namespace NetMud.Data.Game
         {
             var implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
 
-            if (implimentedTypes.Contains(typeof(IObject)))
+            if (implimentedTypes.Contains(typeof(IInanimate)))
             {
-                var obj = (IObject)thing;
+                var obj = (IInanimate)thing;
 
                 if (Inventory.Contains(obj))
                     return "That is already in the container";
@@ -111,9 +108,9 @@ namespace NetMud.Data.Game
         {
             var implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
 
-            if (implimentedTypes.Contains(typeof(IObject)))
+            if (implimentedTypes.Contains(typeof(IInanimate)))
             {
-                var obj = (IObject)thing;
+                var obj = (IInanimate)thing;
 
                 if (!Inventory.Contains(obj))
                     return "That is not in the container";
@@ -157,7 +154,7 @@ namespace NetMud.Data.Game
 
             spawnTo.MoveInto<IIntelligence>(this);
 
-            Inventory = new EntityContainer<IObject>();
+            Inventory = new EntityContainer<IInanimate>();
 
             liveWorld.Add(this);
         }
@@ -222,7 +219,7 @@ namespace NetMud.Data.Game
             //Add a fake entity to get the birthmark over to the next place
             foreach (var item in xDoc.Root.Element("Inventory").Elements("Item"))
             {
-                var obj = new Object();
+                var obj = new Inanimate();
                 obj.BirthMark = item.Value;
 
                 newEntity.Inventory.Add(obj);

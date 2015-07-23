@@ -4,19 +4,16 @@ using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.System;
 using NetMud.Utility;
 using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace NetMud.Data.EntityBackingData
 {
-    public class PathData : IPathData
+    public class PathwayData : IPathwayData
     {    
         public Type EntityClass
         {
-            get { return typeof(NetMud.Data.Game.Path); }
+            get { return typeof(NetMud.Data.Game.Pathway); }
         }
 
         public long ID { get; set; }
@@ -108,9 +105,9 @@ namespace NetMud.Data.EntityBackingData
 
         public IData Create()
         {
-            IPathData returnValue = default(IPathData);
+            IPathwayData returnValue = default(IPathwayData);
             var sql = new StringBuilder();
-            sql.Append("insert into [dbo].[Path]([Name],[ToLocationID],[FromLocationID],[ToLocationType],[FromLocationType],[MessageToDestination],[MessageToOrigin]");
+            sql.Append("insert into [dbo].[PathwayData]([Name],[ToLocationID],[FromLocationID],[ToLocationType],[FromLocationType],[MessageToDestination],[MessageToOrigin]");
             sql.Append(",[MessageToActor],[AudibleToSurroundings],[VisibleToSurroundings],[AudibleStrength],[VisibleStrength])");
             sql.AppendFormat(" values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}',{10},{11})"
                 , Name, ToLocationID, FromLocationID, ToLocationType, FromLocationType, MessageToDestination, MessageToOrigin
@@ -146,7 +143,7 @@ namespace NetMud.Data.EntityBackingData
         {
             //TODO: Exits too?
             var sql = new StringBuilder();
-            sql.AppendFormat("remove from [dbo].[Path] where ID = {0}", ID);
+            sql.AppendFormat("remove from [dbo].[PathwayData] where ID = {0}", ID);
 
             SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text);
 
@@ -156,7 +153,7 @@ namespace NetMud.Data.EntityBackingData
         public bool Save()
         {
             var sql = new StringBuilder();
-            sql.Append("update [dbo].[Path] set ");
+            sql.Append("update [dbo].[PathwayData] set ");
             sql.AppendFormat(" [Name] = '{0}' ", Name);
             sql.AppendFormat(", [ToLocationID] = '{0}' ", ToLocationID);
             sql.AppendFormat(", [FromLocationID] = '{0}' ", FromLocationID);

@@ -22,16 +22,16 @@ namespace NetMud.Data.Game
     {
         public Room()
         {
-            ObjectsInRoom = new EntityContainer<IObject>();
+            ObjectsInRoom = new EntityContainer<IInanimate>();
             MobilesInRoom = new EntityContainer<IMobile>();
-            Pathways = new EntityContainer<IPath>();
+            Pathways = new EntityContainer<IPathway>();
         }
 
         public Room(IRoomData room)
         {
-            ObjectsInRoom = new EntityContainer<IObject>();
+            ObjectsInRoom = new EntityContainer<IInanimate>();
             MobilesInRoom = new EntityContainer<IMobile>();
-            Pathways = new EntityContainer<IPath>();
+            Pathways = new EntityContainer<IPathway>();
 
             //Yes it's its own datatemplate and currentLocation
             DataTemplate = room;
@@ -40,9 +40,9 @@ namespace NetMud.Data.Game
         }
 
         #region Container
-        public EntityContainer<IObject> ObjectsInRoom { get; set; }
+        public EntityContainer<IInanimate> ObjectsInRoom { get; set; }
         public EntityContainer<IMobile> MobilesInRoom { get; set; }
-        public EntityContainer<IPath> Pathways { get; set; }
+        public EntityContainer<IPathway> Pathways { get; set; }
 
         public IEnumerable<T> GetContents<T>()
         {
@@ -53,10 +53,10 @@ namespace NetMud.Data.Game
             if (implimentedTypes.Contains(typeof(IMobile)))
                 contents.AddRange(GetContents<T>("mobiles"));
             
-            if (implimentedTypes.Contains(typeof(IObject)))
+            if (implimentedTypes.Contains(typeof(IInanimate)))
                 contents.AddRange(GetContents<T>("objects"));
 
-            if (implimentedTypes.Contains(typeof(IPath)))
+            if (implimentedTypes.Contains(typeof(IPathway)))
                 contents.AddRange(GetContents<T>("pathways"));
 
             return contents;
@@ -86,9 +86,9 @@ namespace NetMud.Data.Game
         {
             var implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
 
-            if (implimentedTypes.Contains(typeof(IObject)))
+            if (implimentedTypes.Contains(typeof(IInanimate)))
             {
-                var obj = (IObject)thing;
+                var obj = (IInanimate)thing;
 
                 if (ObjectsInRoom.Contains(obj))
                     return "That is already in the container";
@@ -112,9 +112,9 @@ namespace NetMud.Data.Game
                 return string.Empty;
             }
 
-            if (implimentedTypes.Contains(typeof(IPath)))
+            if (implimentedTypes.Contains(typeof(IPathway)))
             {
-                var obj = (IPath)thing;
+                var obj = (IPathway)thing;
 
                 if (Pathways.Contains(obj))
                     return "That is already in the container";
@@ -138,9 +138,9 @@ namespace NetMud.Data.Game
         {
             var implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
 
-            if (implimentedTypes.Contains(typeof(IObject)))
+            if (implimentedTypes.Contains(typeof(IInanimate)))
             {
-                var obj = (IObject)thing;
+                var obj = (IInanimate)thing;
 
                 if (!ObjectsInRoom.Contains(obj))
                     return "That is not in the container";
@@ -164,9 +164,9 @@ namespace NetMud.Data.Game
                 return string.Empty;
             }
 
-            if (implimentedTypes.Contains(typeof(IPath)))
+            if (implimentedTypes.Contains(typeof(IPathway)))
             {
-                var obj = (IPath)thing;
+                var obj = (IPathway)thing;
 
                 if (!Pathways.Contains(obj))
                     return "That is not in the container";
@@ -294,7 +294,7 @@ namespace NetMud.Data.Game
             //Add a fake entity to get the birthmark over to the next place
             foreach(var item in xDoc.Root.Element("ObjectsInRoom").Elements("Item"))
             {
-                var obj = new Object();
+                var obj = new Inanimate();
                 obj.BirthMark = item.Value;
 
                 newEntity.ObjectsInRoom.Add(obj);

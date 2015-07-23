@@ -3,11 +3,8 @@ using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.System;
 using NetMud.Utility;
 using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace NetMud.Data.EntityBackingData
 {
@@ -15,7 +12,7 @@ namespace NetMud.Data.EntityBackingData
     {
         public Type EntityClass
         {
-            get { return typeof(NetMud.Data.Game.Player); }
+            get { return typeof(Game.Player); }
         }
 
         public long ID { get; set; }
@@ -36,7 +33,7 @@ namespace NetMud.Data.EntityBackingData
             get 
             {
                 if (_account == null && !string.IsNullOrWhiteSpace(AccountHandle))
-                    _account = NetMud.Data.System.Account.GetByHandle(AccountHandle);
+                    _account = System.Account.GetByHandle(AccountHandle);
 
                 return _account;
             }
