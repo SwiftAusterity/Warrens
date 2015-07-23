@@ -5,6 +5,7 @@ using NutMud.Commands.Attributes;
 using NetMud.DataStructure.Base.Place;
 using NetMud.Utility;
 using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.SupportingClasses;
 
 namespace NetMud.Commands.Movement
 {

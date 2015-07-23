@@ -8,6 +8,9 @@ using System.Reflection;
 using NetMud.DataAccess;
 using NutMud.Commands.Attributes;
 using System.Text.RegularExpressions;
+using NetMud.DataStructure.Base.Entity;
+using NetMud.DataStructure.SupportingClasses;
+using NetMud.DataStructure.Base.EntityBackingData;
 
 namespace NetMud.Interp
 {
@@ -50,6 +53,12 @@ namespace NetMud.Interp
             CommandStringRemainder = Enumerable.Empty<string>();
 
             LoadedCommands = commandsAssembly.GetTypes().Where(t => t.GetInterfaces().Contains(typeof(ICommand)));
+
+            //NPCs can't use anything player rank can't use
+            if(Actor.GetType().GetInterfaces().Contains(typeof(IPlayer)))
+                LoadedCommands = LoadedCommands.Where(comm => comm.GetCustomAttributes<CommandPermissionAttribute>().Any(att => att.MinimumRank <= ((ICharacter)Actor.DataTemplate).GamePermissionsRank));
+            else
+                LoadedCommands = LoadedCommands.Where(comm => comm.GetCustomAttributes<CommandPermissionAttribute>().Any(att => att.MinimumRank == StaffRank.Player));
 
             //find out command's type
             var commandType = ParseCommand();

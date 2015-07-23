@@ -115,6 +115,7 @@
     <Compile Include="SupportingClasses\MessageCluster.cs" />
     <Compile Include="SupportingClasses\MessagingSupport.cs" />
     <Compile Include="SupportingClasses\PathDirections.cs" />
+    <Compile Include="SupportingClasses\StaffRank.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NetMud.Utility\NetMud.Utility.csproj">

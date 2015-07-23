@@ -77,7 +77,7 @@ namespace NetMud.Websock
             if (newPlayer == null)
             {
                 var hotBack = new HotBackup(System.Web.Hosting.HostingEnvironment.MapPath("/HotBackup/"));
-                newPlayer = hotBack.RestorePlayer(currentCharacter.AccountHandle);
+                newPlayer = hotBack.RestorePlayer(currentCharacter.AccountHandle, currentCharacter.ID);
             }
 
             //else new them up

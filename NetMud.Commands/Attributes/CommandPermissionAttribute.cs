@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NetMud.DataStructure.SupportingClasses;
+using System;
 
 namespace NutMud.Commands.Attributes
 {
@@ -11,13 +12,5 @@ namespace NutMud.Commands.Attributes
         {
             MinimumRank = minimumRankAllowed;
         }
-    }
-
-    public enum StaffRank
-    {
-        Player,
-        Guest,
-        Builder,
-        Admin
     }
 }

@@ -1,6 +1,7 @@
 ﻿using NetMud.DataAccess;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
 using System;
 using System.Data;
@@ -23,6 +24,7 @@ namespace NetMud.Data.EntityBackingData
 
         public string SurName { get; set; }
         public string AccountHandle { get; set; }
+        public StaffRank GamePermissionsRank { get; set; }
 
         public string LastKnownLocation { get; set; }
         public string LastKnownLocationType { get; set; }
@@ -73,6 +75,10 @@ namespace NetMud.Data.EntityBackingData
             string outGender = default(string);
             DataUtility.GetFromDataRow<string>(dr, "Gender", ref outGender);
             Gender = outGender;
+
+            StaffRank outRank = StaffRank.Player;
+            DataUtility.GetFromDataRow<StaffRank>(dr, "GamePermissionsRank", ref outRank);
+            GamePermissionsRank = outRank;
 
             string outLKL = default(string);
             DataUtility.GetFromDataRow<string>(dr, "LastKnownLocation", ref outLKL);
@@ -129,7 +135,7 @@ namespace NetMud.Data.EntityBackingData
             ICharacter returnValue = default(ICharacter);
             var sql = new StringBuilder();
             sql.Append("insert into [dbo].[Character]([SurName], [Name], [AccountHandle], [Gender])");
-            sql.AppendFormat(" values('{0}','{1}','{2}', '{3}')", SurName, Name, AccountHandle, Gender);
+            sql.AppendFormat(" values('{0}','{1}','{2}', '{3}', {4})", SurName, Name, AccountHandle, Gender, GamePermissionsRank);
             sql.Append(" select * from [dbo].[Character] where ID = Scope_Identity()");
 
             var ds = SqlWrapper.RunDataset(sql.ToString(), CommandType.Text);
@@ -175,6 +181,7 @@ namespace NetMud.Data.EntityBackingData
             sql.AppendFormat(" , [Name] = '{0}' ", Name);
             sql.AppendFormat(" , [AccountHandle] = '{0}' ", AccountHandle);
             sql.AppendFormat(" , [Gender] = '{0}' ", Gender);
+            sql.AppendFormat(" , [GamePermissionsRank] = {0} ", GamePermissionsRank);
             sql.AppendFormat(" , [LastKnownLocation] = '{0}' ", LastKnownLocation);
             sql.AppendFormat(" , [LastKnownLocationType] = '{0}' ", LastKnownLocationType);
             sql.AppendFormat(" , [LastRevised] = GetUTCDate()");

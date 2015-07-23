@@ -223,7 +223,8 @@ namespace NetMud.Data.Game
                                         new XAttribute("Created", charData.Created),
                                         new XAttribute("Gender", charData.Gender),
                                         new XAttribute("LastKnownLocationType", charData.LastKnownLocationType),
-                                        new XAttribute("LastKnownLocation", charData.LastKnownLocation)),
+                                        new XAttribute("LastKnownLocation", charData.LastKnownLocation),
+                                        new XAttribute("GamePermissionsRank", charData.GamePermissionsRank)),
                                     new XElement("LiveData",
                                         new XAttribute("Keywords", string.Join(",", Keywords))),
                                     new XElement("Inventory")
@@ -257,14 +258,26 @@ namespace NetMud.Data.Game
             newEntity.Birthdate = DateTime.Parse(xDoc.Root.Attribute("Birthdate").Value);
 
             backingData.ID = long.Parse(xDoc.Root.Element("BackingData").Attribute("ID").Value);
-            backingData.Name = xDoc.Root.Element("BackingData").Attribute("Name").Value;
-            backingData.SurName = xDoc.Root.Element("BackingData").Attribute("Surname").Value;
-            backingData.AccountHandle = xDoc.Root.Element("BackingData").Attribute("AccountHandle").Value;
-            backingData.LastRevised = DateTime.Parse(xDoc.Root.Element("BackingData").Attribute("LastRevised").Value);
-            backingData.Created = DateTime.Parse(xDoc.Root.Element("BackingData").Attribute("Created").Value);
-            backingData.Gender = xDoc.Root.Element("BackingData").Attribute("Gender").Value;
-            backingData.LastKnownLocation = xDoc.Root.Element("BackingData").Attribute("LastKnownLocation").Value;
-            backingData.LastKnownLocationType = xDoc.Root.Element("BackingData").Attribute("LastKnownLocationType").Value;
+
+            //we have the ID, we don't want anything else from here we just want to go get the object from the db for player characters.
+            var dataAccess = new DataWrapper();
+            var backChar = dataAccess.GetOne<Character>(backingData.ID);
+
+            if (backChar != null)
+                backingData = backChar;
+            else
+            { 
+                //we can still use this as a failover to restore data from backups
+                backingData.Name = xDoc.Root.Element("BackingData").Attribute("Name").Value;
+                backingData.SurName = xDoc.Root.Element("BackingData").Attribute("Surname").Value;
+                backingData.AccountHandle = xDoc.Root.Element("BackingData").Attribute("AccountHandle").Value;
+                backingData.LastRevised = DateTime.Parse(xDoc.Root.Element("BackingData").Attribute("LastRevised").Value);
+                backingData.Created = DateTime.Parse(xDoc.Root.Element("BackingData").Attribute("Created").Value);
+                backingData.Gender = xDoc.Root.Element("BackingData").Attribute("Gender").Value;
+                backingData.GamePermissionsRank = (StaffRank)Enum.ToObject(typeof(StaffRank), short.Parse(xDoc.Root.Element("BackingData").Attribute("GamePermissionsRank").Value));
+                backingData.LastKnownLocation = xDoc.Root.Element("BackingData").Attribute("LastKnownLocation").Value;
+                backingData.LastKnownLocationType = xDoc.Root.Element("BackingData").Attribute("LastKnownLocationType").Value;
+            }
 
             //Add a fake entity to get the birthmark over to the next place
             foreach (var item in xDoc.Root.Element("Inventory").Elements("Item"))

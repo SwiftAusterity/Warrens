@@ -128,18 +128,21 @@ namespace NetMud.LiveData
                 {
                     var charData = (ICharacter)entity.DataTemplate;
 
-                    var myDirName = playersDir + charData.AccountHandle + "/";
+                    var charDirName = playersDir + charData.AccountHandle + "/" + charData.ID + "/";
+
+                    if (!Directory.Exists(charDirName))
+                        Directory.CreateDirectory(charDirName);
 
                     //Wipe out the existing one so we can create all new files
-                    if (Directory.Exists(myDirName + "Current/"))
+                    if (Directory.Exists(charDirName + "Current/"))
                     {
-                        var currentRoot = new DirectoryInfo(myDirName + "Current/");
+                        var currentRoot = new DirectoryInfo(charDirName + "Current/");
 
-                        if (!Directory.Exists(myDirName + "Backups/"))
-                            Directory.CreateDirectory(myDirName + "Backups/");
+                        if (!Directory.Exists(charDirName + "Backups/"))
+                            Directory.CreateDirectory(charDirName + "Backups/");
 
                         var newBackupName = String.Format("{0}Backups/{1}{2}{3}_{4}{5}{6}/",
-                                            myDirName
+                                            charDirName
                                             , DateTime.Now.Year
                                             , DateTime.Now.Month
                                             , DateTime.Now.Day
@@ -151,7 +154,7 @@ namespace NetMud.LiveData
                         currentRoot.MoveTo(newBackupName);
                     }
 
-                    var currentBackupDirectory = myDirName + "Current/";
+                    var currentBackupDirectory = charDirName + "Current/";
                     DirectoryInfo entityDirectory = Directory.CreateDirectory(currentBackupDirectory);
 
                     WritePlayer(entityDirectory, entity);
@@ -278,13 +281,13 @@ namespace NetMud.LiveData
             return true;
         }
 
-        public Player RestorePlayer(string accountHandle)
+        public Player RestorePlayer(string accountHandle, long charID)
         {
             Player newPlayerToLoad = null;
 
             try
             {
-                var currentBackupDirectory = BaseDirectory + "Players/" + accountHandle + "/Current/";
+                var currentBackupDirectory = BaseDirectory + "Players/" + accountHandle + "/" + charID.ToString() + "/Current/";
 
                 //No backup directory? No live data.
                 if (!Directory.Exists(currentBackupDirectory))
@@ -293,12 +296,12 @@ namespace NetMud.LiveData
                 var playerDirectory = new DirectoryInfo(currentBackupDirectory);
 
                 //no player file to load, derp
-                if (!File.Exists(playerDirectory + accountHandle + ".Player"))
+                if (!File.Exists(playerDirectory + charID.ToString() + ".Player"))
                     return null;
 
                 var blankEntity = Activator.CreateInstance(typeof(Player)) as Player;
 
-                using (var stream = File.OpenRead(playerDirectory + accountHandle + ".Player"))
+                using (var stream = File.OpenRead(playerDirectory + charID.ToString() + ".Player"))
                 {
                     byte[] bytes = new byte[stream.Length];
                     stream.Read(bytes, 0, (int)stream.Length);
@@ -472,7 +475,7 @@ namespace NetMud.LiveData
         {
             var charData = (ICharacter)entity.DataTemplate;
 
-            return string.Format("{0}.Player", charData.AccountHandle);
+            return string.Format("{0}.Player", charData.ID);
         }
     }
 }
