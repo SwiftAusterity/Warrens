@@ -86,6 +86,38 @@ namespace NetMud.Authentication
 
             return manager;
         }
+
+        public override Task<IdentityResult> CreateAsync(ApplicationUser user)
+        {
+            AddToRoleAsync(user.Id, "Player");
+            return base.CreateAsync(user);
+        }
+
+        public override Task<IdentityResult> CreateAsync(ApplicationUser user, string password)
+        {
+            AddToRoleAsync(user.Id, "Player");
+            return base.CreateAsync(user, password);
+        }
+
+        public override Task<ClaimsIdentity> CreateIdentityAsync(ApplicationUser user, string authenticationType)
+        {
+            if(user.Roles.Count == 0)
+                AddToRoleAsync(user.Id, "Player");
+
+            //Not sure if we need this
+ 	         return base.CreateIdentityAsync(user, authenticationType);
+        }
+
+        public override Task<IdentityResult> AddToRoleAsync(string userId, string role)
+        {
+            return base.AddToRoleAsync(userId, role);
+        }
+
+        public override Task<IdentityResult> DeleteAsync(ApplicationUser user)
+        {
+            //TODO: Do something with characters? Release names? 
+            return base.DeleteAsync(user);
+        }
     }
 
     // Configure the application sign-in manager which is used in this application.

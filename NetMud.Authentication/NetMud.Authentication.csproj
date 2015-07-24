@@ -79,7 +79,6 @@
     <Compile Include="IdentityConfig.cs" />
     <Compile Include="IdentityModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RoleConfig.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NetMud.DataStructure\NetMud.DataStructure.csproj">

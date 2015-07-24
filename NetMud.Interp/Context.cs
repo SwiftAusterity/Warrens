@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.Data.EntityBackingData;
 
 namespace NetMud.Interp
 {
@@ -67,6 +68,10 @@ namespace NetMud.Interp
                 AccessErrors.Add("Unknown Command."); //TODO: Add generic errors class for rando error messages
                 return;
             }
+
+            //Log people using and even attempting to use admin commands in game
+            if (commandType.GetCustomAttributes<CommandPermissionAttribute>().Any(att => att.MinimumRank == StaffRank.Admin))
+                LoggingUtility.LogAdminCommandUsage(OriginalCommandString, ((ICharacter)Actor.DataTemplate).AccountHandle);
 
             //TODO: This works for commands targetting things not existing in the world
             //      existing objects must have an alternate path
