@@ -488,7 +488,7 @@ namespace NetMud.LiveData
             {
                 WriteLiveBackup();
 
-                LoggingUtility.Log("World backed up automatically at " + DateTime.Now.ToString(), LogChannels.Backup, false);
+                LoggingUtility.Log("World backed up automatically.", LogChannels.Backup, false);
 
                 await Task.Delay(intervalInSeconds * 1000);
 

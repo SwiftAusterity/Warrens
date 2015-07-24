@@ -109,8 +109,9 @@ namespace NetMud.DataAccess
                     thisLog = File.Open(currentDirectory + channel + ".txt", FileMode.Append);
                 //Add a line terminator PLEASE
                 content += Environment.NewLine;
+                var timeStamp = String.Format("[{0}/{1}/{2} {3}:{4}:{5}]:  ", DateTime.Now.Day, DateTime.Now.Month, DateTime.Now.Year, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
 
-                var bytes = Encoding.UTF8.GetBytes(content);
+                var bytes = Encoding.UTF8.GetBytes(timeStamp + content);
                 thisLog.Write(bytes, 0, bytes.Length);
 
                 //Don't forget to write the file out
