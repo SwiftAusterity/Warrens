@@ -25,8 +25,8 @@ namespace NetMud.Utility
             }
             catch
             {
-                //Let the upper layer log this
-                throw;
+                //dont error on tryconvert, it's called tryconvert for a reason
+                newThing = default(T);
             }
 
             return false;
@@ -43,9 +43,10 @@ namespace NetMud.Utility
             }
             catch
             {
-                throw;
+                //dont error on this, it is supposed to be safe
+                thing = default(T);
             }
-
+        
             return false;
         }
 

@@ -52,7 +52,7 @@ namespace NetMud.DataAccess
     }
 
 
-    public class Logger
+    internal class Logger
     {
         private string BaseDirectory;
 
