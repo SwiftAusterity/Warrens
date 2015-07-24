@@ -1,4 +1,5 @@
-﻿using NetMud.DataStructure.Base.System;
+﻿using NetMud.DataAccess;
+using NetMud.DataStructure.Base.System;
 using NetMud.Utility;
 using System;
 using System.Collections.Generic;
@@ -68,9 +69,9 @@ namespace NetMud.Data.Reference
 
                     return 0;
                 }
-                catch
+                catch (Exception ex)
                 {
-                    //Minor error logging
+                    LoggingUtility.LogError(ex);
                 }
             }
 
@@ -85,9 +86,9 @@ namespace NetMud.Data.Reference
                 {
                     return other.GetType() == typeof(Help) && other.ID.Equals(this.ID);
                 }
-                catch
+                catch (Exception ex)
                 {
-                    //Minor error logging
+                    LoggingUtility.LogError(ex);
                 }
             }
 

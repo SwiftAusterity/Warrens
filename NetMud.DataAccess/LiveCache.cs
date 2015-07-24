@@ -98,9 +98,9 @@ namespace NetMud.DataAccess
             {
                 return (T)globalCache[key.KeyHash()];
             }
-            catch
+            catch(Exception ex)
             {
-                //TODO: Logging, why were we looking for something that didn't exist?
+                LoggingUtility.LogError(ex);
             }
 
             return default(T);
@@ -115,9 +115,9 @@ namespace NetMud.DataAccess
                 if (allPlayers.Any(p => ((IEntity)p).DataTemplate.ID.Equals(id)))
                     return allPlayers.First(p => ((IEntity)p).DataTemplate.ID.Equals(id));
             }
-            catch
+            catch (Exception ex)
             {
-                //TODO: Logging, why were we looking for something that didn't exist?
+                LoggingUtility.LogError(ex);
             }
 
             return default(T);
@@ -132,9 +132,9 @@ namespace NetMud.DataAccess
                 if (allTheStuff.Any(p => ((IEntity)p).DataTemplate.ID.Equals(id)))
                     return allTheStuff.First(p => ((IEntity)p).DataTemplate.ID.Equals(id));
             }
-            catch
+            catch (Exception ex)
             {
-                //TODO: Logging, why were we looking for something that didn't exist?
+                LoggingUtility.LogError(ex);
             }
 
             return default(T);

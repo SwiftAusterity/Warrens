@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 
 namespace NetMud.DataAccess
 {
@@ -17,27 +18,23 @@ namespace NetMud.DataAccess
             var returnList = new List<T>();
             var sql = string.Format("select * from [dbo].[{0}]", typeof(T).Name);
 
-            var ds = SqlWrapper.RunDataset(sql, CommandType.Text);
+            try
+            {
+                var ds = SqlWrapper.RunDataset(sql, CommandType.Text);
 
-            if (ds.HasErrors)
-            {
-                //TODO: Error handling logging?
-            }
-            else if(ds.Rows != null)
-            {
-                foreach (DataRow dr in ds.Rows)
+                if (ds.Rows != null)
                 {
-                    try
+                    foreach (DataRow dr in ds.Rows)
                     {
                         var newValue = Activator.CreateInstance(typeof(T)) as IData;
                         newValue.Fill(dr);
                         returnList.Add((T)newValue);
                     }
-                    catch
-                    {
-                        //error logging
-                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex);
             }
 
             return returnList;
@@ -48,27 +45,27 @@ namespace NetMud.DataAccess
             var returnList = new List<T>();
             var sql = string.Format("select * from [dbo].[{0}] where {1} = '{2}'", typeof(T).Name, sharedKeyName, sharedKeyValue);
 
-            var ds = SqlWrapper.RunDataset(sql, CommandType.Text);
+            try
+            {
+                var ds = SqlWrapper.RunDataset(sql, CommandType.Text);
 
-            if (ds.HasErrors)
-            {
-                //TODO: Error handling logging?
-            }
-            else if (ds.Rows != null)
-            {
-                foreach (DataRow dr in ds.Rows)
+                if (ds.HasErrors)
                 {
-                    try
+                    //TODO: Error handling logging?
+                }
+                else if (ds.Rows != null)
+                {
+                    foreach (DataRow dr in ds.Rows)
                     {
                         var newValue = Activator.CreateInstance(typeof(T)) as IData;
                         newValue.Fill(dr);
                         returnList.Add((T)newValue);
                     }
-                    catch
-                    {
-                        //error logging
-                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex);
             }
 
             return returnList;
@@ -79,29 +76,25 @@ namespace NetMud.DataAccess
             IData returnValue = default(T);
             var sql = string.Format("select * from [dbo].[{0}] where {1} = '{2}'", typeof(T).Name, sharedKeyName, sharedKeyValue);
 
-            var ds = SqlWrapper.RunDataset(sql, CommandType.Text);
-
-            if (ds.HasErrors)
+            try
             {
-                //TODO: Error handling logging?
-            }
-            else if (ds.Rows != null)
-            {
-                if(ds.Rows.Count > 1)
-                    throw new InvalidOperationException("More than one row returned for shared key.");
+                var ds = SqlWrapper.RunDataset(sql, CommandType.Text);
 
-                foreach (DataRow dr in ds.Rows)
+                if (ds.Rows != null)
                 {
-                    try
+                    if (ds.Rows.Count > 1)
+                        throw new InvalidOperationException("More than one row returned for shared key.");
+
+                    foreach (DataRow dr in ds.Rows)
                     {
                         returnValue = Activator.CreateInstance(typeof(T)) as IData;
                         returnValue.Fill(dr);
                     }
-                    catch
-                    {
-                        //error logging
-                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex);
             }
 
             return (T)returnValue;
@@ -112,26 +105,22 @@ namespace NetMud.DataAccess
             IData returnValue = default(T);
             var sql = string.Format("select * from [dbo].[{0}] where ID = {1}", typeof(T).Name, id);
 
-            var ds = SqlWrapper.RunDataset(sql, CommandType.Text);
+            try
+            {
+                var ds = SqlWrapper.RunDataset(sql, CommandType.Text);
 
-            if (ds.HasErrors)
-            {
-                //TODO: Error handling logging?
-            }
-            else if (ds.Rows != null)
-            {
-                foreach (DataRow dr in ds.Rows)
+                if (ds.Rows != null)
                 {
-                    try
+                    foreach (DataRow dr in ds.Rows)
                     {
                         returnValue = Activator.CreateInstance(typeof(T)) as IData;
                         returnValue.Fill(dr);
                     }
-                    catch
-                    {
-                        //error logging
-                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex);
             }
 
             return (T)returnValue;

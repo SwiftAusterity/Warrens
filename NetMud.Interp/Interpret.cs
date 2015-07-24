@@ -3,6 +3,7 @@ using System.Linq;
 
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.Utility;
+using NetMud.DataAccess;
 
 namespace NetMud.Interp
 {
@@ -25,6 +26,7 @@ namespace NetMud.Interp
             catch(Exception ex)
             {
                 //TODO: Dont return this sort of thing, testing phase only
+                LoggingUtility.LogError(ex);
                 return ex.Message;
             }
 

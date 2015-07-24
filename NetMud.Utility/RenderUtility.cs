@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace NetMud.Utility
@@ -37,6 +38,14 @@ namespace NetMud.Utility
             }
 
             return str;
+        }
+
+        public static string EncapsulateOutput(this string str)
+        {
+            if (!string.IsNullOrWhiteSpace(str))
+                return String.Format("<{0}>{1}</{0}>", encapsulationElement, str);
+            else
+                return bumperElement; //blank strings mean carriage returns
         }
         #endregion
 

@@ -96,11 +96,12 @@ namespace NetMud.LiveData
 
                 return WritePlayers();
             }
-            catch
+            catch (Exception ex)
             {
-                //logging
-                return false;
+                LoggingUtility.LogError(ex);
             }
+
+            return false;
         }
 
         /// <summary>
@@ -271,14 +272,15 @@ namespace NetMud.LiveData
                         roomFrom.MoveInto<IPathway>(entity);
                     }
                 }
+
+                return true;
             }
-            catch
+            catch (Exception ex)
             {
-                //TODO: Logging
-                return false;
+                LoggingUtility.LogError(ex);
             }
 
-            return true;
+            return false;
         }
 
         public Player RestorePlayer(string accountHandle, long charID)
@@ -370,9 +372,9 @@ namespace NetMud.LiveData
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                //logging
+                LoggingUtility.LogError(ex);
             }
 
             return newPlayerToLoad;
@@ -402,9 +404,9 @@ namespace NetMud.LiveData
                 //Don't forget to write the file out
                 entityFile.Flush();
             }
-            catch
+            catch (Exception ex)
             {
-                //boogey boogey
+                LoggingUtility.LogError(ex);
             }
             finally
             {
@@ -454,9 +456,9 @@ namespace NetMud.LiveData
                     WriteEntity(entityDirectory, obj);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                //boogey boogey
+                LoggingUtility.LogError(ex);
             }
             finally
             {

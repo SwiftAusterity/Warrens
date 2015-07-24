@@ -87,9 +87,9 @@ namespace NetMud.Data.Game
 
                     return 0;
                 }
-                catch
+                catch (Exception ex)
                 {
-                    //Minor error logging
+                    LoggingUtility.LogError(ex);
                 }
             }
 
@@ -104,9 +104,9 @@ namespace NetMud.Data.Game
                 {
                     return other.GetType() == this.GetType() && other.BirthMark.Equals(this.BirthMark);
                 }
-                catch
+                catch (Exception ex)
                 {
-                    //Minor error logging
+                    LoggingUtility.LogError(ex);
                 }
             }
 

@@ -70,9 +70,9 @@ namespace NetMud.Data.EntityBackingData
 
                     return 0;
                 }
-                catch
+                catch (Exception ex)
                 {
-                    //Minor error logging
+                    LoggingUtility.LogError(ex);
                 }
             }
 
@@ -87,9 +87,9 @@ namespace NetMud.Data.EntityBackingData
                 {
                     return other.GetType() == typeof(NonPlayerCharacter) && other.ID.Equals(this.ID);
                 }
-                catch
+                catch (Exception ex)
                 {
-                    //Minor error logging
+                    LoggingUtility.LogError(ex);
                 }
             }
 
@@ -104,26 +104,22 @@ namespace NetMud.Data.EntityBackingData
             sql.AppendFormat(" values('{0}','{1}','{2}')", SurName, Name, Gender);
             sql.Append(" select * from [dbo].[NonPlayerCharacter] where ID = Scope_Identity()");
 
-            var ds = SqlWrapper.RunDataset(sql.ToString(), CommandType.Text);
+            try
+            {
+                var ds = SqlWrapper.RunDataset(sql.ToString(), CommandType.Text);
 
-            if (ds.HasErrors)
-            {
-                //TODO: Error handling logging?
-            }
-            else if (ds.Rows != null)
-            {
-                foreach (DataRow dr in ds.Rows)
+                if (ds.Rows != null)
                 {
-                    try
+                    foreach (DataRow dr in ds.Rows)
                     {
                         Fill(dr);
                         returnValue = this;
                     }
-                    catch
-                    {
-                        //error logging
-                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex);
             }
 
             return returnValue;

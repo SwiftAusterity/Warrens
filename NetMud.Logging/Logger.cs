@@ -9,7 +9,7 @@ using System.Web.Configuration;
 
 namespace NetMud.Logging
 {
-    public static class LoggingUtility
+    public static class Logger
     {
         private string BaseDirectory = WebConfigurationManager.AppSettings("LogPath");
 

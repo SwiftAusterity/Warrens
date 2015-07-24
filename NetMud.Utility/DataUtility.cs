@@ -25,7 +25,8 @@ namespace NetMud.Utility
             }
             catch
             {
-                //Def some logging here
+                //Let the upper layer log this
+                throw;
             }
 
             return false;
@@ -42,7 +43,7 @@ namespace NetMud.Utility
             }
             catch
             {
-                //Def some logging here
+                throw;
             }
 
             return false;

@@ -109,9 +109,9 @@ namespace NetMud.Data.EntityBackingData
 
                     return 0;
                 }
-                catch
+                catch (Exception ex)
                 {
-                    //Minor error logging
+                    LoggingUtility.LogError(ex);
                 }
             }
 
@@ -126,9 +126,9 @@ namespace NetMud.Data.EntityBackingData
                 {
                     return other.GetType() == typeof(Object) && other.ID.Equals(this.ID);
                 }
-                catch
+                catch (Exception ex)
                 {
-                    //Minor error logging
+                    LoggingUtility.LogError(ex);
                 }
             }
 

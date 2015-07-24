@@ -17,27 +17,23 @@ namespace NetMud.DataAccess
             var returnList = new List<T>();
             var sql = string.Format("select * from [dbo].[{0}]", typeof(T).Name);
 
-            var ds = SqlWrapper.RunDataset(sql, CommandType.Text);
+            try
+            {
+                var ds = SqlWrapper.RunDataset(sql, CommandType.Text);
 
-            if (ds.HasErrors)
-            {
-                //TODO: Error handling logging?
-            }
-            else if(ds.Rows != null)
-            {
-                foreach (DataRow dr in ds.Rows)
+                if (ds.Rows != null)
                 {
-                    try
+                    foreach (DataRow dr in ds.Rows)
                     {
                         var newValue = Activator.CreateInstance(typeof(T)) as IReference;
                         newValue.Fill(dr);
                         returnList.Add((T)newValue);
                     }
-                    catch
-                    {
-                        //error logging
-                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex);
             }
 
             return returnList;
@@ -48,26 +44,22 @@ namespace NetMud.DataAccess
             IReference returnValue = default(T);
             var sql = string.Format("select * from [dbo].[{0}] where Name = '{1}'", typeof(T).Name, keyword);
 
-            var ds = SqlWrapper.RunDataset(sql, CommandType.Text);
+            try
+            {
+                var ds = SqlWrapper.RunDataset(sql, CommandType.Text);
 
-            if (ds.HasErrors)
-            {
-                //TODO: Error handling logging?
-            }
-            else if (ds.Rows != null)
-            {
-                foreach (DataRow dr in ds.Rows)
+                if (ds.Rows != null)
                 {
-                    try
+                    foreach (DataRow dr in ds.Rows)
                     {
                         returnValue = Activator.CreateInstance(typeof(T)) as IReference;
                         returnValue.Fill(dr);
                     }
-                    catch
-                    {
-                        //error logging
-                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex);
             }
 
             return (T)returnValue;

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.22823.1
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.DataStructure", "NetMud.DataStructure\NetMud.DataStructure.csproj", "{88B7A648-FE23-4E88-9B60-AE17C8858AF4}"
 EndProject
@@ -30,8 +30,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.Authentication", "NetMud.Authentication\NetMud.Authentication.csproj", "{DBC07A3D-3A1E-48C1-9A72-D115FF3E4349}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.LiveData", "NetMud.LiveData\NetMud.LiveData.csproj", "{D16EB03B-8DA6-49C3-8922-CD05AF30FD20}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.Logging", "NetMud.Logging\NetMud.Logging.csproj", "{370533D2-E58C-440F-91BC-223D5428A642}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -83,10 +81,6 @@ Global
 		{D16EB03B-8DA6-49C3-8922-CD05AF30FD20}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D16EB03B-8DA6-49C3-8922-CD05AF30FD20}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D16EB03B-8DA6-49C3-8922-CD05AF30FD20}.Release|Any CPU.Build.0 = Release|Any CPU
-		{370533D2-E58C-440F-91BC-223D5428A642}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{370533D2-E58C-440F-91BC-223D5428A642}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{370533D2-E58C-440F-91BC-223D5428A642}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{370533D2-E58C-440F-91BC-223D5428A642}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
