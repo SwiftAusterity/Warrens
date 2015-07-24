@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
@@ -6,6 +7,8 @@ using Microsoft.Owin.Security.Cookies;
 using Owin;
 using NetMud.Models;
 using NetMud.Authentication;
+using Microsoft.AspNet.Identity.EntityFramework;
+using System.Threading.Tasks;
 
 namespace NetMud
 {
@@ -18,6 +21,10 @@ namespace NetMud
             app.CreatePerOwinContext(ApplicationDbContext.Create);
             app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
             app.CreatePerOwinContext<ApplicationSignInManager>(ApplicationSignInManager.Create);
+
+            //make sure the roles exist
+            var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
+            AddRoleToStore(roleManager);
 
             // Enable the application to use a cookie to store information for the signed in user
             // and to use a cookie to temporarily store information about a user logging in with a third party login provider
@@ -34,7 +41,7 @@ namespace NetMud
                         validateInterval: TimeSpan.FromMinutes(30),
                         regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager))
                 }
-            });            
+            });
 
             // Enables the application to temporarily store user information when they are verifying the second factor in the two-factor authentication process.
             app.UseTwoFactorSignInCookie(DefaultAuthenticationTypes.TwoFactorCookie, TimeSpan.FromMinutes(5));
@@ -62,6 +69,30 @@ namespace NetMud
             //    ClientId = "",
             //    ClientSecret = ""
             //});
+        }
+
+        private async void AddRoleToStore(RoleManager<IdentityRole> manager)
+        {
+            var roles = manager.Roles.ToList();
+            if (!roles.Any(r => r.Name.Equals("Admin", StringComparison.OrdinalIgnoreCase)))
+            {
+                IdentityRole role = new IdentityRole("Admin");
+                await manager.CreateAsync(role);
+            }
+
+            roles = manager.Roles.ToList();
+            if (!roles.Any(r => r.Name.Equals("Builder", StringComparison.OrdinalIgnoreCase)))
+            {
+                IdentityRole role = new IdentityRole("Builder");
+                await manager.CreateAsync(role);
+            }
+
+            roles = manager.Roles.ToList();
+            if (!roles.Any(r => r.Name.Equals("Player", StringComparison.OrdinalIgnoreCase)))
+            {
+                IdentityRole role = new IdentityRole("Player");
+                await manager.CreateAsync(role);
+            }
         }
     }
 }
