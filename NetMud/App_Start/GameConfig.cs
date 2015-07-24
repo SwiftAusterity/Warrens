@@ -1,4 +1,5 @@
 ﻿using NetMud.LiveData;
+using System.Threading;
 
 namespace NetMud
 {
@@ -14,6 +15,11 @@ namespace NetMud
 
             //Rooms, paths, spawns (objs then mobs)
             Websock.Server.StartServer("localhost", 2929);
+
+            var newToken = new CancellationTokenSource();
+            newToken.CancelAfter(60 * 30 * 1000);
+
+            hotBack.LoopHotbackup(60 * 10, newToken.Token, 60 * 30 * 1000);
         }
     }
 }

@@ -12,6 +12,8 @@ using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.EntityBackingData;
 using System.Reflection;
 using NetMud.DataStructure.Behaviors.System;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace NetMud.LiveData
 {
@@ -478,6 +480,33 @@ namespace NetMud.LiveData
             var charData = (ICharacter)entity.DataTemplate;
 
             return string.Format("{0}.Player", charData.ID);
+        }
+
+        public async Task<bool> LoopHotbackup(int intervalInSeconds, CancellationToken ct, int cancelAfterSeconds)
+        {
+            try
+            {
+                WriteLiveBackup();
+
+                LoggingUtility.Log("World backed up automatically at " + DateTime.Now.ToString(), LogChannels.Backup, false);
+
+                await Task.Delay(intervalInSeconds * 1000);
+
+                var newToken = new CancellationTokenSource();
+                newToken.CancelAfter(cancelAfterSeconds * 1000);
+
+                return await LoopHotbackup(intervalInSeconds, newToken.Token, cancelAfterSeconds);
+            }
+            catch (OperationCanceledException)
+            {
+                LoggingUtility.Log("Hotbackup loop timed out", LogChannels.Backup, false);
+            }
+            catch(Exception ex)
+            {
+                LoggingUtility.LogError(ex);
+            }
+
+            return true;
         }
     }
 }
