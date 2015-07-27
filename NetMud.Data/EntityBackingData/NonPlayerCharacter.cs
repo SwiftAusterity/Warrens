@@ -128,7 +128,7 @@ namespace NetMud.Data.EntityBackingData
         public bool Remove()
         {
             var sql = new StringBuilder();
-            sql.AppendFormat("remove from [dbo].[NonPlayerCharacter] where ID = {0}", ID);
+            sql.AppendFormat("delete from [dbo].[NonPlayerCharacter] where ID = {0}", ID);
 
             SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text);
 

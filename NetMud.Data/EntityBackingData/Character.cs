@@ -134,8 +134,8 @@ namespace NetMud.Data.EntityBackingData
         {
             ICharacter returnValue = default(ICharacter);
             var sql = new StringBuilder();
-            sql.Append("insert into [dbo].[Character]([SurName], [Name], [AccountHandle], [Gender])");
-            sql.AppendFormat(" values('{0}','{1}','{2}', '{3}', {4})", SurName, Name, AccountHandle, Gender, GamePermissionsRank);
+            sql.Append("insert into [dbo].[Character]([SurName], [Name], [AccountHandle], [Gender], [GamePermissionsRank])");
+            sql.AppendFormat(" values('{0}','{1}','{2}', '{3}', {4})", SurName, Name, AccountHandle, Gender, (short)GamePermissionsRank);
             sql.Append(" select * from [dbo].[Character] where ID = Scope_Identity()");
 
             try
@@ -162,7 +162,7 @@ namespace NetMud.Data.EntityBackingData
         public bool Remove()
         {
             var sql = new StringBuilder();
-            sql.AppendFormat("remove from [dbo].[Character] where ID = {0}", ID);
+            sql.AppendFormat("delete from [dbo].[Character] where ID = {0}", ID);
 
             SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text);
 

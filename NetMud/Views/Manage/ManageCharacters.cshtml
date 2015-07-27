@@ -19,6 +19,16 @@
                         <td>@ch.SurName</td>
                         <td>@ch.Gender</td>
                         <td>@ch.GamePermissionsRank.ToString()</td>
+                        <td>
+                            @using (Html.BeginForm("RemoveCharacter", "Manage"))
+                            {
+                                @Html.AntiForgeryToken()
+                                <div>
+                                    @Html.Hidden("ID", ch.ID)
+                                    <input type="submit" class="btn btn-default" value="Remove" title="Delete this character" />
+                                </div>
+                            }
+                        </td>
                     </tr>
                 }
             </tbody>
@@ -52,6 +62,17 @@
                     @Html.ValidationMessageFor(m => m.NewGender, "", new { @class = "text-danger" })
                 </div>
             </div>
+            if (User.IsInRole("Admin"))
+            {
+                <div class="form-group">
+                    @Html.LabelFor(m => m.ChosenRole, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.DropDownList("ChosenRole", Model.ValidRoles.Select(rl =>
+                            new SelectListItem() { Text = rl.ToString(), Value = rl.ToString() })
+                            , htmlAttributes: new { id = "chosenRole", Style = "padding: 7px;" })
+                    </div>
+                </div>
+            }
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
                     <input type="submit" value="Create" class="btn btn-default" />
@@ -59,4 +80,7 @@
             </div>
         }
     </section>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
 }

@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
+using NetMud.DataStructure.SupportingClasses;
 
 namespace NetMud.Models
 {
@@ -16,9 +17,24 @@ namespace NetMud.Models
 
     public class ManageCharactersViewModel : BaseViewModel
     {
+        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
+        [DataType(DataType.Text)]
+        [Display(Name = "Given Name")]
         public string NewName { get; set; }
+
+        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
+        [DataType(DataType.Text)]
+        [Display(Name = "Family Name")]
         public string NewSurName { get; set; }
+
+        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
+        [DataType(DataType.Text)]
+        [Display(Name = "Gender")]
         public string NewGender { get; set; }
+
+        public IEnumerable<StaffRank> ValidRoles { get; set; }
+
+        public string ChosenRole { get; set; }
     }
 
     public class ManageLoginsViewModel
@@ -35,7 +51,7 @@ namespace NetMud.Models
     public class SetPasswordViewModel
     {
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "New password")]
         public string NewPassword { get; set; }

@@ -8,6 +8,11 @@ using Microsoft.Owin.Security;
 using NetMud.Models;
 using NetMud.Data.EntityBackingData;
 using NetMud.Authentication;
+using System.Collections.Generic;
+using Microsoft.AspNet.Identity.EntityFramework;
+using System.Web.Security;
+using NetMud.DataStructure.SupportingClasses;
+using System;
 
 namespace NetMud.Controllers
 {
@@ -84,14 +89,15 @@ namespace NetMud.Controllers
             var userId = User.Identity.GetUserId();
             var model = new ManageCharactersViewModel
              {
-                 authedUser = UserManager.FindById(userId)
+                 authedUser = UserManager.FindById(userId),
+                 ValidRoles = (StaffRank[])Enum.GetValues(typeof(StaffRank))
              };
             return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddCharacter(string newName, string newSurName, string newGender)
+        public ActionResult AddCharacter(string newName, string newSurName, string newGender, StaffRank characterRole = StaffRank.Player)
         {
             string message = string.Empty;
             var userId = User.Identity.GetUserId();
@@ -105,13 +111,41 @@ namespace NetMud.Controllers
             newChar.SurName = newSurName;
             newChar.Gender = newGender;
 
+            if (User.IsInRole("Admin"))
+                newChar.GamePermissionsRank = characterRole;
+            else
+                newChar.GamePermissionsRank = StaffRank.Player;
+
             message = model.authedUser.GameAccount.AddCharacter(newChar);
 
             return RedirectToAction("ManageCharacters", new { Message = message });
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult RemoveCharacter(long ID)
+        {
+            string message = string.Empty;
+
+            var userId = User.Identity.GetUserId();
+            var model = new ManageCharactersViewModel
+            {
+                authedUser = UserManager.FindById(userId)
+            };
+
+            var character = model.authedUser.GameAccount.Characters.FirstOrDefault(ch => ch.ID.Equals(ID));
+
+            if (character == null)
+                message = "That character does not exist";
+            else if (character.Remove())
+                message = "Character successfully deleted.";
+            else
+                message = "Error. Character not removed.";
+
+            return RedirectToAction("ManageCharacters", new { Message = message });
+        }
+
         #region AuthStuff
-        //
         // POST: /Manage/RemoveLogin
         [HttpPost]
         [ValidateAntiForgeryToken]

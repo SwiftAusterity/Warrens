@@ -73,7 +73,7 @@ namespace NetMud.Data.EntityBackingData
         {
             //TODO: Exits too?
             var sql = new StringBuilder();
-            sql.AppendFormat("remove from [dbo].[Room] where ID = {0}", ID);
+            sql.AppendFormat("delete from [dbo].[Room] where ID = {0}", ID);
 
             SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text);
 

@@ -16,7 +16,7 @@
     <ul class="nav navbar-nav navbar-right">
         <li>@Html.ActionLink("Test Client", "Index", "GameClient", routeValues: null, htmlAttributes: new { title = "The Game Client", Style = "color: orange" })</li>
         <li>
-            @Html.ActionLink("Hello " + authUser.GameAccount.GlobalIdentityHandle + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
+            @Html.ActionLink("Hello " + authUser.GameAccount.GlobalIdentityHandle, "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
         </li>
         <li>
             @if (authUser.GameAccount.Characters.Count() > 0)
