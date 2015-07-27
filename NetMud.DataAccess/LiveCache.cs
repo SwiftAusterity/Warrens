@@ -64,6 +64,13 @@ namespace NetMud.DataAccess
             return globalCache.Where(keyValuePair => keyValuePair.Value.GetType() == typeof(T)).Select(kvp => (T)kvp.Value);
         }
 
+        public static IEnumerable<T> GetMany<T>(HashSet<string> birthmarks) where T : IEntity
+        {
+            return globalCache.Where(keyValuePair => keyValuePair.Value.GetType().GetInterfaces().Contains(typeof(T)) && birthmarks.Contains(((T)keyValuePair.Value).BirthMark))
+                              .Select(kvp => (T)kvp.Value);
+        }
+
+
         /// <summary>
         /// Only for the hotbackup procedure
         /// </summary>

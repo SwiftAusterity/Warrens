@@ -63,3 +63,58 @@
    at NetMud.Data.Game.Room.MoveFrom[T](T thing, String containerName) in c:\dev\git\NetMud\NetMud.Data\Game\Room.cs:line 150
    at NetMud.Data.Game.Room.MoveFrom[T](T thing) in c:\dev\git\NetMud\NetMud.Data\Game\Room.cs:line 135
    at NetMud.LiveData.HotBackup.RestoreLiveBackup() in c:\dev\git\NetMud\NetMud.LiveData\HotBackup.cs:line 219
+[2015/07/27 09:43:55]:  InvalidCastException: Unable to cast object of type 'NetMud.Data.Game.Room' to type 'NetMud.DataStructure.Base.Entity.IInanimate'.
+   at NetMud.DataAccess.LiveCache.<>c__DisplayClass4`1.<GetMany>b__2(KeyValuePair`2 keyValuePair) in c:\dev\git\NetMud\NetMud.DataAccess\LiveCache.cs:line 69
+   at System.Linq.Enumerable.WhereSelectEnumerableIterator`2.MoveNext()
+   at NetMud.LiveData.HotBackup.RestoreLiveBackup() in c:\dev\git\NetMud\NetMud.LiveData\HotBackup.cs:line 216
+[2015/07/27 09:43:56]:  InvalidCastException: Unable to cast object of type 'NetMud.Data.Game.Room' to type 'NetMud.DataStructure.Base.Entity.IInanimate'.
+   at NetMud.DataAccess.LiveCache.<>c__DisplayClass4`1.<GetMany>b__2(KeyValuePair`2 keyValuePair) in c:\dev\git\NetMud\NetMud.DataAccess\LiveCache.cs:line 69
+   at System.Linq.Enumerable.WhereSelectEnumerableIterator`2.MoveNext()
+   at NetMud.Data.Game.Room.Serialize() in c:\dev\git\NetMud\NetMud.Data\Game\Room.cs:line 255
+   at NetMud.LiveData.HotBackup.WriteEntity(DirectoryInfo dir, IEntity entity) in c:\dev\git\NetMud\NetMud.LiveData\HotBackup.cs:line 385
+[2015/07/27 09:43:56]:  InvalidCastException: Unable to cast object of type 'NetMud.Data.Game.Room' to type 'NetMud.DataStructure.Base.Entity.IInanimate'.
+   at NetMud.DataAccess.LiveCache.<>c__DisplayClass4`1.<GetMany>b__2(KeyValuePair`2 keyValuePair) in c:\dev\git\NetMud\NetMud.DataAccess\LiveCache.cs:line 69
+   at System.Linq.Enumerable.WhereSelectEnumerableIterator`2.MoveNext()
+   at NetMud.Data.Game.Room.Serialize() in c:\dev\git\NetMud\NetMud.Data\Game\Room.cs:line 255
+   at NetMud.LiveData.HotBackup.WriteEntity(DirectoryInfo dir, IEntity entity) in c:\dev\git\NetMud\NetMud.LiveData\HotBackup.cs:line 385
+[2015/07/27 09:44:09]:  InvalidCastException: Unable to cast object of type 'NetMud.Data.Game.Inanimate' to type 'NetMud.DataStructure.Base.Supporting.IMobile'.
+   at NetMud.DataAccess.LiveCache.<>c__DisplayClass4`1.<GetMany>b__2(KeyValuePair`2 keyValuePair) in c:\dev\git\NetMud\NetMud.DataAccess\LiveCache.cs:line 69
+   at System.Linq.Enumerable.WhereSelectEnumerableIterator`2.MoveNext()
+   at System.Collections.Generic.List`1.InsertRange(Int32 index, IEnumerable`1 collection)
+   at System.Collections.Generic.List`1.AddRange(IEnumerable`1 collection)
+   at NetMud.Data.Game.Room.GetContents[T]() in c:\dev\git\NetMud\NetMud.Data\Game\Room.cs:line 55
+   at NetMud.DataStructure.SupportingClasses.MessageCluster.ExecuteMessaging(IEntity Actor, IEntity Subject, IEntity Target, IEntity OriginLocation, IEntity DestinationLocation) in c:\dev\git\NetMud\NetMud.DataStructure\SupportingClasses\MessageCluster.cs:line 56
+   at NutMud.Commands.System.Look.Execute() in c:\dev\git\NetMud\NetMud.Commands\System\Look.cs:line 45
+   at NetMud.Interp.Interpret.Render(String commandString, IActor actor) in c:\dev\git\NetMud\NetMud.Interp\Interpret.cs:line 24
+[2015/07/27 09:46:18]:  XmlException: Root element is missing.
+   at System.Xml.XmlTextReaderImpl.Throw(Exception e)
+   at System.Xml.XmlTextReaderImpl.ParseDocumentContent()
+   at System.Xml.XmlTextReaderImpl.Read()
+   at System.Xml.Linq.XDocument.Load(XmlReader reader, LoadOptions options)
+   at System.Xml.Linq.XDocument.Load(XmlReader reader)
+   at NetMud.Utility.DataUtility.EntityFileData.get_XDoc() in c:\dev\git\NetMud\NetMud.Utility\DataUtility.cs:line 95
+   at NetMud.Data.Game.Room.DeSerialize(Byte[] bytes) in c:\dev\git\NetMud\NetMud.Data\Game\Room.cs:line 279
+   at NetMud.LiveData.HotBackup.RestoreLiveBackup() in c:\dev\git\NetMud\NetMud.LiveData\HotBackup.cs:line 204
+[2015/07/27 09:46:55]:  XmlException: Root element is missing.
+   at System.Xml.XmlTextReaderImpl.Throw(Exception e)
+   at System.Xml.XmlTextReaderImpl.ParseDocumentContent()
+   at System.Xml.XmlTextReaderImpl.Read()
+   at System.Xml.Linq.XDocument.Load(XmlReader reader, LoadOptions options)
+   at System.Xml.Linq.XDocument.Load(XmlReader reader)
+   at NetMud.Utility.DataUtility.EntityFileData.get_XDoc() in c:\dev\git\NetMud\NetMud.Utility\DataUtility.cs:line 95
+   at NetMud.Data.Game.Room.DeSerialize(Byte[] bytes) in c:\dev\git\NetMud\NetMud.Data\Game\Room.cs:line 279
+   at NetMud.LiveData.HotBackup.RestoreLiveBackup() in c:\dev\git\NetMud\NetMud.LiveData\HotBackup.cs:line 204
+[2015/07/27 09:46:55]:  NullReferenceException: Object reference not set to an instance of an object.
+   at NetMud.Data.Game.Pathway.Serialize() in c:\dev\git\NetMud\NetMud.Data\Game\Pathway.cs:line 180
+   at NetMud.LiveData.HotBackup.WriteEntity(DirectoryInfo dir, IEntity entity) in c:\dev\git\NetMud\NetMud.LiveData\HotBackup.cs:line 385
+[2015/07/27 09:50:42]:  NullReferenceException: Object reference not set to an instance of an object.
+   at NetMud.LiveData.HotBackup.RestoreLiveBackup() in c:\dev\git\NetMud\NetMud.LiveData\HotBackup.cs:line 254
+[2015/07/27 09:50:42]:  NullReferenceException: Object reference not set to an instance of an object.
+   at NetMud.Data.Game.Pathway.Serialize() in c:\dev\git\NetMud\NetMud.Data\Game\Pathway.cs:line 180
+   at NetMud.LiveData.HotBackup.WriteEntity(DirectoryInfo dir, IEntity entity) in c:\dev\git\NetMud\NetMud.LiveData\HotBackup.cs:line 385
+[2015/07/27 09:55:07]:  IOException: Access to the path 'C:\dev\git\NetMud\NetMud\HotBackup\Current/' is denied.
+   at System.IO.DirectoryInfo.MoveTo(String destDirName)
+   at NetMud.LiveData.HotBackup.WriteLiveBackup() in c:\dev\git\NetMud\NetMud.LiveData\HotBackup.cs:line 70
+[2015/07/27 09:57:13]:  IOException: Access to the path 'C:\dev\git\NetMud\NetMud\HotBackup\Current/' is denied.
+   at System.IO.DirectoryInfo.MoveTo(String destDirName)
+   at NetMud.LiveData.HotBackup.WriteLiveBackup() in c:\dev\git\NetMud\NetMud.LiveData\HotBackup.cs:line 70

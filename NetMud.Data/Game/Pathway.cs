@@ -32,6 +32,9 @@ namespace NetMud.Data.Game
             }
             set
             {
+                if (value == null)
+                    return;
+
                 _currentToLocationBirthmark = value.BirthMark;
                 UpsertToLiveWorldCache();
             }
@@ -49,6 +52,9 @@ namespace NetMud.Data.Game
             }
             set
             {
+                if (value == null)
+                    return;
+
                 _currentFromLocationBirthmark = value.BirthMark;
                 UpsertToLiveWorldCache();
             }

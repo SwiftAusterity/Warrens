@@ -16,16 +16,10 @@ namespace NetMud.Data.System
         { 
             get
             {
-                var entities = new List<T>();
+                if(Count() > 0)
+                    return LiveCache.GetMany<T>(Birthmarks);
 
-                foreach(var birthmark in Birthmarks)
-                {
-                    var liveCacheKey = new LiveCacheKey(typeof(T), birthmark);
-
-                    entities.Add(LiveCache.Get<T>(liveCacheKey));
-                }
-
-                return entities;
+                return Enumerable.Empty<T>();
             }
         }
 
