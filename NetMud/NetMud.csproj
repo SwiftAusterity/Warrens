@@ -170,6 +170,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\GameAdminController.cs" />
     <Compile Include="Controllers\GameClientController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -177,6 +178,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\GameAdminViewModels.cs" />
     <Compile Include="Models\GameContextModel.cs" />
     <Compile Include="Models\BaseViewModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -255,6 +257,7 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\GameClient\Index.cshtml" />
     <Content Include="Views\Manage\ManageCharacters.cshtml" />
+    <Content Include="Views\GameAdmin\Index.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

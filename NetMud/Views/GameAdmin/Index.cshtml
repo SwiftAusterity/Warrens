@@ -1,0 +1,38 @@
+﻿@model NetMud.Models.GameAdmin.DashboardViewModel
+@{
+    ViewBag.Title = "Manage";
+}
+
+<h2>@ViewBag.Title.</h2>
+
+<p class="text-success">@ViewBag.StatusMessage</p>
+<div>
+    <h4>Backing Data</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>Rooms:</dt>
+        <dd>
+            @Model.Rooms.Count().ToString() [
+            @Html.ActionLink("Manage", "ManageRoomData") ]
+        </dd>
+        <dt>NPCs:</dt>
+        <dd>
+            @Model.NPCs.Count().ToString() [
+            @Html.ActionLink("Manage", "ManageNPCData") ]
+        </dd>
+        <dt>Inanimates:</dt>
+        <dd>
+            @Model.Inanimates.Count().ToString() [
+            @Html.ActionLink("Manage", "ManageInanimateData") ]
+        </dd>
+    </dl>
+    <h4>Live Data</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>Players:</dt>
+        <dd>
+            @Model.LivePlayers [
+            @Html.ActionLink("Live Players", "ManagePlayers") ]
+        </dd>
+    </dl>
+</div>
