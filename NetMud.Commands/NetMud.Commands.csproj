@@ -43,7 +43,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Administrative\SpawnNewNPC.cs" />
-    <Compile Include="Administrative\BackupWorldData.cs" />
     <Compile Include="Administrative\SpawnNewObject.cs" />
     <Compile Include="Attributes\CommandKeywordAttribute.cs" />
     <Compile Include="Attributes\CommandParameterAttribute.cs" />
