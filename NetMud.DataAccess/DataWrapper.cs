@@ -43,17 +43,16 @@ namespace NetMud.DataAccess
         public IEnumerable<T> GetAllBySharedKey<T>(string sharedKeyName, string sharedKeyValue) where T : IData
         {
             var returnList = new List<T>();
-            var sql = string.Format("select * from [dbo].[{0}] where {1} = '{2}'", typeof(T).Name, sharedKeyName, sharedKeyValue);
+            var parms = new Dictionary<string, object>();
+            var sql = string.Format("select * from [dbo].[{0}] where {1} = @value", typeof(T).Name, sharedKeyName, sharedKeyValue);
+
+            parms.Add("value", sharedKeyValue);
 
             try
             {
-                var ds = SqlWrapper.RunDataset(sql, CommandType.Text);
+                var ds = SqlWrapper.RunDataset(sql, CommandType.Text, parms);
 
-                if (ds.HasErrors)
-                {
-                    //TODO: Error handling logging?
-                }
-                else if (ds.Rows != null)
+                if (ds.Rows != null)
                 {
                     foreach (DataRow dr in ds.Rows)
                     {
@@ -74,11 +73,14 @@ namespace NetMud.DataAccess
         public T GetOneBySharedKey<T>(string sharedKeyName, string sharedKeyValue) where T : IData
         {
             IData returnValue = default(T);
-            var sql = string.Format("select * from [dbo].[{0}] where {1} = '{2}'", typeof(T).Name, sharedKeyName, sharedKeyValue);
+            var parms = new Dictionary<string, object>();
+            var sql = string.Format("select * from [dbo].[{0}] where {1} = @value", typeof(T).Name, sharedKeyName, sharedKeyValue);
+
+            parms.Add("value", sharedKeyValue);
 
             try
             {
-                var ds = SqlWrapper.RunDataset(sql, CommandType.Text);
+                var ds = SqlWrapper.RunDataset(sql, CommandType.Text, parms);
 
                 if (ds.Rows != null)
                 {
