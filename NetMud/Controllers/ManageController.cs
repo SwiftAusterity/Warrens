@@ -97,7 +97,7 @@ namespace NetMud.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddCharacter(string newName, string newSurName, string newGender, StaffRank characterRole = StaffRank.Player)
+        public ActionResult AddCharacter(string newName, string newSurName, string newGender, StaffRank chosenRole = StaffRank.Player)
         {
             string message = string.Empty;
             var userId = User.Identity.GetUserId();
@@ -112,7 +112,7 @@ namespace NetMud.Controllers
             newChar.Gender = newGender;
 
             if (User.IsInRole("Admin"))
-                newChar.GamePermissionsRank = characterRole;
+                newChar.GamePermissionsRank = chosenRole;
             else
                 newChar.GamePermissionsRank = StaffRank.Player;
 
@@ -123,24 +123,30 @@ namespace NetMud.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult RemoveCharacter(long ID)
+        public ActionResult RemoveCharacter(long ID, string authorize)
         {
             string message = string.Empty;
 
-            var userId = User.Identity.GetUserId();
-            var model = new ManageCharactersViewModel
-            {
-                authedUser = UserManager.FindById(userId)
-            };
-
-            var character = model.authedUser.GameAccount.Characters.FirstOrDefault(ch => ch.ID.Equals(ID));
-
-            if (character == null)
-                message = "That character does not exist";
-            else if (character.Remove())
-                message = "Character successfully deleted.";
+            if (string.IsNullOrWhiteSpace(authorize) || !ID.ToString().Equals(authorize))
+                message = "You must check the proper authorize radio button first.";
             else
-                message = "Error. Character not removed.";
+            {
+
+                var userId = User.Identity.GetUserId();
+                var model = new ManageCharactersViewModel
+                {
+                    authedUser = UserManager.FindById(userId)
+                };
+
+                var character = model.authedUser.GameAccount.Characters.FirstOrDefault(ch => ch.ID.Equals(ID));
+
+                if (character == null)
+                    message = "That character does not exist";
+                else if (character.Remove())
+                    message = "Character successfully deleted.";
+                else
+                    message = "Error. Character not removed.";
+            }
 
             return RedirectToAction("ManageCharacters", new { Message = message });
         }
