@@ -68,10 +68,9 @@ namespace NetMud.Websock
                 Send("<p>No character selected</p>");
                 return;
             }
-            var liveWorld = new LiveCache();
 
             //Try to see if they are already live
-            Player newPlayer = liveWorld.Get<Player>(currentCharacter.ID);
+            Player newPlayer = LiveCache.Get<Player>(currentCharacter.ID);
 
             //Check the backup
             if (newPlayer == null)

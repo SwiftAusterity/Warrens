@@ -44,13 +44,22 @@ namespace NetMud.Data.Game
             }
         }
 
-        private IContains _currentLocation;
+        private string _currentLocationBirthmark;
         public IContains CurrentLocation
         {
-            get { return _currentLocation; }
+            get 
+            { 
+                if(!String.IsNullOrWhiteSpace(_currentLocationBirthmark))
+                    return LiveCache.Get<IContains>(new LiveCacheKey(typeof(IContains), _currentLocationBirthmark));
+
+                return null; 
+            }
             set
             {
-                _currentLocation = value;
+                if (value == null)
+                    return;
+
+                _currentLocationBirthmark = value.BirthMark;
                 UpsertToLiveWorldCache();
             }
         }
@@ -61,8 +70,7 @@ namespace NetMud.Data.Game
 
         public void UpsertToLiveWorldCache()
         {
-            var liveWorld = new LiveCache();
-            liveWorld.Add(this);
+            LiveCache.Add(this);
         }
 
         public bool TriggerAIAction(IEnumerable<string> input, AITriggerType trigger = AITriggerType.Seen)

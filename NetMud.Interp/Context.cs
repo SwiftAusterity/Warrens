@@ -23,8 +23,6 @@ namespace NetMud.Interp
         private Assembly commandsAssembly;
         private Assembly entitiesAssembly;
 
-        private LiveCache liveWorld;
-
         public IActor Actor { get; private set; }
         public ICommand Command { get; private set; }
         public object Subject { get; private set; }
@@ -43,7 +41,6 @@ namespace NetMud.Interp
         {
             commandsAssembly = Assembly.GetAssembly(typeof(CommandParameterAttribute));
             entitiesAssembly = Assembly.GetAssembly(typeof(IEntity));
-            liveWorld = new LiveCache();
 
             OriginalCommandString = fullCommand;
             Actor = actor;
@@ -315,7 +312,7 @@ namespace NetMud.Interp
                     case CommandRangeType.Regional: //requires range to be working
                         break;
                     case CommandRangeType.Global:
-                        validObjects.AddRange(liveWorld.GetAll<T>());
+                        validObjects.AddRange(LiveCache.GetAll<T>());
                         break;
                 }
 

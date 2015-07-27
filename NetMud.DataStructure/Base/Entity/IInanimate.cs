@@ -6,7 +6,7 @@ namespace NetMud.DataStructure.Base.Entity
 {
     public interface IInanimate : IActor, ILocation, ISpawnAsMultiple
     {
-        EntityContainer<IInanimate> Contents { get; set; }
+        IEntityContainer<IInanimate> Contents { get; set; }
 
         long LastKnownLocation { get; set; }
         string LastKnownLocationType { get; set; }

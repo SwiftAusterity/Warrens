@@ -74,10 +74,8 @@ namespace NetMud.DataAccess
             //Quiet means only write to file, non-quiet means write to whomever is subscribed
             if(!beQuiet)
             {
-                var liveWorld = new LiveCache();
-
                 //write to people in game
-                var peeps = liveWorld.GetAll<IPlayer>().Where(peep => ((ICharacter)peep.DataTemplate).Account.LogChannelSubscriptions.Contains(channel));
+                var peeps = LiveCache.GetAll<IPlayer>().Where(peep => ((ICharacter)peep.DataTemplate).Account.LogChannelSubscriptions.Contains(channel));
 
                 foreach(var peep in peeps)
                     peep.WriteTo(new string[] { content.EncapsulateOutput() });
@@ -109,7 +107,7 @@ namespace NetMud.DataAccess
                     thisLog = File.Open(currentDirectory + channel + ".txt", FileMode.Append);
                 //Add a line terminator PLEASE
                 content += Environment.NewLine;
-                var timeStamp = String.Format("[{0}/{1}/{2} {3}:{4}:{5}]:  ", DateTime.Now.Day, DateTime.Now.Month, DateTime.Now.Year, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+                var timeStamp = String.Format("[{0:0000}/{1:00}/{2:00} {3:00}:{4:00}:{5:00}]:  ", DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
 
                 var bytes = Encoding.UTF8.GetBytes(timeStamp + content);
                 thisLog.Write(bytes, 0, bytes.Length);

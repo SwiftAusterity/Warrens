@@ -6,14 +6,16 @@ using System.Collections.Generic;
 using NetMud.Utility;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.SupportingClasses;
+using NetMud.Data.EntityBackingData;
+using NetMud.Data.Game;
 
 namespace NutMud.Commands.System
 {
     //Really help can be invoked on anything that is helpful, even itself
     [CommandKeyword("SpawnNewObject", false)]
     [CommandPermission(StaffRank.Admin)]
-    [CommandParameter(CommandUsage.Subject, typeof(NetMud.Data.EntityBackingData.InanimateData), new CacheReferenceType[] { CacheReferenceType.Data }, "[0-9]+", false)] //for IDs
-    [CommandParameter(CommandUsage.Subject, typeof(NetMud.Data.EntityBackingData.InanimateData), new CacheReferenceType[] { CacheReferenceType.Data }, "[a-zA-z]+", false)] //for names
+    [CommandParameter(CommandUsage.Subject, typeof(InanimateData), new CacheReferenceType[] { CacheReferenceType.Data }, "[0-9]+", false)] //for IDs
+    [CommandParameter(CommandUsage.Subject, typeof(InanimateData), new CacheReferenceType[] { CacheReferenceType.Data }, "[a-zA-z]+", false)] //for names
     [CommandParameter(CommandUsage.Target, typeof(IContains), new CacheReferenceType[] { CacheReferenceType.Entity }, true)]
     [CommandRange(CommandRangeType.Touch, 0)]
     public class SpawnNewObject : ICommand, IHelpful
@@ -42,7 +44,7 @@ namespace NutMud.Commands.System
             else
                 spawnTo = OriginLocation;
 
-            var entityObject = new NetMud.Data.Game.Inanimate(newObject, spawnTo);
+            var entityObject = new Inanimate(newObject, spawnTo);
 
             //TODO: keywords is janky, location should have its own identifier name somehow for output purposes
             sb.Add(string.Format("{0} spawned to {1}", entityObject.DataTemplate.Name, spawnTo.Keywords[0]));

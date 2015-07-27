@@ -6,6 +6,6 @@ namespace NetMud.DataStructure.Base.Entity
 {
     public interface IIntelligence : IMobile, ISpawnAsMultiple
     {
-        EntityContainer<IInanimate> Inventory { get; set; }
+        IEntityContainer<IInanimate> Inventory { get; set; }
     }
 }

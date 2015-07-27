@@ -8,8 +8,8 @@ namespace NetMud.DataStructure.Base.Place
 {
     public interface IRoom : IActor, ILocation, ISpawnAsSingleton
     {
-        EntityContainer<IInanimate> ObjectsInRoom { get; set; }
-        EntityContainer<IMobile> MobilesInRoom { get; set; }
-        EntityContainer<IPathway> Pathways { get; set; }
+        IEntityContainer<IInanimate> ObjectsInRoom { get; set; }
+        IEntityContainer<IMobile> MobilesInRoom { get; set; }
+        IEntityContainer<IPathway> Pathways { get; set; }
     }
 }

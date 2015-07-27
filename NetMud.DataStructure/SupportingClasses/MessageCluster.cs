@@ -53,9 +53,10 @@ namespace NetMud.DataStructure.SupportingClasses
             if (OriginLocation != null && !string.IsNullOrWhiteSpace(ToOrigin))
             {
                 var oLoc = (IContains)OriginLocation;
+                var validContents = oLoc.GetContents<IEntity>().Where(dud => !dud.Equals(Actor) && !dud.Equals(Subject) && !dud.Equals(Target));
 
                 //Message dudes in the location, including non-person entities since they might have triggers
-                foreach(var dude in oLoc.GetContents<IEntity>().Where(dud => !dud.Equals(Actor) && !dud.Equals(Subject) && !dud.Equals(Target)))
+                foreach (var dude in validContents)
                     dude.WriteTo(TranslateOutput(ToOrigin, entities));
             }
 

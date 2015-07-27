@@ -6,7 +6,7 @@ using System.Runtime.Caching;
 
 namespace NetMud.DataAccess
 {
-    public class LiveCache
+    public static class LiveCache
     {
         /* 
          * The general idea here is that we are literally caching everything possible from app start.
@@ -22,16 +22,10 @@ namespace NetMud.DataAccess
          * get retroactively updated. There will be superadmin level website commands to do this and in-game commands for admins.
          * 
          */
-        private ObjectCache globalCache;
-        private CacheItemPolicy globalPolicy;
+        private static ObjectCache globalCache = MemoryCache.Default;
+        private static CacheItemPolicy globalPolicy = new CacheItemPolicy();
 
-        public LiveCache()
-        {
-            globalCache = MemoryCache.Default;
-            globalPolicy = new CacheItemPolicy();
-        }
-
-        public bool PreLoadAll<T>() where T : IData
+        public static bool PreLoadAll<T>() where T : IData
         {
             var backingClass = Activator.CreateInstance(typeof(T)) as IEntityBackingData;
 
@@ -51,7 +45,7 @@ namespace NetMud.DataAccess
             return true;
         }
 
-        public void Add(object objectToCache)
+        public static void Add(object objectToCache)
         {
             var entityToCache = (IEntity)objectToCache;
             var cacheKey = new LiveCacheKey(objectToCache.GetType(), entityToCache.BirthMark);
@@ -65,7 +59,7 @@ namespace NetMud.DataAccess
             }
         }
 
-        public IEnumerable<T> GetAll<T>()
+        public static IEnumerable<T> GetAll<T>()
         {
             return globalCache.Where(keyValuePair => keyValuePair.Value.GetType() == typeof(T)).Select(kvp => (T)kvp.Value);
         }
@@ -74,7 +68,7 @@ namespace NetMud.DataAccess
         /// Only for the hotbackup procedure
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<IEntity> GetAll()
+        public static IEnumerable<IEntity> GetAll()
         {
             return globalCache.Where(keyValuePair => keyValuePair.Value.GetType().GetInterfaces().Contains(typeof(IEntity))).Select(kvp => (IEntity)kvp.Value);
         }
@@ -85,14 +79,14 @@ namespace NetMud.DataAccess
         /// <typeparam name="T">The base type (like ILocation)</typeparam>
         /// <param name="mainType">The inheriting type (like IRoom)</param>
         /// <returns>all the stuff and things</returns>
-        public IEnumerable<T> GetAll<T>(Type mainType)
+        public static IEnumerable<T> GetAll<T>(Type mainType)
         {
             return globalCache.Where(keyValuePair => keyValuePair.Value.GetType().GetInterfaces()
                 .Contains(typeof(T)) && keyValuePair.Value.GetType().GetInterfaces().Contains(mainType))
                 .Select(kvp => (T)kvp.Value);
         }
 
-        public T Get<T>(LiveCacheKey key) where T : IEntity
+        public static T Get<T>(LiveCacheKey key) where T : IEntity
         {
             try
             {
@@ -106,7 +100,7 @@ namespace NetMud.DataAccess
             return default(T);
         }
 
-        public T Get<T>(long id) where T : IEntity
+        public static T Get<T>(long id) where T : IEntity
         {
             try
             {
@@ -123,7 +117,7 @@ namespace NetMud.DataAccess
             return default(T);
         }
 
-        public T Get<T>(long id, Type mainType) where T : IEntity
+        public static T Get<T>(long id, Type mainType) where T : IEntity
         {
             try
             {
@@ -140,12 +134,12 @@ namespace NetMud.DataAccess
             return default(T);
         }
 
-        public void Remove(LiveCacheKey key)
+        public static void Remove(LiveCacheKey key)
         {
             globalCache.Remove(key.KeyHash());
         }
 
-        public bool Exists(LiveCacheKey key)
+        public static bool Exists(LiveCacheKey key)
         {
             return globalCache.Get(key.KeyHash()) != null;
         }
@@ -165,7 +159,8 @@ namespace NetMud.DataAccess
 
         public string KeyHash()
         {
-            return string.Format("{0}.{1}", ObjectType.Name, BirthMark.ToString());
+            //Not using type name right now, birthmarks are unique globally anyways
+            return string.Format("{0}", BirthMark.ToString());
         }
     }
 

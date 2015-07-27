@@ -1,4 +1,5 @@
 ﻿using NetMud.Data.EntityBackingData;
+using NetMud.Data.System;
 using NetMud.DataAccess;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
@@ -49,7 +50,7 @@ namespace NetMud.Data.Game
         #endregion
 
         #region Container
-        public EntityContainer<IInanimate> Inventory { get; set; }
+        public IEntityContainer<IInanimate> Inventory { get; set; }
 
         public IEnumerable<T> GetContents<T>()
         {
@@ -126,10 +127,8 @@ namespace NetMud.Data.Game
         #region SpawnBehavior
         public void GetFromWorldOrSpawn()
         {
-            var liveWorld = new LiveCache();
-
             //Try to see if they are already there
-            var me = liveWorld.Get<Player>(DataTemplate.ID);
+            var me = LiveCache.Get<Player>(DataTemplate.ID);
 
             //Isn't in the world currently
             if (me == default(IPlayer))
@@ -147,7 +146,6 @@ namespace NetMud.Data.Game
 
         public override void SpawnNewInWorld()
         {
-            var liveWorld = new LiveCache();
             var ch = (ICharacter)DataTemplate;
             var locationAssembly = Assembly.GetAssembly(typeof(ILocation));
 
@@ -162,12 +160,12 @@ namespace NetMud.Data.Game
                 if (lastKnownLocType.GetInterfaces().Contains(typeof(ISpawnAsSingleton)))
                 {
                     long lastKnownLocID = long.Parse(ch.LastKnownLocation);
-                    lastKnownLoc = liveWorld.Get<ILocation>(lastKnownLocID, lastKnownLocType);
+                    lastKnownLoc = LiveCache.Get<ILocation>(lastKnownLocID, lastKnownLocType);
                 }
                 else
                 {
                     var cacheKey = new LiveCacheKey(lastKnownLocType, ch.LastKnownLocation);
-                    lastKnownLoc = liveWorld.Get<ILocation>(cacheKey);
+                    lastKnownLoc = LiveCache.Get<ILocation>(cacheKey);
                 }
             }
 
@@ -176,7 +174,6 @@ namespace NetMud.Data.Game
 
         public override void SpawnNewInWorld(IContains spawnTo)
         {
-            var liveWorld = new LiveCache();
             var ch = (ICharacter)DataTemplate;
 
             BirthMark = Birthmarker.GetBirthmark(ch);
@@ -186,7 +183,7 @@ namespace NetMud.Data.Game
             //TODO: Not hardcode the zeroth room
             if (spawnTo == null)
             {
-                spawnTo = liveWorld.Get<ILocation>(1, typeof(IRoom));
+                spawnTo = LiveCache.Get<ILocation>(1, typeof(IRoom));
             }
 
             CurrentLocation = spawnTo;
@@ -200,7 +197,7 @@ namespace NetMud.Data.Game
 
             Inventory = new EntityContainer<IInanimate>();
 
-            liveWorld.Add(this);
+            LiveCache.Add(this);
         }
         #endregion
 
@@ -277,15 +274,6 @@ namespace NetMud.Data.Game
                 backingData.GamePermissionsRank = (StaffRank)Enum.ToObject(typeof(StaffRank), short.Parse(xDoc.Root.Element("BackingData").Attribute("GamePermissionsRank").Value));
                 backingData.LastKnownLocation = xDoc.Root.Element("BackingData").Attribute("LastKnownLocation").Value;
                 backingData.LastKnownLocationType = xDoc.Root.Element("BackingData").Attribute("LastKnownLocationType").Value;
-            }
-
-            //Add a fake entity to get the birthmark over to the next place
-            foreach (var item in xDoc.Root.Element("Inventory").Elements("Item"))
-            {
-                var obj = new Inanimate();
-                obj.BirthMark = item.Value;
-
-                newEntity.Inventory.Add(obj);
             }
 
             newEntity.DataTemplate = backingData;

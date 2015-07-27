@@ -1,4 +1,5 @@
 ﻿using NetMud.Data.EntityBackingData;
+using NetMud.Data.System;
 using NetMud.DataAccess;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
@@ -43,7 +44,7 @@ namespace NetMud.Data.Game
         public string LastKnownLocationType { get; set; }
 
         #region Container
-        public EntityContainer<IInanimate> Contents { get; set; }
+        public IEntityContainer<IInanimate> Contents { get; set; }
 
         public IEnumerable<T> GetContents<T>()
         {
@@ -128,7 +129,6 @@ namespace NetMud.Data.Game
             if (DataTemplate == null)
                 throw new InvalidOperationException("Missing backing data store on object spawn event.");
 
-            var liveWorld = new LiveCache();
             var backingStore = (IInanimateData)DataTemplate;
 
             BirthMark = Birthmarker.GetBirthmark(backingStore);
@@ -147,7 +147,7 @@ namespace NetMud.Data.Game
 
             Contents = new EntityContainer<IInanimate>();
 
-            liveWorld.Add(this);
+            LiveCache.Add(this);
         }
 
         public override IEnumerable<string> RenderToLook()

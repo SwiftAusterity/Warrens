@@ -1,4 +1,5 @@
 ﻿using NetMud.Data.EntityBackingData;
+using NetMud.Data.System;
 using NetMud.DataAccess;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
@@ -40,9 +41,9 @@ namespace NetMud.Data.Game
         }
 
         #region Container
-        public EntityContainer<IInanimate> ObjectsInRoom { get; set; }
-        public EntityContainer<IMobile> MobilesInRoom { get; set; }
-        public EntityContainer<IPathway> Pathways { get; set; }
+        public IEntityContainer<IInanimate> ObjectsInRoom { get; set; }
+        public IEntityContainer<IMobile> MobilesInRoom { get; set; }
+        public IEntityContainer<IPathway> Pathways { get; set; }
 
         public IEnumerable<T> GetContents<T>()
         {
@@ -191,12 +192,11 @@ namespace NetMud.Data.Game
             return sb;
         }
 
+        #region Spawning
         public void GetFromWorldOrSpawn()
         {
-            var liveWorld = new LiveCache();
-
             //Try to see if they are already there
-            var me = liveWorld.Get<IRoom>(DataTemplate.ID, typeof(IRoom));
+            var me = LiveCache.Get<IRoom>(DataTemplate.ID, typeof(IRoom));
 
             //Isn't in the world currently
             if (me == default(IRoom))
@@ -222,7 +222,6 @@ namespace NetMud.Data.Game
 
         public override void SpawnNewInWorld(IContains spawnTo)
         {
-            var liveWorld = new LiveCache();
             var roomTemplate = (IRoomData)DataTemplate;
 
             BirthMark = Birthmarker.GetBirthmark(roomTemplate);
@@ -230,6 +229,7 @@ namespace NetMud.Data.Game
             Birthdate = DateTime.Now;
             CurrentLocation = spawnTo;
         }
+        #endregion
 
         #region HotBackup
         public override byte[] Serialize()

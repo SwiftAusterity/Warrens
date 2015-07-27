@@ -1,1 +1,24 @@
 World backed up automatically at 7/24/2015 2:27:06 PM
+[27/7/2015 8:19:23]:  World backed up automatically.
+[27/7/2015 8:22:38]:  World backed up automatically.
+[27/7/2015 8:23:28]:  World backed up automatically.
+[27/7/2015 8:24:2]:  World backed up automatically.
+[27/7/2015 8:26:56]:  World backed up automatically.
+[27/7/2015 8:28:25]:  World backed up automatically.
+[27/7/2015 8:30:2]:  World backed up automatically.
+[27/7/2015 8:34:10]:  World backed up automatically.
+[27/7/2015 8:37:26]:  World backed up automatically.
+[27/7/2015 8:38:55]:  World backed up automatically.
+[27/7/2015 8:42:10]:  World backed up automatically.
+[27/7/2015 8:43:52]:  World backed up automatically.
+[27/7/2015 8:46:49]:  World backed up automatically.
+[27/7/2015 8:50:52]:  World backed up automatically.
+[27/7/2015 8:54:26]:  World backed up automatically.
+[27/7/2015 8:55:37]:  World backed up automatically.
+[27/7/2015 8:59:19]:  World backed up automatically.
+[27/7/2015 9:1:26]:  World backed up automatically.
+[27/7/2015 9:11:26]:  World backed up automatically.
+[2015/07/27 09:19:54]:  World restored from current live.
+[2015/07/27 09:19:54]:  World backed up automatically.
+[2015/07/27 09:26:40]:  World restored from current live.
+[2015/07/27 09:26:40]:  World backed up automatically.

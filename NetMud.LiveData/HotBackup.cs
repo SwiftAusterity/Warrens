@@ -23,20 +23,20 @@ namespace NetMud.LiveData
     /// </summary>
     public class HotBackup
     {
-        public LiveCache LiveWorld { get; private set; }
         public string BaseDirectory { get; private set; }
 
         public HotBackup(string baseDirectory)
         {
-            LiveWorld = new LiveCache();
             BaseDirectory = baseDirectory;
         }
 
         public bool NewWorldFallback()
         {
             //Only load in stuff that is static and spawns as singleton
-            LiveWorld.PreLoadAll<RoomData>();
-            LiveWorld.PreLoadAll<PathwayData>();
+            LiveCache.PreLoadAll<RoomData>();
+            LiveCache.PreLoadAll<PathwayData>();
+
+            LoggingUtility.Log("World restored from data fallback.", LogChannels.Backup, true);
 
             return true;
         }
@@ -74,7 +74,7 @@ namespace NetMud.LiveData
                 Directory.CreateDirectory(currentBackupDirectory);
 
                 //Get all the entities (which should be a ton of stuff)
-                var entities = LiveWorld.GetAll();
+                var entities = LiveCache.GetAll();
 
                 //Dont save players to the hot section, there's another place for them
                 foreach (var entity in entities.Where(ent => ent.GetType() != typeof(Player)))
@@ -125,7 +125,7 @@ namespace NetMud.LiveData
                     Directory.CreateDirectory(playersDir);
 
                 //Get all the players
-                var entities = LiveWorld.GetAll<Player>();
+                var entities = LiveCache.GetAll<Player>();
 
                 foreach (var entity in entities)
                 {
@@ -213,22 +213,16 @@ namespace NetMud.LiveData
                 //I don't know how we can even begin to do this type agnostically since the collections are held on type specific objects without some super ugly reflection
                 foreach (Room entity in entitiesToLoad.Where(ent => ent.GetType() == typeof(Room)))
                 {
-                    IEntity[] objectsContained = new IEntity[entity.ObjectsInRoom.EntitiesContained.Count];
-                    entity.ObjectsInRoom.EntitiesContained.CopyTo(objectsContained, 0);
-
-                    foreach (IInanimate obj in objectsContained)
+                    foreach (IInanimate obj in entity.ObjectsInRoom.EntitiesContained)
                     {
-                        var fullObj = LiveWorld.Get<IInanimate>(new LiveCacheKey(typeof(NetMud.Data.Game.Inanimate), obj.BirthMark));
+                        var fullObj = LiveCache.Get<IInanimate>(new LiveCacheKey(typeof(Inanimate), obj.BirthMark));
                         entity.MoveFrom<IInanimate>(obj);
                         entity.MoveInto<IInanimate>(fullObj);
                     }
 
-                    IEntity[] mobilesContained = new IEntity[entity.MobilesInRoom.EntitiesContained.Count];
-                    entity.MobilesInRoom.EntitiesContained.CopyTo(mobilesContained, 0);
-
-                    foreach (IIntelligence obj in mobilesContained)
+                    foreach (IIntelligence obj in entity.MobilesInRoom.EntitiesContained)
                     {
-                        var fullObj = LiveWorld.Get<IIntelligence>(new LiveCacheKey(typeof(Intelligence), obj.BirthMark));
+                        var fullObj = LiveCache.Get<IIntelligence>(new LiveCacheKey(typeof(Intelligence), obj.BirthMark));
                         entity.MoveFrom<IIntelligence>(obj);
                         entity.MoveInto<IIntelligence>(fullObj);
                     }
@@ -236,25 +230,19 @@ namespace NetMud.LiveData
 
                 foreach (Intelligence entity in entitiesToLoad.Where(ent => ent.GetType() == typeof(Intelligence)))
                 {
-                    IEntity[] objectsContained = new IEntity[entity.Inventory.EntitiesContained.Count];
-                    entity.Inventory.EntitiesContained.CopyTo(objectsContained, 0);
-
-                    foreach (IInanimate obj in objectsContained)
+                    foreach (IInanimate obj in entity.Inventory.EntitiesContained)
                     {
-                        var fullObj = LiveWorld.Get<IInanimate>(new LiveCacheKey(typeof(NetMud.Data.Game.Inanimate), obj.BirthMark));
+                        var fullObj = LiveCache.Get<IInanimate>(new LiveCacheKey(typeof(Inanimate), obj.BirthMark));
                         entity.MoveFrom<IInanimate>(obj);
                         entity.MoveInto<IInanimate>(fullObj);
                     }
                 }
 
-                foreach (NetMud.Data.Game.Inanimate entity in entitiesToLoad.Where(ent => ent.GetType() == typeof(NetMud.Data.Game.Inanimate)))
+                foreach (Inanimate entity in entitiesToLoad.Where(ent => ent.GetType() == typeof(Inanimate)))
                 {
-                    IEntity[] objectsContained = new IEntity[entity.Contents.EntitiesContained.Count];
-                    entity.Contents.EntitiesContained.CopyTo(objectsContained, 0);
-
-                    foreach (IInanimate obj in objectsContained)
+                    foreach (IInanimate obj in entity.Contents.EntitiesContained)
                     {
-                        var fullObj = LiveWorld.Get<IInanimate>(new LiveCacheKey(typeof(NetMud.Data.Game.Inanimate), obj.BirthMark));
+                        var fullObj = LiveCache.Get<IInanimate>(new LiveCacheKey(typeof(Inanimate), obj.BirthMark));
                         entity.MoveFrom<IInanimate>(obj);
                         entity.MoveInto<IInanimate>(fullObj);
                     }
@@ -263,8 +251,8 @@ namespace NetMud.LiveData
                 //paths load themselves to their room
                 foreach (NetMud.Data.Game.Pathway entity in entitiesToLoad.Where(ent => ent.GetType() == typeof(NetMud.Data.Game.Pathway)))
                 {
-                    IRoom roomTo = LiveWorld.Get<IRoom>(new LiveCacheKey(typeof(NetMud.Data.Game.Room), entity.ToLocation.BirthMark));
-                    IRoom roomFrom = LiveWorld.Get<IRoom>(new LiveCacheKey(typeof(NetMud.Data.Game.Room), entity.FromLocation.BirthMark));
+                    IRoom roomTo = LiveCache.Get<IRoom>(new LiveCacheKey(typeof(NetMud.Data.Game.Room), entity.ToLocation.BirthMark));
+                    IRoom roomFrom = LiveCache.Get<IRoom>(new LiveCacheKey(typeof(NetMud.Data.Game.Room), entity.FromLocation.BirthMark));
 
                     if (roomTo != null && roomFrom != null)
                     {
@@ -275,6 +263,7 @@ namespace NetMud.LiveData
                     }
                 }
 
+                LoggingUtility.Log("World restored from current live.", LogChannels.Backup, false);
                 return true;
             }
             catch (Exception ex)
@@ -331,12 +320,12 @@ namespace NetMud.LiveData
                     if (lastKnownLocType.GetInterfaces().Contains(typeof(ISpawnAsSingleton)))
                     {
                         long lastKnownLocID = long.Parse(ch.LastKnownLocation);
-                        lastKnownLoc = LiveWorld.Get<ILocation>(lastKnownLocID, lastKnownLocType);
+                        lastKnownLoc = LiveCache.Get<ILocation>(lastKnownLocID, lastKnownLocType);
                     }
                     else
                     {
                         var cacheKey = new LiveCacheKey(lastKnownLocType, ch.LastKnownLocation);
-                        lastKnownLoc = LiveWorld.Get<ILocation>(cacheKey);
+                        lastKnownLoc = LiveCache.Get<ILocation>(cacheKey);
                     }
                 }
 
@@ -347,13 +336,6 @@ namespace NetMud.LiveData
 
                 newPlayerToLoad.UpsertToLiveWorldCache();
 
-                //remove all the ghost objects in the player inventory
-                IEntity[] objectsContained = new IEntity[newPlayerToLoad.Inventory.EntitiesContained.Count];
-                newPlayerToLoad.Inventory.EntitiesContained.CopyTo(objectsContained, 0);
-
-                foreach (IInanimate obj in objectsContained)
-                    newPlayerToLoad.MoveFrom<IInanimate>(obj);
-
                 //We'll need one of these per container on players
                 if (Directory.Exists(playerDirectory + "Inventory/"))
                 {
@@ -361,7 +343,7 @@ namespace NetMud.LiveData
 
                     foreach (var file in inventoryDirectory.EnumerateFiles())
                     {
-                        var blankObject = Activator.CreateInstance(typeof(NetMud.Data.Game.Inanimate)) as NetMud.Data.Game.Inanimate;
+                        var blankObject = Activator.CreateInstance(typeof(Inanimate)) as Inanimate;
 
                         using (var stream = file.Open(FileMode.Open))
                         {

@@ -1,0 +1,2 @@
+[27/7/2015 9:1:38]:  SwiftAusterity: spawnnewobject sword
+[27/7/2015 9:9:27]:  SwiftAusterity: spawnnewobject sword

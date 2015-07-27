@@ -1,0 +1,65 @@
+[27/7/2015 8:2:54]:  NullReferenceException: Object reference not set to an instance of an object.
+   at NetMud.LiveData.HotBackup.RestoreLiveBackup() in c:\dev\git\NetMud\NetMud.LiveData\HotBackup.cs:line 214
+[27/7/2015 8:19:34]:  NullReferenceException: Object reference not set to an instance of an object.
+   at NetMud.Data.System.EntityContainer`1.Contains(T entity) in c:\dev\git\NetMud\NetMud.Data\System\EntityContainer.cs:line 44
+   at NetMud.Data.Game.Player.MoveFrom[T](T thing, String containerName) in c:\dev\git\NetMud\NetMud.Data\Game\Player.cs:line 114
+   at NetMud.Data.Game.Player.MoveFrom[T](T thing) in c:\dev\git\NetMud\NetMud.Data\Game\Player.cs:line 103
+   at NetMud.LiveData.HotBackup.RestorePlayer(String accountHandle, Int64 charID) in c:\dev\git\NetMud\NetMud.LiveData\HotBackup.cs:line 338
+[27/7/2015 8:19:34]:  NullReferenceException: Object reference not set to an instance of an object.
+   at NetMud.DataStructure.SupportingClasses.MessageCluster.<>c__DisplayClass4.<ExecuteMessaging>b__0(IEntity dud) in c:\dev\git\NetMud\NetMud.DataStructure\SupportingClasses\MessageCluster.cs:line 58
+   at System.Linq.Enumerable.WhereListIterator`1.MoveNext()
+   at NetMud.DataStructure.SupportingClasses.MessageCluster.ExecuteMessaging(IEntity Actor, IEntity Subject, IEntity Target, IEntity OriginLocation, IEntity DestinationLocation) in c:\dev\git\NetMud\NetMud.DataStructure\SupportingClasses\MessageCluster.cs:line 58
+   at NutMud.Commands.System.Look.Execute() in c:\dev\git\NetMud\NetMud.Commands\System\Look.cs:line 45
+   at NetMud.Interp.Interpret.Render(String commandString, IActor actor) in c:\dev\git\NetMud\NetMud.Interp\Interpret.cs:line 24
+[27/7/2015 8:19:40]:  NullReferenceException: Object reference not set to an instance of an object.
+   at NetMud.DataStructure.SupportingClasses.MessageCluster.<>c__DisplayClass4.<ExecuteMessaging>b__0(IEntity dud) in c:\dev\git\NetMud\NetMud.DataStructure\SupportingClasses\MessageCluster.cs:line 58
+   at System.Linq.Enumerable.WhereListIterator`1.MoveNext()
+   at NetMud.DataStructure.SupportingClasses.MessageCluster.ExecuteMessaging(IEntity Actor, IEntity Subject, IEntity Target, IEntity OriginLocation, IEntity DestinationLocation) in c:\dev\git\NetMud\NetMud.DataStructure\SupportingClasses\MessageCluster.cs:line 58
+   at NutMud.Commands.System.Look.Execute() in c:\dev\git\NetMud\NetMud.Commands\System\Look.cs:line 45
+   at NetMud.Interp.Interpret.Render(String commandString, IActor actor) in c:\dev\git\NetMud\NetMud.Interp\Interpret.cs:line 24
+[27/7/2015 8:22:50]:  NullReferenceException: Object reference not set to an instance of an object.
+   at NetMud.Data.System.EntityContainer`1.Contains(T entity) in c:\dev\git\NetMud\NetMud.Data\System\EntityContainer.cs:line 44
+   at NetMud.Data.Game.Player.MoveFrom[T](T thing, String containerName) in c:\dev\git\NetMud\NetMud.Data\Game\Player.cs:line 114
+   at NetMud.Data.Game.Player.MoveFrom[T](T thing) in c:\dev\git\NetMud\NetMud.Data\Game\Player.cs:line 103
+   at NetMud.LiveData.HotBackup.RestorePlayer(String accountHandle, Int64 charID) in c:\dev\git\NetMud\NetMud.LiveData\HotBackup.cs:line 338
+[27/7/2015 8:24:10]:  NullReferenceException: Object reference not set to an instance of an object.
+   at NetMud.Data.System.EntityContainer`1.Contains(T entity) in c:\dev\git\NetMud\NetMud.Data\System\EntityContainer.cs:line 44
+   at NetMud.Data.Game.Player.MoveFrom[T](T thing, String containerName) in c:\dev\git\NetMud\NetMud.Data\Game\Player.cs:line 114
+   at NetMud.Data.Game.Player.MoveFrom[T](T thing) in c:\dev\git\NetMud\NetMud.Data\Game\Player.cs:line 103
+   at NetMud.LiveData.HotBackup.RestorePlayer(String accountHandle, Int64 charID) in c:\dev\git\NetMud\NetMud.LiveData\HotBackup.cs:line 338
+[27/7/2015 8:26:11]:  NullReferenceException: Object reference not set to an instance of an object.
+   at NetMud.DataStructure.SupportingClasses.MessageCluster.<>c__DisplayClass4.<ExecuteMessaging>b__0(IEntity dud) in c:\dev\git\NetMud\NetMud.DataStructure\SupportingClasses\MessageCluster.cs:line 56
+   at System.Linq.Enumerable.WhereListIterator`1.MoveNext()
+   at NetMud.DataStructure.SupportingClasses.MessageCluster.ExecuteMessaging(IEntity Actor, IEntity Subject, IEntity Target, IEntity OriginLocation, IEntity DestinationLocation) in c:\dev\git\NetMud\NetMud.DataStructure\SupportingClasses\MessageCluster.cs:line 59
+   at NutMud.Commands.System.Look.Execute() in c:\dev\git\NetMud\NetMud.Commands\System\Look.cs:line 45
+   at NetMud.Interp.Interpret.Render(String commandString, IActor actor) in c:\dev\git\NetMud\NetMud.Interp\Interpret.cs:line 24
+[27/7/2015 8:29:40]:  NullReferenceException: Object reference not set to an instance of an object.
+   at NetMud.Data.System.EntityContainer`1.Contains(T entity) in c:\dev\git\NetMud\NetMud.Data\System\EntityContainer.cs:line 44
+   at NetMud.Data.Game.Player.MoveFrom[T](T thing, String containerName) in c:\dev\git\NetMud\NetMud.Data\Game\Player.cs:line 114
+   at NetMud.Data.Game.Player.MoveFrom[T](T thing) in c:\dev\git\NetMud\NetMud.Data\Game\Player.cs:line 103
+   at NetMud.LiveData.HotBackup.RestorePlayer(String accountHandle, Int64 charID) in c:\dev\git\NetMud\NetMud.LiveData\HotBackup.cs:line 338
+[27/7/2015 8:31:39]:  NullReferenceException: Object reference not set to an instance of an object.
+   at NetMud.Data.System.EntityContainer`1.Contains(T entity) in c:\dev\git\NetMud\NetMud.Data\System\EntityContainer.cs:line 44
+   at NetMud.Data.Game.Player.MoveFrom[T](T thing, String containerName) in c:\dev\git\NetMud\NetMud.Data\Game\Player.cs:line 114
+   at NetMud.Data.Game.Player.MoveFrom[T](T thing) in c:\dev\git\NetMud\NetMud.Data\Game\Player.cs:line 103
+   at NetMud.LiveData.HotBackup.RestorePlayer(String accountHandle, Int64 charID) in c:\dev\git\NetMud\NetMud.LiveData\HotBackup.cs:line 338
+[27/7/2015 8:34:43]:  NullReferenceException: Object reference not set to an instance of an object.
+   at NetMud.Data.System.EntityContainer`1.Contains(T entity) in c:\dev\git\NetMud\NetMud.Data\System\EntityContainer.cs:line 44
+   at NetMud.Data.Game.Player.MoveFrom[T](T thing, String containerName) in c:\dev\git\NetMud\NetMud.Data\Game\Player.cs:line 114
+   at NetMud.Data.Game.Player.MoveFrom[T](T thing) in c:\dev\git\NetMud\NetMud.Data\Game\Player.cs:line 103
+   at NetMud.LiveData.HotBackup.RestorePlayer(String accountHandle, Int64 charID) in c:\dev\git\NetMud\NetMud.LiveData\HotBackup.cs:line 338
+[27/7/2015 8:39:12]:  NullReferenceException: Object reference not set to an instance of an object.
+   at NetMud.Data.System.EntityContainer`1.Contains(T entity) in c:\dev\git\NetMud\NetMud.Data\System\EntityContainer.cs:line 44
+   at NetMud.Data.Game.Player.MoveFrom[T](T thing, String containerName) in c:\dev\git\NetMud\NetMud.Data\Game\Player.cs:line 114
+   at NetMud.Data.Game.Player.MoveFrom[T](T thing) in c:\dev\git\NetMud\NetMud.Data\Game\Player.cs:line 103
+   at NetMud.LiveData.HotBackup.RestorePlayer(String accountHandle, Int64 charID) in c:\dev\git\NetMud\NetMud.LiveData\HotBackup.cs:line 338
+[27/7/2015 8:42:25]:  NullReferenceException: Object reference not set to an instance of an object.
+   at NetMud.Data.System.EntityContainer`1.Contains(T entity) in c:\dev\git\NetMud\NetMud.Data\System\EntityContainer.cs:line 44
+   at NetMud.Data.Game.Player.MoveFrom[T](T thing, String containerName) in c:\dev\git\NetMud\NetMud.Data\Game\Player.cs:line 114
+   at NetMud.Data.Game.Player.MoveFrom[T](T thing) in c:\dev\git\NetMud\NetMud.Data\Game\Player.cs:line 103
+   at NetMud.LiveData.HotBackup.RestorePlayer(String accountHandle, Int64 charID) in c:\dev\git\NetMud\NetMud.LiveData\HotBackup.cs:line 338
+[2015/07/27 09:25:42]:  NullReferenceException: Object reference not set to an instance of an object.
+   at NetMud.Data.Game.EntityPartial.set_CurrentLocation(IContains value) in c:\dev\git\NetMud\NetMud.Data\Game\EntityPartial.cs:line 59
+   at NetMud.Data.Game.Room.MoveFrom[T](T thing, String containerName) in c:\dev\git\NetMud\NetMud.Data\Game\Room.cs:line 150
+   at NetMud.Data.Game.Room.MoveFrom[T](T thing) in c:\dev\git\NetMud\NetMud.Data\Game\Room.cs:line 135
+   at NetMud.LiveData.HotBackup.RestoreLiveBackup() in c:\dev\git\NetMud\NetMud.LiveData\HotBackup.cs:line 219

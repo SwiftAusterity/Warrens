@@ -20,8 +20,40 @@ namespace NetMud.Data.Game
 {
     public class Pathway : EntityPartial, IPathway
     {
-        public ILocation ToLocation { get; set; }
-        public ILocation FromLocation { get; set; }
+        private string _currentToLocationBirthmark;
+        public ILocation ToLocation
+        {
+            get
+            {
+                if (!String.IsNullOrWhiteSpace(_currentToLocationBirthmark))
+                    return LiveCache.Get<ILocation>(new LiveCacheKey(typeof(ILocation), _currentToLocationBirthmark));
+
+                return null;
+            }
+            set
+            {
+                _currentToLocationBirthmark = value.BirthMark;
+                UpsertToLiveWorldCache();
+            }
+        }
+
+        private string _currentFromLocationBirthmark;
+        public ILocation FromLocation
+        {
+            get
+            {
+                if (!String.IsNullOrWhiteSpace(_currentFromLocationBirthmark))
+                    return LiveCache.Get<ILocation>(new LiveCacheKey(typeof(ILocation), _currentFromLocationBirthmark));
+
+                return null;
+            }
+            set
+            {
+                _currentFromLocationBirthmark = value.BirthMark;
+                UpsertToLiveWorldCache();
+            }
+        }
+        
         public MessageCluster Enter { get; set; }
         public MovementDirectionType MovementDirection { get; private set; }
 
@@ -39,10 +71,8 @@ namespace NetMud.Data.Game
 
         public void GetFromWorldOrSpawn()
         {
-            var liveWorld = new LiveCache();
-
             //Try to see if they are already there
-            var me = liveWorld.Get<Pathway>(DataTemplate.ID);
+            var me = LiveCache.Get<Pathway>(DataTemplate.ID);
 
             //Isn't in the world currently
             if (me == default(IPathway))
@@ -63,7 +93,6 @@ namespace NetMud.Data.Game
 
         public override void SpawnNewInWorld()
         {
-            var liveWorld = new LiveCache();
             var bS = (IPathwayData)DataTemplate;
 
             SpawnNewInWorld(null);
@@ -71,7 +100,6 @@ namespace NetMud.Data.Game
 
         public override void SpawnNewInWorld(IContains spawnTo)
         {
-            var liveWorld = new LiveCache();
             var bS = (IPathwayData)DataTemplate;
             var locationAssembly = Assembly.GetAssembly(typeof(ILocation));
 
@@ -90,12 +118,12 @@ namespace NetMud.Data.Game
                 if (fromLocationType.GetInterfaces().Contains(typeof(ISpawnAsSingleton)))
                 {
                     long fromLocationID = long.Parse(bS.FromLocationID);
-                    fromLocation = liveWorld.Get<ILocation>(fromLocationID, fromLocationType);
+                    fromLocation = LiveCache.Get<ILocation>(fromLocationID, fromLocationType);
                 }
                 else
                 {
                     var cacheKey = new LiveCacheKey(fromLocationType, bS.FromLocationID);
-                    fromLocation = liveWorld.Get<ILocation>(cacheKey);
+                    fromLocation = LiveCache.Get<ILocation>(cacheKey);
                 }
             }
 
@@ -107,12 +135,12 @@ namespace NetMud.Data.Game
                 if (toLocationType.GetInterfaces().Contains(typeof(ISpawnAsSingleton)))
                 {
                     long toLocationID = long.Parse(bS.ToLocationID);
-                    toLocation = liveWorld.Get<ILocation>(toLocationID, toLocationType);
+                    toLocation = LiveCache.Get<ILocation>(toLocationID, toLocationType);
                 }
                 else
                 {
                     var cacheKey = new LiveCacheKey(toLocationType, bS.ToLocationID);
-                    toLocation = liveWorld.Get<ILocation>(cacheKey);
+                    toLocation = LiveCache.Get<ILocation>(cacheKey);
                 }
             }
 
