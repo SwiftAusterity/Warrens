@@ -37,6 +37,19 @@ namespace NetMud.DataAccess
 
             CommitLog(content, "AdminCommandUse", true);
         }
+        public static IEnumerable<string> GetCurrentLogNames()
+        {
+            var logger = new Logger(WebConfigurationManager.AppSettings["LogPath"]);
+
+            return logger.GetCurrentLogNames();
+        }
+
+        public static string GetCurrentLogContent(string channel)
+        {
+            var logger = new Logger(WebConfigurationManager.AppSettings["LogPath"]);
+
+            return logger.GetCurrentLogContent(channel);
+        }
 
         public static void Log(string content, LogChannels channel, bool keepItQuiet = false)
         {
@@ -72,16 +85,46 @@ namespace NetMud.DataAccess
             WriteToFile(content, channel);
 
             //Quiet means only write to file, non-quiet means write to whomever is subscribed
-            if(!beQuiet)
+            if (!beQuiet)
             {
                 //write to people in game
                 var peeps = LiveCache.GetAll<IPlayer>().Where(peep => ((ICharacter)peep.DataTemplate).Account.LogChannelSubscriptions.Contains(channel));
 
-                foreach(var peep in peeps)
+                foreach (var peep in peeps)
                     peep.WriteTo(new string[] { content.EncapsulateOutput() });
 
                 //TODO: Write to some source that can push to the web
             }
+        }
+
+        public IEnumerable<string> GetCurrentLogNames()
+        {
+            var names = Enumerable.Empty<string>();
+
+            if (!String.IsNullOrWhiteSpace(BaseDirectory) && Directory.Exists(BaseDirectory) && Directory.Exists(BaseDirectory + "Current/"))
+                names = Directory.EnumerateFiles(BaseDirectory + "Current/", "*.txt", SearchOption.TopDirectoryOnly);
+
+            return names.Select(nm => nm.Substring(nm.LastIndexOf('/') + 1, nm.Length - nm.LastIndexOf('/') - 5));
+        }
+
+        public string GetCurrentLogContent(string channel)
+        {
+            var content = String.Empty;
+
+            if (!String.IsNullOrWhiteSpace(BaseDirectory) 
+                && Directory.Exists(BaseDirectory) 
+                && Directory.Exists(BaseDirectory + "Current/") 
+                && File.Exists(BaseDirectory + "Current/" + channel + ".txt"))
+            { 
+                using (var logFile = File.Open(BaseDirectory + "Current/" + channel + ".txt", FileMode.Open))
+                {
+                    byte[] bytes = new byte[logFile.Length];
+                    logFile.Read(bytes, 0, (int)logFile.Length);
+                    content = Encoding.UTF8.GetString(bytes);
+                }
+            }
+
+            return content;
         }
 
         private void WriteToFile(string content, string channel)

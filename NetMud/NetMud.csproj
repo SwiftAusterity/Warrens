@@ -173,6 +173,7 @@
     <Compile Include="Controllers\GameAdminController.cs" />
     <Compile Include="Controllers\GameClientController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LoggingController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -181,6 +182,7 @@
     <Compile Include="Models\GameAdminViewModels.cs" />
     <Compile Include="Models\GameContextModel.cs" />
     <Compile Include="Models\BaseViewModel.cs" />
+    <Compile Include="Models\LoggingViewModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -262,6 +264,7 @@
     <Content Include="Views\GameAdmin\ManageRoomData.cshtml" />
     <Content Include="Views\GameAdmin\ManagePlayers.cshtml" />
     <Content Include="Views\GameAdmin\ManageNPCData.cshtml" />
+    <Content Include="Views\Logging\Index.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
