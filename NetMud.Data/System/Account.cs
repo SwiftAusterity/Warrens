@@ -42,8 +42,7 @@ namespace NetMud.Data.System
             {
                 if (_characters == null)
                 {
-                    var dataWrapper = new DataWrapper();
-                    IEnumerable<ICharacter> returnValue = dataWrapper.GetAllBySharedKey<Character>("AccountHandle", GlobalIdentityHandle);
+                    IEnumerable<ICharacter> returnValue = DataWrapper.GetAllBySharedKey<Character>("AccountHandle", GlobalIdentityHandle);
                     _characters = returnValue.ToList();
                 }
 
@@ -61,8 +60,7 @@ namespace NetMud.Data.System
 
         public string AddCharacter(ICharacter newChar)
         {
-            var dataWrapper = new DataWrapper();
-            IEnumerable<ICharacter> systemChars = dataWrapper.GetAll<Character>();
+            IEnumerable<ICharacter> systemChars = DataWrapper.GetAll<Character>();
 
             if (systemChars.Any(ch => ch.Name.Equals(newChar.Name) && newChar.SurName.Equals(newChar.SurName)))
                 return "A character with that name already exists, please choose another.";

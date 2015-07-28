@@ -31,9 +31,7 @@ namespace NetMud.DataAccess
 
             var implimentingEntityClass = backingClass.EntityClass;
 
-            var dataBacker = new DataWrapper();
-
-            foreach (IData thing in dataBacker.GetAll<T>())
+            foreach (IData thing in DataWrapper.GetAll<T>())
             {
                 var entityThing = Activator.CreateInstance(implimentingEntityClass, new object[] { (T)thing }) as IEntity;
 

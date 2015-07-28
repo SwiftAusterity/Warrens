@@ -1,0 +1,26 @@
+﻿@model NetMud.Models.GameAdmin.ManagePlayersViewModel
+@{
+    ViewBag.Title = "Manage Players";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p class="text-success">@ViewBag.StatusMessage</p>
+@{
+    if (Model.Players.Count() > 0)
+    {
+        <h4>Registered Characters</h4>
+        using (Html.BeginForm("RemovePlayerAccount", "GameAdmin"))
+        {
+            @Html.AntiForgeryToken()
+            <table class="table">
+                <tbody>
+                </tbody>
+            </table>
+        }
+
+    }
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

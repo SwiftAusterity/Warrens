@@ -258,6 +258,10 @@
     <Content Include="Views\GameClient\Index.cshtml" />
     <Content Include="Views\Manage\ManageCharacters.cshtml" />
     <Content Include="Views\GameAdmin\Index.cshtml" />
+    <Content Include="Views\GameAdmin\ManageInanimateData.cshtml" />
+    <Content Include="Views\GameAdmin\ManageRoomData.cshtml" />
+    <Content Include="Views\GameAdmin\ManagePlayers.cshtml" />
+    <Content Include="Views\GameAdmin\ManageNPCData.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

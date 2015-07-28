@@ -112,7 +112,7 @@ namespace NetMud.Data.EntityBackingData
             sql.AppendFormat(" values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}',{10},{11})"
                 , Name, ToLocationID, FromLocationID, ToLocationType, FromLocationType, MessageToDestination, MessageToOrigin
                 , MessageToActor, AudibleToSurroundings, VisibleToSurroundings, AudibleStrength, VisibleStrength);
-            sql.Append(" select * from [dbo].[Path] where ID = Scope_Identity()");
+            sql.Append(" select * from [dbo].[PathwayData] where ID = Scope_Identity()");
 
             try
             {

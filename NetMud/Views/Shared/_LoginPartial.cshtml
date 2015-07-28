@@ -20,6 +20,7 @@
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">Hello @authUser.GameAccount.GlobalIdentityHandle<span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
                         <li>@Html.ActionLink("Dashboard", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })</li>
+                        <li>@Html.ActionLink("Manage Characters", "ManageCharacters", "Manage", routeValues: null, htmlAttributes: new { title = "Manage Characters" })</li>
                     </ul>
                 </div>
             </li>
@@ -43,6 +44,10 @@
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin<span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
                             <li>@Html.ActionLink("Dashboard", "Index", "GameAdmin", routeValues: null, htmlAttributes: new { title = "Dashboard" })</li>
+                            <li>@Html.ActionLink("Manage NPCs", "ManageNPCData", "GameAdmin", routeValues: null, htmlAttributes: new { title = "Manage NPCs" })</li>
+                            <li>@Html.ActionLink("Manage Rooms", "ManageRoomData", "GameAdmin", routeValues: null, htmlAttributes: new { title = "Manage Rooms" })</li>
+                            <li>@Html.ActionLink("Manage Inanimates", "ManageInanimateData", "GameAdmin", routeValues: null, htmlAttributes: new { title = "Manage Inanimates" })</li>
+                            <li>@Html.ActionLink("Manage Players", "ManagePlayers", "GameAdmin", routeValues: null, htmlAttributes: new { title = "Manage Players" })</li>
                         </ul>
                     </div>
                 </li>

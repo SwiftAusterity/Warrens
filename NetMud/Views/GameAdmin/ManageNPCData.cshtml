@@ -1,0 +1,79 @@
+﻿@model NetMud.Models.GameAdmin.ManageNPCDataViewModel
+@{
+    ViewBag.Title = "Manage Non-player characters";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p class="text-success">@ViewBag.StatusMessage</p>
+@{
+    if (Model.NPCs.Count() > 0)
+    {
+        <h4>Registered Characters</h4>
+        using (Html.BeginForm("RemoveNPCData", "GameAdmin"))
+        {
+            @Html.AntiForgeryToken()
+            <table class="table">
+                <tbody>
+
+
+                    @foreach (var obj in Model.NPCs)
+                    {
+                        <tr>
+                            <td>@obj.ID</td>
+                            <td>@obj.Name</td>
+                            <td>@obj.SurName</td>
+                            <td>@obj.Gender</td>
+                            <td>
+                                <div>
+                                    @Html.Hidden("ID", obj.ID)
+                                    <input type="submit" style="color: red; border: none; padding: 0; background-color: inherit;" value="X" title="Delete this" />
+                                    <input type="radio" name="authorize" value="@obj.ID" style="margin-left: 15px;" />
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+
+    }
+    <section id="newCharacterForm">
+        @using (Html.BeginForm("AddNPCData", "GameAdmin", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            <h4>New Character</h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(m => m.NewName, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.NewName, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.NewName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.NewSurName, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.NewSurName, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.NewSurName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.NewGender, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.NewGender, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.NewGender, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
+            </div>
+        }
+    </section>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

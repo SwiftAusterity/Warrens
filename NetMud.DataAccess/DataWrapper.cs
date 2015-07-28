@@ -6,14 +6,9 @@ using System.Linq;
 
 namespace NetMud.DataAccess
 {
-    public class DataWrapper
+    public static class DataWrapper
     {
-        //Not even sure what to do here yet
-        public DataWrapper()
-        {
-        }
-
-        public IEnumerable<T> GetAll<T>() where T : IData
+        public static IEnumerable<T> GetAll<T>() where T : IData
         {
             var returnList = new List<T>();
             var sql = string.Format("select * from [dbo].[{0}]", typeof(T).Name);
@@ -40,7 +35,7 @@ namespace NetMud.DataAccess
             return returnList;
         }
 
-        public IEnumerable<T> GetAllBySharedKey<T>(string sharedKeyName, string sharedKeyValue) where T : IData
+        public static IEnumerable<T> GetAllBySharedKey<T>(string sharedKeyName, string sharedKeyValue) where T : IData
         {
             var returnList = new List<T>();
             var parms = new Dictionary<string, object>();
@@ -70,7 +65,7 @@ namespace NetMud.DataAccess
             return returnList;
         }
 
-        public T GetOneBySharedKey<T>(string sharedKeyName, string sharedKeyValue) where T : IData
+        public static T GetOneBySharedKey<T>(string sharedKeyName, string sharedKeyValue) where T : IData
         {
             IData returnValue = default(T);
             var parms = new Dictionary<string, object>();
@@ -102,7 +97,7 @@ namespace NetMud.DataAccess
             return (T)returnValue;
         }
 
-        public T GetOne<T>(long id) where T : IData
+        public static T GetOne<T>(long id) where T : IData
         {
             IData returnValue = default(T);
             var sql = string.Format("select * from [dbo].[{0}] where ID = {1}", typeof(T).Name, id);
@@ -128,7 +123,7 @@ namespace NetMud.DataAccess
             return (T)returnValue;
         }
 
-        private string ScrubTypeName(Type t)
+        private static string ScrubTypeName(Type t)
         {
             if (t.IsInterface)
                 return t.Name.Substring(1);

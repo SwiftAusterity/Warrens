@@ -85,6 +85,7 @@ namespace NetMud.Data.EntityBackingData
         public bool Save()
         {
             var sql = new StringBuilder();
+
             sql.Append("update [dbo].[InanimateData] set ");
             sql.AppendFormat(" [Name] = '{0}' ", Name);
             sql.AppendFormat(" , [LastRevised] = GetUTCDate()");

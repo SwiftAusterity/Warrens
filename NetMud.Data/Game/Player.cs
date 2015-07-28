@@ -257,8 +257,7 @@ namespace NetMud.Data.Game
             backingData.ID = long.Parse(xDoc.Root.Element("BackingData").Attribute("ID").Value);
 
             //we have the ID, we don't want anything else from here we just want to go get the object from the db for player characters.
-            var dataAccess = new DataWrapper();
-            var backChar = dataAccess.GetOne<Character>(backingData.ID);
+            var backChar = DataWrapper.GetOne<Character>(backingData.ID);
 
             if (backChar != null)
                 backingData = backChar;

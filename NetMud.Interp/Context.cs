@@ -411,7 +411,6 @@ namespace NetMud.Interp
 
         public void SeekInBackingData<T>(Type commandType, CommandParameterAttribute currentNeededParm) where T : IData
         {
-            var dataContext = new DataWrapper();
             var internalCommandString = CommandStringRemainder.ToList();
 
             var parmWords = internalCommandString.Count();
@@ -430,9 +429,9 @@ namespace NetMud.Interp
 
                 long parmID = -1;
                 if(!long.TryParse(currentParmString, out parmID))
-                    validObject = dataContext.GetOneBySharedKey<T>("Name", currentParmString);
+                    validObject = DataWrapper.GetOneBySharedKey<T>("Name", currentParmString);
                 else
-                    validObject = dataContext.GetOne<T>(parmID);
+                    validObject = DataWrapper.GetOne<T>(parmID);
 
                 if (validObject != null && !validObject.Equals(default(T)))
                 {

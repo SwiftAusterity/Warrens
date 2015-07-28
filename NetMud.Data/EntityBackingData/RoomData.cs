@@ -44,9 +44,9 @@ namespace NetMud.Data.EntityBackingData
         {
             IRoomData returnValue = default(IRoomData);
             var sql = new StringBuilder();
-            sql.Append("insert into [dbo].[Room]([Name])");
+            sql.Append("insert into [dbo].[RoomData]([Name])");
             sql.AppendFormat(" values('{0}')", Name);
-            sql.Append(" select * from [dbo].[Room] where ID = Scope_Identity()");
+            sql.Append(" select * from [dbo].[RoomData] where ID = Scope_Identity()");
 
             try
             {
@@ -73,7 +73,7 @@ namespace NetMud.Data.EntityBackingData
         {
             //TODO: Exits too?
             var sql = new StringBuilder();
-            sql.AppendFormat("delete from [dbo].[Room] where ID = {0}", ID);
+            sql.AppendFormat("delete from [dbo].[RoomData] where ID = {0}", ID);
 
             SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text);
 
@@ -83,7 +83,7 @@ namespace NetMud.Data.EntityBackingData
         public bool Save()
         {
             var sql = new StringBuilder();
-            sql.Append("update [dbo].[Room] set ");
+            sql.Append("update [dbo].[RoomData] set ");
             sql.AppendFormat(" [Name] = '{0}' ", Name);
             sql.AppendFormat(" , [LastRevised] = GetUTCDate()");
             sql.AppendFormat(" where ID = {0}", ID);
