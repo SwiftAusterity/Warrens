@@ -9,12 +9,30 @@
 @{
     if (Model.Players.Count() > 0)
     {
-        <h4>Registered Characters</h4>
+        <h4>Registered Users</h4>
         using (Html.BeginForm("RemovePlayerAccount", "GameAdmin"))
         {
             @Html.AntiForgeryToken()
             <table class="table">
                 <tbody>
+
+
+                    @foreach (var obj in Model.Players)
+                    {
+                        <tr>
+                            <td>@obj.Id</td>
+                            <td>@obj.GameAccount.GlobalIdentityHandle</td>
+                            <td>@obj.Email</td>
+                            <td>@String.Join(",", obj.Roles.Select(rol => Model.ValidRoles.First(vR => vR.Id.Equals(rol.RoleId)).Name))</td>
+                            <td>
+                                <div>
+                                    @Html.Hidden("ID", obj.Id)
+                                    <input type="submit" style="color: red; border: none; padding: 0; background-color: inherit;" value="X" title="Delete this" />
+                                    <input type="radio" name="authorize" value="@obj.Id" style="margin-left: 15px;" />
+                                </div>
+                            </td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         }

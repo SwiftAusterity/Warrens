@@ -91,10 +91,13 @@ namespace NetMud.Controllers
         //TODO: This, we really need to be looking at "users" not players
         public ActionResult ManagePlayers()
         {
+            var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
+
             var vModel = new ManagePlayersViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            //vModel.Players = DataWrapper.GetAll<InanimateData>();
+            vModel.Players = UserManager.Users.ToList();
+            vModel.ValidRoles = roleManager.Roles.ToList();
 
             return View(vModel);
         }

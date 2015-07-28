@@ -1,4 +1,5 @@
-﻿using NetMud.DataStructure.Base.Entity;
+﻿using Microsoft.AspNet.Identity.EntityFramework;
+using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
 using System;
@@ -85,9 +86,11 @@ namespace NetMud.Models.GameAdmin
     {
         public ManagePlayersViewModel()
         {
-            Players = Enumerable.Empty<IPlayer>();
+            Players = Enumerable.Empty<ApplicationUser>();
+            ValidRoles = Enumerable.Empty<IdentityRole>();
         }
 
-        public IEnumerable<IPlayer> Players { get; set; }
+        public IEnumerable<ApplicationUser> Players { get; set; }
+        public IEnumerable<IdentityRole> ValidRoles { get; set; }
     }
 }
