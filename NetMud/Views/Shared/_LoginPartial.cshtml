@@ -16,15 +16,6 @@
         <ul class="nav navbar-nav navbar-right">
             <li>@Html.ActionLink("Test Client", "Index", "GameClient", routeValues: null, htmlAttributes: new { title = "The Game Client", Style = "color: orange" })</li>
             <li>
-                <div style="padding-top: 15px; padding-bottom: 15px;">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Hello @authUser.GameAccount.GlobalIdentityHandle<span class="caret"></span></a>
-                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
-                        <li>@Html.ActionLink("Dashboard", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })</li>
-                        <li>@Html.ActionLink("Manage Characters", "ManageCharacters", "Manage", routeValues: null, htmlAttributes: new { title = "Manage Characters" })</li>
-                    </ul>
-                </div>
-            </li>
-            <li>
                 @if (authUser.GameAccount.Characters.Count() > 0)
                 {
                     @Html.DropDownList("CurrentlySelectedCharacter", authUser.GameAccount.Characters.Select(ch =>
@@ -36,22 +27,28 @@
                     @Html.ActionLink("Create a Character", "ManageCharacters", "Manage", routeValues: null, htmlAttributes: new { id = "ManageCharacters" })
                 }
             </li>
-            <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
-            @if (User.IsInRole("Admin"))
-            {
-                <li>
-                    <div style="padding-top: 15px; padding-bottom: 15px;">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin<span class="caret"></span></a>
-                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
+            <li>
+                <div style="padding-top: 15px; padding-bottom: 15px;">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Hello @authUser.GameAccount.GlobalIdentityHandle<span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
+                        <li class="dropdown-header" style="color: mediumvioletred">Characters</li>
+                        <li>@Html.ActionLink("Dashboard", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })</li>
+                        <li>@Html.ActionLink("Manage Characters", "ManageCharacters", "Manage", routeValues: null, htmlAttributes: new { title = "Manage Characters" })</li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="divider"></li>
+                            <li class="dropdown-header" style="color: mediumvioletred">Administrative</li>
                             <li>@Html.ActionLink("Dashboard", "Index", "GameAdmin", routeValues: null, htmlAttributes: new { title = "Dashboard" })</li>
                             <li>@Html.ActionLink("Manage NPCs", "ManageNPCData", "GameAdmin", routeValues: null, htmlAttributes: new { title = "Manage NPCs" })</li>
                             <li>@Html.ActionLink("Manage Rooms", "ManageRoomData", "GameAdmin", routeValues: null, htmlAttributes: new { title = "Manage Rooms" })</li>
                             <li>@Html.ActionLink("Manage Inanimates", "ManageInanimateData", "GameAdmin", routeValues: null, htmlAttributes: new { title = "Manage Inanimates" })</li>
                             <li>@Html.ActionLink("Manage Players", "ManagePlayers", "GameAdmin", routeValues: null, htmlAttributes: new { title = "Manage Players" })</li>
-                        </ul>
-                    </div>
-                </li>
-            }
+                        }
+                        <li class="divider"></li>
+                        <li ><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+                    </ul>
+                </div>
+            </li>
         </ul>
     }
 }
