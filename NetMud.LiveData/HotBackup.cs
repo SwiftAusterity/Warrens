@@ -468,11 +468,11 @@ namespace NetMud.LiveData
         {
             try
             {
+                await Task.Delay(intervalInSeconds * 1000);
+
                 WriteLiveBackup();
 
                 LoggingUtility.Log("World backed up automatically.", LogChannels.Backup, false);
-
-                await Task.Delay(intervalInSeconds * 1000);
 
                 var newToken = new CancellationTokenSource();
                 newToken.CancelAfter(cancelAfterSeconds * 1000);

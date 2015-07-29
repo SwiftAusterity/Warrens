@@ -16,6 +16,8 @@ using System;
 using NetMud.Data.Game;
 using NetMud.DataAccess;
 using NetMud.Models.GameAdmin;
+using System.Web.Hosting;
+using NetMud.LiveData;
 
 namespace NetMud.Controllers
 {
@@ -50,6 +52,39 @@ namespace NetMud.Controllers
             dashboardModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             dashboardModel.LivePlayers = LiveCache.GetAll<Player>().Count();
+
+            dashboardModel.Inanimates = DataWrapper.GetAll<InanimateData>();
+            dashboardModel.Rooms = DataWrapper.GetAll<RoomData>();
+            dashboardModel.NPCs = DataWrapper.GetAll<NonPlayerCharacter>();
+
+            return View(dashboardModel);
+        }
+
+        public ActionResult BackupWorld()
+        {
+            var dashboardModel = new DashboardViewModel();
+            dashboardModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            var hotBack = new HotBackup(HostingEnvironment.MapPath("/HotBackup/"));
+
+            hotBack.WriteLiveBackup();
+
+            dashboardModel.Inanimates = DataWrapper.GetAll<InanimateData>();
+            dashboardModel.Rooms = DataWrapper.GetAll<RoomData>();
+            dashboardModel.NPCs = DataWrapper.GetAll<NonPlayerCharacter>();
+            
+            return View(dashboardModel);
+        }
+
+        public ActionResult RestoreWorld()
+        {
+            var dashboardModel = new DashboardViewModel();
+            dashboardModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            var hotBack = new HotBackup(HostingEnvironment.MapPath("/HotBackup/"));
+
+            //Our live data restore failed, reload the entire world from backing data
+            hotBack.RestoreLiveBackup();
 
             dashboardModel.Inanimates = DataWrapper.GetAll<InanimateData>();
             dashboardModel.Rooms = DataWrapper.GetAll<RoomData>();

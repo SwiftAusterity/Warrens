@@ -1,5 +1,6 @@
 ﻿using NetMud.LiveData;
 using System.Threading;
+using System.Web.Hosting;
 
 namespace NetMud
 {
@@ -7,7 +8,7 @@ namespace NetMud
     {
         public static void PreloadSupportingEntities()
         {
-            var hotBack = new HotBackup(System.Web.Hosting.HostingEnvironment.MapPath("/HotBackup/"));
+            var hotBack = new HotBackup(HostingEnvironment.MapPath("/HotBackup/"));
 
             //Our live data restore failed, reload the entire world from backing data
             if (!hotBack.RestoreLiveBackup())

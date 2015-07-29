@@ -1,9 +1,9 @@
 ﻿@model NetMud.Models.GameAdmin.DashboardViewModel
 @{
-    ViewBag.Title = "Manage";
+    ViewBag.Title = "Administrative Dashboard";
 }
 
-<h2>@ViewBag.Title.</h2>
+<h2>@ViewBag.Title</h2>
 
 <p class="text-success">@ViewBag.StatusMessage</p>
 <div>
@@ -29,6 +29,11 @@
     <h4>Live Data</h4>
     <hr />
     <dl class="dl-horizontal">
+        <dt>World State:</dt>
+        <dd>
+            @Html.ActionLink("Backup World", "BackupWorld", "GameAdminController", new { @class = "btn btn-default", @style = "color: green; border-color: green;" })
+            @Html.ActionLink("Suspend and Restore World", "RestoreWorld", "GameAdminController", new { @class = "btn btn-default", @style = "color: red; background-color: black; border-color: red;" })
+        </dd>
         <dt>Players:</dt>
         <dd>
             @Model.LivePlayers [
