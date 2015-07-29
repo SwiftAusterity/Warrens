@@ -9,7 +9,7 @@
 @{
     if (Model.Rooms.Count() > 0)
     {
-        <h4>Registered Characters</h4>
+        <h4>Rooms</h4>
         using (Html.BeginForm("RemoveRoomData", "GameAdmin"))
         {
             @Html.AntiForgeryToken()
@@ -36,11 +36,11 @@
         }
 
     }
-    <section id="newCharacterForm">
+    <section id="newRoomForm">
         @using (Html.BeginForm("AddRoomData", "GameAdmin", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
             @Html.AntiForgeryToken()
-            <h4>New Character</h4>
+            <h4>New Room</h4>
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <div class="form-group">
@@ -57,7 +57,45 @@
             </div>
         }
     </section>
+
+    <div class="gridster" style="background-color: darkcyan; height: 700px;">
+        <ul style="list-style: none;">
+            @foreach (var roomData in Model.Rooms)
+            {
+                <li data-row="1" data-col="@roomData.ID" data-sizex="1" data-sizey="1"></li>
+            }
+        </ul>
+    </div>
 }
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/jquery.gridster.min.js")
+
+    <script type="text/javascript">
+        $(function () { //DOM Ready
+
+            $(".gridster ul").gridster({
+                widget_margins: [5, 5],
+                widget_base_dimensions: [25, 25],
+                max_cols: 20,
+                min_cols: 20,
+                min_rows: 20
+            });
+
+            $(".gridster ul li").dblclick(function () {
+                alert('hi');
+            });
+
+        });
+    </script>
+}
+@section Styles {
+    @Styles.Render("~/Content/jquery.gridster.min.css")
+    <style>
+        .gridster .gs-w {
+            cursor: pointer;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+            background: darkgray none repeat scroll 0% 0%;
+        }
+    </style>
 }
