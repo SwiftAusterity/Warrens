@@ -8,6 +8,8 @@ namespace NetMud.Models.Logging
 {
     public class DashboardViewModel : BaseViewModel
     {
+        public ApplicationUser authedUser { get; set; }
+
         public IEnumerable<string> ChannelNames { get; set; }
         public string SelectedLogContent { get; set; }
 

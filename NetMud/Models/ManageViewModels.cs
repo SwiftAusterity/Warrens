@@ -8,6 +8,8 @@ namespace NetMud.Models
 {
     public class ManageAccountViewModel : BaseViewModel
     {
+        public ApplicationUser authedUser { get; set; }
+
         public bool HasPassword { get; set; }
         public IList<UserLoginInfo> Logins { get; set; }
         public string PhoneNumber { get; set; }
@@ -17,6 +19,8 @@ namespace NetMud.Models
 
     public class ManageCharactersViewModel : BaseViewModel
     {
+        public ApplicationUser authedUser { get; set; }
+
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
         [DataType(DataType.Text)]
         [Display(Name = "Given Name")]

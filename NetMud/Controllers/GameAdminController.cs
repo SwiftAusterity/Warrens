@@ -68,12 +68,14 @@ namespace NetMud.Controllers
             return View(vModel);
         }
 
-        public ActionResult ManageRoomData()
+        public ActionResult ManageRoomData(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageRoomDataViewModel();
+            var vModel = new ManageRoomDataViewModel(DataWrapper.GetAll<RoomData>());
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            vModel.Rooms = DataWrapper.GetAll<RoomData>();
+            vModel.CurrentPageNumber = CurrentPageNumber;
+            vModel.ItemsPerPage = ItemsPerPage;
+            vModel.SearchTerms = SearchTerms;
 
             return View(vModel);
         }
@@ -104,7 +106,7 @@ namespace NetMud.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult RemoveInanimate(long ID, string authorize)
+        public ActionResult RemoveInanimateData(long ID, string authorize)
         {
             string message = string.Empty;
 
@@ -113,7 +115,7 @@ namespace NetMud.Controllers
             else
             {
                 var userId = User.Identity.GetUserId();
-                var model = new ManageRoomDataViewModel
+                var model = new ManageInanimateDataViewModel
                 {
                     authedUser = UserManager.FindById(userId)
                 };
@@ -136,7 +138,7 @@ namespace NetMud.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult RemoveNPC(long ID, string authorize)
+        public ActionResult RemoveNPCData(long ID, string authorize)
         {
             string message = string.Empty;
 
@@ -145,7 +147,7 @@ namespace NetMud.Controllers
             else
             {
                 var userId = User.Identity.GetUserId();
-                var model = new ManageRoomDataViewModel
+                var model = new ManageNPCDataViewModel
                 {
                     authedUser = UserManager.FindById(userId)
                 };
@@ -168,7 +170,7 @@ namespace NetMud.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult RemoveRoom(long ID, string authorize)
+        public ActionResult RemoveRoomData(long ID, string authorize)
         {
             string message = string.Empty;
 
@@ -176,11 +178,7 @@ namespace NetMud.Controllers
                 message = "You must check the proper authorize radio button first.";
             else
             {
-                var userId = User.Identity.GetUserId();
-                var model = new ManageRoomDataViewModel
-                {
-                    authedUser = UserManager.FindById(userId)
-                };
+                var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
                 var obj = DataWrapper.GetOne<RoomData>(ID);
 
@@ -188,7 +186,7 @@ namespace NetMud.Controllers
                     message = "That does not exist";
                 else if (obj.Remove())
                 {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveRoom[" + ID.ToString() + "]", model.authedUser.GameAccount.GlobalIdentityHandle);
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveRoom[" + ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Delete Successful.";
                 }
                 else
@@ -264,11 +262,7 @@ namespace NetMud.Controllers
         public ActionResult AddRoomData(string newName)
         {
             string message = string.Empty;
-            var userId = User.Identity.GetUserId();
-            var model = new ManageRoomDataViewModel
-            {
-                authedUser = UserManager.FindById(userId)
-            };
+            var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             var newObj = new RoomData();
             newObj.Name = newName;
@@ -277,7 +271,7 @@ namespace NetMud.Controllers
                 message = "Error; Creation failed.";
             else
             {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - AddRoomData[" + newObj.ID.ToString() + "]", model.authedUser.GameAccount.GlobalIdentityHandle);
+                LoggingUtility.LogAdminCommandUsage("*WEB* - AddRoomData[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 message = "Creation Successful.";
             }
 

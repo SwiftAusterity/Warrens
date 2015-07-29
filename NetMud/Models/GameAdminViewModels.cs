@@ -12,6 +12,8 @@ namespace NetMud.Models.GameAdmin
 {
     public class DashboardViewModel : BaseViewModel
     {
+        public ApplicationUser authedUser { get; set; }
+
         public DashboardViewModel()
         {
             Inanimates = Enumerable.Empty<IInanimateData>();
@@ -29,10 +31,7 @@ namespace NetMud.Models.GameAdmin
 
     public class ManageInanimateDataViewModel : BaseViewModel
     {
-        public ManageInanimateDataViewModel()
-        {
-            Inanimates = Enumerable.Empty<IInanimateData>();
-        }
+        public ApplicationUser authedUser { get; set; }
 
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
         [DataType(DataType.Text)]
@@ -42,23 +41,35 @@ namespace NetMud.Models.GameAdmin
         public IEnumerable<IInanimateData> Inanimates { get; set; }
     }
 
-    public class ManageRoomDataViewModel : BaseViewModel
+    public class ManageRoomDataViewModel : PagedDataModel<IRoomData>, BaseViewModel
     {
-        public ManageRoomDataViewModel()
+        public ApplicationUser authedUser { get; set; }
+
+        public ManageRoomDataViewModel(IEnumerable<IRoomData> items) : base(items)
         {
-            Rooms = Enumerable.Empty<IRoomData>();
+            CurrentPageNumber = 1;
+            ItemsPerPage = 20;
         }
+
+        internal override Func<IRoomData, bool> SearchFilter 
+        { 
+            get
+            {
+                return item => item.Name.Contains(SearchTerms);
+            }
+        }
+
 
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
         [DataType(DataType.Text)]
         [Display(Name = "Name")]
         public string NewName { get; set; }
-
-        public IEnumerable<IRoomData> Rooms { get; set; }
     }
 
     public class ManageNPCDataViewModel : BaseViewModel
     {
+        public ApplicationUser authedUser { get; set; }
+
         public ManageNPCDataViewModel()
         {
             NPCs = Enumerable.Empty<INonPlayerCharacter>();
@@ -84,6 +95,8 @@ namespace NetMud.Models.GameAdmin
 
     public class ManagePlayersViewModel : BaseViewModel
     {
+        public ApplicationUser authedUser { get; set; }
+
         public ManagePlayersViewModel()
         {
             Players = Enumerable.Empty<ApplicationUser>();
