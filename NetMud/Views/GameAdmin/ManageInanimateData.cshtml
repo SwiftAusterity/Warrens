@@ -1,15 +1,56 @@
 ﻿@model NetMud.Models.GameAdmin.ManageInanimateDataViewModel
 @{
     ViewBag.Title = "Manage inanimates";
+    var prevPageState = Model.CurrentPageNumber > 1 ? String.Empty : "disabled";
+    var nextPageState = Model.CurrentPageNumber < Model.NumberOfPages ? String.Empty : "disabled";
 }
 
 <h2>@ViewBag.Title</h2>
 
 <p class="text-success">@ViewBag.StatusMessage</p>
 @{
-    if (Model.Inanimates.Count() > 0)
+    if (Model.Items.Count() > 0)
     {
-        <h4>Registered Characters</h4>
+        <h4>Inanimate Backing Data</h4>
+        using (Html.BeginForm("ManageInanimateData", "GameAdmin", FormMethod.Post, new { id = "paginationForm" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <nav>
+                <ul class="pagination" style="float: right;">
+                    <li style="float: left;">
+                        <div class="col-md-10" style="width: inherit;">
+                            @Html.TextBoxFor(m => m.SearchTerms, new { @class = "form-control", @style = "width: 200px;float: left;margin-right: 15px;", @title = "Search Term", @onchange = "paginationForm.submit();" })
+                            @Html.TextBoxFor(m => m.ItemsPerPage, new { @class = "form-control", @style = "width: 50px;float: left;", @title = "Items Per Page", @onchange = "paginationForm.submit();" })
+                        </div>
+                    </li>
+                    <li class="@prevPageState">
+                        <button aria-label="Previous" value="@(Model.CurrentPageNumber - 1)" title="Previous" name="CurrentPageNumber"><span aria-hidden="true">&laquo;</span></button>
+                    </li>
+                    @for (var i = 1; i <= Model.NumberOfPages; i++)
+                    {
+                        if (Model.NumberOfPages > 5
+                                && i != 1
+                                && i != Model.NumberOfPages
+                                && i > (Model.NumberOfPages / 2 + 1)
+                                && i < (Model.NumberOfPages / 2 - 1))
+                        {
+                            continue;
+                        }
+
+                        <li>
+                            <button value="@i" title="@i" name="CurrentPageNumber">@i.ToString()</button>
+                        </li>
+                    }
+                    <li class="@nextPageState">
+                        <button aria-label="Next" value="@(Model.CurrentPageNumber + 1)" title="Next" name="CurrentPageNumber"><span aria-hidden="true">&raquo;</span></button>
+                    </li>
+                </ul>
+            </nav>
+        }
+        @Html.ValidationMessageFor(m => m.ItemsPerPage, "", new { @class = "text-danger" })
+        @Html.ValidationMessageFor(m => m.SearchTerms, "", new { @class = "text-danger" })
+
         using (Html.BeginForm("RemoveInanimateData", "GameAdmin"))
         {
             @Html.AntiForgeryToken()
@@ -17,7 +58,7 @@
                 <tbody>
 
 
-                    @foreach (var obj in Model.Inanimates)
+                    @foreach (var obj in Model.CurrentPageOfItems)
                     {
                         <tr>
                             <td>@obj.ID</td>
@@ -40,7 +81,7 @@
         @using (Html.BeginForm("AddInanimateData", "GameAdmin", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
             @Html.AntiForgeryToken()
-            <h4>New Character</h4>
+            <h4>New Inanimate</h4>
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <div class="form-group">

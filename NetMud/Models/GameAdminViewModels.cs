@@ -29,16 +29,29 @@ namespace NetMud.Models.GameAdmin
         public int LivePlayers { get; set; }
     }
 
-    public class ManageInanimateDataViewModel : BaseViewModel
+    public class ManageInanimateDataViewModel : PagedDataModel<IInanimateData>, BaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
+
+        public ManageInanimateDataViewModel(IEnumerable<IInanimateData> items)
+            : base(items)
+        {
+            CurrentPageNumber = 1;
+            ItemsPerPage = 20;
+        }
+
+        internal override Func<IInanimateData, bool> SearchFilter 
+        { 
+            get
+            {
+                return item => item.Name.ToLower().Contains(SearchTerms.ToLower());
+            }
+        }
 
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
         [DataType(DataType.Text)]
         [Display(Name = "Name")]
         public string NewName { get; set; }
-
-        public IEnumerable<IInanimateData> Inanimates { get; set; }
     }
 
     public class ManageRoomDataViewModel : PagedDataModel<IRoomData>, BaseViewModel
@@ -55,10 +68,9 @@ namespace NetMud.Models.GameAdmin
         { 
             get
             {
-                return item => item.Name.Contains(SearchTerms);
+                return item => item.Name.ToLower().Contains(SearchTerms.ToLower());
             }
         }
-
 
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
         [DataType(DataType.Text)]
@@ -66,13 +78,23 @@ namespace NetMud.Models.GameAdmin
         public string NewName { get; set; }
     }
 
-    public class ManageNPCDataViewModel : BaseViewModel
+    public class ManageNPCDataViewModel : PagedDataModel<INonPlayerCharacter>, BaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
-        public ManageNPCDataViewModel()
+        public ManageNPCDataViewModel(IEnumerable<INonPlayerCharacter> items)
+            : base(items)
         {
-            NPCs = Enumerable.Empty<INonPlayerCharacter>();
+            CurrentPageNumber = 1;
+            ItemsPerPage = 20;
+        }
+
+        internal override Func<INonPlayerCharacter, bool> SearchFilter 
+        { 
+            get
+            {
+                return item => item.Name.ToLower().Contains(SearchTerms.ToLower()) || item.SurName.ToLower().Contains(SearchTerms.ToLower());
+            }
         }
 
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
@@ -89,21 +111,28 @@ namespace NetMud.Models.GameAdmin
         [DataType(DataType.Text)]
         [Display(Name = "Gender")]
         public string NewGender { get; set; }
-
-        public IEnumerable<INonPlayerCharacter> NPCs { get; set; }
     }
 
-    public class ManagePlayersViewModel : BaseViewModel
+    public class ManagePlayersViewModel : PagedDataModel<ApplicationUser>, BaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
-        public ManagePlayersViewModel()
+        public ManagePlayersViewModel(IEnumerable<ApplicationUser> items)
+            : base(items)
         {
-            Players = Enumerable.Empty<ApplicationUser>();
+            CurrentPageNumber = 1;
+            ItemsPerPage = 20;
             ValidRoles = Enumerable.Empty<IdentityRole>();
         }
 
-        public IEnumerable<ApplicationUser> Players { get; set; }
+        internal override Func<ApplicationUser, bool> SearchFilter 
+        { 
+            get
+            {
+                return item => item.GameAccount.GlobalIdentityHandle.ToLower().Contains(SearchTerms.ToLower());
+            }
+        }
+
         public IEnumerable<IdentityRole> ValidRoles { get; set; }
     }
 }

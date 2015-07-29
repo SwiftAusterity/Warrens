@@ -58,12 +58,14 @@ namespace NetMud.Controllers
             return View(dashboardModel);
         }
 
-        public ActionResult ManageInanimateData()
+        public ActionResult ManageInanimateData(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageInanimateDataViewModel();
+            var vModel = new ManageInanimateDataViewModel(DataWrapper.GetAll<InanimateData>());
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            vModel.Inanimates = DataWrapper.GetAll<InanimateData>();
+            vModel.CurrentPageNumber = CurrentPageNumber;
+            vModel.ItemsPerPage = ItemsPerPage;
+            vModel.SearchTerms = SearchTerms;
 
             return View(vModel);
         }
@@ -80,25 +82,30 @@ namespace NetMud.Controllers
             return View(vModel);
         }
 
-        public ActionResult ManageNPCData()
+        public ActionResult ManageNPCData(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageNPCDataViewModel();
+            var vModel = new ManageNPCDataViewModel(DataWrapper.GetAll<NonPlayerCharacter>());
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            vModel.NPCs = DataWrapper.GetAll<NonPlayerCharacter>();
+            vModel.CurrentPageNumber = CurrentPageNumber;
+            vModel.ItemsPerPage = ItemsPerPage;
+            vModel.SearchTerms = SearchTerms;
 
             return View(vModel);
         }
 
         //TODO: This, we really need to be looking at "users" not players
-        public ActionResult ManagePlayers()
+        public ActionResult ManagePlayers(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
 
-            var vModel = new ManagePlayersViewModel();
+            var vModel = new ManagePlayersViewModel(UserManager.Users.ToList());
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            vModel.Players = UserManager.Users.ToList();
+            vModel.CurrentPageNumber = CurrentPageNumber;
+            vModel.ItemsPerPage = ItemsPerPage;
+            vModel.SearchTerms = SearchTerms;
+
             vModel.ValidRoles = roleManager.Roles.ToList();
 
             return View(vModel);
@@ -114,11 +121,7 @@ namespace NetMud.Controllers
                 message = "You must check the proper authorize radio button first.";
             else
             {
-                var userId = User.Identity.GetUserId();
-                var model = new ManageInanimateDataViewModel
-                {
-                    authedUser = UserManager.FindById(userId)
-                };
+                var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
                 var obj = DataWrapper.GetOne<InanimateData>(ID);
 
@@ -126,7 +129,7 @@ namespace NetMud.Controllers
                     message = "That does not exist";
                 else if (obj.Remove())
                 {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveInanimate[" + ID.ToString() + "]", model.authedUser.GameAccount.GlobalIdentityHandle);
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveInanimate[" + ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Delete Successful.";
                 }
                 else
@@ -146,11 +149,7 @@ namespace NetMud.Controllers
                 message = "You must check the proper authorize radio button first.";
             else
             {
-                var userId = User.Identity.GetUserId();
-                var model = new ManageNPCDataViewModel
-                {
-                    authedUser = UserManager.FindById(userId)
-                };
+                var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
                 var obj = DataWrapper.GetOne<NonPlayerCharacter>(ID);
 
@@ -158,7 +157,7 @@ namespace NetMud.Controllers
                     message = "That does not exist";
                 else if (obj.Remove())
                 {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveNPC[" + ID.ToString() + "]", model.authedUser.GameAccount.GlobalIdentityHandle);
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveNPC[" + ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Delete Successful.";
                 }
                 else
@@ -210,11 +209,7 @@ namespace NetMud.Controllers
         public ActionResult AddInanimateData(string newName)
         {
             string message = string.Empty;
-            var userId = User.Identity.GetUserId();
-            var model = new ManageInanimateDataViewModel
-            {
-                authedUser = UserManager.FindById(userId)
-            };
+            var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             var newObj = new InanimateData();
             newObj.Name = newName;
@@ -223,7 +218,7 @@ namespace NetMud.Controllers
                 message = "Error; Creation failed.";
             else
             {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - AddInanimateData[" + newObj.ID.ToString() + "]", model.authedUser.GameAccount.GlobalIdentityHandle);
+                LoggingUtility.LogAdminCommandUsage("*WEB* - AddInanimateData[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 message = "Creation Successful.";
             }
 
@@ -235,11 +230,7 @@ namespace NetMud.Controllers
         public ActionResult AddNPCData(string newName, string newSurName, string newGender, StaffRank chosenRole = StaffRank.Player)
         {
             string message = string.Empty;
-            var userId = User.Identity.GetUserId();
-            var model = new ManageNPCDataViewModel
-            {
-                authedUser = UserManager.FindById(userId)
-            };
+            var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             var newObj = new Character();
             newObj.Name = newName;
@@ -250,7 +241,7 @@ namespace NetMud.Controllers
                 message = "Error; Creation failed.";
             else
             {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - AddNPCData[" + newObj.ID.ToString() + "]", model.authedUser.GameAccount.GlobalIdentityHandle);
+                LoggingUtility.LogAdminCommandUsage("*WEB* - AddNPCData[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 message = "Creation Successful.";
             }
 
