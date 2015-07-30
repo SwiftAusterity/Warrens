@@ -267,6 +267,9 @@
     <Content Include="Views\GameAdmin\ManagePlayers.cshtml" />
     <Content Include="Views\GameAdmin\ManageNPCData.cshtml" />
     <Content Include="Views\Logging\Index.cshtml" />
+    <Content Include="Views\GameAdmin\AddInanimateData.cshtml" />
+    <Content Include="Views\GameAdmin\AddNPCData.cshtml" />
+    <Content Include="Views\GameAdmin\AddRoomData.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

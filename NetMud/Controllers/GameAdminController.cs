@@ -234,6 +234,33 @@ namespace NetMud.Controllers
             return RedirectToAction("ManagePlayers", new { Message = message });
         }
 
+        [HttpGet]
+        public ActionResult AddInanimateData()
+        {
+            var vModel = new ManageInanimateDataViewModel(DataWrapper.GetAll<InanimateData>());
+            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            return View(vModel);
+        }
+
+        [HttpGet]
+        public ActionResult AddRoomData()
+        {
+            var vModel = new ManageRoomDataViewModel(DataWrapper.GetAll<RoomData>());
+            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            return View(vModel);
+        }
+
+        [HttpGet]
+        public ActionResult AddNPCData()
+        {
+            var vModel = new ManageNPCDataViewModel(DataWrapper.GetAll<NonPlayerCharacter>());
+            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            return View(vModel);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult AddInanimateData(string newName)

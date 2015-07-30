@@ -13,17 +13,20 @@
         <dt>Rooms:</dt>
         <dd>
             @Model.Rooms.Count().ToString() [
-            @Html.ActionLink("Manage", "ManageRoomData") ]
+            @Html.ActionLink("Manage", "ManageRoomData") 
+            @Html.ActionLink("Add", "AddRoomData") ]
         </dd>
         <dt>NPCs:</dt>
         <dd>
             @Model.NPCs.Count().ToString() [
-            @Html.ActionLink("Manage", "ManageNPCData") ]
+            @Html.ActionLink("Manage", "ManageNPCData") 
+            @Html.ActionLink("Add", "AddNPCData") ]
         </dd>
         <dt>Inanimates:</dt>
         <dd>
             @Model.Inanimates.Count().ToString() [
-            @Html.ActionLink("Manage", "ManageInanimateData") ]
+            @Html.ActionLink("Manage", "ManageInanimateData") 
+            @Html.ActionLink("Add", "AddInanimateData") ]
         </dd>
     </dl>
     <h4>Live Data</h4>

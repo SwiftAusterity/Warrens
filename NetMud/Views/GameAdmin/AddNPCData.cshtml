@@ -1,0 +1,49 @@
+﻿@model NetMud.Models.GameAdmin.ManageNPCDataViewModel
+@{
+    ViewBag.Title = "Add New Non-player Character";
+    var prevPageState = Model.CurrentPageNumber > 1 ? String.Empty : "disabled";
+    var nextPageState = Model.CurrentPageNumber < Model.NumberOfPages ? String.Empty : "disabled";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p class="text-success">@ViewBag.StatusMessage</p>
+@{
+    <section id="newNPCForm">
+        @using (Html.BeginForm("AddNPCData", "GameAdmin", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(m => m.NewName, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.NewName, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.NewName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.NewSurName, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.NewSurName, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.NewSurName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.NewGender, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.NewGender, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.NewGender, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
+            </div>
+        }
+    </section>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

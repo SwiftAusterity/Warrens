@@ -1,6 +1,6 @@
 ﻿@model NetMud.Models.GameAdmin.ManagePlayersViewModel
 @{
-    ViewBag.Title = "Manage Players";
+    ViewBag.Title = "Manage Registered Users";
     var prevPageState = Model.CurrentPageNumber > 1 ? String.Empty : "disabled";
     var nextPageState = Model.CurrentPageNumber < Model.NumberOfPages ? String.Empty : "disabled";
 }
@@ -11,11 +11,9 @@
 @{
     if (Model.Items.Count() > 0)
     {
-        <h4>Registered Users</h4>
         using (Html.BeginForm("ManagePlayers", "GameAdmin", FormMethod.Post, new { id = "paginationForm" }))
         {
             @Html.AntiForgeryToken()
-
             <nav>
                 <ul class="pagination" style="float: right;">
                     <li style="float: left;">

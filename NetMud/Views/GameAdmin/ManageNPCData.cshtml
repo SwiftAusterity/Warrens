@@ -11,12 +11,11 @@
 @{
     if (Model.Items.Count() > 0)
     {
-        <h4>Non-Player Characters</h4>
         using (Html.BeginForm("ManageNPCData", "GameAdmin", FormMethod.Post, new { id = "paginationForm" }))
         {
             @Html.AntiForgeryToken()
-
             <nav>
+                @Html.ActionLink("Add New", "AddNPCData", null, new { @style = "float: left; margin-top: 30px;" })
                 <ul class="pagination" style="float: right;">
                     <li style="float: left;">
                         <div class="col-md-10" style="width: inherit;">
@@ -56,8 +55,6 @@
             @Html.AntiForgeryToken()
             <table class="table">
                 <tbody>
-
-
                     @foreach (var obj in Model.CurrentPageOfItems)
                     {
                         <tr>
@@ -79,41 +76,6 @@
         }
 
     }
-    <section id="newCharacterForm">
-        @using (Html.BeginForm("AddNPCData", "GameAdmin", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-        {
-            @Html.AntiForgeryToken()
-            <h4>New Non-Player Character</h4>
-            <hr />
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            <div class="form-group">
-                @Html.LabelFor(m => m.NewName, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
-                    @Html.TextBoxFor(m => m.NewName, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.NewName, "", new { @class = "text-danger" })
-                </div>
-            </div>
-            <div class="form-group">
-                @Html.LabelFor(m => m.NewSurName, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
-                    @Html.TextBoxFor(m => m.NewSurName, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.NewSurName, "", new { @class = "text-danger" })
-                </div>
-            </div>
-            <div class="form-group">
-                @Html.LabelFor(m => m.NewGender, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
-                    @Html.TextBoxFor(m => m.NewGender, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.NewGender, "", new { @class = "text-danger" })
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Create" class="btn btn-default" />
-                </div>
-            </div>
-        }
-    </section>
 }
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

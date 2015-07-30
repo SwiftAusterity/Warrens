@@ -1,0 +1,73 @@
+﻿@model NetMud.Models.GameAdmin.ManageRoomDataViewModel
+@{
+    ViewBag.Title = "Add New Room";
+    var prevPageState = Model.CurrentPageNumber > 1 ? String.Empty : "disabled";
+    var nextPageState = Model.CurrentPageNumber < Model.NumberOfPages ? String.Empty : "disabled";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p class="text-success">@ViewBag.StatusMessage</p>
+@{
+    <section id="newRoomForm">
+        @using (Html.BeginForm("AddRoomData", "GameAdmin", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(m => m.NewName, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.NewName, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.NewName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
+            </div>
+        }
+    </section>
+
+    <div class="gridster" style="background-color: darkcyan; height: 700px;">
+        <ul style="list-style: none;">
+            @foreach (var roomData in Model.CurrentPageOfItems)
+            {
+                <li data-row="1" data-col="@roomData.ID" data-sizex="1" data-sizey="1"></li>
+            }
+        </ul>
+    </div>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/jquery.gridster.min.js")
+
+    <script type="text/javascript">
+        $(function () { //DOM Ready
+
+            $(".gridster ul").gridster({
+                widget_margins: [5, 5],
+                widget_base_dimensions: [25, 25],
+                max_cols: 20,
+                min_cols: 20,
+                min_rows: 20
+            });
+
+            $(".gridster ul li").dblclick(function () {
+                alert('hi');
+            });
+
+        });
+    </script>
+}
+@section Styles {
+    @Styles.Render("~/Content/jquery.gridster.min.css")
+    <style>
+        .gridster .gs-w {
+            cursor: pointer;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+            background: darkgray none repeat scroll 0% 0%;
+        }
+    </style>
+}
