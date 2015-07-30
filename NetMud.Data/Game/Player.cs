@@ -37,6 +37,32 @@ namespace NetMud.Data.Game
         public string DescriptorID { get; set; }
         public DescriptorType Descriptor { get; set; }
 
+        private string _currentLocationBirthmark;
+        public override IContains CurrentLocation
+        {
+            get
+            {
+                if (!String.IsNullOrWhiteSpace(_currentLocationBirthmark))
+                    return LiveCache.Get<IContains>(new LiveCacheKey(typeof(IContains), _currentLocationBirthmark));
+
+                return null;
+            }
+            set
+            {
+                if (value == null)
+                    return;
+
+                _currentLocationBirthmark = value.BirthMark;
+                UpsertToLiveWorldCache();
+
+                //We save character data to ensure the player remains where it was on last known change
+                var ch = (Character)DataTemplate;
+                ch.LastKnownLocation = value.DataTemplate.ID.ToString();
+                ch.LastKnownLocationType = value.DataTemplate.GetType().Name;
+                ch.Save();
+            }
+        }
+
         #region Rendering
         public override IEnumerable<string> RenderToLook()
         {

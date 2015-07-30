@@ -45,7 +45,7 @@ namespace NetMud.Data.Game
         }
 
         private string _currentLocationBirthmark;
-        public IContains CurrentLocation
+        public virtual IContains CurrentLocation
         {
             get 
             { 
