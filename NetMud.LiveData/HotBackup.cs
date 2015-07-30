@@ -45,6 +45,8 @@ namespace NetMud.LiveData
         {
             try
             {
+                LoggingUtility.Log("World backup to current INITIATED.", LogChannels.Backup, true);
+
                 //Need the base dir
                 if (!Directory.Exists(BaseDirectory))
                     Directory.CreateDirectory(BaseDirectory);
@@ -111,11 +113,13 @@ namespace NetMud.LiveData
         /// <summary>
         /// Players are written to their own private directories, with the full current/dated backup cycle for each dude
         /// </summary>
-        /// <returns></returns>
+        /// <returns>whether or not it succeeded</returns>
         public bool WritePlayers()
         {
             try
             {
+                LoggingUtility.Log("All Players backup INITIATED.", LogChannels.Backup, true);
+
                 //Need the base dir
                 if (!Directory.Exists(BaseDirectory))
                     Directory.CreateDirectory(BaseDirectory);
@@ -183,6 +187,8 @@ namespace NetMud.LiveData
             //No backup directory? No live data.
             if (!Directory.Exists(currentBackupDirectory))
                 return false;
+
+            LoggingUtility.Log("World restored from current live INITIATED.", LogChannels.Backup, false);
 
             try
             {

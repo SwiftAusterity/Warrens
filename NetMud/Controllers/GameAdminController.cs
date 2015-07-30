@@ -69,7 +69,12 @@ namespace NetMud.Controllers
         {
             var hotBack = new HotBackup(HostingEnvironment.MapPath("/HotBackup/"));
 
-            //Our live data restore failed, reload the entire world from backing data
+            //TODO: Ensure we suspend EVERYTHING going on (fights, etc), add some sort of announcement globally and delay the entire thing on a timer
+
+            //Write the players out first to maintain their positions
+            hotBack.WritePlayers();
+
+            //restore everything
             hotBack.RestoreLiveBackup();
 
             return RedirectToAction("Index", new { Message = "Restore Started" });
