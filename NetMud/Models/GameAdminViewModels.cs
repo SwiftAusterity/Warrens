@@ -1,12 +1,9 @@
 ﻿using Microsoft.AspNet.Identity.EntityFramework;
-using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.Place;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web;
 
 namespace NetMud.Models.GameAdmin
 {

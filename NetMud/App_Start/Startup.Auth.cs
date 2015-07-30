@@ -8,7 +8,6 @@ using Owin;
 using NetMud.Models;
 using NetMud.Authentication;
 using Microsoft.AspNet.Identity.EntityFramework;
-using System.Threading.Tasks;
 
 namespace NetMud
 {

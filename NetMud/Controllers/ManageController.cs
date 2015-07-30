@@ -8,9 +8,6 @@ using Microsoft.Owin.Security;
 using NetMud.Models;
 using NetMud.Data.EntityBackingData;
 using NetMud.Authentication;
-using System.Collections.Generic;
-using Microsoft.AspNet.Identity.EntityFramework;
-using System.Web.Security;
 using NetMud.DataStructure.SupportingClasses;
 using System;
 

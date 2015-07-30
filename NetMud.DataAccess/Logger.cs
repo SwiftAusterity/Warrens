@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using System.Threading;
 using System.Web.Configuration;
-using NetMud.DataAccess;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.Utility;
@@ -55,6 +52,14 @@ namespace NetMud.DataAccess
         {
             CommitLog(content, channel.ToString(), keepItQuiet);
         }
+
+        public static bool RolloverLog(string channel)
+        {
+            var logger = new Logger(WebConfigurationManager.AppSettings["LogPath"]);
+
+            return logger.RolloverLog(channel);
+        }
+
 
         private static void CommitLog(string content, string channel, bool keepItQuiet)
         {
@@ -105,6 +110,35 @@ namespace NetMud.DataAccess
                 names = Directory.EnumerateFiles(BaseDirectory + "Current/", "*.txt", SearchOption.TopDirectoryOnly);
 
             return names.Select(nm => nm.Substring(nm.LastIndexOf('/') + 1, nm.Length - nm.LastIndexOf('/') - 5));
+        }
+
+        public bool RolloverLog(string channel)
+        {
+            var currentLogName = BaseDirectory + "Current/" + channel + ".txt";
+            var archiveLogName = String.Format("{0}Archive/{1}_{2}{3}{4}_{5}{6}{7}.txt",
+                    BaseDirectory
+                    , channel
+                    , DateTime.Now.Year
+                    , DateTime.Now.Month
+                    , DateTime.Now.Day
+                    , DateTime.Now.Hour
+                    , DateTime.Now.Minute
+                    , DateTime.Now.Second);
+
+
+            if (!String.IsNullOrWhiteSpace(BaseDirectory)
+                && Directory.Exists(BaseDirectory)
+                && Directory.Exists(BaseDirectory + "Current/")
+                && File.Exists(currentLogName))
+            {
+                if (!Directory.Exists(BaseDirectory + "Archive/"))
+                    Directory.CreateDirectory(BaseDirectory + "Archive/");
+
+                File.Move(currentLogName, archiveLogName);
+                return true;
+            }
+
+            return false;
         }
 
         public string GetCurrentLogContent(string channel)

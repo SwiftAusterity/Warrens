@@ -6,7 +6,7 @@
 <h2>@ViewBag.Title</h2>
 
 <p class="text-success">@ViewBag.StatusMessage</p>
-<div>
+<div style="padding-bottom: 25px;">
     <h4>Live Channels</h4>
     <hr />
     <div class="form-group">
@@ -25,6 +25,12 @@
 
     @if (!String.IsNullOrWhiteSpace(Model.SelectedLogContent))
     {
-        <textarea id="logContent" name="logContent" readonly="readonly" style="width: 100%; height: 500px; max-height: 1000px; max-width: 1000px; margin: 20px;">@Model.SelectedLogContent</textarea> 
+        using (Html.BeginForm("Rollover", "Logging", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            <input type="hidden" name="SelectedLog" value="@Model.SelectedLog" />
+            <textarea id="logContent" name="logContent" readonly="readonly" style="width: 100%; height: 500px; max-height: 1000px; max-width: 1000px; margin-top: 20px;">@Model.SelectedLogContent</textarea>
+            <br/>
+            <input type="submit" value="Rollover" class="btn btn-default" style="margin-top: 15px; color: orangered;"/>
+        }
     }
 </div>
