@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 using WebSocketSharp;
 using WebSocketSharp.Server;
@@ -7,7 +8,13 @@ namespace NetMud.Websock
 {
     public class Server
     {
-        public static void StartServer(string domain, int portNumber)
+        /// <summary>
+        /// Start a new websocket server
+        /// </summary>
+        /// <param name="domain">unused currently</param>
+        /// <param name="portNumber">the port to listen on</param>
+        /// <returns>The service manage (which you need to hold on to cause there isn't a way to get this back later)</returns>
+        public static WebSocketServiceManager StartServer(string domain, int portNumber)
         {
             var wssv = new WebSocketServer(portNumber);
 
@@ -21,6 +28,8 @@ namespace NetMud.Websock
 
             wssv.AddWebSocketService<CommandNegotiator>("/");
             wssv.Start();
+
+            return wssv.WebSocketServices;
         }
     }
 }

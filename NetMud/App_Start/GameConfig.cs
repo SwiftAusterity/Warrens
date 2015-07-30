@@ -1,6 +1,8 @@
-﻿using NetMud.LiveData;
+﻿using NetMud.DataAccess;
+using NetMud.LiveData;
 using System.Threading;
 using System.Web.Hosting;
+using System.Web.Http;
 
 namespace NetMud
 {
@@ -15,7 +17,7 @@ namespace NetMud
                 hotBack.NewWorldFallback();
 
             //Rooms, paths, spawns (objs then mobs)
-            Websock.Server.StartServer("localhost", 2929);
+            Communication.RegisterActiveService(Websock.Server.StartServer("localhost", 2929), 2929);
 
             var newToken = new CancellationTokenSource();
             newToken.CancelAfter(60 * 30 * 1000);

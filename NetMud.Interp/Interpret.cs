@@ -13,8 +13,6 @@ namespace NetMud.Interp
         {
             try
             {
-                //Need some way to build a context object to work off of
-                //TODO: Actually care about actor details somehow, off of ICommand likely
                 var commandContext = new Context(commandString, actor);
 
                 //Derp, we had an error with accessing the command somehow, usually to do with parameter collection or access permissions

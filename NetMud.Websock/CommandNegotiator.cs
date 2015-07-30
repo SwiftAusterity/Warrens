@@ -22,7 +22,6 @@ using NetMud.DataAccess;
 
 namespace NetMud.Websock
 {
-
     public class CommandNegotiator : WebSocketBehavior
     {
         public ApplicationUserManager UserManager { get; set; }
