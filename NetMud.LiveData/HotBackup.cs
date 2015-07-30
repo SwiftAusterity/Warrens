@@ -96,6 +96,8 @@ namespace NetMud.LiveData
                     WriteEntity(entityDirectory, entity);
                 }
 
+                LoggingUtility.Log("Live world written to current.", LogChannels.Backup, true);
+
                 return WritePlayers();
             }
             catch (Exception ex)
@@ -162,6 +164,8 @@ namespace NetMud.LiveData
 
                     WritePlayer(entityDirectory, entity);
                 }
+
+                LoggingUtility.Log("All players written.", LogChannels.Backup, true);
             }
             catch
             {

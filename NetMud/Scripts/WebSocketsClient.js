@@ -2,7 +2,21 @@
     var connection;
 
     TestBrowser();
+
+    submitCharacter();
+
+    //bind the change event of the currently selected character dropdown to call the ajax thingy to set the player's character
+    $('#currentCharacter').change(function () {
+        submitCharacter();
+    });
 });
+
+function submitCharacter()
+{
+    var cscVal = $('#currentCharacter').val();
+
+    $.post("GameAdmin/SelectCharacter/" + cscVal, function (data) { });
+}
 
 function submitCommand()
 {

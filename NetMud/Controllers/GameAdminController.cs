@@ -13,6 +13,7 @@ using NetMud.DataAccess;
 using NetMud.Models.GameAdmin;
 using System.Web.Hosting;
 using NetMud.LiveData;
+using System.Threading.Tasks;
 
 namespace NetMud.Controllers
 {
@@ -57,35 +58,21 @@ namespace NetMud.Controllers
 
         public ActionResult BackupWorld()
         {
-            var dashboardModel = new DashboardViewModel();
-            dashboardModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-
             var hotBack = new HotBackup(HostingEnvironment.MapPath("/HotBackup/"));
 
             hotBack.WriteLiveBackup();
 
-            dashboardModel.Inanimates = DataWrapper.GetAll<InanimateData>();
-            dashboardModel.Rooms = DataWrapper.GetAll<RoomData>();
-            dashboardModel.NPCs = DataWrapper.GetAll<NonPlayerCharacter>();
-            
-            return View(dashboardModel);
+            return RedirectToAction("Index", new { Message = "Backup Started" });
         }
 
         public ActionResult RestoreWorld()
         {
-            var dashboardModel = new DashboardViewModel();
-            dashboardModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-
             var hotBack = new HotBackup(HostingEnvironment.MapPath("/HotBackup/"));
 
             //Our live data restore failed, reload the entire world from backing data
             hotBack.RestoreLiveBackup();
 
-            dashboardModel.Inanimates = DataWrapper.GetAll<InanimateData>();
-            dashboardModel.Rooms = DataWrapper.GetAll<RoomData>();
-            dashboardModel.NPCs = DataWrapper.GetAll<NonPlayerCharacter>();
-
-            return View(dashboardModel);
+            return RedirectToAction("Index", new { Message = "Restore Started" });
         }
 
         public ActionResult ManageInanimateData(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
@@ -139,6 +126,20 @@ namespace NetMud.Controllers
             vModel.ValidRoles = roleManager.Roles.ToList();
 
             return View(vModel);
+        }
+
+        [HttpPost]
+        public JsonResult SelectCharacter(long CurrentlySelectedCharacter)
+        {
+            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            if (authedUser != null && CurrentlySelectedCharacter > 0)
+            {
+                authedUser.GameAccount.CurrentlySelectedCharacter = CurrentlySelectedCharacter;
+                UserManager.Update(authedUser);
+            }
+
+            return new JsonResult();
         }
 
         [HttpPost]

@@ -19,8 +19,10 @@
                 @if (authUser.GameAccount.Characters.Count() > 0)
                 {
                     @Html.DropDownList("CurrentlySelectedCharacter", authUser.GameAccount.Characters.Select(ch =>
-                new SelectListItem() { Text = ch.FullName(), Value = ch.ID.ToString(), Selected = authUser.GameAccount.CurrentlySelectedCharacter != default(long) && authUser.GameAccount.CurrentlySelectedCharacter.Equals(ch.ID) })
-                , htmlAttributes: new { id = "currentCharacter", Style = "margin: 15px;" })
+                    new SelectListItem() { Text = ch.FullName()
+                                        , Value = ch.ID.ToString()
+                                        , Selected = authUser.GameAccount.CurrentlySelectedCharacter != default(long) && authUser.GameAccount.CurrentlySelectedCharacter.Equals(ch.ID) })
+                                        , htmlAttributes: new { id = "currentCharacter", Style = "margin: 15px;" })
                 }
                 else
                 {
@@ -62,4 +64,8 @@ else
 }
 @section Scripts {
     @Scripts.Render("~/bundles/bootstrap")
+
+    <script type="text/javascript">
+
+    </script>
 }
