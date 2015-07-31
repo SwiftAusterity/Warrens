@@ -177,7 +177,7 @@ namespace NetMud.Data.EntityBackingData
             sql.AppendFormat(" , [Name] = '{0}' ", Name);
             sql.AppendFormat(" , [AccountHandle] = '{0}' ", AccountHandle);
             sql.AppendFormat(" , [Gender] = '{0}' ", Gender);
-            sql.AppendFormat(" , [GamePermissionsRank] = {0} ", GamePermissionsRank);
+            sql.AppendFormat(" , [GamePermissionsRank] = {0} ", (short)GamePermissionsRank);
             sql.AppendFormat(" , [LastKnownLocation] = '{0}' ", LastKnownLocation);
             sql.AppendFormat(" , [LastKnownLocationType] = '{0}' ", LastKnownLocationType);
             sql.AppendFormat(" , [LastRevised] = GetUTCDate()");

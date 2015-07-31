@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 
 using WebSocketSharp;
 using WebSocketSharp.Server;
@@ -27,6 +26,7 @@ namespace NetMud.Websock
 #endif
 
             wssv.AddWebSocketService<CommandNegotiator>("/");
+
             wssv.Start();
 
             return wssv.WebSocketServices;

@@ -1,8 +1,6 @@
-﻿@model NetMud.Models.GameAdmin.ManageRoomDataViewModel
+﻿@model NetMud.Models.GameAdmin.AddEditRoomDataViewModel
 @{
     ViewBag.Title = "Add New Room";
-    var prevPageState = Model.CurrentPageNumber > 1 ? String.Empty : "disabled";
-    var nextPageState = Model.CurrentPageNumber < Model.NumberOfPages ? String.Empty : "disabled";
 }
 
 <h2>@ViewBag.Title</h2>
@@ -29,45 +27,7 @@
             </div>
         }
     </section>
-
-    <div class="gridster" style="background-color: darkcyan; height: 700px;">
-        <ul style="list-style: none;">
-            @foreach (var roomData in Model.CurrentPageOfItems)
-            {
-                <li data-row="1" data-col="@roomData.ID" data-sizex="1" data-sizey="1"></li>
-            }
-        </ul>
-    </div>
 }
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-    @Scripts.Render("~/Scripts/jquery.gridster.min.js")
-
-    <script type="text/javascript">
-        $(function () { //DOM Ready
-
-            $(".gridster ul").gridster({
-                widget_margins: [5, 5],
-                widget_base_dimensions: [25, 25],
-                max_cols: 20,
-                min_cols: 20,
-                min_rows: 20
-            });
-
-            $(".gridster ul li").dblclick(function () {
-                alert('hi');
-            });
-
-        });
-    </script>
-}
-@section Styles {
-    @Styles.Render("~/Content/jquery.gridster.min.css")
-    <style>
-        .gridster .gs-w {
-            cursor: pointer;
-            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-            background: darkgray none repeat scroll 0% 0%;
-        }
-    </style>
 }

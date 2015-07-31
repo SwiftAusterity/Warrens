@@ -30,10 +30,14 @@ namespace NetMud.Websock
 
         public CommandNegotiator()
         {
+            //firefox fix
+            IgnoreExtensions = true;
         }
 
         public CommandNegotiator(ApplicationUserManager userManager)
         {
+            //firefox fix
+            IgnoreExtensions = true;
             UserManager = userManager;
         }
 

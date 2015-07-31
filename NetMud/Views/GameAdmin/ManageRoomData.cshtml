@@ -58,7 +58,7 @@
                     @foreach (var obj in Model.CurrentPageOfItems)
                     {
                         <tr>
-                            <td>@obj.ID</td>
+                            <td>@Html.ActionLink(@obj.ID.ToString(), "EditRoomData", new { id = obj.ID })</td>
                             <td>@obj.Name</td>
                             <td>
                                 <div>

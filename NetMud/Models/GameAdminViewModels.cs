@@ -44,11 +44,22 @@ namespace NetMud.Models.GameAdmin
                 return item => item.Name.ToLower().Contains(SearchTerms.ToLower());
             }
         }
+    }
+
+    public class AddEditInanimateDataViewModel : BaseViewModel
+    {
+        public ApplicationUser authedUser { get; set; }
+
+        public AddEditInanimateDataViewModel()
+        {
+        }
 
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
         [DataType(DataType.Text)]
         [Display(Name = "Name")]
         public string NewName { get; set; }
+
+        public IInanimateData DataObject { get; set; }
     }
 
     public class ManageRoomDataViewModel : PagedDataModel<IRoomData>, BaseViewModel
@@ -68,11 +79,22 @@ namespace NetMud.Models.GameAdmin
                 return item => item.Name.ToLower().Contains(SearchTerms.ToLower());
             }
         }
+    }
+
+    public class AddEditRoomDataViewModel : BaseViewModel
+    {
+        public ApplicationUser authedUser { get; set; }
+
+        public AddEditRoomDataViewModel()
+        {
+        }
 
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
         [DataType(DataType.Text)]
         [Display(Name = "Name")]
         public string NewName { get; set; }
+
+        public IRoomData DataObject { get; set; }
     }
 
     public class ManageNPCDataViewModel : PagedDataModel<INonPlayerCharacter>, BaseViewModel
@@ -94,6 +116,16 @@ namespace NetMud.Models.GameAdmin
             }
         }
 
+    }
+
+    public class AddEditNPCDataViewModel : BaseViewModel
+    {
+        public ApplicationUser authedUser { get; set; }
+
+        public AddEditNPCDataViewModel()
+        {
+        }
+
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
         [DataType(DataType.Text)]
         [Display(Name = "Given Name")]
@@ -108,6 +140,8 @@ namespace NetMud.Models.GameAdmin
         [DataType(DataType.Text)]
         [Display(Name = "Gender")]
         public string NewGender { get; set; }
+
+        public INonPlayerCharacter DataObject { get; set; }
     }
 
     public class ManagePlayersViewModel : PagedDataModel<ApplicationUser>, BaseViewModel

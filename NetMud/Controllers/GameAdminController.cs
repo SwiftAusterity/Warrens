@@ -14,6 +14,7 @@ using NetMud.Models.GameAdmin;
 using System.Web.Hosting;
 using NetMud.LiveData;
 using System.Threading.Tasks;
+using NetMud.DataStructure.Base.EntityBackingData;
 
 namespace NetMud.Controllers
 {
@@ -243,7 +244,7 @@ namespace NetMud.Controllers
         [HttpGet]
         public ActionResult AddInanimateData()
         {
-            var vModel = new ManageInanimateDataViewModel(DataWrapper.GetAll<InanimateData>());
+            var vModel = new AddEditInanimateDataViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             return View(vModel);
@@ -252,7 +253,7 @@ namespace NetMud.Controllers
         [HttpGet]
         public ActionResult AddRoomData()
         {
-            var vModel = new ManageRoomDataViewModel(DataWrapper.GetAll<RoomData>());
+            var vModel = new AddEditRoomDataViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             return View(vModel);
@@ -261,7 +262,7 @@ namespace NetMud.Controllers
         [HttpGet]
         public ActionResult AddNPCData()
         {
-            var vModel = new ManageNPCDataViewModel(DataWrapper.GetAll<NonPlayerCharacter>());
+            var vModel = new AddEditNPCDataViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             return View(vModel);
@@ -290,12 +291,12 @@ namespace NetMud.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddNPCData(string newName, string newSurName, string newGender, StaffRank chosenRole = StaffRank.Player)
+        public ActionResult AddNPCData(string newName, string newSurName, string newGender)
         {
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var newObj = new Character();
+            var newObj = new NonPlayerCharacter();
             newObj.Name = newName;
             newObj.SurName = newSurName;
             newObj.Gender = newGender;
@@ -328,6 +329,156 @@ namespace NetMud.Controllers
                 LoggingUtility.LogAdminCommandUsage("*WEB* - AddRoomData[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 message = "Creation Successful.";
             }
+
+            return RedirectToAction("ManageRoomData", new { Message = message });
+        }
+
+        [HttpGet]
+        public ActionResult EditInanimateData(int id)
+        {
+            string message = string.Empty;
+            var vModel = new AddEditInanimateDataViewModel();
+            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            var obj = DataWrapper.GetOne<InanimateData>(id);
+
+            if (obj == null)
+            {
+                message = "That does not exist";
+                return RedirectToAction("ManageInanimateData", new { Message = message });
+            }
+
+            vModel.DataObject = obj;
+            vModel.NewName = obj.Name;
+
+            return View(vModel);
+        }
+
+        [HttpGet]
+        public ActionResult EditRoomData(int id)
+        {
+            string message = string.Empty;
+            var vModel = new AddEditRoomDataViewModel();
+            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            var obj = DataWrapper.GetOne<RoomData>(id);
+
+            if (obj == null)
+            {
+                message = "That does not exist";
+                return RedirectToAction("ManageRoomData", new { Message = message });
+            }
+
+            vModel.DataObject = obj;
+            vModel.NewName = obj.Name;
+
+            return View(vModel);
+        }
+
+        [HttpGet]
+        public ActionResult EditNPCData(int id)
+        {
+            string message = string.Empty;
+            var vModel = new AddEditNPCDataViewModel();
+            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+
+            var obj = DataWrapper.GetOne<NonPlayerCharacter>(id);
+
+            if (obj == null)
+            {
+                message = "That does not exist";
+                return RedirectToAction("ManageNPCData", new { Message = message });
+            }
+
+            vModel.DataObject = obj;
+            vModel.NewName = obj.Name;
+            vModel.NewGender = obj.Gender;
+            vModel.NewSurName = obj.SurName;
+
+            return View(vModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditInanimateData(string newName, int id)
+        {
+            string message = string.Empty;
+            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            var obj = DataWrapper.GetOne<InanimateData>(id);
+            if (obj == null)
+            {
+                message = "That does not exist";
+                return RedirectToAction("ManageInanimateData", new { Message = message });
+            }
+
+            obj.Name = newName;
+
+            if (obj.Save())
+            {
+                LoggingUtility.LogAdminCommandUsage("*WEB* - EditInanimateData[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                message = "Edit Successful.";
+            }
+            else
+                message = "Error; Edit failed.";
+
+            return RedirectToAction("ManageInanimateData", new { Message = message });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditNPCData(string newName, string newSurName, string newGender, int id)
+        {
+            string message = string.Empty;
+            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            var obj = DataWrapper.GetOne<NonPlayerCharacter>(id);
+            if (obj == null)
+            {
+                message = "That does not exist";
+                return RedirectToAction("ManageNPCData", new { Message = message });
+            }
+
+            obj.Name = newName;
+            obj.SurName = newSurName;
+            obj.Gender = newGender;
+
+            if (obj.Save())
+            {
+                LoggingUtility.LogAdminCommandUsage("*WEB* - EditNPCData[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                message = "Edit Successful.";
+            }
+            else
+                message = "Error; Edit failed.";
+
+            return RedirectToAction("ManageNPCData", new { Message = message });
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditRoomData(string newName, int id)
+        {
+            string message = string.Empty;
+            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            var obj = DataWrapper.GetOne<RoomData>(id);
+            if (obj == null)
+            {
+                message = "That does not exist";
+                return RedirectToAction("ManageRoomData", new { Message = message });
+            }
+
+            obj.Name = newName;
+
+            if (obj.Save())
+            {
+                LoggingUtility.LogAdminCommandUsage("*WEB* - EditRoomData[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                message = "Edit Successful.";
+            }
+            else
+                message = "Error; Edit failed.";
 
             return RedirectToAction("ManageRoomData", new { Message = message });
         }
