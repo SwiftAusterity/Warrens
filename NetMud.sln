@@ -29,7 +29,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExternalLibraries", "Extern
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.Authentication", "NetMud.Authentication\NetMud.Authentication.csproj", "{DBC07A3D-3A1E-48C1-9A72-D115FF3E4349}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.LiveData", "NetMud.LiveData\NetMud.LiveData.csproj", "{D16EB03B-8DA6-49C3-8922-CD05AF30FD20}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.Backup", "NetMud.LiveData\NetMud.Backup.csproj", "{D16EB03B-8DA6-49C3-8922-CD05AF30FD20}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -7,8 +7,8 @@
     <ProjectGuid>{D16EB03B-8DA6-49C3-8922-CD05AF30FD20}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NetMud.LiveData</RootNamespace>
-    <AssemblyName>NetMud.LiveData</AssemblyName>
+    <RootNamespace>NetMud.Backup</RootNamespace>
+    <AssemblyName>NetMud.Backup</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

@@ -307,9 +307,9 @@
       <Project>{0c46dab6-27fd-4117-acf6-0b8440614aa0}</Project>
       <Name>NetMud.Interp</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NetMud.LiveData\NetMud.LiveData.csproj">
+    <ProjectReference Include="..\NetMud.LiveData\NetMud.Backup.csproj">
       <Project>{d16eb03b-8da6-49c3-8922-cd05af30fd20}</Project>
-      <Name>NetMud.LiveData</Name>
+      <Name>NetMud.Backup</Name>
     </ProjectReference>
     <ProjectReference Include="..\NetMud.Utility\NetMud.Utility.csproj">
       <Project>{9f3caec0-73dc-463c-8ef7-13b83bc8fb12}</Project>
