@@ -16,7 +16,8 @@ namespace NetMud.DataAccess
         Restore,
         Backup,
         AccountActivity,
-        Authentication
+        Authentication,
+        ProcessingLoops
     }
 
     public static class LoggingUtility

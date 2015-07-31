@@ -3,6 +3,8 @@ using NetMud.Backup;
 using System.Threading;
 using System.Web.Hosting;
 using System.Web.Http;
+using NetMud.CentralControl;
+using System;
 
 namespace NetMud
 {
@@ -19,10 +21,9 @@ namespace NetMud
             //Rooms, paths, spawns (objs then mobs)
             Communication.RegisterActiveService(Websock.Server.StartServer("localhost", 2929), 2929);
 
-            var newToken = new CancellationTokenSource();
-            newToken.CancelAfter(60 * 30 * 1000);
+            Func<bool> backupFunction = hotBack.WriteLiveBackup;
 
-            hotBack.LoopHotbackup(60 * 10, newToken.Token, 60 * 30 * 1000);
+            Processor.StartNewLoop("HotBackup", 30 * 60, 5 * 60, 1800, backupFunction);
         }
     }
 }

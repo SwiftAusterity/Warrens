@@ -291,6 +291,10 @@
       <Project>{dbc07a3d-3a1e-48c1-9a72-d115ff3e4349}</Project>
       <Name>NetMud.Authentication</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NetMud.CentralControl\NetMud.CentralControl.csproj">
+      <Project>{1e404cfb-4ced-42ad-b28e-bfee270c88f9}</Project>
+      <Name>NetMud.CentralControl</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NetMud.DataAccess\NetMud.DataAccess.csproj">
       <Project>{25b53ef7-e51c-4ee5-a04c-dd8797cff58f}</Project>
       <Name>NetMud.DataAccess</Name>

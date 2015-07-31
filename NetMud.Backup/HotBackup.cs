@@ -473,32 +473,5 @@ namespace NetMud.Backup
 
             return string.Format("{0}.Player", charData.ID);
         }
-
-        public async Task<bool> LoopHotbackup(int intervalInSeconds, CancellationToken ct, int cancelAfterSeconds)
-        {
-            try
-            {
-                await Task.Delay(intervalInSeconds * 1000);
-
-                WriteLiveBackup();
-
-                LoggingUtility.Log("World backed up automatically.", LogChannels.Backup, false);
-
-                var newToken = new CancellationTokenSource();
-                newToken.CancelAfter(cancelAfterSeconds * 1000);
-
-                return await LoopHotbackup(intervalInSeconds, newToken.Token, cancelAfterSeconds);
-            }
-            catch (OperationCanceledException)
-            {
-                LoggingUtility.Log("Hotbackup loop timed out", LogChannels.Backup, false);
-            }
-            catch(Exception ex)
-            {
-                LoggingUtility.LogError(ex);
-            }
-
-            return true;
-        }
     }
 }
