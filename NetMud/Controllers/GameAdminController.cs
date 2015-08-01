@@ -1,20 +1,22 @@
 ﻿using System.Linq;
 using System.Web;
+using System.Web.Hosting;
 using System.Web.Mvc;
+
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
-using NetMud.Models;
-using NetMud.Data.EntityBackingData;
-using NetMud.Authentication;
 using Microsoft.AspNet.Identity.EntityFramework;
-using NetMud.DataStructure.SupportingClasses;
+
+using NetMud.Authentication;
+using NetMud.Backup;
+using NetMud.CentralControl;
+using NetMud.Data.EntityBackingData;
 using NetMud.Data.Game;
 using NetMud.DataAccess;
 using NetMud.Models.GameAdmin;
-using System.Web.Hosting;
-using NetMud.Backup;
-using System.Threading.Tasks;
-using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.Models;
+
+
 
 namespace NetMud.Controllers
 {
@@ -53,6 +55,7 @@ namespace NetMud.Controllers
             dashboardModel.Inanimates = DataWrapper.GetAll<InanimateData>();
             dashboardModel.Rooms = DataWrapper.GetAll<RoomData>();
             dashboardModel.NPCs = DataWrapper.GetAll<NonPlayerCharacter>();
+            dashboardModel.LiveTaskTokens = Processor.GetAllLiveTaskStatusTokens();
 
             return View(dashboardModel);
         }
@@ -481,6 +484,32 @@ namespace NetMud.Controllers
                 message = "Error; Edit failed.";
 
             return RedirectToAction("ManageRoomData", new { Message = message });
+        }
+
+        public ActionResult StopRunningProcess(string processName)
+        {
+            string message = string.Empty;
+            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            Processor.ShutdownLoop(processName, 600, "{0} seconds before " + processName + " is shutdown.", 60);
+
+            LoggingUtility.LogAdminCommandUsage("*WEB* - StopRunningProcess[" + processName + "]", authedUser.GameAccount.GlobalIdentityHandle);
+            message = "Cancel signal sent.";
+
+            return RedirectToAction("Index", new { Message = message });
+        }
+
+        public ActionResult StopRunningAllProcess()
+        {
+            string message = string.Empty;
+            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            Processor.ShutdownAll(600, "{0} econds before TOTAL WORLD SHUTDOWN.", 60);
+
+            LoggingUtility.LogAdminCommandUsage("*WEB* - StopRunningALLPROCESSES", authedUser.GameAccount.GlobalIdentityHandle);
+            message = "Cancel signal sent for entire world.";
+
+            return RedirectToAction("Index", new { Message = message });
         }
     }
 }

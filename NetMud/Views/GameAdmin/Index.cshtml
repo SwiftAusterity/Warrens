@@ -13,19 +13,19 @@
         <dt>Rooms:</dt>
         <dd>
             @Model.Rooms.Count().ToString() [
-            @Html.ActionLink("Manage", "ManageRoomData") 
+            @Html.ActionLink("Manage", "ManageRoomData")
             @Html.ActionLink("Add", "AddRoomData") ]
         </dd>
         <dt>NPCs:</dt>
         <dd>
             @Model.NPCs.Count().ToString() [
-            @Html.ActionLink("Manage", "ManageNPCData") 
+            @Html.ActionLink("Manage", "ManageNPCData")
             @Html.ActionLink("Add", "AddNPCData") ]
         </dd>
         <dt>Inanimates:</dt>
         <dd>
             @Model.Inanimates.Count().ToString() [
-            @Html.ActionLink("Manage", "ManageInanimateData") 
+            @Html.ActionLink("Manage", "ManageInanimateData")
             @Html.ActionLink("Add", "AddInanimateData") ]
         </dd>
     </dl>
@@ -43,8 +43,32 @@
     <dl class="dl-horizontal">
         <dt>Do stuff</dt>
         <dd>
-            @Html.ActionLink("Backup World", "BackupWorld", "GameAdminController", new { @class = "btn btn-default", @style = "color: green; border-color: green;" })
-            @Html.ActionLink("Suspend and Restore World", "RestoreWorld", "GameAdminController", new { @class = "btn btn-default", @style = "color: red; background-color: black; border-color: red;" })
+            @Html.ActionLink("Backup World", "BackupWorld", "GameAdmin", new { @class = "btn btn-default", @style = "color: green; border-color: green;" })
+            @Html.ActionLink("Suspend and Restore World", "RestoreWorld", "GameAdmin", new { @class = "btn btn-default", @style = "color: red; background-color: black; border-color: red;" })
         </dd>
+    </dl>
+
+    <h4>Live Processes</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>[@Model.LiveTaskTokens.Count().ToString()] Running Threads</dt>
+        <dd>
+            @Html.ActionLink("Stop All", "StopAllRunningProcess", "GameAdmin", new { @class = "btn", @style = "color: red; background-color: black; border-color: red;" })
+        </dd>
+        @foreach (var token in Model.LiveTaskTokens)
+        {
+            <dt style="padding-top: 25px;">@token.Key</dt>
+            if (token.Value.IsCancellationRequested)
+            {
+                <dd style="color:red; padding-top: 25px;">Stopping</dd>
+            }
+            else
+            {
+                <dd style="padding-top: 25px;">
+                    <span style="color:green;">Running</span>
+                    @Html.ActionLink("Stop", "StopRunningProcess", "GameAdmin", new { processName = token.Key }, new { @class = "btn", @style = "color: red; border-color: red;" })
+                </dd>
+            }
+        }
     </dl>
 </div>

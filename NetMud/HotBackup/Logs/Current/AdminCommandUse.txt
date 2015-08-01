@@ -3,3 +3,6 @@
 [2015/07/29 22:09:06]:  SwiftAusterity: *WEB* - RolloverLog[SystemError]
 [2015/07/31 12:17:51]:  SwiftAusterity: *WEB* - RolloverLog[Backup]
 [2015/07/31 14:38:07]:  SwiftAusterity: *WEB* - RolloverLog[Backup]
+[2015/07/31 22:00:21]:  SwiftAusterity: *WEB* - StopRunningProcess[HotBackup]
+[2015/07/31 22:04:13]:  SwiftAusterity: *WEB* - StopRunningProcess[HotBackup]
+[2015/07/31 22:24:49]:  SwiftAusterity: *WEB* - StopRunningProcess[HotBackup]

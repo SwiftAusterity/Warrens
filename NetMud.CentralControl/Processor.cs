@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Caching;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -31,7 +30,9 @@ namespace NetMud.CentralControl
             , Func<bool> workProcess, Func<bool> successTailProcess = null, Func<bool> failedTailProcess = null)
         {
             var cancelTokenSource = new CancellationTokenSource();
-            cancelTokenSource.CancelAfter(maxDuration * 1000); //seconds * 1000 for miliseconds
+
+            if(maxDuration > 0)
+                cancelTokenSource.CancelAfter(maxDuration * 1000); //seconds * 1000 for miliseconds
 
             StoreCancellationToken(designator, cancelTokenSource);
 
@@ -43,9 +44,10 @@ namespace NetMud.CentralControl
 
             var newLoop = new Task<bool>(loopedProcess, cancelTokenSource.Token, TaskCreationOptions.LongRunning);
 
+            //Setup callbacks to termination tail chained functions and make sure we remove the token.
             if (successTailProcess != null && failedTailProcess != null)
             {
-                newLoop.ContinueWith(async (previousTask) => 
+                newLoop.ContinueWith(async (previousTask) =>
                     {
                         await Task.Delay(cooldownDelay * 1000);
 
@@ -53,6 +55,18 @@ namespace NetMud.CentralControl
                             successTailProcess.Invoke();
                         else
                             failedTailProcess.Invoke();
+
+                        RemoveCancellationToken(designator);
+                    }
+                );
+            }
+            else
+            {
+                newLoop.ContinueWith(async (previousTask) =>
+                    {
+                        await Task.Delay(cooldownDelay * 1000);
+
+                        RemoveCancellationToken(designator);
                     }
                 );
             }
@@ -84,39 +98,48 @@ namespace NetMud.CentralControl
             if (!string.IsNullOrWhiteSpace(shutdownAnnouncement))
                 Communication.Broadcast(String.Format(shutdownAnnouncement, shutdownDelay));
 
-            int secondsLeftBeforeShutdown = shutdownDelay;
             if (shutdownAnnouncementFrequency > 0)
             {
-                while (cancelToken != null && cancelToken.IsCancellationRequested && secondsLeftBeforeShutdown > 0)
-                {
-                    Communication.Broadcast(String.Format(shutdownAnnouncement, secondsLeftBeforeShutdown));
-                    secondsLeftBeforeShutdown -= shutdownAnnouncementFrequency;
-                }
+                Task.Run(() => RunAnnouncements(shutdownDelay, shutdownAnnouncement, shutdownAnnouncementFrequency));
+            }
+        }
+
+        private static async void RunAnnouncements(int shutdownDelay, string shutdownAnnouncement, int shutdownAnnouncementFrequency)
+        {
+            int secondsLeftBeforeShutdown = shutdownDelay;
+            while (secondsLeftBeforeShutdown > 0)
+            {
+                Communication.Broadcast(String.Format(shutdownAnnouncement, secondsLeftBeforeShutdown));
+                await Task.Delay(shutdownAnnouncementFrequency * 1000);
+                secondsLeftBeforeShutdown -= shutdownAnnouncementFrequency;
             }
         }
 
         /// <summary>
-        /// Adds a new delegate task to call after the current loop iteration is done
+        /// Get all the living task cancellation tokens
         /// </summary>
-        /// <param name="designator">what the loop is called</param>
-        /// <param name="cooldownDelay">In # of Seconds - how long to wait before running this task after the current process is done</param>
-        /// <param name="newTask">the new task to run</param>
-        public static void AddTaskToLoop(string designator, int cooldownDelay, Func<bool> newTask)
+        /// <returns>All the tokens in the live cache</returns>
+        public static Dictionary<string, CancellationTokenSource> GetAllLiveTaskStatusTokens()
         {
+            var returnDict = new Dictionary<string, CancellationTokenSource>();
+            foreach (var kvp in globalCache.Where(kvp => kvp.Value.GetType() == typeof(CancellationTokenSource)))
+                returnDict.Add(kvp.Key.Replace("AsyncCancellationToken.", String.Empty), (CancellationTokenSource)kvp.Value);
 
+            return returnDict;
         }
 
         /// <summary>
         /// Cancel ALL the current loops
         /// </summary>
         /// <param name="shutdownDelay">In # of Seconds - how long to wait before cancelling it</param>
-        /// <param name="shutdownAnnouncementFrequency">In # of Seconds - how often to announce the shutdown, <= 0 is only one announcement</param>
+        /// <param name="shutdownAnnouncementFrequency">In # of Seconds - how often to announce the shutdown, < = 0 is only one announcement</param>
         /// <param name="shutdownAnnouncement">What to announce (string.format format) before shutting down, empty string = no announcements</param>
         public static void ShutdownAll(int shutdownDelay, string shutdownAnnouncement, int shutdownAnnouncementFrequency = -1)
         {
-            IEnumerable<CancellationTokenSource> tokens = globalCache.Where(kvp => kvp.Value.GetType() == typeof(CancellationTokenSource)).Select(kvp => (CancellationTokenSource)kvp.Value);
+            IEnumerable<CancellationTokenSource> tokens 
+                = globalCache.Where(kvp => kvp.Value.GetType() == typeof(CancellationTokenSource)).Select(kvp => (CancellationTokenSource)kvp.Value);
 
-            foreach(var token in tokens.Where(tk => !tk.IsCancellationRequested && tk.Token.CanBeCanceled))
+            foreach (var token in tokens.Where(tk => !tk.IsCancellationRequested && tk.Token.CanBeCanceled))
             {
                 if (token != null)
                     token.CancelAfter(shutdownDelay * 1000);
@@ -125,14 +148,9 @@ namespace NetMud.CentralControl
             if (!string.IsNullOrWhiteSpace(shutdownAnnouncement))
                 Communication.Broadcast(String.Format(shutdownAnnouncement, shutdownDelay));
 
-            int secondsLeftBeforeShutdown = shutdownDelay;
             if (shutdownAnnouncementFrequency > 0)
-            { 
-                while (secondsLeftBeforeShutdown > 0)
-                {
-                    Communication.Broadcast(String.Format(shutdownAnnouncement, secondsLeftBeforeShutdown));
-                    secondsLeftBeforeShutdown -= shutdownAnnouncementFrequency;
-                }
+            {
+                Task.Run(() => RunAnnouncements(shutdownDelay, shutdownAnnouncement, shutdownAnnouncementFrequency));
             }
         }
 
@@ -163,6 +181,11 @@ namespace NetMud.CentralControl
             }
 
             return null;
+        }
+
+        private static void RemoveCancellationToken(string designator)
+        {
+            globalCache.Remove(String.Format(cacheKeyFormat, designator));
         }
     }
 }

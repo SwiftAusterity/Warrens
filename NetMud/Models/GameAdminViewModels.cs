@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading;
 
 namespace NetMud.Models.GameAdmin
 {
@@ -22,6 +23,7 @@ namespace NetMud.Models.GameAdmin
         public IEnumerable<IRoomData> Rooms { get; set; }
         public IEnumerable<IInanimateData> Inanimates { get; set; }
         public IEnumerable<INonPlayerCharacter> NPCs { get; set; }
+        public Dictionary<string, CancellationTokenSource> LiveTaskTokens { get; set; }
 
         public int LivePlayers { get; set; }
     }
