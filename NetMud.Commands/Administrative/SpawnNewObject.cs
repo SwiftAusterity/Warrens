@@ -11,7 +11,9 @@ using NetMud.Data.Game;
 
 namespace NutMud.Commands.System
 {
-    //Really help can be invoked on anything that is helpful, even itself
+    /// <summary>
+    /// Spawns a new inanimate into the world.  Missing target parameter = container you're standing in
+    /// </summary>
     [CommandKeyword("SpawnNewObject", false)]
     [CommandPermission(StaffRank.Admin)]
     [CommandParameter(CommandUsage.Subject, typeof(InanimateData), new CacheReferenceType[] { CacheReferenceType.Data }, "[0-9]+", false)] //for IDs
@@ -20,18 +22,47 @@ namespace NutMud.Commands.System
     [CommandRange(CommandRangeType.Touch, 0)]
     public class SpawnNewObject : ICommand, IHelpful
     {
+        /// <summary>
+        /// The entity invoking the command
+        /// </summary>
         public IActor Actor { get; set; }
+
+        /// <summary>
+        /// The entity the command refers to
+        /// </summary>
         public object Subject { get; set; }
+
+        /// <summary>
+        /// When there is a predicate parameter, the entity that is being targetting (subject become "with")
+        /// </summary>
         public object Target { get; set; }
+
+        /// <summary>
+        /// Any tertiary entity being referenced in command parameters
+        /// </summary>
         public object Supporting { get; set; }
+
+        /// <summary>
+        /// Container the Actor is in when the command is invoked
+        /// </summary>
         public ILocation OriginLocation { get; set; }
+
+        /// <summary>
+        /// Valid containers by range from OriginLocation
+        /// </summary>
         public IEnumerable<ILocation> Surroundings { get; set; }
 
+        /// <summary>
+        /// All Commands require a generic constructor
+        /// </summary>
         public SpawnNewObject()
         {
             //Generic constructor for all IHelpfuls is needed
         }
 
+        /// <summary>
+        /// Executes this command
+        /// </summary>
         public void Execute()
         {
             var newObject = (IInanimateData)Subject;
@@ -54,6 +85,10 @@ namespace NutMud.Commands.System
             messagingObject.ExecuteMessaging(Actor, entityObject, spawnTo, OriginLocation, null);
         }
 
+        /// <summary>
+        /// Renders syntactical help for the command, invokes automatically when syntax is bungled
+        /// </summary>
+        /// <returns>string</returns>
         public IEnumerable<string> RenderSyntaxHelp()
         {
             var sb = new List<string>();
@@ -65,7 +100,7 @@ namespace NutMud.Commands.System
         }
 
         /// <summary>
-        /// Renders the help text for the help command itself
+        /// Renders the help text
         /// </summary>
         /// <returns>string</returns>
         public IEnumerable<string> RenderHelpBody()

@@ -23,13 +23,24 @@ namespace NetMud.Backup
     /// </summary>
     public class HotBackup
     {
+        /// <summary>
+        /// Root directory where all the backup stuff gets saved too
+        /// </summary>
         public string BaseDirectory { get; private set; }
 
+        /// <summary>
+        /// Create an instance of the hotbackup utility
+        /// </summary>
+        /// <param name="baseDirectory">Root directory where all the backup stuff gets saved too</param>
         public HotBackup(string baseDirectory)
         {
             BaseDirectory = baseDirectory;
         }
 
+        /// <summary>
+        /// Something went wrong with restoring the live backup, this loads all persistence singeltons from the database (rooms, paths, spawns)
+        /// </summary>
+        /// <returns>success state</returns>
         public bool NewWorldFallback()
         {
             //Only load in stuff that is static and spawns as singleton
@@ -41,6 +52,10 @@ namespace NetMud.Backup
             return true;
         }
 
+        /// <summary>
+        /// Writes the current live world content (entities, positions, etc) to the Current backup; archives whatever was already considered current
+        /// </summary>
+        /// <returns>Success state</returns>
         public bool WriteLiveBackup()
         {
             try
@@ -180,6 +195,10 @@ namespace NetMud.Backup
             return true;
         }
 
+        /// <summary>
+        /// Restores live entity backup from Current
+        /// </summary>
+        /// <returns>Success state</returns>
         public bool RestoreLiveBackup()
         {
             var currentBackupDirectory = BaseDirectory + "Current/";
@@ -284,6 +303,12 @@ namespace NetMud.Backup
             return false;
         }
 
+        /// <summary>
+        /// Restores one character from their Current backup
+        /// </summary>
+        /// <param name="accountHandle">Global Account Handle for the account</param>
+        /// <param name="charID">Which character to load</param>
+        /// <returns></returns>
         public Player RestorePlayer(string accountHandle, long charID)
         {
             Player newPlayerToLoad = null;
@@ -374,6 +399,11 @@ namespace NetMud.Backup
             return newPlayerToLoad;
         }
 
+        /// <summary>
+        /// Writes one entity to Current backup (not players)
+        /// </summary>
+        /// <param name="dir">Root directory to write to</param>
+        /// <param name="entity">The entity to write out</param>
         private void WriteEntity(DirectoryInfo dir, IEntity entity)
         {
             var entityFileName = GetEntityFilename(entity);
@@ -410,6 +440,11 @@ namespace NetMud.Backup
             }
         }
 
+        /// <summary>
+        /// Writes one player out (and only one character) and their inventory to Current and archives whatever used to be Current
+        /// </summary>
+        /// <param name="dir">Directory to write to</param>
+        /// <param name="entity">The player to write</param>
         private void WritePlayer(DirectoryInfo dir, IPlayer entity)
         {
             var entityFileName = GetPlayerFilename(entity);
@@ -462,11 +497,21 @@ namespace NetMud.Backup
             }
         }
 
+        /// <summary>
+        /// Gets the statically formatted filename for an entity
+        /// </summary>
+        /// <param name="entity">The entity in question</param>
+        /// <returns>the filename</returns>
         private string GetEntityFilename(IEntity entity)
         {
             return string.Format("{0}.{1}", entity.BirthMark, entity.GetType().Name);
         }
 
+        /// <summary>
+        /// Gets the statically formatted filename for a player
+        /// </summary>
+        /// <param name="entity">The player in question</param>
+        /// <returns>the filename</returns>
         private string GetPlayerFilename(IPlayer entity)
         {
             var charData = (ICharacter)entity.DataTemplate;

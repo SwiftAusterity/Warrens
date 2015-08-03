@@ -74,6 +74,11 @@ namespace NetMud.CentralControl
             newLoop.Start();
         }
 
+        /// <summary>
+        /// Starts an endless loop
+        /// </summary>
+        /// <param name="worker">The action to perform every cycle</param>
+        /// <param name="startDelay">The amount of seconds to delay before running the worker</param>
         private static async void StartLoop(Func<bool> worker, int startDelay)
         {
             await Task.Delay(startDelay * 1000);
@@ -104,6 +109,12 @@ namespace NetMud.CentralControl
             }
         }
 
+        /// <summary>
+        /// Runs looped formatted messages until the timer runs out
+        /// </summary>
+        /// <param name="shutdownDelay">Total amount of message time</param>
+        /// <param name="shutdownAnnouncement">What to announce</param>
+        /// <param name="shutdownAnnouncementFrequency">How often to announce it</param>
         private static async void RunAnnouncements(int shutdownDelay, string shutdownAnnouncement, int shutdownAnnouncementFrequency)
         {
             int secondsLeftBeforeShutdown = shutdownDelay;
@@ -183,6 +194,10 @@ namespace NetMud.CentralControl
             return null;
         }
 
+        /// <summary>
+        /// Removes a token from the cache
+        /// </summary>
+        /// <param name="designator">The token's designator</param>
         private static void RemoveCancellationToken(string designator)
         {
             globalCache.Remove(String.Format(cacheKeyFormat, designator));
