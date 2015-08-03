@@ -8,8 +8,14 @@ using System.Text;
 
 namespace NetMud.Data.Reference
 {
+    /// <summary>
+    /// Referred to as Help Files in the UI, extra help content for the help command
+    /// </summary>
     public class Help : IReference
     {
+        /// <summary>
+        /// New up a "blank" help entry
+        /// </summary>
         public Help()
         {
             ID = -1;
@@ -19,13 +25,35 @@ namespace NetMud.Data.Reference
             HelpText = "NotImpl";
         }
 
+        /// <summary>
+        /// Numerical iterative ID in the db
+        /// </summary>
         public long ID { get; set; }
+
+        /// <summary>
+        /// When this was first created in the db
+        /// </summary>
         public DateTime Created { get; set; }
+
+        /// <summary>
+        /// When this was last revised in the db
+        /// </summary>
         public DateTime LastRevised { get; set; }
+
+        /// <summary>
+        /// The unique name for this entry (also part of the accessor keywords)
+        /// </summary>
         public string Name { get; set; }
 
+        /// <summary>
+        /// Help text for the body of the render to help command
+        /// </summary>
         public string HelpText { get; set; }
 
+        /// <summary>
+        /// Fills a data object with data from a data row
+        /// </summary>
+        /// <param name="dr">the data row to fill from</param>
         public void Fill(global::System.Data.DataRow dr)
         {
             int outId = default(int);
@@ -80,6 +108,11 @@ namespace NetMud.Data.Reference
             return -99;
         }
 
+        /// <summary>
+        /// Compares this object to another one to see if they are the same object
+        /// </summary>
+        /// <param name="other">the object to compare to</param>
+        /// <returns>true if the same object</returns>
         public bool Equals(IData other)
         {
             if (other != default(IData))
@@ -97,6 +130,10 @@ namespace NetMud.Data.Reference
             return false;
         }
 
+        /// <summary>
+        /// Renders the help text for this data object
+        /// </summary>
+        /// <returns>help text</returns>
         public IEnumerable<string> RenderHelpBody()
         {
             var sb = new List<string>();
@@ -106,6 +143,10 @@ namespace NetMud.Data.Reference
             return sb;
         }
 
+        /// <summary>
+        /// insert this into the db
+        /// </summary>
+        /// <returns>the object with ID and other db fields set</returns>
         public IData Create()
         {
             Help returnValue = default(Help);
@@ -135,6 +176,10 @@ namespace NetMud.Data.Reference
             return returnValue;
         }
 
+        /// <summary>
+        /// Remove this object from the db permenantly
+        /// </summary>
+        /// <returns>success status</returns>
         public bool Remove()
         {
             var sql = new StringBuilder();
@@ -145,6 +190,10 @@ namespace NetMud.Data.Reference
             return true;
         }
 
+        /// <summary>
+        /// Update the field data for this object to the db
+        /// </summary>
+        /// <returns>success status</returns>
         public bool Save()
         {
             var sql = new StringBuilder();

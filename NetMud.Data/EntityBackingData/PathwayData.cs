@@ -11,34 +11,108 @@ namespace NetMud.Data.EntityBackingData
 {
     public class PathwayData : IPathwayData
     {    
+        /// <summary>
+        /// The system type for the entity this attaches to
+        /// </summary>
         public Type EntityClass
         {
             get { return typeof(NetMud.Data.Game.Pathway); }
         }
 
+        /// <summary>
+        /// Numerical iterative ID in the db
+        /// </summary>
         public long ID { get; set; }
+
+        /// <summary>
+        /// When this was first created in the db
+        /// </summary>
         public DateTime Created { get; set; }
+
+        /// <summary>
+        /// When this was last revised in the db
+        /// </summary>
         public DateTime LastRevised { get; set; }
+
+        /// <summary>
+        /// The unique name for this entry (also part of the accessor keywords)
+        /// </summary>
         public string Name { get; set; }
 
+        /// <summary>
+        /// How wide this pathway portal is
+        /// </summary>
         public long PassingWidth { get; set; }
+
+        /// <summary>
+        /// How high the pathway portal is
+        /// </summary>
         public long PassingHeight { get; set; }
+
+        /// <summary>
+        /// 0->360 degrees with 0 being absolute north (meaning 90 is west, 180 south, etc) -1 means no cardinality
+        /// </summary>
         public int DegreesFromNorth { get; set; }
 
+        /// <summary>
+        /// The container this points into
+        /// </summary>
         public string ToLocationID { get; set; }
+
+        /// <summary>
+        /// The system type of the container this points into
+        /// </summary>
         public string ToLocationType { get; set; }
 
+        /// <summary>
+        /// The container this starts in
+        /// </summary>
         public string FromLocationID { get; set; }
+
+        /// <summary>
+        /// The system type of the container this starts in
+        /// </summary>
         public string FromLocationType { get; set; }
 
+        /// <summary>
+        /// Output message format the Actor recieves upon moving
+        /// </summary>
         public string MessageToActor { get; set; }
+
+        /// <summary>
+        /// Output message format the originating location's entities recieve upon moving
+        /// </summary>
         public string MessageToOrigin { get; set; }
+
+        /// <summary>
+        /// Output message format the destination location's entities recieve upon moving
+        /// </summary>
         public string MessageToDestination { get; set; }
+
+        /// <summary>
+        /// Audible (heard) message sent to surrounding locations of both origin and destination
+        /// </summary>
         public string AudibleToSurroundings { get; set; }
+
+        /// <summary>
+        /// Strength of audible message to surroundings
+        /// </summary>
         public int AudibleStrength { get; set; }
+
+        /// <summary>
+        /// Visible message sent to surrounding locations of both origin and destination
+        /// </summary>
         public string VisibleToSurroundings { get; set; }
+
+        /// <summary>
+        /// Strength of visible message to surroundings
+        /// </summary>
         public int VisibleStrength { get; set; }
 
+        /// <summary>
+        /// Fills a data object with data from a data row
+        /// </summary>
+        /// <param name="dr">the data row to fill from</param>
         public void Fill(global::System.Data.DataRow dr)
         {
             long outId = default(long);
@@ -103,6 +177,10 @@ namespace NetMud.Data.EntityBackingData
             VisibleStrength = outVisibleStrength;
         }
 
+        /// <summary>
+        /// insert this into the db
+        /// </summary>
+        /// <returns>the object with ID and other db fields set</returns>
         public IData Create()
         {
             IPathwayData returnValue = default(IPathwayData);
@@ -135,6 +213,10 @@ namespace NetMud.Data.EntityBackingData
             return returnValue;
         }
 
+        /// <summary>
+        /// Remove this object from the db permenantly
+        /// </summary>
+        /// <returns>success status</returns>
         public bool Remove()
         {
             //TODO: Exits too?
@@ -146,6 +228,10 @@ namespace NetMud.Data.EntityBackingData
             return true;
         }
 
+        /// <summary>
+        /// Update the field data for this object to the db
+        /// </summary>
+        /// <returns>success status</returns>
         public bool Save()
         {
             var sql = new StringBuilder();
@@ -170,6 +256,14 @@ namespace NetMud.Data.EntityBackingData
             return true;
         }
 
+        /// <summary>
+        /// -99 = null input
+        /// -1 = wrong type
+        /// 0 = same type, wrong id
+        /// 1 = same reference (same id, same type)
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public int CompareTo(IData other)
         {
             if (other != null)
@@ -193,6 +287,11 @@ namespace NetMud.Data.EntityBackingData
             return -99;
         }
 
+        /// <summary>
+        /// Compares this object to another one to see if they are the same object
+        /// </summary>
+        /// <param name="other">the object to compare to</param>
+        /// <returns>true if the same object</returns>
         public bool Equals(IData other)
         {
             if (other != default(IData))

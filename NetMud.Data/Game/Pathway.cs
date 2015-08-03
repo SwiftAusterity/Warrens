@@ -20,7 +20,33 @@ namespace NetMud.Data.Game
 {
     public class Pathway : EntityPartial, IPathway
     {
+        /// <summary>
+        /// News up an empty entity
+        /// </summary>
+        public Pathway()
+        {
+            Enter = new MessageCluster();
+        }
+
+        /// <summary>
+        /// News up an entity with its backing data
+        /// </summary>
+        /// <param name="backingStore">the backing data</param>
+        public Pathway(IPathwayData backingStore)
+        {
+            Enter = new MessageCluster();
+            DataTemplate = backingStore;
+            GetFromWorldOrSpawn();
+        }
+
+        /// <summary>
+        /// Birthmark of live location this points into
+        /// </summary>
         private string _currentToLocationBirthmark;
+
+        /// <summary>
+        /// Restful live location this points into
+        /// </summary>
         public ILocation ToLocation
         {
             get
@@ -40,7 +66,14 @@ namespace NetMud.Data.Game
             }
         }
 
+        /// <summary>
+        /// Birthmark of live location this points out of
+        /// </summary>
         private string _currentFromLocationBirthmark;
+
+        /// <summary>
+        /// Restful live location this points out of
+        /// </summary>
         public ILocation FromLocation
         {
             get
@@ -60,21 +93,20 @@ namespace NetMud.Data.Game
             }
         }
         
+        /// <summary>
+        /// Movement messages trigger when moved through
+        /// </summary>
         public MessageCluster Enter { get; set; }
+
+        /// <summary>
+        /// Cardinality direction this points towards
+        /// </summary>
         public MovementDirectionType MovementDirection { get; private set; }
 
-        public Pathway()
-        {
-            Enter = new MessageCluster();
-        }
-
-        public Pathway(IPathwayData backingStore)
-        {
-            Enter = new MessageCluster();
-            DataTemplate = backingStore;
-            GetFromWorldOrSpawn();
-        }
-
+        #region spawning
+        /// <summary>
+        /// Tries to find this entity in the world based on its ID or gets a new one from the db and puts it in the world
+        /// </summary>
         public void GetFromWorldOrSpawn()
         {
             //Try to see if they are already there
@@ -97,6 +129,9 @@ namespace NetMud.Data.Game
             }
         }
 
+        /// <summary>
+        /// Spawn this new into the live world
+        /// </summary>
         public override void SpawnNewInWorld()
         {
             var bS = (IPathwayData)DataTemplate;
@@ -104,6 +139,10 @@ namespace NetMud.Data.Game
             SpawnNewInWorld(null);
         }
 
+        /// <summary>
+        /// Spawn this new into the live world into a specified container
+        /// </summary>
+        /// <param name="spawnTo">the location/container this should spawn into</param>
         public override void SpawnNewInWorld(IContains spawnTo)
         {
             var bS = (IPathwayData)DataTemplate;
@@ -160,7 +199,12 @@ namespace NetMud.Data.Game
 
             fromLocation.MoveInto<IPathway>(this);
         }
+        #endregion
 
+        /// <summary>
+        /// Render this to a look command (what something sees when it 'look's at this
+        /// </summary>
+        /// <returns>the output strings</returns>
         public override IEnumerable<string> RenderToLook()
         {
             var sb = new List<string>();
@@ -172,6 +216,10 @@ namespace NetMud.Data.Game
         }
 
         #region HotBackup
+        /// <summary>
+        /// Serialize this entity's live data to a binary stream
+        /// </summary>
+        /// <returns>the binary stream</returns>
         public override byte[] Serialize()
         {
             var settings = new XmlWriterSettings { OmitXmlDeclaration = true, Encoding = Encoding.UTF8 };
@@ -219,6 +267,11 @@ namespace NetMud.Data.Game
             return entityBinaryConvert.XmlBinary;
         }
 
+        /// <summary>
+        /// Deserialize binary stream to this entity
+        /// </summary>
+        /// <param name="bytes">the binary to turn into an entity</param>
+        /// <returns>the entity</returns>
         public override IEntity DeSerialize(byte[] bytes)
         {
             var entityBinaryConvert = new DataUtility.EntityFileData(bytes);

@@ -11,25 +11,71 @@ namespace NetMud.Data.EntityBackingData
 {
     public class Character : ICharacter
     {
+        /// <summary>
+        /// The system type for the entity this attaches to
+        /// </summary>
         public Type EntityClass
         {
             get { return typeof(Game.Player); }
         }
 
+        /// <summary>
+        /// Numerical iterative ID in the db
+        /// </summary>
         public long ID { get; set; }
+
+        /// <summary>
+        /// When this was first created in the db
+        /// </summary>
         public DateTime Created { get; set; }
+
+        /// <summary>
+        /// When this was last revised in the db
+        /// </summary>
         public DateTime LastRevised { get; set; }
+
+        /// <summary>
+        /// The unique name for this entry (also part of the accessor keywords)
+        /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Gender data string for player characters
+        /// </summary>
         public string Gender { get; set; }
 
+        /// <summary>
+        /// "family name" for player character
+        /// </summary>
         public string SurName { get; set; }
+
+        /// <summary>
+        /// Account handle (user) this belongs to
+        /// </summary>
         public string AccountHandle { get; set; }
+
+        /// <summary>
+        /// The "user" level for commands and accessibility
+        /// </summary>
         public StaffRank GamePermissionsRank { get; set; }
 
+        /// <summary>
+        /// The last known location ID this character was seen in by system (for restore/backup purposes)
+        /// </summary>
         public string LastKnownLocation { get; set; }
+        /// <summary>
+        /// The system type of the ast known location this character was seen in by system (for restore/backup purposes)
+        /// </summary>
         public string LastKnownLocationType { get; set; }
 
+        /// <summary>
+        /// Account data object this is owned by
+        /// </summary>
         private IAccount _account;
+
+        /// <summary>
+        /// Account data object this is owned by
+        /// </summary>
         public IAccount Account
         {
             get
@@ -41,11 +87,19 @@ namespace NetMud.Data.EntityBackingData
             }
         }
 
+        /// <summary>
+        /// Full name to refer to this NPC with
+        /// </summary>
+        /// <returns>the full name string</returns>
         public string FullName()
         {
             return string.Format("{0} {1}", Name, SurName);
         }
 
+        /// <summary>
+        /// Fills a data object with data from a data row
+        /// </summary>
+        /// <param name="dr">the data row to fill from</param>
         public void Fill(global::System.Data.DataRow dr)
         {
             long outId = default(long);
@@ -89,7 +143,14 @@ namespace NetMud.Data.EntityBackingData
             LastKnownLocationType = outLKLT;
         }
 
-
+        /// <summary>
+        /// -99 = null input
+        /// -1 = wrong type
+        /// 0 = same type, wrong id
+        /// 1 = same reference (same id, same type)
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public int CompareTo(IData other)
         {
             if (other != null)
@@ -113,6 +174,11 @@ namespace NetMud.Data.EntityBackingData
             return -99;
         }
 
+        /// <summary>
+        /// Compares this object to another one to see if they are the same object
+        /// </summary>
+        /// <param name="other">the object to compare to</param>
+        /// <returns>true if the same object</returns>
         public bool Equals(IData other)
         {
             if (other != default(IData))
@@ -130,6 +196,10 @@ namespace NetMud.Data.EntityBackingData
             return false;
         }
 
+        /// <summary>
+        /// insert this into the db
+        /// </summary>
+        /// <returns>the object with ID and other db fields set</returns>
         public IData Create()
         {
             ICharacter returnValue = default(ICharacter);
@@ -159,6 +229,10 @@ namespace NetMud.Data.EntityBackingData
             return returnValue;
         }
 
+        /// <summary>
+        /// Remove this object from the db permenantly
+        /// </summary>
+        /// <returns>success status</returns>
         public bool Remove()
         {
             var sql = new StringBuilder();
@@ -169,6 +243,10 @@ namespace NetMud.Data.EntityBackingData
             return true;
         }
 
+        /// <summary>
+        /// Update the field data for this object to the db
+        /// </summary>
+        /// <returns>success status</returns>
         public bool Save()
         {
             var sql = new StringBuilder();

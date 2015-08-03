@@ -19,8 +19,14 @@ using System.Xml.Linq;
 
 namespace NetMud.Data.Game
 {
+    /// <summary>
+    /// Places entities are (most of the time)
+    /// </summary>
     public class Room : EntityPartial, IRoom
     {
+        /// <summary>
+        /// News up an empty entity
+        /// </summary>
         public Room()
         {
             ObjectsInRoom = new EntityContainer<IInanimate>();
@@ -28,23 +34,42 @@ namespace NetMud.Data.Game
             Pathways = new EntityContainer<IPathway>();
         }
 
+        /// <summary>
+        /// News up an entity with its backing data
+        /// </summary>
+        /// <param name="room">the backing data</param>
         public Room(IRoomData room)
         {
             ObjectsInRoom = new EntityContainer<IInanimate>();
             MobilesInRoom = new EntityContainer<IMobile>();
             Pathways = new EntityContainer<IPathway>();
 
-            //Yes it's its own datatemplate and currentLocation
             DataTemplate = room;
 
             GetFromWorldOrSpawn();
         }
 
         #region Container
+        /// <summary>
+        /// Any inanimates contained in this (on the floor)
+        /// </summary>
         public IEntityContainer<IInanimate> ObjectsInRoom { get; set; }
+
+        /// <summary>
+        /// Any mobiles (players, npcs) contained in this
+        /// </summary>
         public IEntityContainer<IMobile> MobilesInRoom { get; set; }
+
+        /// <summary>
+        /// Pathways leading out of this
+        /// </summary>
         public IEntityContainer<IPathway> Pathways { get; set; }
 
+        /// <summary>
+        /// Get all of the entities matching a type inside this
+        /// </summary>
+        /// <typeparam name="T">the type</typeparam>
+        /// <returns>the contained entities</returns>
         public IEnumerable<T> GetContents<T>()
         {
             var implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
@@ -63,6 +88,12 @@ namespace NetMud.Data.Game
             return contents;
         }
 
+        /// <summary>
+        /// Get all of the entities matching a type inside this in a named container
+        /// </summary>
+        /// <typeparam name="T">the type</typeparam>
+        /// <returns>the contained entities</returns>
+        /// <param name="containerName">the name of the container</param>
         public IEnumerable<T> GetContents<T>(string containerName)
         {
             switch (containerName)
@@ -78,11 +109,25 @@ namespace NetMud.Data.Game
             return Enumerable.Empty<T>();
         }
 
+        /// <summary>
+        /// Move an entity into this
+        /// </summary>
+        /// <typeparam name="T">the type of the entity to add</typeparam>
+        /// <param name="thing">the entity to add</param>
+        /// <returns>errors</returns>
         public string MoveInto<T>(T thing)
         {
             return MoveInto<T>(thing, string.Empty);
         }
 
+
+        /// <summary>
+        /// Move an entity into a named container in this
+        /// </summary>
+        /// <typeparam name="T">the type of the entity to add</typeparam>
+        /// <param name="thing">the entity to add</param>
+        /// <param name="containerName">the name of the container</param>
+        /// <returns>errors</returns>
         public string MoveInto<T>(T thing, string containerName)
         {
             var implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
@@ -130,11 +175,24 @@ namespace NetMud.Data.Game
             return "Invalid type to move to container.";
         }
 
+        /// <summary>
+        /// Move an entity out of this
+        /// </summary>
+        /// <typeparam name="T">the type of entity to remove</typeparam>
+        /// <param name="thing">the entity</param>
+        /// <returns>errors</returns>
         public string MoveFrom<T>(T thing)
         {
             return MoveFrom<T>(thing, string.Empty);
         }
 
+        /// <summary>
+        /// Move an entity out of this' named container
+        /// </summary>
+        /// <typeparam name="T">the type of entity to remove</typeparam>
+        /// <param name="thing">the entity</param>
+        /// <param name="containerName">the name of the container</param>
+        /// <returns>errors</returns>
         public string MoveFrom<T>(T thing, string containerName)
         {
             var implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
@@ -182,6 +240,11 @@ namespace NetMud.Data.Game
         }
         #endregion
 
+        #region rendering
+        /// <summary>
+        /// Render this to a look command (what something sees when it 'look's at this
+        /// </summary>
+        /// <returns>the output strings</returns>
         public override IEnumerable<string> RenderToLook()
         {
             var sb = new List<string>();
@@ -191,8 +254,12 @@ namespace NetMud.Data.Game
 
             return sb;
         }
+        #endregion
 
         #region Spawning
+        /// <summary>
+        /// Tries to find this entity in the world based on its ID or gets a new one from the db and puts it in the world
+        /// </summary>
         public void GetFromWorldOrSpawn()
         {
             //Try to see if they are already there
@@ -214,12 +281,20 @@ namespace NetMud.Data.Game
             }
         }
 
+        /// <summary>
+        /// Spawn this new into the live world
+        /// </summary>
         public override void SpawnNewInWorld()
         {
             //TODO: will rooms ever be contained by something else?
             SpawnNewInWorld(this);
         }
 
+
+        /// <summary>
+        /// Spawn this new into the live world into a specified container
+        /// </summary>
+        /// <param name="spawnTo">the location/container this should spawn into</param>
         public override void SpawnNewInWorld(IContains spawnTo)
         {
             var roomTemplate = (IRoomData)DataTemplate;
@@ -232,6 +307,10 @@ namespace NetMud.Data.Game
         #endregion
 
         #region HotBackup
+        /// <summary>
+        /// Serialize this entity's live data to a binary stream
+        /// </summary>
+        /// <returns>the binary stream</returns>
         public override byte[] Serialize()
         {
             var settings = new XmlWriterSettings { OmitXmlDeclaration = true, Encoding = Encoding.UTF8 };
@@ -273,6 +352,11 @@ namespace NetMud.Data.Game
             return entityBinaryConvert.XmlBinary;
         }
 
+        /// <summary>
+        /// Deserialize binary stream to this entity
+        /// </summary>
+        /// <param name="bytes">the binary to turn into an entity</param>
+        /// <returns>the entity</returns>
         public override IEntity DeSerialize(byte[] bytes)
         {
             var entityBinaryConvert = new DataUtility.EntityFileData(bytes);
