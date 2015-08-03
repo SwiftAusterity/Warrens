@@ -5,8 +5,16 @@ using System.Data;
 
 namespace NetMud.DataAccess
 {
+    /// <summary>
+    /// Provides accessor methods into Reference Data in the db
+    /// </summary>
     public static class ReferenceAccess
     {
+        /// <summary>
+        /// Get all of the reference data in the table
+        /// </summary>
+        /// <typeparam name="T">The system type of the data</typeparam>
+        /// <returns>A list of all of the data for that type</returns>
         public static IEnumerable<T> GetAll<T>() where T : IReference
         {
             var returnList = new List<T>();
@@ -34,6 +42,12 @@ namespace NetMud.DataAccess
             return returnList;
         }
 
+        /// <summary>
+        /// Gets a single reference data entry by name
+        /// </summary>
+        /// <typeparam name="T">The system type of the data</typeparam>
+        /// <param name="keyword">The "Name" of the reference data entry</param>
+        /// <returns>One data entry, if it matches</returns>
         public static T GetOne<T>(string keyword) where T : IReference
         {
             IReference returnValue = default(T);
@@ -63,6 +77,12 @@ namespace NetMud.DataAccess
             return (T)returnValue;
         }
 
+        /// <summary>
+        /// Gets a single reference data entry by ID
+        /// </summary>
+        /// <typeparam name="T">The system type of the data</typeparam>
+        /// <param name="id">The "ID" of the reference data entry</param>
+        /// <returns>One data entry, if it matches</returns>
         public static T GetOne<T>(long id) where T : IReference
         {
             IReference returnValue = default(T);

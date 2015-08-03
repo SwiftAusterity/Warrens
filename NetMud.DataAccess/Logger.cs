@@ -10,6 +10,9 @@ using NetMud.Utility;
 
 namespace NetMud.DataAccess
 {
+    /// <summary>
+    /// Static expected log types for easier log coalation
+    /// </summary>
     public enum LogChannels
     {
         CommandUse,
@@ -20,8 +23,15 @@ namespace NetMud.DataAccess
         ProcessingLoops
     }
 
+    /// <summary>
+    /// Publically available wrapper for logging
+    /// </summary>
     public static class LoggingUtility
     {
+        /// <summary>
+        /// Log an exception
+        /// </summary>
+        /// <param name="ex">the exception</param>
         public static void LogError(Exception ex)
         {
             var errorContent = String.Format("{0}: {1}{2}{3}", ex.GetType().Name, ex.Message, Environment.NewLine, ex.StackTrace);
@@ -29,12 +39,22 @@ namespace NetMud.DataAccess
             CommitLog(errorContent, "SystemError", true);
         }
 
+        /// <summary>
+        /// Log an admin command being used
+        /// </summary>
+        /// <param name="commandString">the command being used</param>
+        /// <param name="accountName">the account using it (user not character)</param>
         public static void LogAdminCommandUsage(string commandString, string accountName)
         {
             var content = String.Format("{0}: {1}", accountName, commandString);
 
             CommitLog(content, "AdminCommandUse", true);
         }
+
+        /// <summary>
+        /// Gets all the current log file names in Current
+        /// </summary>
+        /// <returns>a list of the log file names</returns>
         public static IEnumerable<string> GetCurrentLogNames()
         {
             var logger = new Logger(WebConfigurationManager.AppSettings["LogPath"]);
@@ -42,6 +62,11 @@ namespace NetMud.DataAccess
             return logger.GetCurrentLogNames();
         }
 
+        /// <summary>
+        /// Gets a current log file's contents
+        /// </summary>
+        /// <param name="channel">the log file name</param>
+        /// <returns>the content</returns>
         public static string GetCurrentLogContent(string channel)
         {
             var logger = new Logger(WebConfigurationManager.AppSettings["LogPath"]);
@@ -49,11 +74,22 @@ namespace NetMud.DataAccess
             return logger.GetCurrentLogContent(channel);
         }
 
+        /// <summary>
+        /// Log one entry to a pre-determined channel
+        /// </summary>
+        /// <param name="content">the content to log</param>
+        /// <param name="channel">which log to append it to</param>
+        /// <param name="keepItQuiet">Announce it in game or not</param>
         public static void Log(string content, LogChannels channel, bool keepItQuiet = false)
         {
             CommitLog(content, channel.ToString(), keepItQuiet);
         }
 
+        /// <summary>
+        /// Archives a log file
+        /// </summary>
+        /// <param name="channel">the log file to archive</param>
+        /// <returns>success status</returns>
         public static bool RolloverLog(string channel)
         {
             var logger = new Logger(WebConfigurationManager.AppSettings["LogPath"]);
@@ -61,7 +97,12 @@ namespace NetMud.DataAccess
             return logger.RolloverLog(channel);
         }
 
-
+        /// <summary>
+        /// commits content to a log channel
+        /// </summary>
+        /// <param name="content">the content to log</param>
+        /// <param name="channel">which log to append it to</param>
+        /// <param name="keepItQuiet">Announce it in game or not</param>
         private static void CommitLog(string content, string channel, bool keepItQuiet)
         {
             var logger = new Logger(WebConfigurationManager.AppSettings["LogPath"]);
@@ -70,21 +111,41 @@ namespace NetMud.DataAccess
         }
     }
 
-
+    /// <summary>
+    /// Internal file access for logging
+    /// </summary>
     internal class Logger
     {
+        /// <summary>
+        /// Base directory to push logs to
+        /// </summary>
         private string BaseDirectory;
 
+        /// <summary>
+        /// Create an instance of the logger
+        /// </summary>
+        /// <param name="logDirectoryPath">Base directory to push logs to</param>
         public Logger(string logDirectoryPath)
         {
             BaseDirectory = logDirectoryPath;
         }
 
+        /// <summary>
+        /// Write to a log
+        /// </summary>
+        /// <param name="content">the content to log</param>
+        /// <param name="beQuiet">Announce it in game or not</param>
         public void WriteToLog(string content, bool beQuiet = false)
         {
             WriteToLog(content, "General", beQuiet);
         }
 
+        /// <summary>
+        /// Write to a log
+        /// </summary>
+        /// <param name="content">the content to log</param>
+        /// <param name="channel">which log to append it to</param>
+        /// <param name="keepItQuiet">Announce it in game or not</param>
         public void WriteToLog(string content, string channel, bool beQuiet = false)
         {
             //Write to the log file first
@@ -99,10 +160,14 @@ namespace NetMud.DataAccess
                 foreach (var peep in peeps)
                     peep.WriteTo(new string[] { content.EncapsulateOutput() });
 
-                //TODO: Write to some source that can push to the web
+                //Low Priority TODO: Write to some source that can push to the web
             }
         }
 
+        /// <summary>
+        /// Gets all the current log file names in Current
+        /// </summary>
+        /// <returns>a list of the log file names</returns>
         public IEnumerable<string> GetCurrentLogNames()
         {
             var names = Enumerable.Empty<string>();
@@ -113,6 +178,11 @@ namespace NetMud.DataAccess
             return names.Select(nm => nm.Substring(nm.LastIndexOf('/') + 1, nm.Length - nm.LastIndexOf('/') - 5));
         }
 
+        /// <summary>
+        /// Archives a log file
+        /// </summary>
+        /// <param name="channel">the log file to archive</param>
+        /// <returns>success status</returns>
         public bool RolloverLog(string channel)
         {
             var currentLogName = BaseDirectory + "Current/" + channel + ".txt";
@@ -142,6 +212,11 @@ namespace NetMud.DataAccess
             return false;
         }
 
+        /// <summary>
+        /// Gets a current log file's contents
+        /// </summary>
+        /// <param name="channel">the log file name</param>
+        /// <returns>the content</returns>
         public string GetCurrentLogContent(string channel)
         {
             var content = String.Empty;
@@ -162,6 +237,11 @@ namespace NetMud.DataAccess
             return content;
         }
 
+        /// <summary>
+        /// Writes content to a log file
+        /// </summary>
+        /// <param name="content">the content to write</param>
+        /// <param name="channel">the log file to append it to</param>
         private void WriteToFile(string content, string channel)
         {
             FileStream thisLog = null;

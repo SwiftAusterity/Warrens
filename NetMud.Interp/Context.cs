@@ -14,6 +14,9 @@ using NetMud.DataStructure.Base.EntityBackingData;
 
 namespace NetMud.Interp
 {
+    /// <summary>
+    /// The parsing system for command input
+    /// </summary>
     public class Context
     {
         public string OriginalCommandString { get; private set; }

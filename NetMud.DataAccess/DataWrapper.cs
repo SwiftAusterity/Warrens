@@ -5,8 +5,16 @@ using System.Data;
 
 namespace NetMud.DataAccess
 {
+    /// <summary>
+    /// Provides accessor methods into Backing Data in the db
+    /// </summary>
     public static class DataWrapper
     {
+        /// <summary>
+        /// Get all of the data in the table
+        /// </summary>
+        /// <typeparam name="T">The system type of the data</typeparam>
+        /// <returns>A list of all of the data for that type</returns>
         public static IEnumerable<T> GetAll<T>() where T : IData
         {
             var returnList = new List<T>();
@@ -34,6 +42,13 @@ namespace NetMud.DataAccess
             return returnList;
         }
 
+        /// <summary>
+        /// Get all of the data in a table that matches a key value
+        /// </summary>
+        /// <typeparam name="T">The system type of the data</typeparam>
+        /// <typeparam name="sharedKeyName">Thet db column name to check against</typeparam>
+        /// <typeparam name="sharedKeyValue">The value to match (exact match)</typeparam>
+        /// <returns>A list of all of the data returned</returns>
         public static IEnumerable<T> GetAllBySharedKey<T>(string sharedKeyName, string sharedKeyValue) where T : IData
         {
             var returnList = new List<T>();
@@ -64,6 +79,13 @@ namespace NetMud.DataAccess
             return returnList;
         }
 
+        /// <summary>
+        /// Get a single entry from a table that matches a key value
+        /// </summary>
+        /// <typeparam name="T">The system type of the data</typeparam>
+        /// <typeparam name="sharedKeyName">Thet db column name to check against</typeparam>
+        /// <typeparam name="sharedKeyValue">The value to match (exact match)</typeparam>
+        /// <returns>The one data that matches of the data returned</returns>
         public static T GetOneBySharedKey<T>(string sharedKeyName, string sharedKeyValue) where T : IData
         {
             IData returnValue = default(T);
@@ -96,6 +118,12 @@ namespace NetMud.DataAccess
             return (T)returnValue;
         }
 
+        /// <summary>
+        /// Gets a single backing data entry by ID
+        /// </summary>
+        /// <typeparam name="T">The system type of the data</typeparam>
+        /// <param name="id">The "ID" of the reference data entry</param>
+        /// <returns>One data entry, if it matches</returns>
         public static T GetOne<T>(long id) where T : IData
         {
             IData returnValue = default(T);
@@ -122,6 +150,11 @@ namespace NetMud.DataAccess
             return (T)returnValue;
         }
 
+        /// <summary>
+        /// Scrubs interface type names
+        /// </summary>
+        /// <param name="t">the type to find the right name for</param>
+        /// <returns>the name</returns>
         private static string ScrubTypeName(Type t)
         {
             if (t.IsInterface)
