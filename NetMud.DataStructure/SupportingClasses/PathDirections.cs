@@ -1,7 +1,11 @@
 ﻿namespace NetMud.DataStructure.SupportingClasses
 {
+    /// <summary>
+    /// Movement names, cardinal directions
+    /// </summary>
     public enum MovementDirectionType : short
     {
+        None = -1,
         North = 0,
         NorthEast = 1,
         East = 2,

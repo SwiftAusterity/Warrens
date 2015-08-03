@@ -18,6 +18,9 @@ using System.Xml.Linq;
 
 namespace NetMud.Data.Game
 {
+    /// <summary>
+    /// "Object" class
+    /// </summary>
     public class Inanimate : EntityPartial, IInanimate
     {
         /// <summary>

@@ -8,6 +8,9 @@ using System.Text.RegularExpressions;
 
 namespace NetMud.DataStructure.SupportingClasses
 {
+    /// <summary>
+    /// Type of message being outputted
+    /// </summary>
     public enum MessagingType
     {
         Visible,
@@ -15,6 +18,9 @@ namespace NetMud.DataStructure.SupportingClasses
         Psychic
     }
 
+    /// <summary>
+    /// Type of targetting a message has (used by variables translator) 
+    /// </summary>
     public enum MessagingTargetType
     {
         Actor,
@@ -29,10 +35,21 @@ namespace NetMud.DataStructure.SupportingClasses
         ReverseDirection
     }
 
+    /// <summary>
+    /// Utility methods for messaging output and translation
+    /// </summary>
     public static class MessagingUtility
     {
+        /// <summary>
+        /// regex pattern color codes take
+        /// </summary>
         private const string colorPattern = "\\%[a-zA-z]+\\%";
 
+        /// <summary>
+        /// Translates output text with color codes into proper output
+        /// </summary>
+        /// <param name="message">the text to translate</param>
+        /// <returns>translated text</returns>
         public static string TranslateColorVariables(string message)
         {
             bool stillFound = true;
@@ -168,6 +185,11 @@ namespace NetMud.DataStructure.SupportingClasses
             return message;
         }
 
+        /// <summary>
+        /// Engine for translating output text with color codes into proper output
+        /// </summary>
+        /// <param name="message">the text to translate</param>
+        /// <returns>translated text</returns>
         private static string ReplaceColor(string originalString, string formatToReplace, string styleElement)
         {
             if (string.IsNullOrWhiteSpace(originalString) || string.IsNullOrWhiteSpace(formatToReplace) || string.IsNullOrWhiteSpace(styleElement))
@@ -193,6 +215,11 @@ namespace NetMud.DataStructure.SupportingClasses
                     , styleElement);
         }
 
+        /// <summary>
+        /// Translates output text with entity variables (he, she, it, names, directions, etc)
+        /// </summary>
+        /// <param name="message">the text to translate</param>
+        /// <returns>translated text</returns>
         public static string TranslateEntityVariables(string message, Dictionary<MessagingTargetType, IEntity[]> entities)
         {
             foreach (KeyValuePair<MessagingTargetType, IEntity[]> kvp in entities)
@@ -250,9 +277,19 @@ namespace NetMud.DataStructure.SupportingClasses
 
             return message;
         }
+
+        /// <summary>
+        /// Translates degreesFromNorth into direction words for pathways
+        /// </summary>
+        /// <param name="degreesFromNorth">the value to translate</param>
+        /// <param name="reverse">reverse the direction or not</param>
+        /// <returns>translated text</returns>
         public static MovementDirectionType TranslateDegreesToDirection(int degreesFromNorth, bool reverse = false)
         {
             var trueDegrees = degreesFromNorth;
+
+            if (trueDegrees < 0)
+                return MovementDirectionType.None;
 
             if (reverse)
                 trueDegrees = degreesFromNorth < 180 ? degreesFromNorth + 180 : degreesFromNorth - 180;

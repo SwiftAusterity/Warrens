@@ -9,6 +9,9 @@ using System.Text;
 
 namespace NetMud.Data.EntityBackingData
 {
+    /// <summary>
+    /// Backing data for Rooms
+    /// </summary>
     public class RoomData : IRoomData
     {
         /// <summary>

@@ -9,6 +9,9 @@ using System.Text;
 
 namespace NetMud.Data.EntityBackingData
 {
+    /// <summary>
+    /// Backing data for pathways
+    /// </summary>
     public class PathwayData : IPathwayData
     {    
         /// <summary>

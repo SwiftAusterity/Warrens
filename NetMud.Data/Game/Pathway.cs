@@ -18,6 +18,9 @@ using System.Xml.Linq;
 
 namespace NetMud.Data.Game
 {
+    /// <summary>
+    /// Portals between locations
+    /// </summary>
     public class Pathway : EntityPartial, IPathway
     {
         /// <summary>

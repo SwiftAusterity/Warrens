@@ -6,20 +6,57 @@ using System.Linq;
 
 namespace NetMud.DataStructure.SupportingClasses
 {
+    /// <summary>
+    /// Used by the system to produce output for commands and events
+    /// </summary>
     public class MessageCluster
     {
+        /// <summary>
+        /// Message to send to the acting entity
+        /// </summary>
         public string ToActor { get; set; }
+
+        /// <summary>
+        /// Message to send to the subject of the command
+        /// </summary>
         public string ToSubject { get; set; }
+
+        /// <summary>
+        /// Message to send to the target of the command
+        /// </summary>
         public string ToTarget { get; set; }
+
+        /// <summary>
+        /// Message to send to the origin location of the command/event
+        /// </summary>
         public string ToOrigin { get; set; }
+
+        /// <summary>
+        /// Message to send to the destination location of the command/event
+        /// </summary>
         public string ToDestination { get; set; }
+
+        /// <summary>
+        /// Message to send to the surrounding locations of the command/event
+        /// </summary>
         public Dictionary<int, Tuple<MessagingType, string>> ToSurrounding { get; set; }
 
+        /// <summary>
+        /// New up an empty cluster
+        /// </summary>
         public MessageCluster()
         {
             ToSurrounding = new Dictionary<int, Tuple<MessagingType, string>>();
         }
 
+        /// <summary>
+        /// New up a full cluster
+        /// </summary>
+        /// <param name="actor">Message to send to the acting entity</param>
+        /// <param name="subject">Message to send to the subject of the command</param>
+        /// <param name="target">Message to send to the target of the command</param>
+        /// <param name="origin">Message to send to the origin location of the command/event</param>
+        /// <param name="destination">Message to send to the destination location of the command/event</param>
         public MessageCluster(string actor, string subject, string target, string origin, string destination)
         {
             ToActor = actor;
@@ -31,6 +68,14 @@ namespace NetMud.DataStructure.SupportingClasses
             ToSurrounding = new Dictionary<int, Tuple<MessagingType, string>>();
         }
 
+        /// <summary>
+        /// Executes the messaging, sending messages using WriteTo on all relevant entities
+        /// </summary>
+        /// <param name="Actor">The acting entity</param>
+        /// <param name="Subject">The command's subject entity</param>
+        /// <param name="Target">The command's target entity</param>
+        /// <param name="OriginLocation">The location the acting entity acted in</param>
+        /// <param name="DestinationLocation">The location the command is targetting</param>
         public void ExecuteMessaging(IEntity Actor, IEntity Subject, IEntity Target, IEntity OriginLocation, IEntity DestinationLocation)
         {
             var entities = new Dictionary<MessagingTargetType, IEntity[]>();
@@ -70,6 +115,12 @@ namespace NetMud.DataStructure.SupportingClasses
             }
         }
 
+        /// <summary>
+        /// Translates output text with color codes and entity variables
+        /// </summary>
+        /// <param name="output">the output text to translate</param>
+        /// <param name="entities">relevant entities for the variables transform</param>
+        /// <returns>translated output</returns>
         private IEnumerable<string> TranslateOutput(string output, Dictionary<MessagingTargetType, IEntity[]> entities)
         {
             var outputStrings = new List<string>();

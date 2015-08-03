@@ -9,6 +9,9 @@ using System.Text;
 
 namespace NetMud.Data.EntityBackingData
 {
+    /// <summary>
+    /// Backing data for player characters
+    /// </summary>
     public class Character : ICharacter
     {
         /// <summary>

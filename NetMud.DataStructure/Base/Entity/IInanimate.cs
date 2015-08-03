@@ -4,11 +4,24 @@ using NetMud.DataStructure.SupportingClasses;
 
 namespace NetMud.DataStructure.Base.Entity
 {
+    /// <summary>
+    /// "Object" entity
+    /// </summary>
     public interface IInanimate : IActor, ILocation, ISpawnAsMultiple
     {
+        /// <summary>
+        /// Inventory of the object, essentially
+        /// </summary>
         IEntityContainer<IInanimate> Contents { get; set; }
 
+        /// <summary>
+        /// Last known location ID for the object in the real world
+        /// </summary>
         long LastKnownLocation { get; set; }
+
+        /// <summary>
+        /// System type for the last known location for the object in the real world
+        /// </summary>
         string LastKnownLocationType { get; set; }
     }
 }

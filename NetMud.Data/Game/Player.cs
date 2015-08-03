@@ -20,6 +20,9 @@ using System.Xml.Linq;
 
 namespace NetMud.Data.Game
 {
+    /// <summary>
+    /// live player character entities
+    /// </summary>
     public class Player : EntityPartial, IPlayer
     {        
         /// <summary>

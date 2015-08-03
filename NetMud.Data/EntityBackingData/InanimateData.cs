@@ -8,6 +8,9 @@ using System.Text;
 
 namespace NetMud.Data.EntityBackingData
 {
+    /// <summary>
+    /// Backing data for Inanimate objects
+    /// </summary>
     public class InanimateData : IInanimateData
     {
         /// <summary>

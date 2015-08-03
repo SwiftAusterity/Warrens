@@ -1,5 +1,8 @@
 ﻿namespace NetMud.DataStructure.SupportingClasses
 {
+    /// <summary>
+    /// Permissions ranks for commands
+    /// </summary>
     public enum StaffRank : short
     {
         Player = 0,

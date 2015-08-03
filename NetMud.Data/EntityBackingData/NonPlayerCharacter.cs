@@ -8,6 +8,9 @@ using System.Text;
 
 namespace NetMud.Data.EntityBackingData
 {
+    /// <summary>
+    /// Backing data for NPCs
+    /// </summary>
     public class NonPlayerCharacter : INonPlayerCharacter
     {
         /// <summary>

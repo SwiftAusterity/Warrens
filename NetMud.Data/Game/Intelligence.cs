@@ -17,6 +17,9 @@ using System.Xml.Linq;
 
 namespace NetMud.Data.Game
 {
+    /// <summary>
+    /// NPCs
+    /// </summary>
     public class Intelligence : EntityPartial, IIntelligence
     {
         /// <summary>

@@ -5,6 +5,9 @@
     /// </summary>
     public interface ISpawnAsSingleton
     {
+        /// <summary>
+        /// Get the entity from the live world or spawn it in
+        /// </summary>
         void GetFromWorldOrSpawn();
     }
 }

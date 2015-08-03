@@ -4,8 +4,14 @@ using NetMud.DataStructure.SupportingClasses;
 
 namespace NetMud.DataStructure.Base.Entity
 {
+    /// <summary>
+    /// NPC entity class
+    /// </summary>
     public interface IIntelligence : IMobile, ISpawnAsMultiple
     {
+        /// <summary>
+        /// Held objects for the NPC
+        /// </summary>
         IEntityContainer<IInanimate> Inventory { get; set; }
     }
 }
