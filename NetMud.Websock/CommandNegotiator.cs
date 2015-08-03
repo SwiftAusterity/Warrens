@@ -22,18 +22,34 @@ using NetMud.DataAccess;
 
 namespace NetMud.Websock
 {
+    /// <summary>
+    /// Main handler of descriptor connections for websockets
+    /// </summary>
     public class CommandNegotiator : WebSocketBehavior
     {
+        /// <summary>
+        /// The user manager for the application, handles authentication from the web
+        /// </summary>
         public ApplicationUserManager UserManager { get; set; }
 
+        /// <summary>
+        /// User id of connected player
+        /// </summary>
         private string _userId;
 
+        /// <summary>
+        /// Creates an instance of the command negotiator
+        /// </summary>
         public CommandNegotiator()
         {
             //firefox fix
             IgnoreExtensions = true;
         }
 
+        /// <summary>
+        /// Creates an instance of the command negotiator with a specified user manager
+        /// </summary>
+        /// <param name="userManager">the authentication manager from the web</param>
         public CommandNegotiator(ApplicationUserManager userManager)
         {
             //firefox fix
@@ -41,6 +57,9 @@ namespace NetMud.Websock
             UserManager = userManager;
         }
 
+        /// <summary>
+        /// Handles initial connection
+        /// </summary>
         protected override void OnOpen()
         {
             var authTicketValue = Context.CookieCollection[".AspNet.ApplicationCookie"].Value;
@@ -50,16 +69,28 @@ namespace NetMud.Websock
             UserManager = new ApplicationUserManager(new UserStore<ApplicationUser>(new ApplicationDbContext()));
         }
 
+        /// <summary>
+        /// Handles when the connection closes
+        /// </summary>
+        /// <param name="e">events for closing</param>
         protected override void OnClose(CloseEventArgs e)
         {
             base.OnClose(e);
         }
 
+        /// <summary>
+        /// Handles when the connection faults
+        /// </summary>
+        /// <param name="e">events for the error</param>
         protected override void OnError(WebSocketSharp.ErrorEventArgs e)
         {
             base.OnError(e);
         }
 
+        /// <summary>
+        /// Handles when the connected descriptor sends input
+        /// </summary>
+        /// <param name="e">the events of the message</param>
         protected override void OnMessage(MessageEventArgs e)
         {
             var authedUser = UserManager.FindById(_userId);
@@ -97,6 +128,11 @@ namespace NetMud.Websock
                 Send(errors);
         }
 
+        /// <summary>
+        /// Wraps sending messages to the connected descriptor
+        /// </summary>
+        /// <param name="strings">the output</param>
+        /// <returns>success status</returns>
         public bool SendWrapper(IEnumerable<string> strings)
         {
             Send(RenderUtility.EncapsulateOutput(strings));
@@ -104,7 +140,10 @@ namespace NetMud.Websock
             return true;
         }
 
-
+        /// <summary>
+        /// Gets the user ID from the web from the aspnet cookie
+        /// </summary>
+        /// <param name="authTicketValue">the cookie's value</param>
         private void GetUserIDFromCookie(string authTicketValue)
         {
             authTicketValue = authTicketValue.Replace('-', '+').Replace('_', '/');

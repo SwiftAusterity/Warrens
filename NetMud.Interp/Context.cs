@@ -19,26 +19,81 @@ namespace NetMud.Interp
     /// </summary>
     public class Context
     {
+        /// <summary>
+        /// The original input we recieved to parse
+        /// </summary>
         public string OriginalCommandString { get; private set; }
+
+        /// <summary>
+        /// Internal list that keeps track of what words are left to parse from the command
+        /// </summary>
         public IEnumerable<string> CommandStringRemainder { get; private set; }
 
+        /// <summary>
+        /// The system assembly for where commands live
+        /// </summary>
         private Assembly commandsAssembly;
+
+        /// <summary>
+        /// The system assembly for where live entity classes live
+        /// </summary>
         private Assembly entitiesAssembly;
 
+        /// <summary>
+        /// The entity invoking the command
+        /// </summary>
         public IActor Actor { get; private set; }
-        public ICommand Command { get; private set; }
+
+        /// <summary>
+        /// The entity the command refers to
+        /// </summary>
         public object Subject { get; private set; }
+
+        /// <summary>
+        /// When there is a predicate parameter, the entity that is being targetting (subject become "with")
+        /// </summary>
         public object Target { get; private set; }
+
+        /// <summary>
+        /// Any tertiary entity being referenced in command parameters
+        /// </summary>
         public object Supporting { get; private set; }
+
+        /// <summary>
+        /// Container the Actor is in when the command is invoked
+        /// </summary>
         public ILocation Location { get; private set; }
+
+        /// <summary>
+        /// Valid containers by range from OriginLocation
+        /// </summary>
         public IEnumerable<ILocation> Surroundings { get; private set; }
 
+        /// <summary>
+        /// The command (method) we found after parsing
+        /// </summary>
+        public ICommand Command { get; private set; }
+
+        /// <summary>
+        /// Rolling list of errors encountered during parsing
+        /// </summary>
         public List<string> AccessErrors { get; private set; }
 
+        /// <summary>
+        /// All commands in the system
+        /// </summary>
         private IEnumerable<Type> LoadedCommands;
 
+        /// <summary>
+        /// regex for finding disambiguated entities (stuff that has the same keywords)
+        /// </summary>
         private const string LiveWorldDisambiguationSyntax = "[0-9]{1,9}[.][a-zA-z0-9]+";
 
+        /// <summary>
+        /// Where we do the parsing, creates the context and parsed everything on creation
+        /// </summary>
+        /// <param name="fullCommand">the initial unparsed input string</param>
+        /// <param name="actor">the entity issuing the command</param>
         public Context(string fullCommand, IActor actor)
         {
             commandsAssembly = Assembly.GetAssembly(typeof(CommandParameterAttribute));
@@ -125,6 +180,10 @@ namespace NetMud.Interp
             }
         }
 
+        /// <summary>
+        /// Tries to find the command method we're after
+        /// </summary>
+        /// <returns>The command method's system type</returns>
         private Type ParseCommand()
         {
             var currentString = OriginalCommandString;
@@ -183,6 +242,11 @@ namespace NetMud.Interp
             return command;
         }
 
+        /// <summary>
+        /// Tries to parse the parameters for the command
+        /// </summary>
+        /// <param name="commandType">the command's method type</param>
+        /// <param name="neededParms">what paramaters are considered required by the command</param>
         private void ParseParamaters(Type commandType, IEnumerable<CommandParameterAttribute> neededParms)
         {
             //Flip through each remaining word and parse them
@@ -219,6 +283,11 @@ namespace NetMud.Interp
             }
         }
 
+        /// <summary>
+        /// Find a paramater's target in code (methods)
+        /// </summary>
+        /// <param name="commandType">the system type of the command</param>
+        /// <param name="currentNeededParm">the paramater we are after</param>
         public void SeekInCode(Type commandType, CommandParameterAttribute currentNeededParm)
         {
             var validTargetTypes = commandsAssembly.GetTypes().Where(t => t.GetInterfaces().Contains(currentNeededParm.ParameterType));
@@ -276,6 +345,13 @@ namespace NetMud.Interp
             }
         }
 
+        /// <summary>
+        /// Find a parameter target in the live world (entity)
+        /// </summary>
+        /// <typeparam name="T">the system type of the entity</typeparam>
+        /// <param name="commandType">the system type of the command</param>
+        /// <param name="currentNeededParm">the conditions for the parameter we're after</param>
+        /// <param name="seekRange">how far we can look</param>
         public void SeekInLiveWorld<T>(Type commandType, CommandParameterAttribute currentNeededParm, CommandRangeAttribute seekRange)
         {
             var internalCommandString = CommandStringRemainder.ToList();
@@ -368,6 +444,13 @@ namespace NetMud.Interp
 
         }
 
+
+        /// <summary>
+        /// Find a parameter target in reference data
+        /// </summary>
+        /// <typeparam name="T">the system type of the data</typeparam>
+        /// <param name="commandType">the system type of the command</param>
+        /// <param name="currentNeededParm">the conditions for the parameter we're after</param>
         public void SeekInReferenceData<T>(Type commandType, CommandParameterAttribute currentNeededParm) where T : IReference
         {
             var internalCommandString = CommandStringRemainder.ToList();
@@ -409,6 +492,12 @@ namespace NetMud.Interp
             }
         }
 
+        /// <summary>
+        /// Find a parameter target in backing data
+        /// </summary>
+        /// <typeparam name="T">the system type of the data</typeparam>
+        /// <param name="commandType">the system type of the command</param>
+        /// <param name="currentNeededParm">the conditions for the parameter we're after</param>
         public void SeekInBackingData<T>(Type commandType, CommandParameterAttribute currentNeededParm) where T : IData
         {
             var internalCommandString = CommandStringRemainder.ToList();

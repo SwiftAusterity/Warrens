@@ -80,8 +80,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandNegotiator.cs" />
-    <Compile Include="NotificationMessage.cs" />
-    <Compile Include="Notifier.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -5,6 +5,9 @@ using WebSocketSharp.Server;
 
 namespace NetMud.Websock
 {
+    /// <summary>
+    /// A websocket client server
+    /// </summary>
     public class Server
     {
         /// <summary>
