@@ -15,6 +15,7 @@ using NetMud.Data.Game;
 using NetMud.DataAccess;
 using NetMud.Models.GameAdmin;
 using NetMud.Models;
+using NetMud.Data.Reference;
 
 
 
@@ -55,38 +56,16 @@ namespace NetMud.Controllers
             dashboardModel.Inanimates = DataWrapper.GetAll<InanimateData>();
             dashboardModel.Rooms = DataWrapper.GetAll<RoomData>();
             dashboardModel.NPCs = DataWrapper.GetAll<NonPlayerCharacter>();
+            dashboardModel.HelpFiles = ReferenceAccess.GetAll<Help>();
             dashboardModel.LiveTaskTokens = Processor.GetAllLiveTaskStatusTokens();
 
             return View(dashboardModel);
         }
 
-        public ActionResult BackupWorld()
+        #region Help Files
+        public ActionResult ManageHelpData(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var hotBack = new HotBackup(HostingEnvironment.MapPath("/HotBackup/"));
-
-            hotBack.WriteLiveBackup();
-
-            return RedirectToAction("Index", new { Message = "Backup Started" });
-        }
-
-        public ActionResult RestoreWorld()
-        {
-            var hotBack = new HotBackup(HostingEnvironment.MapPath("/HotBackup/"));
-
-            //TODO: Ensure we suspend EVERYTHING going on (fights, etc), add some sort of announcement globally and delay the entire thing on a timer
-
-            //Write the players out first to maintain their positions
-            hotBack.WritePlayers();
-
-            //restore everything
-            hotBack.RestoreLiveBackup();
-
-            return RedirectToAction("Index", new { Message = "Restore Started" });
-        }
-
-        public ActionResult ManageInanimateData(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
-        {
-            var vModel = new ManageInanimateDataViewModel(DataWrapper.GetAll<InanimateData>());
+            var vModel = new ManageHelpDataViewModel(ReferenceAccess.GetAll<Help>());
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             vModel.CurrentPageNumber = CurrentPageNumber;
@@ -96,18 +75,118 @@ namespace NetMud.Controllers
             return View(vModel);
         }
 
-        public ActionResult ManageRoomData(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
-        {
-            var vModel = new ManageRoomDataViewModel(DataWrapper.GetAll<RoomData>());
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            vModel.CurrentPageNumber = CurrentPageNumber;
-            vModel.ItemsPerPage = ItemsPerPage;
-            vModel.SearchTerms = SearchTerms;
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult RemoveHelpData(long ID, string authorize)
+        {
+            string message = string.Empty;
+
+            if (string.IsNullOrWhiteSpace(authorize) || !ID.ToString().Equals(authorize))
+                message = "You must check the proper authorize radio button first.";
+            else
+            {
+                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+                var obj = ReferenceAccess.GetOne<Help>(ID);
+
+                if (obj == null)
+                    message = "That does not exist";
+                else if (obj.Remove())
+                {
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveHelpFile[" + ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    message = "Delete Successful.";
+                }
+                else
+                    message = "Error; Removal failed.";
+            }
+
+            return RedirectToAction("ManageHelpData", new { Message = message });
+        }
+
+        [HttpGet]
+        public ActionResult AddHelpData()
+        {
+            var vModel = new AddEditHelpDataViewModel();
+            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             return View(vModel);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddHelpData(string newName, string newHelpText)
+        {
+            string message = string.Empty;
+            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            var newObj = new Help();
+            newObj.Name = newName;
+            newObj.HelpText = newHelpText;
+
+            if (newObj.Create() == null)
+                message = "Error; Creation failed.";
+            else
+            {
+                LoggingUtility.LogAdminCommandUsage("*WEB* - AddHelpFile[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                message = "Creation Successful.";
+            }
+
+            return RedirectToAction("ManageHelpData", new { Message = message });
+        }
+
+        [HttpGet]
+        public ActionResult EditHelpData(long id)
+        {
+            string message = string.Empty;
+            var vModel = new AddEditHelpDataViewModel();
+            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            Help obj = ReferenceAccess.GetOne<Help>(id);
+
+            if (obj == null)
+            {
+                message = "That does not exist";
+                return RedirectToAction("ManageHelpData", new { Message = message });
+            }
+
+            vModel.DataObject = obj;
+            vModel.NewName = obj.Name;
+            vModel.NewHelpText = obj.HelpText;
+
+            return View(vModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditHelpData(string newName, string newHelpText, long id)
+        {
+            string message = string.Empty;
+            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            Help obj = ReferenceAccess.GetOne<Help>(id);
+            if (obj == null)
+            {
+                message = "That does not exist";
+                return RedirectToAction("ManageHelpData", new { Message = message });
+            }
+
+            obj.Name = newName;
+            obj.HelpText = newHelpText;
+
+            if (obj.Save())
+            {
+                LoggingUtility.LogAdminCommandUsage("*WEB* - EditHelpFile[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                message = "Edit Successful.";
+            }
+            else
+                message = "Error; Edit failed.";
+
+            return RedirectToAction("ManageHelpData", new { Message = message });
+        }
+        #endregion
+
+        #region NPCs
         public ActionResult ManageNPCData(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
             var vModel = new ManageNPCDataViewModel(DataWrapper.GetAll<NonPlayerCharacter>());
@@ -120,7 +199,362 @@ namespace NetMud.Controllers
             return View(vModel);
         }
 
-        //TODO: This, we really need to be looking at "users" not players
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult RemoveNPCData(long ID, string authorize)
+        {
+            string message = string.Empty;
+
+            if (string.IsNullOrWhiteSpace(authorize) || !ID.ToString().Equals(authorize))
+                message = "You must check the proper authorize radio button first.";
+            else
+            {
+                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+                var obj = DataWrapper.GetOne<NonPlayerCharacter>(ID);
+
+                if (obj == null)
+                    message = "That does not exist";
+                else if (obj.Remove())
+                {
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveNPC[" + ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    message = "Delete Successful.";
+                }
+                else
+                    message = "Error; Removal failed.";
+            }
+
+            return RedirectToAction("ManageNPCData", new { Message = message });
+        }
+
+        [HttpGet]
+        public ActionResult AddNPCData()
+        {
+            var vModel = new AddEditNPCDataViewModel();
+            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            return View(vModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddNPCData(string newName, string newSurName, string newGender)
+        {
+            string message = string.Empty;
+            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            var newObj = new NonPlayerCharacter();
+            newObj.Name = newName;
+            newObj.SurName = newSurName;
+            newObj.Gender = newGender;
+
+            if (newObj.Create() == null)
+                message = "Error; Creation failed.";
+            else
+            {
+                LoggingUtility.LogAdminCommandUsage("*WEB* - AddNPCData[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                message = "Creation Successful.";
+            }
+
+            return RedirectToAction("ManageNPCData", new { Message = message });
+        }
+
+        [HttpGet]
+        public ActionResult EditNPCData(int id)
+        {
+            string message = string.Empty;
+            var vModel = new AddEditNPCDataViewModel();
+            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+
+            var obj = DataWrapper.GetOne<NonPlayerCharacter>(id);
+
+            if (obj == null)
+            {
+                message = "That does not exist";
+                return RedirectToAction("ManageNPCData", new { Message = message });
+            }
+
+            vModel.DataObject = obj;
+            vModel.NewName = obj.Name;
+            vModel.NewGender = obj.Gender;
+            vModel.NewSurName = obj.SurName;
+
+            return View(vModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditNPCData(string newName, string newSurName, string newGender, int id)
+        {
+            string message = string.Empty;
+            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            var obj = DataWrapper.GetOne<NonPlayerCharacter>(id);
+            if (obj == null)
+            {
+                message = "That does not exist";
+                return RedirectToAction("ManageNPCData", new { Message = message });
+            }
+
+            obj.Name = newName;
+            obj.SurName = newSurName;
+            obj.Gender = newGender;
+
+            if (obj.Save())
+            {
+                LoggingUtility.LogAdminCommandUsage("*WEB* - EditNPCData[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                message = "Edit Successful.";
+            }
+            else
+                message = "Error; Edit failed.";
+
+            return RedirectToAction("ManageNPCData", new { Message = message });
+        }
+        #endregion
+
+        #region Inanimates
+        public ActionResult ManageInanimateData(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
+        {
+            var vModel = new ManageInanimateDataViewModel(DataWrapper.GetAll<InanimateData>());
+            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            vModel.CurrentPageNumber = CurrentPageNumber;
+            vModel.ItemsPerPage = ItemsPerPage;
+            vModel.SearchTerms = SearchTerms;
+
+            return View(vModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult RemoveInanimateData(long ID, string authorize)
+        {
+            string message = string.Empty;
+
+            if (string.IsNullOrWhiteSpace(authorize) || !ID.ToString().Equals(authorize))
+                message = "You must check the proper authorize radio button first.";
+            else
+            {
+                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+                var obj = DataWrapper.GetOne<InanimateData>(ID);
+
+                if (obj == null)
+                    message = "That does not exist";
+                else if (obj.Remove())
+                {
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveInanimate[" + ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    message = "Delete Successful.";
+                }
+                else
+                    message = "Error; Removal failed.";
+            }
+
+            return RedirectToAction("ManageInanimateData", new { Message = message });
+        }
+
+        [HttpGet]
+        public ActionResult AddInanimateData()
+        {
+            var vModel = new AddEditInanimateDataViewModel();
+            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            return View(vModel);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddInanimateData(string newName)
+        {
+            string message = string.Empty;
+            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            var newObj = new InanimateData();
+            newObj.Name = newName;
+
+            if (newObj.Create() == null)
+                message = "Error; Creation failed.";
+            else
+            {
+                LoggingUtility.LogAdminCommandUsage("*WEB* - AddInanimateData[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                message = "Creation Successful.";
+            }
+
+            return RedirectToAction("ManageInanimateData", new { Message = message });
+        }
+
+        [HttpGet]
+        public ActionResult EditInanimateData(int id)
+        {
+            string message = string.Empty;
+            var vModel = new AddEditInanimateDataViewModel();
+            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            var obj = DataWrapper.GetOne<InanimateData>(id);
+
+            if (obj == null)
+            {
+                message = "That does not exist";
+                return RedirectToAction("ManageInanimateData", new { Message = message });
+            }
+
+            vModel.DataObject = obj;
+            vModel.NewName = obj.Name;
+
+            return View(vModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditInanimateData(string newName, int id)
+        {
+            string message = string.Empty;
+            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            var obj = DataWrapper.GetOne<InanimateData>(id);
+            if (obj == null)
+            {
+                message = "That does not exist";
+                return RedirectToAction("ManageInanimateData", new { Message = message });
+            }
+
+            obj.Name = newName;
+
+            if (obj.Save())
+            {
+                LoggingUtility.LogAdminCommandUsage("*WEB* - EditInanimateData[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                message = "Edit Successful.";
+            }
+            else
+                message = "Error; Edit failed.";
+
+            return RedirectToAction("ManageInanimateData", new { Message = message });
+        }
+        #endregion
+
+        #region Rooms
+        public ActionResult ManageRoomData(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
+        {
+            var vModel = new ManageRoomDataViewModel(DataWrapper.GetAll<RoomData>());
+            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            vModel.CurrentPageNumber = CurrentPageNumber;
+            vModel.ItemsPerPage = ItemsPerPage;
+            vModel.SearchTerms = SearchTerms;
+
+            return View(vModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult RemoveRoomData(long ID, string authorize)
+        {
+            string message = string.Empty;
+
+            if (string.IsNullOrWhiteSpace(authorize) || !ID.ToString().Equals(authorize))
+                message = "You must check the proper authorize radio button first.";
+            else
+            {
+                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+                var obj = DataWrapper.GetOne<RoomData>(ID);
+
+                if (obj == null)
+                    message = "That does not exist";
+                else if (obj.Remove())
+                {
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveRoom[" + ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    message = "Delete Successful.";
+                }
+                else
+                    message = "Error; Removal failed.";
+            }
+
+            return RedirectToAction("ManageRoomData", new { Message = message });
+        }
+
+        [HttpGet]
+        public ActionResult AddRoomData()
+        {
+            var vModel = new AddEditRoomDataViewModel();
+            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            return View(vModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddRoomData(string newName)
+        {
+            string message = string.Empty;
+            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            var newObj = new RoomData();
+            newObj.Name = newName;
+
+            if (newObj.Create() == null)
+                message = "Error; Creation failed.";
+            else
+            {
+                LoggingUtility.LogAdminCommandUsage("*WEB* - AddRoomData[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                message = "Creation Successful.";
+            }
+
+            return RedirectToAction("ManageRoomData", new { Message = message });
+        }
+
+        [HttpGet]
+        public ActionResult EditRoomData(int id)
+        {
+            string message = string.Empty;
+            var vModel = new AddEditRoomDataViewModel();
+            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            var obj = DataWrapper.GetOne<RoomData>(id);
+
+            if (obj == null)
+            {
+                message = "That does not exist";
+                return RedirectToAction("ManageRoomData", new { Message = message });
+            }
+
+            vModel.DataObject = obj;
+            vModel.NewName = obj.Name;
+
+            return View(vModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditRoomData(string newName, int id)
+        {
+            string message = string.Empty;
+            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            var obj = DataWrapper.GetOne<RoomData>(id);
+            if (obj == null)
+            {
+                message = "That does not exist";
+                return RedirectToAction("ManageRoomData", new { Message = message });
+            }
+
+            obj.Name = newName;
+
+            if (obj.Save())
+            {
+                LoggingUtility.LogAdminCommandUsage("*WEB* - EditRoomData[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                message = "Edit Successful.";
+            }
+            else
+                message = "Error; Edit failed.";
+
+            return RedirectToAction("ManageRoomData", new { Message = message });
+        }
+        #endregion
+
+        #region Players/Users
         public ActionResult ManagePlayers(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
@@ -153,339 +587,15 @@ namespace NetMud.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult RemoveInanimateData(long ID, string authorize)
-        {
-            string message = string.Empty;
-
-            if (string.IsNullOrWhiteSpace(authorize) || !ID.ToString().Equals(authorize))
-                message = "You must check the proper authorize radio button first.";
-            else
-            {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
-
-                var obj = DataWrapper.GetOne<InanimateData>(ID);
-
-                if (obj == null)
-                    message = "That does not exist";
-                else if (obj.Remove())
-                {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveInanimate[" + ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                    message = "Delete Successful.";
-                }
-                else
-                    message = "Error; Removal failed.";
-            }
-
-            return RedirectToAction("ManageInanimateData", new { Message = message });
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult RemoveNPCData(long ID, string authorize)
-        {
-            string message = string.Empty;
-
-            if (string.IsNullOrWhiteSpace(authorize) || !ID.ToString().Equals(authorize))
-                message = "You must check the proper authorize radio button first.";
-            else
-            {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
-
-                var obj = DataWrapper.GetOne<NonPlayerCharacter>(ID);
-
-                if (obj == null)
-                    message = "That does not exist";
-                else if (obj.Remove())
-                {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveNPC[" + ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                    message = "Delete Successful.";
-                }
-                else
-                    message = "Error; Removal failed.";
-            }
-
-            return RedirectToAction("ManageNPCData", new { Message = message });
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult RemoveRoomData(long ID, string authorize)
-        {
-            string message = string.Empty;
-
-            if (string.IsNullOrWhiteSpace(authorize) || !ID.ToString().Equals(authorize))
-                message = "You must check the proper authorize radio button first.";
-            else
-            {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
-
-                var obj = DataWrapper.GetOne<RoomData>(ID);
-
-                if (obj == null)
-                    message = "That does not exist";
-                else if (obj.Remove())
-                {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveRoom[" + ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                    message = "Delete Successful.";
-                }
-                else
-                    message = "Error; Removal failed.";
-            }
-
-            return RedirectToAction("ManageRoomData", new { Message = message });
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
         public ActionResult RemovePlayer(long ID, string authorize)
         {
             string message = "Not Implimented";
 
             return RedirectToAction("ManagePlayers", new { Message = message });
         }
+        #endregion
 
-        [HttpGet]
-        public ActionResult AddInanimateData()
-        {
-            var vModel = new AddEditInanimateDataViewModel();
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-
-            return View(vModel);
-        }
-
-        [HttpGet]
-        public ActionResult AddRoomData()
-        {
-            var vModel = new AddEditRoomDataViewModel();
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-
-            return View(vModel);
-        }
-
-        [HttpGet]
-        public ActionResult AddNPCData()
-        {
-            var vModel = new AddEditNPCDataViewModel();
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-
-            return View(vModel);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult AddInanimateData(string newName)
-        {
-            string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
-
-            var newObj = new InanimateData();
-            newObj.Name = newName;
-
-            if (newObj.Create() == null)
-                message = "Error; Creation failed.";
-            else
-            {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - AddInanimateData[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                message = "Creation Successful.";
-            }
-
-            return RedirectToAction("ManageInanimateData", new { Message = message });
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult AddNPCData(string newName, string newSurName, string newGender)
-        {
-            string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
-
-            var newObj = new NonPlayerCharacter();
-            newObj.Name = newName;
-            newObj.SurName = newSurName;
-            newObj.Gender = newGender;
-
-            if (newObj.Create() == null)
-                message = "Error; Creation failed.";
-            else
-            {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - AddNPCData[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                message = "Creation Successful.";
-            }
-
-            return RedirectToAction("ManageNPCData", new { Message = message });
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult AddRoomData(string newName)
-        {
-            string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
-
-            var newObj = new RoomData();
-            newObj.Name = newName;
-
-            if (newObj.Create() == null)
-                message = "Error; Creation failed.";
-            else
-            {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - AddRoomData[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                message = "Creation Successful.";
-            }
-
-            return RedirectToAction("ManageRoomData", new { Message = message });
-        }
-
-        [HttpGet]
-        public ActionResult EditInanimateData(int id)
-        {
-            string message = string.Empty;
-            var vModel = new AddEditInanimateDataViewModel();
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-
-            var obj = DataWrapper.GetOne<InanimateData>(id);
-
-            if (obj == null)
-            {
-                message = "That does not exist";
-                return RedirectToAction("ManageInanimateData", new { Message = message });
-            }
-
-            vModel.DataObject = obj;
-            vModel.NewName = obj.Name;
-
-            return View(vModel);
-        }
-
-        [HttpGet]
-        public ActionResult EditRoomData(int id)
-        {
-            string message = string.Empty;
-            var vModel = new AddEditRoomDataViewModel();
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-
-            var obj = DataWrapper.GetOne<RoomData>(id);
-
-            if (obj == null)
-            {
-                message = "That does not exist";
-                return RedirectToAction("ManageRoomData", new { Message = message });
-            }
-
-            vModel.DataObject = obj;
-            vModel.NewName = obj.Name;
-
-            return View(vModel);
-        }
-
-        [HttpGet]
-        public ActionResult EditNPCData(int id)
-        {
-            string message = string.Empty;
-            var vModel = new AddEditNPCDataViewModel();
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-
-
-            var obj = DataWrapper.GetOne<NonPlayerCharacter>(id);
-
-            if (obj == null)
-            {
-                message = "That does not exist";
-                return RedirectToAction("ManageNPCData", new { Message = message });
-            }
-
-            vModel.DataObject = obj;
-            vModel.NewName = obj.Name;
-            vModel.NewGender = obj.Gender;
-            vModel.NewSurName = obj.SurName;
-
-            return View(vModel);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult EditInanimateData(string newName, int id)
-        {
-            string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
-
-            var obj = DataWrapper.GetOne<InanimateData>(id);
-            if (obj == null)
-            {
-                message = "That does not exist";
-                return RedirectToAction("ManageInanimateData", new { Message = message });
-            }
-
-            obj.Name = newName;
-
-            if (obj.Save())
-            {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - EditInanimateData[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                message = "Edit Successful.";
-            }
-            else
-                message = "Error; Edit failed.";
-
-            return RedirectToAction("ManageInanimateData", new { Message = message });
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult EditNPCData(string newName, string newSurName, string newGender, int id)
-        {
-            string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
-
-            var obj = DataWrapper.GetOne<NonPlayerCharacter>(id);
-            if (obj == null)
-            {
-                message = "That does not exist";
-                return RedirectToAction("ManageNPCData", new { Message = message });
-            }
-
-            obj.Name = newName;
-            obj.SurName = newSurName;
-            obj.Gender = newGender;
-
-            if (obj.Save())
-            {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - EditNPCData[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                message = "Edit Successful.";
-            }
-            else
-                message = "Error; Edit failed.";
-
-            return RedirectToAction("ManageNPCData", new { Message = message });
-
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult EditRoomData(string newName, int id)
-        {
-            string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
-
-            var obj = DataWrapper.GetOne<RoomData>(id);
-            if (obj == null)
-            {
-                message = "That does not exist";
-                return RedirectToAction("ManageRoomData", new { Message = message });
-            }
-
-            obj.Name = newName;
-
-            if (obj.Save())
-            {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - EditRoomData[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                message = "Edit Successful.";
-            }
-            else
-                message = "Error; Edit failed.";
-
-            return RedirectToAction("ManageRoomData", new { Message = message });
-        }
-
+        #region Live Threads
         public ActionResult StopRunningProcess(string processName)
         {
             string message = string.Empty;
@@ -511,5 +621,32 @@ namespace NetMud.Controllers
 
             return RedirectToAction("Index", new { Message = message });
         }
+        #endregion
+
+        #region Running Data
+        public ActionResult BackupWorld()
+        {
+            var hotBack = new HotBackup(HostingEnvironment.MapPath("/HotBackup/"));
+
+            hotBack.WriteLiveBackup();
+
+            return RedirectToAction("Index", new { Message = "Backup Started" });
+        }
+
+        public ActionResult RestoreWorld()
+        {
+            var hotBack = new HotBackup(HostingEnvironment.MapPath("/HotBackup/"));
+
+            //TODO: Ensure we suspend EVERYTHING going on (fights, etc), add some sort of announcement globally and delay the entire thing on a timer
+
+            //Write the players out first to maintain their positions
+            hotBack.WritePlayers();
+
+            //restore everything
+            hotBack.RestoreLiveBackup();
+
+            return RedirectToAction("Index", new { Message = "Restore Started" });
+        }
+        #endregion
     }
 }

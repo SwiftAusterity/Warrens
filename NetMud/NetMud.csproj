@@ -277,6 +277,9 @@
     <Content Include="Views\GameAdmin\EditInanimateData.cshtml" />
     <Content Include="Views\GameAdmin\EditNPCData.cshtml" />
     <Content Include="Views\GameAdmin\EditRoomData.cshtml" />
+    <Content Include="Views\GameAdmin\ManageHelpData.cshtml" />
+    <Content Include="Views\GameAdmin\EditHelpData.cshtml" />
+    <Content Include="Views\GameAdmin\AddHelpData.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

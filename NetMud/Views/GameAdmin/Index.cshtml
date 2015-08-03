@@ -29,6 +29,16 @@
             @Html.ActionLink("Add", "AddInanimateData") ]
         </dd>
     </dl>
+    <h4>Reference Data</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>Help Files:</dt>
+        <dd>
+            @Model.HelpFiles.Count().ToString() [
+            @Html.ActionLink("Manage", "ManageHelpData")
+            @Html.ActionLink("Add", "AddHelpData") ]
+        </dd>
+    </dl>
     <h4>Live Data</h4>
     <hr />
     <dl class="dl-horizontal">

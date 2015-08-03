@@ -3,6 +3,8 @@ using NetMud.DataStructure.Base.System;
 using NetMud.Utility;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Text;
 
 namespace NetMud.Data.Reference
 {
@@ -22,7 +24,7 @@ namespace NetMud.Data.Reference
         public DateTime LastRevised { get; set; }
         public string Name { get; set; }
 
-        public string HelpText { get; private set; }
+        public string HelpText { get; set; }
 
         public void Fill(global::System.Data.DataRow dr)
         {
@@ -106,17 +108,55 @@ namespace NetMud.Data.Reference
 
         public IData Create()
         {
-            throw new NotImplementedException();
+            Help returnValue = default(Help);
+            var sql = new StringBuilder();
+            sql.Append("insert into [dbo].[Help]([Name], [HelpText])");
+            sql.AppendFormat(" values('{0}','{1}')", Name, HelpText);
+            sql.Append(" select * from [dbo].[Help] where ID = Scope_Identity()");
+
+            try
+            {
+                var ds = SqlWrapper.RunDataset(sql.ToString(), CommandType.Text);
+
+                if (ds.Rows != null)
+                {
+                    foreach (DataRow dr in ds.Rows)
+                    {
+                        Fill(dr);
+                        returnValue = this;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex);
+            }
+
+            return returnValue;
         }
 
         public bool Remove()
         {
-            throw new NotImplementedException();
+            var sql = new StringBuilder();
+            sql.AppendFormat("delete from [dbo].[Help] where ID = {0}", ID);
+
+            SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text);
+
+            return true;
         }
 
         public bool Save()
         {
-            throw new NotImplementedException();
+            var sql = new StringBuilder();
+            sql.Append("update [dbo].[Help] set ");
+            sql.AppendFormat(" [Name] = '{0}' ", Name);
+            sql.AppendFormat(" , [HelpText] = '{0}' ", HelpText);
+            sql.AppendFormat(" , [LastRevised] = GetUTCDate()");
+            sql.AppendFormat(" where ID = {0}", ID);
+
+            SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text);
+
+            return true;
         }
     }
 }

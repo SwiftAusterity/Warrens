@@ -367,8 +367,6 @@ namespace NetMud.Interp
 
         public void SeekInReferenceData<T>(Type commandType, CommandParameterAttribute currentNeededParm) where T : IReference
         {
-            var referenceContext = new ReferenceAccess();
-            
             var internalCommandString = CommandStringRemainder.ToList();
 
             var parmWords = internalCommandString.Count();
@@ -383,7 +381,7 @@ namespace NetMud.Interp
                     continue;
                 }
 
-                var validObject = referenceContext.GetOneReference<T>(currentParmString);
+                var validObject = ReferenceAccess.GetOne<T>(currentParmString);
 
                 if (validObject != null && !validObject.Equals(default(T)))
                 {

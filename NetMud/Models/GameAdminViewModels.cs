@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNet.Identity.EntityFramework;
+using NetMud.Data.Reference;
 using NetMud.DataStructure.Base.EntityBackingData;
 using System;
 using System.Collections.Generic;
@@ -17,15 +18,60 @@ namespace NetMud.Models.GameAdmin
             Inanimates = Enumerable.Empty<IInanimateData>();
             Rooms = Enumerable.Empty<IRoomData>();
             NPCs = Enumerable.Empty<INonPlayerCharacter>();
+            HelpFiles = Enumerable.Empty<Help>();
+
             LivePlayers = 0;
         }
 
         public IEnumerable<IRoomData> Rooms { get; set; }
         public IEnumerable<IInanimateData> Inanimates { get; set; }
         public IEnumerable<INonPlayerCharacter> NPCs { get; set; }
+        public IEnumerable<Help> HelpFiles { get; set; }
         public Dictionary<string, CancellationTokenSource> LiveTaskTokens { get; set; }
 
         public int LivePlayers { get; set; }
+    }
+
+    public class ManageHelpDataViewModel : PagedDataModel<Help>, BaseViewModel
+    {
+        public ApplicationUser authedUser { get; set; }
+
+        public ManageHelpDataViewModel(IEnumerable<Help> items)
+            : base(items)
+        {
+            CurrentPageNumber = 1;
+            ItemsPerPage = 20;
+        }
+
+        internal override Func<Help, bool> SearchFilter
+        {
+            get
+            {
+                return item => item.Name.ToLower().Contains(SearchTerms.ToLower()) || item.HelpText.ToLower().Contains(SearchTerms.ToLower());
+            }
+        }
+    }
+
+    public class AddEditHelpDataViewModel : BaseViewModel
+    {
+        public ApplicationUser authedUser { get; set; }
+
+        public AddEditHelpDataViewModel()
+        {
+        }
+
+        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
+        [DataType(DataType.Text)]
+        [Display(Name = "Name")]
+        public string NewName { get; set; }
+
+        [StringLength(2000, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 20)]
+        [DataType(DataType.Text)]
+        [Display(Name = "HelpText")]
+        public string NewHelpText { get; set; }
+
+
+        public Help DataObject { get; set; }
     }
 
     public class ManageInanimateDataViewModel : PagedDataModel<IInanimateData>, BaseViewModel

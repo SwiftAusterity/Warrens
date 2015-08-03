@@ -5,14 +5,9 @@ using System.Data;
 
 namespace NetMud.DataAccess
 {
-    public class ReferenceAccess
+    public static class ReferenceAccess
     {
-        //Not even sure what to do here yet
-        public ReferenceAccess()
-        {
-        }
-
-        public IEnumerable<T> GetAllReference<T>() where T : IReference
+        public static IEnumerable<T> GetAll<T>() where T : IReference
         {
             var returnList = new List<T>();
             var sql = string.Format("select * from [dbo].[{0}]", typeof(T).Name);
@@ -39,14 +34,46 @@ namespace NetMud.DataAccess
             return returnList;
         }
 
-        public T GetOneReference<T>(string keyword) where T : IReference
+        public static T GetOne<T>(string keyword) where T : IReference
         {
             IReference returnValue = default(T);
-            var sql = string.Format("select * from [dbo].[{0}] where Name = '{1}'", typeof(T).Name, keyword);
+            var parms = new Dictionary<string, object>();
+            var sql = string.Format("select * from [dbo].[{0}] where Name = @name", typeof(T).Name);
+
+            parms.Add("name", keyword);
 
             try
             {
-                var ds = SqlWrapper.RunDataset(sql, CommandType.Text);
+                var ds = SqlWrapper.RunDataset(sql, CommandType.Text, parms);
+
+                if (ds.Rows != null)
+                {
+                    foreach (DataRow dr in ds.Rows)
+                    {
+                        returnValue = Activator.CreateInstance(typeof(T)) as IReference;
+                        returnValue.Fill(dr);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex);
+            }
+
+            return (T)returnValue;
+        }
+
+        public static T GetOne<T>(long id) where T : IReference
+        {
+            IReference returnValue = default(T);
+            var parms = new Dictionary<string, object>();
+            var sql = string.Format("select * from [dbo].[{0}] where ID = @id", typeof(T).Name);
+
+            parms.Add("id", id);
+
+            try
+            {
+                var ds = SqlWrapper.RunDataset(sql, CommandType.Text, parms);
 
                 if (ds.Rows != null)
                 {
