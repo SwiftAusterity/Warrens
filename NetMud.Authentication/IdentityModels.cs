@@ -6,9 +6,16 @@ using NetMud.Data.System;
 
 namespace NetMud.Models
 {
-    // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit http://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
+    /// <summary>
+    /// Authenticated user connected to this web application
+    /// </summary>
     public class ApplicationUser : IdentityUser
     {
+        /// <summary>
+        /// Generates a user identity
+        /// </summary>
+        /// <param name="manager">the user manager used to get the identity</param>
+        /// <returns>the identity (async)</returns>
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
@@ -18,16 +25,29 @@ namespace NetMud.Models
             return userIdentity;
         }
 
+        /// <summary>
+        /// The game account connected to this user identity
+        /// </summary>
         public virtual Account GameAccount { get; set; }
     }
 
+    /// <summary>
+    /// DB Context for the user manager
+    /// </summary>
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+        /// <summary>
+        /// New up the db context
+        /// </summary>
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
         }
 
+        /// <summary>
+        /// Get a new db context for the user manager
+        /// </summary>
+        /// <returns>the db context</returns>
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();
