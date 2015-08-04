@@ -29,3 +29,4 @@ NetMud/App_Data/testingDB_log.ldf
 NetMud/HotBackup/Backups/*
 NetMud/HotBackup/Logs/
 NetMud/Web.config
+NetMud/HotBackup/Players
