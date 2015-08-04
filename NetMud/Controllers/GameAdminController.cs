@@ -377,36 +377,42 @@ namespace NetMud.Controllers
             var newObj = new InanimateData();
             newObj.Name = vModel.NewName;
 
-            int inanimateIndex = 0;
-            foreach (var name in vModel.InanimateContainerNames)
+            if (vModel.InanimateContainerNames != null)
             {
-                if (string.IsNullOrWhiteSpace(name))
-                    continue;
+                int inanimateIndex = 0;
+                foreach (var name in vModel.InanimateContainerNames)
+                {
+                    if (string.IsNullOrWhiteSpace(name))
+                        continue;
 
-                if (vModel.InanimateContainerWeights.Count() <= inanimateIndex || vModel.InanimateContainerVolumes.Count() <= inanimateIndex)
-                    break;
+                    if (vModel.InanimateContainerWeights.Count() <= inanimateIndex || vModel.InanimateContainerVolumes.Count() <= inanimateIndex)
+                        break;
 
-                var currentWeight = vModel.InanimateContainerWeights[inanimateIndex];
-                var currentVolume = vModel.InanimateContainerVolumes[inanimateIndex];
+                    var currentWeight = vModel.InanimateContainerWeights[inanimateIndex];
+                    var currentVolume = vModel.InanimateContainerVolumes[inanimateIndex];
 
-                newObj.InanimateContainers.Add(new EntityContainerData<IInanimate>(currentVolume, currentWeight, name));
-                inanimateIndex++;
+                    newObj.InanimateContainers.Add(new EntityContainerData<IInanimate>(currentVolume, currentWeight, name));
+                    inanimateIndex++;
+                }
             }
 
-            int mobileIndex = 0;
-            foreach (var name in vModel.MobileContainerNames)
+            if (vModel.MobileContainerNames != null)
             {
-                if (string.IsNullOrWhiteSpace(name))
-                    continue;
+                int mobileIndex = 0;
+                foreach (var name in vModel.MobileContainerNames)
+                {
+                    if (string.IsNullOrWhiteSpace(name))
+                        continue;
 
-                if (vModel.MobileContainerWeights.Count() <= mobileIndex || vModel.MobileContainerVolumes.Count() <= mobileIndex)
-                    break;
+                    if (vModel.MobileContainerWeights.Count() <= mobileIndex || vModel.MobileContainerVolumes.Count() <= mobileIndex)
+                        break;
 
-                var currentWeight = vModel.MobileContainerWeights[mobileIndex];
-                var currentVolume = vModel.MobileContainerVolumes[mobileIndex];
+                    var currentWeight = vModel.MobileContainerWeights[mobileIndex];
+                    var currentVolume = vModel.MobileContainerVolumes[mobileIndex];
 
-                newObj.MobileContainers.Add(new EntityContainerData<IMobile>(currentVolume, currentWeight, name));
-                mobileIndex++;
+                    newObj.MobileContainers.Add(new EntityContainerData<IMobile>(currentVolume, currentWeight, name));
+                    mobileIndex++;
+                }
             }
 
             if (newObj.Create() == null)
@@ -443,7 +449,7 @@ namespace NetMud.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EditInanimateData(string newName, int id)
+        public ActionResult EditInanimateData(int id, AddEditInanimateDataViewModel vModel)
         {
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
@@ -455,7 +461,71 @@ namespace NetMud.Controllers
                 return RedirectToAction("ManageInanimateData", new { Message = message });
             }
 
-            obj.Name = newName;
+            obj.Name = vModel.NewName;
+
+            if (vModel.InanimateContainerNames != null)
+            {
+                int inanimateIndex = 0;
+                foreach (var name in vModel.InanimateContainerNames)
+                {
+                    if (string.IsNullOrWhiteSpace(name))
+                        continue;
+
+                    if (vModel.InanimateContainerWeights.Count() <= inanimateIndex || vModel.InanimateContainerVolumes.Count() <= inanimateIndex)
+                        break;
+
+                    if (obj.InanimateContainers.Any(ic => ic.Name.Equals(name, System.StringComparison.InvariantCultureIgnoreCase)))
+                    {
+                        var editIc = obj.InanimateContainers.Single(ic => ic.Name.Equals(name, System.StringComparison.InvariantCultureIgnoreCase));
+                        editIc.CapacityVolume = vModel.InanimateContainerVolumes[inanimateIndex];
+                        editIc.CapacityWeight = vModel.InanimateContainerWeights[inanimateIndex];
+                    }
+                    else
+                    {
+                        var currentWeight = vModel.InanimateContainerWeights[inanimateIndex];
+                        var currentVolume = vModel.InanimateContainerVolumes[inanimateIndex];
+
+                        obj.InanimateContainers.Add(new EntityContainerData<IInanimate>(currentVolume, currentWeight, name));
+                    }
+
+                    inanimateIndex++;
+                }
+            }
+
+            foreach (var container in obj.InanimateContainers.Where(ic => !vModel.InanimateContainerNames.Contains(ic.Name)))
+                obj.InanimateContainers.Remove(container);
+
+            if (vModel.MobileContainerNames != null)
+            {
+                int mobileIndex = 0;
+                foreach (var name in vModel.MobileContainerNames)
+                {
+                    if (string.IsNullOrWhiteSpace(name))
+                        continue;
+
+                    if (vModel.MobileContainerWeights.Count() <= mobileIndex || vModel.MobileContainerVolumes.Count() <= mobileIndex)
+                        break;
+
+                    if (obj.MobileContainers.Any(ic => ic.Name.Equals(name, System.StringComparison.InvariantCultureIgnoreCase)))
+                    {
+                        var editIc = obj.MobileContainers.Single(ic => ic.Name.Equals(name, System.StringComparison.InvariantCultureIgnoreCase));
+                        editIc.CapacityVolume = vModel.MobileContainerVolumes[mobileIndex];
+                        editIc.CapacityWeight = vModel.MobileContainerWeights[mobileIndex];
+                    }
+                    else
+                    {
+                        var currentWeight = vModel.MobileContainerWeights[mobileIndex];
+                        var currentVolume = vModel.MobileContainerVolumes[mobileIndex];
+
+                        obj.MobileContainers.Add(new EntityContainerData<IMobile>(currentVolume, currentWeight, name));
+                    }
+
+                    mobileIndex++;
+                }
+            }
+
+            foreach (var container in obj.InanimateContainers.Where(ic => !vModel.InanimateContainerNames.Contains(ic.Name)))
+                obj.InanimateContainers.Remove(container);
 
             if (obj.Save())
             {
