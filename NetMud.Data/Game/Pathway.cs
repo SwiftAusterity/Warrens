@@ -149,7 +149,7 @@ namespace NetMud.Data.Game
         public override void SpawnNewInWorld(IContains spawnTo)
         {
             var bS = (IPathwayData)DataTemplate;
-            var locationAssembly = Assembly.GetAssembly(typeof(ILocation));
+            var locationAssembly = Assembly.GetAssembly(typeof(Room));
 
             MovementDirection = MessagingUtility.TranslateDegreesToDirection(bS.DegreesFromNorth);
 

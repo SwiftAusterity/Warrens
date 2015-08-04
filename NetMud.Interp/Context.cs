@@ -383,14 +383,14 @@ namespace NetMud.Interp
                         validObjects.Add((T)Actor);
                         break;
                     case CommandRangeType.Touch:
-                        validObjects.AddRange(Actor.CurrentLocation.GetContents<T>().Where(ent => ((IEntity)ent).Keywords.Contains(currentParmString)));
+                        validObjects.AddRange(Actor.CurrentLocation.GetContents<T>().Where(ent => ((IEntity)ent).Keywords.Any(key => key.Contains(currentParmString))));
                         break;
                     case CommandRangeType.Local: //requires Range to be working
                         break;
                     case CommandRangeType.Regional: //requires range to be working
                         break;
                     case CommandRangeType.Global:
-                        validObjects.AddRange(LiveCache.GetAll<T>());
+                        validObjects.AddRange(LiveCache.GetAll<T>().Where(ent => ((IEntity)ent).Keywords.Any(key => key.Contains(currentParmString))));
                         break;
                 }
 

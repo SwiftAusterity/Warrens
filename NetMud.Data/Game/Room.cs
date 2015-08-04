@@ -30,7 +30,7 @@ namespace NetMud.Data.Game
         public Room()
         {
             ObjectsInRoom = new EntityContainer<IInanimate>();
-            MobilesInRoom = new EntityContainer<IMobile>();
+            MobilesInside = new EntityContainer<IMobile>();
             Pathways = new EntityContainer<IPathway>();
         }
 
@@ -41,7 +41,7 @@ namespace NetMud.Data.Game
         public Room(IRoomData room)
         {
             ObjectsInRoom = new EntityContainer<IInanimate>();
-            MobilesInRoom = new EntityContainer<IMobile>();
+            MobilesInside = new EntityContainer<IMobile>();
             Pathways = new EntityContainer<IPathway>();
 
             DataTemplate = room;
@@ -58,7 +58,7 @@ namespace NetMud.Data.Game
         /// <summary>
         /// Any mobiles (players, npcs) contained in this
         /// </summary>
-        public IEntityContainer<IMobile> MobilesInRoom { get; set; }
+        public IEntityContainer<IMobile> MobilesInside { get; set; }
 
         /// <summary>
         /// Pathways leading out of this
@@ -99,7 +99,7 @@ namespace NetMud.Data.Game
             switch (containerName)
             {
                 case "mobiles":
-                    return MobilesInRoom.EntitiesContained.Select(ent => (T)ent);
+                    return MobilesInside.EntitiesContained.Select(ent => (T)ent);
                 case "objects":
                     return ObjectsInRoom.EntitiesContained.Select(ent => (T)ent);
                 case "pathways":
@@ -149,10 +149,10 @@ namespace NetMud.Data.Game
             {
                 var obj = (IMobile)thing;
 
-                if (MobilesInRoom.Contains(obj))
+                if (MobilesInside.Contains(obj))
                     return "That is already in the container";
 
-                MobilesInRoom.Add(obj);
+                MobilesInside.Add(obj);
                 obj.CurrentLocation = this;
                 this.UpsertToLiveWorldCache();
                 return string.Empty;
@@ -170,7 +170,6 @@ namespace NetMud.Data.Game
                 this.UpsertToLiveWorldCache();
                 return string.Empty;
             }
-
 
             return "Invalid type to move to container.";
         }
@@ -214,10 +213,10 @@ namespace NetMud.Data.Game
             {
                 var obj = (IMobile)thing;
 
-                if (!MobilesInRoom.Contains(obj))
+                if (!MobilesInside.Contains(obj))
                     return "That is not in the container";
 
-                MobilesInRoom.Remove(obj);
+                MobilesInside.Remove(obj);
                 obj.CurrentLocation = null;
                 this.UpsertToLiveWorldCache();
                 return string.Empty;
@@ -254,6 +253,37 @@ namespace NetMud.Data.Game
 
             return sb;
         }
+
+        /// <summary>
+        /// Get the surrounding locations based on a strength radius
+        /// </summary>
+        /// <param name="strength">number of places to go out</param>
+        /// <returns>list of valid surrounding locations</returns>
+        public IEnumerable<ILocation> GetSurroundings(int strength)
+        {
+            var radiusLocations = new List<ILocation>();
+
+            //If we don't have any paths out what can we even do
+            if (Pathways.Count() == 0)
+                return radiusLocations;
+
+            var currentRadius = 0;
+            var currentPathsSet = Pathways.EntitiesContained;
+            while(currentRadius <= strength && currentPathsSet.Count() > 0)
+            {
+                var currentLocsSet = currentPathsSet.Select(path => path.ToLocation);
+
+                if (currentLocsSet.Count() == 0)
+                    break;
+
+                radiusLocations.AddRange(currentLocsSet);
+                currentPathsSet = currentLocsSet.SelectMany(ro => ro.Pathways.EntitiesContained);
+
+                currentRadius++;
+            }
+
+            return radiusLocations;
+        }
         #endregion
 
         #region Spawning
@@ -274,7 +304,7 @@ namespace NetMud.Data.Game
                 Birthdate = me.Birthdate;
                 DataTemplate = me.DataTemplate;
                 ObjectsInRoom = me.ObjectsInRoom;
-                MobilesInRoom = me.MobilesInRoom;
+                MobilesInside = me.MobilesInside;
                 Pathways = me.Pathways;
                 Keywords = me.Keywords;
                 CurrentLocation = me.CurrentLocation;
@@ -328,14 +358,14 @@ namespace NetMud.Data.Game
                                     new XElement("LiveData",
                                         new XAttribute("Keywords", string.Join(",", Keywords))),
                                     new XElement("ObjectsInRoom"),
-                                    new XElement("MobilesInRoom")
+                                    new XElement("MobilesInside")
                                     ));
 
             foreach (var item in ObjectsInRoom.EntitiesContained)
                 entityData.Root.Element("ObjectsInRoom").Add(new XElement("Item", item.BirthMark));
 
-            foreach (var item in MobilesInRoom.EntitiesContained.Where(ent => ent.GetType() != typeof(Player)))
-                entityData.Root.Element("MobilesInRoom").Add(new XElement("Item", item.BirthMark));
+            foreach (var item in MobilesInside.EntitiesContained.Where(ent => ent.GetType() != typeof(Player)))
+                entityData.Root.Element("MobilesInside").Add(new XElement("Item", item.BirthMark));
 
             //pathways will load themselves
 
@@ -385,12 +415,12 @@ namespace NetMud.Data.Game
             }
 
             //Add a fake entity to get the birthmark over to the next place
-            foreach (var item in xDoc.Root.Element("MobilesInRoom").Elements("Item"))
+            foreach (var item in xDoc.Root.Element("MobilesInside").Elements("Item"))
             {
                 var obj = new Intelligence();
                 obj.BirthMark = item.Value;
 
-                newEntity.MobilesInRoom.Add(obj);
+                newEntity.MobilesInside.Add(obj);
             }
 
             //keywords is last

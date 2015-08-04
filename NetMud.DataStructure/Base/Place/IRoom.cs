@@ -15,15 +15,5 @@ namespace NetMud.DataStructure.Base.Place
         /// Inanimates in the room (on the floor)
         /// </summary>
         IEntityContainer<IInanimate> ObjectsInRoom { get; set; }
-
-        /// <summary>
-        /// Mobiles (NPC, Players) in the room
-        /// </summary>
-        IEntityContainer<IMobile> MobilesInRoom { get; set; }
-
-        /// <summary>
-        /// Pathways leading from this room
-        /// </summary>
-        IEntityContainer<IPathway> Pathways { get; set; }
     }
 }

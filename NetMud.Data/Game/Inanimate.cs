@@ -3,6 +3,8 @@ using NetMud.Data.System;
 using NetMud.DataAccess;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.DataStructure.Base.Place;
+using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.SupportingClasses;
@@ -30,6 +32,8 @@ namespace NetMud.Data.Game
         {
             //IDatas need parameterless constructors
             Contents = new EntityContainer<IInanimate>();
+            Pathways = new EntityContainer<IPathway>();
+
         }
 
         /// <summary>
@@ -39,6 +43,9 @@ namespace NetMud.Data.Game
         public Inanimate(IInanimateData backingStore)
         {
             Contents = new EntityContainer<IInanimate>();
+            Pathways = new EntityContainer<IPathway>();
+            MobilesInside = new EntityContainer<IMobile>();
+
             DataTemplate = backingStore;
             SpawnNewInWorld();
         }
@@ -51,6 +58,9 @@ namespace NetMud.Data.Game
         public Inanimate(IInanimateData backingStore, IContains spawnTo)
         {
             Contents = new EntityContainer<IInanimate>();
+            Pathways = new EntityContainer<IPathway>();
+            MobilesInside = new EntityContainer<IMobile>();
+
             DataTemplate = backingStore;
             SpawnNewInWorld(spawnTo);
         }
@@ -72,6 +82,16 @@ namespace NetMud.Data.Game
         public IEntityContainer<IInanimate> Contents { get; set; }
 
         /// <summary>
+        /// Pathways leading out of this
+        /// </summary>
+        public IEntityContainer<IPathway> Pathways { get; set; }
+
+        /// <summary>
+        /// Any mobiles (players, npcs) contained in this
+        /// </summary>
+        public IEntityContainer<IMobile> MobilesInside { get; set; }
+
+        /// <summary>
         /// Get all of the entities matching a type inside this
         /// </summary>
         /// <typeparam name="T">the type</typeparam>
@@ -80,10 +100,18 @@ namespace NetMud.Data.Game
         {
             var implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
 
-            if (implimentedTypes.Contains(typeof(IInanimate)))
-                return GetContents<T>("objects");
+            var contents = new List<T>();
 
-            return Enumerable.Empty<T>();
+            if (implimentedTypes.Contains(typeof(IMobile)))
+                contents.AddRange(GetContents<T>("mobiles"));
+
+            if (implimentedTypes.Contains(typeof(IInanimate)))
+                contents.AddRange(GetContents<T>("objects"));
+
+            if (implimentedTypes.Contains(typeof(IPathway)))
+                contents.AddRange(GetContents<T>("pathways"));
+
+            return contents;
         }
 
         /// <summary>
@@ -93,11 +121,15 @@ namespace NetMud.Data.Game
         /// <returns>the contained entities</returns>
         /// <param name="containerName">the name of the container</param>
         public IEnumerable<T> GetContents<T>(string containerName)
-        {
+        { 
             switch (containerName)
             {
+                case "mobiles":
+                    return MobilesInside.EntitiesContained.Select(ent => (T)ent);
                 case "objects":
                     return Contents.EntitiesContained.Select(ent => (T)ent);
+                case "pathways":
+                    return Pathways.EntitiesContained.Select(ent => (T)ent);
             }
 
             return Enumerable.Empty<T>();
@@ -138,6 +170,32 @@ namespace NetMud.Data.Game
                 return string.Empty;
             }
 
+            if (implimentedTypes.Contains(typeof(IMobile)))
+            {
+                var obj = (IMobile)thing;
+
+                if (MobilesInside.Contains(obj))
+                    return "That is already in the container";
+
+                MobilesInside.Add(obj);
+                obj.CurrentLocation = this;
+                this.UpsertToLiveWorldCache();
+                return string.Empty;
+            }
+
+            if (implimentedTypes.Contains(typeof(IPathway)))
+            {
+                var obj = (IPathway)thing;
+
+                if (Pathways.Contains(obj))
+                    return "That is already in the container";
+
+                Pathways.Add(obj);
+                obj.CurrentLocation = this;
+                this.UpsertToLiveWorldCache();
+                return string.Empty;
+            }
+
             return "Invalid type to move to container.";
         }
 
@@ -171,6 +229,33 @@ namespace NetMud.Data.Game
                     return "That is not in the container";
 
                 Contents.Remove(obj);
+                obj.CurrentLocation = null;
+                this.UpsertToLiveWorldCache();
+                return string.Empty;
+            }
+
+
+            if (implimentedTypes.Contains(typeof(IMobile)))
+            {
+                var obj = (IMobile)thing;
+
+                if (!MobilesInside.Contains(obj))
+                    return "That is not in the container";
+
+                MobilesInside.Remove(obj);
+                obj.CurrentLocation = null;
+                this.UpsertToLiveWorldCache();
+                return string.Empty;
+            }
+
+            if (implimentedTypes.Contains(typeof(IPathway)))
+            {
+                var obj = (IPathway)thing;
+
+                if (!Pathways.Contains(obj))
+                    return "That is not in the container";
+
+                Pathways.Remove(obj);
                 obj.CurrentLocation = null;
                 this.UpsertToLiveWorldCache();
                 return string.Empty;
@@ -235,6 +320,37 @@ namespace NetMud.Data.Game
 
             return sb;
         }
+
+        /// <summary>
+        /// Get the surrounding locations based on a strength radius
+        /// </summary>
+        /// <param name="strength">number of places to go out</param>
+        /// <returns>list of valid surrounding locations</returns>
+        public IEnumerable<ILocation> GetSurroundings(int strength)
+        {
+            var radiusLocations = new List<ILocation>();
+
+            //If we don't have any paths out what can we even do
+            if (Pathways.Count() == 0)
+                return radiusLocations;
+
+            var currentRadius = 0;
+            var currentPathsSet = Pathways.EntitiesContained;
+            while (currentRadius <= strength && currentPathsSet.Count() > 0)
+            {
+                var currentLocsSet = currentPathsSet.Select(path => path.ToLocation);
+
+                if (currentLocsSet.Count() == 0)
+                    break;
+
+                radiusLocations.AddRange(currentLocsSet);
+                currentPathsSet = currentLocsSet.SelectMany(ro => ro.Pathways.EntitiesContained);
+
+                currentRadius++;
+            }
+
+            return radiusLocations;
+        }
         #endregion
 
         #region HotBackup
@@ -258,11 +374,15 @@ namespace NetMud.Data.Game
                                         new XAttribute("Created", charData.Created)),
                                     new XElement("LiveData",
                                         new XAttribute("Keywords", string.Join(",", Keywords))),
-                                    new XElement("Contents")
+                                    new XElement("Contents"),
+                                    new XElement("MobilesInside")
                                     ));
 
             foreach (var item in Contents.EntitiesContained)
                 entityData.Root.Element("Contents").Add(new XElement("Item", item.BirthMark));
+
+            foreach (var item in MobilesInside.EntitiesContained.Where(ent => ent.GetType() != typeof(Player)))
+                entityData.Root.Element("MobilesInside").Add(new XElement("Item", item.BirthMark));
 
             var entityBinaryConvert = new DataUtility.EntityFileData(entityData);
 
@@ -305,6 +425,15 @@ namespace NetMud.Data.Game
                 obj.BirthMark = item.Value;
 
                 newEntity.Contents.Add(obj);
+            }
+
+            //Add a fake entity to get the birthmark over to the next place
+            foreach (var item in xDoc.Root.Element("MobilesInside").Elements("Item"))
+            {
+                var obj = new Intelligence();
+                obj.BirthMark = item.Value;
+
+                newEntity.MobilesInside.Add(obj);
             }
 
             newEntity.DataTemplate = backingData;

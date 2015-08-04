@@ -35,6 +35,11 @@ namespace NetMud.Websock
         private string _userId;
 
         /// <summary>
+        /// The player connected
+        /// </summary>
+        private Player _currentPlayer;
+
+        /// <summary>
         /// Creates an instance of the command negotiator
         /// </summary>
         public CommandNegotiator()
@@ -64,6 +69,50 @@ namespace NetMud.Websock
             GetUserIDFromCookie(authTicketValue);
 
             UserManager = new ApplicationUserManager(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+
+            var authedUser = UserManager.FindById(_userId);
+
+            var currentCharacter = authedUser.GameAccount.Characters.FirstOrDefault(ch => ch.ID.Equals(authedUser.GameAccount.CurrentlySelectedCharacter));
+
+            if (currentCharacter == null)
+            {
+                Send("<p>No character selected</p>");
+                return;
+            }
+
+            //Try to see if they are already live
+            _currentPlayer = LiveCache.Get<Player>(currentCharacter.ID);
+
+            //Check the backup
+            if (_currentPlayer == null)
+            {
+                var hotBack = new HotBackup(System.Web.Hosting.HostingEnvironment.MapPath("/HotBackup/"));
+                _currentPlayer = hotBack.RestorePlayer(currentCharacter.AccountHandle, currentCharacter.ID);
+            }
+
+            //else new them up
+            if (_currentPlayer == null)
+                _currentPlayer = new Player(currentCharacter);
+
+            _currentPlayer.Descriptor = DataStructure.Base.Entity.DescriptorType.WebSockets;
+            _currentPlayer.DescriptorID = ID;
+            _currentPlayer.WriteTo = (strings) => SendWrapper(strings);
+            _currentPlayer.CloseConnection = () =>
+            {
+                this.Context.WebSocket.Close(CloseStatusCode.Normal, "user exited");
+                return true;
+            };
+
+            //We need to barf out to the connected client the welcome message. The client will only indicate connection has been established.
+            var welcomeMessage = new List<String>();
+
+            welcomeMessage.Add(string.Format("Welcome to alpha phase twinMUD, {0}", currentCharacter.FullName()));
+            welcomeMessage.Add(string.Format("Please feel free to LOOK around.", currentCharacter.FullName()));
+
+            SendWrapper(welcomeMessage);
+
+            //Send the look command in
+            Interpret.Render("look", _currentPlayer);
         }
 
         /// <summary>
@@ -94,40 +143,13 @@ namespace NetMud.Websock
         /// <param name="e">the events of the message</param>
         protected override void OnMessage(MessageEventArgs e)
         {
-            var authedUser = UserManager.FindById(_userId);
-
-            var currentCharacter = authedUser.GameAccount.Characters.FirstOrDefault(ch => ch.ID.Equals(authedUser.GameAccount.CurrentlySelectedCharacter));
-
-            if (currentCharacter == null)
+            if (_currentPlayer == null)
             {
-                Send("<p>No character selected</p>");
-                return;
+                Send("<p>Invalid character; please reload the client and try again</p>");
+                this.Context.WebSocket.Close(CloseStatusCode.Abnormal, "connection aborted - no player"); ;
             }
 
-            //Try to see if they are already live
-            Player newPlayer = LiveCache.Get<Player>(currentCharacter.ID);
-
-            //Check the backup
-            if (newPlayer == null)
-            {
-                var hotBack = new HotBackup(System.Web.Hosting.HostingEnvironment.MapPath("/HotBackup/"));
-                newPlayer = hotBack.RestorePlayer(currentCharacter.AccountHandle, currentCharacter.ID);
-            }
-
-            //else new them up
-            if (newPlayer == null)
-                newPlayer = new Player(currentCharacter);
-
-            newPlayer.Descriptor = DataStructure.Base.Entity.DescriptorType.WebSockets;
-            newPlayer.DescriptorID = ID;
-            newPlayer.WriteTo = (strings) => SendWrapper(strings);
-            newPlayer.CloseConnection = () =>
-            {
-                this.Context.WebSocket.Close(CloseStatusCode.Normal, "user exited");
-                return true;
-            };
-
-            var errors = Interpret.Render(e.Data, newPlayer);
+            var errors = Interpret.Render(e.Data, _currentPlayer);
 
             //It only sends the errors
             if (!string.IsNullOrWhiteSpace(errors))

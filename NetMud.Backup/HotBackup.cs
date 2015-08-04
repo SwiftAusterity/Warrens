@@ -270,6 +270,7 @@ namespace NetMud.Backup
                     }
                 }
 
+                //Shove them all into the live system first
                 foreach (var entity in entitiesToLoad.OrderBy(ent => ent.Birthdate))
                     entity.UpsertToLiveWorldCache();
 
@@ -284,7 +285,7 @@ namespace NetMud.Backup
                         entity.MoveInto<IInanimate>(fullObj);
                     }
 
-                    foreach (IIntelligence obj in entity.MobilesInRoom.EntitiesContained)
+                    foreach (IIntelligence obj in entity.MobilesInside.EntitiesContained)
                     {
                         var fullObj = LiveCache.Get<IIntelligence>(new LiveCacheKey(typeof(Intelligence), obj.BirthMark));
                         entity.MoveFrom<IIntelligence>(obj);
@@ -310,13 +311,20 @@ namespace NetMud.Backup
                         entity.MoveFrom<IInanimate>(obj);
                         entity.MoveInto<IInanimate>(fullObj);
                     }
+             
+                    foreach (IIntelligence obj in entity.MobilesInside.EntitiesContained)
+                    {
+                        var fullObj = LiveCache.Get<IIntelligence>(new LiveCacheKey(typeof(Intelligence), obj.BirthMark));
+                        entity.MoveFrom<IIntelligence>(obj);
+                        entity.MoveInto<IIntelligence>(fullObj);
+                    }
                 }
 
                 //paths load themselves to their room
-                foreach (NetMud.Data.Game.Pathway entity in entitiesToLoad.Where(ent => ent.GetType() == typeof(NetMud.Data.Game.Pathway)))
+                foreach (Pathway entity in entitiesToLoad.Where(ent => ent.GetType() == typeof(Pathway)))
                 {
-                    IRoom roomTo = LiveCache.Get<IRoom>(new LiveCacheKey(typeof(NetMud.Data.Game.Room), entity.ToLocation.BirthMark));
-                    IRoom roomFrom = LiveCache.Get<IRoom>(new LiveCacheKey(typeof(NetMud.Data.Game.Room), entity.FromLocation.BirthMark));
+                    ILocation roomTo = LiveCache.Get<ILocation>(new LiveCacheKey(entity.ToLocation.GetType(), entity.ToLocation.BirthMark));
+                    ILocation roomFrom = LiveCache.Get<ILocation>(new LiveCacheKey(entity.FromLocation.GetType(), entity.FromLocation.BirthMark));
 
                     if (roomTo != null && roomFrom != null)
                     {
