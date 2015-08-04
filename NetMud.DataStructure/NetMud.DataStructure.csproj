@@ -112,6 +112,7 @@
     <Compile Include="Behaviors\System\ISpawnAsSingleton.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SupportingClasses\IEntityContainer.cs" />
+    <Compile Include="SupportingClasses\IEntityContainerData.cs" />
     <Compile Include="SupportingClasses\MessageCluster.cs" />
     <Compile Include="SupportingClasses\MessagingSupport.cs" />
     <Compile Include="SupportingClasses\PathDirections.cs" />

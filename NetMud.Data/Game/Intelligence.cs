@@ -102,7 +102,7 @@ namespace NetMud.Data.Game
             switch (containerName)
             {
                 case "objects":
-                    return Inventory.EntitiesContained.Select(ent => (T)ent);
+                    return Inventory.EntitiesContained().Select(ent => (T)ent);
             }
 
             return Enumerable.Empty<T>();
@@ -252,7 +252,7 @@ namespace NetMud.Data.Game
                                     new XElement("Inventory")
                                     ));
 
-            foreach(var item in Inventory.EntitiesContained)
+            foreach(var item in Inventory.EntitiesContained())
                 entityData.Root.Element("Inventory").Add(new XElement("Item", item.BirthMark));
 
             var entityBinaryConvert = new DataUtility.EntityFileData(entityData);

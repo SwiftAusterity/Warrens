@@ -125,11 +125,11 @@ namespace NetMud.Data.Game
             switch (containerName)
             {
                 case "mobiles":
-                    return MobilesInside.EntitiesContained.Select(ent => (T)ent);
+                    return MobilesInside.EntitiesContained().Select(ent => (T)ent);
                 case "objects":
-                    return Contents.EntitiesContained.Select(ent => (T)ent);
+                    return Contents.EntitiesContained().Select(ent => (T)ent);
                 case "pathways":
-                    return Pathways.EntitiesContained.Select(ent => (T)ent);
+                    return Pathways.EntitiesContained().Select(ent => (T)ent);
             }
 
             return Enumerable.Empty<T>();
@@ -335,7 +335,7 @@ namespace NetMud.Data.Game
                 return radiusLocations;
 
             var currentRadius = 0;
-            var currentPathsSet = Pathways.EntitiesContained;
+            var currentPathsSet = Pathways.EntitiesContained();
             while (currentRadius <= strength && currentPathsSet.Count() > 0)
             {
                 var currentLocsSet = currentPathsSet.Select(path => path.ToLocation);
@@ -344,7 +344,7 @@ namespace NetMud.Data.Game
                     break;
 
                 radiusLocations.AddRange(currentLocsSet);
-                currentPathsSet = currentLocsSet.SelectMany(ro => ro.Pathways.EntitiesContained);
+                currentPathsSet = currentLocsSet.SelectMany(ro => ro.Pathways.EntitiesContained());
 
                 currentRadius++;
             }
@@ -378,10 +378,10 @@ namespace NetMud.Data.Game
                                     new XElement("MobilesInside")
                                     ));
 
-            foreach (var item in Contents.EntitiesContained)
+            foreach (var item in Contents.EntitiesContained())
                 entityData.Root.Element("Contents").Add(new XElement("Item", item.BirthMark));
 
-            foreach (var item in MobilesInside.EntitiesContained.Where(ent => ent.GetType() != typeof(Player)))
+            foreach (var item in MobilesInside.EntitiesContained().Where(ent => ent.GetType() != typeof(Player)))
                 entityData.Root.Element("MobilesInside").Add(new XElement("Item", item.BirthMark));
 
             var entityBinaryConvert = new DataUtility.EntityFileData(entityData);

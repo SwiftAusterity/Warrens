@@ -9,19 +9,16 @@ namespace NetMud.DataStructure.SupportingClasses
     public interface IEntityContainer<T>
     {
         /// <summary>
-        /// How large is this container
+        /// What named containers are attached to this
         /// </summary>
-        long CapacityVolume { get; set; }
+        IEnumerable<IEntityContainerData<T>> NamedContainers { get; set; }
+
+        #region Universal accessors
 
         /// <summary>
-        /// How much weight can it carry before taking damage
+        /// List of entities contained (it needs to never store its own objects, only cache references)
         /// </summary>
-        long CapacityWeight { get; set; }
-
-        /// <summary>
-        /// Restful list of entities contained (it needs to never store its own objects, only cache references)
-        /// </summary>
-        IEnumerable<T> EntitiesContained { get; }
+        IEnumerable<T> EntitiesContained();
 
         /// <summary>
         /// Add an entity to this
@@ -56,5 +53,48 @@ namespace NetMud.DataStructure.SupportingClasses
         /// </summary>
         /// <returns>the count</returns>
         int Count();
+        #endregion
+
+        #region Named accessors
+
+        /// <summary>
+        /// List of entities contained (it needs to never store its own objects, only cache references)
+        /// </summary>
+        IEnumerable<T> EntitiesContained(string containerName);
+
+        /// <summary>
+        /// Add an entity to this
+        /// </summary>
+        /// <param name="entity">the entity to add</param>
+        /// <returns>success status</returns>
+        bool Add(T entity, string containerName);
+
+        /// <summary>
+        /// Does this contain the specified entity
+        /// </summary>
+        /// <param name="entity">the entity in question</param>
+        /// <returns>yes it contains it or no it does not</returns>
+        bool Contains(T entity, string containerName);
+
+        /// <summary>
+        /// Remove an entity from this
+        /// </summary>
+        /// <param name="entity">the entity to remove</param>
+        /// <returns>success status</returns>
+        bool Remove(T entity, string containerName);
+
+        /// <summary>
+        /// Remove an entity from this
+        /// </summary>
+        /// <param name="birthMark">the entity's birthmark to remove</param>
+        /// <returns>success status</returns>
+        bool Remove(string birthMark, string containerName);
+
+        /// <summary>
+        /// Count the entities in this
+        /// </summary>
+        /// <returns>the count</returns>
+        int Count(string containerName);
+        #endregion
     }
 }

@@ -98,6 +98,18 @@ namespace NetMud.DataAccess
                               .Select(kvp => (T)kvp.Value);
         }
 
+        /// <summary>
+        /// fills a list of entities from the cache of a single type that match the birthmarks sent in
+        /// </summary>
+        /// <typeparam name="T">the system type for the entity</typeparam>
+        /// <param name="birthmarks">the birthmarks to retrieve</param>
+        /// <returns>a list of the entities from the cache</returns>
+        public static IEnumerable<T> GetMany<T>(IEnumerable<string> birthmarks) where T : IEntity
+        {
+            return globalCache.Where(keyValuePair => keyValuePair.Value.GetType().GetInterfaces().Contains(typeof(T)) && birthmarks.Contains(((T)keyValuePair.Value).BirthMark))
+                              .Select(kvp => (T)kvp.Value);
+        }
+
 
         /// <summary>
         /// Only for the hotbackup procedure

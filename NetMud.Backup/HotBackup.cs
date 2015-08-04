@@ -278,14 +278,14 @@ namespace NetMud.Backup
                 //I don't know how we can even begin to do this type agnostically since the collections are held on type specific objects without some super ugly reflection
                 foreach (Room entity in entitiesToLoad.Where(ent => ent.GetType() == typeof(Room)))
                 {
-                    foreach (IInanimate obj in entity.ObjectsInRoom.EntitiesContained)
+                    foreach (IInanimate obj in entity.ObjectsInRoom.EntitiesContained())
                     {
                         var fullObj = LiveCache.Get<IInanimate>(new LiveCacheKey(typeof(Inanimate), obj.BirthMark));
                         entity.MoveFrom<IInanimate>(obj);
                         entity.MoveInto<IInanimate>(fullObj);
                     }
 
-                    foreach (IIntelligence obj in entity.MobilesInside.EntitiesContained)
+                    foreach (IIntelligence obj in entity.MobilesInside.EntitiesContained())
                     {
                         var fullObj = LiveCache.Get<IIntelligence>(new LiveCacheKey(typeof(Intelligence), obj.BirthMark));
                         entity.MoveFrom<IIntelligence>(obj);
@@ -295,7 +295,7 @@ namespace NetMud.Backup
 
                 foreach (Intelligence entity in entitiesToLoad.Where(ent => ent.GetType() == typeof(Intelligence)))
                 {
-                    foreach (IInanimate obj in entity.Inventory.EntitiesContained)
+                    foreach (IInanimate obj in entity.Inventory.EntitiesContained())
                     {
                         var fullObj = LiveCache.Get<IInanimate>(new LiveCacheKey(typeof(Inanimate), obj.BirthMark));
                         entity.MoveFrom<IInanimate>(obj);
@@ -305,14 +305,14 @@ namespace NetMud.Backup
 
                 foreach (Inanimate entity in entitiesToLoad.Where(ent => ent.GetType() == typeof(Inanimate)))
                 {
-                    foreach (IInanimate obj in entity.Contents.EntitiesContained)
+                    foreach (IInanimate obj in entity.Contents.EntitiesContained())
                     {
                         var fullObj = LiveCache.Get<IInanimate>(new LiveCacheKey(typeof(Inanimate), obj.BirthMark));
                         entity.MoveFrom<IInanimate>(obj);
                         entity.MoveInto<IInanimate>(fullObj);
                     }
              
-                    foreach (IIntelligence obj in entity.MobilesInside.EntitiesContained)
+                    foreach (IIntelligence obj in entity.MobilesInside.EntitiesContained())
                     {
                         var fullObj = LiveCache.Get<IIntelligence>(new LiveCacheKey(typeof(Intelligence), obj.BirthMark));
                         entity.MoveFrom<IIntelligence>(obj);
@@ -513,7 +513,7 @@ namespace NetMud.Backup
                 entityFile.Flush();
 
                 //We also need to write out all the inventory
-                foreach (var obj in entity.Inventory.EntitiesContained)
+                foreach (var obj in entity.Inventory.EntitiesContained())
                 {
                     var baseTypeName = "Inventory";
 
