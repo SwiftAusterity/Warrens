@@ -42,9 +42,9 @@ namespace NetMud.Data.Game
         /// <param name="backingStore">the backing data</param>
         public Inanimate(IInanimateData backingStore)
         {
-            Contents = new EntityContainer<IInanimate>();
+            Contents = new EntityContainer<IInanimate>(backingStore.InanimateContainers);
             Pathways = new EntityContainer<IPathway>();
-            MobilesInside = new EntityContainer<IMobile>();
+            MobilesInside = new EntityContainer<IMobile>(backingStore.MobileContainers);
 
             DataTemplate = backingStore;
             SpawnNewInWorld();
@@ -57,9 +57,9 @@ namespace NetMud.Data.Game
         /// <param name="spawnTo">where to spawn this into</param>
         public Inanimate(IInanimateData backingStore, IContains spawnTo)
         {
-            Contents = new EntityContainer<IInanimate>();
+            Contents = new EntityContainer<IInanimate>(backingStore.InanimateContainers);
             Pathways = new EntityContainer<IPathway>();
-            MobilesInside = new EntityContainer<IMobile>();
+            MobilesInside = new EntityContainer<IMobile>(backingStore.MobileContainers);
 
             DataTemplate = backingStore;
             SpawnNewInWorld(spawnTo);
@@ -103,13 +103,13 @@ namespace NetMud.Data.Game
             var contents = new List<T>();
 
             if (implimentedTypes.Contains(typeof(IMobile)))
-                contents.AddRange(GetContents<T>("mobiles"));
+                contents.AddRange(MobilesInside.EntitiesContained().Select(ent => (T)ent));
 
             if (implimentedTypes.Contains(typeof(IInanimate)))
-                contents.AddRange(GetContents<T>("objects"));
+                contents.AddRange(Contents.EntitiesContained().Select(ent => (T)ent));
 
             if (implimentedTypes.Contains(typeof(IPathway)))
-                contents.AddRange(GetContents<T>("pathways"));
+                contents.AddRange(Pathways.EntitiesContained().Select(ent => (T)ent));
 
             return contents;
         }
@@ -121,18 +121,21 @@ namespace NetMud.Data.Game
         /// <returns>the contained entities</returns>
         /// <param name="containerName">the name of the container</param>
         public IEnumerable<T> GetContents<T>(string containerName)
-        { 
-            switch (containerName)
-            {
-                case "mobiles":
-                    return MobilesInside.EntitiesContained().Select(ent => (T)ent);
-                case "objects":
-                    return Contents.EntitiesContained().Select(ent => (T)ent);
-                case "pathways":
-                    return Pathways.EntitiesContained().Select(ent => (T)ent);
-            }
+        {
+            var implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
 
-            return Enumerable.Empty<T>();
+            var contents = new List<T>();
+
+            if (implimentedTypes.Contains(typeof(IMobile)))
+                contents.AddRange(MobilesInside.EntitiesContained(containerName).Select(ent => (T)ent));
+
+            if (implimentedTypes.Contains(typeof(IInanimate)))
+                contents.AddRange(Contents.EntitiesContained(containerName).Select(ent => (T)ent));
+
+            if (implimentedTypes.Contains(typeof(IPathway)))
+                contents.AddRange(Pathways.EntitiesContained(containerName).Select(ent => (T)ent));
+
+            return contents;
         }
 
         /// <summary>
@@ -161,10 +164,10 @@ namespace NetMud.Data.Game
             {
                 var obj = (IInanimate)thing;
 
-                if (Contents.Contains(obj))
+                if (Contents.Contains(obj, containerName))
                     return "That is already in the container";
 
-                Contents.Add(obj);
+                Contents.Add(obj, containerName);
                 obj.CurrentLocation = this;
                 this.UpsertToLiveWorldCache();
                 return string.Empty;
@@ -174,10 +177,10 @@ namespace NetMud.Data.Game
             {
                 var obj = (IMobile)thing;
 
-                if (MobilesInside.Contains(obj))
+                if (MobilesInside.Contains(obj, containerName))
                     return "That is already in the container";
 
-                MobilesInside.Add(obj);
+                MobilesInside.Add(obj, containerName);
                 obj.CurrentLocation = this;
                 this.UpsertToLiveWorldCache();
                 return string.Empty;
@@ -187,10 +190,10 @@ namespace NetMud.Data.Game
             {
                 var obj = (IPathway)thing;
 
-                if (Pathways.Contains(obj))
+                if (Pathways.Contains(obj, containerName))
                     return "That is already in the container";
 
-                Pathways.Add(obj);
+                Pathways.Add(obj, containerName);
                 obj.CurrentLocation = this;
                 this.UpsertToLiveWorldCache();
                 return string.Empty;
@@ -225,10 +228,10 @@ namespace NetMud.Data.Game
             {
                 var obj = (IInanimate)thing;
 
-                if (!Contents.Contains(obj))
+                if (!Contents.Contains(obj, containerName))
                     return "That is not in the container";
 
-                Contents.Remove(obj);
+                Contents.Remove(obj, containerName);
                 obj.CurrentLocation = null;
                 this.UpsertToLiveWorldCache();
                 return string.Empty;
@@ -239,10 +242,10 @@ namespace NetMud.Data.Game
             {
                 var obj = (IMobile)thing;
 
-                if (!MobilesInside.Contains(obj))
+                if (!MobilesInside.Contains(obj, containerName))
                     return "That is not in the container";
 
-                MobilesInside.Remove(obj);
+                MobilesInside.Remove(obj, containerName);
                 obj.CurrentLocation = null;
                 this.UpsertToLiveWorldCache();
                 return string.Empty;
@@ -252,10 +255,10 @@ namespace NetMud.Data.Game
             {
                 var obj = (IPathway)thing;
 
-                if (!Pathways.Contains(obj))
+                if (!Pathways.Contains(obj, containerName))
                     return "That is not in the container";
 
-                Pathways.Remove(obj);
+                Pathways.Remove(obj, containerName);
                 obj.CurrentLocation = null;
                 this.UpsertToLiveWorldCache();
                 return string.Empty;
@@ -372,17 +375,34 @@ namespace NetMud.Data.Game
                                         new XAttribute("Name", charData.Name),
                                         new XAttribute("LastRevised", charData.LastRevised),
                                         new XAttribute("Created", charData.Created)),
+                                        new XElement("MobileContainers"),
+                                        new XElement("InanimateContainers"),
                                     new XElement("LiveData",
                                         new XAttribute("Keywords", string.Join(",", Keywords))),
                                     new XElement("Contents"),
                                     new XElement("MobilesInside")
                                     ));
 
-            foreach (var item in Contents.EntitiesContained())
-                entityData.Root.Element("Contents").Add(new XElement("Item", item.BirthMark));
+            foreach (var item in Contents.EntitiesContainedByName())
+                entityData.Root.Element("Contents").Add(new XElement("Item",
+                                                            new XAttribute("Birthmark", item.Item2.BirthMark),
+                                                            new XAttribute("Container", item.Item1)));
 
-            foreach (var item in MobilesInside.EntitiesContained().Where(ent => ent.GetType() != typeof(Player)))
-                entityData.Root.Element("MobilesInside").Add(new XElement("Item", item.BirthMark));
+            foreach (var item in MobilesInside.EntitiesContainedByName().Where(ent => ent.Item2.GetType() != typeof(Player)))
+                entityData.Root.Element("MobilesInside").Add(new XElement("Item",
+                                                            new XAttribute("Birthmark", item.Item2.BirthMark),
+                                                            new XAttribute("Container", item.Item1)));
+
+            foreach (var item in charData.MobileContainers)
+                entityData.Root.Element("BackingData").Element("MobileContainers").Add(new XElement("Container",
+                                                                                                    new XAttribute("Name", item.Name),
+                                                                                                    new XAttribute("CapacityVolume", item.CapacityVolume),
+                                                                                                    new XAttribute("CapacityWeight", item.CapacityWeight)));
+            foreach (var item in charData.InanimateContainers)
+                entityData.Root.Element("BackingData").Element("InanimateContainers").Add(new XElement("Container",
+                                                                                                    new XAttribute("Name", item.Name),
+                                                                                                    new XAttribute("CapacityVolume", item.CapacityVolume),
+                                                                                                    new XAttribute("CapacityWeight", item.CapacityWeight)));
 
             var entityBinaryConvert = new DataUtility.EntityFileData(entityData);
 
@@ -418,22 +438,52 @@ namespace NetMud.Data.Game
             backingData.LastRevised = DateTime.Parse(xDoc.Root.Element("BackingData").Attribute("LastRevised").Value);
             backingData.Created = DateTime.Parse(xDoc.Root.Element("BackingData").Attribute("Created").Value);
 
-            //Add a fake entity to get the birthmark over to the next place
-            foreach (var item in xDoc.Root.Element("Contents").Elements("Item"))
+            foreach (var item in xDoc.Root.Element("BackingData").Element("InanimateContainers").Elements("Item"))
             {
-                var obj = new Inanimate();
-                obj.BirthMark = item.Value;
+                var newContainer = new EntityContainerData<IInanimate>();
+                newContainer.CapacityVolume = long.Parse(item.Attribute("CapacityVolume").Value);
+                newContainer.CapacityWeight = long.Parse(item.Attribute("CapacityWeight").Value);
+                newContainer.Name = item.Attribute("Name").Value;
 
-                newEntity.Contents.Add(obj);
+                backingData.InanimateContainers.Add(newContainer);
+            }
+
+            //Add a fake entity to get the birthmark over to the next place
+            foreach (var item in xDoc.Root.Element("BackingData").Element("MobileContainers").Elements("Item"))
+            {
+                var newContainer = new EntityContainerData<IMobile>();
+                newContainer.CapacityVolume = long.Parse(item.Attribute("CapacityVolume").Value);
+                newContainer.CapacityWeight = long.Parse(item.Attribute("CapacityWeight").Value);
+                newContainer.Name = item.Attribute("Name").Value;
+
+                backingData.MobileContainers.Add(newContainer);
             }
 
             //Add a fake entity to get the birthmark over to the next place
             foreach (var item in xDoc.Root.Element("MobilesInside").Elements("Item"))
             {
                 var obj = new Intelligence();
-                obj.BirthMark = item.Value;
+                obj.BirthMark = item.Attribute("Birthmark").Value;
+                var containerName = item.Attribute("Container").Value;
 
-                newEntity.MobilesInside.Add(obj);
+                if (!String.IsNullOrWhiteSpace(containerName))
+                    newEntity.MobilesInside.Add(obj, containerName);
+                else
+                    newEntity.MobilesInside.Add(obj);
+            }
+
+
+            //Add a fake entity to get the birthmark over to the next place
+            foreach (var item in xDoc.Root.Element("Contents").Elements("Item"))
+            {
+                var obj = new Inanimate();
+                obj.BirthMark = item.Attribute("Birthmark").Value;
+                var containerName = item.Attribute("Container").Value;
+
+                if (!String.IsNullOrWhiteSpace(containerName))
+                    newEntity.Contents.Add(obj, containerName);
+                else
+                    newEntity.Contents.Add(obj);
             }
 
             newEntity.DataTemplate = backingData;

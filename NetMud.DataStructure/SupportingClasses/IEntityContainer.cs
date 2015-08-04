@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace NetMud.DataStructure.SupportingClasses
 {
@@ -56,6 +57,11 @@ namespace NetMud.DataStructure.SupportingClasses
         #endregion
 
         #region Named accessors
+        /// <summary>
+        /// List of entities contained sent back with which container they are in
+        /// </summary>
+        /// <returns>entities paired with their container names</returns>
+        IEnumerable<Tuple<string, T>> EntitiesContainedByName();
 
         /// <summary>
         /// List of entities contained (it needs to never store its own objects, only cache references)

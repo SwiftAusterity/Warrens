@@ -305,18 +305,18 @@ namespace NetMud.Backup
 
                 foreach (Inanimate entity in entitiesToLoad.Where(ent => ent.GetType() == typeof(Inanimate)))
                 {
-                    foreach (IInanimate obj in entity.Contents.EntitiesContained())
+                    foreach (var obj in entity.Contents.EntitiesContainedByName())
                     {
-                        var fullObj = LiveCache.Get<IInanimate>(new LiveCacheKey(typeof(Inanimate), obj.BirthMark));
-                        entity.MoveFrom<IInanimate>(obj);
-                        entity.MoveInto<IInanimate>(fullObj);
+                        var fullObj = LiveCache.Get<IInanimate>(new LiveCacheKey(typeof(Inanimate), obj.Item2.BirthMark));
+                        entity.MoveFrom<IInanimate>((IInanimate)obj.Item2);
+                        entity.MoveInto<IInanimate>(fullObj, obj.Item1);
                     }
              
-                    foreach (IIntelligence obj in entity.MobilesInside.EntitiesContained())
+                    foreach (var obj in entity.MobilesInside.EntitiesContainedByName())
                     {
-                        var fullObj = LiveCache.Get<IIntelligence>(new LiveCacheKey(typeof(Intelligence), obj.BirthMark));
-                        entity.MoveFrom<IIntelligence>(obj);
-                        entity.MoveInto<IIntelligence>(fullObj);
+                        var fullObj = LiveCache.Get<IIntelligence>(new LiveCacheKey(typeof(Intelligence), obj.Item2.BirthMark));
+                        entity.MoveFrom<IIntelligence>((IIntelligence)obj.Item2);
+                        entity.MoveInto<IIntelligence>(fullObj, obj.Item1);
                     }
                 }
 

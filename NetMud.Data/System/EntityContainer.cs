@@ -52,6 +52,26 @@ namespace NetMud.Data.System
 
         #region Universal Accessors
         /// <summary>
+        /// List of entities contained sent back with which container they are in
+        /// </summary>
+        /// <returns>entities paired with their container names</returns>
+        public IEnumerable<Tuple<string, T>> EntitiesContainedByName()
+        {
+            if (Count() > 0)
+            {
+                var returnList = new List<Tuple<string, T>>();
+
+                foreach(var hashKeySet in Birthmarks)
+                    foreach (var value in LiveCache.GetMany<T>(hashKeySet.Value))
+                        returnList.Add(new Tuple<string, T>(hashKeySet.Key, value));
+
+                return returnList;
+            }
+
+            return Enumerable.Empty<Tuple<string, T>>();
+        }
+
+        /// <summary>
         /// Restful list of entities contained (it needs to never store its own objects, only cache references)
         /// </summary>
         public IEnumerable<T> EntitiesContained()
@@ -118,6 +138,9 @@ namespace NetMud.Data.System
         /// </summary>
         public IEnumerable<T> EntitiesContained(string namedContainer)
         {
+            if (String.IsNullOrWhiteSpace(namedContainer))
+                return EntitiesContained();
+
             if (Count(namedContainer) > 0)
                 return LiveCache.GetMany<T>(Birthmarks[namedContainer]);
 
@@ -131,6 +154,9 @@ namespace NetMud.Data.System
         /// <returns>success status</returns>
         public bool Add(T entity, string namedContainer)
         {
+            if (String.IsNullOrWhiteSpace(namedContainer))
+                return Add(entity);
+
             return Birthmarks[namedContainer].Add(entity.BirthMark);
         }
 
@@ -141,6 +167,9 @@ namespace NetMud.Data.System
         /// <returns>yes it contains it or no it does not</returns>
         public bool Contains(T entity, string namedContainer)
         {
+            if (String.IsNullOrWhiteSpace(namedContainer))
+                return Contains(entity);
+
             return Birthmarks[namedContainer].Contains(entity.BirthMark);
         }
 
@@ -151,6 +180,9 @@ namespace NetMud.Data.System
         /// <returns>success status</returns>
         public bool Remove(T entity, string namedContainer)
         {
+            if (String.IsNullOrWhiteSpace(namedContainer))
+                return Remove(entity);
+
             return Birthmarks[namedContainer].Remove(entity.BirthMark);
         }
 
@@ -161,6 +193,9 @@ namespace NetMud.Data.System
         /// <returns>success status</returns>
         public bool Remove(string birthMark, string namedContainer)
         {
+            if (String.IsNullOrWhiteSpace(namedContainer))
+                return Remove(birthMark);
+
             return Birthmarks[namedContainer].Remove(birthMark);
         }
 
@@ -170,6 +205,9 @@ namespace NetMud.Data.System
         /// <returns>the count</returns>
         public int Count(string namedContainer)
         {
+            if (String.IsNullOrWhiteSpace(namedContainer))
+                return Count();
+
             return Birthmarks[namedContainer].Count;
         }
         #endregion
