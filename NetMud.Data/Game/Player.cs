@@ -24,7 +24,7 @@ namespace NetMud.Data.Game
     /// live player character entities
     /// </summary>
     public class Player : EntityPartial, IPlayer
-    {        
+    {
         /// <summary>
         /// News up an empty entity
         /// </summary>
@@ -55,6 +55,12 @@ namespace NetMud.Data.Game
         public DescriptorType Descriptor { get; set; }
 
         /// <summary>
+        /// Function used to close this connection
+        /// </summary>
+        public Func<bool> CloseConnection { get; set; }
+
+
+        /// <summary>
         /// Birthmark for current live location of this
         /// </summary>
         private string _currentLocationBirthmark;
@@ -82,7 +88,7 @@ namespace NetMud.Data.Game
                 //We save character data to ensure the player remains where it was on last known change
                 var ch = (Character)DataTemplate;
                 ch.LastKnownLocation = value.DataTemplate.ID.ToString();
-                ch.LastKnownLocationType = value.DataTemplate.GetType().Name;
+                ch.LastKnownLocationType = value.GetType().Name;
                 ch.Save();
             }
         }
@@ -237,8 +243,25 @@ namespace NetMud.Data.Game
                 DataTemplate = me.DataTemplate;
                 Inventory = me.Inventory;
                 Keywords = me.Keywords;
-                me.CurrentLocation.MoveInto<IPlayer>(this);
+
+                if (me.CurrentLocation == null)
+                {
+                    var newLoc = GetBaseSpawn();
+                    newLoc.MoveInto<IPlayer>(this);
+                }
+                else
+                    me.CurrentLocation.MoveInto<IPlayer>(this);
             }
+        }
+
+        /// <summary>
+        /// Find the emergency we dont know where to spawn this guy spawn location
+        /// </summary>
+        /// <returns>The emergency spawn location</returns>
+        private IContains GetBaseSpawn()
+        {
+            //TODO: Not hardcode the zeroth room
+            return LiveCache.Get<Room>(1);
         }
 
         /// <summary>
@@ -284,11 +307,8 @@ namespace NetMud.Data.Game
             Keywords = new string[] { ch.Name.ToLower(), ch.SurName.ToLower() };
             Birthdate = DateTime.Now;
 
-            //TODO: Not hardcode the zeroth room
             if (spawnTo == null)
-            {
-                spawnTo = LiveCache.Get<ILocation>(1, typeof(IRoom));
-            }
+                spawnTo = GetBaseSpawn();
 
             CurrentLocation = spawnTo;
 
@@ -375,7 +395,7 @@ namespace NetMud.Data.Game
             if (backChar != null)
                 backingData = backChar;
             else
-            { 
+            {
                 //we can still use this as a failover to restore data from backups
                 backingData.Name = xDoc.Root.Element("BackingData").Attribute("Name").Value;
                 backingData.SurName = xDoc.Root.Element("BackingData").Attribute("Surname").Value;

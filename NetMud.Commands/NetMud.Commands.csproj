@@ -50,6 +50,7 @@
     <Compile Include="Attributes\CommandRangeAttribute.cs" />
     <Compile Include="Movement\UseExits.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="System\Quit.cs" />
     <Compile Include="System\Look.cs" />
     <Compile Include="System\Help.cs" />
   </ItemGroup>

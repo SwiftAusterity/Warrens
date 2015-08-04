@@ -1,23 +1,20 @@
-﻿using System;
-using System.Linq;
-
-using NetMud.Data.Game;
-using NetMud.Interp;
-
-using WebSocketSharp;
-using WebSocketSharp.Server;
-using NetMud.Authentication;
-
-using Microsoft.AspNet.Identity;
-using System.Security.Claims;
-using System.IO;
-using System.IO.Compression;
+﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using NetMud.Authentication;
+using NetMud.Backup;
+using NetMud.Data.Game;
+using NetMud.DataAccess;
+using NetMud.Interp;
 using NetMud.Models;
 using NetMud.Utility;
+using System;
 using System.Collections.Generic;
-using NetMud.Backup;
-using NetMud.DataAccess;
+using System.IO;
+using System.IO.Compression;
+using System.Linq;
+using System.Security.Claims;
+using WebSocketSharp;
+using WebSocketSharp.Server;
 
 
 namespace NetMud.Websock
@@ -84,6 +81,10 @@ namespace NetMud.Websock
         /// <param name="e">events for the error</param>
         protected override void OnError(WebSocketSharp.ErrorEventArgs e)
         {
+            //Log it
+            LoggingUtility.LogError(e.Exception);
+
+            //Do the base behavior from the websockets library
             base.OnError(e);
         }
 
@@ -120,6 +121,11 @@ namespace NetMud.Websock
             newPlayer.Descriptor = DataStructure.Base.Entity.DescriptorType.WebSockets;
             newPlayer.DescriptorID = ID;
             newPlayer.WriteTo = (strings) => SendWrapper(strings);
+            newPlayer.CloseConnection = () =>
+            {
+                this.Context.WebSocket.Close(CloseStatusCode.Normal, "user exited");
+                return true;
+            };
 
             var errors = Interpret.Render(e.Data, newPlayer);
 

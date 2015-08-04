@@ -117,7 +117,7 @@ namespace NetMud.DataAccess
         public static IEnumerable<T> GetAll<T>(Type mainType)
         {
             return globalCache.Where(keyValuePair => keyValuePair.Value.GetType().GetInterfaces()
-                .Contains(typeof(T)) && keyValuePair.Value.GetType().GetInterfaces().Contains(mainType))
+                .Contains(typeof(T)) && keyValuePair.Value.GetType() == mainType)
                 .Select(kvp => (T)kvp.Value);
         }
 

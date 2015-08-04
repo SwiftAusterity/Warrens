@@ -15,7 +15,9 @@ function submitCharacter()
 {
     var cscVal = $('#currentCharacter').val();
 
-    $.post("GameAdmin/SelectCharacter/" + cscVal, function (data) { });
+    $.post("GameAdmin/SelectCharacter/" + cscVal, function (data) {
+        //On success, let's lock the character dropdown.
+    });
 }
 
 function submitCommand()
@@ -32,15 +34,23 @@ function TestBrowser()
 
         connection.onopen = function () {
             //Send a small message to the console once the connection is established
-            AppendOutput('Connection established.');
+            AppendOutput('Connection established with host.');
+            $('#clientReload').hide();
+            $('#currentCharacter').prop('disabled', true);
         }
 
         connection.onclose = function () {
-            AppendOutput('Connection closed');
+            AppendOutput('Connection closed by host.');
+
+            //Unlock this on close
+            $('#currentCharacter').prop('disabled', false);
+            $('#clientReload').show();
         }
 
         connection.onerror = function (error) {
-            AppendOutput('Error detected: ' + error);
+            $('#currentCharacter').prop('disabled', false);
+            $('#clientReload').show();
+            AppendOutput('Connection error detected: ' + error);
         }
 
         connection.onmessage = function (e) {

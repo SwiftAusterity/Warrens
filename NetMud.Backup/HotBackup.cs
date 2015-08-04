@@ -149,47 +149,82 @@ namespace NetMud.Backup
                 var entities = LiveCache.GetAll<Player>();
 
                 foreach (var entity in entities)
-                {
-                    var charData = (ICharacter)entity.DataTemplate;
-
-                    var charDirName = playersDir + charData.AccountHandle + "/" + charData.ID + "/";
-
-                    if (!Directory.Exists(charDirName))
-                        Directory.CreateDirectory(charDirName);
-
-                    //Wipe out the existing one so we can create all new files
-                    if (Directory.Exists(charDirName + "Current/"))
-                    {
-                        var currentRoot = new DirectoryInfo(charDirName + "Current/");
-
-                        if (!Directory.Exists(charDirName + "Backups/"))
-                            Directory.CreateDirectory(charDirName + "Backups/");
-
-                        var newBackupName = String.Format("{0}Backups/{1}{2}{3}_{4}{5}{6}/",
-                                            charDirName
-                                            , DateTime.Now.Year
-                                            , DateTime.Now.Month
-                                            , DateTime.Now.Day
-                                            , DateTime.Now.Hour
-                                            , DateTime.Now.Minute
-                                            , DateTime.Now.Second);
-
-                        //move is literal move, no need to delete afterwards
-                        currentRoot.MoveTo(newBackupName);
-                    }
-
-                    var currentBackupDirectory = charDirName + "Current/";
-                    DirectoryInfo entityDirectory = Directory.CreateDirectory(currentBackupDirectory);
-
-                    WritePlayer(entityDirectory, entity);
-                }
+                    WriteOnePlayer(entity, false);
 
                 LoggingUtility.Log("All players written.", LogChannels.Backup, true);
             }
-            catch
+            catch(Exception ex)
             {
-                //let the upper caller handle the error itself
-                throw;
+                LoggingUtility.LogError(ex);
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Writes one player out to disk
+        /// </summary>
+        /// <param name="player">the player to write</param>
+        /// <param name="checkDirectories">skip checking directories or not</param>
+        /// <returns></returns>
+        public bool WriteOnePlayer(Player entity, bool checkDirectories = true)
+        {
+            var playersDir = BaseDirectory + "Players/";
+
+            //don't do double duty with the directory checking please
+            if (checkDirectories)
+            {
+                LoggingUtility.Log("Backing up player character " + entity.DataTemplate.ID + ".", LogChannels.Backup, true);
+
+                //Need the base dir
+                if (!Directory.Exists(BaseDirectory))
+                    Directory.CreateDirectory(BaseDirectory);
+
+                //and the base players dir
+                if (!Directory.Exists(playersDir))
+                    Directory.CreateDirectory(playersDir);
+            }
+
+            try
+            {
+                var charData = (ICharacter)entity.DataTemplate;
+
+                var charDirName = playersDir + charData.AccountHandle + "/" + charData.ID + "/";
+
+                if (!Directory.Exists(charDirName))
+                    Directory.CreateDirectory(charDirName);
+
+                //Wipe out the existing one so we can create all new files
+                if (Directory.Exists(charDirName + "Current/"))
+                {
+                    var currentRoot = new DirectoryInfo(charDirName + "Current/");
+
+                    if (!Directory.Exists(charDirName + "Backups/"))
+                        Directory.CreateDirectory(charDirName + "Backups/");
+
+                    var newBackupName = String.Format("{0}Backups/{1}{2}{3}_{4}{5}{6}/",
+                                        charDirName
+                                        , DateTime.Now.Year
+                                        , DateTime.Now.Month
+                                        , DateTime.Now.Day
+                                        , DateTime.Now.Hour
+                                        , DateTime.Now.Minute
+                                        , DateTime.Now.Second);
+
+                    //move is literal move, no need to delete afterwards
+                    currentRoot.MoveTo(newBackupName);
+                }
+
+                var currentBackupDirectory = charDirName + "Current/";
+                DirectoryInfo entityDirectory = Directory.CreateDirectory(currentBackupDirectory);
+
+                WritePlayer(entityDirectory, entity);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex);
+                return false;
             }
 
             return true;
@@ -341,11 +376,11 @@ namespace NetMud.Backup
                     return null;
 
                 //abstract this out to a helper maybe?
-                var locationAssembly = Assembly.GetAssembly(typeof(ILocation));
+                var locationAssembly = Assembly.GetAssembly(typeof(EntityPartial));
 
                 var ch = (ICharacter)newPlayerToLoad.DataTemplate;
                 if (ch.LastKnownLocationType == null)
-                    ch.LastKnownLocationType = typeof(IRoom).Name;
+                    ch.LastKnownLocationType = typeof(Room).Name;
 
                 var lastKnownLocType = locationAssembly.DefinedTypes.FirstOrDefault(tp => tp.Name.Equals(ch.LastKnownLocationType));
 
