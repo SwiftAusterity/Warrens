@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNet.Identity.EntityFramework;
 using NetMud.Data.Reference;
+using NetMud.Data.System;
+using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.DataStructure.Base.Supporting;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -106,6 +109,22 @@ namespace NetMud.Models.GameAdmin
         [DataType(DataType.Text)]
         [Display(Name = "Name")]
         public string NewName { get; set; }
+
+        [DataType(DataType.Text)]
+        [Display(Name = "Inanimate Containers")]
+        public string[] InanimateContainerNames { get; set; }
+
+        [DataType(DataType.Text)]
+        [Display(Name = "Inanimate Container Weights")]
+        public long[] InanimateContainerWeights { get; set; }
+
+        [DataType(DataType.Text)]
+        [Display(Name = "Inanimate Container Volumes")]
+        public long[] InanimateContainerVolumes { get; set; }
+
+        public string[] MobileContainerNames { get; set; }
+        public long[] MobileContainerWeights { get; set; }
+        public long[] MobileContainerVolumes { get; set; }
 
         public IInanimateData DataObject { get; set; }
     }

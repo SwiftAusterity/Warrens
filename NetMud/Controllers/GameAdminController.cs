@@ -16,6 +16,9 @@ using NetMud.DataAccess;
 using NetMud.Models.GameAdmin;
 using NetMud.Models;
 using NetMud.Data.Reference;
+using NetMud.DataStructure.Base.Supporting;
+using NetMud.Data.System;
+using NetMud.DataStructure.Base.Entity;
 
 
 
@@ -366,13 +369,45 @@ namespace NetMud.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddInanimateData(string newName)
+        public ActionResult AddInanimateData(AddEditInanimateDataViewModel vModel)
         {
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             var newObj = new InanimateData();
-            newObj.Name = newName;
+            newObj.Name = vModel.NewName;
+
+            int inanimateIndex = 0;
+            foreach (var name in vModel.InanimateContainerNames)
+            {
+                if (string.IsNullOrWhiteSpace(name))
+                    continue;
+
+                if (vModel.InanimateContainerWeights.Count() <= inanimateIndex || vModel.InanimateContainerVolumes.Count() <= inanimateIndex)
+                    break;
+
+                var currentWeight = vModel.InanimateContainerWeights[inanimateIndex];
+                var currentVolume = vModel.InanimateContainerVolumes[inanimateIndex];
+
+                newObj.InanimateContainers.Add(new EntityContainerData<IInanimate>(currentVolume, currentWeight, name));
+                inanimateIndex++;
+            }
+
+            int mobileIndex = 0;
+            foreach (var name in vModel.MobileContainerNames)
+            {
+                if (string.IsNullOrWhiteSpace(name))
+                    continue;
+
+                if (vModel.MobileContainerWeights.Count() <= mobileIndex || vModel.MobileContainerVolumes.Count() <= mobileIndex)
+                    break;
+
+                var currentWeight = vModel.MobileContainerWeights[mobileIndex];
+                var currentVolume = vModel.MobileContainerVolumes[mobileIndex];
+
+                newObj.MobileContainers.Add(new EntityContainerData<IMobile>(currentVolume, currentWeight, name));
+                mobileIndex++;
+            }
 
             if (newObj.Create() == null)
                 message = "Error; Creation failed.";

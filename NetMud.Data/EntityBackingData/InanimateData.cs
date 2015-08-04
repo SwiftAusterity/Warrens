@@ -19,6 +19,12 @@ namespace NetMud.Data.EntityBackingData
     /// </summary>
     public class InanimateData : IInanimateData
     {
+        public InanimateData()
+        {
+            MobileContainers = new HashSet<IEntityContainerData<IMobile>>();
+            InanimateContainers = new HashSet<IEntityContainerData<IInanimate>>();
+        }
+
         /// <summary>
         /// The system type for the entity this attaches to
         /// </summary>

@@ -20,6 +20,34 @@
                     @Html.ValidationMessageFor(m => m.NewName, "", new { @class = "text-danger" })
                 </div>
             </div>
+
+            <div class="form-group">
+                <div style="display: block; padding-bottom: 10px;">
+                    @Html.LabelFor(m => m.InanimateContainerNames, new { @class = "col-md-2 control-label" })
+                    <a href="#" id="addInanimateContainerRow" style="padding: 10px;">Add another...</a>
+                </div>
+                <div id="inanimateContainerRows" style="display: block;">
+                    <div class="col-md-10" style="padding-left: 10px;">
+                        <span style="padding: 10px; float:left;">Name: </span>@Html.TextBoxFor(m => m.InanimateContainerNames, new { @style = " float:left; margin-top: 10px;" })
+                        <span style="padding: 10px; float:left;">Weight:</span>@Html.TextBoxFor(m => m.InanimateContainerWeights, new { @style = " float:left; margin-top: 10px;" })
+                        <span style="padding: 10px; float:left;">Volume:</span>@Html.TextBoxFor(m => m.InanimateContainerVolumes, new { @style = " float:left; margin-top: 10px;" })
+                    </div>
+                </div>
+            </div>
+            <br class="clearfix" />
+            <div class="form-group">
+                <div style="display: block; padding-bottom: 10px;">
+                    @Html.LabelFor(m => m.MobileContainerNames, new { @class = "col-md-2 control-label" })
+                    <a href="#" id="addMobileContainerRow" style="padding: 10px;">Add another...</a>
+                </div>
+                <div id="mobileContainerRows" style="display: block;">
+                    <div class="col-md-10" style="padding-left: 10px;">
+                        <span style="padding: 10px; float:left;">Name: </span>@Html.TextBoxFor(m => m.MobileContainerNames, new { @style = " float:left; margin-top: 10px;" })
+                        <span style="padding: 10px; float:left;">Weight:</span>@Html.TextBoxFor(m => m.MobileContainerWeights, new { @style = " float:left; margin-top: 10px;" })
+                        <span style="padding: 10px; float:left;">Volume:</span>@Html.TextBoxFor(m => m.MobileContainerVolumes, new { @style = " float:left; margin-top: 10px;" })
+                    </div>
+                </div>
+            </div>
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
                     <input type="submit" value="Create" class="btn btn-default" />
@@ -30,4 +58,22 @@
 }
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#addInanimateContainerRow").click(function () {
+                $("#inanimateContainerRows").append(
+                    '<div class="col-md-10" style="padding-left:10px;"><span style="padding: 10px; float:left;">Name: </span><input id="InanimateContainerNames" name="InanimateContainerNames" type="text" value="" style="float:left; margin-top: 10px;"><span style="padding: 10px; float:left;">Weight:</span><input id="InanimateContainerWeights" name="InanimateContainerWeights" type="text" value="" style="float:left; margin-top: 10px;"><span style="padding: 10px; float:left;">Volume:</span><input id="InanimateContainerVolumes" name="InanimateContainerVolumes" type="text" value="" style="float:left; margin-top: 10px;"></div>'
+                );
+                return false;
+            });
+
+            $("#addMobileContainerRow").click(function () {
+                $("#mobileContainerRows").append(
+                    '<div class="col-md-10" style="padding-left:10px;"><span style="padding: 10px; float:left;">Name: </span><input id="MobileContainerNames" name="MobileContainerNames" type="text" value="" style="float:left; margin-top: 10px;"><span style="padding: 10px; float:left;">Weight:</span><input id="MobileContainerWeights" name="MobileContainerWeights" type="text" value="" style="float:left; margin-top: 10px;"><span style="padding: 10px; float:left;">Volume:</span><input id="MobileContainerVolumes" name="MobileContainerVolumes" type="text" value="" style="float:left; margin-top: 10px;"></div>'
+                );
+                return false;
+            });
+        });
+    </script>
 }

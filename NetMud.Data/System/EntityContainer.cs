@@ -220,6 +220,20 @@ namespace NetMud.Data.System
     [Serializable]
     public class EntityContainerData<T> : IEntityContainerData<T> where T : IEntity
     {
+        public EntityContainerData()
+        {
+            CapacityVolume = -1;
+            CapacityWeight = -1;
+            Name = "NotImpl";
+        }
+
+        public EntityContainerData(long capacityVolume, long capacityWeight, string name)
+        {
+            CapacityVolume = capacityVolume;
+            CapacityWeight = capacityWeight;
+            Name = name;
+        }
+
         /// <summary>
         /// How large is this container
         /// </summary>
