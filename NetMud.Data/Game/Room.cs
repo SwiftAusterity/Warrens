@@ -77,13 +77,13 @@ namespace NetMud.Data.Game
             var contents = new List<T>();
 
             if (implimentedTypes.Contains(typeof(IMobile)))
-                contents.AddRange(GetContents<T>("mobiles"));
-            
+                contents.AddRange(MobilesInside.EntitiesContained().Select(ent => (T)ent));
+
             if (implimentedTypes.Contains(typeof(IInanimate)))
-                contents.AddRange(GetContents<T>("objects"));
+                contents.AddRange(ObjectsInRoom.EntitiesContained().Select(ent => (T)ent));
 
             if (implimentedTypes.Contains(typeof(IPathway)))
-                contents.AddRange(GetContents<T>("pathways"));
+                contents.AddRange(Pathways.EntitiesContained().Select(ent => (T)ent));
 
             return contents;
         }
@@ -96,17 +96,20 @@ namespace NetMud.Data.Game
         /// <param name="containerName">the name of the container</param>
         public IEnumerable<T> GetContents<T>(string containerName)
         {
-            switch (containerName)
-            {
-                case "mobiles":
-                    return MobilesInside.EntitiesContained().Select(ent => (T)ent);
-                case "objects":
-                    return ObjectsInRoom.EntitiesContained().Select(ent => (T)ent);
-                case "pathways":
-                    return Pathways.EntitiesContained().Select(ent => (T)ent);
-            }
+            var implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
 
-            return Enumerable.Empty<T>();
+            var contents = new List<T>();
+
+            if (implimentedTypes.Contains(typeof(IMobile)))
+                contents.AddRange(MobilesInside.EntitiesContained(containerName).Select(ent => (T)ent));
+
+            if (implimentedTypes.Contains(typeof(IInanimate)))
+                contents.AddRange(ObjectsInRoom.EntitiesContained(containerName).Select(ent => (T)ent));
+
+            if (implimentedTypes.Contains(typeof(IPathway)))
+                contents.AddRange(Pathways.EntitiesContained(containerName).Select(ent => (T)ent));
+
+            return contents;
         }
 
         /// <summary>
@@ -136,10 +139,10 @@ namespace NetMud.Data.Game
             {
                 var obj = (IInanimate)thing;
 
-                if (ObjectsInRoom.Contains(obj))
+                if (ObjectsInRoom.Contains(obj, containerName))
                     return "That is already in the container";
 
-                ObjectsInRoom.Add(obj);
+                ObjectsInRoom.Add(obj, containerName);
                 obj.CurrentLocation = this;
                 this.UpsertToLiveWorldCache();
                 return string.Empty;
@@ -149,10 +152,10 @@ namespace NetMud.Data.Game
             {
                 var obj = (IMobile)thing;
 
-                if (MobilesInside.Contains(obj))
+                if (MobilesInside.Contains(obj, containerName))
                     return "That is already in the container";
 
-                MobilesInside.Add(obj);
+                MobilesInside.Add(obj, containerName);
                 obj.CurrentLocation = this;
                 this.UpsertToLiveWorldCache();
                 return string.Empty;
@@ -162,10 +165,10 @@ namespace NetMud.Data.Game
             {
                 var obj = (IPathway)thing;
 
-                if (Pathways.Contains(obj))
+                if (Pathways.Contains(obj, containerName))
                     return "That is already in the container";
 
-                Pathways.Add(obj);
+                Pathways.Add(obj, containerName);
                 obj.CurrentLocation = this;
                 this.UpsertToLiveWorldCache();
                 return string.Empty;
@@ -200,23 +203,24 @@ namespace NetMud.Data.Game
             {
                 var obj = (IInanimate)thing;
 
-                if (!ObjectsInRoom.Contains(obj))
+                if (!ObjectsInRoom.Contains(obj, containerName))
                     return "That is not in the container";
 
-                ObjectsInRoom.Remove(obj);
+                ObjectsInRoom.Remove(obj, containerName);
                 obj.CurrentLocation = null;
                 this.UpsertToLiveWorldCache();
                 return string.Empty;
             }
 
+
             if (implimentedTypes.Contains(typeof(IMobile)))
             {
                 var obj = (IMobile)thing;
 
-                if (!MobilesInside.Contains(obj))
+                if (!MobilesInside.Contains(obj, containerName))
                     return "That is not in the container";
 
-                MobilesInside.Remove(obj);
+                MobilesInside.Remove(obj, containerName);
                 obj.CurrentLocation = null;
                 this.UpsertToLiveWorldCache();
                 return string.Empty;
@@ -226,10 +230,10 @@ namespace NetMud.Data.Game
             {
                 var obj = (IPathway)thing;
 
-                if (!Pathways.Contains(obj))
+                if (!Pathways.Contains(obj, containerName))
                     return "That is not in the container";
 
-                Pathways.Remove(obj);
+                Pathways.Remove(obj, containerName);
                 obj.CurrentLocation = null;
                 this.UpsertToLiveWorldCache();
                 return string.Empty;

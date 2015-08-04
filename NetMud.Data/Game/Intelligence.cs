@@ -85,10 +85,12 @@ namespace NetMud.Data.Game
         {
             var implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
 
-            if (implimentedTypes.Contains(typeof(IInanimate)))
-                return GetContents<T>("objects");
+            var contents = new List<T>();
 
-            return Enumerable.Empty<T>();
+            if (implimentedTypes.Contains(typeof(IInanimate)))
+                contents.AddRange(Inventory.EntitiesContained().Select(ent => (T)ent));
+
+            return contents;
         }
 
         /// <summary>
@@ -99,13 +101,14 @@ namespace NetMud.Data.Game
         /// <param name="containerName">the name of the container</param>
         public IEnumerable<T> GetContents<T>(string containerName)
         {
-            switch (containerName)
-            {
-                case "objects":
-                    return Inventory.EntitiesContained().Select(ent => (T)ent);
-            }
+            var implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
 
-            return Enumerable.Empty<T>();
+            var contents = new List<T>();
+
+            if (implimentedTypes.Contains(typeof(IInanimate)))
+                contents.AddRange(Inventory.EntitiesContained(containerName).Select(ent => (T)ent));
+
+            return contents;
         }
 
         /// <summary>
@@ -134,10 +137,10 @@ namespace NetMud.Data.Game
             {
                 var obj = (IInanimate)thing;
 
-                if (Inventory.Contains(obj))
+                if (Inventory.Contains(obj, containerName))
                     return "That is already in the container";
 
-                Inventory.Add(obj);
+                Inventory.Add(obj, containerName);
                 obj.CurrentLocation = this;
                 this.UpsertToLiveWorldCache();
                 return string.Empty;
@@ -172,10 +175,10 @@ namespace NetMud.Data.Game
             {
                 var obj = (IInanimate)thing;
 
-                if (!Inventory.Contains(obj))
+                if (!Inventory.Contains(obj, containerName))
                     return "That is not in the container";
 
-                Inventory.Remove(obj);
+                Inventory.Remove(obj, containerName);
                 obj.CurrentLocation = null;
                 this.UpsertToLiveWorldCache();
                 return string.Empty;
