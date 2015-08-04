@@ -24,11 +24,6 @@ namespace NetMud.DataStructure.Base.Entity
         /// Function used to close the connection
         /// </summary>
         Func<bool> CloseConnection { get; set; }
-
-        /// <summary>
-        /// Held objects for the player
-        /// </summary>
-        IEntityContainer<IInanimate> Inventory { get; set; }
     }
 
     /// <summary>

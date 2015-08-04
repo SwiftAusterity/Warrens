@@ -1,8 +1,14 @@
-﻿using NetMud.DataAccess;
+﻿using NetMud.Data.System;
+using NetMud.DataAccess;
+using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Text;
 
@@ -42,6 +48,16 @@ namespace NetMud.Data.EntityBackingData
         public string Name { get; set; }
 
         /// <summary>
+        /// Definition for the room's capacity for mobiles
+        /// </summary>
+        public HashSet<IEntityContainerData<IMobile>> MobileContainers { get; set; }
+
+        /// <summary>
+        /// Definition for the room's capacity for inanimates
+        /// </summary>
+        public HashSet<IEntityContainerData<IInanimate>> InanimateContainers { get; set; }
+
+        /// <summary>
         /// Fills a data object with data from a data row
         /// </summary>
         /// <param name="dr">the data row to fill from</param>
@@ -62,6 +78,34 @@ namespace NetMud.Data.EntityBackingData
             string outName = default(string);
             DataUtility.GetFromDataRow<string>(dr, "Name", ref outName);
             Name = outName;
+
+            string mobileContainerJson = default(string);
+            DataUtility.GetFromDataRow<string>(dr, "MobileContainers", ref mobileContainerJson);
+            dynamic mobileContainers = JsonConvert.DeserializeObject(mobileContainerJson);
+
+            foreach(dynamic mobileContainer in mobileContainers)
+            {
+                var newContainer = new EntityContainerData<IMobile>();
+                newContainer.CapacityVolume = mobileContainer.CapacityVolume;
+                newContainer.CapacityWeight = mobileContainer.CapacityWeight;
+                newContainer.Name = mobileContainer.Name;
+
+                MobileContainers.Add(newContainer);
+            }
+
+            string inanimateContainerJson = default(string);
+            DataUtility.GetFromDataRow<string>(dr, "InanimateContainers", ref inanimateContainerJson);
+            dynamic inanimateContainers = JsonConvert.DeserializeObject(inanimateContainerJson);
+
+            foreach (dynamic inanimateContainer in inanimateContainers)
+            {
+                var newContainer = new EntityContainerData<IInanimate>();
+                newContainer.CapacityVolume = inanimateContainer.CapacityVolume;
+                newContainer.CapacityWeight = inanimateContainer.CapacityWeight;
+                newContainer.Name = inanimateContainer.Name;
+
+                InanimateContainers.Add(newContainer);
+            }
         }
 
         /// <summary>
@@ -71,9 +115,13 @@ namespace NetMud.Data.EntityBackingData
         public IData Create()
         {
             IInanimateData returnValue = default(IInanimateData);
+
+            var inanimateContainersJson = JsonConvert.SerializeObject(InanimateContainers);
+            var mobileContainersJson = JsonConvert.SerializeObject(MobileContainers);
+
             var sql = new StringBuilder();
-            sql.Append("insert into [dbo].[InanimateData]([Name])");
-            sql.AppendFormat(" values('{0}')", Name);
+            sql.Append("insert into [dbo].[InanimateData]([Name], [MobileContainers], [InanimateContainers])");
+            sql.AppendFormat(" values('{0}', '{1}', '{2}')", Name, mobileContainersJson, inanimateContainersJson);
             sql.Append(" select * from [dbo].[InanimateData] where ID = Scope_Identity()");
 
             var ds = SqlWrapper.RunDataset(sql.ToString(), CommandType.Text);
@@ -123,8 +171,13 @@ namespace NetMud.Data.EntityBackingData
         {
             var sql = new StringBuilder();
 
+            var inanimateContainersJson = JsonConvert.SerializeObject(InanimateContainers);
+            var mobileContainersJson = JsonConvert.SerializeObject(MobileContainers);
+
             sql.Append("update [dbo].[InanimateData] set ");
             sql.AppendFormat(" [Name] = '{0}' ", Name);
+            sql.AppendFormat(" , [MobileContainers] = '{0}' ", mobileContainersJson);
+            sql.AppendFormat(" , [InanimateContainers] = '{0}' ", inanimateContainersJson);
             sql.AppendFormat(" , [LastRevised] = GetUTCDate()");
             sql.AppendFormat(" where ID = {0}", ID);
 

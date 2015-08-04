@@ -33,7 +33,7 @@ namespace NetMud.Data.Game
             //IDatas need parameterless constructors
             Contents = new EntityContainer<IInanimate>();
             Pathways = new EntityContainer<IPathway>();
-
+            MobilesInside = new EntityContainer<IMobile>();
         }
 
         /// <summary>

@@ -1,9 +1,13 @@
 ﻿using NetMud.Data.Game;
 using NetMud.DataAccess;
+using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Text;
 

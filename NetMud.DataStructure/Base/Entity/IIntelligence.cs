@@ -9,9 +9,5 @@ namespace NetMud.DataStructure.Base.Entity
     /// </summary>
     public interface IIntelligence : IMobile, ISpawnAsMultiple
     {
-        /// <summary>
-        /// Held objects for the NPC
-        /// </summary>
-        IEntityContainer<IInanimate> Inventory { get; set; }
     }
 }
