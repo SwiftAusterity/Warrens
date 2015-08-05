@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NetMud.DataStructure.Base.System;
+using System;
 using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Base.Supporting
@@ -24,6 +25,17 @@ namespace NetMud.DataStructure.Base.Supporting
         int Width { get; set; }
 
         /// <summary>
+        /// The model we're following
+        /// </summary>
+        IDimensionalModelData Model { get; set; }
+    }
+
+    /// <summary>
+    /// Backing data for physical models
+    /// </summary>
+    public interface IDimensionalModelData : IReferenceData
+    {
+        /// <summary>
         /// The 11 planes that compose the physical model
         /// </summary>
         HashSet<IDimensionalModelPlane> ModelPlanes { get; set; }
@@ -37,6 +49,37 @@ namespace NetMud.DataStructure.Base.Supporting
         /// <summary>
         /// The collection of 121 nodes in the plane
         /// </summary>
-        HashSet<Tuple<short, short, DamageType, IMaterial>> ModelNodes { get; set; }
+        HashSet<IDimensionalModelNode> ModelNodes { get; set; }
+
+        /// <summary>
+        /// The name of this plane (for a sword it might be 'Blade' or 'Hilt')
+        /// </summary>
+        string TagName { get; set; }
+    }
+
+    /// <summary>
+    /// A single node of the 121 nodes per plane in the dimensional model
+    /// </summary>
+    public interface IDimensionalModelNode
+    {
+        /// <summary>
+        /// The position of this node on the XAxis
+        /// </summary>
+        short XAxis { get; set; }
+
+        /// <summary>
+        /// The position of this node on the YAxis
+        /// </summary>
+        short YAxis { get; set; }
+        
+        /// <summary>
+        /// The damage type inflicted when this part of the model strikes
+        /// </summary>
+        DamageType Style { get; set; }
+        
+        /// <summary>
+        /// Material composition of the node
+        /// </summary>
+        IMaterial Composition { get; set; }
     }
 }

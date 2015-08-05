@@ -15,7 +15,7 @@ namespace NetMud.DataAccess
         /// </summary>
         /// <typeparam name="T">The system type of the data</typeparam>
         /// <returns>A list of all of the data for that type</returns>
-        public static IEnumerable<T> GetAll<T>() where T : IReference
+        public static IEnumerable<T> GetAll<T>() where T : IReferenceData
         {
             var returnList = new List<T>();
             var sql = string.Format("select * from [dbo].[{0}]", typeof(T).Name);
@@ -28,7 +28,7 @@ namespace NetMud.DataAccess
                 {
                     foreach (DataRow dr in ds.Rows)
                     {
-                        var newValue = Activator.CreateInstance(typeof(T)) as IReference;
+                        var newValue = Activator.CreateInstance(typeof(T)) as IReferenceData;
                         newValue.Fill(dr);
                         returnList.Add((T)newValue);
                     }
@@ -48,9 +48,9 @@ namespace NetMud.DataAccess
         /// <typeparam name="T">The system type of the data</typeparam>
         /// <param name="keyword">The "Name" of the reference data entry</param>
         /// <returns>One data entry, if it matches</returns>
-        public static T GetOne<T>(string keyword) where T : IReference
+        public static T GetOne<T>(string keyword) where T : IReferenceData
         {
-            IReference returnValue = default(T);
+            IReferenceData returnValue = default(T);
             var parms = new Dictionary<string, object>();
             var sql = string.Format("select * from [dbo].[{0}] where Name = @name", typeof(T).Name);
 
@@ -64,7 +64,7 @@ namespace NetMud.DataAccess
                 {
                     foreach (DataRow dr in ds.Rows)
                     {
-                        returnValue = Activator.CreateInstance(typeof(T)) as IReference;
+                        returnValue = Activator.CreateInstance(typeof(T)) as IReferenceData;
                         returnValue.Fill(dr);
                     }
                 }
@@ -83,9 +83,9 @@ namespace NetMud.DataAccess
         /// <typeparam name="T">The system type of the data</typeparam>
         /// <param name="id">The "ID" of the reference data entry</param>
         /// <returns>One data entry, if it matches</returns>
-        public static T GetOne<T>(long id) where T : IReference
+        public static T GetOne<T>(long id) where T : IReferenceData
         {
-            IReference returnValue = default(T);
+            IReferenceData returnValue = default(T);
             var parms = new Dictionary<string, object>();
             var sql = string.Format("select * from [dbo].[{0}] where ID = @id", typeof(T).Name);
 
@@ -99,7 +99,7 @@ namespace NetMud.DataAccess
                 {
                     foreach (DataRow dr in ds.Rows)
                     {
-                        returnValue = Activator.CreateInstance(typeof(T)) as IReference;
+                        returnValue = Activator.CreateInstance(typeof(T)) as IReferenceData;
                         returnValue.Fill(dr);
                     }
                 }

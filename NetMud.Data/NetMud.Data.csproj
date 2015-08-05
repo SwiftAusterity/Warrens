@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EntityBackingData\EntityBackingDataPartial.cs" />
     <Compile Include="EntityBackingData\NonPlayerCharacter.cs" />
     <Compile Include="EntityBackingData\Character.cs" />
     <Compile Include="EntityBackingData\InanimateData.cs" />

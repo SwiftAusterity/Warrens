@@ -451,7 +451,7 @@ namespace NetMud.Interp
         /// <typeparam name="T">the system type of the data</typeparam>
         /// <param name="commandType">the system type of the command</param>
         /// <param name="currentNeededParm">the conditions for the parameter we're after</param>
-        public void SeekInReferenceData<T>(Type commandType, CommandParameterAttribute currentNeededParm) where T : IReference
+        public void SeekInReferenceData<T>(Type commandType, CommandParameterAttribute currentNeededParm) where T : IReferenceData
         {
             var internalCommandString = CommandStringRemainder.ToList();
 

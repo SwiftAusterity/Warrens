@@ -11,7 +11,7 @@ namespace NetMud.Data.Reference
     /// <summary>
     /// Referred to as Help Files in the UI, extra help content for the help command
     /// </summary>
-    public class Help : IReference
+    public class Help : IReferenceData
     {
         /// <summary>
         /// New up a "blank" help entry

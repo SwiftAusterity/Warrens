@@ -5,7 +5,7 @@ namespace NetMud.DataStructure.Base.Supporting
     /// <summary>
     /// Reference data for mobile race
     /// </summary>
-    public interface IRace : IReference
+    public interface IRace : IReferenceData
     {
     }
 }

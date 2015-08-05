@@ -109,9 +109,9 @@ namespace NutMud.Commands.System
             var subjectName = subject.GetType().Name;
             var typeName = "Help";
 
-            if (subject.GetType().GetInterfaces().Contains(typeof(IReference)))
+            if (subject.GetType().GetInterfaces().Contains(typeof(IReferenceData)))
             {
-                var refSubject = (IReference)subject;
+                var refSubject = (IReferenceData)subject;
 
                 subjectName = refSubject.Name;
                 typeName = "Reference";

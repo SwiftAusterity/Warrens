@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NetMud.DataStructure.Base.Supporting;
+using System;
 
 namespace NetMud.DataStructure.Base.System
 {
@@ -11,5 +12,10 @@ namespace NetMud.DataStructure.Base.System
         /// Entity class this backing data attaches to
         /// </summary>
         Type EntityClass { get; }
+
+        /// <summary>
+        /// The physical model for this entity
+        /// </summary>
+        IDimensionalModel Model { get; set; }
     }
 }
