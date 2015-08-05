@@ -1,6 +1,5 @@
 ﻿using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Behaviors.System;
-using NetMud.DataStructure.SupportingClasses;
 using System;
 
 namespace NetMud.DataStructure.Base.Entity

@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNet.Identity.EntityFramework;
 using NetMud.Data.Reference;
-using NetMud.Data.System;
-using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.Supporting;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

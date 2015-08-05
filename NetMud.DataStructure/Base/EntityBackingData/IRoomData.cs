@@ -1,8 +1,4 @@
-﻿using NetMud.DataStructure.Base.Entity;
-using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.SupportingClasses;
-using System.Collections.Generic;
+﻿using NetMud.DataStructure.Base.System;
 
 namespace NetMud.DataStructure.Base.EntityBackingData
 {

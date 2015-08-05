@@ -1,6 +1,4 @@
-﻿using NetMud.DataStructure.Behaviors.Automation;
-
-namespace NetMud.DataStructure.Behaviors.Actionable
+﻿namespace NetMud.DataStructure.Behaviors.Actionable
 {
     /// <summary>
     /// For commands/events, inanimate qualifies for crafting/spell/command materials
