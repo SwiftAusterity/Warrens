@@ -1,11 +1,14 @@
 ﻿using Microsoft.AspNet.Identity.EntityFramework;
 using NetMud.Data.Reference;
 using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.DataStructure.Base.Supporting;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Web;
 
 namespace NetMud.Models.GameAdmin
 {
@@ -18,6 +21,7 @@ namespace NetMud.Models.GameAdmin
             Inanimates = Enumerable.Empty<IInanimateData>();
             Rooms = Enumerable.Empty<IRoomData>();
             NPCs = Enumerable.Empty<INonPlayerCharacter>();
+            DimensionalModels = Enumerable.Empty<IDimensionalModelData>();
             HelpFiles = Enumerable.Empty<Help>();
 
             LivePlayers = 0;
@@ -26,6 +30,7 @@ namespace NetMud.Models.GameAdmin
         public IEnumerable<IRoomData> Rooms { get; set; }
         public IEnumerable<IInanimateData> Inanimates { get; set; }
         public IEnumerable<INonPlayerCharacter> NPCs { get; set; }
+        public IEnumerable<IDimensionalModelData> DimensionalModels { get; set; }
         public IEnumerable<Help> HelpFiles { get; set; }
         public Dictionary<string, CancellationTokenSource> LiveTaskTokens { get; set; }
 
@@ -72,6 +77,47 @@ namespace NetMud.Models.GameAdmin
 
 
         public Help DataObject { get; set; }
+    }
+
+    public class ManageDimensionalModelDataViewModel : PagedDataModel<DimensionalModelData>, BaseViewModel
+    {
+        public ApplicationUser authedUser { get; set; }
+
+        public ManageDimensionalModelDataViewModel(IEnumerable<DimensionalModelData> items)
+            : base(items)
+        {
+            CurrentPageNumber = 1;
+            ItemsPerPage = 20;
+        }
+
+        internal override Func<DimensionalModelData, bool> SearchFilter
+        {
+            get
+            {
+                return item => item.Name.ToLower().Contains(SearchTerms.ToLower());
+            }
+        }
+    }
+
+    public class AddEditDimensionalModelDataViewModel : BaseViewModel
+    {
+        public ApplicationUser authedUser { get; set; }
+
+        public AddEditDimensionalModelDataViewModel()
+        {
+        }
+
+        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
+        [DataType(DataType.Text)]
+        [Display(Name = "Name")]
+        public string NewName { get; set; }
+
+        [DataType(DataType.Upload)]
+        [Display(Name = "Model Planes Upload")]
+        public HttpPostedFileBase ModelFile { get; set; }
+
+
+        public DimensionalModelData DataObject { get; set; }
     }
 
     public class ManageInanimateDataViewModel : PagedDataModel<IInanimateData>, BaseViewModel

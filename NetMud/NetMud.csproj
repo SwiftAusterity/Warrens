@@ -281,6 +281,8 @@
     <Content Include="Views\GameAdmin\ManageHelpData.cshtml" />
     <Content Include="Views\GameAdmin\EditHelpData.cshtml" />
     <Content Include="Views\GameAdmin\AddHelpData.cshtml" />
+    <Content Include="Views\GameAdmin\AddDimensionalModelData.cshtml" />
+    <Content Include="Views\GameAdmin\ManageDimensionalModelData.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

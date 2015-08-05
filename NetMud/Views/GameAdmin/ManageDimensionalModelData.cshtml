@@ -1,0 +1,80 @@
+﻿@model NetMud.Models.GameAdmin.ManageDimensionalModelDataViewModel
+@{
+    ViewBag.Title = "Manage Dimensional Models";
+    var prevPageState = Model.CurrentPageNumber > 1 ? String.Empty : "disabled";
+    var nextPageState = Model.CurrentPageNumber < Model.NumberOfPages ? String.Empty : "disabled";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p class="text-success">@ViewBag.StatusMessage</p>
+@{
+    if (Model.Items.Count() > 0)
+    {
+        using (Html.BeginForm("ManageDimensionalModelData", "GameAdmin", FormMethod.Post, new { id = "paginationForm" }))
+        {
+            @Html.AntiForgeryToken()
+            <nav>
+                @Html.ActionLink("Add New", "AddDimensionalModelData", null, new { @style = "float: left; margin-top: 30px;" })
+                <ul class="pagination" style="float: right;">
+                    <li style="float: left;">
+                        <div class="col-md-10" style="width: inherit;">
+                            @Html.TextBoxFor(m => m.SearchTerms, new { @class = "form-control", @style = "width: 200px;float: left;margin-right: 15px;", @title = "Search Term", @onchange = "paginationForm.submit();" })
+                            @Html.TextBoxFor(m => m.ItemsPerPage, new { @class = "form-control", @style = "width: 50px;float: left;", @title = "Items Per Page", @onchange = "paginationForm.submit();" })
+                        </div>
+                    </li>
+                    <li class="@prevPageState">
+                        <button aria-label="Previous" value="@(Model.CurrentPageNumber - 1)" title="Previous" name="CurrentPageNumber"><span aria-hidden="true">&laquo;</span></button>
+                    </li>
+                    @for (var i = 1; i <= Model.NumberOfPages; i++)
+                    {
+                        if (Model.NumberOfPages > 5
+                                && i != 1
+                                && i != Model.NumberOfPages
+                                && i > (Model.NumberOfPages / 2 + 1)
+                                && i < (Model.NumberOfPages / 2 - 1))
+                        {
+                            continue;
+                        }
+
+                        <li>
+                            <button value="@i" title="@i" name="CurrentPageNumber">@i.ToString()</button>
+                        </li>
+                    }
+                    <li class="@nextPageState">
+                        <button aria-label="Next" value="@(Model.CurrentPageNumber + 1)" title="Next" name="CurrentPageNumber"><span aria-hidden="true">&raquo;</span></button>
+                    </li>
+                </ul>
+            </nav>
+        }
+        @Html.ValidationMessageFor(m => m.ItemsPerPage, "", new { @class = "text-danger" })
+        @Html.ValidationMessageFor(m => m.SearchTerms, "", new { @class = "text-danger" })
+
+        using (Html.BeginForm("RemoveDimensionalModelData", "GameAdmin"))
+        {
+            @Html.AntiForgeryToken()
+            <table class="table">
+                <tbody>
+                    @foreach (var obj in Model.CurrentPageOfItems)
+                    {
+                        <tr><!--No editing of dimensional models atm-->
+                            <td>@obj.ID<!--@Html.ActionLink(@obj.ID.ToString(), "EditDimensionalModelData", new { id = obj.ID } )</td>-->
+                            <td>@obj.Name</td>
+                            <td>
+                                <div>
+                                    @Html.Hidden("ID", obj.ID)
+                                    <input type="submit" style="color: red; border: none; padding: 0; background-color: inherit;" value="X" title="Delete this" />
+                                    <input type="radio" name="authorize" value="@obj.ID" style="margin-left: 15px;" />
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+
+    }
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

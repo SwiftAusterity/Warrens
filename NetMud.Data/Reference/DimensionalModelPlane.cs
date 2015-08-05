@@ -14,6 +14,14 @@ namespace NetMud.Data.Reference
     public class DimensionalModelPlane : IDimensionalModelPlane
     {
         /// <summary>
+        /// New up an empty model plane
+        /// </summary>
+        public DimensionalModelPlane()
+        {
+            ModelNodes = new HashSet<IDimensionalModelNode>();
+        }
+
+        /// <summary>
         /// The collection of 121 nodes in the plane
         /// </summary>
         public HashSet<IDimensionalModelNode> ModelNodes { get; set; }

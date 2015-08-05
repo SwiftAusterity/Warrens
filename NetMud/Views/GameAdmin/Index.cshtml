@@ -38,6 +38,12 @@
             @Html.ActionLink("Manage", "ManageHelpData")
             @Html.ActionLink("Add", "AddHelpData") ]
         </dd>
+        <dt>Dimensional Models:</dt>
+        <dd>
+            @Model.DimensionalModels.Count().ToString() [
+            @Html.ActionLink("Manage", "ManageDimensionalModelData")
+            @Html.ActionLink("Add", "AddDimensionalModelData") ]
+        </dd>
     </dl>
     <h4>Live Data</h4>
     <hr />

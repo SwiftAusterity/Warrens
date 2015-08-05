@@ -11,12 +11,30 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace NetMud.Data.Reference
-{    
+{
     /// <summary>
     /// Backing data for physical models
     /// </summary>
     public class DimensionalModelData : ReferenceDataPartial, IDimensionalModelData
     {
+        /// <summary>
+        /// Create an empty model
+        /// </summary>
+        public DimensionalModelData()
+        {
+            ModelPlanes = new HashSet<IDimensionalModelPlane>();
+        }
+
+        /// <summary>
+        /// Create model serialized from a comma delimited string of model planes (all 11 11x11 planes)
+        /// </summary>
+        /// <param name="delimitedPlanes">comma delimited string of model planes (all 11 11x11 planes)</param>
+        public DimensionalModelData(string delimitedPlanes)
+        {
+            ModelPlanes = new HashSet<IDimensionalModelPlane>();
+            SerializeModelFromDelimitedList(delimitedPlanes);
+        }
+
         /// <summary>
         /// The 11 planes that compose the physical model
         /// </summary>
@@ -43,12 +61,83 @@ namespace NetMud.Data.Reference
             {
                 var newPlane = new DimensionalModelPlane();
                 newPlane.TagName = plane.TagName;
-                newPlane.ModelNodes = plane.ModelNodes;
+
+                foreach(dynamic node in plane.ModelNodes)
+                {
+                    var newNode = new DimensionalModelNode();
+                    newNode.XAxis = node.XAxis;
+                    newNode.YAxis = node.YAxis;
+                    newNode.Style = node.Style;
+                    newNode.Composition = node.Composition;
+                    newPlane.ModelNodes.Add(newNode);
+                }
 
                 ModelPlanes.Add(newPlane);
             }
 
         }
+        /// <summary>
+        /// Turn a comma delimited list of planes into the modelplane set
+        /// </summary>
+        /// <param name="delimitedPlanes">comma delimited list of planes</param>
+        private void SerializeModelFromDelimitedList(string delimitedPlanes)
+        {
+            var newPlane = new DimensionalModelPlane();
+            short lineCount = 0;
+
+            try
+            {
+                foreach (var myString in delimitedPlanes.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    //This is the tagName line
+                    if (lineCount == 0)
+                    {
+                        newPlane.TagName = myString;
+                    }
+                    else
+                    {
+                        var currentLineNodes = myString.Split(new char[] { ',' });
+
+                        short xCount = 1;
+                        foreach (var nodeString in currentLineNodes)
+                        {
+                            var newNode = new DimensionalModelNode();
+                            var nodeStringComponents = nodeString.Split(new char[] { '|' });
+
+                            newNode.XAxis = xCount;
+                            newNode.YAxis = lineCount;
+
+                            newNode.Style = String.IsNullOrWhiteSpace(nodeStringComponents[0]) 
+                                                ? DamageType.None 
+                                                : (DamageType)short.Parse(nodeStringComponents[0]);
+
+                            newNode.Composition = nodeStringComponents.Count() < 2 || String.IsNullOrWhiteSpace(nodeStringComponents[1]) 
+                                                ? default(IMaterial)
+                                                : default(IMaterial); //TODO: Implement materials -- ReferenceAccess.GetOne<IMaterial>(long.Parse(nodeStringComponents[1]));
+
+                            newPlane.ModelNodes.Add(newNode);
+                            xCount++;
+                        }
+
+                        if (lineCount == 11)
+                        {
+                            ModelPlanes.Add(newPlane);
+                            lineCount = 0;
+                            newPlane = new DimensionalModelPlane();
+                            continue;
+                        }
+                    }
+
+                    lineCount++;
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex);
+                throw new FormatException("Invalid delimitedPlanes format.", ex);
+            }
+        }
+
 
         /// <summary>
         /// Fills a data object with data from a data row
@@ -73,7 +162,7 @@ namespace NetMud.Data.Reference
             Name = outName;
 
             string outModel = default(string);
-            DataUtility.GetFromDataRow<string>(dr, "Model", ref outName);
+            DataUtility.GetFromDataRow<string>(dr, "Model", ref outModel);
             SerializeModel(outModel);
         }
 

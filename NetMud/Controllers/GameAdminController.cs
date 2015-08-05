@@ -19,6 +19,9 @@ using NetMud.Data.Reference;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.Data.System;
 using NetMud.DataStructure.Base.Entity;
+using System.IO;
+using System.Text;
+using System;
 
 
 
@@ -60,10 +63,99 @@ namespace NetMud.Controllers
             dashboardModel.Rooms = DataWrapper.GetAll<RoomData>();
             dashboardModel.NPCs = DataWrapper.GetAll<NonPlayerCharacter>();
             dashboardModel.HelpFiles = ReferenceAccess.GetAll<Help>();
+            dashboardModel.DimensionalModels = ReferenceAccess.GetAll<DimensionalModelData>();
             dashboardModel.LiveTaskTokens = Processor.GetAllLiveTaskStatusTokens();
 
             return View(dashboardModel);
         }
+
+        #region Dimensional Models
+        public ActionResult ManageDimensionalModelData(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
+        {
+            var vModel = new ManageDimensionalModelDataViewModel(ReferenceAccess.GetAll<DimensionalModelData>());
+            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            vModel.CurrentPageNumber = CurrentPageNumber;
+            vModel.ItemsPerPage = ItemsPerPage;
+            vModel.SearchTerms = SearchTerms;
+
+            return View(vModel);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult RemoveDimensionalModelData(long ID, string authorize)
+        {
+            string message = string.Empty;
+
+            if (string.IsNullOrWhiteSpace(authorize) || !ID.ToString().Equals(authorize))
+                message = "You must check the proper authorize radio button first.";
+            else
+            {
+                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+                var obj = ReferenceAccess.GetOne<DimensionalModelData>(ID);
+
+                if (obj == null)
+                    message = "That does not exist";
+                else if (obj.Remove())
+                {
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveDimensionalModelData[" + ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    message = "Delete Successful.";
+                }
+                else
+                    message = "Error; Removal failed.";
+            }
+
+            return RedirectToAction("ManageDimensionalModelData", new { Message = message });
+        }
+
+        [HttpGet]
+        public ActionResult AddDimensionalModelData()
+        {
+            var vModel = new AddEditDimensionalModelDataViewModel();
+            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            return View(vModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddDimensionalModelData(string newName, HttpPostedFileBase modelFile)
+        {
+            string message = string.Empty;
+            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            try
+            {
+                if (modelFile.ContentLength == 0)
+                    message = "You must post a comma delimited file with the model in it.";
+
+                byte[] bytes = new byte[modelFile.InputStream.Length];
+                modelFile.InputStream.Read(bytes, 0, (int)modelFile.InputStream.Length);
+                var fileContents = Encoding.UTF8.GetString(bytes);
+
+                var newObj = new DimensionalModelData(fileContents);
+                newObj.Name = newName;
+
+                if (newObj.Create() == null)
+                    message = "Error; Creation failed.";
+                else
+                {
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddDimensionalModelData[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    message = "Creation Successful.";
+                }
+            }
+            catch(Exception ex)
+            {
+                LoggingUtility.LogError(ex);
+                message = "Error; Creation failed.";
+            }
+
+            return RedirectToAction("ManageDimensionalModelData", new { Message = message });
+        }
+        #endregion
 
         #region Help Files
         public ActionResult ManageHelpData(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
