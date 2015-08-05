@@ -138,6 +138,10 @@ namespace NetMud.Data.Reference
             }
         }
 
+        public bool IsModelValid()
+        {
+            return ModelPlanes.Count == 11 && !ModelPlanes.Any(plane => String.IsNullOrWhiteSpace(plane.TagName) || plane.ModelNodes.Count != 121);
+        }
 
         /// <summary>
         /// Fills a data object with data from a data row

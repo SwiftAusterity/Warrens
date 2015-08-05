@@ -39,6 +39,12 @@ namespace NetMud.DataStructure.Base.Supporting
         /// The 11 planes that compose the physical model
         /// </summary>
         HashSet<IDimensionalModelPlane> ModelPlanes { get; set; }
+
+        /// <summary>
+        /// Checks to see if we have enough planes and nodes to be a valid model
+        /// </summary>
+        /// <returns>validity</returns>
+        bool IsModelValid();
     }
 
     /// <summary>

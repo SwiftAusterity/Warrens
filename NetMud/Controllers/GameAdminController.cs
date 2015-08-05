@@ -137,17 +137,23 @@ namespace NetMud.Controllers
                 var fileContents = Encoding.UTF8.GetString(bytes);
 
                 var newObj = new DimensionalModelData(fileContents);
-                newObj.Name = newName;
 
-                if (newObj.Create() == null)
-                    message = "Error; Creation failed.";
-                else
+                if (newObj.IsModelValid())
                 {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddDimensionalModelData[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                    message = "Creation Successful.";
+                    newObj.Name = newName;
+
+                    if (newObj.Create() == null)
+                        message = "Error; Creation failed.";
+                    else
+                    {
+                        LoggingUtility.LogAdminCommandUsage("*WEB* - AddDimensionalModelData[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                        message = "Creation Successful.";
+                    }
                 }
+                else
+                    message = "Invalid model file; Model files must contain 11 planes of a tag name followed by 11 rows of 11 nodes.";
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 LoggingUtility.LogError(ex);
                 message = "Error; Creation failed.";
