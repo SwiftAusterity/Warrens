@@ -53,6 +53,15 @@ namespace NetMud.DataStructure.Base.Supporting
         /// <param name="yAxis">the Y-Axis of the node to get</param>
         /// <returns>the node</returns>
         IDimensionalModelNode GetNode(short xAxis, short yAxis, short zAxis);
+
+        /// <summary>
+        /// View the flattened model based on view angle; TODO: ONLY SUPPORTS THE FRONT FACE ATM
+        /// </summary>
+        /// <param name="pitch">rotation on the z-axis</param>
+        /// <param name="yaw">rotation on the Y-axis</param>
+        /// <param name="roll">rotation on the x-axis</param>
+        /// <returns>the flattened model face based on the view angle</returns>
+        string ViewFlattenedModel(short pitch, short yaw, short roll);
     }
 
     /// <summary>

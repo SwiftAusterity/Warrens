@@ -1,6 +1,7 @@
 ﻿using NetMud.DataAccess;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
+using NetMud.Physics;
 using NetMud.Utility;
 using Newtonsoft.Json;
 using System;
@@ -54,6 +55,18 @@ namespace NetMud.Data.Reference
                 return plane.GetNode(xAxis, zAxis);
 
             return null;
+        }
+
+        /// <summary>
+        /// View the flattened model based on view angle; TODO: ONLY SUPPORTS THE FRONT FACE ATM
+        /// </summary>
+        /// <param name="pitch">rotation on the z-axis</param>
+        /// <param name="yaw">rotation on the Y-axis</param>
+        /// <param name="roll">rotation on the x-axis</param>
+        /// <returns>the flattened model face based on the view angle</returns>
+        public string ViewFlattenedModel(short pitch, short yaw, short roll)
+        {
+            return Render.FlattenModel(this, pitch, yaw, roll);
         }
 
         /// <summary>
@@ -244,7 +257,7 @@ namespace NetMud.Data.Reference
 
                             newNode.Style = String.IsNullOrWhiteSpace(nodeStringComponents[0])
                                                 ? DamageType.None
-                                                : (DamageType)short.Parse(nodeStringComponents[0]);
+                                                : Render.CharacterToDamageType(nodeStringComponents[0]);
 
                             newNode.Composition = nodeStringComponents.Count() < 2 || String.IsNullOrWhiteSpace(nodeStringComponents[1])
                                                 ? default(IMaterial)

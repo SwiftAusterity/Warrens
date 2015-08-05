@@ -321,6 +321,10 @@
       <Project>{d16eb03b-8da6-49c3-8922-cd05af30fd20}</Project>
       <Name>NetMud.Backup</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NetMud.Physics\NetMud.Physics.csproj">
+      <Project>{28aabdf5-250e-40ce-88de-be3b9d23d95f}</Project>
+      <Name>NetMud.Physics</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NetMud.Utility\NetMud.Utility.csproj">
       <Project>{9f3caec0-73dc-463c-8ef7-13b83bc8fb12}</Project>
       <Name>NetMud.Utility</Name>

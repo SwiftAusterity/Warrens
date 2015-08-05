@@ -57,9 +57,15 @@
                 <tbody>
                     @foreach (var obj in Model.CurrentPageOfItems)
                     {
-                        <tr><!--No editing of dimensional models atm-->
+                        <tr>
+                            <!--No editing of dimensional models atm-->
                             <td>@obj.ID<!--@Html.ActionLink(@obj.ID.ToString(), "EditDimensionalModelData", new { id = obj.ID } )</td>-->
                             <td>@obj.Name</td>
+                            <td>
+                                <div>
+                                    @obj.ViewFlattenedModel(0, 0, 0)
+                                </div>
+                            </td>
                             <td>
                                 <div>
                                     @Html.Hidden("ID", obj.ID)

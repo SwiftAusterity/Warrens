@@ -20,7 +20,7 @@ namespace NetMud.Physics
         /// <param name="yaw">rotation on the Y-axis</param>
         /// <param name="roll">rotation on the x-axis</param>
         /// <returns>the flattened view</returns>
-        public static string FlattenModel(IDimensionalModel model, short pitch, short yaw, short roll)
+        public static string FlattenModel(IDimensionalModelData model, short pitch, short yaw, short roll)
         {
             var flattenedModel = new StringBuilder();
 
@@ -50,7 +50,165 @@ namespace NetMud.Physics
              * 
              */
 
+            //TODO: handle pitch, yaw and roll
+            short xAxis = 11;
+            short yAxis = 11;
+            short zAxis = 1;
+
+            short endXAxis = 1;
+            short endYAxis = 1;
+            short endZAxis = 11;
+            
+            //load the plane up with blanks
+            List<string[]> flattenedPlane = new List<string[]>();
+            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
+            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
+            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
+            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
+            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
+            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
+            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
+            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
+            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
+            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
+            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
+
+            for( ; zAxis != endZAxis; )
+            {
+                for( ; yAxis != endYAxis; )
+                {
+                    for( ; xAxis != endXAxis; )
+                    {
+                        var node = model.GetNode(xAxis, yAxis, zAxis);
+
+                        //We can't replace stuff we can already see, it'd be obfuscated visually
+                        if (String.IsNullOrWhiteSpace(flattenedPlane[yAxis - 1][xAxis - 1]))
+                            flattenedPlane[yAxis - 1][xAxis - 1] = DamageTypeToCharacter(node.Style);
+
+                        xAxis = xAxis < endXAxis ? (short)(xAxis + 1) : (short)(xAxis - 1);
+                    }
+
+                    yAxis = yAxis < endYAxis ? (short)(yAxis + 1) : (short)(yAxis - 1);
+                }
+
+                zAxis = zAxis < endZAxis ? (short)(zAxis + 1) : (short)(zAxis - 1);
+            }
+            
+            //Write out the flattened view to the string builder with line terminators
+            foreach (var nodes in flattenedPlane)
+                flattenedModel.AppendLine(string.Join("", nodes));
+
             return flattenedModel.ToString();
+        }
+
+        public static string DamageTypeToCharacter(DamageType type)
+        {
+            string returnString = " ";
+
+            switch(type)
+            {
+                default: //also "none" case
+                    break;
+                case DamageType.Blunt:
+                    returnString = "@";
+                    break;
+                case DamageType.Sharp:
+                    returnString = "/";
+                    break;
+                case DamageType.Pierce:
+                    returnString = "^";
+                    break;
+                case DamageType.Shred:
+                    returnString = ">";
+                    break;
+                case DamageType.Chop:
+                    returnString = "}";
+                    break;
+                case DamageType.Acidic:
+                    returnString = "A";
+                    break;
+                case DamageType.Base:
+                    returnString = "B";
+                    break;
+                case DamageType.Heat:
+                    returnString = "H";
+                    break;
+                case DamageType.Cold:
+                    returnString = "C";
+                    break;
+                case DamageType.Electric:
+                    returnString = "E";
+                    break;
+                case DamageType.Positronic:
+                    returnString = "P";
+                    break;
+                case DamageType.Endergonic:
+                    returnString = "N";
+                    break;
+                case DamageType.Exergonic:
+                    returnString = "X";
+                    break;
+                case DamageType.Hypermagnetic:
+                    returnString = "M";
+                    break;
+            }
+
+            return returnString;
+        }
+
+        public static DamageType CharacterToDamageType(string chr)
+        {
+            var returnValue = DamageType.None;
+
+            switch (chr)
+            {
+                default: //also "none" case
+                    break;
+                case "@":
+                    returnValue = DamageType.Blunt;
+                    break;
+                case "/":
+                    returnValue = DamageType.Sharp;
+                    break;
+                case "^":
+                    returnValue = DamageType.Pierce;
+                    break;
+                case ">":
+                    returnValue = DamageType.Shred;
+                    break;
+                case "}":
+                    returnValue = DamageType.Chop;
+                    break;
+                case "A":
+                    returnValue = DamageType.Acidic;
+                    break;
+                case "B":
+                    returnValue = DamageType.Base;
+                    break;
+                case "H":
+                    returnValue = DamageType.Heat;
+                    break;
+                case "C":
+                    returnValue = DamageType.Cold;
+                    break;
+                case "E":
+                    returnValue = DamageType.Electric;
+                    break;
+                case "P":
+                    returnValue = DamageType.Positronic;
+                    break;
+                case "N":
+                    returnValue = DamageType.Endergonic;
+                    break;
+                case "X":
+                    returnValue = DamageType.Exergonic;
+                    break;
+                case "M":
+                    returnValue = DamageType.Hypermagnetic;
+                    break;
+            }
+
+            return returnValue;
         }
     }
 }
