@@ -41,103 +41,25 @@ namespace NetMud.Data.Reference
         public HashSet<IDimensionalModelPlane> ModelPlanes { get; set; }
 
         /// <summary>
-        /// Turn the modelPlanes into a json string we can store in the db
+        /// Gets a node based on the X and Y axis
         /// </summary>
-        /// <returns></returns>
-        private string DeserializeModel()
+        /// <param name="xAxis">the X-Axis of the node to get</param>
+        /// <param name="yAxis">the Y-Axis of the node to get</param>
+        /// <returns>the node</returns>
+        public IDimensionalModelNode GetNode(short xAxis, short yAxis, short zAxis)
         {
-            return JsonConvert.SerializeObject(ModelPlanes);
+            var plane = ModelPlanes.FirstOrDefault(pl => pl.YAxis.Equals(yAxis));
+
+            if(plane != null)
+                return plane.GetNode(xAxis, zAxis);
+
+            return null;
         }
 
         /// <summary>
-        /// Turn the json we store in the db into the modelplanes
+        /// Checks if the model is valid for the physics engine
         /// </summary>
-        /// <param name="modelJson">json we store in the db</param>
-        private void SerializeModel(string modelJson)
-        {
-            dynamic planes = JsonConvert.DeserializeObject(modelJson);
-
-            foreach (dynamic plane in planes)
-            {
-                var newPlane = new DimensionalModelPlane();
-                newPlane.TagName = plane.TagName;
-
-                foreach(dynamic node in plane.ModelNodes)
-                {
-                    var newNode = new DimensionalModelNode();
-                    newNode.XAxis = node.XAxis;
-                    newNode.YAxis = node.YAxis;
-                    newNode.Style = node.Style;
-                    newNode.Composition = node.Composition;
-                    newPlane.ModelNodes.Add(newNode);
-                }
-
-                ModelPlanes.Add(newPlane);
-            }
-
-        }
-        /// <summary>
-        /// Turn a comma delimited list of planes into the modelplane set
-        /// </summary>
-        /// <param name="delimitedPlanes">comma delimited list of planes</param>
-        private void SerializeModelFromDelimitedList(string delimitedPlanes)
-        {
-            var newPlane = new DimensionalModelPlane();
-            short lineCount = 0;
-
-            try
-            {
-                foreach (var myString in delimitedPlanes.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
-                {
-                    //This is the tagName line
-                    if (lineCount == 0)
-                    {
-                        newPlane.TagName = myString;
-                    }
-                    else
-                    {
-                        var currentLineNodes = myString.Split(new char[] { ',' });
-
-                        short xCount = 1;
-                        foreach (var nodeString in currentLineNodes)
-                        {
-                            var newNode = new DimensionalModelNode();
-                            var nodeStringComponents = nodeString.Split(new char[] { '|' });
-
-                            newNode.XAxis = xCount;
-                            newNode.YAxis = lineCount;
-
-                            newNode.Style = String.IsNullOrWhiteSpace(nodeStringComponents[0]) 
-                                                ? DamageType.None 
-                                                : (DamageType)short.Parse(nodeStringComponents[0]);
-
-                            newNode.Composition = nodeStringComponents.Count() < 2 || String.IsNullOrWhiteSpace(nodeStringComponents[1]) 
-                                                ? default(IMaterial)
-                                                : default(IMaterial); //TODO: Implement materials -- ReferenceAccess.GetOne<IMaterial>(long.Parse(nodeStringComponents[1]));
-
-                            newPlane.ModelNodes.Add(newNode);
-                            xCount++;
-                        }
-
-                        if (lineCount == 11)
-                        {
-                            ModelPlanes.Add(newPlane);
-                            lineCount = 0;
-                            newPlane = new DimensionalModelPlane();
-                            continue;
-                        }
-                    }
-
-                    lineCount++;
-                }
-            }
-            catch (Exception ex)
-            {
-                LoggingUtility.LogError(ex);
-                throw new FormatException("Invalid delimitedPlanes format.", ex);
-            }
-        }
-
+        /// <returns>validity</returns>
         public bool IsModelValid()
         {
             return ModelPlanes.Count == 11 && !ModelPlanes.Any(plane => String.IsNullOrWhiteSpace(plane.TagName) || plane.ModelNodes.Count != 121);
@@ -248,6 +170,109 @@ namespace NetMud.Data.Reference
             sb.Add(Name);
 
             return sb;
+        }
+
+        /// <summary>
+        /// Turn the modelPlanes into a json string we can store in the db
+        /// </summary>
+        /// <returns></returns>
+        private string DeserializeModel()
+        {
+            return JsonConvert.SerializeObject(ModelPlanes);
+        }
+
+        /// <summary>
+        /// Turn the json we store in the db into the modelplanes
+        /// </summary>
+        /// <param name="modelJson">json we store in the db</param>
+        private void SerializeModel(string modelJson)
+        {
+            dynamic planes = JsonConvert.DeserializeObject(modelJson);
+
+            foreach (dynamic plane in planes)
+            {
+                var newPlane = new DimensionalModelPlane();
+                newPlane.TagName = plane.TagName;
+                newPlane.YAxis = plane.YAxis;
+
+                foreach (dynamic node in plane.ModelNodes)
+                {
+                    var newNode = new DimensionalModelNode();
+                    newNode.XAxis = node.XAxis;
+                    newNode.ZAxis = node.ZAxis;
+                    newNode.Style = node.Style;
+                    newNode.Composition = node.Composition;
+                    newPlane.ModelNodes.Add(newNode);
+                }
+
+                ModelPlanes.Add(newPlane);
+            }
+
+        }
+        /// <summary>
+        /// Turn a comma delimited list of planes into the modelplane set
+        /// </summary>
+        /// <param name="delimitedPlanes">comma delimited list of planes</param>
+        private void SerializeModelFromDelimitedList(string delimitedPlanes)
+        {
+            var newPlane = new DimensionalModelPlane();
+            short lineCount = 12;
+            short yCount = 12;
+
+            try
+            {
+                foreach (var myString in delimitedPlanes.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    //This is the tagName line
+                    if (lineCount == 12)
+                    {
+                        newPlane.TagName = myString;
+                        newPlane.YAxis = yCount;
+                    }
+                    else
+                    {
+                        var currentLineNodes = myString.Split(new char[] { ',' });
+
+                        short xCount = 1;
+                        foreach (var nodeString in currentLineNodes)
+                        {
+                            var newNode = new DimensionalModelNode();
+                            var nodeStringComponents = nodeString.Split(new char[] { '|' });
+
+                            newNode.XAxis = xCount;
+                            newNode.ZAxis = lineCount;
+
+                            newNode.Style = String.IsNullOrWhiteSpace(nodeStringComponents[0])
+                                                ? DamageType.None
+                                                : (DamageType)short.Parse(nodeStringComponents[0]);
+
+                            newNode.Composition = nodeStringComponents.Count() < 2 || String.IsNullOrWhiteSpace(nodeStringComponents[1])
+                                                ? default(IMaterial)
+                                                : default(IMaterial); //TODO: Implement materials -- ReferenceAccess.GetOne<IMaterial>(long.Parse(nodeStringComponents[1]));
+
+                            newPlane.ModelNodes.Add(newNode);
+                            xCount++;
+                        }
+
+                        if (lineCount == 1)
+                        {
+                            ModelPlanes.Add(newPlane);
+                            lineCount = 12;
+                            yCount--;
+
+                            newPlane = new DimensionalModelPlane();
+                            continue;
+                        }
+                    }
+
+                    lineCount--;
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex);
+                throw new FormatException("Invalid delimitedPlanes format.", ex);
+            }
         }
     }
 }

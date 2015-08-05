@@ -16,9 +16,9 @@ namespace NetMud.Data.Reference
         public short XAxis { get; set; }
 
         /// <summary>
-        /// The position of this node on the YAxis
+        /// The position of this node on the ZAxis
         /// </summary>
-        public short YAxis { get; set; }
+        public short ZAxis { get; set; }
 
         /// <summary>
         /// The damage type inflicted when this part of the model strikes

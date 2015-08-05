@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.Backup", "NetMud.Bac
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.CentralControl", "NetMud.CentralControl\NetMud.CentralControl.csproj", "{1E404CFB-4CED-42AD-B28E-BFEE270C88F9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.Physics", "NetMud.Physics\NetMud.Physics.csproj", "{28AABDF5-250E-40CE-88DE-BE3B9D23D95F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,10 @@ Global
 		{1E404CFB-4CED-42AD-B28E-BFEE270C88F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E404CFB-4CED-42AD-B28E-BFEE270C88F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1E404CFB-4CED-42AD-B28E-BFEE270C88F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28AABDF5-250E-40CE-88DE-BE3B9D23D95F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28AABDF5-250E-40CE-88DE-BE3B9D23D95F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28AABDF5-250E-40CE-88DE-BE3B9D23D95F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28AABDF5-250E-40CE-88DE-BE3B9D23D95F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

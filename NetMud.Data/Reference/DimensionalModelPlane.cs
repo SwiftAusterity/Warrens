@@ -30,5 +30,20 @@ namespace NetMud.Data.Reference
         /// The name of this plane (for a sword it might be 'Blade' or 'Hilt')
         /// </summary>
         public string TagName { get; set; }
+
+        /// <summary>
+        /// All nodes in a plane are of the same YAxis so bubble it up here so we have access
+        /// </summary>
+        public short YAxis { get; set; }
+
+        /// <summary>
+        /// Gets a node based on the X and Y axis
+        /// </summary>
+        /// <param name="xAxis">the X-Axis of the node to get</param>
+        /// <returns>the node</returns>
+        public IDimensionalModelNode GetNode(short xAxis, short zAxis)
+        {
+            return ModelNodes.FirstOrDefault(node => node.XAxis.Equals(xAxis) && node.ZAxis.Equals(zAxis));
+        }
     }
 }

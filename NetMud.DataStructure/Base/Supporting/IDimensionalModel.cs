@@ -45,6 +45,14 @@ namespace NetMud.DataStructure.Base.Supporting
         /// </summary>
         /// <returns>validity</returns>
         bool IsModelValid();
+
+        /// <summary>
+        /// Gets a node based on the X and Y axis
+        /// </summary>
+        /// <param name="xAxis">the X-Axis of the node to get</param>
+        /// <param name="yAxis">the Y-Axis of the node to get</param>
+        /// <returns>the node</returns>
+        IDimensionalModelNode GetNode(short xAxis, short yAxis, short zAxis);
     }
 
     /// <summary>
@@ -61,6 +69,18 @@ namespace NetMud.DataStructure.Base.Supporting
         /// The name of this plane (for a sword it might be 'Blade' or 'Hilt')
         /// </summary>
         string TagName { get; set; }
+
+        /// <summary>
+        /// All nodes in a plane are of the same YAxis so bubble it up here so we have access
+        /// </summary>
+        short YAxis { get; set; }
+
+        /// <summary>
+        /// Gets a node based on the X and Y axis
+        /// </summary>
+        /// <param name="xAxis">the X-Axis of the node to get</param>
+        /// <returns>the node</returns>
+        IDimensionalModelNode GetNode(short xAxis, short zAxis);
     }
 
     /// <summary>
@@ -76,7 +96,7 @@ namespace NetMud.DataStructure.Base.Supporting
         /// <summary>
         /// The position of this node on the YAxis
         /// </summary>
-        short YAxis { get; set; }
+        short ZAxis { get; set; }
         
         /// <summary>
         /// The damage type inflicted when this part of the model strikes
