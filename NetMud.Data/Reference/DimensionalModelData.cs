@@ -1,34 +1,54 @@
 ﻿using NetMud.DataAccess;
+using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.Utility;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace NetMud.Data.Reference
-{
+{    
     /// <summary>
-    /// Referred to as Help Files in the UI, extra help content for the help command
+    /// Backing data for physical models
     /// </summary>
-    public class Help : ReferenceDataPartial, IReferenceData
+    public class DimensionalModelData : ReferenceDataPartial, IDimensionalModelData
     {
         /// <summary>
-        /// New up a "blank" help entry
+        /// The 11 planes that compose the physical model
         /// </summary>
-        public Help()
+        public HashSet<IDimensionalModelPlane> ModelPlanes { get; set; }
+
+        /// <summary>
+        /// Turn the modelPlanes into a json string we can store in the db
+        /// </summary>
+        /// <returns></returns>
+        private string DeserializeModel()
         {
-            ID = -1;
-            Created = DateTime.UtcNow;
-            LastRevised = DateTime.UtcNow;
-            Name = "NotImpl";
-            HelpText = "NotImpl";
+            return JsonConvert.SerializeObject(ModelPlanes);
         }
 
         /// <summary>
-        /// Help text for the body of the render to help command
+        /// Turn the json we store in the db into the modelplanes
         /// </summary>
-        public string HelpText { get; set; }
+        /// <param name="modelJson">json we store in the db</param>
+        private void SerializeModel(string modelJson)
+        {
+            dynamic planes = JsonConvert.DeserializeObject(modelJson);
+
+            foreach (dynamic plane in planes)
+            {
+                var newPlane = new DimensionalModelPlane();
+                newPlane.TagName = plane.TagName;
+                newPlane.ModelNodes = plane.ModelNodes;
+
+                ModelPlanes.Add(newPlane);
+            }
+
+        }
 
         /// <summary>
         /// Fills a data object with data from a data row
@@ -52,9 +72,9 @@ namespace NetMud.Data.Reference
             DataUtility.GetFromDataRow<string>(dr, "Name", ref outName);
             Name = outName;
 
-            string outHelpText = default(string);
-            DataUtility.GetFromDataRow<string>(dr, "HelpText", ref outHelpText);
-            HelpText = outHelpText;
+            string outModel = default(string);
+            DataUtility.GetFromDataRow<string>(dr, "Model", ref outName);
+            SerializeModel(outModel);
         }
 
         /// <summary>
@@ -63,11 +83,11 @@ namespace NetMud.Data.Reference
         /// <returns>the object with ID and other db fields set</returns>
         public override IData Create()
         {
-            Help returnValue = default(Help);
+            DimensionalModelData returnValue = default(DimensionalModelData);
             var sql = new StringBuilder();
-            sql.Append("insert into [dbo].[Help]([Name], [HelpText])");
-            sql.AppendFormat(" values('{0}','{1}')", Name, HelpText);
-            sql.Append(" select * from [dbo].[Help] where ID = Scope_Identity()");
+            sql.Append("insert into [dbo].[DimensionalModelData]([Name], [Model])");
+            sql.AppendFormat(" values('{0}','{1}')", Name, DeserializeModel());
+            sql.Append(" select * from [dbo].[DimensionalModelData] where ID = Scope_Identity()");
 
             try
             {
@@ -94,10 +114,11 @@ namespace NetMud.Data.Reference
         /// Remove this object from the db permenantly
         /// </summary>
         /// <returns>success status</returns>
+
         public override bool Remove()
         {
             var sql = new StringBuilder();
-            sql.AppendFormat("delete from [dbo].[Help] where ID = {0}", ID);
+            sql.AppendFormat("delete from [dbo].[DimensionalModelData] where ID = {0}", ID);
 
             SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text);
 
@@ -111,9 +132,9 @@ namespace NetMud.Data.Reference
         public override bool Save()
         {
             var sql = new StringBuilder();
-            sql.Append("update [dbo].[Help] set ");
+            sql.Append("update [dbo].[DimensionalModelData] set ");
             sql.AppendFormat(" [Name] = '{0}' ", Name);
-            sql.AppendFormat(" , [HelpText] = '{0}' ", HelpText);
+            sql.AppendFormat(" , [Model] = '{0}' ", DeserializeModel());
             sql.AppendFormat(" , [LastRevised] = GetUTCDate()");
             sql.AppendFormat(" where ID = {0}", ID);
 
@@ -130,7 +151,8 @@ namespace NetMud.Data.Reference
         {
             var sb = new List<string>();
 
-            sb.Add(HelpText);
+            //TODO: Render the actual model flattened in ascii, probably require a fair bit of work so just returning name for now
+            sb.Add(Name);
 
             return sb;
         }
