@@ -30,3 +30,4 @@ NetMud/HotBackup/Backups/*
 NetMud/HotBackup/Logs/
 NetMud/Web.config
 NetMud/HotBackup/Players
+NetMud/HotBackup/Logs/Current

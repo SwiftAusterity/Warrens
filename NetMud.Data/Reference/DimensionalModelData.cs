@@ -229,15 +229,15 @@ namespace NetMud.Data.Reference
         private void SerializeModelFromDelimitedList(string delimitedPlanes)
         {
             var newPlane = new DimensionalModelPlane();
-            short lineCount = 12;
-            short yCount = 12;
+            short lineCount = 11;
+            short yCount = 11;
 
             try
             {
                 foreach (var myString in delimitedPlanes.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
                 {
                     //This is the tagName line
-                    if (lineCount == 12)
+                    if (lineCount == 11)
                     {
                         newPlane.TagName = myString;
                         newPlane.YAxis = yCount;
@@ -270,7 +270,7 @@ namespace NetMud.Data.Reference
                         if (lineCount == 1)
                         {
                             ModelPlanes.Add(newPlane);
-                            lineCount = 12;
+                            lineCount = 11;
                             yCount--;
 
                             newPlane = new DimensionalModelPlane();

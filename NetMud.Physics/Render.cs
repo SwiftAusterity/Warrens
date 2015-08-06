@@ -51,14 +51,17 @@ namespace NetMud.Physics
              */
 
             //TODO: handle pitch, yaw and roll
-            short xAxis = 11;
-            short yAxis = 11;
-            short zAxis = 1;
+            short startXAxis = 11;
+            short startYAxis = 11;
+            short startZAxis = 1;
 
             short endXAxis = 1;
             short endYAxis = 1;
             short endZAxis = 11;
-            
+
+            short xAxis = startXAxis;
+            short yAxis = startYAxis;
+            short zAxis = startZAxis;
             //load the plane up with blanks
             List<string[]> flattenedPlane = new List<string[]>();
             flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
@@ -73,35 +76,61 @@ namespace NetMud.Physics
             flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
             flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
 
-            for( ; zAxis != endZAxis; )
+            for( ; (zAxis <= endZAxis && zAxis >= startZAxis) || (zAxis >= endZAxis && zAxis <= startZAxis); )
             {
-                for( ; yAxis != endYAxis; )
+                for( ; (yAxis <= endYAxis && yAxis >= startYAxis) || (yAxis >= endYAxis && yAxis <= startYAxis); )
                 {
-                    for( ; xAxis != endXAxis; )
+                    for( ; (xAxis <= endXAxis && xAxis >= startXAxis) || (xAxis >= endXAxis && xAxis <= startXAxis); )
                     {
                         var node = model.GetNode(xAxis, yAxis, zAxis);
 
                         //We can't replace stuff we can already see, it'd be obfuscated visually
                         if (String.IsNullOrWhiteSpace(flattenedPlane[yAxis - 1][xAxis - 1]))
-                            flattenedPlane[yAxis - 1][xAxis - 1] = DamageTypeToCharacter(node.Style);
+                            flattenedPlane[yAxis - 1][xAxis - 1] = DamageTypeToCharacter(node.Style, xAxis < 6);
+
+                        if (xAxis.Equals(endXAxis))
+                            break;
 
                         xAxis = xAxis < endXAxis ? (short)(xAxis + 1) : (short)(xAxis - 1);
                     }
 
+                    xAxis = startXAxis;
+
+                    if (yAxis.Equals(endYAxis))
+                        break;
+
                     yAxis = yAxis < endYAxis ? (short)(yAxis + 1) : (short)(yAxis - 1);
                 }
 
+                yAxis = startYAxis;
+
+                if (zAxis.Equals(endZAxis))
+                    break;
+
                 zAxis = zAxis < endZAxis ? (short)(zAxis + 1) : (short)(zAxis - 1);
             }
-            
+
+            //the system is basically upsidedown in the data so we have to flip the Y axis to get it to display correctly.
+            flattenedPlane.Reverse();
+
+            flattenedModel.AppendLine();
+
             //Write out the flattened view to the string builder with line terminators
             foreach (var nodes in flattenedPlane)
                 flattenedModel.AppendLine(string.Join("", nodes));
 
+            flattenedModel.AppendLine();
+
             return flattenedModel.ToString();
         }
 
-        public static string DamageTypeToCharacter(DamageType type)
+        /// <summary>
+        /// Converts damage types to characters for use in model rendering
+        /// </summary>
+        /// <param name="type">the damage type to convert</param>
+        /// <param name="reverseCharacter">whether or not to display the left-of-center character</param>
+        /// <returns></returns>
+        public static string DamageTypeToCharacter(DamageType type, bool leftOfCenter)
         {
             string returnString = " ";
 
@@ -110,19 +139,28 @@ namespace NetMud.Physics
                 default: //also "none" case
                     break;
                 case DamageType.Blunt:
-                    returnString = "@";
+                    returnString = "#";
                     break;
                 case DamageType.Sharp:
-                    returnString = "/";
+                    if(leftOfCenter)
+                        returnString = "/";
+                    else
+                        returnString = "\\";
                     break;
                 case DamageType.Pierce:
                     returnString = "^";
                     break;
                 case DamageType.Shred:
-                    returnString = ">";
+                    if (leftOfCenter)
+                        returnString = "<";
+                    else
+                        returnString = ">";
                     break;
                 case DamageType.Chop:
-                    returnString = "}";
+                    if (leftOfCenter)
+                        returnString = "{";
+                    else
+                        returnString = "}";
                     break;
                 case DamageType.Acidic:
                     returnString = "A";
@@ -156,6 +194,11 @@ namespace NetMud.Physics
             return returnString;
         }
 
+        /// <summary>
+        /// Converts render characters to damage types
+        /// </summary>
+        /// <param name="chr">actually a string, the character to convert</param>
+        /// <returns>the damage type</returns>
         public static DamageType CharacterToDamageType(string chr)
         {
             var returnValue = DamageType.None;
@@ -164,18 +207,21 @@ namespace NetMud.Physics
             {
                 default: //also "none" case
                     break;
-                case "@":
+                case "#":
                     returnValue = DamageType.Blunt;
                     break;
+                case "\\":
                 case "/":
                     returnValue = DamageType.Sharp;
                     break;
                 case "^":
                     returnValue = DamageType.Pierce;
                     break;
+                case "<":
                 case ">":
                     returnValue = DamageType.Shred;
                     break;
+                case "{":
                 case "}":
                     returnValue = DamageType.Chop;
                     break;
