@@ -46,13 +46,65 @@ namespace NetMud.Data.Reference
         /// </summary>
         /// <param name="xAxis">the X-Axis of the node to get</param>
         /// <param name="yAxis">the Y-Axis of the node to get</param>
+        /// <param name="zAxis">the Z-Axis of the node to get</param>
         /// <returns>the node</returns>
         public IDimensionalModelNode GetNode(short xAxis, short yAxis, short zAxis)
         {
             var plane = ModelPlanes.FirstOrDefault(pl => pl.YAxis.Equals(yAxis));
 
-            if(plane != null)
+            if (plane != null)
                 return plane.GetNode(xAxis, zAxis);
+
+            return null;
+        }
+
+        /// <summary>
+        /// Gets the node behind the indicated node
+        /// </summary>
+        /// <param name="xAxis">the X-Axis of the initial node to get</param>
+        /// <param name="yAxis">the Y-Axis of the initial node to get</param>
+        /// <param name="zAxis">the Z-Axis of the initial node to get</param>
+        /// <param name="pitch">rotation on the z-axis</param>
+        /// <param name="yaw">rotation on the Y-axis</param>
+        /// <param name="roll">rotation on the x-axis</param>
+        /// <returns>the node "behind" the node asked for (can be null)</returns>
+        public IDimensionalModelNode GetNodeBehindNode(short xAxis, short yAxis, short zAxis, short pitch, short yaw, short roll)
+        {
+            var plane = ModelPlanes.FirstOrDefault(pl => pl.YAxis.Equals(yAxis));
+            IDimensionalModelNode node = null;
+
+            //Get the initial node first
+            if (plane != null)
+                node = plane.GetNode(xAxis, zAxis);
+
+            if (node != null)
+            {
+                //var newX = xAxis * Matrix[0][0] + yAxis * Matrix[0][1] + zAxis * Matrix[0][2] + Matrix[0][3];
+                //var newY = xAxis * Matrix[1][0] + yAxis * Matrix[1][1] + zAxis * Matrix[1][2] + Matrix[1][3];
+                //var newZ = xAxis * Matrix[2][0] + yAxis * Matrix[2][1] + zAxis * Matrix[2][2] + Matrix[2][3];
+
+                //Degrees to radians
+                var yawAngle = yaw * 8.1818181818181818181818181818182 / 57.2957795;
+                var pitchAngle = pitch * 8.1818181818181818181818181818182 / 57.2957795;
+                var rollAngle = roll * 8.1818181818181818181818181818182 / 57.2957795;
+
+                var Matrix = new List<double[]>();
+                //Matrix.Add(new double[] { xAxis * Math.Cos(rollAngle) * Math.Cos(pitchAngle)    , -1 * Math.Sin(pitchAngle)                             , Math.Sin(rollAngle) });
+                //Matrix.Add(new double[] { Math.Sin(pitchAngle)                                  , yAxis * Math.Cos(yawAngle) * Math.Cos(pitchAngle)     , -1 * Math.Sin(yawAngle) });
+                //Matrix.Add(new double[] { -1 * Math.Sin(rollAngle)                              , Math.Sin(yawAngle)                                    , zAxis * Math.Cos(yawAngle) * Math.Cos(rollAngle) });
+
+                zAxis++;
+
+                Matrix.Add(new double[] { xAxis * Math.Cos(rollAngle) * Math.Cos(pitchAngle), -1 * Math.Sin(pitchAngle), Math.Sin(rollAngle) });
+                Matrix.Add(new double[] { Math.Sin(pitchAngle), yAxis * Math.Cos(pitchAngle), -1 * Math.Sin(yawAngle) });
+                Matrix.Add(new double[] { -1 * Math.Sin(rollAngle), Math.Sin(yawAngle), zAxis * Math.Cos(yawAngle) * Math.Cos(rollAngle) });
+
+                var newX = (short)Math.Round(Matrix[0][0] + Matrix[0][1] + Matrix[0][2]);
+                var newY = (short)Math.Round(Matrix[1][0] + Matrix[1][1] + Matrix[1][2]);
+                var newZ = (short)Math.Round(Matrix[2][0] + Matrix[2][1] + Matrix[2][2]);
+
+                return GetNode(newX, newY, newZ);
+            }
 
             return null;
         }
@@ -213,6 +265,7 @@ namespace NetMud.Data.Reference
                     var newNode = new DimensionalModelNode();
                     newNode.XAxis = node.XAxis;
                     newNode.ZAxis = node.ZAxis;
+                    newNode.YAxis = newPlane.YAxis;
                     newNode.Style = node.Style;
                     newNode.Composition = node.Composition;
                     newPlane.ModelNodes.Add(newNode);
@@ -254,6 +307,7 @@ namespace NetMud.Data.Reference
 
                             newNode.XAxis = xCount;
                             newNode.ZAxis = lineCount;
+                            newNode.YAxis = yCount;
 
                             newNode.Style = String.IsNullOrWhiteSpace(nodeStringComponents[0])
                                                 ? DamageType.None

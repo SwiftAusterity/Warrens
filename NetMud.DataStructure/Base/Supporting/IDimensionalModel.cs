@@ -47,12 +47,25 @@ namespace NetMud.DataStructure.Base.Supporting
         bool IsModelValid();
 
         /// <summary>
-        /// Gets a node based on the X and Y axis
+        /// Gets a node based on a vertex
         /// </summary>
         /// <param name="xAxis">the X-Axis of the node to get</param>
         /// <param name="yAxis">the Y-Axis of the node to get</param>
+        /// <param name="zAxis">the Z-Axis of the node to get</param>
         /// <returns>the node</returns>
         IDimensionalModelNode GetNode(short xAxis, short yAxis, short zAxis);
+
+        /// <summary>
+        /// Gets the node behind the indicated node
+        /// </summary>
+        /// <param name="xAxis">the X-Axis of the initial node to get</param>
+        /// <param name="yAxis">the Y-Axis of the initial node to get</param>
+        /// <param name="zAxis">the Z-Axis of the initial node to get</param>
+        /// <param name="pitch">rotation on the z-axis</param>
+        /// <param name="yaw">rotation on the Y-axis</param>
+        /// <param name="roll">rotation on the x-axis</param>
+        /// <returns>the node "behind" the node asked for (can be null)</returns>
+        IDimensionalModelNode GetNodeBehindNode(short xAxis, short yAxis, short zAxis, short pitch, short yaw, short roll);
 
         /// <summary>
         /// View the flattened model based on view angle; TODO: ONLY SUPPORTS THE FRONT FACE ATM
@@ -106,6 +119,11 @@ namespace NetMud.DataStructure.Base.Supporting
         /// The position of this node on the YAxis
         /// </summary>
         short ZAxis { get; set; }
+
+        /// <summary>
+        /// All nodes in a plane are of the same YAxis so bubble it up here so we have access
+        /// </summary>
+        short YAxis { get; set; }
         
         /// <summary>
         /// The damage type inflicted when this part of the model strikes

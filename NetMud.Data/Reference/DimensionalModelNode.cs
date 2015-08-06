@@ -21,6 +21,11 @@ namespace NetMud.Data.Reference
         public short ZAxis { get; set; }
 
         /// <summary>
+        /// The Y-axis from the plane this belongs to
+        /// </summary>
+        public short YAxis { get; set; }
+
+        /// <summary>
         /// The damage type inflicted when this part of the model strikes
         /// </summary>
         public DamageType Style { get; set; }
