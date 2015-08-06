@@ -27,21 +27,21 @@ namespace NetMud.Physics
             /*
              * We start by looking at the "front" of the model which starts at Y=12, Z=1, X=12 (the upper most left corner node) and contains all the Z=1 nodes of the entire thing
              * 
-             * YAW
+             * YAW = pivot on X, affects Z
              * Positive Yaw rotates the object counter-clockwise which means we start at X=(12 - Yaw) 
              * 0 Yaw - we are looking at the front face
-             * 12 Yaw - we are looking at the object rotated 90 degrees (the "right" face)
-             * -24/24 Yaw - we are looking at the back face
-             * -12 Yaw - we are looking at the object rotated 90 degrees to the "left"
+             * 11 Yaw - we are looking at the object rotated 90 degrees (the "right" face)
+             * -22/22 Yaw - we are looking at the back face
+             * -11 Yaw - we are looking at the object rotated 90 degrees to the "left"
              * 
-             * PITCH
+             * PITCH = pivot on Z, affects Y
              * Positive pitch rotates the object forward and back which means we start at Y=(12 - Pitch)
              * 0 Pitch - we are looking at the front face
              * 12 Pitch - we are looking at the object rotated forward 90 degrees (the "bottom" face)
              * -24/24 Pitch - we are looking at the back face, upsidedown
              * -12 Pitch - we are looking at the object rotated 90 degrees backwards (the "top" face)
              * 
-             * ROLL
+             * ROLL = pivot on Y, affects X
              * Positive roll "spins" the object diagonally which means we start at Z=(12 - Roll)
              * 0 Roll - we are looking at the front face
              * 12 Roll - we are looking at the object rotated diagonally 90 degrees (front face - sideways)
