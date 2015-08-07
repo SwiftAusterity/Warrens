@@ -64,7 +64,6 @@ namespace NetMud.Physics
             flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
             flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
 
-            //TODO: handle pitch, yaw and roll
             short startXAxis = 11;
             short startYAxis = 11;
             short startZAxis = 1;
@@ -77,19 +76,21 @@ namespace NetMud.Physics
             for (yI = 0; yI < 11; yI++)
             {
                 yAxis = (short)(startYAxis - roll - yI);
-                zAxis = (short)(startZAxis - pitch);
 
                 for (xI = 0; xI < 11; xI++)
                 {
                     xAxis = (short)(startXAxis - yaw - xI);
-                    zAxis = (short)(startZAxis - pitch);
+                    zAxis = (short)(startZAxis + pitch);
 
-                    if (xAxis < 0)
+                    if (xAxis <= 0)
                         xAxis = (short)(11 + xAxis);
-                    if (yAxis < 0)
+                    if (yAxis <= 0)
                         yAxis = (short)(11 + yAxis);
-                    if (zAxis < 0)
+                    if (zAxis <= 0)
                         zAxis = (short)(11 + zAxis);
+                    if (zAxis > 11)
+                        zAxis = 1;
+
 
                     var node = model.GetNode(xAxis, yAxis, zAxis);
 

@@ -79,29 +79,93 @@ namespace NetMud.Data.Reference
 
             if (node != null)
             {
-                //var newX = xAxis * Matrix[0][0] + yAxis * Matrix[0][1] + zAxis * Matrix[0][2] + Matrix[0][3];
-                //var newY = xAxis * Matrix[1][0] + yAxis * Matrix[1][1] + zAxis * Matrix[1][2] + Matrix[1][3];
-                //var newZ = xAxis * Matrix[2][0] + yAxis * Matrix[2][1] + zAxis * Matrix[2][2] + Matrix[2][3];
+                //We need to determine what the actuals are here, we might have axis flipped depending on the perspective angle
+                //yaw 1-10 - length = model xAxis 11-1, height = yAxis 11-1, depth = zAxis 1-11
+                //yaw 11-21 - length = model zAxis 1-11, height = yAxis 11-1, depth = xAxis 1-11
+                //yaw 22-32 - length = model xAxis 1-11, height = yAxis 11-1, depth = zAxis 11-1
+                //yaw 33-43 - length = model zAxis 11-1, height = yAxis 11-1, depth = xAxis 11-1
 
-                //Degrees to radians
-                var yawAngle = yaw * 8.1818181818181818181818181818182 / 57.2957795;
-                var pitchAngle = pitch * 8.1818181818181818181818181818182 / 57.2957795;
-                var rollAngle = roll * 8.1818181818181818181818181818182 / 57.2957795;
+                //roll 1-10 - length = model xAxis 11-1, height = yAxis 11-1, depth = zAxis 1-11
+                //roll 11-21 - length = model yAxis 1-11, height = xAxis 1-1, depth = zAxis 1-11
+                //roll 22-32 - length = model xAxis 1-11, height = yAxis 1-1, depth = zAxis 1-11
+                //roll 33-43 - length = model yAxis 11-1, height = xAxis 11-1, depth = zAxis 1-11
 
-                var Matrix = new List<double[]>();
-                //Matrix.Add(new double[] { xAxis * Math.Cos(rollAngle) * Math.Cos(pitchAngle)    , -1 * Math.Sin(pitchAngle)                             , Math.Sin(rollAngle) });
-                //Matrix.Add(new double[] { Math.Sin(pitchAngle)                                  , yAxis * Math.Cos(yawAngle) * Math.Cos(pitchAngle)     , -1 * Math.Sin(yawAngle) });
-                //Matrix.Add(new double[] { -1 * Math.Sin(rollAngle)                              , Math.Sin(yawAngle)                                    , zAxis * Math.Cos(yawAngle) * Math.Cos(rollAngle) });
+                //pitch 1-10 - length = model xAxis 11-1, height = yAxis 11-1, depth = zAxis 1-11
+                //pitch 11-21 - length = model xAxis 11-1, height = zAxis 1-11, depth = yAxis 1-11
+                //pitch 22-32 - length = model xAxis 11-1, height = yAxis 1-11, depth = zAxis 11-1
+                //pitch 33-43 - length = model xAxis 11-1, height = zAxis 11-1, depth = yAxis 11-1
 
-                zAxis++;
+                short zChange = 0, yChange = 0, xChange = 0;
 
-                Matrix.Add(new double[] { xAxis * Math.Cos(rollAngle) * Math.Cos(pitchAngle), -1 * Math.Sin(pitchAngle), Math.Sin(rollAngle) });
-                Matrix.Add(new double[] { Math.Sin(pitchAngle), yAxis * Math.Cos(pitchAngle), -1 * Math.Sin(yawAngle) });
-                Matrix.Add(new double[] { -1 * Math.Sin(rollAngle), Math.Sin(yawAngle), zAxis * Math.Cos(yawAngle) * Math.Cos(rollAngle) });
+                if (yaw > 0)
+                {
+                    if (yaw <= 10)
+                    {
+                        zChange++;
+                        xChange++;
+                    }
+                    else if (yaw == 11)
+                        xChange++;
+                    else if (yaw <= 21)
+                    {
+                        xChange++;
+                        zChange--;
+                    }
+                    else if (yaw == 22)
+                        zChange--;
+                    else if (yaw <= 32)
+                    {
+                        zChange--;
+                        xChange--;
+                    }
+                    else if (yaw == 33)
+                        xChange--;
+                    else
+                    {
+                        xChange--;
+                        zChange++;
+                    }
+                }
 
-                var newX = (short)Math.Round(Matrix[0][0] + Matrix[0][1] + Matrix[0][2]);
-                var newY = (short)Math.Round(Matrix[1][0] + Matrix[1][1] + Matrix[1][2]);
-                var newZ = (short)Math.Round(Matrix[2][0] + Matrix[2][1] + Matrix[2][2]);
+                if (roll > 0)
+                    zChange++;
+
+                if (pitch > 0)
+                {
+                    if (pitch <= 10)
+                    {
+                        zChange++;
+                        yChange++;
+                    }
+                    else if (pitch == 11)
+                        yChange++;
+                    else if (pitch <= 21)
+                    {
+                        yChange++;
+                        zChange--;
+                    }
+                    else if (pitch == 22)
+                        zChange--;
+                    else if (pitch <= 32)
+                    {
+                        zChange--;
+                        yChange--;
+                    }
+                    else if (pitch == 33)
+                        yChange--;
+                    else
+                    {
+                        yChange--;
+                        zChange++;
+                    }
+                }
+
+                if (roll == 0 && yaw == 0 && pitch == 0)
+                    zChange++;
+
+                short newX = (short)(xAxis + xChange);
+                short newY = (short)(yAxis + yChange);
+                short newZ = (short)(zAxis + zChange);
 
                 return GetNode(newX, newY, newZ);
             }
