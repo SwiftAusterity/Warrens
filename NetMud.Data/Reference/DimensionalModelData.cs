@@ -163,6 +163,21 @@ namespace NetMud.Data.Reference
                 if (roll == 0 && yaw == 0 && pitch == 0)
                     zChange++;
 
+                if (xChange > 1)
+                    xChange = 1;
+                if (xChange < -1)
+                    xChange = -1;
+
+                if (yChange > 1)
+                    yChange = 1;
+                if (yChange < -1)
+                    yChange = -1;
+
+                if (zChange > 1)
+                    zChange = 1;
+                if (zChange < -1)
+                    zChange = -1;
+
                 short newX = (short)(xAxis + xChange);
                 short newY = (short)(yAxis + yChange);
                 short newZ = (short)(zAxis + zChange);

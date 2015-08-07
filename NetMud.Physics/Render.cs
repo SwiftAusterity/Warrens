@@ -25,30 +25,154 @@ namespace NetMud.Physics
             var flattenedModel = new StringBuilder();
 
             /*
-             * We start by looking at the "front" of the model which starts at Y=12, Z=1, X=12 (the upper most left corner node) and contains all the Z=1 nodes of the entire thing
+             * We start by looking at the "front" of the model which starts at Y=11, Z=1, X=11 (the upper most left corner node) and contains all the Z=1 nodes of the entire thing
              * 
              * YAW = pivot on X
-             * Positive Yaw rotates the object counter-clockwise which means we start at X=(12 - Yaw) 
-             * 0 Yaw - we are looking at the front face
-             * 11 Yaw - we are looking at the object rotated 90 degrees (the "right" face)
-             * -22/22 Yaw - we are looking at the back face
-             * -11 Yaw - we are looking at the object rotated 90 degrees to the "left"
+             * Positive Yaw rotates the object counter-clockwise
+             * yaw 1-10 - length = model xAxis 11-1, height = yAxis 11-1, depth = zAxis 1-11
+             * yaw 11-21 - length = model zAxis 1-11, height = yAxis 11-1, depth = xAxis 1-11
+             * yaw 22-32 - length = model xAxis 1-11, height = yAxis 11-1, depth = zAxis 11-1
+             * yaw 33-43 - length = model zAxis 11-1, height = yAxis 11-1, depth = xAxis 11-1
              * 
              * PITCH = pivot on Z
-             * Positive pitch rotates the object forward and back which means we start at Y=(12 - Pitch)
-             * 0 Pitch - we are looking at the front face
-             * 12 Pitch - we are looking at the object rotated forward 90 degrees (the "bottom" face)
-             * -24/24 Pitch - we are looking at the back face, upsidedown
-             * -12 Pitch - we are looking at the object rotated 90 degrees backwards (the "top" face)
+             * Positive pitch rotates the object forward and back
+             * pitch 1-10 - length = model xAxis 11-1, height = yAxis 11-1, depth = zAxis 1-11
+             * pitch 11-21 - length = model xAxis 11-1, height = zAxis 1-11, depth = yAxis 1-11
+             * pitch 22-32 - length = model xAxis 11-1, height = yAxis 1-11, depth = zAxis 11-1
+             * pitch 33-43 - length = model xAxis 11-1, height = zAxis 11-1, depth = yAxis 11-1
              * 
              * ROLL = pivot on Y
-             * Positive roll "spins" the object diagonally which means we start at Z=(12 - Roll)
-             * 0 Roll - we are looking at the front face
-             * 12 Roll - we are looking at the object rotated diagonally 90 degrees (front face - sideways)
-             * -24/24 Roll - we are looking at the object rotated diagonally 180 degrees (upsidedown)
-             * -12 Roll - we are looking at the object rotated diagonally 90 degrees the other direction (sideways the other way)
+             * Positive roll "spins" the object diagonally
+             * roll 1-10 - length = model xAxis 11-1, height = yAxis 11-1, depth = zAxis 1-11
+             * roll 11-21 - length = model yAxis 1-11, height = xAxis 1-1, depth = zAxis 1-11
+             * roll 22-32 - length = model xAxis 1-11, height = yAxis 1-1, depth = zAxis 1-11
+             * roll 33-43 - length = model yAxis 11-1, height = xAxis 11-1, depth = zAxis 1-11
              * 
              */
+
+            //Figure out the change. We need to "advance" by Length and Height here (where as the "find behind node" function advances Depth only)
+            var heightChanges = new short[] { 0, 0, 0 }; // X, Y, Z
+            var lengthChanges = new short[] { 0, 0, 0 }; // X, Y, Z
+
+            if (yaw > 0)
+            {
+                if (yaw <= 10)
+                {
+                    heightChanges[1]--;
+                    lengthChanges[0]--;
+                }
+                else if (yaw <= 21)
+                {
+                    heightChanges[1]--;
+                    lengthChanges[2]++;
+                }
+                else if (yaw <= 32)
+                {
+                    heightChanges[1]++;
+                    lengthChanges[0]--;
+                }
+                else
+                {
+                    heightChanges[1]--;
+                    lengthChanges[2]--;
+                }
+            }
+
+            if (pitch > 0)
+            {
+                if (pitch <= 10)
+                {
+                    heightChanges[1]--;
+                    lengthChanges[0]--;
+                }
+                else if (pitch <= 21)
+                {
+                    heightChanges[2]++;
+                    lengthChanges[0]--;
+                }
+                else if (pitch <= 32)
+                {
+                    heightChanges[1]++;
+                    lengthChanges[0]--;
+                }
+                else
+                {
+                    heightChanges[2]--;
+                    lengthChanges[0]--;
+                }
+            }
+
+            if (roll > 0)
+            {
+                if (roll <= 10)
+                {
+                    heightChanges[1]--;
+                    lengthChanges[0]--;
+                }
+                else if (roll <= 21)
+                {
+                    heightChanges[0]++;
+                    lengthChanges[1]++;
+                }
+                else if (roll <= 32)
+                {
+                    heightChanges[1]++;
+                    lengthChanges[0]++;
+                }
+                else
+                {
+                    heightChanges[0]--;
+                    lengthChanges[1]--;
+                }
+            }
+
+            if (roll == 0 && yaw == 0 && pitch == 0)
+            {
+                heightChanges[1]--;
+                lengthChanges[0]--;
+            }
+
+            if (heightChanges[0] > 1)
+                heightChanges[0] = 1;
+            if (heightChanges[0] < -1)
+                heightChanges[0] = -1;
+
+            if (heightChanges[1] > 1)
+                heightChanges[1] = 1;
+            if (heightChanges[1] < -1)
+                heightChanges[1] = -1;
+
+            if (heightChanges[2] > 1)
+                heightChanges[2] = 1;
+            if (heightChanges[2] < -1)
+                heightChanges[2] = -1;
+
+            if (lengthChanges[0] > 1)
+                lengthChanges[0] = 1;
+            if (lengthChanges[0] < -1)
+                lengthChanges[0] = -1;
+
+            if (lengthChanges[1] > 1)
+                lengthChanges[1] = 1;
+            if (lengthChanges[1] < -1)
+                lengthChanges[1] = -1;
+
+            if (lengthChanges[2] > 1)
+                lengthChanges[2] = 1;
+            if (lengthChanges[2] < -1)
+                lengthChanges[2] = -1;
+
+            int startXAxis;
+            Math.DivRem(yaw, 11, out startXAxis);
+            startXAxis = 11 - startXAxis;
+
+            int startYAxis;
+            Math.DivRem(roll, 11, out startYAxis);
+            startYAxis = 11 - startYAxis;
+
+            int startZAxis;
+            Math.DivRem(pitch, 11, out startZAxis);
+            startZAxis = 1 + startZAxis;
 
             //load the plane up with blanks
             List<string[]> flattenedPlane = new List<string[]>();
@@ -64,23 +188,18 @@ namespace NetMud.Physics
             flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
             flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
 
-            short startXAxis = 11;
-            short startYAxis = 11;
-            short startZAxis = 1;
-
-            short xAxis;
-            short yAxis;
-            short zAxis;
-
-            int xI, yI;
+            short xAxis, yAxis, zAxis, xI, yI;
             for (yI = 0; yI < 11; yI++)
             {
-                yAxis = (short)(startYAxis - roll - yI);
+                xAxis = (short)(startXAxis - (heightChanges[0] * yI));
+                yAxis = (short)(startYAxis - (heightChanges[1] * yI));
+                zAxis = (short)(startZAxis - (heightChanges[2] * yI));
 
                 for (xI = 0; xI < 11; xI++)
                 {
-                    xAxis = (short)(startXAxis - yaw - xI);
-                    zAxis = (short)(startZAxis + pitch);
+                    xAxis = (short)(startXAxis - (lengthChanges[0] * xI));
+                    yAxis = (short)(startYAxis - (lengthChanges[1] * xI));
+                    zAxis = (short)(startZAxis - (lengthChanges[2] * xI));
 
                     if (xAxis <= 0)
                         xAxis = (short)(11 + xAxis);
@@ -88,9 +207,13 @@ namespace NetMud.Physics
                         yAxis = (short)(11 + yAxis);
                     if (zAxis <= 0)
                         zAxis = (short)(11 + zAxis);
-                    if (zAxis > 11)
-                        zAxis = 1;
 
+                    if (xAxis > 11)
+                        xAxis = (short)(xAxis - 11); 
+                    if (yAxis > 11)           
+                        yAxis = (short)(yAxis - 11);
+                    if (zAxis > 11)          
+                        zAxis = (short)(zAxis - 11);
 
                     var node = model.GetNode(xAxis, yAxis, zAxis);
 
