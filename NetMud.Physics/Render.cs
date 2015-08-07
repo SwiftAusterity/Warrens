@@ -53,6 +53,16 @@ namespace NetMud.Physics
             //Figure out the change. We need to "advance" by Length and Height here (where as the "find behind node" function advances Depth only)
             var heightChanges = new short[] { 0, 0, 0 }; // X, Y, Z
             var lengthChanges = new short[] { 0, 0, 0 }; // X, Y, Z
+            int startXAxis, startYAxis, startZAxis;
+
+            //Math.DivRem(yaw, 10, out startXAxis);
+            //startXAxis = 11 - startXAxis;
+
+            //Math.DivRem(roll, 10, out startYAxis);
+            //startYAxis = 11 - startYAxis;
+
+            //Math.DivRem(pitch, 10, out startZAxis);
+            //startZAxis = 1 + startZAxis;
 
             if (yaw > 0)
             {
@@ -161,18 +171,6 @@ namespace NetMud.Physics
                 lengthChanges[2] = 1;
             if (lengthChanges[2] < -1)
                 lengthChanges[2] = -1;
-
-            int startXAxis;
-            Math.DivRem(yaw, 11, out startXAxis);
-            startXAxis = 11 - startXAxis;
-
-            int startYAxis;
-            Math.DivRem(roll, 11, out startYAxis);
-            startYAxis = 11 - startYAxis;
-
-            int startZAxis;
-            Math.DivRem(pitch, 11, out startZAxis);
-            startZAxis = 1 + startZAxis;
 
             //load the plane up with blanks
             List<string[]> flattenedPlane = new List<string[]>();
