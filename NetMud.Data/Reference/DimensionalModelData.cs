@@ -105,17 +105,17 @@ namespace NetMud.Data.Reference
                         xChange++;
                     }
                     else if (yaw == 11)
-                        xChange++;
+                        xChange--;
                     else if (yaw <= 21)
                     {
-                        xChange++;
+                        xChange--;
                         zChange--;
                     }
                     else if (yaw == 22)
-                        zChange--;
+                        zChange++;
                     else if (yaw <= 32)
                     {
-                        zChange--;
+                        zChange++;
                         xChange--;
                     }
                     else if (yaw == 33)

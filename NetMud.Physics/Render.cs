@@ -53,16 +53,6 @@ namespace NetMud.Physics
             //Figure out the change. We need to "advance" by Length and Height here (where as the "find behind node" function advances Depth only)
             var heightChanges = new short[] { 0, 0, 0 }; // X, Y, Z
             var lengthChanges = new short[] { 0, 0, 0 }; // X, Y, Z
-            int startXAxis, startYAxis, startZAxis;
-
-            //Math.DivRem(yaw, 10, out startXAxis);
-            //startXAxis = 11 - startXAxis;
-
-            //Math.DivRem(roll, 10, out startYAxis);
-            //startYAxis = 11 - startYAxis;
-
-            //Math.DivRem(pitch, 10, out startZAxis);
-            //startZAxis = 1 + startZAxis;
 
             if (yaw > 0)
             {
@@ -171,6 +161,15 @@ namespace NetMud.Physics
                 lengthChanges[2] = 1;
             if (lengthChanges[2] < -1)
                 lengthChanges[2] = -1;
+
+            //figure out the starting point which is like the viewer's pov
+            int startXAxis, startYAxis, startZAxis;
+
+            var startVertex = FindStartingVertex(yaw, pitch, roll);
+
+            startXAxis = startVertex.Item1;
+            startYAxis = startVertex.Item2;
+            startZAxis = startVertex.Item3;
 
             //load the plane up with blanks
             List<string[]> flattenedPlane = new List<string[]>();
@@ -409,6 +408,126 @@ namespace NetMud.Physics
             }
 
             return returnValue;
+        }
+
+        public static Tuple<short, short, short> FindStartingVertex(short yaw, short pitch, short roll)
+        {
+            //figure out the starting point which is like the viewer's pov
+            int startXAxis = 11, startYAxis = 11, startZAxis = 1;
+
+            var heightChanges = new short[] { 0, 0, 0 }; // X, Y, Z
+            var lengthChanges = new short[] { 0, 0, 0 }; // X, Y, Z
+
+            if (yaw > 0)
+            {
+                if (yaw <= 10)
+                {
+                    heightChanges[1]--;
+                    lengthChanges[0]--;
+                }
+                else if (yaw <= 21)
+                {
+                    heightChanges[1]--;
+                    lengthChanges[2]++;
+                }
+                else if (yaw <= 32)
+                {
+                    heightChanges[1]++;
+                    lengthChanges[0]--;
+                }
+                else
+                {
+                    heightChanges[1]--;
+                    lengthChanges[2]--;
+                }
+            }
+
+            if (pitch > 0)
+            {
+                if (pitch <= 10)
+                {
+                    heightChanges[1]--;
+                    lengthChanges[0]--;
+                }
+                else if (pitch <= 21)
+                {
+                    heightChanges[2]++;
+                    lengthChanges[0]--;
+                }
+                else if (pitch <= 32)
+                {
+                    heightChanges[1]++;
+                    lengthChanges[0]--;
+                }
+                else
+                {
+                    heightChanges[2]--;
+                    lengthChanges[0]--;
+                }
+            }
+
+            if (roll > 0)
+            {
+                if (roll <= 10)
+                {
+                    heightChanges[1]--;
+                    lengthChanges[0]--;
+                }
+                else if (roll <= 21)
+                {
+                    heightChanges[0]++;
+                    lengthChanges[1]++;
+                }
+                else if (roll <= 32)
+                {
+                    heightChanges[1]++;
+                    lengthChanges[0]++;
+                }
+                else
+                {
+                    heightChanges[0]--;
+                    lengthChanges[1]--;
+                }
+            }
+
+            if (lengthChanges[0] > 0 || heightChanges[0] < 0)
+            { 
+                Math.DivRem(yaw, 10, out startXAxis);
+                startXAxis = 11 - startXAxis;
+            }
+
+            if (lengthChanges[0] < 0 || heightChanges[0] > 0)
+            { 
+                Math.DivRem(yaw, 10, out startXAxis);
+            }
+
+            if (lengthChanges[1] > 0 || heightChanges[1] < 0)
+            {
+                Math.DivRem(roll, 10, out startYAxis);
+                startYAxis = 11 - startYAxis;
+            }
+
+            if (lengthChanges[1] < 0 || heightChanges[1] > 0)
+            {
+                Math.DivRem(roll, 10, out startYAxis);
+            }
+
+            if (lengthChanges[2] > 0 || heightChanges[2] < 0)
+            {
+                Math.DivRem(pitch, 10, out startZAxis);
+            }
+
+            if (lengthChanges[2] < 0 || heightChanges[2] > 0)
+            {
+                Math.DivRem(pitch, 10, out startZAxis);
+                startZAxis = 11 - startZAxis;
+            }
+
+            startZAxis = Math.Max(1, startZAxis);
+            startYAxis = Math.Max(1, startYAxis);
+            startXAxis = Math.Max(1, startXAxis);
+
+            return new Tuple<short, short, short>((short)startXAxis, (short)startYAxis, (short)startZAxis);
         }
     }
 }
