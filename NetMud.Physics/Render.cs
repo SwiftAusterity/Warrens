@@ -188,16 +188,12 @@ namespace NetMud.Physics
             short xAxis, yAxis, zAxis, xI, yI;
             for (yI = 0; yI < 11; yI++)
             {
-                xAxis = (short)(startXAxis - (heightChanges[0] * yI));
-                yAxis = (short)(startYAxis - (heightChanges[1] * yI));
-                zAxis = (short)(startZAxis - (heightChanges[2] * yI));
+                xAxis = (short)(startXAxis + (heightChanges[0] * yI));
+                yAxis = (short)(startYAxis + (heightChanges[1] * yI));
+                zAxis = (short)(startZAxis + (heightChanges[2] * yI));
 
                 for (xI = 0; xI < 11; xI++)
                 {
-                    xAxis = (short)(startXAxis - (lengthChanges[0] * xI));
-                    yAxis = (short)(startYAxis - (lengthChanges[1] * xI));
-                    zAxis = (short)(startZAxis - (lengthChanges[2] * xI));
-
                     if (xAxis <= 0)
                         xAxis = (short)(11 + xAxis);
                     if (yAxis <= 0)
@@ -206,10 +202,10 @@ namespace NetMud.Physics
                         zAxis = (short)(11 + zAxis);
 
                     if (xAxis > 11)
-                        xAxis = (short)(xAxis - 11); 
-                    if (yAxis > 11)           
+                        xAxis = (short)(xAxis - 11);
+                    if (yAxis > 11)
                         yAxis = (short)(yAxis - 11);
-                    if (zAxis > 11)          
+                    if (zAxis > 11)
                         zAxis = (short)(zAxis - 11);
 
                     var node = model.GetNode(xAxis, yAxis, zAxis);
@@ -224,47 +220,23 @@ namespace NetMud.Physics
 
                         node = model.GetNodeBehindNode(xAxis, yAxis, zAxis, pitch, yaw, roll);
                     }
+
+                    if (lengthChanges[0] != 0)
+                        xAxis = (short)(xAxis + lengthChanges[0]);
+                    else
+                        xAxis = (short)(startXAxis + (heightChanges[0] * yI));
+
+                    if (lengthChanges[1] != 0)
+                        yAxis = (short)(yAxis + lengthChanges[1]);
+                    else
+                        yAxis = (short)(startYAxis + (heightChanges[1] * yI));
+
+                    if (lengthChanges[2] != 0)
+                        zAxis = (short)(zAxis + lengthChanges[2]);
+                    else
+                        zAxis = (short)(startZAxis + (heightChanges[2] * yI));
                 }
             }
-
-            /*
-            for( ; (zAxis <= endZAxis && zAxis >= startZAxis) || (zAxis >= endZAxis && zAxis <= startZAxis); )
-            {
-                for( ; (yAxis <= endYAxis && yAxis >= startYAxis) || (yAxis >= endYAxis && yAxis <= startYAxis); )
-                {
-                    for( ; (xAxis <= endXAxis && xAxis >= startXAxis) || (xAxis >= endXAxis && xAxis <= startXAxis); )
-                    {
-                        var node = model.GetNode(xAxis, yAxis, zAxis);
-
-                        //We can't replace stuff we can already see, it'd be obfuscated visually
-                        if (String.IsNullOrWhiteSpace(flattenedPlane[yAxis - 1][xAxis - 1]))
-                            flattenedPlane[yAxis - 1][xAxis - 1] = DamageTypeToCharacter(node.Style, xAxis < 6);
-
-                        if (xAxis.Equals(endXAxis))
-                            break;
-
-                        xAxis = xAxis < endXAxis ? (short)(xAxis + 1) : (short)(xAxis - 1);
-                    }
-
-                    xAxis = startXAxis;
-
-                    if (yAxis.Equals(endYAxis))
-                        break;
-
-                    yAxis = yAxis < endYAxis ? (short)(yAxis + 1) : (short)(yAxis - 1);
-                }
-
-                yAxis = startYAxis;
-
-                if (zAxis.Equals(endZAxis))
-                    break;
-
-                zAxis = zAxis < endZAxis ? (short)(zAxis + 1) : (short)(zAxis - 1);
-            }
-
-            //the system is basically upsidedown in the data so we have to flip the Y axis to get it to display correctly.
-            flattenedPlane.Reverse();
-            */
 
             flattenedModel.AppendLine();
 
@@ -491,13 +463,13 @@ namespace NetMud.Physics
             }
 
             if (lengthChanges[0] > 0 || heightChanges[0] < 0)
-            { 
+            {
                 Math.DivRem(yaw, 10, out startXAxis);
                 startXAxis = 11 - startXAxis;
             }
 
             if (lengthChanges[0] < 0 || heightChanges[0] > 0)
-            { 
+            {
                 Math.DivRem(yaw, 10, out startXAxis);
             }
 
