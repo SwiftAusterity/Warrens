@@ -12,6 +12,13 @@ namespace NetMud
             config.MapHttpAttributeRoutes();
 
             config.Routes.MapHttpRoute(
+                name: "ApiModelDataReturnAjax",
+                routeTemplate: "api/ClientDataApi/GetEntityModelView/{modelId}/{yaw}/{pitch}/{roll}",
+                defaults: new { controller = "ClientDataApi", action = "GetEntityModelView" }
+                );
+
+
+            config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }

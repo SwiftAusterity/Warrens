@@ -221,6 +221,8 @@ namespace NetMud.Physics
                         node = model.GetNodeBehindNode(xAxis, yAxis, zAxis, pitch, yaw, roll);
                     }
 
+
+                    //reset everything to either the proper length start or height start
                     if (lengthChanges[0] != 0)
                         xAxis = (short)(xAxis + lengthChanges[0]);
                     else

@@ -8,7 +8,7 @@ namespace NetMud.DataAccess
     /// <summary>
     /// Provides accessor methods into Reference Data in the db
     /// </summary>
-    public static class ReferenceAccess
+    public static class ReferenceWrapper
     {
         /// <summary>
         /// Get all of the reference data in the table

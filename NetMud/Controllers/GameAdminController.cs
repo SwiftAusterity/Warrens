@@ -62,8 +62,8 @@ namespace NetMud.Controllers
             dashboardModel.Inanimates = DataWrapper.GetAll<InanimateData>();
             dashboardModel.Rooms = DataWrapper.GetAll<RoomData>();
             dashboardModel.NPCs = DataWrapper.GetAll<NonPlayerCharacter>();
-            dashboardModel.HelpFiles = ReferenceAccess.GetAll<Help>();
-            dashboardModel.DimensionalModels = ReferenceAccess.GetAll<DimensionalModelData>();
+            dashboardModel.HelpFiles = ReferenceWrapper.GetAll<Help>();
+            dashboardModel.DimensionalModels = ReferenceWrapper.GetAll<DimensionalModelData>();
             dashboardModel.LiveTaskTokens = Processor.GetAllLiveTaskStatusTokens();
 
             return View(dashboardModel);
@@ -72,7 +72,7 @@ namespace NetMud.Controllers
         #region Dimensional Models
         public ActionResult ManageDimensionalModelData(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageDimensionalModelDataViewModel(ReferenceAccess.GetAll<DimensionalModelData>());
+            var vModel = new ManageDimensionalModelDataViewModel(ReferenceWrapper.GetAll<DimensionalModelData>());
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             vModel.CurrentPageNumber = CurrentPageNumber;
@@ -95,7 +95,7 @@ namespace NetMud.Controllers
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = ReferenceAccess.GetOne<DimensionalModelData>(ID);
+                var obj = ReferenceWrapper.GetOne<DimensionalModelData>(ID);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -166,7 +166,7 @@ namespace NetMud.Controllers
         #region Help Files
         public ActionResult ManageHelpData(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageHelpDataViewModel(ReferenceAccess.GetAll<Help>());
+            var vModel = new ManageHelpDataViewModel(ReferenceWrapper.GetAll<Help>());
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             vModel.CurrentPageNumber = CurrentPageNumber;
@@ -189,7 +189,7 @@ namespace NetMud.Controllers
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = ReferenceAccess.GetOne<Help>(ID);
+                var obj = ReferenceWrapper.GetOne<Help>(ID);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -243,7 +243,7 @@ namespace NetMud.Controllers
             var vModel = new AddEditHelpDataViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            Help obj = ReferenceAccess.GetOne<Help>(id);
+            Help obj = ReferenceWrapper.GetOne<Help>(id);
 
             if (obj == null)
             {
@@ -265,7 +265,7 @@ namespace NetMud.Controllers
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            Help obj = ReferenceAccess.GetOne<Help>(id);
+            Help obj = ReferenceWrapper.GetOne<Help>(id);
             if (obj == null)
             {
                 message = "That does not exist";

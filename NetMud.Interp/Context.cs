@@ -467,7 +467,7 @@ namespace NetMud.Interp
                     continue;
                 }
 
-                var validObject = ReferenceAccess.GetOne<T>(currentParmString);
+                var validObject = ReferenceWrapper.GetOne<T>(currentParmString);
 
                 if (validObject != null && !validObject.Equals(default(T)))
                 {

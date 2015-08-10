@@ -189,7 +189,7 @@ namespace NetMud.Data.Reference
         }
 
         /// <summary>
-        /// View the flattened model based on view angle; TODO: ONLY SUPPORTS THE FRONT FACE ATM
+        /// View the flattened model based on view angle
         /// </summary>
         /// <param name="pitch">rotation on the z-axis</param>
         /// <param name="yaw">rotation on the Y-axis</param>
@@ -215,8 +215,8 @@ namespace NetMud.Data.Reference
         /// <param name="dr">the data row to fill from</param>
         public override void Fill(global::System.Data.DataRow dr)
         {
-            int outId = default(int);
-            DataUtility.GetFromDataRow<int>(dr, "ID", ref outId);
+            long outId = default(long);
+            DataUtility.GetFromDataRow<long>(dr, "ID", ref outId);
             ID = outId;
 
             DateTime outCreated = default(DateTime);
