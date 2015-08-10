@@ -214,11 +214,7 @@ namespace NetMud.Physics
                     {
                         flattenedPlane[yI][xI] = DamageTypeToCharacter(node.Style, xI < 5);
 
-                        xAxis = node.XAxis;
-                        yAxis = node.YAxis;
-                        zAxis = node.ZAxis;
-
-                        node = model.GetNodeBehindNode(xAxis, yAxis, zAxis, pitch, yaw, roll);
+                        node = model.GetNodeBehindNode(node.XAxis, node.YAxis, node.ZAxis, pitch, yaw, roll);
                     }
 
 
@@ -464,34 +460,34 @@ namespace NetMud.Physics
                 }
             }
 
-            if (lengthChanges[0] > 0 || heightChanges[0] < 0)
+            if (lengthChanges[0] != 0 || heightChanges[0] != 0)
             {
                 Math.DivRem(yaw, 10, out startXAxis);
                 startXAxis = 11 - startXAxis;
             }
 
-            if (lengthChanges[0] < 0 || heightChanges[0] > 0)
-            {
-                Math.DivRem(yaw, 10, out startXAxis);
-            }
+            //if (lengthChanges[0] < 0 || heightChanges[0] > 0)
+            //{
+            //    Math.DivRem(yaw, 10, out startXAxis);
+            //}
 
-            if (lengthChanges[1] > 0 || heightChanges[1] < 0)
+            if (lengthChanges[1] != 0 || heightChanges[1] != 0)
             {
                 Math.DivRem(roll, 10, out startYAxis);
                 startYAxis = 11 - startYAxis;
             }
 
-            if (lengthChanges[1] < 0 || heightChanges[1] > 0)
-            {
-                Math.DivRem(roll, 10, out startYAxis);
-            }
+            //if (lengthChanges[1] < 0 || heightChanges[1] > 0)
+            //{
+            //    Math.DivRem(roll, 10, out startYAxis);
+            //}
 
-            if (lengthChanges[2] > 0 || heightChanges[2] < 0)
-            {
-                Math.DivRem(pitch, 10, out startZAxis);
-            }
+            //if (lengthChanges[2] != 0 || heightChanges[2] != 0)
+            //{
+            //    Math.DivRem(pitch, 10, out startZAxis);
+            //}
 
-            if (lengthChanges[2] < 0 || heightChanges[2] > 0)
+            if (lengthChanges[2] != 0 || heightChanges[2] != 0)
             {
                 Math.DivRem(pitch, 10, out startZAxis);
                 startZAxis = 11 - startZAxis;
