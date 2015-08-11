@@ -133,7 +133,7 @@ namespace NetMud.Data.Game
         /// Render this to a look command (what something sees when it 'look's at this
         /// </summary>
         /// <returns>the output strings</returns>
-        public abstract IEnumerable<string> RenderToLook();
+        public abstract IEnumerable<string> RenderToLook(IEntity actor);
 
         #region Equality Functions
         /// <summary>

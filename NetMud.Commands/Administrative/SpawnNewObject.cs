@@ -8,6 +8,7 @@ using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Data.EntityBackingData;
 using NetMud.Data.Game;
+using NetMud.Commands.Attributes;
 
 namespace NutMud.Commands.System
 {
@@ -20,38 +21,8 @@ namespace NutMud.Commands.System
     [CommandParameter(CommandUsage.Subject, typeof(InanimateData), new CacheReferenceType[] { CacheReferenceType.Data }, "[a-zA-z]+", false)] //for names
     [CommandParameter(CommandUsage.Target, typeof(IContains), new CacheReferenceType[] { CacheReferenceType.Entity }, true)]
     [CommandRange(CommandRangeType.Touch, 0)]
-    public class SpawnNewObject : ICommand, IHelpful
+    public class SpawnNewObject : CommandPartial, IHelpful
     {
-        /// <summary>
-        /// The entity invoking the command
-        /// </summary>
-        public IActor Actor { get; set; }
-
-        /// <summary>
-        /// The entity the command refers to
-        /// </summary>
-        public object Subject { get; set; }
-
-        /// <summary>
-        /// When there is a predicate parameter, the entity that is being targetting (subject become "with")
-        /// </summary>
-        public object Target { get; set; }
-
-        /// <summary>
-        /// Any tertiary entity being referenced in command parameters
-        /// </summary>
-        public object Supporting { get; set; }
-
-        /// <summary>
-        /// Container the Actor is in when the command is invoked
-        /// </summary>
-        public ILocation OriginLocation { get; set; }
-
-        /// <summary>
-        /// Valid containers by range from OriginLocation
-        /// </summary>
-        public IEnumerable<ILocation> Surroundings { get; set; }
-
         /// <summary>
         /// All Commands require a generic constructor
         /// </summary>
@@ -63,7 +34,7 @@ namespace NutMud.Commands.System
         /// <summary>
         /// Executes this command
         /// </summary>
-        public void Execute()
+        public override void Execute()
         {
             var newObject = (IInanimateData)Subject;
             var sb = new List<string>();
@@ -89,7 +60,7 @@ namespace NutMud.Commands.System
         /// Renders syntactical help for the command, invokes automatically when syntax is bungled
         /// </summary>
         /// <returns>string</returns>
-        public IEnumerable<string> RenderSyntaxHelp()
+        public override IEnumerable<string> RenderSyntaxHelp()
         {
             var sb = new List<string>();
 

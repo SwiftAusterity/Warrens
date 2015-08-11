@@ -278,6 +278,23 @@ namespace NetMud.Interp
                                                          .MakeGenericMethod(new Type[] { currentNeededParm.ParameterType });
                             dataMethod.Invoke(this, new object[] { commandType, currentNeededParm });
                             break;
+                        case CacheReferenceType.Text:
+                            //Text just means grab the remainder of the command string and dump it into a param
+                            switch (currentNeededParm.Usage)
+                            {
+                                case CommandUsage.Supporting:
+                                    Supporting = string.Join(" ", CommandStringRemainder);
+                                    break;
+                                case CommandUsage.Subject:
+                                    Subject = string.Join(" ", CommandStringRemainder);
+                                    break;
+                                case CommandUsage.Target:
+                                    Target = string.Join(" ", CommandStringRemainder);
+                                    break;
+                            }
+
+                            //We return here to end the parsing
+                            return;
                     }
                 }
             }

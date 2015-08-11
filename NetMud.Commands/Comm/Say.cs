@@ -1,29 +1,27 @@
-﻿using NetMud.DataStructure.Base.System;
+﻿using NetMud.Commands.Attributes;
 using NetMud.DataStructure.Behaviors.Rendering;
-using NutMud.Commands.Attributes;
-using System.Collections.Generic;
-
-using NetMud.Utility;
 using NetMud.DataStructure.SupportingClasses;
-using NetMud.Data.Game;
-using NetMud.Backup;
-using System.Web.Hosting;
-using NetMud.Commands.Attributes;
+using NetMud.Utility;
+using NutMud.Commands.Attributes;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace NutMud.Commands.System
+namespace NetMud.Commands.Comm
 {
-    /// <summary>
-    /// Invokes the current container's RenderToLook
-    /// </summary>
-    [CommandKeyword("save", false)]
+    [CommandKeyword("say", false)]
+    [CommandKeyword("speak", false)]
     [CommandPermission(StaffRank.Player)]
+    [CommandParameter(CommandUsage.Subject, typeof(string), new CacheReferenceType[] { CacheReferenceType.Text }, false)]
     [CommandRange(CommandRangeType.Touch, 0)]
-    public class Save : CommandPartial, IHelpful
+    public class Say : CommandPartial, IHelpful
     {
         /// <summary>
         /// All Commands require a generic constructor
         /// </summary>
-        public Save()
+        public Say()
         {
             //Generic constructor for all IHelpfuls is needed
         }
@@ -35,18 +33,13 @@ namespace NutMud.Commands.System
         {
             var sb = new List<string>();
 
-            var player = (Player)Actor;
+            //Just do a look on the room
+            sb.Add(String.Format("You say '{0}'", Subject));
 
-            sb.Add("You save your life.");
-
-            var messagingObject = new MessageCluster(RenderUtility.EncapsulateOutput(sb), string.Empty, string.Empty, string.Empty, string.Empty);
+            //TODO: language outputs
+            var messagingObject = new MessageCluster(RenderUtility.EncapsulateOutput(sb), string.Empty, string.Empty, String.Format("$A$ says '{0}'", Subject), string.Empty);
 
             messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation, null);
-
-            var hotBack = new HotBackup(HostingEnvironment.MapPath("/HotBackup/"));
-
-            //Save the player out
-            hotBack.WriteOnePlayer(player);
         }
 
         /// <summary>
@@ -57,7 +50,8 @@ namespace NutMud.Commands.System
         {
             var sb = new List<string>();
 
-            sb.Add("Valid Syntax: save");
+            sb.Add("Valid Syntax: say &lt;text&gt;");
+            sb.Add("speak &lt;text&gt;".PadWithString(14, "&nbsp;", true));
 
             return sb;
         }
@@ -70,7 +64,7 @@ namespace NutMud.Commands.System
         {
             var sb = new List<string>();
 
-            sb.Add(string.Format("Save writes your character to the backup set. This also happens automatically behind the scenes quite often."));
+            sb.Add(string.Format("Say communicates in whatever your current language is to the immediate surroundings. Characters with very good hearing may be able to hear from further away."));
 
             return sb;
         }

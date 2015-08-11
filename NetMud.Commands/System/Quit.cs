@@ -8,6 +8,7 @@ using NetMud.DataStructure.SupportingClasses;
 using NetMud.Data.Game;
 using NetMud.Backup;
 using System.Web.Hosting;
+using NetMud.Commands.Attributes;
 
 namespace NutMud.Commands.System
 {
@@ -18,39 +19,9 @@ namespace NutMud.Commands.System
     [CommandKeyword("exit", false)]
     [CommandPermission(StaffRank.Player)]
     [CommandRange(CommandRangeType.Touch, 0)]
-    public class Quit : ICommand, IHelpful
+    public class Quit : CommandPartial, IHelpful
     {
-        /// <summary>
-        /// The entity invoking the command
-        /// </summary>
-        public IActor Actor { get; set; }
-
-        /// <summary>
-        /// The entity the command refers to
-        /// </summary>
-        public object Subject { get; set; }
-
-        /// <summary>
-        /// When there is a predicate parameter, the entity that is being targetting (subject become "with")
-        /// </summary>
-        public object Target { get; set; }
-
-        /// <summary>
-        /// Any tertiary entity being referenced in command parameters
-        /// </summary>
-        public object Supporting { get; set; }
-
-        /// <summary>
-        /// Container the Actor is in when the command is invoked
-        /// </summary>
-        public ILocation OriginLocation { get; set; }
-
-        /// <summary>
-        /// Valid containers by range from OriginLocation
-        /// </summary>
-        public IEnumerable<ILocation> Surroundings { get; set; }
-
-        /// <summary>
+         /// <summary>
         /// All Commands require a generic constructor
         /// </summary>
         public Quit()
@@ -61,7 +32,7 @@ namespace NutMud.Commands.System
         /// <summary>
         /// Executes this command
         /// </summary>
-        public void Execute()
+        public override void Execute()
         {
             var sb = new List<string>();
 
@@ -84,7 +55,7 @@ namespace NutMud.Commands.System
         /// Renders syntactical help for the command, invokes automatically when syntax is bungled
         /// </summary>
         /// <returns>string</returns>
-        public IEnumerable<string> RenderSyntaxHelp()
+        public override IEnumerable<string> RenderSyntaxHelp()
         {
             var sb = new List<string>();
 

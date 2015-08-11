@@ -314,7 +314,7 @@ namespace NetMud.Data.Game
         /// Render this to a look command (what something sees when it 'look's at this
         /// </summary>
         /// <returns>the output strings</returns>
-        public override IEnumerable<string> RenderToLook()
+        public override IEnumerable<string> RenderToLook(IEntity actor)
         {
             var sb = new List<string>();
             var backingStore = (IInanimateData)DataTemplate;

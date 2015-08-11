@@ -46,14 +46,20 @@
     <Compile Include="Administrative\SpawnNewObject.cs" />
     <Compile Include="Attributes\CommandKeywordAttribute.cs" />
     <Compile Include="Attributes\CommandParameterAttribute.cs" />
+    <Compile Include="Attributes\CommandPartial.cs" />
     <Compile Include="Attributes\CommandPermissionAttribute.cs" />
     <Compile Include="Attributes\CommandRangeAttribute.cs" />
+    <Compile Include="Comm\Say.cs" />
+    <Compile Include="EntityManipulation\Drop.cs" />
+    <Compile Include="EntityManipulation\Get.cs" />
+    <Compile Include="EntityManipulation\Put.cs" />
     <Compile Include="Movement\UseExits.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Administrative\Goto.cs" />
+    <Compile Include="Rendering\Inventory.cs" />
     <Compile Include="System\Save.cs" />
     <Compile Include="System\Quit.cs" />
-    <Compile Include="System\Look.cs" />
+    <Compile Include="Rendering\Look.cs" />
     <Compile Include="System\Help.cs" />
   </ItemGroup>
   <ItemGroup>

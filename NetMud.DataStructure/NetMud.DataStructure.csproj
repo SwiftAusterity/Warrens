@@ -102,7 +102,6 @@
     <Compile Include="Behaviors\Rendering\ILocation.cs" />
     <Compile Include="Behaviors\Rendering\ILookable.cs" />
     <Compile Include="Behaviors\Rendering\IRenderInLocation.cs" />
-    <Compile Include="Behaviors\Rendering\IRendersLocation.cs" />
     <Compile Include="Behaviors\Rendering\IScanable.cs" />
     <Compile Include="Behaviors\Rendering\ISensible.cs" />
     <Compile Include="Behaviors\Rendering\ISmellable.cs" />

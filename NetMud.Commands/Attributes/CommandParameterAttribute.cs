@@ -98,6 +98,7 @@ namespace NutMud.Commands.Attributes
         Code,
         Container,
         Data,
+        Text, //hacky add for communications
         Help //hacky add for help specifically
     }
 }

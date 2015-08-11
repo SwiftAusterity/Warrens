@@ -1,28 +1,27 @@
-﻿using NetMud.DataStructure.Base.System;
+﻿using NetMud.Commands.Attributes;
+using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Behaviors.Rendering;
-using NutMud.Commands.Attributes;
-using System.Collections.Generic;
-
-using NetMud.Utility;
 using NetMud.DataStructure.SupportingClasses;
-using NetMud.Data.Game;
-using NetMud.Commands.Attributes;
+using NetMud.Utility;
+using NutMud.Commands.Attributes;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace NutMud.Commands.Administrative
+namespace NetMud.Commands.Rendering
 {
-    /// <summary>
-    /// Invokes the current container's RenderToLook
-    /// </summary>
-    [CommandKeyword("goto", false)]
-    [CommandPermission(StaffRank.Guest)]
-    [CommandParameter(CommandUsage.Subject, typeof(Room), new CacheReferenceType[] { CacheReferenceType.Entity }, true)]
-    [CommandRange(CommandRangeType.Global, 0)]
-    public class Goto : CommandPartial, IHelpful
-    {
+    [CommandKeyword("inventory", false)]
+    [CommandKeyword("inv", false)]
+    [CommandPermission(StaffRank.Player)]
+    [CommandRange(CommandRangeType.Touch, 0)]
+    public class Inventory : CommandPartial, IHelpful
+    {        
         /// <summary>
         /// All Commands require a generic constructor
         /// </summary>
-        public Goto()
+        public Inventory()
         {
             //Generic constructor for all IHelpfuls is needed
         }
@@ -32,16 +31,15 @@ namespace NutMud.Commands.Administrative
         /// </summary>
         public override void Execute()
         {
-            var moveTo = (ILocation)Subject;
             var sb = new List<string>();
+            var chr = (IMobile)Actor;
 
-            sb.Add("You teleport.");
+            foreach (var thing in chr.Inventory.EntitiesContained())
+                sb.AddRange(thing.RenderToLook(chr));
 
-            var messagingObject = new MessageCluster(RenderUtility.EncapsulateOutput(sb), string.Empty, string.Empty, "$A$ disappears in a puff of smoke.", "$A$ appears out of nowhere.");
+            var messagingObject = new MessageCluster(RenderUtility.EncapsulateOutput(sb), string.Empty, string.Empty, "$A$ sifts through $G$ belongings.", string.Empty);
 
             messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation, null);
-
-            moveTo.MoveInto<Player>((Player)Actor);
         }
 
         /// <summary>
@@ -52,7 +50,8 @@ namespace NutMud.Commands.Administrative
         {
             var sb = new List<string>();
 
-            sb.Add("Valid Syntax: goto &lt;room name&gt;");
+            sb.Add("Valid Syntax: inventory");
+            sb.Add("inv".PadWithString(14, "&nbsp;", true));
 
             return sb;
         }
@@ -65,7 +64,7 @@ namespace NutMud.Commands.Administrative
         {
             var sb = new List<string>();
 
-            sb.Add(string.Format("Goto allows staff members to directly teleport to a room irrespective of its capacity limitations."));
+            sb.Add(string.Format("Inventory lists out all inanimates currently on your person. It is an undetectable action unless a viewer has high perception."));
 
             return sb;
         }
