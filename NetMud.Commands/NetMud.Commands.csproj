@@ -57,6 +57,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Administrative\Goto.cs" />
     <Compile Include="Rendering\Inventory.cs" />
+    <Compile Include="System\Commands.cs" />
     <Compile Include="System\Save.cs" />
     <Compile Include="System\Quit.cs" />
     <Compile Include="Rendering\Look.cs" />

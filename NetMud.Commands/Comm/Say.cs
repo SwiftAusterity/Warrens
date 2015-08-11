@@ -33,7 +33,6 @@ namespace NetMud.Commands.Comm
         {
             var sb = new List<string>();
 
-            //Just do a look on the room
             sb.Add(String.Format("You say '{0}'", Subject));
 
             //TODO: language outputs
