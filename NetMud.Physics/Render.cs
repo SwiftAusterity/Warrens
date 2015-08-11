@@ -163,13 +163,11 @@ namespace NetMud.Physics
                 lengthChanges[2] = -1;
 
             //figure out the starting point which is like the viewer's pov
-            int startXAxis, startYAxis, startZAxis;
-
             var startVertex = FindStartingVertex(yaw, pitch, roll);
 
-            startXAxis = startVertex.Item1;
-            startYAxis = startVertex.Item2;
-            startZAxis = startVertex.Item3;
+            int startXAxis = startVertex.Item1;
+            int startYAxis = startVertex.Item2;
+            int startZAxis = startVertex.Item3;
 
             //load the plane up with blanks
             List<string[]> flattenedPlane = new List<string[]>();
@@ -185,7 +183,8 @@ namespace NetMud.Physics
             flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
             flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
 
-            short xAxis, yAxis, zAxis, xI, yI;
+            short xAxis, yAxis, zAxis;
+            int xI, yI;
             for (yI = 0; yI < 11; yI++)
             {
                 xAxis = (short)(startXAxis + (heightChanges[0] * yI));
@@ -216,7 +215,6 @@ namespace NetMud.Physics
 
                         node = model.GetNodeBehindNode(node.XAxis, node.YAxis, node.ZAxis, pitch, yaw, roll);
                     }
-
 
                     //reset everything to either the proper length start or height start
                     if (lengthChanges[0] != 0)
@@ -466,26 +464,11 @@ namespace NetMud.Physics
                 startXAxis = 11 - startXAxis;
             }
 
-            //if (lengthChanges[0] < 0 || heightChanges[0] > 0)
-            //{
-            //    Math.DivRem(yaw, 10, out startXAxis);
-            //}
-
             if (lengthChanges[1] != 0 || heightChanges[1] != 0)
             {
                 Math.DivRem(roll, 10, out startYAxis);
                 startYAxis = 11 - startYAxis;
             }
-
-            //if (lengthChanges[1] < 0 || heightChanges[1] > 0)
-            //{
-            //    Math.DivRem(roll, 10, out startYAxis);
-            //}
-
-            //if (lengthChanges[2] != 0 || heightChanges[2] != 0)
-            //{
-            //    Math.DivRem(pitch, 10, out startZAxis);
-            //}
 
             if (lengthChanges[2] != 0 || heightChanges[2] != 0)
             {
