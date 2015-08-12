@@ -26,7 +26,7 @@ namespace NetMud.DataStructure.Base.Supporting
         /// <summary>
         /// The model we're following
         /// </summary>
-        IDimensionalModelData Model { get; set; }
+        IDimensionalModelData ModelBackingData { get; set; }
     }
 
     /// <summary>

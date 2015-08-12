@@ -1,5 +1,7 @@
-﻿using NetMud.DataAccess;
+﻿using NetMud.Data.Reference;
+using NetMud.DataAccess;
 using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.Utility;
 using System;
@@ -157,6 +159,8 @@ namespace NetMud.Data.EntityBackingData
             int outVisibleStrength = default(int);
             DataUtility.GetFromDataRow<int>(dr, "VisibleStrength", ref outVisibleStrength);
             VisibleStrength = outVisibleStrength;
+
+            Model = new DimensionalModel(dr);
         }
 
         /// <summary>
@@ -168,10 +172,10 @@ namespace NetMud.Data.EntityBackingData
             IPathwayData returnValue = default(IPathwayData);
             var sql = new StringBuilder();
             sql.Append("insert into [dbo].[PathwayData]([Name],[ToLocationID],[FromLocationID],[ToLocationType],[FromLocationType],[MessageToDestination],[MessageToOrigin]");
-            sql.Append(",[MessageToActor],[AudibleToSurroundings],[VisibleToSurroundings],[AudibleStrength],[VisibleStrength])");
-            sql.AppendFormat(" values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}',{10},{11})"
+            sql.Append(",[MessageToActor],[AudibleToSurroundings],[VisibleToSurroundings],[AudibleStrength],[VisibleStrength], [DimensionalModelLength], [DimensionalModelHeight], [DimensionalModelWidth], [DimensionalModelID])");
+            sql.AppendFormat(" values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}',{10},{11},{12},{13},{14},{15})"
                 , Name, ToLocationID, FromLocationID, ToLocationType, FromLocationType, MessageToDestination, MessageToOrigin
-                , MessageToActor, AudibleToSurroundings, VisibleToSurroundings, AudibleStrength, VisibleStrength);
+                , MessageToActor, AudibleToSurroundings, VisibleToSurroundings, AudibleStrength, VisibleStrength, Model.Height, Model.Length, Model.Width, Model.ModelBackingData.ID);
             sql.Append(" select * from [dbo].[PathwayData] where ID = Scope_Identity()");
 
             try
@@ -230,6 +234,10 @@ namespace NetMud.Data.EntityBackingData
             sql.AppendFormat(", [VisibleToSurroundings] = '{0}' ", VisibleToSurroundings);
             sql.AppendFormat(", [AudibleStrength] = {0} ", AudibleStrength);
             sql.AppendFormat(", [VisibleStrength] = {0} ", VisibleStrength);
+            sql.AppendFormat(", [DimensionalModelLength] = {0} ", Model.Length);
+            sql.AppendFormat(", [DimensionalModelHeight] = {0} ", Model.Height);
+            sql.AppendFormat(", [DimensionalModelWidth] = {0} ", Model.Width);
+            sql.AppendFormat(", [DimensionalModelId] = {0} ", Model.ModelBackingData.ID); 
             sql.AppendFormat(", [LastRevised] = GetUTCDate()");
             sql.AppendFormat(" where ID = {0}", ID);
 

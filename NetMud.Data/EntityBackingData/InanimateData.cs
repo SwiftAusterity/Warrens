@@ -1,4 +1,5 @@
-﻿using NetMud.Data.System;
+﻿using NetMud.Data.Reference;
+using NetMud.Data.System;
 using NetMud.DataAccess;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
@@ -92,6 +93,8 @@ namespace NetMud.Data.EntityBackingData
 
                 InanimateContainers.Add(newContainer);
             }
+
+            Model = new DimensionalModel(dr);
         }
 
         /// <summary>
@@ -106,8 +109,8 @@ namespace NetMud.Data.EntityBackingData
             var mobileContainersJson = JsonConvert.SerializeObject(MobileContainers);
 
             var sql = new StringBuilder();
-            sql.Append("insert into [dbo].[InanimateData]([Name], [MobileContainers], [InanimateContainers])");
-            sql.AppendFormat(" values('{0}', '{1}', '{2}')", Name, mobileContainersJson, inanimateContainersJson);
+            sql.Append("insert into [dbo].[InanimateData]([Name], [MobileContainers], [InanimateContainers], [DimensionalModelLength], [DimensionalModelHeight], [DimensionalModelWidth], [DimensionalModelID])");
+            sql.AppendFormat(" values('{0}', '{1}', '{2}', {3}, {4}, {5}, {6})", Name, mobileContainersJson, inanimateContainersJson, Model.Height, Model.Length, Model.Width, Model.ModelBackingData.ID);
             sql.Append(" select * from [dbo].[InanimateData] where ID = Scope_Identity()");
 
             try
@@ -160,6 +163,10 @@ namespace NetMud.Data.EntityBackingData
             sql.AppendFormat(" [Name] = '{0}' ", Name);
             sql.AppendFormat(" , [MobileContainers] = '{0}' ", mobileContainersJson);
             sql.AppendFormat(" , [InanimateContainers] = '{0}' ", inanimateContainersJson);
+            sql.AppendFormat(" , [DimensionalModelLength] = {0} ", Model.Length);
+            sql.AppendFormat(" , [DimensionalModelHeight] = {0} ", Model.Height);
+            sql.AppendFormat(" , [DimensionalModelWidth] = {0} ", Model.Width);
+            sql.AppendFormat(" , [DimensionalModelId] = {0} ", Model.ModelBackingData.ID); 
             sql.AppendFormat(" , [LastRevised] = GetUTCDate()");
             sql.AppendFormat(" where ID = {0}", ID);
 

@@ -7,6 +7,7 @@
 	[Gender]				VARCHAR (200)	NOT NULL,
 	[GamePermissionsRank]	SMALLINT		DEFAULT(0),
     [AccountHandle]			VARCHAR (200)	NOT NULL,
+	[DimensionalModelID]	BIGINT			NOT NULL,
 	[LastKnownLocation]		VARCHAR(MAX)	DEFAULT('') NOT NULL,
 	[LastKnownLocationType]	VARCHAR(MAX)	DEFAULT('') NOT NULL,
     PRIMARY KEY CLUSTERED ([Id] ASC)

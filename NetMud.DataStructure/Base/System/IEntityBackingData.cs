@@ -14,7 +14,7 @@ namespace NetMud.DataStructure.Base.System
         Type EntityClass { get; }
 
         /// <summary>
-        /// The physical model for this entity
+        /// The ideal physical model for this entity
         /// </summary>
         IDimensionalModel Model { get; set; }
     }

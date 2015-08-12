@@ -1,4 +1,5 @@
 ﻿using NetMud.DataAccess;
+using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
 using System;
@@ -26,6 +27,9 @@ namespace NetMud.Data.Game
         /// The backing data for this live entity
         /// </summary>
         public IData DataTemplate { get; internal set; }
+
+
+        public IDimensionalModel Model { get; internal set; }
 
         /// <summary>
         /// keywords this entity is referrable by in the world by the parser

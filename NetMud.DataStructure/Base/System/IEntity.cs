@@ -1,4 +1,5 @@
-﻿using NetMud.DataStructure.Behaviors.Rendering;
+﻿using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Behaviors.Rendering;
 using System;
 using System.Collections.Generic;
 
@@ -28,6 +29,11 @@ namespace NetMud.DataStructure.Base.System
         /// The backing data for this entity in the db
         /// </summary>
         IData DataTemplate { get; }
+
+        /// <summary>
+        /// The current physical model for this entity
+        /// </summary>
+        IDimensionalModel Model { get; }
 
         /// <summary>
         /// Current location this entity is in

@@ -1,5 +1,7 @@
-﻿using NetMud.DataAccess;
+﻿using NetMud.Data.Reference;
+using NetMud.DataAccess;
 using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.Utility;
 using System;
@@ -42,6 +44,8 @@ namespace NetMud.Data.EntityBackingData
             string outTitle = default(string);
             DataUtility.GetFromDataRow<string>(dr, "Name", ref outTitle);
             Name = outTitle;
+
+            Model = new DimensionalModel(dr);
         }
 
         /// <summary>
@@ -52,8 +56,8 @@ namespace NetMud.Data.EntityBackingData
         {
             IRoomData returnValue = default(IRoomData);
             var sql = new StringBuilder();
-            sql.Append("insert into [dbo].[RoomData]([Name])");
-            sql.AppendFormat(" values('{0}')", Name);
+            sql.Append("insert into [dbo].[RoomData]([Name], [DimensionalModelLength], [DimensionalModelHeight], [DimensionalModelWidth], [DimensionalModelID])");
+            sql.AppendFormat(" values('{0}', {1}, {2}, {3}, {4})", Name, Model.Height, Model.Length, Model.Width, Model.ModelBackingData.ID);
             sql.Append(" select * from [dbo].[RoomData] where ID = Scope_Identity()");
 
             try
@@ -101,6 +105,10 @@ namespace NetMud.Data.EntityBackingData
             var sql = new StringBuilder();
             sql.Append("update [dbo].[RoomData] set ");
             sql.AppendFormat(" [Name] = '{0}' ", Name);
+            sql.AppendFormat(" , [DimensionalModelLength] = {0} ", Model.Length);
+            sql.AppendFormat(" , [DimensionalModelHeight] = {0} ", Model.Height);
+            sql.AppendFormat(" , [DimensionalModelWidth] = {0} ", Model.Width);
+            sql.AppendFormat(" , [DimensionalModelId] = {0} ", Model.ModelBackingData.ID);
             sql.AppendFormat(" , [LastRevised] = GetUTCDate()");
             sql.AppendFormat(" where ID = {0}", ID);
 

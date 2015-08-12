@@ -1,9 +1,11 @@
 ﻿CREATE TABLE [dbo].[RoomData]
 (
-    [Id]					BIGINT        IDENTITY (1, 1) NOT NULL,
-    [Created]				DATETIME      DEFAULT (getutcdate()) NOT NULL,
-    [LastRevised]			DATETIME      DEFAULT (getutcdate()) NOT NULL,
-    [Name]					VARCHAR (200) NOT NULL,
-	[LastKnownLocation]		BIGINT		  DEFAULT(-1) NOT NULL,
-	[LastKnownLocationType]	VARCHAR(MAX)  DEFAULT('') NOT NULL
+    [Id]						BIGINT			IDENTITY (1, 1) NOT NULL,
+    [Created]					DATETIME		DEFAULT (getutcdate()) NOT NULL,
+    [LastRevised]				DATETIME		DEFAULT (getutcdate()) NOT NULL,
+    [Name]						VARCHAR (200)	NOT NULL,
+	[DimensionalModelLength]	INT				NOT NULL DEFAULT (-1),
+	[DimensionalModelHeight]	INT				NOT NULL DEFAULT (-1),
+	[DimensionalModelWidth]		INT				NOT NULL DEFAULT (-1),	
+	[DimensionalModelID]		BIGINT			NOT NULL
 )
