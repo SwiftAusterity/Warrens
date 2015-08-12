@@ -1,5 +1,4 @@
-﻿using NetMud.Data.Game;
-using NetMud.DataAccess;
+﻿using NetMud.DataAccess;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.System;
 using NetMud.Utility;

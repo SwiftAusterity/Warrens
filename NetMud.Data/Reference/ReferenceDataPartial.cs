@@ -1,12 +1,7 @@
 ﻿using NetMud.DataAccess;
-using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NetMud.Data.Reference;
 
 namespace NetMud.Data.Reference
 {

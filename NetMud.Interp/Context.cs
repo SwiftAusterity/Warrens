@@ -11,6 +11,8 @@ using System.Text.RegularExpressions;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.Data.Reference;
+using System.Collections;
 
 namespace NetMud.Interp
 {
@@ -127,16 +129,15 @@ namespace NetMud.Interp
             if (commandType.GetCustomAttributes<CommandPermissionAttribute>().Any(att => att.MinimumRank == StaffRank.Admin))
                 LoggingUtility.LogAdminCommandUsage(OriginalCommandString, ((ICharacter)Actor.DataTemplate).AccountHandle);
 
-            //TODO: This works for commands targetting things not existing in the world
-            //      existing objects must have an alternate path
             try
             {
                 //find the parameters
                 var parmList = commandType.GetCustomAttributes<CommandParameterAttribute>();
 
+                var hasContainer = parmList.Any(parm => parm.CacheTypes.Any(crt => crt == CacheReferenceType.Container));
                 //why bother if we have no parms to find?
-                if(CommandStringRemainder.Count() > 0)
-                    ParseParamaters(commandType, parmList);
+                if (CommandStringRemainder.Count() > 0)
+                    ParseParamaters(commandType, parmList, hasContainer);
 
                 //Did we get errors from the parameter parser? if so bail
                 if(AccessErrors.Count > 0)
@@ -163,6 +164,19 @@ namespace NetMud.Interp
                     return;
                 }
 
+                //double check container stuff
+                if(hasContainer && Subject != null && Subject.GetType().GetInterfaces().Any(typ => typ == typeof(ICollection)))
+                {
+                    var collection = (ICollection<IEntity>)Subject;
+                    if (collection.Count() == 1)
+                        Subject = collection.First();
+                    else
+                    {
+                        AccessErrors.Add("Invalid command targets specified.");
+                        AccessErrors.AddRange(Command.RenderSyntaxHelp());
+                        return;
+                    }
+                }
 
                 Command.Actor = Actor;
                 Command.OriginLocation = Location;
@@ -247,11 +261,22 @@ namespace NetMud.Interp
         /// </summary>
         /// <param name="commandType">the command's method type</param>
         /// <param name="neededParms">what paramaters are considered required by the command</param>
-        private void ParseParamaters(Type commandType, IEnumerable<CommandParameterAttribute> neededParms)
+        private void ParseParamaters(Type commandType, IEnumerable<CommandParameterAttribute> neededParms, bool hasContainer)
         {
+            //HUGE conceit for CacheReferenceType.Container usage
+            // : We need to store all the found CommandUsage.Subjects and validate them once we get to the container
+            Type subjectType = typeof(IEntity);
+
             //Flip through each remaining word and parse them
             foreach (var currentNeededParm in neededParms.OrderBy(parm => parm.Usage))
             {
+                //why continue if we ran out of stuff
+                if (CommandStringRemainder.Count() == 0)
+                    break;
+
+                if (hasContainer && currentNeededParm.Usage == CommandUsage.Subject)
+                    subjectType = currentNeededParm.ParameterType;
+
                 foreach (var seekType in currentNeededParm.CacheTypes)
                 {
                     switch (seekType)
@@ -263,7 +288,12 @@ namespace NetMud.Interp
                             //So damn ugly, make this not use reflection if possible
                             MethodInfo entityMethod = GetType().GetMethod("SeekInLiveWorld")
                                                          .MakeGenericMethod(new Type[] { currentNeededParm.ParameterType });
-                            entityMethod.Invoke(this, new object[] { commandType, currentNeededParm, commandType.GetCustomAttribute<CommandRangeAttribute>() });
+                            entityMethod.Invoke(this, new object[] { commandType, currentNeededParm, commandType.GetCustomAttribute<CommandRangeAttribute>(), hasContainer });
+                            break;
+                        case CacheReferenceType.Container:
+                            MethodInfo containerMethod = GetType().GetMethod("SeekInLiveWorldContainer")
+                                                         .MakeGenericMethod(new Type[] { currentNeededParm.ParameterType });
+                            containerMethod.Invoke(this, new object[] { commandType, currentNeededParm, subjectType });
                             break;
                         case CacheReferenceType.Reference:
                             MethodInfo referenceMethod = GetType().GetMethod("SeekInReferenceData")
@@ -271,7 +301,7 @@ namespace NetMud.Interp
                             referenceMethod.Invoke(this, new object[] { commandType, currentNeededParm });
                             break;
                         case CacheReferenceType.Help:
-                            SeekInReferenceData<Data.Reference.Help>(commandType, currentNeededParm);
+                            SeekInReferenceData<Help>(commandType, currentNeededParm);
                             break;
                         case CacheReferenceType.Data:
                             MethodInfo dataMethod = GetType().GetMethod("SeekInBackingData")
@@ -293,6 +323,8 @@ namespace NetMud.Interp
                                     break;
                             }
 
+                            //empty the remainder
+                            CommandStringRemainder = Enumerable.Empty<string>();
                             //We return here to end the parsing
                             return;
                     }
@@ -368,8 +400,9 @@ namespace NetMud.Interp
         /// <typeparam name="T">the system type of the entity</typeparam>
         /// <param name="commandType">the system type of the command</param>
         /// <param name="currentNeededParm">the conditions for the parameter we're after</param>
+        /// <param name="hasContainer">does the command need a container to look for things in</param>
         /// <param name="seekRange">how far we can look</param>
-        public void SeekInLiveWorld<T>(Type commandType, CommandParameterAttribute currentNeededParm, CommandRangeAttribute seekRange)
+        public void SeekInLiveWorld<T>(Type commandType, CommandParameterAttribute currentNeededParm, CommandRangeAttribute seekRange, bool hasContainer)
         {
             var internalCommandString = CommandStringRemainder.ToList();
             var disambiguator = -1;
@@ -400,7 +433,16 @@ namespace NetMud.Interp
                         validObjects.Add((T)Actor);
                         break;
                     case CommandRangeType.Touch:
-                        validObjects.AddRange(Actor.CurrentLocation.GetContents<T>().Where(ent => ((IEntity)ent).Keywords.Any(key => key.Contains(currentParmString))));
+                        validObjects.AddRange(Location.GetContents<T>().Where(ent => ((IEntity)ent).Keywords.Any(key => key.Contains(currentParmString))));
+
+                        if(Actor.GetType().GetInterfaces().Any(typ => typ == typeof(IContains)))
+                            validObjects.AddRange(((IContains)Actor).GetContents<T>().Where(ent => ((IEntity)ent).Keywords.Any(key => key.Contains(currentParmString))));
+
+                        //Containers only matter for touch usage subject paramaters, actor's inventory is already handled
+                        if (hasContainer && currentNeededParm.Usage == CommandUsage.Subject)
+                            foreach(IContains thing in Location.GetContents<T>().Where(ent => ent.GetType().GetInterfaces().Any(intf => intf == typeof(IContains))
+                                                                                                && !ent.Equals(Actor)))
+                                validObjects.AddRange(thing.GetContents<T>().Where(ent => ((IEntity)ent).Keywords.Any(key => key.Contains(currentParmString))));
                         break;
                     case CommandRangeType.Local: //requires Range to be working
                         break;
@@ -411,7 +453,13 @@ namespace NetMud.Interp
                         break;
                 }
 
-                if (validObjects.Count() > 0)
+                if(hasContainer && currentNeededParm.Usage == CommandUsage.Subject && validObjects.Count() > 0)
+                {
+                    Subject = validObjects;
+                    CommandStringRemainder = CommandStringRemainder.Skip(parmWords);
+                    return;
+                }
+                else if (validObjects.Count() > 0)
                 {
                     //Skip everything up to the right guy and then take the one we want so we don't have to horribly alter the following logic flows
                     if (disambiguator > -1 && validObjects.Count() > 1)
@@ -563,6 +611,118 @@ namespace NetMud.Interp
         }
 
         /// <summary>
+        /// Find a parameter target in the live world (entity)
+        /// </summary>
+        /// <typeparam name="T">the system type of the entity</typeparam>
+        /// <param name="commandType">the system type of the command</param>
+        /// <param name="currentNeededParm">the conditions for the parameter we're after</param>
+        public void SeekInLiveWorldContainer<T>(Type commandType, CommandParameterAttribute currentNeededParm, Type subjectType)
+        {
+            //Borked it here, we found nothing viable earlier
+            if (Subject == null || !((ICollection<IEntity>)Subject).Any())
+                return;
+
+            var subjectCollection = (ICollection<IEntity>)Subject;
+
+            //Containers are touch range only
+            var internalCommandString = CommandStringRemainder.ToList();
+            var disambiguator = -1;
+            var parmWords = internalCommandString.Count();
+
+            while (parmWords > 0)
+            {
+                var currentParmString = string.Join(" ", internalCommandString.Take(parmWords)).ToLower();
+
+                //We have disambiguation here, we need to pick the first object we get back in the list
+                if (Regex.IsMatch(currentParmString, LiveWorldDisambiguationSyntax))
+                {
+                    disambiguator = int.Parse(currentParmString.Substring(0, currentParmString.IndexOf(".")));
+                    currentParmString = currentParmString.Substring(currentParmString.IndexOf(".") + 1);
+                }
+
+                if (!currentNeededParm.MatchesPattern(currentParmString))
+                {
+                    parmWords--;
+                    continue;
+                }
+
+                var validObjects = new List<T>();
+
+                validObjects.AddRange(subjectCollection.Select(sbj => sbj.CurrentLocation)
+                                                        .Where(cl => cl.Keywords.Any(key => key.Contains(currentParmString))).Select(ent => (T)ent));
+
+                if (validObjects.Count() > 0)
+                {
+                    //Skip everything up to the right guy and then take the one we want so we don't have to horribly alter the following logic flows
+                    if (disambiguator > -1 && validObjects.Count() > 1)
+                        validObjects = validObjects.Skip(disambiguator - 1).Take(1).ToList();
+
+                    if (validObjects.Count() > 1)
+                    {
+                        AccessErrors.Add(string.Format("There are {0} potential containers with that name for the {1} command. Try using one of the following disambiguators:", validObjects.Count(), commandType.Name));
+
+                        int iterator = 1;
+                        foreach (var obj in validObjects)
+                        {
+                            var entityObject = (IEntity)obj;
+
+                            AccessErrors.Add(string.Format("{0}.{1}", iterator++, entityObject.DataTemplate.Name));
+                        }
+
+                        break;
+                    }
+                    else if (validObjects.Count() == 1)
+                    {
+                        var parm = validObjects.First();
+
+                        if (parm != null)
+                        {
+                            switch (currentNeededParm.Usage)
+                            {
+                                case CommandUsage.Supporting:
+                                    Supporting = parm;
+                                    break;
+                                case CommandUsage.Subject:
+                                    Subject = parm;
+                                    break;
+                                case CommandUsage.Target:
+                                    Target = parm;
+                                    break;
+                            }
+                        }
+
+                        CommandStringRemainder = CommandStringRemainder.Skip(parmWords);
+
+                        //Now try to set the subject
+                        var container = (IContains)parm;
+
+                        var validSubjects = new List<IEntity>();
+
+                        validSubjects.AddRange(subjectCollection.Where(sbj => sbj.CurrentLocation.Equals(container)));
+
+                        if (validSubjects.Count() > 1)
+                        {
+                            AccessErrors.Add(string.Format("There are {0} potential targets with that name inside {1} for the {2} command. Try using one of the following disambiguators:"
+                                , validObjects.Count(), parmWords, commandType.Name));
+
+                            int iterator = 1;
+                            foreach (var obj in validSubjects)
+                                AccessErrors.Add(string.Format("{0}.{1}", iterator++, obj.DataTemplate.Name));
+                        }
+                        else if (validObjects.Count() == 1)
+                            Subject = validSubjects.First();
+
+                        return;
+                    }
+                }
+
+                parmWords--;
+            }
+
+        }
+
+
+        /// <summary>
         /// Massages the original command string
         /// </summary>
         /// <returns>the right parameters</returns>
@@ -588,6 +748,7 @@ namespace NetMud.Interp
                                         || str.Equals("of", StringComparison.InvariantCulture)
                                         || str.Equals("to", StringComparison.InvariantCulture)
                                         || str.Equals("into", StringComparison.InvariantCulture)
+                                        || str.Equals("in", StringComparison.InvariantCulture)
                                         || str.Equals("from", StringComparison.InvariantCulture)
                                         || str.Equals("inside", StringComparison.InvariantCulture)
                                         || str.Equals("at", StringComparison.InvariantCulture)

@@ -4,11 +4,7 @@ using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
 using NutMud.Commands.Attributes;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NetMud.Commands.EntityManipulation
 {
@@ -16,7 +12,7 @@ namespace NetMud.Commands.EntityManipulation
     [CommandKeyword("place", false)]
     [CommandPermission(StaffRank.Player)]
     [CommandParameter(CommandUsage.Subject, typeof(IEntity), new CacheReferenceType[] { CacheReferenceType.Entity }, false)]
-    [CommandParameter(CommandUsage.Target, typeof(IContains), new CacheReferenceType[] { CacheReferenceType.Container }, false)]
+    [CommandParameter(CommandUsage.Target, typeof(IContains), new CacheReferenceType[] { CacheReferenceType.Entity }, false)]
     [CommandRange(CommandRangeType.Touch, 0)]
     public class Put : CommandPartial, IHelpful
     {

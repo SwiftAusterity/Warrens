@@ -4,11 +4,7 @@ using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
 using NutMud.Commands.Attributes;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NetMud.Commands.Rendering
 {
@@ -33,6 +29,8 @@ namespace NetMud.Commands.Rendering
         {
             var sb = new List<string>();
             var chr = (IMobile)Actor;
+
+            sb.Add("You look through your belongings.");
 
             foreach (var thing in chr.Inventory.EntitiesContained())
                 sb.AddRange(thing.RenderToLook(chr));

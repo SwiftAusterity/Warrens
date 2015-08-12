@@ -4,11 +4,7 @@ using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
 using NutMud.Commands.Attributes;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NetMud.Commands.EntityManipulation
 {
@@ -54,8 +50,7 @@ namespace NetMud.Commands.EntityManipulation
         {
             var sb = new List<string>();
 
-            sb.Add("Valid Syntax: look");
-            sb.Add("look &lt;target&gt;".PadWithString(14, "&nbsp;", true));
+            sb.Add("Valid Syntax: drop &lt;object&gt;");
 
             return sb;
         }
@@ -68,7 +63,7 @@ namespace NetMud.Commands.EntityManipulation
         {
             var sb = new List<string>();
 
-            sb.Add(string.Format("Look provides useful information about the location you are in or a target object or mobile."));
+            sb.Add(string.Format("Drop moves an object from your inventory to the room you are currently in."));
 
             return sb;
         }

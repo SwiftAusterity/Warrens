@@ -4,11 +4,7 @@ using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
 using NutMud.Commands.Attributes;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NetMud.Commands.EntityManipulation
 {
@@ -49,7 +45,7 @@ namespace NetMud.Commands.EntityManipulation
             else
             {
                 place = (IContains)OriginLocation;
-                sb.Add("You get $S$ from the room.");
+                sb.Add("You get $S$.");
             }
 
             place.MoveFrom(thing);
