@@ -46,6 +46,20 @@ namespace NetMud.DataStructure.SupportingClasses
         private const string colorPattern = "\\%[a-zA-z]+\\%";
 
         /// <summary>
+        /// Translates output text with entity variables (he, she, it, names, directions, etc)
+        /// </summary>
+        /// <param name="messages">the text array to translate</param>
+        /// <returns>translated text</returns>
+        public static IEnumerable<string> TranslateColorVariables(string[] messages)
+        {
+            int i = 0;
+            for (i = 0; i < messages.Length; i++)
+                messages[i] = TranslateColorVariables(messages[i]);
+
+            return messages;
+        }
+
+        /// <summary>
         /// Translates output text with color codes into proper output
         /// </summary>
         /// <param name="message">the text to translate</param>
@@ -213,6 +227,20 @@ namespace NetMud.DataStructure.SupportingClasses
                     , originalString.Substring(firstIndex + lengthToSkip, secondIndex - firstIndex - lengthToSkip)
                     , originalString.Substring(secondIndex + lengthToSkip)
                     , styleElement);
+        }
+
+        /// <summary>
+        /// Translates output text with entity variables (he, she, it, names, directions, etc)
+        /// </summary>
+        /// <param name="messages">the text array to translate</param>
+        /// <returns>translated text</returns>
+        public static IEnumerable<string> TranslateEntityVariables(string[] messages, Dictionary<MessagingTargetType, IEntity[]> entities)
+        {
+            int i = 0;
+            for(i = 0; i < messages.Length; i++)
+                messages[i] = TranslateEntityVariables(messages[i], entities);
+
+            return messages;
         }
 
         /// <summary>

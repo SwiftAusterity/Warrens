@@ -36,7 +36,7 @@ namespace NutMud.Commands.Administrative
 
             sb.Add("You teleport.");
 
-            var messagingObject = new MessageCluster(RenderUtility.EncapsulateOutput(sb), string.Empty, string.Empty, "$A$ disappears in a puff of smoke.", "$A$ appears out of nowhere.");
+            var messagingObject = new MessageCluster(sb, new string[] { }, new string[] { }, new string[] { "$A$ disappears in a puff of smoke." }, new string[] { "$A$ appears out of nowhere." });
 
             messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation, null);
 

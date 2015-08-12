@@ -9,24 +9,30 @@ namespace NetMud.Utility
     /// </summary>
     public static class RenderUtility
     {
-        //TODO: Define "output target type" for rendering to can capsule elements and bumpers
         /// <summary>
         /// Encapsulation element for rendering to html
         /// </summary>
-        private const string encapsulationElement = "p";
+        private const string defaultEncapsulationElement = "p";
+
         /// <summary>
         /// Adding a "new line" to the output
         /// </summary>
-        private const string bumperElement = "<br />";
+        private const string defaultBumperElement = "<br />";
 
         /// <summary>
         /// Encapsulate output lines for display to a client
         /// </summary>
         /// <param name="lines">the text lines to encapsulate</param>
         /// <returns>a single string blob of all the output encapsulated</returns>
-        public static string EncapsulateOutput(IEnumerable<string> lines)
+        public static string EncapsulateOutput(IEnumerable<string> lines, string encapsulationElement, string bumperElement)
         {
             var returnString = new StringBuilder();
+
+            if (string.IsNullOrEmpty(encapsulationElement))
+                encapsulationElement = defaultEncapsulationElement;
+
+            if (string.IsNullOrEmpty(bumperElement))
+                bumperElement = defaultBumperElement;
 
             foreach (var line in lines)
             {
@@ -68,8 +74,14 @@ namespace NetMud.Utility
         /// </summary>
         /// <param name="str">the string to encapsulate</param>
         /// <returns>the encapsulated output</returns>
-        public static string EncapsulateOutput(this string str)
+        public static string EncapsulateOutput(this string str, string encapsulationElement, string bumperElement)
         {
+            if (string.IsNullOrEmpty(encapsulationElement))
+                encapsulationElement = defaultEncapsulationElement;
+
+            if (string.IsNullOrEmpty(bumperElement))
+                bumperElement = defaultBumperElement;
+
             if (!string.IsNullOrWhiteSpace(str))
                 return String.Format("<{0}>{1}</{0}>", encapsulationElement, str);
             else

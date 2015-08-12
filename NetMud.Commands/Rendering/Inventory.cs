@@ -35,7 +35,7 @@ namespace NetMud.Commands.Rendering
             foreach (var thing in chr.Inventory.EntitiesContained())
                 sb.AddRange(thing.RenderToLook(chr));
 
-            var messagingObject = new MessageCluster(RenderUtility.EncapsulateOutput(sb), string.Empty, string.Empty, "$A$ sifts through $G$ belongings.", string.Empty);
+            var messagingObject = new MessageCluster(sb, new string[] { }, new string[] { }, new string[] { "$A$ sifts through $G$ belongings." }, new string[] { });
 
             messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation, null);
         }

@@ -33,7 +33,7 @@ namespace NetMud.Commands.Comm
             sb.Add(String.Format("You say '{0}'", Subject));
 
             //TODO: language outputs
-            var messagingObject = new MessageCluster(RenderUtility.EncapsulateOutput(sb), string.Empty, string.Empty, String.Format("$A$ says '{0}'", Subject), string.Empty);
+            var messagingObject = new MessageCluster(sb, new string[] { }, new string[] { }, new string[] { String.Format("$A$ says '{0}'", Subject) }, new string[] { });
 
             messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation, null);
         }

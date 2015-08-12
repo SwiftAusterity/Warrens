@@ -50,7 +50,7 @@ namespace NutMud.Commands.System
             //TODO: keywords is janky, location should have its own identifier name somehow for output purposes - DISPLAY short/long NAME
             sb.Add(string.Format("{0} spawned to {1}", entityObject.DataTemplate.Name, spawnTo.Keywords[0]));
 
-            var messagingObject = new MessageCluster(RenderUtility.EncapsulateOutput(sb), "You are ALIVE", "You have been given $S$", "$S$ appears in the $T$.", string.Empty);
+            var messagingObject = new MessageCluster(sb, new string[] { "You are ALIVE" }, new string[] { "You have been given $S$" }, new string[] { "$S$ appears in the $T$." }, new string[] { });
 
             messagingObject.ExecuteMessaging(Actor, entityObject, spawnTo, OriginLocation, null);
         }

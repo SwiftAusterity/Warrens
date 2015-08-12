@@ -158,7 +158,7 @@ namespace NetMud.DataAccess
                 var peeps = LiveCache.GetAll<IPlayer>().Where(peep => ((ICharacter)peep.DataTemplate).Account.LogChannelSubscriptions.Contains(channel));
 
                 foreach (var peep in peeps)
-                    peep.WriteTo(new string[] { content.EncapsulateOutput() });
+                    peep.WriteTo(new string[] { content });
 
                 //Low Priority TODO: Write to some source that can push to the web
             }

@@ -51,7 +51,7 @@ namespace NetMud.Commands.EntityManipulation
             place.MoveFrom(thing);
             actor.MoveInto(thing);
 
-            var messagingObject = new MessageCluster(RenderUtility.EncapsulateOutput(sb), string.Empty, string.Empty, toRoomMessage, string.Empty);
+            var messagingObject = new MessageCluster(sb, new string[] { }, new string[] { }, new string[] { toRoomMessage }, new string[] { });
 
             messagingObject.ExecuteMessaging(Actor, thing, (IEntity)Target, OriginLocation, null);
         }

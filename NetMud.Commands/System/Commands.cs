@@ -51,7 +51,7 @@ namespace NetMud.Commands.System
 
             returnStrings.Add(sb.ToString());
 
-            var messagingObject = new MessageCluster(RenderUtility.EncapsulateOutput(returnStrings), string.Empty, string.Empty, string.Empty, string.Empty);
+            var messagingObject = new MessageCluster(returnStrings, new string[] { }, new string[] { }, new string[] { }, new string[] { });
 
             messagingObject.ExecuteMessaging(Actor, null, null, null, null);
         }

@@ -14,39 +14,39 @@ namespace NetMud.DataStructure.SupportingClasses
         /// <summary>
         /// Message to send to the acting entity
         /// </summary>
-        public string ToActor { get; set; }
+        public IEnumerable<string> ToActor { get; set; }
 
         /// <summary>
         /// Message to send to the subject of the command
         /// </summary>
-        public string ToSubject { get; set; }
+        public IEnumerable<string> ToSubject { get; set; }
 
         /// <summary>
         /// Message to send to the target of the command
         /// </summary>
-        public string ToTarget { get; set; }
+        public IEnumerable<string> ToTarget { get; set; }
 
         /// <summary>
         /// Message to send to the origin location of the command/event
         /// </summary>
-        public string ToOrigin { get; set; }
+        public IEnumerable<string> ToOrigin { get; set; }
 
         /// <summary>
         /// Message to send to the destination location of the command/event
         /// </summary>
-        public string ToDestination { get; set; }
+        public IEnumerable<string> ToDestination { get; set; }
 
         /// <summary>
         /// Message to send to the surrounding locations of the command/event
         /// </summary>
-        public Dictionary<int, Tuple<MessagingType, string>> ToSurrounding { get; set; }
+        public Dictionary<int, Tuple<MessagingType, IEnumerable<string>>> ToSurrounding { get; set; }
 
         /// <summary>
         /// New up an empty cluster
         /// </summary>
         public MessageCluster()
         {
-            ToSurrounding = new Dictionary<int, Tuple<MessagingType, string>>();
+            ToSurrounding = new Dictionary<int, Tuple<MessagingType, IEnumerable<string>>>();
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace NetMud.DataStructure.SupportingClasses
         /// <param name="target">Message to send to the target of the command</param>
         /// <param name="origin">Message to send to the origin location of the command/event</param>
         /// <param name="destination">Message to send to the destination location of the command/event</param>
-        public MessageCluster(string actor, string subject, string target, string origin, string destination)
+        public MessageCluster(IEnumerable<string> actor, IEnumerable<string> subject, IEnumerable<string> target, IEnumerable<string> origin, IEnumerable<string> destination)
         {
             ToActor = actor;
             ToSubject = subject;
@@ -65,7 +65,7 @@ namespace NetMud.DataStructure.SupportingClasses
             ToOrigin = origin;
             ToDestination = destination;
 
-            ToSurrounding = new Dictionary<int, Tuple<MessagingType, string>>();
+            ToSurrounding = new Dictionary<int, Tuple<MessagingType, IEnumerable<string>>>();
         }
 
         /// <summary>
@@ -86,16 +86,16 @@ namespace NetMud.DataStructure.SupportingClasses
             entities.Add(MessagingTargetType.OriginLocation, new IEntity[] { OriginLocation });
             entities.Add(MessagingTargetType.DestinationLocation, new IEntity[] { DestinationLocation });
 
-            if (Actor != null && !string.IsNullOrWhiteSpace(ToActor))
+            if (Actor != null && ToActor.Any(str => !string.IsNullOrWhiteSpace(str)))
                 Actor.WriteTo(TranslateOutput(ToActor, entities));
 
-            if (Subject != null && !string.IsNullOrWhiteSpace(ToSubject))
+            if (Subject != null && ToSubject.Any(str => !string.IsNullOrWhiteSpace(str)))
                 Subject.WriteTo(TranslateOutput(ToSubject, entities));
 
-            if (Target != null && !string.IsNullOrWhiteSpace(ToTarget))
+            if (Target != null && ToTarget.Any(str => !string.IsNullOrWhiteSpace(str)))
                 Target.WriteTo(TranslateOutput(ToTarget, entities));
 
-            if (OriginLocation != null && !string.IsNullOrWhiteSpace(ToOrigin))
+            if (OriginLocation != null && ToOrigin.Any(str => !string.IsNullOrWhiteSpace(str)))
             {
                 var oLoc = (IContains)OriginLocation;
                 var validContents = oLoc.GetContents<IEntity>().Where(dud => !dud.Equals(Actor) && !dud.Equals(Subject) && !dud.Equals(Target));
@@ -105,7 +105,7 @@ namespace NetMud.DataStructure.SupportingClasses
                     dude.WriteTo(TranslateOutput(ToOrigin, entities));
             }
 
-            if (DestinationLocation != null && !string.IsNullOrWhiteSpace(ToDestination))
+            if (DestinationLocation != null && ToDestination.Any(str => !string.IsNullOrWhiteSpace(str)))
             {
                 var oLoc = (IContains)DestinationLocation;
 
@@ -121,16 +121,11 @@ namespace NetMud.DataStructure.SupportingClasses
         /// <param name="output">the output text to translate</param>
         /// <param name="entities">relevant entities for the variables transform</param>
         /// <returns>translated output</returns>
-        private IEnumerable<string> TranslateOutput(string output, Dictionary<MessagingTargetType, IEntity[]> entities)
+        private IEnumerable<string> TranslateOutput(IEnumerable<string> output, Dictionary<MessagingTargetType, IEntity[]> entities)
         {
-            var outputStrings = new List<string>();
+             output = MessagingUtility.TranslateEntityVariables(output.ToArray(), entities);
 
-            var entityTranslated = MessagingUtility.TranslateEntityVariables(output, entities);
-            var colorTranslated = MessagingUtility.TranslateColorVariables(entityTranslated);
-
-            outputStrings.Add(colorTranslated);
-
-            return outputStrings;
+             return MessagingUtility.TranslateColorVariables(output.ToArray());
         }
     }
 

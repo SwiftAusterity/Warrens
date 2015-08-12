@@ -196,9 +196,9 @@ namespace NetMud.Data.Game
             ToLocation = toLocation;
             CurrentLocation = fromLocation;
 
-            Enter = new MessageCluster(bS.MessageToActor, "$A$ enters you", string.Empty, bS.MessageToOrigin, bS.MessageToDestination);
-            Enter.ToSurrounding.Add(bS.VisibleStrength, new Tuple<MessagingType, string>(MessagingType.Visible, bS.VisibleToSurroundings));
-            Enter.ToSurrounding.Add(bS.AudibleStrength, new Tuple<MessagingType, string>(MessagingType.Visible, bS.AudibleToSurroundings));
+            Enter = new MessageCluster(new string[] { bS.MessageToActor }, new string[] { "$A$ enters you" }, new string[] { }, new string[] { bS.MessageToOrigin }, new string[] { bS.MessageToDestination });
+            Enter.ToSurrounding.Add(bS.VisibleStrength, new Tuple<MessagingType, IEnumerable<string>>(MessagingType.Visible, new string[] { bS.VisibleToSurroundings }));
+            Enter.ToSurrounding.Add(bS.AudibleStrength, new Tuple<MessagingType, IEnumerable<string>>(MessagingType.Visible, new string[] { bS.AudibleToSurroundings }));
 
             fromLocation.MoveInto<IPathway>(this);
         }

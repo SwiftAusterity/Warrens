@@ -42,7 +42,7 @@ namespace NutMud.Commands.Rendering
                 sb.AddRange(lookTarget.RenderToLook(Actor));
             }
 
-            var messagingObject = new MessageCluster(RenderUtility.EncapsulateOutput(sb), "$A$ looks at you.", string.Empty, "$A$ looks around the room.", string.Empty);
+            var messagingObject = new MessageCluster(sb, new string[] { "$A$ looks at you." }, new string[] { }, new string[] { "$A$ looks around the room." }, new string[] { });
 
             messagingObject.ExecuteMessaging(Actor, (IEntity)Subject, null, OriginLocation, null);
         }

@@ -37,7 +37,7 @@ namespace NetMud.Commands.EntityManipulation
 
             sb.Add("You drop $S$.");
 
-            var messagingObject = new MessageCluster(RenderUtility.EncapsulateOutput(sb), string.Empty, string.Empty, "$A$ drops $S$.", string.Empty);
+            var messagingObject = new MessageCluster(sb, new string[] { }, new string[] { }, new string[] { "$A$ drops $S$." }, new string[] { });
 
             messagingObject.ExecuteMessaging(Actor, thing, null, OriginLocation, null);
         }

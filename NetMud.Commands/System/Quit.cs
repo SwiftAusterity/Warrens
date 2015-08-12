@@ -39,7 +39,7 @@ namespace NutMud.Commands.System
 
             sb.Add("You exit this reality.");
 
-            var messagingObject = new MessageCluster(RenderUtility.EncapsulateOutput(sb), string.Empty, string.Empty, "$A$ exits this reality.", string.Empty);
+            var messagingObject = new MessageCluster(sb, new string[] { }, new string[] { }, new string[] { "$A$ exits this reality." }, new string[] { });
 
             messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation, null);
 

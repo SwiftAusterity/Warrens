@@ -25,6 +25,16 @@ namespace NetMud.Websock
     public class CommandNegotiator : WebSocketBehavior
     {
         /// <summary>
+        /// Encapsulation element for rendering to html
+        /// </summary>
+        private const string encapsulationElement = "p";
+
+        /// <summary>
+        /// Adding a "new line" to the output
+        /// </summary>
+        private const string bumperElement = "<br />";
+
+        /// <summary>
         /// The user manager for the application, handles authentication from the web
         /// </summary>
         public ApplicationUserManager UserManager { get; set; }
@@ -145,15 +155,15 @@ namespace NetMud.Websock
         {
             if (_currentPlayer == null)
             {
-                Send("<p>Invalid character; please reload the client and try again</p>");
+                SendWrapper("Invalid character; please reload the client and try again.");
                 this.Context.WebSocket.Close(CloseStatusCode.Abnormal, "connection aborted - no player"); ;
             }
 
             var errors = Interpret.Render(e.Data, _currentPlayer);
 
             //It only sends the errors
-            if (!string.IsNullOrWhiteSpace(errors))
-                Send(errors);
+            if (errors.Any(str => !string.IsNullOrWhiteSpace(str)))
+                SendWrapper(errors);
         }
 
         /// <summary>
@@ -163,7 +173,14 @@ namespace NetMud.Websock
         /// <returns>success status</returns>
         public bool SendWrapper(IEnumerable<string> strings)
         {
-            Send(RenderUtility.EncapsulateOutput(strings));
+            Send(RenderUtility.EncapsulateOutput(strings, encapsulationElement, bumperElement));
+
+            return true;
+        }
+
+        public bool SendWrapper(string str)
+        {
+            Send(str.EncapsulateOutput(encapsulationElement, bumperElement));
 
             return true;
         }

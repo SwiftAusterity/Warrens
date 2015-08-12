@@ -110,8 +110,6 @@ namespace NetMud.Data.EntityBackingData
             sql.AppendFormat(" values('{0}', '{1}', '{2}')", Name, mobileContainersJson, inanimateContainersJson);
             sql.Append(" select * from [dbo].[InanimateData] where ID = Scope_Identity()");
 
-            var ds = SqlWrapper.RunDataset(sql.ToString(), CommandType.Text);
-
             try
             {
                 var ds = SqlWrapper.RunDataset(sql.ToString(), CommandType.Text);

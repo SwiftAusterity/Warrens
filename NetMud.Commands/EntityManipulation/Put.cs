@@ -39,7 +39,7 @@ namespace NetMud.Commands.EntityManipulation
 
             sb.Add("You put $S$ in the $T$.");
 
-            var messagingObject = new MessageCluster(RenderUtility.EncapsulateOutput(sb), string.Empty, string.Empty, "$A$ puts $S$ in the $T$.", string.Empty);
+            var messagingObject = new MessageCluster(sb, new string[] { }, new string[] { }, new string[] { "$A$ puts $S$ in the $T$." }, new string[] { });
 
             messagingObject.ExecuteMessaging(Actor, thing, (IEntity)place, OriginLocation, null);
         }
