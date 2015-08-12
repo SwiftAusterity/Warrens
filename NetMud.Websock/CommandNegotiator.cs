@@ -178,6 +178,11 @@ namespace NetMud.Websock
             return true;
         }
 
+        /// <summary>
+        /// Wraps sending messages to the connected descriptor
+        /// </summary>
+        /// <param name="str">the output</param>
+        /// <returns>success status</returns>
         public bool SendWrapper(string str)
         {
             Send(str.EncapsulateOutput(encapsulationElement, bumperElement));
