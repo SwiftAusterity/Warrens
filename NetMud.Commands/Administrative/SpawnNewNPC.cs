@@ -46,7 +46,7 @@ namespace NutMud.Commands.System
 
             var entityObject = new Intelligence(newObject, spawnTo);
 
-            //TODO: keywords is janky, location should have its own identifier name somehow for output purposes
+            //TODO: keywords is janky, location should have its own identifier name somehow for output purposes - DISPLAY short/long NAME
             sb.Add(string.Format("{0} spawned to {1}", entityObject.DataTemplate.Name, spawnTo.Keywords[0]));
 
             var messagingObject = new MessageCluster(RenderUtility.EncapsulateOutput(sb), "You are ALIVE", "You have been given $S$", "$S$ appears in the $T$.", string.Empty);

@@ -213,7 +213,6 @@ namespace NetMud.Data.Game
             Keywords = new string[] { backingStore.Name.ToLower() };
             Birthdate = DateTime.Now;
 
-            //TODO: People get a base spawn but live objects need to be spawnable to a specific location or not at all really
             if (spawnTo == null)
             {
                 throw new NotImplementedException("NPCs can't spawn to nothing");

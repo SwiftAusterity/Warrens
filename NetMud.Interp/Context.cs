@@ -13,6 +13,7 @@ using NetMud.DataStructure.SupportingClasses;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.Data.Reference;
 using System.Collections;
+using NetMud.DataStructure.Base.Supporting;
 
 namespace NetMud.Interp
 {
@@ -219,7 +220,7 @@ namespace NetMud.Interp
 
             while (commandWords > 0)
             {
-                var currentCommandString = string.Join(" ", parsedWords.Take(commandWords)).ToLower();
+                var currentCommandString = string.Join(" ", RemoveGrammaticalNiceities(parsedWords.Take(commandWords))).ToLower();
 
                 var validCommands = LoadedCommands.Where(comm => comm.GetCustomAttributes<CommandKeywordAttribute>().Any(att => att.Keyword.Equals(currentCommandString)));
 
@@ -347,7 +348,7 @@ namespace NetMud.Interp
 
             while (parmWords > 0)
             {
-                var currentParmString = string.Join(" ", internalCommandString.Take(parmWords)).ToLower();
+                var currentParmString = string.Join(" ", RemoveGrammaticalNiceities(internalCommandString.Take(parmWords))).ToLower();
 
                 if (!currentNeededParm.MatchesPattern(currentParmString))
                 {
@@ -410,7 +411,7 @@ namespace NetMud.Interp
 
             while (parmWords > 0)
             {
-                var currentParmString = string.Join(" ", internalCommandString.Take(parmWords)).ToLower();
+                var currentParmString = string.Join(" ", RemoveGrammaticalNiceities(internalCommandString.Take(parmWords))).ToLower();
 
                 //We have disambiguation here, we need to pick the first object we get back in the list
                 if (Regex.IsMatch(currentParmString, LiveWorldDisambiguationSyntax))
@@ -439,8 +440,11 @@ namespace NetMud.Interp
                             validObjects.AddRange(((IContains)Actor).GetContents<T>().Where(ent => ((IEntity)ent).Keywords.Any(key => key.Contains(currentParmString))));
 
                         //Containers only matter for touch usage subject paramaters, actor's inventory is already handled
+                        //Don't sift through another intelligence's stuff
+                        //TODO: write "does entity have permission to another entity's inventories" function on IEntity
                         if (hasContainer && currentNeededParm.Usage == CommandUsage.Subject)
                             foreach(IContains thing in Location.GetContents<T>().Where(ent => ent.GetType().GetInterfaces().Any(intf => intf == typeof(IContains))
+                                                                                                && !ent.GetType().GetInterfaces().Any(intf => intf == typeof(IMobile))
                                                                                                 && !ent.Equals(Actor)))
                                 validObjects.AddRange(thing.GetContents<T>().Where(ent => ((IEntity)ent).Keywords.Any(key => key.Contains(currentParmString))));
                         break;
@@ -524,7 +528,7 @@ namespace NetMud.Interp
 
             while (parmWords > 0)
             {
-                var currentParmString = string.Join(" ", internalCommandString.Take(parmWords));
+                var currentParmString = string.Join(" ", RemoveGrammaticalNiceities(internalCommandString.Take(parmWords)));
 
                 if (!currentNeededParm.MatchesPattern(currentParmString))
                 {
@@ -631,7 +635,7 @@ namespace NetMud.Interp
 
             while (parmWords > 0)
             {
-                var currentParmString = string.Join(" ", internalCommandString.Take(parmWords)).ToLower();
+                var currentParmString = string.Join(" ", RemoveGrammaticalNiceities(internalCommandString.Take(parmWords))).ToLower();
 
                 //We have disambiguation here, we need to pick the first object we get back in the list
                 if (Regex.IsMatch(currentParmString, LiveWorldDisambiguationSyntax))
@@ -730,9 +734,9 @@ namespace NetMud.Interp
         {
             List<string> returnParams = ParseQuotesOut();
 
-            RemoveGrammaticalNiceities(returnParams);
-
             //TODOs: Pluralizations, "all.", targetting more than one thing at once
+            //singularities - a, an
+            //plurals - all, ends in S, ends in ES, number pattern (get 2 swords)
 
             return returnParams;
         }
@@ -742,9 +746,11 @@ namespace NetMud.Interp
         /// </summary>
         /// <param name="currentParams">The current set of params</param>
         /// <returns>the scrubbed params</returns>
-        private IList<string> RemoveGrammaticalNiceities(List<string> currentParams)
+        private IList<string> RemoveGrammaticalNiceities(IEnumerable<string> currentParams)
         {
-            currentParams.RemoveAll(str => str.Equals("the", StringComparison.InvariantCulture)
+            var parmList = currentParams.ToList();
+
+            parmList.RemoveAll(str => str.Equals("the", StringComparison.InvariantCulture)
                                         || str.Equals("of", StringComparison.InvariantCulture)
                                         || str.Equals("to", StringComparison.InvariantCulture)
                                         || str.Equals("into", StringComparison.InvariantCulture)
@@ -752,9 +758,11 @@ namespace NetMud.Interp
                                         || str.Equals("from", StringComparison.InvariantCulture)
                                         || str.Equals("inside", StringComparison.InvariantCulture)
                                         || str.Equals("at", StringComparison.InvariantCulture)
-                                    );
+                                        || str.Equals("a", StringComparison.InvariantCulture)
+                                        || str.Equals("an", StringComparison.InvariantCulture)
+                                  );
 
-            return currentParams;
+            return parmList;
         }
 
         /// <summary>

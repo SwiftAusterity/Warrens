@@ -320,7 +320,6 @@ namespace NetMud.Data.Game
         /// </summary>
         public override void SpawnNewInWorld()
         {
-            //TODO: will rooms ever be contained by something else?
             SpawnNewInWorld(this);
         }
 

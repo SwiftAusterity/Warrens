@@ -112,24 +112,22 @@ namespace NetMud.Data.EntityBackingData
 
             var ds = SqlWrapper.RunDataset(sql.ToString(), CommandType.Text);
 
-            if (ds.HasErrors)
+            try
             {
-                //TODO: Error handling logging?
-            }
-            else if (ds.Rows != null)
-            {
-                foreach (DataRow dr in ds.Rows)
+                var ds = SqlWrapper.RunDataset(sql.ToString(), CommandType.Text);
+
+                if (ds.Rows != null)
                 {
-                    try
+                    foreach (DataRow dr in ds.Rows)
                     {
                         Fill(dr);
                         returnValue = this;
                     }
-                    catch
-                    {
-                        //error logging
-                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex);
             }
 
             return returnValue;
