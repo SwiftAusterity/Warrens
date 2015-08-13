@@ -1,4 +1,5 @@
 ﻿using NetMud.Data.EntityBackingData;
+using NetMud.Data.Reference;
 using NetMud.Data.System;
 using NetMud.DataAccess;
 using NetMud.DataStructure.Base.Entity;
@@ -229,6 +230,8 @@ namespace NetMud.Data.Game
         #endregion
 
         #region HotBackup
+        private const int liveDataVersion = 1;
+
         /// <summary>
         /// Serialize this entity's live data to a binary stream
         /// </summary>
@@ -240,6 +243,7 @@ namespace NetMud.Data.Game
 
             var entityData = new XDocument(
                                 new XElement("root",
+                                    new XAttribute("formattingVersion", liveDataVersion),
                                     new XAttribute("Birthmark", BirthMark),
                                     new XAttribute("Birthdate", Birthdate),
                                     new XElement("BackingData",
@@ -250,7 +254,13 @@ namespace NetMud.Data.Game
                                         new XAttribute("Created", charData.Created),
                                         new XAttribute("Gender", charData.Gender)),
                                     new XElement("LiveData",
-                                        new XAttribute("Keywords", string.Join(",", Keywords))),
+                                        new XAttribute("Keywords", string.Join(",", Keywords)),
+                                        new XElement("DimensionalModel",
+                                            new XAttribute("Length", Model.Length),
+                                            new XAttribute("Height", Model.Height),
+                                            new XAttribute("Width", Model.Width),
+                                            new XAttribute("ID", charData.Model.ModelBackingData.ID),
+                                            new XElement("ModellingData", Model.ModelBackingData.DeserializeModel()))),
                                     new XElement("Inventory")
                                     ));
 
@@ -283,15 +293,17 @@ namespace NetMud.Data.Game
             var backingData = new NonPlayerCharacter();
             var newEntity = new Intelligence();
 
-            newEntity.BirthMark = xDoc.Root.Attribute("Birthmark").Value;
-            newEntity.Birthdate = DateTime.Parse(xDoc.Root.Attribute("Birthdate").Value);
+            var versionFormat = xDoc.Root.GetSafeAttributeValue<int>("formattingVersion");
 
-            backingData.ID = long.Parse(xDoc.Root.Element("BackingData").Attribute("ID").Value);
-            backingData.Name = xDoc.Root.Element("BackingData").Attribute("Name").Value;
-            backingData.SurName = xDoc.Root.Element("BackingData").Attribute("Surname").Value;
-            backingData.LastRevised = DateTime.Parse(xDoc.Root.Element("BackingData").Attribute("LastRevised").Value);
-            backingData.Created = DateTime.Parse(xDoc.Root.Element("BackingData").Attribute("Created").Value);
-            backingData.Gender = xDoc.Root.Element("BackingData").Attribute("Gender").Value;
+            newEntity.BirthMark = xDoc.Root.GetSafeAttributeValue("Birthmark");
+            newEntity.Birthdate = xDoc.Root.GetSafeAttributeValue<DateTime>("Birthdate");
+
+            backingData.ID = xDoc.Root.Element("BackingData").GetSafeAttributeValue<long>("ID");
+            backingData.Name = xDoc.Root.Element("BackingData").GetSafeAttributeValue("Name");
+            backingData.SurName = xDoc.Root.Element("BackingData").GetSafeAttributeValue("Surname");
+            backingData.LastRevised = xDoc.Root.Element("BackingData").GetSafeAttributeValue<DateTime>("LastRevised");
+            backingData.Created = xDoc.Root.Element("BackingData").GetSafeAttributeValue<DateTime>("Created");
+            backingData.Gender = xDoc.Root.Element("BackingData").GetSafeAttributeValue("Gender");
 
             //Add a fake entity to get the birthmark over to the next place
             foreach (var item in xDoc.Root.Element("Inventory").Elements("Item"))
@@ -302,10 +314,32 @@ namespace NetMud.Data.Game
                 newEntity.Inventory.Add(obj);
             }
 
-            newEntity.DataTemplate = backingData;
 
             //keywords is last
-            newEntity.Keywords = xDoc.Root.Element("LiveData").Attribute("Keywords").Value.Split(new char[] { ',' });
+            newEntity.Keywords = xDoc.Root.Element("LiveData").GetSafeAttributeValue("Keywords").Split(new char[] { ',' });
+
+            //Add new version transformations here, they are meant to be iterative, hence >= 1
+            if (versionFormat >= 1)
+            {
+                //We added dim mods in v1
+                var dimModelId = xDoc.Root.Element("LiveData").Element("DimensionalModel").GetSafeAttributeValue<long>("ID");
+                var dimModelLength = xDoc.Root.Element("LiveData").Element("DimensionalModel").GetSafeAttributeValue<int>("Length");
+                var dimModelHeight = xDoc.Root.Element("LiveData").Element("DimensionalModel").GetSafeAttributeValue<int>("Height");
+                var dimModelWidth = xDoc.Root.Element("LiveData").Element("DimensionalModel").GetSafeAttributeValue<int>("Width");
+                var dimModelJson = xDoc.Root.Element("LiveData").Element("DimensionalModel").GetSafeElementValue("ModellingData");
+
+                backingData.Model = new DimensionalModel(dimModelLength, dimModelHeight, dimModelWidth, dimModelId);
+                newEntity.Model = new DimensionalModel(dimModelLength, dimModelHeight, dimModelWidth, dimModelJson, dimModelId);
+            }
+            else //what if we're older than v1
+            {
+                //Get it from the db
+                var backD = DataWrapper.GetOne<NonPlayerCharacter>(backingData.ID);
+                backingData.Model = backD.Model;
+                newEntity.Model = backD.Model;
+            }
+
+            newEntity.DataTemplate = backingData;
 
             return newEntity;
         }

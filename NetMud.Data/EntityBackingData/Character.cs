@@ -1,4 +1,5 @@
-﻿using NetMud.DataAccess;
+﻿using NetMud.Data.Reference;
+using NetMud.DataAccess;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.SupportingClasses;
@@ -124,6 +125,8 @@ namespace NetMud.Data.EntityBackingData
             string outLKLT = default(string);
             DataUtility.GetFromDataRow<string>(dr, "LastKnownLocationType", ref outLKLT);
             LastKnownLocationType = outLKLT;
+
+            Model = new DimensionalModel(dr);
         }
 
         /// <summary>

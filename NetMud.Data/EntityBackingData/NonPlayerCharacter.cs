@@ -1,4 +1,5 @@
-﻿using NetMud.DataAccess;
+﻿using NetMud.Data.Reference;
+using NetMud.DataAccess;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.System;
 using NetMud.Utility;
@@ -69,6 +70,8 @@ namespace NetMud.Data.EntityBackingData
             string outGender = default(string);
             DataUtility.GetFromDataRow<string>(dr, "Gender", ref outGender);
             Gender = outGender;
+
+            Model = new DimensionalModel(dr);
         }
 
         /// <summary>

@@ -36,6 +36,24 @@ namespace NetMud.Data.Reference
         }
 
         /// <summary>
+        /// Create model serialized from existing xml with a valid ID from the database
+        /// </summary>
+        /// <param name="dataId">the data id</param>
+        /// <param name="modelXML">JSON of model planes (all 11 11x11 planes)</param>
+        public DimensionalModelData(long dataId, string modelJson)
+        {
+            ModelPlanes = new HashSet<IDimensionalModelPlane>();
+
+            var backingModel = ReferenceWrapper.GetOne<DimensionalModelData>(dataId);
+            ID = backingModel.ID;
+            Name = backingModel.Name;
+            Created = backingModel.Created;
+            LastRevised = backingModel.LastRevised;
+
+            SerializeModel(modelJson);
+        }
+
+        /// <summary>
         /// The 11 planes that compose the physical model
         /// </summary>
         public HashSet<IDimensionalModelPlane> ModelPlanes { get; set; }
@@ -319,7 +337,7 @@ namespace NetMud.Data.Reference
         /// Turn the modelPlanes into a json string we can store in the db
         /// </summary>
         /// <returns></returns>
-        private string DeserializeModel()
+        public string DeserializeModel()
         {
             return JsonConvert.SerializeObject(ModelPlanes);
         }

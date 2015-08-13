@@ -16,6 +16,107 @@ namespace NetMud.Utility
     public static class DataUtility
     {
         /// <summary>
+        /// Safely get the value of an element
+        /// </summary>
+        /// <typeparam name="T">the type of data you're looking for</typeparam>
+        /// <param name="element">the parent element</param>
+        /// <param name="xName">the XName of the element you want the value of</param>
+        /// <returns>the value or default(T)</returns>
+        public static T GetSafeElementValue<T>(this XContainer element, string xName)
+        {
+            var returnValue = default(T);
+
+            try
+            {
+                if (element != null && element.Element(xName) != null)
+                {
+                    if (!TryConvert<T>(element.Element(xName).Value, ref returnValue))
+                        returnValue = default(T);
+                }
+            }
+            catch
+            {
+                //its safe return, dont barf please
+            }
+
+            return returnValue;
+        }
+
+        /// <summary>
+        /// Safely get the value of an element only used for strings
+        /// </summary>
+        /// <param name="element">the parent element</param>
+        /// <param name="xName">the XName of the attribute you want the value of</param>
+        /// <returns>the value or string.empty</returns>
+        public static string GetSafeElementValue(this XContainer element, string xName)
+        {
+            var returnValue = string.Empty;
+
+            try
+            {
+                if (element != null && element.Element(xName) != null)
+                    returnValue = element.Element(xName).Value;
+            }
+            catch
+            {
+                //its safe return, dont barf please
+            }
+
+            return returnValue;
+        }
+
+        /// <summary>
+        /// Safely get the value of an attribute
+        /// </summary>
+        /// <typeparam name="T">the type of data you're looking for</typeparam>
+        /// <param name="element">the parent element</param>
+        /// <param name="xName">the XName of the attribute you want the value of</param>
+        /// <returns>the value or default(T)</returns>
+        public static T GetSafeAttributeValue<T>(this XElement element, string xName)
+        {
+            var returnValue = default(T);
+
+            try
+            {
+                if (element != null && element.Attribute(xName) != null)
+                {
+                    if (!TryConvert<T>(element.Attribute(xName).Value, ref returnValue))
+                        returnValue = default(T);
+                }
+            }
+            catch
+            {
+                //its safe return, dont barf please
+            }
+
+            return returnValue;
+        }
+
+        /// <summary>
+        /// Safely get the value of an attribute only used for strings
+        /// </summary>
+        /// <param name="element">the parent element</param>
+        /// <param name="xName">the XName of the attribute you want the value of</param>
+        /// <returns>the value or string.empty</returns>
+        public static string GetSafeAttributeValue(this XElement element, string xName)
+        {
+            var returnValue = string.Empty;
+
+            try
+            {
+                if (element != null && element.Attribute(xName) != null)
+                    returnValue = element.Attribute(xName).Value;
+            }
+            catch
+            {
+                //its safe return, dont barf please
+            }
+
+            return returnValue;
+        }
+
+
+        /// <summary>
         /// Fault safe type converted
         /// </summary>
         /// <typeparam name="T">the type to convert to</typeparam>
@@ -64,7 +165,7 @@ namespace NetMud.Utility
                 //dont error on this, it is supposed to be safe
                 thing = default(T);
             }
-        
+
             return false;
         }
 

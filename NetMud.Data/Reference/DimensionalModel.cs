@@ -38,6 +38,15 @@ namespace NetMud.Data.Reference
             ModelBackingData = ReferenceWrapper.GetOne<IDimensionalModelData>(backingDataId);
         }
 
+        public DimensionalModel(int length, int height, int width, string modelJson, long backingDataId)
+        {
+            Length = length;
+            Height = height;
+            Width = width;
+
+            ModelBackingData = new DimensionalModelData(backingDataId, modelJson);
+        }
+
         /// <summary>
         /// Y axis of the 11 plane model
         /// </summary>

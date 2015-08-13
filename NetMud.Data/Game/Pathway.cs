@@ -1,4 +1,5 @@
 ﻿using NetMud.Data.EntityBackingData;
+using NetMud.Data.Reference;
 using NetMud.DataAccess;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
@@ -219,6 +220,8 @@ namespace NetMud.Data.Game
         }
 
         #region HotBackup
+        private const int liveDataVersion = 1;
+
         /// <summary>
         /// Serialize this entity's live data to a binary stream
         /// </summary>
@@ -230,6 +233,7 @@ namespace NetMud.Data.Game
 
             var entityData = new XDocument(
                                 new XElement("root",
+                                    new XAttribute("formattingVersion", liveDataVersion),
                                     new XAttribute("Birthmark", BirthMark),
                                     new XAttribute("Birthdate", Birthdate),
                                     new XElement("BackingData",
@@ -254,7 +258,13 @@ namespace NetMud.Data.Game
                                     new XElement("LiveData",
                                         new XAttribute("Keywords", string.Join(",", Keywords)),
                                         new XAttribute("RoomTo", ToLocation.BirthMark),
-                                        new XAttribute("RoomFrom", FromLocation.BirthMark))
+                                        new XAttribute("RoomFrom", FromLocation.BirthMark),
+                                        new XElement("DimensionalModel",
+                                            new XAttribute("Length", Model.Length),
+                                            new XAttribute("Height", Model.Height),
+                                            new XAttribute("Width", Model.Width),
+                                            new XAttribute("ID", charData.Model.ModelBackingData.ID),
+                                            new XElement("ModellingData", Model.ModelBackingData.DeserializeModel())))
                                     ));
 
             var entityBinaryConvert = new DataUtility.EntityFileData(entityData);
@@ -283,42 +293,65 @@ namespace NetMud.Data.Game
             var backingData = new PathwayData();
             var newEntity = new Pathway();
 
-            newEntity.BirthMark = xDoc.Root.Attribute("Birthmark").Value;
-            newEntity.Birthdate = DateTime.Parse(xDoc.Root.Attribute("Birthdate").Value);
+            var versionFormat = xDoc.Root.GetSafeAttributeValue<int>("formattingVersion");
 
-            backingData.ID = long.Parse(xDoc.Root.Element("BackingData").Attribute("ID").Value);
-            backingData.Name = xDoc.Root.Element("BackingData").Attribute("Name").Value;
-            backingData.LastRevised = DateTime.Parse(xDoc.Root.Element("BackingData").Attribute("LastRevised").Value);
-            backingData.Created = DateTime.Parse(xDoc.Root.Element("BackingData").Attribute("Created").Value);
-            backingData.PassingWidth = long.Parse(xDoc.Root.Element("BackingData").Attribute("PassingWidth").Value);
-            backingData.PassingHeight = long.Parse(xDoc.Root.Element("BackingData").Attribute("PassingHeight").Value);
-            backingData.DegreesFromNorth = int.Parse(xDoc.Root.Element("BackingData").Attribute("DegreesFromNorth").Value);
-            backingData.ToLocationID = xDoc.Root.Element("BackingData").Attribute("ToLocationID").Value;
-            backingData.ToLocationType = xDoc.Root.Element("BackingData").Attribute("ToLocationType").Value;
-            backingData.FromLocationID = xDoc.Root.Element("BackingData").Attribute("FromLocationID").Value;
-            backingData.FromLocationType = xDoc.Root.Element("BackingData").Attribute("FromLocationType").Value;
-            backingData.MessageToActor = xDoc.Root.Element("BackingData").Attribute("MessageToActor").Value;
-            backingData.MessageToOrigin = xDoc.Root.Element("BackingData").Attribute("MessageToOrigin").Value;
-            backingData.MessageToDestination = xDoc.Root.Element("BackingData").Attribute("MessageToDestination").Value;
-            backingData.AudibleToSurroundings = xDoc.Root.Element("BackingData").Attribute("AudibleToSurroundings").Value;
-            backingData.AudibleStrength = int.Parse(xDoc.Root.Element("BackingData").Attribute("AudibleStrength").Value);
-            backingData.VisibleToSurroundings = xDoc.Root.Element("BackingData").Attribute("VisibleToSurroundings").Value;
-            backingData.VisibleStrength = int.Parse(xDoc.Root.Element("BackingData").Attribute("VisibleStrength").Value);
+            newEntity.BirthMark = xDoc.Root.GetSafeAttributeValue("Birthmark");
+            newEntity.Birthdate = xDoc.Root.GetSafeAttributeValue<DateTime>("Birthdate");
 
-            newEntity.DataTemplate = backingData;
+            backingData.ID = xDoc.Root.Element("BackingData").GetSafeAttributeValue<long>("ID");
+            backingData.Name = xDoc.Root.Element("BackingData").GetSafeAttributeValue("Name");
+            backingData.LastRevised = xDoc.Root.Element("BackingData").GetSafeAttributeValue<DateTime>("LastRevised");
+            backingData.Created = xDoc.Root.Element("BackingData").GetSafeAttributeValue<DateTime>("Created");
+            backingData.PassingWidth = xDoc.Root.Element("BackingData").GetSafeAttributeValue<long>("PassingWidth");
+            backingData.PassingHeight = xDoc.Root.Element("BackingData").GetSafeAttributeValue<long>("PassingHeight");
+            backingData.DegreesFromNorth = xDoc.Root.Element("BackingData").GetSafeAttributeValue<int>("DegreesFromNorth");
+            backingData.ToLocationID = xDoc.Root.Element("BackingData").GetSafeAttributeValue("ToLocationID");
+            backingData.ToLocationType = xDoc.Root.Element("BackingData").GetSafeAttributeValue("ToLocationType");
+            backingData.FromLocationID = xDoc.Root.Element("BackingData").GetSafeAttributeValue("FromLocationID");
+            backingData.FromLocationType = xDoc.Root.Element("BackingData").GetSafeAttributeValue("FromLocationType");
+            backingData.MessageToActor = xDoc.Root.Element("BackingData").GetSafeAttributeValue("MessageToActor");
+            backingData.MessageToOrigin = xDoc.Root.Element("BackingData").GetSafeAttributeValue("MessageToOrigin");
+            backingData.MessageToDestination = xDoc.Root.Element("BackingData").GetSafeAttributeValue("MessageToDestination");
+            backingData.AudibleToSurroundings = xDoc.Root.Element("BackingData").GetSafeAttributeValue("AudibleToSurroundings");
+            backingData.AudibleStrength = xDoc.Root.Element("BackingData").GetSafeAttributeValue<int>("AudibleStrength");
+            backingData.VisibleToSurroundings = xDoc.Root.Element("BackingData").GetSafeAttributeValue("VisibleToSurroundings");
+            backingData.VisibleStrength = xDoc.Root.Element("BackingData").GetSafeAttributeValue<int>("VisibleStrength");
 
             var obj = new Room();
-            obj.BirthMark = xDoc.Root.Element("LiveData").Attribute("RoomFrom").Value;
+            obj.BirthMark = xDoc.Root.Element("LiveData").GetSafeAttributeValue("RoomFrom");
 
             newEntity.FromLocation = obj;
 
             var toObj = new Room();
-            toObj.BirthMark = xDoc.Root.Element("LiveData").Attribute("RoomTo").Value;
+            toObj.BirthMark = xDoc.Root.Element("LiveData").GetSafeAttributeValue("RoomTo");
 
             newEntity.ToLocation = toObj;
 
             //keywords is last
-            newEntity.Keywords = xDoc.Root.Element("LiveData").Attribute("Keywords").Value.Split(new char[] { ',' });
+            newEntity.Keywords = xDoc.Root.Element("LiveData").GetSafeAttributeValue("Keywords").Split(new char[] { ',' });
+
+            //Add new version transformations here, they are meant to be iterative, hence >= 1
+            if (versionFormat >= 1)
+            {
+                //We added dim mods in v1
+                var dimModelId = xDoc.Root.Element("LiveData").Element("DimensionalModel").GetSafeAttributeValue<long>("ID");
+                var dimModelLength = xDoc.Root.Element("LiveData").Element("DimensionalModel").GetSafeAttributeValue<int>("Length");
+                var dimModelHeight = xDoc.Root.Element("LiveData").Element("DimensionalModel").GetSafeAttributeValue<int>("Height");
+                var dimModelWidth = xDoc.Root.Element("LiveData").Element("DimensionalModel").GetSafeAttributeValue<int>("Width");
+                var dimModelJson = xDoc.Root.Element("LiveData").Element("DimensionalModel").GetSafeElementValue("ModellingData");
+
+                backingData.Model = new DimensionalModel(dimModelLength, dimModelHeight, dimModelWidth, dimModelId);
+                newEntity.Model = new DimensionalModel(dimModelLength, dimModelHeight, dimModelWidth, dimModelJson, dimModelId);
+            }
+            else //what if we're older than v1
+            {
+                //Get it from the db
+                var backD = DataWrapper.GetOne<PathwayData>(backingData.ID);
+                backingData.Model = backD.Model;
+                newEntity.Model = backD.Model;
+            }
+
+            newEntity.DataTemplate = backingData;
 
             return newEntity;
         }
