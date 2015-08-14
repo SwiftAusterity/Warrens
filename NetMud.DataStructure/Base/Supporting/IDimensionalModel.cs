@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace NetMud.DataStructure.Base.Supporting
 {
     /// <summary>
-    /// Framework for the physics model of an entity
+    /// Framework for the physics model of an entity. This is an in-transit object.
     /// </summary>
     public interface IDimensionalModel
     {
@@ -27,6 +27,13 @@ namespace NetMud.DataStructure.Base.Supporting
         /// The model we're following
         /// </summary>
         IDimensionalModelData ModelBackingData { get; set; }
+
+        /// <summary>
+        /// Collection of model section name to material composition mappings
+        /// </summary>
+        IDictionary<string, IMaterial> Composition { get; set; }
+
+        string SerializeMaterialCompositions();
     }
 
     /// <summary>

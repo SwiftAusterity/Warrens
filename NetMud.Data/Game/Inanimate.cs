@@ -387,7 +387,8 @@ namespace NetMud.Data.Game
                                             new XAttribute("Height", Model.Height),
                                             new XAttribute("Width", Model.Width),
                                             new XAttribute("ID", charData.Model.ModelBackingData.ID),
-                                            new XElement("ModellingData", Model.ModelBackingData.DeserializeModel()))),
+                                            new XElement("ModellingData", Model.ModelBackingData.DeserializeModel()),
+                                            new XElement("MaterialCompositions", Model.SerializeMaterialCompositions()))),
                                     new XElement("Contents"),
                                     new XElement("MobilesInside")
                                     ));
@@ -497,19 +498,8 @@ namespace NetMud.Data.Game
                     newEntity.Contents.Add(obj);
             }
 
-            //Add new version transformations here, they are meant to be iterative, hence >= 1
-            if (versionFormat >= 1)
-            {
-                //We added dim mods in v1
-                var dimModelId = xDoc.Root.Element("LiveData").Element("DimensionalModel").GetSafeAttributeValue<long>("ID");
-                var dimModelLength = xDoc.Root.Element("LiveData").Element("DimensionalModel").GetSafeAttributeValue<int>("Length");
-                var dimModelHeight = xDoc.Root.Element("LiveData").Element("DimensionalModel").GetSafeAttributeValue<int>("Height");
-                var dimModelWidth = xDoc.Root.Element("LiveData").Element("DimensionalModel").GetSafeAttributeValue<int>("Width");
-                var dimModelJson = xDoc.Root.Element("LiveData").Element("DimensionalModel").GetSafeElementValue("ModellingData");
-
-                backingData.Model = new DimensionalModel(dimModelLength, dimModelHeight, dimModelWidth, dimModelId);
-                newEntity.Model = new DimensionalModel(dimModelLength, dimModelHeight, dimModelWidth, dimModelJson, dimModelId);
-            }
+            //Add new version transformations here, they are meant to be iterative, hence < 1
+            Transform_V1(backingData, newEntity, xDoc.Root, versionFormat < 1);
 
             newEntity.DataTemplate = backingData;
 
@@ -517,6 +507,30 @@ namespace NetMud.Data.Game
             newEntity.Keywords = xDoc.Root.Element("LiveData").Attribute("Keywords").Value.Split(new char[] { ',' });
 
             return newEntity;
+        }
+
+        private void Transform_V1(InanimateData backingData, Inanimate newEntity, XElement docRoot, bool older)
+        {
+            if (!older)
+            {
+                //We added dim mods in v1
+                var dimModelId = docRoot.Element("LiveData").Element("DimensionalModel").GetSafeAttributeValue<long>("ID");
+                var dimModelLength = docRoot.Element("LiveData").Element("DimensionalModel").GetSafeAttributeValue<int>("Length");
+                var dimModelHeight = docRoot.Element("LiveData").Element("DimensionalModel").GetSafeAttributeValue<int>("Height");
+                var dimModelWidth = docRoot.Element("LiveData").Element("DimensionalModel").GetSafeAttributeValue<int>("Width");
+                var dimModelJson = docRoot.Element("LiveData").Element("DimensionalModel").GetSafeElementValue("ModellingData");
+                var dimModelCompJson = docRoot.Element("LiveData").Element("DimensionalModel").GetSafeElementValue("MaterialCompositions");
+
+                backingData.Model = new DimensionalModel(dimModelLength, dimModelHeight, dimModelWidth, dimModelId, dimModelCompJson);
+                newEntity.Model = new DimensionalModel(dimModelLength, dimModelHeight, dimModelWidth, dimModelJson, dimModelId, dimModelCompJson);
+            }
+            else //what if we're older
+            {
+                //Get it from the db
+                var backD = DataWrapper.GetOne<NonPlayerCharacter>(backingData.ID);
+                backingData.Model = backD.Model;
+                newEntity.Model = backD.Model;
+            }
         }
         #endregion
     }

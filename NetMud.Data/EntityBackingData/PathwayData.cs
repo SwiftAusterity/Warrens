@@ -99,66 +99,22 @@ namespace NetMud.Data.EntityBackingData
         /// <param name="dr">the data row to fill from</param>
         public override void Fill(global::System.Data.DataRow dr)
         {
-            long outId = default(long);
-            DataUtility.GetFromDataRow<long>(dr, "ID", ref outId);
-            ID = outId;
+            ID = DataUtility.GetFromDataRow<long>(dr, "ID");
+            Created = DataUtility.GetFromDataRow<DateTime>(dr, "Created");
+            LastRevised = DataUtility.GetFromDataRow<DateTime>(dr, "LastRevised");
+            Name = DataUtility.GetFromDataRow<string>(dr, "Name");
 
-            DateTime outCreated = default(DateTime);
-            DataUtility.GetFromDataRow<DateTime>(dr, "Created", ref outCreated);
-            Created = outCreated;
-
-            DateTime outRevised = default(DateTime);
-            DataUtility.GetFromDataRow<DateTime>(dr, "LastRevised", ref outRevised);
-            LastRevised = outRevised;
-
-            string outTitle = default(string);
-            DataUtility.GetFromDataRow<string>(dr, "Name", ref outTitle);
-            Name = outTitle;
-
-
-            string outToRoomID = default(string);
-            DataUtility.GetFromDataRow<string>(dr, "ToLocationID", ref outToRoomID);
-            ToLocationID = outToRoomID;
-
-            string outFromRoomID = default(string);
-            DataUtility.GetFromDataRow<string>(dr, "FromLocationID", ref outFromRoomID);
-            FromLocationID = outFromRoomID;
-
-            string outToRoomType = default(string);
-            DataUtility.GetFromDataRow<string>(dr, "ToLocationType", ref outToRoomType);
-            ToLocationType = outToRoomType;
-
-            string outFromRoomType = default(string);
-            DataUtility.GetFromDataRow<string>(dr, "FromLocationType", ref outFromRoomType);
-            FromLocationType = outFromRoomType;
-
-            string outMessageToDestination = default(string);
-            DataUtility.GetFromDataRow<string>(dr, "MessageToDestination", ref outMessageToDestination);
-            MessageToDestination = outMessageToDestination;
-
-            string outMessageToOrigin = default(string);
-            DataUtility.GetFromDataRow<string>(dr, "MessageToOrigin", ref outMessageToOrigin);
-            MessageToOrigin = outMessageToOrigin;
-
-            string outMessageToActor = default(string);
-            DataUtility.GetFromDataRow<string>(dr, "MessageToActor", ref outMessageToActor);
-            MessageToActor = outMessageToActor;
-
-            string outAudibleToSurroundings = default(string);
-            DataUtility.GetFromDataRow<string>(dr, "AudibleToSurroundings", ref outAudibleToSurroundings);
-            AudibleToSurroundings = outAudibleToSurroundings;
-
-            string outVisibleToSurroundings = default(string);
-            DataUtility.GetFromDataRow<string>(dr, "VisibleToSurroundings", ref outVisibleToSurroundings);
-            VisibleToSurroundings = outVisibleToSurroundings;
-
-            int outAudibleStrength = default(int);
-            DataUtility.GetFromDataRow<int>(dr, "AudibleStrength", ref outAudibleStrength);
-            AudibleStrength = outAudibleStrength;
-
-            int outVisibleStrength = default(int);
-            DataUtility.GetFromDataRow<int>(dr, "VisibleStrength", ref outVisibleStrength);
-            VisibleStrength = outVisibleStrength;
+            ToLocationID = DataUtility.GetFromDataRow<string>(dr, "ToLocationID");
+            FromLocationID = DataUtility.GetFromDataRow<string>(dr, "FromLocationID");
+            ToLocationType = DataUtility.GetFromDataRow<string>(dr, "ToLocationType");
+            FromLocationType = DataUtility.GetFromDataRow<string>(dr, "FromLocationType");
+            MessageToDestination = DataUtility.GetFromDataRow<string>(dr, "MessageToDestination");
+            MessageToOrigin = DataUtility.GetFromDataRow<string>(dr, "MessageToOrigin");
+            MessageToActor = DataUtility.GetFromDataRow<string>(dr, "MessageToActor");
+            AudibleToSurroundings = DataUtility.GetFromDataRow<string>(dr, "AudibleToSurroundings");
+            VisibleToSurroundings = DataUtility.GetFromDataRow<string>(dr, "VisibleToSurroundings");
+            AudibleStrength = DataUtility.GetFromDataRow<int>(dr, "AudibleStrength");
+            VisibleStrength = DataUtility.GetFromDataRow<int>(dr, "VisibleStrength");
 
             Model = new DimensionalModel(dr);
         }
@@ -172,10 +128,12 @@ namespace NetMud.Data.EntityBackingData
             IPathwayData returnValue = default(IPathwayData);
             var sql = new StringBuilder();
             sql.Append("insert into [dbo].[PathwayData]([Name],[ToLocationID],[FromLocationID],[ToLocationType],[FromLocationType],[MessageToDestination],[MessageToOrigin]");
-            sql.Append(",[MessageToActor],[AudibleToSurroundings],[VisibleToSurroundings],[AudibleStrength],[VisibleStrength], [DimensionalModelLength], [DimensionalModelHeight], [DimensionalModelWidth], [DimensionalModelID])");
-            sql.AppendFormat(" values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}',{10},{11},{12},{13},{14},{15})"
+            sql.Append(",[MessageToActor],[AudibleToSurroundings],[VisibleToSurroundings],[AudibleStrength],[VisibleStrength]");
+            sql.Append(", [DimensionalModelLength], [DimensionalModelHeight], [DimensionalModelWidth], [DimensionalModelID], [DimensionalModelMaterialCompositions])");
+            sql.AppendFormat(" values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}',{10},{11},{12},{13},{14},{15},'{16}')"
                 , Name, ToLocationID, FromLocationID, ToLocationType, FromLocationType, MessageToDestination, MessageToOrigin
-                , MessageToActor, AudibleToSurroundings, VisibleToSurroundings, AudibleStrength, VisibleStrength, Model.Height, Model.Length, Model.Width, Model.ModelBackingData.ID);
+                , MessageToActor, AudibleToSurroundings, VisibleToSurroundings, AudibleStrength, VisibleStrength
+                , Model.Height, Model.Length, Model.Width, Model.ModelBackingData.ID, Model.SerializeMaterialCompositions());
             sql.Append(" select * from [dbo].[PathwayData] where ID = Scope_Identity()");
 
             try
@@ -237,6 +195,7 @@ namespace NetMud.Data.EntityBackingData
             sql.AppendFormat(", [DimensionalModelLength] = {0} ", Model.Length);
             sql.AppendFormat(", [DimensionalModelHeight] = {0} ", Model.Height);
             sql.AppendFormat(", [DimensionalModelWidth] = {0} ", Model.Width);
+            sql.AppendFormat(" , [DimensionalModelMaterialCompositions] = '{0}' ", Model.SerializeMaterialCompositions());
             sql.AppendFormat(", [DimensionalModelId] = {0} ", Model.ModelBackingData.ID); 
             sql.AppendFormat(", [LastRevised] = GetUTCDate()");
             sql.AppendFormat(" where ID = {0}", ID);

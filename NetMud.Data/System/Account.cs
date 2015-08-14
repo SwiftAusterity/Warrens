@@ -145,12 +145,9 @@ namespace NetMud.Data.System
         /// <returns>the account</returns>
         private static IAccount Fill(DataRow dr)
         {
-            string outHandle = default(string);
-            DataUtility.GetFromDataRow<string>(dr, "GlobalIdentityHandle", ref outHandle);
-
-            string outLogSubs = default(string);
-            DataUtility.GetFromDataRow<string>(dr, "LogChannelSubscriptions", ref outLogSubs);
-
+            string outHandle = DataUtility.GetFromDataRow<string>(dr, "GlobalIdentityHandle");
+            string outLogSubs = DataUtility.GetFromDataRow<string>(dr, "LogChannelSubscriptions");
+            
             return new Account(outHandle, outLogSubs);
         }
     }

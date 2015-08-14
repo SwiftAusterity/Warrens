@@ -1,0 +1,19 @@
+﻿CREATE TABLE [dbo].[Material]
+(
+	[Id] BIGINT NOT NULL PRIMARY KEY IDENTITY, 
+    [Raw] BIT NOT NULL DEFAULT 1,
+    [Conductive] BIT NOT NULL DEFAULT 0,
+    [Magnetic] BIT NOT NULL DEFAULT 0,
+    [Flammable] BIT NOT NULL DEFAULT 1,
+    [Viscosity] SMALLINT NOT NULL DEFAULT 1,
+    [Density] SMALLINT NOT NULL DEFAULT 1,
+    [Mallebility] SMALLINT NOT NULL DEFAULT 1,
+    [Ductility] SMALLINT NOT NULL DEFAULT 1,
+    [Porosity] SMALLINT NOT NULL DEFAULT 1,
+    [UnitMass] SMALLINT NOT NULL DEFAULT 1,
+    [SolidPoint] SMALLINT NOT NULL DEFAULT 1,
+    [GasPoint] SMALLINT NOT NULL DEFAULT 1,
+    [TemperatureRetention] SMALLINT NOT NULL DEFAULT 1,
+    [Resistance] VARCHAR(MAX) NOT NULL DEFAULT '{}',
+    [Composition] VARCHAR(MAX) NOT NULL DEFAULT '{}',
+)

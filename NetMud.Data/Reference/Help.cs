@@ -36,25 +36,12 @@ namespace NetMud.Data.Reference
         /// <param name="dr">the data row to fill from</param>
         public override void Fill(global::System.Data.DataRow dr)
         {
-            int outId = default(int);
-            DataUtility.GetFromDataRow<int>(dr, "ID", ref outId);
-            ID = outId;
+            ID = DataUtility.GetFromDataRow<long>(dr, "ID");
+            Created = DataUtility.GetFromDataRow<DateTime>(dr, "Created");
+            LastRevised = DataUtility.GetFromDataRow<DateTime>(dr, "LastRevised");
+            Name = DataUtility.GetFromDataRow<string>(dr, "Name");
 
-            DateTime outCreated = default(DateTime);
-            DataUtility.GetFromDataRow<DateTime>(dr, "Created", ref outCreated);
-            Created = outCreated;
-
-            DateTime outRevised = default(DateTime);
-            DataUtility.GetFromDataRow<DateTime>(dr, "LastRevised", ref outRevised);
-            LastRevised = outRevised;
-
-            string outName = default(string);
-            DataUtility.GetFromDataRow<string>(dr, "Name", ref outName);
-            Name = outName;
-
-            string outHelpText = default(string);
-            DataUtility.GetFromDataRow<string>(dr, "HelpText", ref outHelpText);
-            HelpText = outHelpText;
+            HelpText = DataUtility.GetFromDataRow<string>(dr, "HelpText");
         }
 
         /// <summary>

@@ -29,21 +29,11 @@ namespace NetMud.Data.EntityBackingData
         /// <param name="dr">the data row to fill from</param>
         public override void Fill(global::System.Data.DataRow dr)
         {
-            long outId = default(long);
-            DataUtility.GetFromDataRow<long>(dr, "ID", ref outId);
-            ID = outId;
+            ID = DataUtility.GetFromDataRow<long>(dr, "ID");
+            Created = DataUtility.GetFromDataRow<DateTime>(dr, "Created");
+            LastRevised = DataUtility.GetFromDataRow<DateTime>(dr, "LastRevised");
+            Name = DataUtility.GetFromDataRow<string>(dr, "Name");
 
-            DateTime outCreated = default(DateTime);
-            DataUtility.GetFromDataRow<DateTime>(dr, "Created", ref outCreated);
-            Created = outCreated;
-
-            DateTime outRevised = default(DateTime);
-            DataUtility.GetFromDataRow<DateTime>(dr, "LastRevised", ref outRevised);
-            LastRevised = outRevised;
-
-            string outTitle = default(string);
-            DataUtility.GetFromDataRow<string>(dr, "Name", ref outTitle);
-            Name = outTitle;
 
             Model = new DimensionalModel(dr);
         }
@@ -56,8 +46,9 @@ namespace NetMud.Data.EntityBackingData
         {
             IRoomData returnValue = default(IRoomData);
             var sql = new StringBuilder();
-            sql.Append("insert into [dbo].[RoomData]([Name], [DimensionalModelLength], [DimensionalModelHeight], [DimensionalModelWidth], [DimensionalModelID])");
-            sql.AppendFormat(" values('{0}', {1}, {2}, {3}, {4})", Name, Model.Height, Model.Length, Model.Width, Model.ModelBackingData.ID);
+            sql.Append("insert into [dbo].[RoomData]([Name], [DimensionalModelLength], [DimensionalModelHeight], [DimensionalModelWidth], [DimensionalModelID], [DimensionalModelMaterialCompositions])");
+            sql.AppendFormat(" values('{0}', {1}, {2}, {3}, {4}, '{5}')", Name
+                , Model.Height, Model.Length, Model.Width, Model.ModelBackingData.ID, Model.SerializeMaterialCompositions());
             sql.Append(" select * from [dbo].[RoomData] where ID = Scope_Identity()");
 
             try
@@ -108,6 +99,7 @@ namespace NetMud.Data.EntityBackingData
             sql.AppendFormat(" , [DimensionalModelLength] = {0} ", Model.Length);
             sql.AppendFormat(" , [DimensionalModelHeight] = {0} ", Model.Height);
             sql.AppendFormat(" , [DimensionalModelWidth] = {0} ", Model.Width);
+            sql.AppendFormat(" , [DimensionalModelMaterialCompositions] = '{0}' ", Model.SerializeMaterialCompositions());
             sql.AppendFormat(" , [DimensionalModelId] = {0} ", Model.ModelBackingData.ID);
             sql.AppendFormat(" , [LastRevised] = GetUTCDate()");
             sql.AppendFormat(" where ID = {0}", ID);

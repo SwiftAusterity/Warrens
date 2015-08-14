@@ -50,26 +50,14 @@ namespace NetMud.Data.EntityBackingData
         /// <param name="dr">the data row to fill from</param>
         public override void Fill(global::System.Data.DataRow dr)
         {
-            long outId = default(long);
-            DataUtility.GetFromDataRow<long>(dr, "ID", ref outId);
-            ID = outId;
+            ID = DataUtility.GetFromDataRow<long>(dr, "ID");
+            Created = DataUtility.GetFromDataRow<DateTime>(dr, "Created");
+            LastRevised = DataUtility.GetFromDataRow<DateTime>(dr, "LastRevised");
+            Name = DataUtility.GetFromDataRow<string>(dr, "Name");
 
-            DateTime outCreated = default(DateTime);
-            DataUtility.GetFromDataRow<DateTime>(dr, "Created", ref outCreated);
-            Created = outCreated;
-
-            DateTime outRevised = default(DateTime);
-            DataUtility.GetFromDataRow<DateTime>(dr, "LastRevised", ref outRevised);
-            LastRevised = outRevised;
-
-            string outName = default(string);
-            DataUtility.GetFromDataRow<string>(dr, "Name", ref outName);
-            Name = outName;
-
-            string mobileContainerJson = default(string);
-            DataUtility.GetFromDataRow<string>(dr, "MobileContainers", ref mobileContainerJson);
+            string mobileContainerJson = DataUtility.GetFromDataRow<string>(dr, "MobileContainers");
+            
             dynamic mobileContainers = JsonConvert.DeserializeObject(mobileContainerJson);
-
             foreach(dynamic mobileContainer in mobileContainers)
             {
                 var newContainer = new EntityContainerData<IMobile>();
@@ -80,10 +68,9 @@ namespace NetMud.Data.EntityBackingData
                 MobileContainers.Add(newContainer);
             }
 
-            string inanimateContainerJson = default(string);
-            DataUtility.GetFromDataRow<string>(dr, "InanimateContainers", ref inanimateContainerJson);
+            string inanimateContainerJson = DataUtility.GetFromDataRow<string>(dr, "InanimateContainers");
+         
             dynamic inanimateContainers = JsonConvert.DeserializeObject(inanimateContainerJson);
-
             foreach (dynamic inanimateContainer in inanimateContainers)
             {
                 var newContainer = new EntityContainerData<IInanimate>();
@@ -109,8 +96,11 @@ namespace NetMud.Data.EntityBackingData
             var mobileContainersJson = JsonConvert.SerializeObject(MobileContainers);
 
             var sql = new StringBuilder();
-            sql.Append("insert into [dbo].[InanimateData]([Name], [MobileContainers], [InanimateContainers], [DimensionalModelLength], [DimensionalModelHeight], [DimensionalModelWidth], [DimensionalModelID])");
-            sql.AppendFormat(" values('{0}', '{1}', '{2}', {3}, {4}, {5}, {6})", Name, mobileContainersJson, inanimateContainersJson, Model.Height, Model.Length, Model.Width, Model.ModelBackingData.ID);
+            sql.Append("insert into [dbo].[InanimateData]([Name], [MobileContainers], [InanimateContainers]");
+            sql.Append(", [DimensionalModelLength], [DimensionalModelHeight], [DimensionalModelWidth], [DimensionalModelID], [DimensionalModelMaterialCompositions])");
+            sql.AppendFormat(" values('{0}', '{1}', '{2}', {3}, {4}, {5}, {6}, '{7}')"
+                , Name, mobileContainersJson, inanimateContainersJson
+                , Model.Height, Model.Length, Model.Width, Model.ModelBackingData.ID, Model.SerializeMaterialCompositions());
             sql.Append(" select * from [dbo].[InanimateData] where ID = Scope_Identity()");
 
             try
@@ -166,6 +156,7 @@ namespace NetMud.Data.EntityBackingData
             sql.AppendFormat(" , [DimensionalModelLength] = {0} ", Model.Length);
             sql.AppendFormat(" , [DimensionalModelHeight] = {0} ", Model.Height);
             sql.AppendFormat(" , [DimensionalModelWidth] = {0} ", Model.Width);
+            sql.AppendFormat(" , [DimensionalModelMaterialCompositions] = '{0}' ", Model.SerializeMaterialCompositions());
             sql.AppendFormat(" , [DimensionalModelId] = {0} ", Model.ModelBackingData.ID); 
             sql.AppendFormat(" , [LastRevised] = GetUTCDate()");
             sql.AppendFormat(" where ID = {0}", ID);

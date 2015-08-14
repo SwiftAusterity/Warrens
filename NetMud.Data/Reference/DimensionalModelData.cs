@@ -232,24 +232,12 @@ namespace NetMud.Data.Reference
         /// <param name="dr">the data row to fill from</param>
         public override void Fill(global::System.Data.DataRow dr)
         {
-            long outId = default(long);
-            DataUtility.GetFromDataRow<long>(dr, "ID", ref outId);
-            ID = outId;
+            ID = DataUtility.GetFromDataRow<long>(dr, "ID");
+            Created = DataUtility.GetFromDataRow<DateTime>(dr, "Created");
+            LastRevised = DataUtility.GetFromDataRow<DateTime>(dr, "LastRevised");
+            Name = DataUtility.GetFromDataRow<string>(dr, "Name");
 
-            DateTime outCreated = default(DateTime);
-            DataUtility.GetFromDataRow<DateTime>(dr, "Created", ref outCreated);
-            Created = outCreated;
-
-            DateTime outRevised = default(DateTime);
-            DataUtility.GetFromDataRow<DateTime>(dr, "LastRevised", ref outRevised);
-            LastRevised = outRevised;
-
-            string outName = default(string);
-            DataUtility.GetFromDataRow<string>(dr, "Name", ref outName);
-            Name = outName;
-
-            string outModel = default(string);
-            DataUtility.GetFromDataRow<string>(dr, "Model", ref outModel);
+            string outModel = DataUtility.GetFromDataRow<string>(dr, "Model");
             SerializeModel(outModel);
         }
 
@@ -371,6 +359,7 @@ namespace NetMud.Data.Reference
             }
 
         }
+
         /// <summary>
         /// Turn a comma delimited list of planes into the modelplane set
         /// </summary>

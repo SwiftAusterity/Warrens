@@ -151,14 +151,16 @@ namespace NetMud.Utility
         /// <param name="columnName">the column to extract</param>
         /// <param name="thing">the output object</param>
         /// <returns>success status</returns>
-        public static bool GetFromDataRow<T>(DataRow dr, string columnName, ref T thing)
+        public static T GetFromDataRow<T>(DataRow dr, string columnName)
         {
+            T thing = default(T);
+
             try
             {
                 if (dr == null || !dr.Table.Columns.Contains(columnName))
-                    return false;
+                    return thing;
 
-                return TryConvert<T>(dr[columnName], ref thing);
+                TryConvert<T>(dr[columnName], ref thing);
             }
             catch
             {
@@ -166,7 +168,7 @@ namespace NetMud.Utility
                 thing = default(T);
             }
 
-            return false;
+            return thing;
         }
 
         /// <summary>

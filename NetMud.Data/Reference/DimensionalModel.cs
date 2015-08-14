@@ -1,6 +1,7 @@
 ﻿using NetMud.DataAccess;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.Utility;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,36 +14,33 @@ namespace NetMud.Data.Reference
     {
         public DimensionalModel(global::System.Data.DataRow dr)
         {
-            int length = default(int);
-            DataUtility.GetFromDataRow<int>(dr, "DimensionalModelLength", ref length);
-            Length = length;
+            Length = DataUtility.GetFromDataRow<int>(dr, "DimensionalModelLength");
+            Height = DataUtility.GetFromDataRow<int>(dr, "DimensionalModelHeight");
+            Width = DataUtility.GetFromDataRow<int>(dr, "DimensionalModelWidth");
 
-            int height = default(int);
-            DataUtility.GetFromDataRow<int>(dr, "DimensionalModelHeight", ref height);
-            Height = height;
-
-            int width = default(int);
-            DataUtility.GetFromDataRow<int>(dr, "DimensionalModelWidth", ref width);
-            Width = width;
-
-            long outDimModId = default(long);
-            DataUtility.GetFromDataRow<long>(dr, "DimensionalModelID", ref outDimModId);
+            long outDimModId = DataUtility.GetFromDataRow<long>(dr, "DimensionalModelID");
             ModelBackingData = ReferenceWrapper.GetOne<IDimensionalModelData>(outDimModId);
+
+            string materialComps = DataUtility.GetFromDataRow<string>(dr, "DimensionalModelMaterialCompositions");
+            Composition = DeserializeMaterialCompositions(materialComps);
         }
 
-        public DimensionalModel(int length, int height, int width, long backingDataId)
+        public DimensionalModel(int length, int height, int width, long backingDataId, string compJson)
         {
             Length = length;
             Height = height;
             Width = width;
+            Composition = DeserializeMaterialCompositions(compJson);
+
             ModelBackingData = ReferenceWrapper.GetOne<IDimensionalModelData>(backingDataId);
         }
 
-        public DimensionalModel(int length, int height, int width, string modelJson, long backingDataId)
+        public DimensionalModel(int length, int height, int width, string modelJson, long backingDataId, string compJson)
         {
             Length = length;
             Height = height;
             Width = width;
+            Composition = DeserializeMaterialCompositions(compJson);
 
             ModelBackingData = new DimensionalModelData(backingDataId, modelJson);
         }
@@ -66,5 +64,35 @@ namespace NetMud.Data.Reference
         /// The model we're following
         /// </summary>
         public IDimensionalModelData ModelBackingData { get; set; }
+
+        /// <summary>
+        /// Collection of model section name to material composition mappings
+        /// </summary>
+        public IDictionary<string, IMaterial> Composition { get; set; }
+
+        private IDictionary<string, IMaterial> DeserializeMaterialCompositions(string compJson)
+        {
+            var composition = new Dictionary<string, IMaterial>();
+
+            dynamic comps = JsonConvert.DeserializeObject(compJson);
+
+            foreach (dynamic comp in comps)
+            {
+                string sectionName = comp.Key;
+                long materialId = comp.Value;
+
+                var material = ReferenceWrapper.GetOne<IMaterial>(materialId);
+
+                if (material != null && !string.IsNullOrWhiteSpace(sectionName))
+                    Composition.Add(sectionName, material);
+            }
+
+            return composition;
+        }
+
+        public string SerializeMaterialCompositions()
+        {
+            return JsonConvert.SerializeObject(Composition);
+        }
     }
 }
