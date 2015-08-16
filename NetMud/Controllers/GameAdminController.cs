@@ -56,14 +56,19 @@ namespace NetMud.Controllers
             var dashboardModel = new DashboardViewModel();
             dashboardModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            dashboardModel.LivePlayers = LiveCache.GetAll<Player>().Count();
-
             dashboardModel.Inanimates = DataWrapper.GetAll<InanimateData>();
             dashboardModel.Rooms = DataWrapper.GetAll<RoomData>();
             dashboardModel.NPCs = DataWrapper.GetAll<NonPlayerCharacter>();
+
             dashboardModel.HelpFiles = ReferenceWrapper.GetAll<Help>();
             dashboardModel.DimensionalModels = ReferenceWrapper.GetAll<DimensionalModelData>();
+            dashboardModel.Materials = ReferenceWrapper.GetAll<Material>();
+
             dashboardModel.LiveTaskTokens = Processor.GetAllLiveTaskStatusTokens();
+            dashboardModel.LivePlayers = LiveCache.GetAll<Player>().Count();
+            dashboardModel.LiveInanimates = LiveCache.GetAll<Inanimate>().Count();
+            dashboardModel.LiveRooms = LiveCache.GetAll<Room>().Count();
+            dashboardModel.LiveNPCs = LiveCache.GetAll<Intelligence>().Count();
 
             return View(dashboardModel);
         }
@@ -479,16 +484,18 @@ namespace NetMud.Controllers
                 int inanimateIndex = 0;
                 foreach (var name in vModel.InanimateContainerNames)
                 {
-                    if (string.IsNullOrWhiteSpace(name))
-                        continue;
+                    if (!string.IsNullOrWhiteSpace(name))
+                    {
 
-                    if (vModel.InanimateContainerWeights.Count() <= inanimateIndex || vModel.InanimateContainerVolumes.Count() <= inanimateIndex)
-                        break;
+                        if (vModel.InanimateContainerWeights.Count() <= inanimateIndex || vModel.InanimateContainerVolumes.Count() <= inanimateIndex)
+                            break;
 
-                    var currentWeight = vModel.InanimateContainerWeights[inanimateIndex];
-                    var currentVolume = vModel.InanimateContainerVolumes[inanimateIndex];
+                        var currentWeight = vModel.InanimateContainerWeights[inanimateIndex];
+                        var currentVolume = vModel.InanimateContainerVolumes[inanimateIndex];
 
-                    newObj.InanimateContainers.Add(new EntityContainerData<IInanimate>(currentVolume, currentWeight, name));
+                        newObj.InanimateContainers.Add(new EntityContainerData<IInanimate>(currentVolume, currentWeight, name));
+                    }
+
                     inanimateIndex++;
                 }
             }
@@ -499,15 +506,16 @@ namespace NetMud.Controllers
                 foreach (var name in vModel.MobileContainerNames)
                 {
                     if (string.IsNullOrWhiteSpace(name))
-                        continue;
+                    {
+                        if (vModel.MobileContainerWeights.Count() <= mobileIndex || vModel.MobileContainerVolumes.Count() <= mobileIndex)
+                            break;
 
-                    if (vModel.MobileContainerWeights.Count() <= mobileIndex || vModel.MobileContainerVolumes.Count() <= mobileIndex)
-                        break;
+                        var currentWeight = vModel.MobileContainerWeights[mobileIndex];
+                        var currentVolume = vModel.MobileContainerVolumes[mobileIndex];
 
-                    var currentWeight = vModel.MobileContainerWeights[mobileIndex];
-                    var currentVolume = vModel.MobileContainerVolumes[mobileIndex];
+                        newObj.MobileContainers.Add(new EntityContainerData<IMobile>(currentVolume, currentWeight, name));
+                    }
 
-                    newObj.MobileContainers.Add(new EntityContainerData<IMobile>(currentVolume, currentWeight, name));
                     mobileIndex++;
                 }
             }
@@ -566,23 +574,23 @@ namespace NetMud.Controllers
                 foreach (var name in vModel.InanimateContainerNames)
                 {
                     if (string.IsNullOrWhiteSpace(name))
-                        continue;
-
-                    if (vModel.InanimateContainerWeights.Count() <= inanimateIndex || vModel.InanimateContainerVolumes.Count() <= inanimateIndex)
-                        break;
-
-                    if (obj.InanimateContainers.Any(ic => ic.Name.Equals(name, System.StringComparison.InvariantCultureIgnoreCase)))
                     {
-                        var editIc = obj.InanimateContainers.Single(ic => ic.Name.Equals(name, System.StringComparison.InvariantCultureIgnoreCase));
-                        editIc.CapacityVolume = vModel.InanimateContainerVolumes[inanimateIndex];
-                        editIc.CapacityWeight = vModel.InanimateContainerWeights[inanimateIndex];
-                    }
-                    else
-                    {
-                        var currentWeight = vModel.InanimateContainerWeights[inanimateIndex];
-                        var currentVolume = vModel.InanimateContainerVolumes[inanimateIndex];
+                        if (vModel.InanimateContainerWeights.Count() <= inanimateIndex || vModel.InanimateContainerVolumes.Count() <= inanimateIndex)
+                            break;
 
-                        obj.InanimateContainers.Add(new EntityContainerData<IInanimate>(currentVolume, currentWeight, name));
+                        if (obj.InanimateContainers.Any(ic => ic.Name.Equals(name, System.StringComparison.InvariantCultureIgnoreCase)))
+                        {
+                            var editIc = obj.InanimateContainers.Single(ic => ic.Name.Equals(name, System.StringComparison.InvariantCultureIgnoreCase));
+                            editIc.CapacityVolume = vModel.InanimateContainerVolumes[inanimateIndex];
+                            editIc.CapacityWeight = vModel.InanimateContainerWeights[inanimateIndex];
+                        }
+                        else
+                        {
+                            var currentWeight = vModel.InanimateContainerWeights[inanimateIndex];
+                            var currentVolume = vModel.InanimateContainerVolumes[inanimateIndex];
+
+                            obj.InanimateContainers.Add(new EntityContainerData<IInanimate>(currentVolume, currentWeight, name));
+                        }
                     }
 
                     inanimateIndex++;
@@ -598,23 +606,24 @@ namespace NetMud.Controllers
                 foreach (var name in vModel.MobileContainerNames)
                 {
                     if (string.IsNullOrWhiteSpace(name))
-                        continue;
-
-                    if (vModel.MobileContainerWeights.Count() <= mobileIndex || vModel.MobileContainerVolumes.Count() <= mobileIndex)
-                        break;
-
-                    if (obj.MobileContainers.Any(ic => ic.Name.Equals(name, System.StringComparison.InvariantCultureIgnoreCase)))
                     {
-                        var editIc = obj.MobileContainers.Single(ic => ic.Name.Equals(name, System.StringComparison.InvariantCultureIgnoreCase));
-                        editIc.CapacityVolume = vModel.MobileContainerVolumes[mobileIndex];
-                        editIc.CapacityWeight = vModel.MobileContainerWeights[mobileIndex];
-                    }
-                    else
-                    {
-                        var currentWeight = vModel.MobileContainerWeights[mobileIndex];
-                        var currentVolume = vModel.MobileContainerVolumes[mobileIndex];
 
-                        obj.MobileContainers.Add(new EntityContainerData<IMobile>(currentVolume, currentWeight, name));
+                        if (vModel.MobileContainerWeights.Count() <= mobileIndex || vModel.MobileContainerVolumes.Count() <= mobileIndex)
+                            break;
+
+                        if (obj.MobileContainers.Any(ic => ic.Name.Equals(name, System.StringComparison.InvariantCultureIgnoreCase)))
+                        {
+                            var editIc = obj.MobileContainers.Single(ic => ic.Name.Equals(name, System.StringComparison.InvariantCultureIgnoreCase));
+                            editIc.CapacityVolume = vModel.MobileContainerVolumes[mobileIndex];
+                            editIc.CapacityWeight = vModel.MobileContainerWeights[mobileIndex];
+                        }
+                        else
+                        {
+                            var currentWeight = vModel.MobileContainerWeights[mobileIndex];
+                            var currentVolume = vModel.MobileContainerVolumes[mobileIndex];
+
+                            obj.MobileContainers.Add(new EntityContainerData<IMobile>(currentVolume, currentWeight, name));
+                        }
                     }
 
                     mobileIndex++;
@@ -753,6 +762,273 @@ namespace NetMud.Controllers
                 message = "Error; Edit failed.";
 
             return RedirectToAction("ManageRoomData", new { Message = message });
+        }
+        #endregion
+
+        #region Materials
+        public ActionResult ManageMaterialData(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
+        {
+            var vModel = new ManageMaterialDataViewModel(ReferenceWrapper.GetAll<Material>());
+            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            vModel.CurrentPageNumber = CurrentPageNumber;
+            vModel.ItemsPerPage = ItemsPerPage;
+            vModel.SearchTerms = SearchTerms;
+
+            return View(vModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult RemoveMaterialData(long ID, string authorize)
+        {
+            string message = string.Empty;
+
+            if (string.IsNullOrWhiteSpace(authorize) || !ID.ToString().Equals(authorize))
+                message = "You must check the proper authorize radio button first.";
+            else
+            {
+                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+                var obj = ReferenceWrapper.GetOne<Material>(ID);
+
+                if (obj == null)
+                    message = "That does not exist";
+                else if (obj.Remove())
+                {
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveMaterial[" + ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    message = "Delete Successful.";
+                }
+                else
+                    message = "Error; Removal failed.";
+            }
+
+            return RedirectToAction("ManageMaterialData", new { Message = message });
+        }
+
+        [HttpGet]
+        public ActionResult AddMaterialData()
+        {
+            var vModel = new AddEditMaterialViewModel();
+            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            return View(vModel);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddMaterialData(AddEditMaterialViewModel vModel)
+        {
+            string message = string.Empty;
+            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            var newObj = new Material();
+            newObj.Name = vModel.NewName;
+            newObj.Conductive = vModel.NewConductive;
+            newObj.Density = vModel.NewDensity;
+            newObj.Ductility = vModel.NewDuctility;
+            newObj.Flammable = vModel.NewFlammable;
+            newObj.GasPoint = vModel.NewGasPoint;
+            newObj.Magnetic = vModel.NewMagnetic;
+            newObj.Mallebility = vModel.NewMallebility;
+            newObj.Porosity = vModel.NewPorosity;
+            newObj.Raw = vModel.NewRaw;
+            newObj.SolidPoint = vModel.NewSolidPoint;
+            newObj.TemperatureRetention = vModel.NewTemperatureRetention;
+            newObj.UnitMass = vModel.NewUnitMass;
+            newObj.Viscosity = vModel.NewViscosity;
+
+            if (vModel.Resistances != null)
+            {
+                int resistancesIndex = 0;
+                foreach (var type in vModel.Resistances)
+                {
+                    if (type > 0)
+                    {
+                        if (vModel.ResistanceValues.Count() <= resistancesIndex)
+                            break;
+
+                        var currentValue = vModel.ResistanceValues[resistancesIndex];
+
+                        newObj.Resistance.Add((DamageType)type, currentValue);
+                    }
+
+                    resistancesIndex++;
+                }
+            }
+
+            if (vModel.Compositions != null)
+            {
+                int compositionsIndex = 0;
+                foreach (var materialId in vModel.Compositions)
+                {
+                    if (materialId > 0)
+                    {
+                        if (vModel.CompositionPercentages.Count() <= compositionsIndex)
+                            break;
+
+                        var currentValue = vModel.CompositionPercentages[compositionsIndex];
+                        var material = ReferenceWrapper.GetOne<Material>(materialId);
+
+                        if (material != null)
+                            newObj.Composition.Add(material, currentValue);
+                    }
+
+                    compositionsIndex++;
+                }
+            }
+
+            if (newObj.Create() == null)
+                message = "Error; Creation failed.";
+            else
+            {
+                LoggingUtility.LogAdminCommandUsage("*WEB* - AddMaterialData[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                message = "Creation Successful.";
+            }
+
+            return RedirectToAction("ManageMaterialData", new { Message = message });
+        }
+
+        [HttpGet]
+        public ActionResult EditMaterialData(int id)
+        {
+            string message = string.Empty;
+            var vModel = new AddEditMaterialViewModel();
+            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            var obj = ReferenceWrapper.GetOne<Material>(id);
+
+            if (obj == null)
+            {
+                message = "That does not exist";
+                return RedirectToAction("ManageMaterialData", new { Message = message });
+            }
+
+            vModel.DataObject = obj;
+            vModel.NewName = obj.Name;
+            vModel.NewConductive = obj.Conductive;
+            vModel.NewDensity = obj.Density;
+            vModel.NewDuctility = obj.Ductility;
+            vModel.NewFlammable = obj.Flammable;
+            vModel.NewGasPoint = obj.GasPoint;
+            vModel.NewMagnetic = obj.Magnetic;
+            vModel.NewMallebility = obj.Mallebility;
+            vModel.NewPorosity = obj.Porosity;
+            vModel.NewRaw = obj.Raw;
+            vModel.NewSolidPoint = obj.SolidPoint;
+            vModel.NewTemperatureRetention = obj.TemperatureRetention;
+            vModel.NewUnitMass = obj.UnitMass;
+            vModel.NewViscosity = obj.Viscosity;
+
+            return View(vModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditMaterialData(int id, AddEditMaterialViewModel vModel)
+        {
+            string message = string.Empty;
+            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            var obj = ReferenceWrapper.GetOne<Material>(id);
+            if (obj == null)
+            {
+                message = "That does not exist";
+                return RedirectToAction("ManageMaterialData", new { Message = message });
+            }
+
+            obj.Name = vModel.NewName;
+            obj.Conductive = vModel.NewConductive;
+            obj.Density = vModel.NewDensity;
+            obj.Ductility = vModel.NewDuctility;
+            obj.Flammable = vModel.NewFlammable;
+            obj.GasPoint = vModel.NewGasPoint;
+            obj.Magnetic = vModel.NewMagnetic;
+            obj.Mallebility = vModel.NewMallebility;
+            obj.Porosity = vModel.NewPorosity;
+            obj.Raw = vModel.NewRaw;
+            obj.SolidPoint = vModel.NewSolidPoint;
+            obj.TemperatureRetention = vModel.NewTemperatureRetention;
+            obj.UnitMass = vModel.NewUnitMass;
+            obj.Viscosity = vModel.NewViscosity;
+
+            if (vModel.Resistances != null)
+            {
+                int resistancesIndex = 0;
+                foreach (var type in vModel.Resistances)
+                {
+                    if (type > 0)
+                    {
+                        if (vModel.ResistanceValues.Count() <= resistancesIndex)
+                            break;
+
+                        if (obj.Resistance.Any(ic => (short)ic.Key == type))
+                        {
+                            obj.Resistance.Remove((DamageType)type);
+                            var currentValue = vModel.ResistanceValues[resistancesIndex];
+
+                            obj.Resistance.Add((DamageType)type, currentValue);
+                        }
+                        else
+                        {
+                            var currentValue = vModel.ResistanceValues[resistancesIndex];
+
+                            obj.Resistance.Add((DamageType)type, currentValue);
+                        }
+                    }
+
+                    resistancesIndex++;
+                }
+            }
+
+            foreach (var container in obj.Resistance.Where(ic => !vModel.Resistances.Contains((short)ic.Key)))
+                obj.Resistance.Remove(container);
+
+            if (vModel.Compositions != null)
+            {
+                int compositionsIndex = 0;
+                foreach (var materialId in vModel.Compositions)
+                {
+                    if (materialId > 0)
+                    {
+                        if (vModel.CompositionPercentages.Count() <= compositionsIndex)
+                            break;
+
+                        var material = ReferenceWrapper.GetOne<Material>(materialId);
+                        short currentValue = -1;
+
+                        if (material != null)
+                        {
+                            if (obj.Composition.Any(ic => ic.Key.ID == materialId))
+                            {
+
+                                obj.Composition.Remove(material);
+                                currentValue = vModel.CompositionPercentages[compositionsIndex];
+                            }
+                            else
+                                currentValue = vModel.CompositionPercentages[compositionsIndex];
+
+                            obj.Composition.Add(material, currentValue);
+                        }
+                    }
+
+                    compositionsIndex++;
+                }
+            }
+
+            foreach (var container in obj.Composition.Where(ic => !vModel.Compositions.Contains(ic.Key.ID)))
+                obj.Composition.Remove(container);
+            
+            if (obj.Save())
+            {
+                LoggingUtility.LogAdminCommandUsage("*WEB* - EditMaterialData[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                message = "Edit Successful.";
+            }
+            else
+                message = "Error; Edit failed.";
+
+            return RedirectToAction("ManageMaterialData", new { Message = message });
         }
         #endregion
 

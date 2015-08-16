@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNet.Identity.EntityFramework;
 using NetMud.Data.Reference;
+using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using System;
 using System.Collections.Generic;
@@ -20,19 +22,34 @@ namespace NetMud.Models.GameAdmin
             Inanimates = Enumerable.Empty<IInanimateData>();
             Rooms = Enumerable.Empty<IRoomData>();
             NPCs = Enumerable.Empty<INonPlayerCharacter>();
+
             DimensionalModels = Enumerable.Empty<IDimensionalModelData>();
             HelpFiles = Enumerable.Empty<Help>();
+            Materials = Enumerable.Empty<IMaterial>();
+
+            LiveRooms = 0;
+            LiveInanimates = 0;
+            LiveNPCs = 0;
 
             LivePlayers = 0;
         }
 
+        //Backing Data
         public IEnumerable<IRoomData> Rooms { get; set; }
         public IEnumerable<IInanimateData> Inanimates { get; set; }
         public IEnumerable<INonPlayerCharacter> NPCs { get; set; }
+
+        //Reference Data
         public IEnumerable<IDimensionalModelData> DimensionalModels { get; set; }
         public IEnumerable<Help> HelpFiles { get; set; }
+        public IEnumerable<IMaterial> Materials { get; set; }
+
+        //Running Data
         public Dictionary<string, CancellationTokenSource> LiveTaskTokens { get; set; }
 
+        public int LiveRooms { get; set; }
+        public int LiveInanimates { get; set; }
+        public int LiveNPCs { get; set; }
         public int LivePlayers { get; set; }
     }
 
@@ -76,6 +93,119 @@ namespace NetMud.Models.GameAdmin
 
 
         public Help DataObject { get; set; }
+    }
+
+    public class ManageMaterialDataViewModel : PagedDataModel<Material>, BaseViewModel
+    {
+        public ApplicationUser authedUser { get; set; }
+
+        public ManageMaterialDataViewModel(IEnumerable<Material> items)
+            : base(items)
+        {
+            CurrentPageNumber = 1;
+            ItemsPerPage = 20;
+        }
+
+        internal override Func<Material, bool> SearchFilter
+        {
+            get
+            {
+                return item => item.Name.ToLower().Contains(SearchTerms.ToLower()) || item.Name.ToLower().Contains(SearchTerms.ToLower());
+            }
+        }
+    }
+
+    public class AddEditMaterialViewModel : BaseViewModel
+    {
+        public ApplicationUser authedUser { get; set; }
+
+        public AddEditMaterialViewModel()
+        {
+        }
+
+        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
+        [DataType(DataType.Text)]
+        [Display(Name = "Name")]
+        public string NewName { get; set; }
+
+        [DataType(DataType.Text)]
+        [Display(Name = "Is Raw")]
+        public bool NewRaw { get; set; }
+
+        [DataType(DataType.Text)]
+        [Display(Name = "Is Conductive")]
+        public bool NewConductive { get; set; }
+
+        [DataType(DataType.Text)]
+        [Display(Name = "Is Magnetic")]
+        public bool NewMagnetic { get; set; }
+
+        [DataType(DataType.Text)]
+        [Display(Name = "Is Flammable")]
+        public bool NewFlammable { get; set; }
+
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [DataType(DataType.Text)]
+        [Display(Name = "Viscosity")]
+        public short NewViscosity{ get; set; }
+
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [DataType(DataType.Text)]
+        [Display(Name = "Density")]
+        public short NewDensity { get; set; }
+
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [DataType(DataType.Text)]
+        [Display(Name = "Mallebility")]
+        public short NewMallebility { get; set; }
+
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [DataType(DataType.Text)]
+        [Display(Name = "Ductility")]
+        public short NewDuctility { get; set; }
+
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [DataType(DataType.Text)]
+        [Display(Name = "Porosity")]
+        public short NewPorosity { get; set; }
+
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [DataType(DataType.Text)]
+        [Display(Name = "Per Unit Mass")]
+        public short NewUnitMass { get; set; }
+
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [DataType(DataType.Text)]
+        [Display(Name = "Fusion Point")]
+        public short NewSolidPoint { get; set; }
+
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [DataType(DataType.Text)]
+        [Display(Name = "Vaporization Point")]
+        public short NewGasPoint { get; set; }
+
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [DataType(DataType.Text)]
+        [Display(Name = "Temperature Retention")]
+        public short NewTemperatureRetention { get; set; }
+
+        [DataType(DataType.Text)]
+        [Display(Name = "Damage Resistance")]
+        public short[] Resistances { get; set; }
+
+        [DataType(DataType.Text)]
+        [Display(Name = "Damage Resistance Value")]
+        public short[] ResistanceValues { get; set; }
+
+        [DataType(DataType.Text)]
+        [Display(Name = "Material Composition")]
+        public long[] Compositions { get; set; }
+
+        [DataType(DataType.Text)]
+        [Display(Name = "Material Composition Percentage")]
+        public short[] CompositionPercentages { get; set; }
+
+        public Material DataObject { get; set; }
     }
 
     public class ManageDimensionalModelDataViewModel : PagedDataModel<DimensionalModelData>, BaseViewModel
@@ -164,8 +294,16 @@ namespace NetMud.Models.GameAdmin
         [Display(Name = "Inanimate Container Volumes")]
         public long[] InanimateContainerVolumes { get; set; }
 
+        [DataType(DataType.Text)]
+        [Display(Name = "Character Containers")]
         public string[] MobileContainerNames { get; set; }
+
+        [DataType(DataType.Text)]
+        [Display(Name = "Character Container Weights")]
         public long[] MobileContainerWeights { get; set; }
+
+        [DataType(DataType.Text)]
+        [Display(Name = "Character Container Volumes")]
         public long[] MobileContainerVolumes { get; set; }
 
         public IInanimateData DataObject { get; set; }

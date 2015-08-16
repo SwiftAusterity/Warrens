@@ -198,6 +198,7 @@
     <Content Include="App_Data\dbo.Character.sql" />
     <Content Include="App_Data\dbo.DimensionalModelData.sql" />
     <Content Include="App_Data\dbo.Help.sql" />
+    <Content Include="App_Data\dbo.Material.sql" />
     <Content Include="App_Data\dbo.NonPlayerCharacter.sql" />
     <Content Include="App_Data\dbo.InanimateData.sql" />
     <Content Include="App_Data\dbo.PathwayData.sql" />
@@ -284,6 +285,9 @@
     <Content Include="Views\GameAdmin\AddHelpData.cshtml" />
     <Content Include="Views\GameAdmin\AddDimensionalModelData.cshtml" />
     <Content Include="Views\GameAdmin\ManageDimensionalModelData.cshtml" />
+    <Content Include="Views\GameAdmin\EditMaterialData.cshtml" />
+    <Content Include="Views\GameAdmin\AddMaterialData.cshtml" />
+    <Content Include="Views\GameAdmin\ManageMaterialData.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

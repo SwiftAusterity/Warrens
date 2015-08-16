@@ -9,14 +9,17 @@
 
 <p class="text-success">@ViewBag.StatusMessage</p>
 @{
+    <div style="padding: 10px;">
+        @Html.ActionLink("Add New", "AddRoomData", null, new { @style = "float: left; margin-top: 30px;" })
+    </div>
+
     if (Model.Items.Count() > 0)
     {
         using (Html.BeginForm("ManageRoomData", "GameAdmin", FormMethod.Post, new { id = "paginationForm" }))
         {
             @Html.AntiForgeryToken()
             <nav>
-                @Html.ActionLink("Add New", "AddRoomData", null, new { @style = "float: left; margin-top: 30px;" })
-               <ul class="pagination" style="float: right;">
+                <ul class="pagination" style="float: right;">
                     <li style="float: left;">
                         <div class="col-md-10" style="width: inherit;">
                             @Html.TextBoxFor(m => m.SearchTerms, new { @class = "form-control", @style = "width: 200px;float: left;margin-right: 15px;", @title = "Search Term", @onchange = "paginationForm.submit();" })
@@ -28,21 +31,21 @@
                     </li>
                     @for (var i = 1; i <= Model.NumberOfPages; i++)
                     {
-                        if (Model.NumberOfPages > 5 
-                                && i != 1 
-                                && i != Model.NumberOfPages 
-                                && i > (Model.NumberOfPages / 2 + 1) 
+                        if (Model.NumberOfPages > 5
+                                && i != 1
+                                && i != Model.NumberOfPages
+                                && i > (Model.NumberOfPages / 2 + 1)
                                 && i < (Model.NumberOfPages / 2 - 1))
                         {
                             continue;
                         }
-                        
+
                         <li>
                             <button value="@i" title="@i" name="CurrentPageNumber">@i.ToString()</button>
                         </li>
                     }
                     <li class="@nextPageState">
-                       <button aria-label="Next" value="@(Model.CurrentPageNumber + 1)" title="Next" name="CurrentPageNumber"><span aria-hidden="true">&raquo;</span></button>
+                        <button aria-label="Next" value="@(Model.CurrentPageNumber + 1)" title="Next" name="CurrentPageNumber"><span aria-hidden="true">&raquo;</span></button>
                     </li>
                 </ul>
             </nav>

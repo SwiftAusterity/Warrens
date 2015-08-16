@@ -44,6 +44,12 @@
             @Html.ActionLink("Manage", "ManageDimensionalModelData")
             @Html.ActionLink("Add", "AddDimensionalModelData") ]
         </dd>
+        <dt>Materials:</dt>
+        <dd>
+            @Model.Materials.Count().ToString() [
+            @Html.ActionLink("Manage", "ManageMaterialData")
+            @Html.ActionLink("Add", "AddMaterialData") ]
+        </dd>
     </dl>
     <h4>Live Data</h4>
     <hr />
@@ -51,7 +57,19 @@
         <dt>Players:</dt>
         <dd>
             @Model.LivePlayers [
-            @Html.ActionLink("Live Players", "ManagePlayers") ]
+            @Html.ActionLink("Manage", "ManagePlayers") ]
+        </dd>
+        <dt>Rooms:</dt>
+        <dd>
+            @Model.LiveRooms [  ]
+        </dd>
+        <dt>Inanimates:</dt>
+        <dd>
+            @Model.LiveNPCs [  ]
+        </dd>
+        <dt>NPCs:</dt>
+        <dd>
+            @Model.LiveInanimates [  ]
         </dd>
     </dl>
     <h4>World State</h4>

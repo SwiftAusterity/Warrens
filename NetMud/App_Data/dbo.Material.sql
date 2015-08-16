@@ -1,6 +1,7 @@
 ﻿CREATE TABLE [dbo].[Material]
 (
 	[Id] BIGINT NOT NULL PRIMARY KEY IDENTITY, 
+    [Name] VARCHAR(200) NOT NULL,
     [Raw] BIT NOT NULL DEFAULT 1,
     [Conductive] BIT NOT NULL DEFAULT 0,
     [Magnetic] BIT NOT NULL DEFAULT 0,

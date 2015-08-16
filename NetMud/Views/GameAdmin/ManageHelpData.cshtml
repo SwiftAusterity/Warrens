@@ -9,13 +9,16 @@
 
 <p class="text-success">@ViewBag.StatusMessage</p>
 @{
+    <div style="padding: 10px;">
+        @Html.ActionLink("Add New", "AddHelpData", null, new { @style = "float: left; margin-top: 30px;" })
+    </div>
+
     if (Model.Items.Count() > 0)
     {
         using (Html.BeginForm("ManageHelpData", "GameAdmin", FormMethod.Post, new { id = "paginationForm" }))
         {
             @Html.AntiForgeryToken()
             <nav>
-                @Html.ActionLink("Add New", "AddHelpData", null, new { @style = "float: left; margin-top: 30px;" })
                 <ul class="pagination" style="float: right;">
                     <li style="float: left;">
                         <div class="col-md-10" style="width: inherit;">

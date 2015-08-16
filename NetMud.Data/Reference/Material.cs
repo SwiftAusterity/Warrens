@@ -32,6 +32,12 @@ namespace NetMud.Data.Reference
         public IDictionary<DamageType, short> Resistance { get; set; }
         public IDictionary<IMaterial, short> Composition { get; set; }
 
+        public Material()
+        {
+            Resistance = new Dictionary<DamageType, short>();
+            Composition = new Dictionary<IMaterial, short>();
+        }
+
         private IDictionary<DamageType, short> DeserializeResistances(string compJson)
         {
             var resistances = new Dictionary<DamageType, short>();
@@ -40,7 +46,7 @@ namespace NetMud.Data.Reference
 
             foreach (dynamic comp in comps)
             {
-                DamageType type = (DamageType)comp.Key;
+                DamageType type = Enum.Parse(typeof(DamageType), comp.Name);
                 short amount = comp.Value;
 
                 resistances.Add(type, amount);
@@ -62,7 +68,7 @@ namespace NetMud.Data.Reference
 
             foreach (dynamic comp in comps)
             {
-                long compId = comp.Key;
+                long compId = comp.Name;
                 short amount = comp.Value;
 
                 compositions.Add(ReferenceWrapper.GetOne<IMaterial>(compId), amount);
@@ -121,12 +127,18 @@ namespace NetMud.Data.Reference
         /// <returns>the object with ID and other db fields set</returns>
         public override IData Create()
         {
+            //TODO: parameterize the whole insert business
             Material returnValue = default(Material);
             var sql = new StringBuilder();
             sql.Append("insert into [dbo].[Material]([Name],[Raw],[Conductive],[Magnetic],[Flammable]");
             sql.Append(",[Viscosity],[Density],[Mallebility],[Ductility],[Porosity],[UnitMass],[SolidPoint],[GasPoint],[TemperatureRetention],[Resistance],[Composition])");
             sql.AppendFormat(" values('{0}',{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},'{14}','{15}')", Name
-                ,Raw,Conductive,Magnetic,Flammable,Viscosity,Density,Mallebility,Ductility,Porosity,UnitMass,SolidPoint,GasPoint,TemperatureRetention,SerializeResistances(),SerializeCompositions());
+                , Raw ? 1 : 0
+                , Conductive ? 1 : 0
+                , Magnetic ? 1 : 0
+                , Flammable ? 1 : 0
+                , Viscosity,Density,Mallebility,Ductility,Porosity,UnitMass,SolidPoint,GasPoint,TemperatureRetention
+                ,SerializeResistances(),SerializeCompositions());
             sql.Append(" select * from [dbo].[Material] where ID = Scope_Identity()");
 
             try
@@ -175,10 +187,10 @@ namespace NetMud.Data.Reference
             sql.Append("update [dbo].[Material] set ");
             sql.AppendFormat(" [Name] = '{0}' ", Name);
 
-            sql.AppendFormat(", [Raw] = {0} ", Raw);
-            sql.AppendFormat(", [Conductive] = {0} ", Conductive);
-            sql.AppendFormat(", [Magnetic] = {0} ", Magnetic);
-            sql.AppendFormat(", [Flammable] = {0} ", Flammable);
+            sql.AppendFormat(", [Raw] = {0} ", Raw ? 1 : 0);
+            sql.AppendFormat(", [Conductive] = {0} ", Conductive ? 1 : 0);
+            sql.AppendFormat(", [Magnetic] = {0} ", Magnetic ? 1 : 0);
+            sql.AppendFormat(", [Flammable] = {0} ", Flammable ? 1 : 0);
             sql.AppendFormat(", [Viscosity] = {0} ", Viscosity);
             sql.AppendFormat(", [Density] = {0} ", Density);
             sql.AppendFormat(", [Mallebility] = {0} ", Mallebility);
