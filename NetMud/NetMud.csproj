@@ -218,6 +218,7 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\HtmlUtilities.js" />
     <Content Include="Scripts\jquery.gridster.min.js" />
     <Content Include="Scripts\WebSocketsClient.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />

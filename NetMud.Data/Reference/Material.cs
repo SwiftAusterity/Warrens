@@ -68,7 +68,7 @@ namespace NetMud.Data.Reference
 
             foreach (dynamic comp in comps)
             {
-                long compId = comp.Name;
+                long compId = long.Parse(comp.Name);
                 short amount = comp.Value;
 
                 compositions.Add(ReferenceWrapper.GetOne<IMaterial>(compId), amount);

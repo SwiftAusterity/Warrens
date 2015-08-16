@@ -782,7 +782,7 @@ namespace NetMud.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult RemoveMaterialData(long ID, string authorize)
         {
-            string message = string.Empty;
+             string message = string.Empty;
 
             if (string.IsNullOrWhiteSpace(authorize) || !ID.ToString().Equals(authorize))
                 message = "You must check the proper authorize radio button first.";
@@ -811,6 +811,7 @@ namespace NetMud.Controllers
         {
             var vModel = new AddEditMaterialViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            vModel.ValidMaterials = ReferenceWrapper.GetAll<Material>();
 
             return View(vModel);
         }
@@ -851,7 +852,8 @@ namespace NetMud.Controllers
 
                         var currentValue = vModel.ResistanceValues[resistancesIndex];
 
-                        newObj.Resistance.Add((DamageType)type, currentValue);
+                        if (currentValue > 0)
+                            newObj.Resistance.Add((DamageType)type, currentValue);
                     }
 
                     resistancesIndex++;
@@ -871,7 +873,7 @@ namespace NetMud.Controllers
                         var currentValue = vModel.CompositionPercentages[compositionsIndex];
                         var material = ReferenceWrapper.GetOne<Material>(materialId);
 
-                        if (material != null)
+                        if (material != null && currentValue > 0)
                             newObj.Composition.Add(material, currentValue);
                     }
 
@@ -896,6 +898,7 @@ namespace NetMud.Controllers
             string message = string.Empty;
             var vModel = new AddEditMaterialViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            vModel.ValidMaterials = ReferenceWrapper.GetAll<Material>();
 
             var obj = ReferenceWrapper.GetOne<Material>(id);
 

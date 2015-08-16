@@ -1,6 +1,20 @@
-﻿@model NetMud.Models.GameAdmin.AddEditMaterialViewModel
+﻿@using NetMud.DataStructure.Base.Supporting
+
+@model NetMud.Models.GameAdmin.AddEditMaterialViewModel
 @{
     ViewBag.Title = "Edit Material";
+
+    var compositionsDropdown = Html.DropDownList("Compositions", Model.ValidMaterials.Select(rl => new SelectListItem()
+    {
+        Text = rl.Name,
+        Value = rl.ID.ToString()
+    }), htmlAttributes: new { id = "Compositions", Style = "padding: 7px; float:left; margin-top: 10px;" }).ToString().Replace(Environment.NewLine, "");
+
+    var resistancesDropdown = Html.DropDownList("Resistances", Enum.GetNames(typeof(DamageType)).Select(rl => new SelectListItem()
+    {
+        Text = rl,
+        Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString()
+    }), htmlAttributes: new { id = "Resistances", Style = "padding: 7px; float:left; margin-top: 10px;" }).ToString().Replace(Environment.NewLine, "");
 }
 
 <h2>@ViewBag.Title</h2>
@@ -131,11 +145,13 @@
                     @Html.LabelFor(m => m.Resistances, new { @class = "col-md-2 control-label" })
                     <a href="#" id="addResistancesRow" style="padding: 10px;">Add another...</a>
                 </div>
-                <div id="inanimateContainerRows" style="display: block;">
+                <div id="resistancesRows" style="display: block;">
                     @foreach (var container in Model.DataObject.Resistance)
                     {
                         <div class="col-md-10" style="padding-left: 10px;">
-                            <span style="padding: 10px; float:left;">Type: </span><input id="Resistances" name="Resistances" type="text" style="float:left; margin-top: 10px;" value="@container.Key.ToString()" />
+                            <span style="padding: 10px; float:left;">Type: </span>@Html.DropDownList("Resistances", Enum.GetNames(typeof(DamageType)).Select(rl =>
+                                                                                    new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString(), Selected = rl.Equals(Enum.GetName(typeof(DamageType), container.Key)) })
+                                                                                    , htmlAttributes: new { id = "Resistances", Style = "padding: 7px; float:left; margin-top: 10px;"})
                             <span style="padding: 10px; float:left;">Amount:</span><input id="ResistanceValues" name="ResistanceValues" type="text" style="float:left; margin-top: 10px;"  value="@container.Value">
                             <a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a>
                         </div>
@@ -152,7 +168,9 @@
                     @foreach (var container in Model.DataObject.Composition)
                     {
                         <div class="col-md-10" style="padding-left: 10px;">
-                            <span style="padding: 10px; float:left;">Material: </span><input id="Compositions" name="Compositions" type="text" style="float:left; margin-top: 10px;" value="@container.Key.Name">
+                            <span style="padding: 10px; float:left;">Material: </span>>@Html.DropDownList("Compositions", Model.ValidMaterials.Select(rl =>
+                                                                                    new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString(), Selected = rl.ID.Equals(@container.Key.ID) })
+                                                                                    , htmlAttributes: new { id = "Compositions", Style = "padding: 7px; float:left; margin-top: 10px;" })
                             <span style="padding: 10px; float:left;">Percentage:</span><input id="CompositionPercentages" name="CompositionPercentages" type="text" style="float:left; margin-top: 10px;" value="@container.Value">
                             <a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a>
                         </div>
@@ -170,12 +188,16 @@
 }
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/HtmlUtilities.js")
 
     <script type="text/javascript">
+        var compositionsDropdown = decodeHtml('@compositionsDropdown');
+        var resistancesDropdown = decodeHtml('@resistancesDropdown');
+
         $(document).ready(function () {
             $("#addResistancesRow").click(function () {
                 $("#resistancesRows").append(
-                    '<div class="col-md-10" style="padding-left: 10px;"><span style="padding: 10px; float:left;">Type: </span><input id="Resistances" name="Resistances" type="text" value="" style="float:left; margin-top: 10px;"><span style="padding: 10px; float:left;">Amount:</span><input id="ResistanceValues" name="ResistanceValues" type="text" value="" style="float:left; margin-top: 10px;"><a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a></div>'
+                    '<div class="col-md-10" style="padding-left: 10px;"><span style="padding: 10px; float:left;">Type: </span>' + resistancesDropdown + '<span style="padding: 10px; float:left;">Amount:</span><input id="ResistanceValues" name="ResistanceValues" type="text" value="" style="float:left; margin-top: 10px;"><a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a></div>'
                 );
 
                 $(".removeRow").click(function () {
@@ -187,7 +209,7 @@
 
             $("#addCompositionsRow").click(function () {
                 $("#compositionsRows").append(
-                    '<div class="col-md-10" style="padding-left: 10px;"><span style="padding: 10px; float:left;">Material: </span><input id="Compositions" name="Compositions" type="text" value="" style="float:left; margin-top: 10px;"><span style="padding: 10px; float:left;">Percentage:</span><input id="CompositionPercentages" name="CompositionPercentages" type="text" value="" style="float:left; margin-top: 10px;"><a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a></div>'
+                    '<div class="col-md-10" style="padding-left: 10px;"><span style="padding: 10px; float:left;">Material: </span>' + compositionsDropdown + '<span style="padding: 10px; float:left;">Percentage:</span><input id="CompositionPercentages" name="CompositionPercentages" type="text" value="" style="float:left; margin-top: 10px;"><a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a></div>'
                 );
 
                 $(".removeRow").click(function () {

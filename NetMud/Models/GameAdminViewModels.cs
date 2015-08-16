@@ -121,6 +121,7 @@ namespace NetMud.Models.GameAdmin
 
         public AddEditMaterialViewModel()
         {
+            ValidMaterials = Enumerable.Empty<IMaterial>();
         }
 
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
@@ -205,6 +206,7 @@ namespace NetMud.Models.GameAdmin
         [Display(Name = "Material Composition Percentage")]
         public short[] CompositionPercentages { get; set; }
 
+        public IEnumerable<IMaterial> ValidMaterials { get; set; }
         public Material DataObject { get; set; }
     }
 
