@@ -8,7 +8,6 @@ namespace NetMud.DataStructure.Base.Supporting
     /// </summary>
     public interface IMaterial : IReferenceData
     {
-        bool Raw { get; set; }
         bool Conductive { get; set; }
         bool Magnetic { get; set; }
         bool Flammable { get; set; }
@@ -18,7 +17,6 @@ namespace NetMud.DataStructure.Base.Supporting
         short Mallebility { get; set; }
         short Ductility { get; set; }
         short Porosity { get; set; }
-        short UnitMass { get; set; }
         short SolidPoint { get; set; }
         short GasPoint { get; set; }
 

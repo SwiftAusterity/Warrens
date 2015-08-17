@@ -14,7 +14,6 @@ namespace NetMud.Data.Reference
 {
     public class Material : ReferenceDataPartial, IMaterial
     {
-        public bool Raw { get; set; }
         public bool Conductive { get; set; }
         public bool Magnetic { get; set; }
         public bool Flammable { get; set; }
@@ -24,7 +23,6 @@ namespace NetMud.Data.Reference
         public short Mallebility { get; set; }
         public short Ductility { get; set; }
         public short Porosity { get; set; }
-        public short UnitMass { get; set; }
         public short SolidPoint { get; set; }
         public short GasPoint { get; set; }
          
@@ -98,7 +96,6 @@ namespace NetMud.Data.Reference
             LastRevised = DataUtility.GetFromDataRow<DateTime>(dr, "LastRevised");
             Name = DataUtility.GetFromDataRow<string>(dr, "Name");
 
-            Raw = DataUtility.GetFromDataRow<bool>(dr, "Raw");
             Conductive = DataUtility.GetFromDataRow<bool>(dr, "Conductive");
             Magnetic = DataUtility.GetFromDataRow<bool>(dr, "Magnetic");
             Flammable = DataUtility.GetFromDataRow<bool>(dr, "Flammable");
@@ -108,7 +105,6 @@ namespace NetMud.Data.Reference
             Mallebility = DataUtility.GetFromDataRow<short>(dr, "Mallebility");
             Ductility = DataUtility.GetFromDataRow<short>(dr, "Ductility");
             Porosity = DataUtility.GetFromDataRow<short>(dr, "Porosity");
-            UnitMass = DataUtility.GetFromDataRow<short>(dr, "UnitMass");
             SolidPoint = DataUtility.GetFromDataRow<short>(dr, "SolidPoint");
             GasPoint = DataUtility.GetFromDataRow<short>(dr, "GasPoint");
 
@@ -130,14 +126,13 @@ namespace NetMud.Data.Reference
             //TODO: parameterize the whole insert business
             Material returnValue = default(Material);
             var sql = new StringBuilder();
-            sql.Append("insert into [dbo].[Material]([Name],[Raw],[Conductive],[Magnetic],[Flammable]");
+            sql.Append("insert into [dbo].[Material]([Name],[Conductive],[Magnetic],[Flammable]");
             sql.Append(",[Viscosity],[Density],[Mallebility],[Ductility],[Porosity],[UnitMass],[SolidPoint],[GasPoint],[TemperatureRetention],[Resistance],[Composition])");
-            sql.AppendFormat(" values('{0}',{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},'{14}','{15}')", Name
-                , Raw ? 1 : 0
+            sql.AppendFormat(" values('{0}',{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},'{12}','{13}')", Name
                 , Conductive ? 1 : 0
                 , Magnetic ? 1 : 0
                 , Flammable ? 1 : 0
-                , Viscosity,Density,Mallebility,Ductility,Porosity,UnitMass,SolidPoint,GasPoint,TemperatureRetention
+                , Viscosity,Density,Mallebility,Ductility,Porosity,SolidPoint,GasPoint,TemperatureRetention
                 ,SerializeResistances(),SerializeCompositions());
             sql.Append(" select * from [dbo].[Material] where ID = Scope_Identity()");
 
@@ -187,7 +182,6 @@ namespace NetMud.Data.Reference
             sql.Append("update [dbo].[Material] set ");
             sql.AppendFormat(" [Name] = '{0}' ", Name);
 
-            sql.AppendFormat(", [Raw] = {0} ", Raw ? 1 : 0);
             sql.AppendFormat(", [Conductive] = {0} ", Conductive ? 1 : 0);
             sql.AppendFormat(", [Magnetic] = {0} ", Magnetic ? 1 : 0);
             sql.AppendFormat(", [Flammable] = {0} ", Flammable ? 1 : 0);
@@ -196,7 +190,6 @@ namespace NetMud.Data.Reference
             sql.AppendFormat(", [Mallebility] = {0} ", Mallebility);
             sql.AppendFormat(", [Ductility] = {0} ", Ductility);
             sql.AppendFormat(", [Porosity] = {0} ", Porosity);
-            sql.AppendFormat(", [UnitMass] = {0} ", UnitMass);
             sql.AppendFormat(", [SolidPoint] = {0} ", SolidPoint);
             sql.AppendFormat(", [GasPoint] = {0} ", GasPoint);
             sql.AppendFormat(", [TemperatureRetention] = {0} ", TemperatureRetention);

@@ -130,10 +130,6 @@ namespace NetMud.Models.GameAdmin
         public string NewName { get; set; }
 
         [DataType(DataType.Text)]
-        [Display(Name = "Is Raw")]
-        public bool NewRaw { get; set; }
-
-        [DataType(DataType.Text)]
         [Display(Name = "Is Conductive")]
         public bool NewConductive { get; set; }
 
@@ -169,11 +165,6 @@ namespace NetMud.Models.GameAdmin
         [DataType(DataType.Text)]
         [Display(Name = "Porosity")]
         public short NewPorosity { get; set; }
-
-        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
-        [DataType(DataType.Text)]
-        [Display(Name = "Per Unit Mass")]
-        public short NewUnitMass { get; set; }
 
         [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
         [DataType(DataType.Text)]

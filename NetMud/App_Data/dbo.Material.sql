@@ -1,8 +1,9 @@
 ﻿CREATE TABLE [dbo].[Material]
 (
-	[Id] BIGINT NOT NULL PRIMARY KEY IDENTITY, 
-    [Name] VARCHAR(200) NOT NULL,
-    [Raw] BIT NOT NULL DEFAULT 1,
+    [Id]						BIGINT			IDENTITY (1, 1) NOT NULL,
+    [Created]					DATETIME		DEFAULT (getutcdate()) NOT NULL,
+    [LastRevised]				DATETIME		DEFAULT (getutcdate()) NOT NULL,
+    [Name]						VARCHAR (200)	NOT NULL,
     [Conductive] BIT NOT NULL DEFAULT 0,
     [Magnetic] BIT NOT NULL DEFAULT 0,
     [Flammable] BIT NOT NULL DEFAULT 1,
@@ -11,7 +12,6 @@
     [Mallebility] SMALLINT NOT NULL DEFAULT 1,
     [Ductility] SMALLINT NOT NULL DEFAULT 1,
     [Porosity] SMALLINT NOT NULL DEFAULT 1,
-    [UnitMass] SMALLINT NOT NULL DEFAULT 1,
     [SolidPoint] SMALLINT NOT NULL DEFAULT 1,
     [GasPoint] SMALLINT NOT NULL DEFAULT 1,
     [TemperatureRetention] SMALLINT NOT NULL DEFAULT 1,

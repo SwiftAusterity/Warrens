@@ -834,10 +834,8 @@ namespace NetMud.Controllers
             newObj.Magnetic = vModel.NewMagnetic;
             newObj.Mallebility = vModel.NewMallebility;
             newObj.Porosity = vModel.NewPorosity;
-            newObj.Raw = vModel.NewRaw;
             newObj.SolidPoint = vModel.NewSolidPoint;
             newObj.TemperatureRetention = vModel.NewTemperatureRetention;
-            newObj.UnitMass = vModel.NewUnitMass;
             newObj.Viscosity = vModel.NewViscosity;
 
             if (vModel.Resistances != null)
@@ -918,10 +916,8 @@ namespace NetMud.Controllers
             vModel.NewMagnetic = obj.Magnetic;
             vModel.NewMallebility = obj.Mallebility;
             vModel.NewPorosity = obj.Porosity;
-            vModel.NewRaw = obj.Raw;
             vModel.NewSolidPoint = obj.SolidPoint;
             vModel.NewTemperatureRetention = obj.TemperatureRetention;
-            vModel.NewUnitMass = obj.UnitMass;
             vModel.NewViscosity = obj.Viscosity;
 
             return View(vModel);
@@ -950,10 +946,8 @@ namespace NetMud.Controllers
             obj.Magnetic = vModel.NewMagnetic;
             obj.Mallebility = vModel.NewMallebility;
             obj.Porosity = vModel.NewPorosity;
-            obj.Raw = vModel.NewRaw;
             obj.SolidPoint = vModel.NewSolidPoint;
             obj.TemperatureRetention = vModel.NewTemperatureRetention;
-            obj.UnitMass = vModel.NewUnitMass;
             obj.Viscosity = vModel.NewViscosity;
 
             if (vModel.Resistances != null)
