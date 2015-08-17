@@ -476,7 +476,6 @@ namespace NetMud.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult AddInanimateData(AddEditInanimateDataViewModel vModel)
         {
-            bool validData = true;
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
@@ -546,6 +545,7 @@ namespace NetMud.Controllers
             }
 
             var dimModel = ReferenceWrapper.GetOne<DimensionalModelData>(vModel.DimensionalModelId);
+            bool validData = true;
 
             if (dimModel == null)
             {
@@ -679,13 +679,54 @@ namespace NetMud.Controllers
             foreach (var container in obj.InanimateContainers.Where(ic => !vModel.InanimateContainerNames.Contains(ic.Name)))
                 obj.InanimateContainers.Remove(container);
 
-            if (obj.Save())
+            var materialParts = new Dictionary<string, IMaterial>();
+            if (vModel.ModelPartNames != null)
             {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - EditInanimateData[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                message = "Edit Successful.";
+                int nameIndex = 0;
+                foreach (var partName in vModel.ModelPartNames)
+                {
+                    if (!string.IsNullOrWhiteSpace(partName))
+                    {
+                        if (vModel.ModelPartMaterials.Count() <= nameIndex)
+                            break;
+
+                        var material = ReferenceWrapper.GetOne<Material>(vModel.ModelPartMaterials[nameIndex]);
+
+                        if (material != null)
+                            materialParts.Add(partName, material);
+                    }
+
+                    nameIndex++;
+                }
             }
-            else
-                message = "Error; Edit failed.";
+
+            var dimModel = ReferenceWrapper.GetOne<DimensionalModelData>(vModel.DimensionalModelId);
+            bool validData = true;
+
+            if (dimModel == null)
+            {
+                message = "Choose a valid dimensional model.";
+                validData = false;
+            }
+
+            if (dimModel.ModelPlanes.Any(plane => !materialParts.ContainsKey(plane.TagName)))
+            {
+                message = "You need to choose a material for each Dimensional Model planar section. (" + string.Join(",", dimModel.ModelPlanes.Select(plane => plane.TagName)) + ")";
+                validData = false;
+            }
+
+            if (validData)
+            {
+                obj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth, vModel.DimensionalModelId, materialParts);
+
+                if (obj.Save())
+                {
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - EditInanimateData[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    message = "Edit Successful.";
+                }
+                else
+                    message = "Error; Edit failed.";
+            }
 
             return RedirectToAction("ManageInanimateData", new { Message = message });
         }
