@@ -25,6 +25,16 @@ namespace NetMud.Data.Reference
             Composition = DeserializeMaterialCompositions(materialComps);
         }
 
+        public DimensionalModel(int length, int height, int width, long backingDataId, IDictionary<string, IMaterial> materialComps)
+        {
+            Length = length;
+            Height = height;
+            Width = width;
+            Composition = materialComps;
+
+            ModelBackingData = ReferenceWrapper.GetOne<IDimensionalModelData>(backingDataId);
+        }
+
         public DimensionalModel(int length, int height, int width, long backingDataId, string compJson)
         {
             Length = length;
@@ -78,7 +88,7 @@ namespace NetMud.Data.Reference
 
             foreach (dynamic comp in comps)
             {
-                string sectionName = comp.Key;
+                string sectionName = comp.Name;
                 long materialId = comp.Value;
 
                 var material = ReferenceWrapper.GetOne<IMaterial>(materialId);

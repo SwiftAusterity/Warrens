@@ -21,6 +21,7 @@ using NetMud.Data.System;
 using NetMud.DataStructure.Base.Entity;
 using System.Text;
 using System;
+using System.Collections.Generic;
 
 
 
@@ -464,6 +465,8 @@ namespace NetMud.Controllers
         {
             var vModel = new AddEditInanimateDataViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            vModel.ValidMaterials = ReferenceWrapper.GetAll<Material>();
+            vModel.ValidModels = ReferenceWrapper.GetAll<DimensionalModelData>();
 
             return View(vModel);
         }
@@ -473,6 +476,7 @@ namespace NetMud.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult AddInanimateData(AddEditInanimateDataViewModel vModel)
         {
+            bool validData = true;
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
@@ -520,12 +524,52 @@ namespace NetMud.Controllers
                 }
             }
 
-            if (newObj.Create() == null)
-                message = "Error; Creation failed.";
-            else
+            var materialParts = new Dictionary<string, IMaterial>();
+            if (vModel.ModelPartNames != null)
             {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - AddInanimateData[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                message = "Creation Successful.";
+                int nameIndex = 0;
+                foreach (var partName in vModel.ModelPartNames)
+                {
+                    if (!string.IsNullOrWhiteSpace(partName))
+                    {
+                        if (vModel.ModelPartMaterials.Count() <= nameIndex)
+                            break;
+
+                        var material = ReferenceWrapper.GetOne<Material>(vModel.ModelPartMaterials[nameIndex]);
+
+                        if (material != null)
+                            materialParts.Add(partName, material);
+                    }
+
+                    nameIndex++;
+                }
+            }
+
+            var dimModel = ReferenceWrapper.GetOne<DimensionalModelData>(vModel.DimensionalModelId);
+
+            if (dimModel == null)
+            {
+                message = "Choose a valid dimensional model.";
+                validData = false;
+            }
+
+            if (dimModel.ModelPlanes.Any(plane => !materialParts.ContainsKey(plane.TagName)))
+            {
+                message = "You need to choose a material for each Dimensional Model planar section. (" + string.Join(",", dimModel.ModelPlanes.Select(plane => plane.TagName)) + ")";
+                validData = false;
+            }
+
+            if (validData)
+            {
+                newObj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth, vModel.DimensionalModelId, materialParts);
+
+                if (newObj.Create() == null)
+                    message = "Error; Creation failed.";
+                else
+                {
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddInanimateData[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    message = "Creation Successful.";
+                }
             }
 
             return RedirectToAction("ManageInanimateData", new { Message = message });
@@ -537,6 +581,8 @@ namespace NetMud.Controllers
             string message = string.Empty;
             var vModel = new AddEditInanimateDataViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            vModel.ValidMaterials = ReferenceWrapper.GetAll<Material>();
+            vModel.ValidModels = ReferenceWrapper.GetAll<DimensionalModelData>();
 
             var obj = DataWrapper.GetOne<InanimateData>(id);
 
@@ -782,7 +828,7 @@ namespace NetMud.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult RemoveMaterialData(long ID, string authorize)
         {
-             string message = string.Empty;
+            string message = string.Empty;
 
             if (string.IsNullOrWhiteSpace(authorize) || !ID.ToString().Equals(authorize))
                 message = "You must check the proper authorize radio button first.";
@@ -1016,7 +1062,7 @@ namespace NetMud.Controllers
 
             foreach (var container in obj.Composition.Where(ic => !vModel.Compositions.Contains(ic.Key.ID)))
                 obj.Composition.Remove(container);
-            
+
             if (obj.Save())
             {
                 LoggingUtility.LogAdminCommandUsage("*WEB* - EditMaterialData[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);

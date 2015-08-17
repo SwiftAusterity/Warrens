@@ -1,6 +1,12 @@
 ﻿@model NetMud.Models.GameAdmin.AddEditInanimateDataViewModel
 @{
     ViewBag.Title = "Add New Inanimate";
+
+    var materialsDropdown = Html.DropDownList("ModelPartMaterials", Model.ValidMaterials.Select(rl => new SelectListItem()
+        {
+            Text = rl.Name
+            , Value = rl.ID.ToString()
+        }), htmlAttributes: new { id = "ModelPartMaterials", Style = "padding: 7px; float:left; margin-top: 10px;" }).ToString().Replace(Environment.NewLine, "");
 }
 
 <h2>@ViewBag.Title</h2>
@@ -31,7 +37,7 @@
                         <span style="padding: 10px; float:left;">Name: </span>@Html.TextBoxFor(m => m.InanimateContainerNames, new { @style = " float:left; margin-top: 10px;" })
                         <span style="padding: 10px; float:left;">Weight:</span>@Html.TextBoxFor(m => m.InanimateContainerWeights, new { @style = " float:left; margin-top: 10px;" })
                         <span style="padding: 10px; float:left;">Volume:</span>@Html.TextBoxFor(m => m.InanimateContainerVolumes, new { @style = " float:left; margin-top: 10px;" })
-                        <a href="#" class="removeContainerRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a>
+                        <a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a>
                     </div>
                 </div>
             </div>
@@ -46,8 +52,55 @@
                         <span style="padding: 10px; float:left;">Name: </span>@Html.TextBoxFor(m => m.MobileContainerNames, new { @style = " float:left; margin-top: 10px;" })
                         <span style="padding: 10px; float:left;">Weight:</span>@Html.TextBoxFor(m => m.MobileContainerWeights, new { @style = " float:left; margin-top: 10px;" })
                         <span style="padding: 10px; float:left;">Volume:</span>@Html.TextBoxFor(m => m.MobileContainerVolumes, new { @style = " float:left; margin-top: 10px;" })
-                        <a href="#" class="removeContainerRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a>
-                   </div>
+                        <a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a>
+                    </div>
+                </div>
+            </div>
+            <br class="clearfix" />
+            <div class="form-group">
+                @Html.LabelFor(m => m.DimensionalModelId, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.DropDownList("DimensionalModelId", Model.ValidModels.Select(rl =>
+                                                                new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
+                                                                , htmlAttributes: new { id = "DimensionalModelId", Style = "padding: 7px; float:left; margin-top: 10px;" })
+                    @Html.ValidationMessageFor(m => m.DimensionalModelId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.DimensionalModelHeight, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.DimensionalModelHeight, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.DimensionalModelHeight, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.DimensionalModelLength, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.DimensionalModelLength, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.DimensionalModelLength, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.DimensionalModelWidth, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.DimensionalModelWidth, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.DimensionalModelWidth, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <br class="clearfix" />
+            <div class="form-group">
+                <div style="display: block; padding-bottom: 10px;">
+                    @Html.LabelFor(m => m.ModelPartNames, new { @class = "col-md-2 control-label" })
+                    <a href="#" id="addModelPartName" style="padding: 10px;">Add another...</a>
+                </div>
+                <div id="modelPartRows" style="display: block;">
+                    <div class="col-md-10" style="padding-left: 10px;">
+                        <span style="padding: 10px; float:left;">Part Name:</span>@Html.TextBoxFor(m => m.ModelPartNames, new { @style = " float:left; margin-top: 10px;" })
+                        <span style="padding: 10px; float:left;">Material: </span>@Html.DropDownList("ModelPartMaterials", Model.ValidMaterials.Select(rl =>
+                                                                                            new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
+                                                                                            , htmlAttributes: new { id = "ModelPartMaterials", Style = "padding: 7px; float:left; margin-top: 10px;" })
+                        <a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a>
+                    </div>
                 </div>
             </div>
             <div class="form-group">
@@ -58,17 +111,22 @@
         }
     </section>
 }
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/HtmlUtilities.js")
+
 
     <script type="text/javascript">
+        var materialsDropdown = decodeHtml('@materialsDropdown');
+
         $(document).ready(function () {
             $("#addInanimateContainerRow").click(function () {
                 $("#inanimateContainerRows").append(
-                    '<div class="col-md-10" style="padding-left:10px;"><span style="padding: 10px; float:left;">Name: </span><input id="InanimateContainerNames" name="InanimateContainerNames" type="text" value="" style="float:left; margin-top: 10px;"><span style="padding: 10px; float:left;">Weight:</span><input id="InanimateContainerWeights" name="InanimateContainerWeights" type="text" value="" style="float:left; margin-top: 10px;"><span style="padding: 10px; float:left;">Volume:</span><input id="InanimateContainerVolumes" name="InanimateContainerVolumes" type="text" value="" style="float:left; margin-top: 10px;"><a href="#" class="removeContainerRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a></div>'
+                    '<div class="col-md-10" style="padding-left:10px;"><span style="padding: 10px; float:left;">Name: </span><input id="InanimateContainerNames" name="InanimateContainerNames" type="text" value="" style="float:left; margin-top: 10px;"><span style="padding: 10px; float:left;">Weight:</span><input id="InanimateContainerWeights" name="InanimateContainerWeights" type="text" value="" style="float:left; margin-top: 10px;"><span style="padding: 10px; float:left;">Volume:</span><input id="InanimateContainerVolumes" name="InanimateContainerVolumes" type="text" value="" style="float:left; margin-top: 10px;"><a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a></div>'
                 );
 
-                $(".removeContainerRow").click(function () {
+                $(".removeRow").click(function () {
                     $(this).parent().remove();
                     return false;
                 });
@@ -77,17 +135,29 @@
 
             $("#addMobileContainerRow").click(function () {
                 $("#mobileContainerRows").append(
-                    '<div class="col-md-10" style="padding-left:10px;"><span style="padding: 10px; float:left;">Name: </span><input id="MobileContainerNames" name="MobileContainerNames" type="text" value="" style="float:left; margin-top: 10px;"><span style="padding: 10px; float:left;">Weight:</span><input id="MobileContainerWeights" name="MobileContainerWeights" type="text" value="" style="float:left; margin-top: 10px;"><span style="padding: 10px; float:left;">Volume:</span><input id="MobileContainerVolumes" name="MobileContainerVolumes" type="text" value="" style="float:left; margin-top: 10px;"><a href="#" class="removeContainerRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a></div>'
+                    '<div class="col-md-10" style="padding-left:10px;"><span style="padding: 10px; float:left;">Name: </span><input id="MobileContainerNames" name="MobileContainerNames" type="text" value="" style="float:left; margin-top: 10px;"><span style="padding: 10px; float:left;">Weight:</span><input id="MobileContainerWeights" name="MobileContainerWeights" type="text" value="" style="float:left; margin-top: 10px;"><span style="padding: 10px; float:left;">Volume:</span><input id="MobileContainerVolumes" name="MobileContainerVolumes" type="text" value="" style="float:left; margin-top: 10px;"><a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a></div>'
                 );
 
-                $(".removeContainerRow").click(function () {
+                $(".removeRow").click(function () {
                     $(this).parent().remove();
                     return false;
                 });
                 return false;
             });
 
-            $(".removeContainerRow").click(function () {
+            $("#addModelPartName").click(function () {
+                $("#modelPartRows").append(
+                    '<div class="col-md-10" style="padding-left:10px;"><span style="padding: 10px; float:left;">Part Name: </span><input id="ModelPartNames" name="MobileContainerNames" type="text" value="" style="float:left; margin-top: 10px;"><span style="padding: 10px; float:left;">Material:</span>' + materialsDropdown + '<a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a></div>'
+                );
+
+                $(".removeRow").click(function () {
+                    $(this).parent().remove();
+                    return false;
+                });
+                return false;
+            });
+
+            $(".removeRow").click(function () {
                 $(this).parent().remove();
                 return false;
             });

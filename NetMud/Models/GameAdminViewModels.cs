@@ -53,6 +53,7 @@ namespace NetMud.Models.GameAdmin
         public int LivePlayers { get; set; }
     }
 
+    #region Help
     public class ManageHelpDataViewModel : PagedDataModel<Help>, BaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
@@ -94,7 +95,9 @@ namespace NetMud.Models.GameAdmin
 
         public Help DataObject { get; set; }
     }
+    #endregion
 
+    #region Materials
     public class ManageMaterialDataViewModel : PagedDataModel<Material>, BaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
@@ -200,7 +203,9 @@ namespace NetMud.Models.GameAdmin
         public IEnumerable<IMaterial> ValidMaterials { get; set; }
         public Material DataObject { get; set; }
     }
+    #endregion
 
+    #region Models
     public class ManageDimensionalModelDataViewModel : PagedDataModel<DimensionalModelData>, BaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
@@ -238,10 +243,11 @@ namespace NetMud.Models.GameAdmin
         [Display(Name = "Model Planes Upload")]
         public HttpPostedFileBase ModelFile { get; set; }
 
-
         public DimensionalModelData DataObject { get; set; }
     }
+    #endregion
 
+    #region Inanimates
     public class ManageInanimateDataViewModel : PagedDataModel<IInanimateData>, BaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
@@ -268,6 +274,8 @@ namespace NetMud.Models.GameAdmin
 
         public AddEditInanimateDataViewModel()
         {
+            ValidModels = Enumerable.Empty<IDimensionalModelData>();
+            ValidMaterials = Enumerable.Empty<IMaterial>();
         }
 
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
@@ -299,9 +307,42 @@ namespace NetMud.Models.GameAdmin
         [Display(Name = "Character Container Volumes")]
         public long[] MobileContainerVolumes { get; set; }
 
+        [Range(1, 1200, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [DataType(DataType.Text)]
+        [Display(Name = "Length (inches)")]
+        public int DimensionalModelLength { get; set; }
+
+        [Range(1, 1200, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [DataType(DataType.Text)]
+        [Display(Name = "Height (inches)")]
+        public int DimensionalModelHeight { get; set; }
+
+        [Range(1, 1200, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [DataType(DataType.Text)]
+        [Display(Name = "Width (inches)")]
+        public int DimensionalModelWidth { get; set; }
+
+        [DataType(DataType.Text)]
+        [Display(Name = "Dimensional Model")]
+        public long DimensionalModelId { get; set; }
+
+        [DataType(DataType.Text)]
+        [Display(Name = "Model Parts")]
+        public string[] ModelPartNames { get; set; }
+
+        [DataType(DataType.Text)]
+        [Display(Name = "Model Part Materials")]
+        public long[] ModelPartMaterials { get; set; }
+
+
+        public IEnumerable<IDimensionalModelData> ValidModels { get; set; }
+        public IEnumerable<IMaterial> ValidMaterials { get; set; }
+
         public IInanimateData DataObject { get; set; }
     }
+    #endregion
 
+    #region Rooms
     public class ManageRoomDataViewModel : PagedDataModel<IRoomData>, BaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
@@ -336,7 +377,9 @@ namespace NetMud.Models.GameAdmin
 
         public IRoomData DataObject { get; set; }
     }
+    #endregion
 
+    #region NPC
     public class ManageNPCDataViewModel : PagedDataModel<INonPlayerCharacter>, BaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
@@ -383,7 +426,9 @@ namespace NetMud.Models.GameAdmin
 
         public INonPlayerCharacter DataObject { get; set; }
     }
+    #endregion
 
+    #region Players
     public class ManagePlayersViewModel : PagedDataModel<ApplicationUser>, BaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
@@ -406,4 +451,5 @@ namespace NetMud.Models.GameAdmin
 
         public IEnumerable<IdentityRole> ValidRoles { get; set; }
     }
+#endregion
 }
