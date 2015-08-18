@@ -16,7 +16,6 @@ function submitCharacter()
     var cscVal = $('#currentCharacter').val();
 
     $.post("GameAdmin/SelectCharacter/" + cscVal, function (data) {
-        //On success, let's lock the character dropdown.
     });
 }
 

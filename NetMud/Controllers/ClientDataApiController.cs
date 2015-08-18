@@ -1,6 +1,7 @@
 ﻿using NetMud.Data.Reference;
 using NetMud.DataAccess;
 using System;
+using System.Linq;
 using System.Web.Http;
 
 namespace NetMud.Controllers
@@ -15,6 +16,16 @@ namespace NetMud.Controllers
                 return String.Empty;
 
             return model.ViewFlattenedModel(pitch, yaw, roll);
+        }
+
+        public string[] GetDimensionalData(long id)
+        {
+            var model = ReferenceWrapper.GetOne<DimensionalModelData>(id);
+
+            if (model == null)
+                return new string[0];
+
+            return model.ModelPlanes.Select(plane => plane.TagName).Distinct().ToArray();
         }
     }
 }

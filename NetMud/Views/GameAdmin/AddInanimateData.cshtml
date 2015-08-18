@@ -89,18 +89,10 @@
             </div>
             <br class="clearfix" />
             <div class="form-group">
-                <div style="display: block; padding-bottom: 10px;">
+                <div style="display: block; padding-bottom: 30px;">
                     @Html.LabelFor(m => m.ModelPartNames, new { @class = "col-md-2 control-label" })
-                    <a href="#" id="addModelPartName" style="padding: 10px;">Add another...</a>
                 </div>
                 <div id="modelPartRows" style="display: block;">
-                    <div class="col-md-10" style="padding-left: 10px;">
-                        <span style="padding: 10px; float:left;">Part Name:</span>@Html.TextBoxFor(m => m.ModelPartNames, new { @style = " float:left; margin-top: 10px;" })
-                        <span style="padding: 10px; float:left;">Material: </span>@Html.DropDownList("ModelPartMaterials", Model.ValidMaterials.Select(rl =>
-                                                                                            new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
-                                                                                            , htmlAttributes: new { id = "ModelPartMaterials", Style = "padding: 7px; float:left; margin-top: 10px;" })
-                        <a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a>
-                    </div>
                 </div>
             </div>
             <br class="clearfix" />
@@ -146,16 +138,20 @@
                 return false;
             });
 
-            $("#addModelPartName").click(function () {
-                $("#modelPartRows").append(
-                    '<div class="col-md-10" style="padding-left:10px;"><span style="padding: 10px; float:left;">Part Name: </span><input id="ModelPartNames" name="MobileContainerNames" type="text" value="" style="float:left; margin-top: 10px;"><span style="padding: 10px; float:left;">Material:</span>' + materialsDropdown + '<a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a></div>'
-                );
+            $("#DimensionalModelId").change(function () {
+                $.ajax({
+                    url: "/api/ClientDataApi/GetDimensionalData/" + this.value
+                    , async: false
+                    , success: function (data) {
+                        $("#modelPartRows").html('');
 
-                $(".removeRow").click(function () {
-                    $(this).parent().remove();
-                    return false;
+                        $.each(data, function (key, name) {
+                            $("#modelPartRows").append(
+                                '<div class="col-md-10" style="padding-left:10px;"><span style="padding: 10px; float:left;">Part Name: </span><input id="ModelPartNames" name="MobileContainerNames" disabled="disabled" type="text" value="' + name + '" style="float:left; margin-top: 10px;"><span style="padding: 10px; float:left;">Material:</span>' + materialsDropdown + '</div>'
+                            );
+                        })
+                    }
                 });
-                return false;
             });
 
             $(".removeRow").click(function () {

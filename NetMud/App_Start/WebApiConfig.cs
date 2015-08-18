@@ -17,10 +17,16 @@ namespace NetMud
                 defaults: new { controller = "ClientDataApi", action = "GetEntityModelView" }
                 );
 
+            config.Routes.MapHttpRoute(
+                name: "ApiModelPlanarData",
+                routeTemplate: "api/ClientDataApi/GetDimensionalData/{id}",
+                defaults: new { controller = "ClientDataApi", action = "GetDimensionalData" }
+                );
+
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
-                routeTemplate: "api/{controller}/{id}",
+                routeTemplate: "api/{controller}/{action}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
         }
