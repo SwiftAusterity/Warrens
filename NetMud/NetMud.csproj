@@ -202,6 +202,7 @@
     <Content Include="App_Data\dbo.NonPlayerCharacter.sql" />
     <Content Include="App_Data\dbo.InanimateData.sql" />
     <Content Include="App_Data\dbo.PathwayData.sql" />
+    <Content Include="App_Data\dbo.Race.sql" />
     <Content Include="App_Data\dbo.RoomData.sql" />
     <Content Include="App_Data\testingDB.mdf" />
     <Content Include="App_Data\testingDB_log.ldf">
@@ -289,6 +290,9 @@
     <Content Include="Views\GameAdmin\EditMaterialData.cshtml" />
     <Content Include="Views\GameAdmin\AddMaterialData.cshtml" />
     <Content Include="Views\GameAdmin\ManageMaterialData.cshtml" />
+    <Content Include="Views\GameAdmin\AddRaceData.cshtml" />
+    <Content Include="Views\GameAdmin\EditRaceData.cshtml" />
+    <Content Include="Views\GameAdmin\ManageRaceData.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

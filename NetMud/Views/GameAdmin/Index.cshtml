@@ -50,6 +50,12 @@
             @Html.ActionLink("Manage", "ManageMaterialData")
             @Html.ActionLink("Add", "AddMaterialData") ]
         </dd>
+        <dt>Races:</dt>
+        <dd>
+            @Model.Races.Count().ToString() [
+            @Html.ActionLink("Manage", "ManageRaceData")
+            @Html.ActionLink("Add", "AddRaceData") ]
+        </dd>
     </dl>
     <h4>Live Data</h4>
     <hr />

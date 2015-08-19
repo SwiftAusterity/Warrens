@@ -23,6 +23,8 @@ using System.Text;
 using System;
 using System.Collections.Generic;
 using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.DataStructure.Behaviors.Actionable;
+using NetMud.DataStructure.Behaviors.Automation;
 
 namespace NetMud.Controllers
 {
@@ -63,6 +65,7 @@ namespace NetMud.Controllers
             dashboardModel.HelpFiles = ReferenceWrapper.GetAll<Help>();
             dashboardModel.DimensionalModels = ReferenceWrapper.GetAll<DimensionalModelData>();
             dashboardModel.Materials = ReferenceWrapper.GetAll<Material>();
+            dashboardModel.Races = ReferenceWrapper.GetAll<Race>();
 
             dashboardModel.LiveTaskTokens = Processor.GetAllLiveTaskStatusTokens();
             dashboardModel.LivePlayers = LiveCache.GetAll<Player>().Count();
@@ -1161,6 +1164,310 @@ namespace NetMud.Controllers
             return RedirectToAction("ManageMaterialData", new { Message = message });
         }
         #endregion
+
+        #region Races
+        public ActionResult ManageRaceData(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
+        {
+            var vModel = new ManageRaceDataViewModel(ReferenceWrapper.GetAll<Race>());
+            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            vModel.CurrentPageNumber = CurrentPageNumber;
+            vModel.ItemsPerPage = ItemsPerPage;
+            vModel.SearchTerms = SearchTerms;
+
+            return View(vModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult RemoveRaceData(long ID, string authorize)
+        {
+            string message = string.Empty;
+
+            if (string.IsNullOrWhiteSpace(authorize) || !ID.ToString().Equals(authorize))
+                message = "You must check the proper authorize radio button first.";
+            else
+            {
+                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+                var obj = ReferenceWrapper.GetOne<Race>(ID);
+
+                if (obj == null)
+                    message = "That does not exist";
+                else if (obj.Remove())
+                {
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveRace[" + ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    message = "Delete Successful.";
+                }
+                else
+                    message = "Error; Removal failed.";
+            }
+
+            return RedirectToAction("ManageRaceData", new { Message = message });
+        }
+
+        [HttpGet]
+        public ActionResult AddRaceData()
+        {
+            var vModel = new AddEditRaceViewModel();
+            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            vModel.ValidMaterials = ReferenceWrapper.GetAll<Material>();
+            vModel.ValidObjects = DataWrapper.GetAll<InanimateData>();
+            vModel.ValidRooms = DataWrapper.GetAll<RoomData>();
+
+            return View(vModel);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddRaceData(AddEditRaceViewModel vModel)
+        {
+            string message = string.Empty;
+            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            var newObj = new Race();
+            newObj.Name = vModel.NewName;
+
+            if(vModel.NewArmsID > 0 && vModel.NewArmsAmount > 0)
+            {
+                var arm = DataWrapper.GetOne<InanimateData>(vModel.NewArmsID);
+
+                if(arm != null)
+                    newObj.Arms = new Tuple<IInanimateData,short>(arm, vModel.NewArmsAmount);
+            }
+
+            if(vModel.NewLegsID > 0 && vModel.NewLegsAmount > 0)
+            {
+                var leg = DataWrapper.GetOne<InanimateData>(vModel.NewLegsID);
+
+                if(leg != null)
+                    newObj.Legs = new Tuple<IInanimateData,short>(leg, vModel.NewLegsAmount);
+            }
+
+            if(vModel.NewTorsoId > 0)
+            {
+                var torso = DataWrapper.GetOne<InanimateData>(vModel.NewTorsoId);
+
+                if(torso != null)
+                    newObj.Torso = torso;
+            }
+
+            if(vModel.NewHeadId > 0)
+            {
+                var head = DataWrapper.GetOne<InanimateData>(vModel.NewHeadId);
+
+                if(head != null)
+                    newObj.Head = head;
+            }
+
+            if(vModel.NewStartingLocationId > 0)
+            {
+                var room = DataWrapper.GetOne<RoomData>(vModel.NewStartingLocationId);
+
+                if(room != null)
+                    newObj.StartingLocation = room;
+            }
+
+            if(vModel.NewRecallLocationId > 0)
+            {
+                var room = DataWrapper.GetOne<RoomData>(vModel.NewRecallLocationId);
+
+                if(room != null)
+                    newObj.EmergencyLocation = room;
+            }
+
+            if(vModel.NewBloodId > 0)
+            {
+                var blood = ReferenceWrapper.GetOne<Material>(vModel.NewBloodId);
+
+                if(blood != null)
+                    newObj.SanguinaryMaterial = blood;
+            }
+
+            newObj.VisionRange = new Tuple<short, short>(vModel.NewVisionRangeLow, vModel.NewVisionRangeHigh);
+            newObj.TemperatureTolerance = new Tuple<short, short>(vModel.NewTemperatureToleranceLow, vModel.NewTemperatureToleranceHigh);
+
+            newObj.Breathes = (RespiratoryType)vModel.NewBreathes;
+            newObj.DietaryNeeds = (DietType)vModel.NewDietaryNeeds;
+            newObj.TeethType = (DamageType)vModel.NewTeethType;
+
+            if (vModel.NewExtraPartsId != null)
+            {
+                int partIndex = 0;
+                var bodyBits = new List<Tuple<IInanimateData, short, string>>();
+                foreach (var id in vModel.NewExtraPartsId)
+                {
+                    if (id > 0)
+                    {
+                        if (vModel.NewExtraPartsAmount.Count() <= partIndex || vModel.NewExtraPartsName.Count() <= partIndex)
+                            break;
+
+                        var currentName = vModel.NewExtraPartsName[partIndex];
+                        var currentAmount = vModel.NewExtraPartsAmount[partIndex];
+                        var partObject = DataWrapper.GetOne<InanimateData>(id);
+
+                        if (partObject != null && currentAmount > 0 && !string.IsNullOrWhiteSpace(currentName))
+                            bodyBits.Add(new Tuple<IInanimateData, short, string>(partObject, currentAmount, currentName));
+                    }
+
+                    partIndex++;
+                }
+
+                newObj.BodyParts = bodyBits;
+            }
+
+            if (newObj.Create() == null)
+                message = "Error; Creation failed.";
+            else
+            {
+                LoggingUtility.LogAdminCommandUsage("*WEB* - AddRaceData[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                message = "Creation Successful.";
+            }
+
+            return RedirectToAction("ManageRaceData", new { Message = message });
+        }
+
+        [HttpGet]
+        public ActionResult EditRaceData(int id)
+        {
+            string message = string.Empty;
+            var vModel = new AddEditRaceViewModel();
+            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            vModel.ValidMaterials = ReferenceWrapper.GetAll<Material>();
+            vModel.ValidObjects = DataWrapper.GetAll<InanimateData>();
+            vModel.ValidRooms = DataWrapper.GetAll<RoomData>();
+
+            var obj = ReferenceWrapper.GetOne<Race>(id);
+
+            if (obj == null)
+            {
+                message = "That does not exist";
+                return RedirectToAction("ManageRaceData", new { Message = message });
+            }
+
+            vModel.DataObject = obj;
+            vModel.NewName = obj.Name;
+
+            return View(vModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditRaceData(int id, AddEditRaceViewModel vModel)
+        {
+            string message = string.Empty;
+            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            var obj = ReferenceWrapper.GetOne<Race>(id);
+            if (obj == null)
+            {
+                message = "That does not exist";
+                return RedirectToAction("ManageRaceData", new { Message = message });
+            }
+
+            obj.Name = vModel.NewName;
+
+            if(vModel.NewArmsID > 0 && vModel.NewArmsAmount > 0)
+            {
+                var arm = DataWrapper.GetOne<InanimateData>(vModel.NewArmsID);
+
+                if(arm != null)
+                    obj.Arms = new Tuple<IInanimateData,short>(arm, vModel.NewArmsAmount);
+            }
+
+            if(vModel.NewLegsID > 0 && vModel.NewLegsAmount > 0)
+            {
+                var leg = DataWrapper.GetOne<InanimateData>(vModel.NewLegsID);
+
+                if(leg != null)
+                    obj.Legs = new Tuple<IInanimateData,short>(leg, vModel.NewLegsAmount);
+            }
+
+            if(vModel.NewTorsoId > 0)
+            {
+                var torso = DataWrapper.GetOne<InanimateData>(vModel.NewTorsoId);
+
+                if(torso != null)
+                    obj.Torso = torso;
+            }
+
+            if(vModel.NewHeadId > 0)
+            {
+                var head = DataWrapper.GetOne<InanimateData>(vModel.NewHeadId);
+
+                if(head != null)
+                    obj.Head = head;
+            }
+
+            if(vModel.NewStartingLocationId > 0)
+            {
+                var room = DataWrapper.GetOne<RoomData>(vModel.NewStartingLocationId);
+
+                if(room != null)
+                    obj.StartingLocation = room;
+            }
+
+            if(vModel.NewRecallLocationId > 0)
+            {
+                var room = DataWrapper.GetOne<RoomData>(vModel.NewRecallLocationId);
+
+                if(room != null)
+                    obj.EmergencyLocation = room;
+            }
+
+            if(vModel.NewBloodId > 0)
+            {
+                var blood = ReferenceWrapper.GetOne<Material>(vModel.NewBloodId);
+
+                if(blood != null)
+                    obj.SanguinaryMaterial = blood;
+            }
+
+            obj.VisionRange = new Tuple<short, short>(vModel.NewVisionRangeLow, vModel.NewVisionRangeHigh);
+            obj.TemperatureTolerance = new Tuple<short, short>(vModel.NewTemperatureToleranceLow, vModel.NewTemperatureToleranceHigh);
+
+            obj.Breathes = (RespiratoryType)vModel.NewBreathes;
+            obj.DietaryNeeds = (DietType)vModel.NewDietaryNeeds;
+            obj.TeethType = (DamageType)vModel.NewTeethType;
+
+            var bodyBits = new List<Tuple<IInanimateData, short, string>>();
+            if (vModel.NewExtraPartsId != null)
+            {
+                int partIndex = 0;
+                foreach (var partId in vModel.NewExtraPartsId)
+                {
+                    if (partId > 0)
+                    {
+                        if (vModel.NewExtraPartsAmount.Count() <= partIndex || vModel.NewExtraPartsName.Count() <= partIndex)
+                            break;
+
+                        var currentName = vModel.NewExtraPartsName[partIndex];
+                        var currentAmount = vModel.NewExtraPartsAmount[partIndex];
+                        var partObject = DataWrapper.GetOne<InanimateData>(partId);
+
+                        if (partObject != null && currentAmount > 0 && !string.IsNullOrWhiteSpace(currentName))
+                            bodyBits.Add(new Tuple<IInanimateData, short, string>(partObject, currentAmount, currentName));
+                    }
+
+                    partIndex++;
+                }
+
+                obj.BodyParts = bodyBits;
+            }
+
+            if (obj.Save())
+            {
+                LoggingUtility.LogAdminCommandUsage("*WEB* - EditRaceData[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                message = "Edit Successful.";
+            }
+            else
+                message = "Error; Edit failed.";
+
+            return RedirectToAction("ManageRaceData", new { Message = message });
+        }
+        #endregion
+
 
         #region Players/Users
         public ActionResult ManagePlayers(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)

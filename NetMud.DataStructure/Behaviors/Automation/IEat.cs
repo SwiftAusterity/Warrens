@@ -11,13 +11,13 @@
     /// <summary>
     /// What an entity that IHungers can eat.
     /// </summary>
-    public enum DietType
+    public enum DietType : short
     {
-        Herbivore,
-        Carnivore,
-        Necrovore,
-        Metalvore,
-        Magiviore,
-        Spirivore
+        Herbivore = 0,
+        Carnivore = 1,
+        Necrovore = 2,
+        Metalvore = 3,
+        Magiviore = 4,
+        Spirivore = 5
     }
 }

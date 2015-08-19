@@ -127,7 +127,7 @@ namespace NetMud.Data.Reference
             Material returnValue = default(Material);
             var sql = new StringBuilder();
             sql.Append("insert into [dbo].[Material]([Name],[Conductive],[Magnetic],[Flammable]");
-            sql.Append(",[Viscosity],[Density],[Mallebility],[Ductility],[Porosity],[UnitMass],[SolidPoint],[GasPoint],[TemperatureRetention],[Resistance],[Composition])");
+            sql.Append(",[Viscosity],[Density],[Mallebility],[Ductility],[Porosity],[SolidPoint],[GasPoint],[TemperatureRetention],[Resistance],[Composition])");
             sql.AppendFormat(" values('{0}',{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},'{12}','{13}')", Name
                 , Conductive ? 1 : 0
                 , Magnetic ? 1 : 0
