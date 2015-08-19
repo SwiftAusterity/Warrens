@@ -20,5 +20,8 @@ namespace NetMud.DataStructure.Base.EntityBackingData
         /// Definition for the room's capacity for inanimates
         /// </summary>
         HashSet<IEntityContainerData<IInanimate>> InanimateContainers { get; set; }
+
+
+        IDictionary<IInanimateData, short> InternalComposition { get; set; }
     }
 }

@@ -9,5 +9,6 @@
 	[DimensionalModelMaterialCompositions]		VARCHAR (MAX)	DEFAULT ('{}') NOT NULL,
 	[DimensionalModelID]		BIGINT			NOT NULL,
 	[MobileContainers]			VARCHAR (MAX)	DEFAULT ('{}') NOT NULL,
-	[InanimateContainers]		VARCHAR (MAX)	DEFAULT ('{}') NOT NULL
+	[InanimateContainers]		VARCHAR (MAX)	DEFAULT ('{}') NOT NULL,
+	[InternalComposition]		VARCHAR (MAX)	DEFAULT ('{}') NOT NULL
 );

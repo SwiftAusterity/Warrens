@@ -10,6 +10,7 @@ using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -377,9 +378,10 @@ namespace NetMud.Data.Game
                                         new XAttribute("ID", charData.ID),
                                         new XAttribute("Name", charData.Name),
                                         new XAttribute("LastRevised", charData.LastRevised),
-                                        new XAttribute("Created", charData.Created)),
+                                        new XAttribute("Created", charData.Created),
                                         new XElement("MobileContainers"),
                                         new XElement("InanimateContainers"),
+                                        new XElement("InternalComposition", JsonConvert.SerializeObject(charData.InternalComposition))),
                                     new XElement("LiveData",
                                         new XAttribute("Keywords", string.Join(",", Keywords)),
                                         new XElement("DimensionalModel",
@@ -437,13 +439,15 @@ namespace NetMud.Data.Game
             var entityBinaryConvert = new DataUtility.EntityFileData(bytes);
             var xDoc = entityBinaryConvert.XDoc;
 
-            var backingData = new InanimateData();
             var newEntity = new Inanimate();
 
             var versionFormat = xDoc.Root.GetSafeAttributeValue<int>("formattingVersion");
 
             newEntity.BirthMark = xDoc.Root.GetSafeAttributeValue("Birthmark");
             newEntity.Birthdate = xDoc.Root.GetSafeAttributeValue<DateTime>("Birthdate");
+
+            var internalCompositions = xDoc.Root.Element("BackingData").GetSafeAttributeValue("InternalComposition");
+            var backingData = new InanimateData(internalCompositions);
 
             backingData.ID = xDoc.Root.Element("BackingData").GetSafeAttributeValue<long>("ID");
             backingData.Name = xDoc.Root.Element("BackingData").GetSafeAttributeValue("Name");

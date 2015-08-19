@@ -334,7 +334,15 @@ namespace NetMud.Models.GameAdmin
         [Display(Name = "Model Part Materials")]
         public long[] ModelPartMaterials { get; set; }
 
+        [DataType(DataType.Text)]
+        [Display(Name = "Internal Composition")]
+        public long[] InternalCompositionIds { get; set; }
 
+        [DataType(DataType.Text)]
+        [Display(Name = "Composition Percentage")]
+        public short[] InternalCompositionPercentages { get; set; }
+
+        public IEnumerable<IInanimateData> ValidInanimateDatas { get; set; }
         public IEnumerable<IDimensionalModelData> ValidModels { get; set; }
         public IEnumerable<IMaterial> ValidMaterials { get; set; }
 

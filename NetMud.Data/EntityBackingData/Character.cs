@@ -84,7 +84,7 @@ namespace NetMud.Data.EntityBackingData
         /// Fills a data object with data from a data row
         /// </summary>
         /// <param name="dr">the data row to fill from</param>
-        public override void Fill(global::System.Data.DataRow dr)
+        public override void Fill(DataRow dr)
         {
             ID = DataUtility.GetFromDataRow<long>(dr, "ID");
             Created = DataUtility.GetFromDataRow<DateTime>(dr, "Created");

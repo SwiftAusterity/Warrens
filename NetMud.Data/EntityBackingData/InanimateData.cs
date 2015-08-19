@@ -24,6 +24,15 @@ namespace NetMud.Data.EntityBackingData
         {
             MobileContainers = new HashSet<IEntityContainerData<IMobile>>();
             InanimateContainers = new HashSet<IEntityContainerData<IInanimate>>();
+            InternalComposition = new Dictionary<IInanimateData, short>();
+        }
+
+        public InanimateData(string internalCompositionJson)
+        {
+            MobileContainers = new HashSet<IEntityContainerData<IMobile>>();
+            InanimateContainers = new HashSet<IEntityContainerData<IInanimate>>();
+
+            InternalComposition = DeserializeInternalCompositions(internalCompositionJson);
         }
 
         /// <summary>
@@ -44,11 +53,14 @@ namespace NetMud.Data.EntityBackingData
         /// </summary>
         public HashSet<IEntityContainerData<IInanimate>> InanimateContainers { get; set; }
 
+
+        public IDictionary<IInanimateData, short> InternalComposition { get; set; }
+
         /// <summary>
         /// Fills a data object with data from a data row
         /// </summary>
         /// <param name="dr">the data row to fill from</param>
-        public override void Fill(global::System.Data.DataRow dr)
+        public override void Fill(DataRow dr)
         {
             ID = DataUtility.GetFromDataRow<long>(dr, "ID");
             Created = DataUtility.GetFromDataRow<DateTime>(dr, "Created");
@@ -81,7 +93,30 @@ namespace NetMud.Data.EntityBackingData
                 InanimateContainers.Add(newContainer);
             }
 
+            string internalCompositionJson = DataUtility.GetFromDataRow<string>(dr, "InternalComposition");
+            InternalComposition = DeserializeInternalCompositions(internalCompositionJson);
+
             Model = new DimensionalModel(dr);
+        }
+
+        private IDictionary<IInanimateData, short> DeserializeInternalCompositions(string compJson)
+        {
+            var composition = new Dictionary<IInanimateData, short> ();
+
+            dynamic comps = JsonConvert.DeserializeObject(compJson);
+
+            foreach (dynamic comp in comps)
+            {
+                long id = comp.Name;
+                short percentage = short.Parse(comp.Name);
+
+                var objData = DataWrapper.GetOne<IInanimateData>(id);
+
+                if (objData != null && percentage > 0)
+                    composition.Add(objData, percentage);
+            }
+
+            return composition;
         }
 
         /// <summary>
@@ -97,10 +132,12 @@ namespace NetMud.Data.EntityBackingData
 
             var sql = new StringBuilder();
             sql.Append("insert into [dbo].[InanimateData]([Name], [MobileContainers], [InanimateContainers]");
-            sql.Append(", [DimensionalModelLength], [DimensionalModelHeight], [DimensionalModelWidth], [DimensionalModelID], [DimensionalModelMaterialCompositions])");
-            sql.AppendFormat(" values('{0}', '{1}', '{2}', {3}, {4}, {5}, {6}, '{7}')"
+            sql.Append(", [DimensionalModelLength], [DimensionalModelHeight], [DimensionalModelWidth], [DimensionalModelID], [DimensionalModelMaterialCompositions]");
+            sql.Append(", [InternalComposition])");
+            sql.AppendFormat(" values('{0}', '{1}', '{2}', {3}, {4}, {5}, {6}, '{7}', '{8}')"
                 , Name, mobileContainersJson, inanimateContainersJson
-                , Model.Height, Model.Length, Model.Width, Model.ModelBackingData.ID, Model.SerializeMaterialCompositions());
+                , Model.Height, Model.Length, Model.Width, Model.ModelBackingData.ID, Model.SerializeMaterialCompositions()
+                , JsonConvert.SerializeObject(InternalComposition));
             sql.Append(" select * from [dbo].[InanimateData] where ID = Scope_Identity()");
 
             try
@@ -153,6 +190,7 @@ namespace NetMud.Data.EntityBackingData
             sql.AppendFormat(" [Name] = '{0}' ", Name);
             sql.AppendFormat(" , [MobileContainers] = '{0}' ", mobileContainersJson);
             sql.AppendFormat(" , [InanimateContainers] = '{0}' ", inanimateContainersJson);
+            sql.AppendFormat(" , [InternalComposition] = '{0}' ", JsonConvert.SerializeObject(InternalComposition));
             sql.AppendFormat(" , [DimensionalModelLength] = {0} ", Model.Length);
             sql.AppendFormat(" , [DimensionalModelHeight] = {0} ", Model.Height);
             sql.AppendFormat(" , [DimensionalModelWidth] = {0} ", Model.Width);

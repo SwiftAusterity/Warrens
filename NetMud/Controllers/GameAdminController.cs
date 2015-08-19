@@ -22,8 +22,7 @@ using NetMud.DataStructure.Base.Entity;
 using System.Text;
 using System;
 using System.Collections.Generic;
-
-
+using NetMud.DataStructure.Base.EntityBackingData;
 
 namespace NetMud.Controllers
 {
@@ -467,6 +466,7 @@ namespace NetMud.Controllers
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
             vModel.ValidMaterials = ReferenceWrapper.GetAll<Material>();
             vModel.ValidModels = ReferenceWrapper.GetAll<DimensionalModelData>();
+            vModel.ValidInanimateDatas = DataWrapper.GetAll<InanimateData>();
 
             return View(vModel);
         }
@@ -544,6 +544,29 @@ namespace NetMud.Controllers
                 }
             }
 
+            var internalCompositions = new Dictionary<IInanimateData, short>();
+            if (vModel.InternalCompositionIds != null)
+            {
+                int icIndex = 0;
+                foreach (var id in vModel.InternalCompositionIds)
+                {
+                    if (id > 0)
+                    {
+                        if (vModel.InternalCompositionPercentages.Count() <= icIndex)
+                            break;
+
+                        var internalObj = DataWrapper.GetOne<InanimateData>(id);
+
+                        if (internalObj != null)
+                            internalCompositions.Add(internalObj, vModel.InternalCompositionPercentages[icIndex]);
+                    }
+
+                    icIndex++;
+                }
+            }
+
+            newObj.InternalComposition = internalCompositions;
+
             var dimModel = ReferenceWrapper.GetOne<DimensionalModelData>(vModel.DimensionalModelId);
             bool validData = true;
 
@@ -583,6 +606,7 @@ namespace NetMud.Controllers
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
             vModel.ValidMaterials = ReferenceWrapper.GetAll<Material>();
             vModel.ValidModels = ReferenceWrapper.GetAll<DimensionalModelData>();
+            vModel.ValidInanimateDatas = DataWrapper.GetAll<InanimateData>();
 
             var obj = DataWrapper.GetOne<InanimateData>(id);
 
@@ -699,6 +723,28 @@ namespace NetMud.Controllers
                     nameIndex++;
                 }
             }
+
+            var internalCompositions = new Dictionary<IInanimateData, short>();
+            if (vModel.InternalCompositionIds != null)
+            {
+                int icIndex = 0;
+                foreach (var icId in vModel.InternalCompositionIds)
+                {
+                    if (icId > 0)
+                    {
+                        if (vModel.InternalCompositionPercentages.Count() <= icIndex)
+                            break;
+
+                        var internalObj = DataWrapper.GetOne<InanimateData>(icId);
+
+                        if (internalObj != null)
+                            internalCompositions.Add(internalObj, vModel.InternalCompositionPercentages[icIndex]);
+                    }
+
+                    icIndex++;
+                }
+            }
+            obj.InternalComposition = internalCompositions;
 
             var dimModel = ReferenceWrapper.GetOne<DimensionalModelData>(vModel.DimensionalModelId);
             bool validData = true;
