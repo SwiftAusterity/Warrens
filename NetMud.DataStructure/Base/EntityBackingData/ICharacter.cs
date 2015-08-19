@@ -14,6 +14,8 @@ namespace NetMud.DataStructure.Base.EntityBackingData
         /// </summary>
         string SurName { get; set; }
 
+        IRace RaceData { get; set; }
+
         /// <summary>
         /// Account data object unique key
         /// </summary>

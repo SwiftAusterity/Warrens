@@ -5,11 +5,15 @@ using NetMud.DataAccess;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
+using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Behaviors.Actionable;
+using NetMud.DataStructure.Behaviors.Automation;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.Behaviors.System;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -356,7 +360,28 @@ namespace NetMud.Data.Game
                                         new XAttribute("Gender", charData.Gender),
                                         new XAttribute("LastKnownLocationType", charData.LastKnownLocationType),
                                         new XAttribute("LastKnownLocation", charData.LastKnownLocation),
-                                        new XAttribute("GamePermissionsRank", charData.GamePermissionsRank)),
+                                        new XAttribute("GamePermissionsRank", charData.GamePermissionsRank),
+                                        new XElement("Race",
+                                            new XAttribute("ID", charData.RaceData.ID),
+                                            new XAttribute("Head", charData.RaceData.Head.ID),
+                                            new XAttribute("Torso", charData.RaceData.Torso.ID),
+                                            new XAttribute("SanguinaryMaterial", charData.RaceData.SanguinaryMaterial.ID),
+                                            new XAttribute("Breathes", (short)charData.RaceData.Breathes),
+                                            new XAttribute("DietaryNeeds", (short)charData.RaceData.DietaryNeeds),
+                                            new XAttribute("EmergencyLocation", charData.RaceData.EmergencyLocation.ID),
+                                            new XAttribute("StartingLocation", charData.RaceData.StartingLocation.ID),
+                                            new XAttribute("TeethType", (short)charData.RaceData.TeethType),
+                                            new XAttribute("TemperatureToleranceLow", charData.RaceData.TemperatureTolerance.Item1),
+                                            new XAttribute("TemperatureToleranceHigh", charData.RaceData.TemperatureTolerance.Item2),
+                                            new XAttribute("VisionRangeLow", charData.RaceData.VisionRange.Item1),
+                                            new XAttribute("VisionRangeHigh", charData.RaceData.VisionRange.Item2),
+                                            new XElement("Arms",
+                                                new XAttribute("ID", charData.RaceData.Arms.Item1.ID),
+                                                new XAttribute("Amount", charData.RaceData.Arms.Item2)),
+                                            new XElement("Legs",
+                                                new XAttribute("ID", charData.RaceData.Legs.Item1.ID),
+                                                new XAttribute("Amount", charData.RaceData.Legs.Item2)),
+                                            new XElement("BodyParts", JsonConvert.SerializeObject(charData.RaceData.BodyParts)))),
                                     new XElement("LiveData",
                                         new XAttribute("Keywords", string.Join(",", Keywords)),
                                         new XElement("DimensionalModel",
@@ -449,12 +474,49 @@ namespace NetMud.Data.Game
 
                 backingData.Model = new DimensionalModel(dimModelLength, dimModelHeight, dimModelWidth, dimModelId, dimModelCompJson);
                 newEntity.Model = new DimensionalModel(dimModelLength, dimModelHeight, dimModelWidth, dimModelJson, dimModelId, dimModelCompJson);
+
+                // We added Race in v1 as well
+                var raceID = docRoot.Element("BackingData").Element("Race").GetSafeAttributeValue<long>("ID");
+                var raceHeadID = docRoot.Element("BackingData").Element("Race").GetSafeAttributeValue<long>("Head");
+                var raceTorsoID = docRoot.Element("BackingData").Element("Race").GetSafeAttributeValue<long>("Torso");
+                var raceSanguinaryMaterialID = docRoot.Element("BackingData").Element("Race").GetSafeAttributeValue<long>("SanguinaryMaterial");
+                var raceBreathes = docRoot.Element("BackingData").Element("Race").GetSafeAttributeValue<short>("Breathes");
+                var raceDietaryNeeds = docRoot.Element("BackingData").Element("Race").GetSafeAttributeValue<short>("DietaryNeeds");
+                var raceEmergencyLocationID = docRoot.Element("BackingData").Element("Race").GetSafeAttributeValue<long>("EmergencyLocation");
+                var raceStartingLocationID = docRoot.Element("BackingData").Element("Race").GetSafeAttributeValue<long>("StartingLocation");
+                var raceTeethType = docRoot.Element("BackingData").Element("Race").GetSafeAttributeValue<short>("TeethType");
+                var raceTemperatureToleranceLow = docRoot.Element("BackingData").Element("Race").GetSafeAttributeValue<short>("TemperatureToleranceLow");
+                var raceTemperatureToleranceHigh = docRoot.Element("BackingData").Element("Race").GetSafeAttributeValue<short>("TemperatureToleranceHigh");
+                var raceVisionRangeLow = docRoot.Element("BackingData").Element("Race").GetSafeAttributeValue<short>("VisionRangeLow");
+                var raceVisionRangeHigh = docRoot.Element("BackingData").Element("Race").GetSafeAttributeValue<short>("VisionRangeHigh");
+                var raceArmsId = docRoot.Element("BackingData").Element("Race").Element("Arms").GetSafeAttributeValue<long>("ID");
+                var raceArmsAmount = docRoot.Element("BackingData").Element("Race").Element("Arms").GetSafeAttributeValue<short>("Amount");
+                var raceLegsId = docRoot.Element("BackingData").Element("Race").Element("Legs").GetSafeAttributeValue<long>("ID");
+                var raceLegsAmount = docRoot.Element("BackingData").Element("Race").Element("Legs").GetSafeAttributeValue<short>("Amount");
+                var raceBodyPartsJson = docRoot.Element("BackingData").Element("Race").GetSafeElementValue("BodyParts");
+
+                var raceData = new Race(raceBodyPartsJson);
+
+                raceData.ID = raceID;
+                raceData.Head = DataWrapper.GetOne<InanimateData>(raceHeadID);
+                raceData.Torso = DataWrapper.GetOne<InanimateData>(raceTorsoID);
+                raceData.SanguinaryMaterial = ReferenceWrapper.GetOne<IMaterial>(raceSanguinaryMaterialID);
+                raceData.Breathes = (RespiratoryType)raceBreathes;
+                raceData.DietaryNeeds = (DietType)raceDietaryNeeds;
+                raceData.EmergencyLocation = DataWrapper.GetOne<RoomData>(raceEmergencyLocationID);
+                raceData.StartingLocation = DataWrapper.GetOne<RoomData>(raceStartingLocationID);
+                raceData.TeethType = (DamageType)raceDietaryNeeds;
+                raceData.TemperatureTolerance = new Tuple<short, short>(raceTemperatureToleranceLow, raceTemperatureToleranceHigh);
+                raceData.VisionRange = new Tuple<short, short>(raceVisionRangeLow, raceVisionRangeHigh);
+                raceData.Arms = new Tuple<IInanimateData, short>(DataWrapper.GetOne<InanimateData>(raceArmsId), raceArmsAmount);
+                raceData.Legs = new Tuple<IInanimateData, short>(DataWrapper.GetOne<InanimateData>(raceLegsId), raceLegsAmount);
             }
             else //what if we're older
             {
                 //Get it from the db
                 var backD = DataWrapper.GetOne<NonPlayerCharacter>(backingData.ID);
                 backingData.Model = backD.Model;
+                backingData.RaceData = backD.RaceData;
                 newEntity.Model = backD.Model;
             }
         }

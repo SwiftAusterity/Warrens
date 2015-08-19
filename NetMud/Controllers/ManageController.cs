@@ -10,6 +10,9 @@ using NetMud.Data.EntityBackingData;
 using NetMud.Authentication;
 using NetMud.DataStructure.SupportingClasses;
 using System;
+using NetMud.DataAccess;
+using NetMud.Data.Reference;
+using NetMud.DataStructure.Base.Supporting;
 
 namespace NetMud.Controllers
 {
@@ -89,12 +92,15 @@ namespace NetMud.Controllers
                  authedUser = UserManager.FindById(userId),
                  ValidRoles = (StaffRank[])Enum.GetValues(typeof(StaffRank))
              };
+
+            model.ValidRaces = ReferenceWrapper.GetAll<Race>();
+
             return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddCharacter(string newName, string newSurName, string newGender, StaffRank chosenRole = StaffRank.Player)
+        public ActionResult AddCharacter(string newName, string newSurName, string newGender, long raceId, StaffRank chosenRole = StaffRank.Player)
         {
             string message = string.Empty;
             var userId = User.Identity.GetUserId();
@@ -107,6 +113,10 @@ namespace NetMud.Controllers
             newChar.Name = newName;
             newChar.SurName = newSurName;
             newChar.Gender = newGender;
+            var race = ReferenceWrapper.GetOne<IRace>(raceId);
+
+            if (race != null)
+                newChar.RaceData = race;
 
             if (User.IsInRole("Admin"))
                 newChar.GamePermissionsRank = chosenRole;

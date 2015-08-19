@@ -1,6 +1,7 @@
 ﻿using NetMud.Data.Reference;
 using NetMud.DataAccess;
 using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.Utility;
 using System;
@@ -32,6 +33,8 @@ namespace NetMud.Data.EntityBackingData
         /// </summary>
         public string SurName { get; set; }
 
+        public IRace RaceData { get; set; }
+
         /// <summary>
         /// Full name to refer to this NPC with
         /// </summary>
@@ -55,6 +58,9 @@ namespace NetMud.Data.EntityBackingData
             SurName = DataUtility.GetFromDataRow<string>(dr, "SurName"); ;
             Gender = DataUtility.GetFromDataRow<string>(dr, "Gender"); ;
 
+            var raceId = DataUtility.GetFromDataRow<long>(dr, "Race"); ;
+            RaceData = ReferenceWrapper.GetOne<Race>(raceId);
+
             Model = new DimensionalModel(dr);
         }
 
@@ -68,9 +74,9 @@ namespace NetMud.Data.EntityBackingData
             var sql = new StringBuilder();
             sql.Append("insert into [dbo].[NonPlayerCharacter]([SurName], [Name], [Gender]");
             sql.Append(", [DimensionalModelLength], [DimensionalModelHeight], [DimensionalModelWidth], [DimensionalModelID], [DimensionalModelMaterialCompositions])");
-            sql.AppendFormat(" values('{0}','{1}','{2}', {3}, {4}, {5}, {6}, '{7}')"
+            sql.AppendFormat(" values('{0}','{1}','{2}', {3}, {4}, {5}, {6}, '{7}', {8})"
                 , SurName, Name, Gender
-                , Model.Height, Model.Length, Model.Width, Model.ModelBackingData.ID, Model.SerializeMaterialCompositions());
+                , Model.Height, Model.Length, Model.Width, Model.ModelBackingData.ID, Model.SerializeMaterialCompositions(), RaceData.ID);
             sql.Append(" select * from [dbo].[NonPlayerCharacter] where ID = Scope_Identity()");
 
             try
@@ -119,6 +125,7 @@ namespace NetMud.Data.EntityBackingData
             sql.AppendFormat(" [SurName] = '{0}' ", SurName);
             sql.AppendFormat(" , [Name] = '{0}' ", Name);
             sql.AppendFormat(" , [Gender] = '{0}' ", Gender);
+            sql.AppendFormat(" , [Race] = {0} ", RaceData.ID);
             sql.AppendFormat(" , [DimensionalModelLength] = {0} ", Model.Length);
             sql.AppendFormat(" , [DimensionalModelHeight] = {0} ", Model.Height);
             sql.AppendFormat(" , [DimensionalModelWidth] = {0} ", Model.Width);

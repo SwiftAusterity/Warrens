@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 using NetMud.DataStructure.SupportingClasses;
+using NetMud.DataStructure.Base.Supporting;
 
 namespace NetMud.Models
 {
@@ -35,6 +36,12 @@ namespace NetMud.Models
         [DataType(DataType.Text)]
         [Display(Name = "Gender")]
         public string NewGender { get; set; }
+
+        [DataType(DataType.Text)]
+        [Display(Name = "Race")]
+        public long RaceId { get; set; }
+
+        public IEnumerable<IRace> ValidRaces { get; set; }
 
         public IEnumerable<StaffRank> ValidRoles { get; set; }
 

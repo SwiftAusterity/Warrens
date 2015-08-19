@@ -340,13 +340,14 @@ namespace NetMud.Controllers
         {
             var vModel = new AddEditNPCDataViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            vModel.ValidRaces = ReferenceWrapper.GetAll<Race>();
 
             return View(vModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddNPCData(string newName, string newSurName, string newGender)
+        public ActionResult AddNPCData(string newName, string newSurName, string newGender, long raceId)
         {
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
@@ -355,6 +356,10 @@ namespace NetMud.Controllers
             newObj.Name = newName;
             newObj.SurName = newSurName;
             newObj.Gender = newGender;
+            var race = ReferenceWrapper.GetOne<IRace>(raceId);
+
+            if (race != null)
+                newObj.RaceData = race;
 
             if (newObj.Create() == null)
                 message = "Error; Creation failed.";
@@ -373,7 +378,7 @@ namespace NetMud.Controllers
             string message = string.Empty;
             var vModel = new AddEditNPCDataViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-
+            vModel.ValidRaces = ReferenceWrapper.GetAll<Race>();
 
             var obj = DataWrapper.GetOne<NonPlayerCharacter>(id);
 
@@ -393,7 +398,7 @@ namespace NetMud.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EditNPCData(string newName, string newSurName, string newGender, int id)
+        public ActionResult EditNPCData(string newName, string newSurName, string newGender, long raceId, int id)
         {
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
@@ -408,6 +413,10 @@ namespace NetMud.Controllers
             obj.Name = newName;
             obj.SurName = newSurName;
             obj.Gender = newGender;
+            var race = ReferenceWrapper.GetOne<IRace>(raceId);
+
+            if (race != null)
+                obj.RaceData = race;
 
             if (obj.Save())
             {
@@ -1467,7 +1476,6 @@ namespace NetMud.Controllers
             return RedirectToAction("ManageRaceData", new { Message = message });
         }
         #endregion
-
 
         #region Players/Users
         public ActionResult ManagePlayers(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)

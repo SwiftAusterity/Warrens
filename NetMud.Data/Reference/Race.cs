@@ -48,6 +48,11 @@ namespace NetMud.Data.Reference
             BodyParts = Enumerable.Empty<Tuple<IInanimateData, short, string>>();
         }
 
+        public Race(string bodyPartsJson)
+        {
+            BodyParts = DeserializeBodyParts(bodyPartsJson);
+        }
+
         /// <summary>
         /// Fills a data object with data from a data row
         /// </summary>
@@ -145,8 +150,10 @@ namespace NetMud.Data.Reference
             var sql = new StringBuilder();
             sql.Append("insert into [dbo].[Race]([Name],[Arms],[Legs],[Torso],[Head],[BodyParts]");
             sql.Append(",[DietaryNeeds],[SanguinaryMaterial],[VisionRange],[TemperatureTolerance],[Breathes],[TeethType],[StartingLocation],[EmergencyLocation])");
-            sql.AppendFormat(" values('{0}','{1}','{2}',{3},{4},'{5}',{6},{7},'{8}','{9}',{10},{11},{12},{13})", Name, Arms, Legs, Torso.ID, Head.ID, BodyParts,
-                (short)DietaryNeeds, SanguinaryMaterial.ID, VisionRange, TemperatureTolerance, (short)Breathes, (short)TeethType, StartingLocation.ID, EmergencyLocation.ID);
+            sql.AppendFormat(" values('{0}','{1}','{2}',{3},{4},'{5}',{6},{7},'{8}','{9}',{10},{11},{12},{13})", Name
+                , JsonConvert.SerializeObject(Arms), JsonConvert.SerializeObject(Legs), Torso.ID, Head.ID, JsonConvert.SerializeObject(BodyParts)
+                , (short)DietaryNeeds, SanguinaryMaterial.ID, JsonConvert.SerializeObject(VisionRange), JsonConvert.SerializeObject(TemperatureTolerance)
+                , (short)Breathes, (short)TeethType, StartingLocation.ID, EmergencyLocation.ID);
             sql.Append(" select * from [dbo].[Race] where ID = Scope_Identity()");
 
             try

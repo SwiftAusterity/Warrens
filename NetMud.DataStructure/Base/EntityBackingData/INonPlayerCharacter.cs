@@ -13,6 +13,8 @@ namespace NetMud.DataStructure.Base.EntityBackingData
         /// </summary>
         string SurName { get; set; }
 
+        IRace RaceData { get; set; }
+
         /// <summary>
         /// Given + family name for NPCs
         /// </summary>

@@ -560,6 +560,11 @@ namespace NetMud.Models.GameAdmin
         [Display(Name = "Gender")]
         public string NewGender { get; set; }
 
+        [DataType(DataType.Text)]
+        [Display(Name = "Race")]
+        public long RaceId { get; set; }
+
+        public IEnumerable<IRace> ValidRaces { get; set; }
         public INonPlayerCharacter DataObject { get; set; }
     }
     #endregion

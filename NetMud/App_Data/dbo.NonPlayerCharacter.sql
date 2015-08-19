@@ -5,6 +5,7 @@
     [SurName]               VARCHAR (200) NOT NULL,
     [Name]                  VARCHAR (200) NOT NULL,
     [Gender]                VARCHAR (200) DEFAULT ('') NOT NULL,
+	[Race]					BIGINT NOT NULL DEFAULT (0),
 	[DimensionalModelLength]	INT				NOT NULL DEFAULT (-1),
 	[DimensionalModelHeight]	INT				NOT NULL DEFAULT (-1),
 	[DimensionalModelWidth]		INT				NOT NULL DEFAULT (-1),
