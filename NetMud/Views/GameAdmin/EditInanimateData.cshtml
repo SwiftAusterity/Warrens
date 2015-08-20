@@ -2,6 +2,12 @@
 @{
     ViewBag.Title = "Edit Inanimate";
 
+    var materialsDropdown = Html.DropDownList("ModelPartMaterials", Model.ValidMaterials.Select(rl => new SelectListItem()
+    {
+        Text = rl.Name,
+        Value = rl.ID.ToString()
+    }), htmlAttributes: new { id = "ModelPartMaterials", Style = "padding: 7px; float:left; margin-top: 10px;" }).ToString().Replace(Environment.NewLine, "");
+
     var compositionDropdown = Html.DropDownList("InternalCompositionIds", Model.ValidInanimateDatas.Select(rl => new SelectListItem()
     {
         Text = rl.Name,
@@ -68,7 +74,7 @@
                 @Html.LabelFor(m => m.DimensionalModelId, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
                     @Html.DropDownList("DimensionalModelId", Model.ValidModels.Select(rl =>
-                                                                new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
+                                                                new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString(), Selected = rl.ID.Equals(Model.DimensionalModelId) })
                                                                 , htmlAttributes: new { id = "DimensionalModelId", Style = "padding: 7px; float:left; margin-top: 10px;" })
                     @Html.ValidationMessageFor(m => m.DimensionalModelId, "", new { @class = "text-danger" })
                 </div>
@@ -96,14 +102,14 @@
             </div>
             <br class="clearfix" />
             <div class="form-group">
-                <div style="display: block; padding-bottom: 10px;">
+                <div style="display: block; padding-bottom: 30px;">
                     @Html.LabelFor(m => m.ModelPartNames, new { @class = "col-md-2 control-label" })
                 </div>
                 <div id="modelPartRows" style="display: block;">
                     @foreach (var container in Model.DataObject.Model.Composition)
                     {
                         <div class="col-md-10" style="padding-left: 10px;">
-                            <span style="padding: 10px; float:left;">Part Name:</span><input disabled="disabled" id="ModelPartNames" name="ModelPartNames" style="float:left; margin-top: 10px;" type="text" value="@container.Key">
+                            <span style="padding: 10px; float:left;">Part Name:</span><input id="ModelPartNames" name="ModelPartNames" style="float:left; margin-top: 10px;" type="text" value="@container.Key">
                             <span style="padding: 10px; float:left;">Material: </span>@Html.DropDownList("ModelPartMaterials", Model.ValidMaterials.Select(rl =>
                                                                                             new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString(), Selected = rl.Equals(container.Value) })
                                                                                             , htmlAttributes: new { id = "ModelPartMaterials", Style = "padding: 7px; float:left; margin-top: 10px;" })
@@ -146,6 +152,7 @@
 
     <script type="text/javascript">
         var compositionDropdown = decodeHtml('@compositionDropdown');
+        var materialsDropdown = decodeHtml('@materialsDropdown');
 
         $(document).ready(function () {
             $("#addInanimateContainerRow").click(function () {
@@ -184,10 +191,30 @@
                 return false;
             });
 
+            $("#DimensionalModelId").change(function () {
+                GetNewDimModDeets();
+            });
+
             $(".removeRow").click(function () {
                 $(this).parent().remove();
                 return false;
             });
         });
+
+        function GetNewDimModDeets() {
+            $.ajax({
+                url: "/api/ClientDataApi/GetDimensionalData/" + $("#DimensionalModelId").val()
+                    , async: false
+                    , success: function (data) {
+                        $("#modelPartRows").html('');
+
+                        $.each(data, function (key, name) {
+                            $("#modelPartRows").append(
+                                '<div class="col-md-10" style="padding-left:10px;"><span style="padding: 10px; float:left;">Part Name: </span><input id="ModelPartNames" name="ModelPartNames" type="text" value="' + name + '" style="float:left; margin-top: 10px;"><span style="padding: 10px; float:left;">Material:</span>' + materialsDropdown + '</div>'
+                            );
+                        })
+                    }
+            });
+        };
     </script>
 }

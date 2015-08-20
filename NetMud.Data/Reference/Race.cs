@@ -1,4 +1,5 @@
-﻿using NetMud.DataAccess;
+﻿using NetMud.Data.EntityBackingData;
+using NetMud.DataAccess;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
@@ -64,17 +65,19 @@ namespace NetMud.Data.Reference
             LastRevised = DataUtility.GetFromDataRow<DateTime>(dr, "LastRevised");
             Name = DataUtility.GetFromDataRow<string>(dr, "Name");
 
-            var armsJson = DataUtility.GetFromDataRow<string>(dr, "Arms");
-            Arms = DeserializeLimbs(armsJson);
+            var armsId = DataUtility.GetFromDataRow<long>(dr, "ArmsId");
+            var armsAmount = DataUtility.GetFromDataRow<short>(dr, "ArmsAmount");
+            Arms = new Tuple<IInanimateData, short>(DataWrapper.GetOne<InanimateData>(armsId), armsAmount);
 
-            var legsJson = DataUtility.GetFromDataRow<string>(dr, "Legs");
-            Legs = DeserializeLimbs(legsJson);
+            var LegsId = DataUtility.GetFromDataRow<long>(dr, "LegsId");
+            var LegsAmount = DataUtility.GetFromDataRow<short>(dr, "LegsAmount");
+            Legs = new Tuple<IInanimateData, short>(DataWrapper.GetOne<InanimateData>(LegsId), LegsAmount);
 
             var torsoId = DataUtility.GetFromDataRow<long>(dr, "Torso");
-            Torso = DataWrapper.GetOne<IInanimateData>(torsoId);
+            Torso = DataWrapper.GetOne<InanimateData>(torsoId);
 
             var headId = DataUtility.GetFromDataRow<long>(dr, "Head");
-            Head = DataWrapper.GetOne<IInanimateData>(headId);
+            Head = DataWrapper.GetOne<InanimateData>(headId);
 
             var bodyPartJson = DataUtility.GetFromDataRow<string>(dr, "BodyParts");
             BodyParts = DeserializeBodyParts(bodyPartJson);
@@ -84,21 +87,23 @@ namespace NetMud.Data.Reference
             var bloodId = DataUtility.GetFromDataRow<long>(dr, "SanguinaryMaterial");
             SanguinaryMaterial = ReferenceWrapper.GetOne<Material>(bloodId);
 
-            var visionJson = DataUtility.GetFromDataRow<string>(dr, "VisionRange");
-            VisionRange = DeserializeRange(visionJson);
+            var visionLow = DataUtility.GetFromDataRow<short>(dr, "VisionRangeLow");
+            var visionHigh = DataUtility.GetFromDataRow<short>(dr, "VisionRangeHigh");
+            VisionRange = new Tuple<short, short>(visionLow, visionHigh);
 
-            var tempJson = DataUtility.GetFromDataRow<string>(dr, "TemperatureTolerance");
-            TemperatureTolerance = DeserializeRange(tempJson);
+            var tempLow = DataUtility.GetFromDataRow<short>(dr, "TemperatureTolerance");
+            var tempHigh = DataUtility.GetFromDataRow<short>(dr, "TemperatureTolerance");
+            TemperatureTolerance = new Tuple<short, short>(tempLow, tempHigh);
 
             Breathes = (RespiratoryType)DataUtility.GetFromDataRow<short>(dr, "Breathes");
 
             TeethType = (DamageType)DataUtility.GetFromDataRow<short>(dr, "TeethType");
 
             var startRoomId = DataUtility.GetFromDataRow<long>(dr, "StartingLocation");
-            StartingLocation = DataWrapper.GetOne<IRoomData>(startRoomId);
+            StartingLocation = DataWrapper.GetOne<RoomData>(startRoomId);
 
             var recallRoomId = DataUtility.GetFromDataRow<long>(dr, "EmergencyLocation");
-            EmergencyLocation = DataWrapper.GetOne<IRoomData>(recallRoomId);
+            EmergencyLocation = DataWrapper.GetOne<RoomData>(recallRoomId);
         }
 
         private IEnumerable<Tuple<IInanimateData, short, string>> DeserializeBodyParts(string partJson)
@@ -119,26 +124,6 @@ namespace NetMud.Data.Reference
             return bodyParts;
         }
 
-        private Tuple<IInanimateData, short> DeserializeLimbs(string partJson)
-        {
-            dynamic parts = JsonConvert.DeserializeObject(partJson);
-
-            long objId = long.Parse(parts.First);
-            short amount = parts.Second;
-
-            return new Tuple<IInanimateData, short>(DataWrapper.GetOne<IInanimateData>(objId), amount);
-        }
-
-        private Tuple<short, short> DeserializeRange(string rangeJson)
-        {
-            dynamic parts = JsonConvert.DeserializeObject(rangeJson);
-
-            short low = parts.First;
-            short high = parts.Second;
-
-            return new Tuple<short, short>(low, high);
-        }
-
         /// <summary>
         /// insert this into the db
         /// </summary>
@@ -148,11 +133,11 @@ namespace NetMud.Data.Reference
             //TODO: parameterize the whole insert business
             Race returnValue = default(Race);
             var sql = new StringBuilder();
-            sql.Append("insert into [dbo].[Race]([Name],[Arms],[Legs],[Torso],[Head],[BodyParts]");
-            sql.Append(",[DietaryNeeds],[SanguinaryMaterial],[VisionRange],[TemperatureTolerance],[Breathes],[TeethType],[StartingLocation],[EmergencyLocation])");
-            sql.AppendFormat(" values('{0}','{1}','{2}',{3},{4},'{5}',{6},{7},'{8}','{9}',{10},{11},{12},{13})", Name
-                , JsonConvert.SerializeObject(Arms), JsonConvert.SerializeObject(Legs), Torso.ID, Head.ID, JsonConvert.SerializeObject(BodyParts)
-                , (short)DietaryNeeds, SanguinaryMaterial.ID, JsonConvert.SerializeObject(VisionRange), JsonConvert.SerializeObject(TemperatureTolerance)
+            sql.Append("insert into [dbo].[Race]([Name],[ArmsId],[ArmsAmount],[LegsId],[LegsAmount],[Torso],[Head],[BodyParts]");
+            sql.Append(",[DietaryNeeds],[SanguinaryMaterial],[VisionRangeLow],[VisionRangeHigh],[TemperatureToleranceLow],[TemperatureToleranceHigh],[Breathes],[TeethType],[StartingLocation],[EmergencyLocation])");
+            sql.AppendFormat(" values('{0}',{1},{2},{3},{4},{5},{6},'{7}',{8},{9},{10},{11},{12},{13},{14},{15},{16},{17})", Name
+                , Arms.Item1.ID, Arms.Item2, Legs.Item1.ID, Legs.Item2, Torso.ID, Head.ID, JsonConvert.SerializeObject(BodyParts)
+                , (short)DietaryNeeds, SanguinaryMaterial.ID, VisionRange.Item1, VisionRange.Item2, TemperatureTolerance.Item1, TemperatureTolerance.Item2
                 , (short)Breathes, (short)TeethType, StartingLocation.ID, EmergencyLocation.ID);
             sql.Append(" select * from [dbo].[Race] where ID = Scope_Identity()");
 
@@ -202,15 +187,19 @@ namespace NetMud.Data.Reference
             sql.Append("update [dbo].[Race] set ");
             sql.AppendFormat(" [Name] = '{0}' ", Name);
 
-            sql.AppendFormat(", [Arms] = '{0}' ", Arms);
-            sql.AppendFormat(", [Legs] = '{0}' ", Legs);
-            sql.AppendFormat(", [Torso] = {0} ",  Torso.ID);
+            sql.AppendFormat(", [ArmsId] = {0} ", Arms.Item1.ID);
+            sql.AppendFormat(", [ArmsAmount] = {0} ", Arms.Item2);
+            sql.AppendFormat(", [LegsId] = {0} ", Legs.Item1.ID);
+            sql.AppendFormat(", [LegsAmount] = {0} ", Legs.Item2);
+            sql.AppendFormat(", [Torso] = {0} ", Torso.ID);
             sql.AppendFormat(", [Head] = {0} ", Head.ID);
             sql.AppendFormat(", [BodyParts] = '{0}' ", BodyParts);
             sql.AppendFormat(", [DietaryNeeds] = {0} ", (short)DietaryNeeds);
             sql.AppendFormat(", [SanguinaryMaterial] = {0} ", SanguinaryMaterial.ID);
-            sql.AppendFormat(", [VisionRange] = '{0}' ", VisionRange);
-            sql.AppendFormat(", [TemperatureTolerance] = '{0}' ", TemperatureTolerance);
+            sql.AppendFormat(", [VisionRangeLow] = {0} ", VisionRange.Item1);
+            sql.AppendFormat(", [VisionRangeHigh] = {0} ", VisionRange.Item2);
+            sql.AppendFormat(", [TemperatureToleranceLow] = '{0}' ", TemperatureTolerance.Item1);
+            sql.AppendFormat(", [TemperatureToleranceHigh] = '{0}' ", TemperatureTolerance.Item2);
             sql.AppendFormat(", [Breathes] = {0} ", (short)Breathes);
             sql.AppendFormat(", [TeethType] = {0} ", (short)TeethType);
             sql.AppendFormat(", [StartingLocation] = {0} ", StartingLocation.ID);

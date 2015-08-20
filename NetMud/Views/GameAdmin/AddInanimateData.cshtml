@@ -136,6 +136,8 @@
         var compositionDropdown = decodeHtml('@compositionDropdown');
 
         $(document).ready(function () {
+            GetNewDimModDeets();
+
             $("#addInanimateContainerRow").click(function () {
                 $("#inanimateContainerRows").append(
                     '<div class="col-md-10" style="padding-left:10px;"><span style="padding: 10px; float:left;">Name: </span><input id="InanimateContainerNames" name="InanimateContainerNames" type="text" value="" style="float:left; margin-top: 10px;"><span style="padding: 10px; float:left;">Weight:</span><input id="InanimateContainerWeights" name="InanimateContainerWeights" type="text" value="" style="float:left; margin-top: 10px;"><span style="padding: 10px; float:left;">Volume:</span><input id="InanimateContainerVolumes" name="InanimateContainerVolumes" type="text" value="" style="float:left; margin-top: 10px;"><a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a></div>'
@@ -173,8 +175,18 @@
             });
 
             $("#DimensionalModelId").change(function () {
-                $.ajax({
-                    url: "/api/ClientDataApi/GetDimensionalData/" + this.value
+                GetNewDimModDeets();
+            });
+
+            $(".removeRow").click(function () {
+                $(this).parent().remove();
+                return false;
+            });
+        });
+
+        function GetNewDimModDeets() {
+            $.ajax({
+                url: "/api/ClientDataApi/GetDimensionalData/" + $("#DimensionalModelId").val()
                     , async: false
                     , success: function (data) {
                         $("#modelPartRows").html('');
@@ -185,13 +197,7 @@
                             );
                         })
                     }
-                });
             });
-
-            $(".removeRow").click(function () {
-                $(this).parent().remove();
-                return false;
-            });
-        });
+        };
     </script>
 }
