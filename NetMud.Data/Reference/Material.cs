@@ -69,7 +69,7 @@ namespace NetMud.Data.Reference
                 long compId = long.Parse(comp.Name);
                 short amount = comp.Value;
 
-                compositions.Add(ReferenceWrapper.GetOne<IMaterial>(compId), amount);
+                compositions.Add(ReferenceWrapper.GetOne<Material>(compId), amount);
             }
 
             return compositions;

@@ -82,7 +82,7 @@ namespace NetMud.Data.Reference
             DietaryNeeds = (DietType)DataUtility.GetFromDataRow<short>(dr, "DietaryNeeds");
 
             var bloodId = DataUtility.GetFromDataRow<long>(dr, "SanguinaryMaterial");
-            SanguinaryMaterial = ReferenceWrapper.GetOne<IMaterial>(bloodId);
+            SanguinaryMaterial = ReferenceWrapper.GetOne<Material>(bloodId);
 
             var visionJson = DataUtility.GetFromDataRow<string>(dr, "VisionRange");
             VisionRange = DeserializeRange(visionJson);

@@ -86,7 +86,7 @@ namespace NetMud.DataStructure.Base.Supporting
         /// Turn the modelPlanes into a json string we can store in the db
         /// </summary>
         /// <returns></returns>
-        string DeserializeModel();
+        string SerializeModel();
     }
 
     /// <summary>

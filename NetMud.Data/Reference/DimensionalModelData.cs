@@ -50,7 +50,7 @@ namespace NetMud.Data.Reference
             Created = backingModel.Created;
             LastRevised = backingModel.LastRevised;
 
-            SerializeModel(modelJson);
+            DeserializeModel(modelJson);
         }
 
         /// <summary>
@@ -238,7 +238,7 @@ namespace NetMud.Data.Reference
             Name = DataUtility.GetFromDataRow<string>(dr, "Name");
 
             string outModel = DataUtility.GetFromDataRow<string>(dr, "Model");
-            SerializeModel(outModel);
+            DeserializeModel(outModel);
         }
 
         /// <summary>
@@ -250,7 +250,7 @@ namespace NetMud.Data.Reference
             DimensionalModelData returnValue = default(DimensionalModelData);
             var sql = new StringBuilder();
             sql.Append("insert into [dbo].[DimensionalModelData]([Name], [Model])");
-            sql.AppendFormat(" values('{0}','{1}')", Name, DeserializeModel());
+            sql.AppendFormat(" values('{0}','{1}')", Name, SerializeModel());
             sql.Append(" select * from [dbo].[DimensionalModelData] where ID = Scope_Identity()");
 
             try
@@ -298,7 +298,7 @@ namespace NetMud.Data.Reference
             var sql = new StringBuilder();
             sql.Append("update [dbo].[DimensionalModelData] set ");
             sql.AppendFormat(" [Name] = '{0}' ", Name);
-            sql.AppendFormat(" , [Model] = '{0}' ", DeserializeModel());
+            sql.AppendFormat(" , [Model] = '{0}' ", SerializeModel());
             sql.AppendFormat(" , [LastRevised] = GetUTCDate()");
             sql.AppendFormat(" where ID = {0}", ID);
 
@@ -325,7 +325,7 @@ namespace NetMud.Data.Reference
         /// Turn the modelPlanes into a json string we can store in the db
         /// </summary>
         /// <returns></returns>
-        public string DeserializeModel()
+        public string SerializeModel()
         {
             return JsonConvert.SerializeObject(ModelPlanes);
         }
@@ -334,7 +334,7 @@ namespace NetMud.Data.Reference
         /// Turn the json we store in the db into the modelplanes
         /// </summary>
         /// <param name="modelJson">json we store in the db</param>
-        private void SerializeModel(string modelJson)
+        private void DeserializeModel(string modelJson)
         {
             dynamic planes = JsonConvert.DeserializeObject(modelJson);
 

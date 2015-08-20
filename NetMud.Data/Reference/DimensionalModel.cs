@@ -19,7 +19,7 @@ namespace NetMud.Data.Reference
             Width = DataUtility.GetFromDataRow<int>(dr, "DimensionalModelWidth");
 
             long outDimModId = DataUtility.GetFromDataRow<long>(dr, "DimensionalModelID");
-            ModelBackingData = ReferenceWrapper.GetOne<IDimensionalModelData>(outDimModId);
+            ModelBackingData = ReferenceWrapper.GetOne<DimensionalModelData>(outDimModId);
 
             string materialComps = DataUtility.GetFromDataRow<string>(dr, "DimensionalModelMaterialCompositions");
             Composition = DeserializeMaterialCompositions(materialComps);
@@ -32,7 +32,7 @@ namespace NetMud.Data.Reference
             Width = width;
             Composition = materialComps;
 
-            ModelBackingData = ReferenceWrapper.GetOne<IDimensionalModelData>(backingDataId);
+            ModelBackingData = ReferenceWrapper.GetOne<DimensionalModelData>(backingDataId);
         }
 
         public DimensionalModel(int length, int height, int width, long backingDataId, string compJson)
@@ -42,7 +42,7 @@ namespace NetMud.Data.Reference
             Width = width;
             Composition = DeserializeMaterialCompositions(compJson);
 
-            ModelBackingData = ReferenceWrapper.GetOne<IDimensionalModelData>(backingDataId);
+            ModelBackingData = ReferenceWrapper.GetOne<DimensionalModelData>(backingDataId);
         }
 
         public DimensionalModel(int length, int height, int width, string modelJson, long backingDataId, string compJson)
@@ -91,10 +91,10 @@ namespace NetMud.Data.Reference
                 string sectionName = comp.Name;
                 long materialId = comp.Value;
 
-                var material = ReferenceWrapper.GetOne<IMaterial>(materialId);
+                var material = ReferenceWrapper.GetOne<Material>(materialId);
 
                 if (material != null && !string.IsNullOrWhiteSpace(sectionName))
-                    Composition.Add(sectionName, material);
+                    composition.Add(sectionName, material);
             }
 
             return composition;
@@ -102,7 +102,12 @@ namespace NetMud.Data.Reference
 
         public string SerializeMaterialCompositions()
         {
-            return JsonConvert.SerializeObject(Composition);
+            var materialComps = new Dictionary<string, long>();
+
+            foreach (var kvp in Composition)
+                materialComps.Add(kvp.Key, kvp.Value.ID);
+
+            return JsonConvert.SerializeObject(materialComps);
         }
     }
 }

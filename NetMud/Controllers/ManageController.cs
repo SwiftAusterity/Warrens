@@ -113,7 +113,7 @@ namespace NetMud.Controllers
             newChar.Name = newName;
             newChar.SurName = newSurName;
             newChar.Gender = newGender;
-            var race = ReferenceWrapper.GetOne<IRace>(raceId);
+            var race = ReferenceWrapper.GetOne<Race>(raceId);
 
             if (race != null)
                 newChar.RaceData = race;

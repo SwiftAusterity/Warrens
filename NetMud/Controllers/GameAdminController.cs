@@ -356,7 +356,7 @@ namespace NetMud.Controllers
             newObj.Name = newName;
             newObj.SurName = newSurName;
             newObj.Gender = newGender;
-            var race = ReferenceWrapper.GetOne<IRace>(raceId);
+            var race = ReferenceWrapper.GetOne<Race>(raceId);
 
             if (race != null)
                 newObj.RaceData = race;
@@ -413,7 +413,7 @@ namespace NetMud.Controllers
             obj.Name = newName;
             obj.SurName = newSurName;
             obj.Gender = newGender;
-            var race = ReferenceWrapper.GetOne<IRace>(raceId);
+            var race = ReferenceWrapper.GetOne<Race>(raceId);
 
             if (race != null)
                 obj.RaceData = race;
@@ -569,7 +569,7 @@ namespace NetMud.Controllers
 
                         var internalObj = DataWrapper.GetOne<InanimateData>(id);
 
-                        if (internalObj != null)
+                        if (internalObj != null && vModel.InternalCompositionPercentages[icIndex] > 0)
                             internalCompositions.Add(internalObj, vModel.InternalCompositionPercentages[icIndex]);
                     }
 
@@ -630,6 +630,10 @@ namespace NetMud.Controllers
 
             vModel.DataObject = obj;
             vModel.NewName = obj.Name;
+            vModel.DimensionalModelId = obj.Model.ModelBackingData.ID;
+            vModel.DimensionalModelHeight = obj.Model.Height;
+            vModel.DimensionalModelLength = obj.Model.Length;
+            vModel.DimensionalModelWidth = obj.Model.Width;
 
             return View(vModel);
         }

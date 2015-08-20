@@ -369,7 +369,7 @@ namespace NetMud.Data.Game
                                             new XAttribute("Height", Model.Height),
                                             new XAttribute("Width", Model.Width),
                                             new XAttribute("ID", charData.Model.ModelBackingData.ID),
-                                            new XElement("ModellingData", Model.ModelBackingData.DeserializeModel()),
+                                            new XElement("ModellingData", Model.ModelBackingData.SerializeModel()),
                                             new XElement("MaterialCompositions", Model.SerializeMaterialCompositions()))),
                                     new XElement("ObjectsInRoom"),
                                     new XElement("MobilesInside")

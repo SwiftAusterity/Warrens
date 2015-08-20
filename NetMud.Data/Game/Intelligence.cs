@@ -285,7 +285,7 @@ namespace NetMud.Data.Game
                                             new XAttribute("Height", Model.Height),
                                             new XAttribute("Width", Model.Width),
                                             new XAttribute("ID", charData.Model.ModelBackingData.ID),
-                                            new XElement("ModellingData", Model.ModelBackingData.DeserializeModel()),
+                                            new XElement("ModellingData", Model.ModelBackingData.SerializeModel()),
                                             new XElement("MaterialCompositions", Model.SerializeMaterialCompositions()))),
                                     new XElement("Inventory")
                                     ));
@@ -392,7 +392,7 @@ namespace NetMud.Data.Game
                 raceData.ID = raceID;
                 raceData.Head = DataWrapper.GetOne<InanimateData>(raceHeadID);
                 raceData.Torso = DataWrapper.GetOne<InanimateData>(raceTorsoID);
-                raceData.SanguinaryMaterial = ReferenceWrapper.GetOne<IMaterial>(raceSanguinaryMaterialID);
+                raceData.SanguinaryMaterial = ReferenceWrapper.GetOne<Material>(raceSanguinaryMaterialID);
                 raceData.Breathes = (RespiratoryType)raceBreathes;
                 raceData.DietaryNeeds = (DietType)raceDietaryNeeds;
                 raceData.EmergencyLocation = DataWrapper.GetOne<RoomData>(raceEmergencyLocationID);
