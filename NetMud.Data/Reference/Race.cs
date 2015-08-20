@@ -91,8 +91,8 @@ namespace NetMud.Data.Reference
             var visionHigh = DataUtility.GetFromDataRow<short>(dr, "VisionRangeHigh");
             VisionRange = new Tuple<short, short>(visionLow, visionHigh);
 
-            var tempLow = DataUtility.GetFromDataRow<short>(dr, "TemperatureTolerance");
-            var tempHigh = DataUtility.GetFromDataRow<short>(dr, "TemperatureTolerance");
+            var tempLow = DataUtility.GetFromDataRow<short>(dr, "TemperatureToleranceLow");
+            var tempHigh = DataUtility.GetFromDataRow<short>(dr, "TemperatureToleranceHigh");
             TemperatureTolerance = new Tuple<short, short>(tempLow, tempHigh);
 
             Breathes = (RespiratoryType)DataUtility.GetFromDataRow<short>(dr, "Breathes");

@@ -1365,6 +1365,26 @@ namespace NetMud.Controllers
 
             vModel.DataObject = obj;
             vModel.NewName = obj.Name;
+            vModel.NewArmsAmount = obj.Arms.Item2;
+            vModel.NewArmsID = obj.Arms.Item1.ID;
+            vModel.NewBloodId = obj.SanguinaryMaterial.ID;
+            vModel.NewBreathes = (short)obj.Breathes;
+            vModel.NewDietaryNeeds = (short)obj.DietaryNeeds;
+            vModel.NewHeadId = obj.Head.ID;
+            vModel.NewLegsAmount = obj.Legs.Item2;
+            vModel.NewLegsID = obj.Legs.Item1.ID;
+            vModel.NewRecallLocationId = obj.EmergencyLocation.ID;
+            vModel.NewStartingLocationId = obj.StartingLocation.ID;
+            vModel.NewTeethType = (short)obj.TeethType;
+            vModel.NewTemperatureToleranceHigh = obj.TemperatureTolerance.Item2;
+            vModel.NewTemperatureToleranceLow = obj.TemperatureTolerance.Item1;
+            vModel.NewTorsoId = obj.Torso.ID;
+            vModel.NewVisionRangeHigh = obj.VisionRange.Item2;
+            vModel.NewVisionRangeLow = obj.VisionRange.Item1;
+
+            vModel.NewExtraPartsAmount = obj.BodyParts.Select(bp => bp.Item2).ToArray();
+            vModel.NewExtraPartsId = obj.BodyParts.Select(bp => bp.Item1.ID).ToArray(); ;
+            vModel.NewExtraPartsName = obj.BodyParts.Select(bp => bp.Item3).ToArray(); ;
 
             return View(vModel);
         }

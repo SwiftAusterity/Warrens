@@ -292,7 +292,7 @@ namespace NetMud.Models.GameAdmin
 
         [Range(0, 200)]
         [DataType(DataType.Text)]
-        [Display(Name = "Vision Range Low")]
+        [Display(Name = "Vision Range")]
         public short NewVisionRangeLow { get; set; }
 
         [Range(0, 200)]
@@ -302,7 +302,7 @@ namespace NetMud.Models.GameAdmin
 
         [Range(0, 200)]
         [DataType(DataType.Text)]
-        [Display(Name = "Heat Tolerence Low")]
+        [Display(Name = "Heat Tolerence")]
         public short NewTemperatureToleranceLow { get; set; }
 
         [Range(0, 200)]

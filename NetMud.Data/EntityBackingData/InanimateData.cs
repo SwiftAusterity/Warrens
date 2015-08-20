@@ -107,8 +107,8 @@ namespace NetMud.Data.EntityBackingData
 
             foreach (dynamic comp in comps)
             {
-                long id = long.Parse(comp.Name);
-                short percentage = comp.Value;
+                long id = comp.Item1;
+                short percentage = comp.Item2;
 
                 var objData = DataWrapper.GetOne<InanimateData>(id);
 
@@ -120,10 +120,10 @@ namespace NetMud.Data.EntityBackingData
         }
         public string SerializeInternalCompositions()
         {
-            var materialComps = new Dictionary<long, short>();
+            var materialComps = new List<Tuple<long, short>>();
 
             foreach (var kvp in InternalComposition)
-                materialComps.Add(kvp.Key.ID, kvp.Value);
+                materialComps.Add(new Tuple<long, short>(kvp.Key.ID, kvp.Value));
 
             return JsonConvert.SerializeObject(materialComps);
         }

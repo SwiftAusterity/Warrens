@@ -15,9 +15,10 @@
     {
         Herbivore = 0,
         Carnivore = 1,
-        Necrovore = 2,
-        Metalvore = 3,
-        Magiviore = 4,
-        Spirivore = 5
+        OmniVore = 2,
+        Necrovore = 3,
+        Metalvore = 4,
+        Magiviore = 5,
+        Spirivore = 6
     }
 }

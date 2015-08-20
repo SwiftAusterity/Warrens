@@ -74,7 +74,7 @@
                 @Html.LabelFor(m => m.NewBreathes, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
                     @Html.DropDownList("NewBreathes", Enum.GetNames(typeof(RespiratoryType)).Select(rl =>
-                        new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(RespiratoryType), rl)).ToString(), Selected = rl.Equals(Enum.GetName(typeof(RespiratoryType), container.Key)) })
+                        new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(RespiratoryType), rl)).ToString(), Selected = rl.Equals(Enum.GetName(typeof(RespiratoryType), Model.NewBreathes)) })
                         , htmlAttributes: new { id = "NewBreathes", Style = "padding: 7px; float:left; margin-top: 10px;" })
                     @Html.ValidationMessageFor(m => m.NewBreathes, "", new { @class = "text-danger" })
                 </div>
@@ -84,7 +84,7 @@
                 @Html.LabelFor(m => m.NewDietaryNeeds, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
                     @Html.DropDownList("NewDietaryNeeds", Enum.GetNames(typeof(DietType)).Select(rl =>
-                          new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(DietType), rl)).ToString(), Selected = rl.Equals(Enum.GetName(typeof(DietType), container.Key)) })
+                       new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(DietType), rl)).ToString(), Selected = rl.Equals(Enum.GetName(typeof(DietType), Model.NewDietaryNeeds)) })
                              , htmlAttributes: new { id = "NewDietaryNeeds", Style = "padding: 7px; float:left; margin-top: 10px;" })
                     @Html.ValidationMessageFor(m => m.NewDietaryNeeds, "", new { @class = "text-danger" })
                 </div>
@@ -94,7 +94,7 @@
                 @Html.LabelFor(m => m.NewTeethType, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
                     @Html.DropDownList("NewTeethType", Enum.GetNames(typeof(DamageType)).Select(rl =>
-                          new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString(), Selected = rl.Equals(Enum.GetName(typeof(DamageType), container.Key)) })
+                       new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString(), Selected = rl.Equals(Enum.GetName(typeof(DamageType), Model.NewTeethType)) })
                              , htmlAttributes: new { id = "NewTeethType", Style = "padding: 7px; float:left; margin-top: 10px;" })
                     @Html.ValidationMessageFor(m => m.NewTeethType, "", new { @class = "text-danger" })
                 </div>
