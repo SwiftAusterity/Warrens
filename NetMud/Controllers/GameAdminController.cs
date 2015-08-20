@@ -508,7 +508,8 @@ namespace NetMud.Controllers
                         var currentWeight = vModel.InanimateContainerWeights[inanimateIndex];
                         var currentVolume = vModel.InanimateContainerVolumes[inanimateIndex];
 
-                        newObj.InanimateContainers.Add(new EntityContainerData<IInanimate>(currentVolume, currentWeight, name));
+                        if (currentVolume > 0 && currentVolume > 0)
+                            newObj.InanimateContainers.Add(new EntityContainerData<IInanimate>(currentVolume, currentWeight, name));
                     }
 
                     inanimateIndex++;
@@ -528,7 +529,8 @@ namespace NetMud.Controllers
                         var currentWeight = vModel.MobileContainerWeights[mobileIndex];
                         var currentVolume = vModel.MobileContainerVolumes[mobileIndex];
 
-                        newObj.MobileContainers.Add(new EntityContainerData<IMobile>(currentVolume, currentWeight, name));
+                        if (currentVolume > 0 && currentVolume > 0)
+                            newObj.MobileContainers.Add(new EntityContainerData<IMobile>(currentVolume, currentWeight, name));
                     }
 
                     mobileIndex++;
@@ -548,7 +550,7 @@ namespace NetMud.Controllers
 
                         var material = ReferenceWrapper.GetOne<Material>(vModel.ModelPartMaterials[nameIndex]);
 
-                        if (material != null)
+                        if (material != null && !string.IsNullOrWhiteSpace(partName))
                             materialParts.Add(partName, material);
                     }
 
@@ -675,7 +677,8 @@ namespace NetMud.Controllers
                             var currentWeight = vModel.InanimateContainerWeights[inanimateIndex];
                             var currentVolume = vModel.InanimateContainerVolumes[inanimateIndex];
 
-                            obj.InanimateContainers.Add(new EntityContainerData<IInanimate>(currentVolume, currentWeight, name));
+                            if(currentVolume > 0 && currentWeight > 0)
+                                obj.InanimateContainers.Add(new EntityContainerData<IInanimate>(currentVolume, currentWeight, name));
                         }
                     }
 
@@ -708,7 +711,8 @@ namespace NetMud.Controllers
                             var currentWeight = vModel.MobileContainerWeights[mobileIndex];
                             var currentVolume = vModel.MobileContainerVolumes[mobileIndex];
 
-                            obj.MobileContainers.Add(new EntityContainerData<IMobile>(currentVolume, currentWeight, name));
+                            if (currentVolume > 0 && currentWeight > 0)
+                                obj.MobileContainers.Add(new EntityContainerData<IMobile>(currentVolume, currentWeight, name));
                         }
                     }
 
@@ -1242,59 +1246,59 @@ namespace NetMud.Controllers
             var newObj = new Race();
             newObj.Name = vModel.NewName;
 
-            if(vModel.NewArmsID > 0 && vModel.NewArmsAmount > 0)
+            if (vModel.NewArmsID > 0 && vModel.NewArmsAmount > 0)
             {
                 var arm = DataWrapper.GetOne<InanimateData>(vModel.NewArmsID);
 
-                if(arm != null)
-                    newObj.Arms = new Tuple<IInanimateData,short>(arm, vModel.NewArmsAmount);
+                if (arm != null)
+                    newObj.Arms = new Tuple<IInanimateData, short>(arm, vModel.NewArmsAmount);
             }
 
-            if(vModel.NewLegsID > 0 && vModel.NewLegsAmount > 0)
+            if (vModel.NewLegsID > 0 && vModel.NewLegsAmount > 0)
             {
                 var leg = DataWrapper.GetOne<InanimateData>(vModel.NewLegsID);
 
-                if(leg != null)
-                    newObj.Legs = new Tuple<IInanimateData,short>(leg, vModel.NewLegsAmount);
+                if (leg != null)
+                    newObj.Legs = new Tuple<IInanimateData, short>(leg, vModel.NewLegsAmount);
             }
 
-            if(vModel.NewTorsoId > 0)
+            if (vModel.NewTorsoId > 0)
             {
                 var torso = DataWrapper.GetOne<InanimateData>(vModel.NewTorsoId);
 
-                if(torso != null)
+                if (torso != null)
                     newObj.Torso = torso;
             }
 
-            if(vModel.NewHeadId > 0)
+            if (vModel.NewHeadId > 0)
             {
                 var head = DataWrapper.GetOne<InanimateData>(vModel.NewHeadId);
 
-                if(head != null)
+                if (head != null)
                     newObj.Head = head;
             }
 
-            if(vModel.NewStartingLocationId > 0)
+            if (vModel.NewStartingLocationId > 0)
             {
                 var room = DataWrapper.GetOne<RoomData>(vModel.NewStartingLocationId);
 
-                if(room != null)
+                if (room != null)
                     newObj.StartingLocation = room;
             }
 
-            if(vModel.NewRecallLocationId > 0)
+            if (vModel.NewRecallLocationId > 0)
             {
                 var room = DataWrapper.GetOne<RoomData>(vModel.NewRecallLocationId);
 
-                if(room != null)
+                if (room != null)
                     newObj.EmergencyLocation = room;
             }
 
-            if(vModel.NewBloodId > 0)
+            if (vModel.NewBloodId > 0)
             {
                 var blood = ReferenceWrapper.GetOne<Material>(vModel.NewBloodId);
 
-                if(blood != null)
+                if (blood != null)
                     newObj.SanguinaryMaterial = blood;
             }
 
@@ -1381,59 +1385,59 @@ namespace NetMud.Controllers
 
             obj.Name = vModel.NewName;
 
-            if(vModel.NewArmsID > 0 && vModel.NewArmsAmount > 0)
+            if (vModel.NewArmsID > 0 && vModel.NewArmsAmount > 0)
             {
                 var arm = DataWrapper.GetOne<InanimateData>(vModel.NewArmsID);
 
-                if(arm != null)
-                    obj.Arms = new Tuple<IInanimateData,short>(arm, vModel.NewArmsAmount);
+                if (arm != null)
+                    obj.Arms = new Tuple<IInanimateData, short>(arm, vModel.NewArmsAmount);
             }
 
-            if(vModel.NewLegsID > 0 && vModel.NewLegsAmount > 0)
+            if (vModel.NewLegsID > 0 && vModel.NewLegsAmount > 0)
             {
                 var leg = DataWrapper.GetOne<InanimateData>(vModel.NewLegsID);
 
-                if(leg != null)
-                    obj.Legs = new Tuple<IInanimateData,short>(leg, vModel.NewLegsAmount);
+                if (leg != null)
+                    obj.Legs = new Tuple<IInanimateData, short>(leg, vModel.NewLegsAmount);
             }
 
-            if(vModel.NewTorsoId > 0)
+            if (vModel.NewTorsoId > 0)
             {
                 var torso = DataWrapper.GetOne<InanimateData>(vModel.NewTorsoId);
 
-                if(torso != null)
+                if (torso != null)
                     obj.Torso = torso;
             }
 
-            if(vModel.NewHeadId > 0)
+            if (vModel.NewHeadId > 0)
             {
                 var head = DataWrapper.GetOne<InanimateData>(vModel.NewHeadId);
 
-                if(head != null)
+                if (head != null)
                     obj.Head = head;
             }
 
-            if(vModel.NewStartingLocationId > 0)
+            if (vModel.NewStartingLocationId > 0)
             {
                 var room = DataWrapper.GetOne<RoomData>(vModel.NewStartingLocationId);
 
-                if(room != null)
+                if (room != null)
                     obj.StartingLocation = room;
             }
 
-            if(vModel.NewRecallLocationId > 0)
+            if (vModel.NewRecallLocationId > 0)
             {
                 var room = DataWrapper.GetOne<RoomData>(vModel.NewRecallLocationId);
 
-                if(room != null)
+                if (room != null)
                     obj.EmergencyLocation = room;
             }
 
-            if(vModel.NewBloodId > 0)
+            if (vModel.NewBloodId > 0)
             {
                 var blood = ReferenceWrapper.GetOne<Material>(vModel.NewBloodId);
 
-                if(blood != null)
+                if (blood != null)
                     obj.SanguinaryMaterial = blood;
             }
 

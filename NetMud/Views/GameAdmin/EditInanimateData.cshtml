@@ -128,7 +128,7 @@
                     {
                     <div class="col-md-10" style="padding-left: 10px;">
                         <span style="padding: 10px; float:left;">Object: </span>@Html.DropDownList("InternalCompositionIds", Model.ValidInanimateDatas.Select(rl =>
-                                                                                 new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString(), Selected = rl.Equals(internalComposition.Value) })
+                                                                                 new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString(), Selected = rl.Equals(internalComposition.Key) })
                                                                                  , htmlAttributes: new { id = "InternalCompositionIds", Style = "padding: 7px; float:left; margin-top: 10px;" })
                         <span style="padding: 10px; float:left;">% of Composition:</span><input id="InternalCompositionPercentages" name="InternalCompositionPercentages" style="float:left; margin-top: 10px;" type="text" value="@internalComposition.Value.ToString()">
                         <a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a>

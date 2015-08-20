@@ -107,16 +107,25 @@ namespace NetMud.Data.EntityBackingData
 
             foreach (dynamic comp in comps)
             {
-                long id = comp.Name;
-                short percentage = short.Parse(comp.Name);
+                long id = long.Parse(comp.Name);
+                short percentage = comp.Value;
 
-                var objData = DataWrapper.GetOne<IInanimateData>(id);
+                var objData = DataWrapper.GetOne<InanimateData>(id);
 
                 if (objData != null && percentage > 0)
                     composition.Add(objData, percentage);
             }
 
             return composition;
+        }
+        public string SerializeInternalCompositions()
+        {
+            var materialComps = new Dictionary<long, short>();
+
+            foreach (var kvp in InternalComposition)
+                materialComps.Add(kvp.Key.ID, kvp.Value);
+
+            return JsonConvert.SerializeObject(materialComps);
         }
 
         /// <summary>
@@ -137,7 +146,7 @@ namespace NetMud.Data.EntityBackingData
             sql.AppendFormat(" values('{0}', '{1}', '{2}', {3}, {4}, {5}, {6}, '{7}', '{8}')"
                 , Name, mobileContainersJson, inanimateContainersJson
                 , Model.Height, Model.Length, Model.Width, Model.ModelBackingData.ID, Model.SerializeMaterialCompositions()
-                , JsonConvert.SerializeObject(InternalComposition));
+                , SerializeInternalCompositions());
             sql.Append(" select * from [dbo].[InanimateData] where ID = Scope_Identity()");
 
             try
@@ -190,7 +199,7 @@ namespace NetMud.Data.EntityBackingData
             sql.AppendFormat(" [Name] = '{0}' ", Name);
             sql.AppendFormat(" , [MobileContainers] = '{0}' ", mobileContainersJson);
             sql.AppendFormat(" , [InanimateContainers] = '{0}' ", inanimateContainersJson);
-            sql.AppendFormat(" , [InternalComposition] = '{0}' ", JsonConvert.SerializeObject(InternalComposition));
+            sql.AppendFormat(" , [InternalComposition] = '{0}' ", SerializeInternalCompositions());
             sql.AppendFormat(" , [DimensionalModelLength] = {0} ", Model.Length);
             sql.AppendFormat(" , [DimensionalModelHeight] = {0} ", Model.Height);
             sql.AppendFormat(" , [DimensionalModelWidth] = {0} ", Model.Width);
