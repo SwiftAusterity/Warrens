@@ -31,9 +31,10 @@ namespace NetMud.DataStructure.Base.System
         IData DataTemplate { get; }
 
         /// <summary>
-        /// The current physical model for this entity
+        /// Get's the entity's model dimensions
         /// </summary>
-        IDimensionalModel Model { get; }
+        /// <returns>height, length, width</returns>
+        Tuple<int, int, int> GetModelDimensions();
 
         /// <summary>
         /// Current location this entity is in

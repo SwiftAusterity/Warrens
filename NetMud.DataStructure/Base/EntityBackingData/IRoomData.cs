@@ -1,4 +1,5 @@
-﻿using NetMud.DataStructure.Base.System;
+﻿using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Base.System;
 
 namespace NetMud.DataStructure.Base.EntityBackingData
 {
@@ -7,5 +8,9 @@ namespace NetMud.DataStructure.Base.EntityBackingData
     /// </summary>
     public interface IRoomData : IEntityBackingData
     {
+        /// <summary>
+        /// The current physical model for this entity
+        /// </summary>
+        IDimensionalModel Model { get; }
     }
 }

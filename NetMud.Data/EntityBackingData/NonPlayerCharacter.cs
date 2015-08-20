@@ -36,6 +36,19 @@ namespace NetMud.Data.EntityBackingData
         public IRace RaceData { get; set; }
 
         /// <summary>
+        /// Get's the entity's model dimensions
+        /// </summary>
+        /// <returns>height, length, width</returns>
+        public override Tuple<int, int, int> GetModelDimensions()
+        {
+            var height = RaceData.Head.Model.Height + RaceData.Torso.Model.Height + RaceData.Legs.Item1.Model.Height;
+            var length = RaceData.Torso.Model.Length;
+            var width = RaceData.Torso.Model.Width;
+
+            return new Tuple<int, int, int>(height, length, width);
+        }
+
+        /// <summary>
         /// Full name to refer to this NPC with
         /// </summary>
         /// <returns>the full name string</returns>
@@ -60,8 +73,6 @@ namespace NetMud.Data.EntityBackingData
 
             var raceId = DataUtility.GetFromDataRow<long>(dr, "Race"); ;
             RaceData = ReferenceWrapper.GetOne<Race>(raceId);
-
-            Model = new DimensionalModel(dr);
         }
 
         /// <summary>
@@ -72,11 +83,9 @@ namespace NetMud.Data.EntityBackingData
         {
             INonPlayerCharacter returnValue = default(INonPlayerCharacter);
             var sql = new StringBuilder();
-            sql.Append("insert into [dbo].[NonPlayerCharacter]([SurName], [Name], [Gender]");
-            sql.Append(", [DimensionalModelLength], [DimensionalModelHeight], [DimensionalModelWidth], [DimensionalModelID], [DimensionalModelMaterialCompositions])");
+            sql.Append("insert into [dbo].[NonPlayerCharacter]([SurName], [Name], [Gender], [Race])");
             sql.AppendFormat(" values('{0}','{1}','{2}', {3}, {4}, {5}, {6}, '{7}', {8})"
-                , SurName, Name, Gender
-                , Model.Height, Model.Length, Model.Width, Model.ModelBackingData.ID, Model.SerializeMaterialCompositions(), RaceData.ID);
+                , SurName, Name, Gender, RaceData.ID);
             sql.Append(" select * from [dbo].[NonPlayerCharacter] where ID = Scope_Identity()");
 
             try
@@ -126,11 +135,6 @@ namespace NetMud.Data.EntityBackingData
             sql.AppendFormat(" , [Name] = '{0}' ", Name);
             sql.AppendFormat(" , [Gender] = '{0}' ", Gender);
             sql.AppendFormat(" , [Race] = {0} ", RaceData.ID);
-            sql.AppendFormat(" , [DimensionalModelLength] = {0} ", Model.Length);
-            sql.AppendFormat(" , [DimensionalModelHeight] = {0} ", Model.Height);
-            sql.AppendFormat(" , [DimensionalModelWidth] = {0} ", Model.Width);
-            sql.AppendFormat(" , [DimensionalModelMaterialCompositions] = '{0}' ", Model.SerializeMaterialCompositions());
-            sql.AppendFormat(" , [DimensionalModelId] = {0} ", Model.ModelBackingData.ID);
             sql.AppendFormat(" , [LastRevised] = GetUTCDate()");
             sql.AppendFormat(" where ID = {0}", ID);
 

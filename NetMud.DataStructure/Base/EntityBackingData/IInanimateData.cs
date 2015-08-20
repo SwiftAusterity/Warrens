@@ -23,5 +23,10 @@ namespace NetMud.DataStructure.Base.EntityBackingData
 
 
         IDictionary<IInanimateData, short> InternalComposition { get; set; }
+
+        /// <summary>
+        /// The current physical model for this entity
+        /// </summary>
+        IDimensionalModel Model { get; }
     }
 }

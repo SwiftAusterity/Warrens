@@ -26,6 +26,20 @@ namespace NetMud.Data.Game
     public class Room : EntityPartial, IRoom
     {
         /// <summary>
+        /// Framework for the physics model of an entity
+        /// </summary>
+        public IDimensionalModel Model { get; set; }
+
+        /// <summary>
+        /// Get's the entity's model dimensions
+        /// </summary>
+        /// <returns>height, length, width</returns>
+        public override Tuple<int, int, int> GetModelDimensions()
+        {
+            return new Tuple<int, int, int>(Model.Height, Model.Length, Model.Width);
+        }
+
+        /// <summary>
         /// News up an empty entity
         /// </summary>
         public Room()
@@ -467,7 +481,7 @@ namespace NetMud.Data.Game
             else //what if we're older
             {
                 //Get it from the db
-                var backD = DataWrapper.GetOne<NonPlayerCharacter>(backingData.ID);
+                var backD = DataWrapper.GetOne<RoomData>(backingData.ID);
                 backingData.Model = backD.Model;
                 newEntity.Model = backD.Model;
             }

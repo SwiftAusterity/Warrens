@@ -1,4 +1,5 @@
-﻿using NetMud.DataStructure.Base.System;
+﻿using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Base.System;
 
 namespace NetMud.DataStructure.Base.EntityBackingData
 {
@@ -76,5 +77,10 @@ namespace NetMud.DataStructure.Base.EntityBackingData
         /// Strength of visible message to surroundings
         /// </summary>
         int VisibleStrength { get; set; }
+
+        /// <summary>
+        /// The current physical model for this entity
+        /// </summary>
+        IDimensionalModel Model { get; }
     }
 }

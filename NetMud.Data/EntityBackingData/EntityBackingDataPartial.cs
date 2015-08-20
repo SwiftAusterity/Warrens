@@ -13,9 +13,10 @@ namespace NetMud.Data.EntityBackingData
         public abstract Type EntityClass { get; }
 
         /// <summary>
-        /// Framework for the physics model of an entity
+        /// Get's the entity's model dimensions
         /// </summary>
-        public IDimensionalModel Model { get; set; }
+        /// <returns>height, length, width</returns>
+        public abstract Tuple<int, int, int> GetModelDimensions();
 
         /// <summary>
         /// Numerical iterative ID in the db

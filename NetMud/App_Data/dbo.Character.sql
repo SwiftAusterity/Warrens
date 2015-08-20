@@ -8,11 +8,6 @@
 	[Race]					BIGINT NOT NULL DEFAULT (0),
 	[GamePermissionsRank]	SMALLINT		DEFAULT(0),
     [AccountHandle]			VARCHAR (200)	NOT NULL,
-	[DimensionalModelLength]	INT				NOT NULL DEFAULT (-1),
-	[DimensionalModelHeight]	INT				NOT NULL DEFAULT (-1),
-	[DimensionalModelWidth]		INT				NOT NULL DEFAULT (-1),
-	[DimensionalModelMaterialCompositions]		VARCHAR (MAX)	DEFAULT ('{}') NOT NULL,
-	[DimensionalModelID]	BIGINT			NOT NULL,
 	[LastKnownLocation]		VARCHAR(MAX)	DEFAULT('') NOT NULL,
 	[LastKnownLocationType]	VARCHAR(MAX)	DEFAULT('') NOT NULL,
     PRIMARY KEY CLUSTERED ([Id] ASC)

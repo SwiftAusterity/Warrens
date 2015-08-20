@@ -59,6 +59,20 @@ namespace NetMud.Data.Game
             SpawnNewInWorld(spawnTo);
         }
 
+        /// <summary>
+        /// Get's the entity's model dimensions
+        /// </summary>
+        /// <returns>height, length, width</returns>
+        public override Tuple<int, int, int> GetModelDimensions()
+        {
+            var charData = (NonPlayerCharacter)DataTemplate;
+            var height = charData.RaceData.Head.Model.Height + charData.RaceData.Torso.Model.Height + charData.RaceData.Legs.Item1.Model.Height;
+            var length = charData.RaceData.Torso.Model.Length;
+            var width = charData.RaceData.Torso.Model.Width;
+
+            return new Tuple<int, int, int>(height, length, width);
+        }
+
         #region Rendering
         /// <summary>
         /// Render this to a look command (what something sees when it 'look's at this
@@ -279,14 +293,7 @@ namespace NetMud.Data.Game
                                                 new XAttribute("Amount", charData.RaceData.Legs.Item2)),
                                             new XElement("BodyParts", JsonConvert.SerializeObject(charData.RaceData.BodyParts)))),
                                     new XElement("LiveData",
-                                        new XAttribute("Keywords", string.Join(",", Keywords)),
-                                        new XElement("DimensionalModel",
-                                            new XAttribute("Length", Model.Length),
-                                            new XAttribute("Height", Model.Height),
-                                            new XAttribute("Width", Model.Width),
-                                            new XAttribute("ID", charData.Model.ModelBackingData.ID),
-                                            new XElement("ModellingData", Model.ModelBackingData.SerializeModel()),
-                                            new XElement("MaterialCompositions", Model.SerializeMaterialCompositions()))),
+                                        new XAttribute("Keywords", string.Join(",", Keywords))),
                                     new XElement("Inventory")
                                     ));
 
@@ -356,17 +363,6 @@ namespace NetMud.Data.Game
         {
             if (!older)
             {
-                //We added dim mods in v1
-                var dimModelId = docRoot.Element("LiveData").Element("DimensionalModel").GetSafeAttributeValue<long>("ID");
-                var dimModelLength = docRoot.Element("LiveData").Element("DimensionalModel").GetSafeAttributeValue<int>("Length");
-                var dimModelHeight = docRoot.Element("LiveData").Element("DimensionalModel").GetSafeAttributeValue<int>("Height");
-                var dimModelWidth = docRoot.Element("LiveData").Element("DimensionalModel").GetSafeAttributeValue<int>("Width");
-                var dimModelJson = docRoot.Element("LiveData").Element("DimensionalModel").GetSafeElementValue("ModellingData");
-                var dimModelCompJson = docRoot.Element("LiveData").Element("DimensionalModel").GetSafeElementValue("MaterialCompositions");
-
-                backingData.Model = new DimensionalModel(dimModelLength, dimModelHeight, dimModelWidth, dimModelId, dimModelCompJson);
-                newEntity.Model = new DimensionalModel(dimModelLength, dimModelHeight, dimModelWidth, dimModelJson, dimModelId, dimModelCompJson);
-
                 // We added Race in v1 as well
                 var raceID = docRoot.Element("BackingData").Element("Race").GetSafeAttributeValue<long>("ID");
                 var raceHeadID = docRoot.Element("BackingData").Element("Race").GetSafeAttributeValue<long>("Head");
@@ -407,9 +403,7 @@ namespace NetMud.Data.Game
             {
                 //Get it from the db
                 var backD = DataWrapper.GetOne<NonPlayerCharacter>(backingData.ID);
-                backingData.Model = backD.Model;
                 backingData.RaceData = backD.RaceData;
-                newEntity.Model = backD.Model;
             }
         }
         #endregion

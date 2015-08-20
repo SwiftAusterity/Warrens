@@ -28,8 +28,11 @@ namespace NetMud.Data.Game
         /// </summary>
         public IData DataTemplate { get; internal set; }
 
-
-        public IDimensionalModel Model { get; internal set; }
+        /// <summary>
+        /// Get's the entity's model dimensions
+        /// </summary>
+        /// <returns>height, length, width</returns>
+        public abstract Tuple<int, int, int> GetModelDimensions();
 
         /// <summary>
         /// keywords this entity is referrable by in the world by the parser

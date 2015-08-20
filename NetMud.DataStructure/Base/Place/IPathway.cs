@@ -2,6 +2,7 @@
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.DataStructure.Behaviors.System;
+using NetMud.DataStructure.Base.Supporting;
 
 namespace NetMud.DataStructure.Base.Place
 {
@@ -29,5 +30,10 @@ namespace NetMud.DataStructure.Base.Place
         /// Message cluster for entities entering
         /// </summary>
         MessageCluster Enter { get; set; }
+
+        /// <summary>
+        /// The current physical model for this entity
+        /// </summary>
+        IDimensionalModel Model { get; }
     }
 }

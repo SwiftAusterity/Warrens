@@ -84,6 +84,19 @@ namespace NetMud.Data.EntityBackingData
         }
 
         /// <summary>
+        /// Get's the entity's model dimensions
+        /// </summary>
+        /// <returns>height, length, width</returns>
+        public override Tuple<int, int, int> GetModelDimensions()
+        {
+            var height = RaceData.Head.Model.Height + RaceData.Torso.Model.Height + RaceData.Legs.Item1.Model.Height;
+            var length = RaceData.Torso.Model.Length;
+            var width = RaceData.Torso.Model.Width;
+
+            return new Tuple<int, int, int>(height, length, width);
+        }
+
+        /// <summary>
         /// Fills a data object with data from a data row
         /// </summary>
         /// <param name="dr">the data row to fill from</param>
@@ -105,8 +118,6 @@ namespace NetMud.Data.EntityBackingData
 
             LastKnownLocation = DataUtility.GetFromDataRow<string>(dr, "LastKnownLocation");
             LastKnownLocationType = DataUtility.GetFromDataRow<string>(dr, "LastKnownLocationType");
-
-            Model = new DimensionalModel(dr);
         }
 
         /// <summary>
@@ -117,11 +128,9 @@ namespace NetMud.Data.EntityBackingData
         {
             ICharacter returnValue = default(ICharacter);
             var sql = new StringBuilder();
-            sql.Append("insert into [dbo].[Character]([SurName], [Name], [AccountHandle], [Gender], [GamePermissionsRank]");
-            sql.Append(", [DimensionalModelLength], [DimensionalModelHeight], [DimensionalModelWidth], [DimensionalModelID], [DimensionalModelMaterialCompositions], [Race])");
+            sql.Append("insert into [dbo].[Character]([SurName], [Name], [AccountHandle], [Gender], [GamePermissionsRank], [Race])");
             sql.AppendFormat(" values('{0}','{1}','{2}', '{3}', {4}, {5}, {6}, {7}, {8}, '{9}', {10})"
-                , SurName, Name, AccountHandle, Gender, (short)GamePermissionsRank
-                , Model.Height, Model.Length, Model.Width, Model.ModelBackingData.ID, Model.SerializeMaterialCompositions(), RaceData.ID);
+                , SurName, Name, AccountHandle, Gender, (short)GamePermissionsRank, RaceData.ID);
             sql.Append(" select * from [dbo].[Character] where ID = Scope_Identity()");
 
             try
@@ -175,11 +184,6 @@ namespace NetMud.Data.EntityBackingData
             sql.AppendFormat(" , [GamePermissionsRank] = {0} ", (short)GamePermissionsRank);
             sql.AppendFormat(" , [LastKnownLocation] = '{0}' ", LastKnownLocation);
             sql.AppendFormat(" , [LastKnownLocationType] = '{0}' ", LastKnownLocationType);
-            sql.AppendFormat(" , [DimensionalModelLength] = {0} ", Model.Length);
-            sql.AppendFormat(" , [DimensionalModelHeight] = {0} ", Model.Height);
-            sql.AppendFormat(" , [DimensionalModelWidth] = {0} ", Model.Width);
-            sql.AppendFormat(" , [DimensionalModelMaterialCompositions] = '{0}' ", Model.SerializeMaterialCompositions());
-            sql.AppendFormat(" , [DimensionalModelId] = {0} ", Model.ModelBackingData.ID);
             sql.AppendFormat(" , [LastRevised] = GetUTCDate()");
             sql.AppendFormat(" where ID = {0}", ID);
 

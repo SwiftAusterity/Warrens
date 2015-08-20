@@ -20,6 +20,12 @@ namespace NetMud.Data.EntityBackingData
     /// </summary>
     public class InanimateData : EntityBackingDataPartial, IInanimateData
     {
+
+        /// <summary>
+        /// Framework for the physics model of an entity
+        /// </summary>
+        public IDimensionalModel Model { get; set; }
+
         public InanimateData()
         {
             MobileContainers = new HashSet<IEntityContainerData<IMobile>>();
@@ -55,6 +61,15 @@ namespace NetMud.Data.EntityBackingData
 
 
         public IDictionary<IInanimateData, short> InternalComposition { get; set; }
+
+        /// <summary>
+        /// Get's the entity's model dimensions
+        /// </summary>
+        /// <returns>height, length, width</returns>
+        public override Tuple<int, int, int> GetModelDimensions()
+        {
+            return new Tuple<int, int, int>(Model.Height, Model.Length, Model.Width);
+        }
 
         /// <summary>
         /// Fills a data object with data from a data row

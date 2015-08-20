@@ -14,8 +14,9 @@ namespace NetMud.DataStructure.Base.System
         Type EntityClass { get; }
 
         /// <summary>
-        /// The ideal physical model for this entity
+        /// Get's the entity's model dimensions
         /// </summary>
-        IDimensionalModel Model { get; set; }
+        /// <returns>height, length, width</returns>
+        Tuple<int, int, int> GetModelDimensions();
     }
 }

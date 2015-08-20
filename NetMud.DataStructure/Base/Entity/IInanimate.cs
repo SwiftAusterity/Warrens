@@ -1,4 +1,5 @@
-﻿using NetMud.DataStructure.Behaviors.Rendering;
+﻿using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.Behaviors.System;
 using NetMud.DataStructure.SupportingClasses;
 using System.Collections.Generic;
@@ -24,5 +25,10 @@ namespace NetMud.DataStructure.Base.Entity
         /// System type for the last known location for the object in the real world
         /// </summary>
         string LastKnownLocationType { get; set; }
+
+        /// <summary>
+        /// The current physical model for this entity
+        /// </summary>
+        IDimensionalModel Model { get; }
     }
 }
