@@ -118,7 +118,7 @@ namespace NetMud.Data.EntityBackingData
             ICharacter returnValue = default(ICharacter);
             var sql = new StringBuilder();
             sql.Append("insert into [dbo].[Character]([SurName], [Name], [AccountHandle], [Gender], [GamePermissionsRank]");
-            sql.Append(", [DimensionalModelLength], [DimensionalModelHeight], [DimensionalModelWidth], [DimensionalModelID], [DimensionalModelMaterialCompositions])");
+            sql.Append(", [DimensionalModelLength], [DimensionalModelHeight], [DimensionalModelWidth], [DimensionalModelID], [DimensionalModelMaterialCompositions], [Race])");
             sql.AppendFormat(" values('{0}','{1}','{2}', '{3}', {4}, {5}, {6}, {7}, {8}, '{9}', {10})"
                 , SurName, Name, AccountHandle, Gender, (short)GamePermissionsRank
                 , Model.Height, Model.Length, Model.Width, Model.ModelBackingData.ID, Model.SerializeMaterialCompositions(), RaceData.ID);
