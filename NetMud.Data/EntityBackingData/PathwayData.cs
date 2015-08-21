@@ -5,6 +5,7 @@ using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.Utility;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Text;
 
@@ -139,20 +140,39 @@ namespace NetMud.Data.EntityBackingData
         /// <returns>the object with ID and other db fields set</returns>
         public override IData Create()
         {
+            var parms = new Dictionary<string, object>();
+
             IPathwayData returnValue = default(IPathwayData);
             var sql = new StringBuilder();
             sql.Append("insert into [dbo].[PathwayData]([Name],[ToLocationID],[FromLocationID],[ToLocationType],[FromLocationType],[MessageToDestination],[MessageToOrigin]");
             sql.Append(",[MessageToActor],[AudibleToSurroundings],[VisibleToSurroundings],[AudibleStrength],[VisibleStrength]");
             sql.Append(", [DimensionalModelLength], [DimensionalModelHeight], [DimensionalModelWidth], [DimensionalModelID], [DimensionalModelMaterialCompositions])");
-            sql.AppendFormat(" values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}',{10},{11},{12},{13},{14},{15},'{16}')"
-                , Name, ToLocationID, FromLocationID, ToLocationType, FromLocationType, MessageToDestination, MessageToOrigin
-                , MessageToActor, AudibleToSurroundings, VisibleToSurroundings, AudibleStrength, VisibleStrength
-                , Model.Height, Model.Length, Model.Width, Model.ModelBackingData.ID, Model.SerializeMaterialCompositions());
+            sql.Append(" values(@Name,@ToLocationID,@FromLocationID,@ToLocationType,@FromLocationType,@MessageToDestination,@MessageToOrigin");
+            sql.Append(", @MessageToActor,@AudibleToSurroundings,@VisibleToSurroundings,@AudibleStrength,@VisibleStrength");
+            sql.Append(", @DimensionalModelLength, @DimensionalModelHeight, @DimensionalModelWidth, @DimensionalModelID, @DimensionalModelMaterialCompositions)");
             sql.Append(" select * from [dbo].[PathwayData] where ID = Scope_Identity()");
+
+            parms.Add("Name", Name);
+            parms.Add("ToLocationID", ToLocationID);
+            parms.Add("FromLocationID", FromLocationID);
+            parms.Add("ToLocationType", ToLocationType);
+            parms.Add("FromLocationType", FromLocationType);
+            parms.Add("MessageToDestination", MessageToDestination);
+            parms.Add("MessageToOrigin", MessageToOrigin);
+            parms.Add("MessageToActor", MessageToActor);
+            parms.Add("AudibleToSurroundings", AudibleToSurroundings);
+            parms.Add("VisibleToSurroundings", VisibleToSurroundings);
+            parms.Add("AudibleStrength", AudibleStrength);
+            parms.Add("VisibleStrength", VisibleStrength);
+            parms.Add("DimensionalModelLength", Model.Length);
+            parms.Add("DimensionalModelHeight", Model.Height);
+            parms.Add("DimensionalModelWidth", Model.Width);
+            parms.Add("DimensionalModelID", Model.ModelBackingData.ID);
+            parms.Add("DimensionalModelMaterialCompositions", Model.SerializeMaterialCompositions());
 
             try
             {
-                var ds = SqlWrapper.RunDataset(sql.ToString(), CommandType.Text);
+                var ds = SqlWrapper.RunDataset(sql.ToString(), CommandType.Text, parms);
 
                 if (ds.Rows != null)
                 {
@@ -178,10 +198,13 @@ namespace NetMud.Data.EntityBackingData
         public override bool Remove()
         {
             //TODO: Exits too?
+            var parms = new Dictionary<string, object>();
             var sql = new StringBuilder();
-            sql.AppendFormat("delete from [dbo].[PathwayData] where ID = {0}", ID);
+            sql.AppendFormat("delete from [dbo].[PathwayData] where ID = @id", ID);
 
-            SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text);
+            parms.Add("id", ID);
+
+            SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text, parms);
 
             return true;
         }
@@ -192,29 +215,50 @@ namespace NetMud.Data.EntityBackingData
         /// <returns>success status</returns>
         public override bool Save()
         {
+            var parms = new Dictionary<string, object>();
+            
             var sql = new StringBuilder();
             sql.Append("update [dbo].[PathwayData] set ");
-            sql.AppendFormat(" [Name] = '{0}' ", Name);
-            sql.AppendFormat(", [ToLocationID] = '{0}' ", ToLocationID);
-            sql.AppendFormat(", [FromLocationID] = '{0}' ", FromLocationID);
-            sql.AppendFormat(", [ToLocationType] = '{0}' ", ToLocationType);
-            sql.AppendFormat(", [FromLocationType] = '{0}' ", FromLocationType);
-            sql.AppendFormat(", [MessageToDestination] = '{0}' ", MessageToDestination);
-            sql.AppendFormat(", [MessageToOrigin] = '{0}' ", MessageToOrigin);
-            sql.AppendFormat(", [MessageToActor] = '{0}' ", MessageToActor);
-            sql.AppendFormat(", [AudibleToSurroundings] = '{0}' ", AudibleToSurroundings);
-            sql.AppendFormat(", [VisibleToSurroundings] = '{0}' ", VisibleToSurroundings);
-            sql.AppendFormat(", [AudibleStrength] = {0} ", AudibleStrength);
-            sql.AppendFormat(", [VisibleStrength] = {0} ", VisibleStrength);
-            sql.AppendFormat(", [DimensionalModelLength] = {0} ", Model.Length);
-            sql.AppendFormat(", [DimensionalModelHeight] = {0} ", Model.Height);
-            sql.AppendFormat(", [DimensionalModelWidth] = {0} ", Model.Width);
-            sql.AppendFormat(" , [DimensionalModelMaterialCompositions] = '{0}' ", Model.SerializeMaterialCompositions());
-            sql.AppendFormat(", [DimensionalModelId] = {0} ", Model.ModelBackingData.ID); 
-            sql.AppendFormat(", [LastRevised] = GetUTCDate()");
-            sql.AppendFormat(" where ID = {0}", ID);
+            sql.Append(" [Name] =  @Name ");
+            sql.Append(", [ToLocationID] =  @ToLocationID ");
+            sql.Append(", [FromLocationID] =  @FromLocationID' ");
+            sql.Append(", [ToLocationType] =  @ToLocationType ");
+            sql.Append(", [FromLocationType] =  @FromLocationType ");
+            sql.Append(", [MessageToDestination] =  @MessageToDestination ");
+            sql.Append(", [MessageToOrigin] = @MessageToOrigin' ");
+            sql.Append(", [MessageToActor] = @MessageToActor ");
+            sql.Append(", [AudibleToSurroundings] = @AudibleToSurroundings ");
+            sql.Append(", [VisibleToSurroundings] = @VisibleToSurroundings ");
+            sql.Append(", [AudibleStrength] = @AudibleStrength ");
+            sql.Append(", [VisibleStrength] = @VisibleStrength ");
+            sql.Append(", [DimensionalModelLength] =  @DimensionalModelLength ");
+            sql.Append(", [DimensionalModelHeight] =  @DimensionalModelHeight ");
+            sql.Append(", [DimensionalModelWidth] =  @DimensionalModelWidth ");
+            sql.Append(", [DimensionalModelMaterialCompositions] =  @DimensionalModelMaterialCompositions ");
+            sql.Append(", [DimensionalModelId] = @DimensionalModelId "); 
+            sql.Append(", [LastRevised] = GetUTCDate()");
+            sql.Append(" where ID = @id");
 
-            SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text);
+            parms.Add("id", ID);
+            parms.Add("Name", Name);
+            parms.Add("ToLocationID", ToLocationID);
+            parms.Add("FromLocationID", FromLocationID);
+            parms.Add("ToLocationType", ToLocationType);
+            parms.Add("FromLocationType", FromLocationType);
+            parms.Add("MessageToDestination", MessageToDestination);
+            parms.Add("MessageToOrigin", MessageToOrigin);
+            parms.Add("MessageToActor", MessageToActor);
+            parms.Add("AudibleToSurroundings", AudibleToSurroundings);
+            parms.Add("VisibleToSurroundings", VisibleToSurroundings);
+            parms.Add("AudibleStrength", AudibleStrength);
+            parms.Add("VisibleStrength", VisibleStrength);
+            parms.Add("DimensionalModelLength", Model.Length);
+            parms.Add("DimensionalModelHeight", Model.Height);
+            parms.Add("DimensionalModelWidth", Model.Width);
+            parms.Add("DimensionalModelID", Model.ModelBackingData.ID);
+            parms.Add("DimensionalModelMaterialCompositions", Model.SerializeMaterialCompositions());
+
+            SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text, parms);
 
             return true;
         }

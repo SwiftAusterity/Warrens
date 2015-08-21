@@ -132,18 +132,37 @@ namespace NetMud.Data.Reference
         {
             //TODO: parameterize the whole insert business
             Race returnValue = default(Race);
+            var parms = new Dictionary<string, object>();
+
             var sql = new StringBuilder();
             sql.Append("insert into [dbo].[Race]([Name],[ArmsId],[ArmsAmount],[LegsId],[LegsAmount],[Torso],[Head],[BodyParts]");
             sql.Append(",[DietaryNeeds],[SanguinaryMaterial],[VisionRangeLow],[VisionRangeHigh],[TemperatureToleranceLow],[TemperatureToleranceHigh],[Breathes],[TeethType],[StartingLocation],[EmergencyLocation])");
-            sql.AppendFormat(" values('{0}',{1},{2},{3},{4},{5},{6},'{7}',{8},{9},{10},{11},{12},{13},{14},{15},{16},{17})", Name
-                , Arms.Item1.ID, Arms.Item2, Legs.Item1.ID, Legs.Item2, Torso.ID, Head.ID, JsonConvert.SerializeObject(BodyParts)
-                , (short)DietaryNeeds, SanguinaryMaterial.ID, VisionRange.Item1, VisionRange.Item2, TemperatureTolerance.Item1, TemperatureTolerance.Item2
-                , (short)Breathes, (short)TeethType, StartingLocation.ID, EmergencyLocation.ID);
+            sql.Append(" values(@Name,@ArmsId,@ArmsAmount,@LegsId,@LegsAmount,@Torso,@Head,@BodyParts");
+            sql.Append(",@DietaryNeeds,@SanguinaryMaterial,@VisionRangeLow,@VisionRangeHigh,@TemperatureToleranceLow,@TemperatureToleranceHigh,@Breathes,@TeethType,@StartingLocation,@EmergencyLocation)");
             sql.Append(" select * from [dbo].[Race] where ID = Scope_Identity()");
+
+            parms.Add("Name", Name);
+            parms.Add("ArmsId", Arms.Item1.ID);
+            parms.Add("ArmsAmount", Arms.Item2);
+            parms.Add("LegsId", Legs.Item1.ID);
+            parms.Add("LegsAmount", Legs.Item2);
+            parms.Add("Torso", Torso.ID);
+            parms.Add("Head", Head.ID);
+            parms.Add("BodyParts", JsonConvert.SerializeObject(BodyParts));
+            parms.Add("DietaryNeeds", (short)DietaryNeeds);
+            parms.Add("SanguinaryMaterial", SanguinaryMaterial.ID);
+            parms.Add("VisionRangeLow", VisionRange.Item1);
+            parms.Add("VisionRangeHigh", VisionRange.Item2);
+            parms.Add("TemperatureToleranceLow", TemperatureTolerance.Item1);
+            parms.Add("TemperatureToleranceHigh", TemperatureTolerance.Item2);
+            parms.Add("Breathes", (short)Breathes);
+            parms.Add("TeethType", (short)TeethType);
+            parms.Add("StartingLocation", StartingLocation.ID);
+            parms.Add("EmergencyLocation", EmergencyLocation.ID);
 
             try
             {
-                var ds = SqlWrapper.RunDataset(sql.ToString(), CommandType.Text);
+                var ds = SqlWrapper.RunDataset(sql.ToString(), CommandType.Text, parms);
 
                 if (ds.Rows != null)
                 {
@@ -169,8 +188,12 @@ namespace NetMud.Data.Reference
 
         public override bool Remove()
         {
+            var parms = new Dictionary<string, object>();
+
             var sql = new StringBuilder();
-            sql.AppendFormat("delete from [dbo].[Race] where ID = {0}", ID);
+            sql.Append("delete from [dbo].[Race] where ID = @id");
+
+            parms.Add("id", ID);
 
             SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text);
 
@@ -183,29 +206,50 @@ namespace NetMud.Data.Reference
         /// <returns>success status</returns>
         public override bool Save()
         {
+            var parms = new Dictionary<string, object>();
+
             var sql = new StringBuilder();
             sql.Append("update [dbo].[Race] set ");
-            sql.AppendFormat(" [Name] = '{0}' ", Name);
+            sql.AppendFormat(" [Name] = @Name ");
+            sql.Append(", [ArmsId] = @ArmsId ");
+            sql.Append(", [ArmsAmount] = @ArmsAmount ");
+            sql.Append(", [LegsId] = @LegsId ");
+            sql.Append(", [LegsAmount] = @LegsAmount ");
+            sql.Append(", [Torso] = @Torso ");
+            sql.Append(", [Head] = @Head ");
+            sql.Append(", [BodyParts] = @BodyParts ");
+            sql.Append(", [DietaryNeeds] = @DietaryNeeds ");
+            sql.Append(", [SanguinaryMaterial] = @SanguinaryMaterial ");
+            sql.Append(", [VisionRangeLow] = @VisionRangeLow ");
+            sql.Append(", [VisionRangeHigh] = @VisionRangeHigh ");
+            sql.Append(", [TemperatureToleranceLow] = @TemperatureToleranceLow ");
+            sql.Append(", [TemperatureToleranceHigh] = @TemperatureToleranceHigh ");
+            sql.Append(", [Breathes] = @Breathes ");
+            sql.Append(", [TeethType] = @TeethType ");
+            sql.Append(", [StartingLocation] = @StartingLocation ");
+            sql.Append(", [EmergencyLocation] = @EmergencyLocation ");
+            sql.Append(", [LastRevised] = GetUTCDate()");
+            sql.Append(" where ID = @id");
 
-            sql.AppendFormat(", [ArmsId] = {0} ", Arms.Item1.ID);
-            sql.AppendFormat(", [ArmsAmount] = {0} ", Arms.Item2);
-            sql.AppendFormat(", [LegsId] = {0} ", Legs.Item1.ID);
-            sql.AppendFormat(", [LegsAmount] = {0} ", Legs.Item2);
-            sql.AppendFormat(", [Torso] = {0} ", Torso.ID);
-            sql.AppendFormat(", [Head] = {0} ", Head.ID);
-            sql.AppendFormat(", [BodyParts] = '{0}' ", BodyParts);
-            sql.AppendFormat(", [DietaryNeeds] = {0} ", (short)DietaryNeeds);
-            sql.AppendFormat(", [SanguinaryMaterial] = {0} ", SanguinaryMaterial.ID);
-            sql.AppendFormat(", [VisionRangeLow] = {0} ", VisionRange.Item1);
-            sql.AppendFormat(", [VisionRangeHigh] = {0} ", VisionRange.Item2);
-            sql.AppendFormat(", [TemperatureToleranceLow] = '{0}' ", TemperatureTolerance.Item1);
-            sql.AppendFormat(", [TemperatureToleranceHigh] = '{0}' ", TemperatureTolerance.Item2);
-            sql.AppendFormat(", [Breathes] = {0} ", (short)Breathes);
-            sql.AppendFormat(", [TeethType] = {0} ", (short)TeethType);
-            sql.AppendFormat(", [StartingLocation] = {0} ", StartingLocation.ID);
-            sql.AppendFormat(", [EmergencyLocation] = {0} ", EmergencyLocation.ID);
-            sql.AppendFormat(", [LastRevised] = GetUTCDate()");
-            sql.AppendFormat(" where ID = {0}", ID);
+            parms.Add("id", ID);
+            parms.Add("Name", Name);
+            parms.Add("ArmsId", Arms.Item1.ID);
+            parms.Add("ArmsAmount", Arms.Item2);
+            parms.Add("LegsId", Legs.Item1.ID);
+            parms.Add("LegsAmount", Legs.Item2);
+            parms.Add("Torso", Torso.ID);
+            parms.Add("Head", Head.ID);
+            parms.Add("BodyParts", JsonConvert.SerializeObject(BodyParts));
+            parms.Add("DietaryNeeds", (short)DietaryNeeds);
+            parms.Add("SanguinaryMaterial", SanguinaryMaterial.ID);
+            parms.Add("VisionRangeLow", VisionRange.Item1);
+            parms.Add("VisionRangeHigh", VisionRange.Item2);
+            parms.Add("TemperatureToleranceLow", TemperatureTolerance.Item1);
+            parms.Add("TemperatureToleranceHigh", TemperatureTolerance.Item2);
+            parms.Add("Breathes", (short)Breathes);
+            parms.Add("TeethType", (short)TeethType);
+            parms.Add("StartingLocation", StartingLocation.ID);
+            parms.Add("EmergencyLocation", EmergencyLocation.ID);
 
             SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text);
 

@@ -5,6 +5,7 @@ using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.Utility;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Text;
 
@@ -58,16 +59,24 @@ namespace NetMud.Data.EntityBackingData
         /// <returns>the object with ID and other db fields set</returns>
         public override IData Create()
         {
+            var parms = new Dictionary<string, object>();
+
             IRoomData returnValue = default(IRoomData);
             var sql = new StringBuilder();
             sql.Append("insert into [dbo].[RoomData]([Name], [DimensionalModelLength], [DimensionalModelHeight], [DimensionalModelWidth], [DimensionalModelID], [DimensionalModelMaterialCompositions])");
-            sql.AppendFormat(" values('{0}', {1}, {2}, {3}, {4}, '{5}')", Name
-                , Model.Height, Model.Length, Model.Width, Model.ModelBackingData.ID, Model.SerializeMaterialCompositions());
+            sql.Append(" values(@Name,@DimensionalModelLength,@DimensionalModelHeight,@DimensionalModelWidth,@DimensionalModelID,@DimensionalModelMaterialCompositions)");
             sql.Append(" select * from [dbo].[RoomData] where ID = Scope_Identity()");
+
+            parms.Add("Name", Name);
+            parms.Add("DimensionalModelLength", Model.Length);
+            parms.Add("DimensionalModelHeight", Model.Height);
+            parms.Add("DimensionalModelWidth", Model.Width);
+            parms.Add("DimensionalModelID", Model.ModelBackingData.ID);
+            parms.Add("DimensionalModelMaterialCompositions", Model.SerializeMaterialCompositions());
 
             try
             {
-                var ds = SqlWrapper.RunDataset(sql.ToString(), CommandType.Text);
+                var ds = SqlWrapper.RunDataset(sql.ToString(), CommandType.Text, parms);
 
                 if (ds.Rows != null)
                 {
@@ -92,11 +101,14 @@ namespace NetMud.Data.EntityBackingData
         /// <returns>success status</returns>
         public override bool Remove()
         {
+            var parms = new Dictionary<string, object>();
             //TODO: Exits too?
             var sql = new StringBuilder();
-            sql.AppendFormat("delete from [dbo].[RoomData] where ID = {0}", ID);
+            sql.Append("delete from [dbo].[RoomData] where ID = @id");
 
-            SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text);
+            parms.Add("id", ID);
+
+            SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text, parms);
 
             return true;
         }
@@ -107,18 +119,29 @@ namespace NetMud.Data.EntityBackingData
         /// <returns>success status</returns>
         public override bool Save()
         {
+            var parms = new Dictionary<string, object>();
+
             var sql = new StringBuilder();
             sql.Append("update [dbo].[RoomData] set ");
-            sql.AppendFormat(" [Name] = '{0}' ", Name);
-            sql.AppendFormat(" , [DimensionalModelLength] = {0} ", Model.Length);
-            sql.AppendFormat(" , [DimensionalModelHeight] = {0} ", Model.Height);
-            sql.AppendFormat(" , [DimensionalModelWidth] = {0} ", Model.Width);
-            sql.AppendFormat(" , [DimensionalModelMaterialCompositions] = '{0}' ", Model.SerializeMaterialCompositions());
-            sql.AppendFormat(" , [DimensionalModelId] = {0} ", Model.ModelBackingData.ID);
-            sql.AppendFormat(" , [LastRevised] = GetUTCDate()");
-            sql.AppendFormat(" where ID = {0}", ID);
+            sql.Append(" [Name] =  @Name ");
+            sql.Append(", [DimensionalModelLength] =  @DimensionalModelLength ");
+            sql.Append(", [DimensionalModelHeight] =  @DimensionalModelHeight ");
+            sql.Append(", [DimensionalModelWidth] =  @DimensionalModelWidth ");
+            sql.Append(", [DimensionalModelMaterialCompositions] =  @DimensionalModelMaterialCompositions ");
+            sql.Append(", [DimensionalModelId] = @DimensionalModelId "); 
+            sql.Append(" , [LastRevised] = GetUTCDate()");
+            sql.Append(" where ID = @id");
 
-            SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text);
+            parms.Add("id", ID);
+            parms.Add("Name", Name);
+            parms.Add("DimensionalModelLength", Model.Length);
+            parms.Add("DimensionalModelHeight", Model.Height);
+            parms.Add("DimensionalModelWidth", Model.Width);
+            parms.Add("DimensionalModelID", Model.ModelBackingData.ID);
+            parms.Add("DimensionalModelMaterialCompositions", Model.SerializeMaterialCompositions());
+
+
+            SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text, parms);
 
             return true;
         }

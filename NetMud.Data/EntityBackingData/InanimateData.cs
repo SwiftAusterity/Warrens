@@ -149,6 +149,8 @@ namespace NetMud.Data.EntityBackingData
         /// <returns>the object with ID and other db fields set</returns>
         public override IData Create()
         {
+            var parms = new Dictionary<string, object>();
+
             IInanimateData returnValue = default(IInanimateData);
 
             var inanimateContainersJson = JsonConvert.SerializeObject(InanimateContainers);
@@ -166,7 +168,7 @@ namespace NetMud.Data.EntityBackingData
 
             try
             {
-                var ds = SqlWrapper.RunDataset(sql.ToString(), CommandType.Text);
+                var ds = SqlWrapper.RunDataset(sql.ToString(), CommandType.Text, parms);
 
                 if (ds.Rows != null)
                 {
@@ -191,10 +193,14 @@ namespace NetMud.Data.EntityBackingData
         /// <returns>success status</returns>
         public override bool Remove()
         {
-            var sql = new StringBuilder();
-            sql.AppendFormat("delete from [dbo].[InanimateData] where ID = {0}", ID);
+            var parms = new Dictionary<string, object>();
 
-            SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text);
+            var sql = new StringBuilder();
+            sql.Append("delete from [dbo].[InanimateData] where ID = @id");
+
+            parms.Add("id", ID);
+
+            SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text, parms);
 
             return true;
         }
@@ -205,25 +211,39 @@ namespace NetMud.Data.EntityBackingData
         /// <returns>success status</returns>
         public override bool Save()
         {
+            var parms = new Dictionary<string, object>();
+
             var sql = new StringBuilder();
 
             var inanimateContainersJson = JsonConvert.SerializeObject(InanimateContainers);
             var mobileContainersJson = JsonConvert.SerializeObject(MobileContainers);
 
             sql.Append("update [dbo].[InanimateData] set ");
-            sql.AppendFormat(" [Name] = '{0}' ", Name);
-            sql.AppendFormat(" , [MobileContainers] = '{0}' ", mobileContainersJson);
-            sql.AppendFormat(" , [InanimateContainers] = '{0}' ", inanimateContainersJson);
-            sql.AppendFormat(" , [InternalComposition] = '{0}' ", SerializeInternalCompositions());
-            sql.AppendFormat(" , [DimensionalModelLength] = {0} ", Model.Length);
-            sql.AppendFormat(" , [DimensionalModelHeight] = {0} ", Model.Height);
-            sql.AppendFormat(" , [DimensionalModelWidth] = {0} ", Model.Width);
-            sql.AppendFormat(" , [DimensionalModelMaterialCompositions] = '{0}' ", Model.SerializeMaterialCompositions());
-            sql.AppendFormat(" , [DimensionalModelId] = {0} ", Model.ModelBackingData.ID); 
-            sql.AppendFormat(" , [LastRevised] = GetUTCDate()");
-            sql.AppendFormat(" where ID = {0}", ID);
+            sql.Append(" [Name] = @Name ");
+            sql.Append(" , [MobileContainers] = @MobileContainers ");
+            sql.Append(" , [InanimateContainers] = @InanimateContainers ");
+            sql.Append(" , [InternalComposition] = @InternalComposition ");
+            sql.Append(" , [DimensionalModelLength] = @DimensionalModelLength");
+            sql.Append(" , [DimensionalModelHeight] = @DimensionalModelHeight ");
+            sql.Append(" , [DimensionalModelWidth] = @DimensionalModelWidth ");
+            sql.Append(" , [DimensionalModelMaterialCompositions] = @DimensionalModelMaterialCompositions ");
+            sql.Append(" , [DimensionalModelId] = @DimensionalModelId "); 
+            sql.Append(" , [LastRevised] = GetUTCDate()");
+            sql.Append(" where ID = @id");
 
-            SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text);
+            parms.Add("id", ID);
+            parms.Add("Name", Name);
+            parms.Add("MobileContainers", mobileContainersJson);
+            parms.Add("InanimateContainers", inanimateContainersJson);
+            parms.Add("InternalComposition", SerializeInternalCompositions());
+            parms.Add("DimensionalModelLength",  Model.Length);
+            parms.Add("DimensionalModelHeight", Model.Height);
+            parms.Add("DimensionalModelWidth", Model.Width);
+            parms.Add("DimensionalModelMaterialCompositions", Model.SerializeMaterialCompositions());
+            parms.Add("DimensionalModelId", Model.ModelBackingData.ID);
+
+
+            SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text, parms);
 
             return true;
         }

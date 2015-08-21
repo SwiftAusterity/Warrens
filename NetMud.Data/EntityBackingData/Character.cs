@@ -6,6 +6,7 @@ using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Text;
 
@@ -130,17 +131,27 @@ namespace NetMud.Data.EntityBackingData
         /// <returns>the object with ID and other db fields set</returns>
         public override IData Create()
         {
+            var parms = new Dictionary<string, object>();
+
             ICharacter returnValue = default(ICharacter);
             var sql = new StringBuilder();
             sql.Append("insert into [dbo].[Character]([SurName], [Name], [AccountHandle], [Gender], [GamePermissionsRank], [Race], [LastKnownLocation], [LastKnownLocationType], [StillANoob])");
-            sql.AppendFormat(" values('{0}','{1}','{2}', '{3}', {4}, {5}, '{6}', '{7}', {8})"
-                , SurName, Name, AccountHandle, Gender, (short)GamePermissionsRank, RaceData.ID, LastKnownLocation, LastKnownLocationType
-                , StillANoob ? 1 : 0);
+            sql.Append(" values(@SurName, @Name, @AccountHandle, @Gender, @GamePermissionsRank, @Race, @LastKnownLocation, @LastKnownLocationType, @StillANoob)");
             sql.Append(" select * from [dbo].[Character] where ID = Scope_Identity()");
+
+            parms.Add("Name", Name);
+            parms.Add("SurName", SurName);
+            parms.Add("Gender", Gender);
+            parms.Add("Race", RaceData.ID);
+            parms.Add("AccountHandle", AccountHandle);
+            parms.Add("GamePermissionsRank", (short)GamePermissionsRank);
+            parms.Add("LastKnownLocation", LastKnownLocation);
+            parms.Add("LastKnownLocationType", LastKnownLocationType);
+            parms.Add("StillANoob", StillANoob);
 
             try
             {
-                var ds = SqlWrapper.RunDataset(sql.ToString(), CommandType.Text);
+                var ds = SqlWrapper.RunDataset(sql.ToString(), CommandType.Text, parms);
 
                 if (ds.Rows != null)
                 {
@@ -165,10 +176,14 @@ namespace NetMud.Data.EntityBackingData
         /// <returns>success status</returns>
         public override bool Remove()
         {
-            var sql = new StringBuilder();
-            sql.AppendFormat("delete from [dbo].[Character] where ID = {0}", ID);
+            var parms = new Dictionary<string, object>();
 
-            SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text);
+            var sql = new StringBuilder();
+            sql.AppendFormat("delete from [dbo].[Character] where ID = @id", ID);
+
+            parms.Add("id", ID);
+
+            SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text, parms);
 
             return true;
         }
@@ -179,21 +194,34 @@ namespace NetMud.Data.EntityBackingData
         /// <returns>success status</returns>
         public override bool Save()
         {
+            var parms = new Dictionary<string, object>();
+
             var sql = new StringBuilder();
             sql.Append("update [dbo].[Character] set ");
-            sql.AppendFormat(" [SurName] = '{0}' ", SurName);
-            sql.AppendFormat(" , [Name] = '{0}' ", Name);
-            sql.AppendFormat(" , [AccountHandle] = '{0}' ", AccountHandle);
-            sql.AppendFormat(" , [Gender] = '{0}' ", Gender);
-            sql.AppendFormat(" , [Race] = {0} ", RaceData.ID);
-            sql.AppendFormat(" , [StillANoob] = {0} ", StillANoob ? 1 : 0);
-            sql.AppendFormat(" , [GamePermissionsRank] = {0} ", (short)GamePermissionsRank);
-            sql.AppendFormat(" , [LastKnownLocation] = '{0}' ", LastKnownLocation);
-            sql.AppendFormat(" , [LastKnownLocationType] = '{0}' ", LastKnownLocationType);
-            sql.AppendFormat(" , [LastRevised] = GetUTCDate()");
-            sql.AppendFormat(" where ID = {0}", ID);
+            sql.Append(" [SurName] = @SurName ");
+            sql.Append(" , [Name] = @Name ");
+            sql.Append(" , [AccountHandle] = @AccountHandle ");
+            sql.Append(" , [Gender] = @Gender ");
+            sql.Append(" , [Race] = @Race ");
+            sql.Append(" , [StillANoob] = @StillANoob ");
+            sql.Append(" , [GamePermissionsRank] = @GamePermissionsRank ");
+            sql.Append(" , [LastKnownLocation] = @LastKnownLocation ");
+            sql.Append(" , [LastKnownLocationType] = @LastKnownLocationType ");
+            sql.Append(" , [LastRevised] = GetUTCDate()");
+            sql.Append(" where ID = @id");
 
-            SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text);
+            parms.Add("id", ID);
+            parms.Add("Name", Name);
+            parms.Add("SurName", SurName);
+            parms.Add("Gender", Gender);
+            parms.Add("Race", RaceData.ID);
+            parms.Add("AccountHandle", AccountHandle);
+            parms.Add("GamePermissionsRank", (short)GamePermissionsRank);
+            parms.Add("LastKnownLocation", LastKnownLocation);
+            parms.Add("LastKnownLocationType", LastKnownLocationType);
+            parms.Add("StillANoob", StillANoob);
+
+            SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text, parms);
 
             return true;
         }

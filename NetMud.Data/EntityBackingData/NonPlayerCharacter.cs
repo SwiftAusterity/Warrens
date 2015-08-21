@@ -5,6 +5,7 @@ using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.Utility;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Text;
 
@@ -81,16 +82,22 @@ namespace NetMud.Data.EntityBackingData
         /// <returns>the object with ID and other db fields set</returns>
         public override IData Create()
         {
+            var parms = new Dictionary<string, object>();
+
             INonPlayerCharacter returnValue = default(INonPlayerCharacter);
             var sql = new StringBuilder();
             sql.Append("insert into [dbo].[NonPlayerCharacter]([SurName], [Name], [Gender], [Race])");
-            sql.AppendFormat(" values('{0}','{1}','{2}', {3})"
-                , SurName, Name, Gender, RaceData.ID);
+            sql.Append(" values(@SurName, @Name, @Gender, @Race)");
             sql.Append(" select * from [dbo].[NonPlayerCharacter] where ID = Scope_Identity()");
+
+            parms.Add("Name", Name);
+            parms.Add("SurName", SurName);
+            parms.Add("Gender", Gender);
+            parms.Add("Race", RaceData.ID);
 
             try
             {
-                var ds = SqlWrapper.RunDataset(sql.ToString(), CommandType.Text);
+                var ds = SqlWrapper.RunDataset(sql.ToString(), CommandType.Text, parms);
 
                 if (ds.Rows != null)
                 {
@@ -115,10 +122,14 @@ namespace NetMud.Data.EntityBackingData
         /// <returns>success status</returns>
         public override bool Remove()
         {
-            var sql = new StringBuilder();
-            sql.AppendFormat("delete from [dbo].[NonPlayerCharacter] where ID = {0}", ID);
+            var parms = new Dictionary<string, object>();
 
-            SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text);
+            var sql = new StringBuilder();
+            sql.Append("delete from [dbo].[NonPlayerCharacter] where ID = @id");
+
+            parms.Add("id", ID);
+
+            SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text, parms);
 
             return true;
         }
@@ -129,16 +140,24 @@ namespace NetMud.Data.EntityBackingData
         /// <returns>success status</returns>
         public override bool Save()
         {
+            var parms = new Dictionary<string, object>();
+
             var sql = new StringBuilder();
             sql.Append("update [dbo].[NonPlayerCharacter] set ");
-            sql.AppendFormat(" [SurName] = '{0}' ", SurName);
-            sql.AppendFormat(" , [Name] = '{0}' ", Name);
-            sql.AppendFormat(" , [Gender] = '{0}' ", Gender);
-            sql.AppendFormat(" , [Race] = {0} ", RaceData.ID);
-            sql.AppendFormat(" , [LastRevised] = GetUTCDate()");
-            sql.AppendFormat(" where ID = {0}", ID);
+            sql.Append(" [SurName] = @SurName ");
+            sql.Append(" , [Name] = @Name ");
+            sql.Append(" , [Gender] = @Gender ");
+            sql.Append(" , [Race] = @Race ");
+            sql.Append(" , [LastRevised] = GetUTCDate()");
+            sql.Append(" where ID = @id");
 
-            SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text);
+            parms.Add("id", ID);
+            parms.Add("Name", Name);
+            parms.Add("SurName", SurName);
+            parms.Add("Gender", Gender);
+            parms.Add("Race", RaceData.ID);
+
+            SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text, parms);
 
             return true;
         }

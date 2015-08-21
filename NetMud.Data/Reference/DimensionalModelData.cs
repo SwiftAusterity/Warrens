@@ -247,15 +247,20 @@ namespace NetMud.Data.Reference
         /// <returns>the object with ID and other db fields set</returns>
         public override IData Create()
         {
+            var parms = new Dictionary<string, object>();
+
             DimensionalModelData returnValue = default(DimensionalModelData);
             var sql = new StringBuilder();
             sql.Append("insert into [dbo].[DimensionalModelData]([Name], [Model])");
-            sql.AppendFormat(" values('{0}','{1}')", Name, SerializeModel());
+            sql.Append(" values(@Name,@Model)");
             sql.Append(" select * from [dbo].[DimensionalModelData] where ID = Scope_Identity()");
+
+            parms.Add("Name", Name);
+            parms.Add("Model", SerializeModel());
 
             try
             {
-                var ds = SqlWrapper.RunDataset(sql.ToString(), CommandType.Text);
+                var ds = SqlWrapper.RunDataset(sql.ToString(), CommandType.Text, parms);
 
                 if (ds.Rows != null)
                 {
@@ -281,8 +286,12 @@ namespace NetMud.Data.Reference
 
         public override bool Remove()
         {
+            var parms = new Dictionary<string, object>();
+
             var sql = new StringBuilder();
-            sql.AppendFormat("delete from [dbo].[DimensionalModelData] where ID = {0}", ID);
+            sql.Append("delete from [dbo].[DimensionalModelData] where ID = @id");
+
+            parms.Add("id", ID);
 
             SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text);
 
@@ -295,12 +304,18 @@ namespace NetMud.Data.Reference
         /// <returns>success status</returns>
         public override bool Save()
         {
+            var parms = new Dictionary<string, object>();
+
             var sql = new StringBuilder();
             sql.Append("update [dbo].[DimensionalModelData] set ");
-            sql.AppendFormat(" [Name] = '{0}' ", Name);
-            sql.AppendFormat(" , [Model] = '{0}' ", SerializeModel());
-            sql.AppendFormat(" , [LastRevised] = GetUTCDate()");
-            sql.AppendFormat(" where ID = {0}", ID);
+            sql.Append(" [Name] = @Name ");
+            sql.Append(" , [Model] = @Model ");
+            sql.Append(" , [LastRevised] = GetUTCDate()");
+            sql.Append(" where ID = @id");
+
+            parms.Add("id", ID);
+            parms.Add("Name", Name);
+            parms.Add("Model", SerializeModel());
 
             SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text);
 

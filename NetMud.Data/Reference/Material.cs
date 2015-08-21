@@ -123,22 +123,33 @@ namespace NetMud.Data.Reference
         /// <returns>the object with ID and other db fields set</returns>
         public override IData Create()
         {
-            //TODO: parameterize the whole insert business
+            var parms = new Dictionary<string, object>();
+
             Material returnValue = default(Material);
             var sql = new StringBuilder();
             sql.Append("insert into [dbo].[Material]([Name],[Conductive],[Magnetic],[Flammable]");
             sql.Append(",[Viscosity],[Density],[Mallebility],[Ductility],[Porosity],[SolidPoint],[GasPoint],[TemperatureRetention],[Resistance],[Composition])");
-            sql.AppendFormat(" values('{0}',{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},'{12}','{13}')", Name
-                , Conductive ? 1 : 0
-                , Magnetic ? 1 : 0
-                , Flammable ? 1 : 0
-                , Viscosity,Density,Mallebility,Ductility,Porosity,SolidPoint,GasPoint,TemperatureRetention
-                ,SerializeResistances(),SerializeCompositions());
+            sql.Append(" values(@Name,@Conductive,@Magnetic,@Flammable,@Viscosity,@Density,@Mallebility,@Ductility,@Porosity,@SolidPoint,@GasPoint,@TemperatureRetention,@Resistance,@Composition)");
             sql.Append(" select * from [dbo].[Material] where ID = Scope_Identity()");
+
+            parms.Add("Name", Name);
+            parms.Add("Conductive", Conductive);
+            parms.Add("Magnetic", Magnetic);
+            parms.Add("Flammable", Flammable);
+            parms.Add("Viscosity", Viscosity);
+            parms.Add("Density", Density);
+            parms.Add("Mallebility", Mallebility);
+            parms.Add("Ductility", Ductility);
+            parms.Add("Porosity", Porosity);
+            parms.Add("SolidPoint", SolidPoint);
+            parms.Add("GasPoint", GasPoint);
+            parms.Add("TemperatureRetention", TemperatureRetention);
+            parms.Add("Resistance", SerializeResistances());
+            parms.Add("Composition", SerializeCompositions());
 
             try
             {
-                var ds = SqlWrapper.RunDataset(sql.ToString(), CommandType.Text);
+                var ds = SqlWrapper.RunDataset(sql.ToString(), CommandType.Text, parms);
 
                 if (ds.Rows != null)
                 {
@@ -164,8 +175,11 @@ namespace NetMud.Data.Reference
 
         public override bool Remove()
         {
+            var parms = new Dictionary<string, object>();
             var sql = new StringBuilder();
-            sql.AppendFormat("delete from [dbo].[Material] where ID = {0}", ID);
+            sql.Append("delete from [dbo].[Material] where ID = @id");
+
+            parms.Add("id", ID);
 
             SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text);
 
@@ -178,27 +192,45 @@ namespace NetMud.Data.Reference
         /// <returns>success status</returns>
         public override bool Save()
         {
+            var parms = new Dictionary<string, object>();
+
             var sql = new StringBuilder();
             sql.Append("update [dbo].[Material] set ");
-            sql.AppendFormat(" [Name] = '{0}' ", Name);
+            sql.Append(" [Name] = @Name ");
 
-            sql.AppendFormat(", [Conductive] = {0} ", Conductive ? 1 : 0);
-            sql.AppendFormat(", [Magnetic] = {0} ", Magnetic ? 1 : 0);
-            sql.AppendFormat(", [Flammable] = {0} ", Flammable ? 1 : 0);
-            sql.AppendFormat(", [Viscosity] = {0} ", Viscosity);
-            sql.AppendFormat(", [Density] = {0} ", Density);
-            sql.AppendFormat(", [Mallebility] = {0} ", Mallebility);
-            sql.AppendFormat(", [Ductility] = {0} ", Ductility);
-            sql.AppendFormat(", [Porosity] = {0} ", Porosity);
-            sql.AppendFormat(", [SolidPoint] = {0} ", SolidPoint);
-            sql.AppendFormat(", [GasPoint] = {0} ", GasPoint);
-            sql.AppendFormat(", [TemperatureRetention] = {0} ", TemperatureRetention);
-            sql.AppendFormat(", [Resistance] = '{0}' ", SerializeResistances());
-            sql.AppendFormat(", [Composition] = '{0}' ", SerializeCompositions());
-            sql.AppendFormat(", [LastRevised] = GetUTCDate()");
-            sql.AppendFormat(" where ID = {0}", ID);
+            sql.Append(", [Conductive] = @Conductive ");
+            sql.Append(", [Magnetic] = @Magnetic ");
+            sql.Append(", [Flammable] = @Flammable ");
+            sql.Append(", [Viscosity] = @Viscosity ");
+            sql.Append(", [Density] = @Density ");
+            sql.Append(", [Mallebility] = @Mallebility ");
+            sql.Append(", [Ductility] = @Ductility ");
+            sql.Append(", [Porosity] = @Porosity ");
+            sql.Append(", [SolidPoint] = @SolidPoint ");
+            sql.Append(", [GasPoint] = @GasPoint ");
+            sql.Append(", [TemperatureRetention] = @TemperatureRetention ");
+            sql.Append(", [Resistance] = @Resistance ");
+            sql.Append(", [Composition] = @Composition ");
+            sql.Append(", [LastRevised] = GetUTCDate()");
+            sql.Append(" where ID = @id");
 
-            SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text);
+            parms.Add("id", ID);
+            parms.Add("Name", Name);
+            parms.Add("Conductive", Conductive);
+            parms.Add("Magnetic", Magnetic);
+            parms.Add("Flammable", Flammable);
+            parms.Add("Viscosity", Viscosity);
+            parms.Add("Density", Density);
+            parms.Add("Mallebility", Mallebility);
+            parms.Add("Ductility", Ductility);
+            parms.Add("Porosity", Porosity);
+            parms.Add("SolidPoint", SolidPoint);
+            parms.Add("GasPoint", GasPoint);
+            parms.Add("TemperatureRetention", TemperatureRetention);
+            parms.Add("Resistance", SerializeResistances());
+            parms.Add("Composition", SerializeCompositions());
+
+            SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text, parms);
 
             return true;
         }
