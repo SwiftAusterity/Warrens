@@ -15,7 +15,9 @@ namespace NetMud.Data.EntityBackingData
     /// Backing data for pathways
     /// </summary>
     public class PathwayData : EntityBackingDataPartial, IPathwayData
-    {    
+    {
+        public override string DataTableName { get { return "PathwayData"; } }
+
         /// <summary>
         /// The system type for the entity this attaches to
         /// </summary>

@@ -10,6 +10,13 @@ namespace NetMud.DataAccess
     /// </summary>
     public static class DataWrapper
     {
+        private static string GetDataTableName(Type dataType)
+        {
+            var instance = Activator.CreateInstance(dataType) as IData;
+
+            return instance.DataTableName;
+        }
+
         /// <summary>
         /// Get all of the data in the table
         /// </summary>
@@ -18,7 +25,7 @@ namespace NetMud.DataAccess
         public static IEnumerable<T> GetAll<T>() where T : IData
         {
             var returnList = new List<T>();
-            var sql = string.Format("select * from [dbo].[{0}]", typeof(T).Name);
+            var sql = string.Format("select * from [dbo].[{0}]", GetDataTableName(typeof(T)));
 
             try
             {
@@ -53,7 +60,7 @@ namespace NetMud.DataAccess
         {
             var returnList = new List<T>();
             var parms = new Dictionary<string, object>();
-            var sql = string.Format("select * from [dbo].[{0}] where {1} = @value", typeof(T).Name, sharedKeyName, sharedKeyValue);
+            var sql = string.Format("select * from [dbo].[{0}] where {1} = @value", GetDataTableName(typeof(T)), sharedKeyName);
 
             parms.Add("value", sharedKeyValue);
 
@@ -90,7 +97,7 @@ namespace NetMud.DataAccess
         {
             IData returnValue = default(T);
             var parms = new Dictionary<string, object>();
-            var sql = string.Format("select * from [dbo].[{0}] where {1} = @value", typeof(T).Name, sharedKeyName, sharedKeyValue);
+            var sql = string.Format("select * from [dbo].[{0}] where {1} = @value", GetDataTableName(typeof(T)), sharedKeyName);
 
             parms.Add("value", sharedKeyValue);
 
@@ -127,11 +134,15 @@ namespace NetMud.DataAccess
         public static T GetOne<T>(long id) where T : IData
         {
             IData returnValue = default(T);
-            var sql = string.Format("select * from [dbo].[{0}] where ID = {1}", typeof(T).Name, id);
+            var parms = new Dictionary<string, object>();
+
+            var sql = string.Format("select * from [dbo].[{0}] where ID = @id", GetDataTableName(typeof(T)));
+
+            parms.Add("id", id);
 
             try
             {
-                var ds = SqlWrapper.RunDataset(sql, CommandType.Text);
+                var ds = SqlWrapper.RunDataset(sql, CommandType.Text, parms);
 
                 if (ds.Rows != null)
                 {

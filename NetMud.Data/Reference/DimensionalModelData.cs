@@ -17,6 +17,8 @@ namespace NetMud.Data.Reference
     /// </summary>
     public class DimensionalModelData : ReferenceDataPartial, IDimensionalModelData
     {
+        public override string DataTableName { get { return "DimensionalModelData"; } }
+
         /// <summary>
         /// Create an empty model
         /// </summary>

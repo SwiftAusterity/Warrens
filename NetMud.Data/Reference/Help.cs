@@ -11,8 +11,10 @@ namespace NetMud.Data.Reference
     /// <summary>
     /// Referred to as Help Files in the UI, extra help content for the help command
     /// </summary>
-    public class Help : ReferenceDataPartial, IReferenceData
+    public class Help : ReferenceDataPartial, IHelp
     {
+        public override string DataTableName { get { return "Help"; } }
+
         /// <summary>
         /// New up a "blank" help entry
         /// </summary>

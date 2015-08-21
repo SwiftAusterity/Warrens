@@ -10,6 +10,13 @@ namespace NetMud.DataAccess
     /// </summary>
     public static class ReferenceWrapper
     {
+        private static string GetDataTableName(Type dataType)
+        {
+            var instance = Activator.CreateInstance(dataType) as IReferenceData;
+
+            return instance.DataTableName;
+        }
+
         /// <summary>
         /// Get all of the reference data in the table
         /// </summary>
@@ -18,7 +25,7 @@ namespace NetMud.DataAccess
         public static IEnumerable<T> GetAll<T>() where T : IReferenceData
         {
             var returnList = new List<T>();
-            var sql = string.Format("select * from [dbo].[{0}]", typeof(T).Name);
+            var sql = string.Format("select * from [dbo].[{0}]", GetDataTableName(typeof(T)));
 
             try
             {
@@ -52,7 +59,7 @@ namespace NetMud.DataAccess
         {
             IReferenceData returnValue = default(T);
             var parms = new Dictionary<string, object>();
-            var sql = string.Format("select * from [dbo].[{0}] where Name = @name", typeof(T).Name);
+            var sql = string.Format("select * from [dbo].[{0}] where Name = @name", GetDataTableName(typeof(T)));
 
             parms.Add("name", keyword);
 
@@ -87,7 +94,7 @@ namespace NetMud.DataAccess
         {
             IReferenceData returnValue = default(T);
             var parms = new Dictionary<string, object>();
-            var sql = string.Format("select * from [dbo].[{0}] where ID = @id", typeof(T).Name);
+            var sql = string.Format("select * from [dbo].[{0}] where ID = @id", GetDataTableName(typeof(T)));
 
             parms.Add("id", id);
 

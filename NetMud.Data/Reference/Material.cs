@@ -14,6 +14,8 @@ namespace NetMud.Data.Reference
 {
     public class Material : ReferenceDataPartial, IMaterial
     {
+        public override string DataTableName { get { return "Material"; } }
+
         public bool Conductive { get; set; }
         public bool Magnetic { get; set; }
         public bool Flammable { get; set; }

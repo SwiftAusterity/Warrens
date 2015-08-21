@@ -16,6 +16,8 @@ namespace NetMud.Data.EntityBackingData
     /// </summary>
     public class NonPlayerCharacter : EntityBackingDataPartial, INonPlayerCharacter
     {
+        public override string DataTableName { get { return "NonPlayerCharacter"; } }
+
         /// <summary>
         /// The system type for the entity this attaches to
         /// </summary>

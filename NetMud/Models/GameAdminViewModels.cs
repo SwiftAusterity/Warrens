@@ -4,6 +4,7 @@ using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Actionable;
 using NetMud.DataStructure.Behaviors.Automation;
 using System;
@@ -26,7 +27,7 @@ namespace NetMud.Models.GameAdmin
             NPCs = Enumerable.Empty<INonPlayerCharacter>();
 
             DimensionalModels = Enumerable.Empty<IDimensionalModelData>();
-            HelpFiles = Enumerable.Empty<Help>();
+            HelpFiles = Enumerable.Empty<IHelp>();
             Materials = Enumerable.Empty<IMaterial>();
 
             LiveRooms = 0;
@@ -43,7 +44,7 @@ namespace NetMud.Models.GameAdmin
 
         //Reference Data
         public IEnumerable<IDimensionalModelData> DimensionalModels { get; set; }
-        public IEnumerable<Help> HelpFiles { get; set; }
+        public IEnumerable<IHelp> HelpFiles { get; set; }
         public IEnumerable<IMaterial> Materials { get; set; }
         public IEnumerable<IRace> Races { get; set; }
 
