@@ -282,8 +282,11 @@ namespace NetMud.Data.Game
         /// <returns>The emergency spawn location</returns>
         private IContains GetBaseSpawn()
         {
-            //TODO: Not hardcode the zeroth room
-            return LiveCache.Get<Room>(1);
+            var chr = (Character)DataTemplate;
+
+            var roomId = chr.StillANoob ? chr.RaceData.StartingLocation.ID : chr.RaceData.EmergencyLocation.ID;
+
+            return LiveCache.Get<Room>(roomId);
         }
 
         /// <summary>

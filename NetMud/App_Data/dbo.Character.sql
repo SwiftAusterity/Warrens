@@ -6,6 +6,7 @@
     [Name]					VARCHAR (200)	NOT NULL,
 	[Gender]				VARCHAR (200)	NOT NULL,
 	[Race]					BIGINT NOT NULL DEFAULT (0),
+    [StillANoob]			BIT				NOT NULL DEFAULT((1)),
 	[GamePermissionsRank]	SMALLINT		DEFAULT(0),
     [AccountHandle]			VARCHAR (200)	NOT NULL,
 	[LastKnownLocation]		VARCHAR(MAX)	DEFAULT('') NOT NULL,

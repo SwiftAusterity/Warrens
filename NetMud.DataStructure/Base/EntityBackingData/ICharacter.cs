@@ -21,6 +21,8 @@ namespace NetMud.DataStructure.Base.EntityBackingData
         /// </summary>
         string AccountHandle { get; set; }
 
+        bool StillANoob { get; set; }
+
         /// <summary>
         /// What account owns this character
         /// </summary>

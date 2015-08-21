@@ -84,7 +84,7 @@ namespace NetMud.Data.EntityBackingData
             INonPlayerCharacter returnValue = default(INonPlayerCharacter);
             var sql = new StringBuilder();
             sql.Append("insert into [dbo].[NonPlayerCharacter]([SurName], [Name], [Gender], [Race])");
-            sql.AppendFormat(" values('{0}','{1}','{2}', {3}, {4}, {5}, {6}, '{7}', {8})"
+            sql.AppendFormat(" values('{0}','{1}','{2}', {3})"
                 , SurName, Name, Gender, RaceData.ID);
             sql.Append(" select * from [dbo].[NonPlayerCharacter] where ID = Scope_Identity()");
 

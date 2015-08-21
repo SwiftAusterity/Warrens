@@ -34,6 +34,8 @@ namespace NetMud.Data.EntityBackingData
         /// </summary>
         public string SurName { get; set; }
 
+        public Boolean StillANoob { get; set; }
+
         public IRace RaceData { get; set; }
 
         /// <summary>
@@ -110,6 +112,8 @@ namespace NetMud.Data.EntityBackingData
             SurName = DataUtility.GetFromDataRow<string>(dr, "SurName"); ;
             Gender = DataUtility.GetFromDataRow<string>(dr, "Gender"); ;
 
+            StillANoob = DataUtility.GetFromDataRow<bool>(dr, "StillANoob"); ;
+
             var raceId = DataUtility.GetFromDataRow<long>(dr, "Race"); ;
             RaceData = ReferenceWrapper.GetOne<Race>(raceId);
 
@@ -128,9 +132,10 @@ namespace NetMud.Data.EntityBackingData
         {
             ICharacter returnValue = default(ICharacter);
             var sql = new StringBuilder();
-            sql.Append("insert into [dbo].[Character]([SurName], [Name], [AccountHandle], [Gender], [GamePermissionsRank], [Race])");
-            sql.AppendFormat(" values('{0}','{1}','{2}', '{3}', {4}, {5}, {6}, {7}, {8}, '{9}', {10})"
-                , SurName, Name, AccountHandle, Gender, (short)GamePermissionsRank, RaceData.ID);
+            sql.Append("insert into [dbo].[Character]([SurName], [Name], [AccountHandle], [Gender], [GamePermissionsRank], [Race], [LastKnownLocation], [LastKnownLocationType], [StillANoob])");
+            sql.AppendFormat(" values('{0}','{1}','{2}', '{3}', {4}, {5}, '{6}', '{7}', {8})"
+                , SurName, Name, AccountHandle, Gender, (short)GamePermissionsRank, RaceData.ID, LastKnownLocation, LastKnownLocationType
+                , StillANoob ? 1 : 0);
             sql.Append(" select * from [dbo].[Character] where ID = Scope_Identity()");
 
             try
@@ -181,6 +186,7 @@ namespace NetMud.Data.EntityBackingData
             sql.AppendFormat(" , [AccountHandle] = '{0}' ", AccountHandle);
             sql.AppendFormat(" , [Gender] = '{0}' ", Gender);
             sql.AppendFormat(" , [Race] = {0} ", RaceData.ID);
+            sql.AppendFormat(" , [StillANoob] = {0} ", StillANoob ? 1 : 0);
             sql.AppendFormat(" , [GamePermissionsRank] = {0} ", (short)GamePermissionsRank);
             sql.AppendFormat(" , [LastKnownLocation] = '{0}' ", LastKnownLocation);
             sql.AppendFormat(" , [LastKnownLocationType] = '{0}' ", LastKnownLocationType);
