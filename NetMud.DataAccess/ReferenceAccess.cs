@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
+using System.Reflection;
 
 namespace NetMud.DataAccess
 {
@@ -10,13 +12,6 @@ namespace NetMud.DataAccess
     /// </summary>
     public static class ReferenceWrapper
     {
-        private static string GetDataTableName(Type dataType)
-        {
-            var instance = Activator.CreateInstance(dataType) as IReferenceData;
-
-            return instance.DataTableName;
-        }
-
         /// <summary>
         /// Get all of the reference data in the table
         /// </summary>
@@ -25,17 +20,18 @@ namespace NetMud.DataAccess
         public static IEnumerable<T> GetAll<T>() where T : IReferenceData
         {
             var returnList = new List<T>();
-            var sql = string.Format("select * from [dbo].[{0}]", GetDataTableName(typeof(T)));
 
             try
             {
+                var baseType = GetDataTableName(typeof(T));
+                var sql = string.Format("select * from [dbo].[{0}]", baseType.Name);
                 var ds = SqlWrapper.RunDataset(sql, CommandType.Text);
 
                 if (ds.Rows != null)
                 {
                     foreach (DataRow dr in ds.Rows)
                     {
-                        var newValue = Activator.CreateInstance(typeof(T)) as IReferenceData;
+                        var newValue = Activator.CreateInstance(baseType) as IReferenceData;
                         newValue.Fill(dr);
                         returnList.Add((T)newValue);
                     }
@@ -59,19 +55,20 @@ namespace NetMud.DataAccess
         {
             IReferenceData returnValue = default(T);
             var parms = new Dictionary<string, object>();
-            var sql = string.Format("select * from [dbo].[{0}] where Name = @name", GetDataTableName(typeof(T)));
 
             parms.Add("name", keyword);
 
             try
             {
+                var baseType = GetDataTableName(typeof(T));
+                var sql = string.Format("select * from [dbo].[{0}] where Name = @name", baseType.Name);
                 var ds = SqlWrapper.RunDataset(sql, CommandType.Text, parms);
 
                 if (ds.Rows != null)
                 {
                     foreach (DataRow dr in ds.Rows)
                     {
-                        returnValue = Activator.CreateInstance(typeof(T)) as IReferenceData;
+                        returnValue = Activator.CreateInstance(baseType) as IReferenceData;
                         returnValue.Fill(dr);
                     }
                 }
@@ -94,19 +91,20 @@ namespace NetMud.DataAccess
         {
             IReferenceData returnValue = default(T);
             var parms = new Dictionary<string, object>();
-            var sql = string.Format("select * from [dbo].[{0}] where ID = @id", GetDataTableName(typeof(T)));
 
             parms.Add("id", id);
 
             try
             {
+                var baseType = GetDataTableName(typeof(T));
+                var sql = string.Format("select * from [dbo].[{0}] where ID = @id", baseType.Name);
                 var ds = SqlWrapper.RunDataset(sql, CommandType.Text, parms);
 
                 if (ds.Rows != null)
                 {
                     foreach (DataRow dr in ds.Rows)
                     {
-                        returnValue = Activator.CreateInstance(typeof(T)) as IReferenceData;
+                        returnValue = Activator.CreateInstance(baseType) as IReferenceData;
                         returnValue.Fill(dr);
                     }
                 }
@@ -117,6 +115,24 @@ namespace NetMud.DataAccess
             }
 
             return (T)returnValue;
+        }
+
+        private static Type GetDataTableName(Type dataType)
+        {
+            if (dataType.IsInterface)
+            {
+                var dataAssembly = Assembly.Load("NetMud.Data");
+                var implimentedTypes = dataAssembly.GetTypes().Where(ty => ty.GetInterfaces().Contains(dataType) && !ty.IsInterface);
+
+                if (implimentedTypes.Count() < 0)
+                    throw new InvalidOperationException("Requested bad data type.");
+
+                var instance = Activator.CreateInstance(implimentedTypes.First()) as IReferenceData;
+
+                return instance.GetType();
+            }
+
+            return dataType;
         }
     }
 }

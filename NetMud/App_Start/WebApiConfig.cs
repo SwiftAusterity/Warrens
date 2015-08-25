@@ -23,6 +23,11 @@ namespace NetMud
                 defaults: new { controller = "ClientDataApi", action = "GetDimensionalData" }
                 );
 
+            config.Routes.MapHttpRoute(
+                name: "ApiModelRoomEditor",
+                routeTemplate: "api/ClientDataApi/RenderRoomForEdit/{id}/{radius}",
+                defaults: new { controller = "ClientDataApi", action = "RenderRoomForEdit" }
+                );
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",

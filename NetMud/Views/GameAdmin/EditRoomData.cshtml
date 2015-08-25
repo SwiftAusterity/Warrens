@@ -21,15 +21,30 @@
                     @Html.ValidationMessageFor(m => m.NewName, "", new { @class = "text-danger" })
                 </div>
             </div>
+            <div>
+                <pre id="modelContainer" style="font-family: Courier New, Courier, monospace; width: 200px; text-align: center;" data-id="@Model.DataObject.ID">
+                </pre>
+            </div>
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Commit" class="btn btn-default" style = "color: green; border-color: cadetblue;" />
+                    <input type="submit" value="Commit" class="btn btn-default" style="color: green; border-color: cadetblue;" />
                     @Html.ActionLink("Cancel", "ManageRoomData", "GameAdmin", new { @class = "btn btn-default", @style = "color: orange; border-color: red;" })
-               </div>
+                </div>
             </div>
         }
     </section>
 }
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+        $(function () {
+            var $modelContainer = $("#modelContainer");
+            var dataId = $modelContainer.attr("data-id");
+
+            $.get("/api/ClientDataApi/RenderRoomForEdit/" + dataId + '/0', function (data) {
+                $modelContainer.html(data);
+            });
+        });
+    </script>
 }

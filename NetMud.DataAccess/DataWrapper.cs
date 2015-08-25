@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
+using System.Reflection;
 
 namespace NetMud.DataAccess
 {
@@ -10,13 +12,6 @@ namespace NetMud.DataAccess
     /// </summary>
     public static class DataWrapper
     {
-        private static string GetDataTableName(Type dataType)
-        {
-            var instance = Activator.CreateInstance(dataType) as IData;
-
-            return instance.DataTableName;
-        }
-
         /// <summary>
         /// Get all of the data in the table
         /// </summary>
@@ -25,17 +20,18 @@ namespace NetMud.DataAccess
         public static IEnumerable<T> GetAll<T>() where T : IData
         {
             var returnList = new List<T>();
-            var sql = string.Format("select * from [dbo].[{0}]", GetDataTableName(typeof(T)));
-
             try
             {
+                var baseType = GetDataTableName(typeof(T));
+                var sql = string.Format("select * from [dbo].[{0}]", baseType.Name);
+
                 var ds = SqlWrapper.RunDataset(sql, CommandType.Text);
 
                 if (ds.Rows != null)
                 {
                     foreach (DataRow dr in ds.Rows)
                     {
-                        var newValue = Activator.CreateInstance(typeof(T)) as IData;
+                        var newValue = Activator.CreateInstance(baseType) as IData;
                         newValue.Fill(dr);
                         returnList.Add((T)newValue);
                     }
@@ -60,19 +56,21 @@ namespace NetMud.DataAccess
         {
             var returnList = new List<T>();
             var parms = new Dictionary<string, object>();
-            var sql = string.Format("select * from [dbo].[{0}] where {1} = @value", GetDataTableName(typeof(T)), sharedKeyName);
 
             parms.Add("value", sharedKeyValue);
 
             try
             {
+                var baseType = GetDataTableName(typeof(T));
+                var sql = string.Format("select * from [dbo].[{0}] where {1} = @value", baseType.Name, sharedKeyName);
+
                 var ds = SqlWrapper.RunDataset(sql, CommandType.Text, parms);
 
                 if (ds.Rows != null)
                 {
                     foreach (DataRow dr in ds.Rows)
                     {
-                        var newValue = Activator.CreateInstance(typeof(T)) as IData;
+                        var newValue = Activator.CreateInstance(baseType) as IData;
                         newValue.Fill(dr);
                         returnList.Add((T)newValue);
                     }
@@ -97,12 +95,13 @@ namespace NetMud.DataAccess
         {
             IData returnValue = default(T);
             var parms = new Dictionary<string, object>();
-            var sql = string.Format("select * from [dbo].[{0}] where {1} = @value", GetDataTableName(typeof(T)), sharedKeyName);
 
             parms.Add("value", sharedKeyValue);
 
             try
             {
+                var baseType = GetDataTableName(typeof(T));
+                var sql = string.Format("select * from [dbo].[{0}] where {1} = @value", baseType.Name, sharedKeyName);
                 var ds = SqlWrapper.RunDataset(sql, CommandType.Text, parms);
 
                 if (ds.Rows != null)
@@ -112,7 +111,7 @@ namespace NetMud.DataAccess
 
                     foreach (DataRow dr in ds.Rows)
                     {
-                        returnValue = Activator.CreateInstance(typeof(T)) as IData;
+                        returnValue = Activator.CreateInstance(baseType) as IData;
                         returnValue.Fill(dr);
                     }
                 }
@@ -136,19 +135,19 @@ namespace NetMud.DataAccess
             IData returnValue = default(T);
             var parms = new Dictionary<string, object>();
 
-            var sql = string.Format("select * from [dbo].[{0}] where ID = @id", GetDataTableName(typeof(T)));
-
             parms.Add("id", id);
 
             try
             {
+                var baseType = GetDataTableName(typeof(T));
+                var sql = string.Format("select * from [dbo].[{0}] where ID = @id", baseType.Name);
                 var ds = SqlWrapper.RunDataset(sql, CommandType.Text, parms);
 
                 if (ds.Rows != null)
                 {
                     foreach (DataRow dr in ds.Rows)
                     {
-                        returnValue = Activator.CreateInstance(typeof(T)) as IData;
+                        returnValue = Activator.CreateInstance(baseType) as IData;
                         returnValue.Fill(dr);
                     }
                 }
@@ -161,17 +160,22 @@ namespace NetMud.DataAccess
             return (T)returnValue;
         }
 
-        /// <summary>
-        /// Scrubs interface type names
-        /// </summary>
-        /// <param name="t">the type to find the right name for</param>
-        /// <returns>the name</returns>
-        private static string ScrubTypeName(Type t)
+        private static Type GetDataTableName(Type dataType)
         {
-            if (t.IsInterface)
-                return t.Name.Substring(1);
+            if (dataType.IsInterface)
+            {
+                var dataAssembly = Assembly.Load("NetMud.Data");
+                var implimentedTypes = dataAssembly.GetTypes().Where(ty => ty.GetInterfaces().Contains(dataType) && !ty.IsInterface);
 
-            return t.Name;
+                if (implimentedTypes.Count() < 0)
+                    throw new InvalidOperationException("Requested bad data type.");
+
+                var instance = Activator.CreateInstance(implimentedTypes.First()) as IData;
+
+                return instance.GetType();
+            }
+
+            return dataType;
         }
     }
 }

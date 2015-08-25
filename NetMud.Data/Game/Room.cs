@@ -303,6 +303,18 @@ namespace NetMud.Data.Game
 
             return radiusLocations;
         }
+
+        /// <summary>
+        /// Renders out an ascii map of this room plus all rooms in the radius
+        /// </summary>
+        /// <param name="radius">how far away to render</param>
+        /// <returns>the string</returns>
+        public string RenderCenteredMap(int radius, bool visibleOnly)
+        {
+            var sb = new StringBuilder();
+
+            return sb.ToString();
+        }
         #endregion
 
         #region Spawning

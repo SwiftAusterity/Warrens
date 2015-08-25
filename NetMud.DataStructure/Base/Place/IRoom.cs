@@ -20,5 +20,12 @@ namespace NetMud.DataStructure.Base.Place
         /// The current physical model for this entity
         /// </summary>
         IDimensionalModel Model { get; }
+
+        /// <summary>
+        /// Renders out an ascii map of this room plus all rooms in the radius
+        /// </summary>
+        /// <param name="radius">how far away to render</param>
+        /// <returns>the string</returns>
+        string RenderCenteredMap(int radius, bool visibleOnly);
     }
 }
