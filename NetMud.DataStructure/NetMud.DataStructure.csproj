@@ -45,6 +45,9 @@
     <Compile Include="Base\Skills\ISkill.cs" />
     <Compile Include="Base\Supporting\IDamage.cs" />
     <Compile Include="Base\Supporting\IDimensionalModel.cs" />
+    <Compile Include="Base\Supporting\IDimensionalModelData.cs" />
+    <Compile Include="Base\Supporting\IDimensionalModelNode.cs" />
+    <Compile Include="Base\Supporting\IDimensionalModelPlane.cs" />
     <Compile Include="Base\Supporting\IGender.cs" />
     <Compile Include="Base\Supporting\IMaterial.cs" />
     <Compile Include="Base\Place\IPathway.cs" />
