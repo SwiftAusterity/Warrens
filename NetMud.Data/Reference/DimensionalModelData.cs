@@ -73,6 +73,10 @@ namespace NetMud.Data.Reference
         /// <returns>the node</returns>
         public IDimensionalModelNode GetNode(short xAxis, short yAxis, short zAxis)
         {
+            //Just cut off erroneous requests
+            if (ModelType != DimensionalModelType.ThreeD && zAxis > 0)
+                return null;
+
             var plane = ModelPlanes.FirstOrDefault(pl => pl.YAxis.Equals(yAxis));
 
             if (plane != null)
@@ -93,6 +97,10 @@ namespace NetMud.Data.Reference
         /// <returns>the node "behind" the node asked for (can be null)</returns>
         public IDimensionalModelNode GetNodeBehindNode(short xAxis, short yAxis, short zAxis, short pitch, short yaw, short roll)
         {
+            //Just cut off erroneous requests
+            if (ModelType != DimensionalModelType.ThreeD)
+                return null;
+
             var plane = ModelPlanes.FirstOrDefault(pl => pl.YAxis.Equals(yAxis));
             IDimensionalModelNode node = null;
 

@@ -20,6 +20,16 @@ namespace NetMud.Physics
         /// <returns>the flattened view</returns>
         public static string FlattenModel(IDimensionalModelData model, short pitch, short yaw, short roll)
         {
+            switch(model.ModelType)
+            {
+                case DimensionalModelType.None:
+                    return String.Empty;
+                case DimensionalModelType.Flat:
+                    return FlattenFlatModel(model);
+                case DimensionalModelType.ThreeD:
+                    break; //let it through
+            }
+
             var flattenedModel = new StringBuilder();
 
             /*
@@ -479,6 +489,46 @@ namespace NetMud.Physics
             startXAxis = Math.Max(1, startXAxis);
 
             return new Tuple<short, short, short>((short)startXAxis, (short)startYAxis, (short)startZAxis);
+        }
+
+        private static string FlattenFlatModel(IDimensionalModelData model)
+        {
+            var flattenedModel = new StringBuilder();
+
+            //load the plane up with blanks
+            List<string[]> flattenedPlane = new List<string[]>();
+            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
+            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
+            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
+            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
+            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
+            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
+            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
+            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
+            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
+            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
+            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
+
+            short xI, yI;
+            for (yI = 0; yI < 11; yI++)
+            {
+                for (xI = 0; xI < 11; xI++)
+                {
+                    var node = model.GetNode(xI, yI, 0);
+
+                    flattenedPlane[yI][xI] = DamageTypeToCharacter(node.Style, xI < 5);
+                }
+            }
+
+            flattenedModel.AppendLine();
+
+            //Write out the flattened view to the string builder with line terminators
+            foreach (var nodes in flattenedPlane)
+                flattenedModel.AppendLine(string.Join("", nodes));
+
+            flattenedModel.AppendLine();
+
+            return flattenedModel.ToString();
         }
     }
 }

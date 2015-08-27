@@ -477,7 +477,7 @@ namespace NetMud.Controllers
             var vModel = new AddEditInanimateDataViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
             vModel.ValidMaterials = ReferenceWrapper.GetAll<Material>();
-            vModel.ValidModels = ReferenceWrapper.GetAll<DimensionalModelData>();
+            vModel.ValidModels = ReferenceWrapper.GetAll<DimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.ThreeD);
             vModel.ValidInanimateDatas = DataWrapper.GetAll<InanimateData>();
 
             return View(vModel);
@@ -619,7 +619,7 @@ namespace NetMud.Controllers
             var vModel = new AddEditInanimateDataViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
             vModel.ValidMaterials = ReferenceWrapper.GetAll<Material>();
-            vModel.ValidModels = ReferenceWrapper.GetAll<DimensionalModelData>();
+            vModel.ValidModels = ReferenceWrapper.GetAll<DimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.ThreeD);
             vModel.ValidInanimateDatas = DataWrapper.GetAll<InanimateData>();
 
             var obj = DataWrapper.GetOne<InanimateData>(id);
