@@ -368,6 +368,10 @@ namespace NetMud.Models.GameAdmin
         [Display(Name = "Name")]
         public string NewName { get; set; }
 
+        [DataType(DataType.Text)]
+        [Display(Name = "ModelType")]
+        public DimensionalModelType NewModelType { get; set; }
+
         [DataType(DataType.Upload)]
         [Display(Name = "Model Planes Upload")]
         public HttpPostedFileBase ModelFile { get; set; }

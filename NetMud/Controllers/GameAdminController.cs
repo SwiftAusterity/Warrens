@@ -129,7 +129,7 @@ namespace NetMud.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddDimensionalModelData(string newName, HttpPostedFileBase modelFile)
+        public ActionResult AddDimensionalModelData(AddEditDimensionalModelDataViewModel vModel, HttpPostedFileBase modelFile)
         {
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
@@ -144,11 +144,11 @@ namespace NetMud.Controllers
                 var fileContents = Encoding.UTF8.GetString(bytes);
 
                 var newObj = new DimensionalModelData(fileContents);
+                newObj.Name = vModel.NewName;
+                newObj.ModelType = vModel.NewModelType;
 
                 if (newObj.IsModelValid())
                 {
-                    newObj.Name = newName;
-
                     if (newObj.Create() == null)
                         message = "Error; Creation failed.";
                     else
