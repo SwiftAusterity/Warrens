@@ -17,8 +17,6 @@ namespace NetMud.Data.EntityBackingData
     /// </summary>
     public class Character : EntityBackingDataPartial, ICharacter
     {
-        public override string DataTableName { get { return "Character"; } }
-
         /// <summary>
         /// The system type for the entity this attaches to
         /// </summary>

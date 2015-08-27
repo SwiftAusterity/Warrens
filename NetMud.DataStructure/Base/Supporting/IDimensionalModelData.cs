@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NetMud.DataStructure.Base.System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,11 @@ namespace NetMud.DataStructure.Base.Supporting
     /// </summary>
     public interface IDimensionalModelData : IReferenceData
     {
+        /// <summary>
+        /// Governs what sort of model planes we're looking for
+        /// </summary>
+        DimensionalModelType ModelType { get; set; }
+
         /// <summary>
         /// The 11 planes that compose the physical model
         /// </summary>
@@ -57,5 +63,15 @@ namespace NetMud.DataStructure.Base.Supporting
         /// </summary>
         /// <returns></returns>
         string SerializeModel();
+    }
+
+    /// <summary>
+    /// Governs what sort of model planes we're looking for, numerical value represents how many dimensions the model has
+    /// </summary>
+    public enum DimensionalModelType : short
+    {
+        None = 0,
+        Flat = 2,
+        ThreeD = 3
     }
 }

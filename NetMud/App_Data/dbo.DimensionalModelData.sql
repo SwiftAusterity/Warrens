@@ -4,5 +4,6 @@
     [Created]               DATETIME      DEFAULT (getutcdate()) NOT NULL,
     [LastRevised]           DATETIME      DEFAULT (getutcdate()) NOT NULL,
     [Name]                  VARCHAR (200) NOT NULL,
+	[ModelType]				SMALLINT	  DEFAULT ((0)) NOT NULL,
 	[Model]					VARCHAR (MAX) NOT NULL
 )

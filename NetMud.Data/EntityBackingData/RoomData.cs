@@ -16,8 +16,6 @@ namespace NetMud.Data.EntityBackingData
     /// </summary>
     public class RoomData : EntityBackingDataPartial, IRoomData
     {
-        public override string DataTableName { get { return "RoomData"; } }
-
         /// <summary>
         /// The system type of data this attaches to
         /// </summary>

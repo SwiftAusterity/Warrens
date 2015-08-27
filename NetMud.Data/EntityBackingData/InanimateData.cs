@@ -20,8 +20,6 @@ namespace NetMud.Data.EntityBackingData
     /// </summary>
     public class InanimateData : EntityBackingDataPartial, IInanimateData
     {
-        public override string DataTableName { get { return "InanimateData"; } }
-
         /// <summary>
         /// Framework for the physics model of an entity
         /// </summary>

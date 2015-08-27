@@ -18,8 +18,6 @@ namespace NetMud.Data.Reference
 {
     public class Race : ReferenceDataPartial, IRace
     {
-        public override string DataTableName { get { return "Race"; } }
-
         public Tuple<IInanimateData, short> Arms { get; set; }
 
         public Tuple<IInanimateData, short> Legs { get; set; }

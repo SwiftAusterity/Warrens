@@ -13,8 +13,6 @@ namespace NetMud.Data.Reference
     /// </summary>
     public class Help : ReferenceDataPartial, IHelp
     {
-        public override string DataTableName { get { return "Help"; } }
-
         /// <summary>
         /// New up a "blank" help entry
         /// </summary>

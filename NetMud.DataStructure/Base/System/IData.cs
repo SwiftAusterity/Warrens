@@ -8,8 +8,6 @@ namespace NetMud.DataStructure.Base.System
     /// </summary>
     public interface IData : IComparable<IData>, IEquatable<IData>
     {
-        string DataTableName { get; }
-
         /// <summary>
         /// Unique, iterative ID for this entry
         /// </summary>

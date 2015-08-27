@@ -17,7 +17,10 @@ namespace NetMud.Data.Reference
     /// </summary>
     public class DimensionalModelData : ReferenceDataPartial, IDimensionalModelData
     {
-        public override string DataTableName { get { return "DimensionalModelData"; } }
+        /// <summary>
+        /// Governs what sort of model planes we're looking for
+        /// </summary>
+        public DimensionalModelType ModelType { get; set; }
 
         /// <summary>
         /// Create an empty model
@@ -238,6 +241,7 @@ namespace NetMud.Data.Reference
             Created = DataUtility.GetFromDataRow<DateTime>(dr, "Created");
             LastRevised = DataUtility.GetFromDataRow<DateTime>(dr, "LastRevised");
             Name = DataUtility.GetFromDataRow<string>(dr, "Name");
+            ModelType = (DimensionalModelType)DataUtility.GetFromDataRow<short>(dr, "ModelType");
 
             string outModel = DataUtility.GetFromDataRow<string>(dr, "Model");
             DeserializeModel(outModel);
@@ -253,12 +257,13 @@ namespace NetMud.Data.Reference
 
             DimensionalModelData returnValue = default(DimensionalModelData);
             var sql = new StringBuilder();
-            sql.Append("insert into [dbo].[DimensionalModelData]([Name], [Model])");
-            sql.Append(" values(@Name,@Model)");
+            sql.Append("insert into [dbo].[DimensionalModelData]([Name], [Model], [ModelType])");
+            sql.Append(" values(@Name,@Model,@ModelType)");
             sql.Append(" select * from [dbo].[DimensionalModelData] where ID = Scope_Identity()");
 
             parms.Add("Name", Name);
             parms.Add("Model", SerializeModel());
+            parms.Add("ModelType", (short)ModelType);
 
             try
             {
@@ -312,12 +317,14 @@ namespace NetMud.Data.Reference
             sql.Append("update [dbo].[DimensionalModelData] set ");
             sql.Append(" [Name] = @Name ");
             sql.Append(" , [Model] = @Model ");
+            sql.Append(" , [ModelType] = @ModelType ");
             sql.Append(" , [LastRevised] = GetUTCDate()");
             sql.Append(" where ID = @id");
 
             parms.Add("id", ID);
             parms.Add("Name", Name);
             parms.Add("Model", SerializeModel());
+            parms.Add("ModelType", (short)ModelType);
 
             SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text);
 

@@ -7,8 +7,6 @@ namespace NetMud.Data.EntityBackingData
 {
     public abstract class EntityBackingDataPartial : IEntityBackingData 
     {
-        public abstract string DataTableName { get; }
-
         public EntityBackingDataPartial()
         {
             //empty instance for getting the dataTableName

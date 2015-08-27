@@ -7,8 +7,6 @@ namespace NetMud.Data.Reference
 {
     public abstract class ReferenceDataPartial : IReferenceData
     {
-        public abstract string DataTableName { get; }
-
         public ReferenceDataPartial()
         {
             //empty instance for getting the dataTableName
