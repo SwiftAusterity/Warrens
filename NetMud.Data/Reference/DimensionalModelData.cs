@@ -54,6 +54,7 @@ namespace NetMud.Data.Reference
             Name = backingModel.Name;
             Created = backingModel.Created;
             LastRevised = backingModel.LastRevised;
+            ModelType = backingModel.ModelType;
 
             DeserializeModel(modelJson);
         }
@@ -228,7 +229,17 @@ namespace NetMud.Data.Reference
         /// <returns>validity</returns>
         public bool IsModelValid()
         {
-            return ModelPlanes.Count == 11 && !ModelPlanes.Any(plane => String.IsNullOrWhiteSpace(plane.TagName) || plane.ModelNodes.Count != 121);
+            switch(ModelType)
+            {
+                case DimensionalModelType.Flat: //2d has 11 planes, but they're all flat (11 X nodes)
+                    return ModelPlanes.Count == 11 && !ModelPlanes.Any(plane => String.IsNullOrWhiteSpace(plane.TagName) || plane.ModelNodes.Count != 11);
+                case DimensionalModelType.None: //0d is always valid, it doesn't care about the model
+                    return true;
+                case DimensionalModelType.ThreeD://3d has 11 planes with 11 depth nodes and 11 X nodes
+                    return ModelPlanes.Count == 11 && !ModelPlanes.Any(plane => String.IsNullOrWhiteSpace(plane.TagName) || plane.ModelNodes.Count != 121);
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -360,6 +371,10 @@ namespace NetMud.Data.Reference
         /// <param name="modelJson">json we store in the db</param>
         private void DeserializeModel(string modelJson)
         {
+            //Don't bother even trying
+            if (ModelType == DimensionalModelType.None)
+                return;
+
             dynamic planes = JsonConvert.DeserializeObject(modelJson);
 
             foreach (dynamic plane in planes)
@@ -390,6 +405,10 @@ namespace NetMud.Data.Reference
         /// <param name="delimitedPlanes">comma delimited list of planes</param>
         private void SerializeModelFromDelimitedList(string delimitedPlanes)
         {
+            //don't need to serialize nothing
+            if (ModelType == DimensionalModelType.None)
+                return;
+
             var newPlane = new DimensionalModelPlane();
             short lineCount = 12;
             short yCount = 11;
@@ -415,7 +434,7 @@ namespace NetMud.Data.Reference
                             var nodeStringComponents = nodeString.Split(new char[] { '|' });
 
                             newNode.XAxis = xCount;
-                            newNode.ZAxis = lineCount;
+                            newNode.ZAxis = ModelType == DimensionalModelType.Flat ? (short)0 : lineCount;
                             newNode.YAxis = yCount;
 
                             newNode.Style = String.IsNullOrWhiteSpace(nodeStringComponents[0])
@@ -430,7 +449,8 @@ namespace NetMud.Data.Reference
                             xCount++;
                         }
 
-                        if (lineCount == 1)
+                        //This ensures the linecount is always 12 for flats
+                        if (lineCount == 1 || ModelType == DimensionalModelType.Flat)
                         {
                             ModelPlanes.Add(newPlane);
                             lineCount = 12;
