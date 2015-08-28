@@ -256,8 +256,6 @@ namespace NetMud.Data.Game
                                         new XAttribute("Name", charData.Name),
                                         new XAttribute("LastRevised", charData.LastRevised),
                                         new XAttribute("Created", charData.Created),
-                                        new XAttribute("PassingWidth", charData.PassingWidth),
-                                        new XAttribute("PassingHeight", charData.PassingHeight),
                                         new XAttribute("DegreesFromNorth", charData.DegreesFromNorth),
                                         new XAttribute("ToLocationID", charData.ToLocationID),
                                         new XAttribute("ToLocationType", charData.ToLocationType),
@@ -318,8 +316,6 @@ namespace NetMud.Data.Game
             backingData.Name = xDoc.Root.Element("BackingData").GetSafeAttributeValue("Name");
             backingData.LastRevised = xDoc.Root.Element("BackingData").GetSafeAttributeValue<DateTime>("LastRevised");
             backingData.Created = xDoc.Root.Element("BackingData").GetSafeAttributeValue<DateTime>("Created");
-            backingData.PassingWidth = xDoc.Root.Element("BackingData").GetSafeAttributeValue<long>("PassingWidth");
-            backingData.PassingHeight = xDoc.Root.Element("BackingData").GetSafeAttributeValue<long>("PassingHeight");
             backingData.DegreesFromNorth = xDoc.Root.Element("BackingData").GetSafeAttributeValue<int>("DegreesFromNorth");
             backingData.ToLocationID = xDoc.Root.Element("BackingData").GetSafeAttributeValue("ToLocationID");
             backingData.ToLocationType = xDoc.Root.Element("BackingData").GetSafeAttributeValue("ToLocationType");

@@ -151,7 +151,7 @@ namespace NetMud.Models.GameAdmin
         [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
         [DataType(DataType.Text)]
         [Display(Name = "Viscosity")]
-        public short NewViscosity{ get; set; }
+        public short NewViscosity { get; set; }
 
         [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
         [DataType(DataType.Text)]
@@ -392,8 +392,8 @@ namespace NetMud.Models.GameAdmin
             ItemsPerPage = 20;
         }
 
-        internal override Func<IInanimateData, bool> SearchFilter 
-        { 
+        internal override Func<IInanimateData, bool> SearchFilter
+        {
             get
             {
                 return item => item.Name.ToLower().Contains(SearchTerms.ToLower());
@@ -457,14 +457,15 @@ namespace NetMud.Models.GameAdmin
     {
         public ApplicationUser authedUser { get; set; }
 
-        public ManageRoomDataViewModel(IEnumerable<IRoomData> items) : base(items)
+        public ManageRoomDataViewModel(IEnumerable<IRoomData> items)
+            : base(items)
         {
             CurrentPageNumber = 1;
             ItemsPerPage = 20;
         }
 
-        internal override Func<IRoomData, bool> SearchFilter 
-        { 
+        internal override Func<IRoomData, bool> SearchFilter
+        {
             get
             {
                 return item => item.Name.ToLower().Contains(SearchTerms.ToLower());
@@ -489,6 +490,71 @@ namespace NetMud.Models.GameAdmin
     }
     #endregion
 
+    #region Pathways
+    public class AddEditPathwayDataViewModel : TwoOrThreeDimensionalEntityEditViewModel
+    {
+        public AddEditPathwayDataViewModel()
+        {
+            ValidModels = Enumerable.Empty<IDimensionalModelData>();
+            ValidMaterials = Enumerable.Empty<IMaterial>();
+        }
+
+        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
+        [DataType(DataType.Text)]
+        [Display(Name = "Name")]
+        public string NewName { get; set; }
+
+        [Range(0, 16, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [DataType(DataType.Text)]
+        [Display(Name = "Visible message strength")]
+        public int VisibleStrength { get; set; }
+
+        [Range(0, 16, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [DataType(DataType.Text)]
+        [Display(Name = "Audible message strength")]
+        public int AudibleStrength { get; set; }
+
+        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
+        [DataType(DataType.Text)]
+        [Display(Name = "Visible message to area")]
+        public string VisibleToSurroundings { get; set; }
+
+        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
+        [DataType(DataType.Text)]
+        [Display(Name = "Audible message to area")]
+        public string AudibleToSurroundings { get; set; }
+
+        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
+        [DataType(DataType.Text)]
+        [Display(Name = "Message to Destination")]
+        public string MessageToDestination { get; set; }
+
+        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
+        [DataType(DataType.Text)]
+        [Display(Name = "Message to Origin")]
+        public string MessageToOrigin { get; set; }
+
+        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
+        [DataType(DataType.Text)]
+        [Display(Name = "Message to Actor")]
+        public string MessageToActor { get; set; }
+
+        [DataType(DataType.Text)]
+        [Display(Name = "To Room")]
+        public IRoom ToLocation { get; set; }
+
+        [Range(-1, 360, ErrorMessage = "The {0} must be between {2} and {1}. -1 is for non-cardinal exits.")]
+        [DataType(DataType.Text)]
+        [Display(Name = "Degrees From North")]
+        public int DegreesFromNorth { get; set; }
+
+        public IEnumerable<IRoomData> ValidRooms { get; set; }
+
+
+        public IPathwayData DataObject { get; set; }
+    }
+    #endregion
+
     #region NPC
     public class ManageNPCDataViewModel : PagedDataModel<INonPlayerCharacter>, BaseViewModel
     {
@@ -501,8 +567,8 @@ namespace NetMud.Models.GameAdmin
             ItemsPerPage = 20;
         }
 
-        internal override Func<INonPlayerCharacter, bool> SearchFilter 
-        { 
+        internal override Func<INonPlayerCharacter, bool> SearchFilter
+        {
             get
             {
                 return item => item.Name.ToLower().Contains(SearchTerms.ToLower()) || item.SurName.ToLower().Contains(SearchTerms.ToLower());
@@ -556,8 +622,8 @@ namespace NetMud.Models.GameAdmin
             ValidRoles = Enumerable.Empty<IdentityRole>();
         }
 
-        internal override Func<ApplicationUser, bool> SearchFilter 
-        { 
+        internal override Func<ApplicationUser, bool> SearchFilter
+        {
             get
             {
                 return item => item.GameAccount.GlobalIdentityHandle.ToLower().Contains(SearchTerms.ToLower());
@@ -566,7 +632,7 @@ namespace NetMud.Models.GameAdmin
 
         public IEnumerable<IdentityRole> ValidRoles { get; set; }
     }
-#endregion
+    #endregion
 
     #region base models
     public class DimensionalEntityEditViewModel : BaseViewModel

@@ -25,16 +25,6 @@ namespace NetMud.Data.EntityBackingData
         }
 
         /// <summary>
-        /// How wide this pathway portal is
-        /// </summary>
-        public long PassingWidth { get; set; }
-
-        /// <summary>
-        /// How high the pathway portal is
-        /// </summary>
-        public long PassingHeight { get; set; }
-
-        /// <summary>
         /// 0->360 degrees with 0 being absolute north (meaning 90 is west, 180 south, etc) -1 means no cardinality
         /// </summary>
         public int DegreesFromNorth { get; set; }

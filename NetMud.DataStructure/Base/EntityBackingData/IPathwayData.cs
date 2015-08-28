@@ -9,16 +9,6 @@ namespace NetMud.DataStructure.Base.EntityBackingData
     public interface IPathwayData : IEntityBackingData
     {
         /// <summary>
-        /// How wide this pathway portal is
-        /// </summary>
-        long PassingWidth { get; set; }
-
-        /// <summary>
-        /// How high the pathway portal is
-        /// </summary>
-        long PassingHeight { get; set; }
-
-        /// <summary>
         /// 0->360 degrees with 0 being absolute north (meaning 90 is west, 180 south, etc) -1 means no cardinality
         /// </summary>
         int DegreesFromNorth { get; set; }

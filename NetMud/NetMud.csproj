@@ -295,6 +295,7 @@
     <Content Include="Views\GameAdmin\ManageRaceData.cshtml" />
     <Content Include="Views\Shared\TwoOrThreeDimensionalEntityEditor.cshtml" />
     <Content Include="Views\Shared\DimensionalEntityEditor.cshtml" />
+    <Content Include="Views\GameAdmin\AddEditPathway.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

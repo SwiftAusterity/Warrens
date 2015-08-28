@@ -859,7 +859,7 @@ namespace NetMud.Controllers
 
             var newObj = new RoomData();
             newObj.Name = vModel.NewName;
-            newObj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth);// materialParts);
+            newObj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth);
 
             if (newObj.Create() == null)
                 message = "Error; Creation failed.";
