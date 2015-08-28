@@ -5,6 +5,8 @@
         Text = rl.Name,
         Value = rl.ID.ToString()
     }), htmlAttributes: new { id = "ModelPartMaterials", Style = "padding: 7px; float:left; margin-top: 10px;" }).ToString().Replace(Environment.NewLine, "");
+
+    var isAdd = Model.ModelDataObject == null;
 }
 <br class="clearfix" />
 <div class="form-group">
@@ -16,68 +18,55 @@
         @Html.ValidationMessageFor(m => m.DimensionalModelId, "", new { @class = "text-danger" })
     </div>
 </div>
-<div class="form-group">
-    @Html.LabelFor(m => m.DimensionalModelHeight, new { @class = "col-md-2 control-label" })
-    <div class="col-md-10">
-        @Html.TextBoxFor(m => m.DimensionalModelHeight, new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.DimensionalModelHeight, "", new { @class = "text-danger" })
-    </div>
-</div>
-<div class="form-group">
-    @Html.LabelFor(m => m.DimensionalModelLength, new { @class = "col-md-2 control-label" })
-    <div class="col-md-10">
-        @Html.TextBoxFor(m => m.DimensionalModelLength, new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.DimensionalModelLength, "", new { @class = "text-danger" })
-    </div>
-</div>
-<div class="form-group">
-    @Html.LabelFor(m => m.DimensionalModelWidth, new { @class = "col-md-2 control-label" })
-    <div class="col-md-10">
-        @Html.TextBoxFor(m => m.DimensionalModelWidth, new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.DimensionalModelWidth, "", new { @class = "text-danger" })
-    </div>
-</div>
+@Html.Partial("DimensionalEntityEditor", Model)
 <br class="clearfix" />
 <div class="form-group">
     <div style="display: block; padding-bottom: 30px;">
         @Html.LabelFor(m => m.ModelPartNames, new { @class = "col-md-2 control-label" })
     </div>
     <div id="modelPartRows" style="display: block;">
-        @foreach (var container in Model.ModelDataObject.Composition)
+        @if (!isAdd)
         {
-            <div class="col-md-10" style="padding-left: 10px;">
-                <span style="padding: 10px; float:left;">Part Name:</span><input id="ModelPartNames" name="ModelPartNames" style="float:left; margin-top: 10px;" type="text" value="@container.Key">
-                <span style="padding: 10px; float:left;">Material: </span>@Html.DropDownList("ModelPartMaterials", Model.ValidMaterials.Select(rl =>
+            foreach (var container in Model.ModelDataObject.Composition)
+            {
+                <div class="col-md-10" style="padding-left: 10px;">
+                    <span style="padding: 10px; float:left;">Part Name:</span><input id="ModelPartNames" name="ModelPartNames" style="float:left; margin-top: 10px;" type="text" value="@container.Key">
+                    <span style="padding: 10px; float:left;">Material: </span>@Html.DropDownList("ModelPartMaterials", Model.ValidMaterials.Select(rl =>
                                                                                             new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString(), Selected = rl.Equals(container.Value) })
                                                                                             , htmlAttributes: new { id = "ModelPartMaterials", Style = "padding: 7px; float:left; margin-top: 10px;" })
-            </div>
+                </div>
+            }
         }
     </div>
 </div>
 <br class="clearfix" />
 
 <script type="text/javascript">
-        var materialsDropdown = decodeHtml('@materialsDropdown');
+    var materialsDropdown = decodeHtml('@materialsDropdown');
+    var isAdd = @isAdd ? "true" : "false";
 
-        $(document).ready(function () {
-            $("#DimensionalModelId").change(function () {
-                GetNewDimModDeets();
-            });
+    $(document).ready(function () {
+        if (isAdd = "true")
+            GetNewDimModDeets();
+
+        $("#DimensionalModelId").change(function () {
+            GetNewDimModDeets();
         });
+    });
 
-        function GetNewDimModDeets() {
-            $.ajax({
-                url: "/api/ClientDataApi/GetDimensionalData/" + $("#DimensionalModelId").val()
-                    , async: false
-                    , success: function (data) {
-                        $("#modelPartRows").html('');
+    function GetNewDimModDeets() {
+        $.ajax({
+            url: "/api/ClientDataApi/GetDimensionalData/" + $("#DimensionalModelId").val()
+                , async: false
+                , success: function (data) {
+                    $("#modelPartRows").html('');
 
-                        $.each(data, function (key, name) {
-                            $("#modelPartRows").append(
-                                '<div class="col-md-10" style="padding-left:10px;"><span style="padding: 10px; float:left;">Part Name: </span><input id="ModelPartNames" name="ModelPartNames" type="text" value="' + name + '" style="float:left; margin-top: 10px;"><span style="padding: 10px; float:left;">Material:</span>' + materialsDropdown + '</div>'
-                            );
-                        })
-                    }
-            });
-        };
+                    $.each(data, function (key, name) {
+                        $("#modelPartRows").append(
+                            '<div class="col-md-10" style="padding-left:10px;"><span style="padding: 10px; float:left;">Part Name: </span><input id="ModelPartNames" name="ModelPartNames" type="text" value="' + name + '" style="float:left; margin-top: 10px;"><span style="padding: 10px; float:left;">Material:</span>' + materialsDropdown + '</div>'
+                        );
+                    })
+                }
+        });
+    };
 </script>

@@ -2,12 +2,6 @@
 @{
     ViewBag.Title = "Add New Inanimate";
 
-    var materialsDropdown = Html.DropDownList("ModelPartMaterials", Model.ValidMaterials.Select(rl => new SelectListItem()
-    {
-        Text = rl.Name,
-        Value = rl.ID.ToString()
-    }), htmlAttributes: new { id = "ModelPartMaterials", Style = "padding: 7px; float:left; margin-top: 10px;" }).ToString().Replace(Environment.NewLine, "");
-
     var compositionDropdown = Html.DropDownList("InternalCompositionIds", Model.ValidInanimateDatas.Select(rl => new SelectListItem()
     {
         Text = rl.Name,
@@ -62,46 +56,7 @@
                     </div>
                 </div>
             </div>
-            <br class="clearfix" />
-            <div class="form-group">
-                @Html.LabelFor(m => m.DimensionalModelId, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
-                    @Html.DropDownList("DimensionalModelId", Model.ValidModels.Select(rl =>
-                                                                new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
-                                                                , htmlAttributes: new { id = "DimensionalModelId", Style = "padding: 7px; float:left; margin-top: 10px;" })
-                    @Html.ValidationMessageFor(m => m.DimensionalModelId, "", new { @class = "text-danger" })
-                </div>
-            </div>
-            <div class="form-group">
-                @Html.LabelFor(m => m.DimensionalModelHeight, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
-                    @Html.TextBoxFor(m => m.DimensionalModelHeight, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.DimensionalModelHeight, "", new { @class = "text-danger" })
-                </div>
-            </div>
-            <div class="form-group">
-                @Html.LabelFor(m => m.DimensionalModelLength, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
-                    @Html.TextBoxFor(m => m.DimensionalModelLength, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.DimensionalModelLength, "", new { @class = "text-danger" })
-                </div>
-            </div>
-            <div class="form-group">
-                @Html.LabelFor(m => m.DimensionalModelWidth, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
-                    @Html.TextBoxFor(m => m.DimensionalModelWidth, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.DimensionalModelWidth, "", new { @class = "text-danger" })
-                </div>
-            </div>
-            <br class="clearfix" />
-            <div class="form-group">
-                <div style="display: block; padding-bottom: 30px;">
-                    @Html.LabelFor(m => m.ModelPartNames, new { @class = "col-md-2 control-label" })
-                </div>
-                <div id="modelPartRows" style="display: block;">
-                </div>
-            </div>
-            <br class="clearfix" />
+            @Html.Partial("TwoOrThreeDimensionalEntityEditor", Model)
             <div class="form-group">
                 <div style="display: block; padding-bottom: 10px;">
                     @Html.LabelFor(m => m.InternalCompositionIds, new { @class = "col-md-2 control-label" })
@@ -132,12 +87,9 @@
     @Scripts.Render("~/Scripts/HtmlUtilities.js")
 
     <script type="text/javascript">
-        var materialsDropdown = decodeHtml('@materialsDropdown');
         var compositionDropdown = decodeHtml('@compositionDropdown');
 
         $(document).ready(function () {
-            GetNewDimModDeets();
-
             $("#addInanimateContainerRow").click(function () {
                 $("#inanimateContainerRows").append(
                     '<div class="col-md-10" style="padding-left:10px;"><span style="padding: 10px; float:left;">Name: </span><input id="InanimateContainerNames" name="InanimateContainerNames" type="text" value="" style="float:left; margin-top: 10px;"><span style="padding: 10px; float:left;">Weight:</span><input id="InanimateContainerWeights" name="InanimateContainerWeights" type="text" value="" style="float:left; margin-top: 10px;"><span style="padding: 10px; float:left;">Volume:</span><input id="InanimateContainerVolumes" name="InanimateContainerVolumes" type="text" value="" style="float:left; margin-top: 10px;"><a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a></div>'
@@ -174,30 +126,10 @@
                 return false;
             });
 
-            $("#DimensionalModelId").change(function () {
-                GetNewDimModDeets();
-            });
-
             $(".removeRow").click(function () {
                 $(this).parent().remove();
                 return false;
             });
         });
-
-        function GetNewDimModDeets() {
-            $.ajax({
-                url: "/api/ClientDataApi/GetDimensionalData/" + $("#DimensionalModelId").val()
-                    , async: false
-                    , success: function (data) {
-                        $("#modelPartRows").html('');
-
-                        $.each(data, function (key, name) {
-                            $("#modelPartRows").append(
-                                '<div class="col-md-10" style="padding-left:10px;"><span style="padding: 10px; float:left;">Part Name: </span><input id="ModelPartNames" name="ModelPartNames" type="text" value="' + name + '" style="float:left; margin-top: 10px;"><span style="padding: 10px; float:left;">Material:</span>' + materialsDropdown + '</div>'
-                            );
-                        })
-                    }
-            });
-        };
     </script>
 }

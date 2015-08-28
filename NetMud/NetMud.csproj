@@ -294,6 +294,7 @@
     <Content Include="Views\GameAdmin\EditRaceData.cshtml" />
     <Content Include="Views\GameAdmin\ManageRaceData.cshtml" />
     <Content Include="Views\Shared\TwoOrThreeDimensionalEntityEditor.cshtml" />
+    <Content Include="Views\Shared\DimensionalEntityEditor.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
