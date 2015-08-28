@@ -541,7 +541,7 @@ namespace NetMud.Models.GameAdmin
 
         [DataType(DataType.Text)]
         [Display(Name = "To Room")]
-        public IRoom ToLocation { get; set; }
+        public IRoomData ToLocation { get; set; }
 
         [Range(-1, 360, ErrorMessage = "The {0} must be between {2} and {1}. -1 is for non-cardinal exits.")]
         [DataType(DataType.Text)]

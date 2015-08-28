@@ -144,6 +144,31 @@ namespace NetMud.Utility
         }
 
         /// <summary>
+        /// Fault safe type converted
+        /// </summary>
+        /// <typeparam name="T">the type to convert to</typeparam>
+        /// <param name="thing">the thing being converted</param>
+        /// <param name="newThing">the converted thing</param>
+        /// <returns>success status</returns>
+        public static T TryConvert<T>(object thing)
+        {
+            var newThing = default(T);
+
+            try
+            {
+                if (thing != null)
+                    newThing = (T)thing;
+            }
+            catch
+            {
+                //dont error on tryconvert, it's called tryconvert for a reason
+                newThing = default(T);
+            }
+
+            return newThing;
+        }
+
+        /// <summary>
         /// Get's a single column's data from a datarow (fault safe)
         /// </summary>
         /// <typeparam name="T">the data type</typeparam>

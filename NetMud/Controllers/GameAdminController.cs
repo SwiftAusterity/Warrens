@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Behaviors.Actionable;
 using NetMud.DataStructure.Behaviors.Automation;
+using NetMud.Utility;
 
 namespace NetMud.Controllers
 {
@@ -924,6 +925,247 @@ namespace NetMud.Controllers
                 message = "Error; Edit failed.";
 
             return RedirectToAction("ManageRoomData", new { Message = message });
+        }
+        #endregion
+
+        #region Pathways
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult RemovePathway(long ID, string authorize)
+        {
+            string message = string.Empty;
+            long roomId = -1;
+
+            if (string.IsNullOrWhiteSpace(authorize) || !ID.ToString().Equals(authorize))
+                message = "You must check the proper authorize radio button first.";
+            else
+            {
+                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+                var obj = DataWrapper.GetOne<PathwayData>(ID);
+                roomId = DataUtility.TryConvert<long>(obj.FromLocationID);
+
+                if (obj == null)
+                    message = "That does not exist";
+                else if (obj.Remove())
+                {
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - RemovePathway[" + ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    message = "Delete Successful.";
+                }
+                else
+                    message = "Error; Removal failed.";
+            }
+
+            return RedirectToAction("EditRoomData", new { Message = message, id = roomId });
+        }
+
+        [HttpGet]
+        public ActionResult AddPathway(long id)
+        {
+            var vModel = new AddEditPathwayDataViewModel();
+            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            vModel.ValidMaterials = ReferenceWrapper.GetAll<Material>();
+            vModel.ValidModels = ReferenceWrapper.GetAll<DimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat);
+            vModel.ValidRooms = DataWrapper.GetAll<RoomData>().Where(rm => !rm.ID.Equals(id));
+
+            return View(vModel);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddPathway(AddEditPathwayDataViewModel vModel, long id)
+        {
+            string message = string.Empty;
+            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            var newObj = new PathwayData();
+            newObj.Name = vModel.NewName;
+            newObj.AudibleStrength = vModel.AudibleStrength;
+            newObj.AudibleToSurroundings = vModel.AudibleToSurroundings;
+            newObj.DegreesFromNorth = vModel.DegreesFromNorth;
+            newObj.FromLocationID = id.ToString();
+            newObj.FromLocationType = "RoomData";
+            newObj.MessageToActor = vModel.MessageToActor;
+            newObj.MessageToDestination = vModel.MessageToDestination;
+            newObj.MessageToOrigin = vModel.MessageToOrigin;
+            newObj.ToLocationID = vModel.ToLocation.ID.ToString();
+            newObj.ToLocationType = "RoomData";
+            newObj.VisibleStrength = vModel.VisibleStrength;
+            newObj.VisibleToSurroundings = vModel.VisibleToSurroundings;
+
+            var materialParts = new Dictionary<string, IMaterial>();
+            if (vModel.ModelPartNames != null)
+            {
+                int nameIndex = 0;
+                foreach (var partName in vModel.ModelPartNames)
+                {
+                    if (!string.IsNullOrWhiteSpace(partName))
+                    {
+                        if (vModel.ModelPartMaterials.Count() <= nameIndex)
+                            break;
+
+                        var material = ReferenceWrapper.GetOne<Material>(vModel.ModelPartMaterials[nameIndex]);
+
+                        if (material != null && !string.IsNullOrWhiteSpace(partName))
+                            materialParts.Add(partName, material);
+                    }
+
+                    nameIndex++;
+                }
+            }
+
+            var dimModel = ReferenceWrapper.GetOne<DimensionalModelData>(vModel.DimensionalModelId);
+            bool validData = true;
+
+            if (dimModel == null)
+            {
+                message = "Choose a valid dimensional model.";
+                validData = false;
+            }
+
+            if (dimModel.ModelPlanes.Any(plane => !materialParts.ContainsKey(plane.TagName)))
+            {
+                message = "You need to choose a material for each Dimensional Model planar section. (" + string.Join(",", dimModel.ModelPlanes.Select(plane => plane.TagName)) + ")";
+                validData = false;
+            }
+
+            if (validData)
+            {
+                newObj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth, vModel.DimensionalModelId, materialParts);
+
+                if (newObj.Create() == null)
+                    message = "Error; Creation failed.";
+                else
+                {
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddPathway[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    message = "Creation Successful.";
+                }
+            }
+
+            return RedirectToAction("EditRoomData", new { Message = message, id = id });
+        }
+
+        [HttpGet]
+        public ActionResult EditPathwayData(long id)
+        {
+            string message = string.Empty;
+            var vModel = new AddEditPathwayDataViewModel();
+            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            vModel.ValidMaterials = ReferenceWrapper.GetAll<Material>();
+            vModel.ValidModels = ReferenceWrapper.GetAll<DimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat);
+            vModel.ValidRooms = DataWrapper.GetAll<RoomData>().Where(rm => !rm.ID.Equals(id));
+
+            var obj = DataWrapper.GetOne<PathwayData>(id);
+
+            if (obj == null)
+            {
+                message = "That does not exist";
+                return RedirectToAction("ManagePathwayData", new { Message = message });
+            }
+
+            vModel.DataObject = obj;
+            vModel.NewName = obj.Name;
+
+            vModel.AudibleStrength = obj.AudibleStrength;
+            vModel.AudibleToSurroundings = obj.AudibleToSurroundings;
+            vModel.DegreesFromNorth = obj.DegreesFromNorth;
+            vModel.MessageToActor = obj.MessageToActor;
+            vModel.MessageToDestination = obj.MessageToDestination;
+            vModel.MessageToOrigin = obj.MessageToOrigin;
+            vModel.ToLocation = DataWrapper.GetOne<RoomData>(DataUtility.TryConvert<long>(obj.ToLocationID));
+            vModel.VisibleStrength = obj.VisibleStrength;
+            vModel.VisibleToSurroundings = obj.VisibleToSurroundings;
+
+            vModel.DimensionalModelId = obj.Model.ModelBackingData.ID;
+            vModel.DimensionalModelHeight = obj.Model.Height;
+            vModel.DimensionalModelLength = obj.Model.Length;
+            vModel.DimensionalModelWidth = obj.Model.Width;
+            vModel.ModelDataObject = obj.Model;
+
+            return View(vModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditPathwayData(long id, AddEditPathwayDataViewModel vModel)
+        {
+            string message = string.Empty;
+            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            var obj = DataWrapper.GetOne<PathwayData>(id);
+            if (obj == null)
+            {
+                message = "That does not exist";
+                return RedirectToAction("ManagePathwayData", new { Message = message });
+            }
+
+            obj.Name = vModel.NewName;
+            obj.AudibleStrength = vModel.AudibleStrength;
+            obj.AudibleToSurroundings = vModel.AudibleToSurroundings;
+            obj.DegreesFromNorth = vModel.DegreesFromNorth;
+            obj.FromLocationID = id.ToString();
+            obj.FromLocationType = "RoomData";
+            obj.MessageToActor = vModel.MessageToActor;
+            obj.MessageToDestination = vModel.MessageToDestination;
+            obj.MessageToOrigin = vModel.MessageToOrigin;
+            obj.ToLocationID = vModel.ToLocation.ID.ToString();
+            obj.ToLocationType = "RoomData";
+            obj.VisibleStrength = vModel.VisibleStrength;
+            obj.VisibleToSurroundings = vModel.VisibleToSurroundings;
+
+            var materialParts = new Dictionary<string, IMaterial>();
+            if (vModel.ModelPartNames != null)
+            {
+                int nameIndex = 0;
+                foreach (var partName in vModel.ModelPartNames)
+                {
+                    if (!string.IsNullOrWhiteSpace(partName))
+                    {
+                        if (vModel.ModelPartMaterials.Count() <= nameIndex)
+                            break;
+
+                        var material = ReferenceWrapper.GetOne<Material>(vModel.ModelPartMaterials[nameIndex]);
+
+                        if (material != null)
+                            materialParts.Add(partName, material);
+                    }
+
+                    nameIndex++;
+                }
+            }
+
+            var dimModel = ReferenceWrapper.GetOne<DimensionalModelData>(vModel.DimensionalModelId);
+            bool validData = true;
+
+            if (dimModel == null)
+            {
+                message = "Choose a valid dimensional model.";
+                validData = false;
+            }
+
+            if (dimModel.ModelPlanes.Any(plane => !materialParts.ContainsKey(plane.TagName)))
+            {
+                message = "You need to choose a material for each Dimensional Model planar section. (" + string.Join(",", dimModel.ModelPlanes.Select(plane => plane.TagName)) + ")";
+                validData = false;
+            }
+
+            if (validData)
+            {
+                obj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth, vModel.DimensionalModelId, materialParts);
+
+                if (obj.Save())
+                {
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - EditPathwayData[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    message = "Edit Successful.";
+                }
+                else
+                    message = "Error; Edit failed.";
+            }
+
+            return RedirectToAction("EditRoomData", new { Message = message, id = id });
         }
         #endregion
 

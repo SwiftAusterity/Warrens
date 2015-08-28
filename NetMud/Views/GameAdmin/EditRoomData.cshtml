@@ -30,53 +30,9 @@
             </div>
         }
     </section>
-    <section id="exitsForm">
-        <div class="dimensionalModel">
-            <h5>^ Pathways From</h5>
-            @using (Html.BeginForm("AddEditPathway", "GameAdmin", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-            {
-                @Html.AntiForgeryToken()
-                <hr />
-                <div>
-                <pre id="modelContainer" style="font-family: Courier New, Courier, monospace; width: 200px; text-align: center;" data-id="@Model.DataObject.ID">
-                </pre>
-                </div>
-                <div>
-                    <div class="form-group">
-                        <label id="pathwayNameLabel" class="col-md-2 control-label"></label>
-                        <div class="col-md-10">
-                            <input type="text" id="pathwayName" name="pathwayName" class="form-control" />
-                        </div>
-                    </div>
-
-                    <!--
-                        [DegreesFromNorth]			INT				DEFAULT((0)) NOT NULL,
-                        [ToLocationID]				VARCHAR (MAX)	NOT NULL,
-                        [ToLocationType]			VARCHAR (MAX)	NOT NULL,
-                        [FromLocationID]			VARCHAR (MAX)	NOT NULL,
-                        [FromLocationType]			VARCHAR (MAX)	NOT NULL,
-                        [MessageToActor]			VARCHAR (MAX)	NOT NULL,
-                        [MessageToOrigin]			VARCHAR (MAX)	NOT NULL,
-                        [MessageToDestination]		VARCHAR (MAX)	NOT NULL,
-                        [AudibleToSurroundings]		VARCHAR (MAX)	NOT NULL,
-                        [VisibleToSurroundings]		VARCHAR (MAX)	NOT NULL,
-                        [AudibleStrength]			INT				DEFAULT((3)) NOT NULL,
-                        [VisibleStrength]			INT				DEFAULT((1)) NOT NULL,
-                        [DimensionalModelLength]	INT				NOT NULL DEFAULT (-1),
-                        [DimensionalModelHeight]	INT				NOT NULL DEFAULT (-1),
-                        [DimensionalModelWidth]		INT				NOT NULL DEFAULT (-1),
-                        [DimensionalModelMaterialCompositions]		VARCHAR (MAX)	DEFAULT ('{}') NOT NULL,
-                        [DimensionalModelID]		BIGINT			NOT NULL
-                    -->
-                </div>
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <input type="submit" value="Commit" class="btn btn-default" style="color: green; border-color: cadetblue;" />
-                    </div>
-                </div>
-            }
-        </div>
-    </section>
+    <div>
+        <pre id="modelContainer" style="font-family: Courier New, Courier, monospace; width: 200px; text-align: center;" data-id="@Model.DataObject.ID"></pre>
+    </div>
 }
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
