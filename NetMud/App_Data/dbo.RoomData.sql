@@ -6,7 +6,5 @@
     [Name]						VARCHAR (200)	NOT NULL,
 	[DimensionalModelLength]	INT				NOT NULL DEFAULT (-1),
 	[DimensionalModelHeight]	INT				NOT NULL DEFAULT (-1),
-	[DimensionalModelWidth]		INT				NOT NULL DEFAULT (-1),	
-	[DimensionalModelMaterialCompositions]		VARCHAR (MAX)	DEFAULT ('{}') NOT NULL,
-	[DimensionalModelID]		BIGINT			NOT NULL
+	[DimensionalModelWidth]		INT				NOT NULL DEFAULT (-1)
 )

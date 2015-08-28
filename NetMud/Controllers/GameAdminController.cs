@@ -859,7 +859,7 @@ namespace NetMud.Controllers
 
             var newObj = new RoomData();
             newObj.Name = vModel.NewName;
-            newObj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth, -1, String.Empty);// materialParts);
+            newObj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth);// materialParts);
 
             if (newObj.Create() == null)
                 message = "Error; Creation failed.";
@@ -911,6 +911,9 @@ namespace NetMud.Controllers
             }
 
             obj.Name = vModel.NewName;
+            obj.Model.Height = vModel.DimensionalModelHeight;
+            obj.Model.Length = vModel.DimensionalModelLength;
+            obj.Model.Width = vModel.DimensionalModelWidth;
 
             if (obj.Save())
             {

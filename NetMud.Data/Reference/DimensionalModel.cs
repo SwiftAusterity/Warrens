@@ -19,10 +19,20 @@ namespace NetMud.Data.Reference
             Width = DataUtility.GetFromDataRow<int>(dr, "DimensionalModelWidth");
 
             long outDimModId = DataUtility.GetFromDataRow<long>(dr, "DimensionalModelID");
-            ModelBackingData = ReferenceWrapper.GetOne<DimensionalModelData>(outDimModId);
 
-            string materialComps = DataUtility.GetFromDataRow<string>(dr, "DimensionalModelMaterialCompositions");
-            Composition = DeserializeMaterialCompositions(materialComps);
+            if (outDimModId > 0)
+            {
+                ModelBackingData = ReferenceWrapper.GetOne<DimensionalModelData>(outDimModId);
+
+                string materialComps = DataUtility.GetFromDataRow<string>(dr, "DimensionalModelMaterialCompositions");
+                Composition = DeserializeMaterialCompositions(materialComps);
+            }
+            else //0 dimensional models don't have an actual model
+            {
+                ModelBackingData = new DimensionalModelData();
+                ModelBackingData.ModelType = DimensionalModelType.None;
+                Composition = new Dictionary<string, IMaterial>();
+            }
         }
 
         public DimensionalModel(int length, int height, int width, long backingDataId, IDictionary<string, IMaterial> materialComps)
@@ -53,6 +63,18 @@ namespace NetMud.Data.Reference
             Composition = DeserializeMaterialCompositions(compJson);
 
             ModelBackingData = new DimensionalModelData(backingDataId, modelJson);
+        }
+
+        //for 0 dimension models
+        public DimensionalModel(int length, int height, int width)
+        {
+            Length = length;
+            Height = height;
+            Width = width;
+            Composition = new Dictionary<string, IMaterial>();
+
+            ModelBackingData = new DimensionalModelData();
+            ModelBackingData.ModelType = DimensionalModelType.None;
         }
 
         /// <summary>
