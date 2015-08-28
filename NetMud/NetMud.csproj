@@ -293,6 +293,7 @@
     <Content Include="Views\GameAdmin\AddRaceData.cshtml" />
     <Content Include="Views\GameAdmin\EditRaceData.cshtml" />
     <Content Include="Views\GameAdmin\ManageRaceData.cshtml" />
+    <Content Include="Views\Shared\TwoOrThreeDimensionalEntityEditor.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

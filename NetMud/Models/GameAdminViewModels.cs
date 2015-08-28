@@ -401,10 +401,8 @@ namespace NetMud.Models.GameAdmin
         }
     }
 
-    public class AddEditInanimateDataViewModel : BaseViewModel
+    public class AddEditInanimateDataViewModel : TwoOrThreeDimensionalEntityEditViewModel
     {
-        public ApplicationUser authedUser { get; set; }
-
         public AddEditInanimateDataViewModel()
         {
             ValidModels = Enumerable.Empty<IDimensionalModelData>();
@@ -440,33 +438,6 @@ namespace NetMud.Models.GameAdmin
         [Display(Name = "Character Container Volumes")]
         public long[] MobileContainerVolumes { get; set; }
 
-        [Range(1, 1200, ErrorMessage = "The {0} must be between {2} and {1}.")]
-        [DataType(DataType.Text)]
-        [Display(Name = "Length (inches)")]
-        public int DimensionalModelLength { get; set; }
-
-        [Range(1, 1200, ErrorMessage = "The {0} must be between {2} and {1}.")]
-        [DataType(DataType.Text)]
-        [Display(Name = "Height (inches)")]
-        public int DimensionalModelHeight { get; set; }
-
-        [Range(1, 1200, ErrorMessage = "The {0} must be between {2} and {1}.")]
-        [DataType(DataType.Text)]
-        [Display(Name = "Width (inches)")]
-        public int DimensionalModelWidth { get; set; }
-
-        [DataType(DataType.Text)]
-        [Display(Name = "Dimensional Model")]
-        public long DimensionalModelId { get; set; }
-
-        [DataType(DataType.Text)]
-        [Display(Name = "Model Parts")]
-        public string[] ModelPartNames { get; set; }
-
-        [DataType(DataType.Text)]
-        [Display(Name = "Model Part Materials")]
-        public long[] ModelPartMaterials { get; set; }
-
         [DataType(DataType.Text)]
         [Display(Name = "Internal Composition")]
         public long[] InternalCompositionIds { get; set; }
@@ -476,8 +447,6 @@ namespace NetMud.Models.GameAdmin
         public short[] InternalCompositionPercentages { get; set; }
 
         public IEnumerable<IInanimateData> ValidInanimateDatas { get; set; }
-        public IEnumerable<IDimensionalModelData> ValidModels { get; set; }
-        public IEnumerable<IMaterial> ValidMaterials { get; set; }
 
         public IInanimateData DataObject { get; set; }
     }
@@ -503,10 +472,8 @@ namespace NetMud.Models.GameAdmin
         }
     }
 
-    public class AddEditRoomDataViewModel : BaseViewModel
+    public class AddEditRoomDataViewModel : DimensionalEntityEditViewModel
     {
-        public ApplicationUser authedUser { get; set; }
-
         public AddEditRoomDataViewModel()
         {
         }
@@ -515,6 +482,8 @@ namespace NetMud.Models.GameAdmin
         [DataType(DataType.Text)]
         [Display(Name = "Name")]
         public string NewName { get; set; }
+
+        public IEnumerable<IDimensionalModelData> ValidModels { get; set; }
 
         public IRoomData DataObject { get; set; }
     }
@@ -598,4 +567,45 @@ namespace NetMud.Models.GameAdmin
         public IEnumerable<IdentityRole> ValidRoles { get; set; }
     }
 #endregion
+
+    #region base models
+    public class DimensionalEntityEditViewModel : BaseViewModel
+    {
+        public ApplicationUser authedUser { get; set; }
+
+        [Range(1, 1200, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [DataType(DataType.Text)]
+        [Display(Name = "Length (inches)")]
+        public int DimensionalModelLength { get; set; }
+
+        [Range(1, 1200, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [DataType(DataType.Text)]
+        [Display(Name = "Height (inches)")]
+        public int DimensionalModelHeight { get; set; }
+
+        [Range(1, 1200, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [DataType(DataType.Text)]
+        [Display(Name = "Width (inches)")]
+        public int DimensionalModelWidth { get; set; }
+    }
+
+    public class TwoOrThreeDimensionalEntityEditViewModel : DimensionalEntityEditViewModel
+    {
+        [DataType(DataType.Text)]
+        [Display(Name = "Dimensional Model")]
+        public long DimensionalModelId { get; set; }
+
+        [DataType(DataType.Text)]
+        [Display(Name = "Model Parts")]
+        public string[] ModelPartNames { get; set; }
+
+        [DataType(DataType.Text)]
+        [Display(Name = "Model Part Materials")]
+        public long[] ModelPartMaterials { get; set; }
+
+        public IEnumerable<IDimensionalModelData> ValidModels { get; set; }
+        public IEnumerable<IMaterial> ValidMaterials { get; set; }
+        public IDimensionalModel ModelDataObject { get; set; }
+    }
+    #endregion
 }

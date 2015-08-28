@@ -636,6 +636,7 @@ namespace NetMud.Controllers
             vModel.DimensionalModelHeight = obj.Model.Height;
             vModel.DimensionalModelLength = obj.Model.Length;
             vModel.DimensionalModelWidth = obj.Model.Width;
+            vModel.ModelDataObject = obj.Model;
 
             return View(vModel);
         }
@@ -844,19 +845,21 @@ namespace NetMud.Controllers
         {
             var vModel = new AddEditRoomDataViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            //vModel.ValidModels = ReferenceWrapper.GetAll<DimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.None);
 
             return View(vModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddRoomData(string newName)
+        public ActionResult AddRoomData(AddEditRoomDataViewModel vModel)
         {
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             var newObj = new RoomData();
-            newObj.Name = newName;
+            newObj.Name = vModel.NewName;
+            newObj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth, -1, String.Empty);// materialParts);
 
             if (newObj.Create() == null)
                 message = "Error; Creation failed.";
@@ -886,13 +889,16 @@ namespace NetMud.Controllers
 
             vModel.DataObject = obj;
             vModel.NewName = obj.Name;
+            vModel.DimensionalModelHeight = obj.Model.Height;
+            vModel.DimensionalModelLength = obj.Model.Length;
+            vModel.DimensionalModelWidth = obj.Model.Width;
 
             return View(vModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EditRoomData(string newName, int id)
+        public ActionResult EditRoomData(AddEditRoomDataViewModel vModel, int id)
         {
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
@@ -904,7 +910,7 @@ namespace NetMud.Controllers
                 return RedirectToAction("ManageRoomData", new { Message = message });
             }
 
-            obj.Name = newName;
+            obj.Name = vModel.NewName;
 
             if (obj.Save())
             {

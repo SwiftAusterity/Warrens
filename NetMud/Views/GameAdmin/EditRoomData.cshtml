@@ -22,6 +22,27 @@
                 </div>
             </div>
             <div class="form-group">
+                @Html.LabelFor(m => m.DimensionalModelHeight, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.DimensionalModelHeight, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.DimensionalModelHeight, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.DimensionalModelLength, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.DimensionalModelLength, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.DimensionalModelLength, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.DimensionalModelWidth, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.DimensionalModelWidth, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.DimensionalModelWidth, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
                     <input type="submit" value="Commit" class="btn btn-default" style="color: green; border-color: cadetblue;" />
                     @Html.ActionLink("Cancel", "ManageRoomData", "GameAdmin", new { @class = "btn btn-default", @style = "color: orange; border-color: red;" })

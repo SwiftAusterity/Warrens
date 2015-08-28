@@ -49,7 +49,6 @@ namespace NetMud.Data.EntityBackingData
             LastRevised = DataUtility.GetFromDataRow<DateTime>(dr, "LastRevised");
             Name = DataUtility.GetFromDataRow<string>(dr, "Name");
 
-
             Model = new DimensionalModel(dr);
         }
 
