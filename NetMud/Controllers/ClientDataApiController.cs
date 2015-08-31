@@ -62,7 +62,7 @@ namespace NetMud.Controllers
             if (n != null && !string.IsNullOrWhiteSpace(n.ToLocationID) && n.ToLocationType.Equals("Room"))
             {
                 var location = DataWrapper.GetOne<IRoomData>(long.Parse(n.ToLocationID));
-                northString += String.Format("<a href='/GameAdmin/EditPathway/{0}' target='_blank' class='editPathway' title='{1}' data-id='{0}'>#</a>", n.ID, location.Name);
+                northString += String.Format(" <a href='/GameAdmin/EditPathway/{0}' target='_blank' class='editPathway' title='{1}' data-id='{0}'>#</a>", n.ID, location.Name);
             }
             else
                 northString += String.Format(" <a href='/GameAdmin/AddPathway/{0}' class='addPathway' target='_blank' data-direction='0'>+</a>", id);
@@ -70,7 +70,7 @@ namespace NetMud.Controllers
             if (ne != null && !string.IsNullOrWhiteSpace(ne.ToLocationID) && ne.ToLocationType.Equals("Room"))
             {
                 var location = DataWrapper.GetOne<IRoomData>(long.Parse(ne.ToLocationID));
-                northString += String.Format("<a href='/GameAdmin/EditPathway/{0}' target='_blank' class='editPathway' title='{1}' data-id='{0}'>#</a>", ne.ID, location.Name);
+                northString += String.Format(" <a href='/GameAdmin/EditPathway/{0}' target='_blank' class='editPathway' title='{1}' data-id='{0}'>#</a>", ne.ID, location.Name);
             }
             else
                 northString += String.Format(" <a href='/GameAdmin/AddPathway/{0}' class='addPathway' target='_blank' data-direction='45'>+</a>", id);
@@ -119,7 +119,7 @@ namespace NetMud.Controllers
             if (s != null && !string.IsNullOrWhiteSpace(s.ToLocationID) && s.ToLocationType.Equals("Room"))
             {
                 var location = DataWrapper.GetOne<IRoomData>(long.Parse(s.ToLocationID));
-                southString += String.Format("<a href='/GameAdmin/EditPathway/{0}' target='_blank' class='editPathway' title='{1}' data-id='{0}'>#</a>", s.ID, location.Name);
+                southString += String.Format(" <a href='/GameAdmin/EditPathway/{0}' target='_blank' class='editPathway' title='{1}' data-id='{0}'>#</a>", s.ID, location.Name);
             }
             else
                 southString += String.Format(" <a href='/GameAdmin/AddPathway/{0}' class='addPathway' target='_blank' data-direction='180'>+</a>", id);
@@ -127,7 +127,7 @@ namespace NetMud.Controllers
             if (se != null && !string.IsNullOrWhiteSpace(se.ToLocationID) && se.ToLocationType.Equals("Room"))
             {
                 var location = DataWrapper.GetOne<IRoomData>(long.Parse(se.ToLocationID));
-                southString += String.Format("<a href='/GameAdmin/EditPathway/{0}' target='_blank' class='editPathway' title='{1}' data-id='{0}'>#</a>", se.ID, location.Name);
+                southString += String.Format(" <a href='/GameAdmin/EditPathway/{0}' target='_blank' class='editPathway' title='{1}' data-id='{0}'>#</a>", se.ID, location.Name);
             }
             else
                 southString += String.Format(" <a href='/GameAdmin/AddPathway/{0}' class='addPathway' target='_blank' data-direction='135'>+</a>", id);
@@ -142,7 +142,7 @@ namespace NetMud.Controllers
                 var location = DataWrapper.GetOne<IRoomData>(long.Parse(path.ToLocationID));
 
                 if (location != null)
-                    extraString += String.Format("<a href='/GameAdmin/EditPathway/{0}' target='_blank' class='editPathway' title='{1}' data-id='{0}'>#</a>", path.ID, location.Name);
+                    extraString += String.Format(" <a href='/GameAdmin/EditPathway/{0}' target='_blank' class='editPathway' title='{1}' data-id='{0}'>#</a>", path.ID, location.Name);
             }
 
             //One last for adding non-directional ones

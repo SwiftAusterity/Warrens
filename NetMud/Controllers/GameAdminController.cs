@@ -933,6 +933,9 @@ namespace NetMud.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult RemovePathway(long ID, string authorize)
         {
+            var vModel = new AddEditPathwayDataViewModel();
+            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+
             string message = string.Empty;
             long roomId = -1;
 
@@ -956,7 +959,7 @@ namespace NetMud.Controllers
                     message = "Error; Removal failed.";
             }
 
-            return RedirectToAction("EditRoomData", new { Message = message, id = roomId });
+            return View("AddEditPathway", vModel);
         }
 
         [HttpGet]
@@ -969,7 +972,7 @@ namespace NetMud.Controllers
             vModel.ValidModels = ReferenceWrapper.GetAll<DimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat);
             vModel.ValidRooms = DataWrapper.GetAll<RoomData>().Where(rm => !rm.ID.Equals(id));
 
-            return View(vModel);
+            return View("AddEditPathway", vModel);
         }
 
 
@@ -1044,11 +1047,11 @@ namespace NetMud.Controllers
                 }
             }
 
-            return RedirectToAction("EditRoomData", new { Message = message, id = id });
+            return View("AddEditPathway", vModel);
         }
 
         [HttpGet]
-        public ActionResult EditPathwayData(long id)
+        public ActionResult EditPathway(long id)
         {
             string message = string.Empty;
             var vModel = new AddEditPathwayDataViewModel();
@@ -1085,12 +1088,12 @@ namespace NetMud.Controllers
             vModel.DimensionalModelWidth = obj.Model.Width;
             vModel.ModelDataObject = obj.Model;
 
-            return View(vModel);
+            return View("AddEditPathway", vModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EditPathwayData(long id, AddEditPathwayDataViewModel vModel)
+        public ActionResult EditPathway(long id, AddEditPathwayDataViewModel vModel)
         {
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
@@ -1165,7 +1168,8 @@ namespace NetMud.Controllers
                     message = "Error; Edit failed.";
             }
 
-            return RedirectToAction("EditRoomData", new { Message = message, id = id });
+            //Don't return to the room editor, this is in a window
+            return View("AddEditPathway", vModel);
         }
         #endregion
 
