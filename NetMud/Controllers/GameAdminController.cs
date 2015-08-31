@@ -846,7 +846,7 @@ namespace NetMud.Controllers
         {
             var vModel = new AddEditRoomDataViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-            //vModel.ValidModels = ReferenceWrapper.GetAll<DimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.None);
+            vModel.ValidMaterials = ReferenceWrapper.GetAll<IMaterial>();
 
             return View(vModel);
         }
@@ -862,13 +862,44 @@ namespace NetMud.Controllers
             newObj.Name = vModel.NewName;
             newObj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth);
 
-            if (newObj.Create() == null)
-                message = "Error; Creation failed.";
-            else
+            if (vModel.BorderMaterials != null)
             {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - AddRoomData[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                message = "Creation Successful.";
+                int index = 0;
+                foreach (var materialId in vModel.BorderMaterials)
+                {
+                    if (materialId > 0)
+                    {
+                        if (vModel.BorderNames.Count() <= index)
+                            break;
+
+                        var name = vModel.BorderNames[index];
+                        var material = ReferenceWrapper.GetOne<IMaterial>(materialId);
+
+                        if (material != null && !string.IsNullOrWhiteSpace(name) && !newObj.Borders.ContainsKey(name))
+                            newObj.Borders.Add(name, material);
+                    }
+
+                    index++;
+                }
             }
+
+            var mediumId = vModel.Medium;
+            var medium = ReferenceWrapper.GetOne<IMaterial>(mediumId);
+
+            if (medium != null)
+            {
+                newObj.Medium = medium;
+
+                if (newObj.Create() == null)
+                    message = "Error; Creation failed.";
+                else
+                {
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddRoomData[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    message = "Creation Successful.";
+                }
+            }
+            else
+                message = "You must include a valid Medium material.";
 
             return RedirectToAction("ManageRoomData", new { Message = message });
         }
@@ -879,6 +910,7 @@ namespace NetMud.Controllers
             string message = string.Empty;
             var vModel = new AddEditRoomDataViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            vModel.ValidMaterials = ReferenceWrapper.GetAll<IMaterial>();
 
             var obj = DataWrapper.GetOne<RoomData>(id);
 

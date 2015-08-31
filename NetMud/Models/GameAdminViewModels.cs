@@ -334,7 +334,7 @@ namespace NetMud.Models.GameAdmin
     }
     #endregion
 
-    #region Models
+    #region Dim Models
     public class ManageDimensionalModelDataViewModel : PagedDataModel<DimensionalModelData>, BaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
@@ -484,7 +484,19 @@ namespace NetMud.Models.GameAdmin
         [Display(Name = "Name")]
         public string NewName { get; set; }
 
-        public IEnumerable<IDimensionalModelData> ValidModels { get; set; }
+        [DataType(DataType.Text)]
+        [Display(Name = "Medium")]
+        public long Medium { get; set; }
+
+        [DataType(DataType.Text)]
+        [Display(Name = "Border")]
+        public string[] BorderNames { get; set; }
+
+        [DataType(DataType.Text)]
+        [Display(Name = "Material")]
+        public long[] BorderMaterials { get; set; }
+
+        public IEnumerable<IMaterial> ValidMaterials { get; set; }
 
         public IRoomData DataObject { get; set; }
     }
