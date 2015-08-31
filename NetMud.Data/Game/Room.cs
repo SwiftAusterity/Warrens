@@ -386,17 +386,16 @@ namespace NetMud.Data.Game
                                     new XElement("BackingData",
                                         new XAttribute("ID", charData.ID),
                                         new XAttribute("Name", charData.Name),
+                                        new XAttribute("Medium", charData.Medium.ID),
                                         new XAttribute("LastRevised", charData.LastRevised),
-                                        new XAttribute("Created", charData.Created)),
+                                        new XAttribute("Created", charData.Created),
+                                        new XElement("Borders", charData.SerializeBorders())),
                                    new XElement("LiveData",
                                         new XAttribute("Keywords", string.Join(",", Keywords)),
                                         new XElement("DimensionalModel",
                                             new XAttribute("Length", Model.Length),
                                             new XAttribute("Height", Model.Height),
-                                            new XAttribute("Width", Model.Width),
-                                            new XAttribute("ID", charData.Model.ModelBackingData.ID),
-                                            new XElement("ModellingData", Model.ModelBackingData.SerializeModel()),
-                                            new XElement("MaterialCompositions", Model.SerializeMaterialCompositions()))),
+                                            new XAttribute("Width", Model.Width))),
                                     new XElement("ObjectsInRoom"),
                                     new XElement("MobilesInside")
                                     ));
@@ -480,15 +479,18 @@ namespace NetMud.Data.Game
             if (!older)
             {
                 //We added dim mods in v1
-                var dimModelId = docRoot.Element("LiveData").Element("DimensionalModel").GetSafeAttributeValue<long>("ID");
                 var dimModelLength = docRoot.Element("LiveData").Element("DimensionalModel").GetSafeAttributeValue<int>("Length");
                 var dimModelHeight = docRoot.Element("LiveData").Element("DimensionalModel").GetSafeAttributeValue<int>("Height");
                 var dimModelWidth = docRoot.Element("LiveData").Element("DimensionalModel").GetSafeAttributeValue<int>("Width");
-                var dimModelJson = docRoot.Element("LiveData").Element("DimensionalModel").GetSafeElementValue("ModellingData");
-                var dimModelCompJson = docRoot.Element("LiveData").Element("DimensionalModel").GetSafeElementValue("MaterialCompositions");
 
-                backingData.Model = new DimensionalModel(dimModelLength, dimModelHeight, dimModelWidth, dimModelId, dimModelCompJson);
-                newEntity.Model = new DimensionalModel(dimModelLength, dimModelHeight, dimModelWidth, dimModelJson, dimModelId, dimModelCompJson);
+                backingData.Model = new DimensionalModel(dimModelLength, dimModelHeight, dimModelWidth);
+                newEntity.Model = backingData.Model;
+
+                //Added medium and wall materials in v1
+                var mediumId = docRoot.Element("BackingData").GetSafeAttributeValue<long>("Medium");
+                backingData.Medium = ReferenceWrapper.GetOne<IMaterial>(mediumId);
+
+                backingData.Borders = backingData.DeserializeBorders(docRoot.Element("LiveData").GetSafeElementValue("Borders"));
             }
             else //what if we're older
             {
@@ -496,6 +498,8 @@ namespace NetMud.Data.Game
                 var backD = DataWrapper.GetOne<RoomData>(backingData.ID);
                 backingData.Model = backD.Model;
                 newEntity.Model = backD.Model;
+                backingData.Borders = backD.Borders;
+                backingData.Medium = backD.Medium;
             }
         }
         #endregion

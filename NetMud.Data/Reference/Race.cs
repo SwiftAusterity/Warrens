@@ -124,6 +124,17 @@ namespace NetMud.Data.Reference
             return bodyParts;
         }
 
+        public string SerializeBodyParts()
+        {
+            var parts = new List<Tuple<long, short, string>>();
+
+            foreach (var tpl in BodyParts)
+                parts.Add(new Tuple<long, short, string>(tpl.Item1.ID, tpl.Item2, tpl.Item3));
+
+            return JsonConvert.SerializeObject(parts);
+        }
+
+
         /// <summary>
         /// insert this into the db
         /// </summary>
@@ -148,7 +159,7 @@ namespace NetMud.Data.Reference
             parms.Add("LegsAmount", Legs.Item2);
             parms.Add("Torso", Torso.ID);
             parms.Add("Head", Head.ID);
-            parms.Add("BodyParts", JsonConvert.SerializeObject(BodyParts));
+            parms.Add("BodyParts", SerializeBodyParts());
             parms.Add("DietaryNeeds", (short)DietaryNeeds);
             parms.Add("SanguinaryMaterial", SanguinaryMaterial.ID);
             parms.Add("VisionRangeLow", VisionRange.Item1);
@@ -239,7 +250,7 @@ namespace NetMud.Data.Reference
             parms.Add("LegsAmount", Legs.Item2);
             parms.Add("Torso", Torso.ID);
             parms.Add("Head", Head.ID);
-            parms.Add("BodyParts", JsonConvert.SerializeObject(BodyParts));
+            parms.Add("BodyParts", SerializeBodyParts());
             parms.Add("DietaryNeeds", (short)DietaryNeeds);
             parms.Add("SanguinaryMaterial", SanguinaryMaterial.ID);
             parms.Add("VisionRangeLow", VisionRange.Item1);

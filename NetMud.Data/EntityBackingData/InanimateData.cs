@@ -132,6 +132,7 @@ namespace NetMud.Data.EntityBackingData
 
             return composition;
         }
+
         public string SerializeInternalCompositions()
         {
             var materialComps = new List<Tuple<long, short>>();

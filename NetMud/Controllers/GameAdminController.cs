@@ -1102,7 +1102,7 @@ namespace NetMud.Controllers
             if (obj == null)
             {
                 message = "That does not exist";
-                return RedirectToAction("ManagePathwayData", new { Message = message });
+                return View("AddEditPathway", vModel);
             }
 
             obj.Name = vModel.NewName;

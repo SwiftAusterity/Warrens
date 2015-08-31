@@ -4,6 +4,8 @@
     [Created]					DATETIME		DEFAULT (getutcdate()) NOT NULL,
     [LastRevised]				DATETIME		DEFAULT (getutcdate()) NOT NULL,
     [Name]						VARCHAR (200)	NOT NULL,
+	[Borders]					VARCHAR (MAX)	NOT NULL DEFAULT('{}'),
+	[Medium]					BIGINT			NOT NULL DEFAULT((-1)),
 	[DimensionalModelLength]	INT				NOT NULL DEFAULT (-1),
 	[DimensionalModelHeight]	INT				NOT NULL DEFAULT (-1),
 	[DimensionalModelWidth]		INT				NOT NULL DEFAULT (-1)

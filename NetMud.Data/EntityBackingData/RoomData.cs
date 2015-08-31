@@ -4,6 +4,7 @@ using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.Utility;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -29,6 +30,10 @@ namespace NetMud.Data.EntityBackingData
         /// </summary>
         public IDimensionalModel Model { get; set; }
 
+        public IDictionary<string, IMaterial> Borders { get; set; }
+
+        public IMaterial Medium { get; set; }
+
         /// <summary>
         /// Get's the entity's model dimensions
         /// </summary>
@@ -49,7 +54,41 @@ namespace NetMud.Data.EntityBackingData
             LastRevised = DataUtility.GetFromDataRow<DateTime>(dr, "LastRevised");
             Name = DataUtility.GetFromDataRow<string>(dr, "Name");
 
+            var mediumId = DataUtility.GetFromDataRow<long>(dr, "Medium");
+            Medium = ReferenceWrapper.GetOne<IMaterial>(mediumId);
+
+            Borders = DeserializeBorders(DataUtility.GetFromDataRow<string>(dr, "Borders"));
+
             Model = new DimensionalModel(dr);
+        }
+
+        public IDictionary<string, IMaterial> DeserializeBorders(string json)
+        {
+            var returntionary = new Dictionary<string, IMaterial>();
+
+            dynamic borders = JsonConvert.DeserializeObject(json);
+
+            foreach (dynamic border in borders)
+            {
+                long objId = long.Parse(border.Value);
+                string name = border.Key;
+
+                var material = ReferenceWrapper.GetOne<IMaterial>(objId);
+
+                returntionary.Add(name, material);
+            }
+
+            return returntionary;
+        }
+
+        public string SerializeBorders()
+        {
+            var materialComps = new List<Tuple<string, long>>();
+
+            foreach (var kvp in Borders)
+                materialComps.Add(new Tuple<string, long>(kvp.Key, kvp.Value.ID));
+
+            return JsonConvert.SerializeObject(materialComps);
         }
 
         /// <summary>
@@ -62,16 +101,16 @@ namespace NetMud.Data.EntityBackingData
 
             IRoomData returnValue = default(IRoomData);
             var sql = new StringBuilder();
-            sql.Append("insert into [dbo].[RoomData]([Name], [DimensionalModelLength], [DimensionalModelHeight], [DimensionalModelWidth], [DimensionalModelID], [DimensionalModelMaterialCompositions])");
-            sql.Append(" values(@Name,@DimensionalModelLength,@DimensionalModelHeight,@DimensionalModelWidth,@DimensionalModelID,@DimensionalModelMaterialCompositions)");
+            sql.Append("insert into [dbo].[RoomData]([Name], [DimensionalModelLength], [DimensionalModelHeight], [DimensionalModelWidth], [Medium], [Borders])");
+            sql.Append(" values(@Name,@DimensionalModelLength,@DimensionalModelHeight,@DimensionalModelWidth,@Medium,@Borders)");
             sql.Append(" select * from [dbo].[RoomData] where ID = Scope_Identity()");
 
             parms.Add("Name", Name);
             parms.Add("DimensionalModelLength", Model.Length);
             parms.Add("DimensionalModelHeight", Model.Height);
             parms.Add("DimensionalModelWidth", Model.Width);
-            parms.Add("DimensionalModelID", Model.ModelBackingData.ID);
-            parms.Add("DimensionalModelMaterialCompositions", Model.SerializeMaterialCompositions());
+            parms.Add("Medium", Medium.ID);
+            parms.Add("Borders", SerializeBorders());
 
             try
             {
@@ -123,22 +162,21 @@ namespace NetMud.Data.EntityBackingData
             var sql = new StringBuilder();
             sql.Append("update [dbo].[RoomData] set ");
             sql.Append(" [Name] =  @Name ");
+            sql.Append(", [Borders] =  @Borders ");
+            sql.Append(", [Medium] =  @Medium ");
             sql.Append(", [DimensionalModelLength] =  @DimensionalModelLength ");
             sql.Append(", [DimensionalModelHeight] =  @DimensionalModelHeight ");
             sql.Append(", [DimensionalModelWidth] =  @DimensionalModelWidth ");
-            sql.Append(", [DimensionalModelMaterialCompositions] =  @DimensionalModelMaterialCompositions ");
-            sql.Append(", [DimensionalModelId] = @DimensionalModelId "); 
             sql.Append(" , [LastRevised] = GetUTCDate()");
             sql.Append(" where ID = @id");
 
             parms.Add("id", ID);
             parms.Add("Name", Name);
+            parms.Add("Medium", Medium.ID);
+            parms.Add("Borders", SerializeBorders());
             parms.Add("DimensionalModelLength", Model.Length);
             parms.Add("DimensionalModelHeight", Model.Height);
             parms.Add("DimensionalModelWidth", Model.Width);
-            parms.Add("DimensionalModelID", Model.ModelBackingData.ID);
-            parms.Add("DimensionalModelMaterialCompositions", Model.SerializeMaterialCompositions());
-
 
             SqlWrapper.RunNonQuery(sql.ToString(), CommandType.Text, parms);
 
