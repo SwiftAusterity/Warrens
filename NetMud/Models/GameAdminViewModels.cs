@@ -29,6 +29,8 @@ namespace NetMud.Models.GameAdmin
             DimensionalModels = Enumerable.Empty<IDimensionalModelData>();
             HelpFiles = Enumerable.Empty<IHelp>();
             Materials = Enumerable.Empty<IMaterial>();
+            Races = Enumerable.Empty<IRace>();
+            Zones = Enumerable.Empty<IZone>();
 
             LiveRooms = 0;
             LiveInanimates = 0;
@@ -47,6 +49,7 @@ namespace NetMud.Models.GameAdmin
         public IEnumerable<IHelp> HelpFiles { get; set; }
         public IEnumerable<IMaterial> Materials { get; set; }
         public IEnumerable<IRace> Races { get; set; }
+        public IEnumerable<IZone> Zones { get; set; }
 
         //Running Data
         public Dictionary<string, CancellationTokenSource> LiveTaskTokens { get; set; }

@@ -27,6 +27,7 @@ using NetMud.DataStructure.Behaviors.Actionable;
 using NetMud.DataStructure.Behaviors.Automation;
 using NetMud.Utility;
 using NetMud.DataStructure.Base.Place;
+using NetMud.DataStructure.Base.System;
 
 namespace NetMud.Controllers
 {
@@ -60,20 +61,21 @@ namespace NetMud.Controllers
             var dashboardModel = new DashboardViewModel();
             dashboardModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            dashboardModel.Inanimates = DataWrapper.GetAll<InanimateData>();
-            dashboardModel.Rooms = DataWrapper.GetAll<RoomData>();
-            dashboardModel.NPCs = DataWrapper.GetAll<NonPlayerCharacter>();
+            dashboardModel.Inanimates = DataWrapper.GetAll<IInanimateData>();
+            dashboardModel.Rooms = DataWrapper.GetAll<IRoomData>();
+            dashboardModel.NPCs = DataWrapper.GetAll<INonPlayerCharacter>();
 
-            dashboardModel.HelpFiles = ReferenceWrapper.GetAll<Help>();
-            dashboardModel.DimensionalModels = ReferenceWrapper.GetAll<DimensionalModelData>();
-            dashboardModel.Materials = ReferenceWrapper.GetAll<Material>();
-            dashboardModel.Races = ReferenceWrapper.GetAll<Race>();
+            dashboardModel.HelpFiles = ReferenceWrapper.GetAll<IHelp>();
+            dashboardModel.DimensionalModels = ReferenceWrapper.GetAll<IDimensionalModelData>();
+            dashboardModel.Materials = ReferenceWrapper.GetAll<IMaterial>();
+            dashboardModel.Races = ReferenceWrapper.GetAll<IRace>();
+            dashboardModel.Zones = ReferenceWrapper.GetAll<IZone>();
 
             dashboardModel.LiveTaskTokens = Processor.GetAllLiveTaskStatusTokens();
-            dashboardModel.LivePlayers = LiveCache.GetAll<Player>().Count();
-            dashboardModel.LiveInanimates = LiveCache.GetAll<Inanimate>().Count();
-            dashboardModel.LiveRooms = LiveCache.GetAll<Room>().Count();
-            dashboardModel.LiveNPCs = LiveCache.GetAll<Intelligence>().Count();
+            dashboardModel.LivePlayers = LiveCache.GetAll<IPlayer>().Count();
+            dashboardModel.LiveInanimates = LiveCache.GetAll<IInanimate>().Count();
+            dashboardModel.LiveRooms = LiveCache.GetAll<IRoom>().Count();
+            dashboardModel.LiveNPCs = LiveCache.GetAll<IIntelligence>().Count();
 
             return View(dashboardModel);
         }

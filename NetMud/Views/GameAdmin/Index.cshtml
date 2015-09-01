@@ -56,6 +56,12 @@
             @Html.ActionLink("Manage", "ManageRaceData")
             @Html.ActionLink("Add", "AddRaceData") ]
         </dd>
+        <dt>Zones:</dt>
+        <dd>
+            @Model.Zones.Count().ToString() [
+            @Html.ActionLink("Manage", "ManageZoneData")
+            @Html.ActionLink("Add", "AddZoneData") ]
+        </dd>
     </dl>
     <h4>Live Data</h4>
     <hr />
