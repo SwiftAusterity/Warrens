@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Base.Place;
 
 namespace NetMud.DataStructure.Base.EntityBackingData
 {
@@ -17,6 +18,8 @@ namespace NetMud.DataStructure.Base.EntityBackingData
         IDictionary<string, IMaterial> Borders { get; set; }
 
         IMaterial Medium { get; set; }
+
+        IZone ZoneAffiliation { get; set; }
 
         string SerializeBorders();
     }

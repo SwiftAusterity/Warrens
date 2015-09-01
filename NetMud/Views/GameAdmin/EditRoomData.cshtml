@@ -27,12 +27,21 @@
                     @Html.ValidationMessageFor(m => m.NewName, "", new { @class = "text-danger" })
                 </div>
             </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Zone, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.DropDownList("Zone", Model.ValidZones.Select(rl =>
+                                    new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString(), Selected = rl.ID.Equals(Model.DataObject.ZoneAffiliation.ID) })
+                                        , htmlAttributes: new { id = "Zone", Style = "padding: 7px; float:left; margin-top: 10px;" })
+                            @Html.ValidationMessageFor(m => m.Zone, "", new { @class = "text-danger" })
+                </div>
+            </div>
             @Html.Partial("DimensionalEntityEditor", Model)
             <div class="form-group">
                 @Html.LabelFor(m => m.Medium, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
                     @Html.DropDownList("Medium", Model.ValidMaterials.Select(rl =>
-                                new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString(), Selected = rl.ID.Equals(@container.Key.ID })
+                             new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString(), Selected = rl.ID.Equals(Model.DataObject.Medium.ID) })
                                 , htmlAttributes: new { id = "Medium", Style = "padding: 7px; float:left; margin-top: 10px;" })
                     @Html.ValidationMessageFor(m => m.Medium, "", new { @class = "text-danger" })
                 </div>
@@ -47,7 +56,7 @@
                     @foreach (var border in Model.DataObject.Borders)
                     {
                         <div class="col-md-10" style="padding-left: 10px;">
-                            <span style="padding: 10px; float:left;">Border:</span><input id="BorderNames" name="BorderNames" type="text" style="float:left; margin-top: 10px;" value="@container.Key">
+                            <span style="padding: 10px; float:left;">Border:</span><input id="BorderNames" name="BorderNames" type="text" style="float:left; margin-top: 10px;" value="@border.Key">
                             <span style="padding: 10px; float:left;">Material: </span>>@Html.DropDownList("BorderMaterials", Model.ValidMaterials.Select(rl =>
                                                                                             new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString(), Selected = rl.ID.Equals(border.Value.ID) })
                                                                                             , htmlAttributes: new { id = "BorderMaterials", Style = "padding: 7px; float:left; margin-top: 10px;" })

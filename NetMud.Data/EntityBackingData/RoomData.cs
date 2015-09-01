@@ -1,6 +1,7 @@
 ﻿using NetMud.Data.Reference;
 using NetMud.DataAccess;
 using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.Utility;
@@ -34,6 +35,8 @@ namespace NetMud.Data.EntityBackingData
 
         public IMaterial Medium { get; set; }
 
+        public IZone ZoneAffiliation { get; set; }
+
         /// <summary>
         /// Get's the entity's model dimensions
         /// </summary>
@@ -56,6 +59,9 @@ namespace NetMud.Data.EntityBackingData
 
             var mediumId = DataUtility.GetFromDataRow<long>(dr, "Medium");
             Medium = ReferenceWrapper.GetOne<IMaterial>(mediumId);
+
+            var zoneId = DataUtility.GetFromDataRow<long>(dr, "Zone");
+            ZoneAffiliation = ReferenceWrapper.GetOne<IZone>(zoneId);
 
             Borders = DeserializeBorders(DataUtility.GetFromDataRow<string>(dr, "Borders"));
 
@@ -101,8 +107,8 @@ namespace NetMud.Data.EntityBackingData
 
             IRoomData returnValue = default(IRoomData);
             var sql = new StringBuilder();
-            sql.Append("insert into [dbo].[RoomData]([Name], [DimensionalModelLength], [DimensionalModelHeight], [DimensionalModelWidth], [Medium], [Borders])");
-            sql.Append(" values(@Name,@DimensionalModelLength,@DimensionalModelHeight,@DimensionalModelWidth,@Medium,@Borders)");
+            sql.Append("insert into [dbo].[RoomData]([Name], [DimensionalModelLength], [DimensionalModelHeight], [DimensionalModelWidth], [Medium], [Borders], [Zone])");
+            sql.Append(" values(@Name,@DimensionalModelLength,@DimensionalModelHeight,@DimensionalModelWidth,@Medium,@Borders,@Zone)");
             sql.Append(" select * from [dbo].[RoomData] where ID = Scope_Identity()");
 
             parms.Add("Name", Name);
@@ -111,6 +117,7 @@ namespace NetMud.Data.EntityBackingData
             parms.Add("DimensionalModelWidth", Model.Width);
             parms.Add("Medium", Medium.ID);
             parms.Add("Borders", SerializeBorders());
+            parms.Add("Zone", ZoneAffiliation.ID);
 
             try
             {
@@ -164,6 +171,7 @@ namespace NetMud.Data.EntityBackingData
             sql.Append(" [Name] =  @Name ");
             sql.Append(", [Borders] =  @Borders ");
             sql.Append(", [Medium] =  @Medium ");
+            sql.Append(", [Zone] =  @Zone ");
             sql.Append(", [DimensionalModelLength] =  @DimensionalModelLength ");
             sql.Append(", [DimensionalModelHeight] =  @DimensionalModelHeight ");
             sql.Append(", [DimensionalModelWidth] =  @DimensionalModelWidth ");
@@ -174,6 +182,7 @@ namespace NetMud.Data.EntityBackingData
             parms.Add("Name", Name);
             parms.Add("Medium", Medium.ID);
             parms.Add("Borders", SerializeBorders());
+            parms.Add("Zone", ZoneAffiliation.ID);
             parms.Add("DimensionalModelLength", Model.Length);
             parms.Add("DimensionalModelHeight", Model.Height);
             parms.Add("DimensionalModelWidth", Model.Width);

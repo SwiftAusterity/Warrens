@@ -387,6 +387,7 @@ namespace NetMud.Data.Game
                                         new XAttribute("ID", charData.ID),
                                         new XAttribute("Name", charData.Name),
                                         new XAttribute("Medium", charData.Medium.ID),
+                                        new XAttribute("Zone", charData.ZoneAffiliation.ID),
                                         new XAttribute("LastRevised", charData.LastRevised),
                                         new XAttribute("Created", charData.Created),
                                         new XElement("Borders", charData.SerializeBorders())),
@@ -486,9 +487,12 @@ namespace NetMud.Data.Game
                 backingData.Model = new DimensionalModel(dimModelLength, dimModelHeight, dimModelWidth);
                 newEntity.Model = backingData.Model;
 
-                //Added medium and wall materials in v1
+                //Added medium, zone and wall materials in v1
                 var mediumId = docRoot.Element("BackingData").GetSafeAttributeValue<long>("Medium");
                 backingData.Medium = ReferenceWrapper.GetOne<IMaterial>(mediumId);
+
+                var zoneId = docRoot.Element("BackingData").GetSafeAttributeValue<long>("Zone");
+                backingData.ZoneAffiliation = ReferenceWrapper.GetOne<IZone>(zoneId);
 
                 backingData.Borders = backingData.DeserializeBorders(docRoot.Element("LiveData").GetSafeElementValue("Borders"));
             }
@@ -500,6 +504,7 @@ namespace NetMud.Data.Game
                 newEntity.Model = backD.Model;
                 backingData.Borders = backD.Borders;
                 backingData.Medium = backD.Medium;
+                backingData.ZoneAffiliation = backD.ZoneAffiliation;
             }
         }
         #endregion

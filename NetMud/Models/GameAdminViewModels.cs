@@ -489,6 +489,10 @@ namespace NetMud.Models.GameAdmin
         public long Medium { get; set; }
 
         [DataType(DataType.Text)]
+        [Display(Name = "Zone")]
+        public long Zone { get; set; }
+
+        [DataType(DataType.Text)]
         [Display(Name = "Border")]
         public string[] BorderNames { get; set; }
 
@@ -497,6 +501,8 @@ namespace NetMud.Models.GameAdmin
         public long[] BorderMaterials { get; set; }
 
         public IEnumerable<IMaterial> ValidMaterials { get; set; }
+
+        public IEnumerable<IZone> ValidZones { get; set; }
 
         public IRoomData DataObject { get; set; }
     }

@@ -26,6 +26,7 @@ using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Behaviors.Actionable;
 using NetMud.DataStructure.Behaviors.Automation;
 using NetMud.Utility;
+using NetMud.DataStructure.Base.Place;
 
 namespace NetMud.Controllers
 {
@@ -679,7 +680,7 @@ namespace NetMud.Controllers
                             var currentWeight = vModel.InanimateContainerWeights[inanimateIndex];
                             var currentVolume = vModel.InanimateContainerVolumes[inanimateIndex];
 
-                            if(currentVolume > 0 && currentWeight > 0)
+                            if (currentVolume > 0 && currentWeight > 0)
                                 obj.InanimateContainers.Add(new EntityContainerData<IInanimate>(currentVolume, currentWeight, name));
                         }
                     }
@@ -847,6 +848,7 @@ namespace NetMud.Controllers
             var vModel = new AddEditRoomDataViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
             vModel.ValidMaterials = ReferenceWrapper.GetAll<IMaterial>();
+            vModel.ValidZones = ReferenceWrapper.GetAll<IZone>();
 
             return View(vModel);
         }
@@ -890,13 +892,23 @@ namespace NetMud.Controllers
             {
                 newObj.Medium = medium;
 
-                if (newObj.Create() == null)
-                    message = "Error; Creation failed.";
-                else
+                var zoneId = vModel.Zone;
+                var zone = ReferenceWrapper.GetOne<IZone>(zoneId);
+
+                if (zone != null)
                 {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddRoomData[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                    message = "Creation Successful.";
+                    newObj.ZoneAffiliation = zone;
+
+                    if (newObj.Create() == null)
+                        message = "Error; Creation failed.";
+                    else
+                    {
+                        LoggingUtility.LogAdminCommandUsage("*WEB* - AddRoomData[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                        message = "Creation Successful.";
+                    }
                 }
+                else
+                    message = "You must include a valid Zone.";
             }
             else
                 message = "You must include a valid Medium material.";
@@ -911,6 +923,7 @@ namespace NetMud.Controllers
             var vModel = new AddEditRoomDataViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
             vModel.ValidMaterials = ReferenceWrapper.GetAll<IMaterial>();
+            vModel.ValidZones = ReferenceWrapper.GetAll<IZone>();
 
             var obj = DataWrapper.GetOne<RoomData>(id);
 
@@ -948,13 +961,55 @@ namespace NetMud.Controllers
             obj.Model.Length = vModel.DimensionalModelLength;
             obj.Model.Width = vModel.DimensionalModelWidth;
 
-            if (obj.Save())
+            obj.Borders = new Dictionary<string, IMaterial>();
+            if (vModel.BorderMaterials != null)
             {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - EditRoomData[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                message = "Edit Successful.";
+                int index = 0;
+                foreach (var materialId in vModel.BorderMaterials)
+                {
+                    if (materialId > 0)
+                    {
+                        if (vModel.BorderNames.Count() <= index)
+                            break;
+
+                        var name = vModel.BorderNames[index];
+                        var material = ReferenceWrapper.GetOne<IMaterial>(materialId);
+
+                        if (material != null && !string.IsNullOrWhiteSpace(name) && !obj.Borders.ContainsKey(name))
+                            obj.Borders.Add(name, material);
+                    }
+
+                    index++;
+                }
+            }
+
+            var mediumId = vModel.Medium;
+            var medium = ReferenceWrapper.GetOne<IMaterial>(mediumId);
+
+            if (medium != null)
+            {
+                obj.Medium = medium;
+
+                var zoneId = vModel.Zone;
+                var zone = ReferenceWrapper.GetOne<IZone>(zoneId);
+
+                if (zone != null)
+                {
+                    obj.ZoneAffiliation = zone;
+
+                    if (obj.Save())
+                    {
+                        LoggingUtility.LogAdminCommandUsage("*WEB* - EditRoomData[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                        message = "Edit Successful.";
+                    }
+                    else                        
+                        message = "Error; Edit failed.";
+                }
+                else
+                    message = "You must include a valid Zone.";
             }
             else
-                message = "Error; Edit failed.";
+                message = "You must include a valid Medium material.";
 
             return RedirectToAction("ManageRoomData", new { Message = message });
         }

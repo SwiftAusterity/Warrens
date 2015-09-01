@@ -204,6 +204,7 @@
     <Content Include="App_Data\dbo.PathwayData.sql" />
     <Content Include="App_Data\dbo.Race.sql" />
     <Content Include="App_Data\dbo.RoomData.sql" />
+    <Content Include="App_Data\dbo.Zone.sql" />
     <Content Include="App_Data\testingDB.mdf" />
     <Content Include="App_Data\testingDB_log.ldf">
       <DependentUpon>testingDB.mdf</DependentUpon>
