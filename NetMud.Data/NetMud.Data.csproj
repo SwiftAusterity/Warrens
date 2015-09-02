@@ -60,10 +60,11 @@
     <Compile Include="Reference\DimensionalModelData.cs" />
     <Compile Include="Reference\DimensionalModelNode.cs" />
     <Compile Include="Reference\DimensionalModelPlane.cs" />
+    <Compile Include="Reference\Help.cs" />
     <Compile Include="Reference\Material.cs" />
     <Compile Include="Reference\Race.cs" />
     <Compile Include="Reference\ReferenceDataPartial.cs" />
-    <Compile Include="Reference\Help.cs" />
+    <Compile Include="Reference\Zone.cs" />
     <Compile Include="System\Account.cs" />
     <Compile Include="System\EntityContainer.cs" />
   </ItemGroup>

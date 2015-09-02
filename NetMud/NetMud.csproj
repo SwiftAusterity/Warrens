@@ -297,6 +297,9 @@
     <Content Include="Views\Shared\TwoOrThreeDimensionalEntityEditor.cshtml" />
     <Content Include="Views\Shared\DimensionalEntityEditor.cshtml" />
     <Content Include="Views\GameAdmin\AddEditPathway.cshtml" />
+    <Content Include="Views\GameAdmin\AddZoneData.cshtml" />
+    <Content Include="Views\GameAdmin\EditZoneData.cshtml" />
+    <Content Include="Views\GameAdmin\ManageZoneData.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
