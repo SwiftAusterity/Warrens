@@ -86,7 +86,6 @@
     <Compile Include="Behaviors\Actionable\ICanSpeak.cs" />
     <Compile Include="Behaviors\Actionable\ICanWear.cs" />
     <Compile Include="Behaviors\Actionable\IThrowable.cs" />
-    <Compile Include="Behaviors\Automation\ICraftingType.cs" />
     <Compile Include="Behaviors\Automation\IEat.cs" />
     <Compile Include="Behaviors\Automation\IEnchantable.cs" />
     <Compile Include="Behaviors\Automation\IGetTired.cs" />
