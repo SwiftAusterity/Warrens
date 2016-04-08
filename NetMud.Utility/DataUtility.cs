@@ -130,7 +130,7 @@ namespace NetMud.Utility
                 if (thing == null)
                     return false;
 
-                newThing = (T)thing;
+                newThing = (T)Convert.ChangeType(thing, typeof(T));
 
                 return true;
             }
@@ -157,7 +157,7 @@ namespace NetMud.Utility
             try
             {
                 if (thing != null)
-                    newThing = (T)thing;
+                    newThing = (T)Convert.ChangeType(thing, typeof(T));
             }
             catch
             {

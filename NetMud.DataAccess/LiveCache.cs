@@ -83,7 +83,9 @@ namespace NetMud.DataAccess
         /// <returns>a list of the entities from the cache</returns>
         public static IEnumerable<T> GetAll<T>()
         {
-            return globalCache.Where(keyValuePair => keyValuePair.Value.GetType() == typeof(T)).Select(kvp => (T)kvp.Value);
+            return globalCache.Where(keyValuePair => keyValuePair.Value.GetType() == typeof(T)
+                                                    || (typeof(T).IsInterface && keyValuePair.Value.GetType().GetInterfaces().Contains(typeof(T)))
+                                    ).Select(kvp => (T)kvp.Value);
         }
 
         /// <summary>

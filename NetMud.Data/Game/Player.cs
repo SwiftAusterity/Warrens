@@ -513,7 +513,7 @@ namespace NetMud.Data.Game
             else //what if we're older
             {
                 //Get it from the db
-                var backD = DataWrapper.GetOne<NonPlayerCharacter>(backingData.ID);
+                var backD = DataWrapper.GetOne<Character>(backingData.ID);
                 backingData.RaceData = backD.RaceData;
             }
         }

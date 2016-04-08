@@ -272,6 +272,10 @@ namespace NetMud.Backup
                 foreach (var entity in entitiesToLoad.OrderBy(ent => ent.Birthdate))
                     entity.UpsertToLiveWorldCache();
 
+                //Check we found actual data
+                if (!entitiesToLoad.Any(ent => ent.GetType() == typeof(Room) || ent.GetType() == typeof(Pathway)))
+                    throw new Exception("No rooms or pathways found, failover.");
+
                 //We have the containers contents and the birthmarks from the deserial
                 //I don't know how we can even begin to do this type agnostically since the collections are held on type specific objects without some super ugly reflection
                 foreach (Room entity in entitiesToLoad.Where(ent => ent.GetType() == typeof(Room)))
