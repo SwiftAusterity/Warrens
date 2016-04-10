@@ -1,4 +1,5 @@
-﻿using NetMud.DataAccess;
+﻿using NetMud.Communication;
+using NetMud.DataAccess;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -101,7 +102,7 @@ namespace NetMud.CentralControl
                 cancelToken.CancelAfter(shutdownDelay * 1000);
 
             if (!string.IsNullOrWhiteSpace(shutdownAnnouncement))
-                Communication.Broadcast(String.Format(shutdownAnnouncement, shutdownDelay));
+                SystemComm.BroadcastToAll(String.Format(shutdownAnnouncement, shutdownDelay));
 
             if (shutdownAnnouncementFrequency > 0)
             {
@@ -120,7 +121,7 @@ namespace NetMud.CentralControl
             int secondsLeftBeforeShutdown = shutdownDelay;
             while (secondsLeftBeforeShutdown > 0)
             {
-                Communication.Broadcast(String.Format(shutdownAnnouncement, secondsLeftBeforeShutdown));
+                SystemComm.BroadcastToAll(String.Format(shutdownAnnouncement, secondsLeftBeforeShutdown));
                 await Task.Delay(shutdownAnnouncementFrequency * 1000);
                 secondsLeftBeforeShutdown -= shutdownAnnouncementFrequency;
             }
@@ -157,7 +158,7 @@ namespace NetMud.CentralControl
             }
 
             if (!string.IsNullOrWhiteSpace(shutdownAnnouncement))
-                Communication.Broadcast(String.Format(shutdownAnnouncement, shutdownDelay));
+                SystemComm.BroadcastToAll(String.Format(shutdownAnnouncement, shutdownDelay));
 
             if (shutdownAnnouncementFrequency > 0)
             {

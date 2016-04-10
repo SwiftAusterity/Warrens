@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.DataStructure", "NetMud.DataStructure\NetMud.DataStructure.csproj", "{88B7A648-FE23-4E88-9B60-AE17C8858AF4}"
 EndProject
@@ -34,6 +34,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.CentralControl", "NetMud.CentralControl\NetMud.CentralControl.csproj", "{1E404CFB-4CED-42AD-B28E-BFEE270C88F9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.Physics", "NetMud.Physics\NetMud.Physics.csproj", "{28AABDF5-250E-40CE-88DE-BE3B9D23D95F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.Telnet", "NetMud.Telnet\NetMud.Telnet.csproj", "{CCA74BEA-5DE2-4AF7-B19E-914CA942DE55}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.Communication", "NetMud.Communication\NetMud.Communication.csproj", "{7F19324F-1B9C-467D-816A-74A36EB74CDE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -93,6 +97,14 @@ Global
 		{28AABDF5-250E-40CE-88DE-BE3B9D23D95F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{28AABDF5-250E-40CE-88DE-BE3B9D23D95F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{28AABDF5-250E-40CE-88DE-BE3B9D23D95F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCA74BEA-5DE2-4AF7-B19E-914CA942DE55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCA74BEA-5DE2-4AF7-B19E-914CA942DE55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCA74BEA-5DE2-4AF7-B19E-914CA942DE55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCA74BEA-5DE2-4AF7-B19E-914CA942DE55}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F19324F-1B9C-467D-816A-74A36EB74CDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F19324F-1B9C-467D-816A-74A36EB74CDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F19324F-1B9C-467D-816A-74A36EB74CDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F19324F-1B9C-467D-816A-74A36EB74CDE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
