@@ -1,4 +1,5 @@
-﻿using NetMud.Data.EntityBackingData;
+﻿using NetMud.Communication.Messaging;
+using NetMud.Data.EntityBackingData;
 using NetMud.Data.Reference;
 using NetMud.DataAccess;
 using NetMud.DataStructure.Base.EntityBackingData;
@@ -115,7 +116,7 @@ namespace NetMud.Data.Game
         /// <summary>
         /// Movement messages trigger when moved through
         /// </summary>
-        public MessageCluster Enter { get; set; }
+        public IMessageCluster Enter { get; set; }
 
         /// <summary>
         /// Cardinality direction this points towards

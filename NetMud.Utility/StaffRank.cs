@@ -1,4 +1,4 @@
-﻿namespace NetMud.DataStructure.SupportingClasses
+﻿namespace NetMud.Utility
 {
     /// <summary>
     /// Permissions ranks for commands

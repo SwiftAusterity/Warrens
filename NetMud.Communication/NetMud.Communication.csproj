@@ -41,6 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Messaging\MessageCluster.cs" />
+    <Compile Include="Messaging\MessagingUtility.cs" />
     <Compile Include="SystemComm.cs" />
     <Compile Include="ConnectionType.cs" />
     <Compile Include="IChannelType.cs" />
@@ -57,7 +59,16 @@
       <Project>{25B53EF7-E51C-4EE5-A04C-DD8797CFF58F}</Project>
       <Name>NetMud.DataAccess</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NetMud.DataStructure\NetMud.DataStructure.csproj">
+      <Project>{88b7a648-fe23-4e88-9b60-ae17c8858af4}</Project>
+      <Name>NetMud.DataStructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NetMud.Utility\NetMud.Utility.csproj">
+      <Project>{9F3CAEC0-73DC-463C-8EF7-13B83BC8FB12}</Project>
+      <Name>NetMud.Utility</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

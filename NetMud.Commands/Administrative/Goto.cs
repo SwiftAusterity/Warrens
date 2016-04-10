@@ -6,6 +6,7 @@ using NetMud.Utility;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Data.Game;
 using NetMud.Commands.Attributes;
+using NetMud.Communication.Messaging;
 
 namespace NutMud.Commands.Administrative
 {

@@ -1,6 +1,7 @@
 ﻿using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.SupportingClasses;
+using NetMud.Utility;
 
 namespace NetMud.DataStructure.Base.EntityBackingData
 {

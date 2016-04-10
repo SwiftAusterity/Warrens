@@ -64,6 +64,10 @@
     <Compile Include="System\Help.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NetMud.Communication\NetMud.Communication.csproj">
+      <Project>{7F19324F-1B9C-467D-816A-74A36EB74CDE}</Project>
+      <Name>NetMud.Communication</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NetMud.DataStructure\NetMud.DataStructure.csproj">
       <Project>{88b7a648-fe23-4e88-9b60-ae17c8858af4}</Project>
       <Name>NetMud.DataStructure</Name>

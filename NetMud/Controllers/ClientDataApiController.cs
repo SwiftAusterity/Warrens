@@ -1,4 +1,5 @@
-﻿using NetMud.Data.Reference;
+﻿using NetMud.Communication.Messaging;
+using NetMud.Data.Reference;
 using NetMud.DataAccess;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;

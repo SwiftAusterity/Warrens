@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using NetMud.Data.System;
+using NetMud.DataStructure.Base.System;
 
 namespace NetMud.Models
 {
@@ -28,7 +28,7 @@ namespace NetMud.Models
         /// <summary>
         /// The game account connected to this user identity
         /// </summary>
-        public virtual Account GameAccount { get; set; }
+        public virtual IAccount GameAccount { get; set; }
     }
 
     /// <summary>

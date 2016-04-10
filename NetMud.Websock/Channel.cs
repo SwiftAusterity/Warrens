@@ -1,4 +1,7 @@
 ﻿using NetMud.Communication;
+using System;
+using System.Collections.Generic;
+using System.Text;
 using WebSocketSharp.Server;
 
 namespace NetMud.Websock
@@ -21,11 +24,39 @@ namespace NetMud.Websock
         /// <summary>
         /// Encapsulation element for rendering to html
         /// </summary>
-        public string EncapsulationElement { get { return "<p>"; } }
+        private const string EncapsulationElement = "<p>";
 
         /// <summary>
         /// Adding a "new line" to the output 
         /// </summary>
-        public string BumperElement { get { return "<br />"; } }
+        private const string BumperElement = "<br />";
+
+        /// <summary>
+        /// Encapsulate output lines for display to a client
+        /// </summary>
+        /// <param name="lines">the text lines to encapsulate</param>
+        /// <returns>a single string blob of all the output encapsulated</returns>
+        public string EncapsulateOutput(IEnumerable<string> lines)
+        {
+            var returnString = new StringBuilder();
+
+            foreach (var line in lines)
+                returnString.AppendFormat(EncapsulateOutput(line));
+
+            return returnString.ToString();
+        }
+
+        /// <summary>
+        /// Encapsulates a string for output to a client
+        /// </summary>
+        /// <param name="str">the string to encapsulate</param>
+        /// <returns>the encapsulated output</returns>
+        public string EncapsulateOutput(string str)
+        {
+            if (!string.IsNullOrWhiteSpace(str))
+                return String.Format("<{0}>{1}</{0}>", EncapsulationElement, str);
+            else
+                return BumperElement; //blank strings mean carriage returns
+        }
     }
 }

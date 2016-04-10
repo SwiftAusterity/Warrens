@@ -114,7 +114,7 @@ namespace NetMud.Websock
             var welcomeMessage = new List<String>();
 
             welcomeMessage.Add(string.Format("Welcome to alpha phase twinMUD, {0}", currentCharacter.FullName()));
-            welcomeMessage.Add(string.Format("Please feel free to LOOK around.", currentCharacter.FullName()));
+            welcomeMessage.Add("Please feel free to LOOK around.");
 
             SendWrapper(welcomeMessage);
 
@@ -197,7 +197,7 @@ namespace NetMud.Websock
         /// <returns>success status</returns>
         public bool SendWrapper(IEnumerable<string> strings)
         {
-            Send(RenderUtility.EncapsulateOutput(strings, EncapsulationElement, BumperElement));
+            Send(EncapsulateOutput(strings));
 
             return true;
         }
@@ -209,14 +209,14 @@ namespace NetMud.Websock
         /// <returns>success status</returns>
         public bool SendWrapper(string str)
         {
-            Send(str.EncapsulateOutput(EncapsulationElement, BumperElement));
+            Send(EncapsulateOutput(str));
 
             return true;
         }
 
         public void Disconnect(string finalMessage)
         {
-            Send(finalMessage.EncapsulateOutput(EncapsulationElement, BumperElement));
+            Send(EncapsulateOutput(finalMessage));
             base.OnClose(null);
         }
 

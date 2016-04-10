@@ -8,6 +8,7 @@ using NetMud.Data.Game;
 using NetMud.Backup;
 using System.Web.Hosting;
 using NetMud.Commands.Attributes;
+using NetMud.Communication.Messaging;
 
 namespace NutMud.Commands.System
 {

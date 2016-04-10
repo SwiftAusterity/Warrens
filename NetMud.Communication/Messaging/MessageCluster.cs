@@ -1,15 +1,16 @@
 ﻿using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
+using NetMud.DataStructure.SupportingClasses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NetMud.DataStructure.SupportingClasses
+namespace NetMud.Communication.Messaging
 {
     /// <summary>
     /// Used by the system to produce output for commands and events
     /// </summary>
-    public class MessageCluster
+    public class MessageCluster : IMessageCluster
     {
         /// <summary>
         /// Message to send to the acting entity

@@ -4,8 +4,8 @@ using NutMud.Commands.Attributes;
 using System.Collections.Generic;
 
 using NetMud.Utility;
-using NetMud.DataStructure.SupportingClasses;
 using NetMud.Commands.Attributes;
+using NetMud.Communication.Messaging;
 
 namespace NutMud.Commands.Rendering
 {

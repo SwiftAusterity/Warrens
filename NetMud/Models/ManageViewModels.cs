@@ -4,6 +4,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.DataStructure.Base.Supporting;
+using NetMud.Utility;
 
 namespace NetMud.Models
 {

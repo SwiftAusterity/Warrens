@@ -42,8 +42,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataUtility.cs" />
+    <Compile Include="MovementDirectionType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RenderUtility.cs" />
+    <Compile Include="StaffRank.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

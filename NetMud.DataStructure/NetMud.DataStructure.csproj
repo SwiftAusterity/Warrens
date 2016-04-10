@@ -115,10 +115,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SupportingClasses\IEntityContainer.cs" />
     <Compile Include="SupportingClasses\IEntityContainerData.cs" />
-    <Compile Include="SupportingClasses\MessageCluster.cs" />
-    <Compile Include="SupportingClasses\MessagingSupport.cs" />
-    <Compile Include="SupportingClasses\PathDirections.cs" />
-    <Compile Include="SupportingClasses\StaffRank.cs" />
+    <Compile Include="SupportingClasses\IMessageCluster.cs" />
+    <Compile Include="SupportingClasses\MessagingTargetType.cs" />
+    <Compile Include="SupportingClasses\MessagingType.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NetMud.Utility\NetMud.Utility.csproj">

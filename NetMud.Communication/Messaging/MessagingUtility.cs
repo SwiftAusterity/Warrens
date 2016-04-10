@@ -2,39 +2,14 @@
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.SupportingClasses;
+using NetMud.Utility;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace NetMud.DataStructure.SupportingClasses
-{
-    /// <summary>
-    /// Type of message being outputted
-    /// </summary>
-    public enum MessagingType
-    {
-        Visible,
-        Audible,
-        Psychic
-    }
-
-    /// <summary>
-    /// Type of targetting a message has (used by variables translator) 
-    /// </summary>
-    public enum MessagingTargetType
-    {
-        Actor,
-        Subject,
-        Target,
-        OriginLocation,
-        DestinationLocation,
-        GenderPronoun,
-        AmountOfSubject,
-        AmountOfTarget,
-        Direction,
-        ReverseDirection
-    }
-
+namespace NetMud.Communication.Messaging
+{ 
     /// <summary>
     /// Utility methods for messaging output and translation
     /// </summary>

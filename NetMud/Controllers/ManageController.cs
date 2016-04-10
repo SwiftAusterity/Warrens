@@ -8,11 +8,10 @@ using Microsoft.Owin.Security;
 using NetMud.Models;
 using NetMud.Data.EntityBackingData;
 using NetMud.Authentication;
-using NetMud.DataStructure.SupportingClasses;
 using System;
 using NetMud.DataAccess;
 using NetMud.Data.Reference;
-using NetMud.DataStructure.Base.Supporting;
+using NetMud.Utility;
 
 namespace NetMud.Controllers
 {
