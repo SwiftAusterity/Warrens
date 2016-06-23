@@ -34,6 +34,8 @@ namespace NetMud.Communication.Messaging
             return messages;
         }
 
+        //TODO: special formatting belongs in the comms server somehow
+
         /// <summary>
         /// Translates output text with color codes into proper output
         /// </summary>
