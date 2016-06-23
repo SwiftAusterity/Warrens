@@ -6,8 +6,6 @@ using NetMud.Communication;
 using NetMud.Data.Game;
 using NetMud.DataAccess;
 using NetMud.Interp;
-using NetMud.Models;
-using NetMud.Utility;
 using System;
 using System.Collections.Generic;
 using System.IO;

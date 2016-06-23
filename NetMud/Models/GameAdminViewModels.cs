@@ -1,12 +1,10 @@
 ﻿using Microsoft.AspNet.Identity.EntityFramework;
+using NetMud.Authentication;
 using NetMud.Data.Reference;
-using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.Behaviors.Actionable;
-using NetMud.DataStructure.Behaviors.Automation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

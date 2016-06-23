@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using NetMud.Authentication;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.Models.Logging

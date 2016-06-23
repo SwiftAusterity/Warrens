@@ -5,13 +5,13 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using NetMud.Models;
-using NetMud.Data.EntityBackingData;
 using NetMud.Authentication;
+using NetMud.Data.EntityBackingData;
 using System;
 using NetMud.DataAccess;
 using NetMud.Data.Reference;
 using NetMud.Utility;
+using NetMud.Models;
 
 namespace NetMud.Controllers
 {

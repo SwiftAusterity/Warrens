@@ -2,9 +2,9 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
-using NetMud.DataStructure.SupportingClasses;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.Utility;
+using NetMud.Authentication;
 
 namespace NetMud.Models
 {

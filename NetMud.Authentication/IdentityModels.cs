@@ -3,8 +3,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using NetMud.DataStructure.Base.System;
+using System.Data.Entity;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
-namespace NetMud.Models
+namespace NetMud.Authentication
 {
     /// <summary>
     /// Authenticated user connected to this web application
@@ -25,10 +28,14 @@ namespace NetMud.Models
             return userIdentity;
         }
 
+        [ForeignKey("GameAccount")]
+        public string GlobalIdentityHandle { get; set; }
+
         /// <summary>
         /// The game account connected to this user identity
         /// </summary>
-        public virtual IAccount GameAccount { get; set; }
+        [ForeignKey("GlobalIdentityHandle")]
+        public virtual Account GameAccount { get; set; }
     }
 
     /// <summary>
@@ -52,5 +59,15 @@ namespace NetMud.Models
         {
             return new ApplicationDbContext();
         }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<ApplicationUser>()
+                .HasRequired(u => u.GameAccount);
+        }
+
+        public DbSet<Account> GameAccount { get; set; }
     }
 }

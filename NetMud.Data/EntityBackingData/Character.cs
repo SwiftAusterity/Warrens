@@ -71,7 +71,7 @@ namespace NetMud.Data.EntityBackingData
             get
             {
                 if (_account == null && !string.IsNullOrWhiteSpace(AccountHandle))
-                    _account = System.Account.GetByHandle(AccountHandle);
+                    _account = Authentication.Account.GetByHandle(AccountHandle);
 
                 return _account;
             }

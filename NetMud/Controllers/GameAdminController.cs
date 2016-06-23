@@ -11,10 +11,8 @@ using NetMud.Authentication;
 using NetMud.Backup;
 using NetMud.CentralControl;
 using NetMud.Data.EntityBackingData;
-using NetMud.Data.Game;
 using NetMud.DataAccess;
 using NetMud.Models.GameAdmin;
-using NetMud.Models;
 using NetMud.Data.Reference;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.Data.System;
@@ -1990,7 +1988,7 @@ namespace NetMud.Controllers
         {
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
 
-            var vModel = new ManagePlayersViewModel(UserManager.Users.ToList());
+            var vModel = new ManagePlayersViewModel(UserManager.Users);
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             vModel.CurrentPageNumber = CurrentPageNumber;

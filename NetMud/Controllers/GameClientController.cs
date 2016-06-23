@@ -2,8 +2,8 @@
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
-using NetMud.Models;
 using NetMud.Authentication;
+using NetMud.Models;
 
 namespace Controllers
 {

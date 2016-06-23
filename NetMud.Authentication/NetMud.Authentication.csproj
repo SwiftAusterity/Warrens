@@ -84,19 +84,87 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Account.cs" />
     <Compile Include="IdentityConfig.cs" />
     <Compile Include="IdentityModels.cs" />
+    <Compile Include="Migrations\201606230321457_one.cs" />
+    <Compile Include="Migrations\201606230321457_one.Designer.cs">
+      <DependentUpon>201606230321457_one.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606230339235_authHandle.cs" />
+    <Compile Include="Migrations\201606230339235_authHandle.Designer.cs">
+      <DependentUpon>201606230339235_authHandle.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606230352296_auth2.cs" />
+    <Compile Include="Migrations\201606230352296_auth2.Designer.cs">
+      <DependentUpon>201606230352296_auth2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606230419251_authAccount.cs" />
+    <Compile Include="Migrations\201606230419251_authAccount.Designer.cs">
+      <DependentUpon>201606230419251_authAccount.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606230430582_authLinkedAccount.cs" />
+    <Compile Include="Migrations\201606230430582_authLinkedAccount.Designer.cs">
+      <DependentUpon>201606230430582_authLinkedAccount.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606230446012_authAsp.cs" />
+    <Compile Include="Migrations\201606230446012_authAsp.Designer.cs">
+      <DependentUpon>201606230446012_authAsp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606230457405_authAsp2.cs" />
+    <Compile Include="Migrations\201606230457405_authAsp2.Designer.cs">
+      <DependentUpon>201606230457405_authAsp2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606230509405_authAsp3.cs" />
+    <Compile Include="Migrations\201606230509405_authAsp3.Designer.cs">
+      <DependentUpon>201606230509405_authAsp3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NetMud.DataAccess\NetMud.DataAccess.csproj">
+      <Project>{25b53ef7-e51c-4ee5-a04c-dd8797cff58f}</Project>
+      <Name>NetMud.DataAccess</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NetMud.DataStructure\NetMud.DataStructure.csproj">
       <Project>{88b7a648-fe23-4e88-9b60-ae17c8858af4}</Project>
       <Name>NetMud.DataStructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NetMud.Utility\NetMud.Utility.csproj">
+      <Project>{9F3CAEC0-73DC-463C-8EF7-13B83BC8FB12}</Project>
+      <Name>NetMud.Utility</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201606230321457_one.resx">
+      <DependentUpon>201606230321457_one.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606230339235_authHandle.resx">
+      <DependentUpon>201606230339235_authHandle.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606230352296_auth2.resx">
+      <DependentUpon>201606230352296_auth2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606230419251_authAccount.resx">
+      <DependentUpon>201606230419251_authAccount.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606230430582_authLinkedAccount.resx">
+      <DependentUpon>201606230430582_authLinkedAccount.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606230446012_authAsp.resx">
+      <DependentUpon>201606230446012_authAsp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606230457405_authAsp2.resx">
+      <DependentUpon>201606230457405_authAsp2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606230509405_authAsp3.resx">
+      <DependentUpon>201606230509405_authAsp3.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
