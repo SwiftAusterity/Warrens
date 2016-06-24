@@ -81,7 +81,7 @@ namespace NetMud.DataStructure.Base.System
         /// <summary>
         /// Method by which this entity has output (from commands and events) "shown" to it
         /// </summary>
-        Func<IEnumerable<string>, bool> WriteTo { get; set; }
+        bool WriteTo(IEnumerable<string> input);
     }
 
     /// <summary>

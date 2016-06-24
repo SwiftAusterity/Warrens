@@ -1,7 +1,7 @@
 ﻿using NetMud.DataAccess;
-using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
+
 using System;
 using System.Collections.Generic;
 
@@ -56,27 +56,9 @@ namespace NetMud.Data.Game
         /// <summary>
         /// Method by which this entity has output (from commands and events) "shown" to it
         /// </summary>
-        private Func<IEnumerable<string>, bool> _writeTo;
-
-        /// <summary>
-        /// Method by which this entity has output (from commands and events) "shown" to it
-        /// </summary>
-        public Func<IEnumerable<string>, bool> WriteTo 
+        public virtual bool WriteTo(IEnumerable<string> input)
         { 
-            get
-            {
-                if (_writeTo != null)
-                {
-                    var pred = new Predicate<IEnumerable<string>>(_writeTo);
-                    return new Func<IEnumerable<string>, bool>(pred);
-                }
-
-                return (input) => TriggerAIAction(input);
-            }
-            set
-            {
-                _writeTo = value;
-            }
+            return TriggerAIAction(input);
         }
 
         /// <summary>

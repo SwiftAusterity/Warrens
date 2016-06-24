@@ -1,4 +1,5 @@
-﻿using NetMud.Data.EntityBackingData;
+﻿using NetMud.Communication;
+using NetMud.Data.EntityBackingData;
 using NetMud.Data.Reference;
 using NetMud.Data.System;
 using NetMud.DataAccess;
@@ -50,20 +51,22 @@ namespace NetMud.Data.Game
         }
 
         /// <summary>
-        /// ID from the descriptor connection for this player
+        /// The connection the player is using to chat with us
         /// </summary>
-        public string DescriptorID { get; set; }
-
-        /// <summary>
-        /// Type of descriptor this player connected with
-        /// </summary>
-        public DescriptorType Descriptor { get; set; }
+        public IDescriptor Descriptor { get; set; }
 
         /// <summary>
         /// Function used to close this connection
         /// </summary>
-        public Func<bool> CloseConnection { get; set; }
+        public void CloseConnection()
+        {
+            Descriptor.Disconnect(String.Empty);
+        }
 
+        public override bool WriteTo(IEnumerable<string> strings)
+        {
+            return Descriptor.SendWrapper(strings);
+        }
 
         /// <summary>
         /// Birthmark for current live location of this

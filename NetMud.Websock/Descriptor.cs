@@ -99,14 +99,7 @@ namespace NetMud.Websock
             if (_currentPlayer == null)
                 _currentPlayer = new Player(currentCharacter);
 
-            _currentPlayer.Descriptor = DataStructure.Base.Entity.DescriptorType.WebSockets;
-            _currentPlayer.DescriptorID = ID;
-            _currentPlayer.WriteTo = (strings) => SendWrapper(strings);
-            _currentPlayer.CloseConnection = () =>
-            {
-                this.Context.WebSocket.Close(CloseStatusCode.Normal, "user exited");
-                return true;
-            };
+            _currentPlayer.Descriptor = this;
 
             //We need to barf out to the connected client the welcome message. The client will only indicate connection has been established.
             var welcomeMessage = new List<String>();
@@ -114,7 +107,7 @@ namespace NetMud.Websock
             welcomeMessage.Add(string.Format("Welcome to alpha phase twinMUD, {0}", currentCharacter.FullName()));
             welcomeMessage.Add("Please feel free to LOOK around.");
 
-            SendWrapper(welcomeMessage);
+            _currentPlayer.WriteTo(welcomeMessage);
 
             //Send the look command in
             Interpret.Render("look", _currentPlayer);
@@ -215,6 +208,8 @@ namespace NetMud.Websock
         public void Disconnect(string finalMessage)
         {
             Send(EncapsulateOutput(finalMessage));
+
+            this.Context.WebSocket.Close(CloseStatusCode.Normal, "user exited");
             base.OnClose(null);
         }
 

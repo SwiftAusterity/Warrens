@@ -24,7 +24,7 @@ namespace NetMud.Websock
         /// <summary>
         /// Encapsulation element for rendering to html
         /// </summary>
-        private const string EncapsulationElement = "<p>";
+        private const string EncapsulationElement = "p";
 
         /// <summary>
         /// Adding a "new line" to the output 

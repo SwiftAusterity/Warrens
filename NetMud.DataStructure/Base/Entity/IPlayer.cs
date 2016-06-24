@@ -10,26 +10,8 @@ namespace NetMud.DataStructure.Base.Entity
     public interface IPlayer : IMobile, ISpawnAsSingleton
     {
         /// <summary>
-        /// ID for the connection the player has with us
-        /// </summary>
-        string DescriptorID { get; set; }
-
-        /// <summary>
-        /// Connection type the player is coming in on
-        /// </summary>
-        DescriptorType Descriptor { get; set; }
-
-        /// <summary>
         /// Function used to close the connection
         /// </summary>
-        Func<bool> CloseConnection { get; set; }
-    }
-
-    /// <summary>
-    /// Connection type players come in on
-    /// </summary>
-    public enum DescriptorType
-    {
-        WebSockets
+        void CloseConnection();
     }
 }
