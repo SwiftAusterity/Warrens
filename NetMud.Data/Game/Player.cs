@@ -50,10 +50,28 @@ namespace NetMud.Data.Game
             GetFromWorldOrSpawn();
         }
 
+        private string _descriptorID;
+
         /// <summary>
         /// The connection the player is using to chat with us
         /// </summary>
-        public IDescriptor Descriptor { get; set; }
+        public IDescriptor Descriptor 
+        { 
+            get
+            {
+                if (String.IsNullOrWhiteSpace(_descriptorID))
+                    return default(IDescriptor);
+
+                return LiveCache.Get<IDescriptor>(_descriptorID); 
+            }
+
+            set
+            {
+                _descriptorID = value.CacheKey;
+
+                LiveCache.Add(value, _descriptorID);
+            }
+        }
 
         /// <summary>
         /// Function used to close this connection

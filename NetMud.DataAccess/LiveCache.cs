@@ -62,7 +62,7 @@ namespace NetMud.DataAccess
         /// Adds a single entity into the cache
         /// </summary>
         /// <param name="objectToCache">the entity to cache</param>
-        public static void Add(object objectToCache)
+        public static void Add<T>(T objectToCache) where T : IEntity
         {
             var entityToCache = (IEntity)objectToCache;
             var cacheKey = new LiveCacheKey(objectToCache.GetType(), entityToCache.BirthMark);
@@ -73,6 +73,22 @@ namespace NetMud.DataAccess
             {
                 globalCache.Remove(cacheKey.KeyHash());
                 globalCache.Add(cacheKey.KeyHash(), objectToCache, globalPolicy);
+            }
+        }
+
+        /// <summary>
+        /// Adds a non-entity to the cache
+        /// </summary>
+        /// <param name="objectToCache">the object to cache</param>
+        /// <param name="cacheKey">the string key to cache it under</param>
+        public static void Add(object objectToCache, string cacheKey)
+        {
+            if (!globalCache.Contains(cacheKey))
+                globalCache.AddOrGetExisting(cacheKey, objectToCache, globalPolicy);
+            else
+            {
+                globalCache.Remove(cacheKey);
+                globalCache.Add(cacheKey, objectToCache, globalPolicy);
             }
         }
 
@@ -133,6 +149,35 @@ namespace NetMud.DataAccess
             return globalCache.Where(keyValuePair => keyValuePair.Value.GetType().GetInterfaces()
                 .Contains(typeof(T)) && keyValuePair.Value.GetType() == mainType)
                 .Select(kvp => (T)kvp.Value);
+        }
+
+        /// <summary>
+        /// Gets all of a non-entity from the cache
+        /// </summary>
+        /// <returns>All entities of a type in the entire system</returns>
+        public static IEnumerable<T> GetAllNonEntity<T>()
+        {
+            return globalCache.Where(ob => ob.Value.GetType() == typeof(T)).Select(kvp => (T)kvp.Value);
+        }
+
+        /// <summary>
+        /// Gets one non-entity from the cache by its key
+        /// </summary>
+        /// <typeparam name="T">the type of the entity</typeparam>
+        /// <param name="key">the key it was cached with</param>
+        /// <returns>the entity requested</returns>
+        public static T Get<T>(string key)
+        {
+            try
+            {
+                return (T)globalCache[key];
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex);
+            }
+
+            return default(T);
         }
 
         /// <summary>
@@ -221,6 +266,24 @@ namespace NetMud.DataAccess
             return globalCache.Get(key.KeyHash()) != null;
         }
 
+        /// <summary>
+        /// Removes an non-entity from the cache by its key
+        /// </summary>
+        /// <param name="key">the key of the entity to remove</param>
+        public static void Remove(string key)
+        {
+            globalCache.Remove(key);
+        }
+
+        /// <summary>
+        /// Checks if an non-entity is in the cache
+        /// </summary>
+        /// <param name="key">the key of the entity</param>
+        /// <returns>if it is in the cache of not</returns>
+        public static bool Exists(string key)
+        {
+            return globalCache.Get(key) != null;
+        }
     }
 
     /// <summary>

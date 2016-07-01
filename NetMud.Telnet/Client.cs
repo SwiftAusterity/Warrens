@@ -13,6 +13,14 @@ namespace NetMud.Telnet
         public EClientState clientState { get; set; }
         public string commandIssued { get; set; }
 
+        public string CacheKey 
+        { 
+            get
+            {
+                return String.Format(cacheKeyFormat, remoteEndPoint.Address);
+            }
+        }
+
         public Client(IPEndPoint _remoteEndPoint, DateTime _connectedAt, EClientState _clientState)
         {
             remoteEndPoint = _remoteEndPoint;

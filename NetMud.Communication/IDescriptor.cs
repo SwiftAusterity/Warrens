@@ -14,6 +14,11 @@ namespace NetMud.Communication
         ApplicationUserManager UserManager { get; set; }
 
         /// <summary>
+        /// The cache key for the global cache system
+        /// </summary>
+        string CacheKey { get; }
+
+        /// <summary>
         /// Handles initial connection
         /// </summary>
         void OnOpen();

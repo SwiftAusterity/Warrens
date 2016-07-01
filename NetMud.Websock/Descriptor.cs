@@ -11,8 +11,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Runtime.Caching;
 using System.Security.Claims;
 using WebSocketSharp;
+using WebSocketSharp.Server;
 
 namespace NetMud.Websock
 {
@@ -25,6 +27,17 @@ namespace NetMud.Websock
         /// The user manager for the application, handles authentication from the web
         /// </summary>
         public ApplicationUserManager UserManager { get; set; }
+
+        /// <summary>
+        /// The cache key for the global cache system
+        /// </summary>
+        public string CacheKey
+        {
+            get
+            {
+                return "WebSocketDescriptor_" + this.ID;
+            }
+        }
 
         /// <summary>
         /// User id of connected player

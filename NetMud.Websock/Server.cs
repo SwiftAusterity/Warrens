@@ -14,24 +14,13 @@ namespace NetMud.Websock
     public class Server : Channel, IServer
     {
         /// <summary>
-        /// The place everything gets stored
-        /// </summary>
-        private ObjectCache globalCache = MemoryCache.Default;
-
-        /// <summary>
-        /// The general storage policy
-        /// </summary>
-        private CacheItemPolicy globalPolicy = new CacheItemPolicy();
-
-        /// <summary>
         /// Broadcast a message to all ports
         /// </summary>
         /// <param name="message">the message to send</param>
         /// <returns>Whether or not the service sent it</returns>
         public bool Broadcast(string message)
         {
-            var services = globalCache.Where(keyValuePair =>
-                    keyValuePair.Value.GetType() == typeof(WebSocketServiceManager)).Select(kvp => (WebSocketServiceManager)kvp.Value);
+            var services = LiveCache.GetAllNonEntity<WebSocketServiceManager>();
 
             foreach (var service in services)
                 service.Broadcast(message);
@@ -66,7 +55,7 @@ namespace NetMud.Websock
         {
             try
             {
-                return (T)globalCache[String.Format(cacheKeyFormat, portNumber)];
+                return LiveCache.Get<T>(String.Format(cacheKeyFormat, portNumber));
             }
             catch (Exception ex)
             {
@@ -85,7 +74,7 @@ namespace NetMud.Websock
         {
             var service = StartServer(String.Empty, portNumber);
 
-            globalCache.AddOrGetExisting(String.Format(cacheKeyFormat, portNumber), service, globalPolicy);
+            LiveCache.Add(service, String.Format(cacheKeyFormat, portNumber));
         }
 
         /// <summary>
