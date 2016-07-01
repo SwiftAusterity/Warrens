@@ -84,14 +84,17 @@ namespace NetMud.Websock
         public void Shutdown(int portNumber = -1)
         {
             var service = GetActiveService<WebSocketServiceManager>(portNumber);
+            var server = LiveCache.Get<WebSocketServer>(String.Format("WebSocketServer_{0}", portNumber));
 
-            Broadcast("Shutting down.");
+            service.Broadcast("Shutting down.");
 
             WebSocketServiceHost host;
             service.TryGetServiceHost("/", out host);
 
             foreach (var id in host.Sessions.ActiveIDs)
                 host.Sessions.CloseSession(id);
+
+            server.Stop(CloseStatusCode.Normal, "Manual Shutdown");
         }
 
         private WebSocketServiceManager StartServer(string domain, int portNumber)
@@ -111,6 +114,8 @@ namespace NetMud.Websock
                 wssv.AddWebSocketService<Descriptor>("/");
 
                 wssv.Start();
+
+                LiveCache.Add(wssv, String.Format("WebSocketServer_{0}", portNumber));
 
                 return wssv.WebSocketServices;
             }

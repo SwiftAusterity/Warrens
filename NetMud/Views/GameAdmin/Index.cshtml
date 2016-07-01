@@ -117,4 +117,27 @@
             }
         }
     </dl>
+    <h4>Communications</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>[@Model.WebSocketServers.Count().ToString()] WebSocket Ports</dt>
+        <dd>
+            @Html.ActionLink("Stop All", "StopAllWebsockets", "GameAdmin", new { @class = "btn", @style = "color: red; background-color: black; border-color: red;" })
+        </dd>
+        @foreach (var server in Model.WebSocketServers)
+        {
+            <dt style="padding-top: 25px;">@server.Port.ToString()</dt>
+            if (!server.IsListening)
+            {
+                <dd style="color:red; padding-top: 25px;">Stopped</dd>
+            }
+            else
+            {
+                <dd style="padding-top: 25px;">
+                    <span style="color:green;">Listening</span>
+                    @Html.ActionLink("Stop", "StopWebSocket", "GameAdmin", new { portNumber = server.Port }, new { @class = "btn", @style = "color: red; border-color: red;" })
+                </dd>
+            }
+        }
+    </dl>
 </div>

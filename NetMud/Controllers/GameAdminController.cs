@@ -26,6 +26,7 @@ using NetMud.DataStructure.Behaviors.Automation;
 using NetMud.Utility;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.System;
+using WebSocketSharp.Server;
 
 namespace NetMud.Controllers
 {
@@ -74,6 +75,8 @@ namespace NetMud.Controllers
             dashboardModel.LiveInanimates = LiveCache.GetAll<IInanimate>().Count();
             dashboardModel.LiveRooms = LiveCache.GetAll<IRoom>().Count();
             dashboardModel.LiveNPCs = LiveCache.GetAll<IIntelligence>().Count();
+
+            dashboardModel.WebSocketServers = LiveCache.GetAll<WebSocketServer>();
 
             return View(dashboardModel);
         }
@@ -2043,10 +2046,43 @@ namespace NetMud.Controllers
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            Processor.ShutdownAll(600, "{0} econds before TOTAL WORLD SHUTDOWN.", 60);
+            Processor.ShutdownAll(600, "{0} seconds before TOTAL WORLD SHUTDOWN.", 60);
 
             LoggingUtility.LogAdminCommandUsage("*WEB* - StopRunningALLPROCESSES", authedUser.GameAccount.GlobalIdentityHandle);
             message = "Cancel signal sent for entire world.";
+
+            return RedirectToAction("Index", new { Message = message });
+        }
+        #endregion
+
+        #region "Communication"
+        public ActionResult StopRunningAllWebsockets()
+        {
+            string message = string.Empty;
+            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            var servers = LiveCache.GetAllNonEntity<WebSocketServer>();
+
+            foreach (var server in servers)
+                server.Stop(WebSocketSharp.CloseStatusCode.Normal, "Shutting down");
+
+            LoggingUtility.LogAdminCommandUsage("*WEB* - StopALLWebSockets", authedUser.GameAccount.GlobalIdentityHandle);
+            message = "Cancel signal sent for all websockets.";
+
+            return RedirectToAction("Index", new { Message = message });
+        }
+
+        public ActionResult StopWebSocket(int port)
+        {
+            string message = string.Empty;
+            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            var server = LiveCache.Get<WebSocketServer>("WebSocketServer_" + port.ToString());
+
+            server.Stop(WebSocketSharp.CloseStatusCode.Normal, "Shutting down");
+
+            LoggingUtility.LogAdminCommandUsage("*WEB* - StopWebSocket[" + port.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+            message = "Cancel signal sent.";
 
             return RedirectToAction("Index", new { Message = message });
         }

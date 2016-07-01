@@ -10,16 +10,6 @@ namespace NetMud.Communication
     public static class SystemComm
     {
         /// <summary>
-        /// The place everything gets stored
-        /// </summary>
-        private static ObjectCache globalCache = MemoryCache.Default;
-
-        /// <summary>
-        /// The general storage policy
-        /// </summary>
-        private static CacheItemPolicy globalPolicy = new CacheItemPolicy();
-
-        /// <summary>
         /// Sends a message to all live descriptors everywhere
         /// </summary>
         /// <param name="message">the message to send</param>
