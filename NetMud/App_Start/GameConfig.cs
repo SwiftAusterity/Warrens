@@ -2,6 +2,7 @@
 using System.Web.Hosting;
 using NetMud.CentralControl;
 using System;
+using NetMud.Websock;
 
 namespace NetMud
 {
@@ -16,9 +17,10 @@ namespace NetMud
                 hotBack.NewWorldFallback();
 
             var webSockServer = new Websock.Server();
-
-            //Rooms, paths, spawns (objs then mobs)
             webSockServer.Launch(2929);
+
+            //var customSockServer = new CustomServer();
+            //customSockServer.Launch(2929);
 
             Func<bool> backupFunction = hotBack.WriteLiveBackup;
 

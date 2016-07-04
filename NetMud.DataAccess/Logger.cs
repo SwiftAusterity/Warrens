@@ -20,7 +20,8 @@ namespace NetMud.DataAccess
         Backup,
         AccountActivity,
         Authentication,
-        ProcessingLoops
+        ProcessingLoops,
+        SocketCommunication
     }
 
     /// <summary>

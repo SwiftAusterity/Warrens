@@ -3,6 +3,7 @@ using NetMud.DataAccess;
 using System;
 using System.Linq;
 using System.Runtime.Caching;
+using System.Web.Configuration;
 using WebSocketSharp;
 using WebSocketSharp.Server;
 
@@ -101,7 +102,10 @@ namespace NetMud.Websock
         {
             try
             {
+                var filePath = WebConfigurationManager.AppSettings["LogPath"];
                 var wssv = new WebSocketServer(portNumber);
+
+                wssv.Log.File = String.Format("{0}Current/{1}_{2}.txt", filePath, "WebSocket", portNumber);
 
 #if DEBUG
                 // To change the logging level.
