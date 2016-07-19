@@ -29,7 +29,7 @@ function submitCommand()
 function TestBrowser()
 {
     if ('WebSocket' in window) {
-        connection = new WebSocket('ws://localhost:2929/');
+        connection = new WebSocket('ws://localhost:2929');
 
         connection.onopen = function () {
             //Send a small message to the console once the connection is established

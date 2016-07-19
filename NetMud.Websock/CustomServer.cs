@@ -4,77 +4,60 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Threading;
 using NetMud.Communication;
+using System.Threading.Tasks;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace NetMud.Websock
 {
     public class CustomServer : Channel, IServer
     {
-        static Socket serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
+        static TcpListener serverSocket;
         static private string guid = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
 
-        private static void OnAccept(IAsyncResult result)
+        public void Launch(int portNumber)
         {
-            byte[] buffer = new byte[1024];
+            serverSocket = new TcpListener(IPAddress.Parse("127.0.0.1"), portNumber);
+            serverSocket.Start();
+            OnAccept();
+        }
 
-            try
+        private async void OnAccept()
+        {
+            Task<TcpClient> clientTask = serverSocket.AcceptTcpClientAsync();
+            TcpClient client = await clientTask;
+
+            NetworkStream stream = client.GetStream();
+
+            //enter to an infinite cycle to be able to handle every change in stream
+            while (true)
             {
-                Socket client = null;
-                string headerResponse = "";
-                if (serverSocket != null && serverSocket.IsBound)
+                while (!stream.DataAvailable) 
+                    ;
+
+                Byte[] bytes = new Byte[client.Available];
+
+                stream.Read(bytes, 0, bytes.Length);
+
+                //translate bytes of request to string
+                String data = Encoding.UTF8.GetString(bytes);
+
+                if (new Regex("^GET").IsMatch(data))
                 {
-                    client = serverSocket.EndAccept(result);
-                    var i = client.Receive(buffer);
+                    Byte[] response = Encoding.UTF8.GetBytes("HTTP/1.1 101 Switching Protocols" + Environment.NewLine
+                        + "Connection: Upgrade" + Environment.NewLine
+                        + "Upgrade: websocket" + Environment.NewLine
+                        + "Sec-WebSocket-Accept: " + Convert.ToBase64String(
+                            SHA1.Create().ComputeHash(
+                                Encoding.UTF8.GetBytes(
+                                    new Regex("Sec-WebSocket-Key: (.*)").Match(data).Groups[1].Value.Trim() + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
+                                )
+                            )
+                        ) + Environment.NewLine
+                        + Environment.NewLine);
 
-                    headerResponse = (System.Text.Encoding.UTF8.GetString(buffer)).Substring(0,i);
-
-                    // write received data to the console
-                    //Console.WriteLine(headerResponse);
+                    stream.Write(response, 0, response.Length);
                 }
-
-                if (client != null)
-                {
-                    /* Handshaking and managing ClientSocket */
-                    /* var key = headerResponse.Replace("ey:", "`")
-                              .Split('`')[1]                     // dGhlIHNhbXBsZSBub25jZQ== \r\n .......
-                              .Replace("\r", "").Split('\n')[0]  // dGhlIHNhbXBsZSBub25jZQ==
-                              .Trim();
-                    */
-                    // key should now equal dGhlIHNhbXBsZSBub25jZQ==
-                    var test1 = "dGhlIHNhbXBsZSBub25jZQ=="; // AcceptKey(ref key);
-
-                    var newLine = "\r\n";
-
-                    var response = "HTTP/1.1 101 Switching Protocols" + newLine
-                         + "Upgrade: websocket" + newLine
-                         + "Connection: Upgrade" + newLine
-                         + "Sec-WebSocket-Accept: " + test1 + newLine + newLine
-                         ;
-
-                    // which one should I use? none of them fires the onopen method
-                    client.Send(System.Text.Encoding.UTF8.GetBytes(response));
-
-                    var i = client.Receive(buffer); // wait for client to send a message
-
-                    // once the message is received decode it in different formats
-                    //Console.WriteLine(Convert.ToBase64String(buffer).Substring(0, i));                    
-
-                    //Console.WriteLine("\n\nPress enter to send data to client");
-                    //Console.Read();
-
-                    var subA = SubArray<byte>(buffer, 0, i);
-                    client.Send(subA);
-
-                    Thread.Sleep(100);//wait for message to be send
-                }
-            }
-            catch (SocketException exception)
-            {
-                throw exception;
-            }
-            finally
-            {
-                if (serverSocket != null && serverSocket.IsBound)
-                    serverSocket.BeginAccept(null, 0, OnAccept, null);
             }
         }
 
@@ -110,18 +93,10 @@ namespace NetMud.Websock
             throw new NotImplementedException();
         }
 
-        public void Launch(int portNumber)
-        {
-            serverSocket.Bind(new IPEndPoint(IPAddress.Any, portNumber));
-            serverSocket.Listen(128);
-            serverSocket.BeginAccept(null, 0, OnAccept, null);
-
-            //Console.Read();
-        }
 
         public void Shutdown(int portNumber = -1)
         {
-            serverSocket.Close();
+            serverSocket.Stop();
         }
 
         public T GetActiveService<T>(int portNumber)

@@ -16,11 +16,11 @@ namespace NetMud
             if (!hotBack.RestoreLiveBackup())
                 hotBack.NewWorldFallback();
 
-            var webSockServer = new Websock.Server();
-            webSockServer.Launch(2929);
+            //var webSockServer = new Websock.Server();
+            //webSockServer.Launch(2929);
 
-            //var customSockServer = new CustomServer();
-            //customSockServer.Launch(2929);
+            var customSockServer = new CustomServer();
+            customSockServer.Launch(2929);
 
             Func<bool> backupFunction = hotBack.WriteLiveBackup;
 
