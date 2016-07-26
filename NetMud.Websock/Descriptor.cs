@@ -296,96 +296,107 @@ namespace NetMud.Websock
             Client.Close();
         }
 
-        private string DecodeSocket(byte[] bytes)
+        private string DecodeSocket(byte[] buffer)
         {
-            var secondByte = bytes[1];
+            var length = buffer.Length;
+            byte b = buffer[1];
+            int dataLength = 0;
+            int totalLength = 0;
+            int keyIndex = 0;
 
-            var length = secondByte & 127; // may not be the actual length in the two special cases
+            if (b - 128 <= 125)
+            {
+                dataLength = b - 128;
+                keyIndex = 2;
+                totalLength = dataLength + 6;
+            }
 
-            var indexFirstMask = 2;          // if not a special case
+            if (b - 128 == 126)
+            {
+                dataLength = BitConverter.ToInt16(new byte[] { buffer[3], buffer[2] }, 0);
+                keyIndex = 4;
+                totalLength = dataLength + 8;
+            }
 
-            if(length == 126)            // if a special case, change indexFirstMask
-                indexFirstMask = 4;
-            else if(length == 127)       // ditto
-                indexFirstMask = 10;
+            if (b - 128 == 127)
+            {
+                dataLength = (int)BitConverter.ToInt64(new byte[] { buffer[9], buffer[8], buffer[7], buffer[6], buffer[5], buffer[4], buffer[3], buffer[2] }, 0);
+                keyIndex = 10;
+                totalLength = dataLength + 14;
+            }
 
-            var masks = bytes.Skip(indexFirstMask).Take(4).ToArray(); // four bytes starting from indexFirstMask
+            if (totalLength > length)
+                throw new Exception("The buffer length is small than the data length");
 
-            var indexFirstDataByte = indexFirstMask + 4; // four bytes further
+            byte[] key = new byte[] { buffer[keyIndex], buffer[keyIndex + 1], buffer[keyIndex + 2], buffer[keyIndex + 3] };
 
-            var decoded = new byte[bytes.Length - indexFirstDataByte]; // length of real data
+            int dataIndex = keyIndex + 4;
+            int count = 0;
+            for (int i = dataIndex; i < totalLength; i++)
+            {
+                buffer[i] = (byte)(buffer[i] ^ key[count % 4]);
+                count++;
+            }
 
-            int i, j;
-            for(i = indexFirstDataByte, j = 0; i < bytes.Length; i++, j++)
-                decoded[j] = intToSingleByte(bytes[i] ^ masks[j % 4]);
-
-            // now use "decoded" to interpret the received data
-            return Encoding.UTF8.GetString(decoded);
+            return Encoding.ASCII.GetString(buffer, dataIndex, dataLength);
         }
 
-        private byte[] EncodeSocket(string message)
+        private Byte[] EncodeSocket(string message)
         {
-            var bytesRaw = Encoding.UTF8.GetBytes(message);
-            var rawLength = bytesRaw.Length;
+            Byte[] response;
+            Byte[] bytesRaw = Encoding.UTF8.GetBytes(message);
+            Byte[] frame = new Byte[10];
 
-            var formatBytes = new byte[11];
-            formatBytes[0] = 129;
+            Int32 indexStartRawData = -1;
+            Int32 length = bytesRaw.Length;
 
-            int indexStartRawData;
-
-            if (rawLength <= 125)
+            frame[0] = (Byte)129;
+            if (length <= 125)
             {
-                byte[] intBytes = BitConverter.GetBytes(rawLength);
-
-                if (BitConverter.IsLittleEndian)
-                    Array.Reverse(intBytes);
-
-                formatBytes[1] = intToSingleByte(rawLength);
-
+                frame[1] = (Byte)length;
                 indexStartRawData = 2;
             }
-            else if(rawLength >= 126 && rawLength <= 65535)
+            else if (length >= 126 && length <= 65535)
             {
-                formatBytes[1] = 126;
-                formatBytes[2] = intToSingleByte((rawLength >> 8) & 255);
-                formatBytes[3] = intToSingleByte(( rawLength    ) & 255);
-
+                frame[1] = (Byte)126;
+                frame[2] = (Byte)((length >> 8) & 255);
+                frame[3] = (Byte)(length & 255);
                 indexStartRawData = 4;
             }
             else
             {
-                formatBytes[1] = 127;
-                formatBytes[2] =  intToSingleByte(( rawLength >> 56 ) & 255);
-                formatBytes[3] =  intToSingleByte(( rawLength >> 48 ) & 255);
-                formatBytes[4] =  intToSingleByte(( rawLength >> 40 ) & 255);
-                formatBytes[5] =  intToSingleByte(( rawLength >> 32 ) & 255);
-                formatBytes[6] =  intToSingleByte(( rawLength >> 24 ) & 255);
-                formatBytes[7] =  intToSingleByte(( rawLength >> 16 ) & 255);
-                formatBytes[8] =  intToSingleByte(( rawLength >>  8 ) & 255);
-                formatBytes[9] =  intToSingleByte(( rawLength       ) & 255);
+                frame[1] = (Byte)127;
+                frame[2] = (Byte)((length >> 56) & 255);
+                frame[3] = (Byte)((length >> 48) & 255);
+                frame[4] = (Byte)((length >> 40) & 255);
+                frame[5] = (Byte)((length >> 32) & 255);
+                frame[6] = (Byte)((length >> 24) & 255);
+                frame[7] = (Byte)((length >> 16) & 255);
+                frame[8] = (Byte)((length >> 8) & 255);
+                frame[9] = (Byte)(length & 255);
 
                 indexStartRawData = 10;
             }
-            
-            var returnBytes = new byte[rawLength + indexStartRawData + 1];
 
-            //Add the formatted bytes first
-            System.Array.Copy(formatBytes, returnBytes, indexStartRawData);
+            response = new Byte[indexStartRawData + length];
 
-            // put raw data at the correct index
-            System.Array.Copy(bytesRaw, 0, returnBytes, indexStartRawData, rawLength);
+            Int32 i, reponseIdx = 0;
 
-            return returnBytes;
-        }
+            //Add the frame bytes to the reponse
+            for (i = 0; i < indexStartRawData; i++)
+            {
+                response[reponseIdx] = frame[i];
+                reponseIdx++;
+            }
 
-        private byte intToSingleByte(int value)
-        {
-            byte[] intBytes = BitConverter.GetBytes(value);
+            //Add the data bytes to the response
+            for (i = 0; i < length; i++)
+            {
+                response[reponseIdx] = bytesRaw[i];
+                reponseIdx++;
+            }
 
-            if (BitConverter.IsLittleEndian)
-                Array.Reverse(intBytes);
-
-            return intBytes[0];
+            return response;
         }
 
         /// <summary>
