@@ -41,7 +41,7 @@ namespace NetMud.Communication
         /// Handles when the connected descriptor sends input
         /// </summary>
         /// <param name="e">the events of the message</param>
-        void OnMessage(IAsyncResult result);
+        bool OnMessage(string message);
 
         /// <summary>
         /// Wraps sending messages to the connected descriptor

@@ -68,9 +68,6 @@ namespace NetMud.Websock
             UserManager = new ApplicationUserManager(new UserStore<ApplicationUser>(new ApplicationDbContext()));
 
             LiveCache.Add(this, String.Format(cacheKeyFormat, CacheKey));
-
-            //StartLoop(OnOpen);
-            OnOpen();
         }
 
         /// <summary>
@@ -83,20 +80,33 @@ namespace NetMud.Websock
             UserManager = userManager;
 
             LiveCache.Add(this, String.Format(cacheKeyFormat, CacheKey));
-
-            //StartLoop(OnOpen);
-            OnOpen();
         }
 
-        private async void StartLoop(Func<bool> worker)
+        private async void StartLoop(Func<string, bool> worker)
         {
-            await Task.Delay(50);
-            var success = worker.Invoke();
+            NetworkStream stream = Client.GetStream();
 
-            if (success)
-                StartLoop(worker);
+            await DataAvailable(stream);
+
+            var bytes = new Byte[Client.Available];
+
+            stream.Read(bytes, 0, bytes.Length);
+
+            //translate bytes of request to string
+            var data = Encoding.UTF8.GetString(bytes);
+
+            if(worker.Invoke(data))
+                StartLoop(OnMessage);
             else
                 OnClose();
+        }
+
+        private async Task<bool> DataAvailable(NetworkStream stream)
+        {
+            while (!stream.DataAvailable)
+                ;
+
+            return true;
         }
 
         /// <summary>
@@ -133,9 +143,6 @@ namespace NetMud.Websock
                     ) + Environment.NewLine
                     + Environment.NewLine;
 
-                //complete the handshake
-                Send(response);
-
                 var authTicketValue = new Regex(".AspNet.ApplicationCookie=(.*)").Match(data).Groups[1].Value.Trim();
 
                 GetUserIDFromCookie(authTicketValue);
@@ -166,6 +173,10 @@ namespace NetMud.Websock
 
                 _currentPlayer.Descriptor = this;
 
+                //complete the handshake
+                Send(response);
+
+                /*
                 //We need to barf out to the connected client the welcome message. The client will only indicate connection has been established.
                 var welcomeMessage = new List<String>();
 
@@ -176,37 +187,31 @@ namespace NetMud.Websock
 
                 //Send the look command in
                 Interpret.Render("look", _currentPlayer);
+                */
             }
 
-            StartRead();
+            Func<bool> loopedProcess = () =>
+            {
+                StartLoop(OnMessage);
+                return true;
+            };
+
+            loopedProcess.Invoke();
 
             return true;
-        }
-
-        private void StartRead()
-        {
-            var buffer = new byte[1024];
-            var stream = Client.GetStream();
-            stream.BeginRead(buffer, 0, 1024, new AsyncCallback(OnMessage), buffer);
         }
 
         /// <summary>
         /// Handles when the connected descriptor sends input
         /// </summary>
         /// <param name="e">the events of the message</param>
-        public void OnMessage(IAsyncResult result)
+        public bool OnMessage(string message)
         {
             if (_currentPlayer == null)
             {
                 OnError(new Exception("Invalid character; please reload the client and try again."));
-                return;
+                return false;
             }
-
-            var stream = Client.GetStream();
-            stream.EndRead(result);
-
-            var bytes = (byte[])result.AsyncState;
-            var message = Encoding.UTF8.GetString(bytes);
 
             var errors = Interpret.Render(message, _currentPlayer);
 
@@ -214,7 +219,7 @@ namespace NetMud.Websock
             if (errors.Any(str => !string.IsNullOrWhiteSpace(str)))
                 SendWrapper(errors);
 
-            StartRead();
+            return true;
         }
 
         public void Send(string message)
@@ -234,7 +239,10 @@ namespace NetMud.Websock
 
                 stream.EndWrite(result);
             }
-            catch { }
+            catch(Exception ex)
+            {
+                ///barf?
+            }
         }
 
         /// <summary>

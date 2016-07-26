@@ -88,7 +88,7 @@ namespace NetMud.Telnet
             throw new NotImplementedException();
         }
 
-        public void OnMessage(IAsyncResult result)
+        public bool OnMessage(string message)
         {
             throw new NotImplementedException();
         }

@@ -73,12 +73,17 @@ namespace NetMud.Websock
 
             try
             {
-                //if (!service.Pending())
-                //    return;
-
                 var newDescriptor = new Descriptor(service.EndAcceptTcpClient(result));
 
                 ConnectedClients.Add(newDescriptor);
+
+                Func<bool> loopedProcess = () =>
+                {
+                    newDescriptor.OnOpen();
+                    return true;
+                };
+
+                loopedProcess.Invoke();
             }
             catch
             {
