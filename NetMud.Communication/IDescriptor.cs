@@ -23,7 +23,7 @@ namespace NetMud.Communication
         /// <summary>
         /// Handles initial connection
         /// </summary>
-        bool OnOpen();
+        void OnOpen();
 
         /// <summary>
         /// Handles when the connection closes

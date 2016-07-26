@@ -93,7 +93,7 @@ namespace NetMud.Websock
             stream.Read(bytes, 0, bytes.Length);
 
             //translate bytes of request to string
-            var data = Encoding.UTF8.GetString(bytes);
+            var data = DecodeSocket(bytes);
 
             if(worker.Invoke(data))
                 StartLoop(OnMessage);
@@ -112,7 +112,7 @@ namespace NetMud.Websock
         /// <summary>
         /// Handles initial connection
         /// </summary>
-        public bool OnOpen()
+        public void OnOpen()
         {
             NetworkStream stream = Client.GetStream();
 
@@ -143,62 +143,64 @@ namespace NetMud.Websock
                     ) + Environment.NewLine
                     + Environment.NewLine;
 
-                var authTicketValue = new Regex(".AspNet.ApplicationCookie=(.*)").Match(data).Groups[1].Value.Trim();
+                //Send the handshake
+                var replyBytes = Encoding.UTF8.GetBytes(response);
 
-                GetUserIDFromCookie(authTicketValue);
+                stream.BeginWrite(replyBytes, 0, replyBytes.Length, new AsyncCallback(SendData), null);
 
-                var authedUser = UserManager.FindById(_userId);
-
-                var currentCharacter = authedUser.GameAccount.Characters.FirstOrDefault(ch => ch.ID.Equals(authedUser.GameAccount.CurrentlySelectedCharacter));
-
-                if (currentCharacter == null)
-                {
-                    Send("<p>No character selected</p>");
-                    return false;
-                }
-
-                //Try to see if they are already live
-                _currentPlayer = LiveCache.Get<Player>(currentCharacter.ID);
-
-                //Check the backup
-                if (_currentPlayer == null)
-                {
-                    var hotBack = new HotBackup(System.Web.Hosting.HostingEnvironment.MapPath("/HotBackup/"));
-                    _currentPlayer = hotBack.RestorePlayer(currentCharacter.AccountHandle, currentCharacter.ID);
-                }
-
-                //else new them up
-                if (_currentPlayer == null)
-                    _currentPlayer = new Player(currentCharacter);
-
-                _currentPlayer.Descriptor = this;
-
-                //complete the handshake
-                Send(response);
-
-                /*
-                //We need to barf out to the connected client the welcome message. The client will only indicate connection has been established.
-                var welcomeMessage = new List<String>();
-
-                welcomeMessage.Add(string.Format("Welcome to alpha phase twinMUD, {0}", currentCharacter.FullName()));
-                welcomeMessage.Add("Please feel free to LOOK around.");
-
-                _currentPlayer.WriteTo(welcomeMessage);
-
-                //Send the look command in
-                Interpret.Render("look", _currentPlayer);
-                */
+                ValidateUser(data);
             }
 
-            Func<bool> loopedProcess = () =>
+            StartLoop(OnMessage);
+
+            return;
+        }
+
+        private void ValidateUser(string handshake)
+        {
+            //Grab the user
+            var authTicketValue = new Regex(".AspNet.ApplicationCookie=(.*)").Match(handshake).Groups[1].Value.Trim();
+
+            GetUserIDFromCookie(authTicketValue);
+
+            var authedUser = UserManager.FindById(_userId);
+
+            var currentCharacter = authedUser.GameAccount.Characters.FirstOrDefault(ch => ch.ID.Equals(authedUser.GameAccount.CurrentlySelectedCharacter));
+
+            if (currentCharacter == null)
             {
-                StartLoop(OnMessage);
-                return true;
-            };
+                Send("<p>No character selected</p>");
+                return;
+            }
 
-            loopedProcess.Invoke();
+            //Try to see if they are already live
+            _currentPlayer = LiveCache.Get<Player>(currentCharacter.ID);
 
-            return true;
+            //Check the backup
+            if (_currentPlayer == null)
+            {
+                var hotBack = new HotBackup(System.Web.Hosting.HostingEnvironment.MapPath("/HotBackup/"));
+                _currentPlayer = hotBack.RestorePlayer(currentCharacter.AccountHandle, currentCharacter.ID);
+            }
+
+            //else new them up
+            if (_currentPlayer == null)
+                _currentPlayer = new Player(currentCharacter);
+
+            _currentPlayer.Descriptor = this;
+
+            /*
+            //We need to barf out to the connected client the welcome message. The client will only indicate connection has been established.
+            var welcomeMessage = new List<String>();
+
+            welcomeMessage.Add(string.Format("Welcome to alpha phase twinMUD, {0}", currentCharacter.FullName()));
+            welcomeMessage.Add("Please feel free to LOOK around.");
+
+            _currentPlayer.WriteTo(welcomeMessage);
+
+            //Send the look command in
+            Interpret.Render("look", _currentPlayer);
+            */
         }
 
         /// <summary>
@@ -224,7 +226,7 @@ namespace NetMud.Websock
 
         public void Send(string message)
         {
-            var response = Encoding.ASCII.GetBytes(message);
+            var response = EncodeSocket(message);
 
             var stream = Client.GetStream();
 
@@ -241,7 +243,7 @@ namespace NetMud.Websock
             }
             catch(Exception ex)
             {
-                ///barf?
+                ///barf, log?
             }
         }
 
@@ -292,6 +294,98 @@ namespace NetMud.Websock
             Send(EncapsulateOutput(finalMessage));
 
             Client.Close();
+        }
+
+        private string DecodeSocket(byte[] bytes)
+        {
+            var secondByte = bytes[1];
+
+            var length = secondByte & 127; // may not be the actual length in the two special cases
+
+            var indexFirstMask = 2;          // if not a special case
+
+            if(length == 126)            // if a special case, change indexFirstMask
+                indexFirstMask = 4;
+            else if(length == 127)       // ditto
+                indexFirstMask = 10;
+
+            var masks = bytes.Skip(indexFirstMask).Take(4).ToArray(); // four bytes starting from indexFirstMask
+
+            var indexFirstDataByte = indexFirstMask + 4; // four bytes further
+
+            var decoded = new byte[bytes.Length - indexFirstDataByte]; // length of real data
+
+            int i, j;
+            for(i = indexFirstDataByte, j = 0; i < bytes.Length; i++, j++)
+                decoded[j] = intToSingleByte(bytes[i] ^ masks[j % 4]);
+
+            // now use "decoded" to interpret the received data
+            return Encoding.UTF8.GetString(decoded);
+        }
+
+        private byte[] EncodeSocket(string message)
+        {
+            var bytesRaw = Encoding.UTF8.GetBytes(message);
+            var rawLength = bytesRaw.Length;
+
+            var formatBytes = new byte[11];
+            formatBytes[0] = 129;
+
+            int indexStartRawData;
+
+            if (rawLength <= 125)
+            {
+                byte[] intBytes = BitConverter.GetBytes(rawLength);
+
+                if (BitConverter.IsLittleEndian)
+                    Array.Reverse(intBytes);
+
+                formatBytes[1] = intToSingleByte(rawLength);
+
+                indexStartRawData = 2;
+            }
+            else if(rawLength >= 126 && rawLength <= 65535)
+            {
+                formatBytes[1] = 126;
+                formatBytes[2] = intToSingleByte((rawLength >> 8) & 255);
+                formatBytes[3] = intToSingleByte(( rawLength    ) & 255);
+
+                indexStartRawData = 4;
+            }
+            else
+            {
+                formatBytes[1] = 127;
+                formatBytes[2] =  intToSingleByte(( rawLength >> 56 ) & 255);
+                formatBytes[3] =  intToSingleByte(( rawLength >> 48 ) & 255);
+                formatBytes[4] =  intToSingleByte(( rawLength >> 40 ) & 255);
+                formatBytes[5] =  intToSingleByte(( rawLength >> 32 ) & 255);
+                formatBytes[6] =  intToSingleByte(( rawLength >> 24 ) & 255);
+                formatBytes[7] =  intToSingleByte(( rawLength >> 16 ) & 255);
+                formatBytes[8] =  intToSingleByte(( rawLength >>  8 ) & 255);
+                formatBytes[9] =  intToSingleByte(( rawLength       ) & 255);
+
+                indexStartRawData = 10;
+            }
+            
+            var returnBytes = new byte[rawLength + indexStartRawData + 1];
+
+            //Add the formatted bytes first
+            System.Array.Copy(formatBytes, returnBytes, indexStartRawData);
+
+            // put raw data at the correct index
+            System.Array.Copy(bytesRaw, 0, returnBytes, indexStartRawData, rawLength);
+
+            return returnBytes;
+        }
+
+        private byte intToSingleByte(int value)
+        {
+            byte[] intBytes = BitConverter.GetBytes(value);
+
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(intBytes);
+
+            return intBytes[0];
         }
 
         /// <summary>

@@ -77,13 +77,7 @@ namespace NetMud.Websock
 
                 ConnectedClients.Add(newDescriptor);
 
-                Func<bool> loopedProcess = () =>
-                {
-                    newDescriptor.OnOpen();
-                    return true;
-                };
-
-                loopedProcess.Invoke();
+                new Task(newDescriptor.OnOpen).Start();
             }
             catch
             {

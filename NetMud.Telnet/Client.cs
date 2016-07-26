@@ -92,10 +92,5 @@ namespace NetMud.Telnet
         {
             throw new NotImplementedException();
         }
-
-        bool IDescriptor.OnOpen()
-        {
-            throw new NotImplementedException();
-        }
     }
 }
