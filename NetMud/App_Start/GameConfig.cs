@@ -2,7 +2,6 @@
 using System.Web.Hosting;
 using NetMud.CentralControl;
 using System;
-using NetMud.Websock;
 
 namespace NetMud
 {
@@ -16,10 +15,7 @@ namespace NetMud
             if (!hotBack.RestoreLiveBackup())
                 hotBack.NewWorldFallback();
 
-            //var webSockServer = new Websock.Server();
-            //webSockServer.Launch(2929);
-
-            var customSockServer = new CustomServer();
+            var customSockServer = new NetMud.Websock.Server();
             customSockServer.Launch(2929);
 
             Func<bool> backupFunction = hotBack.WriteLiveBackup;

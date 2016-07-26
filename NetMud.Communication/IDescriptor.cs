@@ -1,5 +1,7 @@
 ﻿using NetMud.Authentication;
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace NetMud.Communication
 {
@@ -21,25 +23,25 @@ namespace NetMud.Communication
         /// <summary>
         /// Handles initial connection
         /// </summary>
-        void OnOpen();
+        bool OnOpen();
 
         /// <summary>
         /// Handles when the connection closes
         /// </summary>
         /// <param name="e">events for closing</param>
-        void OnClose(object closeArguments);
+        void OnClose();
 
         /// <summary>
         /// Handles when the connection faults
         /// </summary>
         /// <param name="e">events for the error</param>
-        void OnError(object errorArguments);
+        void OnError(Exception err);
 
         /// <summary>
         /// Handles when the connected descriptor sends input
         /// </summary>
         /// <param name="e">the events of the message</param>
-        void OnMessage(object messageArguments);
+        void OnMessage(IAsyncResult result);
 
         /// <summary>
         /// Wraps sending messages to the connected descriptor

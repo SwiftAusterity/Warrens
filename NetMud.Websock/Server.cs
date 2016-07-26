@@ -1,62 +1,63 @@
+﻿using System;
+using System.Net.Sockets;
+using System.Net;
 using NetMud.Communication;
+using System.Threading.Tasks;
+using System.Text;
+using System.Collections.Generic;
 using NetMud.DataAccess;
-using System;
-using System.Linq;
-using System.Runtime.Caching;
-using System.Web.Configuration;
-using WebSocketSharp;
-using WebSocketSharp.Server;
 
 namespace NetMud.Websock
 {
-    /// <summary>
-    /// A websocket client server
-    /// </summary>
     public class Server : Channel, IServer
     {
+        public int PortNumber { get; private set; }
+
         /// <summary>
-        /// Broadcast a message to all ports
+        /// Registers this for a service on a port
         /// </summary>
-        /// <param name="message">the message to send</param>
-        /// <returns>Whether or not the service sent it</returns>
-        public bool Broadcast(string message)
+        /// <param name="portNumber">the port it is listening on</param>
+        public void Launch(int portNumber)
         {
-            var services = LiveCache.GetAllNonEntity<WebSocketServiceManager>();
+            ConnectedClients = new List<IDescriptor>();
 
-            foreach (var service in services)
-                service.Broadcast(message);
+            var service = new TcpListener(IPAddress.Parse("127.0.0.1"), portNumber);
 
-            return true;
+            PortNumber = portNumber;
+
+            LiveCache.Add(service, String.Format(cacheKeyFormat, portNumber));
+
+            service.Start(128);
+
+            service.BeginAcceptTcpClient(new AsyncCallback(OnAccept), service);
         }
 
-        /// <summary>
-        /// Broadcast a message to one port
-        /// </summary>
-        /// <param name="message">the message to send</param>
-        /// <param name="portNumber">the port to send to</param>
-        /// <returns>Whether or not the service sent it</returns>
-        public bool Broadcast(string message, int portNumber)
+        public IList<IDescriptor> ConnectedClients { get; private set; }
+
+        public bool Broadcast(string message)
         {
-            var service = GetActiveService<WebSocketServiceManager>(portNumber);
+            var service = GetActiveService<TcpListener>();
 
             if (service == null)
                 return false;
 
-            service.Broadcast(message);
-
-            return true;
+            return service.Server.Send(Encoding.ASCII.GetBytes(message)) > 0;
         }
 
-        /// <summary>
-        /// Gets an active listener service
-        /// </summary>
-        /// <param name="portNumber">the port it is listening on</param>
-        /// <returns>the service</returns>
-        public T GetActiveService<T>(int portNumber)
+
+        public void Shutdown()
+        {
+            var service = GetActiveService<TcpListener>();
+
+            if (service != null)
+                service.Stop();
+        }
+
+        public T GetActiveService<T>()
         {
             try
             {
-                return LiveCache.Get<T>(String.Format(cacheKeyFormat, portNumber));
+                return LiveCache.Get<T>(String.Format(cacheKeyFormat, PortNumber));
             }
             catch (Exception ex)
             {
@@ -66,69 +67,25 @@ namespace NetMud.Websock
             return default(T);
         }
 
-        /// <summary>
-        /// Start a new websocket server
-        /// </summary>
-        /// <param name="portNumber">the port to listen on</param>
-        /// <returns>The service manage (which you need to hold on to cause there isn't a way to get this back later)</returns>
-        public void Launch(int portNumber)
+        private void OnAccept(IAsyncResult result)
         {
-            var service = StartServer(String.Empty, portNumber);
+            var service = (TcpListener)result.AsyncState;
 
-            LiveCache.Add(service, String.Format(cacheKeyFormat, portNumber));
-        }
-
-        /// <summary>
-        /// Shuts down a websocket server
-        /// </summary>
-        /// <param name="portNumber">The port to shutdown, or -1 for all</param>
-        public void Shutdown(int portNumber = -1)
-        {
-            var service = GetActiveService<WebSocketServiceManager>(portNumber);
-            var server = LiveCache.Get<WebSocketServer>(String.Format("WebSocketServer_{0}", portNumber));
-
-            service.Broadcast("Shutting down.");
-
-            WebSocketServiceHost host;
-            service.TryGetServiceHost("/", out host);
-
-            foreach (var id in host.Sessions.ActiveIDs)
-                host.Sessions.CloseSession(id);
-
-            server.Stop(CloseStatusCode.Normal, "Manual Shutdown");
-        }
-
-        private WebSocketServiceManager StartServer(string domain, int portNumber)
-        {
             try
             {
-                var filePath = WebConfigurationManager.AppSettings["LogPath"];
-                var wssv = new WebSocketServer(portNumber);
+                //if (!service.Pending())
+                //    return;
 
-                wssv.Log.File = String.Format("{0}Current/{1}_{2}.txt", filePath, "WebSocket", portNumber);
+                var newDescriptor = new Descriptor(service.EndAcceptTcpClient(result));
 
-#if DEBUG
-                // To change the logging level.
-                wssv.Log.Level = LogLevel.Trace;
-
-                // To change the wait time for the response to the WebSocket Ping or Close.
-                wssv.WaitTime = TimeSpan.FromSeconds(2);
-#endif
-
-                wssv.AddWebSocketService<Descriptor>("/");
-
-                wssv.Start();
-
-                LiveCache.Add(wssv, String.Format("WebSocketServer_{0}", portNumber));
-
-                return wssv.WebSocketServices;
+                ConnectedClients.Add(newDescriptor);
             }
-            catch (Exception ex)
+            catch
             {
-                LoggingUtility.LogError(ex);
+                //TODO: Logging
             }
 
-            return null;
+            service.BeginAcceptTcpClient(new AsyncCallback(OnAccept), service);
         }
     }
 }

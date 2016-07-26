@@ -17,6 +17,16 @@ namespace NetMud.Telnet
         private const int dataSize = 1024;
         private static Dictionary<Socket, Client> clientList = new Dictionary<Socket, Client>();
 
+        public int PortNumber
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public IList<IDescriptor> ConnectedClients { get; private set; }
+
         private static void backgroundThread()
         {
             while (true)
@@ -250,6 +260,16 @@ namespace NetMud.Telnet
         }
 
         public T GetActiveService<T>(int portNumber)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Shutdown()
+        {
+            throw new NotImplementedException();
+        }
+
+        public T GetActiveService<T>()
         {
             throw new NotImplementedException();
         }

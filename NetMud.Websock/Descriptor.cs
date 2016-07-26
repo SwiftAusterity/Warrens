@@ -11,10 +11,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Runtime.Caching;
+using System.Net.Sockets;
 using System.Security.Claims;
-using WebSocketSharp;
-using WebSocketSharp.Server;
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace NetMud.Websock
 {
@@ -24,9 +26,17 @@ namespace NetMud.Websock
     public class Descriptor : Channel, IDescriptor
     {
         /// <summary>
+        /// For Websocket handshaking
+        /// </summary>
+        static private string guid = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
+
+        /// <summary>
         /// The user manager for the application, handles authentication from the web
         /// </summary>
         public ApplicationUserManager UserManager { get; set; }
+        internal TcpClient Client { get; set; }
+        private static byte[] data = new byte[dataSize];
+        private const int dataSize = 1024;
 
         /// <summary>
         /// The cache key for the global cache system
@@ -35,7 +45,7 @@ namespace NetMud.Websock
         {
             get
             {
-                return "WebSocketDescriptor_" + this.ID;
+                return "WebSocketDescriptor_" + Client.Client.RemoteEndPoint.Serialize().ToString();
             }
         }
 
@@ -52,146 +62,197 @@ namespace NetMud.Websock
         /// <summary>
         /// Creates an instance of the command negotiator
         /// </summary>
-        public Descriptor()
+        public Descriptor(TcpClient tcpClient)
         {
-            //firefox fix
-            IgnoreExtensions = true;
+            Client = tcpClient;
+            UserManager = new ApplicationUserManager(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+
+            LiveCache.Add(this, String.Format(cacheKeyFormat, CacheKey));
+
+            //StartLoop(OnOpen);
+            OnOpen();
         }
 
         /// <summary>
         /// Creates an instance of the command negotiator with a specified user manager
         /// </summary>
         /// <param name="userManager">the authentication manager from the web</param>
-        public Descriptor(ApplicationUserManager userManager)
+        public Descriptor(TcpClient tcpClient, ApplicationUserManager userManager)
         {
-            //firefox fix
-            IgnoreExtensions = true;
+            Client = tcpClient;
             UserManager = userManager;
-        }
 
-        /// <summary>
-        /// Handles initial connection
-        /// </summary>
-        void IDescriptor.OnOpen()
-        {
+            LiveCache.Add(this, String.Format(cacheKeyFormat, CacheKey));
+
+            //StartLoop(OnOpen);
             OnOpen();
         }
 
+        private async void StartLoop(Func<bool> worker)
+        {
+            await Task.Delay(50);
+            var success = worker.Invoke();
+
+            if (success)
+                StartLoop(worker);
+            else
+                OnClose();
+        }
+
         /// <summary>
         /// Handles initial connection
         /// </summary>
-        protected override void OnOpen()
+        public bool OnOpen()
         {
-            var authTicketValue = Context.CookieCollection[".AspNet.ApplicationCookie"].Value;
+            NetworkStream stream = Client.GetStream();
 
-            GetUserIDFromCookie(authTicketValue);
+            //enter to an infinite cycle to be able to handle every change in stream
+            while (!stream.DataAvailable)
+                ;
 
-            UserManager = new ApplicationUserManager(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+            var bytes = new Byte[Client.Available];
 
-            var authedUser = UserManager.FindById(_userId);
+            stream.Read(bytes, 0, bytes.Length);
 
-            var currentCharacter = authedUser.GameAccount.Characters.FirstOrDefault(ch => ch.ID.Equals(authedUser.GameAccount.CurrentlySelectedCharacter));
+            //translate bytes of request to string
+            var data = Encoding.UTF8.GetString(bytes);
 
-            if (currentCharacter == null)
+            //initial connection
+            if (new Regex("^GET").IsMatch(data))
             {
-                Send("<p>No character selected</p>");
+                var response = "HTTP/1.1 101 Switching Protocols" + Environment.NewLine
+                    + "Connection: Upgrade" + Environment.NewLine
+                    + "Upgrade: websocket" + Environment.NewLine
+                    + "Sec-WebSocket-Accept: "
+                    + Convert.ToBase64String(
+                        SHA1.Create().ComputeHash(
+                            Encoding.UTF8.GetBytes(
+                                new Regex("Sec-WebSocket-Key: (.*)").Match(data).Groups[1].Value.Trim() + guid
+                            )
+                        )
+                    ) + Environment.NewLine
+                    + Environment.NewLine;
+
+                //complete the handshake
+                Send(response);
+
+                var authTicketValue = new Regex(".AspNet.ApplicationCookie=(.*)").Match(data).Groups[1].Value.Trim();
+
+                GetUserIDFromCookie(authTicketValue);
+
+                var authedUser = UserManager.FindById(_userId);
+
+                var currentCharacter = authedUser.GameAccount.Characters.FirstOrDefault(ch => ch.ID.Equals(authedUser.GameAccount.CurrentlySelectedCharacter));
+
+                if (currentCharacter == null)
+                {
+                    Send("<p>No character selected</p>");
+                    return false;
+                }
+
+                //Try to see if they are already live
+                _currentPlayer = LiveCache.Get<Player>(currentCharacter.ID);
+
+                //Check the backup
+                if (_currentPlayer == null)
+                {
+                    var hotBack = new HotBackup(System.Web.Hosting.HostingEnvironment.MapPath("/HotBackup/"));
+                    _currentPlayer = hotBack.RestorePlayer(currentCharacter.AccountHandle, currentCharacter.ID);
+                }
+
+                //else new them up
+                if (_currentPlayer == null)
+                    _currentPlayer = new Player(currentCharacter);
+
+                _currentPlayer.Descriptor = this;
+
+                //We need to barf out to the connected client the welcome message. The client will only indicate connection has been established.
+                var welcomeMessage = new List<String>();
+
+                welcomeMessage.Add(string.Format("Welcome to alpha phase twinMUD, {0}", currentCharacter.FullName()));
+                welcomeMessage.Add("Please feel free to LOOK around.");
+
+                _currentPlayer.WriteTo(welcomeMessage);
+
+                //Send the look command in
+                Interpret.Render("look", _currentPlayer);
+            }
+
+            StartRead();
+
+            return true;
+        }
+
+        private void StartRead()
+        {
+            var buffer = new byte[1024];
+            var stream = Client.GetStream();
+            stream.BeginRead(buffer, 0, 1024, new AsyncCallback(OnMessage), buffer);
+        }
+
+        /// <summary>
+        /// Handles when the connected descriptor sends input
+        /// </summary>
+        /// <param name="e">the events of the message</param>
+        public void OnMessage(IAsyncResult result)
+        {
+            if (_currentPlayer == null)
+            {
+                OnError(new Exception("Invalid character; please reload the client and try again."));
                 return;
             }
 
-            //Try to see if they are already live
-            _currentPlayer = LiveCache.Get<Player>(currentCharacter.ID);
+            var stream = Client.GetStream();
+            stream.EndRead(result);
 
-            //Check the backup
-            if (_currentPlayer == null)
-            {
-                var hotBack = new HotBackup(System.Web.Hosting.HostingEnvironment.MapPath("/HotBackup/"));
-                _currentPlayer = hotBack.RestorePlayer(currentCharacter.AccountHandle, currentCharacter.ID);
-            }
+            var bytes = (byte[])result.AsyncState;
+            var message = Encoding.UTF8.GetString(bytes);
 
-            //else new them up
-            if (_currentPlayer == null)
-                _currentPlayer = new Player(currentCharacter);
-
-            _currentPlayer.Descriptor = this;
-
-            //We need to barf out to the connected client the welcome message. The client will only indicate connection has been established.
-            var welcomeMessage = new List<String>();
-
-            welcomeMessage.Add(string.Format("Welcome to alpha phase twinMUD, {0}", currentCharacter.FullName()));
-            welcomeMessage.Add("Please feel free to LOOK around.");
-
-            _currentPlayer.WriteTo(welcomeMessage);
-
-            //Send the look command in
-            Interpret.Render("look", _currentPlayer);
-        }
-
-        /// <summary>
-        /// Handles when the connection closes
-        /// </summary>
-        /// <param name="e">events for closing</param>
-        public void OnClose(object closeArguments)
-        {
-            OnClose((CloseEventArgs)closeArguments);
-        }
-
-        /// <summary>
-        /// Handles when the connection closes
-        /// </summary>
-        /// <param name="e">events for closing</param>
-        protected override void OnClose(CloseEventArgs e)
-        {
-            base.OnClose(e);
-        }
-
-        /// <summary>
-        /// Handles when the connection faults
-        /// </summary>
-        /// <param name="e">events for the error</param>
-        public void OnError(object errorArguments)
-        {
-            OnError((WebSocketSharp.ErrorEventArgs)errorArguments);
-        }
-
-        /// <summary>
-        /// Handles when the connection faults
-        /// </summary>
-        /// <param name="e">events for the error</param>
-        protected override void OnError(WebSocketSharp.ErrorEventArgs e)
-        {
-            //Log it
-            LoggingUtility.LogError(e.Exception);
-
-            //Do the base behavior from the websockets library
-            base.OnError(e);
-        }
-
-        /// <summary>
-        /// Handles when the connected descriptor sends input
-        /// </summary>
-        /// <param name="e">the events of the message</param>
-        public void OnMessage(object messageArguments)
-        {
-            OnMessage((MessageEventArgs)messageArguments);
-        }
-
-        /// <summary>
-        /// Handles when the connected descriptor sends input
-        /// </summary>
-        /// <param name="e">the events of the message</param>
-        protected override void OnMessage(MessageEventArgs e)
-        {
-            if (_currentPlayer == null)
-            {
-                SendWrapper("Invalid character; please reload the client and try again.");
-                this.Context.WebSocket.Close(CloseStatusCode.Abnormal, "connection aborted - no player"); ;
-            }
-
-            var errors = Interpret.Render(e.Data, _currentPlayer);
+            var errors = Interpret.Render(message, _currentPlayer);
 
             //It only sends the errors
             if (errors.Any(str => !string.IsNullOrWhiteSpace(str)))
                 SendWrapper(errors);
+
+            StartRead();
+        }
+
+        public void Send(string message)
+        {
+            var response = Encoding.ASCII.GetBytes(message);
+
+            var stream = Client.GetStream();
+
+            stream.BeginWrite(response, 0, response.Length, new AsyncCallback(SendData), null);
+        }
+
+        private void SendData(IAsyncResult result)
+        {
+            try
+            {
+                var stream = Client.GetStream();
+
+                stream.EndWrite(result);
+            }
+            catch { }
+        }
+
+        /// <summary>
+        /// Handles when the connection closes
+        /// </summary>
+        public void OnClose()
+        {
+            Client.Close();
+        }
+
+        /// <summary>
+        /// Handles when the connection faults
+        /// </summary>
+        /// <param name="err">the error</param>
+        public void OnError(Exception err)
+        {
+            //Log it
+            LoggingUtility.LogError(err);
         }
 
         /// <summary>
@@ -222,8 +283,7 @@ namespace NetMud.Websock
         {
             Send(EncapsulateOutput(finalMessage));
 
-            this.Context.WebSocket.Close(CloseStatusCode.Normal, "user exited");
-            base.OnClose(null);
+            Client.Close();
         }
 
         /// <summary>

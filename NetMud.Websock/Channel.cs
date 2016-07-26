@@ -2,14 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using WebSocketSharp.Server;
 
 namespace NetMud.Websock
 {
     /// <summary>
     /// Partial class for websocket channel details
     /// </summary>
-    public abstract class Channel : WebSocketBehavior, IChannelType
+    public abstract class Channel : IChannelType
     {
         /// <summary>
         /// The format the cachekeys for the comms objects take

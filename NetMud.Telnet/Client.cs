@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NetMud.Communication;
 using System.Net;
 using NetMud.Authentication;
+using System.Threading.Tasks;
 
 namespace NetMud.Telnet
 {
@@ -73,6 +74,26 @@ namespace NetMud.Telnet
         }
 
         public bool SendWrapper(IEnumerable<string> strings)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnClose()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnError(Exception err)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnMessage(IAsyncResult result)
+        {
+            throw new NotImplementedException();
+        }
+
+        bool IDescriptor.OnOpen()
         {
             throw new NotImplementedException();
         }
