@@ -84,6 +84,9 @@ namespace NetMud.Websock
 
         private async void StartLoop(Func<string, bool> worker)
         {
+            if (Client == null)
+                return;
+
             NetworkStream stream = Client.GetStream();
 
             await DataAvailable(stream);

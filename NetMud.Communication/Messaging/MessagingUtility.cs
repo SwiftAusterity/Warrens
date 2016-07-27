@@ -188,22 +188,22 @@ namespace NetMud.Communication.Messaging
 
             var firstIndex = originalString.IndexOf(formatToReplace);
 
-            if (firstIndex < 1)
+            if (firstIndex < 0)
                 return originalString;
 
-            var secondIndex = originalString.IndexOf(formatToReplace, firstIndex + 1);
+            var secondIndex = originalString.IndexOf(formatToReplace, firstIndex + formatToReplace.Length);
 
             //Yes 1st instance but no second instance? replace them all with empty string to scrub the string.
-            if (secondIndex < 1)
+            if (secondIndex < 0)
                 return originalString.Replace(formatToReplace, string.Empty);
 
             var lengthToSkip = formatToReplace.Length;
 
             return string.Format("{0}<span style=\"{3}\">{1}</span>{2}"
-                    , originalString.Substring(0, firstIndex)
-                    , originalString.Substring(firstIndex + lengthToSkip, secondIndex - firstIndex - lengthToSkip)
-                    , originalString.Substring(secondIndex + lengthToSkip)
-                    , styleElement);
+                , firstIndex == 0 ? string.Empty : originalString.Substring(0, firstIndex)
+                , originalString.Substring(firstIndex + lengthToSkip, secondIndex - firstIndex - lengthToSkip)
+                , originalString.Substring(secondIndex + lengthToSkip)
+                , styleElement);
         }
 
         /// <summary>
