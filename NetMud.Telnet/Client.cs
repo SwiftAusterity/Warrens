@@ -36,39 +36,13 @@ namespace NetMud.Telnet
             {
                 throw new NotImplementedException();
             }
-
             set
             {
                 throw new NotImplementedException();
             }
         }
 
-        public void Disconnect(string finalMessage)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void OnClose(object closeArguments)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void OnError(object errorArguments)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void OnMessage(object messageArguments)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void OnOpen()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool SendWrapper(string str)
+        public void Open()
         {
             throw new NotImplementedException();
         }
@@ -78,17 +52,12 @@ namespace NetMud.Telnet
             throw new NotImplementedException();
         }
 
-        public void OnClose()
+        public bool SendWrapper(string str)
         {
             throw new NotImplementedException();
         }
 
-        public void OnError(Exception err)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool OnMessage(string message)
+        public void Disconnect(string finalMessage)
         {
             throw new NotImplementedException();
         }

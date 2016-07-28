@@ -35,8 +35,6 @@ namespace NetMud.Websock
         /// </summary>
         public ApplicationUserManager UserManager { get; set; }
         internal TcpClient Client { get; set; }
-        private static byte[] data = new byte[dataSize];
-        private const int dataSize = 1024;
 
         /// <summary>
         /// The cache key for the global cache system
@@ -82,46 +80,57 @@ namespace NetMud.Websock
             LiveCache.Add(this, String.Format(cacheKeyFormat, CacheKey));
         }
 
-        private async void StartLoop(Func<string, bool> worker)
+        /// <summary>
+        /// Wraps sending messages to the connected descriptor
+        /// </summary>
+        /// <param name="strings">the output</param>
+        /// <returns>success status</returns>
+        public bool SendWrapper(IEnumerable<string> strings)
         {
-            if (Client == null)
-                return;
-
-            NetworkStream stream = Client.GetStream();
-
-            await DataAvailable(stream);
-
-            var bytes = new Byte[Client.Available];
-
-            stream.Read(bytes, 0, bytes.Length);
-
-            //translate bytes of request to string
-            var data = DecodeSocket(bytes);
-
-            if(worker.Invoke(data))
-                StartLoop(OnMessage);
-            else
-                OnClose();
-        }
-
-        private async Task<bool> DataAvailable(NetworkStream stream)
-        {
-            while (!stream.DataAvailable)
-                ;
+            Send(EncapsulateOutput(strings));
 
             return true;
         }
 
         /// <summary>
+        /// Wraps sending messages to the connected descriptor
+        /// </summary>
+        /// <param name="str">the output</param>
+        /// <returns>success status</returns>
+        public bool SendWrapper(string str)
+        {
+            Send(EncapsulateOutput(str));
+
+            return true;
+        }
+
+        /// <summary>
+        /// Disconnects the client socket
+        /// </summary>
+        /// <param name="finalMessage">the final string data to send the socket before closing it</param>
+        public void Disconnect(string finalMessage)
+        {
+            Send(EncapsulateOutput(finalMessage));
+
+            Client.Close();
+        }
+
+        public void Open()
+        {
+            new Task(OnOpen).Start();
+        }
+
+        #region "Socket Management"
+
+        /// <summary>
         /// Handles initial connection
         /// </summary>
-        public void OnOpen()
+        private async void OnOpen()
         {
             NetworkStream stream = Client.GetStream();
 
             //enter to an infinite cycle to be able to handle every change in stream
-            while (!stream.DataAvailable)
-                ;
+            await DataAvailable(stream);
 
             var bytes = new Byte[Client.Available];
 
@@ -149,7 +158,7 @@ namespace NetMud.Websock
                 //Send the handshake
                 var replyBytes = Encoding.UTF8.GetBytes(response);
 
-                stream.BeginWrite(replyBytes, 0, replyBytes.Length, new AsyncCallback(SendData), null);
+                stream.BeginWrite(replyBytes, 0, replyBytes.Length, new AsyncCallback(WriteData), null);
 
                 ValidateUser(data);
             }
@@ -159,6 +168,131 @@ namespace NetMud.Websock
             return;
         }
 
+        /// <summary>
+        /// Handles when the connected descriptor sends input
+        /// </summary>
+        /// <param name="e">the events of the message</param>
+        private bool OnMessage(string message)
+        {
+            if (_currentPlayer == null)
+            {
+                OnError(new Exception("Invalid character; please reload the client and try again."));
+                return false;
+            }
+
+            var errors = Interpret.Render(message, _currentPlayer);
+
+            //It only sends the errors
+            if (errors.Any(str => !string.IsNullOrWhiteSpace(str)))
+                SendWrapper(errors);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Handles when the connection faults
+        /// </summary>
+        /// <param name="err">the error</param>
+        private void OnError(Exception err)
+        {
+            //Log it
+            LoggingUtility.LogError(err);
+        }
+
+        /// <summary>
+        /// Begins the send process for putting data into the socket stream
+        /// </summary>
+        /// <param name="message">the string message</param>
+        private void Send(string message)
+        {
+            var response = EncodeSocket(message);
+
+            var stream = Client.GetStream();
+
+            stream.BeginWrite(response, 0, response.Length, new AsyncCallback(WriteData), null);
+        }
+
+        /// <summary>
+        /// Ends the send loop
+        /// </summary>
+        /// <param name="result">the async object for the thread</param>
+        private void WriteData(IAsyncResult result)
+        {
+            try
+            {
+                var stream = Client.GetStream();
+
+                stream.EndWrite(result);
+            }
+            catch (Exception ex)
+            {
+                OnError(ex);
+            }
+        }
+        #endregion
+
+        #region "Helpers"
+
+        /// <summary>
+        /// Handles when the connection closes
+        /// </summary>
+        private void OnClose()
+        {
+            Client.Close();
+        }
+
+        /// <summary>
+        /// Handles the wait loop for accepting input from the socket
+        /// </summary>
+        /// <param name="worker">the function that actually takes in a full message from the socker</param>
+        private async void StartLoop(Func<string, bool> worker)
+        {
+            if (Client == null)
+                OnClose();
+
+            try
+            {
+                NetworkStream stream = Client.GetStream();
+
+                await DataAvailable(stream);
+
+                var bytes = new Byte[Client.Available];
+
+                stream.Read(bytes, 0, bytes.Length);
+
+                //translate bytes of request to string
+                var data = DecodeSocket(bytes);
+
+                if (worker.Invoke(data))
+                    StartLoop(OnMessage);
+                else
+                    OnClose();
+            }
+            catch (Exception ex)
+            {
+                OnError(ex);
+            }
+        }
+
+        /// <summary>
+        /// Just sits on the stream waiting for a messgae to be sent
+        /// </summary>
+        /// <param name="stream">the network stream of the client</param>
+        /// <returns>junk boolean cause it's a task</returns>
+        private async Task<bool> DataAvailable(NetworkStream stream)
+        {
+            while (!stream.DataAvailable)
+                if (Client == null)
+                    OnClose();
+
+            return true;
+        }
+
+
+        /// <summary>
+        /// Validates the game account from the aspnet cookie
+        /// </summary>
+        /// <param name="handshake">the headers from the http request</param>
         private void ValidateUser(string handshake)
         {
             //Grab the user
@@ -207,98 +341,10 @@ namespace NetMud.Websock
         }
 
         /// <summary>
-        /// Handles when the connected descriptor sends input
+        /// Decodes WS headers and data from the stream
         /// </summary>
-        /// <param name="e">the events of the message</param>
-        public bool OnMessage(string message)
-        {
-            if (_currentPlayer == null)
-            {
-                OnError(new Exception("Invalid character; please reload the client and try again."));
-                return false;
-            }
-
-            var errors = Interpret.Render(message, _currentPlayer);
-
-            //It only sends the errors
-            if (errors.Any(str => !string.IsNullOrWhiteSpace(str)))
-                SendWrapper(errors);
-
-            return true;
-        }
-
-        public void Send(string message)
-        {
-            var response = EncodeSocket(message);
-
-            var stream = Client.GetStream();
-
-            stream.BeginWrite(response, 0, response.Length, new AsyncCallback(SendData), null);
-        }
-
-        private void SendData(IAsyncResult result)
-        {
-            try
-            {
-                var stream = Client.GetStream();
-
-                stream.EndWrite(result);
-            }
-            catch(Exception ex)
-            {
-                ///barf, log?
-            }
-        }
-
-        /// <summary>
-        /// Handles when the connection closes
-        /// </summary>
-        public void OnClose()
-        {
-            Client.Close();
-        }
-
-        /// <summary>
-        /// Handles when the connection faults
-        /// </summary>
-        /// <param name="err">the error</param>
-        public void OnError(Exception err)
-        {
-            //Log it
-            LoggingUtility.LogError(err);
-        }
-
-        /// <summary>
-        /// Wraps sending messages to the connected descriptor
-        /// </summary>
-        /// <param name="strings">the output</param>
-        /// <returns>success status</returns>
-        public bool SendWrapper(IEnumerable<string> strings)
-        {
-            Send(EncapsulateOutput(strings));
-
-            return true;
-        }
-
-        /// <summary>
-        /// Wraps sending messages to the connected descriptor
-        /// </summary>
-        /// <param name="str">the output</param>
-        /// <returns>success status</returns>
-        public bool SendWrapper(string str)
-        {
-            Send(EncapsulateOutput(str));
-
-            return true;
-        }
-
-        public void Disconnect(string finalMessage)
-        {
-            Send(EncapsulateOutput(finalMessage));
-
-            Client.Close();
-        }
-
+        /// <param name="buffer">the stream's incoming data</param>
+        /// <returns>the message sent</returns>
         private string DecodeSocket(byte[] buffer)
         {
             var length = buffer.Length;
@@ -344,6 +390,11 @@ namespace NetMud.Websock
             return Encoding.ASCII.GetString(buffer, dataIndex, dataLength);
         }
 
+        /// <summary>
+        /// Encodes string messages into ws socket language
+        /// </summary>
+        /// <param name="message">the data to encode</param>
+        /// <returns>the data to put on the stream</returns>
         private Byte[] EncodeSocket(string message)
         {
             Byte[] response;
@@ -463,5 +514,6 @@ namespace NetMud.Websock
                 }
             }
         }
+        #endregion
     }
 }

@@ -44,7 +44,6 @@ namespace NetMud.Websock
             return service.Server.Send(Encoding.ASCII.GetBytes(message)) > 0;
         }
 
-
         public void Shutdown()
         {
             var service = GetActiveService<TcpListener>();
@@ -77,7 +76,7 @@ namespace NetMud.Websock
 
                 ConnectedClients.Add(newDescriptor);
 
-                new Task(newDescriptor.OnOpen).Start();
+                newDescriptor.Open();
             }
             catch
             {

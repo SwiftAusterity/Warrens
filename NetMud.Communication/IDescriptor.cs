@@ -23,25 +23,7 @@ namespace NetMud.Communication
         /// <summary>
         /// Handles initial connection
         /// </summary>
-        void OnOpen();
-
-        /// <summary>
-        /// Handles when the connection closes
-        /// </summary>
-        /// <param name="e">events for closing</param>
-        void OnClose();
-
-        /// <summary>
-        /// Handles when the connection faults
-        /// </summary>
-        /// <param name="e">events for the error</param>
-        void OnError(Exception err);
-
-        /// <summary>
-        /// Handles when the connected descriptor sends input
-        /// </summary>
-        /// <param name="e">the events of the message</param>
-        bool OnMessage(string message);
+        void Open();
 
         /// <summary>
         /// Wraps sending messages to the connected descriptor
