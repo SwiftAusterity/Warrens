@@ -54,8 +54,10 @@
     <Compile Include="Base\Place\IPathway.cs" />
     <Compile Include="Base\Supporting\IStat.cs" />
     <Compile Include="Base\Supporting\ITranslation.cs" />
+    <Compile Include="Base\System\ConnectionType.cs" />
     <Compile Include="Base\System\IAccount.cs" />
     <Compile Include="Base\EntityBackingData\ICharacter.cs" />
+    <Compile Include="Base\System\IChannelType.cs" />
     <Compile Include="Base\System\ICommand.cs" />
     <Compile Include="Base\System\IData.cs" />
     <Compile Include="Base\System\IEntity.cs" />
@@ -63,6 +65,7 @@
     <Compile Include="Base\System\IEntityBackingData.cs" />
     <Compile Include="Base\System\IHelp.cs" />
     <Compile Include="Base\System\IReferenceData.cs" />
+    <Compile Include="Base\System\SupportedColors.cs" />
     <Compile Include="Base\World\IEconomy.cs" />
     <Compile Include="Base\Entity\IIntelligence.cs" />
     <Compile Include="Base\Supporting\IMobile.cs" />

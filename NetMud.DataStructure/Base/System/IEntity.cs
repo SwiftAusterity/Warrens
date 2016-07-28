@@ -82,6 +82,11 @@ namespace NetMud.DataStructure.Base.System
         /// Method by which this entity has output (from commands and events) "shown" to it
         /// </summary>
         bool WriteTo(IEnumerable<string> input);
+
+        /// <summary>
+        /// How this entity communicates with the system
+        /// </summary>
+        IChannelType ConnectionType { get; }
     }
 
     /// <summary>

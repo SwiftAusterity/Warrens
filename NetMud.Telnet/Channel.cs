@@ -1,4 +1,7 @@
 ﻿using NetMud.Communication;
+using NetMud.Communication.Messaging;
+using NetMud.DataStructure.Base.System;
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -51,6 +54,38 @@ namespace NetMud.Telnet
                 return String.Format("{1}{0}", BumperElement, str);
             else
                 return BumperElement; //blank strings mean carriage returns
+        }
+
+        private Dictionary<SupportedColors, string> _colors = new Dictionary<SupportedColors, string> 
+        {
+            { SupportedColors.Bold,         String.Empty },
+            { SupportedColors.Italics,      String.Empty },
+            { SupportedColors.Blue,         String.Empty },
+            { SupportedColors.LightBlue,    String.Empty },
+            { SupportedColors.Orange,       String.Empty },
+            { SupportedColors.LightOrange,  String.Empty },
+            { SupportedColors.Yellow,       String.Empty },
+            { SupportedColors.LightYellow,  String.Empty },
+            { SupportedColors.Green,        String.Empty },
+            { SupportedColors.LightGreen,   String.Empty },
+            { SupportedColors.Indigo,       String.Empty },
+            { SupportedColors.LightPurple,  String.Empty },
+            { SupportedColors.Red,          String.Empty },
+            { SupportedColors.LightRed,     String.Empty },
+            { SupportedColors.Pink,         String.Empty },
+            { SupportedColors.LightPink,    String.Empty }
+        };
+
+
+        public Dictionary<SupportedColors, string> SupportedColorTranslations
+        {
+            get { return _colors; }
+        }
+
+
+        public bool ReplaceColor(SupportedColors styleType, string formatToReplace, ref string originalString)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -115,6 +115,9 @@ namespace NetMud.Websock
             Client.Close();
         }
 
+        /// <summary>
+        /// Open the socket, the client gets set up in the constructor
+        /// </summary>
         public void Open()
         {
             new Task(OnOpen).Start();

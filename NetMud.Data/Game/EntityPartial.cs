@@ -1,9 +1,11 @@
-﻿using NetMud.DataAccess;
+﻿using NetMud.Communication;
+using NetMud.Communication.Messaging;
+using NetMud.DataAccess;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
-
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NetMud.Data.Game
 {
@@ -57,8 +59,22 @@ namespace NetMud.Data.Game
         /// Method by which this entity has output (from commands and events) "shown" to it
         /// </summary>
         public virtual bool WriteTo(IEnumerable<string> input)
-        { 
-            return TriggerAIAction(input);
+        {
+            var strings = MessagingUtility.TranslateColorVariables(input.ToArray(), this);
+
+            return TriggerAIAction(strings);
+        }
+
+        private IChannelType _internalDescriptor;
+        public virtual IChannelType ConnectionType
+        {
+            get 
+            { 
+                if(_internalDescriptor == null)
+                    _internalDescriptor = new InternalChannel();
+
+                return _internalDescriptor;
+            }
         }
 
         /// <summary>

@@ -124,9 +124,7 @@ namespace NetMud.Communication.Messaging
         /// <returns>translated output</returns>
         private IEnumerable<string> TranslateOutput(IEnumerable<string> output, Dictionary<MessagingTargetType, IEntity[]> entities)
         {
-             output = MessagingUtility.TranslateEntityVariables(output.ToArray(), entities);
-
-             return MessagingUtility.TranslateColorVariables(output.ToArray());
+             return MessagingUtility.TranslateEntityVariables(output.ToArray(), entities);
         }
     }
 

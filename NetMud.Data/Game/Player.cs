@@ -1,4 +1,5 @@
 ﻿using NetMud.Communication;
+using NetMud.Communication.Messaging;
 using NetMud.Data.EntityBackingData;
 using NetMud.Data.Reference;
 using NetMud.Data.System;
@@ -73,6 +74,16 @@ namespace NetMud.Data.Game
             }
         }
 
+        public override IChannelType ConnectionType
+        {
+            get
+            {
+                //All player descriptors should be of ichanneltype too
+                return (IChannelType)Descriptor;
+            }
+        }
+
+
         /// <summary>
         /// Function used to close this connection
         /// </summary>
@@ -81,8 +92,10 @@ namespace NetMud.Data.Game
             Descriptor.Disconnect(String.Empty);
         }
 
-        public override bool WriteTo(IEnumerable<string> strings)
+        public override bool WriteTo(IEnumerable<string> input)
         {
+            var strings = MessagingUtility.TranslateColorVariables(input.ToArray(), this);
+
             return Descriptor.SendWrapper(strings);
         }
 

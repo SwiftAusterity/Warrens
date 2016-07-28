@@ -45,11 +45,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="InternalChannel.cs" />
     <Compile Include="Messaging\MessageCluster.cs" />
     <Compile Include="Messaging\MessagingUtility.cs" />
     <Compile Include="SystemComm.cs" />
-    <Compile Include="ConnectionType.cs" />
-    <Compile Include="IChannelType.cs" />
     <Compile Include="IDescriptor.cs" />
     <Compile Include="IServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
