@@ -75,7 +75,7 @@ namespace NetMud.Websock
         {
             //If the origin string or formatting is blank just return the orginal string
             if (string.IsNullOrWhiteSpace(originalString) || string.IsNullOrWhiteSpace(formatToReplace))
-                return true;
+                return false;
 
             var styleElement = SupportedColorTranslations[styleType];
 
@@ -84,10 +84,11 @@ namespace NetMud.Websock
                 originalString = originalString.Replace(formatToReplace, String.Empty);
             else
             {
-
                 var firstIndex = originalString.IndexOf(formatToReplace);
 
-                if (firstIndex > 0)
+                if (firstIndex < 0)
+                    return false;
+                else
                 {
                     var secondIndex = originalString.IndexOf(formatToReplace, firstIndex + formatToReplace.Length);
 

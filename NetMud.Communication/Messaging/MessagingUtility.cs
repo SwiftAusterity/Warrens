@@ -67,7 +67,7 @@ namespace NetMud.Communication.Messaging
             Match currentMatch;
 
             while (stillFound &&
-                    (currentMatch = Regex.Match(message, colorPattern)) != null)
+                    (currentMatch = Regex.Match(message, colorPattern)).Success)
             {
                 //Need a way to short-circut some bozo creating an infinite loop
                 stillFound = recipient.ConnectionType.ReplaceColor(ColorGlyphs[currentMatch.Value], currentMatch.Value, ref message);
