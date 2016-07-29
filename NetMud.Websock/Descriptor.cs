@@ -216,6 +216,21 @@ namespace NetMud.Websock
         }
 
         /// <summary>
+        /// Ping the client for keepalive
+        /// </summary>
+        private void SendPing()
+        {
+            var stream = Client.GetStream();
+
+            var ping = new byte[2];
+
+            ping[0] = (Byte)129;
+            ping[1] = (Byte)0;
+
+            stream.BeginWrite(ping, 0, 1, new AsyncCallback(WriteData), null);
+        }
+
+        /// <summary>
         /// Ends the send loop
         /// </summary>
         /// <param name="result">the async object for the thread</param>
@@ -284,9 +299,41 @@ namespace NetMud.Websock
         /// <returns>junk boolean cause it's a task</returns>
         private async Task<bool> DataAvailable(NetworkStream stream)
         {
+            var timeIdle = 0;
             while (!stream.DataAvailable)
+            {
                 if (Client == null)
+                {
                     OnClose();
+                    return false;
+                }
+
+                await Task.Delay(500);
+
+                switch (timeIdle)
+                {
+                    default:
+                        {
+                            if (timeIdle % 15 == 0)
+                                SendPing();
+
+                            break;
+                        }
+                    case 600:
+                        {
+                            Send("You have been idle for an extended period of time. You will be logged out shortly.");
+                            break;
+                        }
+                    case 1200:
+                        {
+                            Disconnect("You have been idle too long. You have been disconnected.");
+                            return false;
+                            break;
+                        }
+                }
+
+                timeIdle++;
+            }
 
             return true;
         }
