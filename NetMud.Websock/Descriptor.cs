@@ -328,7 +328,6 @@ namespace NetMud.Websock
                         {
                             Disconnect("You have been idle too long. You have been disconnected.");
                             return false;
-                            break;
                         }
                 }
 

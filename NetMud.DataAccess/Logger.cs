@@ -18,6 +18,7 @@ namespace NetMud.DataAccess
         CommandUse,
         Restore,
         Backup,
+        BackingDataAccess,
         AccountActivity,
         Authentication,
         ProcessingLoops,
