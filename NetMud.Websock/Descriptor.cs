@@ -224,10 +224,10 @@ namespace NetMud.Websock
 
             var ping = new byte[2];
 
-            ping[0] = (Byte)129;
+            ping[0] = (Byte)(9 | 0x80);
             ping[1] = (Byte)0;
 
-            stream.BeginWrite(ping, 0, 1, new AsyncCallback(WriteData), null);
+            stream.BeginWrite(ping, 0, 2, new AsyncCallback(WriteData), null);
         }
 
         /// <summary>
@@ -281,10 +281,15 @@ namespace NetMud.Websock
                 //translate bytes of request to string
                 var data = DecodeSocket(bytes);
 
-                if (worker.Invoke(data))
-                    StartLoop(OnMessage);
+                if (!String.IsNullOrWhiteSpace(data))
+                {
+                    if (worker.Invoke(data))
+                        StartLoop(OnMessage);
+                    else
+                        OnClose();
+                }
                 else
-                    OnClose();
+                    StartLoop(OnMessage);
             }
             catch (Exception ex)
             {
@@ -314,7 +319,7 @@ namespace NetMud.Websock
                 {
                     default:
                         {
-                            if (timeIdle % 15 == 0)
+                            if (timeIdle > 0 && timeIdle % 15 == 0)
                                 SendPing();
 
                             break;
