@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Web.Configuration;
+
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.Utility;
@@ -223,11 +224,11 @@ namespace NetMud.DataAccess
         {
             var content = String.Empty;
 
-            if (!String.IsNullOrWhiteSpace(BaseDirectory) 
-                && Directory.Exists(BaseDirectory) 
-                && Directory.Exists(BaseDirectory + "Current/") 
+            if (!String.IsNullOrWhiteSpace(BaseDirectory)
+                && Directory.Exists(BaseDirectory)
+                && Directory.Exists(BaseDirectory + "Current/")
                 && File.Exists(BaseDirectory + "Current/" + channel + ".txt"))
-            { 
+            {
                 using (var logFile = File.Open(BaseDirectory + "Current/" + channel + ".txt", FileMode.Open))
                 {
                     byte[] bytes = new byte[logFile.Length];
