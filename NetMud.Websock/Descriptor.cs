@@ -17,6 +17,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web.Hosting;
 
 namespace NetMud.Websock
 {
@@ -370,7 +371,7 @@ namespace NetMud.Websock
             //Check the backup
             if (_currentPlayer == null)
             {
-                var hotBack = new HotBackup(System.Web.Hosting.HostingEnvironment.MapPath("/HotBackup/"));
+                var hotBack = new HotBackup();
                 _currentPlayer = hotBack.RestorePlayer(currentCharacter.AccountHandle, currentCharacter.ID);
             }
 

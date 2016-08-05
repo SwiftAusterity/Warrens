@@ -2091,7 +2091,7 @@ namespace NetMud.Controllers
         #region Running Data
         public ActionResult BackupWorld()
         {
-            var hotBack = new HotBackup(HostingEnvironment.MapPath("/HotBackup/"));
+            var hotBack = new HotBackup();
 
             hotBack.WriteLiveBackup();
 
@@ -2100,7 +2100,7 @@ namespace NetMud.Controllers
 
         public ActionResult RestoreWorld()
         {
-            var hotBack = new HotBackup(HostingEnvironment.MapPath("/HotBackup/"));
+            var hotBack = new HotBackup();
 
             //TODO: Ensure we suspend EVERYTHING going on (fights, etc), add some sort of announcement globally and delay the entire thing on a timer
 

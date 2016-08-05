@@ -14,12 +14,12 @@ namespace NetMud.DataAccess.FileSystem
         /// <summary>
         /// The base directory for these files, must be overriden
         /// </summary>
-        internal abstract string BaseDirectory { get; }
+        public abstract string BaseDirectory { get; }
 
         /// <summary>
         /// Directory name for whatever is "current", should probably be left alone
         /// </summary>
-        internal virtual string CurrentDirectoryName
+        public virtual string CurrentDirectoryName
         {
             get
             {
@@ -30,7 +30,7 @@ namespace NetMud.DataAccess.FileSystem
         /// <summary>
         /// Directory for where archived files are moved to
         /// </summary>
-        internal virtual string ArchiveDirectoryName
+        public virtual string ArchiveDirectoryName
         {
             get
             {
@@ -41,7 +41,7 @@ namespace NetMud.DataAccess.FileSystem
         /// <summary>
         /// The default directory name for when files are rolled over or archived
         /// </summary>
-        internal virtual string DatedBackupDirectory
+        public virtual string DatedBackupDirectory
         {
             get
             {
@@ -62,7 +62,7 @@ namespace NetMud.DataAccess.FileSystem
         /// </summary>
         /// <param name="fileName">the file to read in</param>
         /// <returns>the file's data</returns>
-        internal byte[] ReadCurrentFileByPath(string fileName)
+        public byte[] ReadCurrentFileByPath(string fileName)
         {
             byte[] bytes = new byte[0];
             var filePath = BaseDirectory + CurrentDirectoryName + fileName;
@@ -84,7 +84,7 @@ namespace NetMud.DataAccess.FileSystem
         /// </summary>
         /// <param name="file">the file to read from</param>
         /// <returns>the file's data</returns>
-        internal byte[] ReadFile(FileInfo file)
+        public byte[] ReadFile(FileInfo file)
         {
             byte[] bytes = new byte[0];
 
@@ -103,19 +103,15 @@ namespace NetMud.DataAccess.FileSystem
         /// <param name="directoryName">the directory to create</param>
         /// <param name="createIfMissing">creates the directory if it doesn't already exist</param>
         /// <returns>success</returns>
-        internal bool VerifyDirectory(string directoryName, bool createIfMissing = true)
+        public bool VerifyDirectory(string directoryName, bool createIfMissing = true)
         {
             var mappedName = String.Format("{0}{1}/", BaseDirectory, directoryName);
 
             try
             {
+                //always create the base dir
                 if (!Directory.Exists(BaseDirectory))
-                {
-                    if (!createIfMissing)
-                        return false;
-
                     Directory.CreateDirectory(BaseDirectory);
-                }
 
                 if (Directory.Exists(mappedName))
                     return true;
@@ -139,7 +135,7 @@ namespace NetMud.DataAccess.FileSystem
         /// <param name="bytes">the data to write</param>
         /// <param name="backupFirst">should this file be archived first using the default archiving directory structure</param>
         /// <param name="writeMode">should this file be overwritten or appended to</param>
-        internal void WriteToFile(string fullFileName, byte[] bytes, bool backupFirst = false, FileMode writeMode = FileMode.Truncate)
+        public void WriteToFile(string fullFileName, byte[] bytes, bool backupFirst = false, FileMode writeMode = FileMode.Truncate)
         {
             FileStream entityFile = null;
 
@@ -179,14 +175,13 @@ namespace NetMud.DataAccess.FileSystem
         /// </summary>
         /// <param name="fileName">the file to be rolled over</param>
         /// <returns>success</returns>
-        internal bool ArchiveFile(string fileName)
+        public bool ArchiveFile(string fileName)
         {
             var currentFileName = String.Format("{0}{1}{2}", BaseDirectory, CurrentDirectoryName, fileName);
             var archiveFileName = String.Format("{0}{1}{2}", BaseDirectory, ArchiveDirectoryName, fileName);
 
             //Why backup something that doesnt exist
-            if (!VerifyDirectory(BaseDirectory)
-                || !VerifyDirectory(BaseDirectory + CurrentDirectoryName)
+            if (!VerifyDirectory(BaseDirectory + CurrentDirectoryName)
                 || !VerifyDirectory(BaseDirectory + ArchiveDirectoryName)
                 || !File.Exists(currentFileName))
                 return false;
@@ -201,14 +196,13 @@ namespace NetMud.DataAccess.FileSystem
         /// <param name="currentFileName">the file to be rolled over</param>
         /// <param name="archiveFileName">the filename to be rolled over to</param>
         /// <returns>success</returns>
-        internal bool ArchiveFile(string currentFileName, string archiveFileName)
+        public bool ArchiveFile(string currentFileName, string archiveFileName)
         {
             currentFileName = String.Format("{0}{1}{2}", BaseDirectory, CurrentDirectoryName, currentFileName);
             archiveFileName = String.Format("{0}{1}{2}", BaseDirectory, ArchiveDirectoryName, archiveFileName);
 
             //Why backup something that doesnt exist
-            if (!VerifyDirectory(BaseDirectory)
-                || !VerifyDirectory(BaseDirectory + CurrentDirectoryName)
+            if (!VerifyDirectory(BaseDirectory + CurrentDirectoryName)
                 || !VerifyDirectory(BaseDirectory + ArchiveDirectoryName)
                 || !File.Exists(currentFileName))
                 return false;
@@ -223,7 +217,7 @@ namespace NetMud.DataAccess.FileSystem
         /// <param name="fileName">the file to roll over</param>
         /// <param name="dateFormattedDirectory">overrides the default DatedBackupDirectory setting</param>
         /// <returns>success</returns>
-        internal bool ArchiveDatedFile(string fileName, string dateFormattedDirectory = "")
+        public bool ArchiveDatedFile(string fileName, string dateFormattedDirectory = "")
         {
             if (String.IsNullOrWhiteSpace(dateFormattedDirectory))
                 dateFormattedDirectory = DatedBackupDirectory;
@@ -232,8 +226,7 @@ namespace NetMud.DataAccess.FileSystem
             var archiveFileName = String.Format("{0}{1}", dateFormattedDirectory, fileName);
 
             //Why backup something that doesnt exist
-            if (!VerifyDirectory(BaseDirectory)
-                || !VerifyDirectory(BaseDirectory + CurrentDirectoryName)
+            if (!VerifyDirectory(BaseDirectory + CurrentDirectoryName)
                 || !VerifyDirectory(BaseDirectory + ArchiveDirectoryName)
                 || !File.Exists(currentFileName))
                 return false;

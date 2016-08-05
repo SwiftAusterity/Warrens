@@ -43,7 +43,7 @@ namespace NutMud.Commands.System
 
             messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation, null);
 
-            var hotBack = new HotBackup(HostingEnvironment.MapPath("/HotBackup/"));
+            var hotBack = new HotBackup();
 
             //Save the player out
             hotBack.WriteOnePlayer(player);

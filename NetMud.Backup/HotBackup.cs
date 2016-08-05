@@ -12,6 +12,8 @@ using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.EntityBackingData;
 using System.Reflection;
 using NetMud.DataStructure.Behaviors.System;
+using NetMud.DataAccess.FileSystem;
+using System.Web.Hosting;
 
 namespace NetMud.Backup
 {
@@ -19,20 +21,17 @@ namespace NetMud.Backup
     /// The engine behind the system that constantly writes out live data so we can reboot into the prior state if needs be
     /// BaseDirectory should end with a trailing slash
     /// </summary>
-    public class HotBackup
+    public class HotBackup : FileAccessor
     {
         /// <summary>
         /// Root directory where all the backup stuff gets saved too
         /// </summary>
-        public string BaseDirectory { get; private set; }
-
-        /// <summary>
-        /// Create an instance of the hotbackup utility
-        /// </summary>
-        /// <param name="baseDirectory">Root directory where all the backup stuff gets saved too</param>
-        public HotBackup(string baseDirectory)
+        public override string BaseDirectory
         {
-            BaseDirectory = baseDirectory;
+            get
+            {
+                return HostingEnvironment.MapPath("HotBackup/");
+            }
         }
 
         /// <summary>
@@ -60,33 +59,18 @@ namespace NetMud.Backup
             {
                 LoggingUtility.Log("World backup to current INITIATED.", LogChannels.Backup, true);
 
-                //Need the base dir
-                if (!Directory.Exists(BaseDirectory))
-                    Directory.CreateDirectory(BaseDirectory);
-
-                //Wipe out the existing one so we can create all new files
-                if (Directory.Exists(BaseDirectory + "Current/"))
+                //wth, no current directory? Noithing to move then
+                if (VerifyDirectory(CurrentDirectoryName, false) && VerifyDirectory(ArchiveDirectoryName))
                 {
                     var currentRoot = new DirectoryInfo(BaseDirectory + "Current/");
 
-                    if (!Directory.Exists(BaseDirectory + "Backups/"))
-                        Directory.CreateDirectory(BaseDirectory + "Backups/");
-
-                    var newBackupName = String.Format("{0}Backups/{1}{2}{3}_{4}{5}{6}/",
-                                        BaseDirectory
-                                        , DateTime.Now.Year
-                                        , DateTime.Now.Month
-                                        , DateTime.Now.Day
-                                        , DateTime.Now.Hour
-                                        , DateTime.Now.Minute
-                                        , DateTime.Now.Second);
-
                     //move is literal move, no need to delete afterwards
-                    currentRoot.MoveTo(newBackupName);
+                    currentRoot.MoveTo(DatedBackupDirectory);
                 }
 
-                var currentBackupDirectory = BaseDirectory + "Current/";
-                Directory.CreateDirectory(currentBackupDirectory);
+                //something very wrong is happening, it'll get logged
+                if (!VerifyDirectory(CurrentDirectoryName))
+                    return;
 
                 //Get all the entities (which should be a ton of stuff)
                 var entities = LiveCache.GetAll();
@@ -94,19 +78,17 @@ namespace NetMud.Backup
                 //Dont save players to the hot section, there's another place for them
                 foreach (var entity in entities.Where(ent => ent.GetType() != typeof(Player)))
                 {
-                    var baseTypeName = entity.GetType().Name;
-
-                    DirectoryInfo entityDirectory;
-
-                    //Is there a directory for this entity type? If not, then create it
-                    if (!Directory.Exists(currentBackupDirectory + baseTypeName))
-                        entityDirectory = Directory.CreateDirectory(currentBackupDirectory + baseTypeName);
-                    else
-                        entityDirectory = new DirectoryInfo(currentBackupDirectory + baseTypeName);
-
                     //Don't write objects that are on live players, player backup does that itself
                     if (entity.CurrentLocation != null && entity.CurrentLocation.GetType() == typeof(Player))
                         continue;
+
+                    var baseTypeName = entity.GetType().Name;
+
+                    //again, false on verify is bad news
+                    if(!VerifyDirectory(CurrentDirectoryName + baseTypeName))
+                        continue;
+
+                    DirectoryInfo entityDirectory = new DirectoryInfo(currentBackupDirectory + baseTypeName);
 
                     WriteEntity(entityDirectory, entity);
                 }
@@ -133,15 +115,8 @@ namespace NetMud.Backup
             {
                 LoggingUtility.Log("All Players backup INITIATED.", LogChannels.Backup, true);
 
-                //Need the base dir
-                if (!Directory.Exists(BaseDirectory))
-                    Directory.CreateDirectory(BaseDirectory);
-
-                var playersDir = BaseDirectory + "Players/";
-
-                //and the base players dir
-                if (!Directory.Exists(playersDir))
-                    Directory.CreateDirectory(playersDir);
+                if (!VerifyDirectory("Players/", true))
+                    throw new Exception("Players directory unable to be verified or created during full backup.");
 
                 //Get all the players
                 var entities = LiveCache.GetAll<Player>();
@@ -168,20 +143,14 @@ namespace NetMud.Backup
         /// <returns></returns>
         public bool WriteOnePlayer(Player entity, bool checkDirectories = true)
         {
-            var playersDir = BaseDirectory + "Players/";
+            var playersDir = CurrentDirectoryName + "Players/";
 
             //don't do double duty with the directory checking please
             if (checkDirectories)
             {
                 LoggingUtility.Log("Backing up player character " + entity.DataTemplate.ID + ".", LogChannels.Backup, true);
 
-                //Need the base dir
-                if (!Directory.Exists(BaseDirectory))
-                    Directory.CreateDirectory(BaseDirectory);
-
-                //and the base players dir
-                if (!Directory.Exists(playersDir))
-                    Directory.CreateDirectory(playersDir);
+                VerifyDirectory(playersDir);
             }
 
             try
@@ -190,16 +159,16 @@ namespace NetMud.Backup
 
                 var charDirName = playersDir + charData.AccountHandle + "/" + charData.ID + "/";
 
-                if (!Directory.Exists(charDirName))
-                    Directory.CreateDirectory(charDirName);
+                if (!VerifyDirectory(charDirName))
+                    return false;
 
                 //Wipe out the existing one so we can create all new files
-                if (Directory.Exists(charDirName + "Current/"))
+                if (VerifyDirectory(charDirName + "Current/", false))
                 {
                     var currentRoot = new DirectoryInfo(charDirName + "Current/");
 
-                    if (!Directory.Exists(charDirName + "Backups/"))
-                        Directory.CreateDirectory(charDirName + "Backups/");
+                    if (!VerifyDirectory(charDirName + "Backups/"))
+                        return;
 
                     var newBackupName = String.Format("{0}Backups/{1}{2}{3}_{4}{5}{6}/",
                                         charDirName

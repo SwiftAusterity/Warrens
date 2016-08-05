@@ -9,7 +9,7 @@ namespace NetMud
     {
         public static void PreloadSupportingEntities()
         {
-            var hotBack = new HotBackup(HostingEnvironment.MapPath("/HotBackup/"));
+            var hotBack = new HotBackup();
 
             //Our live data restore failed, reload the entire world from backing data
             if (!hotBack.RestoreLiveBackup())

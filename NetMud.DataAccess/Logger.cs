@@ -124,7 +124,7 @@ namespace NetMud.DataAccess
         /// <summary>
         /// Base directory to push logs to
         /// </summary>
-        internal override string BaseDirectory
+        public override string BaseDirectory
         {
             get
             {
