@@ -8,6 +8,8 @@ using System.Web.Configuration;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.Utility;
+using NetMud.DataAccess.FileSystem;
+using System.Web.Hosting;
 
 namespace NetMud.DataAccess
 {
@@ -60,7 +62,7 @@ namespace NetMud.DataAccess
         /// <returns>a list of the log file names</returns>
         public static IEnumerable<string> GetCurrentLogNames()
         {
-            var logger = new Logger(WebConfigurationManager.AppSettings["LogPath"]);
+            var logger = new Logger();
 
             return logger.GetCurrentLogNames();
         }
@@ -72,7 +74,7 @@ namespace NetMud.DataAccess
         /// <returns>the content</returns>
         public static string GetCurrentLogContent(string channel)
         {
-            var logger = new Logger(WebConfigurationManager.AppSettings["LogPath"]);
+            var logger = new Logger();
 
             return logger.GetCurrentLogContent(channel);
         }
@@ -95,7 +97,7 @@ namespace NetMud.DataAccess
         /// <returns>success status</returns>
         public static bool RolloverLog(string channel)
         {
-            var logger = new Logger(WebConfigurationManager.AppSettings["LogPath"]);
+            var logger = new Logger();
 
             return logger.RolloverLog(channel);
         }
@@ -108,7 +110,7 @@ namespace NetMud.DataAccess
         /// <param name="keepItQuiet">Announce it in game or not</param>
         private static void CommitLog(string content, string channel, bool keepItQuiet)
         {
-            var logger = new Logger(WebConfigurationManager.AppSettings["LogPath"]);
+            var logger = new Logger();
 
             logger.WriteToLog(content, channel, keepItQuiet);
         }
@@ -117,20 +119,17 @@ namespace NetMud.DataAccess
     /// <summary>
     /// Internal file access for logging
     /// </summary>
-    internal class Logger
+    internal class Logger : FileAccessor
     {
         /// <summary>
         /// Base directory to push logs to
         /// </summary>
-        private string BaseDirectory;
-
-        /// <summary>
-        /// Create an instance of the logger
-        /// </summary>
-        /// <param name="logDirectoryPath">Base directory to push logs to</param>
-        public Logger(string logDirectoryPath)
+        internal override string BaseDirectory
         {
-            BaseDirectory = logDirectoryPath;
+            get
+            {
+                return HostingEnvironment.MapPath(WebConfigurationManager.AppSettings["LogPath"]);
+            }
         }
 
         /// <summary>
@@ -152,7 +151,7 @@ namespace NetMud.DataAccess
         public void WriteToLog(string content, string channel, bool beQuiet = false)
         {
             //Write to the log file first
-            WriteToFile(content, channel);
+            WriteLine(content, channel);
 
             //Quiet means only write to file, non-quiet means write to whomever is subscribed
             if (!beQuiet)
@@ -188,10 +187,8 @@ namespace NetMud.DataAccess
         /// <returns>success status</returns>
         public bool RolloverLog(string channel)
         {
-            var currentLogName = BaseDirectory + "Current/" + channel + ".txt";
-            var archiveLogName = String.Format("{0}Archive/{1}_{2}{3}{4}_{5}{6}{7}.txt",
-                    BaseDirectory
-                    , channel
+            var archiveLogName = String.Format("{1}_{2}{3}{4}_{5}{6}{7}.txt",
+                    channel
                     , DateTime.Now.Year
                     , DateTime.Now.Month
                     , DateTime.Now.Day
@@ -199,20 +196,7 @@ namespace NetMud.DataAccess
                     , DateTime.Now.Minute
                     , DateTime.Now.Second);
 
-
-            if (!String.IsNullOrWhiteSpace(BaseDirectory)
-                && Directory.Exists(BaseDirectory)
-                && Directory.Exists(BaseDirectory + "Current/")
-                && File.Exists(currentLogName))
-            {
-                if (!Directory.Exists(BaseDirectory + "Archive/"))
-                    Directory.CreateDirectory(BaseDirectory + "Archive/");
-
-                File.Move(currentLogName, archiveLogName);
-                return true;
-            }
-
-            return false;
+            return ArchiveFile(channel + ".txt", archiveLogName);
         }
 
         /// <summary>
@@ -224,18 +208,10 @@ namespace NetMud.DataAccess
         {
             var content = String.Empty;
 
-            if (!String.IsNullOrWhiteSpace(BaseDirectory)
-                && Directory.Exists(BaseDirectory)
-                && Directory.Exists(BaseDirectory + "Current/")
-                && File.Exists(BaseDirectory + "Current/" + channel + ".txt"))
-            {
-                using (var logFile = File.Open(BaseDirectory + "Current/" + channel + ".txt", FileMode.Open))
-                {
-                    byte[] bytes = new byte[logFile.Length];
-                    logFile.Read(bytes, 0, (int)logFile.Length);
-                    content = Encoding.UTF8.GetString(bytes);
-                }
-            }
+            var bytes = ReadCurrentFileByPath(channel + ".txt");
+
+            if(bytes.Length > 0)
+                content = Encoding.UTF8.GetString(bytes);
 
             return content;
         }
@@ -245,47 +221,17 @@ namespace NetMud.DataAccess
         /// </summary>
         /// <param name="content">the content to write</param>
         /// <param name="channel">the log file to append it to</param>
-        private void WriteToFile(string content, string channel)
+        private void WriteLine(string content, string channel)
         {
-            FileStream thisLog = null;
+            var fileName = channel + ".txt";
+            var timeStamp = String.Format("[{0:0000}/{1:00}/{2:00} {3:00}:{4:00}:{5:00}]:  ", DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
 
-            try
-            {
-                //Bail, why is there no base directory?
-                if (String.IsNullOrWhiteSpace(BaseDirectory))
-                    return;
+            //Add a line terminator PLEASE
+            content += Environment.NewLine;
 
-                if (!Directory.Exists(BaseDirectory))
-                    Directory.CreateDirectory(BaseDirectory);
+            var bytes = Encoding.UTF8.GetBytes(timeStamp + content);
 
-                var currentDirectory = BaseDirectory + "Current/";
-                if (!Directory.Exists(currentDirectory))
-                    Directory.CreateDirectory(currentDirectory);
-
-                if (!File.Exists(currentDirectory + channel + ".txt"))
-                    thisLog = File.Create(currentDirectory + channel + ".txt");
-                else
-                    thisLog = File.Open(currentDirectory + channel + ".txt", FileMode.Append);
-                //Add a line terminator PLEASE
-                content += Environment.NewLine;
-                var timeStamp = String.Format("[{0:0000}/{1:00}/{2:00} {3:00}:{4:00}:{5:00}]:  ", DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-
-                var bytes = Encoding.UTF8.GetBytes(timeStamp + content);
-                thisLog.Write(bytes, 0, bytes.Length);
-
-                //Don't forget to write the file out
-                thisLog.Flush();
-            }
-            catch
-            {
-                //dont throw on trying to write the log
-            }
-            finally
-            {
-                //dont not do this everEVERVERRFCFEVVEEV
-                if (thisLog != null)
-                    thisLog.Dispose();
-            }
+            WriteToFile(fileName, bytes, false, FileMode.Append);
         }
     }
 }
