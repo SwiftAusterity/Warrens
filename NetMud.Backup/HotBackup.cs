@@ -9,9 +9,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NetMud.DataStructure.Base.Place;
-using NetMud.DataStructure.Base.EntityBackingData;
-using System.Reflection;
-using NetMud.DataStructure.Behaviors.System;
 using NetMud.DataAccess.FileSystem;
 using System.Web.Hosting;
 
@@ -21,19 +18,8 @@ namespace NetMud.Backup
     /// The engine behind the system that constantly writes out live data so we can reboot into the prior state if needs be
     /// BaseDirectory should end with a trailing slash
     /// </summary>
-    public class HotBackup : FileAccessor
+    public class HotBackup
     {
-        /// <summary>
-        /// Root directory where all the backup stuff gets saved too
-        /// </summary>
-        public override string BaseDirectory
-        {
-            get
-            {
-                return HostingEnvironment.MapPath("HotBackup/");
-            }
-        }
-
         /// <summary>
         /// Something went wrong with restoring the live backup, this loads all persistence singeltons from the database (rooms, paths, spawns)
         /// </summary>
@@ -55,22 +41,13 @@ namespace NetMud.Backup
         /// <returns>Success state</returns>
         public bool WriteLiveBackup()
         {
+            var liveDataAccessor = new LiveData();
+
             try
             {
                 LoggingUtility.Log("World backup to current INITIATED.", LogChannels.Backup, true);
 
-                //wth, no current directory? Noithing to move then
-                if (VerifyDirectory(CurrentDirectoryName, false) && VerifyDirectory(ArchiveDirectoryName))
-                {
-                    var currentRoot = new DirectoryInfo(BaseDirectory + "Current/");
-
-                    //move is literal move, no need to delete afterwards
-                    currentRoot.MoveTo(DatedBackupDirectory);
-                }
-
-                //something very wrong is happening, it'll get logged
-                if (!VerifyDirectory(CurrentDirectoryName))
-                    return;
+                liveDataAccessor.ArchiveFull();
 
                 //Get all the entities (which should be a ton of stuff)
                 var entities = LiveCache.GetAll();
@@ -82,15 +59,7 @@ namespace NetMud.Backup
                     if (entity.CurrentLocation != null && entity.CurrentLocation.GetType() == typeof(Player))
                         continue;
 
-                    var baseTypeName = entity.GetType().Name;
-
-                    //again, false on verify is bad news
-                    if(!VerifyDirectory(CurrentDirectoryName + baseTypeName))
-                        continue;
-
-                    DirectoryInfo entityDirectory = new DirectoryInfo(currentBackupDirectory + baseTypeName);
-
-                    WriteEntity(entityDirectory, entity);
+                    liveDataAccessor.WriteEntity(entity);
                 }
 
                 LoggingUtility.Log("Live world written to current.", LogChannels.Backup, true);
@@ -111,84 +80,20 @@ namespace NetMud.Backup
         /// <returns>whether or not it succeeded</returns>
         public bool WritePlayers()
         {
+            var playerAccessor = new PlayerData();
             try
             {
                 LoggingUtility.Log("All Players backup INITIATED.", LogChannels.Backup, true);
-
-                if (!VerifyDirectory("Players/", true))
-                    throw new Exception("Players directory unable to be verified or created during full backup.");
 
                 //Get all the players
                 var entities = LiveCache.GetAll<Player>();
 
                 foreach (var entity in entities)
-                    WriteOnePlayer(entity, false);
+                    playerAccessor.WriteOnePlayer(entity);
 
                 LoggingUtility.Log("All players written.", LogChannels.Backup, true);
             }
             catch(Exception ex)
-            {
-                LoggingUtility.LogError(ex);
-                return false;
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Writes one player out to disk
-        /// </summary>
-        /// <param name="player">the player to write</param>
-        /// <param name="checkDirectories">skip checking directories or not</param>
-        /// <returns></returns>
-        public bool WriteOnePlayer(Player entity, bool checkDirectories = true)
-        {
-            var playersDir = CurrentDirectoryName + "Players/";
-
-            //don't do double duty with the directory checking please
-            if (checkDirectories)
-            {
-                LoggingUtility.Log("Backing up player character " + entity.DataTemplate.ID + ".", LogChannels.Backup, true);
-
-                VerifyDirectory(playersDir);
-            }
-
-            try
-            {
-                var charData = (ICharacter)entity.DataTemplate;
-
-                var charDirName = playersDir + charData.AccountHandle + "/" + charData.ID + "/";
-
-                if (!VerifyDirectory(charDirName))
-                    return false;
-
-                //Wipe out the existing one so we can create all new files
-                if (VerifyDirectory(charDirName + "Current/", false))
-                {
-                    var currentRoot = new DirectoryInfo(charDirName + "Current/");
-
-                    if (!VerifyDirectory(charDirName + "Backups/"))
-                        return;
-
-                    var newBackupName = String.Format("{0}Backups/{1}{2}{3}_{4}{5}{6}/",
-                                        charDirName
-                                        , DateTime.Now.Year
-                                        , DateTime.Now.Month
-                                        , DateTime.Now.Day
-                                        , DateTime.Now.Hour
-                                        , DateTime.Now.Minute
-                                        , DateTime.Now.Second);
-
-                    //move is literal move, no need to delete afterwards
-                    currentRoot.MoveTo(newBackupName);
-                }
-
-                var currentBackupDirectory = charDirName + "Current/";
-                DirectoryInfo entityDirectory = Directory.CreateDirectory(currentBackupDirectory);
-
-                WritePlayer(entityDirectory, entity);
-            }
-            catch (Exception ex)
             {
                 LoggingUtility.LogError(ex);
                 return false;
@@ -203,7 +108,9 @@ namespace NetMud.Backup
         /// <returns>Success state</returns>
         public bool RestoreLiveBackup()
         {
-            var currentBackupDirectory = BaseDirectory + "Current/";
+            var liveDataAccessor = new LiveData();
+
+            var currentBackupDirectory = liveDataAccessor.BaseDirectory + liveDataAccessor.CurrentDirectoryName;
 
             //No backup directory? No live data.
             if (!Directory.Exists(currentBackupDirectory))
@@ -215,7 +122,10 @@ namespace NetMud.Backup
             {
                 //dont load players here
                 var entitiesToLoad = new List<IEntity>();
-                var implimentedTypes = typeof(EntityPartial).Assembly.GetTypes().Where(ty => ty.GetInterfaces().Contains(typeof(IEntity)) && ty.IsClass && !ty.IsAbstract && !ty.Name.Equals("Player"));
+                var implimentedTypes = typeof(EntityPartial).Assembly.GetTypes().Where(ty => ty.GetInterfaces().Contains(typeof(IEntity)) 
+                                                                                                && ty.IsClass 
+                                                                                                && !ty.IsAbstract 
+                                                                                                && !ty.Name.Equals("Player"));
 
                 foreach (var type in implimentedTypes)
                 {
@@ -225,16 +135,7 @@ namespace NetMud.Backup
                     var entityFilesDirectory = new DirectoryInfo(currentBackupDirectory + type.Name);
 
                     foreach (var file in entityFilesDirectory.EnumerateFiles())
-                    {
-                        var blankEntity = Activator.CreateInstance(type) as IEntity;
-
-                        using (var stream = file.Open(FileMode.Open))
-                        {
-                            byte[] bytes = new byte[stream.Length];
-                            stream.Read(bytes, 0, (int)stream.Length);
-                            entitiesToLoad.Add(blankEntity.DeSerialize(bytes));
-                        }
-                    }
+                        entitiesToLoad.Add(liveDataAccessor.ReadEntity(file, type));
                 }
 
                 //Shove them all into the live system first
@@ -279,7 +180,7 @@ namespace NetMud.Backup
                     foreach (var obj in entity.Contents.EntitiesContainedByName())
                     {
                         var fullObj = LiveCache.Get<IInanimate>(new LiveCacheKey(typeof(Inanimate), obj.Item2.BirthMark));
-                        entity.MoveFrom<IInanimate>((IInanimate)obj.Item2);
+                        entity.MoveFrom<IInanimate>(obj.Item2);
                         entity.MoveInto<IInanimate>(fullObj, obj.Item1);
                     }
              
@@ -315,222 +216,6 @@ namespace NetMud.Backup
             }
 
             return false;
-        }
-
-        /// <summary>
-        /// Restores one character from their Current backup
-        /// </summary>
-        /// <param name="accountHandle">Global Account Handle for the account</param>
-        /// <param name="charID">Which character to load</param>
-        /// <returns></returns>
-        public Player RestorePlayer(string accountHandle, long charID)
-        {
-            Player newPlayerToLoad = null;
-
-            try
-            {
-                var currentBackupDirectory = BaseDirectory + "Players/" + accountHandle + "/" + charID.ToString() + "/Current/";
-
-                //No backup directory? No live data.
-                if (!Directory.Exists(currentBackupDirectory))
-                    return null;
-
-                var playerDirectory = new DirectoryInfo(currentBackupDirectory);
-
-                //no player file to load, derp
-                if (!File.Exists(playerDirectory + charID.ToString() + ".Player"))
-                    return null;
-
-                var blankEntity = Activator.CreateInstance(typeof(Player)) as Player;
-
-                using (var stream = File.OpenRead(playerDirectory + charID.ToString() + ".Player"))
-                {
-                    byte[] bytes = new byte[stream.Length];
-                    stream.Read(bytes, 0, (int)stream.Length);
-                    newPlayerToLoad = (Player)blankEntity.DeSerialize(bytes);
-                }
-
-                //bad load, dump it
-                if (newPlayerToLoad == null)
-                    return null;
-
-                //abstract this out to a helper maybe?
-                var locationAssembly = Assembly.GetAssembly(typeof(EntityPartial));
-
-                var ch = (ICharacter)newPlayerToLoad.DataTemplate;
-                if (ch.LastKnownLocationType == null)
-                    ch.LastKnownLocationType = typeof(Room).Name;
-
-                var lastKnownLocType = locationAssembly.DefinedTypes.FirstOrDefault(tp => tp.Name.Equals(ch.LastKnownLocationType));
-
-                ILocation lastKnownLoc = null;
-                if (lastKnownLocType != null && !string.IsNullOrWhiteSpace(ch.LastKnownLocation))
-                {
-                    if (lastKnownLocType.GetInterfaces().Contains(typeof(ISpawnAsSingleton)))
-                    {
-                        long lastKnownLocID = long.Parse(ch.LastKnownLocation);
-                        lastKnownLoc = LiveCache.Get<ILocation>(lastKnownLocID, lastKnownLocType);
-                    }
-                    else
-                    {
-                        var cacheKey = new LiveCacheKey(lastKnownLocType, ch.LastKnownLocation);
-                        lastKnownLoc = LiveCache.Get<ILocation>(cacheKey);
-                    }
-                }
-
-                newPlayerToLoad.CurrentLocation = lastKnownLoc;
-
-                //We have the player in live cache now so make it move to the right place
-                newPlayerToLoad.GetFromWorldOrSpawn();
-
-                newPlayerToLoad.UpsertToLiveWorldCache();
-
-                //We'll need one of these per container on players
-                if (Directory.Exists(playerDirectory + "Inventory/"))
-                {
-                    var inventoryDirectory = new DirectoryInfo(playerDirectory + "Inventory/");
-
-                    foreach (var file in inventoryDirectory.EnumerateFiles())
-                    {
-                        var blankObject = Activator.CreateInstance(typeof(Inanimate)) as Inanimate;
-
-                        using (var stream = file.Open(FileMode.Open))
-                        {
-                            byte[] bytes = new byte[stream.Length];
-                            stream.Read(bytes, 0, (int)stream.Length);
-                            var newObj = (IInanimate)blankObject.DeSerialize(bytes);
-                            newObj.UpsertToLiveWorldCache();
-                            newPlayerToLoad.MoveInto<IInanimate>(newObj);
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                LoggingUtility.LogError(ex);
-            }
-
-            return newPlayerToLoad;
-        }
-
-        /// <summary>
-        /// Writes one entity to Current backup (not players)
-        /// </summary>
-        /// <param name="dir">Root directory to write to</param>
-        /// <param name="entity">The entity to write out</param>
-        private void WriteEntity(DirectoryInfo dir, IEntity entity)
-        {
-            var entityFileName = GetEntityFilename(entity);
-
-            if (string.IsNullOrWhiteSpace(entityFileName))
-                return;
-
-            var fullFileName = dir.FullName + "/" + entityFileName;
-
-            FileStream entityFile = null;
-
-            try
-            {
-                if (File.Exists(fullFileName))
-                    entityFile = File.Open(fullFileName, FileMode.Truncate);
-                else
-                    entityFile = File.Create(fullFileName);
-
-                var bytes = entity.Serialize();
-                entityFile.Write(bytes, 0, bytes.Length);
-
-                //Don't forget to write the file out
-                entityFile.Flush();
-            }
-            catch (Exception ex)
-            {
-                LoggingUtility.LogError(ex);
-            }
-            finally
-            {
-                //dont not do this everEVERVERRFCFEVVEEV
-                if (entityFile != null)
-                    entityFile.Dispose();
-            }
-        }
-
-        /// <summary>
-        /// Writes one player out (and only one character) and their inventory to Current and archives whatever used to be Current
-        /// </summary>
-        /// <param name="dir">Directory to write to</param>
-        /// <param name="entity">The player to write</param>
-        private void WritePlayer(DirectoryInfo dir, IPlayer entity)
-        {
-            var entityFileName = GetPlayerFilename(entity);
-
-            if (string.IsNullOrWhiteSpace(entityFileName))
-                return;
-
-            var fullFileName = dir.FullName + "/" + entityFileName;
-
-            FileStream entityFile = null;
-
-            try
-            {
-                if (File.Exists(fullFileName))
-                    entityFile = File.Open(fullFileName, FileMode.Truncate);
-                else
-                    entityFile = File.Create(fullFileName);
-
-                var bytes = entity.Serialize();
-                entityFile.Write(bytes, 0, bytes.Length);
-
-                //Don't forget to write the file out
-                entityFile.Flush();
-
-                //We also need to write out all the inventory
-                foreach (var obj in entity.Inventory.EntitiesContained())
-                {
-                    var baseTypeName = "Inventory";
-
-                    DirectoryInfo entityDirectory;
-
-                    //Is there a directory for this entity type? If not, then create it
-                    if (!Directory.Exists(dir.FullName + baseTypeName))
-                        entityDirectory = Directory.CreateDirectory(dir.FullName + baseTypeName);
-                    else
-                        entityDirectory = new DirectoryInfo(dir.FullName + baseTypeName);
-
-                    WriteEntity(entityDirectory, obj);
-                }
-            }
-            catch (Exception ex)
-            {
-                LoggingUtility.LogError(ex);
-            }
-            finally
-            {
-                //dont not do this everEVERVERRFCFEVVEEV
-                if (entityFile != null)
-                    entityFile.Dispose();
-            }
-        }
-
-        /// <summary>
-        /// Gets the statically formatted filename for an entity
-        /// </summary>
-        /// <param name="entity">The entity in question</param>
-        /// <returns>the filename</returns>
-        private string GetEntityFilename(IEntity entity)
-        {
-            return string.Format("{0}.{1}", entity.BirthMark, entity.GetType().Name);
-        }
-
-        /// <summary>
-        /// Gets the statically formatted filename for a player
-        /// </summary>
-        /// <param name="entity">The player in question</param>
-        /// <returns>the filename</returns>
-        private string GetPlayerFilename(IPlayer entity)
-        {
-            var charData = (ICharacter)entity.DataTemplate;
-
-            return string.Format("{0}.Player", charData.ID);
         }
     }
 }

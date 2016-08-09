@@ -1,11 +1,12 @@
-﻿using NetMud.DataAccess;
-using NetMud.DataStructure.Base.Supporting;
+﻿using NetMud.Data.System;
+using NetMud.DataAccess;
 using NetMud.DataStructure.Base.System;
 using System;
 
 namespace NetMud.Data.EntityBackingData
 {
-    public abstract class EntityBackingDataPartial : IEntityBackingData 
+    [Serializable]
+    public abstract class EntityBackingDataPartial : SerializableDataPartial, IEntityBackingData
     {
         public EntityBackingDataPartial()
         {

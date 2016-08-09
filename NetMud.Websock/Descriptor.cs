@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using NetMud.Authentication;
-using NetMud.Backup;
 using NetMud.Communication;
 using NetMud.Data.Game;
 using NetMud.DataAccess;
+using NetMud.DataAccess.FileSystem;
+using NetMud.DataStructure.Base.Entity;
+using NetMud.DataStructure.Base.System;
 using NetMud.Interp;
 using System;
 using System.Collections.Generic;
@@ -17,7 +19,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Web.Hosting;
 
 namespace NetMud.Websock
 {
@@ -34,7 +35,7 @@ namespace NetMud.Websock
         /// <summary>
         /// The user manager for the application, handles authentication from the web
         /// </summary>
-        public ApplicationUserManager UserManager { get; set; }
+        public ApplicationUserManager UserManager { get; private set; }
         internal TcpClient Client { get; set; }
 
         /// <summary>
@@ -56,7 +57,7 @@ namespace NetMud.Websock
         /// <summary>
         /// The player connected
         /// </summary>
-        private Player _currentPlayer;
+        private IPlayer _currentPlayer;
 
         /// <summary>
         /// Creates an instance of the command negotiator
@@ -366,13 +367,13 @@ namespace NetMud.Websock
             }
 
             //Try to see if they are already live
-            _currentPlayer = LiveCache.Get<Player>(currentCharacter.ID);
+            _currentPlayer = LiveCache.Get<IPlayer>(currentCharacter.ID);
 
             //Check the backup
             if (_currentPlayer == null)
             {
-                var hotBack = new HotBackup();
-                _currentPlayer = hotBack.RestorePlayer(currentCharacter.AccountHandle, currentCharacter.ID);
+                var playerDataWrapper = new PlayerData();
+                _currentPlayer = playerDataWrapper.RestorePlayer(currentCharacter.AccountHandle, currentCharacter.ID);
             }
 
             //else new them up

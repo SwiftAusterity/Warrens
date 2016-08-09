@@ -50,7 +50,6 @@
     <Compile Include="Messaging\MessageCluster.cs" />
     <Compile Include="Messaging\MessagingUtility.cs" />
     <Compile Include="SystemComm.cs" />
-    <Compile Include="IDescriptor.cs" />
     <Compile Include="IServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

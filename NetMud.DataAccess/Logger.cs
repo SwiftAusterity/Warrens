@@ -231,7 +231,7 @@ namespace NetMud.DataAccess
 
             var bytes = Encoding.UTF8.GetBytes(timeStamp + content);
 
-            WriteToFile(fileName, bytes, false, FileMode.Append);
+            WriteToFile(fileName, bytes, FileMode.Append);
         }
     }
 }

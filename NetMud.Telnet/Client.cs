@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using NetMud.Communication;
 using System.Net;
 using NetMud.Authentication;
-using System.Threading.Tasks;
+using NetMud.DataStructure.Base.System;
 
 namespace NetMud.Telnet
 {

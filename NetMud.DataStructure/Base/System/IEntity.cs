@@ -1,7 +1,7 @@
-﻿using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.Behaviors.Rendering;
+﻿using NetMud.DataStructure.Behaviors.Rendering;
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace NetMud.DataStructure.Base.System
 {

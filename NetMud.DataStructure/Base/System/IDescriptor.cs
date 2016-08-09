@@ -1,20 +1,12 @@
-﻿using NetMud.Authentication;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace NetMud.Communication
+namespace NetMud.DataStructure.Base.System
 {
     /// <summary>
     /// Interface defining players connected to a server
     /// </summary>
     public interface IDescriptor
     {
-        /// <summary>
-        /// The user manager for the application, handles authentication from the web
-        /// </summary>
-        ApplicationUserManager UserManager { get; set; }
-
         /// <summary>
         /// The cache key for the global cache system
         /// </summary>

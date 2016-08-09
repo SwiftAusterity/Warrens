@@ -9,6 +9,7 @@ using NetMud.Backup;
 using System.Web.Hosting;
 using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
+using NetMud.DataAccess.FileSystem;
 
 namespace NutMud.Commands.System
 {
@@ -44,10 +45,10 @@ namespace NutMud.Commands.System
 
             messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation, null);
 
-            var hotBack = new HotBackup();
+            var playerDataWrapper = new PlayerData();
 
             //Save the player out
-            hotBack.WriteOnePlayer(player);
+            playerDataWrapper.WriteOnePlayer(player);
             player.CloseConnection();
         }
 

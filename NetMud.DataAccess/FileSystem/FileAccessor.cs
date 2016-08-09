@@ -1,11 +1,5 @@
-﻿using NetMud.DataStructure.Base.System;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Hosting;
 
 namespace NetMud.DataAccess.FileSystem
 {
@@ -135,22 +129,14 @@ namespace NetMud.DataAccess.FileSystem
         /// <param name="bytes">the data to write</param>
         /// <param name="backupFirst">should this file be archived first using the default archiving directory structure</param>
         /// <param name="writeMode">should this file be overwritten or appended to</param>
-        public void WriteToFile(string fullFileName, byte[] bytes, bool backupFirst = false, FileMode writeMode = FileMode.Truncate)
+        public void WriteToFile(string fullFileName, byte[] bytes, FileMode writeMode = FileMode.Truncate)
         {
             FileStream entityFile = null;
 
             try
             {
                 if (File.Exists(fullFileName))
-                {
-                    if (backupFirst)
-                    {
-                        ArchiveFile(fullFileName);
-                        entityFile = File.Create(fullFileName);
-                    }
-                    else
-                        entityFile = File.Open(fullFileName, writeMode);
-                }
+                    entityFile = File.Open(fullFileName, writeMode);
                 else
                     entityFile = File.Create(fullFileName);
 
@@ -168,26 +154,6 @@ namespace NetMud.DataAccess.FileSystem
                 if (entityFile != null)
                     entityFile.Dispose();
             }
-        }
-
-        /// <summary>
-        /// Rolls over a file using the default archive settings
-        /// </summary>
-        /// <param name="fileName">the file to be rolled over</param>
-        /// <returns>success</returns>
-        public bool ArchiveFile(string fileName)
-        {
-            var currentFileName = String.Format("{0}{1}{2}", BaseDirectory, CurrentDirectoryName, fileName);
-            var archiveFileName = String.Format("{0}{1}{2}", BaseDirectory, ArchiveDirectoryName, fileName);
-
-            //Why backup something that doesnt exist
-            if (!VerifyDirectory(BaseDirectory + CurrentDirectoryName)
-                || !VerifyDirectory(BaseDirectory + ArchiveDirectoryName)
-                || !File.Exists(currentFileName))
-                return false;
-
-            File.Move(currentFileName, archiveFileName);
-            return true;
         }
 
         /// <summary>

@@ -1,6 +1,6 @@
 ﻿using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.System;
-using System;
 
 namespace NetMud.DataStructure.Base.Entity
 {
@@ -13,5 +13,7 @@ namespace NetMud.DataStructure.Base.Entity
         /// Function used to close the connection
         /// </summary>
         void CloseConnection();
+
+        IDescriptor Descriptor { get; set; }
     }
 }

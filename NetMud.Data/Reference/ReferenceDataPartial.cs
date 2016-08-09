@@ -1,11 +1,15 @@
-﻿using NetMud.DataAccess;
+﻿using NetMud.Data.System;
+using NetMud.DataAccess;
 using NetMud.DataStructure.Base.System;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 
 namespace NetMud.Data.Reference
 {
-    public abstract class ReferenceDataPartial : IReferenceData
+    public abstract class ReferenceDataPartial : SerializableDataPartial, IReferenceData
     {
         public ReferenceDataPartial()
         {
