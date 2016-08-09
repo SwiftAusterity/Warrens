@@ -128,7 +128,7 @@ namespace NetMud.DataAccess
         {
             get
             {
-                return HostingEnvironment.MapPath(WebConfigurationManager.AppSettings["LogPath"]);
+                return HostingEnvironment.MapPath(base.BaseDirectory + "Logs/");
             }
         }
 

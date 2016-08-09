@@ -21,7 +21,7 @@ namespace NetMud.DataAccess.FileSystem
         {
             get
             {
-                return HostingEnvironment.MapPath("LiveData/Players/");
+                return HostingEnvironment.MapPath(base.BaseDirectory + "Players/");
             }
         }
 
@@ -106,7 +106,7 @@ namespace NetMud.DataAccess.FileSystem
                     return null;
 
                 var blankEntity = Activator.CreateInstance(typeof(IPlayer)) as IPlayer;
-                newPlayerToLoad = (IPlayer)blankEntity.DeSerialize(fileData);
+                newPlayerToLoad = (IPlayer)blankEntity.FromBytes(fileData);
 
                 //bad load, dump it
                 if (newPlayerToLoad == null)
@@ -151,7 +151,7 @@ namespace NetMud.DataAccess.FileSystem
                     {
                         var blankObject = Activator.CreateInstance(typeof(IInanimate)) as IInanimate;
 
-                        var newObj = (IInanimate)blankObject.DeSerialize(ReadFile(file));
+                        var newObj = (IInanimate)blankObject.FromBytes(ReadFile(file));
                         newObj.UpsertToLiveWorldCache();
                         newPlayerToLoad.MoveInto(newObj);
                     }
@@ -182,7 +182,7 @@ namespace NetMud.DataAccess.FileSystem
 
             try
             {
-                WriteToFile(fullFileName, entity.Serialize());
+                WriteToFile(fullFileName, entity.ToBytes());
                 var liveDataWrapper = new LiveData();
 
                 //We also need to write out all the inventory

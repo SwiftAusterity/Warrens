@@ -6,7 +6,7 @@ namespace NetMud.DataStructure.Base.System
     /// <summary>
     /// Framework for Database objects
     /// </summary>
-    public interface IData : IComparable<IData>, IEquatable<IData>
+    public interface IData : IFileStored, IComparable<IData>, IEquatable<IData>
     {
         /// <summary>
         /// Unique, iterative ID for this entry
@@ -51,18 +51,5 @@ namespace NetMud.DataStructure.Base.System
         /// </summary>
         /// <returns></returns>
         bool Save();
-
-        /// <summary>
-        /// Serialize this live entity to a binary stream
-        /// </summary>
-        /// <returns>binary stream</returns>
-        byte[] Serialize();
-
-        /// <summary>
-        /// Deserialize a binary stream into this entity
-        /// </summary>
-        /// <param name="bytes">binary to deserialize</param>
-        /// <returns>the entity</returns>
-        IData DeSerialize(byte[] bytes);
     }
 }

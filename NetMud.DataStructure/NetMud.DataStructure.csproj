@@ -68,6 +68,7 @@
     <Compile Include="Base\System\IEntity.cs" />
     <Compile Include="Base\EntityBackingData\IPathwayData.cs" />
     <Compile Include="Base\System\IEntityBackingData.cs" />
+    <Compile Include="Base\System\IFileStored.cs" />
     <Compile Include="Base\System\IHelp.cs" />
     <Compile Include="Base\System\IReferenceData.cs" />
     <Compile Include="Base\System\SupportedColors.cs" />

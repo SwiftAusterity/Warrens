@@ -6,9 +6,15 @@ namespace NetMud.DataAccess.FileSystem
     public abstract class FileAccessor
     {
         /// <summary>
-        /// The base directory for these files, must be overriden
+        /// The base directory for these files, should be overriden
         /// </summary>
-        public abstract string BaseDirectory { get; }
+        public virtual string BaseDirectory 
+        { 
+            get
+            {
+                return "/FileStore/";
+            }
+        }
 
         /// <summary>
         /// Directory name for whatever is "current", should probably be left alone

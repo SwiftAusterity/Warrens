@@ -14,7 +14,7 @@ namespace NetMud.DataAccess.FileSystem
         {
             get
             {
-                return HostingEnvironment.MapPath("BackingData/");
+                return HostingEnvironment.MapPath(base.BaseDirectory + "BackingData/");
             }
         }
 
@@ -53,7 +53,7 @@ namespace NetMud.DataAccess.FileSystem
             try
             {
                 RollingArchiveFile(fullFileName, archiveFileDirectory + entityFileName, archiveFileDirectory);
-                WriteToFile(fullFileName, entity.Serialize());
+                WriteToFile(fullFileName, entity.ToBytes());
             }
             catch (Exception ex)
             {

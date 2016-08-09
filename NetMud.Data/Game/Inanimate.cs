@@ -378,9 +378,9 @@ namespace NetMud.Data.Game
         /// Serialize this entity's live data to a binary stream
         /// </summary>
         /// <returns>the binary stream</returns>
-        public override byte[] Serialize()
+        public override string Serialize()
         {
-            var settings = new XmlWriterSettings { OmitXmlDeclaration = true, Encoding = Encoding.UTF8 };
+            var settings = new XmlWriterSettings { OmitXmlDeclaration = true, Encoding = Encoding.ASCII };
             var charData = (IInanimateData)DataTemplate;
 
             var entityData = new XDocument(
@@ -430,17 +430,7 @@ namespace NetMud.Data.Game
                                                                                                     new XAttribute("CapacityVolume", item.CapacityVolume),
                                                                                                     new XAttribute("CapacityWeight", item.CapacityWeight)));
 
-            var entityBinaryConvert = new DataUtility.EntityFileData(entityData);
-
-            using (var memoryStream = new MemoryStream())
-            using (var xmlWriter = XmlWriter.Create(memoryStream, settings))
-            {
-                entityData.WriteTo(xmlWriter);
-                xmlWriter.Flush();
-                entityBinaryConvert.XmlBinary = memoryStream.ToArray();
-            }
-
-            return entityBinaryConvert.XmlBinary;
+            return entityData.ToString();
         }
 
         /// <summary>
@@ -448,7 +438,7 @@ namespace NetMud.Data.Game
         /// </summary>
         /// <param name="bytes">the binary to turn into an entity</param>
         /// <returns>the entity</returns>
-        public override IEntity DeSerialize(byte[] bytes)
+        public override IEntity DeSerialize(string jsonData)
         {
             var entityBinaryConvert = new DataUtility.EntityFileData(bytes);
             var xDoc = entityBinaryConvert.XDoc;

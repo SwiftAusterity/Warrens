@@ -8,7 +8,7 @@ namespace NetMud.DataStructure.Base.System
     /// <summary>
     /// Framework for live entities
     /// </summary>
-    public interface IEntity : ILookable, IComparable<IEntity>, IEquatable<IEntity>
+    public interface IEntity : ILookable, IFileStored, IComparable<IEntity>, IEquatable<IEntity>
     {
         /// <summary>
         /// Indelible guid that helps the system figure out where stuff is, generated when the object is spawned into the world
@@ -56,19 +56,6 @@ namespace NetMud.DataStructure.Base.System
         /// Update this to the live cache
         /// </summary>
         void UpsertToLiveWorldCache();
-
-        /// <summary>
-        /// Serialize this live entity to a binary stream
-        /// </summary>
-        /// <returns>binary stream</returns>
-        byte[] Serialize();
-
-        /// <summary>
-        /// Deserialize a binary stream into this entity
-        /// </summary>
-        /// <param name="bytes">binary to deserialize</param>
-        /// <returns>the entity</returns>
-        IEntity DeSerialize(byte[] bytes);
 
         /// <summary>
         /// For non-player entities - accepts output "shown" to it by the parser as a result of commands and events

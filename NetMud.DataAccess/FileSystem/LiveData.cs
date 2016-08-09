@@ -14,7 +14,7 @@ namespace NetMud.DataAccess.FileSystem
         {
             get
             {
-                return HostingEnvironment.MapPath("LiveData/");
+                return HostingEnvironment.MapPath(base.BaseDirectory + "LiveData/");
             }
         }
 
@@ -23,7 +23,7 @@ namespace NetMud.DataAccess.FileSystem
             var fileData = ReadFile(file);
             var blankEntity = Activator.CreateInstance(entityType) as IEntity;
 
-            return blankEntity.DeSerialize(fileData);
+            return blankEntity.FromBytes(fileData) as IEntity;
         }
 
         public void WriteEntity(IEntity entity)
@@ -53,7 +53,7 @@ namespace NetMud.DataAccess.FileSystem
 
             try
             {
-                WriteToFile(fullFileName, entity.Serialize());
+                WriteToFile(fullFileName, entity.ToBytes());
             }
             catch (Exception ex)
             {

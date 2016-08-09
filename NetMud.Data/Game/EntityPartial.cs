@@ -1,5 +1,6 @@
 ﻿using NetMud.Communication;
 using NetMud.Communication.Messaging;
+using NetMud.Data.System;
 using NetMud.DataAccess;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
@@ -12,7 +13,7 @@ namespace NetMud.Data.Game
     /// <summary>
     /// Abstract that tries to keep the entity classes cleaner
     /// </summary>
-    public abstract class EntityPartial : IEntity
+    public abstract class EntityPartial : SerializableDataPartial, IEntity
     {
         #region Data and live tracking properties
         /// <summary>
@@ -131,6 +132,7 @@ namespace NetMud.Data.Game
         /// <returns></returns>
         public bool TriggerAIAction(IEnumerable<string> input, AITriggerType trigger = AITriggerType.Seen)
         {
+            //TODO: Actual AI code
             return true;
         }
 
@@ -195,17 +197,16 @@ namespace NetMud.Data.Game
         }
         #endregion
 
-        /// <summary>
-        /// Serialize this entity's live data to a binary stream
-        /// </summary>
-        /// <returns>the binary stream</returns>
-        public abstract byte[] Serialize();
+        #region "Serialization"
+        public override virtual IEntity DeSerialize(string jsonData)
+        {
 
-        /// <summary>
-        /// Deserialize binary stream to this entity
-        /// </summary>
-        /// <param name="bytes">the binary to turn into an entity</param>
-        /// <returns>the entity</returns>
-        public abstract IEntity DeSerialize(byte[] bytes);
+        }
+
+        public override virtual string Serialize()
+        {
+
+        }
+        #endregion
     }
 }
