@@ -11,8 +11,14 @@ namespace NetMud.Data.Reference
     /// <summary>
     /// Referred to as Help Files in the UI, extra help content for the help command
     /// </summary>
+    [Serializable]
     public class Help : ReferenceDataPartial, IHelp
     {
+        /// <summary>
+        /// Help text for the body of the render to help command
+        /// </summary>
+        public string HelpText { get; set; }
+
         /// <summary>
         /// New up a "blank" help entry
         /// </summary>
@@ -24,11 +30,6 @@ namespace NetMud.Data.Reference
             Name = "NotImpl";
             HelpText = "NotImpl";
         }
-
-        /// <summary>
-        /// Help text for the body of the render to help command
-        /// </summary>
-        public string HelpText { get; set; }
 
         /// <summary>
         /// Fills a data object with data from a data row

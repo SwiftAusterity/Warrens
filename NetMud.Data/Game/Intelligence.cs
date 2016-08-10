@@ -25,6 +25,7 @@ namespace NetMud.Data.Game
     /// <summary>
     /// NPCs
     /// </summary>
+    [Serializable]
     public class Intelligence : EntityPartial, IIntelligence
     {
         /// <summary>

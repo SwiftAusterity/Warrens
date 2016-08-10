@@ -24,6 +24,7 @@ namespace NetMud.Data.Game
     /// <summary>
     /// Portals between locations
     /// </summary>
+    [Serializable]
     public class Pathway : EntityPartial, IPathway
     {
         /// <summary>

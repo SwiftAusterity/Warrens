@@ -15,12 +15,18 @@ namespace NetMud.Data.Reference
     /// <summary>
     /// Backing data for physical models
     /// </summary>
+    [Serializable]
     public class DimensionalModelData : ReferenceDataPartial, IDimensionalModelData
     {
         /// <summary>
         /// Governs what sort of model planes we're looking for
         /// </summary>
         public DimensionalModelType ModelType { get; set; }
+
+        /// <summary>
+        /// The 11 planes that compose the physical model
+        /// </summary>
+        public HashSet<IDimensionalModelPlane> ModelPlanes { get; set; }
 
         /// <summary>
         /// Create an empty model
@@ -58,11 +64,6 @@ namespace NetMud.Data.Reference
 
             DeserializeModel(modelJson);
         }
-
-        /// <summary>
-        /// The 11 planes that compose the physical model
-        /// </summary>
-        public HashSet<IDimensionalModelPlane> ModelPlanes { get; set; }
 
         /// <summary>
         /// Gets a node based on the X and Y axis

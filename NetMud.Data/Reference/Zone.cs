@@ -12,8 +12,34 @@ namespace NetMud.Data.Reference
     /// <summary>
     /// Zones contain rooms
     /// </summary>
+    [Serializable]
     public class Zone : ReferenceDataPartial, IZone
     {
+        /// <summary>
+        /// The midline elevation point "sea level" for this zone
+        /// </summary>
+        public int BaseElevation { get; set; }
+
+        /// <summary>
+        /// The fudge value for temperature variance
+        /// </summary>
+        public int TemperatureCoefficient { get; set; }
+
+        /// <summary>
+        /// The fudge value for pressure (weather pattern) variance
+        /// </summary>
+        public int PressureCoefficient { get; set; }
+
+        /// <summary>
+        /// Who currently owns this zone
+        /// </summary>
+        public long Owner { get; set; }
+
+        /// <summary>
+        /// Is this zone ownership malleable
+        /// </summary>
+        public bool Claimable { get; set; }
+
         /// <summary>
         /// New up a "blank" zone entry
         /// </summary>
@@ -30,16 +56,6 @@ namespace NetMud.Data.Reference
             Owner = -1;
             Claimable = false;
         }
-
-        public int BaseElevation { get; set; }
-
-        public int TemperatureCoefficient { get; set; }
-
-        public int PressureCoefficient { get; set; }
-
-        public long Owner { get; set; }
-
-        public bool Claimable { get; set; }
 
         /// <summary>
         /// Fills a data object with data from a data row

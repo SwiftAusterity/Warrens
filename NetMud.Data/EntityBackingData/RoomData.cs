@@ -16,6 +16,7 @@ namespace NetMud.Data.EntityBackingData
     /// <summary>
     /// Backing data for Rooms
     /// </summary>
+    [Serializable]
     public class RoomData : EntityBackingDataPartial, IRoomData
     {
         /// <summary>

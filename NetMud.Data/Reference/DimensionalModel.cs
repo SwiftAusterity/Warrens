@@ -10,8 +10,16 @@ using System.Threading.Tasks;
 
 namespace NetMud.Data.Reference
 {
+    /// <summary>
+    /// The live version of a dimensional model
+    /// </summary>
+    [Serializable]
     public class DimensionalModel : IDimensionalModel
     {
+        /// <summary>
+        /// Constructor for dimensional model based on a datarow
+        /// </summary>
+        /// <param name="dr">the row from the db</param>
         public DimensionalModel(global::System.Data.DataRow dr)
         {
             Length = DataUtility.GetFromDataRow<int>(dr, "DimensionalModelLength");
@@ -35,6 +43,14 @@ namespace NetMud.Data.Reference
             }
         }
 
+        /// <summary>
+        /// Constructor for dimensional model based on full specific data
+        /// </summary>
+        /// <param name="length">Length parameter of the model</param>
+        /// <param name="height">Height parameter of the model</param>
+        /// <param name="width">Width parameter of the model</param>
+        /// <param name="backingDataId">dimensional model backing data id</param>
+        /// <param name="materialComps">The material compositions</param>
         public DimensionalModel(int length, int height, int width, long backingDataId, IDictionary<string, IMaterial> materialComps)
         {
             Length = length;
@@ -45,6 +61,14 @@ namespace NetMud.Data.Reference
             ModelBackingData = ReferenceWrapper.GetOne<DimensionalModelData>(backingDataId);
         }
 
+        /// <summary>
+        /// Constructor for dimensional model based on full specific data
+        /// </summary>
+        /// <param name="length">Length parameter of the model</param>
+        /// <param name="height">Height parameter of the model</param>
+        /// <param name="width">Width parameter of the model</param>
+        /// <param name="backingDataId">dimensional model backing data id</param>
+        /// <param name="compJson">The material compositions in json form</param>
         public DimensionalModel(int length, int height, int width, long backingDataId, string compJson)
         {
             Length = length;
@@ -55,6 +79,15 @@ namespace NetMud.Data.Reference
             ModelBackingData = ReferenceWrapper.GetOne<DimensionalModelData>(backingDataId);
         }
 
+        /// <summary>
+        /// Constructor for dimensional model based on full specific data
+        /// </summary>
+        /// <param name="length">Length parameter of the model</param>
+        /// <param name="height">Height parameter of the model</param>
+        /// <param name="width">Width parameter of the model</param>
+        /// <param name="backingDataId">dimensional model backing data id</param>
+        /// <param name="compJson">The material compositions in json form</param>
+        /// <param name="modelJson">the model structure json</param>
         public DimensionalModel(int length, int height, int width, string modelJson, long backingDataId, string compJson)
         {
             Length = length;
@@ -65,7 +98,12 @@ namespace NetMud.Data.Reference
             ModelBackingData = new DimensionalModelData(backingDataId, modelJson);
         }
 
-        //for 0 dimension models
+        /// <summary>
+        /// constructor for 0 dimension models
+        /// </summary>
+        /// <param name="length">Length parameter of the model</param>
+        /// <param name="height">Height parameter of the model</param>
+        /// <param name="width">Width parameter of the model</param>
         public DimensionalModel(int length, int height, int width)
         {
             Length = length;
@@ -102,6 +140,25 @@ namespace NetMud.Data.Reference
         /// </summary>
         public IDictionary<string, IMaterial> Composition { get; set; }
 
+        /// <summary>
+        /// Turn the material composition set into a json string
+        /// </summary>
+        /// <returns>the json in a string</returns>
+        public string SerializeMaterialCompositions()
+        {
+            var materialComps = new Dictionary<string, long>();
+
+            foreach (var kvp in Composition)
+                materialComps.Add(kvp.Key, kvp.Value.ID);
+
+            return JsonConvert.SerializeObject(materialComps);
+        }
+
+        /// <summary>
+        /// Turn json string of material composition into its proper object form
+        /// </summary>
+        /// <param name="compJson">the json in a string</param>
+        /// <returns>the object form</returns>
         private IDictionary<string, IMaterial> DeserializeMaterialCompositions(string compJson)
         {
             var composition = new Dictionary<string, IMaterial>();
@@ -120,16 +177,6 @@ namespace NetMud.Data.Reference
             }
 
             return composition;
-        }
-
-        public string SerializeMaterialCompositions()
-        {
-            var materialComps = new Dictionary<string, long>();
-
-            foreach (var kvp in Composition)
-                materialComps.Add(kvp.Key, kvp.Value.ID);
-
-            return JsonConvert.SerializeObject(materialComps);
         }
     }
 }

@@ -14,6 +14,7 @@ namespace NetMud.Data.EntityBackingData
     /// <summary>
     /// Backing data for NPCs
     /// </summary>
+    [Serializable]
     public class NonPlayerCharacter : EntityBackingDataPartial, INonPlayerCharacter
     {
         /// <summary>

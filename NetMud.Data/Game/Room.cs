@@ -23,6 +23,7 @@ namespace NetMud.Data.Game
     /// <summary>
     /// Places entities are (most of the time)
     /// </summary>
+    [Serializable]
     public class Room : EntityPartial, IRoom
     {
         /// <summary>

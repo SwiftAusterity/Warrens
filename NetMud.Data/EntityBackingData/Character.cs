@@ -15,6 +15,7 @@ namespace NetMud.Data.EntityBackingData
     /// <summary>
     /// Backing data for player characters
     /// </summary>
+    [Serializable]
     public class Character : EntityBackingDataPartial, ICharacter
     {
         /// <summary>

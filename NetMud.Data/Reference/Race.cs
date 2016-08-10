@@ -16,32 +16,72 @@ using System.Threading.Tasks;
 
 namespace NetMud.Data.Reference
 {
+    [Serializable]
     public class Race : ReferenceDataPartial, IRace
     {
+        /// <summary>
+        /// The arm objects
+        /// </summary>
         public Tuple<IInanimateData, short> Arms { get; set; }
 
+        /// <summary>
+        /// The leg objects
+        /// </summary>
         public Tuple<IInanimateData, short> Legs { get; set; }
 
+        /// <summary>
+        /// the torso object
+        /// </summary>
         public IInanimateData Torso { get; set; }
 
+        /// <summary>
+        /// The head object
+        /// </summary>
         public IInanimateData Head { get; set; }
 
+        /// <summary>
+        /// The list of additional body parts used by this race. Part Object, Amount, Name
+        /// </summary>
         public IEnumerable<Tuple<IInanimateData, short, string>> BodyParts { get; set; }
 
+        /// <summary>
+        /// Dietary type of this race
+        /// </summary>
         public DietType DietaryNeeds { get; set; }
 
+        /// <summary>
+        /// Material that is the blood
+        /// </summary>
         public IMaterial SanguinaryMaterial { get; set; }
 
+        /// <summary>
+        /// Low and High luminosity vision range
+        /// </summary>
         public Tuple<short, short> VisionRange { get; set; }
 
+        /// <summary>
+        /// Low and High temperature range before damage starts to occur
+        /// </summary>
         public Tuple<short, short> TemperatureTolerance { get; set; }
 
+        /// <summary>
+        /// What mode of breathing
+        /// </summary>
         public RespiratoryType Breathes { get; set; }
 
+        /// <summary>
+        /// The type of damage biting inflicts
+        /// </summary>
         public DamageType TeethType { get; set; }
 
+        /// <summary>
+        /// What is the starting room of new players
+        /// </summary>
         public IRoomData StartingLocation { get; set; }
 
+        /// <summary>
+        /// When a player loads without a location where do we sent them
+        /// </summary>
         public IRoomData EmergencyLocation { get; set; }
 
         public Race()

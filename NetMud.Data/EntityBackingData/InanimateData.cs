@@ -18,6 +18,7 @@ namespace NetMud.Data.EntityBackingData
     /// <summary>
     /// Backing data for Inanimate objects
     /// </summary>
+    [Serializable]
     public class InanimateData : EntityBackingDataPartial, IInanimateData
     {
         /// <summary>

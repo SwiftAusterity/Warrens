@@ -14,6 +14,7 @@ namespace NetMud.Data.EntityBackingData
     /// <summary>
     /// Backing data for pathways
     /// </summary>
+    [Serializable]
     public class PathwayData : EntityBackingDataPartial, IPathwayData
     {
         /// <summary>

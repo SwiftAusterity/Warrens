@@ -13,6 +13,7 @@ namespace NetMud.Data.Game
     /// <summary>
     /// Abstract that tries to keep the entity classes cleaner
     /// </summary>
+    [Serializable]
     public abstract class EntityPartial : SerializableDataPartial, IEntity
     {
         #region Data and live tracking properties

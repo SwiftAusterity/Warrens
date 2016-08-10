@@ -5,6 +5,9 @@ using System;
 
 namespace NetMud.Data.EntityBackingData
 {
+    /// <summary>
+    /// Base class for backing data
+    /// </summary>
     [Serializable]
     public abstract class EntityBackingDataPartial : SerializableDataPartial, IEntityBackingData
     {

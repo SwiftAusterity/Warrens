@@ -30,6 +30,7 @@ namespace NetMud.Data.Game
     /// <summary>
     /// live player character entities
     /// </summary>
+    [Serializable]
     public class Player : EntityPartial, IPlayer
     {
         /// <summary>

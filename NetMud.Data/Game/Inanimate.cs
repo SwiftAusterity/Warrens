@@ -25,6 +25,7 @@ namespace NetMud.Data.Game
     /// <summary>
     /// "Object" class
     /// </summary>
+    [Serializable]
     public class Inanimate : EntityPartial, IInanimate
     {
         /// <summary>
