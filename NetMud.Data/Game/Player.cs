@@ -52,11 +52,13 @@ namespace NetMud.Data.Game
             GetFromWorldOrSpawn();
         }
 
+        [NonSerialized]
         private string _descriptorID;
 
         /// <summary>
         /// The connection the player is using to chat with us
         /// </summary>
+        [NonSerialized]
         public IDescriptor Descriptor 
         { 
             get
@@ -75,6 +77,7 @@ namespace NetMud.Data.Game
             }
         }
 
+        [NonSerialized]
         public override IChannelType ConnectionType
         {
             get

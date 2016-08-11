@@ -33,13 +33,19 @@ namespace NetMud.Data.Game
         public IDimensionalModel Model { get; set; }
 
         /// <summary>
-        /// Get's the entity's model dimensions
+        /// Movement messages trigger when moved through
         /// </summary>
-        /// <returns>height, length, width</returns>
-        public override Tuple<int, int, int> GetModelDimensions()
-        {
-            return new Tuple<int, int, int>(Model.Height, Model.Length, Model.Width);
-        }
+        public IMessageCluster Enter { get; set; }
+
+        /// <summary>
+        /// Cardinality direction this points towards
+        /// </summary>
+        public MovementDirectionType MovementDirection { get; private set; }
+
+        /// <summary>
+        /// Birthmark of live location this points into
+        /// </summary>
+        private string _currentToLocationBirthmark;
 
         /// <summary>
         /// News up an empty entity
@@ -61,9 +67,13 @@ namespace NetMud.Data.Game
         }
 
         /// <summary>
-        /// Birthmark of live location this points into
+        /// Get's the entity's model dimensions
         /// </summary>
-        private string _currentToLocationBirthmark;
+        /// <returns>height, length, width</returns>
+        public override Tuple<int, int, int> GetModelDimensions()
+        {
+            return new Tuple<int, int, int>(Model.Height, Model.Length, Model.Width);
+        }
 
         /// <summary>
         /// Restful live location this points into
@@ -114,16 +124,6 @@ namespace NetMud.Data.Game
             }
         }
         
-        /// <summary>
-        /// Movement messages trigger when moved through
-        /// </summary>
-        public IMessageCluster Enter { get; set; }
-
-        /// <summary>
-        /// Cardinality direction this points towards
-        /// </summary>
-        public MovementDirectionType MovementDirection { get; private set; }
-
         #region spawning
         /// <summary>
         /// Tries to find this entity in the world based on its ID or gets a new one from the db and puts it in the world

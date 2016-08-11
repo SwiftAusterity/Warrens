@@ -21,6 +21,7 @@ namespace NetMud.Data.EntityBackingData
         /// <summary>
         /// The system type for the entity this attaches to
         /// </summary>
+        [NonSerialized]
         public override Type EntityClass
         {
             get { return typeof(Game.Player); }
@@ -62,11 +63,13 @@ namespace NetMud.Data.EntityBackingData
         /// <summary>
         /// Account data object this is owned by
         /// </summary>
+        [NonSerialized]
         private IAccount _account;
 
         /// <summary>
         /// Account data object this is owned by
         /// </summary>
+        [NonSerialized]
         public IAccount Account
         {
             get

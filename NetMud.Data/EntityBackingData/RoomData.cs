@@ -22,6 +22,7 @@ namespace NetMud.Data.EntityBackingData
         /// <summary>
         /// The system type of data this attaches to
         /// </summary>
+        [NonSerialized]
         public override Type EntityClass
         {
             get { return typeof(NetMud.Data.Game.Room); }

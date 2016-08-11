@@ -17,6 +17,31 @@ namespace NetMud.Data.Reference
     public class DimensionalModel : IDimensionalModel
     {
         /// <summary>
+        /// Y axis of the 11 plane model
+        /// </summary>
+        public int Length { get; set; }
+
+        /// <summary>
+        /// Measurement of all 11 planes vertically
+        /// </summary>
+        public int Height { get; set; }
+
+        /// <summary>
+        /// X axis of the 11 plane model
+        /// </summary>
+        public int Width { get; set; }
+
+        /// <summary>
+        /// The model we're following
+        /// </summary>
+        public IDimensionalModelData ModelBackingData { get; set; }
+
+        /// <summary>
+        /// Collection of model section name to material composition mappings
+        /// </summary>
+        public IDictionary<string, IMaterial> Composition { get; set; }
+
+        /// <summary>
         /// Constructor for dimensional model based on a datarow
         /// </summary>
         /// <param name="dr">the row from the db</param>
@@ -114,31 +139,6 @@ namespace NetMud.Data.Reference
             ModelBackingData = new DimensionalModelData();
             ModelBackingData.ModelType = DimensionalModelType.None;
         }
-
-        /// <summary>
-        /// Y axis of the 11 plane model
-        /// </summary>
-        public int Length { get; set; }
-
-        /// <summary>
-        /// Measurement of all 11 planes vertically
-        /// </summary>
-        public int Height { get; set; }
-
-        /// <summary>
-        /// X axis of the 11 plane model
-        /// </summary>
-        public int Width { get; set; }
-
-        /// <summary>
-        /// The model we're following
-        /// </summary>
-        public IDimensionalModelData ModelBackingData { get; set; }
-
-        /// <summary>
-        /// Collection of model section name to material composition mappings
-        /// </summary>
-        public IDictionary<string, IMaterial> Composition { get; set; }
 
         /// <summary>
         /// Turn the material composition set into a json string

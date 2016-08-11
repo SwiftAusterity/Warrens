@@ -12,14 +12,6 @@ namespace NetMud.Data.Reference
     public class DimensionalModelPlane : IDimensionalModelPlane
     {
         /// <summary>
-        /// New up an empty model plane
-        /// </summary>
-        public DimensionalModelPlane()
-        {
-            ModelNodes = new HashSet<IDimensionalModelNode>();
-        }
-
-        /// <summary>
         /// The collection of 121 nodes in the plane
         /// </summary>
         public HashSet<IDimensionalModelNode> ModelNodes { get; set; }
@@ -33,6 +25,14 @@ namespace NetMud.Data.Reference
         /// All nodes in a plane are of the same YAxis so bubble it up here so we have access
         /// </summary>
         public short YAxis { get; set; }
+
+        /// <summary>
+        /// New up an empty model plane
+        /// </summary>
+        public DimensionalModelPlane()
+        {
+            ModelNodes = new HashSet<IDimensionalModelNode>();
+        }
 
         /// <summary>
         /// Gets a node based on the X and Y axis

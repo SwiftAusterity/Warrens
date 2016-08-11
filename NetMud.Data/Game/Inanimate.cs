@@ -34,13 +34,14 @@ namespace NetMud.Data.Game
         public IDimensionalModel Model { get; set; }
 
         /// <summary>
-        /// Get's the entity's model dimensions
+        /// Last known location this was loaded to
         /// </summary>
-        /// <returns>height, length, width</returns>
-        public override Tuple<int, int, int> GetModelDimensions()
-        {
-            return new Tuple<int, int, int>(Model.Height, Model.Length, Model.Width);
-        }
+        public long LastKnownLocation { get; set; }
+
+        /// <summary>
+        /// Last known location type this was loaded to
+        /// </summary>
+        public string LastKnownLocationType { get; set; }
 
         /// <summary>
         /// News up an empty entity
@@ -81,16 +82,15 @@ namespace NetMud.Data.Game
             DataTemplate = backingStore;
             SpawnNewInWorld(spawnTo);
         }
-     
-        /// <summary>
-        /// Last known location this was loaded to
-        /// </summary>
-        public long LastKnownLocation { get; set; }
 
         /// <summary>
-        /// Last known location type this was loaded to
+        /// Get's the entity's model dimensions
         /// </summary>
-        public string LastKnownLocationType { get; set; }
+        /// <returns>height, length, width</returns>
+        public override Tuple<int, int, int> GetModelDimensions()
+        {
+            return new Tuple<int, int, int>(Model.Height, Model.Length, Model.Width);
+        }
 
         #region Container
         /// <summary>
