@@ -374,7 +374,7 @@ namespace NetMud.Data.Game
 
         #region HotBackup
         private const int liveDataVersion = 1;
-        
+        /*
         /// <summary>
         /// Serialize this entity's live data to a binary stream
         /// </summary>
@@ -517,6 +517,7 @@ namespace NetMud.Data.Game
 
             return newEntity;
         }
+        */
 
         private void Transform_V1(InanimateData backingData, Inanimate newEntity, XElement docRoot, bool older)
         {

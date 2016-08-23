@@ -12,7 +12,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
 using System.Web;
-using WebSocketSharp.Server;
 
 namespace NetMud.Models.GameAdmin
 {
@@ -32,7 +31,7 @@ namespace NetMud.Models.GameAdmin
             Races = Enumerable.Empty<IRace>();
             Zones = Enumerable.Empty<IZone>();
 
-            WebSocketServers = Enumerable.Empty<WebSocketServer>();
+            WebsocketServers = Enumerable.Empty<NetMud.Websock.Server>();
 
             LiveRooms = 0;
             LiveInanimates = 0;
@@ -56,7 +55,7 @@ namespace NetMud.Models.GameAdmin
         //Running Data
         public Dictionary<string, CancellationTokenSource> LiveTaskTokens { get; set; }
 
-        public IEnumerable<WebSocketServer> WebSocketServers { get; set; }
+        public IEnumerable<NetMud.Websock.Server> WebsocketServers { get; set; }
 
         public int LiveRooms { get; set; }
         public int LiveInanimates { get; set; }

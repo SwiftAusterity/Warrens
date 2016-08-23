@@ -58,7 +58,6 @@ namespace NetMud.Data.Game
         /// <summary>
         /// The connection the player is using to chat with us
         /// </summary>
-        [NonSerialized]
         public IDescriptor Descriptor 
         { 
             get
@@ -77,7 +76,6 @@ namespace NetMud.Data.Game
             }
         }
 
-        [NonSerialized]
         public override IChannelType ConnectionType
         {
             get
@@ -390,7 +388,7 @@ namespace NetMud.Data.Game
 
         #region HotBackup
         private const int liveDataVersion = 1;
-        
+        /*
         /// <summary>
         /// Serialize this entity's live data to a binary stream
         /// </summary>
@@ -555,6 +553,7 @@ namespace NetMud.Data.Game
                 backingData.RaceData = backD.RaceData;
             }
         }
+         * */
         #endregion
     }
 }

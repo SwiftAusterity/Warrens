@@ -26,7 +26,6 @@ using NetMud.DataStructure.Behaviors.Automation;
 using NetMud.Utility;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.System;
-using WebSocketSharp.Server;
 
 namespace NetMud.Controllers
 {
@@ -76,7 +75,7 @@ namespace NetMud.Controllers
             dashboardModel.LiveRooms = LiveCache.GetAll<IRoom>().Count();
             dashboardModel.LiveNPCs = LiveCache.GetAll<IIntelligence>().Count();
 
-            dashboardModel.WebSocketServers = LiveCache.GetAll<WebSocketServer>();
+            dashboardModel.WebsocketServers = LiveCache.GetAll<NetMud.Websock.Server>();
 
             return View(dashboardModel);
         }
@@ -2061,10 +2060,10 @@ namespace NetMud.Controllers
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var servers = LiveCache.GetAllNonEntity<WebSocketServer>();
+            var servers = LiveCache.GetAllNonEntity<NetMud.Websock.Server>();
 
             foreach (var server in servers)
-                server.Stop(WebSocketSharp.CloseStatusCode.Normal, "Shutting down");
+                server.Shutdown();
 
             LoggingUtility.LogAdminCommandUsage("*WEB* - StopALLWebSockets", authedUser.GameAccount.GlobalIdentityHandle);
             message = "Cancel signal sent for all websockets.";
@@ -2077,9 +2076,9 @@ namespace NetMud.Controllers
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var server = LiveCache.Get<WebSocketServer>("WebSocketServer_" + port.ToString());
+            var server = LiveCache.Get<NetMud.Websock.Server>("NetMud.Websock.Server_" + port.ToString());
 
-            server.Stop(WebSocketSharp.CloseStatusCode.Normal, "Shutting down");
+            server.Shutdown();
 
             LoggingUtility.LogAdminCommandUsage("*WEB* - StopWebSocket[" + port.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
             message = "Cancel signal sent.";

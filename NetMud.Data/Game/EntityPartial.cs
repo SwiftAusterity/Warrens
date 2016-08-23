@@ -198,10 +198,12 @@ namespace NetMud.Data.Game
         }
         #endregion
 
+        
         /*
          * Override these for live things since live things can contain other things
          */
         #region "Serialization"
+        /*
         public override IEntity DeSerialize(string jsonData)
         {
             //Need to deserialize the entire object but also find things inside of the object and put them back
@@ -257,6 +259,7 @@ namespace NetMud.Data.Game
                                                                                                     new XAttribute("CapacityVolume", item.CapacityVolume),
                                                                                                     new XAttribute("CapacityWeight", item.CapacityWeight)));
         }
+        */
         #endregion
     }
 }

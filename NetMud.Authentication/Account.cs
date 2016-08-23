@@ -50,7 +50,11 @@ namespace NetMud.Authentication
         public Account(string handle, string logSubscriptions)
         {
             GlobalIdentityHandle = handle;
-            LogChannelSubscriptions = logSubscriptions.Split('|');
+
+            if (!String.IsNullOrEmpty(logSubscriptions))
+                LogChannelSubscriptions = logSubscriptions.Split('|');
+            else
+                LogChannelSubscriptions = new List<string>();
         }
 
         /// <summary>

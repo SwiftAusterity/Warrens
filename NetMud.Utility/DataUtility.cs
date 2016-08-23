@@ -130,7 +130,15 @@ namespace NetMud.Utility
                 if (thing == null)
                     return false;
 
-                newThing = (T)Convert.ChangeType(thing, typeof(T));
+                if (typeof(T).IsEnum)
+                {
+                    if (thing is Int16 || thing is Int32)
+                        newThing = (T)thing;
+                    else
+                        newThing = (T)Enum.Parse(typeof(T), thing.ToString());
+                }
+                else
+                    newThing = (T)Convert.ChangeType(thing, typeof(T));
 
                 return true;
             }

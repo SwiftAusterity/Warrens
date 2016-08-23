@@ -8,8 +8,8 @@ namespace NetMud.DataAccess.FileSystem
         /// <summary>
         /// The base directory for these files, should be overriden
         /// </summary>
-        public virtual string BaseDirectory 
-        { 
+        public virtual string BaseDirectory
+        {
             get
             {
                 return "/FileStore/";
@@ -105,7 +105,13 @@ namespace NetMud.DataAccess.FileSystem
         /// <returns>success</returns>
         public bool VerifyDirectory(string directoryName, bool createIfMissing = true)
         {
-            var mappedName = String.Format("{0}{1}/", BaseDirectory, directoryName);
+            var mappedName = directoryName;
+
+            if (!directoryName.Contains(BaseDirectory))
+                mappedName = String.Format("{0}{1}", BaseDirectory, directoryName);
+
+            if(!mappedName.EndsWith("/"))
+                mappedName = mappedName + "/";
 
             try
             {

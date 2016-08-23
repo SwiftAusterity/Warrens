@@ -161,8 +161,6 @@ namespace NetMud.DataAccess
 
                 foreach (var peep in peeps)
                     peep.WriteTo(new string[] { content });
-
-                //Low Priority TODO: Write to some source that can push to the web
             }
         }
 
@@ -174,7 +172,7 @@ namespace NetMud.DataAccess
         {
             var names = Enumerable.Empty<string>();
 
-            if (!String.IsNullOrWhiteSpace(BaseDirectory) && Directory.Exists(BaseDirectory) && Directory.Exists(BaseDirectory + "Current/"))
+            if (VerifyDirectory(CurrentDirectoryName, false))
                 names = Directory.EnumerateFiles(BaseDirectory + "Current/", "*.txt", SearchOption.TopDirectoryOnly);
 
             return names.Select(nm => nm.Substring(nm.LastIndexOf('/') + 1, nm.Length - nm.LastIndexOf('/') - 5));
@@ -187,7 +185,7 @@ namespace NetMud.DataAccess
         /// <returns>success status</returns>
         public bool RolloverLog(string channel)
         {
-            var archiveLogName = String.Format("{1}_{2}{3}{4}_{5}{6}{7}.txt",
+            var archiveLogName = String.Format("{0}_{1}{2}{3}_{4}{5}{6}.txt",
                     channel
                     , DateTime.Now.Year
                     , DateTime.Now.Month
@@ -223,6 +221,11 @@ namespace NetMud.DataAccess
         /// <param name="channel">the log file to append it to</param>
         private void WriteLine(string content, string channel)
         {
+            var dirName = BaseDirectory + CurrentDirectoryName;
+
+            if (!VerifyDirectory(CurrentDirectoryName))
+                throw new Exception("Unable to locate or create base live logs directory.");
+
             var fileName = channel + ".txt";
             var timeStamp = String.Format("[{0:0000}/{1:00}/{2:00} {3:00}:{4:00}:{5:00}]:  ", DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
 
@@ -231,7 +234,7 @@ namespace NetMud.DataAccess
 
             var bytes = Encoding.UTF8.GetBytes(timeStamp + content);
 
-            WriteToFile(fileName, bytes, FileMode.Append);
+            WriteToFile(dirName + fileName, bytes, FileMode.Append);
         }
     }
 }
