@@ -80,7 +80,7 @@ namespace NetMud.Data.Reference
         public IRoomData StartingLocation { get; set; }
 
         /// <summary>
-        /// When a player loads without a location where do we sent them
+        /// When a player loads without a location where do we send them
         /// </summary>
         public IRoomData EmergencyLocation { get; set; }
 

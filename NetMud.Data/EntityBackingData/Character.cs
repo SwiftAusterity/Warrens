@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Text;
+using System.Web.Script.Serialization;
 
 namespace NetMud.Data.EntityBackingData
 {
@@ -63,11 +64,13 @@ namespace NetMud.Data.EntityBackingData
         /// Account data object this is owned by
         /// </summary>
         [NonSerialized]
+        [ScriptIgnore]
         private IAccount _account;
 
         /// <summary>
         /// Account data object this is owned by
         /// </summary>
+        [ScriptIgnore]
         public IAccount Account
         {
             get

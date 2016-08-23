@@ -33,3 +33,4 @@ NetMud/HotBackup/Players
 NetMud/HotBackup/Logs/Current
 .vs/config/applicationhost.config
 NetMud.Interp/obj
+NetMud/FileStore/Logs/*

@@ -25,6 +25,22 @@ namespace NetMud.DataAccess.FileSystem
             }
         }
 
+        /// <summary>
+        /// The default directory name for when files are rolled over or archived
+        /// </summary>
+        public override string DatedBackupDirectory
+        {
+            get
+            {
+                return String.Format("{0}{1}{2}_{3}{4}{5}/",
+                                        DateTime.Now.Year
+                                        , DateTime.Now.Month
+                                        , DateTime.Now.Day
+                                        , DateTime.Now.Hour
+                                        , DateTime.Now.Minute
+                                        , DateTime.Now.Second);
+            }
+        }
 
         /// <summary>
         /// Writes one player out to disk
@@ -178,7 +194,7 @@ namespace NetMud.DataAccess.FileSystem
             if (string.IsNullOrWhiteSpace(entityFileName))
                 return;
 
-            var fullFileName = dir.FullName + "/" + entityFileName;
+            var fullFileName = dir.FullName + entityFileName;
 
             try
             {

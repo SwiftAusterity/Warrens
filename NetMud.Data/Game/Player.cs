@@ -22,6 +22,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Web.Script.Serialization;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -53,11 +54,13 @@ namespace NetMud.Data.Game
         }
 
         [NonSerialized]
+        [ScriptIgnore]
         private string _descriptorID;
 
         /// <summary>
         /// The connection the player is using to chat with us
         /// </summary>
+        [ScriptIgnore]
         public IDescriptor Descriptor 
         { 
             get
@@ -76,6 +79,7 @@ namespace NetMud.Data.Game
             }
         }
 
+        [ScriptIgnore]
         public override IChannelType ConnectionType
         {
             get
@@ -109,6 +113,7 @@ namespace NetMud.Data.Game
         /// <summary>
         /// Restful location container this is inside of
         /// </summary>
+        [ScriptIgnore]
         public override IContains CurrentLocation
         {
             get
