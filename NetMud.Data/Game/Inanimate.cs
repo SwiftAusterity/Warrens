@@ -1,7 +1,7 @@
 ﻿using NetMud.Data.EntityBackingData;
 using NetMud.Data.Reference;
 using NetMud.Data.System;
-using NetMud.DataAccess;
+using NetMud.DataAccess; using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;

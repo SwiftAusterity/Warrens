@@ -47,16 +47,14 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="websocket-sharp">
-      <HintPath>..\ExternalLibraries\websocket-sharp.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cache\CacheAccessor.cs" />
     <Compile Include="FileSystem\BackingData.cs" />
     <Compile Include="FileSystem\FileAccessor.cs" />
     <Compile Include="FileSystem\LiveData.cs" />
     <Compile Include="FileSystem\PlayerData.cs" />
-    <Compile Include="LiveCache.cs" />
+    <Compile Include="Cache\LiveCache.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DataWrapper.cs" />

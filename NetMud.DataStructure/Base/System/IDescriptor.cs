@@ -10,7 +10,7 @@ namespace NetMud.DataStructure.Base.System
         /// <summary>
         /// The cache key for the global cache system
         /// </summary>
-        string CacheKey { get; }
+        ICacheKey CacheKey { get; }
 
         /// <summary>
         /// Handles initial connection

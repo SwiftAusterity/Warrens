@@ -1,6 +1,6 @@
 ﻿using NetMud.Data.EntityBackingData;
 using NetMud.Data.Game;
-using NetMud.DataAccess;
+using NetMud.DataAccess; using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
@@ -27,13 +27,35 @@ namespace NetMud.Backup
         public bool NewWorldFallback()
         {
             //Only load in stuff that is static and spawns as singleton
-            LiveCache.PreLoadAll<RoomData>();
-            LiveCache.PreLoadAll<PathwayData>();
+            PreLoadAll<RoomData>();
+            PreLoadAll<PathwayData>();
 
             LoggingUtility.Log("World restored from data fallback.", LogChannels.Backup, true);
 
             return true;
         }
+
+        /// <summary>
+        /// Dumps everything of a single type into the cache from the database for BackingData
+        /// </summary>
+        /// <typeparam name="T">the type to get and store</typeparam>
+        /// <returns>success status</returns>
+        public bool PreLoadAll<T>() where T : IData
+        {
+            var backingClass = Activator.CreateInstance(typeof(T)) as IEntityBackingData;
+
+            var implimentingEntityClass = backingClass.EntityClass;
+
+            foreach (IData thing in DataWrapper.GetAll<T>())
+            {
+                var entityThing = Activator.CreateInstance(implimentingEntityClass, new object[] { (T)thing }) as IEntity;
+
+                LiveCache.Add<T>(entityThing);
+            }
+
+            return true;
+        }
+
 
         /// <summary>
         /// Writes the current live world content (entities, positions, etc) to the Current backup; archives whatever was already considered current

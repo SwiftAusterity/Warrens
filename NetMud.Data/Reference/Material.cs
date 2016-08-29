@@ -1,4 +1,4 @@
-﻿using NetMud.DataAccess;
+﻿using NetMud.DataAccess; using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.Utility;

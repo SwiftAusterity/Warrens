@@ -8,7 +8,7 @@ using Microsoft.Owin.Security;
 using NetMud.Authentication;
 using NetMud.Data.EntityBackingData;
 using System;
-using NetMud.DataAccess;
+using NetMud.DataAccess; using NetMud.DataAccess.Cache;
 using NetMud.Data.Reference;
 using NetMud.Utility;
 using NetMud.Models;

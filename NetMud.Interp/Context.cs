@@ -5,7 +5,7 @@ using System.Linq;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.Base.System;
 using System.Reflection;
-using NetMud.DataAccess;
+using NetMud.DataAccess; using NetMud.DataAccess.Cache;
 using NutMud.Commands.Attributes;
 using System.Text.RegularExpressions;
 using NetMud.DataStructure.Base.Entity;

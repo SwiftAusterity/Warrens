@@ -1,4 +1,4 @@
-﻿using NetMud.DataAccess;
+﻿using NetMud.DataAccess; using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.Utility;
 using Newtonsoft.Json;
@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Reference
 {
@@ -16,6 +17,9 @@ namespace NetMud.Data.Reference
     [Serializable]
     public class DimensionalModel : IDimensionalModel
     {
+        [JsonProperty("BackingDataId")]
+        private long _backingDataId { get; set; }
+
         /// <summary>
         /// Y axis of the 11 plane model
         /// </summary>
@@ -34,7 +38,26 @@ namespace NetMud.Data.Reference
         /// <summary>
         /// The model we're following
         /// </summary>
-        public IDimensionalModelData ModelBackingData { get; set; }
+        [NonSerialized]
+        [ScriptIgnore]
+        public IDimensionalModelData ModelBackingData 
+        {
+            get
+            {
+                if (_backingDataId >= 0)
+                    return LiveCache.Get<ilocation>(new LiveCacheKey(typeof(ILocation), _backingDataId));
+
+                return null;
+            }
+            set
+            {
+                if (value == null)
+                    return;
+
+                _currentFromLocationBirthmark = value.BirthMark;
+                UpsertToLiveWorldCache();
+            }
+        }
 
         /// <summary>
         /// Collection of model section name to material composition mappings

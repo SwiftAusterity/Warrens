@@ -1,5 +1,6 @@
 ﻿using NetMud.Communication;
 using NetMud.DataAccess;
+using NetMud.DataAccess.Cache;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +33,7 @@ namespace NetMud.CentralControl
         {
             var cancelTokenSource = new CancellationTokenSource();
 
-            if(maxDuration > 0)
+            if (maxDuration > 0)
                 cancelTokenSource.CancelAfter(maxDuration * 1000); //seconds * 1000 for miliseconds
 
             StoreCancellationToken(designator, cancelTokenSource);
@@ -148,7 +149,7 @@ namespace NetMud.CentralControl
         /// <param name="shutdownAnnouncement">What to announce (string.format format) before shutting down, empty string = no announcements</param>
         public static void ShutdownAll(int shutdownDelay, string shutdownAnnouncement, int shutdownAnnouncementFrequency = -1)
         {
-            IEnumerable<CancellationTokenSource> tokens 
+            IEnumerable<CancellationTokenSource> tokens
                 = globalCache.Where(kvp => kvp.Value.GetType() == typeof(CancellationTokenSource)).Select(kvp => (CancellationTokenSource)kvp.Value);
 
             foreach (var token in tokens.Where(tk => !tk.IsCancellationRequested && tk.Token.CanBeCanceled))

@@ -6,7 +6,7 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Models.Logging;
-using NetMud.DataAccess;
+using NetMud.DataAccess; using NetMud.DataAccess.Cache;
 
 namespace NetMud.Controllers
 {

@@ -61,6 +61,7 @@
     <Compile Include="Base\System\ConnectionType.cs" />
     <Compile Include="Base\System\IAccount.cs" />
     <Compile Include="Base\EntityBackingData\ICharacter.cs" />
+    <Compile Include="Base\System\ICacheKey.cs" />
     <Compile Include="Base\System\IChannelType.cs" />
     <Compile Include="Base\System\ICommand.cs" />
     <Compile Include="Base\System\IData.cs" />

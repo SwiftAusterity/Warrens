@@ -3,7 +3,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using NetMud.Authentication;
 using NetMud.Communication;
 using NetMud.Data.Game;
-using NetMud.DataAccess;
+using NetMud.DataAccess; using NetMud.DataAccess.Cache;
 using NetMud.DataAccess.FileSystem;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.System;
