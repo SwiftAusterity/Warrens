@@ -17,7 +17,7 @@ namespace NetMud.DataAccess.Cache
          * The administrative website will edit the reference data in the database which wont get refreshed
          * until someone tells it to (or the entire thing reboots)
          * 
-         * IEntity data is ALWAYS cached and saved to a different place because it is live in-game data and even if
+         * ILiveData data is ALWAYS cached and saved to a different place because it is live in-game data and even if
          * we add, say, one damage to the Combat Knife item in the db it doesn't mean all Combat Knife objects in game
          * get retroactively updated. There will be superadmin level website commands to do this and in-game commands for admins.
          * 
@@ -51,13 +51,26 @@ namespace NetMud.DataAccess.Cache
         /// Adds an object to the cache
         /// </summary>
         /// <param name="objectToCache">the object to cache</param>
-        /// <param name="cacheKey">the string key to cache it under</param>
+        /// <param name="cacheKey">the key to cache it under</param>
         public void Add(object objectToCache, ICacheKey cacheKey)
         {
             if (Exists(cacheKey))
                 Remove(cacheKey);
 
-            _globalCache.AddOrGetExisting(cacheKey.KeyHash(), objectToCache, globalPolicy);
+            _globalCache.AddOrGetExisting(cacheKey.KeyHash(), objectToCache, _globalPolicy);
+        }
+
+        /// <summary>
+        /// Adds an object to the cache
+        /// </summary>
+        /// <param name="objectToCache">the object to cache</param>
+        /// <param name="cacheKey">the string key to cache it under</param>
+        public void Add(object objectToCache, string cacheKey)
+        {
+            if (Exists(cacheKey))
+                Remove(cacheKey);
+
+            _globalCache.AddOrGetExisting(cacheKey, objectToCache, _globalPolicy);
         }
 
         /// <summary>
@@ -66,7 +79,7 @@ namespace NetMud.DataAccess.Cache
         /// <typeparam name="T">the system type for the entity</typeparam>
         /// <param name="birthmarks">the birthmarks to retrieve</param>
         /// <returns>a list of the entities from the cache</returns>
-        public IEnumerable<T> GetMany<T>(HashSet<string> birthmarks) where T : IEntity
+        public IEnumerable<T> GetMany<T>(HashSet<string> birthmarks) where T : ILiveData
         {
             try
             {
@@ -87,7 +100,7 @@ namespace NetMud.DataAccess.Cache
         /// <typeparam name="T">the system type for the entity</typeparam>
         /// <param name="birthmarks">the birthmarks to retrieve</param>
         /// <returns>a list of the entities from the cache</returns>
-        public IEnumerable<T> GetMany<T>(IEnumerable<string> birthmarks) where T : IEntity
+        public IEnumerable<T> GetMany<T>(IEnumerable<string> birthmarks) where T : ILiveData
         {
             try
             {

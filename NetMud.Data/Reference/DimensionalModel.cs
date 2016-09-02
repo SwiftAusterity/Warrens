@@ -38,14 +38,14 @@ namespace NetMud.Data.Reference
         /// <summary>
         /// The model we're following
         /// </summary>
-        [NonSerialized]
         [ScriptIgnore]
         public IDimensionalModelData ModelBackingData 
         {
             get
             {
-                if (_backingDataId >= 0)
-                    return LiveCache.Get<ilocation>(new LiveCacheKey(typeof(ILocation), _backingDataId));
+                // TODO: Impl the BackingDataCache once it is written
+               // if (_backingDataId >= 0)
+                 //   return LiveCache.Get<IDimensionalModelData>(new LiveCacheKey(typeof(IDimensionalModelData), _backingDataId.ToString()));
 
                 return null;
             }
@@ -54,8 +54,7 @@ namespace NetMud.Data.Reference
                 if (value == null)
                     return;
 
-                _currentFromLocationBirthmark = value.BirthMark;
-                UpsertToLiveWorldCache();
+                //UpsertToLiveWorldCache();
             }
         }
 

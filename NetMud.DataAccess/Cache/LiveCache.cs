@@ -17,9 +17,9 @@ namespace NetMud.DataAccess.Cache
         /// Adds a single entity into the cache
         /// </summary>
         /// <param name="objectToCache">the entity to cache</param>
-        public static void Add<T>(T objectToCache) where T : IEntity
+        public static void Add<T>(T objectToCache) where T : ILiveData
         {
-            var entityToCache = (IEntity)objectToCache;
+            var entityToCache = (ILiveData)objectToCache;
             var cacheKey = new LiveCacheKey(objectToCache.GetType(), entityToCache.BirthMark);
 
             BackingCache.Add(objectToCache, cacheKey);
@@ -42,9 +42,7 @@ namespace NetMud.DataAccess.Cache
         /// <returns>a list of the entities from the cache</returns>
         public static IEnumerable<T> GetAll<T>()
         {
-            return globalCache.Where(keyValuePair => keyValuePair.Value.GetType() == typeof(T)
-                                                    || (typeof(T).IsInterface && keyValuePair.Value.GetType().GetInterfaces().Contains(typeof(T)))
-                                    ).Select(kvp => (T)kvp.Value);
+            return BackingCache.GetAll<T>();
         }
 
         /// <summary>
@@ -53,10 +51,9 @@ namespace NetMud.DataAccess.Cache
         /// <typeparam name="T">the system type for the entity</typeparam>
         /// <param name="birthmarks">the birthmarks to retrieve</param>
         /// <returns>a list of the entities from the cache</returns>
-        public static IEnumerable<T> GetMany<T>(HashSet<string> birthmarks) where T : IEntity
+        public static IEnumerable<T> GetMany<T>(HashSet<string> birthmarks) where T : ILiveData
         {
-            return globalCache.Where(keyValuePair => keyValuePair.Value.GetType().GetInterfaces().Contains(typeof(T)) && birthmarks.Contains(((T)keyValuePair.Value).BirthMark))
-                              .Select(kvp => (T)kvp.Value);
+            return BackingCache.GetMany<T>(birthmarks);
         }
 
         /// <summary>
@@ -65,10 +62,9 @@ namespace NetMud.DataAccess.Cache
         /// <typeparam name="T">the system type for the entity</typeparam>
         /// <param name="birthmarks">the birthmarks to retrieve</param>
         /// <returns>a list of the entities from the cache</returns>
-        public static IEnumerable<T> GetMany<T>(IEnumerable<string> birthmarks) where T : IEntity
+        public static IEnumerable<T> GetMany<T>(IEnumerable<string> birthmarks) where T : ILiveData
         {
-            return globalCache.Where(keyValuePair => keyValuePair.Value.GetType().GetInterfaces().Contains(typeof(T)) && birthmarks.Contains(((T)keyValuePair.Value).BirthMark))
-                              .Select(kvp => (T)kvp.Value);
+            return BackingCache.GetMany<T>(birthmarks);
         }
 
 
@@ -76,9 +72,9 @@ namespace NetMud.DataAccess.Cache
         /// Only for the hotbackup procedure
         /// </summary>
         /// <returns>All entities in the entire system</returns>
-        public static IEnumerable<IEntity> GetAll()
+        public static IEnumerable<ILiveData> GetAll()
         {
-            return globalCache.Where(keyValuePair => keyValuePair.Value.GetType().GetInterfaces().Contains(typeof(IEntity))).Select(kvp => (IEntity)kvp.Value);
+            return BackingCache.GetAll<ILiveData>();
         }
 
         /// <summary>
@@ -89,18 +85,7 @@ namespace NetMud.DataAccess.Cache
         /// <returns>all the stuff and things</returns>
         public static IEnumerable<T> GetAll<T>(Type mainType)
         {
-            return globalCache.Where(keyValuePair => keyValuePair.Value.GetType().GetInterfaces()
-                .Contains(typeof(T)) && keyValuePair.Value.GetType() == mainType)
-                .Select(kvp => (T)kvp.Value);
-        }
-
-        /// <summary>
-        /// Gets all of a non-entity from the cache
-        /// </summary>
-        /// <returns>All entities of a type in the entire system</returns>
-        public static IEnumerable<T> GetAllNonEntity<T>()
-        {
-            return globalCache.Where(ob => ob.Value.GetType() == typeof(T)).Select(kvp => (T)kvp.Value);
+            return BackingCache.GetAll<T>(mainType);
         }
 
         /// <summary>
@@ -111,16 +96,7 @@ namespace NetMud.DataAccess.Cache
         /// <returns>the entity requested</returns>
         public static T Get<T>(string key)
         {
-            try
-            {
-                return (T)globalCache[key];
-            }
-            catch (Exception ex)
-            {
-                LoggingUtility.LogError(ex);
-            }
-
-            return default(T);
+            return BackingCache.Get<T>(key);
         }
 
         /// <summary>
@@ -129,22 +105,13 @@ namespace NetMud.DataAccess.Cache
         /// <typeparam name="T">the type of the entity</typeparam>
         /// <param name="key">the key it was cached with</param>
         /// <returns>the entity requested</returns>
-        public static T Get<T>(LiveCacheKey key) where T : IEntity
+        public static T Get<T>(LiveCacheKey key) where T : ILiveData
         {
-            try
-            {
-                return (T)globalCache[key.KeyHash()];
-            }
-            catch(Exception ex)
-            {
-                LoggingUtility.LogError(ex);
-            }
-
-            return default(T);
+            return BackingCache.Get<T>(key);
         }
 
         /// <summary>
-        /// Gets one entity from the cache by its ID, only works for Singleton spawners
+        /// Gets one entity from the cache by its ID, only works for Singleton spawners with data templates(IEntities)
         /// </summary>
         /// <typeparam name="T">the type of the entity</typeparam>
         /// <param name="id">the id</param>
@@ -153,10 +120,10 @@ namespace NetMud.DataAccess.Cache
         {
             try
             {
-                var allPlayers = GetAll<T>();
+                var dataCluster = GetAll<T>();
 
-                if (allPlayers.Any(p => ((IEntity)p).DataTemplate.ID.Equals(id)))
-                    return allPlayers.First(p => ((IEntity)p).DataTemplate.ID.Equals(id));
+                if (dataCluster.Any(p => ((IEntity)p).DataTemplate.ID.Equals(id)))
+                    return dataCluster.First(p => ((IEntity)p).DataTemplate.ID.Equals(id));
             }
             catch (Exception ex)
             {
@@ -177,10 +144,10 @@ namespace NetMud.DataAccess.Cache
         {
             try
             {
-                var allTheStuff = GetAll<T>(mainType);
+                var dataCluster = GetAll<T>(mainType);
 
-                if (allTheStuff.Any(p => ((IEntity)p).DataTemplate.ID.Equals(id)))
-                    return allTheStuff.First(p => ((IEntity)p).DataTemplate.ID.Equals(id));
+                if (dataCluster.Any(p => ((IEntity)p).DataTemplate.ID.Equals(id)))
+                    return dataCluster.First(p => ((IEntity)p).DataTemplate.ID.Equals(id));
             }
             catch (Exception ex)
             {
@@ -196,7 +163,16 @@ namespace NetMud.DataAccess.Cache
         /// <param name="key">the key of the entity to remove</param>
         public static void Remove(LiveCacheKey key)
         {
-            globalCache.Remove(key.KeyHash());
+            BackingCache.Remove(key);
+        }
+
+        /// <summary>
+        /// Removes an non-entity from the cache by its key
+        /// </summary>
+        /// <param name="key">the key of the entity to remove</param>
+        public static void Remove(string key)
+        {
+            BackingCache.Remove(key);
         }
 
         /// <summary>
@@ -206,17 +182,9 @@ namespace NetMud.DataAccess.Cache
         /// <returns>if it is in the cache of not</returns>
         public static bool Exists(LiveCacheKey key)
         {
-            return globalCache.Get(key.KeyHash()) != null;
+            return BackingCache.Exists(key);
         }
 
-        /// <summary>
-        /// Removes an non-entity from the cache by its key
-        /// </summary>
-        /// <param name="key">the key of the entity to remove</param>
-        public static void Remove(string key)
-        {
-            globalCache.Remove(key);
-        }
 
         /// <summary>
         /// Checks if an non-entity is in the cache
@@ -225,18 +193,34 @@ namespace NetMud.DataAccess.Cache
         /// <returns>if it is in the cache of not</returns>
         public static bool Exists(string key)
         {
-            return globalCache.Get(key) != null;
+            return BackingCache.Exists(key);
         }
 
         /// <summary>
         /// Gets birthmarks for live entities
         /// </summary>
         /// <returns>the birthmark string</returns>
-        public static string GetUniqueIdentifier(object obj)
+        public static string GetUniqueIdentifier(IEntity obj)
         {
-            var dataObject = obj as IData;
+            return GetUniqueIdentifier(obj.DataTemplate);
+        }
 
-            return string.Format("{0}.{1}.{2}", dataObject.ID, DateTime.Now.ToBinary(), Guid.NewGuid().ToString().Replace("-", string.Empty));
+        /// <summary>
+        /// Gets birthmarks for live entities
+        /// </summary>
+        /// <returns>the birthmark string</returns>
+        public static string GetUniqueIdentifier(IData obj)
+        {
+            return GetUniqueIdentifier(obj.ID.ToString());
+        }
+
+        /// <summary>
+        /// Gets birthmarks for live entities
+        /// </summary>
+        /// <returns>the birthmark string</returns>
+        public static string GetUniqueIdentifier(string marker)
+        {
+            return string.Format("{0}.{1}.{2}", marker, DateTime.Now.ToBinary(), Guid.NewGuid().ToString().Replace("-", string.Empty));
         }
     }
 
@@ -251,17 +235,17 @@ namespace NetMud.DataAccess.Cache
         }
 
         /// <summary>
-        /// System type of the entity being cached
+        /// System type of the object being cached
         /// </summary>
         public Type ObjectType { get; set; }
 
         /// <summary>
-        /// Unique signature for a live entity
+        /// Unique signature for a live object
         /// </summary>
         public string BirthMark { get; set; }
 
         /// <summary>
-        /// Generate a live key for an entity
+        /// Generate a live key for a live object
         /// </summary>
         /// <param name="objectType">System type of the entity being cached</param>
         /// <param name="marker">Unique signature for a live entity</param>

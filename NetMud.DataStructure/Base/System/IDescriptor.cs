@@ -5,13 +5,8 @@ namespace NetMud.DataStructure.Base.System
     /// <summary>
     /// Interface defining players connected to a server
     /// </summary>
-    public interface IDescriptor
+    public interface IDescriptor : ILiveData
     {
-        /// <summary>
-        /// The cache key for the global cache system
-        /// </summary>
-        ICacheKey CacheKey { get; }
-
         /// <summary>
         /// Handles initial connection
         /// </summary>

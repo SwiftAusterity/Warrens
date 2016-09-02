@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using NetMud.Authentication;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.System;
 
 namespace NetMud.Telnet
@@ -13,13 +14,15 @@ namespace NetMud.Telnet
         public EClientState clientState { get; set; }
         public string commandIssued { get; set; }
 
-        public string CacheKey 
-        { 
-            get
-            {
-                return String.Format(cacheKeyFormat, remoteEndPoint.Address);
-            }
-        }
+        /// <summary>
+        /// Unique string for this live entity
+        /// </summary>
+        public string BirthMark { get; internal set; }
+
+        /// <summary>
+        /// When this entity was born to the world
+        /// </summary>
+        public DateTime Birthdate { get; internal set; }
 
         public Client(IPEndPoint _remoteEndPoint, DateTime _connectedAt, EClientState _clientState)
         {
@@ -27,6 +30,9 @@ namespace NetMud.Telnet
             connectedAt = _connectedAt;
             clientState = _clientState;
             commandIssued = String.Empty;
+
+            BirthMark = LiveCache.GetUniqueIdentifier(String.Format(cacheKeyFormat, remoteEndPoint.Port));
+            Birthdate = DateTime.Now;
         }
 
         public ApplicationUserManager UserManager

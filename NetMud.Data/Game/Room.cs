@@ -360,7 +360,7 @@ namespace NetMud.Data.Game
         {
             var roomTemplate = (IRoomData)DataTemplate;
 
-            BirthMark = Birthmarker.GetBirthmark(roomTemplate);
+            BirthMark = LiveCache.GetUniqueIdentifier(roomTemplate);
             Keywords = new string[] { roomTemplate.Name.ToLower() };
             Birthdate = DateTime.Now;
             CurrentLocation = spawnTo;

@@ -10,6 +10,7 @@ using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.Utility;
 using NetMud.DataAccess.FileSystem;
 using System.Web.Hosting;
+using NetMud.DataAccess.Cache;
 
 namespace NetMud.DataAccess
 {

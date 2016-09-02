@@ -3,7 +3,8 @@ using NetMud.Communication.Messaging;
 using NetMud.Data.EntityBackingData;
 using NetMud.Data.Reference;
 using NetMud.Data.System;
-using NetMud.DataAccess; using NetMud.DataAccess.Cache;
+using NetMud.DataAccess; 
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
@@ -55,7 +56,7 @@ namespace NetMud.Data.Game
 
         [NonSerialized]
         [ScriptIgnore]
-        private string _descriptorID;
+        private LiveCacheKey _descriptorKey;
 
         /// <summary>
         /// The connection the player is using to chat with us
@@ -65,17 +66,17 @@ namespace NetMud.Data.Game
         { 
             get
             {
-                if (String.IsNullOrWhiteSpace(_descriptorID))
+                if (_descriptorKey != null)
                     return default(IDescriptor);
 
-                return LiveCache.Get<IDescriptor>(_descriptorID); 
+                return LiveCache.Get<IDescriptor>(_descriptorKey);
             }
 
             set
             {
-                _descriptorID = value.CacheKey;
+                _descriptorKey = new LiveCacheKey(typeof(IDescriptor), value.BirthMark);
 
-                LiveCache.Add(value, _descriptorID);
+                LiveCache.Add<IDescriptor>(value);
             }
         }
 
@@ -369,7 +370,7 @@ namespace NetMud.Data.Game
         {
             var ch = (ICharacter)DataTemplate;
 
-            BirthMark = Birthmarker.GetBirthmark(ch);
+            BirthMark = LiveCache.GetUniqueIdentifier(ch);
             Keywords = new string[] { ch.Name.ToLower(), ch.SurName.ToLower() };
             Birthdate = DateTime.Now;
 

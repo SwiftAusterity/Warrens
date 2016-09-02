@@ -8,18 +8,8 @@ namespace NetMud.DataStructure.Base.System
     /// <summary>
     /// Framework for live entities
     /// </summary>
-    public interface IEntity : ILookable, IFileStored, IComparable<IEntity>, IEquatable<IEntity>
+    public interface IEntity : ILookable, IFileStored, ILiveData, IComparable<IEntity>, IEquatable<IEntity>
     {
-        /// <summary>
-        /// Indelible guid that helps the system figure out where stuff is, generated when the object is spawned into the world
-        /// </summary>
-        string BirthMark { get; }
-
-        /// <summary>
-        /// When this was first added to the live world
-        /// </summary>
-        DateTime Birthdate { get; }
-
         /// <summary>
         /// Keywords this entity can be found with in command parsing
         /// </summary>

@@ -173,7 +173,7 @@ namespace NetMud.Data.Game
 
             MovementDirection = MessagingUtility.TranslateDegreesToDirection(bS.DegreesFromNorth);
 
-            BirthMark = Birthmarker.GetBirthmark(bS);
+            BirthMark = LiveCache.GetUniqueIdentifier(bS);
             Keywords = new string[] { bS.Name.ToLower(), MovementDirection.ToString().ToLower() };
             Birthdate = DateTime.Now;
 

@@ -227,10 +227,10 @@ namespace NetMud.Data.Game
             if (DataTemplate == null)
                 throw new InvalidOperationException("Missing backing data store on NPC spawn event.");
 
-            var backingStore = (INonPlayerCharacter)DataTemplate;
+            var bS = (INonPlayerCharacter)DataTemplate;
 
-            BirthMark = Birthmarker.GetBirthmark(backingStore);
-            Keywords = new string[] { backingStore.Name.ToLower() };
+            BirthMark = LiveCache.GetUniqueIdentifier(bS);
+            Keywords = new string[] { bS.Name.ToLower() };
             Birthdate = DateTime.Now;
 
             if (spawnTo == null)

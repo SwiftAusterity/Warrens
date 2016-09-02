@@ -304,10 +304,10 @@ namespace NetMud.Data.Game
             if (DataTemplate == null)
                 throw new InvalidOperationException("Missing backing data store on object spawn event.");
 
-            var backingStore = (IInanimateData)DataTemplate;
+            var bS = (IInanimateData)DataTemplate;
 
-            BirthMark = Birthmarker.GetBirthmark(backingStore);
-            Keywords = new string[] { backingStore.Name.ToLower() };
+            BirthMark = LiveCache.GetUniqueIdentifier(bS);
+            Keywords = new string[] { bS.Name.ToLower() };
             Birthdate = DateTime.Now;
 
             if (spawnTo == null)

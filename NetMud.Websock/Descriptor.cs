@@ -36,18 +36,21 @@ namespace NetMud.Websock
         /// The user manager for the application, handles authentication from the web
         /// </summary>
         public ApplicationUserManager UserManager { get; private set; }
+
+        /// <summary>
+        /// The actual connection's client handler
+        /// </summary>
         internal TcpClient Client { get; set; }
 
         /// <summary>
-        /// The cache key for the global cache system
+        /// Unique string for this live entity
         /// </summary>
-        public string CacheKey
-        {
-            get
-            {
-                return "WebSocketDescriptor_" + Client.Client.RemoteEndPoint.Serialize().ToString();
-            }
-        }
+        public string BirthMark { get; internal set; }
+
+        /// <summary>
+        /// When this entity was born to the world
+        /// </summary>
+        public DateTime Birthdate { get; internal set; }
 
         /// <summary>
         /// User id of connected player
@@ -67,7 +70,10 @@ namespace NetMud.Websock
             Client = tcpClient;
             UserManager = new ApplicationUserManager(new UserStore<ApplicationUser>(new ApplicationDbContext()));
 
-            LiveCache.Add(this, String.Format(cacheKeyFormat, CacheKey));
+            BirthMark = LiveCache.GetUniqueIdentifier(String.Format(cacheKeyFormat, Client.Client.RemoteEndPoint.Serialize().ToString()));
+            Birthdate = DateTime.Now;
+
+            LiveCache.Add<IDescriptor>(this);
         }
 
         /// <summary>
@@ -79,7 +85,10 @@ namespace NetMud.Websock
             Client = tcpClient;
             UserManager = userManager;
 
-            LiveCache.Add(this, String.Format(cacheKeyFormat, CacheKey));
+            BirthMark = LiveCache.GetUniqueIdentifier(String.Format(cacheKeyFormat, Client.Client.RemoteEndPoint.Serialize().ToString()));
+            Birthdate = DateTime.Now;
+
+            LiveCache.Add<IDescriptor>(this);
         }
 
         /// <summary>

@@ -50,7 +50,7 @@ namespace NetMud.Backup
             {
                 var entityThing = Activator.CreateInstance(implimentingEntityClass, new object[] { (T)thing }) as IEntity;
 
-                LiveCache.Add<T>(entityThing);
+                LiveCache.Add(entityThing);
             }
 
             return true;
@@ -77,11 +77,13 @@ namespace NetMud.Backup
                 //Dont save players to the hot section, there's another place for them
                 foreach (var entity in entities.Where(ent => ent.GetType() != typeof(Player)))
                 {
+                    var liveEntity = entity as IEntity;
+
                     //Don't write objects that are on live players, player backup does that itself
-                    if (entity.CurrentLocation != null && entity.CurrentLocation.GetType() == typeof(Player))
+                    if (liveEntity.CurrentLocation != null && liveEntity.CurrentLocation.GetType() == typeof(Player))
                         continue;
 
-                    liveDataAccessor.WriteEntity(entity);
+                    liveDataAccessor.WriteEntity(liveEntity);
                 }
 
                 LoggingUtility.Log("Live world written to current.", LogChannels.Backup, true);

@@ -2060,7 +2060,7 @@ namespace NetMud.Controllers
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var servers = LiveCache.GetAllNonEntity<NetMud.Websock.Server>();
+            var servers = LiveCache.GetAll<NetMud.Websock.Server>();
 
             foreach (var server in servers)
                 server.Shutdown();
