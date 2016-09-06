@@ -116,6 +116,28 @@ namespace NetMud.DataAccess.Cache
         }
 
         /// <summary>
+        /// fills a list of entities from the cache of a single type that match the birthmarks sent in
+        /// </summary>
+        /// <typeparam name="T">the system type for the entity</typeparam>
+        /// <param name="birthmarks">the birthmarks to retrieve</param>
+        /// <returns>a list of the entities from the cache</returns>
+        public IEnumerable<T> GetMany<T>(IEnumerable<long> ids) where T : IEntityBackingData
+        {
+            try
+            {
+                return _globalCache.Where(keyValuePair => keyValuePair.Value.GetType().GetInterfaces().Contains(typeof(T)) 
+                                                        && ids.Contains(((T)keyValuePair.Value).ID))
+                                  .Select(kvp => (T)kvp.Value);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex);
+            }
+
+            return Enumerable.Empty<T>();
+        }
+
+        /// <summary>
         /// Get all entities of a type from the cache
         /// </summary>
         /// <typeparam name="T">the system type for the entity</typeparam>

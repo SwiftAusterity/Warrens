@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cache\CacheAccessor.cs" />
+    <Compile Include="Cache\BackingDataCache.cs" />
     <Compile Include="FileSystem\BackingData.cs" />
     <Compile Include="FileSystem\FileAccessor.cs" />
     <Compile Include="FileSystem\LiveData.cs" />
