@@ -35,6 +35,14 @@ namespace NetMud.DataAccess.FileSystem
             }
         }
 
+        public IEntityBackingData ReadEntity(FileInfo file, Type entityType)
+        {
+            var fileData = ReadFile(file);
+            var blankEntity = Activator.CreateInstance(entityType) as IEntityBackingData;
+
+            return blankEntity.FromBytes(fileData) as IEntityBackingData;
+        }
+
         public void WriteEntity(IEntityBackingData entity)
         {
             var dirName = BaseDirectory + entity.GetType().Name + CurrentDirectoryName;
@@ -78,6 +86,25 @@ namespace NetMud.DataAccess.FileSystem
             }
 
             File.Move(currentFile, archiveFile);
+        }
+
+        /// <summary>
+        /// Archives everything
+        /// </summary>
+        public void ArchiveFull()
+        {
+            //wth, no current directory? Noithing to move then
+            if (VerifyDirectory(CurrentDirectoryName, false) && VerifyDirectory(ArchiveDirectoryName))
+            {
+                var currentRoot = new DirectoryInfo(BaseDirectory + CurrentDirectoryName);
+
+                //move is literal move, no need to delete afterwards
+                currentRoot.MoveTo(DatedBackupDirectory);
+            }
+
+            //something very wrong is happening, it'll get logged
+            if (!VerifyDirectory(CurrentDirectoryName))
+                throw new Exception("Can not locate or verify current data directory.");
         }
 
         /// <summary>

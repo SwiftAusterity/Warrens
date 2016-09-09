@@ -61,6 +61,9 @@ namespace NetMud.DataAccess.FileSystem
             }
         }
 
+        /// <summary>
+        /// Archives EVERYTHING
+        /// </summary>
         public void ArchiveFull()
         {
             //wth, no current directory? Noithing to move then
