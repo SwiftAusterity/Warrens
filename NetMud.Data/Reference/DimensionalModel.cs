@@ -17,9 +17,6 @@ namespace NetMud.Data.Reference
     [Serializable]
     public class DimensionalModel : IDimensionalModel
     {
-        [JsonProperty("BackingDataId")]
-        private long _backingDataId { get; set; }
-
         /// <summary>
         /// Y axis of the 11 plane model
         /// </summary>
@@ -35,6 +32,9 @@ namespace NetMud.Data.Reference
         /// </summary>
         public int Width { get; set; }
 
+        [JsonProperty("BackingDataId")]
+        private long _backingDataId { get; set; }
+
         /// <summary>
         /// The model we're following
         /// </summary>
@@ -43,9 +43,8 @@ namespace NetMud.Data.Reference
         {
             get
             {
-                // TODO: Impl the BackingDataCache once it is written
-               // if (_backingDataId >= 0)
-                 //   return LiveCache.Get<IDimensionalModelData>(new LiveCacheKey(typeof(IDimensionalModelData), _backingDataId.ToString()));
+                if (_backingDataId >= 0)
+                    return BackingDataCache.Get<IDimensionalModelData>(new BackingDataCacheKey(typeof(IDimensionalModelData), _backingDataId));
 
                 return null;
             }
@@ -54,14 +53,32 @@ namespace NetMud.Data.Reference
                 if (value == null)
                     return;
 
-                //UpsertToLiveWorldCache();
+                _backingDataId = value.ID;
             }
         }
+
+        [JsonProperty("MaterialComposition")]
+        private IDictionary<string, long> _materialComposition { get; set; }
 
         /// <summary>
         /// Collection of model section name to material composition mappings
         /// </summary>
-        public IDictionary<string, IMaterial> Composition { get; set; }
+        [ScriptIgnore]
+        public IDictionary<string, IMaterial> Composition 
+        {
+            get
+            {
+                if (_materialComposition != null)
+                    return BackingDataCache.Get<IDimensionalModelData>(new BackingDataCacheKey(typeof(IDimensionalModelData), _backingDataId));
+
+                return null;
+            }
+            set
+            {
+                if (value == null)
+                    return;
+            }
+        }
 
         /// <summary>
         /// Constructor for dimensional model based on a datarow
