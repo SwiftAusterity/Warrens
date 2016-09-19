@@ -1,5 +1,8 @@
-﻿using NetMud.DataStructure.Base.Supporting;
+﻿using NetMud.DataAccess.Cache;
+using NetMud.DataStructure.Base.Supporting;
+using Newtonsoft.Json;
 using System;
+using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Reference
 {
@@ -26,9 +29,23 @@ namespace NetMud.Data.Reference
         /// </summary>
         public DamageType Style { get; set; }
 
+        [JsonProperty("CompositionId")]
+        private long _compositionId { get; set; }
+
         /// <summary>
         /// Material composition of the node
         /// </summary>
-        public IMaterial Composition { get; set; }
+        [ScriptIgnore]
+        public IMaterial Composition 
+        { 
+            get
+            {
+                return BackingDataCache.Get<IMaterial>(_compositionId);
+            }
+            set
+            {
+                _compositionId = value.ID;
+            }
+        }
     }
 }

@@ -17,9 +17,9 @@ namespace NetMud.DataAccess.Cache
         /// Adds a single entity into the cache
         /// </summary>
         /// <param name="objectToCache">the entity to cache</param>
-        public static void Add<T>(T objectToCache) where T : IEntityBackingData
+        public static void Add<T>(T objectToCache) where T : IData
         {
-            var entityToCache = (IEntityBackingData)objectToCache;
+            var entityToCache = (IData)objectToCache;
             var cacheKey = new BackingDataCacheKey(objectToCache.GetType(), entityToCache.ID);
 
             BackingCache.Add(objectToCache, cacheKey);
@@ -41,7 +41,7 @@ namespace NetMud.DataAccess.Cache
         /// <typeparam name="T">the system type for the entity</typeparam>
         /// <param name="birthmarks">the birthmarks to retrieve</param>
         /// <returns>a list of the entities from the cache</returns>
-        public static IEnumerable<T> GetMany<T>(IEnumerable<long> ids) where T : IEntityBackingData
+        public static IEnumerable<T> GetMany<T>(IEnumerable<long> ids) where T : IData
         {
             return BackingCache.GetMany<T>(ids);
         }
@@ -60,9 +60,9 @@ namespace NetMud.DataAccess.Cache
         /// Only for the hotbackup procedure
         /// </summary>
         /// <returns>All entities in the entire system</returns>
-        public static IEnumerable<IEntityBackingData> GetAll()
+        public static IEnumerable<IData> GetAll()
         {
-            return BackingCache.GetAll<IEntityBackingData>();
+            return BackingCache.GetAll<IData>();
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace NetMud.DataAccess.Cache
         /// <typeparam name="T">the type of the entity</typeparam>
         /// <param name="key">the key it was cached with</param>
         /// <returns>the entity requested</returns>
-        public static T Get<T>(BackingDataCacheKey key) where T : IEntityBackingData
+        public static T Get<T>(BackingDataCacheKey key) where T : IData
         {
             return BackingCache.Get<T>(key);
         }
@@ -93,7 +93,7 @@ namespace NetMud.DataAccess.Cache
         /// <typeparam name="T">the type of the entity</typeparam>
         /// <param name="id">the id</param>
         /// <returns>the entity requested</returns>
-        public static T Get<T>(long id) where T : IEntityBackingData
+        public static T Get<T>(long id) where T : IData
         {
             var key = new BackingDataCacheKey(typeof(T), id);
 

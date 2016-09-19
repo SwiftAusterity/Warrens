@@ -121,7 +121,7 @@ namespace NetMud.DataAccess.Cache
         /// <typeparam name="T">the system type for the entity</typeparam>
         /// <param name="birthmarks">the birthmarks to retrieve</param>
         /// <returns>a list of the entities from the cache</returns>
-        public IEnumerable<T> GetMany<T>(IEnumerable<long> ids) where T : IEntityBackingData
+        public IEnumerable<T> GetMany<T>(IEnumerable<long> ids) where T : IData
         {
             try
             {

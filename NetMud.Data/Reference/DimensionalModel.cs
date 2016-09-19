@@ -43,8 +43,8 @@ namespace NetMud.Data.Reference
         {
             get
             {
-                if (_backingDataId >= 0)
-                    return BackingDataCache.Get<IDimensionalModelData>(new BackingDataCacheKey(typeof(IDimensionalModelData), _backingDataId));
+              if (_backingDataId >= 0)
+                 return BackingDataCache.Get<IDimensionalModelData>(_backingDataId);
 
                 return null;
             }
@@ -69,7 +69,7 @@ namespace NetMud.Data.Reference
             get
             {
                 if (_materialComposition != null)
-                    return BackingDataCache.Get<IDimensionalModelData>(new BackingDataCacheKey(typeof(IDimensionalModelData), _backingDataId));
+                    return _materialComposition.ToDictionary(k => k.Key, k => BackingDataCache.Get<IMaterial>(k.Value));
 
                 return null;
             }
@@ -77,6 +77,8 @@ namespace NetMud.Data.Reference
             {
                 if (value == null)
                     return;
+
+                _materialComposition = value.ToDictionary(k => k.Key, k => k.Value.ID);
             }
         }
 
