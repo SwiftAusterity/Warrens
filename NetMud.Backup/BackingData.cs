@@ -55,7 +55,7 @@ namespace NetMud.Backup
         /// <returns>full or partial success</returns>
         public static bool LoadEverythingToCache()
         {
-            var implimentedTypes = typeof(EntityBackingDataPartial).Assembly.GetTypes().Where(ty => ty.GetInterfaces().Contains(typeof(IEntityBackingData))
+            var implimentedTypes = typeof(EntityBackingDataPartial).Assembly.GetTypes().Where(ty => ty.GetInterfaces().Contains(typeof(IData))
                                                                                 && ty.IsClass
                                                                                 && !ty.IsAbstract);
 
@@ -72,7 +72,7 @@ namespace NetMud.Backup
         /// <returns>full or partial success</returns>
         public static bool LoadAllToCache(Type objectType)
         {
-            if (!objectType.GetInterfaces().Contains(typeof(IEntityBackingData)))
+            if (!objectType.GetInterfaces().Contains(typeof(IData)))
                 return false;
 
             var fileAccessor = new NetMud.DataAccess.FileSystem.BackingData();

@@ -13,46 +13,148 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Reference
 {
     [Serializable]
     public class Race : ReferenceDataPartial, IRace
     {
+        [JsonProperty("Arms")]
+        private Tuple<long, short> _arms { get; set; }
+
         /// <summary>
         /// The arm objects
         /// </summary>
-        public Tuple<IInanimateData, short> Arms { get; set; }
+        [ScriptIgnore]
+        public Tuple<IInanimateData, short> Arms
+        {
+            get
+            {
+                if (_arms != null)
+                    return new Tuple<IInanimateData, short>(BackingDataCache.Get<IInanimateData>(_arms.Item1), _arms.Item2);
+
+                return null;
+            }
+            set
+            {
+                if (value == null)
+                    return;
+
+                _arms = new Tuple<long, short>(value.Item1.ID, value.Item2);
+            }
+        }
+
+        [JsonProperty("Legs")]
+        private Tuple<long, short> _legs { get; set; }
 
         /// <summary>
         /// The leg objects
         /// </summary>
-        public Tuple<IInanimateData, short> Legs { get; set; }
+        [ScriptIgnore]
+        public Tuple<IInanimateData, short> Legs
+        {
+            get
+            {
+                if (_legs != null)
+                    return new Tuple<IInanimateData, short>(BackingDataCache.Get<IInanimateData>(_legs.Item1), _legs.Item2);
+
+                return null;
+            }
+            set
+            {
+                if (value == null)
+                    return;
+
+                _legs = new Tuple<long, short>(value.Item1.ID, value.Item2);
+            }
+        }
+
+        [JsonProperty("Torso")]
+        private long _torso { get; set; }
 
         /// <summary>
         /// the torso object
         /// </summary>
-        public IInanimateData Torso { get; set; }
+        [ScriptIgnore]
+        public IInanimateData Torso 
+        { 
+            get
+            {
+                return BackingDataCache.Get<IInanimateData>(_torso);
+            }
+            set
+            {
+                _torso = value.ID;
+            }
+        }
+
+        [JsonProperty("Head")]
+        private long _head { get; set; }
 
         /// <summary>
         /// The head object
         /// </summary>
-        public IInanimateData Head { get; set; }
+        [ScriptIgnore]
+        public IInanimateData Head
+        {
+            get
+            {
+                return BackingDataCache.Get<IInanimateData>(_head);
+            }
+            set
+            {
+                _head = value.ID;
+            }
+        }
+        [JsonProperty("BodyParts")]
+        private IEnumerable<Tuple<long, short, string>> _bodyParts { get; set; }
 
         /// <summary>
         /// The list of additional body parts used by this race. Part Object, Amount, Name
         /// </summary>
-        public IEnumerable<Tuple<IInanimateData, short, string>> BodyParts { get; set; }
+        [ScriptIgnore]
+        public IEnumerable<Tuple<IInanimateData, short, string>> BodyParts
+        {
+            get
+            {
+                if (_legs != null)
+                    return _bodyParts.Select(bp => new Tuple<IInanimateData, short, string>(BackingDataCache.Get<IInanimateData>(bp.Item1), bp.Item2, bp.Item3));
+
+                return null;
+            }
+            set
+            {
+                if (value == null)
+                    return;
+
+                _bodyParts = value.Select(bp => new Tuple<long, short, string>(bp.Item1.ID, bp.Item2, bp.Item3));
+            }
+        }
 
         /// <summary>
         /// Dietary type of this race
         /// </summary>
         public DietType DietaryNeeds { get; set; }
 
+        [JsonProperty("SanguinaryMaterial")]
+        private long _sanguinaryMaterial { get; set; }
+
         /// <summary>
         /// Material that is the blood
         /// </summary>
-        public IMaterial SanguinaryMaterial { get; set; }
+        [ScriptIgnore]
+        public IMaterial SanguinaryMaterial
+        {
+            get
+            {
+                return BackingDataCache.Get<IMaterial>(_sanguinaryMaterial);
+            }
+            set
+            {
+                _sanguinaryMaterial = value.ID;
+            }
+        }
 
         /// <summary>
         /// Low and High luminosity vision range
@@ -74,15 +176,43 @@ namespace NetMud.Data.Reference
         /// </summary>
         public DamageType TeethType { get; set; }
 
+        [JsonProperty("StartingLocation")]
+        private long _startingLocation { get; set; }
+
         /// <summary>
         /// What is the starting room of new players
         /// </summary>
-        public IRoomData StartingLocation { get; set; }
+        [ScriptIgnore]
+        public IRoomData StartingLocation
+        {
+            get
+            {
+                return BackingDataCache.Get<IRoomData>(_startingLocation);
+            }
+            set
+            {
+                _startingLocation = value.ID;
+            }
+        }
+
+        [JsonProperty("EmergencyLocation")]
+        private long _emergencyLocation { get; set; }
 
         /// <summary>
         /// When a player loads without a location where do we send them
         /// </summary>
-        public IRoomData EmergencyLocation { get; set; }
+        [ScriptIgnore]
+        public IRoomData EmergencyLocation
+        {
+            get
+            {
+                return BackingDataCache.Get<IRoomData>(_emergencyLocation);
+            }
+            set
+            {
+                _emergencyLocation = value.ID;
+            }
+        }
 
         public Race()
         {

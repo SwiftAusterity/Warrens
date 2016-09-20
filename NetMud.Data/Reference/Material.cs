@@ -9,6 +9,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Reference
 {
@@ -75,10 +76,30 @@ namespace NetMud.Data.Reference
         /// </summary>
         public IDictionary<DamageType, short> Resistance { get; set; }
 
+        [JsonProperty("Composition")]
+        private IDictionary<long, short> _composition { get; set; }
+
         /// <summary>
-        /// Is this material an alloy of other materials
+        /// Collection of model section name to material composition mappings
         /// </summary>
-        public IDictionary<IMaterial, short> Composition { get; set; }
+        [ScriptIgnore]
+        public IDictionary<IMaterial, short> Composition
+        {
+            get
+            {
+                if (_composition != null)
+                    return _composition.ToDictionary(k => BackingDataCache.Get<IMaterial>(k.Key), k => k.Value);
+
+                return null;
+            }
+            set
+            {
+                if (value == null)
+                    return;
+
+                _composition = value.ToDictionary(k => k.Key.ID, k => k.Value);
+            }
+        }
 
         public Material()
         {
