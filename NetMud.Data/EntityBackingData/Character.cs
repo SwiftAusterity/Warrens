@@ -1,10 +1,12 @@
 ﻿using NetMud.Data.Reference;
-using NetMud.DataAccess; using NetMud.DataAccess.Cache;
+using NetMud.DataAccess;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -37,14 +39,29 @@ namespace NetMud.Data.EntityBackingData
         /// </summary>
         public string SurName { get; set; }
 
+        /// <summary>
+        /// Has this character "graduated" from the tutorial yet
+        /// </summary>
         public Boolean StillANoob { get; set; }
 
-        public IRace RaceData { get; set; }
+        [JsonProperty("RaceData")]
+        private long _raceData { get; set; }
 
         /// <summary>
-        /// Account handle (user) this belongs to
+        /// The race data for the character
         /// </summary>
-        public string AccountHandle { get; set; }
+        [ScriptIgnore]
+        public IRace RaceData 
+        { 
+            get
+            {
+                return BackingDataCache.Get<IRace>(_raceData);
+            }
+            set
+            {
+                _raceData = value.ID;
+            }
+        }
 
         /// <summary>
         /// The "user" level for commands and accessibility
@@ -61,11 +78,12 @@ namespace NetMud.Data.EntityBackingData
         public string LastKnownLocationType { get; set; }
 
         /// <summary>
-        /// Account data object this is owned by
+        /// Account handle (user) this belongs to
         /// </summary>
-        [NonSerialized]
+        public string AccountHandle { get; set; }
+
         [ScriptIgnore]
-        private IAccount _account;
+        private IAccount _account { get; set; }
 
         /// <summary>
         /// Account data object this is owned by

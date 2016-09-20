@@ -1,7 +1,8 @@
 ﻿using NetMud.Data.EntityBackingData;
 using NetMud.Data.Reference;
 using NetMud.Data.System;
-using NetMud.DataAccess; using NetMud.DataAccess.Cache;
+using NetMud.DataAccess;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Supporting;
@@ -17,6 +18,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Web.Script.Serialization;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -28,6 +30,22 @@ namespace NetMud.Data.Game
     [Serializable]
     public class Intelligence : EntityPartial, IIntelligence
     {
+        /// <summary>
+        /// The backing data for this entity
+        /// </summary>
+        [ScriptIgnore]
+        public new INonPlayerCharacter DataTemplate
+        {
+            get
+            {
+                return BackingDataCache.Get<INonPlayerCharacter>(_dataTemplate);
+            }
+            internal set
+            {
+                _dataTemplate = value.ID;
+            }
+        }
+
         /// <summary>
         /// News up an empty entity
         /// </summary>

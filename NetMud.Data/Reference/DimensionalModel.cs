@@ -1,4 +1,5 @@
-﻿using NetMud.DataAccess; using NetMud.DataAccess.Cache;
+﻿using NetMud.DataAccess; 
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.Utility;
 using Newtonsoft.Json;
@@ -11,6 +12,8 @@ using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Reference
 {
+    /* Does not need to be ScriptIgnored */
+
     /// <summary>
     /// The live version of a dimensional model
     /// </summary>
@@ -57,8 +60,8 @@ namespace NetMud.Data.Reference
             }
         }
 
-        [JsonProperty("MaterialComposition")]
-        private IDictionary<string, long> _materialComposition { get; set; }
+        [JsonProperty("Composition")]
+        private IDictionary<string, long> _composition { get; set; }
 
         /// <summary>
         /// Collection of model section name to material composition mappings
@@ -68,8 +71,8 @@ namespace NetMud.Data.Reference
         {
             get
             {
-                if (_materialComposition != null)
-                    return _materialComposition.ToDictionary(k => k.Key, k => BackingDataCache.Get<IMaterial>(k.Value));
+                if (_composition != null)
+                    return _composition.ToDictionary(k => k.Key, k => BackingDataCache.Get<IMaterial>(k.Value));
 
                 return null;
             }
@@ -78,7 +81,7 @@ namespace NetMud.Data.Reference
                 if (value == null)
                     return;
 
-                _materialComposition = value.ToDictionary(k => k.Key, k => k.Value.ID);
+                _composition = value.ToDictionary(k => k.Key, k => k.Value.ID);
             }
         }
 

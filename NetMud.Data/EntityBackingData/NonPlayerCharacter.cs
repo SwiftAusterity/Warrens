@@ -1,13 +1,16 @@
 ﻿using NetMud.Data.Reference;
-using NetMud.DataAccess; using NetMud.DataAccess.Cache;
+using NetMud.DataAccess;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.Utility;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Text;
+using System.Web.Script.Serialization;
 
 namespace NetMud.Data.EntityBackingData
 {
@@ -35,7 +38,24 @@ namespace NetMud.Data.EntityBackingData
         /// </summary>
         public string SurName { get; set; }
 
-        public IRace RaceData { get; set; }
+        [JsonProperty("RaceData")]
+        private long _raceData { get; set; }
+
+        /// <summary>
+        /// NPC's race data
+        /// </summary>
+        [ScriptIgnore]
+        public IRace RaceData
+        {
+            get
+            {
+                return BackingDataCache.Get<IRace>(_raceData);
+            }
+            set
+            {
+                _raceData = value.ID;
+            }
+        }
 
         /// <summary>
         /// Get's the entity's model dimensions

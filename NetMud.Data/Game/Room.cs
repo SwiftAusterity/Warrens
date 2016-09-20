@@ -1,7 +1,8 @@
 ﻿using NetMud.Data.EntityBackingData;
 using NetMud.Data.Reference;
 using NetMud.Data.System;
-using NetMud.DataAccess; using NetMud.DataAccess.Cache;
+using NetMud.DataAccess;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
@@ -15,6 +16,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Web.Script.Serialization;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -30,6 +32,22 @@ namespace NetMud.Data.Game
         /// Framework for the physics model of an entity
         /// </summary>
         public IDimensionalModel Model { get; set; }
+
+        /// <summary>
+        /// The backing data for this entity
+        /// </summary>
+        [ScriptIgnore]
+        public new IRoomData DataTemplate
+        {
+            get
+            {
+                return BackingDataCache.Get<IRoomData>(_dataTemplate);
+            }
+            internal set
+            {
+                _dataTemplate = value.ID;
+            }
+        }
 
         /// <summary>
         /// Get's the entity's model dimensions
@@ -334,7 +352,7 @@ namespace NetMud.Data.Game
             {
                 BirthMark = me.BirthMark;
                 Birthdate = me.Birthdate;
-                DataTemplate = me.DataTemplate;
+                _dataTemplate = me.DataTemplate.ID;
                 ObjectsInRoom = me.ObjectsInRoom;
                 MobilesInside = me.MobilesInside;
                 Pathways = me.Pathways;

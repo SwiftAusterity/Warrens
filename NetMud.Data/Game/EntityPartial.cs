@@ -1,12 +1,15 @@
 ﻿using NetMud.Communication;
 using NetMud.Communication.Messaging;
 using NetMud.Data.System;
-using NetMud.DataAccess; using NetMud.DataAccess.Cache;
+using NetMud.DataAccess;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Game
 {
@@ -27,9 +30,13 @@ namespace NetMud.Data.Game
         /// </summary>
         public DateTime Birthdate { get; internal set; }
 
+        [JsonProperty("DataTemplate")]
+        internal long _dataTemplate { get; set; }
+
         /// <summary>
         /// The backing data for this live entity
         /// </summary>
+        [ScriptIgnore]
         public IData DataTemplate { get; internal set; }
 
         /// <summary>

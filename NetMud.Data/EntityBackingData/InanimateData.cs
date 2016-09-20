@@ -1,6 +1,7 @@
 ﻿using NetMud.Data.Reference;
 using NetMud.Data.System;
-using NetMud.DataAccess; using NetMud.DataAccess.Cache;
+using NetMud.DataAccess;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Supporting;
@@ -11,7 +12,9 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Text;
+using System.Web.Script.Serialization;
 
 namespace NetMud.Data.EntityBackingData
 {
@@ -25,21 +28,6 @@ namespace NetMud.Data.EntityBackingData
         /// Framework for the physics model of an entity
         /// </summary>
         public IDimensionalModel Model { get; set; }
-
-        public InanimateData()
-        {
-            MobileContainers = new HashSet<IEntityContainerData<IMobile>>();
-            InanimateContainers = new HashSet<IEntityContainerData<IInanimate>>();
-            InternalComposition = new Dictionary<IInanimateData, short>();
-        }
-
-        public InanimateData(string internalCompositionJson)
-        {
-            MobileContainers = new HashSet<IEntityContainerData<IMobile>>();
-            InanimateContainers = new HashSet<IEntityContainerData<IInanimate>>();
-
-            InternalComposition = DeserializeInternalCompositions(internalCompositionJson);
-        }
 
         /// <summary>
         /// The system type for the entity this attaches to
@@ -59,8 +47,51 @@ namespace NetMud.Data.EntityBackingData
         /// </summary>
         public HashSet<IEntityContainerData<IInanimate>> InanimateContainers { get; set; }
 
+        [JsonProperty("InternalComposition")]
+        private IDictionary<long, short> _internalComposition { get; set; }
 
-        public IDictionary<IInanimateData, short> InternalComposition { get; set; }
+        /// <summary>
+        /// The list of internal compositions for separate/explosion/sharding
+        /// </summary>
+        [ScriptIgnore]
+        public IDictionary<IInanimateData, short> InternalComposition
+        {
+            get
+            {
+                if (_internalComposition != null)
+                    return _internalComposition.ToDictionary(k => BackingDataCache.Get<IInanimateData>(k.Key), k => k.Value);
+
+                return null;
+            }
+            set
+            {
+                if (value == null)
+                    return;
+
+                _internalComposition = value.ToDictionary(k => k.Key.ID, k => k.Value);
+            }
+        }
+
+        /// <summary>
+        /// Spawns a new empty inanimate object
+        /// </summary>
+        public InanimateData()
+        {
+            MobileContainers = new HashSet<IEntityContainerData<IMobile>>();
+            InanimateContainers = new HashSet<IEntityContainerData<IInanimate>>();
+            InternalComposition = new Dictionary<IInanimateData, short>();
+        }
+
+        /// <summary>
+        /// Spawns a new inanimate object with a model json
+        /// </summary>
+        public InanimateData(string internalCompositionJson)
+        {
+            MobileContainers = new HashSet<IEntityContainerData<IMobile>>();
+            InanimateContainers = new HashSet<IEntityContainerData<IInanimate>>();
+
+            InternalComposition = DeserializeInternalCompositions(internalCompositionJson);
+        }
 
         /// <summary>
         /// Get's the entity's model dimensions
@@ -83,9 +114,9 @@ namespace NetMud.Data.EntityBackingData
             Name = DataUtility.GetFromDataRow<string>(dr, "Name");
 
             string mobileContainerJson = DataUtility.GetFromDataRow<string>(dr, "MobileContainers");
-            
+
             dynamic mobileContainers = JsonConvert.DeserializeObject(mobileContainerJson);
-            foreach(dynamic mobileContainer in mobileContainers)
+            foreach (dynamic mobileContainer in mobileContainers)
             {
                 var newContainer = new EntityContainerData<IMobile>();
                 newContainer.CapacityVolume = mobileContainer.CapacityVolume;
@@ -96,7 +127,7 @@ namespace NetMud.Data.EntityBackingData
             }
 
             string inanimateContainerJson = DataUtility.GetFromDataRow<string>(dr, "InanimateContainers");
-         
+
             dynamic inanimateContainers = JsonConvert.DeserializeObject(inanimateContainerJson);
             foreach (dynamic inanimateContainer in inanimateContainers)
             {
@@ -116,7 +147,7 @@ namespace NetMud.Data.EntityBackingData
 
         private IDictionary<IInanimateData, short> DeserializeInternalCompositions(string compJson)
         {
-            var composition = new Dictionary<IInanimateData, short> ();
+            var composition = new Dictionary<IInanimateData, short>();
 
             dynamic comps = JsonConvert.DeserializeObject(compJson);
 
@@ -228,7 +259,7 @@ namespace NetMud.Data.EntityBackingData
             sql.Append(" , [DimensionalModelHeight] = @DimensionalModelHeight ");
             sql.Append(" , [DimensionalModelWidth] = @DimensionalModelWidth ");
             sql.Append(" , [DimensionalModelMaterialCompositions] = @DimensionalModelMaterialCompositions ");
-            sql.Append(" , [DimensionalModelId] = @DimensionalModelId "); 
+            sql.Append(" , [DimensionalModelId] = @DimensionalModelId ");
             sql.Append(" , [LastRevised] = GetUTCDate()");
             sql.Append(" where ID = @id");
 
@@ -237,7 +268,7 @@ namespace NetMud.Data.EntityBackingData
             parms.Add("MobileContainers", mobileContainersJson);
             parms.Add("InanimateContainers", inanimateContainersJson);
             parms.Add("InternalComposition", SerializeInternalCompositions());
-            parms.Add("DimensionalModelLength",  Model.Length);
+            parms.Add("DimensionalModelLength", Model.Length);
             parms.Add("DimensionalModelHeight", Model.Height);
             parms.Add("DimensionalModelWidth", Model.Width);
             parms.Add("DimensionalModelMaterialCompositions", Model.SerializeMaterialCompositions());

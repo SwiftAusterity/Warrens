@@ -1,5 +1,6 @@
 ﻿using NetMud.Data.Reference;
-using NetMud.DataAccess; using NetMud.DataAccess.Cache;
+using NetMud.DataAccess; 
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
@@ -9,7 +10,9 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Text;
+using System.Web.Script.Serialization;
 
 namespace NetMud.Data.EntityBackingData
 {
@@ -32,11 +35,71 @@ namespace NetMud.Data.EntityBackingData
         /// </summary>
         public IDimensionalModel Model { get; set; }
 
-        public IDictionary<string, IMaterial> Borders { get; set; }
+        [JsonProperty("Medium")]
+        private long _medium { get; set; }
 
-        public IMaterial Medium { get; set; }
+        /// <summary>
+        /// What is in the middle of the room
+        /// </summary>
+        [ScriptIgnore]
+        public IMaterial Medium
+        {
+            get
+            {
+                return BackingDataCache.Get<IMaterial>(_medium);
+            }
+            set
+            {
+                _medium = value.ID;
+            }
+        }
 
-        public IZone ZoneAffiliation { get; set; }
+        [JsonProperty("ZoneAffiliation")]
+        private long _zoneAffiliation { get; set; }
+
+        /// <summary>
+        /// What zone this belongs to
+        /// </summary>
+        [ScriptIgnore]
+        public IZone ZoneAffiliation
+        {
+            get
+            {
+                return BackingDataCache.Get<IZone>(_zoneAffiliation);
+            }
+            set
+            {
+                _zoneAffiliation = value.ID;
+            }
+        }
+
+        /// <summary>
+        /// What walls are made of
+        /// </summary>
+        [JsonProperty("Borders")]
+        private IDictionary<string, long> _borders { get; set; }
+
+        /// <summary>
+        /// The list of internal compositions for separate/explosion/sharding
+        /// </summary>
+        [ScriptIgnore]
+        public IDictionary<string, IMaterial> Borders
+        {
+            get
+            {
+                if (_borders != null)
+                    return _borders.ToDictionary(k => k.Key, k => BackingDataCache.Get<IMaterial>(k.Value));
+
+                return null;
+            }
+            set
+            {
+                if (value == null)
+                    return;
+
+                _borders = value.ToDictionary(k => k.Key, k => k.Value.ID);
+            }
+        }
 
         /// <summary>
         /// Get's the entity's model dimensions

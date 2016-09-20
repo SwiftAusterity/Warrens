@@ -50,6 +50,22 @@ namespace NetMud.Data.Game
         private string _currentToLocationBirthmark;
 
         /// <summary>
+        /// The backing data for this entity
+        /// </summary>
+        [ScriptIgnore]
+        public new IPathwayData DataTemplate
+        {
+            get
+            {
+                return BackingDataCache.Get<IPathwayData>(_dataTemplate);
+            }
+            internal set
+            {
+                _dataTemplate = value.ID;
+            }
+        }
+
+        /// <summary>
         /// News up an empty entity
         /// </summary>
         public Pathway()

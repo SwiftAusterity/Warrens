@@ -54,7 +54,6 @@ namespace NetMud.Data.Game
             GetFromWorldOrSpawn();
         }
 
-        [NonSerialized]
         [ScriptIgnore]
         private LiveCacheKey _descriptorKey;
 
@@ -90,6 +89,21 @@ namespace NetMud.Data.Game
             }
         }
 
+        /// <summary>
+        /// The backing data for this entity
+        /// </summary>
+        [ScriptIgnore]
+        public new ICharacter DataTemplate
+        {
+            get
+            {
+                return BackingDataCache.Get<ICharacter>(_dataTemplate);
+            }
+            internal set
+            {
+                _dataTemplate = value.ID;
+            }
+        }
 
         /// <summary>
         /// Function used to close this connection
