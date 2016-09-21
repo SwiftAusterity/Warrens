@@ -35,15 +35,15 @@ namespace NetMud.DataAccess.FileSystem
             }
         }
 
-        public IEntityBackingData ReadEntity(FileInfo file, Type entityType)
+        public IData ReadEntity(FileInfo file, Type entityType)
         {
             var fileData = ReadFile(file);
-            var blankEntity = Activator.CreateInstance(entityType) as IEntityBackingData;
+            var blankEntity = Activator.CreateInstance(entityType) as IData;
 
-            return blankEntity.FromBytes(fileData) as IEntityBackingData;
+            return blankEntity.FromBytes(fileData) as IData;
         }
 
-        public void WriteEntity(IEntityBackingData entity)
+        public void WriteEntity(IData entity)
         {
             var dirName = BaseDirectory + entity.GetType().Name + CurrentDirectoryName;
 
@@ -62,6 +62,31 @@ namespace NetMud.DataAccess.FileSystem
             {
                 RollingArchiveFile(fullFileName, archiveFileDirectory + entityFileName, archiveFileDirectory);
                 WriteToFile(fullFileName, entity.ToBytes());
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex);
+            }
+        }
+
+        public void ArchiveEntity(IData entity)
+        {
+            var dirName = BaseDirectory + entity.GetType().Name + CurrentDirectoryName;
+
+            if (!VerifyDirectory(dirName))
+                throw new Exception("Unable to locate or create base live data directory.");
+
+            var entityFileName = GetEntityFilename(entity);
+
+            if (string.IsNullOrWhiteSpace(entityFileName))
+                return;
+
+            var fullFileName = dirName + entityFileName;
+            var archiveFileDirectory = BaseDirectory + entity.GetType().Name + DatedBackupDirectory;
+
+            try
+            {
+                RollingArchiveFile(fullFileName, archiveFileDirectory + entityFileName, archiveFileDirectory);
             }
             catch (Exception ex)
             {
@@ -112,7 +137,7 @@ namespace NetMud.DataAccess.FileSystem
         /// </summary>
         /// <param name="entity">The entity in question</param>
         /// <returns>the filename</returns>
-        private string GetEntityFilename(IEntityBackingData entity)
+        private string GetEntityFilename(IData entity)
         {
             return String.Format("{0}.{1}", entity.ID, entity.GetType().Name);
         }
