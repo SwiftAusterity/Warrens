@@ -1,4 +1,4 @@
-﻿using NetMud.DataAccess; 
+﻿using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.Utility;
@@ -42,12 +42,20 @@ namespace NetMud.Data.Reference
         /// The model we're following
         /// </summary>
         [ScriptIgnore]
-        public IDimensionalModelData ModelBackingData 
+        public IDimensionalModelData ModelBackingData
         {
             get
             {
-              if (_backingDataId >= 0)
-                 return BackingDataCache.Get<IDimensionalModelData>(_backingDataId);
+                if (_backingDataId > 0)
+                    return BackingDataCache.Get<IDimensionalModelData>(_backingDataId);
+                else
+                {
+                    // 0d models don't have real values
+                    var returnValue = new DimensionalModelData();
+                    returnValue.ModelType = DimensionalModelType.None;
+
+                    return returnValue;
+                }
 
                 return null;
             }
@@ -67,7 +75,7 @@ namespace NetMud.Data.Reference
         /// Collection of model section name to material composition mappings
         /// </summary>
         [ScriptIgnore]
-        public IDictionary<string, IMaterial> Composition 
+        public IDictionary<string, IMaterial> Composition
         {
             get
             {
@@ -97,18 +105,14 @@ namespace NetMud.Data.Reference
 
             long outDimModId = DataUtility.GetFromDataRow<long>(dr, "DimensionalModelID");
 
+            Composition = new Dictionary<string, IMaterial>();
+
             if (outDimModId > 0)
             {
                 ModelBackingData = ReferenceWrapper.GetOne<DimensionalModelData>(outDimModId);
 
                 string materialComps = DataUtility.GetFromDataRow<string>(dr, "DimensionalModelMaterialCompositions");
                 Composition = DeserializeMaterialCompositions(materialComps);
-            }
-            else //0 dimensional models don't have an actual model
-            {
-                ModelBackingData = new DimensionalModelData();
-                ModelBackingData.ModelType = DimensionalModelType.None;
-                Composition = new Dictionary<string, IMaterial>();
             }
         }
 
