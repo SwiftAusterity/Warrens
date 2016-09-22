@@ -9,7 +9,7 @@ using System.Text;
 
 namespace NetMud.Data.Reference
 {
-    public abstract class ReferenceDataPartial : SerializableDataPartial, IReferenceData
+    public abstract class ReferenceDataPartial : BackingDataPartial, IReferenceData
     {
         public ReferenceDataPartial()
         {

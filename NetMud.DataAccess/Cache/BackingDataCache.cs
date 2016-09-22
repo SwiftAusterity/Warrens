@@ -157,7 +157,13 @@ namespace NetMud.DataAccess.Cache
         /// <returns>the key's hash</returns>
         public string KeyHash()
         {
-            return string.Format("{0}_{1}_{2}", CacheType.ToString(),  ObjectType.ToString(), BirthMark.ToString());
+            var typeName = ObjectType.Name;
+
+            //Normalize interfaces versus classnames
+            if (ObjectType.IsInterface)
+                typeName = typeName.Substring(1);
+
+            return string.Format("{0}_{1}_{2}", CacheType.ToString(), typeName, BirthMark.ToString());
         }
     }
 }

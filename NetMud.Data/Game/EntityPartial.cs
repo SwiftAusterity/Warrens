@@ -64,12 +64,6 @@ namespace NetMud.Data.Game
         }
         #endregion
 
-        //TODO: Remove this
-        public override void Fill(global::System.Data.DataRow dr)
-        {
-            throw new NotImplementedException();
-        }
-
         /// <summary>
         /// Method by which this entity has output (from commands and events) "shown" to it
         /// </summary>

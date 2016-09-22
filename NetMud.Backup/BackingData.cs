@@ -9,6 +9,7 @@ using System.IO;
 using NetMud.DataAccess.Cache;
 using NetMud.DataAccess;
 using NetMud.Data.EntityBackingData;
+using NetMud.Data.Game;
 
 namespace NetMud.Backup
 {
@@ -56,7 +57,8 @@ namespace NetMud.Backup
         {
             var implimentedTypes = typeof(EntityBackingDataPartial).Assembly.GetTypes().Where(ty => ty.GetInterfaces().Contains(typeof(IData))
                                                                                 && ty.IsClass
-                                                                                && !ty.IsAbstract);
+                                                                                && !ty.IsAbstract
+                                                                                && ty != typeof(Character));
 
             foreach (var t in implimentedTypes)
                 LoadAllToCache(t);
@@ -72,7 +74,8 @@ namespace NetMud.Backup
         {
             var implimentedTypes = typeof(EntityBackingDataPartial).Assembly.GetTypes().Where(ty => ty.GetInterfaces().Contains(typeof(IData))
                                                                                 && ty.IsClass
-                                                                                && !ty.IsAbstract);
+                                                                                && !ty.IsAbstract
+                                                                                && ty != typeof(Character));
 
             foreach (var t in implimentedTypes)
                 LoadAllToCacheFromDatabase(t);

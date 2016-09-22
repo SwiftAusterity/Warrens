@@ -9,7 +9,7 @@ namespace NetMud.Data.EntityBackingData
     /// Base class for backing data
     /// </summary>
     [Serializable]
-    public abstract class EntityBackingDataPartial : SerializableDataPartial, IEntityBackingData
+    public abstract class EntityBackingDataPartial : BackingDataPartial, IEntityBackingData
     {
         public EntityBackingDataPartial()
         {
