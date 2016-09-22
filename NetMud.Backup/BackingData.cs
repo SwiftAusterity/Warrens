@@ -34,9 +34,8 @@ namespace NetMud.Backup
                 //Get all the entities (which should be a ton of stuff)
                 var entities = BackingDataCache.GetAll();
 
-                //Dont save players to the hot section, there's another place for them
                 foreach (var entity in entities)
-                    fileAccessor.WriteEntity(entity as IEntityBackingData);
+                    fileAccessor.WriteEntity(entity as IData);
 
                 LoggingUtility.Log("Entire backing data set written to current.", LogChannels.Backup, true);
             }
@@ -66,7 +65,23 @@ namespace NetMud.Backup
         }
 
         /// <summary>
-        /// Dumps everything of a single type into the cache from the database for BackingData
+        /// Loads all the backing data in the current directories to the cache
+        /// </summary>
+        /// <returns>full or partial success</returns>
+        public static bool LoadEverythingToCacheFromDatabase()
+        {
+            var implimentedTypes = typeof(EntityBackingDataPartial).Assembly.GetTypes().Where(ty => ty.GetInterfaces().Contains(typeof(IData))
+                                                                                && ty.IsClass
+                                                                                && !ty.IsAbstract);
+
+            foreach (var t in implimentedTypes)
+                LoadAllToCacheFromDatabase(t);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Dumps everything of a single type into the cache from the filesystem for BackingData
         /// </summary>
         /// <typeparam name="T">the type to get and store</typeparam>
         /// <returns>full or partial success</returns>
@@ -93,6 +108,29 @@ namespace NetMud.Backup
                     BackingDataCache.Add(fileAccessor.ReadEntity(file, objectType));
                 }
                 catch(Exception ex)
+                {
+                    LoggingUtility.LogError(ex);
+                    //Let it keep going
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Dumps everything of a single type into the cache from the database for BackingData
+        /// </summary>
+        /// <typeparam name="T">the type to get and store</typeparam>
+        /// <returns>full or partial success</returns>
+        public static bool LoadAllToCacheFromDatabase(Type objectType)
+        {
+            foreach (IData thing in NetMud.DataAccess.DataWrapper.GetAll(objectType))
+            {
+                try
+                {
+                    BackingDataCache.Add(thing, new BackingDataCacheKey(objectType, thing.ID).KeyHash());
+                }
+                catch (Exception ex)
                 {
                     LoggingUtility.LogError(ex);
                     //Let it keep going

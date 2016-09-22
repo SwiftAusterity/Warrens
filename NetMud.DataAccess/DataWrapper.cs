@@ -1,5 +1,6 @@
 ﻿using NetMud.DataStructure.Base.System;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -20,6 +21,7 @@ namespace NetMud.DataAccess
         public static IEnumerable<T> GetAll<T>() where T : IData
         {
             var returnList = new List<T>();
+
             try
             {
                 var baseType = GetDataTableName(typeof(T));
@@ -34,6 +36,38 @@ namespace NetMud.DataAccess
                         var newValue = Activator.CreateInstance(baseType) as IData;
                         newValue.Fill(dr);
                         returnList.Add((T)newValue);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex);
+            }
+
+            return returnList;
+        }
+
+        public static IList GetAll(Type t)
+        {
+            var listType = typeof(List<>);
+            var constructedListType = listType.MakeGenericType(t);
+
+            var returnList = (IList)Activator.CreateInstance(constructedListType);
+
+            try
+            {
+                var baseType = GetDataTableName(t);
+                var sql = string.Format("select * from [dbo].[{0}]", baseType.Name);
+
+                var ds = SqlWrapper.RunDataset(sql, CommandType.Text);
+
+                if (ds.Rows != null)
+                {
+                    foreach (DataRow dr in ds.Rows)
+                    {
+                        var newValue = Activator.CreateInstance(baseType) as IData;
+                        newValue.Fill(dr);
+                        returnList.Add(Convert.ChangeType(newValue, t));
                     }
                 }
             }

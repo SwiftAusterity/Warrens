@@ -50,7 +50,8 @@ namespace NetMud.Data.EntityBackingData
             }
             set
             {
-                _medium = value.ID;
+                if(value != null)
+                    _medium = value.ID;
             }
         }
 
@@ -69,7 +70,8 @@ namespace NetMud.Data.EntityBackingData
             }
             set
             {
-                _zoneAffiliation = value.ID;
+                if(value != null)
+                    _zoneAffiliation = value.ID;
             }
         }
 
