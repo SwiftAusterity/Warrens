@@ -14,11 +14,11 @@ namespace NetMud.DataStructure.Base.System
         /// <summary>
         /// Indelible guid that helps the system figure out where stuff is, generated when the object is spawned into the world
         /// </summary>
-        string BirthMark { get; }
+        string BirthMark { get; set; }
 
         /// <summary>
         /// When this was first added to the live world
         /// </summary>
-        DateTime Birthdate { get; }
+        DateTime Birthdate { get; set; }
     }
 }

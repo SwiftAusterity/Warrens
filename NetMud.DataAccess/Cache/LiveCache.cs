@@ -262,7 +262,7 @@ namespace NetMud.DataAccess.Cache
         public string KeyHash()
         {
             //Not using type name right now, birthmarks are unique globally anyways
-            return string.Format("{0}_{1}", CacheType.ToString(), BirthMark.ToString());
+            return string.Format("{0}_{1}", CacheType.ToString(), BirthMark);
         }
     }
 }

@@ -45,7 +45,7 @@ namespace NetMud.DataAccess.FileSystem
 
         public void WriteEntity(IData entity)
         {
-            var dirName = BaseDirectory + entity.GetType().Name + CurrentDirectoryName;
+            var dirName = BaseDirectory + CurrentDirectoryName + entity.GetType().Name + "/";
 
             if (!VerifyDirectory(dirName))
                 throw new Exception("Unable to locate or create base live data directory.");
@@ -56,7 +56,7 @@ namespace NetMud.DataAccess.FileSystem
                 return;
 
             var fullFileName = dirName + entityFileName;
-            var archiveFileDirectory = BaseDirectory + entity.GetType().Name + DatedBackupDirectory;
+            var archiveFileDirectory = BaseDirectory + DatedBackupDirectory + entity.GetType().Name + "/";
 
             try
             {
@@ -71,7 +71,7 @@ namespace NetMud.DataAccess.FileSystem
 
         public void ArchiveEntity(IData entity)
         {
-            var dirName = BaseDirectory + entity.GetType().Name + CurrentDirectoryName;
+            var dirName = BaseDirectory + CurrentDirectoryName + entity.GetType().Name + "/";
 
             if (!VerifyDirectory(dirName))
                 throw new Exception("Unable to locate or create base live data directory.");
@@ -82,7 +82,7 @@ namespace NetMud.DataAccess.FileSystem
                 return;
 
             var fullFileName = dirName + entityFileName;
-            var archiveFileDirectory = BaseDirectory + entity.GetType().Name + DatedBackupDirectory;
+            var archiveFileDirectory = BaseDirectory + DatedBackupDirectory + entity.GetType().Name + "/";
 
             try
             {
@@ -102,6 +102,9 @@ namespace NetMud.DataAccess.FileSystem
         /// <param name="archiveDirectory">archive directory</param>
         private void RollingArchiveFile(string currentFile, string archiveFile, string archiveDirectory)
         {
+            if (!File.Exists(currentFile))
+                return;
+
             if (File.Exists(archiveFile))
             {
                 var archiveDir = new DirectoryInfo(archiveDirectory);
@@ -119,16 +122,16 @@ namespace NetMud.DataAccess.FileSystem
         public void ArchiveFull()
         {
             //wth, no current directory? Noithing to move then
-            if (VerifyDirectory(CurrentDirectoryName, false) && VerifyDirectory(ArchiveDirectoryName))
+            if (VerifyDirectory(BaseDirectory + CurrentDirectoryName, false) && VerifyDirectory(BaseDirectory + ArchiveDirectoryName))
             {
                 var currentRoot = new DirectoryInfo(BaseDirectory + CurrentDirectoryName);
 
                 //move is literal move, no need to delete afterwards
-                currentRoot.MoveTo(DatedBackupDirectory);
+                currentRoot.MoveTo(BaseDirectory + DatedBackupDirectory);
             }
 
             //something very wrong is happening, it'll get logged
-            if (!VerifyDirectory(CurrentDirectoryName))
+            if (!VerifyDirectory(BaseDirectory + CurrentDirectoryName))
                 throw new Exception("Can not locate or verify current data directory.");
         }
 

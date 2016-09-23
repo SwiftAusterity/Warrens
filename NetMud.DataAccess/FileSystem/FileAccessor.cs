@@ -186,6 +186,7 @@ namespace NetMud.DataAccess.FileSystem
                 return false;
 
             File.Move(currentFileName, archiveFileName);
+
             return true;
         }
 

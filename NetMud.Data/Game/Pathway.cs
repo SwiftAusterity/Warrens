@@ -45,11 +45,6 @@ namespace NetMud.Data.Game
         public MovementDirectionType MovementDirection { get; private set; }
 
         /// <summary>
-        /// Birthmark of live location this points into
-        /// </summary>
-        private string _currentToLocationBirthmark;
-
-        /// <summary>
         /// The backing data for this entity
         /// </summary>
         [ScriptIgnore]
@@ -63,6 +58,66 @@ namespace NetMud.Data.Game
             internal set
             {
                 DataTemplateId = value.ID;
+            }
+        }
+
+        /// <summary>
+        /// Birthmark of live location this points into
+        /// </summary>
+        [JsonProperty("ToLocation")]
+        private string _currentToLocationBirthmark;
+
+        /// <summary>
+        /// Restful live location this points into
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public ILocation ToLocation
+        {
+            get
+            {
+                if (!String.IsNullOrWhiteSpace(_currentToLocationBirthmark))
+                    return LiveCache.Get<ILocation>(new LiveCacheKey(typeof(ILocation), _currentToLocationBirthmark));
+
+                return null;
+            }
+            set
+            {
+                if (value == null)
+                    return;
+
+                _currentToLocationBirthmark = value.BirthMark;
+                UpsertToLiveWorldCache();
+            }
+        }
+
+        /// <summary>
+        /// Birthmark of live location this points out of
+        /// </summary>
+        [JsonProperty("FromLocation")]
+        private string _currentFromLocationBirthmark;
+
+        /// <summary>
+        /// Restful live location this points out of
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public ILocation FromLocation
+        {
+            get
+            {
+                if (!String.IsNullOrWhiteSpace(_currentFromLocationBirthmark))
+                    return LiveCache.Get<ILocation>(new LiveCacheKey(typeof(ILocation), _currentFromLocationBirthmark));
+
+                return null;
+            }
+            set
+            {
+                if (value == null)
+                    return;
+
+                _currentFromLocationBirthmark = value.BirthMark;
+                UpsertToLiveWorldCache();
             }
         }
 
@@ -92,55 +147,6 @@ namespace NetMud.Data.Game
         public override Tuple<int, int, int> GetModelDimensions()
         {
             return new Tuple<int, int, int>(Model.Height, Model.Length, Model.Width);
-        }
-
-        /// <summary>
-        /// Restful live location this points into
-        /// </summary>
-        public ILocation ToLocation
-        {
-            get
-            {
-                if (!String.IsNullOrWhiteSpace(_currentToLocationBirthmark))
-                    return LiveCache.Get<ILocation>(new LiveCacheKey(typeof(ILocation), _currentToLocationBirthmark));
-
-                return null;
-            }
-            set
-            {
-                if (value == null)
-                    return;
-
-                _currentToLocationBirthmark = value.BirthMark;
-                UpsertToLiveWorldCache();
-            }
-        }
-
-        /// <summary>
-        /// Birthmark of live location this points out of
-        /// </summary>
-        private string _currentFromLocationBirthmark;
-
-        /// <summary>
-        /// Restful live location this points out of
-        /// </summary>
-        public ILocation FromLocation
-        {
-            get
-            {
-                if (!String.IsNullOrWhiteSpace(_currentFromLocationBirthmark))
-                    return LiveCache.Get<ILocation>(new LiveCacheKey(typeof(ILocation), _currentFromLocationBirthmark));
-
-                return null;
-            }
-            set
-            {
-                if (value == null)
-                    return;
-
-                _currentFromLocationBirthmark = value.BirthMark;
-                UpsertToLiveWorldCache();
-            }
         }
         
         #region spawning

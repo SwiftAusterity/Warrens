@@ -18,7 +18,7 @@ namespace NetMud.DataStructure.Base.System
         /// <summary>
         /// The ID for the data template
         /// </summary>
-        long DataTemplateId { get; }
+        long DataTemplateId { get; set; }
 
         /// <summary>
         /// The backing data for this entity in the db
