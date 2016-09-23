@@ -55,12 +55,14 @@ namespace NetMud.Data.Game
         }
 
         [ScriptIgnore]
+        [JsonIgnore]
         private LiveCacheKey _descriptorKey;
 
         /// <summary>
         /// The connection the player is using to chat with us
         /// </summary>
         [ScriptIgnore]
+        [JsonIgnore]
         public IDescriptor Descriptor 
         { 
             get
@@ -80,6 +82,7 @@ namespace NetMud.Data.Game
         }
 
         [ScriptIgnore]
+        [JsonIgnore]
         public override IChannelType ConnectionType
         {
             get
@@ -93,15 +96,16 @@ namespace NetMud.Data.Game
         /// The backing data for this entity
         /// </summary>
         [ScriptIgnore]
+        [JsonIgnore]
         public new ICharacter DataTemplate
         {
             get
             {
-                return BackingDataCache.Get<ICharacter>(_dataTemplate);
+                return BackingDataCache.Get<ICharacter>(DataTemplateId);
             }
             internal set
             {
-                _dataTemplate = value.ID;
+                DataTemplateId = value.ID;
             }
         }
 
@@ -129,6 +133,7 @@ namespace NetMud.Data.Game
         /// Restful location container this is inside of
         /// </summary>
         [ScriptIgnore]
+        [JsonIgnore]
         public override IContains CurrentLocation
         {
             get

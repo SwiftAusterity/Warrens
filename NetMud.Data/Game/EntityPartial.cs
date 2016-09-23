@@ -30,13 +30,13 @@ namespace NetMud.Data.Game
         /// </summary>
         public DateTime Birthdate { get; internal set; }
 
-        [JsonProperty("DataTemplate")]
-        internal long _dataTemplate { get; set; }
+        public long DataTemplateId { get; internal set; }
 
         /// <summary>
         /// The backing data for this live entity
         /// </summary>
         [ScriptIgnore]
+        [JsonIgnore]
         public IData DataTemplate { get; internal set; }
 
         /// <summary>
@@ -89,11 +89,14 @@ namespace NetMud.Data.Game
         /// <summary>
         /// Where in the live world this is
         /// </summary>
+        [JsonProperty("CurrentLocation")]
         private string _currentLocationBirthmark;
 
         /// <summary>
         /// Where in the live world this is
         /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
         public virtual IContains CurrentLocation
         {
             get 

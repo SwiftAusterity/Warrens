@@ -2093,6 +2093,7 @@ namespace NetMud.Controllers
             var hotBack = new HotBackup();
 
             hotBack.WriteLiveBackup();
+            BackingData.WriteFullBackup();
 
             return RedirectToAction("Index", new { Message = "Backup Started" });
         }

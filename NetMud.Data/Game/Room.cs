@@ -11,6 +11,7 @@ using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -37,15 +38,16 @@ namespace NetMud.Data.Game
         /// The backing data for this entity
         /// </summary>
         [ScriptIgnore]
+        [JsonIgnore]
         public new IRoomData DataTemplate
         {
             get
             {
-                return BackingDataCache.Get<IRoomData>(_dataTemplate);
+                return BackingDataCache.Get<IRoomData>(DataTemplateId);
             }
             internal set
             {
-                _dataTemplate = value.ID;
+                DataTemplateId = value.ID;
             }
         }
 
@@ -352,7 +354,7 @@ namespace NetMud.Data.Game
             {
                 BirthMark = me.BirthMark;
                 Birthdate = me.Birthdate;
-                _dataTemplate = me.DataTemplate.ID;
+                DataTemplateId = me.DataTemplate.ID;
                 ObjectsInRoom = me.ObjectsInRoom;
                 MobilesInside = me.MobilesInside;
                 Pathways = me.Pathways;

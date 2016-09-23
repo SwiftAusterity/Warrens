@@ -34,15 +34,16 @@ namespace NetMud.Data.Game
         /// The backing data for this entity
         /// </summary>
         [ScriptIgnore]
+        [JsonIgnore]
         public new INonPlayerCharacter DataTemplate
         {
             get
             {
-                return BackingDataCache.Get<INonPlayerCharacter>(_dataTemplate);
+                return BackingDataCache.Get<INonPlayerCharacter>(DataTemplateId);
             }
             internal set
             {
-                _dataTemplate = value.ID;
+                DataTemplateId = value.ID;
             }
         }
 

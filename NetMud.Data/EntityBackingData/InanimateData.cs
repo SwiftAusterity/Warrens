@@ -54,6 +54,7 @@ namespace NetMud.Data.EntityBackingData
         /// The list of internal compositions for separate/explosion/sharding
         /// </summary>
         [ScriptIgnore]
+        [JsonIgnore]
         public IDictionary<IInanimateData, short> InternalComposition
         {
             get
@@ -174,7 +175,7 @@ namespace NetMud.Data.EntityBackingData
 
             return JsonConvert.SerializeObject(materialComps);
         }
-
+        /*
         /// <summary>
         /// insert this into the db
         /// </summary>
@@ -279,5 +280,6 @@ namespace NetMud.Data.EntityBackingData
 
             return true;
         }
+         * */
     }
 }

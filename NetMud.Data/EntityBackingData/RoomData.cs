@@ -42,6 +42,7 @@ namespace NetMud.Data.EntityBackingData
         /// What is in the middle of the room
         /// </summary>
         [ScriptIgnore]
+        [JsonIgnore]
         public IMaterial Medium
         {
             get
@@ -62,6 +63,7 @@ namespace NetMud.Data.EntityBackingData
         /// What zone this belongs to
         /// </summary>
         [ScriptIgnore]
+        [JsonIgnore]
         public IZone ZoneAffiliation
         {
             get
@@ -85,6 +87,7 @@ namespace NetMud.Data.EntityBackingData
         /// The list of internal compositions for separate/explosion/sharding
         /// </summary>
         [ScriptIgnore]
+        [JsonIgnore]
         public IDictionary<string, IMaterial> Borders
         {
             get
@@ -162,7 +165,7 @@ namespace NetMud.Data.EntityBackingData
 
             return JsonConvert.SerializeObject(materialComps);
         }
-
+        /*
         /// <summary>
         /// insert this into the db
         /// </summary>
@@ -257,5 +260,6 @@ namespace NetMud.Data.EntityBackingData
 
             return true;
         }
+        */
     }
 }

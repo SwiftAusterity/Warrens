@@ -42,6 +42,7 @@ namespace NetMud.Data.Reference
         /// The model we're following
         /// </summary>
         [ScriptIgnore]
+        [JsonIgnore]
         public IDimensionalModelData ModelBackingData
         {
             get
@@ -75,6 +76,7 @@ namespace NetMud.Data.Reference
         /// Collection of model section name to material composition mappings
         /// </summary>
         [ScriptIgnore]
+        [JsonIgnore]
         public IDictionary<string, IMaterial> Composition
         {
             get

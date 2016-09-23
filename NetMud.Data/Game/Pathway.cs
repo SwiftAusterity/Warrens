@@ -53,15 +53,16 @@ namespace NetMud.Data.Game
         /// The backing data for this entity
         /// </summary>
         [ScriptIgnore]
+        [JsonIgnore]
         public new IPathwayData DataTemplate
         {
             get
             {
-                return BackingDataCache.Get<IPathwayData>(_dataTemplate);
+                return BackingDataCache.Get<IPathwayData>(DataTemplateId);
             }
             internal set
             {
-                _dataTemplate = value.ID;
+                DataTemplateId = value.ID;
             }
         }
 

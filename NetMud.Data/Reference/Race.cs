@@ -27,6 +27,7 @@ namespace NetMud.Data.Reference
         /// The arm objects
         /// </summary>
         [ScriptIgnore]
+        [JsonIgnore]
         public Tuple<IInanimateData, short> Arms
         {
             get
@@ -52,6 +53,7 @@ namespace NetMud.Data.Reference
         /// The leg objects
         /// </summary>
         [ScriptIgnore]
+        [JsonIgnore]
         public Tuple<IInanimateData, short> Legs
         {
             get
@@ -77,6 +79,7 @@ namespace NetMud.Data.Reference
         /// the torso object
         /// </summary>
         [ScriptIgnore]
+        [JsonIgnore]
         public IInanimateData Torso 
         { 
             get
@@ -96,6 +99,7 @@ namespace NetMud.Data.Reference
         /// The head object
         /// </summary>
         [ScriptIgnore]
+        [JsonIgnore]
         public IInanimateData Head
         {
             get
@@ -114,6 +118,7 @@ namespace NetMud.Data.Reference
         /// The list of additional body parts used by this race. Part Object, Amount, Name
         /// </summary>
         [ScriptIgnore]
+        [JsonIgnore]
         public IEnumerable<Tuple<IInanimateData, short, string>> BodyParts
         {
             get
@@ -144,6 +149,7 @@ namespace NetMud.Data.Reference
         /// Material that is the blood
         /// </summary>
         [ScriptIgnore]
+        [JsonIgnore]
         public IMaterial SanguinaryMaterial
         {
             get
@@ -183,6 +189,7 @@ namespace NetMud.Data.Reference
         /// What is the starting room of new players
         /// </summary>
         [ScriptIgnore]
+        [JsonIgnore]
         public IRoomData StartingLocation
         {
             get
@@ -202,6 +209,7 @@ namespace NetMud.Data.Reference
         /// When a player loads without a location where do we send them
         /// </summary>
         [ScriptIgnore]
+        [JsonIgnore]
         public IRoomData EmergencyLocation
         {
             get

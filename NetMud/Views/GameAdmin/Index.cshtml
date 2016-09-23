@@ -120,24 +120,17 @@
     <h4>Communications</h4>
     <hr />
     <dl class="dl-horizontal">
-        <dt>[@Model.NetMud.Websock.Servers.Count().ToString()] WebSocket Ports</dt>
+        <dt>[@Model.WebsocketServers.Count().ToString()] WebSocket Ports</dt>
         <dd>
             @Html.ActionLink("Stop All", "StopAllWebsockets", "GameAdmin", new { @class = "btn", @style = "color: red; background-color: black; border-color: red;" })
         </dd>
-        @foreach (var server in Model.NetMud.Websock.Servers)
+        @foreach (var server in Model.WebsocketServers)
         {
-            <dt style="padding-top: 25px;">@server.Port.ToString()</dt>
-            if (!server.IsListening)
-            {
-                <dd style="color:red; padding-top: 25px;">Stopped</dd>
-            }
-            else
-            {
-                <dd style="padding-top: 25px;">
-                    <span style="color:green;">Listening</span>
-                    @Html.ActionLink("Stop", "StopWebSocket", "GameAdmin", new { portNumber = server.Port }, new { @class = "btn", @style = "color: red; border-color: red;" })
-                </dd>
-            }
+            <dt style="padding-top: 25px;">@server.PortNumber.ToString()</dt>
+            <dd style="padding-top: 25px;">
+                <span style="color:green;">Listening</span>
+                @Html.ActionLink("Stop", "StopWebSocket", "GameAdmin", new { portNumber = server.PortNumber }, new { @class = "btn", @style = "color: red; border-color: red;" })
+            </dd>
         }
     </dl>
 </div>

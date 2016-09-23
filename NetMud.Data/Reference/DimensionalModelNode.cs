@@ -36,6 +36,7 @@ namespace NetMud.Data.Reference
         /// Material composition of the node
         /// </summary>
         [ScriptIgnore]
+        [JsonIgnore]
         public IMaterial Composition 
         { 
             get

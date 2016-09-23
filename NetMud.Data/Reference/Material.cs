@@ -83,6 +83,7 @@ namespace NetMud.Data.Reference
         /// Collection of model section name to material composition mappings
         /// </summary>
         [ScriptIgnore]
+        [JsonIgnore]
         public IDictionary<IMaterial, short> Composition
         {
             get

@@ -51,6 +51,7 @@ namespace NetMud.Data.EntityBackingData
         /// The race data for the character
         /// </summary>
         [ScriptIgnore]
+        [JsonIgnore]
         public IRace RaceData 
         { 
             get
@@ -83,12 +84,14 @@ namespace NetMud.Data.EntityBackingData
         public string AccountHandle { get; set; }
 
         [ScriptIgnore]
+        [JsonIgnore]
         private IAccount _account { get; set; }
 
         /// <summary>
         /// Account data object this is owned by
         /// </summary>
         [ScriptIgnore]
+        [JsonIgnore]
         public IAccount Account
         {
             get

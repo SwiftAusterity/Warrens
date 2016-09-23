@@ -45,6 +45,7 @@ namespace NetMud.Data.EntityBackingData
         /// NPC's race data
         /// </summary>
         [ScriptIgnore]
+        [JsonIgnore]
         public IRace RaceData
         {
             get
