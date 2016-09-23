@@ -62,6 +62,17 @@ namespace NetMud.Data.Game
             }
         }
 
+        [JsonConstructor]
+        public Inanimate(DimensionalModel model)
+        {
+            Model = model;
+
+            //IDatas need parameterless constructors
+            Contents = new EntityContainer<IInanimate>();
+            Pathways = new EntityContainer<IPathway>();
+            MobilesInside = new EntityContainer<IMobile>();
+        }
+
         /// <summary>
         /// News up an empty entity
         /// </summary>
@@ -388,178 +399,6 @@ namespace NetMud.Data.Game
             }
 
             return radiusLocations;
-        }
-        #endregion
-
-        #region HotBackup
-        private const int liveDataVersion = 1;
-        /*
-        /// <summary>
-        /// Serialize this entity's live data to a binary stream
-        /// </summary>
-        /// <returns>the binary stream</returns>
-        public override string Serialize()
-        {
-            var settings = new XmlWriterSettings { OmitXmlDeclaration = true, Encoding = Encoding.ASCII };
-            var charData = (IInanimateData)DataTemplate;
-
-            var entityData = new XDocument(
-                                new XElement("root",
-                                    new XAttribute("formattingVersion", liveDataVersion),
-                                    new XAttribute("Birthmark", BirthMark),
-                                    new XAttribute("Birthdate", Birthdate),
-                                    new XElement("BackingData",
-                                        new XAttribute("ID", charData.ID),
-                                        new XAttribute("Name", charData.Name),
-                                        new XAttribute("LastRevised", charData.LastRevised),
-                                        new XAttribute("Created", charData.Created),
-                                        new XElement("MobileContainers"),
-                                        new XElement("InanimateContainers"),
-                                        new XElement("InternalComposition", JsonConvert.SerializeObject(charData.InternalComposition))),
-                                    new XElement("LiveData",
-                                        new XAttribute("Keywords", string.Join(",", Keywords)),
-                                        new XElement("DimensionalModel",
-                                            new XAttribute("Length", Model.Length),
-                                            new XAttribute("Height", Model.Height),
-                                            new XAttribute("Width", Model.Width),
-                                            new XAttribute("ID", charData.Model.ModelBackingData.ID),
-                                            new XElement("ModellingData", Model.ModelBackingData.SerializeModel()),
-                                            new XElement("MaterialCompositions", Model.SerializeMaterialCompositions()))),
-                                    new XElement("Contents"),
-                                    new XElement("MobilesInside")
-                                    ));
-
-            foreach (var item in Contents.EntitiesContainedByName())
-                entityData.Root.Element("Contents").Add(new XElement("Item",
-                                                            new XAttribute("Birthmark", item.Item2.BirthMark),
-                                                            new XAttribute("Container", item.Item1)));
-
-            foreach (var item in MobilesInside.EntitiesContainedByName().Where(ent => ent.Item2.GetType() != typeof(Player)))
-                entityData.Root.Element("MobilesInside").Add(new XElement("Item",
-                                                            new XAttribute("Birthmark", item.Item2.BirthMark),
-                                                            new XAttribute("Container", item.Item1)));
-
-            foreach (var item in charData.MobileContainers)
-                entityData.Root.Element("BackingData").Element("MobileContainers").Add(new XElement("Container",
-                                                                                                    new XAttribute("Name", item.Name),
-                                                                                                    new XAttribute("CapacityVolume", item.CapacityVolume),
-                                                                                                    new XAttribute("CapacityWeight", item.CapacityWeight)));
-            foreach (var item in charData.InanimateContainers)
-                entityData.Root.Element("BackingData").Element("InanimateContainers").Add(new XElement("Container",
-                                                                                                    new XAttribute("Name", item.Name),
-                                                                                                    new XAttribute("CapacityVolume", item.CapacityVolume),
-                                                                                                    new XAttribute("CapacityWeight", item.CapacityWeight)));
-
-            return entityData.ToString();
-        }
-
-        /// <summary>
-        /// Deserialize binary stream to this entity
-        /// </summary>
-        /// <param name="bytes">the binary to turn into an entity</param>
-        /// <returns>the entity</returns>
-        public override IEntity DeSerialize(string jsonData)
-        {
-            var entityBinaryConvert = new DataUtility.EntityFileData(bytes);
-            var xDoc = entityBinaryConvert.XDoc;
-
-            var newEntity = new Inanimate();
-
-            var versionFormat = xDoc.Root.GetSafeAttributeValue<int>("formattingVersion");
-
-            newEntity.BirthMark = xDoc.Root.GetSafeAttributeValue("Birthmark");
-            newEntity.Birthdate = xDoc.Root.GetSafeAttributeValue<DateTime>("Birthdate");
-
-            var internalCompositions = xDoc.Root.Element("BackingData").GetSafeAttributeValue("InternalComposition");
-            var backingData = new InanimateData(internalCompositions);
-
-            backingData.ID = xDoc.Root.Element("BackingData").GetSafeAttributeValue<long>("ID");
-            backingData.Name = xDoc.Root.Element("BackingData").GetSafeAttributeValue("Name");
-            backingData.LastRevised =xDoc.Root.Element("BackingData").GetSafeAttributeValue<DateTime>("LastRevised");
-            backingData.Created = xDoc.Root.Element("BackingData").GetSafeAttributeValue<DateTime>("Created");
-
-            foreach (var item in xDoc.Root.Element("BackingData").Element("InanimateContainers").Elements("Item"))
-            {
-                var newContainer = new EntityContainerData<IInanimate>();
-                newContainer.CapacityVolume = item.GetSafeAttributeValue<long>("CapacityVolume");
-                newContainer.CapacityWeight = item.GetSafeAttributeValue<long>("CapacityWeight");
-                newContainer.Name = item.GetSafeAttributeValue("Name");
-
-                backingData.InanimateContainers.Add(newContainer);
-            }
-
-            //Add a fake entity to get the birthmark over to the next place
-            foreach (var item in xDoc.Root.Element("BackingData").Element("MobileContainers").Elements("Item"))
-            {
-                var newContainer = new EntityContainerData<IMobile>();
-                newContainer.CapacityVolume = item.GetSafeAttributeValue<long>("CapacityVolume");
-                newContainer.CapacityWeight = item.GetSafeAttributeValue<long>("CapacityWeight");
-                newContainer.Name = item.GetSafeAttributeValue("Name");
-
-                backingData.MobileContainers.Add(newContainer);
-            }
-
-            //Add a fake entity to get the birthmark over to the next place
-            foreach (var item in xDoc.Root.Element("MobilesInside").Elements("Item"))
-            {
-                var obj = new Intelligence();
-                obj.BirthMark = item.GetSafeAttributeValue("Birthmark");
-                var containerName = item.GetSafeAttributeValue("Container");
-
-                if (!String.IsNullOrWhiteSpace(containerName))
-                    newEntity.MobilesInside.Add(obj, containerName);
-                else
-                    newEntity.MobilesInside.Add(obj);
-            }
-
-
-            //Add a fake entity to get the birthmark over to the next place
-            foreach (var item in xDoc.Root.Element("Contents").Elements("Item"))
-            {
-                var obj = new Inanimate();
-                obj.BirthMark = item.GetSafeAttributeValue("Birthmark");
-                var containerName = item.GetSafeAttributeValue("Container");
-
-                if (!String.IsNullOrWhiteSpace(containerName))
-                    newEntity.Contents.Add(obj, containerName);
-                else
-                    newEntity.Contents.Add(obj);
-            }
-
-            //Add new version transformations here, they are meant to be iterative, hence < 1
-            Transform_V1(backingData, newEntity, xDoc.Root, versionFormat < 1);
-
-            newEntity.DataTemplate = backingData;
-
-            //keywords is last
-            newEntity.Keywords = xDoc.Root.Element("LiveData").Attribute("Keywords").Value.Split(new char[] { ',' });
-
-            return newEntity;
-        }
-        */
-
-        private void Transform_V1(InanimateData backingData, Inanimate newEntity, XElement docRoot, bool older)
-        {
-            if (!older)
-            {
-                //We added dim mods in v1
-                var dimModelId = docRoot.Element("LiveData").Element("DimensionalModel").GetSafeAttributeValue<long>("ID");
-                var dimModelLength = docRoot.Element("LiveData").Element("DimensionalModel").GetSafeAttributeValue<int>("Length");
-                var dimModelHeight = docRoot.Element("LiveData").Element("DimensionalModel").GetSafeAttributeValue<int>("Height");
-                var dimModelWidth = docRoot.Element("LiveData").Element("DimensionalModel").GetSafeAttributeValue<int>("Width");
-                var dimModelJson = docRoot.Element("LiveData").Element("DimensionalModel").GetSafeElementValue("ModellingData");
-                var dimModelCompJson = docRoot.Element("LiveData").Element("DimensionalModel").GetSafeElementValue("MaterialCompositions");
-
-                backingData.Model = new DimensionalModel(dimModelLength, dimModelHeight, dimModelWidth, dimModelId, dimModelCompJson);
-                newEntity.Model = new DimensionalModel(dimModelLength, dimModelHeight, dimModelWidth, dimModelJson, dimModelId, dimModelCompJson);
-            }
-            else //what if we're older
-            {
-                //Get it from the db
-                var backD = DataWrapper.GetOne<InanimateData>(backingData.ID);
-                backingData.Model = backD.Model;
-                newEntity.Model = backD.Model;
-            }
         }
         #endregion
     }

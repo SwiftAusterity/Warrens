@@ -31,12 +31,6 @@ namespace NetMud.Data.System
         public string Name { get; set; }
 
         /// <summary>
-        /// Fills a data object with data from a data row
-        /// </summary>
-        /// <param name="dr">the data row to fill from</param>
-        public abstract void Fill(global::System.Data.DataRow dr);
-
-        /// <summary>
         /// Add it to the cache and save it to the file system
         /// </summary>
         /// <returns>the object with ID and other db fields set</returns>

@@ -1,6 +1,8 @@
-﻿using NetMud.DataAccess; using NetMud.DataAccess.Cache;
+﻿using NetMud.DataAccess;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.SupportingClasses;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,6 +35,21 @@ namespace NetMud.Data.System
             NamedContainers = Enumerable.Empty<IEntityContainerData<T>>();
 
             Birthmarks.Add(genericCollectionLabel, new HashSet<string>());
+        }
+
+        /// <summary>
+        /// New up an empty container
+        /// </summary>
+        [JsonConstructor]
+        public EntityContainer(IEnumerable<EntityContainerData<T>> namedContainers)
+        {
+            Birthmarks = new Dictionary<string, HashSet<string>>();
+            NamedContainers = namedContainers;
+
+            Birthmarks.Add(genericCollectionLabel, new HashSet<string>());
+
+            foreach (var container in namedContainers)
+                Birthmarks.Add(container.Name, new HashSet<string>());
         }
 
         /// <summary>
@@ -219,6 +236,9 @@ namespace NetMud.Data.System
     [Serializable]
     public class EntityContainerData<T> : IEntityContainerData<T> where T : IEntity
     {
+        /// <summary>
+        /// Instansiate this empty
+        /// </summary>
         public EntityContainerData()
         {
             CapacityVolume = -1;
@@ -226,6 +246,12 @@ namespace NetMud.Data.System
             Name = "NotImpl";
         }
 
+        /// <summary>
+        /// Instansiate this with parameters
+        /// </summary>
+        /// <param name="capacityVolume">How large is this container</param>
+        /// <param name="capacityWeight">How much weight can it carry before taking damage</param>
+        /// <param name="name"> The name of the container; can be string empty without issue</param>
         public EntityContainerData(long capacityVolume, long capacityWeight, string name)
         {
             CapacityVolume = capacityVolume;

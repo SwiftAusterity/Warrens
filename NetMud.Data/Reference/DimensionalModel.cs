@@ -96,26 +96,11 @@ namespace NetMud.Data.Reference
         }
 
         /// <summary>
-        /// Constructor for dimensional model based on a datarow
+        /// Default constructor
         /// </summary>
-        /// <param name="dr">the row from the db</param>
-        public DimensionalModel(global::System.Data.DataRow dr)
+        public DimensionalModel()
         {
-            Length = DataUtility.GetFromDataRow<int>(dr, "DimensionalModelLength");
-            Height = DataUtility.GetFromDataRow<int>(dr, "DimensionalModelHeight");
-            Width = DataUtility.GetFromDataRow<int>(dr, "DimensionalModelWidth");
 
-            long outDimModId = DataUtility.GetFromDataRow<long>(dr, "DimensionalModelID");
-
-            Composition = new Dictionary<string, IMaterial>();
-
-            if (outDimModId > 0)
-            {
-                ModelBackingData = ReferenceWrapper.GetOne<DimensionalModelData>(outDimModId);
-
-                string materialComps = DataUtility.GetFromDataRow<string>(dr, "DimensionalModelMaterialCompositions");
-                Composition = DeserializeMaterialCompositions(materialComps);
-            }
         }
 
         /// <summary>
@@ -188,45 +173,6 @@ namespace NetMud.Data.Reference
 
             ModelBackingData = new DimensionalModelData();
             ModelBackingData.ModelType = DimensionalModelType.None;
-        }
-
-        /// <summary>
-        /// Turn the material composition set into a json string
-        /// </summary>
-        /// <returns>the json in a string</returns>
-        public string SerializeMaterialCompositions()
-        {
-            var materialComps = new Dictionary<string, long>();
-
-            foreach (var kvp in Composition)
-                materialComps.Add(kvp.Key, kvp.Value.ID);
-
-            return JsonConvert.SerializeObject(materialComps);
-        }
-
-        /// <summary>
-        /// Turn json string of material composition into its proper object form
-        /// </summary>
-        /// <param name="compJson">the json in a string</param>
-        /// <returns>the object form</returns>
-        private IDictionary<string, IMaterial> DeserializeMaterialCompositions(string compJson)
-        {
-            var composition = new Dictionary<string, IMaterial>();
-
-            dynamic comps = JsonConvert.DeserializeObject(compJson);
-
-            foreach (dynamic comp in comps)
-            {
-                string sectionName = comp.Name;
-                long materialId = comp.Value;
-
-                var material = ReferenceWrapper.GetOne<Material>(materialId);
-
-                if (material != null && !string.IsNullOrWhiteSpace(sectionName))
-                    composition.Add(sectionName, material);
-            }
-
-            return composition;
         }
     }
 }

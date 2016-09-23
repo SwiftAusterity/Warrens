@@ -140,6 +140,7 @@ namespace NetMud.Authentication
             parms.Add("handle", handle);
 
             IAccount account = null;
+
             try
             {
                 var ds = SqlWrapper.RunDataset(sql, CommandType.Text, parms);

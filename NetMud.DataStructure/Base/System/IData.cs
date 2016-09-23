@@ -29,12 +29,6 @@ namespace NetMud.DataStructure.Base.System
         string Name { get; set; }
 
         /// <summary>
-        /// Fill this data object from a datarow
-        /// </summary>
-        /// <param name="dr">the datarow</param>
-        void Fill(DataRow dr);
-
-        /// <summary>
         /// Create a new db entry
         /// </summary>
         /// <returns>the new, filled db object</returns>

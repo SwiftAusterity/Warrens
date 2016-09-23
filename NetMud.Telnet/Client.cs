@@ -17,12 +17,12 @@ namespace NetMud.Telnet
         /// <summary>
         /// Unique string for this live entity
         /// </summary>
-        public string BirthMark { get; internal set; }
+        public string BirthMark { get; set; }
 
         /// <summary>
         /// When this entity was born to the world
         /// </summary>
-        public DateTime Birthdate { get; internal set; }
+        public DateTime Birthdate { get; set; }
 
         public Client(IPEndPoint _remoteEndPoint, DateTime _connectedAt, EClientState _clientState)
         {

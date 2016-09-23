@@ -94,7 +94,7 @@ namespace NetMud.Backup
                 return false;
 
             var fileAccessor = new NetMud.DataAccess.FileSystem.BackingData();
-            var typeDirectory = fileAccessor.CurrentDirectoryName + objectType.Name;
+            var typeDirectory = fileAccessor.BaseDirectory + fileAccessor.CurrentDirectoryName + objectType.Name + "/";
 
             if (!fileAccessor.VerifyDirectory(typeDirectory, false))
             {
