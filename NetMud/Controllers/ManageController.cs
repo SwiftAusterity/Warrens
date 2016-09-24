@@ -8,10 +8,10 @@ using Microsoft.Owin.Security;
 using NetMud.Authentication;
 using NetMud.Data.EntityBackingData;
 using System;
-using NetMud.DataAccess; using NetMud.DataAccess.Cache;
 using NetMud.Data.Reference;
 using NetMud.Utility;
 using NetMud.Models;
+using NetMud.DataAccess.Cache;
 
 namespace NetMud.Controllers
 {
@@ -92,7 +92,7 @@ namespace NetMud.Controllers
                  ValidRoles = (StaffRank[])Enum.GetValues(typeof(StaffRank))
              };
 
-            model.ValidRaces = ReferenceWrapper.GetAll<Race>();
+            model.ValidRaces = BackingDataCache.GetAll<Race>();
 
             return View(model);
         }
@@ -112,7 +112,7 @@ namespace NetMud.Controllers
             newChar.Name = newName;
             newChar.SurName = newSurName;
             newChar.Gender = newGender;
-            var race = ReferenceWrapper.GetOne<Race>(raceId);
+            var race = BackingDataCache.Get<Race>(raceId);
 
             if (race != null)
                 newChar.RaceData = race;

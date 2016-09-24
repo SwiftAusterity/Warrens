@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Web;
-using System.Web.Hosting;
 using System.Web.Mvc;
 
 using Microsoft.AspNet.Identity;
@@ -11,7 +10,8 @@ using NetMud.Authentication;
 using NetMud.Backup;
 using NetMud.CentralControl;
 using NetMud.Data.EntityBackingData;
-using NetMud.DataAccess; using NetMud.DataAccess.Cache;
+using NetMud.DataAccess;
+using NetMud.DataAccess.Cache;
 using NetMud.Models.GameAdmin;
 using NetMud.Data.Reference;
 using NetMud.DataStructure.Base.Supporting;
@@ -59,15 +59,15 @@ namespace NetMud.Controllers
             var dashboardModel = new DashboardViewModel();
             dashboardModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            dashboardModel.Inanimates = DataWrapper.GetAll<IInanimateData>();
-            dashboardModel.Rooms = DataWrapper.GetAll<IRoomData>();
-            dashboardModel.NPCs = DataWrapper.GetAll<INonPlayerCharacter>();
+            dashboardModel.Inanimates = BackingDataCache.GetAll<IInanimateData>();
+            dashboardModel.Rooms = BackingDataCache.GetAll<IRoomData>();
+            dashboardModel.NPCs = BackingDataCache.GetAll<INonPlayerCharacter>();
 
-            dashboardModel.HelpFiles = ReferenceWrapper.GetAll<IHelp>();
-            dashboardModel.DimensionalModels = ReferenceWrapper.GetAll<IDimensionalModelData>();
-            dashboardModel.Materials = ReferenceWrapper.GetAll<IMaterial>();
-            dashboardModel.Races = ReferenceWrapper.GetAll<IRace>();
-            dashboardModel.Zones = ReferenceWrapper.GetAll<IZone>();
+            dashboardModel.HelpFiles = BackingDataCache.GetAll<IHelp>();
+            dashboardModel.DimensionalModels = BackingDataCache.GetAll<IDimensionalModelData>();
+            dashboardModel.Materials = BackingDataCache.GetAll<IMaterial>();
+            dashboardModel.Races = BackingDataCache.GetAll<IRace>();
+            dashboardModel.Zones = BackingDataCache.GetAll<IZone>();
 
             dashboardModel.LiveTaskTokens = Processor.GetAllLiveTaskStatusTokens();
             dashboardModel.LivePlayers = LiveCache.GetAll<IPlayer>().Count();
@@ -83,7 +83,7 @@ namespace NetMud.Controllers
         #region Dimensional Models
         public ActionResult ManageDimensionalModelData(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageDimensionalModelDataViewModel(ReferenceWrapper.GetAll<DimensionalModelData>());
+            var vModel = new ManageDimensionalModelDataViewModel(BackingDataCache.GetAll<DimensionalModelData>());
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             vModel.CurrentPageNumber = CurrentPageNumber;
@@ -106,7 +106,7 @@ namespace NetMud.Controllers
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = ReferenceWrapper.GetOne<DimensionalModelData>(ID);
+                var obj = BackingDataCache.Get<DimensionalModelData>(ID);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -177,7 +177,7 @@ namespace NetMud.Controllers
         #region Help Files
         public ActionResult ManageHelpData(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageHelpDataViewModel(ReferenceWrapper.GetAll<Help>());
+            var vModel = new ManageHelpDataViewModel(BackingDataCache.GetAll<Help>());
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             vModel.CurrentPageNumber = CurrentPageNumber;
@@ -200,7 +200,7 @@ namespace NetMud.Controllers
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = ReferenceWrapper.GetOne<Help>(ID);
+                var obj = BackingDataCache.Get<Help>(ID);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -254,7 +254,7 @@ namespace NetMud.Controllers
             var vModel = new AddEditHelpDataViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            Help obj = ReferenceWrapper.GetOne<Help>(id);
+            Help obj = BackingDataCache.Get<Help>(id);
 
             if (obj == null)
             {
@@ -276,7 +276,7 @@ namespace NetMud.Controllers
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            Help obj = ReferenceWrapper.GetOne<Help>(id);
+            Help obj = BackingDataCache.Get<Help>(id);
             if (obj == null)
             {
                 message = "That does not exist";
@@ -301,7 +301,7 @@ namespace NetMud.Controllers
         #region NPCs
         public ActionResult ManageNPCData(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageNPCDataViewModel(DataWrapper.GetAll<NonPlayerCharacter>());
+            var vModel = new ManageNPCDataViewModel(BackingDataCache.GetAll<NonPlayerCharacter>());
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             vModel.CurrentPageNumber = CurrentPageNumber;
@@ -323,7 +323,7 @@ namespace NetMud.Controllers
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = DataWrapper.GetOne<NonPlayerCharacter>(ID);
+                var obj = BackingDataCache.Get<NonPlayerCharacter>(ID);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -344,7 +344,7 @@ namespace NetMud.Controllers
         {
             var vModel = new AddEditNPCDataViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-            vModel.ValidRaces = ReferenceWrapper.GetAll<Race>();
+            vModel.ValidRaces = BackingDataCache.GetAll<Race>();
 
             return View(vModel);
         }
@@ -360,7 +360,7 @@ namespace NetMud.Controllers
             newObj.Name = newName;
             newObj.SurName = newSurName;
             newObj.Gender = newGender;
-            var race = ReferenceWrapper.GetOne<Race>(raceId);
+            var race = BackingDataCache.Get<Race>(raceId);
 
             if (race != null)
                 newObj.RaceData = race;
@@ -382,9 +382,9 @@ namespace NetMud.Controllers
             string message = string.Empty;
             var vModel = new AddEditNPCDataViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-            vModel.ValidRaces = ReferenceWrapper.GetAll<Race>();
+            vModel.ValidRaces = BackingDataCache.GetAll<Race>();
 
-            var obj = DataWrapper.GetOne<NonPlayerCharacter>(id);
+            var obj = BackingDataCache.Get<NonPlayerCharacter>(id);
 
             if (obj == null)
             {
@@ -407,7 +407,7 @@ namespace NetMud.Controllers
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = DataWrapper.GetOne<NonPlayerCharacter>(id);
+            var obj = BackingDataCache.Get<NonPlayerCharacter>(id);
             if (obj == null)
             {
                 message = "That does not exist";
@@ -417,7 +417,7 @@ namespace NetMud.Controllers
             obj.Name = newName;
             obj.SurName = newSurName;
             obj.Gender = newGender;
-            var race = ReferenceWrapper.GetOne<Race>(raceId);
+            var race = BackingDataCache.Get<Race>(raceId);
 
             if (race != null)
                 obj.RaceData = race;
@@ -437,7 +437,7 @@ namespace NetMud.Controllers
         #region Inanimates
         public ActionResult ManageInanimateData(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageInanimateDataViewModel(DataWrapper.GetAll<InanimateData>());
+            var vModel = new ManageInanimateDataViewModel(BackingDataCache.GetAll<InanimateData>());
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             vModel.CurrentPageNumber = CurrentPageNumber;
@@ -459,7 +459,7 @@ namespace NetMud.Controllers
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = DataWrapper.GetOne<InanimateData>(ID);
+                var obj = BackingDataCache.Get<InanimateData>(ID);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -480,9 +480,9 @@ namespace NetMud.Controllers
         {
             var vModel = new AddEditInanimateDataViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-            vModel.ValidMaterials = ReferenceWrapper.GetAll<Material>();
-            vModel.ValidModels = ReferenceWrapper.GetAll<DimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.ThreeD);
-            vModel.ValidInanimateDatas = DataWrapper.GetAll<InanimateData>();
+            vModel.ValidMaterials = BackingDataCache.GetAll<Material>();
+            vModel.ValidModels = BackingDataCache.GetAll<DimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.ThreeD);
+            vModel.ValidInanimateDatas = BackingDataCache.GetAll<InanimateData>();
 
             return View(vModel);
         }
@@ -552,7 +552,7 @@ namespace NetMud.Controllers
                         if (vModel.ModelPartMaterials.Count() <= nameIndex)
                             break;
 
-                        var material = ReferenceWrapper.GetOne<Material>(vModel.ModelPartMaterials[nameIndex]);
+                        var material = BackingDataCache.Get<Material>(vModel.ModelPartMaterials[nameIndex]);
 
                         if (material != null && !string.IsNullOrWhiteSpace(partName))
                             materialParts.Add(partName, material);
@@ -573,7 +573,7 @@ namespace NetMud.Controllers
                         if (vModel.InternalCompositionPercentages.Count() <= icIndex)
                             break;
 
-                        var internalObj = DataWrapper.GetOne<InanimateData>(id);
+                        var internalObj = BackingDataCache.Get<InanimateData>(id);
 
                         if (internalObj != null && vModel.InternalCompositionPercentages[icIndex] > 0)
                             internalCompositions.Add(internalObj, vModel.InternalCompositionPercentages[icIndex]);
@@ -585,7 +585,7 @@ namespace NetMud.Controllers
 
             newObj.InternalComposition = internalCompositions;
 
-            var dimModel = ReferenceWrapper.GetOne<DimensionalModelData>(vModel.DimensionalModelId);
+            var dimModel = BackingDataCache.Get<DimensionalModelData>(vModel.DimensionalModelId);
             bool validData = true;
 
             if (dimModel == null)
@@ -622,11 +622,11 @@ namespace NetMud.Controllers
             string message = string.Empty;
             var vModel = new AddEditInanimateDataViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-            vModel.ValidMaterials = ReferenceWrapper.GetAll<Material>();
-            vModel.ValidModels = ReferenceWrapper.GetAll<DimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.ThreeD);
-            vModel.ValidInanimateDatas = DataWrapper.GetAll<InanimateData>();
+            vModel.ValidMaterials = BackingDataCache.GetAll<Material>();
+            vModel.ValidModels = BackingDataCache.GetAll<DimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.ThreeD);
+            vModel.ValidInanimateDatas = BackingDataCache.GetAll<InanimateData>();
 
-            var obj = DataWrapper.GetOne<InanimateData>(id);
+            var obj = BackingDataCache.Get<InanimateData>(id);
 
             if (obj == null)
             {
@@ -652,7 +652,7 @@ namespace NetMud.Controllers
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = DataWrapper.GetOne<InanimateData>(id);
+            var obj = BackingDataCache.Get<InanimateData>(id);
             if (obj == null)
             {
                 message = "That does not exist";
@@ -739,7 +739,7 @@ namespace NetMud.Controllers
                         if (vModel.ModelPartMaterials.Count() <= nameIndex)
                             break;
 
-                        var material = ReferenceWrapper.GetOne<Material>(vModel.ModelPartMaterials[nameIndex]);
+                        var material = BackingDataCache.Get<Material>(vModel.ModelPartMaterials[nameIndex]);
 
                         if (material != null)
                             materialParts.Add(partName, material);
@@ -760,7 +760,7 @@ namespace NetMud.Controllers
                         if (vModel.InternalCompositionPercentages.Count() <= icIndex)
                             break;
 
-                        var internalObj = DataWrapper.GetOne<InanimateData>(icId);
+                        var internalObj = BackingDataCache.Get<InanimateData>(icId);
 
                         if (internalObj != null)
                             internalCompositions.Add(internalObj, vModel.InternalCompositionPercentages[icIndex]);
@@ -771,7 +771,7 @@ namespace NetMud.Controllers
             }
             obj.InternalComposition = internalCompositions;
 
-            var dimModel = ReferenceWrapper.GetOne<DimensionalModelData>(vModel.DimensionalModelId);
+            var dimModel = BackingDataCache.Get<DimensionalModelData>(vModel.DimensionalModelId);
             bool validData = true;
 
             if (dimModel == null)
@@ -806,7 +806,7 @@ namespace NetMud.Controllers
         #region Rooms
         public ActionResult ManageRoomData(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageRoomDataViewModel(DataWrapper.GetAll<RoomData>());
+            var vModel = new ManageRoomDataViewModel(BackingDataCache.GetAll<RoomData>());
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             vModel.CurrentPageNumber = CurrentPageNumber;
@@ -828,7 +828,7 @@ namespace NetMud.Controllers
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = DataWrapper.GetOne<RoomData>(ID);
+                var obj = BackingDataCache.Get<RoomData>(ID);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -849,8 +849,8 @@ namespace NetMud.Controllers
         {
             var vModel = new AddEditRoomDataViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-            vModel.ValidMaterials = ReferenceWrapper.GetAll<IMaterial>();
-            vModel.ValidZones = ReferenceWrapper.GetAll<IZone>();
+            vModel.ValidMaterials = BackingDataCache.GetAll<IMaterial>();
+            vModel.ValidZones = BackingDataCache.GetAll<IZone>();
 
             return View(vModel);
         }
@@ -877,7 +877,7 @@ namespace NetMud.Controllers
                             break;
 
                         var name = vModel.BorderNames[index];
-                        var material = ReferenceWrapper.GetOne<IMaterial>(materialId);
+                        var material = BackingDataCache.Get<IMaterial>(materialId);
 
                         if (material != null && !string.IsNullOrWhiteSpace(name) && !newObj.Borders.ContainsKey(name))
                             newObj.Borders.Add(name, material);
@@ -888,14 +888,14 @@ namespace NetMud.Controllers
             }
 
             var mediumId = vModel.Medium;
-            var medium = ReferenceWrapper.GetOne<IMaterial>(mediumId);
+            var medium = BackingDataCache.Get<IMaterial>(mediumId);
 
             if (medium != null)
             {
                 newObj.Medium = medium;
 
                 var zoneId = vModel.Zone;
-                var zone = ReferenceWrapper.GetOne<IZone>(zoneId);
+                var zone = BackingDataCache.Get<IZone>(zoneId);
 
                 if (zone != null)
                 {
@@ -924,10 +924,10 @@ namespace NetMud.Controllers
             string message = string.Empty;
             var vModel = new AddEditRoomDataViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-            vModel.ValidMaterials = ReferenceWrapper.GetAll<IMaterial>();
-            vModel.ValidZones = ReferenceWrapper.GetAll<IZone>();
+            vModel.ValidMaterials = BackingDataCache.GetAll<IMaterial>();
+            vModel.ValidZones = BackingDataCache.GetAll<IZone>();
 
-            var obj = DataWrapper.GetOne<RoomData>(id);
+            var obj = BackingDataCache.Get<RoomData>(id);
 
             if (obj == null)
             {
@@ -951,7 +951,7 @@ namespace NetMud.Controllers
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = DataWrapper.GetOne<RoomData>(id);
+            var obj = BackingDataCache.Get<RoomData>(id);
             if (obj == null)
             {
                 message = "That does not exist";
@@ -975,7 +975,7 @@ namespace NetMud.Controllers
                             break;
 
                         var name = vModel.BorderNames[index];
-                        var material = ReferenceWrapper.GetOne<IMaterial>(materialId);
+                        var material = BackingDataCache.Get<IMaterial>(materialId);
 
                         if (material != null && !string.IsNullOrWhiteSpace(name) && !obj.Borders.ContainsKey(name))
                             obj.Borders.Add(name, material);
@@ -986,14 +986,14 @@ namespace NetMud.Controllers
             }
 
             var mediumId = vModel.Medium;
-            var medium = ReferenceWrapper.GetOne<IMaterial>(mediumId);
+            var medium = BackingDataCache.Get<IMaterial>(mediumId);
 
             if (medium != null)
             {
                 obj.Medium = medium;
 
                 var zoneId = vModel.Zone;
-                var zone = ReferenceWrapper.GetOne<IZone>(zoneId);
+                var zone = BackingDataCache.Get<IZone>(zoneId);
 
                 if (zone != null)
                 {
@@ -1034,7 +1034,7 @@ namespace NetMud.Controllers
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = DataWrapper.GetOne<PathwayData>(ID);
+                var obj = BackingDataCache.Get<PathwayData>(ID);
                 roomId = DataUtility.TryConvert<long>(obj.FromLocationID);
 
                 if (obj == null)
@@ -1057,9 +1057,9 @@ namespace NetMud.Controllers
             var vModel = new AddEditPathwayDataViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            vModel.ValidMaterials = ReferenceWrapper.GetAll<Material>();
-            vModel.ValidModels = ReferenceWrapper.GetAll<DimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat);
-            vModel.ValidRooms = DataWrapper.GetAll<RoomData>().Where(rm => !rm.ID.Equals(id));
+            vModel.ValidMaterials = BackingDataCache.GetAll<Material>();
+            vModel.ValidModels = BackingDataCache.GetAll<DimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat);
+            vModel.ValidRooms = BackingDataCache.GetAll<RoomData>().Where(rm => !rm.ID.Equals(id));
 
             return View("AddEditPathway", vModel);
         }
@@ -1098,7 +1098,7 @@ namespace NetMud.Controllers
                         if (vModel.ModelPartMaterials.Count() <= nameIndex)
                             break;
 
-                        var material = ReferenceWrapper.GetOne<Material>(vModel.ModelPartMaterials[nameIndex]);
+                        var material = BackingDataCache.Get<Material>(vModel.ModelPartMaterials[nameIndex]);
 
                         if (material != null && !string.IsNullOrWhiteSpace(partName))
                             materialParts.Add(partName, material);
@@ -1108,7 +1108,7 @@ namespace NetMud.Controllers
                 }
             }
 
-            var dimModel = ReferenceWrapper.GetOne<DimensionalModelData>(vModel.DimensionalModelId);
+            var dimModel = BackingDataCache.Get<DimensionalModelData>(vModel.DimensionalModelId);
             bool validData = true;
 
             if (dimModel == null)
@@ -1146,11 +1146,11 @@ namespace NetMud.Controllers
             var vModel = new AddEditPathwayDataViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            vModel.ValidMaterials = ReferenceWrapper.GetAll<Material>();
-            vModel.ValidModels = ReferenceWrapper.GetAll<DimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat);
-            vModel.ValidRooms = DataWrapper.GetAll<RoomData>().Where(rm => !rm.ID.Equals(id));
+            vModel.ValidMaterials = BackingDataCache.GetAll<Material>();
+            vModel.ValidModels = BackingDataCache.GetAll<DimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat);
+            vModel.ValidRooms = BackingDataCache.GetAll<RoomData>().Where(rm => !rm.ID.Equals(id));
 
-            var obj = DataWrapper.GetOne<PathwayData>(id);
+            var obj = BackingDataCache.Get<PathwayData>(id);
 
             if (obj == null)
             {
@@ -1167,7 +1167,7 @@ namespace NetMud.Controllers
             vModel.MessageToActor = obj.MessageToActor;
             vModel.MessageToDestination = obj.MessageToDestination;
             vModel.MessageToOrigin = obj.MessageToOrigin;
-            vModel.ToLocation = DataWrapper.GetOne<RoomData>(DataUtility.TryConvert<long>(obj.ToLocationID));
+            vModel.ToLocation = BackingDataCache.Get<RoomData>(DataUtility.TryConvert<long>(obj.ToLocationID));
             vModel.VisibleStrength = obj.VisibleStrength;
             vModel.VisibleToSurroundings = obj.VisibleToSurroundings;
 
@@ -1187,7 +1187,7 @@ namespace NetMud.Controllers
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = DataWrapper.GetOne<PathwayData>(id);
+            var obj = BackingDataCache.Get<PathwayData>(id);
             if (obj == null)
             {
                 message = "That does not exist";
@@ -1219,7 +1219,7 @@ namespace NetMud.Controllers
                         if (vModel.ModelPartMaterials.Count() <= nameIndex)
                             break;
 
-                        var material = ReferenceWrapper.GetOne<Material>(vModel.ModelPartMaterials[nameIndex]);
+                        var material = BackingDataCache.Get<Material>(vModel.ModelPartMaterials[nameIndex]);
 
                         if (material != null)
                             materialParts.Add(partName, material);
@@ -1229,7 +1229,7 @@ namespace NetMud.Controllers
                 }
             }
 
-            var dimModel = ReferenceWrapper.GetOne<DimensionalModelData>(vModel.DimensionalModelId);
+            var dimModel = BackingDataCache.Get<DimensionalModelData>(vModel.DimensionalModelId);
             bool validData = true;
 
             if (dimModel == null)
@@ -1265,7 +1265,7 @@ namespace NetMud.Controllers
         #region Zones
         public ActionResult ManageZoneData(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageZoneDataViewModel(ReferenceWrapper.GetAll<Zone>());
+            var vModel = new ManageZoneDataViewModel(BackingDataCache.GetAll<Zone>());
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             vModel.CurrentPageNumber = CurrentPageNumber;
@@ -1288,7 +1288,7 @@ namespace NetMud.Controllers
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = ReferenceWrapper.GetOne<IZone>(ID);
+                var obj = BackingDataCache.Get<IZone>(ID);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -1346,7 +1346,7 @@ namespace NetMud.Controllers
             var vModel = new AddEditZoneDataViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            Zone obj = ReferenceWrapper.GetOne<Zone>(id);
+            Zone obj = BackingDataCache.Get<Zone>(id);
 
             if (obj == null)
             {
@@ -1372,7 +1372,7 @@ namespace NetMud.Controllers
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            Zone obj = ReferenceWrapper.GetOne<Zone>(id);
+            Zone obj = BackingDataCache.Get<Zone>(id);
             if (obj == null)
             {
                 message = "That does not exist";
@@ -1401,7 +1401,7 @@ namespace NetMud.Controllers
         #region Materials
         public ActionResult ManageMaterialData(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageMaterialDataViewModel(ReferenceWrapper.GetAll<Material>());
+            var vModel = new ManageMaterialDataViewModel(BackingDataCache.GetAll<Material>());
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             vModel.CurrentPageNumber = CurrentPageNumber;
@@ -1423,7 +1423,7 @@ namespace NetMud.Controllers
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = ReferenceWrapper.GetOne<Material>(ID);
+                var obj = BackingDataCache.Get<Material>(ID);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -1444,7 +1444,7 @@ namespace NetMud.Controllers
         {
             var vModel = new AddEditMaterialViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-            vModel.ValidMaterials = ReferenceWrapper.GetAll<Material>();
+            vModel.ValidMaterials = BackingDataCache.GetAll<Material>();
 
             return View(vModel);
         }
@@ -1502,7 +1502,7 @@ namespace NetMud.Controllers
                             break;
 
                         var currentValue = vModel.CompositionPercentages[compositionsIndex];
-                        var material = ReferenceWrapper.GetOne<Material>(materialId);
+                        var material = BackingDataCache.Get<Material>(materialId);
 
                         if (material != null && currentValue > 0)
                             newObj.Composition.Add(material, currentValue);
@@ -1529,9 +1529,9 @@ namespace NetMud.Controllers
             string message = string.Empty;
             var vModel = new AddEditMaterialViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-            vModel.ValidMaterials = ReferenceWrapper.GetAll<Material>();
+            vModel.ValidMaterials = BackingDataCache.GetAll<Material>();
 
-            var obj = ReferenceWrapper.GetOne<Material>(id);
+            var obj = BackingDataCache.Get<Material>(id);
 
             if (obj == null)
             {
@@ -1563,7 +1563,7 @@ namespace NetMud.Controllers
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = ReferenceWrapper.GetOne<Material>(id);
+            var obj = BackingDataCache.Get<Material>(id);
             if (obj == null)
             {
                 message = "That does not exist";
@@ -1625,7 +1625,7 @@ namespace NetMud.Controllers
                         if (vModel.CompositionPercentages.Count() <= compositionsIndex)
                             break;
 
-                        var material = ReferenceWrapper.GetOne<Material>(materialId);
+                        var material = BackingDataCache.Get<Material>(materialId);
                         short currentValue = -1;
 
                         if (material != null)
@@ -1665,7 +1665,7 @@ namespace NetMud.Controllers
         #region Races
         public ActionResult ManageRaceData(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageRaceDataViewModel(ReferenceWrapper.GetAll<Race>());
+            var vModel = new ManageRaceDataViewModel(BackingDataCache.GetAll<Race>());
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             vModel.CurrentPageNumber = CurrentPageNumber;
@@ -1687,7 +1687,7 @@ namespace NetMud.Controllers
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = ReferenceWrapper.GetOne<Race>(ID);
+                var obj = BackingDataCache.Get<Race>(ID);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -1708,9 +1708,9 @@ namespace NetMud.Controllers
         {
             var vModel = new AddEditRaceViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-            vModel.ValidMaterials = ReferenceWrapper.GetAll<Material>();
-            vModel.ValidObjects = DataWrapper.GetAll<InanimateData>();
-            vModel.ValidRooms = DataWrapper.GetAll<RoomData>();
+            vModel.ValidMaterials = BackingDataCache.GetAll<Material>();
+            vModel.ValidObjects = BackingDataCache.GetAll<InanimateData>();
+            vModel.ValidRooms = BackingDataCache.GetAll<RoomData>();
 
             return View(vModel);
         }
@@ -1728,7 +1728,7 @@ namespace NetMud.Controllers
 
             if (vModel.NewArmsID > 0 && vModel.NewArmsAmount > 0)
             {
-                var arm = DataWrapper.GetOne<InanimateData>(vModel.NewArmsID);
+                var arm = BackingDataCache.Get<InanimateData>(vModel.NewArmsID);
 
                 if (arm != null)
                     newObj.Arms = new Tuple<IInanimateData, short>(arm, vModel.NewArmsAmount);
@@ -1736,7 +1736,7 @@ namespace NetMud.Controllers
 
             if (vModel.NewLegsID > 0 && vModel.NewLegsAmount > 0)
             {
-                var leg = DataWrapper.GetOne<InanimateData>(vModel.NewLegsID);
+                var leg = BackingDataCache.Get<InanimateData>(vModel.NewLegsID);
 
                 if (leg != null)
                     newObj.Legs = new Tuple<IInanimateData, short>(leg, vModel.NewLegsAmount);
@@ -1744,7 +1744,7 @@ namespace NetMud.Controllers
 
             if (vModel.NewTorsoId > 0)
             {
-                var torso = DataWrapper.GetOne<InanimateData>(vModel.NewTorsoId);
+                var torso = BackingDataCache.Get<InanimateData>(vModel.NewTorsoId);
 
                 if (torso != null)
                     newObj.Torso = torso;
@@ -1752,7 +1752,7 @@ namespace NetMud.Controllers
 
             if (vModel.NewHeadId > 0)
             {
-                var head = DataWrapper.GetOne<InanimateData>(vModel.NewHeadId);
+                var head = BackingDataCache.Get<InanimateData>(vModel.NewHeadId);
 
                 if (head != null)
                     newObj.Head = head;
@@ -1760,7 +1760,7 @@ namespace NetMud.Controllers
 
             if (vModel.NewStartingLocationId > 0)
             {
-                var room = DataWrapper.GetOne<RoomData>(vModel.NewStartingLocationId);
+                var room = BackingDataCache.Get<RoomData>(vModel.NewStartingLocationId);
 
                 if (room != null)
                     newObj.StartingLocation = room;
@@ -1768,7 +1768,7 @@ namespace NetMud.Controllers
 
             if (vModel.NewRecallLocationId > 0)
             {
-                var room = DataWrapper.GetOne<RoomData>(vModel.NewRecallLocationId);
+                var room = BackingDataCache.Get<RoomData>(vModel.NewRecallLocationId);
 
                 if (room != null)
                     newObj.EmergencyLocation = room;
@@ -1776,7 +1776,7 @@ namespace NetMud.Controllers
 
             if (vModel.NewBloodId > 0)
             {
-                var blood = ReferenceWrapper.GetOne<Material>(vModel.NewBloodId);
+                var blood = BackingDataCache.Get<Material>(vModel.NewBloodId);
 
                 if (blood != null)
                     newObj.SanguinaryMaterial = blood;
@@ -1802,7 +1802,7 @@ namespace NetMud.Controllers
 
                         var currentName = vModel.NewExtraPartsName[partIndex];
                         var currentAmount = vModel.NewExtraPartsAmount[partIndex];
-                        var partObject = DataWrapper.GetOne<InanimateData>(id);
+                        var partObject = BackingDataCache.Get<InanimateData>(id);
 
                         if (partObject != null && currentAmount > 0 && !string.IsNullOrWhiteSpace(currentName))
                             bodyBits.Add(new Tuple<IInanimateData, short, string>(partObject, currentAmount, currentName));
@@ -1831,11 +1831,11 @@ namespace NetMud.Controllers
             string message = string.Empty;
             var vModel = new AddEditRaceViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-            vModel.ValidMaterials = ReferenceWrapper.GetAll<Material>();
-            vModel.ValidObjects = DataWrapper.GetAll<InanimateData>();
-            vModel.ValidRooms = DataWrapper.GetAll<RoomData>();
+            vModel.ValidMaterials = BackingDataCache.GetAll<Material>();
+            vModel.ValidObjects = BackingDataCache.GetAll<InanimateData>();
+            vModel.ValidRooms = BackingDataCache.GetAll<RoomData>();
 
-            var obj = ReferenceWrapper.GetOne<Race>(id);
+            var obj = BackingDataCache.Get<Race>(id);
 
             if (obj == null)
             {
@@ -1876,7 +1876,7 @@ namespace NetMud.Controllers
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = ReferenceWrapper.GetOne<Race>(id);
+            var obj = BackingDataCache.Get<Race>(id);
             if (obj == null)
             {
                 message = "That does not exist";
@@ -1887,7 +1887,7 @@ namespace NetMud.Controllers
 
             if (vModel.NewArmsID > 0 && vModel.NewArmsAmount > 0)
             {
-                var arm = DataWrapper.GetOne<InanimateData>(vModel.NewArmsID);
+                var arm = BackingDataCache.Get<InanimateData>(vModel.NewArmsID);
 
                 if (arm != null)
                     obj.Arms = new Tuple<IInanimateData, short>(arm, vModel.NewArmsAmount);
@@ -1895,7 +1895,7 @@ namespace NetMud.Controllers
 
             if (vModel.NewLegsID > 0 && vModel.NewLegsAmount > 0)
             {
-                var leg = DataWrapper.GetOne<InanimateData>(vModel.NewLegsID);
+                var leg = BackingDataCache.Get<InanimateData>(vModel.NewLegsID);
 
                 if (leg != null)
                     obj.Legs = new Tuple<IInanimateData, short>(leg, vModel.NewLegsAmount);
@@ -1903,7 +1903,7 @@ namespace NetMud.Controllers
 
             if (vModel.NewTorsoId > 0)
             {
-                var torso = DataWrapper.GetOne<InanimateData>(vModel.NewTorsoId);
+                var torso = BackingDataCache.Get<InanimateData>(vModel.NewTorsoId);
 
                 if (torso != null)
                     obj.Torso = torso;
@@ -1911,7 +1911,7 @@ namespace NetMud.Controllers
 
             if (vModel.NewHeadId > 0)
             {
-                var head = DataWrapper.GetOne<InanimateData>(vModel.NewHeadId);
+                var head = BackingDataCache.Get<InanimateData>(vModel.NewHeadId);
 
                 if (head != null)
                     obj.Head = head;
@@ -1919,7 +1919,7 @@ namespace NetMud.Controllers
 
             if (vModel.NewStartingLocationId > 0)
             {
-                var room = DataWrapper.GetOne<RoomData>(vModel.NewStartingLocationId);
+                var room = BackingDataCache.Get<RoomData>(vModel.NewStartingLocationId);
 
                 if (room != null)
                     obj.StartingLocation = room;
@@ -1927,7 +1927,7 @@ namespace NetMud.Controllers
 
             if (vModel.NewRecallLocationId > 0)
             {
-                var room = DataWrapper.GetOne<RoomData>(vModel.NewRecallLocationId);
+                var room = BackingDataCache.Get<RoomData>(vModel.NewRecallLocationId);
 
                 if (room != null)
                     obj.EmergencyLocation = room;
@@ -1935,7 +1935,7 @@ namespace NetMud.Controllers
 
             if (vModel.NewBloodId > 0)
             {
-                var blood = ReferenceWrapper.GetOne<Material>(vModel.NewBloodId);
+                var blood = BackingDataCache.Get<Material>(vModel.NewBloodId);
 
                 if (blood != null)
                     obj.SanguinaryMaterial = blood;
@@ -1961,7 +1961,7 @@ namespace NetMud.Controllers
 
                         var currentName = vModel.NewExtraPartsName[partIndex];
                         var currentAmount = vModel.NewExtraPartsAmount[partIndex];
-                        var partObject = DataWrapper.GetOne<InanimateData>(partId);
+                        var partObject = BackingDataCache.Get<InanimateData>(partId);
 
                         if (partObject != null && currentAmount > 0 && !string.IsNullOrWhiteSpace(currentName))
                             bodyBits.Add(new Tuple<IInanimateData, short, string>(partObject, currentAmount, currentName));

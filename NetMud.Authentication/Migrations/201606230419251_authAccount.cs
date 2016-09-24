@@ -1,8 +1,7 @@
 namespace NetMud.Authentication.Migrations
 {
-    using System;
     using System.Data.Entity.Migrations;
-    
+
     public partial class authAccount : DbMigration
     {
         public override void Up()

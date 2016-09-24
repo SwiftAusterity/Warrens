@@ -6,7 +6,6 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using NetMud.Authentication;
-using NetMud.Data.System;
 using NetMud.Models;
 
 namespace NetMud.Controllers

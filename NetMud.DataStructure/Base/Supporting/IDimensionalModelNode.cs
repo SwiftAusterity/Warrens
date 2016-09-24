@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace NetMud.DataStructure.Base.Supporting
+﻿namespace NetMud.DataStructure.Base.Supporting
 {
     /// <summary>
     /// A single node of the 121 nodes per plane in the dimensional model

@@ -5,11 +5,11 @@ using System.Linq;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.Base.System;
 using System.Reflection;
-using NetMud.DataAccess; using NetMud.DataAccess.Cache;
+using NetMud.DataAccess;
+using NetMud.DataAccess.Cache;
 using NutMud.Commands.Attributes;
 using System.Text.RegularExpressions;
 using NetMud.DataStructure.Base.Entity;
-using NetMud.DataStructure.SupportingClasses;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.Data.Reference;
 using System.Collections;
@@ -537,7 +537,7 @@ namespace NetMud.Interp
                     continue;
                 }
 
-                var validObject = ReferenceWrapper.GetOne<T>(currentParmString);
+                var validObject = BackingDataCache.GetByName<T>(currentParmString);
 
                 if (validObject != null && !validObject.Equals(default(T)))
                 {
@@ -588,9 +588,9 @@ namespace NetMud.Interp
 
                 long parmID = -1;
                 if(!long.TryParse(currentParmString, out parmID))
-                    validObject = DataWrapper.GetOneBySharedKey<T>("Name", currentParmString);
+                    validObject = BackingDataCache.GetByName<T>(currentParmString);
                 else
-                    validObject = DataWrapper.GetOne<T>(parmID);
+                    validObject = BackingDataCache.Get<T>(parmID);
 
                 if (validObject != null && !validObject.Equals(default(T)))
                 {

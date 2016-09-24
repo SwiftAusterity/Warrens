@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Caching;
 
 namespace NetMud.DataAccess.Cache
 {
@@ -63,6 +62,19 @@ namespace NetMud.DataAccess.Cache
         public static IEnumerable<IData> GetAll()
         {
             return BackingCache.GetAll<IData>();
+        }
+
+        /// <summary>
+        /// Gets one non-entity from the cache by its key
+        /// </summary>
+        /// <typeparam name="T">the type of the entity</typeparam>
+        /// <param name="key">the key it was cached with</param>
+        /// <returns>the entity requested</returns>
+        public static T GetByName<T>(string name) where T : IData
+        {
+            var cacheItems = BackingCache.GetAll<T>();
+
+            return cacheItems.FirstOrDefault<T>(ci => ci.Name.Contains(name));
         }
 
         /// <summary>

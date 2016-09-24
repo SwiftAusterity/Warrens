@@ -20,7 +20,5 @@ namespace NetMud.DataStructure.Base.EntityBackingData
         IMaterial Medium { get; set; }
 
         IZone ZoneAffiliation { get; set; }
-
-        string SerializeBorders();
     }
 }

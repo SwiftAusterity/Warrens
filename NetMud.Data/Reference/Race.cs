@@ -1,19 +1,13 @@
-﻿using NetMud.Data.EntityBackingData;
-using NetMud.DataAccess; 
-using NetMud.DataAccess.Cache;
+﻿using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Actionable;
 using NetMud.DataStructure.Behaviors.Automation;
-using NetMud.Utility;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Reference
@@ -227,11 +221,6 @@ namespace NetMud.Data.Reference
         public Race()
         {
             BodyParts = Enumerable.Empty<Tuple<IInanimateData, short, string>>();
-        }
-
-        public Race(string bodyPartsJson)
-        {
-            BodyParts = DeserializeBodyParts(bodyPartsJson);
         }
 
         /// <summary>

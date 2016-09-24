@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Runtime.Caching;
-
-namespace NetMud.Communication
+﻿namespace NetMud.Communication
 {
     /// <summary>
     /// Negotiation and access to ALL player connection descriptors

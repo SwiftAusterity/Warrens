@@ -1,5 +1,4 @@
-﻿using NetMud.DataStructure.Base.Supporting;
-using System;
+﻿using System;
 
 namespace NetMud.DataStructure.Base.System
 {

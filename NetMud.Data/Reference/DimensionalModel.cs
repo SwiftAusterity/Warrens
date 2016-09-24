@@ -1,13 +1,9 @@
-﻿using NetMud.DataAccess;
-using NetMud.DataAccess.Cache;
+﻿using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Supporting;
-using NetMud.Utility;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Reference
@@ -57,8 +53,6 @@ namespace NetMud.Data.Reference
 
                     return returnValue;
                 }
-
-                return null;
             }
             set
             {
@@ -118,44 +112,7 @@ namespace NetMud.Data.Reference
             Width = width;
             Composition = materialComps;
 
-            ModelBackingData = ReferenceWrapper.GetOne<DimensionalModelData>(backingDataId);
-        }
-
-        /// <summary>
-        /// Constructor for dimensional model based on full specific data
-        /// </summary>
-        /// <param name="length">Length parameter of the model</param>
-        /// <param name="height">Height parameter of the model</param>
-        /// <param name="width">Width parameter of the model</param>
-        /// <param name="backingDataId">dimensional model backing data id</param>
-        /// <param name="compJson">The material compositions in json form</param>
-        public DimensionalModel(int length, int height, int width, long backingDataId, string compJson)
-        {
-            Length = length;
-            Height = height;
-            Width = width;
-            Composition = DeserializeMaterialCompositions(compJson);
-
-            ModelBackingData = ReferenceWrapper.GetOne<DimensionalModelData>(backingDataId);
-        }
-
-        /// <summary>
-        /// Constructor for dimensional model based on full specific data
-        /// </summary>
-        /// <param name="length">Length parameter of the model</param>
-        /// <param name="height">Height parameter of the model</param>
-        /// <param name="width">Width parameter of the model</param>
-        /// <param name="backingDataId">dimensional model backing data id</param>
-        /// <param name="compJson">The material compositions in json form</param>
-        /// <param name="modelJson">the model structure json</param>
-        public DimensionalModel(int length, int height, int width, string modelJson, long backingDataId, string compJson)
-        {
-            Length = length;
-            Height = height;
-            Width = width;
-            Composition = DeserializeMaterialCompositions(compJson);
-
-            ModelBackingData = new DimensionalModelData(backingDataId, modelJson);
+            _backingDataId = backingDataId;
         }
 
         /// <summary>

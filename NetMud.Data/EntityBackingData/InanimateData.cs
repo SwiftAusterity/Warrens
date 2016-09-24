@@ -1,19 +1,14 @@
 ﻿using NetMud.Data.Reference;
 using NetMud.Data.System;
-using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.SupportingClasses;
-using NetMud.Utility;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
-using System.Text;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.EntityBackingData

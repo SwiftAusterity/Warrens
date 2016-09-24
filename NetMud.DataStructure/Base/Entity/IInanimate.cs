@@ -2,7 +2,6 @@
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.Behaviors.System;
 using NetMud.DataStructure.SupportingClasses;
-using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Base.Entity
 {

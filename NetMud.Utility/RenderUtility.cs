@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace NetMud.Utility
+﻿namespace NetMud.Utility
 {
     /// <summary>
     /// Utilities for rendering output

@@ -1,9 +1,5 @@
 ﻿using NetMud.DataStructure.Base.System;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NetMud.DataStructure.Base.Supporting
 {
@@ -57,12 +53,6 @@ namespace NetMud.DataStructure.Base.Supporting
         /// <param name="roll">rotation on the x-axis</param>
         /// <returns>the flattened model face based on the view angle</returns>
         string ViewFlattenedModel(short pitch, short yaw, short roll);
-
-        /// <summary>
-        /// Turn the modelPlanes into a json string we can store in the db
-        /// </summary>
-        /// <returns></returns>
-        string SerializeModel();
     }
 
     /// <summary>

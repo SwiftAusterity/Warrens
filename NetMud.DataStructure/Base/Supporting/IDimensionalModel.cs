@@ -1,5 +1,4 @@
-﻿using NetMud.DataStructure.Base.System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Base.Supporting
 {
@@ -32,7 +31,5 @@ namespace NetMud.DataStructure.Base.Supporting
         /// Collection of model section name to material composition mappings
         /// </summary>
         IDictionary<string, IMaterial> Composition { get; set; }
-
-        string SerializeMaterialCompositions();
     }
 }

@@ -1,6 +1,7 @@
 ﻿using NetMud.Data.EntityBackingData;
 using NetMud.Data.Game;
-using NetMud.DataAccess; using NetMud.DataAccess.Cache;
+using NetMud.DataAccess;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
@@ -10,7 +11,6 @@ using System.IO;
 using System.Linq;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataAccess.FileSystem;
-using System.Web.Hosting;
 
 namespace NetMud.Backup
 {
@@ -46,7 +46,7 @@ namespace NetMud.Backup
 
             var implimentingEntityClass = backingClass.EntityClass;
 
-            foreach (IData thing in DataWrapper.GetAll<T>())
+            foreach (IData thing in BackingDataCache.GetAll<T>())
             {
                 var entityThing = Activator.CreateInstance(implimentingEntityClass, new object[] { (T)thing }) as IEntity;
 

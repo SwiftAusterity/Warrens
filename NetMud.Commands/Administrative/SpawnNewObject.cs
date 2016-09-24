@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 using NetMud.Utility;
 using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.SupportingClasses;
 using NetMud.Data.EntityBackingData;
 using NetMud.Data.Game;
 using NetMud.Commands.Attributes;

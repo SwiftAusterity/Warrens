@@ -1,13 +1,9 @@
 ﻿using NetMud.Communication.Messaging;
-using NetMud.Data.Reference;
-using NetMud.DataAccess; using NetMud.DataAccess.Cache;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web.Http;
@@ -18,7 +14,7 @@ namespace NetMud.Controllers
     {
         public string GetEntityModelView(long modelId, short yaw, short pitch, short roll)
         {
-            var model = ReferenceWrapper.GetOne<IDimensionalModelData>(modelId);
+            var model = BackingDataCache.Get<IDimensionalModelData>(modelId);
 
             if (model == null)
                 return String.Empty;
@@ -28,7 +24,7 @@ namespace NetMud.Controllers
 
         public string[] GetDimensionalData(long id)
         {
-            var model = ReferenceWrapper.GetOne<IDimensionalModelData>(id);
+            var model = BackingDataCache.Get<IDimensionalModelData>(id);
 
             if (model == null)
                 return new string[0];
@@ -39,13 +35,13 @@ namespace NetMud.Controllers
         [HttpGet]
         public string RenderRoomForEdit(long id, int radius)
         {
-            var room = DataWrapper.GetOne<IRoomData>(id);
+            var room = BackingDataCache.Get<IRoomData>(id);
             var sb = new StringBuilder();
 
             if (room == null || radius < 0)
                 return "Invalid inputs.";
 
-            var pathways = DataWrapper.GetAll<IPathwayData>().Where(path => path.FromLocationID.Equals(room.ID.ToString()));
+            var pathways = BackingDataCache.GetAll<IPathwayData>().Where(path => path.FromLocationID.Equals(room.ID.ToString()));
 
             var nw = pathways.FirstOrDefault(path => MessagingUtility.TranslateDegreesToDirection(path.DegreesFromNorth) == MovementDirectionType.NorthWest);
             var n = pathways.FirstOrDefault(path => MessagingUtility.TranslateDegreesToDirection(path.DegreesFromNorth) == MovementDirectionType.North);
@@ -54,7 +50,7 @@ namespace NetMud.Controllers
             var northString = String.Empty;
             if (nw != null && !string.IsNullOrWhiteSpace(nw.ToLocationID) && nw.ToLocationType.Equals("Room"))
             {
-                var location = DataWrapper.GetOne<IRoomData>(long.Parse(nw.ToLocationID));
+                var location = BackingDataCache.Get<IRoomData>(long.Parse(nw.ToLocationID));
                 northString += String.Format("<a href='/GameAdmin/EditPathway/{0}' target='_blank' class='editPathway' title='{1}' data-id='{0}'>#</a>", nw.ID, location.Name);
             }
             else
@@ -62,7 +58,7 @@ namespace NetMud.Controllers
 
             if (n != null && !string.IsNullOrWhiteSpace(n.ToLocationID) && n.ToLocationType.Equals("Room"))
             {
-                var location = DataWrapper.GetOne<IRoomData>(long.Parse(n.ToLocationID));
+                var location = BackingDataCache.Get<IRoomData>(long.Parse(n.ToLocationID));
                 northString += String.Format(" <a href='/GameAdmin/EditPathway/{0}' target='_blank' class='editPathway' title='{1}' data-id='{0}'>#</a>", n.ID, location.Name);
             }
             else
@@ -70,7 +66,7 @@ namespace NetMud.Controllers
 
             if (ne != null && !string.IsNullOrWhiteSpace(ne.ToLocationID) && ne.ToLocationType.Equals("Room"))
             {
-                var location = DataWrapper.GetOne<IRoomData>(long.Parse(ne.ToLocationID));
+                var location = BackingDataCache.Get<IRoomData>(long.Parse(ne.ToLocationID));
                 northString += String.Format(" <a href='/GameAdmin/EditPathway/{0}' target='_blank' class='editPathway' title='{1}' data-id='{0}'>#</a>", ne.ID, location.Name);
             }
             else
@@ -85,7 +81,7 @@ namespace NetMud.Controllers
             var middleString = String.Empty;
             if (w != null && !string.IsNullOrWhiteSpace(w.ToLocationID) && w.ToLocationType.Equals("Room"))
             {
-                var location = DataWrapper.GetOne<IRoomData>(long.Parse(w.ToLocationID));
+                var location = BackingDataCache.Get<IRoomData>(long.Parse(w.ToLocationID));
                 middleString += String.Format("<a href='/GameAdmin/EditPathway/{0}' target='_blank' class='editPathway' title='{1}' data-id='{0}'>#</a>", w.ID, location.Name);
             }
             else
@@ -95,7 +91,7 @@ namespace NetMud.Controllers
 
             if (e != null && !string.IsNullOrWhiteSpace(e.ToLocationID) && e.ToLocationType.Equals("Room"))
             {
-                var location = DataWrapper.GetOne<IRoomData>(long.Parse(e.ToLocationID));
+                var location = BackingDataCache.Get<IRoomData>(long.Parse(e.ToLocationID));
                 middleString += String.Format("<a href='/GameAdmin/EditPathway/{0}' target='_blank' class='editPathway' title='{1}' data-id='{0}'>#</a>", e.ID, location.Name);
             }
             else
@@ -111,7 +107,7 @@ namespace NetMud.Controllers
             var southString = String.Empty;
             if (sw != null && !string.IsNullOrWhiteSpace(sw.ToLocationID) && sw.ToLocationType.Equals("Room"))
             {
-                var location = DataWrapper.GetOne<IRoomData>(long.Parse(sw.ToLocationID));
+                var location = BackingDataCache.Get<IRoomData>(long.Parse(sw.ToLocationID));
                 southString += String.Format("<a href='/GameAdmin/EditPathway/{0}' target='_blank' class='editPathway' title='{1}' data-id='{0}'>#</a>", sw.ID, location.Name);
             }
             else
@@ -119,7 +115,7 @@ namespace NetMud.Controllers
 
             if (s != null && !string.IsNullOrWhiteSpace(s.ToLocationID) && s.ToLocationType.Equals("Room"))
             {
-                var location = DataWrapper.GetOne<IRoomData>(long.Parse(s.ToLocationID));
+                var location = BackingDataCache.Get<IRoomData>(long.Parse(s.ToLocationID));
                 southString += String.Format(" <a href='/GameAdmin/EditPathway/{0}' target='_blank' class='editPathway' title='{1}' data-id='{0}'>#</a>", s.ID, location.Name);
             }
             else
@@ -127,7 +123,7 @@ namespace NetMud.Controllers
 
             if (se != null && !string.IsNullOrWhiteSpace(se.ToLocationID) && se.ToLocationType.Equals("Room"))
             {
-                var location = DataWrapper.GetOne<IRoomData>(long.Parse(se.ToLocationID));
+                var location = BackingDataCache.Get<IRoomData>(long.Parse(se.ToLocationID));
                 southString += String.Format(" <a href='/GameAdmin/EditPathway/{0}' target='_blank' class='editPathway' title='{1}' data-id='{0}'>#</a>", se.ID, location.Name);
             }
             else
@@ -140,7 +136,7 @@ namespace NetMud.Controllers
                                                         && !string.IsNullOrWhiteSpace(path.ToLocationID) 
                                                         && path.ToLocationType.Equals("Room")))
             {
-                var location = DataWrapper.GetOne<IRoomData>(long.Parse(path.ToLocationID));
+                var location = BackingDataCache.Get<IRoomData>(long.Parse(path.ToLocationID));
 
                 if (location != null)
                     extraString += String.Format(" <a href='/GameAdmin/EditPathway/{0}' target='_blank' class='editPathway' title='{1}' data-id='{0}'>#</a>", path.ID, location.Name);

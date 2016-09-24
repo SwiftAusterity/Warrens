@@ -1,14 +1,9 @@
-﻿using NetMud.DataAccess; using NetMud.DataAccess.Cache;
+﻿using NetMud.DataAccess;
 using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.Base.System;
 using NetMud.Physics;
-using NetMud.Utility;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
-using System.Text;
 
 namespace NetMud.Data.Reference
 {
@@ -44,25 +39,6 @@ namespace NetMud.Data.Reference
         {
             ModelPlanes = new HashSet<IDimensionalModelPlane>();
             SerializeModelFromDelimitedList(delimitedPlanes);
-        }
-
-        /// <summary>
-        /// Create model serialized from existing xml with a valid ID from the database
-        /// </summary>
-        /// <param name="dataId">the data id</param>
-        /// <param name="modelXML">JSON of model planes (all 11 11x11 planes)</param>
-        public DimensionalModelData(long dataId, string modelJson)
-        {
-            ModelPlanes = new HashSet<IDimensionalModelPlane>();
-
-            var backingModel = ReferenceWrapper.GetOne<DimensionalModelData>(dataId);
-            ID = backingModel.ID;
-            Name = backingModel.Name;
-            Created = backingModel.Created;
-            LastRevised = backingModel.LastRevised;
-            ModelType = backingModel.ModelType;
-
-            DeserializeModel(modelJson);
         }
 
         /// <summary>
