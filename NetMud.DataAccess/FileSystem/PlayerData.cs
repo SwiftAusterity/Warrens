@@ -2,6 +2,7 @@
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
+using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.Behaviors.System;
 using System;
@@ -55,7 +56,7 @@ namespace NetMud.DataAccess.FileSystem
             if (!VerifyDirectory(playersDir))
                 throw new Exception("Players directory unable to be verified or created during full backup.");
 
-            LoggingUtility.Log("Backing up player character " + entity.DataTemplate.ID + ".", LogChannels.Backup, true);
+            LoggingUtility.Log("Backing up player character " + entity.DataTemplateId + ".", LogChannels.Backup, true);
 
             try
             {
@@ -198,11 +199,13 @@ namespace NetMud.DataAccess.FileSystem
                 try
                 {
                     var fileData = ReadFile(file);
-                    var blankEntity = Activator.CreateInstance(typeof(ICharacter)) as ICharacter;
+                    var blankEntity = Activator.CreateInstance("NetMud.Data", "NetMud.Data.EntityBackingData.Character");
 
-                    var newChar = blankEntity.FromBytes(fileData) as ICharacter;
+                    var objRef = blankEntity.Unwrap() as ICharacter;
 
-                    BackingDataCache.Add<ICharacter>(newChar);
+                    var newChar = objRef.FromBytes(fileData) as ICharacter;
+
+                    PlayerDataCache.Add(newChar);
                 }
                 catch (Exception ex)
                 {
@@ -248,6 +251,76 @@ namespace NetMud.DataAccess.FileSystem
 
                     liveDataWrapper.WriteSpecificEntity(entityDirectory, obj);
                 }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex);
+            }
+        }
+
+        /// <summary>
+        /// Write one character to its player current data
+        /// </summary>
+        /// <param name="entity">the char to write</param>
+        public void WriteCharacter(ICharacter entity)
+        {
+            var dirName = BaseDirectory + entity.AccountHandle + "/" + CurrentDirectoryName;
+
+            if (!VerifyDirectory(dirName))
+                throw new Exception("Unable to locate or create base player directory.");
+
+            var entityFileName = GetCharacterFilename(entity);
+
+            if (string.IsNullOrWhiteSpace(entityFileName))
+                return;
+
+            var fullFileName = dirName + entityFileName;
+            var archiveFileDirectory = BaseDirectory + entity.AccountHandle + "/" + ArchiveDirectoryName + DatedBackupDirectory;
+
+            try
+            {
+                ArchiveCharacter(entity);
+                WriteToFile(fullFileName, entity.ToBytes());
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex);
+            }
+        }
+
+        /// <summary>
+        /// Archive a character
+        /// </summary>
+        /// <param name="entity">the thing to archive</param>
+        public void ArchiveCharacter(ICharacter entity)
+        {
+            var dirName = BaseDirectory + entity.AccountHandle + "/" + CurrentDirectoryName;
+
+            if (!VerifyDirectory(dirName))
+                throw new Exception("Unable to locate or create current player directory.");
+
+            var entityFileName = GetCharacterFilename(entity);
+
+            if (string.IsNullOrWhiteSpace(entityFileName))
+                return;
+
+            var fullFileName = dirName + entityFileName;
+            var archiveFileDirectory = BaseDirectory + entity.AccountHandle + "/" + ArchiveDirectoryName + DatedBackupDirectory;
+
+            if (!VerifyDirectory(archiveFileDirectory))
+                throw new Exception("Unable to locate or create archive player directory.");
+
+            if (!File.Exists(fullFileName))
+                return;
+
+            try
+            {
+                var archiveFile = archiveFileDirectory + entityFileName;
+
+                if (File.Exists(archiveFile))
+                    File.Delete(archiveFile);
+
+                File.Move(fullFileName, archiveFile);
             }
             catch (Exception ex)
             {

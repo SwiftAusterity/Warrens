@@ -114,10 +114,12 @@ namespace NetMud.Interp
             LoadedCommands = commandsAssembly.GetTypes().Where(t => t.GetInterfaces().Contains(typeof(ICommand)));
 
             //NPCs can't use anything player rank can't use
-            if(Actor.GetType().GetInterfaces().Contains(typeof(IPlayer)))
-                LoadedCommands = LoadedCommands.Where(comm => comm.GetCustomAttributes<CommandPermissionAttribute>().Any(att => att.MinimumRank <= ((ICharacter)Actor.DataTemplate).GamePermissionsRank));
-            else
-                LoadedCommands = LoadedCommands.Where(comm => comm.GetCustomAttributes<CommandPermissionAttribute>().Any(att => att.MinimumRank == StaffRank.Player));
+            var effectiveRank = StaffRank.Player;
+
+            if (Actor.GetType().GetInterfaces().Contains(typeof(IPlayer)))
+                effectiveRank = (Actor.DataTemplate as ICharacter).GamePermissionsRank;
+
+            LoadedCommands = LoadedCommands.Where(comm => comm.GetCustomAttributes<CommandPermissionAttribute>().Any(att => att.MinimumRank == effectiveRank));
 
             //find out command's type
             var commandType = ParseCommand();

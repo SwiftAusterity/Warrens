@@ -32,9 +32,7 @@ namespace NetMud.DataAccess.Cache
         /// <returns>a list of the entities from the cache</returns>
         public static IEnumerable<ICharacter> GetAllForAccountHandle(string accountHandle)
         {
-            EnsureAccountCharacters(accountHandle);
-
-            return BackingCache.GetAll<ICharacter>().Where(ch => ch.AccountHandle.Equals(accountHandle, StringComparison.InvariantCultureIgnoreCase));
+            return EnsureAccountCharacters(accountHandle);
         }
 
         /// <summary>
@@ -78,13 +76,13 @@ namespace NetMud.DataAccess.Cache
             return BackingCache.Exists(key);
         }
 
-        private static void EnsureAccountCharacters(string accountHandle)
+        private static IEnumerable<ICharacter> EnsureAccountCharacters(string accountHandle)
         {
             //No shenanigans
             if(String.IsNullOrWhiteSpace(accountHandle))
-                return;
+                return Enumerable.Empty<ICharacter>();
 
-            var chars = GetAllForAccountHandle(accountHandle);
+            var chars = BackingCache.GetAll<ICharacter>().Where(ch => ch.AccountHandle.Equals(accountHandle, StringComparison.InvariantCultureIgnoreCase));
 
             if(!chars.Any())
             {
@@ -92,6 +90,8 @@ namespace NetMud.DataAccess.Cache
 
                 pData.LoadAllCharactersForAccountToCache(accountHandle);
             }
+
+            return chars;
         }
     }
 

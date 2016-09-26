@@ -43,6 +43,10 @@ namespace NetMud.DataAccess.FileSystem
             return blankEntity.FromBytes(fileData) as IData;
         }
 
+        /// <summary>
+        /// Write one backing data entity out
+        /// </summary>
+        /// <param name="entity">the thing to write out to current</param>
         public void WriteEntity(IData entity)
         {
             var dirName = BaseDirectory + CurrentDirectoryName + entity.GetType().Name + "/";
@@ -69,6 +73,10 @@ namespace NetMud.DataAccess.FileSystem
             }
         }
 
+        /// <summary>
+        /// Archive a backing data entity
+        /// </summary>
+        /// <param name="entity">the thing to archive</param>
         public void ArchiveEntity(IData entity)
         {
             var dirName = BaseDirectory + CurrentDirectoryName + entity.GetType().Name + "/";

@@ -43,7 +43,7 @@ namespace NetMud.Data.Game
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
-        public new IPathwayData DataTemplate
+        public IPathwayData DataTemplate
         {
             get
             {
@@ -150,7 +150,7 @@ namespace NetMud.Data.Game
         public void GetFromWorldOrSpawn()
         {
             //Try to see if they are already there
-            var me = LiveCache.Get<Pathway>(DataTemplate.ID);
+            var me = LiveCache.Get<Pathway>(DataTemplateId);
 
             //Isn't in the world currently
             if (me == default(IPathway))

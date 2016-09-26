@@ -1,1 +1,0 @@
-{"Model":{"Length":3,"Height":5,"Width":3,"BackingDataId":16,"Composition":{"Brain":2}},"EntityClass":"NetMud.Data.Game.Inanimate, NetMud.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null","MobileContainers":[],"InanimateContainers":[],"InternalComposition":{},"ID":12,"Created":"2015-08-20T16:53:44.74","LastRevised":"2015-08-20T16:53:44.74","Name":"Human Brain"}

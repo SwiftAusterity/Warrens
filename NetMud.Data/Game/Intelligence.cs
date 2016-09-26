@@ -26,7 +26,7 @@ namespace NetMud.Data.Game
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
-        public new INonPlayerCharacter DataTemplate
+        public INonPlayerCharacter DataTemplate
         {
             get
             {

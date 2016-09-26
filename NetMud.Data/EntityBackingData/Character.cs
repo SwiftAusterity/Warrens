@@ -1,4 +1,5 @@
-﻿using NetMud.DataAccess.Cache;
+﻿using NetMud.DataAccess;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
@@ -98,6 +99,14 @@ namespace NetMud.Data.EntityBackingData
         }
 
         /// <summary>
+        /// Empty constructor
+        /// </summary>
+        public Character()
+        {
+
+        }
+
+        /// <summary>
         /// Full name to refer to this NPC with
         /// </summary>
         /// <returns>the full name string</returns>
@@ -117,6 +126,74 @@ namespace NetMud.Data.EntityBackingData
             var width = RaceData.Torso.Model.Width;
 
             return new Tuple<int, int, int>(height, length, width);
+        }
+
+        /// <summary>
+        /// Add it to the cache and save it to the file system
+        /// </summary>
+        /// <returns>the object with ID and other db fields set</returns>
+        public override IData Create()
+        {
+            var accessor = new NetMud.DataAccess.FileSystem.PlayerData();
+
+            try
+            {
+                PlayerDataCache.Add(this);
+                accessor.WriteCharacter(this);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex);
+                return null;
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        /// Remove this object from the db permenantly
+        /// </summary>
+        /// <returns>success status</returns>
+        public override bool Remove()
+        {
+            var accessor = new NetMud.DataAccess.FileSystem.PlayerData();
+
+            try
+            {
+                //Remove from cache first
+                PlayerDataCache.Remove(new PlayerDataCacheKey(typeof(ICharacter), AccountHandle, ID));
+
+                //Remove it from the file system.
+                accessor.ArchiveCharacter(this);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex);
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Update the field data for this object to the db
+        /// </summary>
+        /// <returns>success status</returns>
+        public override bool Save()
+        {
+            var accessor = new NetMud.DataAccess.FileSystem.PlayerData();
+
+            try
+            {
+                accessor.WriteCharacter(this);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex);
+                return false;
+            }
+
+            return true;
         }
     }
 }

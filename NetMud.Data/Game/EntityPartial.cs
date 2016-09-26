@@ -35,12 +35,18 @@ namespace NetMud.Data.Game
         /// </summary>
         public long DataTemplateId { get; set; }
 
+        [ScriptIgnore]
+        [JsonIgnore]
+        public abstract IData DataTemplate { get; }
+
+        /*
         /// <summary>
         /// The backing data for this live entity
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
         public IData DataTemplate { get; internal set; }
+        */
 
         /// <summary>
         /// Get's the entity's model dimensions

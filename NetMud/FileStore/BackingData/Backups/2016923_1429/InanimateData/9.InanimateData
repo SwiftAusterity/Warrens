@@ -1,1 +1,0 @@
-{"Model":{"Length":5,"Height":8,"Width":2,"BackingDataId":13,"Composition":{"Lung":2}},"EntityClass":"NetMud.Data.Game.Inanimate, NetMud.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null","MobileContainers":[],"InanimateContainers":[],"InternalComposition":{},"ID":9,"Created":"2015-08-20T16:43:04.737","LastRevised":"2015-08-20T16:43:04.737","Name":"Human Lung"}

@@ -93,7 +93,7 @@ namespace NetMud.Data.Game
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
-        public new ICharacter DataTemplate
+        public ICharacter DataTemplate
         {
             get
             {
@@ -149,7 +149,7 @@ namespace NetMud.Data.Game
 
                 //We save character data to ensure the player remains where it was on last known change
                 var ch = (Character)DataTemplate;
-                ch.LastKnownLocation = value.DataTemplate.ID.ToString();
+                ch.LastKnownLocation = value.DataTemplateId.ToString();
                 ch.LastKnownLocationType = value.GetType().Name;
                 ch.Save();
             }
@@ -310,7 +310,7 @@ namespace NetMud.Data.Game
         public void GetFromWorldOrSpawn()
         {
             //Try to see if they are already there
-            var me = LiveCache.Get<Player>(DataTemplate.ID);
+            var me = LiveCache.Get<Player>(DataTemplateId);
 
             //Isn't in the world currently
             if (me == default(IPlayer))
@@ -395,7 +395,7 @@ namespace NetMud.Data.Game
             CurrentLocation = spawnTo;
 
             //Set the data context's stuff too so we don't have to do this over again
-            ch.LastKnownLocation = spawnTo.DataTemplate.ID.ToString();
+            ch.LastKnownLocation = spawnTo.DataTemplateId.ToString();
             ch.LastKnownLocationType = spawnTo.GetType().Name;
             ch.Save();
 

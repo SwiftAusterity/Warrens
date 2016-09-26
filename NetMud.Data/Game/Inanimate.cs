@@ -44,7 +44,7 @@ namespace NetMud.Data.Game
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
-        public new IInanimateData DataTemplate
+        public override IInanimateData DataTemplate
         {
             get
             {

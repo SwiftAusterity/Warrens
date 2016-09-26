@@ -33,7 +33,7 @@ namespace NetMud.Data.Game
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
-        public new IRoomData DataTemplate
+        public IRoomData DataTemplate
         {
             get
             {
@@ -339,7 +339,7 @@ namespace NetMud.Data.Game
         public void GetFromWorldOrSpawn()
         {
             //Try to see if they are already there
-            var me = LiveCache.Get<IRoom>(DataTemplate.ID, typeof(IRoom));
+            var me = LiveCache.Get<IRoom>(DataTemplateId, typeof(IRoom));
 
             //Isn't in the world currently
             if (me == default(IRoom))
@@ -348,7 +348,7 @@ namespace NetMud.Data.Game
             {
                 BirthMark = me.BirthMark;
                 Birthdate = me.Birthdate;
-                DataTemplateId = me.DataTemplate.ID;
+                DataTemplateId = me.DataTemplateId;
                 ObjectsInRoom = me.ObjectsInRoom;
                 MobilesInside = me.MobilesInside;
                 Pathways = me.Pathways;
