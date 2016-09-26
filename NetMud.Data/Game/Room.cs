@@ -29,23 +29,6 @@ namespace NetMud.Data.Game
         public IDimensionalModel Model { get; set; }
 
         /// <summary>
-        /// The backing data for this entity
-        /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        public IRoomData DataTemplate
-        {
-            get
-            {
-                return BackingDataCache.Get<IRoomData>(DataTemplateId);
-            }
-            internal set
-            {
-                DataTemplateId = value.ID;
-            }
-        }
-
-        /// <summary>
         /// Get's the entity's model dimensions
         /// </summary>
         /// <returns>height, length, width</returns>
@@ -74,7 +57,7 @@ namespace NetMud.Data.Game
             MobilesInside = new EntityContainer<IMobile>();
             Pathways = new EntityContainer<IPathway>();
 
-            DataTemplate = room;
+            DataTemplateId = room.ID;
 
             GetFromWorldOrSpawn();
         }
@@ -282,8 +265,8 @@ namespace NetMud.Data.Game
         {
             var sb = new List<string>();
 
-            sb.Add(string.Format("%O%{0}%O%", DataTemplate.Name));
-            sb.Add(string.Empty.PadLeft(DataTemplate.Name.Length, '-'));
+            sb.Add(string.Format("%O%{0}%O%", DataTemplate<IRoomData>().Name));
+            sb.Add(string.Empty.PadLeft(DataTemplate<IRoomData>().Name.Length, '-'));
 
             return sb;
         }
@@ -303,7 +286,7 @@ namespace NetMud.Data.Game
 
             var currentRadius = 0;
             var currentPathsSet = Pathways.EntitiesContained();
-            while(currentRadius <= strength && currentPathsSet.Count() > 0)
+            while (currentRadius <= strength && currentPathsSet.Count() > 0)
             {
                 var currentLocsSet = currentPathsSet.Select(path => path.ToLocation);
 
@@ -372,7 +355,7 @@ namespace NetMud.Data.Game
         /// <param name="spawnTo">the location/container this should spawn into</param>
         public override void SpawnNewInWorld(IContains spawnTo)
         {
-            var roomTemplate = (IRoomData)DataTemplate;
+            var roomTemplate = DataTemplate<IRoomData>();
 
             BirthMark = LiveCache.GetUniqueIdentifier(roomTemplate);
             Keywords = new string[] { roomTemplate.Name.ToLower() };

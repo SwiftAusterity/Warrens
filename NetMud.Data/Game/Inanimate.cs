@@ -39,23 +39,6 @@ namespace NetMud.Data.Game
         /// </summary>
         public string LastKnownLocationType { get; set; }
 
-        /// <summary>
-        /// The backing data for this entity
-        /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        public override IInanimateData DataTemplate
-        {
-            get
-            {
-                return BackingDataCache.Get<IInanimateData>(DataTemplateId);
-            }
-            internal set
-            {
-                DataTemplateId = value.ID;
-            }
-        }
-
         [JsonConstructor]
         public Inanimate(DimensionalModel model)
         {
@@ -88,7 +71,7 @@ namespace NetMud.Data.Game
             Pathways = new EntityContainer<IPathway>();
             MobilesInside = new EntityContainer<IMobile>(backingStore.MobileContainers);
 
-            DataTemplate = backingStore;
+            DataTemplateId = backingStore.ID;
             SpawnNewInWorld();
         }
 
@@ -103,7 +86,7 @@ namespace NetMud.Data.Game
             Pathways = new EntityContainer<IPathway>();
             MobilesInside = new EntityContainer<IMobile>(backingStore.MobileContainers);
 
-            DataTemplate = backingStore;
+            DataTemplateId = backingStore.ID;
             SpawnNewInWorld(spawnTo);
         }
 
@@ -325,10 +308,10 @@ namespace NetMud.Data.Game
         public override void SpawnNewInWorld(IContains spawnTo)
         {
             //We can't even try this until we know if the data is there
-            if (DataTemplate == null)
+            if (DataTemplate<IInanimateData>() == null)
                 throw new InvalidOperationException("Missing backing data store on object spawn event.");
 
-            var bS = (IInanimateData)DataTemplate;
+            var bS = DataTemplate<IInanimateData>();
 
             BirthMark = LiveCache.GetUniqueIdentifier(bS);
             Keywords = new string[] { bS.Name.ToLower() };
@@ -357,7 +340,7 @@ namespace NetMud.Data.Game
         public override IEnumerable<string> RenderToLook(IEntity actor)
         {
             var sb = new List<string>();
-            var backingStore = (IInanimateData)DataTemplate;
+            var backingStore = DataTemplate<IInanimateData>(); ;
 
             sb.Add(string.Format("There is a {0} here", backingStore.Name));
 

@@ -60,7 +60,7 @@ namespace NetMud.DataAccess.FileSystem
 
             try
             {
-                var charData = (ICharacter)entity.DataTemplate;
+                var charData = entity.DataTemplate<ICharacter>();
 
                 var currentDirName = playersDir + charData.AccountHandle + "/" + CurrentDirectoryName + charData.ID;
                 var archiveDirName = playersDir + charData.AccountHandle + "/" + ArchiveDirectoryName + charData.ID;
@@ -129,7 +129,7 @@ namespace NetMud.DataAccess.FileSystem
                 //abstract this out to a helper maybe?
                 var locationAssembly = Assembly.GetAssembly(typeof(ILocation));
 
-                var ch = (ICharacter)newPlayerToLoad.DataTemplate;
+                var ch = newPlayerToLoad.DataTemplate<ICharacter>();
                 if (ch.LastKnownLocationType == null)
                     ch.LastKnownLocationType = typeof(IRoom).Name;
 

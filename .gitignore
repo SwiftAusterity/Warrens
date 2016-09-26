@@ -31,3 +31,4 @@ NetMud/Web.config
 NetMud.Interp/obj
 NetMud/FileStore/Logs/*
 NetMud/FileStore/*/Backups/
+*Backups*/

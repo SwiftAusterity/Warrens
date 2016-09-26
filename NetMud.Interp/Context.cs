@@ -117,7 +117,7 @@ namespace NetMud.Interp
             var effectiveRank = StaffRank.Player;
 
             if (Actor.GetType().GetInterfaces().Contains(typeof(IPlayer)))
-                effectiveRank = (Actor.DataTemplate as ICharacter).GamePermissionsRank;
+                effectiveRank = Actor.DataTemplate<ICharacter>().GamePermissionsRank;
 
             LoadedCommands = LoadedCommands.Where(comm => comm.GetCustomAttributes<CommandPermissionAttribute>().Any(att => att.MinimumRank == effectiveRank));
 
@@ -131,7 +131,7 @@ namespace NetMud.Interp
 
             //Log people using and even attempting to use admin commands in game
             if (commandType.GetCustomAttributes<CommandPermissionAttribute>().Any(att => att.MinimumRank == StaffRank.Admin))
-                LoggingUtility.LogAdminCommandUsage(OriginalCommandString, ((ICharacter)Actor.DataTemplate).AccountHandle);
+                LoggingUtility.LogAdminCommandUsage(OriginalCommandString, Actor.DataTemplate<ICharacter>().AccountHandle);
 
             try
             {
@@ -481,7 +481,7 @@ namespace NetMud.Interp
                         {
                             var entityObject = (IEntity)obj;
 
-                            AccessErrors.Add(string.Format("{0}.{1}", iterator++, entityObject.DataTemplate.Name));
+                            AccessErrors.Add(string.Format("{0}.{1}", iterator++, entityObject.DataTemplate<IData>().Name));
                         }
 
                         break;
@@ -673,7 +673,7 @@ namespace NetMud.Interp
                         {
                             var entityObject = (IEntity)obj;
 
-                            AccessErrors.Add(string.Format("{0}.{1}", iterator++, entityObject.DataTemplate.Name));
+                            AccessErrors.Add(string.Format("{0}.{1}", iterator++, entityObject.DataTemplate<IData>().Name));
                         }
 
                         break;
@@ -714,7 +714,7 @@ namespace NetMud.Interp
 
                             int iterator = 1;
                             foreach (var obj in validSubjects)
-                                AccessErrors.Add(string.Format("{0}.{1}", iterator++, obj.DataTemplate.Name));
+                                AccessErrors.Add(string.Format("{0}.{1}", iterator++, obj.DataTemplate<IData>().Name));
                         }
                         else if (validObjects.Count() == 1)
                             Subject = validSubjects.First();

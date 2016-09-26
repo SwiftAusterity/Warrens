@@ -22,23 +22,6 @@ namespace NetMud.Data.Game
     public class Intelligence : EntityPartial, IIntelligence
     {
         /// <summary>
-        /// The backing data for this entity
-        /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        public INonPlayerCharacter DataTemplate
-        {
-            get
-            {
-                return BackingDataCache.Get<INonPlayerCharacter>(DataTemplateId);
-            }
-            internal set
-            {
-                DataTemplateId = value.ID;
-            }
-        }
-
-        /// <summary>
         /// News up an empty entity
         /// </summary>
         public Intelligence()
@@ -54,7 +37,7 @@ namespace NetMud.Data.Game
         public Intelligence(INonPlayerCharacter backingStore)
         {
             Inventory = new EntityContainer<IInanimate>();
-            DataTemplate = backingStore;
+            DataTemplateId = backingStore.ID;
             SpawnNewInWorld();
         }
 
@@ -66,7 +49,7 @@ namespace NetMud.Data.Game
         public Intelligence(INonPlayerCharacter backingStore, IContains spawnTo)
         {
             Inventory = new EntityContainer<IInanimate>();
-            DataTemplate = backingStore;
+            DataTemplateId = backingStore.ID;
             SpawnNewInWorld(spawnTo);
         }
 
@@ -76,7 +59,7 @@ namespace NetMud.Data.Game
         /// <returns>height, length, width</returns>
         public override Tuple<int, int, int> GetModelDimensions()
         {
-            var charData = (NonPlayerCharacter)DataTemplate;
+            var charData = DataTemplate<INonPlayerCharacter>(); ;
             var height = charData.RaceData.Head.Model.Height + charData.RaceData.Torso.Model.Height + charData.RaceData.Legs.Item1.Model.Height;
             var length = charData.RaceData.Torso.Model.Length;
             var width = charData.RaceData.Torso.Model.Width;
@@ -92,7 +75,7 @@ namespace NetMud.Data.Game
         public override IEnumerable<string> RenderToLook(IEntity actor)
         {
             var sb = new List<string>();
-            var ch = (INonPlayerCharacter)DataTemplate;
+            var ch = DataTemplate<INonPlayerCharacter>(); ;
 
             sb.Add(string.Format("This is {0}", ch.FullName()));
 
@@ -234,10 +217,10 @@ namespace NetMud.Data.Game
         public override void SpawnNewInWorld(IContains spawnTo)
         {
             //We can't even try this until we know if the data is there
-            if (DataTemplate == null)
+            if (DataTemplate<INonPlayerCharacter>() == null)
                 throw new InvalidOperationException("Missing backing data store on NPC spawn event.");
 
-            var bS = (INonPlayerCharacter)DataTemplate;
+            var bS = DataTemplate<INonPlayerCharacter>(); ;
 
             BirthMark = LiveCache.GetUniqueIdentifier(bS);
             Keywords = new string[] { bS.Name.ToLower() };

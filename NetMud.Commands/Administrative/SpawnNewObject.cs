@@ -8,6 +8,7 @@ using NetMud.Data.EntityBackingData;
 using NetMud.Data.Game;
 using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
+using NetMud.DataStructure.Base.System;
 
 namespace NutMud.Commands.System
 {
@@ -48,7 +49,7 @@ namespace NutMud.Commands.System
             var entityObject = new Inanimate(newObject, spawnTo);
 
             //TODO: keywords is janky, location should have its own identifier name somehow for output purposes - DISPLAY short/long NAME
-            sb.Add(string.Format("{0} spawned to {1}", entityObject.DataTemplate.Name, spawnTo.Keywords[0]));
+            sb.Add(string.Format("{0} spawned to {1}", entityObject.DataTemplate<IData>().Name, spawnTo.Keywords[0]));
 
             var messagingObject = new MessageCluster(sb, new string[] { "You are ALIVE" }, new string[] { "You have been given $S$" }, new string[] { "$S$ appears in the $T$." }, new string[] { });
 

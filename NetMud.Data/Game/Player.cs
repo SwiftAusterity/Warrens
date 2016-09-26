@@ -40,7 +40,7 @@ namespace NetMud.Data.Game
         public Player(ICharacter character)
         {
             Inventory = new EntityContainer<IInanimate>();
-            DataTemplate = character;
+            DataTemplateId = character.ID;
             AccountHandle = character.AccountHandle;
             GetFromWorldOrSpawn();
         }
@@ -54,8 +54,8 @@ namespace NetMud.Data.Game
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
-        public IDescriptor Descriptor 
-        { 
+        public IDescriptor Descriptor
+        {
             get
             {
                 if (_descriptorKey != null)
@@ -91,18 +91,9 @@ namespace NetMud.Data.Game
         /// <summary>
         /// The backing data for this entity
         /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        public ICharacter DataTemplate
+        public override T DataTemplate<T>()
         {
-            get
-            {
-                return PlayerDataCache.Get(new PlayerDataCacheKey(typeof(ICharacter), AccountHandle, DataTemplateId));
-            }
-            internal set
-            {
-                DataTemplateId = value.ID;
-            }
+            return (T)PlayerDataCache.Get(new PlayerDataCacheKey(typeof(ICharacter), AccountHandle, DataTemplateId));
         }
 
         /// <summary>
@@ -148,7 +139,7 @@ namespace NetMud.Data.Game
                 UpsertToLiveWorldCache();
 
                 //We save character data to ensure the player remains where it was on last known change
-                var ch = (Character)DataTemplate;
+                var ch = DataTemplate<ICharacter>();
                 ch.LastKnownLocation = value.DataTemplateId.ToString();
                 ch.LastKnownLocationType = value.GetType().Name;
                 ch.Save();
@@ -161,7 +152,7 @@ namespace NetMud.Data.Game
         /// <returns>height, length, width</returns>
         public override Tuple<int, int, int> GetModelDimensions()
         {
-            var charData = (Character)DataTemplate;
+            var charData = DataTemplate<ICharacter>(); ;
             var height = charData.RaceData.Head.Model.Height + charData.RaceData.Torso.Model.Height + charData.RaceData.Legs.Item1.Model.Height;
             var length = charData.RaceData.Torso.Model.Length;
             var width = charData.RaceData.Torso.Model.Width;
@@ -177,7 +168,7 @@ namespace NetMud.Data.Game
         public override IEnumerable<string> RenderToLook(IEntity actor)
         {
             var sb = new List<string>();
-            var ch = (ICharacter)DataTemplate;
+            var ch = DataTemplate<ICharacter>(); ;
 
             sb.Add(string.Format("This is {0}", ch.FullName()));
 
@@ -319,7 +310,7 @@ namespace NetMud.Data.Game
             {
                 BirthMark = me.BirthMark;
                 Birthdate = me.Birthdate;
-                DataTemplate = me.DataTemplate;
+                DataTemplateId = me.DataTemplate<ICharacter>().ID;
                 Inventory = me.Inventory;
                 Keywords = me.Keywords;
 
@@ -339,7 +330,7 @@ namespace NetMud.Data.Game
         /// <returns>The emergency spawn location</returns>
         private IContains GetBaseSpawn()
         {
-            var chr = (Character)DataTemplate;
+            var chr = DataTemplate<ICharacter>(); ;
 
             var roomId = chr.StillANoob ? chr.RaceData.StartingLocation.ID : chr.RaceData.EmergencyLocation.ID;
 
@@ -351,7 +342,7 @@ namespace NetMud.Data.Game
         /// </summary>
         public override void SpawnNewInWorld()
         {
-            var ch = (ICharacter)DataTemplate;
+            var ch = DataTemplate<ICharacter>(); ;
             var locationAssembly = Assembly.GetAssembly(typeof(ILocation));
 
             if (ch.LastKnownLocationType == null)
@@ -383,7 +374,7 @@ namespace NetMud.Data.Game
         /// <param name="spawnTo">the location/container this should spawn into</param>
         public override void SpawnNewInWorld(IContains spawnTo)
         {
-            var ch = (ICharacter)DataTemplate;
+            var ch = DataTemplate<ICharacter>(); ;
 
             BirthMark = LiveCache.GetUniqueIdentifier(ch);
             Keywords = new string[] { ch.Name.ToLower(), ch.SurName.ToLower() };

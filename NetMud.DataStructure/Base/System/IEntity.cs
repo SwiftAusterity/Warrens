@@ -22,7 +22,7 @@ namespace NetMud.DataStructure.Base.System
         /// <summary>
         /// The backing data for this entity in the db
         /// </summary>
-        IData DataTemplate { get; }
+        T DataTemplate<T>() where T : IData;
 
         /// <summary>
         /// Get's the entity's model dimensions

@@ -39,7 +39,7 @@ namespace NetMud.Commands.System
 
             var loadedCommands = commandsAssembly.GetTypes().Where(t => t.GetInterfaces().Contains(typeof(ICommand)));
 
-            loadedCommands = loadedCommands.Where(comm => comm.GetCustomAttributes<CommandPermissionAttribute>().Any(att => att.MinimumRank <= ((ICharacter)Actor.DataTemplate).GamePermissionsRank));
+            loadedCommands = loadedCommands.Where(comm => comm.GetCustomAttributes<CommandPermissionAttribute>().Any(att => att.MinimumRank <= Actor.DataTemplate<ICharacter>().GamePermissionsRank));
 
             returnStrings.Add("Commands:");
 

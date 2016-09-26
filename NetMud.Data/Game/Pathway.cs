@@ -39,23 +39,6 @@ namespace NetMud.Data.Game
         public MovementDirectionType MovementDirection { get; private set; }
 
         /// <summary>
-        /// The backing data for this entity
-        /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        public IPathwayData DataTemplate
-        {
-            get
-            {
-                return BackingDataCache.Get<IPathwayData>(DataTemplateId);
-            }
-            internal set
-            {
-                DataTemplateId = value.ID;
-            }
-        }
-
-        /// <summary>
         /// Birthmark of live location this points into
         /// </summary>
         [JsonProperty("ToLocation")]
@@ -130,7 +113,7 @@ namespace NetMud.Data.Game
         public Pathway(IPathwayData backingStore)
         {
             Enter = new MessageCluster();
-            DataTemplate = backingStore;
+            DataTemplateId = backingStore.ID;
             GetFromWorldOrSpawn();
         }
 
@@ -142,7 +125,7 @@ namespace NetMud.Data.Game
         {
             return new Tuple<int, int, int>(Model.Height, Model.Length, Model.Width);
         }
-        
+
         #region spawning
         /// <summary>
         /// Tries to find this entity in the world based on its ID or gets a new one from the db and puts it in the world
@@ -161,7 +144,7 @@ namespace NetMud.Data.Game
                 Keywords = me.Keywords;
                 Birthdate = me.Birthdate;
                 CurrentLocation = me.CurrentLocation;
-                DataTemplate = me.DataTemplate;
+                DataTemplateId = me.DataTemplate<IPathwayData>().ID;
                 FromLocation = me.FromLocation;
                 ToLocation = me.ToLocation;
                 Enter = me.Enter;
@@ -174,7 +157,7 @@ namespace NetMud.Data.Game
         /// </summary>
         public override void SpawnNewInWorld()
         {
-            var bS = (IPathwayData)DataTemplate;
+            var bS = DataTemplate<IPathwayData>(); ;
 
             SpawnNewInWorld(null);
         }
@@ -185,7 +168,7 @@ namespace NetMud.Data.Game
         /// <param name="spawnTo">the location/container this should spawn into</param>
         public override void SpawnNewInWorld(IContains spawnTo)
         {
-            var bS = (IPathwayData)DataTemplate;
+            var bS = DataTemplate<IPathwayData>(); ;
             var locationAssembly = Assembly.GetAssembly(typeof(Room));
 
             MovementDirection = MessagingUtility.TranslateDegreesToDirection(bS.DegreesFromNorth);
@@ -248,9 +231,9 @@ namespace NetMud.Data.Game
         public override IEnumerable<string> RenderToLook(IEntity actor)
         {
             var sb = new List<string>();
-            var bS = (IPathwayData)DataTemplate;
+            var bS = DataTemplate<IPathwayData>(); ;
 
-            sb.Add(string.Format("{0} heads in the direction of {1} from {2} to {3}", bS.Name, MovementDirection.ToString(), FromLocation.DataTemplate.Name, ToLocation.DataTemplate.Name));
+            sb.Add(string.Format("{0} heads in the direction of {1} from {2} to {3}", bS.Name, MovementDirection.ToString(), FromLocation.DataTemplate<IRoomData>().Name, ToLocation.DataTemplate<IRoomData>().Name));
 
             return sb;
         }

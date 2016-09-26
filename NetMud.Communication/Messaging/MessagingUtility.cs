@@ -112,19 +112,19 @@ namespace NetMud.Communication.Messaging
                 switch (kvp.Key)
                 {
                     case MessagingTargetType.Actor:
-                        message = message.Replace("$A$", thing.DataTemplate.Name);
+                        message = message.Replace("$A$", thing.DataTemplate<IData>().Name);
                         break;
                     case MessagingTargetType.DestinationLocation:
-                        message = message.Replace("$D$", thing.DataTemplate.Name);
+                        message = message.Replace("$D$", thing.DataTemplate<IData>().Name);
                         break;
                     case MessagingTargetType.OriginLocation:
-                        message = message.Replace("$O$", thing.DataTemplate.Name);
+                        message = message.Replace("$O$", thing.DataTemplate<IData>().Name);
                         break;
                     case MessagingTargetType.Subject:
-                        message = message.Replace("$S$", thing.DataTemplate.Name);
+                        message = message.Replace("$S$", thing.DataTemplate<IData>().Name);
                         break;
                     case MessagingTargetType.Target:
-                        message = message.Replace("$T$", thing.DataTemplate.Name);
+                        message = message.Replace("$T$", thing.DataTemplate<IData>().Name);
                         break;
                     case MessagingTargetType.GenderPronoun:
                         if (!thing.GetType().GetInterfaces().Contains(typeof(IGender)))
@@ -144,7 +144,7 @@ namespace NetMud.Communication.Messaging
                         if (!thing.GetType().GetInterfaces().Contains(typeof(IPathway)))
                             break;
 
-                        IPathwayData pathData = (IPathwayData)thing.DataTemplate;
+                        var pathData = thing.DataTemplate<IPathwayData>();
                         message = message.Replace("$DIR$", TranslateDegreesToDirection(pathData.DegreesFromNorth, kvp.Key == MessagingTargetType.ReverseDirection).ToString());
                         break;
                 }
