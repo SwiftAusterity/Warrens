@@ -2,7 +2,7 @@
 using System.Data;
 using System.Data.SqlClient;
 
-namespace NetMud.DataAccess
+namespace NetMud.DataAccess.Database
 {
     /// <summary>
     /// Internal wrapper class for invoking sql queries

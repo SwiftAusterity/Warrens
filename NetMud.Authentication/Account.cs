@@ -1,5 +1,7 @@
 ﻿
 using NetMud.DataAccess;
+using NetMud.DataAccess.Cache;
+using NetMud.DataAccess.Database;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.System;
 using NetMud.Utility;
@@ -89,7 +91,7 @@ namespace NetMud.Authentication
             {
                 if (_characters == null)
                 {
-                    IEnumerable<ICharacter> returnValue = BackingDataCache.GetAllBySharedKey<ICharacter>("AccountHandle", GlobalIdentityHandle);
+                    IEnumerable<ICharacter> returnValue = PlayerDataCache.GetAllForAccountHandle(GlobalIdentityHandle);
                     _characters = returnValue.ToList();
                 }
 
@@ -112,9 +114,9 @@ namespace NetMud.Authentication
         /// <returns>errors or Empty if successful</returns>
         public string AddCharacter(ICharacter newChar)
         {
-            IEnumerable<ICharacter> systemChars = BackingDataCache.GetAll<ICharacter>();
+            IEnumerable<ICharacter> systemChars = PlayerDataCache.GetAll();
 
-            if (systemChars.Any(ch => ch.Name.Equals(newChar.Name) && newChar.SurName.Equals(newChar.SurName)))
+            if (systemChars.Any(ch => ch.Name.Equals(newChar.Name, StringComparison.InvariantCultureIgnoreCase) && newChar.SurName.Equals(newChar.SurName, StringComparison.InvariantCultureIgnoreCase)))
                 return "A character with that name already exists, please choose another.";
 
             newChar.AccountHandle = GlobalIdentityHandle;

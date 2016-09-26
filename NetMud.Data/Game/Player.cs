@@ -41,6 +41,7 @@ namespace NetMud.Data.Game
         {
             Inventory = new EntityContainer<IInanimate>();
             DataTemplate = character;
+            AccountHandle = character.AccountHandle;
             GetFromWorldOrSpawn();
         }
 
@@ -83,6 +84,11 @@ namespace NetMud.Data.Game
         }
 
         /// <summary>
+        /// The account this character belongs to
+        /// </summary>
+        public string AccountHandle { get; set; }
+
+        /// <summary>
         /// The backing data for this entity
         /// </summary>
         [ScriptIgnore]
@@ -91,7 +97,7 @@ namespace NetMud.Data.Game
         {
             get
             {
-                return BackingDataCache.Get<ICharacter>(DataTemplateId);
+                return PlayerDataCache.Get(new PlayerDataCacheKey(typeof(ICharacter), AccountHandle, DataTemplateId));
             }
             internal set
             {

@@ -14,6 +14,14 @@ namespace NetMud.DataStructure.Base.Entity
         /// </summary>
         void CloseConnection();
 
+        /// <summary>
+        /// How this player is connected
+        /// </summary>
         IDescriptor Descriptor { get; set; }
+
+        /// <summary>
+        /// Account this player belongs to
+        /// </summary>
+        string AccountHandle { get; set; }
     }
 }

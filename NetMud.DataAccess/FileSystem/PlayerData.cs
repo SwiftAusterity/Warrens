@@ -50,9 +50,9 @@ namespace NetMud.DataAccess.FileSystem
         /// <returns></returns>
         public bool WriteOnePlayer(IPlayer entity)
         {
-            var playersDir = BaseDirectory + CurrentDirectoryName;
+            var playersDir = BaseDirectory;
 
-            if (!VerifyDirectory(playersDir, true))
+            if (!VerifyDirectory(playersDir))
                 throw new Exception("Players directory unable to be verified or created during full backup.");
 
             LoggingUtility.Log("Backing up player character " + entity.DataTemplate.ID + ".", LogChannels.Backup, true);
@@ -61,25 +61,22 @@ namespace NetMud.DataAccess.FileSystem
             {
                 var charData = (ICharacter)entity.DataTemplate;
 
-                var charDirName = playersDir + charData.AccountHandle + "/" + charData.ID + "/";
-
-                if (!VerifyDirectory(charDirName))
-                    return false;
+                var currentDirName = playersDir + charData.AccountHandle + "/" + CurrentDirectoryName + charData.ID;
+                var archiveDirName = playersDir + charData.AccountHandle + "/" + ArchiveDirectoryName + charData.ID;
 
                 //Wipe out the existing one so we can create all new files
-                if (VerifyDirectory(charDirName + CurrentDirectoryName, false))
+                if (VerifyDirectory(currentDirName, false))
                 {
-                    var currentRoot = new DirectoryInfo(charDirName + CurrentDirectoryName);
+                    var currentRoot = new DirectoryInfo(currentDirName);
 
-                    if (!VerifyDirectory(charDirName + ArchiveDirectoryName))
+                    if (!VerifyDirectory(archiveDirName))
                         return false;
 
                     //move is literal move, no need to delete afterwards
-                    currentRoot.MoveTo(charDirName + DatedBackupDirectory);
+                    currentRoot.MoveTo(archiveDirName + DatedBackupDirectory);
                 }
 
-                var currentBackupDirectory = charDirName + CurrentDirectoryName;
-                DirectoryInfo entityDirectory = Directory.CreateDirectory(currentBackupDirectory);
+                DirectoryInfo entityDirectory = Directory.CreateDirectory(currentDirName);
 
                 WritePlayer(entityDirectory, entity);
             }
@@ -105,7 +102,7 @@ namespace NetMud.DataAccess.FileSystem
 
             try
             {
-                var currentBackupDirectory = BaseDirectory + accountHandle + "/" + charID.ToString() + "/" + CurrentDirectoryName;
+                var currentBackupDirectory = BaseDirectory + accountHandle + "/" + CurrentDirectoryName + charID.ToString();
 
                 //No backup directory? No live data.
                 if (!VerifyDirectory(currentBackupDirectory, false))
@@ -113,7 +110,7 @@ namespace NetMud.DataAccess.FileSystem
 
                 var playerDirectory = new DirectoryInfo(currentBackupDirectory);
 
-                var playerFilePath = playerDirectory + charID.ToString() + ".Player";
+                var playerFilePath = playerDirectory + GetPlayerFilename(charID);
 
                 var fileData = ReadCurrentFileByPath(playerFilePath);
 
@@ -181,6 +178,41 @@ namespace NetMud.DataAccess.FileSystem
             return newPlayerToLoad;
         }
 
+        /// <summary>
+        /// Dumps everything of a single type into the cache from the filesystem for BackingData
+        /// </summary>
+        /// <typeparam name="T">the type to get and store</typeparam>
+        /// <returns>full or partial success</returns>
+        public bool LoadAllCharactersForAccountToCache(string accountHandle)
+        {
+            var currentBackupDirectory = BaseDirectory + accountHandle + "/" + CurrentDirectoryName;
+
+            //No current directory? WTF
+            if (!VerifyDirectory(currentBackupDirectory, false))
+                return false;
+
+            var charDirectory = new DirectoryInfo(currentBackupDirectory);
+
+            foreach (var file in charDirectory.EnumerateFiles("*.character", SearchOption.AllDirectories))
+            {
+                try
+                {
+                    var fileData = ReadFile(file);
+                    var blankEntity = Activator.CreateInstance(typeof(ICharacter)) as ICharacter;
+
+                    var newChar = blankEntity.FromBytes(fileData) as ICharacter;
+
+                    BackingDataCache.Add<ICharacter>(newChar);
+                }
+                catch (Exception ex)
+                {
+                    LoggingUtility.LogError(ex);
+                    //Let it keep going
+                }
+            }
+
+            return true;
+        }
 
         /// <summary>
         /// Writes one player out (and only one character) and their inventory to Current and archives whatever used to be Current
@@ -230,9 +262,23 @@ namespace NetMud.DataAccess.FileSystem
         /// <returns>the filename</returns>
         private string GetPlayerFilename(IPlayer entity)
         {
-            var charData = (ICharacter)entity.DataTemplate;
-
-            return string.Format("{0}.Player", charData.ID);
+            return GetPlayerFilename(entity.DataTemplateId);
         }
+
+        private string GetPlayerFilename(long charId)
+        {
+            return string.Format("{0}.player", charId);
+        }
+
+        /// <summary>
+        /// Gets the statically formatted filename for a player
+        /// </summary>
+        /// <param name="entity">The player in question</param>
+        /// <returns>the filename</returns>
+        private string GetCharacterFilename(ICharacter entity)
+        {
+            return string.Format("{0}.character", entity.ID);
+        }
+
     }
 }

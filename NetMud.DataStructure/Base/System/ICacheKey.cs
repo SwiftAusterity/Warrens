@@ -21,6 +21,7 @@
     {
         Live,
         BackingData,
-        Reference
+        Reference,
+        PlayerData
     }
 }
