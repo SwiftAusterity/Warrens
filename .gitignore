@@ -32,3 +32,5 @@ NetMud.Interp/obj
 NetMud/FileStore/Logs/*
 NetMud/FileStore/*/Backups/
 *Backups*/
+*.mdf
+*.ldf
