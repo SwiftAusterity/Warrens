@@ -195,18 +195,7 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\BaseData.sql" />
     <Content Include="App_Data\dbo.Account.sql" />
-    <Content Include="App_Data\dbo.Character.sql" />
-    <Content Include="App_Data\dbo.DimensionalModelData.sql" />
-    <Content Include="App_Data\dbo.Help.sql" />
-    <Content Include="App_Data\dbo.Material.sql" />
-    <Content Include="App_Data\dbo.NonPlayerCharacter.sql" />
-    <Content Include="App_Data\dbo.InanimateData.sql" />
-    <Content Include="App_Data\dbo.PathwayData.sql" />
-    <Content Include="App_Data\dbo.Race.sql" />
-    <Content Include="App_Data\dbo.RoomData.sql" />
-    <Content Include="App_Data\dbo.Zone.sql" />
     <Content Include="App_Data\testingDB.mdf" />
     <Content Include="App_Data\testingDB_log.ldf">
       <DependentUpon>testingDB.mdf</DependentUpon>
