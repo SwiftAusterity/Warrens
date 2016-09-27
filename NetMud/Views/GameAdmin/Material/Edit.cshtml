@@ -1,0 +1,212 @@
+﻿@using NetMud.DataStructure.Base.Supporting
+
+@model NetMud.Models.Admin.AddEditMaterialViewModel
+@{
+    ViewBag.Title = "Edit Material";
+
+    var compositionsDropdown = Html.DropDownList("Compositions", Model.ValidMaterials.Select(rl => new SelectListItem()
+    {
+        Text = rl.Name,
+        Value = rl.ID.ToString()
+    }), htmlAttributes: new { id = "Compositions", Style = "padding: 7px; float:left; margin-top: 10px;" }).ToString().Replace(Environment.NewLine, "");
+
+    var resistancesDropdown = Html.DropDownList("Resistances", Enum.GetNames(typeof(DamageType)).Select(rl => new SelectListItem()
+    {
+        Text = rl,
+        Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString()
+    }), htmlAttributes: new { id = "Resistances", Style = "padding: 7px; float:left; margin-top: 10px;" }).ToString().Replace(Environment.NewLine, "");
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p class="text-success">@ViewBag.StatusMessage</p>
+@{
+    <section id="newCharacterForm">
+        @using (Html.BeginForm("Edit", "Material", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <input type="hidden" name="id" id="id" value="@Model.DataObject.ID" />
+            <div class="form-group">
+                @Html.LabelFor(m => m.NewName, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.NewName, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.NewName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.NewConductive, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.CheckBoxFor(m => m.NewConductive, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.NewConductive, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.NewMagnetic, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.CheckBoxFor(m => m.NewMagnetic, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.NewMagnetic, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.NewFlammable, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.CheckBoxFor(m => m.NewFlammable, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.NewFlammable, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.NewViscosity, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.NewViscosity, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.NewViscosity, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.NewDensity, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.NewDensity, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.NewDensity, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.NewMallebility, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.NewMallebility, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.NewMallebility, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.NewDuctility, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.NewDuctility, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.NewDuctility, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.NewPorosity, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.NewPorosity, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.NewPorosity, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.NewSolidPoint, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.NewSolidPoint, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.NewSolidPoint, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.NewGasPoint, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.NewGasPoint, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.NewGasPoint, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.NewTemperatureRetention, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.NewTemperatureRetention, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.NewTemperatureRetention, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div style="display: block; padding-bottom: 10px;">
+                    @Html.LabelFor(m => m.Resistances, new { @class = "col-md-2 control-label" })
+                    <a href="#" id="addResistancesRow" style="padding: 10px;">Add another...</a>
+                </div>
+                <div id="resistancesRows" style="display: block;">
+                    @foreach (var container in Model.DataObject.Resistance)
+                    {
+                        <div class="col-md-10" style="padding-left: 10px;">
+                            <span style="padding: 10px; float:left;">Type: </span>@Html.DropDownList("Resistances", Enum.GetNames(typeof(DamageType)).Select(rl =>
+                                                                                    new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString(), Selected = rl.Equals(Enum.GetName(typeof(DamageType), container.Key)) })
+                                                                                    , htmlAttributes: new { id = "Resistances", Style = "padding: 7px; float:left; margin-top: 10px;"})
+                            <span style="padding: 10px; float:left;">Amount:</span><input id="ResistanceValues" name="ResistanceValues" type="text" style="float:left; margin-top: 10px;"  value="@container.Value">
+                            <a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a>
+                        </div>
+                    }
+                </div>
+            </div>
+            <br class="clearfix" />
+            <div class="form-group">
+                <div style="display: block; padding-bottom: 10px;">
+                    @Html.LabelFor(m => m.Compositions, new { @class = "col-md-2 control-label" })
+                    <a href="#" id="addCompositionsRow" style="padding: 10px;">Add another...</a>
+                </div>
+                <div id="compositionsRows" style="display: block;">
+                    @foreach (var container in Model.DataObject.Composition)
+                    {
+                        <div class="col-md-10" style="padding-left: 10px;">
+                            <span style="padding: 10px; float:left;">Material: </span>>@Html.DropDownList("Compositions", Model.ValidMaterials.Select(rl =>
+                                                                                    new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString(), Selected = rl.ID.Equals(@container.Key.ID) })
+                                                                                    , htmlAttributes: new { id = "Compositions", Style = "padding: 7px; float:left; margin-top: 10px;" })
+                            <span style="padding: 10px; float:left;">Percentage:</span><input id="CompositionPercentages" name="CompositionPercentages" type="text" style="float:left; margin-top: 10px;" value="@container.Value">
+                            <a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Commit" class="btn btn-default" style="color: green; border-color: cadetblue;" />
+                    @Html.ActionLink("Cancel", "Index", "Material", new { @class = "btn btn-default", @style = "color: orange; border-color: red;" })
+                </div>
+            </div>
+        }
+    </section>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/HtmlUtilities.js")
+
+    <script type="text/javascript">
+        var compositionsDropdown = decodeHtml('@compositionsDropdown');
+        var resistancesDropdown = decodeHtml('@resistancesDropdown');
+
+        $(document).ready(function () {
+            $("#addResistancesRow").click(function () {
+                $("#resistancesRows").append(
+                    '<div class="col-md-10" style="padding-left: 10px;"><span style="padding: 10px; float:left;">Type: </span>' + resistancesDropdown + '<span style="padding: 10px; float:left;">Amount:</span><input id="ResistanceValues" name="ResistanceValues" type="text" value="" style="float:left; margin-top: 10px;"><a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a></div>'
+                );
+
+                $(".removeRow").click(function () {
+                    $(this).parent().remove();
+                    return false;
+                });
+                return false;
+            });
+
+            $("#addCompositionsRow").click(function () {
+                $("#compositionsRows").append(
+                    '<div class="col-md-10" style="padding-left: 10px;"><span style="padding: 10px; float:left;">Material: </span>' + compositionsDropdown + '<span style="padding: 10px; float:left;">Percentage:</span><input id="CompositionPercentages" name="CompositionPercentages" type="text" value="" style="float:left; margin-top: 10px;"><a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a></div>'
+                );
+
+                $(".removeRow").click(function () {
+                    $(this).parent().remove();
+                    return false;
+                });
+                return false;
+            });
+
+            $(".removeRow").click(function () {
+                $(this).parent().remove();
+                return false;
+            });
+        });
+    </script>
+}

@@ -1,0 +1,162 @@
+﻿@model NetMud.Models.Admin.ManageDimensionalModelDataViewModel
+@{
+    ViewBag.Title = "Manage Dimensional Models";
+    var prevPageState = Model.CurrentPageNumber > 1 ? String.Empty : "disabled";
+    var nextPageState = Model.CurrentPageNumber < Model.NumberOfPages ? String.Empty : "disabled";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p class="text-success">@ViewBag.StatusMessage</p>
+@{
+    <div style="padding: 10px;">
+        @Html.ActionLink("Add New", "Add", null, new { @style = "float: left; margin-top: 30px;" })
+    </div>
+
+    if (Model.Items.Count() > 0)
+    {
+        using (Html.BeginForm("Index", "DimensionalModel", FormMethod.Post, new { id = "paginationForm" }))
+        {
+            @Html.AntiForgeryToken()
+            <nav>
+                <ul class="pagination" style="float: right;">
+                    <li style="float: left;">
+                        <div class="col-md-10" style="width: inherit;">
+                            @Html.TextBoxFor(m => m.SearchTerms, new { @class = "form-control", @style = "width: 200px;float: left;margin-right: 15px;", @title = "Search Term", @onchange = "paginationForm.submit();" })
+                            @Html.TextBoxFor(m => m.ItemsPerPage, new { @class = "form-control", @style = "width: 50px;float: left;", @title = "Items Per Page", @onchange = "paginationForm.submit();" })
+                        </div>
+                    </li>
+                    <li class="@prevPageState">
+                        <button aria-label="Previous" value="@(Model.CurrentPageNumber - 1)" title="Previous" name="CurrentPageNumber"><span aria-hidden="true">&laquo;</span></button>
+                    </li>
+                    @for (var i = 1; i <= Model.NumberOfPages; i++)
+                    {
+                        if (Model.NumberOfPages > 5
+                                && i != 1
+                                && i != Model.NumberOfPages
+                                && i > (Model.NumberOfPages / 2 + 1)
+                                && i < (Model.NumberOfPages / 2 - 1))
+                        {
+                            continue;
+                        }
+
+                        <li>
+                            <button value="@i" title="@i" name="CurrentPageNumber">@i.ToString()</button>
+                        </li>
+                    }
+                    <li class="@nextPageState">
+                        <button aria-label="Next" value="@(Model.CurrentPageNumber + 1)" title="Next" name="CurrentPageNumber"><span aria-hidden="true">&raquo;</span></button>
+                    </li>
+                </ul>
+            </nav>
+        }
+        @Html.ValidationMessageFor(m => m.ItemsPerPage, "", new { @class = "text-danger" })
+        @Html.ValidationMessageFor(m => m.SearchTerms, "", new { @class = "text-danger" })
+
+        using (Html.BeginForm("Remove", "DimensionalModel"))
+        {
+            @Html.AntiForgeryToken()
+            <table class="table">
+                <tbody>
+                    @foreach (var obj in Model.CurrentPageOfItems)
+                    {
+                        <tr>
+                            <!--No editing of dimensional models atm-->
+                            <td>@obj.ID<!--@Html.ActionLink(@obj.ID.ToString(), "Edit", new { id = obj.ID } )</td>-->
+                            <td>@obj.Name</td>
+                            <td>
+                                <div class="dimensionalModel">
+                                    <h5>^ Physical Model</h5>
+                                    <div>
+                                        <pre id="modelContainer" style="font-family: Courier New, Courier, monospace; width: 200px; text-align: center;" data-id="@obj.ID">
+                                            @obj.ViewFlattenedModel(0, 0, 0)
+                                        </pre>
+                                        <input type="hidden" data-id="@obj.ID" id="yawValue" value="0" />
+                                        <a id="increaseYaw" href="#" data-id="@obj.ID">-></a>
+                                        <input type="hidden" data-id="@obj.ID" id="pitchValue" value="0" />
+                                        <a id="increasePitch" href="#" data-id="@obj.ID">^^</a>
+                                        <input type="hidden" data-id="@obj.ID" id="rollValue" value="0" />
+                                        <a id="increaseRoll" href="#" data-id="@obj.ID">@@</a>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    @Html.Hidden("ID", obj.ID)
+                                    <input type="submit" style="color: red; border: none; padding: 0; background-color: inherit;" value="X" title="Delete this" />
+                                    <input type="radio" name="authorize" value="@obj.ID" style="margin-left: 15px;" />
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+
+    }
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $(".dimensionalModel").accordion({
+                collapsible: true,
+                active: false
+            });
+
+            $("#increaseYaw").click(function () {
+                var $this = $(this);
+                var dataId = $this.attr("data-id");
+                var $container = $('#modelContainer[data-id=' + dataId + ']');
+                var $yawValue = $('#yawValue[data-id=' + dataId + ']');
+                var $pitchValue = $('#pitchValue[data-id=' + dataId + ']');
+                var $rollValue = $('#rollValue[data-id=' + dataId + ']');
+
+                $yawValue.val(parseInt($yawValue.val(), 10) + 1);
+
+                $.get("/api/ClientDataApi/GetEntityModelView/" + dataId + '/' + $yawValue.val() + '/' + $pitchValue.val() + '/' + $rollValue.val(), function (data) {
+                    $container.html(data);
+                });
+
+                return false;
+            });
+
+            $("#increasePitch").click(function () {
+                var $this = $(this);
+                var dataId = $this.attr("data-id");
+                var $container = $('#modelContainer[data-id=' + dataId + ']');
+                var $yawValue = $('#yawValue[data-id=' + dataId + ']');
+                var $pitchValue = $('#pitchValue[data-id=' + dataId + ']');
+                var $rollValue = $('#rollValue[data-id=' + dataId + ']');
+
+                $pitchValue.val(parseInt($pitchValue.val(), 10) + 1);
+
+                $.get("/api/ClientDataApi/GetEntityModelView/" + dataId + '/' + $yawValue.val() + '/' + $pitchValue.val() + '/' + $rollValue.val(), function (data) {
+                    $container.html(data);
+                });
+
+                return false;
+            });
+
+            $("#increaseRoll").click(function () {
+                var $this = $(this);
+                var dataId = $this.attr("data-id");
+                var $container = $('#modelContainer[data-id=' + dataId + ']');
+                var $yawValue = $('#yawValue[data-id=' + dataId + ']');
+                var $pitchValue = $('#pitchValue[data-id=' + dataId + ']');
+                var $rollValue = $('#rollValue[data-id=' + dataId + ']');
+
+                $rollValue.val(parseInt($rollValue.val(), 10) + 1);
+
+                $.get("/api/ClientDataApi/GetEntityModelView/" + dataId + '/' + $yawValue.val() + '/' + $pitchValue.val() + '/' + $rollValue.val(), function (data) {
+                    $container.html(data);
+                });
+
+                return false;
+            });
+        });
+    </script>
+}

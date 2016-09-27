@@ -1,0 +1,57 @@
+﻿@model NetMud.Models.Admin.AddEditNPCDataViewModel
+@{
+    ViewBag.Title = "Edit Non-player Character";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p class="text-success">@ViewBag.StatusMessage</p>
+@{
+    <section id="newNPCForm">
+        @using (Html.BeginForm("Edit", "NPC", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <input type="hidden" name="id" id="id" value="@Model.DataObject.ID" />
+            <div class="form-group">
+                @Html.LabelFor(m => m.NewName, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.NewName, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.NewName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.NewSurName, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.NewSurName, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.NewSurName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.NewGender, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.NewGender, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.NewGender, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.RaceId, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.DropDownList("RaceId", Model.ValidRaces.Select(rl =>
+                                                    new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString(), Selected = rl.ID.Equals(Model.RaceId) })
+                                                     , htmlAttributes: new { id = "raceId", Style = "padding: 7px;" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Commit" class="btn btn-default" style="color: green; border-color: cadetblue;" />
+                    @Html.ActionLink("Cancel", "Index", "NPC", new { @class = "btn btn-default", @style = "color: orange; border-color: red;" })
+                </div>
+            </div>
+        }
+    </section>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

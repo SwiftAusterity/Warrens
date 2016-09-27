@@ -1,4 +1,4 @@
-﻿@model NetMud.Models.GameAdmin.DashboardViewModel
+﻿@model NetMud.Models.Admin.DashboardViewModel
 @{
     ViewBag.Title = "Administrative Dashboard";
 }
@@ -13,20 +13,20 @@
         <dt>Rooms:</dt>
         <dd>
             @Model.Rooms.Count().ToString() [
-            @Html.ActionLink("Manage", "ManageRoomData")
-            @Html.ActionLink("Add", "AddRoomData") ]
+            @Html.ActionLink("Manage", "Index", "Room")
+            @Html.ActionLink("Add", "Add", "Room") ]
         </dd>
         <dt>NPCs:</dt>
         <dd>
             @Model.NPCs.Count().ToString() [
-            @Html.ActionLink("Manage", "ManageNPCData")
-            @Html.ActionLink("Add", "AddNPCData") ]
+            @Html.ActionLink("Manage", "Index", "NPC")
+            @Html.ActionLink("Add", "Add", "NPC") ]
         </dd>
         <dt>Inanimates:</dt>
         <dd>
             @Model.Inanimates.Count().ToString() [
-            @Html.ActionLink("Manage", "ManageInanimateData")
-            @Html.ActionLink("Add", "AddInanimateData") ]
+            @Html.ActionLink("Manage", "Index", "Inanimate")
+            @Html.ActionLink("Add", "Add", "Inanimate") ]
         </dd>
     </dl>
     <h4>Reference Data</h4>
@@ -35,32 +35,32 @@
         <dt>Help Files:</dt>
         <dd>
             @Model.HelpFiles.Count().ToString() [
-            @Html.ActionLink("Manage", "ManageHelpData")
-            @Html.ActionLink("Add", "AddHelpData") ]
+            @Html.ActionLink("Manage", "Index", "Help")
+            @Html.ActionLink("Add", "Add", "Help") ]
         </dd>
         <dt>Dimensional Models:</dt>
         <dd>
             @Model.DimensionalModels.Count().ToString() [
-            @Html.ActionLink("Manage", "ManageDimensionalModelData")
-            @Html.ActionLink("Add", "AddDimensionalModelData") ]
+            @Html.ActionLink("Manage", "Index", "DimensionalModel")
+            @Html.ActionLink("Add", "Add", "DimensionalModel") ]
         </dd>
         <dt>Materials:</dt>
         <dd>
             @Model.Materials.Count().ToString() [
-            @Html.ActionLink("Manage", "ManageMaterialData")
-            @Html.ActionLink("Add", "AddMaterialData") ]
+            @Html.ActionLink("Manage", "Index", "Material")
+            @Html.ActionLink("Add", "Add", "Material") ]
         </dd>
         <dt>Races:</dt>
         <dd>
             @Model.Races.Count().ToString() [
-            @Html.ActionLink("Manage", "ManageRaceData")
-            @Html.ActionLink("Add", "AddRaceData") ]
+            @Html.ActionLink("Manage", "Index", "Race")
+            @Html.ActionLink("Add", "Add", "Race") ]
         </dd>
         <dt>Zones:</dt>
         <dd>
             @Model.Zones.Count().ToString() [
-            @Html.ActionLink("Manage", "ManageZoneData")
-            @Html.ActionLink("Add", "AddZoneData") ]
+            @Html.ActionLink("Manage", "Index", "Zone")
+            @Html.ActionLink("Add", "Add", "Zone") ]
         </dd>
     </dl>
     <h4>Live Data</h4>
@@ -69,7 +69,7 @@
         <dt>Players:</dt>
         <dd>
             @Model.LivePlayers [
-            @Html.ActionLink("Manage", "ManagePlayers") ]
+            @Html.ActionLink("Manage", "Index", "Player") ]
         </dd>
         <dt>Rooms:</dt>
         <dd>

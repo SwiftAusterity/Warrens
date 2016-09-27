@@ -123,6 +123,7 @@ namespace NetMud.Interp
 
             //find out command's type
             var commandType = ParseCommand();
+
             if (commandType == null)
             {
                 AccessErrors.Add("Unknown Command."); //TODO: Add generic errors class for rando error messages

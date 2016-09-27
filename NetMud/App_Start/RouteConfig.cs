@@ -10,15 +10,30 @@ namespace NetMud
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
-                name: "GameAdminSelectCharacterAjax",
-                url: "GameAdmin/SelectCharacter/{CurrentlySelectedCharacter}",
-                defaults: new { controller = "GameAdmin", action = "SelectCharacter" }
+                name: "SelectCharacterAjax",
+                url: "GameAdmin/Player/SelectCharacter/{CurrentlySelectedCharacter}",
+                defaults: new { controller = "Player", action = "SelectCharacter" }
                 );
+
+            routes.MapRoute(
+                name: "GameAdminSubControllers",
+                url: "GameAdmin/{controller}/{action}/{id}",
+                defaults: new { controller = "Player", action = "Index", id = UrlParameter.Optional },
+                namespaces: new string[] { "NetMud.Controllers.GameAdmin" }
+            );
+
+            routes.MapRoute(
+                name: "GameAdminBaseController",
+                url: "GameAdmin/{action}/{id}",
+                defaults: new { controller = "GameAdmin", action = "Index", id = UrlParameter.Optional },
+                namespaces: new string[] { "NetMud.Controllers.GameAdmin" }
+            );
 
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional },
+                namespaces: new string[] { "NetMud.Controllers" }
             );
         }
     }

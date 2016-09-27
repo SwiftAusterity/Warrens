@@ -42,10 +42,14 @@
                             <li class="dropdown-header" style="color: mediumvioletred">Administrative</li>
                             <li>@Html.ActionLink("Dashboard", "Index", "GameAdmin", routeValues: null, htmlAttributes: new { title = "Dashboard" })</li>
                             <li>@Html.ActionLink("Logs", "Index", "Logging", routeValues: null, htmlAttributes: new { title = "Logs" })</li>
-                            <li>@Html.ActionLink("Manage NPCs", "ManageNPCData", "GameAdmin", routeValues: null, htmlAttributes: new { title = "Manage NPCs" })</li>
-                            <li>@Html.ActionLink("Manage Rooms", "ManageRoomData", "GameAdmin", routeValues: null, htmlAttributes: new { title = "Manage Rooms" })</li>
-                            <li>@Html.ActionLink("Manage Inanimates", "ManageInanimateData", "GameAdmin", routeValues: null, htmlAttributes: new { title = "Manage Inanimates" })</li>
-                            <li>@Html.ActionLink("Manage Players", "ManagePlayers", "GameAdmin", routeValues: null, htmlAttributes: new { title = "Manage Players" })</li>
+                            <li>@Html.ActionLink("Manage NPCs", "Index", "NPC", routeValues: null, htmlAttributes: new { title = "Manage NPCs" })</li>
+                            <li>@Html.ActionLink("Manage Rooms", "Index", "Room", routeValues: null, htmlAttributes: new { title = "Manage Rooms" })</li>
+                            <li>@Html.ActionLink("Manage Inanimates", "Index", "Inanimate", routeValues: null, htmlAttributes: new { title = "Manage Inanimates" })</li>
+                            <li>@Html.ActionLink("Manage Players", "Index", "Player", routeValues: null, htmlAttributes: new { title = "Manage Players" })</li>
+                            <li>@Html.ActionLink("Manage Zones", "Index", "Zone", routeValues: null, htmlAttributes: new { title = "Manage Zones" })</li>
+                            <li>@Html.ActionLink("Manage Materials", "Index", "Material", routeValues: null, htmlAttributes: new { title = "Manage Materials" })</li>
+                            <li>@Html.ActionLink("Manage Races", "Index", "Race", routeValues: null, htmlAttributes: new { title = "Manage Races" })</li>
+                            <li>@Html.ActionLink("Manage Dimensional Models", "Index", "DimensionalModel", routeValues: null, htmlAttributes: new { title = "Manage Dimensional Models" })</li>
                         }
                         <li class="divider"></li>
                         <li ><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>

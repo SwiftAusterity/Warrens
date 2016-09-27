@@ -177,7 +177,17 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ClientDataApiController.cs" />
-    <Compile Include="Controllers\GameAdminController.cs" />
+    <Compile Include="Controllers\GameAdmin\GameAdminController.cs" />
+    <Compile Include="Controllers\GameAdmin\ZoneController.cs" />
+    <Compile Include="Controllers\GameAdmin\RoomController.cs" />
+    <Compile Include="Controllers\GameAdmin\RaceController.cs" />
+    <Compile Include="Controllers\GameAdmin\PlayerController.cs" />
+    <Compile Include="Controllers\GameAdmin\PathwayController.cs" />
+    <Compile Include="Controllers\GameAdmin\NPCController.cs" />
+    <Compile Include="Controllers\GameAdmin\MaterialController.cs" />
+    <Compile Include="Controllers\GameAdmin\InanimateController.cs" />
+    <Compile Include="Controllers\GameAdmin\HelpController.cs" />
+    <Compile Include="Controllers\GameAdmin\DimensionalModelController.cs" />
     <Compile Include="Controllers\GameClientController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoggingController.cs" />
@@ -186,7 +196,17 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\GameAdminViewModels.cs" />
+    <Compile Include="Models\Admin\DimensionalModelViewModels.cs" />
+    <Compile Include="Models\Admin\PlayerViewModels.cs" />
+    <Compile Include="Models\Admin\PathwayViewModels.cs" />
+    <Compile Include="Models\Admin\InanimateViewModels.cs" />
+    <Compile Include="Models\Admin\MaterialViewModels.cs" />
+    <Compile Include="Models\Admin\NPCViewModels.cs" />
+    <Compile Include="Models\Admin\RaceViewModels.cs" />
+    <Compile Include="Models\Admin\RoomViewModels.cs" />
+    <Compile Include="Models\Admin\ZoneViewModels.cs" />
+    <Compile Include="Models\Admin\HelpViewModels.cs" />
+    <Compile Include="Models\Admin\GameAdminViewModels.cs" />
     <Compile Include="Models\GameContextModel.cs" />
     <Compile Include="Models\BaseViewModel.cs" />
     <Compile Include="Models\LoggingViewModels.cs" />
@@ -278,36 +298,38 @@
     <Content Include="Views\GameClient\Index.cshtml" />
     <Content Include="Views\Manage\ManageCharacters.cshtml" />
     <Content Include="Views\GameAdmin\Index.cshtml" />
-    <Content Include="Views\GameAdmin\ManageInanimateData.cshtml" />
-    <Content Include="Views\GameAdmin\ManageRoomData.cshtml" />
-    <Content Include="Views\GameAdmin\ManagePlayers.cshtml" />
-    <Content Include="Views\GameAdmin\ManageNPCData.cshtml" />
+    <Content Include="Views\GameAdmin\Inanimate\Index.cshtml" />
+    <Content Include="Views\GameAdmin\Room\Index.cshtml" />
+    <Content Include="Views\GameAdmin\Player\Index.cshtml" />
+    <Content Include="Views\GameAdmin\NPC\Index.cshtml" />
     <Content Include="Views\Logging\Index.cshtml" />
-    <Content Include="Views\GameAdmin\AddInanimateData.cshtml" />
-    <Content Include="Views\GameAdmin\AddNPCData.cshtml" />
-    <Content Include="Views\GameAdmin\AddRoomData.cshtml" />
-    <Content Include="Views\GameAdmin\EditInanimateData.cshtml" />
-    <Content Include="Views\GameAdmin\EditNPCData.cshtml" />
-    <Content Include="Views\GameAdmin\EditRoomData.cshtml" />
-    <Content Include="Views\GameAdmin\ManageHelpData.cshtml" />
-    <Content Include="Views\GameAdmin\EditHelpData.cshtml" />
-    <Content Include="Views\GameAdmin\AddHelpData.cshtml" />
-    <Content Include="Views\GameAdmin\AddDimensionalModelData.cshtml" />
-    <Content Include="Views\GameAdmin\ManageDimensionalModelData.cshtml" />
-    <Content Include="Views\GameAdmin\EditMaterialData.cshtml" />
-    <Content Include="Views\GameAdmin\AddMaterialData.cshtml" />
-    <Content Include="Views\GameAdmin\ManageMaterialData.cshtml" />
-    <Content Include="Views\GameAdmin\AddRaceData.cshtml" />
-    <Content Include="Views\GameAdmin\EditRaceData.cshtml" />
-    <Content Include="Views\GameAdmin\ManageRaceData.cshtml" />
+    <Content Include="Views\GameAdmin\Inanimate\Add.cshtml" />
+    <Content Include="Views\GameAdmin\NPC\Add.cshtml" />
+    <Content Include="Views\GameAdmin\Room\Add.cshtml" />
+    <Content Include="Views\GameAdmin\Inanimate\Edit.cshtml" />
+    <Content Include="Views\GameAdmin\NPC\Edit.cshtml" />
+    <Content Include="Views\GameAdmin\Room\Edit.cshtml" />
+    <Content Include="Views\GameAdmin\Help\Index.cshtml" />
+    <Content Include="Views\GameAdmin\Help\Edit.cshtml" />
+    <Content Include="Views\GameAdmin\Help\Add.cshtml" />
+    <Content Include="Views\GameAdmin\DimensionalModel\Add.cshtml" />
+    <Content Include="Views\GameAdmin\DimensionalModel\Index.cshtml" />
+    <Content Include="Views\GameAdmin\Material\Edit.cshtml" />
+    <Content Include="Views\GameAdmin\Material\Add.cshtml" />
+    <Content Include="Views\GameAdmin\Material\Index.cshtml" />
+    <Content Include="Views\GameAdmin\Race\Add.cshtml" />
+    <Content Include="Views\GameAdmin\Race\Edit.cshtml" />
+    <Content Include="Views\GameAdmin\Race\Index.cshtml" />
     <Content Include="Views\Shared\TwoOrThreeDimensionalEntityEditor.cshtml" />
     <Content Include="Views\Shared\DimensionalEntityEditor.cshtml" />
-    <Content Include="Views\GameAdmin\AddEditPathway.cshtml" />
-    <Content Include="Views\GameAdmin\AddZoneData.cshtml" />
-    <Content Include="Views\GameAdmin\EditZoneData.cshtml" />
-    <Content Include="Views\GameAdmin\ManageZoneData.cshtml" />
+    <Content Include="Views\GameAdmin\Pathway\AddEdit.cshtml" />
+    <Content Include="Views\GameAdmin\Zone\Add.cshtml" />
+    <Content Include="Views\GameAdmin\Zone\Edit.cshtml" />
+    <Content Include="Views\GameAdmin\Zone\Index.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Views\DimensionalModel\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
