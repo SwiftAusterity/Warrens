@@ -20,6 +20,11 @@ namespace NetMud.DataStructure.Base.System
         long DataTemplateId { get; set; }
 
         /// <summary>
+        /// The keyword name of the object in the data template
+        /// </summary>
+        string DataTemplateName { get; }
+
+        /// <summary>
         /// The backing data for this entity in the db
         /// </summary>
         T DataTemplate<T>() where T : IData;

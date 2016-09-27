@@ -14,7 +14,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Game
 {
@@ -38,6 +37,17 @@ namespace NetMud.Data.Game
         /// Last known location type this was loaded to
         /// </summary>
         public string LastKnownLocationType { get; set; }
+
+        /// <summary>
+        /// The name of the object in the data template
+        /// </summary>
+        public override string DataTemplateName
+        {
+            get
+            {
+                return DataTemplate<IInanimateData>().Name;
+            }
+        }
 
         [JsonConstructor]
         public Inanimate(DimensionalModel model)

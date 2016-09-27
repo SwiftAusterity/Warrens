@@ -201,7 +201,7 @@ namespace NetMud.DataAccess.Cache
         /// <returns>the birthmark string</returns>
         public static string GetUniqueIdentifier(IEntity obj)
         {
-            return GetUniqueIdentifier(obj.DataTemplate<IData>());
+            return GetUniqueIdentifier(obj.DataTemplateId.ToString());
         }
 
         /// <summary>

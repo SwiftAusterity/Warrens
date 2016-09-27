@@ -35,7 +35,17 @@ namespace NetMud.Data.Game
         /// </summary>
         public long DataTemplateId { get; set; }
 
-       
+        /// <summary>
+        /// The name of the object in the data template
+        /// </summary>
+        public virtual string DataTemplateName
+        {
+            get
+            {
+                return DataTemplate<IData>().Name;
+            }
+        }
+
         /// <summary>
         /// The backing data for this live entity
         /// </summary>

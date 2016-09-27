@@ -112,19 +112,19 @@ namespace NetMud.Communication.Messaging
                 switch (kvp.Key)
                 {
                     case MessagingTargetType.Actor:
-                        message = message.Replace("$A$", thing.DataTemplate<IData>().Name);
+                        message = message.Replace("$A$", thing.DataTemplateName);
                         break;
                     case MessagingTargetType.DestinationLocation:
-                        message = message.Replace("$D$", thing.DataTemplate<IData>().Name);
+                        message = message.Replace("$D$", thing.DataTemplateName);
                         break;
                     case MessagingTargetType.OriginLocation:
-                        message = message.Replace("$O$", thing.DataTemplate<IData>().Name);
+                         message = message.Replace("$O$", thing.DataTemplateName);
                         break;
                     case MessagingTargetType.Subject:
-                        message = message.Replace("$S$", thing.DataTemplate<IData>().Name);
+                        message = message.Replace("$S$", thing.DataTemplateName);
                         break;
                     case MessagingTargetType.Target:
-                        message = message.Replace("$T$", thing.DataTemplate<IData>().Name);
+                        message = message.Replace("$T$", thing.DataTemplateName);
                         break;
                     case MessagingTargetType.GenderPronoun:
                         if (!thing.GetType().GetInterfaces().Contains(typeof(IGender)))

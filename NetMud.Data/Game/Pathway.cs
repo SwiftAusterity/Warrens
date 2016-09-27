@@ -99,6 +99,17 @@ namespace NetMud.Data.Game
         }
 
         /// <summary>
+        /// The name of the object in the data template
+        /// </summary>
+        public override string DataTemplateName
+        {
+            get
+            {
+                return DataTemplate<IPathwayData>().Name;
+            }
+        }
+
+        /// <summary>
         /// News up an empty entity
         /// </summary>
         public Pathway()

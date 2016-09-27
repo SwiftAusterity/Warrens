@@ -119,7 +119,7 @@ namespace NetMud.Interp
             if (Actor.GetType().GetInterfaces().Contains(typeof(IPlayer)))
                 effectiveRank = Actor.DataTemplate<ICharacter>().GamePermissionsRank;
 
-            LoadedCommands = LoadedCommands.Where(comm => comm.GetCustomAttributes<CommandPermissionAttribute>().Any(att => att.MinimumRank == effectiveRank));
+            LoadedCommands = LoadedCommands.Where(comm => comm.GetCustomAttributes<CommandPermissionAttribute>().Any(att => att.MinimumRank <= effectiveRank));
 
             //find out command's type
             var commandType = ParseCommand();
@@ -481,7 +481,7 @@ namespace NetMud.Interp
                         {
                             var entityObject = (IEntity)obj;
 
-                            AccessErrors.Add(string.Format("{0}.{1}", iterator++, entityObject.DataTemplate<IData>().Name));
+                            AccessErrors.Add(string.Format("{0}.{1}", iterator++, entityObject.DataTemplateName));
                         }
 
                         break;
@@ -673,7 +673,7 @@ namespace NetMud.Interp
                         {
                             var entityObject = (IEntity)obj;
 
-                            AccessErrors.Add(string.Format("{0}.{1}", iterator++, entityObject.DataTemplate<IData>().Name));
+                            AccessErrors.Add(string.Format("{0}.{1}", iterator++, entityObject.DataTemplateName));
                         }
 
                         break;
@@ -714,7 +714,7 @@ namespace NetMud.Interp
 
                             int iterator = 1;
                             foreach (var obj in validSubjects)
-                                AccessErrors.Add(string.Format("{0}.{1}", iterator++, obj.DataTemplate<IData>().Name));
+                                AccessErrors.Add(string.Format("{0}.{1}", iterator++, obj.DataTemplateName));
                         }
                         else if (validObjects.Count() == 1)
                             Subject = validSubjects.First();

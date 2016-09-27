@@ -8,12 +8,10 @@ using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Game
 {
@@ -27,6 +25,17 @@ namespace NetMud.Data.Game
         /// Framework for the physics model of an entity
         /// </summary>
         public IDimensionalModel Model { get; set; }
+
+        /// <summary>
+        /// The name of the object in the data template
+        /// </summary>
+        public override string DataTemplateName
+        {
+            get
+            {
+                return DataTemplate<IRoomData>().Name;
+            }
+        }
 
         /// <summary>
         /// Get's the entity's model dimensions

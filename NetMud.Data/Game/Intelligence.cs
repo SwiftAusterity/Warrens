@@ -1,5 +1,4 @@
-﻿using NetMud.Data.EntityBackingData;
-using NetMud.Data.System;
+﻿using NetMud.Data.System;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
@@ -7,11 +6,9 @@ using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Game
 {
@@ -21,6 +18,17 @@ namespace NetMud.Data.Game
     [Serializable]
     public class Intelligence : EntityPartial, IIntelligence
     {
+        /// <summary>
+        /// The name of the object in the data template
+        /// </summary>
+        public override string DataTemplateName
+        {
+            get
+            {
+                return DataTemplate<INonPlayerCharacter>().Name;
+            }
+        }
+
         /// <summary>
         /// News up an empty entity
         /// </summary>

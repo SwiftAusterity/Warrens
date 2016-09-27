@@ -1,5 +1,4 @@
 ﻿using NetMud.Communication.Messaging;
-using NetMud.Data.EntityBackingData;
 using NetMud.Data.System;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Entity;
@@ -25,6 +24,17 @@ namespace NetMud.Data.Game
     [Serializable]
     public class Player : EntityPartial, IPlayer
     {
+        /// <summary>
+        /// The name of the object in the data template
+        /// </summary>
+        public override string DataTemplateName
+        {
+            get
+            {
+                return DataTemplate<ICharacter>().Name;
+            }
+        }
+
         /// <summary>
         /// News up an empty entity
         /// </summary>
@@ -58,7 +68,7 @@ namespace NetMud.Data.Game
         {
             get
             {
-                if (_descriptorKey != null)
+                if (_descriptorKey == null)
                     return default(IDescriptor);
 
                 return LiveCache.Get<IDescriptor>(_descriptorKey);
@@ -68,7 +78,7 @@ namespace NetMud.Data.Game
             {
                 _descriptorKey = new LiveCacheKey(typeof(IDescriptor), value.BirthMark);
 
-                LiveCache.Add<IDescriptor>(value);
+                LiveCache.Add(value);
             }
         }
 
