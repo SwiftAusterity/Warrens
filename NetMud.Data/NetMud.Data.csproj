@@ -69,6 +69,7 @@
     <Compile Include="Reference\Race.cs" />
     <Compile Include="Reference\ReferenceDataPartial.cs" />
     <Compile Include="Reference\Zone.cs" />
+    <Compile Include="System\Constants.cs" />
     <Compile Include="System\EntityContainer.cs" />
     <Compile Include="System\BackingDataPartial.cs" />
     <Compile Include="System\SerializableDataPartial.cs" />

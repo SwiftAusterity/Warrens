@@ -391,7 +391,6 @@ namespace NetMud.Websock
 
             _currentPlayer.Descriptor = this;
 
-            /*
             //We need to barf out to the connected client the welcome message. The client will only indicate connection has been established.
             var welcomeMessage = new List<String>();
 
@@ -402,7 +401,6 @@ namespace NetMud.Websock
 
             //Send the look command in
             Interpret.Render("look", _currentPlayer);
-            */
         }
 
         /// <summary>

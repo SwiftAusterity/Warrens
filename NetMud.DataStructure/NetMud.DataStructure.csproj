@@ -64,6 +64,7 @@
     <Compile Include="Base\System\ICacheKey.cs" />
     <Compile Include="Base\System\IChannelType.cs" />
     <Compile Include="Base\System\ICommand.cs" />
+    <Compile Include="Base\System\IConstants.cs" />
     <Compile Include="Base\System\IData.cs" />
     <Compile Include="Base\System\IDescriptor.cs" />
     <Compile Include="Base\System\IEntity.cs" />
