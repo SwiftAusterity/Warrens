@@ -328,6 +328,15 @@
     <Content Include="Views\GameAdmin\Zone\Index.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Text.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\MultilineText.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Checkbox.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Password.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\EnumDropDownList.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\File.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\StringArray.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Boolean.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Short.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Long.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Int.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

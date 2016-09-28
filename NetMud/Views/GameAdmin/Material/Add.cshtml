@@ -27,102 +27,18 @@
             @Html.AntiForgeryToken()
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            <div class="form-group">
-                @Html.LabelFor(m => m.NewName, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
-                    @Html.TextBoxFor(m => m.NewName, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.NewName, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(m => m.NewConductive, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
-                    @Html.CheckBoxFor(m => m.NewConductive, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.NewConductive, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(m => m.NewMagnetic, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
-                    @Html.CheckBoxFor(m => m.NewMagnetic, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.NewMagnetic, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(m => m.NewFlammable, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
-                    @Html.CheckBoxFor(m => m.NewFlammable, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.NewFlammable, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(m => m.NewViscosity, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
-                    @Html.TextBoxFor(m => m.NewViscosity, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.NewViscosity, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(m => m.NewDensity, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
-                    @Html.TextBoxFor(m => m.NewDensity, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.NewDensity, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(m => m.NewMallebility, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
-                    @Html.TextBoxFor(m => m.NewMallebility, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.NewMallebility, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(m => m.NewDuctility, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
-                    @Html.TextBoxFor(m => m.NewDuctility, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.NewDuctility, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(m => m.NewPorosity, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
-                    @Html.TextBoxFor(m => m.NewPorosity, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.NewPorosity, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(m => m.NewSolidPoint, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
-                    @Html.TextBoxFor(m => m.NewSolidPoint, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.NewSolidPoint, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(m => m.NewGasPoint, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
-                    @Html.TextBoxFor(m => m.NewGasPoint, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.NewGasPoint, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(m => m.NewTemperatureRetention, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
-                    @Html.TextBoxFor(m => m.NewTemperatureRetention, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.NewTemperatureRetention, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
+            @Html.EditorFor(e => e.NewName)
+            @Html.EditorFor(e => e.NewConductive)
+            @Html.EditorFor(e => e.NewMagnetic)
+            @Html.EditorFor(e => e.NewFlammable)
+            @Html.EditorFor(e => e.NewViscosity)
+            @Html.EditorFor(e => e.NewDensity)
+            @Html.EditorFor(e => e.NewMallebility)
+            @Html.EditorFor(e => e.NewDuctility)
+            @Html.EditorFor(e => e.NewPorosity)
+            @Html.EditorFor(e => e.NewSolidPoint)
+            @Html.EditorFor(e => e.NewGasPoint)
+            @Html.EditorFor(e => e.NewTemperatureRetention)
             <div class="form-group">
                 <div style="display: block; padding-bottom: 10px;">
                     @Html.LabelFor(m => m.Resistances, new { @class = "col-md-2 control-label" })
