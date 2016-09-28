@@ -326,10 +326,10 @@
     <Content Include="Views\GameAdmin\Zone\Add.cshtml" />
     <Content Include="Views\GameAdmin\Zone\Edit.cshtml" />
     <Content Include="Views\GameAdmin\Zone\Index.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Text.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\MultilineText.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\DimensionalModel\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />

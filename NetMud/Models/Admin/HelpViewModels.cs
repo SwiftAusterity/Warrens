@@ -1,32 +1,25 @@
-﻿using Microsoft.AspNet.Identity.EntityFramework;
-using NetMud.Authentication;
+﻿using NetMud.Authentication;
 using NetMud.Data.Reference;
-using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.Place;
-using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading;
-using System.Web;
 
 
 namespace NetMud.Models.Admin
 {
-    public class ManageHelpDataViewModel : PagedDataModel<Help>, BaseViewModel
+    public class ManageHelpDataViewModel : PagedDataModel<IHelp>, BaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
-        public ManageHelpDataViewModel(IEnumerable<Help> items)
+        public ManageHelpDataViewModel(IEnumerable<IHelp> items)
             : base(items)
         {
             CurrentPageNumber = 1;
             ItemsPerPage = 20;
         }
 
-        internal override Func<Help, bool> SearchFilter
+        internal override Func<IHelp, bool> SearchFilter
         {
             get
             {
@@ -49,10 +42,10 @@ namespace NetMud.Models.Admin
         public string NewName { get; set; }
 
         [StringLength(2000, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 20)]
-        [DataType(DataType.Text)]
-        [Display(Name = "HelpText")]
+        [DataType(DataType.MultilineText)]
+        [Display(Name = "Help Text")]
         public string NewHelpText { get; set; }
 
-        public Help DataObject { get; set; }
+        public IHelp DataObject { get; set; }
     }
 }
