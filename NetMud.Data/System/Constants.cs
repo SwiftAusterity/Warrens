@@ -16,14 +16,14 @@ namespace NetMud.Data.System
         /// <summary>
         /// All string values
         /// </summary>
-        public Dictionary<ILookupCriteria, string[]> Values { get; set; }
+        public Dictionary<ILookupCriteria, HashSet<string>> Values { get; set; }
 
         /// <summary>
         /// Empty constructor for serialization
         /// </summary>
         public Constants()
         {
-            Values = new Dictionary<ILookupCriteria, string[]>();
+            Values = new Dictionary<ILookupCriteria, HashSet<string>>();
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace NetMud.Data.System
         /// </summary>
         /// <param name="key">the value to affect</param>
         /// <param name="value">the new strings to add</param>
-        public void AddOrUpdate(ILookupCriteria key, string[] value)
+        public void AddOrUpdate(ILookupCriteria key, HashSet<string> value)
         {
             if (Values.ContainsKey(key))
                 Values.Remove(key);
@@ -46,7 +46,7 @@ namespace NetMud.Data.System
         /// <param name="value">the new values to add</param>
         public void AddOrUpdate(ILookupCriteria key, string value)
         {
-            AddOrUpdate(key, new string[] { value });
+            AddOrUpdate(key, new HashSet<string> { value });
         }
 
         /// <summary>
@@ -58,11 +58,12 @@ namespace NetMud.Data.System
         {
             if (Values.ContainsKey(key))
             {
-                var valueArray = Values[key].ToList();
+                var valueArray = Values[key];
 
-                valueArray.Add(value);
+                if(!valueArray.Contains(value))
+                    valueArray.Add(value);
 
-                AddOrUpdate(key, valueArray.ToArray());
+                AddOrUpdate(key, valueArray);
             }
             else
                 AddOrUpdate(key, value);

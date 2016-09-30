@@ -178,6 +178,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ClientDataApiController.cs" />
     <Compile Include="Controllers\GameAdmin\GameAdminController.cs" />
+    <Compile Include="Controllers\GameAdmin\ConstantsController.cs" />
     <Compile Include="Controllers\GameAdmin\ZoneController.cs" />
     <Compile Include="Controllers\GameAdmin\RoomController.cs" />
     <Compile Include="Controllers\GameAdmin\RaceController.cs" />

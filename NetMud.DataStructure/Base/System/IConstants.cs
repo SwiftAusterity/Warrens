@@ -11,14 +11,14 @@ namespace NetMud.DataStructure.Base.System
         /// <summary>
         /// All string values
         /// </summary>
-        Dictionary<ILookupCriteria, string[]> Values { get; set; }
+        Dictionary<ILookupCriteria, HashSet<string>> Values { get; set; }
 
         /// <summary>
         /// Adds or updates an entire string cluster
         /// </summary>
         /// <param name="key">the value to affect</param>
         /// <param name="value">the new strings to add</param>
-        void AddOrUpdate(ILookupCriteria key, string[] value);
+        void AddOrUpdate(ILookupCriteria key, HashSet<string> value);
 
         /// <summary>
         /// Adds or updates an entire string cluster

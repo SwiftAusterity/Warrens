@@ -113,6 +113,8 @@ namespace NetMud.DataAccess.FileSystem
             if (!File.Exists(currentFile))
                 return;
 
+            VerifyDirectory(archiveDirectory);
+
             if (File.Exists(archiveFile))
             {
                 var archiveDir = new DirectoryInfo(archiveDirectory);

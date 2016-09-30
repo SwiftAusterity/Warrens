@@ -20,13 +20,13 @@ namespace NetMud.DataStructure.SupportingClasses
     /// <summary>
     /// Criteria type for constant values lookup
     /// </summary>
-    public enum CriteriaType
+    public enum CriteriaType : short
     {
-        Race,
-        Language,
-        GameLanguage,
-        PortType,
-        TimeOfDay,
-        Season
+        Race = 0,
+        Language = 1,
+        GameLanguage = 2,
+        PortType = 3,
+        TimeOfDay = 4,
+        Season = 5
     }
 }

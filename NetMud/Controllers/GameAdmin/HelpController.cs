@@ -4,6 +4,7 @@ using NetMud.Authentication;
 using NetMud.Data.LookupData;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
+using NetMud.DataStructure.Base.System;
 using NetMud.Models.Admin;
 using System.Web;
 using System.Web.Mvc;
@@ -36,7 +37,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageHelpDataViewModel(BackingDataCache.GetAll<Help>());
+            var vModel = new ManageHelpDataViewModel(BackingDataCache.GetAll<IHelp>());
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             vModel.CurrentPageNumber = CurrentPageNumber;
@@ -59,7 +60,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<Help>(ID);
+                var obj = BackingDataCache.Get<IHelp>(ID);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -113,7 +114,7 @@ namespace NetMud.Controllers.GameAdmin
             var vModel = new AddEditHelpDataViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            Help obj = BackingDataCache.Get<Help>(id);
+            var obj = BackingDataCache.Get<IHelp>(id);
 
             if (obj == null)
             {
@@ -135,7 +136,7 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            Help obj = BackingDataCache.Get<Help>(id);
+            var obj = BackingDataCache.Get<IHelp>(id);
             if (obj == null)
             {
                 message = "That does not exist";

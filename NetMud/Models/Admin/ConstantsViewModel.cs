@@ -44,12 +44,10 @@ namespace NetMud.Models.Admin
         [Display(Name = "Criterion Type")]
         public short[] NewCriterionTypes { get; set; }
 
-        [StringLength(100, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 1)]
         [DataType(DataType.Text)]
         [Display(Name = "Criterion Value")]
         public string[] NewCriterionValues { get; set; }
 
-        [StringLength(2000, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 1)]
         [DataType(DataType.MultilineText)]
         [Display(Name = "Value")]
         public string[] NewConstantValues { get; set; }
