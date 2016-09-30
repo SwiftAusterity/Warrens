@@ -109,11 +109,7 @@ namespace NetMud.Data.Reference
         /// <returns>help text</returns>
         public override IEnumerable<string> RenderHelpBody()
         {
-            var sb = new List<string>();
-
-            sb.Add(Name);
-
-            return sb;
+            return base.RenderHelpBody();
         }
     }
 }

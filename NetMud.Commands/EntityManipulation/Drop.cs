@@ -12,7 +12,7 @@ namespace NetMud.Commands.EntityManipulation
     [CommandPermission(StaffRank.Player)]
     [CommandParameter(CommandUsage.Subject, typeof(IEntity), new CacheReferenceType[] { CacheReferenceType.Entity }, false)]
     [CommandRange(CommandRangeType.Touch, 0)]
-    public class Drop : CommandPartial, IHelpful
+    public class Drop : CommandPartial
     {
         /// <summary>
         /// All Commands require a generic constructor
@@ -56,16 +56,15 @@ namespace NetMud.Commands.EntityManipulation
         }
 
         /// <summary>
-        /// Renders the help text
+        /// The custom body of help text
         /// </summary>
-        /// <returns>string</returns>
-        public IEnumerable<string> RenderHelpBody()
+        public override string HelpText
         {
-            var sb = new List<string>();
-
-            sb.Add(string.Format("Drop moves an object from your inventory to the room you are currently in."));
-
-            return sb;
+            get
+            {
+                return string.Format("Drop moves an object from your inventory to the room you are currently in.");
+            }
+            set { }
         }
     }
 }

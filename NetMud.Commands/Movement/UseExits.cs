@@ -24,7 +24,7 @@ namespace NetMud.Commands.Movement
     [CommandPermission(StaffRank.Player)]
     [CommandParameter(CommandUsage.Subject, typeof(IPathway), new CacheReferenceType[] { CacheReferenceType.Entity }, "[a-zA-z]+", true)]
     [CommandRange(CommandRangeType.Touch, 0)]
-    public class UseExits : CommandPartial, IHelpful
+    public class UseExits : CommandPartial
     {
         /// <summary>
         /// All Commands require a generic constructor
@@ -71,16 +71,15 @@ namespace NetMud.Commands.Movement
         }
 
         /// <summary>
-        /// Renders the help text
+        /// The custom body of help text
         /// </summary>
-        /// <returns>string</returns>
-        public IEnumerable<string> RenderHelpBody()
+        public override string HelpText
         {
-            var sb = new List<string>();
-
-            sb.Add(string.Format("These are all directions, need better help text for movements."));
-
-            return sb;
+            get
+            {
+                return string.Format("These are all directions, need better help text for movements.");
+            }
+            set { }
         }
     }
 }

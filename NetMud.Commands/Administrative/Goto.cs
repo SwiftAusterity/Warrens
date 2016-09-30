@@ -6,6 +6,7 @@ using NetMud.Utility;
 using NetMud.Data.Game;
 using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
+using System;
 
 namespace NutMud.Commands.Administrative
 {
@@ -16,7 +17,7 @@ namespace NutMud.Commands.Administrative
     [CommandPermission(StaffRank.Guest)]
     [CommandParameter(CommandUsage.Subject, typeof(Room), new CacheReferenceType[] { CacheReferenceType.Entity }, true)]
     [CommandRange(CommandRangeType.Global, 0)]
-    public class Goto : CommandPartial, IHelpful
+    public class Goto : CommandPartial
     {
         /// <summary>
         /// All Commands require a generic constructor
@@ -57,16 +58,15 @@ namespace NutMud.Commands.Administrative
         }
 
         /// <summary>
-        /// Renders the help text
+        /// The custom body of help text
         /// </summary>
-        /// <returns>string</returns>
-        public IEnumerable<string> RenderHelpBody()
+        public override string HelpText
         {
-            var sb = new List<string>();
-
-            sb.Add(string.Format("Goto allows staff members to directly teleport to a room irrespective of its capacity limitations."));
-
-            return sb;
+            get
+            {
+                return string.Format("Goto allows staff members to directly teleport to a room irrespective of its capacity limitations.");
+            }
+            set { throw new NotImplementedException(); }
         }
     }
 }

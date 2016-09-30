@@ -19,7 +19,7 @@ namespace NutMud.Commands.System
     [CommandParameter(CommandUsage.Subject, typeof(NetMud.Data.EntityBackingData.NonPlayerCharacter), new CacheReferenceType[] { CacheReferenceType.Data }, "[a-zA-z]+", false)] //for names
     [CommandParameter(CommandUsage.Target, typeof(IContains), new CacheReferenceType[] { CacheReferenceType.Entity }, true)]
     [CommandRange(CommandRangeType.Touch, 0)]
-    public class SpawnNewNPC : CommandPartial, IHelpful
+    public class SpawnNewNPC : CommandPartial
     {
         /// <summary>
         /// All Commands require a generic constructor
@@ -69,16 +69,15 @@ namespace NutMud.Commands.System
         }
 
         /// <summary>
-        /// Renders the help text
+        /// The custom body of help text
         /// </summary>
-        /// <returns>string</returns>
-        public IEnumerable<string> RenderHelpBody()
+        public override string HelpText
         {
-            var sb = new List<string>();
-
-            sb.Add(string.Format("spawnNewNPC spawns a new NPC from its data template into the room or into a specified location."));
-
-            return sb;
+            get
+            {
+                return string.Format("spawnNewNPC spawns a new NPC from its data template into the room or into a specified location.");
+            }
+            set { }
         }
     }
 }

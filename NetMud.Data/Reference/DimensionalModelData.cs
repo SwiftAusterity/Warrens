@@ -233,12 +233,8 @@ namespace NetMud.Data.Reference
         /// <returns>help text</returns>
         public override IEnumerable<string> RenderHelpBody()
         {
-            var sb = new List<string>();
-
             //TODO: Render the actual model flattened in ascii, probably require a fair bit of work so just returning name for now
-            sb.Add(Name);
-
-            return sb;
+            return base.RenderHelpBody();
         }
 
         /// <summary>

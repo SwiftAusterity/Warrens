@@ -2,6 +2,5 @@
 {
     public interface IHelp : IReferenceData
     {
-        string HelpText { get; set; }
     }
 }

@@ -20,7 +20,7 @@ namespace NutMud.Commands.System
     [CommandParameter(CommandUsage.Subject, typeof(InanimateData), new CacheReferenceType[] { CacheReferenceType.Data }, "[a-zA-z]+", false)] //for names
     [CommandParameter(CommandUsage.Target, typeof(IContains), new CacheReferenceType[] { CacheReferenceType.Entity }, true)]
     [CommandRange(CommandRangeType.Touch, 0)]
-    public class SpawnNewObject : CommandPartial, IHelpful
+    public class SpawnNewObject : CommandPartial
     {
         /// <summary>
         /// All Commands require a generic constructor
@@ -69,17 +69,17 @@ namespace NutMud.Commands.System
             return sb;
         }
 
+
         /// <summary>
-        /// Renders the help text
+        /// The custom body of help text
         /// </summary>
-        /// <returns>string</returns>
-        public IEnumerable<string> RenderHelpBody()
+        public override string HelpText
         {
-            var sb = new List<string>();
-
-            sb.Add(string.Format("SpawnNewObject spawns a new object from its data template into the room or into a specified inventory."));
-
-            return sb;
+            get
+            {
+                return string.Format("SpawnNewObject spawns a new object from its data template into the room or into a specified inventory.");
+            }
+            set { }
         }
     }
 }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace NetMud.Commands.Attributes
 {
-    public abstract class CommandPartial : ICommand
+    public abstract class CommandPartial : ICommand, IHelpful
     {
         public abstract void Execute();
 
@@ -39,5 +39,19 @@ namespace NetMud.Commands.Attributes
         /// Valid containers by range from OriginLocation
         /// </summary>
         public IEnumerable<ILocation> Surroundings { get; set; }
+
+        /// <summary>
+        /// The custom body of help text
+        /// </summary>
+        public abstract string HelpText { get; set; }
+
+        public virtual IEnumerable<string> RenderHelpBody()
+        {
+            var sb = new List<string>();
+
+            sb.Add(HelpText);
+
+            return sb;
+        }
     }
 }

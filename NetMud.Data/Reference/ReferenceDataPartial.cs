@@ -1,6 +1,7 @@
 ﻿using NetMud.Data.System;
 using NetMud.DataStructure.Base.System;
 using System.Collections.Generic;
+using System;
 
 namespace NetMud.Data.Reference
 {
@@ -11,6 +12,15 @@ namespace NetMud.Data.Reference
             //empty instance for getting the dataTableName
         }
 
-        public abstract IEnumerable<string> RenderHelpBody();
+        public string HelpText { get; set; }
+
+        public virtual IEnumerable<string> RenderHelpBody()
+        {
+            var sb = new List<string>();
+
+            sb.Add(HelpText);
+
+            return sb;
+        }
     }
 }

@@ -16,7 +16,7 @@ namespace NutMud.Commands.Rendering
     [CommandPermission(StaffRank.Player)]
     [CommandParameter(CommandUsage.Subject, typeof(ILookable), new CacheReferenceType[] { CacheReferenceType.Entity }, true )]
     [CommandRange(CommandRangeType.Touch, 0)]
-    public class Look : CommandPartial, IHelpful
+    public class Look : CommandPartial
     {
         /// <summary>
         /// All Commands require a generic constructor
@@ -62,16 +62,15 @@ namespace NutMud.Commands.Rendering
         }
 
         /// <summary>
-        /// Renders the help text
+        /// The custom body of help text
         /// </summary>
-        /// <returns>string</returns>
-        public IEnumerable<string> RenderHelpBody()
+        public override string HelpText
         {
-            var sb = new List<string>();
-
-            sb.Add(string.Format("Look provides useful information about the location you are in or a target object or mobile."));
-
-            return sb;
+            get
+            {
+                return string.Format("Look provides useful information about the location you are in or a target object or mobile.");
+            }
+            set { }
         }
     }
 }

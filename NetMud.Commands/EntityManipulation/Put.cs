@@ -14,7 +14,7 @@ namespace NetMud.Commands.EntityManipulation
     [CommandParameter(CommandUsage.Subject, typeof(IEntity), new CacheReferenceType[] { CacheReferenceType.Entity }, false)]
     [CommandParameter(CommandUsage.Target, typeof(IContains), new CacheReferenceType[] { CacheReferenceType.Entity }, false)]
     [CommandRange(CommandRangeType.Touch, 0)]
-    public class Put : CommandPartial, IHelpful
+    public class Put : CommandPartial
     {
         /// <summary>
         /// All Commands require a generic constructor
@@ -59,16 +59,15 @@ namespace NetMud.Commands.EntityManipulation
         }
 
         /// <summary>
-        /// Renders the help text
+        /// The custom body of help text
         /// </summary>
-        /// <returns>string</returns>
-        public IEnumerable<string> RenderHelpBody()
+        public override string HelpText
         {
-            var sb = new List<string>();
-
-            sb.Add(string.Format("Places an object into a container. To put something in the room you are in use Drop."));
-
-            return sb;
+            get
+            {
+                return string.Format("Places an object into a container. To put something in the room you are in use Drop.");
+            }
+            set { }
         }
     }
 }

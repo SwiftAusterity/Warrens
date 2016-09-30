@@ -16,7 +16,7 @@ namespace NutMud.Commands.System
     [CommandKeyword("save", false)]
     [CommandPermission(StaffRank.Player)]
     [CommandRange(CommandRangeType.Touch, 0)]
-    public class Save : CommandPartial, IHelpful
+    public class Save : CommandPartial
     {
         /// <summary>
         /// All Commands require a generic constructor
@@ -61,16 +61,15 @@ namespace NutMud.Commands.System
         }
 
         /// <summary>
-        /// Renders the help text
+        /// The custom body of help text
         /// </summary>
-        /// <returns>string</returns>
-        public IEnumerable<string> RenderHelpBody()
+        public override string HelpText
         {
-            var sb = new List<string>();
-
-            sb.Add(string.Format("Save writes your character to the backup set. This also happens automatically behind the scenes quite often."));
-
-            return sb;
+            get
+            {
+                return string.Format("Save writes your character to the backup set. This also happens automatically behind the scenes quite often.");
+            }
+            set {  }
         }
     }
 }

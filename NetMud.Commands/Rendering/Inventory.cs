@@ -12,7 +12,7 @@ namespace NetMud.Commands.Rendering
     [CommandKeyword("inv", false)]
     [CommandPermission(StaffRank.Player)]
     [CommandRange(CommandRangeType.Touch, 0)]
-    public class Inventory : CommandPartial, IHelpful
+    public class Inventory : CommandPartial
     {        
         /// <summary>
         /// All Commands require a generic constructor
@@ -55,16 +55,16 @@ namespace NetMud.Commands.Rendering
         }
 
         /// <summary>
-        /// Renders the help text
+        /// The custom body of help text
         /// </summary>
-        /// <returns>string</returns>
-        public IEnumerable<string> RenderHelpBody()
+        public override string HelpText
         {
-            var sb = new List<string>();
-
-            sb.Add(string.Format("Inventory lists out all inanimates currently on your person. It is an undetectable action unless a viewer has high perception."));
-
-            return sb;
+            get
+            {
+                return string.Format("Inventory lists out all inanimates currently on your person. It is an undetectable action unless a viewer has high perception.");
+            }
+            set { }
         }
+
     }
 }

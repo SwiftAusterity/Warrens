@@ -4,6 +4,7 @@ using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.Utility;
 using NutMud.Commands.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,7 +16,7 @@ namespace NutMud.Commands.System
     [CommandKeyword("Help", false)]
     [CommandPermission(StaffRank.Player)]
     [CommandParameter(CommandUsage.Subject, typeof(IHelpful), new CacheReferenceType[] { CacheReferenceType.Help, CacheReferenceType.Code }, false)]
-    public class Help : CommandPartial, IHelpful
+    public class Help : CommandPartial
     {
         /// <summary>
         /// All Commands require a generic constructor
@@ -62,16 +63,15 @@ namespace NutMud.Commands.System
         }
 
         /// <summary>
-        /// Renders the help text for the help command itself
+        /// The custom body of help text
         /// </summary>
-        /// <returns>string</returns>
-        public IEnumerable<string> RenderHelpBody()
+        public override string HelpText
         {
-            var sb = new List<string>();
-
-            sb.Add(string.Format("Help provides useful information and syntax for the various commands you can use in the world."));
-
-            return sb;
+            get
+            {
+                return string.Format("Help provides useful information and syntax for the various commands you can use in the world.");
+            }
+            set {  }
         }
 
         private IList<string> GetHelpHeader(IHelpful subject)
@@ -92,7 +92,7 @@ namespace NutMud.Commands.System
                 typeName = "Commands";
             }
 
-            sb.Add(string.Format("{0} - <span style=\"color: orange\">{1}</span>", typeName, subjectName));
+            sb.Add(string.Format("{0} - %O%{1}%O%", typeName, subjectName));
             sb.Add(string.Empty.PadLeft(typeName.Length + 3 + subjectName.Length, '-'));
 
             return sb;

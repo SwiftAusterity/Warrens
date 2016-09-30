@@ -8,6 +8,11 @@ namespace NetMud.DataStructure.Behaviors.Rendering
     public interface IHelpful
     {
         /// <summary>
+        /// Extra custom body text for help rendering
+        /// </summary>
+        string HelpText { get; set; }
+
+        /// <summary>
         /// the text to render when Help targets this
         /// </summary>
         /// <returns>the help output</returns>

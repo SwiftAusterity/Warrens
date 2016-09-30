@@ -11,11 +11,6 @@ namespace NetMud.Data.Reference
     public class Help : ReferenceDataPartial, IHelp
     {
         /// <summary>
-        /// Help text for the body of the render to help command
-        /// </summary>
-        public string HelpText { get; set; }
-
-        /// <summary>
         /// New up a "blank" help entry
         /// </summary>
         public Help()
@@ -25,19 +20,6 @@ namespace NetMud.Data.Reference
             LastRevised = DateTime.UtcNow;
             Name = "NotImpl";
             HelpText = "NotImpl";
-        }
-
-        /// <summary>
-        /// Renders the help text for this data object
-        /// </summary>
-        /// <returns>help text</returns>
-        public override IEnumerable<string> RenderHelpBody()
-        {
-            var sb = new List<string>();
-
-            sb.Add(HelpText);
-
-            return sb;
         }
     }
 }

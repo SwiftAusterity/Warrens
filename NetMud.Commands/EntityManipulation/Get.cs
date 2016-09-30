@@ -14,7 +14,7 @@ namespace NetMud.Commands.EntityManipulation
     [CommandParameter(CommandUsage.Subject, typeof(IEntity), new CacheReferenceType[] { CacheReferenceType.Entity }, false)]
     [CommandParameter(CommandUsage.Target, typeof(IContains), new CacheReferenceType[] { CacheReferenceType.Container }, true)]
     [CommandRange(CommandRangeType.Touch, 0)]
-    public class Get : CommandPartial, IHelpful
+    public class Get : CommandPartial
     {
         /// <summary>
         /// All Commands require a generic constructor
@@ -72,16 +72,15 @@ namespace NetMud.Commands.EntityManipulation
         }
 
         /// <summary>
-        /// Renders the help text
+        /// The custom body of help text
         /// </summary>
-        /// <returns>string</returns>
-        public IEnumerable<string> RenderHelpBody()
+        public override string HelpText
         {
-            var sb = new List<string>();
-
-            sb.Add(string.Format("Takes an object from a container or if unspecified attempts to take it from the room you are in."));
-
-            return sb;
+            get
+            {
+                return string.Format("Takes an object from a container or if unspecified attempts to take it from the room you are in.");
+            }
+            set { }
         }
     }
 }

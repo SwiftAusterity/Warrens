@@ -16,7 +16,7 @@ namespace NetMud.Commands.System
     [CommandKeyword("commands", false)]
     [CommandPermission(StaffRank.Player)]
     [CommandRange(CommandRangeType.Touch, 0)]
-    public class Commands : CommandPartial, IHelpful
+    public class Commands : CommandPartial
     {
         /// <summary>
         /// All Commands require a generic constructor
@@ -65,13 +65,16 @@ namespace NetMud.Commands.System
             return sb;
         }
 
-        public IEnumerable<string> RenderHelpBody()
+        /// <summary>
+        /// The custom body of help text
+        /// </summary>
+        public override string HelpText
         {
-            var sb = new List<string>();
-
-            sb.Add(string.Format("Commands lists possible commands for you to use in-game."));
-
-            return sb;
+            get
+            {
+                return string.Format("Commands lists possible commands for you to use in-game.");
+            }
+            set { }
         }
     }
 }

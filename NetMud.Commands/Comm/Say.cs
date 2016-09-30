@@ -13,7 +13,7 @@ namespace NetMud.Commands.Comm
     [CommandPermission(StaffRank.Player)]
     [CommandParameter(CommandUsage.Subject, typeof(string), new CacheReferenceType[] { CacheReferenceType.Text }, false)]
     [CommandRange(CommandRangeType.Touch, 0)]
-    public class Say : CommandPartial, IHelpful
+    public class Say : CommandPartial
     {
         /// <summary>
         /// All Commands require a generic constructor
@@ -53,16 +53,15 @@ namespace NetMud.Commands.Comm
         }
 
         /// <summary>
-        /// Renders the help text
+        /// The custom body of help text
         /// </summary>
-        /// <returns>string</returns>
-        public IEnumerable<string> RenderHelpBody()
+        public override string HelpText
         {
-            var sb = new List<string>();
-
-            sb.Add(string.Format("Say communicates in whatever your current language is to the immediate surroundings. Characters with very good hearing may be able to hear from further away."));
-
-            return sb;
+            get
+            {
+                return string.Format("Say communicates in whatever your current language is to the immediate surroundings. Characters with very good hearing may be able to hear from further away.");
+            }
+            set { }
         }
     }
 }
