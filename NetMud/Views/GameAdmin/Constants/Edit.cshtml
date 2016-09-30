@@ -3,6 +3,10 @@
 @model NetMud.Models.Admin.AddEditConstantsViewModel
 @{
     ViewBag.Title = "Edit Constant";
+
+    var criterionDropdown = Html.DropDownList("NewCriterionTypes", Enum.GetNames(typeof(CriteriaType)).Select(rl =>
+        new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(CriteriaType), rl)).ToString() })
+        , htmlAttributes: new { id = "NewCriterionTypes", Style = "padding: 7px; float:left; margin-top: 10px;" }).ToString().Replace(Environment.NewLine, "");
 }
 
 <h2>@ViewBag.Title</h2>
@@ -16,56 +20,92 @@
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <input type="hidden" name="id" id="id" value="@Model.DataObject.ID" />
-            @Html.EditorFor(e => e.NewConstantValue)
+            @Html.EditorFor(e => e.NewName)
 
-            <div class="form-group">
-                <div style="display: block; padding-bottom: 10px;">
-                    @Html.LabelFor(m => m.NewCriterionValues, new { @class = "col-md-2 control-label" })
-                    <a href="#" id="addCriterionRow" style="padding: 10px;">Add another...</a>
-                </div>
-                <div id="criterionRows" style="display: block;">
-                    <div class="col-md-10" style="padding-left: 10px;">
-                        @foreach (var criterion in Model.DataObject.Strings)
-                        {
-                        <span style="padding: 10px; float:left;">Criterion Type: </span>@Html.DropDownList("NewCriterionTypes", Enum.GetNames(typeof(CriteriaType)).Select(rl =>
-                               new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(CriteriaType), rl)).ToString() })
-                                  , htmlAttributes: new { id = "NewCriterionTypes", Style = "padding: 7px; float:left; margin-top: 10px;" })
-                        <span style="padding: 10px; float:left;">Criterion Value: </span>@Html.TextBoxFor(m => m.NewCriterionValues, new { @style = " float:left; margin-top: 10px;" })
-                        <a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a>
+            @foreach (var criterion in Model.DataObject.Values)
+            {
+                <div class="form-group">
+                    <div style="display: block; padding-bottom: 10px;">
+                        @Html.LabelFor(m => m.NewConstantValues, new { @class = "col-md-2 control-label" })
+                        <a href="#" id="addValueRow" style="padding: 10px;">Add another...</a>
                     </div>
+                    <div id="valueRows" style="display: block;">
+                        @foreach (var stringValue in criterion.Value)
+                        {
+                            <div class="col-md-10" style="padding-left: 10px;">
+                                <span style="padding: 10px; float:left;">Constant Value: </span><input id="NewConstantValues" name="NewConstantValues" style="float:left; margin-top: 10px;" type="text" value="@stringValue">
+                                <a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a>
+                            </div>
                         }
+                    </div>
                 </div>
-            </div>
+                <br class="clearfix" />
 
-            <div class="form-group">
-                <div style="display: block; padding-bottom: 10px;">
-                    @Html.LabelFor(m => m.InternalCompositionIds, new { @class = "col-md-2 control-label" })
-                    <a href="#" id="addInternalCompositionRow" style="padding: 10px;">Add another...</a>
+                <div class="form-group">
+                    <div style="display: block; padding-bottom: 10px;">
+                        @Html.LabelFor(m => m.NewCriterionValues, new { @class = "col-md-2 control-label" })
+                        <a href="#" id="addCriterionRow" style="padding: 10px;">Add another...</a>
+                    </div>
+                    <div id="criterionRows" style="display: block;">
+                        @foreach (var criteriaLookup in criterion.Key.Criterion)
+                        {
+                            <div class="col-md-10" style="padding-left: 10px;">
+                                <span style="padding: 10px; float:left;">Criterion Type: </span>@Html.DropDownList("NewCriterionTypes", Enum.GetNames(typeof(CriteriaType)).Select(rl =>
+                               new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(CriteriaType), rl), Selected = rl.Equals(criteriaLookup.Key) ).ToString() })
+                                  , htmlAttributes: new { id = "NewCriterionTypes", Style = "padding: 7px; float:left; margin-top: 10px;" })
+                                <span style="padding: 10px; float:left;">Criterion Value: </span><input id="NewCriterionValues" name="NewCriterionValues" style="float:left; margin-top: 10px;" type="text" value="@criteriaLookup.Value">
+                                <a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a>
+                            </div>
+                        }
+                    </div>
                 </div>
-                <div id="internalCompositionRows" style="display: block;">
-                    @foreach (var internalComposition in Model.DataObject.InternalComposition)
-                    {
-                        <div class="col-md-10" style="padding-left: 10px;">
-                            <span style="padding: 10px; float:left;">Object: </span>@Html.DropDownList("InternalCompositionIds", Model.ValidInanimateDatas.Select(rl =>
-                                                                                 new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString(), Selected = rl.Equals(internalComposition.Key) })
-                                                                                 , htmlAttributes: new { id = "InternalCompositionIds", Style = "padding: 7px; float:left; margin-top: 10px;" })
-                            <span style="padding: 10px; float:left;">% of Composition:</span><input id="InternalCompositionPercentages" name="InternalCompositionPercentages" style="float:left; margin-top: 10px;" type="text" value="@internalComposition.Value.ToString()">
-                            <a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a>
-                        </div>
-                    }
-                </div>
-            </div>
-            <br class="clearfix" />
-
+                <br class="clearfix" />
+            }
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
                     <input type="submit" value="Commit" class="btn btn-default" style="color: green; border-color: cadetblue;" />
                     @Html.ActionLink("Cancel", "Index", "Help", new { @class = "btn btn-default", @style = "color: orange; border-color: red;" })
                 </div>
             </div>
-        }
+                }
     </section>
 }
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/HtmlUtilities.js")
 }
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var criterionDropdown = decodeHtml('@criterionDropdown');
+
+        $("#addCriterionRow").click(function () {
+            $("#criterionRows").append(
+                '<div class="col-md-10" style="padding-left:10px;"><span style="padding: 10px; float:left;">Criterion Type: </span>' + criterionDropdown + '<span style="padding: 10px; float:left;">Criterion Value:</span><input id="NewCriterionValues" name="NewCriterionValues" type="text" value="" style="float:left; margin-top: 10px;"><a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a></div>'
+            );
+
+            $(".removeRow").click(function () {
+                $(this).parent().remove();
+                return false;
+            });
+            return false;
+        });
+
+        $("#addValueRow").click(function () {
+            $("#valueRows").append(
+                '<div class="col-md-10" style="padding-left:10px;"><span style="padding: 10px; float:left;">Constant Value:</span><input id="NewConstantValues" name="NewConstantValues" type="text" value="" style="float:left; margin-top: 10px;"><a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a></div>'
+            );
+
+            $(".removeRow").click(function () {
+                $(this).parent().remove();
+                return false;
+            });
+            return false;
+        });
+
+        $(".removeRow").click(function () {
+            $(this).parent().remove();
+            return false;
+        });
+    });
+</script>

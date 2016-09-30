@@ -7,7 +7,6 @@
     var criterionDropdown = Html.DropDownList("NewCriterionTypes", Enum.GetNames(typeof(CriteriaType)).Select(rl =>
             new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(CriteriaType), rl)).ToString() })
             , htmlAttributes: new { id = "NewCriterionTypes", Style = "padding: 7px; float:left; margin-top: 10px;" }).ToString().Replace(Environment.NewLine, "");
-
 }
 
 <h2>@ViewBag.Title</h2>
@@ -20,7 +19,21 @@
             @Html.AntiForgeryToken()
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            @Html.EditorFor(e => e.NewConstantValue)
+            @Html.EditorFor(e => e.NewConstantName)
+
+            <div class="form-group">
+                <div style="display: block; padding-bottom: 10px;">
+                    @Html.LabelFor(m => m.NewConstantValues, new { @class = "col-md-2 control-label" })
+                    <a href="#" id="addValueRow" style="padding: 10px;">Add another...</a>
+                </div>
+                <div id="valueRows" style="display: block;">
+                    <div class="col-md-10" style="padding-left: 10px;">
+                        <span style="padding: 10px; float:left;">Constant Value: </span>@Html.TextBoxFor(m => m.NewConstantValues, new { @style = " float:left; margin-top: 10px;" })
+                        <a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a>
+                    </div>
+                </div>
+            </div>
+            <br class="clearfix" />
 
             <div class="form-group">
                 <div style="display: block; padding-bottom: 10px;">
@@ -60,6 +73,18 @@
         $("#addCriterionRow").click(function () {
             $("#criterionRows").append(
                 '<div class="col-md-10" style="padding-left:10px;"><span style="padding: 10px; float:left;">Criterion Type: </span>' + criterionDropdown + '<span style="padding: 10px; float:left;">Criterion Value:</span><input id="NewCriterionValues" name="NewCriterionValues" type="text" value="" style="float:left; margin-top: 10px;"><a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a></div>'
+            );
+
+            $(".removeRow").click(function () {
+                $(this).parent().remove();
+                return false;
+            });
+            return false;
+        });
+
+        $("#addValueRow").click(function () {
+            $("#valueRows").append(
+                '<div class="col-md-10" style="padding-left:10px;"><span style="padding: 10px; float:left;">Constant Value:</span><input id="NewConstantValues" name="NewConstantValues" type="text" value="" style="float:left; margin-top: 10px;"><a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a></div>'
             );
 
             $(".removeRow").click(function () {

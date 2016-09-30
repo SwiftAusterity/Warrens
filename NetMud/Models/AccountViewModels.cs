@@ -58,6 +58,7 @@ namespace NetMud.Models
         [Display(Name = "Password")]
         public string Password { get; set; }
 
+        [UIHint("Boolean")]
         [Display(Name = "Remember me?")]
         public bool RememberMe { get; set; }
     }

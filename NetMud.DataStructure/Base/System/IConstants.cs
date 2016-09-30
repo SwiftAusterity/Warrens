@@ -3,72 +3,49 @@ using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Base.System
 {
+    /// <summary>
+    /// Constant values for use in the game code for localization purposes
+    /// </summary>
     public interface IConstants : IFileStored, IData
     {
         /// <summary>
         /// All string values
         /// </summary>
-        Dictionary<ILookupCriteria, string[]> Strings { get; set; }
-
-        /// <summary>
-        /// All numerical values
-        /// </summary>
-        Dictionary<ILookupCriteria, double[]> Values { get; set; }
+        Dictionary<ILookupCriteria, string[]> Values { get; set; }
 
         /// <summary>
         /// Adds or updates an entire string cluster
         /// </summary>
         /// <param name="key">the value to affect</param>
         /// <param name="value">the new strings to add</param>
-        void AddOrUpdateString(ILookupCriteria key, string[] value);
-
-        /// <summary>
-        /// Adds or updates an entire numerical cluster
-        /// </summary>
-        /// <param name="key">the value to affect</param>
-        /// <param name="value">the new values to add</param>
-        void AddOrUpdateNumerical(ILookupCriteria key, double[] value);
+        void AddOrUpdate(ILookupCriteria key, string[] value);
 
         /// <summary>
         /// Adds or updates an entire string cluster
         /// </summary>
         /// <param name="key">the value to affect</param>
         /// <param name="value">the new values to add</param>
-        void AddOrUpdateString(ILookupCriteria key, string value);
-
-        /// <summary>
-        /// Adds or updates an entire numerical cluster
-        /// </summary>
-        /// <param name="key">the value to affect</param>
-        /// <param name="value">the new values to add</param>
-        void AddOrUpdateNumerical(ILookupCriteria key, double value);
+        void AddOrUpdate(ILookupCriteria key, string value);
 
         /// <summary>
         /// Adds a single value to an existing cluster (or adds the cluster)
         /// </summary>
         /// <param name="key">the value to affect</param>
         /// <param name="value">the new string to add</param>
-        void AddOrUpdateToStringCluster(ILookupCriteria key, string value);
+        void AddOrUpdateToCluster(ILookupCriteria key, string value);
 
         /// <summary>
-        /// Adds a single value to an existing cluster (or adds the cluster)
-        /// </summary>
-        /// <param name="key">the value to affect</param>
-        /// <param name="value">the new value to add</param>
-        void AddOrUpdateToNumericalCluster(ILookupCriteria key, double value);
-
-        /// <summary>
-        /// Gets a single string value out (will use first)
+        /// Gets a single value out by random
         /// </summary>
         /// <param name="key">the key of the value to get</param>
         /// <returns>the value</returns>
-        string GetSingleString(ILookupCriteria key);
+        T GetSingleByRandom<T>(ILookupCriteria key);
 
         /// <summary>
-        /// Gets a single numerical value out (will use first)
+        /// Gets the entire value cluster out
         /// </summary>
-        /// <param name="key">the key of the value to get</param>
-        /// <returns>the value</returns>
-        double GetSingleNumerical(ILookupCriteria key);
+        /// <param name="key">the key of the values to get</param>
+        /// <returns>the values</returns>
+        IEnumerable<T> Get<T>(ILookupCriteria key);
     }
 }

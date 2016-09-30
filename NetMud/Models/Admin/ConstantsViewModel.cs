@@ -35,6 +35,11 @@ namespace NetMud.Models.Admin
         {
         }
 
+        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
+        [DataType(DataType.Text)]
+        [Display(Name = "Name")]
+        public string NewName { get; set; }
+
         [DataType(DataType.Text)]
         [Display(Name = "Criterion Type")]
         public short[] NewCriterionTypes { get; set; }
@@ -47,7 +52,7 @@ namespace NetMud.Models.Admin
         [StringLength(2000, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 1)]
         [DataType(DataType.MultilineText)]
         [Display(Name = "Value")]
-        public string NewConstantValue { get; set; }
+        public string[] NewConstantValues { get; set; }
 
         public IConstants DataObject { get; set; }
     }

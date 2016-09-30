@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace NetMud.DataStructure.SupportingClasses
 {
+    /// <summary>
+    /// Criteria used to lookup constants values
+    /// </summary>
     public interface ILookupCriteria : IComparable<ILookupCriteria>, IEquatable<ILookupCriteria>
     {
         /// <summary>
@@ -14,6 +17,9 @@ namespace NetMud.DataStructure.SupportingClasses
         Dictionary<CriteriaType, string> Criterion { get; set; }
     }
 
+    /// <summary>
+    /// Criteria type for constant values lookup
+    /// </summary>
     public enum CriteriaType
     {
         Race,
