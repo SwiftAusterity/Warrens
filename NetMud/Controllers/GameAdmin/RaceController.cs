@@ -167,6 +167,7 @@ namespace NetMud.Controllers.GameAdmin
             newObj.Breathes = (RespiratoryType)vModel.NewBreathes;
             newObj.DietaryNeeds = (DietType)vModel.NewDietaryNeeds;
             newObj.TeethType = (DamageType)vModel.NewTeethType;
+            newObj.HelpText = vModel.NewHelpBody;
 
             if (vModel.NewExtraPartsId != null)
             {
@@ -240,6 +241,7 @@ namespace NetMud.Controllers.GameAdmin
             vModel.NewTorsoId = obj.Torso.ID;
             vModel.NewVisionRangeHigh = obj.VisionRange.Item2;
             vModel.NewVisionRangeLow = obj.VisionRange.Item1;
+            vModel.NewHelpBody = obj.HelpText;
 
             vModel.NewExtraPartsAmount = obj.BodyParts.Select(bp => bp.Item2).ToArray();
             vModel.NewExtraPartsId = obj.BodyParts.Select(bp => bp.Item1.ID).ToArray(); ;
@@ -326,6 +328,7 @@ namespace NetMud.Controllers.GameAdmin
             obj.Breathes = (RespiratoryType)vModel.NewBreathes;
             obj.DietaryNeeds = (DietType)vModel.NewDietaryNeeds;
             obj.TeethType = (DamageType)vModel.NewTeethType;
+            obj.HelpText = vModel.NewHelpBody;
 
             var bodyBits = new List<Tuple<IInanimateData, short, string>>();
             if (vModel.NewExtraPartsId != null)

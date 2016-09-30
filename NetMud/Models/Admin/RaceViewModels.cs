@@ -127,6 +127,11 @@ namespace NetMud.Models.Admin
         [Display(Name = "Recall Room")]
         public long NewRecallLocationId { get; set; }
 
+        [StringLength(2000, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
+        [DataType(DataType.MultilineText)]
+        [Display(Name = "Help Text Body")]
+        public string NewHelpBody { get; set; }
+
         public IEnumerable<IRoomData> ValidRooms { get; set; }
         public IEnumerable<IInanimateData> ValidObjects { get; set; }
         public IEnumerable<IMaterial> ValidMaterials { get; set; }

@@ -99,6 +99,7 @@ namespace NetMud.Controllers.GameAdmin
             newObj.Owner = vModel.Owner;
             newObj.PressureCoefficient = vModel.PressureCoefficient;
             newObj.TemperatureCoefficient = vModel.TemperatureCoefficient;
+            newObj.HelpText = vModel.NewHelpBody;
 
             if (newObj.Create() == null)
                 message = "Error; Creation failed.";
@@ -133,6 +134,7 @@ namespace NetMud.Controllers.GameAdmin
             vModel.Owner = obj.Owner;
             vModel.PressureCoefficient = obj.PressureCoefficient;
             vModel.TemperatureCoefficient = obj.TemperatureCoefficient;
+            vModel.NewHelpBody = obj.HelpText;
 
             return View("~/Views/GameAdmin/Zone/Edit.cshtml", vModel);
         }
@@ -157,6 +159,7 @@ namespace NetMud.Controllers.GameAdmin
             obj.Owner = vModel.Owner;
             obj.PressureCoefficient = vModel.PressureCoefficient;
             obj.TemperatureCoefficient = vModel.TemperatureCoefficient;
+            obj.HelpText = vModel.NewHelpBody;
 
             if (obj.Save())
             {

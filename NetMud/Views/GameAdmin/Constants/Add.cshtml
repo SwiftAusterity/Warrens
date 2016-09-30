@@ -20,7 +20,6 @@
             @Html.AntiForgeryToken()
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            @Html.EditorFor(e => e.NewName)
             @Html.EditorFor(e => e.NewConstantValue)
 
             <div class="form-group">

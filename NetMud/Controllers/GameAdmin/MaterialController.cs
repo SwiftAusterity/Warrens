@@ -107,6 +107,7 @@ namespace NetMud.Controllers.GameAdmin
             newObj.SolidPoint = vModel.NewSolidPoint;
             newObj.TemperatureRetention = vModel.NewTemperatureRetention;
             newObj.Viscosity = vModel.NewViscosity;
+            newObj.HelpText = vModel.NewHelpBody;
 
             if (vModel.Resistances != null)
             {
@@ -189,6 +190,7 @@ namespace NetMud.Controllers.GameAdmin
             vModel.NewSolidPoint = obj.SolidPoint;
             vModel.NewTemperatureRetention = obj.TemperatureRetention;
             vModel.NewViscosity = obj.Viscosity;
+            vModel.NewHelpBody = obj.HelpText;
 
             return View("~/Views/GameAdmin/Material/Edit.cshtml", vModel);
         }
@@ -219,6 +221,7 @@ namespace NetMud.Controllers.GameAdmin
             obj.SolidPoint = vModel.NewSolidPoint;
             obj.TemperatureRetention = vModel.NewTemperatureRetention;
             obj.Viscosity = vModel.NewViscosity;
+            obj.HelpText = vModel.NewHelpBody;
 
             if (vModel.Resistances != null)
             {
