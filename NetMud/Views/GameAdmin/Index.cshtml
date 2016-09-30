@@ -62,6 +62,12 @@
             @Html.ActionLink("Manage", "Index", "Zone")
             @Html.ActionLink("Add", "Add", "Zone") ]
         </dd>
+        <dt>Constants:</dt>
+        <dd>
+            @Model.Constants.Count().ToString() [
+            @Html.ActionLink("Manage", "Index", "Constants")
+            @Html.ActionLink("Add", "Add", "Constants") ]
+        </dd>
     </dl>
     <h4>Live Data</h4>
     <hr />

@@ -20,8 +20,6 @@
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             @Html.EditorFor(e => e.NewName)
-            @Html.EditorFor(e => e.NewSurName)
-            @Html.EditorFor(e => e.NewGender)
             <div class="form-group">
                 @Html.LabelFor(m => m.Zone, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
@@ -43,7 +41,7 @@
             </div>
             <div class="form-group">
                 <div style="display: block; padding-bottom: 10px;">
-                    @Html.LabelFor(m => m.Compositions, new { @class = "col-md-2 control-label" })
+                    @Html.LabelFor(m => m.BorderNames, new { @class = "col-md-2 control-label" })
                     <a href="#" id="addBorderRow" style="padding: 10px;">Add another...</a>
                 </div>
                 <div id="borderRows" style="display: block;">

@@ -56,6 +56,7 @@ namespace NetMud.Controllers.GameAdmin
             dashboardModel.Materials = BackingDataCache.GetAll<IMaterial>();
             dashboardModel.Races = BackingDataCache.GetAll<IRace>();
             dashboardModel.Zones = BackingDataCache.GetAll<IZone>();
+            dashboardModel.Constants = BackingDataCache.GetAll<IConstants>();
 
             dashboardModel.LiveTaskTokens = Processor.GetAllLiveTaskStatusTokens();
             dashboardModel.LivePlayers = LiveCache.GetAll<IPlayer>().Count();

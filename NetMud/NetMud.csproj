@@ -197,6 +197,7 @@
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Admin\DimensionalModelViewModels.cs" />
+    <Compile Include="Models\Admin\ConstantsViewModel.cs" />
     <Compile Include="Models\Admin\PlayerViewModels.cs" />
     <Compile Include="Models\Admin\PathwayViewModels.cs" />
     <Compile Include="Models\Admin\InanimateViewModels.cs" />
@@ -337,6 +338,9 @@
     <Content Include="Views\Shared\EditorTemplates\Short.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Long.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Int.cshtml" />
+    <Content Include="Views\GameAdmin\Constants\Add.cshtml" />
+    <Content Include="Views\GameAdmin\Constants\Edit.cshtml" />
+    <Content Include="Views\GameAdmin\Constants\Index.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

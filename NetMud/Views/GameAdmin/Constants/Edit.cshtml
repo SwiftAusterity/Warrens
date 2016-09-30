@@ -1,0 +1,72 @@
+﻿@using NetMud.DataStructure.SupportingClasses
+
+@model NetMud.Models.Admin.AddEditConstantsViewModel
+@{
+    ViewBag.Title = "Edit Constant";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p class="text-success">@ViewBag.StatusMessage</p>
+@{
+    <section id="newCharacterForm">
+        @using (Html.BeginForm("Edit", "Constants", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <input type="hidden" name="id" id="id" value="@Model.DataObject.ID" />
+            @Html.EditorFor(e => e.NewName)
+            @Html.EditorFor(e => e.NewConstantValue)
+
+            <div class="form-group">
+                <div style="display: block; padding-bottom: 10px;">
+                    @Html.LabelFor(m => m.NewCriterionValues, new { @class = "col-md-2 control-label" })
+                    <a href="#" id="addCriterionRow" style="padding: 10px;">Add another...</a>
+                </div>
+                <div id="criterionRows" style="display: block;">
+                    <div class="col-md-10" style="padding-left: 10px;">
+                        @foreach (var criterion in Model.DataObject.Strings)
+                        {
+                        <span style="padding: 10px; float:left;">Criterion Type: </span>@Html.DropDownList("NewCriterionTypes", Enum.GetNames(typeof(CriteriaType)).Select(rl =>
+                               new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(CriteriaType), rl)).ToString() })
+                                  , htmlAttributes: new { id = "NewCriterionTypes", Style = "padding: 7px; float:left; margin-top: 10px;" })
+                        <span style="padding: 10px; float:left;">Criterion Value: </span>@Html.TextBoxFor(m => m.NewCriterionValues, new { @style = " float:left; margin-top: 10px;" })
+                        <a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a>
+                    </div>
+                        }
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div style="display: block; padding-bottom: 10px;">
+                    @Html.LabelFor(m => m.InternalCompositionIds, new { @class = "col-md-2 control-label" })
+                    <a href="#" id="addInternalCompositionRow" style="padding: 10px;">Add another...</a>
+                </div>
+                <div id="internalCompositionRows" style="display: block;">
+                    @foreach (var internalComposition in Model.DataObject.InternalComposition)
+                    {
+                        <div class="col-md-10" style="padding-left: 10px;">
+                            <span style="padding: 10px; float:left;">Object: </span>@Html.DropDownList("InternalCompositionIds", Model.ValidInanimateDatas.Select(rl =>
+                                                                                 new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString(), Selected = rl.Equals(internalComposition.Key) })
+                                                                                 , htmlAttributes: new { id = "InternalCompositionIds", Style = "padding: 7px; float:left; margin-top: 10px;" })
+                            <span style="padding: 10px; float:left;">% of Composition:</span><input id="InternalCompositionPercentages" name="InternalCompositionPercentages" style="float:left; margin-top: 10px;" type="text" value="@internalComposition.Value.ToString()">
+                            <a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a>
+                        </div>
+                    }
+                </div>
+            </div>
+            <br class="clearfix" />
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Commit" class="btn btn-default" style="color: green; border-color: cadetblue;" />
+                    @Html.ActionLink("Cancel", "Index", "Help", new { @class = "btn btn-default", @style = "color: orange; border-color: red;" })
+                </div>
+            </div>
+        }
+    </section>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

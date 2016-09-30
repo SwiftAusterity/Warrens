@@ -25,6 +25,7 @@ namespace NetMud.Models.Admin
             Materials = Enumerable.Empty<IMaterial>();
             Races = Enumerable.Empty<IRace>();
             Zones = Enumerable.Empty<IZone>();
+            Constants = Enumerable.Empty<IConstants>();
 
             WebsocketServers = Enumerable.Empty<NetMud.Websock.Server>();
 
@@ -46,6 +47,7 @@ namespace NetMud.Models.Admin
         public IEnumerable<IMaterial> Materials { get; set; }
         public IEnumerable<IRace> Races { get; set; }
         public IEnumerable<IZone> Zones { get; set; }
+        public IEnumerable<IConstants> Constants { get; set; }
 
         //Running Data
         public Dictionary<string, CancellationTokenSource> LiveTaskTokens { get; set; }
