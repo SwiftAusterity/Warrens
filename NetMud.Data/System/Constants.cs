@@ -1,4 +1,5 @@
 ﻿using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.SupportingClasses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,20 +15,20 @@ namespace NetMud.Data.System
         /// <summary>
         /// All string values
         /// </summary>
-        public Dictionary<string, string[]> Strings { get; set; }
+        public Dictionary<ILookupCriteria, string[]> Strings { get; set; }
 
         /// <summary>
         /// All numerical values
         /// </summary>
-        public Dictionary<string, double[]> Values { get; set; }
+        public Dictionary<ILookupCriteria, double[]> Values { get; set; }
 
         /// <summary>
         /// Empty constructor for serialization
         /// </summary>
         public Constants()
         {
-            Strings = new Dictionary<string, string[]>();
-            Values = new Dictionary<string, double[]>();
+            Strings = new Dictionary<ILookupCriteria, string[]>();
+            Values = new Dictionary<ILookupCriteria, double[]>();
         }
 
         /// <summary>
@@ -35,7 +36,7 @@ namespace NetMud.Data.System
         /// </summary>
         /// <param name="key">the value to affect</param>
         /// <param name="value">the new strings to add</param>
-        public void AddOrUpdateString(string key, string[] value)
+        public void AddOrUpdateString(ILookupCriteria key, string[] value)
         {
             if (Strings.ContainsKey(key))
                 Strings.Remove(key);
@@ -48,7 +49,7 @@ namespace NetMud.Data.System
         /// </summary>
         /// <param name="key">the value to affect</param>
         /// <param name="value">the new values to add</param>
-        public void AddOrUpdateNumerical(string key, double[] value)
+        public void AddOrUpdateNumerical(ILookupCriteria key, double[] value)
         {
             if (Values.ContainsKey(key))
                 Values.Remove(key);
@@ -61,7 +62,7 @@ namespace NetMud.Data.System
         /// </summary>
         /// <param name="key">the value to affect</param>
         /// <param name="value">the new values to add</param>
-        public void AddOrUpdateString(string key, string value)
+        public void AddOrUpdateString(ILookupCriteria key, string value)
         {
             AddOrUpdateString(key, new string[] { value });
         }
@@ -71,7 +72,7 @@ namespace NetMud.Data.System
         /// </summary>
         /// <param name="key">the value to affect</param>
         /// <param name="value">the new values to add</param>
-        public void AddOrUpdateNumerical(string key, double value)
+        public void AddOrUpdateNumerical(ILookupCriteria key, double value)
         {
             AddOrUpdateNumerical(key, new double[] { value });
         }
@@ -81,7 +82,7 @@ namespace NetMud.Data.System
         /// </summary>
         /// <param name="key">the value to affect</param>
         /// <param name="value">the new string to add</param>
-        public void AddOrUpdateToStringCluster(string key, string value)
+        public void AddOrUpdateToStringCluster(ILookupCriteria key, string value)
         {
             if (Strings.ContainsKey(key))
             {
@@ -100,7 +101,7 @@ namespace NetMud.Data.System
         /// </summary>
         /// <param name="key">the value to affect</param>
         /// <param name="value">the new value to add</param>
-        public void AddOrUpdateToNumericalCluster(string key, double value)
+        public void AddOrUpdateToNumericalCluster(ILookupCriteria key, double value)
         {
             if (Values.ContainsKey(key))
             {
@@ -119,7 +120,7 @@ namespace NetMud.Data.System
         /// </summary>
         /// <param name="key">the key of the value to get</param>
         /// <returns>the value</returns>
-        public string GetSingleString(string key)
+        public string GetSingleString(ILookupCriteria key)
         {
             var cluster = Strings[key];
 
@@ -134,7 +135,7 @@ namespace NetMud.Data.System
         /// </summary>
         /// <param name="key">the key of the value to get</param>
         /// <returns>the value</returns>
-        public double GetSingleNumerical(string key)
+        public double GetSingleNumerical(ILookupCriteria key)
         {
             var cluster = Values[key];
 

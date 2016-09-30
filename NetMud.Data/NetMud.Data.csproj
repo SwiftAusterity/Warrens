@@ -72,6 +72,7 @@
     <Compile Include="System\Constants.cs" />
     <Compile Include="System\EntityContainer.cs" />
     <Compile Include="System\BackingDataPartial.cs" />
+    <Compile Include="System\LookupCriteria.cs" />
     <Compile Include="System\SerializableDataPartial.cs" />
   </ItemGroup>
   <ItemGroup>
