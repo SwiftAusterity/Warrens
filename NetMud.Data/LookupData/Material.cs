@@ -6,10 +6,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Script.Serialization;
 
-namespace NetMud.Data.Reference
+namespace NetMud.Data.LookupData
 {
     [Serializable]
-    public class Material : ReferenceDataPartial, IMaterial
+    public class Material : LookupDataPartial, IMaterial
     {
         /// <summary>
         /// Is this material energy conduction

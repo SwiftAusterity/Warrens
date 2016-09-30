@@ -1,4 +1,4 @@
-﻿using NetMud.Data.Reference;
+﻿using NetMud.Data.LookupData;
 using NetMud.Data.System;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Entity;

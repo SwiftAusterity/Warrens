@@ -2,13 +2,13 @@
 using System;
 using System.Collections.Generic;
 
-namespace NetMud.Data.Reference
+namespace NetMud.Data.LookupData
 {
     /// <summary>
     /// Zones contain rooms
     /// </summary>
     [Serializable]
-    public class Zone : ReferenceDataPartial, IZone
+    public class Zone : LookupDataPartial, IZone
     {
         /// <summary>
         /// The midline elevation point "sea level" for this zone

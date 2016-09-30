@@ -40,7 +40,7 @@ namespace NetMud.Models.Admin
         public IEnumerable<IInanimateData> Inanimates { get; set; }
         public IEnumerable<INonPlayerCharacter> NPCs { get; set; }
 
-        //Reference Data
+        //Lookup Data
         public IEnumerable<IDimensionalModelData> DimensionalModels { get; set; }
         public IEnumerable<IHelp> HelpFiles { get; set; }
         public IEnumerable<IMaterial> Materials { get; set; }

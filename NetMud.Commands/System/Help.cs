@@ -80,12 +80,12 @@ namespace NutMud.Commands.System
             var subjectName = subject.GetType().Name;
             var typeName = "Help";
 
-            if (subject.GetType().GetInterfaces().Contains(typeof(IReferenceData)))
+            if (subject.GetType().GetInterfaces().Contains(typeof(ILookupData)))
             {
-                var refSubject = (IReferenceData)subject;
+                var refSubject = (ILookupData)subject;
 
                 subjectName = refSubject.Name;
-                typeName = "Reference";
+                typeName = "Lookup Data";
             }
             else if (subject.GetType().GetInterfaces().Contains(typeof(ICommand)))
             {

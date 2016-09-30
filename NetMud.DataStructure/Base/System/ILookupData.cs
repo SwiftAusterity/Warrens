@@ -3,9 +3,9 @@
 namespace NetMud.DataStructure.Base.System
 {
     /// <summary>
-    /// Framework for Reference Data
+    /// Framework for Lookup Data
     /// </summary>
-    public interface IReferenceData : IData, IHelpful
+    public interface ILookupData : IData, IHelpful
     {
     }
 }

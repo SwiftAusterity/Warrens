@@ -8,9 +8,9 @@ using System.Collections.Generic;
 namespace NetMud.DataStructure.Base.Supporting
 {
     /// <summary>
-    /// Reference data for mobile race
+    /// Lookup Data for mobile race
     /// </summary>
-    public interface IRace : IReferenceData
+    public interface IRace : ILookupData
     {
         /// <summary>
         /// The arm objects

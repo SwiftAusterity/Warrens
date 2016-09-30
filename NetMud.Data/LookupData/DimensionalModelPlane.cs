@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NetMud.Data.Reference
+namespace NetMud.Data.LookupData
 {
     /// <summary>
     /// A single 11x11 grid of the 11 planes that compose the dimensional model

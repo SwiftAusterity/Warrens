@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 using System;
 using System.Web.Script.Serialization;
 
-namespace NetMud.Data.Reference
+namespace NetMud.Data.LookupData
 {
     [Serializable]
     public class DimensionalModelNode : IDimensionalModelNode

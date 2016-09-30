@@ -5,13 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NetMud.Data.Reference
+namespace NetMud.Data.LookupData
 {
     /// <summary>
     /// Backing data for physical models
     /// </summary>
     [Serializable]
-    public class DimensionalModelData : ReferenceDataPartial, IDimensionalModelData
+    public class DimensionalModelData : LookupDataPartial, IDimensionalModelData
     {
         /// <summary>
         /// Governs what sort of model planes we're looking for

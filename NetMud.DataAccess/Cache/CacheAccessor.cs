@@ -14,7 +14,7 @@ namespace NetMud.DataAccess.Cache
          * We'll need to cache collections of references to things and the things themselves.
          * Caching collections of things will result in flipping the cache constantly
          * 
-         * The administrative website will edit the reference data in the database which wont get refreshed
+         * The administrative website will edit the Lookup Data in the database which wont get refreshed
          * until someone tells it to (or the entire thing reboots)
          * 
          * ILiveData data is ALWAYS cached and saved to a different place because it is live in-game data and even if

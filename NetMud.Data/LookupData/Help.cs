@@ -2,13 +2,13 @@
 using System;
 using System.Collections.Generic;
 
-namespace NetMud.Data.Reference
+namespace NetMud.Data.LookupData
 {
     /// <summary>
     /// Referred to as Help Files in the UI, extra help content for the help command
     /// </summary>
     [Serializable]
-    public class Help : ReferenceDataPartial, IHelp
+    public class Help : LookupDataPartial, IHelp
     {
         /// <summary>
         /// New up a "blank" help entry

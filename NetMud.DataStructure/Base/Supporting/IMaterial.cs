@@ -4,9 +4,9 @@ using System.Collections.Generic;
 namespace NetMud.DataStructure.Base.Supporting
 {
     /// <summary>
-    /// Reference data for what things are made of
+    /// Lookup Data for what things are made of
     /// </summary>
-    public interface IMaterial : IReferenceData
+    public interface IMaterial : ILookupData
     {
         /// <summary>
         /// Is this material energy conduction

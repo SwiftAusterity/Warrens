@@ -2,7 +2,7 @@
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
 using NetMud.Data.EntityBackingData;
-using NetMud.Data.Reference;
+using NetMud.Data.LookupData;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.Models.Admin;

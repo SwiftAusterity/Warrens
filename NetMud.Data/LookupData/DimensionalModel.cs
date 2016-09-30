@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Script.Serialization;
 
-namespace NetMud.Data.Reference
+namespace NetMud.Data.LookupData
 {
     /* Does not need to be ScriptIgnored */
 

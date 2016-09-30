@@ -1,5 +1,5 @@
 ﻿using NetMud.Authentication;
-using NetMud.Data.Reference;
+using NetMud.Data.LookupData;
 using NetMud.DataStructure.Base.Place;
 using System;
 using System.Collections.Generic;

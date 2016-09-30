@@ -6,7 +6,7 @@ namespace NetMud.DataStructure.Base.Supporting
     /// <summary>
     /// Backing data for physical models
     /// </summary>
-    public interface IDimensionalModelData : IReferenceData
+    public interface IDimensionalModelData : ILookupData
     {
         /// <summary>
         /// Governs what sort of model planes we're looking for

@@ -3,9 +3,9 @@
 namespace NetMud.DataStructure.Base.World
 {
     /// <summary>
-    /// Reference data for spoken languages
+    /// Lookup Data for spoken languages
     /// </summary>
-    public interface ILanguage : IReferenceData
+    public interface ILanguage : ILookupData
     {
     }
 }

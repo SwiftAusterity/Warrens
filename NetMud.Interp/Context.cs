@@ -11,7 +11,7 @@ using NutMud.Commands.Attributes;
 using System.Text.RegularExpressions;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.Data.Reference;
+using NetMud.Data.LookupData;
 using System.Collections;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.Utility;
@@ -300,13 +300,13 @@ namespace NetMud.Interp
                                                          .MakeGenericMethod(new Type[] { currentNeededParm.ParameterType });
                             containerMethod.Invoke(this, new object[] { commandType, currentNeededParm, subjectType });
                             break;
-                        case CacheReferenceType.Reference:
-                            MethodInfo referenceMethod = GetType().GetMethod("SeekInReferenceData")
+                        case CacheReferenceType.LookupData:
+                            MethodInfo referenceMethod = GetType().GetMethod("SeekInLookupData")
                                                          .MakeGenericMethod(new Type[] { currentNeededParm.ParameterType });
                             referenceMethod.Invoke(this, new object[] { commandType, currentNeededParm });
                             break;
                         case CacheReferenceType.Help:
-                            SeekInReferenceData<Help>(commandType, currentNeededParm);
+                            SeekInLookupData<Help>(commandType, currentNeededParm);
                             break;
                         case CacheReferenceType.Data:
                             MethodInfo dataMethod = GetType().GetMethod("SeekInBackingData")
@@ -519,12 +519,12 @@ namespace NetMud.Interp
 
 
         /// <summary>
-        /// Find a parameter target in reference data
+        /// Find a parameter target in Lookup Data
         /// </summary>
         /// <typeparam name="T">the system type of the data</typeparam>
         /// <param name="commandType">the system type of the command</param>
         /// <param name="currentNeededParm">the conditions for the parameter we're after</param>
-        public void SeekInReferenceData<T>(Type commandType, CommandParameterAttribute currentNeededParm) where T : IReferenceData
+        public void SeekInLookupData<T>(Type commandType, CommandParameterAttribute currentNeededParm) where T : ILookupData
         {
             var internalCommandString = CommandStringRemainder.ToList();
 

@@ -73,7 +73,7 @@
     <Compile Include="Base\System\IFileStored.cs" />
     <Compile Include="Base\System\IHelp.cs" />
     <Compile Include="Base\System\ILiveData.cs" />
-    <Compile Include="Base\System\IReferenceData.cs" />
+    <Compile Include="Base\System\ILookupData.cs" />
     <Compile Include="Base\System\SupportedColors.cs" />
     <Compile Include="Base\World\IEconomy.cs" />
     <Compile Include="Base\Entity\IIntelligence.cs" />

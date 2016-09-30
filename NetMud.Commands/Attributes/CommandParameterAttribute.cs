@@ -94,7 +94,7 @@ namespace NutMud.Commands.Attributes
     public enum CacheReferenceType
     {
         Entity,
-        Reference,
+        LookupData,
         Code,
         Container,
         Data,

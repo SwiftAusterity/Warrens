@@ -3,11 +3,11 @@ using NetMud.DataStructure.Base.System;
 using System.Collections.Generic;
 using System;
 
-namespace NetMud.Data.Reference
+namespace NetMud.Data.LookupData
 {
-    public abstract class ReferenceDataPartial : BackingDataPartial, IReferenceData
+    public abstract class LookupDataPartial : BackingDataPartial, ILookupData
     {
-        public ReferenceDataPartial()
+        public LookupDataPartial()
         {
             //empty instance for getting the dataTableName
         }

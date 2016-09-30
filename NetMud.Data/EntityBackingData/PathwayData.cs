@@ -1,4 +1,4 @@
-﻿using NetMud.Data.Reference;
+﻿using NetMud.Data.LookupData;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Supporting;
 using Newtonsoft.Json;

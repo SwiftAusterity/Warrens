@@ -10,10 +10,10 @@ using System.Data;
 using System.Linq;
 using System.Web.Script.Serialization;
 
-namespace NetMud.Data.Reference
+namespace NetMud.Data.LookupData
 {
     [Serializable]
-    public class Race : ReferenceDataPartial, IRace
+    public class Race : LookupDataPartial, IRace
     {
         [JsonProperty("Arms")]
         private Tuple<long, short> _arms { get; set; }
