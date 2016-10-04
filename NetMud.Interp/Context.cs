@@ -226,7 +226,8 @@ namespace NetMud.Interp
             {
                 var currentCommandString = string.Join(" ", RemoveGrammaticalNiceities(parsedWords.Take(commandWords))).ToLower();
 
-                var validCommands = LoadedCommands.Where(comm => comm.GetCustomAttributes<CommandKeywordAttribute>().Any(att => att.Keyword.Equals(currentCommandString)));
+                var validCommands = LoadedCommands.Where(comm => comm.GetCustomAttributes<CommandKeywordAttribute>()
+                                                                .Any(att => att.Keyword.Equals(currentCommandString, StringComparison.InvariantCultureIgnoreCase)));
 
                 if (validCommands.Count() > 1)
                 {
@@ -247,7 +248,7 @@ namespace NetMud.Interp
                     command = validCommands.First();
 
                     //Kinda janky but we need a way to tell the system "north" is both the command and the target
-                    if (!command.GetCustomAttributes<CommandKeywordAttribute>().Single(att => att.Keyword.Equals(currentCommandString)).IsAlsoSubject)
+                    if (!command.GetCustomAttributes<CommandKeywordAttribute>().Single(att => att.Keyword.Equals(currentCommandString, StringComparison.InvariantCultureIgnoreCase)).IsAlsoSubject)
                         CommandStringRemainder = parsedWords.Skip(commandWords);
                     else
                         CommandStringRemainder = parsedWords;
@@ -361,7 +362,9 @@ namespace NetMud.Interp
                 }
 
                 var validParms = validTargetTypes.Where(comm => comm.GetCustomAttributes<CommandKeywordAttribute>()
-                                                                .Any(att => att.Keyword.Equals(currentParmString)));
+                                                                .Any(att => att.Keyword.Equals(currentParmString, StringComparison.InvariantCultureIgnoreCase) && att.DisplayInHelpAndCommands)
+                                                                || (comm.GetCustomAttribute<CommandSuppressName>() != null) && comm.Name.Equals(currentParmString, StringComparison.InvariantCultureIgnoreCase));
+
 
                 if (validParms.Count() > 1)
                 {

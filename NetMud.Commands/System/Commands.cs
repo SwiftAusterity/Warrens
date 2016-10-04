@@ -43,8 +43,16 @@ namespace NetMud.Commands.System
 
             returnStrings.Add("Commands:");
 
-            foreach (var commandName in loadedCommands.Select(comm => comm.Name))
-                sb.Append(commandName + ", ");
+            var commandNames = new HashSet<string>();
+            foreach (var command in loadedCommands)
+            {
+                foreach(var commandName in command.GetCustomAttributes<CommandKeywordAttribute>().Where(key => key.DisplayInHelpAndCommands))
+                    if(!commandNames.Contains(commandName.Keyword))
+                        commandNames.Add(commandName.Keyword);
+
+                if (!commandNames.Contains(command.Name) && command.GetCustomAttribute<CommandSuppressName>() != null)
+                    commandNames.Add(command.Name);
+            }
 
             if(sb.Length > 0)
                 sb.Length -= 2;

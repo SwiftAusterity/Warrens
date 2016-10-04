@@ -11,6 +11,7 @@ namespace NetMud.Commands.Movement
     /// <summary>
     /// Handles mobile movement commands. All cardinal directions plus "enter <door>" type pathways
     /// </summary>
+    [CommandSuppressName]
     [CommandKeyword("north", true)]
     [CommandKeyword("northeast", true)]
     [CommandKeyword("east", true)]
