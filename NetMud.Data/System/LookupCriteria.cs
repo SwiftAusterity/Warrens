@@ -3,7 +3,10 @@ using NetMud.DataStructure.SupportingClasses;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace NetMud.Data.System
 {
@@ -11,6 +14,7 @@ namespace NetMud.Data.System
     /// Collection of lookup parameters for finding string constants
     /// </summary>
     [Serializable]
+    [TypeConverter(typeof(LookupCriteriaTypeConverter))]
     public class LookupCriteria : ILookupCriteria
     {
         /// <summary>
@@ -31,6 +35,7 @@ namespace NetMud.Data.System
         /// Instansiate with existing criteria list
         /// </summary>
         /// <param name="criteria">list of lookup criteria</param>
+        [JsonConstructor]
         public LookupCriteria(Dictionary<CriteriaType, string> criteria)
         {
             Criterion = criteria;
@@ -87,6 +92,22 @@ namespace NetMud.Data.System
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Overriding this to make the json converter work right
+        /// </summary>
+        /// <returns>the json string</returns>
+        public override string ToString()
+        {
+            var serializer = SerializationUtility.GetSerializer();
+
+            var sb = new StringBuilder();
+            var writer = new StringWriter(sb);
+
+            serializer.Serialize(writer, Criterion);
+
+            return sb.ToString();
         }
     }
 }
