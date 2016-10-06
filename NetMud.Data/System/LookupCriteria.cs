@@ -1,17 +1,40 @@
 ﻿using NetMud.DataAccess;
 using NetMud.DataStructure.SupportingClasses;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace NetMud.Data.System
 {
+    /// <summary>
+    /// Collection of lookup parameters for finding string constants
+    /// </summary>
+    [Serializable]
     public class LookupCriteria : ILookupCriteria
     {
         /// <summary>
         /// The type of criteria to look for
         /// </summary>
+        [JsonProperty("Criteria")]
         public Dictionary<CriteriaType, string> Criterion { get; set; }
+
+        /// <summary>
+        /// Instansiate with empty list of criteria
+        /// </summary>
+        public LookupCriteria()
+        {
+            Criterion = new Dictionary<CriteriaType, string>();
+        }
+
+        /// <summary>
+        /// Instansiate with existing criteria list
+        /// </summary>
+        /// <param name="criteria">list of lookup criteria</param>
+        public LookupCriteria(Dictionary<CriteriaType, string> criteria)
+        {
+            Criterion = criteria;
+        }
 
         /// <summary>
         /// -99 = null input

@@ -5,6 +5,7 @@ using Microsoft.Owin.Security;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.Utility;
 using NetMud.Authentication;
+using NetMud.DataStructure.SupportingClasses;
 
 namespace NetMud.Models
 {

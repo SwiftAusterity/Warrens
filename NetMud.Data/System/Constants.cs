@@ -27,6 +27,15 @@ namespace NetMud.Data.System
         }
 
         /// <summary>
+        /// Instansiate with existing list of lookup values
+        /// </summary>
+        /// <param name="values">list of lookup values</param>
+        public Constants(Dictionary<ILookupCriteria, HashSet<string>> values)
+        {
+            Values = values;
+        }
+
+        /// <summary>
         /// Adds or updates an entire string cluster
         /// </summary>
         /// <param name="key">the value to affect</param>

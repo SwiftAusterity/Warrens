@@ -3,6 +3,7 @@ using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
 using Newtonsoft.Json;
 using System;
@@ -68,6 +69,7 @@ namespace NetMud.Data.EntityBackingData
         /// The last known location ID this character was seen in by system (for restore/backup purposes)
         /// </summary>
         public string LastKnownLocation { get; set; }
+
         /// <summary>
         /// The system type of the ast known location this character was seen in by system (for restore/backup purposes)
         /// </summary>

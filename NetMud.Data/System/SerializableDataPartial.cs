@@ -13,7 +13,7 @@ namespace NetMud.Data.System
         /// <returns>json string</returns>
         public virtual string Serialize()
         {
-            var serializer = JsonSerializer.Create();
+            var serializer = SerializationUtility.GetSerializer();
 
             var sb = new StringBuilder();
             var writer = new StringWriter(sb);
@@ -30,7 +30,7 @@ namespace NetMud.Data.System
         /// <returns>the entity</returns>
         public virtual IFileStored DeSerialize(string jsonData)
         {
-            var serializer = JsonSerializer.Create();
+            var serializer = SerializationUtility.GetSerializer();
 
             var reader = new StringReader(jsonData);
 

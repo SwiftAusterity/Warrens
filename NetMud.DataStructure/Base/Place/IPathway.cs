@@ -3,7 +3,6 @@ using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.DataStructure.Behaviors.System;
 using NetMud.DataStructure.Base.Supporting;
-using NetMud.Utility;
 
 namespace NetMud.DataStructure.Base.Place
 {

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using NetMud.Utility;
 using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
+using NetMud.DataStructure.SupportingClasses;
 
 namespace NutMud.Commands.Rendering
 {

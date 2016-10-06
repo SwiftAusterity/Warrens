@@ -8,6 +8,7 @@ using NetMud.Data.EntityBackingData;
 using NetMud.Data.Game;
 using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
+using NetMud.DataStructure.SupportingClasses;
 
 namespace NutMud.Commands.System
 {

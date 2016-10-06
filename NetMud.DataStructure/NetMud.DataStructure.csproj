@@ -131,12 +131,8 @@
     <Compile Include="SupportingClasses\IMessageCluster.cs" />
     <Compile Include="SupportingClasses\MessagingTargetType.cs" />
     <Compile Include="SupportingClasses\MessagingType.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\NetMud.Utility\NetMud.Utility.csproj">
-      <Project>{9f3caec0-73dc-463c-8ef7-13b83bc8fb12}</Project>
-      <Name>NetMud.Utility</Name>
-    </ProjectReference>
+    <Compile Include="SupportingClasses\MovementDirectionType.cs" />
+    <Compile Include="SupportingClasses\StaffRank.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

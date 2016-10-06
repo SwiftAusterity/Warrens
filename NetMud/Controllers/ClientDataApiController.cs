@@ -2,6 +2,7 @@
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
 using System;
 using System.Linq;

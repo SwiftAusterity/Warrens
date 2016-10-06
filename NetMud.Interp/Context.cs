@@ -15,6 +15,7 @@ using NetMud.Data.LookupData;
 using System.Collections;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.Utility;
+using NetMud.DataStructure.SupportingClasses;
 
 namespace NetMud.Interp
 {

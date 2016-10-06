@@ -1,4 +1,7 @@
-﻿using System;
+﻿using NetMud.DataStructure.SupportingClasses;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
@@ -15,6 +18,110 @@ namespace NetMud.Utility
     /// </summary>
     public static class DataUtility
     {
+        #region "Type Conversion"
+        /// <summary>
+        /// Fault safe type converted
+        /// </summary>
+        /// <typeparam name="T">the type to convert to</typeparam>
+        /// <param name="thing">the thing being converted</param>
+        /// <param name="newThing">the converted thing</param>
+        /// <returns>success status</returns>
+        public static bool TryConvert<T>(object thing, ref T newThing)
+        {
+            try
+            {
+                if (thing == null)
+                    return false;
+
+                if (typeof(T).IsEnum)
+                {
+                    if (thing is Int16 || thing is Int32)
+                        newThing = (T)thing;
+                    else
+                        newThing = (T)Enum.Parse(typeof(T), thing.ToString());
+                }
+                else
+                    newThing = (T)Convert.ChangeType(thing, typeof(T));
+
+                return true;
+            }
+            catch
+            {
+                //dont error on tryconvert, it's called tryconvert for a reason
+                newThing = default(T);
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Fault safe type converted
+        /// </summary>
+        /// <typeparam name="T">the type to convert to</typeparam>
+        /// <param name="thing">the thing being converted</param>
+        /// <param name="newThing">the converted thing</param>
+        /// <returns>success status</returns>
+        public static T TryConvert<T>(object thing)
+        {
+            var newThing = default(T);
+
+            try
+            {
+                if (thing != null)
+                    newThing = (T)Convert.ChangeType(thing, typeof(T));
+            }
+            catch
+            {
+                //dont error on tryconvert, it's called tryconvert for a reason
+                newThing = default(T);
+            }
+
+            return newThing;
+        }
+
+        /// <summary>
+        /// Gets all system types and interfaces implemented by or with for a type, including itself
+        /// </summary>
+        /// <param name="t">the system type in question</param>
+        /// <returns>all types that touch the input type</returns>
+        public static IEnumerable<Type> GetAllImplimentingedTypes(Type t)
+        {
+            var implimentedTypes = t.Assembly.GetTypes().Where(ty => ty.GetInterfaces().Contains(t) || ty == t);
+            return implimentedTypes.Concat(t.GetInterfaces());
+        }
+        #endregion
+
+        #region "Database"
+        /// <summary>
+        /// Get's a single column's data from a datarow (fault safe)
+        /// </summary>
+        /// <typeparam name="T">the data type</typeparam>
+        /// <param name="dr">the data row</param>
+        /// <param name="columnName">the column to extract</param>
+        /// <param name="thing">the output object</param>
+        /// <returns>success status</returns>
+        public static T GetFromDataRow<T>(DataRow dr, string columnName)
+        {
+            T thing = default(T);
+
+            try
+            {
+                if (dr == null || !dr.Table.Columns.Contains(columnName))
+                    return thing;
+
+                TryConvert<T>(dr[columnName], ref thing);
+            }
+            catch
+            {
+                //dont error on this, it is supposed to be safe
+                thing = default(T);
+            }
+
+            return thing;
+        }
+        #endregion
+
+        #region "XML"
         /// <summary>
         /// Safely get the value of an element
         /// </summary>
@@ -115,106 +222,6 @@ namespace NetMud.Utility
             return returnValue;
         }
 
-
-        /// <summary>
-        /// Fault safe type converted
-        /// </summary>
-        /// <typeparam name="T">the type to convert to</typeparam>
-        /// <param name="thing">the thing being converted</param>
-        /// <param name="newThing">the converted thing</param>
-        /// <returns>success status</returns>
-        public static bool TryConvert<T>(object thing, ref T newThing)
-        {
-            try
-            {
-                if (thing == null)
-                    return false;
-
-                if (typeof(T).IsEnum)
-                {
-                    if (thing is Int16 || thing is Int32)
-                        newThing = (T)thing;
-                    else
-                        newThing = (T)Enum.Parse(typeof(T), thing.ToString());
-                }
-                else
-                    newThing = (T)Convert.ChangeType(thing, typeof(T));
-
-                return true;
-            }
-            catch
-            {
-                //dont error on tryconvert, it's called tryconvert for a reason
-                newThing = default(T);
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Fault safe type converted
-        /// </summary>
-        /// <typeparam name="T">the type to convert to</typeparam>
-        /// <param name="thing">the thing being converted</param>
-        /// <param name="newThing">the converted thing</param>
-        /// <returns>success status</returns>
-        public static T TryConvert<T>(object thing)
-        {
-            var newThing = default(T);
-
-            try
-            {
-                if (thing != null)
-                    newThing = (T)Convert.ChangeType(thing, typeof(T));
-            }
-            catch
-            {
-                //dont error on tryconvert, it's called tryconvert for a reason
-                newThing = default(T);
-            }
-
-            return newThing;
-        }
-
-        /// <summary>
-        /// Get's a single column's data from a datarow (fault safe)
-        /// </summary>
-        /// <typeparam name="T">the data type</typeparam>
-        /// <param name="dr">the data row</param>
-        /// <param name="columnName">the column to extract</param>
-        /// <param name="thing">the output object</param>
-        /// <returns>success status</returns>
-        public static T GetFromDataRow<T>(DataRow dr, string columnName)
-        {
-            T thing = default(T);
-
-            try
-            {
-                if (dr == null || !dr.Table.Columns.Contains(columnName))
-                    return thing;
-
-                TryConvert<T>(dr[columnName], ref thing);
-            }
-            catch
-            {
-                //dont error on this, it is supposed to be safe
-                thing = default(T);
-            }
-
-            return thing;
-        }
-
-        /// <summary>
-        /// Gets all system types and interfaces implemented by or with for a type, including itself
-        /// </summary>
-        /// <param name="t">the system type in question</param>
-        /// <returns>all types that touch the input type</returns>
-        public static IEnumerable<Type> GetAllImplimentingedTypes(Type t)
-        {
-            var implimentedTypes = t.Assembly.GetTypes().Where(ty => ty.GetInterfaces().Contains(t) || ty == t);
-            return implimentedTypes.Concat(t.GetInterfaces());
-        }
-
         /// <summary>
         /// Partial class for entity backing data xml (live backup storage format)
         /// </summary>
@@ -288,6 +295,6 @@ namespace NetMud.Utility
                 }
             }
         }
-
+        #endregion
     }
 }

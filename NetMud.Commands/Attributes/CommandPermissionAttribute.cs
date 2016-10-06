@@ -1,4 +1,5 @@
-﻿using NetMud.Utility;
+﻿using NetMud.DataStructure.SupportingClasses;
+using NetMud.Utility;
 using System;
 
 namespace NutMud.Commands.Attributes

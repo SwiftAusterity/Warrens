@@ -7,6 +7,7 @@ using NetMud.Data.Game;
 using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
 using NetMud.DataAccess.FileSystem;
+using NetMud.DataStructure.SupportingClasses;
 
 namespace NutMud.Commands.System
 {
