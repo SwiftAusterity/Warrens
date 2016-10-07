@@ -73,7 +73,7 @@ namespace NetMud.Controllers.GameAdmin
         }
 
         [HttpGet]
-        public ActionResult AddPathway(long id)
+        public ActionResult Add(long id)
         {
             var vModel = new AddEditPathwayDataViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
