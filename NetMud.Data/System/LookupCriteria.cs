@@ -14,7 +14,6 @@ namespace NetMud.Data.System
     /// Collection of lookup parameters for finding string constants
     /// </summary>
     [Serializable]
-    [TypeConverter(typeof(LookupCriteriaTypeConverter))]
     public class LookupCriteria : ILookupCriteria
     {
         /// <summary>
@@ -40,6 +39,19 @@ namespace NetMud.Data.System
         {
             Criterion = criteria;
         }
+
+        /// <summary>
+        /// Instansiate by deserializing the criteria from json
+        /// </summary>
+        public LookupCriteria(string jsonString)
+        {
+            var serializer = SerializationUtility.GetSerializer();
+
+            var reader = new StringReader(jsonString);
+
+            Criterion = serializer.Deserialize(reader, typeof(Dictionary<CriteriaType, string>)) as Dictionary<CriteriaType, string>;
+        }
+
 
         /// <summary>
         /// -99 = null input

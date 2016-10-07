@@ -1,6 +1,7 @@
 ﻿using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,9 +31,13 @@ namespace NetMud.Data.System
         /// Instansiate with existing list of lookup values
         /// </summary>
         /// <param name="values">list of lookup values</param>
-        public Constants(Dictionary<ILookupCriteria, HashSet<string>> values)
+        [JsonConstructor]
+        public Constants(Dictionary<string, HashSet<string>> values)
         {
-            Values = values;
+            Values = new Dictionary<ILookupCriteria, HashSet<string>>();
+
+            foreach (var kvp in values)
+                Values.Add(new LookupCriteria(kvp.Key), kvp.Value);
         }
 
         /// <summary>
