@@ -2,6 +2,8 @@
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.System;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace NetMud.Data.System
 {
@@ -37,6 +39,9 @@ namespace NetMud.Data.System
 
             try
             {
+                //reset this guy's ID to the next one in the list
+                GetNextId();
+
                 BackingDataCache.Add(this);
                 accessor.WriteEntity(this);
             }
@@ -148,5 +153,14 @@ namespace NetMud.Data.System
             return false;
         }
 
+        /// <summary>
+        /// Grabs the next ID in the chain of all objects of this type.
+        /// </summary>
+        private void GetNextId()
+        {
+            IEnumerable<IData> allOfMe = BackingDataCache.GetAll().Where(bdc => bdc.GetType() == this.GetType());
+
+            ID = allOfMe.Max(dp => dp.ID) + 1;
+        }
     }
 }
