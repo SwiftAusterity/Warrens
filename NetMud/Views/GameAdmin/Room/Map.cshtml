@@ -1,0 +1,29 @@
+﻿@model NetMud.Models.Admin.RoomMapViewModel
+@{
+    ViewBag.Title = "Room Mapper";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p class="text-success">@ViewBag.StatusMessage</p>
+@{
+
+    <div>
+        <pre id="modelContainer" style="font-family: Courier New, Courier, monospace; width: 200px; text-align: center;" data-id="@Model.Here.ID"></pre>
+    </div>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            var $modelContainer = $("#modelContainer");
+            var dataId = $modelContainer.attr("data-id");
+
+            $.get("/api/ClientDataApi/RenderRoomForEdit/" + dataId + '/5', function (data) {
+                $modelContainer.html(data);
+            });
+        });
+    </script>
+}

@@ -5,6 +5,7 @@ using NetMud.Data.EntityBackingData;
 using NetMud.Data.LookupData;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
+using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.Models.Admin;
@@ -41,7 +42,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageRoomDataViewModel(BackingDataCache.GetAll<RoomData>());
+            var vModel = new ManageRoomDataViewModel(BackingDataCache.GetAll<IRoomData>());
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             vModel.CurrentPageNumber = CurrentPageNumber;
@@ -49,6 +50,16 @@ namespace NetMud.Controllers.GameAdmin
             vModel.SearchTerms = SearchTerms;
 
             return View("~/Views/GameAdmin/Room/Index.cshtml", vModel);
+        }
+
+        [HttpGet]
+        public ActionResult Map(long ID)
+        {
+            var vModel = new RoomMapViewModel();
+
+            vModel.Here = BackingDataCache.Get<IRoomData>(ID);
+
+            return View("~/Views/GameAdmin/Room/Map.cshtml", vModel);
         }
 
         [HttpPost]
@@ -63,7 +74,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<RoomData>(ID);
+                var obj = BackingDataCache.Get<IRoomData>(ID);
 
                 if (obj == null)
                     message = "That does not exist";

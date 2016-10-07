@@ -61,7 +61,7 @@
                     @foreach (var obj in Model.CurrentPageOfItems)
                     {
                         <tr>
-                            <td>@Html.ActionLink(@obj.ID.ToString(), "Edit", new { id = obj.ID })</td>
+                            <td>@Html.ActionLink(@obj.ID.ToString(), "Edit", new { id = obj.ID }) [@Html.ActionLink("Map", "Map", new { id = obj.ID })]</td>
                             <td>@obj.Name</td>
                             <td>
                                 <div>

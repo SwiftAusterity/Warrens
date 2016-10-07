@@ -44,11 +44,9 @@ namespace NetMud.Models.Admin
         [Display(Name = "Zone")]
         public long Zone { get; set; }
 
-        
         [Display(Name = "Border")]
         public string[] BorderNames { get; set; }
 
-        
         [Display(Name = "Material")]
         public long[] BorderMaterials { get; set; }
 
@@ -57,5 +55,16 @@ namespace NetMud.Models.Admin
         public IEnumerable<IZone> ValidZones { get; set; }
 
         public IRoomData DataObject { get; set; }
+    }
+
+    public class RoomMapViewModel : BaseViewModel
+    {
+        public ApplicationUser authedUser { get; set; }
+
+        public RoomMapViewModel()
+        {
+        }
+
+        public IRoomData Here { get; set; }
     }
 }

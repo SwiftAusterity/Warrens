@@ -342,6 +342,7 @@
     <Content Include="Views\GameAdmin\Constants\Add.cshtml" />
     <Content Include="Views\GameAdmin\Constants\Edit.cshtml" />
     <Content Include="Views\GameAdmin\Constants\Index.cshtml" />
+    <Content Include="Views\GameAdmin\Room\Map.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
