@@ -160,7 +160,11 @@ namespace NetMud.Data.System
         {
             IEnumerable<IData> allOfMe = BackingDataCache.GetAll().Where(bdc => bdc.GetType() == this.GetType());
 
-            ID = allOfMe.Max(dp => dp.ID) + 1;
+            //Zero ordered list
+            if (allOfMe.Count() > 0)
+                ID = allOfMe.Max(dp => dp.ID) + 1;
+            else
+                ID = 0;
         }
     }
 }

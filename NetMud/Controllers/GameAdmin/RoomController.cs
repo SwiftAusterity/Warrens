@@ -48,7 +48,7 @@ namespace NetMud.Controllers.GameAdmin
             vModel.ItemsPerPage = ItemsPerPage;
             vModel.SearchTerms = SearchTerms;
 
-            return View("~/Views/GameAdmin/Room/Index.cshtml.cshtml", vModel);
+            return View("~/Views/GameAdmin/Room/Index.cshtml", vModel);
         }
 
         [HttpPost]

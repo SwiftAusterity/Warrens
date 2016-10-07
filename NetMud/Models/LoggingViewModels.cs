@@ -11,7 +11,7 @@ namespace NetMud.Models.Logging
         public IEnumerable<string> ChannelNames { get; set; }
         public string SelectedLogContent { get; set; }
 
-        [DataType(DataType.Text)]
+        
         [Display(Name = "Selected Channel:")]
         public string SelectedLog { get; set; }
     }

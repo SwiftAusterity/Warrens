@@ -25,21 +25,21 @@ namespace NetMud.Models
         public ApplicationUser authedUser { get; set; }
 
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
-        [DataType(DataType.Text)]
+        
         [Display(Name = "Given Name")]
         public string NewName { get; set; }
 
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
-        [DataType(DataType.Text)]
+        
         [Display(Name = "Family Name")]
         public string NewSurName { get; set; }
 
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
-        [DataType(DataType.Text)]
+        
         [Display(Name = "Gender")]
         public string NewGender { get; set; }
 
-        [DataType(DataType.Text)]
+        
         [Display(Name = "Race")]
         public long RaceId { get; set; }
 

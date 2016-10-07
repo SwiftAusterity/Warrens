@@ -338,7 +338,7 @@
     <Content Include="Views\Shared\EditorTemplates\Boolean.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Short.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Long.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\Int.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Int32.cshtml" />
     <Content Include="Views\GameAdmin\Constants\Add.cshtml" />
     <Content Include="Views\GameAdmin\Constants\Edit.cshtml" />
     <Content Include="Views\GameAdmin\Constants\Index.cshtml" />

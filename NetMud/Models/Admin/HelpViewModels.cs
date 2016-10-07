@@ -37,7 +37,7 @@ namespace NetMud.Models.Admin
         }
 
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
-        [DataType(DataType.Text)]
+        
         [Display(Name = "Name")]
         public string NewName { get; set; }
 

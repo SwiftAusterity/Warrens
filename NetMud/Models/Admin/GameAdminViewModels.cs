@@ -66,32 +66,29 @@ namespace NetMud.Models.Admin
         public ApplicationUser authedUser { get; set; }
 
         [Range(1, 1200, ErrorMessage = "The {0} must be between {2} and {1}.")]
-        [DataType(DataType.Text)]
         [Display(Name = "Length (inches)")]
         public int DimensionalModelLength { get; set; }
 
         [Range(1, 1200, ErrorMessage = "The {0} must be between {2} and {1}.")]
-        [DataType(DataType.Text)]
         [Display(Name = "Height (inches)")]
         public int DimensionalModelHeight { get; set; }
 
         [Range(1, 1200, ErrorMessage = "The {0} must be between {2} and {1}.")]
-        [DataType(DataType.Text)]
         [Display(Name = "Width (inches)")]
         public int DimensionalModelWidth { get; set; }
     }
 
     public class TwoOrThreeDimensionalEntityEditViewModel : DimensionalEntityEditViewModel
     {
-        [DataType(DataType.Text)]
+        
         [Display(Name = "Dimensional Model")]
         public long DimensionalModelId { get; set; }
 
-        [DataType(DataType.Text)]
+        
         [Display(Name = "Model Parts")]
         public string[] ModelPartNames { get; set; }
 
-        [DataType(DataType.Text)]
+        
         [Display(Name = "Model Part Materials")]
         public long[] ModelPartMaterials { get; set; }
 

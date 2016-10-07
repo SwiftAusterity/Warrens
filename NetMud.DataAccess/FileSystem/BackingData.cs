@@ -116,12 +116,7 @@ namespace NetMud.DataAccess.FileSystem
             VerifyDirectory(archiveDirectory);
 
             if (File.Exists(archiveFile))
-            {
-                var archiveDir = new DirectoryInfo(archiveDirectory);
-                var count = archiveDir.GetFiles(archiveFile + ".*").Length;
-
-                File.Move(archiveFile, String.Format("{0}.{1}", archiveFile + count + 1));
-            }
+                File.Delete(archiveFile);
 
             File.Move(currentFile, archiveFile);
         }

@@ -31,7 +31,7 @@ namespace NetMud.Models
         public int ItemsPerPage { get; set; }
 
         [StringLength(2000, ErrorMessage = "Search Terms must be at least {2} characters long.", MinimumLength = 2)]
-        [DataType(DataType.Text)]
+        
         [Display(Name = "Search")]
         public string SearchTerms { get; set; }
 

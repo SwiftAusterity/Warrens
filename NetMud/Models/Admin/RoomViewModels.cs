@@ -35,23 +35,20 @@ namespace NetMud.Models.Admin
         }
 
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
-        [DataType(DataType.Text)]
         [Display(Name = "Name")]
         public string NewName { get; set; }
 
-        [DataType(DataType.Text)]
         [Display(Name = "Medium")]
         public long Medium { get; set; }
 
-        [DataType(DataType.Text)]
         [Display(Name = "Zone")]
         public long Zone { get; set; }
 
-        [DataType(DataType.Text)]
+        
         [Display(Name = "Border")]
         public string[] BorderNames { get; set; }
 
-        [DataType(DataType.Text)]
+        
         [Display(Name = "Material")]
         public long[] BorderMaterials { get; set; }
 
