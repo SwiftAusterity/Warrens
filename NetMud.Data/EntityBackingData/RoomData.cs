@@ -72,14 +72,11 @@ namespace NetMud.Data.EntityBackingData
             }
         }
 
-        /// <summary>
-        /// What walls are made of
-        /// </summary>
         [JsonProperty("Borders")]
         private IDictionary<string, long> _borders { get; set; }
 
         /// <summary>
-        /// The list of internal compositions for separate/explosion/sharding
+        /// What the walls are made of
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
@@ -125,6 +122,14 @@ namespace NetMud.Data.EntityBackingData
         public override Tuple<int, int, int> GetModelDimensions()
         {
             return new Tuple<int, int, int>(Model.Height, Model.Length, Model.Width);
+        }
+
+        /// <summary>
+        /// What pathways are affiliated with this room data (what it spawns with)
+        /// </summary>
+        public IEnumerable<IPathwayData> GetPathways()
+        {
+            return BackingDataCache.GetAll<IPathwayData>().Where(path => path.FromLocationID.Equals(ID.ToString()));
         }
     }
 }

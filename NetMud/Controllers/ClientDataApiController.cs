@@ -37,12 +37,13 @@ namespace NetMud.Controllers
         public string RenderRoomForEdit(long id, int radius)
         {
             var room = BackingDataCache.Get<IRoomData>(id);
-            var sb = new StringBuilder();
 
             if (room == null || radius < 0)
                 return "Invalid inputs.";
 
-            var pathways = BackingDataCache.GetAll<IPathwayData>().Where(path => path.FromLocationID.Equals(room.ID.ToString()));
+            var sb = new StringBuilder();
+
+            var pathways = room.GetPathways();
 
             var nw = pathways.FirstOrDefault(path => MessagingUtility.TranslateDegreesToDirection(path.DegreesFromNorth) == MovementDirectionType.NorthWest);
             var n = pathways.FirstOrDefault(path => MessagingUtility.TranslateDegreesToDirection(path.DegreesFromNorth) == MovementDirectionType.North);
