@@ -182,7 +182,7 @@ namespace NetMud.Data.Game
             var bS = DataTemplate<IPathwayData>(); ;
             var locationAssembly = Assembly.GetAssembly(typeof(Room));
 
-            MovementDirection = MessagingUtility.TranslateDegreesToDirection(bS.DegreesFromNorth);
+            MovementDirection = RenderUtility.TranslateDegreesToDirection(bS.DegreesFromNorth);
 
             BirthMark = LiveCache.GetUniqueIdentifier(bS);
             Keywords = new string[] { bS.Name.ToLower(), MovementDirection.ToString().ToLower() };

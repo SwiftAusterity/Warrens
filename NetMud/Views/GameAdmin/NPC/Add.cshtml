@@ -18,15 +18,15 @@
             @Html.EditorFor(e => e.NewGender)
 
             <div class="form-group">
-                @Html.LabelFor(m => m.RaceId, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
+                @Html.LabelFor(m => m.RaceId, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
                     @Html.DropDownList("RaceId", Model.ValidRaces.Select(rl =>
                                             new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
                                              , htmlAttributes: new { id = "raceId", Style = "padding: 7px;" })
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
+                <div class="col-md-offset-2 col-md-9">
                     <input type="submit" value="Create" class="btn btn-default" />
                 </div>
             </div>

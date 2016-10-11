@@ -23,8 +23,8 @@
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             @Html.EditorFor(e => e.NewName)
             <div class="form-group">
-                @Html.LabelFor(m => m.NewStartingLocationId, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
+                @Html.LabelFor(m => m.NewStartingLocationId, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
                     @Html.DropDownList("NewStartingLocationId", Model.ValidRooms.Select(rl =>
                                                        new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString(), Selected = rl.ID.Equals(Model.NewStartingLocationId) })
                                                        , htmlAttributes: new { id = "NewStartingLocationId", Style = "padding: 7px; float:left; margin-top: 10px;" })
@@ -33,8 +33,8 @@
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(m => m.NewRecallLocationId, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
+                @Html.LabelFor(m => m.NewRecallLocationId, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
                     @Html.DropDownList("NewRecallLocationId", Model.ValidRooms.Select(rl =>
                                                             new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString(), Selected = rl.ID.Equals(Model.NewRecallLocationId) })
                                                             , htmlAttributes: new { id = "NewRecallLocationId", Style = "padding: 7px; float:left; margin-top: 10px;" })
@@ -43,8 +43,8 @@
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(m => m.NewVisionRangeLow, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
+                @Html.LabelFor(m => m.NewVisionRangeLow, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
                     @Html.TextBoxFor(m => m.NewVisionRangeLow, new { @class = "form-control" })
                     @Html.TextBoxFor(m => m.NewVisionRangeHigh, new { @class = "form-control" })
                     @Html.ValidationMessageFor(m => m.NewVisionRangeLow, "", new { @class = "text-danger" })
@@ -53,8 +53,8 @@
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(m => m.NewTemperatureToleranceLow, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
+                @Html.LabelFor(m => m.NewTemperatureToleranceLow, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
                     @Html.TextBoxFor(m => m.NewTemperatureToleranceLow, new { @class = "form-control" })
                     @Html.TextBoxFor(m => m.NewTemperatureToleranceHigh, new { @class = "form-control" })
                     @Html.ValidationMessageFor(m => m.NewTemperatureToleranceLow, "", new { @class = "text-danger" })
@@ -63,8 +63,8 @@
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(m => m.NewBreathes, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
+                @Html.LabelFor(m => m.NewBreathes, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
                     @Html.DropDownList("NewBreathes", Enum.GetNames(typeof(RespiratoryType)).Select(rl =>
                         new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(RespiratoryType), rl)).ToString() })
                         , htmlAttributes: new { id = "NewBreathes", Style = "padding: 7px; float:left; margin-top: 10px;" })
@@ -73,8 +73,8 @@
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(m => m.NewDietaryNeeds, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
+                @Html.LabelFor(m => m.NewDietaryNeeds, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
                     @Html.DropDownList("NewDietaryNeeds", Enum.GetNames(typeof(DietType)).Select(rl =>
                           new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(DietType), rl)).ToString() })
                              , htmlAttributes: new { id = "NewDietaryNeeds", Style = "padding: 7px; float:left; margin-top: 10px;" })
@@ -83,8 +83,8 @@
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(m => m.NewTeethType, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
+                @Html.LabelFor(m => m.NewTeethType, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
                     @Html.DropDownList("NewTeethType", Enum.GetNames(typeof(DamageType)).Select(rl =>
                           new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString() })
                              , htmlAttributes: new { id = "NewTeethType", Style = "padding: 7px; float:left; margin-top: 10px;" })
@@ -93,8 +93,8 @@
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(m => m.NewBloodId, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
+                @Html.LabelFor(m => m.NewBloodId, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
                     @Html.DropDownList("NewBloodId", Model.ValidMaterials.Select(rl =>
                                                        new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
                                                        , htmlAttributes: new { id = "NewBloodId", Style = "padding: 7px; float:left; margin-top: 10px;" })
@@ -103,8 +103,8 @@
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(m => m.NewHeadId, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
+                @Html.LabelFor(m => m.NewHeadId, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
                     @Html.DropDownList("NewHeadId", Model.ValidObjects.Select(rl =>
                                              new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
                                              , htmlAttributes: new { id = "NewHeadId", Style = "padding: 7px; float:left; margin-top: 10px;" })
@@ -113,8 +113,8 @@
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(m => m.NewTorsoId, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
+                @Html.LabelFor(m => m.NewTorsoId, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
                     @Html.DropDownList("NewTorsoId", Model.ValidObjects.Select(rl =>
                                                   new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString()})
                                                   , htmlAttributes: new { id = "NewTorsoId", Style = "padding: 7px; float:left; margin-top: 10px;" })
@@ -124,10 +124,10 @@
 
             <div class="form-group">
                 <div style="display: block; padding-bottom: 10px;">
-                    @Html.LabelFor(m => m.NewArmsID, new { @class = "col-md-2 control-label" })
+                    @Html.LabelFor(m => m.NewArmsID, new { @class = "col-md-3 control-label" })
                 </div>
                 <div style="display: block;">
-                    <div class="col-md-10" style="padding-left: 10px;">
+                    <div class="col-md-9" style="padding-left: 10px;">
                         <span style="padding: 10px; float:left;">Object: </span>@Html.DropDownList("NewArmsId", Model.ValidObjects.Select(rl =>
                                              new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
                                                 , htmlAttributes: new { id = "NewArmsId", Style = "padding: 7px; float:left; margin-top: 10px;" })
@@ -138,10 +138,10 @@
             <br class="clearfix" />
             <div class="form-group">
                 <div style="display: block; padding-bottom: 10px;">
-                    @Html.LabelFor(m => m.NewLegsID, new { @class = "col-md-2 control-label" })
+                    @Html.LabelFor(m => m.NewLegsID, new { @class = "col-md-3 control-label" })
                 </div>
                 <div style="display: block;">
-                    <div class="col-md-10" style="padding-left: 10px;">
+                    <div class="col-md-9" style="padding-left: 10px;">
                         <span style="padding: 10px; float:left;">Object: </span>@Html.DropDownList("NewLegsId", Model.ValidObjects.Select(rl =>
                                                      new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString()})
                                                         , htmlAttributes: new { id = "NewLegsId", Style = "padding: 7px; float:left; margin-top: 10px;" })
@@ -152,11 +152,11 @@
             <br class="clearfix" />
             <div class="form-group">
                 <div style="display: block; padding-bottom: 10px;">
-                    @Html.LabelFor(m => m.NewExtraPartsId, new { @class = "col-md-2 control-label" })
+                    @Html.LabelFor(m => m.NewExtraPartsId, new { @class = "col-md-3 control-label" })
                     <a href="#" id="addPartsRow" style="padding: 10px;">Add another...</a>
                 </div>
                 <div id="partsRows" style="display: block;">
-                    <div class="col-md-10" style="padding-left: 10px;">
+                    <div class="col-md-9" style="padding-left: 10px;">
                         <span style="padding: 10px; float:left;">Name:</span><input id="NewExtraPartsName" name="NewExtraPartsName" type="text" style="float:left; margin-top: 10px;">
                         <span style="padding: 10px; float:left;">Object: </span>@Html.DropDownList("NewExtraPartsId", Model.ValidObjects.Select(rl =>
                                                                                     new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
@@ -170,7 +170,7 @@
             @Html.EditorFor(e => e.NewHelpBody)
 
             <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
+                <div class="col-md-offset-2 col-md-9">
                     <input type="submit" value="Create" class="btn btn-default" />
                 </div>
             </div>
@@ -187,7 +187,7 @@
         $(document).ready(function () {
             $("#addPartsRow").click(function () {
                 $("#partsRows").append(
-                    '<div class="col-md-10" style="padding-left: 10px;"><span style="padding: 10px; float:left;">Name:</span><input id="NewExtraPartsName" name="NewExtraPartsName" type="text" style="float:left; margin-top: 10px;" value=""><span style="padding: 10px; float:left;">Object: </span>' + partsDropdown + '<span style="padding: 10px; float:left;">Amount:</span><input id="NewExtraPartsAmount" name="NewExtraPartsAmount" type="text" value="" style="float:left; margin-top: 10px;"><a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a></div>'
+                    '<div class="col-md-9" style="padding-left: 10px;"><span style="padding: 10px; float:left;">Name:</span><input id="NewExtraPartsName" name="NewExtraPartsName" type="text" style="float:left; margin-top: 10px;" value=""><span style="padding: 10px; float:left;">Object: </span>' + partsDropdown + '<span style="padding: 10px; float:left;">Amount:</span><input id="NewExtraPartsAmount" name="NewExtraPartsAmount" type="text" value="" style="float:left; margin-top: 10px;"><a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a></div>'
                 );
 
                 $(".removeRow").click(function () {

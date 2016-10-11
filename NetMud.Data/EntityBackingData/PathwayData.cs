@@ -3,6 +3,7 @@ using NetMud.Data.LookupData;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.SupportingClasses;
+using NetMud.Utility;
 using Newtonsoft.Json;
 using System;
 using System.Web.Script.Serialization;
@@ -37,7 +38,7 @@ namespace NetMud.Data.EntityBackingData
         {
             get
             {
-                return MessagingUtility.TranslateDegreesToDirection(DegreesFromNorth);
+                return RenderUtility.TranslateDegreesToDirection(DegreesFromNorth);
             }
         }
 

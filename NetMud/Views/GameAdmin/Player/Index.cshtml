@@ -17,7 +17,7 @@
             <nav>
                 <ul class="pagination" style="float: right;">
                     <li style="float: left;">
-                        <div class="col-md-10" style="width: inherit;">
+                        <div class="col-md-9" style="width: inherit;">
                             @Html.TextBoxFor(m => m.SearchTerms, new { @class = "form-control", @style = "width: 200px;float: left;margin-right: 15px;", @title = "Search Term", @onchange = "paginationForm.submit();" })
                             @Html.TextBoxFor(m => m.ItemsPerPage, new { @class = "form-control", @style = "width: 50px;float: left;", @title = "Items Per Page", @onchange = "paginationForm.submit();" })
                         </div>

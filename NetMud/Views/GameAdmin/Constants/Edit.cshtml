@@ -26,13 +26,13 @@
             {
                 <div class="form-group">
                     <div style="display: block; padding-bottom: 10px;">
-                        @Html.LabelFor(m => m.NewConstantValues, new { @class = "col-md-2 control-label" })
+                        @Html.LabelFor(m => m.NewConstantValues, new { @class = "col-md-3 control-label" })
                         <a href="#" id="addValueRow" style="padding: 10px;">Add another...</a>
                     </div>
                     <div id="valueRows" style="display: block;">
                         @foreach (var stringValue in criterion.Value)
                         {
-                            <div class="col-md-10" style="padding-left: 10px;">
+                            <div class="col-md-9" style="padding-left: 10px;">
                                 <span style="padding: 10px; float:left;">Constant Value: </span><input id="NewConstantValues" name="NewConstantValues" style="float:left; margin-top: 10px;" type="text" value="@stringValue">
                                 <a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a>
                             </div>
@@ -43,13 +43,13 @@
 
                 <div class="form-group">
                     <div style="display: block; padding-bottom: 10px;">
-                        @Html.LabelFor(m => m.NewCriterionValues, new { @class = "col-md-2 control-label" })
+                        @Html.LabelFor(m => m.NewCriterionValues, new { @class = "col-md-3 control-label" })
                         <a href="#" id="addCriterionRow" style="padding: 10px;">Add another...</a>
                     </div>
                     <div id="criterionRows" style="display: block;">
                         @foreach (var criteriaLookup in criterion.Key.Criterion)
                         {
-                            <div class="col-md-10" style="padding-left: 10px;">
+                            <div class="col-md-9" style="padding-left: 10px;">
                                 <span style="padding: 10px; float:left;">Criterion Type: </span>@Html.DropDownList("NewCriterionTypes", Enum.GetNames(typeof(CriteriaType)).Select(rl =>
                                     new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(CriteriaType), rl)).ToString(), Selected = rl.Equals(criteriaLookup.Key.ToString()) })
                                   , htmlAttributes: new { id = "NewCriterionTypes", Style = "padding: 7px; float:left; margin-top: 10px;" })
@@ -62,7 +62,7 @@
                 <br class="clearfix" />
             }
             <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
+                <div class="col-md-offset-2 col-md-9">
                     <input type="submit" value="Commit" class="btn btn-default" style="color: green; border-color: cadetblue;" />
                     @Html.ActionLink("Cancel", "Index", "Help", new { @class = "btn btn-default", @style = "color: orange; border-color: red;" })
                 </div>
@@ -81,7 +81,7 @@
 
         $("#addCriterionRow").click(function () {
             $("#criterionRows").append(
-                '<div class="col-md-10" style="padding-left:10px;"><span style="padding: 10px; float:left;">Criterion Type: </span>' + criterionDropdown + '<span style="padding: 10px; float:left;">Criterion Value:</span><input id="NewCriterionValues" name="NewCriterionValues" type="text" value="" style="float:left; margin-top: 10px;"><a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a></div>'
+                '<div class="col-md-9" style="padding-left:10px;"><span style="padding: 10px; float:left;">Criterion Type: </span>' + criterionDropdown + '<span style="padding: 10px; float:left;">Criterion Value:</span><input id="NewCriterionValues" name="NewCriterionValues" type="text" value="" style="float:left; margin-top: 10px;"><a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a></div>'
             );
 
             $(".removeRow").click(function () {
@@ -93,7 +93,7 @@
 
         $("#addValueRow").click(function () {
             $("#valueRows").append(
-                '<div class="col-md-10" style="padding-left:10px;"><span style="padding: 10px; float:left;">Constant Value:</span><input id="NewConstantValues" name="NewConstantValues" type="text" value="" style="float:left; margin-top: 10px;"><a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a></div>'
+                '<div class="col-md-9" style="padding-left:10px;"><span style="padding: 10px; float:left;">Constant Value:</span><input id="NewConstantValues" name="NewConstantValues" type="text" value="" style="float:left; margin-top: 10px;"><a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a></div>'
             );
 
             $(".removeRow").click(function () {

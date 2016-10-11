@@ -13,8 +13,8 @@
         @using (Html.BeginForm("Index", "Logging", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
             @Html.AntiForgeryToken()
-            @Html.LabelFor(m => m.SelectedLog, new { @class = "col-md-2 control-label" })
-            <div class="col-md-10">
+            @Html.LabelFor(m => m.SelectedLog, new { @class = "col-md-3 control-label" })
+            <div class="col-md-9">
                 @Html.DropDownList("SelectedLog", Model.ChannelNames.Select(rl =>
                             new SelectListItem() { Text = rl, Value = rl })
                             , htmlAttributes: new { id = "selectedLog", Style = "padding: 7px;" })

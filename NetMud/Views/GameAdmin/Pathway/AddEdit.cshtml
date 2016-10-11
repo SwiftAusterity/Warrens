@@ -12,7 +12,7 @@
 
         <div class="form-group">
             @Html.LabelFor(model => model.ToLocation, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="col-md-9">
                 @Html.DropDownList("ToLocation", Model.ValidRooms.Select(rl =>
                                     new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
                                      , htmlAttributes: new { id = "ToLocation", Style = "padding: 7px; float:left; margin-top: 10px;" })                
@@ -22,10 +22,10 @@
 
         <div class="form-group">
             <div style="display: block; padding-bottom: 10px;">
-                @Html.LabelFor(m => m.VisibleToSurroundings, new { @class = "col-md-2 control-label" })
+                @Html.LabelFor(m => m.VisibleToSurroundings, new { @class = "col-md-3 control-label" })
             </div>
             <div id="mobileContainerRows" style="display: block;">
-                <div class="col-md-10" style="padding-left: 10px;">
+                <div class="col-md-9" style="padding-left: 10px;">
                     <span style="padding: 10px; float:left;">Name: </span>@Html.TextBoxFor(m => m.VisibleToSurroundings, new { @style = " float:left; margin-top: 10px;" })
                     <span style="padding: 10px; float:left;">Weight:</span>@Html.TextBoxFor(m => m.VisibleStrength, new { @style = " float:left; margin-top: 10px;" })
                 </div>
@@ -33,10 +33,10 @@
         </div>
         <div class="form-group">
             <div style="display: block; padding-bottom: 10px;">
-                @Html.LabelFor(m => m.AudibleToSurroundings, new { @class = "col-md-2 control-label" })
+                @Html.LabelFor(m => m.AudibleToSurroundings, new { @class = "col-md-3 control-label" })
             </div>
             <div id="mobileContainerRows" style="display: block;">
-                <div class="col-md-10" style="padding-left: 10px;">
+                <div class="col-md-9" style="padding-left: 10px;">
                     <span style="padding: 10px; float:left;">Name: </span>@Html.TextBoxFor(m => m.AudibleToSurroundings, new { @style = " float:left; margin-top: 10px;" })
                     <span style="padding: 10px; float:left;">Weight:</span>@Html.TextBoxFor(m => m.AudibleStrength, new { @style = " float:left; margin-top: 10px;" })
                 </div>
@@ -51,7 +51,7 @@
         @Html.Partial("TwoOrThreeDimensionalEntityEditor", Model)
 
         <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
+            <div class="col-md-offset-2 col-md-9">
                 <input type="submit" value="Commit" class="btn btn-default" style="color: green; border-color: cadetblue;" />
                 <a href="#" id="cancelButton" class="btn btn-default" style="color: orange; border-color: red;">Cancel</a>
            </div>

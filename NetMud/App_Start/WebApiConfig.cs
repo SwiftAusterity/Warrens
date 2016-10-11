@@ -30,6 +30,13 @@ namespace NetMud
                 );
 
             config.Routes.MapHttpRoute(
+                name: "ApiModelRoomEditorWithRadius",
+                routeTemplate: "api/ClientDataApi/RenderRoomForEditWithRadius/{id}/{radius}",
+                defaults: new { controller = "ClientDataApi", action = "RenderRoomForEditWithRadius" }
+                );
+
+
+            config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{action}/{id}",
                 defaults: new { id = RouteParameter.Optional }

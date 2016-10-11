@@ -31,6 +31,7 @@ namespace NetMud.Models
         [Required]
         [Display(Name = "Code")]
         public string Code { get; set; }
+
         public string ReturnUrl { get; set; }
 
         [Display(Name = "Remember this browser?")]
@@ -51,6 +52,7 @@ namespace NetMud.Models
         [Required]
         [Display(Name = "Email")]
         [EmailAddress]
+        [UIHint("String")]
         public string Email { get; set; }
 
         [Required]
@@ -68,6 +70,7 @@ namespace NetMud.Models
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
+        [UIHint("String")]
         public string Email { get; set; }
 
         [Required]
@@ -92,6 +95,7 @@ namespace NetMud.Models
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
+        [UIHint("String")]
         public string Email { get; set; }
 
         [Required]
@@ -113,6 +117,7 @@ namespace NetMud.Models
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
+        [UIHint("String")]
         public string Email { get; set; }
     }
 }

@@ -24,13 +24,13 @@
 
             <div class="form-group">
                 <div style="display: block; padding-bottom: 10px;">
-                    @Html.LabelFor(m => m.InanimateContainerNames, new { @class = "col-md-2 control-label" })
+                    @Html.LabelFor(m => m.InanimateContainerNames, new { @class = "col-md-3 control-label" })
                     <a href="#" id="addInanimateContainerRow" style="padding: 10px;">Add another...</a>
                 </div>
                 <div id="inanimateContainerRows" style="display: block;">
                     @foreach (var container in Model.DataObject.InanimateContainers)
                     {
-                        <div class="col-md-10" style="padding-left: 10px;">
+                        <div class="col-md-9" style="padding-left: 10px;">
                             <span style="padding: 10px; float:left;">Name: </span><input id="InanimateContainerNames" name="InanimateContainerNames" style="float:left; margin-top: 10px;" type="text" value="@container.Name">
                             <span style="padding: 10px; float:left;">Weight:</span><input id="InanimateContainerWeights" name="InanimateContainerWeights" style="float:left; margin-top: 10px;" type="text" value="@container.CapacityWeight.ToString()">
                             <span style="padding: 10px; float:left;">Volume:</span><input id="InanimateContainerVolumes" name="InanimateContainerVolumes" style="float:left; margin-top: 10px;" type="text" value="@container.CapacityVolume.ToString()">
@@ -42,13 +42,13 @@
             <br class="clearfix" />
             <div class="form-group">
                 <div style="display: block; padding-bottom: 10px;">
-                    @Html.LabelFor(m => m.MobileContainerNames, new { @class = "col-md-2 control-label" })
+                    @Html.LabelFor(m => m.MobileContainerNames, new { @class = "col-md-3 control-label" })
                     <a href="#" id="addMobileContainerRow" style="padding: 10px;">Add another...</a>
                 </div>
                 <div id="mobileContainerRows" style="display: block;">
                     @foreach (var container in Model.DataObject.MobileContainers)
                     {
-                        <div class="col-md-10" style="padding-left: 10px;">
+                        <div class="col-md-9" style="padding-left: 10px;">
                             <span style="padding: 10px; float:left;">Name: </span><input id="MobileContainerNames" name="MobileContainerNames" style="float:left; margin-top: 10px;" type="text" value="@container.Name">
                             <span style="padding: 10px; float:left;">Weight:</span><input id="MobileContainerWeights" name="MobileContainerWeights" style="float:left; margin-top: 10px;" type="text" value="@container.CapacityWeight.ToString()">
                             <span style="padding: 10px; float:left;">Volume:</span><input id="MobileContainerVolumes" name="MobileContainerVolumes" style="float:left; margin-top: 10px;" type="text" value="@container.CapacityVolume.ToString()">
@@ -60,13 +60,13 @@
             @Html.Partial("TwoOrThreeDimensionalEntityEditor", Model)
             <div class="form-group">
                 <div style="display: block; padding-bottom: 10px;">
-                    @Html.LabelFor(m => m.InternalCompositionIds, new { @class = "col-md-2 control-label" })
+                    @Html.LabelFor(m => m.InternalCompositionIds, new { @class = "col-md-3 control-label" })
                     <a href="#" id="addInternalCompositionRow" style="padding: 10px;">Add another...</a>
                 </div>
                 <div id="internalCompositionRows" style="display: block;">
                     @foreach (var internalComposition in Model.DataObject.InternalComposition)
                     {
-                    <div class="col-md-10" style="padding-left: 10px;">
+                    <div class="col-md-9" style="padding-left: 10px;">
                         <span style="padding: 10px; float:left;">Object: </span>@Html.DropDownList("InternalCompositionIds", Model.ValidInanimateDatas.Select(rl =>
                                                                                  new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString(), Selected = rl.Equals(internalComposition.Key) })
                                                                                  , htmlAttributes: new { id = "InternalCompositionIds", Style = "padding: 7px; float:left; margin-top: 10px;" })
@@ -78,7 +78,7 @@
             </div>
             <br class="clearfix" />
             <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
+                <div class="col-md-offset-2 col-md-9">
                     <input type="submit" value="Commit" class="btn btn-default" style="color: green; border-color: cadetblue;" />
                     @Html.ActionLink("Cancel", "Index", "Inanimate", new { @class = "btn btn-default", @style = "color: orange; border-color: red;" })
                 </div>
@@ -96,7 +96,7 @@
         $(document).ready(function () {
             $("#addInanimateContainerRow").click(function () {
                 $("#inanimateContainerRows").append(
-                    '<div class="col-md-10" style="padding-left:10px;"><span style="padding: 10px; float:left;">Name: </span><input id="InanimateContainerNames" name="InanimateContainerNames" type="text" value="" style="float:left; margin-top: 10px;"><span style="padding: 10px; float:left;">Weight:</span><input id="InanimateContainerWeights" name="InanimateContainerWeights" type="text" value="" style="float:left; margin-top: 10px;"><span style="padding: 10px; float:left;">Volume:</span><input id="InanimateContainerVolumes" name="InanimateContainerVolumes" type="text" value="" style="float:left; margin-top: 10px;"><a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a></div>'
+                    '<div class="col-md-9" style="padding-left:10px;"><span style="padding: 10px; float:left;">Name: </span><input id="InanimateContainerNames" name="InanimateContainerNames" type="text" value="" style="float:left; margin-top: 10px;"><span style="padding: 10px; float:left;">Weight:</span><input id="InanimateContainerWeights" name="InanimateContainerWeights" type="text" value="" style="float:left; margin-top: 10px;"><span style="padding: 10px; float:left;">Volume:</span><input id="InanimateContainerVolumes" name="InanimateContainerVolumes" type="text" value="" style="float:left; margin-top: 10px;"><a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a></div>'
                 );
 
                 $(".removeRow").click(function () {
@@ -108,7 +108,7 @@
 
             $("#addMobileContainerRow").click(function () {
                 $("#mobileContainerRows").append(
-                    '<div class="col-md-10" style="padding-left:10px;"><span style="padding: 10px; float:left;">Name: </span><input id="MobileContainerNames" name="MobileContainerNames" type="text" value="" style="float:left; margin-top: 10px;"><span style="padding: 10px; float:left;">Weight:</span><input id="MobileContainerWeights" name="MobileContainerWeights" type="text" value="" style="float:left; margin-top: 10px;"><span style="padding: 10px; float:left;">Volume:</span><input id="MobileContainerVolumes" name="MobileContainerVolumes" type="text" value="" style="float:left; margin-top: 10px;"><a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a></div>'
+                    '<div class="col-md-9" style="padding-left:10px;"><span style="padding: 10px; float:left;">Name: </span><input id="MobileContainerNames" name="MobileContainerNames" type="text" value="" style="float:left; margin-top: 10px;"><span style="padding: 10px; float:left;">Weight:</span><input id="MobileContainerWeights" name="MobileContainerWeights" type="text" value="" style="float:left; margin-top: 10px;"><span style="padding: 10px; float:left;">Volume:</span><input id="MobileContainerVolumes" name="MobileContainerVolumes" type="text" value="" style="float:left; margin-top: 10px;"><a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a></div>'
                 );
 
                 $(".removeRow").click(function () {
@@ -120,7 +120,7 @@
 
             $("#addInternalCompositionRow").click(function () {
                 $("#internalCompositionRows").append(
-                    '<div class="col-md-10" style="padding-left:10px;"><span style="padding: 10px; float:left;">Object: </span>' + compositionDropdown + '<span style="padding: 10px; float:left;">% of Composition:</span><input id="InternalCompositionPercentages" name="InternalCompositionPercentages" type="text" value="" style="float:left; margin-top: 10px;"><a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a></div>'
+                    '<div class="col-md-9" style="padding-left:10px;"><span style="padding: 10px; float:left;">Object: </span>' + compositionDropdown + '<span style="padding: 10px; float:left;">% of Composition:</span><input id="InternalCompositionPercentages" name="InternalCompositionPercentages" type="text" value="" style="float:left; margin-top: 10px;"><a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a></div>'
                 );
 
                 $(".removeRow").click(function () {

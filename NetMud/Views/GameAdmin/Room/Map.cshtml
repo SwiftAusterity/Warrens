@@ -11,6 +11,10 @@
     <div>
         <pre id="modelContainer" class="asciiMap" data-id="@Model.Here.ID"></pre>
     </div>
+
+    <div>
+        <pre id="expandedModelContainer" class="asciiMap" data-id="@Model.Here.ID"></pre>
+    </div>
 }
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
@@ -23,6 +27,13 @@
 
             $.get("/api/ClientDataApi/RenderRoomForEdit/" + dataId + '/5', function (data) {
                 $modelContainer.html(data);
+            });
+
+            var $exModelContainer = $("#expandedModelContainer");
+            var dataId = $exModelContainer.attr("data-id");
+
+            $.get("/api/ClientDataApi/RenderRoomForEditWithRadius/" + dataId + '/5', function (data) {
+                $exModelContainer.html(data);
             });
         });
     </script>
