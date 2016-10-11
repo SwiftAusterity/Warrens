@@ -1,8 +1,11 @@
-﻿using NetMud.Data.LookupData;
+﻿using NetMud.Communication.Messaging;
+using NetMud.Data.LookupData;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.SupportingClasses;
 using Newtonsoft.Json;
 using System;
+using System.Web.Script.Serialization;
 
 namespace NetMud.Data.EntityBackingData
 {
@@ -24,6 +27,19 @@ namespace NetMud.Data.EntityBackingData
         /// 0->360 degrees with 0 being absolute north (meaning 90 is west, 180 south, etc) -1 means no cardinality
         /// </summary>
         public int DegreesFromNorth { get; set; }
+
+        /// <summary>
+        /// DegreesFromNorth translated
+        /// </summary>
+        [JsonIgnore]
+        [ScriptIgnore]
+        public MovementDirectionType DirectionType
+        {
+            get
+            {
+                return MessagingUtility.TranslateDegreesToDirection(DegreesFromNorth);
+            }
+        }
 
         /// <summary>
         /// The container this points into

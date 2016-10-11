@@ -36,116 +36,55 @@ namespace NetMud.Controllers
         [HttpGet]
         public string RenderRoomForEdit(long id, int radius)
         {
-            var room = BackingDataCache.Get<IRoomData>(id);
+            var centerRoom = BackingDataCache.Get<IRoomData>(id);
 
-            if (room == null || radius < 0)
+            if (centerRoom == null || radius < 0)
                 return "Invalid inputs.";
 
             var sb = new StringBuilder();
 
-            var pathways = room.GetPathways();
+            var pathways = centerRoom.GetPathways();
 
-            var nw = pathways.FirstOrDefault(path => MessagingUtility.TranslateDegreesToDirection(path.DegreesFromNorth) == MovementDirectionType.NorthWest);
-            var n = pathways.FirstOrDefault(path => MessagingUtility.TranslateDegreesToDirection(path.DegreesFromNorth) == MovementDirectionType.North);
-            var ne = pathways.FirstOrDefault(path => MessagingUtility.TranslateDegreesToDirection(path.DegreesFromNorth) == MovementDirectionType.NorthEast);
+            var nw = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.NorthWest);
+            var n = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.North);
+            var ne = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.NorthEast);
 
             var northString = String.Empty;
-            if (nw != null && !string.IsNullOrWhiteSpace(nw.ToLocationID) && nw.ToLocationType.Equals("Room"))
-            {
-                var location = BackingDataCache.Get<IRoomData>(long.Parse(nw.ToLocationID));
-                northString += String.Format("<a href='/GameAdmin/Pathway/Add/{0}' target='_blank' class='editPathway' title='{1}' data-id='{0}'>#</a>", nw.ID, location.Name);
-            }
-            else
-                northString += String.Format("<a href='/GameAdmin/Pathway/Add/{0}' class='addPathway' target='_blank' data-direction='315'>+</a>", id);
-
-            if (n != null && !string.IsNullOrWhiteSpace(n.ToLocationID) && n.ToLocationType.Equals("Room"))
-            {
-                var location = BackingDataCache.Get<IRoomData>(long.Parse(n.ToLocationID));
-                northString += String.Format(" <a href='/GameAdmin/Pathway/Edit/{0}' target='_blank' class='editPathway' title='{1}' data-id='{0}'>#</a>", n.ID, location.Name);
-            }
-            else
-                northString += String.Format(" <a href='/GameAdmin/Pathway/Add/{0}' class='addPathway' target='_blank' data-direction='0'>+</a>", id);
-
-            if (ne != null && !string.IsNullOrWhiteSpace(ne.ToLocationID) && ne.ToLocationType.Equals("Room"))
-            {
-                var location = BackingDataCache.Get<IRoomData>(long.Parse(ne.ToLocationID));
-                northString += String.Format(" <a href='/GameAdmin/Pathway/Edit/{0}' target='_blank' class='editPathway' title='{1}' data-id='{0}'>#</a>", ne.ID, location.Name);
-            }
-            else
-                northString += String.Format(" <a href='/GameAdmin/Pathway/Add/{0}' class='addPathway' target='_blank' data-direction='45'>+</a>", id);
+            northString += RenderPathwayToAscii(nw, centerRoom.ID, MovementDirectionType.NorthWest);
+            northString += RenderPathwayToAscii(n, centerRoom.ID, MovementDirectionType.North);
+            northString += RenderPathwayToAscii(ne, centerRoom.ID, MovementDirectionType.NorthEast);
 
             sb.AppendLine(northString);
-            sb.AppendLine("\\ | /");
 
-            var w = pathways.FirstOrDefault(path => MessagingUtility.TranslateDegreesToDirection(path.DegreesFromNorth) == MovementDirectionType.West);
-            var e = pathways.FirstOrDefault(path => MessagingUtility.TranslateDegreesToDirection(path.DegreesFromNorth) == MovementDirectionType.East);
+            var w = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.West);
+            var e = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.East);
 
             var middleString = String.Empty;
-            if (w != null && !string.IsNullOrWhiteSpace(w.ToLocationID) && w.ToLocationType.Equals("Room"))
-            {
-                var location = BackingDataCache.Get<IRoomData>(long.Parse(w.ToLocationID));
-                middleString += String.Format("<a href='/GameAdmin/Pathway/Edit/{0}' target='_blank' class='editPathway' title='{1}' data-id='{0}'>#</a>", w.ID, location.Name);
-            }
-            else
-                middleString += String.Format("<a href='/GameAdmin/Pathway/Add/{0}' class='addPathway' target='_blank' data-direction='270'>+</a>", id);
-
-            middleString += String.Format("--<a href='/GameAdmin/Room/Edit/{0}' class='addPathway' target='_blank' data-direction='270'>*</a>--", id);
-
-            if (e != null && !string.IsNullOrWhiteSpace(e.ToLocationID) && e.ToLocationType.Equals("Room"))
-            {
-                var location = BackingDataCache.Get<IRoomData>(long.Parse(e.ToLocationID));
-                middleString += String.Format("<a href='/GameAdmin/Pathway/Edit/{0}' target='_blank' class='editPathway' title='{1}' data-id='{0}'>#</a>", e.ID, location.Name);
-            }
-            else
-                middleString += String.Format("<a href='/GameAdmin/Pathway/Add/{0}' class='addPathway' target='_blank' data-direction='90'>+</a>", id);
+            middleString += RenderPathwayToAscii(w, centerRoom.ID, MovementDirectionType.West);
+            middleString += RenderRoomToAscii(centerRoom, true);
+            middleString += RenderPathwayToAscii(e, centerRoom.ID, MovementDirectionType.East);
 
             sb.AppendLine(middleString);
-            sb.AppendLine("/ | \\");
 
-            var sw = pathways.FirstOrDefault(path => MessagingUtility.TranslateDegreesToDirection(path.DegreesFromNorth) == MovementDirectionType.SouthWest);
-            var s = pathways.FirstOrDefault(path => MessagingUtility.TranslateDegreesToDirection(path.DegreesFromNorth) == MovementDirectionType.South);
-            var se = pathways.FirstOrDefault(path => MessagingUtility.TranslateDegreesToDirection(path.DegreesFromNorth) == MovementDirectionType.SouthEast);
+            var sw = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.SouthWest);
+            var s = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.South);
+            var se = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.SouthEast);
 
             var southString = String.Empty;
-            if (sw != null && !string.IsNullOrWhiteSpace(sw.ToLocationID) && sw.ToLocationType.Equals("Room"))
-            {
-                var location = BackingDataCache.Get<IRoomData>(long.Parse(sw.ToLocationID));
-                southString += String.Format("<a href='/GameAdmin/Pathway/Edit/{0}' target='_blank' class='editPathway' title='{1}' data-id='{0}'>#</a>", sw.ID, location.Name);
-            }
-            else
-                southString += String.Format("<a href='/GameAdmin/Pathway/Add/{0}' class='addPathway' target='_blank' data-direction='225'>+</a>", id);
-
-            if (s != null && !string.IsNullOrWhiteSpace(s.ToLocationID) && s.ToLocationType.Equals("Room"))
-            {
-                var location = BackingDataCache.Get<IRoomData>(long.Parse(s.ToLocationID));
-                southString += String.Format(" <a href='/GameAdmin/Pathway/Edit/{0}' target='_blank' class='editPathway' title='{1}' data-id='{0}'>#</a>", s.ID, location.Name);
-            }
-            else
-                southString += String.Format(" <a href='/GameAdmin/Pathway/Add/{0}' class='addPathway' target='_blank' data-direction='180'>+</a>", id);
-
-            if (se != null && !string.IsNullOrWhiteSpace(se.ToLocationID) && se.ToLocationType.Equals("Room"))
-            {
-                var location = BackingDataCache.Get<IRoomData>(long.Parse(se.ToLocationID));
-                southString += String.Format(" <a href='/GameAdmin/Pathway/Edit/{0}' target='_blank' class='editPathway' title='{1}' data-id='{0}'>#</a>", se.ID, location.Name);
-            }
-            else
-                southString += String.Format(" <a href='/GameAdmin/Pathway/Add/{0}' class='addPathway' target='_blank' data-direction='135'>+</a>", id);
+            southString += RenderPathwayToAscii(sw, centerRoom.ID, MovementDirectionType.SouthWest);
+            southString += RenderPathwayToAscii(s, centerRoom.ID, MovementDirectionType.South);
+            southString += RenderPathwayToAscii(se, centerRoom.ID, MovementDirectionType.SouthEast);
 
             sb.AppendLine(southString);
 
             var extraString = String.Empty;
-            foreach (var path in pathways.Where(path => MessagingUtility.TranslateDegreesToDirection(path.DegreesFromNorth) == MovementDirectionType.None
-                                                        && !string.IsNullOrWhiteSpace(path.ToLocationID) 
+            foreach (var path in pathways.Where(path => path.DirectionType == MovementDirectionType.None
+                                                        && !string.IsNullOrWhiteSpace(path.ToLocationID)
                                                         && path.ToLocationType.Equals("Room")))
-            {
-                var location = BackingDataCache.Get<IRoomData>(long.Parse(path.ToLocationID));
-
-                if (location != null)
-                    extraString += String.Format(" <a href='/GameAdmin/Pathway/Edit/{0}' target='_blank' class='editPathway' title='{1}' data-id='{0}'>#</a>", path.ID, location.Name);
-            }
+                extraString += "&nbsp;" + RenderPathwayToAscii(path, centerRoom.ID, MovementDirectionType.None);
 
             //One last for adding non-directional ones
-            extraString += String.Format(" <a href='/GameAdmin/Pathway/Add/{0}' class='addPathway' target='_blank' data-direction='-1'>+</a>", id);
+            extraString += "&nbsp;" + RenderPathwayToAscii(null, centerRoom.ID, MovementDirectionType.None);
 
             if (extraString.Length > 0)
             {
@@ -154,6 +93,32 @@ namespace NetMud.Controllers
             }
 
             return sb.ToString();
+        }
+
+        private string RenderPathwayToAscii(IPathwayData path, long originId, MovementDirectionType directionType)
+        {
+            var returnValue = String.Empty;
+            var asciiCharacter = MessagingUtility.TranslateDirectionToAsciiCharacter(directionType);
+
+            if (path != null)
+            {
+                var destination = BackingDataCache.Get<IRoomData>(long.Parse(path.ToLocationID));
+
+                returnValue = String.Format("<a href='/GameAdmin/Pathway/Edit/{0}' target='_blank' class='editData pathway' title='Edit - {1}' data-id='{0}'>{2}</a>",
+                    path.ID, destination.Name, asciiCharacter);
+            }
+            else
+                returnValue = String.Format("<a href='/GameAdmin/Pathway/Add/{0}' class='addData pathway' target='_blank' data-direction='{1}' title='Add - {2} path and room'>+</a>",
+                    originId, MessagingUtility.TranslateDirectionToDegrees(directionType), directionType.ToString());
+
+            return returnValue;
+        }
+
+        private string RenderRoomToAscii(IRoomData destination, bool centered)
+        {
+            var character = centered ? "0" : "*";
+
+            return String.Format("<a href='/GameAdmin/Room/Edit/{0}' class='editData room' target='_blank' title='Edit - {2}'>{1}</a>", destination.ID, character, destination.Name);
         }
     }
 }

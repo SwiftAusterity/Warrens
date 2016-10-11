@@ -187,5 +187,55 @@ namespace NetMud.Communication.Messaging
             return MovementDirectionType.North;
         }
 
+        /// <summary>
+        /// Translates direction words into degreesFromNorth for pathways
+        /// </summary>
+        /// <param name="direction">the value to translate</param>
+        /// <returns>degrees from north</returns>
+        public static int TranslateDirectionToDegrees(MovementDirectionType direction)
+        {
+            switch(direction)
+            {
+                default:
+                    return -1;
+                case MovementDirectionType.East:
+                    return 90;
+                case MovementDirectionType.North:
+                    return 0;
+                case MovementDirectionType.NorthEast:
+                    return 45;
+                case MovementDirectionType.NorthWest:
+                    return 315;
+                case MovementDirectionType.South:
+                    return 180;
+                case MovementDirectionType.SouthEast:
+                    return 135;
+                case MovementDirectionType.SouthWest:
+                    return 225;
+                case MovementDirectionType.West:
+                    return 270;
+            }
+        }
+
+        public static string TranslateDirectionToAsciiCharacter(MovementDirectionType direction)
+        {
+            switch (direction)
+            {
+                default:
+                    return "#";
+                case MovementDirectionType.West:
+                case MovementDirectionType.East:
+                    return "-";
+                case MovementDirectionType.South:
+                case MovementDirectionType.North:
+                    return "|";
+                case MovementDirectionType.SouthWest:
+                case MovementDirectionType.NorthEast:
+                    return "/";
+                case MovementDirectionType.SouthEast:
+                case MovementDirectionType.NorthWest:
+                    return @"\";
+            }
+        }
     }
 }

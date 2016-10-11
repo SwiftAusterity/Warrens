@@ -1,5 +1,6 @@
 ﻿using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.SupportingClasses;
 
 namespace NetMud.DataStructure.Base.EntityBackingData
 {
@@ -12,6 +13,11 @@ namespace NetMud.DataStructure.Base.EntityBackingData
         /// 0->360 degrees with 0 being absolute north (meaning 90 is west, 180 south, etc) -1 means no cardinality
         /// </summary>
         int DegreesFromNorth { get; set; }
+
+        /// <summary>
+        /// DegreesFromNorth translated
+        /// </summary>
+        MovementDirectionType DirectionType { get; }
 
         /// <summary>
         /// The container this points into
