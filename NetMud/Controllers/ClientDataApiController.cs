@@ -105,11 +105,11 @@ namespace NetMud.Controllers
 
             var sb = new StringBuilder();
 
-            //double radius (one for pathways, one for rooms) in each direction plus the center room
-            var diameter = radius * 4 + 1;
+            //triple radius (one for pathway, one for return pathway, one for rooms) in each direction plus the center room
+            var diameter = radius * 6 + 1;
 
             //Useful to have, we dont want math all over the code just to find the center every time
-            var center = radius * 2 + 1;
+            var center = radius * 3 + 1;
 
             var asciiMap = new string[diameter, diameter];
 
@@ -162,6 +162,7 @@ namespace NetMud.Controllers
             return asciiMap;
         }
 
+        //We have to render our pathway out, an empty space for the potential pathway back and the destination room
         private string[,] RenderDirection(string[,] asciiMap, MovementDirectionType transversalDirection, IRoomData origin, int diameter, int centerX, int centerY)
         {
             var pathways = origin.GetPathways();
@@ -171,23 +172,25 @@ namespace NetMud.Controllers
             var yStepped = centerY + directionalSteps.Item2;
 
             //If we're not over diameter budget and there is nothing there already (we might have already rendered the path and room) then render it
+            //When the next room tries to render backwards it'll run into the existant path it came from and stop the chain here
             if (xStepped <= diameter && yStepped <= diameter && xStepped > 0 && yStepped > 0 
                 && String.IsNullOrWhiteSpace(asciiMap[xStepped - 1, yStepped - 1]))
             {
                 var thisPath = pathways.FirstOrDefault(path => path.DirectionType == transversalDirection);
                 asciiMap[xStepped - 1, yStepped - 1] = RenderPathwayToAscii(thisPath, origin.ID, transversalDirection);
 
-                var doubleXStep = xStepped + directionalSteps.Item1;
-                var doubleYStep = yStepped + directionalSteps.Item2;
+                //We triple step here because the first step was the pathway but the second step is blank for the return pathway. the third step is the actual room
+                var tripleXStep = xStepped + directionalSteps.Item1 * 2;
+                var tripleYStep = yStepped + directionalSteps.Item2 * 2;
 
                 if (thisPath != null && thisPath.ToLocationType.Equals("Room", StringComparison.InvariantCultureIgnoreCase)
-                    && doubleXStep <= diameter && doubleYStep <= diameter && doubleXStep > 0 && doubleYStep > 0 
-                    && String.IsNullOrWhiteSpace(asciiMap[doubleXStep - 1, doubleYStep - 1]))
+                    && tripleXStep <= diameter && tripleYStep <= diameter && tripleXStep > 0 && tripleYStep > 0
+                    && String.IsNullOrWhiteSpace(asciiMap[tripleXStep - 1, tripleYStep - 1]))
                 {
                     var passdownOrigin = BackingDataCache.Get<IRoomData>(long.Parse(thisPath.ToLocationID));
 
                     if (passdownOrigin != null)
-                        asciiMap = RenderFullRoomToAscii(asciiMap, passdownOrigin, diameter, doubleXStep, doubleYStep);
+                        asciiMap = RenderFullRoomToAscii(asciiMap, passdownOrigin, diameter, tripleXStep, tripleYStep);
                 }
             }
 
