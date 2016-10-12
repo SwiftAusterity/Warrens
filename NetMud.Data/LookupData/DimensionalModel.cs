@@ -31,6 +31,16 @@ namespace NetMud.Data.LookupData
         /// </summary>
         public int Width { get; set; }
 
+        /// <summary>
+        /// How hollow something is, we have to maintain current vacuity versus the spawned vacuity in the ModelData
+        /// </summary>
+        public int Vacuity { get; set; }
+
+        /// <summary>
+        /// How pock-marked the surface areas are of the object
+        /// </summary>
+        public int SurfaceCavitation { get; set; }
+
         [JsonProperty("BackingDataId")]
         private long _backingDataId { get; set; }
 
@@ -105,11 +115,13 @@ namespace NetMud.Data.LookupData
         /// <param name="width">Width parameter of the model</param>
         /// <param name="backingDataId">dimensional model backing data id</param>
         /// <param name="materialComps">The material compositions</param>
-        public DimensionalModel(int length, int height, int width, long backingDataId, IDictionary<string, IMaterial> materialComps)
+        public DimensionalModel(int length, int height, int width, int vacuity, int surfaceCavitation, long backingDataId, IDictionary<string, IMaterial> materialComps)
         {
             Length = length;
             Height = height;
             Width = width;
+            Vacuity = vacuity;
+            SurfaceCavitation = surfaceCavitation;
             Composition = materialComps;
 
             _backingDataId = backingDataId;
@@ -121,11 +133,13 @@ namespace NetMud.Data.LookupData
         /// <param name="length">Length parameter of the model</param>
         /// <param name="height">Height parameter of the model</param>
         /// <param name="width">Width parameter of the model</param>
-        public DimensionalModel(int length, int height, int width)
+        public DimensionalModel(int length, int height, int width, int vacuity, int surfaceCavitation)
         {
             Length = length;
             Height = height;
             Width = width;
+            Vacuity = vacuity;
+            SurfaceCavitation = surfaceCavitation;
             Composition = new Dictionary<string, IMaterial>();
 
             ModelBackingData = new DimensionalModelData();

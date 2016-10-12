@@ -69,7 +69,7 @@
         }
     </section>
     <div>
-        <pre id="modelContainer" style="font-family: Courier New, Courier, monospace; width: 200px; text-align: center;" data-id="@Model.DataObject.ID"></pre>
+        <pre id="modelContainer" class="asciiMap" data-id="@Model.DataObject.ID"></pre>
     </div>
 }
 @section Scripts {
@@ -82,7 +82,7 @@
             var dataId = $modelContainer.attr("data-id");
             var materialsDropdown = decodeHtml('@materialsDropdown');
 
-            $.get("/api/ClientDataApi/RenderRoomForEdit/" + dataId + '/0', function (data) {
+            $.get("/api/ClientDataApi/RenderRoomForEditWithRadius/" + dataId + '/1', function (data) {
                 $modelContainer.html(data);
             });
 

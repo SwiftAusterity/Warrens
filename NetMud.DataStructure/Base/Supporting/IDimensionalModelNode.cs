@@ -11,11 +11,6 @@
         short XAxis { get; set; }
 
         /// <summary>
-        /// The position of this node on the YAxis
-        /// </summary>
-        short ZAxis { get; set; }
-
-        /// <summary>
         /// All nodes in a plane are of the same YAxis so bubble it up here so we have access
         /// </summary>
         short YAxis { get; set; }

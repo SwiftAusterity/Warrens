@@ -3,12 +3,12 @@
 namespace NetMud.DataStructure.Base.Supporting
 {
     /// <summary>
-    /// A single 11x11 grid of the 11 planes that compose the dimensional model
+    /// A single 11x11 grid that compose the dimensional model
     /// </summary>
     public interface IDimensionalModelPlane
     {
         /// <summary>
-        /// The collection of 121 nodes in the plane
+        /// The collection of 11 nodes in the plane
         /// </summary>
         HashSet<IDimensionalModelNode> ModelNodes { get; set; }
 
@@ -27,6 +27,6 @@ namespace NetMud.DataStructure.Base.Supporting
         /// </summary>
         /// <param name="xAxis">the X-Axis of the node to get</param>
         /// <returns>the node</returns>
-        IDimensionalModelNode GetNode(short xAxis, short zAxis);
+        IDimensionalModelNode GetNode(short xAxis);
     }
 }

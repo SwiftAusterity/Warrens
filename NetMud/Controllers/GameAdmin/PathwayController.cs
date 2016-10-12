@@ -138,7 +138,7 @@ namespace NetMud.Controllers.GameAdmin
                 validData = false;
             }
 
-            if (dimModel.ModelPlanes.Any(plane => !materialParts.ContainsKey(plane.TagName)))
+            if (dimModel.ModelPlane.Any(plane => !materialParts.ContainsKey(plane.TagName)))
             {
                 message = "You need to choose a material for each Dimensional Model planar section. (" + string.Join(",", dimModel.ModelPlanes.Select(plane => plane.TagName)) + ")";
                 validData = false;

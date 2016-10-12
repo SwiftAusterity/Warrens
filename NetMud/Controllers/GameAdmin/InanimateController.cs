@@ -87,7 +87,7 @@ namespace NetMud.Controllers.GameAdmin
             var vModel = new AddEditInanimateDataViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
             vModel.ValidMaterials = BackingDataCache.GetAll<Material>();
-            vModel.ValidModels = BackingDataCache.GetAll<DimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.ThreeD);
+            vModel.ValidModels = BackingDataCache.GetAll<DimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat);
             vModel.ValidInanimateDatas = BackingDataCache.GetAll<InanimateData>();
 
             return View("~/Views/GameAdmin/Inanimate/Add.cshtml", vModel);
@@ -229,7 +229,7 @@ namespace NetMud.Controllers.GameAdmin
             var vModel = new AddEditInanimateDataViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
             vModel.ValidMaterials = BackingDataCache.GetAll<Material>();
-            vModel.ValidModels = BackingDataCache.GetAll<DimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.ThreeD);
+            vModel.ValidModels = BackingDataCache.GetAll<DimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat);
             vModel.ValidInanimateDatas = BackingDataCache.GetAll<InanimateData>();
 
             var obj = BackingDataCache.Get<InanimateData>(id);

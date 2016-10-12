@@ -15,11 +15,6 @@ namespace NetMud.Data.LookupData
         public short XAxis { get; set; }
 
         /// <summary>
-        /// The position of this node on the ZAxis
-        /// </summary>
-        public short ZAxis { get; set; }
-
-        /// <summary>
         /// The Y-axis from the plane this belongs to
         /// </summary>
         public short YAxis { get; set; }

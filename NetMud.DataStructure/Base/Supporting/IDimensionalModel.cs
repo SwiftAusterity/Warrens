@@ -23,6 +23,16 @@ namespace NetMud.DataStructure.Base.Supporting
         int Width { get; set; }
 
         /// <summary>
+        /// How hollow something is, we have to maintain current vacuity versus the spawned vacuity in the ModelData
+        /// </summary>
+        int Vacuity { get; set; }
+
+        /// <summary>
+        /// How pock-marked the surface areas are of the object
+        /// </summary>
+        int SurfaceCavitation { get; set; }
+
+        /// <summary>
         /// The model we're following
         /// </summary>
         IDimensionalModelData ModelBackingData { get; set; }

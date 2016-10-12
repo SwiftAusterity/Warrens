@@ -69,14 +69,8 @@
                                     <h5>^ Physical Model</h5>
                                     <div>
                                         <pre id="modelContainer" style="font-family: Courier New, Courier, monospace; width: 200px; text-align: center;" data-id="@obj.ID">
-                                            @obj.ViewFlattenedModel(0, 0, 0)
+                                            @obj.ViewFlattenedModel()
                                         </pre>
-                                        <input type="hidden" data-id="@obj.ID" id="yawValue" value="0" />
-                                        <a id="increaseYaw" href="#" data-id="@obj.ID">-></a>
-                                        <input type="hidden" data-id="@obj.ID" id="pitchValue" value="0" />
-                                        <a id="increasePitch" href="#" data-id="@obj.ID">^^</a>
-                                        <input type="hidden" data-id="@obj.ID" id="rollValue" value="0" />
-                                        <a id="increaseRoll" href="#" data-id="@obj.ID">@@</a>
                                     </div>
                                 </div>
                             </td>
@@ -105,57 +99,6 @@
             $(".dimensionalModel").accordion({
                 collapsible: true,
                 active: false
-            });
-
-            $("#increaseYaw").click(function () {
-                var $this = $(this);
-                var dataId = $this.attr("data-id");
-                var $container = $('#modelContainer[data-id=' + dataId + ']');
-                var $yawValue = $('#yawValue[data-id=' + dataId + ']');
-                var $pitchValue = $('#pitchValue[data-id=' + dataId + ']');
-                var $rollValue = $('#rollValue[data-id=' + dataId + ']');
-
-                $yawValue.val(parseInt($yawValue.val(), 10) + 1);
-
-                $.get("/api/ClientDataApi/GetEntityModelView/" + dataId + '/' + $yawValue.val() + '/' + $pitchValue.val() + '/' + $rollValue.val(), function (data) {
-                    $container.html(data);
-                });
-
-                return false;
-            });
-
-            $("#increasePitch").click(function () {
-                var $this = $(this);
-                var dataId = $this.attr("data-id");
-                var $container = $('#modelContainer[data-id=' + dataId + ']');
-                var $yawValue = $('#yawValue[data-id=' + dataId + ']');
-                var $pitchValue = $('#pitchValue[data-id=' + dataId + ']');
-                var $rollValue = $('#rollValue[data-id=' + dataId + ']');
-
-                $pitchValue.val(parseInt($pitchValue.val(), 10) + 1);
-
-                $.get("/api/ClientDataApi/GetEntityModelView/" + dataId + '/' + $yawValue.val() + '/' + $pitchValue.val() + '/' + $rollValue.val(), function (data) {
-                    $container.html(data);
-                });
-
-                return false;
-            });
-
-            $("#increaseRoll").click(function () {
-                var $this = $(this);
-                var dataId = $this.attr("data-id");
-                var $container = $('#modelContainer[data-id=' + dataId + ']');
-                var $yawValue = $('#yawValue[data-id=' + dataId + ']');
-                var $pitchValue = $('#pitchValue[data-id=' + dataId + ']');
-                var $rollValue = $('#rollValue[data-id=' + dataId + ']');
-
-                $rollValue.val(parseInt($rollValue.val(), 10) + 1);
-
-                $.get("/api/ClientDataApi/GetEntityModelView/" + dataId + '/' + $yawValue.val() + '/' + $pitchValue.val() + '/' + $rollValue.val(), function (data) {
-                    $container.html(data);
-                });
-
-                return false;
             });
         });
     </script>

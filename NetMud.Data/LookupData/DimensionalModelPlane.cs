@@ -39,9 +39,9 @@ namespace NetMud.Data.LookupData
         /// </summary>
         /// <param name="xAxis">the X-Axis of the node to get</param>
         /// <returns>the node</returns>
-        public IDimensionalModelNode GetNode(short xAxis, short zAxis)
+        public IDimensionalModelNode GetNode(short xAxis)
         {
-            return ModelNodes.FirstOrDefault(node => node.XAxis.Equals(xAxis) && node.ZAxis.Equals(zAxis));
+            return ModelNodes.FirstOrDefault(node => node.XAxis.Equals(xAxis));
         }
     }
 }
