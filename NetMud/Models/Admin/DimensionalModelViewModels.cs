@@ -43,6 +43,7 @@ namespace NetMud.Models.Admin
 
         
         [Display(Name = "ModelType")]
+        [UIHint("EnumDropDownList")]
         public DimensionalModelType NewModelType { get; set; }
 
         [DataType(DataType.Upload)]
