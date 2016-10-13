@@ -71,6 +71,19 @@ namespace NetMud.Data.Game
             GetFromWorldOrSpawn();
         }
 
+        /// <summary>
+        /// Gets the remaining distance and next "step" to the destination room
+        /// </summary>
+        /// <param name="destination">The room you're heading for</param>
+        /// <returns>distance (in rooms) and the next path you'd have to use</returns>
+        public Tuple<int, IPathway> GetDistanceAndNextStepToRoom(IRoom destination)
+        {
+            var distance = -1;
+            IPathway nextStep = null;
+
+            return new Tuple<int, IPathway>(distance, nextStep);
+        }
+
         #region Container
         /// <summary>
         /// Any inanimates contained in this (on the floor)

@@ -116,6 +116,16 @@ namespace NetMud.Data.EntityBackingData
         }
 
         /// <summary>
+        /// Gets the remaining distance to the destination room
+        /// </summary>
+        /// <param name="destination">The room you're heading for</param>
+        /// <returns>distance (in rooms) between here and there</returns>
+        public int GetDistanceToRoom(IRoomData destination)
+        {
+            return -1;
+        }
+
+        /// <summary>
         /// Get's the entity's model dimensions
         /// </summary>
         /// <returns>height, length, width</returns>

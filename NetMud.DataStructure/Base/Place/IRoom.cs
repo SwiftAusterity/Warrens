@@ -3,6 +3,7 @@ using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.DataStructure.Behaviors.System;
 using NetMud.DataStructure.Base.Supporting;
+using System;
 
 namespace NetMud.DataStructure.Base.Place
 {
@@ -27,5 +28,12 @@ namespace NetMud.DataStructure.Base.Place
         /// <param name="radius">how far away to render</param>
         /// <returns>the string</returns>
         string RenderCenteredMap(int radius, bool visibleOnly);
+
+        /// <summary>
+        /// Gets the remaining distance and next "step" to the destination room
+        /// </summary>
+        /// <param name="destination">The room you're heading for</param>
+        /// <returns>distance (in rooms) and the next path you'd have to use</returns>
+        Tuple<int, IPathway> GetDistanceAndNextStepToRoom(IRoom destination);
     }
 }
