@@ -101,9 +101,8 @@ namespace NetMud.Controllers.GameAdmin
                 modelFile.InputStream.Read(bytes, 0, (int)modelFile.InputStream.Length);
                 var fileContents = Encoding.UTF8.GetString(bytes);
 
-                var newObj = new DimensionalModelData(fileContents);
+                var newObj = new DimensionalModelData(fileContents, vModel.NewModelType);
                 newObj.Name = vModel.NewName;
-                newObj.ModelType = vModel.NewModelType;
 
                 if (newObj.IsModelValid())
                 {

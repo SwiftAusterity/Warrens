@@ -110,7 +110,8 @@ namespace NetMud.Controllers.GameAdmin
 
             var newObj = new RoomData();
             newObj.Name = vModel.NewName;
-            newObj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth);
+            newObj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth
+                                , vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation);
 
             if (vModel.BorderMaterials != null)
             {

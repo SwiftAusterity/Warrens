@@ -29,7 +29,7 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditInanimateDataViewModel : TwoOrThreeDimensionalEntityEditViewModel
+    public class AddEditInanimateDataViewModel : TwoDimensionalEntityEditViewModel
     {
         public AddEditInanimateDataViewModel()
         {

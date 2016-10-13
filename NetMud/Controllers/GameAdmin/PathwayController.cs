@@ -138,7 +138,7 @@ namespace NetMud.Controllers.GameAdmin
                 validData = false;
             }
 
-            if (dimModel.ModelPlane.Any(plane => !materialParts.ContainsKey(plane.TagName)))
+            if (dimModel.ModelPlanes.Any(plane => !materialParts.ContainsKey(plane.TagName)))
             {
                 message = "You need to choose a material for each Dimensional Model planar section. (" + string.Join(",", dimModel.ModelPlanes.Select(plane => plane.TagName)) + ")";
                 validData = false;
@@ -146,7 +146,8 @@ namespace NetMud.Controllers.GameAdmin
 
             if (validData)
             {
-                newObj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth, vModel.DimensionalModelId, materialParts);
+                newObj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth, 
+                    vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation, vModel.DimensionalModelId, materialParts);
 
                 if (newObj.Create() == null)
                     message = "Error; Creation failed.";
@@ -196,6 +197,8 @@ namespace NetMud.Controllers.GameAdmin
             vModel.DimensionalModelHeight = obj.Model.Height;
             vModel.DimensionalModelLength = obj.Model.Length;
             vModel.DimensionalModelWidth = obj.Model.Width;
+            vModel.DimensionalModelVacuity = obj.Model.Vacuity;
+            vModel.DimensionalModelCavitation = obj.Model.SurfaceCavitation;
             vModel.ModelDataObject = obj.Model;
 
             return View("~/Views/GameAdmin/Pathway/AddEdit.cshtml", vModel);
@@ -267,7 +270,8 @@ namespace NetMud.Controllers.GameAdmin
 
             if (validData)
             {
-                obj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth, vModel.DimensionalModelId, materialParts);
+                obj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth, 
+                    vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation, vModel.DimensionalModelId, materialParts);
 
                 if (obj.Save())
                 {

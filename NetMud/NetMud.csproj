@@ -322,7 +322,7 @@
     <Content Include="Views\GameAdmin\Race\Add.cshtml" />
     <Content Include="Views\GameAdmin\Race\Edit.cshtml" />
     <Content Include="Views\GameAdmin\Race\Index.cshtml" />
-    <Content Include="Views\Shared\TwoOrThreeDimensionalEntityEditor.cshtml" />
+    <Content Include="Views\Shared\TwoDimensionalEntityEditor.cshtml" />
     <Content Include="Views\Shared\DimensionalEntityEditor.cshtml" />
     <Content Include="Views\GameAdmin\Pathway\AddEdit.cshtml" />
     <Content Include="Views\GameAdmin\Zone\Add.cshtml" />

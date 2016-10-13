@@ -76,19 +76,24 @@ namespace NetMud.Models.Admin
         [Range(1, 1200, ErrorMessage = "The {0} must be between {2} and {1}.")]
         [Display(Name = "Width (inches)")]
         public int DimensionalModelWidth { get; set; }
+
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Hollowness")]
+        public int DimensionalModelVacuity { get; set; }
+
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Surface Cavitation")]
+        public int DimensionalModelCavitation { get; set; }
     }
 
-    public class TwoOrThreeDimensionalEntityEditViewModel : DimensionalEntityEditViewModel
+    public class TwoDimensionalEntityEditViewModel : DimensionalEntityEditViewModel
     {
-        
         [Display(Name = "Dimensional Model")]
         public long DimensionalModelId { get; set; }
-
         
         [Display(Name = "Model Parts")]
         public string[] ModelPartNames { get; set; }
 
-        
         [Display(Name = "Model Part Materials")]
         public long[] ModelPartMaterials { get; set; }
 

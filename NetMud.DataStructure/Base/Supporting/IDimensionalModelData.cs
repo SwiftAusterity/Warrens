@@ -16,7 +16,7 @@ namespace NetMud.DataStructure.Base.Supporting
         /// <summary>
         /// The 11 planes that compose the physical model
         /// </summary>
-        IDimensionalModelPlane ModelPlane { get; set; }
+        HashSet<IDimensionalModelPlane> ModelPlanes { get; set; }
 
         /// <summary>
         /// How hollow something is

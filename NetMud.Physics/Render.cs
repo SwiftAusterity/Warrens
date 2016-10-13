@@ -185,7 +185,10 @@ namespace NetMud.Physics
             {
                 for (xI = 0; xI < 11; xI++)
                 {
-                    var node = model.GetNode(xI, yI);
+                    short xIs = (short)(xI + 1);
+                    short yIs = (short)(yI + 1);
+
+                    var node = model.GetNode(xIs, yIs);
 
                     flattenedPlane[yI][xI] = DamageTypeToCharacter(node.Style, xI < 5);
                 }

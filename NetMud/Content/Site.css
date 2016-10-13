@@ -41,3 +41,17 @@ textarea {
     text-align: center; 
     background-color: black;
 }
+
+.twoDModel {
+    font-family: Courier New, Courier, monospace; 
+    font-size: large;
+    letter-spacing: 7px;
+    padding: 15px; 
+    width: 400px; 
+    height: 400px;
+    text-align: center; 
+    background-color: black;
+    color: white;
+    overflow: hidden;
+    border: 5px solid grey;
+}

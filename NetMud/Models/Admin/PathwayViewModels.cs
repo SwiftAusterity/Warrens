@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace NetMud.Models.Admin
 {
-    public class AddEditPathwayDataViewModel : TwoOrThreeDimensionalEntityEditViewModel
+    public class AddEditPathwayDataViewModel : TwoDimensionalEntityEditViewModel
     {
         public AddEditPathwayDataViewModel()
         {

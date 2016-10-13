@@ -1,4 +1,5 @@
 ﻿using NetMud.DataAccess;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.Physics;
 using System;
@@ -21,7 +22,7 @@ namespace NetMud.Data.LookupData
         /// <summary>
         /// The 11 planes that compose the physical model
         /// </summary>
-        public IDimensionalModelPlane ModelPlane { get; set; }
+        public HashSet<IDimensionalModelPlane> ModelPlanes { get; set; }
 
         /// <summary>
         /// How hollow something is
@@ -33,15 +34,18 @@ namespace NetMud.Data.LookupData
         /// </summary>
         public DimensionalModelData()
         {
+            ModelPlanes = new HashSet<IDimensionalModelPlane>();
         }
 
         /// <summary>
         /// Create model serialized from a comma delimited string of an 11x11 plane
         /// </summary>
         /// <param name="delimitedPlane">comma delimited string of an 11x11 plane</param>
-        public DimensionalModelData(string delimitedPlane)
+        public DimensionalModelData(string delimitedPlanes, DimensionalModelType type)
         {
-            SerializeModelFromDelimitedList(delimitedPlane);
+            ModelType = type;
+            ModelPlanes = new HashSet<IDimensionalModelPlane>();
+            SerializeModelFromDelimitedList(delimitedPlanes);
         }
 
         /// <summary>
@@ -62,7 +66,7 @@ namespace NetMud.Data.LookupData
         /// <returns>the node</returns>
         public IDimensionalModelNode GetNode(short xAxis, short yAxis)
         {
-            var plane = ModelPlane;
+            var plane = ModelPlanes.FirstOrDefault(pl => pl.YAxis.Equals(yAxis));
 
             if (plane != null)
                 return plane.GetNode(xAxis);
@@ -76,10 +80,10 @@ namespace NetMud.Data.LookupData
         /// <returns>validity</returns>
         public bool IsModelValid()
         {
-            switch(ModelType)
+            switch (ModelType)
             {
-                case DimensionalModelType.Flat: //2d has one 11x11 plane
-                    return ModelPlane != null;
+                case DimensionalModelType.Flat: //2d has 11 planes, but they're all flat (11 X nodes)
+                    return ModelPlanes.Count == 11 && !ModelPlanes.Any(plane => String.IsNullOrWhiteSpace(plane.TagName) || plane.ModelNodes.Count != 11);
                 case DimensionalModelType.None: //0d is always valid, it doesn't care about the model
                     return true;
             }
@@ -101,58 +105,48 @@ namespace NetMud.Data.LookupData
         /// Turn a comma delimited list of planes into the modelplane set
         /// </summary>
         /// <param name="delimitedPlanes">comma delimited list of planes</param>
-        private void SerializeModelFromDelimitedList(string delimitedPlane)
+        private void SerializeModelFromDelimitedList(string delimitedPlanes)
         {
             //don't need to serialize nothing
             if (ModelType == DimensionalModelType.None)
                 return;
 
-            var newPlane = new DimensionalModelPlane();
-            short lineCount = 12;
-
             try
             {
-                foreach (var myString in delimitedPlane.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+                short yCount = 11;
+                foreach (var myString in delimitedPlanes.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    //This is the tagName line
-                    if (lineCount == 12)
+                    var newPlane = new DimensionalModelPlane();
+                    var currentLineNodes = myString.Split(new char[] { ',' });
+
+                    //Name is first
+                    newPlane.TagName = currentLineNodes[0];
+                    newPlane.YAxis = yCount;
+
+                    short xCount = 1;
+                    foreach (var nodeString in currentLineNodes.Skip(1))
                     {
-                        newPlane.TagName = myString;
-                    }
-                    else
-                    {
-                        var currentLineNodes = myString.Split(new char[] { ',' });
+                        var newNode = new DimensionalModelNode();
+                        var nodeStringComponents = nodeString.Split(new char[] { '|' });
 
-                        short xCount = 1;
-                        foreach (var nodeString in currentLineNodes)
-                        {
-                            var newNode = new DimensionalModelNode();
-                            var nodeStringComponents = nodeString.Split(new char[] { '|' });
+                        newNode.XAxis = xCount;
+                        newNode.YAxis = yCount;
 
-                            newNode.XAxis = xCount;
-                            newNode.YAxis = lineCount;
+                        newNode.Style = String.IsNullOrWhiteSpace(nodeStringComponents[0])
+                                            ? DamageType.None
+                                            : Render.CharacterToDamageType(nodeStringComponents[0]);
 
-                            newNode.Style = String.IsNullOrWhiteSpace(nodeStringComponents[0])
-                                                ? DamageType.None
-                                                : Render.CharacterToDamageType(nodeStringComponents[0]);
+                        //May not always indicate material id
+                        if (nodeStringComponents.Count() > 1 && String.IsNullOrWhiteSpace(nodeStringComponents[1]))
+                            newNode.Composition = BackingDataCache.Get<IMaterial>(long.Parse(nodeStringComponents[1]));
 
-                            newNode.Composition = nodeStringComponents.Count() < 2 || String.IsNullOrWhiteSpace(nodeStringComponents[1])
-                                                ? default(IMaterial)
-                                                : default(IMaterial); //TODO: Implement materials -- ReferenceAccess.GetOne<IMaterial>(long.Parse(nodeStringComponents[1]));
-
-                            newPlane.ModelNodes.Add(newNode);
-                            xCount++;
-                        }
-
-                        //This ensures the linecount is always 12 for flats
-                        if (lineCount == 1)
-                        {
-                            ModelPlane = newPlane;
-                            break;
-                        }
+                        newPlane.ModelNodes.Add(newNode);
+                        xCount++;
                     }
 
-                    lineCount--;
+                    //This ensures the linecount is always 11 for flats
+                    ModelPlanes.Add(newPlane);
+                    yCount--;
                 }
             }
             catch (Exception ex)

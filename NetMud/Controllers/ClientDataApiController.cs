@@ -31,7 +31,7 @@ namespace NetMud.Controllers
             if (model == null)
                 return new string[0];
 
-            return new string[] { model.ModelPlane.TagName };
+            return model.ModelPlanes.Select(plane => plane.TagName).Distinct().ToArray();
         }
 
         [HttpGet]
