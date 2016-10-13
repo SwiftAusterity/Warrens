@@ -77,6 +77,6 @@ namespace NetMud.DataStructure.Base.EntityBackingData
         /// <summary>
         /// The current physical model for this entity
         /// </summary>
-        IDimensionalModel Model { get; }
+        IDimensionalModel Model { get; set; }
     }
 }

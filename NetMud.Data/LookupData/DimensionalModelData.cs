@@ -52,9 +52,12 @@ namespace NetMud.Data.LookupData
         /// View the flattened model based on view angle
         /// </summary>
         /// <returns>the flattened model face based on the view angle</returns>
-        public string ViewFlattenedModel()
+        public string ViewFlattenedModel(bool forWeb = false)
         {
-            return Render.FlattenModel(this);
+            if(forWeb)
+                return Render.FlattenModelForWeb(this);
+
+            return Render.FlattenModel(this);        
         }
 
         /// <summary>

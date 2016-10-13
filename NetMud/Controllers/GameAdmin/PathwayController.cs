@@ -5,6 +5,7 @@ using NetMud.Data.EntityBackingData;
 using NetMud.Data.LookupData;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
+using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.Models.Admin;
 using NetMud.Utility;
@@ -189,7 +190,7 @@ namespace NetMud.Controllers.GameAdmin
             vModel.MessageToActor = obj.MessageToActor;
             vModel.MessageToDestination = obj.MessageToDestination;
             vModel.MessageToOrigin = obj.MessageToOrigin;
-            vModel.ToLocation = BackingDataCache.Get<RoomData>(DataUtility.TryConvert<long>(obj.ToLocationID));
+            vModel.ToLocation = BackingDataCache.Get<IRoomData>(DataUtility.TryConvert<long>(obj.ToLocationID));
             vModel.VisibleStrength = obj.VisibleStrength;
             vModel.VisibleToSurroundings = obj.VisibleToSurroundings;
 
@@ -211,7 +212,7 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = BackingDataCache.Get<PathwayData>(id);
+            var obj = BackingDataCache.Get<IPathwayData>(id);
             if (obj == null)
             {
                 message = "That does not exist";
@@ -227,7 +228,7 @@ namespace NetMud.Controllers.GameAdmin
             obj.MessageToActor = vModel.MessageToActor;
             obj.MessageToDestination = vModel.MessageToDestination;
             obj.MessageToOrigin = vModel.MessageToOrigin;
-            obj.ToLocationID = vModel.ToLocation.ID.ToString();
+            obj.ToLocationID = vModel.ToLocationID.ToString();
             obj.ToLocationType = "RoomData";
             obj.VisibleStrength = vModel.VisibleStrength;
             obj.VisibleToSurroundings = vModel.VisibleToSurroundings;

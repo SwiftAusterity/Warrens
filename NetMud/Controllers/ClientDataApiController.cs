@@ -21,7 +21,7 @@ namespace NetMud.Controllers
             if (model == null)
                 return String.Empty;
 
-            return Render.FlattenModel(model);
+            return Render.FlattenModelForWeb(model);
         }
 
         public string[] GetDimensionalData(long id)

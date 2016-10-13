@@ -1,6 +1,6 @@
 ﻿@model NetMud.Models.Admin.AddEditPathwayDataViewModel
 
-@using (Html.BeginForm("AddEdit", "Pathway", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+@using (Html.BeginForm("Edit", "Pathway", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
     
@@ -11,11 +11,11 @@
         @Html.EditorFor(model => model.NewName)
 
         <div class="form-group">
-            @Html.LabelFor(model => model.ToLocation, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.ToLocationID, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-9">
-                @Html.DropDownList("ToLocation", Model.ValidRooms.Select(rl =>
-                                    new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
-                                     , htmlAttributes: new { id = "ToLocation", Style = "padding: 7px; float:left; margin-top: 10px;" })                
+                @Html.DropDownList("ToLocationID", Model.ValidRooms.Select(rl =>
+                                    new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString(), Selected = rl.Equals(Model.ToLocation.ID.ToString()) })
+                                     , htmlAttributes: new { id = "ToLocationID", Style = "padding: 7px; float:left; margin-top: 10px;" })                
                 @Html.ValidationMessageFor(model => model.ToLocation, "", new { @class = "text-danger" })
             </div>
         </div>

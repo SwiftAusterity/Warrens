@@ -42,7 +42,7 @@ namespace NetMud.DataStructure.Base.Supporting
         /// View the flattened model based on view angle
         /// </summary>
         /// <returns>the flattened model face based on the view angle</returns>
-        string ViewFlattenedModel();
+        string ViewFlattenedModel(bool forWeb = false);
     }
 
     /// <summary>

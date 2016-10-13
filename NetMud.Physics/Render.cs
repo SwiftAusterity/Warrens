@@ -11,16 +11,29 @@ namespace NetMud.Physics
     public static class Render
     {
         /// <summary>
+        /// Flattens a dimensional model for display on the web (with material tooltips)
+        /// </summary>
+        /// <param name="model">the model to flatten</param>
+        /// <returns>the flattened view</returns>
+        public static string FlattenModelForWeb(IDimensionalModelData model)
+        {
+            switch(model.ModelType)
+            {
+                case DimensionalModelType.Flat:
+                    return FlattenFlatModel(model, true);
+            }
+
+            return String.Empty;
+        }
+
+        /// <summary>
         /// Flattens a dimensional model for display
         /// </summary>
         /// <param name="model">the model to flatten</param>
-        /// <param name="pitch">rotation on the z-axis</param>
-        /// <param name="yaw">rotation on the Y-axis</param>
-        /// <param name="roll">rotation on the x-axis</param>
         /// <returns>the flattened view</returns>
         public static string FlattenModel(IDimensionalModelData model)
         {
-            switch(model.ModelType)
+            switch (model.ModelType)
             {
                 case DimensionalModelType.Flat:
                     return FlattenFlatModel(model);
@@ -162,7 +175,7 @@ namespace NetMud.Physics
             return returnValue;
         }
 
-        private static string FlattenFlatModel(IDimensionalModelData model)
+        private static string FlattenFlatModel(IDimensionalModelData model, bool forWeb = false)
         {
             var flattenedModel = new StringBuilder();
 
@@ -190,7 +203,14 @@ namespace NetMud.Physics
 
                     var node = model.GetNode(xIs, yIs);
 
-                    flattenedPlane[yI][xI] = DamageTypeToCharacter(node.Style, xI < 5);
+                    var nodeString = DamageTypeToCharacter(node.Style, xI < 5);
+
+                    if (forWeb)
+                        nodeString = String.Format("<a title='{0}'>{1}</a>"
+                            , node.Composition == null ? String.Empty : node.Composition.Name 
+                            , nodeString);
+
+                    flattenedPlane[yI][xI] = nodeString;
                 }
             }
 
