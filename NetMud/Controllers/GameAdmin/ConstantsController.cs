@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
-using NetMud.Data.LookupData;
 using NetMud.Data.System;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;

@@ -9,7 +9,6 @@ using NetMud.Authentication;
 using NetMud.Data.EntityBackingData;
 using System;
 using NetMud.Data.LookupData;
-using NetMud.Utility;
 using NetMud.Models;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.SupportingClasses;

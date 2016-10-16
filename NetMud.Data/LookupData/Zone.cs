@@ -1,7 +1,9 @@
 ﻿using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Web.Script.Serialization;
 
 namespace NetMud.Data.LookupData
 {
@@ -35,6 +37,13 @@ namespace NetMud.Data.LookupData
         /// Is this zone ownership malleable
         /// </summary>
         public bool Claimable { get; set; }
+
+        /// <summary>
+        /// The room array that makes up the world
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public IBackingDataMap ZoneMap { get; private set; }
 
         /// <summary>
         /// New up a "blank" zone entry

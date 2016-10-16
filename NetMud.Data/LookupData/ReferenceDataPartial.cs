@@ -1,7 +1,6 @@
 ﻿using NetMud.Data.System;
 using NetMud.DataStructure.Base.System;
 using System.Collections.Generic;
-using System;
 
 namespace NetMud.Data.LookupData
 {

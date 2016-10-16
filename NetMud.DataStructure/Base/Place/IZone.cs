@@ -36,6 +36,11 @@ namespace NetMud.DataStructure.Base.Place
         bool Claimable { get; set; }
 
         /// <summary>
+        /// The room array that makes up the world
+        /// </summary>
+        IBackingDataMap ZoneMap { get; }
+
+        /// <summary>
         /// Getall the rooms for the zone
         /// </summary>
         /// <returns>the rooms for the zone</returns>

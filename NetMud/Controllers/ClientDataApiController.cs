@@ -1,4 +1,4 @@
-﻿using NetMud.Communication.Messaging;
+﻿using NetMud.Cartography;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Supporting;
@@ -166,7 +166,7 @@ namespace NetMud.Controllers
         private string RenderPathwayToAscii(IPathwayData path, long originId, MovementDirectionType directionType)
         {
             var returnValue = String.Empty;
-            var asciiCharacter = RenderUtility.TranslateDirectionToAsciiCharacter(directionType);
+            var asciiCharacter = Utilities.TranslateDirectionToAsciiCharacter(directionType);
 
             if (path != null)
             {
@@ -177,7 +177,7 @@ namespace NetMud.Controllers
             }
             else
                 returnValue = String.Format("<a href='/GameAdmin/Pathway/Add/{0}' class='addData pathway' target='_blank' data-direction='{1}' title='Add - {2} path and room'>+</a>",
-                    originId, RenderUtility.TranslateDirectionToDegrees(directionType), directionType.ToString());
+                    originId, Utilities.TranslateDirectionToDegrees(directionType), directionType.ToString());
 
             return returnValue;
         }

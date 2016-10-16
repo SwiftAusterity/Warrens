@@ -1,4 +1,5 @@
-﻿using NetMud.DataStructure.Base.EntityBackingData;
+﻿using NetMud.Cartography;
+using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
@@ -145,7 +146,7 @@ namespace NetMud.Communication.Messaging
                             break;
 
                         var pathData = thing.DataTemplate<IPathwayData>();
-                        message = message.Replace("$DIR$", RenderUtility.TranslateDegreesToDirection(pathData.DegreesFromNorth, kvp.Key == MessagingTargetType.ReverseDirection).ToString());
+                        message = message.Replace("$DIR$", Utilities.TranslateToDirection(pathData.DegreesFromNorth, 0, kvp.Key == MessagingTargetType.ReverseDirection).ToString());
                         break;
                 }
             }

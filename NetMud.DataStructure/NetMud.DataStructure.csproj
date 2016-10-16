@@ -47,6 +47,8 @@
     <Compile Include="Base\EntityBackingData\INonPlayerCharacter.cs" />
     <Compile Include="Base\EntityBackingData\IInanimateData.cs" />
     <Compile Include="Base\EntityBackingData\IRoomData.cs" />
+    <Compile Include="Base\Place\IMaps.cs" />
+    <Compile Include="Base\Place\IWorld.cs" />
     <Compile Include="Base\Skills\ISkill.cs" />
     <Compile Include="Base\Supporting\IDamage.cs" />
     <Compile Include="Base\Supporting\IDimensionalModel.cs" />

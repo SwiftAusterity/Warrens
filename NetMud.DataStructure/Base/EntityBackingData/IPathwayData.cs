@@ -15,6 +15,11 @@ namespace NetMud.DataStructure.Base.EntityBackingData
         int DegreesFromNorth { get; set; }
 
         /// <summary>
+        /// -100 to 100 (negative being a decline) % grade of up and down
+        /// </summary>
+        int InclineGrade { get; set; }
+
+        /// <summary>
         /// DegreesFromNorth translated
         /// </summary>
         MovementDirectionType DirectionType { get; }

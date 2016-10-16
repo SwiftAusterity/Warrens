@@ -58,6 +58,10 @@
       <Project>{DBC07A3D-3A1E-48C1-9A72-D115FF3E4349}</Project>
       <Name>NetMud.Authentication</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NetMud.Cartography\NetMud.Cartography.csproj">
+      <Project>{f4eab5d7-93fa-4b7b-9e6d-b7f191e66945}</Project>
+      <Name>NetMud.Cartography</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NetMud.DataAccess\NetMud.DataAccess.csproj">
       <Project>{25B53EF7-E51C-4EE5-A04C-DD8797CFF58F}</Project>
       <Name>NetMud.DataAccess</Name>

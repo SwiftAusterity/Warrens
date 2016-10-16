@@ -73,6 +73,7 @@
     <Compile Include="System\EntityContainer.cs" />
     <Compile Include="System\BackingDataPartial.cs" />
     <Compile Include="System\LookupCriteria.cs" />
+    <Compile Include="System\Maps.cs" />
     <Compile Include="System\SerializableDataPartial.cs" />
     <Compile Include="System\SerializationUtility.cs" />
   </ItemGroup>
@@ -80,6 +81,10 @@
     <ProjectReference Include="..\NetMud.Authentication\NetMud.Authentication.csproj">
       <Project>{dbc07a3d-3a1e-48c1-9a72-d115ff3e4349}</Project>
       <Name>NetMud.Authentication</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NetMud.Cartography\NetMud.Cartography.csproj">
+      <Project>{f4eab5d7-93fa-4b7b-9e6d-b7f191e66945}</Project>
+      <Name>NetMud.Cartography</Name>
     </ProjectReference>
     <ProjectReference Include="..\NetMud.Communication\NetMud.Communication.csproj">
       <Project>{7f19324f-1b9c-467d-816a-74a36eb74cde}</Project>

@@ -1,9 +1,8 @@
-﻿using NetMud.Communication.Messaging;
-using NetMud.Data.LookupData;
+﻿using NetMud.Data.LookupData;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.SupportingClasses;
-using NetMud.Utility;
+using NetMud.Cartography;
 using Newtonsoft.Json;
 using System;
 using System.Web.Script.Serialization;
@@ -21,13 +20,18 @@ namespace NetMud.Data.EntityBackingData
         /// </summary>
         public override Type EntityClass
         {
-            get { return typeof(NetMud.Data.Game.Pathway); }
+            get { return typeof(Game.Pathway); }
         }
 
         /// <summary>
         /// 0->360 degrees with 0 being absolute north (meaning 90 is west, 180 south, etc) -1 means no cardinality
         /// </summary>
         public int DegreesFromNorth { get; set; }
+
+        /// <summary>
+        /// -100 to 100 (negative being a decline) % grade of up and down
+        /// </summary>
+        public int InclineGrade { get; set; }
 
         /// <summary>
         /// DegreesFromNorth translated
@@ -38,7 +42,7 @@ namespace NetMud.Data.EntityBackingData
         {
             get
             {
-                return RenderUtility.TranslateDegreesToDirection(DegreesFromNorth);
+                return Utilities.TranslateToDirection(DegreesFromNorth, InclineGrade);
             }
         }
 

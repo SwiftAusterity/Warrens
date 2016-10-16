@@ -1,4 +1,5 @@
-﻿using NetMud.Communication.Messaging;
+﻿using NetMud.Cartography;
+using NetMud.Communication.Messaging;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
@@ -182,7 +183,7 @@ namespace NetMud.Data.Game
             var bS = DataTemplate<IPathwayData>(); ;
             var locationAssembly = Assembly.GetAssembly(typeof(Room));
 
-            MovementDirection = RenderUtility.TranslateDegreesToDirection(bS.DegreesFromNorth);
+            MovementDirection = Utilities.TranslateToDirection(bS.DegreesFromNorth, bS.InclineGrade);
 
             BirthMark = LiveCache.GetUniqueIdentifier(bS);
             Keywords = new string[] { bS.Name.ToLower(), MovementDirection.ToString().ToLower() };
