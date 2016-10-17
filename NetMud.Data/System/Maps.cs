@@ -10,7 +10,7 @@ namespace NetMud.Data.System
 
         public bool Partial { get; private set; }
 
-        public long[,] GetSinglePlane(int zIndex, bool forAdmin = false, bool withPathways = false)
+        public long[,] GetSinglePlane(int zIndex)
         {
             throw new NotImplementedException();
         }

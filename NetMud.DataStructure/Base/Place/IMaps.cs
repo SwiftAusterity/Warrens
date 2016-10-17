@@ -21,9 +21,7 @@ namespace NetMud.DataStructure.Base.Place
         /// Gets a single plane back from the 3d matrix
         /// </summary>
         /// <param name="zIndex">the z-index plane to render</param>
-        /// <param name="forAdmin">should the rooms and pathways render with admin links</param>
-        /// <param name="withPathways">include pathways? (triples the size of the map)</param>
         /// <returns>the single z plane rendered to a large ascii string</returns>
-        long[,] GetSinglePlane(int zIndex, bool forAdmin, bool withPathways);
+        long[,] GetSinglePlane(int zIndex);
     }
 }

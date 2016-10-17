@@ -15,6 +15,26 @@ namespace NetMud.Cartography
     public static class Cartographer
     {
         /// <summary>
+        /// Render a 3d map down to 2d
+        /// </summary>
+        /// <param name="zIndex"></param>
+        /// <returns>flattened map</returns>
+        public static long[,] GetSinglePlane(long[,,] fullMap, int zIndex)
+        {
+            if (zIndex > fullMap.GetUpperBound(2))
+                throw new InvalidOperationException("Requested zIndex greater than upper Z bound of map.");
+
+            var flatMap = new long[fullMap.GetUpperBound(0), fullMap.GetUpperBound(1)];
+
+            int x, y;
+            for (x = 0; x < fullMap.GetUpperBound(0); x++)
+                for (y = 0; y < fullMap.GetUpperBound(1); y++)
+                    flatMap[x, y] = fullMap[x, y, zIndex];
+
+            return flatMap;
+        }
+
+        /// <summary>
         /// Generate a room map starting in a room backing data with a radius around it
         /// </summary>
         /// <param name="room">the starting room</param>
