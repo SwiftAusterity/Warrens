@@ -30,6 +30,8 @@ namespace NetMud.Backup
             PreLoadAll<RoomData>();
             PreLoadAll<PathwayData>();
 
+            //TODO: Need to new up all the dimensional maps here
+
             LoggingUtility.Log("World restored from data fallback.", LogChannels.Backup, true);
 
             return true;
@@ -230,6 +232,8 @@ namespace NetMud.Backup
                         roomFrom.MoveInto<IPathway>(entity);
                     }
                 }
+
+                //TODO: We need to poll the WorldMaps here and give all the rooms their coordinates as well as the zones their sub-maps
 
                 LoggingUtility.Log("World restored from current live.", LogChannels.Backup, false);
                 return true;
