@@ -26,19 +26,24 @@ namespace NetMud.DataStructure.Base.Place
         int PressureCoefficient { get; set; }
 
         /// <summary>
-        /// Who currently owns this zone
-        /// </summary>
-        long Owner { get; set; } //long for now cause it's supposed to be guild/clan but that wont be implemented for a while, it'll be a bigint in the db anyways
-
-        /// <summary>
         /// Is this zone ownership malleable
         /// </summary>
         bool Claimable { get; set; }
 
         /// <summary>
+        /// The name it will confer to the world it loads to if it is the first zone to load a world
+        /// </summary>
+        string WorldName { get; set; }
+
+        /// <summary>
+        /// What world does this belong to (determined after load)
+        /// </summary>
+        IWorld World { get; set; }
+
+        /// <summary>
         /// The room array that makes up the world
         /// </summary>
-        IBackingDataMap ZoneMap { get; }
+        IMap ZoneMap { get; }
 
         /// <summary>
         /// Getall the rooms for the zone

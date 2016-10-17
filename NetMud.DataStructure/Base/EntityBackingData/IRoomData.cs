@@ -2,6 +2,7 @@
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Base.Place;
+using System;
 
 namespace NetMud.DataStructure.Base.EntityBackingData
 {
@@ -29,6 +30,11 @@ namespace NetMud.DataStructure.Base.EntityBackingData
         /// What zone does this belong to
         /// </summary>
         IZone ZoneAffiliation { get; set; }
+
+        /// <summary>
+        /// Current coordinates of the room on its world map
+        /// </summary>
+        Tuple<int, int, int> Coordinates { get; set; }
 
         /// <summary>
         /// What pathways are affiliated with this room data (what it spawns with)

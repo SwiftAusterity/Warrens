@@ -21,11 +21,7 @@ namespace NetMud.Cartography
         /// <returns>a single string that is an ascii map</returns>
         public static string RenderRadiusMap(IRoom room, int radius)
         {
-            var asciiMapString = new StringBuilder();
-
-            // RenderRoomDataForEditWithRadius(asciiMapString, room, radius);
-
-            return asciiMapString.ToString();
+            return RenderRadiusMap(room.DataTemplate<IRoomData>(), radius, false, false);
         }
 
         /// <summary>
@@ -40,7 +36,19 @@ namespace NetMud.Cartography
         {
             var asciiMapString = new StringBuilder();
 
-            RenderRoomWithRadius(asciiMapString, room, radius, forAdmin, withPathways);
+            //1. Get world map
+            var worlds = LiveCache.GetAll<IWorld>();
+            var ourWorld = worlds.FirstOrDefault(world => world.Equals(room.ZoneAffiliation.World));
+            
+            //2. Get slice of room from world map
+            var map = Cartographer.TakeSliceOfMap(new Tuple<int, int>(room.Coordinates.Item1 + radius, Math.Max(room.Coordinates.Item1 - radius, 0))
+                                                , new Tuple<int, int>(room.Coordinates.Item2 + radius, Math.Max(room.Coordinates.Item2 - radius, 0))
+                                                , new Tuple<int, int>(room.Coordinates.Item3 + 1, Math.Max(room.Coordinates.Item3 - 1, 0))
+                                                , ourWorld.WorldMap.CoordinatePlane, true);
+
+            //3. Render slice of room
+            
+            //RenderRoomWithRadius(asciiMapString, room, radius, forAdmin, withPathways);
 
             return asciiMapString.ToString();
         }

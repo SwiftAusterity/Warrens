@@ -4,23 +4,13 @@ using System;
 
 namespace NetMud.Data.System
 {
-    public class LiveMap : ILiveMap
+    public class Map : IMap
     {
-        public IRoom[,,] CoordinatePlane { get; set; }
+        public long[,,] CoordinatePlane { get; set; }
 
         public bool Partial { get; private set; }
 
-        public string RenderToSinglePlane(int zIndex, bool withPathways = false)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    public class BackingDataMap : IBackingDataMap
-    {
-        public IRoomData[,,] CoordinatePlane { get; set; }
-
-        public string RenderToSinglePlane(int zIndex, bool forAdmin, bool withPathways)
+        public long[,] GetSinglePlane(int zIndex, bool forAdmin = false, bool withPathways = false)
         {
             throw new NotImplementedException();
         }

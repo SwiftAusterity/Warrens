@@ -29,21 +29,28 @@ namespace NetMud.Data.LookupData
         public int PressureCoefficient { get; set; }
 
         /// <summary>
-        /// Who currently owns this zone
-        /// </summary>
-        public long Owner { get; set; }
-
-        /// <summary>
         /// Is this zone ownership malleable
         /// </summary>
         public bool Claimable { get; set; }
+
+        /// <summary>
+        /// The name it will confer to the world it loads to if it is the first zone to load a world
+        /// </summary>
+        public string WorldName { get; set; }
+
+        /// <summary>
+        /// What world does this belong to (determined after load)
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]  
+        public IWorld World { get; set; }
 
         /// <summary>
         /// The room array that makes up the world
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
-        public IBackingDataMap ZoneMap { get; private set; }
+        public IMap ZoneMap { get; private set; }
 
         /// <summary>
         /// New up a "blank" zone entry
@@ -54,11 +61,11 @@ namespace NetMud.Data.LookupData
             Created = DateTime.UtcNow;
             LastRevised = DateTime.UtcNow;
             Name = "NotImpl";
+            WorldName = "Zero";
 
             BaseElevation = 0;
             TemperatureCoefficient = 0;
             PressureCoefficient = 0;
-            Owner = -1;
             Claimable = false;
         }
 

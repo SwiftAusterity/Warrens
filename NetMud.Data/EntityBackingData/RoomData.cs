@@ -99,6 +99,13 @@ namespace NetMud.Data.EntityBackingData
         }
 
         /// <summary>
+        /// Current coordinates of the room on its world map
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public Tuple<int, int, int> Coordinates { get; set; }
+
+        /// <summary>
         /// Spawn new room with its model
         /// </summary>
         [JsonConstructor]
