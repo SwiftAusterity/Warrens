@@ -13,6 +13,7 @@ using System.Reflection;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataAccess.FileSystem;
 using NetMud.DataStructure.SupportingClasses;
+using NetMud.DataStructure.Base.EntityBackingData;
 
 namespace NetMud.Backup
 {
@@ -54,7 +55,7 @@ namespace NetMud.Backup
             {
                 var entityThing = Activator.CreateInstance(implimentingEntityClass, new object[] { (T)thing }) as IEntity;
 
-                LiveCache.Add(entityThing);
+                entityThing.UpsertToLiveWorldCache();
             }
 
             return true;
@@ -173,6 +174,21 @@ namespace NetMud.Backup
                 //Check we found actual data
                 if (!entitiesToLoad.Any(ent => ent.GetType() == typeof(Room) || ent.GetType() == typeof(Pathway)))
                     throw new Exception("No rooms or pathways found, failover.");
+
+                //We need to pick up any roomDatas and pathwaydatas that aren't already live from the file system incase someone added them during the last session
+                foreach (var thing in BackingDataCache.GetAll<IRoomData>().Where(dt => !entitiesToLoad.Any(ent => ent.DataTemplateId.Equals(dt.ID))))
+                {
+                    var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { (IRoomData)thing }) as IRoom;
+
+                    entityThing.UpsertToLiveWorldCache();
+                }
+
+                foreach (var thing in BackingDataCache.GetAll<IPathwayData>().Where(dt => !entitiesToLoad.Any(ent => ent.DataTemplateId.Equals(dt.ID))))
+                {
+                    var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { (IPathwayData)thing }) as IPathway;
+
+                    entityThing.UpsertToLiveWorldCache();
+                }
 
                 //We have the containers contents and the birthmarks from the deserial
                 //I don't know how we can even begin to do this type agnostically since the collections are held on type specific objects without some super ugly reflection
