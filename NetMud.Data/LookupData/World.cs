@@ -11,9 +11,15 @@ namespace NetMud.Data.LookupData
     {
         public IMap WorldMap { get; private set; }
 
-        public World(IMap worldMap)
+        public World(IMap worldMap, string name)
         {
             WorldMap = worldMap;
+            Name = name;
+            Created = DateTime.UtcNow;
+            LastRevised = DateTime.UtcNow;
+
+            //Set the id right now
+            GetNextId();
         }
     }
 }

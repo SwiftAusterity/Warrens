@@ -1,7 +1,9 @@
 ﻿using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.SupportingClasses;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace NetMud.Cartography
@@ -75,9 +77,6 @@ namespace NetMud.Cartography
                 , new Tuple<int, int>(newMap.GetLowerBound(2), newMap.GetUpperBound(2)));
         }
 
-        //TODO: a method that takes a room, builds the entire connected world out of it and returns a World without regards to radius. 
-        //Would need to both recenter and shrink before the end otherwise we'll have gigantic arrays
-
         /// <summary>
         /// Generate a room map starting in a room backing data with a radius around it
         /// </summary>
@@ -85,7 +84,7 @@ namespace NetMud.Cartography
         /// <param name="radius">the radius of rooms to go out to. -1 means "generate the entire world"</param>
         /// <param name="recenter">find the center node of the array and return an array with that node at absolute center</param>
         /// <returns>a 3d array of rooms</returns>
-        public static long[, ,] GenerateMapFromRoom(IRoomData room, int radius, bool recenter = false)
+        public static long[, ,] GenerateMapFromRoom(IRoomData room, int radius, HashSet<IRoomData> roomPool, bool shrink = false)
         {
             if (room == null || radius < 0)
                 throw new InvalidOperationException("Invalid inputs.");
@@ -99,49 +98,55 @@ namespace NetMud.Cartography
             center++;
 
             //The origin room
-            returnMap = AddFullRoomToMap(returnMap, room, diameter, center, center, center);
+            returnMap = AddFullRoomToMap(returnMap, room, diameter, center, center, center, roomPool);
+
+            if (shrink)
+                returnMap = ShrinkMap(returnMap);
 
             return returnMap;
         }
 
 
         //It's just easier to pass the ints we already calculated along instead of doing the math every single time, this cascades each direction fully because it calls itself for existant rooms
-        private static long[, ,] AddFullRoomToMap(long[, ,] dataMap, IRoomData origin, int diameter, int centerX, int centerY, int centerZ)
+        private static long[, ,] AddFullRoomToMap(long[, ,] dataMap, IRoomData origin, int diameter, int centerX, int centerY, int centerZ, HashSet<IRoomData> roomPool)
         {
+            if (roomPool != null && roomPool.Contains(origin))
+                roomPool.Remove(origin);
+
             //Render the room itself
             dataMap[centerX - 1, centerY - 1, centerZ] = origin.ID;
-            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.North, origin, diameter, centerX, centerY, centerZ);
-            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.NorthEast, origin, diameter, centerX, centerY, centerZ);
-            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.NorthWest, origin, diameter, centerX, centerY, centerZ);
-            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.East, origin, diameter, centerX, centerY, centerZ);
-            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.West, origin, diameter, centerX, centerY, centerZ);
-            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.South, origin, diameter, centerX, centerY, centerZ);
-            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.SouthEast, origin, diameter, centerX, centerY, centerZ);
-            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.SouthWest, origin, diameter, centerX, centerY, centerZ);
-            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.Up, origin, diameter, centerX, centerY, centerZ);
-            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.UpNorth, origin, diameter, centerX, centerY, centerZ);
-            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.UpNorthEast, origin, diameter, centerX, centerY, centerZ);
-            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.UpNorthWest, origin, diameter, centerX, centerY, centerZ);
-            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.UpEast, origin, diameter, centerX, centerY, centerZ);
-            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.UpWest, origin, diameter, centerX, centerY, centerZ);
-            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.UpSouth, origin, diameter, centerX, centerY, centerZ);
-            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.UpSouthEast, origin, diameter, centerX, centerY, centerZ);
-            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.UpSouthWest, origin, diameter, centerX, centerY, centerZ);
-            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.Down, origin, diameter, centerX, centerY, centerZ);
-            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.DownNorth, origin, diameter, centerX, centerY, centerZ);
-            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.DownNorthEast, origin, diameter, centerX, centerY, centerZ);
-            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.DownNorthWest, origin, diameter, centerX, centerY, centerZ);
-            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.DownEast, origin, diameter, centerX, centerY, centerZ);
-            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.DownWest, origin, diameter, centerX, centerY, centerZ);
-            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.DownSouth, origin, diameter, centerX, centerY, centerZ);
-            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.DownSouthEast, origin, diameter, centerX, centerY, centerZ);
-            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.DownSouthWest, origin, diameter, centerX, centerY, centerZ);
+            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.North, origin, diameter, centerX, centerY, centerZ, roomPool);
+            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.NorthEast, origin, diameter, centerX, centerY, centerZ, roomPool);
+            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.NorthWest, origin, diameter, centerX, centerY, centerZ, roomPool);
+            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.East, origin, diameter, centerX, centerY, centerZ, roomPool);
+            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.West, origin, diameter, centerX, centerY, centerZ, roomPool);
+            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.South, origin, diameter, centerX, centerY, centerZ, roomPool);
+            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.SouthEast, origin, diameter, centerX, centerY, centerZ, roomPool);
+            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.SouthWest, origin, diameter, centerX, centerY, centerZ, roomPool);
+            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.Up, origin, diameter, centerX, centerY, centerZ, roomPool);
+            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.UpNorth, origin, diameter, centerX, centerY, centerZ, roomPool);
+            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.UpNorthEast, origin, diameter, centerX, centerY, centerZ, roomPool);
+            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.UpNorthWest, origin, diameter, centerX, centerY, centerZ, roomPool);
+            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.UpEast, origin, diameter, centerX, centerY, centerZ, roomPool);
+            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.UpWest, origin, diameter, centerX, centerY, centerZ, roomPool);
+            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.UpSouth, origin, diameter, centerX, centerY, centerZ, roomPool);
+            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.UpSouthEast, origin, diameter, centerX, centerY, centerZ, roomPool);
+            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.UpSouthWest, origin, diameter, centerX, centerY, centerZ, roomPool);
+            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.Down, origin, diameter, centerX, centerY, centerZ, roomPool);
+            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.DownNorth, origin, diameter, centerX, centerY, centerZ, roomPool);
+            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.DownNorthEast, origin, diameter, centerX, centerY, centerZ, roomPool);
+            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.DownNorthWest, origin, diameter, centerX, centerY, centerZ, roomPool);
+            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.DownEast, origin, diameter, centerX, centerY, centerZ, roomPool);
+            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.DownWest, origin, diameter, centerX, centerY, centerZ, roomPool);
+            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.DownSouth, origin, diameter, centerX, centerY, centerZ, roomPool);
+            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.DownSouthEast, origin, diameter, centerX, centerY, centerZ, roomPool);
+            dataMap = AddDirectionToMap(dataMap, MovementDirectionType.DownSouthWest, origin, diameter, centerX, centerY, centerZ, roomPool);
 
             return dataMap;
         }
 
         //We have to render our pathway out, an empty space for the potential pathway back and the destination room
-        private static long[, ,] AddDirectionToMap(long[, ,] dataMap, MovementDirectionType transversalDirection, IRoomData origin, int diameter, int centerX, int centerY, int centerZ)
+        private static long[, ,] AddDirectionToMap(long[, ,] dataMap, MovementDirectionType transversalDirection, IRoomData origin, int diameter, int centerX, int centerY, int centerZ, HashSet<IRoomData> roomPool)
         {
             var pathways = origin.GetPathways();
             var directionalSteps = Utilities.GetDirectionStep(transversalDirection);
@@ -165,12 +170,27 @@ namespace NetMud.Cartography
                     if (passdownOrigin != null)
                     {
                         dataMap[xStepped - 1, yStepped - 1, zStepped - 1] = passdownOrigin.ID;
-                        dataMap = AddFullRoomToMap(dataMap, passdownOrigin, diameter, xStepped, yStepped, zStepped);
+                        dataMap = AddFullRoomToMap(dataMap, passdownOrigin, diameter, xStepped, yStepped, zStepped, roomPool);
                     }
                 }
             }
 
             return dataMap;
+        }
+
+
+        /// <summary>
+        /// Shrinks a map matrix to its exact needed coordinate bounds
+        /// </summary>
+        /// <param name="map"></param>
+        /// <returns></returns>
+        public static long[, ,] ShrinkMap(long[, ,] map)
+        {
+            //We take a "full slice" of the map to shrink it
+            return Cartographer.TakeSliceOfMap(new Tuple<int, int>(map.GetLowerBound(0), map.GetUpperBound(0))
+                                                    , new Tuple<int, int>(map.GetLowerBound(1), map.GetUpperBound(1))
+                                                    , new Tuple<int, int>(map.GetLowerBound(2), map.GetUpperBound(2))
+                                                    , map, true);
         }
 
         /// <summary>

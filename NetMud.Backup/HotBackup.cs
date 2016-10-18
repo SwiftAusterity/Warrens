@@ -14,6 +14,9 @@ using NetMud.DataStructure.Base.Place;
 using NetMud.DataAccess.FileSystem;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.Data.LookupData;
+using NetMud.Data.System;
+using NetMud.Cartography;
 
 namespace NetMud.Backup
 {
@@ -34,6 +37,21 @@ namespace NetMud.Backup
             PreLoadAll<PathwayData>();
 
             //TODO: Need to new up all the dimensional maps here
+            var roomPool = new HashSet<IRoomData>(BackingDataCache.GetAll<IRoomData>());
+
+            //This will cycle through every room building massive (in theory) maps and spitting out the remaining items to make more worlds from.
+            //If your world is highly disconnected you will end up with a ton of world maps
+            while(roomPool.Count() > 0)
+            {
+                var currentRoom = roomPool.FirstOrDefault();
+
+                if(currentRoom == null)
+                    continue;
+
+                var newWorld = GenerateWorld(currentRoom, roomPool);
+
+                BackingDataCache.Add(newWorld);
+            }
 
             LoggingUtility.Log("World restored from data fallback.", LogChannels.Backup, true);
 
@@ -262,6 +280,31 @@ namespace NetMud.Backup
             }
 
             return false;
+        }
+
+        //TODO: a method that takes a room, 
+        //Would need to both recenter and shrink before the end otherwise we'll have gigantic arrays
+        /// <summary>
+        /// Builds the entire connected world out of the starting room 
+        /// </summary>
+        /// <param name="startingRoom">The room to start with</param>
+        /// <param name="remainingRooms">The list of remaining rooms to work against (will remove used rooms from this)</param>
+        /// <returns>A whole new world</returns>
+        private IWorld GenerateWorld(IRoomData startingRoom, HashSet<IRoomData> remainingRooms)
+        {
+            if (startingRoom == null)
+                throw new InvalidOperationException("Invalid inputs.");
+
+            //We're kind of faking array size for radius, it will be shrunk later
+            var returnMap = Cartographer.GenerateMapFromRoom(startingRoom, remainingRooms.Count(), remainingRooms, true);
+
+            //This zone gets to choose the world name if any
+            var world = new World(new Map(returnMap, false), startingRoom.ZoneAffiliation.WorldName);
+
+            if (String.IsNullOrWhiteSpace(world.Name))
+                world.Name = "Dimension " + world.ID.ToString();
+
+            return world;
         }
     }
 }

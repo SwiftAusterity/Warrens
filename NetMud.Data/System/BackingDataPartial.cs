@@ -156,7 +156,7 @@ namespace NetMud.Data.System
         /// <summary>
         /// Grabs the next ID in the chain of all objects of this type.
         /// </summary>
-        private void GetNextId()
+        internal void GetNextId()
         {
             IEnumerable<IData> allOfMe = BackingDataCache.GetAll().Where(bdc => bdc.GetType() == this.GetType());
 

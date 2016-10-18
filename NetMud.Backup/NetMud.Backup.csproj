@@ -46,6 +46,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NetMud.Cartography\NetMud.Cartography.csproj">
+      <Project>{f4eab5d7-93fa-4b7b-9e6d-b7f191e66945}</Project>
+      <Name>NetMud.Cartography</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NetMud.DataAccess\NetMud.DataAccess.csproj">
       <Project>{25b53ef7-e51c-4ee5-a04c-dd8797cff58f}</Project>
       <Name>NetMud.DataAccess</Name>
