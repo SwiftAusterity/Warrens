@@ -10,5 +10,10 @@ namespace NetMud.Data.LookupData
     public class World : BackingDataPartial, IWorld
     {
         public IMap WorldMap { get; private set; }
+
+        public World(IMap worldMap)
+        {
+            WorldMap = worldMap;
+        }
     }
 }

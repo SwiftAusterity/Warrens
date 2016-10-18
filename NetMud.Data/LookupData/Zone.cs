@@ -1,4 +1,5 @@
-﻿using NetMud.DataAccess.Cache;
+﻿using NetMud.Data.System;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
 using Newtonsoft.Json;
@@ -47,12 +48,12 @@ namespace NetMud.Data.LookupData
         /// What world does this belong to (determined after load)
         /// </summary>
         [ScriptIgnore]
-        [JsonIgnore]  
+        [JsonIgnore]
         public IWorld World
         {
             get
             {
-                if(_worldId > -1)
+                if (_worldId > -1)
                     return BackingDataCache.Get<IWorld>(_worldId);
 
                 return null;
@@ -63,12 +64,25 @@ namespace NetMud.Data.LookupData
             }
         }
 
+        [ScriptIgnore]
+        [JsonIgnore]
+        private IMap _zoneMap { get; set; }
+
         /// <summary>
         /// The room array that makes up the world
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
-        public IMap ZoneMap { get; private set; }
+        public IMap ZoneMap
+        {
+            get
+            {
+                if (_zoneMap == null && World != null)
+                    _zoneMap = new Map(Cartography.Cartographer.GetZoneMap(World.WorldMap.CoordinatePlane, ID), true);
+
+                return _zoneMap;
+            }
+        }
 
         /// <summary>
         /// New up a "blank" zone entry
