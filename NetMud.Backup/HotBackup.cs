@@ -36,22 +36,7 @@ namespace NetMud.Backup
             PreLoadAll<RoomData>();
             PreLoadAll<PathwayData>();
 
-            //TODO: Need to new up all the dimensional maps here
-            var roomPool = new HashSet<IRoomData>(BackingDataCache.GetAll<IRoomData>());
-
-            //This will cycle through every room building massive (in theory) maps and spitting out the remaining items to make more worlds from.
-            //If your world is highly disconnected you will end up with a ton of world maps
-            while(roomPool.Count() > 0)
-            {
-                var currentRoom = roomPool.FirstOrDefault();
-
-                if(currentRoom == null)
-                    continue;
-
-                var newWorld = GenerateWorld(currentRoom, roomPool);
-
-                BackingDataCache.Add(newWorld);
-            }
+            ParseDimension();
 
             LoggingUtility.Log("World restored from data fallback.", LogChannels.Backup, true);
 
@@ -269,7 +254,8 @@ namespace NetMud.Backup
                     }
                 }
 
-                //TODO: We need to poll the WorldMaps here and give all the rooms their coordinates as well as the zones their sub-maps
+                //We need to poll the WorldMaps here and give all the rooms their coordinates as well as the zones their sub-maps
+                ParseDimension();
 
                 LoggingUtility.Log("World restored from current live.", LogChannels.Backup, false);
                 return true;
@@ -280,6 +266,25 @@ namespace NetMud.Backup
             }
 
             return false;
+        }
+
+        private void ParseDimension()
+        {
+                    var roomPool = new HashSet<IRoomData>(BackingDataCache.GetAll<IRoomData>());
+
+            //This will cycle through every room building massive (in theory) maps and spitting out the remaining items to make more worlds from.
+            //If your world is highly disconnected you will end up with a ton of world maps
+            while(roomPool.Count() > 0)
+            {
+                var currentRoom = roomPool.FirstOrDefault();
+
+                if(currentRoom == null)
+                    continue;
+
+                var newWorld = GenerateWorld(currentRoom, roomPool);
+
+                BackingDataCache.Add(newWorld);
+            }
         }
 
         //TODO: a method that takes a room, 

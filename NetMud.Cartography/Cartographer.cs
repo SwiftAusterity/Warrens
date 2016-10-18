@@ -110,11 +110,11 @@ namespace NetMud.Cartography
         //It's just easier to pass the ints we already calculated along instead of doing the math every single time, this cascades each direction fully because it calls itself for existant rooms
         private static long[, ,] AddFullRoomToMap(long[, ,] dataMap, IRoomData origin, int diameter, int centerX, int centerY, int centerZ, HashSet<IRoomData> roomPool)
         {
-            if (roomPool != null && roomPool.Contains(origin))
+            if (roomPool != null && roomPool.Count > 0 && roomPool.Contains(origin))
                 roomPool.Remove(origin);
 
             //Render the room itself
-            dataMap[centerX - 1, centerY - 1, centerZ] = origin.ID;
+            dataMap[centerX - 1, centerY - 1, centerZ - 1] = origin.ID;
             dataMap = AddDirectionToMap(dataMap, MovementDirectionType.North, origin, diameter, centerX, centerY, centerZ, roomPool);
             dataMap = AddDirectionToMap(dataMap, MovementDirectionType.NorthEast, origin, diameter, centerX, centerY, centerZ, roomPool);
             dataMap = AddDirectionToMap(dataMap, MovementDirectionType.NorthWest, origin, diameter, centerX, centerY, centerZ, roomPool);
@@ -157,9 +157,9 @@ namespace NetMud.Cartography
 
             //If we're not over diameter budget and there is nothing there already (we might have already rendered the path and room) then render it
             //When the next room tries to render backwards it'll run into the existant path it came from and stop the chain here
-            if (xStepped <= diameter && xStepped > 0
-                && yStepped > 0 && yStepped <= diameter
-                && zStepped > 0 && zStepped <= diameter
+            if (xStepped < diameter && xStepped > 0
+                && yStepped > 0 && yStepped < diameter
+                && zStepped > 0 && zStepped < diameter
                 && dataMap[xStepped - 1, yStepped - 1, zStepped - 1] <= 0)
             {
                 var thisPath = pathways.FirstOrDefault(path => path.DirectionType == transversalDirection);
