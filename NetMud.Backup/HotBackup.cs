@@ -9,8 +9,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataAccess.FileSystem;
+using NetMud.DataStructure.SupportingClasses;
 
 namespace NetMud.Backup
 {
@@ -77,7 +79,7 @@ namespace NetMud.Backup
                 var entities = LiveCache.GetAll();
 
                 //Dont save players to the hot section, there's another place for them
-                foreach (var entity in entities.Where(ent => ent.GetType() != typeof(Player)))
+                foreach (var entity in entities.Where(ent => !ent.GetType().GetCustomAttributes<IgnoreAutomatedBackupAttribute>().Any()))
                 {
                     var liveEntity = entity as IEntity;
 
@@ -151,7 +153,7 @@ namespace NetMud.Backup
                 var implimentedTypes = typeof(EntityPartial).Assembly.GetTypes().Where(ty => ty.GetInterfaces().Contains(typeof(IEntity)) 
                                                                                                 && ty.IsClass 
                                                                                                 && !ty.IsAbstract 
-                                                                                                && !ty.Name.Equals("Player"));
+                                                                                                && !ty.GetCustomAttributes<IgnoreAutomatedBackupAttribute>().Any());
 
                 foreach (var type in implimentedTypes)
                 {

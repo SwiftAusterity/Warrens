@@ -1,4 +1,5 @@
-﻿using NetMud.DataStructure.Base.EntityBackingData;
+﻿using NetMud.DataAccess.Cache;
+using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
 using Newtonsoft.Json;
 using System;
@@ -38,12 +39,29 @@ namespace NetMud.Data.LookupData
         /// </summary>
         public string WorldName { get; set; }
 
+        [ScriptIgnore]
+        [JsonIgnore]
+        private long _worldId { get; set; }
+
         /// <summary>
         /// What world does this belong to (determined after load)
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]  
-        public IWorld World { get; set; }
+        public IWorld World
+        {
+            get
+            {
+                if(_worldId > -1)
+                    return BackingDataCache.Get<IWorld>(_worldId);
+
+                return null;
+            }
+            set
+            {
+                _worldId = value.ID;
+            }
+        }
 
         /// <summary>
         /// The room array that makes up the world

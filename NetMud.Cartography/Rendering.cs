@@ -37,8 +37,7 @@ namespace NetMud.Cartography
             var asciiMap = new StringBuilder();
 
             //1. Get world map
-            var worlds = LiveCache.GetAll<IWorld>();
-            var ourWorld = worlds.FirstOrDefault(world => world.Equals(room.ZoneAffiliation.World));
+            var ourWorld = room.ZoneAffiliation.World;
 
             //2. Get slice of room from world map
             var map = Cartographer.TakeSliceOfMap(new Tuple<int, int>(room.Coordinates.Item1 + radius, Math.Max(room.Coordinates.Item1 - radius, 0))

@@ -1,13 +1,8 @@
 ﻿using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.Place;
-using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.SupportingClasses;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NetMud.Cartography
 {
@@ -57,7 +52,7 @@ namespace NetMud.Cartography
             center++;
 
             //The origin room
-            returnMap = AddFullRoomToMap(returnMap, room, diameter, center, center);
+            returnMap = AddFullRoomToMap(returnMap, room, diameter, center, center, center);
 
             return returnMap;
         }
@@ -99,7 +94,7 @@ namespace NetMud.Cartography
         }
 
         //We have to render our pathway out, an empty space for the potential pathway back and the destination room
-        private static string[,] AddDirectionToMap(long[, ,] dataMap, MovementDirectionType transversalDirection, IRoomData origin, int diameter, int centerX, int centerY, int centerZ)
+        private static long[, ,] AddDirectionToMap(long[, ,] dataMap, MovementDirectionType transversalDirection, IRoomData origin, int diameter, int centerX, int centerY, int centerZ)
         {
             var pathways = origin.GetPathways();
             var directionalSteps = Utilities.GetDirectionStep(transversalDirection);
@@ -128,7 +123,7 @@ namespace NetMud.Cartography
                 }
             }
 
-            return asciiMap;
+            return dataMap;
         }
 
         /// <summary>
@@ -151,7 +146,7 @@ namespace NetMud.Cartography
                     for (y = 0; y < map.GetUpperBound(1); y++)
                         if (y >= yBounds.Item2 && y <= yBounds.Item1)
                             for (z = 0; z < map.GetUpperBound(2); z++)
-                                if (z >= zBounds.Item2 && z <= zBounds.Item1 && map[x, y, z] != null)
+                                if (z >= zBounds.Item2 && z <= zBounds.Item1 && map[x, y, z] > 0)
                                 {
                                     newMap[x, y, z] = map[x, y, z];
 

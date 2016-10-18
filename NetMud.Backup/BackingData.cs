@@ -3,9 +3,11 @@
 using System;
 using System.Linq;
 using System.IO;
+using System.Reflection;
 using NetMud.DataAccess.Cache;
 using NetMud.DataAccess;
 using NetMud.Data.EntityBackingData;
+using NetMud.DataStructure.SupportingClasses;
 
 namespace NetMud.Backup
 {
@@ -54,7 +56,7 @@ namespace NetMud.Backup
             var implimentedTypes = typeof(EntityBackingDataPartial).Assembly.GetTypes().Where(ty => ty.GetInterfaces().Contains(typeof(IData))
                                                                                 && ty.IsClass
                                                                                 && !ty.IsAbstract
-                                                                                && ty != typeof(Character));
+                                                                                && !ty.GetCustomAttributes<IgnoreAutomatedBackupAttribute>().Any());
 
             foreach (var t in implimentedTypes)
                 LoadAllToCache(t);
