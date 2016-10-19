@@ -40,21 +40,21 @@ namespace NetMud.Cartography
             var ourWorld = room.ZoneAffiliation.World;
 
             //2. Get slice of room from world map
-            var map = Cartographer.TakeSliceOfMap(new Tuple<int, int>(room.Coordinates.Item1 + radius, Math.Max(room.Coordinates.Item1 - radius, 0))
-                                                , new Tuple<int, int>(room.Coordinates.Item2 + radius, Math.Max(room.Coordinates.Item2 - radius, 0))
-                                                , new Tuple<int, int>(room.Coordinates.Item3 + 1, Math.Max(room.Coordinates.Item3 - 1, 0))
+            var map = Cartographer.TakeSliceOfMap(new Tuple<int, int>(Math.Max(room.Coordinates.Item1 - radius, 0), room.Coordinates.Item1 + radius)
+                                                , new Tuple<int, int>(Math.Max(room.Coordinates.Item2 - radius, 0), room.Coordinates.Item2 + radius)
+                                                , new Tuple<int, int>(Math.Max(room.Coordinates.Item3 - 1, 0), room.Coordinates.Item3 + 1)
                                                 , ourWorld.WorldMap.CoordinatePlane, true);
 
             //3. Flatten the map
             var flattenedMap = Cartographer.GetSinglePlane(map, room.Coordinates.Item3);
 
             //4. Render slice of room
-            asciiMap = RenderMap(flattenedMap, asciiMap, forAdmin, withPathways);
+            asciiMap = RenderMap(flattenedMap, asciiMap, forAdmin, withPathways, room);
 
             return asciiMap.ToString();
         }
 
-        private static StringBuilder RenderMap(long[,] map, StringBuilder sb, bool forAdmin, bool withPathways)
+        private static StringBuilder RenderMap(long[,] map, StringBuilder sb, bool forAdmin, bool withPathways, IRoomData centerRoom)
         {
             if(!withPathways)
             {
@@ -67,7 +67,7 @@ namespace NetMud.Cartography
                         var roomData = BackingDataCache.Get<IRoomData>(map[x, y]);
 
                         if (roomData != null)
-                            rowString += RenderRoomToAscii(roomData, false, forAdmin);
+                            rowString += RenderRoomToAscii(roomData, centerRoom.Equals(roomData), forAdmin);
                         else
                             rowString += "&nbsp;";
                     }
@@ -77,12 +77,12 @@ namespace NetMud.Cartography
             }
             else
             {
-                var expandedMap = new string[map.GetUpperBound(0) * 3, map.GetUpperBound(1) * 3];
+                var expandedMap = new string[(map.GetUpperBound(0) + 1) * 3 + 1, (map.GetUpperBound(1) + 1) * 3 + 1];
 
                 int x, y;
                 for (y = map.GetUpperBound(1); y >= 0; y--)
                 {
-                    for (x = 0; x < map.GetUpperBound(0); x++)
+                    for (x = 0; x <= map.GetUpperBound(0); x++)
                     {
                         var roomData = BackingDataCache.Get<IRoomData>(map[x, y]);
 
@@ -102,17 +102,18 @@ namespace NetMud.Cartography
                             var expandedRoomY = y * 3 + 1;
 
                             //The room
-                            expandedMap[expandedRoomX, expandedRoomY] = RenderRoomToAscii(roomData, false, forAdmin);
+                            expandedMap[expandedRoomX, expandedRoomY] = RenderRoomToAscii(roomData, centerRoom.Equals(roomData), forAdmin);
 
                             //all potential paths out of it
-                            expandedMap[expandedRoomX - 1, expandedRoomY - 1] = RenderPathwayToAscii(nwPath, roomData.ID, MovementDirectionType.NorthWest, forAdmin);
-                            expandedMap[expandedRoomX, expandedRoomY - 1] = RenderPathwayToAscii(nwPath, roomData.ID, MovementDirectionType.North, forAdmin);
-                            expandedMap[expandedRoomX + 1, expandedRoomY - 1] = RenderPathwayToAscii(nwPath, roomData.ID, MovementDirectionType.NorthEast, forAdmin);
-                            expandedMap[expandedRoomX - 1, expandedRoomY] = RenderPathwayToAscii(nwPath, roomData.ID, MovementDirectionType.West, forAdmin);
-                            expandedMap[expandedRoomX + 1, expandedRoomY] = RenderPathwayToAscii(nwPath, roomData.ID, MovementDirectionType.East, forAdmin);
-                            expandedMap[expandedRoomX - 1, expandedRoomY + 1] = RenderPathwayToAscii(nwPath, roomData.ID, MovementDirectionType.SouthWest, forAdmin);
-                            expandedMap[expandedRoomX, expandedRoomY + 1] = RenderPathwayToAscii(nwPath, roomData.ID, MovementDirectionType.South, forAdmin);
-                            expandedMap[expandedRoomX + 1, expandedRoomY + 1] = RenderPathwayToAscii(nwPath, roomData.ID, MovementDirectionType.SouthEast, forAdmin);
+                            
+                            expandedMap[expandedRoomX - 1, expandedRoomY + 1] = RenderPathwayToAscii(nwPath, roomData.ID, MovementDirectionType.NorthWest, forAdmin);
+                            expandedMap[expandedRoomX, expandedRoomY + 1] = RenderPathwayToAscii(nPath, roomData.ID, MovementDirectionType.North, forAdmin);
+                            expandedMap[expandedRoomX + 1, expandedRoomY + 1] = RenderPathwayToAscii(nePath, roomData.ID, MovementDirectionType.NorthEast, forAdmin);
+                            expandedMap[expandedRoomX - 1, expandedRoomY] = RenderPathwayToAscii(wPath, roomData.ID, MovementDirectionType.West, forAdmin);
+                            expandedMap[expandedRoomX + 1, expandedRoomY] = RenderPathwayToAscii(ePath, roomData.ID, MovementDirectionType.East, forAdmin);
+                            expandedMap[expandedRoomX - 1, expandedRoomY - 1] = RenderPathwayToAscii(swPath, roomData.ID, MovementDirectionType.SouthWest, forAdmin);
+                            expandedMap[expandedRoomX, expandedRoomY - 1] = RenderPathwayToAscii(sPath, roomData.ID, MovementDirectionType.South, forAdmin);
+                            expandedMap[expandedRoomX + 1, expandedRoomY - 1] = RenderPathwayToAscii(sePath, roomData.ID, MovementDirectionType.SouthEast, forAdmin);
                         }
                     }
                 }
@@ -120,7 +121,7 @@ namespace NetMud.Cartography
                 for (y = expandedMap.GetUpperBound(1); y >= 0; y--)
                 {
                     var rowString = String.Empty;
-                    for (x = 0; x < expandedMap.GetUpperBound(0); x++)
+                    for (x = 0; x <= expandedMap.GetUpperBound(0); x++)
                         rowString += expandedMap[x,y];
 
                     sb.AppendLine(rowString);

@@ -125,7 +125,7 @@ namespace NetMud.Backup
 
                 LoggingUtility.Log("All players written.", LogChannels.Backup, true);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 LoggingUtility.LogError(ex);
                 return false;
@@ -154,9 +154,9 @@ namespace NetMud.Backup
             {
                 //dont load players here
                 var entitiesToLoad = new List<IEntity>();
-                var implimentedTypes = typeof(EntityPartial).Assembly.GetTypes().Where(ty => ty.GetInterfaces().Contains(typeof(IEntity)) 
-                                                                                                && ty.IsClass 
-                                                                                                && !ty.IsAbstract 
+                var implimentedTypes = typeof(EntityPartial).Assembly.GetTypes().Where(ty => ty.GetInterfaces().Contains(typeof(IEntity))
+                                                                                                && ty.IsClass
+                                                                                                && !ty.IsAbstract
                                                                                                 && !ty.GetCustomAttributes<IgnoreAutomatedBackupAttribute>().Any());
 
                 foreach (var type in implimentedTypes)
@@ -230,7 +230,7 @@ namespace NetMud.Backup
                         entity.MoveFrom<IInanimate>(obj.Item2);
                         entity.MoveInto<IInanimate>(fullObj, obj.Item1);
                     }
-             
+
                     foreach (var obj in entity.MobilesInside.EntitiesContainedByName())
                     {
                         var fullObj = LiveCache.Get<IIntelligence>(new LiveCacheKey(typeof(Intelligence), obj.Item2.BirthMark));
@@ -270,15 +270,15 @@ namespace NetMud.Backup
 
         private void ParseDimension()
         {
-                    var roomPool = new HashSet<IRoomData>(BackingDataCache.GetAll<IRoomData>());
+            var roomPool = new HashSet<IRoomData>(BackingDataCache.GetAll<IRoomData>());
 
             //This will cycle through every room building massive (in theory) maps and spitting out the remaining items to make more worlds from.
             //If your world is highly disconnected you will end up with a ton of world maps
-            while(roomPool.Count() > 0)
+            while (roomPool.Count() > 0)
             {
                 var currentRoom = roomPool.FirstOrDefault();
 
-                if(currentRoom == null)
+                if (currentRoom == null)
                     continue;
 
                 var newWorld = GenerateWorld(currentRoom, roomPool);
@@ -297,11 +297,11 @@ namespace NetMud.Backup
         /// <returns>A whole new world</returns>
         private IWorld GenerateWorld(IRoomData startingRoom, HashSet<IRoomData> remainingRooms)
         {
-            if (startingRoom == null)
+            if (startingRoom == null || remainingRooms.Count() == 0)
                 throw new InvalidOperationException("Invalid inputs.");
 
             //We're kind of faking array size for radius, it will be shrunk later
-            var returnMap = Cartographer.GenerateMapFromRoom(startingRoom, remainingRooms.Count(), remainingRooms, true);
+            var returnMap = Cartographer.GenerateMapFromRoom(startingRoom, remainingRooms.Count() / 2, remainingRooms, true);
 
             //This zone gets to choose the world name if any
             var world = new World(new Map(returnMap, false), startingRoom.ZoneAffiliation.WorldName);

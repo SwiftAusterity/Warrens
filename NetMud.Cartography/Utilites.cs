@@ -171,6 +171,68 @@ namespace NetMud.Cartography
             return new Tuple<int, int>(-1, 0);
         }
 
+        public static MovementDirectionType ReverseDirection(MovementDirectionType direction)
+        {
+            switch (direction)
+            {
+                case MovementDirectionType.East:
+                    return MovementDirectionType.West;
+                case MovementDirectionType.North:
+                    return MovementDirectionType.South;
+                case MovementDirectionType.NorthEast:
+                    return MovementDirectionType.SouthWest;
+                case MovementDirectionType.NorthWest:
+                    return MovementDirectionType.SouthEast;
+                case MovementDirectionType.South:
+                    return MovementDirectionType.North;
+                case MovementDirectionType.SouthEast:
+                    return MovementDirectionType.NorthWest;
+                case MovementDirectionType.SouthWest:
+                    return MovementDirectionType.NorthEast;
+                case MovementDirectionType.West:
+                    return MovementDirectionType.East;
+                case MovementDirectionType.Up:
+                    return MovementDirectionType.Down;
+                case MovementDirectionType.Down:
+                    return MovementDirectionType.Up;
+                case MovementDirectionType.UpEast:
+                    return MovementDirectionType.DownWest;
+                case MovementDirectionType.UpNorth:
+                    return MovementDirectionType.DownSouth;
+                case MovementDirectionType.UpNorthEast:
+                    return MovementDirectionType.DownSouthWest;
+                case MovementDirectionType.UpNorthWest:
+                    return MovementDirectionType.DownSouthEast;
+                case MovementDirectionType.UpSouth:
+                    return MovementDirectionType.DownNorth;
+                case MovementDirectionType.UpSouthEast:
+                    return MovementDirectionType.DownNorthWest;
+                case MovementDirectionType.UpSouthWest:
+                    return MovementDirectionType.DownNorthEast;
+                case MovementDirectionType.UpWest:
+                    return MovementDirectionType.DownEast;
+                case MovementDirectionType.DownEast:
+                    return MovementDirectionType.UpWest;
+                case MovementDirectionType.DownNorth:
+                    return MovementDirectionType.UpSouth;
+                case MovementDirectionType.DownNorthEast:
+                    return MovementDirectionType.UpSouthWest;
+                case MovementDirectionType.DownNorthWest:
+                    return MovementDirectionType.UpSouthEast;
+                case MovementDirectionType.DownSouth:
+                    return MovementDirectionType.UpNorth;
+                case MovementDirectionType.DownSouthEast:
+                    return MovementDirectionType.UpNorthWest;
+                case MovementDirectionType.DownSouthWest:
+                    return MovementDirectionType.UpNorthEast;
+                case MovementDirectionType.DownWest:
+                    return MovementDirectionType.UpEast;
+            }
+
+            //return none, neutral for anything not counted
+            return MovementDirectionType.None;
+        }
+
         /// <summary>
         /// Translates hard directions to ascii characters. UP inclines are always brackets open to the left, DOWN is always bracket open to the right
         /// </summary>

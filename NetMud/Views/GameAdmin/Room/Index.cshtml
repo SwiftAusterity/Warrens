@@ -65,8 +65,8 @@
                             <td>@obj.Name</td>
                             <td>
                                 <div>
-                                    @Html.Hidden("ID", obj.ID)
-                                    <input type="submit" style="color: red; border: none; padding: 0; background-color: inherit;" value="X" title="Delete this" />
+                                    <button type="submit" name="ID" id="ID" style="color: red; border: none; padding: 0; background-color: inherit;" 
+                                           value="@obj.ID" title="Delete this">X</button>
                                     <input type="radio" name="authorize" value="@obj.ID" style="margin-left: 15px;" />
                                 </div>
                             </td>

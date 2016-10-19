@@ -39,7 +39,7 @@ namespace NetMud.DataStructure.Base.EntityBackingData
         /// <summary>
         /// What pathways are affiliated with this room data (what it spawns with)
         /// </summary>
-        IEnumerable<IPathwayData> GetPathways();
+        IEnumerable<IPathwayData> GetPathways(bool withReturn = false);
 
         /// <summary>
         /// Gets the remaining distance to the destination room

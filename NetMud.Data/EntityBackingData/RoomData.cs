@@ -1,4 +1,5 @@
-﻿using NetMud.Data.LookupData;
+﻿using NetMud.Data.Game;
+using NetMud.Data.LookupData;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
@@ -22,7 +23,7 @@ namespace NetMud.Data.EntityBackingData
         /// </summary>
         public override Type EntityClass
         {
-            get { return typeof(NetMud.Data.Game.Room); }
+            get { return typeof(Room); }
         }
 
         /// <summary>
@@ -144,9 +145,13 @@ namespace NetMud.Data.EntityBackingData
         /// <summary>
         /// What pathways are affiliated with this room data (what it spawns with)
         /// </summary>
-        public IEnumerable<IPathwayData> GetPathways()
+        /// <param name="withReturn">includes paths into this room as well</param>
+        /// <returns>the valid pathways</returns>
+        public IEnumerable<IPathwayData> GetPathways(bool withReturn = false)
         {
-            return BackingDataCache.GetAll<IPathwayData>().Where(path => path.FromLocationID.Equals(ID.ToString()));
+            return BackingDataCache.GetAll<IPathwayData>().Where(path => path.FromLocationID.Equals(ID.ToString()) 
+                                                                        || (withReturn && path.ToLocationID.Equals(ID.ToString()))
+                                                                        );
         }
     }
 }
