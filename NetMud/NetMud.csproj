@@ -343,6 +343,7 @@
     <Content Include="Views\GameAdmin\Constants\Edit.cshtml" />
     <Content Include="Views\GameAdmin\Constants\Index.cshtml" />
     <Content Include="Views\GameAdmin\Room\Map.cshtml" />
+    <Content Include="Views\Shared\RemoveDataItem.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

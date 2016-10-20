@@ -67,9 +67,7 @@
                             <td>@obj.Gender</td>
                             <td>
                                 <div>
-                                    @Html.Hidden("ID", obj.ID)
-                                    <input type="submit" style="color: red; border: none; padding: 0; background-color: inherit;" value="X" title="Delete this" />
-                                    <input type="radio" name="authorize" value="@obj.ID" style="margin-left: 15px;" />
+                                    @Html.Partial("RemoveDataItem", @obj.ID)
                                 </div>
                             </td>
                         </tr>

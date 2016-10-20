@@ -65,9 +65,7 @@
                             <td>@String.Join(",", obj.Roles.Select(rol => Model.ValidRoles.First(vR => vR.Id.Equals(rol.RoleId)).Name))</td>
                             <td>
                                 <div>
-                                    @Html.Hidden("ID", obj.Id)
-                                    <input type="submit" style="color: red; border: none; padding: 0; background-color: inherit;" value="X" title="Delete this" />
-                                    <input type="radio" name="authorize" value="@obj.Id" style="margin-left: 15px;" />
+                                    @Html.Partial("RemoveDataItem", @obj.ID)
                                 </div>
                             </td>
                         </tr>

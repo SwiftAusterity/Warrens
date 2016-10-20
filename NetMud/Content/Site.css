@@ -55,3 +55,10 @@ textarea {
     overflow: hidden;
     border: 5px solid grey;
 }
+
+button[type=submit].removeData {
+    color: red; 
+    border: none; 
+    padding: 0; 
+    background-color: inherit;
+}

@@ -64,11 +64,7 @@
                             <td>@Html.ActionLink(@obj.ID.ToString(), "Edit", new { id = obj.ID }) [@Html.ActionLink("Map", "Map", new { id = obj.ID })]</td>
                             <td>@obj.Name</td>
                             <td>
-                                <div>
-                                    <button type="submit" name="ID" id="ID" style="color: red; border: none; padding: 0; background-color: inherit;" 
-                                           value="@obj.ID" title="Delete this">X</button>
-                                    <input type="radio" name="authorize" value="@obj.ID" style="margin-left: 15px;" />
-                                </div>
+                                @Html.Partial("RemoveDataItem", @obj.ID)
                             </td>
                         </tr>
                     }
