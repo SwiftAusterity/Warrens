@@ -4,7 +4,7 @@
 }
 
 @{
-    <section id="newCharacterForm">
+    <section id="newZoneForm">
         @using (Html.BeginForm("EditZoneData", "GameAdmin", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
             @Html.AntiForgeryToken()
@@ -28,6 +28,54 @@
         }
     </section>
 }
+
+<div>
+    <p>
+        <a id="TravelUp" name="TravelUp" style="color: green; padding: 5px; cursor: pointer;" title="up">A</a>&nbsp;
+        <a id="TravelDown" name="TravelDown" style="color: red; padding: 5px; cursor: pointer;" title="Down">V</a>
+    </p>
+    <pre id="expandedModelContainer" class="asciiMap" data-id="@Model.DataObject.ID" data-zindex="0"></pre>
+</div>
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            GetMap();
+
+            $('#TravelUp').click(function () {
+                var $exModelContainer = $("#expandedModelContainer");
+                var currentZ = parseInt($exModelContainer.attr('data-zIndex'));
+
+                $exModelContainer.attr('data-zIndex', currentZ + 1);
+
+                GetMap();
+            });
+
+            $('#TravelDown').click(function () {
+                var $exModelContainer = $("#expandedModelContainer");
+                var currentZ = parseInt($exModelContainer.attr('data-zIndex'));
+
+                if (currentZ == 0)
+                    return;
+
+                $exModelContainer.attr('data-zIndex', currentZ - 1);
+
+                GetMap();
+            });
+        });
+
+        function GetMap() {
+            var $exModelContainer = $("#expandedModelContainer");
+            var dataId = $exModelContainer.attr("data-id");
+            var zIndex = $exModelContainer.attr("data-zindex");
+
+            $.get("/api/AdminDataApi/RenderZoneMap/" + dataId + '/' + zIndex, function (data) {
+                $exModelContainer.html(data);
+            });
+        };
+    </script>
 }

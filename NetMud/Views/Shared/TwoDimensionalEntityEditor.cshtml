@@ -56,7 +56,7 @@
 
     function GetNewDimModDeets() {
         $.ajax({
-            url: "/api/ClientDataApi/GetDimensionalData/" + $("#DimensionalModelId").val()
+            url: "/api/AdminDataApi/GetDimensionalData/" + $("#DimensionalModelId").val()
                 , async: false
                 , success: function (data) {
                     $("#modelPartRows").html('');

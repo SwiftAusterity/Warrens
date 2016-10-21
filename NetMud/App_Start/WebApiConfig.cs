@@ -11,30 +11,51 @@ namespace NetMud
             // Web API routes
             config.MapHttpAttributeRoutes();
 
+            #region "AdminAPI"
             config.Routes.MapHttpRoute(
-                name: "ApiModelDataReturnAjax",
-                routeTemplate: "api/ClientDataApi/GetEntityModelView/{modelId}/{yaw}/{pitch}/{roll}",
-                defaults: new { controller = "ClientDataApi", action = "GetEntityModelView" }
+                name: "Api_GetEntityModelView",
+                routeTemplate: "api/AdminDataApi/GetEntityModelView/{modelId}",
+                defaults: new { controller = "AdminDataApi", action = "GetEntityModelView" }
                 );
 
             config.Routes.MapHttpRoute(
-                name: "ApiModelPlanarData",
-                routeTemplate: "api/ClientDataApi/GetDimensionalData/{id}",
-                defaults: new { controller = "ClientDataApi", action = "GetDimensionalData" }
+                name: "Api_GetDimensionalData",
+                routeTemplate: "api/AdminDataApi/GetDimensionalData/{id}",
+                defaults: new { controller = "AdminDataApi", action = "GetDimensionalData" }
                 );
 
             config.Routes.MapHttpRoute(
-                name: "ApiModelRoomEditor",
-                routeTemplate: "api/ClientDataApi/RenderRoomForEdit/{id}/{radius}",
-                defaults: new { controller = "ClientDataApi", action = "RenderRoomForEdit" }
+                name: "Api_RenderRoomEditorWithRadius",
+                routeTemplate: "api/AdminDataApi/RenderRoomForEditWithRadius/{id}/{radius}",
+                defaults: new { controller = "AdminDataApi", action = "RenderRoomForEditWithRadius" }
                 );
 
             config.Routes.MapHttpRoute(
-                name: "ApiModelRoomEditorWithRadius",
-                routeTemplate: "api/ClientDataApi/RenderRoomForEditWithRadius/{id}/{radius}",
-                defaults: new { controller = "ClientDataApi", action = "RenderRoomForEditWithRadius" }
+                name: "Api_RenderZoneMap",
+                routeTemplate: "api/AdminDataApi/RenderZoneMap/{id}/{zIndex}",
+                defaults: new { controller = "AdminDataApi", action = "RenderZoneMap" }
                 );
 
+            config.Routes.MapHttpRoute(
+                name: "Api_RenderWorldMap",
+                routeTemplate: "api/AdminDataApi/RenderWorldMap/{id}/{zIndex}",
+                defaults: new { controller = "AdminDataApi", action = "RenderWorldMap" }
+                );
+            #endregion
+
+            #region "ClientAPI"
+            config.Routes.MapHttpRoute(
+              name: "ClientApi_GetEntityModelView",
+              routeTemplate: "api/AdminDataApi/GetEntityModelView/{modelId}",
+              defaults: new { controller = "ClientDataApi", action = "GetEntityModelView" }
+              );
+
+            config.Routes.MapHttpRoute(
+                name: "ClientApi_RenderRoomWithRadius",
+                routeTemplate: "api/AdminDataApi/RenderRoomWithRadius/{id}/{radius}",
+                defaults: new { controller = "ClientDataApi", action = "RenderRoomWithRadius" }
+                );
+            #endregion
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",

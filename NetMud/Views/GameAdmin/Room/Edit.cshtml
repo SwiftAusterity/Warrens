@@ -79,7 +79,7 @@
             var dataId = $modelContainer.attr("data-id");
             var materialsDropdown = decodeHtml('@materialsDropdown');
 
-            $.get("/api/ClientDataApi/RenderRoomForEditWithRadius/" + dataId + '/1', function (data) {
+            $.get("/api/AdminDataApi/RenderRoomForEditWithRadius/" + dataId + '/1', function (data) {
                 $modelContainer.html(data);
             });
 

@@ -14,6 +14,7 @@ namespace NetMud.Controllers
 {
     public class ClientDataApiController : ApiController
     {
+        [HttpGet]
         public string GetEntityModelView(long modelId)
         {
             var model = BackingDataCache.Get<IDimensionalModelData>(modelId);
@@ -24,25 +25,15 @@ namespace NetMud.Controllers
             return Render.FlattenModelForWeb(model);
         }
 
-        public string[] GetDimensionalData(long id)
-        {
-            var model = BackingDataCache.Get<IDimensionalModelData>(id);
-
-            if (model == null)
-                return new string[0];
-
-            return model.ModelPlanes.Select(plane => plane.TagName).Distinct().ToArray();
-        }
-
         [HttpGet]
-        public string RenderRoomForEditWithRadius(long id, int radius)
+        public string RenderRoomWithRadius(long id, int radius)
         {
             var centerRoom = BackingDataCache.Get<IRoomData>(id);
 
             if (centerRoom == null || radius < 0)
                 return "Invalid inputs.";
 
-            return Rendering.RenderRadiusMap(centerRoom, radius);
+            return Rendering.RenderRadiusMap(centerRoom, radius, false);
         }
     }
 }

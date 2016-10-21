@@ -90,6 +90,9 @@ namespace NetMud.Data.Game
         }
 
         private IChannelType _internalDescriptor;
+
+        [ScriptIgnore]
+        [JsonIgnore]
         public virtual IChannelType ConnectionType
         {
             get 

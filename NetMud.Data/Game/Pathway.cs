@@ -106,6 +106,9 @@ namespace NetMud.Data.Game
         {
             get
             {
+                if (DataTemplate<IPathwayData>() == null)
+                    return String.Empty;
+                
                 return DataTemplate<IPathwayData>().Name;
             }
         }

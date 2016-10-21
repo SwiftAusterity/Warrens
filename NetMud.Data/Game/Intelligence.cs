@@ -25,6 +25,9 @@ namespace NetMud.Data.Game
         {
             get
             {
+                if (DataTemplate<INonPlayerCharacter>() == null)
+                    return String.Empty;
+
                 return DataTemplate<INonPlayerCharacter>().Name;
             }
         }

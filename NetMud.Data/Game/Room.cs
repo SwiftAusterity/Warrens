@@ -33,6 +33,9 @@ namespace NetMud.Data.Game
         {
             get
             {
+                if (DataTemplate<IRoomData>() == null)
+                    return String.Empty;
+
                 return DataTemplate<IRoomData>().Name;
             }
         }

@@ -45,6 +45,9 @@ namespace NetMud.Data.Game
         {
             get
             {
+                if (DataTemplate<IInanimateData>() == null)
+                    return String.Empty;
+
                 return DataTemplate<IInanimateData>().Name;
             }
         }
