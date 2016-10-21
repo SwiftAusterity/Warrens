@@ -3,9 +3,6 @@
     ViewBag.Title = "Edit Non-player Character";
 }
 
-<h2>@ViewBag.Title</h2>
-
-<p class="text-success">@ViewBag.StatusMessage</p>
 @{
     <section id="newNPCForm">
         @using (Html.BeginForm("Edit", "NPC", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))

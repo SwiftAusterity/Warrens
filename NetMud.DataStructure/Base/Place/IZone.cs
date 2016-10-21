@@ -55,25 +55,19 @@ namespace NetMud.DataStructure.Base.Place
         /// Get the absolute center room of the zone
         /// </summary>
         /// <returns>the central room of the zone</returns>
-        IRoomData CentralRoom();
+        IRoomData CentralRoom(int zIndex = -1);
 
         /// <summary>
         /// Get the basic map render for the zone
         /// </summary>
         /// <returns>the zone map in ascii</returns>
-        string RenderMap();
-
-        /// <summary>
-        /// Gets the ascii render of all the rooms
-        /// </summary>
-        /// <returns></returns>
-        string RenderRoomMap();
+        string RenderMap(int zIndex, bool forAdmin = false);
 
         /// <summary>
         /// The diameter of the zone
         /// </summary>
         /// <returns>the diameter of the zone in room count</returns>
-        int Diameter();
+        Tuple<int, int, int> Diameter();
 
         /// <summary>
         /// Calculate the theoretical dimensions of the zone in inches

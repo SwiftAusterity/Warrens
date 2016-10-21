@@ -4,9 +4,6 @@
     //TODO: http://www.growingwiththeweb.com/2012/12/aspnet-mvc-display-and-editor-templates.html
 }
 
-<h2>@ViewBag.Title</h2>
-
-<p class="text-success">@ViewBag.StatusMessage</p>
 @{
     <section id="newCharacterForm">
         @using (Html.BeginForm("Add", "Help", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))

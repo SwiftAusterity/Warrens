@@ -3,9 +3,6 @@
     ViewBag.Title = "Add New Zone";
 }
 
-<h2>@ViewBag.Title</h2>
-
-<p class="text-success">@ViewBag.StatusMessage</p>
 @{
     <section id="newCharacterForm">
         @using (Html.BeginForm("Add", "Zone", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
@@ -15,10 +12,10 @@
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             @Html.EditorFor(e => e.Name)
             @Html.EditorFor(e => e.Claimable)
-            @Html.EditorFor(e => e.Owner)
             @Html.EditorFor(e => e.TemperatureCoefficient)
             @Html.EditorFor(e => e.PressureCoefficient)
             @Html.EditorFor(e => e.BaseElevation)
+            @Html.EditorFor(e => e.WorldName)
             @Html.EditorFor(e => e.NewHelpBody)
 
             <div class="form-group">

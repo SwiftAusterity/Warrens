@@ -36,33 +36,28 @@ namespace NetMud.Models.Admin
         {
         }
 
-        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
-        
+        [StringLength(100, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
         [Display(Name = "Name")]
         public string Name { get; set; }
 
-        
         [Display(Name = "Claimable")]
         public bool Claimable { get; set; }
 
         [Range(-5000, 5000, ErrorMessage = "The {0} must be between {2} and {1}.")]
-        
         [Display(Name = "Base Elevation")]
         public int BaseElevation { get; set; }
 
         [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
-        
         [Display(Name = "Temperature Coefficient")]
         public int TemperatureCoefficient { get; set; }
 
         [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
-        
         [Display(Name = "Pressure Coefficient")]
         public int PressureCoefficient { get; set; }
 
-        
-        [Display(Name = "Base Owner")]
-        public long Owner { get; set; }
+        [StringLength(100, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 3)]
+        [Display(Name = "World Name")]
+        public string WorldName { get; set; }
 
         [StringLength(2000, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
         [DataType(DataType.MultilineText)]

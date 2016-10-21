@@ -8,6 +8,7 @@
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/Scripts/HtmlUtilities.js")
     @RenderSection("scripts", required: false)
     @RenderSection("styles", required: false)
 </head>
@@ -33,6 +34,9 @@
         </div>
     </div>
     <div class="container body-content">
+        <h2>@ViewBag.Title</h2>
+
+        <h3><p id="statusMessage" name="statusMessage" class="text-success">@ViewBag.StatusMessage</p></h3>
         @RenderBody()
         <footer>
             <br class="clearfix" />
@@ -40,5 +44,10 @@
             <p>TwinMUD &copy; @DateTime.Now.Year - Daniel Nissenfeld</p>
         </footer>
     </div>
+    <script type="text/javascript">
+        if('@ViewBag.StatusMessage' == '' && GetQueryStringParams('Message') != '') {
+            $('#statusMessage').html(GetQueryStringParams('Message'));
+        }
+    </script>
 </body>
 </html>

@@ -108,6 +108,136 @@ namespace NetMud.Cartography
             return returnMap;
         }
 
+        /// <summary>
+        /// Shrinks a map matrix to its exact needed coordinate bounds
+        /// </summary>
+        /// <param name="map"></param>
+        /// <returns></returns>
+        public static long[, ,] ShrinkMap(long[, ,] map)
+        {
+            //We take a "full slice" of the map to shrink it
+            return Cartographer.TakeSliceOfMap(new Tuple<int, int>(map.GetLowerBound(0), map.GetUpperBound(0))
+                                                    , new Tuple<int, int>(map.GetLowerBound(1), map.GetUpperBound(1))
+                                                    , new Tuple<int, int>(map.GetLowerBound(2), map.GetUpperBound(2))
+                                                    , map, true);
+        }
+
+        /// <summary>
+        /// Gives back the original map but with all rooms that fall outside of the indicated bounds removed
+        /// </summary>
+        /// <param name="xBounds">The upper and lower bounds to grab for X axis</param>
+        /// <param name="yBounds">The upper and lower bounds to grab for Y axis</param>
+        /// <param name="zBounds">The upper and lower bounds to grab for Z axis</param>
+        /// <param name="map">The map to take from</param>
+        /// <param name="shrink">Return a new array that is bound to the size of the remaining data</param>
+        /// <returns>the new sliced array</returns>
+        public static long[, ,] TakeSliceOfMap(Tuple<int, int> xBounds, Tuple<int, int> yBounds, Tuple<int, int> zBounds, long[, ,] map, bool shrink = false)
+        {
+            var newMap = new long[map.GetUpperBound(0) + 1, map.GetUpperBound(1) + 1, map.GetUpperBound(2) + 1];
+
+            int x, y, z, xLowest = -1, yLowest = -1, zLowest = -1;
+
+            for (x = 0; x <= map.GetUpperBound(0); x++)
+                if (x <= xBounds.Item2 && x >= xBounds.Item1)
+                    for (y = 0; y <= map.GetUpperBound(1); y++)
+                        if (y <= yBounds.Item2 && y >= yBounds.Item1)
+                            for (z = 0; z <= map.GetUpperBound(2); z++)
+                                if (z <= zBounds.Item2 && z >= zBounds.Item1 && map[x, y, z] > 0)
+                                {
+                                    newMap[x, y, z] = map[x, y, z];
+
+                                    if (xLowest == -1 || xLowest > x)
+                                        xLowest = x;
+
+                                    if (yLowest == -1 || yLowest > y)
+                                        yLowest = y;
+
+                                    if (zLowest == -1 || zLowest > z)
+                                        zLowest = z;
+                                }
+
+            //Maps were the same size or we didnt want to shrink
+            if (!shrink || (xLowest <= 0 && yLowest <= 0 && zLowest <= 0))
+                return newMap;
+
+            return ShrinkMap(newMap, xLowest, yLowest, zLowest, xBounds, yBounds, zBounds);
+        }
+
+        /// <summary>
+        /// Finds the central room of a given map
+        /// </summary>
+        /// <param name="map">the map x,y,z</param>
+        /// <param name="zIndex">If > -1 we're looking for the x,y center of the single plane as opposed to the actual x,y,z center of the whole map</param>
+        /// <returns>the central room</returns>
+        public static IRoomData FindCenterOfMap(long[, ,] map, int zIndex = -1)
+        {
+            var zCenter = zIndex;
+            long roomId = -1;
+
+            //If we want a specific z index thats fine, otherwise we find the middle Z
+            if (zIndex == -1)
+                zCenter = (map.GetUpperBound(2) - map.GetLowerBound(2)) / 2 + map.GetLowerBound(2);
+
+            var xCenter = (map.GetUpperBound(0) - map.GetLowerBound(0)) / 2 + map.GetLowerBound(0);
+            var yCenter = (map.GetUpperBound(1) - map.GetLowerBound(1)) / 2 + map.GetLowerBound(1);
+
+            roomId = map[xCenter, yCenter, zCenter];
+
+            if (roomId < 0)
+            {
+                for (var variance = 1;
+                variance <= xCenter - map.GetLowerBound(0) && variance <= map.GetUpperBound(0) - xCenter
+                && variance <= yCenter - map.GetLowerBound(1) && variance <= map.GetUpperBound(1) - yCenter
+                ; variance++)
+                {
+                    //Check around it
+                    if (map[xCenter - variance, yCenter, zCenter] >= 0)
+                        roomId = map[xCenter - variance, yCenter, zCenter];
+                    else if (map[xCenter + variance, yCenter, zCenter] >= 0)
+                        roomId = map[xCenter + variance, yCenter, zCenter];
+                    else if (map[xCenter, yCenter - variance, zCenter] >= 0)
+                        roomId = map[xCenter, yCenter - variance, zCenter];
+                    else if (map[xCenter, yCenter + variance, zCenter] >= 0)
+                        roomId = map[xCenter, yCenter + variance, zCenter];
+                    else if (map[xCenter - variance, yCenter - variance, zCenter] >= 0)
+                        roomId = map[xCenter - variance, yCenter - variance, zCenter];
+                    else if (map[xCenter - variance, yCenter + variance, zCenter] >= 0)
+                        roomId = map[xCenter - variance, yCenter + variance, zCenter];
+                    else if (map[xCenter + variance, yCenter - variance, zCenter] >= 0)
+                        roomId = map[xCenter + variance, yCenter - variance, zCenter];
+                    else if (map[xCenter + variance, yCenter + variance, zCenter] >= 0)
+                        roomId = map[xCenter + variance, yCenter + variance, zCenter];
+
+                    if (roomId >= 0)
+                        break;
+                }
+            }
+
+            //Well, no valid rooms on this Z so try another Z unless all we got was this one Z
+            if(roomId < 0 && zIndex == -1)
+            {
+                IRoomData returnRoom = null;
+
+                for (var variance = 1;
+                variance < zCenter - map.GetLowerBound(2) && variance < map.GetUpperBound(2) - zCenter
+                ; variance++)
+                {
+                    returnRoom = FindCenterOfMap(map, zCenter - variance);
+
+                    if (returnRoom != null)
+                        break;
+
+                    returnRoom = FindCenterOfMap(map, zCenter + variance);
+
+                    if (returnRoom != null)
+                        break;
+                }
+
+                return returnRoom;
+            }
+
+            return BackingDataCache.Get<IRoomData>(roomId);
+        }
 
         //It's just easier to pass the ints we already calculated along instead of doing the math every single time, this cascades each direction fully because it calls itself for existant rooms
         private static long[, ,] AddFullRoomToMap(long[, ,] dataMap, IRoomData origin, int diameter, int centerX, int centerY, int centerZ, HashSet<IRoomData> roomPool)
@@ -164,7 +294,7 @@ namespace NetMud.Cartography
                 && zStepped > 0 && zStepped < diameter
                 && dataMap[xStepped - 1, yStepped - 1, zStepped - 1] <= 0)
             {
-                var thisPath = pathways.FirstOrDefault(path => 
+                var thisPath = pathways.FirstOrDefault(path =>
                                                         (path.DirectionType == transversalDirection && path.FromLocationID.Equals(origin.ID.ToString()))
                                                         || (path.DirectionType == Utilities.ReverseDirection(transversalDirection) && path.ToLocationID.Equals(origin.ID.ToString()))
                                                         );
@@ -185,62 +315,6 @@ namespace NetMud.Cartography
             }
 
             return dataMap;
-        }
-
-
-        /// <summary>
-        /// Shrinks a map matrix to its exact needed coordinate bounds
-        /// </summary>
-        /// <param name="map"></param>
-        /// <returns></returns>
-        public static long[, ,] ShrinkMap(long[, ,] map)
-        {
-            //We take a "full slice" of the map to shrink it
-            return Cartographer.TakeSliceOfMap(new Tuple<int, int>(map.GetLowerBound(0), map.GetUpperBound(0))
-                                                    , new Tuple<int, int>(map.GetLowerBound(1), map.GetUpperBound(1))
-                                                    , new Tuple<int, int>(map.GetLowerBound(2), map.GetUpperBound(2))
-                                                    , map, true);
-        }
-
-        /// <summary>
-        /// Gives back the original map but with all rooms that fall outside of the indicated bounds removed
-        /// </summary>
-        /// <param name="xBounds">The upper and lower bounds to grab for X axis</param>
-        /// <param name="yBounds">The upper and lower bounds to grab for Y axis</param>
-        /// <param name="zBounds">The upper and lower bounds to grab for Z axis</param>
-        /// <param name="map">The map to take from</param>
-        /// <param name="shrink">Return a new array that is bound to the size of the remaining data</param>
-        /// <returns>the new sliced array</returns>
-        public static long[, ,] TakeSliceOfMap(Tuple<int, int> xBounds, Tuple<int, int> yBounds, Tuple<int, int> zBounds, long[, ,] map, bool shrink = false)
-        {
-            var newMap = new long[map.GetUpperBound(0) + 1, map.GetUpperBound(1) + 1, map.GetUpperBound(2) + 1];
-
-            int x, y, z, xLowest = -1, yLowest = -1, zLowest = -1;
-
-            for (x = 0; x <= map.GetUpperBound(0); x++)
-                if (x <= xBounds.Item2 && x >= xBounds.Item1)
-                    for (y = 0; y <= map.GetUpperBound(1); y++)
-                        if (y <= yBounds.Item2 && y >= yBounds.Item1)
-                            for (z = 0; z <= map.GetUpperBound(2); z++)
-                                if (z <= zBounds.Item2 && z >= zBounds.Item1 && map[x, y, z] > 0)
-                                {
-                                    newMap[x, y, z] = map[x, y, z];
-
-                                    if (xLowest == -1 || xLowest > x)
-                                        xLowest = x;
-
-                                    if (yLowest == -1 || yLowest > y)
-                                        yLowest = y;
-
-                                    if (zLowest == -1 || zLowest > z)
-                                        zLowest = z;
-                                }
-
-            //Maps were the same size or we didnt want to shrink
-            if (!shrink || (xLowest <= 0 && yLowest <= 0 && zLowest <= 0))
-                return newMap;
-
-            return ShrinkMap(newMap, xLowest, yLowest, zLowest, xBounds, yBounds, zBounds);
         }
 
         private static long[, ,] ShrinkMap(long[, ,] fullMap, int xLowest, int yLowest, int zLowest, Tuple<int, int> xBounds, Tuple<int, int> yBounds, Tuple<int, int> zBounds)

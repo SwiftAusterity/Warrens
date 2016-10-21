@@ -5,6 +5,7 @@ using NetMud.DataStructure.Base.Place;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.LookupData
@@ -116,49 +117,42 @@ namespace NetMud.Data.LookupData
         /// <returns>the rooms for the zone</returns>
         public IEnumerable<IRoomData> Rooms()
         {
-            return null;
+            return BackingDataCache.GetAll<IRoomData>().Where(room => room.ZoneAffiliation.Equals(this));
         }
 
         /// <summary>
         /// Get the absolute center room of the zone
         /// </summary>
         /// <returns>the central room of the zone</returns>
-        public IRoomData CentralRoom()
+        public IRoomData CentralRoom(int zIndex = -1)
         {
-            return null;
+            return Cartography.Cartographer.FindCenterOfMap(ZoneMap.CoordinatePlane, zIndex);
         }
 
         /// <summary>
         /// Get the basic map render for the zone
         /// </summary>
         /// <returns>the zone map in ascii</returns>
-        public string RenderMap()
+        public string RenderMap(int zIndex, bool forAdmin = false)
         {
-            return String.Empty;
-        }
-
-        /// <summary>
-        /// Gets the ascii render of all the rooms
-        /// </summary>
-        /// <returns></returns>
-        public string RenderRoomMap()
-        {
-            return String.Empty;
+            return Cartography.Rendering.RenderMap(ZoneMap.GetSinglePlane(zIndex), forAdmin, true, CentralRoom(zIndex));
         }
 
         /// <summary>
         /// The diameter of the zone
         /// </summary>
-        /// <returns>the diameter of the zone in room count</returns>
-        public int Diameter()
+        /// <returns>the diameter of the zone in room count x,y,z</returns>
+        public Tuple<int, int, int> Diameter()
         {
-            return -1;
+            return new Tuple<int, int, int>(ZoneMap.CoordinatePlane.GetUpperBound(0) - ZoneMap.CoordinatePlane.GetLowerBound(0)
+                                            , ZoneMap.CoordinatePlane.GetUpperBound(1) - ZoneMap.CoordinatePlane.GetLowerBound(1)
+                                            , ZoneMap.CoordinatePlane.GetUpperBound(2) - ZoneMap.CoordinatePlane.GetLowerBound(2));
         }
 
         /// <summary>
         /// Calculate the theoretical dimensions of the zone in inches
         /// </summary>
-        /// <returns>height, width, depth</returns>
+        /// <returns>height, width, depth in inches</returns>
         public Tuple<int, int, int> FullDimensions()
         {
             int height = -1, width = -1, depth = -1;

@@ -3,9 +3,6 @@
     ViewBag.Title = "Add New Dimensional Model";
 }
 
-<h2>@ViewBag.Title</h2>
-
-<p class="text-success">@ViewBag.StatusMessage</p>
 @{
     <section id="newCharacterForm">
         @using (Html.BeginForm("Add", "DimensionalModel", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))

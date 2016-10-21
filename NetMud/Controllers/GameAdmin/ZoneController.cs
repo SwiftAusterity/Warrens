@@ -96,6 +96,7 @@ namespace NetMud.Controllers.GameAdmin
             newObj.Name = vModel.Name;
             newObj.BaseElevation = vModel.BaseElevation;
             newObj.Claimable = vModel.Claimable;
+            newObj.WorldName = vModel.WorldName;
             newObj.PressureCoefficient = vModel.PressureCoefficient;
             newObj.TemperatureCoefficient = vModel.TemperatureCoefficient;
             newObj.HelpText = vModel.NewHelpBody;
@@ -130,6 +131,7 @@ namespace NetMud.Controllers.GameAdmin
             vModel.Name = obj.Name;
             vModel.BaseElevation = obj.BaseElevation;
             vModel.Claimable = obj.Claimable;
+            vModel.WorldName = obj.WorldName;
             vModel.PressureCoefficient = obj.PressureCoefficient;
             vModel.TemperatureCoefficient = obj.TemperatureCoefficient;
             vModel.NewHelpBody = obj.HelpText;
@@ -154,6 +156,7 @@ namespace NetMud.Controllers.GameAdmin
             obj.Name = vModel.Name;
             obj.BaseElevation = vModel.BaseElevation;
             obj.Claimable = vModel.Claimable;
+            obj.WorldName = vModel.WorldName;
             obj.PressureCoefficient = vModel.PressureCoefficient;
             obj.TemperatureCoefficient = vModel.TemperatureCoefficient;
             obj.HelpText = vModel.NewHelpBody;

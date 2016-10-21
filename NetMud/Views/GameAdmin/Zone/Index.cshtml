@@ -63,6 +63,7 @@
                         <tr>
                             <td>@Html.ActionLink(@obj.ID.ToString(), "Edit", new { id = obj.ID } )</td>
                             <td>@obj.Name</td>
+                            <td>@obj.WorldName</td>
                             <td>
                                 <div>
                                     @Html.Partial("RemoveDataItem", @obj.ID)

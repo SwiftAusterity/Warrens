@@ -49,13 +49,21 @@ namespace NetMud.Cartography
             var flattenedMap = Cartographer.GetSinglePlane(map, room.Coordinates.Item3);
 
             //4. Render slice of room
-            asciiMap = RenderMap(flattenedMap, asciiMap, forAdmin, withPathways, room);
-
-            return asciiMap.ToString();
+            return RenderMap(flattenedMap, forAdmin, withPathways, room);
         }
 
-        private static StringBuilder RenderMap(long[,] map, StringBuilder sb, bool forAdmin, bool withPathways, IRoomData centerRoom)
+        /// <summary>
+        /// Renders a map from a single z,y plane
+        /// </summary>
+        /// <param name="map">The map to render</param>
+        /// <param name="forAdmin">is this for admin (with edit links)</param>
+        /// <param name="withPathways">include pathway symbols</param>
+        /// <param name="centerRoom">the room considered "center"</param>
+        /// <returns>the rendered map</returns>
+        public static string RenderMap(long[,] map, bool forAdmin, bool withPathways, IRoomData centerRoom)
         {
+            var sb = new StringBuilder();
+
             if(!withPathways)
             {
                 int x, y;
@@ -128,7 +136,7 @@ namespace NetMud.Cartography
                 }
             }
 
-            return sb;
+            return sb.ToString();
         }
 
         private static string RenderPathwayToAscii(IPathwayData path, long originId, MovementDirectionType directionType, bool forAdmin = false)

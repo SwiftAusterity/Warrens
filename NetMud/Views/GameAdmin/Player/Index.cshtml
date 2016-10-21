@@ -5,9 +5,6 @@
     var nextPageState = Model.CurrentPageNumber < Model.NumberOfPages ? String.Empty : "disabled";
 }
 
-<h2>@ViewBag.Title</h2>
-
-<p class="text-success">@ViewBag.StatusMessage</p>
 @{
     if (Model.Items.Count() > 0)
     {
