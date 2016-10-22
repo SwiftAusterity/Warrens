@@ -1,0 +1,62 @@
+﻿@model NetMud.Models.AsciiMapViewModel
+
+<div class="roomAsciiMap">
+    <p style="">
+        <a id="TravelUp" name="TravelUp" class="Up" title="Up"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></a>&nbsp;
+        <a id="TravelDown" name="TravelDown" class="Down" title="Down"><span class="glyphicon glyphicon-download" aria-hidden="true"></span></a>
+    </p>
+    <div>
+        <pre id="expandedModelContainer" class="asciiMap" data-id="@Model.DataID" data-zindex="@Model.ZIndex"></pre>
+    </div>
+</div>
+
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        GetMap();
+
+        $('#TravelUp').click(function () {
+            var $exModelContainer = $("#expandedModelContainer");
+            var currentZ = parseInt($exModelContainer.attr('data-zIndex'));
+
+            $exModelContainer.attr('data-zIndex', currentZ + 1);
+
+            GetMap();
+        });
+
+        $('#TravelDown').click(function () {
+            var $exModelContainer = $("#expandedModelContainer");
+            var currentZ = parseInt($exModelContainer.attr('data-zIndex'));
+
+            if (currentZ == 0)
+                return;
+
+            $exModelContainer.attr('data-zIndex', currentZ - 1);
+
+            GetMap();
+        });
+    });
+
+    //RenderRoomForEditWithRadius, RenderWorldMap, RenderZoneMap
+    function GetMap() {
+        var $exModelContainer = $("#expandedModelContainer");
+        var dataId = $exModelContainer.attr("data-id");
+        var mapRenderType = '@Model.MapRenderType';
+        var radius = '@Model.Radius';
+
+        if (mapRenderType == 'RenderRoomForEditWithRadius') {
+            var zIndex = $exModelContainer.attr("data-zindex");
+
+            $.get('/api/AdminDataApi/' + mapRenderType + '/' + dataId + '/' + radius, function (data) {
+                $exModelContainer.html(data);
+            });
+        } else {
+            var zIndex = $exModelContainer.attr("data-zindex");
+
+            $.get('/api/AdminDataApi/' + mapRenderType + '/' + dataId + '/' + zIndex, function (data) {
+                $exModelContainer.html(data);
+            });
+        }
+    };
+</script>

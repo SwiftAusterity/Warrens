@@ -31,6 +31,14 @@ textarea {
     color: yellow;
 }
 
+button[type=submit].removeData {
+    color: red; 
+    border: none; 
+    padding: 0; 
+    background-color: inherit;
+}
+
+/* Ascii maps for object dim models and room maps */
 .asciiMap {
     font-family: Courier New, Courier, monospace; 
     font-size: large;
@@ -56,9 +64,29 @@ textarea {
     border: 5px solid grey;
 }
 
-button[type=submit].removeData {
-    color: red; 
-    border: none; 
-    padding: 0; 
-    background-color: inherit;
+
+div.roomAsciiMap {
+    width: 100%;
+}
+
+.roomAsciiMap div {
+    clear: both;
+}
+
+.roomAsciiMap p {
+    float:right; 
+    display:inline-block;
+}
+
+.roomAsciiMap p a {
+    padding: 5px; 
+    cursor: pointer;
+}
+
+.roomAsciiMap p a.Up {
+     color: green; 
+}
+
+.roomAsciiMap p a.Down {
+    color: red;
 }
