@@ -200,6 +200,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Admin\DimensionalModelViewModels.cs" />
     <Compile Include="Models\Admin\ConstantsViewModel.cs" />
+    <Compile Include="Models\Admin\PathwayModalViewModel.cs" />
     <Compile Include="Models\Admin\PlayerViewModels.cs" />
     <Compile Include="Models\Admin\PathwayViewModels.cs" />
     <Compile Include="Models\Admin\InanimateViewModels.cs" />
@@ -260,7 +261,6 @@
     <Content Include="Scripts\respond.matchmedia.addListener.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
     <Content Include="Scripts\respond.min.js" />
-    <Content Include="Scripts\sockjs.min.js" />
     <Content Include="Scripts\WebSocketsClient.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
@@ -348,6 +348,7 @@
     <Content Include="Views\GameAdmin\Room\Map.cshtml" />
     <Content Include="Views\Shared\RemoveDataItem.cshtml" />
     <Content Include="Views\Shared\AsciiMap.cshtml" />
+    <Content Include="Views\Shared\PathwayModal.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

@@ -16,3 +16,28 @@ function GetQueryStringParams(sParam) {
         }
     }
 }
+
+//Stuff always run on doc load
+$(function () {
+
+    //Automates modal forms a bit, a function by the data-submitName MUST exist on the page otherwise this will error
+    var dialog = $("#modal-form").dialog({
+        autoOpen: false,
+        height: parseInt($(this).attr('data-height')),
+        width: parseInt($(this).attr('data-width')),
+        modal: true,
+        buttons: {
+            Cancel: function () {
+                $(this).dialog("close");
+            }
+        }
+    });
+
+    var form = dialog.find("form").on("submit", function (event) {
+        dialog.dialog("close");
+    });
+
+    $("#modal-form-open").button().on("click", function () {
+        dialog.dialog("open");
+    });
+});
