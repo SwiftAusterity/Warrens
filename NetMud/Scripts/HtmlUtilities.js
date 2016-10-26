@@ -19,25 +19,28 @@ function GetQueryStringParams(sParam) {
 
 //Stuff always run on doc load
 $(function () {
+    var dialogHeight = $("#modal-form").attr('data-height');
+    var dialogWidth = $("#modal-form").attr('data-width');
+    var dialogContainer = $("#modal-form");
 
     //Automates modal forms a bit, a function by the data-submitName MUST exist on the page otherwise this will error
-    var dialog = $("#modal-form").dialog({
+    var dialog = dialogContainer.dialog({
         autoOpen: false,
-        height: parseInt($(this).attr('data-height')),
-        width: parseInt($(this).attr('data-width')),
+        height: parseInt(dialogHeight),
+        width: parseInt(dialogWidth),
         modal: true,
         buttons: {
             Cancel: function () {
-                $(this).dialog("close");
+                dialogContainer.dialog("close");
             }
         }
     });
 
-    var form = dialog.find("form").on("submit", function (event) {
-        dialog.dialog("close");
+    var form = dialogContainer.find("form").on("submit", function (event) {
+        dialogContainer.dialog("close");
     });
 
     $("#modal-form-open").button().on("click", function () {
-        dialog.dialog("open");
+        dialogContainer.dialog("open");
     });
 });

@@ -74,7 +74,7 @@ namespace NetMud.Controllers.GameAdmin
         }
 
         [HttpGet]
-        public ActionResult Add(long id)
+        public ActionResult Add(long id, long originRoomId, long destinationRoomId)
         {
             var vModel = new AddEditPathwayDataViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
@@ -86,6 +86,20 @@ namespace NetMud.Controllers.GameAdmin
             return View("~/Views/GameAdmin/Pathway/AddEdit.cshtml", vModel);
         }
 
+        /*
+        [HttpGet]
+        public ActionResult Add(long id)
+        {
+            var vModel = new AddEditPathwayDataViewModel();
+            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            vModel.ValidMaterials = BackingDataCache.GetAll<Material>();
+            vModel.ValidModels = BackingDataCache.GetAll<DimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat);
+            vModel.ValidRooms = BackingDataCache.GetAll<RoomData>().Where(rm => !rm.ID.Equals(id));
+
+            return View("~/Views/GameAdmin/Pathway/AddEdit.cshtml", vModel);
+        }
+        */
 
         [HttpPost]
         [ValidateAntiForgeryToken]

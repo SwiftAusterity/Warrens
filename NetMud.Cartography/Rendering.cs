@@ -64,7 +64,7 @@ namespace NetMud.Cartography
         {
             var sb = new StringBuilder();
 
-            if(!withPathways)
+            if (!withPathways)
             {
                 int x, y;
                 for (y = map.GetUpperBound(1); y >= 0; y--)
@@ -113,7 +113,7 @@ namespace NetMud.Cartography
                             expandedMap[expandedRoomX, expandedRoomY] = RenderRoomToAscii(roomData, centerRoom.Equals(roomData), forAdmin);
 
                             //all potential paths out of it
-                            
+                            /*
                             expandedMap[expandedRoomX - 1, expandedRoomY + 1] = RenderPathwayToAscii(nwPath, roomData.ID, MovementDirectionType.NorthWest, forAdmin);
                             expandedMap[expandedRoomX, expandedRoomY + 1] = RenderPathwayToAscii(nPath, roomData.ID, MovementDirectionType.North, forAdmin);
                             expandedMap[expandedRoomX + 1, expandedRoomY + 1] = RenderPathwayToAscii(nePath, roomData.ID, MovementDirectionType.NorthEast, forAdmin);
@@ -122,6 +122,24 @@ namespace NetMud.Cartography
                             expandedMap[expandedRoomX - 1, expandedRoomY - 1] = RenderPathwayToAscii(swPath, roomData.ID, MovementDirectionType.SouthWest, forAdmin);
                             expandedMap[expandedRoomX, expandedRoomY - 1] = RenderPathwayToAscii(sPath, roomData.ID, MovementDirectionType.South, forAdmin);
                             expandedMap[expandedRoomX + 1, expandedRoomY - 1] = RenderPathwayToAscii(sePath, roomData.ID, MovementDirectionType.SouthEast, forAdmin);
+                            */
+
+                            expandedMap[expandedRoomX - 1, expandedRoomY + 1] = RenderPathwayToAsciiForModals(nwPath, roomData.ID, MovementDirectionType.NorthWest
+                                                                                                , Utilities.GetOpposingRoom(roomData, MovementDirectionType.NorthWest), forAdmin);
+                            expandedMap[expandedRoomX, expandedRoomY + 1] = RenderPathwayToAsciiForModals(nPath, roomData.ID, MovementDirectionType.North
+                                                                                                , Utilities.GetOpposingRoom(roomData, MovementDirectionType.North), forAdmin);
+                            expandedMap[expandedRoomX + 1, expandedRoomY + 1] = RenderPathwayToAsciiForModals(nePath, roomData.ID, MovementDirectionType.NorthEast
+                                                                                                , Utilities.GetOpposingRoom(roomData, MovementDirectionType.NorthEast), forAdmin);
+                            expandedMap[expandedRoomX - 1, expandedRoomY] = RenderPathwayToAsciiForModals(wPath, roomData.ID, MovementDirectionType.West
+                                                                                                , Utilities.GetOpposingRoom(roomData, MovementDirectionType.West), forAdmin);
+                            expandedMap[expandedRoomX + 1, expandedRoomY] = RenderPathwayToAsciiForModals(ePath, roomData.ID, MovementDirectionType.East
+                                                                                                , Utilities.GetOpposingRoom(roomData, MovementDirectionType.East), forAdmin);
+                            expandedMap[expandedRoomX - 1, expandedRoomY - 1] = RenderPathwayToAsciiForModals(swPath, roomData.ID, MovementDirectionType.SouthWest
+                                                                                                , Utilities.GetOpposingRoom(roomData, MovementDirectionType.SouthWest), forAdmin);
+                            expandedMap[expandedRoomX, expandedRoomY - 1] = RenderPathwayToAsciiForModals(sPath, roomData.ID, MovementDirectionType.South
+                                                                                                , Utilities.GetOpposingRoom(roomData, MovementDirectionType.South), forAdmin);
+                            expandedMap[expandedRoomX + 1, expandedRoomY - 1] = RenderPathwayToAsciiForModals(sePath, roomData.ID, MovementDirectionType.SouthEast
+                                                                                                , Utilities.GetOpposingRoom(roomData, MovementDirectionType.SouthEast), forAdmin);
                         }
                     }
                 }
@@ -130,7 +148,7 @@ namespace NetMud.Cartography
                 {
                     var rowString = String.Empty;
                     for (x = 0; x <= expandedMap.GetUpperBound(0); x++)
-                        rowString += expandedMap[x,y];
+                        rowString += expandedMap[x, y];
 
                     sb.AppendLine(rowString);
                 }
@@ -158,6 +176,39 @@ namespace NetMud.Cartography
             {
                 returnValue = String.Format("<a href='/GameAdmin/Pathway/Add/{0}' class='addData pathway' target='_blank' data-direction='{1}' title='Add - {2} path and room'>+</a>",
                     originId, Utilities.TranslateDirectionToDegrees(directionType), directionType.ToString());
+            }
+
+            return returnValue;
+        }
+
+        private static string RenderPathwayToAsciiForModals(IPathwayData path, long originId, MovementDirectionType directionType, IRoomData destination, bool forAdmin = false)
+        {
+            var returnValue = String.Empty;
+            var asciiCharacter = Utilities.TranslateDirectionToAsciiCharacter(directionType);
+
+            if (!forAdmin)
+                return "&nbsp;";
+
+            if (path != null)
+                destination = BackingDataCache.Get<IRoomData>(int.Parse(path.ToLocationID));
+
+            long destinationId = -1;
+            var destinationName = String.Empty;
+            if (destination != null)
+            {
+                destinationName = destination.Name;
+                destinationId = destination.ID;
+            }
+
+            if (path != null)
+            {
+                returnValue = String.Format("<a href='#' class='editData pathway AdminAddPathway' pathwayId='{0}' fromRoom='{3}' toRoom='{4}' title='Edit - {1}' data-id='{0}'>{2}</a>",
+                    path.ID, destinationName, asciiCharacter, originId, destinationId);
+            }
+            else
+            {
+                returnValue = String.Format("<a href='#' class='addData pathway AdminAddPathway' pathwayId='-1' fromRoom='{0}' toRoom='{3}' data-direction='{1}' title='Add - {2} path and room'>+</a>",
+                    originId, Utilities.TranslateDirectionToDegrees(directionType), directionType.ToString(), destinationId);
             }
 
             return returnValue;

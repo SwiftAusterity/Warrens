@@ -1,5 +1,8 @@
-﻿using NetMud.DataStructure.SupportingClasses;
+﻿using NetMud.DataAccess.Cache;
+using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.DataStructure.SupportingClasses;
 using System;
+using System.Linq;
 
 namespace NetMud.Cartography
 {
@@ -9,6 +12,32 @@ namespace NetMud.Cartography
     /// </summary>
     public static class Utilities
     {
+        /// <summary>
+        /// Gets the opposite room from the origin based on direction
+        /// </summary>
+        /// <param name="origin">The room we're looking to oppose</param>
+        /// <param name="direction">The direction the room would be in (this method will reverse the direction itself)</param>
+        /// <returns>The room that is in the direction from our room</returns>
+        public static IRoomData GetOpposingRoom(IRoomData origin, MovementDirectionType direction)
+        {
+            //There is no opposite of none directionals
+            if (origin == null || direction == MovementDirectionType.None)
+                return null;
+
+            var oppositeDirection = ReverseDirection(direction);
+
+            var paths = BackingDataCache.GetAll<IPathwayData>();
+
+            var ourPath = paths.FirstOrDefault(pt => pt.ToLocationType == "Room" 
+                                            && origin.ID.Equals(int.Parse(pt.ToLocationID)) 
+                                            && pt.DirectionType == oppositeDirection);
+
+            if(ourPath != null)
+                return BackingDataCache.Get<IRoomData>(int.Parse(ourPath.ToLocationID));
+
+            return null;
+        }
+
         /// <summary>
         /// Translates degreesFromNorth into direction words for pathways
         /// </summary>

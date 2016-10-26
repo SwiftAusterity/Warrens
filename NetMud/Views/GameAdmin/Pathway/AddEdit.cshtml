@@ -14,7 +14,7 @@
             @Html.LabelFor(model => model.ToLocationID, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-9">
                 @Html.DropDownList("ToLocationID", Model.ValidRooms.Select(rl =>
-                                    new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString(), Selected = rl.Equals(Model.ToLocation.ID.ToString()) })
+                                    new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString(), Selected = rl.Equals(Model.ToLocationID.ToString()) })
                                      , htmlAttributes: new { id = "ToLocationID", Style = "padding: 7px; float:left; margin-top: 10px;" })                
                 @Html.ValidationMessageFor(model => model.ToLocation, "", new { @class = "text-danger" })
             </div>
@@ -53,7 +53,6 @@
         <div class="form-group">
             <div class="col-md-offset-2 col-md-9">
                 <input type="submit" value="Commit" class="btn btn-default" style="color: green; border-color: cadetblue;" />
-                <a href="#" id="cancelButton" class="btn btn-default" style="color: orange; border-color: red;">Cancel</a>
            </div>
         </div>
     </div>
@@ -61,13 +60,4 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-    @Scripts.Render("~/Scripts/HtmlUtilities.js")
-
-    <script type="text/javascript">
-        $(function () {
-            $("#cancelButton").click({
-                window.close();
-            });
-        });
-    </script>
 }

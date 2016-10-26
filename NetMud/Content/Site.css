@@ -25,10 +25,12 @@ textarea {
 
 .addData {
     color: green;
+    cursor: pointer;
 }
 
 .editData {
     color: yellow;
+    cursor: pointer;
 }
 
 button[type=submit].removeData {
