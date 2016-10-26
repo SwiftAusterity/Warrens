@@ -83,7 +83,7 @@ namespace NetMud.Controllers.GameAdmin
             vModel.ValidModels = BackingDataCache.GetAll<DimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat);
             vModel.ValidRooms = BackingDataCache.GetAll<RoomData>().Where(rm => !rm.ID.Equals(id));
 
-            return View("~/Views/GameAdmin/Pathway/AddEdit.cshtml", vModel);
+            return PartialView("~/Views/GameAdmin/Pathway/AddEdit.cshtml", vModel);
         }
 
         /*
