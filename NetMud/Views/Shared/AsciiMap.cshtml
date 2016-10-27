@@ -1,8 +1,9 @@
 ﻿@model NetMud.Models.AsciiMapViewModel
 
 <div class="roomAsciiMap">
-    <p style="">
-        <a id="TravelUp" name="TravelUp" class="Up" title="Up"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></a>&nbsp;
+    <p>
+        <a id="TravelUp" name="TravelUp" class="Up" title="Up"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></a>
+        <span id="levelIndicator" style="font-size:larger; color: blue;">Level @Model.ZIndex</span>
         <a id="TravelDown" name="TravelDown" class="Down" title="Down"><span class="glyphicon glyphicon-download" aria-hidden="true"></span></a>
     </p>
     <div>
@@ -23,8 +24,10 @@
         $('#TravelUp').click(function () {
             var $exModelContainer = $("#expandedModelContainer");
             var currentZ = parseInt($exModelContainer.attr('data-zIndex'));
+            var newZ = currentZ + 1;
 
-            $exModelContainer.attr('data-zIndex', currentZ + 1);
+            $exModelContainer.attr('data-zIndex', newZ);
+            $('#levelIndicator').html('Level ' + newZ);
 
             GetMap();
         });
@@ -32,11 +35,13 @@
         $('#TravelDown').click(function () {
             var $exModelContainer = $("#expandedModelContainer");
             var currentZ = parseInt($exModelContainer.attr('data-zIndex'));
+            var newZ = currentZ - 1;
 
-            if (currentZ == 0)
+            if (currentZ < 0)
                 return;
 
-            $exModelContainer.attr('data-zIndex', currentZ - 1);
+            $exModelContainer.attr('data-zIndex', newZ);
+            $('#levelIndicator').html('Level ' + newZ);
 
             GetMap();
         });

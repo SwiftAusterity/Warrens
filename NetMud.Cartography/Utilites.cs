@@ -33,9 +33,35 @@ namespace NetMud.Cartography
                                             && pt.DirectionType == oppositeDirection);
 
             if(ourPath != null)
-                return BackingDataCache.Get<IRoomData>(int.Parse(ourPath.ToLocationID));
+                return BackingDataCache.Get<IRoomData>(long.Parse(ourPath.ToLocationID));
 
             return null;
+        }
+
+        /// <summary>
+        /// Is this coordinate out of bounds of the map
+        /// </summary>
+        /// <param name="boundings">a 3d coordinate x,y,z</param>
+        /// <param name="map">the 3d map in question</param>
+        /// <returns>whether it is out of bounds of the map</returns>
+        public static bool IsOutOfBounds(Tuple<int, int, int> boundings, long[,,] map)
+        {
+            return map.GetUpperBound(0) < boundings.Item1 || map.GetLowerBound(0) > boundings.Item1
+                || map.GetUpperBound(1) < boundings.Item2 || map.GetLowerBound(1) > boundings.Item2
+                || map.GetUpperBound(2) < boundings.Item3 || map.GetLowerBound(2) > boundings.Item3;
+
+        }
+
+        /// <summary>
+        /// Is this coordinate out of bounds of the map
+        /// </summary>
+        /// <param name="boundings">a 2d coordinate x,y,z</param>
+        /// <param name="map">the 2d map in question</param>
+        /// <returns>whether it is out of bounds of the map</returns>
+        public static bool IsOutOfBounds(Tuple<int, int> boundings, long[,] map)
+        {
+            return map.GetUpperBound(0) < boundings.Item1 || map.GetLowerBound(0) > boundings.Item1
+                || map.GetUpperBound(1) < boundings.Item2 || map.GetLowerBound(1) > boundings.Item2;
         }
 
         /// <summary>

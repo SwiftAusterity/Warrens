@@ -13,6 +13,35 @@ namespace NetMud.Cartography
     public static class Cartographer
     {
         /// <summary>
+        /// Gets a room in a direction if there is one based on the world map the room belongs to
+        /// </summary>
+        /// <param name="origin">The room we're starting in</param>
+        /// <param name="direction">The direction we're moving in</param>
+        /// <returns>null or a RoomData</returns>
+        public static IRoomData GetRoomInDirection(IRoomData origin, MovementDirectionType direction)
+        {
+            //We can't find none directions on a map
+            if (origin == null || direction == MovementDirectionType.None)
+                return null;
+
+            var worldMap = origin.ZoneAffiliation.World.WorldMap.CoordinatePlane;
+
+            var steps = Utilities.GetDirectionStep(direction);
+            var newX = origin.Coordinates.Item1 + steps.Item1;
+            var newY = origin.Coordinates.Item2 + steps.Item2;
+            var newZ = origin.Coordinates.Item3 + steps.Item3;
+
+            //out of bounds
+            if (Utilities.IsOutOfBounds(new Tuple<int,int,int>(newX, newY, newZ), worldMap))
+                return null;
+
+            if (worldMap[newX, newY, newZ] > -1)
+                return BackingDataCache.Get<IRoomData>(worldMap[newX, newY, newZ]);
+
+            return null;
+        }
+
+        /// <summary>
         /// Render a 3d map down to 2d
         /// </summary>
         /// <param name="zIndex"></param>

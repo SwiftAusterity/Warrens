@@ -125,21 +125,21 @@ namespace NetMud.Cartography
                             */
 
                             expandedMap[expandedRoomX - 1, expandedRoomY + 1] = RenderPathwayToAsciiForModals(nwPath, roomData.ID, MovementDirectionType.NorthWest
-                                                                                                , Utilities.GetOpposingRoom(roomData, MovementDirectionType.NorthWest), forAdmin);
+                                                                                                , Cartographer.GetRoomInDirection(roomData, MovementDirectionType.NorthWest), forAdmin);
                             expandedMap[expandedRoomX, expandedRoomY + 1] = RenderPathwayToAsciiForModals(nPath, roomData.ID, MovementDirectionType.North
-                                                                                                , Utilities.GetOpposingRoom(roomData, MovementDirectionType.North), forAdmin);
+                                                                                                , Cartographer.GetRoomInDirection(roomData, MovementDirectionType.North), forAdmin);
                             expandedMap[expandedRoomX + 1, expandedRoomY + 1] = RenderPathwayToAsciiForModals(nePath, roomData.ID, MovementDirectionType.NorthEast
-                                                                                                , Utilities.GetOpposingRoom(roomData, MovementDirectionType.NorthEast), forAdmin);
+                                                                                                , Cartographer.GetRoomInDirection(roomData, MovementDirectionType.NorthEast), forAdmin);
                             expandedMap[expandedRoomX - 1, expandedRoomY] = RenderPathwayToAsciiForModals(wPath, roomData.ID, MovementDirectionType.West
-                                                                                                , Utilities.GetOpposingRoom(roomData, MovementDirectionType.West), forAdmin);
+                                                                                                , Cartographer.GetRoomInDirection(roomData, MovementDirectionType.West), forAdmin);
                             expandedMap[expandedRoomX + 1, expandedRoomY] = RenderPathwayToAsciiForModals(ePath, roomData.ID, MovementDirectionType.East
-                                                                                                , Utilities.GetOpposingRoom(roomData, MovementDirectionType.East), forAdmin);
+                                                                                                , Cartographer.GetRoomInDirection(roomData, MovementDirectionType.East), forAdmin);
                             expandedMap[expandedRoomX - 1, expandedRoomY - 1] = RenderPathwayToAsciiForModals(swPath, roomData.ID, MovementDirectionType.SouthWest
-                                                                                                , Utilities.GetOpposingRoom(roomData, MovementDirectionType.SouthWest), forAdmin);
+                                                                                                , Cartographer.GetRoomInDirection(roomData, MovementDirectionType.SouthWest), forAdmin);
                             expandedMap[expandedRoomX, expandedRoomY - 1] = RenderPathwayToAsciiForModals(sPath, roomData.ID, MovementDirectionType.South
-                                                                                                , Utilities.GetOpposingRoom(roomData, MovementDirectionType.South), forAdmin);
+                                                                                                , Cartographer.GetRoomInDirection(roomData, MovementDirectionType.South), forAdmin);
                             expandedMap[expandedRoomX + 1, expandedRoomY - 1] = RenderPathwayToAsciiForModals(sePath, roomData.ID, MovementDirectionType.SouthEast
-                                                                                                , Utilities.GetOpposingRoom(roomData, MovementDirectionType.SouthEast), forAdmin);
+                                                                                                , Cartographer.GetRoomInDirection(roomData, MovementDirectionType.SouthEast), forAdmin);
                         }
                     }
                 }
