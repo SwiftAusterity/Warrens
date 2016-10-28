@@ -10,8 +10,8 @@ namespace NetMud.Models
     {
         ApplicationUser authedUser { get; set; }
     }
-    
-    public abstract class PagedDataModel<T>
+
+    public abstract class PagedDataModel<T> : IPagedDataModel
     {
         public PagedDataModel(IEnumerable<T> items)
         {
@@ -31,7 +31,6 @@ namespace NetMud.Models
         public int ItemsPerPage { get; set; }
 
         [StringLength(2000, ErrorMessage = "Search Terms must be at least {2} characters long.", MinimumLength = 2)]
-        
         [Display(Name = "Search")]
         public string SearchTerms { get; set; }
 
@@ -63,5 +62,16 @@ namespace NetMud.Models
                 return (int)Math.Ceiling(Math.Min((double)1, Items.Count() / ItemsPerPage));
             }
         }
+    }
+
+    public interface IPagedDataModel
+    {
+        int CurrentPageNumber { get; set; }
+
+        int ItemsPerPage { get; set; }
+
+        string SearchTerms { get; set; }
+
+        int NumberOfPages { get; }
     }
 }

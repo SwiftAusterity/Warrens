@@ -1,0 +1,45 @@
+﻿@model Tuple<NetMud.Models.IPagedDataModel, string>
+
+@{
+    var prevPageState = Model.Item1.CurrentPageNumber > 1 ? String.Empty : "disabled";
+    var nextPageState = Model.Item1.CurrentPageNumber < Model.Item1.NumberOfPages ? String.Empty : "disabled";
+
+    using (Html.BeginForm("Index", Model.Item2, FormMethod.Post, new { id = "paginationForm" }))
+    {
+        @Html.AntiForgeryToken()
+        <nav>
+            <ul class="pagination" style="float: right;">
+                <li style="float: left;">
+                    <div class="col-md-9" style="width: inherit;">
+                        @Html.TextBoxFor(m => m.Item1.SearchTerms, new { @class = "form-control", @style = "width: 200px;float: left;margin-right: 15px;", @title = "Search Term", @onchange = "paginationForm.submit();" })
+                        @Html.TextBoxFor(m => m.Item1.ItemsPerPage, new { @class = "form-control", @style = "width: 50px;float: left;", @title = "Items Per Page", @onchange = "paginationForm.submit();" })
+                    </div>
+                </li>
+                <li class="@prevPageState">
+                    <button aria-label="Previous" value="@(Model.Item1.CurrentPageNumber - 1)" title="Previous" name="CurrentPageNumber"><span aria-hidden="true">&laquo;</span></button>
+                </li>
+                @for (var i = 1; i <= Model.Item1.NumberOfPages; i++)
+                {
+                    if (Model.Item1.NumberOfPages > 5
+                            && i != 1
+                            && i != Model.Item1.NumberOfPages
+                            && i > (Model.Item1.NumberOfPages / 2 + 1)
+                            && i < (Model.Item1.NumberOfPages / 2 - 1))
+                    {
+                        continue;
+                    }
+
+                    <li>
+                        <button value="@i" title="@i" name="CurrentPageNumber">@i.ToString()</button>
+                    </li>
+                }
+                <li class="@nextPageState">
+                    <button aria-label="Next" value="@(Model.Item1.CurrentPageNumber + 1)" title="Next" name="CurrentPageNumber"><span aria-hidden="true">&raquo;</span></button>
+                </li>
+            </ul>
+        </nav>
+    }
+}
+
+@Html.ValidationMessageFor(m => m.Item1.ItemsPerPage, "", new { @class = "text-danger" })
+@Html.ValidationMessageFor(m => m.Item1.SearchTerms, "", new { @class = "text-danger" })

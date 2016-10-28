@@ -8,18 +8,18 @@ using System.Web;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageDimensionalModelDataViewModel : PagedDataModel<DimensionalModelData>, BaseViewModel
+    public class ManageDimensionalModelDataViewModel : PagedDataModel<IDimensionalModelData>, BaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
-        public ManageDimensionalModelDataViewModel(IEnumerable<DimensionalModelData> items)
+        public ManageDimensionalModelDataViewModel(IEnumerable<IDimensionalModelData> items)
             : base(items)
         {
             CurrentPageNumber = 1;
             ItemsPerPage = 20;
         }
 
-        internal override Func<DimensionalModelData, bool> SearchFilter
+        internal override Func<IDimensionalModelData, bool> SearchFilter
         {
             get
             {
@@ -50,6 +50,6 @@ namespace NetMud.Models.Admin
         [Display(Name = "Model Planes Upload")]
         public HttpPostedFileBase ModelFile { get; set; }
 
-        public DimensionalModelData DataObject { get; set; }
+        public IDimensionalModelData DataObject { get; set; }
     }
 }

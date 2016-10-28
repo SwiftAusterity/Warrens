@@ -10,48 +10,25 @@
 
     if (Model.Items.Count() > 0)
     {
-        using (Html.BeginForm("Index", "Material", FormMethod.Post, new { id = "paginationForm" }))
-        {
-            @Html.AntiForgeryToken()
-            <nav>
-               <ul class="pagination" style="float: right;">
-                    <li style="float: left;">
-                        <div class="col-md-9" style="width: inherit;">
-                            @Html.TextBoxFor(m => m.SearchTerms, new { @class = "form-control", @style = "width: 200px;float: left;margin-right: 15px;", @title = "Search Term", @onchange = "paginationForm.submit();" })
-                            @Html.TextBoxFor(m => m.ItemsPerPage, new { @class = "form-control", @style = "width: 50px;float: left;", @title = "Items Per Page", @onchange = "paginationForm.submit();" })
-                        </div>
-                    </li>
-                    <li class="@prevPageState">
-                        <button aria-label="Previous" value="@(Model.CurrentPageNumber - 1)" title="Previous" name="CurrentPageNumber"><span aria-hidden="true">&laquo;</span></button>
-                    </li>
-                    @for (var i = 1; i <= Model.NumberOfPages; i++)
-                    {
-                        if (Model.NumberOfPages > 5
-                                && i != 1
-                                && i != Model.NumberOfPages
-                                && i > (Model.NumberOfPages / 2 + 1)
-                                && i < (Model.NumberOfPages / 2 - 1))
-                        {
-                            continue;
-                        }
-
-                        <li>
-                            <button value="@i" title="@i" name="CurrentPageNumber">@i.ToString()</button>
-                        </li>
-                    }
-                    <li class="@nextPageState">
-                        <button aria-label="Next" value="@(Model.CurrentPageNumber + 1)" title="Next" name="CurrentPageNumber"><span aria-hidden="true">&raquo;</span></button>
-                    </li>
-                </ul>
-            </nav>
-        }
-        @Html.ValidationMessageFor(m => m.ItemsPerPage, "", new { @class = "text-danger" })
-        @Html.ValidationMessageFor(m => m.SearchTerms, "", new { @class = "text-danger" })
+        @Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model, "Material"))
 
         using (Html.BeginForm("Remove", "Material"))
         {
             @Html.AntiForgeryToken()
             <table class="table">
+                <thead>
+                    <tr>
+                        <td>
+                            ID
+                        </td>
+                        <td>
+                            Name
+                        </td>
+                        <td>
+                            Remove
+                        </td>
+                    </tr>
+                </thead>
                 <tbody>
                     @foreach (var obj in Model.CurrentPageOfItems)
                     {

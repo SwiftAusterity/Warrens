@@ -343,6 +343,7 @@
     <Content Include="Views\Shared\RemoveDataItem.cshtml" />
     <Content Include="Views\Shared\AsciiMap.cshtml" />
     <Content Include="Views\Shared\SubmitButton.cshtml" />
+    <Content Include="Views\Shared\SearchCriteriaAndPaging.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
