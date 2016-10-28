@@ -38,8 +38,8 @@ namespace NetMud.Models.Admin
         }
 
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
-        
         [Display(Name = "Name")]
+        [DataType(DataType.Text)]
         public string NewName { get; set; }
 
         
@@ -62,7 +62,6 @@ namespace NetMud.Models.Admin
         [Display(Name = "Character Container Weights")]
         public long[] MobileContainerWeights { get; set; }
 
-        
         [Display(Name = "Character Container Volumes")]
         public long[] MobileContainerVolumes { get; set; }
 
@@ -70,7 +69,6 @@ namespace NetMud.Models.Admin
         [Display(Name = "Internal Composition")]
         public long[] InternalCompositionIds { get; set; }
 
-        
         [Display(Name = "Composition Percentage")]
         public short[] InternalCompositionPercentages { get; set; }
 

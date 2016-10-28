@@ -40,35 +40,39 @@ namespace NetMud.Models.Admin
             ValidObjects = Enumerable.Empty<IInanimateData>();
         }
 
-        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
-        
+        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]  
         [Display(Name = "Name")]
+        [DataType(DataType.Text)]
         public string NewName { get; set; }
 
         
         [Display(Name = "Arm Object")]
+        [DataType(DataType.Text)]
         public long NewArmsID { get; set; }
 
         [Range(0, 8)]
-        
         [Display(Name = "# of Arms")]
+        [DataType(DataType.Text)]
         public short NewArmsAmount { get; set; }
 
         
         [Display(Name = "Leg Object")]
+        [DataType(DataType.Text)]
         public long NewLegsID { get; set; }
 
         [Range(0, 8)]
-        
         [Display(Name = "# of Legs")]
+        [DataType(DataType.Text)]
         public short NewLegsAmount { get; set; }
 
         
         [Display(Name = "Torso Object")]
+        [DataType(DataType.Text)]
         public long NewTorsoId { get; set; }
 
         
         [Display(Name = "Head Object")]
+        [DataType(DataType.Text)]
         public long NewHeadId { get; set; }
 
         
@@ -85,46 +89,52 @@ namespace NetMud.Models.Admin
 
         
         [Display(Name = "Diet")]
+        [DataType(DataType.Text)]
         public short NewDietaryNeeds { get; set; }
 
         
         [Display(Name = "Blood Type")]
+        [DataType(DataType.Text)]
         public long NewBloodId { get; set; }
 
         [Range(0, 200)]
-        
         [Display(Name = "Vision Range")]
+        [DataType(DataType.Text)]
         public short NewVisionRangeLow { get; set; }
 
         [Range(0, 200)]
-        
         [Display(Name = "Vision Range High")]
+        [DataType(DataType.Text)]
         public short NewVisionRangeHigh { get; set; }
 
         [Range(0, 200)]
-        
         [Display(Name = "Heat Tolerence")]
+        [DataType(DataType.Text)]
         public short NewTemperatureToleranceLow { get; set; }
 
         [Range(0, 200)]
-        
         [Display(Name = "Heat Tolerence High")]
+        [DataType(DataType.Text)]
         public short NewTemperatureToleranceHigh { get; set; }
 
         
         [Display(Name = "Breathes")]
+        [DataType(DataType.Text)]
         public short NewBreathes { get; set; }
 
         
         [Display(Name = "Teeth")]
+        [DataType(DataType.Text)]
         public short NewTeethType { get; set; }
 
         
         [Display(Name = "Starting Room")]
+        [DataType(DataType.Text)]
         public long NewStartingLocationId { get; set; }
 
         
         [Display(Name = "Recall Room")]
+        [DataType(DataType.Text)]
         public long NewRecallLocationId { get; set; }
 
         [StringLength(2000, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]

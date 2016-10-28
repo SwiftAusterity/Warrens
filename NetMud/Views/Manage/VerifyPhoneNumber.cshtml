@@ -3,8 +3,6 @@
     ViewBag.Title = "Verify Phone Number";
 }
 
-<h2>@ViewBag.Title</h2>
-
 @using (Html.BeginForm("VerifyPhoneNumber", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
@@ -13,12 +11,10 @@
     <h5>@ViewBag.Status</h5>
     <hr />
     @Html.ValidationSummary("", new { @class = "text-danger" })
-    @Html.EditorFor(e => e.Code)
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-9">
-            <input type="submit" class="btn btn-default" value="Submit" />
-        </div>
+    <div class="form-group one-column">
+        @Html.EditorFor(e => e.Code)
     </div>
+    @Html.Partial("SubmitButton", "Submit")
 }
 
 @section Scripts {

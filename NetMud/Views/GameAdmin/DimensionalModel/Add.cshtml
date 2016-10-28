@@ -10,14 +10,16 @@
             @Html.AntiForgeryToken()
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            @Html.EditorFor(e => e.NewName)
-            @Html.EditorFor(e => e.NewModelType)
-            @Html.EditorFor(e => e.ModelFile)
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-9">
-                    <input type="submit" value="Create" class="btn btn-default" />
-                </div>
+            <div class="form-group one-column">
+                @Html.EditorFor(e => e.NewName)
+            </div>        <div class="form-group one-column">
+                @Html.EditorFor(e => e.NewModelType)
             </div>
+            <div class="form-group one-column">
+                @Html.EditorFor(e => e.ModelFile)
+            </div>
+            @Html.Partial("SubmitButton", "Create")
+
         }
     </section>
 }

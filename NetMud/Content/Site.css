@@ -40,6 +40,50 @@ button[type=submit].removeData {
     background-color: inherit;
 }
 
+/* All the col-# properties */
+/*
+    all: float: left;
+    col-1 width: 8.33333333%;
+    col-2 width: 16.66666667%;
+    col-3 width: 25%;
+    col-4 width: 33.33333333%;
+    col-5 width: 41.66666667%;
+    col-6 width: 50%;
+    col-7 width: 58.33333333%;
+    col-8 width: 66.66666667%;
+    col-9 width: 75%;
+    col-10 width: 83.33333333%;
+*/
+div.form-group div, div.form-group label {
+    float: left;
+    padding-right: 10px;
+}
+
+div.form-group.one-column label {
+    width: 16.66666667%;
+}
+
+div.form-group.one-column div {
+    width: 83.33333333%;
+}
+
+div.form-group.two-column label {
+    width: 16.66666667%;
+}
+
+div.form-group.two-column div {
+    width: 33.33333333%;
+}
+
+div.form-group.three-column label {
+    width: 8.33333333%;
+}
+
+div.form-group.three-column div {
+    width: 16.66666667%;
+}
+
+
 /* Ascii maps for object dim models and room maps */
 .asciiMap {
     font-family: Courier New, Courier, monospace; 

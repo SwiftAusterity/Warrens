@@ -16,8 +16,9 @@
             @Html.AntiForgeryToken()
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            @Html.EditorFor(e => e.NewName)
-
+            <div class="form-group one-column">
+                @Html.EditorFor(e => e.NewName)
+            </div>
             <div class="form-group">
                 <div style="display: block; padding-bottom: 10px;">
                     @Html.LabelFor(m => m.InanimateContainerNames, new { @class = "col-md-3 control-label" })
@@ -64,11 +65,8 @@
                 </div>
             </div>
             <br class="clearfix" />
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-9">
-                    <input type="submit" value="Create" class="btn btn-default" />
-                </div>
-            </div>
+            @Html.Partial("SubmitButton", "Create")
+
         }
     </section>
 }

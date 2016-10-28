@@ -1,7 +1,11 @@
 ﻿@model NetMud.Models.Admin.DimensionalEntityEditViewModel
 
-@Html.EditorFor(e => e.DimensionalModelHeight)
-@Html.EditorFor(e => e.DimensionalModelWidth)
-@Html.EditorFor(e => e.DimensionalModelLength)
-@Html.EditorFor(e => e.DimensionalModelVacuity)
-@Html.EditorFor(e => e.DimensionalModelCavitation)
+<div class="form-group three-column">
+    @Html.EditorFor(e => e.DimensionalModelHeight)
+    @Html.EditorFor(e => e.DimensionalModelWidth)
+    @Html.EditorFor(e => e.DimensionalModelLength)
+</div>
+<div class="form-group two-column">
+    @Html.EditorFor(e => e.DimensionalModelVacuity)
+    @Html.EditorFor(e => e.DimensionalModelCavitation)
+</div>

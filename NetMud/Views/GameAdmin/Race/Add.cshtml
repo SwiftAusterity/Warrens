@@ -18,20 +18,20 @@
             @Html.AntiForgeryToken()
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            @Html.EditorFor(e => e.NewName)
-            <div class="form-group">
-                @Html.LabelFor(m => m.NewStartingLocationId, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9">
+
+            <div class="form-group one-column">
+                @Html.EditorFor(e => e.NewName)
+            </div>
+            <div class="form-group two-column">
+                @Html.LabelFor(m => m.NewStartingLocationId, new { @class = "control-label" })
+                <div>
                     @Html.DropDownList("NewStartingLocationId", Model.ValidRooms.Select(rl =>
                                                        new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString(), Selected = rl.ID.Equals(Model.NewStartingLocationId) })
                                                        , htmlAttributes: new { id = "NewStartingLocationId", Style = "padding: 7px; float:left; margin-top: 10px;" })
                     @Html.ValidationMessageFor(m => m.NewStartingLocationId, "", new { @class = "text-danger" })
                 </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(m => m.NewRecallLocationId, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9">
+                @Html.LabelFor(m => m.NewRecallLocationId, new { @class = "control-label" })
+                <div>
                     @Html.DropDownList("NewRecallLocationId", Model.ValidRooms.Select(rl =>
                                                             new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString(), Selected = rl.ID.Equals(Model.NewRecallLocationId) })
                                                             , htmlAttributes: new { id = "NewRecallLocationId", Style = "padding: 7px; float:left; margin-top: 10px;" })
@@ -39,9 +39,9 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                @Html.LabelFor(m => m.NewVisionRangeLow, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9">
+            <div class="form-group one-column">
+                @Html.LabelFor(m => m.NewVisionRangeLow, new { @class = "control-label" })
+                <div>
                     @Html.TextBoxFor(m => m.NewVisionRangeLow, new { @class = "form-control" })
                     @Html.TextBoxFor(m => m.NewVisionRangeHigh, new { @class = "form-control" })
                     @Html.ValidationMessageFor(m => m.NewVisionRangeLow, "", new { @class = "text-danger" })
@@ -49,9 +49,9 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                @Html.LabelFor(m => m.NewTemperatureToleranceLow, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9">
+            <div class="form-group one-column">
+                @Html.LabelFor(m => m.NewTemperatureToleranceLow, new { @class = "control-label" })
+                <div>
                     @Html.TextBoxFor(m => m.NewTemperatureToleranceLow, new { @class = "form-control" })
                     @Html.TextBoxFor(m => m.NewTemperatureToleranceHigh, new { @class = "form-control" })
                     @Html.ValidationMessageFor(m => m.NewTemperatureToleranceLow, "", new { @class = "text-danger" })
@@ -59,19 +59,16 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                @Html.LabelFor(m => m.NewBreathes, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9">
+            <div class="form-group two-column">
+                @Html.LabelFor(m => m.NewBreathes, new { @class = "control-label" })
+                <div>
                     @Html.DropDownList("NewBreathes", Enum.GetNames(typeof(RespiratoryType)).Select(rl =>
                         new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(RespiratoryType), rl)).ToString() })
                         , htmlAttributes: new { id = "NewBreathes", Style = "padding: 7px; float:left; margin-top: 10px;" })
                     @Html.ValidationMessageFor(m => m.NewBreathes, "", new { @class = "text-danger" })
                 </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(m => m.NewDietaryNeeds, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9">
+                @Html.LabelFor(m => m.NewDietaryNeeds, new { @class = "control-label" })
+                <div>
                     @Html.DropDownList("NewDietaryNeeds", Enum.GetNames(typeof(DietType)).Select(rl =>
                           new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(DietType), rl)).ToString() })
                              , htmlAttributes: new { id = "NewDietaryNeeds", Style = "padding: 7px; float:left; margin-top: 10px;" })
@@ -79,19 +76,16 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                @Html.LabelFor(m => m.NewTeethType, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9">
+            <div class="form-group two-column">
+                @Html.LabelFor(m => m.NewTeethType, new { @class = "control-label" })
+                <div>
                     @Html.DropDownList("NewTeethType", Enum.GetNames(typeof(DamageType)).Select(rl =>
                           new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString() })
                              , htmlAttributes: new { id = "NewTeethType", Style = "padding: 7px; float:left; margin-top: 10px;" })
                     @Html.ValidationMessageFor(m => m.NewTeethType, "", new { @class = "text-danger" })
                 </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(m => m.NewBloodId, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9">
+                @Html.LabelFor(m => m.NewBloodId, new { @class = "control-label" })
+                <div>
                     @Html.DropDownList("NewBloodId", Model.ValidMaterials.Select(rl =>
                                                        new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
                                                        , htmlAttributes: new { id = "NewBloodId", Style = "padding: 7px; float:left; margin-top: 10px;" })
@@ -99,21 +93,18 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                @Html.LabelFor(m => m.NewHeadId, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9">
+            <div class="form-group two-column">
+                @Html.LabelFor(m => m.NewHeadId, new { @class = "control-label" })
+                <div>
                     @Html.DropDownList("NewHeadId", Model.ValidObjects.Select(rl =>
                                              new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
                                              , htmlAttributes: new { id = "NewHeadId", Style = "padding: 7px; float:left; margin-top: 10px;" })
                     @Html.ValidationMessageFor(m => m.NewHeadId, "", new { @class = "text-danger" })
                 </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(m => m.NewTorsoId, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9">
+                @Html.LabelFor(m => m.NewTorsoId, new { @class = "control-label" })
+                <div>
                     @Html.DropDownList("NewTorsoId", Model.ValidObjects.Select(rl =>
-                                                  new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString()})
+                                                  new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
                                                   , htmlAttributes: new { id = "NewTorsoId", Style = "padding: 7px; float:left; margin-top: 10px;" })
                     @Html.ValidationMessageFor(m => m.NewTorsoId, "", new { @class = "text-danger" })
                 </div>
@@ -140,7 +131,7 @@
                 <div style="display: block;">
                     <div class="col-md-9" style="padding-left: 10px;">
                         <span style="padding: 10px; float:left;">Object: </span>@Html.DropDownList("NewLegsId", Model.ValidObjects.Select(rl =>
-                                                     new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString()})
+                                                     new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
                                                         , htmlAttributes: new { id = "NewLegsId", Style = "padding: 7px; float:left; margin-top: 10px;" })
                         <span style="padding: 10px; float:left;"># of:</span><input id="NewLegsAmount" name="NewLegsAmount" type="text" style="float:left; margin-top: 10px;">
                     </div>
@@ -164,13 +155,10 @@
                 </div>
             </div>
             <br class="clearfix" />
-            @Html.EditorFor(e => e.NewHelpBody)
-
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-9">
-                    <input type="submit" value="Create" class="btn btn-default" />
-                </div>
+            <div class="form-group one-column">
+                @Html.EditorFor(e => e.NewHelpBody)
             </div>
+            @Html.Partial("SubmitButton", "Create")
         }
     </section>
 }

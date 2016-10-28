@@ -9,15 +9,16 @@
     <h4>Create a new account.</h4>
     <hr />
     @Html.ValidationSummary("", new { @class = "text-danger" })
-    @Html.EditorFor(e => e.GlobalUserHandle)
-    @Html.EditorFor(e => e.Email)
-    @Html.EditorFor(e => e.Password)
-    @Html.EditorFor(e => e.ConfirmPassword)
-    <<div class="form-group">
-        <div class="col-md-offset-2 col-md-9">
-            <input type="submit" class="btn btn-default" value="Register" />
-        </div>
+    <div class="form-group two-column">
+        @Html.EditorFor(e => e.GlobalUserHandle)
+        @Html.EditorFor(e => e.Email)
     </div>
+    <div class="form-group two-column">
+        @Html.EditorFor(e => e.Password)
+        @Html.EditorFor(e => e.ConfirmPassword)
+    </div>
+    @Html.Partial("SubmitButton", "Register")
+
 }
 
 @section Scripts {

@@ -3,58 +3,56 @@
 @using (Html.BeginForm("Edit", "Pathway", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
-        <h4>Pathway</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.EditorFor(model => model.NewName)
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ToLocationID, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-9">
+        <div class="form-group two-column">
+            @Html.EditorFor(model => model.NewName)
+            @Html.LabelFor(model => model.ToLocationID, htmlAttributes: new { @class = "control-label" })
+            <div>
                 @Html.DropDownList("ToLocationID", Model.ValidRooms.Select(rl =>
                                     new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString(), Selected = rl.Equals(Model.ToLocationID.ToString()) })
-                                     , htmlAttributes: new { id = "ToLocationID", Style = "padding: 7px; float:left; margin-top: 10px;" })                
+                                     , htmlAttributes: new { id = "ToLocationID", Style = "padding: 7px; float:left; margin-top: 10px;" })
                 @Html.ValidationMessageFor(model => model.ToLocation, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            <div style="display: block; padding-bottom: 10px;">
-                @Html.LabelFor(m => m.VisibleToSurroundings, new { @class = "col-md-3 control-label" })
+            <div style="display: block; padding-bottom: 10px;" class="col-md-3">
+                @Html.LabelFor(m => m.VisibleToSurroundings, new { @class = "control-label" })
             </div>
-            <div id="mobileContainerRows" style="display: block;">
-                <div class="col-md-9" style="padding-left: 10px;">
+            <div id="mobileContainerRows" style="display: block;" class="col-md-9">
+                <div style="padding-left: 10px;">
                     <span style="padding: 10px; float:left;">Name: </span>@Html.TextBoxFor(m => m.VisibleToSurroundings, new { @style = " float:left; margin-top: 10px;" })
                     <span style="padding: 10px; float:left;">Weight:</span>@Html.TextBoxFor(m => m.VisibleStrength, new { @style = " float:left; margin-top: 10px;" })
                 </div>
             </div>
         </div>
         <div class="form-group">
-            <div style="display: block; padding-bottom: 10px;">
-                @Html.LabelFor(m => m.AudibleToSurroundings, new { @class = "col-md-3 control-label" })
+            <div style="display: block; padding-bottom: 10px;" class="col-md-3">
+                @Html.LabelFor(m => m.AudibleToSurroundings, new { @class = "control-label" })
             </div>
-            <div id="mobileContainerRows" style="display: block;">
-                <div class="col-md-9" style="padding-left: 10px;">
+            <div id="mobileContainerRows" style="display: block;" class="col-md-9">
+                <div style="padding-left: 10px;">
                     <span style="padding: 10px; float:left;">Name: </span>@Html.TextBoxFor(m => m.AudibleToSurroundings, new { @style = " float:left; margin-top: 10px;" })
                     <span style="padding: 10px; float:left;">Weight:</span>@Html.TextBoxFor(m => m.AudibleStrength, new { @style = " float:left; margin-top: 10px;" })
                 </div>
             </div>
         </div>
 
-        @Html.EditorFor(model => model.MessageToDestination)
-        @Html.EditorFor(model => model.MessageToOrigin)
-        @Html.EditorFor(model => model.MessageToActor)
-        @Html.EditorFor(model => model.DegreesFromNorth)
+        <div class="form-group two-column">
+            @Html.EditorFor(model => model.MessageToDestination)
+            @Html.EditorFor(model => model.MessageToOrigin)
+        </div>
+        <div class="form-group two-column">
+            @Html.EditorFor(model => model.MessageToActor)
+            @Html.EditorFor(model => model.DegreesFromNorth)
+        </div>
 
         @Html.Partial("TwoDimensionalEntityEditor", Model)
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-9">
-                <input type="submit" value="Commit" class="btn btn-default" style="color: green; border-color: cadetblue;" />
-           </div>
-        </div>
+        @Html.Partial("SubmitButton", "Commit")
     </div>
 }
 

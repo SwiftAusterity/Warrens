@@ -1,9 +1,0 @@
-﻿@model short
-
-<div class="form-group">
-    @Html.LabelFor(m => m, new {  @class = "col-md-3 control-label" })
-    <div class="col-md-9">
-        @Html.TextBoxFor(m => m)
-        @Html.ValidationMessageFor(m => m, "", new { @class = "text-danger" })
-    </div>
-</div>

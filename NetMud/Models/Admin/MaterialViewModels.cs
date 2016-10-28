@@ -41,73 +41,73 @@ namespace NetMud.Models.Admin
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
         
         [Display(Name = "Name")]
+        [DataType(DataType.Text)]
         public string NewName { get; set; }
 
         
         [Display(Name = "Is Conductive")]
+        [DataType(DataType.Text)]
         public bool NewConductive { get; set; }
 
         
         [Display(Name = "Is Magnetic")]
+        [DataType(DataType.Text)]
         public bool NewMagnetic { get; set; }
 
         
         [Display(Name = "Is Flammable")]
+        [DataType(DataType.Text)]
         public bool NewFlammable { get; set; }
 
         [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
-        
         [Display(Name = "Viscosity")]
+        [DataType(DataType.Text)]
         public short NewViscosity { get; set; }
 
         [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
-        
         [Display(Name = "Density")]
+        [DataType(DataType.Text)]
         public short NewDensity { get; set; }
 
         [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
-        
         [Display(Name = "Mallebility")]
+        [DataType(DataType.Text)]
         public short NewMallebility { get; set; }
 
         [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
-        
         [Display(Name = "Ductility")]
+        [DataType(DataType.Text)]
         public short NewDuctility { get; set; }
 
         [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
-        
         [Display(Name = "Porosity")]
+        [DataType(DataType.Text)]
         public short NewPorosity { get; set; }
 
         [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
-        
         [Display(Name = "Fusion Point")]
+        [DataType(DataType.Text)]
         public short NewSolidPoint { get; set; }
 
         [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
-        
         [Display(Name = "Vaporization Point")]
+        [DataType(DataType.Text)]
         public short NewGasPoint { get; set; }
 
         [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
-        
         [Display(Name = "Temperature Retention")]
+        [DataType(DataType.Text)]
         public short NewTemperatureRetention { get; set; }
 
-        
         [Display(Name = "Damage Resistance")]
         public short[] Resistances { get; set; }
 
-        
         [Display(Name = "Damage Resistance Value")]
         public short[] ResistanceValues { get; set; }
 
-        
         [Display(Name = "Material Composition")]
         public long[] Compositions { get; set; }
 
-        
         [Display(Name = "Material Composition Percentage")]
         public short[] CompositionPercentages { get; set; }
 

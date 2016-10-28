@@ -24,18 +24,18 @@ namespace NetMud.Models
         public ApplicationUser authedUser { get; set; }
 
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
-        
         [Display(Name = "Given Name")]
+        [DataType(DataType.Text)]
         public string NewName { get; set; }
 
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
-        
         [Display(Name = "Family Name")]
+        [DataType(DataType.Text)]
         public string NewSurName { get; set; }
 
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
-        
         [Display(Name = "Gender")]
+        [DataType(DataType.Text)]
         public string NewGender { get; set; }
 
         
@@ -68,6 +68,7 @@ namespace NetMud.Models
         [Display(Name = "New password")]
         public string NewPassword { get; set; }
 
+        [Required]
         [DataType(DataType.Password)]
         [Display(Name = "Confirm new password")]
         [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
@@ -87,6 +88,7 @@ namespace NetMud.Models
         [Display(Name = "New password")]
         public string NewPassword { get; set; }
 
+        [Required]
         [DataType(DataType.Password)]
         [Display(Name = "Confirm new password")]
         [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]

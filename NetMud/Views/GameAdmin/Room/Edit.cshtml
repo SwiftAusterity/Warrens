@@ -17,20 +17,22 @@
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <input type="hidden" name="id" id="id" value="@Model.DataObject.ID" />
-            @Html.EditorFor(e => e.NewName)
-            <div class="form-group">
-                @Html.LabelFor(m => m.Zone, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9">
+            <div class="form-group one-column">
+                @Html.EditorFor(e => e.NewName)
+            </div>
+            <div class="form-group one-column">
+                @Html.LabelFor(m => m.Zone, new { @class = "control-label" })
+                <div>
                     @Html.DropDownList("Zone", Model.ValidZones.Select(rl =>
                                     new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString(), Selected = rl.ID.Equals(Model.DataObject.ZoneAffiliation.ID) })
                                         , htmlAttributes: new { id = "Zone", Style = "padding: 7px; float:left; margin-top: 10px;" })
-                            @Html.ValidationMessageFor(m => m.Zone, "", new { @class = "text-danger" })
+                    @Html.ValidationMessageFor(m => m.Zone, "", new { @class = "text-danger" })
                 </div>
             </div>
             @Html.Partial("DimensionalEntityEditor", Model)
-            <div class="form-group">
-                @Html.LabelFor(m => m.Medium, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9">
+            <div class="form-group one-column">
+                @Html.LabelFor(m => m.Medium, new { @class = "control-label" })
+                <div>
                     @Html.DropDownList("Medium", Model.ValidMaterials.Select(rl =>
                              new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString(), Selected = rl.ID.Equals(Model.DataObject.Medium.ID) })
                                 , htmlAttributes: new { id = "Medium", Style = "padding: 7px; float:left; margin-top: 10px;" })
@@ -106,6 +108,6 @@
                     return false;
                 });
 
-        });
+            });
     </script>
 }

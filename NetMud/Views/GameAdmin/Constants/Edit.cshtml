@@ -17,8 +17,9 @@
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <input type="hidden" name="id" id="id" value="@Model.DataObject.ID" />
-            @Html.EditorFor(e => e.NewName)
-
+            <div class="form-group one-column">
+                @Html.EditorFor(e => e.NewName)
+            </div>
             foreach (var criterion in Model.DataObject.Values)
             {
                 <div class="form-group">
@@ -64,7 +65,7 @@
                     @Html.ActionLink("Cancel", "Index", "Help", new { @class = "btn btn-default", @style = "color: orange; border-color: red;" })
                 </div>
             </div>
-                }
+        }
     </section>
 }
 @section Scripts {

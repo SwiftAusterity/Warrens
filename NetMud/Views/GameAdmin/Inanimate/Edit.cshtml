@@ -17,7 +17,9 @@
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <input type="hidden" name="id" id="id" value="@Model.DataObject.ID" />
-            @Html.EditorFor(e => e.NewName)
+            <div class="form-group one-column">
+                @Html.EditorFor(e => e.NewName)
+            </div>
 
             <div class="form-group">
                 <div style="display: block; padding-bottom: 10px;">
@@ -63,13 +65,13 @@
                 <div id="internalCompositionRows" style="display: block;">
                     @foreach (var internalComposition in Model.DataObject.InternalComposition)
                     {
-                    <div class="col-md-9" style="padding-left: 10px;">
-                        <span style="padding: 10px; float:left;">Object: </span>@Html.DropDownList("InternalCompositionIds", Model.ValidInanimateDatas.Select(rl =>
+                        <div class="col-md-9" style="padding-left: 10px;">
+                            <span style="padding: 10px; float:left;">Object: </span>@Html.DropDownList("InternalCompositionIds", Model.ValidInanimateDatas.Select(rl =>
                                                                                  new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString(), Selected = rl.Equals(internalComposition.Key) })
                                                                                  , htmlAttributes: new { id = "InternalCompositionIds", Style = "padding: 7px; float:left; margin-top: 10px;" })
-                        <span style="padding: 10px; float:left;">% of Composition:</span><input id="InternalCompositionPercentages" name="InternalCompositionPercentages" style="float:left; margin-top: 10px;" type="text" value="@internalComposition.Value.ToString()">
-                        <a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a>
-                    </div>
+                            <span style="padding: 10px; float:left;">% of Composition:</span><input id="InternalCompositionPercentages" name="InternalCompositionPercentages" style="float:left; margin-top: 10px;" type="text" value="@internalComposition.Value.ToString()">
+                            <a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a>
+                        </div>
                     }
                 </div>
             </div>

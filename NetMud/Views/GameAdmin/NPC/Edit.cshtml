@@ -11,12 +11,14 @@
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <input type="hidden" name="id" id="id" value="@Model.DataObject.ID" />
-            @Html.EditorFor(e => e.NewName)
-            @Html.EditorFor(e => e.NewSurName)
-            @Html.EditorFor(e => e.NewGender)
-            <div class="form-group">
-                @Html.LabelFor(m => m.RaceId, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9">
+            <div class="form-group two-column">
+                @Html.EditorFor(e => e.NewName)
+                @Html.EditorFor(e => e.NewSurName)
+            </div>
+            <div class="form-group two-column">
+                @Html.EditorFor(e => e.NewGender)
+                @Html.LabelFor(m => m.RaceId, new { @class = "control-label" })
+                <div>
                     @Html.DropDownList("RaceId", Model.ValidRaces.Select(rl =>
                                                     new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString(), Selected = rl.ID.Equals(Model.RaceId) })
                                                      , htmlAttributes: new { id = "raceId", Style = "padding: 7px;" })

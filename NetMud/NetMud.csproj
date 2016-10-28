@@ -200,7 +200,6 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Admin\DimensionalModelViewModels.cs" />
     <Compile Include="Models\Admin\ConstantsViewModel.cs" />
-    <Compile Include="Models\Admin\PathwayModalViewModel.cs" />
     <Compile Include="Models\Admin\PlayerViewModels.cs" />
     <Compile Include="Models\Admin\PathwayViewModels.cs" />
     <Compile Include="Models\Admin\InanimateViewModels.cs" />
@@ -331,24 +330,19 @@
     <Content Include="Views\GameAdmin\Zone\Add.cshtml" />
     <Content Include="Views\GameAdmin\Zone\Edit.cshtml" />
     <Content Include="Views\GameAdmin\Zone\Index.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\String.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Text.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\MultilineText.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\Checkbox.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Password.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\EnumDropDownList.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Upload.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\StringArray.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Boolean.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\Short.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\Long.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\Int32.cshtml" />
     <Content Include="Views\GameAdmin\Constants\Add.cshtml" />
     <Content Include="Views\GameAdmin\Constants\Edit.cshtml" />
     <Content Include="Views\GameAdmin\Constants\Index.cshtml" />
     <Content Include="Views\GameAdmin\Room\Map.cshtml" />
     <Content Include="Views\Shared\RemoveDataItem.cshtml" />
     <Content Include="Views\Shared\AsciiMap.cshtml" />
-    <Content Include="Views\Shared\PathwayModal.cshtml" />
+    <Content Include="Views\Shared\SubmitButton.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

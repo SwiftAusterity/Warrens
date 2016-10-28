@@ -10,19 +10,22 @@
             @Html.AntiForgeryToken()
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            @Html.EditorFor(e => e.Name)
-            @Html.EditorFor(e => e.Claimable)
-            @Html.EditorFor(e => e.TemperatureCoefficient)
-            @Html.EditorFor(e => e.PressureCoefficient)
-            @Html.EditorFor(e => e.BaseElevation)
-            @Html.EditorFor(e => e.WorldName)
-            @Html.EditorFor(e => e.NewHelpBody)
-
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-9">
-                    <input type="submit" value="Create" class="btn btn-default" />
-                </div>
+            <div class="form-group two-column">
+                @Html.EditorFor(e => e.Name)
+                @Html.EditorFor(e => e.WorldName)
             </div>
+            <div class="form-group two-column">
+                @Html.EditorFor(e => e.TemperatureCoefficient)
+                @Html.EditorFor(e => e.PressureCoefficient)
+            </div>
+            <div class="form-group two-column">
+                @Html.EditorFor(e => e.BaseElevation)
+                @Html.EditorFor(e => e.Claimable)
+            </div>
+            <div class="form-group one-column">
+                @Html.EditorFor(e => e.NewHelpBody)
+            </div>
+            @Html.Partial("SubmitButton", "Create")
         }
     </section>
 }

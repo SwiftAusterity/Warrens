@@ -1,9 +1,7 @@
 ﻿@model string
 
-<div class="form-group">
-    @Html.LabelFor(m => m, new { @class = "col-md-3 control-label" })
-    <div class="col-md-9">
-        @Html.TextAreaFor(m => m, new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m, "", new { @class = "text-danger" })
-    </div>
+@Html.LabelFor(m => m, new { @class = "control-label" })
+<div>
+    @Html.TextAreaFor(m => m, new { @class = "form-control" })
+    @Html.ValidationMessageFor(m => m, "", new { @class = "text-danger" })
 </div>

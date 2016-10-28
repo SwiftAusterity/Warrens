@@ -11,8 +11,12 @@
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <input type="hidden" name="id" id="id" value="@Model.DataObject.ID" />
-            @Html.EditorFor(e => e.NewName)
-            @Html.EditorFor(e => e.NewHelpText)
+            <div class="form-group one-column">
+                @Html.EditorFor(e => e.NewName)
+            </div>
+            <div class="form-group one-column">
+                @Html.EditorFor(e => e.NewHelpText)
+            </div>
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-9">
                     <input type="submit" value="Commit" class="btn btn-default" style="color: green; border-color: cadetblue;" />
