@@ -59,6 +59,10 @@ namespace NetMud.Models.Admin
         [DataType(DataType.Text)]
         public long ToLocationID { get; set; }
 
+        [Display(Name = "From Room")]
+        [DataType(DataType.Text)]
+        public long FromLocationID { get; set; }
+
         [Range(-1, 360, ErrorMessage = "The {0} must be between {2} and {1}. -1 is for non-cardinal exits.")]
         [Display(Name = "Degrees From North")]
         [DataType(DataType.Text)]

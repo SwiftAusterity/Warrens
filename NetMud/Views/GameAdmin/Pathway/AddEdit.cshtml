@@ -11,6 +11,8 @@
             @Html.EditorFor(model => model.NewName)
         </div>
         <div class="form-group two-column">
+            @Html.HiddenFor(m => m.ToLocationID)
+            @Html.HiddenFor(m => m.FromLocationID)
             <label id="lblToLocation" class="control-label">Origin:</label>
             <div>@Model.FromLocation.Name</div>
             <label id="lblToLocation" class="control-label">Destination:</label>

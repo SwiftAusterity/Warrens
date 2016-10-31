@@ -158,7 +158,10 @@ namespace NetMud.Controllers.GameAdmin
                 }
             }
 
-            return View("~/Views/GameAdmin/Pathway/AddEdit.cshtml", vModel);
+            var result = new ContentResult();
+            result.Content = message;
+
+            return result;
         }
 
         [HttpGet]
@@ -190,7 +193,9 @@ namespace NetMud.Controllers.GameAdmin
             vModel.MessageToActor = obj.MessageToActor;
             vModel.MessageToDestination = obj.MessageToDestination;
             vModel.MessageToOrigin = obj.MessageToOrigin;
+            vModel.ToLocationID = DataUtility.TryConvert<long>(obj.ToLocationID);
             vModel.ToLocation = BackingDataCache.Get<IRoomData>(DataUtility.TryConvert<long>(obj.ToLocationID));
+            vModel.FromLocationID = DataUtility.TryConvert<long>(obj.FromLocationID);
             vModel.FromLocation = BackingDataCache.Get<IRoomData>(DataUtility.TryConvert<long>(obj.FromLocationID));
             vModel.VisibleStrength = obj.VisibleStrength;
             vModel.VisibleToSurroundings = obj.VisibleToSurroundings;
@@ -224,7 +229,7 @@ namespace NetMud.Controllers.GameAdmin
             obj.AudibleStrength = vModel.AudibleStrength;
             obj.AudibleToSurroundings = vModel.AudibleToSurroundings;
             obj.DegreesFromNorth = vModel.DegreesFromNorth;
-            obj.FromLocationID = id.ToString();
+            obj.FromLocationID = vModel.FromLocationID.ToString();
             obj.FromLocationType = "RoomData";
             obj.MessageToActor = vModel.MessageToActor;
             obj.MessageToDestination = vModel.MessageToDestination;
@@ -283,9 +288,12 @@ namespace NetMud.Controllers.GameAdmin
                 else
                     message = "Error; Edit failed.";
             }
+            
+            var result = new ContentResult();
+            result.Content = message;
 
             //Don't return to the room editor, this is in a window, it just needs to close
-            return View();
+            return result;
         }
     }
 }
