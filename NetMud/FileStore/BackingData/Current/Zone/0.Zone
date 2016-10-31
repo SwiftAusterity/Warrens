@@ -1,1 +1,1 @@
-{"BaseElevation":0,"TemperatureCoefficient":0,"PressureCoefficient":0,"Owner":0,"Claimable":false,"HelpText":"The test zone.","ID":0,"Created":"2016-10-07T18:28:30.2418076Z","LastRevised":"2016-10-07T18:28:30.2418076Z","Name":"TestZone"}
+{"BaseElevation":0,"TemperatureCoefficient":0,"PressureCoefficient":0,"Claimable":false,"WorldName":"Zero","HelpText":"The test zone.","ID":0,"Created":"2016-10-07T18:28:30.2418076Z","LastRevised":"2016-10-07T18:28:30.2418076Z","Name":"TestZone"}
