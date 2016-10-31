@@ -1,5 +1,6 @@
 ﻿using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Behaviors.System;
 using NetMud.DataStructure.SupportingClasses;
 
 namespace NetMud.DataStructure.Base.EntityBackingData
@@ -7,7 +8,7 @@ namespace NetMud.DataStructure.Base.EntityBackingData
     /// <summary>
     /// Backing data for Pathways
     /// </summary>
-    public interface IPathwayData : IEntityBackingData
+    public interface IPathwayData : IEntityBackingData, ISingleton
     {
         /// <summary>
         /// 0->360 degrees with 0 being absolute north (meaning 90 is west, 180 south, etc) -1 means no cardinality

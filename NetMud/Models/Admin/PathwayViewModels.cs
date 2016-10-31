@@ -65,6 +65,7 @@ namespace NetMud.Models.Admin
         public int DegreesFromNorth { get; set; }
 
         public IEnumerable<IRoomData> ValidRooms { get; set; }
+        public IRoomData FromLocation { get; set; }
         public IRoomData ToLocation { get; set; }
         public IPathwayData DataObject { get; set; }
     }

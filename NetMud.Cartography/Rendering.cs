@@ -112,18 +112,6 @@ namespace NetMud.Cartography
                             //The room
                             expandedMap[expandedRoomX, expandedRoomY] = RenderRoomToAscii(roomData, centerRoom.Equals(roomData), forAdmin);
 
-                            //all potential paths out of it
-                            /*
-                            expandedMap[expandedRoomX - 1, expandedRoomY + 1] = RenderPathwayToAscii(nwPath, roomData.ID, MovementDirectionType.NorthWest, forAdmin);
-                            expandedMap[expandedRoomX, expandedRoomY + 1] = RenderPathwayToAscii(nPath, roomData.ID, MovementDirectionType.North, forAdmin);
-                            expandedMap[expandedRoomX + 1, expandedRoomY + 1] = RenderPathwayToAscii(nePath, roomData.ID, MovementDirectionType.NorthEast, forAdmin);
-                            expandedMap[expandedRoomX - 1, expandedRoomY] = RenderPathwayToAscii(wPath, roomData.ID, MovementDirectionType.West, forAdmin);
-                            expandedMap[expandedRoomX + 1, expandedRoomY] = RenderPathwayToAscii(ePath, roomData.ID, MovementDirectionType.East, forAdmin);
-                            expandedMap[expandedRoomX - 1, expandedRoomY - 1] = RenderPathwayToAscii(swPath, roomData.ID, MovementDirectionType.SouthWest, forAdmin);
-                            expandedMap[expandedRoomX, expandedRoomY - 1] = RenderPathwayToAscii(sPath, roomData.ID, MovementDirectionType.South, forAdmin);
-                            expandedMap[expandedRoomX + 1, expandedRoomY - 1] = RenderPathwayToAscii(sePath, roomData.ID, MovementDirectionType.SouthEast, forAdmin);
-                            */
-
                             expandedMap[expandedRoomX - 1, expandedRoomY + 1] = RenderPathwayToAsciiForModals(nwPath, roomData.ID, MovementDirectionType.NorthWest
                                                                                                 , Cartographer.GetRoomInDirection(roomData, MovementDirectionType.NorthWest), forAdmin);
                             expandedMap[expandedRoomX, expandedRoomY + 1] = RenderPathwayToAsciiForModals(nPath, roomData.ID, MovementDirectionType.North
@@ -157,30 +145,6 @@ namespace NetMud.Cartography
             return sb.ToString();
         }
 
-        private static string RenderPathwayToAscii(IPathwayData path, long originId, MovementDirectionType directionType, bool forAdmin = false)
-        {
-            var returnValue = String.Empty;
-            var asciiCharacter = Utilities.TranslateDirectionToAsciiCharacter(directionType);
-
-            if (!forAdmin)
-                return "&nbsp;";
-
-            if (path != null)
-            {
-                var destination = BackingDataCache.Get<IRoomData>(long.Parse(path.ToLocationID));
-
-                returnValue = String.Format("<a href='/GameAdmin/Pathway/Edit/{0}' target='_blank' class='editData pathway' title='Edit - {1}' data-id='{0}'>{2}</a>",
-                    path.ID, destination.Name, asciiCharacter);
-            }
-            else
-            {
-                returnValue = String.Format("<a href='/GameAdmin/Pathway/Add/{0}' class='addData pathway' target='_blank' data-direction='{1}' title='Add - {2} path and room'>+</a>",
-                    originId, Utilities.TranslateDirectionToDegrees(directionType), directionType.ToString());
-            }
-
-            return returnValue;
-        }
-
         private static string RenderPathwayToAsciiForModals(IPathwayData path, long originId, MovementDirectionType directionType, IRoomData destination, bool forAdmin = false)
         {
             var returnValue = String.Empty;
@@ -202,7 +166,7 @@ namespace NetMud.Cartography
 
             if (path != null)
             {
-                returnValue = String.Format("<a href='#' class='editData pathway AdminAddPathway' pathwayId='{0}' fromRoom='{3}' toRoom='{4}' title='Edit - {1}' data-id='{0}'>{2}</a>",
+                returnValue = String.Format("<a href='#' class='editData pathway AdminEditPathway' pathwayId='{0}' fromRoom='{3}' toRoom='{4}' title='Edit - Path to {1}' data-id='{0}'>{2}</a>",
                     path.ID, destinationName, asciiCharacter, originId, destinationId);
             }
             else

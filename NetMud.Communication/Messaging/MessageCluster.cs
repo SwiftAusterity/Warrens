@@ -40,14 +40,14 @@ namespace NetMud.Communication.Messaging
         /// <summary>
         /// Message to send to the surrounding locations of the command/event
         /// </summary>
-        public Dictionary<int, Tuple<MessagingType, IEnumerable<string>>> ToSurrounding { get; set; }
+        public Dictionary<MessagingType, Tuple<int, IEnumerable<string>>> ToSurrounding { get; set; }
 
         /// <summary>
         /// New up an empty cluster
         /// </summary>
         public MessageCluster()
         {
-            ToSurrounding = new Dictionary<int, Tuple<MessagingType, IEnumerable<string>>>();
+            ToSurrounding = new Dictionary<MessagingType, Tuple<int, IEnumerable<string>>>();
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace NetMud.Communication.Messaging
             ToOrigin = origin;
             ToDestination = destination;
 
-            ToSurrounding = new Dictionary<int, Tuple<MessagingType, IEnumerable<string>>>();
+            ToSurrounding = new Dictionary<MessagingType, Tuple<int, IEnumerable<string>>>();
         }
 
         /// <summary>
@@ -114,6 +114,8 @@ namespace NetMud.Communication.Messaging
                 foreach (var dude in oLoc.GetContents<IEntity>().Where(dud => !dud.Equals(Actor) && !dud.Equals(Subject) && !dud.Equals(Target)))
                     dude.WriteTo(TranslateOutput(ToDestination, entities));
             }
+
+            //TODO: to surrounding?
         }
 
         /// <summary>

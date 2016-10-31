@@ -86,21 +86,6 @@ namespace NetMud.Controllers.GameAdmin
             return PartialView("~/Views/GameAdmin/Pathway/AddEdit.cshtml", vModel);
         }
 
-        /*
-        [HttpGet]
-        public ActionResult Add(long id)
-        {
-            var vModel = new AddEditPathwayDataViewModel();
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-
-            vModel.ValidMaterials = BackingDataCache.GetAll<Material>();
-            vModel.ValidModels = BackingDataCache.GetAll<DimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat);
-            vModel.ValidRooms = BackingDataCache.GetAll<RoomData>().Where(rm => !rm.ID.Equals(id));
-
-            return View("~/Views/GameAdmin/Pathway/AddEdit.cshtml", vModel);
-        }
-        */
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Add(AddEditPathwayDataViewModel vModel, long id)
@@ -177,7 +162,7 @@ namespace NetMud.Controllers.GameAdmin
         }
 
         [HttpGet]
-        public ActionResult Edit(long id)
+        public ActionResult Edit(long id, long originRoomId, long destinationRoomId)
         {
             string message = string.Empty;
             var vModel = new AddEditPathwayDataViewModel();
@@ -185,7 +170,6 @@ namespace NetMud.Controllers.GameAdmin
 
             vModel.ValidMaterials = BackingDataCache.GetAll<Material>();
             vModel.ValidModels = BackingDataCache.GetAll<DimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat);
-            vModel.ValidRooms = BackingDataCache.GetAll<RoomData>().Where(rm => !rm.ID.Equals(id));
 
             var obj = BackingDataCache.Get<PathwayData>(id);
 
@@ -194,6 +178,8 @@ namespace NetMud.Controllers.GameAdmin
                 message = "That does not exist";
                 return RedirectToAction("Index", "Room", new { Message = message });
             }
+
+            vModel.ValidRooms = BackingDataCache.GetAll<RoomData>().Where(rm => !rm.ID.Equals(obj.FromLocationID) && !rm.ID.Equals(obj.ToLocationID));
 
             vModel.DataObject = obj;
             vModel.NewName = obj.Name;
@@ -205,6 +191,7 @@ namespace NetMud.Controllers.GameAdmin
             vModel.MessageToDestination = obj.MessageToDestination;
             vModel.MessageToOrigin = obj.MessageToOrigin;
             vModel.ToLocation = BackingDataCache.Get<IRoomData>(DataUtility.TryConvert<long>(obj.ToLocationID));
+            vModel.FromLocation = BackingDataCache.Get<IRoomData>(DataUtility.TryConvert<long>(obj.FromLocationID));
             vModel.VisibleStrength = obj.VisibleStrength;
             vModel.VisibleToSurroundings = obj.VisibleToSurroundings;
 
@@ -297,8 +284,8 @@ namespace NetMud.Controllers.GameAdmin
                     message = "Error; Edit failed.";
             }
 
-            //Don't return to the room editor, this is in a window
-            return View("~/Views/GameAdmin/Pathway/AddEdit.cshtml", vModel);
+            //Don't return to the room editor, this is in a window, it just needs to close
+            return View();
         }
     }
 }

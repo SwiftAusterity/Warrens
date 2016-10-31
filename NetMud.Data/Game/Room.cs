@@ -1,4 +1,5 @@
-﻿using NetMud.Data.System;
+﻿using NetMud.Data.EntityBackingData;
+using NetMud.Data.System;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
@@ -349,7 +350,7 @@ namespace NetMud.Data.Game
         public void GetFromWorldOrSpawn()
         {
             //Try to see if they are already there
-            var me = LiveCache.Get<IRoom>(DataTemplateId, typeof(IRoom));
+            var me = LiveCache.Get<IRoom>(DataTemplateId, typeof(RoomData));
 
             //Isn't in the world currently
             if (me == default(IRoom))

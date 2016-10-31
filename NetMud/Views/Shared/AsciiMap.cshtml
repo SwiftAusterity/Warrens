@@ -81,5 +81,13 @@
 
             return false;
         });
+
+        $('.AdminEditPathway').click(function () {
+            $("#modalFormPlaceholder").load("/GameAdmin/Pathway/Edit/" + $(this).attr('pathwayId') + '/' + $(this).attr('fromRoom') + '/' + $(this).attr('toRoom'));
+
+            $('#modal-form').dialog("open");
+
+            return false;
+        });
     };
 </script>

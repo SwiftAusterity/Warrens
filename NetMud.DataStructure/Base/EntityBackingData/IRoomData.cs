@@ -3,13 +3,14 @@ using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Base.Place;
 using System;
+using NetMud.DataStructure.Behaviors.System;
 
 namespace NetMud.DataStructure.Base.EntityBackingData
 {
     /// <summary>
     /// Backing data for Rooms
     /// </summary>
-    public interface IRoomData : IEntityBackingData
+    public interface IRoomData : IEntityBackingData, ISingleton
     {
         /// <summary>
         /// The current physical model for this entity

@@ -34,7 +34,7 @@ namespace NetMud.DataStructure.SupportingClasses
         /// <summary>
         /// Message to send to the surrounding locations of the command/event
         /// </summary>
-        Dictionary<int, Tuple<MessagingType, IEnumerable<string>>> ToSurrounding { get; set; }
+        Dictionary<MessagingType, Tuple<int, IEnumerable<string>>> ToSurrounding { get; set; }
 
         /// <summary>
         /// Executes the messaging, sending messages using WriteTo on all relevant entities

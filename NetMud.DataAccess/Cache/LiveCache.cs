@@ -139,11 +139,13 @@ namespace NetMud.DataAccess.Cache
         /// <param name="id">the id</param>
         /// <param name="mainType">the primary type of the entity</param>
         /// <returns>the entity requested</returns>
-        public static T Get<T>(long id, Type mainType) where T : IEntity
+        public static T Get<T>(long id, Type backingDataType) where T : IEntity
         {
             try
             {
-                var dataCluster = GetAll<T>(mainType);
+                var backingData = Activator.CreateInstance(backingDataType) as IEntityBackingData;
+
+                var dataCluster = GetAll<T>().Where(thing => thing.GetType() == backingData.EntityClass);
 
                 if (dataCluster.Any(p => ((IEntity)p).DataTemplateId.Equals(id)))
                     return dataCluster.First(p => ((IEntity)p).DataTemplateId.Equals(id));

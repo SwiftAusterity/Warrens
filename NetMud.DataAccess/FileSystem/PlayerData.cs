@@ -138,7 +138,7 @@ namespace NetMud.DataAccess.FileSystem
                 ILocation lastKnownLoc = null;
                 if (lastKnownLocType != null && !string.IsNullOrWhiteSpace(ch.LastKnownLocation))
                 {
-                    if (lastKnownLocType.GetInterfaces().Contains(typeof(ISpawnAsSingleton)))
+                    if (lastKnownLocType.GetInterfaces().Contains(typeof(ISingleton)))
                     {
                         long lastKnownLocID = long.Parse(ch.LastKnownLocation);
                         lastKnownLoc = LiveCache.Get<ILocation>(lastKnownLocID, lastKnownLocType);

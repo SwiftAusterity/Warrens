@@ -198,7 +198,7 @@ namespace NetMud.Data.Game
 
             if (fromLocationType != null && !string.IsNullOrWhiteSpace(bS.FromLocationID))
             {
-                if (fromLocationType.GetInterfaces().Contains(typeof(ISpawnAsSingleton)))
+                if (fromLocationType.GetInterfaces().Contains(typeof(ISingleton)))
                 {
                     long fromLocationID = long.Parse(bS.FromLocationID);
                     fromLocation = LiveCache.Get<ILocation>(fromLocationID, fromLocationType);
@@ -215,7 +215,7 @@ namespace NetMud.Data.Game
 
             if (toLocationType != null && !string.IsNullOrWhiteSpace(bS.ToLocationID))
             {
-                if (toLocationType.GetInterfaces().Contains(typeof(ISpawnAsSingleton)))
+                if (toLocationType.GetInterfaces().Contains(typeof(ISingleton)))
                 {
                     long toLocationID = long.Parse(bS.ToLocationID);
                     toLocation = LiveCache.Get<ILocation>(toLocationID, toLocationType);
@@ -231,9 +231,27 @@ namespace NetMud.Data.Game
             ToLocation = toLocation;
             CurrentLocation = fromLocation;
 
+            if (String.IsNullOrWhiteSpace(bS.MessageToActor))
+                bS.MessageToActor = String.Empty;
+
+            if (String.IsNullOrWhiteSpace(bS.MessageToDestination))
+                bS.MessageToDestination = String.Empty;
+
+            if (String.IsNullOrWhiteSpace(bS.MessageToOrigin))
+                bS.MessageToOrigin = String.Empty;
+
+            if (String.IsNullOrWhiteSpace(bS.MessageToOrigin))
+                bS.MessageToOrigin = String.Empty;
+
+            if (String.IsNullOrWhiteSpace(bS.VisibleToSurroundings))
+                bS.VisibleToSurroundings = String.Empty;
+
+            if (String.IsNullOrWhiteSpace(bS.AudibleToSurroundings))
+                bS.AudibleToSurroundings = String.Empty;
+
             Enter = new MessageCluster(new string[] { bS.MessageToActor }, new string[] { "$A$ enters you" }, new string[] { }, new string[] { bS.MessageToOrigin }, new string[] { bS.MessageToDestination });
-            Enter.ToSurrounding.Add(bS.VisibleStrength, new Tuple<MessagingType, IEnumerable<string>>(MessagingType.Visible, new string[] { bS.VisibleToSurroundings }));
-            Enter.ToSurrounding.Add(bS.AudibleStrength, new Tuple<MessagingType, IEnumerable<string>>(MessagingType.Visible, new string[] { bS.AudibleToSurroundings }));
+            Enter.ToSurrounding.Add(MessagingType.Visible, new Tuple<int, IEnumerable<string>>(bS.VisibleStrength, new string[] { bS.VisibleToSurroundings }));
+            Enter.ToSurrounding.Add(MessagingType.Audible, new Tuple<int, IEnumerable<string>>(bS.AudibleStrength, new string[] { bS.AudibleToSurroundings }));
 
             fromLocation.MoveInto<IPathway>(this);
         }
