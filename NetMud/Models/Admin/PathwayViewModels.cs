@@ -23,22 +23,22 @@ namespace NetMud.Models.Admin
         public string NewName { get; set; }
 
         [Range(0, 16, ErrorMessage = "The {0} must be between {2} and {1}.")]
-        [Display(Name = "Visible message strength")]
+        [Display(Name = "Visible Strength")]
         [DataType(DataType.Text)]
         public int VisibleStrength { get; set; }
 
         [Range(0, 16, ErrorMessage = "The {0} must be between {2} and {1}.")] 
-        [Display(Name = "Audible message strength")]
+        [Display(Name = "Audible Strength")]
         [DataType(DataType.Text)]
         public int AudibleStrength { get; set; }
 
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
-        [Display(Name = "Visible message to area")]
+        [Display(Name = "Visible message")]
         [DataType(DataType.Text)]
         public string VisibleToSurroundings { get; set; }
 
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]       
-        [Display(Name = "Audible message to area")]
+        [Display(Name = "Audible message")]
         [DataType(DataType.Text)]
         public string AudibleToSurroundings { get; set; }
 

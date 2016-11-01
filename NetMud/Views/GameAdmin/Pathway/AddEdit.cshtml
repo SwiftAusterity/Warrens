@@ -11,39 +11,23 @@
     <div class="form-horizontal">
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group one-column">
+        <div class="form-group three-column">
             @Html.EditorFor(model => model.NewName)
-        </div>
-        <div class="form-group two-column">
             @Html.HiddenFor(m => m.ToLocationID)
             @Html.HiddenFor(m => m.FromLocationID)
             <label id="lblFromLocation" class="control-label">Origin:</label>
-            <div>@Model.FromLocation.Name</div>
+            <div style="padding-top: 7px;">@Model.FromLocation.Name</div>
             <label id="lblToLocation" class="control-label">Destination:</label>
-            <div>@Model.ToLocation.Name</div>
+            <div style="padding-top: 7px;">@Model.ToLocation.Name</div>
         </div>
 
-        <div class="form-group">
-            <div style="display: block; padding-bottom: 10px;" class="col-md-3">
-                @Html.LabelFor(m => m.VisibleToSurroundings, new { @class = "control-label" })
-            </div>
-            <div id="mobileContainerRows" style="display: block;" class="col-md-9">
-                <div style="padding-left: 10px;">
-                    <span style="padding: 10px; float:left;">Name: </span>@Html.TextBoxFor(m => m.VisibleToSurroundings, new { @style = " float:left; margin-top: 10px;" })
-                    <span style="padding: 10px; float:left;">Weight:</span>@Html.TextBoxFor(m => m.VisibleStrength, new { @style = " float:left; margin-top: 10px;" })
-                </div>
-            </div>
+        <div class="form-group two-column">
+            @Html.EditorFor(model => model.VisibleToSurroundings)
+            @Html.EditorFor(model => model.VisibleStrength)
         </div>
-        <div class="form-group">
-            <div style="display: block; padding-bottom: 10px;" class="col-md-3">
-                @Html.LabelFor(m => m.AudibleToSurroundings, new { @class = "control-label" })
-            </div>
-            <div id="mobileContainerRows" style="display: block;" class="col-md-9">
-                <div style="padding-left: 10px;">
-                    <span style="padding: 10px; float:left;">Name: </span>@Html.TextBoxFor(m => m.AudibleToSurroundings, new { @style = " float:left; margin-top: 10px;" })
-                    <span style="padding: 10px; float:left;">Weight:</span>@Html.TextBoxFor(m => m.AudibleStrength, new { @style = " float:left; margin-top: 10px;" })
-                </div>
-            </div>
+        <div class="form-group two-column">
+            @Html.EditorFor(model => model.AudibleToSurroundings)
+            @Html.EditorFor(model => model.AudibleStrength)
         </div>
 
         <div class="form-group two-column">

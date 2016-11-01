@@ -14,7 +14,7 @@
     <div>
         @Html.DropDownList("DimensionalModelId", Model.ValidModels.Select(rl =>
                                                                 new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString(), Selected = rl.ID.Equals(Model.DimensionalModelId) })
-                                                                , htmlAttributes: new { id = "DimensionalModelId", Style = "padding: 7px; float:left; margin-top: 10px;" })
+                                                                , htmlAttributes: new { id = "DimensionalModelId", Style = "padding: 7px; float:left;" })
         @Html.ValidationMessageFor(m => m.DimensionalModelId, "", new { @class = "text-danger" })
     </div>
 </div>

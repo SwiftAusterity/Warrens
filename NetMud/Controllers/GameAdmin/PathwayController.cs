@@ -101,7 +101,7 @@ namespace NetMud.Controllers.GameAdmin
                 vModel.ToLocationID = destinationRoomId;
                 vModel.ToLocation = BackingDataCache.Get<IRoomData>(destinationRoomId);
 
-                return View("~/Views/GameAdmin/Pathway/AddEdit.cshtml", vModel);
+                return PartialView("~/Views/GameAdmin/Pathway/AddEdit.cshtml", vModel);
             }
         }
 
@@ -360,7 +360,7 @@ namespace NetMud.Controllers.GameAdmin
             vModel.DimensionalModelCavitation = obj.Model.SurfaceCavitation;
             vModel.ModelDataObject = obj.Model;
 
-            return View("~/Views/GameAdmin/Pathway/AddEdit.cshtml", vModel);
+            return PartialView("~/Views/GameAdmin/Pathway/AddEdit.cshtml", vModel);
         }
 
         [HttpPost]
