@@ -1,0 +1,133 @@
+﻿@model NetMud.Models.Admin.AddEditPathwayDataViewModel
+@{
+    var materialsDropdown = Html.DropDownList("BorderMaterials", Model.NewRoomModel.ValidMaterials.Select(rl => new SelectListItem()
+    {
+        Text = rl.Name,
+        Value = rl.ID.ToString()
+    }), htmlAttributes: new { id = "BorderMaterials", Style = "padding: 7px; float:left; margin-top: 10px;" }).ToString().Replace(Environment.NewLine, "");
+}
+
+@using (Html.BeginForm("Add", "Pathway", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group one-column">
+            @Html.EditorFor(model => model.NewName)
+        </div>
+        <div class="form-group two-column">
+            @Html.HiddenFor(m => m.FromLocationID)
+            @Html.HiddenFor(m => m.ToLocationID)
+            <label id="lblFromLocation" class="control-label">Origin:</label>
+            <div>@Model.FromLocation.Name</div>
+            <label id="lbToLocation" class="control-label">Destination:</label>
+            <div style="color: red;">New Room</div>
+        </div>
+
+        <div class="form-group">
+            <div style="display: block; padding-bottom: 10px;" class="col-md-3">
+                @Html.LabelFor(m => m.VisibleToSurroundings, new { @class = "control-label" })
+            </div>
+            <div id="mobileContainerRows" style="display: block;" class="col-md-9">
+                <div style="padding-left: 10px;">
+                    <span style="padding: 10px; float:left;">Name: </span>@Html.TextBoxFor(m => m.VisibleToSurroundings, new { @style = " float:left; margin-top: 10px;" })
+                    <span style="padding: 10px; float:left;">Weight:</span>@Html.TextBoxFor(m => m.VisibleStrength, new { @style = " float:left; margin-top: 10px;" })
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div style="display: block; padding-bottom: 10px;" class="col-md-3">
+                @Html.LabelFor(m => m.AudibleToSurroundings, new { @class = "control-label" })
+            </div>
+            <div id="mobileContainerRows" style="display: block;" class="col-md-9">
+                <div style="padding-left: 10px;">
+                    <span style="padding: 10px; float:left;">Name: </span>@Html.TextBoxFor(m => m.AudibleToSurroundings, new { @style = " float:left; margin-top: 10px;" })
+                    <span style="padding: 10px; float:left;">Weight:</span>@Html.TextBoxFor(m => m.AudibleStrength, new { @style = " float:left; margin-top: 10px;" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group two-column">
+            @Html.EditorFor(model => model.MessageToDestination)
+            @Html.EditorFor(model => model.MessageToOrigin)
+        </div>
+        <div class="form-group two-column">
+            @Html.EditorFor(model => model.MessageToActor)
+            @Html.EditorFor(model => model.DegreesFromNorth)
+        </div>
+
+        @Html.Partial("TwoDimensionalEntityEditor", Model)
+
+        <hr />
+        <h3>New Room</h3>
+        <hr />
+        <div class="form-group one-column">
+            @Html.EditorFor(e => e.NewRoomModel.NewName)
+        </div>
+        <div class="form-group one-column">
+            @Html.LabelFor(m => m.NewRoomModel.Zone, new { @class = "control-label" })
+            <div>
+                @Html.DropDownList("Zone", Model.NewRoomModel.ValidZones.Select(rl =>
+                                            new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
+                                                , htmlAttributes: new { id = "Zone", Style = "padding: 7px; float:left; margin-top: 10px;" })
+                @Html.ValidationMessageFor(m => m.NewRoomModel.Zone, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        @Html.Partial("DimensionalEntityEditor", Model.NewRoomModel)
+        <div class="form-group one-column">
+            @Html.LabelFor(m => m.NewRoomModel.Medium, new { @class = "control-label" })
+            <div>
+                @Html.DropDownList("Medium", Model.NewRoomModel.ValidMaterials.Select(rl =>
+                        new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
+                        , htmlAttributes: new { id = "Medium", Style = "padding: 7px; float:left; margin-top: 10px;" })
+                @Html.ValidationMessageFor(m => m.NewRoomModel.Medium, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div style="display: block; padding-bottom: 10px;">
+                @Html.LabelFor(m => m.NewRoomModel.BorderNames, new { @class = "col-md-3 control-label" })
+                <a href="#" id="addBorderRow" style="padding: 10px;">Add another...</a>
+            </div>
+            <div id="borderRows" style="display: block;">
+                <div class="col-md-9" style="padding-left: 10px;">
+                    <span style="padding: 10px; float:left;">Border:</span>@Html.TextBoxFor(m => m.NewRoomModel.BorderNames, new { @style = " float:left; margin-top: 10px;" })
+                    <span style="padding: 10px; float:left;">Material: </span>@Html.DropDownList("BorderMaterials", Model.NewRoomModel.ValidMaterials.Select(rl =>
+                                                                                    new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
+                                                                                    , htmlAttributes: new { id = "BorderMaterials", Style = "padding: 7px; float:left; margin-top: 10px;" })
+                    <a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a>
+                </div>
+            </div>
+        </div>
+
+        @Html.Partial("SubmitButton", "Commit")
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+            var materialsDropdown = decodeHtml('@materialsDropdown');
+
+            $(document).ready(function () {
+                $("#addBorderRow").click(function () {
+                    $("#borderRows").append(
+                        '<div class="col-md-9" style="padding-left: 10px;"><span style="padding: 10px; float:left;">Border:</span><input id="BorderNames" name="BorderNames" type="text" value="" style="float:left; margin-top: 10px;"><span style="padding: 10px; float:left;">Material: </span>' + materialsDropdown + '<a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a></div>'
+                    );
+
+                    $(".removeRow").click(function () {
+                        $(this).parent().remove();
+                        return false;
+                    });
+                    return false;
+                });
+
+                $(".removeRow").click(function () {
+                    $(this).parent().remove();
+                    return false;
+                });
+            });
+    </script>
+}

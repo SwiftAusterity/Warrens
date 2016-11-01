@@ -14,14 +14,14 @@ namespace NetMud.Cartography
     public static class Rendering
     {
         /// <summary>
-        /// Render an ascii map of live rooms around a specific radius (always includes pathways, never includes editing links
+        /// Render an ascii map of live rooms around a specific radius (always includes pathways, never includes editing links)
         /// </summary>
         /// <param name="room">the room to render the radius around</param>
         /// <param name="radius">the radius around the room to render</param>
         /// <returns>a single string that is an ascii map</returns>
         public static string RenderRadiusMap(IRoom room, int radius)
         {
-            return RenderRadiusMap(room.DataTemplate<IRoomData>(), radius, false, false);
+            return RenderRadiusMap(room.DataTemplate<IRoomData>(), radius, false);
         }
 
         /// <summary>
@@ -166,13 +166,18 @@ namespace NetMud.Cartography
 
             if (path != null)
             {
-                returnValue = String.Format("<a href='#' class='editData pathway AdminEditPathway' pathwayId='{0}' fromRoom='{3}' toRoom='{4}' title='Edit - Path to {1}' data-id='{0}'>{2}</a>",
-                    path.ID, destinationName, asciiCharacter, originId, destinationId);
+                returnValue = String.Format("<a href='#' class='editData pathway AdminEditPathway' pathwayId='{0}' fromRoom='{3}' toRoom='{4}' title='Edit - {5} path to {1}' data-id='{0}'>{2}</a>",
+                    path.ID, destinationName, asciiCharacter, originId, destinationId, directionType.ToString());
             }
             else
             {
-                returnValue = String.Format("<a href='#' class='addData pathway AdminAddPathway' pathwayId='-1' fromRoom='{0}' toRoom='{3}' data-direction='{1}' title='Add - {2} path and room'>+</a>",
-                    originId, Utilities.TranslateDirectionToDegrees(directionType), directionType.ToString(), destinationId);
+                var roomString = String.Format("Add - {0} path and room", directionType.ToString());
+
+                if (!string.IsNullOrWhiteSpace(destinationName))
+                    roomString = String.Format("Add {0} path to {1}", directionType.ToString(), destinationName);
+
+                returnValue = String.Format("<a href='#' class='addData pathway AdminAddPathway' pathwayId='-1' fromRoom='{0}' toRoom='{3}' data-direction='{1}' title='{2}'>+</a>",
+                    originId, Utilities.TranslateDirectionToDegrees(directionType), roomString, destinationId);
             }
 
             return returnValue;

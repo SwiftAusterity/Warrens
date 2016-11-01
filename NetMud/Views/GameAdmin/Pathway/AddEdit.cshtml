@@ -1,6 +1,10 @@
 ﻿@model NetMud.Models.Admin.AddEditPathwayDataViewModel
 
-@using (Html.BeginForm("Edit", "Pathway", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+@{
+    var postType = Model.DataObject != null ? "Edit" : "Add";
+}
+
+@using (Html.BeginForm(postType, "Pathway", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
 
@@ -13,7 +17,7 @@
         <div class="form-group two-column">
             @Html.HiddenFor(m => m.ToLocationID)
             @Html.HiddenFor(m => m.FromLocationID)
-            <label id="lblToLocation" class="control-label">Origin:</label>
+            <label id="lblFromLocation" class="control-label">Origin:</label>
             <div>@Model.FromLocation.Name</div>
             <label id="lblToLocation" class="control-label">Destination:</label>
             <div>@Model.ToLocation.Name</div>

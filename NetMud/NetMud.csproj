@@ -344,6 +344,7 @@
     <Content Include="Views\Shared\AsciiMap.cshtml" />
     <Content Include="Views\Shared\SubmitButton.cshtml" />
     <Content Include="Views\Shared\SearchCriteriaAndPaging.cshtml" />
+    <Content Include="Views\GameAdmin\Pathway\AddWithRoom.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

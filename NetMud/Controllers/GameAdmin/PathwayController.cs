@@ -6,6 +6,7 @@ using NetMud.Data.LookupData;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.Models.Admin;
 using NetMud.Utility;
@@ -81,9 +82,160 @@ namespace NetMud.Controllers.GameAdmin
 
             vModel.ValidMaterials = BackingDataCache.GetAll<Material>();
             vModel.ValidModels = BackingDataCache.GetAll<DimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat);
-            vModel.ValidRooms = BackingDataCache.GetAll<RoomData>().Where(rm => !rm.ID.Equals(id));
+            vModel.ValidRooms = BackingDataCache.GetAll<RoomData>().Where(rm => !rm.ID.Equals(originRoomId));
 
-            return PartialView("~/Views/GameAdmin/Pathway/AddEdit.cshtml", vModel);
+            vModel.FromLocation = BackingDataCache.Get<IRoomData>(originRoomId);
+            vModel.FromLocationID = originRoomId;
+
+            //New room or existing room
+            if(destinationRoomId.Equals(-1))
+            {
+                vModel.NewRoomModel.authedUser = vModel.authedUser;
+                vModel.NewRoomModel.ValidMaterials = vModel.ValidMaterials;
+                vModel.NewRoomModel.ValidZones = BackingDataCache.GetAll<IZone>();
+
+                return View("~/Views/GameAdmin/Pathway/AddWithRoom.cshtml", vModel);
+            }
+            else
+            {
+                vModel.ToLocationID = destinationRoomId;
+                vModel.ToLocation = BackingDataCache.Get<IRoomData>(destinationRoomId);
+
+                return View("~/Views/GameAdmin/Pathway/AddEdit.cshtml", vModel);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddWithRoom(AddEditPathwayDataViewModel vModel, long id)
+        {
+            string message = string.Empty;
+            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            var newObj = new PathwayData();
+            newObj.Name = vModel.NewName;
+            newObj.AudibleStrength = vModel.AudibleStrength;
+            newObj.AudibleToSurroundings = vModel.AudibleToSurroundings;
+            newObj.DegreesFromNorth = vModel.DegreesFromNorth;
+            newObj.FromLocationID = vModel.ToLocationID.ToString();
+            newObj.FromLocationType = "RoomData";
+            newObj.MessageToActor = vModel.MessageToActor;
+            newObj.MessageToDestination = vModel.MessageToDestination;
+            newObj.MessageToOrigin = vModel.MessageToOrigin;
+            newObj.ToLocationID = vModel.ToLocationID.ToString();
+            newObj.ToLocationType = "RoomData";
+            newObj.VisibleStrength = vModel.VisibleStrength;
+            newObj.VisibleToSurroundings = vModel.VisibleToSurroundings;
+
+            var materialParts = new Dictionary<string, IMaterial>();
+            if (vModel.ModelPartNames != null)
+            {
+                int nameIndex = 0;
+                foreach (var partName in vModel.ModelPartNames)
+                {
+                    if (!string.IsNullOrWhiteSpace(partName))
+                    {
+                        if (vModel.ModelPartMaterials.Count() <= nameIndex)
+                            break;
+
+                        var material = BackingDataCache.Get<Material>(vModel.ModelPartMaterials[nameIndex]);
+
+                        if (material != null && !string.IsNullOrWhiteSpace(partName))
+                            materialParts.Add(partName, material);
+                    }
+
+                    nameIndex++;
+                }
+            }
+
+            var dimModel = BackingDataCache.Get<DimensionalModelData>(vModel.DimensionalModelId);
+            bool validData = true;
+
+            if (dimModel == null)
+            {
+                message = "Choose a valid dimensional model.";
+                validData = false;
+            }
+
+            if (dimModel.ModelPlanes.Any(plane => !materialParts.ContainsKey(plane.TagName)))
+            {
+                message = "You need to choose a material for each Dimensional Model planar section. (" + string.Join(",", dimModel.ModelPlanes.Select(plane => plane.TagName)) + ")";
+                validData = false;
+            }
+
+            if (validData)
+            {
+                newObj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth,
+                    vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation, vModel.DimensionalModelId, materialParts);
+
+                if (newObj.Create() == null)
+                    message = "Error; Creation failed.";
+                else
+                {
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddPathwayWithRoom[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    message = "Creation Successful.";
+                }
+            }
+
+            string roomMessage = string.Empty;
+            var newRoom = new RoomData();
+            newRoom.Name = vModel.NewRoomModel.NewName;
+            newRoom.Model = new DimensionalModel(vModel.NewRoomModel.DimensionalModelHeight, vModel.NewRoomModel.DimensionalModelLength, vModel.NewRoomModel.DimensionalModelWidth
+                                , vModel.NewRoomModel.DimensionalModelVacuity, vModel.NewRoomModel.DimensionalModelCavitation);
+
+            if (vModel.NewRoomModel.BorderMaterials != null)
+            {
+                int index = 0;
+                foreach (var materialId in vModel.NewRoomModel.BorderMaterials)
+                {
+                    if (materialId > 0)
+                    {
+                        if (vModel.NewRoomModel.BorderNames.Count() <= index)
+                            break;
+
+                        var name = vModel.NewRoomModel.BorderNames[index];
+                        var material = BackingDataCache.Get<IMaterial>(materialId);
+
+                        if (material != null && !string.IsNullOrWhiteSpace(name) && !newRoom.Borders.ContainsKey(name))
+                            newRoom.Borders.Add(name, material);
+                    }
+
+                    index++;
+                }
+            }
+
+            var mediumId = vModel.NewRoomModel.Medium;
+            var medium = BackingDataCache.Get<IMaterial>(mediumId);
+
+            if (medium != null)
+            {
+                newRoom.Medium = medium;
+
+                var zoneId = vModel.NewRoomModel.Zone;
+                var zone = BackingDataCache.Get<IZone>(zoneId);
+
+                if (zone != null)
+                {
+                    newRoom.ZoneAffiliation = zone;
+
+                    if (newRoom.Create() == null)
+                        roomMessage = "Error; Creation failed.";
+                    else
+                    {
+                        LoggingUtility.LogAdminCommandUsage("*WEB* - AddRoomDataWithPathway[" + newRoom.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                        roomMessage = "Creation Successful.";
+                    }
+                }
+                else
+                    roomMessage = "You must include a valid Zone.";
+            }
+            else
+                roomMessage = "You must include a valid Medium material.";
+
+            var result = new ContentResult();
+            result.Content = message + "|" + roomMessage;
+
+            return result;
         }
 
         [HttpPost]
@@ -98,12 +250,12 @@ namespace NetMud.Controllers.GameAdmin
             newObj.AudibleStrength = vModel.AudibleStrength;
             newObj.AudibleToSurroundings = vModel.AudibleToSurroundings;
             newObj.DegreesFromNorth = vModel.DegreesFromNorth;
-            newObj.FromLocationID = id.ToString();
+            newObj.FromLocationID = vModel.ToLocationID.ToString();
             newObj.FromLocationType = "RoomData";
             newObj.MessageToActor = vModel.MessageToActor;
             newObj.MessageToDestination = vModel.MessageToDestination;
             newObj.MessageToOrigin = vModel.MessageToOrigin;
-            newObj.ToLocationID = vModel.ToLocation.ID.ToString();
+            newObj.ToLocationID = vModel.ToLocationID.ToString();
             newObj.ToLocationType = "RoomData";
             newObj.VisibleStrength = vModel.VisibleStrength;
             newObj.VisibleToSurroundings = vModel.VisibleToSurroundings;

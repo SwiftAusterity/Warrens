@@ -7,9 +7,7 @@
         Text = rl.Name,
         Value = rl.ID.ToString()
     }), htmlAttributes: new { id = "BorderMaterials", Style = "padding: 7px; float:left; margin-top: 10px;" }).ToString().Replace(Environment.NewLine, "");
-}
 
-@{
     <section id="newRoomForm">
         @using (Html.BeginForm("Add", "Room", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
