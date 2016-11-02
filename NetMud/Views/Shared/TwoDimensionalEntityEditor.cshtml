@@ -4,7 +4,7 @@
     {
         Text = rl.Name,
         Value = rl.ID.ToString()
-    }), htmlAttributes: new { id = "ModelPartMaterials", Style = "padding: 7px; float:left; margin-top: 10px;" }).ToString().Replace(Environment.NewLine, "");
+    }), htmlAttributes: new { id = "ModelPartMaterials", @class = "form-control" }).ToString().Replace(Environment.NewLine, "");
 
     var isAdd = Model.ModelDataObject == null;
 }
@@ -20,24 +20,29 @@
 </div>
 @Html.Partial("DimensionalEntityEditor", Model)
 <br class="clearfix" />
-<div class="form-group" >
-    <div style="display: block; padding-bottom: 30px;" class="col-md-3">
-        @Html.LabelFor(m => m.ModelPartNames, new { @class = "control-label" })
-    </div>
-    <div id="modelPartRows" style="display: block;" class="col-md-9">
-        @if (!isAdd)
+<div class="form-group one-column">
+    <label class="control-label" id="lblModelParts">Model Parts</label>
+    <div>&nbsp;</div>
+</div>
+<div id="modelPartRows">
+    @if (!isAdd)
+    {
+        foreach (var container in Model.ModelDataObject.Composition)
         {
-            foreach (var container in Model.ModelDataObject.Composition)
-            {
-                <div style="padding-left: 10px;">
-                    <span style="padding: 10px; float:left;">Part Name:</span><input id="ModelPartNames" name="ModelPartNames" style="float:left; margin-top: 10px;" type="text" value="@container.Key">
-                    <span style="padding: 10px; float:left;">Material: </span>@Html.DropDownList("ModelPartMaterials", Model.ValidMaterials.Select(rl =>
-                                                                                            new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString(), Selected = rl.Equals(container.Value) })
-                                                                                            , htmlAttributes: new { id = "ModelPartMaterials", Style = "padding: 7px; float:left; margin-top: 10px;" })
+            <div class="form-group two-column">
+                @Html.LabelFor(m => m.ModelPartNames, new { @class = "control-label" })
+                <div>
+                    <input id="ModelPartNames" name="ModelPartNames" class="form-control" type="text" value="@container.Key">
                 </div>
-            }
+                @Html.LabelFor(m => m.ModelPartMaterials, new { @class = "control-label" })
+                <div>
+                    @Html.DropDownList("ModelPartMaterials", Model.ValidMaterials.Select(rl =>
+                                                                new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString(), Selected = rl.Equals(container.Value) })
+                                                                , htmlAttributes: new { id = "ModelPartMaterials", @class = "form-control" })
+                </div>
+            </div>
         }
-    </div>
+    }
 </div>
 <br class="clearfix" />
 
@@ -63,7 +68,7 @@
 
                     $.each(data, function (key, name) {
                         $("#modelPartRows").append(
-                            '<div style="padding-left:10px;"><span style="padding: 10px; float:left;">Part Name: </span><input id="ModelPartNames" name="ModelPartNames" type="text" value="' + name + '" style="float:left; margin-top: 10px;"><span style="padding: 10px; float:left;">Material:</span>' + materialsDropdown + '</div>'
+                            '<div class="form-group two-column" id="modelPartRows"><label class="control-label">Part Name:</label><div><input id="ModelPartNames" name="ModelPartNames" class="form-control" type="text" value="' + name + '"></div><label class="control-label">Material: </label><div>' + materialsDropdown + '</div></div>'
                         );
                     })
                 }

@@ -47,12 +47,6 @@ namespace NetMud.Models.Admin
         [DataType(DataType.Text)]
         public long Zone { get; set; }
 
-        [Display(Name = "Border")]
-        public string[] BorderNames { get; set; }
-
-        [Display(Name = "Material")]
-        public long[] BorderMaterials { get; set; }
-
         public IEnumerable<IMaterial> ValidMaterials { get; set; }
 
         public IEnumerable<IZone> ValidZones { get; set; }

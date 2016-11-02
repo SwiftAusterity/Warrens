@@ -18,11 +18,6 @@ namespace NetMud.DataStructure.Base.EntityBackingData
         IDimensionalModel Model { get; }
 
         /// <summary>
-        /// What the walls are made of
-        /// </summary>
-        IDictionary<string, IMaterial> Borders { get; set; }
-
-        /// <summary>
         /// What the room's primary material is (is it filled with water, air, etc)
         /// </summary>
         IMaterial Medium { get; set; }

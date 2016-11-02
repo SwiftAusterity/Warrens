@@ -2,12 +2,6 @@
 @{
     ViewBag.Title = "Add New Room";
 
-    var materialsDropdown = Html.DropDownList("BorderMaterials", Model.ValidMaterials.Select(rl => new SelectListItem()
-    {
-        Text = rl.Name,
-        Value = rl.ID.ToString()
-    }), htmlAttributes: new { id = "BorderMaterials", Style = "padding: 7px; float:left; margin-top: 10px;" }).ToString().Replace(Environment.NewLine, "");
-
     <section id="newRoomForm">
         @using (Html.BeginForm("Add", "Room", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
@@ -36,48 +30,11 @@
                     @Html.ValidationMessageFor(m => m.Medium, "", new { @class = "text-danger" })
                 </div>
             </div>
-            <div class="form-group">
-                <div style="display: block; padding-bottom: 10px;">
-                    @Html.LabelFor(m => m.BorderNames, new { @class = "col-md-3 control-label" })
-                    <a href="#" id="addBorderRow" style="padding: 10px;">Add another...</a>
-                </div>
-                <div id="borderRows" style="display: block;">
-                    <div class="col-md-9" style="padding-left: 10px;">
-                        <span style="padding: 10px; float:left;">Border:</span>@Html.TextBoxFor(m => m.BorderNames, new { @style = " float:left; margin-top: 10px;" })
-                        <span style="padding: 10px; float:left;">Material: </span>@Html.DropDownList("BorderMaterials", Model.ValidMaterials.Select(rl =>
-                                                                                    new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
-                                                                                    , htmlAttributes: new { id = "BorderMaterials", Style = "padding: 7px; float:left; margin-top: 10px;" })
-                        <a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a>
-                    </div>
-                </div>
-            </div>
+            
             @Html.Partial("SubmitButton", "Create")
         }
     </section>
 }
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-
-    <script type="text/javascript">
-        var materialsDropdown = decodeHtml('@materialsDropdown');
-
-        $(document).ready(function () {
-            $("#addBorderRow").click(function () {
-                $("#borderRows").append(
-                    '<div class="col-md-9" style="padding-left: 10px;"><span style="padding: 10px; float:left;">Border:</span><input id="BorderNames" name="BorderNames" type="text" value="" style="float:left; margin-top: 10px;"><span style="padding: 10px; float:left;">Material: </span>' + materialsDropdown + '<a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a></div>'
-                );
-
-                $(".removeRow").click(function () {
-                    $(this).parent().remove();
-                    return false;
-                });
-                return false;
-            });
-
-            $(".removeRow").click(function () {
-                $(this).parent().remove();
-                return false;
-            });
-        });
-    </script>
 }

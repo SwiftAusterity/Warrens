@@ -113,27 +113,6 @@ namespace NetMud.Controllers.GameAdmin
             newObj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth
                                 , vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation);
 
-            if (vModel.BorderMaterials != null)
-            {
-                int index = 0;
-                foreach (var materialId in vModel.BorderMaterials)
-                {
-                    if (materialId > 0)
-                    {
-                        if (vModel.BorderNames.Count() <= index)
-                            break;
-
-                        var name = vModel.BorderNames[index];
-                        var material = BackingDataCache.Get<IMaterial>(materialId);
-
-                        if (material != null && !string.IsNullOrWhiteSpace(name) && !newObj.Borders.ContainsKey(name))
-                            newObj.Borders.Add(name, material);
-                    }
-
-                    index++;
-                }
-            }
-
             var mediumId = vModel.Medium;
             var medium = BackingDataCache.Get<IMaterial>(mediumId);
 
@@ -209,28 +188,6 @@ namespace NetMud.Controllers.GameAdmin
             obj.Model.Height = vModel.DimensionalModelHeight;
             obj.Model.Length = vModel.DimensionalModelLength;
             obj.Model.Width = vModel.DimensionalModelWidth;
-
-            obj.Borders = new Dictionary<string, IMaterial>();
-            if (vModel.BorderMaterials != null)
-            {
-                int index = 0;
-                foreach (var materialId in vModel.BorderMaterials)
-                {
-                    if (materialId > 0)
-                    {
-                        if (vModel.BorderNames.Count() <= index)
-                            break;
-
-                        var name = vModel.BorderNames[index];
-                        var material = BackingDataCache.Get<IMaterial>(materialId);
-
-                        if (material != null && !string.IsNullOrWhiteSpace(name) && !obj.Borders.ContainsKey(name))
-                            obj.Borders.Add(name, material);
-                    }
-
-                    index++;
-                }
-            }
 
             var mediumId = vModel.Medium;
             var medium = BackingDataCache.Get<IMaterial>(mediumId);

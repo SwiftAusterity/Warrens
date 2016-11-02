@@ -73,32 +73,6 @@ namespace NetMud.Data.EntityBackingData
             }
         }
 
-        [JsonProperty("Borders")]
-        private IDictionary<string, long> _borders { get; set; }
-
-        /// <summary>
-        /// What the walls are made of
-        /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        public IDictionary<string, IMaterial> Borders
-        {
-            get
-            {
-                if (_borders != null)
-                    return _borders.ToDictionary(k => k.Key, k => BackingDataCache.Get<IMaterial>(k.Value));
-
-                return null;
-            }
-            set
-            {
-                if (value == null)
-                    return;
-
-                _borders = value.ToDictionary(k => k.Key, k => k.Value.ID);
-            }
-        }
-
         /// <summary>
         /// Current coordinates of the room on its world map
         /// </summary>

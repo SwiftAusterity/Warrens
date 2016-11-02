@@ -94,7 +94,7 @@ namespace NetMud.Controllers.GameAdmin
                 vModel.NewRoomModel.ValidMaterials = vModel.ValidMaterials;
                 vModel.NewRoomModel.ValidZones = BackingDataCache.GetAll<IZone>();
 
-                return View("~/Views/GameAdmin/Pathway/AddWithRoom.cshtml", vModel);
+                return PartialView("~/Views/GameAdmin/Pathway/AddWithRoom.cshtml", vModel);
             }
             else
             {
@@ -182,27 +182,6 @@ namespace NetMud.Controllers.GameAdmin
             newRoom.Name = vModel.NewRoomModel.NewName;
             newRoom.Model = new DimensionalModel(vModel.NewRoomModel.DimensionalModelHeight, vModel.NewRoomModel.DimensionalModelLength, vModel.NewRoomModel.DimensionalModelWidth
                                 , vModel.NewRoomModel.DimensionalModelVacuity, vModel.NewRoomModel.DimensionalModelCavitation);
-
-            if (vModel.NewRoomModel.BorderMaterials != null)
-            {
-                int index = 0;
-                foreach (var materialId in vModel.NewRoomModel.BorderMaterials)
-                {
-                    if (materialId > 0)
-                    {
-                        if (vModel.NewRoomModel.BorderNames.Count() <= index)
-                            break;
-
-                        var name = vModel.NewRoomModel.BorderNames[index];
-                        var material = BackingDataCache.Get<IMaterial>(materialId);
-
-                        if (material != null && !string.IsNullOrWhiteSpace(name) && !newRoom.Borders.ContainsKey(name))
-                            newRoom.Borders.Add(name, material);
-                    }
-
-                    index++;
-                }
-            }
 
             var mediumId = vModel.NewRoomModel.Medium;
             var medium = BackingDataCache.Get<IMaterial>(mediumId);

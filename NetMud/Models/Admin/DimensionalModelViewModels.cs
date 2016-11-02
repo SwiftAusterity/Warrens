@@ -52,4 +52,50 @@ namespace NetMud.Models.Admin
 
         public IDimensionalModelData DataObject { get; set; }
     }
+
+    public class DimensionalEntityEditViewModel : BaseViewModel
+    {
+        public ApplicationUser authedUser { get; set; }
+
+        [Range(1, 1200, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Length (inches)")]
+        [DataType(DataType.Text)]
+        public int DimensionalModelLength { get; set; }
+
+        [Range(1, 1200, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Height (inches)")]
+        [DataType(DataType.Text)]
+        public int DimensionalModelHeight { get; set; }
+
+        [Range(1, 1200, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Width (inches)")]
+        [DataType(DataType.Text)]
+        public int DimensionalModelWidth { get; set; }
+
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Hollowness")]
+        [DataType(DataType.Text)]
+        public int DimensionalModelVacuity { get; set; }
+
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Surface Cavitation")]
+        [DataType(DataType.Text)]
+        public int DimensionalModelCavitation { get; set; }
+    }
+
+    public class TwoDimensionalEntityEditViewModel : DimensionalEntityEditViewModel
+    {
+        [Display(Name = "Dimensional Model")]
+        public long DimensionalModelId { get; set; }
+
+        [Display(Name = "Part Name")]
+        public string[] ModelPartNames { get; set; }
+
+        [Display(Name = "Material")]
+        public long[] ModelPartMaterials { get; set; }
+
+        public IEnumerable<IDimensionalModelData> ValidModels { get; set; }
+        public IEnumerable<IMaterial> ValidMaterials { get; set; }
+        public IDimensionalModel ModelDataObject { get; set; }
+    }
 }
