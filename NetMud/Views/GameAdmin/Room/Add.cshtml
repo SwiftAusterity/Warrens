@@ -8,15 +8,13 @@
             @Html.AntiForgeryToken()
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            <div class="form-group one-column">
+            <div class="form-group two-column">
                 @Html.EditorFor(e => e.NewName)
-            </div>
-            <div class="form-group one-column">
                 @Html.LabelFor(m => m.Zone, new { @class = "control-label" })
                 <div>
                     @Html.DropDownList("Zone", Model.ValidZones.Select(rl =>
                                             new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
-                                                , htmlAttributes: new { id = "Zone", Style = "padding: 7px; float:left; margin-top: 10px;" })
+                                             , htmlAttributes: new { id = "Zone", @class = "form-control" })
                     @Html.ValidationMessageFor(m => m.Zone, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -26,7 +24,7 @@
                 <div>
                     @Html.DropDownList("Medium", Model.ValidMaterials.Select(rl =>
                         new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
-                        , htmlAttributes: new { id = "Medium", Style = "padding: 7px; float:left; margin-top: 10px;" })
+                        , htmlAttributes: new { id = "Medium", @class = "form-control" })
                     @Html.ValidationMessageFor(m => m.Medium, "", new { @class = "text-danger" })
                 </div>
             </div>

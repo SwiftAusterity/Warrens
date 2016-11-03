@@ -69,6 +69,15 @@ div.form-group.three-column div {
     width: 20%;
 }
 
+div.form-group a.removeRow {
+    color: red;
+    border: none;
+    padding: 10px;
+    background-color: inherit;
+    float: left;
+    position: absolute;
+}
+
 /* Ascii maps for object dim models and room maps */
 .asciiMap {
     font-family: Courier New, Courier, monospace; 

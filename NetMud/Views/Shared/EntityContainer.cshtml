@@ -1,0 +1,50 @@
+﻿@model NetMud.Models.Admin.EntityContainerViewModel
+
+@{
+    var addRowId = "add" + @Model.ContainerName + "Row";
+    var removeRowId = "remove" + @Model.ContainerName + "Row";
+    
+    <label class="control-label">@Model.ContainerName</label>
+    <a href="#" id="@addRowId" style="padding: 10px;">Add another container row...</a>
+    <div id="containerRows">
+        @if (Model.Containers == null || Model.Containers.Count == 0)
+        {
+            <div class="form-group three-column">
+                <a href="#" class="removeRow" id="@removeRowId" title="Remove this">X</a>
+                @Html.LabelFor(m => m.ContainerNames, new { @class = "control-label" })
+                <div>
+                    @Html.TextBoxFor(m => m.ContainerNames, new { @class = "form-control" })
+                </div>
+                @Html.LabelFor(m => m.ContainerWeights, new { @class = "control-label" })
+                <div>
+                    @Html.TextBoxFor(m => m.ContainerWeights, new { @class = "form-control" })
+                </div>
+                @Html.LabelFor(m => m.ContainerVolumes, new { @class = "control-label" })
+                <div>
+                    @Html.TextBoxFor(m => m.ContainerVolumes, new { @class = "form-control" })
+                </div>
+            </div>
+        }
+        else
+        {
+            foreach (var container in Model.Containers)
+            {
+                <div class="form-group three-column">
+                    <a href="#" class="removeRow" id="@removeRowId" title="Remove this">X</a>
+                    @Html.LabelFor(m => m.ContainerNames, new { @class = "control-label" })
+                    <div>
+                        <input id="ContainerNames" name="ContainerNames" class="form-control" type="text" value="@container.Name">
+                    </div>
+                    @Html.LabelFor(m => m.ContainerWeights, new { @class = "control-label" })
+                    <div>
+                        <input id="ContainerWeights" name="ContainerWeights" class="form-control" type="text" value="@container.CapacityWeight.ToString()">
+                    </div>
+                    @Html.LabelFor(m => m.ContainerVolumes, new { @class = "control-label" })
+                    <div>
+                        <input id="ContainerVolumes" name="ContainerVolumes" class="form-control" type="text" value="@container.CapacityVolume.ToString()">
+                    </div>
+                </div>
+            }
+        }
+    </div>
+}

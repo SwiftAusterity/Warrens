@@ -19,54 +19,14 @@
             <div class="form-group one-column">
                 @Html.EditorFor(e => e.NewName)
             </div>
-            <div class="form-group">
-                <div style="display: block; padding-bottom: 10px;">
-                    @Html.LabelFor(m => m.InanimateContainerNames, new { @class = "col-md-3 control-label" })
-                    <a href="#" id="addInanimateContainerRow" style="padding: 10px;">Add another...</a>
-                </div>
-                <div id="inanimateContainerRows" style="display: block;">
-                    <div class="col-md-9" style="padding-left: 10px;">
-                        <span style="padding: 10px; float:left;">Name: </span>@Html.TextBoxFor(m => m.InanimateContainerNames, new { @style = " float:left; margin-top: 10px;" })
-                        <span style="padding: 10px; float:left;">Weight:</span>@Html.TextBoxFor(m => m.InanimateContainerWeights, new { @style = " float:left; margin-top: 10px;" })
-                        <span style="padding: 10px; float:left;">Volume:</span>@Html.TextBoxFor(m => m.InanimateContainerVolumes, new { @style = " float:left; margin-top: 10px;" })
-                        <a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a>
-                    </div>
-                </div>
-            </div>
-            <br class="clearfix" />
-            <div class="form-group">
-                <div style="display: block; padding-bottom: 10px;">
-                    @Html.LabelFor(m => m.MobileContainerNames, new { @class = "col-md-3 control-label" })
-                    <a href="#" id="addMobileContainerRow" style="padding: 10px;">Add another...</a>
-                </div>
-                <div id="mobileContainerRows" style="display: block;">
-                    <div class="col-md-9" style="padding-left: 10px;">
-                        <span style="padding: 10px; float:left;">Name: </span>@Html.TextBoxFor(m => m.MobileContainerNames, new { @style = " float:left; margin-top: 10px;" })
-                        <span style="padding: 10px; float:left;">Weight:</span>@Html.TextBoxFor(m => m.MobileContainerWeights, new { @style = " float:left; margin-top: 10px;" })
-                        <span style="padding: 10px; float:left;">Volume:</span>@Html.TextBoxFor(m => m.MobileContainerVolumes, new { @style = " float:left; margin-top: 10px;" })
-                        <a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a>
-                    </div>
-                </div>
-            </div>
-            @Html.Partial("TwoDimensionalEntityEditor", Model)
-            <div class="form-group">
-                <div style="display: block; padding-bottom: 10px;">
-                    @Html.LabelFor(m => m.InternalCompositionIds, new { @class = "col-md-3 control-label" })
-                    <a href="#" id="addInternalCompositionRow" style="padding: 10px;">Add another...</a>
-                </div>
-                <div id="internalCompositionRows" style="display: block;">
-                    <div class="col-md-9" style="padding-left: 10px;">
-                        <span style="padding: 10px; float:left;">Object: </span>@Html.DropDownList("InternalCompositionIds", Model.ValidInanimateDatas.Select(rl =>
-                                                                                new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
-                                                                                , htmlAttributes: new { id = "InternalCompositionIds", Style = "padding: 7px; float:left; margin-top: 10px;" })
-                        <span style="padding: 10px; float:left;">% of Composition:</span>@Html.TextBoxFor(m => m.InternalCompositionPercentages, new { @style = " float:left; margin-top: 10px;" })
-                        <a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a>
-                    </div>
-                </div>
-            </div>
-            <br class="clearfix" />
-            @Html.Partial("SubmitButton", "Create")
+            
+            @Html.Partial("EntityContainer", new NetMud.Models.Admin.EntityContainerViewModel("Inanimate Containers"))
+            @Html.Partial("EntityContainer", new NetMud.Models.Admin.EntityContainerViewModel("Character Containers"))
 
+            @Html.Partial("TwoDimensionalEntityEditor", Model)
+            @Html.Partial("~/Views/GameAdmin/Inanimate/InternalComposition.cshtml", Model)
+
+            @Html.Partial("SubmitButton", "Create")
         }
     </section>
 }

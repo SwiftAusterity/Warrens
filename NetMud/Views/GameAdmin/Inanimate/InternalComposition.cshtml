@@ -1,0 +1,51 @@
+﻿@model NetMud.Models.Admin.AddEditInanimateDataViewModel
+
+@{
+    <label class="control-label">Internal composition</label>
+    <a href="#" id="addInternalCompositionRow" style="padding: 10px;">Add another row...</a>
+    <div id="internalCompositionRows">
+        @if (Model.DataObject == null || Model.DataObject.InternalComposition == null || Model.DataObject.InternalComposition.Count == 0)
+        {
+            <div class="form-group three-column">
+                <a href="#" class="removeRow" id="removeInternalCompositionRow" title="Remove this">X</a>
+                <label class="contorl-label">&nbsp;</label>
+                <div>
+                    &nbsp;
+                </div>           
+                @Html.LabelFor(m => m.InternalCompositionIds, new { @class = "control-label" })
+                <div>
+                    @Html.DropDownList("InternalCompositionIds", Model.ValidInanimateDatas.Select(rl =>
+                                                                                new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
+                                                                                        , htmlAttributes: new { id = "InternalCompositionIds", @class = "form-control" })
+                </div>
+                @Html.LabelFor(m => m.InternalCompositionPercentages, new { @class = "control-label" })
+                <div>
+                    @Html.TextBoxFor(m => m.InternalCompositionPercentages, new { @class = "control-label" })
+                </div>
+            </div>
+        }
+        else
+        {
+            foreach (var internalComposition in Model.DataObject.InternalComposition)
+            {
+                <div class="form-group three-column">
+                    <a href="#" class="removeRow" id="removeInternalCompositionRow" title="Remove this">X</a>
+                    <label class="contorl-label">&nbsp;</label>
+                    <div>
+                        &nbsp;
+                    </div>
+                    @Html.LabelFor(m => m.InternalCompositionIds, new { @class = "control-label" })
+                    <div>
+                        @Html.DropDownList("InternalCompositionIds", Model.ValidInanimateDatas.Select(rl =>
+                                                                             new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString(), Selected = rl.Equals(internalComposition.Key) })
+                                                                                        , htmlAttributes: new { id = "InternalCompositionIds", @class = "form-control" })
+                    </div>
+                    @Html.LabelFor(m => m.InternalCompositionPercentages, new { @class = "control-label" })
+                    <div>
+                        <input id="InternalCompositionPercentages" name="InternalCompositionPercentages" class="form-control" type="text" value="@internalComposition.Value.ToString()">
+                    </div>
+                </div>
+            }
+        }
+    </div>
+}

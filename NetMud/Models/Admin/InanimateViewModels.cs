@@ -42,23 +42,18 @@ namespace NetMud.Models.Admin
         [DataType(DataType.Text)]
         public string NewName { get; set; }
 
-        
         [Display(Name = "Inanimate Containers")]
         public string[] InanimateContainerNames { get; set; }
 
-        
         [Display(Name = "Inanimate Container Weights")]
         public long[] InanimateContainerWeights { get; set; }
 
-        
         [Display(Name = "Inanimate Container Volumes")]
         public long[] InanimateContainerVolumes { get; set; }
 
-        
         [Display(Name = "Character Containers")]
         public string[] MobileContainerNames { get; set; }
 
-        
         [Display(Name = "Character Container Weights")]
         public long[] MobileContainerWeights { get; set; }
 
@@ -66,10 +61,10 @@ namespace NetMud.Models.Admin
         public long[] MobileContainerVolumes { get; set; }
 
         
-        [Display(Name = "Internal Composition")]
+        [Display(Name = "Inanimate")]
         public long[] InternalCompositionIds { get; set; }
 
-        [Display(Name = "Composition Percentage")]
+        [Display(Name = "Percentage")]
         public short[] InternalCompositionPercentages { get; set; }
 
         public IEnumerable<IInanimateData> ValidInanimateDatas { get; set; }

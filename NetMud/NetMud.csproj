@@ -200,6 +200,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Admin\DimensionalModelViewModels.cs" />
     <Compile Include="Models\Admin\ConstantsViewModel.cs" />
+    <Compile Include="Models\Admin\EntityContainerViewModel.cs" />
     <Compile Include="Models\Admin\PlayerViewModels.cs" />
     <Compile Include="Models\Admin\PathwayViewModels.cs" />
     <Compile Include="Models\Admin\InanimateViewModels.cs" />
@@ -345,6 +346,8 @@
     <Content Include="Views\Shared\SubmitButton.cshtml" />
     <Content Include="Views\Shared\SearchCriteriaAndPaging.cshtml" />
     <Content Include="Views\GameAdmin\Pathway\AddWithRoom.cshtml" />
+    <Content Include="Views\Shared\EntityContainer.cshtml" />
+    <Content Include="Views\GameAdmin\Inanimate\InternalComposition.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
