@@ -198,6 +198,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Admin\BackingDataDropdownModel.cs" />
     <Compile Include="Models\Admin\DimensionalModelViewModels.cs" />
     <Compile Include="Models\Admin\ConstantsViewModel.cs" />
     <Compile Include="Models\Admin\EntityContainerViewModel.cs" />
@@ -348,6 +349,7 @@
     <Content Include="Views\GameAdmin\Pathway\AddWithRoom.cshtml" />
     <Content Include="Views\Shared\EntityContainer.cshtml" />
     <Content Include="Views\GameAdmin\Inanimate\InternalComposition.cshtml" />
+    <Content Include="Views\Shared\BackingDataDropdown.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

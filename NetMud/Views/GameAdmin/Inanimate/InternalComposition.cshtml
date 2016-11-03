@@ -12,12 +12,7 @@
                 <div>
                     &nbsp;
                 </div>           
-                @Html.LabelFor(m => m.InternalCompositionIds, new { @class = "control-label" })
-                <div>
-                    @Html.DropDownList("InternalCompositionIds", Model.ValidInanimateDatas.Select(rl =>
-                                                                                new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
-                                                                                        , htmlAttributes: new { id = "InternalCompositionIds", @class = "form-control" })
-                </div>
+                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.BackingDataDropdownModel("InternalCompositionIds", "Inanimate", Model.ValidInanimateDatas, -1))
                 @Html.LabelFor(m => m.InternalCompositionPercentages, new { @class = "control-label" })
                 <div>
                     @Html.TextBoxFor(m => m.InternalCompositionPercentages, new { @class = "control-label" })
@@ -34,12 +29,8 @@
                     <div>
                         &nbsp;
                     </div>
-                    @Html.LabelFor(m => m.InternalCompositionIds, new { @class = "control-label" })
-                    <div>
-                        @Html.DropDownList("InternalCompositionIds", Model.ValidInanimateDatas.Select(rl =>
-                                                                             new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString(), Selected = rl.Equals(internalComposition.Key) })
-                                                                                        , htmlAttributes: new { id = "InternalCompositionIds", @class = "form-control" })
-                    </div>
+                    @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.BackingDataDropdownModel("InternalCompositionIds", "Inanimate", Model.ValidInanimateDatas, internalComposition.Key.ID))
+
                     @Html.LabelFor(m => m.InternalCompositionPercentages, new { @class = "control-label" })
                     <div>
                         <input id="InternalCompositionPercentages" name="InternalCompositionPercentages" class="form-control" type="text" value="@internalComposition.Value.ToString()">

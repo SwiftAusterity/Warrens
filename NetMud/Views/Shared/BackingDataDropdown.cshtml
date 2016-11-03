@@ -1,0 +1,8 @@
+﻿@model NetMud.Models.Admin.BackingDataDropdownModel
+
+<label class="control-label" for="@Model.ControlName">@Model.Label</label>
+<div>
+    @Html.DropDownList(@Model.ControlName, @Model.ValidList.Select(rl =>
+                                    new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString(), Selected = rl.ID.Equals(Model.SelectedItemId) })
+                            , htmlAttributes: new { id = "InternalCompositionIds", @class = "form-control" })
+</div>
