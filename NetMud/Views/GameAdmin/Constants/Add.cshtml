@@ -10,7 +10,7 @@
 }
 
 @{
-    <section id="newCharacterForm">
+    <section id="newConstantsForm">
         @using (Html.BeginForm("Add", "Constants", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
             @Html.AntiForgeryToken()
@@ -20,38 +20,10 @@
             <div class="form-group one-column">
                 @Html.EditorFor(e => e.NewName)
             </div>
-            <div class="form-group">
-                <div style="display: block; padding-bottom: 10px;">
-                    @Html.LabelFor(m => m.NewConstantValues, new { @class = "col-md-3 control-label" })
-                    <a href="#" id="addValueRow" style="padding: 10px;">Add another...</a>
-                </div>
-                <div id="valueRows" style="display: block;">
-                    <div class="col-md-9" style="padding-left: 10px;">
-                        <span style="padding: 10px; float:left;">Constant Value: </span>@Html.TextBoxFor(m => m.NewConstantValues, new { @style = " float:left; margin-top: 10px;" })
-                        <a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a>
-                    </div>
-                </div>
-            </div>
-            <br class="clearfix" />
 
-            <div class="form-group">
-                <div style="display: block; padding-bottom: 10px;">
-                    @Html.LabelFor(m => m.NewCriterionValues, new { @class = "col-md-3 control-label" })
-                    <a href="#" id="addCriterionRow" style="padding: 10px;">Add another...</a>
-                </div>
-                <div id="criterionRows" style="display: block;">
-                    <div class="col-md-9" style="padding-left: 10px;">
-                        <span style="padding: 10px; float:left;">Criterion Type: </span>@Html.DropDownList("NewCriterionTypes", Enum.GetNames(typeof(CriteriaType)).Select(rl =>
-                                                                                      new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(CriteriaType), rl)).ToString() })
-                                                                                         , htmlAttributes: new { id = "NewCriterionTypes", Style = "padding: 7px; float:left; margin-top: 10px;" })
-                        <span style="padding: 10px; float:left;">Criterion Value: </span>@Html.TextBoxFor(m => m.NewCriterionValues, new { @style = " float:left; margin-top: 10px;" })
-                        <a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a>
-                    </div>
-                </div>
-            </div>
-            <br class="clearfix" />
+            @Html.Partial("~/Views/GameAdmin/Constants/CriterionValue.cshtml", Model)
+
             @Html.Partial("SubmitButton", "Create")
-
         }
     </section>
 }

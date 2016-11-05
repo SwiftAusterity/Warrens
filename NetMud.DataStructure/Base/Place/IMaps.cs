@@ -1,6 +1,4 @@
-﻿using NetMud.DataStructure.Base.EntityBackingData;
-
-namespace NetMud.DataStructure.Base.Place
+﻿namespace NetMud.DataStructure.Base.Place
 {
     /// <summary>
     /// Contains the coordinate array of rooms

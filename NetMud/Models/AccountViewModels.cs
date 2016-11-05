@@ -7,6 +7,7 @@ namespace NetMud.Models
     {
         [Required]
         [Display(Name = "Email")]
+        [DataType(DataType.Text)]
         public string Email { get; set; }
     }
 
@@ -26,10 +27,12 @@ namespace NetMud.Models
     public class VerifyCodeViewModel
     {
         [Required]
+        [DataType(DataType.Text)]
         public string Provider { get; set; }
 
         [Required]
         [Display(Name = "Code")]
+        [DataType(DataType.Text)]
         public string Code { get; set; }
 
         public string ReturnUrl { get; set; }
@@ -44,6 +47,7 @@ namespace NetMud.Models
     {
         [Required]
         [Display(Name = "Email")]
+        [DataType(DataType.Text)]
         public string Email { get; set; }
     }
 
@@ -52,7 +56,7 @@ namespace NetMud.Models
         [Required]
         [Display(Name = "Email")]
         [EmailAddress]
-        [UIHint("String")]
+        [DataType(DataType.Text)]
         public string Email { get; set; }
 
         [Required]
@@ -70,7 +74,7 @@ namespace NetMud.Models
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
-        [UIHint("String")]
+        [DataType(DataType.Text)]
         public string Email { get; set; }
 
         [Required]
@@ -87,6 +91,7 @@ namespace NetMud.Models
         [Required]
         [Display(Name = "Global User Handle")]
         [StringLength(200, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 4)]
+        [DataType(DataType.Text)]
         public string GlobalUserHandle { get; set; }
     }
 
@@ -95,7 +100,7 @@ namespace NetMud.Models
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
-        [UIHint("String")]
+        [DataType(DataType.Text)]
         public string Email { get; set; }
 
         [Required]
@@ -109,6 +114,7 @@ namespace NetMud.Models
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
 
+        [DataType(DataType.Text)]
         public string Code { get; set; }
     }
 
@@ -117,7 +123,7 @@ namespace NetMud.Models
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
-        [UIHint("String")]
+        [DataType(DataType.Text)]
         public string Email { get; set; }
     }
 }

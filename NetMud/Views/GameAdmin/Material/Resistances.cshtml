@@ -1,0 +1,53 @@
+﻿@using NetMud.DataStructure.Base.Supporting
+
+@model NetMud.Models.Admin.AddEditMaterialViewModel
+
+@{
+    <label class="control-label">Resistances</label>
+    <a href="#" id="addResistancesRow" style="padding: 10px;">Add another row...</a>
+    <div id="resistanceRows">
+        @if (Model.DataObject == null || Model.DataObject.Resistance == null || Model.DataObject.Resistance.Count == 0)
+        {
+            <div class="form-group three-column">
+                <a href="#" class="removeRow" id="removeResistanceRow" title="Remove this">X</a>
+                <label class="contorl-label">&nbsp;</label>
+                <div>
+                    &nbsp;
+                </div>
+                @Html.LabelFor(m => m.Resistances)
+                <div>
+                    @Html.DropDownList("Resistances", Enum.GetNames(typeof(DamageType)).Select(rl =>
+                                                                                    new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString() })
+                                                                                    , htmlAttributes: new { id = "Resistances", @class = "form-control" })
+                </div>
+                @Html.LabelFor(m => m.ResistanceValues, new { @class = "control-label" })
+                <div>
+                    @Html.TextBoxFor(m => m.ResistanceValues, new { @class = "control-label" })
+                </div>
+            </div>
+        }
+        else
+        {
+            foreach (var dataItem in Model.DataObject.Resistance)
+            {
+                <div class="form-group three-column">
+                    <a href="#" class="removeRow" id="removeResistanceRow" title="Remove this">X</a>
+                    <label class="contorl-label">&nbsp;</label>
+                    <div>
+                        &nbsp;
+                    </div>
+                    @Html.LabelFor(m => m.Resistances)
+                    <div>
+                        @Html.DropDownList("Resistances", Enum.GetNames(typeof(DamageType)).Select(rl =>
+                                                                                    new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString(), Selected = rl.Equals(Enum.GetName(typeof(DamageType), dataItem.Key)) })
+                                                                                    , htmlAttributes: new { id = "Resistances", @class = "form-control" })
+                    </div>
+                    @Html.LabelFor(m => m.ResistanceValues, new { @class = "control-label" })
+                    <div>
+                        <input id="ResistanceValues" name="ResistanceValues" class="form-control" type="text" value="@dataItem.Value.ToString()">
+                    </div>
+                </div>
+            }
+        }
+    </div>
+}

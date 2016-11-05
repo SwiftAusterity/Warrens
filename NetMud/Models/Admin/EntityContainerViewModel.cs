@@ -1,11 +1,7 @@
-﻿using NetMud.DataStructure.Base.Entity;
-using NetMud.DataStructure.Base.System;
+﻿using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.SupportingClasses;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
 namespace NetMud.Models.Admin
 {

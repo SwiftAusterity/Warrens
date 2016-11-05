@@ -3,12 +3,9 @@ using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.SupportingClasses;
 using NetMud.Physics;
-using NetMud.Utility;
 using System;
 using System.Linq;
-using System.Text;
 using System.Web.Http;
 
 namespace NetMud.Controllers
