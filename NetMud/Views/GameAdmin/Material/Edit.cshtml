@@ -28,68 +28,32 @@
             <div class="form-group one-column">
                 @Html.EditorFor(e => e.NewName)
             </div>
-            <div class="form-group two-column">
+            <div class="form-group three-column">
                 @Html.EditorFor(e => e.NewConductive)
                 @Html.EditorFor(e => e.NewMagnetic)
-            </div>
-            <div class="form-group two-column">
                 @Html.EditorFor(e => e.NewFlammable)
-                @Html.EditorFor(e => e.NewViscosity)
             </div>
-            <div class="form-group two-column">
+            <div class="form-group three-column">
+                @Html.EditorFor(e => e.NewViscosity)
                 @Html.EditorFor(e => e.NewDensity)
                 @Html.EditorFor(e => e.NewMallebility)
-            </div>
-            <div class="form-group two-column">
-                @Html.EditorFor(e => e.NewDuctility)
-                @Html.EditorFor(e => e.NewPorosity)
             </div>
             <div class="form-group three-column">
                 @Html.EditorFor(e => e.NewSolidPoint)
                 @Html.EditorFor(e => e.NewGasPoint)
                 @Html.EditorFor(e => e.NewTemperatureRetention)
             </div>
+            <div class="form-group two-column">
+                @Html.EditorFor(e => e.NewDuctility)
+                @Html.EditorFor(e => e.NewPorosity)
+            </div>
+            @Html.Partial("~/Views/GameAdmin/Material/Resistances.cshtml", Model)
+            @Html.Partial("~/Views/GameAdmin/Material/Compositions.cshtml", Model)
+
             <div class="form-group one-column">
                 @Html.EditorFor(e => e.NewHelpBody)
             </div>
 
-            <div class="form-group">
-                <div style="display: block; padding-bottom: 10px;">
-                    @Html.LabelFor(m => m.Resistances, new { @class = "col-md-3 control-label" })
-                    <a href="#" id="addResistancesRow" style="padding: 10px;">Add another...</a>
-                </div>
-                <div id="resistancesRows" style="display: block;">
-                    @foreach (var container in Model.DataObject.Resistance)
-                    {
-                        <div class="col-md-9" style="padding-left: 10px;">
-                            <span style="padding: 10px; float:left;">Type: </span>@Html.DropDownList("Resistances", Enum.GetNames(typeof(DamageType)).Select(rl =>
-                                                                                    new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString(), Selected = rl.Equals(Enum.GetName(typeof(DamageType), container.Key)) })
-                                                                                    , htmlAttributes: new { id = "Resistances", Style = "padding: 7px; float:left; margin-top: 10px;" })
-                            <span style="padding: 10px; float:left;">Amount:</span><input id="ResistanceValues" name="ResistanceValues" type="text" style="float:left; margin-top: 10px;" value="@container.Value">
-                            <a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a>
-                        </div>
-                    }
-                </div>
-            </div>
-            <br class="clearfix" />
-            <div class="form-group">
-                <div style="display: block; padding-bottom: 10px;">
-                    @Html.LabelFor(m => m.Compositions, new { @class = "col-md-3 control-label" })
-                    <a href="#" id="addCompositionsRow" style="padding: 10px;">Add another...</a>
-                </div>
-                <div id="compositionsRows" style="display: block;">
-                    @foreach (var container in Model.DataObject.Composition)
-                    {
-                        <div class="col-md-9" style="padding-left: 10px;">
-                            <span style="padding: 10px; float:left;">Material: </span>>@Html.DropDownList("Compositions", Model.ValidMaterials.Select(rl =>
-                                                                                    new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString(), Selected = rl.ID.Equals(@container.Key.ID) })
-                                                                                    , htmlAttributes: new { id = "Compositions", Style = "padding: 7px; float:left; margin-top: 10px;" })
-                            <span style="padding: 10px; float:left;">Percentage:</span><input id="CompositionPercentages" name="CompositionPercentages" type="text" style="float:left; margin-top: 10px;" value="@container.Value">
-                            <a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a>
-                        </div>
-                    }
-                </div>
-            </div>
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-9">
                     <input type="submit" value="Commit" class="btn btn-default" style="color: green; border-color: cadetblue;" />

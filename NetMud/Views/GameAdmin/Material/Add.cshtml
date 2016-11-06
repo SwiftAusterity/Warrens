@@ -29,7 +29,7 @@
             </div>
             <div class="form-group three-column">
                 @Html.EditorFor(e => e.NewConductive)
-                @Html.EditorFor(e => e.NewMagnetic)'
+                @Html.EditorFor(e => e.NewMagnetic)
                 @Html.EditorFor(e => e.NewFlammable)
             </div>
             <div class="form-group three-column">
@@ -47,37 +47,8 @@
                 @Html.EditorFor(e => e.NewPorosity)
             </div>
 
-            <div class="form-group">
-                <div style="display: block; padding-bottom: 10px;">
-                    @Html.LabelFor(m => m.Resistances, new { @class = "col-md-3 control-label" })
-                    <a href="#" id="addResistancesRow" style="padding: 10px;">Add another...</a>
-                </div>
-                <div id="resistancesRows" style="display: block;">
-                    <div class="col-md-9" style="padding-left: 10px;">
-                        <span style="padding: 10px; float:left;">Type: </span>@Html.DropDownList("Resistances", Enum.GetNames(typeof(DamageType)).Select(rl =>
-                                                                                    new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString() })
-                                                                                    , htmlAttributes: new { id = "Resistances", Style = "padding: 7px; float:left; margin-top: 10px;" })
-                        <span style="padding: 10px; float:left;">Amount:</span>@Html.TextBoxFor(m => m.ResistanceValues, new { @style = "float:left; margin-top: 10px;" })
-                        <a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a>
-                    </div>
-                </div>
-            </div>
-            <br class="clearfix" />
-            <div class="form-group">
-                <div style="display: block; padding-bottom: 10px;">
-                    @Html.LabelFor(m => m.Compositions, new { @class = "col-md-3 control-label" })
-                    <a href="#" id="addCompositionsRow" style="padding: 10px;">Add another...</a>
-                </div>
-                <div id="compositionsRows" style="display: block;">
-                    <div class="col-md-9" style="padding-left: 10px;">
-                        <span style="padding: 10px; float:left;">Material: </span>@Html.DropDownList("Compositions", Model.ValidMaterials.Select(rl =>
-                                                                                    new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
-                                                                                    , htmlAttributes: new { id = "Compositions", Style = "padding: 7px; float:left; margin-top: 10px;" })
-                        <span style="padding: 10px; float:left;">Percentage:</span>@Html.TextBoxFor(m => m.CompositionPercentages, new { @style = " float:left; margin-top: 10px;" })
-                        <a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a>
-                    </div>
-                </div>
-            </div>
+            @Html.Partial("~/Views/GameAdmin/Material/Resistances.cshtml", Model)
+            @Html.Partial("~/Views/GameAdmin/Material/Compositions.cshtml", Model)
 
             <div class="form-group one-column">
                 @Html.EditorFor(e => e.NewHelpBody)

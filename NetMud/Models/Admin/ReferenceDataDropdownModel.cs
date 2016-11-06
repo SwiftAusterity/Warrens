@@ -1,14 +1,11 @@
 ﻿using NetMud.DataStructure.Base.System;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace NetMud.Models.Admin
 {
-    public class BackingDataDropdownModel
+    public class ReferenceDataDropdownModel
     {
-        public BackingDataDropdownModel(string controlName, string label, IEnumerable<IEntityBackingData> validItemList, long selectedItemId)
+        public ReferenceDataDropdownModel(string controlName, string label, IEnumerable<IData> validItemList, long selectedItemId)
         {
             ControlName = controlName;
             Label = label;
@@ -18,7 +15,7 @@ namespace NetMud.Models.Admin
 
         public string ControlName { get; set; }
         public string Label { get; set; }
-        public IEnumerable<IEntityBackingData> ValidList { get; set; }
+        public IEnumerable<IData> ValidList { get; set; }
         public long SelectedItemId { get; set; }
     }
 }

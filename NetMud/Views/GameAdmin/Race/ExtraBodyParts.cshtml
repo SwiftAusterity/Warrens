@@ -1,0 +1,42 @@
+﻿@model NetMud.Models.Admin.AddEditRaceViewModel
+
+@{
+    <label class="control-label">Internal composition</label>
+    <a href="#" id="addExtraPartsRow" style="padding: 10px;">Add another row...</a>
+    <div id="ExtraPartsRows">
+        @if (Model.DataObject == null || Model.DataObject.BodyParts == null || Model.DataObject.BodyParts.Count() == 0)
+        {
+            <div class="form-group three-column">
+                <a href="#" class="removeRow" id="removeExtraPartsRow" title="Remove this">X</a>
+                @Html.LabelFor(m => m.NewExtraPartsName, new { @class = "control-label" })
+                <div>
+                    <input id="NewExtraPartsName" name="NewExtraPartsName" class="form-control" type="text" />
+                </div>        
+                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("NewExtraPartsId", "Extra Part", Model.ValidObjects, -1))
+                @Html.LabelFor(m => m.NewExtraPartsAmount, new { @class = "control-label" })
+                <div>
+                    @Html.TextBoxFor(m => m.NewExtraPartsAmount, new { @class = "control-label" })
+                </div>
+            </div>
+        }
+        else
+        {
+            foreach (var dataItem in Model.DataObject.BodyParts)
+            {
+                <div class="form-group three-column">
+                    <a href="#" class="removeRow" id="removeExtraPartsRow" title="Remove this">X</a>
+                    @Html.LabelFor(m => m.NewExtraPartsName, new { @class = "control-label" })
+                    <div>
+                        <input id="NewExtraPartsName" name="NewExtraPartsName" class="form-control" type="text" value="@dataItem.Item3">
+                    </div>
+                    @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("NewExtraPartsId", "Extra Part", Model.ValidObjects, dataItem.Item1.ID))
+
+                    @Html.LabelFor(m => m.NewExtraPartsAmount, new { @class = "control-label" })
+                    <div>
+                        <input id="NewExtraPartsAmount" name="NewExtraPartsAmount" class="form-control" type="text" value="@dataItem.Item2.ToString()">
+                    </div>
+                </div>
+            }
+        }
+    </div>
+}

@@ -1,0 +1,93 @@
+﻿@using NetMud.DataStructure.SupportingClasses
+
+@model NetMud.Models.Admin.AddEditConstantsViewModel
+
+@{
+    if (Model.DataObject == null || Model.DataObject.Values == null || Model.DataObject.Values.Count == 0)
+    {
+        @Html.LabelFor(m => m.NewConstantValues)
+        <a href="#" id="addValueRow" style="padding: 10px;">Add another row...</a>
+        <div id="valueRows">
+            <div class="form-group two-column">
+                <a href="#" class="removeRow" id="removeValueRow" title="Remove this">X</a>
+                <label class="contorl-label">&nbsp;</label>
+                <div>
+                    &nbsp;
+                </div>
+                <div>
+                    @Html.TextAreaFor(m => m.NewConstantValues, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+
+        <label class="control-label">Criteria</label>
+        <a href="#" id="addCriterionRow" style="padding: 10px;">Add another row...</a>
+        <div id="criterionRows">
+            <div class="form-group three-column">
+                <a href="#" class="removeRow" id="removeCriterionRow" title="Remove this">X</a>
+                <label class="contorl-label">&nbsp;</label>
+                <div>
+                    &nbsp;
+                </div>
+                @Html.LabelFor(m => m.NewCriterionTypes)
+                <div>
+                    @Html.DropDownList("NewCriterionTypes", Enum.GetNames(typeof(CriteriaType)).Select(rl =>
+                                                                    new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(CriteriaType), rl)).ToString() })
+                                                                    , htmlAttributes: new { id = "NewCriterionTypes", @class = "form-control" })
+                </div>
+                @Html.LabelFor(m => m.NewCriterionValues, new { @class = "control-label" })
+                <div>
+                    @Html.TextBoxFor(m => m.NewCriterionValues, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        foreach (var criterion in Model.DataObject.Values)
+        {
+            @Html.LabelFor(m => m.NewConstantValues)
+            <a href="#" id="addValueRow" style="padding: 10px;">Add another row...</a>
+            <div id="valueRows">
+                @foreach (var dataItem in criterion.Value)
+                {
+                    <div class="form-group two-column">
+                        <a href="#" class="removeRow" id="removeValueRow" title="Remove this">X</a>
+                        <label class="contorl-label">&nbsp;</label>
+                        <div>
+                            &nbsp;
+                        </div>
+                        @Html.LabelFor(m => m.NewConstantValues)
+                        <div>
+                            <textarea id="NewConstantValues" name="NewConstantValues" class="form-control" value="@dataItem"></textarea>
+                        </div>
+                    </div>
+                }
+            </div>
+            <label class="control-label">Criteria</label>
+            <a href="#" id="addCriterionRow" style="padding: 10px;">Add another row...</a>
+            <div id="criterionRows">
+                @foreach (var dataItem in criterion.Key.Criterion)
+                {
+                    <div class="form-group three-column">
+                        <a href="#" class="removeRow" id="removeCriterionRow" title="Remove this">X</a>
+                        <label class="contorl-label">&nbsp;</label>
+                        <div>
+                            &nbsp;
+                        </div>
+                        @Html.LabelFor(m => m.NewCriterionTypes)
+                        <div>
+                            @Html.DropDownList("NewCriterionTypes", Enum.GetNames(typeof(CriteriaType)).Select(rl =>
+                                                                    new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(CriteriaType), rl)).ToString(), Selected = rl.Equals(dataItem.Key.ToString()) })
+                                                                    , htmlAttributes: new { id = "NewCriterionTypes", @class = "form-control" })
+                        </div>
+                        @Html.LabelFor(m => m.NewCriterionValues, new { @class = "control-label" })
+                        <div>
+                            @Html.TextBoxFor(m => m.NewCriterionValues, new { @class = "control-label", @value = dataItem.Value })
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    }
+}

@@ -98,7 +98,7 @@ namespace NetMud.Models.Admin
         public long NewBloodId { get; set; }
 
         [Range(0, 200)]
-        [Display(Name = "Vision Range")]
+        [Display(Name = "Vision Range Low")]
         [DataType(DataType.Text)]
         public short NewVisionRangeLow { get; set; }
 
@@ -108,7 +108,7 @@ namespace NetMud.Models.Admin
         public short NewVisionRangeHigh { get; set; }
 
         [Range(0, 200)]
-        [Display(Name = "Heat Tolerence")]
+        [Display(Name = "Heat Tolerence Low")]
         [DataType(DataType.Text)]
         public short NewTemperatureToleranceLow { get; set; }
 

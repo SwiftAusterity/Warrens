@@ -44,19 +44,13 @@ namespace NetMud.Models.Admin
         [DataType(DataType.Text)]
         public string NewName { get; set; }
 
-        
         [Display(Name = "Is Conductive")]
-        [DataType(DataType.Text)]
         public bool NewConductive { get; set; }
-
         
         [Display(Name = "Is Magnetic")]
-        [DataType(DataType.Text)]
         public bool NewMagnetic { get; set; }
 
-        
         [Display(Name = "Is Flammable")]
-        [DataType(DataType.Text)]
         public bool NewFlammable { get; set; }
 
         [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]

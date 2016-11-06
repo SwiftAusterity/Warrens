@@ -4,13 +4,12 @@ using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.SupportingClasses;
-using NetMud.Utility;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace NetMud.Communication.Messaging
-{ 
+{
     /// <summary>
     /// Utility methods for messaging output and translation
     /// </summary>

@@ -19,142 +19,63 @@
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-            <div class="form-group one-column">
+            <div class="form-group three-column">
                 @Html.EditorFor(e => e.NewName)
-            </div>
-            <div class="form-group two-column">
-                @Html.LabelFor(m => m.NewStartingLocationId, new { @class = "control-label" })
-                <div>
-                    @Html.DropDownList("NewStartingLocationId", Model.ValidRooms.Select(rl =>
-                                                       new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString(), Selected = rl.ID.Equals(Model.NewStartingLocationId) })
-                                                       , htmlAttributes: new { id = "NewStartingLocationId", Style = "padding: 7px; float:left; margin-top: 10px;" })
-                    @Html.ValidationMessageFor(m => m.NewStartingLocationId, "", new { @class = "text-danger" })
-                </div>
-                @Html.LabelFor(m => m.NewRecallLocationId, new { @class = "control-label" })
-                <div>
-                    @Html.DropDownList("NewRecallLocationId", Model.ValidRooms.Select(rl =>
-                                                            new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString(), Selected = rl.ID.Equals(Model.NewRecallLocationId) })
-                                                            , htmlAttributes: new { id = "NewRecallLocationId", Style = "padding: 7px; float:left; margin-top: 10px;" })
-                    @Html.ValidationMessageFor(m => m.NewRecallLocationId, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group one-column">
-                @Html.LabelFor(m => m.NewVisionRangeLow, new { @class = "control-label" })
-                <div>
-                    @Html.TextBoxFor(m => m.NewVisionRangeLow, new { @class = "form-control" })
-                    @Html.TextBoxFor(m => m.NewVisionRangeHigh, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.NewVisionRangeLow, "", new { @class = "text-danger" })
-                    @Html.ValidationMessageFor(m => m.NewVisionRangeHigh, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group one-column">
-                @Html.LabelFor(m => m.NewTemperatureToleranceLow, new { @class = "control-label" })
-                <div>
-                    @Html.TextBoxFor(m => m.NewTemperatureToleranceLow, new { @class = "form-control" })
-                    @Html.TextBoxFor(m => m.NewTemperatureToleranceHigh, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.NewTemperatureToleranceLow, "", new { @class = "text-danger" })
-                    @Html.ValidationMessageFor(m => m.NewTemperatureToleranceHigh, "", new { @class = "text-danger" })
-                </div>
+                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("NewStartingLocationId", "Starting Location", Model.ValidRooms, Model.NewStartingLocationId))
+                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("NewRecallLocationId", "Recall Location", Model.ValidRooms, Model.NewRecallLocationId))
             </div>
 
             <div class="form-group two-column">
+                @Html.EditorFor(m => m.NewVisionRangeLow)
+                @Html.EditorFor(m => m.NewVisionRangeHigh)
+            </div>
+            <div class="form-group two-column">
+                @Html.EditorFor(m => m.NewTemperatureToleranceLow)
+                @Html.EditorFor(m => m.NewTemperatureToleranceHigh)
+            </div>
+
+            <div class="form-group three-column">
                 @Html.LabelFor(m => m.NewBreathes, new { @class = "control-label" })
                 <div>
                     @Html.DropDownList("NewBreathes", Enum.GetNames(typeof(RespiratoryType)).Select(rl =>
                         new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(RespiratoryType), rl)).ToString() })
-                        , htmlAttributes: new { id = "NewBreathes", Style = "padding: 7px; float:left; margin-top: 10px;" })
+                        , htmlAttributes: new { id = "NewBreathes", @class = "form-control" })
                     @Html.ValidationMessageFor(m => m.NewBreathes, "", new { @class = "text-danger" })
                 </div>
                 @Html.LabelFor(m => m.NewDietaryNeeds, new { @class = "control-label" })
                 <div>
                     @Html.DropDownList("NewDietaryNeeds", Enum.GetNames(typeof(DietType)).Select(rl =>
                           new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(DietType), rl)).ToString() })
-                             , htmlAttributes: new { id = "NewDietaryNeeds", Style = "padding: 7px; float:left; margin-top: 10px;" })
+                             , htmlAttributes: new { id = "NewDietaryNeeds", @class = "form-control" })
                     @Html.ValidationMessageFor(m => m.NewDietaryNeeds, "", new { @class = "text-danger" })
                 </div>
-            </div>
-
-            <div class="form-group two-column">
                 @Html.LabelFor(m => m.NewTeethType, new { @class = "control-label" })
                 <div>
                     @Html.DropDownList("NewTeethType", Enum.GetNames(typeof(DamageType)).Select(rl =>
                           new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString() })
-                             , htmlAttributes: new { id = "NewTeethType", Style = "padding: 7px; float:left; margin-top: 10px;" })
+                             , htmlAttributes: new { id = "NewTeethType", @class = "form-control" })
                     @Html.ValidationMessageFor(m => m.NewTeethType, "", new { @class = "text-danger" })
                 </div>
-                @Html.LabelFor(m => m.NewBloodId, new { @class = "control-label" })
-                <div>
-                    @Html.DropDownList("NewBloodId", Model.ValidMaterials.Select(rl =>
-                                                       new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
-                                                       , htmlAttributes: new { id = "NewBloodId", Style = "padding: 7px; float:left; margin-top: 10px;" })
-                    @Html.ValidationMessageFor(m => m.NewBloodId, "", new { @class = "text-danger" })
-                </div>
+            </div>
+
+            <div class="form-group three-column">
+                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("NewBloodId", "Blood", Model.ValidMaterials, -1))
+                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("NewHeadId", "Head", Model.ValidObjects, -1))
+                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("NewTorsoId", "Torso", Model.ValidObjects, -1))
             </div>
 
             <div class="form-group two-column">
-                @Html.LabelFor(m => m.NewHeadId, new { @class = "control-label" })
-                <div>
-                    @Html.DropDownList("NewHeadId", Model.ValidObjects.Select(rl =>
-                                             new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
-                                             , htmlAttributes: new { id = "NewHeadId", Style = "padding: 7px; float:left; margin-top: 10px;" })
-                    @Html.ValidationMessageFor(m => m.NewHeadId, "", new { @class = "text-danger" })
-                </div>
-                @Html.LabelFor(m => m.NewTorsoId, new { @class = "control-label" })
-                <div>
-                    @Html.DropDownList("NewTorsoId", Model.ValidObjects.Select(rl =>
-                                                  new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
-                                                  , htmlAttributes: new { id = "NewTorsoId", Style = "padding: 7px; float:left; margin-top: 10px;" })
-                    @Html.ValidationMessageFor(m => m.NewTorsoId, "", new { @class = "text-danger" })
-                </div>
+                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("NewArmsId", "Arms", Model.ValidObjects, -1))
+                @Html.EditorFor(m => m.NewArmsAmount)
             </div>
 
-            <div class="form-group">
-                <div style="display: block; padding-bottom: 10px;">
-                    @Html.LabelFor(m => m.NewArmsID, new { @class = "col-md-3 control-label" })
-                </div>
-                <div style="display: block;">
-                    <div class="col-md-9" style="padding-left: 10px;">
-                        <span style="padding: 10px; float:left;">Object: </span>@Html.DropDownList("NewArmsId", Model.ValidObjects.Select(rl =>
-                                             new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
-                                                , htmlAttributes: new { id = "NewArmsId", Style = "padding: 7px; float:left; margin-top: 10px;" })
-                        <span style="padding: 10px; float:left;"># of:</span><input id="NewArmsAmount" name="NewArmsAmount" type="text" style="float:left; margin-top: 10px;">
-                    </div>
-                </div>
+            <div class="form-group two-column">
+                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("NewLegsID", "Legs", Model.ValidObjects, -1))
+                @Html.EditorFor(m => m.NewLegsAmount)
             </div>
-            <br class="clearfix" />
-            <div class="form-group">
-                <div style="display: block; padding-bottom: 10px;">
-                    @Html.LabelFor(m => m.NewLegsID, new { @class = "col-md-3 control-label" })
-                </div>
-                <div style="display: block;">
-                    <div class="col-md-9" style="padding-left: 10px;">
-                        <span style="padding: 10px; float:left;">Object: </span>@Html.DropDownList("NewLegsId", Model.ValidObjects.Select(rl =>
-                                                     new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
-                                                        , htmlAttributes: new { id = "NewLegsId", Style = "padding: 7px; float:left; margin-top: 10px;" })
-                        <span style="padding: 10px; float:left;"># of:</span><input id="NewLegsAmount" name="NewLegsAmount" type="text" style="float:left; margin-top: 10px;">
-                    </div>
-                </div>
-            </div>
-            <br class="clearfix" />
-            <div class="form-group">
-                <div style="display: block; padding-bottom: 10px;">
-                    @Html.LabelFor(m => m.NewExtraPartsId, new { @class = "col-md-3 control-label" })
-                    <a href="#" id="addPartsRow" style="padding: 10px;">Add another...</a>
-                </div>
-                <div id="partsRows" style="display: block;">
-                    <div class="col-md-9" style="padding-left: 10px;">
-                        <span style="padding: 10px; float:left;">Name:</span><input id="NewExtraPartsName" name="NewExtraPartsName" type="text" style="float:left; margin-top: 10px;">
-                        <span style="padding: 10px; float:left;">Object: </span>@Html.DropDownList("NewExtraPartsId", Model.ValidObjects.Select(rl =>
-                                                                                    new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
-                                                                                , htmlAttributes: new { id = "NewExtraPartsId", Style = "padding: 7px; float:left; margin-top: 10px;" })
-                        <span style="padding: 10px; float:left;">Amount:</span><input id="NewExtraPartsAmount" name="NewExtraPartsAmount" type="text" style="float:left; margin-top: 10px;">
-                        <a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a>
-                    </div>
-                </div>
-            </div>
-            <br class="clearfix" />
+
+            @Html.Partial("~/Views/GameAdmin/Race/ExtraBodyParts.cshtml", Model)
+
             <div class="form-group one-column">
                 @Html.EditorFor(e => e.NewHelpBody)
             </div>

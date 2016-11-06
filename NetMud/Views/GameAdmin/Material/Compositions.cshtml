@@ -1,0 +1,42 @@
+﻿@model NetMud.Models.Admin.AddEditMaterialViewModel
+
+@{
+    <label class="control-label">Internal composition</label>
+    <a href="#" id="addCompositionsRow" style="padding: 10px;">Add another row...</a>
+    <div id="CompositionRows">
+        @if (Model.DataObject == null || Model.DataObject.Composition == null || Model.DataObject.Composition.Count == 0)
+        {
+            <div class="form-group three-column">
+                <a href="#" class="removeRow" id="removeCompositionRow" title="Remove this">X</a>
+                <label class="contorl-label">&nbsp;</label>
+                <div>
+                    &nbsp;
+                </div>           
+                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Compositions", "Material", Model.ValidMaterials, -1))
+                @Html.LabelFor(m => m.CompositionPercentages, new { @class = "control-label" })
+                <div>
+                    @Html.TextBoxFor(m => m.CompositionPercentages, new { @class = "control-label" })
+                </div>
+            </div>
+        }
+        else
+        {
+            foreach (var Composition in Model.DataObject.Composition)
+            {
+                <div class="form-group three-column">
+                    <a href="#" class="removeRow" id="removeCompositionRow" title="Remove this">X</a>
+                    <label class="contorl-label">&nbsp;</label>
+                    <div>
+                        &nbsp;
+                    </div>
+                    @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Compositions", "Material", Model.ValidMaterials, Composition.Key.ID))
+
+                    @Html.LabelFor(m => m.CompositionPercentages, new { @class = "control-label" })
+                    <div>
+                        <input id="CompositionPercentages" name="CompositionPercentages" class="form-control" type="text" value="@Composition.Value.ToString()">
+                    </div>
+                </div>
+            }
+        }
+    </div>
+}
