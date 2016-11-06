@@ -27,29 +27,24 @@
             <div class="form-group one-column">
                 @Html.EditorFor(e => e.NewName)
             </div>
-            <div class="form-group two-column">
+            <div class="form-group three-column">
                 @Html.EditorFor(e => e.NewConductive)
                 @Html.EditorFor(e => e.NewMagnetic)'
-            </div>
-            <div class="form-group two-column">
                 @Html.EditorFor(e => e.NewFlammable)
-                @Html.EditorFor(e => e.NewViscosity)
             </div>
-            <div class="form-group two-column">
+            <div class="form-group three-column">
+                @Html.EditorFor(e => e.NewViscosity)
                 @Html.EditorFor(e => e.NewDensity)
                 @Html.EditorFor(e => e.NewMallebility)
-            </div>
-            <div class="form-group two-column">
-                @Html.EditorFor(e => e.NewDuctility)
-                @Html.EditorFor(e => e.NewPorosity)
             </div>
             <div class="form-group three-column">
                 @Html.EditorFor(e => e.NewSolidPoint)
                 @Html.EditorFor(e => e.NewGasPoint)
                 @Html.EditorFor(e => e.NewTemperatureRetention)
             </div>
-            <div class="form-group one-column">
-                @Html.EditorFor(e => e.NewHelpBody)
+            <div class="form-group two-column">
+                @Html.EditorFor(e => e.NewDuctility)
+                @Html.EditorFor(e => e.NewPorosity)
             </div>
 
             <div class="form-group">
@@ -84,6 +79,9 @@
                 </div>
             </div>
 
+            <div class="form-group one-column">
+                @Html.EditorFor(e => e.NewHelpBody)
+            </div>
             @Html.Partial("SubmitButton", "Create")
 
         }
