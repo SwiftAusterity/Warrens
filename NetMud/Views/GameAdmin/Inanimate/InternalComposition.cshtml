@@ -8,14 +8,14 @@
         {
             <div class="form-group three-column">
                 <a href="#" class="removeRow" id="removeInternalCompositionRow" title="Remove this">X</a>
-                <label class="contorl-label">&nbsp;</label>
+                <label class="control-label">&nbsp;</label>
                 <div>
                     &nbsp;
-                </div>           
+                </div>
                 @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("InternalCompositionIds", "Inanimate", Model.ValidInanimateDatas, -1))
                 @Html.LabelFor(m => m.InternalCompositionPercentages, new { @class = "control-label" })
                 <div>
-                    @Html.TextBoxFor(m => m.InternalCompositionPercentages, new { @class = "control-label" })
+                    @Html.TextBoxFor(m => m.InternalCompositionPercentages, new { @class = "form-control" })
                 </div>
             </div>
         }
@@ -25,10 +25,8 @@
             {
                 <div class="form-group three-column">
                     <a href="#" class="removeRow" id="removeInternalCompositionRow" title="Remove this">X</a>
-                    <label class="contorl-label">&nbsp;</label>
-                    <div>
-                        &nbsp;
-                    </div>
+                    <label class="control-label">&nbsp;</label>
+                    <div>&nbsp;</div>
                     @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("InternalCompositionIds", "Inanimate", Model.ValidInanimateDatas, internalComposition.Key.ID))
 
                     @Html.LabelFor(m => m.InternalCompositionPercentages, new { @class = "control-label" })
@@ -40,3 +38,33 @@
         }
     </div>
 }
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var compositionDropdown = decodeHtml('@Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("InternalCompositionIds", "Inanimate", Model.ValidInanimateDatas, -1)).ToString().Replace(Environment.NewLine, "")');
+        var textboxLabel = decodeHtml('@Html.LabelFor(m => m.InternalCompositionPercentages, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "")');
+        var textboxControl = decodeHtml('@Html.TextBoxFor(m => m.InternalCompositionPercentages, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');
+
+        $("#addInternalCompositionRow").click(function () {
+            $("#internalCompositionRows").append(
+                '<div class="form-group three-column">' +
+                '<a href="#" class="removeRow" id="removeInternalCompositionRow" title="Remove this">X</a>' +
+                '<label class="control-label">&nbsp;</label><div>&nbsp;</div>' +
+                compositionDropdown +
+                textboxLabel +
+                '<div>' + textboxControl + '</div></div>'
+            );
+
+            $(".removeRow").click(function () {
+                $(this).parent().remove();
+                return false;
+            });
+            return false;
+        });
+
+        $(".removeRow").click(function () {
+            $(this).parent().remove();
+            return false;
+        });
+    });
+</script>

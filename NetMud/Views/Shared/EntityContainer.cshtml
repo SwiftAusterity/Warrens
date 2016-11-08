@@ -1,12 +1,13 @@
 ﻿@model NetMud.Models.Admin.EntityContainerViewModel
 
 @{
-    var addRowId = "add" + @Model.ContainerName + "Row";
-    var removeRowId = "remove" + @Model.ContainerName + "Row";
+    var addRowId = "add" + Model.ContainerName.Replace(" ", "") + "Row";
+    var containerRowsId = Model.ContainerName.Replace(" ", "") + "Rows";
+    var removeRowId = "remove" + Model.ContainerName.Replace(" ", "") + "Row";
     
     <label class="control-label">@Model.ContainerName</label>
-    <a href="#" id="@addRowId" style="padding: 10px;">Add another container row...</a>
-    <div id="containerRows">
+    <a href="#" id="@addRowId" style="padding: 10px;">Add another row...</a>
+    <div id="@containerRowsId">
         @if (Model.Containers == null || Model.Containers.Count == 0)
         {
             <div class="form-group three-column">
@@ -48,3 +49,31 @@
         }
     </div>
 }
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var containerNamesLabel = decodeHtml('@Html.LabelFor(m => m.ContainerNames, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "")');
+        var containerNamesBox = decodeHtml('@Html.TextBoxFor(m => m.ContainerNames, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');
+        var containerWeightsLabel = decodeHtml('@Html.LabelFor(m => m.ContainerWeights, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "")');
+        var containerWeightsBox = decodeHtml('@Html.TextBoxFor(m => m.ContainerWeights, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');
+        var containerVolumesLabel = decodeHtml('@Html.LabelFor(m => m.ContainerVolumes, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "")');
+        var containerVolumesBox = decodeHtml('@Html.TextBoxFor(m => m.ContainerVolumes, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');
+
+        $('#@addRowId').click(function () {
+            $('#@containerRowsId').append(
+                    '<div class="form-group three-column">' +
+                    '<a href="#" class="removeRow" id="@removeRowId" title="Remove this">X</a>' +
+                    containerNamesLabel + '<div>' + containerNamesBox + '</div>' +
+                    containerWeightsLabel + '<div>' + containerWeightsBox + '</div>' +
+                    containerVolumesLabel + '<div>' + containerVolumesBox + '</div>' +
+                    '</div>'
+                );
+
+            $(".removeRow").click(function () {
+                $(this).parent().remove();
+                return false;
+            });
+            return false;
+        });
+    });
+</script>

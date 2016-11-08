@@ -1,7 +1,11 @@
-﻿using NetMud.DataStructure.Base.System;
+﻿using NetMud.DataStructure.Base.Entity;
+using NetMud.DataStructure.Base.Place;
+using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.SupportingClasses;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace NetMud.Models.Admin
 {
@@ -13,10 +17,22 @@ namespace NetMud.Models.Admin
             Containers = new HashSet<IEntityContainerData<IEntity>>();
         }
 
-        public EntityContainerViewModel(HashSet<IEntityContainerData<IEntity>> containers, string name)
+        public EntityContainerViewModel(HashSet<IEntityContainerData<IInanimate>> containers, string name)
         {
             ContainerName = name;
-            Containers = containers;
+            Containers = new HashSet<IEntityContainerData<IEntity>>(containers.Select(c => c as IEntityContainerData<IEntity>));
+        }
+
+        public EntityContainerViewModel(HashSet<IEntityContainerData<IMobile>> containers, string name)
+        {
+            ContainerName = name;
+            Containers = new HashSet<IEntityContainerData<IEntity>>(containers.Select(c => c as IEntityContainerData<IEntity>));
+        }
+
+        public EntityContainerViewModel(HashSet<IEntityContainerData<IPathway>> containers, string name)
+        {
+            ContainerName = name;
+            Containers = new HashSet<IEntityContainerData<IEntity>>(containers.Select(c => c as IEntityContainerData<IEntity>));
         }
 
         public string ContainerName { get; set; }
