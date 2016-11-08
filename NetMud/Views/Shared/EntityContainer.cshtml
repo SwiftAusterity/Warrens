@@ -4,8 +4,11 @@
     var addRowId = "add" + Model.ContainerName.Replace(" ", "") + "Row";
     var containerRowsId = Model.ContainerName.Replace(" ", "") + "Rows";
     var removeRowId = "remove" + Model.ContainerName.Replace(" ", "") + "Row";
+    var containerNameId = Model.ContainerName + "ContainerNames";
+    var containerWeightsId = Model.ContainerName + "ContainerWeights";
+    var containerVolumesId = Model.ContainerName + "ContainerVolumes";
     
-    <label class="control-label">@Model.ContainerName</label>
+    <label class="control-label">@Model.ContainerFriendlyName</label>
     <a href="#" id="@addRowId" style="padding: 10px;">Add another row...</a>
     <div id="@containerRowsId">
         @if (Model.Containers == null || Model.Containers.Count == 0)
@@ -14,15 +17,15 @@
                 <a href="#" class="removeRow" id="@removeRowId" title="Remove this">X</a>
                 @Html.LabelFor(m => m.ContainerNames, new { @class = "control-label" })
                 <div>
-                    @Html.TextBoxFor(m => m.ContainerNames, new { @class = "form-control" })
+                    <input id="@containerNameId" name="@containerNameId" class="form-control" type="text" value="">
                 </div>
                 @Html.LabelFor(m => m.ContainerWeights, new { @class = "control-label" })
                 <div>
-                    @Html.TextBoxFor(m => m.ContainerWeights, new { @class = "form-control" })
+                    <input id="@containerWeightsId" name="@containerWeightsId" class="form-control" type="text" value="">
                 </div>
                 @Html.LabelFor(m => m.ContainerVolumes, new { @class = "control-label" })
                 <div>
-                    @Html.TextBoxFor(m => m.ContainerVolumes, new { @class = "form-control" })
+                    <input id="@containerVolumesId" name="@containerVolumesId" class="form-control" type="text" value="">
                 </div>
             </div>
         }
@@ -34,15 +37,15 @@
                     <a href="#" class="removeRow" id="@removeRowId" title="Remove this">X</a>
                     @Html.LabelFor(m => m.ContainerNames, new { @class = "control-label" })
                     <div>
-                        <input id="ContainerNames" name="ContainerNames" class="form-control" type="text" value="@container.Name">
+                        <input id="@containerNameId" name="@containerNameId" class="form-control" type="text" value="@container.Name">
                     </div>
                     @Html.LabelFor(m => m.ContainerWeights, new { @class = "control-label" })
                     <div>
-                        <input id="ContainerWeights" name="ContainerWeights" class="form-control" type="text" value="@container.CapacityWeight.ToString()">
+                        <input id="@containerWeightsId" name="@containerWeightsId" class="form-control" type="text" value="@container.CapacityWeight.ToString()">
                     </div>
                     @Html.LabelFor(m => m.ContainerVolumes, new { @class = "control-label" })
                     <div>
-                        <input id="ContainerVolumes" name="ContainerVolumes" class="form-control" type="text" value="@container.CapacityVolume.ToString()">
+                        <input id="@containerVolumesId" name="@containerVolumesId" class="form-control" type="text" value="@container.CapacityVolume.ToString()">
                     </div>
                 </div>
             }
@@ -53,11 +56,11 @@
 <script type="text/javascript">
     $(document).ready(function () {
         var containerNamesLabel = decodeHtml('@Html.LabelFor(m => m.ContainerNames, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "")');
-        var containerNamesBox = decodeHtml('@Html.TextBoxFor(m => m.ContainerNames, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');
+        var containerNamesBox = '<input id="@containerNameId" name="@containerNameId" class="form-control" type="text" value="">';
         var containerWeightsLabel = decodeHtml('@Html.LabelFor(m => m.ContainerWeights, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "")');
-        var containerWeightsBox = decodeHtml('@Html.TextBoxFor(m => m.ContainerWeights, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');
+        var containerWeightsBox = '<input id="@containerWeightsId" name="@containerWeightsId" class="form-control" type="text" value="">';
         var containerVolumesLabel = decodeHtml('@Html.LabelFor(m => m.ContainerVolumes, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "")');
-        var containerVolumesBox = decodeHtml('@Html.TextBoxFor(m => m.ContainerVolumes, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');
+        var containerVolumesBox = '<input id="@containerVolumesId" name="@containerVolumesId" class="form-control" type="text" value="">';
 
         $('#@addRowId').click(function () {
             $('#@containerRowsId').append(

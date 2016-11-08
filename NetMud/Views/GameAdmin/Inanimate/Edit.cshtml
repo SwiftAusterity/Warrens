@@ -15,8 +15,8 @@
                 @Html.EditorFor(e => e.NewName)
             </div>
             
-            @Html.Partial("EntityContainer", new NetMud.Models.Admin.EntityContainerViewModel(Model.DataObject.InanimateContainers, "Inanimate Containers"))
-            @Html.Partial("EntityContainer", new NetMud.Models.Admin.EntityContainerViewModel(Model.DataObject.MobileContainers, "Character Containers"))
+            @Html.Partial("EntityContainer", new NetMud.Models.Admin.EntityContainerViewModel(Model.DataObject.InanimateContainers, "Inanimate", "Inanimate Containers"))
+            @Html.Partial("EntityContainer", new NetMud.Models.Admin.EntityContainerViewModel(Model.DataObject.MobileContainers, "Mobile", "Character Containers"))
 
             @Html.Partial("TwoDimensionalEntityEditor", Model)
 

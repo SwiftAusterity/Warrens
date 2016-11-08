@@ -275,7 +275,7 @@ namespace NetMud.Controllers.GameAdmin
                 int inanimateIndex = 0;
                 foreach (var name in vModel.InanimateContainerNames)
                 {
-                    if (string.IsNullOrWhiteSpace(name))
+                    if (!string.IsNullOrWhiteSpace(name))
                     {
                         if (vModel.InanimateContainerWeights.Count() <= inanimateIndex || vModel.InanimateContainerVolumes.Count() <= inanimateIndex)
                             break;
@@ -308,9 +308,8 @@ namespace NetMud.Controllers.GameAdmin
                 int mobileIndex = 0;
                 foreach (var name in vModel.MobileContainerNames)
                 {
-                    if (string.IsNullOrWhiteSpace(name))
+                    if (!string.IsNullOrWhiteSpace(name))
                     {
-
                         if (vModel.MobileContainerWeights.Count() <= mobileIndex || vModel.MobileContainerVolumes.Count() <= mobileIndex)
                             break;
 
@@ -334,8 +333,8 @@ namespace NetMud.Controllers.GameAdmin
                 }
             }
 
-            foreach (var container in obj.InanimateContainers.Where(ic => !vModel.InanimateContainerNames.Contains(ic.Name)))
-                obj.InanimateContainers.Remove(container);
+            foreach (var container in obj.MobileContainers.Where(ic => !vModel.MobileContainerNames.Contains(ic.Name)))
+                obj.MobileContainers.Remove(container);
 
             var materialParts = new Dictionary<string, IMaterial>();
             if (vModel.ModelPartNames != null)

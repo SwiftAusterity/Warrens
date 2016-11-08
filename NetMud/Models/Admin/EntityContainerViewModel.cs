@@ -11,31 +11,36 @@ namespace NetMud.Models.Admin
 {
     public class EntityContainerViewModel
     {
-        public EntityContainerViewModel(string name)
+        public EntityContainerViewModel(string name, string friendlyName)
         {
             ContainerName = name;
+            ContainerFriendlyName = friendlyName;
             Containers = new HashSet<IEntityContainerData<IEntity>>();
         }
 
-        public EntityContainerViewModel(HashSet<IEntityContainerData<IInanimate>> containers, string name)
+        public EntityContainerViewModel(HashSet<IEntityContainerData<IInanimate>> containers, string name, string friendlyName)
         {
             ContainerName = name;
+            ContainerFriendlyName = friendlyName;
             Containers = new HashSet<IEntityContainerData<IEntity>>(containers.Select(c => c as IEntityContainerData<IEntity>));
         }
 
-        public EntityContainerViewModel(HashSet<IEntityContainerData<IMobile>> containers, string name)
+        public EntityContainerViewModel(HashSet<IEntityContainerData<IMobile>> containers, string name, string friendlyName)
         {
             ContainerName = name;
+            ContainerFriendlyName = friendlyName;
             Containers = new HashSet<IEntityContainerData<IEntity>>(containers.Select(c => c as IEntityContainerData<IEntity>));
         }
 
-        public EntityContainerViewModel(HashSet<IEntityContainerData<IPathway>> containers, string name)
+        public EntityContainerViewModel(HashSet<IEntityContainerData<IPathway>> containers, string name, string friendlyName)
         {
             ContainerName = name;
+            ContainerFriendlyName = friendlyName;
             Containers = new HashSet<IEntityContainerData<IEntity>>(containers.Select(c => c as IEntityContainerData<IEntity>));
         }
 
         public string ContainerName { get; set; }
+        public string ContainerFriendlyName { get; set; }
 
         [Display(Name = "Name")]
         public string[] ContainerNames { get; set; }
