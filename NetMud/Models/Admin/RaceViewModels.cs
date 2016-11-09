@@ -145,6 +145,6 @@ namespace NetMud.Models.Admin
         public IEnumerable<IRoomData> ValidRooms { get; set; }
         public IEnumerable<IInanimateData> ValidObjects { get; set; }
         public IEnumerable<IMaterial> ValidMaterials { get; set; }
-        public Race DataObject { get; set; }
+        public IRace DataObject { get; set; }
     }
 }

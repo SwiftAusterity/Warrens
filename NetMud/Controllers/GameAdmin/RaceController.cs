@@ -211,11 +211,11 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var vModel = new AddEditRaceViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-            vModel.ValidMaterials = BackingDataCache.GetAll<Material>();
-            vModel.ValidObjects = BackingDataCache.GetAll<InanimateData>();
-            vModel.ValidRooms = BackingDataCache.GetAll<RoomData>();
+            vModel.ValidMaterials = BackingDataCache.GetAll<IMaterial>();
+            vModel.ValidObjects = BackingDataCache.GetAll<IInanimateData>();
+            vModel.ValidRooms = BackingDataCache.GetAll<IRoomData>();
 
-            var obj = BackingDataCache.Get<Race>(id);
+            var obj = BackingDataCache.Get<IRace>(id);
 
             if (obj == null)
             {

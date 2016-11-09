@@ -51,3 +51,36 @@
         }
     </div>
 }
+
+
+<script type="text/javascript">
+    var resistancesLabel = decodeHtml('@Html.LabelFor(m => m.Resistances, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "")');
+    var resistancesDropdown = decodeHtml('@Html.DropDownList("Resistances", Enum.GetNames(typeof(DamageType)).Select(rl =>
+                                                                                    new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString() })
+                                                       , htmlAttributes: new { id = "Resistances", @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');
+    var resistanceValuesLabel = decodeHtml('@Html.LabelFor(m => m.ResistanceValues, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "")');
+    var textboxControl = decodeHtml('@Html.TextBoxFor(m => m.ResistanceValues, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');
+
+    $(document).ready(function () {
+        $("#addResistancesRow").click(function () {
+            $("#resistanceRows").append(
+                '<div class="form-group three-column">' +
+                '<a href="#" class="removeRow" id="removeResistanceRow" title="Remove this">X</a>' +
+                '<label class="control-label">&nbsp;</label><div>&nbsp;</div>' +
+                resistancesLabel + '<div>' + resistancesDropdown + '</div>' +
+                resistanceValuesLabel + '<div>' + textboxControl + '</div></div>'
+            );
+
+            $(".removeRow").click(function () {
+                $(this).parent().remove();
+                return false;
+            });
+            return false;
+        });
+
+        $(".removeRow").click(function () {
+            $(this).parent().remove();
+            return false;
+        });
+    });
+</script>

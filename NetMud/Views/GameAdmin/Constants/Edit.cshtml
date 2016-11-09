@@ -4,12 +4,6 @@
 @{
     ViewBag.Title = "Edit Constant";
 
-    var criterionDropdown = Html.DropDownList("NewCriterionTypes", Enum.GetNames(typeof(CriteriaType)).Select(rl =>
-        new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(CriteriaType), rl)).ToString() })
-        , htmlAttributes: new { id = "NewCriterionTypes", Style = "padding: 7px; float:left; margin-top: 10px;" }).ToString().Replace(Environment.NewLine, "");
-}
-
-@{
     <section id="newCharacterForm">
         @using (Html.BeginForm("Edit", "Constants", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
@@ -35,38 +29,3 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
-
-<script type="text/javascript">
-    $(document).ready(function () {
-        var criterionDropdown = decodeHtml('@criterionDropdown');
-
-        $("#addCriterionRow").click(function () {
-            $("#criterionRows").append(
-                '<div class="col-md-9" style="padding-left:10px;"><span style="padding: 10px; float:left;">Criterion Type: </span>' + criterionDropdown + '<span style="padding: 10px; float:left;">Criterion Value:</span><input id="NewCriterionValues" name="NewCriterionValues" type="text" value="" style="float:left; margin-top: 10px;"><a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a></div>'
-            );
-
-            $(".removeRow").click(function () {
-                $(this).parent().remove();
-                return false;
-            });
-            return false;
-        });
-
-        $("#addValueRow").click(function () {
-            $("#valueRows").append(
-                '<div class="col-md-9" style="padding-left:10px;"><span style="padding: 10px; float:left;">Constant Value:</span><input id="NewConstantValues" name="NewConstantValues" type="text" value="" style="float:left; margin-top: 10px;"><a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a></div>'
-            );
-
-            $(".removeRow").click(function () {
-                $(this).parent().remove();
-                return false;
-            });
-            return false;
-        });
-
-        $(".removeRow").click(function () {
-            $(this).parent().remove();
-            return false;
-        });
-    });
-</script>

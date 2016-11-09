@@ -3,6 +3,7 @@
 @model NetMud.Models.Admin.AddEditConstantsViewModel
 
 @{
+
     if (Model.DataObject == null || Model.DataObject.Values == null || Model.DataObject.Values.Count == 0)
     {
         @Html.LabelFor(m => m.NewConstantValues)
@@ -10,10 +11,11 @@
         <div id="valueRows">
             <div class="form-group two-column">
                 <a href="#" class="removeRow" id="removeValueRow" title="Remove this">X</a>
-                <label class="contorl-label">&nbsp;</label>
+                <label class="control-label">&nbsp;</label>
                 <div>
                     &nbsp;
                 </div>
+                @Html.LabelFor(m => m.NewConstantValues, new { @class = "control-label" })
                 <div>
                     @Html.TextAreaFor(m => m.NewConstantValues, new { @class = "form-control" })
                 </div>
@@ -25,11 +27,11 @@
         <div id="criterionRows">
             <div class="form-group three-column">
                 <a href="#" class="removeRow" id="removeCriterionRow" title="Remove this">X</a>
-                <label class="contorl-label">&nbsp;</label>
+                <label class="control-label">&nbsp;</label>
                 <div>
                     &nbsp;
                 </div>
-                @Html.LabelFor(m => m.NewCriterionTypes)
+                @Html.LabelFor(m => m.NewCriterionTypes, new { @class = "control-label" })
                 <div>
                     @Html.DropDownList("NewCriterionTypes", Enum.GetNames(typeof(CriteriaType)).Select(rl =>
                                                                     new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(CriteriaType), rl)).ToString() })
@@ -53,13 +55,13 @@
                 {
                     <div class="form-group two-column">
                         <a href="#" class="removeRow" id="removeValueRow" title="Remove this">X</a>
-                        <label class="contorl-label">&nbsp;</label>
+                        <label class="control-label">&nbsp;</label>
                         <div>
                             &nbsp;
                         </div>
-                        @Html.LabelFor(m => m.NewConstantValues)
+                        @Html.LabelFor(m => m.NewConstantValues, new { @class = "control-label" })
                         <div>
-                            <textarea id="NewConstantValues" name="NewConstantValues" class="form-control" value="@dataItem"></textarea>
+                            <textarea id="NewConstantValues" name="NewConstantValues" class="form-control">@dataItem</textarea>
                         </div>
                     </div>
                 }
@@ -71,11 +73,11 @@
                 {
                     <div class="form-group three-column">
                         <a href="#" class="removeRow" id="removeCriterionRow" title="Remove this">X</a>
-                        <label class="contorl-label">&nbsp;</label>
+                        <label class="control-label">&nbsp;</label>
                         <div>
                             &nbsp;
                         </div>
-                        @Html.LabelFor(m => m.NewCriterionTypes)
+                        @Html.LabelFor(m => m.NewCriterionTypes, new { @class = "control-label" })
                         <div>
                             @Html.DropDownList("NewCriterionTypes", Enum.GetNames(typeof(CriteriaType)).Select(rl =>
                                                                     new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(CriteriaType), rl)).ToString(), Selected = rl.Equals(dataItem.Key.ToString()) })
@@ -83,7 +85,7 @@
                         </div>
                         @Html.LabelFor(m => m.NewCriterionValues, new { @class = "control-label" })
                         <div>
-                            @Html.TextBoxFor(m => m.NewCriterionValues, new { @class = "control-label", @value = dataItem.Value })
+                            <input id="NewCriterionValues" name="NewCriterionValues" class="form-control" value="@dataItem.Value" />
                         </div>
                     </div>
                 }
@@ -91,3 +93,53 @@
         }
     }
 }
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var criterionLabel = decodeHtml('@Html.LabelFor(m => m.NewCriterionTypes, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "")');
+        var criterionDropdown = decodeHtml('@Html.DropDownList("NewCriterionTypes", Enum.GetNames(typeof(CriteriaType)).Select(rl =>
+                                                    new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(CriteriaType), rl)).ToString() })
+                                                    , htmlAttributes: new { id = "NewCriterionTypes", @class = "form-control" }).ToString().Replace(Environment.NewLine, "");');
+        var criterionValueLabel = decodeHtml('@Html.LabelFor(m => m.NewCriterionValues, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "")');
+        var criterionValueControl = decodeHtml('@Html.TextBoxFor(m => m.NewCriterionValues, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');
+        var constantValueLabel = decodeHtml('@Html.LabelFor(m => m.NewConstantValues, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "")');
+        var constantValueControl = decodeHtml('@Html.TextAreaFor(m => m.NewConstantValues, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');
+
+        $("#addCriterionRow").click(function () {
+            $("#criterionRows").append(
+                '<div class="form-group three-column">' +
+                '<a href="#" class="removeRow" id="removeCriterionRow" title="Remove this">X</a>' +
+                '<label class="control-label">&nbsp;</label><div>&nbsp;</div>' +
+                criterionLabel + '<div>' + criterionDropdown + '</div>' +
+                criterionValueLabel + '<div>' + criterionValueControl + '</div></div>'
+            );
+
+            $(".removeRow").click(function () {
+                $(this).parent().remove();
+                return false;
+            });
+            return false;
+        });
+
+        $("#addValueRow").click(function () {
+            $("#valueRows").append(
+                '<div class="form-group three-column">' +
+                '<a href="#" class="removeRow" id="removeValueRow" title="Remove this">X</a>' +
+                '<label class="control-label">&nbsp;</label><div>&nbsp;</div>' +
+                constantValueLabel + '<div>' + constantValueControl + '</div></div>'
+            );
+
+            $(".removeRow").click(function () {
+                $(this).parent().remove();
+                return false;
+            });
+            return false;
+        });
+
+        $(".removeRow").click(function () {
+            $(this).parent().remove();
+            return false;
+        });
+    });
+</script>

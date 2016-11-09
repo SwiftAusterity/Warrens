@@ -6,12 +6,6 @@
 @{
     ViewBag.Title = "Edit Race";
 
-    var partsDropdown = Html.DropDownList("NewExtraPartsId", Model.ValidObjects.Select(rl =>
-                        new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
-                        , htmlAttributes: new { id = "NewExtraPartsId", Style = "padding: 7px; float:left; margin-top: 10px;" }).ToString().Replace(Environment.NewLine, "");
-}
-
-@{
     <section id="newCharacterForm">
         @using (Html.BeginForm("Edit", "Race", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
@@ -90,27 +84,4 @@
 }
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-
-    <script type="text/javascript">
-        var partsDropdown = decodeHtml('@partsDropdown');
-
-        $(document).ready(function () {
-            $("#addPartsRow").click(function () {
-                $("#partsRows").append(
-                    '<div class="col-md-9" style="padding-left: 10px;"><span style="padding: 10px; float:left;">Name:</span><input id="NewExtraPartsName" name="NewExtraPartsName" type="text" style="float:left; margin-top: 10px;" value=""><span style="padding: 10px; float:left;">Object: </span>' + partsDropdown + '<span style="padding: 10px; float:left;">Amount:</span><input id="NewExtraPartsAmount" name="NewExtraPartsAmount" type="text" value="" style="float:left; margin-top: 10px;"><a href="#" class="removeRow" style="color: red; border: none; padding: 10px; background-color: inherit; float:left;" title="Remove this">X</a></div>'
-                );
-
-                $(".removeRow").click(function () {
-                    $(this).parent().remove();
-                    return false;
-                });
-                return false;
-            });
-
-            $(".removeRow").click(function () {
-                $(this).parent().remove();
-                return false;
-            });
-        });
-    </script>
 }
