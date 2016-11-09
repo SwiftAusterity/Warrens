@@ -13,9 +13,9 @@
             <div class="form-group one-column">
                 @Html.EditorFor(e => e.NewName)
             </div>
-            
-            @Html.Partial("EntityContainer", new NetMud.Models.Admin.EntityContainerViewModel("Inanimate", "Inanimate Containers"))
-            @Html.Partial("EntityContainer", new NetMud.Models.Admin.EntityContainerViewModel("Mobile", "Character Containers"))
+
+            @Html.Partial("InanimateEntityContainer", new NetMud.Models.Admin.EntityContainerViewModel<NetMud.DataStructure.Base.Entity.IInanimate>("Inanimate", "Inanimate Containers"))
+            @Html.Partial("MobileEntityContainer", new NetMud.Models.Admin.EntityContainerViewModel<NetMud.DataStructure.Base.Supporting.IMobile>("Mobile", "Character Containers"))
 
             @Html.Partial("TwoDimensionalEntityEditor", Model)
             @Html.Partial("~/Views/GameAdmin/Inanimate/InternalComposition.cshtml", Model)

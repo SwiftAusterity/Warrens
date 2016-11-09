@@ -347,13 +347,14 @@
     <Content Include="Views\Shared\SubmitButton.cshtml" />
     <Content Include="Views\Shared\SearchCriteriaAndPaging.cshtml" />
     <Content Include="Views\GameAdmin\Pathway\AddWithRoom.cshtml" />
-    <Content Include="Views\Shared\EntityContainer.cshtml" />
     <Content Include="Views\GameAdmin\Inanimate\InternalComposition.cshtml" />
     <Content Include="Views\Shared\BackingDataDropdown.cshtml" />
     <Content Include="Views\GameAdmin\Material\Resistances.cshtml" />
     <Content Include="Views\GameAdmin\Material\Compositions.cshtml" />
     <Content Include="Views\GameAdmin\Race\ExtraBodyParts.cshtml" />
     <Content Include="Views\GameAdmin\Constants\CriterionValue.cshtml" />
+    <Content Include="Views\Shared\InanimateEntityContainer.cshtml" />
+    <Content Include="Views\Shared\MobileEntityContainer.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

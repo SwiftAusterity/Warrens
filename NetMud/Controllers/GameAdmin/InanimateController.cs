@@ -158,7 +158,7 @@ namespace NetMud.Controllers.GameAdmin
                         if (vModel.ModelPartMaterials.Count() <= nameIndex)
                             break;
 
-                        var material = BackingDataCache.Get<Material>(vModel.ModelPartMaterials[nameIndex]);
+                        var material = BackingDataCache.Get<IMaterial>(vModel.ModelPartMaterials[nameIndex]);
 
                         if (material != null && !string.IsNullOrWhiteSpace(partName))
                             materialParts.Add(partName, material);
@@ -179,7 +179,7 @@ namespace NetMud.Controllers.GameAdmin
                         if (vModel.InternalCompositionPercentages.Count() <= icIndex)
                             break;
 
-                        var internalObj = BackingDataCache.Get<InanimateData>(id);
+                        var internalObj = BackingDataCache.Get<IInanimateData>(id);
 
                         if (internalObj != null && vModel.InternalCompositionPercentages[icIndex] > 0)
                             internalCompositions.Add(internalObj, vModel.InternalCompositionPercentages[icIndex]);
@@ -191,7 +191,7 @@ namespace NetMud.Controllers.GameAdmin
 
             newObj.InternalComposition = internalCompositions;
 
-            var dimModel = BackingDataCache.Get<DimensionalModelData>(vModel.DimensionalModelId);
+            var dimModel = BackingDataCache.Get<IDimensionalModelData>(vModel.DimensionalModelId);
             bool validData = true;
 
             if (dimModel == null)
