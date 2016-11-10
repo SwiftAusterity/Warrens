@@ -48,7 +48,7 @@ namespace NetMud.Physics
         /// <param name="type">the damage type to convert</param>
         /// <param name="reverseCharacter">whether or not to display the left-of-center character</param>
         /// <returns></returns>
-        public static string DamageTypeToCharacter(DamageType type, bool leftOfCenter)
+        public static string DamageTypeToCharacter(DamageType type, bool leftOfCenter = false)
         {
             string returnString = " ";
 

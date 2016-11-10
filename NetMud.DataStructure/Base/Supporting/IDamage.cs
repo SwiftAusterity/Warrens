@@ -18,9 +18,9 @@ namespace NetMud.DataStructure.Base.Supporting
         Sharp = 2,
         [Description("^ Pierce")]
         Pierce = 3,
-        [Description("< Shred")]
+        [Description("> Shred")]
         Shred = 4,
-        [Description("{ Chop")]
+        [Description("} Chop")]
         Chop = 5,
         [Description("A Acidic")]
         Acidic = 6,

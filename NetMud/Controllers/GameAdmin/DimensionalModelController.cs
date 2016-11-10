@@ -4,8 +4,10 @@ using NetMud.Authentication;
 using NetMud.Data.LookupData;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
+using NetMud.DataStructure.Base.Supporting;
 using NetMud.Models.Admin;
 using System;
+using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
@@ -94,28 +96,68 @@ namespace NetMud.Controllers.GameAdmin
 
             try
             {
-                if (modelFile.ContentLength == 0)
-                    message = "You must post a comma delimited file with the model in it.";
+                DimensionalModelData newModel = null;
 
-                byte[] bytes = new byte[modelFile.InputStream.Length];
-                modelFile.InputStream.Read(bytes, 0, (int)modelFile.InputStream.Length);
-                var fileContents = Encoding.UTF8.GetString(bytes);
-
-                var newObj = new DimensionalModelData(fileContents, vModel.NewModelType);
-                newObj.Name = vModel.NewName;
-
-                if (newObj.IsModelValid())
+                //So we have file OR manual now so file trumps manual
+                if (modelFile != null && modelFile.ContentLength > 0)
                 {
-                    if (newObj.Create() == null)
-                        message = "Error; Creation failed.";
-                    else
+                    byte[] bytes = new byte[modelFile.InputStream.Length];
+                    modelFile.InputStream.Read(bytes, 0, (int)modelFile.InputStream.Length);
+                    var fileContents = Encoding.UTF8.GetString(bytes);
+
+                    newModel = new DimensionalModelData(fileContents, vModel.NewModelType);
+                }
+                else if(vModel.ModelPlaneNames.Count(m => !String.IsNullOrEmpty(m)) == 11
+                    && vModel.CoordinateDamageTypes.Any(m => !m.Equals(0))) //can't have an entirely null typed model
+                {
+                    //We're going to be cheaty and build a cDel string based on the arrays
+                    var arrayString = new StringBuilder();
+
+                    var i = 11;
+                    foreach(var name in vModel.ModelPlaneNames)
                     {
-                        LoggingUtility.LogAdminCommandUsage("*WEB* - AddDimensionalModelData[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                        message = "Creation Successful.";
+                        arrayString.AppendLine(
+                            String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}"
+                                , name
+                                , NetMud.Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 11 - 1]))
+                                , NetMud.Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 11 - 2]))
+                                , NetMud.Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 11 - 3]))
+                                , NetMud.Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 11 - 4]))
+                                , NetMud.Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 11 - 5]))
+                                , NetMud.Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 11 - 6]))
+                                , NetMud.Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 11 - 7]))
+                                , NetMud.Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 11 - 8]))
+                                , NetMud.Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 11 - 9]))
+                                , NetMud.Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 11 - 10]))
+                                , NetMud.Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 11 - 11]))
+                            )
+                        );
+
+                        i--;
                     }
+
+                    newModel = new DimensionalModelData(arrayString.ToString(), vModel.NewModelType);
                 }
                 else
-                    message = "Invalid model file; Model files must contain 11 planes of a tag name followed by 11 rows of 11 nodes.";
+                    message = "You must post a comma delimited file with the model in it or use the manual form.";
+
+                if (newModel != null)
+                {
+                    newModel.Name = vModel.NewName;
+
+                    if (newModel.IsModelValid())
+                    {
+                        if (newModel.Create() == null)
+                            message = "Error; Creation failed.";
+                        else
+                        {
+                            LoggingUtility.LogAdminCommandUsage("*WEB* - AddDimensionalModelData[" + newModel.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                            message = "Creation Successful.";
+                        }
+                    }
+                    else
+                        message = "Invalid model file; Model files must contain 11 planes of a tag name followed by 11 rows of 11 nodes.";
+                }
             }
             catch (Exception ex)
             {
