@@ -356,6 +356,7 @@
     <Content Include="Views\Shared\InanimateEntityContainer.cshtml" />
     <Content Include="Views\Shared\MobileEntityContainer.cshtml" />
     <Content Include="Views\GameAdmin\DimensionalModel\ModelPlane.cshtml" />
+    <Content Include="Views\GameAdmin\DimensionalModel\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

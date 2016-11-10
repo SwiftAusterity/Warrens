@@ -11,7 +11,8 @@
     <div>
         @Html.LabelFor(m => m.CoordinateDamageTypes)
         @Html.DropDownList("CoordinateDamageTypes", Enum.GetNames(typeof(DamageType)).Select(rl =>
-                new SelectListItem() { Text = ((DamageType)Enum.Parse(typeof(DamageType), rl)).GetDescription(), Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString() })
+                new SelectListItem() { Text = ((DamageType)Enum.Parse(typeof(DamageType), rl)).GetDescription(), Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString()
+                                        , Selected = rl.Equals(Enum.GetName(typeof(DamageType), Model.NewBreathes))})
                              , htmlAttributes: new { id = "CoordinateDamageTypes", style = "width:32px;" })
 
         @Html.DropDownList("CoordinateDamageTypes", Enum.GetNames(typeof(DamageType)).Select(rl =>

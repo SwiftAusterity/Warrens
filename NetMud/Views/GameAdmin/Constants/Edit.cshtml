@@ -1,6 +1,7 @@
 ﻿@using NetMud.DataStructure.SupportingClasses
 
 @model NetMud.Models.Admin.AddEditConstantsViewModel
+
 @{
     ViewBag.Title = "Edit Constant";
 
@@ -20,7 +21,7 @@
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-9">
                     <input type="submit" value="Commit" class="btn btn-default" style="color: green; border-color: cadetblue;" />
-                    @Html.ActionLink("Cancel", "Index", "Help", new { @class = "btn btn-default", @style = "color: orange; border-color: red;" })
+                    @Html.ActionLink("Cancel", "Index", "Constants", new { @class = "btn btn-default", @style = "color: orange; border-color: red;" })
                 </div>
             </div>
         }
