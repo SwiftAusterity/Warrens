@@ -355,6 +355,7 @@
     <Content Include="Views\GameAdmin\Constants\CriterionValue.cshtml" />
     <Content Include="Views\Shared\InanimateEntityContainer.cshtml" />
     <Content Include="Views\Shared\MobileEntityContainer.cshtml" />
+    <Content Include="Views\GameAdmin\DimensionalModel\ModelPlane.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

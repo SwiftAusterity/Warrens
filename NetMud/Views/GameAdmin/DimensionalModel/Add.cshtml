@@ -1,26 +1,61 @@
 ﻿@model NetMud.Models.Admin.AddEditDimensionalModelDataViewModel
 @{
     ViewBag.Title = "Add New Dimensional Model";
-}
 
-@{
     <section id="newCharacterForm">
         @using (Html.BeginForm("Add", "DimensionalModel", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
         {
             @Html.AntiForgeryToken()
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            <div class="form-group one-column">
+            <div class="form-group two-column">
                 @Html.EditorFor(e => e.NewName)
-            </div>        
-            <div class="form-group one-column">
                 @Html.EditorFor(e => e.NewModelType)
             </div>
             <div class="form-group one-column">
                 @Html.EditorFor(e => e.ModelFile)
             </div>
+            <div class="form-group one-column">
+                <label class="control-label">-OR-</label>
+            </div>
+            <div class="form-group one-column">
+                <label class="control-label">Manual model</label>
+            </div>
+            <div class="form-group" style="display:inline-block">
+                @Html.Partial("~/Views/GameAdmin/DimensionalModel/ModelPlane.cshtml", Model)
+            </div>
+            <div class="form-group" style="display:inline-block">
+                @Html.Partial("~/Views/GameAdmin/DimensionalModel/ModelPlane.cshtml", Model)
+            </div>
+            <div class="form-group" style="display:inline-block">
+                @Html.Partial("~/Views/GameAdmin/DimensionalModel/ModelPlane.cshtml", Model)
+            </div>
+            <div class="form-group" style="display:inline-block">
+                @Html.Partial("~/Views/GameAdmin/DimensionalModel/ModelPlane.cshtml", Model)
+            </div>
+            <div class="form-group" style="display:inline-block">
+                @Html.Partial("~/Views/GameAdmin/DimensionalModel/ModelPlane.cshtml", Model)
+            </div>
+            <div class="form-group" style="display:inline-block">
+                @Html.Partial("~/Views/GameAdmin/DimensionalModel/ModelPlane.cshtml", Model)
+            </div>
+            <div class="form-group" style="display:inline-block">
+                @Html.Partial("~/Views/GameAdmin/DimensionalModel/ModelPlane.cshtml", Model)
+            </div>
+            <div class="form-group" style="display:inline-block">
+                @Html.Partial("~/Views/GameAdmin/DimensionalModel/ModelPlane.cshtml", Model)
+            </div>
+            <div class="form-group" style="display:inline-block">
+                @Html.Partial("~/Views/GameAdmin/DimensionalModel/ModelPlane.cshtml", Model)
+            </div>
+            <div class="form-group" style="display:inline-block">
+                @Html.Partial("~/Views/GameAdmin/DimensionalModel/ModelPlane.cshtml", Model)
+            </div>
+            <div class="form-group" style="display:inline-block">
+                @Html.Partial("~/Views/GameAdmin/DimensionalModel/ModelPlane.cshtml", Model)
+            </div>
+            
             @Html.Partial("SubmitButton", "Create")
-
         }
     </section>
 }

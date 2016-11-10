@@ -1,0 +1,57 @@
+﻿@using NetMud.DataStructure.Base.Supporting
+@using NetMud.Utility
+
+@model NetMud.Models.Admin.AddEditDimensionalModelDataViewModel
+
+@{
+    <div>
+        @Html.LabelFor(m => m.ModelPlaneNames)
+        @Html.TextBoxFor(m => m.ModelPlaneNames)
+    </div>
+    <div>
+        @Html.LabelFor(m => m.CoordinateDamageTypes)
+        @Html.DropDownList("CoordinateDamageTypes", Enum.GetNames(typeof(DamageType)).Select(rl =>
+                new SelectListItem() { Text = ((DamageType)Enum.Parse(typeof(DamageType), rl)).GetDescription(), Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString() })
+                             , htmlAttributes: new { id = "CoordinateDamageTypes", style = "width:35px;" })
+
+        @Html.DropDownList("CoordinateDamageTypes", Enum.GetNames(typeof(DamageType)).Select(rl =>
+                new SelectListItem() { Text = ((DamageType)Enum.Parse(typeof(DamageType), rl)).GetDescription(), Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString() })
+                             , htmlAttributes: new { id = "CoordinateDamageTypes", style = "width:35px;" })
+
+        @Html.DropDownList("CoordinateDamageTypes", Enum.GetNames(typeof(DamageType)).Select(rl =>
+                new SelectListItem() { Text = ((DamageType)Enum.Parse(typeof(DamageType), rl)).GetDescription(), Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString() })
+                             , htmlAttributes: new { id = "CoordinateDamageTypes", style = "width:35px;" })
+
+        @Html.DropDownList("CoordinateDamageTypes", Enum.GetNames(typeof(DamageType)).Select(rl =>
+                new SelectListItem() { Text = ((DamageType)Enum.Parse(typeof(DamageType), rl)).GetDescription(), Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString() })
+                             , htmlAttributes: new { id = "CoordinateDamageTypes", style = "width:35px;" })
+
+        @Html.DropDownList("CoordinateDamageTypes", Enum.GetNames(typeof(DamageType)).Select(rl =>
+                new SelectListItem() { Text = ((DamageType)Enum.Parse(typeof(DamageType), rl)).GetDescription(), Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString() })
+                             , htmlAttributes: new { id = "CoordinateDamageTypes", style = "width:35px;" })
+
+        @Html.DropDownList("CoordinateDamageTypes", Enum.GetNames(typeof(DamageType)).Select(rl =>
+                new SelectListItem() { Text = ((DamageType)Enum.Parse(typeof(DamageType), rl)).GetDescription(), Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString() })
+                             , htmlAttributes: new { id = "CoordinateDamageTypes", style = "width:35px;" })
+
+        @Html.DropDownList("CoordinateDamageTypes", Enum.GetNames(typeof(DamageType)).Select(rl =>
+                new SelectListItem() { Text = ((DamageType)Enum.Parse(typeof(DamageType), rl)).GetDescription(), Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString() })
+                             , htmlAttributes: new { id = "CoordinateDamageTypes", style = "width:35px;" })
+
+        @Html.DropDownList("CoordinateDamageTypes", Enum.GetNames(typeof(DamageType)).Select(rl =>
+                new SelectListItem() { Text = ((DamageType)Enum.Parse(typeof(DamageType), rl)).GetDescription(), Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString() })
+                             , htmlAttributes: new { id = "CoordinateDamageTypes", style = "width:35px;" })
+
+        @Html.DropDownList("CoordinateDamageTypes", Enum.GetNames(typeof(DamageType)).Select(rl =>
+                new SelectListItem() { Text = ((DamageType)Enum.Parse(typeof(DamageType), rl)).GetDescription(), Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString() })
+                             , htmlAttributes: new { id = "CoordinateDamageTypes", style = "width:35px;" })
+
+        @Html.DropDownList("CoordinateDamageTypes", Enum.GetNames(typeof(DamageType)).Select(rl =>
+                new SelectListItem() { Text = ((DamageType)Enum.Parse(typeof(DamageType), rl)).GetDescription(), Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString() })
+                             , htmlAttributes: new { id = "CoordinateDamageTypes", style = "width:35px;" })
+
+        @Html.DropDownList("CoordinateDamageTypes", Enum.GetNames(typeof(DamageType)).Select(rl =>
+                new SelectListItem() { Text = ((DamageType)Enum.Parse(typeof(DamageType), rl)).GetDescription(), Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString() })
+                             , htmlAttributes: new { id = "CoordinateDamageTypes", style = "width:35px;" })
+    </div>
+}

@@ -40,14 +40,19 @@ namespace NetMud.Models.Admin
         [DataType(DataType.Text)]
         public string NewName { get; set; }
 
-        
-        [Display(Name = "ModelType")]
+        [Display(Name = "Model Type")]
         [UIHint("EnumDropDownList")]
         public DimensionalModelType NewModelType { get; set; }
 
         [DataType(DataType.Upload)]
         [Display(Name = "Model Planes Upload")]
         public HttpPostedFileBase ModelFile { get; set; }
+
+        [Display(Name = "X-Plane")]
+        public short[] CoordinateDamageTypes { get; set; }
+
+        [Display(Name = "Name")]
+        public string[] ModelPlaneNames { get; set; }
 
         public IDimensionalModelData DataObject { get; set; }
     }
