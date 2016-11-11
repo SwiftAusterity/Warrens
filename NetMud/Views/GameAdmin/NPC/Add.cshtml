@@ -1,9 +1,7 @@
 ﻿@model NetMud.Models.Admin.AddEditNPCDataViewModel
 @{
     ViewBag.Title = "Add New Non-player Character";
-}
 
-@{
     <section id="newNPCForm">
         @using (Html.BeginForm("Add", "NPC", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
@@ -20,7 +18,7 @@
                 <div>
                     @Html.DropDownList("RaceId", Model.ValidRaces.Select(rl =>
                                             new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
-                                             , htmlAttributes: new { id = "raceId", Style = "padding: 7px;" })
+                                             , htmlAttributes: new { id = "raceId", @class="form-control" })
                 </div>
             </div>
             @Html.Partial("SubmitButton", "Create")

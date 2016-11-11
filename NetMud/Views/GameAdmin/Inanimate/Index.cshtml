@@ -1,14 +1,9 @@
 ﻿@model NetMud.Models.Admin.ManageInanimateDataViewModel
 @{
     ViewBag.Title = "Manage inanimates";
-    var prevPageState = Model.CurrentPageNumber > 1 ? String.Empty : "disabled";
-    var nextPageState = Model.CurrentPageNumber < Model.NumberOfPages ? String.Empty : "disabled";
-}
+    
+    @Html.Partial("AddContentLink")
 
-@{
-    <div style="padding: 10px;">
-        @Html.ActionLink("Add New", "Add", null, new { @style = "float: left; margin-top: 30px;" })
-    </div>
 
     if (Model.Items.Count() > 0)
     {

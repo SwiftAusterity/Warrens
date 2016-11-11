@@ -1,12 +1,8 @@
 ﻿@model NetMud.Models.Admin.ManageMaterialDataViewModel
 @{
     ViewBag.Title = "Manage Materials";
-    var prevPageState = Model.CurrentPageNumber > 1 ? String.Empty : "disabled";
-    var nextPageState = Model.CurrentPageNumber < Model.NumberOfPages ? String.Empty : "disabled";
-}
 
-@{
-    <div style="padding: 10px;">@Html.ActionLink("Add New", "Add", null, new { @style = "float: left; margin-top: 30px;" })</div>
+    @Html.Partial("AddContentLink")
 
     if (Model.Items.Count() > 0)
     {
@@ -33,7 +29,7 @@
                     @foreach (var obj in Model.CurrentPageOfItems)
                     {
                         <tr>
-                            <td>@Html.ActionLink(@obj.ID.ToString(), "Edit", new { id = obj.ID } )</td>
+                            <td>@Html.ActionLink(@obj.ID.ToString(), "Edit", new { id = obj.ID })</td>
                             <td>@obj.Name</td>
                             <td>
                                 <div>

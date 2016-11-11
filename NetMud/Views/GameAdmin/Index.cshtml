@@ -92,8 +92,8 @@
     <dl class="dl-horizontal">
         <dt>Do stuff</dt>
         <dd>
-            @Html.ActionLink("Backup World", "BackupWorld", "GameAdmin", new { @class = "btn btn-default", @style = "color: green; border-color: green;" })
-            @Html.ActionLink("Suspend and Restore World", "RestoreWorld", "GameAdmin", new { @class = "btn btn-default", @style = "color: red; background-color: black; border-color: red;" })
+            @Html.ActionLink("Backup World", "BackupWorld", "GameAdmin", new { @class = "btn btn-default save" })
+            @Html.ActionLink("Suspend and Restore World", "RestoreWorld", "GameAdmin", new { @class = "btn btn-default caution" })
         </dd>
     </dl>
 
@@ -102,7 +102,7 @@
     <dl class="dl-horizontal">
         <dt>[@Model.LiveTaskTokens.Count().ToString()] Running Threads</dt>
         <dd>
-            @Html.ActionLink("Stop All", "StopAllRunningProcess", "GameAdmin", new { @class = "btn", @style = "color: red; background-color: black; border-color: red;" })
+            @Html.ActionLink("Stop All", "StopAllRunningProcess", "GameAdmin", new { @class = "btn btn-default caution" })
         </dd>
         @foreach (var token in Model.LiveTaskTokens)
         {
@@ -115,7 +115,7 @@
             {
                 <dd style="padding-top: 25px;">
                     <span style="color:green;">Running</span>
-                    @Html.ActionLink("Stop", "StopRunningProcess", "GameAdmin", new { processName = token.Key }, new { @class = "btn", @style = "color: red; border-color: red;" })
+                    @Html.ActionLink("Stop", "StopRunningProcess", "GameAdmin", new { processName = token.Key }, new { @class = "btn btn-default stop"})
                 </dd>
             }
         }
@@ -125,14 +125,14 @@
     <dl class="dl-horizontal">
         <dt>[@Model.WebsocketServers.Count().ToString()] WebSocket Ports</dt>
         <dd>
-            @Html.ActionLink("Stop All", "StopAllWebsockets", "GameAdmin", new { @class = "btn", @style = "color: red; background-color: black; border-color: red;" })
+            @Html.ActionLink("Stop All", "StopAllWebsockets", "GameAdmin", new { @class = "btn btn-default caution" })
         </dd>
         @foreach (var server in Model.WebsocketServers)
         {
             <dt style="padding-top: 25px;">@server.PortNumber.ToString()</dt>
             <dd style="padding-top: 25px;">
                 <span style="color:green;">Listening</span>
-                @Html.ActionLink("Stop", "StopWebSocket", "GameAdmin", new { portNumber = server.PortNumber }, new { @class = "btn", @style = "color: red; border-color: red;" })
+                @Html.ActionLink("Stop", "StopWebSocket", "GameAdmin", new { portNumber = server.PortNumber }, new { @class = "btn btn-default stop" })
             </dd>
         }
     </dl>

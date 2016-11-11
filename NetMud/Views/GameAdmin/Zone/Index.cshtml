@@ -6,9 +6,7 @@
 }
 
 @{
-    <div style="padding: 10px;">
-        @Html.ActionLink("Add New", "Add", null, new { @style = "float: left; margin-top: 30px;" })
-    </div>
+    @Html.Partial("AddContentLink");
 
     if (Model.Items.Count() > 0)
     {

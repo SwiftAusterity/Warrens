@@ -9,7 +9,7 @@
     var containerVolumesId = Model.ContainerName + "ContainerVolumes";
 
     <label class="control-label">@Model.ContainerFriendlyName</label>
-    <a href="#" id="@addRowId" style="padding: 10px;">Add another row...</a>
+    <a href="#" id="@addRowId" class="addRow">Add another row...</a>
     <div id="@containerRowsId">
         @if (Model.Containers == null || Model.Containers.Count == 0)
         {

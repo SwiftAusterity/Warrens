@@ -7,7 +7,7 @@
     if (Model.DataObject == null || Model.DataObject.Values == null || Model.DataObject.Values.Count == 0)
     {
         @Html.LabelFor(m => m.NewConstantValues)
-        <a href="#" id="addValueRow" style="padding: 10px;">Add another row...</a>
+        <a href="#" id="addValueRow" class="addRow">Add another row...</a>
         <div id="valueRows">
             <div class="form-group two-column">
                 <a href="#" class="removeRow" id="removeValueRow" title="Remove this">X</a>
@@ -23,7 +23,7 @@
         </div>
 
         <label class="control-label">Criteria</label>
-        <a href="#" id="addCriterionRow" style="padding: 10px;">Add another row...</a>
+        <a href="#" id="addCriterionRow" class="addRow">Add another row...</a>
         <div id="criterionRows">
             <div class="form-group three-column">
                 <a href="#" class="removeRow" id="removeCriterionRow" title="Remove this">X</a>
@@ -49,7 +49,7 @@
         foreach (var criterion in Model.DataObject.Values)
         {
             @Html.LabelFor(m => m.NewConstantValues)
-            <a href="#" id="addValueRow" style="padding: 10px;">Add another row...</a>
+            <a href="#" id="addValueRow" class="addRow">Add another row...</a>
             <div id="valueRows">
                 @foreach (var dataItem in criterion.Value)
                 {
@@ -67,7 +67,7 @@
                 }
             </div>
             <label class="control-label">Criteria</label>
-            <a href="#" id="addCriterionRow" style="padding: 10px;">Add another row...</a>
+            <a href="#" id="addCriterionRow" class="addRow">Add another row...</a>
             <div id="criterionRows">
                 @foreach (var dataItem in criterion.Key.Criterion)
                 {

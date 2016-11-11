@@ -2,7 +2,7 @@
 
 @{
     <label class="control-label">Extra Body Parts</label>
-    <a href="#" id="addExtraPartsRow" style="padding: 10px;">Add another row...</a>
+    <a href="#" id="addExtraPartsRow" class="addRow">Add another row...</a>
     <div id="extraPartsRows">
         @if (Model.DataObject == null || Model.DataObject.BodyParts == null || Model.DataObject.BodyParts.Count() == 0)
         {
