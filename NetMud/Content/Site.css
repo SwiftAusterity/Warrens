@@ -88,6 +88,22 @@ div.form-group a.removeRow {
     position: absolute;
 }
 
+.dimModelNode {
+    width:32px;
+    background-color: black;
+    color: chartreuse;
+}
+
+.dimModelNode.center {
+    background-color: black;
+    color: chartreuse;
+}
+
+.dimModelNode[data-value='0'] {
+    color: darkgrey;
+    background-color: white;
+}
+
 /* Ascii maps for object dim models and room maps */
 .asciiMap {
     font-family: Courier New, Courier, monospace; 
