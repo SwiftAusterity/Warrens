@@ -1,15 +1,20 @@
 ﻿using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.System;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.Script.Serialization;
 
 namespace NetMud.Data.System
 {
+    /// <summary>
+    /// Partial for all backing data
+    /// </summary>
     public abstract class BackingDataPartial : SerializableDataPartial, IData
     {
-         /// <summary>
+        /// <summary>
         /// Numerical iterative ID in the db
         /// </summary>
         public long ID { get; set; }
@@ -28,6 +33,36 @@ namespace NetMud.Data.System
         /// The unique name for this entry (also part of the accessor keywords)
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Gets the errors for data fitness
+        /// </summary>
+        /// <returns>a bunch of text saying how awful your data is</returns>
+        public virtual IList<string> FitnessReport()
+        {
+            var dataProblems = new List<string>();
+
+            if (String.IsNullOrWhiteSpace(Name))
+                dataProblems.Add("Name is blank.");
+
+            if (ID < 0)
+                dataProblems.Add("ID is less than zero.");
+    
+            return dataProblems;
+        }
+
+        /// <summary>
+        /// Does this have data problems?
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public bool FitnessProblems 
+        { 
+            get
+            {
+                return FitnessReport().Any();
+            }
+        }
 
         /// <summary>
         /// Add it to the cache and save it to the file system

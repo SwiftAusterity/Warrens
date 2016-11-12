@@ -30,7 +30,16 @@
                     {
                         <tr>
                             <td>@Html.ActionLink(@obj.ID.ToString(), "Edit", new { id = obj.ID }) [@Html.ActionLink("Map", "Map", new { id = obj.ID })]</td>
-                            <td>@obj.Name</td>
+                            <td>
+                                @if (obj.FitnessProblems)
+                                {
+                                    <span style="color:red;" title="@String.Join(", ", obj.FitnessReport())">@obj.Name</span>
+                                }
+                                else
+                                {
+                                    @obj.Name
+                                }
+                            </td>
                             <td>
                                 @Html.Partial("RemoveDataItem", @obj.ID)
                             </td>

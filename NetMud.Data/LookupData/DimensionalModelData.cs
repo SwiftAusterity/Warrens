@@ -49,6 +49,27 @@ namespace NetMud.Data.LookupData
         }
 
         /// <summary>
+        /// Gets the errors for data fitness
+        /// </summary>
+        /// <returns>a bunch of text saying how awful your data is</returns>
+        public override IList<string> FitnessReport()
+        {
+            var dataProblems = base.FitnessReport();
+
+            if (ModelPlanes == null || !ModelPlanes.Any() 
+                || ModelPlanes.Any(m => m == null || String.IsNullOrWhiteSpace(m.TagName) || !m.ModelNodes.Any()))
+                dataProblems.Add("Model Planes are invalid.");
+
+            if (Vacuity < 0)
+                dataProblems.Add("Vacuity is invalid.");
+
+            if (!IsModelValid())
+                dataProblems.Add("Model is invalid entirely.");
+
+            return dataProblems;
+        }
+
+        /// <summary>
         /// View the flattened model based on view angle
         /// </summary>
         /// <returns>the flattened model face based on the view angle</returns>

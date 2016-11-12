@@ -104,6 +104,38 @@ namespace NetMud.Data.LookupData
         }
 
         /// <summary>
+        /// Gets the errors for data fitness
+        /// </summary>
+        /// <returns>a bunch of text saying how awful your data is</returns>
+        public override IList<string> FitnessReport()
+        {
+            var dataProblems = base.FitnessReport();
+
+            if (Viscosity == 0)
+                dataProblems.Add("Viscosity has to be greater than 0.");
+
+            if (Density == 0)
+                dataProblems.Add("Density has to be greater than 0.");
+
+            if (Mallebility == 0)
+                dataProblems.Add("Mallebility has to be greater than 0.");
+
+            if (Ductility == 0)
+                dataProblems.Add("Ductility has to be greater than 0.");
+
+            if (SolidPoint >= GasPoint)
+                dataProblems.Add("Solidification point must be lower than gaseous point.");
+
+            if (Resistance == null || !Resistance.Any() || Resistance.Any(r => r.Value == 0))
+                dataProblems.Add("Resistances are invalid.");
+
+            if (Composition == null || Composition.Any(r => r.Key == null || r.Value == 0))
+                dataProblems.Add("Compositions are invalid.");
+
+            return dataProblems;
+        }
+
+        /// <summary>
         /// Renders the help text for this data object
         /// </summary>
         /// <returns>help text</returns>

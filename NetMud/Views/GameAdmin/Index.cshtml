@@ -9,22 +9,32 @@
     <dl class="dl-horizontal">
         <dt>Rooms:</dt>
         <dd>
-            @Model.Rooms.Count().ToString() [
-            @Html.ActionLink("Manage", "Index", "Room")
-            @Html.ActionLink("Add", "Add", "Room") ]
+            @Model.Rooms.Count().ToString() [ Use Zones Yo ]             
+            @if (Model.Rooms.Any(r => r.FitnessProblems))
+            {
+                <span style="color:red;">DATA PROBLEMS</span>
+            }
         </dd>
         <dt>NPCs:</dt>
         <dd>
             @Model.NPCs.Count().ToString() [
             @Html.ActionLink("Manage", "Index", "NPC")
             @Html.ActionLink("Add", "Add", "NPC") ]
-        </dd>
+            @if (Model.NPCs.Any(r => r.FitnessProblems))
+            {
+                <span style="color:red;">DATA PROBLEMS</span>
+            }
+       </dd>
         <dt>Inanimates:</dt>
         <dd>
             @Model.Inanimates.Count().ToString() [
             @Html.ActionLink("Manage", "Index", "Inanimate")
             @Html.ActionLink("Add", "Add", "Inanimate") ]
-        </dd>
+            @if (Model.Inanimates.Any(r => r.FitnessProblems))
+            {
+                <span style="color:red;">DATA PROBLEMS</span>
+            }
+      </dd>
     </dl>
     <h4>Lookup Data</h4>
     <hr />
@@ -34,37 +44,61 @@
             @Model.HelpFiles.Count().ToString() [
             @Html.ActionLink("Manage", "Index", "Help")
             @Html.ActionLink("Add", "Add", "Help") ]
-        </dd>
+            @if (Model.HelpFiles.Any(r => r.FitnessProblems))
+            {
+                <span style="color:red;">DATA PROBLEMS</span>
+            }
+     </dd>
         <dt>Dimensional Models:</dt>
         <dd>
             @Model.DimensionalModels.Count().ToString() [
             @Html.ActionLink("Manage", "Index", "DimensionalModel")
             @Html.ActionLink("Add", "Add", "DimensionalModel") ]
-        </dd>
+            @if (Model.DimensionalModels.Any(r => r.FitnessProblems))
+            {
+                <span style="color:red;">DATA PROBLEMS</span>
+            }
+      </dd>
         <dt>Materials:</dt>
         <dd>
             @Model.Materials.Count().ToString() [
             @Html.ActionLink("Manage", "Index", "Material")
             @Html.ActionLink("Add", "Add", "Material") ]
-        </dd>
+            @if (Model.Materials.Any(r => r.FitnessProblems))
+            {
+                <span style="color:red;">DATA PROBLEMS</span>
+            }
+       </dd>
         <dt>Races:</dt>
         <dd>
             @Model.Races.Count().ToString() [
             @Html.ActionLink("Manage", "Index", "Race")
             @Html.ActionLink("Add", "Add", "Race") ]
-        </dd>
+            @if (Model.Races.Any(r => r.FitnessProblems))
+            {
+                <span style="color:red;">DATA PROBLEMS</span>
+            }
+     </dd>
         <dt>Zones:</dt>
         <dd>
             @Model.Zones.Count().ToString() [
             @Html.ActionLink("Manage", "Index", "Zone")
             @Html.ActionLink("Add", "Add", "Zone") ]
-        </dd>
+            @if (Model.Zones.Any(r => r.FitnessProblems))
+            {
+                <span style="color:red;">DATA PROBLEMS</span>
+            }
+      </dd>
         <dt>Constants:</dt>
         <dd>
             @Model.Constants.Count().ToString() [
             @Html.ActionLink("Manage", "Index", "Constants")
             @Html.ActionLink("Add", "Add", "Constants") ]
-        </dd>
+            @if (Model.Constants.Any(r => r.FitnessProblems))
+            {
+                <span style="color:red;">DATA PROBLEMS</span>
+            }
+     </dd>
     </dl>
     <h4>Live Data</h4>
     <hr />
@@ -115,7 +149,7 @@
             {
                 <dd style="padding-top: 25px;">
                     <span style="color:green;">Running</span>
-                    @Html.ActionLink("Stop", "StopRunningProcess", "GameAdmin", new { processName = token.Key }, new { @class = "btn btn-default stop"})
+                    @Html.ActionLink("Stop", "StopRunningProcess", "GameAdmin", new { processName = token.Key }, new { @class = "btn btn-default stop" })
                 </dd>
             }
         }

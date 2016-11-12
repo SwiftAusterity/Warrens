@@ -33,13 +33,10 @@
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-9">
                     <input type="submit" value="Commit" class="btn btn-default save" />
-                    @Html.ActionLink("Cancel", "Index", "Room", new { @class = "btn btn-default cancel" })
                 </div>
             </div>
         }
     </section>
-
-    @Html.Partial("AsciiMap", new NetMud.Models.AsciiMapViewModel("RenderRoomForEditWithRadius", Model.DataObject.ID, 0, 1))
 
 }
 @section Scripts {

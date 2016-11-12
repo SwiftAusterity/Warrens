@@ -41,6 +41,28 @@ namespace NetMud.Data.System
         }
 
         /// <summary>
+        /// Gets the errors for data fitness
+        /// </summary>
+        /// <returns>a bunch of text saying how awful your data is</returns>
+        public override IList<string> FitnessReport()
+        {
+            var dataProblems = base.FitnessReport();
+
+            if (Values == null)
+                dataProblems.Add("Values table is null.");
+            else
+            {
+                if (Values.Any(kvp => kvp.Key == null))
+                    dataProblems.Add("Lookup Criteria for a cluster is null.");
+
+                if (Values.Any(kvp => !kvp.Value.Any() || kvp.Value.Any(v => String.IsNullOrWhiteSpace(v))))
+                    dataProblems.Add("Lookup Criteria entry has empty values or none at all.");
+            }
+
+            return dataProblems;
+        }
+
+        /// <summary>
         /// Adds or updates an entire string cluster
         /// </summary>
         /// <param name="key">the value to affect</param>

@@ -11,6 +11,20 @@ namespace NetMud.Data.LookupData
             //empty instance for getting the dataTableName
         }
 
+        /// <summary>
+        /// Gets the errors for data fitness
+        /// </summary>
+        /// <returns>a bunch of text saying how awful your data is</returns>
+        public override IList<string> FitnessReport()
+        {
+            var dataProblems = base.FitnessReport();
+
+            if (string.IsNullOrWhiteSpace(HelpText))
+                dataProblems.Add("Help text empty.");
+
+            return dataProblems;
+        }
+
         public string HelpText { get; set; }
 
         public virtual IEnumerable<string> RenderHelpBody()

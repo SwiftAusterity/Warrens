@@ -3,6 +3,7 @@ using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Supporting;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.EntityBackingData
@@ -49,6 +50,26 @@ namespace NetMud.Data.EntityBackingData
             {
                 _raceData = value.ID;
             }
+        }
+
+        /// <summary>
+        /// Gets the errors for data fitness
+        /// </summary>
+        /// <returns>a bunch of text saying how awful your data is</returns>
+        public override IList<string> FitnessReport()
+        {
+            var dataProblems = base.FitnessReport();
+
+            if (String.IsNullOrWhiteSpace(Gender))
+                dataProblems.Add("Gender is empty.");
+
+            if (String.IsNullOrWhiteSpace(SurName))
+                dataProblems.Add("Surname is empty.");
+
+            if (RaceData == null)
+                dataProblems.Add("Invalid racial data.");
+
+            return dataProblems;
         }
 
         /// <summary>

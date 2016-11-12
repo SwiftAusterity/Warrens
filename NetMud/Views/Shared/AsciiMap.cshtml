@@ -48,6 +48,7 @@
     //RenderRoomForEditWithRadius, RenderWorldMap, RenderZoneMap
     function GetMap() {
         initModal();
+
         var $exModelContainer = $("#expandedModelContainer");
         var dataId = $exModelContainer.attr("data-id");
         var mapRenderType = '@Model.MapRenderType';
@@ -59,7 +60,7 @@
             $.get('/api/AdminDataApi/' + mapRenderType + '/' + dataId + '/' + radius, function (data) {
                 $exModelContainer.html(data);
 
-                BindPathways();
+                BindRoomsAndPaths();
             });
         } else {
             var zIndex = $exModelContainer.attr("data-zindex");
@@ -67,12 +68,12 @@
             $.get('/api/AdminDataApi/' + mapRenderType + '/' + dataId + '/' + zIndex, function (data) {
                 $exModelContainer.html(data);
 
-                BindPathways();
+                BindRoomsAndPaths();
             });
         }
     };
 
-    function BindPathways() {
+    function BindRoomsAndPaths() {
         $('.AdminAddPathway').click(function () {
             $("#modalFormPlaceholder").load("/GameAdmin/Pathway/Add/" + $(this).attr('pathwayId') + '/' + $(this).attr('fromRoom') + '/' + $(this).attr('toRoom'));
 
@@ -83,6 +84,14 @@
 
         $('.AdminEditPathway').click(function () {
             $("#modalFormPlaceholder").load("/GameAdmin/Pathway/Edit/" + $(this).attr('pathwayId') + '/' + $(this).attr('fromRoom') + '/' + $(this).attr('toRoom'));
+
+            $('#modal-form').dialog("open");
+
+            return false;
+        });
+
+        $('.AdminEditRoom').click(function () {
+            $("#modalFormPlaceholder").load("/GameAdmin/Room/Edit/" + $(this).attr('roomId'));
 
             $('#modal-form').dialog("open");
 

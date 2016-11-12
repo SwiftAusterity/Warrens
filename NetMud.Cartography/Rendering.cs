@@ -188,7 +188,7 @@ namespace NetMud.Cartography
             var character = centered ? "0" : "*";
 
             if (forAdmin)
-                return String.Format("<a href='/GameAdmin/Room/Edit/{0}' class='editData room' target='_blank' title='Edit - {2}'>{1}</a>", destination.ID, character, destination.Name);
+                return String.Format("<a href='#' class='editData AdminEditRoom' roomId='{0}' title='Edit - {2}'>{1}</a>", destination.ID, character, destination.Name);
             else
                 return character;
         }

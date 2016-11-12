@@ -92,12 +92,37 @@ namespace NetMud.Data.EntityBackingData
         }
 
         /// <summary>
+        /// Gets the errors for data fitness
+        /// </summary>
+        /// <returns>a bunch of text saying how awful your data is</returns>
+        public override IList<string> FitnessReport()
+        {
+            var dataProblems = base.FitnessReport();
+
+            if(Model == null)
+                dataProblems.Add("Physical model is invalid.");
+
+            if(InternalComposition == null)
+                dataProblems.Add("Internal composition cluster is null.");
+            else
+            {
+                if(InternalComposition.Any(kvp => kvp.Key == null))
+                    dataProblems.Add("Internal composition key object is null.");
+
+                if (InternalComposition.Any(kvp => kvp.Value < 0))
+                    dataProblems.Add("Internal composition value is invalid.");
+            };
+
+            return dataProblems;
+        }
+
+        /// <summary>
         /// Get's the entity's model dimensions
         /// </summary>
         /// <returns>height, length, width</returns>
         public override Tuple<int, int, int> GetModelDimensions()
         {
             return new Tuple<int, int, int>(Model.Height, Model.Length, Model.Width);
-        }   
+        }
     }
 }

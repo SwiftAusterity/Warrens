@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Base.System
 {
@@ -26,6 +27,17 @@ namespace NetMud.DataStructure.Base.System
         /// The name/keyword for this entry
         /// </summary>
         string Name { get; set; }
+
+        /// <summary>
+        /// Gets the errors for data fitness
+        /// </summary>
+        /// <returns>a bunch of text saying how awful your data is</returns>
+        IList<string> FitnessReport();
+
+        /// <summary>
+        /// Does this data have fitness problems?
+        /// </summary>
+        bool FitnessProblems { get; }
 
         /// <summary>
         /// Create a new db entry

@@ -6,6 +6,7 @@ using NetMud.Cartography;
 using Newtonsoft.Json;
 using System;
 using System.Web.Script.Serialization;
+using System.Collections.Generic;
 
 namespace NetMud.Data.EntityBackingData
 {
@@ -121,6 +122,32 @@ namespace NetMud.Data.EntityBackingData
         public PathwayData()
         {
 
+        }
+
+        /// <summary>
+        /// Gets the errors for data fitness
+        /// </summary>
+        /// <returns>a bunch of text saying how awful your data is</returns>
+        public override IList<string> FitnessReport()
+        {
+            var dataProblems = base.FitnessReport();
+
+            if (Model == null)
+                dataProblems.Add("Physical Model is invalid.");
+
+            if (String.IsNullOrWhiteSpace(ToLocationID) || ToLocationID.Equals("-1"))
+                dataProblems.Add("To Location is invalid.");
+
+            if (String.IsNullOrWhiteSpace(ToLocationType))
+                dataProblems.Add("To Location Type is invalid.");
+
+            if (String.IsNullOrWhiteSpace(FromLocationID) || FromLocationID.Equals("-1"))
+                dataProblems.Add("From Location is invalid.");
+
+            if (String.IsNullOrWhiteSpace(FromLocationType))
+                dataProblems.Add("From Location Type is invalid.");
+
+            return dataProblems;
         }
 
         /// <summary>

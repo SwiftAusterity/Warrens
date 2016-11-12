@@ -75,8 +75,8 @@ namespace NetMud.Data.LookupData
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
-        public IInanimateData Torso 
-        { 
+        public IInanimateData Torso
+        {
             get
             {
                 return BackingDataCache.Get<IInanimateData>(_torso);
@@ -129,7 +129,7 @@ namespace NetMud.Data.LookupData
                 if (value == null)
                     return;
 
-                _bodyParts = new HashSet<Tuple<long,short,string>>(value.Select(bp => new Tuple<long, short, string>(bp.Item1.ID, bp.Item2, bp.Item3)));
+                _bodyParts = new HashSet<Tuple<long, short, string>>(value.Select(bp => new Tuple<long, short, string>(bp.Item1.ID, bp.Item2, bp.Item3)));
             }
         }
 
@@ -221,6 +221,48 @@ namespace NetMud.Data.LookupData
         public Race()
         {
             BodyParts = Enumerable.Empty<Tuple<IInanimateData, short, string>>();
+        }
+
+
+        /// <summary>
+        /// Gets the errors for data fitness
+        /// </summary>
+        /// <returns>a bunch of text saying how awful your data is</returns>
+        public override IList<string> FitnessReport()
+        {
+            var dataProblems = base.FitnessReport();
+
+            if (Arms == null || Arms.Item1 == null || Arms.Item2 == 0)
+                dataProblems.Add("Arms are invalid.");
+
+            if (Legs == null || Legs.Item1 == null || Legs.Item2 == 0)
+                dataProblems.Add("Legs are invalid.");
+
+            if (Torso == null)
+                dataProblems.Add("Torso is invalid.");
+
+            if (Head == null)
+                dataProblems.Add("Head is invalid.");
+
+            if (BodyParts == null || BodyParts.Any(a => a.Item1 == null || a.Item2 == 0 || String.IsNullOrWhiteSpace(a.Item3)))
+                dataProblems.Add("BodyParts are invalid.");
+
+            if (SanguinaryMaterial == null)
+                dataProblems.Add("Blood material is invalid.");
+
+            if (VisionRange == null || VisionRange.Item1 >= VisionRange.Item2)
+                dataProblems.Add("Vision range is invalid.");
+
+            if (TemperatureTolerance == null || TemperatureTolerance.Item1 >= TemperatureTolerance.Item2)
+                dataProblems.Add("Temperature tolerance is invalid.");
+
+            if (StartingLocation == null)
+                dataProblems.Add("Starting Location is invalid.");
+
+            if (EmergencyLocation == null)
+                dataProblems.Add("Emergency Location is invalid.");
+
+            return dataProblems;
         }
 
         /// <summary>

@@ -103,6 +103,29 @@ namespace NetMud.Data.LookupData
         }
 
         /// <summary>
+        /// Gets the errors for data fitness
+        /// </summary>
+        /// <returns>a bunch of text saying how awful your data is</returns>
+        public override IList<string> FitnessReport()
+        {
+            var dataProblems = base.FitnessReport();
+
+            if (String.IsNullOrWhiteSpace(WorldName))
+                dataProblems.Add("World name is empty or invalid.");
+
+            if (World == null)
+                dataProblems.Add("World is invalid.");
+
+            if (ZoneMap == null)
+                dataProblems.Add("Zone map is invalid.");
+
+            if (!Rooms().Any() || Rooms().Any(r => r == null))
+                dataProblems.Add("Zone has no rooms or at least one invalid room.");
+
+            return dataProblems;
+        }
+
+        /// <summary>
         /// Renders the help text for this data object
         /// </summary>
         /// <returns>help text</returns>

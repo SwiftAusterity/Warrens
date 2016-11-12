@@ -68,7 +68,7 @@
     <Compile Include="LookupData\Help.cs" />
     <Compile Include="LookupData\Material.cs" />
     <Compile Include="LookupData\Race.cs" />
-    <Compile Include="LookupData\ReferenceDataPartial.cs" />
+    <Compile Include="LookupData\LookupDataPartial.cs" />
     <Compile Include="LookupData\Zone.cs" />
     <Compile Include="System\Constants.cs" />
     <Compile Include="System\EntityContainer.cs" />

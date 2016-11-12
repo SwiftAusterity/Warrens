@@ -4,9 +4,13 @@ using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.SupportingClasses;
 using System;
+using System.Collections.Generic;
 
 namespace NetMud.Data.LookupData
 {
+    /// <summary>
+    /// World for holding world maps
+    /// </summary>
     [Serializable]
     [IgnoreAutomatedBackup]
     public class World : BackingDataPartial, IWorld
@@ -24,6 +28,20 @@ namespace NetMud.Data.LookupData
             GetNextId();
 
             FillRoomDimensions();
+        }
+
+        /// <summary>
+        /// Gets the errors for data fitness
+        /// </summary>
+        /// <returns>a bunch of text saying how awful your data is</returns>
+        public override IList<string> FitnessReport()
+        {
+            var dataProblems = base.FitnessReport();
+
+            if (WorldMap == null)
+                dataProblems.Add("World Map is null.");
+
+            return dataProblems;
         }
 
         private void FillRoomDimensions()

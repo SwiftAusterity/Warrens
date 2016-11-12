@@ -1,7 +1,7 @@
 ﻿@model NetMud.Models.Admin.ManageInanimateDataViewModel
 @{
     ViewBag.Title = "Manage inanimates";
-    
+
     @Html.Partial("AddContentLink")
 
 
@@ -31,7 +31,16 @@
                     {
                         <tr>
                             <td>@Html.ActionLink(@obj.ID.ToString(), "Edit", new { id = obj.ID })</td>
-                            <td>@obj.Name</td>
+                            <td>
+                                @if (obj.FitnessProblems)
+                                {
+                                    <span style="color:red;" title="@String.Join(", ", obj.FitnessReport())">@obj.Name</span>
+                                }
+                                else
+                                {
+                                    @obj.Name
+                                }
+                            </td>
                             <td>
                                 <div>
                                     @Html.Partial("RemoveDataItem", @obj.ID)
