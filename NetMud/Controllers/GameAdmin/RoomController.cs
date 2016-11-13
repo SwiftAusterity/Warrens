@@ -165,7 +165,7 @@ namespace NetMud.Controllers.GameAdmin
             vModel.DimensionalModelLength = obj.Model.Length;
             vModel.DimensionalModelWidth = obj.Model.Width;
 
-            return View("~/Views/GameAdmin/Room/Edit.cshtml", vModel);
+            return View("~/Views/GameAdmin/Room/Edit.cshtml", "_chromelessLayout", vModel);
         }
 
         [HttpPost]
