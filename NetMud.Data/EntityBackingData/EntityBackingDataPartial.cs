@@ -1,4 +1,5 @@
 ﻿using NetMud.Data.System;
+using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,16 @@ namespace NetMud.Data.EntityBackingData
     [Serializable]
     public abstract class EntityBackingDataPartial : BackingDataPartial, IEntityBackingData
     {
+        /// <summary>
+        /// The system type for the entity this attaches to
+        /// </summary>
+        public abstract Type EntityClass { get; }
+
+        /// <summary>
+        /// Affects to add to a live entity when it is spawned
+        /// </summary>
+        public HashSet<IAffect> AffectsOnSpawn { get; set; }
+
         public EntityBackingDataPartial()
         {
             //empty instance for getting the dataTableName
@@ -34,10 +45,6 @@ namespace NetMud.Data.EntityBackingData
             return dataProblems;
         }
 
-        /// <summary>
-        /// The system type for the entity this attaches to
-        /// </summary>
-        public abstract Type EntityClass { get; }
 
         /// <summary>
         /// Get's the entity's model dimensions

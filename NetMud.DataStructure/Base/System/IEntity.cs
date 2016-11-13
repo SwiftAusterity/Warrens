@@ -1,4 +1,5 @@
-﻿using NetMud.DataStructure.Behaviors.Rendering;
+﻿using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Behaviors.Rendering;
 using System;
 using System.Collections.Generic;
 
@@ -28,6 +29,11 @@ namespace NetMud.DataStructure.Base.System
         /// The backing data for this entity in the db
         /// </summary>
         T DataTemplate<T>() where T : IData;
+
+        /// <summary>
+        /// Active affects.. affecting an entity
+        /// </summary>
+        HashSet<IAffect> ActiveAffects { get; set; }
 
         /// <summary>
         /// Get's the entity's model dimensions

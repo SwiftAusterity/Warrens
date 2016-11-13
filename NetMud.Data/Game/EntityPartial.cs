@@ -3,6 +3,7 @@ using NetMud.Communication.Messaging;
 using NetMud.Data.System;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
+using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
 using Newtonsoft.Json;
@@ -133,6 +134,11 @@ namespace NetMud.Data.Game
                 UpsertToLiveWorldCache();
             }
         }
+
+        /// <summary>
+        /// Active affects.. affecting an entity
+        /// </summary>
+        public HashSet<IAffect> ActiveAffects { get; set; }
 
         /// <summary>
         /// Spawn this new into the live world

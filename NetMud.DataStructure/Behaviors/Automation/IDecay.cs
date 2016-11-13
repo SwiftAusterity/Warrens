@@ -3,7 +3,7 @@
     /// <summary>
     /// Indicates an entity loses durability over time
     /// </summary>
-    public interface IDecays
+    public interface IDecay
     {
     }
 }
