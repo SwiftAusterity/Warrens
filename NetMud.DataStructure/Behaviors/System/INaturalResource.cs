@@ -1,4 +1,5 @@
 ﻿using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Base.System;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace NetMud.DataStructure.Behaviors.System
     /// <summary>
     /// Natural resources (minerals, flora, fauna)
     /// </summary>
-    public interface INaturalResource
+    public interface INaturalResource : ILookupData
     {
         /// <summary>
         /// How much spawns in one place in one spawn tick
