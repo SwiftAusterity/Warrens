@@ -1,5 +1,9 @@
 ﻿@model NetMud.Models.Admin.AddEditPathwayDataViewModel
 
+@{
+    ViewBag.Title = "Add New Pathway With New Room";
+}
+
 @using (Html.BeginForm("AddWithRoom", "Pathway", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()

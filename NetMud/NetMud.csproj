@@ -236,7 +236,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Scripts\AsciiMaps.js" />
+    <Content Include="Scripts\adminModal.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -358,6 +358,7 @@
     <Content Include="Views\GameAdmin\DimensionalModel\ModelPlane.cshtml" />
     <Content Include="Views\GameAdmin\DimensionalModel\Edit.cshtml" />
     <Content Include="Views\Shared\AddContentLink.cshtml" />
+    <Content Include="Views\Shared\_chromelessLayout.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

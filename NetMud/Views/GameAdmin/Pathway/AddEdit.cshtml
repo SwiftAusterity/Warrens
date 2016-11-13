@@ -2,6 +2,7 @@
 
 @{
     var postType = Model.DataObject != null ? "Edit" : "Add";
+    ViewBag.Title = postType + " Pathway";
 }
 
 @using (Html.BeginForm(postType, "Pathway", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))

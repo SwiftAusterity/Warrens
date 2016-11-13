@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - TwinMUD</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/Scripts/HtmlUtilities.js")
+    @RenderSection("scripts", required: false)
+    @RenderSection("styles", required: false)
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+</head>
+<body style="padding: 0px;">
+    <div class="container body-content">
+        <h2>@ViewBag.Title</h2>
+
+        <h3><p id="statusMessage" name="statusMessage" class="text-success">@ViewBag.StatusMessage</p></h3>
+        @RenderBody()
+    </div>
+    <script type="text/javascript">
+        if('@ViewBag.StatusMessage' == '' && GetQueryStringParams('Message') != '') {
+            $('#statusMessage').html(GetQueryStringParams('Message'));
+        }
+    </script>
+</body>
+</html>

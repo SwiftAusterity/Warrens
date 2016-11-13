@@ -94,14 +94,14 @@ namespace NetMud.Controllers.GameAdmin
                 vModel.NewRoomModel.ValidMaterials = vModel.ValidMaterials;
                 vModel.NewRoomModel.ValidZones = BackingDataCache.GetAll<IZone>();
 
-                return PartialView("~/Views/GameAdmin/Pathway/AddWithRoom.cshtml", vModel);
+                return View("~/Views/GameAdmin/Pathway/AddWithRoom.cshtml", "_chromelessLayout", vModel);
             }
             else
             {
                 vModel.ToLocationID = destinationRoomId;
                 vModel.ToLocation = BackingDataCache.Get<IRoomData>(destinationRoomId);
 
-                return PartialView("~/Views/GameAdmin/Pathway/AddEdit.cshtml", vModel);
+                return View("~/Views/GameAdmin/Pathway/AddEdit.cshtml", "_chromelessLayout", vModel);
             }
         }
 
@@ -339,7 +339,7 @@ namespace NetMud.Controllers.GameAdmin
             vModel.DimensionalModelCavitation = obj.Model.SurfaceCavitation;
             vModel.ModelDataObject = obj.Model;
 
-            return PartialView("~/Views/GameAdmin/Pathway/AddEdit.cshtml", vModel);
+            return View("~/Views/GameAdmin/Pathway/AddEdit.cshtml", "_chromelessLayout", vModel);
         }
 
         [HttpPost]

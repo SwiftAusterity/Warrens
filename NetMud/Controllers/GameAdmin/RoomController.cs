@@ -96,7 +96,7 @@ namespace NetMud.Controllers.GameAdmin
             vModel.ValidMaterials = BackingDataCache.GetAll<IMaterial>();
             vModel.ValidZones = BackingDataCache.GetAll<IZone>();
 
-            return View("~/Views/GameAdmin/Room/Add.cshtml", vModel);
+            return View("~/Views/GameAdmin/Room/Add.cshtml", "_chromelessLayout", vModel);
         }
 
         [HttpPost]

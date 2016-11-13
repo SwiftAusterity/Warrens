@@ -11,9 +11,7 @@
     </div>
 </div>
 
-<div id="modal-form" title="Pathway Editor" data-height="900" data-width="1400" data-submitName="Save">
-    <div id="modalFormPlaceholder"></div>
-</div>
+@Scripts.Render("/Scripts/adminModal.js")
 
 <script type="text/javascript">
     $(function () {
@@ -75,25 +73,19 @@
 
     function BindRoomsAndPaths() {
         $('.AdminAddPathway').click(function () {
-            $("#modalFormPlaceholder").load("/GameAdmin/Pathway/Add/" + $(this).attr('pathwayId') + '/' + $(this).attr('fromRoom') + '/' + $(this).attr('toRoom'));
-
-            $('#modal-form').dialog("open");
+            openFrameless(1400, 900, 0, 0, "/GameAdmin/Pathway/Add/" + $(this).attr('pathwayId') + '/' + $(this).attr('fromRoom') + '/' + $(this).attr('toRoom'), 'Add Pathway', true);
 
             return false;
         });
 
         $('.AdminEditPathway').click(function () {
-            $("#modalFormPlaceholder").load("/GameAdmin/Pathway/Edit/" + $(this).attr('pathwayId') + '/' + $(this).attr('fromRoom') + '/' + $(this).attr('toRoom'));
-
-            $('#modal-form').dialog("open");
+            openFrameless(1400, 900, 0, 0, "/GameAdmin/Pathway/Edit/" + $(this).attr('pathwayId') + '/' + $(this).attr('fromRoom') + '/' + $(this).attr('toRoom'), 'Add Pathway', true);
 
             return false;
         });
 
         $('.AdminEditRoom').click(function () {
-            $("#modalFormPlaceholder").load("/GameAdmin/Room/Edit/" + $(this).attr('roomId'));
-
-            $('#modal-form').dialog("open");
+            openFrameless(1400, 900, 0, 0, "/GameAdmin/Room/Add/" + $(this).attr('roomId'), 'Add Pathway', true);
 
             return false;
         });
