@@ -31,11 +31,6 @@ namespace NetMud.DataStructure.Base.System
         T DataTemplate<T>() where T : IData;
 
         /// <summary>
-        /// Active affects.. affecting an entity
-        /// </summary>
-        HashSet<IAffect> ActiveAffects { get; set; }
-
-        /// <summary>
         /// Get's the entity's model dimensions
         /// </summary>
         /// <returns>height, length, width</returns>

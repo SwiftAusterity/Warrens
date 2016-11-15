@@ -3,6 +3,7 @@ using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NetMud.Data.EntityBackingData
 {
@@ -20,11 +21,22 @@ namespace NetMud.Data.EntityBackingData
         /// <summary>
         /// Affects to add to a live entity when it is spawned
         /// </summary>
-        public HashSet<IAffect> AffectsOnSpawn { get; set; }
+        public HashSet<IAffect> Affects { get; set; }
 
         public EntityBackingDataPartial()
         {
             //empty instance for getting the dataTableName
+        }
+
+        /// <summary>
+        /// Does this data have this affect
+        /// </summary>
+        /// <param name="affectTarget">the target of the affect</param>
+        /// <returns>the affect</returns>
+        public bool HasAffect(string affectTarget)
+        {
+            return Affects.Any(aff => aff.Target.Equals(affectTarget, StringComparison.InvariantCultureIgnoreCase)
+                                        && (aff.Duration > 0 || aff.Duration == -1));
         }
 
         /// <summary>

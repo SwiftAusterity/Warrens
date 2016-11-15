@@ -5,6 +5,7 @@ using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Behaviors.Automation;
 using NetMud.DataStructure.Behaviors.Rendering;
 using Newtonsoft.Json;
 using System;
@@ -136,9 +137,91 @@ namespace NetMud.Data.Game
         }
 
         /// <summary>
-        /// Active affects.. affecting an entity
+        /// Affects to add to a live entity when it is spawned
         /// </summary>
-        public HashSet<IAffect> ActiveAffects { get; set; }
+        public HashSet<IAffect> Affects { get; set; }
+
+        /// <summary>
+        /// Does this data have this affect
+        /// </summary>
+        /// <param name="affectTarget">the target of the affect</param>
+        /// <returns>the affect</returns>
+        public bool HasAffect(string affectTarget)
+        {
+            if(String.IsNullOrWhiteSpace(affectTarget))
+                return false;
+
+            return Affects.Any(aff => aff.Target.Equals(affectTarget, StringComparison.InvariantCultureIgnoreCase)
+                                        && (aff.Duration > 0 || aff.Duration == -1));
+        }
+
+        /// <summary>
+        /// Attempts to apply the affect
+        /// </summary>
+        /// <param name="affectToApply">the affect to apply</param>
+        /// <returns>what type of resist happened (or success)</returns>
+        public AffectResistType ApplyAffect(IAffect affectToApply)
+        {
+            if (affectToApply == null)
+                throw new ArgumentNullException("Affect to apply can not be null during application.");
+
+            var affect = Affects.FirstOrDefault(aff => aff.Equals(affectToApply));
+
+            //Are we combining affects or not
+            if(affect == null)
+            {
+                //TODO: Resistance roll
+                Affects.Add(affectToApply);
+            }
+            else
+            {
+                //TODO: Better math
+                affect.Duration += affectToApply.Duration;
+                affect.Value = Math.Max(affect.Value, affectToApply.Value);
+            }
+
+            return AffectResistType.Success;
+        }
+
+        /// <summary>
+        /// Attempt to dispel the affect
+        /// </summary>
+        /// <param name="affectTarget">the thing attempting to be dispeled</param>
+        /// <param name="dispellationMethod">the dispellation methodology. [TypeOfMethod, strength]</param>
+        /// <returns>reisst type</returns>
+        public AffectResistType DispelAffect(string affectTarget, Tuple<AffectType, int> dispellationMethod)
+        {
+            var returnValue = AffectResistType.Success;
+
+            if (HasAffect(affectTarget))
+            {
+                //They have the affect so lets try and remove it
+                var affects = Affects.Where(aff => aff.Target.Equals(affectTarget, StringComparison.InvariantCultureIgnoreCase));
+
+                foreach (var affect in affects)
+                {
+                    switch (affect.Type)
+                    {
+                        case AffectType.Pure:
+                            returnValue = AffectResistType.Immune;
+                            break;
+                        default:
+                            //TODO: This is kind of a stub, needs more stuff possibly int rolls or luck and such
+                            if (dispellationMethod.Item1 == affect.Type && dispellationMethod.Item2 < affect.Value * affect.Duration)
+                                returnValue = AffectResistType.Resisted;
+                            else
+                                returnValue = AffectResistType.Success;
+
+                            break;
+                    }
+
+                    if (returnValue == AffectResistType.Success)
+                        affect.Duration = 0;
+                }
+            }
+
+            return returnValue;
+        }
 
         /// <summary>
         /// Spawn this new into the live world

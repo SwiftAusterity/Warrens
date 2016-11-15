@@ -1,6 +1,7 @@
 ﻿using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Behaviors.Automation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace NetMud.DataStructure.Behaviors.System
     /// <summary>
     /// Natural resources (minerals, flora, fauna)
     /// </summary>
-    public interface INaturalResource : ILookupData
+    public interface INaturalResource : ILookupData, IHasAffects
     {
         /// <summary>
         /// How much spawns in one place in one spawn tick
@@ -28,11 +29,6 @@ namespace NetMud.DataStructure.Behaviors.System
         /// How much the spawned puissance varies
         /// </summary>
         int PuissanceVariance { get; set; }
-
-        /// <summary>
-        /// On-gather affects that can be applied to the raw material
-        /// </summary>
-        HashSet<IAffect> PotentialAffects { get; set; }
 
         /// <summary>
         /// Spawns in elevations within this range

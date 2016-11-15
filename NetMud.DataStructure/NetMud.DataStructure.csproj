@@ -62,6 +62,7 @@
     <Compile Include="Base\Supporting\IMaterial.cs" />
     <Compile Include="Base\Place\IPathway.cs" />
     <Compile Include="Base\Supporting\IMineral.cs" />
+    <Compile Include="Behaviors\Automation\ICanBeAffected.cs" />
     <Compile Include="Behaviors\System\INaturalResource.cs" />
     <Compile Include="Base\Supporting\IStat.cs" />
     <Compile Include="Base\Supporting\ITranslation.cs" />
