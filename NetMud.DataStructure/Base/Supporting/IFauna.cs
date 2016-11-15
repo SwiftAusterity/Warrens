@@ -10,7 +10,7 @@ namespace NetMud.DataStructure.Base.Supporting
     /// <summary>
     /// Animal spawns
     /// </summary>
-    interface IFauna : INaturalResource
+    public interface IFauna : INaturalResource
     {
         /// <summary>
         /// What we're spawning

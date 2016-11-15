@@ -44,7 +44,7 @@ namespace NetMud.DataStructure.Base.Supporting
         /// <param name="victim">the victim</param>
         /// <param name="vector">How this is being spread</param>
         /// <returns>success or failure</returns>
-        bool Afflict(IHasAffects source, IHasAffects victim, ContagionVector vector);
+        bool Afflict(IHasAffects source, ICanBeAffected victim, ContagionVector vector);
     }
 
     /// <summary>

@@ -10,7 +10,7 @@ namespace NetMud.DataStructure.Base.Supporting
     /// <summary>
     /// Plants, all elements can be nullable (one has to exist)
     /// </summary>
-    interface IFlora : INaturalResource
+    public interface IFlora : INaturalResource
     {
         /// <summary>
         /// Bulk material of plant. Stem, trunk, etc.

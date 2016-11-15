@@ -59,6 +59,7 @@
     <Compile Include="Game\Intelligence.cs" />
     <Compile Include="Game\Player.cs" />
     <Compile Include="Game\Room.cs" />
+    <Compile Include="LookupData\NaturalResourceDataPartial.cs" />
     <Compile Include="LookupData\World.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="LookupData\DimensionalModel.cs" />
@@ -70,11 +71,15 @@
     <Compile Include="LookupData\Race.cs" />
     <Compile Include="LookupData\LookupDataPartial.cs" />
     <Compile Include="LookupData\Zone.cs" />
+    <Compile Include="System\Affect.cs" />
     <Compile Include="System\Constants.cs" />
     <Compile Include="System\EntityContainer.cs" />
     <Compile Include="System\BackingDataPartial.cs" />
+    <Compile Include="LookupData\Fauna.cs" />
+    <Compile Include="LookupData\Flora.cs" />
     <Compile Include="System\LookupCriteria.cs" />
     <Compile Include="System\Map.cs" />
+    <Compile Include="LookupData\Mineral.cs" />
     <Compile Include="System\SerializableDataPartial.cs" />
     <Compile Include="System\SerializationUtility.cs" />
   </ItemGroup>

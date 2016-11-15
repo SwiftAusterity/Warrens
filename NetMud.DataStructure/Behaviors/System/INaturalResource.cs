@@ -48,7 +48,7 @@ namespace NetMud.DataStructure.Behaviors.System
         /// <summary>
         /// What medium materials this can spawn in
         /// </summary>
-        HashSet<IMaterial> OccursIn { get; set; }
+        IEnumerable<IMaterial> OccursIn { get; set; }
 
         /// <summary>
         /// Can spawn in system zones like non-player owned cities

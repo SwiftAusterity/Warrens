@@ -21,7 +21,7 @@ namespace NetMud.Data.EntityBackingData
         /// <summary>
         /// Affects to add to a live entity when it is spawned
         /// </summary>
-        public HashSet<IAffect> Affects { get; set; }
+        public HashSet<IAffect> Affects { get; private set; }
 
         public EntityBackingDataPartial()
         {
