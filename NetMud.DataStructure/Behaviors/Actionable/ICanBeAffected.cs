@@ -1,11 +1,12 @@
 ﻿using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Behaviors.Automation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NetMud.DataStructure.Behaviors.Automation
+namespace NetMud.DataStructure.Behaviors.Actionable
 {
     /// <summary>
     /// Indicates an entity can have affects removed or applied to them

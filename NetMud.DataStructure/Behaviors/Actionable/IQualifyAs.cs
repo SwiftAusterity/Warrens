@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+
 namespace NetMud.DataStructure.Behaviors.Actionable
 {
     /// <summary>
@@ -10,10 +11,6 @@ namespace NetMud.DataStructure.Behaviors.Actionable
         Qualification QualificationType { get; set; }
 
         IDictionary<string, string> SupportingData { get; set; }
-
-        string Serialize();
-
-        IQualifyAs Deserialize();
     }
 
     public enum Qualification

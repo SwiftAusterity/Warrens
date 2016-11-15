@@ -12,6 +12,6 @@ namespace NetMud.DataStructure.Behaviors.Rendering
         /// </summary>
         /// <param name="actor">entity initiating the command</param>
         /// <returns>the scan output</returns>
-        IEnumerable<string> RenderToInspect(IEntity actor, IEntity target);
+        IEnumerable<string> DescribeTo(IEntity actor, IEntity target);
     }
 }

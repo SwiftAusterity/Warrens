@@ -1,4 +1,5 @@
-﻿namespace NetMud.DataStructure.Behaviors.Automation
+﻿using NetMud.DataStructure.Base.System;
+namespace NetMud.DataStructure.Behaviors.Automation
 {
     /// <summary>
     /// For IHunger entities, details what they can eat
@@ -6,6 +7,7 @@
     /// <typeparam name="DietType">the type they can eat</typeparam>
     public interface IEat<DietType>
     {
+        int Consume(IEntity food);
     }
 
     /// <summary>

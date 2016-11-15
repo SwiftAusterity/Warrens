@@ -1,5 +1,6 @@
 ﻿using NetMud.DataAccess;
 using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Behaviors.Actionable;
 using NetMud.DataStructure.Behaviors.Automation;
 using System;
 using System.Collections.Generic;
