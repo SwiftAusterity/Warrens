@@ -1,4 +1,5 @@
-﻿using NetMud.DataStructure.Base.Supporting;
+﻿using NetMud.DataStructure.Base.Place;
+using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using System;
 using System.Collections.Generic;
@@ -56,6 +57,20 @@ namespace NetMud.DataStructure.Behaviors.System
         /// <summary>
         /// Can spawn in system zones like non-player owned cities
         /// </summary>
-        Boolean CanSpawnInSystemAreas { get; set; }
+        bool CanSpawnInSystemAreas { get; set; }
+
+        /// <summary>
+        /// Can this resource potentially spawn in this room
+        /// </summary>
+        /// <param name="room">The room to spawn in</param>
+        /// <returns>if this can spawn there</returns>
+        bool CanSpawnIn(IRoom room);
+
+        /// <summary>
+        /// Should this resource spawn in this room. Combines the "can" logic with checks against total local population
+        /// </summary>
+        /// <param name="room">The room to spawn in</param>
+        /// <returns>if this should spawn there</returns>
+        bool ShouldSpawnIn(IRoom room);
     }
 }
