@@ -1,0 +1,58 @@
+﻿@model NetMud.Models.Admin.ManageFloraViewModel
+@{
+    ViewBag.Title = "Manage Flora";
+
+    @Html.Partial("AddContentLink")
+
+    if (Model.Items.Count() > 0)
+    {
+        @Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model, "Flora"))
+
+        using (Html.BeginForm("Remove", "Flora"))
+        {
+            @Html.AntiForgeryToken()
+            <table class="table">
+                <thead>
+                    <tr>
+                        <td>
+                            ID
+                        </td>
+                        <td>
+                            Name
+                        </td>
+                        <td>
+                            Remove
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var obj in Model.CurrentPageOfItems)
+                    {
+                        <tr>
+                            <td>@Html.ActionLink(@obj.ID.ToString(), "Edit", new { id = obj.ID })</td>
+                            <td>
+                                @if (obj.FitnessProblems)
+                                {
+                                    <span style="color:red;" title="@String.Join(", ", obj.FitnessReport())">@obj.Name</span>
+                                }
+                                else
+                                {
+                                    @obj.Name
+                                }
+                            </td>
+                            <td>
+                                <div>
+                                    @Html.Partial("RemoveDataItem", @obj.ID)
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+
+    }
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

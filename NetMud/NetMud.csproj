@@ -178,6 +178,8 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminDataApiController.cs" />
     <Compile Include="Controllers\ClientDataApiController.cs" />
+    <Compile Include="Controllers\GameAdmin\FloraController.cs" />
+    <Compile Include="Controllers\GameAdmin\MineralsController.cs" />
     <Compile Include="Controllers\GameAdmin\GameAdminController.cs" />
     <Compile Include="Controllers\GameAdmin\ConstantsController.cs" />
     <Compile Include="Controllers\GameAdmin\FaunaController.cs" />
@@ -199,6 +201,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Admin\FloraViewModels.cs" />
+    <Compile Include="Models\Admin\MineralsViewModels.cs" />
     <Compile Include="Models\Admin\FaunaViewModels.cs" />
     <Compile Include="Models\Admin\ReferenceDataDropdownModel.cs" />
     <Compile Include="Models\Admin\DimensionalModelViewModels.cs" />
@@ -365,6 +369,14 @@
     <Content Include="Views\GameAdmin\Fauna\Edit.cshtml" />
     <Content Include="Views\GameAdmin\Fauna\Index.cshtml" />
     <Content Include="Views\GameAdmin\Fauna\OccursIn.cshtml" />
+    <Content Include="Views\GameAdmin\Flora\Add.cshtml" />
+    <Content Include="Views\GameAdmin\Flora\Edit.cshtml" />
+    <Content Include="Views\GameAdmin\Flora\Index.cshtml" />
+    <Content Include="Views\GameAdmin\Minerals\Add.cshtml" />
+    <Content Include="Views\GameAdmin\Minerals\Edit.cshtml" />
+    <Content Include="Views\GameAdmin\Minerals\Index.cshtml" />
+    <Content Include="Views\GameAdmin\Flora\OccursIn.cshtml" />
+    <Content Include="Views\GameAdmin\Minerals\OccursIn.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
