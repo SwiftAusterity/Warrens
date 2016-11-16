@@ -98,6 +98,12 @@ namespace NetMud.Models.Admin
         [Display(Name = "Occurs in Material")]
         public long[] OccursIn { get; set; }
 
+        [Display(Name = "Rock")]
+        public long Rock { get; set; }
+
+        [Display(Name = "Dirt")]
+        public long Dirt { get; set; }
+
         public IEnumerable<IInanimateData> ValidInanimateDatas { get; set; }
         public IEnumerable<IMaterial> ValidMaterials { get; set; }
         public IMineral DataObject { get; set; }

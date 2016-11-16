@@ -88,6 +88,7 @@ namespace NetMud.Controllers.GameAdmin
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
             vModel.ValidMaterials = BackingDataCache.GetAll<IMaterial>();
             vModel.ValidInanimateDatas = BackingDataCache.GetAll<IInanimateData>();
+            vModel.ValidRaces = BackingDataCache.GetAll<IRace>();
 
             return View("~/Views/GameAdmin/Fauna/Add.cshtml", vModel);
         }
@@ -108,6 +109,14 @@ namespace NetMud.Controllers.GameAdmin
             newObj.ElevationRange = new Tuple<int, int>(vModel.ElevationRangeLow, vModel.ElevationRangeHigh);
             newObj.TemperatureRange = new Tuple<int, int>(vModel.TemperatureRangeLow, vModel.TemperatureRangeHigh);
             newObj.HumidityRange = new Tuple<int, int>(vModel.HumidityRangeLow, vModel.HumidityRangeHigh);
+            newObj.PopulationHardCap = vModel.PopulationHardCap;
+            newObj.AmountMultiplier = vModel.AmountMultiplier;
+
+            var newRace = BackingDataCache.Get<IRace>(vModel.Race);
+            if (newRace != null)
+                newObj.Race = newRace;
+            else
+                message += "Invalid race.";
 
             var newMaterials = new List<IMaterial>();
             if (vModel.OccursIn != null)
@@ -127,12 +136,15 @@ namespace NetMud.Controllers.GameAdmin
                     newObj.OccursIn = newMaterials;
             }
 
-            if (newObj.Create() == null)
-                message = "Error; Creation failed.";
-            else
+            if (!String.IsNullOrWhiteSpace(message))
             {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - AddFauna[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                message = "Creation Successful.";
+                if (newObj.Create() == null)
+                    message = "Error; Creation failed.";
+                else
+                {
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddFauna[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    message = "Creation Successful.";
+                }
             }
 
             return RedirectToAction("Index", new { Message = message });
@@ -167,6 +179,9 @@ namespace NetMud.Controllers.GameAdmin
             vModel.TemperatureRangeLow = obj.TemperatureRange.Item1;
             vModel.HumidityRangeHigh = obj.HumidityRange.Item2;
             vModel.HumidityRangeLow = obj.HumidityRange.Item1;
+            vModel.PopulationHardCap = obj.PopulationHardCap;
+            vModel.AmountMultiplier = obj.AmountMultiplier;
+            vModel.Race = obj.Race.ID;
 
             return View("~/Views/GameAdmin/Fauna/Edit.cshtml", vModel);
         }
@@ -193,6 +208,14 @@ namespace NetMud.Controllers.GameAdmin
             obj.ElevationRange = new Tuple<int, int>(vModel.ElevationRangeLow, vModel.ElevationRangeHigh);
             obj.TemperatureRange = new Tuple<int, int>(vModel.TemperatureRangeLow, vModel.TemperatureRangeHigh);
             obj.HumidityRange = new Tuple<int, int>(vModel.HumidityRangeLow, vModel.HumidityRangeHigh);
+            obj.PopulationHardCap = vModel.PopulationHardCap;
+            obj.AmountMultiplier = vModel.AmountMultiplier;
+
+            var newRace = BackingDataCache.Get<IRace>(vModel.Race);
+            if (newRace != null)
+                obj.Race = newRace;
+            else
+                message += "Invalid race.";
 
             var newMaterials = new List<IMaterial>();
             if (vModel.OccursIn != null)
@@ -212,13 +235,16 @@ namespace NetMud.Controllers.GameAdmin
             //Might need to be blanked out
             obj.OccursIn = newMaterials;
 
-            if (obj.Save())
+            if (!String.IsNullOrWhiteSpace(message))
             {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - EditFauna[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                message = "Edit Successful.";
+                if (obj.Save())
+                {
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - EditFauna[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    message = "Edit Successful.";
+                }
+                else
+                    message = "Error; Edit failed.";
             }
-            else
-                message = "Error; Edit failed.";
 
             return RedirectToAction("Index", new { Message = message });
         }

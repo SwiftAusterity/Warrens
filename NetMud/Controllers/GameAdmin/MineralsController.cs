@@ -109,6 +109,18 @@ namespace NetMud.Controllers.GameAdmin
             newObj.TemperatureRange = new Tuple<int, int>(vModel.TemperatureRangeLow, vModel.TemperatureRangeHigh);
             newObj.HumidityRange = new Tuple<int, int>(vModel.HumidityRangeLow, vModel.HumidityRangeHigh);
 
+            var newRock = BackingDataCache.Get<IMaterial>(vModel.Rock);
+            if (newRock != null)
+                newObj.Rock = newRock;
+            else
+                message += "Invalid rock material.";
+
+            var newDirt = BackingDataCache.Get<IMaterial>(vModel.Dirt);
+            if (newDirt != null)
+                newObj.Dirt = newDirt;
+            else
+                message += "Invalid dirt material.";
+            
             var newMaterials = new List<IMaterial>();
             if (vModel.OccursIn != null)
             {
@@ -127,12 +139,15 @@ namespace NetMud.Controllers.GameAdmin
                     newObj.OccursIn = newMaterials;
             }
 
-            if (newObj.Create() == null)
-                message = "Error; Creation failed.";
-            else
+            if (!String.IsNullOrWhiteSpace(message))
             {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - AddMinerals[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                message = "Creation Successful.";
+                if (newObj.Create() == null)
+                    message = "Error; Creation failed.";
+                else
+                {
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddMinerals[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    message = "Creation Successful.";
+                }
             }
 
             return RedirectToAction("Index", new { Message = message });
@@ -167,6 +182,8 @@ namespace NetMud.Controllers.GameAdmin
             vModel.TemperatureRangeLow = obj.TemperatureRange.Item1;
             vModel.HumidityRangeHigh = obj.HumidityRange.Item2;
             vModel.HumidityRangeLow = obj.HumidityRange.Item1;
+            vModel.Rock = obj.Rock.ID;
+            vModel.Dirt = obj.Dirt.ID;
 
             return View("~/Views/GameAdmin/Minerals/Edit.cshtml", vModel);
         }
@@ -194,6 +211,18 @@ namespace NetMud.Controllers.GameAdmin
             obj.TemperatureRange = new Tuple<int, int>(vModel.TemperatureRangeLow, vModel.TemperatureRangeHigh);
             obj.HumidityRange = new Tuple<int, int>(vModel.HumidityRangeLow, vModel.HumidityRangeHigh);
 
+            var newDirt = BackingDataCache.Get<IMaterial>(vModel.Dirt);
+            if (newDirt != null)
+                obj.Dirt = newDirt;
+            else
+                message += "Invalid dirt material.";
+
+            var newRock = BackingDataCache.Get<IMaterial>(vModel.Rock);
+            if (newRock != null)
+                obj.Rock = newRock;
+            else
+                message += "Invalid rock material.";
+
             var newMaterials = new List<IMaterial>();
             if (vModel.OccursIn != null)
             {
@@ -212,13 +241,16 @@ namespace NetMud.Controllers.GameAdmin
             //Might need to be blanked out
             obj.OccursIn = newMaterials;
 
-            if (obj.Save())
+            if (!String.IsNullOrWhiteSpace(message))
             {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - EditMinerals[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                message = "Edit Successful.";
+                if (obj.Save())
+                {
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - EditMinerals[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    message = "Edit Successful.";
+                }
+                else
+                    message = "Error; Edit failed.";
             }
-            else
-                message = "Error; Edit failed.";
 
             return RedirectToAction("Index", new { Message = message });
         }

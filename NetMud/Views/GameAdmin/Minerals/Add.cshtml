@@ -29,6 +29,11 @@
                 @Html.EditorFor(m => m.ElevationRangeLow)
                 @Html.EditorFor(m => m.ElevationRangeHigh)
             </div>
+            <div class="form-group two-column">
+                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Rock", "Rock", Model.ValidMaterials, Model.Rock))
+                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Dirt", "Dirt", Model.ValidMaterials, Model.Dirt))
+            </div>
+
             @Html.Partial("~/Views/GameAdmin/Minerals/OccursIn.cshtml", Model)
 
             <div class="form-group one-column">

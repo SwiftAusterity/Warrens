@@ -38,6 +38,7 @@ namespace NetMud.Models.Admin
         {
             ValidInanimateDatas = Enumerable.Empty<IInanimateData>();
             ValidMaterials = Enumerable.Empty<IMaterial>();
+            ValidRaces = Enumerable.Empty<IRace>();
         }
 
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
@@ -98,6 +99,20 @@ namespace NetMud.Models.Admin
         [Display(Name = "Occurs in Material")]
         public long[] OccursIn { get; set; }
 
+        [Range(1, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Ratio Female to Male")]
+        [DataType(DataType.Text)]
+        public int FemaleRatio { get; set; }
+
+        [Range(1, 2000, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Total Pop Cap")]
+        [DataType(DataType.Text)]
+        public int PopulationHardCap { get; set; }
+
+        [Display(Name = "Race")]
+        public long Race { get; set; }
+
+        public IEnumerable<IRace> ValidRaces { get; set; }
         public IEnumerable<IInanimateData> ValidInanimateDatas { get; set; }
         public IEnumerable<IMaterial> ValidMaterials { get; set; }
         public IFauna DataObject { get; set; }

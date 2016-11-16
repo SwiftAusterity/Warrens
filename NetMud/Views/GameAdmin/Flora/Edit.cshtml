@@ -29,6 +29,16 @@
                 @Html.EditorFor(m => m.ElevationRangeLow)
                 @Html.EditorFor(m => m.ElevationRangeHigh)
             </div>
+            <div class="form-group three-column">
+                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Wood", "Wood", Model.ValidMaterials, Model.Wood))
+                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Leaf", "Leaf", Model.ValidMaterials, Model.Leaf))
+                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Flower", "Flower", Model.ValidMaterials, Model.Flower))
+            </div>
+            <div class="form-group two-column">
+                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Fruit", "Fruit", Model.ValidMaterials, Model.Fruit))
+                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Seed", "Seed", Model.ValidMaterials, Model.Seed))
+            </div>
+            
             @Html.Partial("~/Views/GameAdmin/Flora/OccursIn.cshtml", Model)
 
             <div class="form-group one-column">

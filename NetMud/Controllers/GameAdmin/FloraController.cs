@@ -109,6 +109,29 @@ namespace NetMud.Controllers.GameAdmin
             newObj.TemperatureRange = new Tuple<int, int>(vModel.TemperatureRangeLow, vModel.TemperatureRangeHigh);
             newObj.HumidityRange = new Tuple<int, int>(vModel.HumidityRangeLow, vModel.HumidityRangeHigh);
 
+            var newWood = BackingDataCache.Get<IMaterial>(vModel.Wood);
+            if (newWood != null)
+                newObj.Wood = newWood;
+
+            var newFlower = BackingDataCache.Get<IMaterial>(vModel.Flower);
+            if (newFlower != null)
+                newObj.Flower = newFlower;
+
+            var newSeed = BackingDataCache.Get<IMaterial>(vModel.Seed);
+            if (newSeed != null)
+                newObj.Seed = newSeed;
+
+            var newLeaf = BackingDataCache.Get<IMaterial>(vModel.Leaf);
+            if (newLeaf != null)
+                newObj.Leaf = newLeaf;
+
+            var newFruit = BackingDataCache.Get<IMaterial>(vModel.Fruit);
+            if (newFruit != null)
+                newObj.Fruit = newFruit;
+
+            if (newWood == null && newFlower == null && newSeed == null && newLeaf == null && newFruit == null)
+                message = "At least one of the parts of this plant must be valid.";
+
             var newMaterials = new List<IMaterial>();
             if (vModel.OccursIn != null)
             {
@@ -127,12 +150,15 @@ namespace NetMud.Controllers.GameAdmin
                     newObj.OccursIn = newMaterials;
             }
 
-            if (newObj.Create() == null)
-                message = "Error; Creation failed.";
-            else
+            if (!String.IsNullOrWhiteSpace(message))
             {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - AddFlora[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                message = "Creation Successful.";
+                if (newObj.Create() == null)
+                    message = "Error; Creation failed.";
+                else
+                {
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddFlora[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    message = "Creation Successful.";
+                }
             }
 
             return RedirectToAction("Index", new { Message = message });
@@ -167,6 +193,11 @@ namespace NetMud.Controllers.GameAdmin
             vModel.TemperatureRangeLow = obj.TemperatureRange.Item1;
             vModel.HumidityRangeHigh = obj.HumidityRange.Item2;
             vModel.HumidityRangeLow = obj.HumidityRange.Item1;
+            vModel.Wood = obj.Wood.ID;
+            vModel.Flower = obj.Flower.ID;
+            vModel.Fruit = obj.Fruit.ID;
+            vModel.Seed = obj.Seed.ID;
+            vModel.Leaf = obj.Leaf.ID;
 
             return View("~/Views/GameAdmin/Flora/Edit.cshtml", vModel);
         }
@@ -194,6 +225,29 @@ namespace NetMud.Controllers.GameAdmin
             obj.TemperatureRange = new Tuple<int, int>(vModel.TemperatureRangeLow, vModel.TemperatureRangeHigh);
             obj.HumidityRange = new Tuple<int, int>(vModel.HumidityRangeLow, vModel.HumidityRangeHigh);
 
+            var newWood = BackingDataCache.Get<IMaterial>(vModel.Wood);
+            if (newWood != null)
+                obj.Wood = newWood;
+
+            var newFlower = BackingDataCache.Get<IMaterial>(vModel.Flower);
+            if (newFlower != null)
+                obj.Flower = newFlower;
+
+            var newSeed = BackingDataCache.Get<IMaterial>(vModel.Seed);
+            if (newSeed != null)
+                obj.Seed = newSeed;
+
+            var newLeaf = BackingDataCache.Get<IMaterial>(vModel.Leaf);
+            if (newLeaf != null)
+                obj.Leaf = newLeaf;
+
+            var newFruit = BackingDataCache.Get<IMaterial>(vModel.Fruit);
+            if (newFruit != null)
+                obj.Fruit = newFruit;
+
+            if (newWood == null && newFlower == null && newSeed == null && newLeaf == null && newFruit == null)
+                message = "At least one of the parts of this plant must be valid.";
+
             var newMaterials = new List<IMaterial>();
             if (vModel.OccursIn != null)
             {
@@ -212,13 +266,16 @@ namespace NetMud.Controllers.GameAdmin
             //Might need to be blanked out
             obj.OccursIn = newMaterials;
 
-            if (obj.Save())
+            if (!String.IsNullOrWhiteSpace(message))
             {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - EditFlora[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                message = "Edit Successful.";
+                if (obj.Save())
+                {
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - EditFlora[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    message = "Edit Successful.";
+                }
+                else
+                    message = "Error; Edit failed.";
             }
-            else
-                message = "Error; Edit failed.";
 
             return RedirectToAction("Index", new { Message = message });
         }
