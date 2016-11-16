@@ -4,9 +4,13 @@ using NetMud.Authentication;
 using NetMud.Data.LookupData;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
+using NetMud.DataStructure.Base.Entity;
+using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.Models.Admin;
+using System;
+using System.Collections.Generic;
 using System.Web;
 using System.Web.Mvc;
 
@@ -82,20 +86,46 @@ namespace NetMud.Controllers.GameAdmin
         {
             var vModel = new AddEditFaunaViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            vModel.ValidMaterials = BackingDataCache.GetAll<IMaterial>();
+            vModel.ValidInanimateDatas = BackingDataCache.GetAll<IInanimateData>();
 
             return View("~/Views/GameAdmin/Fauna/Add.cshtml", vModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Add(string newName, string newHelpText)
+        public ActionResult Add(AddEditFaunaViewModel vModel)
         {
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             var newObj = new Fauna();
-            newObj.Name = newName;
-            newObj.HelpText = newHelpText;
+            newObj.Name = vModel.Name;
+            newObj.HelpText = vModel.HelpText;
+            newObj.AmountMultiplier = vModel.AmountMultiplier;
+            newObj.Rarity = vModel.Rarity;
+            newObj.PuissanceVariance = vModel.PuissanceVariance;
+            newObj.ElevationRange = new Tuple<int, int>(vModel.ElevationRangeLow, vModel.ElevationRangeHigh);
+            newObj.TemperatureRange = new Tuple<int, int>(vModel.TemperatureRangeLow, vModel.TemperatureRangeHigh);
+            newObj.HumidityRange = new Tuple<int, int>(vModel.HumidityRangeLow, vModel.HumidityRangeHigh);
+
+            var newMaterials = new List<IMaterial>();
+            if (vModel.OccursIn != null)
+            {
+                foreach (var materialId in vModel.OccursIn)
+                {
+                    if (materialId >= 0)
+                    {
+                        var material = BackingDataCache.Get<IMaterial>(materialId);
+
+                        if (material != null)
+                            newMaterials.Add(material);
+                    }
+                }
+
+                if (newMaterials.Count > 0)
+                    newObj.OccursIn = newMaterials;
+            }
 
             if (newObj.Create() == null)
                 message = "Error; Creation failed.";
@@ -114,6 +144,8 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var vModel = new AddEditFaunaViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            vModel.ValidMaterials = BackingDataCache.GetAll<IMaterial>();
+            vModel.ValidInanimateDatas = BackingDataCache.GetAll<IInanimateData>();
 
             var obj = BackingDataCache.Get<IFauna>(id);
 
@@ -126,6 +158,15 @@ namespace NetMud.Controllers.GameAdmin
             vModel.DataObject = obj;
             vModel.Name = obj.Name;
             vModel.HelpText = obj.HelpText;
+            vModel.AmountMultiplier = obj.AmountMultiplier;
+            vModel.Rarity = obj.Rarity;
+            vModel.PuissanceVariance = obj.PuissanceVariance;
+            vModel.ElevationRangeHigh = obj.ElevationRange.Item2;
+            vModel.ElevationRangeLow = obj.ElevationRange.Item1;
+            vModel.TemperatureRangeHigh = obj.TemperatureRange.Item2;
+            vModel.TemperatureRangeLow = obj.TemperatureRange.Item1;
+            vModel.HumidityRangeHigh = obj.HumidityRange.Item2;
+            vModel.HumidityRangeLow = obj.HumidityRange.Item1;
 
             return View("~/Views/GameAdmin/Fauna/Edit.cshtml", vModel);
         }
@@ -146,6 +187,30 @@ namespace NetMud.Controllers.GameAdmin
 
             obj.Name = vModel.Name;
             obj.HelpText = vModel.HelpText;
+            obj.AmountMultiplier = vModel.AmountMultiplier;
+            obj.Rarity = vModel.Rarity;
+            obj.PuissanceVariance = vModel.PuissanceVariance;
+            obj.ElevationRange = new Tuple<int, int>(vModel.ElevationRangeLow, vModel.ElevationRangeHigh);
+            obj.TemperatureRange = new Tuple<int, int>(vModel.TemperatureRangeLow, vModel.TemperatureRangeHigh);
+            obj.HumidityRange = new Tuple<int, int>(vModel.HumidityRangeLow, vModel.HumidityRangeHigh);
+
+            var newMaterials = new List<IMaterial>();
+            if (vModel.OccursIn != null)
+            {
+                foreach (var materialId in vModel.OccursIn)
+                {
+                    if (materialId >= 0)
+                    {
+                        var material = BackingDataCache.Get<IMaterial>(materialId);
+
+                        if (material != null)
+                            newMaterials.Add(material);
+                    }
+                }
+            }
+
+            //Might need to be blanked out
+            obj.OccursIn = newMaterials;
 
             if (obj.Save())
             {

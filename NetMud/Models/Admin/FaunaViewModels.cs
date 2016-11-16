@@ -1,9 +1,11 @@
 ﻿using NetMud.Authentication;
+using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 
 namespace NetMud.Models.Admin
@@ -34,6 +36,8 @@ namespace NetMud.Models.Admin
 
         public AddEditFaunaViewModel()
         {
+            ValidInanimateDatas = Enumerable.Empty<IInanimateData>();
+            ValidMaterials = Enumerable.Empty<IMaterial>();
         }
 
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
@@ -46,6 +50,56 @@ namespace NetMud.Models.Admin
         [Display(Name = "Help Text")]
         public string HelpText { get; set; }
 
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Spawn Multiplier")]
+        [DataType(DataType.Text)]
+        public int AmountMultiplier { get; set; }
+
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Spawn Rarity")]
+        [DataType(DataType.Text)]
+        public int Rarity { get; set; }
+
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Puissance Variance")]
+        [DataType(DataType.Text)]
+        public int PuissanceVariance { get; set; }
+
+        [Range(-1000, 1000, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Y-Axis High")]
+        [DataType(DataType.Text)]
+        public int ElevationRangeHigh { get; set; }
+
+        [Range(-2000, 2000, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Y-Axis Low")]
+        [DataType(DataType.Text)]
+        public int ElevationRangeLow { get; set; }
+
+        [Range(-2000, 2000, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Temperature High")]
+        [DataType(DataType.Text)]
+        public int TemperatureRangeHigh { get; set; }
+
+        [Range(-2000, 2000, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Temperature Low")]
+        [DataType(DataType.Text)]
+        public int TemperatureRangeLow { get; set; }
+
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Humidity High")]
+        [DataType(DataType.Text)]
+        public int HumidityRangeHigh { get; set; }
+
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Humidity Low")]
+        [DataType(DataType.Text)]
+        public int HumidityRangeLow { get; set; }
+
+        [Display(Name = "Occurs in Material")]
+        public long[] OccursIn { get; set; }
+
+        public IEnumerable<IInanimateData> ValidInanimateDatas { get; set; }
+        public IEnumerable<IMaterial> ValidMaterials { get; set; }
         public IFauna DataObject { get; set; }
     }
 }

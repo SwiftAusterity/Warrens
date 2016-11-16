@@ -81,7 +81,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             var vModel = new AddEditMaterialViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-            vModel.ValidMaterials = BackingDataCache.GetAll<Material>();
+            vModel.ValidMaterials = BackingDataCache.GetAll<IMaterial>();
 
             return View("~/Views/GameAdmin/Material/Add.cshtml", vModel);
         }

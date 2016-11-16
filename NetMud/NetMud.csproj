@@ -364,6 +364,7 @@
     <Content Include="Views\GameAdmin\Fauna\Add.cshtml" />
     <Content Include="Views\GameAdmin\Fauna\Edit.cshtml" />
     <Content Include="Views\GameAdmin\Fauna\Index.cshtml" />
+    <Content Include="Views\GameAdmin\Fauna\OccursIn.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
