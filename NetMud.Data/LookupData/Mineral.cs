@@ -55,5 +55,22 @@ namespace NetMud.Data.LookupData
                 _dirt = value.ID;
             }
         }
+
+        /// <summary>
+        /// Gets the errors for data fitness
+        /// </summary>
+        /// <returns>a bunch of text saying how awful your data is</returns>
+        public override IList<string> FitnessReport()
+        {
+            var dataProblems = base.FitnessReport();
+
+            if (Dirt == null)
+                dataProblems.Add("Dirt must have a value.");
+
+            if (Rock == null)
+                dataProblems.Add("Rock must have a value.");
+
+            return dataProblems;
+        }
     }
 }

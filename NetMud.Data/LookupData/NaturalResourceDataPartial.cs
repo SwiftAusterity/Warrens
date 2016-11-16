@@ -110,5 +110,37 @@ namespace NetMud.Data.LookupData
             //TODO : This
             return true;
         }
+
+        /// <summary>
+        /// Gets the errors for data fitness
+        /// </summary>
+        /// <returns>a bunch of text saying how awful your data is</returns>
+        public override IList<string> FitnessReport()
+        {
+            var dataProblems = base.FitnessReport();
+
+            if (AmountMultiplier < 0 || AmountMultiplier > 100)
+                dataProblems.Add("Amount Multiplier must be between 0 and 100.");
+
+            if (Rarity < 0 || Rarity > 100)
+                dataProblems.Add("Rarity must be between 0 and 100.");
+
+            if (PuissanceVariance < 0 || PuissanceVariance > 100)
+                dataProblems.Add("Puissance Variance must be between 0 and 100.");
+
+            if (ElevationRange.Item1 < 0 || ElevationRange.Item2 < ElevationRange.Item1)
+                dataProblems.Add("Elevation Range is incorrect.");
+
+            if (TemperatureRange.Item1 < 0 || TemperatureRange.Item2 < TemperatureRange.Item1)
+                dataProblems.Add("Temperature Range is incorrect.");
+
+            if (HumidityRange.Item1 < 0 || HumidityRange.Item2 < HumidityRange.Item1)
+                dataProblems.Add("Humidity Range is incorrect.");
+
+            if (OccursIn == null || OccursIn.Count() == 0)
+                dataProblems.Add("This resource must occur in at least one material.");
+
+            return dataProblems;
+        }
     }
 }

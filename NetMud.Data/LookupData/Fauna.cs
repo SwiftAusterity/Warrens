@@ -46,5 +46,25 @@ namespace NetMud.Data.LookupData
         /// The absolute hard cap to natural population growth
         /// </summary>
         public int PopulationHardCap { get; set; }
+
+        /// <summary>
+        /// Gets the errors for data fitness
+        /// </summary>
+        /// <returns>a bunch of text saying how awful your data is</returns>
+        public override IList<string> FitnessReport()
+        {
+            var dataProblems = base.FitnessReport();
+
+            if (Race == null)
+                dataProblems.Add("Race must be set.");
+
+            if (PopulationHardCap <= 0)
+                dataProblems.Add("Population Hard Cap must be greater than 0.");
+
+            if (FemaleRatio <= 0)
+                dataProblems.Add("Female to male ratio must be greater than 0.");
+
+            return dataProblems;
+        }
     }
 }

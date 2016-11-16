@@ -223,7 +223,6 @@ namespace NetMud.Data.LookupData
             BodyParts = Enumerable.Empty<Tuple<IInanimateData, short, string>>();
         }
 
-
         /// <summary>
         /// Gets the errors for data fitness
         /// </summary>

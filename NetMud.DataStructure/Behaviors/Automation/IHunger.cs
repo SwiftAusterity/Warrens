@@ -3,8 +3,16 @@
     /// <summary>
     /// Indicates an entity is subject to becoming hungry (and ill effects)
     /// </summary>
-    public interface IHunger : IEat<DietType>
+    public interface IHunger : IEat
     {
-        int Hunger { get; set; }
+        /// <summary>
+        /// Current satiation level
+        /// </summary>
+        int Satiation { get; set; }
+
+        /// <summary>
+        /// Maximum statiation for this
+        /// </summary>
+        int MaximumSatiation { get; set; }
     }
 }

@@ -115,5 +115,19 @@ namespace NetMud.Data.LookupData
                 _seed = value.ID;
             }
         }
+
+        /// <summary>
+        /// Gets the errors for data fitness
+        /// </summary>
+        /// <returns>a bunch of text saying how awful your data is</returns>
+        public override IList<string> FitnessReport()
+        {
+            var dataProblems = base.FitnessReport();
+
+            if (Flower == null && Seed == null && Wood == null && Leaf == null && Fruit == null)
+                dataProblems.Add("At least one part of this plant must have a value.");
+
+            return dataProblems;
+        }
     }
 }
