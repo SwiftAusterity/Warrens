@@ -9,7 +9,7 @@
     <dl class="dl-horizontal">
         <dt>Rooms:</dt>
         <dd>
-            @Model.Rooms.Count().ToString() [ Use Zones Yo ]             
+            @Model.Rooms.Count().ToString() [ Use Zones Yo ]
             @if (Model.Rooms.Any(r => r.FitnessProblems))
             {
                 <span style="color:red;">DATA PROBLEMS</span>
@@ -24,7 +24,7 @@
             {
                 <span style="color:red;">DATA PROBLEMS</span>
             }
-       </dd>
+        </dd>
         <dt>Inanimates:</dt>
         <dd>
             @Model.Inanimates.Count().ToString() [
@@ -34,7 +34,7 @@
             {
                 <span style="color:red;">DATA PROBLEMS</span>
             }
-      </dd>
+        </dd>
     </dl>
     <h4>Lookup Data</h4>
     <hr />
@@ -48,7 +48,7 @@
             {
                 <span style="color:red;">DATA PROBLEMS</span>
             }
-     </dd>
+        </dd>
         <dt>Dimensional Models:</dt>
         <dd>
             @Model.DimensionalModels.Count().ToString() [
@@ -58,7 +58,7 @@
             {
                 <span style="color:red;">DATA PROBLEMS</span>
             }
-      </dd>
+        </dd>
         <dt>Materials:</dt>
         <dd>
             @Model.Materials.Count().ToString() [
@@ -68,7 +68,7 @@
             {
                 <span style="color:red;">DATA PROBLEMS</span>
             }
-       </dd>
+        </dd>
         <dt>Races:</dt>
         <dd>
             @Model.Races.Count().ToString() [
@@ -78,7 +78,7 @@
             {
                 <span style="color:red;">DATA PROBLEMS</span>
             }
-     </dd>
+        </dd>
         <dt>Zones:</dt>
         <dd>
             @Model.Zones.Count().ToString() [
@@ -88,7 +88,7 @@
             {
                 <span style="color:red;">DATA PROBLEMS</span>
             }
-      </dd>
+        </dd>
         <dt>Constants:</dt>
         <dd>
             @Model.Constants.Count().ToString() [
@@ -98,7 +98,37 @@
             {
                 <span style="color:red;">DATA PROBLEMS</span>
             }
-     </dd>
+        </dd>
+        <dt>Flora:</dt>
+        <dd>
+            @Model.Flora.Count().ToString() [
+            @Html.ActionLink("Manage", "Index", "Flora")
+            @Html.ActionLink("Add", "Add", "Flora") ]
+            @if (Model.Flora.Any(r => r.FitnessProblems))
+            {
+                <span style="color:red;">DATA PROBLEMS</span>
+            }
+        </dd>
+        <dt>Fauna:</dt>
+        <dd>
+            @Model.Fauna.Count().ToString() [
+            @Html.ActionLink("Manage", "Index", "Fauna")
+            @Html.ActionLink("Add", "Add", "Fauna") ]
+            @if (Model.Fauna.Any(r => r.FitnessProblems))
+            {
+                <span style="color:red;">DATA PROBLEMS</span>
+            }
+        </dd>
+        <dt>Minerals:</dt>
+        <dd>
+            @Model.Minerals.Count().ToString() [
+            @Html.ActionLink("Manage", "Index", "Minerals")
+            @Html.ActionLink("Add", "Add", "Minerals") ]
+            @if (Model.Minerals.Any(r => r.FitnessProblems))
+            {
+                <span style="color:red;">DATA PROBLEMS</span>
+            }
+        </dd>
     </dl>
     <h4>Live Data</h4>
     <hr />
@@ -110,15 +140,15 @@
         </dd>
         <dt>Rooms:</dt>
         <dd>
-            @Model.LiveRooms [  ]
+            @Model.LiveRooms [ ]
         </dd>
         <dt>Inanimates:</dt>
         <dd>
-            @Model.LiveNPCs [  ]
+            @Model.LiveInanimates [ ]
         </dd>
         <dt>NPCs:</dt>
         <dd>
-            @Model.LiveInanimates [  ]
+            @Model.LiveNPCs [ ]
         </dd>
     </dl>
     <h4>World State</h4>

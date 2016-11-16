@@ -180,6 +180,7 @@
     <Compile Include="Controllers\ClientDataApiController.cs" />
     <Compile Include="Controllers\GameAdmin\GameAdminController.cs" />
     <Compile Include="Controllers\GameAdmin\ConstantsController.cs" />
+    <Compile Include="Controllers\GameAdmin\FaunaController.cs" />
     <Compile Include="Controllers\GameAdmin\ZoneController.cs" />
     <Compile Include="Controllers\GameAdmin\RoomController.cs" />
     <Compile Include="Controllers\GameAdmin\RaceController.cs" />
@@ -198,6 +199,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Admin\FaunaViewModels.cs" />
     <Compile Include="Models\Admin\ReferenceDataDropdownModel.cs" />
     <Compile Include="Models\Admin\DimensionalModelViewModels.cs" />
     <Compile Include="Models\Admin\ConstantsViewModel.cs" />
@@ -359,6 +361,9 @@
     <Content Include="Views\GameAdmin\DimensionalModel\Edit.cshtml" />
     <Content Include="Views\Shared\AddContentLink.cshtml" />
     <Content Include="Views\Shared\_chromelessLayout.cshtml" />
+    <Content Include="Views\GameAdmin\Fauna\Add.cshtml" />
+    <Content Include="Views\GameAdmin\Fauna\Edit.cshtml" />
+    <Content Include="Views\GameAdmin\Fauna\Index.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

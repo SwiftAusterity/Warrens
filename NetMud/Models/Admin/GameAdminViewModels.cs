@@ -25,6 +25,9 @@ namespace NetMud.Models.Admin
             Races = Enumerable.Empty<IRace>();
             Zones = Enumerable.Empty<IZone>();
             Constants = Enumerable.Empty<IConstants>();
+            Constants = Enumerable.Empty<IConstants>();
+            Constants = Enumerable.Empty<IConstants>();
+            Constants = Enumerable.Empty<IConstants>();
 
             WebsocketServers = Enumerable.Empty<NetMud.Websock.Server>();
 
@@ -47,6 +50,9 @@ namespace NetMud.Models.Admin
         public IEnumerable<IRace> Races { get; set; }
         public IEnumerable<IZone> Zones { get; set; }
         public IEnumerable<IConstants> Constants { get; set; }
+        public IEnumerable<IFlora> Flora { get; set; }
+        public IEnumerable<IFauna> Fauna { get; set; }
+        public IEnumerable<IMineral> Minerals { get; set; }
 
         //Running Data
         public Dictionary<string, CancellationTokenSource> LiveTaskTokens { get; set; }
