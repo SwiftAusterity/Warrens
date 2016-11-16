@@ -49,7 +49,7 @@
     <Compile Include="Base\EntityBackingData\IRoomData.cs" />
     <Compile Include="Base\Place\IMaps.cs" />
     <Compile Include="Base\Place\IWorld.cs" />
-    <Compile Include="Base\Skills\ISkill.cs" />
+    <Compile Include="Base\Skills\ISkpell.cs" />
     <Compile Include="Base\Supporting\IAffect.cs" />
     <Compile Include="Base\Supporting\IDamage.cs" />
     <Compile Include="Base\Supporting\IDimensionalModel.cs" />
@@ -92,7 +92,7 @@
     <Compile Include="Base\Supporting\IRace.cs" />
     <Compile Include="Base\Place\IRoom.cs" />
     <Compile Include="Base\Skills\ISkillLeaf.cs" />
-    <Compile Include="Base\Skills\ISkillTree.cs" />
+    <Compile Include="Base\Skills\ISkillNode.cs" />
     <Compile Include="Base\Place\IZone.cs" />
     <Compile Include="Base\World\IFaction.cs" />
     <Compile Include="Base\World\ILanguage.cs" />

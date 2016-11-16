@@ -14,6 +14,11 @@ namespace NetMud.DataStructure.Behaviors.Automation
         IEnumerable<DietType> Diets { get; set; }
 
         /// <summary>
+        /// What's in yo belly
+        /// </summary>
+        IEnumerable<IEntity> StomachContents { get; set; }
+
+        /// <summary>
         /// The act of eating
         /// </summary>
         /// <param name="food">the thing being eaten</param>

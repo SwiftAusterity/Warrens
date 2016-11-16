@@ -52,10 +52,11 @@ namespace NetMud.CentralControl
                     {
                         await Task.Delay(cooldownDelay * 1000);
 
-                        if (!previousTask.IsFaulted)
-                            successTailProcess.Invoke();
-                        else
+                        if (previousTask.IsFaulted)
                             failedTailProcess.Invoke();
+                        else
+                            successTailProcess.Invoke();
+                        
 
                         RemoveCancellationToken(designator);
                     }

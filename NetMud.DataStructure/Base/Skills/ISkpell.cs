@@ -1,9 +1,9 @@
 ﻿namespace NetMud.DataStructure.Base.Skills
 {
     /// <summary>
-    /// Skill tree Nodes (contains nodes and leaves)
+    /// Framework for a command being a skpell
     /// </summary>
-    public interface ISkillTree
+    public interface ISkpell
     {
     }
 }
