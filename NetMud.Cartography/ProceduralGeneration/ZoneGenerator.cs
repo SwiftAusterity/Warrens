@@ -19,18 +19,54 @@ namespace NetMud.Cartography.ProceduralGeneration
         /// </summary>
         public int Seed { get; private set; }
 
+        /// <summary>
+        /// Width of the zone (X axis)
+        /// </summary>
         public int Width { get; private set; }
 
+        /// <summary>
+        /// Length of the zone (Y axis)
+        /// </summary>
         public int Length { get; private set; }
 
+        /// <summary>
+        /// Height of zone above center line
+        /// </summary>
         public int Elevation { get; private set; }
 
+        /// <summary>
+        /// Height of zone under center line
+        /// </summary>
         public int Depth { get; private set; }
 
+        /// <summary>
+        /// Diameter of the zone array
+        /// </summary>
+        public int Diameter { get; private set; }
+
+        /// <summary>
+        /// Radius of the zone array
+        /// </summary>
+        public int Radius { get; private set; }
+
+        /// <summary>
+        /// Center room x,y,z of the array
+        /// </summary>
+        public Tuple<int, int, int> Center { get; private set; }
+
+        /// <summary>
+        /// The zone we're filling
+        /// </summary>
         public IZone Zone { get; private set; }
 
+        /// <summary>
+        /// The room map array
+        /// </summary>
         public long[, ,] RoomMap { get; private set; }
 
+        /// <summary>
+        /// Is this zone ready to generate rooms for
+        /// </summary>
         public bool Primed { get; private set; }
 
         public ZoneGenerator(int seed, IZone zone, int width, int length, int elevation, int depth)
