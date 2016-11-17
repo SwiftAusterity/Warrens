@@ -55,6 +55,7 @@
     <Compile Include="EntityBackingData\RoomData.cs" />
     <Compile Include="Game\EntityPartial.cs" />
     <Compile Include="Game\Inanimate.cs" />
+    <Compile Include="Game\LocationEntityPartial.cs" />
     <Compile Include="Game\Pathway.cs" />
     <Compile Include="Game\Intelligence.cs" />
     <Compile Include="Game\Player.cs" />

@@ -11,11 +11,6 @@ namespace NetMud.DataStructure.Base.Entity
     public interface IInanimate : IActor, ILocation, ISpawnAsMultiple
     {
         /// <summary>
-        /// Inventory of the object, essentially
-        /// </summary>
-        IEntityContainer<IInanimate> Contents { get; set; }
-
-        /// <summary>
         /// Last known location ID for the object in the real world
         /// </summary>
         long LastKnownLocation { get; set; }

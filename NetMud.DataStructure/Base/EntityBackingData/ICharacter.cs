@@ -14,6 +14,9 @@ namespace NetMud.DataStructure.Base.EntityBackingData
         /// </summary>
         string SurName { get; set; }
 
+        /// <summary>
+        /// The race of this
+        /// </summary>
         IRace RaceData { get; set; }
 
         /// <summary>
@@ -21,6 +24,9 @@ namespace NetMud.DataStructure.Base.EntityBackingData
         /// </summary>
         string AccountHandle { get; set; }
 
+        /// <summary>
+        /// Is this character not graduated from the tutorial
+        /// </summary>
         bool StillANoob { get; set; }
 
         /// <summary>

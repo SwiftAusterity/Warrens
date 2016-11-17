@@ -13,11 +13,6 @@ namespace NetMud.DataStructure.Base.Place
     public interface IRoom : IActor, ILocation, ISpawnAsSingleton
     {
         /// <summary>
-        /// Inanimates in the room (on the floor)
-        /// </summary>
-        IEntityContainer<IInanimate> ObjectsInRoom { get; set; }
-
-        /// <summary>
         /// The current physical model for this entity
         /// </summary>
         IDimensionalModel Model { get; }
