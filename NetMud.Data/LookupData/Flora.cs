@@ -1,4 +1,6 @@
 ﻿using NetMud.DataAccess.Cache;
+using NetMud.DataStructure.Base.Entity;
+using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Supporting;
 using Newtonsoft.Json;
 using System;
@@ -16,6 +18,16 @@ namespace NetMud.Data.LookupData
     [Serializable]
     public class Flora : NaturalResourceDataPartial, IFlora
     {
+        /// <summary>
+        /// How much sunlight does this need to spawn
+        /// </summary>
+        public int SunlightPreference { get; set; }
+
+        /// <summary>
+        /// Does this plant go dormant in colder weather
+        /// </summary>
+        public bool Coniferous { get; set; }
+
         [JsonProperty("Wood")]
         private long _wood { get; set; }
 
@@ -44,11 +56,11 @@ namespace NetMud.Data.LookupData
         /// </summary>
         [JsonIgnore]
         [ScriptIgnore]
-        public IMaterial Flower
+        public IInanimateData Flower
         { 
             get
             {
-                return BackingDataCache.Get<IMaterial>(_flower);
+                return BackingDataCache.Get<IInanimateData>(_flower);
             }
             set
             {
@@ -64,11 +76,11 @@ namespace NetMud.Data.LookupData
         /// </summary>
         [JsonIgnore]
         [ScriptIgnore]
-        public IMaterial Leaf 
+        public IInanimateData Leaf 
         { 
             get
             {
-                return BackingDataCache.Get<IMaterial>(_leaf);
+                return BackingDataCache.Get<IInanimateData>(_leaf);
             }
             set
             {
@@ -84,11 +96,11 @@ namespace NetMud.Data.LookupData
         /// </summary>
         [JsonIgnore]
         [ScriptIgnore]
-        public IMaterial Fruit
+        public IInanimateData Fruit
         { 
             get
             {
-                return BackingDataCache.Get<IMaterial>(_fruit);
+                return BackingDataCache.Get<IInanimateData>(_fruit);
             }
             set
             {
@@ -104,11 +116,11 @@ namespace NetMud.Data.LookupData
         /// </summary>
         [JsonIgnore]
         [ScriptIgnore]
-        public IMaterial Seed 
+        public IInanimateData Seed 
         { 
             get
             {
-                return BackingDataCache.Get<IMaterial>(_seed);
+                return BackingDataCache.Get<IInanimateData>(_seed);
             }
             set
             {
@@ -124,7 +136,10 @@ namespace NetMud.Data.LookupData
         {
             var dataProblems = base.FitnessReport();
 
-            if (Flower == null && Seed == null && Wood == null && Leaf == null && Fruit == null)
+            if (Wood == null)
+                dataProblems.Add("Wood must have a value.");
+
+            if (Flower == null && Seed == null && Leaf == null && Fruit == null)
                 dataProblems.Add("At least one part of this plant must have a value.");
 
             return dataProblems;

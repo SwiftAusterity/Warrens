@@ -38,6 +38,7 @@ namespace NetMud.Models.Admin
         {
             ValidInanimateDatas = Enumerable.Empty<IInanimateData>();
             ValidMaterials = Enumerable.Empty<IMaterial>();
+            ValidMinerals = Enumerable.Empty<IMineral>();
         }
 
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
@@ -54,6 +55,16 @@ namespace NetMud.Models.Admin
         [Display(Name = "Spawn Multiplier")]
         [DataType(DataType.Text)]
         public int AmountMultiplier { get; set; }
+
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Solubility")]
+        [DataType(DataType.Text)]
+        public int Solubility { get; set; }
+
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Dirt Fertility")]
+        [DataType(DataType.Text)]
+        public int Fertility { get; set; }
 
         [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
         [Display(Name = "Spawn Rarity")]
@@ -95,8 +106,11 @@ namespace NetMud.Models.Admin
         [DataType(DataType.Text)]
         public int HumidityRangeLow { get; set; }
 
-        [Display(Name = "Occurs in Material")]
-        public long[] OccursIn { get; set; }
+        [Display(Name = "Occurs in Biome")]
+        public Biome[] OccursIn { get; set; }
+
+        [Display(Name = "Ores")]
+        public long[] Ores { get; set; }
 
         [Display(Name = "Rock")]
         public long Rock { get; set; }
@@ -106,6 +120,7 @@ namespace NetMud.Models.Admin
 
         public IEnumerable<IInanimateData> ValidInanimateDatas { get; set; }
         public IEnumerable<IMaterial> ValidMaterials { get; set; }
+        public IEnumerable<IMineral> ValidMinerals { get; set; }
         public IMineral DataObject { get; set; }
     }
 }

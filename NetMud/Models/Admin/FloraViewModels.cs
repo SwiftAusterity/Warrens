@@ -51,6 +51,14 @@ namespace NetMud.Models.Admin
         public string HelpText { get; set; }
 
         [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Sunlight Preference")]
+        [DataType(DataType.Text)]
+        public int SunlightPreference { get; set; }
+
+        [Display(Name = "Coniferous")]
+        public bool Coniferous { get; set; }
+
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
         [Display(Name = "Spawn Multiplier")]
         [DataType(DataType.Text)]
         public int AmountMultiplier { get; set; }
@@ -95,8 +103,8 @@ namespace NetMud.Models.Admin
         [DataType(DataType.Text)]
         public int HumidityRangeLow { get; set; }
 
-        [Display(Name = "Occurs in Material")]
-        public long[] OccursIn { get; set; }
+        [Display(Name = "Occurs in Biome")]
+        public Biome[] OccursIn { get; set; }
 
         [Display(Name = "Wood/Bark")]
         public long Wood { get; set; }

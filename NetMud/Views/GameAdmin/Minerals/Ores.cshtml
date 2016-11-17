@@ -1,0 +1,51 @@
+﻿@model NetMud.Models.Admin.AddEditMineralsViewModel
+
+@{
+    <label class="control-label">Internal composition</label>
+    <a href="#" id="addOresRow" class="addRow">Add another row...</a>
+    <div id="OresRow">
+        @if (Model.DataObject == null || Model.DataObject.Ores == null || Model.DataObject.Ores.Count() == 0)
+        {
+            <div class="form-group three-column">
+                <a href="#" class="removeRow" id="removeOresRow" title="Remove this">X</a>
+                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Ores", "Mineral", Model.ValidMinerals, -1))
+            </div>
+        }
+        else
+        {
+            foreach (var Ores in Model.DataObject.Ores)
+            {
+                <div class="form-group three-column">
+                    <a href="#" class="removeRow" id="removeOresRow" title="Remove this">X</a>
+                    @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Ores", "Mineral", Model.ValidMinerals, Ores.ID))
+                </div>
+            }
+        }
+    </div>
+}
+
+
+<script type="text/javascript">
+    var OresDropdown = decodeHtml('@Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Ores", "Mineral", Model.ValidMinerals, -1)).ToString().Replace(Environment.NewLine, "")');
+
+    $(document).ready(function () {
+        $("#addOresRow").click(function () {
+            $("#OresRow").append(
+                '<div class="form-group three-column">' +
+                '<a href="#" class="removeRow" id="removeOresRow" title="Remove this">X</a>' +
+                OresDropdown + '</div>'
+            );
+
+            $(".removeRow").click(function () {
+                $(this).parent().remove();
+                return false;
+            });
+            return false;
+        });
+
+        $(".removeRow").click(function () {
+            $(this).parent().remove();
+            return false;
+        });
+    });
+</script>

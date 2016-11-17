@@ -46,9 +46,9 @@ namespace NetMud.DataStructure.Behaviors.System
         Tuple<int, int> HumidityRange { get; set; }
 
         /// <summary>
-        /// What medium materials this can spawn in
+        /// What biomes this can spawn in
         /// </summary>
-        IEnumerable<IMaterial> OccursIn { get; set; }
+        IEnumerable<Biome> OccursIn { get; set; }
 
         /// <summary>
         /// Can spawn in system zones like non-player owned cities

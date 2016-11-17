@@ -102,6 +102,8 @@ namespace NetMud.Controllers.GameAdmin
             var newObj = new Flora();
             newObj.Name = vModel.Name;
             newObj.HelpText = vModel.HelpText;
+            newObj.SunlightPreference = vModel.SunlightPreference;
+            newObj.Coniferous = vModel.Coniferous;
             newObj.AmountMultiplier = vModel.AmountMultiplier;
             newObj.Rarity = vModel.Rarity;
             newObj.PuissanceVariance = vModel.PuissanceVariance;
@@ -113,42 +115,26 @@ namespace NetMud.Controllers.GameAdmin
             if (newWood != null)
                 newObj.Wood = newWood;
 
-            var newFlower = BackingDataCache.Get<IMaterial>(vModel.Flower);
+            var newFlower = BackingDataCache.Get<IInanimateData>(vModel.Flower);
             if (newFlower != null)
                 newObj.Flower = newFlower;
 
-            var newSeed = BackingDataCache.Get<IMaterial>(vModel.Seed);
+            var newSeed = BackingDataCache.Get<IInanimateData>(vModel.Seed);
             if (newSeed != null)
                 newObj.Seed = newSeed;
 
-            var newLeaf = BackingDataCache.Get<IMaterial>(vModel.Leaf);
+            var newLeaf = BackingDataCache.Get<IInanimateData>(vModel.Leaf);
             if (newLeaf != null)
                 newObj.Leaf = newLeaf;
 
-            var newFruit = BackingDataCache.Get<IMaterial>(vModel.Fruit);
+            var newFruit = BackingDataCache.Get<IInanimateData>(vModel.Fruit);
             if (newFruit != null)
                 newObj.Fruit = newFruit;
 
             if (newWood == null && newFlower == null && newSeed == null && newLeaf == null && newFruit == null)
                 message = "At least one of the parts of this plant must be valid.";
 
-            var newMaterials = new List<IMaterial>();
-            if (vModel.OccursIn != null)
-            {
-                foreach (var materialId in vModel.OccursIn)
-                {
-                    if (materialId >= 0)
-                    {
-                        var material = BackingDataCache.Get<IMaterial>(materialId);
-
-                        if (material != null)
-                            newMaterials.Add(material);
-                    }
-                }
-
-                if (newMaterials.Count > 0)
-                    newObj.OccursIn = newMaterials;
-            }
+            newObj.OccursIn = vModel.OccursIn;
 
             if (!String.IsNullOrWhiteSpace(message))
             {
@@ -184,6 +170,8 @@ namespace NetMud.Controllers.GameAdmin
             vModel.DataObject = obj;
             vModel.Name = obj.Name;
             vModel.HelpText = obj.HelpText;
+            vModel.SunlightPreference = obj.SunlightPreference;
+            vModel.Coniferous = obj.Coniferous;
             vModel.AmountMultiplier = obj.AmountMultiplier;
             vModel.Rarity = obj.Rarity;
             vModel.PuissanceVariance = obj.PuissanceVariance;
@@ -218,6 +206,8 @@ namespace NetMud.Controllers.GameAdmin
 
             obj.Name = vModel.Name;
             obj.HelpText = vModel.HelpText;
+            obj.SunlightPreference = vModel.SunlightPreference;
+            obj.Coniferous = vModel.Coniferous;
             obj.AmountMultiplier = vModel.AmountMultiplier;
             obj.Rarity = vModel.Rarity;
             obj.PuissanceVariance = vModel.PuissanceVariance;
@@ -229,42 +219,29 @@ namespace NetMud.Controllers.GameAdmin
             if (newWood != null)
                 obj.Wood = newWood;
 
-            var newFlower = BackingDataCache.Get<IMaterial>(vModel.Flower);
+            var newFlower = BackingDataCache.Get<IInanimateData>(vModel.Flower);
             if (newFlower != null)
                 obj.Flower = newFlower;
 
-            var newSeed = BackingDataCache.Get<IMaterial>(vModel.Seed);
+            var newSeed = BackingDataCache.Get<IInanimateData>(vModel.Seed);
             if (newSeed != null)
                 obj.Seed = newSeed;
 
-            var newLeaf = BackingDataCache.Get<IMaterial>(vModel.Leaf);
+            var newLeaf = BackingDataCache.Get<IInanimateData>(vModel.Leaf);
             if (newLeaf != null)
                 obj.Leaf = newLeaf;
 
-            var newFruit = BackingDataCache.Get<IMaterial>(vModel.Fruit);
+            var newFruit = BackingDataCache.Get<IInanimateData>(vModel.Fruit);
             if (newFruit != null)
                 obj.Fruit = newFruit;
 
-            if (newWood == null && newFlower == null && newSeed == null && newLeaf == null && newFruit == null)
+            if(newWood == null)
+                message = "Wood must be valid.";
+
+            if (newFlower == null && newSeed == null && newLeaf == null && newFruit == null)
                 message = "At least one of the parts of this plant must be valid.";
 
-            var newMaterials = new List<IMaterial>();
-            if (vModel.OccursIn != null)
-            {
-                foreach (var materialId in vModel.OccursIn)
-                {
-                    if (materialId >= 0)
-                    {
-                        var material = BackingDataCache.Get<IMaterial>(materialId);
-
-                        if (material != null)
-                            newMaterials.Add(material);
-                    }
-                }
-            }
-
-            //Might need to be blanked out
-            obj.OccursIn = newMaterials;
+            obj.OccursIn = vModel.OccursIn;
 
             if (!String.IsNullOrWhiteSpace(message))
             {

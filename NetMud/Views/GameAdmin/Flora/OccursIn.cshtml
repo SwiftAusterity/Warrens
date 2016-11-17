@@ -1,51 +1,65 @@
-﻿@model NetMud.Models.Admin.AddEditFloraViewModel
+﻿@using NetMud.DataStructure.Base.Supporting
 
-    @{
-        <label class="control-label">Internal composition</label>
-        <a href="#" id="addOccursInRow" class="addRow">Add another row...</a>
-        <div id="occursInRow">
-            @if (Model.DataObject == null || Model.DataObject.OccursIn == null || Model.DataObject.OccursIn.Count() == 0)
+@model NetMud.Models.Admin.AddEditFloraViewModel
+
+@{
+    <label class="control-label">Internal composition</label>
+    <a href="#" id="addOccursInRow" class="addRow">Add another row...</a>
+    <div id="occursInRow">
+        @if (Model.DataObject == null || Model.DataObject.OccursIn == null || Model.DataObject.OccursIn.Count() == 0)
+        {
+            <div class="form-group three-column">
+                <a href="#" class="removeRow" id="removeOccursInRow" title="Remove this">X</a>
+                @Html.LabelFor(m => m.OccursIn)
+                <div>
+                    @Html.DropDownList("OccursIn", Enum.GetNames(typeof(Biome)).Select(rl =>
+                                                                                    new SelectListItem() { Text = rl, Value = rl })
+                                                                                    , htmlAttributes: new { id = "OccursIn", @class = "form-control" })
+                </div>
+            </div>
+        }
+        else
+        {
+            foreach (var occursIn in Model.DataObject.OccursIn)
             {
                 <div class="form-group three-column">
                     <a href="#" class="removeRow" id="removeOccursInRow" title="Remove this">X</a>
-                    @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("OccursIn", "Material", Model.ValidMaterials, -1))
+                    @Html.LabelFor(m => m.Resistances)
+                    <div>
+                        @Html.DropDownList("OccursIn", Enum.GetNames(typeof(Biome)).Select(rl =>
+                                                                              new SelectListItem() { Text = rl, Value = rl, Selected = rl.Equals(occursIn) })
+                                                                                    , htmlAttributes: new { id = "OccursIn", @class = "form-control" })
+                    </div>
                 </div>
             }
-            else
-            {
-                foreach (var occursIn in Model.DataObject.OccursIn)
-                {
-                    <div class="form-group three-column">
-                        <a href="#" class="removeRow" id="removeOccursInRow" title="Remove this">X</a>
-                        @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("OccursIn", "Material", Model.ValidMaterials, occursIn.ID))
-                    </div>
-                }
-            }
-        </div>
-    }
+        }
+    </div>
+}
 
 
-    <script type="text/javascript">
-        var occursInDropdown = decodeHtml('@Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("OccursIn", "Material", Model.ValidMaterials, -1)).ToString().Replace(Environment.NewLine, "")');
+<script type="text/javascript">
+    var occursInLabel = decodeHtml('@Html.LabelFor(m => m.OccursIn).ToString().Replace(Environment.NewLine, "")')
+    var occursInDropdown = decodeHtml('@Html.DropDownList("OccursIn", Enum.GetNames(typeof(Biome)).Select(rl => new SelectListItem() { Text = rl, Value = rl }), htmlAttributes: new { id = "OccursIn", @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');
 
-        $(document).ready(function () {
-            $("#addOccursInRow").click(function () {
-                $("#occursInRow").append(
-                    '<div class="form-group three-column">' +
-                    '<a href="#" class="removeRow" id="removeOccursInRow" title="Remove this">X</a>' +
-                    occursInDropdown + '</div>'
-                );
-
-                $(".removeRow").click(function () {
-                    $(this).parent().remove();
-                    return false;
-                });
-                return false;
-            });
+    $(document).ready(function () {
+        $("#addOccursInRow").click(function () {
+            $("#occursInRow").append(
+                '<div class="form-group three-column">' +
+                '<a href="#" class="removeRow" id="removeOccursInRow" title="Remove this">X</a>' +
+                occursInLabel +
+                '<div>' + occursInDropdown + '</div></div>'
+            );
 
             $(".removeRow").click(function () {
                 $(this).parent().remove();
                 return false;
             });
+            return false;
         });
-    </script>
+
+        $(".removeRow").click(function () {
+            $(this).parent().remove();
+            return false;
+        });
+    });
+</script>

@@ -377,6 +377,7 @@
     <Content Include="Views\GameAdmin\Minerals\Index.cshtml" />
     <Content Include="Views\GameAdmin\Flora\OccursIn.cshtml" />
     <Content Include="Views\GameAdmin\Minerals\OccursIn.cshtml" />
+    <Content Include="Views\GameAdmin\Minerals\Ores.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

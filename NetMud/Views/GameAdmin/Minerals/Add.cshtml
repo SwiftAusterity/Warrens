@@ -8,8 +8,10 @@
             @Html.AntiForgeryToken()
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            <div class="form-group one-column">
+            <div class="form-group three-column">
                 @Html.EditorFor(e => e.Name)
+                @Html.EditorFor(e => e.Solubility)
+                @Html.EditorFor(e => e.Fertility)
             </div>
 
             <div class="form-group three-column">
@@ -33,6 +35,8 @@
                 @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Rock", "Rock", Model.ValidMaterials, Model.Rock))
                 @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Dirt", "Dirt", Model.ValidMaterials, Model.Dirt))
             </div>
+
+            @Html.Partial("~/Views/GameAdmin/Minerals/Ores.cshtml", Model)
 
             @Html.Partial("~/Views/GameAdmin/Minerals/OccursIn.cshtml", Model)
 

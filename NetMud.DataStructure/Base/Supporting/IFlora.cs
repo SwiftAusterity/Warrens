@@ -1,4 +1,6 @@
-﻿using NetMud.DataStructure.Behaviors.System;
+﻿using NetMud.DataStructure.Base.Entity;
+using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.DataStructure.Behaviors.System;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +15,16 @@ namespace NetMud.DataStructure.Base.Supporting
     public interface IFlora : INaturalResource
     {
         /// <summary>
+        /// How much sunlight does this need to spawn
+        /// </summary>
+        int SunlightPreference { get; set; }
+
+        /// <summary>
+        /// Does this plant go dormant in colder weather
+        /// </summary>
+        bool Coniferous { get; set; }
+
+        /// <summary>
         /// Bulk material of plant. Stem, trunk, etc.
         /// </summary>
         IMaterial Wood { get; set; }
@@ -20,21 +32,21 @@ namespace NetMud.DataStructure.Base.Supporting
         /// <summary>
         /// Flowering element of plant
         /// </summary>
-        IMaterial Flower { get; set; }
+        IInanimateData Flower { get; set; }
 
         /// <summary>
         /// Leaves of the plant.
         /// </summary>
-        IMaterial Leaf { get; set; }
+        IInanimateData Leaf { get; set; }
 
         /// <summary>
         /// Fruit of the plant, can be inedible like a pinecone
         /// </summary>
-        IMaterial Fruit { get; set; }
+        IInanimateData Fruit { get; set; }
 
         /// <summary>
         /// Seed of the plant.
         /// </summary>
-        IMaterial Seed { get; set; }
+        IInanimateData Seed { get; set; }
     }
 }

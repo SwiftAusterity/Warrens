@@ -8,10 +8,11 @@
             @Html.AntiForgeryToken()
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            <div class="form-group one-column">
+            <div class="form-group three-column">
                 @Html.EditorFor(e => e.Name)
+                @Html.EditorFor(e => e.SunlightPreference)
+                @Html.EditorFor(e => e.Coniferous)
             </div>
-
             <div class="form-group three-column">
                 @Html.EditorFor(e => e.Rarity)
                 @Html.EditorFor(e => e.AmountMultiplier)
@@ -31,14 +32,14 @@
             </div>
             <div class="form-group three-column">
                 @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Wood", "Wood", Model.ValidMaterials, -1))
-                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Leaf", "Leaf", Model.ValidMaterials, -1))
-                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Flower", "Flower", Model.ValidMaterials, -1))
+                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Leaf", "Leaf", Model.ValidInanimateDatas, -1))
+                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Flower", "Flower", Model.ValidInanimateDatas, -1))
             </div>
             <div class="form-group two-column">
-                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Fruit", "Fruit", Model.ValidMaterials, -1))
-                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Seed", "Seed", Model.ValidMaterials, -1))
+                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Fruit", "Fruit", Model.ValidInanimateDatas, -1))
+                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Seed", "Seed", Model.ValidInanimateDatas, -1))
             </div>
-            
+
             @Html.Partial("~/Views/GameAdmin/Flora/OccursIn.cshtml", Model)
 
             <div class="form-group one-column">

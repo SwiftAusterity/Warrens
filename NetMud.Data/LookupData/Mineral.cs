@@ -16,6 +16,16 @@ namespace NetMud.Data.LookupData
     [Serializable]
     public class Mineral : NaturalResourceDataPartial, IMineral
     {
+        /// <summary>
+        /// How soluble the dirt is
+        /// </summary>
+        public int Solubility { get; set; }
+
+        /// <summary>
+        /// How fertile the dirt generally is
+        /// </summary>
+        public int Fertility { get; set; }
+
         [JsonProperty("Rock")]
         private long _rock { get; set; }
 
@@ -55,6 +65,27 @@ namespace NetMud.Data.LookupData
                 _dirt = value.ID;
             }
         }
+        [JsonProperty("Ores")]
+        private IEnumerable<long> _ores { get; set; }
+
+        /// <summary>
+        /// What medium minerals this can spawn in
+        /// </summary>
+        public IEnumerable<IMineral> Ores
+        {
+            get
+            {
+                if (_ores == null)
+                    _ores = new HashSet<long>();
+
+                return BackingDataCache.GetMany<IMineral>(_ores);
+            }
+            set
+            {
+                _ores = value.Select(m => m.ID);
+            }
+        }
+
 
         /// <summary>
         /// Gets the errors for data fitness

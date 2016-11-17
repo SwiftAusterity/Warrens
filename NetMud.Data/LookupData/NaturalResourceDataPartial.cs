@@ -45,28 +45,10 @@ namespace NetMud.Data.LookupData
         /// </summary>
         public Tuple<int, int> HumidityRange { get; set; }
 
-        [JsonProperty("OccursIn")]
-        private IEnumerable<long> _occursIn { get; set; }
-
         /// <summary>
-        /// What medium materials this can spawn in
+        /// What medium biomes this can spawn in
         /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        public IEnumerable<IMaterial> OccursIn
-        {
-            get
-            {
-                if (_occursIn == null)
-                    _occursIn = new HashSet<long>();
-
-                return BackingDataCache.GetMany<IMaterial>(_occursIn);
-            }
-            set
-            {
-                _occursIn =value.Select(m => m.ID);
-            }
-        }
+        public IEnumerable<Biome> OccursIn { get; set; }
 
         /// <summary>
         /// The affects.. affecting the entity
@@ -138,7 +120,7 @@ namespace NetMud.Data.LookupData
                 dataProblems.Add("Humidity Range is incorrect.");
 
             if (OccursIn == null || OccursIn.Count() == 0)
-                dataProblems.Add("This resource must occur in at least one material.");
+                dataProblems.Add("This resource must occur in at least one biome.");
 
             return dataProblems;
         }

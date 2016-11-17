@@ -11,6 +11,7 @@ using NetMud.DataStructure.Base.System;
 using NetMud.Models.Admin;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
@@ -88,6 +89,7 @@ namespace NetMud.Controllers.GameAdmin
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
             vModel.ValidMaterials = BackingDataCache.GetAll<IMaterial>();
             vModel.ValidInanimateDatas = BackingDataCache.GetAll<IInanimateData>();
+            vModel.ValidMinerals = BackingDataCache.GetAll<IMineral>();
 
             return View("~/Views/GameAdmin/Minerals/Add.cshtml", vModel);
         }
@@ -102,6 +104,8 @@ namespace NetMud.Controllers.GameAdmin
             var newObj = new Mineral();
             newObj.Name = vModel.Name;
             newObj.HelpText = vModel.HelpText;
+            newObj.Solubility = vModel.Solubility;
+            newObj.Fertility = vModel.Fertility;
             newObj.AmountMultiplier = vModel.AmountMultiplier;
             newObj.Rarity = vModel.Rarity;
             newObj.PuissanceVariance = vModel.PuissanceVariance;
@@ -120,23 +124,25 @@ namespace NetMud.Controllers.GameAdmin
                 newObj.Dirt = newDirt;
             else
                 message += "Invalid dirt material.";
-            
-            var newMaterials = new List<IMaterial>();
-            if (vModel.OccursIn != null)
-            {
-                foreach (var materialId in vModel.OccursIn)
-                {
-                    if (materialId >= 0)
-                    {
-                        var material = BackingDataCache.Get<IMaterial>(materialId);
 
-                        if (material != null)
-                            newMaterials.Add(material);
+            newObj.OccursIn = vModel.OccursIn;
+            
+            var newOres = new List<IMineral>();
+            if (vModel.Ores != null)
+            {
+                foreach (var mineralId in vModel.Ores)
+                {
+                    if (mineralId >= 0)
+                    {
+                        var mineral = BackingDataCache.Get<IMineral>(mineralId);
+
+                        if (mineral != null)
+                            newOres.Add(mineral);
                     }
                 }
 
-                if (newMaterials.Count > 0)
-                    newObj.OccursIn = newMaterials;
+                if (newOres.Count > 0)
+                    newObj.Ores = newOres;
             }
 
             if (!String.IsNullOrWhiteSpace(message))
@@ -160,6 +166,7 @@ namespace NetMud.Controllers.GameAdmin
             var vModel = new AddEditMineralsViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
             vModel.ValidMaterials = BackingDataCache.GetAll<IMaterial>();
+            vModel.ValidMinerals = BackingDataCache.GetAll<IMineral>().Where(m => m.ID != id);
             vModel.ValidInanimateDatas = BackingDataCache.GetAll<IInanimateData>();
 
             var obj = BackingDataCache.Get<IMineral>(id);
@@ -173,6 +180,8 @@ namespace NetMud.Controllers.GameAdmin
             vModel.DataObject = obj;
             vModel.Name = obj.Name;
             vModel.HelpText = obj.HelpText;
+            vModel.Solubility = obj.Solubility;
+            vModel.Fertility = obj.Fertility;
             vModel.AmountMultiplier = obj.AmountMultiplier;
             vModel.Rarity = obj.Rarity;
             vModel.PuissanceVariance = obj.PuissanceVariance;
@@ -204,6 +213,8 @@ namespace NetMud.Controllers.GameAdmin
 
             obj.Name = vModel.Name;
             obj.HelpText = vModel.HelpText;
+            obj.Solubility = vModel.Solubility;
+            obj.Fertility = vModel.Fertility;
             obj.AmountMultiplier = vModel.AmountMultiplier;
             obj.Rarity = vModel.Rarity;
             obj.PuissanceVariance = vModel.PuissanceVariance;
@@ -223,23 +234,25 @@ namespace NetMud.Controllers.GameAdmin
             else
                 message += "Invalid rock material.";
 
-            var newMaterials = new List<IMaterial>();
-            if (vModel.OccursIn != null)
+            var newOres = new List<IMineral>();
+            if (vModel.Ores != null)
             {
-                foreach (var materialId in vModel.OccursIn)
+                foreach (var mineralId in vModel.Ores)
                 {
-                    if (materialId >= 0)
+                    if (mineralId >= 0)
                     {
-                        var material = BackingDataCache.Get<IMaterial>(materialId);
+                        var mineral = BackingDataCache.Get<IMineral>(mineralId);
 
-                        if (material != null)
-                            newMaterials.Add(material);
+                        if (mineral != null)
+                            newOres.Add(mineral);
                     }
                 }
+
+                if (newOres.Count > 0)
+                    obj.Ores = newOres;
             }
 
-            //Might need to be blanked out
-            obj.OccursIn = newMaterials;
+            obj.OccursIn = vModel.OccursIn;
 
             if (!String.IsNullOrWhiteSpace(message))
             {

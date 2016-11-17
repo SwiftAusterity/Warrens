@@ -118,23 +118,7 @@ namespace NetMud.Controllers.GameAdmin
             else
                 message += "Invalid race.";
 
-            var newMaterials = new List<IMaterial>();
-            if (vModel.OccursIn != null)
-            {
-                foreach (var materialId in vModel.OccursIn)
-                {
-                    if (materialId >= 0)
-                    {
-                        var material = BackingDataCache.Get<IMaterial>(materialId);
-
-                        if (material != null)
-                            newMaterials.Add(material);
-                    }
-                }
-
-                if (newMaterials.Count > 0)
-                    newObj.OccursIn = newMaterials;
-            }
+            newObj.OccursIn = vModel.OccursIn;
 
             if (!String.IsNullOrWhiteSpace(message))
             {
@@ -217,23 +201,7 @@ namespace NetMud.Controllers.GameAdmin
             else
                 message += "Invalid race.";
 
-            var newMaterials = new List<IMaterial>();
-            if (vModel.OccursIn != null)
-            {
-                foreach (var materialId in vModel.OccursIn)
-                {
-                    if (materialId >= 0)
-                    {
-                        var material = BackingDataCache.Get<IMaterial>(materialId);
-
-                        if (material != null)
-                            newMaterials.Add(material);
-                    }
-                }
-            }
-
-            //Might need to be blanked out
-            obj.OccursIn = newMaterials;
+            obj.OccursIn = vModel.OccursIn;
 
             if (!String.IsNullOrWhiteSpace(message))
             {

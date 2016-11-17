@@ -96,8 +96,8 @@ namespace NetMud.Models.Admin
         [DataType(DataType.Text)]
         public int HumidityRangeLow { get; set; }
 
-        [Display(Name = "Occurs in Material")]
-        public long[] OccursIn { get; set; }
+        [Display(Name = "Occurs in Biome")]
+        public Biome[] OccursIn { get; set; }
 
         [Range(1, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
         [Display(Name = "Ratio Female to Male")]
