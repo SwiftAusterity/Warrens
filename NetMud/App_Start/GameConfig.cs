@@ -25,10 +25,10 @@ namespace NetMud
             Func<bool> backingDataBackupFunction = BackingData.WriteFullBackup;
 
             //every 5 minutes after half an hour
-            Processor.StartNewLoop("HotBackup", 30 * 60, 5 * 60, -1, backupFunction);
+            Processor.StartSingeltonChainedLoop("HotBackup", 30 * 60, 5 * 60, -1, backupFunction);
 
             //every 2 hours after 1 hour
-            Processor.StartNewLoop("BackingDataFullBackup", 60 * 60, 120 * 60, -1, backingDataBackupFunction);
+            Processor.StartSingeltonChainedLoop("BackingDataFullBackup", 60 * 60, 120 * 60, -1, backingDataBackupFunction);
         }
     }
 }
