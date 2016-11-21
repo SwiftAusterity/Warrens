@@ -15,7 +15,6 @@ namespace NetMud.DataStructure.SupportingClasses
         IEnumerable<IEntityContainerData<T>> NamedContainers { get; set; }
 
         #region Universal accessors
-
         /// <summary>
         /// List of entities contained (it needs to never store its own objects, only cache references)
         /// </summary>

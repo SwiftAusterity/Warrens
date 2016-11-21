@@ -66,6 +66,7 @@
     <Compile Include="Behaviors\Actionable\ICanBeAffected.cs" />
     <Compile Include="Behaviors\Actionable\ICanReproduce.cs" />
     <Compile Include="Behaviors\Automation\IIlluminated.cs" />
+    <Compile Include="Behaviors\Rendering\IContainsLiquid.cs" />
     <Compile Include="Behaviors\System\INaturalResource.cs" />
     <Compile Include="Base\Supporting\IStat.cs" />
     <Compile Include="Base\Supporting\ITranslation.cs" />
