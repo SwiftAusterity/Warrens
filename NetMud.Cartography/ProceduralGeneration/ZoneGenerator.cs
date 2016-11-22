@@ -13,6 +13,7 @@ namespace NetMud.Cartography.ProceduralGeneration
     public class ZoneGenerator
     {
         private Random _randomizer;
+        private const string roomSymbol = "*";
 
         /// <summary>
         /// The rand seed
@@ -84,7 +85,7 @@ namespace NetMud.Cartography.ProceduralGeneration
             Elevation = elevation;
             Depth = depth;
 
-            RoomMap = new long[width * 3, length * 3, (elevation + depth * 3) + 1];
+            RoomMap = new long[width * 3 + 1, length * 3 + 1, (elevation + depth) * 3 + 1];
         }
 
         public ZoneGenerator(IZone zone, int width, int length, int elevation, int depth)
@@ -102,7 +103,7 @@ namespace NetMud.Cartography.ProceduralGeneration
             Elevation = elevation;
             Depth = depth;
 
-            RoomMap = new long[width * 3, length * 3, (elevation + depth * 3) + 1];
+            RoomMap = new long[width * 3 + 1, length * 3 + 1, (elevation + depth) * 3 + 1];
         }
 
         /// <summary>
@@ -110,7 +111,101 @@ namespace NetMud.Cartography.ProceduralGeneration
         /// </summary>
         public void FillMap()
         {
-            //Generate grid
+            //We'll build the potential rooms first just using strings
+            var prototypeMap = new string[Width * 3 + 1, Length * 3 + 1, (Elevation + Depth) * 3 + 1];
+            var center = new Tuple<int, int, int>(Width * 3 / 2 + 1, Length * 3 / 2 + 1, (Elevation + Depth) * 3 / 2 + 1);
+
+            //Find the absolute max boundings
+            var maxX = prototypeMap.GetUpperBound(0);
+            var maxY = prototypeMap.GetUpperBound(1);
+            var maxZ = prototypeMap.GetUpperBound(2);
+
+            //Set up center room
+            prototypeMap[center.Item1, center.Item2, center.Item3] = roomSymbol;
+
+            var currentX = center.Item1;
+            var currentY = center.Item2;
+            var currentZ = center.Item3;
+
+            //Do 4 point cardinal directions
+            for (var variance = 1; currentX < maxX || currentY < maxY || currentZ < maxZ; variance++)
+            {
+                //Room or pathway?
+                bool isRoom = variance % 3 == 0;
+
+                //Do X, don't do it if we're at or over max bounding for X specifically
+                if(currentX + 1 < maxX)
+                {
+                    var roll = _randomizer.Next(1, 100);
+
+                    if(isRoom && roll >= 25)
+                    {
+                        prototypeMap[center.Item1 + variance, currentY, currentZ] = roomSymbol;
+
+                        if(roll >= 50)
+                            prototypeMap[center.Item1 - variance, currentY, currentZ] = roomSymbol;
+                    }
+                    else if(roll >= 50)
+                    {
+                        prototypeMap[center.Item1 + variance, currentY, currentZ] = "-";
+
+                        if (roll >= 75)
+                            prototypeMap[center.Item1 - variance, currentY, currentZ] = "-";
+                    }
+
+                    currentX++;
+                }
+
+                //Do Y
+                if (currentY + 1 < maxY)
+                {
+                    var roll = _randomizer.Next(1, 100);
+
+                    if (isRoom && roll >= 25)
+                    {
+                        prototypeMap[center.Item1, currentY + variance, currentZ] = roomSymbol;
+
+                        if (roll >= 50)
+                            prototypeMap[center.Item1, currentY - variance, currentZ] = roomSymbol;
+                    }
+                    else if (roll >= 50)
+                    {
+                        prototypeMap[center.Item1, currentY + variance, currentZ] = "|";
+
+                        if (roll >= 75)
+                            prototypeMap[center.Item1, currentY - variance, currentZ] = "|";
+                    }
+
+                    currentY++;
+                }
+
+                //Do Z
+                if (currentZ + 1 < maxZ)
+                {
+                    var roll = _randomizer.Next(1, 100);
+
+                    if (isRoom && roll >= 25)
+                    {
+                        prototypeMap[center.Item1, currentY, currentZ + variance] = roomSymbol;
+
+                        if (roll >= 50)
+                            prototypeMap[center.Item1, currentY, currentZ - variance] = roomSymbol;
+                    }
+                    else if (roll >= 50)
+                    {
+                        prototypeMap[center.Item1, currentY, currentZ + variance] = "^";
+
+                        if (roll >= 75)
+                            prototypeMap[center.Item1, currentY, currentZ - variance] = "v";
+                    }
+
+                    currentZ++;
+                }
+            }
+
+            //Go through and do diag cardinal directions.
+
+            //Do "cave" entrances (sloped down) and hills (sloped up)
 
             //Verify grid
 
