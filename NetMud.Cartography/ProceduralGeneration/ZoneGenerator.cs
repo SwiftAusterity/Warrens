@@ -127,8 +127,8 @@ namespace NetMud.Cartography.ProceduralGeneration
             var currentY = center.Item2;
             var currentZ = center.Item3;
 
-            //Do 4 point cardinal directions
-            for (var variance = 1; currentX < maxX || currentY < maxY || currentZ < maxZ; variance++)
+            //Do 4 point cardinal directions for the initial layer
+            for (var variance = 1; currentX < maxX || currentY < maxY; variance++)
             {
                 //Room or pathway?
                 bool isRoom = variance % 3 == 0;
@@ -178,32 +178,7 @@ namespace NetMud.Cartography.ProceduralGeneration
 
                     currentY++;
                 }
-
-                //Do Z
-                if (currentZ + 1 < maxZ)
-                {
-                    var roll = _randomizer.Next(1, 100);
-
-                    if (isRoom && roll >= 25)
-                    {
-                        prototypeMap[center.Item1, currentY, currentZ + variance] = roomSymbol;
-
-                        if (roll >= 50)
-                            prototypeMap[center.Item1, currentY, currentZ - variance] = roomSymbol;
-                    }
-                    else if (roll >= 50)
-                    {
-                        prototypeMap[center.Item1, currentY, currentZ + variance] = "^";
-
-                        if (roll >= 75)
-                            prototypeMap[center.Item1, currentY, currentZ - variance] = "v";
-                    }
-
-                    currentZ++;
-                }
             }
-
-            //Go through and do diag cardinal directions.
 
             //Do "cave" entrances (sloped down) and hills (sloped up)
 
