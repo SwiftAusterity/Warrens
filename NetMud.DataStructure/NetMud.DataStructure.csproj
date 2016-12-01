@@ -64,6 +64,7 @@
     <Compile Include="Base\Place\IPathway.cs" />
     <Compile Include="Base\Supporting\IMineral.cs" />
     <Compile Include="Behaviors\Actionable\ICanBeAffected.cs" />
+    <Compile Include="Behaviors\Actionable\ICanGainExperience.cs" />
     <Compile Include="Behaviors\Actionable\ICanReproduce.cs" />
     <Compile Include="Behaviors\Automation\IIlluminated.cs" />
     <Compile Include="Behaviors\Rendering\IContainsLiquid.cs" />
