@@ -51,6 +51,31 @@ namespace NetMud.Cartography.ProceduralGeneration
         public int Radius { get; private set; }
 
         /// <summary>
+        /// How hilly the zone should be
+        /// </summary>
+        public int HillFrequency { get; set; }
+
+        /// <summary>
+        /// Variance on cave generation
+        /// </summary>
+        public int CaveFrequency { get; set; }
+
+        /// <summary>
+        /// How smooth should the system make the hills and caves (lower = more sheet cliffs)
+        /// </summary>
+        public int VariantSmoothness { get; set; }
+
+        /// <summary>
+        /// Should the zone have a final pass and preset structures be created
+        /// </summary>
+        public bool CreateStructures { get; set; }
+
+        /// <summary>
+        /// Should a pass be made to create degredated structures
+        /// </summary>
+        public bool CreateRuins { get; set; }
+
+        /// <summary>
         /// Center room x,y,z of the array
         /// </summary>
         public Tuple<int, int, int> Center { get; private set; }
