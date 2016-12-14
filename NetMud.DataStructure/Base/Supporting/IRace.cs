@@ -70,12 +70,12 @@ namespace NetMud.DataStructure.Base.Supporting
         /// <summary>
         /// What is the starting room of new players
         /// </summary>
-        IRoomData StartingLocation { get; set; }
+        long[,,] StartingLocation { get; set; }
 
         /// <summary>
         /// When a player loads without a location where do we sent them
         /// </summary>
-        IRoomData EmergencyLocation { get; set; }
+        long[,,] EmergencyLocation { get; set; }
 
         //TODO: Poison glands
     }

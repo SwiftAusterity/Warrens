@@ -12,11 +12,6 @@ namespace NetMud.DataStructure.Behaviors.Rendering
     public interface ILocation : IContains, IEnvironment
     {
         /// <summary>
-        /// Pathways leading from this room
-        /// </summary>
-        IEntityContainer<IPathway> Pathways { get; set; }
-
-        /// <summary>
         /// Mobiles (NPC, Players) in the room
         /// </summary>
         IEntityContainer<IMobile> MobilesInside { get; set; }

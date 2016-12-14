@@ -46,18 +46,6 @@ namespace NetMud.DataStructure.Base.Place
         IMap ZoneMap { get; }
 
         /// <summary>
-        /// Getall the rooms for the zone
-        /// </summary>
-        /// <returns>the rooms for the zone</returns>
-        IEnumerable<IRoomData> Rooms();
-
-        /// <summary>
-        /// Get the absolute center room of the zone
-        /// </summary>
-        /// <returns>the central room of the zone</returns>
-        IRoomData CentralRoom(int zIndex = -1);
-
-        /// <summary>
         /// Get the basic map render for the zone
         /// </summary>
         /// <returns>the zone map in ascii</returns>

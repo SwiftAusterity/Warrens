@@ -129,29 +129,6 @@ namespace NetMud.DataAccess.FileSystem
                 //abstract this out to a helper maybe?
                 var locationAssembly = Assembly.GetAssembly(typeof(ILocation));
 
-                var ch = newPlayerToLoad.DataTemplate<ICharacter>();
-                if (ch.LastKnownLocationType == null)
-                    ch.LastKnownLocationType = typeof(IRoom).Name;
-
-                var lastKnownLocType = locationAssembly.DefinedTypes.FirstOrDefault(tp => tp.Name.Equals(ch.LastKnownLocationType));
-
-                ILocation lastKnownLoc = null;
-                if (lastKnownLocType != null && !string.IsNullOrWhiteSpace(ch.LastKnownLocation))
-                {
-                    if (lastKnownLocType.GetInterfaces().Contains(typeof(ISingleton)))
-                    {
-                        long lastKnownLocID = long.Parse(ch.LastKnownLocation);
-                        lastKnownLoc = LiveCache.Get<ILocation>(lastKnownLocID, lastKnownLocType);
-                    }
-                    else
-                    {
-                        var cacheKey = new LiveCacheKey(lastKnownLocType, ch.LastKnownLocation);
-                        lastKnownLoc = LiveCache.Get<ILocation>(cacheKey);
-                    }
-                }
-
-                newPlayerToLoad.CurrentLocation = lastKnownLoc;
-
                 //We have the player in live cache now so make it move to the right place
                 newPlayerToLoad.GetFromWorldOrSpawn();
                 newPlayerToLoad.UpsertToLiveWorldCache();

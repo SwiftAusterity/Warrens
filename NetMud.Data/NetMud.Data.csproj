@@ -51,15 +51,11 @@
     <Compile Include="EntityBackingData\NonPlayerCharacter.cs" />
     <Compile Include="EntityBackingData\Character.cs" />
     <Compile Include="EntityBackingData\InanimateData.cs" />
-    <Compile Include="EntityBackingData\PathwayData.cs" />
-    <Compile Include="EntityBackingData\RoomData.cs" />
     <Compile Include="Game\EntityPartial.cs" />
     <Compile Include="Game\Inanimate.cs" />
     <Compile Include="Game\LocationEntityPartial.cs" />
-    <Compile Include="Game\Pathway.cs" />
     <Compile Include="Game\Intelligence.cs" />
     <Compile Include="Game\Player.cs" />
-    <Compile Include="Game\Room.cs" />
     <Compile Include="LookupData\NaturalResourceDataPartial.cs" />
     <Compile Include="LookupData\World.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

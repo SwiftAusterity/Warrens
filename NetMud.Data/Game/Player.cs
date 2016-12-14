@@ -135,7 +135,7 @@ namespace NetMud.Data.Game
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
-        public override IContains CurrentLocation
+        public override IContains InsideOf
         {
             get
             {
@@ -261,7 +261,7 @@ namespace NetMud.Data.Game
                     return "That is already in the container";
 
                 Inventory.Add(obj, containerName);
-                obj.CurrentLocation = this;
+                obj.InsideOf = this;
                 this.UpsertToLiveWorldCache();
                 return string.Empty;
             }
@@ -299,7 +299,7 @@ namespace NetMud.Data.Game
                     return "That is not in the container";
 
                 Inventory.Remove(obj, containerName);
-                obj.CurrentLocation = null;
+                obj.InsideOf = null;
                 this.UpsertToLiveWorldCache();
                 return string.Empty;
             }
@@ -328,13 +328,13 @@ namespace NetMud.Data.Game
                 Inventory = me.Inventory;
                 Keywords = me.Keywords;
 
-                if (me.CurrentLocation == null)
+                if (me.InsideOf == null)
                 {
                     var newLoc = GetBaseSpawn();
                     newLoc.MoveInto<IPlayer>(this);
                 }
                 else
-                    me.CurrentLocation.MoveInto<IPlayer>(this);
+                    me.InsideOf.MoveInto<IPlayer>(this);
             }
         }
 
@@ -397,7 +397,7 @@ namespace NetMud.Data.Game
             if (spawnTo == null)
                 spawnTo = GetBaseSpawn();
 
-            CurrentLocation = spawnTo;
+            InsideOf = spawnTo;
 
             //Set the data context's stuff too so we don't have to do this over again
             ch.LastKnownLocation = spawnTo.DataTemplateId.ToString();

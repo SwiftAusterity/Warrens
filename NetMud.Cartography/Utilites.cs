@@ -409,5 +409,89 @@ namespace NetMud.Cartography
 
             return new Tuple<int, int, int>(0, 0, 0);
         }
+
+        public static Tuple<int, int> TranslateToDirection(int degreesFromNorth, int distance)
+        {
+            var x = distance;
+            var y = distance;
+
+            //north
+            if (degreesFromNorth > 22 && degreesFromNorth < 67)
+            {
+                if (degreesFromNorth <= 30)
+                    x *= .75;
+
+                if (degressFromNorth >= 60)
+                    y *= .75;
+            }
+
+
+            //east
+            if (degreesFromNorth > 66 && degreesFromNorth < 111)
+            {
+                if (degreesFromNorth <= 75 || degressFromNorth >= 105)
+                    x *= .75;
+
+                if (degreesFromNorth <= 75 || degressFromNorth >= 105)
+                    y *= .25;
+            }
+
+            //southeast
+            if (degreesFromNorth > 110 && degreesFromNorth < 155)
+            {
+                if (degreesFromNorth >= 140)
+                    x *= .25;
+
+                y *= -1;
+            }
+
+            //south
+            if (degreesFromNorth > 154 && degreesFromNorth < 199)
+            {
+                if (degreesFromNorth <= 165 || degressFromNorth >= 195)
+                    x *= .25;
+
+                if (degreesFromNorth <= 165 || degressFromNorth >= 195) 
+                    y *= .75;
+
+                y *= -1;
+            }
+
+            //southwest
+            if (degreesFromNorth > 198 && degreesFromNorth < 243)
+            {
+                if (degreesFromNorth <= 210)
+                    x *= .75;
+
+                if (degreesFromNorth <= 210 || degressFromNorth >= 240)
+                    y *= .75;
+
+                y *= -1;
+                x *= -1;
+            }
+
+            //west
+            if (degreesFromNorth > 242 && degreesFromNorth < 287)
+            {
+                if (degreesFromNorth <= 260)
+                    y *= .25;
+
+                x *= -1;
+            }
+
+            //Northwest
+            if (degreesFromNorth > 286 && degreesFromNorth < 331)
+            {
+                if (degreesFromNorth <= 300 || degressFromNorth >= 330)
+                    x *= .75;
+
+                if (degreesFromNorth <= 300)
+                    y *= .25;
+
+                x *= -1;
+            }
+
+            return new Tuple<int, int>(x,y);
+        }
     }
 }

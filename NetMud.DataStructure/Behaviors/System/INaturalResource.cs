@@ -60,13 +60,13 @@ namespace NetMud.DataStructure.Behaviors.System
         /// </summary>
         /// <param name="room">The room to spawn in</param>
         /// <returns>if this can spawn there</returns>
-        bool CanSpawnIn(IRoom room);
+        bool CanSpawnIn(long[,,] location);
 
         /// <summary>
         /// Should this resource spawn in this room. Combines the "can" logic with checks against total local population
         /// </summary>
         /// <param name="room">The room to spawn in</param>
         /// <returns>if this should spawn there</returns>
-        bool ShouldSpawnIn(IRoom room);
+        bool ShouldSpawnIn(long[, ,] location);
     }
 }

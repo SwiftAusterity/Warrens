@@ -165,7 +165,7 @@ namespace NetMud.Data.Game
                     return "That is already in the container";
 
                 Inventory.Add(obj, containerName);
-                obj.CurrentLocation = this;
+                obj.InsideOf = this;
                 this.UpsertToLiveWorldCache();
                 return string.Empty;
             }
@@ -203,7 +203,7 @@ namespace NetMud.Data.Game
                     return "That is not in the container";
 
                 Inventory.Remove(obj, containerName);
-                obj.CurrentLocation = null;
+                obj.InsideOf = null;
                 this.UpsertToLiveWorldCache();
                 return string.Empty;
             }
@@ -242,7 +242,7 @@ namespace NetMud.Data.Game
                 throw new NotImplementedException("NPCs can't spawn to nothing");
             }
 
-            CurrentLocation = spawnTo;
+            InsideOf = spawnTo;
 
             spawnTo.MoveInto<IIntelligence>(this);
 

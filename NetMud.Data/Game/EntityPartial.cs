@@ -93,6 +93,7 @@ namespace NetMud.Data.Game
 
         private IChannelType _internalDescriptor;
 
+        #region "World Positioning"
         [ScriptIgnore]
         [JsonIgnore]
         public virtual IChannelType ConnectionType
@@ -107,17 +108,17 @@ namespace NetMud.Data.Game
         }
 
         /// <summary>
-        /// Where in the live world this is
+        /// What this is inside of if it is inside of something
         /// </summary>
-        [JsonProperty("CurrentLocation")]
+        [JsonProperty("InsideOf")]
         private string _currentLocationBirthmark;
 
         /// <summary>
-        /// Where in the live world this is
+        /// What this is inside of if it is inside of something
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
-        public virtual IContains CurrentLocation
+        public virtual IContains InsideOf
         {
             get 
             { 
@@ -135,6 +136,92 @@ namespace NetMud.Data.Game
                 UpsertToLiveWorldCache();
             }
         }
+
+        /// <summary>
+        /// x,y,z position in the world
+        /// </summary>
+        public Tuple<long, long, long> Position { get; private set; }
+
+        /// <summary>
+        /// What direction is this facing, 0/360 = north
+        /// </summary>
+        public int Facing { get; private set; }
+
+        /// <summary>
+        /// Handles returning container's position if inside of something
+        /// </summary>
+        /// <returns>positional coordinates</returns>
+        public long[, ,] AbsolutePosition()
+        {
+            var returnValue = Position;
+            var container = InsideOf;
+
+            short recursionPrevention = 0;
+            while(container != null && recursionPrevention < 10)
+            {
+                returnValue = container.Position;
+                container = container.InsideOf;
+                recursionPrevention++;
+            }
+
+            return returnValue;
+        }
+
+        /// <summary>
+        /// Change the position of this
+        /// </summary>
+        /// <param name="direction">the 0-360 direction we're moving</param>
+        /// <param name="incline">-90 to 90 incline are we moving up or down as well? Terrain will take care of natural incline changes</param>
+        /// <param name="distance">how far are we moving</param>
+        /// <param name="changeFacing">should the thing's facing rotate towards the direction?</param>
+        /// <returns>was this thing moved?</returns>
+        public bool Move(int direction, int incline, int distance, bool changeFacing = false)
+        {
+            //We're assuming messaging happens in what asked us to move
+            var x = Position.Item1;
+            var y = Position.Item2;
+            var z = Position.Item3;
+
+            //TODO: Get world geometry to see what the floor incline rate is
+
+            var xyChanges = NetMud.Cartography.Utilities.TranslateToDirection(direction, distance);
+            x += xyChanges.Item1;
+            y += xyChanges.Item2;
+            z += (incline / 90) * distance;
+            
+            //TODO: Get world geometry to see if you can even move here, otherwise move to up till you can't anymore
+
+            //TODO: Triggers
+
+            Position = new Tuple<long, long, long>(x, y, z);
+
+            if(changeFacing)
+                Facing = new Tuple<int, int>(direction, incline);
+
+            //TODO: Falling
+        }
+
+        /// <summary>
+        /// Reposition entirely without moving
+        /// </summary>
+        /// <param name="x">x coordinate</param>
+        /// <param name="y">y coordinate</param>
+        /// <param name="z">z coordinate</param>
+        /// <param name="facing">where the thing should be facing in the end</param>
+        /// <returns>success</returns>
+        bool Reposition(long x, long y, long z, Tuple<int, int> facing)
+        {
+            //We're assuming messaging happens in what asked us to move
+
+            //TODO: Get world geometry to see if you can even move here, otherwise move to up till you can't anymore
+
+            //TODO: Triggers
+            Position = new Tuple<long, long, long>(x, y, z);
+            Facing = facing;
+
+            //TODO: Falling
+        }
+        #endregion
 
         /// <summary>
         /// Affects to add to a live entity when it is spawned
@@ -227,6 +314,12 @@ namespace NetMud.Data.Game
         /// Spawn this new into the live world
         /// </summary>
         public abstract void SpawnNewInWorld();
+
+        /// <summary>
+        /// Spawn a new instance of this entity into the live world in a set position
+        /// </summary>
+        /// <param name="position">x,y,z coordinates to spawn into</param>
+        public abstract void SpawnNewInWorld(long[, ,] position);
 
         /// <summary>
         /// Spawn this new into the live world into a specified container

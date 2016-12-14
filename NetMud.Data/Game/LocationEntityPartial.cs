@@ -108,7 +108,7 @@ namespace NetMud.Data.Game
                     return "That is already in the container";
 
                 Contents.Add(obj, containerName);
-                obj.CurrentLocation = this;
+                obj.InsideOf = this;
                 this.UpsertToLiveWorldCache();
 
                 return string.Empty;
@@ -122,7 +122,7 @@ namespace NetMud.Data.Game
                     return "That is already in the container";
 
                 MobilesInside.Add(obj, containerName);
-                obj.CurrentLocation = this;
+                obj.InsideOf = this;
                 this.UpsertToLiveWorldCache();
 
                 return string.Empty;
@@ -136,7 +136,7 @@ namespace NetMud.Data.Game
                     return "That is already in the container";
 
                 Pathways.Add(obj, containerName);
-                obj.CurrentLocation = this;
+                obj.InsideOf = this;
                 this.UpsertToLiveWorldCache();
 
                 return string.Empty;
@@ -175,7 +175,7 @@ namespace NetMud.Data.Game
                     return "That is not in the container";
 
                 Contents.Remove(obj, containerName);
-                obj.CurrentLocation = null;
+                obj.InsideOf = null;
                 this.UpsertToLiveWorldCache();
 
                 return string.Empty;
@@ -190,7 +190,7 @@ namespace NetMud.Data.Game
                     return "That is not in the container";
 
                 MobilesInside.Remove(obj, containerName);
-                obj.CurrentLocation = null;
+                obj.InsideOf = null;
                 this.UpsertToLiveWorldCache();
 
                 return string.Empty;
@@ -204,7 +204,7 @@ namespace NetMud.Data.Game
                     return "That is not in the container";
 
                 Pathways.Remove(obj, containerName);
-                obj.CurrentLocation = null;
+                obj.InsideOf = null;
                 this.UpsertToLiveWorldCache();
 
                 return string.Empty;

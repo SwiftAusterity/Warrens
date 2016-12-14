@@ -1,13 +1,16 @@
 ﻿using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Behaviors.Existential;
+using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.SupportingClasses;
+using System;
 
 namespace NetMud.DataStructure.Base.EntityBackingData
 {
     /// <summary>
     /// Backing data for player characters
     /// </summary>
-    public interface ICharacter : IEntityBackingData, IGender
+    public interface ICharacter : IEntityBackingData, IGender, IHasPositioning
     {
         /// <summary>
         /// Family name for character
@@ -38,16 +41,6 @@ namespace NetMud.DataStructure.Base.EntityBackingData
         /// Command permissions for player character
         /// </summary>
         StaffRank GamePermissionsRank { get; set; }
-
-        /// <summary>
-        /// Last known location ID for character in live world
-        /// </summary>
-        string LastKnownLocation { get; set; }
-
-        /// <summary>
-        /// System type for Last known location for character in live world
-        /// </summary>
-        string LastKnownLocationType { get; set; }
 
         /// <summary>
         /// Given name + surname

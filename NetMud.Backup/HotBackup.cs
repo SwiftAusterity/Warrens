@@ -88,7 +88,7 @@ namespace NetMud.Backup
                     var liveEntity = entity as IEntity;
 
                     //Don't write objects that are on live players, player backup does that itself
-                    if (liveEntity.CurrentLocation != null && liveEntity.CurrentLocation.GetType() == typeof(Player))
+                    if (liveEntity.InsideOf != null && liveEntity.InsideOf.GetType() == typeof(Player))
                         continue;
 
                     liveDataAccessor.WriteEntity(liveEntity);
@@ -249,7 +249,7 @@ namespace NetMud.Backup
                     {
                         entity.ToLocation = roomTo;
                         entity.FromLocation = roomFrom;
-                        entity.CurrentLocation = roomFrom;
+                        entity.InsideOf = roomFrom;
                         roomFrom.MoveInto<IPathway>(entity);
                     }
                 }

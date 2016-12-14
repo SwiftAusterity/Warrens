@@ -142,7 +142,7 @@ namespace NetMud.Data.Game
                 throw new NotImplementedException("Objects can't spawn to nothing");
             }
 
-            CurrentLocation = spawnTo;
+            InsideOf = spawnTo;
 
             spawnTo.MoveInto<IInanimate>(this);
 
