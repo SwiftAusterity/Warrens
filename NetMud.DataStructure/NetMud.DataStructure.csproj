@@ -50,6 +50,7 @@
     <Compile Include="Base\Place\IWorld.cs" />
     <Compile Include="Base\Skills\ISkpell.cs" />
     <Compile Include="Base\Supporting\IAffect.cs" />
+    <Compile Include="Base\Supporting\IAilment.cs" />
     <Compile Include="Base\Supporting\IDamage.cs" />
     <Compile Include="Base\Supporting\IDimensionalModel.cs" />
     <Compile Include="Base\Supporting\IDimensionalModelData.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="Base\Supporting\IMaterial.cs" />
     <Compile Include="Base\Supporting\IMineral.cs" />
     <Compile Include="Behaviors\Actionable\ICanBeAffected.cs" />
+    <Compile Include="Behaviors\Actionable\ICanBeWounded.cs" />
     <Compile Include="Behaviors\Actionable\ICanGainExperience.cs" />
     <Compile Include="Behaviors\Actionable\ICanReproduce.cs" />
     <Compile Include="Behaviors\Automation\IIlluminated.cs" />
