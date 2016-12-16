@@ -22,11 +22,6 @@ namespace NetMud.Data.Game
         public IEntityContainer<IInanimate> Contents { get; set; }
 
         /// <summary>
-        /// Pathways leading out of this
-        /// </summary>
-        public IEntityContainer<IPathway> Pathways { get; set; }
-
-        /// <summary>
         /// Any mobiles (players, npcs) contained in this
         /// </summary>
         public IEntityContainer<IMobile> MobilesInside { get; set; }
@@ -48,9 +43,6 @@ namespace NetMud.Data.Game
             if (implimentedTypes.Contains(typeof(IInanimate)))
                 contents.AddRange(Contents.EntitiesContained().Select(ent => (T)ent));
 
-            if (implimentedTypes.Contains(typeof(IPathway)))
-                contents.AddRange(Pathways.EntitiesContained().Select(ent => (T)ent));
-
             return contents;
         }
 
@@ -71,9 +63,6 @@ namespace NetMud.Data.Game
 
             if (implimentedTypes.Contains(typeof(IInanimate)))
                 contents.AddRange(Contents.EntitiesContained(containerName).Select(ent => (T)ent));
-
-            if (implimentedTypes.Contains(typeof(IPathway)))
-                contents.AddRange(Pathways.EntitiesContained(containerName).Select(ent => (T)ent));
 
             return contents;
         }
@@ -128,20 +117,6 @@ namespace NetMud.Data.Game
                 return string.Empty;
             }
 
-            if (implimentedTypes.Contains(typeof(IPathway)))
-            {
-                var obj = (IPathway)thing;
-
-                if (Pathways.Contains(obj, containerName))
-                    return "That is already in the container";
-
-                Pathways.Add(obj, containerName);
-                obj.InsideOf = this;
-                this.UpsertToLiveWorldCache();
-
-                return string.Empty;
-            }
-
             return "Invalid type to move to container.";
         }
 
@@ -190,20 +165,6 @@ namespace NetMud.Data.Game
                     return "That is not in the container";
 
                 MobilesInside.Remove(obj, containerName);
-                obj.InsideOf = null;
-                this.UpsertToLiveWorldCache();
-
-                return string.Empty;
-            }
-
-            if (implimentedTypes.Contains(typeof(IPathway)))
-            {
-                var obj = (IPathway)thing;
-
-                if (!Pathways.Contains(obj, containerName))
-                    return "That is not in the container";
-
-                Pathways.Remove(obj, containerName);
                 obj.InsideOf = null;
                 this.UpsertToLiveWorldCache();
 

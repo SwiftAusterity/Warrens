@@ -32,27 +32,20 @@ namespace NetMud.Data.System
         public int Duration { get; set; }
 
         /// <summary>
-        /// The dispel type of the affect
-        /// </summary>
-        public AffectType Type { get; set; }
-
-        /// <summary>
         /// Chance of spread
         /// </summary>
         public Dictionary<ContagionVector, int> AfflictionChances { get; set; }
 
         public Affect()
         {
-            Type = AffectType.Pure;
             Duration = -1;
             Value = 0;
             Target = String.Empty;
             AfflictionChances = new Dictionary<ContagionVector, int>();
         }
 
-        public Affect(AffectType type, int duration, int value, string target, Dictionary<ContagionVector, int> afflictionChances)
+        public Affect(int duration, int value, string target, Dictionary<ContagionVector, int> afflictionChances)
         {
-            Type = type;
             Duration = duration;
             Value = value;
             Target = target;

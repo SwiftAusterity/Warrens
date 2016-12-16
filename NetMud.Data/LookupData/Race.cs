@@ -178,46 +178,6 @@ namespace NetMud.Data.LookupData
         /// </summary>
         public DamageType TeethType { get; set; }
 
-        [JsonProperty("StartingLocation")]
-        private long _startingLocation { get; set; }
-
-        /// <summary>
-        /// What is the starting room of new players
-        /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        public IRoomData StartingLocation
-        {
-            get
-            {
-                return BackingDataCache.Get<IRoomData>(_startingLocation);
-            }
-            set
-            {
-                _startingLocation = value.ID;
-            }
-        }
-
-        [JsonProperty("EmergencyLocation")]
-        private long _emergencyLocation { get; set; }
-
-        /// <summary>
-        /// When a player loads without a location where do we send them
-        /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        public IRoomData EmergencyLocation
-        {
-            get
-            {
-                return BackingDataCache.Get<IRoomData>(_emergencyLocation);
-            }
-            set
-            {
-                _emergencyLocation = value.ID;
-            }
-        }
-
         public Race()
         {
             BodyParts = Enumerable.Empty<Tuple<IInanimateData, short, string>>();
@@ -254,12 +214,6 @@ namespace NetMud.Data.LookupData
 
             if (TemperatureTolerance == null || TemperatureTolerance.Item1 >= TemperatureTolerance.Item2)
                 dataProblems.Add("Temperature tolerance is invalid.");
-
-            if (StartingLocation == null)
-                dataProblems.Add("Starting Location is invalid.");
-
-            if (EmergencyLocation == null)
-                dataProblems.Add("Emergency Location is invalid.");
 
             return dataProblems;
         }

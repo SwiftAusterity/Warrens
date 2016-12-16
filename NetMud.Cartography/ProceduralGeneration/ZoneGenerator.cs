@@ -81,11 +81,6 @@ namespace NetMud.Cartography.ProceduralGeneration
         public Tuple<int, int, int> Center { get; private set; }
 
         /// <summary>
-        /// The zone we're filling
-        /// </summary>
-        public IZone Zone { get; private set; }
-
-        /// <summary>
         /// The room map array
         /// </summary>
         public long[, ,] RoomMap { get; private set; }
@@ -95,15 +90,13 @@ namespace NetMud.Cartography.ProceduralGeneration
         /// </summary>
         public bool Primed { get; private set; }
 
-        public ZoneGenerator(int seed, IZone zone, int width, int length, int elevation, int depth)
+        public ZoneGenerator(int seed, int width, int length, int elevation, int depth)
         {
-            VerifyZone(zone);
             VerifyDimensions(width, length, elevation, depth);
 
             _randomizer = new Random(Seed);
 
             Seed = seed;
-            Zone = zone;
 
             Width = width;
             Length = length;
@@ -113,16 +106,14 @@ namespace NetMud.Cartography.ProceduralGeneration
             RoomMap = new long[width * 3 + 1, length * 3 + 1, (elevation + depth) * 3 + 1];
         }
 
-        public ZoneGenerator(IZone zone, int width, int length, int elevation, int depth)
+        public ZoneGenerator(int width, int length, int elevation, int depth)
         {
-            VerifyZone(zone);
             VerifyDimensions(width, length, elevation, depth);
 
             var rand = new System.Random();
             _randomizer = new Random(Seed);
 
             Seed = rand.Next(10000);
-            Zone = zone;
             Width = width;
             Length = length;
             Elevation = elevation;
@@ -219,21 +210,6 @@ namespace NetMud.Cartography.ProceduralGeneration
                 throw new AccessViolationException("Map is not primed yet.");
 
             //Create rooms and pathways
-        }
-
-        /// <summary>
-        /// We just throw errors, no need for a return value
-        /// </summary>
-        private void VerifyZone(IZone zone)
-        {
-            if (zone == null)
-                throw new ArgumentNullException("Zone must not be null.");
-
-            if (zone.Rooms().Any())
-                throw new ArgumentOutOfRangeException("Zone must be devoid of rooms.");
-
-            if (zone.FitnessProblems)
-                throw new ArgumentOutOfRangeException("Zone must have data integrity.");
         }
 
         private void VerifyDimensions(int width, int length, int elevation, int depth)

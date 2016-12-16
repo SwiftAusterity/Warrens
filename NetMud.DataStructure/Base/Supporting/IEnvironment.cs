@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NetMud.DataStructure.Behaviors.System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,6 +21,11 @@ namespace NetMud.DataStructure.Base.Supporting
         /// Base temperature for this
         /// </summary>
         int Temperature { get; set; }
+
+        /// <summary>
+        /// Natural resources spawned to this location currently
+        /// </summary>
+        Dictionary<Tuple<long, long, long>, Tuple<INaturalResource, int>> NaturalResources { get; set; }
 
         /// <summary>
         /// Current humidity for this

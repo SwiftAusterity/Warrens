@@ -276,7 +276,7 @@ namespace NetMud.Data.Game
         /// <param name="affectTarget">the thing attempting to be dispeled</param>
         /// <param name="dispellationMethod">the dispellation methodology. [TypeOfMethod, strength]</param>
         /// <returns>reisst type</returns>
-        public AffectResistType DispelAffect(string affectTarget, Tuple<AffectType, int> dispellationMethod)
+        public AffectResistType DispelAffect(string affectTarget, int dispellationStrength)
         {
             var returnValue = AffectResistType.Success;
 

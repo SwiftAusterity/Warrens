@@ -67,6 +67,6 @@ namespace NetMud.DataStructure.Behaviors.System
         /// </summary>
         /// <param name="room">The room to spawn in</param>
         /// <returns>if this should spawn there</returns>
-        bool ShouldSpawnIn(long[, ,] location);
+        bool ShouldSpawnIn(long[,,] location);
     }
 }

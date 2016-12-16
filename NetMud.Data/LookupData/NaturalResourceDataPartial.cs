@@ -72,28 +72,6 @@ namespace NetMud.Data.LookupData
         public bool CanSpawnInSystemAreas { get; set; }
 
         /// <summary>
-        /// Can this resource potentially spawn in this room
-        /// </summary>
-        /// <param name="room">The room to spawn in</param>
-        /// <returns>if this can spawn there</returns>
-        public bool CanSpawnIn(IRoom room)
-        {
-            //TODO : This
-            return true;
-        }
-
-        /// <summary>
-        /// Should this resource spawn in this room. Combines the "can" logic with checks against total local population
-        /// </summary>
-        /// <param name="room">The room to spawn in</param>
-        /// <returns>if this should spawn there</returns>
-        public bool ShouldSpawnIn(IRoom room)
-        {
-            //TODO : This
-            return true;
-        }
-
-        /// <summary>
         /// Gets the errors for data fitness
         /// </summary>
         /// <returns>a bunch of text saying how awful your data is</returns>

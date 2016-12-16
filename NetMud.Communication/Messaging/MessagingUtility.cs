@@ -141,11 +141,13 @@ namespace NetMud.Communication.Messaging
                         break;
                     case MessagingTargetType.Direction:
                     case MessagingTargetType.ReverseDirection:
+                        /* TODO
                         if (!thing.GetType().GetInterfaces().Contains(typeof(IPathway)))
                             break;
 
                         var pathData = thing.DataTemplate<IPathwayData>();
                         message = message.Replace("$DIR$", Utilities.TranslateToDirection(pathData.DegreesFromNorth, 0, kvp.Key == MessagingTargetType.ReverseDirection).ToString());
+                         */
                         break;
                 }
             }

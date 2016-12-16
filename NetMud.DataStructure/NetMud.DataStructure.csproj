@@ -46,7 +46,9 @@
   <ItemGroup>
     <Compile Include="Base\EntityBackingData\INonPlayerCharacter.cs" />
     <Compile Include="Base\EntityBackingData\IInanimateData.cs" />
+    <Compile Include="Base\Place\IChunk.cs" />
     <Compile Include="Base\Place\IMaps.cs" />
+    <Compile Include="Base\Place\IStratum.cs" />
     <Compile Include="Base\Place\IWorld.cs" />
     <Compile Include="Base\Skills\ISkpell.cs" />
     <Compile Include="Base\Supporting\IAffect.cs" />
@@ -97,7 +99,6 @@
     <Compile Include="Base\Supporting\IRace.cs" />
     <Compile Include="Base\Skills\ISkillLeaf.cs" />
     <Compile Include="Base\Skills\ISkillNode.cs" />
-    <Compile Include="Base\Place\IZone.cs" />
     <Compile Include="Base\World\IFaction.cs" />
     <Compile Include="Base\World\ILanguage.cs" />
     <Compile Include="Base\World\IWeatherPattern.cs" />

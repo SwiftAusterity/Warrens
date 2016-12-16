@@ -25,6 +25,6 @@ namespace NetMud.DataStructure.Behaviors.Actionable
         /// </summary>
         /// <param name="affectTarget">the thing attempting to be dispeled</param>
         /// <returns>reisst type</returns>
-        AffectResistType DispelAffect(string affectTarget, Tuple<AffectType, int> dispellationMethod);
+        AffectResistType DispelAffect(string affectTarget, int dispellationStrength);
     }
 }

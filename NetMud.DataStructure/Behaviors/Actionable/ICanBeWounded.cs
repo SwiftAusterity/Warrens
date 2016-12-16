@@ -29,6 +29,6 @@ namespace NetMud.DataStructure.Behaviors.Actionable
         /// <param name="source">the source trying to fix the problem, nullable</param>
         /// <param name="strength">How strong the attempt is</param>
         /// <returns>Was something cured</returns>
-        string Cure(IEntity source, int strength)
+        string Cure(IEntity source, int strength);
     }
 }
