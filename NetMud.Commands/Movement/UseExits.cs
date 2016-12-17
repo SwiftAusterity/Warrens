@@ -38,7 +38,7 @@ namespace NetMud.Commands.Movement
     [CommandKeyword("downsoutheast", true)]
     [CommandKeyword("downwest", true)]
     [CommandPermission(StaffRank.Player)]
-    [CommandParameter(CommandUsage.Subject, typeof(IPathway), new CacheReferenceType[] { CacheReferenceType.Entity }, "[a-zA-z]+", true)]
+    //[CommandParameter(CommandUsage.Subject, typeof(IPathway), new CacheReferenceType[] { CacheReferenceType.Entity }, "[a-zA-z]+", true)]
     [CommandRange(CommandRangeType.Touch, 0)]
     public class UseExits : CommandPartial
     {
@@ -56,12 +56,12 @@ namespace NetMud.Commands.Movement
         public override void Execute()
         {
             var sb = new List<string>();
-            IPathway targetPath = (IPathway)Subject;
+           // IPathway targetPath = (IPathway)Subject;
 
-            targetPath.FromLocation.MoveFrom((IMobile)Actor);
-            targetPath.ToLocation.MoveInto((IMobile)Actor);
+           // targetPath.FromLocation.MoveFrom((IMobile)Actor);
+           // targetPath.ToLocation.MoveInto((IMobile)Actor);
 
-            targetPath.Enter.ExecuteMessaging(Actor, targetPath, null, targetPath.FromLocation, targetPath.ToLocation);
+            //targetPath.Enter.ExecuteMessaging(Actor, targetPath, null, targetPath.FromLocation, targetPath.ToLocation);
         }
 
         /// <summary>

@@ -33,8 +33,8 @@ namespace NetMud.Backup
         public bool NewWorldFallback()
         {
             //Only load in stuff that is static and spawns as singleton
-            PreLoadAll<RoomData>();
-            PreLoadAll<PathwayData>();
+            //PreLoadAll<RoomData>();
+            //PreLoadAll<PathwayData>();
 
             ParseDimension();
 
@@ -175,42 +175,8 @@ namespace NetMud.Backup
                     entity.UpsertToLiveWorldCache();
 
                 //Check we found actual data
-                if (!entitiesToLoad.Any(ent => ent.GetType() == typeof(Room) || ent.GetType() == typeof(Pathway)))
-                    throw new Exception("No rooms or pathways found, failover.");
-
-                //We need to pick up any roomDatas and pathwaydatas that aren't already live from the file system incase someone added them during the last session
-                foreach (var thing in BackingDataCache.GetAll<IRoomData>().Where(dt => !entitiesToLoad.Any(ent => ent.DataTemplateId.Equals(dt.ID))))
-                {
-                    var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { (IRoomData)thing }) as IRoom;
-
-                    entityThing.UpsertToLiveWorldCache();
-                }
-
-                foreach (var thing in BackingDataCache.GetAll<IPathwayData>().Where(dt => !entitiesToLoad.Any(ent => ent.DataTemplateId.Equals(dt.ID))))
-                {
-                    var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { (IPathwayData)thing }) as IPathway;
-
-                    entityThing.UpsertToLiveWorldCache();
-                }
-
-                //We have the containers contents and the birthmarks from the deserial
-                //I don't know how we can even begin to do this type agnostically since the collections are held on type specific objects without some super ugly reflection
-                foreach (Room entity in entitiesToLoad.Where(ent => ent.GetType() == typeof(Room)))
-                {
-                    foreach (IInanimate obj in entity.Contents.EntitiesContained())
-                    {
-                        var fullObj = LiveCache.Get<IInanimate>(new LiveCacheKey(typeof(Inanimate), obj.BirthMark));
-                        entity.MoveFrom<IInanimate>(obj);
-                        entity.MoveInto<IInanimate>(fullObj);
-                    }
-
-                    foreach (IIntelligence obj in entity.MobilesInside.EntitiesContained())
-                    {
-                        var fullObj = LiveCache.Get<IIntelligence>(new LiveCacheKey(typeof(Intelligence), obj.BirthMark));
-                        entity.MoveFrom<IIntelligence>(obj);
-                        entity.MoveInto<IIntelligence>(fullObj);
-                    }
-                }
+               // if (!entitiesToLoad.Any(ent => ent.GetType() == typeof(Room) || ent.GetType() == typeof(Pathway)))
+                   // throw new Exception("No rooms or pathways found, failover.");
 
                 foreach (Intelligence entity in entitiesToLoad.Where(ent => ent.GetType() == typeof(Intelligence)))
                 {
@@ -239,21 +205,6 @@ namespace NetMud.Backup
                     }
                 }
 
-                //paths load themselves to their room
-                foreach (Pathway entity in entitiesToLoad.Where(ent => ent.GetType() == typeof(Pathway)))
-                {
-                    ILocation roomTo = LiveCache.Get<ILocation>(new LiveCacheKey(entity.ToLocation.GetType(), entity.ToLocation.BirthMark));
-                    ILocation roomFrom = LiveCache.Get<ILocation>(new LiveCacheKey(entity.FromLocation.GetType(), entity.FromLocation.BirthMark));
-
-                    if (roomTo != null && roomFrom != null)
-                    {
-                        entity.ToLocation = roomTo;
-                        entity.FromLocation = roomFrom;
-                        entity.InsideOf = roomFrom;
-                        roomFrom.MoveInto<IPathway>(entity);
-                    }
-                }
-
                 //We need to poll the WorldMaps here and give all the rooms their coordinates as well as the zones their sub-maps
                 ParseDimension();
 
@@ -270,21 +221,6 @@ namespace NetMud.Backup
 
         private void ParseDimension()
         {
-            var roomPool = new HashSet<IRoomData>(BackingDataCache.GetAll<IRoomData>());
-
-            //This will cycle through every room building massive (in theory) maps and spitting out the remaining items to make more worlds from.
-            //If your world is highly disconnected you will end up with a ton of world maps
-            while (roomPool.Count() > 0)
-            {
-                var currentRoom = roomPool.FirstOrDefault();
-
-                if (currentRoom == null)
-                    continue;
-
-                var newWorld = GenerateWorld(currentRoom, roomPool);
-
-                BackingDataCache.Add(newWorld);
-            }
         }
 
         //TODO: a method that takes a room, 
@@ -295,16 +231,12 @@ namespace NetMud.Backup
         /// <param name="startingRoom">The room to start with</param>
         /// <param name="remainingRooms">The list of remaining rooms to work against (will remove used rooms from this)</param>
         /// <returns>A whole new world</returns>
-        private IWorld GenerateWorld(IRoomData startingRoom, HashSet<IRoomData> remainingRooms)
+        private IWorld GenerateWorld()
         {
-            if (startingRoom == null || remainingRooms.Count() == 0)
-                throw new InvalidOperationException("Invalid inputs.");
-
-            //We're kind of faking array size for radius, it will be shrunk later
-            var returnMap = Cartographer.GenerateMapFromRoom(startingRoom, remainingRooms.Count() / 2, remainingRooms, true);
+            //TODO this
 
             //This zone gets to choose the world name if any
-            var world = new World(new Map(returnMap, false), startingRoom.ZoneAffiliation.WorldName);
+            var world = new World(new Map(null, false), "");
 
             if (String.IsNullOrWhiteSpace(world.Name))
                 world.Name = "Dimension " + world.ID.ToString();

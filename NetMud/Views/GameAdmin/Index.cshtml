@@ -7,14 +7,6 @@
     <h4>Backing Data</h4>
     <hr />
     <dl class="dl-horizontal">
-        <dt>Rooms:</dt>
-        <dd>
-            @Model.Rooms.Count().ToString() [ Use Zones Yo ]
-            @if (Model.Rooms.Any(r => r.FitnessProblems))
-            {
-                <span style="color:red;">DATA PROBLEMS</span>
-            }
-        </dd>
         <dt>NPCs:</dt>
         <dd>
             @Model.NPCs.Count().ToString() [
@@ -79,16 +71,6 @@
                 <span style="color:red;">DATA PROBLEMS</span>
             }
         </dd>
-        <dt>Zones:</dt>
-        <dd>
-            @Model.Zones.Count().ToString() [
-            @Html.ActionLink("Manage", "Index", "Zone")
-            @Html.ActionLink("Add", "Add", "Zone") ]
-            @if (Model.Zones.Any(r => r.FitnessProblems))
-            {
-                <span style="color:red;">DATA PROBLEMS</span>
-            }
-        </dd>
         <dt>Constants:</dt>
         <dd>
             @Model.Constants.Count().ToString() [
@@ -137,10 +119,6 @@
         <dd>
             @Model.LivePlayers [
             @Html.ActionLink("Manage", "Index", "Player") ]
-        </dd>
-        <dt>Rooms:</dt>
-        <dd>
-            @Model.LiveRooms [ ]
         </dd>
         <dt>Inanimates:</dt>
         <dd>

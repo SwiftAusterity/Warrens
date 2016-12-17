@@ -24,12 +24,7 @@ namespace NetMud.Controllers
         [HttpGet]
         public string RenderRoomWithRadius(long id, int radius)
         {
-            var centerRoom = BackingDataCache.Get<IRoomData>(id);
-
-            if (centerRoom == null || radius < 0)
-                return "Invalid inputs.";
-
-            return Rendering.RenderRadiusMap(centerRoom, radius, false);
+            return "";// Rendering.RenderRadiusMap(centerRoom, radius, false);
         }
     }
 }

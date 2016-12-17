@@ -16,7 +16,7 @@ namespace NetMud.DataStructure.Behaviors.Existential
         /// Handles returning container's position if inside of something
         /// </summary>
         /// <returns>positional coordinates</returns>
-        long[, ,] AbsolutePosition();
+        IGlobalPosition AbsolutePosition();
 
         /// <summary>
         /// Change the position of this
@@ -36,7 +36,7 @@ namespace NetMud.DataStructure.Behaviors.Existential
         /// <param name="z">z coordinate</param>
         /// <param name="facing">where the thing should be facing in the end</param>
         /// <returns>success</returns>
-        bool Reposition(long x, long y, long z, Tuple<int, int> facing);
+        bool Reposition(IGlobalPosition position, Tuple<int, int> facing);
 
         /// <summary>
         /// Spawns a new instance of this entity in the live world into a default position
@@ -47,7 +47,7 @@ namespace NetMud.DataStructure.Behaviors.Existential
         /// Spawn a new instance of this entity into the live world in a set position
         /// </summary>
         /// <param name="position">x,y,z coordinates to spawn into</param>
-        void SpawnNewInWorld(long[, ,] position);
+        void SpawnNewInWorld(IGlobalPosition position);
 
         /// <summary>
         /// Spawns a new instance of this entity in the live world to a specified container

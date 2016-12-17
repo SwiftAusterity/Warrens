@@ -89,7 +89,6 @@ namespace NetMud.Controllers.GameAdmin
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
             vModel.ValidMaterials = BackingDataCache.GetAll<Material>();
             vModel.ValidObjects = BackingDataCache.GetAll<InanimateData>();
-            vModel.ValidRooms = BackingDataCache.GetAll<RoomData>();
 
             return View("~/Views/GameAdmin/Race/Add.cshtml", vModel);
         }
@@ -137,21 +136,21 @@ namespace NetMud.Controllers.GameAdmin
                     newObj.Head = head;
             }
 
-            if (vModel.NewStartingLocationId > 0)
-            {
-                var room = BackingDataCache.Get<RoomData>(vModel.NewStartingLocationId);
+            //if (vModel.NewStartingLocationId > 0)
+            //{
+            //    var room = BackingDataCache.Get<RoomData>(vModel.NewStartingLocationId);
 
-                if (room != null)
-                    newObj.StartingLocation = room;
-            }
+            //    if (room != null)
+            //        newObj.StartingLocation = room;
+            //}
 
-            if (vModel.NewRecallLocationId > 0)
-            {
-                var room = BackingDataCache.Get<RoomData>(vModel.NewRecallLocationId);
+            //if (vModel.NewRecallLocationId > 0)
+            //{
+            //    var room = BackingDataCache.Get<RoomData>(vModel.NewRecallLocationId);
 
-                if (room != null)
-                    newObj.EmergencyLocation = room;
-            }
+            //    if (room != null)
+            //        newObj.EmergencyLocation = room;
+            //}
 
             if (vModel.NewBloodId > 0)
             {
@@ -213,7 +212,6 @@ namespace NetMud.Controllers.GameAdmin
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
             vModel.ValidMaterials = BackingDataCache.GetAll<IMaterial>();
             vModel.ValidObjects = BackingDataCache.GetAll<IInanimateData>();
-            vModel.ValidRooms = BackingDataCache.GetAll<IRoomData>();
 
             var obj = BackingDataCache.Get<IRace>(id);
 
@@ -233,8 +231,8 @@ namespace NetMud.Controllers.GameAdmin
             vModel.NewHeadId = obj.Head.ID;
             vModel.NewLegsAmount = obj.Legs.Item2;
             vModel.NewLegsID = obj.Legs.Item1.ID;
-            vModel.NewRecallLocationId = obj.EmergencyLocation.ID;
-            vModel.NewStartingLocationId = obj.StartingLocation.ID;
+          //  vModel.NewRecallLocationId = obj.EmergencyLocation.ID;
+           // vModel.NewStartingLocationId = obj.StartingLocation.ID;
             vModel.NewTeethType = (short)obj.TeethType;
             vModel.NewTemperatureToleranceHigh = obj.TemperatureTolerance.Item2;
             vModel.NewTemperatureToleranceLow = obj.TemperatureTolerance.Item1;
@@ -298,21 +296,21 @@ namespace NetMud.Controllers.GameAdmin
                     obj.Head = head;
             }
 
-            if (vModel.NewStartingLocationId > 0)
-            {
-                var room = BackingDataCache.Get<RoomData>(vModel.NewStartingLocationId);
+            //if (vModel.NewStartingLocationId > 0)
+            //{
+            //    var room = BackingDataCache.Get<RoomData>(vModel.NewStartingLocationId);
 
-                if (room != null)
-                    obj.StartingLocation = room;
-            }
+            //    if (room != null)
+            //        obj.StartingLocation = room;
+            //}
 
-            if (vModel.NewRecallLocationId > 0)
-            {
-                var room = BackingDataCache.Get<RoomData>(vModel.NewRecallLocationId);
+            //if (vModel.NewRecallLocationId > 0)
+            //{
+            //    var room = BackingDataCache.Get<RoomData>(vModel.NewRecallLocationId);
 
-                if (room != null)
-                    obj.EmergencyLocation = room;
-            }
+            //    if (room != null)
+            //        obj.EmergencyLocation = room;
+            //}
 
             if (vModel.NewBloodId > 0)
             {

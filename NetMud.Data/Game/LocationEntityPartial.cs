@@ -2,6 +2,7 @@
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Behaviors.Rendering;
+using NetMud.DataStructure.Behaviors.System;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
 using System;
@@ -184,24 +185,7 @@ namespace NetMud.Data.Game
         {
             var radiusLocations = new List<ILocation>();
 
-            //If we don't have any paths out what can we even do
-            if (Pathways.Count() == 0)
-                return radiusLocations;
-
-            var currentRadius = 0;
-            var currentPathsSet = Pathways.EntitiesContained();
-            while (currentRadius <= strength && currentPathsSet.Count() > 0)
-            {
-                var currentLocsSet = currentPathsSet.Select(path => path.ToLocation);
-
-                if (currentLocsSet.Count() == 0)
-                    break;
-
-                radiusLocations.AddRange(currentLocsSet);
-                currentPathsSet = currentLocsSet.SelectMany(ro => ro.Pathways.EntitiesContained());
-
-                currentRadius++;
-            }
+            //TODO
 
             return radiusLocations;
         }
@@ -230,6 +214,18 @@ namespace NetMud.Data.Game
         public virtual Biome GetBiome()
         {
             return Biome.Fabricated;
+        }
+
+        public Dictionary<Tuple<long, long, long>, Tuple<INaturalResource, int>> NaturalResources
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

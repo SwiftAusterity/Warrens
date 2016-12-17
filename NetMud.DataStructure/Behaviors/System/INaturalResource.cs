@@ -2,6 +2,7 @@
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Automation;
+using NetMud.DataStructure.Behaviors.Existential;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,13 +61,13 @@ namespace NetMud.DataStructure.Behaviors.System
         /// </summary>
         /// <param name="room">The room to spawn in</param>
         /// <returns>if this can spawn there</returns>
-        bool CanSpawnIn(long[,,] location);
+        bool CanSpawnIn(IGlobalPosition location);
 
         /// <summary>
         /// Should this resource spawn in this room. Combines the "can" logic with checks against total local population
         /// </summary>
         /// <param name="room">The room to spawn in</param>
         /// <returns>if this should spawn there</returns>
-        bool ShouldSpawnIn(long[,,] location);
+        bool ShouldSpawnIn(IGlobalPosition location);
     }
 }

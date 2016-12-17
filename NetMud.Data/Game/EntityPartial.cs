@@ -6,6 +6,7 @@ using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Automation;
+using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.Rendering;
 using Newtonsoft.Json;
 using System;
@@ -98,9 +99,9 @@ namespace NetMud.Data.Game
         [JsonIgnore]
         public virtual IChannelType ConnectionType
         {
-            get 
-            { 
-                if(_internalDescriptor == null)
+            get
+            {
+                if (_internalDescriptor == null)
                     _internalDescriptor = new InternalChannel();
 
                 return _internalDescriptor;
@@ -111,7 +112,7 @@ namespace NetMud.Data.Game
         /// What this is inside of if it is inside of something
         /// </summary>
         [JsonProperty("InsideOf")]
-        private string _currentLocationBirthmark;
+        private string _insideOfBirthmark;
 
         /// <summary>
         /// What this is inside of if it is inside of something
@@ -120,19 +121,19 @@ namespace NetMud.Data.Game
         [JsonIgnore]
         public virtual IContains InsideOf
         {
-            get 
-            { 
-                if(!String.IsNullOrWhiteSpace(_currentLocationBirthmark))
-                    return LiveCache.Get<IContains>(new LiveCacheKey(typeof(IContains), _currentLocationBirthmark));
+            get
+            {
+                if (!String.IsNullOrWhiteSpace(_insideOfBirthmark))
+                    return LiveCache.Get<IContains>(new LiveCacheKey(typeof(IContains), _insideOfBirthmark));
 
-                return null; 
+                return null;
             }
             set
             {
                 if (value == null)
                     return;
 
-                _currentLocationBirthmark = value.BirthMark;
+                _insideOfBirthmark = value.BirthMark;
                 UpsertToLiveWorldCache();
             }
         }
@@ -140,24 +141,24 @@ namespace NetMud.Data.Game
         /// <summary>
         /// x,y,z position in the world
         /// </summary>
-        public Tuple<long, long, long> Position { get; private set; }
+        public IGlobalPosition Position { get; private set; }
 
         /// <summary>
         /// What direction is this facing, 0/360 = north
         /// </summary>
-        public int Facing { get; private set; }
+        public Tuple<int, int> Facing { get; private set; }
 
         /// <summary>
         /// Handles returning container's position if inside of something
         /// </summary>
         /// <returns>positional coordinates</returns>
-        public long[, ,] AbsolutePosition()
+        public IGlobalPosition AbsolutePosition()
         {
             var returnValue = Position;
             var container = InsideOf;
 
             short recursionPrevention = 0;
-            while(container != null && recursionPrevention < 10)
+            while (container != null && recursionPrevention < 10)
             {
                 returnValue = container.Position;
                 container = container.InsideOf;
@@ -178,27 +179,29 @@ namespace NetMud.Data.Game
         public bool Move(int direction, int incline, int distance, bool changeFacing = false)
         {
             //We're assuming messaging happens in what asked us to move
-            var x = Position.Item1;
-            var y = Position.Item2;
-            var z = Position.Item3;
+            var x = Position.Coordinates.Item1;
+            var y = Position.Coordinates.Item2;
+            var z = Position.Coordinates.Item3;
 
             //TODO: Get world geometry to see what the floor incline rate is
 
-            var xyChanges = NetMud.Cartography.Utilities.TranslateToDirection(direction, distance);
+            var xyChanges = NetMud.Cartography.Utilities.CalculateMovementDistance(direction, distance);
             x += xyChanges.Item1;
             y += xyChanges.Item2;
             z += (incline / 90) * distance;
-            
+
             //TODO: Get world geometry to see if you can even move here, otherwise move to up till you can't anymore
 
             //TODO: Triggers
 
-            Position = new Tuple<long, long, long>(x, y, z);
+            Position.Coordinates = new Tuple<long, long, long>(x, y, z);
 
-            if(changeFacing)
+            if (changeFacing)
                 Facing = new Tuple<int, int>(direction, incline);
 
             //TODO: Falling
+
+            return true;
         }
 
         /// <summary>
@@ -209,17 +212,22 @@ namespace NetMud.Data.Game
         /// <param name="z">z coordinate</param>
         /// <param name="facing">where the thing should be facing in the end</param>
         /// <returns>success</returns>
-        bool Reposition(long x, long y, long z, Tuple<int, int> facing)
+        public bool Reposition(IGlobalPosition position, Tuple<int, int> facing)
         {
+            if (facing == null)
+                facing = new Tuple<int, int>(360, 0);
+
             //We're assuming messaging happens in what asked us to move
 
             //TODO: Get world geometry to see if you can even move here, otherwise move to up till you can't anymore
 
             //TODO: Triggers
-            Position = new Tuple<long, long, long>(x, y, z);
+            Position = position;
             Facing = facing;
 
             //TODO: Falling
+
+            return true;
         }
         #endregion
 
@@ -235,7 +243,7 @@ namespace NetMud.Data.Game
         /// <returns>the affect</returns>
         public bool HasAffect(string affectTarget)
         {
-            if(String.IsNullOrWhiteSpace(affectTarget))
+            if (String.IsNullOrWhiteSpace(affectTarget))
                 return false;
 
             return Affects.Any(aff => aff.Target.Equals(affectTarget, StringComparison.InvariantCultureIgnoreCase)
@@ -255,7 +263,7 @@ namespace NetMud.Data.Game
             var affect = Affects.FirstOrDefault(aff => aff.Equals(affectToApply));
 
             //Are we combining affects or not
-            if(affect == null)
+            if (affect == null)
             {
                 //TODO: Resistance roll
                 Affects.Add(affectToApply);
@@ -287,20 +295,11 @@ namespace NetMud.Data.Game
 
                 foreach (var affect in affects)
                 {
-                    switch (affect.Type)
-                    {
-                        case AffectType.Pure:
-                            returnValue = AffectResistType.Immune;
-                            break;
-                        default:
-                            //TODO: This is kind of a stub, needs more stuff possibly int rolls or luck and such
-                            if (dispellationMethod.Item1 == affect.Type && dispellationMethod.Item2 < affect.Value * affect.Duration)
-                                returnValue = AffectResistType.Resisted;
-                            else
-                                returnValue = AffectResistType.Success;
-
-                            break;
-                    }
+                    //TODO: This is kind of a stub, needs more stuff possibly int rolls or luck and such
+                    if (dispellationStrength >= affect.DispelResistance)
+                        returnValue = AffectResistType.Resisted;
+                    else
+                        returnValue = AffectResistType.Success;
 
                     if (returnValue == AffectResistType.Success)
                         affect.Duration = 0;
@@ -319,7 +318,7 @@ namespace NetMud.Data.Game
         /// Spawn a new instance of this entity into the live world in a set position
         /// </summary>
         /// <param name="position">x,y,z coordinates to spawn into</param>
-        public abstract void SpawnNewInWorld(long[, ,] position);
+        public abstract void SpawnNewInWorld(IGlobalPosition position);
 
         /// <summary>
         /// Spawn this new into the live world into a specified container

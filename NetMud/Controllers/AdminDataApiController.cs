@@ -37,12 +37,7 @@ namespace NetMud.Controllers
         [HttpGet]
         public string RenderRoomForEditWithRadius(long id, int radius)
         {
-            var centerRoom = BackingDataCache.Get<IRoomData>(id);
-
-            if (centerRoom == null || radius < 0)
-                return "Invalid inputs.";
-
-            return Rendering.RenderRadiusMap(centerRoom, radius);
+            return "";// Rendering.RenderRadiusMap(centerRoom, radius);
         }
 
         [HttpGet]
@@ -53,18 +48,13 @@ namespace NetMud.Controllers
             if (world == null || zIndex < 0 || zIndex > world.WorldMap.CoordinatePlane.GetUpperBound(2))
                 return "Invalid inputs.";
 
-            return Rendering.RenderMap(Cartographer.GetSinglePlane(world.WorldMap.CoordinatePlane, zIndex), true, true, null);
+            return "";// Rendering.RenderMap(Cartographer.GetSinglePlane(world.WorldMap.CoordinatePlane, zIndex), true, true, null);
         }
 
         [HttpGet]
         public string RenderZoneMap(long id, int zIndex)
         {
-            var zone = BackingDataCache.Get<IZone>(id);
-
-            if (zone == null || zIndex < 0 || zIndex > zone.ZoneMap.CoordinatePlane.GetUpperBound(2))
-                return "Invalid inputs.";
-
-            return Rendering.RenderMap(Cartographer.GetSinglePlane(zone.ZoneMap.CoordinatePlane, zIndex), true, true, zone.CentralRoom(zIndex));
+            return "";// Rendering.RenderMap(Cartographer.GetSinglePlane(zone.ZoneMap.CoordinatePlane, zIndex), true, true, zone.CentralRoom(zIndex));
         }
     }
 }

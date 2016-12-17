@@ -183,11 +183,8 @@
     <Compile Include="Controllers\GameAdmin\GameAdminController.cs" />
     <Compile Include="Controllers\GameAdmin\ConstantsController.cs" />
     <Compile Include="Controllers\GameAdmin\FaunaController.cs" />
-    <Compile Include="Controllers\GameAdmin\ZoneController.cs" />
-    <Compile Include="Controllers\GameAdmin\RoomController.cs" />
     <Compile Include="Controllers\GameAdmin\RaceController.cs" />
     <Compile Include="Controllers\GameAdmin\PlayerController.cs" />
-    <Compile Include="Controllers\GameAdmin\PathwayController.cs" />
     <Compile Include="Controllers\GameAdmin\NPCController.cs" />
     <Compile Include="Controllers\GameAdmin\MaterialController.cs" />
     <Compile Include="Controllers\GameAdmin\InanimateController.cs" />
@@ -209,13 +206,10 @@
     <Compile Include="Models\Admin\ConstantsViewModel.cs" />
     <Compile Include="Models\Admin\EntityContainerViewModel.cs" />
     <Compile Include="Models\Admin\PlayerViewModels.cs" />
-    <Compile Include="Models\Admin\PathwayViewModels.cs" />
     <Compile Include="Models\Admin\InanimateViewModels.cs" />
     <Compile Include="Models\Admin\MaterialViewModels.cs" />
     <Compile Include="Models\Admin\NPCViewModels.cs" />
     <Compile Include="Models\Admin\RaceViewModels.cs" />
-    <Compile Include="Models\Admin\RoomViewModels.cs" />
-    <Compile Include="Models\Admin\ZoneViewModels.cs" />
     <Compile Include="Models\Admin\HelpViewModels.cs" />
     <Compile Include="Models\Admin\GameAdminViewModels.cs" />
     <Compile Include="Models\AsciiMapViewModel.cs" />

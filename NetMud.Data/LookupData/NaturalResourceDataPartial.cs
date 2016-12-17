@@ -1,6 +1,7 @@
 ﻿using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.System;
 using Newtonsoft.Json;
 using System;
@@ -101,6 +102,16 @@ namespace NetMud.Data.LookupData
                 dataProblems.Add("This resource must occur in at least one biome.");
 
             return dataProblems;
+        }
+
+        public virtual bool CanSpawnIn(IGlobalPosition location)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual bool ShouldSpawnIn(IGlobalPosition location)
+        {
+            throw new NotImplementedException();
         }
     }
 }

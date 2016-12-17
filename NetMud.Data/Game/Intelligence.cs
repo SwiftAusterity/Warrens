@@ -3,6 +3,7 @@ using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
@@ -219,6 +220,29 @@ namespace NetMud.Data.Game
         public override void SpawnNewInWorld()
         {
             throw new NotImplementedException("NPCs can't spawn to nothing");
+        }
+
+        /// <summary>
+        /// Spawn a new instance of this entity into the live world in a set position
+        /// </summary>
+        /// <param name="position">x,y,z coordinates to spawn into</param>
+        public override void SpawnNewInWorld(IGlobalPosition position)
+        {
+            //We can't even try this until we know if the data is there
+            if (DataTemplate<INonPlayerCharacter>() == null)
+                throw new InvalidOperationException("Missing backing data store on NPC spawn event.");
+
+            var bS = DataTemplate<INonPlayerCharacter>();
+
+            BirthMark = LiveCache.GetUniqueIdentifier(bS);
+            Keywords = new string[] { bS.Name.ToLower() };
+            Birthdate = DateTime.Now;
+
+            Inventory = new EntityContainer<IInanimate>();
+
+            this.Reposition(position, null);
+
+            LiveCache.Add(this);
         }
 
         /// <summary>

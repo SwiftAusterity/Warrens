@@ -2,6 +2,7 @@
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Actionable;
 using NetMud.DataStructure.Behaviors.Automation;
+using NetMud.DataStructure.Behaviors.Existential;
 using System;
 using System.Collections.Generic;
 
@@ -70,12 +71,12 @@ namespace NetMud.DataStructure.Base.Supporting
         /// <summary>
         /// What is the starting room of new players
         /// </summary>
-        long[,,] StartingLocation { get; set; }
+        IGlobalPosition StartingLocation { get; set; }
 
         /// <summary>
         /// When a player loads without a location where do we sent them
         /// </summary>
-        long[,,] EmergencyLocation { get; set; }
+        IGlobalPosition EmergencyLocation { get; set; }
 
         //TODO: Poison glands
     }

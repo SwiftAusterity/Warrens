@@ -2,6 +2,7 @@
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Behaviors.Existential;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -143,6 +144,20 @@ namespace NetMud.Data.LookupData
                 dataProblems.Add("At least one part of this plant must have a value.");
 
             return dataProblems;
+        }
+
+        public override bool CanSpawnIn(IGlobalPosition location)
+        {
+            var returnValue = true;
+
+            return base.CanSpawnIn(location) && returnValue;
+        }
+
+        public override bool ShouldSpawnIn(IGlobalPosition location)
+        {
+            var returnValue = true;
+
+            return base.ShouldSpawnIn(location) && returnValue;
         }
     }
 }

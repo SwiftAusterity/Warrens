@@ -1,6 +1,7 @@
 ﻿using NetMud.Data.LookupData;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Behaviors.Existential;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -65,6 +66,20 @@ namespace NetMud.Data.LookupData
                 dataProblems.Add("Female to male ratio must be greater than 0.");
 
             return dataProblems;
+        }
+
+        public override bool CanSpawnIn(IGlobalPosition location)
+        {
+            var returnValue = true;
+
+            return base.CanSpawnIn(location) && returnValue;
+        }
+
+        public override bool ShouldSpawnIn(IGlobalPosition location)
+        {
+            var returnValue = true;
+
+            return base.ShouldSpawnIn(location) && returnValue;
         }
     }
 }

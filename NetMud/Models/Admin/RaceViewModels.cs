@@ -142,7 +142,6 @@ namespace NetMud.Models.Admin
         [Display(Name = "Help Text Body")]
         public string NewHelpBody { get; set; }
 
-        public IEnumerable<IRoomData> ValidRooms { get; set; }
         public IEnumerable<IInanimateData> ValidObjects { get; set; }
         public IEnumerable<IMaterial> ValidMaterials { get; set; }
         public IRace DataObject { get; set; }

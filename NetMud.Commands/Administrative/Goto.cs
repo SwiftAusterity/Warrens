@@ -14,7 +14,7 @@ namespace NutMud.Commands.Administrative
     /// </summary>
     [CommandKeyword("goto", false)]
     [CommandPermission(StaffRank.Guest)]
-    [CommandParameter(CommandUsage.Subject, typeof(Room), new CacheReferenceType[] { CacheReferenceType.Entity }, true)]
+   // [CommandParameter(CommandUsage.Subject, typeof(Room), new CacheReferenceType[] { CacheReferenceType.Entity }, true)]
     [CommandRange(CommandRangeType.Global, 0)]
     public class Goto : CommandPartial
     {

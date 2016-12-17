@@ -6,6 +6,7 @@ using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
@@ -59,7 +60,7 @@ namespace NetMud.Data.Game
 
             //IDatas need parameterless constructors
             Contents = new EntityContainer<IInanimate>();
-            Pathways = new EntityContainer<IPathway>();
+
             MobilesInside = new EntityContainer<IMobile>();
         }
 
@@ -70,7 +71,7 @@ namespace NetMud.Data.Game
         {
             //IDatas need parameterless constructors
             Contents = new EntityContainer<IInanimate>();
-            Pathways = new EntityContainer<IPathway>();
+
             MobilesInside = new EntityContainer<IMobile>();
         }
 
@@ -81,7 +82,7 @@ namespace NetMud.Data.Game
         public Inanimate(IInanimateData backingStore)
         {
             Contents = new EntityContainer<IInanimate>(backingStore.InanimateContainers);
-            Pathways = new EntityContainer<IPathway>();
+
             MobilesInside = new EntityContainer<IMobile>(backingStore.MobileContainers);
 
             DataTemplateId = backingStore.ID;
@@ -96,7 +97,7 @@ namespace NetMud.Data.Game
         public Inanimate(IInanimateData backingStore, IContains spawnTo)
         {
             Contents = new EntityContainer<IInanimate>(backingStore.InanimateContainers);
-            Pathways = new EntityContainer<IPathway>();
+
             MobilesInside = new EntityContainer<IMobile>(backingStore.MobileContainers);
 
             DataTemplateId = backingStore.ID;
@@ -119,6 +120,29 @@ namespace NetMud.Data.Game
         public override void SpawnNewInWorld()
         {
             throw new NotImplementedException("Objects can't spawn to nothing");
+        }
+
+        /// <summary>
+        /// Spawn a new instance of this entity into the live world in a set position
+        /// </summary>
+        /// <param name="position">x,y,z coordinates to spawn into</param>
+        public override void SpawnNewInWorld(IGlobalPosition position)
+        {
+            //We can't even try this until we know if the data is there
+            if (DataTemplate<IInanimateData>() == null)
+                throw new InvalidOperationException("Missing backing data store on object spawn event.");
+
+            var bS = DataTemplate<IInanimateData>();
+
+            BirthMark = LiveCache.GetUniqueIdentifier(bS);
+            Keywords = new string[] { bS.Name.ToLower() };
+            Birthdate = DateTime.Now;
+
+            Contents = new EntityContainer<IInanimate>();
+
+            this.Reposition(position, null);
+
+            LiveCache.Add(this);
         }
 
         /// <summary>

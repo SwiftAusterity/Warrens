@@ -16,17 +16,12 @@ namespace NetMud.Models.Admin
         public DashboardViewModel()
         {
             Inanimates = Enumerable.Empty<IInanimateData>();
-            Rooms = Enumerable.Empty<IRoomData>();
             NPCs = Enumerable.Empty<INonPlayerCharacter>();
 
             DimensionalModels = Enumerable.Empty<IDimensionalModelData>();
             HelpFiles = Enumerable.Empty<IHelp>();
             Materials = Enumerable.Empty<IMaterial>();
             Races = Enumerable.Empty<IRace>();
-            Zones = Enumerable.Empty<IZone>();
-            Constants = Enumerable.Empty<IConstants>();
-            Constants = Enumerable.Empty<IConstants>();
-            Constants = Enumerable.Empty<IConstants>();
             Constants = Enumerable.Empty<IConstants>();
 
             WebsocketServers = Enumerable.Empty<NetMud.Websock.Server>();
@@ -39,7 +34,6 @@ namespace NetMud.Models.Admin
         }
 
         //Backing Data
-        public IEnumerable<IRoomData> Rooms { get; set; }
         public IEnumerable<IInanimateData> Inanimates { get; set; }
         public IEnumerable<INonPlayerCharacter> NPCs { get; set; }
 
@@ -48,7 +42,6 @@ namespace NetMud.Models.Admin
         public IEnumerable<IHelp> HelpFiles { get; set; }
         public IEnumerable<IMaterial> Materials { get; set; }
         public IEnumerable<IRace> Races { get; set; }
-        public IEnumerable<IZone> Zones { get; set; }
         public IEnumerable<IConstants> Constants { get; set; }
         public IEnumerable<IFlora> Flora { get; set; }
         public IEnumerable<IFauna> Fauna { get; set; }

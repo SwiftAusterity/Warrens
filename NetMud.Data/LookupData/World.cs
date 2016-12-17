@@ -17,6 +17,12 @@ namespace NetMud.Data.LookupData
     {
         public IMap WorldMap { get; private set; }
 
+        public long FullDiameter { get; set; }
+
+        public HashSet<IStratum> Strata { get; set; }
+
+        public HashSet<IChunk> Chunks { get; set; }
+
         public World(IMap worldMap, string name)
         {
             WorldMap = worldMap;
@@ -26,8 +32,6 @@ namespace NetMud.Data.LookupData
 
             //Set the id right now
             GetNextId();
-
-            FillRoomDimensions();
         }
 
         /// <summary>
@@ -42,28 +46,6 @@ namespace NetMud.Data.LookupData
                 dataProblems.Add("World Map is null.");
 
             return dataProblems;
-        }
-
-        private void FillRoomDimensions()
-        {
-            if (WorldMap == null || WorldMap.CoordinatePlane == null)
-                return;
-
-            int x, y, z;
-            for (x = 0; x <= WorldMap.CoordinatePlane.GetUpperBound(0); x++)
-                for (y = 0; y <= WorldMap.CoordinatePlane.GetUpperBound(1); y++)
-                    for (z = 0; z <= WorldMap.CoordinatePlane.GetUpperBound(2); z++)
-                    {
-                        if (WorldMap.CoordinatePlane[x, y, z] <= 0)
-                            continue;
-
-                        var room = BackingDataCache.Get<IRoomData>(WorldMap.CoordinatePlane[x, y, z]);
-
-                        if (room == null)
-                            continue;
-
-                        room.Coordinates = new Tuple<int, int, int>(x, y, z);
-                    }
         }
     }
 }

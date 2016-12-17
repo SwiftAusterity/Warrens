@@ -3,6 +3,8 @@ using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Behaviors.Existential;
+using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.SupportingClasses;
 using Newtonsoft.Json;
 using System;
@@ -100,6 +102,45 @@ namespace NetMud.Data.EntityBackingData
                 return _account;
             }
         }
+
+        /// <summary>
+        /// What this is inside of if it is inside of something
+        /// </summary>
+        [JsonProperty("InsideOf")]
+        private string _insideOfBirthmark;
+
+        /// <summary>
+        /// What this is inside of if it is inside of something
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public virtual IContains InsideOf
+        {
+            get
+            {
+                if (!String.IsNullOrWhiteSpace(_insideOfBirthmark))
+                    return LiveCache.Get<IContains>(new LiveCacheKey(typeof(IContains), _insideOfBirthmark));
+
+                return null;
+            }
+            set
+            {
+                if (value == null)
+                    return;
+
+                _insideOfBirthmark = value.BirthMark;
+            }
+        }
+
+        /// <summary>
+        /// x,y,z position in the world
+        /// </summary>
+        public IGlobalPosition Position { get; private set; }
+
+        /// <summary>
+        /// What direction is this facing, 0/360 = north
+        /// </summary>
+        public Tuple<int, int> Facing { get; private set; }
 
         /// <summary>
         /// Empty constructor

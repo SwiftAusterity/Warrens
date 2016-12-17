@@ -5,6 +5,7 @@ using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.Behaviors.System;
 using NetMud.DataStructure.SupportingClasses;
@@ -154,8 +155,6 @@ namespace NetMud.Data.Game
 
                 //We save character data to ensure the player remains where it was on last known change
                 var ch = DataTemplate<ICharacter>();
-                ch.LastKnownLocation = value.DataTemplateId.ToString();
-                ch.LastKnownLocationType = value.GetType().Name;
                 ch.Save();
             }
         }
@@ -331,7 +330,7 @@ namespace NetMud.Data.Game
                 if (me.InsideOf == null)
                 {
                     var newLoc = GetBaseSpawn();
-                    newLoc.MoveInto<IPlayer>(this);
+                    this.Reposition(newLoc, null);
                 }
                 else
                     me.InsideOf.MoveInto<IPlayer>(this);
@@ -342,13 +341,13 @@ namespace NetMud.Data.Game
         /// Find the emergency we dont know where to spawn this guy spawn location
         /// </summary>
         /// <returns>The emergency spawn location</returns>
-        private IContains GetBaseSpawn()
+        private IGlobalPosition GetBaseSpawn()
         {
             var chr = DataTemplate<ICharacter>(); ;
 
-            var roomId = chr.StillANoob ? chr.RaceData.StartingLocation.ID : chr.RaceData.EmergencyLocation.ID;
+            var gPos = chr.StillANoob ? chr.RaceData.StartingLocation : chr.RaceData.EmergencyLocation;
 
-            return LiveCache.Get<Room>(roomId);
+            return gPos;
         }
 
         /// <summary>
@@ -357,29 +356,32 @@ namespace NetMud.Data.Game
         public override void SpawnNewInWorld()
         {
             var ch = DataTemplate<ICharacter>(); ;
-            var locationAssembly = Assembly.GetAssembly(typeof(ILocation));
+        }
 
-            if (ch.LastKnownLocationType == null)
-                ch.LastKnownLocationType = typeof(IRoom).Name;
+        /// <summary>
+        /// Spawn a new instance of this entity into the live world in a set position
+        /// </summary>
+        /// <param name="position">x,y,z coordinates to spawn into</param>
+        public override void SpawnNewInWorld(IGlobalPosition position)
+        {
+            //We can't even try this until we know if the data is there
+            if (DataTemplate<ICharacter>() == null)
+                throw new InvalidOperationException("Missing backing data store on player spawn event.");
 
-            var lastKnownLocType = locationAssembly.DefinedTypes.FirstOrDefault(tp => tp.Name.Equals(ch.LastKnownLocationType));
+            var ch = DataTemplate<ICharacter>();
 
-            ILocation lastKnownLoc = null;
-            if (lastKnownLocType != null && !string.IsNullOrWhiteSpace(ch.LastKnownLocation))
-            {
-                if (lastKnownLocType.GetInterfaces().Contains(typeof(ISpawnAsSingleton)))
-                {
-                    long lastKnownLocID = long.Parse(ch.LastKnownLocation);
-                    lastKnownLoc = LiveCache.Get<ILocation>(lastKnownLocID, lastKnownLocType);
-                }
-                else
-                {
-                    var cacheKey = new LiveCacheKey(lastKnownLocType, ch.LastKnownLocation);
-                    lastKnownLoc = LiveCache.Get<ILocation>(cacheKey);
-                }
-            }
+            BirthMark = LiveCache.GetUniqueIdentifier(ch);
+            Keywords = new string[] { ch.Name.ToLower(), ch.SurName.ToLower() };
+            Birthdate = DateTime.Now;
 
-            SpawnNewInWorld(lastKnownLoc);
+            //Set the data context's stuff too so we don't have to do this over again
+            ch.Save();
+
+            Inventory = new EntityContainer<IInanimate>();
+
+            this.Reposition(position, null);
+
+            LiveCache.Add(this);
         }
 
         /// <summary>
@@ -388,20 +390,18 @@ namespace NetMud.Data.Game
         /// <param name="spawnTo">the location/container this should spawn into</param>
         public override void SpawnNewInWorld(IContains spawnTo)
         {
-            var ch = DataTemplate<ICharacter>(); ;
+            if (spawnTo == null)
+                SpawnNewInWorld(GetBaseSpawn());
+
+            var ch = DataTemplate<ICharacter>();
 
             BirthMark = LiveCache.GetUniqueIdentifier(ch);
             Keywords = new string[] { ch.Name.ToLower(), ch.SurName.ToLower() };
             Birthdate = DateTime.Now;
 
-            if (spawnTo == null)
-                spawnTo = GetBaseSpawn();
-
             InsideOf = spawnTo;
 
             //Set the data context's stuff too so we don't have to do this over again
-            ch.LastKnownLocation = spawnTo.DataTemplateId.ToString();
-            ch.LastKnownLocationType = spawnTo.GetType().Name;
             ch.Save();
 
             spawnTo.MoveInto<IPlayer>(this);

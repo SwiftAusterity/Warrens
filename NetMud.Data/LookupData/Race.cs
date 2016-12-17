@@ -3,6 +3,7 @@ using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Behaviors.Actionable;
 using NetMud.DataStructure.Behaviors.Automation;
+using NetMud.DataStructure.Behaviors.Existential;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -226,5 +227,10 @@ namespace NetMud.Data.LookupData
         {
             return base.RenderHelpBody();
         }
+
+
+        public IGlobalPosition StartingLocation { get; set; }
+
+        public IGlobalPosition EmergencyLocation { get; set; }
     }
 }

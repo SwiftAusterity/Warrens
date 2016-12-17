@@ -34,37 +34,23 @@ namespace NetMud.Data.System
         /// <summary>
         /// Chance of spread
         /// </summary>
-        public Dictionary<ContagionVector, int> AfflictionChances { get; set; }
+        public int DispelResistance { get; set; }
 
         public Affect()
         {
             Duration = -1;
             Value = 0;
             Target = String.Empty;
-            AfflictionChances = new Dictionary<ContagionVector, int>();
+            DispelResistance = 0;
         }
 
-        public Affect(int duration, int value, string target, Dictionary<ContagionVector, int> afflictionChances)
+        public Affect(int duration, int value, string target, int dispelResistance)
         {
             Duration = duration;
             Value = value;
             Target = target;
-            AfflictionChances = afflictionChances;
+            DispelResistance = dispelResistance;
         }
-
-        /// <summary>
-        /// Attempt to spread this to someone else
-        /// </summary>
-        /// <param name="affected">the afflcited</param>
-        /// <param name="victim">the victim</param>
-        /// <param name="vector">How this is being spread</param>
-        /// <returns>success or failure</returns>
-        public bool Afflict(IHasAffects source, ICanBeAffected victim, ContagionVector vector)
-        {
-            //TODO: math for strength of affliction based on stats/sktree
-            return victim.ApplyAffect(this) == AffectResistType.Success;
-        }
-
 
         /// <summary>
         /// -99 = null input
@@ -83,7 +69,7 @@ namespace NetMud.Data.System
                     if (other.GetType() != this.GetType())
                         return -1;
 
-                    if (other.Target.Equals(this.Target, StringComparison.InvariantCultureIgnoreCase) && other.Type == this.Type)
+                    if (other.Target.Equals(this.Target, StringComparison.InvariantCultureIgnoreCase))
                         return 1;
 
                     return 0;
@@ -109,8 +95,7 @@ namespace NetMud.Data.System
                 try
                 {
                     return other.GetType() == this.GetType() 
-                        && other.Target.Equals(this.Target, StringComparison.InvariantCultureIgnoreCase) 
-                        && other.Type == this.Type;
+                        && other.Target.Equals(this.Target, StringComparison.InvariantCultureIgnoreCase);
                 }
                 catch (Exception ex)
                 {

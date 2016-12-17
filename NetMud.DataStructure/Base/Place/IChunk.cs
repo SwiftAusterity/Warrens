@@ -15,8 +15,14 @@ namespace NetMud.DataStructure.Base.Place
     /// </summary>
     public interface IChunk : ILocation, ISpawnAsSingleton
     {
+        /// <summary>
+        /// Upper x,y,z
+        /// </summary>
         Tuple<long, long, long> UpperBounds { get; set; }
 
+        /// <summary>
+        /// Lower x,y,z
+        /// </summary>
         Tuple<long, long, long> LowerBounds { get; set; }
 
         /// <summary>
