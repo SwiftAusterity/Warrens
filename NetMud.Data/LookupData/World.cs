@@ -30,6 +30,9 @@ namespace NetMud.Data.LookupData
             Created = DateTime.UtcNow;
             LastRevised = DateTime.UtcNow;
 
+            Strata = new HashSet<IStratum>();
+            Chunks = new HashSet<IChunk>();
+
             //Set the id right now
             GetNextId();
         }
@@ -42,8 +45,17 @@ namespace NetMud.Data.LookupData
         {
             var dataProblems = base.FitnessReport();
 
+            if (FullDiameter < 1)
+                dataProblems.Add("Diameter is 0 or less.");
+
             if (WorldMap == null)
                 dataProblems.Add("World Map is null.");
+
+            if (Strata.Count == 0)
+                dataProblems.Add("World is void, no strata detected.");
+
+            if (Chunks.Count == 0)
+                dataProblems.Add("No chunks currently loaded to world.");
 
             return dataProblems;
         }
