@@ -1,0 +1,30 @@
+﻿@model NetMud.Models.Admin.AddEditWorldViewModel
+@{
+    ViewBag.Title = "Add New World";
+}
+
+@{
+    <section id="newCharacterForm">
+        @using (Html.BeginForm("Add", "World", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group one-column">
+                @Html.EditorFor(e => e.NewName)
+            </div>
+
+            @Html.Partial("WorldEntityContainer", new NetMud.Models.Admin.EntityContainerViewModel<NetMud.DataStructure.Base.Entity.IWorld>("World", "World Containers"))
+            @Html.Partial("MobileEntityContainer", new NetMud.Models.Admin.EntityContainerViewModel<NetMud.DataStructure.Base.Supporting.IMobile>("Mobile", "Character Containers"))
+
+            @Html.Partial("TwoDimensionalEntityEditor", Model)
+            @Html.Partial("~/Views/GameAdmin/World/InternalComposition.cshtml", Model)
+
+            @Html.Partial("SubmitButton", "Create")
+        }
+    </section>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -17,6 +17,7 @@ namespace NetMud.Models.Admin
         {
             Inanimates = Enumerable.Empty<IInanimateData>();
             NPCs = Enumerable.Empty<INonPlayerCharacter>();
+            Worlds = Enumerable.Empty<IWorld>();
 
             DimensionalModels = Enumerable.Empty<IDimensionalModelData>();
             HelpFiles = Enumerable.Empty<IHelp>();
@@ -26,9 +27,9 @@ namespace NetMud.Models.Admin
 
             WebsocketServers = Enumerable.Empty<NetMud.Websock.Server>();
 
-            LiveRooms = 0;
             LiveInanimates = 0;
             LiveNPCs = 0;
+            liveChunks = 0;
 
             LivePlayers = 0;
         }
@@ -36,6 +37,7 @@ namespace NetMud.Models.Admin
         //Backing Data
         public IEnumerable<IInanimateData> Inanimates { get; set; }
         public IEnumerable<INonPlayerCharacter> NPCs { get; set; }
+        public IEnumerable<IWorld> Worlds { get; set; }
 
         //Lookup Data
         public IEnumerable<IDimensionalModelData> DimensionalModels { get; set; }
@@ -52,7 +54,7 @@ namespace NetMud.Models.Admin
 
         public IEnumerable<NetMud.Websock.Server> WebsocketServers { get; set; }
 
-        public int LiveRooms { get; set; }
+        public int LiveChunks { get; set; }
         public int LiveInanimates { get; set; }
         public int LiveNPCs { get; set; }
         public int LivePlayers { get; set; }

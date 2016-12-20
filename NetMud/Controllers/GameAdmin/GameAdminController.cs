@@ -49,6 +49,7 @@ namespace NetMud.Controllers.GameAdmin
 
             dashboardModel.Inanimates = BackingDataCache.GetAll<IInanimateData>();
             dashboardModel.NPCs = BackingDataCache.GetAll<INonPlayerCharacter>();
+            dashboardModel.Worlds = BackingDataCache.GetAll<IWorld>();
 
             dashboardModel.HelpFiles = BackingDataCache.GetAll<IHelp>();
             dashboardModel.DimensionalModels = BackingDataCache.GetAll<IDimensionalModelData>();
@@ -63,6 +64,7 @@ namespace NetMud.Controllers.GameAdmin
             dashboardModel.LivePlayers = LiveCache.GetAll<IPlayer>().Count();
             dashboardModel.LiveInanimates = LiveCache.GetAll<IInanimate>().Count();
             dashboardModel.LiveNPCs = LiveCache.GetAll<IIntelligence>().Count();
+            dashboardModel.LiveChunks = LiveCache.GetAll<IChunk>().Count();
 
             dashboardModel.WebsocketServers = LiveCache.GetAll<NetMud.Websock.Server>();
 

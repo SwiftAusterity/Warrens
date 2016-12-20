@@ -7,6 +7,16 @@
     <h4>Backing Data</h4>
     <hr />
     <dl class="dl-horizontal">
+        <dt>Worlds:</dt>
+        <dd>
+            @Model.NPCs.Count().ToString() [
+            @Html.ActionLink("Manage", "Index", "World")
+            @Html.ActionLink("Add", "Add", "World") ]
+            @if (Model.Worlds.Any(r => r.FitnessProblems))
+            {
+                <span style="color:red;">DATA PROBLEMS</span>
+            }
+        </dd>
         <dt>NPCs:</dt>
         <dd>
             @Model.NPCs.Count().ToString() [
@@ -127,6 +137,10 @@
         <dt>NPCs:</dt>
         <dd>
             @Model.LiveNPCs [ ]
+        </dd>
+        <dt>Chunks:</dt>
+        <dd>
+            @Model.LiveChunks [ ]
         </dd>
     </dl>
     <h4>World State</h4>

@@ -1,0 +1,37 @@
+﻿@model NetMud.Models.Admin.AddEditWorldViewModel
+@{
+    ViewBag.Title = "Edit World";
+}
+
+@{
+    <section id="newCharacterForm">
+        @using (Html.BeginForm("Edit", "World", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <input type="hidden" name="id" id="id" value="@Model.DataObject.ID" />
+            <div class="form-group one-column">
+                @Html.EditorFor(e => e.NewName)
+            </div>
+
+            
+            @Html.Partial("WorldEntityContainer", new NetMud.Models.Admin.EntityContainerViewModel<NetMud.DataStructure.Base.Entity.IWorld>(Model.DataObject.WorldContainers, "World", "World Containers"))
+            @Html.Partial("MobileEntityContainer", new NetMud.Models.Admin.EntityContainerViewModel<NetMud.DataStructure.Base.Supporting.IMobile>(Model.DataObject.MobileContainers, "Mobile", "Character Containers"))
+            
+            @Html.Partial("TwoDimensionalEntityEditor", Model)
+
+            @Html.Partial("~/Views/GameAdmin/World/InternalComposition.cshtml", Model)
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-9">
+                    <input type="submit" value="Commit" class="btn btn-default save" />
+                    @Html.ActionLink("Cancel", "Index", "World", new { @class = "btn btn-default cancel" })
+                </div>
+            </div>
+        }
+    </section>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -60,7 +60,6 @@ namespace NetMud.Models.Admin
         [Display(Name = "Character Container Volumes")]
         public long[] MobileContainerVolumes { get; set; }
 
-        
         [Display(Name = "Inanimate")]
         public long[] InternalCompositionIds { get; set; }
 
