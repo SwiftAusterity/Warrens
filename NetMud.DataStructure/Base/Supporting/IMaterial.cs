@@ -1,4 +1,5 @@
 ﻿using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Behaviors.Existential;
 using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Base.Supporting
@@ -6,7 +7,7 @@ namespace NetMud.DataStructure.Base.Supporting
     /// <summary>
     /// Lookup Data for what things are made of
     /// </summary>
-    public interface IMaterial : ILookupData
+    public interface IMaterial : ILookupData, ICanAccumulate
     {
         /// <summary>
         /// Is this material energy conduction

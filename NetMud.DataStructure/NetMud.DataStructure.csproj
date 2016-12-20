@@ -53,6 +53,7 @@
     <Compile Include="Base\Skills\ISkpell.cs" />
     <Compile Include="Base\Supporting\IAffect.cs" />
     <Compile Include="Base\Supporting\IAilment.cs" />
+    <Compile Include="Base\Supporting\ICurrency.cs" />
     <Compile Include="Base\Supporting\IDamage.cs" />
     <Compile Include="Base\Supporting\IDimensionalModel.cs" />
     <Compile Include="Base\Supporting\IDimensionalModelData.cs" />
@@ -69,6 +70,8 @@
     <Compile Include="Behaviors\Actionable\ICanGainExperience.cs" />
     <Compile Include="Behaviors\Actionable\ICanReproduce.cs" />
     <Compile Include="Behaviors\Automation\IIlluminated.cs" />
+    <Compile Include="Behaviors\Existential\ICanAccumulate.cs" />
+    <Compile Include="Behaviors\Existential\IAccumulation.cs" />
     <Compile Include="Behaviors\Existential\IContainsLiquid.cs" />
     <Compile Include="Behaviors\Existential\IExist.cs" />
     <Compile Include="Behaviors\Existential\IHasPositioning.cs" />
