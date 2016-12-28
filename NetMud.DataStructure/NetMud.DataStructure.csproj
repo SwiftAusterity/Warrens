@@ -65,6 +65,7 @@
     <Compile Include="Base\Supporting\IGender.cs" />
     <Compile Include="Base\Supporting\IMaterial.cs" />
     <Compile Include="Base\Supporting\IMineral.cs" />
+    <Compile Include="Base\Supporting\IQuality.cs" />
     <Compile Include="Behaviors\Actionable\ICanBeAffected.cs" />
     <Compile Include="Behaviors\Actionable\ICanBeWounded.cs" />
     <Compile Include="Behaviors\Actionable\ICanGainExperience.cs" />

@@ -9,6 +9,11 @@ namespace NetMud.DataStructure.Base.Place
     public interface IWorld : IData
     {
         /// <summary>
+        /// How the world behaves with regards to coordinates and empty space
+        /// </summary>
+        WorldType Topography { get; set; }
+
+        /// <summary>
         /// The room array that makes up the world
         /// </summary>
         IMap WorldMap { get; }
@@ -27,5 +32,15 @@ namespace NetMud.DataStructure.Base.Place
         /// Live chunk collection of this world
         /// </summary>
         HashSet<IChunk> Chunks { get; set; }
+    }
+
+    /// <summary>
+    /// Types for handling coords and worlds
+    /// </summary>
+    public enum WorldType
+    {
+        Planetoid,
+        Flat,
+        Void
     }
 }
