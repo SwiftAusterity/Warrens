@@ -23,9 +23,10 @@ namespace NetMud.Data.LookupData
 
         public HashSet<IChunk> Chunks { get; set; }
 
-        public World(IMap worldMap, string name)
+        public WorldType Topography { get; set; }
+
+        public World(string name)
         {
-            WorldMap = worldMap;
             Name = name;
             Created = DateTime.UtcNow;
             LastRevised = DateTime.UtcNow;

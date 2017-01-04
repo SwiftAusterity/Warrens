@@ -29,7 +29,7 @@ namespace NetMud.Models.Admin
 
             LiveInanimates = 0;
             LiveNPCs = 0;
-            liveChunks = 0;
+            LiveChunks = 0;
 
             LivePlayers = 0;
         }

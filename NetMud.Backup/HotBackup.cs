@@ -236,7 +236,7 @@ namespace NetMud.Backup
             //TODO this
 
             //This zone gets to choose the world name if any
-            var world = new World(new Map(null, false), "");
+            var world = new World(String.Empty);
 
             if (String.IsNullOrWhiteSpace(world.Name))
                 world.Name = "Dimension " + world.ID.ToString();

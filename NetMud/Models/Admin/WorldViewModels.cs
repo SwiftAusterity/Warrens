@@ -46,6 +46,9 @@ namespace NetMud.Models.Admin
         [Display(Name = "Full Diameter")]
         [DataType(DataType.Text)]
         public long FullDiameter { get; set; }
+
+        [Display(Name = "Topography")]
+        public WorldType Topography { get; set; }
         
         public IWorld DataObject { get; set; }
     }
