@@ -40,7 +40,7 @@ namespace NetMud.Models.Admin
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
         [Display(Name = "Name")]
         [DataType(DataType.Text)]
-        public string NewName { get; set; }
+        public string Name { get; set; }
 
         [Display(Name = "Inanimate Containers")]
         public string[] InanimateContainerNames { get; set; }

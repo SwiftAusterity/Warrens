@@ -12,7 +12,7 @@
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
             <div class="form-group one-column">
-                @Html.EditorFor(e => e.NewName)
+                @Html.EditorFor(e => e.Name)
             </div>
 
             @Html.Partial("~/Views/GameAdmin/Constants/CriterionValue.cshtml", Model)

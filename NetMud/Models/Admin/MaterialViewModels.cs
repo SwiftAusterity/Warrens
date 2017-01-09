@@ -42,56 +42,56 @@ namespace NetMud.Models.Admin
         
         [Display(Name = "Name")]
         [DataType(DataType.Text)]
-        public string NewName { get; set; }
+        public string Name { get; set; }
 
         [Display(Name = "Is Conductive")]
-        public bool NewConductive { get; set; }
+        public bool Conductive { get; set; }
         
         [Display(Name = "Is Magnetic")]
-        public bool NewMagnetic { get; set; }
+        public bool Magnetic { get; set; }
 
         [Display(Name = "Is Flammable")]
-        public bool NewFlammable { get; set; }
+        public bool Flammable { get; set; }
 
         [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
         [Display(Name = "Viscosity")]
         [DataType(DataType.Text)]
-        public short NewViscosity { get; set; }
+        public short Viscosity { get; set; }
 
         [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
         [Display(Name = "Density")]
         [DataType(DataType.Text)]
-        public short NewDensity { get; set; }
+        public short Density { get; set; }
 
         [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
         [Display(Name = "Mallebility")]
         [DataType(DataType.Text)]
-        public short NewMallebility { get; set; }
+        public short Mallebility { get; set; }
 
         [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
         [Display(Name = "Ductility")]
         [DataType(DataType.Text)]
-        public short NewDuctility { get; set; }
+        public short Ductility { get; set; }
 
         [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
         [Display(Name = "Porosity")]
         [DataType(DataType.Text)]
-        public short NewPorosity { get; set; }
+        public short Porosity { get; set; }
 
         [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
         [Display(Name = "Fusion Point")]
         [DataType(DataType.Text)]
-        public short NewSolidPoint { get; set; }
+        public short SolidPoint { get; set; }
 
         [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
         [Display(Name = "Vaporization Point")]
         [DataType(DataType.Text)]
-        public short NewGasPoint { get; set; }
+        public short GasPoint { get; set; }
 
         [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
         [Display(Name = "Temperature Retention")]
         [DataType(DataType.Text)]
-        public short NewTemperatureRetention { get; set; }
+        public short TemperatureRetention { get; set; }
 
         [Display(Name = "Damage Resistance")]
         public short[] Resistances { get; set; }
@@ -108,7 +108,7 @@ namespace NetMud.Models.Admin
         [StringLength(2000, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
         [DataType(DataType.MultilineText)]
         [Display(Name = "Help Text Body")]
-        public string NewHelpBody { get; set; }
+        public string HelpBody { get; set; }
 
         public IEnumerable<IMaterial> ValidMaterials { get; set; }
         public Material DataObject { get; set; }

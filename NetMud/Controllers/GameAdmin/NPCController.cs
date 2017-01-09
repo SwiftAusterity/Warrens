@@ -87,15 +87,15 @@ namespace NetMud.Controllers.GameAdmin
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Add(string newName, string newSurName, string newGender, long raceId)
+        public ActionResult Add(string Name, string SurName, string Gender, long raceId)
         {
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             var newObj = new NonPlayerCharacter();
-            newObj.Name = newName;
-            newObj.SurName = newSurName;
-            newObj.Gender = newGender;
+            newObj.Name = Name;
+            newObj.SurName = SurName;
+            newObj.Gender = Gender;
             var race = BackingDataCache.Get<Race>(raceId);
 
             if (race != null)
@@ -129,16 +129,16 @@ namespace NetMud.Controllers.GameAdmin
             }
 
             vModel.DataObject = obj;
-            vModel.NewName = obj.Name;
-            vModel.NewGender = obj.Gender;
-            vModel.NewSurName = obj.SurName;
+            vModel.Name = obj.Name;
+            vModel.Gender = obj.Gender;
+            vModel.SurName = obj.SurName;
 
             return View("~/Views/GameAdmin/NPC/Edit.cshtml", vModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(string newName, string newSurName, string newGender, long raceId, int id)
+        public ActionResult Edit(string Name, string SurName, string Gender, long raceId, int id)
         {
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
@@ -150,9 +150,9 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = message });
             }
 
-            obj.Name = newName;
-            obj.SurName = newSurName;
-            obj.Gender = newGender;
+            obj.Name = Name;
+            obj.SurName = SurName;
+            obj.Gender = Gender;
             var race = BackingDataCache.Get<Race>(raceId);
 
             if (race != null)

@@ -15,8 +15,6 @@ namespace NetMud.Data.LookupData
     [IgnoreAutomatedBackup]
     public class World : BackingDataPartial, IWorld
     {
-        public IMap WorldMap { get; private set; }
-
         public long FullDiameter { get; set; }
 
         public HashSet<IStratum> Strata { get; set; }
@@ -48,9 +46,6 @@ namespace NetMud.Data.LookupData
 
             if (FullDiameter < 1)
                 dataProblems.Add("Diameter is 0 or less.");
-
-            if (WorldMap == null)
-                dataProblems.Add("World Map is null.");
 
             if (Strata.Count == 0)
                 dataProblems.Add("World is void, no strata detected.");

@@ -9,8 +9,8 @@
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <div class="form-group two-column">
-                @Html.EditorFor(e => e.NewName)
-                @Html.EditorFor(e => e.NewModelType)
+                @Html.EditorFor(e => e.Name)
+                @Html.EditorFor(e => e.ModelType)
             </div>
             <div class="form-group one-column">
                 @Html.EditorFor(e => e.ModelFile)

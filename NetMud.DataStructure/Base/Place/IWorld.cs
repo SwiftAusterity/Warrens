@@ -14,11 +14,6 @@ namespace NetMud.DataStructure.Base.Place
         WorldType Topography { get; set; }
 
         /// <summary>
-        /// The room array that makes up the world
-        /// </summary>
-        IMap WorldMap { get; }
-
-        /// <summary>
         /// Absolute full diameter for this entire world in meters
         /// </summary>
         long FullDiameter { get; set; }

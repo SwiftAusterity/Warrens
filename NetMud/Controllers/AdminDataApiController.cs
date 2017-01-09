@@ -45,7 +45,7 @@ namespace NetMud.Controllers
         {
             var world = BackingDataCache.Get<IWorld>(id);
 
-            if (world == null || zIndex < 0 || zIndex > world.WorldMap.CoordinatePlane.GetUpperBound(2))
+            if (world == null || zIndex < 0) // || zIndex > world.WorldMap.CoordinatePlane.GetUpperBound(2))
                 return "Invalid inputs.";
 
             return "";// Rendering.RenderMap(Cartographer.GetSinglePlane(world.WorldMap.CoordinatePlane, zIndex), true, true, null);

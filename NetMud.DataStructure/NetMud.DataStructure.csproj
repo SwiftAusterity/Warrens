@@ -47,7 +47,6 @@
     <Compile Include="Base\EntityBackingData\INonPlayerCharacter.cs" />
     <Compile Include="Base\EntityBackingData\IInanimateData.cs" />
     <Compile Include="Base\Place\IChunk.cs" />
-    <Compile Include="Base\Place\IMaps.cs" />
     <Compile Include="Base\Place\IStratum.cs" />
     <Compile Include="Base\Place\IWorld.cs" />
     <Compile Include="Base\Skills\ISkpell.cs" />

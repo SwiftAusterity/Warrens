@@ -102,85 +102,85 @@ namespace NetMud.Controllers.GameAdmin
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             var newObj = new Race();
-            newObj.Name = vModel.NewName;
+            newObj.Name = vModel.Name;
 
-            if (vModel.NewArmsID > 0 && vModel.NewArmsAmount > 0)
+            if (vModel.ArmsID > 0 && vModel.ArmsAmount > 0)
             {
-                var arm = BackingDataCache.Get<InanimateData>(vModel.NewArmsID);
+                var arm = BackingDataCache.Get<InanimateData>(vModel.ArmsID);
 
                 if (arm != null)
-                    newObj.Arms = new Tuple<IInanimateData, short>(arm, vModel.NewArmsAmount);
+                    newObj.Arms = new Tuple<IInanimateData, short>(arm, vModel.ArmsAmount);
             }
 
-            if (vModel.NewLegsID > 0 && vModel.NewLegsAmount > 0)
+            if (vModel.LegsID > 0 && vModel.LegsAmount > 0)
             {
-                var leg = BackingDataCache.Get<InanimateData>(vModel.NewLegsID);
+                var leg = BackingDataCache.Get<InanimateData>(vModel.LegsID);
 
                 if (leg != null)
-                    newObj.Legs = new Tuple<IInanimateData, short>(leg, vModel.NewLegsAmount);
+                    newObj.Legs = new Tuple<IInanimateData, short>(leg, vModel.LegsAmount);
             }
 
-            if (vModel.NewTorsoId > 0)
+            if (vModel.TorsoId > 0)
             {
-                var torso = BackingDataCache.Get<InanimateData>(vModel.NewTorsoId);
+                var torso = BackingDataCache.Get<InanimateData>(vModel.TorsoId);
 
                 if (torso != null)
                     newObj.Torso = torso;
             }
 
-            if (vModel.NewHeadId > 0)
+            if (vModel.HeadId > 0)
             {
-                var head = BackingDataCache.Get<InanimateData>(vModel.NewHeadId);
+                var head = BackingDataCache.Get<InanimateData>(vModel.HeadId);
 
                 if (head != null)
                     newObj.Head = head;
             }
 
-            //if (vModel.NewStartingLocationId > 0)
+            //if (vModel.StartingLocationId > 0)
             //{
-            //    var room = BackingDataCache.Get<RoomData>(vModel.NewStartingLocationId);
+            //    var room = BackingDataCache.Get<RoomData>(vModel.StartingLocationId);
 
             //    if (room != null)
             //        newObj.StartingLocation = room;
             //}
 
-            //if (vModel.NewRecallLocationId > 0)
+            //if (vModel.RecallLocationId > 0)
             //{
-            //    var room = BackingDataCache.Get<RoomData>(vModel.NewRecallLocationId);
+            //    var room = BackingDataCache.Get<RoomData>(vModel.RecallLocationId);
 
             //    if (room != null)
             //        newObj.EmergencyLocation = room;
             //}
 
-            if (vModel.NewBloodId > 0)
+            if (vModel.BloodId > 0)
             {
-                var blood = BackingDataCache.Get<Material>(vModel.NewBloodId);
+                var blood = BackingDataCache.Get<Material>(vModel.BloodId);
 
                 if (blood != null)
                     newObj.SanguinaryMaterial = blood;
             }
 
-            newObj.VisionRange = new Tuple<short, short>(vModel.NewVisionRangeLow, vModel.NewVisionRangeHigh);
-            newObj.TemperatureTolerance = new Tuple<short, short>(vModel.NewTemperatureToleranceLow, vModel.NewTemperatureToleranceHigh);
+            newObj.VisionRange = new Tuple<short, short>(vModel.VisionRangeLow, vModel.VisionRangeHigh);
+            newObj.TemperatureTolerance = new Tuple<short, short>(vModel.TemperatureToleranceLow, vModel.TemperatureToleranceHigh);
 
-            newObj.Breathes = (RespiratoryType)vModel.NewBreathes;
-            newObj.DietaryNeeds = (DietType)vModel.NewDietaryNeeds;
-            newObj.TeethType = (DamageType)vModel.NewTeethType;
-            newObj.HelpText = vModel.NewHelpBody;
+            newObj.Breathes = (RespiratoryType)vModel.Breathes;
+            newObj.DietaryNeeds = (DietType)vModel.DietaryNeeds;
+            newObj.TeethType = (DamageType)vModel.TeethType;
+            newObj.HelpText = vModel.HelpBody;
 
-            if (vModel.NewExtraPartsId != null)
+            if (vModel.ExtraPartsId != null)
             {
                 int partIndex = 0;
                 var bodyBits = new List<Tuple<IInanimateData, short, string>>();
-                foreach (var id in vModel.NewExtraPartsId)
+                foreach (var id in vModel.ExtraPartsId)
                 {
                     if (id > 0)
                     {
-                        if (vModel.NewExtraPartsAmount.Count() <= partIndex || vModel.NewExtraPartsName.Count() <= partIndex)
+                        if (vModel.ExtraPartsAmount.Count() <= partIndex || vModel.ExtraPartsName.Count() <= partIndex)
                             break;
 
-                        var currentName = vModel.NewExtraPartsName[partIndex];
-                        var currentAmount = vModel.NewExtraPartsAmount[partIndex];
+                        var currentName = vModel.ExtraPartsName[partIndex];
+                        var currentAmount = vModel.ExtraPartsAmount[partIndex];
                         var partObject = BackingDataCache.Get<InanimateData>(id);
 
                         if (partObject != null && currentAmount > 0 && !string.IsNullOrWhiteSpace(currentName))
@@ -222,28 +222,28 @@ namespace NetMud.Controllers.GameAdmin
             }
 
             vModel.DataObject = obj;
-            vModel.NewName = obj.Name;
-            vModel.NewArmsAmount = obj.Arms.Item2;
-            vModel.NewArmsID = obj.Arms.Item1.ID;
-            vModel.NewBloodId = obj.SanguinaryMaterial.ID;
-            vModel.NewBreathes = (short)obj.Breathes;
-            vModel.NewDietaryNeeds = (short)obj.DietaryNeeds;
-            vModel.NewHeadId = obj.Head.ID;
-            vModel.NewLegsAmount = obj.Legs.Item2;
-            vModel.NewLegsID = obj.Legs.Item1.ID;
-          //  vModel.NewRecallLocationId = obj.EmergencyLocation.ID;
-           // vModel.NewStartingLocationId = obj.StartingLocation.ID;
-            vModel.NewTeethType = (short)obj.TeethType;
-            vModel.NewTemperatureToleranceHigh = obj.TemperatureTolerance.Item2;
-            vModel.NewTemperatureToleranceLow = obj.TemperatureTolerance.Item1;
-            vModel.NewTorsoId = obj.Torso.ID;
-            vModel.NewVisionRangeHigh = obj.VisionRange.Item2;
-            vModel.NewVisionRangeLow = obj.VisionRange.Item1;
-            vModel.NewHelpBody = obj.HelpText;
+            vModel.Name = obj.Name;
+            vModel.ArmsAmount = obj.Arms.Item2;
+            vModel.ArmsID = obj.Arms.Item1.ID;
+            vModel.BloodId = obj.SanguinaryMaterial.ID;
+            vModel.Breathes = (short)obj.Breathes;
+            vModel.DietaryNeeds = (short)obj.DietaryNeeds;
+            vModel.HeadId = obj.Head.ID;
+            vModel.LegsAmount = obj.Legs.Item2;
+            vModel.LegsID = obj.Legs.Item1.ID;
+          //  vModel.RecallLocationId = obj.EmergencyLocation.ID;
+           // vModel.StartingLocationId = obj.StartingLocation.ID;
+            vModel.TeethType = (short)obj.TeethType;
+            vModel.TemperatureToleranceHigh = obj.TemperatureTolerance.Item2;
+            vModel.TemperatureToleranceLow = obj.TemperatureTolerance.Item1;
+            vModel.TorsoId = obj.Torso.ID;
+            vModel.VisionRangeHigh = obj.VisionRange.Item2;
+            vModel.VisionRangeLow = obj.VisionRange.Item1;
+            vModel.HelpBody = obj.HelpText;
 
-            vModel.NewExtraPartsAmount = obj.BodyParts.Select(bp => bp.Item2).ToArray();
-            vModel.NewExtraPartsId = obj.BodyParts.Select(bp => bp.Item1.ID).ToArray(); ;
-            vModel.NewExtraPartsName = obj.BodyParts.Select(bp => bp.Item3).ToArray(); ;
+            vModel.ExtraPartsAmount = obj.BodyParts.Select(bp => bp.Item2).ToArray();
+            vModel.ExtraPartsId = obj.BodyParts.Select(bp => bp.Item1.ID).ToArray(); ;
+            vModel.ExtraPartsName = obj.BodyParts.Select(bp => bp.Item3).ToArray(); ;
 
             return View("~/Views/GameAdmin/Race/Edit.cshtml", vModel);
         }
@@ -262,85 +262,85 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = message });
             }
 
-            obj.Name = vModel.NewName;
+            obj.Name = vModel.Name;
 
-            if (vModel.NewArmsID > 0 && vModel.NewArmsAmount > 0)
+            if (vModel.ArmsID > 0 && vModel.ArmsAmount > 0)
             {
-                var arm = BackingDataCache.Get<InanimateData>(vModel.NewArmsID);
+                var arm = BackingDataCache.Get<InanimateData>(vModel.ArmsID);
 
                 if (arm != null)
-                    obj.Arms = new Tuple<IInanimateData, short>(arm, vModel.NewArmsAmount);
+                    obj.Arms = new Tuple<IInanimateData, short>(arm, vModel.ArmsAmount);
             }
 
-            if (vModel.NewLegsID > 0 && vModel.NewLegsAmount > 0)
+            if (vModel.LegsID > 0 && vModel.LegsAmount > 0)
             {
-                var leg = BackingDataCache.Get<InanimateData>(vModel.NewLegsID);
+                var leg = BackingDataCache.Get<InanimateData>(vModel.LegsID);
 
                 if (leg != null)
-                    obj.Legs = new Tuple<IInanimateData, short>(leg, vModel.NewLegsAmount);
+                    obj.Legs = new Tuple<IInanimateData, short>(leg, vModel.LegsAmount);
             }
 
-            if (vModel.NewTorsoId > 0)
+            if (vModel.TorsoId > 0)
             {
-                var torso = BackingDataCache.Get<InanimateData>(vModel.NewTorsoId);
+                var torso = BackingDataCache.Get<InanimateData>(vModel.TorsoId);
 
                 if (torso != null)
                     obj.Torso = torso;
             }
 
-            if (vModel.NewHeadId > 0)
+            if (vModel.HeadId > 0)
             {
-                var head = BackingDataCache.Get<InanimateData>(vModel.NewHeadId);
+                var head = BackingDataCache.Get<InanimateData>(vModel.HeadId);
 
                 if (head != null)
                     obj.Head = head;
             }
 
-            //if (vModel.NewStartingLocationId > 0)
+            //if (vModel.StartingLocationId > 0)
             //{
-            //    var room = BackingDataCache.Get<RoomData>(vModel.NewStartingLocationId);
+            //    var room = BackingDataCache.Get<RoomData>(vModel.StartingLocationId);
 
             //    if (room != null)
             //        obj.StartingLocation = room;
             //}
 
-            //if (vModel.NewRecallLocationId > 0)
+            //if (vModel.RecallLocationId > 0)
             //{
-            //    var room = BackingDataCache.Get<RoomData>(vModel.NewRecallLocationId);
+            //    var room = BackingDataCache.Get<RoomData>(vModel.RecallLocationId);
 
             //    if (room != null)
             //        obj.EmergencyLocation = room;
             //}
 
-            if (vModel.NewBloodId > 0)
+            if (vModel.BloodId > 0)
             {
-                var blood = BackingDataCache.Get<Material>(vModel.NewBloodId);
+                var blood = BackingDataCache.Get<Material>(vModel.BloodId);
 
                 if (blood != null)
                     obj.SanguinaryMaterial = blood;
             }
 
-            obj.VisionRange = new Tuple<short, short>(vModel.NewVisionRangeLow, vModel.NewVisionRangeHigh);
-            obj.TemperatureTolerance = new Tuple<short, short>(vModel.NewTemperatureToleranceLow, vModel.NewTemperatureToleranceHigh);
+            obj.VisionRange = new Tuple<short, short>(vModel.VisionRangeLow, vModel.VisionRangeHigh);
+            obj.TemperatureTolerance = new Tuple<short, short>(vModel.TemperatureToleranceLow, vModel.TemperatureToleranceHigh);
 
-            obj.Breathes = (RespiratoryType)vModel.NewBreathes;
-            obj.DietaryNeeds = (DietType)vModel.NewDietaryNeeds;
-            obj.TeethType = (DamageType)vModel.NewTeethType;
-            obj.HelpText = vModel.NewHelpBody;
+            obj.Breathes = (RespiratoryType)vModel.Breathes;
+            obj.DietaryNeeds = (DietType)vModel.DietaryNeeds;
+            obj.TeethType = (DamageType)vModel.TeethType;
+            obj.HelpText = vModel.HelpBody;
 
             var bodyBits = new List<Tuple<IInanimateData, short, string>>();
-            if (vModel.NewExtraPartsId != null)
+            if (vModel.ExtraPartsId != null)
             {
                 int partIndex = 0;
-                foreach (var partId in vModel.NewExtraPartsId)
+                foreach (var partId in vModel.ExtraPartsId)
                 {
                     if (partId > 0)
                     {
-                        if (vModel.NewExtraPartsAmount.Count() <= partIndex || vModel.NewExtraPartsName.Count() <= partIndex)
+                        if (vModel.ExtraPartsAmount.Count() <= partIndex || vModel.ExtraPartsName.Count() <= partIndex)
                             break;
 
-                        var currentName = vModel.NewExtraPartsName[partIndex];
-                        var currentAmount = vModel.NewExtraPartsAmount[partIndex];
+                        var currentName = vModel.ExtraPartsName[partIndex];
+                        var currentAmount = vModel.ExtraPartsAmount[partIndex];
                         var partObject = BackingDataCache.Get<InanimateData>(partId);
 
                         if (partObject != null && currentAmount > 0 && !string.IsNullOrWhiteSpace(currentName))

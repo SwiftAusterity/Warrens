@@ -8,14 +8,14 @@
         {
             <div class="form-group three-column">
                 <a href="#" class="removeRow" id="removeExtraPartsRow" title="Remove this">X</a>
-                @Html.LabelFor(m => m.NewExtraPartsName, new { @class = "control-label" })
+                @Html.LabelFor(m => m.ExtraPartsName, new { @class = "control-label" })
                 <div>
-                    <input id="NewExtraPartsName" name="NewExtraPartsName" class="form-control" type="text" />
+                    <input id="ExtraPartsName" name="ExtraPartsName" class="form-control" type="text" />
                 </div>        
-                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("NewExtraPartsId", "Extra Part", Model.ValidObjects, -1))
-                @Html.LabelFor(m => m.NewExtraPartsAmount, new { @class = "control-label" })
+                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("ExtraPartsId", "Extra Part", Model.ValidObjects, -1))
+                @Html.LabelFor(m => m.ExtraPartsAmount, new { @class = "control-label" })
                 <div>
-                    @Html.TextBoxFor(m => m.NewExtraPartsAmount, new { @class = "form-control" })
+                    @Html.TextBoxFor(m => m.ExtraPartsAmount, new { @class = "form-control" })
                 </div>
             </div>
         }
@@ -25,15 +25,15 @@
             {
                 <div class="form-group three-column">
                     <a href="#" class="removeRow" id="removeExtraPartsRow" title="Remove this">X</a>
-                    @Html.LabelFor(m => m.NewExtraPartsName, new { @class = "control-label" })
+                    @Html.LabelFor(m => m.ExtraPartsName, new { @class = "control-label" })
                     <div>
-                        <input id="NewExtraPartsName" name="NewExtraPartsName" class="form-control" type="text" value="@dataItem.Item3">
+                        <input id="ExtraPartsName" name="ExtraPartsName" class="form-control" type="text" value="@dataItem.Item3">
                     </div>
-                    @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("NewExtraPartsId", "Extra Part", Model.ValidObjects, dataItem.Item1.ID))
+                    @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("ExtraPartsId", "Extra Part", Model.ValidObjects, dataItem.Item1.ID))
 
-                    @Html.LabelFor(m => m.NewExtraPartsAmount, new { @class = "control-label" })
+                    @Html.LabelFor(m => m.ExtraPartsAmount, new { @class = "control-label" })
                     <div>
-                        <input id="NewExtraPartsAmount" name="NewExtraPartsAmount" class="form-control" type="text" value="@dataItem.Item2.ToString()">
+                        <input id="ExtraPartsAmount" name="ExtraPartsAmount" class="form-control" type="text" value="@dataItem.Item2.ToString()">
                     </div>
                 </div>
             }
@@ -43,11 +43,11 @@
 
 
 <script type="text/javascript">
-        var partsDropdown = decodeHtml('@Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("NewExtraPartsId", "Extra Part", Model.ValidObjects, -1)).ToString().Replace(Environment.NewLine, "")');
-        var amountLabel = decodeHtml('@Html.LabelFor(m => m.NewExtraPartsAmount, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "")');
-        var amountControl = decodeHtml('@Html.TextBoxFor(m => m.NewExtraPartsAmount, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');
-        var nameLabel = decodeHtml('@Html.LabelFor(m => m.NewExtraPartsName, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "")');
-        var nameControl = decodeHtml('@Html.TextBoxFor(m => m.NewExtraPartsName, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');
+        var partsDropdown = decodeHtml('@Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("ExtraPartsId", "Extra Part", Model.ValidObjects, -1)).ToString().Replace(Environment.NewLine, "")');
+        var amountLabel = decodeHtml('@Html.LabelFor(m => m.ExtraPartsAmount, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "")');
+        var amountControl = decodeHtml('@Html.TextBoxFor(m => m.ExtraPartsAmount, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');
+        var nameLabel = decodeHtml('@Html.LabelFor(m => m.ExtraPartsName, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "")');
+        var nameControl = decodeHtml('@Html.TextBoxFor(m => m.ExtraPartsName, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');
 
         $(document).ready(function () {
             $("#addExtraPartsRow").click(function () {
