@@ -15,13 +15,7 @@
                 @Html.EditorFor(e => e.Name)
             </div>
 
-            
-            @Html.Partial("WorldEntityContainer", new NetMud.Models.Admin.EntityContainerViewModel<NetMud.DataStructure.Base.Entity.IWorld>(Model.DataObject.WorldContainers, "World", "World Containers"))
-            @Html.Partial("MobileEntityContainer", new NetMud.Models.Admin.EntityContainerViewModel<NetMud.DataStructure.Base.Supporting.IMobile>(Model.DataObject.MobileContainers, "Mobile", "Character Containers"))
-            
-            @Html.Partial("TwoDimensionalEntityEditor", Model)
-
-            @Html.Partial("~/Views/GameAdmin/World/InternalComposition.cshtml", Model)
+            @Html.Partial("~/Views/GameAdmin/World/Strata.cshtml", Model)
 
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-9">

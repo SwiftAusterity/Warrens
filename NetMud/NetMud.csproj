@@ -374,7 +374,7 @@
     <Content Include="Views\GameAdmin\Flora\OccursIn.cshtml" />
     <Content Include="Views\GameAdmin\Minerals\OccursIn.cshtml" />
     <Content Include="Views\GameAdmin\Minerals\Ores.cshtml" />
-    <Content Include="Views\GameAdmin\World\InternalComposition.cshtml" />
+    <Content Include="Views\GameAdmin\World\Strata.cshtml" />
     <Content Include="Views\GameAdmin\World\Add.cshtml" />
     <Content Include="Views\GameAdmin\World\Edit.cshtml" />
     <Content Include="Views\GameAdmin\World\Index.cshtml" />
