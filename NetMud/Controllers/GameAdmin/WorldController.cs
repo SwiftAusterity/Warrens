@@ -88,6 +88,8 @@ namespace NetMud.Controllers.GameAdmin
             var vModel = new AddEditWorldViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
+            vModel.ValidMaterials = BackingDataCache.GetAll<Material>();
+
             return View("~/Views/GameAdmin/World/Add.cshtml", vModel);
         }
 
@@ -122,6 +124,8 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var vModel = new AddEditWorldViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            vModel.ValidMaterials = BackingDataCache.GetAll<Material>();
 
             var obj = BackingDataCache.Get<IWorld>(id);
 

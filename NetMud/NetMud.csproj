@@ -378,6 +378,8 @@
     <Content Include="Views\GameAdmin\World\Add.cshtml" />
     <Content Include="Views\GameAdmin\World\Edit.cshtml" />
     <Content Include="Views\GameAdmin\World\Index.cshtml" />
+    <Content Include="Views\GameAdmin\World\Stratum.cshtml" />
+    <Content Include="Views\GameAdmin\World\Layer.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

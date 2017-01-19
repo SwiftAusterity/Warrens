@@ -1,38 +1,29 @@
 ﻿@model NetMud.Models.Admin.AddEditWorldViewModel
 
 @{
-    <label class="control-label">Internal composition</label>
-    <a href="#" id="addInternalCompositionRow" class="addRow">Add another row...</a>
-    <div id="internalCompositionRows">
-        @if (Model.DataObject == null || Model.DataObject.InternalComposition == null || Model.DataObject.InternalComposition.Count == 0)
+    <label class="control-label">Strata</label>
+    <a href="#" id="addStratumRow" class="addRow">Add another row...</a>
+    <div id="StratumRows">
+        @if (Model.DataObject == null || Model.DataObject.Strata == null || Model.DataObject.Strata.Count == 0)
         {
             <div class="form-group three-column">
-                <a href="#" class="removeRow" id="removeInternalCompositionRow" title="Remove this">X</a>
+                <a href="#" class="removeRow" id="removeStratumRow" title="Remove this">X</a>
                 <label class="control-label">&nbsp;</label>
                 <div>
                     &nbsp;
                 </div>
-                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("InternalCompositionIds", "World", Model.ValidWorlds, -1))
-                @Html.LabelFor(m => m.InternalCompositionPercentages, new { @class = "control-label" })
-                <div>
-                    @Html.TextBoxFor(m => m.InternalCompositionPercentages, new { @class = "form-control" })
-                </div>
+                @Html.Partial("~/Views/GameAdmin/World/Stratum.cshtml", null)
             </div>
         }
         else
         {
-            foreach (var internalComposition in Model.DataObject.InternalComposition)
+            foreach (var Stratum in Model.DataObject.Strata)
             {
                 <div class="form-group three-column">
-                    <a href="#" class="removeRow" id="removeInternalCompositionRow" title="Remove this">X</a>
+                    <a href="#" class="removeRow" id="removeStratumRow" title="Remove this">X</a>
                     <label class="control-label">&nbsp;</label>
                     <div>&nbsp;</div>
-                    @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("InternalCompositionIds", "World", Model.ValidWorlds, internalComposition.Key.ID))
-
-                    @Html.LabelFor(m => m.InternalCompositionPercentages, new { @class = "control-label" })
-                    <div>
-                        <input id="InternalCompositionPercentages" name="InternalCompositionPercentages" class="form-control" type="text" value="@internalComposition.Value.ToString()">
-                    </div>
+                    @Html.Partial("~/Views/GameAdmin/World/Stratum.cshtml", new NetMud.Models.Admin.AddEditStratumViewModel(Stratum))
                 </div>
             }
         }
@@ -41,17 +32,13 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        var compositionDropdown = decodeHtml('@Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("InternalCompositionIds", "World", Model.ValidWorlds, -1)).ToString().Replace(Environment.NewLine, "")');
-        var textboxLabel = decodeHtml('@Html.LabelFor(m => m.InternalCompositionPercentages, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "")');
-        var textboxControl = decodeHtml('@Html.TextBoxFor(m => m.InternalCompositionPercentages, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');
-
-        $("#addInternalCompositionRow").click(function () {
-            $("#internalCompositionRows").append(
+        $("#addStratumRow").click(function () {
+            $("#StratumRows").append(
                 '<div class="form-group three-column">' +
-                '<a href="#" class="removeRow" id="removeInternalCompositionRow" title="Remove this">X</a>' +
+                '<a href="#" class="removeRow" id="removeStratumRow" title="Remove this">X</a>' +
                 '<label class="control-label">&nbsp;</label><div>&nbsp;</div>' +
-                compositionDropdown +
-                textboxLabel + '<div>' + textboxControl + '</div></div>'
+                @Html.Partial("~/Views/GameAdmin/World/Stratum.cshtml", null) +
+                '</div></div>'
             );
 
             $(".removeRow").click(function () {

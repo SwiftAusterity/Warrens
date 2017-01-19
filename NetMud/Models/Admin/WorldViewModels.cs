@@ -1,11 +1,11 @@
 ﻿using NetMud.Authentication;
 using NetMud.DataStructure.Base.Place;
+using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-
 
 namespace NetMud.Models.Admin
 {
@@ -35,6 +35,7 @@ namespace NetMud.Models.Admin
 
         public AddEditWorldViewModel()
         {
+            ValidMaterials = Enumerable.Empty<IMaterial>();
         }
 
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
@@ -49,7 +50,9 @@ namespace NetMud.Models.Admin
 
         [Display(Name = "Topography")]
         public WorldType Topography { get; set; }
-        
+
+        public IEnumerable<IMaterial> ValidMaterials { get; set; }
+
         public IWorld DataObject { get; set; }
     }
 
@@ -57,8 +60,10 @@ namespace NetMud.Models.Admin
     {
         public ApplicationUser authedUser { get; set; }
 
-        public AddEditStratumViewModel()
+        public AddEditStratumViewModel(IStratum stratum)
         {
+            DataObject = stratum;
+            ValidMaterials = Enumerable.Empty<IMaterial>();
         }
 
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
@@ -94,16 +99,14 @@ namespace NetMud.Models.Admin
         [Display(Name = "Layer Material")]
         public long[] LayerMaterials { get; set; }
 
-        [Range(0, 100000, ErrorMessage = "The {0} must be between {2} and {1}.")]
         [Display(Name = "Lower Depth")]
-        [DataType(DataType.Text)]
         public int[] LowerDepths { get; set; }
 
-        [Range(0, 100000, ErrorMessage = "The {0} must be between {2} and {1}.")]
         [Display(Name = "Upper Depth")]
-        [DataType(DataType.Text)]
         public int[] UpperDepths { get; set; }
 
-        public IWorld DataObject { get; set; }
+        public IEnumerable<IMaterial> ValidMaterials { get; set; }
+
+        public IStratum DataObject { get; set; }
     }
 }

@@ -1,0 +1,18 @@
+﻿@model Tuple<string, NetMud.DataStructure.Base.Place.IStratumLayer, IList<NetMud.DataStructure.Base.Supporting.IMaterial>>
+
+@{
+    var layerName = Model.Item1;
+    var layer = Model.Item2;
+    var materialsList = Model.Item3;
+
+    <div class="form-group two-column">
+        @Html.EditorFor(m => layerName)
+        @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Rock", "Rock", materialsList, layer.BaseMaterial))
+    </div>
+    
+    <div class="form-group two-column">
+        @Html.EditorFor(m => m.Item2.LowerDepth)
+        @Html.EditorFor(m => m.Item2.UpperDepth)
+    </div>
+
+}

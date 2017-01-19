@@ -1,0 +1,60 @@
+﻿@model NetMud.Models.Admin.AddEditStratumViewModel
+
+@{
+    
+    
+    <label class="control-label">Layers</label>
+    <a href="#" id="addLayerRow" class="addRow">Add another row...</a>
+    <div id="LayerRows">
+        @if (Model == null || Model.DataObject == null || Model.DataObject.Layers == null || Model.DataObject.Layers.Count == 0)
+        {
+            <div class="form-group three-column">
+                <a href="#" class="removeRow" id="removeLayerRow" title="Remove this">X</a>
+                <label class="control-label">&nbsp;</label>
+                <div>
+                    &nbsp;
+                </div>
+                @Html.Partial("~/Views/GameAdmin/World/Layer.cshtml", 
+                    new Tuple<string, NetMud.DataStructure.Base.Place.IStratumLayer, IList<NetMud.DataStructure.Base.Supporting.IMaterial>>(String.Empty, null, Model.ValidMaterials))
+            </div>
+        }
+        else
+        {
+            foreach (var layer in Model.DataObject.Layers)
+            {
+                <div class="form-group three-column">
+                    <a href="#" class="removeRow" id="removeLayerRow" title="Remove this">X</a>
+                    <label class="control-label">&nbsp;</label>
+                    <div>&nbsp;</div>
+                    @Html.Partial("~/Views/GameAdmin/World/Layer.cshtml", 
+                    new Tuple<string, NetMud.DataStructure.Base.Place.IStratumLayer, IList<NetMud.DataStructure.Base.Supporting.IMaterial>>(layer.Key, layer.Value, Model.ValidMaterials)))
+                </div>
+            }
+        }
+    </div>
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#addLayerRow").click(function () {
+            $("#LayerRows").append(
+                '<div class="form-group three-column">' +
+                '<a href="#" class="removeRow" id="removeLayerRow" title="Remove this">X</a>' +
+                '<label class="control-label">&nbsp;</label><div>&nbsp;</div>' +
+                '' +
+                '</div></div>'
+            );
+
+            $(".removeRow").click(function () {
+                $(this).parent().remove();
+                return false;
+            });
+            return false;
+        });
+
+        $(".removeRow").click(function () {
+            $(this).parent().remove();
+            return false;
+        });
+    });
+</script>
