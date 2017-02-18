@@ -1,18 +1,12 @@
 ﻿using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.Place;
-using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.Rendering;
-using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Game

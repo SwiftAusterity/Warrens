@@ -1,5 +1,4 @@
 ﻿using NetMud.DataStructure.Base.Entity;
-using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.Behaviors.System;
@@ -8,8 +7,6 @@ using NetMud.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NetMud.Data.Game
 {

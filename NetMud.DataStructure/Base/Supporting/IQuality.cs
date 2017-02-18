@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace NetMud.DataStructure.Base.Supporting
+﻿namespace NetMud.DataStructure.Base.Supporting
 {
     /// <summary>
     /// Tracked statistics and quest progress

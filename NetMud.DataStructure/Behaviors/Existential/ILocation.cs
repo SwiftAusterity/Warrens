@@ -1,5 +1,4 @@
 ﻿using NetMud.DataStructure.Base.Entity;
-using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.SupportingClasses;
 using System.Collections.Generic;

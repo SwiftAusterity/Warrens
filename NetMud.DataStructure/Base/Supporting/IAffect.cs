@@ -1,11 +1,4 @@
-﻿using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.Behaviors.Actionable;
-using NetMud.DataStructure.Behaviors.Automation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace NetMud.DataStructure.Base.Supporting
 {

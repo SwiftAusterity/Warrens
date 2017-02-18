@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace NetMud.DataStructure.Behaviors.Automation
+﻿namespace NetMud.DataStructure.Behaviors.Automation
 {
     /// <summary>
     /// Behavioral pattern for things that can produce light

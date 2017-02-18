@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using NutMud.Commands.Attributes;
-using NetMud.DataStructure.Base.Place;
 using NetMud.Utility;
-using NetMud.DataStructure.Base.Supporting;
 using NetMud.Commands.Attributes;
 using NetMud.DataStructure.SupportingClasses;
 

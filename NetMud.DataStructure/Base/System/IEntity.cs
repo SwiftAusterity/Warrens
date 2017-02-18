@@ -1,5 +1,4 @@
-﻿using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.Behaviors.Existential;
+﻿using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.Rendering;
 using System;
 using System.Collections.Generic;

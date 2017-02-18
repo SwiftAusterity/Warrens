@@ -1,12 +1,6 @@
 ﻿using NetMud.DataAccess;
 using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.Behaviors.Actionable;
-using NetMud.DataStructure.Behaviors.Automation;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NetMud.Data.System
 {
