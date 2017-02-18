@@ -96,6 +96,8 @@ namespace NetMud.Controllers.GameAdmin
             var validData = true;
 
             var newObj = new World(vModel.Name);
+            newObj.FullDiameter = vModel.FullDiameter;
+            newObj.Topography = vModel.Topography;
 
             if (validData)
             {

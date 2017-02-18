@@ -48,6 +48,7 @@ namespace NetMud.Models.Admin
         public long FullDiameter { get; set; }
 
         [Display(Name = "Topography")]
+        [UIHint("EnumDropDownList")]
         public WorldType Topography { get; set; }
 
         public IEnumerable<IMaterial> ValidMaterials { get; set; }

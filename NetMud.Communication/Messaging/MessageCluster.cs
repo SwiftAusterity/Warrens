@@ -96,6 +96,7 @@ namespace NetMud.Communication.Messaging
             if (Target != null && ToTarget.Any(str => !string.IsNullOrWhiteSpace(str)))
                 Target.WriteTo(TranslateOutput(ToTarget, entities));
 
+            //TODO: origin and destination are areas of effect on their surrounding areas
             if (OriginLocation != null && ToOrigin.Any(str => !string.IsNullOrWhiteSpace(str)))
             {
                 var oLoc = (IContains)OriginLocation;
@@ -114,8 +115,6 @@ namespace NetMud.Communication.Messaging
                 foreach (var dude in oLoc.GetContents<IEntity>().Where(dud => !dud.Equals(Actor) && !dud.Equals(Subject) && !dud.Equals(Target)))
                     dude.WriteTo(TranslateOutput(ToDestination, entities));
             }
-
-            //TODO: to surrounding?
         }
 
         /// <summary>

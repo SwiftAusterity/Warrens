@@ -10,8 +10,10 @@
             @Html.AntiForgeryToken()
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            <div class="form-group one-column">
+            <div class="form-group three-column">
                 @Html.EditorFor(e => e.Name)
+                @Html.EditorFor(e => e.FullDiameter)
+                @Html.EditorFor(e => e.Topography)
             </div>
 
             @Html.Partial("~/Views/GameAdmin/World/Strata.cshtml", Model)
