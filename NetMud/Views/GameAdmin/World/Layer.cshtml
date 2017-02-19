@@ -1,4 +1,4 @@
-﻿@model Tuple<string, NetMud.DataStructure.Base.Place.IStratumLayer, IList<NetMud.DataStructure.Base.Supporting.IMaterial>>
+﻿@model Tuple<string, NetMud.DataStructure.Base.Place.IStratumLayer, IEnumerable<NetMud.DataStructure.Base.Supporting.IMaterial>>
 
 @{
     var layerName = Model.Item1;
@@ -7,7 +7,7 @@
 
     <div class="form-group two-column">
         @Html.EditorFor(m => layerName)
-        @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Rock", "Rock", materialsList, layer.BaseMaterial))
+        @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Rock", "Rock", materialsList, layer.BaseMaterial.ID))
     </div>
     
     <div class="form-group two-column">
