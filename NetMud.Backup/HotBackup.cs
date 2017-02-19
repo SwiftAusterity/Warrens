@@ -216,10 +216,13 @@ namespace NetMud.Backup
 
         private void ParseDimension()
         {
+            //Need to load up all the worlds
+
+            //Get chunks and then generate gap-fill chunks across all world dimensions
+
+            //put stuff in the right places
         }
 
-        //TODO: a method that takes a room, 
-        //Would need to both recenter and shrink before the end otherwise we'll have gigantic arrays
         /// <summary>
         /// Builds the entire connected world out of the starting room 
         /// </summary>
