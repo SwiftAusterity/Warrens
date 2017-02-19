@@ -38,7 +38,15 @@ namespace NutMud.Commands.System
 
             sb.Add("You exit this reality.");
 
-            var messagingObject = new MessageCluster(sb, new string[] { }, new string[] { }, new string[] { "$A$ exits this reality." }, new string[] { });
+            var toActor = new Message(MessagingType.Visible, 1);
+            toActor.Override = sb;
+
+            var toOrigin = new Message(MessagingType.Visible, 5);
+            toOrigin.Override = new string[] { "$A$ exits this reality." };
+
+
+            var messagingObject = new MessageCluster(toActor);
+            messagingObject.ToOrigin = new List<IMessage> { toOrigin };
 
             messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation, null);
 

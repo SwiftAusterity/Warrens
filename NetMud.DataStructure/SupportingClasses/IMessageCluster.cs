@@ -9,32 +9,27 @@ namespace NetMud.DataStructure.SupportingClasses
         /// <summary>
         /// Message to send to the acting entity
         /// </summary>
-        IEnumerable<string> ToActor { get; set; }
+        IEnumerable<IMessage> ToActor { get; set; }
 
         /// <summary>
         /// Message to send to the subject of the command
         /// </summary>
-        IEnumerable<string> ToSubject { get; set; }
+        IEnumerable<IMessage> ToSubject { get; set; }
 
         /// <summary>
         /// Message to send to the target of the command
         /// </summary>
-        IEnumerable<string> ToTarget { get; set; }
+        IEnumerable<IMessage> ToTarget { get; set; }
 
         /// <summary>
         /// Message to send to the origin location of the command/event
         /// </summary>
-        IEnumerable<string> ToOrigin { get; set; }
+        IEnumerable<IMessage> ToOrigin { get; set; }
 
         /// <summary>
         /// Message to send to the destination location of the command/event
         /// </summary>
-        IEnumerable<string> ToDestination { get; set; }
-
-        /// <summary>
-        /// Message to send to the surrounding locations of the command/event
-        /// </summary>
-        Dictionary<MessagingType, Tuple<int, IEnumerable<string>>> ToSurrounding { get; set; }
+        IEnumerable<IMessage> ToDestination { get; set; }
 
         /// <summary>
         /// Executes the messaging, sending messages using WriteTo on all relevant entities
