@@ -126,6 +126,14 @@ namespace NetMud.Data.LookupData
         }
 
         /// <summary>
+        /// Constructor
+        /// </summary>
+        public Flora()
+        {
+
+        }
+
+        /// <summary>
         /// Gets the errors for data fitness
         /// </summary>
         /// <returns>a bunch of text saying how awful your data is</returns>

@@ -45,7 +45,7 @@ namespace NetMud.DataStructure.Behaviors.System
         /// <summary>
         /// What biomes this can spawn in
         /// </summary>
-        IEnumerable<Biome> OccursIn { get; set; }
+        HashSet<Biome> OccursIn { get; set; }
 
         /// <summary>
         /// Can spawn in system zones like non-player owned cities

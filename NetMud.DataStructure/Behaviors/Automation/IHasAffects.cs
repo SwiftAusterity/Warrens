@@ -10,7 +10,7 @@ namespace NetMud.DataStructure.Behaviors.Automation
         /// <summary>
         /// The affects.. affecting the entity
         /// </summary>
-        HashSet<IAffect> Affects { get; }
+        HashSet<IAffect> Affects { get; set; }
 
         /// <summary>
         /// Checks if there is an affect without having to crawl the hashset everytime or returning a big class object

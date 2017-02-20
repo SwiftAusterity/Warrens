@@ -43,8 +43,7 @@
                 </div>
             </div>
             <div class="form-group one-column">
-                @Html.Partial("~/Views/GameAdmin/World/Layer.cshtml",
-                new Tuple<string, NetMud.DataStructure.Base.Place.IStratumLayer, IEnumerable<NetMud.DataStructure.Base.Supporting.IMaterial>>(String.Empty, null, Model.ValidMaterials))
+                @Html.Partial("~/Views/GameAdmin/World/Layer.cshtml", Model)
             </div>
 
         }
@@ -87,8 +86,7 @@
                     </div>
                 </div>
                 <div class="form-group one-column">
-                    @Html.Partial("~/Views/GameAdmin/World/Layer.cshtml",
-                        new Tuple<string, NetMud.DataStructure.Base.Place.IStratumLayer, IEnumerable<NetMud.DataStructure.Base.Supporting.IMaterial>>(layer.Key, layer.Value, Model.ValidMaterials))
+                    @Html.Partial("~/Views/GameAdmin/World/Layer.cshtml", Model)                
                 </div>
             }
         }
@@ -132,8 +130,7 @@
                 '</div>' +
                 '</div>' +
                 '<div class="form-group two-column">' +
-                @Html.Partial("~/Views/GameAdmin/World/Layer.cshtml",
-                new Tuple<string, NetMud.DataStructure.Base.Place.IStratumLayer, IEnumerable<NetMud.DataStructure.Base.Supporting.IMaterial>>(String.Empty, null, Model.ValidMaterials))
+                @Html.Partial("~/Views/GameAdmin/World/Layer.cshtml", Model) +
                 '</div></div>'
             );
 

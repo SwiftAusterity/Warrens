@@ -43,12 +43,12 @@ namespace NetMud.Data.LookupData
         /// <summary>
         /// What medium biomes this can spawn in
         /// </summary>
-        public IEnumerable<Biome> OccursIn { get; set; }
+        public HashSet<Biome> OccursIn { get; set; }
 
         /// <summary>
         /// The affects.. affecting the entity
         /// </summary>
-        public HashSet<IAffect> Affects { get; private set; }
+        public HashSet<IAffect> Affects { get; set; }
 
         /// <summary>
         /// Checks if there is an affect without having to crawl the hashset everytime or returning a big class object

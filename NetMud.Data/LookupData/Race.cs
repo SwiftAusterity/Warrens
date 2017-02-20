@@ -204,7 +204,7 @@ namespace NetMud.Data.LookupData
             if (Head == null)
                 dataProblems.Add("Head is invalid.");
 
-            if (BodyParts == null || BodyParts.Any(a => a.Item1 == null || a.Item2 == 0 || String.IsNullOrWhiteSpace(a.Item3)))
+            if (BodyParts != null && BodyParts.Any(a => a.Item1 == null || a.Item2 == 0 || String.IsNullOrWhiteSpace(a.Item3)))
                 dataProblems.Add("BodyParts are invalid.");
 
             if (SanguinaryMaterial == null)

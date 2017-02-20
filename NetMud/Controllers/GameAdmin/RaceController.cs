@@ -223,14 +223,34 @@ namespace NetMud.Controllers.GameAdmin
 
             vModel.DataObject = obj;
             vModel.Name = obj.Name;
-            vModel.ArmsAmount = obj.Arms.Item2;
-            vModel.ArmsID = obj.Arms.Item1.ID;
-            vModel.BloodId = obj.SanguinaryMaterial.ID;
+
+            if (obj.Arms != null)
+            {
+                vModel.ArmsAmount = obj.Arms.Item2;
+                vModel.ArmsID = obj.Arms.Item1.ID;
+            }
+
+            if (obj.Legs != null)
+            {
+                vModel.LegsAmount = obj.Legs.Item2;
+                vModel.LegsID = obj.Legs.Item1.ID;
+            }
+
+            if (obj.BodyParts != null)
+            {
+                vModel.ExtraPartsAmount = obj.BodyParts.Select(bp => bp.Item2).ToArray();
+                vModel.ExtraPartsId = obj.BodyParts.Select(bp => bp.Item1.ID).ToArray(); ;
+                vModel.ExtraPartsName = obj.BodyParts.Select(bp => bp.Item3).ToArray(); ;
+            }
+
+            if (obj.SanguinaryMaterial != null)
+            {
+                vModel.BloodId = obj.SanguinaryMaterial.ID;
+            }
+
             vModel.Breathes = (short)obj.Breathes;
             vModel.DietaryNeeds = (short)obj.DietaryNeeds;
             vModel.HeadId = obj.Head.ID;
-            vModel.LegsAmount = obj.Legs.Item2;
-            vModel.LegsID = obj.Legs.Item1.ID;
           //  vModel.RecallLocationId = obj.EmergencyLocation.ID;
            // vModel.StartingLocationId = obj.StartingLocation.ID;
             vModel.TeethType = (short)obj.TeethType;
@@ -241,9 +261,6 @@ namespace NetMud.Controllers.GameAdmin
             vModel.VisionRangeLow = obj.VisionRange.Item1;
             vModel.HelpBody = obj.HelpText;
 
-            vModel.ExtraPartsAmount = obj.BodyParts.Select(bp => bp.Item2).ToArray();
-            vModel.ExtraPartsId = obj.BodyParts.Select(bp => bp.Item1.ID).ToArray(); ;
-            vModel.ExtraPartsName = obj.BodyParts.Select(bp => bp.Item3).ToArray(); ;
 
             return View("~/Views/GameAdmin/Race/Edit.cshtml", vModel);
         }
@@ -264,7 +281,7 @@ namespace NetMud.Controllers.GameAdmin
 
             obj.Name = vModel.Name;
 
-            if (vModel.ArmsID > 0 && vModel.ArmsAmount > 0)
+            if (vModel.ArmsID > -1 && vModel.ArmsAmount > 0)
             {
                 var arm = BackingDataCache.Get<InanimateData>(vModel.ArmsID);
 
@@ -272,7 +289,7 @@ namespace NetMud.Controllers.GameAdmin
                     obj.Arms = new Tuple<IInanimateData, short>(arm, vModel.ArmsAmount);
             }
 
-            if (vModel.LegsID > 0 && vModel.LegsAmount > 0)
+            if (vModel.LegsID > -1 && vModel.LegsAmount > 0)
             {
                 var leg = BackingDataCache.Get<InanimateData>(vModel.LegsID);
 
@@ -280,7 +297,7 @@ namespace NetMud.Controllers.GameAdmin
                     obj.Legs = new Tuple<IInanimateData, short>(leg, vModel.LegsAmount);
             }
 
-            if (vModel.TorsoId > 0)
+            if (vModel.TorsoId > -1)
             {
                 var torso = BackingDataCache.Get<InanimateData>(vModel.TorsoId);
 
@@ -288,7 +305,7 @@ namespace NetMud.Controllers.GameAdmin
                     obj.Torso = torso;
             }
 
-            if (vModel.HeadId > 0)
+            if (vModel.HeadId > -1)
             {
                 var head = BackingDataCache.Get<InanimateData>(vModel.HeadId);
 
@@ -312,7 +329,7 @@ namespace NetMud.Controllers.GameAdmin
             //        obj.EmergencyLocation = room;
             //}
 
-            if (vModel.BloodId > 0)
+            if (vModel.BloodId > -1)
             {
                 var blood = BackingDataCache.Get<Material>(vModel.BloodId);
 
@@ -334,7 +351,7 @@ namespace NetMud.Controllers.GameAdmin
                 int partIndex = 0;
                 foreach (var partId in vModel.ExtraPartsId)
                 {
-                    if (partId > 0)
+                    if (partId > -1)
                     {
                         if (vModel.ExtraPartsAmount.Count() <= partIndex || vModel.ExtraPartsName.Count() <= partIndex)
                             break;

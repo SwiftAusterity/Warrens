@@ -144,6 +144,7 @@ namespace NetMud.Controllers.GameAdmin
                 if (newModel != null)
                 {
                     newModel.Name = vModel.Name;
+                    newModel.HelpText = vModel.HelpText;
 
                     if (newModel.IsModelValid())
                     {
@@ -187,6 +188,7 @@ namespace NetMud.Controllers.GameAdmin
             vModel.DataObject = obj;
             vModel.Name = obj.Name;
             vModel.ModelType = obj.ModelType;
+            vModel.HelpText = obj.HelpText;
 
             return View("~/Views/GameAdmin/DimensionalModel/Edit.cshtml", vModel);
         }
@@ -248,6 +250,7 @@ namespace NetMud.Controllers.GameAdmin
                     if (newModel.IsModelValid())
                     {
                         obj.Name = vModel.Name;
+                        obj.HelpText = vModel.HelpText;
                         obj.ModelType = newModel.ModelType;
                         obj.ModelPlanes = newModel.ModelPlanes;
 
