@@ -6,7 +6,7 @@
     <label class="control-label">Occurs in Biome</label>
     <a href="#" id="addOccursInRow" class="addRow">Add another row...</a>
     <div id="occursInRow">
-        @if (Model == null || Model.OccursIn == null || Model.OccursIn.Count() == 0)
+        @if (Model == null || Model.OccursIn == null || Model.OccursIn.Length == 0)
         {
             <div class="form-group three-column">
                 <a href="#" class="removeRow" id="removeOccursInRow" title="Remove this">X</a>

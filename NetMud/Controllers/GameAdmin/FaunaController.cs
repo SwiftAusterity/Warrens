@@ -141,6 +141,7 @@ namespace NetMud.Controllers.GameAdmin
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
             vModel.ValidMaterials = BackingDataCache.GetAll<IMaterial>();
             vModel.ValidInanimateDatas = BackingDataCache.GetAll<IInanimateData>();
+            vModel.ValidRaces = BackingDataCache.GetAll<IRace>();
 
             var obj = BackingDataCache.Get<IFauna>(id);
 
