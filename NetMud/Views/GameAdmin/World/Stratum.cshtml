@@ -9,9 +9,6 @@
             <div class="form-group three-column">
                 <a href="#" class="removeRow" id="removeLayerRow" title="Remove this">X</a>
                 <label class="control-label">&nbsp;</label>
-                <div>
-                    &nbsp;
-                </div>
                 @Html.LabelFor(m => m.Name, new { @class = "control-label" })
                 <div>
                     @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
@@ -42,9 +39,7 @@
                     @Html.TextBoxFor(m => m.AmbientHumidityRangeHigh, new { @class = "form-control" })
                 </div>
             </div>
-            <div class="form-group one-column">
-                @Html.Partial("~/Views/GameAdmin/World/Layer.cshtml", Model)
-            </div>
+                @Html.Partial("~/Views/GameAdmin/World/Layer.cshtml", new Tuple<KeyValuePair<string, NetMud.DataStructure.Base.Place.IStratumLayer>, IEnumerable<NetMud.DataStructure.Base.Supporting.IMaterial>>(new KeyValuePair<string, NetMud.DataStructure.Base.Place.IStratumLayer>(), Model.ValidMaterials))
 
         }
         else
@@ -54,7 +49,6 @@
                 <div class="form-group three-column">
                     <a href="#" class="removeRow" id="removeLayerRow" title="Remove this">X</a>
                     <label class="control-label">&nbsp;</label>
-                    <div>&nbsp;</div>
                     @Html.LabelFor(m => m.Name, new { @class = "control-label" })
                     <div>
                         @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
@@ -85,9 +79,7 @@
                         @Html.TextBoxFor(m => m.AmbientHumidityRangeHigh, new { @class = "form-control" })
                     </div>
                 </div>
-                <div class="form-group one-column">
-                    @Html.Partial("~/Views/GameAdmin/World/Layer.cshtml", Model)                
-                </div>
+                    @Html.Partial("~/Views/GameAdmin/World/Layer.cshtml", new Tuple<KeyValuePair<string, NetMud.DataStructure.Base.Place.IStratumLayer>, IEnumerable<NetMud.DataStructure.Base.Supporting.IMaterial>>(layer, Model.ValidMaterials))
             }
         }
     </div>
@@ -99,39 +91,38 @@
             $("#LayerRows").append(
                 '<div class="form-group three-column">' +
                 '<a href="#" class="removeRow" id="removeLayerRow" title="Remove this">X</a>' +
-                '<label class="control-label">&nbsp;</label><div>&nbsp;</div>' +
-                decodeHtml('@Html.LabelFor(m => m.Name, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "")') +
+                '<label class="control-label">&nbsp;</label>' +
+                decodeHtml('@Html.LabelFor(m => m.Name, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "").ToString().Replace(Environment.NewLine, "")') +
                 '<div>' +
-                decodeHtml('@Html.TextBoxFor(m => m.Name, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "")') +
+                decodeHtml('@Html.TextBoxFor(m => m.Name, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "").ToString().Replace(Environment.NewLine, "")') +
                 '</div>' +
-                decodeHtml('@Html.LabelFor(m => m.Diameter, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "")') +
+                decodeHtml('@Html.LabelFor(m => m.Diameter, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "").ToString().Replace(Environment.NewLine, "")') +
                 '<div>' +
-                decodeHtml('@Html.TextBoxFor(m => m.Diameter, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "")') +
+                decodeHtml('@Html.TextBoxFor(m => m.Diameter, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "").ToString().Replace(Environment.NewLine, "")') +
                 '</div>' +
                 '</div>' +
                 '<div class="form-group two-column">' +
-                decodeHtml('@Html.LabelFor(m => m.AmbientTemperatureRangeLow, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "")') +
+                decodeHtml('@Html.LabelFor(m => m.AmbientTemperatureRangeLow, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "").ToString().Replace(Environment.NewLine, "")') +
                 '<div>' +
-                decodeHtml('@Html.TextBoxFor(m => m.AmbientTemperatureRangeLow, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "")') +
+                decodeHtml('@Html.TextBoxFor(m => m.AmbientTemperatureRangeLow, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "").ToString().Replace(Environment.NewLine, "")') +
                 '</div>' +
-                decodeHtml('@Html.LabelFor(m => m.AmbientTemperatureRangeHigh, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "")') +
+                decodeHtml('@Html.LabelFor(m => m.AmbientTemperatureRangeHigh, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "").ToString().Replace(Environment.NewLine, "")') +
                 '<div>' +
-                decodeHtml('@Html.TextBoxFor(m => m.AmbientTemperatureRangeHigh, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "")') +
+                decodeHtml('@Html.TextBoxFor(m => m.AmbientTemperatureRangeHigh, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "").ToString().Replace(Environment.NewLine, "")') +
                 '</div>' +
                 '</div>' +
                 '<div class="form-group two-column">' +
-                decodeHtml('@Html.LabelFor(m => m.AmbientHumidityRangeLow, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "")') +
+                decodeHtml('@Html.LabelFor(m => m.AmbientHumidityRangeLow, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "").ToString().Replace(Environment.NewLine, "")') +
                 '<div>' +
-                decodeHtml('@Html.TextBoxFor(m => m.AmbientHumidityRangeLow, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "")') +
+                decodeHtml('@Html.TextBoxFor(m => m.AmbientHumidityRangeLow, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "").ToString().Replace(Environment.NewLine, "")') +
                 '</div>' +
-                decodeHtml('@Html.LabelFor(m => m.AmbientHumidityRangeHigh, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "")') +
+                decodeHtml('@Html.LabelFor(m => m.AmbientHumidityRangeHigh, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "").ToString().Replace(Environment.NewLine, "")') +
                 '<div>' +
-                decodeHtml('@Html.TextBoxFor(m => m.AmbientHumidityRangeHigh, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "")') +
+                decodeHtml('@Html.TextBoxFor(m => m.AmbientHumidityRangeHigh, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "").ToString().Replace(Environment.NewLine, "")') +
                 '</div>' +
                 '</div>' +
-                '<div class="form-group two-column">' +
-                @Html.Partial("~/Views/GameAdmin/World/Layer.cshtml", Model) +
-                '</div></div>'
+                decodeHtml('@Html.Partial("~/Views/GameAdmin/World/Layer.cshtml", new Tuple<KeyValuePair<string, NetMud.DataStructure.Base.Place.IStratumLayer>, IEnumerable<NetMud.DataStructure.Base.Supporting.IMaterial>>(new KeyValuePair<string, NetMud.DataStructure.Base.Place.IStratumLayer>(), Model.ValidMaterials)).ToString().Replace(Environment.NewLine, "")') +
+                '</div>'
             );
 
             $(".removeRow").click(function () {

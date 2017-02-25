@@ -1,14 +1,28 @@
-﻿@model NetMud.Models.Admin.AddEditStratumViewModel
+﻿@model Tuple<KeyValuePair<string, NetMud.DataStructure.Base.Place.IStratumLayer>, IEnumerable<NetMud.DataStructure.Base.Supporting.IMaterial>>
 
 @{
+    var layerName = Model.Item1.Key;
+    var materialId = Model.Item1.Value == null ? -1 : Model.Item1.Value.BaseMaterial.ID;
+    var upperDepth = Model.Item1.Value == null ? -1 : Model.Item1.Value.UpperDepth;
+    var lowerDepth = Model.Item1.Value == null ? -1 : Model.Item1.Value.LowerDepth;
+
     <div class="form-group two-column">
-        @Html.EditorFor(m => layerName)
-        @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Rock", "Rock", Model.MaterialsList, Model.BaseMaterial.ID))
+        <label class="control-label" for="Name">Name</label>
+        <div>
+            <input id="Name" class="form-control valid" name="Name" value="@layerName" type="text" aria-describedby="Name-error" aria-invalid="false">
+        </div>
+        @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Rock", "Rock", Model.Item2, materialId))
     </div>
     
     <div class="form-group two-column">
-        @Html.EditorFor(m => m.LowerDepths)
-        @Html.EditorFor(m => m.UpperDepths)
+        <label class="control-label" for="Name">Lower Depth</label>
+        <div>
+            <input id="Name" class="form-control valid" name="Name" value="@lowerDepth" type="text" aria-describedby="Name-error" aria-invalid="false">
+        </div>
+        <label class="control-label" for="Name">Upper Depth</label>
+        <div>
+            <input id="Name" class="form-control valid" name="Name" value="@upperDepth" type="text" aria-describedby="Name-error" aria-invalid="false">
+        </div>
     </div>
 
 }
