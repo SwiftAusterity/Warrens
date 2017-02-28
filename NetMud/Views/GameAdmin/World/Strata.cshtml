@@ -38,9 +38,9 @@
                 '</div>'
             );
 
-            $("#addLayerRow").unbind("click");
+            $(".addLayerRow").unbind("click");
 
-            $("#addLayerRow").click(function () {
+            $(".addLayerRow").bind("click", function () {
                 $(this).next("#LayerRows").append(
                     '<div style="background-color: lightgrey; padding:15px; border: 1px solid black;">' +
                     '<a href="#" class="removeRow" id="removeLayerRow" title="Remove this">X</a>' +
@@ -92,7 +92,7 @@
             return false;
         });
 
-        $("#addLayerRow").click(function () {
+        $(".addLayerRow").click(function () {
             $(this).next("#LayerRows").append(
                 '<div style="background-color: lightgrey; padding:15px; border: 1px solid black;">' +
                 '<a href="#" class="removeRow" id="removeLayerRow" title="Remove this">X</a>' +
