@@ -44,7 +44,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageRaceDataViewModel(BackingDataCache.GetAll<Race>());
+            var vModel = new ManageRaceDataViewModel(BackingDataCache.GetAll<IRace>());
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             vModel.CurrentPageNumber = CurrentPageNumber;
@@ -87,8 +87,8 @@ namespace NetMud.Controllers.GameAdmin
         {
             var vModel = new AddEditRaceViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-            vModel.ValidMaterials = BackingDataCache.GetAll<Material>();
-            vModel.ValidObjects = BackingDataCache.GetAll<InanimateData>();
+            vModel.ValidMaterials = BackingDataCache.GetAll<IMaterial>();
+            vModel.ValidObjects = BackingDataCache.GetAll<IInanimateData>();
 
             return View("~/Views/GameAdmin/Race/Add.cshtml", vModel);
         }
@@ -114,7 +114,7 @@ namespace NetMud.Controllers.GameAdmin
 
             if (vModel.LegsID > 0 && vModel.LegsAmount > 0)
             {
-                var leg = BackingDataCache.Get<InanimateData>(vModel.LegsID);
+                var leg = BackingDataCache.Get<IInanimateData>(vModel.LegsID);
 
                 if (leg != null)
                     newObj.Legs = new Tuple<IInanimateData, short>(leg, vModel.LegsAmount);
@@ -122,7 +122,7 @@ namespace NetMud.Controllers.GameAdmin
 
             if (vModel.TorsoId > 0)
             {
-                var torso = BackingDataCache.Get<InanimateData>(vModel.TorsoId);
+                var torso = BackingDataCache.Get<IInanimateData>(vModel.TorsoId);
 
                 if (torso != null)
                     newObj.Torso = torso;
@@ -130,7 +130,7 @@ namespace NetMud.Controllers.GameAdmin
 
             if (vModel.HeadId > 0)
             {
-                var head = BackingDataCache.Get<InanimateData>(vModel.HeadId);
+                var head = BackingDataCache.Get<IInanimateData>(vModel.HeadId);
 
                 if (head != null)
                     newObj.Head = head;
@@ -181,7 +181,7 @@ namespace NetMud.Controllers.GameAdmin
 
                         var currentName = vModel.ExtraPartsName[partIndex];
                         var currentAmount = vModel.ExtraPartsAmount[partIndex];
-                        var partObject = BackingDataCache.Get<InanimateData>(id);
+                        var partObject = BackingDataCache.Get<IInanimateData>(id);
 
                         if (partObject != null && currentAmount > 0 && !string.IsNullOrWhiteSpace(currentName))
                             bodyBits.Add(new Tuple<IInanimateData, short, string>(partObject, currentAmount, currentName));
@@ -272,7 +272,7 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = BackingDataCache.Get<Race>(id);
+            var obj = BackingDataCache.Get<IRace>(id);
             if (obj == null)
             {
                 message = "That does not exist";
@@ -291,7 +291,7 @@ namespace NetMud.Controllers.GameAdmin
 
             if (vModel.LegsID > -1 && vModel.LegsAmount > 0)
             {
-                var leg = BackingDataCache.Get<InanimateData>(vModel.LegsID);
+                var leg = BackingDataCache.Get<IInanimateData>(vModel.LegsID);
 
                 if (leg != null)
                     obj.Legs = new Tuple<IInanimateData, short>(leg, vModel.LegsAmount);
@@ -299,7 +299,7 @@ namespace NetMud.Controllers.GameAdmin
 
             if (vModel.TorsoId > -1)
             {
-                var torso = BackingDataCache.Get<InanimateData>(vModel.TorsoId);
+                var torso = BackingDataCache.Get<IInanimateData>(vModel.TorsoId);
 
                 if (torso != null)
                     obj.Torso = torso;
@@ -307,7 +307,7 @@ namespace NetMud.Controllers.GameAdmin
 
             if (vModel.HeadId > -1)
             {
-                var head = BackingDataCache.Get<InanimateData>(vModel.HeadId);
+                var head = BackingDataCache.Get<IInanimateData>(vModel.HeadId);
 
                 if (head != null)
                     obj.Head = head;
@@ -358,7 +358,7 @@ namespace NetMud.Controllers.GameAdmin
 
                         var currentName = vModel.ExtraPartsName[partIndex];
                         var currentAmount = vModel.ExtraPartsAmount[partIndex];
-                        var partObject = BackingDataCache.Get<InanimateData>(partId);
+                        var partObject = BackingDataCache.Get<IInanimateData>(partId);
 
                         if (partObject != null && currentAmount > 0 && !string.IsNullOrWhiteSpace(currentName))
                             bodyBits.Add(new Tuple<IInanimateData, short, string>(partObject, currentAmount, currentName));

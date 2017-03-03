@@ -10,18 +10,18 @@ using System.Linq;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageRaceDataViewModel : PagedDataModel<Race>, BaseViewModel
+    public class ManageRaceDataViewModel : PagedDataModel<IRace>, BaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
-        public ManageRaceDataViewModel(IEnumerable<Race> items)
+        public ManageRaceDataViewModel(IEnumerable<IRace> items)
             : base(items)
         {
             CurrentPageNumber = 1;
             ItemsPerPage = 20;
         }
 
-        internal override Func<Race, bool> SearchFilter
+        internal override Func<IRace, bool> SearchFilter
         {
             get
             {

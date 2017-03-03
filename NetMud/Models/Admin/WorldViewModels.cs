@@ -60,10 +60,10 @@ namespace NetMud.Models.Admin
     {
         public ApplicationUser authedUser { get; set; }
 
-        public AddEditStratumViewModel(IStratum stratum)
+        public AddEditStratumViewModel(IStratum stratum, IEnumerable<IMaterial> validMaterials)
         {
             DataObject = stratum;
-            ValidMaterials = Enumerable.Empty<IMaterial>();
+            ValidMaterials = validMaterials;
         }
 
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
