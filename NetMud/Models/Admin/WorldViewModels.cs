@@ -51,6 +51,45 @@ namespace NetMud.Models.Admin
         [UIHint("EnumDropDownList")]
         public WorldType Topography { get; set; }
 
+        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
+        [Display(Name = "Name")]
+        [DataType(DataType.Text)]
+        public string[] StratumName { get; set; }
+
+        [Range(1, 100000, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Diameter")]
+        [DataType(DataType.Text)]
+        public long[] Diameter { get; set; }
+
+        [Range(-100, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Ambient Temperature Low")]
+        [DataType(DataType.Text)]
+        public int[] AmbientTemperatureRangeLow { get; set; }
+
+        [Range(-100, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Ambient Temperature High")]
+        [DataType(DataType.Text)]
+        public int[] AmbientTemperatureRangeHigh { get; set; }
+
+        [Range(-100, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Ambient Humidity Low")]
+        [DataType(DataType.Text)]
+        public int[] AmbientHumidityRangeLow { get; set; }
+
+        [Range(-100, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Ambient Humidity High")]
+        [DataType(DataType.Text)]
+        public int[] AmbientHumidityRangeHigh { get; set; }
+
+        [Display(Name = "Layer Material")]
+        public long[] LayerMaterials { get; set; }
+
+        [Display(Name = "Lower Depth")]
+        public int[] LowerDepths { get; set; }
+
+        [Display(Name = "Upper Depth")]
+        public int[] UpperDepths { get; set; }
+
         public IEnumerable<IMaterial> ValidMaterials { get; set; }
 
         public IWorld DataObject { get; set; }
@@ -69,7 +108,7 @@ namespace NetMud.Models.Admin
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
         [Display(Name = "Name")]
         [DataType(DataType.Text)]
-        public string Name { get; set; }
+        public string StratumName { get; set; }
 
         [Range(1, 100000, ErrorMessage = "The {0} must be between {2} and {1}.")]
         [Display(Name = "Diameter")]

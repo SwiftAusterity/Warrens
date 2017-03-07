@@ -6,6 +6,7 @@ using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Place;
 using NetMud.Models.Admin;
+using System.Collections.Generic;
 using System.Web;
 using System.Web.Mvc;
 
@@ -98,6 +99,51 @@ namespace NetMud.Controllers.GameAdmin
             var newObj = new World(vModel.Name);
             newObj.FullDiameter = vModel.FullDiameter;
             newObj.Topography = vModel.Topography;
+
+            if (vModel.StratumName != null)
+            {
+                int stratumIndex = 0;
+                var stratumList = new List<IStratum>();
+
+                foreach (var stratumName in vModel.StratumName)
+                {
+                    if (!string.IsNullOrEmpty(stratumName))
+                    {
+                        if (vModel.Diameter.Count() <= partIndex || vModel.AmbientTemperatureRangeLow.Count() <= partIndex
+                            || vModel.AmbientTemperatureRangeHigh.Count() <= partIndex || vModel.AmbientHumidityRangeLow.Count() <= partIndex
+                            || vModel.AmbientHumidityRangeHigh.Count() <= partIndex)
+                            break;
+
+                        var currentDiameter = vModel.Diameter[partIndex];
+                        var currentTempLow = vModel.AmbientTemperatureRangeLow[partIndex];
+                        var currentTempHigh = vModel.AmbientTemperatureRangeHigh[partIndex];
+                        var currentHumidLow = vModel.AmbientHumidityRangeLow[partIndex];
+                        var currentHumidHigh = vModel.AmbientHumidityRangeHigh[partIndex];
+
+                        if (currentDiameter > 0 && currentTempLow < currentTempHigh && currentHumidLow < currentHumidHigh)
+                            stratumList.Add(new Stratum());
+                    }
+
+                    partIndex++;
+                }
+
+                newObj.BodyParts = bodyBits;
+            }
+
+            /*
+            //Per stratum
+        public string StratumName { get; set; }
+        public long Diameter { get; set; }
+        public int AmbientTemperatureRangeLow { get; set; }
+        public int AmbientTemperatureRangeHigh { get; set; }
+        public int AmbientHumidityRangeLow { get; set; }
+        public int AmbientHumidityRangeHigh { get; set; }
+
+        //per layer
+        public long[] LayerMaterials { get; set; }
+        public int[] LowerDepths { get; set; }
+        public int[] UpperDepths { get; set; }
+            */
 
             if (validData)
             {
