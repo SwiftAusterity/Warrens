@@ -5,6 +5,7 @@ using NetMud.Data.LookupData;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Place;
+using NetMud.DataStructure.Base.Supporting;
 using NetMud.Models.Admin;
 using System.Collections.Generic;
 using System.Web;
@@ -82,7 +83,7 @@ namespace NetMud.Controllers.GameAdmin
             var vModel = new AddEditWorldViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            vModel.ValidMaterials = BackingDataCache.GetAll<Material>();
+            vModel.ValidMaterials = BackingDataCache.GetAll<IMaterial>();
 
             return View("~/Views/GameAdmin/World/Add.cshtml", vModel);
         }
@@ -166,7 +167,7 @@ namespace NetMud.Controllers.GameAdmin
             var vModel = new AddEditWorldViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            vModel.ValidMaterials = BackingDataCache.GetAll<Material>();
+            vModel.ValidMaterials = BackingDataCache.GetAll<IMaterial>();
 
             var obj = BackingDataCache.Get<IWorld>(id);
 
