@@ -10,7 +10,6 @@ namespace NetMud.Data.LookupData
     /// World for holding world maps
     /// </summary>
     [Serializable]
-    [IgnoreAutomatedBackup]
     public class World : BackingDataPartial, IWorld
     {
         public long FullDiameter { get; set; }

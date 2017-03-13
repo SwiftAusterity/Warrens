@@ -8,6 +8,7 @@ using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.Models.Admin;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
@@ -110,25 +111,25 @@ namespace NetMud.Controllers.GameAdmin
                 {
                     if (!string.IsNullOrEmpty(stratumName))
                     {
-                        if (vModel.Diameter.Count() <= partIndex || vModel.AmbientTemperatureRangeLow.Count() <= partIndex
-                            || vModel.AmbientTemperatureRangeHigh.Count() <= partIndex || vModel.AmbientHumidityRangeLow.Count() <= partIndex
-                            || vModel.AmbientHumidityRangeHigh.Count() <= partIndex)
+                        if (vModel.Diameter.Count() <= stratumIndex || vModel.AmbientTemperatureRangeLow.Count() <= stratumIndex
+                            || vModel.AmbientTemperatureRangeHigh.Count() <= stratumIndex || vModel.AmbientHumidityRangeLow.Count() <= stratumIndex
+                            || vModel.AmbientHumidityRangeHigh.Count() <= stratumIndex)
                             break;
 
-                        var currentDiameter = vModel.Diameter[partIndex];
-                        var currentTempLow = vModel.AmbientTemperatureRangeLow[partIndex];
-                        var currentTempHigh = vModel.AmbientTemperatureRangeHigh[partIndex];
-                        var currentHumidLow = vModel.AmbientHumidityRangeLow[partIndex];
-                        var currentHumidHigh = vModel.AmbientHumidityRangeHigh[partIndex];
+                        var currentDiameter = vModel.Diameter[stratumIndex];
+                        var currentTempLow = vModel.AmbientTemperatureRangeLow[stratumIndex];
+                        var currentTempHigh = vModel.AmbientTemperatureRangeHigh[stratumIndex];
+                        var currentHumidLow = vModel.AmbientHumidityRangeLow[stratumIndex];
+                        var currentHumidHigh = vModel.AmbientHumidityRangeHigh[stratumIndex];
 
                         if (currentDiameter > 0 && currentTempLow < currentTempHigh && currentHumidLow < currentHumidHigh)
                             stratumList.Add(new Stratum());
                     }
 
-                    partIndex++;
+                    stratumIndex++;
                 }
 
-                newObj.BodyParts = bodyBits;
+                newObj.Strata = new HashSet<IStratum>(stratumList);
             }
 
             /*
