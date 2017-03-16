@@ -81,6 +81,11 @@ namespace NetMud.Models.Admin
         [DataType(DataType.Text)]
         public int[] AmbientHumidityRangeHigh { get; set; }
 
+        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
+        [Display(Name = "Name")]
+        [DataType(DataType.Text)]
+        public string LayerName { get; set; }
+
         [Display(Name = "Layer Material")]
         public long[] LayerMaterials { get; set; }
 
@@ -134,6 +139,11 @@ namespace NetMud.Models.Admin
         [Display(Name = "Ambient Humidity High")]
         [DataType(DataType.Text)]
         public int AmbientHumidityRangeHigh { get; set; }
+
+        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
+        [Display(Name = "Name")]
+        [DataType(DataType.Text)]
+        public string LayerName { get; set; }
 
         [Display(Name = "Layer Material")]
         public long[] LayerMaterials { get; set; }

@@ -1,4 +1,5 @@
 ﻿using NetMud.Data.System;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using Newtonsoft.Json;
@@ -8,9 +9,6 @@ using System.Web.Script.Serialization;
 
 namespace NetMud.Data.LookupData
 {
-    /// <summary>
-    /// Composes the various horizontal layers of worlds
-    /// </summary>
     [Serializable]
     public class Stratum : BackingDataPartial, IStratum
     {
@@ -36,14 +34,7 @@ namespace NetMud.Data.LookupData
 
         public Stratum()
         {
-            //empty constructor
-        }
-
-        public Stratum(int lowTemp, int highTemp, int lowHumidity, int highHumidity, long diameter)
-        {
-            AmbientHumidityRange = new Tuple<int, int>(lowHumidity, highHumidity);
-            AmbientTemperatureRange = new Tuple<int, int>(lowTemp, highTemp);
-            Diameter = diameter;
+            Layers = new Dictionary<string, IStratumLayer>();
         }
     }
 
@@ -53,32 +44,26 @@ namespace NetMud.Data.LookupData
     [Serializable]
     public class StratumLayer : IStratumLayer
     {
+
+        [JsonProperty("BaseMaterial")]
+        private long _baseMaterial { get; set; }
+
         /// <summary>
         /// Material for this layer, can be null for Air layer
         /// </summary>
-        [ScriptIgnore]
         [JsonIgnore]
+        [ScriptIgnore]
         public IMaterial BaseMaterial
         {
             get
             {
-                if (_baseMaterial > -1)
-                    return BackingDataCache.Get<IMaterial>(_baseMaterial);
-
-                return null;
+                return BackingDataCache.Get<IMaterial>(_baseMaterial);
             }
             set
             {
-                if (value == null)
-                    return;
-
                 _baseMaterial = value.ID;
             }
         }
-
-
-        [JsonProperty("BaseMaterial")]
-        private long _baseMaterial { get; set; }
 
         /// <summary>
         /// Lower Z bound for this layer

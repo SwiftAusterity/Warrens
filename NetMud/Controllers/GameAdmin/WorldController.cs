@@ -7,6 +7,7 @@ using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.Models.Admin;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -123,7 +124,17 @@ namespace NetMud.Controllers.GameAdmin
                         var currentHumidHigh = vModel.AmbientHumidityRangeHigh[stratumIndex];
 
                         if (currentDiameter > 0 && currentTempLow < currentTempHigh && currentHumidLow < currentHumidHigh)
-                            stratumList.Add(new Stratum());
+                        {
+                            var newStrat = new Stratum();
+                            newStrat.AmbientHumidityRange = new Tuple<int, int>(currentHumidLow, currentHumidHigh);
+                            newStrat.AmbientTemperatureRange = new Tuple<int, int>(currentTempLow, currentTempHigh);
+                            newStrat.Diameter = currentDiameter;
+                            newStrat.Name = stratumName;
+
+                            //Do layers now
+
+                            stratumList.Add(newStrat);
+                        }
                     }
 
                     stratumIndex++;
@@ -133,13 +144,6 @@ namespace NetMud.Controllers.GameAdmin
             }
 
             /*
-            //Per stratum
-        public string StratumName { get; set; }
-        public long Diameter { get; set; }
-        public int AmbientTemperatureRangeLow { get; set; }
-        public int AmbientTemperatureRangeHigh { get; set; }
-        public int AmbientHumidityRangeLow { get; set; }
-        public int AmbientHumidityRangeHigh { get; set; }
 
         //per layer
         public long[] LayerMaterials { get; set; }
