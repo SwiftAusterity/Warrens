@@ -1,7 +1,7 @@
 ﻿@model NetMud.Models.Admin.AddEditWorldViewModel
 
 @{
-    var nullStratumModel = new NetMud.Models.Admin.AddEditStratumViewModel(null);
+    var nullStratumModel = new NetMud.Models.Admin.AddEditStratumViewModel(null, Model.ValidMaterials);
 
     <label class="control-label">Strata</label>
     <a href="#" id="addStratumRow" class="addRow">Add another row...</a>
@@ -19,7 +19,7 @@
             {
                 <div style="border: 1px solid black; padding: 15px;">
                     <a href="#" class="removeRow" id="removeStratumRow" title="Remove this">X</a>
-                    @Html.Partial("~/Views/GameAdmin/World/Stratum.cshtml", new NetMud.Models.Admin.AddEditStratumViewModel(Stratum))
+                    @Html.Partial("~/Views/GameAdmin/World/Stratum.cshtml", new NetMud.Models.Admin.AddEditStratumViewModel(Stratum, Model.ValidMaterials))
                 </div>
             }
         }
@@ -44,36 +44,6 @@
                 $(this).next("#LayerRows").append(
                     '<div style="background-color: lightgrey; padding:15px; border: 1px solid black;">' +
                     '<a href="#" class="removeRow" id="removeLayerRow" title="Remove this">X</a>' +
-                    '<div class="form-group three-column">' +
-                    decodeHtml('@Html.LabelFor(m => nullStratumModel.StratumName, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "").ToString().Replace(Environment.NewLine, "")') +
-                    '<div>' +
-                    decodeHtml('@Html.TextBoxFor(m => nullStratumModel.StratumName, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "").ToString().Replace(Environment.NewLine, "")') +
-                    '</div>' +
-                    decodeHtml('@Html.LabelFor(m => nullStratumModel.Diameter, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "").ToString().Replace(Environment.NewLine, "")') +
-                    '<div>' +
-                    decodeHtml('@Html.TextBoxFor(m => nullStratumModel.Diameter, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "").ToString().Replace(Environment.NewLine, "")') +
-                    '</div>' +
-                    '</div>' +
-                    '<div class="form-group two-column">' +
-                    decodeHtml('@Html.LabelFor(m => nullStratumModel.AmbientTemperatureRangeLow, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "").ToString().Replace(Environment.NewLine, "")') +
-                    '<div>' +
-                    decodeHtml('@Html.TextBoxFor(m => nullStratumModel.AmbientTemperatureRangeLow, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "").ToString().Replace(Environment.NewLine, "")') +
-                    '</div>' +
-                    decodeHtml('@Html.LabelFor(m => nullStratumModel.AmbientTemperatureRangeHigh, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "").ToString().Replace(Environment.NewLine, "")') +
-                    '<div>' +
-                    decodeHtml('@Html.TextBoxFor(m => nullStratumModel.AmbientTemperatureRangeHigh, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "").ToString().Replace(Environment.NewLine, "")') +
-                    '</div>' +
-                    '</div>' +
-                    '<div class="form-group two-column">' +
-                    decodeHtml('@Html.LabelFor(m => nullStratumModel.AmbientHumidityRangeLow, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "").ToString().Replace(Environment.NewLine, "")') +
-                    '<div>' +
-                    decodeHtml('@Html.TextBoxFor(m => nullStratumModel.AmbientHumidityRangeLow, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "").ToString().Replace(Environment.NewLine, "")') +
-                    '</div>' +
-                    decodeHtml('@Html.LabelFor(m => nullStratumModel.AmbientHumidityRangeHigh, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "").ToString().Replace(Environment.NewLine, "")') +
-                    '<div>' +
-                    decodeHtml('@Html.TextBoxFor(m => nullStratumModel.AmbientHumidityRangeHigh, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "").ToString().Replace(Environment.NewLine, "")') +
-                    '</div>' +
-                    '</div>' +
                     decodeHtml('@Html.Partial("~/Views/GameAdmin/World/Layer.cshtml", new Tuple<KeyValuePair<string, NetMud.DataStructure.Base.Place.IStratumLayer>, IEnumerable<NetMud.DataStructure.Base.Supporting.IMaterial>>(new KeyValuePair<string, NetMud.DataStructure.Base.Place.IStratumLayer>(), Model.ValidMaterials)).ToString().Replace(Environment.NewLine, "")') +
                     '</div>'
                 );
@@ -96,36 +66,6 @@
             $(this).next("#LayerRows").append(
                 '<div style="background-color: lightgrey; padding:15px; border: 1px solid black;">' +
                 '<a href="#" class="removeRow" id="removeLayerRow" title="Remove this">X</a>' +
-                '<div class="form-group three-column">' +
-                decodeHtml('@Html.LabelFor(m => nullStratumModel.StratumName, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "").ToString().Replace(Environment.NewLine, "")') +
-                '<div>' +
-                decodeHtml('@Html.TextBoxFor(m => nullStratumModel.StratumName, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "").ToString().Replace(Environment.NewLine, "")') +
-                '</div>' +
-                decodeHtml('@Html.LabelFor(m => nullStratumModel.Diameter, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "").ToString().Replace(Environment.NewLine, "")') +
-                '<div>' +
-                decodeHtml('@Html.TextBoxFor(m => nullStratumModel.Diameter, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "").ToString().Replace(Environment.NewLine, "")') +
-                '</div>' +
-                '</div>' +
-                '<div class="form-group two-column">' +
-                decodeHtml('@Html.LabelFor(m => nullStratumModel.AmbientTemperatureRangeLow, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "").ToString().Replace(Environment.NewLine, "")') +
-                '<div>' +
-                decodeHtml('@Html.TextBoxFor(m => nullStratumModel.AmbientTemperatureRangeLow, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "").ToString().Replace(Environment.NewLine, "")') +
-                '</div>' +
-                decodeHtml('@Html.LabelFor(m => nullStratumModel.AmbientTemperatureRangeHigh, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "").ToString().Replace(Environment.NewLine, "")') +
-                '<div>' +
-                decodeHtml('@Html.TextBoxFor(m => nullStratumModel.AmbientTemperatureRangeHigh, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "").ToString().Replace(Environment.NewLine, "")') +
-                '</div>' +
-                '</div>' +
-                '<div class="form-group two-column">' +
-                decodeHtml('@Html.LabelFor(m => nullStratumModel.AmbientHumidityRangeLow, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "").ToString().Replace(Environment.NewLine, "")') +
-                '<div>' +
-                decodeHtml('@Html.TextBoxFor(m => nullStratumModel.AmbientHumidityRangeLow, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "").ToString().Replace(Environment.NewLine, "")') +
-                '</div>' +
-                decodeHtml('@Html.LabelFor(m => nullStratumModel.AmbientHumidityRangeHigh, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "").ToString().Replace(Environment.NewLine, "")') +
-                '<div>' +
-                decodeHtml('@Html.TextBoxFor(m => nullStratumModel.AmbientHumidityRangeHigh, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "").ToString().Replace(Environment.NewLine, "")') +
-                '</div>' +
-                '</div>' +
                 decodeHtml('@Html.Partial("~/Views/GameAdmin/World/Layer.cshtml", new Tuple<KeyValuePair<string, NetMud.DataStructure.Base.Place.IStratumLayer>, IEnumerable<NetMud.DataStructure.Base.Supporting.IMaterial>>(new KeyValuePair<string, NetMud.DataStructure.Base.Place.IStratumLayer>(), Model.ValidMaterials)).ToString().Replace(Environment.NewLine, "")') +
                 '</div>'
             );
