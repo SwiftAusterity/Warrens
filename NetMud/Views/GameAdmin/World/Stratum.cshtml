@@ -41,7 +41,7 @@
             <div style="background-color: lightgrey; padding:15px; border: 1px solid black;">
                 <a href="#" class="removeRow" id="removeLayerRow" title="Remove this">X</a>
 
-                @Html.Partial("~/Views/GameAdmin/World/Layer.cshtml", new Tuple<KeyValuePair<string, NetMud.DataStructure.Base.Place.IStratumLayer>, IEnumerable<NetMud.DataStructure.Base.Supporting.IMaterial>>(new KeyValuePair<string, NetMud.DataStructure.Base.Place.IStratumLayer>(), Model.ValidMaterials))
+                @Html.Partial("~/Views/GameAdmin/World/Layer.cshtml", new Tuple<KeyValuePair<string, NetMud.DataStructure.Base.Place.IStratumLayer>, IEnumerable<NetMud.DataStructure.Base.Supporting.IMaterial>, string>(new KeyValuePair<string, NetMud.DataStructure.Base.Place.IStratumLayer>(), Model.ValidMaterials, Model.StratumName))
             </div>
         }
         else
@@ -51,7 +51,7 @@
                 <div style="background-color: lightgrey; padding:15px; border: 1px solid black;">
                     <a href="#" class="removeRow" id="removeLayerRow" title="Remove this">X</a>
 
-                    @Html.Partial("~/Views/GameAdmin/World/Layer.cshtml", new Tuple<KeyValuePair<string, NetMud.DataStructure.Base.Place.IStratumLayer>, IEnumerable<NetMud.DataStructure.Base.Supporting.IMaterial>>(layer, Model.ValidMaterials))
+                    @Html.Partial("~/Views/GameAdmin/World/Layer.cshtml", new Tuple<KeyValuePair<string, NetMud.DataStructure.Base.Place.IStratumLayer>, IEnumerable<NetMud.DataStructure.Base.Supporting.IMaterial>, string>(layer, Model.ValidMaterials, Model.StratumName))
                 </div>
             }
         }

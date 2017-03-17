@@ -1,4 +1,4 @@
-﻿@model Tuple<KeyValuePair<string, NetMud.DataStructure.Base.Place.IStratumLayer>, IEnumerable<NetMud.DataStructure.Base.Supporting.IMaterial>>
+﻿@model Tuple<KeyValuePair<string, NetMud.DataStructure.Base.Place.IStratumLayer>, IEnumerable<NetMud.DataStructure.Base.Supporting.IMaterial>, string>
 
 @{
     var layerName = Model.Item1.Key;
@@ -7,9 +7,10 @@
     var lowerDepth = Model.Item1.Value == null ? -1 : Model.Item1.Value.LowerDepth;
 
     <div class="form-group two-column">
-        <label class="control-label" for="Name">Name</label>
+        <input type="hidden" name="StratumLayerNames" id="StratumLayerNames" value="@Model.Item3"
+        <label class="control-label" for="LayerName">Name</label>
         <div>
-            <input id="Name" class="form-control valid" name="Name" value="@layerName" type="text" aria-describedby="Name-error" aria-invalid="false">
+            <input id="LayerNames" class="form-control valid" name="LayerNames" value="@layerName" type="text" aria-describedby="Name-error" aria-invalid="false">
         </div>
         @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Rock", "Rock", Model.Item2, materialId))
     </div>
@@ -17,11 +18,11 @@
     <div class="form-group two-column">
         <label class="control-label" for="Name">Lower Depth</label>
         <div>
-            <input id="Name" class="form-control valid" name="Name" value="@lowerDepth" type="text" aria-describedby="Name-error" aria-invalid="false">
+            <input id="LowerDepths" class="form-control valid" name="LowerDepths" value="@lowerDepth" type="text" aria-describedby="Name-error" aria-invalid="false">
         </div>
         <label class="control-label" for="Name">Upper Depth</label>
         <div>
-            <input id="Name" class="form-control valid" name="Name" value="@upperDepth" type="text" aria-describedby="Name-error" aria-invalid="false">
+            <input id="UpperDepths" class="form-control valid" name="UpperDepths" value="@upperDepth" type="text" aria-describedby="Name-error" aria-invalid="false">
         </div>
     </div>
 
