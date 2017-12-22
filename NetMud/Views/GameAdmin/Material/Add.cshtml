@@ -12,33 +12,33 @@
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <div class="form-group one-column">
-                @Html.EditorFor(e => e.NewName)
+                @Html.EditorFor(e => e.Name)
             </div>
             <div class="form-group three-column">
-                @Html.EditorFor(e => e.NewConductive)
-                @Html.EditorFor(e => e.NewMagnetic)
-                @Html.EditorFor(e => e.NewFlammable)
+                @Html.EditorFor(e => e.Conductive)
+                @Html.EditorFor(e => e.Magnetic)
+                @Html.EditorFor(e => e.Flammable)
             </div>
             <div class="form-group three-column">
-                @Html.EditorFor(e => e.NewViscosity)
-                @Html.EditorFor(e => e.NewDensity)
-                @Html.EditorFor(e => e.NewMallebility)
+                @Html.EditorFor(e => e.Viscosity)
+                @Html.EditorFor(e => e.Density)
+                @Html.EditorFor(e => e.Mallebility)
             </div>
             <div class="form-group three-column">
-                @Html.EditorFor(e => e.NewSolidPoint)
-                @Html.EditorFor(e => e.NewGasPoint)
-                @Html.EditorFor(e => e.NewTemperatureRetention)
+                @Html.EditorFor(e => e.SolidPoint)
+                @Html.EditorFor(e => e.GasPoint)
+                @Html.EditorFor(e => e.TemperatureRetention)
             </div>
             <div class="form-group two-column">
-                @Html.EditorFor(e => e.NewDuctility)
-                @Html.EditorFor(e => e.NewPorosity)
+                @Html.EditorFor(e => e.Ductility)
+                @Html.EditorFor(e => e.Porosity)
             </div>
 
             @Html.Partial("~/Views/GameAdmin/Material/Resistances.cshtml", Model)
             @Html.Partial("~/Views/GameAdmin/Material/Compositions.cshtml", Model)
 
             <div class="form-group one-column">
-                @Html.EditorFor(e => e.NewHelpBody)
+                @Html.EditorFor(e => e.HelpBody)
             </div>
             @Html.Partial("SubmitButton", "Create")
 

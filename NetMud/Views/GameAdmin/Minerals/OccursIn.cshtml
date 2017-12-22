@@ -3,14 +3,14 @@
 @model NetMud.Models.Admin.AddEditMineralsViewModel
 
 @{
-    <label class="control-label">Internal composition</label>
+    <label class="control-label">Occurs in Biome</label>
     <a href="#" id="addOccursInRow" class="addRow">Add another row...</a>
     <div id="occursInRow">
-        @if (Model.DataObject == null || Model.DataObject.OccursIn == null || Model.DataObject.OccursIn.Count() == 0)
+        @if (Model == null || Model.OccursIn == null || Model.OccursIn.Length == 0)
         {
             <div class="form-group three-column">
                 <a href="#" class="removeRow" id="removeOccursInRow" title="Remove this">X</a>
-                @Html.LabelFor(m => m.OccursIn)
+                <label class="control-label" for="OccursIn">&nbsp;</label>
                 <div>
                     @Html.DropDownList("OccursIn", Enum.GetNames(typeof(Biome)).Select(rl =>
                                                                                     new SelectListItem() { Text = rl, Value = rl })
@@ -20,14 +20,14 @@
         }
         else
         {
-            foreach (var occursIn in Model.DataObject.OccursIn)
+            foreach (var occursIn in Model.OccursIn)
             {
                 <div class="form-group three-column">
                     <a href="#" class="removeRow" id="removeOccursInRow" title="Remove this">X</a>
-                    @Html.LabelFor(m => m.Resistances)
+                    <label class="control-label" for="OccursIn">&nbsp;</label>
                     <div>
                         @Html.DropDownList("OccursIn", Enum.GetNames(typeof(Biome)).Select(rl =>
-                                                                              new SelectListItem() { Text = rl, Value = rl, Selected = rl.Equals(occursIn) })
+                                                                              new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(Biome), rl)).ToString(), Selected = (Biome)Enum.Parse(typeof(Biome), rl) == occursIn })
                                                                                     , htmlAttributes: new { id = "OccursIn", @class = "form-control" })
                     </div>
                 </div>
@@ -38,7 +38,6 @@
 
 
 <script type="text/javascript">
-    var occursInLabel = decodeHtml('@Html.LabelFor(m => m.OccursIn).ToString().Replace(Environment.NewLine, "")')
     var occursInDropdown = decodeHtml('@Html.DropDownList("OccursIn", Enum.GetNames(typeof(Biome)).Select(rl => new SelectListItem() { Text = rl, Value = rl }), htmlAttributes: new { id = "OccursIn", @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');
 
     $(document).ready(function () {
@@ -46,7 +45,7 @@
             $("#occursInRow").append(
                 '<div class="form-group three-column">' +
                 '<a href="#" class="removeRow" id="removeOccursInRow" title="Remove this">X</a>' +
-                occursInLabel +
+                '<label class="control-label" for="OccursIn">&nbsp;</label>' +
                 '<div>' + occursInDropdown + '</div></div>'
             );
 

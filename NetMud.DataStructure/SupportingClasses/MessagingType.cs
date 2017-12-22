@@ -7,6 +7,7 @@
     {
         Visible,
         Audible,
+        Olefactory,
         Psychic
     }
 }

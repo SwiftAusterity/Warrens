@@ -38,11 +38,16 @@ namespace NetMud.Models.Admin
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
         [Display(Name = "Name")]
         [DataType(DataType.Text)]
-        public string NewName { get; set; }
+        public string Name { get; set; }
+
+        [StringLength(2000, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 20)]
+        [DataType(DataType.MultilineText)]
+        [Display(Name = "Help Text")]
+        public string HelpText { get; set; }
 
         [Display(Name = "Model Type")]
         [UIHint("EnumDropDownList")]
-        public DimensionalModelType NewModelType { get; set; }
+        public DimensionalModelType ModelType { get; set; }
 
         [DataType(DataType.Upload)]
         [Display(Name = "Model Planes Upload")]

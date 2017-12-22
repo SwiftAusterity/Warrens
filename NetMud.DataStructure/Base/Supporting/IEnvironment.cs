@@ -49,19 +49,19 @@ namespace NetMud.DataStructure.Base.Supporting
     /// <summary>
     /// What effective environment something is
     /// </summary>
-    public enum Biome
+    public enum Biome : short
     {
-        Air,
-        Aquatic,
-        AquaticSurface,
-        AquaticFloor,
-        Cavernous,
-        Desert,
-        Fabricated,
-        Forest,
-        Mountainous,
-        Plains,
-        Rainforest,
-        Swamp
+        Air = 0,
+        Aquatic = 1,
+        AquaticSurface = 2,
+        AquaticFloor = 3,
+        Cavernous = 4,
+        Desert = 5,
+        Fabricated = 6,
+        Forest = 7,
+        Mountainous = 8,
+        Plains = 9,
+        Rainforest = 10,
+        Swamp = 11
     }
 }

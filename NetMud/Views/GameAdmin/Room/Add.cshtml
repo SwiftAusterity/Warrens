@@ -9,7 +9,7 @@
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <div class="form-group two-column">
-                @Html.EditorFor(e => e.NewName)
+                @Html.EditorFor(e => e.Name)
                 @Html.LabelFor(m => m.Zone, new { @class = "control-label" })
                 <div>
                     @Html.DropDownList("Zone", Model.ValidZones.Select(rl =>

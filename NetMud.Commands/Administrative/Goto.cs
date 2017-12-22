@@ -36,11 +36,22 @@ namespace NutMud.Commands.Administrative
 
             sb.Add("You teleport.");
 
-            var messagingObject = new MessageCluster(sb, new string[] { }, new string[] { }, new string[] { "$A$ disappears in a puff of smoke." }, new string[] { "$A$ appears out of nowhere." });
+            var toActor = new Message(MessagingType.Visible, 1);
+            toActor.Override = sb;
+
+            var toOrigin = new Message(MessagingType.Visible, 30);
+            toOrigin.Override = new string[] { "$A$ disappears in a puff of smoke." };
+
+            var toDest = new Message(MessagingType.Visible, 30);
+            toDest.Override = new string[] { "$A$ appears out of nowhere." };
+
+            var messagingObject = new MessageCluster(toActor);
+            messagingObject.ToOrigin = new List<IMessage> { toOrigin };
+            messagingObject.ToDestination = new List<IMessage> { toDest };
 
             messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation, null);
 
-            moveTo.MoveInto<Player>((Player)Actor);
+            moveTo.MoveInto((Player)Actor);
         }
 
         /// <summary>

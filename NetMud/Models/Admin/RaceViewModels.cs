@@ -10,18 +10,18 @@ using System.Linq;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageRaceDataViewModel : PagedDataModel<Race>, BaseViewModel
+    public class ManageRaceDataViewModel : PagedDataModel<IRace>, BaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
-        public ManageRaceDataViewModel(IEnumerable<Race> items)
+        public ManageRaceDataViewModel(IEnumerable<IRace> items)
             : base(items)
         {
             CurrentPageNumber = 1;
             ItemsPerPage = 20;
         }
 
-        internal override Func<Race, bool> SearchFilter
+        internal override Func<IRace, bool> SearchFilter
         {
             get
             {
@@ -43,104 +43,104 @@ namespace NetMud.Models.Admin
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]  
         [Display(Name = "Name")]
         [DataType(DataType.Text)]
-        public string NewName { get; set; }
+        public string Name { get; set; }
 
         
         [Display(Name = "Arm Object")]
         [DataType(DataType.Text)]
-        public long NewArmsID { get; set; }
+        public long ArmsID { get; set; }
 
         [Range(0, 8)]
         [Display(Name = "# of Arms")]
         [DataType(DataType.Text)]
-        public short NewArmsAmount { get; set; }
+        public short ArmsAmount { get; set; }
 
         
         [Display(Name = "Leg Object")]
         [DataType(DataType.Text)]
-        public long NewLegsID { get; set; }
+        public long LegsID { get; set; }
 
         [Range(0, 8)]
         [Display(Name = "# of Legs")]
         [DataType(DataType.Text)]
-        public short NewLegsAmount { get; set; }
+        public short LegsAmount { get; set; }
 
         
         [Display(Name = "Torso Object")]
         [DataType(DataType.Text)]
-        public long NewTorsoId { get; set; }
+        public long TorsoId { get; set; }
 
         
         [Display(Name = "Head Object")]
         [DataType(DataType.Text)]
-        public long NewHeadId { get; set; }
+        public long HeadId { get; set; }
 
         
         [Display(Name = "Extra Parts")]
-        public long[] NewExtraPartsId { get; set; }
+        public long[] ExtraPartsId { get; set; }
 
         
         [Display(Name = "Extra Parts")]
-        public short[] NewExtraPartsAmount { get; set; }
+        public short[] ExtraPartsAmount { get; set; }
 
         
         [Display(Name = "Extra Parts")]
-        public string[] NewExtraPartsName { get; set; }
+        public string[] ExtraPartsName { get; set; }
 
         
         [Display(Name = "Diet")]
         [DataType(DataType.Text)]
-        public short NewDietaryNeeds { get; set; }
+        public short DietaryNeeds { get; set; }
 
         
         [Display(Name = "Blood Type")]
         [DataType(DataType.Text)]
-        public long NewBloodId { get; set; }
+        public long BloodId { get; set; }
 
         [Range(0, 200)]
         [Display(Name = "Vision Range Low")]
         [DataType(DataType.Text)]
-        public short NewVisionRangeLow { get; set; }
+        public short VisionRangeLow { get; set; }
 
         [Range(0, 200)]
         [Display(Name = "Vision Range High")]
         [DataType(DataType.Text)]
-        public short NewVisionRangeHigh { get; set; }
+        public short VisionRangeHigh { get; set; }
 
         [Range(0, 200)]
         [Display(Name = "Heat Tolerence Low")]
         [DataType(DataType.Text)]
-        public short NewTemperatureToleranceLow { get; set; }
+        public short TemperatureToleranceLow { get; set; }
 
         [Range(0, 200)]
         [Display(Name = "Heat Tolerence High")]
         [DataType(DataType.Text)]
-        public short NewTemperatureToleranceHigh { get; set; }
+        public short TemperatureToleranceHigh { get; set; }
 
         
         [Display(Name = "Breathes")]
         [DataType(DataType.Text)]
-        public short NewBreathes { get; set; }
+        public short Breathes { get; set; }
 
         
         [Display(Name = "Teeth")]
         [DataType(DataType.Text)]
-        public short NewTeethType { get; set; }
+        public short TeethType { get; set; }
 
         
         [Display(Name = "Starting Room")]
         [DataType(DataType.Text)]
-        public long NewStartingLocationId { get; set; }
+        public long StartingLocationId { get; set; }
 
         
         [Display(Name = "Recall Room")]
         [DataType(DataType.Text)]
-        public long NewRecallLocationId { get; set; }
+        public long RecallLocationId { get; set; }
 
         [StringLength(2000, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
         [DataType(DataType.MultilineText)]
         [Display(Name = "Help Text Body")]
-        public string NewHelpBody { get; set; }
+        public string HelpBody { get; set; }
 
         public IEnumerable<IRoomData> ValidRooms { get; set; }
         public IEnumerable<IInanimateData> ValidObjects { get; set; }

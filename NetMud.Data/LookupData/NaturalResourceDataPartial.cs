@@ -48,12 +48,12 @@ namespace NetMud.Data.LookupData
         /// <summary>
         /// What medium biomes this can spawn in
         /// </summary>
-        public IEnumerable<Biome> OccursIn { get; set; }
+        public HashSet<Biome> OccursIn { get; set; }
 
         /// <summary>
         /// The affects.. affecting the entity
         /// </summary>
-        public HashSet<IAffect> Affects { get; private set; }
+        public HashSet<IAffect> Affects { get; set; }
 
         /// <summary>
         /// Checks if there is an affect without having to crawl the hashset everytime or returning a big class object
@@ -76,9 +76,8 @@ namespace NetMud.Data.LookupData
         /// </summary>
         /// <param name="room">The room to spawn in</param>
         /// <returns>if this can spawn there</returns>
-        public bool CanSpawnIn(IRoom room)
+        public virtual bool CanSpawnIn(IRoom room)
         {
-            //TODO : This
             return true;
         }
 
@@ -87,9 +86,8 @@ namespace NetMud.Data.LookupData
         /// </summary>
         /// <param name="room">The room to spawn in</param>
         /// <returns>if this should spawn there</returns>
-        public bool ShouldSpawnIn(IRoom room)
+        public virtual bool ShouldSpawnIn(IRoom room)
         {
-            //TODO : This
             return true;
         }
 

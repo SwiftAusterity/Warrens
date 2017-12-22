@@ -105,7 +105,7 @@ namespace NetMud.Controllers.GameAdmin
                     modelFile.InputStream.Read(bytes, 0, (int)modelFile.InputStream.Length);
                     var fileContents = Encoding.UTF8.GetString(bytes);
 
-                    newModel = new DimensionalModelData(fileContents, vModel.NewModelType);
+                    newModel = new DimensionalModelData(fileContents, vModel.ModelType);
                 }
                 else if(vModel.ModelPlaneNames.Count(m => !String.IsNullOrEmpty(m)) == 11
                     && vModel.CoordinateDamageTypes.Any(m => !m.Equals(0))) //can't have an entirely null typed model
@@ -136,14 +136,15 @@ namespace NetMud.Controllers.GameAdmin
                         i--;
                     }
 
-                    newModel = new DimensionalModelData(arrayString.ToString(), vModel.NewModelType);
+                    newModel = new DimensionalModelData(arrayString.ToString(), vModel.ModelType);
                 }
                 else
                     message = "You must post a comma delimited file with the model in it or use the manual form.";
 
                 if (newModel != null)
                 {
-                    newModel.Name = vModel.NewName;
+                    newModel.Name = vModel.Name;
+                    newModel.HelpText = vModel.HelpText;
 
                     if (newModel.IsModelValid())
                     {
@@ -185,8 +186,9 @@ namespace NetMud.Controllers.GameAdmin
             }
 
             vModel.DataObject = obj;
-            vModel.NewName = obj.Name;
-            vModel.NewModelType = obj.ModelType;
+            vModel.Name = obj.Name;
+            vModel.ModelType = obj.ModelType;
+            vModel.HelpText = obj.HelpText;
 
             return View("~/Views/GameAdmin/DimensionalModel/Edit.cshtml", vModel);
         }
@@ -238,7 +240,7 @@ namespace NetMud.Controllers.GameAdmin
                         i--;
                     }
 
-                    newModel = new DimensionalModelData(arrayString.ToString(), vModel.NewModelType);
+                    newModel = new DimensionalModelData(arrayString.ToString(), vModel.ModelType);
                 }
                 else
                     message = "You must post a comma delimited file with the model in it or use the manual form.";
@@ -247,7 +249,8 @@ namespace NetMud.Controllers.GameAdmin
                 {
                     if (newModel.IsModelValid())
                     {
-                        obj.Name = vModel.NewName;
+                        obj.Name = vModel.Name;
+                        obj.HelpText = vModel.HelpText;
                         obj.ModelType = newModel.ModelType;
                         obj.ModelPlanes = newModel.ModelPlanes;
 

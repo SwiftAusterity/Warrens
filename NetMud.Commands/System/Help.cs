@@ -43,7 +43,10 @@ namespace NutMud.Commands.System
                 sb = sb.Concat(subject.RenderSyntaxHelp()).ToList();
             }
 
-            var messagingObject = new MessageCluster(sb, new string[] { }, new string[] { }, new string[] { }, new string[] { });
+            var toActor = new Message(MessagingType.Audible, 1);
+            toActor.Override = sb;
+
+            var messagingObject = new MessageCluster(toActor);
 
             messagingObject.ExecuteMessaging(Actor, null, null, null, null);
         }

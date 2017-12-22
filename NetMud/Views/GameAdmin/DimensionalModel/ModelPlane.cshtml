@@ -16,7 +16,7 @@
                     Text = ((DamageType)Enum.Parse(typeof(DamageType), rl)).GetDescription(),
                     Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString()
                    ,
-                    Selected = rl.Equals(Enum.GetName(typeof(DamageType), Model.NewBreathes))
+                    Selected = rl.Equals(Enum.GetName(typeof(DamageType), Model.Breathes))
                 })
                                       , htmlAttributes: new { id = "CoordinateDamageTypes", @class = "dimModelNode edge" })
 

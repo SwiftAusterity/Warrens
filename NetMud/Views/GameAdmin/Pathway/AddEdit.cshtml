@@ -13,7 +13,7 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group three-column">
-            @Html.EditorFor(model => model.NewName)
+            @Html.EditorFor(model => model.Name)
             @Html.HiddenFor(m => m.ToLocationID)
             @Html.HiddenFor(m => m.FromLocationID)
             <label id="lblFromLocation" class="control-label">Origin:</label>

@@ -14,63 +14,63 @@
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <input type="hidden" name="id" id="id" value="@Model.DataObject.ID" />
             <div class="form-group three-column">
-                @Html.EditorFor(e => e.NewName)
-                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("NewStartingLocationId", "Starting Location", Model.ValidRooms, Model.NewStartingLocationId))
-                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("NewRecallLocationId", "Recall Location", Model.ValidRooms, Model.NewRecallLocationId))
+                @Html.EditorFor(e => e.Name)
+                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("StartingLocationId", "Starting Location", Model.ValidRooms, Model.StartingLocationId))
+                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("RecallLocationId", "Recall Location", Model.ValidRooms, Model.RecallLocationId))
             </div>
 
             <div class="form-group two-column">
-                @Html.EditorFor(m => m.NewVisionRangeLow)
-                @Html.EditorFor(m => m.NewVisionRangeHigh)
+                @Html.EditorFor(m => m.VisionRangeLow)
+                @Html.EditorFor(m => m.VisionRangeHigh)
             </div>
             <div class="form-group two-column">
-                @Html.EditorFor(m => m.NewTemperatureToleranceLow)
-                @Html.EditorFor(m => m.NewTemperatureToleranceHigh)
+                @Html.EditorFor(m => m.TemperatureToleranceLow)
+                @Html.EditorFor(m => m.TemperatureToleranceHigh)
             </div>
             <div class="form-group three-column">
-                @Html.LabelFor(m => m.NewBreathes, new { @class = "control-label" })
+                @Html.LabelFor(m => m.Breathes, new { @class = "control-label" })
                 <div>
-                    @Html.DropDownList("NewBreathes", Enum.GetNames(typeof(RespiratoryType)).Select(rl =>
-                        new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(RespiratoryType), rl)).ToString(), Selected = rl.Equals(Enum.GetName(typeof(RespiratoryType), Model.NewBreathes)) })
-                        , htmlAttributes: new { id = "NewBreathes", @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.NewBreathes, "", new { @class = "text-danger" })
+                    @Html.DropDownList("Breathes", Enum.GetNames(typeof(RespiratoryType)).Select(rl =>
+                        new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(RespiratoryType), rl)).ToString(), Selected = rl.Equals(Enum.GetName(typeof(RespiratoryType), Model.Breathes)) })
+                        , htmlAttributes: new { id = "Breathes", @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Breathes, "", new { @class = "text-danger" })
                 </div>
-                @Html.LabelFor(m => m.NewDietaryNeeds, new { @class = "control-label" })
+                @Html.LabelFor(m => m.DietaryNeeds, new { @class = "control-label" })
                 <div>
-                    @Html.DropDownList("NewDietaryNeeds", Enum.GetNames(typeof(DietType)).Select(rl =>
-                          new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(DietType), rl)).ToString(), Selected = rl.Equals(Enum.GetName(typeof(DietType), Model.NewDietaryNeeds)) })
-                             , htmlAttributes: new { id = "NewDietaryNeeds", @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.NewDietaryNeeds, "", new { @class = "text-danger" })
+                    @Html.DropDownList("DietaryNeeds", Enum.GetNames(typeof(DietType)).Select(rl =>
+                          new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(DietType), rl)).ToString(), Selected = rl.Equals(Enum.GetName(typeof(DietType), Model.DietaryNeeds)) })
+                             , htmlAttributes: new { id = "DietaryNeeds", @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.DietaryNeeds, "", new { @class = "text-danger" })
                 </div>
-                @Html.LabelFor(m => m.NewTeethType, new { @class = "control-label" })
+                @Html.LabelFor(m => m.TeethType, new { @class = "control-label" })
                 <div>
-                    @Html.DropDownList("NewTeethType", Enum.GetNames(typeof(DamageType)).Select(rl =>
-                          new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString(), Selected = rl.Equals(Enum.GetName(typeof(DamageType), Model.NewTeethType)) })
-                             , htmlAttributes: new { id = "NewTeethType", @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.NewTeethType, "", new { @class = "text-danger" })
+                    @Html.DropDownList("TeethType", Enum.GetNames(typeof(DamageType)).Select(rl =>
+                          new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString(), Selected = rl.Equals(Enum.GetName(typeof(DamageType), Model.TeethType)) })
+                             , htmlAttributes: new { id = "TeethType", @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.TeethType, "", new { @class = "text-danger" })
                 </div>
             </div>
 
             <div class="form-group three-column">
-                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("NewBloodId", "Blood", Model.ValidMaterials, Model.NewBloodId))
-                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("NewHeadId", "Head", Model.ValidObjects, Model.NewHeadId))
-                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("NewTorsoId", "Torso", Model.ValidObjects, Model.NewTorsoId))
+                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("BloodId", "Blood", Model.ValidMaterials, Model.BloodId))
+                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("HeadId", "Head", Model.ValidObjects, Model.HeadId))
+                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("TorsoId", "Torso", Model.ValidObjects, Model.TorsoId))
             </div>
 
             <div class="form-group two-column">
-                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("NewArmsId", "Arms", Model.ValidObjects, Model.NewArmsID))
-                @Html.EditorFor(m => m.NewArmsAmount)
+                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("ArmsID", "Arms", Model.ValidObjects, Model.ArmsID))
+                @Html.EditorFor(m => m.ArmsAmount)
             </div>
 
             <div class="form-group two-column">
-                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("NewLegsID", "Legs", Model.ValidObjects, Model.NewLegsID))
-                @Html.EditorFor(m => m.NewLegsAmount)
+                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("LegsID", "Legs", Model.ValidObjects, Model.LegsID))
+                @Html.EditorFor(m => m.LegsAmount)
             </div>
 
             @Html.Partial("~/Views/GameAdmin/Race/ExtraBodyParts.cshtml", Model)
             
             <div class="form-group one-column">
-                @Html.EditorFor(e => e.NewHelpBody)
+                @Html.EditorFor(e => e.HelpBody)
             </div>
 
             <div class="form-group">

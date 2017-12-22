@@ -99,7 +99,7 @@ namespace NetMud.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddCharacter(string newName, string newSurName, string newGender, long raceId, StaffRank chosenRole = StaffRank.Player)
+        public ActionResult AddCharacter(string Name, string SurName, string Gender, long raceId, StaffRank chosenRole = StaffRank.Player)
         {
             string message = string.Empty;
             var userId = User.Identity.GetUserId();
@@ -109,9 +109,9 @@ namespace NetMud.Controllers
             };
 
             var newChar = new Character();
-            newChar.Name = newName;
-            newChar.SurName = newSurName;
-            newChar.Gender = newGender;
+            newChar.Name = Name;
+            newChar.SurName = SurName;
+            newChar.Gender = Gender;
             var race = BackingDataCache.Get<Race>(raceId);
 
             if (race != null)

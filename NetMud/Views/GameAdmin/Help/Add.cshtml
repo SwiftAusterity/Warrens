@@ -9,10 +9,10 @@
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <div class="form-group one-column">
-                @Html.EditorFor(e => e.NewName)
+                @Html.EditorFor(e => e.Name)
             </div>
             <div class="form-group one-column">
-                @Html.EditorFor(e => e.NewHelpText)
+                @Html.EditorFor(e => e.HelpText)
             </div>
             @Html.Partial("SubmitButton", "Create")
 

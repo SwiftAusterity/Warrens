@@ -25,9 +25,6 @@ namespace NetMud.Models.Admin
             Races = Enumerable.Empty<IRace>();
             Zones = Enumerable.Empty<IZone>();
             Constants = Enumerable.Empty<IConstants>();
-            Constants = Enumerable.Empty<IConstants>();
-            Constants = Enumerable.Empty<IConstants>();
-            Constants = Enumerable.Empty<IConstants>();
 
             WebsocketServers = Enumerable.Empty<NetMud.Websock.Server>();
 

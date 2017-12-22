@@ -95,20 +95,20 @@ namespace NetMud.Controllers.GameAdmin
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             var newObj = new NetMud.Data.System.Constants();
-            newObj.Name = vModel.NewName;
+            newObj.Name = vModel.Name;
 
             var criterion = new Dictionary<CriteriaType, string>();
-            if (vModel.NewCriterionTypes != null && vModel.NewCriterionValues != null)
+            if (vModel.CriterionTypes != null && vModel.CriterionValues != null)
             {
                 int nameIndex = 0;
-                foreach (var criteriaType in vModel.NewCriterionTypes)
+                foreach (var criteriaType in vModel.CriterionTypes)
                 {
                     if (criteriaType >= 0)
                     {
-                        if (vModel.NewCriterionValues.Length <= nameIndex)
+                        if (vModel.CriterionValues.Length <= nameIndex)
                             break;
 
-                        var criteriaValue = vModel.NewCriterionValues[nameIndex];
+                        var criteriaValue = vModel.CriterionValues[nameIndex];
                         if (!string.IsNullOrWhiteSpace(criteriaValue))
                             criterion.Add((CriteriaType)criteriaType, criteriaValue);
                     }
@@ -118,8 +118,8 @@ namespace NetMud.Controllers.GameAdmin
             }
 
             var newValues = new HashSet<string>();
-            if (vModel.NewConstantValues != null)
-                foreach (var newValue in vModel.NewConstantValues)
+            if (vModel.ConstantValues != null)
+                foreach (var newValue in vModel.ConstantValues)
                     if (!string.IsNullOrWhiteSpace(newValue) && !newValues.Contains(newValue))
                         newValues.Add(newValue);
 
@@ -161,7 +161,7 @@ namespace NetMud.Controllers.GameAdmin
             }
 
             vModel.DataObject = obj;
-            vModel.NewName = obj.Name;
+            vModel.Name = obj.Name;
 
             return View("~/Views/GameAdmin/Constants/Edit.cshtml", vModel);
         }
@@ -180,20 +180,20 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = message });
             }
 
-            obj.Name = vModel.NewName;
+            obj.Name = vModel.Name;
 
             var criterion = new Dictionary<CriteriaType, string>();
-            if (vModel.NewCriterionTypes != null && vModel.NewCriterionValues != null)
+            if (vModel.CriterionTypes != null && vModel.CriterionValues != null)
             {
                 int nameIndex = 0;
-                foreach (var criteriaType in vModel.NewCriterionTypes)
+                foreach (var criteriaType in vModel.CriterionTypes)
                 {
                     if (criteriaType >= 0)
                     {
-                        if (vModel.NewCriterionValues.Length <= nameIndex)
+                        if (vModel.CriterionValues.Length <= nameIndex)
                             break;
 
-                        var criteriaValue = vModel.NewCriterionValues[nameIndex];
+                        var criteriaValue = vModel.CriterionValues[nameIndex];
                         if (!string.IsNullOrWhiteSpace(criteriaValue))
                             criterion.Add((CriteriaType)criteriaType, criteriaValue);
                     }
@@ -203,8 +203,8 @@ namespace NetMud.Controllers.GameAdmin
             }
 
             var newValues = new HashSet<string>();
-            if (vModel.NewConstantValues != null)
-                foreach (var newValue in vModel.NewConstantValues)
+            if (vModel.ConstantValues != null)
+                foreach (var newValue in vModel.ConstantValues)
                     if (!string.IsNullOrWhiteSpace(newValue) && !newValues.Contains(newValue))
                         newValues.Add(newValue);
 

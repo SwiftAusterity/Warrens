@@ -6,7 +6,7 @@
 
     if (Model.DataObject == null || Model.DataObject.Values == null || Model.DataObject.Values.Count == 0)
     {
-        @Html.LabelFor(m => m.NewConstantValues)
+        @Html.LabelFor(m => m.ConstantValues)
         <a href="#" id="addValueRow" class="addRow">Add another row...</a>
         <div id="valueRows">
             <div class="form-group two-column">
@@ -15,9 +15,9 @@
                 <div>
                     &nbsp;
                 </div>
-                @Html.LabelFor(m => m.NewConstantValues, new { @class = "control-label" })
+                @Html.LabelFor(m => m.ConstantValues, new { @class = "control-label" })
                 <div>
-                    @Html.TextAreaFor(m => m.NewConstantValues, new { @class = "form-control" })
+                    @Html.TextAreaFor(m => m.ConstantValues, new { @class = "form-control" })
                 </div>
             </div>
         </div>
@@ -31,15 +31,15 @@
                 <div>
                     &nbsp;
                 </div>
-                @Html.LabelFor(m => m.NewCriterionTypes, new { @class = "control-label" })
+                @Html.LabelFor(m => m.CriterionTypes, new { @class = "control-label" })
                 <div>
-                    @Html.DropDownList("NewCriterionTypes", Enum.GetNames(typeof(CriteriaType)).Select(rl =>
+                    @Html.DropDownList("CriterionTypes", Enum.GetNames(typeof(CriteriaType)).Select(rl =>
                                                                     new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(CriteriaType), rl)).ToString() })
-                                                                    , htmlAttributes: new { id = "NewCriterionTypes", @class = "form-control" })
+                                                                    , htmlAttributes: new { id = "CriterionTypes", @class = "form-control" })
                 </div>
-                @Html.LabelFor(m => m.NewCriterionValues, new { @class = "control-label" })
+                @Html.LabelFor(m => m.CriterionValues, new { @class = "control-label" })
                 <div>
-                    @Html.TextBoxFor(m => m.NewCriterionValues, new { @class = "form-control" })
+                    @Html.TextBoxFor(m => m.CriterionValues, new { @class = "form-control" })
                 </div>
             </div>
         </div>
@@ -48,7 +48,7 @@
     {
         foreach (var criterion in Model.DataObject.Values)
         {
-            @Html.LabelFor(m => m.NewConstantValues)
+            @Html.LabelFor(m => m.ConstantValues)
             <a href="#" id="addValueRow" class="addRow">Add another row...</a>
             <div id="valueRows">
                 @foreach (var dataItem in criterion.Value)
@@ -59,9 +59,9 @@
                         <div>
                             &nbsp;
                         </div>
-                        @Html.LabelFor(m => m.NewConstantValues, new { @class = "control-label" })
+                        @Html.LabelFor(m => m.ConstantValues, new { @class = "control-label" })
                         <div>
-                            <textarea id="NewConstantValues" name="NewConstantValues" class="form-control">@dataItem</textarea>
+                            <textarea id="ConstantValues" name="ConstantValues" class="form-control">@dataItem</textarea>
                         </div>
                     </div>
                 }
@@ -77,15 +77,15 @@
                         <div>
                             &nbsp;
                         </div>
-                        @Html.LabelFor(m => m.NewCriterionTypes, new { @class = "control-label" })
+                        @Html.LabelFor(m => m.CriterionTypes, new { @class = "control-label" })
                         <div>
-                            @Html.DropDownList("NewCriterionTypes", Enum.GetNames(typeof(CriteriaType)).Select(rl =>
+                            @Html.DropDownList("CriterionTypes", Enum.GetNames(typeof(CriteriaType)).Select(rl =>
                                                                     new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(CriteriaType), rl)).ToString(), Selected = rl.Equals(dataItem.Key.ToString()) })
-                                                                    , htmlAttributes: new { id = "NewCriterionTypes", @class = "form-control" })
+                                                                    , htmlAttributes: new { id = "CriterionTypes", @class = "form-control" })
                         </div>
-                        @Html.LabelFor(m => m.NewCriterionValues, new { @class = "control-label" })
+                        @Html.LabelFor(m => m.CriterionValues, new { @class = "control-label" })
                         <div>
-                            <input id="NewCriterionValues" name="NewCriterionValues" class="form-control" value="@dataItem.Value" />
+                            <input id="CriterionValues" name="CriterionValues" class="form-control" value="@dataItem.Value" />
                         </div>
                     </div>
                 }
@@ -97,14 +97,14 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        var criterionLabel = decodeHtml('@Html.LabelFor(m => m.NewCriterionTypes, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "")');
-        var criterionDropdown = decodeHtml('@Html.DropDownList("NewCriterionTypes", Enum.GetNames(typeof(CriteriaType)).Select(rl =>
+        var criterionLabel = decodeHtml('@Html.LabelFor(m => m.CriterionTypes, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "")');
+        var criterionDropdown = decodeHtml('@Html.DropDownList("CriterionTypes", Enum.GetNames(typeof(CriteriaType)).Select(rl =>
                                                     new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(CriteriaType), rl)).ToString() })
-                                                    , htmlAttributes: new { id = "NewCriterionTypes", @class = "form-control" }).ToString().Replace(Environment.NewLine, "");');
-        var criterionValueLabel = decodeHtml('@Html.LabelFor(m => m.NewCriterionValues, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "")');
-        var criterionValueControl = decodeHtml('@Html.TextBoxFor(m => m.NewCriterionValues, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');
-        var constantValueLabel = decodeHtml('@Html.LabelFor(m => m.NewConstantValues, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "")');
-        var constantValueControl = decodeHtml('@Html.TextAreaFor(m => m.NewConstantValues, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');
+                                                    , htmlAttributes: new { id = "CriterionTypes", @class = "form-control" }).ToString().Replace(Environment.NewLine, "");');
+        var criterionValueLabel = decodeHtml('@Html.LabelFor(m => m.CriterionValues, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "")');
+        var criterionValueControl = decodeHtml('@Html.TextBoxFor(m => m.CriterionValues, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');
+        var constantValueLabel = decodeHtml('@Html.LabelFor(m => m.ConstantValues, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "")');
+        var constantValueControl = decodeHtml('@Html.TextAreaFor(m => m.ConstantValues, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');
 
         $("#addCriterionRow").click(function () {
             $("#criterionRows").append(

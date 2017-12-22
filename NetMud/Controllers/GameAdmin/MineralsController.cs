@@ -4,10 +4,8 @@ using NetMud.Authentication;
 using NetMud.Data.LookupData;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.Base.System;
 using NetMud.Models.Admin;
 using System;
 using System.Collections.Generic;
@@ -125,7 +123,7 @@ namespace NetMud.Controllers.GameAdmin
             else
                 message += "Invalid dirt material.";
 
-            newObj.OccursIn = vModel.OccursIn;
+            newObj.OccursIn = new HashSet<Biome>(vModel.OccursIn);
             
             var newOres = new List<IMineral>();
             if (vModel.Ores != null)
@@ -145,7 +143,7 @@ namespace NetMud.Controllers.GameAdmin
                     newObj.Ores = newOres;
             }
 
-            if (!String.IsNullOrWhiteSpace(message))
+            if (String.IsNullOrWhiteSpace(message))
             {
                 if (newObj.Create() == null)
                     message = "Error; Creation failed.";
@@ -252,9 +250,9 @@ namespace NetMud.Controllers.GameAdmin
                     obj.Ores = newOres;
             }
 
-            obj.OccursIn = vModel.OccursIn;
+            obj.OccursIn = new HashSet<Biome>(vModel.OccursIn);
 
-            if (!String.IsNullOrWhiteSpace(message))
+            if (String.IsNullOrWhiteSpace(message))
             {
                 if (obj.Save())
                 {

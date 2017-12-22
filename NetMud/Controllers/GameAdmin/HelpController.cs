@@ -87,14 +87,14 @@ namespace NetMud.Controllers.GameAdmin
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Add(string newName, string newHelpText)
+        public ActionResult Add(string Name, string HelpText)
         {
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             var newObj = new Help();
-            newObj.Name = newName;
-            newObj.HelpText = newHelpText;
+            newObj.Name = Name;
+            newObj.HelpText = HelpText;
 
             if (newObj.Create() == null)
                 message = "Error; Creation failed.";
@@ -123,15 +123,15 @@ namespace NetMud.Controllers.GameAdmin
             }
 
             vModel.DataObject = obj;
-            vModel.NewName = obj.Name;
-            vModel.NewHelpText = obj.HelpText;
+            vModel.Name = obj.Name;
+            vModel.HelpText = obj.HelpText;
 
             return View("~/Views/GameAdmin/Help/Edit.cshtml", vModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(string newName, string newHelpText, long id)
+        public ActionResult Edit(string Name, string HelpText, long id)
         {
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
@@ -143,8 +143,8 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = message });
             }
 
-            obj.Name = newName;
-            obj.HelpText = newHelpText;
+            obj.Name = Name;
+            obj.HelpText = HelpText;
 
             if (obj.Save())
             {

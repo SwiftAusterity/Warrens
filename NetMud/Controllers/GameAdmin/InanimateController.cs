@@ -102,7 +102,7 @@ namespace NetMud.Controllers.GameAdmin
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             var newObj = new InanimateData();
-            newObj.Name = vModel.NewName;
+            newObj.Name = vModel.Name;
 
             if (vModel.InanimateContainerNames != null)
             {
@@ -242,7 +242,7 @@ namespace NetMud.Controllers.GameAdmin
             }
 
             vModel.DataObject = obj;
-            vModel.NewName = obj.Name;
+            vModel.Name = obj.Name;
             vModel.DimensionalModelId = obj.Model.ModelBackingData.ID;
             vModel.DimensionalModelHeight = obj.Model.Height;
             vModel.DimensionalModelLength = obj.Model.Length;
@@ -268,7 +268,7 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = message });
             }
 
-            obj.Name = vModel.NewName;
+            obj.Name = vModel.Name;
 
             if (vModel.InanimateContainerNames != null)
             {

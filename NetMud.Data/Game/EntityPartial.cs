@@ -168,7 +168,7 @@ namespace NetMud.Data.Game
             var affect = Affects.FirstOrDefault(aff => aff.Equals(affectToApply));
 
             //Are we combining affects or not
-            if(affect == null)
+            if (affect == null)
             {
                 //TODO: Resistance roll
                 Affects.Add(affectToApply);
@@ -189,7 +189,7 @@ namespace NetMud.Data.Game
         /// <param name="affectTarget">the thing attempting to be dispeled</param>
         /// <param name="dispellationMethod">the dispellation methodology. [TypeOfMethod, strength]</param>
         /// <returns>reisst type</returns>
-        public AffectResistType DispelAffect(string affectTarget, Tuple<AffectType, int> dispellationMethod)
+        public AffectResistType DispelAffect(string affectTarget, int dispellationStrength)
         {
             var returnValue = AffectResistType.Success;
 
@@ -200,20 +200,11 @@ namespace NetMud.Data.Game
 
                 foreach (var affect in affects)
                 {
-                    switch (affect.Type)
-                    {
-                        case AffectType.Pure:
-                            returnValue = AffectResistType.Immune;
-                            break;
-                        default:
-                            //TODO: This is kind of a stub, needs more stuff possibly int rolls or luck and such
-                            if (dispellationMethod.Item1 == affect.Type && dispellationMethod.Item2 < affect.Value * affect.Duration)
-                                returnValue = AffectResistType.Resisted;
-                            else
-                                returnValue = AffectResistType.Success;
-
-                            break;
-                    }
+                    //TODO: This is kind of a stub, needs more stuff possibly int rolls or luck and such
+                    if (dispellationStrength >= affect.DispelResistance)
+                        returnValue = AffectResistType.Resisted;
+                    else
+                        returnValue = AffectResistType.Success;
 
                     if (returnValue == AffectResistType.Success)
                         affect.Duration = 0;

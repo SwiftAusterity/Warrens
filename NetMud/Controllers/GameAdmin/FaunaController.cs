@@ -4,13 +4,12 @@ using NetMud.Authentication;
 using NetMud.Data.LookupData;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.Base.System;
 using NetMud.Models.Admin;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
@@ -118,9 +117,9 @@ namespace NetMud.Controllers.GameAdmin
             else
                 message += "Invalid race.";
 
-            newObj.OccursIn = vModel.OccursIn;
+            newObj.OccursIn = new HashSet<Biome>(vModel.OccursIn);
 
-            if (!String.IsNullOrWhiteSpace(message))
+            if (String.IsNullOrWhiteSpace(message))
             {
                 if (newObj.Create() == null)
                     message = "Error; Creation failed.";
@@ -142,6 +141,7 @@ namespace NetMud.Controllers.GameAdmin
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
             vModel.ValidMaterials = BackingDataCache.GetAll<IMaterial>();
             vModel.ValidInanimateDatas = BackingDataCache.GetAll<IInanimateData>();
+            vModel.ValidRaces = BackingDataCache.GetAll<IRace>();
 
             var obj = BackingDataCache.Get<IFauna>(id);
 
@@ -165,7 +165,9 @@ namespace NetMud.Controllers.GameAdmin
             vModel.HumidityRangeLow = obj.HumidityRange.Item1;
             vModel.PopulationHardCap = obj.PopulationHardCap;
             vModel.AmountMultiplier = obj.AmountMultiplier;
+            vModel.FemaleRatio = obj.FemaleRatio;
             vModel.Race = obj.Race.ID;
+            vModel.OccursIn = obj.OccursIn.ToArray();
 
             return View("~/Views/GameAdmin/Fauna/Edit.cshtml", vModel);
         }
@@ -194,6 +196,7 @@ namespace NetMud.Controllers.GameAdmin
             obj.HumidityRange = new Tuple<int, int>(vModel.HumidityRangeLow, vModel.HumidityRangeHigh);
             obj.PopulationHardCap = vModel.PopulationHardCap;
             obj.AmountMultiplier = vModel.AmountMultiplier;
+            obj.FemaleRatio = vModel.FemaleRatio;
 
             var newRace = BackingDataCache.Get<IRace>(vModel.Race);
             if (newRace != null)
@@ -201,9 +204,9 @@ namespace NetMud.Controllers.GameAdmin
             else
                 message += "Invalid race.";
 
-            obj.OccursIn = vModel.OccursIn;
+            obj.OccursIn = new HashSet<Biome>(vModel.OccursIn);
 
-            if (!String.IsNullOrWhiteSpace(message))
+            if (String.IsNullOrWhiteSpace(message))
             {
                 if (obj.Save())
                 {

@@ -2,6 +2,7 @@
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Behaviors.Rendering;
+using NetMud.DataStructure.Behaviors.System;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
 using System;
@@ -269,6 +270,18 @@ namespace NetMud.Data.Game
         public virtual Biome GetBiome()
         {
             return Biome.Fabricated;
+        }
+
+        public Dictionary<Tuple<long, long, long>, Tuple<INaturalResource, int>> NaturalResources
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

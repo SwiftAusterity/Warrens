@@ -95,19 +95,19 @@ namespace NetMud.Controllers.GameAdmin
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             var newObj = new Material();
-            newObj.Name = vModel.NewName;
-            newObj.Conductive = vModel.NewConductive;
-            newObj.Density = vModel.NewDensity;
-            newObj.Ductility = vModel.NewDuctility;
-            newObj.Flammable = vModel.NewFlammable;
-            newObj.GasPoint = vModel.NewGasPoint;
-            newObj.Magnetic = vModel.NewMagnetic;
-            newObj.Mallebility = vModel.NewMallebility;
-            newObj.Porosity = vModel.NewPorosity;
-            newObj.SolidPoint = vModel.NewSolidPoint;
-            newObj.TemperatureRetention = vModel.NewTemperatureRetention;
-            newObj.Viscosity = vModel.NewViscosity;
-            newObj.HelpText = vModel.NewHelpBody;
+            newObj.Name = vModel.Name;
+            newObj.Conductive = vModel.Conductive;
+            newObj.Density = vModel.Density;
+            newObj.Ductility = vModel.Ductility;
+            newObj.Flammable = vModel.Flammable;
+            newObj.GasPoint = vModel.GasPoint;
+            newObj.Magnetic = vModel.Magnetic;
+            newObj.Mallebility = vModel.Mallebility;
+            newObj.Porosity = vModel.Porosity;
+            newObj.SolidPoint = vModel.SolidPoint;
+            newObj.TemperatureRetention = vModel.TemperatureRetention;
+            newObj.Viscosity = vModel.Viscosity;
+            newObj.HelpText = vModel.HelpBody;
 
             if (vModel.Resistances != null)
             {
@@ -178,19 +178,19 @@ namespace NetMud.Controllers.GameAdmin
             }
 
             vModel.DataObject = obj;
-            vModel.NewName = obj.Name;
-            vModel.NewConductive = obj.Conductive;
-            vModel.NewDensity = obj.Density;
-            vModel.NewDuctility = obj.Ductility;
-            vModel.NewFlammable = obj.Flammable;
-            vModel.NewGasPoint = obj.GasPoint;
-            vModel.NewMagnetic = obj.Magnetic;
-            vModel.NewMallebility = obj.Mallebility;
-            vModel.NewPorosity = obj.Porosity;
-            vModel.NewSolidPoint = obj.SolidPoint;
-            vModel.NewTemperatureRetention = obj.TemperatureRetention;
-            vModel.NewViscosity = obj.Viscosity;
-            vModel.NewHelpBody = obj.HelpText;
+            vModel.Name = obj.Name;
+            vModel.Conductive = obj.Conductive;
+            vModel.Density = obj.Density;
+            vModel.Ductility = obj.Ductility;
+            vModel.Flammable = obj.Flammable;
+            vModel.GasPoint = obj.GasPoint;
+            vModel.Magnetic = obj.Magnetic;
+            vModel.Mallebility = obj.Mallebility;
+            vModel.Porosity = obj.Porosity;
+            vModel.SolidPoint = obj.SolidPoint;
+            vModel.TemperatureRetention = obj.TemperatureRetention;
+            vModel.Viscosity = obj.Viscosity;
+            vModel.HelpBody = obj.HelpText;
 
             return View("~/Views/GameAdmin/Material/Edit.cshtml", vModel);
         }
@@ -209,19 +209,19 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = message });
             }
 
-            obj.Name = vModel.NewName;
-            obj.Conductive = vModel.NewConductive;
-            obj.Density = vModel.NewDensity;
-            obj.Ductility = vModel.NewDuctility;
-            obj.Flammable = vModel.NewFlammable;
-            obj.GasPoint = vModel.NewGasPoint;
-            obj.Magnetic = vModel.NewMagnetic;
-            obj.Mallebility = vModel.NewMallebility;
-            obj.Porosity = vModel.NewPorosity;
-            obj.SolidPoint = vModel.NewSolidPoint;
-            obj.TemperatureRetention = vModel.NewTemperatureRetention;
-            obj.Viscosity = vModel.NewViscosity;
-            obj.HelpText = vModel.NewHelpBody;
+            obj.Name = vModel.Name;
+            obj.Conductive = vModel.Conductive;
+            obj.Density = vModel.Density;
+            obj.Ductility = vModel.Ductility;
+            obj.Flammable = vModel.Flammable;
+            obj.GasPoint = vModel.GasPoint;
+            obj.Magnetic = vModel.Magnetic;
+            obj.Mallebility = vModel.Mallebility;
+            obj.Porosity = vModel.Porosity;
+            obj.SolidPoint = vModel.SolidPoint;
+            obj.TemperatureRetention = vModel.TemperatureRetention;
+            obj.Viscosity = vModel.Viscosity;
+            obj.HelpText = vModel.HelpBody;
 
             if (vModel.Resistances != null)
             {
