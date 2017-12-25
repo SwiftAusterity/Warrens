@@ -8,6 +8,7 @@ using NetMud.Data.Game;
 using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
 using NetMud.DataStructure.SupportingClasses;
+using NetMud.DataStructure.Behaviors.Existential;
 
 namespace NutMud.Commands.System
 {
@@ -37,18 +38,18 @@ namespace NutMud.Commands.System
         {
             var newObject = (INonPlayerCharacter)Subject;
             var sb = new List<string>();
-            IContains spawnTo;
+            IGlobalPosition spawnTo;
 
             //No target = spawn to room you're in
             if (Target != null)
-                spawnTo = (IContains)Target;
+                spawnTo = (IGlobalPosition)Target;
             else
                 spawnTo = OriginLocation;
 
             var entityObject = new Intelligence(newObject, spawnTo);
 
             //TODO: keywords is janky, location should have its own identifier name somehow for output purposes - DISPLAY short/long NAME
-            sb.Add(string.Format("{0} spawned to {1}", entityObject.DataTemplateName, spawnTo.Keywords[0]));
+            sb.Add(string.Format("{0} spawned to {1}", entityObject.DataTemplateName, spawnTo.CurrentLocation.Keywords[0]));
 
             var toActor = new Message(MessagingType.Visible, 1);
             toActor.Override = sb;
@@ -63,7 +64,7 @@ namespace NutMud.Commands.System
             messagingObject.ToOrigin = new List<IMessage> { toOrigin };
             messagingObject.ToSubject = new List<IMessage> { toSubject };
 
-            messagingObject.ExecuteMessaging(Actor, entityObject, spawnTo, OriginLocation, null);
+            messagingObject.ExecuteMessaging(Actor, entityObject, spawnTo.CurrentLocation, OriginLocation.CurrentLocation, null);
         }
 
         /// <summary>

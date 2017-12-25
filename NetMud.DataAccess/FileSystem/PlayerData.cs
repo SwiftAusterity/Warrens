@@ -150,7 +150,8 @@ namespace NetMud.DataAccess.FileSystem
                     }
                 }
 
-                newPlayerToLoad.CurrentLocation = lastKnownLoc;
+                newPlayerToLoad.Position.CurrentLocation = lastKnownLoc;
+                newPlayerToLoad.Position.CurrentZone = lastKnownLoc.AbsolutePosition().CurrentZone;
 
                 //We have the player in live cache now so make it move to the right place
                 newPlayerToLoad.GetFromWorldOrSpawn();

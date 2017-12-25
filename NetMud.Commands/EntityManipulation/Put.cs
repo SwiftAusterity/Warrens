@@ -49,7 +49,7 @@ namespace NetMud.Commands.EntityManipulation
             var messagingObject = new MessageCluster(toActor);
             messagingObject.ToOrigin = new List<IMessage> { toOrigin };
 
-            messagingObject.ExecuteMessaging(Actor, thing, (IEntity)place, OriginLocation, null);
+            messagingObject.ExecuteMessaging(Actor, thing, (IEntity)place, OriginLocation.CurrentLocation, null);
         }
 
         /// <summary>

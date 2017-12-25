@@ -1,4 +1,4 @@
-﻿using NetMud.DataStructure.Base.Supporting;
+﻿using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.Rendering;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ namespace NetMud.DataStructure.Base.System
     /// <summary>
     /// Framework for live entities
     /// </summary>
-    public interface IEntity : ILookable, IFileStored, ILiveData, IComparable<IEntity>, IEquatable<IEntity>
+    public interface IEntity : IExist, ILookable, IFileStored, ILiveData, IComparable<IEntity>, IEquatable<IEntity>
     {
         /// <summary>
         /// Keywords this entity can be found with in command parsing
@@ -40,22 +40,6 @@ namespace NetMud.DataStructure.Base.System
         /// </summary>
         /// <returns>height, length, width</returns>
         Tuple<int, int, int> GetModelDimensions();
-
-        /// <summary>
-        /// Current location this entity is in
-        /// </summary>
-        IContains CurrentLocation { get; set; }
-
-        /// <summary>
-        /// Spawns a new instance of this entity in the live world
-        /// </summary>
-        void SpawnNewInWorld();
-
-        /// <summary>
-        /// Spawns a new instance of this entity in the live world to a specified container
-        /// </summary>
-        /// <param name="spawnTo">the container to spawn this into</param>
-        void SpawnNewInWorld(IContains spawnTo);
 
         /// <summary>
         /// Update this to the live cache

@@ -44,7 +44,7 @@ namespace NetMud.Commands.Comm
             var messagingObject = new MessageCluster(toActor);
             messagingObject.ToOrigin = new List<IMessage> { toArea };
 
-            messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation, null);
+            messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation.CurrentLocation, null);
         }
 
         /// <summary>

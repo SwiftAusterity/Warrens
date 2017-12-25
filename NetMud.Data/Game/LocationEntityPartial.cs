@@ -5,17 +5,13 @@ using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.Behaviors.System;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NetMud.Data.Game
 {
     public abstract class LocationEntityPartial : EntityPartial, ILocation
     {
-
         #region Container
         /// <summary>
         /// Inanimates contained in this
@@ -87,7 +83,7 @@ namespace NetMud.Data.Game
         /// <returns>errors</returns>
         public string MoveInto<T>(T thing)
         {
-            return MoveInto<T>(thing, string.Empty);
+            return MoveInto(thing, string.Empty);
         }
 
         /// <summary>
@@ -109,8 +105,8 @@ namespace NetMud.Data.Game
                     return "That is already in the container";
 
                 Contents.Add(obj, containerName);
-                obj.CurrentLocation = this;
-                this.UpsertToLiveWorldCache();
+                obj.TryMoveInto(this);
+                UpsertToLiveWorldCache();
 
                 return string.Empty;
             }
@@ -123,8 +119,8 @@ namespace NetMud.Data.Game
                     return "That is already in the container";
 
                 MobilesInside.Add(obj, containerName);
-                obj.CurrentLocation = this;
-                this.UpsertToLiveWorldCache();
+                obj.TryMoveInto(this);
+                UpsertToLiveWorldCache();
 
                 return string.Empty;
             }
@@ -137,8 +133,8 @@ namespace NetMud.Data.Game
                     return "That is already in the container";
 
                 Pathways.Add(obj, containerName);
-                obj.CurrentLocation = this;
-                this.UpsertToLiveWorldCache();
+                obj.TryMoveInto(this);
+                UpsertToLiveWorldCache();
 
                 return string.Empty;
             }
@@ -154,7 +150,7 @@ namespace NetMud.Data.Game
         /// <returns>errors</returns>
         public string MoveFrom<T>(T thing)
         {
-            return MoveFrom<T>(thing, string.Empty);
+            return MoveFrom(thing, string.Empty);
         }
 
         /// <summary>
@@ -176,12 +172,11 @@ namespace NetMud.Data.Game
                     return "That is not in the container";
 
                 Contents.Remove(obj, containerName);
-                obj.CurrentLocation = null;
-                this.UpsertToLiveWorldCache();
+                obj.TryMoveInto(null);
+                UpsertToLiveWorldCache();
 
                 return string.Empty;
             }
-
 
             if (implimentedTypes.Contains(typeof(IMobile)))
             {
@@ -191,8 +186,8 @@ namespace NetMud.Data.Game
                     return "That is not in the container";
 
                 MobilesInside.Remove(obj, containerName);
-                obj.CurrentLocation = null;
-                this.UpsertToLiveWorldCache();
+                obj.TryMoveInto(null);
+                UpsertToLiveWorldCache();
 
                 return string.Empty;
             }
@@ -205,8 +200,8 @@ namespace NetMud.Data.Game
                     return "That is not in the container";
 
                 Pathways.Remove(obj, containerName);
-                obj.CurrentLocation = null;
-                this.UpsertToLiveWorldCache();
+                obj.TryMoveInto(null);
+                UpsertToLiveWorldCache();
 
                 return string.Empty;
             }
@@ -272,16 +267,6 @@ namespace NetMud.Data.Game
             return Biome.Fabricated;
         }
 
-        public Dictionary<Tuple<long, long, long>, Tuple<INaturalResource, int>> NaturalResources
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
+        Dictionary<INaturalResource, int> IEnvironment.NaturalResources { get; set; }
     }
 }

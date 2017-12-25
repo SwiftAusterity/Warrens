@@ -3,6 +3,7 @@ using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
@@ -57,7 +58,7 @@ namespace NetMud.Data.Game
         /// </summary>
         /// <param name="backingStore">the backing data</param>
         /// <param name="spawnTo">where to spawn this into</param>
-        public Intelligence(INonPlayerCharacter backingStore, IContains spawnTo)
+        public Intelligence(INonPlayerCharacter backingStore, IGlobalPosition spawnTo)
         {
             Inventory = new EntityContainer<IInanimate>();
             DataTemplateId = backingStore.ID;
@@ -143,7 +144,7 @@ namespace NetMud.Data.Game
         /// <returns>errors</returns>
         public string MoveInto<T>(T thing)
         {
-            return MoveInto<T>(thing, string.Empty);
+            return MoveInto(thing, string.Empty);
         }
 
         /// <summary>
@@ -165,8 +166,8 @@ namespace NetMud.Data.Game
                     return "That is already in the container";
 
                 Inventory.Add(obj, containerName);
-                obj.CurrentLocation = this;
-                this.UpsertToLiveWorldCache();
+                obj.TryMoveInto(this);
+                UpsertToLiveWorldCache();
                 return string.Empty;
             }
 
@@ -181,7 +182,7 @@ namespace NetMud.Data.Game
         /// <returns>errors</returns>
         public string MoveFrom<T>(T thing)
         {
-            return MoveFrom<T>(thing, string.Empty);
+            return MoveFrom(thing, string.Empty);
         }
 
         /// <summary>
@@ -203,8 +204,8 @@ namespace NetMud.Data.Game
                     return "That is not in the container";
 
                 Inventory.Remove(obj, containerName);
-                obj.CurrentLocation = null;
-                this.UpsertToLiveWorldCache();
+                obj.TryMoveInto(null);
+                UpsertToLiveWorldCache();
                 return string.Empty;
             }
 
@@ -225,7 +226,7 @@ namespace NetMud.Data.Game
         /// Spawn this new into the live world into a specified container
         /// </summary>
         /// <param name="spawnTo">the location/container this should spawn into</param>
-        public override void SpawnNewInWorld(IContains spawnTo)
+        public override void SpawnNewInWorld(IGlobalPosition position)
         {
             //We can't even try this until we know if the data is there
             if (DataTemplate<INonPlayerCharacter>() == null)
@@ -237,14 +238,9 @@ namespace NetMud.Data.Game
             Keywords = new string[] { bS.Name.ToLower() };
             Birthdate = DateTime.Now;
 
-            if (spawnTo == null)
-            {
-                throw new NotImplementedException("NPCs can't spawn to nothing");
-            }
+            Position = position ?? throw new NotImplementedException("NPCs can't spawn to nothing");
 
-            CurrentLocation = spawnTo;
-
-            spawnTo.MoveInto<IIntelligence>(this);
+            position.CurrentLocation.MoveInto<IIntelligence>(this);
 
             Inventory = new EntityContainer<IInanimate>();
 

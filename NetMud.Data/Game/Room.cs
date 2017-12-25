@@ -6,12 +6,9 @@ using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.Behaviors.Rendering;
-using NetMud.DataStructure.SupportingClasses;
-using NetMud.Utility;
+using NetMud.DataStructure.Behaviors.Existential;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace NetMud.Data.Game
@@ -139,7 +136,7 @@ namespace NetMud.Data.Game
                 MobilesInside = me.MobilesInside;
                 Pathways = me.Pathways;
                 Keywords = me.Keywords;
-                CurrentLocation = me.CurrentLocation;
+                Position = me.Position;
             }
         }
 
@@ -148,7 +145,7 @@ namespace NetMud.Data.Game
         /// </summary>
         public override void SpawnNewInWorld()
         {
-            SpawnNewInWorld(this);
+            SpawnNewInWorld(new GlobalPosition { CurrentLocation = this, CurrentZone = this.Position.CurrentZone });
         }
 
 
@@ -156,14 +153,13 @@ namespace NetMud.Data.Game
         /// Spawn this new into the live world into a specified container
         /// </summary>
         /// <param name="spawnTo">the location/container this should spawn into</param>
-        public override void SpawnNewInWorld(IContains spawnTo)
+        public override void SpawnNewInWorld(IGlobalPosition spawnTo)
         {
             var roomTemplate = DataTemplate<IRoomData>();
 
             BirthMark = LiveCache.GetUniqueIdentifier(roomTemplate);
             Keywords = new string[] { roomTemplate.Name.ToLower() };
             Birthdate = DateTime.Now;
-            CurrentLocation = spawnTo;
         }
         #endregion
     }

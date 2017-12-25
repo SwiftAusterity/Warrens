@@ -1,10 +1,5 @@
 ﻿using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Behaviors.Automation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NetMud.DataStructure.Behaviors.Actionable
 {
@@ -25,6 +20,6 @@ namespace NetMud.DataStructure.Behaviors.Actionable
         /// </summary>
         /// <param name="affectTarget">the thing attempting to be dispeled</param>
         /// <returns>reisst type</returns>
-        //AffectResistType DispelAffect(string affectTarget, Tuple<AffectType, int> dispellationMethod);
+        AffectResistType DispelAffect(string affectTarget, int dispellationStrength);
     }
 }

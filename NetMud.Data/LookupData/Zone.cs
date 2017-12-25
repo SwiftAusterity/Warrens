@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Script.Serialization;
+using NetMud.DataStructure.Base.System;
 
 namespace NetMud.Data.LookupData
 {
@@ -181,6 +182,11 @@ namespace NetMud.Data.LookupData
             int height = -1, width = -1, depth = -1;
 
             return new Tuple<int, int, int>(height, width, depth);
+        }
+
+        public IEnumerable<string> RenderToLook(IEntity actor)
+        {
+            yield return String.Empty;
         }
     }
 }

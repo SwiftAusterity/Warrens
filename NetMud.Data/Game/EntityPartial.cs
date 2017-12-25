@@ -6,6 +6,7 @@ using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Automation;
+using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.Rendering;
 using Newtonsoft.Json;
 using System;
@@ -97,9 +98,9 @@ namespace NetMud.Data.Game
         [JsonIgnore]
         public virtual IChannelType ConnectionType
         {
-            get 
-            { 
-                if(_internalDescriptor == null)
+            get
+            {
+                if (_internalDescriptor == null)
                     _internalDescriptor = new InternalChannel();
 
                 return _internalDescriptor;
@@ -117,23 +118,36 @@ namespace NetMud.Data.Game
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
-        public virtual IContains CurrentLocation
+        public virtual IGlobalPosition Position
         {
-            get 
-            { 
-                if(!String.IsNullOrWhiteSpace(_currentLocationBirthmark))
-                    return LiveCache.Get<IContains>(new LiveCacheKey(typeof(IContains), _currentLocationBirthmark));
+            get
+            {
+                if (!String.IsNullOrWhiteSpace(_currentLocationBirthmark))
+                {
+                    var currentLocation = LiveCache.Get<IContains>(new LiveCacheKey(typeof(IContains), _currentLocationBirthmark));
 
-                return null; 
+                    return new GlobalPosition { CurrentLocation = currentLocation, CurrentZone = currentLocation.Position.CurrentZone };
+                }
+
+                return null;
             }
             set
             {
                 if (value == null)
                     return;
 
-                _currentLocationBirthmark = value.BirthMark;
+                _currentLocationBirthmark = value.CurrentLocation.BirthMark;
                 UpsertToLiveWorldCache();
             }
+        }
+
+        public virtual IGlobalPosition AbsolutePosition()
+        {
+            //TODO: Default to emergency location
+            if (Position == null || (Position.CurrentLocation == null && Position.CurrentZone == null))
+                return null;
+
+            return Position;
         }
 
         /// <summary>
@@ -223,7 +237,39 @@ namespace NetMud.Data.Game
         /// Spawn this new into the live world into a specified container
         /// </summary>
         /// <param name="spawnTo">the location/container this should spawn into</param>
-        public abstract void SpawnNewInWorld(IContains spawnTo);
+        public abstract void SpawnNewInWorld(IGlobalPosition spawnTo);
+
+        /// <summary>
+        /// Change the position of this
+        /// </summary>
+        /// <param name="direction">the 0-360 direction we're moving</param>
+        /// <param name="newPosition">The new position the thing is in, will return with the original one if nothing moved</param>
+        /// <returns>was this thing moved?</returns>
+        public virtual bool TryMoveDirection(int direction, IGlobalPosition newPosition)
+        {
+            return false;
+        }
+
+        /// <summary>
+        /// Move this inside of something
+        /// </summary>
+        /// <param name="container">The container to move into</param>
+        /// <returns>was this thing moved?</returns>
+        public virtual bool TryMoveInto(IContains container)
+        {
+            return false;
+        }
+
+        /// <summary>
+        /// Change the position of this without physical movement
+        /// </summary>
+        /// <param name="newPosition">The new position the thing is in, will return with the original one if nothing moved</param>
+        /// <returns>was this thing moved?</returns>
+        public virtual bool TryTeleport(IGlobalPosition newPosition)
+        {
+            return false;
+        }
+
 
         /// <summary>
         /// Update this entry to the live world cache

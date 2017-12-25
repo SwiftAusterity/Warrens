@@ -48,7 +48,7 @@ namespace NutMud.Commands.System
             var messagingObject = new MessageCluster(toActor);
             messagingObject.ToOrigin = new List<IMessage> { toOrigin };
 
-            messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation, null);
+            messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation.CurrentLocation, null);
 
             var playerDataWrapper = new PlayerData();
 

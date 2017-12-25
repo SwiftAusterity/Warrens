@@ -36,7 +36,12 @@ namespace NutMud.Commands.Rendering
 
             //Just do a look on the room
             if (Subject == null)
-                sb.AddRange(OriginLocation.RenderToLook(Actor));
+            {
+                if(OriginLocation.CurrentLocation == null)
+                    sb.AddRange(OriginLocation.CurrentZone.RenderToLook(Actor));
+                else
+                    sb.AddRange(OriginLocation.CurrentLocation.RenderToLook(Actor));
+            }
             else
             {
                 var lookTarget = (ILookable)Subject;
@@ -56,7 +61,7 @@ namespace NutMud.Commands.Rendering
             messagingObject.ToOrigin = new List<IMessage> { toOrigin };
             messagingObject.ToSubject = new List<IMessage> { toSubject };
 
-            messagingObject.ExecuteMessaging(Actor, (IEntity)Subject, null, OriginLocation, null);
+            messagingObject.ExecuteMessaging(Actor, (IEntity)Subject, null, OriginLocation.CurrentLocation, null);
         }
 
         /// <summary>

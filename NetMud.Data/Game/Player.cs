@@ -5,6 +5,7 @@ using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.Behaviors.System;
 using NetMud.DataStructure.SupportingClasses;
@@ -135,12 +136,16 @@ namespace NetMud.Data.Game
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
-        public override IContains CurrentLocation
+        public override IGlobalPosition Position
         {
             get
             {
                 if (!String.IsNullOrWhiteSpace(_currentLocationBirthmark))
-                    return LiveCache.Get<IContains>(new LiveCacheKey(typeof(IContains), _currentLocationBirthmark));
+                {
+                    var currentLocation = LiveCache.Get<IContains>(new LiveCacheKey(typeof(IContains), _currentLocationBirthmark));
+
+                    return new GlobalPosition { CurrentLocation = currentLocation, CurrentZone = currentLocation.Position.CurrentZone };
+                }
 
                 return null;
             }
@@ -149,13 +154,13 @@ namespace NetMud.Data.Game
                 if (value == null)
                     return;
 
-                _currentLocationBirthmark = value.BirthMark;
+                _currentLocationBirthmark = value.CurrentLocation.BirthMark;
                 UpsertToLiveWorldCache();
 
                 //We save character data to ensure the player remains where it was on last known change
                 var ch = DataTemplate<ICharacter>();
-                ch.LastKnownLocation = value.DataTemplateId.ToString();
-                ch.LastKnownLocationType = value.GetType().Name;
+                ch.LastKnownLocation = value.CurrentLocation.DataTemplateId.ToString();
+                ch.LastKnownLocationType = value.CurrentLocation.GetType().Name;
                 ch.Save();
             }
         }
@@ -261,8 +266,8 @@ namespace NetMud.Data.Game
                     return "That is already in the container";
 
                 Inventory.Add(obj, containerName);
-                obj.CurrentLocation = this;
-                this.UpsertToLiveWorldCache();
+                obj.TryMoveInto(this);
+                UpsertToLiveWorldCache();
                 return string.Empty;
             }
 
@@ -299,8 +304,8 @@ namespace NetMud.Data.Game
                     return "That is not in the container";
 
                 Inventory.Remove(obj, containerName);
-                obj.CurrentLocation = null;
-                this.UpsertToLiveWorldCache();
+                obj.TryMoveInto(null);
+                UpsertToLiveWorldCache();
                 return string.Empty;
             }
 
@@ -328,13 +333,13 @@ namespace NetMud.Data.Game
                 Inventory = me.Inventory;
                 Keywords = me.Keywords;
 
-                if (me.CurrentLocation == null)
+                if (me.Position == null)
                 {
                     var newLoc = GetBaseSpawn();
                     newLoc.MoveInto<IPlayer>(this);
                 }
                 else
-                    me.CurrentLocation.MoveInto<IPlayer>(this);
+                    me.Position.CurrentLocation.MoveInto<IPlayer>(this);
             }
         }
 
@@ -379,16 +384,17 @@ namespace NetMud.Data.Game
                 }
             }
 
-            SpawnNewInWorld(lastKnownLoc);
+            SpawnNewInWorld(lastKnownLoc.Position);
         }
 
         /// <summary>
         /// Spawn this new into the live world into a specified container
         /// </summary>
         /// <param name="spawnTo">the location/container this should spawn into</param>
-        public override void SpawnNewInWorld(IContains spawnTo)
+        public override void SpawnNewInWorld(IGlobalPosition position)
         {
-            var ch = DataTemplate<ICharacter>(); ;
+            var ch = DataTemplate<ICharacter>();
+            var spawnTo = position.CurrentLocation;
 
             BirthMark = LiveCache.GetUniqueIdentifier(ch);
             Keywords = new string[] { ch.Name.ToLower(), ch.SurName.ToLower() };
@@ -397,7 +403,7 @@ namespace NetMud.Data.Game
             if (spawnTo == null)
                 spawnTo = GetBaseSpawn();
 
-            CurrentLocation = spawnTo;
+            Position = position;
 
             //Set the data context's stuff too so we don't have to do this over again
             ch.LastKnownLocation = spawnTo.DataTemplateId.ToString();

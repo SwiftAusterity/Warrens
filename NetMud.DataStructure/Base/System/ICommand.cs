@@ -1,4 +1,5 @@
-﻿using NetMud.DataStructure.Behaviors.Rendering;
+﻿using NetMud.DataStructure.Behaviors.Existential;
+using NetMud.DataStructure.Behaviors.Rendering;
 using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Base.System
@@ -49,7 +50,7 @@ namespace NetMud.DataStructure.Base.System
         /// <summary>
         /// Location the Actor was in when command was issued
         /// </summary>
-        ILocation OriginLocation { get; set; }
+        IGlobalPosition OriginLocation { get; set; }
 
         /// <summary>
         /// Any surrounding locations to the origin or target locations for the command

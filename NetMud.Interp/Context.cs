@@ -15,6 +15,7 @@ using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.SupportingClasses;
+using NetMud.DataStructure.Behaviors.Existential;
 
 namespace NetMud.Interp
 {
@@ -66,7 +67,7 @@ namespace NetMud.Interp
         /// <summary>
         /// Container the Actor is in when the command is invoked
         /// </summary>
-        public ILocation Location { get; private set; }
+        public IGlobalPosition Position { get; private set; }
 
         /// <summary>
         /// Valid containers by range from OriginLocation
@@ -106,7 +107,7 @@ namespace NetMud.Interp
             OriginalCommandString = fullCommand;
             Actor = actor;
 
-            Location = (ILocation)Actor.CurrentLocation;
+            Position = Actor.Position;
 
             AccessErrors = new List<string>();
             CommandStringRemainder = Enumerable.Empty<string>();
@@ -184,7 +185,7 @@ namespace NetMud.Interp
                 }
 
                 Command.Actor = Actor;
-                Command.OriginLocation = Location;
+                Command.OriginLocation = Position;
                 Command.Surroundings = Surroundings;
 
                 Command.Subject = Subject;
@@ -441,7 +442,7 @@ namespace NetMud.Interp
                         validObjects.Add((T)Actor);
                         break;
                     case CommandRangeType.Touch:
-                        validObjects.AddRange(Location.GetContents<T>().Where(ent => ((IEntity)ent).Keywords.Any(key => key.Contains(currentParmString))));
+                        validObjects.AddRange(Position.CurrentLocation.GetContents<T>().Where(ent => ((IEntity)ent).Keywords.Any(key => key.Contains(currentParmString))));
 
                         if(Actor.GetType().GetInterfaces().Any(typ => typ == typeof(IContains)))
                             validObjects.AddRange(((IContains)Actor).GetContents<T>().Where(ent => ((IEntity)ent).Keywords.Any(key => key.Contains(currentParmString))));
@@ -450,7 +451,7 @@ namespace NetMud.Interp
                         //Don't sift through another intelligence's stuff
                         //TODO: write "does entity have permission to another entity's inventories" function on IEntity
                         if (hasContainer && currentNeededParm.Usage == CommandUsage.Subject)
-                            foreach(IContains thing in Location.GetContents<T>().Where(ent => ent.GetType().GetInterfaces().Any(intf => intf == typeof(IContains))
+                            foreach(IContains thing in Position.CurrentLocation.GetContents<T>().Where(ent => ent.GetType().GetInterfaces().Any(intf => intf == typeof(IContains))
                                                                                                 && !ent.GetType().GetInterfaces().Any(intf => intf == typeof(IMobile))
                                                                                                 && !ent.Equals(Actor)))
                                 validObjects.AddRange(thing.GetContents<T>().Where(ent => ((IEntity)ent).Keywords.Any(key => key.Contains(currentParmString))));
@@ -659,7 +660,7 @@ namespace NetMud.Interp
 
                 var validObjects = new List<T>();
 
-                validObjects.AddRange(subjectCollection.Select(sbj => sbj.CurrentLocation)
+                validObjects.AddRange(subjectCollection.Select(sbj => sbj.Position.CurrentLocation)
                                                         .Where(cl => cl.Keywords.Any(key => key.Contains(currentParmString))).Select(ent => (T)ent));
 
                 if (validObjects.Count() > 0)
@@ -709,7 +710,7 @@ namespace NetMud.Interp
 
                         var validSubjects = new List<IEntity>();
 
-                        validSubjects.AddRange(subjectCollection.Where(sbj => sbj.CurrentLocation.Equals(container)));
+                        validSubjects.AddRange(subjectCollection.Where(sbj => sbj.Position.CurrentLocation.Equals(container)));
 
                         if (validSubjects.Count() > 1)
                         {

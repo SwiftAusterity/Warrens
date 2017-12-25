@@ -61,7 +61,7 @@ namespace NetMud.Commands.EntityManipulation
             var messagingObject = new MessageCluster(toActor);
             messagingObject.ToOrigin = new List<IMessage> { toOrigin };
 
-            messagingObject.ExecuteMessaging(Actor, thing, (IEntity)Target, OriginLocation, null);
+            messagingObject.ExecuteMessaging(Actor, thing, (IEntity)Target, OriginLocation.CurrentLocation, null);
         }
 
         /// <summary>

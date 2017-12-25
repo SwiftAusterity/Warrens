@@ -1,4 +1,5 @@
 ﻿using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.Rendering;
 using System.Collections.Generic;
 
@@ -33,7 +34,7 @@ namespace NetMud.Commands.Attributes
         /// <summary>
         /// Container the Actor is in when the command is invoked
         /// </summary>
-        public ILocation OriginLocation { get; set; }
+        public IGlobalPosition OriginLocation { get; set; }
 
         /// <summary>
         /// Valid containers by range from OriginLocation

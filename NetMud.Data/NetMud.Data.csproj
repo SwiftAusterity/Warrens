@@ -78,6 +78,7 @@
     <Compile Include="System\BackingDataPartial.cs" />
     <Compile Include="LookupData\Fauna.cs" />
     <Compile Include="LookupData\Flora.cs" />
+    <Compile Include="System\GlobalPosition.cs" />
     <Compile Include="System\LookupCriteria.cs" />
     <Compile Include="System\Map.cs" />
     <Compile Include="LookupData\Mineral.cs" />

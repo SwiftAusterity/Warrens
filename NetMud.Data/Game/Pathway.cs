@@ -1,10 +1,12 @@
 ﻿using NetMud.Cartography;
 using NetMud.Communication.Messaging;
+using NetMud.Data.System;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.Behaviors.System;
 using NetMud.DataStructure.SupportingClasses;
@@ -157,7 +159,7 @@ namespace NetMud.Data.Game
                 BirthMark = me.BirthMark;
                 Keywords = me.Keywords;
                 Birthdate = me.Birthdate;
-                CurrentLocation = me.CurrentLocation;
+                Position = me.Position;
                 DataTemplateId = me.DataTemplate<IPathwayData>().ID;
                 FromLocation = me.FromLocation;
                 ToLocation = me.ToLocation;
@@ -180,7 +182,7 @@ namespace NetMud.Data.Game
         /// Spawn this new into the live world into a specified container
         /// </summary>
         /// <param name="spawnTo">the location/container this should spawn into</param>
-        public override void SpawnNewInWorld(IContains spawnTo)
+        public override void SpawnNewInWorld(IGlobalPosition position)
         {
             var bS = DataTemplate<IPathwayData>(); ;
             var locationAssembly = Assembly.GetAssembly(typeof(Room));
@@ -228,7 +230,7 @@ namespace NetMud.Data.Game
 
             FromLocation = fromLocation;
             ToLocation = toLocation;
-            CurrentLocation = fromLocation;
+            Position = fromLocation.Position; 
 
             if (String.IsNullOrWhiteSpace(bS.MessageToActor))
                 bS.MessageToActor = String.Empty;

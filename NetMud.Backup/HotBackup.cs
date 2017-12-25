@@ -88,7 +88,8 @@ namespace NetMud.Backup
                     var liveEntity = entity as IEntity;
 
                     //Don't write objects that are on live players, player backup does that itself
-                    if (liveEntity.CurrentLocation != null && liveEntity.CurrentLocation.GetType() == typeof(Player))
+                    if (liveEntity.Position != null && liveEntity.Position.CurrentLocation != null 
+                        && liveEntity.Position.CurrentLocation.GetType() == typeof(Player))
                         continue;
 
                     liveDataAccessor.WriteEntity(liveEntity);
@@ -200,15 +201,15 @@ namespace NetMud.Backup
                     foreach (IInanimate obj in entity.Contents.EntitiesContained())
                     {
                         var fullObj = LiveCache.Get<IInanimate>(new LiveCacheKey(typeof(Inanimate), obj.BirthMark));
-                        entity.MoveFrom<IInanimate>(obj);
-                        entity.MoveInto<IInanimate>(fullObj);
+                        entity.MoveFrom(obj);
+                        entity.MoveInto(fullObj);
                     }
 
                     foreach (IIntelligence obj in entity.MobilesInside.EntitiesContained())
                     {
                         var fullObj = LiveCache.Get<IIntelligence>(new LiveCacheKey(typeof(Intelligence), obj.BirthMark));
-                        entity.MoveFrom<IIntelligence>(obj);
-                        entity.MoveInto<IIntelligence>(fullObj);
+                        entity.MoveFrom(obj);
+                        entity.MoveInto(fullObj);
                     }
                 }
 
@@ -217,8 +218,8 @@ namespace NetMud.Backup
                     foreach (IInanimate obj in entity.Inventory.EntitiesContained())
                     {
                         var fullObj = LiveCache.Get<IInanimate>(new LiveCacheKey(typeof(Inanimate), obj.BirthMark));
-                        entity.MoveFrom<IInanimate>(obj);
-                        entity.MoveInto<IInanimate>(fullObj);
+                        entity.MoveFrom(obj);
+                        entity.MoveInto(fullObj);
                     }
                 }
 
@@ -227,15 +228,15 @@ namespace NetMud.Backup
                     foreach (var obj in entity.Contents.EntitiesContainedByName())
                     {
                         var fullObj = LiveCache.Get<IInanimate>(new LiveCacheKey(typeof(Inanimate), obj.Item2.BirthMark));
-                        entity.MoveFrom<IInanimate>(obj.Item2);
-                        entity.MoveInto<IInanimate>(fullObj, obj.Item1);
+                        entity.MoveFrom(obj.Item2);
+                        entity.MoveInto(fullObj, obj.Item1);
                     }
 
                     foreach (var obj in entity.MobilesInside.EntitiesContainedByName())
                     {
                         var fullObj = LiveCache.Get<IIntelligence>(new LiveCacheKey(typeof(Intelligence), obj.Item2.BirthMark));
-                        entity.MoveFrom<IIntelligence>((IIntelligence)obj.Item2);
-                        entity.MoveInto<IIntelligence>(fullObj, obj.Item1);
+                        entity.MoveFrom((IIntelligence)obj.Item2);
+                        entity.MoveInto(fullObj, obj.Item1);
                     }
                 }
 
@@ -249,7 +250,7 @@ namespace NetMud.Backup
                     {
                         entity.ToLocation = roomTo;
                         entity.FromLocation = roomFrom;
-                        entity.CurrentLocation = roomFrom;
+                        entity.Position = roomFrom.Position;
                         roomFrom.MoveInto<IPathway>(entity);
                     }
                 }

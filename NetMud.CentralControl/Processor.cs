@@ -53,13 +53,11 @@ namespace NetMud.CentralControl
                         if (subArgs.CurrentPulse == _maxPulseCount)
                             subArgs.CurrentPulse = 0;
                     }
-
-                    return subArgs;
                 };
 
                 var newLoop = new Task<SubscriptionLoopArgs>(looperProcess, new SubscriptionLoopArgs(designator, 0), cancelTokenSource.Token, TaskCreationOptions.LongRunning);
 
-                newLoop.ContinueWith(async (previousTask) =>
+                newLoop.ContinueWith((previousTask) =>
                 {
                     //Just end it
                     RemoveSubscriberList(designator);

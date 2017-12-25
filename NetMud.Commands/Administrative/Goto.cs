@@ -49,7 +49,7 @@ namespace NutMud.Commands.Administrative
             messagingObject.ToOrigin = new List<IMessage> { toOrigin };
             messagingObject.ToDestination = new List<IMessage> { toDest };
 
-            messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation, null);
+            messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation.CurrentLocation, null);
 
             moveTo.MoveInto((Player)Actor);
         }

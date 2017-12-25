@@ -6,14 +6,11 @@ using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.Rendering;
-using NetMud.DataStructure.SupportingClasses;
-using NetMud.Utility;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Linq;
 
 namespace NetMud.Data.Game
 {
@@ -93,7 +90,7 @@ namespace NetMud.Data.Game
         /// </summary>
         /// <param name="backingStore">the backing data</param>
         /// <param name="spawnTo">where to spawn this into</param>
-        public Inanimate(IInanimateData backingStore, IContains spawnTo)
+        public Inanimate(IInanimateData backingStore, IGlobalPosition spawnTo)
         {
             Contents = new EntityContainer<IInanimate>(backingStore.InanimateContainers);
             Pathways = new EntityContainer<IPathway>();
@@ -125,7 +122,7 @@ namespace NetMud.Data.Game
         /// Spawn this new into the live world into a specified container
         /// </summary>
         /// <param name="spawnTo">the location/container this should spawn into</param>
-        public override void SpawnNewInWorld(IContains spawnTo)
+        public override void SpawnNewInWorld(IGlobalPosition spawnTo)
         {
             //We can't even try this until we know if the data is there
             if (DataTemplate<IInanimateData>() == null)
@@ -142,9 +139,9 @@ namespace NetMud.Data.Game
                 throw new NotImplementedException("Objects can't spawn to nothing");
             }
 
-            CurrentLocation = spawnTo;
+            Position = spawnTo;
 
-            spawnTo.MoveInto<IInanimate>(this);
+            spawnTo.CurrentLocation.MoveInto<IInanimate>(this);
 
             Contents = new EntityContainer<IInanimate>();
 
