@@ -124,7 +124,7 @@ namespace NetMud.Data.Game
             {
                 if (!String.IsNullOrWhiteSpace(_currentLocationBirthmark))
                 {
-                    var currentLocation = LiveCache.Get<IContains>(new LiveCacheKey(typeof(IContains), _currentLocationBirthmark));
+                    var currentLocation = LiveCache.Get<ILocation>(new LiveCacheKey(typeof(ILocation), _currentLocationBirthmark));
 
                     return new GlobalPosition { CurrentLocation = currentLocation, CurrentZone = currentLocation.Position.CurrentZone };
                 }

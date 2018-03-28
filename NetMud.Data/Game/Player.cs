@@ -142,7 +142,7 @@ namespace NetMud.Data.Game
             {
                 if (!String.IsNullOrWhiteSpace(_currentLocationBirthmark))
                 {
-                    var currentLocation = LiveCache.Get<IContains>(new LiveCacheKey(typeof(IContains), _currentLocationBirthmark));
+                    var currentLocation = LiveCache.Get<ILocation>(new LiveCacheKey(typeof(ILocation), _currentLocationBirthmark));
 
                     return new GlobalPosition { CurrentLocation = currentLocation, CurrentZone = currentLocation.Position.CurrentZone };
                 }
@@ -347,7 +347,7 @@ namespace NetMud.Data.Game
         /// Find the emergency we dont know where to spawn this guy spawn location
         /// </summary>
         /// <returns>The emergency spawn location</returns>
-        private IContains GetBaseSpawn()
+        private ILocation GetBaseSpawn()
         {
             var chr = DataTemplate<ICharacter>(); ;
 

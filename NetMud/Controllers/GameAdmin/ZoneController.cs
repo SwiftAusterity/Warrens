@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
-using NetMud.Data.LookupData;
+using NetMud.Data.EntityBackingData;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Base.Place;
+using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.Models.Admin;
 using System.Web;
 using System.Web.Mvc;
@@ -37,7 +37,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageZoneDataViewModel(BackingDataCache.GetAll<Zone>());
+            var vModel = new ManageZoneDataViewModel(BackingDataCache.GetAll<IZoneData>());
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             vModel.CurrentPageNumber = CurrentPageNumber;
@@ -60,7 +60,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<IZone>(ID);
+                var obj = BackingDataCache.Get<IZoneData>(ID);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -92,14 +92,11 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var newObj = new Zone();
+            var newObj = new ZoneData();
             newObj.Name = vModel.Name;
             newObj.BaseElevation = vModel.BaseElevation;
-            newObj.Claimable = vModel.Claimable;
-            newObj.WorldName = vModel.WorldName;
             newObj.PressureCoefficient = vModel.PressureCoefficient;
             newObj.TemperatureCoefficient = vModel.TemperatureCoefficient;
-            newObj.HelpText = vModel.NewHelpBody;
 
             if (newObj.Create() == null)
                 message = "Error; Creation failed.";
@@ -119,7 +116,7 @@ namespace NetMud.Controllers.GameAdmin
             var vModel = new AddEditZoneDataViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            Zone obj = BackingDataCache.Get<Zone>(id);
+            IZoneData obj = BackingDataCache.Get<IZoneData>(id);
 
             if (obj == null)
             {
@@ -130,11 +127,8 @@ namespace NetMud.Controllers.GameAdmin
             vModel.DataObject = obj;
             vModel.Name = obj.Name;
             vModel.BaseElevation = obj.BaseElevation;
-            vModel.Claimable = obj.Claimable;
-            vModel.WorldName = obj.WorldName;
             vModel.PressureCoefficient = obj.PressureCoefficient;
             vModel.TemperatureCoefficient = obj.TemperatureCoefficient;
-            vModel.NewHelpBody = obj.HelpText;
 
             return View("~/Views/GameAdmin/Zone/Edit.cshtml", vModel);
         }
@@ -146,7 +140,7 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            Zone obj = BackingDataCache.Get<Zone>(id);
+            IZoneData obj = BackingDataCache.Get<IZoneData>(id);
             if (obj == null)
             {
                 message = "That does not exist";
@@ -155,11 +149,8 @@ namespace NetMud.Controllers.GameAdmin
 
             obj.Name = vModel.Name;
             obj.BaseElevation = vModel.BaseElevation;
-            obj.Claimable = vModel.Claimable;
-            obj.WorldName = vModel.WorldName;
             obj.PressureCoefficient = vModel.PressureCoefficient;
             obj.TemperatureCoefficient = vModel.TemperatureCoefficient;
-            obj.HelpText = vModel.NewHelpBody;
 
             if (obj.Save())
             {

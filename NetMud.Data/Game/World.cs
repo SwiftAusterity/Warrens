@@ -6,14 +6,14 @@ using NetMud.DataStructure.SupportingClasses;
 using System;
 using System.Collections.Generic;
 
-namespace NetMud.Data.LookupData
+namespace NetMud.Data.Game
 {
     /// <summary>
     /// World for holding world maps
     /// </summary>
     [Serializable]
     [IgnoreAutomatedBackup]
-    public class World : BackingDataPartial, IWorld
+    public class World : BackingDataPartial
     {
         public IMap WorldMap { get; private set; }
 

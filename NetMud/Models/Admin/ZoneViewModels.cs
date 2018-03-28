@@ -1,6 +1,5 @@
 ﻿using NetMud.Authentication;
-using NetMud.Data.LookupData;
-using NetMud.DataStructure.Base.Place;
+using NetMud.DataStructure.Base.EntityBackingData;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -8,18 +7,18 @@ using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageZoneDataViewModel : PagedDataModel<Zone>, BaseViewModel
+    public class ManageZoneDataViewModel : PagedDataModel<IZoneData>, BaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
-        public ManageZoneDataViewModel(IEnumerable<Zone> items)
+        public ManageZoneDataViewModel(IEnumerable<IZoneData> items)
             : base(items)
         {
             CurrentPageNumber = 1;
             ItemsPerPage = 20;
         }
 
-        internal override Func<Zone, bool> SearchFilter
+        internal override Func<IZoneData, bool> SearchFilter
         {
             get
             {
@@ -69,6 +68,6 @@ namespace NetMud.Models.Admin
         [Display(Name = "Help Text Body")]
         public string NewHelpBody { get; set; }
 
-        public IZone DataObject { get; set; }
+        public IZoneData DataObject { get; set; }
     }
 }

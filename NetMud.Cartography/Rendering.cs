@@ -37,13 +37,13 @@ namespace NetMud.Cartography
             var asciiMap = new StringBuilder();
 
             //1. Get world map
-            var ourWorld = room.ZoneAffiliation.World;
+            var ourLocale = room.Affiliation;
 
             //2. Get slice of room from world map
             var map = Cartographer.TakeSliceOfMap(new Tuple<int, int>(Math.Max(room.Coordinates.Item1 - radius, 0), room.Coordinates.Item1 + radius)
                                                 , new Tuple<int, int>(Math.Max(room.Coordinates.Item2 - radius, 0), room.Coordinates.Item2 + radius)
                                                 , new Tuple<int, int>(Math.Max(room.Coordinates.Item3 - 1, 0), room.Coordinates.Item3 + 1)
-                                                , ourWorld.WorldMap.CoordinatePlane, true);
+                                                , ourLocale.Interior.CoordinatePlane, true);
 
             //3. Flatten the map
             var flattenedMap = Cartographer.GetSinglePlane(map, room.Coordinates.Item3);

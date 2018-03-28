@@ -33,7 +33,7 @@ namespace NetMud.DataStructure.Base.Supporting
         /// Current temperature for this
         /// </summary>
         /// <returns>The current temperature in in-game units</returns>
-        int EffectiveCurrentTemperature();
+        int EffectiveTemperature();
 
         /// <summary>
         /// Is this considered outdoors (ie clear path to the sky)
@@ -46,24 +46,5 @@ namespace NetMud.DataStructure.Base.Supporting
         /// </summary>
         /// <returns>the biome</returns>
         Biome GetBiome();
-    }
-
-    /// <summary>
-    /// What effective environment something is
-    /// </summary>
-    public enum Biome : short
-    {
-        Air = 0,
-        Aquatic = 1,
-        AquaticSurface = 2,
-        AquaticFloor = 3,
-        Cavernous = 4,
-        Desert = 5,
-        Fabricated = 6,
-        Forest = 7,
-        Mountainous = 8,
-        Plains = 9,
-        Rainforest = 10,
-        Swamp = 11
     }
 }

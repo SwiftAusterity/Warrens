@@ -9,6 +9,6 @@ namespace NetMud.Data.System
     public class GlobalPosition : IGlobalPosition
     {
         public IZone CurrentZone { get; set; }
-        public IContains CurrentLocation { get; set; }
+        public ILocation CurrentLocation { get; set; }
     }
 }

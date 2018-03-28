@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using NetMud.DataStructure.Base.Supporting;
+﻿using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.Base.Place;
-using System;
 using NetMud.DataStructure.Behaviors.System;
+using System;
+using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Base.EntityBackingData
 {
@@ -23,9 +22,9 @@ namespace NetMud.DataStructure.Base.EntityBackingData
         IMaterial Medium { get; set; }
 
         /// <summary>
-        /// What zone does this belong to
+        /// What locale does this belong to
         /// </summary>
-        IZone ZoneAffiliation { get; set; }
+        ILocaleData Affiliation { get; set; }
 
         /// <summary>
         /// Current coordinates of the room on its world map

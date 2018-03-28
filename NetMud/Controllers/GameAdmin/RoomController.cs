@@ -94,7 +94,7 @@ namespace NetMud.Controllers.GameAdmin
             var vModel = new AddEditRoomDataViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
             vModel.ValidMaterials = BackingDataCache.GetAll<IMaterial>();
-            vModel.ValidZones = BackingDataCache.GetAll<IZone>();
+            vModel.ValidLocales = BackingDataCache.GetAll<ILocaleData>();
 
             return View("~/Views/GameAdmin/Room/Add.cshtml", "_chromelessLayout", vModel);
         }
@@ -118,12 +118,12 @@ namespace NetMud.Controllers.GameAdmin
             {
                 newObj.Medium = medium;
 
-                var zoneId = vModel.Zone;
-                var zone = BackingDataCache.Get<IZone>(zoneId);
+                var localeId = vModel.Locale;
+                var locale = BackingDataCache.Get<ILocaleData>(localeId);
 
-                if (zone != null)
+                if (locale != null)
                 {
-                    newObj.ZoneAffiliation = zone;
+                    newObj.Affiliation = locale;
 
                     if (newObj.Create() == null)
                         message = "Error; Creation failed.";
@@ -149,7 +149,7 @@ namespace NetMud.Controllers.GameAdmin
             var vModel = new AddEditRoomDataViewModel();
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
             vModel.ValidMaterials = BackingDataCache.GetAll<IMaterial>();
-            vModel.ValidZones = BackingDataCache.GetAll<IZone>();
+            vModel.ValidLocales = BackingDataCache.GetAll<ILocaleData>();
 
             var obj = BackingDataCache.Get<RoomData>(id);
 
@@ -194,12 +194,12 @@ namespace NetMud.Controllers.GameAdmin
             {
                 obj.Medium = medium;
 
-                var zoneId = vModel.Zone;
-                var zone = BackingDataCache.Get<IZone>(zoneId);
+                var localeId = vModel.Locale;
+                var locale = BackingDataCache.Get<ILocaleData>(localeId);
 
-                if (zone != null)
+                if (locale != null)
                 {
-                    obj.ZoneAffiliation = zone;
+                    obj.Affiliation = locale;
 
                     if (obj.Save())
                     {
