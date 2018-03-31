@@ -5,6 +5,7 @@ using NetMud.Data.EntityBackingData;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.DataStructure.Base.Place;
 using NetMud.Models.Admin;
 using System.Web;
 using System.Web.Mvc;

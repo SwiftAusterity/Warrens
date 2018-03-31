@@ -51,7 +51,7 @@
     <Compile Include="Base\EntityBackingData\IRoomData.cs" />
     <Compile Include="Base\EntityBackingData\IZoneData.cs" />
     <Compile Include="Base\Place\ILocale.cs" />
-    <Compile Include="Base\Place\IMaps.cs" />
+    <Compile Include="Base\Place\IMap.cs" />
     <Compile Include="Base\Place\IPathway.cs" />
     <Compile Include="Base\Place\IRoom.cs" />
     <Compile Include="Base\Place\IZone.cs" />
@@ -68,6 +68,7 @@
     <Compile Include="Base\Supporting\IDimensionalModelPlane.cs" />
     <Compile Include="Base\Supporting\IDiscoverable.cs" />
     <Compile Include="Base\Supporting\IEnvironment.cs" />
+    <Compile Include="Base\Supporting\IEnvironmentData.cs" />
     <Compile Include="Base\Supporting\IFauna.cs" />
     <Compile Include="Base\Supporting\IFlora.cs" />
     <Compile Include="Base\Supporting\IGender.cs" />

@@ -2,6 +2,7 @@
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.System;
 using System;
+using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Base.Place
 {
@@ -24,19 +25,9 @@ namespace NetMud.DataStructure.Base.Place
         /// The midline elevation point "sea level" for this zone
         /// </summary>
         int BaseElevation { get; set; }
-
-        /// <summary>
-        /// The fudge value for temperature variance
-        /// </summary>
-        int TemperatureCoefficient { get; set; }
 		
         /// What other zones does this zone exit to and are they initially visible
         /// </summary>
         Tuple<IZoneData, bool> ZoneExits { get; set; }
-
-        /// <summary>
-        /// The fudge value for pressure (weather pattern) variance
-        /// </summary>
-        int PressureCoefficient { get; set; }
     }
 }

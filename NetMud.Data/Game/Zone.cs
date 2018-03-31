@@ -198,5 +198,10 @@ namespace NetMud.Data.Game
         {
             throw new NotImplementedException();
         }
+
+        public IEnumerable<IZone> ZoneExits()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

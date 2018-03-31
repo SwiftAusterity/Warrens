@@ -227,7 +227,7 @@ namespace NetMud.Cartography.ProceduralGeneration
             if (locale == null)
                 throw new ArgumentNullException("Locale must not be null.");
 
-            if (locale.Rooms.Any())
+            if (locale.Rooms().Any())
                 throw new ArgumentOutOfRangeException("Locale must be devoid of rooms.");
 
             if (locale.DataTemplate<ILocaleData>().FitnessProblems)
