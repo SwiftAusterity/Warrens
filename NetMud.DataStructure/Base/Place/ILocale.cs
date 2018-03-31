@@ -34,6 +34,18 @@ namespace NetMud.DataStructure.Base.Place
         /// <returns>Rooms</returns>
         Dictionary<IRoom, IZone> LocaleExitPoints();
 
+
+        /// <summary>
+        /// The map of the rooms inside
+        /// </summary>
+        IMap Interior { get; set; }
+
+        /// <summary>
+        /// Get the absolute center room of the locale
+        /// </summary>
+        /// <returns>the central room of the locale</returns>
+        IRoom CentralRoom(int zIndex = -1);
+
         /// <summary>
         /// Get the basic map render for the zone
         /// </summary>

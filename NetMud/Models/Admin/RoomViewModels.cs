@@ -1,6 +1,5 @@
 ﻿using NetMud.Authentication;
 using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using System;
 using System.Collections.Generic;
@@ -43,13 +42,13 @@ namespace NetMud.Models.Admin
         [DataType(DataType.Text)]
         public long Medium { get; set; }
 
-        [Display(Name = "Zone")]
+        [Display(Name = "Locale")]
         [DataType(DataType.Text)]
-        public long Zone { get; set; }
+        public long Locale { get; set; }
 
         public IEnumerable<IMaterial> ValidMaterials { get; set; }
 
-        public IEnumerable<IZone> ValidZones { get; set; }
+        public IEnumerable<ILocaleData> ValidLocales { get; set; }
 
         public IRoomData DataObject { get; set; }
     }

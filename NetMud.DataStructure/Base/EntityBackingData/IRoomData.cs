@@ -1,5 +1,4 @@
-﻿using NetMud.DataStructure.Base.Place;
-using NetMud.DataStructure.Base.Supporting;
+﻿using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.System;
 using System;
@@ -23,14 +22,14 @@ namespace NetMud.DataStructure.Base.EntityBackingData
         IMaterial Medium { get; set; }
 
         /// <summary>
+        /// What locale does this belong to
+        /// </summary>
+        ILocaleData Affiliation { get; set; }
+
+        /// <summary>
         /// Current coordinates of the room on its world map
         /// </summary>
         Tuple<int, int, int> Coordinates { get; set; }
-
-        /// <summary>
-        /// The Locale this is affiliated with
-        /// </summary>
-        ILocaleData LocaleAffiliation { get; set; }
 
         /// <summary>
         /// What pathways are affiliated with this room data (what it spawns with)

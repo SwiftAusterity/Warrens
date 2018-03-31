@@ -92,7 +92,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 vModel.NewRoomModel.authedUser = vModel.authedUser;
                 vModel.NewRoomModel.ValidMaterials = vModel.ValidMaterials;
-                vModel.NewRoomModel.ValidZones = BackingDataCache.GetAll<IZone>();
+                vModel.NewRoomModel.ValidLocales = BackingDataCache.GetAll<ILocaleData>();
 
                 return View("~/Views/GameAdmin/Pathway/AddWithRoom.cshtml", "_chromelessLayout", vModel);
             }
@@ -190,12 +190,12 @@ namespace NetMud.Controllers.GameAdmin
             {
                 newRoom.Medium = medium;
 
-                var zoneId = vModel.NewRoomModel.Zone;
-                var zone = BackingDataCache.Get<IZone>(zoneId);
+                var localeId = vModel.NewRoomModel.Locale;
+                var locale = BackingDataCache.Get<ILocaleData>(localeId);
 
-                if (zone != null)
+                if (locale != null)
                 {
-                    newRoom.ZoneAffiliation = zone;
+                    newRoom.Affiliation = locale;
 
                     if (newRoom.Create() == null)
                         roomMessage = "Error; Creation failed.";

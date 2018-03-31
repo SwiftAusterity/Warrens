@@ -1,6 +1,5 @@
 ﻿using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.Behaviors.Automation;
 using NetMud.DataStructure.Behaviors.Existential;
 using System;
 using System.Collections.Generic;
@@ -10,7 +9,7 @@ namespace NetMud.DataStructure.Behaviors.System
     /// <summary>
     /// Natural resources (minerals, flora, fauna)
     /// </summary>
-    public interface INaturalResource : ILookupData, IHasAffects
+    public interface INaturalResource : ILookupData
     {
         /// <summary>
         /// How much spawns in one place in one spawn tick

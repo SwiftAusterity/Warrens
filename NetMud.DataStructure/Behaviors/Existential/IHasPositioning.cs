@@ -1,5 +1,4 @@
-﻿using NetMud.DataStructure.Base.Place;
-using NetMud.DataStructure.Behaviors.Rendering;
+﻿using NetMud.DataStructure.Behaviors.Rendering;
 
 namespace NetMud.DataStructure.Behaviors.Existential
 {
@@ -34,21 +33,5 @@ namespace NetMud.DataStructure.Behaviors.Existential
         /// <param name="newPosition">The new position the thing is in, will return with the original one if nothing moved</param>
         /// <returns>was this thing moved?</returns>
         bool TryTeleport(IGlobalPosition newPosition);
-    }
-
-    /// <summary>
-    /// Coords + world designator
-    /// </summary>
-    public interface IGlobalPosition
-    {
-        /// <summary>
-        /// The world this is in
-        /// </summary>
-        IZone CurrentZone { get; set;  }
-
-        /// <summary>
-        /// Current location this entity is in
-        /// </summary>
-        IContains CurrentLocation { get; set; }
     }
 }

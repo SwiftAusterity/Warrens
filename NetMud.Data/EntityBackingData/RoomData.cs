@@ -2,7 +2,6 @@
 using NetMud.Data.LookupData;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using Newtonsoft.Json;
 using System;
@@ -52,7 +51,7 @@ namespace NetMud.Data.EntityBackingData
             }
         }
 
-        [JsonProperty("LocaleAffiliation")]
+        [JsonProperty("Affiliation")]
         private long _affiliation { get; set; }
 
         /// <summary>
@@ -60,7 +59,7 @@ namespace NetMud.Data.EntityBackingData
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
-        public ILocaleData LocaleAffiliation
+        public ILocaleData Affiliation
         {
             get
             {
@@ -111,8 +110,8 @@ namespace NetMud.Data.EntityBackingData
             if (Medium == null)
                 dataProblems.Add("Medium material is invalid.");
 
-            if (LocaleAffiliation == null)
-                dataProblems.Add("Locale  is invalid.");
+            if (Affiliation == null)
+                dataProblems.Add("Affiliation is invalid.");
 
             if (Coordinates.Item1 < 0 || Coordinates.Item2 < 0 || Coordinates.Item3 < 0)
                 dataProblems.Add("Coordinates are invalid.");

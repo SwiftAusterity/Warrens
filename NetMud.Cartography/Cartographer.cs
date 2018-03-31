@@ -24,6 +24,8 @@ namespace NetMud.Cartography
             if (origin == null || direction == MovementDirectionType.None)
                 return null;
 
+            var worldMap = origin.Affiliation.Interior.CoordinatePlane;
+
             var steps = Utilities.GetDirectionStep(direction);
             var newX = origin.Coordinates.Item1 + steps.Item1;
             var newY = origin.Coordinates.Item2 + steps.Item2;
@@ -66,7 +68,7 @@ namespace NetMud.Cartography
         /// <param name="zoneId">the zone to isolate</param>
         /// <param name="recenter">recenter the map or not, defaults to not</param>
         /// <returns>the zone's map</returns>
-        public static long[, ,] GetZoneMap(long[, ,] fullMap, long zoneId, bool recenter = false)
+        public static long[, ,] GetZoneMap(long[, ,] fullMap, long localeId, bool recenter = false)
         {
             var newMap = new long[fullMap.GetUpperBound(0) + 1, fullMap.GetUpperBound(1) + 1, fullMap.GetUpperBound(2) + 1];
 
@@ -78,7 +80,7 @@ namespace NetMud.Cartography
                     {
                         var room = BackingDataCache.Get<IRoomData>(fullMap[x, y, z]);
 
-                        if (room == null)
+                        if (room == null || room.Affiliation == null || !room.Affiliation.ID.Equals(localeId))
                             continue;
 
                         newMap[x, y, z] = fullMap[x, y, z];

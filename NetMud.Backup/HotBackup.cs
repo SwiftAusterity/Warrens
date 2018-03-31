@@ -14,8 +14,6 @@ using NetMud.DataStructure.Base.Place;
 using NetMud.DataAccess.FileSystem;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.Data.LookupData;
-using NetMud.Data.System;
 using NetMud.Cartography;
 
 namespace NetMud.Backup
@@ -282,9 +280,9 @@ namespace NetMud.Backup
                 if (currentRoom == null)
                     continue;
 
-                var newWorld = GenerateWorld(currentRoom, roomPool);
+                GenerateWorld(currentRoom, roomPool);
 
-                BackingDataCache.Add(newWorld);
+                //BackingDataCache.Add(newWorld);
             }
         }
 
@@ -296,7 +294,7 @@ namespace NetMud.Backup
         /// <param name="startingRoom">The room to start with</param>
         /// <param name="remainingRooms">The list of remaining rooms to work against (will remove used rooms from this)</param>
         /// <returns>A whole new world</returns>
-        private IWorld GenerateWorld(IRoomData startingRoom, HashSet<IRoomData> remainingRooms)
+        private void GenerateWorld(IRoomData startingRoom, HashSet<IRoomData> remainingRooms)
         {
             if (startingRoom == null || remainingRooms.Count() == 0)
                 throw new InvalidOperationException("Invalid inputs.");
@@ -305,12 +303,10 @@ namespace NetMud.Backup
             var returnMap = Cartographer.GenerateMapFromRoom(startingRoom, remainingRooms.Count() / 2, remainingRooms, true);
 
             //This zone gets to choose the world name if any
-            var world = new World(new Map(returnMap, false), startingRoom.ZoneAffiliation.WorldName);
+            //var world = new World(new Map(returnMap, false), startingRoom.ZoneAffiliation.WorldName);
 
-            if (String.IsNullOrWhiteSpace(world.Name))
-                world.Name = "Dimension " + world.ID.ToString();
-
-            return world;
+            //if (String.IsNullOrWhiteSpace(world.Name))
+            //    world.Name = "Dimension " + world.ID.ToString();
         }
     }
 }

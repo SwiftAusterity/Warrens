@@ -11,13 +11,32 @@ namespace NetMud.DataStructure.Base.Place
     public interface IZoneData : IEntityBackingData, IEnvironmentData, ISingleton
     {
         /// <summary>
+        /// Templates for generating randomized locales for zones
+        /// </summary>
+        HashSet<IAdventureTemplate> Templates { get; set; }
+
+        /// <summary>
+        /// Perm locales within this zone should the system need to regenerate from scratch
+        /// </summary>
+        HashSet<ILocaleData> Locales { get; set; }
+
+        /// <summary>
         /// The midline elevation point "sea level" for this zone
         /// </summary>
         int BaseElevation { get; set; }
 
         /// <summary>
+        /// The fudge value for temperature variance
+        /// </summary>
+        int TemperatureCoefficient { get; set; }
+		
         /// What other zones does this zone exit to and are they initially visible
         /// </summary>
         Tuple<IZoneData, bool> ZoneExits { get; set; }
+
+        /// <summary>
+        /// The fudge value for pressure (weather pattern) variance
+        /// </summary>
+        int PressureCoefficient { get; set; }
     }
 }

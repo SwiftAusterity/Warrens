@@ -33,7 +33,7 @@ namespace NetMud.DataStructure.Base.Supporting
         /// Current temperature for this
         /// </summary>
         /// <returns>The current temperature in in-game units</returns>
-        int EffectiveCurrentTemperature();
+        int EffectiveTemperature();
 
         /// <summary>
         /// Is this considered outdoors (ie clear path to the sky)

@@ -47,12 +47,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataIntegrity\BaseDataIntegrity.cs" />
+    <Compile Include="DataIntegrity\LongDataIntegrityAttribute.cs" />
+    <Compile Include="DataIntegrity\IntDataIntegrityAttribute.cs" />
+    <Compile Include="DataIntegrity\StringDataIntegrityAttribute.cs" />
     <Compile Include="EntityBackingData\EntityBackingDataPartial.cs" />
     <Compile Include="EntityBackingData\NonPlayerCharacter.cs" />
     <Compile Include="EntityBackingData\Character.cs" />
     <Compile Include="EntityBackingData\InanimateData.cs" />
     <Compile Include="EntityBackingData\PathwayData.cs" />
     <Compile Include="EntityBackingData\RoomData.cs" />
+    <Compile Include="EntityBackingData\ZoneData.cs" />
     <Compile Include="Game\EntityPartial.cs" />
     <Compile Include="Game\Inanimate.cs" />
     <Compile Include="Game\LocationEntityPartial.cs" />
@@ -61,6 +66,7 @@
     <Compile Include="Game\Player.cs" />
     <Compile Include="Game\Room.cs" />
     <Compile Include="LookupData\NaturalResourceDataPartial.cs" />
+    <Compile Include="Game\World.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="LookupData\DimensionalModel.cs" />
     <Compile Include="LookupData\DimensionalModelData.cs" />
@@ -70,13 +76,14 @@
     <Compile Include="LookupData\Material.cs" />
     <Compile Include="LookupData\Race.cs" />
     <Compile Include="LookupData\LookupDataPartial.cs" />
-    <Compile Include="LookupData\Zone.cs" />
+    <Compile Include="Game\Zone.cs" />
     <Compile Include="System\Affect.cs" />
     <Compile Include="System\Constants.cs" />
     <Compile Include="System\EntityContainer.cs" />
     <Compile Include="System\BackingDataPartial.cs" />
     <Compile Include="LookupData\Fauna.cs" />
     <Compile Include="LookupData\Flora.cs" />
+    <Compile Include="System\EntityContainerData.cs" />
     <Compile Include="System\GlobalPosition.cs" />
     <Compile Include="System\LookupCriteria.cs" />
     <Compile Include="System\Map.cs" />

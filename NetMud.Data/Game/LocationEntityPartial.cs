@@ -251,7 +251,7 @@ namespace NetMud.Data.Game
             return Humidity;
         }
 
-        public virtual int EffectiveCurrentTemperature()
+        public virtual int EffectiveTemperature()
         {
             //TODO: More Stuff
             return Temperature;

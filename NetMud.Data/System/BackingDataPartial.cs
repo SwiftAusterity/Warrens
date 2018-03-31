@@ -1,4 +1,5 @@
-﻿using NetMud.DataAccess;
+﻿using NetMud.Data.DataIntegrity;
+using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.System;
 using Newtonsoft.Json;
@@ -17,6 +18,7 @@ namespace NetMud.Data.System
         /// <summary>
         /// Numerical iterative ID in the db
         /// </summary>
+        [LongDataIntegrity("ID is less than zero", -1)]
         public long ID { get; set; }
 
         /// <summary>
@@ -32,6 +34,7 @@ namespace NetMud.Data.System
         /// <summary>
         /// The unique name for this entry (also part of the accessor keywords)
         /// </summary>
+        [StringDataIntegrity("Name is blank")]
         public string Name { get; set; }
 
         /// <summary>
@@ -41,12 +44,24 @@ namespace NetMud.Data.System
         public virtual IList<string> FitnessReport()
         {
             var dataProblems = new List<string>();
+            var requiredProperties = GetType().GetProperties().Where(prop => prop.CustomAttributes.Any(attr => attr.AttributeType.BaseType == typeof(BaseDataIntegrity)));
 
-            if (String.IsNullOrWhiteSpace(Name))
-                dataProblems.Add("Name is blank.");
+            foreach (var property in requiredProperties)
+            {
+                foreach (var checker in property.GetCustomAttributes(typeof(BaseDataIntegrity), false))
+                {
+                    BaseDataIntegrity integrityCheck = (BaseDataIntegrity)checker;
 
-            if (ID < 0)
-                dataProblems.Add("ID is less than zero.");
+                    if (!integrityCheck.Verify(property.GetValue(property)))
+                        dataProblems.Add(integrityCheck.ErrorMessage);
+                }
+            }
+
+            //if (String.IsNullOrWhiteSpace(Name))
+            //    dataProblems.Add("Name is blank.");
+
+            //if (ID < 0)
+            //    dataProblems.Add("ID is less than zero.");
     
             return dataProblems;
         }
@@ -70,7 +85,7 @@ namespace NetMud.Data.System
         /// <returns>the object with ID and other db fields set</returns>
         public virtual IData Create()
         {
-            var accessor = new NetMud.DataAccess.FileSystem.BackingData();
+            var accessor = new DataAccess.FileSystem.BackingData();
 
             try
             {
@@ -95,7 +110,7 @@ namespace NetMud.Data.System
         /// <returns>success status</returns>
         public virtual bool Remove()
         {
-            var accessor = new NetMud.DataAccess.FileSystem.BackingData();
+            var accessor = new DataAccess.FileSystem.BackingData();
 
             try
             {
@@ -120,7 +135,7 @@ namespace NetMud.Data.System
         /// <returns>success status</returns>
         public virtual bool Save()
         {
-            var accessor = new NetMud.DataAccess.FileSystem.BackingData();
+            var accessor = new DataAccess.FileSystem.BackingData();
 
             try
             {
