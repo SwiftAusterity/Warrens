@@ -166,7 +166,7 @@ namespace NetMud.Data.EntityBackingData
         /// <returns>the object with ID and other db fields set</returns>
         public override IData Create()
         {
-            var accessor = new NetMud.DataAccess.FileSystem.PlayerData();
+            var accessor = new DataAccess.FileSystem.PlayerData();
 
             try
             {
@@ -188,7 +188,7 @@ namespace NetMud.Data.EntityBackingData
         /// <returns>success status</returns>
         public override bool Remove()
         {
-            var accessor = new NetMud.DataAccess.FileSystem.PlayerData();
+            var accessor = new DataAccess.FileSystem.PlayerData();
 
             try
             {
@@ -213,7 +213,7 @@ namespace NetMud.Data.EntityBackingData
         /// <returns>success status</returns>
         public override bool Save()
         {
-            var accessor = new NetMud.DataAccess.FileSystem.PlayerData();
+            var accessor = new DataAccess.FileSystem.PlayerData();
 
             try
             {

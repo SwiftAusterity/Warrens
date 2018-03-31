@@ -37,14 +37,14 @@ namespace NetMud.Data.Game
         /// </summary>
         public bool Claimable { get; set; }
 
-        public HashSet<ILocale> Locales { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public IEntityContainer<IMobile> MobilesInside { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public IEntityContainer<IInanimate> Contents { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public IEntityContainer<IPathway> Pathways { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public int Humidity { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public int Temperature { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public Dictionary<INaturalResource, int> NaturalResources { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public bool AlwaysVisible { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public HashSet<ILocale> Locales { get; set; }
+        public IEntityContainer<IMobile> MobilesInside { get; set; }
+        public IEntityContainer<IInanimate> Contents { get; set; }
+        public IEntityContainer<IPathway> Pathways { get; set; }
+        public int Humidity { get; set; }
+        public int Temperature { get; set; }
+        public Dictionary<INaturalResource, int> NaturalResources { get; set; }
+        public bool AlwaysVisible { get; set; }
 
         public string DiscoveryName => throw new NotImplementedException();
 
@@ -116,7 +116,8 @@ namespace NetMud.Data.Game
 
         public override Tuple<int, int, int> GetModelDimensions()
         {
-            throw new NotImplementedException();
+            //TODO
+            return new Tuple<int, int, int>(1, 1, 1);
         }
 
         public override void SpawnNewInWorld()

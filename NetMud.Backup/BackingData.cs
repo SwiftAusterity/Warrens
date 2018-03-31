@@ -22,7 +22,7 @@ namespace NetMud.Backup
         /// <returns>full or partial success</returns>
         public static bool WriteFullBackup()
         {
-            var fileAccessor = new NetMud.DataAccess.FileSystem.BackingData();
+            var fileAccessor = new DataAccess.FileSystem.BackingData();
 
             try
             {
@@ -74,7 +74,7 @@ namespace NetMud.Backup
             if (!objectType.GetInterfaces().Contains(typeof(IData)))
                 return false;
 
-            var fileAccessor = new NetMud.DataAccess.FileSystem.BackingData();
+            var fileAccessor = new DataAccess.FileSystem.BackingData();
             var typeDirectory = fileAccessor.BaseDirectory + fileAccessor.CurrentDirectoryName + objectType.Name + "/";
 
             if (!fileAccessor.VerifyDirectory(typeDirectory, false))
