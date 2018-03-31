@@ -1,4 +1,5 @@
 ﻿using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.Behaviors.System;
 using System.Collections.Generic;
@@ -21,9 +22,10 @@ namespace NetMud.DataStructure.Base.Place
         /// <param name="name">The name of the template requested, blank = use random</param>
         /// <returns>The locale generated</returns>
         ILocale GenerateAdventure(string name = "");
+
         /// <summary>
         /// Get the zones this exits to (factors in visibility)
         /// </summary>
-        IEnumerable<IZone> ZoneExits();
+        IEnumerable<IZone> ZoneExits(IEntity viewer);
     }
 }

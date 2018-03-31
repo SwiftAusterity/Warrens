@@ -7,7 +7,10 @@ using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.Behaviors.System;
-using NetMud.DataStructure.SupportingClasses;
+using NetMud.Data.System;
+using NetMud.DataAccess.Cache;
+using System.Linq;
+using NetMud.Data.EntityBackingData;
 
 namespace NetMud.Data.Game
 {
@@ -15,49 +18,67 @@ namespace NetMud.Data.Game
     /// Zones contain rooms
     /// </summary>
     [Serializable]
-    public class Zone : EntityPartial, IZone
+    public class Zone : LocationEntityPartial, IZone
     {
         /// <summary>
-        /// The midline elevation point "sea level" for this zone
+        /// Is this zone discoverable?
         /// </summary>
-        public int BaseElevation { get; set; }
+        public bool AlwaysVisible { get; set; }
 
         /// <summary>
-        /// The fudge value for temperature variance
+        /// The name used in the tag for discovery checking
         /// </summary>
-        public int TemperatureCoefficient { get; set; }
+        public string DiscoveryName
+        {
+            get
+            {
+                return "Zone_" + DataTemplate<IZoneData>().Name;
+            }
+        }
 
-        /// <summary>
-        /// The fudge value for pressure (weather pattern) variance
-        /// </summary>
-        public int PressureCoefficient { get; set; }
 
         /// <summary>
         /// Is this zone ownership malleable
         /// </summary>
         public bool Claimable { get; set; }
 
+        /// <summary>
+        /// Locales inside this zone
+        /// </summary>
         public HashSet<ILocale> Locales { get; set; }
-        public IEntityContainer<IMobile> MobilesInside { get; set; }
-        public IEntityContainer<IInanimate> Contents { get; set; }
-        public IEntityContainer<IPathway> Pathways { get; set; }
-        public int Humidity { get; set; }
-        public int Temperature { get; set; }
-        public Dictionary<INaturalResource, int> NaturalResources { get; set; }
-        public bool AlwaysVisible { get; set; }
 
-        public string DiscoveryName => throw new NotImplementedException();
+        /// <summary>
+        /// Natural resource counts used to populate locales and allow for gathering
+        /// </summary>
+        public Dictionary<INaturalResource, int> NaturalResources { get; set; }
 
         /// <summary>
         /// New up a "blank" zone entry
         /// </summary>
         public Zone()
         {
+            Contents = new EntityContainer<IInanimate>();
+            MobilesInside = new EntityContainer<IMobile>();
+            Pathways = new EntityContainer<IPathway>();
 
-            BaseElevation = 0;
-            TemperatureCoefficient = 0;
-            PressureCoefficient = 0;
             Claimable = false;
+        }
+
+        /// <summary>
+        /// News up an entity with its backing data
+        /// </summary>
+        /// <param name="room">the backing data</param>
+        public Zone(IZoneData zone)
+        {
+            Contents = new EntityContainer<IInanimate>();
+            MobilesInside = new EntityContainer<IMobile>();
+            Pathways = new EntityContainer<IPathway>();
+
+            Claimable = false;
+
+            DataTemplateId = zone.ID;
+
+            GetFromWorldOrSpawn();
         }
 
         ///// <summary>
@@ -122,87 +143,66 @@ namespace NetMud.Data.Game
 
         public override void SpawnNewInWorld()
         {
-            throw new NotImplementedException();
+            SpawnNewInWorld(new GlobalPosition { CurrentLocation = this, CurrentZone = this });
         }
 
         public override void SpawnNewInWorld(IGlobalPosition spawnTo)
         {
-            throw new NotImplementedException();
+            var dataTemplate = DataTemplate<IZoneData>();
+
+            BirthMark = LiveCache.GetUniqueIdentifier(dataTemplate);
+            Keywords = new string[] { dataTemplate.Name.ToLower() };
+            Birthdate = DateTime.Now;
         }
 
         public ILocale GenerateAdventure(string name = "")
         {
+            //TODO
             throw new NotImplementedException();
         }
 
-        public IEnumerable<ILocation> GetSurroundings(int strength)
+        public override IEnumerable<ILocation> GetSurroundings(int strength)
         {
-            throw new NotImplementedException();
+            //Zone is always 1
+            return base.GetSurroundings(1);
         }
-
-        public string MoveInto<T>(T thing)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string MoveInto<T>(T thing, string containerName)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string MoveFrom<T>(T thing)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string MoveFrom<T>(T thing, string containerName)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<T> GetContents<T>()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<T> GetContents<T>(string containerName)
-        {
-            throw new NotImplementedException();
-        }
-
-        public int EffectiveHumidity()
-        {
-            throw new NotImplementedException();
-        }
-
-        public int EffectiveTemperature()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool IsOutside()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Biome GetBiome()
-        {
-            throw new NotImplementedException();
-        }
-
+        
         public bool IsDiscovered(IEntity discoverer)
         {
-            throw new NotImplementedException();
+            //TODO
+
+            //discoverer.HasAccomplishment(DiscoveryName);
+
+            //For now
+            return true;
         }
 
         public void GetFromWorldOrSpawn()
         {
-            throw new NotImplementedException();
+            //Try to see if they are already there
+            var me = LiveCache.Get<IZone>(DataTemplateId, typeof(ZoneData));
+
+            //Isn't in the world currently
+            if (me == default(IZone))
+                SpawnNewInWorld();
+            else
+            {
+                BirthMark = me.BirthMark;
+                Birthdate = me.Birthdate;
+                DataTemplateId = me.DataTemplateId;
+                Contents = me.Contents;
+                MobilesInside = me.MobilesInside;
+                Pathways = me.Pathways;
+                Keywords = me.Keywords;
+                Position = me.Position;
+            }
         }
 
-        public IEnumerable<IZone> ZoneExits()
+        public IEnumerable<IZone> ZoneExits(IEntity viewer)
         {
-            throw new NotImplementedException();
+            return Pathways.EntitiesContained()
+                    .Where(path => path.ToLocation.GetType() == typeof(IZone) && ((IZone)path.ToLocation).IsDiscovered(viewer))
+                    .Select(path => (IZone)path.ToLocation);
         }
     }
 }

@@ -52,6 +52,7 @@
     <Compile Include="DataIntegrity\IntDataIntegrityAttribute.cs" />
     <Compile Include="DataIntegrity\StringDataIntegrityAttribute.cs" />
     <Compile Include="EntityBackingData\EntityBackingDataPartial.cs" />
+    <Compile Include="EntityBackingData\LocaleData.cs" />
     <Compile Include="EntityBackingData\NonPlayerCharacter.cs" />
     <Compile Include="EntityBackingData\Character.cs" />
     <Compile Include="EntityBackingData\InanimateData.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="EntityBackingData\ZoneData.cs" />
     <Compile Include="Game\EntityPartial.cs" />
     <Compile Include="Game\Inanimate.cs" />
+    <Compile Include="Game\Locale.cs" />
     <Compile Include="Game\LocationEntityPartial.cs" />
     <Compile Include="Game\Pathway.cs" />
     <Compile Include="Game\Intelligence.cs" />
