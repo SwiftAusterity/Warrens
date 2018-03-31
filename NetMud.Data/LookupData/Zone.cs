@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Script.Serialization;
 using NetMud.DataStructure.Base.System;
+using NetMud.Data.Game;
 
 namespace NetMud.Data.LookupData
 {
@@ -15,7 +16,7 @@ namespace NetMud.Data.LookupData
     /// Zones contain rooms
     /// </summary>
     [Serializable]
-    public class Zone : LookupDataPartial, IZone
+    public class Zone : LocationEntityPartial, IZone
     {
         /// <summary>
         /// The midline elevation point "sea level" for this zone
@@ -31,61 +32,7 @@ namespace NetMud.Data.LookupData
         /// The fudge value for pressure (weather pattern) variance
         /// </summary>
         public int PressureCoefficient { get; set; }
-
-        /// <summary>
-        /// Is this zone ownership malleable
-        /// </summary>
-        public bool Claimable { get; set; }
-
-        /// <summary>
-        /// The name it will confer to the world it loads to if it is the first zone to load a world
-        /// </summary>
-        public string WorldName { get; set; }
-
-        [ScriptIgnore]
-        [JsonIgnore]
-        private long _worldId { get; set; }
-
-        /// <summary>
-        /// What world does this belong to (determined after load)
-        /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        public IWorld World
-        {
-            get
-            {
-                if (_worldId > -1)
-                    return BackingDataCache.Get<IWorld>(_worldId);
-
-                return null;
-            }
-            set
-            {
-                _worldId = value.ID;
-            }
-        }
-
-        [ScriptIgnore]
-        [JsonIgnore]
-        private IMap _zoneMap { get; set; }
-
-        /// <summary>
-        /// The room array that makes up the world
-        /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        public IMap ZoneMap
-        {
-            get
-            {
-                if (_zoneMap == null && World != null)
-                    _zoneMap = new Map(Cartography.Cartographer.GetZoneMap(World.WorldMap.CoordinatePlane, ID), true);
-
-                return _zoneMap;
-            }
-        }
-
+        
         /// <summary>
         /// New up a "blank" zone entry
         /// </summary>
@@ -102,39 +49,7 @@ namespace NetMud.Data.LookupData
             PressureCoefficient = 0;
             Claimable = false;
         }
-
-        /// <summary>
-        /// Gets the errors for data fitness
-        /// </summary>
-        /// <returns>a bunch of text saying how awful your data is</returns>
-        public override IList<string> FitnessReport()
-        {
-            var dataProblems = base.FitnessReport();
-
-            if (String.IsNullOrWhiteSpace(WorldName))
-                dataProblems.Add("World name is empty or invalid.");
-
-            if (World == null)
-                dataProblems.Add("World is invalid.");
-
-            if (ZoneMap == null)
-                dataProblems.Add("Zone map is invalid.");
-
-            if (!Rooms().Any() || Rooms().Any(r => r == null))
-                dataProblems.Add("Zone has no rooms or at least one invalid room.");
-
-            return dataProblems;
-        }
-
-        /// <summary>
-        /// Renders the help text for this data object
-        /// </summary>
-        /// <returns>help text</returns>
-        public override IEnumerable<string> RenderHelpBody()
-        {
-            return base.RenderHelpBody();
-        }
-
+        
         /// <summary>
         /// Getall the rooms for the zone
         /// </summary>
@@ -143,16 +58,7 @@ namespace NetMud.Data.LookupData
         {
             return BackingDataCache.GetAll<IRoomData>().Where(room => room.ZoneAffiliation.Equals(this));
         }
-
-        /// <summary>
-        /// Get the absolute center room of the zone
-        /// </summary>
-        /// <returns>the central room of the zone</returns>
-        public IRoomData CentralRoom(int zIndex = -1)
-        {
-            return Cartography.Cartographer.FindCenterOfMap(ZoneMap.CoordinatePlane, zIndex);
-        }
-
+        
         /// <summary>
         /// Get the basic map render for the zone
         /// </summary>

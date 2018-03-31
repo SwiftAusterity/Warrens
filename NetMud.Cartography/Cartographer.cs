@@ -24,19 +24,17 @@ namespace NetMud.Cartography
             if (origin == null || direction == MovementDirectionType.None)
                 return null;
 
-            var worldMap = origin.ZoneAffiliation.World.WorldMap.CoordinatePlane;
-
             var steps = Utilities.GetDirectionStep(direction);
             var newX = origin.Coordinates.Item1 + steps.Item1;
             var newY = origin.Coordinates.Item2 + steps.Item2;
             var newZ = origin.Coordinates.Item3 + steps.Item3;
 
             //out of bounds
-            if (Utilities.IsOutOfBounds(new Tuple<int,int,int>(newX, newY, newZ), worldMap))
-                return null;
+           // if (Utilities.IsOutOfBounds(new Tuple<int,int,int>(newX, newY, newZ), worldMap))
+           //     return null;
 
-            if (worldMap[newX, newY, newZ] > -1)
-                return BackingDataCache.Get<IRoomData>(worldMap[newX, newY, newZ]);
+            //if (worldMap[newX, newY, newZ] > -1)
+             //   return BackingDataCache.Get<IRoomData>(worldMap[newX, newY, newZ]);
 
             return null;
         }
@@ -80,7 +78,7 @@ namespace NetMud.Cartography
                     {
                         var room = BackingDataCache.Get<IRoomData>(fullMap[x, y, z]);
 
-                        if (room == null || room.ZoneAffiliation == null || !room.ZoneAffiliation.ID.Equals(zoneId))
+                        if (room == null)
                             continue;
 
                         newMap[x, y, z] = fullMap[x, y, z];

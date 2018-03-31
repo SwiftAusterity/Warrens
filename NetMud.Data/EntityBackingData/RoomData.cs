@@ -52,24 +52,24 @@ namespace NetMud.Data.EntityBackingData
             }
         }
 
-        [JsonProperty("ZoneAffiliation")]
-        private long _zoneAffiliation { get; set; }
+        [JsonProperty("LocaleAffiliation")]
+        private long _affiliation { get; set; }
 
         /// <summary>
         /// What zone this belongs to
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
-        public IZone ZoneAffiliation
+        public ILocaleData LocaleAffiliation
         {
             get
             {
-                return BackingDataCache.Get<IZone>(_zoneAffiliation);
+                return BackingDataCache.Get<ILocaleData>(_affiliation);
             }
             set
             {
                 if(value != null)
-                    _zoneAffiliation = value.ID;
+                    _affiliation = value.ID;
             }
         }
 
@@ -111,8 +111,8 @@ namespace NetMud.Data.EntityBackingData
             if (Medium == null)
                 dataProblems.Add("Medium material is invalid.");
 
-            if (ZoneAffiliation == null)
-                dataProblems.Add("Zone is invalid.");
+            if (LocaleAffiliation == null)
+                dataProblems.Add("Locale  is invalid.");
 
             if (Coordinates.Item1 < 0 || Coordinates.Item2 < 0 || Coordinates.Item3 < 0)
                 dataProblems.Add("Coordinates are invalid.");

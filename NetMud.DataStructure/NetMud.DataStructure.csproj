@@ -44,16 +44,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base\EntityBackingData\ILocaleData.cs" />
     <Compile Include="Base\EntityBackingData\INonPlayerCharacter.cs" />
     <Compile Include="Base\EntityBackingData\IInanimateData.cs" />
     <Compile Include="Base\EntityBackingData\IPathwayData.cs" />
     <Compile Include="Base\EntityBackingData\IRoomData.cs" />
-    <Compile Include="Base\Place\IMaps.cs" />
+    <Compile Include="Base\EntityBackingData\IZoneData.cs" />
+    <Compile Include="Base\Place\IMap.cs" />
     <Compile Include="Base\Place\IPathway.cs" />
     <Compile Include="Base\Place\IRoom.cs" />
-    <Compile Include="Base\Place\IWorld.cs" />
+    <Compile Include="Base\Place\ILocale.cs" />
     <Compile Include="Base\Place\IZone.cs" />
     <Compile Include="Base\Skills\ISkpell.cs" />
+    <Compile Include="Base\Supporting\Biome.cs" />
     <Compile Include="Base\Supporting\IAffect.cs" />
     <Compile Include="Base\Supporting\IAilment.cs" />
     <Compile Include="Base\Supporting\ICurrency.cs" />
@@ -62,6 +65,7 @@
     <Compile Include="Base\Supporting\IDimensionalModelData.cs" />
     <Compile Include="Base\Supporting\IDimensionalModelNode.cs" />
     <Compile Include="Base\Supporting\IDimensionalModelPlane.cs" />
+    <Compile Include="Base\Supporting\IEnvironmentData.cs" />
     <Compile Include="Base\Supporting\IEnvironment.cs" />
     <Compile Include="Base\Supporting\IFauna.cs" />
     <Compile Include="Base\Supporting\IFlora.cs" />

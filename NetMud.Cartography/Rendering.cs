@@ -34,21 +34,21 @@ namespace NetMud.Cartography
         /// <returns>a single string that is an ascii map</returns>
         public static string RenderRadiusMap(IRoomData room, int radius, bool forAdmin = true, bool withPathways = true)
         {
-            var asciiMap = new StringBuilder();
+            //var asciiMap = new StringBuilder();
 
-            //1. Get world map
-            var ourWorld = room.ZoneAffiliation.World;
+            ////1. Get world map
+            var ourWorld = room.LocaleAffiliation;
 
-            //2. Get slice of room from world map
+            ////2. Get slice of room from world map
             var map = Cartographer.TakeSliceOfMap(new Tuple<int, int>(Math.Max(room.Coordinates.Item1 - radius, 0), room.Coordinates.Item1 + radius)
                                                 , new Tuple<int, int>(Math.Max(room.Coordinates.Item2 - radius, 0), room.Coordinates.Item2 + radius)
                                                 , new Tuple<int, int>(Math.Max(room.Coordinates.Item3 - 1, 0), room.Coordinates.Item3 + 1)
-                                                , ourWorld.WorldMap.CoordinatePlane, true);
+                                                , new long[1,1,1], true);
 
-            //3. Flatten the map
+            ////3. Flatten the map
             var flattenedMap = Cartographer.GetSinglePlane(map, room.Coordinates.Item3);
 
-            //4. Render slice of room
+            ////4. Render slice of room
             return RenderMap(flattenedMap, forAdmin, withPathways, room);
         }
 

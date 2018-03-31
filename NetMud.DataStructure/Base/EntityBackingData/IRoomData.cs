@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.Base.Place;
-using System;
 using NetMud.DataStructure.Behaviors.System;
+using System;
+using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Base.EntityBackingData
 {
@@ -23,14 +23,14 @@ namespace NetMud.DataStructure.Base.EntityBackingData
         IMaterial Medium { get; set; }
 
         /// <summary>
-        /// What zone does this belong to
-        /// </summary>
-        IZone ZoneAffiliation { get; set; }
-
-        /// <summary>
         /// Current coordinates of the room on its world map
         /// </summary>
         Tuple<int, int, int> Coordinates { get; set; }
+
+        /// <summary>
+        /// The Locale this is affiliated with
+        /// </summary>
+        ILocaleData LocaleAffiliation { get; set; }
 
         /// <summary>
         /// What pathways are affiliated with this room data (what it spawns with)

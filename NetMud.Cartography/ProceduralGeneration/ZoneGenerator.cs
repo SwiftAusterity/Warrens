@@ -80,7 +80,7 @@ namespace NetMud.Cartography.ProceduralGeneration
         /// <summary>
         /// The zone we're filling
         /// </summary>
-        public IZone Zone { get; private set; }
+        public IZoneData Zone { get; private set; }
 
         /// <summary>
         /// The room map array
@@ -92,7 +92,7 @@ namespace NetMud.Cartography.ProceduralGeneration
         /// </summary>
         public bool Primed { get; private set; }
 
-        public ZoneGenerator(int seed, IZone zone, int width, int length, int elevation, int depth)
+        public ZoneGenerator(int seed, IZoneData zone, int width, int length, int elevation, int depth)
         {
             VerifyZone(zone);
             VerifyDimensions(width, length, elevation, depth);
@@ -110,7 +110,7 @@ namespace NetMud.Cartography.ProceduralGeneration
             RoomMap = new long[width * 3 + 1, length * 3 + 1, (elevation + depth) * 3 + 1];
         }
 
-        public ZoneGenerator(IZone zone, int width, int length, int elevation, int depth)
+        public ZoneGenerator(IZoneData zone, int width, int length, int elevation, int depth)
         {
             VerifyZone(zone);
             VerifyDimensions(width, length, elevation, depth);
@@ -221,13 +221,10 @@ namespace NetMud.Cartography.ProceduralGeneration
         /// <summary>
         /// We just throw errors, no need for a return value
         /// </summary>
-        private void VerifyZone(IZone zone)
+        private void VerifyZone(IZoneData zone)
         {
             if (zone == null)
                 throw new ArgumentNullException("Zone must not be null.");
-
-            if (zone.Rooms().Any())
-                throw new ArgumentOutOfRangeException("Zone must be devoid of rooms.");
 
             if (zone.FitnessProblems)
                 throw new ArgumentOutOfRangeException("Zone must have data integrity.");
