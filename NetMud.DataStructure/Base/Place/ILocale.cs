@@ -1,6 +1,7 @@
 ﻿using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.Behaviors.System;
+using NetMud.DataStructure.SupportingClasses;
 using System;
 using System.Collections.Generic;
 
@@ -9,18 +10,28 @@ namespace NetMud.DataStructure.Base.Place
     /// <summary>
     /// Collection of rooms in a zone
     /// </summary>
-    public interface ILocale : IEntity, ILocation, ISpawnAsSingleton
+    public interface ILocale : IEntity, ISpawnAsSingleton
     {
         /// <summary>
-        /// The room array that makes up the world
+        /// The zone this lives in
         /// </summary>
-        IMap InteriorMap { get; }
+        IZone Affiliation { get; set; }
 
         /// <summary>
         /// Get all the rooms for the zone
         /// </summary>
         /// <returns>the rooms for the zone</returns>
-        IEnumerable<IRoom> Rooms();
+        IEnumerable<IRoom> Rooms { get; set; }
+
+        /// <summary>
+        /// Pathways leading out of this
+        /// </summary>
+        IEntityContainer<IPathway> Pathways { get; set; }
+
+        /// <summary>
+        /// The map of the rooms inside
+        /// </summary>
+        IMap Interior { get; set; }
 
         /// <summary>
         /// The rooms that are also exits to zones
@@ -32,13 +43,14 @@ namespace NetMud.DataStructure.Base.Place
         /// The rooms that are also exits to locales
         /// </summary>
         /// <returns>Rooms</returns>
-        Dictionary<IRoom, IZone> LocaleExitPoints();
-
+        Dictionary<IRoom, ILocale> LocaleExitPoints();
 
         /// <summary>
-        /// The map of the rooms inside
+        /// Get the surrounding locations based on a strength radius
         /// </summary>
-        IMap Interior { get; set; }
+        /// <param name="strength">number of places to go out</param>
+        /// <returns>list of valid surrounding locations</returns>
+        IEnumerable<ILocation> GetSurroundings();
 
         /// <summary>
         /// Get the absolute center room of the locale
