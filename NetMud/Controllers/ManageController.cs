@@ -108,10 +108,12 @@ namespace NetMud.Controllers
                 authedUser = UserManager.FindById(userId)
             };
 
-            var newChar = new Character();
-            newChar.Name = Name;
-            newChar.SurName = SurName;
-            newChar.Gender = Gender;
+            var newChar = new Character
+            {
+                Name = Name,
+                SurName = SurName,
+                Gender = Gender
+            };
             var race = BackingDataCache.Get<Race>(raceId);
 
             if (race != null)

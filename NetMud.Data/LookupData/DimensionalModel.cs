@@ -58,8 +58,10 @@ namespace NetMud.Data.LookupData
                 else
                 {
                     // 0d models don't have real values
-                    var returnValue = new DimensionalModelData();
-                    returnValue.ModelType = DimensionalModelType.None;
+                    var returnValue = new DimensionalModelData
+                    {
+                        ModelType = DimensionalModelType.None
+                    };
 
                     return returnValue;
                 }
@@ -142,8 +144,10 @@ namespace NetMud.Data.LookupData
             SurfaceCavitation = surfaceCavitation;
             Composition = new Dictionary<string, IMaterial>();
 
-            ModelBackingData = new DimensionalModelData();
-            ModelBackingData.ModelType = DimensionalModelType.None;
+            ModelBackingData = new DimensionalModelData
+            {
+                ModelType = DimensionalModelType.None
+            };
         }
     }
 }

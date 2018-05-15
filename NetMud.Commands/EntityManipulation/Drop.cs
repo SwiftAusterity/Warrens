@@ -37,14 +37,20 @@ namespace NetMud.Commands.EntityManipulation
 
             sb.Add("You drop $S$.");
 
-            var toActor = new Message(MessagingType.Visible, 1);
-            toActor.Override = sb;
+            var toActor = new Message(MessagingType.Visible, 1)
+            {
+                Override = sb
+            };
 
-            var toOrigin = new Message(MessagingType.Visible, 30);
-            toOrigin.Override = new string[] { "$A$ drops $S$." };
+            var toOrigin = new Message(MessagingType.Visible, 30)
+            {
+                Override = new string[] { "$A$ drops $S$." }
+            };
 
-            var messagingObject = new MessageCluster(toActor);
-            messagingObject.ToOrigin = new List<IMessage> { toOrigin };
+            var messagingObject = new MessageCluster(toActor)
+            {
+                ToOrigin = new List<IMessage> { toOrigin }
+            };
 
             messagingObject.ExecuteMessaging(Actor, thing, null, OriginLocation.CurrentLocation, null);
         }

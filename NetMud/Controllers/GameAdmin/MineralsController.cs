@@ -41,12 +41,14 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageMineralsViewModel(BackingDataCache.GetAll<IMineral>());
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            var vModel = new ManageMineralsViewModel(BackingDataCache.GetAll<IMineral>())
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
-            vModel.CurrentPageNumber = CurrentPageNumber;
-            vModel.ItemsPerPage = ItemsPerPage;
-            vModel.SearchTerms = SearchTerms;
+                CurrentPageNumber = CurrentPageNumber,
+                ItemsPerPage = ItemsPerPage,
+                SearchTerms = SearchTerms
+            };
 
             return View("~/Views/GameAdmin/Minerals/Index.cshtml", vModel);
         }
@@ -83,11 +85,13 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add()
         {
-            var vModel = new AddEditMineralsViewModel();
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-            vModel.ValidMaterials = BackingDataCache.GetAll<IMaterial>();
-            vModel.ValidInanimateDatas = BackingDataCache.GetAll<IInanimateData>();
-            vModel.ValidMinerals = BackingDataCache.GetAll<IMineral>();
+            var vModel = new AddEditMineralsViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                ValidMaterials = BackingDataCache.GetAll<IMaterial>(),
+                ValidInanimateDatas = BackingDataCache.GetAll<IInanimateData>(),
+                ValidMinerals = BackingDataCache.GetAll<IMineral>()
+            };
 
             return View("~/Views/GameAdmin/Minerals/Add.cshtml", vModel);
         }
@@ -99,17 +103,19 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var newObj = new Mineral();
-            newObj.Name = vModel.Name;
-            newObj.HelpText = vModel.HelpText;
-            newObj.Solubility = vModel.Solubility;
-            newObj.Fertility = vModel.Fertility;
-            newObj.AmountMultiplier = vModel.AmountMultiplier;
-            newObj.Rarity = vModel.Rarity;
-            newObj.PuissanceVariance = vModel.PuissanceVariance;
-            newObj.ElevationRange = new Tuple<int, int>(vModel.ElevationRangeLow, vModel.ElevationRangeHigh);
-            newObj.TemperatureRange = new Tuple<int, int>(vModel.TemperatureRangeLow, vModel.TemperatureRangeHigh);
-            newObj.HumidityRange = new Tuple<int, int>(vModel.HumidityRangeLow, vModel.HumidityRangeHigh);
+            var newObj = new Mineral
+            {
+                Name = vModel.Name,
+                HelpText = vModel.HelpText,
+                Solubility = vModel.Solubility,
+                Fertility = vModel.Fertility,
+                AmountMultiplier = vModel.AmountMultiplier,
+                Rarity = vModel.Rarity,
+                PuissanceVariance = vModel.PuissanceVariance,
+                ElevationRange = new Tuple<int, int>(vModel.ElevationRangeLow, vModel.ElevationRangeHigh),
+                TemperatureRange = new Tuple<int, int>(vModel.TemperatureRangeLow, vModel.TemperatureRangeHigh),
+                HumidityRange = new Tuple<int, int>(vModel.HumidityRangeLow, vModel.HumidityRangeHigh)
+            };
 
             var newRock = BackingDataCache.Get<IMaterial>(vModel.Rock);
             if (newRock != null)
@@ -161,11 +167,13 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(long id)
         {
             string message = string.Empty;
-            var vModel = new AddEditMineralsViewModel();
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-            vModel.ValidMaterials = BackingDataCache.GetAll<IMaterial>();
-            vModel.ValidMinerals = BackingDataCache.GetAll<IMineral>().Where(m => m.ID != id);
-            vModel.ValidInanimateDatas = BackingDataCache.GetAll<IInanimateData>();
+            var vModel = new AddEditMineralsViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                ValidMaterials = BackingDataCache.GetAll<IMaterial>(),
+                ValidMinerals = BackingDataCache.GetAll<IMineral>().Where(m => m.ID != id),
+                ValidInanimateDatas = BackingDataCache.GetAll<IInanimateData>()
+            };
 
             var obj = BackingDataCache.Get<IMineral>(id);
 

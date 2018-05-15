@@ -52,14 +52,20 @@ namespace NetMud.Commands.EntityManipulation
             place.MoveFrom(thing);
             actor.MoveInto(thing);
 
-            var toActor = new Message(MessagingType.Visible, 1);
-            toActor.Override = sb;
+            var toActor = new Message(MessagingType.Visible, 1)
+            {
+                Override = sb
+            };
 
-            var toOrigin = new Message(MessagingType.Visible, 30);
-            toOrigin.Override = new string[] { toRoomMessage };
+            var toOrigin = new Message(MessagingType.Visible, 30)
+            {
+                Override = new string[] { toRoomMessage }
+            };
 
-            var messagingObject = new MessageCluster(toActor);
-            messagingObject.ToOrigin = new List<IMessage> { toOrigin };
+            var messagingObject = new MessageCluster(toActor)
+            {
+                ToOrigin = new List<IMessage> { toOrigin }
+            };
 
             messagingObject.ExecuteMessaging(Actor, thing, (IEntity)Target, OriginLocation.CurrentLocation, null);
         }

@@ -37,14 +37,16 @@ namespace NetMud.Controllers.GameAdmin
         {
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
 
-            var vModel = new ManagePlayersViewModel(UserManager.Users);
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            var vModel = new ManagePlayersViewModel(UserManager.Users)
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
-            vModel.CurrentPageNumber = CurrentPageNumber;
-            vModel.ItemsPerPage = ItemsPerPage;
-            vModel.SearchTerms = SearchTerms;
+                CurrentPageNumber = CurrentPageNumber,
+                ItemsPerPage = ItemsPerPage,
+                SearchTerms = SearchTerms,
 
-            vModel.ValidRoles = roleManager.Roles.ToList();
+                ValidRoles = roleManager.Roles.ToList()
+            };
 
             return View("~/Views/GameAdmin/Player/Index.cshtml", vModel);
         }

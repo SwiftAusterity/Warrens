@@ -58,8 +58,10 @@ namespace NetMud.Commands.System
 
             returnStrings.Add(sb.ToString());
 
-            var toActor = new Message(MessagingType.Visible, 1);
-            toActor.Override = returnStrings;
+            var toActor = new Message(MessagingType.Visible, 1)
+            {
+                Override = returnStrings
+            };
 
             var messagingObject = new MessageCluster(toActor);
 

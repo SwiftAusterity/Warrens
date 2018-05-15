@@ -35,10 +35,12 @@ namespace NetMud.Controllers
 
         public ActionResult Index(string selectedLog)
         {
-            var dashboardModel = new DashboardViewModel();
-            dashboardModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            var dashboardModel = new DashboardViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
-            dashboardModel.ChannelNames = LoggingUtility.GetCurrentLogNames();
+                ChannelNames = LoggingUtility.GetCurrentLogNames()
+            };
 
             if (!String.IsNullOrWhiteSpace(selectedLog))
             {

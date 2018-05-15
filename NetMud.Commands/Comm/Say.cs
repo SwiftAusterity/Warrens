@@ -32,17 +32,23 @@ namespace NetMud.Commands.Comm
 
             sb.Add(String.Format("You say '{0}'", Subject));
 
-            var toActor = new Message(MessagingType.Audible, 1);
-            toActor.Override = sb;
+            var toActor = new Message(MessagingType.Audible, 1)
+            {
+                Override = sb
+            };
 
             var areaString = new string[] { String.Format("$A$ says '{0}'", Subject) };
 
-            var toArea = new Message(MessagingType.Audible, 30);
-            toArea.Override = areaString;
+            var toArea = new Message(MessagingType.Audible, 30)
+            {
+                Override = areaString
+            };
 
             //TODO: language outputs
-            var messagingObject = new MessageCluster(toActor);
-            messagingObject.ToOrigin = new List<IMessage> { toArea };
+            var messagingObject = new MessageCluster(toActor)
+            {
+                ToOrigin = new List<IMessage> { toArea }
+            };
 
             messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation.CurrentLocation, null);
         }

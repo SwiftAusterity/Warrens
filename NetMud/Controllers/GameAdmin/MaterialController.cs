@@ -38,12 +38,14 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageMaterialDataViewModel(BackingDataCache.GetAll<Material>());
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            var vModel = new ManageMaterialDataViewModel(BackingDataCache.GetAll<Material>())
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
-            vModel.CurrentPageNumber = CurrentPageNumber;
-            vModel.ItemsPerPage = ItemsPerPage;
-            vModel.SearchTerms = SearchTerms;
+                CurrentPageNumber = CurrentPageNumber,
+                ItemsPerPage = ItemsPerPage,
+                SearchTerms = SearchTerms
+            };
 
             return View("~/Views/GameAdmin/Material/Index.cshtml", vModel);
         }
@@ -79,9 +81,11 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add()
         {
-            var vModel = new AddEditMaterialViewModel();
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-            vModel.ValidMaterials = BackingDataCache.GetAll<IMaterial>();
+            var vModel = new AddEditMaterialViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                ValidMaterials = BackingDataCache.GetAll<IMaterial>()
+            };
 
             return View("~/Views/GameAdmin/Material/Add.cshtml", vModel);
         }
@@ -94,20 +98,22 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var newObj = new Material();
-            newObj.Name = vModel.Name;
-            newObj.Conductive = vModel.Conductive;
-            newObj.Density = vModel.Density;
-            newObj.Ductility = vModel.Ductility;
-            newObj.Flammable = vModel.Flammable;
-            newObj.GasPoint = vModel.GasPoint;
-            newObj.Magnetic = vModel.Magnetic;
-            newObj.Mallebility = vModel.Mallebility;
-            newObj.Porosity = vModel.Porosity;
-            newObj.SolidPoint = vModel.SolidPoint;
-            newObj.TemperatureRetention = vModel.TemperatureRetention;
-            newObj.Viscosity = vModel.Viscosity;
-            newObj.HelpText = vModel.HelpBody;
+            var newObj = new Material
+            {
+                Name = vModel.Name,
+                Conductive = vModel.Conductive,
+                Density = vModel.Density,
+                Ductility = vModel.Ductility,
+                Flammable = vModel.Flammable,
+                GasPoint = vModel.GasPoint,
+                Magnetic = vModel.Magnetic,
+                Mallebility = vModel.Mallebility,
+                Porosity = vModel.Porosity,
+                SolidPoint = vModel.SolidPoint,
+                TemperatureRetention = vModel.TemperatureRetention,
+                Viscosity = vModel.Viscosity,
+                HelpText = vModel.HelpBody
+            };
 
             if (vModel.Resistances != null)
             {
@@ -165,9 +171,11 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(int id)
         {
             string message = string.Empty;
-            var vModel = new AddEditMaterialViewModel();
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-            vModel.ValidMaterials = BackingDataCache.GetAll<Material>();
+            var vModel = new AddEditMaterialViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                ValidMaterials = BackingDataCache.GetAll<Material>()
+            };
 
             var obj = BackingDataCache.Get<Material>(id);
 

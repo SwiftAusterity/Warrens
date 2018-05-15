@@ -35,14 +35,20 @@ namespace NetMud.Commands.Rendering
             foreach (var thing in chr.Inventory.EntitiesContained())
                 sb.AddRange(thing.RenderToLook(chr));
 
-            var toActor = new Message(MessagingType.Visible, 1);
-            toActor.Override = sb;
+            var toActor = new Message(MessagingType.Visible, 1)
+            {
+                Override = sb
+            };
 
-            var toOrigin = new Message(MessagingType.Visible, 30);
-            toOrigin.Override = new string[] { "$A$ sifts through $G$ belongings." };
+            var toOrigin = new Message(MessagingType.Visible, 30)
+            {
+                Override = new string[] { "$A$ sifts through $G$ belongings." }
+            };
 
-            var messagingObject = new MessageCluster(toActor);
-            messagingObject.ToOrigin = new List<IMessage> { toOrigin };
+            var messagingObject = new MessageCluster(toActor)
+            {
+                ToOrigin = new List<IMessage> { toOrigin }
+            };
 
             messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation.CurrentLocation, null);
         }

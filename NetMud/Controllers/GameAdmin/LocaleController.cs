@@ -37,12 +37,14 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageLocaleDataViewModel(BackingDataCache.GetAll<ILocaleData>());
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            var vModel = new ManageLocaleDataViewModel(BackingDataCache.GetAll<ILocaleData>())
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
-            vModel.CurrentPageNumber = CurrentPageNumber;
-            vModel.ItemsPerPage = ItemsPerPage;
-            vModel.SearchTerms = SearchTerms;
+                CurrentPageNumber = CurrentPageNumber,
+                ItemsPerPage = ItemsPerPage,
+                SearchTerms = SearchTerms
+            };
 
             return View("~/Views/GameAdmin/Locale/Index.cshtml", vModel);
         }
@@ -79,8 +81,10 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add()
         {
-            var vModel = new AddEditLocaleDataViewModel();
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            var vModel = new AddEditLocaleDataViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId())
+            };
 
             return View("~/Views/GameAdmin/Locale/Add.cshtml", vModel);
         }
@@ -92,8 +96,10 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var newObj = new LocaleData();
-            newObj.Name = vModel.Name;
+            var newObj = new LocaleData
+            {
+                Name = vModel.Name
+            };
 
             if (newObj.Create() == null)
                 message = "Error; Creation failed.";
@@ -110,8 +116,10 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(long id)
         {
             string message = string.Empty;
-            var vModel = new AddEditLocaleDataViewModel();
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            var vModel = new AddEditLocaleDataViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId())
+            };
 
             ILocaleData obj = BackingDataCache.Get<ILocaleData>(id);
 

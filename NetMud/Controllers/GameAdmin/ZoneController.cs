@@ -38,12 +38,14 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageZoneDataViewModel(BackingDataCache.GetAll<IZoneData>());
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            var vModel = new ManageZoneDataViewModel(BackingDataCache.GetAll<IZoneData>())
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
-            vModel.CurrentPageNumber = CurrentPageNumber;
-            vModel.ItemsPerPage = ItemsPerPage;
-            vModel.SearchTerms = SearchTerms;
+                CurrentPageNumber = CurrentPageNumber,
+                ItemsPerPage = ItemsPerPage,
+                SearchTerms = SearchTerms
+            };
 
             return View("~/Views/GameAdmin/Zone/Index.cshtml", vModel);
         }
@@ -80,8 +82,10 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add()
         {
-            var vModel = new AddEditZoneDataViewModel(Enumerable.Empty<ILocaleData>());
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            var vModel = new AddEditZoneDataViewModel(Enumerable.Empty<ILocaleData>())
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId())
+            };
 
             return View("~/Views/GameAdmin/Zone/Add.cshtml", vModel);
         }
@@ -93,11 +97,13 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var newObj = new ZoneData();
-            newObj.Name = vModel.Name;
-            newObj.BaseElevation = vModel.BaseElevation;
-            newObj.PressureCoefficient = vModel.PressureCoefficient;
-            newObj.TemperatureCoefficient = vModel.TemperatureCoefficient;
+            var newObj = new ZoneData
+            {
+                Name = vModel.Name,
+                BaseElevation = vModel.BaseElevation,
+                PressureCoefficient = vModel.PressureCoefficient,
+                TemperatureCoefficient = vModel.TemperatureCoefficient
+            };
 
             if (newObj.Create() == null)
                 message = "Error; Creation failed.";
@@ -123,14 +129,16 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = message });
             }
 
-            var vModel = new AddEditZoneDataViewModel(obj.Locales);
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            var vModel = new AddEditZoneDataViewModel(obj.Locales)
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
-            vModel.DataObject = obj;
-            vModel.Name = obj.Name;
-            vModel.BaseElevation = obj.BaseElevation;
-            vModel.PressureCoefficient = obj.PressureCoefficient;
-            vModel.TemperatureCoefficient = obj.TemperatureCoefficient;
+                DataObject = obj,
+                Name = obj.Name,
+                BaseElevation = obj.BaseElevation,
+                PressureCoefficient = obj.PressureCoefficient,
+                TemperatureCoefficient = obj.TemperatureCoefficient
+            };
 
             return View("~/Views/GameAdmin/Zone/Edit.cshtml", vModel);
         }

@@ -44,12 +44,14 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageRaceDataViewModel(BackingDataCache.GetAll<IRace>());
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            var vModel = new ManageRaceDataViewModel(BackingDataCache.GetAll<IRace>())
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
-            vModel.CurrentPageNumber = CurrentPageNumber;
-            vModel.ItemsPerPage = ItemsPerPage;
-            vModel.SearchTerms = SearchTerms;
+                CurrentPageNumber = CurrentPageNumber,
+                ItemsPerPage = ItemsPerPage,
+                SearchTerms = SearchTerms
+            };
 
             return View("~/Views/GameAdmin/Race/Index.cshtml", vModel);
         }
@@ -85,11 +87,13 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add()
         {
-            var vModel = new AddEditRaceViewModel();
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-            vModel.ValidMaterials = BackingDataCache.GetAll<IMaterial>();
-            vModel.ValidObjects = BackingDataCache.GetAll<IInanimateData>();
-            vModel.ValidRooms = BackingDataCache.GetAll<IRoomData>();
+            var vModel = new AddEditRaceViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                ValidMaterials = BackingDataCache.GetAll<IMaterial>(),
+                ValidObjects = BackingDataCache.GetAll<IInanimateData>(),
+                ValidRooms = BackingDataCache.GetAll<IRoomData>()
+            };
 
             return View("~/Views/GameAdmin/Race/Add.cshtml", vModel);
         }
@@ -102,8 +106,10 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var newObj = new Race();
-            newObj.Name = vModel.Name;
+            var newObj = new Race
+            {
+                Name = vModel.Name
+            };
 
             if (vModel.ArmsID > 0 && vModel.ArmsAmount > 0)
             {
@@ -209,11 +215,13 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(int id)
         {
             string message = string.Empty;
-            var vModel = new AddEditRaceViewModel();
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-            vModel.ValidMaterials = BackingDataCache.GetAll<IMaterial>();
-            vModel.ValidObjects = BackingDataCache.GetAll<IInanimateData>();
-            vModel.ValidRooms = BackingDataCache.GetAll<IRoomData>();
+            var vModel = new AddEditRaceViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                ValidMaterials = BackingDataCache.GetAll<IMaterial>(),
+                ValidObjects = BackingDataCache.GetAll<IInanimateData>(),
+                ValidRooms = BackingDataCache.GetAll<IRoomData>()
+            };
 
             var obj = BackingDataCache.Get<IRace>(id);
 

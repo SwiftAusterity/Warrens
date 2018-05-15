@@ -48,18 +48,26 @@ namespace NutMud.Commands.Rendering
                 sb.AddRange(lookTarget.RenderToLook(Actor));
             }
 
-            var toActor = new Message(MessagingType.Visible, 1);
-            toActor.Override = sb;
+            var toActor = new Message(MessagingType.Visible, 1)
+            {
+                Override = sb
+            };
 
-            var toOrigin = new Message(MessagingType.Visible, 5);
-            toOrigin.Override = new string[] { "$A$ looks at $T$." };
+            var toOrigin = new Message(MessagingType.Visible, 5)
+            {
+                Override = new string[] { "$A$ looks at $T$." }
+            };
 
-            var toSubject = new Message(MessagingType.Visible, 1);
-            toSubject.Override = new string[] { "$A$ looks at $T$." };
+            var toSubject = new Message(MessagingType.Visible, 1)
+            {
+                Override = new string[] { "$A$ looks at $T$." }
+            };
 
-            var messagingObject = new MessageCluster(toActor);
-            messagingObject.ToOrigin = new List<IMessage> { toOrigin };
-            messagingObject.ToSubject = new List<IMessage> { toSubject };
+            var messagingObject = new MessageCluster(toActor)
+            {
+                ToOrigin = new List<IMessage> { toOrigin },
+                ToSubject = new List<IMessage> { toSubject }
+            };
 
             messagingObject.ExecuteMessaging(Actor, (IEntity)Subject, null, OriginLocation.CurrentLocation, null);
         }

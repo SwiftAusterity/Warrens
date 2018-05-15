@@ -37,12 +37,14 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageNPCDataViewModel(BackingDataCache.GetAll<NonPlayerCharacter>());
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            var vModel = new ManageNPCDataViewModel(BackingDataCache.GetAll<NonPlayerCharacter>())
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
-            vModel.CurrentPageNumber = CurrentPageNumber;
-            vModel.ItemsPerPage = ItemsPerPage;
-            vModel.SearchTerms = SearchTerms;
+                CurrentPageNumber = CurrentPageNumber,
+                ItemsPerPage = ItemsPerPage,
+                SearchTerms = SearchTerms
+            };
 
             return View("~/Views/GameAdmin/NPC/Index.cshtml", vModel);
         }
@@ -78,9 +80,11 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add()
         {
-            var vModel = new AddEditNPCDataViewModel();
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-            vModel.ValidRaces = BackingDataCache.GetAll<Race>();
+            var vModel = new AddEditNPCDataViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                ValidRaces = BackingDataCache.GetAll<Race>()
+            };
 
             return View("~/Views/GameAdmin/NPC/Add.cshtml", vModel);
         }
@@ -92,10 +96,12 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var newObj = new NonPlayerCharacter();
-            newObj.Name = Name;
-            newObj.SurName = SurName;
-            newObj.Gender = Gender;
+            var newObj = new NonPlayerCharacter
+            {
+                Name = Name,
+                SurName = SurName,
+                Gender = Gender
+            };
             var race = BackingDataCache.Get<Race>(raceId);
 
             if (race != null)
@@ -116,9 +122,11 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(int id)
         {
             string message = string.Empty;
-            var vModel = new AddEditNPCDataViewModel();
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-            vModel.ValidRaces = BackingDataCache.GetAll<Race>();
+            var vModel = new AddEditNPCDataViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                ValidRaces = BackingDataCache.GetAll<Race>()
+            };
 
             var obj = BackingDataCache.Get<NonPlayerCharacter>(id);
 

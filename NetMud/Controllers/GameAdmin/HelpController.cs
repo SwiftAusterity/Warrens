@@ -37,12 +37,14 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageHelpDataViewModel(BackingDataCache.GetAll<IHelp>());
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            var vModel = new ManageHelpDataViewModel(BackingDataCache.GetAll<IHelp>())
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
-            vModel.CurrentPageNumber = CurrentPageNumber;
-            vModel.ItemsPerPage = ItemsPerPage;
-            vModel.SearchTerms = SearchTerms;
+                CurrentPageNumber = CurrentPageNumber,
+                ItemsPerPage = ItemsPerPage,
+                SearchTerms = SearchTerms
+            };
 
             return View("~/Views/GameAdmin/Help/Index.cshtml", vModel);
         }
@@ -79,8 +81,10 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add()
         {
-            var vModel = new AddEditHelpDataViewModel();
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            var vModel = new AddEditHelpDataViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId())
+            };
 
             return View("~/Views/GameAdmin/Help/Add.cshtml", vModel);
         }
@@ -92,9 +96,11 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var newObj = new Help();
-            newObj.Name = Name;
-            newObj.HelpText = HelpText;
+            var newObj = new Help
+            {
+                Name = Name,
+                HelpText = HelpText
+            };
 
             if (newObj.Create() == null)
                 message = "Error; Creation failed.";
@@ -111,8 +117,10 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(long id)
         {
             string message = string.Empty;
-            var vModel = new AddEditHelpDataViewModel();
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            var vModel = new AddEditHelpDataViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId())
+            };
 
             var obj = BackingDataCache.Get<IHelp>(id);
 

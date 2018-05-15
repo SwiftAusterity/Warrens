@@ -40,12 +40,14 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageRoomDataViewModel(BackingDataCache.GetAll<IRoomData>());
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            var vModel = new ManageRoomDataViewModel(BackingDataCache.GetAll<IRoomData>())
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
-            vModel.CurrentPageNumber = CurrentPageNumber;
-            vModel.ItemsPerPage = ItemsPerPage;
-            vModel.SearchTerms = SearchTerms;
+                CurrentPageNumber = CurrentPageNumber,
+                ItemsPerPage = ItemsPerPage,
+                SearchTerms = SearchTerms
+            };
 
             return View("~/Views/GameAdmin/Room/Index.cshtml", vModel);
         }
@@ -53,9 +55,10 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Map(long ID)
         {
-            var vModel = new RoomMapViewModel();
-
-            vModel.Here = BackingDataCache.Get<IRoomData>(ID);
+            var vModel = new RoomMapViewModel
+            {
+                Here = BackingDataCache.Get<IRoomData>(ID)
+            };
 
             return View("~/Views/GameAdmin/Room/Map.cshtml", vModel);
         }
@@ -91,10 +94,12 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add()
         {
-            var vModel = new AddEditRoomDataViewModel();
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-            vModel.ValidMaterials = BackingDataCache.GetAll<IMaterial>();
-            vModel.ValidLocales = BackingDataCache.GetAll<ILocaleData>();
+            var vModel = new AddEditRoomDataViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                ValidMaterials = BackingDataCache.GetAll<IMaterial>(),
+                ValidLocales = BackingDataCache.GetAll<ILocaleData>()
+            };
 
             return View("~/Views/GameAdmin/Room/Add.cshtml", "_chromelessLayout", vModel);
         }
@@ -106,10 +111,12 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var newObj = new RoomData();
-            newObj.Name = vModel.NewName;
-            newObj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth
-                                , vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation);
+            var newObj = new RoomData
+            {
+                Name = vModel.NewName,
+                Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth
+                                , vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation)
+            };
 
             var mediumId = vModel.Medium;
             var medium = BackingDataCache.Get<IMaterial>(mediumId);
@@ -146,10 +153,12 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(int id)
         {
             string message = string.Empty;
-            var vModel = new AddEditRoomDataViewModel();
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-            vModel.ValidMaterials = BackingDataCache.GetAll<IMaterial>();
-            vModel.ValidLocales = BackingDataCache.GetAll<ILocaleData>();
+            var vModel = new AddEditRoomDataViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                ValidMaterials = BackingDataCache.GetAll<IMaterial>(),
+                ValidLocales = BackingDataCache.GetAll<ILocaleData>()
+            };
 
             var obj = BackingDataCache.Get<RoomData>(id);
 

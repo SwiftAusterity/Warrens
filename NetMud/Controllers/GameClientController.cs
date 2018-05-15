@@ -33,8 +33,10 @@ namespace Controllers
 
         public ActionResult Index()
         {
-            var model = new GameContextModel();
-            model.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            var model = new GameContextModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId())
+            };
 
             return View(model);
         }

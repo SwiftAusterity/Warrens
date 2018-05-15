@@ -44,33 +44,35 @@ namespace NetMud.Controllers.GameAdmin
         //Also called Dashboard in most of the html
         public ActionResult Index()
         {
-            var dashboardModel = new DashboardViewModel();
-            dashboardModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            var dashboardModel = new DashboardViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
-            dashboardModel.Inanimates = BackingDataCache.GetAll<IInanimateData>();
-            dashboardModel.Rooms = BackingDataCache.GetAll<IRoomData>();
-            dashboardModel.NPCs = BackingDataCache.GetAll<INonPlayerCharacter>();
-            dashboardModel.Zones = BackingDataCache.GetAll<IZoneData>();
-            dashboardModel.Locales = BackingDataCache.GetAll<ILocaleData>();
+                Inanimates = BackingDataCache.GetAll<IInanimateData>(),
+                Rooms = BackingDataCache.GetAll<IRoomData>(),
+                NPCs = BackingDataCache.GetAll<INonPlayerCharacter>(),
+                Zones = BackingDataCache.GetAll<IZoneData>(),
+                Locales = BackingDataCache.GetAll<ILocaleData>(),
 
-            dashboardModel.HelpFiles = BackingDataCache.GetAll<IHelp>();
-            dashboardModel.DimensionalModels = BackingDataCache.GetAll<IDimensionalModelData>();
-            dashboardModel.Materials = BackingDataCache.GetAll<IMaterial>();
-            dashboardModel.Races = BackingDataCache.GetAll<IRace>();
-            dashboardModel.Constants = BackingDataCache.GetAll<IConstants>();
-            dashboardModel.Fauna = BackingDataCache.GetAll<IFauna>();
-            dashboardModel.Flora = BackingDataCache.GetAll<IFlora>();
-            dashboardModel.Minerals = BackingDataCache.GetAll<IMineral>();
+                HelpFiles = BackingDataCache.GetAll<IHelp>(),
+                DimensionalModels = BackingDataCache.GetAll<IDimensionalModelData>(),
+                Materials = BackingDataCache.GetAll<IMaterial>(),
+                Races = BackingDataCache.GetAll<IRace>(),
+                Constants = BackingDataCache.GetAll<IConstants>(),
+                Fauna = BackingDataCache.GetAll<IFauna>(),
+                Flora = BackingDataCache.GetAll<IFlora>(),
+                Minerals = BackingDataCache.GetAll<IMineral>(),
 
-            dashboardModel.LiveTaskTokens = Processor.GetAllLiveTaskStatusTokens();
-            dashboardModel.LivePlayers = LiveCache.GetAll<IPlayer>().Count();
-            dashboardModel.LiveInanimates = LiveCache.GetAll<IInanimate>().Count();
-            dashboardModel.LiveRooms = LiveCache.GetAll<IRoom>().Count();
-            dashboardModel.LiveNPCs = LiveCache.GetAll<IIntelligence>().Count();
-            dashboardModel.LiveLocales = LiveCache.GetAll<ILocale>().Count();
-            dashboardModel.LiveZones = LiveCache.GetAll<IZone>().Count();
+                LiveTaskTokens = Processor.GetAllLiveTaskStatusTokens(),
+                LivePlayers = LiveCache.GetAll<IPlayer>().Count(),
+                LiveInanimates = LiveCache.GetAll<IInanimate>().Count(),
+                LiveRooms = LiveCache.GetAll<IRoom>().Count(),
+                LiveNPCs = LiveCache.GetAll<IIntelligence>().Count(),
+                LiveLocales = LiveCache.GetAll<ILocale>().Count(),
+                LiveZones = LiveCache.GetAll<IZone>().Count(),
 
-            dashboardModel.WebsocketServers = LiveCache.GetAll<NetMud.Websock.Server>();
+                WebsocketServers = LiveCache.GetAll<NetMud.Websock.Server>()
+            };
 
             return View(dashboardModel);
         }

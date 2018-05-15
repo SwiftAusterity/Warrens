@@ -39,12 +39,14 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageConstantsDataViewModel(BackingDataCache.GetAll<IConstants>());
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            var vModel = new ManageConstantsDataViewModel(BackingDataCache.GetAll<IConstants>())
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
-            vModel.CurrentPageNumber = CurrentPageNumber;
-            vModel.ItemsPerPage = ItemsPerPage;
-            vModel.SearchTerms = SearchTerms;
+                CurrentPageNumber = CurrentPageNumber,
+                ItemsPerPage = ItemsPerPage,
+                SearchTerms = SearchTerms
+            };
 
             return View("~/Views/GameAdmin/Constants/Index.cshtml", vModel);
         }
@@ -81,8 +83,10 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add()
         {
-            var vModel = new AddEditConstantsViewModel();
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            var vModel = new AddEditConstantsViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId())
+            };
 
             return View("~/Views/GameAdmin/Constants/Add.cshtml", vModel);
         }
@@ -94,8 +98,10 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var newObj = new NetMud.Data.System.Constants();
-            newObj.Name = vModel.Name;
+            var newObj = new NetMud.Data.System.Constants
+            {
+                Name = vModel.Name
+            };
 
             var criterion = new Dictionary<CriteriaType, string>();
             if (vModel.CriterionTypes != null && vModel.CriterionValues != null)
@@ -129,8 +135,10 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = message });
             }
 
-            var newLookup = new LookupCriteria();
-            newLookup.Criterion = criterion;
+            var newLookup = new LookupCriteria
+            {
+                Criterion = criterion
+            };
 
             newObj.AddOrUpdate(newLookup, newValues);
 
@@ -149,8 +157,10 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(long id)
         {
             string message = string.Empty;
-            var vModel = new AddEditConstantsViewModel();
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            var vModel = new AddEditConstantsViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId())
+            };
 
             var obj = BackingDataCache.Get<IConstants>(id);
 
@@ -208,8 +218,10 @@ namespace NetMud.Controllers.GameAdmin
                     if (!string.IsNullOrWhiteSpace(newValue) && !newValues.Contains(newValue))
                         newValues.Add(newValue);
 
-            var newLookup = new LookupCriteria();
-            newLookup.Criterion = criterion;
+            var newLookup = new LookupCriteria
+            {
+                Criterion = criterion
+            };
 
             obj.AddOrUpdate(newLookup, newValues);
 

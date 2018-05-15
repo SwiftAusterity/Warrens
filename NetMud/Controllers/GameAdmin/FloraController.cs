@@ -41,12 +41,14 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageFloraViewModel(BackingDataCache.GetAll<IFlora>());
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            var vModel = new ManageFloraViewModel(BackingDataCache.GetAll<IFlora>())
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
-            vModel.CurrentPageNumber = CurrentPageNumber;
-            vModel.ItemsPerPage = ItemsPerPage;
-            vModel.SearchTerms = SearchTerms;
+                CurrentPageNumber = CurrentPageNumber,
+                ItemsPerPage = ItemsPerPage,
+                SearchTerms = SearchTerms
+            };
 
             return View("~/Views/GameAdmin/Flora/Index.cshtml", vModel);
         }
@@ -83,10 +85,12 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add()
         {
-            var vModel = new AddEditFloraViewModel();
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-            vModel.ValidMaterials = BackingDataCache.GetAll<IMaterial>();
-            vModel.ValidInanimateDatas = BackingDataCache.GetAll<IInanimateData>();
+            var vModel = new AddEditFloraViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                ValidMaterials = BackingDataCache.GetAll<IMaterial>(),
+                ValidInanimateDatas = BackingDataCache.GetAll<IInanimateData>()
+            };
 
             return View("~/Views/GameAdmin/Flora/Add.cshtml", vModel);
         }
@@ -98,17 +102,19 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var newObj = new Flora();
-            newObj.Name = vModel.Name;
-            newObj.HelpText = vModel.HelpText;
-            newObj.SunlightPreference = vModel.SunlightPreference;
-            newObj.Coniferous = vModel.Coniferous;
-            newObj.AmountMultiplier = vModel.AmountMultiplier;
-            newObj.Rarity = vModel.Rarity;
-            newObj.PuissanceVariance = vModel.PuissanceVariance;
-            newObj.ElevationRange = new Tuple<int, int>(vModel.ElevationRangeLow, vModel.ElevationRangeHigh);
-            newObj.TemperatureRange = new Tuple<int, int>(vModel.TemperatureRangeLow, vModel.TemperatureRangeHigh);
-            newObj.HumidityRange = new Tuple<int, int>(vModel.HumidityRangeLow, vModel.HumidityRangeHigh);
+            var newObj = new Flora
+            {
+                Name = vModel.Name,
+                HelpText = vModel.HelpText,
+                SunlightPreference = vModel.SunlightPreference,
+                Coniferous = vModel.Coniferous,
+                AmountMultiplier = vModel.AmountMultiplier,
+                Rarity = vModel.Rarity,
+                PuissanceVariance = vModel.PuissanceVariance,
+                ElevationRange = new Tuple<int, int>(vModel.ElevationRangeLow, vModel.ElevationRangeHigh),
+                TemperatureRange = new Tuple<int, int>(vModel.TemperatureRangeLow, vModel.TemperatureRangeHigh),
+                HumidityRange = new Tuple<int, int>(vModel.HumidityRangeLow, vModel.HumidityRangeHigh)
+            };
 
             var newWood = BackingDataCache.Get<IMaterial>(vModel.Wood);
             if (newWood != null)
@@ -153,10 +159,12 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(long id)
         {
             string message = string.Empty;
-            var vModel = new AddEditFloraViewModel();
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-            vModel.ValidMaterials = BackingDataCache.GetAll<IMaterial>();
-            vModel.ValidInanimateDatas = BackingDataCache.GetAll<IInanimateData>();
+            var vModel = new AddEditFloraViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                ValidMaterials = BackingDataCache.GetAll<IMaterial>(),
+                ValidInanimateDatas = BackingDataCache.GetAll<IInanimateData>()
+            };
 
             var obj = BackingDataCache.Get<IFlora>(id);
 

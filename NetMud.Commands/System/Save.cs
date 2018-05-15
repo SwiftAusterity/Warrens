@@ -35,8 +35,10 @@ namespace NutMud.Commands.System
 
             sb.Add("You save your life.");
 
-            var toActor = new Message(MessagingType.Visible, 1);
-            toActor.Override = sb;
+            var toActor = new Message(MessagingType.Visible, 1)
+            {
+                Override = sb
+            };
 
             var messagingObject = new MessageCluster(toActor);
 
