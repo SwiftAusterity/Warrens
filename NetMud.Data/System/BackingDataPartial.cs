@@ -122,7 +122,7 @@ namespace NetMud.Data.System
             try
             {
                 //Remove from cache first
-                BackingDataCache.Remove(new BackingDataCacheKey(this.GetType(), this.ID));
+                BackingDataCache.Remove(new BackingDataCacheKey(GetType(), ID));
 
                 //Remove it from the file system.
                 accessor.ArchiveEntity(this);
@@ -179,10 +179,10 @@ namespace NetMud.Data.System
             {
                 try
                 {
-                    if (other.GetType() != this.GetType())
+                    if (other.GetType() != GetType())
                         return -1;
 
-                    if (other.ID.Equals(this.ID))
+                    if (other.ID.Equals(ID))
                         return 1;
 
                     return 0;
@@ -207,7 +207,7 @@ namespace NetMud.Data.System
             {
                 try
                 {
-                    return other.GetType() == this.GetType() && other.ID.Equals(this.ID);
+                    return other.GetType() == GetType() && other.ID.Equals(ID);
                 }
                 catch (Exception ex)
                 {
@@ -223,7 +223,7 @@ namespace NetMud.Data.System
         /// </summary>
         internal void GetNextId()
         {
-            IEnumerable<IData> allOfMe = BackingDataCache.GetAll().Where(bdc => bdc.GetType() == this.GetType());
+            IEnumerable<IData> allOfMe = BackingDataCache.GetAll().Where(bdc => bdc.GetType() == GetType());
 
             //Zero ordered list
             if (allOfMe.Count() > 0)

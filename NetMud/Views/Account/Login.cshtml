@@ -13,10 +13,10 @@
                 <h4>Use a local account to log in.</h4>
                 <hr />
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                <div class="form-group one-column">
+                <div class="form-group two-column">
                     @Html.EditorFor(e => e.Email)
                 </div>
-                <div class="form-group one-column">
+                <div class="form-group two-column">
                     @Html.EditorFor(e => e.Password)
                 </div>
                 <div class="form-group one-column">

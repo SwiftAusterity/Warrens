@@ -312,10 +312,10 @@ namespace NetMud.Data.Game
             {
                 try
                 {
-                    if (other.GetType() != this.GetType())
+                    if (other.GetType() != GetType())
                         return -1;
 
-                    if (other.BirthMark.Equals(this.BirthMark))
+                    if (other.BirthMark.Equals(BirthMark))
                         return 1;
 
                     return 0;
@@ -340,7 +340,7 @@ namespace NetMud.Data.Game
             {
                 try
                 {
-                    return other.GetType() == this.GetType() && other.BirthMark.Equals(this.BirthMark);
+                    return other.GetType() == GetType() && other.BirthMark.Equals(BirthMark);
                 }
                 catch (Exception ex)
                 {

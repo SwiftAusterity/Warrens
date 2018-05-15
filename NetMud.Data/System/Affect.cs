@@ -60,10 +60,10 @@ namespace NetMud.Data.System
             {
                 try
                 {
-                    if (other.GetType() != this.GetType())
+                    if (other.GetType() != GetType())
                         return -1;
 
-                    if (other.Target.Equals(this.Target, StringComparison.InvariantCultureIgnoreCase))
+                    if (other.Target.Equals(Target, StringComparison.InvariantCultureIgnoreCase))
                         return 1;
 
                     return 0;
@@ -88,8 +88,8 @@ namespace NetMud.Data.System
             {
                 try
                 {
-                    return other.GetType() == this.GetType() 
-                        && other.Target.Equals(this.Target, StringComparison.InvariantCultureIgnoreCase);
+                    return other.GetType() == GetType() 
+                        && other.Target.Equals(Target, StringComparison.InvariantCultureIgnoreCase);
                 }
                 catch (Exception ex)
                 {

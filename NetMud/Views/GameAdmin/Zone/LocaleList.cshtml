@@ -6,7 +6,7 @@
 
 @{
     <div>
-        @Html.ActionLink("Add New Locale", "Add", new { zoneId = Model.DataObject.ID }, new { @class = "addNew" })
+        @Html.ActionLink("Add New Locale", "Add", "Locale", new { zoneId = Model.DataObject.ID }, new { @class = "addNew" })
     </div>
 
     if (Model.Items.Count() > 0)

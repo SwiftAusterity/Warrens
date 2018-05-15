@@ -58,6 +58,16 @@ namespace NetMud.Data.EntityBackingData
         public Dictionary<INaturalResource, int> NaturalResourceSpawn { get; set; }
 
         /// <summary>
+        /// Blank constructor
+        /// </summary>
+        public ZoneData()
+        {
+            Templates = new HashSet<IAdventureTemplate>();
+            Locales = new HashSet<ILocaleData>();
+            NaturalResourceSpawn = new Dictionary<INaturalResource, int>();            
+        }
+
+        /// <summary>
         /// Get the total rough dimensions of the zone
         /// </summary>
         /// <returns></returns>

@@ -153,11 +153,23 @@ namespace NetMud.Data.EntityBackingData
         /// <returns>height, length, width</returns>
         public override Tuple<int, int, int> GetModelDimensions()
         {
-            var height = RaceData.Head.Model.Height + RaceData.Torso.Model.Height + RaceData.Legs.Item1.Model.Height;
-            var length = RaceData.Torso.Model.Length;
-            var width = RaceData.Torso.Model.Width;
+            try
+            {
+                if (RaceData == null)
+                    return new Tuple<int, int, int>(0, 0, 0);
 
-            return new Tuple<int, int, int>(height, length, width);
+                var height = RaceData.Head.Model.Height + RaceData.Torso.Model.Height + RaceData.Legs.Item1.Model.Height;
+                var length = RaceData.Torso.Model.Length;
+                var width = RaceData.Torso.Model.Width;
+
+                return new Tuple<int, int, int>(height, length, width);
+            }
+            catch(Exception ex)
+            {
+                LoggingUtility.LogError(ex);
+            }
+
+            return new Tuple<int, int, int>(0, 0, 0);
         }
 
         /// <summary>
