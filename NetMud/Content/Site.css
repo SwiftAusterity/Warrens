@@ -3,6 +3,10 @@
     padding-bottom: 20px;
 }
 
+footer {
+    padding-top: 50px;
+}
+
 /* Set padding to keep content from hitting the edges */
 .body-content {
     padding-left: 15px;
@@ -102,19 +106,19 @@ div.form-group.one-column div {
 }
 
 div.form-group.two-column label {
-    width: 13.33333333%;
+    width: 26.66666666%;
 }
 
 div.form-group.two-column div {
-    width: 20%;
+    width: 40%;
 }
 
 div.form-group.three-column label {
-    width: 13.33333333%;
+    width: 39.99999999%;
 }
 
 div.form-group.three-column div {
-    width: 20%;
+    width: 60%;
 }
 
 div.form-group a.removeRow {

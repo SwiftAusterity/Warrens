@@ -235,8 +235,8 @@ namespace NetMud.Websock
 
             var ping = new byte[2];
 
-            ping[0] = (Byte)(9 | 0x80);
-            ping[1] = (Byte)0;
+            ping[0] = 9 | 0x80;
+            ping[1] = 0;
 
             stream.BeginWrite(ping, 0, 2, new AsyncCallback(WriteData), null);
         }
@@ -467,7 +467,7 @@ namespace NetMud.Websock
             Int32 indexStartRawData = -1;
             Int32 length = bytesRaw.Length;
 
-            frame[0] = (Byte)129;
+            frame[0] = 129;
             if (length <= 125)
             {
                 frame[1] = (Byte)length;
@@ -475,14 +475,14 @@ namespace NetMud.Websock
             }
             else if (length >= 126 && length <= 65535)
             {
-                frame[1] = (Byte)126;
+                frame[1] = 126;
                 frame[2] = (Byte)((length >> 8) & 255);
                 frame[3] = (Byte)(length & 255);
                 indexStartRawData = 4;
             }
             else
             {
-                frame[1] = (Byte)127;
+                frame[1] = 127;
                 frame[2] = (Byte)((length >> 56) & 255);
                 frame[3] = (Byte)((length >> 48) & 255);
                 frame[4] = (Byte)((length >> 40) & 255);

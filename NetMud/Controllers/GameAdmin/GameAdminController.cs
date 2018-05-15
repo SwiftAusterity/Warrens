@@ -50,12 +50,13 @@ namespace NetMud.Controllers.GameAdmin
             dashboardModel.Inanimates = BackingDataCache.GetAll<IInanimateData>();
             dashboardModel.Rooms = BackingDataCache.GetAll<IRoomData>();
             dashboardModel.NPCs = BackingDataCache.GetAll<INonPlayerCharacter>();
+            dashboardModel.Zones = BackingDataCache.GetAll<IZoneData>();
+            dashboardModel.Locales = BackingDataCache.GetAll<ILocaleData>();
 
             dashboardModel.HelpFiles = BackingDataCache.GetAll<IHelp>();
             dashboardModel.DimensionalModels = BackingDataCache.GetAll<IDimensionalModelData>();
             dashboardModel.Materials = BackingDataCache.GetAll<IMaterial>();
             dashboardModel.Races = BackingDataCache.GetAll<IRace>();
-            dashboardModel.Zones = BackingDataCache.GetAll<IZone>();
             dashboardModel.Constants = BackingDataCache.GetAll<IConstants>();
             dashboardModel.Fauna = BackingDataCache.GetAll<IFauna>();
             dashboardModel.Flora = BackingDataCache.GetAll<IFlora>();
@@ -66,6 +67,8 @@ namespace NetMud.Controllers.GameAdmin
             dashboardModel.LiveInanimates = LiveCache.GetAll<IInanimate>().Count();
             dashboardModel.LiveRooms = LiveCache.GetAll<IRoom>().Count();
             dashboardModel.LiveNPCs = LiveCache.GetAll<IIntelligence>().Count();
+            dashboardModel.LiveLocales = LiveCache.GetAll<ILocale>().Count();
+            dashboardModel.LiveZones = LiveCache.GetAll<IZone>().Count();
 
             dashboardModel.WebsocketServers = LiveCache.GetAll<NetMud.Websock.Server>();
 

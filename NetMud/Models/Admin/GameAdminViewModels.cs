@@ -18,16 +18,19 @@ namespace NetMud.Models.Admin
             Inanimates = Enumerable.Empty<IInanimateData>();
             Rooms = Enumerable.Empty<IRoomData>();
             NPCs = Enumerable.Empty<INonPlayerCharacter>();
+            Zones = Enumerable.Empty<IZoneData>();
+            Locales = Enumerable.Empty<ILocaleData>();
 
             DimensionalModels = Enumerable.Empty<IDimensionalModelData>();
             HelpFiles = Enumerable.Empty<IHelp>();
             Materials = Enumerable.Empty<IMaterial>();
             Races = Enumerable.Empty<IRace>();
-            Zones = Enumerable.Empty<IZone>();
             Constants = Enumerable.Empty<IConstants>();
 
             WebsocketServers = Enumerable.Empty<NetMud.Websock.Server>();
 
+            LiveZones = 0;
+            LiveLocales = 0;
             LiveRooms = 0;
             LiveInanimates = 0;
             LiveNPCs = 0;
@@ -39,13 +42,14 @@ namespace NetMud.Models.Admin
         public IEnumerable<IRoomData> Rooms { get; set; }
         public IEnumerable<IInanimateData> Inanimates { get; set; }
         public IEnumerable<INonPlayerCharacter> NPCs { get; set; }
+        public IEnumerable<IZoneData> Zones { get; set; }
+        public IEnumerable<ILocaleData> Locales { get; set; }
 
         //Lookup Data
         public IEnumerable<IDimensionalModelData> DimensionalModels { get; set; }
         public IEnumerable<IHelp> HelpFiles { get; set; }
         public IEnumerable<IMaterial> Materials { get; set; }
         public IEnumerable<IRace> Races { get; set; }
-        public IEnumerable<IZone> Zones { get; set; }
         public IEnumerable<IConstants> Constants { get; set; }
         public IEnumerable<IFlora> Flora { get; set; }
         public IEnumerable<IFauna> Fauna { get; set; }
@@ -56,6 +60,8 @@ namespace NetMud.Models.Admin
 
         public IEnumerable<NetMud.Websock.Server> WebsocketServers { get; set; }
 
+        public int LiveZones { get; set; }
+        public int LiveLocales { get; set; }
         public int LiveRooms { get; set; }
         public int LiveInanimates { get; set; }
         public int LiveNPCs { get; set; }

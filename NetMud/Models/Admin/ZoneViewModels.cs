@@ -1,5 +1,4 @@
 ﻿using NetMud.Authentication;
-using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
 using System;
 using System.Collections.Generic;
@@ -28,12 +27,23 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditZoneDataViewModel : BaseViewModel
+    public class AddEditZoneDataViewModel : PagedDataModel<ILocaleData>, BaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
-        public AddEditZoneDataViewModel()
+        public AddEditZoneDataViewModel(IEnumerable<ILocaleData> items)
+            : base(items)
         {
+            CurrentPageNumber = 1;
+            ItemsPerPage = 20;
+        }
+
+        internal override Func<ILocaleData, bool> SearchFilter
+        {
+            get
+            {
+                return item => item.Name.ToLower().Contains(SearchTerms.ToLower());
+            }
         }
 
         [StringLength(100, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
@@ -58,16 +68,6 @@ namespace NetMud.Models.Admin
         [Display(Name = "Pressure Coefficient")]
         [DataType(DataType.Text)]
         public int PressureCoefficient { get; set; }
-
-        [StringLength(100, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 3)]
-        [Display(Name = "World Name")]
-        [DataType(DataType.Text)]
-        public string WorldName { get; set; }
-
-        [StringLength(2000, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
-        [DataType(DataType.MultilineText)]
-        [Display(Name = "Help Text Body")]
-        public string NewHelpBody { get; set; }
 
         public IZoneData DataObject { get; set; }
     }

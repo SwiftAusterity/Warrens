@@ -14,6 +14,20 @@ namespace NetMud.Data.Game
 {
     public class Locale : EntityPartial, ILocale
     {
+        /// <summary>
+        /// The name of the object in the data template
+        /// </summary>
+        public override string DataTemplateName
+        {
+            get
+            {
+                if (DataTemplate<ILocaleData>() == null)
+                    return String.Empty;
+
+                return DataTemplate<ILocaleData>().Name;
+            }
+        }
+
         public IZone Affiliation { get; set; }
         public IMap Interior { get; set; }
         public IEnumerable<IRoom> Rooms { get; set; }

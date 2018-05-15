@@ -36,6 +36,19 @@ namespace NetMud.Data.Game
             }
         }
 
+        /// <summary>
+        /// The name of the object in the data template
+        /// </summary>
+        public override string DataTemplateName
+        {
+            get
+            {
+                if (DataTemplate<IZoneData>() == null)
+                    return String.Empty;
+
+                return DataTemplate<IZoneData>().Name;
+            }
+        }
 
         /// <summary>
         /// Is this zone ownership malleable

@@ -7,6 +7,26 @@
     <h4>Backing Data</h4>
     <hr />
     <dl class="dl-horizontal">
+        <dt>Zones:</dt>
+        <dd>
+            @Model.Zones.Count().ToString() [
+            @Html.ActionLink("Manage", "Index", "Zone")
+            @Html.ActionLink("Add", "Add", "Zone") ]
+            @if (Model.Zones.Any(r => r.FitnessProblems))
+            {
+                <span style="color:red;">DATA PROBLEMS</span>
+            }
+        </dd>
+        <dt>Locales:</dt>
+        <dd>
+            @Model.Zones.Count().ToString() [
+            @Html.ActionLink("Manage", "Index", "Locale")
+            @Html.ActionLink("Add", "Add", "Locale") ]
+            @if (Model.Locales.Any(r => r.FitnessProblems))
+            {
+                <span style="color:red;">DATA PROBLEMS</span>
+            }
+        </dd>
         <dt>Rooms:</dt>
         <dd>
             @Model.Rooms.Count().ToString() [ Use Zones Yo ]
@@ -79,16 +99,6 @@
                 <span style="color:red;">DATA PROBLEMS</span>
             }
         </dd>
-        <dt>Zones:</dt>
-        <dd>
-            @Model.Zones.Count().ToString() [
-            @Html.ActionLink("Manage", "Index", "Zone")
-            @Html.ActionLink("Add", "Add", "Zone") ]
-            @if (Model.Zones.Any(r => r.FitnessProblems))
-            {
-                <span style="color:red;">DATA PROBLEMS</span>
-            }
-        </dd>
         <dt>Constants:</dt>
         <dd>
             @Model.Constants.Count().ToString() [
@@ -137,6 +147,14 @@
         <dd>
             @Model.LivePlayers [
             @Html.ActionLink("Manage", "Index", "Player") ]
+        </dd>
+        <dt>Zones:</dt>
+        <dd>
+            @Model.LiveZones [ ]
+        </dd>
+        <dt>Locales:</dt>
+        <dd>
+            @Model.LiveLocales [ ]
         </dd>
         <dt>Rooms:</dt>
         <dd>

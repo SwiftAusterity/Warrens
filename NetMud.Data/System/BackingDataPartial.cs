@@ -52,7 +52,7 @@ namespace NetMud.Data.System
                 {
                     BaseDataIntegrity integrityCheck = (BaseDataIntegrity)checker;
 
-                    if (!integrityCheck.Verify(property.GetValue(property)))
+                    if (!integrityCheck.Verify(property.GetValue(this)))
                         dataProblems.Add(integrityCheck.ErrorMessage);
                 }
             }
@@ -89,11 +89,18 @@ namespace NetMud.Data.System
 
             try
             {
-                //reset this guy's ID to the next one in the list
-                GetNextId();
+                if (Created != DateTime.MinValue)
+                    Save();
+                else
+                {
 
-                BackingDataCache.Add(this);
-                accessor.WriteEntity(this);
+                    //reset this guy's ID to the next one in the list
+                    GetNextId();
+                    Created = DateTime.Now;
+
+                    BackingDataCache.Add(this);
+                    accessor.WriteEntity(this);
+                }
             }
             catch (Exception ex)
             {
@@ -103,7 +110,7 @@ namespace NetMud.Data.System
 
             return this;
         }
-
+        
         /// <summary>
         /// Remove this object from the db permenantly
         /// </summary>
@@ -139,7 +146,15 @@ namespace NetMud.Data.System
 
             try
             {
-                accessor.WriteEntity(this);
+                if (Created == DateTime.MinValue)
+                    Create();
+                else
+                {
+                    LastRevised = DateTime.Now;
+
+                    BackingDataCache.Add(this);
+                    accessor.WriteEntity(this);
+                }
             }
             catch (Exception ex)
             {

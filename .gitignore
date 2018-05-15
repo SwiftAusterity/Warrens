@@ -34,3 +34,4 @@ NetMud/FileStore/*/Backups/
 *Backups*/
 *.mdf
 *.ldf
+/.vs/NetMud/v15/Server/sqlite3

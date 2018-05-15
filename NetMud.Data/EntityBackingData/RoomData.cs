@@ -114,7 +114,7 @@ namespace NetMud.Data.EntityBackingData
             if (Affiliation == null)
                 dataProblems.Add("Affiliation is invalid.");
 
-            if (Coordinates.Item1 < 0 || Coordinates.Item2 < 0 || Coordinates.Item3 < 0)
+            if (Coordinates?.Item1 < 0 || Coordinates?.Item2 < 0 || Coordinates?.Item3 < 0)
                 dataProblems.Add("Coordinates are invalid.");
 
             return dataProblems;

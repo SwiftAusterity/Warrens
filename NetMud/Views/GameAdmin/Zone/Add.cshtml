@@ -10,20 +10,16 @@
             @Html.AntiForgeryToken()
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            <div class="form-group two-column">
+            <div class="form-group one-column">
                 @Html.EditorFor(e => e.Name)
-                @Html.EditorFor(e => e.WorldName)
             </div>
-            <div class="form-group two-column">
+            <div class="form-group one-column">
                 @Html.EditorFor(e => e.TemperatureCoefficient)
                 @Html.EditorFor(e => e.PressureCoefficient)
             </div>
-            <div class="form-group two-column">
+            <div class="form-group one-column">
                 @Html.EditorFor(e => e.BaseElevation)
                 @Html.EditorFor(e => e.Claimable)
-            </div>
-            <div class="form-group one-column">
-                @Html.EditorFor(e => e.HelpBody)
             </div>
             @Html.Partial("SubmitButton", "Create")
         }

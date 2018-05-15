@@ -145,7 +145,7 @@ namespace NetMud.Data.Game
         /// </summary>
         public override void SpawnNewInWorld()
         {
-            SpawnNewInWorld(new GlobalPosition { CurrentLocation = this, CurrentZone = Position.CurrentZone });
+            SpawnNewInWorld(new GlobalPosition { CurrentLocation = this, CurrentZone = Position?.CurrentZone });
         }
 
 

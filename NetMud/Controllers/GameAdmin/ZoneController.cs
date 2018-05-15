@@ -4,9 +4,9 @@ using NetMud.Authentication;
 using NetMud.Data.EntityBackingData;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
 using NetMud.Models.Admin;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
@@ -80,7 +80,7 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add()
         {
-            var vModel = new AddEditZoneDataViewModel();
+            var vModel = new AddEditZoneDataViewModel(Enumerable.Empty<ILocaleData>());
             vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             return View("~/Views/GameAdmin/Zone/Add.cshtml", vModel);
@@ -114,8 +114,6 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(long id)
         {
             string message = string.Empty;
-            var vModel = new AddEditZoneDataViewModel();
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             IZoneData obj = BackingDataCache.Get<IZoneData>(id);
 
@@ -124,6 +122,9 @@ namespace NetMud.Controllers.GameAdmin
                 message = "That does not exist";
                 return RedirectToAction("Index", new { Message = message });
             }
+
+            var vModel = new AddEditZoneDataViewModel(obj.Locales);
+            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             vModel.DataObject = obj;
             vModel.Name = obj.Name;

@@ -31,6 +31,8 @@ namespace NetMud.Backup
         public bool NewWorldFallback()
         {
             //Only load in stuff that is static and spawns as singleton
+            PreLoadAll<ZoneData>();
+            PreLoadAll<LocaleData>();
             PreLoadAll<RoomData>();
             PreLoadAll<PathwayData>();
 
@@ -174,26 +176,50 @@ namespace NetMud.Backup
                     entity.UpsertToLiveWorldCache();
 
                 //Check we found actual data
-                if (!entitiesToLoad.Any(ent => ent.GetType() == typeof(Room) || ent.GetType() == typeof(Pathway)))
-                    throw new Exception("No rooms or pathways found, failover.");
+                if (!entitiesToLoad.Any(ent => ent.GetType() == typeof(Zone)))
+                    throw new Exception("No zones found, failover.");
 
-                //We need to pick up any roomDatas and pathwaydatas that aren't already live from the file system incase someone added them during the last session
+                //We need to pick up any places that aren't already live from the file system incase someone added them during the last session\
+                foreach (var thing in BackingDataCache.GetAll<IZoneData>().Where(dt => !entitiesToLoad.Any(ent => ent.DataTemplateId.Equals(dt.ID))))
+                {
+                    var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IZone;
+
+                    entityThing.UpsertToLiveWorldCache();
+                }
+
+                foreach (var thing in BackingDataCache.GetAll<ILocaleData>().Where(dt => !entitiesToLoad.Any(ent => ent.DataTemplateId.Equals(dt.ID))))
+                {
+                    var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as ILocale;
+
+                    entityThing.UpsertToLiveWorldCache();
+                }
+
                 foreach (var thing in BackingDataCache.GetAll<IRoomData>().Where(dt => !entitiesToLoad.Any(ent => ent.DataTemplateId.Equals(dt.ID))))
                 {
-                    var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { (IRoomData)thing }) as IRoom;
+                    var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IRoom;
 
                     entityThing.UpsertToLiveWorldCache();
                 }
 
                 foreach (var thing in BackingDataCache.GetAll<IPathwayData>().Where(dt => !entitiesToLoad.Any(ent => ent.DataTemplateId.Equals(dt.ID))))
                 {
-                    var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { (IPathwayData)thing }) as IPathway;
+                    var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IPathway;
 
                     entityThing.UpsertToLiveWorldCache();
                 }
 
                 //We have the containers contents and the birthmarks from the deserial
                 //I don't know how we can even begin to do this type agnostically since the collections are held on type specific objects without some super ugly reflection
+                foreach(Zone entity in entitiesToLoad.Where(ent => ent.GetType() == typeof(Zone)))
+                {
+                    foreach(ILocale obj in entity.Contents.EntitiesContained())
+                    {
+                        var fullObj = LiveCache.Get<ILocale>(new LiveCacheKey(typeof(Locale), obj.BirthMark));
+                        entity.MoveFrom(obj);
+                        entity.MoveInto(fullObj);
+                    }
+                }
+
                 foreach (Room entity in entitiesToLoad.Where(ent => ent.GetType() == typeof(Room)))
                 {
                     foreach (IInanimate obj in entity.Contents.EntitiesContained())
@@ -238,7 +264,7 @@ namespace NetMud.Backup
                     }
                 }
 
-                //paths load themselves to their room
+                //paths load themselves to their appropriate location
                 foreach (Pathway entity in entitiesToLoad.Where(ent => ent.GetType() == typeof(Pathway)))
                 {
                     ILocation roomTo = LiveCache.Get<ILocation>(new LiveCacheKey(entity.ToLocation.GetType(), entity.ToLocation.BirthMark));
@@ -269,6 +295,8 @@ namespace NetMud.Backup
 
         private void ParseDimension()
         {
+            var zonePool = new HashSet<IZoneData>(BackingDataCache.GetAll<IZoneData>());
+            var localePool = new HashSet<ILocaleData>(BackingDataCache.GetAll<ILocaleData>());
             var roomPool = new HashSet<IRoomData>(BackingDataCache.GetAll<IRoomData>());
 
             //This will cycle through every room building massive (in theory) maps and spitting out the remaining items to make more worlds from.
