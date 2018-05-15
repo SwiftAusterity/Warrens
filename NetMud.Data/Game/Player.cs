@@ -384,6 +384,11 @@ namespace NetMud.Data.Game
                 }
             }
 
+            if(lastKnownLoc == null)
+            {
+                lastKnownLoc = LiveCache.GetAll<ILocation>().FirstOrDefault();
+            }
+
             SpawnNewInWorld(lastKnownLoc.Position);
         }
 

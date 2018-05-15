@@ -221,7 +221,7 @@ namespace NetMud.DataAccess.Cache
         /// <returns>the birthmark string</returns>
         public static string GetUniqueIdentifier(string marker)
         {
-            return string.Format("{0}.{1}.{2}", marker, DateTime.Now.ToBinary(), Guid.NewGuid().ToString().Replace("-", string.Empty));
+            return string.Format("{0}.{1}.{2}", marker, DateTime.Now.ToBinary(), Guid.NewGuid().ToString().Substring(30));
         }
     }
 

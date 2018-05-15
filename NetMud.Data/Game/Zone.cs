@@ -65,6 +65,19 @@ namespace NetMud.Data.Game
         /// </summary>
         public Dictionary<INaturalResource, int> NaturalResources { get; set; }
 
+        public override IGlobalPosition Position
+        {
+            get
+            {
+                    return new GlobalPosition { CurrentLocation = this, CurrentZone = this };
+            }
+            set
+            {
+                _currentLocationBirthmark = BirthMark;
+                UpsertToLiveWorldCache();
+            }
+        }
+
         /// <summary>
         /// New up a "blank" zone entry
         /// </summary>
@@ -92,60 +105,16 @@ namespace NetMud.Data.Game
             DataTemplateId = zone.ID;
 
             GetFromWorldOrSpawn();
-        }
-
-        ///// <summary>
-        ///// Getall the rooms for the zone
-        ///// </summary>
-        ///// <returns>the rooms for the zone</returns>
-        //public IEnumerable<IRoomData> Rooms()
-        //{
-        //    return BackingDataCache.GetAll<IRoomData>().Where(room => room.ZoneAffiliation.Equals(this));
-        //}
-
-        ///// <summary>
-        ///// Get the absolute center room of the zone
-        ///// </summary>
-        ///// <returns>the central room of the zone</returns>
-        //public IRoomData CentralRoom(int zIndex = -1)
-        //{
-        //    return Cartography.Cartographer.FindCenterOfMap(ZoneMap.CoordinatePlane, zIndex);
-        //}
-
-        ///// <summary>
-        ///// Get the basic map render for the zone
-        ///// </summary>
-        ///// <returns>the zone map in ascii</returns>
-        //public string RenderMap(int zIndex, bool forAdmin = false)
-        //{
-        //    return Cartography.Rendering.RenderMap(ZoneMap.GetSinglePlane(zIndex), forAdmin, true, CentralRoom(zIndex));
-        //}
-
-        ///// <summary>
-        ///// The diameter of the zone
-        ///// </summary>
-        ///// <returns>the diameter of the zone in room count x,y,z</returns>
-        //public Tuple<int, int, int> Diameter()
-        //{
-        //    return new Tuple<int, int, int>(ZoneMap.CoordinatePlane.GetUpperBound(0) - ZoneMap.CoordinatePlane.GetLowerBound(0)
-        //                                    , ZoneMap.CoordinatePlane.GetUpperBound(1) - ZoneMap.CoordinatePlane.GetLowerBound(1)
-        //                                    , ZoneMap.CoordinatePlane.GetUpperBound(2) - ZoneMap.CoordinatePlane.GetLowerBound(2));
-        //}
-
-        ///// <summary>
-        ///// Calculate the theoretical dimensions of the zone in inches
-        ///// </summary>
-        ///// <returns>height, width, depth in inches</returns>
-        //public Tuple<int, int, int> FullDimensions()
-        //{
-        //    int height = -1, width = -1, depth = -1;
-
-        //    return new Tuple<int, int, int>(height, width, depth);
-        //}
+        }      
 
         public override IEnumerable<string> RenderToLook(IEntity actor)
         {
-            yield return String.Empty;
+            var sb = new List<string>();
+
+            sb.Add(string.Format("%O%{0}%O%", DataTemplate<IZoneData>().Name));
+            sb.Add(string.Empty.PadLeft(DataTemplate<IZoneData>().Name.Length, '-'));
+
+            return sb;
         }
 
         public override Tuple<int, int, int> GetModelDimensions()
@@ -166,6 +135,7 @@ namespace NetMud.Data.Game
             BirthMark = LiveCache.GetUniqueIdentifier(dataTemplate);
             Keywords = new string[] { dataTemplate.Name.ToLower() };
             Birthdate = DateTime.Now;
+            Position = spawnTo;
         }
 
         public ILocale GenerateAdventure(string name = "")
@@ -207,7 +177,7 @@ namespace NetMud.Data.Game
                 MobilesInside = me.MobilesInside;
                 Pathways = me.Pathways;
                 Keywords = me.Keywords;
-                Position = me.Position;
+                Position = new GlobalPosition { CurrentLocation = this, CurrentZone = this };
             }
         }
 

@@ -25,6 +25,11 @@ namespace NetMud.Data.Game
         public IDimensionalModel Model { get; set; }
 
         /// <summary>
+        /// What locale this belongs to
+        /// </summary>
+        public ILocale Affiliation { get; }
+
+        /// <summary>
         /// The name of the object in the data template
         /// </summary>
         public override string DataTemplateName
@@ -35,6 +40,19 @@ namespace NetMud.Data.Game
                     return String.Empty;
 
                 return DataTemplate<IRoomData>().Name;
+            }
+        }
+
+        public override IGlobalPosition Position
+        {
+            get
+            {
+                return new GlobalPosition { CurrentLocation = this, CurrentZone = Affiliation.Affiliation };
+            }
+            set
+            {
+                _currentLocationBirthmark = BirthMark;
+                UpsertToLiveWorldCache();
             }
         }
 
@@ -136,7 +154,6 @@ namespace NetMud.Data.Game
                 MobilesInside = me.MobilesInside;
                 Pathways = me.Pathways;
                 Keywords = me.Keywords;
-                Position = me.Position;
             }
         }
 
@@ -145,7 +162,7 @@ namespace NetMud.Data.Game
         /// </summary>
         public override void SpawnNewInWorld()
         {
-            SpawnNewInWorld(new GlobalPosition { CurrentLocation = this, CurrentZone = Position?.CurrentZone });
+            SpawnNewInWorld(new GlobalPosition { CurrentLocation = this, CurrentZone = Affiliation.Affiliation });
         }
 
 
@@ -160,6 +177,7 @@ namespace NetMud.Data.Game
             BirthMark = LiveCache.GetUniqueIdentifier(roomTemplate);
             Keywords = new string[] { roomTemplate.Name.ToLower() };
             Birthdate = DateTime.Now;
+            Position = spawnTo;
         }
         #endregion
     }

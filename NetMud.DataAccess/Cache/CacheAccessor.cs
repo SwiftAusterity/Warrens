@@ -54,10 +54,7 @@ namespace NetMud.DataAccess.Cache
         /// <param name="cacheKey">the key to cache it under</param>
         public void Add(object objectToCache, ICacheKey cacheKey)
         {
-            if (Exists(cacheKey))
-                Remove(cacheKey);
-
-            _globalCache.AddOrGetExisting(cacheKey.KeyHash(), objectToCache, _globalPolicy);
+            Add(objectToCache, cacheKey.KeyHash());
         }
 
         /// <summary>
@@ -70,7 +67,7 @@ namespace NetMud.DataAccess.Cache
             if (Exists(cacheKey))
                 Remove(cacheKey);
 
-            _globalCache.AddOrGetExisting(cacheKey, objectToCache, _globalPolicy);
+            _globalCache.Add(cacheKey, objectToCache, _globalPolicy);
         }
 
         /// <summary>
@@ -207,16 +204,7 @@ namespace NetMud.DataAccess.Cache
         /// <returns>the entity requested</returns>
         public T Get<T>(ICacheKey key)
         {
-            try
-            {
-                return (T)_globalCache[key.KeyHash()];
-            }
-            catch (Exception ex)
-            {
-                LoggingUtility.LogError(ex);
-            }
-
-            return default(T);
+            return Get<T>(key.KeyHash());
         }
 
         /// <summary>
@@ -225,7 +213,7 @@ namespace NetMud.DataAccess.Cache
         /// <param name="key">the key of the entity to remove</param>
         public void Remove(ICacheKey key)
         {
-            _globalCache.Remove(key.KeyHash());
+            Remove(key.KeyHash());
         }
 
         /// <summary>
@@ -244,7 +232,7 @@ namespace NetMud.DataAccess.Cache
         /// <returns>if it is in the cache of not</returns>
         public bool Exists(ICacheKey key)
         {
-            return _globalCache.Get(key.KeyHash()) != null;
+            return Exists(key.KeyHash());
         }
 
         /// <summary>

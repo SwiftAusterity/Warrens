@@ -111,7 +111,7 @@ namespace NetMud.Data.Game
         /// Where in the live world this is
         /// </summary>
         [JsonProperty("CurrentLocation")]
-        private string _currentLocationBirthmark;
+        internal string _currentLocationBirthmark;
 
         /// <summary>
         /// Where in the live world this is

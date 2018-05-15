@@ -1,7 +1,9 @@
 ﻿using NetMud.DataStructure.Base.System;
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 
@@ -59,13 +61,14 @@ namespace NetMud.Data.System
 
             var obj = DeSerialize(strData);
 
-            foreach(var container in obj.GetType().GetProperties())
+            foreach (var container in obj.GetType().GetProperties())
             {
-                if (container.GetValue(obj) == null && 
-                    (
-                        container.PropertyType.IsArray || (!typeof(String).Equals(container.PropertyType) && typeof(IEnumerable).IsAssignableFrom(container.PropertyType)))
-                    )
+                if (container.GetValue(obj) == null
+                    && !container.PropertyType.GetCustomAttributes<JsonIgnoreAttribute>().Any()
+                    && (container.PropertyType.IsArray || (!typeof(String).Equals(container.PropertyType) && typeof(IEnumerable).IsAssignableFrom(container.PropertyType))))
+                {
                     container.SetValue(obj, Activator.CreateInstance(container.PropertyType, new object[] { }));
+                }
             }
 
             return obj;

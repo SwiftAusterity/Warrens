@@ -8,7 +8,7 @@ using System.Linq;
 namespace NetMud.Data.LookupData
 {
     [Serializable]
-    public class NaturalResourceDataPartial : LookupDataPartial, INaturalResource
+    public abstract class NaturalResourceDataPartial : LookupDataPartial, INaturalResource
     {
         /// <summary>
         /// How much spawns in one place in one spawn tick
