@@ -110,44 +110,16 @@ namespace NetMud.Data.Game
         /// <summary>
         /// Where in the live world this is
         /// </summary>
-        [JsonProperty("CurrentLocation")]
-        internal string _currentLocationBirthmark;
-
-        /// <summary>
-        /// Where in the live world this is
-        /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        public virtual IGlobalPosition Position
-        {
-            get
-            {
-                if (!String.IsNullOrWhiteSpace(_currentLocationBirthmark))
-                {
-                    var currentLocation = LiveCache.Get<ILocation>(new LiveCacheKey(typeof(ILocation), _currentLocationBirthmark));
-
-                    return new GlobalPosition { CurrentLocation = currentLocation, CurrentZone = currentLocation.Position.CurrentZone };
-                }
-
-                return null;
-            }
-            set
-            {
-                if (value == null)
-                    return;
-
-                _currentLocationBirthmark = value.CurrentLocation.BirthMark;
-                UpsertToLiveWorldCache();
-            }
-        }
+        [JsonConverter(typeof(ConcreteTypeConverter<GlobalPosition>))]
+        public IGlobalPosition CurrentLocation { get; set; }
 
         public virtual IGlobalPosition AbsolutePosition()
         {
             //TODO: Default to emergency location
-            if (Position == null || (Position.CurrentLocation == null && Position.CurrentZone == null))
+            if (CurrentLocation == null || CurrentLocation.CurrentLocation == null)
                 return null;
 
-            return Position;
+            return CurrentLocation;
         }
 
         /// <summary>
@@ -247,7 +219,8 @@ namespace NetMud.Data.Game
         /// <returns>was this thing moved?</returns>
         public virtual bool TryMoveDirection(int direction, IGlobalPosition newPosition)
         {
-            return false;
+            //TODO: Check for directions, trigger movement stuff
+            return TryMoveTo(newPosition);
         }
 
         /// <summary>
@@ -257,7 +230,7 @@ namespace NetMud.Data.Game
         /// <returns>was this thing moved?</returns>
         public virtual bool TryMoveInto(IContains container)
         {
-            return false;
+            return TryMoveTo(new GlobalPosition(container));
         }
 
         /// <summary>
@@ -267,9 +240,19 @@ namespace NetMud.Data.Game
         /// <returns>was this thing moved?</returns>
         public virtual bool TryTeleport(IGlobalPosition newPosition)
         {
-            return false;
+            return TryMoveTo(newPosition);
         }
 
+        internal virtual bool TryMoveTo(IGlobalPosition newPosition)
+        {
+            //validate position
+            if(CurrentLocation?.CurrentLocation != null)
+                CurrentLocation.CurrentLocation.MoveFrom(this);
+
+            CurrentLocation = newPosition;
+
+            return true;
+        }
 
         /// <summary>
         /// Update this entry to the live world cache

@@ -1,5 +1,6 @@
 ﻿using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.SupportingClasses;
 
 namespace NetMud.DataStructure.Base.EntityBackingData
@@ -42,12 +43,7 @@ namespace NetMud.DataStructure.Base.EntityBackingData
         /// <summary>
         /// Last known location ID for character in live world
         /// </summary>
-        string LastKnownLocation { get; set; }
-
-        /// <summary>
-        /// System type for Last known location for character in live world
-        /// </summary>
-        string LastKnownLocationType { get; set; }
+        IGlobalPosition CurrentLocation { get; set; }
 
         /// <summary>
         /// Given name + surname

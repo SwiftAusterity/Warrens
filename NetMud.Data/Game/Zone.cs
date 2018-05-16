@@ -65,19 +65,6 @@ namespace NetMud.Data.Game
         /// </summary>
         public Dictionary<INaturalResource, int> NaturalResources { get; set; }
 
-        public override IGlobalPosition Position
-        {
-            get
-            {
-                    return new GlobalPosition { CurrentLocation = this, CurrentZone = this };
-            }
-            set
-            {
-                _currentLocationBirthmark = BirthMark;
-                UpsertToLiveWorldCache();
-            }
-        }
-
         /// <summary>
         /// New up a "blank" zone entry
         /// </summary>
@@ -125,7 +112,7 @@ namespace NetMud.Data.Game
 
         public override void SpawnNewInWorld()
         {
-            SpawnNewInWorld(new GlobalPosition { CurrentLocation = this, CurrentZone = this });
+            SpawnNewInWorld(new GlobalPosition(this));
         }
 
         public override void SpawnNewInWorld(IGlobalPosition spawnTo)
@@ -135,7 +122,7 @@ namespace NetMud.Data.Game
             BirthMark = LiveCache.GetUniqueIdentifier(dataTemplate);
             Keywords = new string[] { dataTemplate.Name.ToLower() };
             Birthdate = DateTime.Now;
-            Position = spawnTo;
+            CurrentLocation = spawnTo;
         }
 
         public ILocale GenerateAdventure(string name = "")
@@ -177,7 +164,7 @@ namespace NetMud.Data.Game
                 MobilesInside = me.MobilesInside;
                 Pathways = me.Pathways;
                 Keywords = me.Keywords;
-                Position = new GlobalPosition { CurrentLocation = this, CurrentZone = this };
+                CurrentLocation = new GlobalPosition(this);
             }
         }
 

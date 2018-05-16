@@ -1,8 +1,6 @@
-﻿using NetMud.Data.System;
-using NetMud.DataStructure.Base.Entity;
+﻿using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.Behaviors.System;
 using NetMud.DataStructure.SupportingClasses;
@@ -106,8 +104,10 @@ namespace NetMud.Data.Game
                 if (Contents.Contains(obj, containerName))
                     return "That is already in the container";
 
+                if (!obj.TryMoveInto(this))
+                    return "Unable to move into that container.";
+
                 Contents.Add(obj, containerName);
-                obj.TryMoveInto(this);
                 UpsertToLiveWorldCache();
 
                 return string.Empty;
@@ -120,8 +120,10 @@ namespace NetMud.Data.Game
                 if (MobilesInside.Contains(obj, containerName))
                     return "That is already in the container";
 
+                if (!obj.TryMoveInto(this))
+                    return "Unable to move into that container.";
+
                 MobilesInside.Add(obj, containerName);
-                obj.TryMoveInto(this);
                 UpsertToLiveWorldCache();
 
                 return string.Empty;
@@ -134,8 +136,10 @@ namespace NetMud.Data.Game
                 if (Pathways.Contains(obj, containerName))
                     return "That is already in the container";
 
+                if (!obj.TryMoveInto(this))
+                    return "Unable to move into that container.";
+
                 Pathways.Add(obj, containerName);
-                obj.TryMoveInto(this);
                 UpsertToLiveWorldCache();
 
                 return string.Empty;
@@ -173,8 +177,8 @@ namespace NetMud.Data.Game
                 if (!Contents.Contains(obj, containerName))
                     return "That is not in the container";
 
-                Contents.Remove(obj, containerName);
                 obj.TryMoveInto(null);
+                Contents.Remove(obj, containerName);
                 UpsertToLiveWorldCache();
 
                 return string.Empty;
@@ -187,8 +191,8 @@ namespace NetMud.Data.Game
                 if (!MobilesInside.Contains(obj, containerName))
                     return "That is not in the container";
 
-                MobilesInside.Remove(obj, containerName);
                 obj.TryMoveInto(null);
+                MobilesInside.Remove(obj, containerName);
                 UpsertToLiveWorldCache();
 
                 return string.Empty;
@@ -201,8 +205,8 @@ namespace NetMud.Data.Game
                 if (!Pathways.Contains(obj, containerName))
                     return "That is not in the container";
 
-                Pathways.Remove(obj, containerName);
                 obj.TryMoveInto(null);
+                Pathways.Remove(obj, containerName);
                 UpsertToLiveWorldCache();
 
                 return string.Empty;

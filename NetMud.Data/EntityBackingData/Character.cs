@@ -1,8 +1,10 @@
-﻿using NetMud.DataAccess;
+﻿using NetMud.Data.System;
+using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.SupportingClasses;
 using Newtonsoft.Json;
 using System;
@@ -39,7 +41,7 @@ namespace NetMud.Data.EntityBackingData
         /// <summary>
         /// Has this character "graduated" from the tutorial yet
         /// </summary>
-        public Boolean StillANoob { get; set; }
+        public bool StillANoob { get; set; }
 
         [JsonProperty("RaceData")]
         private long _raceData { get; set; }
@@ -69,12 +71,8 @@ namespace NetMud.Data.EntityBackingData
         /// <summary>
         /// The last known location ID this character was seen in by system (for restore/backup purposes)
         /// </summary>
-        public string LastKnownLocation { get; set; }
-
-        /// <summary>
-        /// The system type of the ast known location this character was seen in by system (for restore/backup purposes)
-        /// </summary>
-        public string LastKnownLocationType { get; set; }
+        [JsonConverter(typeof(ConcreteTypeConverter<GlobalPosition>))]
+        public IGlobalPosition CurrentLocation { get; set; }
 
         /// <summary>
         /// Account handle (user) this belongs to
@@ -109,6 +107,12 @@ namespace NetMud.Data.EntityBackingData
 
         }
 
+        [JsonConstructor]
+        public Character(GlobalPosition currentLocation)
+        {
+            CurrentLocation = currentLocation;
+        }
+
         /// <summary>
         /// Gets the errors for data fitness
         /// </summary>
@@ -126,11 +130,8 @@ namespace NetMud.Data.EntityBackingData
             if(RaceData == null)
                 dataProblems.Add("Invalid racial data.");
 
-            if(String.IsNullOrWhiteSpace(LastKnownLocation))
+            if(CurrentLocation == null)
                 dataProblems.Add("Last Known Location is blank.");
-
-            if(String.IsNullOrWhiteSpace(LastKnownLocation))
-                dataProblems.Add("Last Known Location Type is blank.");
 
             if (Account == null)
                 dataProblems.Add("Account is invalid.");

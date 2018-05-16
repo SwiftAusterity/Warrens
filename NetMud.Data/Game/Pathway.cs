@@ -158,7 +158,7 @@ namespace NetMud.Data.Game
                 BirthMark = me.BirthMark;
                 Keywords = me.Keywords;
                 Birthdate = me.Birthdate;
-                Position = me.Position;
+                CurrentLocation = me.CurrentLocation;
                 DataTemplateId = me.DataTemplate<IPathwayData>().ID;
                 FromLocation = me.FromLocation;
                 ToLocation = me.ToLocation;
@@ -229,7 +229,7 @@ namespace NetMud.Data.Game
 
             FromLocation = fromLocation;
             ToLocation = toLocation;
-            Position = fromLocation.Position; 
+            CurrentLocation = fromLocation.CurrentLocation; 
 
             if (String.IsNullOrWhiteSpace(bS.MessageToActor))
                 bS.MessageToActor = String.Empty;

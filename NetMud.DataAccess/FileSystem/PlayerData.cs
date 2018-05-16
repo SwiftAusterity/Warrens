@@ -1,13 +1,8 @@
 ﻿using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.Place;
-using NetMud.DataStructure.Behaviors.Rendering;
-using NetMud.DataStructure.Behaviors.System;
 using System;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Web.Hosting;
 
 namespace NetMud.DataAccess.FileSystem
@@ -111,9 +106,7 @@ namespace NetMud.DataAccess.FileSystem
 
                 var playerDirectory = new DirectoryInfo(currentBackupDirectory);
 
-                var playerFilePath = playerDirectory + GetPlayerFilename(charID);
-
-                var fileData = ReadCurrentFileByPath(playerFilePath);
+                var fileData = ReadCurrentFileByPath(GetPlayerFilename(charID));
 
                 //no player file to load, derp
                 if (fileData.Length == 0)
@@ -125,33 +118,6 @@ namespace NetMud.DataAccess.FileSystem
                 //bad load, dump it
                 if (newPlayerToLoad == null)
                     return null;
-
-                //abstract this out to a helper maybe?
-                var locationAssembly = Assembly.GetAssembly(typeof(ILocation));
-
-                var ch = newPlayerToLoad.DataTemplate<ICharacter>();
-                if (ch.LastKnownLocationType == null)
-                    ch.LastKnownLocationType = typeof(IRoom).Name;
-
-                var lastKnownLocType = locationAssembly.DefinedTypes.FirstOrDefault(tp => tp.Name.Equals(ch.LastKnownLocationType));
-
-                ILocation lastKnownLoc = null;
-                if (lastKnownLocType != null && !string.IsNullOrWhiteSpace(ch.LastKnownLocation))
-                {
-                    if (lastKnownLocType.GetInterfaces().Contains(typeof(ISingleton)))
-                    {
-                        long lastKnownLocID = long.Parse(ch.LastKnownLocation);
-                        lastKnownLoc = LiveCache.Get<ILocation>(lastKnownLocID, lastKnownLocType);
-                    }
-                    else
-                    {
-                        var cacheKey = new LiveCacheKey(lastKnownLocType, ch.LastKnownLocation);
-                        lastKnownLoc = LiveCache.Get<ILocation>(cacheKey);
-                    }
-                }
-
-                newPlayerToLoad.Position.CurrentLocation = lastKnownLoc;
-                newPlayerToLoad.Position.CurrentZone = lastKnownLoc.AbsolutePosition().CurrentZone;
 
                 //We have the player in live cache now so make it move to the right place
                 newPlayerToLoad.GetFromWorldOrSpawn();

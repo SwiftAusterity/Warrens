@@ -1,5 +1,6 @@
 ﻿using NetMud.Authentication;
 using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using System;
 using System.Collections.Generic;
@@ -141,7 +142,7 @@ namespace NetMud.Models.Admin
         [Display(Name = "Help Text Body")]
         public string HelpBody { get; set; }
 
-        public IEnumerable<IRoomData> ValidRooms { get; set; }
+        public IEnumerable<IZoneData> ValidZones { get; set; }
         public IEnumerable<IInanimateData> ValidObjects { get; set; }
         public IEnumerable<IMaterial> ValidMaterials { get; set; }
         public IRace DataObject { get; set; }

@@ -88,7 +88,7 @@ namespace NetMud.Backup
                     var liveEntity = entity as IEntity;
 
                     //Don't write objects that are on live players, player backup does that itself
-                    if (liveEntity.Position?.CurrentLocation != null && liveEntity.Position.CurrentLocation.GetType() == typeof(Player))
+                    if (liveEntity.CurrentLocation?.CurrentLocation != null && liveEntity.CurrentLocation.CurrentLocation.GetType() == typeof(Player))
                         continue;
 
                     liveDataAccessor.WriteEntity(liveEntity);
@@ -214,7 +214,7 @@ namespace NetMud.Backup
                 //I don't know how we can even begin to do this type agnostically since the collections are held on type specific objects without some super ugly reflection
                 foreach(Zone entity in entitiesToLoad.Where(ent => ent.GetType() == typeof(Zone)))
                 {
-                    if(entity.Position == null)
+                    if(entity.CurrentLocation == null)
                         entity.SpawnNewInWorld();
 
                     foreach (ILocale obj in entity.Contents.EntitiesContained())
@@ -227,7 +227,7 @@ namespace NetMud.Backup
 
                 foreach (Room entity in entitiesToLoad.Where(ent => ent.GetType() == typeof(Room)))
                 {
-                    if (entity.Position == null)
+                    if (entity.CurrentLocation == null)
                         entity.SpawnNewInWorld();
 
                     foreach (IInanimate obj in entity.Contents.EntitiesContained())
@@ -282,7 +282,7 @@ namespace NetMud.Backup
                     {
                         entity.ToLocation = roomTo;
                         entity.FromLocation = roomFrom;
-                        entity.Position = roomFrom.Position;
+                        entity.CurrentLocation = roomFrom.CurrentLocation;
                         roomFrom.MoveInto<IPathway>(entity);
                     }
                 }

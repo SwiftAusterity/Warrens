@@ -6,6 +6,7 @@ using NetMud.Data.LookupData;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Behaviors.Actionable;
 using NetMud.DataStructure.Behaviors.Automation;
@@ -92,7 +93,7 @@ namespace NetMud.Controllers.GameAdmin
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
                 ValidMaterials = BackingDataCache.GetAll<IMaterial>(),
                 ValidObjects = BackingDataCache.GetAll<IInanimateData>(),
-                ValidRooms = BackingDataCache.GetAll<IRoomData>()
+                ValidZones = BackingDataCache.GetAll<IZoneData>()
             };
 
             return View("~/Views/GameAdmin/Race/Add.cshtml", vModel);
@@ -145,18 +146,18 @@ namespace NetMud.Controllers.GameAdmin
 
             if (vModel.StartingLocationId > 0)
             {
-                var room = BackingDataCache.Get<RoomData>(vModel.StartingLocationId);
+                var zone = BackingDataCache.Get<ZoneData>(vModel.StartingLocationId);
 
-                if (room != null)
-                    newObj.StartingLocation = room;
+                if (zone != null)
+                    newObj.StartingLocation = zone;
             }
 
             if (vModel.RecallLocationId > 0)
             {
-                var room = BackingDataCache.Get<RoomData>(vModel.RecallLocationId);
+                var zone = BackingDataCache.Get<ZoneData>(vModel.RecallLocationId);
 
-                if (room != null)
-                    newObj.EmergencyLocation = room;
+                if (zone != null)
+                    newObj.EmergencyLocation = zone;
             }
 
             if (vModel.BloodId > 0)
@@ -220,7 +221,7 @@ namespace NetMud.Controllers.GameAdmin
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
                 ValidMaterials = BackingDataCache.GetAll<IMaterial>(),
                 ValidObjects = BackingDataCache.GetAll<IInanimateData>(),
-                ValidRooms = BackingDataCache.GetAll<IRoomData>()
+                ValidZones = BackingDataCache.GetAll<IZoneData>()
             };
 
             var obj = BackingDataCache.Get<IRace>(id);
@@ -325,18 +326,18 @@ namespace NetMud.Controllers.GameAdmin
 
             if (vModel.StartingLocationId > 0)
             {
-                var room = BackingDataCache.Get<RoomData>(vModel.StartingLocationId);
+                var zone = BackingDataCache.Get<ZoneData>(vModel.StartingLocationId);
 
-                if (room != null)
-                    obj.StartingLocation = room;
+                if (zone != null)
+                    obj.StartingLocation = zone;
             }
 
             if (vModel.RecallLocationId > 0)
             {
-                var room = BackingDataCache.Get<RoomData>(vModel.RecallLocationId);
+                var zone = BackingDataCache.Get<ZoneData>(vModel.RecallLocationId);
 
-                if (room != null)
-                    obj.EmergencyLocation = room;
+                if (zone != null)
+                    obj.EmergencyLocation = zone;
             }
 
             if (vModel.BloodId > -1)

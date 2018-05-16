@@ -107,7 +107,7 @@ namespace NetMud.Interp
             OriginalCommandString = fullCommand;
             Actor = actor;
 
-            Position = Actor.Position;
+            Position = Actor.CurrentLocation;
 
             AccessErrors = new List<string>();
             CommandStringRemainder = Enumerable.Empty<string>();
@@ -660,7 +660,7 @@ namespace NetMud.Interp
 
                 var validObjects = new List<T>();
 
-                validObjects.AddRange(subjectCollection.Select(sbj => sbj.Position.CurrentLocation)
+                validObjects.AddRange(subjectCollection.Select(sbj => sbj.CurrentLocation.CurrentLocation)
                                                         .Where(cl => cl.Keywords.Any(key => key.Contains(currentParmString))).Select(ent => (T)ent));
 
                 if (validObjects.Count() > 0)
@@ -710,7 +710,7 @@ namespace NetMud.Interp
 
                         var validSubjects = new List<IEntity>();
 
-                        validSubjects.AddRange(subjectCollection.Where(sbj => sbj.Position.CurrentLocation.Equals(container)));
+                        validSubjects.AddRange(subjectCollection.Where(sbj => sbj.CurrentLocation.CurrentLocation.Equals(container)));
 
                         if (validSubjects.Count() > 1)
                         {

@@ -6,6 +6,7 @@ using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
 using System;
 using NetMud.DataStructure.SupportingClasses;
+using NetMud.Data.System;
 
 namespace NutMud.Commands.Administrative
 {
@@ -59,7 +60,7 @@ namespace NutMud.Commands.Administrative
 
             messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation.CurrentLocation, null);
 
-            moveTo.MoveInto((Player)Actor);
+            Actor.TryTeleport(new GlobalPosition(moveTo));
         }
 
         /// <summary>

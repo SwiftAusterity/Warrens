@@ -1,4 +1,5 @@
 ﻿using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Actionable;
 using NetMud.DataStructure.Behaviors.Automation;
@@ -70,12 +71,12 @@ namespace NetMud.DataStructure.Base.Supporting
         /// <summary>
         /// What is the starting room of new players
         /// </summary>
-        IRoomData StartingLocation { get; set; }
+        IZoneData StartingLocation { get; set; }
 
         /// <summary>
         /// When a player loads without a location where do we sent them
         /// </summary>
-        IRoomData EmergencyLocation { get; set; }
+        IZoneData EmergencyLocation { get; set; }
 
         //TODO: Poison glands
     }

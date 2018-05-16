@@ -1,5 +1,6 @@
 ﻿using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Behaviors.Actionable;
 using NetMud.DataStructure.Behaviors.Automation;
@@ -186,11 +187,11 @@ namespace NetMud.Data.LookupData
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
-        public IRoomData StartingLocation
+        public IZoneData StartingLocation
         {
             get
             {
-                return BackingDataCache.Get<IRoomData>(_startingLocation);
+                return BackingDataCache.Get<IZoneData>(_startingLocation);
             }
             set
             {
@@ -206,11 +207,11 @@ namespace NetMud.Data.LookupData
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
-        public IRoomData EmergencyLocation
+        public IZoneData EmergencyLocation
         {
             get
             {
-                return BackingDataCache.Get<IRoomData>(_emergencyLocation);
+                return BackingDataCache.Get<IZoneData>(_emergencyLocation);
             }
             set
             {

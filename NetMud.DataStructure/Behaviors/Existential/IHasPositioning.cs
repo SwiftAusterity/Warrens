@@ -10,7 +10,7 @@ namespace NetMud.DataStructure.Behaviors.Existential
         /// <summary>
         /// position in the worlds
         /// </summary>
-        IGlobalPosition Position { get; }
+        IGlobalPosition CurrentLocation { get; }
 
         /// <summary>
         /// Change the position of this

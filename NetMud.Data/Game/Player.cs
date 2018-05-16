@@ -125,46 +125,7 @@ namespace NetMud.Data.Game
 
             return Descriptor.SendWrapper(strings);
         }
-
-        /// <summary>
-        /// Birthmark for current live location of this
-        /// </summary>
-        private string _currentLocationBirthmark;
-
-        /// <summary>
-        /// Restful location container this is inside of
-        /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        public override IGlobalPosition Position
-        {
-            get
-            {
-                if (!String.IsNullOrWhiteSpace(_currentLocationBirthmark))
-                {
-                    var currentLocation = LiveCache.Get<ILocation>(new LiveCacheKey(typeof(ILocation), _currentLocationBirthmark));
-
-                    return new GlobalPosition { CurrentLocation = currentLocation, CurrentZone = currentLocation.Position.CurrentZone };
-                }
-
-                return null;
-            }
-            set
-            {
-                if (value == null)
-                    return;
-
-                _currentLocationBirthmark = value.CurrentLocation.BirthMark;
-                UpsertToLiveWorldCache();
-
-                //We save character data to ensure the player remains where it was on last known change
-                var ch = DataTemplate<ICharacter>();
-                ch.LastKnownLocation = value.CurrentLocation.DataTemplateId.ToString();
-                ch.LastKnownLocationType = value.CurrentLocation.GetType().Name;
-                ch.Save();
-            }
-        }
-
+        
         /// <summary>
         /// Get's the entity's model dimensions
         /// </summary>
@@ -265,8 +226,10 @@ namespace NetMud.Data.Game
                 if (Inventory.Contains(obj, containerName))
                     return "That is already in the container";
 
+                if (!obj.TryMoveInto(this))
+                    return "Unable to move into that container.";
+
                 Inventory.Add(obj, containerName);
-                obj.TryMoveInto(this);
                 UpsertToLiveWorldCache();
                 return string.Empty;
             }
@@ -303,8 +266,9 @@ namespace NetMud.Data.Game
                 if (!Inventory.Contains(obj, containerName))
                     return "That is not in the container";
 
-                Inventory.Remove(obj, containerName);
                 obj.TryMoveInto(null);
+
+                Inventory.Remove(obj, containerName);
                 UpsertToLiveWorldCache();
                 return string.Empty;
             }
@@ -333,28 +297,16 @@ namespace NetMud.Data.Game
                 Inventory = me.Inventory;
                 Keywords = me.Keywords;
 
-                if (me.Position == null)
+                if (me.CurrentLocation == null)
                 {
                     var newLoc = GetBaseSpawn();
                     newLoc.MoveInto<IPlayer>(this);
                 }
                 else
-                    me.Position.CurrentLocation.MoveInto<IPlayer>(this);
+                    me.CurrentLocation.CurrentLocation.MoveInto<IPlayer>(this);
             }
         }
 
-        /// <summary>
-        /// Find the emergency we dont know where to spawn this guy spawn location
-        /// </summary>
-        /// <returns>The emergency spawn location</returns>
-        private ILocation GetBaseSpawn()
-        {
-            var chr = DataTemplate<ICharacter>(); ;
-
-            var roomId = chr.StillANoob ? chr.RaceData.StartingLocation.ID : chr.RaceData.EmergencyLocation.ID;
-
-            return LiveCache.Get<Room>(roomId);
-        }
 
         /// <summary>
         /// Spawn this new into the live world
@@ -362,34 +314,8 @@ namespace NetMud.Data.Game
         public override void SpawnNewInWorld()
         {
             var ch = DataTemplate<ICharacter>(); ;
-            var locationAssembly = Assembly.GetAssembly(typeof(ILocation));
 
-            if (ch.LastKnownLocationType == null)
-                ch.LastKnownLocationType = typeof(IRoom).Name;
-
-            var lastKnownLocType = locationAssembly.DefinedTypes.FirstOrDefault(tp => tp.Name.Equals(ch.LastKnownLocationType));
-
-            ILocation lastKnownLoc = null;
-            if (lastKnownLocType != null && !string.IsNullOrWhiteSpace(ch.LastKnownLocation))
-            {
-                if (lastKnownLocType.GetInterfaces().Contains(typeof(ISpawnAsSingleton)))
-                {
-                    long lastKnownLocID = long.Parse(ch.LastKnownLocation);
-                    lastKnownLoc = LiveCache.Get<ILocation>(lastKnownLocID, lastKnownLocType);
-                }
-                else
-                {
-                    var cacheKey = new LiveCacheKey(lastKnownLocType, ch.LastKnownLocation);
-                    lastKnownLoc = LiveCache.Get<ILocation>(cacheKey);
-                }
-            }
-
-            if(lastKnownLoc == null)
-            {
-                lastKnownLoc = LiveCache.GetAll<ILocation>().FirstOrDefault();
-            }
-
-            SpawnNewInWorld(lastKnownLoc.Position);
+            SpawnNewInWorld(ch.CurrentLocation);
         }
 
         /// <summary>
@@ -408,18 +334,28 @@ namespace NetMud.Data.Game
             if (spawnTo == null)
                 spawnTo = GetBaseSpawn();
 
-            Position = position;
+            spawnTo.MoveInto<IPlayer>(this);
 
             //Set the data context's stuff too so we don't have to do this over again
-            ch.LastKnownLocation = spawnTo.DataTemplateId.ToString();
-            ch.LastKnownLocationType = spawnTo.GetType().Name;
+            ch.CurrentLocation = position;
             ch.Save();
-
-            spawnTo.MoveInto<IPlayer>(this);
 
             Inventory = new EntityContainer<IInanimate>();
 
             LiveCache.Add(this);
+        }
+
+        /// <summary>
+        /// Find the emergency we dont know where to spawn this guy spawn location
+        /// </summary>
+        /// <returns>The emergency spawn location</returns>
+        private ILocation GetBaseSpawn()
+        {
+            var chr = DataTemplate<ICharacter>(); ;
+
+            var zoneId = chr.StillANoob ? chr.RaceData.StartingLocation.ID : chr.RaceData.EmergencyLocation.ID;
+
+            return LiveCache.Get<Zone>(zoneId);
         }
         #endregion
     }

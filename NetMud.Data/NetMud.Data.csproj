@@ -80,6 +80,7 @@
     <Compile Include="LookupData\LookupDataPartial.cs" />
     <Compile Include="Game\Zone.cs" />
     <Compile Include="System\Affect.cs" />
+    <Compile Include="System\ConcreteTypeConverter.cs" />
     <Compile Include="System\Constants.cs" />
     <Compile Include="System\EntityContainer.cs" />
     <Compile Include="System\BackingDataPartial.cs" />

@@ -43,19 +43,6 @@ namespace NetMud.Data.Game
             }
         }
 
-        public override IGlobalPosition Position
-        {
-            get
-            {
-                return new GlobalPosition { CurrentLocation = this, CurrentZone = Affiliation.Affiliation };
-            }
-            set
-            {
-                _currentLocationBirthmark = BirthMark;
-                UpsertToLiveWorldCache();
-            }
-        }
-
         /// <summary>
         /// Get's the entity's model dimensions
         /// </summary>
@@ -162,7 +149,7 @@ namespace NetMud.Data.Game
         /// </summary>
         public override void SpawnNewInWorld()
         {
-            SpawnNewInWorld(new GlobalPosition { CurrentLocation = this, CurrentZone = Affiliation.Affiliation });
+            SpawnNewInWorld(new GlobalPosition(this));
         }
 
 
@@ -177,7 +164,7 @@ namespace NetMud.Data.Game
             BirthMark = LiveCache.GetUniqueIdentifier(roomTemplate);
             Keywords = new string[] { roomTemplate.Name.ToLower() };
             Birthdate = DateTime.Now;
-            Position = spawnTo;
+            CurrentLocation = spawnTo;
         }
         #endregion
     }

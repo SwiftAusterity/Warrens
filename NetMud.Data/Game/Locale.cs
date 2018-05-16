@@ -78,7 +78,7 @@ namespace NetMud.Data.Game
 
         public override void SpawnNewInWorld()
         {
-            SpawnNewInWorld(new GlobalPosition { CurrentLocation = Affiliation, CurrentZone = Affiliation });
+            SpawnNewInWorld(new GlobalPosition(Affiliation));
         }
 
         public override void SpawnNewInWorld(IGlobalPosition spawnTo)
@@ -105,7 +105,7 @@ namespace NetMud.Data.Game
                 DataTemplateId = me.DataTemplateId;
                 Pathways = me.Pathways;
                 Keywords = me.Keywords;
-                Position = me.Position;
+                CurrentLocation = me.CurrentLocation;
             }
         }
 

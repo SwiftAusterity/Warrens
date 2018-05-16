@@ -1,5 +1,4 @@
-﻿using NetMud.DataStructure.Base.Place;
-using NetMud.DataStructure.Behaviors.Rendering;
+﻿using NetMud.DataStructure.Behaviors.Rendering;
 
 namespace NetMud.DataStructure.Behaviors.Existential
 {
@@ -9,13 +8,8 @@ namespace NetMud.DataStructure.Behaviors.Existential
     public interface IGlobalPosition
     {
         /// <summary>
-        /// The zone this is in
-        /// </summary>
-        IZone CurrentZone { get; set; }
-
-        /// <summary>
         /// Current location this entity is in
         /// </summary>
-        ILocation CurrentLocation { get; set; }
+        IContains CurrentLocation { get; set; }
     }
 }

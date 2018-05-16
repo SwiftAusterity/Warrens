@@ -228,6 +228,7 @@ namespace NetMud.DataAccess.Cache
     /// <summary>
     /// A cache key for live entities
     /// </summary>
+    [Serializable]
     public class LiveCacheKey : ICacheKey
     {
         public CacheType CacheType

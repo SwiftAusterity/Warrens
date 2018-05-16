@@ -15,7 +15,7 @@ namespace NutMud.Commands.Rendering
     /// </summary>
     [CommandKeyword("look", false)]
     [CommandPermission(StaffRank.Player)]
-    [CommandParameter(CommandUsage.Subject, typeof(ILookable), new CacheReferenceType[] { CacheReferenceType.Entity }, true )]
+    [CommandParameter(CommandUsage.Subject, typeof(ILookable), new CacheReferenceType[] { CacheReferenceType.Entity }, true)]
     [CommandRange(CommandRangeType.Touch, 0)]
     public class Look : CommandPartial
     {
@@ -37,10 +37,7 @@ namespace NutMud.Commands.Rendering
             //Just do a look on the room
             if (Subject == null)
             {
-                if(OriginLocation.CurrentLocation == null)
-                    sb.AddRange(OriginLocation.CurrentZone.RenderToLook(Actor));
-                else
-                    sb.AddRange(OriginLocation.CurrentLocation.RenderToLook(Actor));
+                sb.AddRange(OriginLocation.CurrentLocation.RenderToLook(Actor));
             }
             else
             {
