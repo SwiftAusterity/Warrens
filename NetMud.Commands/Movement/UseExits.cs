@@ -70,37 +70,38 @@ namespace NetMud.Commands.Movement
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            var sb = new List<string>();
+            var sb = new List<string>
+            {
+                string.Format("Valid Syntax:"),
+                "east".PadWithString(14, "&nbsp;", true),
+                "north".PadWithString(14, "&nbsp;", true),
+                "northeast".PadWithString(14, "&nbsp;", true),
+                "northwest".PadWithString(14, "&nbsp;", true),
+                "south".PadWithString(14, "&nbsp;", true),
+                "southeast".PadWithString(14, "&nbsp;", true),
+                "southwest".PadWithString(14, "&nbsp;", true),
+                "west".PadWithString(14, "&nbsp;", true),
+                "up".PadWithString(14, "&nbsp;", true),
+                "down".PadWithString(14, "&nbsp;", true),
+                "upeast".PadWithString(14, "&nbsp;", true),
+                "upnorth".PadWithString(14, "&nbsp;", true),
+                "upnortheast".PadWithString(14, "&nbsp;", true),
+                "upnorthwest".PadWithString(14, "&nbsp;", true),
+                "upsouth".PadWithString(14, "&nbsp;", true),
+                "upsoutheast".PadWithString(14, "&nbsp;", true),
+                "upsouthwest".PadWithString(14, "&nbsp;", true),
+                "upwest".PadWithString(14, "&nbsp;", true),
+                "downeast".PadWithString(14, "&nbsp;", true),
+                "downnorth".PadWithString(14, "&nbsp;", true),
+                "downnortheast".PadWithString(14, "&nbsp;", true),
+                "downnorthwest".PadWithString(14, "&nbsp;", true),
+                "downsouth".PadWithString(14, "&nbsp;", true),
+                "downsoutheast".PadWithString(14, "&nbsp;", true),
+                "downsouthwest".PadWithString(14, "&nbsp;", true),
+                "downwest".PadWithString(14, "&nbsp;", true),
 
-            sb.Add(string.Format("Valid Syntax:"));
-            sb.Add("east".PadWithString(14, "&nbsp;", true));
-            sb.Add("north".PadWithString(14, "&nbsp;", true));
-            sb.Add("northeast".PadWithString(14, "&nbsp;", true));
-            sb.Add("northwest".PadWithString(14, "&nbsp;", true));
-            sb.Add("south".PadWithString(14, "&nbsp;", true));
-            sb.Add("southeast".PadWithString(14, "&nbsp;", true));
-            sb.Add("southwest".PadWithString(14, "&nbsp;", true));
-            sb.Add("west".PadWithString(14, "&nbsp;", true));
-            sb.Add("up".PadWithString(14, "&nbsp;", true));
-            sb.Add("down".PadWithString(14, "&nbsp;", true));
-            sb.Add("upeast".PadWithString(14, "&nbsp;", true));
-            sb.Add("upnorth".PadWithString(14, "&nbsp;", true));
-            sb.Add("upnortheast".PadWithString(14, "&nbsp;", true));
-            sb.Add("upnorthwest".PadWithString(14, "&nbsp;", true));
-            sb.Add("upsouth".PadWithString(14, "&nbsp;", true));
-            sb.Add("upsoutheast".PadWithString(14, "&nbsp;", true));
-            sb.Add("upsouthwest".PadWithString(14, "&nbsp;", true));
-            sb.Add("upwest".PadWithString(14, "&nbsp;", true));
-            sb.Add("downeast".PadWithString(14, "&nbsp;", true));
-            sb.Add("downnorth".PadWithString(14, "&nbsp;", true));
-            sb.Add("downnortheast".PadWithString(14, "&nbsp;", true));
-            sb.Add("downnorthwest".PadWithString(14, "&nbsp;", true));
-            sb.Add("downsouth".PadWithString(14, "&nbsp;", true));
-            sb.Add("downsoutheast".PadWithString(14, "&nbsp;", true));
-            sb.Add("downsouthwest".PadWithString(14, "&nbsp;", true));
-            sb.Add("downwest".PadWithString(14, "&nbsp;", true));
-
-            sb.Add("enter &lt;exit name&gt;".PadWithString(14, "&nbsp;", true));
+                "enter &lt;exit name&gt;".PadWithString(14, "&nbsp;", true)
+            };
 
             return sb;
         }

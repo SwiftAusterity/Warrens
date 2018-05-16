@@ -33,9 +33,10 @@ namespace NutMud.Commands.Administrative
         public override void Execute()
         {
             var moveTo = (ILocation)Subject;
-            var sb = new List<string>();
-
-            sb.Add("You teleport.");
+            var sb = new List<string>
+            {
+                "You teleport."
+            };
 
             var toActor = new Message(MessagingType.Visible, 1)
             {
@@ -69,9 +70,10 @@ namespace NutMud.Commands.Administrative
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            var sb = new List<string>();
-
-            sb.Add("Valid Syntax: goto &lt;room name&gt;");
+            var sb = new List<string>
+            {
+                "Valid Syntax: goto &lt;room name&gt;"
+            };
 
             return sb;
         }

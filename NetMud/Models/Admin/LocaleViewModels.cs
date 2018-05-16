@@ -30,6 +30,7 @@ namespace NetMud.Models.Admin
     public class AddEditLocaleDataViewModel : BaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
+        public long ZoneId { get; set; }
 
         public AddEditLocaleDataViewModel()
         {

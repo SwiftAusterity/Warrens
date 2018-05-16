@@ -76,12 +76,13 @@ namespace NetMud.Commands.EntityManipulation
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            var sb = new List<string>();
-
-            sb.Add("Valid Syntax: get &lt;object&gt;");
-            sb.Add("take &lt;object&gt;".PadWithString(14, "&nbsp;", true));
-            sb.Add("get &lt;object&gt; &lt;container&gt;".PadWithString(14, "&nbsp;", true));
-            sb.Add("take &lt;object&gt; &lt;container&gt;".PadWithString(14, "&nbsp;", true));
+            var sb = new List<string>
+            {
+                "Valid Syntax: get &lt;object&gt;",
+                "take &lt;object&gt;".PadWithString(14, "&nbsp;", true),
+                "get &lt;object&gt; &lt;container&gt;".PadWithString(14, "&nbsp;", true),
+                "take &lt;object&gt; &lt;container&gt;".PadWithString(14, "&nbsp;", true)
+            };
             return sb;
         }
 

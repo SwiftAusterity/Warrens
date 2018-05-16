@@ -19,9 +19,7 @@
         </dd>
         <dt>Locales:</dt>
         <dd>
-            @Model.Zones.Count().ToString() [
-            @Html.ActionLink("Manage", "Index", "Locale")
-            @Html.ActionLink("Add", "Add", "Locale") ]
+            @Model.Locales.Count().ToString() [ Use Zones Yo ]
             @if (Model.Locales.Any(r => r.FitnessProblems))
             {
                 <span style="color:red;">DATA PROBLEMS</span>

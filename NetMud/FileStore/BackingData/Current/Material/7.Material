@@ -1,1 +1,20 @@
-{"Conductive":true,"Magnetic":false,"Flammable":false,"Viscosity":1,"Density":1,"Mallebility":1,"Ductility":1,"Porosity":1,"SolidPoint":1,"GasPoint":1,"TemperatureRetention":1,"Resistance":{"Hypermagnetic":100},"Composition":{},"HelpText":null,"ID":7,"Created":"2015-08-20T16:56:12.24","LastRevised":"2015-08-20T16:56:12.24","Name":"Human Blood"}
+{
+  "Conductive": true,
+  "Magnetic": false,
+  "Flammable": false,
+  "Viscosity": 1,
+  "Density": 1,
+  "Mallebility": 1,
+  "Ductility": 1,
+  "Porosity": 1,
+  "SolidPoint": 1,
+  "GasPoint": 1,
+  "TemperatureRetention": 1,
+  "Resistance": { "Hypermagnetic": 100 },
+  "Composition": {},
+  "HelpText": null,
+  "ID": 7,
+  "Created": "2015-08-20T16:56:12.24",
+  "LastRevised": "2015-08-20T16:56:12.24",
+  "Name": "Human Blood"
+}

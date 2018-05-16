@@ -75,10 +75,11 @@ namespace NutMud.Commands.Rendering
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            var sb = new List<string>();
-
-            sb.Add("Valid Syntax: look");
-            sb.Add("look &lt;target&gt;".PadWithString(14, "&nbsp;", true));
+            var sb = new List<string>
+            {
+                "Valid Syntax: look",
+                "look &lt;target&gt;".PadWithString(14, "&nbsp;", true)
+            };
 
             return sb;
         }

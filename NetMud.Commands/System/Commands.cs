@@ -73,9 +73,10 @@ namespace NetMud.Commands.System
 
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            var sb = new List<string>();
-
-            sb.Add("Valid Syntax: commands");
+            var sb = new List<string>
+            {
+                "Valid Syntax: commands"
+            };
 
             return sb;
         }

@@ -22,27 +22,27 @@ namespace NetMud.Data.EntityBackingData
 
         public IRoomData CentralRoom(int zIndex = -1)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public Tuple<int, int, int> Diameter()
         {
-            throw new NotImplementedException();
+            return new Tuple<int, int, int>(0, 0, 0);
         }
 
         public Tuple<int, int, int> FullDimensions()
         {
-            throw new NotImplementedException();
+            return new Tuple<int, int, int>(0, 0, 0);
         }
 
         public override Tuple<int, int, int> GetModelDimensions()
         {
-            throw new NotImplementedException();
+            return new Tuple<int, int, int>(0, 0, 0);
         }
 
         public string RenderMap(int zIndex, bool forAdmin = false)
         {
-            throw new NotImplementedException();
+            return string.Empty;
         }
     }
 }

@@ -180,18 +180,20 @@ namespace NetMud.Physics
             var flattenedModel = new StringBuilder();
 
             //load the plane up with blanks
-            List<string[]> flattenedPlane = new List<string[]>();
-            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
-            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
-            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
-            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
-            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
-            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
-            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
-            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
-            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
-            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
-            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
+            List<string[]> flattenedPlane = new List<string[]>
+            {
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " }
+            };
 
             short xI, yI;
             for (yI = 0; yI < 11; yI++)

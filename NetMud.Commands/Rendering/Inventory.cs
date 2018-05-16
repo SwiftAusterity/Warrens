@@ -59,10 +59,11 @@ namespace NetMud.Commands.Rendering
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            var sb = new List<string>();
-
-            sb.Add("Valid Syntax: inventory");
-            sb.Add("inv".PadWithString(14, "&nbsp;", true));
+            var sb = new List<string>
+            {
+                "Valid Syntax: inventory",
+                "inv".PadWithString(14, "&nbsp;", true)
+            };
 
             return sb;
         }

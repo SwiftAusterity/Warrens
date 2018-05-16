@@ -87,13 +87,14 @@ namespace NetMud.Communication.Messaging
         /// <param name="DestinationLocation">The location the command is targetting</param>
         public void ExecuteMessaging(IEntity Actor, IEntity Subject, IEntity Target, IEntity OriginLocation, IEntity DestinationLocation)
         {
-            var entities = new Dictionary<MessagingTargetType, IEntity[]>();
-
-            entities.Add(MessagingTargetType.Actor, new IEntity[] { Actor });
-            entities.Add(MessagingTargetType.Subject, new IEntity[] { Subject });
-            entities.Add(MessagingTargetType.Target, new IEntity[] { Target });
-            entities.Add(MessagingTargetType.OriginLocation, new IEntity[] { OriginLocation });
-            entities.Add(MessagingTargetType.DestinationLocation, new IEntity[] { DestinationLocation });
+            var entities = new Dictionary<MessagingTargetType, IEntity[]>
+            {
+                { MessagingTargetType.Actor, new IEntity[] { Actor } },
+                { MessagingTargetType.Subject, new IEntity[] { Subject } },
+                { MessagingTargetType.Target, new IEntity[] { Target } },
+                { MessagingTargetType.OriginLocation, new IEntity[] { OriginLocation } },
+                { MessagingTargetType.DestinationLocation, new IEntity[] { DestinationLocation } }
+            };
 
             if (Actor != null && ToActor.SelectMany(msg => msg.Override).Any(str => !string.IsNullOrWhiteSpace(str)))
                 Actor.WriteTo(TranslateOutput(ToActor.SelectMany(msg => msg.Override), entities));

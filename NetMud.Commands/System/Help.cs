@@ -59,9 +59,10 @@ namespace NutMud.Commands.System
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            var sb = new List<string>();
-
-            sb.Add(string.Format("Valid Syntax: help &lt;topic&gt;"));
+            var sb = new List<string>
+            {
+                string.Format("Valid Syntax: help &lt;topic&gt;")
+            };
 
             return sb;
         }

@@ -69,10 +69,11 @@ namespace NutMud.Commands.System
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            var sb = new List<string>();
-
-            sb.Add("Valid Syntax: quit");
-            sb.Add("exit".PadWithString(14, "&nbsp;", true));
+            var sb = new List<string>
+            {
+                "Valid Syntax: quit",
+                "exit".PadWithString(14, "&nbsp;", true)
+            };
 
             return sb;
         }

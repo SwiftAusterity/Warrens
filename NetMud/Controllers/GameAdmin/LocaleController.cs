@@ -35,24 +35,9 @@ namespace NetMud.Controllers.GameAdmin
             UserManager = userManager;
         }
 
-        public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
-        {
-            var vModel = new ManageLocaleDataViewModel(BackingDataCache.GetAll<ILocaleData>())
-            {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
-
-                CurrentPageNumber = CurrentPageNumber,
-                ItemsPerPage = ItemsPerPage,
-                SearchTerms = SearchTerms
-            };
-
-            return View("~/Views/GameAdmin/Locale/Index.cshtml", vModel);
-        }
-
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Remove(long ID, string authorize)
+        public ActionResult Remove(long zoneId, long ID, string authorize)
         {
             string message = string.Empty;
 
@@ -75,15 +60,23 @@ namespace NetMud.Controllers.GameAdmin
                     message = "Error; Removal failed.";
             }
 
-            return RedirectToAction("Index", new { Message = message });
+            return RedirectToAction("Edit", "Zone", new { Id = zoneId, Message = message });
         }
 
         [HttpGet]
-        public ActionResult Add()
+        public ActionResult Add(long zoneId)
         {
+            IZoneData zone = BackingDataCache.Get<IZoneData>(zoneId);
+
+            if(zone == null)
+            {
+                return RedirectToAction("Index", "Zone", new { Id = zoneId, Message = "Invalid zone" });
+            }
+
             var vModel = new AddEditLocaleDataViewModel
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId())
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                ZoneId = zoneId
             };
 
             return View("~/Views/GameAdmin/Locale/Add.cshtml", vModel);
@@ -91,30 +84,48 @@ namespace NetMud.Controllers.GameAdmin
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Add(AddEditLocaleDataViewModel vModel)
+        public ActionResult Add(long zoneId, AddEditLocaleDataViewModel vModel)
         {
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
+            IZoneData zone = BackingDataCache.Get<IZoneData>(zoneId);
+
+            if (zone == null)
+            {
+                return RedirectToAction("Index", "Zone", new { Id = zoneId, Message = "Invalid zone" });
+            }
+
             var newObj = new LocaleData
             {
-                Name = vModel.Name
+                Name = vModel.Name,
+                Zone = zone
             };
 
             if (newObj.Create() == null)
                 message = "Error; Creation failed.";
             else
             {
+                zone.Locales.Add(newObj);
+                zone.Save();
+
                 LoggingUtility.LogAdminCommandUsage("*WEB* - AddLocale[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 message = "Creation Successful.";
             }
 
-            return RedirectToAction("Index", new { Message = message });
+            return RedirectToAction("Index", "Zone", new { Id = zoneId, Message = message });
         }
 
         [HttpGet]
-        public ActionResult Edit(long id)
+        public ActionResult Edit(long zoneId, long id)
         {
+            IZoneData zone = BackingDataCache.Get<IZoneData>(zoneId);
+
+            if (zone == null)
+            {
+                return RedirectToAction("Index", "Zone", new { Id = zoneId, Message = "Invalid zone" });
+            }
+
             string message = string.Empty;
             var vModel = new AddEditLocaleDataViewModel
             {
@@ -126,7 +137,7 @@ namespace NetMud.Controllers.GameAdmin
             if (obj == null)
             {
                 message = "That does not exist";
-                return RedirectToAction("Index", new { Message = message });
+                return RedirectToAction("Index", "Zone", new { Id = zoneId, Message = message });
             }
 
             vModel.DataObject = obj;
@@ -137,8 +148,15 @@ namespace NetMud.Controllers.GameAdmin
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(AddEditLocaleDataViewModel vModel, long id)
+        public ActionResult Edit(long zoneId, AddEditLocaleDataViewModel vModel, long id)
         {
+            IZoneData zone = BackingDataCache.Get<IZoneData>(zoneId);
+
+            if (zone == null)
+            {
+                return RedirectToAction("Index", "Zone", new { Id = zoneId, Message = "Invalid zone" });
+            }
+
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
@@ -159,7 +177,7 @@ namespace NetMud.Controllers.GameAdmin
             else
                 message = "Error; Edit failed.";
 
-            return RedirectToAction("Index", new { Message = message });
+            return RedirectToAction("Index", "Zone", new { Id = zoneId, Message = message });
         }
     }
 }

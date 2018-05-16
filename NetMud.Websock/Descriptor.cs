@@ -392,10 +392,11 @@ namespace NetMud.Websock
             _currentPlayer.Descriptor = this;
 
             //We need to barf out to the connected client the welcome message. The client will only indicate connection has been established.
-            var welcomeMessage = new List<String>();
-
-            welcomeMessage.Add(string.Format("Welcome to alpha phase twinMUD, {0}", currentCharacter.FullName()));
-            welcomeMessage.Add("Please feel free to LOOK around.");
+            var welcomeMessage = new List<String>
+            {
+                string.Format("Welcome to alpha phase twinMUD, {0}", currentCharacter.FullName()),
+                "Please feel free to LOOK around."
+            };
 
             _currentPlayer.WriteTo(welcomeMessage);
 

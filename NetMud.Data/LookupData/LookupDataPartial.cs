@@ -29,9 +29,10 @@ namespace NetMud.Data.LookupData
 
         public virtual IEnumerable<string> RenderHelpBody()
         {
-            var sb = new List<string>();
-
-            sb.Add(HelpText);
+            var sb = new List<string>
+            {
+                HelpText
+            };
 
             return sb;
         }

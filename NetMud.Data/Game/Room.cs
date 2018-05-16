@@ -97,10 +97,11 @@ namespace NetMud.Data.Game
         /// <returns>the output strings</returns>
         public override IEnumerable<string> RenderToLook(IEntity actor)
         {
-            var sb = new List<string>();
-
-            sb.Add(string.Format("%O%{0}%O%", DataTemplate<IRoomData>().Name));
-            sb.Add(string.Empty.PadLeft(DataTemplate<IRoomData>().Name.Length, '-'));
+            var sb = new List<string>
+            {
+                string.Format("%O%{0}%O%", DataTemplate<IRoomData>().Name),
+                string.Empty.PadLeft(DataTemplate<IRoomData>().Name.Length, '-')
+            };
 
             return sb;
         }

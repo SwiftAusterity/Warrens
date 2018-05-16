@@ -28,9 +28,10 @@ namespace NetMud.Commands.Comm
         /// </summary>
         public override void Execute()
         {
-            var sb = new List<string>();
-
-            sb.Add(String.Format("You say '{0}'", Subject));
+            var sb = new List<string>
+            {
+                String.Format("You say '{0}'", Subject)
+            };
 
             var toActor = new Message(MessagingType.Audible, 1)
             {
@@ -59,10 +60,11 @@ namespace NetMud.Commands.Comm
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            var sb = new List<string>();
-
-            sb.Add("Valid Syntax: say &lt;text&gt;");
-            sb.Add("speak &lt;text&gt;".PadWithString(14, "&nbsp;", true));
+            var sb = new List<string>
+            {
+                "Valid Syntax: say &lt;text&gt;",
+                "speak &lt;text&gt;".PadWithString(14, "&nbsp;", true)
+            };
 
             return sb;
         }

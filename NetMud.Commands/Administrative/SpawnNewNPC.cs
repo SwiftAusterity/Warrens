@@ -81,10 +81,11 @@ namespace NutMud.Commands.System
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            var sb = new List<string>();
-
-            sb.Add(string.Format("Valid Syntax: spawnNewNPC &lt;object name&gt;"));
-            sb.Add("spawnNewNPC  &lt;NPC name&gt;  &lt;location name to spawn to&gt;".PadWithString(14, "&nbsp;", true));
+            var sb = new List<string>
+            {
+                string.Format("Valid Syntax: spawnNewNPC &lt;object name&gt;"),
+                "spawnNewNPC  &lt;NPC name&gt;  &lt;location name to spawn to&gt;".PadWithString(14, "&nbsp;", true)
+            };
 
             return sb;
         }

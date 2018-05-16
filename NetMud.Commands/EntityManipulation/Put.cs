@@ -64,10 +64,11 @@ namespace NetMud.Commands.EntityManipulation
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            var sb = new List<string>();
-
-            sb.Add("Valid Syntax: put &lt;object&gt; &lt;container&gt;");
-            sb.Add("place &lt;object&gt; &lt;container&gt;".PadWithString(14, "&nbsp;", true));
+            var sb = new List<string>
+            {
+                "Valid Syntax: put &lt;object&gt; &lt;container&gt;",
+                "place &lt;object&gt; &lt;container&gt;".PadWithString(14, "&nbsp;", true)
+            };
 
             return sb;
         }

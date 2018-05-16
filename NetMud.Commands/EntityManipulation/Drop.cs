@@ -61,9 +61,10 @@ namespace NetMud.Commands.EntityManipulation
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            var sb = new List<string>();
-
-            sb.Add("Valid Syntax: drop &lt;object&gt;");
+            var sb = new List<string>
+            {
+                "Valid Syntax: drop &lt;object&gt;"
+            };
 
             return sb;
         }

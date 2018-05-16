@@ -1,1 +1,11 @@
-{"EntityClass":"NetMud.Data.Game.Intelligence, NetMud.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null","Gender":"Male","SurName":"Wolf","RaceData":1,"Affects":[],"ID":3,"Created":"0001-01-01T00:00:00","LastRevised":"0001-01-01T00:00:00","Name":"Forest"}
+{
+  "EntityClass": "NetMud.Data.Game.Intelligence, NetMud.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+  "Gender": "Male",
+  "SurName": "Wolf",
+  "RaceData": 1,
+  "Affects": [],
+  "ID": 3,
+  "Created": "2018-05-16T12:07:18.9028938-05:00",
+  "LastRevised": "2018-05-16T12:07:18.9028938-05:00",
+  "Name": "Forest"
+}
