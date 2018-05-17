@@ -6,7 +6,8 @@ using NetMud.Cartography;
 using Newtonsoft.Json;
 using System;
 using System.Web.Script.Serialization;
-using System.Collections.Generic;
+using NetMud.Data.DataIntegrity;
+using NetMud.DataAccess.Cache;
 
 namespace NetMud.Data.EntityBackingData
 {
@@ -25,16 +26,6 @@ namespace NetMud.Data.EntityBackingData
         }
 
         /// <summary>
-        /// 0->360 degrees with 0 being absolute north (meaning 90 is west, 180 south, etc) -1 means no cardinality
-        /// </summary>
-        public int DegreesFromNorth { get; set; }
-
-        /// <summary>
-        /// -100 to 100 (negative being a decline) % grade of up and down
-        /// </summary>
-        public int InclineGrade { get; set; }
-
-        /// <summary>
         /// DegreesFromNorth translated
         /// </summary>
         [JsonIgnore]
@@ -48,24 +39,63 @@ namespace NetMud.Data.EntityBackingData
         }
 
         /// <summary>
+        /// 0->360 degrees with 0 being absolute north (meaning 90 is west, 180 south, etc) -1 means no cardinality
+        /// </summary>
+        public int DegreesFromNorth { get; set; }
+
+        /// <summary>
+        /// -100 to 100 (negative being a decline) % grade of up and down
+        /// </summary>
+        public int InclineGrade { get; set; }
+
+        [JsonProperty("ToLocation")]
+        private long _toLocation { get; set; }
+
+        /// <summary>
+        /// What is in the middle of the room
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        [NonNullableDataIntegrity("To Location is invalid.")]
+        public ILocationBackingData ToLocation
+        {
+            get
+            {
+                return BackingDataCache.Get<ILocationBackingData>(_toLocation);
+            }
+            set
+            {
+                if (value != null)
+                    _toLocation = value.ID;
+            }
+        }
+
+        [JsonProperty("FromLocation")]
+        private long _fromLocation { get; set; }
+
+        /// <summary>
+        /// What is in the middle of the room
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        [NonNullableDataIntegrity("From Location is invalid.")]
+        public ILocationBackingData FromLocation
+        {
+            get
+            {
+                return BackingDataCache.Get<ILocationBackingData>(_fromLocation);
+            }
+            set
+            {
+                if (value != null)
+                    _fromLocation = value.ID;
+            }
+        }
+
+        /// <summary>
         /// The container this points into
         /// </summary>
         public string ToLocationID { get; set; }
-
-        /// <summary>
-        /// The system type of the container this points into
-        /// </summary>
-        public string ToLocationType { get; set; }
-
-        /// <summary>
-        /// The container this starts in
-        /// </summary>
-        public string FromLocationID { get; set; }
-
-        /// <summary>
-        /// The system type of the container this starts in
-        /// </summary>
-        public string FromLocationType { get; set; }
 
         /// <summary>
         /// Output message format the Actor recieves upon moving
@@ -105,16 +135,8 @@ namespace NetMud.Data.EntityBackingData
         /// <summary>
         /// Framework for the physics model of an entity
         /// </summary>
+        [NonNullableDataIntegrity("Physical Model is invalid.")]
         public IDimensionalModel Model { get; set; }
-
-        /// <summary>
-        /// Spawn new pathway with its model
-        /// </summary>
-        [JsonConstructor]
-        public PathwayData(DimensionalModel model)
-        {
-            Model = model;
-        }
 
         /// <summary>
         /// Blank constructor
@@ -125,29 +147,12 @@ namespace NetMud.Data.EntityBackingData
         }
 
         /// <summary>
-        /// Gets the errors for data fitness
+        /// Spawn new pathway with its model
         /// </summary>
-        /// <returns>a bunch of text saying how awful your data is</returns>
-        public override IList<string> FitnessReport()
+        [JsonConstructor]
+        public PathwayData(DimensionalModel model)
         {
-            var dataProblems = base.FitnessReport();
-
-            if (Model == null)
-                dataProblems.Add("Physical Model is invalid.");
-
-            if (String.IsNullOrWhiteSpace(ToLocationID) || ToLocationID.Equals("-1"))
-                dataProblems.Add("To Location is invalid.");
-
-            if (String.IsNullOrWhiteSpace(ToLocationType))
-                dataProblems.Add("To Location Type is invalid.");
-
-            if (String.IsNullOrWhiteSpace(FromLocationID) || FromLocationID.Equals("-1"))
-                dataProblems.Add("From Location is invalid.");
-
-            if (String.IsNullOrWhiteSpace(FromLocationType))
-                dataProblems.Add("From Location Type is invalid.");
-
-            return dataProblems;
+            Model = model;
         }
 
         /// <summary>

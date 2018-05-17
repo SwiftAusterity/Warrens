@@ -3,18 +3,15 @@ using NetMud.Data.System;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.Rendering;
-using NetMud.DataStructure.Behaviors.System;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Game
@@ -38,26 +35,6 @@ namespace NetMud.Data.Game
 
                 return DataTemplate<ICharacter>().Name;
             }
-        }
-
-        /// <summary>
-        /// News up an empty entity
-        /// </summary>
-        public Player()
-        {
-            Inventory = new EntityContainer<IInanimate>();
-        }
-
-        /// <summary>
-        /// News up an entity with its backing data
-        /// </summary>
-        /// <param name="character">the backing data</param>
-        public Player(ICharacter character)
-        {
-            Inventory = new EntityContainer<IInanimate>();
-            DataTemplateId = character.ID;
-            AccountHandle = character.AccountHandle;
-            GetFromWorldOrSpawn();
         }
 
         [ScriptIgnore]
@@ -87,6 +64,9 @@ namespace NetMud.Data.Game
             }
         }
 
+        /// <summary>
+        /// Type of connection this has, doesn't get saved as it's transitory information
+        /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
         public override IChannelType ConnectionType
@@ -102,6 +82,26 @@ namespace NetMud.Data.Game
         /// The account this character belongs to
         /// </summary>
         public string AccountHandle { get; set; }
+
+        /// <summary>
+        /// News up an empty entity
+        /// </summary>
+        public Player()
+        {
+            Inventory = new EntityContainer<IInanimate>();
+        }
+
+        /// <summary>
+        /// News up an entity with its backing data
+        /// </summary>
+        /// <param name="character">the backing data</param>
+        public Player(ICharacter character)
+        {
+            Inventory = new EntityContainer<IInanimate>();
+            DataTemplateId = character.ID;
+            AccountHandle = character.AccountHandle;
+            GetFromWorldOrSpawn();
+        }
 
         /// <summary>
         /// The backing data for this entity

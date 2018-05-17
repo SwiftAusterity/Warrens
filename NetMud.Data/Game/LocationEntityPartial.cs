@@ -1,17 +1,59 @@
-﻿using NetMud.DataStructure.Base.Entity;
+﻿using NetMud.DataAccess.Cache;
+using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.Behaviors.System;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Game
 {
+    /// <summary>
+    /// Partial template for live Location entities
+    /// </summary>
     public abstract class LocationEntityPartial : EntityPartial, ILocation
     {
+        /// <summary>
+        /// Current base humidity
+        /// </summary>
+        public virtual int Humidity { get; set; }
+
+        /// <summary>
+        /// Base temperature
+        /// </summary>
+        public virtual int Temperature { get; set; }
+
+        [JsonProperty("NaturalResources")]
+        private IDictionary<long, int> _naturalResources { get; set; }
+
+        /// <summary>
+        /// Collection of model section name to material composition mappings
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public IDictionary<INaturalResource, int> NaturalResources
+        {
+            get
+            {
+                if (_naturalResources != null)
+                    return _naturalResources.ToDictionary(k => BackingDataCache.Get<INaturalResource>(k.Key), k => k.Value);
+
+                return null;
+            }
+            set
+            {
+                if (value == null)
+                    return;
+
+                _naturalResources = value.ToDictionary(k => k.Key.ID, k => k.Value);
+            }
+        }
+
         #region Container
         /// <summary>
         /// Inanimates contained in this
@@ -247,32 +289,42 @@ namespace NetMud.Data.Game
             return radiusLocations;
         }
 
-        public virtual int Humidity { get; set; }
-
-        public virtual int Temperature { get; set; }
-
+        /// <summary>
+        /// "Functional" Humiditiy
+        /// </summary>
+        /// <returns></returns>
         public virtual int EffectiveHumidity()
         {
             //TODO: More stuff
             return Humidity;
         }
 
+        /// <summary>
+        /// Functional temperature
+        /// </summary>
+        /// <returns></returns>
         public virtual int EffectiveTemperature()
         {
             //TODO: More Stuff
             return Temperature;
         }
 
+        /// <summary>
+        /// Are we out doors?
+        /// </summary>
+        /// <returns>if we are outside</returns>
         public virtual bool IsOutside()
         {
             return false;
         }
 
+        /// <summary>
+        /// Get the biome
+        /// </summary>
+        /// <returns>the biome</returns>
         public virtual Biome GetBiome()
         {
             return Biome.Fabricated;
         }
-
-        Dictionary<INaturalResource, int> IEnvironment.NaturalResources { get; set; }
     }
 }

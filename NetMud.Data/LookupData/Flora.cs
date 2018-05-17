@@ -1,4 +1,5 @@
-﻿using NetMud.DataAccess.Cache;
+﻿using NetMud.Data.DataIntegrity;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Supporting;
 using Newtonsoft.Json;
@@ -32,6 +33,7 @@ namespace NetMud.Data.LookupData
         /// </summary>
         [JsonIgnore]
         [ScriptIgnore]
+        [NonNullableDataIntegrity("Wood must have a value.")]
         public IMaterial Wood
         { 
             get
@@ -139,9 +141,6 @@ namespace NetMud.Data.LookupData
         public override IList<string> FitnessReport()
         {
             var dataProblems = base.FitnessReport();
-
-            if (Wood == null)
-                dataProblems.Add("Wood must have a value.");
 
             if (Flower == null && Seed == null && Leaf == null && Fruit == null)
                 dataProblems.Add("At least one part of this plant must have a value.");

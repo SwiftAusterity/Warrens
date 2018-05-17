@@ -1,4 +1,5 @@
-﻿using NetMud.DataAccess;
+﻿using NetMud.Data.Serialization;
+using NetMud.DataAccess;
 using NetMud.DataStructure.SupportingClasses;
 using Newtonsoft.Json;
 using System;
@@ -30,16 +31,6 @@ namespace NetMud.Data.System
         }
 
         /// <summary>
-        /// Instansiate with existing criteria list
-        /// </summary>
-        /// <param name="criteria">list of lookup criteria</param>
-        [JsonConstructor]
-        public LookupCriteria(Dictionary<CriteriaType, string> criteria)
-        {
-            Criterion = criteria;
-        }
-
-        /// <summary>
         /// Instansiate by deserializing the criteria from json
         /// </summary>
         public LookupCriteria(string jsonString)
@@ -51,7 +42,33 @@ namespace NetMud.Data.System
             Criterion = serializer.Deserialize(reader, typeof(Dictionary<CriteriaType, string>)) as Dictionary<CriteriaType, string>;
         }
 
+        /// <summary>
+        /// Instansiate with existing criteria list
+        /// </summary>
+        /// <param name="criteria">list of lookup criteria</param>
+        [JsonConstructor]
+        public LookupCriteria(Dictionary<CriteriaType, string> criteria)
+        {
+            Criterion = criteria;
+        }
 
+        /// <summary>
+        /// Overriding this to make the json converter work right
+        /// </summary>
+        /// <returns>the json string</returns>
+        public override string ToString()
+        {
+            var serializer = SerializationUtility.GetSerializer();
+
+            var sb = new StringBuilder();
+            var writer = new StringWriter(sb);
+
+            serializer.Serialize(writer, Criterion);
+
+            return sb.ToString();
+        }
+
+        #region Equality Functions
         /// <summary>
         /// -99 = null input
         ///-1 = Matches none
@@ -104,21 +121,6 @@ namespace NetMud.Data.System
 
             return false;
         }
-
-        /// <summary>
-        /// Overriding this to make the json converter work right
-        /// </summary>
-        /// <returns>the json string</returns>
-        public override string ToString()
-        {
-            var serializer = SerializationUtility.GetSerializer();
-
-            var sb = new StringBuilder();
-            var writer = new StringWriter(sb);
-
-            serializer.Serialize(writer, Criterion);
-
-            return sb.ToString();
-        }
+        #endregion
     }
 }

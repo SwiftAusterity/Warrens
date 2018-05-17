@@ -1,4 +1,5 @@
-﻿using NetMud.DataStructure.Base.Supporting;
+﻿using NetMud.Data.DataIntegrity;
+using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.System;
 using System;
@@ -7,22 +8,28 @@ using System.Linq;
 
 namespace NetMud.Data.LookupData
 {
+    /// <summary>
+    /// Partial class for handling the basics of natural resources (rocks, trees, etc)
+    /// </summary>
     [Serializable]
     public abstract class NaturalResourceDataPartial : LookupDataPartial, INaturalResource
     {
         /// <summary>
         /// How much spawns in one place in one spawn tick
         /// </summary>
+        [IntDataIntegrity("Amount Multiplier must be between 0 and 100.", 0, 100)]
         public int AmountMultiplier { get; set; }
 
         /// <summary>
         /// How rare this is to spawn even in its optimal range
         /// </summary>
+        [IntDataIntegrity("Rarity must be between 0 and 100.", 0, 100)]
         public int Rarity { get; set; }
 
         /// <summary>
         /// How much the spawned puissance varies
         /// </summary>
+        [IntDataIntegrity("Puissance Variance must be between 0 and 100.", 0, 100)]
         public int PuissanceVariance { get; set; }
 
         /// <summary>
@@ -43,6 +50,7 @@ namespace NetMud.Data.LookupData
         /// <summary>
         /// What medium biomes this can spawn in
         /// </summary>
+        [FilledContainerDataIntegrity("This resource must occur in at least one biome.")]
         public HashSet<Biome> OccursIn { get; set; }
 
         /// <summary>
@@ -94,15 +102,7 @@ namespace NetMud.Data.LookupData
         {
             var dataProblems = base.FitnessReport();
 
-            if (AmountMultiplier < 0 || AmountMultiplier > 100)
-                dataProblems.Add("Amount Multiplier must be between 0 and 100.");
-
-            if (Rarity < 0 || Rarity > 100)
-                dataProblems.Add("Rarity must be between 0 and 100.");
-
-            if (PuissanceVariance < 0 || PuissanceVariance > 100)
-                dataProblems.Add("Puissance Variance must be between 0 and 100.");
-
+            //Tuples must be handled individually
             if (ElevationRange.Item1 < 0 || ElevationRange.Item2 < ElevationRange.Item1)
                 dataProblems.Add("Elevation Range is incorrect.");
 
@@ -111,9 +111,6 @@ namespace NetMud.Data.LookupData
 
             if (HumidityRange.Item1 < 0 || HumidityRange.Item2 < HumidityRange.Item1)
                 dataProblems.Add("Humidity Range is incorrect.");
-
-            if (OccursIn == null || OccursIn.Count() == 0)
-                dataProblems.Add("This resource must occur in at least one biome.");
 
             return dataProblems;
         }

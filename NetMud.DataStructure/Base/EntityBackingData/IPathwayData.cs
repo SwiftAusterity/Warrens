@@ -1,5 +1,6 @@
 ﻿using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.Behaviors.System;
 using NetMud.DataStructure.SupportingClasses;
 
@@ -11,6 +12,11 @@ namespace NetMud.DataStructure.Base.EntityBackingData
     public interface IPathwayData : IEntityBackingData, ISingleton
     {
         /// <summary>
+        /// DegreesFromNorth translated
+        /// </summary>
+        MovementDirectionType DirectionType { get; }
+
+        /// <summary>
         /// 0->360 degrees with 0 being absolute north (meaning 90 is west, 180 south, etc) -1 means no cardinality
         /// </summary>
         int DegreesFromNorth { get; set; }
@@ -21,29 +27,14 @@ namespace NetMud.DataStructure.Base.EntityBackingData
         int InclineGrade { get; set; }
 
         /// <summary>
-        /// DegreesFromNorth translated
-        /// </summary>
-        MovementDirectionType DirectionType { get; }
-
-        /// <summary>
         /// The container this points into
         /// </summary>
-        string ToLocationID { get; set; }
-
-        /// <summary>
-        /// The system type of the container this points into
-        /// </summary>
-        string ToLocationType { get; set; }
+        ILocationBackingData ToLocation { get; set; }
 
         /// <summary>
         /// The container this starts in
         /// </summary>
-        string FromLocationID { get; set; }
-
-        /// <summary>
-        /// The system type of the container this starts in
-        /// </summary>
-        string FromLocationType { get; set; }
+        ILocationBackingData FromLocation { get; set; }
 
         /// <summary>
         /// Output message format the Actor recieves upon moving

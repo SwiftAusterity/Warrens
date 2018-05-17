@@ -1,10 +1,10 @@
-﻿using NetMud.DataAccess;
+﻿using NetMud.Data.DataIntegrity;
+using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Supporting;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.EntityBackingData
@@ -26,11 +26,13 @@ namespace NetMud.Data.EntityBackingData
         /// <summary>
         /// Gender data string for NPCs
         /// </summary>
+        [StringDataIntegrity("Gender is empty.")]
         public string Gender { get; set; }
 
         /// <summary>
         /// "family name" for NPCs
         /// </summary>
+        [StringDataIntegrity("Gender is empty.")]
         public string SurName { get; set; }
 
         [JsonProperty("RaceData")]
@@ -41,6 +43,7 @@ namespace NetMud.Data.EntityBackingData
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
+        [NonNullableDataIntegrity("Invalid racial data.")]
         public IRace RaceData
         {
             get
@@ -54,23 +57,12 @@ namespace NetMud.Data.EntityBackingData
         }
 
         /// <summary>
-        /// Gets the errors for data fitness
+        /// Full name to refer to this NPC with
         /// </summary>
-        /// <returns>a bunch of text saying how awful your data is</returns>
-        public override IList<string> FitnessReport()
+        /// <returns>the full name string</returns>
+        public string FullName()
         {
-            var dataProblems = base.FitnessReport();
-
-            if (String.IsNullOrWhiteSpace(Gender))
-                dataProblems.Add("Gender is empty.");
-
-            if (String.IsNullOrWhiteSpace(SurName))
-                dataProblems.Add("Surname is empty.");
-
-            if (RaceData == null)
-                dataProblems.Add("Invalid racial data.");
-
-            return dataProblems;
+            return string.Format("{0} {1}", Name, SurName);
         }
 
         /// <summary>
@@ -96,15 +88,6 @@ namespace NetMud.Data.EntityBackingData
             }
 
             return new Tuple<int, int, int>(0, 0, 0);
-        }
-
-        /// <summary>
-        /// Full name to refer to this NPC with
-        /// </summary>
-        /// <returns>the full name string</returns>
-        public string FullName()
-        {
-            return string.Format("{0} {1}", Name, SurName);
         }
     }
 }

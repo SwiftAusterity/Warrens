@@ -21,7 +21,7 @@ namespace NetMud.DataStructure.Base.Supporting
         /// <summary>
         /// Natural resources spawned to this location currently
         /// </summary>
-        Dictionary<INaturalResource, int> NaturalResources { get; set; }
+        IDictionary<INaturalResource, int> NaturalResources { get; set; }
 
         /// <summary>
         /// Current humidity for this

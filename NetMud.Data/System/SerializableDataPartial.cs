@@ -1,4 +1,5 @@
-﻿using NetMud.DataStructure.Base.System;
+﻿using NetMud.Data.Serialization;
+using NetMud.DataStructure.Base.System;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
@@ -61,6 +62,7 @@ namespace NetMud.Data.System
 
             var obj = DeSerialize(strData);
 
+            //Finds containers and inits them to empty after this thing is deserialized
             foreach (var container in obj.GetType().GetProperties())
             {
                 if (container.GetValue(obj) == null

@@ -1,4 +1,6 @@
-﻿using NetMud.Data.System;
+﻿using NetMud.Data.DataIntegrity;
+using NetMud.Data.Serialization;
+using NetMud.Data.System;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
@@ -31,11 +33,13 @@ namespace NetMud.Data.EntityBackingData
         /// <summary>
         /// Gender data string for player characters
         /// </summary>
+        [StringDataIntegrity("Gender is required.")]
         public string Gender { get; set; }
 
         /// <summary>
         /// "family name" for player character
         /// </summary>
+        [StringDataIntegrity("Surname is required.")]
         public string SurName { get; set; }
 
         /// <summary>
@@ -51,6 +55,7 @@ namespace NetMud.Data.EntityBackingData
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
+        [NonNullableDataIntegrity("Missing racial data.")]
         public IRace RaceData 
         { 
             get
@@ -72,6 +77,7 @@ namespace NetMud.Data.EntityBackingData
         /// The last known location ID this character was seen in by system (for restore/backup purposes)
         /// </summary>
         [JsonConverter(typeof(ConcreteTypeConverter<GlobalPosition>))]
+        [NonNullableDataIntegrity("Missing location data.")]
         public IGlobalPosition CurrentLocation { get; set; }
 
         /// <summary>
@@ -88,6 +94,7 @@ namespace NetMud.Data.EntityBackingData
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
+        [NonNullableDataIntegrity("Missing account data.")]
         public IAccount Account
         {
             get
@@ -111,32 +118,6 @@ namespace NetMud.Data.EntityBackingData
         public Character(GlobalPosition currentLocation)
         {
             CurrentLocation = currentLocation;
-        }
-
-        /// <summary>
-        /// Gets the errors for data fitness
-        /// </summary>
-        /// <returns>a bunch of text saying how awful your data is</returns>
-        public override IList<string> FitnessReport()
-        {
-            var dataProblems = base.FitnessReport();
-
-            if(String.IsNullOrWhiteSpace(Gender))
-                dataProblems.Add("Gender is empty.");
-
-            if(String.IsNullOrWhiteSpace(SurName))
-                dataProblems.Add("Surname is empty.");
-
-            if(RaceData == null)
-                dataProblems.Add("Invalid racial data.");
-
-            if(CurrentLocation == null)
-                dataProblems.Add("Last Known Location is blank.");
-
-            if (Account == null)
-                dataProblems.Add("Account is invalid.");
-
-            return dataProblems;
         }
 
         /// <summary>
@@ -173,6 +154,7 @@ namespace NetMud.Data.EntityBackingData
             return new Tuple<int, int, int>(0, 0, 0);
         }
 
+        #region data persistence
         /// <summary>
         /// Add it to the cache and save it to the file system
         /// </summary>
@@ -240,5 +222,6 @@ namespace NetMud.Data.EntityBackingData
 
             return true;
         }
+        #endregion
     }
 }

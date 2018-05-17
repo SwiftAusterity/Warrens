@@ -21,7 +21,7 @@ namespace NetMud.DataStructure.Base.Supporting
         /// <summary>
         /// Natural resources that can spawn here with rate/chance factor
         /// </summary>
-        Dictionary<INaturalResource, int> NaturalResourceSpawn { get; set; }
+        IDictionary<INaturalResource, int> NaturalResourceSpawn { get; set; }
 
         /// <summary>
         /// The biome this is supposed to be

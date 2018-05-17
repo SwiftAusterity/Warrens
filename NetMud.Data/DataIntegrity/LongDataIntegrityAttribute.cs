@@ -31,7 +31,7 @@ namespace NetMud.Data.DataIntegrity
         /// <summary>
         /// Creates a data Longegrity attribute
         /// </summary>
-        /// <param name="errorMessage"></param>
+        /// <param name="errorMessage">error to display when this fails the integrity check</param>
         /// <param name="warning">Not a required field but will display on the editor itself</param>
         public LongDataIntegrityAttribute(string errorMessage, long lowerBound = long.MinValue, long upperBound = long.MaxValue, bool warning = false) : base(errorMessage, warning)
         {

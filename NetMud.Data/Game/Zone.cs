@@ -6,11 +6,12 @@ using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Behaviors.Rendering;
-using NetMud.DataStructure.Behaviors.System;
 using NetMud.Data.System;
 using NetMud.DataAccess.Cache;
 using System.Linq;
 using NetMud.Data.EntityBackingData;
+using Newtonsoft.Json;
+using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Game
 {
@@ -32,7 +33,7 @@ namespace NetMud.Data.Game
         {
             get
             {
-                return "Zone_" + DataTemplate<IZoneData>().Name;
+                return "Zone_" + DataTemplateName;
             }
         }
 
@@ -55,15 +56,31 @@ namespace NetMud.Data.Game
         /// </summary>
         public bool Claimable { get; set; }
 
-        /// <summary>
-        /// Locales inside this zone
-        /// </summary>
-        public HashSet<ILocale> Locales { get; set; }
+        [JsonProperty("Locales")]
+        private HashSet<string> _locales { get; set; }
 
         /// <summary>
-        /// Natural resource counts used to populate locales and allow for gathering
+        /// Locales in this zone, temporary and perm
         /// </summary>
-        public Dictionary<INaturalResource, int> NaturalResources { get; set; }
+        [ScriptIgnore]
+        [JsonIgnore]
+        public HashSet<ILocale> Locales
+        {
+            get
+            {
+                if (_locales != null)
+                    return new HashSet<ILocale>(LiveCache.GetMany<ILocale>(_locales));
+
+                return null;
+            }
+            set
+            {
+                if (value == null)
+                    return;
+
+                _locales = new HashSet<string>(value.Select(k => k.BirthMark));
+            }
+        }
 
         /// <summary>
         /// New up a "blank" zone entry
@@ -92,8 +109,62 @@ namespace NetMud.Data.Game
             DataTemplateId = zone.ID;
 
             GetFromWorldOrSpawn();
-        }      
+        }
 
+        /// <summary>
+        /// Generate a new random locale with rooms, put it in the world (and this zone) as temporary
+        /// </summary>
+        /// <param name="name">The name of the new locale, empty = generate a new one</param>
+        /// <returns></returns>
+        public ILocale GenerateAdventure(string name = "")
+        {
+            //TODO
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Get all possible surroundings (locales, rooms, etc)
+        /// </summary>
+        /// <param name="strength">How far to look, IGNORED</param>
+        /// <returns>All locations that are visible</returns>
+        public override IEnumerable<ILocation> GetSurroundings(int strength)
+        {
+            //Zone is always 1
+            return base.GetSurroundings(1);
+        }
+        
+        /// <summary>
+        /// Does this entity know about this thing
+        /// </summary>
+        /// <param name="discoverer">The onlooker</param>
+        /// <returns>If this is known to the discoverer</returns>
+        public bool IsDiscovered(IEntity discoverer)
+        {
+            //TODO
+
+            //discoverer.HasAccomplishment(DiscoveryName);
+
+            //For now
+            return true;
+        }
+
+        /// <summary>
+        /// List out all the known exits to Zones
+        /// </summary>
+        /// <param name="viewer">the onlooker</param>
+        /// <returns>All zones that have exits from here that are known</returns>
+        public IEnumerable<IZone> ZoneExits(IEntity viewer)
+        {
+            return Pathways.EntitiesContained()
+                    .Where(path => path.ToLocation.GetType() == typeof(IZone) && ((IZone)path.ToLocation).IsDiscovered(viewer))
+                    .Select(path => (IZone)path.ToLocation);
+        }
+
+        /// <summary>
+        /// Render to the look command
+        /// </summary>
+        /// <param name="actor">Who is looking</param>
+        /// <returns>Descriptive text</returns>
         public override IEnumerable<string> RenderToLook(IEntity actor)
         {
             var sb = new List<string>
@@ -105,17 +176,28 @@ namespace NetMud.Data.Game
             return sb;
         }
 
+        /// <summary>
+        /// Get the h,w,d of this
+        /// </summary>
+        /// <returns></returns>
         public override Tuple<int, int, int> GetModelDimensions()
         {
             //TODO
             return new Tuple<int, int, int>(1, 1, 1);
         }
 
+        /// <summary>
+        /// Spawn this into the world and live cache
+        /// </summary>
         public override void SpawnNewInWorld()
         {
             SpawnNewInWorld(new GlobalPosition(this));
         }
 
+        /// <summary>
+        /// Spawn this into the world and live cache
+        /// </summary>
+        /// <param name="spawnTo">Where this will go</param>
         public override void SpawnNewInWorld(IGlobalPosition spawnTo)
         {
             var dataTemplate = DataTemplate<IZoneData>();
@@ -126,28 +208,9 @@ namespace NetMud.Data.Game
             CurrentLocation = spawnTo;
         }
 
-        public ILocale GenerateAdventure(string name = "")
-        {
-            //TODO
-            throw new NotImplementedException();
-        }
-
-        public override IEnumerable<ILocation> GetSurroundings(int strength)
-        {
-            //Zone is always 1
-            return base.GetSurroundings(1);
-        }
-        
-        public bool IsDiscovered(IEntity discoverer)
-        {
-            //TODO
-
-            //discoverer.HasAccomplishment(DiscoveryName);
-
-            //For now
-            return true;
-        }
-
+        /// <summary>
+        /// Get this from the world or make a new one and put it in
+        /// </summary>
         public void GetFromWorldOrSpawn()
         {
             //Try to see if they are already there
@@ -167,13 +230,6 @@ namespace NetMud.Data.Game
                 Keywords = me.Keywords;
                 CurrentLocation = new GlobalPosition(this);
             }
-        }
-
-        public IEnumerable<IZone> ZoneExits(IEntity viewer)
-        {
-            return Pathways.EntitiesContained()
-                    .Where(path => path.ToLocation.GetType() == typeof(IZone) && ((IZone)path.ToLocation).IsDiscovered(viewer))
-                    .Select(path => (IZone)path.ToLocation);
         }
     }
 }

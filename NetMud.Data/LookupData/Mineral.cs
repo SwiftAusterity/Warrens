@@ -1,4 +1,5 @@
-﻿using NetMud.DataAccess.Cache;
+﻿using NetMud.Data.DataIntegrity;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Supporting;
 using Newtonsoft.Json;
 using System;
@@ -32,6 +33,7 @@ namespace NetMud.Data.LookupData
         /// </summary>
         [JsonIgnore]
         [ScriptIgnore]
+        [NonNullableDataIntegrity("Rock must have a value.")]
         public IMaterial Rock
         {
             get
@@ -52,6 +54,7 @@ namespace NetMud.Data.LookupData
         /// </summary>
         [JsonIgnore]
         [ScriptIgnore]
+        [NonNullableDataIntegrity("Dirt must have a value.")]
         public IMaterial Dirt
         {
             get
@@ -63,6 +66,7 @@ namespace NetMud.Data.LookupData
                 _dirt = value.ID;
             }
         }
+
         [JsonProperty("Ores")]
         private IEnumerable<long> _ores { get; set; }
 
@@ -82,24 +86,6 @@ namespace NetMud.Data.LookupData
             {
                 _ores = value.Select(m => m.ID);
             }
-        }
-
-
-        /// <summary>
-        /// Gets the errors for data fitness
-        /// </summary>
-        /// <returns>a bunch of text saying how awful your data is</returns>
-        public override IList<string> FitnessReport()
-        {
-            var dataProblems = base.FitnessReport();
-
-            if (Dirt == null)
-                dataProblems.Add("Dirt must have a value.");
-
-            if (Rock == null)
-                dataProblems.Add("Rock must have a value.");
-
-            return dataProblems;
         }
     }
 }

@@ -7,6 +7,9 @@ using System.Web.Script.Serialization;
 
 namespace NetMud.Data.System
 {
+    /// <summary>
+    /// An entity's position in the world
+    /// </summary>
     [Serializable]
     public class GlobalPosition : IGlobalPosition
     {
@@ -16,6 +19,9 @@ namespace NetMud.Data.System
         [JsonProperty("CurrentLocation")]
         public LiveCacheKey CurrentLocationBirthmark { get; private set; }
 
+        /// <summary>
+        /// The actual container that the current location is
+        /// </summary>
         [JsonIgnore]
         [ScriptIgnore]
         public IContains CurrentLocation
@@ -48,6 +54,10 @@ namespace NetMud.Data.System
             CurrentLocationBirthmark = locationKey;
         }
 
+        /// <summary>
+        /// Construct with the container to set as the location
+        /// </summary>
+        /// <param name="currentLocation">the container</param>
         public GlobalPosition(IContains currentLocation)
         {
             CurrentLocation = currentLocation;

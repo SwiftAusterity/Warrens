@@ -12,6 +12,21 @@ namespace NetMud.Data.System
     public class EntityContainerData<T> : IEntityContainerData<T> where T : IEntity
     {
         /// <summary>
+        /// How large is this container
+        /// </summary>
+        public long CapacityVolume { get; set; }
+
+        /// <summary>
+        /// How much weight can it carry before taking damage
+        /// </summary>
+        public long CapacityWeight { get; set; }
+
+        /// <summary>
+        /// The name of the container; can be string empty without issue
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
         /// Instansiate this empty
         /// </summary>
         public EntityContainerData()
@@ -33,21 +48,6 @@ namespace NetMud.Data.System
             CapacityWeight = capacityWeight;
             Name = name;
         }
-
-        /// <summary>
-        /// How large is this container
-        /// </summary>
-        public long CapacityVolume { get; set; }
-
-        /// <summary>
-        /// How much weight can it carry before taking damage
-        /// </summary>
-        public long CapacityWeight { get; set; }
-
-        /// <summary>
-        /// The name of the container; can be string empty without issue
-        /// </summary>
-        public string Name { get; set; }
 
         /// <summary>
         /// Will an entity fit inside

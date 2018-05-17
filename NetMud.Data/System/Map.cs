@@ -28,7 +28,7 @@ namespace NetMud.Data.System
         /// <summary>
         /// Get a single flat plane of the main map at a specific zIndex
         /// </summary>
-        /// <param name="zIndex"></param>
+        /// <param name="zIndex">the Z (up/down) level to retrieve</param>
         /// <returns></returns>
         public long[,] GetSinglePlane(int zIndex)
         {

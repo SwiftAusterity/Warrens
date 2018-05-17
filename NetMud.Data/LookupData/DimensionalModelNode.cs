@@ -6,6 +6,9 @@ using System.Web.Script.Serialization;
 
 namespace NetMud.Data.LookupData
 {
+    /// <summary>
+    /// Single node for a dimensional model
+    /// </summary>
     [Serializable]
     public class DimensionalModelNode : IDimensionalModelNode
     {

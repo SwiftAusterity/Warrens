@@ -1,7 +1,6 @@
 ﻿using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.Behaviors.System;
-using NetMud.DataStructure.SupportingClasses;
 using System;
 using System.Collections.Generic;
 
@@ -26,7 +25,7 @@ namespace NetMud.DataStructure.Base.Place
         /// <summary>
         /// Pathways leading out of this
         /// </summary>
-        IEntityContainer<IPathway> Pathways { get; set; }
+        IEnumerable<IPathway> Pathways { get; set; }
 
         /// <summary>
         /// The map of the rooms inside

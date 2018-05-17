@@ -1,4 +1,5 @@
-﻿using NetMud.DataAccess.Cache;
+﻿using NetMud.Data.DataIntegrity;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Supporting;
 using Newtonsoft.Json;
 using System;
@@ -13,6 +14,18 @@ namespace NetMud.Data.LookupData
     [Serializable]
     public class Fauna : NaturalResourceDataPartial, IFauna
     {
+        /// <summary>
+        /// What is the % chance of generating a female instead of a male on birth
+        /// </summary>
+        [IntDataIntegrity("Female to male ratio must be greater than 0.", 0)]
+        public int FemaleRatio { get; set; }
+
+        /// <summary>
+        /// The absolute hard cap to natural population growth
+        /// </summary>
+        [IntDataIntegrity("Population Hard Cap must be greater than 0.", 0)]
+        public int PopulationHardCap { get; set; }
+
         [JsonProperty("Race")]
         private long _race { get; set; }
 
@@ -21,6 +34,7 @@ namespace NetMud.Data.LookupData
         /// </summary>
         [JsonIgnore]
         [ScriptIgnore]
+        [NonNullableDataIntegrity("Race must be set.")]
         public IRace Race
         {
             get
@@ -31,36 +45,6 @@ namespace NetMud.Data.LookupData
             {
                 _race = value.ID;
             }
-        }
-
-        /// <summary>
-        /// What is the % chance of generating a female instead of a male on birth
-        /// </summary>
-        public int FemaleRatio { get; set; }
-
-        /// <summary>
-        /// The absolute hard cap to natural population growth
-        /// </summary>
-        public int PopulationHardCap { get; set; }
-
-        /// <summary>
-        /// Gets the errors for data fitness
-        /// </summary>
-        /// <returns>a bunch of text saying how awful your data is</returns>
-        public override IList<string> FitnessReport()
-        {
-            var dataProblems = base.FitnessReport();
-
-            if (Race == null)
-                dataProblems.Add("Race must be set.");
-
-            if (PopulationHardCap <= 0)
-                dataProblems.Add("Population Hard Cap must be greater than 0.");
-
-            if (FemaleRatio <= 0)
-                dataProblems.Add("Female to male ratio must be greater than 0.");
-
-            return dataProblems;
         }
     }
 }

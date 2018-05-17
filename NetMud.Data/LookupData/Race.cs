@@ -1,4 +1,5 @@
-﻿using NetMud.DataAccess.Cache;
+﻿using NetMud.Data.DataIntegrity;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
@@ -13,6 +14,9 @@ using System.Web.Script.Serialization;
 
 namespace NetMud.Data.LookupData
 {
+    /// <summary>
+    /// Character race, determines loads of things
+    /// </summary>
     [Serializable]
     public class Race : LookupDataPartial, IRace
     {
@@ -76,6 +80,7 @@ namespace NetMud.Data.LookupData
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
+        [NonNullableDataIntegrity("Torso is invalid.")]
         public IInanimateData Torso
         {
             get
@@ -96,6 +101,7 @@ namespace NetMud.Data.LookupData
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
+        [NonNullableDataIntegrity("Head is invalid.")]
         public IInanimateData Head
         {
             get
@@ -147,6 +153,7 @@ namespace NetMud.Data.LookupData
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
+        [NonNullableDataIntegrity("Blood material is invalid.")]
         public IMaterial SanguinaryMaterial
         {
             get
@@ -187,6 +194,7 @@ namespace NetMud.Data.LookupData
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
+        [NonNullableDataIntegrity("Starting Location is invalid.")]
         public IZoneData StartingLocation
         {
             get
@@ -207,6 +215,7 @@ namespace NetMud.Data.LookupData
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
+        [NonNullableDataIntegrity("Emergency Location is invalid.")]
         public IZoneData EmergencyLocation
         {
             get
@@ -219,6 +228,9 @@ namespace NetMud.Data.LookupData
             }
         }
 
+        /// <summary>
+        /// Make a new blank race
+        /// </summary>
         public Race()
         {
             BodyParts = Enumerable.Empty<Tuple<IInanimateData, short, string>>();
@@ -232,23 +244,15 @@ namespace NetMud.Data.LookupData
         {
             var dataProblems = base.FitnessReport();
 
-            if (Arms == null || Arms.Item1 == null || Arms.Item2 == 0)
+            //Gotta keep most of these in due to the tuple thing
+            if (Arms == null || Arms.Item1 == null || Arms.Item2 < 0)
                 dataProblems.Add("Arms are invalid.");
 
-            if (Legs == null || Legs.Item1 == null || Legs.Item2 == 0)
+            if (Legs == null || Legs.Item1 == null || Legs.Item2 < 0)
                 dataProblems.Add("Legs are invalid.");
-
-            if (Torso == null)
-                dataProblems.Add("Torso is invalid.");
-
-            if (Head == null)
-                dataProblems.Add("Head is invalid.");
 
             if (BodyParts != null && BodyParts.Any(a => a.Item1 == null || a.Item2 == 0 || String.IsNullOrWhiteSpace(a.Item3)))
                 dataProblems.Add("BodyParts are invalid.");
-
-            if (SanguinaryMaterial == null)
-                dataProblems.Add("Blood material is invalid.");
 
             if (VisionRange == null || VisionRange.Item1 >= VisionRange.Item2)
                 dataProblems.Add("Vision range is invalid.");
@@ -256,22 +260,7 @@ namespace NetMud.Data.LookupData
             if (TemperatureTolerance == null || TemperatureTolerance.Item1 >= TemperatureTolerance.Item2)
                 dataProblems.Add("Temperature tolerance is invalid.");
 
-            if (StartingLocation == null)
-                dataProblems.Add("Starting Location is invalid.");
-
-            if (EmergencyLocation == null)
-                dataProblems.Add("Emergency Location is invalid.");
-
             return dataProblems;
-        }
-
-        /// <summary>
-        /// Renders the help text for this data object
-        /// </summary>
-        /// <returns>help text</returns>
-        public override IEnumerable<string> RenderHelpBody()
-        {
-            return base.RenderHelpBody();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using NetMud.DataAccess.Cache;
+﻿using NetMud.Data.DataIntegrity;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Supporting;
 using Newtonsoft.Json;
 using System;
@@ -29,21 +30,25 @@ namespace NetMud.Data.LookupData
         /// <summary>
         /// How viscous is this material (higher = more viscous)
         /// </summary>
+        [ShortDataIntegrity("Viscosity has to be greater than 0.", 0)]
         public short Viscosity { get; set; }
 
         /// <summary>
         /// How dense is this material
         /// </summary>
+        [ShortDataIntegrity("Density has to be greater than 0.", 0)]
         public short Density { get; set; }
 
         /// <summary>
         /// How well does this material bend without breaking
         /// </summary>
+        [ShortDataIntegrity("Mallebility has to be greater than 0.", 0)]
         public short Mallebility { get; set; }
 
         /// <summary>
         /// How stretchable is this material
         /// </summary>
+        [ShortDataIntegrity("Ductility has to be greater than 0.", 0)]
         public short Ductility { get; set; }
 
         /// <summary>
@@ -97,6 +102,9 @@ namespace NetMud.Data.LookupData
             }
         }
 
+        /// <summary>
+        /// Make a new empty instance of this
+        /// </summary>
         public Material()
         {
             Resistance = new Dictionary<DamageType, short>();
@@ -111,21 +119,10 @@ namespace NetMud.Data.LookupData
         {
             var dataProblems = base.FitnessReport();
 
-            if (Viscosity == 0)
-                dataProblems.Add("Viscosity has to be greater than 0.");
-
-            if (Density == 0)
-                dataProblems.Add("Density has to be greater than 0.");
-
-            if (Mallebility == 0)
-                dataProblems.Add("Mallebility has to be greater than 0.");
-
-            if (Ductility == 0)
-                dataProblems.Add("Ductility has to be greater than 0.");
-
             if (SolidPoint >= GasPoint)
                 dataProblems.Add("Solidification point must be lower than gaseous point.");
 
+            //Specific interior value checking
             if (Resistance == null || !Resistance.Any() || Resistance.Any(r => r.Value == 0))
                 dataProblems.Add("Resistances are invalid.");
 
@@ -133,15 +130,6 @@ namespace NetMud.Data.LookupData
                 dataProblems.Add("Compositions are invalid.");
 
             return dataProblems;
-        }
-
-        /// <summary>
-        /// Renders the help text for this data object
-        /// </summary>
-        /// <returns>help text</returns>
-        public override IEnumerable<string> RenderHelpBody()
-        {
-            return base.RenderHelpBody();
         }
     }
 }

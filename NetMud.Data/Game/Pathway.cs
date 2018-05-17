@@ -1,5 +1,6 @@
 ﻿using NetMud.Cartography;
 using NetMud.Communication.Messaging;
+using NetMud.Data.DataIntegrity;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
@@ -24,6 +25,20 @@ namespace NetMud.Data.Game
     [Serializable]
     public class Pathway : EntityPartial, IPathway
     {
+        /// <summary>
+        /// The name of the object in the data template
+        /// </summary>
+        public override string DataTemplateName
+        {
+            get
+            {
+                if (DataTemplate<IPathwayData>() == null)
+                    return String.Empty;
+
+                return DataTemplate<IPathwayData>().Name;
+            }
+        }
+
         /// <summary>
         /// Framework for the physics model of an entity
         /// </summary>
@@ -50,6 +65,7 @@ namespace NetMud.Data.Game
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
+        [NonNullableDataIntegrity("From Location must be valid.")]
         public ILocation ToLocation
         {
             get
@@ -80,6 +96,7 @@ namespace NetMud.Data.Game
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
+        [NonNullableDataIntegrity("From Location must be valid.")]
         public ILocation FromLocation
         {
             get
@@ -96,20 +113,6 @@ namespace NetMud.Data.Game
 
                 _currentFromLocationBirthmark = value.BirthMark;
                 UpsertToLiveWorldCache();
-            }
-        }
-
-        /// <summary>
-        /// The name of the object in the data template
-        /// </summary>
-        public override string DataTemplateName
-        {
-            get
-            {
-                if (DataTemplate<IPathwayData>() == null)
-                    return String.Empty;
-                
-                return DataTemplate<IPathwayData>().Name;
             }
         }
 
@@ -193,43 +196,10 @@ namespace NetMud.Data.Game
             Birthdate = DateTime.Now;
 
             //paths need two locations
-            ILocation fromLocation = null;
-            var fromLocationType = locationAssembly.DefinedTypes.FirstOrDefault(tp => tp.Name.Equals(bS.FromLocationType));
+            FromLocation = LiveCache.Get<ILocation>(bS.FromLocation.ID, bS.FromLocation.EntityClass);
+            ToLocation = LiveCache.Get<ILocation>(bS.ToLocation.ID, bS.ToLocation.EntityClass);
 
-            if (fromLocationType != null && !string.IsNullOrWhiteSpace(bS.FromLocationID))
-            {
-                if (fromLocationType.GetInterfaces().Contains(typeof(ISingleton)))
-                {
-                    long fromLocationID = long.Parse(bS.FromLocationID);
-                    fromLocation = LiveCache.Get<ILocation>(fromLocationID, fromLocationType);
-                }
-                else
-                {
-                    var cacheKey = new LiveCacheKey(fromLocationType, bS.FromLocationID);
-                    fromLocation = LiveCache.Get<ILocation>(cacheKey);
-                }
-            }
-
-            ILocation toLocation = null;
-            var toLocationType = locationAssembly.DefinedTypes.FirstOrDefault(tp => tp.Name.Equals(bS.ToLocationType));
-
-            if (toLocationType != null && !string.IsNullOrWhiteSpace(bS.ToLocationID))
-            {
-                if (toLocationType.GetInterfaces().Contains(typeof(ISingleton)))
-                {
-                    long toLocationID = long.Parse(bS.ToLocationID);
-                    toLocation = LiveCache.Get<ILocation>(toLocationID, toLocationType);
-                }
-                else
-                {
-                    var cacheKey = new LiveCacheKey(toLocationType, bS.ToLocationID);
-                    toLocation = LiveCache.Get<ILocation>(cacheKey);
-                }
-            }
-
-            FromLocation = fromLocation;
-            ToLocation = toLocation;
-            CurrentLocation = fromLocation.CurrentLocation; 
+            CurrentLocation = FromLocation.CurrentLocation; 
 
             if (String.IsNullOrWhiteSpace(bS.MessageToActor))
                 bS.MessageToActor = String.Empty;
@@ -253,7 +223,7 @@ namespace NetMud.Data.Game
             //Enter.ToSurrounding.Add(MessagingType.Visible, new Tuple<int, IEnumerable<string>>(bS.VisibleStrength, new string[] { bS.VisibleToSurroundings }));
             //Enter.ToSurrounding.Add(MessagingType.Audible, new Tuple<int, IEnumerable<string>>(bS.AudibleStrength, new string[] { bS.AudibleToSurroundings }));
 
-            fromLocation.MoveInto<IPathway>(this);
+            FromLocation.MoveInto<IPathway>(this);
         }
         #endregion
 

@@ -1,7 +1,1 @@
-{
-  "HelpText": "This is the testing example.",
-  "ID": 1,
-  "Created": "2015-07-14T16:06:14.453",
-  "LastRevised": "2015-07-14T16:06:14.453",
-  "Name": "Example"
-}
+{"HelpText":"This is the testing example.","ID":1,"Created":"2015-07-14T16:06:14.453","LastRevised":"2015-07-14T16:06:14.453","Name":"Example"}

@@ -1,4 +1,5 @@
-﻿using NetMud.Data.Game;
+﻿using NetMud.Data.DataIntegrity;
+using NetMud.Data.Game;
 using NetMud.Data.LookupData;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
@@ -29,6 +30,7 @@ namespace NetMud.Data.EntityBackingData
         /// <summary>
         /// Framework for the physics model of an entity
         /// </summary>
+        [NonNullableDataIntegrity("Physical Model is invalid.")]
         public IDimensionalModel Model { get; set; }
 
         [JsonProperty("Medium")]
@@ -39,6 +41,7 @@ namespace NetMud.Data.EntityBackingData
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
+        [NonNullableDataIntegrity("Medium material is invalid.")]
         public IMaterial Medium
         {
             get
@@ -60,6 +63,7 @@ namespace NetMud.Data.EntityBackingData
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
+        [NonNullableDataIntegrity("Affiliation is invalid.")]
         public ILocaleData Affiliation
         {
             get
@@ -81,6 +85,14 @@ namespace NetMud.Data.EntityBackingData
         public Tuple<int, int, int> Coordinates { get; set; }
 
         /// <summary>
+        /// Blank constructor
+        /// </summary>
+        public RoomData()
+        {
+
+        }
+
+        /// <summary>
         /// Spawn new room with its model
         /// </summary>
         [JsonConstructor]
@@ -90,29 +102,12 @@ namespace NetMud.Data.EntityBackingData
         }
 
         /// <summary>
-        /// Blank constructor
-        /// </summary>
-        public RoomData()
-        {
-
-        }
-
-        /// <summary>
         /// Gets the errors for data fitness
         /// </summary>
         /// <returns>a bunch of text saying how awful your data is</returns>
         public override IList<string> FitnessReport()
         {
             var dataProblems = base.FitnessReport();
-
-            if (Model == null)
-                dataProblems.Add("Physical Model is invalid.");
-
-            if (Medium == null)
-                dataProblems.Add("Medium material is invalid.");
-
-            if (Affiliation == null)
-                dataProblems.Add("Affiliation is invalid.");
 
             if (Coordinates?.Item1 < 0 || Coordinates?.Item2 < 0 || Coordinates?.Item3 < 0)
                 dataProblems.Add("Coordinates are invalid.");
@@ -146,9 +141,7 @@ namespace NetMud.Data.EntityBackingData
         /// <returns>the valid pathways</returns>
         public IEnumerable<IPathwayData> GetPathways(bool withReturn = false)
         {
-            return BackingDataCache.GetAll<IPathwayData>().Where(path => path.FromLocationID.Equals(ID.ToString()) 
-                                                                        || (withReturn && path.ToLocationID.Equals(ID.ToString()))
-                                                                        );
+            return BackingDataCache.GetAll<IPathwayData>().Where(path => path.FromLocation.Equals(this) || (withReturn && path.ToLocation.Equals(this)));
         }
     }
 }

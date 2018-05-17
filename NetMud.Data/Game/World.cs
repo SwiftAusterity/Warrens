@@ -1,4 +1,5 @@
-﻿using NetMud.Data.System;
+﻿using NetMud.Data.DataIntegrity;
+using NetMud.Data.System;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
@@ -9,14 +10,23 @@ using System.Collections.Generic;
 namespace NetMud.Data.Game
 {
     /// <summary>
-    /// World for holding world maps
+    /// World for holding world maps. TODO: Do we even need this anymore? Might need to roll this featureset into Locales
     /// </summary>
     [Serializable]
     [IgnoreAutomatedBackup]
     public class World : BackingDataPartial
     {
+        /// <summary>
+        /// A map of the world
+        /// </summary>
+        [NonNullableDataIntegrity("World Map is null.")]
         public IMap WorldMap { get; private set; }
 
+        /// <summary>
+        /// Make a new one of these
+        /// </summary>
+        /// <param name="worldMap">The map to set</param>
+        /// <param name="name">The name of the world</param>
         public World(IMap worldMap, string name)
         {
             WorldMap = worldMap;
@@ -28,20 +38,6 @@ namespace NetMud.Data.Game
             GetNextId();
 
             FillRoomDimensions();
-        }
-
-        /// <summary>
-        /// Gets the errors for data fitness
-        /// </summary>
-        /// <returns>a bunch of text saying how awful your data is</returns>
-        public override IList<string> FitnessReport()
-        {
-            var dataProblems = base.FitnessReport();
-
-            if (WorldMap == null)
-                dataProblems.Add("World Map is null.");
-
-            return dataProblems;
         }
 
         private void FillRoomDimensions()

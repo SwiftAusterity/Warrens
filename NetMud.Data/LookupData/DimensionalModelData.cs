@@ -1,4 +1,5 @@
-﻿using NetMud.DataAccess;
+﻿using NetMud.Data.DataIntegrity;
+using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.Physics;
@@ -27,6 +28,7 @@ namespace NetMud.Data.LookupData
         /// <summary>
         /// How hollow something is
         /// </summary>
+        [IntDataIntegrity("Vacuity must be at least zero.", -1)]
         public int Vacuity { get; set; }
 
         /// <summary>
@@ -59,9 +61,6 @@ namespace NetMud.Data.LookupData
             if (ModelPlanes == null || !ModelPlanes.Any() 
                 || ModelPlanes.Any(m => m == null || String.IsNullOrWhiteSpace(m.TagName) || !m.ModelNodes.Any()))
                 dataProblems.Add("Model Planes are invalid.");
-
-            if (Vacuity < 0)
-                dataProblems.Add("Vacuity is invalid.");
 
             if (!IsModelValid())
                 dataProblems.Add("Model is invalid entirely.");

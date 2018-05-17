@@ -1,4 +1,5 @@
-﻿using NetMud.Data.EntityBackingData;
+﻿using NetMud.Data.DataIntegrity;
+using NetMud.Data.EntityBackingData;
 using NetMud.Data.System;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Entity;
@@ -7,9 +8,11 @@ using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Existential;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Game
 {
@@ -24,10 +27,27 @@ namespace NetMud.Data.Game
         /// </summary>
         public IDimensionalModel Model { get; set; }
 
+        [JsonProperty("Affiliation")]
+        private LiveCacheKey _affiliation { get; set; }
+
         /// <summary>
-        /// What locale this belongs to
+        /// The locale this belongs to
         /// </summary>
-        public ILocale Affiliation { get; }
+        [ScriptIgnore]
+        [JsonIgnore]
+        [NonNullableDataIntegrity("Rooms must have a zone affiliation.")]
+        public ILocale Affiliation
+        {
+            get
+            {
+                return LiveCache.Get<ILocale>(_affiliation);
+            }
+            set
+            {
+                if (value != null)
+                    _affiliation = new LiveCacheKey(typeof(ILocale), value.BirthMark);
+            }
+        }
 
         /// <summary>
         /// The name of the object in the data template

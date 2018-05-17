@@ -82,7 +82,7 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add()
         {
-            var vModel = new AddEditZoneDataViewModel(Enumerable.Empty<ILocaleData>())
+            var vModel = new AddEditZoneDataViewModel()
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId())
             };

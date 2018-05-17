@@ -51,7 +51,6 @@ namespace NetMud.Controllers.GameAdmin
             };
 
             string message = string.Empty;
-            long roomId = -1;
 
             if (string.IsNullOrWhiteSpace(authorize) || !ID.ToString().Equals(authorize))
                 message = "You must check the proper authorize radio button first.";
@@ -60,7 +59,6 @@ namespace NetMud.Controllers.GameAdmin
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
                 var obj = BackingDataCache.Get<PathwayData>(ID);
-                roomId = DataUtility.TryConvert<long>(obj.FromLocationID);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -83,9 +81,9 @@ namespace NetMud.Controllers.GameAdmin
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
-                ValidMaterials = BackingDataCache.GetAll<Material>(),
-                ValidModels = BackingDataCache.GetAll<DimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat),
-                ValidRooms = BackingDataCache.GetAll<RoomData>().Where(rm => !rm.ID.Equals(originRoomId)),
+                ValidMaterials = BackingDataCache.GetAll<IMaterial>(),
+                ValidModels = BackingDataCache.GetAll<IDimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat),
+                ValidRooms = BackingDataCache.GetAll<IRoomData>().Where(rm => !rm.ID.Equals(originRoomId)),
 
                 FromLocation = BackingDataCache.Get<IRoomData>(originRoomId),
                 FromLocationID = originRoomId
@@ -122,13 +120,11 @@ namespace NetMud.Controllers.GameAdmin
                 AudibleStrength = vModel.AudibleStrength,
                 AudibleToSurroundings = vModel.AudibleToSurroundings,
                 DegreesFromNorth = vModel.DegreesFromNorth,
-                FromLocationID = vModel.ToLocationID.ToString(),
-                FromLocationType = "RoomData",
+                FromLocation = vModel.ValidRooms.FirstOrDefault(room => room.ID.Equals(vModel.FromLocationID)),
                 MessageToActor = vModel.MessageToActor,
                 MessageToDestination = vModel.MessageToDestination,
                 MessageToOrigin = vModel.MessageToOrigin,
-                ToLocationID = vModel.ToLocationID.ToString(),
-                ToLocationType = "RoomData",
+                ToLocation = vModel.ValidRooms.FirstOrDefault(room => room.ID.Equals(vModel.ToLocationID)),
                 VisibleStrength = vModel.VisibleStrength,
                 VisibleToSurroundings = vModel.VisibleToSurroundings
             };
@@ -240,13 +236,11 @@ namespace NetMud.Controllers.GameAdmin
                 AudibleStrength = vModel.AudibleStrength,
                 AudibleToSurroundings = vModel.AudibleToSurroundings,
                 DegreesFromNorth = vModel.DegreesFromNorth,
-                FromLocationID = vModel.ToLocationID.ToString(),
-                FromLocationType = "RoomData",
+                FromLocation = vModel.ValidRooms.FirstOrDefault(room => room.ID.Equals(vModel.FromLocationID)),
                 MessageToActor = vModel.MessageToActor,
                 MessageToDestination = vModel.MessageToDestination,
                 MessageToOrigin = vModel.MessageToOrigin,
-                ToLocationID = vModel.ToLocationID.ToString(),
-                ToLocationType = "RoomData",
+                ToLocation = vModel.ValidRooms.FirstOrDefault(room => room.ID.Equals(vModel.FromLocationID)),
                 VisibleStrength = vModel.VisibleStrength,
                 VisibleToSurroundings = vModel.VisibleToSurroundings
             };
@@ -262,7 +256,7 @@ namespace NetMud.Controllers.GameAdmin
                         if (vModel.ModelPartMaterials.Count() <= nameIndex)
                             break;
 
-                        var material = BackingDataCache.Get<Material>(vModel.ModelPartMaterials[nameIndex]);
+                        var material = BackingDataCache.Get<IMaterial>(vModel.ModelPartMaterials[nameIndex]);
 
                         if (material != null && !string.IsNullOrWhiteSpace(partName))
                             materialParts.Add(partName, material);
@@ -272,7 +266,7 @@ namespace NetMud.Controllers.GameAdmin
                 }
             }
 
-            var dimModel = BackingDataCache.Get<DimensionalModelData>(vModel.DimensionalModelId);
+            var dimModel = BackingDataCache.Get<IDimensionalModelData>(vModel.DimensionalModelId);
             bool validData = true;
 
             if (dimModel == null)
@@ -317,8 +311,8 @@ namespace NetMud.Controllers.GameAdmin
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
-                ValidMaterials = BackingDataCache.GetAll<Material>(),
-                ValidModels = BackingDataCache.GetAll<DimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat)
+                ValidMaterials = BackingDataCache.GetAll<IMaterial>(),
+                ValidModels = BackingDataCache.GetAll<IDimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat)
             };
 
             var obj = BackingDataCache.Get<PathwayData>(id);
@@ -329,7 +323,7 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", "Room", new { Message = message });
             }
 
-            vModel.ValidRooms = BackingDataCache.GetAll<RoomData>().Where(rm => !rm.ID.Equals(obj.FromLocationID) && !rm.ID.Equals(obj.ToLocationID));
+            vModel.ValidRooms = BackingDataCache.GetAll<IRoomData>().Where(rm => !rm.Equals(obj.FromLocation) && !rm.Equals(obj.ToLocation));
 
             vModel.DataObject = obj;
             vModel.NewName = obj.Name;
@@ -340,10 +334,8 @@ namespace NetMud.Controllers.GameAdmin
             vModel.MessageToActor = obj.MessageToActor;
             vModel.MessageToDestination = obj.MessageToDestination;
             vModel.MessageToOrigin = obj.MessageToOrigin;
-            vModel.ToLocationID = DataUtility.TryConvert<long>(obj.ToLocationID);
-            vModel.ToLocation = BackingDataCache.Get<IRoomData>(DataUtility.TryConvert<long>(obj.ToLocationID));
-            vModel.FromLocationID = DataUtility.TryConvert<long>(obj.FromLocationID);
-            vModel.FromLocation = BackingDataCache.Get<IRoomData>(DataUtility.TryConvert<long>(obj.FromLocationID));
+            vModel.ToLocation = (IRoomData)obj.ToLocation;
+            vModel.FromLocation = (IRoomData)obj.FromLocation;
             vModel.VisibleStrength = obj.VisibleStrength;
             vModel.VisibleToSurroundings = obj.VisibleToSurroundings;
 
@@ -364,6 +356,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            vModel.ValidRooms = BackingDataCache.GetAll<IRoomData>();
 
             var obj = BackingDataCache.Get<IPathwayData>(id);
             if (obj == null)
@@ -376,13 +369,11 @@ namespace NetMud.Controllers.GameAdmin
             obj.AudibleStrength = vModel.AudibleStrength;
             obj.AudibleToSurroundings = vModel.AudibleToSurroundings;
             obj.DegreesFromNorth = vModel.DegreesFromNorth;
-            obj.FromLocationID = vModel.FromLocationID.ToString();
-            obj.FromLocationType = "RoomData";
+            obj.FromLocation = vModel.ValidRooms.FirstOrDefault(room => room.ID.Equals(vModel.FromLocationID));
             obj.MessageToActor = vModel.MessageToActor;
             obj.MessageToDestination = vModel.MessageToDestination;
             obj.MessageToOrigin = vModel.MessageToOrigin;
-            obj.ToLocationID = vModel.ToLocationID.ToString();
-            obj.ToLocationType = "RoomData";
+            obj.ToLocation = vModel.ValidRooms.FirstOrDefault(room => room.ID.Equals(vModel.ToLocationID));
             obj.VisibleStrength = vModel.VisibleStrength;
             obj.VisibleToSurroundings = vModel.VisibleToSurroundings;
 

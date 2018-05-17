@@ -1,4 +1,5 @@
-﻿using NetMud.Data.LookupData;
+﻿using NetMud.Data.DataIntegrity;
+using NetMud.Data.LookupData;
 using NetMud.Data.System;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Entity;
@@ -20,17 +21,18 @@ namespace NetMud.Data.EntityBackingData
     public class InanimateData : EntityBackingDataPartial, IInanimateData
     {
         /// <summary>
-        /// Framework for the physics model of an entity
-        /// </summary>
-        public IDimensionalModel Model { get; set; }
-
-        /// <summary>
         /// The system type for the entity this attaches to
         /// </summary>
         public override Type EntityClass
         {
             get { return typeof(Game.Inanimate); }
         }
+
+        /// <summary>
+        /// Framework for the physics model of an entity
+        /// </summary>
+        [NonNullableDataIntegrity("Physical model is invalid.")]
+        public IDimensionalModel Model { get; set; }
 
         /// <summary>
         /// Definition for the room's capacity for mobiles
@@ -68,6 +70,17 @@ namespace NetMud.Data.EntityBackingData
             }
         }
 
+
+        /// <summary>
+        /// Spawns a new empty inanimate object
+        /// </summary>
+        public InanimateData()
+        {
+            MobileContainers = new HashSet<IEntityContainerData<IMobile>>();
+            InanimateContainers = new HashSet<IEntityContainerData<IInanimate>>();
+            InternalComposition = new Dictionary<IInanimateData, short>();
+        }
+
         /// <summary>
         /// Spawn new inanimate with its model
         /// </summary>
@@ -82,13 +95,12 @@ namespace NetMud.Data.EntityBackingData
         }
 
         /// <summary>
-        /// Spawns a new empty inanimate object
+        /// Get's the entity's model dimensions
         /// </summary>
-        public InanimateData()
+        /// <returns>height, length, width</returns>
+        public override Tuple<int, int, int> GetModelDimensions()
         {
-            MobileContainers = new HashSet<IEntityContainerData<IMobile>>();
-            InanimateContainers = new HashSet<IEntityContainerData<IInanimate>>();
-            InternalComposition = new Dictionary<IInanimateData, short>();
+            return new Tuple<int, int, int>(Model.Height, Model.Length, Model.Width);
         }
 
         /// <summary>
@@ -99,14 +111,11 @@ namespace NetMud.Data.EntityBackingData
         {
             var dataProblems = base.FitnessReport();
 
-            if(Model == null)
-                dataProblems.Add("Physical model is invalid.");
-
-            if(InternalComposition == null)
+            if (InternalComposition == null)
                 dataProblems.Add("Internal composition cluster is null.");
             else
             {
-                if(InternalComposition.Any(kvp => kvp.Key == null))
+                if (InternalComposition.Any(kvp => kvp.Key == null))
                     dataProblems.Add("Internal composition key object is null.");
 
                 if (InternalComposition.Any(kvp => kvp.Value < 0))
@@ -114,15 +123,6 @@ namespace NetMud.Data.EntityBackingData
             };
 
             return dataProblems;
-        }
-
-        /// <summary>
-        /// Get's the entity's model dimensions
-        /// </summary>
-        /// <returns>height, length, width</returns>
-        public override Tuple<int, int, int> GetModelDimensions()
-        {
-            return new Tuple<int, int, int>(Model.Height, Model.Length, Model.Width);
         }
     }
 }

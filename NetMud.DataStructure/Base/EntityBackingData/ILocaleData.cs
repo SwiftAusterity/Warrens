@@ -9,12 +9,12 @@ namespace NetMud.DataStructure.Base.Place
     /// <summary>
     /// Collector of rooms, used for weather patterning
     /// </summary>
-    public interface ILocaleData : IEntityBackingData, ISingleton
+    public interface ILocaleData : IEntityBackingData, ILocationBackingData, ISingleton
     {
         /// <summary>
         /// The zone this belongs to
         /// </summary>
-        IZoneData Zone { get; set; }
+        IZoneData Affiliation { get; set; }
 
         /// <summary>
         /// The rooms contained within the locale should it need to regenerate from nothing

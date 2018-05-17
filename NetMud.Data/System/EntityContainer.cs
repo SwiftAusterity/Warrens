@@ -18,7 +18,7 @@ namespace NetMud.Data.System
         /// <summary>
         /// What this actually contains, yeah it's a hashtable of hashtables but whatever
         /// </summary>
-        private Dictionary<string, HashSet<string>> Birthmarks;
+        private Dictionary<string, HashSet<string>> Birthmarks => new Dictionary<string, HashSet<string>>();
 
         /// <summary>
         /// What named containers are attached to this
@@ -30,25 +30,9 @@ namespace NetMud.Data.System
         /// </summary>
         public EntityContainer()
         {
-            Birthmarks = new Dictionary<string, HashSet<string>>();
             NamedContainers = Enumerable.Empty<IEntityContainerData<T>>();
 
             Birthmarks.Add(genericCollectionLabel, new HashSet<string>());
-        }
-
-        /// <summary>
-        /// New up an empty container
-        /// </summary>
-        [JsonConstructor]
-        public EntityContainer(IEnumerable<EntityContainerData<T>> namedContainers)
-        {
-            Birthmarks = new Dictionary<string, HashSet<string>>();
-            NamedContainers = namedContainers;
-
-            Birthmarks.Add(genericCollectionLabel, new HashSet<string>());
-
-            foreach (var container in namedContainers)
-                Birthmarks.Add(container.Name, new HashSet<string>());
         }
 
         /// <summary>
@@ -56,12 +40,26 @@ namespace NetMud.Data.System
         /// </summary>
         public EntityContainer(IEnumerable<IEntityContainerData<T>> namedContainers)
         {
-            Birthmarks = new Dictionary<string, HashSet<string>>();
             NamedContainers = namedContainers;
 
             Birthmarks.Add(genericCollectionLabel, new HashSet<string>());
 
             foreach(var container in namedContainers)
+                Birthmarks.Add(container.Name, new HashSet<string>());
+        }
+
+
+        /// <summary>
+        /// New up an empty container
+        /// </summary>
+        [JsonConstructor]
+        public EntityContainer(IEnumerable<EntityContainerData<T>> namedContainers)
+        {
+            NamedContainers = namedContainers;
+
+            Birthmarks.Add(genericCollectionLabel, new HashSet<string>());
+
+            foreach (var container in namedContainers)
                 Birthmarks.Add(container.Name, new HashSet<string>());
         }
 

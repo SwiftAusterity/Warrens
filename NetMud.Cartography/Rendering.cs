@@ -154,7 +154,7 @@ namespace NetMud.Cartography
                 return "&nbsp;";
 
             if (path != null)
-                destination = BackingDataCache.Get<IRoomData>(int.Parse(path.ToLocationID));
+                destination = (IRoomData)path.ToLocation;
 
             long destinationId = -1;
             var destinationName = String.Empty;

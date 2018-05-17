@@ -3,7 +3,7 @@ using NetMud.DataStructure.Base.Place;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-
+using System.Linq;
 
 namespace NetMud.Models.Admin
 {
@@ -31,12 +31,6 @@ namespace NetMud.Models.Admin
     {
         public ApplicationUser authedUser { get; set; }
 
-        public AddEditZoneDataViewModel(IEnumerable<ILocaleData> items)
-            : base(items)
-        {
-            CurrentPageNumber = 1;
-            ItemsPerPage = 20;
-        }
 
         internal override Func<ILocaleData, bool> SearchFilter
         {
@@ -45,6 +39,20 @@ namespace NetMud.Models.Admin
                 return item => item.Name.ToLower().Contains(SearchTerms.ToLower());
             }
         }
+
+        public AddEditZoneDataViewModel(IEnumerable<ILocaleData> items)
+        : base(items)
+        {
+            CurrentPageNumber = 1;
+            ItemsPerPage = 20;
+        }
+
+        public AddEditZoneDataViewModel() : base(Enumerable.Empty<ILocaleData>())
+        {
+            CurrentPageNumber = 1;
+            ItemsPerPage = 20;
+        }
+
 
         [StringLength(100, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
         [Display(Name = "Name")]

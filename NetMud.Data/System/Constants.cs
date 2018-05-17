@@ -1,4 +1,5 @@
-﻿using NetMud.DataStructure.Base.System;
+﻿using NetMud.Data.DataIntegrity;
+using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
 using Newtonsoft.Json;
@@ -17,6 +18,7 @@ namespace NetMud.Data.System
         /// <summary>
         /// All string values
         /// </summary>
+        [FilledContainerDataIntegrity("Lookup Criteria entry has no values.")]
         public Dictionary<ILookupCriteria, HashSet<string>> Values { get; set; }
 
         /// <summary>
@@ -38,28 +40,6 @@ namespace NetMud.Data.System
 
             foreach (var kvp in values)
                 Values.Add(new LookupCriteria(kvp.Key), kvp.Value);
-        }
-
-        /// <summary>
-        /// Gets the errors for data fitness
-        /// </summary>
-        /// <returns>a bunch of text saying how awful your data is</returns>
-        public override IList<string> FitnessReport()
-        {
-            var dataProblems = base.FitnessReport();
-
-            if (Values == null)
-                dataProblems.Add("Values table is null.");
-            else
-            {
-                if (Values.Any(kvp => kvp.Key == null))
-                    dataProblems.Add("Lookup Criteria for a cluster is null.");
-
-                if (Values.Any(kvp => !kvp.Value.Any() || kvp.Value.Any(v => String.IsNullOrWhiteSpace(v))))
-                    dataProblems.Add("Lookup Criteria entry has empty values or none at all.");
-            }
-
-            return dataProblems;
         }
 
         /// <summary>

@@ -15,6 +15,7 @@ namespace NetMud.Data.System
     /// </summary>
     public abstract class BackingDataPartial : SerializableDataPartial, IData
     {
+        #region Data ID Parameters
         /// <summary>
         /// Numerical iterative ID in the db
         /// </summary>
@@ -36,35 +37,7 @@ namespace NetMud.Data.System
         /// </summary>
         [StringDataIntegrity("Name is blank")]
         public string Name { get; set; }
-
-        /// <summary>
-        /// Gets the errors for data fitness
-        /// </summary>
-        /// <returns>a bunch of text saying how awful your data is</returns>
-        public virtual IList<string> FitnessReport()
-        {
-            var dataProblems = new List<string>();
-            var requiredProperties = GetType().GetProperties().Where(prop => prop.CustomAttributes.Any(attr => attr.AttributeType.BaseType == typeof(BaseDataIntegrity)));
-
-            foreach (var property in requiredProperties)
-            {
-                foreach (var checker in property.GetCustomAttributes(typeof(BaseDataIntegrity), false))
-                {
-                    BaseDataIntegrity integrityCheck = (BaseDataIntegrity)checker;
-
-                    if (!integrityCheck.Verify(property.GetValue(this)))
-                        dataProblems.Add(integrityCheck.ErrorMessage);
-                }
-            }
-
-            //if (String.IsNullOrWhiteSpace(Name))
-            //    dataProblems.Add("Name is blank.");
-
-            //if (ID < 0)
-            //    dataProblems.Add("ID is less than zero.");
-    
-            return dataProblems;
-        }
+        #endregion
 
         /// <summary>
         /// Does this have data problems?
@@ -79,6 +52,31 @@ namespace NetMud.Data.System
             }
         }
 
+        /// <summary>
+        /// Gets the errors for data fitness
+        /// </summary>
+        /// <returns>a bunch of text saying how awful your data is</returns>
+        public virtual IList<string> FitnessReport()
+        {
+            var dataProblems = new List<string>();
+            var requiredProperties = GetType().GetProperties().Where(prop => prop.CustomAttributes.Any(attr => attr.AttributeType.BaseType == typeof(BaseDataIntegrity)));
+
+            //Sift through the props decorated with DataIntegrity Attributes
+            foreach (var property in requiredProperties)
+            {
+                foreach (var checker in property.GetCustomAttributes(typeof(BaseDataIntegrity), false))
+                {
+                    BaseDataIntegrity integrityCheck = (BaseDataIntegrity)checker;
+
+                    if (!integrityCheck.Verify(property.GetValue(this)))
+                        dataProblems.Add(integrityCheck.ErrorMessage);
+                }
+            }
+
+            return dataProblems;
+        }
+
+        #region Data persistence functions
         /// <summary>
         /// Add it to the cache and save it to the file system
         /// </summary>
@@ -166,6 +164,22 @@ namespace NetMud.Data.System
         }
 
         /// <summary>
+        /// Grabs the next ID in the chain of all objects of this type.
+        /// </summary>
+        internal void GetNextId()
+        {
+            IEnumerable<IData> allOfMe = BackingDataCache.GetAll().Where(bdc => bdc.GetType() == GetType());
+
+            //Zero ordered list
+            if (allOfMe.Count() > 0)
+                ID = allOfMe.Max(dp => dp.ID) + 1;
+            else
+                ID = 0;
+        }
+        #endregion
+
+        #region Equality Functions
+        /// <summary>
         /// -99 = null input
         /// -1 = wrong type
         /// 0 = same type, wrong id
@@ -217,19 +231,6 @@ namespace NetMud.Data.System
 
             return false;
         }
-
-        /// <summary>
-        /// Grabs the next ID in the chain of all objects of this type.
-        /// </summary>
-        internal void GetNextId()
-        {
-            IEnumerable<IData> allOfMe = BackingDataCache.GetAll().Where(bdc => bdc.GetType() == GetType());
-
-            //Zero ordered list
-            if (allOfMe.Count() > 0)
-                ID = allOfMe.Max(dp => dp.ID) + 1;
-            else
-                ID = 0;
-        }
+        #endregion
     }
 }

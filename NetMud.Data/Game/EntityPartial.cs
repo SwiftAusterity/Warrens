@@ -1,5 +1,6 @@
 ﻿using NetMud.Communication;
 using NetMud.Communication.Messaging;
+using NetMud.Data.Serialization;
 using NetMud.Data.System;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
