@@ -8,11 +8,6 @@ namespace NetMud.DataStructure.Base.Supporting
     public interface IDiscoverable
     {
         /// <summary>
-        /// Does this even need to be discovered?
-        /// </summary>
-        bool AlwaysVisible { get; set; }
-
-        /// <summary>
         /// What "Achievement" to look for to make this visible
         /// </summary>
         string DiscoveryName { get; }

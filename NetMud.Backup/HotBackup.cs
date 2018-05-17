@@ -4,7 +4,6 @@ using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.Behaviors.Rendering;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -275,8 +274,8 @@ namespace NetMud.Backup
                 //paths load themselves to their appropriate location
                 foreach (Pathway entity in entitiesToLoad.Where(ent => ent.GetType() == typeof(Pathway)))
                 {
-                    ILocation roomTo = LiveCache.Get<ILocation>(new LiveCacheKey(entity.ToLocation.GetType(), entity.ToLocation.BirthMark));
-                    ILocation roomFrom = LiveCache.Get<ILocation>(new LiveCacheKey(entity.FromLocation.GetType(), entity.FromLocation.BirthMark));
+                    var roomTo = LiveCache.Get<IRoom>(new LiveCacheKey(typeof(IRoom), entity.ToLocation.BirthMark));
+                    var roomFrom = LiveCache.Get<IRoom>(new LiveCacheKey(typeof(IRoom), entity.FromLocation.BirthMark));
 
                     if (roomTo != null && roomFrom != null)
                     {

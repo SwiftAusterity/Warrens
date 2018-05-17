@@ -1,13 +1,13 @@
-﻿using NetMud.DataStructure.Base.Place;
+﻿using NetMud.Data.DataIntegrity;
+using NetMud.Data.Game;
+using NetMud.DataAccess.Cache;
+using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.DataStructure.Base.Place;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.Data.Game;
-using Newtonsoft.Json;
-using System.Web.Script.Serialization;
 using System.Linq;
-using NetMud.DataAccess.Cache;
-using NetMud.Data.DataIntegrity;
+using System.Web.Script.Serialization;
 
 namespace NetMud.Data.EntityBackingData
 {
@@ -22,9 +22,14 @@ namespace NetMud.Data.EntityBackingData
         }
 
         /// <summary>
-        /// If this is discoverable or not
+        /// Is this zone discoverable?
         /// </summary>
-        public bool AlwaysVisible { get; set; }
+        public bool AlwaysDiscovered { get; set; }
+
+        /// <summary>
+        /// When this locale dies off
+        /// </summary>
+        public DateTime RollingExpiration { get; set; }
 
         /// <summary>
         /// The interior map of the locale

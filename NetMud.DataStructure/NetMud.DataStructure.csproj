@@ -45,7 +45,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Base\EntityBackingData\ILocaleData.cs" />
-    <Compile Include="Base\EntityBackingData\ILocationBackingData.cs" />
     <Compile Include="Base\EntityBackingData\INonPlayerCharacter.cs" />
     <Compile Include="Base\EntityBackingData\IInanimateData.cs" />
     <Compile Include="Base\EntityBackingData\IPathwayData.cs" />
@@ -68,6 +67,7 @@
     <Compile Include="Base\Supporting\IDimensionalModelNode.cs" />
     <Compile Include="Base\Supporting\IDimensionalModelPlane.cs" />
     <Compile Include="Base\Supporting\IDiscoverable.cs" />
+    <Compile Include="Base\Supporting\IDiscoverableData.cs" />
     <Compile Include="Base\Supporting\IEnvironment.cs" />
     <Compile Include="Base\Supporting\IEnvironmentData.cs" />
     <Compile Include="Base\Supporting\IFauna.cs" />

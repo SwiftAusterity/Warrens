@@ -14,12 +14,12 @@ namespace NetMud.DataStructure.Base.Place
         /// <summary>
         /// Location this pathway leads to
         /// </summary>
-        ILocation ToLocation { get; set; }
+        IRoom ToLocation { get; set; }
 
         /// <summary>
         /// Location this pathway spawns into and leads away from
         /// </summary>
-        ILocation FromLocation { get; set; }
+        IRoom FromLocation { get; set; }
 
         /// <summary>
         /// Cardinal direction this pathway is

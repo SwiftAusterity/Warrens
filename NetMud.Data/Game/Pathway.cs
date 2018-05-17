@@ -7,13 +7,10 @@ using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Existential;
-using NetMud.DataStructure.Behaviors.Rendering;
-using NetMud.DataStructure.Behaviors.System;
 using NetMud.DataStructure.SupportingClasses;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Web.Script.Serialization;
 
@@ -66,12 +63,12 @@ namespace NetMud.Data.Game
         [ScriptIgnore]
         [JsonIgnore]
         [NonNullableDataIntegrity("From Location must be valid.")]
-        public ILocation ToLocation
+        public IRoom ToLocation
         {
             get
             {
                 if (!String.IsNullOrWhiteSpace(_currentToLocationBirthmark))
-                    return LiveCache.Get<ILocation>(new LiveCacheKey(typeof(ILocation), _currentToLocationBirthmark));
+                    return LiveCache.Get<IRoom>(new LiveCacheKey(typeof(IRoom), _currentToLocationBirthmark));
 
                 return null;
             }
@@ -97,12 +94,12 @@ namespace NetMud.Data.Game
         [ScriptIgnore]
         [JsonIgnore]
         [NonNullableDataIntegrity("From Location must be valid.")]
-        public ILocation FromLocation
+        public IRoom FromLocation
         {
             get
             {
                 if (!String.IsNullOrWhiteSpace(_currentFromLocationBirthmark))
-                    return LiveCache.Get<ILocation>(new LiveCacheKey(typeof(ILocation), _currentFromLocationBirthmark));
+                    return LiveCache.Get<IRoom>(new LiveCacheKey(typeof(IRoom), _currentFromLocationBirthmark));
 
                 return null;
             }
@@ -196,8 +193,8 @@ namespace NetMud.Data.Game
             Birthdate = DateTime.Now;
 
             //paths need two locations
-            FromLocation = LiveCache.Get<ILocation>(bS.FromLocation.ID, bS.FromLocation.EntityClass);
-            ToLocation = LiveCache.Get<ILocation>(bS.ToLocation.ID, bS.ToLocation.EntityClass);
+            FromLocation = LiveCache.Get<IRoom>(bS.FromLocation.ID);
+            ToLocation = LiveCache.Get<IRoom>(bS.ToLocation.ID);
 
             CurrentLocation = FromLocation.CurrentLocation; 
 

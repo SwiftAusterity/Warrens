@@ -1,4 +1,5 @@
-﻿using NetMud.DataStructure.Base.System;
+﻿using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.Behaviors.System;
 using System;
@@ -9,7 +10,7 @@ namespace NetMud.DataStructure.Base.Place
     /// <summary>
     /// Collection of rooms in a zone
     /// </summary>
-    public interface ILocale : IEntity, ISpawnAsSingleton
+    public interface ILocale : IEntity, IDiscoverable, ISpawnAsSingleton
     {
         /// <summary>
         /// The zone this lives in

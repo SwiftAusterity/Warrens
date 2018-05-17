@@ -8,6 +8,8 @@
         Visible,
         Audible,
         Olefactory,
+        Tactile,
+        Taste,
         Psychic
     }
 }

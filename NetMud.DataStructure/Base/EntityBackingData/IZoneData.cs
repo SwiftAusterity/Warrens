@@ -1,5 +1,4 @@
-﻿using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.Supporting;
+﻿using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.System;
 using System.Collections.Generic;
@@ -9,7 +8,7 @@ namespace NetMud.DataStructure.Base.Place
     /// <summary>
     /// Collector of rooms, used for weather patterning
     /// </summary>
-    public interface IZoneData : IEntityBackingData, IEnvironmentData, ILocationBackingData, ISingleton
+    public interface IZoneData : IEntityBackingData, IEnvironmentData, IDiscoverableData, ISingleton
     {
         /// <summary>
         /// Templates for generating randomized locales for zones
@@ -28,6 +27,6 @@ namespace NetMud.DataStructure.Base.Place
 
         /// What other zones does this zone exit to and are they initially visible
         /// </summary>
-        IDictionary<IZoneData, bool> ZoneExits { get; set; }
+        HashSet<IZoneData> ZoneExits { get; set; }
     }
 }

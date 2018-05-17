@@ -41,6 +41,11 @@ namespace NetMud.Data.EntityBackingData
         /// </summary>
         public Biome BaseBiome { get; set; }
 
+        /// <summary>
+        /// Is this zone discoverable?
+        /// </summary>
+        public bool AlwaysDiscovered { get; set; }
+
         [JsonProperty("Templates")]
         private HashSet<long> _templates { get; set; }
 
@@ -94,19 +99,19 @@ namespace NetMud.Data.EntityBackingData
         }
 
         [JsonProperty("ZoneExits")]
-        private IDictionary<long, bool> _zoneExits { get; set; }
+        private HashSet<long> _zoneExits { get; set; }
 
         /// <summary>
         ///List of perm locales
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
-        public IDictionary<IZoneData, bool> ZoneExits
+        public HashSet<IZoneData> ZoneExits
         {
             get
             {
                 if (_zoneExits != null)
-                    return _zoneExits.ToDictionary(k => BackingDataCache.Get<IZoneData>(k.Key), k => k.Value);
+                    return new HashSet<IZoneData>(BackingDataCache.GetMany<IZoneData>(_zoneExits));
 
                 return null;
             }
@@ -115,10 +120,10 @@ namespace NetMud.Data.EntityBackingData
                 if (value == null)
                     return;
 
-                _zoneExits = value.ToDictionary(k => k.Key.ID, k => k.Value);
+                _zoneExits = new HashSet<long>(value.Select(k => k.ID));
             }
         }
-
+        
         [JsonProperty("NaturalResourceSpawn")]
         private IDictionary<long, int> _naturalResourceSpawn { get; set; }
 

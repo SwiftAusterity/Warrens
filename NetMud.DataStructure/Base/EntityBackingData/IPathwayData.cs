@@ -1,6 +1,5 @@
 ﻿using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.Behaviors.System;
 using NetMud.DataStructure.SupportingClasses;
 
@@ -29,12 +28,12 @@ namespace NetMud.DataStructure.Base.EntityBackingData
         /// <summary>
         /// The container this points into
         /// </summary>
-        ILocationBackingData ToLocation { get; set; }
+        IRoomData ToLocation { get; set; }
 
         /// <summary>
         /// The container this starts in
         /// </summary>
-        ILocationBackingData FromLocation { get; set; }
+        IRoomData FromLocation { get; set; }
 
         /// <summary>
         /// Output message format the Actor recieves upon moving

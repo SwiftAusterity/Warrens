@@ -57,11 +57,11 @@ namespace NetMud.Data.EntityBackingData
         [ScriptIgnore]
         [JsonIgnore]
         [NonNullableDataIntegrity("To Location is invalid.")]
-        public ILocationBackingData ToLocation
+        public IRoomData ToLocation
         {
             get
             {
-                return BackingDataCache.Get<ILocationBackingData>(_toLocation);
+                return BackingDataCache.Get<IRoomData>(_toLocation);
             }
             set
             {
@@ -79,11 +79,11 @@ namespace NetMud.Data.EntityBackingData
         [ScriptIgnore]
         [JsonIgnore]
         [NonNullableDataIntegrity("From Location is invalid.")]
-        public ILocationBackingData FromLocation
+        public IRoomData FromLocation
         {
             get
             {
-                return BackingDataCache.Get<ILocationBackingData>(_fromLocation);
+                return BackingDataCache.Get<IRoomData>(_fromLocation);
             }
             set
             {
@@ -91,11 +91,6 @@ namespace NetMud.Data.EntityBackingData
                     _fromLocation = value.ID;
             }
         }
-
-        /// <summary>
-        /// The container this points into
-        /// </summary>
-        public string ToLocationID { get; set; }
 
         /// <summary>
         /// Output message format the Actor recieves upon moving

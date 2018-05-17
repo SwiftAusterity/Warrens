@@ -34,6 +34,17 @@ namespace NetMud.Data.Game
         }
 
         /// <summary>
+        /// The name used in the tag for discovery checking
+        /// </summary>
+        public string DiscoveryName
+        {
+            get
+            {
+                return "Locale_" + DataTemplateName;
+            }
+        }
+
+        /// <summary>
         /// The interior map of the locale
         /// </summary>
         [JsonIgnore]
@@ -133,6 +144,24 @@ namespace NetMud.Data.Game
             DataTemplateId = locale.ID;
 
             GetFromWorldOrSpawn();
+        }
+
+        /// <summary>
+        /// Does this entity know about this thing
+        /// </summary>
+        /// <param name="discoverer">The onlooker</param>
+        /// <returns>If this is known to the discoverer</returns>
+        public bool IsDiscovered(IEntity discoverer)
+        {
+            if (DataTemplate<ILocaleData>().AlwaysDiscovered)
+                return true;
+
+            //TODO
+
+            //discoverer.HasAccomplishment(DiscoveryName);
+
+            //For now
+            return true;
         }
 
         /// <summary>

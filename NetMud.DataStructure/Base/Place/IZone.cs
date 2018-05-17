@@ -21,11 +21,20 @@ namespace NetMud.DataStructure.Base.Place
         /// </summary>
         /// <param name="name">The name of the template requested, blank = use random</param>
         /// <returns>The locale generated</returns>
-        ILocale GenerateAdventure(string name = "");
+        ILocale GenerateAdventure(string templateName = "");
 
         /// <summary>
         /// Get the zones this exits to (factors in visibility)
         /// </summary>
+        /// <param name="viewer">the entity looking</param>
+        /// <returns>valid zones you can go to</returns>
         IEnumerable<IZone> ZoneExits(IEntity viewer);
+
+        /// <summary>
+        /// Get the locales this exits to (factors in visibility)
+        /// </summary>
+        /// <param name="viewer">the entity looking</param>
+        /// <returns>valid locales you can go to</returns>
+        IEnumerable<ILocale> LocaleExits(IEntity viewer);
     }
 }

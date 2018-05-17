@@ -10,7 +10,7 @@ namespace NetMud.DataStructure.Base.EntityBackingData
     /// <summary>
     /// Backing data for Rooms
     /// </summary>
-    public interface IRoomData : IEntityBackingData, ILocationBackingData, ISingleton
+    public interface IRoomData : IEntityBackingData, ISingleton
     {
         /// <summary>
         /// The current physical model for this entity

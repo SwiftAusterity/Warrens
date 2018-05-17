@@ -9,7 +9,6 @@ using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.Models.Admin;
-using NetMud.Utility;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -334,8 +333,8 @@ namespace NetMud.Controllers.GameAdmin
             vModel.MessageToActor = obj.MessageToActor;
             vModel.MessageToDestination = obj.MessageToDestination;
             vModel.MessageToOrigin = obj.MessageToOrigin;
-            vModel.ToLocation = (IRoomData)obj.ToLocation;
-            vModel.FromLocation = (IRoomData)obj.FromLocation;
+            vModel.ToLocation = obj.ToLocation;
+            vModel.FromLocation = obj.FromLocation;
             vModel.VisibleStrength = obj.VisibleStrength;
             vModel.VisibleToSurroundings = obj.VisibleToSurroundings;
 

@@ -1,4 +1,5 @@
 ﻿using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.System;
 using System;
@@ -9,8 +10,13 @@ namespace NetMud.DataStructure.Base.Place
     /// <summary>
     /// Collector of rooms, used for weather patterning
     /// </summary>
-    public interface ILocaleData : IEntityBackingData, ILocationBackingData, ISingleton
+    public interface ILocaleData : IEntityBackingData, IDiscoverableData, ISingleton
     {
+        /// <summary>
+        /// When this locale dies off, MinValue = never
+        /// </summary>
+        DateTime RollingExpiration { get; set; }
+
         /// <summary>
         /// The zone this belongs to
         /// </summary>
@@ -20,11 +26,6 @@ namespace NetMud.DataStructure.Base.Place
         /// The rooms contained within the locale should it need to regenerate from nothing
         /// </summary>
         HashSet<IRoomData> Rooms { get; set; }
-
-        /// <summary>
-        /// Does this even need to be discovered?
-        /// </summary>
-        bool AlwaysVisible { get; set; }
 
         /// <summary>
         /// Zones this can exit to

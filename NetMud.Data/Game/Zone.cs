@@ -22,22 +22,6 @@ namespace NetMud.Data.Game
     public class Zone : LocationEntityPartial, IZone
     {
         /// <summary>
-        /// Is this zone discoverable?
-        /// </summary>
-        public bool AlwaysVisible { get; set; }
-
-        /// <summary>
-        /// The name used in the tag for discovery checking
-        /// </summary>
-        public string DiscoveryName
-        {
-            get
-            {
-                return "Zone_" + DataTemplateName;
-            }
-        }
-
-        /// <summary>
         /// The name of the object in the data template
         /// </summary>
         public override string DataTemplateName
@@ -48,6 +32,17 @@ namespace NetMud.Data.Game
                     return String.Empty;
 
                 return DataTemplate<IZoneData>().Name;
+            }
+        }
+
+        /// <summary>
+        /// The name used in the tag for discovery checking
+        /// </summary>
+        public string DiscoveryName
+        {
+            get
+            {
+                return "Zone_" + DataTemplateName;
             }
         }
 
@@ -140,6 +135,9 @@ namespace NetMud.Data.Game
         /// <returns>If this is known to the discoverer</returns>
         public bool IsDiscovered(IEntity discoverer)
         {
+            if (DataTemplate<IZoneData>().AlwaysDiscovered)
+                return true;
+
             //TODO
 
             //discoverer.HasAccomplishment(DiscoveryName);
@@ -155,9 +153,21 @@ namespace NetMud.Data.Game
         /// <returns>All zones that have exits from here that are known</returns>
         public IEnumerable<IZone> ZoneExits(IEntity viewer)
         {
-            return Pathways.EntitiesContained()
-                    .Where(path => path.ToLocation.GetType() == typeof(IZone) && ((IZone)path.ToLocation).IsDiscovered(viewer))
-                    .Select(path => (IZone)path.ToLocation);
+            return Enumerable.Empty<IZone>();
+
+            //return Pathways.EntitiesContained()
+            //        .Where(path => path.ToLocation.GetType() == typeof(IZone) && ((IZone)path.ToLocation).IsDiscovered(viewer))
+            //        .Select(path => (IZone)path.ToLocation);
+        }
+
+        /// <summary>
+        /// List out all the known exits to Zones
+        /// </summary>
+        /// <param name="viewer">the onlooker</param>
+        /// <returns>All zones that have exits from here that are known</returns>
+        public IEnumerable<ILocale> LocaleExits(IEntity viewer)
+        {
+            return Enumerable.Empty<ILocale>();
         }
 
         /// <summary>
