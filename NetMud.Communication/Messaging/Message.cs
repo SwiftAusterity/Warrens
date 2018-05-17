@@ -1,6 +1,7 @@
 ﻿using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.SupportingClasses;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,6 +10,7 @@ namespace NetMud.Communication.Messaging
     /// <summary>
     /// Singular message object for output parsing
     /// </summary>
+    [Serializable]
     public class Message : IMessage
     {
         /// <summary>
