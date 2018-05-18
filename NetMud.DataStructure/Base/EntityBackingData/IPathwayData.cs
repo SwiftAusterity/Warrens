@@ -36,39 +36,19 @@ namespace NetMud.DataStructure.Base.EntityBackingData
         IRoomData FromLocation { get; set; }
 
         /// <summary>
-        /// Output message format the Actor recieves upon moving
+        /// The visual output of using this path
         /// </summary>
-        string MessageToActor { get; set; }
+        ILexica VisualOutput { get; set; }
 
         /// <summary>
-        /// Output message format the originating location's entities recieve upon moving
+        /// The auditory output of using this path
         /// </summary>
-        string MessageToOrigin { get; set; }
+        ILexica AuditoryOutput { get; set; }
 
         /// <summary>
-        /// Output message format the destination location's entities recieve upon moving
+        /// The auditory output of using this path
         /// </summary>
-        string MessageToDestination { get; set; }
-
-        /// <summary>
-        /// Audible (heard) message sent to surrounding locations of both origin and destination
-        /// </summary>
-        string AudibleToSurroundings { get; set; }
-
-        /// <summary>
-        /// Strength of audible message to surroundings
-        /// </summary>
-        int AudibleStrength { get; set; }
-
-        /// <summary>
-        /// Visible message sent to surrounding locations of both origin and destination
-        /// </summary>
-        string VisibleToSurroundings { get; set; }
-
-        /// <summary>
-        /// Strength of visible message to surroundings
-        /// </summary>
-        int VisibleStrength { get; set; }
+        ILexica OlefactoryOutput { get; set; }
 
         /// <summary>
         /// The current physical model for this entity

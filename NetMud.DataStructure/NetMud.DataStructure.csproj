@@ -74,6 +74,8 @@
     <Compile Include="Base\Supporting\IFlora.cs" />
     <Compile Include="Base\Supporting\IGender.cs" />
     <Compile Include="Base\Supporting\IHomesteading.cs" />
+    <Compile Include="Base\Supporting\IHorizon.cs" />
+    <Compile Include="Base\Supporting\IHorizonData.cs" />
     <Compile Include="Base\Supporting\IMaterial.cs" />
     <Compile Include="Base\Supporting\IMineral.cs" />
     <Compile Include="Base\Supporting\IQuality.cs" />

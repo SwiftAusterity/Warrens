@@ -15,18 +15,13 @@ namespace NetMud.DataStructure.Base.Place
         /// <summary>
         /// The zone this lives in
         /// </summary>
-        IZone Affiliation { get; set; }
+        IZone ParentLocation { get; set; }
 
         /// <summary>
         /// Get all the rooms for the zone
         /// </summary>
         /// <returns>the rooms for the zone</returns>
         IEnumerable<IRoom> Rooms { get; set; }
-
-        /// <summary>
-        /// Pathways leading out of this
-        /// </summary>
-        IEnumerable<IPathway> Pathways { get; set; }
 
         /// <summary>
         /// The map of the rooms inside
@@ -37,13 +32,13 @@ namespace NetMud.DataStructure.Base.Place
         /// The rooms that are also exits to zones
         /// </summary>
         /// <returns>Rooms</returns>
-        Dictionary<IRoom, IZone> ZoneExitPoints();
+        Dictionary<IRoom, IHorizon<IZone>> ZoneHorizons();
 
         /// <summary>
         /// The rooms that are also exits to locales
         /// </summary>
         /// <returns>Rooms</returns>
-        Dictionary<IRoom, ILocale> LocaleExitPoints();
+        Dictionary<IRoom, IHorizon<ILocale>> LocaleHorizons();
 
         /// <summary>
         /// Get the surrounding locations based on a strength radius

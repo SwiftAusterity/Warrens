@@ -98,7 +98,7 @@ namespace NetMud.Data.EntityBackingData
             }
         }
 
-        [JsonProperty("ZoneExits")]
+        [JsonProperty("GetVisibleZoneHorizons")]
         private HashSet<long> _zoneExits { get; set; }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace NetMud.Data.EntityBackingData
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
-        public HashSet<IZoneData> ZoneExits
+        public HashSet<IZoneData> ConnectedZones
         {
             get
             {

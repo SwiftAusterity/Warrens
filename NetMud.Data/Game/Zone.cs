@@ -151,7 +151,7 @@ namespace NetMud.Data.Game
         /// </summary>
         /// <param name="viewer">the onlooker</param>
         /// <returns>All zones that have exits from here that are known</returns>
-        public IEnumerable<IZone> ZoneExits(IEntity viewer)
+        public IEnumerable<IZone> GetVisibleZoneHorizons(IEntity viewer)
         {
             return Enumerable.Empty<IZone>();
 
@@ -165,7 +165,7 @@ namespace NetMud.Data.Game
         /// </summary>
         /// <param name="viewer">the onlooker</param>
         /// <returns>All zones that have exits from here that are known</returns>
-        public IEnumerable<ILocale> LocaleExits(IEntity viewer)
+        public IEnumerable<ILocale> GetVisibleLocaleHorizons(IEntity viewer)
         {
             return Enumerable.Empty<ILocale>();
         }

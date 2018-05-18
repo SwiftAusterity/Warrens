@@ -71,6 +71,10 @@ namespace NetMud.Communication.Messaging
             return true;
         }
 
+        /// <summary>
+        /// Render this lexica to a sentence fragment (or whole sentence if it's a Subject role)
+        /// </summary>
+        /// <returns>a sentence fragment</returns>
         public override string ToString()
         {
             var sb = new StringBuilder();

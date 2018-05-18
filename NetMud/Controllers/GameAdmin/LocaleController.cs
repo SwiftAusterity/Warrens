@@ -99,7 +99,7 @@ namespace NetMud.Controllers.GameAdmin
             var newObj = new LocaleData
             {
                 Name = vModel.Name,
-                Affiliation = zone
+                ParentLocation = zone
             };
 
             if (newObj.Create() == null)

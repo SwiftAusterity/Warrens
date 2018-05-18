@@ -25,7 +25,7 @@ namespace NetMud.DataStructure.Base.EntityBackingData
         /// <summary>
         /// What locale does this belong to
         /// </summary>
-        ILocaleData Affiliation { get; set; }
+        ILocaleData ParentLocation { get; set; }
 
         /// <summary>
         /// Current coordinates of the room on its world map

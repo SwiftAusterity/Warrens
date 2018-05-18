@@ -38,7 +38,7 @@ namespace NetMud.Data.EntityBackingData
         [ScriptIgnore]
         public IMap Interior { get; set; }
 
-        [JsonProperty("Affiliation")]
+        [JsonProperty("ParentLocation")]
         private long _affiliation { get; set; }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace NetMud.Data.EntityBackingData
         [ScriptIgnore]
         [JsonIgnore]
         [NonNullableDataIntegrity("Locales must have a zone affiliation.")]
-        public IZoneData Affiliation
+        public IZoneData ParentLocation
         {
             get
             {
@@ -86,7 +86,7 @@ namespace NetMud.Data.EntityBackingData
             }
         }
 
-        [JsonProperty("ZoneExits")]
+        [JsonProperty("GetVisibleZoneHorizons")]
         private IEnumerable<long> _zoneExits { get; set; }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace NetMud.Data.EntityBackingData
             }
         }
 
-        [JsonProperty("LocaleExits")]
+        [JsonProperty("GetVisibleLocaleHorizons")]
         private IEnumerable<long> _localeExits { get; set; }
 
         /// <summary>

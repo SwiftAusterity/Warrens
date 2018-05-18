@@ -130,7 +130,7 @@ namespace NetMud.Controllers.GameAdmin
 
                 if (locale != null)
                 {
-                    newObj.Affiliation = locale;
+                    newObj.ParentLocation = locale;
 
                     if (newObj.Create() == null)
                         message = "Error; Creation failed.";
@@ -208,7 +208,7 @@ namespace NetMud.Controllers.GameAdmin
 
                 if (locale != null)
                 {
-                    obj.Affiliation = locale;
+                    obj.ParentLocation = locale;
 
                     if (obj.Save())
                     {

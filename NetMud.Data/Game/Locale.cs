@@ -3,6 +3,7 @@ using NetMud.Data.EntityBackingData;
 using NetMud.Data.System;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Place;
+using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.Rendering;
@@ -51,7 +52,7 @@ namespace NetMud.Data.Game
         [ScriptIgnore]
         public IMap Interior { get; set; }
 
-        [JsonProperty("Affiliation")]
+        [JsonProperty("ParentLocation")]
         private LiveCacheKey _affiliation { get; set; }
 
         /// <summary>
@@ -60,7 +61,7 @@ namespace NetMud.Data.Game
         [ScriptIgnore]
         [JsonIgnore]
         [NonNullableDataIntegrity("Locales must have a zone affiliation.")]
-        public IZone Affiliation
+        public IZone ParentLocation
         {
             get
             {
@@ -96,32 +97,6 @@ namespace NetMud.Data.Game
                     return;
 
                 _rooms = new HashSet<string>(value.Select(k => k.BirthMark));
-            }
-        }
-
-        [JsonProperty("Pathways")]
-        private IEnumerable<string> _pathways { get; set; }
-
-        /// <summary>
-        /// Pathways out of this locale
-        /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        public IEnumerable<IPathway> Pathways
-        {
-            get
-            {
-                if (_pathways != null)
-                    return new HashSet<IPathway>(LiveCache.GetMany<IPathway>(_pathways));
-
-                return null;
-            }
-            set
-            {
-                if (value == null)
-                    return;
-
-                _pathways = new HashSet<string>(value.Select(k => k.BirthMark));
             }
         }
 
@@ -209,7 +184,7 @@ namespace NetMud.Data.Game
         /// </summary>
         public override void SpawnNewInWorld()
         {
-            SpawnNewInWorld(new GlobalPosition(Affiliation));
+            SpawnNewInWorld(new GlobalPosition(ParentLocation));
         }
 
         /// <summary>
@@ -240,7 +215,6 @@ namespace NetMud.Data.Game
                 BirthMark = me.BirthMark;
                 Birthdate = me.Birthdate;
                 DataTemplateId = me.DataTemplateId;
-                Pathways = me.Pathways;
                 Keywords = me.Keywords;
                 CurrentLocation = me.CurrentLocation;
             }
@@ -270,8 +244,9 @@ namespace NetMud.Data.Game
         /// What locale exits exist here
         /// </summary>
         /// <returns>Collections of the room the exit is in and the place it goes</returns>
-        public Dictionary<IRoom, ILocale> LocaleExitPoints()
+        public Dictionary<IRoom, IHorizon<ILocale>> LocaleHorizons()
         {
+            var horizons = DataTemplate<ILocaleData>().LocaleExits.Select(hori => new Horizon<ILocale>(hori));
             return Pathways
                     .Where(path => path.ToLocation.GetType() == typeof(ILocale))
                     .ToDictionary(path => (IRoom)path.FromLocation, vpath => (ILocale)vpath.ToLocation);
@@ -281,7 +256,7 @@ namespace NetMud.Data.Game
         /// What Zone exits exist here
         /// </summary>
         /// <returns>Collections of the room the exit is in and the place it goes</returns>      
-        public Dictionary<IRoom, IZone> ZoneExitPoints()
+        public Dictionary<IRoom, IHorizon<IZone>> ZoneHorizons()
         {
             return Pathways
                     .Where(path => path.ToLocation.GetType() == typeof(IZone))
@@ -294,8 +269,8 @@ namespace NetMud.Data.Game
         /// <returns>The adjascent locales and zones</returns>
         public IEnumerable<ILocation> GetSurroundings()
         {
-            var locales = LocaleExitPoints().Select(pair => pair.Value);
-            var zones = ZoneExitPoints().Select(pair => pair.Value);
+            var locales = LocaleHorizons().Select(pair => pair.Value);
+            var zones = ZoneHorizons().Select(pair => pair.Value);
 
             return locales.Select(locale => (ILocation)locale)
                 .Union(zones.Select(zone => (ILocation)zone));

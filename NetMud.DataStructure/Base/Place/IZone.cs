@@ -14,7 +14,7 @@ namespace NetMud.DataStructure.Base.Place
         /// <summary>
         /// Locales within this zone
         /// </summary>
-        HashSet<ILocale> Locales { get; set; }
+        HashSet<IHorizon<IRoom>> Horizons { get; set; }
 
         /// <summary>
         /// Create a new randomized locale based on the template requested
@@ -28,13 +28,13 @@ namespace NetMud.DataStructure.Base.Place
         /// </summary>
         /// <param name="viewer">the entity looking</param>
         /// <returns>valid zones you can go to</returns>
-        IEnumerable<IZone> ZoneExits(IEntity viewer);
+        IEnumerable<IHorizon<IZone>> GetVisibleZoneHorizons(IEntity viewer);
 
         /// <summary>
         /// Get the locales this exits to (factors in visibility)
         /// </summary>
         /// <param name="viewer">the entity looking</param>
         /// <returns>valid locales you can go to</returns>
-        IEnumerable<ILocale> LocaleExits(IEntity viewer);
+        IEnumerable<IHorizon<IRoom>> GetVisibleLocaleHorizons(IEntity viewer);
     }
 }

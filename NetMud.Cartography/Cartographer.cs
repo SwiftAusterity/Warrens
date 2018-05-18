@@ -24,7 +24,7 @@ namespace NetMud.Cartography
             if (origin == null || direction == MovementDirectionType.None)
                 return null;
 
-            var worldMap = origin.Affiliation.Interior.CoordinatePlane;
+            var worldMap = origin.ParentLocation.Interior.CoordinatePlane;
 
             var steps = Utilities.GetDirectionStep(direction);
             var newX = origin.Coordinates.Item1 + steps.Item1;
@@ -80,7 +80,7 @@ namespace NetMud.Cartography
                     {
                         var room = BackingDataCache.Get<IRoomData>(fullMap[x, y, z]);
 
-                        if (room == null || room.Affiliation == null || !room.Affiliation.ID.Equals(localeId))
+                        if (room == null || room.ParentLocation == null || !room.ParentLocation.ID.Equals(localeId))
                             continue;
 
                         newMap[x, y, z] = fullMap[x, y, z];

@@ -24,19 +24,9 @@ namespace NetMud.Communication.Messaging
         public int Strength { get; set; }
 
         /// <summary>
-        /// Grammatical subject
+        /// The composed message
         /// </summary>
-        public string Subject { get; set; }
-
-        /// <summary>
-        /// Object of the sentence
-        /// </summary>
-        public string Object { get; set; }
-
-        /// <summary>
-        /// Action being taken
-        /// </summary>
-        public string Verb { get; set; }
+        public ILexica Lexica { get; set; }
 
         /// <summary>
         /// Overrides the grammatical generator

@@ -93,45 +93,25 @@ namespace NetMud.Data.EntityBackingData
         }
 
         /// <summary>
-        /// Output message format the Actor recieves upon moving
-        /// </summary>
-        public string MessageToActor { get; set; }
-
-        /// <summary>
-        /// Output message format the originating location's entities recieve upon moving
-        /// </summary>
-        public string MessageToOrigin { get; set; }
-
-        /// <summary>
-        /// Output message format the destination location's entities recieve upon moving
-        /// </summary>
-        public string MessageToDestination { get; set; }
-
-        /// <summary>
-        /// Audible (heard) message sent to surrounding locations of both origin and destination
-        /// </summary>
-        public string AudibleToSurroundings { get; set; }
-
-        /// <summary>
-        /// Strength of audible message to surroundings
-        /// </summary>
-        public int AudibleStrength { get; set; }
-
-        /// <summary>
-        /// Visible message sent to surrounding locations of both origin and destination
-        /// </summary>
-        public string VisibleToSurroundings { get; set; }
-
-        /// <summary>
-        /// Strength of visible message to surroundings
-        /// </summary>
-        public int VisibleStrength { get; set; }
-
-        /// <summary>
         /// Framework for the physics model of an entity
         /// </summary>
         [NonNullableDataIntegrity("Physical Model is invalid.")]
         public IDimensionalModel Model { get; set; }
+
+        /// <summary>
+        /// The visual output of using this path
+        /// </summary>
+        public ILexica VisualOutput { get; set; }
+
+        /// <summary>
+        /// The auditory output of using this path
+        /// </summary>
+        public ILexica AuditoryOutput { get; set; }
+
+        /// <summary>
+        /// The auditory output of using this path
+        /// </summary>
+        public ILexica OlefactoryOutput { get; set; }
 
         /// <summary>
         /// Blank constructor

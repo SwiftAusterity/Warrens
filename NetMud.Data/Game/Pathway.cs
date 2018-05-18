@@ -198,24 +198,6 @@ namespace NetMud.Data.Game
 
             CurrentLocation = FromLocation.CurrentLocation; 
 
-            if (String.IsNullOrWhiteSpace(bS.MessageToActor))
-                bS.MessageToActor = String.Empty;
-
-            if (String.IsNullOrWhiteSpace(bS.MessageToDestination))
-                bS.MessageToDestination = String.Empty;
-
-            if (String.IsNullOrWhiteSpace(bS.MessageToOrigin))
-                bS.MessageToOrigin = String.Empty;
-
-            if (String.IsNullOrWhiteSpace(bS.MessageToOrigin))
-                bS.MessageToOrigin = String.Empty;
-
-            if (String.IsNullOrWhiteSpace(bS.VisibleToSurroundings))
-                bS.VisibleToSurroundings = String.Empty;
-
-            if (String.IsNullOrWhiteSpace(bS.AudibleToSurroundings))
-                bS.AudibleToSurroundings = String.Empty;
-
             //Enter = new MessageCluster(new string[] { bS.MessageToActor }, new string[] { "$A$ enters you" }, new string[] { }, new string[] { bS.MessageToOrigin }, new string[] { bS.MessageToDestination });
             //Enter.ToSurrounding.Add(MessagingType.Visible, new Tuple<int, IEnumerable<string>>(bS.VisibleStrength, new string[] { bS.VisibleToSurroundings }));
             //Enter.ToSurrounding.Add(MessagingType.Audible, new Tuple<int, IEnumerable<string>>(bS.AudibleStrength, new string[] { bS.AudibleToSurroundings }));

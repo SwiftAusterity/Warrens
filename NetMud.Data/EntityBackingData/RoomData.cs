@@ -55,7 +55,7 @@ namespace NetMud.Data.EntityBackingData
             }
         }
 
-        [JsonProperty("Affiliation")]
+        [JsonProperty("ParentLocation")]
         private long _affiliation { get; set; }
 
         /// <summary>
@@ -63,8 +63,8 @@ namespace NetMud.Data.EntityBackingData
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
-        [NonNullableDataIntegrity("Affiliation is invalid.")]
-        public ILocaleData Affiliation
+        [NonNullableDataIntegrity("ParentLocation is invalid.")]
+        public ILocaleData ParentLocation
         {
             get
             {

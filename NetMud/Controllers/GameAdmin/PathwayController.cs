@@ -116,16 +116,9 @@ namespace NetMud.Controllers.GameAdmin
             var newObj = new PathwayData
             {
                 Name = vModel.NewName,
-                AudibleStrength = vModel.AudibleStrength,
-                AudibleToSurroundings = vModel.AudibleToSurroundings,
                 DegreesFromNorth = vModel.DegreesFromNorth,
                 FromLocation = vModel.ValidRooms.FirstOrDefault(room => room.ID.Equals(vModel.FromLocationID)),
-                MessageToActor = vModel.MessageToActor,
-                MessageToDestination = vModel.MessageToDestination,
-                MessageToOrigin = vModel.MessageToOrigin,
                 ToLocation = vModel.ValidRooms.FirstOrDefault(room => room.ID.Equals(vModel.ToLocationID)),
-                VisibleStrength = vModel.VisibleStrength,
-                VisibleToSurroundings = vModel.VisibleToSurroundings
             };
 
             var materialParts = new Dictionary<string, IMaterial>();
@@ -198,7 +191,7 @@ namespace NetMud.Controllers.GameAdmin
 
                 if (locale != null)
                 {
-                    newRoom.Affiliation = locale;
+                    newRoom.ParentLocation = locale;
 
                     if (newRoom.Create() == null)
                         roomMessage = "Error; Creation failed.";
@@ -232,16 +225,9 @@ namespace NetMud.Controllers.GameAdmin
             var newObj = new PathwayData
             {
                 Name = vModel.NewName,
-                AudibleStrength = vModel.AudibleStrength,
-                AudibleToSurroundings = vModel.AudibleToSurroundings,
                 DegreesFromNorth = vModel.DegreesFromNorth,
                 FromLocation = vModel.ValidRooms.FirstOrDefault(room => room.ID.Equals(vModel.FromLocationID)),
-                MessageToActor = vModel.MessageToActor,
-                MessageToDestination = vModel.MessageToDestination,
-                MessageToOrigin = vModel.MessageToOrigin,
                 ToLocation = vModel.ValidRooms.FirstOrDefault(room => room.ID.Equals(vModel.FromLocationID)),
-                VisibleStrength = vModel.VisibleStrength,
-                VisibleToSurroundings = vModel.VisibleToSurroundings
             };
 
             var materialParts = new Dictionary<string, IMaterial>();
@@ -327,16 +313,9 @@ namespace NetMud.Controllers.GameAdmin
             vModel.DataObject = obj;
             vModel.NewName = obj.Name;
 
-            vModel.AudibleStrength = obj.AudibleStrength;
-            vModel.AudibleToSurroundings = obj.AudibleToSurroundings;
             vModel.DegreesFromNorth = obj.DegreesFromNorth;
-            vModel.MessageToActor = obj.MessageToActor;
-            vModel.MessageToDestination = obj.MessageToDestination;
-            vModel.MessageToOrigin = obj.MessageToOrigin;
             vModel.ToLocation = obj.ToLocation;
             vModel.FromLocation = obj.FromLocation;
-            vModel.VisibleStrength = obj.VisibleStrength;
-            vModel.VisibleToSurroundings = obj.VisibleToSurroundings;
 
             vModel.DimensionalModelId = obj.Model.ModelBackingData.ID;
             vModel.DimensionalModelHeight = obj.Model.Height;
@@ -365,16 +344,9 @@ namespace NetMud.Controllers.GameAdmin
             }
 
             obj.Name = vModel.NewName;
-            obj.AudibleStrength = vModel.AudibleStrength;
-            obj.AudibleToSurroundings = vModel.AudibleToSurroundings;
             obj.DegreesFromNorth = vModel.DegreesFromNorth;
             obj.FromLocation = vModel.ValidRooms.FirstOrDefault(room => room.ID.Equals(vModel.FromLocationID));
-            obj.MessageToActor = vModel.MessageToActor;
-            obj.MessageToDestination = vModel.MessageToDestination;
-            obj.MessageToOrigin = vModel.MessageToOrigin;
             obj.ToLocation = vModel.ValidRooms.FirstOrDefault(room => room.ID.Equals(vModel.ToLocationID));
-            obj.VisibleStrength = vModel.VisibleStrength;
-            obj.VisibleToSurroundings = vModel.VisibleToSurroundings;
 
             var materialParts = new Dictionary<string, IMaterial>();
             if (vModel.ModelPartNames != null)

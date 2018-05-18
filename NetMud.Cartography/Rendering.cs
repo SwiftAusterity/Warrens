@@ -37,7 +37,7 @@ namespace NetMud.Cartography
             var asciiMap = new StringBuilder();
 
             //1. Get world map
-            var ourLocale = room.Affiliation;
+            var ourLocale = room.ParentLocation;
 
             //2. Get slice of room from world map
             var map = Cartographer.TakeSliceOfMap(new Tuple<int, int>(Math.Max(room.Coordinates.Item1 - radius, 0), room.Coordinates.Item1 + radius)

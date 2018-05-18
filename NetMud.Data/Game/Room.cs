@@ -27,7 +27,7 @@ namespace NetMud.Data.Game
         /// </summary>
         public IDimensionalModel Model { get; set; }
 
-        [JsonProperty("Affiliation")]
+        [JsonProperty("ParentLocation")]
         private LiveCacheKey _affiliation { get; set; }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace NetMud.Data.Game
         [ScriptIgnore]
         [JsonIgnore]
         [NonNullableDataIntegrity("Rooms must have a zone affiliation.")]
-        public ILocale Affiliation
+        public ILocale ParentLocation
         {
             get
             {

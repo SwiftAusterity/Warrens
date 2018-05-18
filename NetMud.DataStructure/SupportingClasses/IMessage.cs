@@ -21,19 +21,9 @@ namespace NetMud.DataStructure.SupportingClasses
         int Strength { get; set; }
 
         /// <summary>
-        /// Grammatical subject
+        /// The composed message
         /// </summary>
-        string Subject { get; set; }
-
-        /// <summary>
-        /// Object of the sentence
-        /// </summary>
-        string Object { get; set; }
-
-        /// <summary>
-        /// Action being taken
-        /// </summary>
-        string Verb { get; set; }
+        ILexica Lexica { get; set; }
 
         /// <summary>
         /// Overrides the grammatical generator

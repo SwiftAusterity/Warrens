@@ -11,6 +11,11 @@ namespace NetMud.DataStructure.Base.Place
     public interface IZoneData : IEntityBackingData, IEnvironmentData, IDiscoverableData, ISingleton
     {
         /// <summary>
+        /// The midline elevation point "sea level" for this zone
+        /// </summary>
+        int BaseElevation { get; set; }
+
+        /// <summary>
         /// Templates for generating randomized locales for zones
         /// </summary>
         HashSet<IAdventureTemplate> Templates { get; set; }
@@ -18,15 +23,10 @@ namespace NetMud.DataStructure.Base.Place
         /// <summary>
         /// Perm locales within this zone should the system need to regenerate from scratch
         /// </summary>
-        HashSet<ILocaleData> Locales { get; set; }
-
-        /// <summary>
-        /// The midline elevation point "sea level" for this zone
-        /// </summary>
-        int BaseElevation { get; set; }
+        HashSet<IHorizonData<ILocaleData>> Locales { get; set; }
 
         /// What other zones does this zone exit to and are they initially visible
         /// </summary>
-        HashSet<IZoneData> ZoneExits { get; set; }
+        HashSet<IHorizonData<IZoneData>> ConnectedZones { get; set; }
     }
 }

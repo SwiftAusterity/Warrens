@@ -20,7 +20,7 @@ namespace NetMud.DataStructure.Base.Place
         /// <summary>
         /// The zone this belongs to
         /// </summary>
-        IZoneData Affiliation { get; set; }
+        IZoneData ParentLocation { get; set; }
 
         /// <summary>
         /// The rooms contained within the locale should it need to regenerate from nothing
@@ -30,12 +30,12 @@ namespace NetMud.DataStructure.Base.Place
         /// <summary>
         /// Zones this can exit to
         /// </summary>
-        IEnumerable<IZoneData> ZoneExits { get; set; }
+        IEnumerable<IHorizonData<IZoneData>> ZoneExits { get; set; }
 
         /// <summary>
         /// Locales this can exit to
         /// </summary>
-        IEnumerable<ILocaleData> LocaleExits { get; set; }
+        IEnumerable<IHorizonData<ILocaleData>> LocaleExits { get; set; }
 		
         /// <summary>
         /// The map of the rooms inside
