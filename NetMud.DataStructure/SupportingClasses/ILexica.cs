@@ -1,12 +1,20 @@
-﻿namespace NetMud.DataStructure.SupportingClasses
+﻿using System;
+using System.Collections.Generic;
+
+namespace NetMud.DataStructure.SupportingClasses
 {
     /// <summary>
     /// A gramatical element
     /// </summary>
-    public interface ILexica
+    public interface ILexica : IComparable<ILexica>, IEquatable<ILexica>
     {
         /// <summary>
         /// The type of word this is to the sentence
+        /// </summary>
+        GrammaticalType Role { get; set; }
+
+        /// <summary>
+        /// The type of word this is in general
         /// </summary>
         LexicalType Type { get; set; }
 
@@ -16,13 +24,16 @@
         string Phrase { get; set; }
 
         /// <summary>
-        /// Does this modify another lexica
+        /// Modifiers for this lexica
         /// </summary>
-        ILexica Modifies { get; set; }
+        Dictionary<ILexica, string> Modifiers { get; }
 
         /// <summary>
-        /// What phrase do we use to join this to the other lexica
+        /// Try to add a modifier to a lexica
         /// </summary>
-        string Conjunction { get; set; }
+        /// <param name="modifier">the lexica that is the modifier</param>
+        /// <param name="conjunction">the joining text</param>
+        /// <returns>Whether or not it succeeded</returns>
+        bool TryModify(ILexica modifier, string conjunction);
     }
 }

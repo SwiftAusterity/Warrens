@@ -162,6 +162,7 @@
     <Compile Include="SupportingClasses\ILookupCriteria.cs" />
     <Compile Include="SupportingClasses\IMessage.cs" />
     <Compile Include="SupportingClasses\IMessageCluster.cs" />
+    <Compile Include="SupportingClasses\GrammaticalType.cs" />
     <Compile Include="SupportingClasses\LexicalType.cs" />
     <Compile Include="SupportingClasses\MessagingTargetType.cs" />
     <Compile Include="SupportingClasses\MessagingType.cs" />

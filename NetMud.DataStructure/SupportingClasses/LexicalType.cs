@@ -1,13 +1,16 @@
 ﻿namespace NetMud.DataStructure.SupportingClasses
 {
     /// <summary>
-    /// The type of lexica
+    /// Word/phrase types
     /// </summary>
     public enum LexicalType
     {
         Noun,
+        Pronoun,
         Verb,
         Adjective,
-        Adverb
+        Adverb,
+        Conjunction,
+        Interjection
     }
 }
