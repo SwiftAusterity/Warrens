@@ -1,14 +1,17 @@
-﻿using NetMud.DataStructure.Base.Supporting;
+﻿using NetMud.DataStructure.Base.Place;
+using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.Behaviors.System;
 using NetMud.DataStructure.SupportingClasses;
+using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Base.EntityBackingData
 {
     /// <summary>
     /// Backing data for Pathways
     /// </summary>
-    public interface IPathwayData : IEntityBackingData, ISingleton
+    public interface IPathwayData : IEntityBackingData, ISingleton<IPathway>
     {
         /// <summary>
         /// DegreesFromNorth translated
@@ -28,27 +31,17 @@ namespace NetMud.DataStructure.Base.EntityBackingData
         /// <summary>
         /// The container this points into
         /// </summary>
-        IRoomData ToLocation { get; set; }
+        ILocationData Destination { get; set; }
 
         /// <summary>
         /// The container this starts in
         /// </summary>
-        IRoomData FromLocation { get; set; }
+        ILocationData Origin { get; set; }
 
         /// <summary>
-        /// The visual output of using this path
+        /// Set of output relevant to this exit
         /// </summary>
-        ILexica VisualOutput { get; set; }
-
-        /// <summary>
-        /// The auditory output of using this path
-        /// </summary>
-        ILexica AuditoryOutput { get; set; }
-
-        /// <summary>
-        /// The auditory output of using this path
-        /// </summary>
-        ILexica OlefactoryOutput { get; set; }
+        HashSet<IOccurrence> Occurrences { get; set; }
 
         /// <summary>
         /// The current physical model for this entity

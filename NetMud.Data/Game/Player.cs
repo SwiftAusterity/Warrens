@@ -140,6 +140,15 @@ namespace NetMud.Data.Game
             return new Tuple<int, int, int>(height, length, width);
         }
 
+        /// <summary>
+        /// Get the live version of this in the world
+        /// </summary>
+        /// <returns>The live data</returns>
+        public IPlayer GetLiveInstance()
+        {
+            return this;
+        }
+
         #region Rendering
         /// <summary>
         /// Render this to a look command (what something sees when it 'look's at this

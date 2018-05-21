@@ -58,10 +58,10 @@ namespace NetMud.Commands.Movement
             var sb = new List<string>();
             IPathway targetPath = (IPathway)Subject;
 
-            targetPath.FromLocation.MoveFrom((IMobile)Actor);
-            targetPath.ToLocation.MoveInto((IMobile)Actor);
+            targetPath.Origin.MoveFrom((IMobile)Actor);
+            targetPath.Destination.MoveInto((IMobile)Actor);
 
-            targetPath.Enter.ExecuteMessaging(Actor, targetPath, null, targetPath.FromLocation, targetPath.ToLocation);
+            targetPath.Enter.ExecuteMessaging(Actor, targetPath, null, targetPath.Origin, targetPath.Destination);
         }
 
         /// <summary>

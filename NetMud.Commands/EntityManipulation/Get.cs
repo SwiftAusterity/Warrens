@@ -1,5 +1,6 @@
 ﻿using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
+using NetMud.Data.System;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.SupportingClasses;
@@ -52,12 +53,12 @@ namespace NetMud.Commands.EntityManipulation
             place.MoveFrom(thing);
             actor.MoveInto(thing);
 
-            var toActor = new Message(MessagingType.Visible, 1)
+            var toActor = new Message(MessagingType.Visible, new Occurrence() { Strength = 1 })
             {
                 Override = sb
             };
 
-            var toOrigin = new Message(MessagingType.Visible, 30)
+            var toOrigin = new Message(MessagingType.Visible, new Occurrence() { Strength = 30 })
             {
                 Override = new string[] { toRoomMessage }
             };

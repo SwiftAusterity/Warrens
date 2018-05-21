@@ -8,6 +8,9 @@ using System;
 using System.Web.Script.Serialization;
 using NetMud.Data.DataIntegrity;
 using NetMud.DataAccess.Cache;
+using System.Collections.Generic;
+using NetMud.DataStructure.Base.Place;
+using NetMud.DataStructure.Behaviors.Rendering;
 
 namespace NetMud.Data.EntityBackingData
 {
@@ -39,6 +42,11 @@ namespace NetMud.Data.EntityBackingData
         }
 
         /// <summary>
+        /// Set of output relevant to this exit
+        /// </summary>
+        public HashSet<IOccurrence> Occurrences { get; set; }
+
+        /// <summary>
         /// 0->360 degrees with 0 being absolute north (meaning 90 is west, 180 south, etc) -1 means no cardinality
         /// </summary>
         public int DegreesFromNorth { get; set; }
@@ -48,47 +56,47 @@ namespace NetMud.Data.EntityBackingData
         /// </summary>
         public int InclineGrade { get; set; }
 
-        [JsonProperty("ToLocation")]
-        private long _toLocation { get; set; }
+        [JsonProperty("Destination")]
+        private long _destination { get; set; }
 
         /// <summary>
         /// What is in the middle of the room
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
-        [NonNullableDataIntegrity("To Location is invalid.")]
-        public IRoomData ToLocation
+        [NonNullableDataIntegrity("Destination is invalid.")]
+        public ILocationData Destination
         {
             get
             {
-                return BackingDataCache.Get<IRoomData>(_toLocation);
+                return BackingDataCache.Get<IRoomData>(_destination);
             }
             set
             {
                 if (value != null)
-                    _toLocation = value.ID;
+                    _destination = value.ID;
             }
         }
 
-        [JsonProperty("FromLocation")]
-        private long _fromLocation { get; set; }
+        [JsonProperty("Origin")]
+        private long _origin { get; set; }
 
         /// <summary>
         /// What is in the middle of the room
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
-        [NonNullableDataIntegrity("From Location is invalid.")]
-        public IRoomData FromLocation
+        [NonNullableDataIntegrity("Origin is invalid.")]
+        public ILocationData Origin
         {
             get
             {
-                return BackingDataCache.Get<IRoomData>(_fromLocation);
+                return BackingDataCache.Get<IRoomData>(_origin);
             }
             set
             {
                 if (value != null)
-                    _fromLocation = value.ID;
+                    _origin = value.ID;
             }
         }
 
@@ -97,21 +105,6 @@ namespace NetMud.Data.EntityBackingData
         /// </summary>
         [NonNullableDataIntegrity("Physical Model is invalid.")]
         public IDimensionalModel Model { get; set; }
-
-        /// <summary>
-        /// The visual output of using this path
-        /// </summary>
-        public ILexica VisualOutput { get; set; }
-
-        /// <summary>
-        /// The auditory output of using this path
-        /// </summary>
-        public ILexica AuditoryOutput { get; set; }
-
-        /// <summary>
-        /// The auditory output of using this path
-        /// </summary>
-        public ILexica OlefactoryOutput { get; set; }
 
         /// <summary>
         /// Blank constructor
@@ -137,6 +130,15 @@ namespace NetMud.Data.EntityBackingData
         public override Tuple<int, int, int> GetModelDimensions()
         {
             return new Tuple<int, int, int>(Model.Height, Model.Length, Model.Width);
+        }
+
+        /// <summary>
+        /// Get the live version of this in the world
+        /// </summary>
+        /// <returns>The live data</returns>
+        public IPathway GetLiveInstance()
+        {
+            return LiveCache.Get<IPathway>(ID);
         }
     }
 }

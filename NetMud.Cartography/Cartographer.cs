@@ -323,15 +323,15 @@ namespace NetMud.Cartography
                 && dataMap[xStepped - 1, yStepped - 1, zStepped - 1] <= 0)
             {
                 var thisPath = pathways.FirstOrDefault(path =>
-                                                        (path.DirectionType == transversalDirection && path.FromLocation.Equals(origin))
-                                                        || (path.DirectionType == Utilities.ReverseDirection(transversalDirection) && path.ToLocation.Equals(origin))
+                                                        (path.DirectionType == transversalDirection && path.Origin.Equals(origin))
+                                                        || (path.DirectionType == Utilities.ReverseDirection(transversalDirection) && path.Destination.Equals(origin))
                                                         );
                 if (thisPath != null)
                 {
-                    var locId = thisPath.ToLocation.ID;
+                    var locId = thisPath.Destination.ID;
 
-                    if (thisPath.ToLocation.ID.Equals(origin.ID))
-                        locId = thisPath.FromLocation.ID;
+                    if (thisPath.Destination.ID.Equals(origin.ID))
+                        locId = thisPath.Origin.ID;
 
                     var passdownOrigin = BackingDataCache.Get<IRoomData>(locId);
 

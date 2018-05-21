@@ -7,6 +7,7 @@ using NetMud.Utility;
 using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
 using NetMud.DataStructure.SupportingClasses;
+using NetMud.Data.System;
 
 namespace NutMud.Commands.Rendering
 {
@@ -45,17 +46,17 @@ namespace NutMud.Commands.Rendering
                 sb.AddRange(lookTarget.RenderToLook(Actor));
             }
 
-            var toActor = new Message(MessagingType.Visible, 1)
+            var toActor = new Message(MessagingType.Visible, new Occurrence() { Strength = 1 })
             {
                 Override = sb
             };
 
-            var toOrigin = new Message(MessagingType.Visible, 5)
+            var toOrigin = new Message(MessagingType.Visible, new Occurrence() { Strength = 5 })
             {
                 Override = new string[] { "$A$ looks at $T$." }
             };
 
-            var toSubject = new Message(MessagingType.Visible, 1)
+            var toSubject = new Message(MessagingType.Visible, new Occurrence() { Strength = 1 })
             {
                 Override = new string[] { "$A$ looks at $T$." }
             };

@@ -7,6 +7,7 @@ using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Existential;
+using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.SupportingClasses;
 using Newtonsoft.Json;
 using System;
@@ -54,8 +55,8 @@ namespace NetMud.Data.Game
         /// <summary>
         /// Birthmark of live location this points into
         /// </summary>
-        [JsonProperty("ToLocation")]
-        private string _currentToLocationBirthmark;
+        [JsonProperty("Destination")]
+        private string _currentDestinationBirthmark;
 
         /// <summary>
         /// Restful live location this points into
@@ -63,12 +64,12 @@ namespace NetMud.Data.Game
         [ScriptIgnore]
         [JsonIgnore]
         [NonNullableDataIntegrity("From Location must be valid.")]
-        public IRoom ToLocation
+        public ILocation Destination
         {
             get
             {
-                if (!String.IsNullOrWhiteSpace(_currentToLocationBirthmark))
-                    return LiveCache.Get<IRoom>(new LiveCacheKey(typeof(IRoom), _currentToLocationBirthmark));
+                if (!String.IsNullOrWhiteSpace(_currentDestinationBirthmark))
+                    return LiveCache.Get<IRoom>(new LiveCacheKey(typeof(IRoom), _currentDestinationBirthmark));
 
                 return null;
             }
@@ -77,7 +78,7 @@ namespace NetMud.Data.Game
                 if (value == null)
                     return;
 
-                _currentToLocationBirthmark = value.BirthMark;
+                _currentDestinationBirthmark = value.BirthMark;
                 UpsertToLiveWorldCache();
             }
         }
@@ -85,8 +86,8 @@ namespace NetMud.Data.Game
         /// <summary>
         /// Birthmark of live location this points out of
         /// </summary>
-        [JsonProperty("FromLocation")]
-        private string _currentFromLocationBirthmark;
+        [JsonProperty("Origin")]
+        private string _currentOriginBirthmark;
 
         /// <summary>
         /// Restful live location this points out of
@@ -94,12 +95,12 @@ namespace NetMud.Data.Game
         [ScriptIgnore]
         [JsonIgnore]
         [NonNullableDataIntegrity("From Location must be valid.")]
-        public IRoom FromLocation
+        public ILocation Origin
         {
             get
             {
-                if (!String.IsNullOrWhiteSpace(_currentFromLocationBirthmark))
-                    return LiveCache.Get<IRoom>(new LiveCacheKey(typeof(IRoom), _currentFromLocationBirthmark));
+                if (!String.IsNullOrWhiteSpace(_currentOriginBirthmark))
+                    return LiveCache.Get<IRoom>(new LiveCacheKey(typeof(IRoom), _currentOriginBirthmark));
 
                 return null;
             }
@@ -108,7 +109,7 @@ namespace NetMud.Data.Game
                 if (value == null)
                     return;
 
-                _currentFromLocationBirthmark = value.BirthMark;
+                _currentOriginBirthmark = value.BirthMark;
                 UpsertToLiveWorldCache();
             }
         }
@@ -160,8 +161,8 @@ namespace NetMud.Data.Game
                 Birthdate = me.Birthdate;
                 CurrentLocation = me.CurrentLocation;
                 DataTemplateId = me.DataTemplate<IPathwayData>().ID;
-                FromLocation = me.FromLocation;
-                ToLocation = me.ToLocation;
+                Origin = me.Origin;
+                Destination = me.Destination;
                 Enter = me.Enter;
                 MovementDirection = me.MovementDirection;
             }
@@ -193,16 +194,16 @@ namespace NetMud.Data.Game
             Birthdate = DateTime.Now;
 
             //paths need two locations
-            FromLocation = LiveCache.Get<IRoom>(bS.FromLocation.ID);
-            ToLocation = LiveCache.Get<IRoom>(bS.ToLocation.ID);
+            Origin = LiveCache.Get<IRoom>(bS.Origin.ID);
+            Destination = LiveCache.Get<IRoom>(bS.Destination.ID);
 
-            CurrentLocation = FromLocation.CurrentLocation; 
+            CurrentLocation = Origin.CurrentLocation;
 
             //Enter = new MessageCluster(new string[] { bS.MessageToActor }, new string[] { "$A$ enters you" }, new string[] { }, new string[] { bS.MessageToOrigin }, new string[] { bS.MessageToDestination });
             //Enter.ToSurrounding.Add(MessagingType.Visible, new Tuple<int, IEnumerable<string>>(bS.VisibleStrength, new string[] { bS.VisibleToSurroundings }));
             //Enter.ToSurrounding.Add(MessagingType.Audible, new Tuple<int, IEnumerable<string>>(bS.AudibleStrength, new string[] { bS.AudibleToSurroundings }));
 
-            FromLocation.MoveInto<IPathway>(this);
+            Origin.MoveInto<IPathway>(this);
         }
         #endregion
 
@@ -215,9 +216,19 @@ namespace NetMud.Data.Game
             var sb = new List<string>();
             var bS = DataTemplate<IPathwayData>(); ;
 
-            sb.Add(string.Format("{0} heads in the direction of {1} from {2} to {3}", bS.Name, MovementDirection.ToString(), FromLocation.DataTemplate<IRoomData>().Name, ToLocation.DataTemplate<IRoomData>().Name));
+            sb.Add(string.Format("{0} heads in the direction of {1} from {2} to {3}", bS.Name, MovementDirection.ToString(), 
+                Origin.DataTemplate<IRoomData>().Name, Destination.DataTemplate<IRoomData>().Name));
 
             return sb;
+        }
+
+        /// <summary>
+        /// Get the live version of this in the world
+        /// </summary>
+        /// <returns>The live data</returns>
+        public IPathway GetLiveInstance()
+        {
+            return this;
         }
     }
 }

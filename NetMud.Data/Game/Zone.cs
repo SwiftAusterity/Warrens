@@ -1,17 +1,14 @@
-﻿using NetMud.DataStructure.Base.Place;
-using System;
-using System.Collections.Generic;
-using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.Behaviors.Existential;
-using NetMud.DataStructure.Base.Entity;
-using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.Behaviors.Rendering;
+﻿using NetMud.Data.EntityBackingData;
 using NetMud.Data.System;
 using NetMud.DataAccess.Cache;
-using System.Linq;
-using NetMud.Data.EntityBackingData;
-using Newtonsoft.Json;
-using System.Web.Script.Serialization;
+using NetMud.DataStructure.Base.Entity;
+using NetMud.DataStructure.Base.Place;
+using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Behaviors.Existential;
+using NetMud.DataStructure.Behaviors.Rendering;
+using System;
+using System.Collections.Generic;
 
 namespace NetMud.Data.Game
 {
@@ -50,32 +47,6 @@ namespace NetMud.Data.Game
         /// Is this zone ownership malleable
         /// </summary>
         public bool Claimable { get; set; }
-
-        [JsonProperty("Locales")]
-        private HashSet<string> _locales { get; set; }
-
-        /// <summary>
-        /// Locales in this zone, temporary and perm
-        /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        public HashSet<ILocale> Locales
-        {
-            get
-            {
-                if (_locales != null)
-                    return new HashSet<ILocale>(LiveCache.GetMany<ILocale>(_locales));
-
-                return null;
-            }
-            set
-            {
-                if (value == null)
-                    return;
-
-                _locales = new HashSet<string>(value.Select(k => k.BirthMark));
-            }
-        }
 
         /// <summary>
         /// New up a "blank" zone entry
@@ -144,30 +115,6 @@ namespace NetMud.Data.Game
 
             //For now
             return true;
-        }
-
-        /// <summary>
-        /// List out all the known exits to Zones
-        /// </summary>
-        /// <param name="viewer">the onlooker</param>
-        /// <returns>All zones that have exits from here that are known</returns>
-        public IEnumerable<IZone> GetVisibleZoneHorizons(IEntity viewer)
-        {
-            return Enumerable.Empty<IZone>();
-
-            //return Pathways.EntitiesContained()
-            //        .Where(path => path.ToLocation.GetType() == typeof(IZone) && ((IZone)path.ToLocation).IsDiscovered(viewer))
-            //        .Select(path => (IZone)path.ToLocation);
-        }
-
-        /// <summary>
-        /// List out all the known exits to Zones
-        /// </summary>
-        /// <param name="viewer">the onlooker</param>
-        /// <returns>All zones that have exits from here that are known</returns>
-        public IEnumerable<ILocale> GetVisibleLocaleHorizons(IEntity viewer)
-        {
-            return Enumerable.Empty<ILocale>();
         }
 
         /// <summary>
@@ -240,6 +187,11 @@ namespace NetMud.Data.Game
                 Keywords = me.Keywords;
                 CurrentLocation = new GlobalPosition(this);
             }
+        }
+
+        public IZone GetLiveInstance()
+        {
+            return this;
         }
     }
 }

@@ -275,7 +275,7 @@ namespace NetMud.Data.Game
             var currentPathsSet = Pathways.EntitiesContained();
             while (currentRadius <= strength && currentPathsSet.Count() > 0)
             {
-                var currentLocsSet = currentPathsSet.Select(path => path.ToLocation);
+                var currentLocsSet = currentPathsSet.Select(path => path.Destination);
 
                 if (currentLocsSet.Count() == 0)
                     break;

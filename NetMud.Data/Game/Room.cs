@@ -8,6 +8,7 @@ using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Existential;
+using NetMud.DataStructure.Behaviors.Rendering;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -102,12 +103,22 @@ namespace NetMud.Data.Game
         /// </summary>
         /// <param name="destination">The room you're heading for</param>
         /// <returns>distance (in rooms) and the next path you'd have to use</returns>
-        public Tuple<int, IPathway> GetDistanceAndNextStepToRoom(IRoom destination)
+        public Tuple<int, IPathway> GetDistanceAndNextStepDestination(ILocation destination)
         {
             var distance = -1;
             IPathway nextStep = null;
 
             return new Tuple<int, IPathway>(distance, nextStep);
+        }
+
+
+        /// <summary>
+        /// Get the live version of this in the world
+        /// </summary>
+        /// <returns>The live data</returns>
+        public IRoom GetLiveInstance()
+        {
+            return this;
         }
 
         #region rendering

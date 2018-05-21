@@ -14,12 +14,12 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group three-column">
             @Html.EditorFor(model => model.Name)
-            @Html.HiddenFor(m => m.ToLocationID)
-            @Html.HiddenFor(m => m.FromLocationID)
-            <label id="lblFromLocation" class="control-label">Origin:</label>
-            <div style="padding-top: 7px;">@Model.FromLocation.Name</div>
-            <label id="lblToLocation" class="control-label">Destination:</label>
-            <div style="padding-top: 7px;">@Model.ToLocation.Name</div>
+            @Html.HiddenFor(m => m.DestinationID)
+            @Html.HiddenFor(m => m.OriginID)
+            <label id="lblOrigin" class="control-label">Origin:</label>
+            <div style="padding-top: 7px;">@Model.Origin.Name</div>
+            <label id="lblDestination" class="control-label">Destination:</label>
+            <div style="padding-top: 7px;">@Model.Destination.Name</div>
         </div>
 
         <div class="form-group two-column">

@@ -19,14 +19,9 @@ namespace NetMud.Communication.Messaging
         public MessagingType Type { get; set; }
 
         /// <summary>
-        /// Quality of the output to be graded against sensory ability and environmental factors
+        /// The composed message and strength
         /// </summary>
-        public int Strength { get; set; }
-
-        /// <summary>
-        /// The composed message
-        /// </summary>
-        public ILexica Lexica { get; set; }
+        public IOccurrence Occurrence { get; set; }
 
         /// <summary>
         /// Overrides the grammatical generator
@@ -38,10 +33,10 @@ namespace NetMud.Communication.Messaging
         /// </summary>
         /// <param name="type"></param>
         /// <param name="strength"></param>
-        public Message(MessagingType type, int strength)
+        public Message(MessagingType type, IOccurrence occurrence)
         {
             Type = type;
-            Strength = strength;
+            Occurrence = occurrence;
 
             Override = Enumerable.Empty<string>();
         }

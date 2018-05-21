@@ -9,22 +9,17 @@ namespace NetMud.DataStructure.Base.Place
     /// <summary>
     /// Entity for Pathways
     /// </summary>
-    public interface IPathway : IActor, ISpawnAsSingleton
+    public interface IPathway : IActor, ISpawnAsSingleton<IPathway>
     {
         /// <summary>
         /// Location this pathway leads to
         /// </summary>
-        IRoom ToLocation { get; set; }
+        ILocation Destination { get; set; }
 
         /// <summary>
         /// Location this pathway spawns into and leads away from
         /// </summary>
-        IRoom FromLocation { get; set; }
-
-        /// <summary>
-        /// Cardinal direction this pathway is
-        /// </summary>
-        MovementDirectionType MovementDirection { get; }
+        ILocation Origin { get; set; }
 
         /// <summary>
         /// Message cluster for entities entering

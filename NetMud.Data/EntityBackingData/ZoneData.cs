@@ -2,6 +2,7 @@
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.Behaviors.System;
 using Newtonsoft.Json;
 using System;
@@ -11,7 +12,7 @@ using System.Web.Script.Serialization;
 
 namespace NetMud.Data.EntityBackingData
 {
-    public class ZoneData : EntityBackingDataPartial, IZoneData
+    public class ZoneData : LocationDataEntityPartial, IZoneData
     {
         /// <summary>
         /// The system type of data this attaches to
@@ -72,58 +73,6 @@ namespace NetMud.Data.EntityBackingData
             }
         }
 
-        [JsonProperty("Locales")]
-        private HashSet<long> _locales { get; set; }
-
-        /// <summary>
-        ///List of perm locales
-        /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        public HashSet<ILocaleData> Locales
-        {
-            get
-            {
-                if (_locales != null)
-                    return new HashSet<ILocaleData>(BackingDataCache.GetMany<ILocaleData>(_locales));
-
-                return null;
-            }
-            set
-            {
-                if (value == null)
-                    return;
-
-                _locales = new HashSet<long>(value.Select(k => k.ID));
-            }
-        }
-
-        [JsonProperty("GetVisibleZoneHorizons")]
-        private HashSet<long> _zoneExits { get; set; }
-
-        /// <summary>
-        ///List of perm locales
-        /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        public HashSet<IZoneData> ConnectedZones
-        {
-            get
-            {
-                if (_zoneExits != null)
-                    return new HashSet<IZoneData>(BackingDataCache.GetMany<IZoneData>(_zoneExits));
-
-                return null;
-            }
-            set
-            {
-                if (value == null)
-                    return;
-
-                _zoneExits = new HashSet<long>(value.Select(k => k.ID));
-            }
-        }
-        
         [JsonProperty("NaturalResourceSpawn")]
         private IDictionary<long, int> _naturalResourceSpawn { get; set; }
 
@@ -156,8 +105,7 @@ namespace NetMud.Data.EntityBackingData
         public ZoneData()
         {
             Templates = new HashSet<IAdventureTemplate>();
-            Locales = new HashSet<ILocaleData>();
-            NaturalResourceSpawn = new Dictionary<INaturalResource, int>();            
+            NaturalResourceSpawn = new Dictionary<INaturalResource, int>();
         }
 
         /// <summary>
@@ -168,6 +116,15 @@ namespace NetMud.Data.EntityBackingData
         {
             //TODO
             return new Tuple<int, int, int>(1, 1, 1);
+        }
+
+        /// <summary>
+        /// Get the live version of this in the world
+        /// </summary>
+        /// <returns>The live data</returns>
+        public override ILocation GetLiveInstance()
+        {
+            return LiveCache.Get<IZone>(ID);
         }
     }
 }

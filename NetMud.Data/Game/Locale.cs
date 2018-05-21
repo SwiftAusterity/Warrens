@@ -3,7 +3,6 @@ using NetMud.Data.EntityBackingData;
 using NetMud.Data.System;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Place;
-using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.Rendering;
@@ -105,7 +104,6 @@ namespace NetMud.Data.Game
         /// </summary>
         public Locale()
         {
-            Pathways = Enumerable.Empty<IPathway>();
         }
 
         /// <summary>
@@ -114,8 +112,6 @@ namespace NetMud.Data.Game
         /// <param name="room">the backing data</param>
         public Locale(ILocaleData locale)
         {
-            Pathways = Enumerable.Empty<IPathway>();
-
             DataTemplateId = locale.ID;
 
             GetFromWorldOrSpawn();
@@ -241,39 +237,22 @@ namespace NetMud.Data.Game
         }
 
         /// <summary>
-        /// What locale exits exist here
-        /// </summary>
-        /// <returns>Collections of the room the exit is in and the place it goes</returns>
-        public Dictionary<IRoom, IHorizon<ILocale>> LocaleHorizons()
-        {
-            var horizons = DataTemplate<ILocaleData>().LocaleExits.Select(hori => new Horizon<ILocale>(hori));
-            return Pathways
-                    .Where(path => path.ToLocation.GetType() == typeof(ILocale))
-                    .ToDictionary(path => (IRoom)path.FromLocation, vpath => (ILocale)vpath.ToLocation);
-        }
-
-        /// <summary>
-        /// What Zone exits exist here
-        /// </summary>
-        /// <returns>Collections of the room the exit is in and the place it goes</returns>      
-        public Dictionary<IRoom, IHorizon<IZone>> ZoneHorizons()
-        {
-            return Pathways
-                    .Where(path => path.ToLocation.GetType() == typeof(IZone))
-                    .ToDictionary(path => (IRoom)path.FromLocation, vpath => (IZone)vpath.ToLocation);
-        }
-
-        /// <summary>
         /// Get adjascent surrounding locales and zones
         /// </summary>
         /// <returns>The adjascent locales and zones</returns>
         public IEnumerable<ILocation> GetSurroundings()
         {
-            var locales = LocaleHorizons().Select(pair => pair.Value);
-            var zones = ZoneHorizons().Select(pair => pair.Value);
+            //TODO
+            return Enumerable.Empty<ILocation>();
+        }
 
-            return locales.Select(locale => (ILocation)locale)
-                .Union(zones.Select(zone => (ILocation)zone));
+        /// <summary>
+        /// Get the live version of this in the world
+        /// </summary>
+        /// <returns>The live data</returns>
+        public ILocale GetLiveInstance()
+        {
+            return this;
         }
     }
 }

@@ -5,6 +5,7 @@ using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
 using NetMud.DataAccess.FileSystem;
 using NetMud.DataStructure.SupportingClasses;
+using NetMud.Data.System;
 
 namespace NutMud.Commands.System
 {
@@ -35,7 +36,7 @@ namespace NutMud.Commands.System
 
             sb.Add("You save your life.");
 
-            var toActor = new Message(MessagingType.Visible, 1)
+            var toActor = new Message(MessagingType.Visible, new Occurrence() { Strength = 1 })
             {
                 Override = sb
             };

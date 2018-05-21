@@ -86,58 +86,6 @@ namespace NetMud.Data.EntityBackingData
             }
         }
 
-        [JsonProperty("GetVisibleZoneHorizons")]
-        private IEnumerable<long> _zoneExits { get; set; }
-
-        /// <summary>
-        ///List of perm locales
-        /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        public IEnumerable<IZoneData> ZoneExits
-        {
-            get
-            {
-                if (_zoneExits != null)
-                    return BackingDataCache.GetMany<IZoneData>(_zoneExits);
-
-                return null;
-            }
-            set
-            {
-                if (value == null)
-                    return;
-
-                _zoneExits = value.Select(k => k.ID);
-            }
-        }
-
-        [JsonProperty("GetVisibleLocaleHorizons")]
-        private IEnumerable<long> _localeExits { get; set; }
-
-        /// <summary>
-        ///List of perm locales
-        /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        public IEnumerable<ILocaleData> LocaleExits
-        {
-            get
-            {
-                if (_localeExits != null)
-                    return BackingDataCache.GetMany<ILocaleData>(_localeExits);
-
-                return null;
-            }
-            set
-            {
-                if (value == null)
-                    return;
-
-                _localeExits = value.Select(k => k.ID);
-            }
-        }
-
         /// <summary>
         /// Get the central room for a Z plane
         /// </summary>
@@ -184,6 +132,15 @@ namespace NetMud.Data.EntityBackingData
         public string RenderMap(int zIndex, bool forAdmin = false)
         {
             return string.Empty;
+        }
+
+        /// <summary>
+        /// Get the live version of this in the world
+        /// </summary>
+        /// <returns>The live data</returns>
+        public ILocale GetLiveInstance()
+        {
+            return LiveCache.Get<ILocale>(ID);
         }
     }
 }

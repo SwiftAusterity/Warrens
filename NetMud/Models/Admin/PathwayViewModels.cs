@@ -59,11 +59,11 @@ namespace NetMud.Models.Admin
         
         [Display(Name = "To Room")]
         [DataType(DataType.Text)]
-        public long ToLocationID { get; set; }
+        public long DestinationID { get; set; }
 
         [Display(Name = "From Room")]
         [DataType(DataType.Text)]
-        public long FromLocationID { get; set; }
+        public long OriginID { get; set; }
 
         [Range(-1, 360, ErrorMessage = "The {0} must be between {2} and {1}. -1 is for non-cardinal exits.")]
         [Display(Name = "Degrees From North")]
@@ -71,8 +71,8 @@ namespace NetMud.Models.Admin
         public int DegreesFromNorth { get; set; }
 
         public IEnumerable<IRoomData> ValidRooms { get; set; }
-        public IRoomData FromLocation { get; set; }
-        public IRoomData ToLocation { get; set; }
+        public IRoomData Origin { get; set; }
+        public IRoomData Destination { get; set; }
         public IPathwayData DataObject { get; set; }
 
         public AddEditRoomDataViewModel NewRoomModel { get; set; }

@@ -7,7 +7,7 @@ namespace NetMud.DataStructure.Base.Entity
     /// <summary>
     /// Player character + account entity class
     /// </summary>
-    public interface IPlayer : IMobile, ISpawnAsSingleton
+    public interface IPlayer : IMobile, ISpawnAsSingleton<IPlayer>
     {
         /// <summary>
         /// Function used to close the connection

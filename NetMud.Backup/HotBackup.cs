@@ -274,13 +274,13 @@ namespace NetMud.Backup
                 //paths load themselves to their appropriate location
                 foreach (Pathway entity in entitiesToLoad.Where(ent => ent.GetType() == typeof(Pathway)))
                 {
-                    var roomTo = LiveCache.Get<IRoom>(new LiveCacheKey(typeof(IRoom), entity.ToLocation.BirthMark));
-                    var roomFrom = LiveCache.Get<IRoom>(new LiveCacheKey(typeof(IRoom), entity.FromLocation.BirthMark));
+                    var roomTo = LiveCache.Get<IRoom>(new LiveCacheKey(typeof(IRoom), entity.Origin.BirthMark));
+                    var roomFrom = LiveCache.Get<IRoom>(new LiveCacheKey(typeof(IRoom), entity.Destination.BirthMark));
 
                     if (roomTo != null && roomFrom != null)
                     {
-                        entity.ToLocation = roomTo;
-                        entity.FromLocation = roomFrom;
+                        entity.Origin = roomTo;
+                        entity.Destination = roomFrom;
                         entity.CurrentLocation = roomFrom.CurrentLocation;
                         roomFrom.MoveInto<IPathway>(entity);
                     }

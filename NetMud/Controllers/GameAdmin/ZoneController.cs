@@ -6,6 +6,7 @@ using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Place;
 using NetMud.Models.Admin;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
@@ -128,7 +129,9 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = message });
             }
 
-            var vModel = new AddEditZoneDataViewModel(obj.Locales)
+            var locales = BackingDataCache.GetAll<ILocaleData>().Where(locale => locale.ParentLocation.Equals(obj));
+
+            var vModel = new AddEditZoneDataViewModel(locales)
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
 

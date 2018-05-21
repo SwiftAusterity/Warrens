@@ -13,6 +13,6 @@ namespace NetMud.DataStructure.Behaviors.Rendering
         /// </summary>
         /// <param name="actor">entity initiating the command</param>
         /// <returns>the output</returns>
-        IEnumerable<string> RenderToLocation(IEntity actor);
+        IEnumerable<string> RenderDestination(IEntity actor);
     }
 }

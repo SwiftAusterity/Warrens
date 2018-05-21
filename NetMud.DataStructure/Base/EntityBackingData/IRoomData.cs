@@ -1,16 +1,14 @@
 ﻿using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.Behaviors.System;
+using NetMud.DataStructure.Behaviors.Rendering;
 using System;
-using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Base.EntityBackingData
 {
     /// <summary>
     /// Backing data for Rooms
     /// </summary>
-    public interface IRoomData : IEntityBackingData, ISingleton
+    public interface IRoomData : ILocationData
     {
         /// <summary>
         /// The current physical model for this entity
@@ -33,15 +31,10 @@ namespace NetMud.DataStructure.Base.EntityBackingData
         Tuple<int, int, int> Coordinates { get; set; }
 
         /// <summary>
-        /// What pathways are affiliated with this room data (what it spawns with)
-        /// </summary>
-        IEnumerable<IPathwayData> GetPathways(bool withReturn = false);
-
-        /// <summary>
         /// Gets the remaining distance to the destination room
         /// </summary>
         /// <param name="destination">The room you're heading for</param>
         /// <returns>distance (in rooms) between here and there</returns>
-        int GetDistanceToRoom(IRoomData destination);
+        int GetDistanceDestination(ILocationData destination);
     }
 }

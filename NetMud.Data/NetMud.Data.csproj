@@ -56,6 +56,7 @@
     <Compile Include="DataIntegrity\StringDataIntegrityAttribute.cs" />
     <Compile Include="EntityBackingData\EntityBackingDataPartial.cs" />
     <Compile Include="EntityBackingData\LocaleData.cs" />
+    <Compile Include="EntityBackingData\LocationDataEntityPartial.cs" />
     <Compile Include="EntityBackingData\NonPlayerCharacter.cs" />
     <Compile Include="EntityBackingData\Character.cs" />
     <Compile Include="EntityBackingData\InanimateData.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="System\LookupCriteria.cs" />
     <Compile Include="System\Map.cs" />
     <Compile Include="LookupData\Mineral.cs" />
+    <Compile Include="System\Occurrence.cs" />
     <Compile Include="System\SerializableDataPartial.cs" />
     <Compile Include="Serialization\SerializationUtility.cs" />
   </ItemGroup>

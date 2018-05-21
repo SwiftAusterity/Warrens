@@ -10,6 +10,7 @@ using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.DataStructure.Behaviors.Existential;
+using NetMud.Data.System;
 
 namespace NutMud.Commands.System
 {
@@ -52,22 +53,22 @@ namespace NutMud.Commands.System
             //TODO: keywords is janky, location should have its own identifier name somehow for output purposes - DISPLAY short/long NAME
             sb.Add(string.Format("{0} spawned to {1}", entityObject.DataTemplateName, spawnTo.CurrentLocation.Keywords[0]));
 
-            var toActor = new Message(MessagingType.Visible, 1)
+            var toActor = new Message(MessagingType.Visible, new Occurrence() { Strength = 1 })
             {
                 Override = sb
             };
 
-            var toOrigin = new Message(MessagingType.Visible, 30)
+            var toOrigin = new Message(MessagingType.Visible, new Occurrence() { Strength = 30 })
             {
                 Override = new string[] { "$S$ appears in the $T$." }
             };
 
-            var toSubject = new Message(MessagingType.Visible, 30)
+            var toSubject = new Message(MessagingType.Visible, new Occurrence() { Strength = 30 })
             {
                 Override = new string[] { "You are ALIVE" }
             };
 
-            var toTarget = new Message(MessagingType.Visible, 30)
+            var toTarget = new Message(MessagingType.Visible, new Occurrence() { Strength = 30 })
             {
                 Override = new string[] { "You have been given $S$" }
             };

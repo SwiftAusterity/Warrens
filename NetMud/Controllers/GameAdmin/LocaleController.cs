@@ -106,9 +106,6 @@ namespace NetMud.Controllers.GameAdmin
                 message = "Error; Creation failed.";
             else
             {
-                zone.Locales.Add(newObj);
-                zone.Save();
-
                 LoggingUtility.LogAdminCommandUsage("*WEB* - AddLocale[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 message = "Creation Successful.";
             }

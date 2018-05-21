@@ -38,17 +38,17 @@ namespace NutMud.Commands.Administrative
                 "You teleport."
             };
 
-            var toActor = new Message(MessagingType.Visible, 1)
+            var toActor = new Message(MessagingType.Visible, new Occurrence() { Strength = 1 })
             {
                 Override = sb
             };
 
-            var toOrigin = new Message(MessagingType.Visible, 30)
+            var toOrigin = new Message(MessagingType.Visible, new Occurrence() { Strength = 30 })
             {
                 Override = new string[] { "$A$ disappears in a puff of smoke." }
             };
 
-            var toDest = new Message(MessagingType.Visible, 30)
+            var toDest = new Message(MessagingType.Visible, new Occurrence() { Strength = 30 })
             {
                 Override = new string[] { "$A$ appears out of nowhere." }
             };

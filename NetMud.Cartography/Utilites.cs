@@ -28,11 +28,11 @@ namespace NetMud.Cartography
 
             var paths = BackingDataCache.GetAll<IPathwayData>();
 
-            var ourPath = paths.FirstOrDefault(pt => origin.Equals(pt.ToLocation) 
+            var ourPath = paths.FirstOrDefault(pt => origin.Equals(pt.Destination) 
                                             && pt.DirectionType == oppositeDirection);
 
             if(ourPath != null)
-                return (IRoomData)ourPath.ToLocation;
+                return (IRoomData)ourPath.Destination;
 
             return null;
         }

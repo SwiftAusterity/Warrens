@@ -16,14 +16,9 @@ namespace NetMud.DataStructure.SupportingClasses
         MessagingType Type { get; set; }
 
         /// <summary>
-        /// Quality of the output to be graded against sensory ability and environmental factors
-        /// </summary>
-        int Strength { get; set; }
-
-        /// <summary>
         /// The composed message
         /// </summary>
-        ILexica Lexica { get; set; }
+        IOccurrence Occurrence { get; set; }
 
         /// <summary>
         /// Overrides the grammatical generator

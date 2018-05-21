@@ -84,8 +84,8 @@ namespace NetMud.Controllers.GameAdmin
                 ValidModels = BackingDataCache.GetAll<IDimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat),
                 ValidRooms = BackingDataCache.GetAll<IRoomData>().Where(rm => !rm.ID.Equals(originRoomId)),
 
-                FromLocation = BackingDataCache.Get<IRoomData>(originRoomId),
-                FromLocationID = originRoomId
+                Origin = BackingDataCache.Get<IRoomData>(originRoomId),
+                OriginID = originRoomId
             };
 
             //New room or existing room
@@ -99,8 +99,8 @@ namespace NetMud.Controllers.GameAdmin
             }
             else
             {
-                vModel.ToLocationID = destinationRoomId;
-                vModel.ToLocation = BackingDataCache.Get<IRoomData>(destinationRoomId);
+                vModel.DestinationID = destinationRoomId;
+                vModel.Destination = BackingDataCache.Get<IRoomData>(destinationRoomId);
 
                 return View("~/Views/GameAdmin/Pathway/AddEdit.cshtml", "_chromelessLayout", vModel);
             }
@@ -117,8 +117,8 @@ namespace NetMud.Controllers.GameAdmin
             {
                 Name = vModel.NewName,
                 DegreesFromNorth = vModel.DegreesFromNorth,
-                FromLocation = vModel.ValidRooms.FirstOrDefault(room => room.ID.Equals(vModel.FromLocationID)),
-                ToLocation = vModel.ValidRooms.FirstOrDefault(room => room.ID.Equals(vModel.ToLocationID)),
+                Origin = vModel.ValidRooms.FirstOrDefault(room => room.ID.Equals(vModel.OriginID)),
+                Destination = vModel.ValidRooms.FirstOrDefault(room => room.ID.Equals(vModel.DestinationID)),
             };
 
             var materialParts = new Dictionary<string, IMaterial>();
@@ -226,8 +226,8 @@ namespace NetMud.Controllers.GameAdmin
             {
                 Name = vModel.NewName,
                 DegreesFromNorth = vModel.DegreesFromNorth,
-                FromLocation = vModel.ValidRooms.FirstOrDefault(room => room.ID.Equals(vModel.FromLocationID)),
-                ToLocation = vModel.ValidRooms.FirstOrDefault(room => room.ID.Equals(vModel.FromLocationID)),
+                Origin = vModel.ValidRooms.FirstOrDefault(room => room.ID.Equals(vModel.OriginID)),
+                Destination = vModel.ValidRooms.FirstOrDefault(room => room.ID.Equals(vModel.OriginID)),
             };
 
             var materialParts = new Dictionary<string, IMaterial>();
@@ -308,14 +308,14 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", "Room", new { Message = message });
             }
 
-            vModel.ValidRooms = BackingDataCache.GetAll<IRoomData>().Where(rm => !rm.Equals(obj.FromLocation) && !rm.Equals(obj.ToLocation));
+            vModel.ValidRooms = BackingDataCache.GetAll<IRoomData>().Where(rm => !rm.Equals(obj.Origin) && !rm.Equals(obj.Destination));
 
             vModel.DataObject = obj;
             vModel.NewName = obj.Name;
 
             vModel.DegreesFromNorth = obj.DegreesFromNorth;
-            vModel.ToLocation = obj.ToLocation;
-            vModel.FromLocation = obj.FromLocation;
+            vModel.Destination = (IRoomData)obj.Destination;
+            vModel.Origin = (IRoomData)obj.Origin;
 
             vModel.DimensionalModelId = obj.Model.ModelBackingData.ID;
             vModel.DimensionalModelHeight = obj.Model.Height;
@@ -345,8 +345,8 @@ namespace NetMud.Controllers.GameAdmin
 
             obj.Name = vModel.NewName;
             obj.DegreesFromNorth = vModel.DegreesFromNorth;
-            obj.FromLocation = vModel.ValidRooms.FirstOrDefault(room => room.ID.Equals(vModel.FromLocationID));
-            obj.ToLocation = vModel.ValidRooms.FirstOrDefault(room => room.ID.Equals(vModel.ToLocationID));
+            obj.Origin = vModel.ValidRooms.FirstOrDefault(room => room.ID.Equals(vModel.OriginID));
+            obj.Destination = vModel.ValidRooms.FirstOrDefault(room => room.ID.Equals(vModel.DestinationID));
 
             var materialParts = new Dictionary<string, IMaterial>();
             if (vModel.ModelPartNames != null)

@@ -101,7 +101,7 @@ namespace NetMud.Communication.Messaging
                 if (ToActor.SelectMany(msg => msg.Override).Any(str => !string.IsNullOrWhiteSpace(str)))
                     Actor.WriteTo(TranslateOutput(ToActor.SelectMany(msg => msg.Override), entities));
                 else
-                    Actor.WriteTo(TranslateOutput(ToActor.Select(msg => msg.Lexica.ToString()), entities));
+                    Actor.WriteTo(TranslateOutput(ToActor.Select(msg => msg.Occurrence.Event.ToString()), entities));
             }
 
             if (Subject != null && ToSubject.Any())
@@ -109,7 +109,7 @@ namespace NetMud.Communication.Messaging
                 if (ToSubject.SelectMany(msg => msg.Override).Any(str => !string.IsNullOrWhiteSpace(str)))
                     Subject.WriteTo(TranslateOutput(ToSubject.SelectMany(msg => msg.Override), entities));
                 else
-                    Subject.WriteTo(TranslateOutput(ToSubject.Select(msg => msg.Lexica.ToString()), entities));
+                    Subject.WriteTo(TranslateOutput(ToSubject.Select(msg => msg.Occurrence.Event.ToString()), entities));
             }
 
             if (Target != null && ToTarget.Any())
@@ -117,7 +117,7 @@ namespace NetMud.Communication.Messaging
                 if (ToTarget.SelectMany(msg => msg.Override).Any(str => !string.IsNullOrWhiteSpace(str)))
                     Target.WriteTo(TranslateOutput(ToTarget.SelectMany(msg => msg.Override), entities));
                 else
-                    Target.WriteTo(TranslateOutput(ToTarget.Select(msg => msg.Lexica.ToString()), entities));
+                    Target.WriteTo(TranslateOutput(ToTarget.Select(msg => msg.Occurrence.Event.ToString()), entities));
             }
 
             //TODO: origin and destination are areas of effect on their surrounding areas
@@ -132,7 +132,7 @@ namespace NetMud.Communication.Messaging
                     if (ToOrigin.SelectMany(msg => msg.Override).Any(str => !string.IsNullOrWhiteSpace(str)))
                         dude.WriteTo(TranslateOutput(ToOrigin.SelectMany(msg => msg.Override), entities));
                     else
-                        dude.WriteTo(TranslateOutput(ToOrigin.Select(msg => msg.Lexica.ToString()), entities));
+                        dude.WriteTo(TranslateOutput(ToOrigin.Select(msg => msg.Occurrence.Event.ToString()), entities));
                 }
             }
 
@@ -146,7 +146,7 @@ namespace NetMud.Communication.Messaging
                     if (ToDestination.SelectMany(msg => msg.Override).Any(str => !string.IsNullOrWhiteSpace(str)))
                         dude.WriteTo(TranslateOutput(ToDestination.SelectMany(msg => msg.Override), entities));
                     else
-                        dude.WriteTo(TranslateOutput(ToDestination.Select(msg => msg.Lexica.ToString()), entities));
+                        dude.WriteTo(TranslateOutput(ToDestination.Select(msg => msg.Occurrence.Event.ToString()), entities));
                 }
             }
         }

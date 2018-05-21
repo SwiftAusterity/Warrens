@@ -1,5 +1,6 @@
 ﻿using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
+using NetMud.Data.System;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.SupportingClasses;
@@ -43,7 +44,7 @@ namespace NutMud.Commands.System
                 sb = sb.Concat(subject.RenderSyntaxHelp()).ToList();
             }
 
-            var toActor = new Message(MessagingType.Audible, 1)
+            var toActor = new Message(MessagingType.Audible, new Occurrence() { Strength = 1 })
             {
                 Override = sb
             };

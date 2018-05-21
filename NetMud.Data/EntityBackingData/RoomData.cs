@@ -5,10 +5,10 @@ using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Behaviors.Rendering;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.EntityBackingData
@@ -17,7 +17,7 @@ namespace NetMud.Data.EntityBackingData
     /// Backing data for Rooms
     /// </summary>
     [Serializable]
-    public class RoomData : EntityBackingDataPartial, IRoomData
+    public class RoomData : LocationDataEntityPartial, IRoomData
     {
         /// <summary>
         /// The system type of data this attaches to
@@ -120,7 +120,7 @@ namespace NetMud.Data.EntityBackingData
         /// </summary>
         /// <param name="destination">The room you're heading for</param>
         /// <returns>distance (in rooms) between here and there</returns>
-        public int GetDistanceToRoom(IRoomData destination)
+        public int GetDistanceDestination(ILocationData destination)
         {
             return -1;
         }
@@ -135,13 +135,12 @@ namespace NetMud.Data.EntityBackingData
         }
 
         /// <summary>
-        /// What pathways are affiliated with this room data (what it spawns with)
+        /// Get the live version of this in the world
         /// </summary>
-        /// <param name="withReturn">includes paths into this room as well</param>
-        /// <returns>the valid pathways</returns>
-        public IEnumerable<IPathwayData> GetPathways(bool withReturn = false)
+        /// <returns>The live data</returns>
+        public override ILocation GetLiveInstance()
         {
-            return BackingDataCache.GetAll<IPathwayData>().Where(path => path.FromLocation.Equals(this) || (withReturn && path.ToLocation.Equals(this)));
+            return LiveCache.Get<IRoom>(ID);
         }
     }
 }

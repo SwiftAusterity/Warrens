@@ -1,5 +1,6 @@
 ﻿using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
+using NetMud.Data.System;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
 using NutMud.Commands.Attributes;
@@ -33,14 +34,14 @@ namespace NetMud.Commands.Comm
                 String.Format("You say '{0}'", Subject)
             };
 
-            var toActor = new Message(MessagingType.Audible, 1)
+            var toActor = new Message(MessagingType.Audible, new Occurrence() { Strength = 1 })
             {
                 Override = sb
             };
 
             var areaString = new string[] { String.Format("$A$ says '{0}'", Subject) };
 
-            var toArea = new Message(MessagingType.Audible, 30)
+            var toArea = new Message(MessagingType.Audible, new Occurrence() { Strength = 30 })
             {
                 Override = areaString
             };

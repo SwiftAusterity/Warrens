@@ -10,7 +10,7 @@ namespace NetMud.DataStructure.Base.Place
     /// <summary>
     /// Collector of rooms, used for weather patterning
     /// </summary>
-    public interface ILocaleData : IEntityBackingData, IDiscoverableData, ISingleton
+    public interface ILocaleData : IEntityBackingData, IDiscoverableData, ISingleton<ILocale>
     {
         /// <summary>
         /// When this locale dies off, MinValue = never
@@ -27,16 +27,6 @@ namespace NetMud.DataStructure.Base.Place
         /// </summary>
         HashSet<IRoomData> Rooms { get; set; }
 
-        /// <summary>
-        /// Zones this can exit to
-        /// </summary>
-        IEnumerable<IHorizonData<IZoneData>> ZoneExits { get; set; }
-
-        /// <summary>
-        /// Locales this can exit to
-        /// </summary>
-        IEnumerable<IHorizonData<ILocaleData>> LocaleExits { get; set; }
-		
         /// <summary>
         /// The map of the rooms inside
         /// </summary>

@@ -8,7 +8,7 @@ namespace NetMud.DataStructure.Base.Place
     /// <summary>
     /// Entity for Rooms
     /// </summary>
-    public interface IRoom : IActor, ILocation, ISpawnAsSingleton
+    public interface IRoom : IActor, ILocation, ISpawnAsSingleton<IRoom>
     {
         /// <summary>
         /// The current physical model for this entity
@@ -32,6 +32,6 @@ namespace NetMud.DataStructure.Base.Place
         /// </summary>
         /// <param name="destination">The room you're heading for</param>
         /// <returns>distance (in rooms) and the next path you'd have to use</returns>
-        Tuple<int, IPathway> GetDistanceAndNextStepToRoom(IRoom destination);
+        Tuple<int, IPathway> GetDistanceAndNextStepDestination(ILocation destination);
     }
 }

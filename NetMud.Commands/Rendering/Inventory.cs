@@ -1,5 +1,6 @@
 ﻿using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
+using NetMud.Data.System;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
@@ -35,12 +36,12 @@ namespace NetMud.Commands.Rendering
             foreach (var thing in chr.Inventory.EntitiesContained())
                 sb.AddRange(thing.RenderToLook(chr));
 
-            var toActor = new Message(MessagingType.Visible, 1)
+            var toActor = new Message(MessagingType.Visible, new Occurrence() { Strength = 1 })
             {
                 Override = sb
             };
 
-            var toOrigin = new Message(MessagingType.Visible, 30)
+            var toOrigin = new Message(MessagingType.Visible, new Occurrence() { Strength = 30 })
             {
                 Override = new string[] { "$A$ sifts through $G$ belongings." }
             };

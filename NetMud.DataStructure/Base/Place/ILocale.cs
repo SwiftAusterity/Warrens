@@ -10,7 +10,7 @@ namespace NetMud.DataStructure.Base.Place
     /// <summary>
     /// Collection of rooms in a zone
     /// </summary>
-    public interface ILocale : IEntity, IDiscoverable, ISpawnAsSingleton
+    public interface ILocale : IEntity, IDiscoverable, ISpawnAsSingleton<ILocale>
     {
         /// <summary>
         /// The zone this lives in
@@ -27,18 +27,6 @@ namespace NetMud.DataStructure.Base.Place
         /// The map of the rooms inside
         /// </summary>
         IMap Interior { get; set; }
-
-        /// <summary>
-        /// The rooms that are also exits to zones
-        /// </summary>
-        /// <returns>Rooms</returns>
-        Dictionary<IRoom, IHorizon<IZone>> ZoneHorizons();
-
-        /// <summary>
-        /// The rooms that are also exits to locales
-        /// </summary>
-        /// <returns>Rooms</returns>
-        Dictionary<IRoom, IHorizon<ILocale>> LocaleHorizons();
 
         /// <summary>
         /// Get the surrounding locations based on a strength radius
