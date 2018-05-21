@@ -23,14 +23,14 @@ namespace NetMud.DataStructure.Base.Place
         IZoneData ParentLocation { get; set; }
 
         /// <summary>
-        /// The rooms contained within the locale should it need to regenerate from nothing
-        /// </summary>
-        HashSet<IRoomData> Rooms { get; set; }
-
-        /// <summary>
         /// The map of the rooms inside
         /// </summary>
         IMap Interior { get; set; }
+
+        /// <summary>
+        /// The rooms contained within the locale should it need to regenerate from nothing
+        /// </summary>
+        IEnumerable<IRoomData> Rooms();
 
         /// <summary>
         /// Get the absolute center room of the locale

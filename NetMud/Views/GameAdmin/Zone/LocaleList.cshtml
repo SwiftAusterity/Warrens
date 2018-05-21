@@ -34,7 +34,7 @@
                     @foreach (var obj in Model.CurrentPageOfItems)
                     {
                         <tr>
-                            <td>@Html.ActionLink(@obj.ID.ToString(), "Edit", new { zoneId = Model.DataObject.ID, id = obj.ID })</td>
+                            <td>@Html.ActionLink(@obj.ID.ToString(), "Edit", "Locale", new { zoneId = Model.DataObject.ID, id = obj.ID }, new { })</td>
                             <td>
                                 @if (obj.FitnessProblems)
                                 {

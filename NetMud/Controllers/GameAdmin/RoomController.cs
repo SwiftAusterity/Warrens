@@ -9,6 +9,7 @@ using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.Models.Admin;
+using System;
 using System.Web;
 using System.Web.Mvc;
 
@@ -92,13 +93,13 @@ namespace NetMud.Controllers.GameAdmin
         }
 
         [HttpGet]
-        public ActionResult Add()
+        public ActionResult Add(long localeId)
         {
             var vModel = new AddEditRoomDataViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
                 ValidMaterials = BackingDataCache.GetAll<IMaterial>(),
-                ValidLocales = BackingDataCache.GetAll<ILocaleData>()
+                Locale = BackingDataCache.Get<ILocaleData>(localeId)
             };
 
             return View("~/Views/GameAdmin/Room/Add.cshtml", "_chromelessLayout", vModel);
@@ -106,14 +107,14 @@ namespace NetMud.Controllers.GameAdmin
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Add(AddEditRoomDataViewModel vModel)
+        public ActionResult Add(long localeId, AddEditRoomDataViewModel vModel)
         {
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             var newObj = new RoomData
             {
-                Name = vModel.NewName,
+                Name = vModel.Name,
                 Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth
                                 , vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation)
             };
@@ -124,24 +125,16 @@ namespace NetMud.Controllers.GameAdmin
             if (medium != null)
             {
                 newObj.Medium = medium;
+                newObj.ParentLocation = vModel.Locale;
+                newObj.Coordinates = new Tuple<int, int, int>(0, 0, 0); //TODO: fix this
 
-                var localeId = vModel.Locale;
-                var locale = BackingDataCache.Get<ILocaleData>(localeId);
-
-                if (locale != null)
-                {
-                    newObj.ParentLocation = locale;
-
-                    if (newObj.Create() == null)
-                        message = "Error; Creation failed.";
-                    else
-                    {
-                        LoggingUtility.LogAdminCommandUsage("*WEB* - AddRoomData[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                        message = "Creation Successful.";
-                    }
-                }
+                if (newObj.Create() == null)
+                    message = "Error; Creation failed.";
                 else
-                    message = "You must include a valid Zone.";
+                {
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddRoomData[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    message = "Creation Successful.";
+                }
             }
             else
                 message = "You must include a valid Medium material.";
@@ -157,7 +150,6 @@ namespace NetMud.Controllers.GameAdmin
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
                 ValidMaterials = BackingDataCache.GetAll<IMaterial>(),
-                ValidLocales = BackingDataCache.GetAll<ILocaleData>()
             };
 
             var obj = BackingDataCache.Get<RoomData>(id);
@@ -168,8 +160,9 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = message });
             }
 
+            vModel.Locale = obj.ParentLocation;
             vModel.DataObject = obj;
-            vModel.NewName = obj.Name;
+            vModel.Name = obj.Name;
             vModel.DimensionalModelHeight = obj.Model.Height;
             vModel.DimensionalModelLength = obj.Model.Length;
             vModel.DimensionalModelWidth = obj.Model.Width;
@@ -191,7 +184,7 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = message });
             }
 
-            obj.Name = vModel.NewName;
+            obj.Name = vModel.Name;
             obj.Model.Height = vModel.DimensionalModelHeight;
             obj.Model.Length = vModel.DimensionalModelLength;
             obj.Model.Width = vModel.DimensionalModelWidth;
@@ -203,23 +196,13 @@ namespace NetMud.Controllers.GameAdmin
             {
                 obj.Medium = medium;
 
-                var localeId = vModel.Locale;
-                var locale = BackingDataCache.Get<ILocaleData>(localeId);
-
-                if (locale != null)
+                if (obj.Save())
                 {
-                    obj.ParentLocation = locale;
-
-                    if (obj.Save())
-                    {
-                        LoggingUtility.LogAdminCommandUsage("*WEB* - EditRoomData[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                        message = "Edit Successful.";
-                    }
-                    else
-                        message = "Error; Edit failed.";
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - EditRoomData[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    message = "Edit Successful.";
                 }
                 else
-                    message = "You must include a valid Zone.";
+                    message = "Error; Edit failed.";
             }
             else
                 message = "You must include a valid Medium material.";

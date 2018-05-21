@@ -43,23 +43,23 @@
         <h3>New Room</h3>
         <hr />
         <div class="form-group three-column">
-            @Html.EditorFor(e => e.NewRoomModel.Name)
-            @Html.LabelFor(m => m.NewRoomModel.Zone, new { @class = "control-label" })
+            @Html.EditorFor(e => e.RoomModel.Name)
+            @Html.LabelFor(m => m.RoomModel.Zone, new { @class = "control-label" })
             <div>
-                @Html.DropDownList("Zone", Model.NewRoomModel.ValidZones.Select(rl =>
+                @Html.DropDownList("Zone", Model.RoomModel.ValidZones.Select(rl =>
                                             new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
                                          , htmlAttributes: new { id = "Zone", @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.NewRoomModel.Zone, "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(m => m.RoomModel.Zone, "", new { @class = "text-danger" })
             </div>
             @Html.LabelFor(m => m.NewRoomModel.Medium, new { @class = "control-label" })
             <div>
-                @Html.DropDownList("Medium", Model.NewRoomModel.ValidMaterials.Select(rl =>
+                @Html.DropDownList("Medium", Model.RoomModel.ValidMaterials.Select(rl =>
                         new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
                  , htmlAttributes: new { id = "Medium", @class = "form-control" })
                 @Html.ValidationMessageFor(m => m.NewRoomModel.Medium, "", new { @class = "text-danger" })
             </div>
         </div>
-        @Html.Partial("DimensionalEntityEditor", Model.NewRoomModel)
+        @Html.Partial("DimensionalEntityEditor", Model.RoomModel)
 
         @Html.Partial("SubmitButton", "Commit")
     </div>

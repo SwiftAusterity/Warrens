@@ -14,13 +14,13 @@ namespace NetMud.Models.Admin
             ValidModels = Enumerable.Empty<IDimensionalModelData>();
             ValidMaterials = Enumerable.Empty<IMaterial>();
             ValidRooms = Enumerable.Empty<IRoomData>();
-            NewRoomModel = new AddEditRoomDataViewModel();
+            RoomModel = new AddEditRoomDataViewModel();
         }
 
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
         [Display(Name = "Name")]
         [DataType(DataType.Text)]
-        public string NewName { get; set; }
+        public string Name { get; set; }
 
         [Range(0, 16, ErrorMessage = "The {0} must be between {2} and {1}.")]
         [Display(Name = "Visible Strength")]
@@ -75,6 +75,6 @@ namespace NetMud.Models.Admin
         public IRoomData Destination { get; set; }
         public IPathwayData DataObject { get; set; }
 
-        public AddEditRoomDataViewModel NewRoomModel { get; set; }
+        public AddEditRoomDataViewModel RoomModel { get; set; }
     }
 }

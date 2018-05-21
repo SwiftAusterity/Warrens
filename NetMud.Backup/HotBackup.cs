@@ -14,6 +14,7 @@ using NetMud.DataAccess.FileSystem;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.Cartography;
+using NetMud.Data.System;
 
 namespace NetMud.Backup
 {
@@ -211,19 +212,6 @@ namespace NetMud.Backup
 
                 //We have the containers contents and the birthmarks from the deserial
                 //I don't know how we can even begin to do this type agnostically since the collections are held on type specific objects without some super ugly reflection
-                foreach(Zone entity in entitiesToLoad.Where(ent => ent.GetType() == typeof(Zone)))
-                {
-                    if(entity.CurrentLocation == null)
-                        entity.SpawnNewInWorld();
-
-                    foreach (ILocale obj in entity.Contents.EntitiesContained())
-                    {
-                        var fullObj = LiveCache.Get<ILocale>(new LiveCacheKey(typeof(Locale), obj.BirthMark));
-                        entity.MoveFrom(obj);
-                        entity.MoveInto(fullObj);
-                    }
-                }
-
                 foreach (Room entity in entitiesToLoad.Where(ent => ent.GetType() == typeof(Room)))
                 {
                     if (entity.CurrentLocation == null)
@@ -272,19 +260,19 @@ namespace NetMud.Backup
                 }
 
                 //paths load themselves to their appropriate location
-                foreach (Pathway entity in entitiesToLoad.Where(ent => ent.GetType() == typeof(Pathway)))
-                {
-                    var roomTo = LiveCache.Get<IRoom>(new LiveCacheKey(typeof(IRoom), entity.Origin.BirthMark));
-                    var roomFrom = LiveCache.Get<IRoom>(new LiveCacheKey(typeof(IRoom), entity.Destination.BirthMark));
+                //foreach (Pathway entity in entitiesToLoad.Where(ent => ent.GetType() == typeof(Pathway)))
+                //{
+                //    var roomTo = LiveCache.Get<IRoom>(new LiveCacheKey(typeof(IRoom), entity.Origin.BirthMark));
+                //    var roomFrom = LiveCache.Get<IRoom>(new LiveCacheKey(typeof(IRoom), entity.Destination.BirthMark));
 
-                    if (roomTo != null && roomFrom != null)
-                    {
-                        entity.Origin = roomTo;
-                        entity.Destination = roomFrom;
-                        entity.CurrentLocation = roomFrom.CurrentLocation;
-                        roomFrom.MoveInto<IPathway>(entity);
-                    }
-                }
+                //    if (roomTo != null && roomFrom != null)
+                //    {
+                //        entity.Origin = roomTo;
+                //        entity.Destination = roomFrom;
+                //        entity.CurrentLocation = roomFrom.CurrentLocation;
+                //        roomFrom.MoveInto<IPathway>(entity);
+                //    }
+                //}
 
                 //We need to poll the WorldMaps here and give all the rooms their coordinates as well as the zones their sub-maps
                 ParseDimension();
@@ -334,8 +322,12 @@ namespace NetMud.Backup
             if (startingRoom == null || remainingRooms.Count() == 0)
                 throw new InvalidOperationException("Invalid inputs.");
 
+            startingRoom.Coordinates = new Tuple<int, int, int>(0, 0, 0);
+
             //We're kind of faking array size for radius, it will be shrunk later
             var returnMap = Cartographer.GenerateMapFromRoom(startingRoom, remainingRooms.Count() / 2, remainingRooms, true);
+
+            startingRoom.ParentLocation.Interior = new Map(returnMap, false);
 
             //This zone gets to choose the world name if any
             //var world = new World(new Map(returnMap, false), startingRoom.ZoneAffiliation.WorldName);

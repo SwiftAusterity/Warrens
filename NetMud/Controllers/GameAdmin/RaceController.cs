@@ -262,8 +262,13 @@ namespace NetMud.Controllers.GameAdmin
             vModel.Breathes = (short)obj.Breathes;
             vModel.DietaryNeeds = (short)obj.DietaryNeeds;
             vModel.HeadId = obj.Head.ID;
-            vModel.RecallLocationId = obj.EmergencyLocation.ID;
-            vModel.StartingLocationId = obj.StartingLocation.ID;
+
+            if(obj.EmergencyLocation != null)
+                vModel.RecallLocationId = obj.EmergencyLocation.ID;
+
+            if(obj.StartingLocation != null)
+                vModel.StartingLocationId = obj.StartingLocation.ID;
+
             vModel.TeethType = (short)obj.TeethType;
             vModel.TemperatureToleranceHigh = obj.TemperatureTolerance.Item2;
             vModel.TemperatureToleranceLow = obj.TemperatureTolerance.Item1;
@@ -357,7 +362,7 @@ namespace NetMud.Controllers.GameAdmin
             obj.HelpText = vModel.HelpBody;
 
             var bodyBits = new List<Tuple<IInanimateData, short, string>>();
-            if (vModel.ExtraPartsId != null)
+            if (vModel.ExtraPartsId != null && vModel.ExtraPartsAmount != null && vModel.ExtraPartsName != null)
             {
                 int partIndex = 0;
                 foreach (var partId in vModel.ExtraPartsId)

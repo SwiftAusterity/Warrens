@@ -1,5 +1,6 @@
 ﻿using NetMud.Data.DataIntegrity;
 using NetMud.Data.Game;
+using NetMud.Data.System;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
@@ -60,30 +61,12 @@ namespace NetMud.Data.EntityBackingData
             }
         }
 
-        [JsonProperty("Rooms")]
-        private HashSet<long> _rooms { get; set; }
-
         /// <summary>
-        ///List of perm locales
+        ///List of rooms
         /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        public HashSet<IRoomData> Rooms
+        public IEnumerable<IRoomData> Rooms()
         {
-            get
-            {
-                if (_rooms != null)
-                    return new HashSet<IRoomData>(BackingDataCache.GetMany<IRoomData>(_rooms));
-
-                return null;
-            }
-            set
-            {
-                if (value == null)
-                    return;
-
-                _rooms = new HashSet<long>(value.Select(k => k.ID));
-            }
+            return BackingDataCache.GetAll<IRoomData>().Where(room => room.ParentLocation.Equals(this));
         }
 
         /// <summary>
@@ -93,7 +76,10 @@ namespace NetMud.Data.EntityBackingData
         /// <returns>The room that is in the center of the Z plane</returns>
         public IRoomData CentralRoom(int zIndex = -1)
         {
-            return null;
+            var roomsPlane = Rooms().Where(room => zIndex == -1 || (room.Coordinates != null && room.Coordinates.Item3 == zIndex));
+
+            //TODO 
+            return roomsPlane.FirstOrDefault();
         }
 
         /// <summary>

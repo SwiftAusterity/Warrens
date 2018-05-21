@@ -204,7 +204,16 @@ namespace NetMud.DataAccess.Cache
         /// <returns>the entity requested</returns>
         public T Get<T>(ICacheKey key)
         {
-            return Get<T>(key.KeyHash());
+            try
+            {
+                return Get<T>(key.KeyHash());
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex);
+            }
+
+            return default(T);
         }
 
         /// <summary>
@@ -213,7 +222,14 @@ namespace NetMud.DataAccess.Cache
         /// <param name="key">the key of the entity to remove</param>
         public void Remove(ICacheKey key)
         {
-            Remove(key.KeyHash());
+            try
+            {
+                Remove(key.KeyHash());
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex);
+            }
         }
 
         /// <summary>

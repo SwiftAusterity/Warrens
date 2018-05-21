@@ -91,9 +91,8 @@ namespace NetMud.Controllers.GameAdmin
             //New room or existing room
             if (destinationRoomId.Equals(-1))
             {
-                vModel.NewRoomModel.authedUser = vModel.authedUser;
-                vModel.NewRoomModel.ValidMaterials = vModel.ValidMaterials;
-                vModel.NewRoomModel.ValidLocales = BackingDataCache.GetAll<ILocaleData>();
+                vModel.RoomModel.authedUser = vModel.authedUser;
+                vModel.RoomModel.ValidMaterials = vModel.ValidMaterials;
 
                 return View("~/Views/GameAdmin/Pathway/AddWithRoom.cshtml", "_chromelessLayout", vModel);
             }
@@ -115,7 +114,7 @@ namespace NetMud.Controllers.GameAdmin
 
             var newObj = new PathwayData
             {
-                Name = vModel.NewName,
+                Name = vModel.Name,
                 DegreesFromNorth = vModel.DegreesFromNorth,
                 Origin = vModel.ValidRooms.FirstOrDefault(room => room.ID.Equals(vModel.OriginID)),
                 Destination = vModel.ValidRooms.FirstOrDefault(room => room.ID.Equals(vModel.DestinationID)),
@@ -174,20 +173,19 @@ namespace NetMud.Controllers.GameAdmin
             string roomMessage = string.Empty;
             var newRoom = new RoomData
             {
-                Name = vModel.NewRoomModel.NewName,
-                Model = new DimensionalModel(vModel.NewRoomModel.DimensionalModelHeight, vModel.NewRoomModel.DimensionalModelLength, vModel.NewRoomModel.DimensionalModelWidth
-                                , vModel.NewRoomModel.DimensionalModelVacuity, vModel.NewRoomModel.DimensionalModelCavitation)
+                Name = vModel.RoomModel.Name,
+                Model = new DimensionalModel(vModel.RoomModel.DimensionalModelHeight, vModel.RoomModel.DimensionalModelLength, vModel.RoomModel.DimensionalModelWidth
+                                , vModel.RoomModel.DimensionalModelVacuity, vModel.RoomModel.DimensionalModelCavitation)
             };
 
-            var mediumId = vModel.NewRoomModel.Medium;
+            var mediumId = vModel.RoomModel.Medium;
             var medium = BackingDataCache.Get<IMaterial>(mediumId);
 
             if (medium != null)
             {
                 newRoom.Medium = medium;
 
-                var localeId = vModel.NewRoomModel.Locale;
-                var locale = BackingDataCache.Get<ILocaleData>(localeId);
+                var locale = vModel.RoomModel.Locale;
 
                 if (locale != null)
                 {
@@ -224,7 +222,7 @@ namespace NetMud.Controllers.GameAdmin
 
             var newObj = new PathwayData
             {
-                Name = vModel.NewName,
+                Name = vModel.Name,
                 DegreesFromNorth = vModel.DegreesFromNorth,
                 Origin = vModel.ValidRooms.FirstOrDefault(room => room.ID.Equals(vModel.OriginID)),
                 Destination = vModel.ValidRooms.FirstOrDefault(room => room.ID.Equals(vModel.OriginID)),
@@ -311,7 +309,7 @@ namespace NetMud.Controllers.GameAdmin
             vModel.ValidRooms = BackingDataCache.GetAll<IRoomData>().Where(rm => !rm.Equals(obj.Origin) && !rm.Equals(obj.Destination));
 
             vModel.DataObject = obj;
-            vModel.NewName = obj.Name;
+            vModel.Name = obj.Name;
 
             vModel.DegreesFromNorth = obj.DegreesFromNorth;
             vModel.Destination = (IRoomData)obj.Destination;
@@ -343,7 +341,7 @@ namespace NetMud.Controllers.GameAdmin
                 return View("~/Views/GameAdmin/Pathway/AddEdit.cshtml", vModel);
             }
 
-            obj.Name = vModel.NewName;
+            obj.Name = vModel.Name;
             obj.DegreesFromNorth = vModel.DegreesFromNorth;
             obj.Origin = vModel.ValidRooms.FirstOrDefault(room => room.ID.Equals(vModel.OriginID));
             obj.Destination = vModel.ValidRooms.FirstOrDefault(room => room.ID.Equals(vModel.DestinationID));

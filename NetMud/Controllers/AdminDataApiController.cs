@@ -1,6 +1,7 @@
 ﻿using NetMud.Cartography;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.Physics;
 using System;
@@ -42,6 +43,17 @@ namespace NetMud.Controllers
                 return "Invalid inputs.";
 
             return Rendering.RenderRadiusMap(centerRoom, radius);
+        }
+
+        [HttpGet]
+        public string RenderLocaleMapForEdit(long id)
+        {
+            var locale = BackingDataCache.Get<ILocaleData>(id);
+
+            if (locale == null)
+                return "Invalid inputs.";
+
+            return Rendering.RenderRadiusMap(locale, 10);
         }
     }
 }

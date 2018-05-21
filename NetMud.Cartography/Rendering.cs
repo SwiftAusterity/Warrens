@@ -24,6 +24,11 @@ namespace NetMud.Cartography
             return RenderRadiusMap(room.DataTemplate<IRoomData>(), radius, false);
         }
 
+        public static string RenderRadiusMap(ILocaleData locale, int radius, bool forAdmin = true, bool withPathways = true)
+        {
+            return RenderRadiusMap(locale.CentralRoom(), radius, forAdmin, withPathways, locale);
+        }
+
         /// <summary>
         /// Render an ascii map of stored data rooms around a specific radius
         /// </summary>
@@ -32,9 +37,18 @@ namespace NetMud.Cartography
         /// <param name="forAdmin">include edit links for paths and rooms?</param>
         /// <param name="withPathways">include paths at all?</param>
         /// <returns>a single string that is an ascii map</returns>
-        public static string RenderRadiusMap(IRoomData room, int radius, bool forAdmin = true, bool withPathways = true)
+        public static string RenderRadiusMap(IRoomData room, int radius, bool forAdmin = true, bool withPathways = true, ILocaleData locale = null)
         {
             var asciiMap = new StringBuilder();
+
+            //Why?
+            if (room == null)
+            {
+                if(!forAdmin || locale == null)
+                    return string.Empty;
+
+                return string.Format("<a href='#' class='addData pathway AdminAddInitialRoom' localeId='{0}' title='New Room'>Add Initial Room</a>", locale.ID);
+            }
 
             //1. Get world map
             var ourLocale = room.ParentLocation;

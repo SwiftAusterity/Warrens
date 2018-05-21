@@ -16,6 +16,13 @@ namespace NetMud
                 );
 
             routes.MapRoute(
+                name: "Room Add Modal",
+                url: "GameAdmin/Room/Add/{localeId}",
+                defaults: new { controller = "Room", action = "Add" },
+                namespaces: new string[] { "NetMud.Controllers.GameAdmin" }
+            );
+
+            routes.MapRoute(
                 name: "Pathway Add Modal",
                 url: "GameAdmin/Pathway/Add/{id}/{originRoomId}/{destinationRoomId}",
                 defaults: new { controller = "Pathway", action = "Add" },

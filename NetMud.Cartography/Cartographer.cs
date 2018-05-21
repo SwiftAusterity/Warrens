@@ -144,7 +144,7 @@ namespace NetMud.Cartography
         public static long[, ,] ShrinkMap(long[, ,] map)
         {
             //We take a "full slice" of the map to shrink it
-            return Cartographer.TakeSliceOfMap(new Tuple<int, int>(map.GetLowerBound(0), map.GetUpperBound(0))
+            return TakeSliceOfMap(new Tuple<int, int>(map.GetLowerBound(0), map.GetUpperBound(0))
                                                     , new Tuple<int, int>(map.GetLowerBound(1), map.GetUpperBound(1))
                                                     , new Tuple<int, int>(map.GetLowerBound(2), map.GetUpperBound(2))
                                                     , map, true);

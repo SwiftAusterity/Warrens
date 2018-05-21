@@ -10,13 +10,8 @@
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <div class="form-group two-column">
                 @Html.EditorFor(e => e.Name)
-                @Html.LabelFor(m => m.Zone, new { @class = "control-label" })
-                <div>
-                    @Html.DropDownList("Zone", Model.ValidZones.Select(rl =>
-                                            new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
-                                             , htmlAttributes: new { id = "Zone", @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.Zone, "", new { @class = "text-danger" })
-                </div>
+                <label for="Locale">Locale</label>
+                <input type="text" id="Locale" name="Locale" disabled="disabled" title="Locale" value="@Model.Locale.Name" />
             </div>
             @Html.Partial("DimensionalEntityEditor", Model)
             <div class="form-group one-column">
@@ -28,7 +23,7 @@
                     @Html.ValidationMessageFor(m => m.Medium, "", new { @class = "text-danger" })
                 </div>
             </div>
-            
+
             @Html.Partial("SubmitButton", "Create")
         }
     </section>

@@ -60,6 +60,14 @@
 
                 BindRoomsAndPaths();
             });
+        } else if (mapRenderType == 'RenderLocaleMapForEdit') {
+            var radius = $exModelContainer.attr("data-zindex");
+
+            $.get('/api/AdminDataApi/' + mapRenderType + '/' + dataId, function (data) {
+                $exModelContainer.html(data);
+
+                BindRoomsAndPaths();
+            });
         } else {
             var zIndex = $exModelContainer.attr("data-zindex");
 
@@ -73,19 +81,25 @@
 
     function BindRoomsAndPaths() {
         $('.AdminAddPathway').click(function () {
-            openFrameless(1400, 900, 0, 0, "/GameAdmin/Pathway/Add/" + $(this).attr('pathwayId') + '/' + $(this).attr('fromRoom') + '/' + $(this).attr('toRoom'), 'Add Pathway', true);
+            openFrameless(1400, 900, 0, 0, "/GameAdmin/Pathway/Add/" + $(this).attr('pathwayid') + '/' + $(this).attr('fromroom') + '/' + $(this).attr('toroom'), 'Add Pathway', true);
 
             return false;
         });
 
         $('.AdminEditPathway').click(function () {
-            openFrameless(1400, 900, 0, 0, "/GameAdmin/Pathway/Edit/" + $(this).attr('pathwayId') + '/' + $(this).attr('fromRoom') + '/' + $(this).attr('toRoom'), 'Add Pathway', true);
+            openFrameless(1400, 900, 0, 0, "/GameAdmin/Pathway/Edit/" + $(this).attr('pathwayid') + '/' + $(this).attr('fromroom') + '/' + $(this).attr('toroom'), 'Add Pathway', true);
 
             return false;
         });
 
         $('.AdminEditRoom').click(function () {
-            openFrameless(1400, 900, 0, 0, "/GameAdmin/Room/Add/" + $(this).attr('roomId'), 'Add Pathway', true);
+            openFrameless(1400, 900, 0, 0, "/GameAdmin/Room/Add/" + $(this).attr('roomid'), 'Add Pathway', true);
+
+            return false;
+        });
+
+        $('.AdminAddInitialRoom').click(function () {
+            openFrameless(1400, 900, 0, 0, "/GameAdmin/Room/Add/" + $(this).attr('localeid'), 'Add Initial Room', true);
 
             return false;
         });
