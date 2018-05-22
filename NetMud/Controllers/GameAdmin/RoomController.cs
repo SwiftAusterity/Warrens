@@ -133,13 +133,12 @@ namespace NetMud.Controllers.GameAdmin
                 else
                 {
                     LoggingUtility.LogAdminCommandUsage("*WEB* - AddRoomData[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                    message = "Creation Successful.";
                 }
             }
             else
                 message = "You must include a valid Medium material.";
 
-            return RedirectToAction("Index", new { Message = message });
+            return RedirectToRoute("ModalErrorOrClose", new { Message = message });
         }
 
         [HttpGet]
@@ -157,7 +156,7 @@ namespace NetMud.Controllers.GameAdmin
             if (obj == null)
             {
                 message = "That does not exist";
-                return RedirectToAction("Index", new { Message = message });
+                return RedirectToRoute("ErrorOrClose", new { Message = message });
             }
 
             vModel.Locale = obj.ParentLocation;
@@ -172,7 +171,7 @@ namespace NetMud.Controllers.GameAdmin
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(AddEditRoomDataViewModel vModel, int id)
+        public ActionResult Edit(int id, AddEditRoomDataViewModel vModel)
         {
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
@@ -181,7 +180,7 @@ namespace NetMud.Controllers.GameAdmin
             if (obj == null)
             {
                 message = "That does not exist";
-                return RedirectToAction("Index", new { Message = message });
+                return RedirectToRoute("ModalErrorOrClose", new { Message = message });
             }
 
             obj.Name = vModel.Name;
@@ -199,7 +198,6 @@ namespace NetMud.Controllers.GameAdmin
                 if (obj.Save())
                 {
                     LoggingUtility.LogAdminCommandUsage("*WEB* - EditRoomData[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                    message = "Edit Successful.";
                 }
                 else
                     message = "Error; Edit failed.";
@@ -207,7 +205,7 @@ namespace NetMud.Controllers.GameAdmin
             else
                 message = "You must include a valid Medium material.";
 
-            return RedirectToAction("Index", new { Message = message });
+            return RedirectToRoute("ModalErrorOrClose");
         }
     }
 }

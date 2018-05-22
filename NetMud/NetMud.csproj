@@ -384,6 +384,7 @@
     <Content Include="Views\GameAdmin\Locale\Add.cshtml" />
     <Content Include="Views\GameAdmin\Locale\Edit.cshtml" />
     <Content Include="Views\GameAdmin\Zone\LocaleList.cshtml" />
+    <Content Include="Views\GameAdmin\ModalErrorOrClose.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

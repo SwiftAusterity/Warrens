@@ -1,4 +1,5 @@
-﻿using NetMud.Data.DataIntegrity;
+﻿using NetMud.Cartography;
+using NetMud.Data.DataIntegrity;
 using NetMud.Data.Game;
 using NetMud.Data.System;
 using NetMud.DataAccess.Cache;
@@ -70,6 +71,17 @@ namespace NetMud.Data.EntityBackingData
         }
 
         /// <summary>
+        /// Regenerate the internal map for the locale; try not to do this often
+        /// </summary>
+        public void RemapInterior()
+        {
+            var remainingRooms = Rooms();
+            var returnMap = Cartographer.GenerateMapFromRoom(CentralRoom(), remainingRooms.Count() / 2, new HashSet<IRoomData>(remainingRooms), true);
+
+            Interior = new Map(returnMap, false);
+        }
+
+        /// <summary>
         /// Get the central room for a Z plane
         /// </summary>
         /// <param name="zIndex">The Z plane to get the central room of</param>
@@ -117,7 +129,7 @@ namespace NetMud.Data.EntityBackingData
         /// <returns>The flattened map</returns>
         public string RenderMap(int zIndex, bool forAdmin = false)
         {
-            return string.Empty;
+            return Rendering.RenderRadiusMap(this, 10, zIndex, forAdmin);
         }
 
         /// <summary>

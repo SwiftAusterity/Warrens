@@ -18,7 +18,7 @@ namespace NetMud.Data.System
         /// <summary>
         /// What this actually contains, yeah it's a hashtable of hashtables but whatever
         /// </summary>
-        private Dictionary<string, HashSet<string>> Birthmarks => new Dictionary<string, HashSet<string>>();
+        private Dictionary<string, HashSet<string>> Birthmarks { get; set; }
 
         /// <summary>
         /// What named containers are attached to this
@@ -31,6 +31,7 @@ namespace NetMud.Data.System
         public EntityContainer()
         {
             NamedContainers = Enumerable.Empty<IEntityContainerData<T>>();
+            Birthmarks = new Dictionary<string, HashSet<string>>();
 
             Birthmarks.Add(genericCollectionLabel, new HashSet<string>());
         }
@@ -41,6 +42,7 @@ namespace NetMud.Data.System
         public EntityContainer(IEnumerable<IEntityContainerData<T>> namedContainers)
         {
             NamedContainers = namedContainers;
+            Birthmarks = new Dictionary<string, HashSet<string>>();
 
             Birthmarks.Add(genericCollectionLabel, new HashSet<string>());
 
@@ -56,6 +58,7 @@ namespace NetMud.Data.System
         public EntityContainer(IEnumerable<EntityContainerData<T>> namedContainers)
         {
             NamedContainers = namedContainers;
+            Birthmarks = new Dictionary<string, HashSet<string>>();
 
             Birthmarks.Add(genericCollectionLabel, new HashSet<string>());
 
@@ -102,6 +105,9 @@ namespace NetMud.Data.System
         /// <returns>success status</returns>
         public bool Add(T entity)
         {
+            if (Birthmarks[genericCollectionLabel].Contains(entity.BirthMark))
+                return false;
+
             return Birthmarks[genericCollectionLabel].Add(entity.BirthMark);
         }
 
@@ -122,6 +128,9 @@ namespace NetMud.Data.System
         /// <returns>success status</returns>
         public bool Remove(T entity)
         {
+            if (!Birthmarks[genericCollectionLabel].Contains(entity.BirthMark))
+                return false;
+
             return Birthmarks[genericCollectionLabel].Remove(entity.BirthMark);
         }
 
@@ -132,6 +141,9 @@ namespace NetMud.Data.System
         /// <returns>success status</returns>
         public bool Remove(string birthMark)
         {
+            if (!Birthmarks[genericCollectionLabel].Contains(birthMark))
+                return false;
+
             return Birthmarks[genericCollectionLabel].Remove(birthMark);
         }
 
@@ -170,6 +182,9 @@ namespace NetMud.Data.System
             if (String.IsNullOrWhiteSpace(namedContainer))
                 return Add(entity);
 
+            if (Birthmarks[namedContainer].Contains(entity.BirthMark))
+                return false;
+
             return Birthmarks[namedContainer].Add(entity.BirthMark);
         }
 
@@ -196,6 +211,9 @@ namespace NetMud.Data.System
             if (String.IsNullOrWhiteSpace(namedContainer))
                 return Remove(entity);
 
+            if (!Birthmarks[namedContainer].Contains(entity.BirthMark))
+                return false;
+
             return Birthmarks[namedContainer].Remove(entity.BirthMark);
         }
 
@@ -208,6 +226,9 @@ namespace NetMud.Data.System
         {
             if (String.IsNullOrWhiteSpace(namedContainer))
                 return Remove(birthMark);
+
+            if (!Birthmarks[namedContainer].Contains(birthMark))
+                return false;
 
             return Birthmarks[namedContainer].Remove(birthMark);
         }

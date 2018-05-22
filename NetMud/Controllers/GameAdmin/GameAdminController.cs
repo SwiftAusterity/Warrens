@@ -77,6 +77,11 @@ namespace NetMud.Controllers.GameAdmin
             return View(dashboardModel);
         }
 
+        public ActionResult ModalErrorOrClose(string Message = "")
+        {
+            return View("~/Views/GameAdmin/ModalErrorOrClose.cshtml", "_chromelessLayout", Message);
+        }
+
         #region Live Threads
         public ActionResult StopRunningProcess(string processName)
         {

@@ -74,32 +74,47 @@ namespace NetMud.Controllers.GameAdmin
         }
 
         [HttpGet]
-        public ActionResult Add(long id, long originRoomId, long destinationRoomId)
+        public ActionResult Add(long id, long originRoomId, long destinationRoomId, int degreesFromNorth = 0)
         {
-            var vModel = new AddEditPathwayDataViewModel
-            {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
-
-                ValidMaterials = BackingDataCache.GetAll<IMaterial>(),
-                ValidModels = BackingDataCache.GetAll<IDimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat),
-                ValidRooms = BackingDataCache.GetAll<IRoomData>().Where(rm => !rm.ID.Equals(originRoomId)),
-
-                Origin = BackingDataCache.Get<IRoomData>(originRoomId),
-                OriginID = originRoomId
-            };
-
             //New room or existing room
             if (destinationRoomId.Equals(-1))
             {
-                vModel.RoomModel.authedUser = vModel.authedUser;
-                vModel.RoomModel.ValidMaterials = vModel.ValidMaterials;
+                var vModel = new AddPathwayWithRoomDataViewModel
+                {
+                    authedUser = UserManager.FindById(User.Identity.GetUserId()),
+
+                    ValidMaterials = BackingDataCache.GetAll<IMaterial>(),
+                    ValidModels = BackingDataCache.GetAll<IDimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat),
+                    ValidRooms = BackingDataCache.GetAll<IRoomData>().Where(rm => !rm.ID.Equals(originRoomId)),
+
+                    Origin = BackingDataCache.Get<IRoomData>(originRoomId),
+                    OriginID = originRoomId,
+
+                    DegreesFromNorth = degreesFromNorth
+                };
+
+                vModel.Locale = vModel.Origin.ParentLocation;
+                vModel.LocaleId = vModel.Origin.ParentLocation.ID;
 
                 return View("~/Views/GameAdmin/Pathway/AddWithRoom.cshtml", "_chromelessLayout", vModel);
             }
             else
             {
-                vModel.DestinationID = destinationRoomId;
-                vModel.Destination = BackingDataCache.Get<IRoomData>(destinationRoomId);
+                var vModel = new AddEditPathwayDataViewModel
+                {
+                    authedUser = UserManager.FindById(User.Identity.GetUserId()),
+
+                    ValidMaterials = BackingDataCache.GetAll<IMaterial>(),
+                    ValidModels = BackingDataCache.GetAll<IDimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat),
+                    ValidRooms = BackingDataCache.GetAll<IRoomData>().Where(rm => !rm.ID.Equals(originRoomId)),
+
+                    Origin = BackingDataCache.Get<IRoomData>(originRoomId),
+                    OriginID = originRoomId,
+
+                    DegreesFromNorth = degreesFromNorth,
+                    DestinationID = destinationRoomId,
+                    Destination = BackingDataCache.Get<IRoomData>(destinationRoomId)
+                };
 
                 return View("~/Views/GameAdmin/Pathway/AddEdit.cshtml", "_chromelessLayout", vModel);
             }
@@ -107,17 +122,54 @@ namespace NetMud.Controllers.GameAdmin
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddWithRoom(AddEditPathwayDataViewModel vModel, long id)
+        public ActionResult AddWithRoom(AddPathwayWithRoomDataViewModel vModel)
         {
-            string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
+            string roomMessage = string.Empty;
+            var newRoom = new RoomData
+            {
+                Name = vModel.RoomName,
+                Model = new DimensionalModel(vModel.RoomDimensionalModelHeight, vModel.RoomDimensionalModelLength, vModel.RoomDimensionalModelWidth
+                                , vModel.RoomDimensionalModelVacuity, vModel.RoomDimensionalModelCavitation)
+            };
+
+            var mediumId = vModel.Medium;
+            var medium = BackingDataCache.Get<IMaterial>(mediumId);
+
+            if (medium != null)
+            {
+                newRoom.Medium = medium;
+
+                var locale = BackingDataCache.Get<ILocaleData>(vModel.LocaleId);
+
+                if (locale != null)
+                {
+                    newRoom.ParentLocation = locale;
+
+                    if (newRoom.Create() == null)
+                        roomMessage = "Error; Creation failed.";
+                    else
+                    {
+                        LoggingUtility.LogAdminCommandUsage("*WEB* - AddRoomDataWithPathway[" + newRoom.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    }
+                }
+                else
+                    roomMessage = "You must include a valid Locale.";
+            }
+            else
+                roomMessage = "You must include a valid Medium material.";
+
+            if(!string.IsNullOrWhiteSpace(roomMessage))
+                return RedirectToRoute("ModalErrorOrClose", new { Message = roomMessage });
+
+            string message = string.Empty;
             var newObj = new PathwayData
             {
                 Name = vModel.Name,
                 DegreesFromNorth = vModel.DegreesFromNorth,
-                Origin = vModel.ValidRooms.FirstOrDefault(room => room.ID.Equals(vModel.OriginID)),
-                Destination = vModel.ValidRooms.FirstOrDefault(room => room.ID.Equals(vModel.DestinationID)),
+                Origin = BackingDataCache.Get<IRoomData>(vModel.OriginID),
+                Destination = newRoom
             };
 
             var materialParts = new Dictionary<string, IMaterial>();
@@ -166,56 +218,15 @@ namespace NetMud.Controllers.GameAdmin
                 else
                 {
                     LoggingUtility.LogAdminCommandUsage("*WEB* - AddPathwayWithRoom[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                    message = "Creation Successful.";
                 }
             }
 
-            string roomMessage = string.Empty;
-            var newRoom = new RoomData
-            {
-                Name = vModel.RoomModel.Name,
-                Model = new DimensionalModel(vModel.RoomModel.DimensionalModelHeight, vModel.RoomModel.DimensionalModelLength, vModel.RoomModel.DimensionalModelWidth
-                                , vModel.RoomModel.DimensionalModelVacuity, vModel.RoomModel.DimensionalModelCavitation)
-            };
-
-            var mediumId = vModel.RoomModel.Medium;
-            var medium = BackingDataCache.Get<IMaterial>(mediumId);
-
-            if (medium != null)
-            {
-                newRoom.Medium = medium;
-
-                var locale = vModel.RoomModel.Locale;
-
-                if (locale != null)
-                {
-                    newRoom.ParentLocation = locale;
-
-                    if (newRoom.Create() == null)
-                        roomMessage = "Error; Creation failed.";
-                    else
-                    {
-                        LoggingUtility.LogAdminCommandUsage("*WEB* - AddRoomDataWithPathway[" + newRoom.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                        roomMessage = "Creation Successful.";
-                    }
-                }
-                else
-                    roomMessage = "You must include a valid Zone.";
-            }
-            else
-                roomMessage = "You must include a valid Medium material.";
-
-            var result = new ContentResult
-            {
-                Content = message + "|" + roomMessage
-            };
-
-            return result;
+            return RedirectToRoute("ModalErrorOrClose", new { Message = message });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Add(AddEditPathwayDataViewModel vModel, long id)
+        public ActionResult Add(AddEditPathwayDataViewModel vModel)
         {
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
@@ -266,7 +277,7 @@ namespace NetMud.Controllers.GameAdmin
 
             if (validData)
             {
-                newObj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth, 
+                newObj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth,
                     vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation, vModel.DimensionalModelId, materialParts);
 
                 if (newObj.Create() == null)
@@ -274,16 +285,10 @@ namespace NetMud.Controllers.GameAdmin
                 else
                 {
                     LoggingUtility.LogAdminCommandUsage("*WEB* - AddPathway[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                    message = "Creation Successful.";
                 }
             }
 
-            var result = new ContentResult
-            {
-                Content = message
-            };
-
-            return result;
+            return RedirectToRoute("ModalErrorOrClose", new { Message = message });
         }
 
         [HttpGet]
@@ -384,25 +389,18 @@ namespace NetMud.Controllers.GameAdmin
 
             if (validData)
             {
-                obj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth, 
+                obj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth,
                     vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation, vModel.DimensionalModelId, materialParts);
 
                 if (obj.Save())
                 {
                     LoggingUtility.LogAdminCommandUsage("*WEB* - EditPathwayData[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                    message = "Edit Successful.";
                 }
                 else
                     message = "Error; Edit failed.";
             }
 
-            var result = new ContentResult
-            {
-                Content = message
-            };
-
-            //Don't return to the room editor, this is in a window, it just needs to close
-            return result;
+            return RedirectToRoute("ModalErrorOrClose", new { Message = message });
         }
     }
 }

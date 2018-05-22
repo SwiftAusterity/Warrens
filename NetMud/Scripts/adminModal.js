@@ -15,5 +15,13 @@
 
     NFW.focus();
 
-    NFW.onsubmit = NFW.close;
+    NFW.onsubmit = submitFrameless(e, NFW);
+}
+
+function submitFrameless(e, formWindow) {
+    e.preventDefault();
+
+    formWindow.getElementById('form').submit();
+
+    setTimeout(formWindow.close, 5);
 }

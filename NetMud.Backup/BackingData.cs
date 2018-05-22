@@ -58,12 +58,15 @@ namespace NetMud.Backup
                                                                                 && !ty.IsAbstract
                                                                                 && !ty.GetCustomAttributes<IgnoreAutomatedBackupAttribute>().Any());
 
-            foreach (var t in implimentedTypes)
+            foreach (var t in implimentedTypes.OrderByDescending(type => type == typeof(ZoneData) ? 4 :
+                                                                            type == typeof(LocaleData) ? 3 :
+                                                                            type == typeof(RoomData) ? 2 :
+                                                                            type == typeof(PathwayData) ? 1 : 0))
                 LoadAllToCache(t);
 
             return true;
         }
-       
+
         /// <summary>
         /// Dumps everything of a single type into the cache from the filesystem for BackingData
         /// </summary>
@@ -91,7 +94,7 @@ namespace NetMud.Backup
                 {
                     BackingDataCache.Add(fileAccessor.ReadEntity(file, objectType));
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     LoggingUtility.LogError(ex);
                     //Let it keep going

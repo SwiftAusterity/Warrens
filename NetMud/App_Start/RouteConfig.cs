@@ -10,6 +10,13 @@ namespace NetMud
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
+                name: "ModalErrorOrClose",
+                url: "GameAdmin/ModalErrorOrClose/{Message}",
+                defaults: new { controller = "GameAdmin", action = "ModalErrorOrClose", Message = UrlParameter.Optional },
+                namespaces: new string[] { "NetMud.Controllers.GameAdmin" }
+              );
+
+            routes.MapRoute(
                 name: "SelectCharacterAjax",
                 url: "GameAdmin/Player/SelectCharacter/{CurrentlySelectedCharacter}",
                 defaults: new { controller = "Player", action = "SelectCharacter" }
@@ -24,8 +31,8 @@ namespace NetMud
 
             routes.MapRoute(
                 name: "Pathway Add Modal",
-                url: "GameAdmin/Pathway/Add/{id}/{originRoomId}/{destinationRoomId}",
-                defaults: new { controller = "Pathway", action = "Add" },
+                url: "GameAdmin/Pathway/Add/{id}/{originRoomId}/{destinationRoomId}/{degreesFromNorth}",
+                defaults: new { controller = "Pathway", action = "Add", degreesFromNorth = UrlParameter.Optional },
                 namespaces: new string[] { "NetMud.Controllers.GameAdmin" }
             );
 

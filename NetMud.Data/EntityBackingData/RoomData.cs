@@ -5,6 +5,7 @@ using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
 using Newtonsoft.Json;
 using System;
@@ -141,6 +142,15 @@ namespace NetMud.Data.EntityBackingData
         public override ILocation GetLiveInstance()
         {
             return LiveCache.Get<IRoom>(ID);
+        }
+
+        public override IData Create()
+        {
+            var obj = base.Create();
+
+            ParentLocation.RemapInterior();
+
+            return obj;
         }
     }
 }

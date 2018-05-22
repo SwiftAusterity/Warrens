@@ -173,8 +173,6 @@ namespace NetMud.Data.Game
         /// </summary>
         public override void SpawnNewInWorld()
         {
-            var bS = DataTemplate<IPathwayData>(); ;
-
             SpawnNewInWorld(null);
         }
 
@@ -185,7 +183,6 @@ namespace NetMud.Data.Game
         public override void SpawnNewInWorld(IGlobalPosition position)
         {
             var bS = DataTemplate<IPathwayData>(); ;
-            var locationAssembly = Assembly.GetAssembly(typeof(Room));
 
             MovementDirection = Utilities.TranslateToDirection(bS.DegreesFromNorth, bS.InclineGrade);
 

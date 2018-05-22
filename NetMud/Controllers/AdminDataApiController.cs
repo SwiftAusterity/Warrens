@@ -35,6 +35,7 @@ namespace NetMud.Controllers
         }
 
         [HttpGet]
+        [Route("api/AdminDataApi/RenderRoomForEditWithRadius/{id}/{radius}", Name = "RenderRoomForEditWithRadius")]
         public string RenderRoomForEditWithRadius(long id, int radius)
         {
             var centerRoom = BackingDataCache.Get<IRoomData>(id);
@@ -46,14 +47,15 @@ namespace NetMud.Controllers
         }
 
         [HttpGet]
-        public string RenderLocaleMapForEdit(long id)
+        [Route("api/AdminDataApi/RenderLocaleMapForEdit/{id}/{zIndex}", Name = "RenderLocaleMapForEdit")]
+        public string RenderLocaleMapForEdit(long id, int zIndex)
         {
             var locale = BackingDataCache.Get<ILocaleData>(id);
 
             if (locale == null)
                 return "Invalid inputs.";
 
-            return Rendering.RenderRadiusMap(locale, 10);
+            return Rendering.RenderRadiusMap(locale, 10, zIndex);
         }
     }
 }

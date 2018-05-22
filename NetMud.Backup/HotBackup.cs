@@ -15,6 +15,7 @@ using NetMud.DataStructure.SupportingClasses;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.Cartography;
 using NetMud.Data.System;
+using NetMud.DataStructure.Behaviors.Rendering;
 
 namespace NetMud.Backup
 {
@@ -56,9 +57,16 @@ namespace NetMud.Backup
 
             foreach (IData thing in BackingDataCache.GetAll<T>())
             {
-                var entityThing = Activator.CreateInstance(implimentingEntityClass, new object[] { (T)thing }) as IEntity;
+                try
+                {
+                    var entityThing = Activator.CreateInstance(implimentingEntityClass, new object[] { (T)thing }) as IEntity;
 
-                entityThing.UpsertToLiveWorldCache();
+                    entityThing.UpsertToLiveWorldCache();
+                }
+                catch(Exception ex)
+                {
+                    LoggingUtility.LogError(ex);
+                }
             }
 
             return true;
@@ -262,13 +270,13 @@ namespace NetMud.Backup
                 //paths load themselves to their appropriate location
                 //foreach (Pathway entity in entitiesToLoad.Where(ent => ent.GetType() == typeof(Pathway)))
                 //{
-                //    var roomTo = LiveCache.Get<IRoom>(new LiveCacheKey(typeof(IRoom), entity.Origin.BirthMark));
-                //    var roomFrom = LiveCache.Get<IRoom>(new LiveCacheKey(typeof(IRoom), entity.Destination.BirthMark));
+                //    ILocation roomTo = LiveCache.Get<ILocation>(new LiveCacheKey(entity.Origin.GetType(), entity.Origin.BirthMark));
+                //    ILocation roomFrom = LiveCache.Get<ILocation>(new LiveCacheKey(entity.Origin.GetType(), entity.Destination.BirthMark));
 
                 //    if (roomTo != null && roomFrom != null)
                 //    {
-                //        entity.Origin = roomTo;
-                //        entity.Destination = roomFrom;
+                //        entity.Origin = roomFrom;
+                //        entity.Destination = roomTo;
                 //        entity.CurrentLocation = roomFrom.CurrentLocation;
                 //        roomFrom.MoveInto<IPathway>(entity);
                 //    }
@@ -325,7 +333,7 @@ namespace NetMud.Backup
             startingRoom.Coordinates = new Tuple<int, int, int>(0, 0, 0);
 
             //We're kind of faking array size for radius, it will be shrunk later
-            var returnMap = Cartographer.GenerateMapFromRoom(startingRoom, remainingRooms.Count() / 2, remainingRooms, true);
+             var returnMap = Cartographer.GenerateMapFromRoom(startingRoom, remainingRooms.Count() / 2, remainingRooms, true);
 
             startingRoom.ParentLocation.Interior = new Map(returnMap, false);
 

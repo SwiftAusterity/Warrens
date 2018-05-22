@@ -28,6 +28,11 @@ namespace NetMud.DataStructure.Base.Place
         IMap Interior { get; set; }
 
         /// <summary>
+        /// Regenerate the internal map for the locale
+        /// </summary>
+        void RemapInterior();
+
+        /// <summary>
         /// The rooms contained within the locale should it need to regenerate from nothing
         /// </summary>
         IEnumerable<IRoomData> Rooms();

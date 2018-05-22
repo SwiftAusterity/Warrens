@@ -12,6 +12,51 @@ namespace NetMud.Utility
     {
         #region Extensions
         /// <summary>
+        /// Populate an array with a single value
+        /// </summary>
+        /// <typeparam name="T">The array type</typeparam>
+        /// <param name="arr">The array, this is an ext method</param>
+        /// <param name="value">The value to cram</param>
+        public static T[,,] Populate<T>(this T[,,] arr, T value)
+        {
+            for (int x = 0; x < arr.GetLength(0); x++)
+                for (int y = 0; y < arr.GetLength(1); y++)
+                    for (int z = 0; z < arr.GetLength(2); z++)
+                        arr[x, y, z] = value;
+
+            return arr;
+        }
+
+        /// <summary>
+        /// Populate an array with a single value
+        /// </summary>
+        /// <typeparam name="T">The array type</typeparam>
+        /// <param name="arr">The array, this is an ext method</param>
+        /// <param name="value">The value to cram</param>
+        public static T[,] Populate<T>(this T[,] arr, T value)
+        {
+            for (int x = 0; x < arr.GetLength(0); x++)
+                for (int y = 0; y < arr.GetLength(1); y++)
+                    arr[x, y] = value;
+
+            return arr;
+        }
+
+        /// <summary>
+        /// Populate an array with a single value
+        /// </summary>
+        /// <typeparam name="T">The array type</typeparam>
+        /// <param name="arr">The array, this is an ext method</param>
+        /// <param name="value">The value to cram</param>
+        public static T[] Populate<T>(this T[] arr, T value)
+        {
+            for (int x = 0; x < arr.Length; x++)
+                arr[x] = value;
+
+            return arr;
+        }
+
+        /// <summary>
         /// Pads a string with characters
         /// </summary>
         /// <param name="str">the string to pad</param>

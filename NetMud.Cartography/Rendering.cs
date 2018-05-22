@@ -24,9 +24,18 @@ namespace NetMud.Cartography
             return RenderRadiusMap(room.DataTemplate<IRoomData>(), radius, false);
         }
 
-        public static string RenderRadiusMap(ILocaleData locale, int radius, bool forAdmin = true, bool withPathways = true)
+        /// <summary>
+        /// Render the ascii map of room data for the locale based around the center room of the zIndex (negative 1 zIndex is treated as central room of entire set)
+        /// </summary>
+        /// <param name="locale">The locale to render for</param>
+        /// <param name="radius">The radius of rooms to go out to</param>
+        /// <param name="zIndex">The zIndex plane to get</param>
+        /// <param name="forAdmin">Is this for admin purposes? (makes it have editor links)</param>
+        /// <param name="withPathways">Include pathways? (inflated map)</param>
+        /// <returns>a single string that is an ascii map</returns>
+        public static string RenderRadiusMap(ILocaleData locale, int radius, int zIndex, bool forAdmin = true, bool withPathways = true)
         {
-            return RenderRadiusMap(locale.CentralRoom(), radius, forAdmin, withPathways, locale);
+            return RenderRadiusMap(locale.CentralRoom(zIndex), radius, forAdmin, withPathways, locale);
         }
 
         /// <summary>
@@ -44,7 +53,8 @@ namespace NetMud.Cartography
             //Why?
             if (room == null)
             {
-                if(!forAdmin || locale == null)
+                //Don't show "add room" to non admins, if we're not requesting this for a locale and if the locale has actual rooms
+                if(!forAdmin || locale == null || locale.Rooms().Count() > 0)
                     return string.Empty;
 
                 return string.Format("<a href='#' class='addData pathway AdminAddInitialRoom' localeId='{0}' title='New Room'>Add Initial Room</a>", locale.ID);
@@ -191,7 +201,7 @@ namespace NetMud.Cartography
                     roomString = String.Format("Add {0} path to {1}", directionType.ToString(), destinationName);
 
                 returnValue = String.Format("<a href='#' class='addData pathway AdminAddPathway' pathwayId='-1' fromRoom='{0}' toRoom='{3}' data-direction='{1}' title='{2}'>+</a>",
-                    originId, Utilities.TranslateDirectionToDegrees(directionType), roomString, destinationId);
+                    originId, Utilities.TranslateDirectionToDegrees(directionType).Item1, roomString, destinationId);
             }
 
             return returnValue;
