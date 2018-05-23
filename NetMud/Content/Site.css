@@ -1,5 +1,5 @@
 ﻿footer {
-    padding-top: 25px;
+    padding: 25px;
 }
 
 /* Set padding to keep content from hitting the edges */
@@ -116,7 +116,7 @@ div.form-group.three-column label {
 div.form-group.three-column div {
     width: 60%;
 }
-            
+
 div.form-group a.removeRow {
     color: red;
     border: none;
@@ -136,7 +136,16 @@ div.form-group a.removeRow {
         color: darkgrey;
         background-color: white;
     }
-    
+
+.adminDashboard {
+    padding: 10px;
+    display: inline-table;
+}
+
+    .adminDashboard div {
+        padding: 15px;
+        float: left;
+    }
 
 /* Ascii maps for object dim models and room maps */
 .asciiMap {

@@ -15,7 +15,7 @@
 
     NFW.focus();
 
-    NFW.onsubmit = submitFrameless(e, NFW);
+    NFW.onsubmit = submitFrameless(NFW);
 }
 
 function submitFrameless(e, formWindow) {

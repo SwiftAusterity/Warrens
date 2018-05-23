@@ -15,6 +15,34 @@
         using (Html.BeginForm("Remove", "Zone"))
         {
             @Html.AntiForgeryToken()
+            <div class="table" style="display:inline-table;">
+                <div class="headers">
+                    <div>ID</div>
+                    <div>Name</div>
+                    <div>Remove</div>
+                </div>
+                <div class="body">
+                    @foreach (var obj in Model.CurrentPageOfItems)
+                    {
+                        <div>
+                            <div>@Html.ActionLink(@obj.ID.ToString(), "Edit", new { id = obj.ID })</div>
+                            <div>
+                                @if (obj.FitnessProblems)
+                                {
+                                    <div style="color:red;" title="@String.Join(", ", obj.FitnessReport())">@obj.Name</div>
+                                }
+                                else
+                                {
+                                    @obj.Name
+                                }
+                            </div>
+                            <div>
+                                @Html.Partial("RemoveDataItem", @obj.ID)
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
             <table class="table">
                 <thead>
                     <tr>

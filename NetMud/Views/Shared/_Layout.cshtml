@@ -41,12 +41,12 @@
 
         <h3><p id="statusMessage" name="statusMessage" class="text-success">@ViewBag.StatusMessage</p></h3>
         @RenderBody()
-        <footer>
-            <br class="clearfix" />
-            <hr />
-            <p>TwinMUD &copy; @DateTime.Now.Year - Daniel Nissenfeld</p>
-        </footer>
     </div>
+    <footer>
+        <br class="clearfix" />
+        <hr />
+        <p>TwinMUD &copy; @DateTime.Now.Year - Daniel Nissenfeld</p>
+    </footer>
     <script type="text/javascript">
         if('@ViewBag.StatusMessage' == '' && GetQueryStringParams('Message') != '') {
             $('#statusMessage').html(GetQueryStringParams('Message'));

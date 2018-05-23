@@ -3,217 +3,222 @@
     ViewBag.Title = "Administrative Dashboard";
 }
 
-<div>
-    <h4>Backing Data</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>Zones:</dt>
-        <dd>
-            @Model.Zones.Count().ToString() [
-            @Html.ActionLink("Manage", "Index", "Zone")
-            @Html.ActionLink("Add", "Add", "Zone") ]
-            @if (Model.Zones.Any(r => r.FitnessProblems))
+<div class="adminDashboard">
+    <div>
+        <h4>Backing Data</h4>
+        <dl class="dl-horizontal">
+            <dt>Zones:</dt>
+            <dd>
+                @Model.Zones.Count().ToString() [
+                @Html.ActionLink("Manage", "Index", "Zone")
+                @Html.ActionLink("Add", "Add", "Zone") ]
+                @if (Model.Zones.Any(r => r.FitnessProblems))
+                {
+                    <span style="color:red;">DATA PROBLEMS</span>
+                }
+            </dd>
+            <dt>Locales:</dt>
+            <dd>
+                @Model.Locales.Count().ToString() [ Use Zones Yo ]
+                @if (Model.Locales.Any(r => r.FitnessProblems))
+                {
+                    <span style="color:red;">DATA PROBLEMS</span>
+                }
+            </dd>
+            <dt>Rooms:</dt>
+            <dd>
+                @Model.Rooms.Count().ToString() [ Use Zones Yo ]
+                @if (Model.Rooms.Any(r => r.FitnessProblems))
+                {
+                    <span style="color:red;">DATA PROBLEMS</span>
+                }
+            </dd>
+            <dt>NPCs:</dt>
+            <dd>
+                @Model.NPCs.Count().ToString() [
+                @Html.ActionLink("Manage", "Index", "NPC")
+                @Html.ActionLink("Add", "Add", "NPC") ]
+                @if (Model.NPCs.Any(r => r.FitnessProblems))
+                {
+                    <span style="color:red;">DATA PROBLEMS</span>
+                }
+            </dd>
+            <dt>Inanimates:</dt>
+            <dd>
+                @Model.Inanimates.Count().ToString() [
+                @Html.ActionLink("Manage", "Index", "Inanimate")
+                @Html.ActionLink("Add", "Add", "Inanimate") ]
+                @if (Model.Inanimates.Any(r => r.FitnessProblems))
+                {
+                    <span style="color:red;">DATA PROBLEMS</span>
+                }
+            </dd>
+        </dl>
+    </div>
+    <div>
+        <h4>Lookup Data</h4>
+        <dl class="dl-horizontal">
+            <dt>Help Files:</dt>
+            <dd>
+                @Model.HelpFiles.Count().ToString() [
+                @Html.ActionLink("Manage", "Index", "Help")
+                @Html.ActionLink("Add", "Add", "Help") ]
+                @if (Model.HelpFiles.Any(r => r.FitnessProblems))
+                {
+                    <span style="color:red;">DATA PROBLEMS</span>
+                }
+            </dd>
+            <dt>Dimensional Models:</dt>
+            <dd>
+                @Model.DimensionalModels.Count().ToString() [
+                @Html.ActionLink("Manage", "Index", "DimensionalModel")
+                @Html.ActionLink("Add", "Add", "DimensionalModel") ]
+                @if (Model.DimensionalModels.Any(r => r.FitnessProblems))
+                {
+                    <span style="color:red;">DATA PROBLEMS</span>
+                }
+            </dd>
+            <dt>Materials:</dt>
+            <dd>
+                @Model.Materials.Count().ToString() [
+                @Html.ActionLink("Manage", "Index", "Material")
+                @Html.ActionLink("Add", "Add", "Material") ]
+                @if (Model.Materials.Any(r => r.FitnessProblems))
+                {
+                    <span style="color:red;">DATA PROBLEMS</span>
+                }
+            </dd>
+            <dt>Races:</dt>
+            <dd>
+                @Model.Races.Count().ToString() [
+                @Html.ActionLink("Manage", "Index", "Race")
+                @Html.ActionLink("Add", "Add", "Race") ]
+                @if (Model.Races.Any(r => r.FitnessProblems))
+                {
+                    <span style="color:red;">DATA PROBLEMS</span>
+                }
+            </dd>
+            <dt>Constants:</dt>
+            <dd>
+                @Model.Constants.Count().ToString() [
+                @Html.ActionLink("Manage", "Index", "Constants")
+                @Html.ActionLink("Add", "Add", "Constants") ]
+                @if (Model.Constants.Any(r => r.FitnessProblems))
+                {
+                    <span style="color:red;">DATA PROBLEMS</span>
+                }
+            </dd>
+            <dt>Flora:</dt>
+            <dd>
+                @Model.Flora.Count().ToString() [
+                @Html.ActionLink("Manage", "Index", "Flora")
+                @Html.ActionLink("Add", "Add", "Flora") ]
+                @if (Model.Flora.Any(r => r.FitnessProblems))
+                {
+                    <span style="color:red;">DATA PROBLEMS</span>
+                }
+            </dd>
+            <dt>Fauna:</dt>
+            <dd>
+                @Model.Fauna.Count().ToString() [
+                @Html.ActionLink("Manage", "Index", "Fauna")
+                @Html.ActionLink("Add", "Add", "Fauna") ]
+                @if (Model.Fauna.Any(r => r.FitnessProblems))
+                {
+                    <span style="color:red;">DATA PROBLEMS</span>
+                }
+            </dd>
+            <dt>Minerals:</dt>
+            <dd>
+                @Model.Minerals.Count().ToString() [
+                @Html.ActionLink("Manage", "Index", "Minerals")
+                @Html.ActionLink("Add", "Add", "Minerals") ]
+                @if (Model.Minerals.Any(r => r.FitnessProblems))
+                {
+                    <span style="color:red;">DATA PROBLEMS</span>
+                }
+            </dd>
+        </dl>
+    </div>
+    <div>
+        <h4>Live Data</h4>
+        <dl class="dl-horizontal">
+            <dt>Players:</dt>
+            <dd>
+                @Model.LivePlayers [
+                @Html.ActionLink("Manage", "Index", "Player") ]
+            </dd>
+            <dt>Zones:</dt>
+            <dd>
+                @Model.LiveZones [ ]
+            </dd>
+            <dt>Locales:</dt>
+            <dd>
+                @Model.LiveLocales [ ]
+            </dd>
+            <dt>Rooms:</dt>
+            <dd>
+                @Model.LiveRooms [ ]
+            </dd>
+            <dt>Inanimates:</dt>
+            <dd>
+                @Model.LiveInanimates [ ]
+            </dd>
+            <dt>NPCs:</dt>
+            <dd>
+                @Model.LiveNPCs [ ]
+            </dd>
+        </dl>
+    </div>
+    <div>
+        <h4>World State</h4>
+        <dl class="dl-horizontal">
+            <dt>Do stuff</dt>
+            <dd>
+                @Html.ActionLink("Backup World", "BackupWorld", "GameAdmin", new { @class = "btn btn-default save" })
+                @Html.ActionLink("Suspend and Restore World", "RestoreWorld", "GameAdmin", new { @class = "btn btn-default caution" })
+            </dd>
+        </dl>
+    </div>
+    <div>
+        <h4>Live Processes</h4>
+        <dl class="dl-horizontal">
+            <dt>[@Model.LiveTaskTokens.Count().ToString()] Running Threads</dt>
+            <dd>
+                @Html.ActionLink("Stop All", "StopAllRunningProcess", "GameAdmin", new { @class = "btn btn-default caution" })
+            </dd>
+            @foreach (var token in Model.LiveTaskTokens)
             {
-                <span style="color:red;">DATA PROBLEMS</span>
+                <dt style="padding-top: 25px;">@token.Key</dt>
+                if (token.Value.IsCancellationRequested)
+                {
+                    <dd style="color:red; padding-top: 25px;">Stopping</dd>
+                }
+                else
+                {
+                    <dd style="padding-top: 25px;">
+                        <span style="color:green;">Running</span>
+                        @Html.ActionLink("Stop", "StopRunningProcess", "GameAdmin", new { processName = token.Key }, new { @class = "btn btn-default stop" })
+                    </dd>
+                }
             }
-        </dd>
-        <dt>Locales:</dt>
-        <dd>
-            @Model.Locales.Count().ToString() [ Use Zones Yo ]
-            @if (Model.Locales.Any(r => r.FitnessProblems))
+        </dl>
+    </div>
+    <div>
+        <h4>Communications</h4>
+        <dl class="dl-horizontal">
+            <dt>[@Model.WebsocketServers.Count().ToString()] WebSocket Ports</dt>
+            <dd>
+                @Html.ActionLink("Stop All", "StopAllWebsockets", "GameAdmin", new { @class = "btn btn-default caution" })
+            </dd>
+            @foreach (var server in Model.WebsocketServers)
             {
-                <span style="color:red;">DATA PROBLEMS</span>
-            }
-        </dd>
-        <dt>Rooms:</dt>
-        <dd>
-            @Model.Rooms.Count().ToString() [ Use Zones Yo ]
-            @if (Model.Rooms.Any(r => r.FitnessProblems))
-            {
-                <span style="color:red;">DATA PROBLEMS</span>
-            }
-        </dd>
-        <dt>NPCs:</dt>
-        <dd>
-            @Model.NPCs.Count().ToString() [
-            @Html.ActionLink("Manage", "Index", "NPC")
-            @Html.ActionLink("Add", "Add", "NPC") ]
-            @if (Model.NPCs.Any(r => r.FitnessProblems))
-            {
-                <span style="color:red;">DATA PROBLEMS</span>
-            }
-        </dd>
-        <dt>Inanimates:</dt>
-        <dd>
-            @Model.Inanimates.Count().ToString() [
-            @Html.ActionLink("Manage", "Index", "Inanimate")
-            @Html.ActionLink("Add", "Add", "Inanimate") ]
-            @if (Model.Inanimates.Any(r => r.FitnessProblems))
-            {
-                <span style="color:red;">DATA PROBLEMS</span>
-            }
-        </dd>
-    </dl>
-    <h4>Lookup Data</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>Help Files:</dt>
-        <dd>
-            @Model.HelpFiles.Count().ToString() [
-            @Html.ActionLink("Manage", "Index", "Help")
-            @Html.ActionLink("Add", "Add", "Help") ]
-            @if (Model.HelpFiles.Any(r => r.FitnessProblems))
-            {
-                <span style="color:red;">DATA PROBLEMS</span>
-            }
-        </dd>
-        <dt>Dimensional Models:</dt>
-        <dd>
-            @Model.DimensionalModels.Count().ToString() [
-            @Html.ActionLink("Manage", "Index", "DimensionalModel")
-            @Html.ActionLink("Add", "Add", "DimensionalModel") ]
-            @if (Model.DimensionalModels.Any(r => r.FitnessProblems))
-            {
-                <span style="color:red;">DATA PROBLEMS</span>
-            }
-        </dd>
-        <dt>Materials:</dt>
-        <dd>
-            @Model.Materials.Count().ToString() [
-            @Html.ActionLink("Manage", "Index", "Material")
-            @Html.ActionLink("Add", "Add", "Material") ]
-            @if (Model.Materials.Any(r => r.FitnessProblems))
-            {
-                <span style="color:red;">DATA PROBLEMS</span>
-            }
-        </dd>
-        <dt>Races:</dt>
-        <dd>
-            @Model.Races.Count().ToString() [
-            @Html.ActionLink("Manage", "Index", "Race")
-            @Html.ActionLink("Add", "Add", "Race") ]
-            @if (Model.Races.Any(r => r.FitnessProblems))
-            {
-                <span style="color:red;">DATA PROBLEMS</span>
-            }
-        </dd>
-        <dt>Constants:</dt>
-        <dd>
-            @Model.Constants.Count().ToString() [
-            @Html.ActionLink("Manage", "Index", "Constants")
-            @Html.ActionLink("Add", "Add", "Constants") ]
-            @if (Model.Constants.Any(r => r.FitnessProblems))
-            {
-                <span style="color:red;">DATA PROBLEMS</span>
-            }
-        </dd>
-        <dt>Flora:</dt>
-        <dd>
-            @Model.Flora.Count().ToString() [
-            @Html.ActionLink("Manage", "Index", "Flora")
-            @Html.ActionLink("Add", "Add", "Flora") ]
-            @if (Model.Flora.Any(r => r.FitnessProblems))
-            {
-                <span style="color:red;">DATA PROBLEMS</span>
-            }
-        </dd>
-        <dt>Fauna:</dt>
-        <dd>
-            @Model.Fauna.Count().ToString() [
-            @Html.ActionLink("Manage", "Index", "Fauna")
-            @Html.ActionLink("Add", "Add", "Fauna") ]
-            @if (Model.Fauna.Any(r => r.FitnessProblems))
-            {
-                <span style="color:red;">DATA PROBLEMS</span>
-            }
-        </dd>
-        <dt>Minerals:</dt>
-        <dd>
-            @Model.Minerals.Count().ToString() [
-            @Html.ActionLink("Manage", "Index", "Minerals")
-            @Html.ActionLink("Add", "Add", "Minerals") ]
-            @if (Model.Minerals.Any(r => r.FitnessProblems))
-            {
-                <span style="color:red;">DATA PROBLEMS</span>
-            }
-        </dd>
-    </dl>
-    <h4>Live Data</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>Players:</dt>
-        <dd>
-            @Model.LivePlayers [
-            @Html.ActionLink("Manage", "Index", "Player") ]
-        </dd>
-        <dt>Zones:</dt>
-        <dd>
-            @Model.LiveZones [ ]
-        </dd>
-        <dt>Locales:</dt>
-        <dd>
-            @Model.LiveLocales [ ]
-        </dd>
-        <dt>Rooms:</dt>
-        <dd>
-            @Model.LiveRooms [ ]
-        </dd>
-        <dt>Inanimates:</dt>
-        <dd>
-            @Model.LiveInanimates [ ]
-        </dd>
-        <dt>NPCs:</dt>
-        <dd>
-            @Model.LiveNPCs [ ]
-        </dd>
-    </dl>
-    <h4>World State</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>Do stuff</dt>
-        <dd>
-            @Html.ActionLink("Backup World", "BackupWorld", "GameAdmin", new { @class = "btn btn-default save" })
-            @Html.ActionLink("Suspend and Restore World", "RestoreWorld", "GameAdmin", new { @class = "btn btn-default caution" })
-        </dd>
-    </dl>
-
-    <h4>Live Processes</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>[@Model.LiveTaskTokens.Count().ToString()] Running Threads</dt>
-        <dd>
-            @Html.ActionLink("Stop All", "StopAllRunningProcess", "GameAdmin", new { @class = "btn btn-default caution" })
-        </dd>
-        @foreach (var token in Model.LiveTaskTokens)
-        {
-            <dt style="padding-top: 25px;">@token.Key</dt>
-            if (token.Value.IsCancellationRequested)
-            {
-                <dd style="color:red; padding-top: 25px;">Stopping</dd>
-            }
-            else
-            {
+                <dt style="padding-top: 25px;">@server.PortNumber.ToString()</dt>
                 <dd style="padding-top: 25px;">
-                    <span style="color:green;">Running</span>
-                    @Html.ActionLink("Stop", "StopRunningProcess", "GameAdmin", new { processName = token.Key }, new { @class = "btn btn-default stop" })
+                    <span style="color:green;">Listening</span>
+                    @Html.ActionLink("Stop", "StopWebSocket", "GameAdmin", new { portNumber = server.PortNumber }, new { @class = "btn btn-default stop" })
                 </dd>
             }
-        }
-    </dl>
-    <h4>Communications</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>[@Model.WebsocketServers.Count().ToString()] WebSocket Ports</dt>
-        <dd>
-            @Html.ActionLink("Stop All", "StopAllWebsockets", "GameAdmin", new { @class = "btn btn-default caution" })
-        </dd>
-        @foreach (var server in Model.WebsocketServers)
-        {
-            <dt style="padding-top: 25px;">@server.PortNumber.ToString()</dt>
-            <dd style="padding-top: 25px;">
-                <span style="color:green;">Listening</span>
-                @Html.ActionLink("Stop", "StopWebSocket", "GameAdmin", new { portNumber = server.PortNumber }, new { @class = "btn btn-default stop" })
-            </dd>
-        }
-    </dl>
+        </dl>
+    </div>
 </div>
