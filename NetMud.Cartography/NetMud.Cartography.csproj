@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cartographer.cs" />
+    <Compile Include="MapRenderMode.cs" />
     <Compile Include="ProceduralGeneration\ZoneGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rendering.cs" />

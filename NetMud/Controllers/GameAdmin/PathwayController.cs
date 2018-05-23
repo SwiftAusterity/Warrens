@@ -235,8 +235,8 @@ namespace NetMud.Controllers.GameAdmin
             {
                 Name = vModel.Name,
                 DegreesFromNorth = vModel.DegreesFromNorth,
-                Origin = vModel.ValidRooms.FirstOrDefault(room => room.ID.Equals(vModel.OriginID)),
-                Destination = vModel.ValidRooms.FirstOrDefault(room => room.ID.Equals(vModel.OriginID)),
+                Origin = BackingDataCache.Get<IRoomData>(vModel.OriginID),
+                Destination = BackingDataCache.Get<IRoomData>(vModel.DestinationID),
             };
 
             var materialParts = new Dictionary<string, IMaterial>();
@@ -348,8 +348,8 @@ namespace NetMud.Controllers.GameAdmin
 
             obj.Name = vModel.Name;
             obj.DegreesFromNorth = vModel.DegreesFromNorth;
-            obj.Origin = vModel.ValidRooms.FirstOrDefault(room => room.ID.Equals(vModel.OriginID));
-            obj.Destination = vModel.ValidRooms.FirstOrDefault(room => room.ID.Equals(vModel.DestinationID));
+            obj.Origin = BackingDataCache.Get<IRoomData>(vModel.OriginID);
+            obj.Destination = BackingDataCache.Get<IRoomData>(vModel.DestinationID);
 
             var materialParts = new Dictionary<string, IMaterial>();
             if (vModel.ModelPartNames != null)

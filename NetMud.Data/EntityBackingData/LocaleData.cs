@@ -129,7 +129,7 @@ namespace NetMud.Data.EntityBackingData
         /// <returns>The flattened map</returns>
         public string RenderMap(int zIndex, bool forAdmin = false)
         {
-            return Rendering.RenderRadiusMap(this, 10, zIndex, forAdmin);
+            return Rendering.RenderRadiusMap(this, 10, zIndex, forAdmin).Item2;
         }
 
         /// <summary>

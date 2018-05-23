@@ -48,14 +48,16 @@ namespace NetMud.Controllers
 
         [HttpGet]
         [Route("api/AdminDataApi/RenderLocaleMapForEdit/{id}/{zIndex}", Name = "RenderLocaleMapForEdit")]
-        public string RenderLocaleMapForEdit(long id, int zIndex)
+        public string[] RenderLocaleMapForEdit(long id, int zIndex)
         {
             var locale = BackingDataCache.Get<ILocaleData>(id);
 
             if (locale == null)
-                return "Invalid inputs.";
+                return new string[] { "Invalid inputs." };
 
-            return Rendering.RenderRadiusMap(locale, 10, zIndex);
+            var maps = Rendering.RenderRadiusMap(locale, 10, zIndex);
+
+            return new string[] { maps.Item1, maps.Item2, maps.Item3 };
         }
     }
 }
