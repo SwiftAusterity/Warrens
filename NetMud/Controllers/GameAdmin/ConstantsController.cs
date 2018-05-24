@@ -146,7 +146,7 @@ namespace NetMud.Controllers.GameAdmin
                 message = "Error; Creation failed.";
             else
             {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - AddConstantsFile[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                LoggingUtility.LogAdminCommandUsage("*WEB* - AddConstantsFile[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 message = "Creation Successful.";
             }
 
@@ -227,7 +227,7 @@ namespace NetMud.Controllers.GameAdmin
 
             if (obj.Save())
             {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - EditConstantsFile[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                LoggingUtility.LogAdminCommandUsage("*WEB* - EditConstantsFile[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 message = "Edit Successful.";
             }
             else

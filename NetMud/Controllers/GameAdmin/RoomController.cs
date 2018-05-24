@@ -132,7 +132,7 @@ namespace NetMud.Controllers.GameAdmin
                     message = "Error; Creation failed.";
                 else
                 {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddRoomData[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddRoomData[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 }
             }
             else
@@ -197,7 +197,7 @@ namespace NetMud.Controllers.GameAdmin
 
                 if (obj.Save())
                 {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - EditRoomData[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - EditRoomData[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 }
                 else
                     message = "Error; Edit failed.";

@@ -72,7 +72,7 @@ namespace NetMud.Data.Game
 
             Claimable = false;
 
-            DataTemplateId = zone.ID;
+            DataTemplateId = zone.Id;
 
             GetFromWorldOrSpawn();
         }

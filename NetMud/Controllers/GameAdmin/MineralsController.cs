@@ -155,7 +155,7 @@ namespace NetMud.Controllers.GameAdmin
                     message = "Error; Creation failed.";
                 else
                 {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddMinerals[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddMinerals[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Creation Successful.";
                 }
             }
@@ -171,7 +171,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
                 ValidMaterials = BackingDataCache.GetAll<IMaterial>(),
-                ValidMinerals = BackingDataCache.GetAll<IMineral>().Where(m => m.ID != id),
+                ValidMinerals = BackingDataCache.GetAll<IMineral>().Where(m => m.Id != id),
                 ValidInanimateDatas = BackingDataCache.GetAll<IInanimateData>()
             };
 
@@ -197,8 +197,8 @@ namespace NetMud.Controllers.GameAdmin
             vModel.TemperatureRangeLow = obj.TemperatureRange.Item1;
             vModel.HumidityRangeHigh = obj.HumidityRange.Item2;
             vModel.HumidityRangeLow = obj.HumidityRange.Item1;
-            vModel.Rock = obj.Rock.ID;
-            vModel.Dirt = obj.Dirt.ID;
+            vModel.Rock = obj.Rock.Id;
+            vModel.Dirt = obj.Dirt.Id;
 
             return View("~/Views/GameAdmin/Minerals/Edit.cshtml", vModel);
         }
@@ -264,7 +264,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 if (obj.Save())
                 {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - EditMinerals[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - EditMinerals[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Edit Successful.";
                 }
                 else

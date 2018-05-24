@@ -20,7 +20,7 @@ namespace NetMud.DataAccess.Cache
         /// <param name="objectToCache">the entity to cache</param>
         public static void Add(ICharacter objectToCache)
         {
-            var cacheKey = new PlayerDataCacheKey(typeof(ICharacter), objectToCache.AccountHandle, objectToCache.ID);
+            var cacheKey = new PlayerDataCacheKey(typeof(ICharacter), objectToCache.AccountHandle, objectToCache.Id);
 
             BackingCache.Add(objectToCache, cacheKey);
         }
@@ -106,7 +106,7 @@ namespace NetMud.DataAccess.Cache
         public string AccountHandle { get; set; }
 
         /// <summary>
-        /// The character object's ID
+        /// The character object's Id
         /// </summary>
         public long CharacterId { get; set; }
 

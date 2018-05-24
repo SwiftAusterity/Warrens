@@ -1,1 +1,1 @@
-{"EntityClass":"NetMud.Data.Game.Intelligence, NetMud.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null","Gender":"Male","SurName":"Errant","RaceData":1,"Affects":[],"ID":2,"Created":"2015-08-21T18:56:33.487","LastRevised":"2015-08-21T18:56:33.487","Name":"Knight"}
+{"EntityClass":"NetMud.Data.Game.Intelligence, NetMud.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null","Gender":"Male","SurName":"Errant","RaceData":1,"Affects":[],"Id":2,"Created":"2015-08-21T18:56:33.487","LastRevised":"2015-08-21T18:56:33.487","Name":"Knight"}

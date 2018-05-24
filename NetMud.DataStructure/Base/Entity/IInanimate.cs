@@ -10,7 +10,7 @@ namespace NetMud.DataStructure.Base.Entity
     public interface IInanimate : IActor, ILocation, ISpawnAsMultiple
     {
         /// <summary>
-        /// Last known location ID for the object in the real world
+        /// Last known location Id for the object in the real world
         /// </summary>
         long LastKnownLocation { get; set; }
 

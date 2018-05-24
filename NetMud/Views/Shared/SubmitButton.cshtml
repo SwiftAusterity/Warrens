@@ -1,7 +1,11 @@
-﻿@model string
+﻿@model NetMud.Models.SubmitButtonModel
 
-<div class="form-group" style="width:100%; padding: 15px;">
+<div class="form-group row submitButtons">
     <div>
-        <input type="submit" value="@Model" class="btn btn-default save" />
+        <input type="submit" value="@Model.SubmitName" class="btn btn-default save" />
+        @if (Model.IncludeCancel)
+        {
+            @Html.ActionLink(Model.CancelName, Model.ReturnAction, Model.ReturnController, new { @class = "btn btn-default cancel" })
+        }
     </div>
 </div>

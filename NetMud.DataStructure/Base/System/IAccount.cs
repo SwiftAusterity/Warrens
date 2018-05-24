@@ -24,7 +24,7 @@ namespace NetMud.DataStructure.Base.System
         IList<ICharacter> Characters { get; set; }
 
         /// <summary>
-        /// ID for currently selected character
+        /// Id for currently selected character
         /// </summary>
         long CurrentlySelectedCharacter { get; set; }
 

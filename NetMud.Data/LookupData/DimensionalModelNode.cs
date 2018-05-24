@@ -43,7 +43,7 @@ namespace NetMud.Data.LookupData
             }
             set
             {
-                _compositionId = value.ID;
+                _compositionId = value.Id;
             }
         }
     }

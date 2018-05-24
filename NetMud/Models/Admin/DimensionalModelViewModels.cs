@@ -67,17 +67,17 @@ namespace NetMud.Models.Admin
         public ApplicationUser authedUser { get; set; }
 
         [Range(1, 1200, ErrorMessage = "The {0} must be between {2} and {1}.")]
-        [Display(Name = "Length (inches)")]
+        [Display(Name = "Length (in)")]
         [DataType(DataType.Text)]
         public int DimensionalModelLength { get; set; }
 
         [Range(1, 1200, ErrorMessage = "The {0} must be between {2} and {1}.")]
-        [Display(Name = "Height (inches)")]
+        [Display(Name = "Height (in)")]
         [DataType(DataType.Text)]
         public int DimensionalModelHeight { get; set; }
 
         [Range(1, 1200, ErrorMessage = "The {0} must be between {2} and {1}.")]
-        [Display(Name = "Width (inches)")]
+        [Display(Name = "Width (in)")]
         [DataType(DataType.Text)]
         public int DimensionalModelWidth { get; set; }
 

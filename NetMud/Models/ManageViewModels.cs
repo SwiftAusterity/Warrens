@@ -46,6 +46,7 @@ namespace NetMud.Models
 
         public IEnumerable<StaffRank> ValidRoles { get; set; }
 
+        [Display(Name = "Chosen Role")]
         public string ChosenRole { get; set; }
     }
 

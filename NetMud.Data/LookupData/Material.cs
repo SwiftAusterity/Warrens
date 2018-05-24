@@ -98,7 +98,7 @@ namespace NetMud.Data.LookupData
                 if (value == null)
                     return;
 
-                _composition = value.ToDictionary(k => k.Key.ID, k => k.Value);
+                _composition = value.ToDictionary(k => k.Key.Id, k => k.Value);
             }
         }
 

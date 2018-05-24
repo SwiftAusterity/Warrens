@@ -2,56 +2,64 @@
 
 @{
     ViewBag.Title = "Add New Pathway With New Room";
-
-    <section id="newPathwayWithRoomForm">
-        @using (Html.BeginForm("AddWithRoom", "Pathway", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-        {
-            @Html.AntiForgeryToken()
-            <hr />
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            <div class="form-group three-column">
-                @Html.EditorFor(model => model.Name)
-                @Html.HiddenFor(m => m.OriginID)
-                <label id="lblOrigin" class="control-label">Origin:</label>
-                <div style="padding-top: 7px;">@Model.Origin.Name</div>
-                <label id="lblDestination" class="control-label">Destination:</label>
-                <div style="padding-top: 7px;">NEW ROOM</div>
-            </div>
-            <div class="form-group two-column">
-                @Html.EditorFor(model => model.DegreesFromNorth)
-            </div>
-
-            @Html.Partial("TwoDimensionalEntityEditor", Model)
-
-            <h3>New Room</h3>
-            <hr />
-            <div class="form-group three-column">
-                @Html.EditorFor(e => e.RoomName)
-                @Html.HiddenFor(m => m.LocaleId)
-                <label for="Locale">Locale</label>
-                <input type="text" id="Locale" name="Locale" disabled="disabled" title="Locale" value="@Model.Locale.Name" />
-                @Html.LabelFor(m => m.Medium, new { @class = "control-label" })
-                <div>
-                    @Html.DropDownList("Medium", Model.ValidMaterials.Select(rl =>
-                             new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
-                      , htmlAttributes: new { id = "Medium", @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.Medium, "", new { @class = "text-danger" })
-                </div>
-            </div>
-            <div class="form-group three-column">
-                @Html.EditorFor(e => e.RoomDimensionalModelHeight)
-                @Html.EditorFor(e => e.RoomDimensionalModelWidth)
-                @Html.EditorFor(e => e.RoomDimensionalModelLength)
-            </div>
-            <div class="form-group two-column">
-                @Html.EditorFor(e => e.RoomDimensionalModelVacuity)
-                @Html.EditorFor(e => e.RoomDimensionalModelCavitation)
-            </div>
-
-            @Html.Partial("SubmitButton", "Create")
-        }
-    </section>
 }
+
+<section id="newPathwayWithRoomForm">
+    @using (Html.BeginForm("AddWithRoom", "Pathway", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group row">
+            @Html.EditorFor(model => model.Name)
+            @Html.HiddenFor(m => m.OriginID)
+            <label id="lblOrigin" class="col-sm-2 col-form-label">Origin:</label>
+            <div>@Model.Origin.Name</div>
+            <label id="lblDestination" class="col-sm-2 col-form-label">Destination:</label>
+            <div>NEW ROOM</div>
+        </div>
+        <div class="form-group row">
+            @Html.EditorFor(model => model.DegreesFromNorth)
+        </div>
+
+        @Html.Partial("TwoDimensionalEntityEditor", Model)
+
+        <div class="clearfix"></div>
+        <h3>New Room</h3>
+        <hr />
+        <div class="form-group row">
+            @Html.HiddenFor(m => m.LocaleId)
+            <label for="Locale" class="col-sm-2 col-form-label">Locale</label>
+            <div class="col-md-9">
+                <input type="text" id="Locale" name="Locale" disabled="disabled" title="Locale" value="@Model.Locale.Name" />
+            </div>
+        </div>
+        <div class="form-group row">
+            @Html.EditorFor(e => e.RoomName, new { columnCount = 2 })
+            @Html.LabelFor(m => m.Medium, new { @class = "col-sm-2 col-form-label" })
+            <div class="col-md-4">
+                @Html.DropDownList("Medium", Model.ValidMaterials.Select(rl => new SelectListItem() { Text = rl.Name, Value = rl.Id.ToString() })
+                  , htmlAttributes: new { id = "Medium", @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Medium, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <h4>Dimensional Properties</h4>
+        <hr />
+        <div class="form-group row">
+            @Html.EditorFor(e => e.RoomDimensionalModelHeight, new { columnCount = 3 })
+            @Html.EditorFor(e => e.RoomDimensionalModelWidth, new { columnCount = 3 })
+            @Html.EditorFor(e => e.RoomDimensionalModelLength, new { columnCount = 3 })
+        </div>
+        <div class="form-group row">
+            @Html.EditorFor(e => e.RoomDimensionalModelVacuity, new { columnCount = 2 })
+            @Html.EditorFor(e => e.RoomDimensionalModelCavitation, new { columnCount = 2 })
+        </div>
+        <div class="clearfix"></div>
+
+        @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Zone", IncludeCancel = true })
+    }
+</section>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

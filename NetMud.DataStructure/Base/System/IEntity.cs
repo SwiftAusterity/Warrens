@@ -16,7 +16,7 @@ namespace NetMud.DataStructure.Base.System
         string[] Keywords { get; set; }
 
         /// <summary>
-        /// The ID for the data template
+        /// The Id for the data template
         /// </summary>
         long DataTemplateId { get; set; }
 

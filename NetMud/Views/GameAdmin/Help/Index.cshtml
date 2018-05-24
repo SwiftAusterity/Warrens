@@ -2,57 +2,26 @@
 @{
     ViewBag.Title = "Manage Help Files";
 
-    @Html.Partial("AddContentLink")
-
-    if (Model.Items.Count() > 0)
-    {
-        @Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model, "Help"))
-
-        using (Html.BeginForm("Remove", "Help"))
-        {
-            @Html.AntiForgeryToken()
-            <table class="table">
-                <thead>
-                    <tr>
-                        <td>
-                            ID
-                        </td>
-                        <td>
-                            Name
-                        </td>
-                        <td>
-                            Remove
-                        </td>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var obj in Model.CurrentPageOfItems)
-                    {
-                        <tr>
-                            <td>@Html.ActionLink(@obj.ID.ToString(), "Edit", new { id = obj.ID })</td>
-                            <td>
-                                @if (obj.FitnessProblems)
-                                {
-                                    <span style="color:red;" title="@String.Join(", ", obj.FitnessReport())">@obj.Name</span>
-                                }
-                                else
-                                {
-                                    @obj.Name
-                                }
-                            </td>
-                            <td>
-                                <div>
-                                    @Html.Partial("RemoveDataItem", @obj.ID)
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
-
-    }
+    var linkText = Html.ActionLink("99999999", "Edit", new { id = 99999999 }).ToString();
+    var tableColumns = new Dictionary<string, Func<dynamic, string>>();
+    tableColumns.Add("Id", obj => linkText.Replace("99999999", obj.Id.ToString()));
+    tableColumns.Add("Name", obj => obj.FitnessProblems ? string.Format("<span style='color:red;' title='{0}'>{1}</span>", String.Join(", ", obj.FitnessReport()), obj.Name) : obj.Name);
 }
+
+@Html.Partial("AddContentLink")
+
+@if (Model.Items.Count() > 0)
+{
+    @Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model, "Help"))
+
+    using (Html.BeginForm("Remove", "Help"))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Name = "Help Files", Columns = tableColumns, Values = Model.CurrentPageOfItems.OrderBy(obj => obj.Id) })
+    }
+
+}
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

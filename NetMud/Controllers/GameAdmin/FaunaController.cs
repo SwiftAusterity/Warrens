@@ -131,7 +131,7 @@ namespace NetMud.Controllers.GameAdmin
                     message = "Error; Creation failed.";
                 else
                 {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddFauna[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddFauna[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Creation Successful.";
                 }
             }
@@ -174,7 +174,7 @@ namespace NetMud.Controllers.GameAdmin
             vModel.PopulationHardCap = obj.PopulationHardCap;
             vModel.AmountMultiplier = obj.AmountMultiplier;
             vModel.FemaleRatio = obj.FemaleRatio;
-            vModel.Race = obj.Race.ID;
+            vModel.Race = obj.Race.Id;
             vModel.OccursIn = obj.OccursIn.ToArray();
 
             return View("~/Views/GameAdmin/Fauna/Edit.cshtml", vModel);
@@ -218,7 +218,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 if (obj.Save())
                 {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - EditFauna[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - EditFauna[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Edit Successful.";
                 }
                 else

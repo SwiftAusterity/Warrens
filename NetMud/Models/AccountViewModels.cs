@@ -7,7 +7,7 @@ namespace NetMud.Models
     {
         [Required]
         [Display(Name = "Email")]
-        [DataType(DataType.Text)]
+        [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
     }
 
@@ -56,7 +56,7 @@ namespace NetMud.Models
         [Required]
         [Display(Name = "Email")]
         [EmailAddress]
-        [DataType(DataType.Text)]
+        [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
 
         [Required]
@@ -74,7 +74,7 @@ namespace NetMud.Models
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
-        [DataType(DataType.Text)]
+        [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
 
         [Required]
@@ -100,7 +100,7 @@ namespace NetMud.Models
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
-        [DataType(DataType.Text)]
+        [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
 
         [Required]
@@ -123,7 +123,7 @@ namespace NetMud.Models
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
-        [DataType(DataType.Text)]
+        [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
     }
 }

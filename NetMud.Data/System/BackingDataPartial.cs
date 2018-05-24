@@ -17,10 +17,10 @@ namespace NetMud.Data.System
     {
         #region Data ID Parameters
         /// <summary>
-        /// Numerical iterative ID in the db
+        /// Numerical iterative Id in the db
         /// </summary>
-        [LongDataIntegrity("ID is less than zero", -1)]
-        public long ID { get; set; }
+        [LongDataIntegrity("Id is less than zero", -1)]
+        public long Id { get; set; }
 
         /// <summary>
         /// When this was first created in the db
@@ -80,7 +80,7 @@ namespace NetMud.Data.System
         /// <summary>
         /// Add it to the cache and save it to the file system
         /// </summary>
-        /// <returns>the object with ID and other db fields set</returns>
+        /// <returns>the object with Id and other db fields set</returns>
         public virtual IData Create()
         {
             var accessor = new DataAccess.FileSystem.BackingData();
@@ -92,7 +92,7 @@ namespace NetMud.Data.System
                 else
                 {
 
-                    //reset this guy's ID to the next one in the list
+                    //reset this guy's Id to the next one in the list
                     GetNextId();
                     Created = DateTime.Now;
 
@@ -120,7 +120,7 @@ namespace NetMud.Data.System
             try
             {
                 //Remove from cache first
-                BackingDataCache.Remove(new BackingDataCacheKey(GetType(), ID));
+                BackingDataCache.Remove(new BackingDataCacheKey(GetType(), Id));
 
                 //Remove it from the file system.
                 accessor.ArchiveEntity(this);
@@ -164,7 +164,7 @@ namespace NetMud.Data.System
         }
 
         /// <summary>
-        /// Grabs the next ID in the chain of all objects of this type.
+        /// Grabs the next Id in the chain of all objects of this type.
         /// </summary>
         internal void GetNextId()
         {
@@ -172,9 +172,9 @@ namespace NetMud.Data.System
 
             //Zero ordered list
             if (allOfMe.Count() > 0)
-                ID = allOfMe.Max(dp => dp.ID) + 1;
+                Id = allOfMe.Max(dp => dp.Id) + 1;
             else
-                ID = 0;
+                Id = 0;
         }
         #endregion
 
@@ -196,7 +196,7 @@ namespace NetMud.Data.System
                     if (other.GetType() != GetType())
                         return -1;
 
-                    if (other.ID.Equals(ID))
+                    if (other.Id.Equals(Id))
                         return 1;
 
                     return 0;
@@ -221,7 +221,7 @@ namespace NetMud.Data.System
             {
                 try
                 {
-                    return other.GetType() == GetType() && other.ID.Equals(ID);
+                    return other.GetType() == GetType() && other.Id.Equals(Id);
                 }
                 catch (Exception ex)
                 {

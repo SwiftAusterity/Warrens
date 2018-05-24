@@ -63,7 +63,7 @@ namespace NetMud.Cartography
                 if(!forAdmin || locale == null || locale.Rooms().Count() > 0)
                     return string.Empty;
 
-                return string.Format("<a href='#' class='addData pathway AdminAddInitialRoom' localeId='{0}' title='New Room'>Add Initial Room</a>", locale.ID);
+                return string.Format("<a href='#' class='addData pathway AdminAddInitialRoom' localeId='{0}' title='New Room'>Add Initial Room</a>", locale.Id);
             }
 
             //1. Get world map
@@ -163,28 +163,28 @@ namespace NetMud.Cartography
                     //The room
                     expandedMap[expandedRoomX, expandedRoomY] = RenderRoomToAscii(roomData, centerRoom.Equals(roomData), forAdmin);
 
-                    expandedMap[expandedRoomX - 1, expandedRoomY + 1] = RenderPathwayToAsciiForModals(nwPath, roomData.ID, MovementDirectionType.NorthWest
+                    expandedMap[expandedRoomX - 1, expandedRoomY + 1] = RenderPathwayToAsciiForModals(nwPath, roomData.Id, MovementDirectionType.NorthWest
                                                                                         , Cartographer.GetRoomInDirection(roomData, MovementDirectionType.NorthWest), forAdmin);
 
-                    expandedMap[expandedRoomX, expandedRoomY + 1] = RenderPathwayToAsciiForModals(nPath, roomData.ID, MovementDirectionType.North
+                    expandedMap[expandedRoomX, expandedRoomY + 1] = RenderPathwayToAsciiForModals(nPath, roomData.Id, MovementDirectionType.North
                                                                                         , Cartographer.GetRoomInDirection(roomData, MovementDirectionType.North), forAdmin);
 
-                    expandedMap[expandedRoomX + 1, expandedRoomY + 1] = RenderPathwayToAsciiForModals(nePath, roomData.ID, MovementDirectionType.NorthEast
+                    expandedMap[expandedRoomX + 1, expandedRoomY + 1] = RenderPathwayToAsciiForModals(nePath, roomData.Id, MovementDirectionType.NorthEast
                                                                                         , Cartographer.GetRoomInDirection(roomData, MovementDirectionType.NorthEast), forAdmin);
 
-                    expandedMap[expandedRoomX - 1, expandedRoomY] = RenderPathwayToAsciiForModals(wPath, roomData.ID, MovementDirectionType.West
+                    expandedMap[expandedRoomX - 1, expandedRoomY] = RenderPathwayToAsciiForModals(wPath, roomData.Id, MovementDirectionType.West
                                                                                         , Cartographer.GetRoomInDirection(roomData, MovementDirectionType.West), forAdmin);
 
-                    expandedMap[expandedRoomX + 1, expandedRoomY] = RenderPathwayToAsciiForModals(ePath, roomData.ID, MovementDirectionType.East
+                    expandedMap[expandedRoomX + 1, expandedRoomY] = RenderPathwayToAsciiForModals(ePath, roomData.Id, MovementDirectionType.East
                                                                                         , Cartographer.GetRoomInDirection(roomData, MovementDirectionType.East), forAdmin);
 
-                    expandedMap[expandedRoomX - 1, expandedRoomY - 1] = RenderPathwayToAsciiForModals(swPath, roomData.ID, MovementDirectionType.SouthWest
+                    expandedMap[expandedRoomX - 1, expandedRoomY - 1] = RenderPathwayToAsciiForModals(swPath, roomData.Id, MovementDirectionType.SouthWest
                                                                                         , Cartographer.GetRoomInDirection(roomData, MovementDirectionType.SouthWest), forAdmin);
 
-                    expandedMap[expandedRoomX, expandedRoomY - 1] = RenderPathwayToAsciiForModals(sPath, roomData.ID, MovementDirectionType.South
+                    expandedMap[expandedRoomX, expandedRoomY - 1] = RenderPathwayToAsciiForModals(sPath, roomData.Id, MovementDirectionType.South
                                                                                         , Cartographer.GetRoomInDirection(roomData, MovementDirectionType.South), forAdmin);
 
-                    expandedMap[expandedRoomX + 1, expandedRoomY - 1] = RenderPathwayToAsciiForModals(sePath, roomData.ID, MovementDirectionType.SouthEast
+                    expandedMap[expandedRoomX + 1, expandedRoomY - 1] = RenderPathwayToAsciiForModals(sePath, roomData.Id, MovementDirectionType.SouthEast
                                                                                         , Cartographer.GetRoomInDirection(roomData, MovementDirectionType.SouthEast), forAdmin);
 
                     break;
@@ -200,31 +200,31 @@ namespace NetMud.Cartography
                     var upwPath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.UpWest);
 
                     //The room
-                    expandedMap[expandedRoomX, expandedRoomY] = RenderPathwayToAsciiForModals(upPath, roomData.ID, MovementDirectionType.Up
+                    expandedMap[expandedRoomX, expandedRoomY] = RenderPathwayToAsciiForModals(upPath, roomData.Id, MovementDirectionType.Up
                                                                                         , Cartographer.GetRoomInDirection(roomData, MovementDirectionType.Up), forAdmin);
 
-                    expandedMap[expandedRoomX - 1, expandedRoomY + 1] = RenderPathwayToAsciiForModals(upnwPath, roomData.ID, MovementDirectionType.UpNorthWest
+                    expandedMap[expandedRoomX - 1, expandedRoomY + 1] = RenderPathwayToAsciiForModals(upnwPath, roomData.Id, MovementDirectionType.UpNorthWest
                                                                                         , Cartographer.GetRoomInDirection(roomData, MovementDirectionType.UpNorthWest), forAdmin);
 
-                    expandedMap[expandedRoomX, expandedRoomY + 1] = RenderPathwayToAsciiForModals(upnPath, roomData.ID, MovementDirectionType.UpNorth
+                    expandedMap[expandedRoomX, expandedRoomY + 1] = RenderPathwayToAsciiForModals(upnPath, roomData.Id, MovementDirectionType.UpNorth
                                                                                         , Cartographer.GetRoomInDirection(roomData, MovementDirectionType.UpNorth), forAdmin);
 
-                    expandedMap[expandedRoomX + 1, expandedRoomY + 1] = RenderPathwayToAsciiForModals(upnePath, roomData.ID, MovementDirectionType.UpNorthEast
+                    expandedMap[expandedRoomX + 1, expandedRoomY + 1] = RenderPathwayToAsciiForModals(upnePath, roomData.Id, MovementDirectionType.UpNorthEast
                                                                                         , Cartographer.GetRoomInDirection(roomData, MovementDirectionType.UpNorthEast), forAdmin);
 
-                    expandedMap[expandedRoomX - 1, expandedRoomY] = RenderPathwayToAsciiForModals(upwPath, roomData.ID, MovementDirectionType.UpWest
+                    expandedMap[expandedRoomX - 1, expandedRoomY] = RenderPathwayToAsciiForModals(upwPath, roomData.Id, MovementDirectionType.UpWest
                                                                                         , Cartographer.GetRoomInDirection(roomData, MovementDirectionType.UpWest), forAdmin);
 
-                    expandedMap[expandedRoomX + 1, expandedRoomY] = RenderPathwayToAsciiForModals(upePath, roomData.ID, MovementDirectionType.UpEast
+                    expandedMap[expandedRoomX + 1, expandedRoomY] = RenderPathwayToAsciiForModals(upePath, roomData.Id, MovementDirectionType.UpEast
                                                                                         , Cartographer.GetRoomInDirection(roomData, MovementDirectionType.UpEast), forAdmin);
 
-                    expandedMap[expandedRoomX - 1, expandedRoomY - 1] = RenderPathwayToAsciiForModals(upswPath, roomData.ID, MovementDirectionType.UpSouthWest
+                    expandedMap[expandedRoomX - 1, expandedRoomY - 1] = RenderPathwayToAsciiForModals(upswPath, roomData.Id, MovementDirectionType.UpSouthWest
                                                                                         , Cartographer.GetRoomInDirection(roomData, MovementDirectionType.UpSouthWest), forAdmin);
 
-                    expandedMap[expandedRoomX, expandedRoomY - 1] = RenderPathwayToAsciiForModals(upsPath, roomData.ID, MovementDirectionType.UpSouth
+                    expandedMap[expandedRoomX, expandedRoomY - 1] = RenderPathwayToAsciiForModals(upsPath, roomData.Id, MovementDirectionType.UpSouth
                                                                                         , Cartographer.GetRoomInDirection(roomData, MovementDirectionType.UpSouth), forAdmin);
 
-                    expandedMap[expandedRoomX + 1, expandedRoomY - 1] = RenderPathwayToAsciiForModals(upsePath, roomData.ID, MovementDirectionType.UpSouthEast
+                    expandedMap[expandedRoomX + 1, expandedRoomY - 1] = RenderPathwayToAsciiForModals(upsePath, roomData.Id, MovementDirectionType.UpSouthEast
                                                                                         , Cartographer.GetRoomInDirection(roomData, MovementDirectionType.UpSouthEast), forAdmin);
 
                     break;
@@ -240,31 +240,31 @@ namespace NetMud.Cartography
                     var downwPath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.DownWest);
 
                     //The room
-                    expandedMap[expandedRoomX, expandedRoomY] = RenderPathwayToAsciiForModals(downPath, roomData.ID, MovementDirectionType.Down
+                    expandedMap[expandedRoomX, expandedRoomY] = RenderPathwayToAsciiForModals(downPath, roomData.Id, MovementDirectionType.Down
                                                                                         , Cartographer.GetRoomInDirection(roomData, MovementDirectionType.Down), forAdmin);
 
-                    expandedMap[expandedRoomX - 1, expandedRoomY + 1] = RenderPathwayToAsciiForModals(downnwPath, roomData.ID, MovementDirectionType.DownNorthWest
+                    expandedMap[expandedRoomX - 1, expandedRoomY + 1] = RenderPathwayToAsciiForModals(downnwPath, roomData.Id, MovementDirectionType.DownNorthWest
                                                                                         , Cartographer.GetRoomInDirection(roomData, MovementDirectionType.DownNorthWest), forAdmin);
 
-                    expandedMap[expandedRoomX, expandedRoomY + 1] = RenderPathwayToAsciiForModals(downnPath, roomData.ID, MovementDirectionType.DownNorth
+                    expandedMap[expandedRoomX, expandedRoomY + 1] = RenderPathwayToAsciiForModals(downnPath, roomData.Id, MovementDirectionType.DownNorth
                                                                                         , Cartographer.GetRoomInDirection(roomData, MovementDirectionType.DownNorth), forAdmin);
 
-                    expandedMap[expandedRoomX + 1, expandedRoomY + 1] = RenderPathwayToAsciiForModals(downnePath, roomData.ID, MovementDirectionType.DownNorthEast
+                    expandedMap[expandedRoomX + 1, expandedRoomY + 1] = RenderPathwayToAsciiForModals(downnePath, roomData.Id, MovementDirectionType.DownNorthEast
                                                                                         , Cartographer.GetRoomInDirection(roomData, MovementDirectionType.DownNorthEast), forAdmin);
 
-                    expandedMap[expandedRoomX - 1, expandedRoomY] = RenderPathwayToAsciiForModals(downwPath, roomData.ID, MovementDirectionType.DownWest
+                    expandedMap[expandedRoomX - 1, expandedRoomY] = RenderPathwayToAsciiForModals(downwPath, roomData.Id, MovementDirectionType.DownWest
                                                                                         , Cartographer.GetRoomInDirection(roomData, MovementDirectionType.DownWest), forAdmin);
 
-                    expandedMap[expandedRoomX + 1, expandedRoomY] = RenderPathwayToAsciiForModals(downePath, roomData.ID, MovementDirectionType.DownEast
+                    expandedMap[expandedRoomX + 1, expandedRoomY] = RenderPathwayToAsciiForModals(downePath, roomData.Id, MovementDirectionType.DownEast
                                                                                         , Cartographer.GetRoomInDirection(roomData, MovementDirectionType.DownEast), forAdmin);
 
-                    expandedMap[expandedRoomX - 1, expandedRoomY - 1] = RenderPathwayToAsciiForModals(downswPath, roomData.ID, MovementDirectionType.DownSouthWest
+                    expandedMap[expandedRoomX - 1, expandedRoomY - 1] = RenderPathwayToAsciiForModals(downswPath, roomData.Id, MovementDirectionType.DownSouthWest
                                                                                         , Cartographer.GetRoomInDirection(roomData, MovementDirectionType.DownSouthWest), forAdmin);
 
-                    expandedMap[expandedRoomX, expandedRoomY - 1] = RenderPathwayToAsciiForModals(downsPath, roomData.ID, MovementDirectionType.DownSouth
+                    expandedMap[expandedRoomX, expandedRoomY - 1] = RenderPathwayToAsciiForModals(downsPath, roomData.Id, MovementDirectionType.DownSouth
                                                                                         , Cartographer.GetRoomInDirection(roomData, MovementDirectionType.DownSouth), forAdmin);
 
-                    expandedMap[expandedRoomX + 1, expandedRoomY - 1] = RenderPathwayToAsciiForModals(downsePath, roomData.ID, MovementDirectionType.DownSouthEast
+                    expandedMap[expandedRoomX + 1, expandedRoomY - 1] = RenderPathwayToAsciiForModals(downsePath, roomData.Id, MovementDirectionType.DownSouthEast
                                                                                         , Cartographer.GetRoomInDirection(roomData, MovementDirectionType.DownSouthEast), forAdmin);
 
                     break;
@@ -289,13 +289,13 @@ namespace NetMud.Cartography
             if (destination != null)
             {
                 destinationName = destination.Name;
-                destinationId = destination.ID;
+                destinationId = destination.Id;
             }
 
             if (path != null)
             {
                 returnValue = String.Format("<a href='#' class='editData pathway AdminEditPathway' pathwayId='{0}' fromRoom='{3}' toRoom='{4}' title='Edit - {5} path to {1}' data-id='{0}'>{2}</a>",
-                    path.ID, destinationName, asciiCharacter, originId, destinationId, directionType.ToString());
+                    path.Id, destinationName, asciiCharacter, originId, destinationId, directionType.ToString());
             }
             else
             {
@@ -316,7 +316,7 @@ namespace NetMud.Cartography
             var character = centered ? "0" : "*";
 
             if (forAdmin)
-                return String.Format("<a href='#' class='editData AdminEditRoom' roomId='{0}' title='Edit - {2}'>{1}</a>", destination.ID, character, destination.Name);
+                return String.Format("<a href='#' class='editData AdminEditRoom' roomId='{0}' title='Edit - {2}'>{1}</a>", destination.Id, character, destination.Name);
             else
                 return character;
         }

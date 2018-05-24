@@ -11,7 +11,7 @@
     <h4>Enter verification code</h4>
     <hr />
     @Html.ValidationSummary("", new { @class = "text-danger" })
-    <div class="form-group two-column">
+    <div class="form-group row">
         @Html.EditorFor(e => e.Code)
         @Html.EditorFor(e => e.RememberBrowser)
     </div>

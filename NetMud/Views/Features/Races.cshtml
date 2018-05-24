@@ -1,0 +1,15 @@
+﻿@model IEnumerable<NetMud.DataStructure.Base.Supporting.IRace>
+@{
+    ViewBag.Title = "Races";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Races</h2>
+
+@foreach(var race in Model)
+{
+    <div>
+        <p>@race.Name</p>
+        <p>@race.HelpText</p>
+    </div>
+}

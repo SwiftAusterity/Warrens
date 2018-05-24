@@ -8,30 +8,30 @@
             @Html.AntiForgeryToken()
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            <input type="hidden" name="id" id="id" value="@Model.DataObject.ID" />
-            <div class="form-group three-column">
+            <input type="hidden" name="id" id="id" value="@Model.DataObject.Id" />
+            <div class="form-group row">
                 @Html.EditorFor(e => e.Name)
                 @Html.EditorFor(e => e.Solubility)
                 @Html.EditorFor(e => e.Fertility)
             </div>
-            <div class="form-group three-column">
+            <div class="form-group row">
                 @Html.EditorFor(e => e.Rarity)
                 @Html.EditorFor(e => e.AmountMultiplier)
                 @Html.EditorFor(e => e.PuissanceVariance)
             </div>
-            <div class="form-group two-column">
+            <div class="form-group row">
                 @Html.EditorFor(m => m.TemperatureRangeLow)
                 @Html.EditorFor(m => m.TemperatureRangeHigh)
             </div>
-            <div class="form-group two-column">
+            <div class="form-group row">
                 @Html.EditorFor(m => m.HumidityRangeLow)
                 @Html.EditorFor(m => m.HumidityRangeHigh)
             </div>
-            <div class="form-group two-column">
+            <div class="form-group row">
                 @Html.EditorFor(m => m.ElevationRangeLow)
                 @Html.EditorFor(m => m.ElevationRangeHigh)
             </div>
-            <div class="form-group two-column">
+            <div class="form-group row">
                 @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Rock", "Rock", Model.ValidMaterials, Model.Rock))
                 @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Dirt", "Dirt", Model.ValidMaterials, Model.Dirt))
             </div>
@@ -40,10 +40,10 @@
 
             @Html.Partial("~/Views/GameAdmin/Minerals/OccursIn.cshtml", Model)
 
-            <div class="form-group one-column">
+            <div class="form-group row">
                 @Html.EditorFor(e => e.HelpText)
             </div>
-            <div class="form-group">
+            <div class="form-group row">
                 <div class="col-md-offset-2 col-md-9">
                     <input type="submit" value="Commit" class="btn btn-default save" />
                     @Html.ActionLink("Cancel", "Index", "Minerals", new { @class = "btn btn-default cancel" })

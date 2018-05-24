@@ -42,7 +42,7 @@ namespace NetMud.Data.LookupData
             }
             set
             {
-                _wood = value.ID;
+                _wood = value.Id;
             }
         }
 
@@ -62,7 +62,7 @@ namespace NetMud.Data.LookupData
             }
             set
             {
-                _flower = value.ID;
+                _flower = value.Id;
             }
         }
 
@@ -82,7 +82,7 @@ namespace NetMud.Data.LookupData
             }
             set
             {
-                _leaf = value.ID;
+                _leaf = value.Id;
             }
         }
 
@@ -102,7 +102,7 @@ namespace NetMud.Data.LookupData
             }
             set
             {
-                _fruit = value.ID;
+                _fruit = value.Id;
             }
         }
 
@@ -122,7 +122,7 @@ namespace NetMud.Data.LookupData
             }
             set
             {
-                _seed = value.ID;
+                _seed = value.Id;
             }
         }
 

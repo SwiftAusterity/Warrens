@@ -147,7 +147,7 @@ namespace NetMud.Controllers.GameAdmin
                     message = "Error; Creation failed.";
                 else
                 {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddFlora[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddFlora[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Creation Successful.";
                 }
             }
@@ -188,11 +188,11 @@ namespace NetMud.Controllers.GameAdmin
             vModel.TemperatureRangeLow = obj.TemperatureRange.Item1;
             vModel.HumidityRangeHigh = obj.HumidityRange.Item2;
             vModel.HumidityRangeLow = obj.HumidityRange.Item1;
-            vModel.Wood = obj.Wood.ID;
-            vModel.Flower = obj.Flower.ID;
-            vModel.Fruit = obj.Fruit.ID;
-            vModel.Seed = obj.Seed.ID;
-            vModel.Leaf = obj.Leaf.ID;
+            vModel.Wood = obj.Wood.Id;
+            vModel.Flower = obj.Flower.Id;
+            vModel.Fruit = obj.Fruit.Id;
+            vModel.Seed = obj.Seed.Id;
+            vModel.Leaf = obj.Leaf.Id;
             vModel.OccursIn = obj.OccursIn.ToArray();
 
             return View("~/Views/GameAdmin/Flora/Edit.cshtml", vModel);
@@ -255,7 +255,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 if (obj.Save())
                 {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - EditFlora[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - EditFlora[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Edit Successful.";
                 }
                 else

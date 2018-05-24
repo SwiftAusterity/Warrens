@@ -221,7 +221,7 @@ namespace NetMud.Controllers.GameAdmin
                     message = "Error; Creation failed.";
                 else
                 {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddInanimateData[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddInanimateData[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Creation Successful.";
                 }
             }
@@ -251,7 +251,7 @@ namespace NetMud.Controllers.GameAdmin
 
             vModel.DataObject = obj;
             vModel.Name = obj.Name;
-            vModel.DimensionalModelId = obj.Model.ModelBackingData.ID;
+            vModel.DimensionalModelId = obj.Model.ModelBackingData.Id;
             vModel.DimensionalModelHeight = obj.Model.Height;
             vModel.DimensionalModelLength = obj.Model.Length;
             vModel.DimensionalModelWidth = obj.Model.Width;
@@ -409,7 +409,7 @@ namespace NetMud.Controllers.GameAdmin
 
                 if (obj.Save())
                 {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - EditInanimateData[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - EditInanimateData[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Edit Successful.";
                 }
                 else

@@ -1,0 +1,41 @@
+﻿@model NetMud.Models.ListTableViewModel
+
+@if(!string.IsNullOrWhiteSpace(Model.Name))
+{
+    <h4>@Model.Name</h4>
+}
+<table class="table table-striped table-bordered table-hover table-dark">
+    <thead>
+        <tr>
+            @foreach (var column in Model.Columns)
+            {
+                <th scope="col">@column.Key</th>
+            }
+
+            @if (Model.IncludeDelete)
+            {
+                <th>DELETE</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var val in Model.Values)
+        {
+            <tr>
+                @foreach (var column in Model.Columns)
+                {
+                    <td>@Html.Raw(column.Value(val))</td>
+                }
+
+                @if (Model.IncludeDelete)
+                {
+                    <td>
+                        <div>
+                            @Html.Partial("RemoveDataItem", (long)val.Id)
+                        </div>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>

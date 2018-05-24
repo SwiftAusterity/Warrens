@@ -71,7 +71,7 @@ namespace NetMud.Data.LookupData
                 if (value == null)
                     return;
 
-                _backingDataId = value.ID;
+                _backingDataId = value.Id;
             }
         }
 
@@ -97,7 +97,7 @@ namespace NetMud.Data.LookupData
                 if (value == null)
                     return;
 
-                _composition = value.ToDictionary(k => k.Key, k => k.Value.ID);
+                _composition = value.ToDictionary(k => k.Key, k => k.Value.Id);
             }
         }
 

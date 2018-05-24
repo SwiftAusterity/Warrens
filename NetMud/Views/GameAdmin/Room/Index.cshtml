@@ -29,7 +29,7 @@
                     @foreach (var obj in Model.CurrentPageOfItems)
                     {
                         <tr>
-                            <td>@Html.ActionLink(@obj.ID.ToString(), "Edit", new { id = obj.ID }) [@Html.ActionLink("Map", "Map", new { id = obj.ID })]</td>
+                            <td>@Html.ActionLink(@obj.Id.ToString(), "Edit", new { id = obj.Id }) [@Html.ActionLink("Map", "Map", new { id = obj.Id })]</td>
                             <td>
                                 @if (obj.FitnessProblems)
                                 {
@@ -41,7 +41,7 @@
                                 }
                             </td>
                             <td>
-                                @Html.Partial("RemoveDataItem", @obj.ID)
+                                @Html.Partial("RemoveDataItem", @obj.Id)
                             </td>
                         </tr>
                     }

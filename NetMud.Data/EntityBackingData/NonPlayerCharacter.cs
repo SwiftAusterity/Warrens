@@ -52,7 +52,7 @@ namespace NetMud.Data.EntityBackingData
             }
             set
             {
-                _raceData = value.ID;
+                _raceData = value.Id;
             }
         }
 

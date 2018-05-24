@@ -3,8 +3,9 @@
 @{
     var prevPageState = Model.Item1.CurrentPageNumber > 1 ? String.Empty : "disabled";
     var nextPageState = Model.Item1.CurrentPageNumber < Model.Item1.NumberOfPages ? String.Empty : "disabled";
-
-    using (Html.BeginForm("Index", Model.Item2, FormMethod.Post, new { id = "paginationForm" }))
+}
+<div class="searchCriteria">
+    @using (Html.BeginForm("Index", Model.Item2, FormMethod.Post, new { id = "paginationForm" }))
     {
         @Html.AntiForgeryToken()
         <nav>
@@ -39,7 +40,7 @@
             </ul>
         </nav>
     }
-}
 
-@Html.ValidationMessageFor(m => m.Item1.ItemsPerPage, "", new { @class = "text-danger" })
-@Html.ValidationMessageFor(m => m.Item1.SearchTerms, "", new { @class = "text-danger" })
+    @Html.ValidationMessageFor(m => m.Item1.ItemsPerPage, "", new { @class = "text-danger" })
+    @Html.ValidationMessageFor(m => m.Item1.SearchTerms, "", new { @class = "text-danger" })
+</div>

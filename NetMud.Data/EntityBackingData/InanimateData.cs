@@ -66,7 +66,7 @@ namespace NetMud.Data.EntityBackingData
                 if (value == null)
                     return;
 
-                _internalComposition = value.ToDictionary(k => k.Key.ID, k => k.Value);
+                _internalComposition = value.ToDictionary(k => k.Key.Id, k => k.Value);
             }
         }
 

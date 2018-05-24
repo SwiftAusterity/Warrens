@@ -11,7 +11,7 @@
     <h5>@ViewBag.Status</h5>
     <hr />
     @Html.ValidationSummary("", new { @class = "text-danger" })
-    <div class="form-group one-column">
+    <div class="form-group row">
         @Html.EditorFor(e => e.Code)
     </div>
     @Html.Partial("SubmitButton", "Submit")

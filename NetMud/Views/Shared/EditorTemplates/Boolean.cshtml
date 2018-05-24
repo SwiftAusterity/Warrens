@@ -1,7 +1,13 @@
 ﻿@model bool
 
-@Html.LabelFor(m => m, new { @class = "control-label" })
-<div>
+@{
+    double columnCount = ViewData["columnCount"] == null ? 1 : (int)ViewData["columnCount"];
+    var columnLabelValue = columnCount > 2 ? 1 : 2;
+    var columnInputValue = (int)Math.Round(10 / columnCount);
+}
+
+@Html.LabelFor(m => m, new { @class = String.Format("col-sm-{0} col-form-label", columnLabelValue) })
+<div class="col-sm-2">
     @Html.CheckBoxFor(m => m, new { @class = "form-control" })
     @Html.ValidationMessageFor(m => m, "", new { @class = "text-danger" })
 </div>

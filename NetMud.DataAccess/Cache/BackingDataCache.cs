@@ -19,7 +19,7 @@ namespace NetMud.DataAccess.Cache
         public static void Add<T>(T objectToCache) where T : IData
         {
             var entityToCache = (IData)objectToCache;
-            var cacheKey = new BackingDataCacheKey(objectToCache.GetType(), entityToCache.ID);
+            var cacheKey = new BackingDataCacheKey(objectToCache.GetType(), entityToCache.Id);
 
             BackingCache.Add(objectToCache, cacheKey);
         }
@@ -100,7 +100,7 @@ namespace NetMud.DataAccess.Cache
         }
 
         /// <summary>
-        /// Gets one entity from the cache by its ID, only works for Singleton spawners with data templates(IEntities)
+        /// Gets one entity from the cache by its Id, only works for Singleton spawners with data templates(IEntities)
         /// </summary>
         /// <typeparam name="T">the type of the entity</typeparam>
         /// <param name="id">the id</param>

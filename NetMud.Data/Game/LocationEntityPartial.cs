@@ -50,7 +50,7 @@ namespace NetMud.Data.Game
                 if (value == null)
                     return;
 
-                _naturalResources = value.ToDictionary(k => k.Key.ID, k => k.Value);
+                _naturalResources = value.ToDictionary(k => k.Key.Id, k => k.Value);
             }
         }
 

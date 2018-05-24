@@ -9,9 +9,9 @@ namespace NetMud.DataStructure.Base.System
     public interface IData : IFileStored, IComparable<IData>, IEquatable<IData>
     {
         /// <summary>
-        /// Unique, iterative ID for this entry
+        /// Unique, iterative Id for this entry
         /// </summary>
-        long ID { get; set; }
+        long Id { get; set; }
 
         /// <summary>
         /// When this entry was first created

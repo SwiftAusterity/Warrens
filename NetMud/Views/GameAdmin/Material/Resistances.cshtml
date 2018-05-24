@@ -3,12 +3,12 @@
 @model NetMud.Models.Admin.AddEditMaterialViewModel
 
 @{
-    <label class="control-label">Resistances</label>
+    <label class="col-sm-2 col-form-label">Resistances</label>
     <a href="#" id="addResistancesRow" class="addRow">Add another row...</a>
     <div id="resistanceRows">
         @if (Model.DataObject == null || Model.DataObject.Resistance == null || Model.DataObject.Resistance.Count == 0)
         {
-            <div class="form-group three-column">
+            <div class="form-group row">
                 <a href="#" class="removeRow" id="removeResistanceRow" title="Remove this">X</a>
                 <label class="contorl-label">&nbsp;</label>
                 <div>
@@ -20,9 +20,9 @@
                                                                                     new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString() })
                                                                                     , htmlAttributes: new { id = "Resistances", @class = "form-control" })
                 </div>
-                @Html.LabelFor(m => m.ResistanceValues, new { @class = "control-label" })
+                @Html.LabelFor(m => m.ResistanceValues, new { @class = "col-sm-2 col-form-label" })
                 <div>
-                    @Html.TextBoxFor(m => m.ResistanceValues, new { @class = "control-label" })
+                    @Html.TextBoxFor(m => m.ResistanceValues, new { @class = "col-sm-2 col-form-label" })
                 </div>
             </div>
         }
@@ -30,7 +30,7 @@
         {
             foreach (var dataItem in Model.DataObject.Resistance)
             {
-                <div class="form-group three-column">
+                <div class="form-group row">
                     <a href="#" class="removeRow" id="removeResistanceRow" title="Remove this">X</a>
                     <label class="contorl-label">&nbsp;</label>
                     <div>
@@ -42,7 +42,7 @@
                                                                                     new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString(), Selected = rl.Equals(Enum.GetName(typeof(DamageType), dataItem.Key)) })
                                                                                     , htmlAttributes: new { id = "Resistances", @class = "form-control" })
                     </div>
-                    @Html.LabelFor(m => m.ResistanceValues, new { @class = "control-label" })
+                    @Html.LabelFor(m => m.ResistanceValues, new { @class = "col-sm-2 col-form-label" })
                     <div>
                         <input id="ResistanceValues" name="ResistanceValues" class="form-control" type="text" value="@dataItem.Value.ToString()">
                     </div>
@@ -54,19 +54,19 @@
 
 
 <script type="text/javascript">
-    var resistancesLabel = decodeHtml('@Html.LabelFor(m => m.Resistances, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "")');
+    var resistancesLabel = decodeHtml('@Html.LabelFor(m => m.Resistances, new { @class = "col-sm-2 col-form-label" }).ToString().Replace(Environment.NewLine, "")');
     var resistancesDropdown = decodeHtml('@Html.DropDownList("Resistances", Enum.GetNames(typeof(DamageType)).Select(rl =>
                                                                                     new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString() })
                                                        , htmlAttributes: new { id = "Resistances", @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');
-    var resistanceValuesLabel = decodeHtml('@Html.LabelFor(m => m.ResistanceValues, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "")');
+    var resistanceValuesLabel = decodeHtml('@Html.LabelFor(m => m.ResistanceValues, new { @class = "col-sm-2 col-form-label" }).ToString().Replace(Environment.NewLine, "")');
     var textboxControl = decodeHtml('@Html.TextBoxFor(m => m.ResistanceValues, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');
 
     $(document).ready(function () {
         $("#addResistancesRow").click(function () {
             $("#resistanceRows").append(
-                '<div class="form-group three-column">' +
+                '<div class="form-group row">' +
                 '<a href="#" class="removeRow" id="removeResistanceRow" title="Remove this">X</a>' +
-                '<label class="control-label">&nbsp;</label><div>&nbsp;</div>' +
+                '<label class="col-sm-2 col-form-label">&nbsp;</label><div>&nbsp;</div>' +
                 resistancesLabel + '<div>' + resistancesDropdown + '</div>' +
                 resistanceValuesLabel + '<div>' + textboxControl + '</div></div>'
             );

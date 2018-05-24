@@ -80,7 +80,7 @@ namespace NetMud.Data.Game
             Pathways = new EntityContainer<IPathway>();
             MobilesInside = new EntityContainer<IMobile>(backingStore.MobileContainers);
 
-            DataTemplateId = backingStore.ID;
+            DataTemplateId = backingStore.Id;
             SpawnNewInWorld();
         }
 
@@ -95,7 +95,7 @@ namespace NetMud.Data.Game
             Pathways = new EntityContainer<IPathway>();
             MobilesInside = new EntityContainer<IMobile>(backingStore.MobileContainers);
 
-            DataTemplateId = backingStore.ID;
+            DataTemplateId = backingStore.Id;
             SpawnNewInWorld(spawnTo);
         }
 

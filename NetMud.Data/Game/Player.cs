@@ -98,7 +98,7 @@ namespace NetMud.Data.Game
         public Player(ICharacter character)
         {
             Inventory = new EntityContainer<IInanimate>();
-            DataTemplateId = character.ID;
+            DataTemplateId = character.Id;
             AccountHandle = character.AccountHandle;
             GetFromWorldOrSpawn();
         }
@@ -288,7 +288,7 @@ namespace NetMud.Data.Game
 
         #region SpawnBehavior
         /// <summary>
-        /// Tries to find this entity in the world based on its ID or gets a new one from the db and puts it in the world
+        /// Tries to find this entity in the world based on its Id or gets a new one from the db and puts it in the world
         /// </summary>
         public void GetFromWorldOrSpawn()
         {
@@ -302,7 +302,7 @@ namespace NetMud.Data.Game
             {
                 BirthMark = me.BirthMark;
                 Birthdate = me.Birthdate;
-                DataTemplateId = me.DataTemplate<ICharacter>().ID;
+                DataTemplateId = me.DataTemplate<ICharacter>().Id;
                 Inventory = me.Inventory;
                 Keywords = me.Keywords;
 
@@ -362,7 +362,7 @@ namespace NetMud.Data.Game
         {
             var chr = DataTemplate<ICharacter>(); ;
 
-            var zoneId = chr.StillANoob ? chr.RaceData.StartingLocation.ID : chr.RaceData.EmergencyLocation.ID;
+            var zoneId = chr.StillANoob ? chr.RaceData.StartingLocation.Id : chr.RaceData.EmergencyLocation.Id;
 
             return LiveCache.Get<Zone>(zoneId);
         }

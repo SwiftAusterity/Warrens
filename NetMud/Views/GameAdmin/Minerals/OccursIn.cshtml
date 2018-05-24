@@ -3,14 +3,14 @@
 @model NetMud.Models.Admin.AddEditMineralsViewModel
 
 @{
-    <label class="control-label">Occurs in Biome</label>
+    <label class="col-sm-2 col-form-label">Occurs in Biome</label>
     <a href="#" id="addOccursInRow" class="addRow">Add another row...</a>
     <div id="occursInRow">
         @if (Model == null || Model.OccursIn == null || Model.OccursIn.Length == 0)
         {
-            <div class="form-group three-column">
+            <div class="form-group row">
                 <a href="#" class="removeRow" id="removeOccursInRow" title="Remove this">X</a>
-                <label class="control-label" for="OccursIn">&nbsp;</label>
+                <label class="col-sm-2 col-form-label" for="OccursIn">&nbsp;</label>
                 <div>
                     @Html.DropDownList("OccursIn", Enum.GetNames(typeof(Biome)).Select(rl =>
                                                                                     new SelectListItem() { Text = rl, Value = rl })
@@ -22,9 +22,9 @@
         {
             foreach (var occursIn in Model.OccursIn)
             {
-                <div class="form-group three-column">
+                <div class="form-group row">
                     <a href="#" class="removeRow" id="removeOccursInRow" title="Remove this">X</a>
-                    <label class="control-label" for="OccursIn">&nbsp;</label>
+                    <label class="col-sm-2 col-form-label" for="OccursIn">&nbsp;</label>
                     <div>
                         @Html.DropDownList("OccursIn", Enum.GetNames(typeof(Biome)).Select(rl =>
                                                                               new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(Biome), rl)).ToString(), Selected = (Biome)Enum.Parse(typeof(Biome), rl) == occursIn })
@@ -43,9 +43,9 @@
     $(document).ready(function () {
         $("#addOccursInRow").click(function () {
             $("#occursInRow").append(
-                '<div class="form-group three-column">' +
+                '<div class="form-group row">' +
                 '<a href="#" class="removeRow" id="removeOccursInRow" title="Remove this">X</a>' +
-                '<label class="control-label" for="OccursIn">&nbsp;</label>' +
+                '<label class="col-sm-2 col-form-label" for="OccursIn">&nbsp;</label>' +
                 '<div>' + occursInDropdown + '</div></div>'
             );
 

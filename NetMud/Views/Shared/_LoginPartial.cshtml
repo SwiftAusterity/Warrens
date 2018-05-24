@@ -20,8 +20,8 @@
                 {
                     @Html.DropDownList("CurrentlySelectedCharacter", authUser.GameAccount.Characters.Select(ch =>
                     new SelectListItem() { Text = ch.FullName()
-                                        , Value = ch.ID.ToString()
-                                        , Selected = authUser.GameAccount.CurrentlySelectedCharacter != default(long) && authUser.GameAccount.CurrentlySelectedCharacter.Equals(ch.ID) })
+                                        , Value = ch.Id.ToString()
+                                        , Selected = authUser.GameAccount.CurrentlySelectedCharacter != default(long) && authUser.GameAccount.CurrentlySelectedCharacter.Equals(ch.Id) })
                                         , htmlAttributes: new { id = "currentCharacter", Style = "margin: 15px;" })
                 }
                 else

@@ -205,7 +205,7 @@ namespace NetMud.Controllers.GameAdmin
                 message = "Error; Creation failed.";
             else
             {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - AddRaceData[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                LoggingUtility.LogAdminCommandUsage("*WEB* - AddRaceData[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 message = "Creation Successful.";
             }
 
@@ -238,41 +238,41 @@ namespace NetMud.Controllers.GameAdmin
             if (obj.Arms != null)
             {
                 vModel.ArmsAmount = obj.Arms.Item2;
-                vModel.ArmsID = obj.Arms.Item1.ID;
+                vModel.ArmsID = obj.Arms.Item1.Id;
             }
 
             if (obj.Legs != null)
             {
                 vModel.LegsAmount = obj.Legs.Item2;
-                vModel.LegsID = obj.Legs.Item1.ID;
+                vModel.LegsID = obj.Legs.Item1.Id;
             }
 
             if (obj.BodyParts != null)
             {
                 vModel.ExtraPartsAmount = obj.BodyParts.Select(bp => bp.Item2).ToArray();
-                vModel.ExtraPartsId = obj.BodyParts.Select(bp => bp.Item1.ID).ToArray(); ;
+                vModel.ExtraPartsId = obj.BodyParts.Select(bp => bp.Item1.Id).ToArray(); ;
                 vModel.ExtraPartsName = obj.BodyParts.Select(bp => bp.Item3).ToArray(); ;
             }
 
             if (obj.SanguinaryMaterial != null)
             {
-                vModel.BloodId = obj.SanguinaryMaterial.ID;
+                vModel.BloodId = obj.SanguinaryMaterial.Id;
             }
 
             vModel.Breathes = (short)obj.Breathes;
             vModel.DietaryNeeds = (short)obj.DietaryNeeds;
-            vModel.HeadId = obj.Head.ID;
+            vModel.HeadId = obj.Head.Id;
 
             if(obj.EmergencyLocation != null)
-                vModel.RecallLocationId = obj.EmergencyLocation.ID;
+                vModel.RecallLocationId = obj.EmergencyLocation.Id;
 
             if(obj.StartingLocation != null)
-                vModel.StartingLocationId = obj.StartingLocation.ID;
+                vModel.StartingLocationId = obj.StartingLocation.Id;
 
             vModel.TeethType = (short)obj.TeethType;
             vModel.TemperatureToleranceHigh = obj.TemperatureTolerance.Item2;
             vModel.TemperatureToleranceLow = obj.TemperatureTolerance.Item1;
-            vModel.TorsoId = obj.Torso.ID;
+            vModel.TorsoId = obj.Torso.Id;
             vModel.VisionRangeHigh = obj.VisionRange.Item2;
             vModel.VisionRangeLow = obj.VisionRange.Item1;
             vModel.HelpBody = obj.HelpText;
@@ -388,7 +388,7 @@ namespace NetMud.Controllers.GameAdmin
 
             if (obj.Save())
             {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - EditRaceData[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                LoggingUtility.LogAdminCommandUsage("*WEB* - EditRaceData[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 message = "Edit Successful.";
             }
             else

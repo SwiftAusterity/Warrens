@@ -1,12 +1,12 @@
 ﻿@model NetMud.Models.Admin.AddEditMineralsViewModel
 
 @{
-    <label class="control-label">Internal composition</label>
+    <label class="col-sm-2 col-form-label">Internal composition</label>
     <a href="#" id="addOresRow" class="addRow">Add another row...</a>
     <div id="OresRow">
         @if (Model.DataObject == null || Model.DataObject.Ores == null || Model.DataObject.Ores.Count() == 0)
         {
-            <div class="form-group three-column">
+            <div class="form-group row">
                 <a href="#" class="removeRow" id="removeOresRow" title="Remove this">X</a>
                 @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Ores", "Mineral", Model.ValidMinerals, -1))
             </div>
@@ -15,9 +15,9 @@
         {
             foreach (var Ores in Model.DataObject.Ores)
             {
-                <div class="form-group three-column">
+                <div class="form-group row">
                     <a href="#" class="removeRow" id="removeOresRow" title="Remove this">X</a>
-                    @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Ores", "Mineral", Model.ValidMinerals, Ores.ID))
+                    @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Ores", "Mineral", Model.ValidMinerals, Ores.Id))
                 </div>
             }
         }
@@ -31,7 +31,7 @@
     $(document).ready(function () {
         $("#addOresRow").click(function () {
             $("#OresRow").append(
-                '<div class="form-group three-column">' +
+                '<div class="form-group row">' +
                 '<a href="#" class="removeRow" id="removeOresRow" title="Remove this">X</a>' +
                 OresDropdown + '</div>'
             );

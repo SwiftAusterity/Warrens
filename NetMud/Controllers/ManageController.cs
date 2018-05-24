@@ -146,7 +146,7 @@ namespace NetMud.Controllers
                     authedUser = UserManager.FindById(userId)
                 };
 
-                var character = model.authedUser.GameAccount.Characters.FirstOrDefault(ch => ch.ID.Equals(ID));
+                var character = model.authedUser.GameAccount.Characters.FirstOrDefault(ch => ch.Id.Equals(ID));
 
                 if (character == null)
                     message = "That character does not exist";

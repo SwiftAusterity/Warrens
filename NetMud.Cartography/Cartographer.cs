@@ -82,7 +82,7 @@ namespace NetMud.Cartography
                     {
                         var room = BackingDataCache.Get<IRoomData>(fullMap[x, y, z]);
 
-                        if (room == null || room.ParentLocation == null || !room.ParentLocation.ID.Equals(localeId))
+                        if (room == null || room.ParentLocation == null || !room.ParentLocation.Id.Equals(localeId))
                             continue;
 
                         newMap[x, y, z] = fullMap[x, y, z];
@@ -302,7 +302,7 @@ namespace NetMud.Cartography
                 roomPool.Remove(origin);
 
             //Render the room itself
-            dataMap[centerX - 1, centerY - 1, centerZ - 1] = origin.ID;
+            dataMap[centerX - 1, centerY - 1, centerZ - 1] = origin.Id;
             dataMap = AddDirectionToMap(dataMap, MovementDirectionType.North, origin, diameter, centerX, centerY, centerZ, roomPool);
             dataMap = AddDirectionToMap(dataMap, MovementDirectionType.NorthEast, origin, diameter, centerX, centerY, centerZ, roomPool);
             dataMap = AddDirectionToMap(dataMap, MovementDirectionType.NorthWest, origin, diameter, centerX, centerY, centerZ, roomPool);
@@ -356,16 +356,16 @@ namespace NetMud.Cartography
                                                         );
                 if (thisPath != null)
                 {
-                    var locId = thisPath.Destination.ID;
+                    var locId = thisPath.Destination.Id;
 
-                    if (thisPath.Destination.ID.Equals(origin.ID))
-                        locId = thisPath.Origin.ID;
+                    if (thisPath.Destination.Id.Equals(origin.Id))
+                        locId = thisPath.Origin.Id;
 
                     var passdownOrigin = BackingDataCache.Get<IRoomData>(locId);
 
                     if (passdownOrigin != null)
                     {
-                        dataMap[xStepped - 1, yStepped - 1, zStepped - 1] = passdownOrigin.ID;
+                        dataMap[xStepped - 1, yStepped - 1, zStepped - 1] = passdownOrigin.Id;
                         dataMap = AddFullRoomToMap(dataMap, passdownOrigin, diameter, xStepped, yStepped, zStepped, roomPool);
                     }
                 }

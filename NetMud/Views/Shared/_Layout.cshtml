@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - TwinMUD</title>
+    <title>netMUD - @ViewBag.Title</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar navbar-inverse navbar-top">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -31,6 +31,17 @@
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
                     <li>@Html.ActionLink("About", "About", "Home")</li>
                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                    <li>
+                        <div style="padding-top: 15px; padding-bottom: 15px;">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Features<span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
+                                <li class="dropdown-header" style="color: mediumvioletred">Choices</li>
+                                <li>@Html.ActionLink("Races", "Races", "Features", routeValues: null, htmlAttributes: new { title = "Races" })</li>
+                                <li class="dropdown-header" style="color: mediumvioletred">Systems</li>
+                                <li>@Html.ActionLink("Skills", "Skills", "Features", routeValues: null, htmlAttributes: new { title = "Skills" })</li>
+                            </ul>
+                        </div>
+                    </li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>

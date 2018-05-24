@@ -74,7 +74,7 @@ namespace NetMud.Data.EntityBackingData
             set
             {
                 if (value != null)
-                    _destination = value.ID;
+                    _destination = value.Id;
             }
         }
 
@@ -96,7 +96,7 @@ namespace NetMud.Data.EntityBackingData
             set
             {
                 if (value != null)
-                    _origin = value.ID;
+                    _origin = value.Id;
             }
         }
 
@@ -138,7 +138,7 @@ namespace NetMud.Data.EntityBackingData
         /// <returns>The live data</returns>
         public IPathway GetLiveInstance()
         {
-            return LiveCache.Get<IPathway>(ID);
+            return LiveCache.Get<IPathway>(Id);
         }
     }
 }

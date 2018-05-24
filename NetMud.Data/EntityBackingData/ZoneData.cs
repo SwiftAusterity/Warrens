@@ -69,7 +69,7 @@ namespace NetMud.Data.EntityBackingData
                 if (value == null)
                     return;
 
-                _templates = new HashSet<long>(value.Select(k => k.ID));
+                _templates = new HashSet<long>(value.Select(k => k.Id));
             }
         }
 
@@ -95,7 +95,7 @@ namespace NetMud.Data.EntityBackingData
                 if (value == null)
                     return;
 
-                _naturalResourceSpawn = value.ToDictionary(k => k.Key.ID, k => k.Value);
+                _naturalResourceSpawn = value.ToDictionary(k => k.Key.Id, k => k.Value);
             }
         }
 
@@ -124,7 +124,7 @@ namespace NetMud.Data.EntityBackingData
         /// <returns>The live data</returns>
         public override ILocation GetLiveInstance()
         {
-            return LiveCache.Get<IZone>(ID);
+            return LiveCache.Get<IZone>(Id);
         }
     }
 }

@@ -187,7 +187,7 @@ namespace NetMud.Backup
                     throw new Exception("No zones found, failover.");
 
                 //We need to pick up any places that aren't already live from the file system incase someone added them during the last session\
-                foreach (var thing in BackingDataCache.GetAll<IZoneData>().Where(dt => !entitiesToLoad.Any(ent => ent.DataTemplateId.Equals(dt.ID))))
+                foreach (var thing in BackingDataCache.GetAll<IZoneData>().Where(dt => !entitiesToLoad.Any(ent => ent.DataTemplateId.Equals(dt.Id))))
                 {
                     var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IZone;
 
@@ -195,7 +195,7 @@ namespace NetMud.Backup
                     entityThing.SpawnNewInWorld();
                 }
 
-                foreach (var thing in BackingDataCache.GetAll<ILocaleData>().Where(dt => !entitiesToLoad.Any(ent => ent.DataTemplateId.Equals(dt.ID))))
+                foreach (var thing in BackingDataCache.GetAll<ILocaleData>().Where(dt => !entitiesToLoad.Any(ent => ent.DataTemplateId.Equals(dt.Id))))
                 {
                     var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as ILocale;
 
@@ -203,7 +203,7 @@ namespace NetMud.Backup
                     entityThing.SpawnNewInWorld();
                 }
 
-                foreach (var thing in BackingDataCache.GetAll<IRoomData>().Where(dt => !entitiesToLoad.Any(ent => ent.DataTemplateId.Equals(dt.ID))))
+                foreach (var thing in BackingDataCache.GetAll<IRoomData>().Where(dt => !entitiesToLoad.Any(ent => ent.DataTemplateId.Equals(dt.Id))))
                 {
                     var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IRoom;
 
@@ -211,7 +211,7 @@ namespace NetMud.Backup
                     entityThing.SpawnNewInWorld();
                 }
 
-                foreach (var thing in BackingDataCache.GetAll<IPathwayData>().Where(dt => !entitiesToLoad.Any(ent => ent.DataTemplateId.Equals(dt.ID))))
+                foreach (var thing in BackingDataCache.GetAll<IPathwayData>().Where(dt => !entitiesToLoad.Any(ent => ent.DataTemplateId.Equals(dt.Id))))
                 {
                     var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IPathway;
 
@@ -341,7 +341,7 @@ namespace NetMud.Backup
             //var world = new World(new Map(returnMap, false), startingRoom.ZoneAffiliation.WorldName);
 
             //if (String.IsNullOrWhiteSpace(world.Name))
-            //    world.Name = "Dimension " + world.ID.ToString();
+            //    world.Name = "Dimension " + world.Id.ToString();
         }
     }
 }

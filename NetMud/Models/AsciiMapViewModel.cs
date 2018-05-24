@@ -12,7 +12,7 @@
         public string MapRenderType { get; set; }
         
         /// <summary>
-        /// The ID of the thing we're rendering
+        /// The Id of the thing we're rendering
         /// </summary>
         public long DataID { get; set; }
 

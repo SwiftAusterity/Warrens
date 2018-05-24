@@ -59,7 +59,7 @@ namespace NetMud.Authentication
         }
 
         /// <summary>
-        /// ID for the currently selected character for the account to log into the game as
+        /// Id for the currently selected character for the account to log into the game as
         /// </summary>
         public long CurrentlySelectedCharacter { get; set; }
 

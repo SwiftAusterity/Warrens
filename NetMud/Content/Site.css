@@ -1,5 +1,5 @@
 ﻿footer {
-    padding: 25px;
+    padding: 15px;
 }
 
 /* Set padding to keep content from hitting the edges */
@@ -88,34 +88,14 @@ button[type=submit].removeData {
     border-color: red;
 }
 
-div.form-group div, div.form-group label {
-    float: left;
-    padding-right: 10px;
+.submitButtons {
+    float: right;
+    padding: 15px;
 }
 
-div.form-group.one-column label {
-    width: 13.33333333%;
-}
-
-div.form-group.one-column div {
-    width: 20%;
-}
-
-div.form-group.two-column label {
-    width: 26.66666666%;
-}
-
-div.form-group.two-column div {
-    width: 40%;
-}
-
-div.form-group.three-column label {
-    width: 39.99999999%;
-}
-
-div.form-group.three-column div {
-    width: 60%;
-}
+    .submitButtons input.save {
+        margin-right: 15px;
+    }
 
 div.form-group a.removeRow {
     color: red;
@@ -205,4 +185,10 @@ div.roomAsciiMap {
     float: right;
     color: yellow;
     left: -15px;
+}
+
+.searchCriteria {
+    width: 100%;
+    height: 70px;
+    padding-bottom: 5px;
 }

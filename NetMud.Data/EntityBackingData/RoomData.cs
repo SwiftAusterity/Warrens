@@ -52,7 +52,7 @@ namespace NetMud.Data.EntityBackingData
             set
             {
                 if(value != null)
-                    _medium = value.ID;
+                    _medium = value.Id;
             }
         }
 
@@ -74,7 +74,7 @@ namespace NetMud.Data.EntityBackingData
             set
             {
                 if(value != null)
-                    _affiliation = value.ID;
+                    _affiliation = value.Id;
             }
         }
 
@@ -141,7 +141,7 @@ namespace NetMud.Data.EntityBackingData
         /// <returns>The live data</returns>
         public override ILocation GetLiveInstance()
         {
-            return LiveCache.Get<IRoom>(ID);
+            return LiveCache.Get<IRoom>(Id);
         }
 
         public override IData Create()

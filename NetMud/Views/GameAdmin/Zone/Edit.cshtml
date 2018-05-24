@@ -3,38 +3,32 @@
     ViewBag.Title = "Edit Zone";
 }
 
-@{
-<section id="newZoneForm">
-    @using (Html.BeginForm("EditZoneData", "GameAdmin", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+<section id="editZoneForm">
+    @using (Html.BeginForm("Edit", "Zone", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {
         @Html.AntiForgeryToken()
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <input type="hidden" name="id" id="id" value="@Model.DataObject.ID" />
-        <div class="form-group one-column">
-            @Html.EditorFor(e => e.Name)
+        <input type="hidden" name="id" id="id" value="@Model.DataObject.Id" />
+        <div class="form-group row">
+            @Html.EditorFor(e => e.Name, new { columnCount = 1 })
         </div>
-        <div class="form-group one-column">
-            @Html.EditorFor(e => e.TemperatureCoefficient)
-            @Html.EditorFor(e => e.PressureCoefficient)
+        <div class="form-group row">
+            @Html.EditorFor(e => e.TemperatureCoefficient, new { columnCount = 2 })
+            @Html.EditorFor(e => e.PressureCoefficient, new { columnCount = 2 })
         </div>
-        <div class="form-group one-column">
-            @Html.EditorFor(e => e.BaseElevation)
-            @Html.EditorFor(e => e.Claimable)
+        <div class="form-group row">
+            @Html.EditorFor(e => e.BaseElevation, new { columnCount = 2 })
+            @Html.EditorFor(e => e.Claimable, new { columnCount = 2 })
         </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-9">
-                <input type="submit" value="Commit" class="btn btn-default save" />
-                @Html.ActionLink("Cancel", "ManageZoneData", "GameAdmin", new { @class = "btn btn-default cancel" })
-            </div>
-        </div>
+        @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Zone", IncludeCancel = true })
     }
-
-    @Html.Partial("~/Views/GameAdmin/Zone/LocaleList.cshtml", Model)
 </section>
-}
-
+<div class="clearfix"></div>
+<div style="padding-top: 15px;">
+    @Html.Partial("~/Views/GameAdmin/Zone/LocaleList.cshtml", Model)
+</div>
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

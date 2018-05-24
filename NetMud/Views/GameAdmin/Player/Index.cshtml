@@ -2,54 +2,26 @@
 @{
     ViewBag.Title = "Manage Registered Users";
 
-    if (Model.Items.Count() > 0)
-    {
-        @Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model, "Player"))
-    
-        using (Html.BeginForm("Remove", "Player"))
-        {
-            @Html.AntiForgeryToken()
-            <table class="table">
-                <thead>
-                    <tr>
-                        <td>
-                            ID
-                        </td>
-                        <td>
-                            Global Handle
-                        </td>
-                        <td>
-                            Email
-                        </td>
-                        <td>
-                            Roles
-                        </td>
-                        <td>
-                            Remove
-                        </td>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var obj in Model.CurrentPageOfItems)
-                    {
-                        <tr>
-                            <td>@obj.Id</td>
-                            <td>@obj.GameAccount.GlobalIdentityHandle</td>
-                            <td>@obj.Email</td>
-                            <td>@String.Join(",", obj.Roles.Select(rol => Model.ValidRoles.First(vR => vR.Id.Equals(rol.RoleId)).Name))</td>
-                            <td>
-                                <div>
-                                    @Html.Partial("RemoveDataItem", @obj.Id)
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
-
-    }
+    var linkText = Html.ActionLink("99999999", "Edit", new { id = 99999999 }).ToString();
+    var tableColumns = new Dictionary<string, Func<dynamic, string>>();
+    tableColumns.Add("Id", obj => linkText.Replace("99999999", obj.Id.ToString()));
+    tableColumns.Add("Global Handle", obj => obj.GameAccount.GlobalIdentityHandle);
+    tableColumns.Add("Email", obj => obj.Email);
+    tableColumns.Add("Roles", obj => String.Join(",", ((NetMud.Authentication.ApplicationUser)obj).Roles.Select(rol => Model.ValidRoles.First(vR => vR.Id.Equals(rol.RoleId)).Name)));
 }
+
+@if (Model.Items.Count() > 0)
+{
+    @Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model, "Player"))
+
+    using (Html.BeginForm("Remove", "Player"))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Name = "Player Accounts", Columns = tableColumns, Values = Model.CurrentPageOfItems.OrderBy(obj => obj.Id), IncludeDelete = false })
+    }
+
+}
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

@@ -1,19 +1,19 @@
 ﻿@model NetMud.Models.Admin.AddEditMaterialViewModel
 
 @{
-    <label class="control-label">Internal composition</label>
+    <label class="col-sm-2 col-form-label">Internal composition</label>
     <a href="#" id="addCompositionsRow" class="addRow">Add another row...</a>
     <div id="compositionRows">
         @if (Model.DataObject == null || Model.DataObject.Composition == null || Model.DataObject.Composition.Count == 0)
         {
-            <div class="form-group three-column">
+            <div class="form-group row">
                 <a href="#" class="removeRow" id="removeCompositionRow" title="Remove this">X</a>
-                <label class="control-label">&nbsp;</label>
+                <label class="col-sm-2 col-form-label">&nbsp;</label>
                 <div>
                     &nbsp;
                 </div>           
                 @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Compositions", "Material", Model.ValidMaterials, -1))
-                @Html.LabelFor(m => m.CompositionPercentages, new { @class = "control-label" })
+                @Html.LabelFor(m => m.CompositionPercentages, new { @class = "col-sm-2 col-form-label" })
                 <div>
                     @Html.TextBoxFor(m => m.CompositionPercentages, new { @class = "form-control" })
                 </div>
@@ -23,15 +23,15 @@
         {
             foreach (var Composition in Model.DataObject.Composition)
             {
-                <div class="form-group three-column">
+                <div class="form-group row">
                     <a href="#" class="removeRow" id="removeCompositionRow" title="Remove this">X</a>
-                    <label class="control-label">&nbsp;</label>
+                    <label class="col-sm-2 col-form-label">&nbsp;</label>
                     <div>
                         &nbsp;
                     </div>
-                    @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Compositions", "Material", Model.ValidMaterials, Composition.Key.ID))
+                    @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Compositions", "Material", Model.ValidMaterials, Composition.Key.Id))
 
-                    @Html.LabelFor(m => m.CompositionPercentages, new { @class = "control-label" })
+                    @Html.LabelFor(m => m.CompositionPercentages, new { @class = "col-sm-2 col-form-label" })
                     <div>
                         <input id="CompositionPercentages" name="CompositionPercentages" class="form-control" type="text" value="@Composition.Value.ToString()">
                     </div>
@@ -44,15 +44,15 @@
 
 <script type="text/javascript">
         var compositionDropdown = decodeHtml('@Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Compositions", "Material", Model.ValidMaterials, -1)).ToString().Replace(Environment.NewLine, "")');
-        var textboxLabel = decodeHtml('@Html.LabelFor(m => m.CompositionPercentages, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "")');
+        var textboxLabel = decodeHtml('@Html.LabelFor(m => m.CompositionPercentages, new { @class = "col-sm-2 col-form-label" }).ToString().Replace(Environment.NewLine, "")');
         var textboxControl = decodeHtml('@Html.TextBoxFor(m => m.CompositionPercentages, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');
 
         $(document).ready(function () {
             $("#addCompositionsRow").click(function () {
                 $("#compositionRows").append(
-                    '<div class="form-group three-column">' +
+                    '<div class="form-group row">' +
                     '<a href="#" class="removeRow" id="removeCompositionRow" title="Remove this">X</a>' +
-                    '<label class="control-label">&nbsp;</label><div>&nbsp;</div>' +
+                    '<label class="col-sm-2 col-form-label">&nbsp;</label><div>&nbsp;</div>' +
                     compositionDropdown +
                     textboxLabel + '<div>' + textboxControl + '</div></div>'
                 );

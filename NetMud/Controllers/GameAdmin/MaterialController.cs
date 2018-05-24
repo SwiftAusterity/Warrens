@@ -160,7 +160,7 @@ namespace NetMud.Controllers.GameAdmin
                 message = "Error; Creation failed.";
             else
             {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - AddMaterialData[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                LoggingUtility.LogAdminCommandUsage("*WEB* - AddMaterialData[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 message = "Creation Successful.";
             }
 
@@ -278,7 +278,7 @@ namespace NetMud.Controllers.GameAdmin
 
                         if (material != null)
                         {
-                            if (obj.Composition.Any(ic => ic.Key.ID == materialId))
+                            if (obj.Composition.Any(ic => ic.Key.Id == materialId))
                             {
 
                                 obj.Composition.Remove(material);
@@ -295,12 +295,12 @@ namespace NetMud.Controllers.GameAdmin
                 }
             }
 
-            foreach (var container in obj.Composition.Where(ic => !vModel.Compositions.Contains(ic.Key.ID)))
+            foreach (var container in obj.Composition.Where(ic => !vModel.Compositions.Contains(ic.Key.Id)))
                 obj.Composition.Remove(container);
 
             if (obj.Save())
             {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - EditMaterialData[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                LoggingUtility.LogAdminCommandUsage("*WEB* - EditMaterialData[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 message = "Edit Successful.";
             }
             else

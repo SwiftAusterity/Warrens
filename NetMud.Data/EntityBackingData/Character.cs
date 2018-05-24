@@ -63,7 +63,7 @@ namespace NetMud.Data.EntityBackingData
             }
             set
             {
-                _raceData = value.ID;
+                _raceData = value.Id;
             }
         }
 
@@ -73,7 +73,7 @@ namespace NetMud.Data.EntityBackingData
         public StaffRank GamePermissionsRank { get; set; }
 
         /// <summary>
-        /// The last known location ID this character was seen in by system (for restore/backup purposes)
+        /// The last known location Id this character was seen in by system (for restore/backup purposes)
         /// </summary>
         [JsonConverter(typeof(ConcreteTypeConverter<GlobalPosition>))]
         [NonNullableDataIntegrity("Missing location data.")]
@@ -157,7 +157,7 @@ namespace NetMud.Data.EntityBackingData
         /// <summary>
         /// Add it to the cache and save it to the file system
         /// </summary>
-        /// <returns>the object with ID and other db fields set</returns>
+        /// <returns>the object with Id and other db fields set</returns>
         public override IData Create()
         {
             var accessor = new DataAccess.FileSystem.PlayerData();
@@ -187,7 +187,7 @@ namespace NetMud.Data.EntityBackingData
             try
             {
                 //Remove from cache first
-                PlayerDataCache.Remove(new PlayerDataCacheKey(typeof(ICharacter), AccountHandle, ID));
+                PlayerDataCache.Remove(new PlayerDataCacheKey(typeof(ICharacter), AccountHandle, Id));
 
                 //Remove it from the file system.
                 accessor.ArchiveCharacter(this);

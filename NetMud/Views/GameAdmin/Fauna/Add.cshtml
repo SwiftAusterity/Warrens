@@ -8,36 +8,36 @@
             @Html.AntiForgeryToken()
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            <div class="form-group two-column">
+            <div class="form-group row">
                 @Html.EditorFor(e => e.Name)
                 @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Race", "Race", Model.ValidRaces, -1))
             </div>
 
-            <div class="form-group three-column">
+            <div class="form-group row">
                 @Html.EditorFor(e => e.Rarity)
                 @Html.EditorFor(e => e.AmountMultiplier)
                 @Html.EditorFor(e => e.PuissanceVariance)
             </div>
-            <div class="form-group two-column">
+            <div class="form-group row">
                 @Html.EditorFor(m => m.FemaleRatio)
                 @Html.EditorFor(m => m.PopulationHardCap)
             </div>
-            <div class="form-group two-column">
+            <div class="form-group row">
                 @Html.EditorFor(m => m.TemperatureRangeLow)
                 @Html.EditorFor(m => m.TemperatureRangeHigh)
             </div>
-            <div class="form-group two-column">
+            <div class="form-group row">
                 @Html.EditorFor(m => m.HumidityRangeLow)
                 @Html.EditorFor(m => m.HumidityRangeHigh)
             </div>
-            <div class="form-group two-column">
+            <div class="form-group row">
                 @Html.EditorFor(m => m.ElevationRangeLow)
                 @Html.EditorFor(m => m.ElevationRangeHigh)
             </div>
 
             @Html.Partial("~/Views/GameAdmin/Fauna/OccursIn.cshtml", Model)
 
-            <div class="form-group one-column">
+            <div class="form-group row">
                 @Html.EditorFor(e => e.HelpText)
             </div>
             @Html.Partial("SubmitButton", "Create")

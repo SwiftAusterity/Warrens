@@ -1,31 +1,31 @@
 ﻿@model NetMud.Models.Admin.AddEditNPCDataViewModel
 @{
     ViewBag.Title = "Add New Non-player Character";
-
-    <section id="newNPCForm">
-        @using (Html.BeginForm("Add", "NPC", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-        {
-            @Html.AntiForgeryToken()
-            <hr />
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            <div class="form-group two-column">
-                @Html.EditorFor(e => e.Name)
-                @Html.EditorFor(e => e.SurName)
-            </div>
-            <div class="form-group two-column">
-                @Html.EditorFor(e => e.Gender)
-                @Html.LabelFor(m => m.RaceId, new { @class = "control-label" })
-                <div>
-                    @Html.DropDownList("RaceId", Model.ValidRaces.Select(rl =>
-                                            new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
-                                             , htmlAttributes: new { id = "raceId", @class="form-control" })
-                </div>
-            </div>
-            @Html.Partial("SubmitButton", "Create")
-
-        }
-    </section>
 }
+
+<section id="newNPCForm">
+    @using (Html.BeginForm("Add", "NPC", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group row">
+            @Html.EditorFor(e => e.Name, new { columnCount = 3 })
+            @Html.EditorFor(e => e.SurName, new { columnCount = 3 })
+        </div>
+        <div class="form-group row">
+            @Html.EditorFor(e => e.Gender, new { columnCount = 3 })
+            @Html.LabelFor(m => m.RaceId, new { @class = "col-sm-1 col-form-label" })
+            <div class="col-md-4">
+                @Html.DropDownList("RaceId", Model.ValidRaces.Select(rl =>
+                                     new SelectListItem() { Text = rl.Name, Value = rl.Id.ToString() })
+                                      , htmlAttributes: new { id = "raceId", @class = "form-control" })
+            </div>
+        </div>
+        @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Create", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "NPC", IncludeCancel = true })
+    }
+</section>
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

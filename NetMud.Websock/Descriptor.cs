@@ -367,7 +367,7 @@ namespace NetMud.Websock
 
             var authedUser = UserManager.FindById(_userId);
 
-            var currentCharacter = authedUser.GameAccount.Characters.FirstOrDefault(ch => ch.ID.Equals(authedUser.GameAccount.CurrentlySelectedCharacter));
+            var currentCharacter = authedUser.GameAccount.Characters.FirstOrDefault(ch => ch.Id.Equals(authedUser.GameAccount.CurrentlySelectedCharacter));
 
             if (currentCharacter == null)
             {
@@ -376,13 +376,13 @@ namespace NetMud.Websock
             }
 
             //Try to see if they are already live
-            _currentPlayer = LiveCache.Get<IPlayer>(currentCharacter.ID);
+            _currentPlayer = LiveCache.Get<IPlayer>(currentCharacter.Id);
 
             //Check the backup
             if (_currentPlayer == null)
             {
                 var playerDataWrapper = new PlayerData();
-                _currentPlayer = playerDataWrapper.RestorePlayer(currentCharacter.AccountHandle, currentCharacter.ID);
+                _currentPlayer = playerDataWrapper.RestorePlayer(currentCharacter.AccountHandle, currentCharacter.Id);
             }
 
             //else new them up
@@ -518,7 +518,7 @@ namespace NetMud.Websock
         }
 
         /// <summary>
-        /// Gets the user ID from the web from the aspnet cookie
+        /// Gets the user Id from the web from the aspnet cookie
         /// </summary>
         /// <param name="authTicketValue">the cookie's value</param>
         private void GetUserIDFromCookie(string authTicketValue)

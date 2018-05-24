@@ -41,7 +41,7 @@ namespace NetMud.DataStructure.Base.EntityBackingData
         StaffRank GamePermissionsRank { get; set; }
 
         /// <summary>
-        /// Last known location ID for character in live world
+        /// Last known location Id for character in live world
         /// </summary>
         IGlobalPosition CurrentLocation { get; set; }
 

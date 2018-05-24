@@ -48,7 +48,7 @@ namespace NetMud.Data.Game
         public Intelligence(INonPlayerCharacter backingStore)
         {
             Inventory = new EntityContainer<IInanimate>();
-            DataTemplateId = backingStore.ID;
+            DataTemplateId = backingStore.Id;
             SpawnNewInWorld();
         }
 
@@ -60,7 +60,7 @@ namespace NetMud.Data.Game
         public Intelligence(INonPlayerCharacter backingStore, IGlobalPosition spawnTo)
         {
             Inventory = new EntityContainer<IInanimate>();
-            DataTemplateId = backingStore.ID;
+            DataTemplateId = backingStore.Id;
             SpawnNewInWorld(spawnTo);
         }
 

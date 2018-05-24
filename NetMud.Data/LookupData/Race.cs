@@ -42,7 +42,7 @@ namespace NetMud.Data.LookupData
                 if (value == null)
                     return;
 
-                _arms = new Tuple<long, short>(value.Item1.ID, value.Item2);
+                _arms = new Tuple<long, short>(value.Item1.Id, value.Item2);
             }
         }
 
@@ -68,7 +68,7 @@ namespace NetMud.Data.LookupData
                 if (value == null)
                     return;
 
-                _legs = new Tuple<long, short>(value.Item1.ID, value.Item2);
+                _legs = new Tuple<long, short>(value.Item1.Id, value.Item2);
             }
         }
 
@@ -89,7 +89,7 @@ namespace NetMud.Data.LookupData
             }
             set
             {
-                _torso = value.ID;
+                _torso = value.Id;
             }
         }
 
@@ -110,7 +110,7 @@ namespace NetMud.Data.LookupData
             }
             set
             {
-                _head = value.ID;
+                _head = value.Id;
             }
         }
 
@@ -136,7 +136,7 @@ namespace NetMud.Data.LookupData
                 if (value == null)
                     return;
 
-                _bodyParts = new HashSet<Tuple<long, short, string>>(value.Select(bp => new Tuple<long, short, string>(bp.Item1.ID, bp.Item2, bp.Item3)));
+                _bodyParts = new HashSet<Tuple<long, short, string>>(value.Select(bp => new Tuple<long, short, string>(bp.Item1.Id, bp.Item2, bp.Item3)));
             }
         }
 
@@ -162,7 +162,7 @@ namespace NetMud.Data.LookupData
             }
             set
             {
-                _sanguinaryMaterial = value.ID;
+                _sanguinaryMaterial = value.Id;
             }
         }
 
@@ -203,7 +203,7 @@ namespace NetMud.Data.LookupData
             }
             set
             {
-                _startingLocation = value.ID;
+                _startingLocation = value.Id;
             }
         }
 
@@ -224,7 +224,7 @@ namespace NetMud.Data.LookupData
             }
             set
             {
-                _emergencyLocation = value.ID;
+                _emergencyLocation = value.Id;
             }
         }
 

@@ -42,7 +42,7 @@ namespace NetMud.Data.LookupData
             }
             set
             {
-                _rock = value.ID;
+                _rock = value.Id;
             }
         }
 
@@ -63,7 +63,7 @@ namespace NetMud.Data.LookupData
             }
             set
             {
-                _dirt = value.ID;
+                _dirt = value.Id;
             }
         }
 
@@ -84,7 +84,7 @@ namespace NetMud.Data.LookupData
             }
             set
             {
-                _ores = value.Select(m => m.ID);
+                _ores = value.Select(m => m.Id);
             }
         }
     }

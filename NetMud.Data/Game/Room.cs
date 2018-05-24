@@ -93,7 +93,7 @@ namespace NetMud.Data.Game
             MobilesInside = new EntityContainer<IMobile>();
             Pathways = new EntityContainer<IPathway>();
 
-            DataTemplateId = room.ID;
+            DataTemplateId = room.Id;
 
             GetFromWorldOrSpawn();
         }
@@ -154,7 +154,7 @@ namespace NetMud.Data.Game
 
         #region Spawning
         /// <summary>
-        /// Tries to find this entity in the world based on its ID or gets a new one from the db and puts it in the world
+        /// Tries to find this entity in the world based on its Id or gets a new one from the db and puts it in the world
         /// </summary>
         public void GetFromWorldOrSpawn()
         {

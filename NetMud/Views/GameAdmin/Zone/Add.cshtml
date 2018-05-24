@@ -10,18 +10,18 @@
         @Html.AntiForgeryToken()
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group one-column">
-            @Html.EditorFor(e => e.Name)
+        <div class="form-group row">
+            @Html.EditorFor(e => e.Name, new { columnCount = 1 })
         </div>
-        <div class="form-group one-column">
-            @Html.EditorFor(e => e.TemperatureCoefficient)
-            @Html.EditorFor(e => e.PressureCoefficient)
+        <div class="form-group row">
+            @Html.EditorFor(e => e.TemperatureCoefficient, new { columnCount = 2 })
+            @Html.EditorFor(e => e.PressureCoefficient, new { columnCount = 2 })
         </div>
-        <div class="form-group one-column">
-            @Html.EditorFor(e => e.BaseElevation)
-            @Html.EditorFor(e => e.Claimable)
+        <div class="form-group row">
+            @Html.EditorFor(e => e.BaseElevation, new { columnCount = 2 })
+            @Html.EditorFor(e => e.Claimable, new { columnCount = 2 })
         </div>
-        @Html.Partial("SubmitButton", "Create")
+        @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Create", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Zone", IncludeCancel = true })
     }
 </section>
 }

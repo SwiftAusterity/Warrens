@@ -58,7 +58,7 @@ namespace NetMud.Data.EntityBackingData
             set
             {
                 if (value != null)
-                    _affiliation = value.ID;
+                    _affiliation = value.Id;
             }
         }
 
@@ -138,7 +138,7 @@ namespace NetMud.Data.EntityBackingData
         /// <returns>The live data</returns>
         public ILocale GetLiveInstance()
         {
-            return LiveCache.Get<ILocale>(ID);
+            return LiveCache.Get<ILocale>(Id);
         }
     }
 }

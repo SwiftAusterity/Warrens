@@ -85,7 +85,7 @@ namespace NetMud.Controllers.GameAdmin
 
                     ValidMaterials = BackingDataCache.GetAll<IMaterial>(),
                     ValidModels = BackingDataCache.GetAll<IDimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat),
-                    ValidRooms = BackingDataCache.GetAll<IRoomData>().Where(rm => !rm.ID.Equals(originRoomId)),
+                    ValidRooms = BackingDataCache.GetAll<IRoomData>().Where(rm => !rm.Id.Equals(originRoomId)),
 
                     Origin = BackingDataCache.Get<IRoomData>(originRoomId),
                     OriginID = originRoomId,
@@ -94,7 +94,7 @@ namespace NetMud.Controllers.GameAdmin
                 };
 
                 vModel.Locale = vModel.Origin.ParentLocation;
-                vModel.LocaleId = vModel.Origin.ParentLocation.ID;
+                vModel.LocaleId = vModel.Origin.ParentLocation.Id;
 
                 return View("~/Views/GameAdmin/Pathway/AddWithRoom.cshtml", "_chromelessLayout", vModel);
             }
@@ -106,7 +106,7 @@ namespace NetMud.Controllers.GameAdmin
 
                     ValidMaterials = BackingDataCache.GetAll<IMaterial>(),
                     ValidModels = BackingDataCache.GetAll<IDimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat),
-                    ValidRooms = BackingDataCache.GetAll<IRoomData>().Where(rm => !rm.ID.Equals(originRoomId)),
+                    ValidRooms = BackingDataCache.GetAll<IRoomData>().Where(rm => !rm.Id.Equals(originRoomId)),
 
                     Origin = BackingDataCache.Get<IRoomData>(originRoomId),
                     OriginID = originRoomId,
@@ -151,7 +151,7 @@ namespace NetMud.Controllers.GameAdmin
                         roomMessage = "Error; Creation failed.";
                     else
                     {
-                        LoggingUtility.LogAdminCommandUsage("*WEB* - AddRoomDataWithPathway[" + newRoom.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                        LoggingUtility.LogAdminCommandUsage("*WEB* - AddRoomDataWithPathway[" + newRoom.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     }
                 }
                 else
@@ -217,7 +217,7 @@ namespace NetMud.Controllers.GameAdmin
                     message = "Error; Creation failed.";
                 else
                 {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddPathwayWithRoom[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddPathwayWithRoom[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 }
             }
 
@@ -284,7 +284,7 @@ namespace NetMud.Controllers.GameAdmin
                     message = "Error; Creation failed.";
                 else
                 {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddPathway[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddPathway[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 }
             }
 
@@ -320,7 +320,7 @@ namespace NetMud.Controllers.GameAdmin
             vModel.Destination = (IRoomData)obj.Destination;
             vModel.Origin = (IRoomData)obj.Origin;
 
-            vModel.DimensionalModelId = obj.Model.ModelBackingData.ID;
+            vModel.DimensionalModelId = obj.Model.ModelBackingData.Id;
             vModel.DimensionalModelHeight = obj.Model.Height;
             vModel.DimensionalModelLength = obj.Model.Length;
             vModel.DimensionalModelWidth = obj.Model.Width;
@@ -394,7 +394,7 @@ namespace NetMud.Controllers.GameAdmin
 
                 if (obj.Save())
                 {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - EditPathwayData[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - EditPathwayData[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 }
                 else
                     message = "Error; Edit failed.";

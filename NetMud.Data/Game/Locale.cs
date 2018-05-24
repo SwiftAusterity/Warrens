@@ -112,7 +112,7 @@ namespace NetMud.Data.Game
         /// <param name="room">the backing data</param>
         public Locale(ILocaleData locale)
         {
-            DataTemplateId = locale.ID;
+            DataTemplateId = locale.Id;
 
             GetFromWorldOrSpawn();
         }

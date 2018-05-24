@@ -8,17 +8,17 @@
             @Html.AntiForgeryToken()
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            <div class="form-group two-column">
+            <div class="form-group row">
                 <label for="Locale">Locale</label>
                 <input type="text" id="Locale" name="Locale" disabled="disabled" title="Locale" value="@Model.Locale.Name" />
                 @Html.EditorFor(e => e.Name)
             </div>
             @Html.Partial("DimensionalEntityEditor", Model)
-            <div class="form-group one-column">
-                @Html.LabelFor(m => m.Medium, new { @class = "control-label" })
+            <div class="form-group row">
+                @Html.LabelFor(m => m.Medium, new { @class = "col-sm-2 col-form-label" })
                 <div>
                     @Html.DropDownList("Medium", Model.ValidMaterials.Select(rl =>
-                        new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
+                        new SelectListItem() { Text = rl.Name, Value = rl.Id.ToString() })
                         , htmlAttributes: new { id = "Medium", @class = "form-control" })
                     @Html.ValidationMessageFor(m => m.Medium, "", new { @class = "text-danger" })
                 </div>

@@ -129,7 +129,7 @@ namespace NetMud.Data.Game
         public Pathway(IPathwayData backingStore)
         {
             Enter = new MessageCluster();
-            DataTemplateId = backingStore.ID;
+            DataTemplateId = backingStore.Id;
             GetFromWorldOrSpawn();
         }
 
@@ -144,7 +144,7 @@ namespace NetMud.Data.Game
 
         #region spawning
         /// <summary>
-        /// Tries to find this entity in the world based on its ID or gets a new one from the db and puts it in the world
+        /// Tries to find this entity in the world based on its Id or gets a new one from the db and puts it in the world
         /// </summary>
         public void GetFromWorldOrSpawn()
         {
@@ -160,7 +160,7 @@ namespace NetMud.Data.Game
                 Keywords = me.Keywords;
                 Birthdate = me.Birthdate;
                 CurrentLocation = me.CurrentLocation;
-                DataTemplateId = me.DataTemplate<IPathwayData>().ID;
+                DataTemplateId = me.DataTemplate<IPathwayData>().Id;
                 Origin = me.Origin;
                 Destination = me.Destination;
                 Enter = me.Enter;
@@ -191,8 +191,8 @@ namespace NetMud.Data.Game
             Birthdate = DateTime.Now;
 
             //paths need two locations
-            Origin = LiveCache.Get<IRoom>(bS.Origin.ID);
-            Destination = LiveCache.Get<IRoom>(bS.Destination.ID);
+            Origin = LiveCache.Get<IRoom>(bS.Origin.Id);
+            Destination = LiveCache.Get<IRoom>(bS.Destination.Id);
 
             CurrentLocation = Origin.CurrentLocation;
 

@@ -123,7 +123,7 @@ namespace NetMud.DataAccess.Cache
             try
             {
                 return _globalCache.Where(keyValuePair => keyValuePair.Value.GetType().GetInterfaces().Contains(typeof(T)) 
-                                                        && ids.Contains(((T)keyValuePair.Value).ID))
+                                                        && ids.Contains(((T)keyValuePair.Value).Id))
                                   .Select(kvp => (T)kvp.Value);
             }
             catch (Exception ex)

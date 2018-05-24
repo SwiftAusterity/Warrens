@@ -110,7 +110,7 @@ namespace NetMud.DataAccess.Cache
         }
 
         /// <summary>
-        /// Gets one entity from the cache by its ID, only works for Singleton spawners with data templates(IEntities)
+        /// Gets one entity from the cache by its Id, only works for Singleton spawners with data templates(IEntities)
         /// </summary>
         /// <typeparam name="T">the type of the entity</typeparam>
         /// <param name="id">the id</param>
@@ -133,7 +133,7 @@ namespace NetMud.DataAccess.Cache
         }
 
         /// <summary>
-        /// Gets one entity from the cache by its ID, only works for Singleton spawners
+        /// Gets one entity from the cache by its Id, only works for Singleton spawners
         /// </summary>
         /// <typeparam name="T">the underlying type of the entity</typeparam>
         /// <param name="id">the id</param>
@@ -212,7 +212,7 @@ namespace NetMud.DataAccess.Cache
         /// <returns>the birthmark string</returns>
         public static string GetUniqueIdentifier(IData obj)
         {
-            return GetUniqueIdentifier(obj.ID.ToString());
+            return GetUniqueIdentifier(obj.Id.ToString());
         }
 
         /// <summary>

@@ -42,7 +42,7 @@ namespace NetMud.Data.LookupData
             }
             set
             {
-                _race = value.ID;
+                _race = value.Id;
             }
         }
     }
