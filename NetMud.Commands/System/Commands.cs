@@ -43,7 +43,7 @@ namespace NetMud.Commands.System
 
             returnStrings.Add("Commands:");
 
-            var commandNames = new HashSet<string>();
+            var commandNames = new List<string>();
             foreach (var command in loadedCommands)
             {
                 foreach(var commandName in command.GetCustomAttributes<CommandKeywordAttribute>().Where(key => key.DisplayInHelpAndCommands))
@@ -54,7 +54,7 @@ namespace NetMud.Commands.System
                     commandNames.Add(command.Name);
             }
 
-            sb.AppendLine(string.Join(", ", commandNames));
+            sb.AppendLine(string.Join(", ", commandNames.Select(cmd => cmd.ToLower()).Distinct()));
 
             if(sb.Length > 0)
                 sb.Length -= 2;

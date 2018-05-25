@@ -10,4 +10,4 @@
     tableColumns.Add("Teeth", obj => obj.TeethType.ToString());
 }
 
-@Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Name = "Races", Columns = tableColumns, Values = Model.OrderBy(obj => obj.Name) })
+@Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Name = "", Columns = tableColumns, Values = Model.OrderBy(obj => obj.Name) })

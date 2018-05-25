@@ -84,7 +84,7 @@ namespace NutMud.Commands.System
         {
             var sb = new List<string>
             {
-                string.Format("Valid Syntax: spawnNewNPC &lt;object name&gt;"),
+                string.Format("Valid Syntax: spawnNewNPC &lt;NPC name&gt;"),
                 "spawnNewNPC  &lt;NPC name&gt;  &lt;location name to spawn to&gt;".PadWithString(14, "&nbsp;", true)
             };
 
