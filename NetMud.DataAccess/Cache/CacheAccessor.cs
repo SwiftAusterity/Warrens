@@ -217,6 +217,26 @@ namespace NetMud.DataAccess.Cache
         }
 
         /// <summary>
+        /// Gets one entity from the cache by its key
+        /// </summary>
+        /// <typeparam name="T">the type of the entity</typeparam>
+        /// <param name="key">the key it was cached with</param>
+        /// <returns>the entity requested</returns>
+        public object Get(ICacheKey key)
+        {
+            try
+            {
+                return _globalCache[key.KeyHash()];
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex);
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Removes an entity from the cache by its key
         /// </summary>
         /// <param name="key">the key of the entity to remove</param>

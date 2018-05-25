@@ -16,6 +16,7 @@ using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.DataStructure.Behaviors.Existential;
+using NetMud.DataStructure.Base.Place;
 
 namespace NetMud.Interp
 {
@@ -444,17 +445,31 @@ namespace NetMud.Interp
                     case CommandRangeType.Touch:
                         validObjects.AddRange(Position.CurrentLocation.GetContents<T>().Where(ent => ((IEntity)ent).Keywords.Any(key => key.Contains(currentParmString))));
 
-                        if(Actor.GetType().GetInterfaces().Any(typ => typ == typeof(IContains)))
+                        //Add the pathways
+                        if(typeof(T) == typeof(IPathway) && Position.CurrentLocation.GetType().GetInterfaces().Contains(typeof(ILocation)))
+                        {
+                            var location = (ILocation)Position.CurrentLocation;
+
+                            validObjects.AddRange(location.GetPathways() as IEnumerable<T>);
+                        }
+
+                        if (Actor.GetType().GetInterfaces().Any(typ => typ == typeof(IContains)))
+                        {
                             validObjects.AddRange(((IContains)Actor).GetContents<T>().Where(ent => ((IEntity)ent).Keywords.Any(key => key.Contains(currentParmString))));
+                        }
 
                         //Containers only matter for touch usage subject paramaters, actor's inventory is already handled
                         //Don't sift through another intelligence's stuff
                         //TODO: write "does entity have permission to another entity's inventories" function on IEntity
                         if (hasContainer && currentNeededParm.Usage == CommandUsage.Subject)
-                            foreach(IContains thing in Position.CurrentLocation.GetContents<T>().Where(ent => ent.GetType().GetInterfaces().Any(intf => intf == typeof(IContains))
-                                                                                                && !ent.GetType().GetInterfaces().Any(intf => intf == typeof(IMobile))
-                                                                                                && !ent.Equals(Actor)))
+                        {
+                            foreach (IContains thing in Position.CurrentLocation.GetContents<T>().Where(ent => ent.GetType().GetInterfaces().Any(intf => intf == typeof(IContains))
+                                                                                                 && !ent.GetType().GetInterfaces().Any(intf => intf == typeof(IMobile))
+                                                                                                 && !ent.Equals(Actor)))
+                            {
                                 validObjects.AddRange(thing.GetContents<T>().Where(ent => ((IEntity)ent).Keywords.Any(key => key.Contains(currentParmString))));
+                            }
+                        }
                         break;
                     case CommandRangeType.Local: //requires Range to be working
                         break;

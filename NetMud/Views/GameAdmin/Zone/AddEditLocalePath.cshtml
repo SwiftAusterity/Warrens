@@ -1,0 +1,36 @@
+﻿@model NetMud.Models.Admin.AddEditZonePathwayDataViewModel
+
+@{
+    ViewBag.Title = "Add/Edit Zone to Locale Pathway";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var formTarget = Model.DestinationID == -1 ? "AddLocalePathway" : "EditLocalePathway";
+}
+
+<section id="newPathwayWithRoomForm">
+    @using (Html.BeginForm(formTarget, "Zone", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group row">
+            <input type="hidden" id="id" name="id" value="@Model.OriginID"/>
+
+            @Html.EditorFor(model => model.Name)
+        </div>
+        <div class="form-group row">
+            <label id="lblOrigin" class="col-sm-1 col-form-label">Origin:</label>
+            <div class="col-sm-3">@Model.Origin.Name</div>
+            <label id="lblDestination" class="col-sm-1 col-form-label">&nbsp;</label>
+            @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("destination", "Destination Room", Model.ValidRooms, Model.DestinationID))
+        </div>
+
+        @Html.Partial("TwoDimensionalEntityEditor", Model)
+
+        <div class="clearfix"></div>
+        @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Zone", IncludeCancel = true })
+    }
+</section>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -1,1 +1,35 @@
-{"EntityClass":"NetMud.Data.Game.Pathway, NetMud.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null","Occurrences":[],"DegreesFromNorth":90,"InclineGrade":0,"Destination":1,"Origin":0,"Model":{"$type":"NetMud.Data.LookupData.DimensionalModel, NetMud.Data","Length":500,"Height":500,"Width":500,"Vacuity":0,"SurfaceCavitation":0,"BackingDataId":0,"Composition":{"bottom":5,"middle":5,"top":5}},"Affects":[],"Id":0,"Created":"2018-05-22T14:14:04.0174353-05:00","LastRevised":"0001-01-01T00:00:00","Name":"door"}
+{
+  "EntityClass": "NetMud.Data.Game.Pathway, NetMud.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+  "Occurrences": null,
+  "DegreesFromNorth": -1,
+  "InclineGrade": 0,
+  "Destination": {
+    "CacheType": 1,
+    "ObjectType": "NetMud.Data.EntityBackingData.RoomData, NetMud.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "BirthMark": 0
+  },
+  "Origin": {
+    "CacheType": 1,
+    "ObjectType": "NetMud.Data.EntityBackingData.ZoneData, NetMud.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "BirthMark": 0
+  },
+  "Model": {
+    "$type": "NetMud.Data.LookupData.DimensionalModel, NetMud.Data",
+    "Length": 500,
+    "Height": 500,
+    "Width": 500,
+    "Vacuity": 0,
+    "SurfaceCavitation": 0,
+    "BackingDataId": 0,
+    "Composition": {
+      "bottom": 5,
+      "middle": 5,
+      "top": 5
+    }
+  },
+  "Affects": null,
+  "Id": 0,
+  "Created": "2018-05-25T15:41:53.1898912-05:00",
+  "LastRevised": "0001-01-01T00:00:00",
+  "Name": "A misty portal"
+}

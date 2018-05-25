@@ -1,5 +1,7 @@
 ﻿using NetMud.Authentication;
+using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
+using NetMud.DataStructure.Base.Supporting;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -78,5 +80,33 @@ namespace NetMud.Models.Admin
         public int PressureCoefficient { get; set; }
 
         public IZoneData DataObject { get; set; }
+    }
+
+    public class AddEditZonePathwayDataViewModel : TwoDimensionalEntityEditViewModel
+    {
+        public AddEditZonePathwayDataViewModel()
+        {
+            ValidModels = Enumerable.Empty<IDimensionalModelData>();
+            ValidMaterials = Enumerable.Empty<IMaterial>();
+            ValidRooms = Enumerable.Empty<IRoomData>();
+        }
+
+        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
+        [Display(Name = "Name")]
+        [DataType(DataType.Text)]
+        public string Name { get; set; }
+
+        [Display(Name = "To Room")]
+        [DataType(DataType.Text)]
+        public long DestinationID { get; set; }
+
+        [Display(Name = "From Zone")]
+        [DataType(DataType.Text)]
+        public long OriginID { get; set; }
+
+        public IEnumerable<IRoomData> ValidRooms { get; set; }
+        public IZoneData Origin { get; set; }
+        public IRoomData Destination { get; set; }
+        public IPathwayData DataObject { get; set; }
     }
 }

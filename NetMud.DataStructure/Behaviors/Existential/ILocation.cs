@@ -22,9 +22,9 @@ namespace NetMud.DataStructure.Behaviors.Rendering
         IEntityContainer<IInanimate> Contents { get; set; }
 
         /// <summary>
-        /// Pathways leading out of this
+        /// Pathways leading out of (or into) this
         /// </summary>
-        IEntityContainer<IPathway> Pathways { get; set; }
+        IEnumerable<IPathway> GetPathways(bool inward = false);
 
         /// <summary>
         /// Get the surrounding locations based on a strength radius

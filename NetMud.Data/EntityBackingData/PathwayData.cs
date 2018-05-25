@@ -57,7 +57,7 @@ namespace NetMud.Data.EntityBackingData
         public int InclineGrade { get; set; }
 
         [JsonProperty("Destination")]
-        private long _destination { get; set; }
+        private BackingDataCacheKey _destination { get; set; }
 
         /// <summary>
         /// What is in the middle of the room
@@ -69,17 +69,17 @@ namespace NetMud.Data.EntityBackingData
         {
             get
             {
-                return BackingDataCache.Get<IRoomData>(_destination);
+                return (ILocationData)BackingDataCache.Get(_destination);
             }
             set
             {
                 if (value != null)
-                    _destination = value.Id;
+                    _destination = new BackingDataCacheKey(value.GetType(), value.Id);
             }
         }
 
         [JsonProperty("Origin")]
-        private long _origin { get; set; }
+        private BackingDataCacheKey _origin { get; set; }
 
         /// <summary>
         /// What is in the middle of the room
@@ -91,12 +91,12 @@ namespace NetMud.Data.EntityBackingData
         {
             get
             {
-                return BackingDataCache.Get<IRoomData>(_origin);
+                return (ILocationData)BackingDataCache.Get(_origin);
             }
             set
             {
                 if (value != null)
-                    _origin = value.Id;
+                    _origin = new BackingDataCacheKey(value.GetType(), value.Id);
             }
         }
 

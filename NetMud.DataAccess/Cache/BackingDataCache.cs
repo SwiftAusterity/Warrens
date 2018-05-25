@@ -100,6 +100,17 @@ namespace NetMud.DataAccess.Cache
         }
 
         /// <summary>
+        /// Gets one entity from the cache by its key
+        /// </summary>
+        /// <typeparam name="T">the type of the entity</typeparam>
+        /// <param name="key">the key it was cached with</param>
+        /// <returns>the entity requested</returns>
+        public static object Get(BackingDataCacheKey key)
+        {
+            return BackingCache.Get(key);
+        }
+
+        /// <summary>
         /// Gets one entity from the cache by its Id, only works for Singleton spawners with data templates(IEntities)
         /// </summary>
         /// <typeparam name="T">the type of the entity</typeparam>

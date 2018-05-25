@@ -337,7 +337,6 @@ namespace NetMud.Controllers.GameAdmin
         {
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
-            vModel.ValidRooms = BackingDataCache.GetAll<IRoomData>();
 
             var obj = BackingDataCache.Get<IPathwayData>(id);
             if (obj == null)

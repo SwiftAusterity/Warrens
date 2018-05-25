@@ -9,9 +9,11 @@ using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.Rendering;
+using NetMud.Utility;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Web.Script.Serialization;
 
@@ -80,7 +82,6 @@ namespace NetMud.Data.Game
         {
             Contents = new EntityContainer<IInanimate>();
             MobilesInside = new EntityContainer<IMobile>();
-            Pathways = new EntityContainer<IPathway>();
         }
 
         /// <summary>
@@ -91,7 +92,6 @@ namespace NetMud.Data.Game
         {
             Contents = new EntityContainer<IInanimate>();
             MobilesInside = new EntityContainer<IMobile>();
-            Pathways = new EntityContainer<IPathway>();
 
             DataTemplateId = room.Id;
 
@@ -131,8 +131,9 @@ namespace NetMud.Data.Game
             var sb = new List<string>
             {
                 string.Format("%O%{0}%O%", DataTemplate<IRoomData>().Name),
-                string.Empty.PadLeft(DataTemplate<IRoomData>().Name.Length, '-')
-            };
+                string.Empty.PadLeft(DataTemplate<IRoomData>().Name.Length, '-'),
+                GetPathways().SelectMany(path => path.RenderToLook(actor)).CommaList(RenderUtility.SplitListType.AllComma)
+          };
 
             return sb;
         }
@@ -171,7 +172,6 @@ namespace NetMud.Data.Game
                 DataTemplateId = me.DataTemplateId;
                 Contents = me.Contents;
                 MobilesInside = me.MobilesInside;
-                Pathways = me.Pathways;
                 Keywords = me.Keywords;
             }
         }

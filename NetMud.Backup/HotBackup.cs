@@ -267,21 +267,6 @@ namespace NetMud.Backup
                     }
                 }
 
-                //paths load themselves to their appropriate location
-                //foreach (Pathway entity in entitiesToLoad.Where(ent => ent.GetType() == typeof(Pathway)))
-                //{
-                //    ILocation roomTo = LiveCache.Get<ILocation>(new LiveCacheKey(entity.Origin.GetType(), entity.Origin.BirthMark));
-                //    ILocation roomFrom = LiveCache.Get<ILocation>(new LiveCacheKey(entity.Origin.GetType(), entity.Destination.BirthMark));
-
-                //    if (roomTo != null && roomFrom != null)
-                //    {
-                //        entity.Origin = roomFrom;
-                //        entity.Destination = roomTo;
-                //        entity.CurrentLocation = roomFrom.CurrentLocation;
-                //        roomFrom.MoveInto<IPathway>(entity);
-                //    }
-                //}
-
                 //We need to poll the WorldMaps here and give all the rooms their coordinates as well as the zones their sub-maps
                 ParseDimension();
 

@@ -7,8 +7,10 @@ using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.Rendering;
+using NetMud.Utility;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NetMud.Data.Game
 {
@@ -55,7 +57,6 @@ namespace NetMud.Data.Game
         {
             Contents = new EntityContainer<IInanimate>();
             MobilesInside = new EntityContainer<IMobile>();
-            Pathways = new EntityContainer<IPathway>();
 
             Claimable = false;
         }
@@ -68,7 +69,6 @@ namespace NetMud.Data.Game
         {
             Contents = new EntityContainer<IInanimate>();
             MobilesInside = new EntityContainer<IMobile>();
-            Pathways = new EntityContainer<IPathway>();
 
             Claimable = false;
 
@@ -127,7 +127,8 @@ namespace NetMud.Data.Game
             var sb = new List<string>
             {
                 string.Format("%O%{0}%O%", DataTemplate<IZoneData>().Name),
-                string.Empty.PadLeft(DataTemplate<IZoneData>().Name.Length, '-')
+                string.Empty.PadLeft(DataTemplate<IZoneData>().Name.Length, '-'),
+                GetPathways().SelectMany(path => path.RenderToLook(actor)).CommaList(RenderUtility.SplitListType.AllComma)
             };
 
             return sb;
@@ -183,7 +184,6 @@ namespace NetMud.Data.Game
                 DataTemplateId = me.DataTemplateId;
                 Contents = me.Contents;
                 MobilesInside = me.MobilesInside;
-                Pathways = me.Pathways;
                 Keywords = me.Keywords;
                 CurrentLocation = new GlobalPosition(this);
             }

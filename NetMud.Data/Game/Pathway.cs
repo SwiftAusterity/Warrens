@@ -56,7 +56,7 @@ namespace NetMud.Data.Game
         /// Birthmark of live location this points into
         /// </summary>
         [JsonProperty("Destination")]
-        private string _currentDestinationBirthmark;
+        private LiveCacheKey _currentDestinationBirthmark;
 
         /// <summary>
         /// Restful live location this points into
@@ -68,8 +68,8 @@ namespace NetMud.Data.Game
         {
             get
             {
-                if (!String.IsNullOrWhiteSpace(_currentDestinationBirthmark))
-                    return LiveCache.Get<IRoom>(new LiveCacheKey(typeof(IRoom), _currentDestinationBirthmark));
+                if (_currentDestinationBirthmark != null)
+                    return (ILocation)LiveCache.Get(_currentDestinationBirthmark);
 
                 return null;
             }
@@ -78,7 +78,7 @@ namespace NetMud.Data.Game
                 if (value == null)
                     return;
 
-                _currentDestinationBirthmark = value.BirthMark;
+                _currentDestinationBirthmark = new LiveCacheKey(value.GetType(), value.BirthMark);
                 UpsertToLiveWorldCache();
             }
         }
@@ -87,7 +87,7 @@ namespace NetMud.Data.Game
         /// Birthmark of live location this points out of
         /// </summary>
         [JsonProperty("Origin")]
-        private string _currentOriginBirthmark;
+        private LiveCacheKey _currentOriginBirthmark;
 
         /// <summary>
         /// Restful live location this points out of
@@ -99,8 +99,8 @@ namespace NetMud.Data.Game
         {
             get
             {
-                if (!String.IsNullOrWhiteSpace(_currentOriginBirthmark))
-                    return LiveCache.Get<IRoom>(new LiveCacheKey(typeof(IRoom), _currentOriginBirthmark));
+                if (_currentOriginBirthmark != null)
+                    return (ILocation)LiveCache.Get(_currentOriginBirthmark);
 
                 return null;
             }
@@ -109,7 +109,7 @@ namespace NetMud.Data.Game
                 if (value == null)
                     return;
 
-                _currentOriginBirthmark = value.BirthMark;
+                _currentOriginBirthmark = new LiveCacheKey(value.GetType(), value.BirthMark);
                 UpsertToLiveWorldCache();
             }
         }
@@ -152,7 +152,7 @@ namespace NetMud.Data.Game
             var me = LiveCache.Get<Pathway>(DataTemplateId);
 
             //Isn't in the world currently
-            if (me == default(IPathway))
+            if (me == default(Pathway))
                 SpawnNewInWorld();
             else
             {
@@ -191,16 +191,14 @@ namespace NetMud.Data.Game
             Birthdate = DateTime.Now;
 
             //paths need two locations
-            Origin = LiveCache.Get<IRoom>(bS.Origin.Id);
-            Destination = LiveCache.Get<IRoom>(bS.Destination.Id);
+            Origin = bS.Origin.GetLiveInstance();
+            Destination = bS.Destination.GetLiveInstance();
 
             CurrentLocation = Origin.CurrentLocation;
 
             //Enter = new MessageCluster(new string[] { bS.MessageToActor }, new string[] { "$A$ enters you" }, new string[] { }, new string[] { bS.MessageToOrigin }, new string[] { bS.MessageToDestination });
             //Enter.ToSurrounding.Add(MessagingType.Visible, new Tuple<int, IEnumerable<string>>(bS.VisibleStrength, new string[] { bS.VisibleToSurroundings }));
             //Enter.ToSurrounding.Add(MessagingType.Audible, new Tuple<int, IEnumerable<string>>(bS.AudibleStrength, new string[] { bS.AudibleToSurroundings }));
-
-            Origin.MoveInto<IPathway>(this);
         }
         #endregion
 
@@ -213,8 +211,8 @@ namespace NetMud.Data.Game
             var sb = new List<string>();
             var bS = DataTemplate<IPathwayData>(); ;
 
-            sb.Add(string.Format("{0} heads in the direction of {1} from {2} to {3}", bS.Name, MovementDirection.ToString(), 
-                Origin.DataTemplate<IRoomData>().Name, Destination.DataTemplate<IRoomData>().Name));
+            sb.Add(string.Format("{0} heads in the direction of {1} from {2} to {3}.", bS.Name, MovementDirection.ToString(), 
+                Origin.DataTemplateName, Destination.DataTemplateName));
 
             return sb;
         }

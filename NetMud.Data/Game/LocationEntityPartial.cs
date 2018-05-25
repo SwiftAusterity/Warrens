@@ -61,11 +61,6 @@ namespace NetMud.Data.Game
         public IEntityContainer<IInanimate> Contents { get; set; }
 
         /// <summary>
-        /// Pathways leading out of this
-        /// </summary>
-        public IEntityContainer<IPathway> Pathways { get; set; }
-
-        /// <summary>
         /// Any mobiles (players, npcs) contained in this
         /// </summary>
         public IEntityContainer<IMobile> MobilesInside { get; set; }
@@ -87,9 +82,6 @@ namespace NetMud.Data.Game
             if (implimentedTypes.Contains(typeof(IInanimate)))
                 contents.AddRange(Contents.EntitiesContained().Select(ent => (T)ent));
 
-            if (implimentedTypes.Contains(typeof(IPathway)))
-                contents.AddRange(Pathways.EntitiesContained().Select(ent => (T)ent));
-
             return contents;
         }
 
@@ -110,9 +102,6 @@ namespace NetMud.Data.Game
 
             if (implimentedTypes.Contains(typeof(IInanimate)))
                 contents.AddRange(Contents.EntitiesContained(containerName).Select(ent => (T)ent));
-
-            if (implimentedTypes.Contains(typeof(IPathway)))
-                contents.AddRange(Pathways.EntitiesContained(containerName).Select(ent => (T)ent));
 
             return contents;
         }
@@ -171,22 +160,6 @@ namespace NetMud.Data.Game
                 return string.Empty;
             }
 
-            if (implimentedTypes.Contains(typeof(IPathway)))
-            {
-                var obj = (IPathway)thing;
-
-                if (Pathways.Contains(obj, containerName))
-                    return "That is already in the container";
-
-                if (!obj.TryMoveInto(this))
-                    return "Unable to move into that container.";
-
-                Pathways.Add(obj, containerName);
-                UpsertToLiveWorldCache();
-
-                return string.Empty;
-            }
-
             return "Invalid type to move to container.";
         }
 
@@ -240,23 +213,14 @@ namespace NetMud.Data.Game
                 return string.Empty;
             }
 
-            if (implimentedTypes.Contains(typeof(IPathway)))
-            {
-                var obj = (IPathway)thing;
-
-                if (!Pathways.Contains(obj, containerName))
-                    return "That is not in the container";
-
-                obj.TryMoveInto(null);
-                Pathways.Remove(obj, containerName);
-                UpsertToLiveWorldCache();
-
-                return string.Empty;
-            }
-
             return "Invalid type to move from container.";
         }
         #endregion
+
+        public IEnumerable<IPathway> GetPathways(bool inward = false)
+        {
+            return LiveCache.GetAll<IPathway>().Where(path => path.Origin.Equals(this) || (inward && path.Destination.Equals(this)));
+        }
 
         /// <summary>
         /// Get the surrounding locations based on a strength radius
@@ -266,22 +230,22 @@ namespace NetMud.Data.Game
         public virtual IEnumerable<ILocation> GetSurroundings(int strength)
         {
             var radiusLocations = new List<ILocation>();
+            var paths = GetPathways();
 
             //If we don't have any paths out what can we even do
-            if (Pathways.Count() == 0)
+            if (paths.Count() == 0)
                 return radiusLocations;
 
             var currentRadius = 0;
-            var currentPathsSet = Pathways.EntitiesContained();
-            while (currentRadius <= strength && currentPathsSet.Count() > 0)
+            while (currentRadius <= strength && paths.Count() > 0)
             {
-                var currentLocsSet = currentPathsSet.Select(path => path.Destination);
+                var currentLocsSet = paths.Select(path => path.Destination);
 
                 if (currentLocsSet.Count() == 0)
                     break;
 
                 radiusLocations.AddRange(currentLocsSet);
-                currentPathsSet = currentLocsSet.SelectMany(ro => ro.Pathways.EntitiesContained());
+                paths = currentLocsSet.SelectMany(ro => ro.GetPathways());
 
                 currentRadius++;
             }

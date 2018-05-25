@@ -11,12 +11,14 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group row">
-            @Html.EditorFor(model => model.Name)
             @Html.HiddenFor(m => m.OriginID)
-            <label id="lblOrigin" class="col-sm-2 col-form-label">Origin:</label>
-            <div>@Model.Origin.Name</div>
-            <label id="lblDestination" class="col-sm-2 col-form-label">Destination:</label>
-            <div>NEW ROOM</div>
+            @Html.EditorFor(model => model.Name)
+        </div>
+        <div class="form-group row">
+            <label id="lblOrigin" class="col-sm-1 col-form-label">Origin:</label>
+            <div class="col-sm-3">@Model.Origin.Name</div>
+            <label id="lblDestination" class="col-sm-1 col-form-label">Destination:</label>
+            <div class="col-sm-3">NEW ROOM</div>
         </div>
         <div class="form-group row">
             @Html.EditorFor(model => model.DegreesFromNorth)

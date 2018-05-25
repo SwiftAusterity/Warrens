@@ -428,6 +428,7 @@
     <Content Include="Views\Features\Flora.cshtml" />
     <Content Include="Views\Features\Minerals.cshtml" />
     <Content Include="Views\Features\Help.cshtml" />
+    <Content Include="Views\GameAdmin\Zone\AddEditLocalePath.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

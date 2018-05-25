@@ -5,6 +5,7 @@ using NetMud.Utility;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.Commands.Attributes;
 using NetMud.DataStructure.SupportingClasses;
+using NutMud.Commands.Rendering;
 
 namespace NetMud.Commands.Movement
 {
@@ -62,6 +63,11 @@ namespace NetMud.Commands.Movement
             targetPath.Destination.MoveInto((IMobile)Actor);
 
             targetPath.Enter.ExecuteMessaging(Actor, targetPath, null, targetPath.Origin, targetPath.Destination);
+
+            //Render the next room to them
+            var lookCommand = new Look() { Actor = Actor, Subject = null, OriginLocation = Actor.CurrentLocation };
+
+            lookCommand.Execute();
         }
 
         /// <summary>
@@ -70,37 +76,17 @@ namespace NetMud.Commands.Movement
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
+            var dirList = new List<string>() {
+                "east", "north", "northeast", "northwest", "south", "southeast", "southwest", "west", "up", "down",
+                "upeast", "upnorth", "upnortheast", "upnorthwest", "upsouth", "upsoutheast", "upsouthwest", "upwest",
+                "downeast", "downnorth", "downnortheast", "downnorthwest", "downsouth", "downsoutheast", "downwest",
+                "enter &lt;exit name&gt;"
+            };
+
             var sb = new List<string>
             {
                 string.Format("Valid Syntax:"),
-                "east".PadWithString(14, "&nbsp;", true),
-                "north".PadWithString(14, "&nbsp;", true),
-                "northeast".PadWithString(14, "&nbsp;", true),
-                "northwest".PadWithString(14, "&nbsp;", true),
-                "south".PadWithString(14, "&nbsp;", true),
-                "southeast".PadWithString(14, "&nbsp;", true),
-                "southwest".PadWithString(14, "&nbsp;", true),
-                "west".PadWithString(14, "&nbsp;", true),
-                "up".PadWithString(14, "&nbsp;", true),
-                "down".PadWithString(14, "&nbsp;", true),
-                "upeast".PadWithString(14, "&nbsp;", true),
-                "upnorth".PadWithString(14, "&nbsp;", true),
-                "upnortheast".PadWithString(14, "&nbsp;", true),
-                "upnorthwest".PadWithString(14, "&nbsp;", true),
-                "upsouth".PadWithString(14, "&nbsp;", true),
-                "upsoutheast".PadWithString(14, "&nbsp;", true),
-                "upsouthwest".PadWithString(14, "&nbsp;", true),
-                "upwest".PadWithString(14, "&nbsp;", true),
-                "downeast".PadWithString(14, "&nbsp;", true),
-                "downnorth".PadWithString(14, "&nbsp;", true),
-                "downnortheast".PadWithString(14, "&nbsp;", true),
-                "downnorthwest".PadWithString(14, "&nbsp;", true),
-                "downsouth".PadWithString(14, "&nbsp;", true),
-                "downsoutheast".PadWithString(14, "&nbsp;", true),
-                "downsouthwest".PadWithString(14, "&nbsp;", true),
-                "downwest".PadWithString(14, "&nbsp;", true),
-
-                "enter &lt;exit name&gt;".PadWithString(14, "&nbsp;", true)
+                dirList.CommaList(RenderUtility.SplitListType.AllComma)
             };
 
             return sb;

@@ -55,7 +55,6 @@ namespace NetMud.Data.Game
 
             //IDatas need parameterless constructors
             Contents = new EntityContainer<IInanimate>();
-            Pathways = new EntityContainer<IPathway>();
             MobilesInside = new EntityContainer<IMobile>();
         }
 
@@ -66,7 +65,6 @@ namespace NetMud.Data.Game
         {
             //IDatas need parameterless constructors
             Contents = new EntityContainer<IInanimate>();
-            Pathways = new EntityContainer<IPathway>();
             MobilesInside = new EntityContainer<IMobile>();
         }
 
@@ -77,7 +75,6 @@ namespace NetMud.Data.Game
         public Inanimate(IInanimateData backingStore)
         {
             Contents = new EntityContainer<IInanimate>(backingStore.InanimateContainers);
-            Pathways = new EntityContainer<IPathway>();
             MobilesInside = new EntityContainer<IMobile>(backingStore.MobileContainers);
 
             DataTemplateId = backingStore.Id;
@@ -92,7 +89,6 @@ namespace NetMud.Data.Game
         public Inanimate(IInanimateData backingStore, IGlobalPosition spawnTo)
         {
             Contents = new EntityContainer<IInanimate>(backingStore.InanimateContainers);
-            Pathways = new EntityContainer<IPathway>();
             MobilesInside = new EntityContainer<IMobile>(backingStore.MobileContainers);
 
             DataTemplateId = backingStore.Id;

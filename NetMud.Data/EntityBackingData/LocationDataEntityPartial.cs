@@ -28,7 +28,7 @@ namespace NetMud.Data.EntityBackingData
         /// <returns>the valid pathways</returns>       
         public IEnumerable<IPathwayData> GetLocalePathways(bool withReturn = false)
         {
-            return GetPathways(withReturn).Where(path => path.Destination.GetType() == typeof(IRoomData));
+            return GetPathways(withReturn).Where(path => path.Destination.GetType().GetInterfaces().Contains(typeof(IRoomData)));
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace NetMud.Data.EntityBackingData
         /// <returns>the valid pathways</returns>      
         public IEnumerable<IPathwayData> GetZonePathways(bool withReturn = false)
         {
-            return GetPathways(withReturn).Where(path => path.Destination.GetType() == typeof(IZoneData));
+            return GetPathways(withReturn).Where(path => path.Destination.GetType().GetInterfaces().Contains(typeof(IZoneData)));
         }
     }
 }
