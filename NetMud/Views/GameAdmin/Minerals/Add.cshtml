@@ -1,53 +1,55 @@
 ﻿@model NetMud.Models.Admin.AddEditMineralsViewModel
 @{
     ViewBag.Title = "Add New Minerals";
-
-    <section id="newCharacterForm">
-        @using (Html.BeginForm("Add", "Minerals", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-        {
-            @Html.AntiForgeryToken()
-            <hr />
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            <div class="form-group row">
-                @Html.EditorFor(e => e.Name)
-                @Html.EditorFor(e => e.Solubility)
-                @Html.EditorFor(e => e.Fertility)
-            </div>
-
-            <div class="form-group row">
-                @Html.EditorFor(e => e.Rarity)
-                @Html.EditorFor(e => e.AmountMultiplier)
-                @Html.EditorFor(e => e.PuissanceVariance)
-            </div>
-            <div class="form-group row">
-                @Html.EditorFor(m => m.TemperatureRangeLow)
-                @Html.EditorFor(m => m.TemperatureRangeHigh)
-            </div>
-            <div class="form-group row">
-                @Html.EditorFor(m => m.HumidityRangeLow)
-                @Html.EditorFor(m => m.HumidityRangeHigh)
-            </div>
-            <div class="form-group row">
-                @Html.EditorFor(m => m.ElevationRangeLow)
-                @Html.EditorFor(m => m.ElevationRangeHigh)
-            </div>
-            <div class="form-group row">
-                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Rock", "Rock", Model.ValidMaterials, Model.Rock))
-                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Dirt", "Dirt", Model.ValidMaterials, Model.Dirt))
-            </div>
-
-            @Html.Partial("~/Views/GameAdmin/Minerals/Ores.cshtml", Model)
-
-            @Html.Partial("~/Views/GameAdmin/Minerals/OccursIn.cshtml", Model)
-
-            <div class="form-group row">
-                @Html.EditorFor(e => e.HelpText)
-            </div>
-            @Html.Partial("SubmitButton", "Create")
-
-        }
-    </section>
 }
+
+<section id="newCharacterForm">
+    @using (Html.BeginForm("Add", "Minerals", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group row">
+            @Html.EditorFor(e => e.Name, new { columnCount = 3 })
+            @Html.EditorFor(e => e.Solubility, new { columnCount = 3 })
+            @Html.EditorFor(e => e.Fertility, new { columnCount = 3 })
+        </div>
+
+        <div class="form-group row">
+            @Html.EditorFor(e => e.Rarity, new { columnCount = 3 })
+            @Html.EditorFor(e => e.AmountMultiplier, new { columnCount = 3 })
+            @Html.EditorFor(e => e.PuissanceVariance, new { columnCount = 3 })
+        </div>
+        <div class="form-group row">
+            @Html.EditorFor(m => m.TemperatureRangeLow, new { columnCount = 3 })
+            @Html.EditorFor(m => m.TemperatureRangeHigh, new { columnCount = 3 })
+        </div>
+        <div class="form-group row">
+            @Html.EditorFor(m => m.HumidityRangeLow, new { columnCount = 3 })
+            @Html.EditorFor(m => m.HumidityRangeHigh, new { columnCount = 3 })
+        </div>
+        <div class="form-group row">
+            @Html.EditorFor(m => m.ElevationRangeLow, new { columnCount = 3 })
+            @Html.EditorFor(m => m.ElevationRangeHigh, new { columnCount = 3 })
+        </div>
+        <div class="form-group row">
+            @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Rock", "Rock", Model.ValidMaterials, Model.Rock))
+            @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Dirt", "Dirt", Model.ValidMaterials, Model.Dirt))
+        </div>
+
+        @Html.Partial("~/Views/GameAdmin/Minerals/Ores.cshtml", Model)
+
+        @Html.Partial("~/Views/GameAdmin/Minerals/OccursIn.cshtml", Model)
+
+        <div class="form-group row">
+            @Html.EditorFor(e => e.HelpText)
+        </div>
+
+        @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Create", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Minerals", IncludeCancel = true })
+
+    }
+</section>
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

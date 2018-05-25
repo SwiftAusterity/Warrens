@@ -36,7 +36,10 @@
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">Features<span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
                                 <li class="dropdown-header" style="color: mediumvioletred">Choices</li>
+                                <li>@Html.ActionLink("Help Files", "Help", "Features", routeValues: null, htmlAttributes: new { title = "Help Files" })</li>
                                 <li>@Html.ActionLink("Races", "Races", "Features", routeValues: null, htmlAttributes: new { title = "Races" })</li>
+                                <li>@Html.ActionLink("Flora", "Flora", "Features", routeValues: null, htmlAttributes: new { title = "Flora" })</li>
+                                <li>@Html.ActionLink("Minerals", "Minerals", "Features", routeValues: null, htmlAttributes: new { title = "Minerals" })</li>
                                 <li class="dropdown-header" style="color: mediumvioletred">Systems</li>
                                 <li>@Html.ActionLink("Skills", "Skills", "Features", routeValues: null, htmlAttributes: new { title = "Skills" })</li>
                             </ul>

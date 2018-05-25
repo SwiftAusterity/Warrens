@@ -17,7 +17,7 @@
         @Html.EditorFor(e => e.Password)
         @Html.EditorFor(e => e.ConfirmPassword)
     </div>
-    @Html.Partial("SubmitButton", "Register")
+    @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Register", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Home", IncludeCancel = false })
 
 }
 

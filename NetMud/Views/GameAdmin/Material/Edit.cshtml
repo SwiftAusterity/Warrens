@@ -3,52 +3,48 @@
 @model NetMud.Models.Admin.AddEditMaterialViewModel
 @{
     ViewBag.Title = "Edit Material";
-
-    <section id="newCharacterForm">
-        @using (Html.BeginForm("Edit", "Material", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-        {
-            @Html.AntiForgeryToken()
-            <hr />
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            <input type="hidden" name="id" id="id" value="@Model.DataObject.Id" />
-            <div class="form-group row">
-                @Html.EditorFor(e => e.Name)
-            </div>
-            <div class="form-group row">
-                @Html.EditorFor(e => e.Conductive)
-                @Html.EditorFor(e => e.Magnetic)
-                @Html.EditorFor(e => e.Flammable)
-            </div>
-            <div class="form-group row">
-                @Html.EditorFor(e => e.Viscosity)
-                @Html.EditorFor(e => e.Density)
-                @Html.EditorFor(e => e.Mallebility)
-            </div>
-            <div class="form-group row">
-                @Html.EditorFor(e => e.SolidPoint)
-                @Html.EditorFor(e => e.GasPoint)
-                @Html.EditorFor(e => e.TemperatureRetention)
-            </div>
-            <div class="form-group row">
-                @Html.EditorFor(e => e.Ductility)
-                @Html.EditorFor(e => e.Porosity)
-            </div>
-            @Html.Partial("~/Views/GameAdmin/Material/Resistances.cshtml", Model)
-            @Html.Partial("~/Views/GameAdmin/Material/Compositions.cshtml", Model)
-
-            <div class="form-group row">
-                @Html.EditorFor(e => e.HelpBody)
-            </div>
-
-            <div class="form-group row">
-                <div class="col-md-offset-2 col-md-9">
-                    <input type="submit" value="Commit" class="btn btn-default save" />
-                    @Html.ActionLink("Cancel", "Index", "Material", new { @class = "btn btn-default cancel" })
-                </div>
-            </div>
-        }
-    </section>
 }
+<section id="newCharacterForm">
+    @using (Html.BeginForm("Edit", "Material", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <input type="hidden" name="id" id="id" value="@Model.DataObject.Id" />
+        <div class="form-group row">
+            @Html.EditorFor(e => e.Name)
+        </div>
+        <div class="form-group row">
+            @Html.EditorFor(e => e.Conductive, new { columnCount = 2 })
+            @Html.EditorFor(e => e.Magnetic, new { columnCount = 2 })
+            @Html.EditorFor(e => e.Flammable, new { columnCount = 2 })
+        </div>
+        <div class="form-group row">
+            @Html.EditorFor(e => e.Viscosity, new { columnCount = 3 })
+            @Html.EditorFor(e => e.Density, new { columnCount = 3 })
+            @Html.EditorFor(e => e.Mallebility, new { columnCount = 3 })
+        </div>
+        <div class="form-group row">
+            @Html.EditorFor(e => e.SolidPoint, new { columnCount = 3 })
+            @Html.EditorFor(e => e.GasPoint, new { columnCount = 3 })
+            @Html.EditorFor(e => e.TemperatureRetention, new { columnCount = 3 })
+        </div>
+        <div class="form-group row">
+            @Html.EditorFor(e => e.Ductility, new { columnCount = 3 })
+            @Html.EditorFor(e => e.Porosity, new { columnCount = 3 })
+        </div>
+        @Html.Partial("~/Views/GameAdmin/Material/Resistances.cshtml", Model)
+        @Html.Partial("~/Views/GameAdmin/Material/Compositions.cshtml", Model)
+
+        <div class="form-group row">
+            @Html.EditorFor(e => e.HelpBody)
+        </div>
+
+        @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Material", IncludeCancel = true })
+
+    }
+</section>
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

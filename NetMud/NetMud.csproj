@@ -425,6 +425,9 @@
     <Content Include="Views\Features\Skills.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\EmailAddress.cshtml" />
     <Content Include="Views\Shared\ListTable.cshtml" />
+    <Content Include="Views\Features\Flora.cshtml" />
+    <Content Include="Views\Features\Minerals.cshtml" />
+    <Content Include="Views\Features\Help.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

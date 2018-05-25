@@ -2,14 +2,12 @@
 @{
     ViewBag.Title = "Races";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var tableColumns = new Dictionary<string, Func<dynamic, string>>();
+    tableColumns.Add("Name", obj => obj.Name);
+    tableColumns.Add("Diet", obj => obj.DietaryNeeds.ToString());
+    tableColumns.Add("Breathes", obj => obj.Breathes.ToString());
+    tableColumns.Add("Teeth", obj => obj.TeethType.ToString());
 }
 
-<h2>Races</h2>
-
-@foreach(var race in Model)
-{
-    <div>
-        <p>@race.Name</p>
-        <p>@race.HelpText</p>
-    </div>
-}
+@Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Name = "Races", Columns = tableColumns, Values = Model.OrderBy(obj => obj.Name) })

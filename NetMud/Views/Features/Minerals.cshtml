@@ -1,0 +1,12 @@
+﻿@model IEnumerable<NetMud.DataStructure.Base.Supporting.IMineral>
+@{
+    ViewBag.Title = "Minerals";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var tableColumns = new Dictionary<string, Func<dynamic, string>>();
+    tableColumns.Add("Name", obj => obj.Name);
+    tableColumns.Add("Solubility", obj => obj.Solubility.ToString());
+    tableColumns.Add("Fertility", obj => obj.Fertility.ToString());
+}
+
+@Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Name = "Minerals", Columns = tableColumns, Values = Model.OrderBy(obj => obj.Name) })

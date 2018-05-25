@@ -5,27 +5,23 @@
 @{
     ViewBag.Title = "Edit Constant";
 
-    <section id="newCharacterForm">
-        @using (Html.BeginForm("Edit", "Constants", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-        {
-            @Html.AntiForgeryToken()
-            <hr />
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            <input type="hidden" name="id" id="id" value="@Model.DataObject.Id" />
-            <div class="form-group row">
-                @Html.EditorFor(e => e.Name)
-            </div>
+<section id="newCharacterForm">
+    @using (Html.BeginForm("Edit", "Constants", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <input type="hidden" name="id" id="id" value="@Model.DataObject.Id" />
+        <div class="form-group row">
+            @Html.EditorFor(e => e.Name)
+        </div>
 
-            @Html.Partial("~/Views/GameAdmin/Constants/CriterionValue.cshtml", Model)
+        @Html.Partial("~/Views/GameAdmin/Constants/CriterionValue.cshtml", Model)
 
-            <div class="form-group row">
-                <div class="col-md-offset-2 col-md-9">
-                    <input type="submit" value="Commit" class="btn btn-default save" />
-                    @Html.ActionLink("Cancel", "Index", "Constants", new { @class = "btn btn-default cancel" })
-                </div>
-            </div>
-        }
-    </section>
+        @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Constants", IncludeCancel = true })
+
+    }
+</section>
 }
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

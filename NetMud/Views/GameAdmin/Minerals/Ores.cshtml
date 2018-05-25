@@ -1,28 +1,27 @@
 ﻿@model NetMud.Models.Admin.AddEditMineralsViewModel
 
-@{
-    <label class="col-sm-2 col-form-label">Internal composition</label>
-    <a href="#" id="addOresRow" class="addRow">Add another row...</a>
-    <div id="OresRow">
-        @if (Model.DataObject == null || Model.DataObject.Ores == null || Model.DataObject.Ores.Count() == 0)
+
+<h3>Internal composition</h3>
+<a href="#" id="addOresRow" class="addRow">Add another row...</a>
+<div id="OresRow">
+    @if (Model.DataObject == null || Model.DataObject.Ores == null || Model.DataObject.Ores.Count() == 0)
+    {
+        <div class="form-group row">
+            <label class="col-sm-1 col-form-label" for="Ores"><a href="#" class="removeRow" id="removeOccursInRow" title="Remove this">X</a></label>
+            @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Ores", "Mineral", Model.ValidMinerals, -1))
+        </div>
+    }
+    else
+    {
+        foreach (var Ores in Model.DataObject.Ores)
         {
             <div class="form-group row">
-                <a href="#" class="removeRow" id="removeOresRow" title="Remove this">X</a>
-                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Ores", "Mineral", Model.ValidMinerals, -1))
+                <label class="col-sm-1 col-form-label" for="Ores"><a href="#" class="removeRow" id="removeOccursInRow" title="Remove this">X</a></label>
+                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Ores", "Mineral", Model.ValidMinerals, Ores.Id))
             </div>
         }
-        else
-        {
-            foreach (var Ores in Model.DataObject.Ores)
-            {
-                <div class="form-group row">
-                    <a href="#" class="removeRow" id="removeOresRow" title="Remove this">X</a>
-                    @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Ores", "Mineral", Model.ValidMinerals, Ores.Id))
-                </div>
-            }
-        }
-    </div>
-}
+    }
+</div>
 
 
 <script type="text/javascript">
@@ -32,19 +31,19 @@
         $("#addOresRow").click(function () {
             $("#OresRow").append(
                 '<div class="form-group row">' +
-                '<a href="#" class="removeRow" id="removeOresRow" title="Remove this">X</a>' +
+                '<label class="col-sm-1 col-form-label" for="Ores"><a href="#" class="removeRow" id="removeOccursInRow" title="Remove this">X</a></label>' +
                 OresDropdown + '</div>'
             );
 
             $(".removeRow").click(function () {
-                $(this).parent().remove();
+                $(this).parent().parent().remove();
                 return false;
             });
             return false;
         });
 
         $(".removeRow").click(function () {
-            $(this).parent().remove();
+            $(this).parent().parent().remove();
             return false;
         });
     });

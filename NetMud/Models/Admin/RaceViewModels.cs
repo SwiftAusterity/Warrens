@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-
 namespace NetMud.Models.Admin
 {
     public class ManageRaceDataViewModel : PagedDataModel<IRace>, BaseViewModel
@@ -44,8 +43,7 @@ namespace NetMud.Models.Admin
         [Display(Name = "Name")]
         [DataType(DataType.Text)]
         public string Name { get; set; }
-
-        
+   
         [Display(Name = "Arm Object")]
         [DataType(DataType.Text)]
         public long ArmsID { get; set; }
@@ -54,8 +52,7 @@ namespace NetMud.Models.Admin
         [Display(Name = "# of Arms")]
         [DataType(DataType.Text)]
         public short ArmsAmount { get; set; }
-
-        
+      
         [Display(Name = "Leg Object")]
         [DataType(DataType.Text)]
         public long LegsID { get; set; }
@@ -64,7 +61,6 @@ namespace NetMud.Models.Admin
         [Display(Name = "# of Legs")]
         [DataType(DataType.Text)]
         public short LegsAmount { get; set; }
-
         
         [Display(Name = "Torso Object")]
         [DataType(DataType.Text)]
@@ -74,24 +70,19 @@ namespace NetMud.Models.Admin
         [Display(Name = "Head Object")]
         [DataType(DataType.Text)]
         public long HeadId { get; set; }
-
-        
+       
         [Display(Name = "Extra Parts")]
         public long[] ExtraPartsId { get; set; }
 
-        
-        [Display(Name = "Extra Parts")]
+        [Display(Name = "Amount")]
         public short[] ExtraPartsAmount { get; set; }
-
         
-        [Display(Name = "Extra Parts")]
+        [Display(Name = "Name")]
         public string[] ExtraPartsName { get; set; }
-
         
         [Display(Name = "Diet")]
         [DataType(DataType.Text)]
         public short DietaryNeeds { get; set; }
-
         
         [Display(Name = "Blood Type")]
         [DataType(DataType.Text)]
@@ -116,22 +107,18 @@ namespace NetMud.Models.Admin
         [Display(Name = "Heat Tolerence High")]
         [DataType(DataType.Text)]
         public short TemperatureToleranceHigh { get; set; }
-
-        
+    
         [Display(Name = "Breathes")]
         [DataType(DataType.Text)]
         public short Breathes { get; set; }
-
         
         [Display(Name = "Teeth")]
         [DataType(DataType.Text)]
         public short TeethType { get; set; }
-
         
         [Display(Name = "Starting Room")]
         [DataType(DataType.Text)]
         public long StartingLocationId { get; set; }
-
         
         [Display(Name = "Recall Room")]
         [DataType(DataType.Text)]

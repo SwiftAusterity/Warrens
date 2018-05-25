@@ -73,6 +73,8 @@ namespace NetMud.Data.LookupData
         /// <summary>
         /// What medium minerals this can spawn in
         /// </summary>
+        [JsonIgnore]
+        [ScriptIgnore]
         public IEnumerable<IMineral> Ores
         {
             get
