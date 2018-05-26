@@ -26,7 +26,7 @@ namespace NetMud.Data.LookupData
         public bool Coniferous { get; set; }
 
         [JsonProperty("Wood")]
-        private long _wood { get; set; }
+        private BackingDataCacheKey _wood { get; set; }
 
         /// <summary>
         /// Bulk material of plant. Stem, trunk, etc.
@@ -42,12 +42,12 @@ namespace NetMud.Data.LookupData
             }
             set
             {
-                _wood = value.Id;
+                _wood = new BackingDataCacheKey(value);
             }
         }
 
         [JsonProperty("Flower")]
-        private long _flower { get; set; }
+        private BackingDataCacheKey _flower { get; set; }
 
         /// <summary>
         /// Flowering element of plant
@@ -62,12 +62,12 @@ namespace NetMud.Data.LookupData
             }
             set
             {
-                _flower = value.Id;
+                _flower = new BackingDataCacheKey(value);
             }
         }
 
         [JsonProperty("Leaf")]
-        private long _leaf { get; set; }
+        private BackingDataCacheKey _leaf { get; set; }
 
         /// <summary>
         /// Leaves of the plant.
@@ -82,12 +82,12 @@ namespace NetMud.Data.LookupData
             }
             set
             {
-                _leaf = value.Id;
+                _leaf = new BackingDataCacheKey(value);
             }
         }
 
         [JsonProperty("Fruit")]
-        private long _fruit { get; set; }
+        private BackingDataCacheKey _fruit { get; set; }
 
         /// <summary>
         /// Fruit of the plant, can be inedible like a pinecone
@@ -102,12 +102,12 @@ namespace NetMud.Data.LookupData
             }
             set
             {
-                _fruit = value.Id;
+                _fruit = new BackingDataCacheKey(value);
             }
         }
 
         [JsonProperty("Seed")]
-        private long _seed { get; set; }
+        private BackingDataCacheKey _seed { get; set; }
 
         /// <summary>
         /// Seed of the plant.
@@ -122,7 +122,7 @@ namespace NetMud.Data.LookupData
             }
             set
             {
-                _seed = value.Id;
+                _seed = new BackingDataCacheKey(value);
             }
         }
 

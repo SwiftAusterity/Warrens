@@ -18,7 +18,7 @@ namespace NetMud.Data.System
         /// <summary>
         /// What this actually contains, yeah it's a hashtable of hashtables but whatever
         /// </summary>
-        private Dictionary<string, HashSet<string>> Birthmarks { get; set; }
+        private Dictionary<string, HashSet<LiveCacheKey>> Birthmarks { get; set; }
 
         /// <summary>
         /// What named containers are attached to this
@@ -31,9 +31,9 @@ namespace NetMud.Data.System
         public EntityContainer()
         {
             NamedContainers = Enumerable.Empty<IEntityContainerData<T>>();
-            Birthmarks = new Dictionary<string, HashSet<string>>();
+            Birthmarks = new Dictionary<string, HashSet<LiveCacheKey>>();
 
-            Birthmarks.Add(genericCollectionLabel, new HashSet<string>());
+            Birthmarks.Add(genericCollectionLabel, new HashSet<LiveCacheKey>());
         }
 
         /// <summary>
@@ -42,12 +42,13 @@ namespace NetMud.Data.System
         public EntityContainer(IEnumerable<IEntityContainerData<T>> namedContainers)
         {
             NamedContainers = namedContainers;
-            Birthmarks = new Dictionary<string, HashSet<string>>();
+            Birthmarks = new Dictionary<string, HashSet<LiveCacheKey>>
+            {
+                { genericCollectionLabel, new HashSet<LiveCacheKey>() }
+            };
 
-            Birthmarks.Add(genericCollectionLabel, new HashSet<string>());
-
-            foreach(var container in namedContainers)
-                Birthmarks.Add(container.Name, new HashSet<string>());
+            foreach (var container in namedContainers)
+                Birthmarks.Add(container.Name, new HashSet<LiveCacheKey>());
         }
 
 
@@ -58,12 +59,12 @@ namespace NetMud.Data.System
         public EntityContainer(IEnumerable<EntityContainerData<T>> namedContainers)
         {
             NamedContainers = namedContainers;
-            Birthmarks = new Dictionary<string, HashSet<string>>();
+            Birthmarks = new Dictionary<string, HashSet<LiveCacheKey>>();
 
-            Birthmarks.Add(genericCollectionLabel, new HashSet<string>());
+            Birthmarks.Add(genericCollectionLabel, new HashSet<LiveCacheKey>());
 
             foreach (var container in namedContainers)
-                Birthmarks.Add(container.Name, new HashSet<string>());
+                Birthmarks.Add(container.Name, new HashSet<LiveCacheKey>());
         }
 
         #region Universal Accessors
@@ -105,10 +106,10 @@ namespace NetMud.Data.System
         /// <returns>success status</returns>
         public bool Add(T entity)
         {
-            if (Birthmarks[genericCollectionLabel].Contains(entity.BirthMark))
+            if (Birthmarks[genericCollectionLabel].Contains(new LiveCacheKey(entity)))
                 return false;
 
-            return Birthmarks[genericCollectionLabel].Add(entity.BirthMark);
+            return Birthmarks[genericCollectionLabel].Add(new LiveCacheKey(entity));
         }
 
         /// <summary>
@@ -118,7 +119,7 @@ namespace NetMud.Data.System
         /// <returns>yes it contains it or no it does not</returns>
         public bool Contains(T entity)
         {
-            return Birthmarks.Values.Any(hs => hs.Contains(entity.BirthMark));
+            return Birthmarks.Values.Any(hs => hs.Contains(new LiveCacheKey(entity)));
         }
 
         /// <summary>
@@ -128,10 +129,10 @@ namespace NetMud.Data.System
         /// <returns>success status</returns>
         public bool Remove(T entity)
         {
-            if (!Birthmarks[genericCollectionLabel].Contains(entity.BirthMark))
+            if (!Birthmarks[genericCollectionLabel].Contains(new LiveCacheKey(entity)))
                 return false;
 
-            return Birthmarks[genericCollectionLabel].Remove(entity.BirthMark);
+            return Birthmarks[genericCollectionLabel].Remove(new LiveCacheKey(entity));
         }
 
         /// <summary>
@@ -139,12 +140,14 @@ namespace NetMud.Data.System
         /// </summary>
         /// <param name="birthMark">the entity's birthmark to remove</param>
         /// <returns>success status</returns>
-        public bool Remove(string birthMark)
+        public bool Remove(ICacheKey cacheKey)
         {
-            if (!Birthmarks[genericCollectionLabel].Contains(birthMark))
+            var key = (LiveCacheKey)cacheKey;
+
+            if (!Birthmarks[genericCollectionLabel].Contains(key))
                 return false;
 
-            return Birthmarks[genericCollectionLabel].Remove(birthMark);
+            return Birthmarks[genericCollectionLabel].Remove(key);
         }
 
         /// <summary>
@@ -182,10 +185,12 @@ namespace NetMud.Data.System
             if (String.IsNullOrWhiteSpace(namedContainer))
                 return Add(entity);
 
-            if (Birthmarks[namedContainer].Contains(entity.BirthMark))
+            var key = new LiveCacheKey(entity);
+
+            if (Birthmarks[namedContainer].Contains(key))
                 return false;
 
-            return Birthmarks[namedContainer].Add(entity.BirthMark);
+            return Birthmarks[namedContainer].Add(key);
         }
 
         /// <summary>
@@ -198,7 +203,9 @@ namespace NetMud.Data.System
             if (String.IsNullOrWhiteSpace(namedContainer))
                 return Contains(entity);
 
-            return Birthmarks[namedContainer].Contains(entity.BirthMark);
+            var key = new LiveCacheKey(entity);
+
+            return Birthmarks[namedContainer].Contains(key);
         }
 
         /// <summary>
@@ -211,10 +218,12 @@ namespace NetMud.Data.System
             if (String.IsNullOrWhiteSpace(namedContainer))
                 return Remove(entity);
 
-            if (!Birthmarks[namedContainer].Contains(entity.BirthMark))
+            var key = new LiveCacheKey(entity);
+
+            if (!Birthmarks[namedContainer].Contains(key))
                 return false;
 
-            return Birthmarks[namedContainer].Remove(entity.BirthMark);
+            return Birthmarks[namedContainer].Remove(key);
         }
 
         /// <summary>
@@ -222,15 +231,17 @@ namespace NetMud.Data.System
         /// </summary>
         /// <param name="birthMark">the entity's birthmark to remove</param>
         /// <returns>success status</returns>
-        public bool Remove(string birthMark, string namedContainer)
+        public bool Remove(ICacheKey cacheKey, string namedContainer)
         {
             if (String.IsNullOrWhiteSpace(namedContainer))
-                return Remove(birthMark);
+                return Remove(cacheKey);
 
-            if (!Birthmarks[namedContainer].Contains(birthMark))
+            var key = (LiveCacheKey)cacheKey;
+
+            if (!Birthmarks[namedContainer].Contains(key))
                 return false;
 
-            return Birthmarks[namedContainer].Remove(birthMark);
+            return Birthmarks[namedContainer].Remove(key);
         }
 
         /// <summary>

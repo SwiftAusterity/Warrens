@@ -77,7 +77,7 @@ namespace NetMud.Data.LookupData
         public IDictionary<DamageType, short> Resistance { get; set; }
 
         [JsonProperty("Composition")]
-        private IDictionary<long, short> _composition { get; set; }
+        private IDictionary<BackingDataCacheKey, short> _composition { get; set; }
 
         /// <summary>
         /// Collection of model section name to material composition mappings
@@ -98,7 +98,7 @@ namespace NetMud.Data.LookupData
                 if (value == null)
                     return;
 
-                _composition = value.ToDictionary(k => k.Key.Id, k => k.Value);
+                _composition = value.ToDictionary(k => new BackingDataCacheKey(k.Key), k => k.Value);
             }
         }
 

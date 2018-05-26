@@ -15,7 +15,6 @@ using NetMud.DataStructure.SupportingClasses;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.Cartography;
 using NetMud.Data.System;
-using NetMud.DataStructure.Behaviors.Rendering;
 
 namespace NetMud.Backup
 {
@@ -227,14 +226,14 @@ namespace NetMud.Backup
 
                     foreach (IInanimate obj in entity.Contents.EntitiesContained())
                     {
-                        var fullObj = LiveCache.Get<IInanimate>(new LiveCacheKey(typeof(Inanimate), obj.BirthMark));
+                        var fullObj = LiveCache.Get<IInanimate>(new LiveCacheKey(obj));
                         entity.MoveFrom(obj);
                         entity.MoveInto(fullObj);
                     }
 
                     foreach (IIntelligence obj in entity.MobilesInside.EntitiesContained())
                     {
-                        var fullObj = LiveCache.Get<IIntelligence>(new LiveCacheKey(typeof(Intelligence), obj.BirthMark));
+                        var fullObj = LiveCache.Get<IIntelligence>(new LiveCacheKey(obj));
                         entity.MoveFrom(obj);
                         entity.MoveInto(fullObj);
                     }
@@ -244,7 +243,7 @@ namespace NetMud.Backup
                 {
                     foreach (IInanimate obj in entity.Inventory.EntitiesContained())
                     {
-                        var fullObj = LiveCache.Get<IInanimate>(new LiveCacheKey(typeof(Inanimate), obj.BirthMark));
+                        var fullObj = LiveCache.Get<IInanimate>(new LiveCacheKey(obj));
                         entity.MoveFrom(obj);
                         entity.MoveInto(fullObj);
                     }
@@ -254,14 +253,14 @@ namespace NetMud.Backup
                 {
                     foreach (var obj in entity.Contents.EntitiesContainedByName())
                     {
-                        var fullObj = LiveCache.Get<IInanimate>(new LiveCacheKey(typeof(Inanimate), obj.Item2.BirthMark));
+                        var fullObj = LiveCache.Get<IInanimate>(new LiveCacheKey(obj.Item2));
                         entity.MoveFrom(obj.Item2);
                         entity.MoveInto(fullObj, obj.Item1);
                     }
 
                     foreach (var obj in entity.MobilesInside.EntitiesContainedByName())
                     {
-                        var fullObj = LiveCache.Get<IIntelligence>(new LiveCacheKey(typeof(Intelligence), obj.Item2.BirthMark));
+                        var fullObj = LiveCache.Get<IIntelligence>(new LiveCacheKey(obj.Item2));
                         entity.MoveFrom((IIntelligence)obj.Item2);
                         entity.MoveInto(fullObj, obj.Item1);
                     }

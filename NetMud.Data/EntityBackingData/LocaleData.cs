@@ -18,6 +18,8 @@ namespace NetMud.Data.EntityBackingData
     /// </summary>
     public class LocaleData : EntityBackingDataPartial, ILocaleData
     {
+        [JsonIgnore]
+        [ScriptIgnore]
         public override Type EntityClass
         {
             get { return typeof(Locale); }
@@ -41,7 +43,7 @@ namespace NetMud.Data.EntityBackingData
         public IMap Interior { get; set; }
 
         [JsonProperty("ParentLocation")]
-        private long _affiliation { get; set; }
+        private BackingDataCacheKey _parentLocation { get; set; }
 
         /// <summary>
         /// The zone this belongs to
@@ -53,12 +55,12 @@ namespace NetMud.Data.EntityBackingData
         {
             get
             {
-                return BackingDataCache.Get<IZoneData>(_affiliation);
+                return BackingDataCache.Get<IZoneData>(_parentLocation);
             }
             set
             {
                 if (value != null)
-                    _affiliation = value.Id;
+                    _parentLocation = new BackingDataCacheKey(value);
             }
         }
 

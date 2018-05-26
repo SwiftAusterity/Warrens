@@ -17,6 +17,8 @@ namespace NetMud.Data.EntityBackingData
         /// <summary>
         /// The system type of data this attaches to
         /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
         public override Type EntityClass
         {
             get { return typeof(Zone); }
@@ -48,7 +50,7 @@ namespace NetMud.Data.EntityBackingData
         public bool AlwaysDiscovered { get; set; }
 
         [JsonProperty("Templates")]
-        private HashSet<long> _templates { get; set; }
+        private HashSet<BackingDataCacheKey> _templates { get; set; }
 
         /// <summary>
         /// Adventure templates valid for this zone
@@ -69,12 +71,12 @@ namespace NetMud.Data.EntityBackingData
                 if (value == null)
                     return;
 
-                _templates = new HashSet<long>(value.Select(k => k.Id));
+                _templates = new HashSet<BackingDataCacheKey>(value.Select(k => new BackingDataCacheKey(k)));
             }
         }
 
         [JsonProperty("NaturalResourceSpawn")]
-        private IDictionary<long, int> _naturalResourceSpawn { get; set; }
+        private IDictionary<BackingDataCacheKey, int> _naturalResourceSpawn { get; set; }
 
         /// <summary>
         /// Collection of model section name to material composition mappings
@@ -95,7 +97,7 @@ namespace NetMud.Data.EntityBackingData
                 if (value == null)
                     return;
 
-                _naturalResourceSpawn = value.ToDictionary(k => k.Key.Id, k => k.Value);
+                _naturalResourceSpawn = value.ToDictionary(k => new BackingDataCacheKey(k.Key), k => k.Value);
             }
         }
 

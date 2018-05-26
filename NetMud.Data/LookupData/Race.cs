@@ -21,7 +21,7 @@ namespace NetMud.Data.LookupData
     public class Race : LookupDataPartial, IRace
     {
         [JsonProperty("Arms")]
-        private Tuple<long, short> _arms { get; set; }
+        private Tuple<BackingDataCacheKey, short> _arms { get; set; }
 
         /// <summary>
         /// The arm objects
@@ -42,12 +42,12 @@ namespace NetMud.Data.LookupData
                 if (value == null)
                     return;
 
-                _arms = new Tuple<long, short>(value.Item1.Id, value.Item2);
+                _arms = new Tuple<BackingDataCacheKey, short>(new BackingDataCacheKey(value.Item1), value.Item2);
             }
         }
 
         [JsonProperty("Legs")]
-        private Tuple<long, short> _legs { get; set; }
+        private Tuple<BackingDataCacheKey, short> _legs { get; set; }
 
         /// <summary>
         /// The leg objects
@@ -68,12 +68,12 @@ namespace NetMud.Data.LookupData
                 if (value == null)
                     return;
 
-                _legs = new Tuple<long, short>(value.Item1.Id, value.Item2);
+                _legs = new Tuple<BackingDataCacheKey, short>(new BackingDataCacheKey(value.Item1), value.Item2);
             }
         }
 
         [JsonProperty("Torso")]
-        private long _torso { get; set; }
+        private BackingDataCacheKey _torso { get; set; }
 
         /// <summary>
         /// the torso object
@@ -89,12 +89,12 @@ namespace NetMud.Data.LookupData
             }
             set
             {
-                _torso = value.Id;
+                _torso = new BackingDataCacheKey(value);
             }
         }
 
         [JsonProperty("Head")]
-        private long _head { get; set; }
+        private BackingDataCacheKey _head { get; set; }
 
         /// <summary>
         /// The head object
@@ -110,12 +110,12 @@ namespace NetMud.Data.LookupData
             }
             set
             {
-                _head = value.Id;
+                _head = new BackingDataCacheKey(value);
             }
         }
 
         [JsonProperty("BodyParts")]
-        private HashSet<Tuple<long, short, string>> _bodyParts { get; set; }
+        private HashSet<Tuple<BackingDataCacheKey, short, string>> _bodyParts { get; set; }
 
         /// <summary>
         /// The list of additional body parts used by this race. Part Object, Amount, Name
@@ -136,7 +136,7 @@ namespace NetMud.Data.LookupData
                 if (value == null)
                     return;
 
-                _bodyParts = new HashSet<Tuple<long, short, string>>(value.Select(bp => new Tuple<long, short, string>(bp.Item1.Id, bp.Item2, bp.Item3)));
+                _bodyParts = new HashSet<Tuple<BackingDataCacheKey, short, string>>(value.Select(bp => new Tuple<BackingDataCacheKey, short, string>(new BackingDataCacheKey(bp.Item1), bp.Item2, bp.Item3)));
             }
         }
 
@@ -146,7 +146,7 @@ namespace NetMud.Data.LookupData
         public DietType DietaryNeeds { get; set; }
 
         [JsonProperty("SanguinaryMaterial")]
-        private long _sanguinaryMaterial { get; set; }
+        private BackingDataCacheKey _sanguinaryMaterial { get; set; }
 
         /// <summary>
         /// Material that is the blood
@@ -162,7 +162,7 @@ namespace NetMud.Data.LookupData
             }
             set
             {
-                _sanguinaryMaterial = value.Id;
+                _sanguinaryMaterial = new BackingDataCacheKey(value);
             }
         }
 
@@ -187,7 +187,7 @@ namespace NetMud.Data.LookupData
         public DamageType TeethType { get; set; }
 
         [JsonProperty("StartingLocation")]
-        private long _startingLocation { get; set; }
+        private BackingDataCacheKey _startingLocation { get; set; }
 
         /// <summary>
         /// What is the starting room of new players
@@ -203,12 +203,12 @@ namespace NetMud.Data.LookupData
             }
             set
             {
-                _startingLocation = value.Id;
+                _startingLocation = new BackingDataCacheKey(value);
             }
         }
 
         [JsonProperty("EmergencyLocation")]
-        private long _emergencyLocation { get; set; }
+        private BackingDataCacheKey _emergencyLocation { get; set; }
 
         /// <summary>
         /// When a player loads without a location where do we send them
@@ -224,7 +224,7 @@ namespace NetMud.Data.LookupData
             }
             set
             {
-                _emergencyLocation = value.Id;
+                _emergencyLocation = new BackingDataCacheKey(value);
             }
         }
 

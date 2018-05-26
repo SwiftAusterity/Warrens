@@ -23,6 +23,8 @@ namespace NetMud.Data.EntityBackingData
         /// <summary>
         /// The system type for the entity this attaches to
         /// </summary>
+        [JsonIgnore]
+        [ScriptIgnore]
         public override Type EntityClass
         {
             get { return typeof(Game.Inanimate); }
@@ -45,7 +47,7 @@ namespace NetMud.Data.EntityBackingData
         public HashSet<IEntityContainerData<IInanimate>> InanimateContainers { get; set; }
 
         [JsonProperty("InternalComposition")]
-        private IDictionary<long, short> _internalComposition { get; set; }
+        private IDictionary<BackingDataCacheKey, short> _internalComposition { get; set; }
 
         /// <summary>
         /// The list of internal compositions for separate/explosion/sharding
@@ -66,7 +68,7 @@ namespace NetMud.Data.EntityBackingData
                 if (value == null)
                     return;
 
-                _internalComposition = value.ToDictionary(k => k.Key.Id, k => k.Value);
+                _internalComposition = value.ToDictionary(k => new BackingDataCacheKey(k.Key), k => k.Value);
             }
         }
 

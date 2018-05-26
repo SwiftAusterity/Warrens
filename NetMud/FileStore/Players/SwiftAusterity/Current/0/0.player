@@ -4,7 +4,6 @@
     "ObjectType": "NetMud.Data.Game.Zone, NetMud.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
     "BirthMark": "0.-8586751903602393667.18321f"
   },
-  "DataTemplateName": "Yslande",
   "AccountHandle": "SwiftAusterity",
   "Inventory": { "NamedContainers": [] },
   "BirthMark": "0.-8587266386212433229.1d2532b364ca466cbb4e14c9379b3d62",

@@ -41,6 +41,7 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -48,9 +49,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cache\BackingDataCacheKey.cs" />
+    <Compile Include="Cache\LiveCacheKey.cs" />
     <Compile Include="Cache\PlayerDataCache.cs" />
     <Compile Include="Cache\CacheAccessor.cs" />
     <Compile Include="Cache\BackingDataCache.cs" />
+    <Compile Include="Cache\PlayerDataCacheKey.cs" />
     <Compile Include="FileSystem\BackingData.cs" />
     <Compile Include="FileSystem\FileAccessor.cs" />
     <Compile Include="FileSystem\LiveData.cs" />

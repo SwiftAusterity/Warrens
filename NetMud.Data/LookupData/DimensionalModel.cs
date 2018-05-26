@@ -41,8 +41,8 @@ namespace NetMud.Data.LookupData
         /// </summary>
         public int SurfaceCavitation { get; set; }
 
-        [JsonProperty("BackingDataId")]
-        private long _backingDataId { get; set; }
+        [JsonProperty("ModelBackingData")]
+        private BackingDataCacheKey _modelBackingData { get; set; }
 
         /// <summary>
         /// The model we're following
@@ -53,8 +53,8 @@ namespace NetMud.Data.LookupData
         {
             get
             {
-                if (_backingDataId > 0)
-                    return BackingDataCache.Get<IDimensionalModelData>(_backingDataId);
+                if (_modelBackingData != null)
+                    return BackingDataCache.Get<IDimensionalModelData>(_modelBackingData);
                 else
                 {
                     // 0d models don't have real values
@@ -71,12 +71,12 @@ namespace NetMud.Data.LookupData
                 if (value == null)
                     return;
 
-                _backingDataId = value.Id;
+                _modelBackingData = new BackingDataCacheKey(value);
             }
         }
 
         [JsonProperty("Composition")]
-        private IDictionary<string, long> _composition { get; set; }
+        private IDictionary<string, BackingDataCacheKey> _composition { get; set; }
 
         /// <summary>
         /// Collection of model section name to material composition mappings
@@ -97,7 +97,7 @@ namespace NetMud.Data.LookupData
                 if (value == null)
                     return;
 
-                _composition = value.ToDictionary(k => k.Key, k => k.Value.Id);
+                _composition = value.ToDictionary(k =>k.Key, k => new BackingDataCacheKey(k.Value));
             }
         }
 
@@ -115,9 +115,9 @@ namespace NetMud.Data.LookupData
         /// <param name="length">Length parameter of the model</param>
         /// <param name="height">Height parameter of the model</param>
         /// <param name="width">Width parameter of the model</param>
-        /// <param name="backingDataId">dimensional model backing data id</param>
+        /// <param name="backingDataKey">dimensional model backing data id</param>
         /// <param name="materialComps">The material compositions</param>
-        public DimensionalModel(int length, int height, int width, int vacuity, int surfaceCavitation, long backingDataId, IDictionary<string, IMaterial> materialComps)
+        public DimensionalModel(int length, int height, int width, int vacuity, int surfaceCavitation, BackingDataCacheKey backingDataKey, IDictionary<string, IMaterial> materialComps)
         {
             Length = length;
             Height = height;
@@ -126,7 +126,7 @@ namespace NetMud.Data.LookupData
             SurfaceCavitation = surfaceCavitation;
             Composition = materialComps;
 
-            _backingDataId = backingDataId;
+            _modelBackingData = backingDataKey;
         }
 
         /// <summary>

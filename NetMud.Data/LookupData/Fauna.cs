@@ -26,7 +26,7 @@ namespace NetMud.Data.LookupData
         public int PopulationHardCap { get; set; }
 
         [JsonProperty("Race")]
-        private long _race { get; set; }
+        private BackingDataCacheKey _race { get; set; }
 
         /// <summary>
         /// What we're spawning
@@ -42,7 +42,7 @@ namespace NetMud.Data.LookupData
             }
             set
             {
-                _race = value.Id;
+                _race = new BackingDataCacheKey(value);
             }
         }
     }

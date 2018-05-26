@@ -40,7 +40,7 @@ namespace NetMud.Data.System
                 if (value == null)
                     return;
 
-                CurrentLocationBirthmark = new LiveCacheKey(value.GetType(), value.BirthMark);
+                CurrentLocationBirthmark = new LiveCacheKey(value);
             }
         }
 

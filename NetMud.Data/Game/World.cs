@@ -4,7 +4,9 @@ using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.SupportingClasses;
+using Newtonsoft.Json;
 using System;
+using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Game
 {
@@ -18,6 +20,8 @@ namespace NetMud.Data.Game
         /// <summary>
         /// A map of the world
         /// </summary>
+        [JsonIgnore]
+        [ScriptIgnore]
         [NonNullableDataIntegrity("World Map is null.")]
         public IMap WorldMap { get; private set; }
 

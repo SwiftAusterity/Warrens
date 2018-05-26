@@ -31,7 +31,7 @@ namespace NetMud.Data.Game
         public IDimensionalModel Model { get; set; }
 
         [JsonProperty("ParentLocation")]
-        private LiveCacheKey _affiliation { get; set; }
+        private LiveCacheKey _parentLocation { get; set; }
 
         /// <summary>
         /// The locale this belongs to
@@ -43,26 +43,12 @@ namespace NetMud.Data.Game
         {
             get
             {
-                return LiveCache.Get<ILocale>(_affiliation);
+                return LiveCache.Get<ILocale>(_parentLocation);
             }
             set
             {
                 if (value != null)
-                    _affiliation = new LiveCacheKey(typeof(ILocale), value.BirthMark);
-            }
-        }
-
-        /// <summary>
-        /// The name of the object in the data template
-        /// </summary>
-        public override string DataTemplateName
-        {
-            get
-            {
-                if (DataTemplate<IRoomData>() == null)
-                    return String.Empty;
-
-                return DataTemplate<IRoomData>().Name;
+                    _parentLocation = new LiveCacheKey(value);
             }
         }
 

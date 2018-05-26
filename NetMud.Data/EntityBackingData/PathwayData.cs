@@ -23,6 +23,8 @@ namespace NetMud.Data.EntityBackingData
         /// <summary>
         /// The system type for the entity this attaches to
         /// </summary>
+        [JsonIgnore]
+        [ScriptIgnore]
         public override Type EntityClass
         {
             get { return typeof(Game.Pathway); }
@@ -74,7 +76,7 @@ namespace NetMud.Data.EntityBackingData
             set
             {
                 if (value != null)
-                    _destination = new BackingDataCacheKey(value.GetType(), value.Id);
+                    _destination = new BackingDataCacheKey(value);
             }
         }
 
@@ -96,7 +98,7 @@ namespace NetMud.Data.EntityBackingData
             set
             {
                 if (value != null)
-                    _origin = new BackingDataCacheKey(value.GetType(), value.Id);
+                    _origin = new BackingDataCacheKey(value);
             }
         }
 

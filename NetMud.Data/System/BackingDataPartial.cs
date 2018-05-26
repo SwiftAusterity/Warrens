@@ -120,7 +120,7 @@ namespace NetMud.Data.System
             try
             {
                 //Remove from cache first
-                BackingDataCache.Remove(new BackingDataCacheKey(GetType(), Id));
+                BackingDataCache.Remove(new BackingDataCacheKey(this));
 
                 //Remove it from the file system.
                 accessor.ArchiveEntity(this);

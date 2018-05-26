@@ -1,5 +1,4 @@
 ﻿using NetMud.DataStructure.Base.System;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -18,10 +17,7 @@ namespace NetMud.DataAccess.Cache
         /// <param name="objectToCache">the entity to cache</param>
         public static void Add<T>(T objectToCache) where T : IData
         {
-            var entityToCache = (IData)objectToCache;
-            var cacheKey = new BackingDataCacheKey(objectToCache.GetType(), entityToCache.Id);
-
-            BackingCache.Add(objectToCache, cacheKey);
+            BackingCache.Add(objectToCache, new BackingDataCacheKey(objectToCache));
         }
 
         /// <summary>
@@ -43,6 +39,17 @@ namespace NetMud.DataAccess.Cache
         public static IEnumerable<T> GetMany<T>(IEnumerable<long> ids) where T : IData
         {
             return BackingCache.GetMany<T>(ids);
+        }
+
+        /// <summary>
+        /// fills a list of entities from the cache of a single type that match the birthmarks sent in
+        /// </summary>
+        /// <typeparam name="T">the system type for the entity</typeparam>
+        /// <param name="keys">the keys to retrieve</param>
+        /// <returns>a list of the entities from the cache</returns>
+        public static IEnumerable<T> GetMany<T>(IEnumerable<BackingDataCacheKey> keys) where T : IData
+        {
+            return BackingCache.GetMany<T>(keys);
         }
 
         /// <summary>
@@ -140,53 +147,6 @@ namespace NetMud.DataAccess.Cache
         public static bool Exists(BackingDataCacheKey key)
         {
             return BackingCache.Exists(key);
-        }
-    }
-
-    /// <summary>
-    /// A cache key for live entities
-    /// </summary>
-    public class BackingDataCacheKey : ICacheKey
-    {
-        public CacheType CacheType
-        {
-            get { return CacheType.BackingData; }
-        }
-
-        /// <summary>
-        /// System type of the object being cached
-        /// </summary>
-        public Type ObjectType { get; set; }
-
-        /// <summary>
-        /// Unique signature for a live object
-        /// </summary>
-        public long BirthMark { get; set; }
-
-        /// <summary>
-        /// Generate a live key for a live object
-        /// </summary>
-        /// <param name="objectType">System type of the entity being cached</param>
-        /// <param name="marker">Unique signature for a live entity</param>
-        public BackingDataCacheKey(Type objectType, long marker)
-        {
-            ObjectType = objectType;
-            BirthMark = marker;
-        }
-
-        /// <summary>
-        /// Hash key used by the cache system
-        /// </summary>
-        /// <returns>the key's hash</returns>
-        public string KeyHash()
-        {
-            var typeName = ObjectType.Name;
-
-            //Normalize interfaces versus classnames
-            if (ObjectType.IsInterface)
-                typeName = typeName.Substring(1);
-
-            return string.Format("{0}_{1}_{2}", CacheType.ToString(), typeName, BirthMark.ToString());
         }
     }
 }

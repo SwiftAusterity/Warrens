@@ -23,6 +23,8 @@ namespace NetMud.Data.EntityBackingData
         /// <summary>
         /// The system type of data this attaches to
         /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
         public override Type EntityClass
         {
             get { return typeof(Room); }
@@ -35,7 +37,7 @@ namespace NetMud.Data.EntityBackingData
         public IDimensionalModel Model { get; set; }
 
         [JsonProperty("Medium")]
-        private long _medium { get; set; }
+        private BackingDataCacheKey _medium { get; set; }
 
         /// <summary>
         /// What is in the middle of the room
@@ -52,12 +54,12 @@ namespace NetMud.Data.EntityBackingData
             set
             {
                 if(value != null)
-                    _medium = value.Id;
+                    _medium = new BackingDataCacheKey(value);
             }
         }
 
         [JsonProperty("ParentLocation")]
-        private long _affiliation { get; set; }
+        private BackingDataCacheKey _parentLocation { get; set; }
 
         /// <summary>
         /// What zone this belongs to
@@ -69,12 +71,12 @@ namespace NetMud.Data.EntityBackingData
         {
             get
             {
-                return BackingDataCache.Get<ILocaleData>(_affiliation);
+                return BackingDataCache.Get<ILocaleData>(_parentLocation);
             }
             set
             {
                 if(value != null)
-                    _affiliation = value.Id;
+                    _parentLocation = new BackingDataCacheKey(value);
             }
         }
 

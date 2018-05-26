@@ -20,22 +20,10 @@ namespace NetMud.Data.Game
     public class Locale : EntityPartial, ILocale
     {
         /// <summary>
-        /// The name of the object in the data template
-        /// </summary>
-        public override string DataTemplateName
-        {
-            get
-            {
-                if (DataTemplate<ILocaleData>() == null)
-                    return String.Empty;
-
-                return DataTemplate<ILocaleData>().Name;
-            }
-        }
-
-        /// <summary>
         /// The name used in the tag for discovery checking
         /// </summary>
+        [JsonIgnore]
+        [ScriptIgnore]
         public string DiscoveryName
         {
             get
@@ -52,7 +40,7 @@ namespace NetMud.Data.Game
         public IMap Interior { get; set; }
 
         [JsonProperty("ParentLocation")]
-        private LiveCacheKey _affiliation { get; set; }
+        private LiveCacheKey _parentLocation { get; set; }
 
         /// <summary>
         /// The zone this belongs to
@@ -64,17 +52,17 @@ namespace NetMud.Data.Game
         {
             get
             {
-                return LiveCache.Get<IZone>(_affiliation);
+                return LiveCache.Get<IZone>(_parentLocation);
             }
             set
             {
                 if (value != null)
-                    _affiliation = new LiveCacheKey(typeof(IZone), value.BirthMark);
+                    _parentLocation = new LiveCacheKey(value);
             }
         }
 
         [JsonProperty("Rooms")]
-        private IEnumerable<string> _rooms { get; set; }
+        private IEnumerable<LiveCacheKey> _rooms { get; set; }
 
         /// <summary>
         /// Live rooms in this locale
@@ -95,7 +83,7 @@ namespace NetMud.Data.Game
                 if (value == null)
                     return;
 
-                _rooms = new HashSet<string>(value.Select(k => k.BirthMark));
+                _rooms = new HashSet<LiveCacheKey>(value.Select(k => new LiveCacheKey(k)));
             }
         }
 

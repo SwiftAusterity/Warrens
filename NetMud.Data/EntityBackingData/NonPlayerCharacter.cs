@@ -18,6 +18,8 @@ namespace NetMud.Data.EntityBackingData
         /// <summary>
         /// The system type for the entity this attaches to
         /// </summary>
+        [JsonIgnore]
+        [ScriptIgnore]
         public override Type EntityClass
         {
             get { return typeof(Game.Intelligence); }
@@ -36,7 +38,7 @@ namespace NetMud.Data.EntityBackingData
         public string SurName { get; set; }
 
         [JsonProperty("RaceData")]
-        private long _raceData { get; set; }
+        private BackingDataCacheKey _raceData { get; set; }
 
         /// <summary>
         /// NPC's race data
@@ -52,7 +54,7 @@ namespace NetMud.Data.EntityBackingData
             }
             set
             {
-                _raceData = value.Id;
+                _raceData = new BackingDataCacheKey(value);
             }
         }
 

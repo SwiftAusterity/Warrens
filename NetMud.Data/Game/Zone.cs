@@ -8,9 +8,11 @@ using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.Utility;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Game
 {
@@ -21,22 +23,10 @@ namespace NetMud.Data.Game
     public class Zone : LocationEntityPartial, IZone
     {
         /// <summary>
-        /// The name of the object in the data template
-        /// </summary>
-        public override string DataTemplateName
-        {
-            get
-            {
-                if (DataTemplate<IZoneData>() == null)
-                    return String.Empty;
-
-                return DataTemplate<IZoneData>().Name;
-            }
-        }
-
-        /// <summary>
         /// The name used in the tag for discovery checking
         /// </summary>
+        [JsonIgnore]
+        [ScriptIgnore]
         public string DiscoveryName
         {
             get

@@ -42,11 +42,13 @@ namespace NetMud.Data.Game
         /// <summary>
         /// The name of the object in the data template
         /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
         public virtual string DataTemplateName
         {
             get
             {
-                return DataTemplate<IData>().Name;
+                return DataTemplate<IData>()?.Name;
             }
         }
 

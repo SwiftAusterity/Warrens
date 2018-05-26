@@ -3,13 +3,13 @@ using NetMud.Data.System;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Existential;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Game
 {
@@ -23,30 +23,6 @@ namespace NetMud.Data.Game
         /// Framework for the physics model of an entity
         /// </summary>
         public IDimensionalModel Model { get; set; }
-
-        /// <summary>
-        /// Last known location this was loaded to
-        /// </summary>
-        public long LastKnownLocation { get; set; }
-
-        /// <summary>
-        /// Last known location type this was loaded to
-        /// </summary>
-        public string LastKnownLocationType { get; set; }
-
-        /// <summary>
-        /// The name of the object in the data template
-        /// </summary>
-        public override string DataTemplateName
-        {
-            get
-            {
-                if (DataTemplate<IInanimateData>() == null)
-                    return String.Empty;
-
-                return DataTemplate<IInanimateData>().Name;
-            }
-        }
 
         [JsonConstructor]
         public Inanimate(DimensionalModel model)

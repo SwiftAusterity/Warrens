@@ -28,7 +28,7 @@ namespace NetMud.Data.LookupData
         public DamageType Style { get; set; }
 
         [JsonProperty("CompositionId")]
-        private long _compositionId { get; set; }
+        private BackingDataCacheKey _compositionId { get; set; }
 
         /// <summary>
         /// Material composition of the node
@@ -43,7 +43,7 @@ namespace NetMud.Data.LookupData
             }
             set
             {
-                _compositionId = value.Id;
+                _compositionId = new BackingDataCacheKey(value);
             }
         }
     }

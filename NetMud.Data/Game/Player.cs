@@ -23,20 +23,6 @@ namespace NetMud.Data.Game
     [IgnoreAutomatedBackup]
     public class Player : EntityPartial, IPlayer
     {
-        /// <summary>
-        /// The name of the object in the data template
-        /// </summary>
-        public override string DataTemplateName
-        {
-            get
-            {
-                if (DataTemplate<ICharacter>() == null)
-                    return String.Empty;
-
-                return DataTemplate<ICharacter>().Name;
-            }
-        }
-
         [ScriptIgnore]
         [JsonIgnore]
         private LiveCacheKey _descriptorKey;
@@ -58,7 +44,7 @@ namespace NetMud.Data.Game
 
             set
             {
-                _descriptorKey = new LiveCacheKey(typeof(IDescriptor), value.BirthMark);
+                _descriptorKey = new LiveCacheKey(value);
 
                 LiveCache.Add(value);
             }
@@ -108,7 +94,7 @@ namespace NetMud.Data.Game
         /// </summary>
         public override T DataTemplate<T>()
         {
-            return (T)PlayerDataCache.Get(new PlayerDataCacheKey(typeof(ICharacter), AccountHandle, DataTemplateId));
+            return (T)PlayerDataCache.Get(new PlayerDataCacheKey(DataTemplate<ICharacter>()));
         }
 
         /// <summary>

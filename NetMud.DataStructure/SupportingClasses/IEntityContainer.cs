@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NetMud.DataStructure.Base.System;
+using System;
 using System.Collections.Generic;
 
 namespace NetMud.DataStructure.SupportingClasses
@@ -46,7 +47,7 @@ namespace NetMud.DataStructure.SupportingClasses
         /// </summary>
         /// <param name="birthMark">the entity's birthmark to remove</param>
         /// <returns>success status</returns>
-        bool Remove(string birthMark);
+        bool Remove(ICacheKey cacheKey);
 
         /// <summary>
         /// Count the entities in this
@@ -93,7 +94,7 @@ namespace NetMud.DataStructure.SupportingClasses
         /// </summary>
         /// <param name="birthMark">the entity's birthmark to remove</param>
         /// <returns>success status</returns>
-        bool Remove(string birthMark, string containerName);
+        bool Remove(ICacheKey cacheKey, string containerName);
 
         /// <summary>
         /// Count the entities in this

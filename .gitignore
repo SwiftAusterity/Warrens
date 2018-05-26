@@ -35,3 +35,4 @@ NetMud/FileStore/*/Backups/
 *.mdf
 *.ldf
 /.vs/NetMud/v15/Server/sqlite3
+/.vs/NetMud/v15/sqlite3/db.lock

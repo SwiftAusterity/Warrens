@@ -6,9 +6,11 @@ using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Game
 {
@@ -18,20 +20,6 @@ namespace NetMud.Data.Game
     [Serializable]
     public class Intelligence : EntityPartial, IIntelligence
     {
-        /// <summary>
-        /// The name of the object in the data template
-        /// </summary>
-        public override string DataTemplateName
-        {
-            get
-            {
-                if (DataTemplate<INonPlayerCharacter>() == null)
-                    return String.Empty;
-
-                return DataTemplate<INonPlayerCharacter>().Name;
-            }
-        }
-
         /// <summary>
         /// News up an empty entity
         /// </summary>

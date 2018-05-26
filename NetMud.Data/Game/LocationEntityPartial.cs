@@ -29,7 +29,7 @@ namespace NetMud.Data.Game
         public virtual int Temperature { get; set; }
 
         [JsonProperty("NaturalResources")]
-        private IDictionary<long, int> _naturalResources { get; set; }
+        private IDictionary<BackingDataCacheKey, int> _naturalResources { get; set; }
 
         /// <summary>
         /// Collection of model section name to material composition mappings
@@ -50,7 +50,7 @@ namespace NetMud.Data.Game
                 if (value == null)
                     return;
 
-                _naturalResources = value.ToDictionary(k => k.Key.Id, k => k.Value);
+                _naturalResources = value.ToDictionary(k => new BackingDataCacheKey(k.Key), k => k.Value);
             }
         }
 

@@ -285,7 +285,7 @@ namespace NetMud.Controllers.GameAdmin
             if (validData)
             {
                 newObj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth,
-                    vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation, vModel.DimensionalModelId, materialParts);
+                    vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation, new BackingDataCacheKey(dimModel), materialParts);
 
                 if (newObj.Create() == null)
                     message = "Error; Creation failed.";
@@ -354,7 +354,7 @@ namespace NetMud.Controllers.GameAdmin
             if (validData)
             {
                 obj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth,
-                    vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation, vModel.DimensionalModelId, materialParts);
+                    vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation, new BackingDataCacheKey(dimModel), materialParts);
 
                 if (obj.Save())
                 {

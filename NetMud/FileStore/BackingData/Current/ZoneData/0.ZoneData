@@ -1,1 +1,0 @@
-{"EntityClass":"NetMud.Data.Game.Zone, NetMud.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null","BaseElevation":0,"TemperatureCoefficient":1,"PressureCoefficient":1,"BaseBiome":0,"AlwaysDiscovered":false,"Templates":[],"NaturalResourceSpawn":{},"Affects":[],"Id":0,"Created":"2018-05-21T14:25:59.7284784-05:00","LastRevised":"0001-01-01T00:00:00","Name":"The Void"}

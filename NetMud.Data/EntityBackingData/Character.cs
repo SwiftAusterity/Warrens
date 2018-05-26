@@ -24,6 +24,8 @@ namespace NetMud.Data.EntityBackingData
         /// <summary>
         /// The system type for the entity this attaches to
         /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
         public override Type EntityClass
         {
             get { return typeof(Game.Player); }
@@ -47,7 +49,7 @@ namespace NetMud.Data.EntityBackingData
         public bool StillANoob { get; set; }
 
         [JsonProperty("RaceData")]
-        private long _raceData { get; set; }
+        private BackingDataCacheKey _raceData { get; set; }
 
         /// <summary>
         /// The race data for the character
@@ -63,7 +65,7 @@ namespace NetMud.Data.EntityBackingData
             }
             set
             {
-                _raceData = value.Id;
+                _raceData = new BackingDataCacheKey(value);
             }
         }
 
@@ -187,7 +189,7 @@ namespace NetMud.Data.EntityBackingData
             try
             {
                 //Remove from cache first
-                PlayerDataCache.Remove(new PlayerDataCacheKey(typeof(ICharacter), AccountHandle, Id));
+                PlayerDataCache.Remove(new PlayerDataCacheKey(this));
 
                 //Remove it from the file system.
                 accessor.ArchiveCharacter(this);

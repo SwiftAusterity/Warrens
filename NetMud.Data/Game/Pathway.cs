@@ -12,7 +12,6 @@ using NetMud.DataStructure.SupportingClasses;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Game
@@ -23,20 +22,6 @@ namespace NetMud.Data.Game
     [Serializable]
     public class Pathway : EntityPartial, IPathway
     {
-        /// <summary>
-        /// The name of the object in the data template
-        /// </summary>
-        public override string DataTemplateName
-        {
-            get
-            {
-                if (DataTemplate<IPathwayData>() == null)
-                    return String.Empty;
-
-                return DataTemplate<IPathwayData>().Name;
-            }
-        }
-
         /// <summary>
         /// Framework for the physics model of an entity
         /// </summary>
@@ -78,7 +63,7 @@ namespace NetMud.Data.Game
                 if (value == null)
                     return;
 
-                _currentDestinationBirthmark = new LiveCacheKey(value.GetType(), value.BirthMark);
+                _currentDestinationBirthmark = new LiveCacheKey(value);
                 UpsertToLiveWorldCache();
             }
         }
@@ -109,7 +94,7 @@ namespace NetMud.Data.Game
                 if (value == null)
                     return;
 
-                _currentOriginBirthmark = new LiveCacheKey(value.GetType(), value.BirthMark);
+                _currentOriginBirthmark = new LiveCacheKey(value);
                 UpsertToLiveWorldCache();
             }
         }
