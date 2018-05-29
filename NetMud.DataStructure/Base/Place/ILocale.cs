@@ -17,16 +17,17 @@ namespace NetMud.DataStructure.Base.Place
         /// </summary>
         IZone ParentLocation { get; set; }
 
-        /// <summary>
-        /// Get all the rooms for the zone
-        /// </summary>
-        /// <returns>the rooms for the zone</returns>
-        IEnumerable<IRoom> Rooms { get; set; }
 
         /// <summary>
         /// The map of the rooms inside
         /// </summary>
         IMap Interior { get; set; }
+
+        /// <summary>
+        /// Get all the rooms for the zone
+        /// </summary>
+        /// <returns>the rooms for the zone</returns>
+        IEnumerable<IRoom> Rooms();
 
         /// <summary>
         /// Get the surrounding locations based on a strength radius

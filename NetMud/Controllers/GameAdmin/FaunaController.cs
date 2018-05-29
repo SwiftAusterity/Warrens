@@ -113,7 +113,8 @@ namespace NetMud.Controllers.GameAdmin
                 ElevationRange = new Tuple<int, int>(vModel.ElevationRangeLow, vModel.ElevationRangeHigh),
                 TemperatureRange = new Tuple<int, int>(vModel.TemperatureRangeLow, vModel.TemperatureRangeHigh),
                 HumidityRange = new Tuple<int, int>(vModel.HumidityRangeLow, vModel.HumidityRangeHigh),
-                PopulationHardCap = vModel.PopulationHardCap
+                PopulationHardCap = vModel.PopulationHardCap,
+                FemaleRatio = vModel.FemaleRatio
             };
             newObj.AmountMultiplier = vModel.AmountMultiplier;
 

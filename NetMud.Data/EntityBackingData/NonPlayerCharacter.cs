@@ -78,9 +78,11 @@ namespace NetMud.Data.EntityBackingData
                 if (RaceData == null)
                     return new Tuple<int, int, int>(0, 0, 0);
 
-                var height = RaceData.Head.Model.Height + RaceData.Torso.Model.Height + RaceData.Legs.Item1.Model.Height;
-                var length = RaceData.Torso.Model.Length;
-                var width = RaceData.Torso.Model.Width;
+                var height = (RaceData?.Head?.Model != null ? RaceData.Head.Model.Height : 0)
+                            + (RaceData?.Torso?.Model != null ? RaceData.Torso.Model.Height : 0)
+                            + (RaceData?.Legs?.Item1?.Model != null ? RaceData.Legs.Item1.Model.Height : 0);
+                var length = RaceData?.Torso?.Model != null ? RaceData.Torso.Model.Length : 0;
+                var width = RaceData?.Torso?.Model != null ? RaceData.Torso.Model.Width : 0;
 
                 return new Tuple<int, int, int>(height, length, width);
             }

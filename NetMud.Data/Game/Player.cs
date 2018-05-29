@@ -90,11 +90,24 @@ namespace NetMud.Data.Game
         }
 
         /// <summary>
+        /// The name of the object in the data template
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public override string DataTemplateName
+        {
+            get
+            {
+                return DataTemplate<ICharacter>()?.Name;
+            }
+        }
+
+        /// <summary>
         /// The backing data for this entity
         /// </summary>
         public override T DataTemplate<T>()
         {
-            return (T)PlayerDataCache.Get(new PlayerDataCacheKey(DataTemplate<ICharacter>()));
+            return (T)PlayerDataCache.Get(new PlayerDataCacheKey(typeof(ICharacter), AccountHandle, DataTemplateId));
         }
 
         /// <summary>
@@ -320,16 +333,20 @@ namespace NetMud.Data.Game
         public override void SpawnNewInWorld(IGlobalPosition position)
         {
             var ch = DataTemplate<ICharacter>();
-            var spawnTo = position.CurrentLocation;
 
             BirthMark = LiveCache.GetUniqueIdentifier(ch);
             Keywords = new string[] { ch.Name.ToLower(), ch.SurName.ToLower() };
             Birthdate = DateTime.Now;
 
+            var spawnTo = position?.CurrentLocation;
+
             if (spawnTo == null)
                 spawnTo = GetBaseSpawn();
 
             spawnTo.MoveInto<IPlayer>(this);
+
+            if (position == null)
+                position = new GlobalPosition(spawnTo);
 
             //Set the data context's stuff too so we don't have to do this over again
             ch.CurrentLocation = position;

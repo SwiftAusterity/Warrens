@@ -1,5 +1,6 @@
 ﻿using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
 using System;
@@ -189,6 +190,7 @@ namespace NetMud.Cartography
         public static long[,,] TakeSliceOfMap(Tuple<int, int> xBounds, Tuple<int, int> yBounds, Tuple<int, int> zBounds, long[,,] map, bool shrink = false)
         {
             var newMap = new long[map.GetUpperBound(0) + 1, map.GetUpperBound(1) + 1, map.GetUpperBound(2) + 1];
+            newMap = newMap.Populate(-1);
 
             int x, y, z, xLowest = -1, yLowest = -1, zLowest = -1;
 
@@ -350,8 +352,8 @@ namespace NetMud.Cartography
                 && dataMap[xStepped - 1, yStepped - 1, zStepped - 1] < 0)
             {
                 var thisPath = pathways.FirstOrDefault(path =>
-                                                        (path.DirectionType == transversalDirection && path.Origin.Equals(origin))
-                                                        || (path.DirectionType == Utilities.ReverseDirection(transversalDirection) && path.Destination.Equals(origin))
+                                                        (path.DirectionType == transversalDirection && path.Origin.Equals(origin) && path.Destination.EntityClass.GetInterfaces().Contains(typeof(IRoom)))
+                                                        || (path.DirectionType == Utilities.ReverseDirection(transversalDirection) && path.Destination.Equals(origin) && path.Origin.EntityClass.GetInterfaces().Contains(typeof(IRoom)))
                                                         );
                 if (thisPath != null)
                 {
@@ -379,7 +381,7 @@ namespace NetMud.Cartography
             if (xLowest <= 0 && yLowest <= 0 && zLowest <= 0)
                 return fullMap;
 
-            var shrunkMap = new long[fullMap.GetUpperBound(0) - xLowest, fullMap.GetUpperBound(1) - yLowest, fullMap.GetUpperBound(2) - zLowest];
+            var shrunkMap = new long[fullMap.GetUpperBound(0) + 1 - xLowest, fullMap.GetUpperBound(1) + 1 - yLowest, fullMap.GetUpperBound(2) + 1 - zLowest];
 
             int x, y, z;
             for (x = 0; x <= shrunkMap.GetUpperBound(0); x++)

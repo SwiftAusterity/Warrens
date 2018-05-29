@@ -19,6 +19,27 @@ namespace NetMud.Data.Game
     public abstract class LocationEntityPartial : EntityPartial, ILocation
     {
         /// <summary>
+        /// The name of the object in the data template
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public override string DataTemplateName
+        {
+            get
+            {
+                return DataTemplate<ILocationData>()?.Name;
+            }
+        }
+
+        /// <summary>
+        /// The backing data for this entity
+        /// </summary>
+        public override T DataTemplate<T>()
+        {
+            return (T)BackingDataCache.Get(new BackingDataCacheKey(typeof(ILocationData), DataTemplateId));
+        }
+
+        /// <summary>
         /// Current base humidity
         /// </summary>
         public virtual int Humidity { get; set; }

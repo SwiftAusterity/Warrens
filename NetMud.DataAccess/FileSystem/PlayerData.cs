@@ -221,7 +221,7 @@ namespace NetMud.DataAccess.FileSystem
             }
             catch (Exception ex)
             {
-                LoggingUtility.LogError(ex);
+                LoggingUtility.LogError(ex, false);
             }
         }
 
@@ -251,7 +251,7 @@ namespace NetMud.DataAccess.FileSystem
             }
             catch (Exception ex)
             {
-                LoggingUtility.LogError(ex);
+                LoggingUtility.LogError(ex, false);
             }
         }
 

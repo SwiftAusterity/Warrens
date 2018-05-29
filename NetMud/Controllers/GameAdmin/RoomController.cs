@@ -111,12 +111,13 @@ namespace NetMud.Controllers.GameAdmin
         {
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            var locale = BackingDataCache.Get<ILocaleData>(localeId);
 
             var newObj = new RoomData
             {
                 Name = vModel.Name,
                 Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth
-                                , vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation)
+                                , vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation),
             };
 
             var mediumId = vModel.Medium;
@@ -125,7 +126,7 @@ namespace NetMud.Controllers.GameAdmin
             if (medium != null)
             {
                 newObj.Medium = medium;
-                newObj.ParentLocation = vModel.Locale;
+                newObj.ParentLocation = locale;
                 newObj.Coordinates = new Tuple<int, int, int>(0, 0, 0); //TODO: fix this
 
                 if (newObj.Create() == null)

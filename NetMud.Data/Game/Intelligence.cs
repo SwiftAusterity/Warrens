@@ -21,6 +21,27 @@ namespace NetMud.Data.Game
     public class Intelligence : EntityPartial, IIntelligence
     {
         /// <summary>
+        /// The name of the object in the data template
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public override string DataTemplateName
+        {
+            get
+            {
+                return DataTemplate<INonPlayerCharacter>()?.Name;
+            }
+        }
+
+        /// <summary>
+        /// The backing data for this entity
+        /// </summary>
+        public override T DataTemplate<T>()
+        {
+            return (T)BackingDataCache.Get(new BackingDataCacheKey(typeof(INonPlayerCharacter), DataTemplateId));
+        }
+
+        /// <summary>
         /// News up an empty entity
         /// </summary>
         public Intelligence()

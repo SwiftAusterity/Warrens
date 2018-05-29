@@ -1,4 +1,5 @@
-﻿using NetMud.Data.DataIntegrity;
+﻿using NetMud.Cartography;
+using NetMud.Data.DataIntegrity;
 using NetMud.Data.EntityBackingData;
 using NetMud.Data.System;
 using NetMud.DataAccess.Cache;
@@ -19,6 +20,27 @@ namespace NetMud.Data.Game
     /// </summary>
     public class Locale : EntityPartial, ILocale
     {
+        /// <summary>
+        /// The name of the object in the data template
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public override string DataTemplateName
+        {
+            get
+            {
+                return DataTemplate<ILocaleData>()?.Name;
+            }
+        }
+
+        /// <summary>
+        /// The backing data for this entity
+        /// </summary>
+        public override T DataTemplate<T>()
+        {
+            return (T)BackingDataCache.Get(new BackingDataCacheKey(typeof(ILocaleData), DataTemplateId));
+        }
+
         /// <summary>
         /// The name used in the tag for discovery checking
         /// </summary>
@@ -61,31 +83,6 @@ namespace NetMud.Data.Game
             }
         }
 
-        [JsonProperty("Rooms")]
-        private IEnumerable<LiveCacheKey> _rooms { get; set; }
-
-        /// <summary>
-        /// Live rooms in this locale
-        /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        public IEnumerable<IRoom> Rooms
-        {
-            get
-            {
-                if (_rooms != null)
-                    return new HashSet<IRoom>(LiveCache.GetMany<IRoom>(_rooms));
-
-                return null;
-            }
-            set
-            {
-                if (value == null)
-                    return;
-
-                _rooms = new HashSet<LiveCacheKey>(value.Select(k => new LiveCacheKey(k)));
-            }
-        }
 
         /// <summary>
         /// New up a "blank" zone entry
@@ -103,6 +100,14 @@ namespace NetMud.Data.Game
             DataTemplateId = locale.Id;
 
             GetFromWorldOrSpawn();
+        }
+
+        /// <summary>
+        /// Live rooms in this locale
+        /// </summary>
+        public IEnumerable<IRoom> Rooms()
+        {
+            return LiveCache.GetAll<IRoom>().Where(room => room.ParentLocation.Equals(this));
         }
 
         /// <summary>
@@ -130,7 +135,7 @@ namespace NetMud.Data.Game
         /// <returns>The central room</returns>
         public IRoom CentralRoom(int zIndex = -1)
         {
-            throw new NotImplementedException();
+            return (IRoom)Cartographer.FindCenterOfMap(DataTemplate<ILocaleData>().Interior.CoordinatePlane, zIndex).GetLiveInstance();
         }
 
         /// <summary>
@@ -221,7 +226,7 @@ namespace NetMud.Data.Game
         /// <returns>The rendered flat map</returns>
         public string RenderMap(int zIndex, bool forAdmin = false)
         {
-            return string.Empty;
+            return DataTemplate<ILocaleData>().RenderMap(zIndex, forAdmin);
         }
 
         /// <summary>
@@ -230,8 +235,25 @@ namespace NetMud.Data.Game
         /// <returns>The adjascent locales and zones</returns>
         public IEnumerable<ILocation> GetSurroundings()
         {
-            //TODO
-            return Enumerable.Empty<ILocation>();
+            var radiusLocations = new List<ILocation>();
+            var paths = LiveCache.GetAll<IPathway>().Where(path => path.Origin.Equals(this));
+
+            //If we don't have any paths out what can we even do
+            if (paths.Count() == 0)
+                return radiusLocations;
+
+            while (paths.Count() > 0)
+            {
+                var currentLocsSet = paths.Select(path => path.Destination);
+
+                if (currentLocsSet.Count() == 0)
+                    break;
+
+                radiusLocations.AddRange(currentLocsSet);
+                paths = currentLocsSet.SelectMany(ro => ro.GetPathways());
+            }
+
+            return radiusLocations;
         }
 
         /// <summary>

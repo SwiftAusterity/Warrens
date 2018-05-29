@@ -112,7 +112,7 @@ namespace NetMud.Controllers.GameAdmin
                 Name = vModel.Name
             };
 
-            if (vModel.ArmsID > 0 && vModel.ArmsAmount > 0)
+            if (vModel.ArmsID >= 0 && vModel.ArmsAmount > 0)
             {
                 var arm = BackingDataCache.Get<InanimateData>(vModel.ArmsID);
 
@@ -120,7 +120,7 @@ namespace NetMud.Controllers.GameAdmin
                     newObj.Arms = new Tuple<IInanimateData, short>(arm, vModel.ArmsAmount);
             }
 
-            if (vModel.LegsID > 0 && vModel.LegsAmount > 0)
+            if (vModel.LegsID >= 0 && vModel.LegsAmount > 0)
             {
                 var leg = BackingDataCache.Get<IInanimateData>(vModel.LegsID);
 
@@ -128,7 +128,7 @@ namespace NetMud.Controllers.GameAdmin
                     newObj.Legs = new Tuple<IInanimateData, short>(leg, vModel.LegsAmount);
             }
 
-            if (vModel.TorsoId > 0)
+            if (vModel.TorsoId >= 0)
             {
                 var torso = BackingDataCache.Get<IInanimateData>(vModel.TorsoId);
 
@@ -136,7 +136,7 @@ namespace NetMud.Controllers.GameAdmin
                     newObj.Torso = torso;
             }
 
-            if (vModel.HeadId > 0)
+            if (vModel.HeadId >= 0)
             {
                 var head = BackingDataCache.Get<IInanimateData>(vModel.HeadId);
 
@@ -144,7 +144,7 @@ namespace NetMud.Controllers.GameAdmin
                     newObj.Head = head;
             }
 
-            if (vModel.StartingLocationId > 0)
+            if (vModel.StartingLocationId >= 0)
             {
                 var zone = BackingDataCache.Get<ZoneData>(vModel.StartingLocationId);
 
@@ -152,7 +152,7 @@ namespace NetMud.Controllers.GameAdmin
                     newObj.StartingLocation = zone;
             }
 
-            if (vModel.RecallLocationId > 0)
+            if (vModel.RecallLocationId >= 0)
             {
                 var zone = BackingDataCache.Get<ZoneData>(vModel.RecallLocationId);
 
@@ -160,7 +160,7 @@ namespace NetMud.Controllers.GameAdmin
                     newObj.EmergencyLocation = zone;
             }
 
-            if (vModel.BloodId > 0)
+            if (vModel.BloodId >= 0)
             {
                 var blood = BackingDataCache.Get<Material>(vModel.BloodId);
 
@@ -182,7 +182,7 @@ namespace NetMud.Controllers.GameAdmin
                 var bodyBits = new List<Tuple<IInanimateData, short, string>>();
                 foreach (var id in vModel.ExtraPartsId)
                 {
-                    if (id > 0)
+                    if (id >= 0)
                     {
                         if (vModel.ExtraPartsAmount.Count() <= partIndex || vModel.ExtraPartsName.Count() <= partIndex)
                             break;
@@ -329,7 +329,7 @@ namespace NetMud.Controllers.GameAdmin
                     obj.Head = head;
             }
 
-            if (vModel.StartingLocationId > 0)
+            if (vModel.StartingLocationId >= 0)
             {
                 var zone = BackingDataCache.Get<ZoneData>(vModel.StartingLocationId);
 
@@ -337,7 +337,7 @@ namespace NetMud.Controllers.GameAdmin
                     obj.StartingLocation = zone;
             }
 
-            if (vModel.RecallLocationId > 0)
+            if (vModel.RecallLocationId >= 0)
             {
                 var zone = BackingDataCache.Get<ZoneData>(vModel.RecallLocationId);
 

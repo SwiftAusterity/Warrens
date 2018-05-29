@@ -86,6 +86,7 @@
 
             $.get('/api/AdminDataApi/' + mapRenderType + '/' + dataId + '/' + radius, function (data) {
                 $exModelContainer.html(data);
+                $exModelContainer.css({ 'height': data.length * 6 + 'pc' });
 
                 BindRoomsAndPaths();
             });
@@ -102,6 +103,7 @@
                 }
 
                 $exModelContainer.html(data[renderMode]);
+                $exModelContainer.css({ 'height': data.length * 6 + 'pc' });
 
                 BindRoomsAndPaths();
             });
@@ -110,6 +112,7 @@
 
             $.get('/api/AdminDataApi/' + mapRenderType + '/' + dataId + '/' + zIndex, function (data) {
                 $exModelContainer.html(data);
+                $exModelContainer.css({ 'height': data.length * 6 + 'pc' });
 
                 BindRoomsAndPaths();
             });

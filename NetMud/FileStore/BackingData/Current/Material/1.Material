@@ -1,0 +1,1 @@
+{"Conductive":false,"Magnetic":false,"Flammable":true,"Viscosity":1,"Density":20,"Mallebility":25,"Ductility":5,"Porosity":15,"SolidPoint":5,"GasPoint":90,"TemperatureRetention":1,"Resistance":{"Electric":100},"Composition":{},"HelpText":"Wood, test value. Comes from \"tree\".","Id":1,"Created":"2018-05-29T09:44:03.8271108-05:00","LastRevised":"0001-01-01T00:00:00","Name":"Wood"}

@@ -58,10 +58,13 @@ namespace NetMud.Backup
                                                                                 && !ty.IsAbstract
                                                                                 && !ty.GetCustomAttributes<IgnoreAutomatedBackupAttribute>().Any());
 
-            foreach (var t in implimentedTypes.OrderByDescending(type => type == typeof(ZoneData) ? 4 :
-                                                                            type == typeof(LocaleData) ? 3 :
-                                                                            type == typeof(RoomData) ? 2 :
-                                                                            type == typeof(PathwayData) ? 1 : 0))
+
+
+            foreach (var t in implimentedTypes.OrderByDescending(type => type == typeof(ZoneData) ? 5 :
+                                                                            type == typeof(LocaleData) ? 4 :
+                                                                            type == typeof(RoomData) ? 3 :
+                                                                            type == typeof(PathwayData) ? 2 : 
+                                                                            type.GetInterfaces().Contains(typeof(ILookupData)) ? 1 : 0))
                 LoadAllToCache(t);
 
             return true;

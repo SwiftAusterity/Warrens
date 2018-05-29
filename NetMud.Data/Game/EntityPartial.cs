@@ -44,21 +44,12 @@ namespace NetMud.Data.Game
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
-        public virtual string DataTemplateName
-        {
-            get
-            {
-                return DataTemplate<IData>()?.Name;
-            }
-        }
+        public abstract string DataTemplateName { get; }
 
         /// <summary>
         /// The backing data for this live entity
         /// </summary>
-        public virtual T DataTemplate<T>() where T : IData
-        {
-            return BackingDataCache.Get<T>(DataTemplateId);
-        }
+        public abstract T DataTemplate<T>() where T : IData;
 
         /// <summary>
         /// Get's the entity's model dimensions

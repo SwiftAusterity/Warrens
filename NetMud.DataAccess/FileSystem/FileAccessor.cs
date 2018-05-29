@@ -128,7 +128,7 @@ namespace NetMud.DataAccess.FileSystem
             catch (Exception ex)
             {
                 //Log any filesystem errors
-                LoggingUtility.LogError(ex);
+                LoggingUtility.LogError(ex, false);
             }
 
             return false;

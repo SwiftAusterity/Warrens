@@ -30,7 +30,7 @@ namespace NetMud.Data.System
             {
                 if (!String.IsNullOrWhiteSpace(CurrentLocationBirthmark?.BirthMark))
                 {
-                    return LiveCache.Get<IContains>(CurrentLocationBirthmark);
+                    return (IContains)LiveCache.Get(CurrentLocationBirthmark);
                 }
 
                 return null;

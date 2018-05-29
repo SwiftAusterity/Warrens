@@ -69,7 +69,14 @@ namespace NetMud.Data.System
                     && !container.PropertyType.GetCustomAttributes<JsonIgnoreAttribute>().Any()
                     && (container.PropertyType.IsArray || (!typeof(String).Equals(container.PropertyType) && typeof(IEnumerable).IsAssignableFrom(container.PropertyType))))
                 {
-                    container.SetValue(obj, Activator.CreateInstance(container.PropertyType, new object[] { }));
+                    try
+                    {
+                        container.SetValue(obj, Activator.CreateInstance(container.PropertyType, new object[] { }));
+                    }
+                    catch
+                    {
+                        //Oh well, can't init this on deserialization that's ok mostly
+                    }
                 }
             }
 

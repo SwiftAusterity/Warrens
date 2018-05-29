@@ -23,6 +23,27 @@ namespace NetMud.Data.Game
     public class Pathway : EntityPartial, IPathway
     {
         /// <summary>
+        /// The name of the object in the data template
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public override string DataTemplateName
+        {
+            get
+            {
+                return DataTemplate<IPathwayData>()?.Name;
+            }
+        }
+
+        /// <summary>
+        /// The backing data for this entity
+        /// </summary>
+        public override T DataTemplate<T>()
+        {
+            return (T)BackingDataCache.Get(new BackingDataCacheKey(typeof(IPathwayData), DataTemplateId));
+        }
+
+        /// <summary>
         /// Framework for the physics model of an entity
         /// </summary>
         public IDimensionalModel Model { get; set; }
@@ -48,7 +69,7 @@ namespace NetMud.Data.Game
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
-        [NonNullableDataIntegrity("From Location must be valid.")]
+        [NonNullableDataIntegrity("To Location must be valid.")]
         public ILocation Destination
         {
             get
@@ -115,6 +136,7 @@ namespace NetMud.Data.Game
         {
             Enter = new MessageCluster();
             DataTemplateId = backingStore.Id;
+            MovementDirection = Utilities.TranslateToDirection(backingStore.DegreesFromNorth, backingStore.InclineGrade);
             GetFromWorldOrSpawn();
         }
 
@@ -194,9 +216,9 @@ namespace NetMud.Data.Game
         public override IEnumerable<string> RenderToLook(IEntity actor)
         {
             var sb = new List<string>();
-            var bS = DataTemplate<IPathwayData>(); ;
+            var bS = DataTemplate<IPathwayData>();
 
-            sb.Add(string.Format("{0} heads in the direction of {1} from {2} to {3}.", bS.Name, MovementDirection.ToString(), 
+            sb.Add(string.Format("{0} heads in the direction of {1} from {2} to {3}.", bS.Name, MovementDirection.ToString(),
                 Origin.DataTemplateName, Destination.DataTemplateName));
 
             return sb;

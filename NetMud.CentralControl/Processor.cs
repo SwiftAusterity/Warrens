@@ -265,7 +265,7 @@ namespace NetMud.CentralControl
             }
             catch (Exception ex)
             {
-                LoggingUtility.LogError(ex);
+                LoggingUtility.LogError(ex, false);
             }
 
             return null;
@@ -330,7 +330,7 @@ namespace NetMud.CentralControl
             }
             catch (Exception ex)
             {
-                LoggingUtility.LogError(ex);
+                LoggingUtility.LogError(ex, false);
             }
 
             return null;

@@ -166,7 +166,7 @@ namespace NetMud.Controllers.GameAdmin
             }
             catch (Exception ex)
             {
-                LoggingUtility.LogError(ex);
+                LoggingUtility.LogError(ex, false);
                 message = "Error; Creation failed.";
             }
 
@@ -274,7 +274,7 @@ namespace NetMud.Controllers.GameAdmin
             }
             catch (Exception ex)
             {
-                LoggingUtility.LogError(ex);
+                LoggingUtility.LogError(ex, false);
                 message = "Error; Creation failed.";
             }
 

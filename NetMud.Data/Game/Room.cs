@@ -26,6 +26,27 @@ namespace NetMud.Data.Game
     public class Room : LocationEntityPartial, IRoom
     {
         /// <summary>
+        /// The name of the object in the data template
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public override string DataTemplateName
+        {
+            get
+            {
+                return DataTemplate<IRoomData>()?.Name;
+            }
+        }
+
+        /// <summary>
+        /// The backing data for this entity
+        /// </summary>
+        public override T DataTemplate<T>()
+        {
+            return (T)BackingDataCache.Get(new BackingDataCacheKey(typeof(IRoomData), DataTemplateId));
+        }
+
+        /// <summary>
         /// Framework for the physics model of an entity
         /// </summary>
         public IDimensionalModel Model { get; set; }

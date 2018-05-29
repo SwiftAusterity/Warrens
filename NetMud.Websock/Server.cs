@@ -60,7 +60,7 @@ namespace NetMud.Websock
             }
             catch (Exception ex)
             {
-                LoggingUtility.LogError(ex);
+                LoggingUtility.LogError(ex, false);
             }
 
             return default(T);

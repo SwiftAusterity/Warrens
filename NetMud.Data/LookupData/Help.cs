@@ -15,8 +15,6 @@ namespace NetMud.Data.LookupData
         public Help()
         {
             Id = -1;
-            Created = DateTime.UtcNow;
-            LastRevised = DateTime.UtcNow;
             Name = "NotImpl";
             HelpText = "NotImpl";
         }

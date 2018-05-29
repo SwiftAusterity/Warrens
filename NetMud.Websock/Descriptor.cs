@@ -207,10 +207,10 @@ namespace NetMud.Websock
         /// Handles when the connection faults
         /// </summary>
         /// <param name="err">the error</param>
-        private void OnError(Exception err)
+        private void OnError(Exception ex)
         {
             //Log it
-            LoggingUtility.LogError(err);
+            LoggingUtility.LogError(ex, false);
         }
 
         /// <summary>

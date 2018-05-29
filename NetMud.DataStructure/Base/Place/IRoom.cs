@@ -18,7 +18,7 @@ namespace NetMud.DataStructure.Base.Place
         /// <summary>
         /// What locale this belongs to
         /// </summary>
-        ILocale ParentLocation { get; }
+        ILocale ParentLocation { get; set; }
 
         /// <summary>
         /// Renders out an ascii map of this room plus all rooms in the radius

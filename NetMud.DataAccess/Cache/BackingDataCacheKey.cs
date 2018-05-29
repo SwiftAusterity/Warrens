@@ -33,10 +33,11 @@ namespace NetMud.DataAccess.Cache
         /// </summary>
         /// <param name="objectType">System type of the entity being cached</param>
         /// <param name="marker">Unique signature for a live entity</param>
-        public BackingDataCacheKey(Type objectType, long marker)
+        [JsonConstructor]
+        public BackingDataCacheKey(Type objectType, long birthMark)
         {
             ObjectType = objectType;
-            BirthMark = marker;
+            BirthMark = birthMark;
         }
 
         /// <summary>

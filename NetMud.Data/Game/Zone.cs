@@ -23,6 +23,27 @@ namespace NetMud.Data.Game
     public class Zone : LocationEntityPartial, IZone
     {
         /// <summary>
+        /// The name of the object in the data template
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public override string DataTemplateName
+        {
+            get
+            {
+                return DataTemplate<IZoneData>()?.Name;
+            }
+        }
+
+        /// <summary>
+        /// The backing data for this entity
+        /// </summary>
+        public override T DataTemplate<T>()
+        {
+            return (T)BackingDataCache.Get(new BackingDataCacheKey(typeof(IZoneData), DataTemplateId));
+        }
+
+        /// <summary>
         /// The name used in the tag for discovery checking
         /// </summary>
         [JsonIgnore]

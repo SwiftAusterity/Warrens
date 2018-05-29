@@ -1,20 +1,19 @@
-﻿using NetMud.Data.EntityBackingData;
+﻿using NetMud.Cartography;
 using NetMud.Data.Game;
+using NetMud.Data.System;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
+using NetMud.DataAccess.FileSystem;
 using NetMud.DataStructure.Base.Entity;
+using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.SupportingClasses;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using NetMud.DataStructure.Base.Place;
-using NetMud.DataAccess.FileSystem;
-using NetMud.DataStructure.SupportingClasses;
-using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.Cartography;
-using NetMud.Data.System;
 
 namespace NetMud.Backup
 {
@@ -31,10 +30,36 @@ namespace NetMud.Backup
         public bool NewWorldFallback()
         {
             //Only load in stuff that is static and spawns as singleton
-            PreLoadAll<ZoneData>();
-            PreLoadAll<LocaleData>();
-            PreLoadAll<RoomData>();
-            PreLoadAll<PathwayData>();
+            //We need to pick up any places that aren't already live from the file system incase someone added them during the last session\
+            foreach (var thing in BackingDataCache.GetAll<IZoneData>())
+            {
+                var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IZone;
+
+                entityThing.UpsertToLiveWorldCache();
+            }
+
+            foreach (var thing in BackingDataCache.GetAll<ILocaleData>())
+            {
+                var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as ILocale;
+
+                entityThing.ParentLocation = (IZone)entityThing.DataTemplate<ILocaleData>().ParentLocation.GetLiveInstance();
+                entityThing.UpsertToLiveWorldCache();
+            }
+
+            foreach (var thing in BackingDataCache.GetAll<IRoomData>())
+            {
+                var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IRoom;
+
+                entityThing.ParentLocation = entityThing.DataTemplate<IRoomData>().ParentLocation.GetLiveInstance();
+                entityThing.UpsertToLiveWorldCache();
+            }
+
+            foreach (var thing in BackingDataCache.GetAll<IPathwayData>())
+            {
+                var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IPathway;
+
+                entityThing.UpsertToLiveWorldCache();
+            }
 
             ParseDimension();
 
@@ -62,7 +87,7 @@ namespace NetMud.Backup
 
                     entityThing.UpsertToLiveWorldCache();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     LoggingUtility.LogError(ex);
                 }
@@ -191,23 +216,22 @@ namespace NetMud.Backup
                     var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IZone;
 
                     entityThing.UpsertToLiveWorldCache();
-                    entityThing.SpawnNewInWorld();
                 }
 
                 foreach (var thing in BackingDataCache.GetAll<ILocaleData>().Where(dt => !entitiesToLoad.Any(ent => ent.DataTemplateId.Equals(dt.Id))))
                 {
                     var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as ILocale;
 
+                    entityThing.ParentLocation = (IZone)entityThing.DataTemplate<ILocaleData>().ParentLocation.GetLiveInstance();
                     entityThing.UpsertToLiveWorldCache();
-                    entityThing.SpawnNewInWorld();
                 }
 
                 foreach (var thing in BackingDataCache.GetAll<IRoomData>().Where(dt => !entitiesToLoad.Any(ent => ent.DataTemplateId.Equals(dt.Id))))
                 {
                     var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IRoom;
 
+                    entityThing.ParentLocation = entityThing.DataTemplate<IRoomData>().ParentLocation.GetLiveInstance();
                     entityThing.UpsertToLiveWorldCache();
-                    entityThing.SpawnNewInWorld();
                 }
 
                 foreach (var thing in BackingDataCache.GetAll<IPathwayData>().Where(dt => !entitiesToLoad.Any(ent => ent.DataTemplateId.Equals(dt.Id))))
@@ -282,23 +306,26 @@ namespace NetMud.Backup
 
         private void ParseDimension()
         {
-            var zonePool = new HashSet<IZoneData>(BackingDataCache.GetAll<IZoneData>());
+            //var zonePool = new HashSet<IZoneData>(BackingDataCache.GetAll<IZoneData>());
             var localePool = new HashSet<ILocaleData>(BackingDataCache.GetAll<ILocaleData>());
-            var roomPool = new HashSet<IRoomData>(BackingDataCache.GetAll<IRoomData>());
+            //var roomPool = new HashSet<IRoomData>(BackingDataCache.GetAll<IRoomData>());
+
+            foreach (var locale in localePool)
+                locale.RemapInterior();
 
             //This will cycle through every room building massive (in theory) maps and spitting out the remaining items to make more worlds from.
             //If your world is highly disconnected you will end up with a ton of world maps
-            while (roomPool.Count() > 0)
-            {
-                var currentRoom = roomPool.FirstOrDefault();
+            //while (roomPool.Count() > 0)
+            //{
+            //    var currentRoom = roomPool.FirstOrDefault();
 
-                if (currentRoom == null)
-                    continue;
+            //    if (currentRoom == null)
+            //        continue;
 
-                GenerateWorld(currentRoom, roomPool);
+            //    GenerateWorld(currentRoom, roomPool);
 
-                //BackingDataCache.Add(newWorld);
-            }
+            //    //BackingDataCache.Add(newWorld);
+            //}
         }
 
         //TODO: a method that takes a room, 
@@ -317,7 +344,7 @@ namespace NetMud.Backup
             startingRoom.Coordinates = new Tuple<int, int, int>(0, 0, 0);
 
             //We're kind of faking array size for radius, it will be shrunk later
-             var returnMap = Cartographer.GenerateMapFromRoom(startingRoom, remainingRooms.Count() / 2, remainingRooms, true);
+            var returnMap = Cartographer.GenerateMapFromRoom(startingRoom, remainingRooms.Count() / 2, remainingRooms, true);
 
             startingRoom.ParentLocation.Interior = new Map(returnMap, false);
 

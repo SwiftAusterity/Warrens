@@ -66,7 +66,7 @@ namespace NetMud.Data.EntityBackingData
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
-        [NonNullableDataIntegrity("ParentLocation is invalid.")]
+        [NonNullableDataIntegrity("Parent Location is invalid.")]
         public ILocaleData ParentLocation
         {
             get
