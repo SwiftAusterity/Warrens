@@ -10,6 +10,7 @@ using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.Models.Admin;
 using System;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
@@ -150,6 +151,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
                 ValidMaterials = BackingDataCache.GetAll<IMaterial>(),
+                ValidZones = BackingDataCache.GetAll<IZoneData>(),
             };
 
             var obj = BackingDataCache.Get<RoomData>(id);
@@ -166,6 +168,23 @@ namespace NetMud.Controllers.GameAdmin
             vModel.DimensionalModelHeight = obj.Model.Height;
             vModel.DimensionalModelLength = obj.Model.Length;
             vModel.DimensionalModelWidth = obj.Model.Width;
+            vModel.DimensionalModelCavitation = obj.Model.SurfaceCavitation;
+            vModel.DimensionalModelVacuity = obj.Model.Vacuity;
+
+            var zoneDestination = obj.GetZonePathways().FirstOrDefault();
+
+            if (zoneDestination != null)
+            {
+                vModel.ZoneDestinationId = zoneDestination.Id;
+                vModel.ZonePathwayName = zoneDestination.Name;
+                vModel.ZoneDimensionalModelHeight = zoneDestination.Model.Height;
+                vModel.ZoneDimensionalModelLength = zoneDestination.Model.Length;
+                vModel.ZoneDimensionalModelWidth = zoneDestination.Model.Width;
+                vModel.ZoneDimensionalModelCavitation = zoneDestination.Model.SurfaceCavitation;
+                vModel.ZoneDimensionalModelVacuity = zoneDestination.Model.Vacuity;
+            }
+            else
+                vModel.ZoneDestinationId = -1;
 
             return View("~/Views/GameAdmin/Room/Edit.cshtml", "_chromelessLayout", vModel);
         }
@@ -176,6 +195,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            IPathwayData zoneDestination = null;
 
             var obj = BackingDataCache.Get<RoomData>(id);
             if (obj == null)
@@ -184,20 +204,40 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToRoute("ModalErrorOrClose", new { Message = message });
             }
 
-            obj.Name = vModel.Name;
-            obj.Model.Height = vModel.DimensionalModelHeight;
-            obj.Model.Length = vModel.DimensionalModelLength;
-            obj.Model.Width = vModel.DimensionalModelWidth;
-
             var mediumId = vModel.Medium;
             var medium = BackingDataCache.Get<IMaterial>(mediumId);
 
             if (medium != null)
             {
+                obj.Name = vModel.Name;
+                obj.Model.Height = vModel.DimensionalModelHeight;
+                obj.Model.Length = vModel.DimensionalModelLength;
+                obj.Model.Width = vModel.DimensionalModelWidth;
+                obj.Model.SurfaceCavitation = vModel.DimensionalModelCavitation;
+                obj.Model.Vacuity = vModel.DimensionalModelVacuity;
                 obj.Medium = medium;
+
+                var destination = BackingDataCache.Get<IZoneData>(vModel.ZoneDestinationId);
+                if (destination != null)
+                {
+                    zoneDestination = obj.GetZonePathways().FirstOrDefault();
+                    
+                    if(zoneDestination == null)
+                    {
+                        zoneDestination = new PathwayData(new DimensionalModel(vModel.ZoneDimensionalModelLength, vModel.ZoneDimensionalModelHeight, vModel.ZoneDimensionalModelWidth,
+                                                                                vModel.ZoneDimensionalModelVacuity, vModel.ZoneDimensionalModelCavitation));
+                        zoneDestination.DegreesFromNorth = -1;
+                        zoneDestination.Name = vModel.ZonePathwayName;
+                        zoneDestination.Origin = obj;
+                        zoneDestination.Destination = destination;
+                    }
+                }
 
                 if (obj.Save())
                 {
+                    if (zoneDestination != null)
+                        zoneDestination.Save();
+
                     LoggingUtility.LogAdminCommandUsage("*WEB* - EditRoomData[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 }
                 else
