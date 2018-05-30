@@ -99,13 +99,13 @@ namespace NetMud.Cartography
                 int x, y;
                 for (y = map.GetUpperBound(1); y >= 0; y--)
                 {
-                    var rowString = String.Empty;
+                    var rowString = string.Empty;
                     for (x = 0; x < map.GetUpperBound(0); x++)
                     {
                         var roomData = BackingDataCache.Get<IRoomData>(map[x, y]);
 
                         if (roomData != null)
-                            rowString += RenderRoomToAscii(roomData, centerRoom.Equals(roomData), forAdmin);
+                            rowString += RenderRoomToAscii(roomData, roomData.GetZonePathways().Any(), forAdmin);
                         else
                             rowString += "&nbsp;";
                     }
@@ -131,7 +131,7 @@ namespace NetMud.Cartography
 
                 for (y = expandedMap.GetUpperBound(1); y >= 0; y--)
                 {
-                    var rowString = String.Empty;
+                    var rowString = string.Empty;
                     for (x = 0; x <= expandedMap.GetUpperBound(0); x++)
                         rowString += expandedMap[x, y];
 
@@ -161,7 +161,7 @@ namespace NetMud.Cartography
                     var wPath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.West);
 
                     //The room
-                    expandedMap[expandedRoomX, expandedRoomY] = RenderRoomToAscii(roomData, centerRoom.Equals(roomData), forAdmin);
+                    expandedMap[expandedRoomX, expandedRoomY] = RenderRoomToAscii(roomData, roomData.GetZonePathways().Any(), forAdmin);
 
                     expandedMap[expandedRoomX - 1, expandedRoomY + 1] = RenderPathwayToAsciiForModals(nwPath, roomData.Id, MovementDirectionType.NorthWest
                                                                                         , Cartographer.GetRoomInDirection(roomData, MovementDirectionType.NorthWest), forAdmin);
@@ -275,7 +275,7 @@ namespace NetMud.Cartography
 
         private static string RenderPathwayToAsciiForModals(IPathwayData path, long originId, MovementDirectionType directionType, IRoomData destination, bool forAdmin = false)
         {
-            var returnValue = String.Empty;
+            var returnValue = string.Empty;
             var asciiCharacter = Utilities.TranslateDirectionToAsciiCharacter(directionType);
 
             if (!forAdmin)
@@ -285,7 +285,7 @@ namespace NetMud.Cartography
                 destination = (IRoomData)path.Destination;
 
             long destinationId = -1;
-            var destinationName = String.Empty;
+            var destinationName = string.Empty;
             if (destination != null)
             {
                 destinationName = destination.Name;
@@ -294,29 +294,29 @@ namespace NetMud.Cartography
 
             if (path != null)
             {
-                returnValue = String.Format("<a href='#' class='editData pathway AdminEditPathway' pathwayId='{0}' fromRoom='{3}' toRoom='{4}' title='Edit - {5} path to {1}' data-id='{0}'>{2}</a>",
+                returnValue = string.Format("<a href='#' class='editData pathway AdminEditPathway' pathwayId='{0}' fromRoom='{3}' toRoom='{4}' title='Edit - {5} path to {1}' data-id='{0}'>{2}</a>",
                     path.Id, destinationName, asciiCharacter, originId, destinationId, directionType.ToString());
             }
             else
             {
-                var roomString = String.Format("Add - {0} path and room", directionType.ToString());
+                var roomString = string.Format("Add - {0} path and room", directionType.ToString());
 
                 if (!string.IsNullOrWhiteSpace(destinationName))
-                    roomString = String.Format("Add {0} path to {1}", directionType.ToString(), destinationName);
+                    roomString = string.Format("Add {0} path to {1}", directionType.ToString(), destinationName);
 
-                returnValue = String.Format("<a href='#' class='addData pathway AdminAddPathway' pathwayId='-1' fromRoom='{0}' toRoom='{3}' data-direction='{1}' title='{2}'>+</a>",
+                returnValue = string.Format("<a href='#' class='addData pathway AdminAddPathway' pathwayId='-1' fromRoom='{0}' toRoom='{3}' data-direction='{1}' title='{2}'>+</a>",
                     originId, Utilities.TranslateDirectionToDegrees(directionType).Item1, roomString, destinationId);
             }
 
             return returnValue;
         }
 
-        private static string RenderRoomToAscii(IRoomData destination, bool centered, bool forAdmin = false)
+        private static string RenderRoomToAscii(IRoomData destination, bool hasZoneExits, bool forAdmin = false)
         {
-            var character = centered ? "0" : "*";
+            var character = hasZoneExits ? "O" : "@";
 
             if (forAdmin)
-                return String.Format("<a href='#' class='editData AdminEditRoom' roomId='{0}' title='Edit - {2}'>{1}</a>", destination.Id, character, destination.Name);
+                return string.Format("<a href='#' class='editData AdminEditRoom' roomId='{0}' title='Edit - {2}'>{1}</a>", destination.Id, character, destination.Name);
             else
                 return character;
         }

@@ -79,7 +79,7 @@ namespace NetMud.DataAccess.Cache
         private static IEnumerable<ICharacter> EnsureAccountCharacters(string accountHandle)
         {
             //No shenanigans
-            if(String.IsNullOrWhiteSpace(accountHandle))
+            if(string.IsNullOrWhiteSpace(accountHandle))
                 return Enumerable.Empty<ICharacter>();
 
             var chars = BackingCache.GetAll<ICharacter>().Where(ch => ch.AccountHandle.Equals(accountHandle, StringComparison.InvariantCultureIgnoreCase));

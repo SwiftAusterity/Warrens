@@ -251,7 +251,7 @@ namespace NetMud.Data.LookupData
             if (Legs == null || Legs.Item1 == null || Legs.Item2 < 0)
                 dataProblems.Add("Legs are invalid.");
 
-            if (BodyParts != null && BodyParts.Any(a => a.Item1 == null || a.Item2 == 0 || String.IsNullOrWhiteSpace(a.Item3)))
+            if (BodyParts != null && BodyParts.Any(a => a.Item1 == null || a.Item2 == 0 || string.IsNullOrWhiteSpace(a.Item3)))
                 dataProblems.Add("BodyParts are invalid.");
 
             if (VisionRange == null || VisionRange.Item1 >= VisionRange.Item2)

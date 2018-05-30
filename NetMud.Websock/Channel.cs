@@ -78,8 +78,8 @@ namespace NetMud.Websock
             var styleElement = SupportedColorTranslations[styleType];
 
             //If the destination string is blank, just remove them all since they'd come back empty anyways
-            if (String.IsNullOrWhiteSpace(styleElement))
-                originalString = originalString.Replace(formatToReplace, String.Empty);
+            if (string.IsNullOrWhiteSpace(styleElement))
+                originalString = originalString.Replace(formatToReplace, string.Empty);
             else
             {
                 var firstIndex = originalString.IndexOf(formatToReplace);
@@ -132,7 +132,7 @@ namespace NetMud.Websock
         public string EncapsulateOutput(string str)
         {
             if (!string.IsNullOrWhiteSpace(str))
-                return String.Format("<{0}>{1}</{0}>", EncapsulationElement, str);
+                return string.Format("<{0}>{1}</{0}>", EncapsulationElement, str);
             else
                 return BumperElement; //blank strings mean carriage returns
         }

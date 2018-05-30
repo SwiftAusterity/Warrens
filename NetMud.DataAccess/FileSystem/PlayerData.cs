@@ -27,7 +27,7 @@ namespace NetMud.DataAccess.FileSystem
         {
             get
             {
-                return String.Format("{0}{1}{2}_{3}{4}{5}/",
+                return string.Format("{0}{1}{2}_{3}{4}{5}/",
                                         DateTime.Now.Year
                                         , DateTime.Now.Month
                                         , DateTime.Now.Day

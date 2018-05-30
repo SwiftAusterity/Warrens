@@ -25,7 +25,7 @@ namespace NetMud.Websock
 
             PortNumber = portNumber;
 
-            LiveCache.Add(service, String.Format(cacheKeyFormat, portNumber));
+            LiveCache.Add(service, string.Format(cacheKeyFormat, portNumber));
 
             service.Start(128);
 
@@ -56,7 +56,7 @@ namespace NetMud.Websock
         {
             try
             {
-                return LiveCache.Get<T>(String.Format(cacheKeyFormat, PortNumber));
+                return LiveCache.Get<T>(string.Format(cacheKeyFormat, PortNumber));
             }
             catch (Exception ex)
             {

@@ -29,9 +29,9 @@ namespace NetMud.Telnet
             remoteEndPoint = _remoteEndPoint;
             connectedAt = _connectedAt;
             clientState = _clientState;
-            commandIssued = String.Empty;
+            commandIssued = string.Empty;
 
-            BirthMark = LiveCache.GetUniqueIdentifier(String.Format(cacheKeyFormat, remoteEndPoint.Port));
+            BirthMark = LiveCache.GetUniqueIdentifier(string.Format(cacheKeyFormat, remoteEndPoint.Port));
             Birthdate = DateTime.Now;
         }
 

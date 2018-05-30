@@ -166,7 +166,7 @@ namespace NetMud.Data.System
         /// </summary>
         public IEnumerable<T> EntitiesContained(string namedContainer)
         {
-            if (String.IsNullOrWhiteSpace(namedContainer))
+            if (string.IsNullOrWhiteSpace(namedContainer))
                 return EntitiesContained();
 
             if (Count(namedContainer) > 0)
@@ -182,7 +182,7 @@ namespace NetMud.Data.System
         /// <returns>success status</returns>
         public bool Add(T entity, string namedContainer)
         {
-            if (String.IsNullOrWhiteSpace(namedContainer))
+            if (string.IsNullOrWhiteSpace(namedContainer))
                 return Add(entity);
 
             var key = new LiveCacheKey(entity);
@@ -200,7 +200,7 @@ namespace NetMud.Data.System
         /// <returns>yes it contains it or no it does not</returns>
         public bool Contains(T entity, string namedContainer)
         {
-            if (String.IsNullOrWhiteSpace(namedContainer))
+            if (string.IsNullOrWhiteSpace(namedContainer))
                 return Contains(entity);
 
             var key = new LiveCacheKey(entity);
@@ -215,7 +215,7 @@ namespace NetMud.Data.System
         /// <returns>success status</returns>
         public bool Remove(T entity, string namedContainer)
         {
-            if (String.IsNullOrWhiteSpace(namedContainer))
+            if (string.IsNullOrWhiteSpace(namedContainer))
                 return Remove(entity);
 
             var key = new LiveCacheKey(entity);
@@ -233,7 +233,7 @@ namespace NetMud.Data.System
         /// <returns>success status</returns>
         public bool Remove(ICacheKey cacheKey, string namedContainer)
         {
-            if (String.IsNullOrWhiteSpace(namedContainer))
+            if (string.IsNullOrWhiteSpace(namedContainer))
                 return Remove(cacheKey);
 
             var key = (LiveCacheKey)cacheKey;
@@ -250,7 +250,7 @@ namespace NetMud.Data.System
         /// <returns>the count</returns>
         public int Count(string namedContainer)
         {
-            if (String.IsNullOrWhiteSpace(namedContainer))
+            if (string.IsNullOrWhiteSpace(namedContainer))
                 return Count();
 
             return Birthmarks[namedContainer].Count;

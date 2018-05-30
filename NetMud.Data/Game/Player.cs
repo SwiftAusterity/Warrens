@@ -115,7 +115,7 @@ namespace NetMud.Data.Game
         /// </summary>
         public void CloseConnection()
         {
-            Descriptor.Disconnect(String.Empty);
+            Descriptor.Disconnect(string.Empty);
         }
 
         public override bool WriteTo(IEnumerable<string> input)

@@ -149,7 +149,7 @@ namespace NetMud.Controllers.GameAdmin
                     newObj.Ores = newOres;
             }
 
-            if (String.IsNullOrWhiteSpace(message))
+            if (string.IsNullOrWhiteSpace(message))
             {
                 if (newObj.Create() == null)
                     message = "Error; Creation failed.";
@@ -260,7 +260,7 @@ namespace NetMud.Controllers.GameAdmin
 
             obj.OccursIn = new HashSet<Biome>(vModel.OccursIn);
 
-            if (String.IsNullOrWhiteSpace(message))
+            if (string.IsNullOrWhiteSpace(message))
             {
                 if (obj.Save())
                 {

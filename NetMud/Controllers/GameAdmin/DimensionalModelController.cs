@@ -111,7 +111,7 @@ namespace NetMud.Controllers.GameAdmin
 
                     newModel = new DimensionalModelData(fileContents, vModel.ModelType);
                 }
-                else if(vModel.ModelPlaneNames.Count(m => !String.IsNullOrEmpty(m)) == 11
+                else if(vModel.ModelPlaneNames.Count(m => !string.IsNullOrEmpty(m)) == 11
                     && vModel.CoordinateDamageTypes.Any(m => !m.Equals(0))) //can't have an entirely null typed model
                 {
                     //We're going to be cheaty and build a cDel string based on the arrays
@@ -121,7 +121,7 @@ namespace NetMud.Controllers.GameAdmin
                     foreach(var name in vModel.ModelPlaneNames)
                     {
                         arrayString.AppendLine(
-                            String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}"
+                            string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}"
                                 , name
                                 , NetMud.Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 11 - 1]))
                                 , NetMud.Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 11 - 2]))
@@ -217,7 +217,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 DimensionalModelData newModel = null;
                 
-                if (vModel.ModelPlaneNames.Count(m => !String.IsNullOrEmpty(m)) == 11
+                if (vModel.ModelPlaneNames.Count(m => !string.IsNullOrEmpty(m)) == 11
                     && vModel.CoordinateDamageTypes.Any(m => !m.Equals(0))) //can't have an entirely null typed model
                 {
                     //We're going to be cheaty and build a cDel string based on the arrays
@@ -227,7 +227,7 @@ namespace NetMud.Controllers.GameAdmin
                     foreach (var name in vModel.ModelPlaneNames)
                     {
                         arrayString.AppendLine(
-                            String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}"
+                            string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}"
                                 , name
                                 , NetMud.Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 11 - 1]))
                                 , NetMud.Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 11 - 2]))

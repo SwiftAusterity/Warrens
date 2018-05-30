@@ -11,7 +11,7 @@ namespace NetMud.Communication
         /// </summary>
         public string cacheKeyFormat
         {
-            get {  return String.Empty; }
+            get {  return string.Empty; }
         }
 
         /// <summary>
@@ -19,22 +19,22 @@ namespace NetMud.Communication
         /// </summary>
         private Dictionary<SupportedColors, string> _colors = new Dictionary<SupportedColors, string> 
         {
-            { SupportedColors.Bold,         String.Empty },
-            { SupportedColors.Italics,      String.Empty },
-            { SupportedColors.Blue,         String.Empty },
-            { SupportedColors.LightBlue,    String.Empty },
-            { SupportedColors.Orange,       String.Empty },
-            { SupportedColors.LightOrange,  String.Empty },
-            { SupportedColors.Yellow,       String.Empty },
-            { SupportedColors.LightYellow,  String.Empty },
-            { SupportedColors.Green,        String.Empty },
-            { SupportedColors.LightGreen,   String.Empty },
-            { SupportedColors.Indigo,       String.Empty },
-            { SupportedColors.LightPurple,  String.Empty },
-            { SupportedColors.Red,          String.Empty },
-            { SupportedColors.LightRed,     String.Empty },
-            { SupportedColors.Pink,         String.Empty },
-            { SupportedColors.LightPink,    String.Empty }
+            { SupportedColors.Bold,         string.Empty },
+            { SupportedColors.Italics,      string.Empty },
+            { SupportedColors.Blue,         string.Empty },
+            { SupportedColors.LightBlue,    string.Empty },
+            { SupportedColors.Orange,       string.Empty },
+            { SupportedColors.LightOrange,  string.Empty },
+            { SupportedColors.Yellow,       string.Empty },
+            { SupportedColors.LightYellow,  string.Empty },
+            { SupportedColors.Green,        string.Empty },
+            { SupportedColors.LightGreen,   string.Empty },
+            { SupportedColors.Indigo,       string.Empty },
+            { SupportedColors.LightPurple,  string.Empty },
+            { SupportedColors.Red,          string.Empty },
+            { SupportedColors.LightRed,     string.Empty },
+            { SupportedColors.Pink,         string.Empty },
+            { SupportedColors.LightPink,    string.Empty }
         };
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace NetMud.Communication
         public string EncapsulateOutput(IEnumerable<string> lines)
         {
             //We're not doing any output encapsulation for internal guys
-            return String.Join(" ", lines);
+            return string.Join(" ", lines);
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace NetMud.Communication
                 return false;
 
             //It's all blank anyways
-            originalString = originalString.Replace(formatToReplace, String.Empty);
+            originalString = originalString.Replace(formatToReplace, string.Empty);
 
             return true;
         }

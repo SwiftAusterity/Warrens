@@ -34,8 +34,9 @@
             var currentZ = parseInt($exModelContainer.attr('data-zIndex'));
             var newZ = currentZ - 1;
 
-            if (currentZ == 0)
+            if (currentZ == 0) {
                 return false;
+            }
 
             $exModelContainer.attr('data-zIndex', newZ);
             $('#levelIndicator').html('Level ' + newZ);
@@ -62,7 +63,7 @@
                 $this.attr('data-renderMode', 'down');
                 $this.addClass('Down');
                 $this.children().addClass('glyphicon-download');
-          } else {
+            } else {
                 $this.attr('data-renderMode', 'up');
                 $this.addClass('Up');
                 $this.children().addClass('glyphicon-upload');

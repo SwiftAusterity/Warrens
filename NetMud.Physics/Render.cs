@@ -23,7 +23,7 @@ namespace NetMud.Physics
                     return FlattenFlatModel(model, true);
             }
 
-            return String.Empty;
+            return string.Empty;
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace NetMud.Physics
                     return FlattenFlatModel(model);
             }
 
-            return String.Empty;
+            return string.Empty;
         }
 
         /// <summary>
@@ -208,8 +208,8 @@ namespace NetMud.Physics
                     var nodeString = DamageTypeToCharacter(node.Style, xI < 5);
 
                     if (forWeb)
-                        nodeString = String.Format("<a title='{0}'>{1}</a>"
-                            , node.Composition == null ? String.Empty : node.Composition.Name 
+                        nodeString = string.Format("<a title='{0}'>{1}</a>"
+                            , node.Composition == null ? string.Empty : node.Composition.Name 
                             , nodeString);
 
                     flattenedPlane[yI][xI] = nodeString;

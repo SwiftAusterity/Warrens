@@ -25,7 +25,7 @@ namespace NetMud.DataAccess.FileSystem
         {
             get
             {
-                return String.Format("{0}{1}{2}{3}_{4}{5}/",
+                return string.Format("{0}{1}{2}{3}_{4}{5}/",
                                         ArchiveDirectoryName
                                         , DateTime.Now.Year
                                         , DateTime.Now.Month
@@ -147,7 +147,7 @@ namespace NetMud.DataAccess.FileSystem
         /// <returns>the filename</returns>
         private string GetEntityFilename(IData entity)
         {
-            return String.Format("{0}.{1}", entity.Id, entity.GetType().Name);
+            return string.Format("{0}.{1}", entity.Id, entity.GetType().Name);
         }
     }
 }

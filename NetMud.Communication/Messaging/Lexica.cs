@@ -58,7 +58,7 @@ namespace NetMud.Communication.Messaging
         {
             if (Modifiers.ContainsKey(modifier))
             {
-                if (String.IsNullOrWhiteSpace(Modifiers[modifier]))
+                if (string.IsNullOrWhiteSpace(Modifiers[modifier]))
                     Modifiers[modifier] = conjunction;
                 else
                     return false;
@@ -108,7 +108,7 @@ namespace NetMud.Communication.Messaging
                     if (Modifiers.Any(mod => mod.Key.Role == GrammaticalType.IndirectObject))
                     {
                         var iObj = Modifiers.Where(mod => mod.Key.Role == GrammaticalType.IndirectObject)
-                                            .Select(mod => String.Format("{0} {1}", mod.Value, mod.Key.ToString())).CommaList(RenderUtility.SplitListType.AllAnd);
+                                            .Select(mod => string.Format("{0} {1}", mod.Value, mod.Key.ToString())).CommaList(RenderUtility.SplitListType.AllAnd);
 
                         sb.AppendFormat("{0} {1}", iObj, describedNoun);
                     }
@@ -163,7 +163,7 @@ namespace NetMud.Communication.Messaging
                 var conjunctive = adjectives.FirstOrDefault(adj => adj.Key.Type == LexicalType.Conjunction || adj.Key.Type == LexicalType.Interjection);
                 var conjunctiveString = conjunctive.Key != null ? conjunctive.Key.ToString() : string.Empty;
 
-                described = String.Format("{1} {2} {0}", phrase, conjunctiveString, decorativeString);
+                described = string.Format("{1} {2} {0}", phrase, conjunctiveString, decorativeString);
             }
 
             return described;

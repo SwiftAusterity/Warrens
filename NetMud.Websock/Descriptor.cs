@@ -70,7 +70,7 @@ namespace NetMud.Websock
             Client = tcpClient;
             UserManager = new ApplicationUserManager(new UserStore<ApplicationUser>(new ApplicationDbContext()));
 
-            BirthMark = LiveCache.GetUniqueIdentifier(String.Format(cacheKeyFormat, Client.Client.RemoteEndPoint.Serialize().ToString()));
+            BirthMark = LiveCache.GetUniqueIdentifier(string.Format(cacheKeyFormat, Client.Client.RemoteEndPoint.Serialize().ToString()));
             Birthdate = DateTime.Now;
 
             LiveCache.Add<IDescriptor>(this);
@@ -85,7 +85,7 @@ namespace NetMud.Websock
             Client = tcpClient;
             UserManager = userManager;
 
-            BirthMark = LiveCache.GetUniqueIdentifier(String.Format(cacheKeyFormat, Client.Client.RemoteEndPoint.Serialize().ToString()));
+            BirthMark = LiveCache.GetUniqueIdentifier(string.Format(cacheKeyFormat, Client.Client.RemoteEndPoint.Serialize().ToString()));
             Birthdate = DateTime.Now;
 
             LiveCache.Add<IDescriptor>(this);
@@ -292,7 +292,7 @@ namespace NetMud.Websock
                 //translate bytes of request to string
                 var data = DecodeSocket(bytes);
 
-                if (!String.IsNullOrWhiteSpace(data))
+                if (!string.IsNullOrWhiteSpace(data))
                 {
                     if (worker.Invoke(data))
                         StartLoop(OnMessage);
@@ -392,7 +392,7 @@ namespace NetMud.Websock
             _currentPlayer.Descriptor = this;
 
             //We need to barf out to the connected client the welcome message. The client will only indicate connection has been established.
-            var welcomeMessage = new List<String>
+            var welcomeMessage = new List<string>
             {
                 string.Format("Welcome to alpha phase twinMUD, {0}", currentCharacter.FullName()),
                 "Please feel free to LOOK around."

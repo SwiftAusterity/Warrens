@@ -16,7 +16,7 @@ namespace NetMud.Controllers
             var model = BackingDataCache.Get<IDimensionalModelData>(modelId);
 
             if (model == null)
-                return String.Empty;
+                return string.Empty;
 
             return Render.FlattenModelForWeb(model);
         }

@@ -44,7 +44,7 @@ namespace NetMud.DataAccess.Cache
         { 
             get
             {
-                return String.Format("{0}_{1}", AccountHandle, CharacterId);
+                return string.Format("{0}_{1}", AccountHandle, CharacterId);
             }
         }
 

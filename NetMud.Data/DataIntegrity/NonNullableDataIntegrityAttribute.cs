@@ -15,7 +15,7 @@ namespace NetMud.Data.DataIntegrity
         internal override bool Verify(object val)
         {
             if (val?.GetType() == typeof(string))
-                return !String.IsNullOrEmpty((string)val);
+                return !string.IsNullOrEmpty((string)val);
 
             return val != null;
         }

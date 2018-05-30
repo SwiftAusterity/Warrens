@@ -67,7 +67,7 @@ namespace NetMud.Data.System
             {
                 if (container.GetValue(obj) == null
                     && !container.PropertyType.GetCustomAttributes<JsonIgnoreAttribute>().Any()
-                    && (container.PropertyType.IsArray || (!typeof(String).Equals(container.PropertyType) && typeof(IEnumerable).IsAssignableFrom(container.PropertyType))))
+                    && (container.PropertyType.IsArray || (!typeof(string).Equals(container.PropertyType) && typeof(IEnumerable).IsAssignableFrom(container.PropertyType))))
                 {
                     try
                     {

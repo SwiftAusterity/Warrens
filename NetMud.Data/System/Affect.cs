@@ -37,7 +37,7 @@ namespace NetMud.Data.System
         {
             Duration = -1;
             Value = 0;
-            Target = String.Empty;
+            Target = string.Empty;
             DispelResistance = 0;
         }
 

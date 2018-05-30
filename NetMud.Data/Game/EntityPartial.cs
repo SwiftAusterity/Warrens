@@ -128,7 +128,7 @@ namespace NetMud.Data.Game
         /// <returns>the affect</returns>
         public bool HasAffect(string affectTarget)
         {
-            if(String.IsNullOrWhiteSpace(affectTarget))
+            if(string.IsNullOrWhiteSpace(affectTarget))
                 return false;
 
             return Affects.Any(aff => aff.Target.Equals(affectTarget, StringComparison.InvariantCultureIgnoreCase)

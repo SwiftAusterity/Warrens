@@ -42,7 +42,7 @@ namespace NetMud.Controllers
                 ChannelNames = LoggingUtility.GetCurrentLogNames()
             };
 
-            if (!String.IsNullOrWhiteSpace(selectedLog))
+            if (!string.IsNullOrWhiteSpace(selectedLog))
             {
                 dashboardModel.SelectedLogContent = LoggingUtility.GetCurrentLogContent(selectedLog);
                 dashboardModel.SelectedLog = selectedLog;
@@ -55,8 +55,8 @@ namespace NetMud.Controllers
         public ActionResult Rollover(string selectedLog)
         {
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
-            var message = String.Empty;
-            if (!String.IsNullOrWhiteSpace(selectedLog))
+            var message = string.Empty;
+            if (!string.IsNullOrWhiteSpace(selectedLog))
             {
                 if (!LoggingUtility.RolloverLog(selectedLog))
                     message = "Error rolling over log.";

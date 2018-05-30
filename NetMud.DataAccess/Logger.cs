@@ -39,7 +39,7 @@ namespace NetMud.DataAccess
         /// <param name="nonImportant">Should we get cross about this or not? Defaults to not.</param>
         public static void LogError(Exception ex, bool nonImportant = true)
         {
-            var errorContent = String.Format("{0}: {1}{2}{3}", ex.GetType().Name, ex.Message, Environment.NewLine, ex.StackTrace);
+            var errorContent = string.Format("{0}: {1}{2}{3}", ex.GetType().Name, ex.Message, Environment.NewLine, ex.StackTrace);
 
             if(nonImportant)
                 CommitLog(errorContent, "SystemFailures", true);
@@ -54,7 +54,7 @@ namespace NetMud.DataAccess
         /// <param name="accountName">the account using it (user not character)</param>
         public static void LogAdminCommandUsage(string commandString, string accountName)
         {
-            var content = String.Format("{0}: {1}", accountName, commandString);
+            var content = string.Format("{0}: {1}", accountName, commandString);
 
             CommitLog(content, "AdminCommandUse", true);
         }
@@ -188,7 +188,7 @@ namespace NetMud.DataAccess
         /// <returns>success status</returns>
         public bool RolloverLog(string channel)
         {
-            var archiveLogName = String.Format("{0}_{1}{2}{3}_{4}{5}{6}.txt",
+            var archiveLogName = string.Format("{0}_{1}{2}{3}_{4}{5}{6}.txt",
                     channel
                     , DateTime.Now.Year
                     , DateTime.Now.Month
@@ -207,7 +207,7 @@ namespace NetMud.DataAccess
         /// <returns>the content</returns>
         public string GetCurrentLogContent(string channel)
         {
-            var content = String.Empty;
+            var content = string.Empty;
 
             var bytes = ReadCurrentFileByPath(channel + ".txt");
 
@@ -230,7 +230,7 @@ namespace NetMud.DataAccess
                 throw new Exception("Unable to locate or create base live logs directory.");
 
             var fileName = channel + ".txt";
-            var timeStamp = String.Format("[{0:0000}/{1:00}/{2:00} {3:00}:{4:00}:{5:00}]:  ", DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+            var timeStamp = string.Format("[{0:0000}/{1:00}/{2:00} {3:00}:{4:00}:{5:00}]:  ", DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
 
             //Add a line terminator PLEASE
             content += Environment.NewLine;

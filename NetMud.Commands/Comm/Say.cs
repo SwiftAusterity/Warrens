@@ -31,7 +31,7 @@ namespace NetMud.Commands.Comm
         {
             var sb = new List<string>
             {
-                String.Format("You say '{0}'", Subject)
+                string.Format("You say '{0}'", Subject)
             };
 
             var toActor = new Message(MessagingType.Audible, new Occurrence() { Strength = 1 })
@@ -39,7 +39,7 @@ namespace NetMud.Commands.Comm
                 Override = sb
             };
 
-            var areaString = new string[] { String.Format("$A$ says '{0}'", Subject) };
+            var areaString = new string[] { string.Format("$A$ says '{0}'", Subject) };
 
             var toArea = new Message(MessagingType.Audible, new Occurrence() { Strength = 30 })
             {

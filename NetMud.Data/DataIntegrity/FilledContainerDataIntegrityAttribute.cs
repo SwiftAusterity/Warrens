@@ -22,7 +22,7 @@ namespace NetMud.Data.DataIntegrity
             var valueType = val.GetType();
 
             //return true on non-collections unless they're null
-            if (!valueType.IsArray && (typeof(String).Equals(valueType) || !typeof(IEnumerable).IsAssignableFrom(valueType)))
+            if (!valueType.IsArray && (typeof(string).Equals(valueType) || !typeof(IEnumerable).IsAssignableFrom(valueType)))
                 return val != null;
 
             try

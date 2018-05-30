@@ -59,7 +59,7 @@ namespace NetMud.Data.LookupData
             var dataProblems = base.FitnessReport();
 
             if (ModelPlanes == null || !ModelPlanes.Any() 
-                || ModelPlanes.Any(m => m == null || String.IsNullOrWhiteSpace(m.TagName) || !m.ModelNodes.Any()))
+                || ModelPlanes.Any(m => m == null || string.IsNullOrWhiteSpace(m.TagName) || !m.ModelNodes.Any()))
                 dataProblems.Add("Model Planes are invalid.");
 
             if (!IsModelValid())
@@ -105,7 +105,7 @@ namespace NetMud.Data.LookupData
             switch (ModelType)
             {
                 case DimensionalModelType.Flat: //2d has 11 planes, but they're all flat (11 X nodes)
-                    return ModelPlanes.Count == 11 && !ModelPlanes.Any(plane => String.IsNullOrWhiteSpace(plane.TagName) || plane.ModelNodes.Count != 11);
+                    return ModelPlanes.Count == 11 && !ModelPlanes.Any(plane => string.IsNullOrWhiteSpace(plane.TagName) || plane.ModelNodes.Count != 11);
                 case DimensionalModelType.None: //0d is always valid, it doesn't care about the model
                     return true;
             }
@@ -154,12 +154,12 @@ namespace NetMud.Data.LookupData
                         newNode.XAxis = xCount;
                         newNode.YAxis = yCount;
 
-                        newNode.Style = String.IsNullOrWhiteSpace(nodeStringComponents[0])
+                        newNode.Style = string.IsNullOrWhiteSpace(nodeStringComponents[0])
                                             ? DamageType.None
                                             : Render.CharacterToDamageType(nodeStringComponents[0]);
 
                         //May not always indicate material id
-                        if (nodeStringComponents.Count() > 1 && String.IsNullOrWhiteSpace(nodeStringComponents[1]))
+                        if (nodeStringComponents.Count() > 1 && string.IsNullOrWhiteSpace(nodeStringComponents[1]))
                             newNode.Composition = BackingDataCache.Get<IMaterial>(long.Parse(nodeStringComponents[1]));
 
                         newPlane.ModelNodes.Add(newNode);

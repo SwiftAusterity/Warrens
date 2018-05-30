@@ -52,7 +52,7 @@ namespace NetMud.Authentication
         {
             GlobalIdentityHandle = handle;
 
-            if (!String.IsNullOrEmpty(logSubscriptions))
+            if (!string.IsNullOrEmpty(logSubscriptions))
                 LogChannelSubscriptions = logSubscriptions.Split('|');
             else
                 LogChannelSubscriptions = new List<string>();

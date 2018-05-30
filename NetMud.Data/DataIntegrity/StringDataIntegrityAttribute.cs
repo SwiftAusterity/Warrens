@@ -25,7 +25,7 @@ namespace NetMud.Data.DataIntegrity
         {
             string value = Utility.DataUtility.TryConvert<string>(val);
 
-            return !String.IsNullOrWhiteSpace(value) && value.Length >= MinimumLength && value.Length <= MaximumLength;
+            return !string.IsNullOrWhiteSpace(value) && value.Length >= MinimumLength && value.Length <= MaximumLength;
         }
 
         /// <summary>

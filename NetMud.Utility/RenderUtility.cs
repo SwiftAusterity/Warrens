@@ -96,22 +96,22 @@ namespace NetMud.Utility
             switch (mode)
             {
                 case SplitListType.AllAnd:
-                    returnString = String.Join(" and ", stringList);
+                    returnString = string.Join(" and ", stringList);
                     break;
                 case SplitListType.AllComma:
-                    returnString = String.Join(", ", stringList);
+                    returnString = string.Join(", ", stringList);
                     break;
                 case SplitListType.CommaWithAnd:
-                    returnString = String.Join(", ", stringList);
+                    returnString = string.Join(", ", stringList);
                     var lastComma = returnString.LastIndexOf(',');
 
-                    returnString = String.Format("{0} and {1}", returnString.Substring(0, lastComma), returnString.Substring(lastComma + 1));
+                    returnString = string.Format("{0} and {1}", returnString.Substring(0, lastComma), returnString.Substring(lastComma + 1));
                     break;
                 case SplitListType.OxfordComma:
-                    returnString = String.Join(", ", stringList);
+                    returnString = string.Join(", ", stringList);
                     var lastOxfordComma = returnString.LastIndexOf(',');
 
-                    returnString = String.Format("{0}, and {1}", returnString.Substring(0, lastOxfordComma), returnString.Substring(lastOxfordComma + 1));
+                    returnString = string.Format("{0}, and {1}", returnString.Substring(0, lastOxfordComma), returnString.Substring(lastOxfordComma + 1));
                     break;
             }
 
