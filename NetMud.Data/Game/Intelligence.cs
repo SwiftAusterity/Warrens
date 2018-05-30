@@ -246,7 +246,10 @@ namespace NetMud.Data.Game
             Keywords = new string[] { bS.Name.ToLower() };
             Birthdate = DateTime.Now;
 
-            CurrentLocation = position ?? throw new NotImplementedException("NPCs can't spawn to nothing");
+            if(position == null)
+                throw new NotImplementedException("NPCs can't spawn to nothing");
+
+            CurrentLocation = position;
 
             position.CurrentLocation.MoveInto<IIntelligence>(this);
 

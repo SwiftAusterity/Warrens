@@ -126,7 +126,10 @@ namespace NetMud.Data.Game
             Keywords = new string[] { bS.Name.ToLower() };
             Birthdate = DateTime.Now;
 
-            CurrentLocation = spawnTo ?? throw new NotImplementedException("Objects can't spawn to nothing");
+            if (spawnTo == null)
+                throw new NotImplementedException("Objects can't spawn to nothing");
+
+            CurrentLocation = spawnTo;
 
             spawnTo.CurrentLocation.MoveInto<IInanimate>(this);
 
