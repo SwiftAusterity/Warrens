@@ -446,11 +446,15 @@ namespace NetMud.Interp
                         validObjects.AddRange(Position.CurrentLocation.GetContents<T>().Where(ent => ((IEntity)ent).Keywords.Any(key => key.Contains(currentParmString))));
 
                         //Add the pathways
-                        if(Position.CurrentLocation.GetType().GetInterfaces().Contains(typeof(ILocation)))
+                        if(Utility.DataUtility.GetAllImplimentingedTypes(typeof(IPathway)).Contains(typeof(T)) && Position.CurrentLocation.GetType().GetInterfaces().Contains(typeof(ILocation)))
                         {
                             var location = (ILocation)Position.CurrentLocation;
+                            var validPathways = location.GetPathways();
 
-                            validObjects.AddRange(location.GetPathways() as IEnumerable<T>);
+                            if (validPathways.Any())
+                            {
+                                validObjects.AddRange(validPathways.Select(path => (T)path));
+                            }
                         }
 
                         if (Actor.GetType().GetInterfaces().Any(typ => typ == typeof(IContains)))

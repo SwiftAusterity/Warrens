@@ -160,7 +160,8 @@ namespace NetMud.DataAccess
             if (!beQuiet)
             {
                 //write to people in game
-                var peeps = LiveCache.GetAll<IPlayer>().Where(peep => peep.DataTemplate<ICharacter>().Account.LogChannelSubscriptions.Contains(channel));
+                var peeps = LiveCache.GetAll<IPlayer>().Where(peep => peep.DataTemplate<ICharacter>() != null && peep.DataTemplate<ICharacter>().Account != null && 
+                                                                        peep.DataTemplate<ICharacter>().Account.LogChannelSubscriptions.Contains(channel));
 
                 foreach (var peep in peeps)
                     peep.WriteTo(new string[] { content });

@@ -81,7 +81,7 @@ namespace NetMud.DataAccess.Cache
         {
             var cacheItems = BackingCache.GetAll<T>();
 
-            return cacheItems.FirstOrDefault<T>(ci => ci.Name.Contains(name));
+            return cacheItems.FirstOrDefault<T>(ci => ci.Name.ToLower().Contains(name.ToLower()));
         }
 
         /// <summary>
