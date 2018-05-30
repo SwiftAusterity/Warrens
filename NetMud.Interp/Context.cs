@@ -446,7 +446,7 @@ namespace NetMud.Interp
                         validObjects.AddRange(Position.CurrentLocation.GetContents<T>().Where(ent => ((IEntity)ent).Keywords.Any(key => key.Contains(currentParmString))));
 
                         //Add the pathways
-                        if(typeof(T) == typeof(IPathway) && Position.CurrentLocation.GetType().GetInterfaces().Contains(typeof(ILocation)))
+                        if(Position.CurrentLocation.GetType().GetInterfaces().Contains(typeof(ILocation)))
                         {
                             var location = (ILocation)Position.CurrentLocation;
 
