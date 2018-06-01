@@ -594,7 +594,7 @@ namespace NetMud.Interp
         /// <typeparam name="T">the system type of the data</typeparam>
         /// <param name="commandType">the system type of the command</param>
         /// <param name="currentNeededParm">the conditions for the parameter we're after</param>
-        public void SeekInBackingData<T>(Type commandType, CommandParameterAttribute currentNeededParm) where T : IData
+        public void SeekInBackingData<T>(Type commandType, CommandParameterAttribute currentNeededParm) where T : IEntityBackingData
         {
             var internalCommandString = CommandStringRemainder.ToList();
 
@@ -614,7 +614,7 @@ namespace NetMud.Interp
 
                 long parmID = -1;
                 if(!long.TryParse(currentParmString, out parmID))
-                    validObject = BackingDataCache.GetByName<T>(currentParmString);
+                    validObject = BackingDataCache.GetByKeywords<T>(currentParmString);
                 else
                     validObject = BackingDataCache.Get<T>(parmID);
 

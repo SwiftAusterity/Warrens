@@ -169,11 +169,17 @@ namespace NetMud.Data.Game
         /// <param name="spawnTo">Where this will go</param>
         public override void SpawnNewInWorld(IGlobalPosition spawnTo)
         {
-            var dataTemplate = DataTemplate<IZoneData>();
+            //We can't even try this until we know if the data is there
+            var bS = DataTemplate<IZoneData>() ?? throw new InvalidOperationException("Missing backing data store on room spawn event.");
 
-            BirthMark = LiveCache.GetUniqueIdentifier(dataTemplate);
-            Keywords = new string[] { dataTemplate.Name.ToLower() };
-            Birthdate = DateTime.Now;
+            Keywords = new string[] { bS.Name.ToLower() };
+
+            if (String.IsNullOrWhiteSpace(BirthMark))
+            {
+                BirthMark = LiveCache.GetUniqueIdentifier(bS);
+                Birthdate = DateTime.Now;
+            }
+
             CurrentLocation = spawnTo;
         }
 

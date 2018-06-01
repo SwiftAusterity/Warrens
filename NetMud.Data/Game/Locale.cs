@@ -181,11 +181,16 @@ namespace NetMud.Data.Game
         /// </summary>
         public override void SpawnNewInWorld(IGlobalPosition spawnTo)
         {
-            var dataTemplate = DataTemplate<ILocaleData>();
+            //We can't even try this until we know if the data is there
+            var bS = DataTemplate<ILocaleData>() ?? throw new InvalidOperationException("Missing backing data store on locale spawn event.");
 
-            BirthMark = LiveCache.GetUniqueIdentifier(dataTemplate);
-            Keywords = new string[] { dataTemplate.Name.ToLower() };
-            Birthdate = DateTime.Now;
+            Keywords = new string[] { bS.Name.ToLower() };
+
+            if (String.IsNullOrWhiteSpace(BirthMark))
+            {
+                BirthMark = LiveCache.GetUniqueIdentifier(bS);
+                Birthdate = DateTime.Now;
+            }
         }
 
         /// <summary>

@@ -31,6 +31,23 @@ namespace NetMud.Data.EntityBackingData
         }
 
         /// <summary>
+        /// keywords this entity is referrable by in the world by the parser
+        /// </summary>
+        [JsonIgnore]
+        [ScriptIgnore]
+        public override string[] Keywords
+        {
+            get
+            {
+                if (_keywords == null || _keywords.Length == 0)
+                    _keywords = new string[] { Name };
+
+                return _keywords;
+            }
+            set { _keywords = value; }
+        }
+
+        /// <summary>
         /// DegreesFromNorth translated
         /// </summary>
         [JsonIgnore]
@@ -113,7 +130,6 @@ namespace NetMud.Data.EntityBackingData
         /// </summary>
         public PathwayData()
         {
-
         }
 
         /// <summary>

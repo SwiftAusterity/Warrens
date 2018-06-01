@@ -23,6 +23,20 @@ namespace NetMud.Data.EntityBackingData
         public abstract Type EntityClass { get; }
 
         /// <summary>
+        /// keywords this entity is referrable by in the world by the parser
+        /// </summary>
+        [JsonIgnore]
+        [ScriptIgnore]
+        internal string[] _keywords;
+
+        /// <summary>
+        /// keywords this entity is referrable by in the world by the parser
+        /// </summary>
+        [JsonIgnore]
+        [ScriptIgnore]
+        public abstract string[] Keywords { get; set; }
+
+        /// <summary>
         /// Affects to add to a live entity when it is spawned
         /// </summary>
         public HashSet<IAffect> Affects { get; set; }

@@ -60,11 +60,15 @@ namespace NetMud.Data.Game
         /// <summary>
         /// keywords this entity is referrable by in the world by the parser
         /// </summary>
+        [JsonIgnore]
+        [ScriptIgnore]
         private string[] _keywords;
 
         /// <summary>
         /// keywords this entity is referrable by in the world by the parser
         /// </summary>
+        [JsonIgnore]
+        [ScriptIgnore]
         public string[] Keywords
         {
             get { return _keywords; }

@@ -31,6 +31,23 @@ namespace NetMud.Data.EntityBackingData
         }
 
         /// <summary>
+        /// keywords this entity is referrable by in the world by the parser
+        /// </summary>
+        [JsonIgnore]
+        [ScriptIgnore]
+        public override string[] Keywords
+        {
+            get
+            {
+                if (_keywords == null || _keywords.Length == 0)
+                    _keywords = new string[] { Name };
+
+                return _keywords;
+            }
+            set { _keywords = value; }
+        }
+
+        /// <summary>
         /// Framework for the physics model of an entity
         /// </summary>
         [NonNullableDataIntegrity("Physical Model is invalid.")]
@@ -53,7 +70,7 @@ namespace NetMud.Data.EntityBackingData
             }
             set
             {
-                if(value != null)
+                if (value != null)
                     _medium = new BackingDataCacheKey(value);
             }
         }
@@ -75,7 +92,7 @@ namespace NetMud.Data.EntityBackingData
             }
             set
             {
-                if(value != null)
+                if (value != null)
                     _parentLocation = new BackingDataCacheKey(value);
             }
         }
@@ -92,7 +109,6 @@ namespace NetMud.Data.EntityBackingData
         /// </summary>
         public RoomData()
         {
-
         }
 
         /// <summary>

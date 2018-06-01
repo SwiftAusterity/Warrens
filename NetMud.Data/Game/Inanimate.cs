@@ -107,7 +107,10 @@ namespace NetMud.Data.Game
         /// </summary>
         public override void SpawnNewInWorld()
         {
-            throw new NotImplementedException("Objects can't spawn to nothing");
+            if(CurrentLocation == null)
+                throw new NotImplementedException("Objects can't spawn to nothing");
+
+            SpawnNewInWorld(CurrentLocation);
         }
 
         /// <summary>
@@ -117,23 +120,18 @@ namespace NetMud.Data.Game
         public override void SpawnNewInWorld(IGlobalPosition spawnTo)
         {
             //We can't even try this until we know if the data is there
-            if (DataTemplate<IInanimateData>() == null)
-                throw new InvalidOperationException("Missing backing data store on object spawn event.");
+            var bS = DataTemplate<IInanimateData>() ?? throw new InvalidOperationException("Missing backing data store on object spawn event.");
+            CurrentLocation = spawnTo ?? throw new NotImplementedException("Objects can't spawn to nothing");
 
-            var bS = DataTemplate<IInanimateData>();
-
-            BirthMark = LiveCache.GetUniqueIdentifier(bS);
             Keywords = new string[] { bS.Name.ToLower() };
-            Birthdate = DateTime.Now;
 
-            if (spawnTo == null)
-                throw new NotImplementedException("Objects can't spawn to nothing");
-
-            CurrentLocation = spawnTo;
+            if (String.IsNullOrWhiteSpace(BirthMark))
+            {
+                BirthMark = LiveCache.GetUniqueIdentifier(bS);
+                Birthdate = DateTime.Now;
+            }
 
             spawnTo.CurrentLocation.MoveInto<IInanimate>(this);
-
-            Contents = new EntityContainer<IInanimate>();
 
             LiveCache.Add(this);
         }

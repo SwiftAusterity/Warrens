@@ -313,7 +313,7 @@ namespace NetMud.Cartography
 
         private static string RenderRoomToAscii(IRoomData destination, bool hasZoneExits, bool forAdmin = false)
         {
-            var character = hasZoneExits ? "O" : "@";
+            var character = hasZoneExits ? "@" : "O";
 
             if (forAdmin)
                 return string.Format("<a href='#' class='editData AdminEditRoom' roomId='{0}' title='Edit - {2}'>{1}</a>", destination.Id, character, destination.Name);

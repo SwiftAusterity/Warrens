@@ -8,6 +8,7 @@ using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Behaviors.System;
 using NetMud.DataStructure.SupportingClasses;
 using System;
 using System.Collections.Generic;
@@ -35,7 +36,7 @@ namespace NetMud.Backup
             {
                 var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IZone;
 
-                entityThing.UpsertToLiveWorldCache();
+                entityThing.GetFromWorldOrSpawn();
             }
 
             foreach (var thing in BackingDataCache.GetAll<ILocaleData>())
@@ -43,7 +44,7 @@ namespace NetMud.Backup
                 var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as ILocale;
 
                 entityThing.ParentLocation = (IZone)entityThing.DataTemplate<ILocaleData>().ParentLocation.GetLiveInstance();
-                entityThing.UpsertToLiveWorldCache();
+                entityThing.GetFromWorldOrSpawn();
             }
 
             foreach (var thing in BackingDataCache.GetAll<IRoomData>())
@@ -51,14 +52,14 @@ namespace NetMud.Backup
                 var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IRoom;
 
                 entityThing.ParentLocation = entityThing.DataTemplate<IRoomData>().ParentLocation.GetLiveInstance();
-                entityThing.UpsertToLiveWorldCache();
+                entityThing.GetFromWorldOrSpawn();
             }
 
             foreach (var thing in BackingDataCache.GetAll<IPathwayData>())
             {
                 var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IPathway;
 
-                entityThing.UpsertToLiveWorldCache();
+                entityThing.GetFromWorldOrSpawn();
             }
 
             ParseDimension();
@@ -85,7 +86,10 @@ namespace NetMud.Backup
                 {
                     var entityThing = Activator.CreateInstance(implimentingEntityClass, new object[] { (T)thing }) as IEntity;
 
-                    entityThing.UpsertToLiveWorldCache();
+                    if(typeof(T).GetInterfaces().Contains(typeof(ISpawnAsMultiple)))
+                        entityThing.SpawnNewInWorld();
+                    else
+                        ((ISpawnAsSingleton<T>)entityThing).GetFromWorldOrSpawn();
                 }
                 catch (Exception ex)
                 {
@@ -215,7 +219,7 @@ namespace NetMud.Backup
                 {
                     var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IZone;
 
-                    entityThing.UpsertToLiveWorldCache();
+                    entityThing.GetFromWorldOrSpawn();
                 }
 
                 foreach (var thing in BackingDataCache.GetAll<ILocaleData>().Where(dt => !entitiesToLoad.Any(ent => ent.DataTemplateId.Equals(dt.Id))))
@@ -231,23 +235,20 @@ namespace NetMud.Backup
                     var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IRoom;
 
                     entityThing.ParentLocation = entityThing.DataTemplate<IRoomData>().ParentLocation.GetLiveInstance();
-                    entityThing.UpsertToLiveWorldCache();
+                    entityThing.GetFromWorldOrSpawn();
                 }
 
                 foreach (var thing in BackingDataCache.GetAll<IPathwayData>().Where(dt => !entitiesToLoad.Any(ent => ent.DataTemplateId.Equals(dt.Id))))
                 {
                     var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IPathway;
 
-                    entityThing.UpsertToLiveWorldCache();
+                    entityThing.GetFromWorldOrSpawn();
                 }
 
                 //We have the containers contents and the birthmarks from the deserial
                 //I don't know how we can even begin to do this type agnostically since the collections are held on type specific objects without some super ugly reflection
                 foreach (Room entity in entitiesToLoad.Where(ent => ent.GetType() == typeof(Room)))
                 {
-                    if (entity.CurrentLocation == null)
-                        entity.SpawnNewInWorld();
-
                     foreach (IInanimate obj in entity.Contents.EntitiesContained())
                     {
                         var fullObj = LiveCache.Get<IInanimate>(new LiveCacheKey(obj));

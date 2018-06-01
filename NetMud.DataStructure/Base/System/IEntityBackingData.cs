@@ -14,6 +14,11 @@ namespace NetMud.DataStructure.Base.System
         Type EntityClass { get; }
 
         /// <summary>
+        /// Keywords this entity can be found with in command parsing (needed for admin commands that look for data)
+        /// </summary>
+        string[] Keywords { get; set; }
+
+        /// <summary>
         /// Get's the entity's model dimensions
         /// </summary>
         /// <returns>height, length, width</returns>

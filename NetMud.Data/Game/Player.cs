@@ -332,18 +332,18 @@ namespace NetMud.Data.Game
         /// <param name="spawnTo">the location/container this should spawn into</param>
         public override void SpawnNewInWorld(IGlobalPosition position)
         {
-            var ch = DataTemplate<ICharacter>();
+            //We can't even try this until we know if the data is there
+            var ch = DataTemplate<ICharacter>() ?? throw new InvalidOperationException("Missing backing data store on player spawn event.");
 
-            BirthMark = LiveCache.GetUniqueIdentifier(ch);
             Keywords = new string[] { ch.Name.ToLower(), ch.SurName.ToLower() };
-            Birthdate = DateTime.Now;
 
-            var spawnTo = position?.CurrentLocation;
+            if (String.IsNullOrWhiteSpace(BirthMark))
+            {
+                BirthMark = LiveCache.GetUniqueIdentifier(ch);
+                Birthdate = DateTime.Now;
+            }
 
-            if (spawnTo == null)
-                spawnTo = GetBaseSpawn();
-
-            spawnTo.MoveInto<IPlayer>(this);
+            var spawnTo = position?.CurrentLocation ?? GetBaseSpawn();
 
             if (position == null)
                 position = new GlobalPosition(spawnTo);
@@ -352,7 +352,7 @@ namespace NetMud.Data.Game
             ch.CurrentLocation = position;
             ch.Save();
 
-            Inventory = new EntityContainer<IInanimate>();
+            spawnTo.MoveInto<IPlayer>(this);
 
             LiveCache.Add(this);
         }

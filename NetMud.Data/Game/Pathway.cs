@@ -56,7 +56,7 @@ namespace NetMud.Data.Game
         /// <summary>
         /// Cardinality direction this points towards
         /// </summary>
-        public MovementDirectionType MovementDirection { get; private set; }
+        public MovementDirectionType MovementDirection { get; set; }
 
         /// <summary>
         /// Birthmark of live location this points into
@@ -189,13 +189,18 @@ namespace NetMud.Data.Game
         /// <param name="spawnTo">the location/container this should spawn into</param>
         public override void SpawnNewInWorld(IGlobalPosition position)
         {
-            var bS = DataTemplate<IPathwayData>(); ;
+            //We can't even try this until we know if the data is there
+            var bS = DataTemplate<IPathwayData>() ?? throw new InvalidOperationException("Missing backing data store on pathway spawn event.");
+
+            Keywords = new string[] { bS.Name.ToLower(), MovementDirection.ToString().ToLower() };
+
+            if (String.IsNullOrWhiteSpace(BirthMark))
+            {
+                BirthMark = LiveCache.GetUniqueIdentifier(bS);
+                Birthdate = DateTime.Now;
+            }
 
             MovementDirection = Utilities.TranslateToDirection(bS.DegreesFromNorth, bS.InclineGrade);
-
-            BirthMark = LiveCache.GetUniqueIdentifier(bS);
-            Keywords = new string[] { bS.Name.ToLower(), MovementDirection.ToString().ToLower() };
-            Birthdate = DateTime.Now;
 
             //paths need two locations
             Origin = bS.Origin.GetLiveInstance();

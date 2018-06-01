@@ -17,7 +17,7 @@ namespace NetMud.Data.System
         /// Birthmark for current live location of this
         /// </summary>
         [JsonProperty("CurrentLocation")]
-        public LiveCacheKey CurrentLocationBirthmark { get; private set; }
+        public LiveCacheKey CurrentLocationBirthmark { get; set; }
 
         /// <summary>
         /// The actual container that the current location is

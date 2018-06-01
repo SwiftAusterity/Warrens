@@ -32,6 +32,23 @@ namespace NetMud.Data.EntityBackingData
         }
 
         /// <summary>
+        /// keywords this entity is referrable by in the world by the parser
+        /// </summary>
+        [JsonIgnore]
+        [ScriptIgnore]
+        public override string[] Keywords
+        {
+            get
+            {
+                if (_keywords == null || _keywords.Length == 0)
+                    _keywords = new string[] { FullName().ToLower(), Name.ToLower(), SurName.ToLower() };
+
+                return _keywords;
+            }
+            set { _keywords = value; }
+        }
+
+        /// <summary>
         /// Gender data string for player characters
         /// </summary>
         [StringDataIntegrity("Gender is required.")]
@@ -112,7 +129,6 @@ namespace NetMud.Data.EntityBackingData
         /// </summary>
         public Character()
         {
-
         }
 
         [JsonConstructor]

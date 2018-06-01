@@ -90,6 +90,19 @@ namespace NetMud.DataAccess.Cache
         /// <typeparam name="T">the type of the entity</typeparam>
         /// <param name="key">the key it was cached with</param>
         /// <returns>the entity requested</returns>
+        public static T GetByKeywords<T>(string word) where T : IEntityBackingData
+        {
+            var cacheItems = BackingCache.GetAll<T>();
+
+            return cacheItems.FirstOrDefault(ci => ci.Keywords.Contains(word.ToLower()));
+        }
+
+        /// <summary>
+        /// Gets one non-entity from the cache by its key
+        /// </summary>
+        /// <typeparam name="T">the type of the entity</typeparam>
+        /// <param name="key">the key it was cached with</param>
+        /// <returns>the entity requested</returns>
         public static T Get<T>(string key)
         {
             return BackingCache.Get<T>(key);

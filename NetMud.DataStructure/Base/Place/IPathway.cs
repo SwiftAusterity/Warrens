@@ -30,5 +30,10 @@ namespace NetMud.DataStructure.Base.Place
         /// The current physical model for this entity
         /// </summary>
         IDimensionalModel Model { get; }
+
+        /// <summary>
+        /// Cardinality direction this points towards
+        /// </summary>
+        MovementDirectionType MovementDirection { get; set; }
     }
 }
