@@ -13,16 +13,16 @@ namespace NutMud.Commands.Administrative
     /// <summary>
     /// Invokes the current container's RenderToLook
     /// </summary>
-    [CommandKeyword("goto", false)]
+    [CommandKeyword("gotozone", false)]
     [CommandPermission(StaffRank.Guest)]
-    [CommandParameter(CommandUsage.Subject, typeof(Room), new CacheReferenceType[] { CacheReferenceType.Entity }, true)]
+    [CommandParameter(CommandUsage.Subject, typeof(Zone), new CacheReferenceType[] { CacheReferenceType.Entity }, false)] //for names
     [CommandRange(CommandRangeType.Global, 0)]
-    public class Goto : CommandPartial
+    public class GotoZone : CommandPartial
     {
         /// <summary>
         /// All Commands require a generic constructor
         /// </summary>
-        public Goto()
+        public GotoZone()
         {
             //Generic constructor for all IHelpfuls is needed
         }

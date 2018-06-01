@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Administrative\GotoZone.cs" />
     <Compile Include="Administrative\SpawnNewNPC.cs" />
     <Compile Include="Administrative\SpawnNewObject.cs" />
     <Compile Include="Attributes\CommandSuppressName.cs" />
@@ -56,7 +57,7 @@
     <Compile Include="EntityManipulation\Put.cs" />
     <Compile Include="Movement\UseExits.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Administrative\Goto.cs" />
+    <Compile Include="Administrative\GotoChar.cs" />
     <Compile Include="Rendering\Inventory.cs" />
     <Compile Include="System\Commands.cs" />
     <Compile Include="System\Save.cs" />

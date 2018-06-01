@@ -437,7 +437,7 @@ namespace NetMud.Interp
 
                 var validObjects = new List<T>();
 
-                switch(seekRange.Type)
+                switch (seekRange.Type)
                 {
                     case CommandRangeType.Self:
                         validObjects.Add((T)Actor);
