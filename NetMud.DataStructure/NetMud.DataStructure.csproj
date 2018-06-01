@@ -84,6 +84,8 @@
     <Compile Include="Behaviors\Automation\IIlluminated.cs" />
     <Compile Include="Behaviors\Existential\IAccumulation.cs" />
     <Compile Include="Behaviors\Existential\ICanAccumulate.cs" />
+    <Compile Include="Behaviors\Existential\ICanBeHeld.cs" />
+    <Compile Include="Behaviors\Existential\ICanBeWorn.cs" />
     <Compile Include="Behaviors\Existential\IContains.cs" />
     <Compile Include="Behaviors\Existential\IContainsLiquid.cs" />
     <Compile Include="Behaviors\Existential\IExist.cs" />
@@ -91,6 +93,8 @@
     <Compile Include="Behaviors\Existential\IHasPositioning.cs" />
     <Compile Include="Behaviors\Existential\ILocation.cs" />
     <Compile Include="Behaviors\Existential\ILocationData.cs" />
+    <Compile Include="Behaviors\Rendering\IRenderAsHeld.cs" />
+    <Compile Include="Behaviors\Rendering\IRenderAsWorn.cs" />
     <Compile Include="Behaviors\System\INaturalResource.cs" />
     <Compile Include="Base\Supporting\IStat.cs" />
     <Compile Include="Base\Supporting\ITranslation.cs" />

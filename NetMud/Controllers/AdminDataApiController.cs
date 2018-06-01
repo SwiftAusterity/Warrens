@@ -4,7 +4,6 @@ using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.Physics;
-using System;
 using System.Linq;
 using System.Web.Http;
 

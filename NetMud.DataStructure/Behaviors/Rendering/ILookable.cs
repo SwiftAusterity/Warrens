@@ -11,8 +11,15 @@ namespace NetMud.DataStructure.Behaviors.Rendering
         /// <summary>
         /// Renders output for this entity when Look targets it
         /// </summary>
-        /// <param name="actor">entity initiating the command</param>
+        /// <param name="viewer">entity initiating the command</param>
         /// <returns>the output</returns>
-        IEnumerable<string> RenderToLook(IEntity actor);
+        IEnumerable<string> RenderToLook(IEntity viewer);
+
+        /// <summary>
+        /// A fully described short description (includes adjectives)
+        /// </summary>
+        /// <param name="viewer">entity initiating the command</param>
+        /// <returns>the output</returns>
+        string GetFullShortDescription(IEntity viewer);
     }
 }

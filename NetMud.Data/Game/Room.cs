@@ -139,7 +139,9 @@ namespace NetMud.Data.Game
             {
                 string.Format("%O%{0}%O%", DataTemplate<IRoomData>().Name),
                 string.Empty.PadLeft(DataTemplate<IRoomData>().Name.Length, '-'),
-                GetPathways().SelectMany(path => path.RenderToLook(actor)).CommaList(RenderUtility.SplitListType.AllComma)
+                "Exits: " + GetPathways().SelectMany(path => path.RenderAsContents(actor)).CommaList(RenderUtility.SplitListType.AllComma),
+                "Things: " + GetContents<IInanimate>().SelectMany(path => path.RenderAsContents(actor)).CommaList(RenderUtility.SplitListType.AllComma),
+                "Critters: " + GetContents<IMobile>().Where(player => !player.Equals(actor)).SelectMany(path => path.RenderAsContents(actor)).CommaList(RenderUtility.SplitListType.AllComma)
           };
 
             return sb;

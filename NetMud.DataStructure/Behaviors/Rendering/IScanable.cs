@@ -10,8 +10,8 @@ namespace NetMud.DataStructure.Behaviors.Rendering
         /// <summary>
         /// Renders "display" from scan command
         /// </summary>
-        /// <param name="actor">entity initiating the command</param>
+        /// <param name="viewer">entity initiating the command</param>
         /// <returns>the scan output</returns>
-        IEnumerable<string> RenderToScan(IEntity actor);
+        IEnumerable<string> RenderToScan(IEntity viewer);
     }
 }

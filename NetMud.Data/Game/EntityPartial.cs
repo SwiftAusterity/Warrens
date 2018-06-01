@@ -278,6 +278,16 @@ namespace NetMud.Data.Game
         /// <returns>the output strings</returns>
         public abstract IEnumerable<string> RenderToLook(IEntity actor);
 
+        public virtual IEnumerable<string> RenderAsContents(IEntity viewer)
+        {
+            return new List<string> { GetFullShortDescription(viewer) };
+        }
+
+        public virtual string GetFullShortDescription(IEntity viewer)
+        {
+            return DataTemplateName;
+        }
+
         #region Equality Functions
         /// <summary>
         /// -99 = null input

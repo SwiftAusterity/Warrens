@@ -151,6 +151,24 @@ namespace NetMud.Data.Game
 
             return sb;
         }
+
+        public IEnumerable<string> RenderAsWorn(IEntity viewer, IEntity wearer)
+        {
+            var sb = new List<string>();
+
+            sb.Add(string.Format("{0} is wearing {1}", wearer.DataTemplateName, GetFullShortDescription(viewer)));
+
+            return sb;
+        }
+
+        public IEnumerable<string> RenderAsHeld(IEntity viewer, IEntity holder)
+        {
+            var sb = new List<string>();
+
+            sb.Add(string.Format("{0} is holding {1}", holder.DataTemplateName, GetFullShortDescription(viewer)));
+
+            return sb;
+        }
         #endregion
     }
 }

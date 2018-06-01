@@ -4,15 +4,16 @@ using System.Collections.Generic;
 namespace NetMud.DataStructure.Behaviors.Rendering
 {
     /// <summary>
-    /// Rendering methods for when a location that contains the entity being rendered is being rendered
+    /// For when something that can be held is looked at as being held
     /// </summary>
-    public interface IRenderInLocation
+    public interface IRenderAsHeld
     {
         /// <summary>
-        /// Renders output for this entity when Look targets the container it is in
+        /// Renders output for this entity when it is held by something they are looking at
         /// </summary>
         /// <param name="viewer">entity initiating the command</param>
+        /// <param name="holder">entity holding the thing</param>
         /// <returns>the output</returns>
-        IEnumerable<string> RenderAsContents(IEntity viewer);
+        IEnumerable<string> RenderAsHeld(IEntity viewer, IEntity holder);
     }
 }

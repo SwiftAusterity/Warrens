@@ -5,7 +5,7 @@ namespace NetMud.DataStructure.Behaviors.Existential
     /// <summary>
     /// Var collection for IExist
     /// </summary>
-    public interface IHasPositioning
+    public interface IHasPositioning : IRenderInLocation
     {
         /// <summary>
         /// position in the worlds
