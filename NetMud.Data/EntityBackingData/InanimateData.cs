@@ -40,7 +40,7 @@ namespace NetMud.Data.EntityBackingData
             get
             {
                 if (_keywords == null || _keywords.Length == 0)
-                    _keywords = new string[] { Name };
+                    _keywords = new string[] { Name.ToLower() };
 
                 return _keywords;
             }

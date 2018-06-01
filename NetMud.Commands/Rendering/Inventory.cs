@@ -34,7 +34,7 @@ namespace NetMud.Commands.Rendering
             sb.Add("You look through your belongings.");
 
             foreach (var thing in chr.Inventory.EntitiesContained())
-                sb.AddRange(thing.RenderToLook(chr));
+                sb.AddRange(thing.RenderAsContents(chr));
 
             var toActor = new Message(MessagingType.Visible, new Occurrence() { Strength = 1 })
             {
