@@ -1,5 +1,5 @@
 ﻿function openFrameless(width, height, fromLeft, fromTop, targetUrl, windowTitle) {
-    var s = 'menubar=no, location=no, resizable=no, scrollbars=yes, status=no, width = ' + width + ', height = ' + height;
+    var s = 'menubar=no, toolbar=no, location=no, resizable=no, scrollbars=yes, status=no, width = ' + width + ', height = ' + height;
     var styles = '';
     var scripts = '';
 
@@ -15,13 +15,14 @@
 
     NFW.focus();
 
-    NFW.onsubmit = submitFrameless(NFW);
+    var timer = setInterval(function () {
+        if (NFW.closed) {
+            clearInterval(timer);
+            submitFrameless(window);
+        }
+    }, 1000);
 }
 
-function submitFrameless(e, formWindow) {
-    e.preventDefault();
-
-    formWindow.getElementById('form').submit();
-
-    setTimeout(formWindow.close, 5);
+function submitFrameless(baseDocument) {
+    baseDocument.location.reload(false); 
 }

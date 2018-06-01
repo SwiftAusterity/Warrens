@@ -27,7 +27,8 @@
         @Html.Partial("TwoDimensionalEntityEditor", Model)
 
         <div class="clearfix"></div>
-        @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Zone", IncludeCancel = true })
+        @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Edit",
+                                                                                ReturnRouteValues = new { controller = "Zone", id = Model.DataObject.Id } })
     }
 </section>
 

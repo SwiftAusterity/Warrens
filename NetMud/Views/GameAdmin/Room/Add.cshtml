@@ -27,7 +27,7 @@
             <hr />
             @Html.Partial("DimensionalEntityEditor", Model)
 
-            @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Create", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Zone", IncludeCancel = true })
+            @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Create", CancelName = "Cancel", ModalWindow = true })
         }
     </section>
 }

@@ -225,11 +225,13 @@ namespace NetMud.Controllers.GameAdmin
                     if(zoneDestination == null)
                     {
                         zoneDestination = new PathwayData(new DimensionalModel(vModel.ZoneDimensionalModelLength, vModel.ZoneDimensionalModelHeight, vModel.ZoneDimensionalModelWidth,
-                                                                                vModel.ZoneDimensionalModelVacuity, vModel.ZoneDimensionalModelCavitation));
-                        zoneDestination.DegreesFromNorth = -1;
-                        zoneDestination.Name = vModel.ZonePathwayName;
-                        zoneDestination.Origin = obj;
-                        zoneDestination.Destination = destination;
+                                                                                vModel.ZoneDimensionalModelVacuity, vModel.ZoneDimensionalModelCavitation))
+                        {
+                            DegreesFromNorth = -1,
+                            Name = vModel.ZonePathwayName,
+                            Origin = obj,
+                            Destination = destination
+                        };
                     }
                 }
 

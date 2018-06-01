@@ -30,10 +30,10 @@
 
     @Html.Partial("TwoDimensionalEntityEditor", Model)
 
-    @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Zone", IncludeCancel = true })
+    @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Zone", ModalWindow = true })
 </div>
 
 
-    @section Scripts {
-        @Scripts.Render("~/bundles/jqueryval")
-    }
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
