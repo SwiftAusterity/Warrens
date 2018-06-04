@@ -1,33 +1,222 @@
-﻿.textParserClient {
-    background-color: black;
-    font-family: Courier New, Courier, monospace;
+﻿/*Experimental*/
+body {
+    padding-bottom: 20px;
+}
+
+.navbar-brand {
+    padding: 20px;
+}
+
+/* Wrapping element */
+/* Set some basic padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+    width: 1340px;
+    max-width: 1340px;
+}
+
+/* Carousel */
+.carousel-caption p {
+    font-size: 20px;
+    line-height: 1.4;
+}
+
+/* Make .svg files in the carousel display properly in older browsers */
+.carousel-inner .item img[src$=".svg"] {
+    width: 100%;
+}
+
+/* QR code generator */
+#qrCode {
+    margin: 15px;
+}
+
+.selected {
+    background-image: linear-gradient(to bottom, lightgreen, lightgreen);
+    background-clip: content-box;
+}
+
+.parserClient {
+    position: relative;
+    padding-bottom: 0px;
     height: 750px;
+    width: 100%;
+    margin-top: 5px;
+}
+
+    .parserClient .textParserClient {
+        background-color: black;
+        font-family: Courier New, Courier, monospace;
+        height: 750px;
+        width: 1280px;
+        position: relative;
+        overflow-y: hidden;
+        overflow-x: hidden;
+        float: left;
+    }
+
+    .parserClient .parserClientLeft {
+        position: relative;
+        float: left;
+        padding: 10px;
+        max-width: 220px;
+        overflow-wrap: break-word;
+        overflow-x: hidden;
+    }
+
+    .parserClient .parserClientRight {
+        position: relative;
+        float: right;
+        padding: 10px;
+        max-width: 220px;
+        overflow-wrap: break-word;
+        overflow-x: hidden;
+    }
+
+.text-output {
+    position: absolute;
 }
 
 .parserOutput {
     color: white;
-    height: 100%;
+    height: 96%;
     width: 100%;
-    margin-top: 15px;
     overflow-y: scroll;
+    overflow-x: visible;
     padding: 5px;
     vertical-align: bottom;
     text-align: left;
+    z-index: 999;
 }
 
-.parserOutput p {
-    margin-top: 0px;
-    margin-bottom: 0px;
-}
+    .parserOutput p {
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
 
 .parserInput {
     background-color: black;
     color: lightgreen;
     width: 100%;
     max-width: inherit;
-    font-family: Courier New, Courier, monospace
+    font-family: Courier New, Courier, monospace;
+    margin-top: 4px;
 }
 
-a#clearInput {
+.parserControls {
+    position: relative;
+    left: 220px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    width: 910px;
+}
+
+    .parserControls a {
+        display: inline-block;
+        width: 32px;
+        height: 32px;
+    }
+
+        .parserControls a img {
+            width: 32px;
+            height: 32px;
+            padding-top: 5px;
+        }
+
+    .parserControls #clientReload {
+        float: right;
+    }
+
+ul.nav li a img {
+    width: 28px;
+    height: 28px;
+}
+
+#clearInput {
     color: red;
+}
+
+#clientReload {
+    color: yellow;
+    float: right;
+}
+
+ul.nav li input {
+    margin-top: 20px;
+    color: black;
+}
+
+    ul.nav li input[type=checkbox] {
+        margin-top: 25px;
+        margin-right: 50px;
+    }
+
+ul.nav li label {
+    display: inline-block;
+    margin-right: 5px;
+}
+
+#personaLabel {
+    color: red;
+    padding-top: 22px;
+    margin-right: 15px;
+}
+
+    #personaLabel.button {
+        text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+        color: yellow;
+        display: inline-block;
+        text-decoration: none;
+        font-weight: 200;
+        text-align: center;
+        vertical-align: middle;
+        cursor: pointer;
+        padding: 0.5em 1em;
+        background-image: -moz-linear-gradient(top, white, #9d9d9d);
+        background-image: -webkit-gradient(linear, 0 0, 0 100%, from(white), to(#9d9d9d));
+        background-image: -webkit-linear-gradient(top, white, #9d9d9d);
+        background-image: -o-linear-gradient(top, white, #9d9d9d);
+        background-image: linear-gradient(to bottom, white, #9d9d9d);
+        background-repeat: repeat-x;
+        -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 5px rgba(0,0,0,.25);
+        -moz-box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 5px rgba(0,0,0,.25);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 5px rgba(0,0,0,.25);
+        font-size: 14px;
+        line-height: 1.42857143;
+        white-space: nowrap;
+        -ms-touch-action: manipulation;
+        touch-action: manipulation;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        margin-top: 15px;
+        margin-right: 15px;
+    }
+
+        #personaLabel.button.activated {
+            color: green;
+        }
+
+a.entityInfo {
+    color: lightgreen;
+}
+
+ul.animated-list {
+    display: inline;
+    padding: unset;
+}
+
+    ul.animated-list li {
+        display: inline;
+        padding: unset;
+    }
+
+/* Hide/rearrange for smaller screens */
+@media screen and (max-width: 767px) {
+    /* Hide captions */
+    .carousel-caption {
+        display: none;
+    }
 }

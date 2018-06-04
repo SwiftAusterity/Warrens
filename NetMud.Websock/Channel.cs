@@ -30,9 +30,9 @@ namespace NetMud.Websock
         private const string BumperElement = "<br />";
 
         /// <summary>
-        /// List of style types to element
+        /// Returns a list of all supported systems colors and what colors they can become
         /// </summary>
-        private Dictionary<SupportedColors, string> _colors = new Dictionary<SupportedColors, string> 
+        public Dictionary<SupportedColors, string> SupportedColorTranslations { get; } = new Dictionary<SupportedColors, string>
         {
             { SupportedColors.Bold,         "font-weight: bold;" },
             { SupportedColors.Italics,      "font-weight: italic;" },
@@ -51,17 +51,6 @@ namespace NetMud.Websock
             { SupportedColors.Pink,         "color: #FF69B4;" },
             { SupportedColors.LightPink,    "color: #FFB6C1;" }
         };
-
-        /// <summary>
-        /// Returns a list of all supported systems colors and what colors they can become
-        /// </summary>
-        public Dictionary<SupportedColors, string> SupportedColorTranslations
-        {
-            get
-            {
-                return _colors;
-            }
-        }
 
         /// <summary>
         /// Engine for translating output text with color codes into proper output
