@@ -6,8 +6,12 @@ using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataAccess.FileSystem;
 using NetMud.DataStructure.Base.Entity;
+using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.Interp;
+using NetMud.Utility;
+using NetMud.Websock.OutputFormatting;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -98,10 +102,85 @@ namespace NetMud.Websock
         /// <returns>success status</returns>
         public bool SendWrapper(IEnumerable<string> strings)
         {
-            //TODO: Add "robust output format" here
-            var output = EncapsulateOutput(strings);
+            //TODO: Stop hardcoding this but we have literally no sense of injury/self status yet
+            var self = new SelfStatus
+            {
+                Body = new BodyStatus
+                {
+                    Overall = OverallStatus.Excellent,
+                    Anatomy = new AnatomicalPart[] {
+                        new AnatomicalPart {
+                            Name = "Arm",
+                            Overall = OverallStatus.Good,
+                            Wounds = new string[] {
+                                "Light scrape"
+                            }
+                        },
+                        new AnatomicalPart {
+                            Name = "Leg",
+                            Overall = OverallStatus.Excellent,
+                            Wounds = new string[] {
+                            }
 
-            Send(output);
+                        }
+                    }
+                },
+                Mind = new MindStatus
+                {
+                    Overall = OverallStatus.Excellent,
+                    States = new string[]
+                    {
+                        "Fearful"
+                    }
+                }
+            };
+
+            var currentLocation = _currentPlayer.CurrentLocation;
+            var currentContainer = currentLocation.CurrentLocation;
+
+            var pathways = ((ILocation)currentContainer).GetPathways().SelectMany(path => path.RenderAsContents(_currentPlayer));
+            var inventory = currentContainer.GetContents<IInanimate>().SelectMany(path => path.RenderAsContents(_currentPlayer));
+            var populace = currentContainer.GetContents<IMobile>().Where(player => !player.Equals(_currentPlayer)).SelectMany(path => path.RenderAsContents(_currentPlayer));
+
+            var local = new LocalStatus
+            {
+                ZoneName = currentLocation.GetZone().DataTemplateName,
+                LocaleName = currentLocation.GetLocale()?.DataTemplateName,
+                RoomName = currentLocation.GetRoom()?.DataTemplateName,
+                Inventory = inventory.ToArray(),
+                Populace = populace.ToArray(),
+                Exits = pathways.ToArray()
+            };
+
+            //The next two are mostly hard coded, TODO, also fix how we get the map as that's an admin thing
+            var extended = new ExtendedStatus
+            {
+                Horizon = new string[]
+                {
+                     "A hillside",
+                     "A dense forest"
+                },
+                VisibleMap = currentLocation.GetRoom() == null ? string.Empty : currentLocation.GetRoom().RenderCenteredMap(3, true)
+            };
+
+            var environment = new EnvironmentStatus
+            {
+                Celestial = "The sun peaks over the horizon",
+                Visibility = "Twilight darkness",
+                Weather = "It is lightly raining",
+                TimeOfDay = "Onesday, 12th of Onesmonth in the year of 13109"
+            };
+
+            var outputFormat = new OutputStatus
+            {
+                Occurrence = EncapsulateOutput(strings),
+                Self = self,
+                Local = local,
+                Extended = extended,
+                Environment = environment
+            };
+
+            Send(SerializationUtility.Serialize(outputFormat));
 
             return true;
         }

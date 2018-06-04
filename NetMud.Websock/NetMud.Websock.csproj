@@ -78,6 +78,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="OutputFormatting\AnatomicalPart.cs" />
+    <Compile Include="OutputFormatting\BodyStatus.cs" />
+    <Compile Include="OutputFormatting\EnvironmentStatus.cs" />
+    <Compile Include="OutputFormatting\ExtendedStatus.cs" />
+    <Compile Include="OutputFormatting\LocalStatus.cs" />
+    <Compile Include="OutputFormatting\MindStatus.cs" />
+    <Compile Include="OutputFormatting\OutputStatus.cs" />
+    <Compile Include="OutputFormatting\OverallStatus.cs" />
+    <Compile Include="OutputFormatting\SelfStatus.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="Descriptor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

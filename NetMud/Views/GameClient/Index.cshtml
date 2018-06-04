@@ -6,24 +6,26 @@
 
 <div class="parserClient">
     <div class="parserClientTop">
-        <div id="locationBreadcrumbs" output-data-source="Local">
-            Zone > Locale > Room
+        <div id="locationBreadcrumbs">
+            <span output-data-source="Local.ZoneName"></span> > <span output-data-source="Local.LocaleName"></span> > <span output-data-source="Local.RoomName"></span>
         </div>
     </div>
     <div class="parserClientLeft">
-        <div id="quadrentOne" output-data-source="Environment" class="sideBar">
-
+        <div id="quadrentOne" class="sideBar">
+            <span output-data-source="Environment"></span>
         </div>
-        <div id="quadrentTwo" output-data-source="Local" class="sideBar">
-
+        <div id="quadrentTwo" class="sideBar">
+            <span>Exits: </span><span output-data-source="Local.Exits"></span>
+            <span>Populace: </span><span output-data-source="Local.Populace"></span>
+            <span>Inventory: </span><span output-data-source="Local.Inventory"></span>
         </div>
     </div>
     <div class="parserClientRight">
-        <div id="quadrentThree" output-data-source="Self" class="sideBar">
-
+        <div id="quadrentThree" class="sideBar">
+            <span output-data-source="Self"></span>
         </div>
-        <div id="quadrentFour" output-data-source="Extended" class="sideBar">
-
+        <div id="quadrentFour" class="sideBar">
+            <span output-data-source="Extended"></span>
         </div>
     </div>
     <div class="textParserClient">

@@ -240,7 +240,9 @@ namespace NetMud.Data.Game
 
         public IEnumerable<IPathway> GetPathways(bool inward = false)
         {
-            return LiveCache.GetAll<IPathway>().Where(path => path.Origin.Equals(this) || (inward && path.Destination.Equals(this)));
+            return LiveCache.GetAll<IPathway>().Where(path => path.Destination != null 
+                                                            && path.Origin != null 
+                                                            && (path.Origin.Equals(this) || (inward && path.Destination.Equals(this))));
         }
 
         /// <summary>

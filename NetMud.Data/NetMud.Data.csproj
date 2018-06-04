@@ -96,7 +96,6 @@
     <Compile Include="LookupData\Mineral.cs" />
     <Compile Include="System\Occurrence.cs" />
     <Compile Include="System\SerializableDataPartial.cs" />
-    <Compile Include="Serialization\SerializationUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NetMud.Authentication\NetMud.Authentication.csproj">

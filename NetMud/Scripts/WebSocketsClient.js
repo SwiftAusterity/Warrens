@@ -1,6 +1,6 @@
 ﻿$(document).ready(function () {
     window.connection;
-    window.commandArray = [''];
+    window.commandArray = ['look'];
     window.commandPointer = 0;
 
     TestBrowser();
@@ -16,7 +16,7 @@
 function submitCharacter() {
     var cscVal = $('#currentCharacter').val();
 
-    $.post("GameAdmin/SelectCharacter/" + cscVal, function (data) {
+    $.post("/GameAdmin/Player/SelectCharacter/" + cscVal, function (data) {
     });
 }
 
@@ -55,7 +55,7 @@ function TestBrowser() {
         }
 
         window.connection.onmessage = function (e) {
-            var server_message = e.data;
+            var server_message = JSON.parse(e.data);
             AppendOutput(server_message);
         }
 
@@ -73,7 +73,7 @@ function TestBrowser() {
                 case 33: //pgup
                     $('#OutputArea').scrollTop(Math.max(0, $('#OutputArea')[0].scrollTop - 700));
                     e.preventDefault();
-                   break;
+                    break;
                 case 34: //pgdown
                     $('#OutputArea').scrollTop(Math.min($('#OutputArea')[0].scrollHeight, $('#OutputArea')[0].scrollTop + 700));
                     e.preventDefault();
@@ -95,7 +95,7 @@ function TestBrowser() {
                         $(this).val(window.commandArray[window.commandPointer]);
                     }
                     e.preventDefault();
-                   break;
+                    break;
                 case 40: //down
                     if (window.commandPointer === window.commandArray.length - 1) {
                         $(this).val('');
@@ -105,7 +105,7 @@ function TestBrowser() {
                         $(this).val(commandArray[window.commandPointer]);
                     }
                     e.preventDefault();
-                   break;
+                    break;
             }
         }).focus();
     } else {
@@ -117,7 +117,33 @@ function TestBrowser() {
 function AppendOutput(output) {
     var $outputArea = $("#OutputArea");
 
-    $outputArea.append(output);
+    $outputArea.append(output.Occurrence);
+
+    $('[output-data-source]').each(function () {
+        var $this = $(this);
+        var sourceKey = $this.attr('output-data-source');
+        var dataToAppend = getObjects(output, sourceKey, 0);
+
+        if (dataToAppend != undefined && dataToAppend.length > 0) {
+            $this.html(dataToAppend)
+        }
+    });
 
     $outputArea[0].scrollTop = $outputArea[0].scrollHeight;
+}
+
+function getObjects(collection, key, depth) {
+    var objects = [];
+    var keyHierarchy = key.split('.');
+
+    if (collection != undefined && collection[keyHierarchy[depth]] != undefined) {
+        if (depth == keyHierarchy.length - 1) {
+            objects.push(collection[keyHierarchy[depth]]);
+        }
+        else {
+            objects = objects.concat(getObjects(collection[keyHierarchy[depth]], key, depth + 1));
+        }
+    }
+
+    return objects;
 }

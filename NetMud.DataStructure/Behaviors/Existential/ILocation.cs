@@ -12,6 +12,11 @@ namespace NetMud.DataStructure.Behaviors.Rendering
     public interface ILocation : IContains, IEnvironment
     {
         /// <summary>
+        /// Pathways leading out of (or into) this
+        /// </summary>
+        IEnumerable<IPathway> GetPathways(bool inward = false);
+
+        /// <summary>
         /// Mobiles (NPC, Players) in the room
         /// </summary>
         IEntityContainer<IMobile> MobilesInside { get; set; }
@@ -20,11 +25,6 @@ namespace NetMud.DataStructure.Behaviors.Rendering
         /// IInanimate inventory
         /// </summary>
         IEntityContainer<IInanimate> Contents { get; set; }
-
-        /// <summary>
-        /// Pathways leading out of (or into) this
-        /// </summary>
-        IEnumerable<IPathway> GetPathways(bool inward = false);
 
         /// <summary>
         /// Get the surrounding locations based on a strength radius

@@ -1,4 +1,5 @@
-﻿using NetMud.DataStructure.Base.System;
+﻿using NetMud.DataStructure.Base.Place;
+using NetMud.DataStructure.Base.System;
 using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Behaviors.Rendering
