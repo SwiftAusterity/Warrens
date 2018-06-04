@@ -5,9 +5,26 @@
 }
 
 <div class="parserClient">
+    <div class="parserClientTop">
+        <div id="locationBreadcrumbs" output-data-source="Local">
+            Zone > Locale > Room
+        </div>
+    </div>
     <div class="parserClientLeft">
+        <div id="quadrentOne" output-data-source="Environment" class="sideBar">
+
+        </div>
+        <div id="quadrentTwo" output-data-source="Local" class="sideBar">
+
+        </div>
     </div>
     <div class="parserClientRight">
+        <div id="quadrentThree" output-data-source="Self" class="sideBar">
+
+        </div>
+        <div id="quadrentFour" output-data-source="Extended" class="sideBar">
+
+        </div>
     </div>
     <div class="textParserClient">
         <div id="OutputArea" class="parserOutput"></div>
@@ -15,5 +32,7 @@
     </div>
     <a href="./GameClient" id="clientReload">Reload Client</a>
 </div>
+
 @Styles.Render("~/Content/GameClient.css")
 @Scripts.Render("~/Scripts/WebSocketsClient.js")
+@Styles.Render("http://fonts.googleapis.com/css?family=Berkshire+Swash")

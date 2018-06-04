@@ -98,7 +98,10 @@ namespace NetMud.Websock
         /// <returns>success status</returns>
         public bool SendWrapper(IEnumerable<string> strings)
         {
-            Send(EncapsulateOutput(strings));
+            //TODO: Add "robust output format" here
+            var output = EncapsulateOutput(strings);
+
+            Send(output);
 
             return true;
         }
@@ -110,9 +113,8 @@ namespace NetMud.Websock
         /// <returns>success status</returns>
         public bool SendWrapper(string str)
         {
-            Send(EncapsulateOutput(str));
-
-            return true;
+            //Easier just to handle it in one place
+            return SendWrapper(new List<string>() { str });
         }
 
         /// <summary>
@@ -121,7 +123,7 @@ namespace NetMud.Websock
         /// <param name="finalMessage">the final string data to send the socket before closing it</param>
         public void Disconnect(string finalMessage)
         {
-            Send(EncapsulateOutput(finalMessage));
+            SendWrapper(finalMessage);
 
             Client.Close();
         }

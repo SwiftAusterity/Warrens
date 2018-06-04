@@ -1,5 +1,7 @@
 ﻿$(document).ready(function () {
-    var connection;
+    window.connection;
+    window.commandArray = [''];
+    window.commandPointer = 0;
 
     TestBrowser();
 
@@ -11,34 +13,34 @@
     });
 });
 
-function submitCharacter()
-{
+function submitCharacter() {
     var cscVal = $('#currentCharacter').val();
 
     $.post("GameAdmin/SelectCharacter/" + cscVal, function (data) {
     });
 }
 
-function submitCommand()
-{
+function submitCommand() {
     var commandText = $('#input').val();
 
-    connection.send(commandText);
+    window.connection.send(commandText);
+
+    window.commandArray.push(commandText);
+    window.commandPointer = commandArray.length - 1;
 }
 
-function TestBrowser()
-{
+function TestBrowser() {
     if ('WebSocket' in window) {
-        connection = new WebSocket('ws://localhost:2929');
+        window.connection = new WebSocket('ws://localhost:2929');
 
-        connection.onopen = function () {
+        window.connection.onopen = function () {
             //Send a small message to the console once the connection is established
             AppendOutput('Connection established with host.');
             $('#clientReload').hide();
             $('#currentCharacter').prop('disabled', true);
         }
 
-        connection.onclose = function () {
+        window.connection.onclose = function () {
             AppendOutput('Connection closed by host.');
 
             //Unlock this on close
@@ -46,24 +48,64 @@ function TestBrowser()
             $('#clientReload').show();
         }
 
-        connection.onerror = function (error) {
+        window.connection.onerror = function (error) {
             $('#currentCharacter').prop('disabled', false);
             $('#clientReload').show();
             AppendOutput('Connection error detected: ' + error);
         }
 
-        connection.onmessage = function (e) {
+        window.connection.onmessage = function (e) {
             var server_message = e.data;
             AppendOutput(server_message);
         }
 
-        $('#input').bind("enterKey", function (e) {
-            submitCommand();
+        $('#input').keydown(function (e) {
+            switch (e.keyCode) {
+                case 13:
+                    submitCommand();
 
-            $(this).val('');
-        }).keyup(function (e) {
-            if (e.keyCode == 13) {
-                $(this).trigger("enterKey");
+                    $(this).val('');
+                    break;
+                case 27: //esc
+                    $(this).val('');
+                    e.preventDefault();
+                    break;
+                case 33: //pgup
+                    $('#OutputArea').scrollTop(Math.max(0, $('#OutputArea')[0].scrollTop - 700));
+                    e.preventDefault();
+                   break;
+                case 34: //pgdown
+                    $('#OutputArea').scrollTop(Math.min($('#OutputArea')[0].scrollHeight, $('#OutputArea')[0].scrollTop + 700));
+                    e.preventDefault();
+                    break;
+                case 35: //END
+                    $('#OutputArea').scrollTop($('#OutputArea')[0].scrollHeight);
+                    e.preventDefault();
+                    break;
+                case 36: //home
+                    $('#OutputArea').scrollTop(0);
+                    e.preventDefault();
+                    break;
+                case 38: //up
+                    if (window.commandPointer === 0) {
+                        $(this).val('');
+                    }
+                    else {
+                        window.commandPointer = window.commandPointer - 1;
+                        $(this).val(window.commandArray[window.commandPointer]);
+                    }
+                    e.preventDefault();
+                   break;
+                case 40: //down
+                    if (window.commandPointer === window.commandArray.length - 1) {
+                        $(this).val('');
+                    }
+                    else {
+                        window.commandPointer = window.commandPointer + 1;
+                        $(this).val(commandArray[window.commandPointer]);
+                    }
+                    e.preventDefault();
+                   break;
             }
         }).focus();
     } else {
@@ -72,8 +114,7 @@ function TestBrowser()
     }
 }
 
-function AppendOutput(output)
-{
+function AppendOutput(output) {
     var $outputArea = $("#OutputArea");
 
     $outputArea.append(output);

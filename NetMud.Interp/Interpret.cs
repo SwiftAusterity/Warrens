@@ -35,7 +35,7 @@ namespace NetMud.Interp
                 //TODO: Dont return this sort of thing, testing phase only, should return some sort of randomized error
                 LoggingUtility.LogError(ex);
 
-                return new string[] { ex.Message };
+                return new string[] { "SYSTEM ERROR ALPHA ONLY: " + ex.Message };
             }
 
             return new string[] { };
