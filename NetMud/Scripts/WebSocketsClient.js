@@ -16,7 +16,7 @@
 function submitCharacter() {
     var cscVal = $('#currentCharacter').val();
 
-    $.post("/GameAdmin/Player/SelectCharacter/" + cscVal, function (data) {
+    $.post("Player/SelectCharacter/" + cscVal, function (data) {
     });
 }
 
@@ -119,14 +119,25 @@ function AppendOutput(output) {
 
     $outputArea.append(output.Occurrence);
 
-    $('[output-data-source]').each(function () {
+    $('[output-data-binding]').each(function () {
         var $this = $(this);
-        var sourceKey = $this.attr('output-data-source');
+        var sourceKey = $this.attr('output-data-binding');
         var dataToAppend = getObjects(output, sourceKey, 0);
 
         if (dataToAppend != undefined && dataToAppend.length > 0) {
             $this.html(dataToAppend)
         }
+    });
+
+    $('[output-eval-code]').each(function () {
+        var $this = $(this);
+        var evalKey = $this.attr('output-eval-key');
+        var functionCode = $this.attr('output-eval-code');
+        var dataToAppend = getObjects(output, evalKey, 0);
+
+        var funct = new Function('element', 'data', functionCode);
+
+        return funct($this, dataToAppend);
     });
 
     $outputArea[0].scrollTop = $outputArea[0].scrollHeight;

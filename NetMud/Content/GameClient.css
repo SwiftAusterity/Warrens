@@ -10,8 +10,6 @@ body {
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
 .body-content {
-    padding-left: 15px;
-    padding-right: 15px;
     width: 1340px;
     max-width: 1340px;
 }
@@ -42,23 +40,29 @@ body {
     position: relative;
     padding-bottom: 0px;
     height: 750px;
-    width: 100%;
+    width: 1280px;
     margin-top: 5px;
     font-family: Courier New, Courier, monospace;
+    font-size: 11px;
 }
 
     .parserClient .parserClientTop {
-        padding-bottom: 1px;
+        padding-bottom: 5px;
         font: 400 24px/1.3 'Berkshire Swash', Helvetica, sans-serif;
         color: #2b2b2b;
         text-shadow: 1px 1px 0px #ededed, 4px 4px 0px rgba(0,0,0,0.15);
+        margin-left: 10%;
     }
+
+        .parserClient .parserClientTop #locationBreadcrumbs {
+            display: inline-flex;
+        }
 
     .parserClient .textParserClient {
         background-color: black;
         font-family: Courier New, Courier, monospace;
         height: 750px;
-        width: 1280px;
+        width: 80%;
         position: relative;
         overflow-y: hidden;
         overflow-x: hidden;
@@ -69,7 +73,7 @@ body {
         position: relative;
         float: left;
         padding: 0 10px;
-        max-width: 220px;
+        width: 10%;
         overflow-wrap: break-word;
         overflow-x: hidden;
     }
@@ -78,7 +82,7 @@ body {
         position: relative;
         float: right;
         padding: 0 10px;
-        max-width: 220px;
+        width: 10%;
         overflow-wrap: break-word;
         overflow-x: hidden;
     }
@@ -115,15 +119,15 @@ body {
     width: 100%;
     max-width: inherit;
     font-family: Courier New, Courier, monospace;
-    margin-top: 4px;
+    margin-top: 10px;
 }
 
 .parserControls {
     position: relative;
-    left: 220px;
+    left: 10%;
     padding-bottom: 10px;
     padding-top: 10px;
-    width: 910px;
+    width: 1280px;
 }
 
     .parserControls a {

@@ -7,25 +7,27 @@
 <div class="parserClient">
     <div class="parserClientTop">
         <div id="locationBreadcrumbs">
-            <span output-data-source="Local.ZoneName"></span> > <span output-data-source="Local.LocaleName"></span> > <span output-data-source="Local.RoomName"></span>
+            <span output-data-binding="Local.ZoneName"></span>
+            <span output-eval-key="Local.LocaleName" output-eval-code="if(data.length === 0) { element.css({'display': 'none'}); } else { element.css({'display' : 'block'}); }">&nbsp;>&nbsp;<span output-data-binding="Local.LocaleName"></span></span>
+            <span output-eval-key="Local.RoomName" output-eval-code="if(data.length === 0) { element.css({'display': 'none'}); } else { element.css({'display' : 'block'}); }">&nbsp;>&nbsp;<span output-data-binding="Local.RoomName"></span></span>
         </div>
     </div>
     <div class="parserClientLeft">
         <div id="quadrentOne" class="sideBar">
-            <span output-data-source="Environment"></span>
+            <span output-data-binding="Environment"></span>
         </div>
         <div id="quadrentTwo" class="sideBar">
-            <span>Exits: </span><span output-data-source="Local.Exits"></span>
-            <span>Populace: </span><span output-data-source="Local.Populace"></span>
-            <span>Inventory: </span><span output-data-source="Local.Inventory"></span>
+            <span output-eval-key="Local.Exits" output-eval-code="if(data[0] != undefined && data[0].length === 0) { element.css({'display': 'none'}); } else { element.css({'display' : 'block'}); }">Exits: <span output-data-binding="Local.Exits"></span></span>
+            <span output-eval-key="Local.Populace" output-eval-code="if(data[0] != undefined && data[0].length === 0) { element.css({'display': 'none'}); } else { element.css({'display' : 'block'}); }">Populace: <span output-data-binding="Local.Populace"></span></span>
+            <span output-eval-key="Local.Inventory" output-eval-code="if(data[0] != undefined && data[0].length === 0) { element.css({'display': 'none'}); } else { element.css({'display' : 'block'}); }">Inventory: <span output-data-binding="Local.Inventory"></span></span>
         </div>
     </div>
     <div class="parserClientRight">
         <div id="quadrentThree" class="sideBar">
-            <span output-data-source="Self"></span>
+            <span output-data-binding="Self"></span>
         </div>
         <div id="quadrentFour" class="sideBar">
-            <span output-data-source="Extended"></span>
+            <span output-data-binding="Extended"></span>
         </div>
     </div>
     <div class="textParserClient">

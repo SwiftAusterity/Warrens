@@ -172,7 +172,7 @@ namespace NetMud.Data.Game
         public override void SpawnNewInWorld(IGlobalPosition spawnTo)
         {
             //We can't even try this until we know if the data is there
-            var bS = DataTemplate<IZoneData>() ?? throw new InvalidOperationException("Missing backing data store on room spawn event.");
+            var bS = DataTemplate<IZoneData>() ?? throw new InvalidOperationException("Missing backing data store on zone spawn event.");
 
             Keywords = new string[] { bS.Name.ToLower() };
 
