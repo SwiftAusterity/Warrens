@@ -1,4 +1,6 @@
-﻿namespace NetMud.DataStructure.Behaviors.Existential
+﻿using NetMud.DataStructure.Base.System;
+
+namespace NetMud.DataStructure.Behaviors.Existential
 {
     /// <summary>
     /// Encapsulates position in the world
@@ -21,5 +23,12 @@
         /// </summary>
         /// <param name="position">container and zone to spawn to</param>
         void SpawnNewInWorld(IGlobalPosition position);
+
+        /// <summary>
+        /// Is this thing visible to the viewing entity
+        /// </summary>
+        /// <param name="viewer">the viewing entity</param>
+        /// <returns>If this is visible</returns>
+        bool IsVisibleTo(IEntity viewer);
     }
 }

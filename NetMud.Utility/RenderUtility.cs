@@ -79,11 +79,50 @@ namespace NetMud.Utility
             return str;
         }
 
+        /// <summary>
+        /// Render this collection of strings as a paragraph. (appends punctuation)
+        /// </summary>
+        /// <param name="stringList">The string list to join</param>
+        /// <returns>A paragraph format string</returns>
+        public static string ParagraphList(this IEnumerable<string> stringList)
+        {
+            return stringList.ToArray().ParagraphList();
+        }
+
+        /// <summary>
+        /// Render this collection of strings as a paragraph. (appends punctuation)
+        /// </summary>
+        /// <param name="stringList">The string list to join</param>
+        /// <returns>A paragraph format string</returns>
+        public static string ParagraphList(this string[] stringList)
+        {
+            if (stringList.Length == 0)
+                return string.Empty;
+
+            if (stringList.Length == 1)
+                return stringList[0];
+
+            //Remove any prior punctuated things
+            return string.Join(". ", stringList).Replace(".. ", ". ").Replace("?. ", "? ").Replace("!. ", "! ");
+        }
+
+        /// <summary>
+        /// Render this collection of strings as a commalist (appends punctuation)
+        /// </summary>
+        /// <param name="stringList">The string list to join</param>
+        /// <param name="mode">The punctuation mode</param>
+        /// <returns>A commalist format string</returns>
         public static string CommaList(this IEnumerable<string> stringList, SplitListType mode)
         {
             return stringList.ToArray().CommaList(mode);
         }
 
+        /// <summary>
+        /// Render this collection of strings as a commalist (appends punctuation)
+        /// </summary>
+        /// <param name="stringList">The string list to join</param>
+        /// <param name="mode">The punctuation mode</param>
+        /// <returns>A commalist format string</returns>
         public static string CommaList(this string[] stringList, SplitListType mode)
         {
             if (stringList.Length == 0)

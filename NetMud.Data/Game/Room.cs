@@ -9,6 +9,7 @@ using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.Rendering;
+using NetMud.DataStructure.Behaviors.System;
 using NetMud.Utility;
 using Newtonsoft.Json;
 using System;
@@ -133,16 +134,22 @@ namespace NetMud.Data.Game
         /// Render this to a look command (what something sees when it 'look's at this
         /// </summary>
         /// <returns>the output strings</returns>
-        public override IEnumerable<string> RenderToLook(IEntity actor)
+        public override IEnumerable<string> RenderToLook(IEntity viewer)
         {
+            if (!IsVisibleTo(viewer))
+                return Enumerable.Empty<string>();
+
             var sb = new List<string>
             {
-                string.Format("%O%{0}%O%", DataTemplate<IRoomData>().Name),
-                string.Empty.PadLeft(DataTemplate<IRoomData>().Name.Length, '-'),
-                "Exits: " + GetPathways().SelectMany(path => path.RenderAsContents(actor)).CommaList(RenderUtility.SplitListType.AllComma),
-                "Things: " + GetContents<IInanimate>().SelectMany(path => path.RenderAsContents(actor)).CommaList(RenderUtility.SplitListType.AllComma),
-                "Critters: " + GetContents<IMobile>().Where(player => !player.Equals(actor)).SelectMany(path => path.RenderAsContents(actor)).CommaList(RenderUtility.SplitListType.AllComma)
-          };
+                GetFullShortDescription(viewer)
+            };
+
+            if (NaturalResources != null)
+                sb.AddRange(NaturalResources.Select(kvp => kvp.Key.RenderResourceCollection(viewer, kvp.Value)));
+
+            sb.AddRange(GetPathways().SelectMany(path => path.RenderAsContents(viewer)));
+            sb.AddRange(GetContents<IInanimate>().SelectMany(path => path.RenderAsContents(viewer)));
+            sb.AddRange(GetContents<IMobile>().Where(player => !player.Equals(viewer)).SelectMany(path => path.RenderAsContents(viewer)));
 
             return sb;
         }
@@ -182,6 +189,7 @@ namespace NetMud.Data.Game
                 Contents = me.Contents;
                 MobilesInside = me.MobilesInside;
                 Keywords = me.Keywords;
+                NaturalResources = me.NaturalResources;
             }
         }
 
@@ -204,6 +212,9 @@ namespace NetMud.Data.Game
             var bS = DataTemplate<IRoomData>() ?? throw new InvalidOperationException("Missing backing data store on room spawn event.");
 
             Keywords = new string[] { bS.Name.ToLower() };
+
+            if (NaturalResources == null)
+                NaturalResources = new Dictionary<INaturalResource, int>();
 
             if (String.IsNullOrWhiteSpace(BirthMark))
             {

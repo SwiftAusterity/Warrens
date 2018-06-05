@@ -7,6 +7,9 @@ using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.Rendering;
+using NetMud.DataStructure.Behaviors.System;
+using NetMud.Gaia.Geographical;
+using NetMud.Gaia.Meteorological;
 using NetMud.Utility;
 using Newtonsoft.Json;
 using System;
@@ -122,7 +125,7 @@ namespace NetMud.Data.Game
 
             //TODO
 
-            //discoverer.HasAccomplishment(DiscoveryName);
+            //discoverer.HasQuality(DiscoveryName);
 
             //For now
             return true;
@@ -133,18 +136,40 @@ namespace NetMud.Data.Game
         /// </summary>
         /// <param name="actor">Who is looking</param>
         /// <returns>Descriptive text</returns>
-        public override IEnumerable<string> RenderToLook(IEntity actor)
+        public override IEnumerable<string> RenderToLook(IEntity viewer)
         {
+            if (!IsVisibleTo(viewer))
+                return Enumerable.Empty<string>();
+
             var sb = new List<string>
             {
-                string.Format("%O%{0}%O%", DataTemplate<IZoneData>().Name),
-                string.Empty.PadLeft(DataTemplate<IZoneData>().Name.Length, '-'),
-                "Exits: " + GetPathways().SelectMany(path => path.RenderAsContents(actor)).CommaList(RenderUtility.SplitListType.AllComma),
-                "Things: " + GetContents<IInanimate>().SelectMany(path => path.RenderAsContents(actor)).CommaList(RenderUtility.SplitListType.AllComma),
-                "Critters: " + GetContents<IMobile>().Where(player => !player.Equals(actor)).SelectMany(path => path.RenderAsContents(actor)).CommaList(RenderUtility.SplitListType.AllComma)
+                GetFullShortDescription(viewer)
             };
 
+            if(NaturalResources != null)
+                sb.AddRange(NaturalResources.Select(kvp => kvp.Key.RenderResourceCollection(viewer, kvp.Value)));
+
+            sb.AddRange(GetPathways().SelectMany(path => path.RenderAsContents(viewer)));
+            sb.AddRange(GetContents<IInanimate>().SelectMany(path => path.RenderAsContents(viewer)));
+            sb.AddRange(GetContents<IMobile>().Where(player => !player.Equals(viewer)).SelectMany(path => path.RenderAsContents(viewer)));
+
             return sb;
+        }
+
+        /// <summary>
+        /// Render this in a short descriptive style
+        /// </summary>
+        /// <param name="viewer">The entity looking</param>
+        /// <returns>the output strings</returns>
+        public override string GetFullShortDescription(IEntity viewer)
+        {
+            if (!IsVisibleTo(viewer))
+                return string.Empty;
+
+            return String.Format("A {0} and {1} {2} {3} area.", GeographicalUtilities.ConvertSizeToType(GetModelDimensions(), GetType()), 
+                                                            MeteorologicalUtilities.ConvertTemperatureToType(EffectiveTemperature()),
+                                                            MeteorologicalUtilities.ConvertHumidityToType(EffectiveHumidity()),
+                                                            GetBiome());
         }
 
         /// <summary>
@@ -176,6 +201,9 @@ namespace NetMud.Data.Game
 
             Keywords = new string[] { bS.Name.ToLower() };
 
+            if(NaturalResources == null)
+                NaturalResources = new Dictionary<INaturalResource, int>();
+
             if (String.IsNullOrWhiteSpace(BirthMark))
             {
                 BirthMark = LiveCache.GetUniqueIdentifier(bS);
@@ -205,6 +233,7 @@ namespace NetMud.Data.Game
                 MobilesInside = me.MobilesInside;
                 Keywords = me.Keywords;
                 CurrentLocation = new GlobalPosition(this);
+                NaturalResources = me.NaturalResources;
             }
         }
 

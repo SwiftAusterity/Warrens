@@ -12,6 +12,7 @@ using NetMud.DataStructure.SupportingClasses;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Game
@@ -218,8 +219,11 @@ namespace NetMud.Data.Game
         /// Render this to a look command (what something sees when it 'look's at this
         /// </summary>
         /// <returns>the output strings</returns>
-        public override IEnumerable<string> RenderToLook(IEntity actor)
+        public override IEnumerable<string> RenderToLook(IEntity viewer)
         {
+            if (!IsVisibleTo(viewer))
+                return Enumerable.Empty<string>();
+
             var sb = new List<string>();
             var bS = DataTemplate<IPathwayData>();
 

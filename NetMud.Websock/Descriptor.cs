@@ -138,9 +138,9 @@ namespace NetMud.Websock
             var currentLocation = _currentPlayer.CurrentLocation;
             var currentContainer = currentLocation.CurrentLocation;
 
-            var pathways = ((ILocation)currentContainer).GetPathways().SelectMany(path => path.RenderAsContents(_currentPlayer));
-            var inventory = currentContainer.GetContents<IInanimate>().SelectMany(path => path.RenderAsContents(_currentPlayer));
-            var populace = currentContainer.GetContents<IMobile>().Where(player => !player.Equals(_currentPlayer)).SelectMany(path => path.RenderAsContents(_currentPlayer));
+            var pathways = ((ILocation)currentContainer).GetPathways().SelectMany(data => data.RenderAsContents(_currentPlayer));
+            var inventory = currentContainer.GetContents<IInanimate>().SelectMany(data => data.RenderAsContents(_currentPlayer));
+            var populace = currentContainer.GetContents<IMobile>().Where(player => !player.Equals(_currentPlayer)).SelectMany(data => data.RenderAsContents(_currentPlayer));
 
             var local = new LocalStatus
             {
@@ -149,7 +149,8 @@ namespace NetMud.Websock
                 RoomName = currentLocation.GetRoom()?.DataTemplateName,
                 Inventory = inventory.ToArray(),
                 Populace = populace.ToArray(),
-                Exits = pathways.ToArray()
+                Exits = pathways.ToArray(),
+                LocationDescriptive = currentLocation.CurrentLocation.RenderToLook(_currentPlayer).ParagraphList()
             };
 
             //The next two are mostly hard coded, TODO, also fix how we get the map as that's an admin thing

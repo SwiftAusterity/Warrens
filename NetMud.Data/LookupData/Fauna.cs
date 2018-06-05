@@ -1,8 +1,10 @@
 ﻿using NetMud.Data.DataIntegrity;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Base.System;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.LookupData
@@ -45,5 +47,18 @@ namespace NetMud.Data.LookupData
                 _race = new BackingDataCacheKey(value);
             }
         }
+
+        #region Rendering
+        /// <summary>
+        /// Render a natural resource collection to a viewer
+        /// </summary>
+        /// <param name="viewer">the entity looking</param>
+        /// <param name="amount">How much of it there is</param>
+        /// <returns>a view string</returns>
+        public override string RenderResourceCollection(IEntity viewer, int amount)
+        {
+            return string.Format("a grouping of {0} {1}s", amount, GetFullShortDescription(viewer));
+        }
+        #endregion
     }
 }

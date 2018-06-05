@@ -11,6 +11,9 @@
             <span output-eval-key="Local.LocaleName" output-eval-code="if(data.length === 0) { element.css({'display': 'none'}); } else { element.css({'display' : 'block'}); }">&nbsp;>&nbsp;<span output-data-binding="Local.LocaleName"></span></span>
             <span output-eval-key="Local.RoomName" output-eval-code="if(data.length === 0) { element.css({'display': 'none'}); } else { element.css({'display' : 'block'}); }">&nbsp;>&nbsp;<span output-data-binding="Local.RoomName"></span></span>
         </div>
+        <div id="locationDescription">
+            <span output-data-binding="Local.LocationDescriptive"></span>
+        </div>
     </div>
     <div class="parserClientLeft">
         <div id="quadrentOne" class="sideBar">

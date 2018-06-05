@@ -9,6 +9,7 @@ using NetMud.DataStructure.Behaviors.Existential;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Game
@@ -142,30 +143,43 @@ namespace NetMud.Data.Game
         /// Render this to a look command (what something sees when it 'look's at this
         /// </summary>
         /// <returns>the output strings</returns>
-        public override IEnumerable<string> RenderToLook(IEntity actor)
+        public override IEnumerable<string> RenderToLook(IEntity viewer)
         {
-            var sb = new List<string>();
-            var backingStore = DataTemplate<IInanimateData>(); ;
+            if (!IsVisibleTo(viewer))
+                return Enumerable.Empty<string>();
 
-            sb.Add(string.Format("There is a {0} here", backingStore.Name));
+            var backingStore = DataTemplate<IInanimateData>();
+
+            var sb = new List<string>
+            {
+                string.Format("There is a {0} here", backingStore.Name)
+            };
 
             return sb;
         }
 
         public IEnumerable<string> RenderAsWorn(IEntity viewer, IEntity wearer)
         {
-            var sb = new List<string>();
+            if (!IsVisibleTo(viewer))
+                return Enumerable.Empty<string>();
 
-            sb.Add(string.Format("{0} is wearing {1}", wearer.DataTemplateName, GetFullShortDescription(viewer)));
+            var sb = new List<string>
+            {
+                string.Format("{0} is wearing {1}", wearer.DataTemplateName, GetFullShortDescription(viewer))
+            };
 
             return sb;
         }
 
         public IEnumerable<string> RenderAsHeld(IEntity viewer, IEntity holder)
         {
-            var sb = new List<string>();
+            if (!IsVisibleTo(viewer))
+                return Enumerable.Empty<string>();
 
-            sb.Add(string.Format("{0} is holding {1}", holder.DataTemplateName, GetFullShortDescription(viewer)));
+            var sb = new List<string>
+            {
+                string.Format("{0} is holding {1}", holder.DataTemplateName, GetFullShortDescription(viewer))
+            };
 
             return sb;
         }

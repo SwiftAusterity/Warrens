@@ -1,5 +1,6 @@
 ﻿using NetMud.Data.DataIntegrity;
 using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.System;
 using System;
@@ -114,5 +115,43 @@ namespace NetMud.Data.LookupData
 
             return dataProblems;
         }
+
+        #region Rendering
+        public virtual IEnumerable<string> RenderToLook(IEntity viewer)
+        {
+            var returnValues = new List<string>
+            {
+                GetFullShortDescription(viewer)
+            };
+
+            return returnValues;
+        }
+
+        public virtual string GetFullShortDescription(IEntity viewer)
+        {
+            return Name;
+        }
+
+        public virtual IEnumerable<string> RenderAsContents(IEntity viewer)
+        {
+            var returnValues = new List<string>
+            {
+                GetFullShortDescription(viewer)
+            };
+
+            return returnValues;
+        }
+
+        /// <summary>
+        /// Render a natural resource collection to a viewer
+        /// </summary>
+        /// <param name="viewer">the entity looking</param>
+        /// <param name="amount">How much of it there is</param>
+        /// <returns>a view string</returns>
+        public virtual string RenderResourceCollection(IEntity viewer, int amount)
+        {
+            return string.Format("{0} {1}s", amount, GetFullShortDescription(viewer));
+        }
+        #endregion
     }
 }

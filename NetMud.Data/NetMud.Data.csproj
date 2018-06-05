@@ -118,6 +118,10 @@
       <Project>{88b7a648-fe23-4e88-9b60-ae17c8858af4}</Project>
       <Name>NetMud.DataStructure</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NetMud.Gaia\NetMud.Gaia.csproj">
+      <Project>{69f61bfc-0e4d-484d-bef2-dcb1f4181340}</Project>
+      <Name>NetMud.Gaia</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NetMud.Physics\NetMud.Physics.csproj">
       <Project>{28aabdf5-250e-40ce-88de-be3b9d23d95f}</Project>
       <Name>NetMud.Physics</Name>

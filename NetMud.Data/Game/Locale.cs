@@ -163,9 +163,12 @@ namespace NetMud.Data.Game
         /// </summary>
         /// <param name="actor">Who is looking</param>
         /// <returns>The locale's description</returns>
-        public override IEnumerable<string> RenderToLook(IEntity actor)
+        public override IEnumerable<string> RenderToLook(IEntity viewer)
         {
-            yield return string.Empty;
+            if (!IsVisibleTo(viewer))
+                return Enumerable.Empty<string>();
+
+            return Enumerable.Empty<string>();
         }
 
         /// <summary>

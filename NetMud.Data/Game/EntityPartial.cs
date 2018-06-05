@@ -273,19 +273,48 @@ namespace NetMud.Data.Game
         }
 
         /// <summary>
-        /// Render this to a look command (what something sees when it 'look's at this
+        /// Render this to a look command (what something sees when it 'look's at this)
         /// </summary>
+        /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public abstract IEnumerable<string> RenderToLook(IEntity actor);
+        public abstract IEnumerable<string> RenderToLook(IEntity viewer);
 
+        /// <summary>
+        /// Render this as being show inside a container
+        /// </summary>
+        /// <param name="viewer">The entity looking</param>
+        /// <returns>the output strings</returns>
         public virtual IEnumerable<string> RenderAsContents(IEntity viewer)
         {
+            if (!IsVisibleTo(viewer))
+                return Enumerable.Empty<string>();
+
             return new List<string> { GetFullShortDescription(viewer) };
         }
 
+        /// <summary>
+        /// Render this in a short descriptive style
+        /// </summary>
+        /// <param name="viewer">The entity looking</param>
+        /// <returns>the output strings</returns>
         public virtual string GetFullShortDescription(IEntity viewer)
         {
+            if (!IsVisibleTo(viewer))
+                return string.Empty;
+
             return DataTemplateName;
+        }
+
+
+        /// <summary>
+        /// Is this visible to the viewer
+        /// </summary>
+        /// <param name="viewer">the viewing entity</param>
+        /// <returns>If this is visible</returns>
+        public bool IsVisibleTo(IEntity viewer)
+        {
+            //TODO: this
+            return true;
         }
 
         #region Equality Functions
