@@ -1,1 +1,31 @@
-{"Occurrences":[],"DegreesFromNorth":-1,"InclineGrade":0,"Destination":{"ObjectType":"NetMud.Data.EntityBackingData.ZoneData, NetMud.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null","BirthMark":0},"Origin":{"ObjectType":"NetMud.Data.EntityBackingData.RoomData, NetMud.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null","BirthMark":1},"Model":{"$type":"NetMud.Data.LookupData.DimensionalModel, NetMud.Data","Length":500,"Height":500,"Width":500,"Vacuity":0,"SurfaceCavitation":0,"ModelBackingData":{"ObjectType":"NetMud.Data.LookupData.DimensionalModelData, NetMud.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null","BirthMark":0},"Composition":{}},"Affects":[],"Id":2,"Created":"2018-05-29T16:00:37.4235705-05:00","LastRevised":"2018-06-01T09:51:17.5955835-05:00","Name":"A Dusty Portal"}
+{
+  "Occurrences": [],
+  "DegreesFromNorth": -1,
+  "InclineGrade": 0,
+  "Destination": {
+    "ObjectType": "NetMud.Data.EntityBackingData.ZoneData, NetMud.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "BirthMark": 0
+  },
+  "Origin": {
+    "ObjectType": "NetMud.Data.EntityBackingData.RoomData, NetMud.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "BirthMark": 1
+  },
+  "Model": {
+    "$type": "NetMud.Data.LookupData.DimensionalModel, NetMud.Data",
+    "Length": 500,
+    "Height": 500,
+    "Width": 500,
+    "Vacuity": 0,
+    "SurfaceCavitation": 0,
+    "ModelBackingData": {
+      "ObjectType": "NetMud.Data.LookupData.DimensionalModelData, NetMud.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "BirthMark": 0
+    },
+    "Composition": {}
+  },
+  "Affects": [],
+  "Id": 2,
+  "Created": "2018-05-29T16:00:37.4235705-05:00",
+  "LastRevised": "2018-06-01T09:51:17.5955835-05:00",
+  "Name": "A Dusty Portal"
+}
