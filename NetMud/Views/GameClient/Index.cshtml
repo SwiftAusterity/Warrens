@@ -1,35 +1,34 @@
 ﻿@model NetMud.Models.GameContextModel
-
 @{
     ViewBag.Title = "";
 }
 
-<div class="parserClient">
-    <div class="parserClientTop">
-        <div id="locationBreadcrumbs">
-            <span output-data-binding="Local.ZoneName"></span>
-            <span output-eval-key="Local.LocaleName" output-eval-code="if(data.length === 0) { element.css({'display': 'none'}); } else { element.css({'display' : 'block'}); }">&nbsp;>&nbsp;<span output-data-binding="Local.LocaleName"></span></span>
-            <span output-eval-key="Local.RoomName" output-eval-code="if(data.length === 0) { element.css({'display': 'none'}); } else { element.css({'display' : 'block'}); }">&nbsp;>&nbsp;<span output-data-binding="Local.RoomName"></span></span>
-        </div>
-        <div id="locationDescription">
-            <span output-data-binding="Local.LocationDescriptive"></span>
-        </div>
+<div class="parserClientTop">
+    <div id="locationBreadcrumbs">
+        <span output-data-binding="Local.ZoneName"></span>
+        <span output-eval-key="Local.LocaleName" output-eval-code="if(data.length === 0) { element.css({'display': 'none'}); } else { element.css({'display' : 'block'}); }">&nbsp;>&nbsp;<span output-data-binding="Local.LocaleName"></span></span>
+        <span output-eval-key="Local.RoomName" output-eval-code="if(data.length === 0) { element.css({'display': 'none'}); } else { element.css({'display' : 'block'}); }">&nbsp;>&nbsp;<span output-data-binding="Local.RoomName"></span></span>
     </div>
-    <div class="parserClientLeft">
-        <div id="quadrentOne" class="sideBar">
+    <div id="locationDescription">
+        <span output-data-binding="Local.LocationDescriptive"></span>
+    </div>
+</div>
+<div class="parserClient">
+    <div class="parserClientLeft sidebar">
+        <div id="quadrentOne" class="quadrant">
             <span output-data-binding="Environment"></span>
         </div>
-        <div id="quadrentTwo" class="sideBar">
+        <div id="quadrentTwo" class="quadrant">
             <span output-eval-key="Local.Exits" output-eval-code="if(data[0] != undefined && data[0].length === 0) { element.css({'display': 'none'}); } else { element.css({'display' : 'block'}); }">Exits: <span output-data-binding="Local.Exits"></span></span>
             <span output-eval-key="Local.Populace" output-eval-code="if(data[0] != undefined && data[0].length === 0) { element.css({'display': 'none'}); } else { element.css({'display' : 'block'}); }">Populace: <span output-data-binding="Local.Populace"></span></span>
             <span output-eval-key="Local.Inventory" output-eval-code="if(data[0] != undefined && data[0].length === 0) { element.css({'display': 'none'}); } else { element.css({'display' : 'block'}); }">Inventory: <span output-data-binding="Local.Inventory"></span></span>
         </div>
     </div>
-    <div class="parserClientRight">
-        <div id="quadrentThree" class="sideBar">
+    <div class="parserClientRight sidebar">
+        <div id="quadrentThree" class="quadrant">
             <span output-data-binding="Self"></span>
         </div>
-        <div id="quadrentFour" class="sideBar">
+        <div id="quadrentFour" class="quadrant">
             <span output-data-binding="Extended"></span>
         </div>
     </div>
@@ -39,7 +38,6 @@
     </div>
     <a href="./GameClient" id="clientReload">Reload Client</a>
 </div>
-
 @Styles.Render("~/Content/GameClient.css")
 @Scripts.Render("~/Scripts/WebSocketsClient.js")
 @Styles.Render("http://fonts.googleapis.com/css?family=Berkshire+Swash")
