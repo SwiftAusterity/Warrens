@@ -3,11 +3,13 @@ using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
 using NetMud.Data.EntityBackingData;
 using NetMud.Data.LookupData;
+using NetMud.Data.System;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.SupportingClasses;
 using NetMud.Models.Admin;
 using System.Collections.Generic;
 using System.Linq;
@@ -160,7 +162,7 @@ namespace NetMud.Controllers.GameAdmin
             else
                 roomMessage = "You must include a valid Medium material.";
 
-            if(!string.IsNullOrWhiteSpace(roomMessage))
+            if (!string.IsNullOrWhiteSpace(roomMessage))
                 return RedirectToRoute("ModalErrorOrClose", new { Message = roomMessage });
 
             string message = string.Empty;
@@ -208,6 +210,65 @@ namespace NetMud.Controllers.GameAdmin
                 validData = false;
             }
 
+            if (vModel.Strengths != null)
+            {
+                int lexicalIndex = 0;
+                foreach (var strengthValue in vModel.Strengths)
+                {
+                    if (vModel.Phrases.Count() <= lexicalIndex ||
+                        vModel.Roles.Count() <= lexicalIndex ||
+                        vModel.Types.Count() <= lexicalIndex)
+                        break;
+
+                    var currentOccurrence = new Occurrence()
+                    {
+                        Strength = vModel.Strengths[lexicalIndex]
+                    };
+
+                    var lexica = new Lexica
+                    {
+                        Phrase = vModel.Phrases[lexicalIndex],
+                        Role = (GrammaticalType)vModel.Roles[lexicalIndex],
+                        Type = (LexicalType)vModel.Types[lexicalIndex]
+                    };
+
+                    int modifierIndex = -1;
+                    foreach (var modifierIterator in vModel.LexicaModifierIterator)
+                    {
+                        modifierIndex++;
+
+                        if (modifierIterator < lexicalIndex)
+                            continue;
+
+                        if (modifierIterator > lexicalIndex)
+                            break;
+
+                        if (!string.IsNullOrWhiteSpace(vModel.ModifierPhrases[modifierIndex]))
+                        {
+                            if (vModel.ModifierRoles.Count() <= modifierIndex || vModel.ModifierLexicalTypes.Count() <= modifierIndex || vModel.ModifierConjunctions.Count() <= modifierIndex)
+                                break;
+
+                            var phrase = vModel.ModifierPhrases[modifierIndex];
+                            var role = (GrammaticalType)vModel.ModifierRoles[modifierIndex];
+                            var type = (LexicalType)vModel.ModifierLexicalTypes[modifierIndex];
+                            var conjunction = vModel.ModifierConjunctions[modifierIndex];
+
+                            lexica.TryModify(new Lexica { Role = role, Type = type, Phrase = phrase }, conjunction);
+                        }
+
+
+                        modifierIndex++;
+                    }
+
+                    currentOccurrence.Event = lexica;
+
+                    if (currentOccurrence != null || lexica != null)
+                        newObj.Descriptives.Add(currentOccurrence);
+
+                    lexicalIndex++;
+                }
+            }
+
             if (validData)
             {
                 newObj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth,
@@ -217,6 +278,23 @@ namespace NetMud.Controllers.GameAdmin
                     message = "Error; Creation failed.";
                 else
                 {
+                    if (vModel.CreateReciprocalPath)
+                    {
+                        var reversePath = new PathwayData
+                        {
+                            Name = newObj.Name,
+                            DegreesFromNorth = newObj.DegreesFromNorth,
+                            Origin = newObj.Destination,
+                            Destination = newObj.Origin,
+                            Model = newObj.Model
+                        };
+
+                        if (reversePath.Create() == null)
+                        {
+                            message = "Reverse Path creation FAILED. Origin path creation SUCCESS.";
+                        }
+                    }
+
                     LoggingUtility.LogAdminCommandUsage("*WEB* - AddPathwayWithRoom[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 }
             }
@@ -275,6 +353,65 @@ namespace NetMud.Controllers.GameAdmin
                 validData = false;
             }
 
+            if (vModel.Strengths != null)
+            {
+                int lexicalIndex = 0;
+                foreach (var strengthValue in vModel.Strengths)
+                {
+                    if (vModel.Phrases.Count() <= lexicalIndex ||
+                        vModel.Roles.Count() <= lexicalIndex ||
+                        vModel.Types.Count() <= lexicalIndex)
+                        break;
+
+                    var currentOccurrence = new Occurrence()
+                    {
+                        Strength = vModel.Strengths[lexicalIndex]
+                    };
+
+                    var lexica = new Lexica
+                    {
+                        Phrase = vModel.Phrases[lexicalIndex],
+                        Role = (GrammaticalType)vModel.Roles[lexicalIndex],
+                        Type = (LexicalType)vModel.Types[lexicalIndex]
+                    };
+
+                    int modifierIndex = -1;
+                    foreach (var modifierIterator in vModel.LexicaModifierIterator)
+                    {
+                        modifierIndex++;
+
+                        if (modifierIterator < lexicalIndex)
+                            continue;
+
+                        if (modifierIterator > lexicalIndex)
+                            break;
+
+                        if (!string.IsNullOrWhiteSpace(vModel.ModifierPhrases[modifierIndex]))
+                        {
+                            if (vModel.ModifierRoles.Count() <= modifierIndex || vModel.ModifierLexicalTypes.Count() <= modifierIndex || vModel.ModifierConjunctions.Count() <= modifierIndex)
+                                break;
+
+                            var phrase = vModel.ModifierPhrases[modifierIndex];
+                            var role = (GrammaticalType)vModel.ModifierRoles[modifierIndex];
+                            var type = (LexicalType)vModel.ModifierLexicalTypes[modifierIndex];
+                            var conjunction = vModel.ModifierConjunctions[modifierIndex];
+
+                            lexica.TryModify(new Lexica { Role = role, Type = type, Phrase = phrase }, conjunction);
+                        }
+
+
+                        modifierIndex++;
+                    }
+
+                    currentOccurrence.Event = lexica;
+
+                    if (currentOccurrence != null || lexica != null)
+                        newObj.Descriptives.Add(currentOccurrence);
+
+                    lexicalIndex++;
+                }
+            }
+
             if (validData)
             {
                 newObj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth,
@@ -310,6 +447,8 @@ namespace NetMud.Controllers.GameAdmin
                 message = "That does not exist";
                 return RedirectToAction("Index", "Room", new { Message = message });
             }
+
+            vModel.OccurrenceDataObjects = obj.Descriptives.ToArray();
 
             vModel.ValidRooms = BackingDataCache.GetAll<IRoomData>().Where(rm => !rm.Equals(obj.Origin) && !rm.Equals(obj.Destination));
 
@@ -385,6 +524,74 @@ namespace NetMud.Controllers.GameAdmin
                 message = "You need to choose a material for each Dimensional Model planar section. (" + string.Join(",", dimModel.ModelPlanes.Select(plane => plane.TagName)) + ")";
                 validData = false;
             }
+
+            var descriptives = new HashSet<IOccurrence>();
+            if (vModel.Strengths != null)
+            {
+                int lexicalIndex = 0;
+                foreach (var strengthValue in vModel.Strengths)
+                {
+                    if (vModel.Phrases.Count() <= lexicalIndex ||
+                        vModel.Roles.Count() <= lexicalIndex ||
+                        vModel.Types.Count() <= lexicalIndex)
+                        break;
+
+                    var currentOccurrence = new Occurrence()
+                    {
+                        Strength = vModel.Strengths[lexicalIndex]
+                    };
+
+                    var lexica = new Lexica
+                    {
+                        Phrase = vModel.Phrases[lexicalIndex],
+                        Role = (GrammaticalType)vModel.Roles[lexicalIndex],
+                        Type = (LexicalType)vModel.Types[lexicalIndex]
+                    };
+
+                    int modifierIndex = -1;
+                    foreach (var modifierIterator in vModel.LexicaModifierIterator)
+                    {
+                        modifierIndex++;
+
+                        if (modifierIterator < lexicalIndex)
+                            continue;
+
+                        if (modifierIterator > lexicalIndex)
+                            break;
+
+                        if (!string.IsNullOrWhiteSpace(vModel.ModifierPhrases[modifierIndex]))
+                        {
+                            if (vModel.ModifierRoles.Count() <= modifierIndex || vModel.ModifierLexicalTypes.Count() <= modifierIndex || vModel.ModifierConjunctions.Count() <= modifierIndex)
+                                break;
+
+                            var phrase = vModel.ModifierPhrases[modifierIndex];
+                            var role = (GrammaticalType)vModel.ModifierRoles[modifierIndex];
+                            var type = (LexicalType)vModel.ModifierLexicalTypes[modifierIndex];
+                            var conjunction = vModel.ModifierConjunctions[modifierIndex];
+
+                            lexica.TryModify(new Lexica { Role = role, Type = type, Phrase = phrase }, conjunction);
+                        }
+
+
+                        modifierIndex++;
+                    }
+
+                    currentOccurrence.Event = lexica;
+
+                    if (currentOccurrence != null || lexica != null)
+                        descriptives.Add(currentOccurrence);
+
+                    lexicalIndex++;
+                }
+            }
+
+            if (descriptives.Count == 0)
+            {
+                message = "At least one descriptive is required.";
+                validData = false;
+            }
+            else
+                obj.Descriptives = descriptives;
 
             if (validData)
             {

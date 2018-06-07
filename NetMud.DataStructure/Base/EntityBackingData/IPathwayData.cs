@@ -41,7 +41,7 @@ namespace NetMud.DataStructure.Base.EntityBackingData
         /// <summary>
         /// Set of output relevant to this exit
         /// </summary>
-        HashSet<IOccurrence> Occurrences { get; set; }
+        HashSet<IOccurrence> Descriptives { get; set; }
 
         /// <summary>
         /// The current physical model for this entity

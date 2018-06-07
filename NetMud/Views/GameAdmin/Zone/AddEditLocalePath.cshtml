@@ -13,7 +13,7 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group row">
-            <input type="hidden" id="id" name="id" value="@Model.OriginID"/>
+            <input type="hidden" id="id" name="id" value="@Model.OriginID" />
 
             @Html.EditorFor(model => model.Name)
         </div>
@@ -25,6 +25,9 @@
         </div>
 
         @Html.Partial("TwoDimensionalEntityEditor", Model)
+
+        <div class="clearfix"></div>
+        @Html.Partial("~/Views/Shared/Occurrences.cshtml", Model)
 
         <div class="clearfix"></div>
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Edit",

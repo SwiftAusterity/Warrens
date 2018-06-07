@@ -1,5 +1,6 @@
 ﻿using NetMud.Authentication;
 using NetMud.DataStructure.Base.Supporting;
+using NetMud.Models.Admin.PartialInterfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -62,7 +63,7 @@ namespace NetMud.Models.Admin
         public IDimensionalModelData DataObject { get; set; }
     }
 
-    public class DimensionalEntityEditViewModel : BaseViewModel
+    public class DimensionalEntityEditViewModel : BaseViewModel, IDimensionalEntityViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
@@ -92,7 +93,7 @@ namespace NetMud.Models.Admin
         public int DimensionalModelCavitation { get; set; }
     }
 
-    public class TwoDimensionalEntityEditViewModel : DimensionalEntityEditViewModel
+    public partial class TwoDimensionalEntityEditViewModel : DimensionalEntityEditViewModel, ITwoDimensionalEntityViewModel
     {
         [Display(Name = "Dimensional Model")]
         public long DimensionalModelId { get; set; }

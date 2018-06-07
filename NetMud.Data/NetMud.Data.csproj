@@ -94,6 +94,7 @@
     <Compile Include="System\LookupCriteria.cs" />
     <Compile Include="System\Map.cs" />
     <Compile Include="LookupData\Mineral.cs" />
+    <Compile Include="System\Lexica.cs" />
     <Compile Include="System\Occurrence.cs" />
     <Compile Include="System\SerializableDataPartial.cs" />
   </ItemGroup>

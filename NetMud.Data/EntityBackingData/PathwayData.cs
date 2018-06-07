@@ -61,9 +61,9 @@ namespace NetMud.Data.EntityBackingData
         }
 
         /// <summary>
-        /// Set of output relevant to this exit
+        /// Set of output relevant to this exit. These are essentially single word descriptions to render the path
         /// </summary>
-        public HashSet<IOccurrence> Occurrences { get; set; }
+        public HashSet<IOccurrence> Descriptives { get; set; }
 
         /// <summary>
         /// 0->360 degrees with 0 being absolute north (meaning 90 is west, 180 south, etc) -1 means no cardinality

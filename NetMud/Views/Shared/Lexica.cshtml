@@ -1,0 +1,145 @@
+﻿@using NetMud.DataStructure.SupportingClasses
+
+@model Tuple<NetMud.Models.Admin.LexicaViewModel, int>
+
+@{
+    var model = Model.Item1;
+    var occurrenceIterator = Model.Item2;
+}
+
+<h3>Lexica</h3>
+<div class="form-group row">
+    @Html.EditorFor(e => e.Item1.Phrase)
+</div>
+<div class="form-group row">
+    @Html.LabelFor(m => m.Item1.Role, new { @class = "col-sm-1 col-form-label" })
+    <div class="col-md-3">
+        @Html.DropDownList("Role", Enum.GetNames(typeof(GrammaticalType)).Select(rl =>
+                                                        new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(GrammaticalType), rl)).ToString() })
+                                                        , htmlAttributes: new { id = "Role", @class = "form-control" })
+    </div>
+    @Html.LabelFor(m => m.Item1.Type, new { @class = "col-sm-1 col-form-label" })
+    <div class="col-md-3">
+        @Html.DropDownList("Type", Enum.GetNames(typeof(LexicalType)).Select(rl =>
+                                                        new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(LexicalType), rl)).ToString() })
+                                                        , htmlAttributes: new { id = "Type", @class = "form-control" })
+    </div>
+</div>
+
+<h3>Modifiers</h3>
+<a href="#" id="addValueRow" class="addRow">Add another row...</a>
+@if (model.LexicaDataObject == null || model.LexicaDataObject.Modifiers == null || model.LexicaDataObject.Modifiers.Count == 0)
+{
+    <div id="valueRows">
+        <div id="valueRow">
+            <label class="col-sm-1 col-form-label"><a href="#" class="removeRow" id="removeValueRow" title="Remove this">X</a></label>
+            <input type="hidden" name="LexicaModifierIterator" value="@occurrenceIterator" />
+            <div class="form-group row">
+                @Html.LabelFor(m => m.Item1.ModifierPhrases, new { @class = "col-sm-1 col-form-label" })
+                <div class="col-md-3">
+                    @Html.TextBoxFor(m => m.Item1.ModifierPhrases, new { @class = "form-control" })
+                </div>
+                @Html.LabelFor(m => m.Item1.ModifierConjunctions, new { @class = "col-sm-1 col-form-label" })
+                <div class="col-md-3">
+                    @Html.TextBoxFor(m => m.Item1.ModifierConjunctions, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group row">
+                @Html.LabelFor(m => m.Item1.ModifierRoles, new { @class = "col-sm-1 col-form-label" })
+                <div class="col-md-3">
+                    @Html.DropDownList("ModifierRoles", Enum.GetNames(typeof(GrammaticalType)).Select(rl =>
+                                                                    new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(GrammaticalType), rl)).ToString() })
+                                                                    , htmlAttributes: new { id = "ModifierRoles", @class = "form-control" })
+                </div>
+                @Html.LabelFor(m => m.Item1.ModifierLexicalTypes, new { @class = "col-sm-1 col-form-label" })
+                <div class="col-md-3">
+                    @Html.DropDownList("ModifierLexicalTypes", Enum.GetNames(typeof(LexicalType)).Select(rl =>
+                                                                    new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(LexicalType), rl)).ToString() })
+                                                                    , htmlAttributes: new { id = "ModifierLexicalTypes", @class = "form-control" })
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    foreach (var modifier in model.LexicaDataObject.Modifiers)
+    {
+        <div id="valueRows">
+            <div id="valueRow">
+                <label class="col-sm-1 col-form-label"><a href="#" class="removeRow" id="removeValueRow" title="Remove this">X</a></label>
+                <input type="hidden" name="LexicaModifierIterator" value="@occurrenceIterator" />
+                <div class="form-group row">
+                    @Html.LabelFor(m => m.Item1.ModifierPhrases, new { @class = "col-sm-1 col-form-label" })
+                    <div class="col-md-3">
+                        <input type="text" id="ModifierPhrases" name="ModifierPhrases" class="form-control" value="@modifier.Key.Phrase" />
+                    </div>
+                    @Html.LabelFor(m => m.Item1.ModifierConjunctions, new { @class = "col-sm-1 col-form-label" })
+                    <div class="col-md-3">
+                        <input type="text" id="ModifierConjunctions" name="ModifierConjunctions" class="form-control" value="@modifier.Value" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    @Html.LabelFor(m => m.Item1.ModifierRoles, new { @class = "col-sm-1 col-form-label" })
+                    <div class="col-md-3">
+                        @Html.DropDownList("ModifierRoles", Enum.GetNames(typeof(GrammaticalType)).Select(rl =>
+                                                                        new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(GrammaticalType), rl)).ToString(), Selected = rl.Equals(modifier.Key.Role) })
+                                                                        , htmlAttributes: new { id = "ModifierRoles", @class = "form-control" })
+                    </div>
+                    @Html.LabelFor(m => m.Item1.ModifierLexicalTypes, new { @class = "col-sm-1 col-form-label" })
+                    <div class="col-md-3">
+                        @Html.DropDownList("ModifierLexicalTypes", Enum.GetNames(typeof(LexicalType)).Select(rl =>
+                                                                        new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(LexicalType), rl)).ToString(), Selected = rl.Equals(modifier.Key.Type) })
+                                                                        , htmlAttributes: new { id = "ModifierLexicalTypes", @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var roleLabel = decodeHtml('@Html.LabelFor(m => m.Item1.ModifierRoles, new { @class = "col-sm-1 col-form-label" }).ToString().Replace(Environment.NewLine, "")');
+        var roleDropdown = decodeHtml('@Html.DropDownList("ModifierRoles", Enum.GetNames(typeof(GrammaticalType)).Select(rl =>
+                                                    new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(GrammaticalType), rl)).ToString() })
+                                                    , htmlAttributes: new { id = "ModifierRoles", @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');
+        var typeLabel = decodeHtml('@Html.LabelFor(m => m.Item1.ModifierRoles, new { @class = "col-sm-1 col-form-label" }).ToString().Replace(Environment.NewLine, "")');
+        var typeDropdown = decodeHtml('@Html.DropDownList("ModifierLexicalTypes", Enum.GetNames(typeof(LexicalType)).Select(rl =>
+                                                    new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(LexicalType), rl)).ToString() })
+                                                    , htmlAttributes: new { id = "ModifierLexicalTypes", @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');
+
+        var phraseValueLabel = decodeHtml('@Html.LabelFor(m => m.Item1.ModifierPhrases, new { @class = "col-sm-1 col-form-label" }).ToString().Replace(Environment.NewLine, "")');
+        var phraseValueControl = decodeHtml('@Html.TextBoxFor(m => m.Item1.ModifierPhrases, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');
+        var conjunctionValueLabel = decodeHtml('@Html.LabelFor(m => m.Item1.ModifierConjunctions, new { @class = "col-sm-1 col-form-label" }).ToString().Replace(Environment.NewLine, "")');
+        var conjunctionValueControl = decodeHtml('@Html.TextBoxFor(m => m.Item1.ModifierConjunctions, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');
+
+        var lexicalIterator = decodeHtml('<input type="hidden" name="LexicaModifierIterator" value="@occurrenceIterator" />');;
+
+        $("#addValueRow").click(function () {
+            $("#valueRows").append(
+                '<div class="form-group row">' + lexicalIterator +
+                '<label class="col-sm-1 col-form-label"><a href="#" class="removeRow" id="removeValueRow" title="Remove this">X</a></label>' +
+                phraseValueLabel + '<div class="col-md-3">' + phraseValueControl + '</div>' +
+                conjunctionValueLabel + '<div class="col-md-3">' + conjunctionValueControl + '</div>' +
+                '</div>' +
+                '<div class="form-group row">' +
+                roleLabel + '<div class="col-md-3">' + roleDropdown + '</div>' +
+                typeLabel + '<div class="col-md-3">' + typeDropdown + '</div>' +
+                '</div>'
+            );
+
+            $(".removeRow").click(function () {
+                $(this).parent().parent().remove();
+                return false;
+            });
+            return false;
+        });
+
+        $(".removeRow").click(function () {
+            $(this).parent().parent().remove();
+            return false;
+        });
+    });
+</script>

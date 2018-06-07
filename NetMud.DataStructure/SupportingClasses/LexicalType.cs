@@ -3,14 +3,14 @@
     /// <summary>
     /// Word/phrase types
     /// </summary>
-    public enum LexicalType
+    public enum LexicalType : short
     {
-        Noun,
-        Pronoun,
-        Verb,
-        Adjective,
-        Adverb,
-        Conjunction,
-        Interjection
+        Noun = 0,
+        Pronoun = 1,
+        Verb = 2,
+        Adjective = 3,
+        Adverb = 4,
+        Conjunction = 5,
+        Interjection = 6
     }
 }

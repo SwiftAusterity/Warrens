@@ -24,9 +24,9 @@ namespace NetMud.DataStructure.SupportingClasses
         string Phrase { get; set; }
 
         /// <summary>
-        /// Modifiers for this lexica
+        /// Modifiers for this lexica. (Modifier, Conjunction)
         /// </summary>
-        Dictionary<ILexica, string> Modifiers { get; }
+        Dictionary<ILexica, string> Modifiers { get; set; }
 
         /// <summary>
         /// Try to add a modifier to a lexica

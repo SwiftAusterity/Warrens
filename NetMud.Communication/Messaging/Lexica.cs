@@ -32,7 +32,7 @@ namespace NetMud.Communication.Messaging
         /// <summary>
         /// Modifiers for this lexica
         /// </summary>
-        public Dictionary<ILexica, string> Modifiers { get; }
+        public Dictionary<ILexica, string> Modifiers { get; set;  }
 
         public Lexica()
         {

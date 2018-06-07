@@ -22,9 +22,13 @@
         </div>
         <div class="form-group row">
             @Html.EditorFor(model => model.DegreesFromNorth)
+            @Html.EditorFor(model => model.CreateReciprocalPath)
         </div>
 
         @Html.Partial("TwoDimensionalEntityEditor", Model)
+
+        <div class="clearfix"></div>
+        @Html.Partial("~/Views/Shared/Occurrences.cshtml", Model)
 
         <div class="clearfix"></div>
         <h3>New Room</h3>

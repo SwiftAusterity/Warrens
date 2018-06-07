@@ -3,12 +3,12 @@
     /// <summary>
     /// The type of grammatical parts of a sentence
     /// </summary>
-    public enum GrammaticalType
+    public enum GrammaticalType : short
     {
-        Subject,
-        DirectObject,
-        IndirectObject,
-        Verb,
-        Descriptive
+        Subject = 0,
+        DirectObject = 1,
+        IndirectObject = 2,
+        Verb = 3,
+        Descriptive = 4
     }
 }
