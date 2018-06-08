@@ -30,6 +30,14 @@ namespace NetMud
             );
 
             routes.MapRoute(
+                name: "Pathway Add Edit Descriptive Modal",
+                url: "GameAdmin/Pathway/AddEditDescriptive/{id}/{descriptiveType}",
+                defaults: new { controller = "Pathway", action = "AddEditDescriptive" },
+                namespaces: new string[] { "NetMud.Controllers.GameAdmin" }
+            );
+
+
+            routes.MapRoute(
                 name: "Pathway Add Modal",
                 url: "GameAdmin/Pathway/Add/{id}/{originRoomId}/{destinationRoomId}/{degreesFromNorth}",
                 defaults: new { controller = "Pathway", action = "Add", degreesFromNorth = UrlParameter.Optional },

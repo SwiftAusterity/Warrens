@@ -93,7 +93,7 @@ namespace NetMud.Models.Admin
         public int DimensionalModelCavitation { get; set; }
     }
 
-    public partial class TwoDimensionalEntityEditViewModel : DimensionalEntityEditViewModel, ITwoDimensionalEntityViewModel
+    public class TwoDimensionalEntityEditViewModel : DimensionalEntityEditViewModel, ITwoDimensionalEntityViewModel
     {
         [Display(Name = "Dimensional Model")]
         public long DimensionalModelId { get; set; }

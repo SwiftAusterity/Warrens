@@ -1,35 +1,21 @@
-﻿using NetMud.DataStructure.SupportingClasses;
+﻿using NetMud.Authentication;
+using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.DataStructure.SupportingClasses;
 using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.Models.Admin
 {
-    public partial class MultipleOccurrenceViewModel : LexicaViewModel
+    public partial class OccurrenceViewModel : LexicaViewModel, BaseViewModel
     {
-        [Display(Name = "Strength")]
-        public int[] Strengths { get; set; }
+        public ApplicationUser authedUser { get; set; }
 
-        [DataType(DataType.Text)]
-        [Display(Name = "Phrase")]
-        public string[] Phrases { get; set; }
-
-        [Display(Name = "Grammatical Role")]
-        public short[] Roles { get; set; }
-
-        [Display(Name = "Type")]
-        public short[] Types { get; set; }
-
-        public short[] LexicaModifierIterator { get; set; }
-
-        public IOccurrence[] OccurrenceDataObjects { get; set; }
-    }
-
-    public partial class OccurrenceViewModel : LexicaViewModel
-    {
         [Range(-1, 1000, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [DataType(DataType.Text)]
         [Display(Name = "Strength")]
         public int Strength { get; set; }
 
         public IOccurrence OccurrenceDataObject { get; set; }
+        public IPathwayData DataObject { get; set; }
     }
 
     public partial class LexicaViewModel

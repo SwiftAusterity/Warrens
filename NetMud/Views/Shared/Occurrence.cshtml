@@ -1,7 +1,22 @@
 ﻿@model NetMud.Models.Admin.OccurrenceViewModel
 
-<div class="form-group row">
-    @Html.EditorFor(e => e.Strength)
-</div>
+@{
+    ViewBag.Title = "Descriptive";
+}
 
-@Html.Partial("~/Views/Shared/Lexica.cshtml", new Tuple<NetMud.Models.Admin.LexicaViewModel, int>(Model, 0))
+<section id="addDescriptiveSection">
+    @using (Html.BeginForm("AddEditDescriptive", "Pathway", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        <hr />
+        <div class="form-group row">
+            @Html.EditorFor(e => e.Strength)
+        </div>
+
+        @Html.Partial("~/Views/Shared/Lexica.cshtml", Model)
+
+        <div class="clearfix"></div>
+
+        @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Zone", ModalWindow = true })
+    }
+</section>

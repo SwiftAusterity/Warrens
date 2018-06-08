@@ -232,7 +232,6 @@ namespace NetMud.Controllers.GameAdmin
                 vModel.ModelDataObject = existingPathway.Model;
 
                 vModel.DataObject = existingPathway;
-                vModel.OccurrenceDataObjects = existingPathway.Descriptives.ToArray();
             }
 
             return View("~/Views/GameAdmin/Zone/AddEditLocalePath.cshtml", vModel);
@@ -286,65 +285,6 @@ namespace NetMud.Controllers.GameAdmin
             {
                 message = "You need to choose a material for each Dimensional Model planar section. (" + string.Join(",", dimModel.ModelPlanes.Select(plane => plane.TagName)) + ")";
                 validData = false;
-            }
-
-            if (vModel.Strengths != null)
-            {
-                int lexicalIndex = 0;
-                foreach (var strengthValue in vModel.Strengths)
-                {
-                    if (vModel.Phrases.Count() <= lexicalIndex ||
-                        vModel.Roles.Count() <= lexicalIndex ||
-                        vModel.Types.Count() <= lexicalIndex)
-                        break;
-
-                    var currentOccurrence = new Occurrence()
-                    {
-                        Strength = vModel.Strengths[lexicalIndex]
-                    };
-
-                    var lexica = new Data.System.Lexica
-                    {
-                        Phrase = vModel.Phrases[lexicalIndex],
-                        Role = (GrammaticalType)vModel.Roles[lexicalIndex],
-                        Type = (LexicalType)vModel.Types[lexicalIndex]
-                    };
-
-                    int modifierIndex = -1;
-                    foreach (var modifierIterator in vModel.LexicaModifierIterator)
-                    {
-                        modifierIndex++;
-
-                        if (modifierIterator < lexicalIndex)
-                            continue;
-
-                        if (modifierIterator > lexicalIndex)
-                            break;
-
-                        if (!string.IsNullOrWhiteSpace(vModel.ModifierPhrases[modifierIndex]))
-                        {
-                            if (vModel.ModifierRoles.Count() <= modifierIndex || vModel.ModifierLexicalTypes.Count() <= modifierIndex || vModel.ModifierConjunctions.Count() <= modifierIndex)
-                                break;
-
-                            var phrase = vModel.ModifierPhrases[modifierIndex];
-                            var role = (GrammaticalType)vModel.ModifierRoles[modifierIndex];
-                            var type = (LexicalType)vModel.ModifierLexicalTypes[modifierIndex];
-                            var conjunction = vModel.ModifierConjunctions[modifierIndex];
-
-                            lexica.TryModify(new Data.System.Lexica { Role = role, Type = type, Phrase = phrase }, conjunction);
-                        }
-
-
-                        modifierIndex++;
-                    }
-
-                    currentOccurrence.Event = lexica;
-
-                    if (currentOccurrence != null || lexica != null)
-                        newObj.Descriptives.Add(currentOccurrence);
-
-                    lexicalIndex++;
-                }
             }
 
             if (validData)
@@ -415,75 +355,6 @@ namespace NetMud.Controllers.GameAdmin
                 message = "You need to choose a material for each Dimensional Model planar section. (" + string.Join(",", dimModel.ModelPlanes.Select(plane => plane.TagName)) + ")";
                 validData = false;
             }
-
-            var descriptives = new HashSet<IOccurrence>();
-            if (vModel.Strengths != null)
-            {
-                int lexicalIndex = 0;
-                foreach (var strengthValue in vModel.Strengths)
-                {
-                    if (vModel.Phrases.Count() <= lexicalIndex ||
-                        vModel.Roles.Count() <= lexicalIndex ||
-                        vModel.Types.Count() <= lexicalIndex)
-                        break;
-
-                    var currentOccurrence = new Occurrence()
-                    {
-                        Strength = vModel.Strengths[lexicalIndex]
-                    };
-
-                    var lexica = new Data.System.Lexica
-                    {
-                        Phrase = vModel.Phrases[lexicalIndex],
-                        Role = (GrammaticalType)vModel.Roles[lexicalIndex],
-                        Type = (LexicalType)vModel.Types[lexicalIndex]
-                    };
-
-                    int modifierIndex = -1;
-                    foreach (var modifierIterator in vModel.LexicaModifierIterator)
-                    {
-                        modifierIndex++;
-
-                        if (modifierIterator < lexicalIndex)
-                            continue;
-
-                        if (modifierIterator > lexicalIndex)
-                            break;
-
-                        if (!string.IsNullOrWhiteSpace(vModel.ModifierPhrases[modifierIndex]))
-                        {
-                            if (vModel.ModifierRoles.Count() <= modifierIndex || vModel.ModifierLexicalTypes.Count() <= modifierIndex || vModel.ModifierConjunctions.Count() <= modifierIndex)
-                                break;
-
-                            var phrase = vModel.ModifierPhrases[modifierIndex];
-                            var role = (GrammaticalType)vModel.ModifierRoles[modifierIndex];
-                            var type = (LexicalType)vModel.ModifierLexicalTypes[modifierIndex];
-                            var conjunction = vModel.ModifierConjunctions[modifierIndex];
-
-                            lexica.TryModify(new Data.System.Lexica { Role = role, Type = type, Phrase = phrase }, conjunction);
-                        }
-
-
-                        modifierIndex++;
-                    }
-
-                    currentOccurrence.Event = lexica;
-
-                    if (currentOccurrence != null || lexica != null)
-                        descriptives.Add(currentOccurrence);
-
-                    lexicalIndex++;
-                }
-            }
-
-            if (descriptives.Count == 0)
-            {
-                message = "At least one descriptive is required.";
-                validData = false;
-            }
-            else
-                obj.Descriptives = descriptives;
-
 
             if (validData)
             {

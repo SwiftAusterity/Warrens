@@ -210,65 +210,6 @@ namespace NetMud.Controllers.GameAdmin
                 validData = false;
             }
 
-            if (vModel.Strengths != null)
-            {
-                int lexicalIndex = 0;
-                foreach (var strengthValue in vModel.Strengths)
-                {
-                    if (vModel.Phrases.Count() <= lexicalIndex ||
-                        vModel.Roles.Count() <= lexicalIndex ||
-                        vModel.Types.Count() <= lexicalIndex)
-                        break;
-
-                    var currentOccurrence = new Occurrence()
-                    {
-                        Strength = vModel.Strengths[lexicalIndex]
-                    };
-
-                    var lexica = new Lexica
-                    {
-                        Phrase = vModel.Phrases[lexicalIndex],
-                        Role = (GrammaticalType)vModel.Roles[lexicalIndex],
-                        Type = (LexicalType)vModel.Types[lexicalIndex]
-                    };
-
-                    int modifierIndex = -1;
-                    foreach (var modifierIterator in vModel.LexicaModifierIterator)
-                    {
-                        modifierIndex++;
-
-                        if (modifierIterator < lexicalIndex)
-                            continue;
-
-                        if (modifierIterator > lexicalIndex)
-                            break;
-
-                        if (!string.IsNullOrWhiteSpace(vModel.ModifierPhrases[modifierIndex]))
-                        {
-                            if (vModel.ModifierRoles.Count() <= modifierIndex || vModel.ModifierLexicalTypes.Count() <= modifierIndex || vModel.ModifierConjunctions.Count() <= modifierIndex)
-                                break;
-
-                            var phrase = vModel.ModifierPhrases[modifierIndex];
-                            var role = (GrammaticalType)vModel.ModifierRoles[modifierIndex];
-                            var type = (LexicalType)vModel.ModifierLexicalTypes[modifierIndex];
-                            var conjunction = vModel.ModifierConjunctions[modifierIndex];
-
-                            lexica.TryModify(new Lexica { Role = role, Type = type, Phrase = phrase }, conjunction);
-                        }
-
-
-                        modifierIndex++;
-                    }
-
-                    currentOccurrence.Event = lexica;
-
-                    if (currentOccurrence != null || lexica != null)
-                        newObj.Descriptives.Add(currentOccurrence);
-
-                    lexicalIndex++;
-                }
-            }
-
             if (validData)
             {
                 newObj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth,
@@ -353,65 +294,6 @@ namespace NetMud.Controllers.GameAdmin
                 validData = false;
             }
 
-            if (vModel.Strengths != null)
-            {
-                int lexicalIndex = 0;
-                foreach (var strengthValue in vModel.Strengths)
-                {
-                    if (vModel.Phrases.Count() <= lexicalIndex ||
-                        vModel.Roles.Count() <= lexicalIndex ||
-                        vModel.Types.Count() <= lexicalIndex)
-                        break;
-
-                    var currentOccurrence = new Occurrence()
-                    {
-                        Strength = vModel.Strengths[lexicalIndex]
-                    };
-
-                    var lexica = new Lexica
-                    {
-                        Phrase = vModel.Phrases[lexicalIndex],
-                        Role = (GrammaticalType)vModel.Roles[lexicalIndex],
-                        Type = (LexicalType)vModel.Types[lexicalIndex]
-                    };
-
-                    int modifierIndex = -1;
-                    foreach (var modifierIterator in vModel.LexicaModifierIterator)
-                    {
-                        modifierIndex++;
-
-                        if (modifierIterator < lexicalIndex)
-                            continue;
-
-                        if (modifierIterator > lexicalIndex)
-                            break;
-
-                        if (!string.IsNullOrWhiteSpace(vModel.ModifierPhrases[modifierIndex]))
-                        {
-                            if (vModel.ModifierRoles.Count() <= modifierIndex || vModel.ModifierLexicalTypes.Count() <= modifierIndex || vModel.ModifierConjunctions.Count() <= modifierIndex)
-                                break;
-
-                            var phrase = vModel.ModifierPhrases[modifierIndex];
-                            var role = (GrammaticalType)vModel.ModifierRoles[modifierIndex];
-                            var type = (LexicalType)vModel.ModifierLexicalTypes[modifierIndex];
-                            var conjunction = vModel.ModifierConjunctions[modifierIndex];
-
-                            lexica.TryModify(new Lexica { Role = role, Type = type, Phrase = phrase }, conjunction);
-                        }
-
-
-                        modifierIndex++;
-                    }
-
-                    currentOccurrence.Event = lexica;
-
-                    if (currentOccurrence != null || lexica != null)
-                        newObj.Descriptives.Add(currentOccurrence);
-
-                    lexicalIndex++;
-                }
-            }
-
             if (validData)
             {
                 newObj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth,
@@ -447,8 +329,6 @@ namespace NetMud.Controllers.GameAdmin
                 message = "That does not exist";
                 return RedirectToAction("Index", "Room", new { Message = message });
             }
-
-            vModel.OccurrenceDataObjects = obj.Descriptives.ToArray();
 
             vModel.ValidRooms = BackingDataCache.GetAll<IRoomData>().Where(rm => !rm.Equals(obj.Origin) && !rm.Equals(obj.Destination));
 
@@ -525,74 +405,6 @@ namespace NetMud.Controllers.GameAdmin
                 validData = false;
             }
 
-            var descriptives = new HashSet<IOccurrence>();
-            if (vModel.Strengths != null)
-            {
-                int lexicalIndex = 0;
-                foreach (var strengthValue in vModel.Strengths)
-                {
-                    if (vModel.Phrases.Count() <= lexicalIndex ||
-                        vModel.Roles.Count() <= lexicalIndex ||
-                        vModel.Types.Count() <= lexicalIndex)
-                        break;
-
-                    var currentOccurrence = new Occurrence()
-                    {
-                        Strength = vModel.Strengths[lexicalIndex]
-                    };
-
-                    var lexica = new Lexica
-                    {
-                        Phrase = vModel.Phrases[lexicalIndex],
-                        Role = (GrammaticalType)vModel.Roles[lexicalIndex],
-                        Type = (LexicalType)vModel.Types[lexicalIndex]
-                    };
-
-                    int modifierIndex = -1;
-                    foreach (var modifierIterator in vModel.LexicaModifierIterator)
-                    {
-                        modifierIndex++;
-
-                        if (modifierIterator < lexicalIndex)
-                            continue;
-
-                        if (modifierIterator > lexicalIndex)
-                            break;
-
-                        if (!string.IsNullOrWhiteSpace(vModel.ModifierPhrases[modifierIndex]))
-                        {
-                            if (vModel.ModifierRoles.Count() <= modifierIndex || vModel.ModifierLexicalTypes.Count() <= modifierIndex || vModel.ModifierConjunctions.Count() <= modifierIndex)
-                                break;
-
-                            var phrase = vModel.ModifierPhrases[modifierIndex];
-                            var role = (GrammaticalType)vModel.ModifierRoles[modifierIndex];
-                            var type = (LexicalType)vModel.ModifierLexicalTypes[modifierIndex];
-                            var conjunction = vModel.ModifierConjunctions[modifierIndex];
-
-                            lexica.TryModify(new Lexica { Role = role, Type = type, Phrase = phrase }, conjunction);
-                        }
-
-
-                        modifierIndex++;
-                    }
-
-                    currentOccurrence.Event = lexica;
-
-                    if (currentOccurrence != null || lexica != null)
-                        descriptives.Add(currentOccurrence);
-
-                    lexicalIndex++;
-                }
-            }
-
-            if (descriptives.Count == 0)
-            {
-                message = "At least one descriptive is required.";
-                validData = false;
-            }
-            else
-                obj.Descriptives = descriptives;
-
             if (validData)
             {
                 obj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth,
@@ -604,6 +416,149 @@ namespace NetMud.Controllers.GameAdmin
                 }
                 else
                     message = "Error; Edit failed.";
+            }
+
+            return RedirectToRoute("ModalErrorOrClose", new { Message = message });
+        }
+
+        [HttpGet]
+        public ActionResult AddEditDescriptive(long id, short descriptiveType)
+        {
+            string message = string.Empty;
+
+            var obj = BackingDataCache.Get<IPathwayData>(id);
+            if (obj == null)
+            {
+                message = "That pathway does not exist";
+                return RedirectToRoute("ModalErrorOrClose", new { Message = message });
+            }
+
+            var vModel = new OccurrenceViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                DataObject = obj
+            };
+
+            if (descriptiveType > -1)
+            {
+                var grammaticalType = (GrammaticalType)descriptiveType;
+                vModel.OccurrenceDataObject = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType);
+            }
+
+            if (vModel.OccurrenceDataObject != null)
+            {
+                vModel.LexicaDataObject = vModel.OccurrenceDataObject.Event;
+                vModel.Strength = vModel.OccurrenceDataObject.Strength;
+
+                vModel.Role = (short)vModel.LexicaDataObject.Role;
+                vModel.Type = (short)vModel.LexicaDataObject.Type;
+                vModel.Phrase = vModel.LexicaDataObject.Phrase;
+            }
+
+            return View("~/Views/Shared/Occurrence.cshtml", "_chromelessLayout", vModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddEditDescriptive(long id, OccurrenceViewModel vModel)
+        {
+            string message = string.Empty;
+            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            var obj = BackingDataCache.Get<IPathwayData>(id);
+            if (obj == null)
+            {
+                message = "That pathway does not exist";
+                return RedirectToRoute("ModalErrorOrClose", new { Message = message });
+            }
+
+            var grammaticalType = (GrammaticalType)vModel.Role;
+            var existingOccurrence = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType);
+
+            if (existingOccurrence == null)
+                existingOccurrence = new Occurrence();
+
+            existingOccurrence.Strength = vModel.Strength;
+
+            var existingEvent = existingOccurrence.Event;
+
+            if (existingEvent == null)
+                existingEvent = new Lexica();
+
+            existingEvent.Role = grammaticalType;
+            existingEvent.Phrase = vModel.Phrase;
+            existingEvent.Type = (LexicalType)vModel.Type;
+
+            int modifierIndex = 0;
+            foreach (var currentPhrase in vModel.ModifierPhrases)
+            {
+                if (!string.IsNullOrWhiteSpace(currentPhrase))
+                {
+                    if (vModel.ModifierRoles.Count() <= modifierIndex || vModel.ModifierLexicalTypes.Count() <= modifierIndex || vModel.ModifierConjunctions.Count() <= modifierIndex)
+                        break;
+
+                    var phrase = currentPhrase;
+                    var role = (GrammaticalType)vModel.ModifierRoles[modifierIndex];
+                    var type = (LexicalType)vModel.ModifierLexicalTypes[modifierIndex];
+                    var conjunction = vModel.ModifierConjunctions[modifierIndex];
+
+                    existingEvent.TryModify(new Lexica { Role = role, Type = type, Phrase = phrase }, conjunction);
+                }
+
+                modifierIndex++;
+            }
+
+            existingOccurrence.Event = existingEvent;
+
+            obj.Descriptives.RemoveWhere(occ => occ.Event.Role == grammaticalType);
+            obj.Descriptives.Add(existingOccurrence);
+
+            if (obj.Save())
+            {
+                LoggingUtility.LogAdminCommandUsage("*WEB* - AddEditDescriptive[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+            }
+            else
+                message = "Error; Edit failed.";
+
+            return RedirectToRoute("ModalErrorOrClose", new { Message = message });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult RemoveDescriptive(long id, short type, string authorize)
+        {
+            string message = string.Empty;
+
+            if (string.IsNullOrWhiteSpace(authorize) || !type.ToString().Equals(authorize))
+                message = "You must check the proper authorize radio button first.";
+            else
+            {
+                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+                var obj = BackingDataCache.Get<PathwayData>(id);
+
+                if (obj == null)
+                    message = "That does not exist";
+                else
+                {
+                    var grammaticalType = (GrammaticalType)type;
+                    var existingOccurrence = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType);
+
+                    if (existingOccurrence != null)
+                    {
+                        obj.Descriptives.Remove(existingOccurrence);
+
+                        if (obj.Save())
+                        {
+                            LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveDescriptive[" + id.ToString() + "|" + type.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                            message = "Delete Successful.";
+                        }
+                        else
+                            message = "Error; Removal failed.";
+                    }
+                    else
+                        message = "That does not exist";
+                }
             }
 
             return RedirectToRoute("ModalErrorOrClose", new { Message = message });
