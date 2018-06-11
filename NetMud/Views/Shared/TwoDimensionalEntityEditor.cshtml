@@ -37,7 +37,7 @@
                 @Html.LabelFor(m => m.ModelPartMaterials, new { @class = "col-sm-2 col-form-label" })
                 <div class="col-sm-4">
                     @Html.DropDownList("ModelPartMaterials", Model.ValidMaterials.Select(rl =>
-                                                                new SelectListItem() { Text = rl.Name, Value = rl.Id.ToString(), Selected = rl.Equals(container.Value) })
+                                                                new SelectListItem() { Text = rl.Name, Value = rl.Id.ToString(), Selected = rl.Id.Equals(container.Value.Id) })
                                                                 , htmlAttributes: new { id = "ModelPartMaterials", @class = "form-control" })
                 </div>
             </div>

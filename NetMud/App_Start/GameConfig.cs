@@ -18,14 +18,14 @@ namespace NetMud
             if (!hotBack.RestoreLiveBackup())
                 hotBack.NewWorldFallback();
 
-            var customSockServer = new NetMud.Websock.Server();
+            var customSockServer = new Websock.Server();
             customSockServer.Launch(2929);
 
             Func<bool> backupFunction = hotBack.WriteLiveBackup;
             Func<bool> backingDataBackupFunction = BackingData.WriteFullBackup;
 
-            //every 5 minutes after half an hour
-            Processor.StartSingeltonChainedLoop("HotBackup", 30 * 60, 5 * 60, -1, backupFunction);
+            //every 15 minutes after half an hour
+            Processor.StartSingeltonChainedLoop("HotBackup", 30 * 60, 15 * 60, -1, backupFunction);
 
             //every 2 hours after 1 hour
             Processor.StartSingeltonChainedLoop("BackingDataFullBackup", 60 * 60, 120 * 60, -1, backingDataBackupFunction);

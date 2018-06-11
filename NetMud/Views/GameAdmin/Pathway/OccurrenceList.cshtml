@@ -3,7 +3,7 @@
 @{
     var linkText = Html.ActionLink("99999999", "AddEditDescriptive", "Pathway", new { descriptiveType = 99999999, id = Model.Id }).ToString();
     var tableColumns = new Dictionary<string, Func<dynamic, string>>();
-    tableColumns.Add("Role", obj => string.Format("<a href='#' class='.editDescriptive' data-descriptive-type='{1}'>{0}</a>", obj.Event.Role, (short)obj.Event.Role));
+    tableColumns.Add("Role", obj => string.Format("<a href='#' class='editDescriptive' data-descriptive-type='{1}'>{0}</a>", obj.Event.Role, (short)obj.Event.Role));
     tableColumns.Add("Phrase", obj => obj.Event.Phrase);
     tableColumns.Add("Type", obj => obj.Event.Type.ToString());
     tableColumns.Add("Strength", obj => obj.Strength.ToString());
@@ -25,7 +25,7 @@
     using (Html.BeginForm("RemoveDescriptive", "Pathway"))
     {
         @Html.AntiForgeryToken()
-        @Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Name = "Descriptives", Columns = tableColumns, Values = Model.Descriptives, IncludeDelete = false })
+        @Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Name = "", Columns = tableColumns, Values = Model.Descriptives, IncludeDelete = false })
     }
 }
 

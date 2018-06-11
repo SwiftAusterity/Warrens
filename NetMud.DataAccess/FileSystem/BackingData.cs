@@ -1,4 +1,5 @@
 ﻿using NetMud.DataStructure.Base.System;
+using NetMud.Utility;
 using System;
 using System.IO;
 using System.Web.Hosting;
@@ -49,22 +50,24 @@ namespace NetMud.DataAccess.FileSystem
         /// <param name="entity">the thing to write out to current</param>
         public void WriteEntity(IData entity)
         {
-            var dirName = BaseDirectory + CurrentDirectoryName + entity.GetType().Name + "/";
-
-            if (!VerifyDirectory(dirName))
-                throw new Exception("Unable to locate or create base live data directory.");
-
-            var entityFileName = GetEntityFilename(entity);
-
-            if (string.IsNullOrWhiteSpace(entityFileName))
-                return;
-
-            var fullFileName = dirName + entityFileName;
-            var archiveFileDirectory = BaseDirectory + DatedBackupDirectory + entity.GetType().Name + "/";
-
             try
             {
-                RollingArchiveFile(fullFileName, archiveFileDirectory + entityFileName, archiveFileDirectory);
+                if (entity.FitnessProblems)
+                    throw new Exception("Attempt to write bad entity.");
+
+                var dirName = BaseDirectory + CurrentDirectoryName + entity.GetType().Name + "/";
+
+                if (!VerifyDirectory(dirName))
+                    throw new Exception("Unable to locate or create base backing data directory.");
+
+                var entityFileName = GetEntityFilename(entity);
+
+                if (string.IsNullOrWhiteSpace(entityFileName))
+                    return;
+
+                var fullFileName = dirName + entityFileName;
+
+                ArchiveEntity(entity);
                 WriteToFile(fullFileName, entity.ToBytes());
             }
             catch (Exception ex)
@@ -118,7 +121,7 @@ namespace NetMud.DataAccess.FileSystem
             if (File.Exists(archiveFile))
                 File.Delete(archiveFile);
 
-            File.Move(currentFile, archiveFile);
+            File.Copy(currentFile, archiveFile, true);
         }
 
         /// <summary>
@@ -131,8 +134,7 @@ namespace NetMud.DataAccess.FileSystem
             {
                 var currentRoot = new DirectoryInfo(BaseDirectory + CurrentDirectoryName);
 
-                //move is literal move, no need to delete afterwards
-                currentRoot.MoveTo(BaseDirectory + DatedBackupDirectory);
+                currentRoot.CopyTo(BaseDirectory + DatedBackupDirectory);
             }
 
             //something very wrong is happening, it'll get logged

@@ -27,8 +27,6 @@
 {
     <div id="valueRows">
         <div id="valueRow">
-            <label class="col-sm-1 col-form-label"><a href="#" class="removeRow" id="removeValueRow" title="Remove this">X</a></label>
-
             <div class="form-group row">
                 @Html.LabelFor(m => m.ModifierPhrases, new { @class = "col-sm-1 col-form-label" })
                 <div class="col-md-3">
@@ -38,6 +36,8 @@
                 <div class="col-md-3">
                     @Html.TextBoxFor(m => m.ModifierConjunctions, new { @class = "form-control" })
                 </div>
+
+                <label class="col-sm-1 col-form-label"><a href="#" class="removeRow" id="removeValueRow" title="Remove this">X</a></label>
             </div>
             <div class="form-group row">
                 @Html.LabelFor(m => m.ModifierRoles, new { @class = "col-sm-1 col-form-label" })
@@ -62,8 +62,6 @@ else
     {
         <div id="valueRows">
             <div id="valueRow">
-                <label class="col-sm-1 col-form-label"><a href="#" class="removeRow" id="removeValueRow" title="Remove this">X</a></label>
-
                 <div class="form-group row">
                     @Html.LabelFor(m => m.ModifierPhrases, new { @class = "col-sm-1 col-form-label" })
                     <div class="col-md-3">
@@ -73,6 +71,8 @@ else
                     <div class="col-md-3">
                         <input type="text" id="ModifierConjunctions" name="ModifierConjunctions" class="form-control" value="@modifier.Value" />
                     </div>
+
+                    <label class="col-sm-1 col-form-label"><a href="#" class="removeRow" id="removeValueRow" title="Remove this">X</a></label>
                 </div>
                 <div class="form-group row">
                     @Html.LabelFor(m => m.ModifierRoles, new { @class = "col-sm-1 col-form-label" })
@@ -113,10 +113,10 @@ else
         $("#addValueRow").click(function () {
             $("#valueRows").append(
                 '<div id="valueRow">' +
-                '<label class="col-sm-1 col-form-label"><a href="#" class="removeRow" id="removeValueRow" title="Remove this">X</a></label>' +
                 '<div class="form-group row">' +
                 phraseValueLabel + '<div class="col-md-3">' + phraseValueControl + '</div>' +
                 conjunctionValueLabel + '<div class="col-md-3">' + conjunctionValueControl + '</div>' +
+                '<label class="col-sm-1 col-form-label"><a href="#" class="removeRow" id="removeValueRow" title="Remove this">X</a></label>' +
                 '</div>' +
                 '<div class="form-group row">' +
                 roleLabel + '<div class="col-md-3">' + roleDropdown + '</div>' +
@@ -125,14 +125,14 @@ else
             );
 
             $(".removeRow").click(function () {
-                $(this).parent().parent().remove();
+                $(this).parent().parent().parent().remove();
                 return false;
             });
             return false;
         });
 
         $(".removeRow").click(function () {
-            $(this).parent().parent().remove();
+            $(this).parent().parent().parent().remove();
             return false;
         });
     });

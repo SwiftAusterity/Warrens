@@ -1,4 +1,5 @@
 ﻿using NetMud.DataStructure.Base.System;
+using NetMud.Utility;
 using System;
 using System.IO;
 using System.Web.Hosting;
@@ -71,8 +72,7 @@ namespace NetMud.DataAccess.FileSystem
             {
                 var currentRoot = new DirectoryInfo(BaseDirectory + CurrentDirectoryName);
 
-                //move is literal move, no need to delete afterwards
-                currentRoot.MoveTo(DatedBackupDirectory);
+                currentRoot.CopyTo(DatedBackupDirectory);
             }
 
             //something very wrong is happening, it'll get logged

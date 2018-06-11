@@ -30,13 +30,7 @@ namespace NetMud.Backup
 
                 fileAccessor.ArchiveFull();
 
-                //Get all the entities (which should be a ton of stuff)
-                var entities = BackingDataCache.GetAll();
-
-                foreach (var entity in entities)
-                    fileAccessor.WriteEntity(entity as IData);
-
-                LoggingUtility.Log("Entire backing data set written to current.", LogChannels.Backup, true);
+                LoggingUtility.Log("Entire backing data set archived.", LogChannels.Backup, true);
             }
             catch (Exception ex)
             {

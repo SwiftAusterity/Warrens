@@ -115,22 +115,7 @@ namespace NetMud.Backup
 
                 liveDataAccessor.ArchiveFull();
 
-                //Get all the entities (which should be a ton of stuff)
-                var entities = LiveCache.GetAll();
-
-                //Dont save players to the hot section, there's another place for them
-                foreach (var entity in entities.Where(ent => !ent.GetType().GetCustomAttributes<IgnoreAutomatedBackupAttribute>().Any()))
-                {
-                    var liveEntity = entity as IEntity;
-
-                    //Don't write objects that are on live players, player backup does that itself
-                    if (liveEntity.CurrentLocation?.CurrentLocation != null && liveEntity.CurrentLocation.CurrentLocation.GetType() == typeof(Player))
-                        continue;
-
-                    liveDataAccessor.WriteEntity(liveEntity);
-                }
-
-                LoggingUtility.Log("Live world written to current.", LogChannels.Backup, true);
+                LoggingUtility.Log("Current live world written to archive.", LogChannels.Backup, true);
 
                 return WritePlayers();
             }

@@ -141,9 +141,10 @@ namespace NetMud.DataAccess.FileSystem
         /// <param name="bytes">the data to write</param>
         /// <param name="backupFirst">should this file be archived first using the default archiving directory structure</param>
         /// <param name="writeMode">should this file be overwritten or appended to</param>
-        public void WriteToFile(string fullFileName, byte[] bytes, FileMode writeMode = FileMode.Truncate)
+        public bool WriteToFile(string fullFileName, byte[] bytes, FileMode writeMode = FileMode.Truncate)
         {
             FileStream entityFile = null;
+            var success = true;
 
             try
             {
@@ -160,12 +161,15 @@ namespace NetMud.DataAccess.FileSystem
             catch (Exception ex)
             {
                 LoggingUtility.LogError(ex);
+                success = false;
             }
             finally
             {
                 if (entityFile != null)
                     entityFile.Dispose();
             }
+
+            return success;
         }
 
         /// <summary>
