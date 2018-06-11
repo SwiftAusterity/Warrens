@@ -30,12 +30,10 @@
 
     @Html.Partial("TwoDimensionalEntityEditor", Model)
 
-    <div class="clearfix"></div>
-    @Html.Partial("~/Views/Shared/Occurrences.cshtml", Model)
-
     @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Zone", ModalWindow = true })
 </div>
 
+@Html.Partial("~/Views/GameAdmin/Pathway/OccurrenceList.cshtml", Model.DataObject)
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
