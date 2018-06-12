@@ -7,10 +7,11 @@
     tableColumns.Add("Phrase", obj => obj.Event.Phrase);
     tableColumns.Add("Type", obj => obj.Event.Type.ToString());
     tableColumns.Add("Strength", obj => obj.Strength.ToString());
+    tableColumns.Add("Sensory", obj => obj.SensoryType.ToString());
     tableColumns.Add("DELETE", obj =>
-        string.Format("<div></div>"
-                       + "<button type='submit' name='id' id='id' class='removeData' value='{0}' title='Delete this'><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></button>"
-                       + "<input type='radio' name='authorize' value='{1}' style='margin-left: 15px;' />", Model.Id, obj.Event.Type.ToString()));
+    string.Format("<div></div>"
+               + "<button type='submit' name='id' id='id' class='removeData' value='{0}' title='Delete this'><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></button>"
+               + "<input type='radio' name='authorize' value='{1}' style='margin-left: 15px;' />", Model.Id, obj.Event.Type.ToString()));
 }
 
 <div class="clearfix"></div>

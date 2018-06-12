@@ -78,6 +78,11 @@ namespace NetMud.DataStructure.Base.Supporting
         /// </summary>
         IZoneData EmergencyLocation { get; set; }
 
+        /// <summary>
+        /// The name used to describe a large gathering of this race
+        /// </summary>
+        string CollectiveNoun { get; set; }
+
         //TODO: Poison glands
     }
 }

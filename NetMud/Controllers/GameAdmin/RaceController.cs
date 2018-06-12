@@ -175,6 +175,7 @@ namespace NetMud.Controllers.GameAdmin
             newObj.DietaryNeeds = (DietType)vModel.DietaryNeeds;
             newObj.TeethType = (DamageType)vModel.TeethType;
             newObj.HelpText = vModel.HelpBody;
+            newObj.CollectiveNoun = vModel.CollectiveNoun;
 
             if (vModel.ExtraPartsId != null)
             {
@@ -276,7 +277,7 @@ namespace NetMud.Controllers.GameAdmin
             vModel.VisionRangeHigh = obj.VisionRange.Item2;
             vModel.VisionRangeLow = obj.VisionRange.Item1;
             vModel.HelpBody = obj.HelpText;
-
+            vModel.CollectiveNoun = obj.CollectiveNoun;
 
             return View("~/Views/GameAdmin/Race/Edit.cshtml", vModel);
         }
@@ -360,6 +361,7 @@ namespace NetMud.Controllers.GameAdmin
             obj.DietaryNeeds = (DietType)vModel.DietaryNeeds;
             obj.TeethType = (DamageType)vModel.TeethType;
             obj.HelpText = vModel.HelpBody;
+            obj.CollectiveNoun = vModel.CollectiveNoun;
 
             var bodyBits = new List<Tuple<IInanimateData, short, string>>();
             if (vModel.ExtraPartsId != null && vModel.ExtraPartsAmount != null && vModel.ExtraPartsName != null)

@@ -31,6 +31,9 @@ namespace NetMud.Models.Admin
         [Display(Name = "Type")]
         public short Type { get; set; }
 
+        [Display(Name ="Sensory Type")]
+        public MessagingType SensoryType { get; set; }
+
         [DataType(DataType.Text)]
         [Display(Name = "Phrase")]
         public string[] ModifierPhrases { get; set; }

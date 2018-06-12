@@ -1,6 +1,4 @@
-﻿using NetMud.Data.Serialization;
-using NetMud.DataStructure.SupportingClasses;
-using Newtonsoft.Json;
+﻿using NetMud.DataStructure.SupportingClasses;
 using System;
 
 namespace NetMud.Data.System
@@ -18,15 +16,22 @@ namespace NetMud.Data.System
         /// </summary>
         public int Strength { get; set; }
 
+
+        /// <summary>
+        /// The type of sense used to detect this
+        /// </summary>
+        public MessagingType SensoryType { get; set; }
+
         public Occurrence()
         {
 
         }
 
-        public Occurrence(ILexica happening, int strength)
+        public Occurrence(ILexica happening, int strength, MessagingType sensoryType)
         {
             Event = happening;
             Strength = strength;
+            SensoryType = sensoryType;
         }
     }
 }

@@ -450,6 +450,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 vModel.LexicaDataObject = vModel.OccurrenceDataObject.Event;
                 vModel.Strength = vModel.OccurrenceDataObject.Strength;
+                vModel.SensoryType = vModel.OccurrenceDataObject.SensoryType;
 
                 vModel.Role = (short)vModel.LexicaDataObject.Role;
                 vModel.Type = (short)vModel.LexicaDataObject.Type;
@@ -480,6 +481,7 @@ namespace NetMud.Controllers.GameAdmin
                 existingOccurrence = new Occurrence();
 
             existingOccurrence.Strength = vModel.Strength;
+            existingOccurrence.SensoryType = vModel.SensoryType;
 
             var existingEvent = existingOccurrence.Event;
 

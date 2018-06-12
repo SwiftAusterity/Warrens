@@ -1,4 +1,7 @@
-﻿@model NetMud.Models.Admin.OccurrenceViewModel
+﻿@using NetMud.DataStructure.SupportingClasses
+@using NetMud.Utility
+
+@model NetMud.Models.Admin.OccurrenceViewModel
 
 @{
     ViewBag.Title = "Descriptive";
@@ -10,7 +13,8 @@
         @Html.AntiForgeryToken()
         <hr />
         <div class="form-group row">
-            @Html.EditorFor(e => e.Strength)
+            @Html.EditorFor(e => e.Strength, new { columnCount = 3 })
+            @Html.EditorFor(e => e.SensoryType, new { columnCount = 3 })
         </div>
 
         @Html.Partial("~/Views/Shared/Lexica.cshtml", Model)

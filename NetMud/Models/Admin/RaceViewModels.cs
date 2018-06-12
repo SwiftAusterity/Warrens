@@ -115,7 +115,12 @@ namespace NetMud.Models.Admin
         [Display(Name = "Teeth")]
         [DataType(DataType.Text)]
         public short TeethType { get; set; }
-        
+
+        [StringLength(50, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
+        [Display(Name = "Collective Noun")]
+        [DataType(DataType.Text)]
+        public string CollectiveNoun { get; set; }
+
         [Display(Name = "Starting Room")]
         [DataType(DataType.Text)]
         public long StartingLocationId { get; set; }

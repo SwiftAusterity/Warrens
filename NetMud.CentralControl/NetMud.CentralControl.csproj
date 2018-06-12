@@ -58,10 +58,6 @@
       <Project>{88b7a648-fe23-4e88-9b60-ae17c8858af4}</Project>
       <Name>NetMud.DataStructure</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NetMud.Data\NetMud.Data.csproj">
-      <Project>{8b2cb5f6-65ca-4458-856b-6957e9309dbb}</Project>
-      <Name>NetMud.Data</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NetMud.Utility\NetMud.Utility.csproj">
       <Project>{9f3caec0-73dc-463c-8ef7-13b83bc8fb12}</Project>
       <Name>NetMud.Utility</Name>

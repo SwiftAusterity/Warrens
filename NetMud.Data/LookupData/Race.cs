@@ -186,6 +186,12 @@ namespace NetMud.Data.LookupData
         /// </summary>
         public DamageType TeethType { get; set; }
 
+        /// <summary>
+        /// The name used to describe a large gathering of this race
+        /// </summary>
+        [StringDataIntegrity("Races must have a collective noun between 2 and 50 characters long.", 2, 50)]
+        public string CollectiveNoun { get; set; }
+
         [JsonProperty("StartingLocation")]
         private BackingDataCacheKey _startingLocation { get; set; }
 
