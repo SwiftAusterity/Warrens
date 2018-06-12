@@ -4,5 +4,5 @@
 <div class="col-sm-3">
     @Html.DropDownList(@Model.ControlName, @Model.ValidList.Select(rl =>
                         new SelectListItem() { Text = rl.Name, Value = rl.Id.ToString(), Selected = rl.Id.Equals(Model.SelectedItemId) })
-                            , htmlAttributes: new { id = "@Model.ControlName", @class = "form-control" })
+                            , "Select One", htmlAttributes: new { id = "@Model.ControlName", @class = "form-control" })
 </div>

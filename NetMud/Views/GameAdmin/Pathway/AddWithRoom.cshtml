@@ -45,7 +45,7 @@
             @Html.LabelFor(m => m.Medium, new { @class = "col-sm-1 col-form-label" })
             <div class="col-md-4">
                 @Html.DropDownList("Medium", Model.ValidMaterials.Select(rl => new SelectListItem() { Text = rl.Name, Value = rl.Id.ToString() })
-                  , htmlAttributes: new { id = "Medium", @class = "form-control" })
+                  , "Select One", htmlAttributes: new { id = "Medium", @class = "form-control" })
                 @Html.ValidationMessageFor(m => m.Medium, "", new { @class = "text-danger" })
             </div>
         </div>

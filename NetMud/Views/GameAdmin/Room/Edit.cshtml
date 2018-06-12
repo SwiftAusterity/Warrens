@@ -22,7 +22,7 @@
             <div class="col-md-4">
                 @Html.DropDownList("Medium", Model.ValidMaterials.Select(rl =>
                          new SelectListItem() { Text = rl.Name, Value = rl.Id.ToString(), Selected = rl.Id.Equals(Model.DataObject.Medium.Id) })
-                         , htmlAttributes: new { id = "Medium", @class = "form-control" })
+                         , "Select One", htmlAttributes: new { id = "Medium", @class = "form-control" })
                 @Html.ValidationMessageFor(m => m.Medium, "", new { @class = "text-danger" })
             </div>
         </div>

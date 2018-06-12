@@ -15,7 +15,7 @@
             <div class="col-md-3">
                 @Html.DropDownList("Resistances", Enum.GetNames(typeof(DamageType)).Select(rl =>
                                                                                 new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString() })
-                                                                                , htmlAttributes: new { id = "Resistances", @class = "form-control" })
+                                                                                , "Select One", htmlAttributes: new { id = "Resistances", @class = "form-control" })
             </div>
             @Html.LabelFor(m => m.ResistanceValues, new { @class = "col-sm-1 col-form-label" })
             <div class="col-md-3">
@@ -33,7 +33,7 @@
                 <div class="col-md-3">
                     @Html.DropDownList("Resistances", Enum.GetNames(typeof(DamageType)).Select(rl =>
                                                                                 new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString(), Selected = rl.Equals(Enum.GetName(typeof(DamageType), dataItem.Key)) })
-                                                                                , htmlAttributes: new { id = "Resistances", @class = "form-control" })
+                                                                                , "Select One", htmlAttributes: new { id = "Resistances", @class = "form-control" })
                 </div>
                 @Html.LabelFor(m => m.ResistanceValues, new { @class = "col-sm-2 col-form-label" })
                 <div class="col-md-3">
@@ -50,7 +50,7 @@
     var resistancesLabel = decodeHtml('@Html.LabelFor(m => m.Resistances, new { @class = "col-sm-1 col-form-label" }).ToString().Replace(Environment.NewLine, "")');
     var resistancesDropdown = decodeHtml('@Html.DropDownList("Resistances", Enum.GetNames(typeof(DamageType)).Select(rl =>
                                                                                     new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString() })
-                                                       , htmlAttributes: new { id = "Resistances", @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');
+                                                       , "Select One", htmlAttributes: new { id = "Resistances", @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');
     var resistanceValuesLabel = decodeHtml('@Html.LabelFor(m => m.ResistanceValues, new { @class = "col-sm-1 col-form-label" }).ToString().Replace(Environment.NewLine, "")');
     var textboxControl = decodeHtml('@Html.TextBoxFor(m => m.ResistanceValues, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');
 

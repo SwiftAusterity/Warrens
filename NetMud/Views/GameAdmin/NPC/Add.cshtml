@@ -19,7 +19,7 @@
             <div class="col-md-4">
                 @Html.DropDownList("RaceId", Model.ValidRaces.Select(rl =>
                                      new SelectListItem() { Text = rl.Name, Value = rl.Id.ToString() })
-                                      , htmlAttributes: new { id = "raceId", @class = "form-control" })
+                                      , "Select One", htmlAttributes: new { id = "raceId", @class = "form-control" })
             </div>
         </div>
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Create", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "NPC", IncludeCancel = true })

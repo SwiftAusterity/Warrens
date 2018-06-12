@@ -11,13 +11,13 @@
     <div class="col-md-3">
         @Html.DropDownList("Role", Enum.GetNames(typeof(GrammaticalType)).Select(rl =>
                                                         new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(GrammaticalType), rl)).ToString() })
-                                                        , htmlAttributes: new { id = "Role", @class = "form-control" })
+                                                        , "Select One", htmlAttributes: new { id = "Role", @class = "form-control" })
     </div>
     @Html.LabelFor(m => m.Type, new { @class = "col-sm-1 col-form-label" })
     <div class="col-md-3">
         @Html.DropDownList("Type", Enum.GetNames(typeof(LexicalType)).Select(rl =>
                                                         new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(LexicalType), rl)).ToString() })
-                                                        , htmlAttributes: new { id = "Type", @class = "form-control" })
+                                                        , "Select One", htmlAttributes: new { id = "Type", @class = "form-control" })
     </div>
 </div>
 
@@ -40,13 +40,13 @@
                 <div class="col-md-3">
                     @Html.DropDownList("ModifierRoles", Enum.GetNames(typeof(GrammaticalType)).Select(rl =>
                                                                     new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(GrammaticalType), rl)).ToString() })
-                                                                    , htmlAttributes: new { id = "ModifierRoles", @class = "form-control" })
+                                                                    , "Select One", htmlAttributes: new { id = "ModifierRoles", @class = "form-control" })
                 </div>
                 @Html.LabelFor(m => m.ModifierLexicalTypes, new { @class = "col-sm-1 col-form-label" })
                 <div class="col-md-3">
                     @Html.DropDownList("ModifierLexicalTypes", Enum.GetNames(typeof(LexicalType)).Select(rl =>
                                                                     new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(LexicalType), rl)).ToString() })
-                                                                    , htmlAttributes: new { id = "ModifierLexicalTypes", @class = "form-control" })
+                                                                    , "Select One", htmlAttributes: new { id = "ModifierLexicalTypes", @class = "form-control" })
                 </div>
             </div>
         </div>
@@ -71,13 +71,13 @@ else
                     <div class="col-md-3">
                         @Html.DropDownList("ModifierRoles", Enum.GetNames(typeof(GrammaticalType)).Select(rl =>
                                                                         new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(GrammaticalType), rl)).ToString(), Selected = rl.Equals(modifier.Role) })
-                                                                        , htmlAttributes: new { id = "ModifierRoles", @class = "form-control" })
+                                                                        , "Select One", htmlAttributes: new { id = "ModifierRoles", @class = "form-control" })
                     </div>
                     @Html.LabelFor(m => m.ModifierLexicalTypes, new { @class = "col-sm-1 col-form-label" })
                     <div class="col-md-3">
                         @Html.DropDownList("ModifierLexicalTypes", Enum.GetNames(typeof(LexicalType)).Select(rl =>
                                                                         new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(LexicalType), rl)).ToString(), Selected = rl.Equals(modifier.Type) })
-                                                                        , htmlAttributes: new { id = "ModifierLexicalTypes", @class = "form-control" })
+                                                                        , "Select One", htmlAttributes: new { id = "ModifierLexicalTypes", @class = "form-control" })
                     </div>
                 </div>
             </div>
@@ -91,11 +91,11 @@ else
         var roleLabel = decodeHtml('@Html.LabelFor(m => m.ModifierRoles, new { @class = "col-sm-1 col-form-label" }).ToString().Replace(Environment.NewLine, "")');
         var roleDropdown = decodeHtml('@Html.DropDownList("ModifierRoles", Enum.GetNames(typeof(GrammaticalType)).Select(rl =>
                                                     new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(GrammaticalType), rl)).ToString() })
-                                                    , htmlAttributes: new { id = "ModifierRoles", @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');
+                                                    , "Select One", htmlAttributes: new { id = "ModifierRoles", @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');
         var typeLabel = decodeHtml('@Html.LabelFor(m => m.ModifierRoles, new { @class = "col-sm-1 col-form-label" }).ToString().Replace(Environment.NewLine, "")');
         var typeDropdown = decodeHtml('@Html.DropDownList("ModifierLexicalTypes", Enum.GetNames(typeof(LexicalType)).Select(rl =>
                                                     new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(LexicalType), rl)).ToString() })
-                                                    , htmlAttributes: new { id = "ModifierLexicalTypes", @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');
+                                                    , "Select One", htmlAttributes: new { id = "ModifierLexicalTypes", @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');
 
         var phraseValueLabel = decodeHtml('@Html.LabelFor(m => m.ModifierPhrases, new { @class = "col-sm-1 col-form-label" }).ToString().Replace(Environment.NewLine, "")');
         var phraseValueControl = decodeHtml('@Html.TextBoxFor(m => m.ModifierPhrases, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');

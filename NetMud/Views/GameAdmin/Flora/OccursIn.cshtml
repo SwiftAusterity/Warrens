@@ -12,7 +12,7 @@
             <div class="col-md-3">
                 @Html.DropDownList("OccursIn", Enum.GetNames(typeof(Biome)).Select(rl =>
                                                                                 new SelectListItem() { Text = rl, Value = rl })
-                                                                                , htmlAttributes: new { id = "OccursIn", @class = "form-control" })
+                                                                                , "Select One", htmlAttributes: new { id = "OccursIn", @class = "form-control" })
             </div>
         </div>
     }
@@ -25,7 +25,7 @@
                 <div class="col-md-3">
                     @Html.DropDownList("OccursIn", Enum.GetNames(typeof(Biome)).Select(rl =>
                                                                                 new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(Biome), rl)).ToString(), Selected = rl.Equals(Enum.GetName(typeof(Biome), occursIn)) })
-                                                                                , htmlAttributes: new { id = "OccursIn", @class = "form-control" })
+                                                                                , "Select One", htmlAttributes: new { id = "OccursIn", @class = "form-control" })
                 </div>
             </div>
         }
@@ -33,7 +33,7 @@
 </div>
 
 <script type="text/javascript">
-    var occursInDropdown = decodeHtml('@Html.DropDownList("OccursIn", Enum.GetNames(typeof(Biome)).Select(rl => new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(Biome), rl)).ToString() }), htmlAttributes: new { id = "OccursIn", @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');
+    var occursInDropdown = decodeHtml('@Html.DropDownList("OccursIn", Enum.GetNames(typeof(Biome)).Select(rl => new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(Biome), rl)).ToString() }), "Select One", htmlAttributes: new { id = "OccursIn", @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');
 
     $(document).ready(function () {
         $("#addOccursInRow").click(function () {
