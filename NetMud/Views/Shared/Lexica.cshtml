@@ -70,13 +70,13 @@ else
                     @Html.LabelFor(m => m.ModifierRoles, new { @class = "col-sm-1 col-form-label" })
                     <div class="col-md-3">
                         @Html.DropDownList("ModifierRoles", Enum.GetNames(typeof(GrammaticalType)).Select(rl =>
-                                                                        new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(GrammaticalType), rl)).ToString(), Selected = rl.Equals(modifier.Role) })
+                                                                        new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(GrammaticalType), rl)).ToString(), Selected = rl.Equals(modifier.Role.ToString()) })
                                                                         , "Select One", htmlAttributes: new { id = "ModifierRoles", @class = "form-control" })
                     </div>
                     @Html.LabelFor(m => m.ModifierLexicalTypes, new { @class = "col-sm-1 col-form-label" })
                     <div class="col-md-3">
                         @Html.DropDownList("ModifierLexicalTypes", Enum.GetNames(typeof(LexicalType)).Select(rl =>
-                                                                        new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(LexicalType), rl)).ToString(), Selected = rl.Equals(modifier.Type) })
+                                                                        new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(LexicalType), rl)).ToString(), Selected = rl.Equals(modifier.Type.ToString()) })
                                                                         , "Select One", htmlAttributes: new { id = "ModifierLexicalTypes", @class = "form-control" })
                     </div>
                 </div>

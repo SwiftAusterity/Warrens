@@ -256,7 +256,7 @@ namespace NetMud.Data.Game
 
             position.CurrentLocation.MoveInto<IIntelligence>(this);
 
-            UpsertToLiveWorldCache();
+            UpsertToLiveWorldCache(true);
         }
         #endregion
     }

@@ -262,13 +262,13 @@ namespace NetMud.Data.Game
         /// <summary>
         /// Update this entry to the live world cache
         /// </summary>
-        public void UpsertToLiveWorldCache()
+        public void UpsertToLiveWorldCache(bool forceSave = false)
         {
             LiveCache.Add(this);
 
             var now = DateTime.Now;
 
-            if (CleanUntil < now.AddMinutes(-5))
+            if (CleanUntil < now.AddMinutes(-5) || forceSave)
             {
                 CleanUntil = now;
                 Save();
@@ -279,7 +279,7 @@ namespace NetMud.Data.Game
         /// Save this to the filesystem in Current
         /// </summary>
         /// <returns>Success</returns>
-        internal bool Save()
+        internal virtual bool Save()
         {
             try
             {

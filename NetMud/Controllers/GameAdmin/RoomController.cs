@@ -175,7 +175,8 @@ namespace NetMud.Controllers.GameAdmin
 
             if (zoneDestination != null)
             {
-                vModel.ZoneDestinationId = zoneDestination.Id;
+                vModel.ZonePathway = zoneDestination;
+                vModel.ZoneDestinationId = zoneDestination.Destination.Id;
                 vModel.ZonePathwayName = zoneDestination.Name;
                 vModel.ZoneDimensionalModelHeight = zoneDestination.Model.Height;
                 vModel.ZoneDimensionalModelLength = zoneDestination.Model.Length;
@@ -233,6 +234,19 @@ namespace NetMud.Controllers.GameAdmin
                             Destination = destination
                         };
                     }
+                    else
+                    {
+                        zoneDestination.Model = new DimensionalModel(vModel.ZoneDimensionalModelLength, vModel.ZoneDimensionalModelHeight, vModel.ZoneDimensionalModelWidth,
+                                                    vModel.ZoneDimensionalModelVacuity, vModel.ZoneDimensionalModelCavitation);
+                        zoneDestination.Name = vModel.ZonePathwayName;
+
+                        //We switched zones, this makes things more complicated
+                        if (zoneDestination.Id != vModel.ZoneDestinationId)
+                        {
+                            zoneDestination.Destination = destination;
+                        }
+                    }
+
                 }
 
                 if (obj.Save())

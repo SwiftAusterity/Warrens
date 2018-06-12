@@ -1,6 +1,7 @@
 ﻿using NetMud.Communication.Messaging;
 using NetMud.Data.System;
 using NetMud.DataAccess.Cache;
+using NetMud.DataAccess.FileSystem;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.System;
@@ -357,7 +358,26 @@ namespace NetMud.Data.Game
 
             spawnTo.MoveInto<IPlayer>(this);
 
-            UpsertToLiveWorldCache();
+            UpsertToLiveWorldCache(true);
+        }
+
+        /// <summary>
+        /// Save this to the filesystem in Current
+        /// </summary>
+        /// <returns>Success</returns>
+        internal override bool Save()
+        {
+            try
+            {
+                var dataAccessor = new PlayerData();
+                dataAccessor.WriteOnePlayer(this);
+            }
+            catch
+            {
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>

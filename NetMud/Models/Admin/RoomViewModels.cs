@@ -83,6 +83,8 @@ namespace NetMud.Models.Admin
 
         public IEnumerable<IZoneData> ValidZones { get; set; }
 
+        public IPathwayData ZonePathway { get; set; }
+
         public IRoomData DataObject { get; set; }
     }
 

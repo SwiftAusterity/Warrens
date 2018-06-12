@@ -44,7 +44,7 @@ namespace NetMud.DataStructure.Base.System
         /// <summary>
         /// Update this to the live cache
         /// </summary>
-        void UpsertToLiveWorldCache();
+        void UpsertToLiveWorldCache(bool forceSave = false);
 
         /// <summary>
         /// For non-player entities - accepts output "shown" to it by the parser as a result of commands and events

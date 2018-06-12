@@ -121,7 +121,7 @@ namespace NetMud.DataAccess.FileSystem
 
                 //We have the player in live cache now so make it move to the right place
                 newPlayerToLoad.GetFromWorldOrSpawn();
-                newPlayerToLoad.UpsertToLiveWorldCache();
+                newPlayerToLoad.UpsertToLiveWorldCache(true);
 
                 //We'll need one of these per container on players
                 if (Directory.Exists(playerDirectory + "Inventory/"))
@@ -133,7 +133,7 @@ namespace NetMud.DataAccess.FileSystem
                         var blankObject = Activator.CreateInstance(typeof(IInanimate)) as IInanimate;
 
                         var newObj = (IInanimate)blankObject.FromBytes(ReadFile(file));
-                        newObj.UpsertToLiveWorldCache();
+                        newObj.UpsertToLiveWorldCache(true);
                         newPlayerToLoad.MoveInto(newObj);
                     }
                 }

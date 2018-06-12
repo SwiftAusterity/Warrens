@@ -58,6 +58,20 @@
     }
 </section>
 
+<div id="zonePathway">
+    @Html.Partial("~/Views/GameAdmin/Pathway/OccurrenceList.cshtml", Model.ZonePathway)
+</div>
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">     
+        $(document).ready(function () {
+
+            //Changing the destination ID really messes up the pathway stuff.
+            $("#ZoneDestinationId").change(function () {
+                $('#zonePathway').html('The Destination zone has changed. Please save changes and the descriptives list will be available on a subsequent edit.');
+            });
+        });
+    </script>
 }

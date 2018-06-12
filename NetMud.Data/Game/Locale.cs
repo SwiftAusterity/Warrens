@@ -195,7 +195,7 @@ namespace NetMud.Data.Game
                 Birthdate = DateTime.Now;
             }
 
-            UpsertToLiveWorldCache();
+            UpsertToLiveWorldCache(true);
         }
 
         /// <summary>

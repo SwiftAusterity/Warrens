@@ -135,7 +135,7 @@ namespace NetMud.Data.Game
 
             spawnTo.CurrentLocation.MoveInto<IInanimate>(this);
 
-            UpsertToLiveWorldCache();
+            UpsertToLiveWorldCache(true);
         }
         #endregion
 
