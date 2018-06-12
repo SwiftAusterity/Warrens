@@ -26,7 +26,7 @@ namespace NetMud.DataStructure.SupportingClasses
         /// <summary>
         /// Modifiers for this lexica. (Modifier, Conjunction)
         /// </summary>
-        Dictionary<ILexica, string> Modifiers { get; set; }
+        HashSet<ILexica> Modifiers { get; set; }
 
         /// <summary>
         /// Try to add a modifier to a lexica
@@ -34,6 +34,6 @@ namespace NetMud.DataStructure.SupportingClasses
         /// <param name="modifier">the lexica that is the modifier</param>
         /// <param name="conjunction">the joining text</param>
         /// <returns>Whether or not it succeeded</returns>
-        bool TryModify(ILexica modifier, string conjunction);
+        bool TryModify(ILexica modifier);
     }
 }

@@ -194,6 +194,8 @@ namespace NetMud.Data.Game
                 BirthMark = LiveCache.GetUniqueIdentifier(bS);
                 Birthdate = DateTime.Now;
             }
+
+            UpsertToLiveWorldCache();
         }
 
         /// <summary>

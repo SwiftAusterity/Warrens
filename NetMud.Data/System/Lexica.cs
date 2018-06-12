@@ -1,5 +1,7 @@
-﻿using NetMud.DataAccess;
+﻿using NetMud.Data.Serialization;
+using NetMud.DataAccess;
 using NetMud.DataStructure.SupportingClasses;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
@@ -26,11 +28,11 @@ namespace NetMud.Data.System
         /// <summary>
         /// Modifiers for this lexica. (Modifier, Conjunction)
         /// </summary>
-        public Dictionary<ILexica, string> Modifiers { get; set; }
+        public HashSet<ILexica> Modifiers { get; set; }
 
         public Lexica()
         {
-            Modifiers = new Dictionary<ILexica, string>();
+            Modifiers = new HashSet<ILexica>();
         }
 
         /// <summary>
@@ -39,12 +41,12 @@ namespace NetMud.Data.System
         /// <param name="modifier">the lexica that is the modifier</param>
         /// <param name="conjunction">the joining text</param>
         /// <returns>Whether or not it succeeded</returns>
-        public bool TryModify(ILexica modifier, string conjunction)
+        public bool TryModify(ILexica modifier)
         {
-            if (Modifiers.ContainsKey(modifier))
+            if (Modifiers.Contains(modifier))
                 return false;
 
-            Modifiers.Add(modifier, conjunction);
+            Modifiers.Add(modifier);
 
             return true;
         }

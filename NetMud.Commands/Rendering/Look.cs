@@ -8,6 +8,7 @@ using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Data.System;
+using System;
 
 namespace NutMud.Commands.Rendering
 {
@@ -35,10 +36,15 @@ namespace NutMud.Commands.Rendering
         {
             var sb = new List<string>();
 
-            //Just do a look on the room
+            //Just do a blank execution as the channel will handle doing the room updates
             if (Subject == null)
             {
-                sb.AddRange(OriginLocation.CurrentLocation.RenderToLook(Actor));
+                //sb.AddRange(OriginLocation.CurrentLocation.RenderToLook(Actor));
+
+                var blankMessenger = new MessageCluster(new Message(MessagingType.Visible, new Occurrence() { Strength = 999 }) { Override = new string[] { Environment.NewLine } });
+
+                blankMessenger.ExecuteMessaging(Actor, (IEntity)Subject, null, OriginLocation.CurrentLocation, null);
+                return;
             }
             else
             {
@@ -46,7 +52,7 @@ namespace NutMud.Commands.Rendering
                 sb.AddRange(lookTarget.RenderToLook(Actor));
             }
 
-            var toActor = new Message(MessagingType.Visible, new Occurrence() { Strength = 1 })
+            var toActor = new Message(MessagingType.Visible, new Occurrence() { Strength = 999 })
             {
                 Override = sb
             };

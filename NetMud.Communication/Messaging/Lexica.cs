@@ -32,11 +32,11 @@ namespace NetMud.Communication.Messaging
         /// <summary>
         /// Modifiers for this lexica
         /// </summary>
-        public Dictionary<ILexica, string> Modifiers { get; set;  }
+        public HashSet<ILexica> Modifiers { get; set;  }
 
         public Lexica()
         {
-            Modifiers = new Dictionary<ILexica, string>();
+            Modifiers = new HashSet<ILexica>();
         }
 
         public Lexica(LexicalType type, GrammaticalType role, string phrase)
@@ -45,7 +45,7 @@ namespace NetMud.Communication.Messaging
             Phrase = phrase;
             Role = role;
 
-            Modifiers = new Dictionary<ILexica, string>();
+            Modifiers = new HashSet<ILexica>();
         }
 
         /// <summary>
@@ -54,18 +54,13 @@ namespace NetMud.Communication.Messaging
         /// <param name="modifier">the lexica that is the modifier</param>
         /// <param name="conjunction">the joining text</param>
         /// <returns>Whether or not it succeeded</returns>
-        public bool TryModify(ILexica modifier, string conjunction)
+        public bool TryModify(ILexica modifier)
         {
-            if (Modifiers.ContainsKey(modifier))
-            {
-                if (string.IsNullOrWhiteSpace(Modifiers[modifier]))
-                    Modifiers[modifier] = conjunction;
-                else
-                    return false;
-            }
+            if (Modifiers.Contains(modifier))
+                return false;
             else
             {
-                Modifiers.Add(modifier, conjunction);
+                Modifiers.Add(modifier);
             }
 
             return true;
@@ -78,7 +73,7 @@ namespace NetMud.Communication.Messaging
         public override string ToString()
         {
             var sb = new StringBuilder();
-            var adjectives = Modifiers.Where(mod => mod.Key.Role == GrammaticalType.Descriptive);
+            var adjectives = Modifiers.Where(mod => mod.Role == GrammaticalType.Descriptive);
 
             switch (Role)
             {
@@ -105,10 +100,10 @@ namespace NetMud.Communication.Messaging
                 case GrammaticalType.DirectObject:
                     var describedNoun = AppendDescriptors(adjectives, Phrase);
 
-                    if (Modifiers.Any(mod => mod.Key.Role == GrammaticalType.IndirectObject))
+                    if (Modifiers.Any(mod => mod.Role == GrammaticalType.IndirectObject))
                     {
-                        var iObj = Modifiers.Where(mod => mod.Key.Role == GrammaticalType.IndirectObject)
-                                            .Select(mod => string.Format("{0} {1}", mod.Value, mod.Key.ToString())).CommaList(RenderUtility.SplitListType.AllAnd);
+                        var iObj = Modifiers.Where(mod => mod.Role == GrammaticalType.IndirectObject)
+                                            .Select(mod => mod.ToString()).CommaList(RenderUtility.SplitListType.AllAnd);
 
                         sb.AppendFormat("{0} {1}", iObj, describedNoun);
                     }
@@ -117,16 +112,16 @@ namespace NetMud.Communication.Messaging
 
                     break;
                 case GrammaticalType.Verb:
-                    var adverbString = adjectives.Where(adj => adj.Key.Type == LexicalType.Adverb)
+                    var adverbString = adjectives.Where(adj => adj.Type == LexicalType.Adverb)
                                  .Select(adj => adj.ToString()).CommaList(RenderUtility.SplitListType.AllComma);
 
-                    var adjectiveString = adjectives.Where(adj => adj.Key.Type == LexicalType.Adjective)
+                    var adjectiveString = adjectives.Where(adj => adj.Type == LexicalType.Adjective)
                                      .Select(adj => adj.ToString()).CommaList(RenderUtility.SplitListType.OxfordComma);
 
-                    if(Modifiers.Any(mod => mod.Key.Role == GrammaticalType.DirectObject))
+                    if(Modifiers.Any(mod => mod.Role == GrammaticalType.DirectObject))
                     {
-                        var dObj = Modifiers.Where(mod => mod.Key.Role == GrammaticalType.DirectObject)
-                                            .Select(mod =>  mod.Key.ToString()).CommaList(RenderUtility.SplitListType.OxfordComma);
+                        var dObj = Modifiers.Where(mod => mod.Role == GrammaticalType.DirectObject)
+                                            .Select(mod =>  mod.ToString()).CommaList(RenderUtility.SplitListType.OxfordComma);
 
                         sb.AppendFormat("{2} {0} {1} {3}", Phrase, dObj, adverbString, adjectiveString);
                     }
@@ -136,10 +131,10 @@ namespace NetMud.Communication.Messaging
                 case GrammaticalType.Subject:
                     var describedSubject = AppendDescriptors(adjectives, Phrase);
 
-                    if (Modifiers.Any(mod => mod.Key.Role == GrammaticalType.Verb))
+                    if (Modifiers.Any(mod => mod.Role == GrammaticalType.Verb))
                     {
-                        var vObj = Modifiers.Where(mod => mod.Key.Role == GrammaticalType.Verb)
-                                            .Select(mod => mod.Key.ToString()).CommaList(RenderUtility.SplitListType.AllAnd);
+                        var vObj = Modifiers.Where(mod => mod.Role == GrammaticalType.Verb)
+                                            .Select(mod => mod.ToString()).CommaList(RenderUtility.SplitListType.AllAnd);
 
                         sb.AppendFormat("{0} {1}", describedSubject, vObj);
                     }
@@ -151,17 +146,17 @@ namespace NetMud.Communication.Messaging
             return sb.ToString();
         }
 
-        private string AppendDescriptors(IEnumerable<KeyValuePair<ILexica, string>> adjectives, string phrase)
+        private string AppendDescriptors(IEnumerable<ILexica> adjectives, string phrase)
         {
             var described = phrase;
 
             if (adjectives.Count() > 0)
             {
-                var decorativeString = adjectives.Where(adj => adj.Key.Type != LexicalType.Conjunction && adj.Key.Type != LexicalType.Interjection)
+                var decorativeString = adjectives.Where(adj => adj.Type != LexicalType.Conjunction && adj.Type != LexicalType.Interjection)
                                                  .Select(adj => adj.ToString()).CommaList(RenderUtility.SplitListType.AllComma);
 
-                var conjunctive = adjectives.FirstOrDefault(adj => adj.Key.Type == LexicalType.Conjunction || adj.Key.Type == LexicalType.Interjection);
-                var conjunctiveString = conjunctive.Key != null ? conjunctive.Key.ToString() : string.Empty;
+                var conjunctive = adjectives.FirstOrDefault(adj => adj.Type == LexicalType.Conjunction || adj.Type == LexicalType.Interjection);
+                var conjunctiveString = conjunctive != null ? conjunctive.ToString() : string.Empty;
 
                 described = string.Format("{1} {2} {0}", phrase, conjunctiveString, decorativeString);
             }

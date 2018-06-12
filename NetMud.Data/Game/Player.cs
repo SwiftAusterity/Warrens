@@ -357,7 +357,7 @@ namespace NetMud.Data.Game
 
             spawnTo.MoveInto<IPlayer>(this);
 
-            LiveCache.Add(this);
+            UpsertToLiveWorldCache();
         }
 
         /// <summary>

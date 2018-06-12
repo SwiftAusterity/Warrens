@@ -211,6 +211,8 @@ namespace NetMud.Data.Game
             }
 
             CurrentLocation = spawnTo;
+
+            UpsertToLiveWorldCache();
         }
 
         /// <summary>

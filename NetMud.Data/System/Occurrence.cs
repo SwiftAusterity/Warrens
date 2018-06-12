@@ -1,4 +1,6 @@
-﻿using NetMud.DataStructure.SupportingClasses;
+﻿using NetMud.Data.Serialization;
+using NetMud.DataStructure.SupportingClasses;
+using Newtonsoft.Json;
 using System;
 
 namespace NetMud.Data.System

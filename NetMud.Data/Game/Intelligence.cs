@@ -243,6 +243,7 @@ namespace NetMud.Data.Game
         public override void SpawnNewInWorld(IGlobalPosition position)
         {
             var bS = DataTemplate<INonPlayerCharacter>() ?? throw new InvalidOperationException("Missing backing data store on NPC spawn event.");
+
             CurrentLocation = position ?? throw new NotImplementedException("NPCs can't spawn to nothing");
 
             Keywords = new string[] { bS.Name.ToLower() };
@@ -255,7 +256,7 @@ namespace NetMud.Data.Game
 
             position.CurrentLocation.MoveInto<IIntelligence>(this);
 
-            LiveCache.Add(this);
+            UpsertToLiveWorldCache();
         }
         #endregion
     }

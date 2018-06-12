@@ -1,16 +1,13 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
-using NetMud.Communication.Messaging;
 using NetMud.Data.EntityBackingData;
 using NetMud.Data.LookupData;
-using NetMud.Data.System;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.SupportingClasses;
 using NetMud.Models.Admin;
 using System.Collections.Generic;
 using System.Linq;

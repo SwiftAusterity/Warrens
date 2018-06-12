@@ -494,15 +494,14 @@ namespace NetMud.Controllers.GameAdmin
             {
                 if (!string.IsNullOrWhiteSpace(currentPhrase))
                 {
-                    if (vModel.ModifierRoles.Count() <= modifierIndex || vModel.ModifierLexicalTypes.Count() <= modifierIndex || vModel.ModifierConjunctions.Count() <= modifierIndex)
+                    if (vModel.ModifierRoles.Count() <= modifierIndex || vModel.ModifierLexicalTypes.Count() <= modifierIndex)
                         break;
 
                     var phrase = currentPhrase;
                     var role = (GrammaticalType)vModel.ModifierRoles[modifierIndex];
                     var type = (LexicalType)vModel.ModifierLexicalTypes[modifierIndex];
-                    var conjunction = vModel.ModifierConjunctions[modifierIndex];
 
-                    existingEvent.TryModify(new Lexica { Role = role, Type = type, Phrase = phrase }, conjunction);
+                    existingEvent.TryModify(new Lexica { Role = role, Type = type, Phrase = phrase });
                 }
 
                 modifierIndex++;

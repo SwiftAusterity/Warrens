@@ -122,6 +122,7 @@ namespace NetMud.Data.Game
         {
             //We can't even try this until we know if the data is there
             var bS = DataTemplate<IInanimateData>() ?? throw new InvalidOperationException("Missing backing data store on object spawn event.");
+
             CurrentLocation = spawnTo ?? throw new NotImplementedException("Objects can't spawn to nothing");
 
             Keywords = new string[] { bS.Name.ToLower() };
@@ -134,7 +135,7 @@ namespace NetMud.Data.Game
 
             spawnTo.CurrentLocation.MoveInto<IInanimate>(this);
 
-            LiveCache.Add(this);
+            UpsertToLiveWorldCache();
         }
         #endregion
 

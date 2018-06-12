@@ -35,10 +35,6 @@ namespace NetMud.Models.Admin
         [Display(Name = "Phrase")]
         public string[] ModifierPhrases { get; set; }
 
-        [DataType(DataType.Text)]
-        [Display(Name = "Conjunction")]
-        public string[] ModifierConjunctions { get; set; }
-
         [Display(Name = "Grammatical Role")]
         public short[] ModifierRoles { get; set; }
 

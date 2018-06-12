@@ -4,6 +4,7 @@ using NetMud.Data.Serialization;
 using NetMud.Data.System;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
+using NetMud.DataAccess.FileSystem;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Automation;
@@ -33,6 +34,13 @@ namespace NetMud.Data.Game
         /// When this entity was born to the world
         /// </summary>
         public DateTime Birthdate { get; set; }
+
+        /// <summary>
+        /// An internal date for checking the last time this was saved
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        internal DateTime CleanUntil { get; set; }
 
         /// <summary>
         /// The Id for the backing data
@@ -75,7 +83,6 @@ namespace NetMud.Data.Game
             set
             {
                 _keywords = value;
-                UpsertToLiveWorldCache();
             }
         }
         #endregion
@@ -258,6 +265,33 @@ namespace NetMud.Data.Game
         public void UpsertToLiveWorldCache()
         {
             LiveCache.Add(this);
+
+            var now = DateTime.Now;
+
+            if (CleanUntil < now.AddMinutes(-5))
+            {
+                CleanUntil = now;
+                Save();
+            }
+        }
+
+        /// <summary>
+        /// Save this to the filesystem in Current
+        /// </summary>
+        /// <returns>Success</returns>
+        internal bool Save()
+        {
+            try
+            {
+                var dataAccessor = new LiveData();
+                dataAccessor.WriteEntity(this);
+            }
+            catch
+            {
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>

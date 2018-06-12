@@ -223,6 +223,8 @@ namespace NetMud.Data.Game
             }
 
             CurrentLocation = spawnTo;
+
+            UpsertToLiveWorldCache();
         }
         #endregion
     }

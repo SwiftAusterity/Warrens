@@ -212,6 +212,8 @@ namespace NetMud.Data.Game
             //Enter = new MessageCluster(new string[] { bS.MessageToActor }, new string[] { "$A$ enters you" }, new string[] { }, new string[] { bS.MessageToOrigin }, new string[] { bS.MessageToDestination });
             //Enter.ToSurrounding.Add(MessagingType.Visible, new Tuple<int, IEnumerable<string>>(bS.VisibleStrength, new string[] { bS.VisibleToSurroundings }));
             //Enter.ToSurrounding.Add(MessagingType.Audible, new Tuple<int, IEnumerable<string>>(bS.AudibleStrength, new string[] { bS.AudibleToSurroundings }));
+
+            UpsertToLiveWorldCache();
         }
         #endregion
 
@@ -227,8 +229,23 @@ namespace NetMud.Data.Game
             var sb = new List<string>();
             var bS = DataTemplate<IPathwayData>();
 
-            sb.Add(string.Format("{0} heads in the direction of {1} from {2} to {3}.", bS.Name, MovementDirection.ToString(),
-                Origin.DataTemplateName, Destination.DataTemplateName));
+            if (bS.Descriptives.Any())
+            {
+                foreach(var desc in bS.Descriptives)
+                {
+                    sb.Add(desc.Event.ToString());
+                }
+            }
+            else
+            {
+                //Fallback to using names
+                if (MovementDirection == MovementDirectionType.None)
+                    sb.Add(string.Format("{0} leads from {2} to {3}.", DataTemplateName, MovementDirection.ToString(),
+                        Origin.DataTemplateName, Destination.DataTemplateName));
+                else
+                    sb.Add(string.Format("{0} heads in the direction of {1} from {2} to {3}.", DataTemplateName, MovementDirection.ToString(),
+                        Origin.DataTemplateName, Destination.DataTemplateName));
+            }
 
             return sb;
         }
