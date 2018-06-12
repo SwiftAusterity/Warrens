@@ -210,7 +210,10 @@ namespace NetMud.Data.Game
                 Birthdate = DateTime.Now;
             }
 
-            CurrentLocation = spawnTo;
+            if (spawnTo?.CurrentLocation == null)
+                spawnTo = new GlobalPosition(this);
+
+                CurrentLocation = spawnTo;
 
             UpsertToLiveWorldCache(true);
         }

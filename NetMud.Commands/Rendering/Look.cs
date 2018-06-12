@@ -41,7 +41,7 @@ namespace NutMud.Commands.Rendering
             {
                 //sb.AddRange(OriginLocation.CurrentLocation.RenderToLook(Actor));
 
-                var blankMessenger = new MessageCluster(new Message(MessagingType.Visible, new Occurrence() { Strength = 999 }) { Override = new string[] { Environment.NewLine } });
+                var blankMessenger = new MessageCluster(new Message(MessagingType.Visible, new Occurrence() { Strength = 999 }) { Override = new string[] { "You observe your surroundings." } });
 
                 blankMessenger.ExecuteMessaging(Actor, (IEntity)Subject, null, OriginLocation.CurrentLocation, null);
                 return;

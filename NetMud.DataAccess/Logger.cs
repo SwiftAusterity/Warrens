@@ -37,14 +37,24 @@ namespace NetMud.DataAccess
         /// </summary>
         /// <param name="ex">the exception</param>
         /// <param name="nonImportant">Should we get cross about this or not? Defaults to not.</param>
-        public static void LogError(Exception ex, bool nonImportant = true)
+        public static void LogError(Exception ex, string specificLogName, bool keepItQuiet = true)
         {
             var errorContent = string.Format("{0}: {1}{2}{3}", ex.GetType().Name, ex.Message, Environment.NewLine, ex.StackTrace);
 
+            CommitLog(errorContent, specificLogName, keepItQuiet);
+        }
+
+        /// <summary>
+        /// Log an exception
+        /// </summary>
+        /// <param name="ex">the exception</param>
+        /// <param name="nonImportant">Should we get cross about this or not? Defaults to not.</param>
+        public static void LogError(Exception ex, bool nonImportant = true)
+        {
             if(nonImportant)
-                CommitLog(errorContent, "SystemFailures", true);
+                LogError(ex, "SystemFailures");
             else
-                CommitLog(errorContent, "SystemError", false);
+                LogError(ex, "SystemError", false);
         }
 
         /// <summary>

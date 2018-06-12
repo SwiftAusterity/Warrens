@@ -195,6 +195,13 @@ namespace NetMud.Data.Game
                 Birthdate = DateTime.Now;
             }
 
+            ParentLocation = (IZone)bS.ParentLocation.GetLiveInstance();
+
+            if (spawnTo?.CurrentLocation == null)
+                spawnTo = new GlobalPosition(ParentLocation);
+
+            CurrentLocation = spawnTo;
+
             UpsertToLiveWorldCache(true);
         }
 
@@ -216,6 +223,7 @@ namespace NetMud.Data.Game
                 DataTemplateId = me.DataTemplateId;
                 Keywords = me.Keywords;
                 CurrentLocation = me.CurrentLocation;
+                ParentLocation = me.ParentLocation;
             }
         }
 

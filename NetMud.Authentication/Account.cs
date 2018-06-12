@@ -154,7 +154,7 @@ namespace NetMud.Authentication
             }
             catch (Exception ex)
             {
-                LoggingUtility.LogError(ex);
+                LoggingUtility.LogError(ex, "AccountDatabaseFailures");
             }
 
             return account;

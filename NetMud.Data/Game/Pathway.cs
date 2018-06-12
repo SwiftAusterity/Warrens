@@ -171,6 +171,7 @@ namespace NetMud.Data.Game
                 Destination = me.Destination;
                 Enter = me.Enter;
                 MovementDirection = me.MovementDirection;
+                Model = me.Model;
             }
         }
 
@@ -206,6 +207,7 @@ namespace NetMud.Data.Game
             Destination = bS.Destination.GetLiveInstance();
 
             CurrentLocation = Origin.CurrentLocation;
+            Model = bS.Model;
 
             //Enter = new MessageCluster(new string[] { bS.MessageToActor }, new string[] { "$A$ enters you" }, new string[] { }, new string[] { bS.MessageToOrigin }, new string[] { bS.MessageToDestination });
             //Enter.ToSurrounding.Add(MessagingType.Visible, new Tuple<int, IEnumerable<string>>(bS.VisibleStrength, new string[] { bS.VisibleToSurroundings }));

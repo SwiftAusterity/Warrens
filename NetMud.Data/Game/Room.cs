@@ -10,7 +10,6 @@ using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.Behaviors.System;
-using NetMud.Utility;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -60,7 +59,7 @@ namespace NetMud.Data.Game
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
-        [NonNullableDataIntegrity("Rooms must have a zone affiliation.")]
+        [NonNullableDataIntegrity("Rooms must have a locale affiliation.")]
         public ILocale ParentLocation
         {
             get
@@ -190,6 +189,8 @@ namespace NetMud.Data.Game
                 MobilesInside = me.MobilesInside;
                 Keywords = me.Keywords;
                 NaturalResources = me.NaturalResources;
+                ParentLocation = me.ParentLocation;
+                Model = me.Model;
             }
         }
 
@@ -222,7 +223,12 @@ namespace NetMud.Data.Game
                 Birthdate = DateTime.Now;
             }
 
+            if (spawnTo?.CurrentLocation == null)
+                spawnTo = new GlobalPosition(this);
+
             CurrentLocation = spawnTo;
+            ParentLocation = bS.ParentLocation.GetLiveInstance();
+            Model = bS.Model;
 
             UpsertToLiveWorldCache(true);
         }

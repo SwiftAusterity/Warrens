@@ -77,7 +77,7 @@ namespace NetMud.Data.System
             if(CurrentLocation.GetType().GetInterfaces().Contains(typeof(IRoom)))
             {
                 var room = (IRoom)CurrentLocation;
-                return room.ParentLocation.ParentLocation;
+                return room.ParentLocation?.ParentLocation;
             }
 
             return null;
