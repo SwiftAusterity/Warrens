@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
+using NetMud.Communication.Messaging;
 using NetMud.Data.EntityBackingData;
 using NetMud.Data.LookupData;
 using NetMud.Data.System;
