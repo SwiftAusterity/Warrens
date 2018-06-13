@@ -10,6 +10,7 @@ using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Automation;
 using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.Rendering;
+using NetMud.DataStructure.SupportingClasses;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -339,6 +340,22 @@ namespace NetMud.Data.Game
             return DataTemplateName;
         }
 
+        /// <summary>
+        /// Retrieve all of the descriptors that are tagged as visible output
+        /// </summary>
+        /// <returns>A collection of the descriptors</returns>
+        public virtual IEnumerable<IOccurrence> GetVisibleDescriptives()
+        {
+            return new Occurrence[]
+            {
+                new Occurrence()
+                {
+                    SensoryType = MessagingType.Visible,
+                    Strength = 30,
+                    Event = new Lexica() {  Phrase = DataTemplateName, Type = LexicalType.Noun, Role = GrammaticalType.Subject }
+                }
+            };
+        }
 
         /// <summary>
         /// Is this visible to the viewer

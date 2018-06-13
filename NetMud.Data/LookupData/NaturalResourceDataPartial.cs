@@ -1,8 +1,11 @@
-﻿using NetMud.Data.DataIntegrity;
+﻿using NetMud.Communication.Messaging;
+using NetMud.Data.DataIntegrity;
+using NetMud.Data.System;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.System;
+using NetMud.DataStructure.SupportingClasses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -140,6 +143,23 @@ namespace NetMud.Data.LookupData
             };
 
             return returnValues;
+        }
+
+        /// <summary>
+        /// Retrieve all of the descriptors that are tagged as Psychic output
+        /// </summary>
+        /// <returns>A collection of the descriptors</returns>
+        public virtual IEnumerable<IOccurrence> GetVisibleDescriptives()
+        {
+            return new Occurrence[] 
+            {
+                new Occurrence()
+                {
+                    SensoryType = MessagingType.Visible,
+                    Strength = 30,
+                    Event = new Lexica() {  Phrase = Name, Type = LexicalType.Noun, Role = GrammaticalType.Subject }
+                }
+            };
         }
 
         /// <summary>

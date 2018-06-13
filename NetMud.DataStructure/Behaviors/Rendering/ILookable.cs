@@ -1,4 +1,5 @@
 ﻿using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.SupportingClasses;
 using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Behaviors.Rendering
@@ -21,5 +22,12 @@ namespace NetMud.DataStructure.Behaviors.Rendering
         /// <param name="viewer">entity initiating the command</param>
         /// <returns>the output</returns>
         string GetFullShortDescription(IEntity viewer);
+
+        /// <summary>
+        /// Retrieve all of the descriptors that are tagged as visible output
+        /// </summary>
+        /// <returns>A collection of the descriptors</returns>
+        IEnumerable<IOccurrence> GetVisibleDescriptives();
+
     }
 }
