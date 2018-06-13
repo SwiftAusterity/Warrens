@@ -10,6 +10,7 @@ using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.SupportingClasses;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.EntityBackingData
@@ -64,6 +65,11 @@ namespace NetMud.Data.EntityBackingData
         /// Has this character "graduated" from the tutorial yet
         /// </summary>
         public bool StillANoob { get; set; }
+
+        /// <summary>
+        /// Set of output relevant to this exit. These are essentially single word descriptions to render the path
+        /// </summary>
+        public HashSet<IOccurrence> Descriptives { get; set; }
 
         [JsonProperty("RaceData")]
         private BackingDataCacheKey _raceData { get; set; }

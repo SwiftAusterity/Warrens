@@ -7,7 +7,7 @@ namespace NetMud.DataStructure.Base.Place
     /// <summary>
     /// Collector of rooms, used for weather patterning
     /// </summary>
-    public interface IZoneData : ILocationData, IEnvironmentData, IDiscoverableData
+    public interface IZoneData : ILocationData, IEnvironmentData, IDescribable, IDiscoverableData
     {
         /// <summary>
         /// The midline elevation point "sea level" for this zone

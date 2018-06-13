@@ -7,6 +7,7 @@ using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
+using NetMud.DataStructure.SupportingClasses;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -103,6 +104,11 @@ namespace NetMud.Data.EntityBackingData
         [ScriptIgnore]
         [JsonIgnore]
         public Tuple<int, int, int> Coordinates { get; set; }
+
+        /// <summary>
+        /// Set of output relevant to this exit. These are essentially single word descriptions to render the path
+        /// </summary>
+        public HashSet<IOccurrence> Descriptives { get; set; }
 
         /// <summary>
         /// Blank constructor

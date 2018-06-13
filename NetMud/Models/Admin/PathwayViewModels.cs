@@ -1,5 +1,4 @@
-﻿using NetMud.Authentication;
-using NetMud.DataStructure.Base.EntityBackingData;
+﻿using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using System.Collections.Generic;

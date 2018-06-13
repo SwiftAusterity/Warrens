@@ -13,6 +13,9 @@ namespace NetMud.DataStructure.Base.EntityBackingData
         /// </summary>
         string SurName { get; set; }
 
+        /// <summary>
+        /// The race type for this character
+        /// </summary>
         IRace RaceData { get; set; }
 
         /// <summary>

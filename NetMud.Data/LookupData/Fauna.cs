@@ -4,7 +4,6 @@ using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.LookupData
