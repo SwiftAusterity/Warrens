@@ -12,6 +12,7 @@ using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Models.Admin;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -423,7 +424,7 @@ namespace NetMud.Controllers.GameAdmin
         }
 
         [HttpGet]
-        public ActionResult AddEditDescriptive(long id, short descriptiveType)
+        public ActionResult AddEditDescriptive(long id, short descriptiveType, string phrase)
         {
             string message = string.Empty;
 
@@ -443,14 +444,15 @@ namespace NetMud.Controllers.GameAdmin
             if (descriptiveType > -1)
             {
                 var grammaticalType = (GrammaticalType)descriptiveType;
-                vModel.OccurrenceDataObject = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType);
+                vModel.OccurrenceDataObject = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType
+                                                                                        && occurrence.Event.Phrase.Equals(phrase, System.StringComparison.InvariantCultureIgnoreCase));
             }
 
             if (vModel.OccurrenceDataObject != null)
             {
                 vModel.LexicaDataObject = vModel.OccurrenceDataObject.Event;
                 vModel.Strength = vModel.OccurrenceDataObject.Strength;
-                vModel.SensoryType = vModel.OccurrenceDataObject.SensoryType;
+                vModel.SensoryType = (short)vModel.OccurrenceDataObject.SensoryType;
 
                 vModel.Role = (short)vModel.LexicaDataObject.Role;
                 vModel.Type = (short)vModel.LexicaDataObject.Type;
@@ -475,13 +477,15 @@ namespace NetMud.Controllers.GameAdmin
             }
 
             var grammaticalType = (GrammaticalType)vModel.Role;
-            var existingOccurrence = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType);
+            var phraseF = vModel.Phrase;
+            var existingOccurrence = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType
+                                                                                && occurrence.Event.Phrase.Equals(phraseF, System.StringComparison.InvariantCultureIgnoreCase));
 
             if (existingOccurrence == null)
                 existingOccurrence = new Occurrence();
 
             existingOccurrence.Strength = vModel.Strength;
-            existingOccurrence.SensoryType = vModel.SensoryType;
+            existingOccurrence.SensoryType = (MessagingType)vModel.SensoryType;
 
             var existingEvent = existingOccurrence.Event;
 
@@ -512,7 +516,8 @@ namespace NetMud.Controllers.GameAdmin
 
             existingOccurrence.Event = existingEvent;
 
-            obj.Descriptives.RemoveWhere(occ => occ.Event.Role == grammaticalType);
+            obj.Descriptives.RemoveWhere(occ => occ.Event.Role == grammaticalType
+                                                    && occ.Event.Phrase.Equals(phraseF, StringComparison.InvariantCultureIgnoreCase));
             obj.Descriptives.Add(existingOccurrence);
 
             if (obj.Save())
@@ -527,39 +532,49 @@ namespace NetMud.Controllers.GameAdmin
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult RemoveDescriptive(long id, short type, string authorize)
+        public ActionResult RemoveDescriptive(long id, string authorize)
         {
             string message = string.Empty;
 
-            if (string.IsNullOrWhiteSpace(authorize) || !type.ToString().Equals(authorize))
+            if (string.IsNullOrWhiteSpace(authorize))
                 message = "You must check the proper authorize radio button first.";
             else
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
+                var values = authorize.Split(new string[] { "|||" }, StringSplitOptions.RemoveEmptyEntries);
 
-                var obj = BackingDataCache.Get<PathwayData>(id);
-
-                if (obj == null)
-                    message = "That does not exist";
+                if (values.Count() != 2)
+                    message = "You must check the proper authorize radio button first.";
                 else
                 {
-                    var grammaticalType = (GrammaticalType)type;
-                    var existingOccurrence = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType);
+                    var type = short.Parse(values[0]);
+                    var phrase = values[1];
 
-                    if (existingOccurrence != null)
+                    var obj = BackingDataCache.Get<IPathwayData>(id);
+
+                    if (obj == null)
+                        message = "That does not exist";
+                    else
                     {
-                        obj.Descriptives.Remove(existingOccurrence);
+                        var grammaticalType = (GrammaticalType)type;
+                        var existingOccurrence = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType
+                                                                                            && occurrence.Event.Phrase.Equals(phrase, StringComparison.InvariantCultureIgnoreCase));
 
-                        if (obj.Save())
+                        if (existingOccurrence != null)
                         {
-                            LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveDescriptive[" + id.ToString() + "|" + type.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                            message = "Delete Successful.";
+                            obj.Descriptives.Remove(existingOccurrence);
+
+                            if (obj.Save())
+                            {
+                                LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveDescriptive[" + id.ToString() + "|" + type.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                                message = "Delete Successful.";
+                            }
+                            else
+                                message = "Error; Removal failed.";
                         }
                         else
-                            message = "Error; Removal failed.";
+                            message = "That does not exist";
                     }
-                    else
-                        message = "That does not exist";
                 }
             }
 

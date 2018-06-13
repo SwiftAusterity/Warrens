@@ -1,9 +1,8 @@
-﻿@model NetMud.DataStructure.Base.EntityBackingData.IPathwayData
+﻿@model NetMud.DataStructure.Base.Place.IZoneData
 
 @{
-    var linkText = Html.ActionLink("99999999", "AddEditDescriptive", "Pathway", new { descriptiveType = 99999999, id = Model.Id }).ToString();
     var tableColumns = new Dictionary<string, Func<dynamic, string>>();
-    tableColumns.Add("Role", obj => string.Format("<a href='#' class='editDescriptive' data-descriptive-type='{1}'>{0}</a>", obj.Event.Role, (short)obj.Event.Role));
+    tableColumns.Add("Role", obj => string.Format("<a href='#' class='editDescriptive' data-descriptive-type='{1}' data-descriptive-phrase='{2}'>{0}</a>", obj.Event.Role, (short)obj.Event.Role, obj.Event.Phrase));
     tableColumns.Add("Phrase", obj => obj.Event.Phrase);
     tableColumns.Add("Type", obj => obj.Event.Type.ToString());
     tableColumns.Add("Strength", obj => obj.Strength.ToString());
@@ -11,11 +10,11 @@
     tableColumns.Add("DELETE", obj =>
     string.Format("<div></div>"
                + "<button type='submit' name='id' id='id' class='removeData' value='{0}' title='Delete this'><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></button>"
-               + "<input type='radio' name='authorize' value='{1}' style='margin-left: 15px;' />", Model.Id, obj.Event.Type.ToString()));
+               + "<input type='radio' name='authorize' value='{1}|||{2}' style='margin-left: 15px;' />", Model.Id, obj.Event.Type.ToString(), obj.Event.Phrase));
 }
 
 <div class="clearfix"></div>
-<h3>Descriptives for Pathway</h3>
+<h3>Descriptive Features</h3>
 <hr />
 <div>
     <a href="#" class="addNew">Add New Descriptive</a>
@@ -23,7 +22,7 @@
 
 @if (Model.Descriptives.Count() > 0)
 {
-    using (Html.BeginForm("RemoveDescriptive", "Pathway"))
+    using (Html.BeginForm("RemoveDescriptive", "Zone"))
     {
         @Html.AntiForgeryToken()
         @Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Name = "", Columns = tableColumns, Values = Model.Descriptives, IncludeDelete = false })
@@ -35,13 +34,15 @@
 <script>
         $(document).ready(function () {
             $('.addNew').click(function () {
-                openFrameless(1400, 900, 0, 0, "/GameAdmin/Pathway/AddEditDescriptive/" + @Model.Id + '/-1', 'Add Descriptive', true);
+                openFrameless(1400, 900, 0, 0, "/GameAdmin/Zone/AddEditDescriptive/" + @Model.Id + '/-1', 'Add Descriptive', true);
 
                 return false;
             });
 
             $('.editDescriptive').click(function () {
-                openFrameless(1400, 900, 0, 0, "/GameAdmin/Pathway/AddEditDescriptive/" + @Model.Id + '/' + $(this).attr('data-descriptive-type'), 'Add Descriptive', true);
+                openFrameless(1400, 900, 0, 0, "/GameAdmin/Zone/AddEditDescriptive/" + @Model.Id
+                    + '/' + $(this).attr('data-descriptive-type')
+                    + '/' + $(this).attr('data-descriptive-phrase'), 'Edit Descriptive', true);
 
                 return false;
             });

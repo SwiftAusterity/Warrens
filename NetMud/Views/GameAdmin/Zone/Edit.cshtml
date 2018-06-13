@@ -26,7 +26,11 @@
     }
 </section>
 <div class="clearfix"></div>
-<div style="padding-top: 15px;">
+<div style="padding-top: 5px;">
+    @Html.Partial("~/Views/GameAdmin/Zone/OccurrenceList.cshtml", Model.DataObject)
+</div>
+<div class="clearfix"></div>
+<div style="padding-top: 5px;">
     @Html.Partial("~/Views/GameAdmin/Zone/LocaleList.cshtml", Model)
 </div>
 @section Scripts {

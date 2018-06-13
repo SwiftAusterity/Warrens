@@ -12,6 +12,28 @@ namespace NetMud.Utility
     {
         #region Extensions
         /// <summary>
+        /// Split a string with a single delimiter
+        /// </summary>
+        /// <param name="value">the string being split</param>
+        /// <param name="delimiter">the single delimiter</param>
+        /// <returns>a string array</returns>
+        public static string[] Split(this string value, string delimiter, StringSplitOptions splitOpts)
+        {
+            return value.Split(new string[] { delimiter }, splitOpts);
+        }
+
+        /// <summary>
+        /// Split a string with a single delimiter
+        /// </summary>
+        /// <param name="value">the string being split</param>
+        /// <param name="delimiter">the single delimiter</param>
+        /// <returns>a string array</returns>
+        public static string[] Split(this string value, char delimiter, StringSplitOptions splitOpts)
+        {
+            return value.Split(new char[] { delimiter }, splitOpts);
+        }
+
+        /// <summary>
         /// Populate an array with a single value
         /// </summary>
         /// <typeparam name="T">The array type</typeparam>

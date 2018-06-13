@@ -32,6 +32,9 @@
         @Html.Partial("DimensionalEntityEditor", Model)
 
         <div class="clearfix"></div>
+        @Html.Partial("~/Views/GameAdmin/Room/OccurrenceList.cshtml", Model.DataObject)
+
+        <div class="clearfix"></div>
         <hr />
         <h3>Pathway to Zone</h3>
 

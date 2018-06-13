@@ -1,13 +1,16 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
+using NetMud.Communication.Messaging;
 using NetMud.Data.EntityBackingData;
 using NetMud.Data.LookupData;
+using NetMud.Data.System;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.SupportingClasses;
 using NetMud.Models.Admin;
 using System;
 using System.Linq;
@@ -263,6 +266,164 @@ namespace NetMud.Controllers.GameAdmin
                 message = "You must include a valid Medium material.";
 
             return RedirectToRoute("ModalErrorOrClose");
+        }
+
+        [HttpGet]
+        public ActionResult AddEditDescriptive(long id, short descriptiveType, string phrase)
+        {
+            string message = string.Empty;
+
+            var obj = BackingDataCache.Get<IRoomData>(id);
+            if (obj == null)
+            {
+                message = "That room does not exist";
+                return RedirectToRoute("ModalErrorOrClose", new { Message = message });
+            }
+
+            var vModel = new OccurrenceViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                DataObject = obj
+            };
+
+            if (descriptiveType > -1)
+            {
+                var grammaticalType = (GrammaticalType)descriptiveType;
+                vModel.OccurrenceDataObject = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType
+                                                                                        && occurrence.Event.Phrase.Equals(phrase, System.StringComparison.InvariantCultureIgnoreCase));
+            }
+
+            if (vModel.OccurrenceDataObject != null)
+            {
+                vModel.LexicaDataObject = vModel.OccurrenceDataObject.Event;
+                vModel.Strength = vModel.OccurrenceDataObject.Strength;
+                vModel.SensoryType = (short)vModel.OccurrenceDataObject.SensoryType;
+
+                vModel.Role = (short)vModel.LexicaDataObject.Role;
+                vModel.Type = (short)vModel.LexicaDataObject.Type;
+                vModel.Phrase = vModel.LexicaDataObject.Phrase;
+            }
+
+            return View("~/Views/Shared/Occurrence.cshtml", "_chromelessLayout", vModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddEditDescriptive(long id, OccurrenceViewModel vModel)
+        {
+            string message = string.Empty;
+            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            var obj = BackingDataCache.Get<IZoneData>(id);
+            if (obj == null)
+            {
+                message = "That room does not exist";
+                return RedirectToRoute("ModalErrorOrClose", new { Message = message });
+            }
+
+            var grammaticalType = (GrammaticalType)vModel.Role;
+            var phraseF = vModel.Phrase;
+            var existingOccurrence = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType
+                                                                                && occurrence.Event.Phrase.Equals(phraseF, System.StringComparison.InvariantCultureIgnoreCase));
+
+            if (existingOccurrence == null)
+                existingOccurrence = new Occurrence();
+
+            existingOccurrence.Strength = vModel.Strength;
+            existingOccurrence.SensoryType = (MessagingType)vModel.SensoryType;
+
+            var existingEvent = existingOccurrence.Event;
+
+            if (existingEvent == null)
+                existingEvent = new Lexica();
+
+            existingEvent.Role = grammaticalType;
+            existingEvent.Phrase = vModel.Phrase;
+            existingEvent.Type = (LexicalType)vModel.Type;
+
+            int modifierIndex = 0;
+            foreach (var currentPhrase in vModel.ModifierPhrases)
+            {
+                if (!string.IsNullOrWhiteSpace(currentPhrase))
+                {
+                    if (vModel.ModifierRoles.Count() <= modifierIndex || vModel.ModifierLexicalTypes.Count() <= modifierIndex)
+                        break;
+
+                    var phrase = currentPhrase;
+                    var role = (GrammaticalType)vModel.ModifierRoles[modifierIndex];
+                    var type = (LexicalType)vModel.ModifierLexicalTypes[modifierIndex];
+
+                    existingEvent.TryModify(new Lexica { Role = role, Type = type, Phrase = phrase });
+                }
+
+                modifierIndex++;
+            }
+
+            existingOccurrence.Event = existingEvent;
+
+            obj.Descriptives.RemoveWhere(occ => occ.Event.Role == grammaticalType
+                                                    && occ.Event.Phrase.Equals(phraseF, StringComparison.InvariantCultureIgnoreCase));
+            obj.Descriptives.Add(existingOccurrence);
+
+            if (obj.Save())
+            {
+                LoggingUtility.LogAdminCommandUsage("*WEB* - Room AddEditDescriptive[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+            }
+            else
+                message = "Error; Edit failed.";
+
+            return RedirectToRoute("ModalErrorOrClose", new { Message = message });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult RemoveDescriptive(long id, string authorize)
+        {
+            string message = string.Empty;
+
+            if (string.IsNullOrWhiteSpace(authorize))
+                message = "You must check the proper authorize radio button first.";
+            else
+            {
+                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+                var values = authorize.Split(new string[] { "|||" }, StringSplitOptions.RemoveEmptyEntries);
+
+                if (values.Count() != 2)
+                    message = "You must check the proper authorize radio button first.";
+                else
+                {
+                    var type = short.Parse(values[0]);
+                    var phrase = values[1];
+
+                    var obj = BackingDataCache.Get<IRoomData>(id);
+
+                    if (obj == null)
+                        message = "That does not exist";
+                    else
+                    {
+                        var grammaticalType = (GrammaticalType)type;
+                        var existingOccurrence = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType
+                                                                                            && occurrence.Event.Phrase.Equals(phrase, StringComparison.InvariantCultureIgnoreCase));
+
+                        if (existingOccurrence != null)
+                        {
+                            obj.Descriptives.Remove(existingOccurrence);
+
+                            if (obj.Save())
+                            {
+                                LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveDescriptive[" + id.ToString() + "|" + type.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                                message = "Delete Successful.";
+                            }
+                            else
+                                message = "Error; Removal failed.";
+                        }
+                        else
+                            message = "That does not exist";
+                    }
+                }
+            }
+
+            return RedirectToRoute("ModalErrorOrClose", new { Message = message });
         }
     }
 }

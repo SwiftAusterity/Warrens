@@ -281,7 +281,8 @@
     <Content Include="Views\Shared\Occurrence.cshtml" />
     <Content Include="Views\Shared\Lexica.cshtml" />
     <Content Include="Views\GameAdmin\Pathway\OccurrenceList.cshtml" />
-    <Content Include="Views\Shared\OccurrenceList.cshtml" />
+    <Content Include="Views\GameAdmin\Room\OccurrenceList.cshtml" />
+    <Content Include="Views\GameAdmin\Zone\OccurrenceList.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />

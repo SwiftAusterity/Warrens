@@ -31,11 +31,10 @@ namespace NetMud
 
             routes.MapRoute(
                 name: "Pathway Add Edit Descriptive Modal",
-                url: "GameAdmin/Pathway/AddEditDescriptive/{id}/{descriptiveType}",
-                defaults: new { controller = "Pathway", action = "AddEditDescriptive" },
+                url: "GameAdmin/Pathway/AddEditDescriptive/{id}/{descriptiveType}/{phrase}",
+                defaults: new { controller = "Pathway", action = "AddEditDescriptive", phrase = "" },
                 namespaces: new string[] { "NetMud.Controllers.GameAdmin" }
             );
-
 
             routes.MapRoute(
                 name: "Pathway Add Modal",
@@ -50,6 +49,22 @@ namespace NetMud
                 defaults: new { controller = "Pathway", action = "Edit" },
                 namespaces: new string[] { "NetMud.Controllers.GameAdmin" }
             );
+
+            routes.MapRoute(
+                name: "Zone Add Edit Descriptive Modal",
+                url: "GameAdmin/Zone/AddEditDescriptive/{id}/{descriptiveType}/{phrase}",
+                defaults: new { controller = "Zone", action = "AddEditDescriptive", phrase = "" },
+                namespaces: new string[] { "NetMud.Controllers.GameAdmin" }
+            );
+
+
+            routes.MapRoute(
+                name: "Room Add Edit Descriptive Modal",
+                url: "GameAdmin/Room/AddEditDescriptive/{id}/{descriptiveType}/{phrase}",
+                defaults: new { controller = "Room", action = "AddEditDescriptive", phrase = "" },
+                namespaces: new string[] { "NetMud.Controllers.GameAdmin" }
+            );
+
 
             routes.MapRoute(
                 name: "GameAdminSubControllers",
