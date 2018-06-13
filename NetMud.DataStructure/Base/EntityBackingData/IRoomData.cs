@@ -8,7 +8,7 @@ namespace NetMud.DataStructure.Base.EntityBackingData
     /// <summary>
     /// Backing data for Rooms
     /// </summary>
-    public interface IRoomData : ILocationData
+    public interface IRoomData : ILocationData, IDescribable
     {
         /// <summary>
         /// The current physical model for this entity

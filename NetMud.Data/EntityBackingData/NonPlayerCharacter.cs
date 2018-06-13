@@ -3,8 +3,10 @@ using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.SupportingClasses;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.EntityBackingData
@@ -74,6 +76,11 @@ namespace NetMud.Data.EntityBackingData
                 _raceData = new BackingDataCacheKey(value);
             }
         }
+
+        /// <summary>
+        /// Set of output relevant to this exit. These are essentially single word descriptions to render the path
+        /// </summary>
+        public HashSet<IOccurrence> Descriptives { get; set; }
 
         /// <summary>
         /// Base constructor

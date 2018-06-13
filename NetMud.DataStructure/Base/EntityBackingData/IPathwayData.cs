@@ -4,14 +4,13 @@ using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.Behaviors.System;
 using NetMud.DataStructure.SupportingClasses;
-using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Base.EntityBackingData
 {
     /// <summary>
     /// Backing data for Pathways
     /// </summary>
-    public interface IPathwayData : IEntityBackingData, ISingleton<IPathway>
+    public interface IPathwayData : IEntityBackingData, IDescribable, ISingleton<IPathway>
     {
         /// <summary>
         /// DegreesFromNorth translated
@@ -37,11 +36,6 @@ namespace NetMud.DataStructure.Base.EntityBackingData
         /// The container this starts in
         /// </summary>
         ILocationData Origin { get; set; }
-
-        /// <summary>
-        /// Set of output relevant to this exit
-        /// </summary>
-        HashSet<IOccurrence> Descriptives { get; set; }
 
         /// <summary>
         /// The current physical model for this entity

@@ -1,6 +1,7 @@
 ﻿using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Existential;
+using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.SupportingClasses;
 
 namespace NetMud.DataStructure.Base.EntityBackingData
@@ -8,7 +9,7 @@ namespace NetMud.DataStructure.Base.EntityBackingData
     /// <summary>
     /// Backing data for player characters
     /// </summary>
-    public interface ICharacter : IEntityBackingData, IGender
+    public interface ICharacter : IEntityBackingData, IDescribable, IGender
     {
         /// <summary>
         /// Family name for character

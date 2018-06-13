@@ -13,5 +13,13 @@ namespace NetMud.DataStructure.Behaviors.Rendering
         /// <param name="viewer">entity initiating the command</param>
         /// <returns>the scan output</returns>
         IEnumerable<string> RenderToInspect(IEntity viewer);
+
+        /// <summary>
+        /// Renders "display" from scan command
+        /// </summary>
+        /// <param name="teller">entity describer</param>
+        /// <param name="reciever">entity being described to</param>
+        /// <returns>the scan output</returns>
+        IEnumerable<string> DescribeTo(IEntity teller, IEntity reciever);
     }
 }

@@ -38,35 +38,4 @@ namespace NetMud.DataStructure.Base.Supporting
         /// <returns>success or failure</returns>
         bool Afflict(ICanBeWounded affected, ICanBeWounded victim, ContagionVector vector);
     }
-
-    /// <summary>
-    /// Type of affect for dispelling purposes
-    /// </summary>
-    public enum AilmentType
-    {
-        /// <summary>
-        /// Undispelable by magical means, medically treatable
-        /// </summary>
-        Physical,
-
-        /// <summary>
-        /// Is a pathogenic condition
-        /// </summary>
-        Disease,
-
-        /// <summary>
-        /// Is a venom
-        /// </summary>
-        Poison
-    }
-
-    /// <summary>
-    /// Vectors by which this contagion can be spread
-    /// </summary>
-    public enum ContagionVector
-    {
-        Pneumatic,
-        DirectContact,
-        IntimateContact
-    }
 }

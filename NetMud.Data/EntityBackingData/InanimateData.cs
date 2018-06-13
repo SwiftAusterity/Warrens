@@ -63,6 +63,11 @@ namespace NetMud.Data.EntityBackingData
         /// </summary>
         public HashSet<IEntityContainerData<IInanimate>> InanimateContainers { get; set; }
 
+        /// <summary>
+        /// Set of output relevant to this exit. These are essentially single word descriptions to render the path
+        /// </summary>
+        public HashSet<IOccurrence> Descriptives { get; set; }
+
         [JsonProperty("InternalComposition")]
         private IDictionary<BackingDataCacheKey, short> _internalComposition { get; set; }
 

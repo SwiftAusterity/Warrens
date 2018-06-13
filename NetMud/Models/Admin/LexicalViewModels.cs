@@ -1,10 +1,18 @@
 ﻿using NetMud.Authentication;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.SupportingClasses;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.Models.Admin
 {
+    public class OccurrenceListViewModel
+    {
+        public IEnumerable<IOccurrence> Occurrences { get; set; }
+        public long DataId { get; set; }
+        public string AdminPathName { get; set; }
+    }
+
     public partial class OccurrenceViewModel : LexicaViewModel, BaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
@@ -13,6 +21,9 @@ namespace NetMud.Models.Admin
         [DataType(DataType.Text)]
         [Display(Name = "Strength")]
         public int Strength { get; set; }
+
+        [Display(Name = "Sensory Type")]
+        public MessagingType SensoryType { get; set; }
 
         public IOccurrence OccurrenceDataObject { get; set; }
         public IPathwayData DataObject { get; set; }
@@ -30,9 +41,6 @@ namespace NetMud.Models.Admin
 
         [Display(Name = "Type")]
         public short Type { get; set; }
-
-        [Display(Name ="Sensory Type")]
-        public MessagingType SensoryType { get; set; }
 
         [DataType(DataType.Text)]
         [Display(Name = "Phrase")]
