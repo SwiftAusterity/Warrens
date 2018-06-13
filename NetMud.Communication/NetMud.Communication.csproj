@@ -47,6 +47,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="InternalChannel.cs" />
+    <Compile Include="Lexicon\Dictata.cs" />
+    <Compile Include="Lexicon\LexicalProcessor.cs" />
+    <Compile Include="Lexicon\Thesaurus.cs" />
     <Compile Include="Messaging\Lexica.cs" />
     <Compile Include="Messaging\Message.cs" />
     <Compile Include="Messaging\MessageCluster.cs" />
