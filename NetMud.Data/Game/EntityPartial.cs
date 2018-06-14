@@ -377,7 +377,7 @@ namespace NetMud.Data.Game
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public int CompareTo(IEntity other)
+        public int CompareTo(ILiveData other)
         {
             if (other != null)
             {
@@ -405,9 +405,9 @@ namespace NetMud.Data.Game
         /// </summary>
         /// <param name="other">the object to compare to</param>
         /// <returns>true if the same object</returns>
-        public bool Equals(IEntity other)
+        public bool Equals(ILiveData other)
         {
-            if (other != default(IEntity))
+            if (other != default(ILiveData))
             {
                 try
                 {
@@ -420,6 +420,36 @@ namespace NetMud.Data.Game
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Compares an object to another one to see if they are the same object
+        /// </summary>
+        /// <param name="x">the object to compare to</param>
+        /// <param name="y">the object to compare to</param>
+        /// <returns>true if the same object</returns>
+        public bool Equals(ILiveData x, ILiveData y)
+        {
+            return x.Equals(y);
+        }
+
+        /// <summary>
+        /// Get the hash code for comparison purposes
+        /// </summary>
+        /// <param name="obj">the thing to get the hashcode for</param>
+        /// <returns>the hash code</returns>
+        public int GetHashCode(ILiveData obj)
+        {
+            return obj.GetType().GetHashCode() + obj.BirthMark.GetHashCode();
+        }
+
+        /// <summary>
+        /// Get the hash code for comparison purposes
+        /// </summary>
+        /// <returns>the hash code</returns>
+        public override int GetHashCode()
+        {
+            return GetType().GetHashCode() + BirthMark.GetHashCode();
         }
         #endregion
     }

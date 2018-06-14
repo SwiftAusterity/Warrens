@@ -231,6 +231,36 @@ namespace NetMud.Data.System
 
             return false;
         }
+
+        /// <summary>
+        /// Compares an object to another one to see if they are the same object
+        /// </summary>
+        /// <param name="x">the object to compare to</param>
+        /// <param name="y">the object to compare to</param>
+        /// <returns>true if the same object</returns>
+        public bool Equals(IData x, IData y)
+        {
+            return x.Equals(y);
+        }
+
+        /// <summary>
+        /// Get the hash code for comparison purposes
+        /// </summary>
+        /// <param name="obj">the thing to get the hashcode for</param>
+        /// <returns>the hash code</returns>
+        public int GetHashCode(IData obj)
+        {
+            return obj.GetType().GetHashCode() + obj.Id.GetHashCode();
+        }
+
+        /// <summary>
+        /// Get the hash code for comparison purposes
+        /// </summary>
+        /// <returns>the hash code</returns>
+        public override int GetHashCode()
+        {
+            return GetType().GetHashCode() + Id.GetHashCode();
+        }
         #endregion
     }
 }

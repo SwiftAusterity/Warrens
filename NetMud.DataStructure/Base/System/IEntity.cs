@@ -8,7 +8,7 @@ namespace NetMud.DataStructure.Base.System
     /// <summary>
     /// Framework for live entities
     /// </summary>
-    public interface IEntity : IExist, ILookable, IFileStored, ILiveData, IComparable<IEntity>, IEquatable<IEntity>
+    public interface IEntity : IExist, ILookable, IFileStored, ILiveData
     {
         /// <summary>
         /// Keywords this entity can be found with in command parsing

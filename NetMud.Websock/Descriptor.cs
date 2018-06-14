@@ -661,5 +661,90 @@ namespace NetMud.Websock
             }
         }
         #endregion
+
+        #region Equality Functions
+        /// <summary>
+        /// -99 = null input
+        /// -1 = wrong type
+        /// 0 = same type, wrong id
+        /// 1 = same reference (same id, same type)
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public int CompareTo(ILiveData other)
+        {
+            if (other != null)
+            {
+                try
+                {
+                    if (other.GetType() != GetType())
+                        return -1;
+
+                    if (other.BirthMark.Equals(BirthMark))
+                        return 1;
+
+                    return 0;
+                }
+                catch (Exception ex)
+                {
+                    LoggingUtility.LogError(ex);
+                }
+            }
+
+            return -99;
+        }
+
+        /// <summary>
+        /// Compares this object to another one to see if they are the same object
+        /// </summary>
+        /// <param name="other">the object to compare to</param>
+        /// <returns>true if the same object</returns>
+        public bool Equals(ILiveData other)
+        {
+            if (other != default(ILiveData))
+            {
+                try
+                {
+                    return other.GetType() == GetType() && other.BirthMark.Equals(BirthMark);
+                }
+                catch (Exception ex)
+                {
+                    LoggingUtility.LogError(ex);
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Compares an object to another one to see if they are the same object
+        /// </summary>
+        /// <param name="x">the object to compare to</param>
+        /// <param name="y">the object to compare to</param>
+        /// <returns>true if the same object</returns>
+        public bool Equals(ILiveData x, ILiveData y)
+        {
+            return x.Equals(y);
+        }
+
+        /// <summary>
+        /// Get the hash code for comparison purposes
+        /// </summary>
+        /// <param name="obj">the thing to get the hashcode for</param>
+        /// <returns>the hash code</returns>
+        public int GetHashCode(ILiveData obj)
+        {
+            return obj.GetType().GetHashCode() + obj.BirthMark.GetHashCode();
+        }
+
+        /// <summary>
+        /// Get the hash code for comparison purposes
+        /// </summary>
+        /// <returns>the hash code</returns>
+        public override int GetHashCode()
+        {
+            return GetType().GetHashCode() + BirthMark.GetHashCode();
+        }
+        #endregion
     }
 }

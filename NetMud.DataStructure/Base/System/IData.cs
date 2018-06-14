@@ -6,7 +6,7 @@ namespace NetMud.DataStructure.Base.System
     /// <summary>
     /// Framework for Database objects
     /// </summary>
-    public interface IData : IFileStored, IComparable<IData>, IEquatable<IData>
+    public interface IData : IFileStored, IComparable<IData>, IEquatable<IData>, IEqualityComparer<IData>
     {
         /// <summary>
         /// Unique, iterative Id for this entry
