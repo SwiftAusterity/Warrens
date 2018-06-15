@@ -131,21 +131,43 @@ namespace NetMud.Data.Game
         }
 
         /// <summary>
-        /// Render to the look command
+        /// Render this in a short descriptive style
         /// </summary>
-        /// <param name="actor">Who is looking</param>
-        /// <returns>Descriptive text</returns>
-        public override IEnumerable<string> RenderToLook(IEntity viewer)
+        /// <param name="viewer">The entity looking</param>
+        /// <returns>the output strings</returns>
+        public override IEnumerable<string> GetShortDescription(IEntity viewer)
         {
             if (!IsVisibleTo(viewer))
                 return Enumerable.Empty<string>();
 
-            var sb = new List<string>
+            return new List<string>()
             {
-                GetFullShortDescription(viewer)
+                String.Format("A {0} and {1} {2} {3} area.", GeographicalUtilities.ConvertSizeToType(GetModelDimensions(), GetType()),
+                                                            MeteorologicalUtilities.ConvertTemperatureToType(EffectiveTemperature()),
+                                                            MeteorologicalUtilities.ConvertHumidityToType(EffectiveHumidity()),
+                                                            GetBiome())
             };
+        }
 
-            if(NaturalResources != null)
+        /// <summary>
+        /// Render this in a short descriptive style
+        /// </summary>
+        /// <param name="viewer">The entity looking</param>
+        /// <returns>the output strings</returns>
+        public override IEnumerable<string> GetLongDescription(IEntity viewer)
+        {
+            if (!IsVisibleTo(viewer))
+                return Enumerable.Empty<string>();
+
+            var sb = new List<string>();
+
+            //Weather/biome
+            sb.Add(String.Format("A {0} and {1} {2} {3} area.", GeographicalUtilities.ConvertSizeToType(GetModelDimensions(), GetType()),
+                                                            MeteorologicalUtilities.ConvertTemperatureToType(EffectiveTemperature()),
+                                                            MeteorologicalUtilities.ConvertHumidityToType(EffectiveHumidity()),
+                                                            GetBiome()));
+
+            if (NaturalResources != null)
                 sb.AddRange(NaturalResources.Select(kvp => kvp.Key.RenderResourceCollection(viewer, kvp.Value)));
 
             //sb.AddRange(GetPathways().SelectMany(path => path.RenderAsContents(viewer)));
@@ -155,21 +177,6 @@ namespace NetMud.Data.Game
             return sb;
         }
 
-        /// <summary>
-        /// Render this in a short descriptive style
-        /// </summary>
-        /// <param name="viewer">The entity looking</param>
-        /// <returns>the output strings</returns>
-        public override string GetFullShortDescription(IEntity viewer)
-        {
-            if (!IsVisibleTo(viewer))
-                return string.Empty;
-
-            return String.Format("A {0} and {1} {2} {3} area.", GeographicalUtilities.ConvertSizeToType(GetModelDimensions(), GetType()), 
-                                                            MeteorologicalUtilities.ConvertTemperatureToType(EffectiveTemperature()),
-                                                            MeteorologicalUtilities.ConvertHumidityToType(EffectiveHumidity()),
-                                                            GetBiome());
-        }
 
         /// <summary>
         /// Get the h,w,d of this

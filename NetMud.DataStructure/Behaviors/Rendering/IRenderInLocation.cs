@@ -14,5 +14,12 @@ namespace NetMud.DataStructure.Behaviors.Rendering
         /// <param name="viewer">entity initiating the command</param>
         /// <returns>the output</returns>
         IEnumerable<string> RenderAsContents(IEntity viewer);
+
+        /// <summary>
+        /// A fully described short description (includes adjectives)
+        /// </summary>
+        /// <param name="viewer">entity initiating the command</param>
+        /// <returns>the output</returns>
+        IEnumerable<string> GetShortDescription(IEntity viewer);
     }
 }

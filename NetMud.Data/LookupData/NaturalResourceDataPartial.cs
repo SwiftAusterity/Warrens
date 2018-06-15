@@ -120,38 +120,83 @@ namespace NetMud.Data.LookupData
         }
 
         #region Rendering
+        /// <summary>
+        /// Render this to a look command (what something sees when it 'look's at this)
+        /// </summary>
+        /// <param name="viewer">The entity looking</param>
+        /// <returns>the output strings</returns>
         public virtual IEnumerable<string> RenderToLook(IEntity viewer)
         {
-            var returnValues = new List<string>
-            {
-                GetFullShortDescription(viewer)
-            };
+            //if (!IsVisibleTo(viewer))
+            //    return Enumerable.Empty<string>();
 
-            return returnValues;
-        }
-
-        public virtual string GetFullShortDescription(IEntity viewer)
-        {
-            return Name;
-        }
-
-        public virtual IEnumerable<string> RenderAsContents(IEntity viewer)
-        {
-            var returnValues = new List<string>
-            {
-                GetFullShortDescription(viewer)
-            };
-
-            return returnValues;
+            return GetLongDescription(viewer);
         }
 
         /// <summary>
-        /// Retrieve all of the descriptors that are tagged as Psychic output
+        /// Render this in a short descriptive style
+        /// </summary>
+        /// <param name="viewer">The entity looking</param>
+        /// <returns>the output strings</returns>
+        public virtual IEnumerable<string> GetLongDescription(IEntity viewer)
+        {
+            //if (!IsVisibleTo(viewer))
+            //    return Enumerable.Empty<string>();
+
+            var sb = new List<string>();
+            var descriptives = GetVisibleDescriptives(viewer);
+            sb.AddRange(descriptives.Select(desc => desc.Event.ToString()));
+
+            return sb;
+        }
+
+        /// <summary>
+        /// Render this as being show inside a container
+        /// </summary>
+        /// <param name="viewer">The entity looking</param>
+        /// <returns>the output strings</returns>
+        public virtual IEnumerable<string> RenderAsContents(IEntity viewer)
+        {
+            //if (!IsVisibleTo(viewer))
+            //    return Enumerable.Empty<string>();
+
+            return GetShortDescription(viewer);
+        }
+
+        /// <summary>
+        /// Render this in a short descriptive style
+        /// </summary>
+        /// <param name="viewer">The entity looking</param>
+        /// <returns>the output strings</returns>
+        public virtual IEnumerable<string> GetShortDescription(IEntity viewer)
+        {
+            //if (!IsVisibleTo(viewer))
+            //    return Enumerable.Empty<string>();
+
+            return new List<string> { Name }; ;
+        }
+
+        /// <summary>
+        /// Render this in a short descriptive style
+        /// </summary>
+        /// <param name="viewer">The entity looking</param>
+        /// <returns>the output strings</returns>
+        public virtual string GetDescribedName(IEntity viewer)
+        {
+            //if (!IsVisibleTo(viewer))
+            //    return string.Empty;
+
+            return Name;
+        }
+
+        /// <summary>
+        /// Retrieve all of the descriptors that are tagged as visible output
         /// </summary>
         /// <returns>A collection of the descriptors</returns>
-        public virtual IEnumerable<IOccurrence> GetVisibleDescriptives()
+        public virtual IEnumerable<IOccurrence> GetVisibleDescriptives(IEntity viewer)
         {
-            return new Occurrence[] 
+            //TODO: Check for visibility, and also list descriptives
+            return new Occurrence[]
             {
                 new Occurrence()
                 {
@@ -162,6 +207,7 @@ namespace NetMud.Data.LookupData
             };
         }
 
+
         /// <summary>
         /// Render a natural resource collection to a viewer
         /// </summary>
@@ -170,7 +216,7 @@ namespace NetMud.Data.LookupData
         /// <returns>a view string</returns>
         public virtual string RenderResourceCollection(IEntity viewer, int amount)
         {
-            return string.Format("{0} {1}s", amount, GetFullShortDescription(viewer));
+            return string.Format("{0} {1}s", amount, GetDescribedName(viewer));
         }
         #endregion
     }

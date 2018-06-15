@@ -140,7 +140,7 @@ namespace NetMud.Data.Game
         /// <returns>the affect</returns>
         public bool HasAffect(string affectTarget)
         {
-            if(string.IsNullOrWhiteSpace(affectTarget))
+            if (string.IsNullOrWhiteSpace(affectTarget))
                 return false;
 
             return Affects.Any(aff => aff.Target.Equals(affectTarget, StringComparison.InvariantCultureIgnoreCase)
@@ -252,7 +252,7 @@ namespace NetMud.Data.Game
         internal virtual bool TryMoveTo(IGlobalPosition newPosition)
         {
             //validate position
-            if(CurrentLocation?.CurrentLocation != null)
+            if (CurrentLocation?.CurrentLocation != null)
                 CurrentLocation.CurrentLocation.MoveFrom(this);
 
             CurrentLocation = newPosition;
@@ -312,7 +312,30 @@ namespace NetMud.Data.Game
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public abstract IEnumerable<string> RenderToLook(IEntity viewer);
+        public virtual IEnumerable<string> RenderToLook(IEntity viewer)
+        {
+            if (!IsVisibleTo(viewer))
+                return Enumerable.Empty<string>();
+
+            return GetLongDescription(viewer);
+        }
+
+        /// <summary>
+        /// Render this in a short descriptive style
+        /// </summary>
+        /// <param name="viewer">The entity looking</param>
+        /// <returns>the output strings</returns>
+        public virtual IEnumerable<string> GetLongDescription(IEntity viewer)
+        {
+            if (!IsVisibleTo(viewer))
+                return Enumerable.Empty<string>();
+
+            var sb = new List<string>();
+            var descriptives = GetVisibleDescriptives(viewer);
+            sb.AddRange(descriptives.Select(desc => desc.Event.ToString()));
+
+            return sb;
+        }
 
         /// <summary>
         /// Render this as being show inside a container
@@ -324,7 +347,7 @@ namespace NetMud.Data.Game
             if (!IsVisibleTo(viewer))
                 return Enumerable.Empty<string>();
 
-            return new List<string> { GetFullShortDescription(viewer) };
+            return GetShortDescription(viewer);
         }
 
         /// <summary>
@@ -332,7 +355,20 @@ namespace NetMud.Data.Game
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public virtual string GetFullShortDescription(IEntity viewer)
+        public virtual IEnumerable<string> GetShortDescription(IEntity viewer)
+        {
+            if (!IsVisibleTo(viewer))
+                return Enumerable.Empty<string>();
+
+            return new List<string> { DataTemplateName }; ;
+        }
+
+        /// <summary>
+        /// Render this in a short descriptive style
+        /// </summary>
+        /// <param name="viewer">The entity looking</param>
+        /// <returns>the output strings</returns>
+        public virtual string GetDescribedName(IEntity viewer)
         {
             if (!IsVisibleTo(viewer))
                 return string.Empty;
@@ -344,8 +380,9 @@ namespace NetMud.Data.Game
         /// Retrieve all of the descriptors that are tagged as visible output
         /// </summary>
         /// <returns>A collection of the descriptors</returns>
-        public virtual IEnumerable<IOccurrence> GetVisibleDescriptives()
+        public virtual IEnumerable<IOccurrence> GetVisibleDescriptives(IEntity viewer)
         {
+            //TODO: Check for visibility, and also list descriptives
             return new Occurrence[]
             {
                 new Occurrence()

@@ -166,7 +166,7 @@ namespace NetMud.Data.Game
 
             var sb = new List<string>
             {
-                string.Format("{0} is wearing {1}", wearer.DataTemplateName, GetFullShortDescription(viewer))
+                string.Format("{0} is wearing {1}", wearer.DataTemplateName, GetDescribedName(viewer))
             };
 
             return sb;
@@ -179,7 +179,7 @@ namespace NetMud.Data.Game
 
             var sb = new List<string>
             {
-                string.Format("{0} is holding {1}", holder.DataTemplateName, GetFullShortDescription(viewer))
+                string.Format("{0} is holding {1}", holder.DataTemplateName, GetDescribedName(viewer))
             };
 
             return sb;

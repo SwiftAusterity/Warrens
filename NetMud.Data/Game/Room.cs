@@ -138,17 +138,15 @@ namespace NetMud.Data.Game
             if (!IsVisibleTo(viewer))
                 return Enumerable.Empty<string>();
 
-            var sb = new List<string>
-            {
-                GetFullShortDescription(viewer)
-            };
+            var sb = new List<string>();
+            sb.AddRange(GetShortDescription(viewer));
 
             if (NaturalResources != null)
                 sb.AddRange(NaturalResources.Select(kvp => kvp.Key.RenderResourceCollection(viewer, kvp.Value)));
 
-            sb.AddRange(GetPathways().SelectMany(path => path.RenderAsContents(viewer)));
-            sb.AddRange(GetContents<IInanimate>().SelectMany(path => path.RenderAsContents(viewer)));
-            sb.AddRange(GetContents<IMobile>().Where(player => !player.Equals(viewer)).SelectMany(path => path.RenderAsContents(viewer)));
+            //sb.AddRange(GetPathways().SelectMany(path => path.RenderAsContents(viewer)));
+            //sb.AddRange(GetContents<IInanimate>().SelectMany(path => path.RenderAsContents(viewer)));
+            //sb.AddRange(GetContents<IMobile>().Where(player => !player.Equals(viewer)).SelectMany(path => path.RenderAsContents(viewer)));
 
             return sb;
         }

@@ -56,7 +56,7 @@ namespace NetMud.Data.LookupData
         /// <returns>a view string</returns>
         public override string RenderResourceCollection(IEntity viewer, int amount)
         {
-            return string.Format("a {0} of {1} {2}s", Race.CollectiveNoun, amount, GetFullShortDescription(viewer));
+            return string.Format("a {0} of {1} {2}s", Race.CollectiveNoun, amount, GetDescribedName(viewer));
         }
         #endregion
     }

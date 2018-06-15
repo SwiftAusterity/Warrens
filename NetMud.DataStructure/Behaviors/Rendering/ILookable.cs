@@ -21,13 +21,19 @@ namespace NetMud.DataStructure.Behaviors.Rendering
         /// </summary>
         /// <param name="viewer">entity initiating the command</param>
         /// <returns>the output</returns>
-        string GetFullShortDescription(IEntity viewer);
+        IEnumerable<string> GetLongDescription(IEntity viewer);
 
         /// <summary>
         /// Retrieve all of the descriptors that are tagged as visible output
         /// </summary>
         /// <returns>A collection of the descriptors</returns>
-        IEnumerable<IOccurrence> GetVisibleDescriptives();
+        string GetDescribedName(IEntity viewer);
+
+        /// <summary>
+        /// Retrieve all of the descriptors that are tagged as visible output
+        /// </summary>
+        /// <returns>A collection of the descriptors</returns>
+        IEnumerable<IOccurrence> GetVisibleDescriptives(IEntity viewer);
 
     }
 }
