@@ -65,6 +65,20 @@ namespace NetMud
                 namespaces: new string[] { "NetMud.Controllers.GameAdmin" }
             );
 
+            routes.MapRoute(
+                name: "NPC Add Edit Descriptive Modal",
+                url: "GameAdmin/NPC/AddEditDescriptive/{id}/{descriptiveType}/{phrase}",
+                defaults: new { controller = "NPC", action = "AddEditDescriptive", phrase = "" },
+                namespaces: new string[] { "NetMud.Controllers.GameAdmin" }
+            );
+
+            routes.MapRoute(
+                name: "Inanimate Add Edit Descriptive Modal",
+                url: "GameAdmin/Inanimate/AddEditDescriptive/{id}/{descriptiveType}/{phrase}",
+                defaults: new { controller = "Inanimate", action = "AddEditDescriptive", phrase = "" },
+                namespaces: new string[] { "NetMud.Controllers.GameAdmin" }
+            );
+
 
             routes.MapRoute(
                 name: "GameAdminSubControllers",

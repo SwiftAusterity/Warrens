@@ -5,6 +5,7 @@ using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Behaviors.Actionable;
 using NetMud.DataStructure.Behaviors.Automation;
+using NetMud.Utility;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -240,6 +241,45 @@ namespace NetMud.Data.LookupData
         public Race()
         {
             BodyParts = Enumerable.Empty<Tuple<IInanimateData, short, string>>();
+        }
+
+        /// <summary>
+        /// Method to get the full list of anatomical features of this race
+        /// </summary>
+        public IEnumerable<Tuple<IInanimateData, string>> FullAnatomy()
+        {
+            var anatomy = new List<Tuple<IInanimateData, string>>();
+
+            if (Arms.Item1 != null)
+            {
+                var i = 1;
+                while (i < Arms.Item2)
+                {
+                    anatomy.Add(new Tuple<IInanimateData, string>(Arms.Item1, string.Format("Arm {0}", i.ToGreek(true))));
+                    i++;
+                }
+            }
+
+            if (Legs.Item1 != null)
+            {
+                var i = 1;
+                while (i < Arms.Item2)
+                {
+                    anatomy.Add(new Tuple<IInanimateData, string>(Legs.Item1, string.Format("Leg {0}", i.ToGreek(true))));
+                    i++;
+                }
+            }
+
+            if(Head != null)
+                anatomy.Add(new Tuple<IInanimateData, string>(Head, "Head"));
+
+            if (Torso != null)
+                anatomy.Add(new Tuple<IInanimateData, string>(Torso, "Torso"));
+
+            foreach(var bit in BodyParts)
+                anatomy.Add(new Tuple<IInanimateData, string>(bit.Item1, bit.Item3));
+
+            return anatomy;
         }
 
         /// <summary>

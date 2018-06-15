@@ -1,12 +1,13 @@
 ﻿using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Behaviors.Rendering;
 
 namespace NetMud.DataStructure.Base.EntityBackingData
 {
     /// <summary>
     /// Backing data for NPC/Intelligences
     /// </summary>
-    public interface INonPlayerCharacter : IEntityBackingData, IGender
+    public interface INonPlayerCharacter : IEntityBackingData, IDescribable, IGender
     {
         /// <summary>
         /// Family name for NPCs

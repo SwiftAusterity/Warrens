@@ -54,9 +54,8 @@
             @Html.EditorFor(e => e.ZoneDimensionalModelVacuity, new { columnCount = 3 })
             @Html.EditorFor(e => e.ZoneDimensionalModelCavitation, new { columnCount = 3 })
         </div>
+
         <div class="clearfix"></div>
-
-
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ModalWindow = true })
     }
 </section>

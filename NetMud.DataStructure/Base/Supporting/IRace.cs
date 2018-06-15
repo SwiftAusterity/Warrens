@@ -83,6 +83,11 @@ namespace NetMud.DataStructure.Base.Supporting
         /// </summary>
         string CollectiveNoun { get; set; }
 
+        /// <summary>
+        /// Method to get the full list of anatomical features of this race
+        /// </summary>
+        IEnumerable<Tuple<IInanimateData, string>> FullAnatomy();
+
         //TODO: Poison glands
     }
 }

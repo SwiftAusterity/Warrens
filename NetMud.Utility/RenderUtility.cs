@@ -196,6 +196,166 @@ namespace NetMud.Utility
                     ? ((DescriptionAttribute)attributes[0]).Description
                     : string.Empty;
         }
+
+        /// <summary>
+        /// Get the greek alphabet equivelant of an integer
+        /// </summary>
+        /// <param name="iterator">the integer in question</param>
+        /// <param name="specialCharacter">should this be the actual letter (true) or the english word equivelant (false)</param>
+        /// <returns>A string, only works 1-24</returns>
+        public static string ToGreek(this int iterator, bool specialCharacter = false)
+        {
+            var returnValue = "";
+            switch(iterator)
+            {
+                case 1:
+                    if (specialCharacter)
+                        returnValue = "alpha";
+                    else
+                        returnValue = "α";
+                    break;
+                case 2:
+                    if (specialCharacter)
+                        returnValue = "beta";
+                    else
+                        returnValue = "β";
+                    break;
+                case 3:
+                    if (specialCharacter)
+                        returnValue = "gamma";
+                    else
+                        returnValue = "γ";
+                    break;
+                case 4:
+                    if (specialCharacter)
+                        returnValue = "delta";
+                    else
+                        returnValue = "δ";
+                    break;
+                case 5:
+                    if (specialCharacter)
+                        returnValue = "epsilon";
+                    else
+                        returnValue = "ε";
+                    break;
+                case 6:
+                    if (specialCharacter)
+                        returnValue = "zeta";
+                    else
+                        returnValue = "ζ";
+                    break;
+                case 7:
+                    if (specialCharacter)
+                        returnValue = "eta";
+                    else
+                        returnValue = "η";
+                    break;
+                case 8:
+                    if (specialCharacter)
+                        returnValue = "theta";
+                    else
+                        returnValue = "θ";
+                    break;
+                case 9:
+                    if (specialCharacter)
+                        returnValue = "iota";
+                    else
+                        returnValue = "ι";
+                    break;
+                case 10:
+                    if (specialCharacter)
+                        returnValue = "kappa";
+                    else
+                        returnValue = "κ";
+                    break;
+                case 11:
+                    if (specialCharacter)
+                        returnValue = "lamda";
+                    else
+                        returnValue = "λ";
+                    break;
+                case 12:
+                    if (specialCharacter)
+                        returnValue = "mu";
+                    else
+                        returnValue = "μ";
+                    break;
+                case 13:
+                    if (specialCharacter)
+                        returnValue = "nu";
+                    else
+                        returnValue = "ν";
+                    break;
+                case 14:
+                    if (specialCharacter)
+                        returnValue = "xi";
+                    else
+                        returnValue = "ξ";
+                    break;
+                case 15:
+                    if (specialCharacter)
+                        returnValue = "omicron";
+                    else
+                        returnValue = "ο";
+                    break;
+                case 16:
+                    if (specialCharacter)
+                        returnValue = "pi";
+                    else
+                        returnValue = "π";
+                    break;
+                case 17:
+                    if (specialCharacter)
+                        returnValue = "rho";
+                    else
+                        returnValue = "ρ";
+                    break;
+                case 18:
+                    if (specialCharacter)
+                        returnValue = "sigma";
+                    else
+                        returnValue = "σ";
+                    break;
+                case 19:
+                    if (specialCharacter)
+                        returnValue = "tau";
+                    else
+                        returnValue = "τ";
+                    break;
+                case 20:
+                    if (specialCharacter)
+                        returnValue = "upsilon";
+                    else
+                        returnValue = "υ";
+                    break;
+                case 21:
+                    if (specialCharacter)
+                        returnValue = "phi";
+                    else
+                        returnValue = "φ";
+                    break;
+                case 22:
+                    if (specialCharacter)
+                        returnValue = "chi";
+                    else
+                        returnValue = "χ";
+                    break;
+                case 23:
+                    if (specialCharacter)
+                        returnValue = "psi";
+                    else
+                        returnValue = "ψ";
+                    break;
+                case 24:
+                    if (specialCharacter)
+                        returnValue = "omega";
+                    else
+                        returnValue = "ω";
+                    break;
+            }
+
+            return returnValue;
+        }
         #endregion
     }
 }
