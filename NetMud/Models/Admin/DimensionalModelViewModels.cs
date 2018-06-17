@@ -55,6 +55,7 @@ namespace NetMud.Models.Admin
         public HttpPostedFileBase ModelFile { get; set; }
 
         [Display(Name = "X-Plane")]
+        [UIHint("EnumDropDownList")]
         public short[] CoordinateDamageTypes { get; set; }
 
         [Display(Name = "Name")]

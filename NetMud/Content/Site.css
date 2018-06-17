@@ -130,8 +130,8 @@ div.form-group a.removeRow {
 /* Ascii maps for object dim models and room maps */
 .asciiMap {
     font-family: Courier New, Courier, monospace;
-    font-size: large;
-    letter-spacing: 7px;
+    font-size: small;
+    letter-spacing: 1px;
     padding: 15px;
     min-width: 200px;
     min-height: 200px;
@@ -141,11 +141,10 @@ div.form-group a.removeRow {
 
 .twoDModel {
     font-family: Courier New, Courier, monospace;
-    font-size: large;
-    letter-spacing: 7px;
+    font-size: small;
+    letter-spacing: 0;
     padding: 15px;
-    width: 400px;
-    height: 400px;
+    max-width: 400px;
     text-align: center;
     background-color: black;
     color: white;

@@ -187,14 +187,23 @@ namespace NetMud.Utility
         /// <example>string desc = myEnumVariable.GetDescription();</example>
         public static string GetDescription(this Enum enumVal)
         {
-            var type = enumVal.GetType();
-            var memInfo = type.GetMember(enumVal.ToString());
+            try
+            {
+                var type = enumVal.GetType();
+                var memInfo = type.GetMember(enumVal.ToString());
 
-            var attributes = memInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
+                var attributes = memInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
 
-            return attributes.Length > 0
-                    ? ((DescriptionAttribute)attributes[0]).Description
-                    : string.Empty;
+                return attributes.Length > 0
+                        ? ((DescriptionAttribute)attributes[0]).Description
+                        : string.Empty;
+            }
+            catch
+            {
+                //Don't want to barf on this stuff
+            }
+
+            return string.Empty;
         }
 
         /// <summary>
