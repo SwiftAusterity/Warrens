@@ -201,6 +201,6 @@ div.roomAsciiMap {
     position: relative;
     top: -0.5em;
     color: blue;
-    float: left;
-    margin-left: -20px;
+    float: right;
+    margin-left: -1px;
 }

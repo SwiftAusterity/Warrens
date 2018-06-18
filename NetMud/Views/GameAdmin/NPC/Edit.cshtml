@@ -16,7 +16,7 @@
         </div>
         <div class="form-group row">
             @Html.EditorFor(e => e.Gender, new { columnCount = 3 })
-            @Html.LabelFor(m => m.RaceId, new { @class = "col-sm-1 col-form-label" })
+            @Html.DescriptiveLabelFor(m => m.RaceId, new { @class = "col-sm-1 col-form-label" })
             <div class="col-md-4">
                 @Html.DropDownList("RaceId", Model.ValidRaces.Select(rl =>
                                                 new SelectListItem() { Text = rl.Name, Value = rl.Id.ToString(), Selected = rl.Id.Equals(Model.RaceId) })

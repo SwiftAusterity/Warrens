@@ -32,21 +32,21 @@
             @Html.EditorFor(m => m.TemperatureToleranceHigh, new { columnCount = 3 })
         </div>
         <div class="form-group row">
-            @Html.LabelFor(m => m.Breathes, new { @class = "col-sm-1 col-form-label" })
+            @Html.DescriptiveLabelFor(m => m.Breathes, new { @class = "col-sm-1 col-form-label" })
             <div class="col-md-3">
                 @Html.DropDownList("Breathes", Enum.GetNames(typeof(RespiratoryType)).Select(rl =>
                     new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(RespiratoryType), rl)).ToString(), Selected = rl.Equals(Enum.GetName(typeof(RespiratoryType), Model.Breathes)) })
                     , "Select One", htmlAttributes: new { id = "Breathes", @class = "form-control" })
                 @Html.ValidationMessageFor(m => m.Breathes, "", new { @class = "text-danger" })
             </div>
-            @Html.LabelFor(m => m.DietaryNeeds, new { @class = "col-sm-1 col-form-label" })
+            @Html.DescriptiveLabelFor(m => m.DietaryNeeds, new { @class = "col-sm-1 col-form-label" })
             <div class="col-md-3">
                 @Html.DropDownList("DietaryNeeds", Enum.GetNames(typeof(DietType)).Select(rl =>
                       new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(DietType), rl)).ToString(), Selected = rl.Equals(Enum.GetName(typeof(DietType), Model.DietaryNeeds)) })
                          , "Select One", htmlAttributes: new { id = "DietaryNeeds", @class = "form-control" })
                 @Html.ValidationMessageFor(m => m.DietaryNeeds, "", new { @class = "text-danger" })
             </div>
-            @Html.LabelFor(m => m.TeethType, new { @class = "col-sm-1 col-form-label" })
+            @Html.DescriptiveLabelFor(m => m.TeethType, new { @class = "col-sm-1 col-form-label" })
             <div class="col-md-3">
                 @Html.DropDownList("TeethType", Enum.GetNames(typeof(DamageType)).Select(rl =>
                       new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString(), Selected = rl.Equals(Enum.GetName(typeof(DamageType), Model.TeethType)) })
