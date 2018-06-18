@@ -5476,7 +5476,7 @@ button.close {
   visibility: visible;
   font-size: 12px;
   line-height: 1.4;
-  opacity: 0;
+  /*opacity: 0;*/
   filter: alpha(opacity=0);
 }
 .tooltip.in {
@@ -5512,7 +5512,6 @@ button.close {
   position: absolute;
   width: 0;
   height: 0;
-  border-color: transparent;
   border-style: solid;
 }
 .tooltip.top .tooltip-arrow {

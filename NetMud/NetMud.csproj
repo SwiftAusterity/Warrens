@@ -247,6 +247,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\GameClient.css" />
     <Content Include="Content\jquery.gridster.min.css" />
+    <Content Include="Content\popper.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -278,6 +279,9 @@
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Scripts\js-cookie.js" />
+    <Content Include="Scripts\site.js" />
+    <Content Include="Scripts\tooltip.js" />
     <Content Include="Views\Shared\Occurrence.cshtml" />
     <Content Include="Views\Shared\Lexica.cshtml" />
     <Content Include="Views\GameAdmin\Pathway\OccurrenceList.cshtml" />

@@ -15,13 +15,13 @@
 
         <ul class="nav navbar-nav navbar-right">
             <li>@Html.ActionLink("Test Client", "Index", "GameClient", routeValues: null, htmlAttributes: new { title = "The Game Client", Style = "color: orange" })</li>
-            <li>
+            <li id="currentCharacterSelector">
                 @if (authUser.GameAccount.Characters.Count() > 0)
                 {
                     @Html.DropDownList("CurrentlySelectedCharacter", authUser.GameAccount.Characters.Select(ch =>
                     new SelectListItem() { Text = ch.FullName()
                                         , Value = ch.Id.ToString()
-                                        , Selected = authUser.GameAccount.CurrentlySelectedCharacter != default(long) && authUser.GameAccount.CurrentlySelectedCharacter.Equals(ch.Id) })
+                                        , Selected = authUser.GameAccount.CurrentlySelectedCharacter >= 0 && authUser.GameAccount.CurrentlySelectedCharacter.Equals(ch.Id) })
                                         , "Select One", htmlAttributes: new { id = "currentCharacter", Style = "margin: 15px;" })
                 }
                 else
@@ -48,7 +48,7 @@
                             <li>@Html.ActionLink("Manage Players", "Index", "Player", routeValues: null, htmlAttributes: new { title = "Manage Players" })</li>
                         }
                         <li class="divider"></li>
-                        <li ><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+                        <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
                     </ul>
                 </div>
             </li>
@@ -62,10 +62,9 @@ else
         <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
     </ul>
 }
-@section Scripts {
-    @Scripts.Render("~/bundles/bootstrap")
 
-    <script type="text/javascript">
-
-    </script>
-}
+<script type="text/javascript">
+    $(document).ready(function () {
+        Tutorial($('#currentCharacterSelector'), "Select a character");
+    });
+</script>
