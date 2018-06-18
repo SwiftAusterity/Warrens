@@ -41,3 +41,10 @@
 @Styles.Render("~/Content/GameClient.css")
 @Scripts.Render("~/Scripts/WebSocketsClient.js")
 @Styles.Render("http://fonts.googleapis.com/css?family=Berkshire+Swash")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        Tutorial($('#locationBreadcrumbs'), "This is where you are.");
+        Tutorial($('#input'), "This is where you type commands. The UP and DOWN arrow keys will cycle through prior input. Hit ENTER to submit commands.");
+    });
+</script>

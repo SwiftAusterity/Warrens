@@ -36,6 +36,7 @@
                         <li class="dropdown-header" style="color: mediumvioletred">Characters</li>
                         <li>@Html.ActionLink("Dashboard", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })</li>
                         <li>@Html.ActionLink("Manage Characters", "ManageCharacters", "Manage", routeValues: null, htmlAttributes: new { title = "Manage Characters" })</li>
+                        <li><a href="#" id="tutorialToggle">Tutorials <span id="tutorialMode" class="tutorialToggle">OFF</span></a></li>
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="divider"></li>
@@ -65,6 +66,25 @@ else
 
 <script type="text/javascript">
     $(document).ready(function () {
-        Tutorial($('#currentCharacterSelector'), "Select a character");
+        if (Cookies.get('tutorialMode') !== undefined) {
+
+            if (Cookies.get('tutorialMode') === 'on') {
+                $('#tutorialMode').html('ON');
+            }
+        }
+
+        $('#tutorialToggle').click(function () {
+            if ($('#tutorialMode').html() === 'OFF') {
+                Cookies.set('tutorialMode', 'on');
+                $('#tutorialMode').html('ON');
+            } else {
+                Cookies.set('tutorialMode', 'off');
+                $('#tutorialMode').html('OFF');
+            }
+
+            return false;
+        });
+
+        Tutorial($('#currentCharacterSelector'), 'Select a Character');
     });
 </script>

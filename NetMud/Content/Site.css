@@ -192,3 +192,7 @@ div.roomAsciiMap {
     height: 70px;
     padding-bottom: 5px;
 }
+
+.tutorialToggle {
+    font-weight: bold;
+}
