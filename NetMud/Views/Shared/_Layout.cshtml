@@ -7,13 +7,11 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.8.2/umd/popper.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.8.2/umd/popper-utils.js"></script>
+
     @Scripts.Render("~/bundles/bootstrap")
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.8.2/umd/popper.js">
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.8.2/umd/popper-utils.js">
-    </script>
-
     @Scripts.Render("~/Scripts/tooltip.js")
     @Scripts.Render("~/Scripts/HtmlUtilities.js")
     @Scripts.Render("~/Scripts/site.js")
@@ -40,7 +38,7 @@
                     <li>@Html.ActionLink("About", "About", "Home")</li>
                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
                     <li>
-                        <div style="padding-top: 15px; padding-bottom: 15px;">
+                        <div style="padding: 15px">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">Features<span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
                                 <li class="dropdown-header" style="color: mediumvioletred">Knowledge</li>

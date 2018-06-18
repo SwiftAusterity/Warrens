@@ -1,4 +1,5 @@
 ﻿@model NetMud.Models.GameContextModel
+
 @{
     ViewBag.Title = "";
 }
@@ -16,9 +17,11 @@
 <div class="parserClient">
     <div class="parserClientLeft sidebar">
         <div id="quadrentOne" class="quadrant">
+            @Html.Partial("DockerSettings", new { quadrant = "1" })
             <span output-data-binding="Environment"></span>
         </div>
         <div id="quadrentTwo" class="quadrant">
+            @Html.Partial("DockerSettings", new { quadrant = "2" })
             <span output-eval-key="Local.Exits" output-eval-code="if(data[0] != undefined && data[0].length === 0) { element.css({'display': 'none'}); } else { element.css({'display' : 'block'}); }">Exits: <span output-data-binding="Local.Exits"></span></span>
             <span output-eval-key="Local.Populace" output-eval-code="if(data[0] != undefined && data[0].length === 0) { element.css({'display': 'none'}); } else { element.css({'display' : 'block'}); }">Populace: <span output-data-binding="Local.Populace"></span></span>
             <span output-eval-key="Local.Inventory" output-eval-code="if(data[0] != undefined && data[0].length === 0) { element.css({'display': 'none'}); } else { element.css({'display' : 'block'}); }">Inventory: <span output-data-binding="Local.Inventory"></span></span>
@@ -26,9 +29,11 @@
     </div>
     <div class="parserClientRight sidebar">
         <div id="quadrentThree" class="quadrant">
+            @Html.Partial("DockerSettings", new { quadrant = "3" })
             <span output-data-binding="Self"></span>
         </div>
         <div id="quadrentFour" class="quadrant">
+            @Html.Partial("DockerSettings", new { quadrant = "4" })
             <span output-data-binding="Extended"></span>
         </div>
     </div>
@@ -38,6 +43,7 @@
     </div>
     <a href="./GameClient" id="clientReload">Reload Client</a>
 </div>
+
 @Styles.Render("~/Content/GameClient.css")
 @Scripts.Render("~/Scripts/WebSocketsClient.js")
 @Styles.Render("http://fonts.googleapis.com/css?family=Berkshire+Swash")
