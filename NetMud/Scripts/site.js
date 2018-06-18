@@ -22,3 +22,17 @@
         parent.off('mouseenter');
     });
 }
+
+function HelpTipTutorial(parent, text) {
+    var options = {
+        title: text,
+        trigger: 'click',
+        template: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>',
+        offset: 5,
+        popperOptions: {
+            placements: 'auto',
+        }
+    };
+
+    var instance = new Tooltip(parent, options);
+}

@@ -27,12 +27,10 @@ NetMud.Utility/obj/*
 NetMud/App_Data/testingDB.mdf
 NetMud/App_Data/testingDB_log.ldf
 NetMud/Web.config
-.vs/config/applicationhost.config
 NetMud.Interp/obj
 NetMud/FileStore/Logs/*
 NetMud/FileStore/*/Backups/
 *Backups*/
 *.mdf
 *.ldf
-/.vs/NetMud/v15/Server/sqlite3
-/.vs/NetMud/v15/sqlite3/db.lock
+.vs/*

@@ -31,9 +31,15 @@
         @RenderBody()
     </div>
     <script type="text/javascript">
-        if('@ViewBag.StatusMessage' == '' && GetQueryStringParams('Message') != '') {
-            $('#statusMessage').html(GetQueryStringParams('Message'));
-        }
+        $(document).ready(function () {
+            if ('@ViewBag.StatusMessage' == '' && GetQueryStringParams('Message') != '') {
+                $('#statusMessage').html(GetQueryStringParams('Message'));
+            }
+
+            $('.helpTip').each(function () {
+                HelpTipTutorial($(this), $(this).attr('title'));
+            });
+        });
     </script>
 </body>
 </html>

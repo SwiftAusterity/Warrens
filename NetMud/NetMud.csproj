@@ -227,6 +227,7 @@
     <Compile Include="Models\AsciiMapViewModel.cs" />
     <Compile Include="Models\GameContextModel.cs" />
     <Compile Include="Models\BaseViewModel.cs" />
+    <Compile Include="Models\HtmlHelpers.cs" />
     <Compile Include="Models\ListTableViewModel.cs" />
     <Compile Include="Models\LoggingViewModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />

@@ -206,7 +206,7 @@ namespace NetMud.Utility
         public static string ToGreek(this int iterator, bool specialCharacter = false)
         {
             var returnValue = "";
-            switch(iterator)
+            switch (iterator)
             {
                 case 1:
                     if (specialCharacter)

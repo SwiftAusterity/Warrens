@@ -196,3 +196,11 @@ div.roomAsciiMap {
 .tutorialToggle {
     font-weight: bold;
 }
+
+.helpTip {
+    position: relative;
+    top: -0.5em;
+    color: blue;
+    float: left;
+    margin-left: -20px;
+}

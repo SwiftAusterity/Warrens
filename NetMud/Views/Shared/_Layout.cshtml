@@ -9,7 +9,7 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
 
-    <script  src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.8.2/umd/popper.js">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.8.2/umd/popper.js">
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.8.2/umd/popper-utils.js">
     </script>
@@ -70,9 +70,15 @@
         <p>TwinMUD &copy; @DateTime.Now.Year - Daniel Nissenfeld</p>
     </footer>
     <script type="text/javascript">
-        if('@ViewBag.StatusMessage' == '' && GetQueryStringParams('Message') != '') {
-            $('#statusMessage').html(GetQueryStringParams('Message'));
-        }
+        $(document).ready(function () {
+            if ('@ViewBag.StatusMessage' == '' && GetQueryStringParams('Message') != '') {
+                $('#statusMessage').html(GetQueryStringParams('Message'));
+            }
+
+            $('.helpTip').each(function () {
+                HelpTipTutorial($(this), $(this).attr('title'));
+            });
+        });
     </script>
 </body>
 </html>
