@@ -1,0 +1,36 @@
+﻿@model string
+
+@{
+    ViewBag.Title = "";
+    Layout = "~/Views/Shared/_chromelessLayout.cshtml";
+}
+
+<div id="contentArea">
+    <a class="dropdown-toggle" data-toggle="dropdown" href="#" style="float: right;"><span class="glyphicon glyphicon-cog dockable" title="Settings"></span></a>
+    <ul class="dropdown-menu dropdown-menu-left dockingMenu" role="menu" aria-labelledby="dropdownMenu">
+        <li class="dropdown-header" style="color: mediumvioletred">Modular Window</li>
+        <li class="divider"></li>
+        <li><a href="#" style="padding: 5px; color: black;" class="quadrantDocker" data-destination-quadrant="1"><span class="glyphicon glyphicon-resize-small" style="padding-right: 5px;"></span>Dock Quadrant 1</a></li>
+        <li><a href="#" style="padding: 5px; color: black;" class="quadrantDocker" data-destination-quadrant="2"><span class="glyphicon glyphicon-resize-small" style="padding-right: 5px;"></span>Dock Quadrant 2</a></li>
+        <li><a href="#" style="padding: 5px; color: black;" class="quadrantDocker" data-destination-quadrant="3"><span class="glyphicon glyphicon-resize-small" style="padding-right: 5px;"></span>Dock Quadrant 3</a></li>
+        <li><a href="#" style="padding: 5px; color: black;" class="quadrantDocker" data-destination-quadrant="4"><span class="glyphicon glyphicon-resize-small" style="padding-right: 5px;"></span>Dock Quadrant 4</a></li>
+    </ul>
+</div>
+
+
+<script type="text/javascript">
+    $(".quadrantDocker").click(function (e) {
+        var $this = $(this);
+
+        var myContent = $('.contentContainer');
+
+        var destinationNumber = $this.attr('data-destination-quadrant');
+        var $destination = window.opener.document.querySelector('div#quadrant-' + destinationNumber + '.quadrant');
+
+        myContent.detach();
+        myContent.appendTo($destination);
+
+        window.close();
+    });
+</script>
+

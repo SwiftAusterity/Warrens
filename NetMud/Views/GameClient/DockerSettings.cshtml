@@ -1,46 +1,43 @@
-﻿@{
-    string quadrant = ViewData["quadrant"] == null ? "" : ViewData["quadrant"].ToString();
-}
+﻿@model int
 
 <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-cog dockable" title="Settings"></span></a>
 <ul class="dropdown-menu dropdown-menu-left dockingMenu" role="menu" aria-labelledby="dropdownMenu">
-    <li class="dropdown-header" style="color: mediumvioletred">Docking</li>
-    <li><a href="#" style="padding: 5px;"><span class="glyphicon glyphicon-resize-full" style="padding-right: 5px;"></span>Undock</a></li>
+    <li class="dropdown-header" style="color: mediumvioletred">Quadrant @Model</li>
+    <li><a href="#" style="padding: 5px; color: black;" class="quadrantDocker" data-destination-quadrant="-1" data-origin-quadrant="@Model"><span class="glyphicon glyphicon-resize-full" style="padding-right: 5px;"></span>Undock</a></li>
     <li class="divider"></li>
-    @if (quadrant == "1")
+    @if (Model == 1)
     {
         <li><a href="#" style="padding: 5px;" disabled="disabled"><span class="glyphicon glyphicon-resize-small" style="padding-right: 5px;"></span>Dock Quadrant 1</a></li>
     }
     else
     {
-        <li><a href="#" style="padding: 5px;"><span class="glyphicon glyphicon-resize-small" style="padding-right: 5px;"></span>Dock Quadrant 1</a></li>
+        <li><a href="#" style="padding: 5px; color: black;" class="quadrantDocker" data-destination-quadrant="1" data-origin-quadrant="@Model"><span class="glyphicon glyphicon-resize-small" style="padding-right: 5px;"></span>Dock Quadrant 1</a></li>
     }
 
-    @if (quadrant == "2")
+    @if (Model == 2)
     {
         <li><a href="#" style="padding: 5px;" disabled="disabled"><span class="glyphicon glyphicon-resize-small" style="padding-right: 5px;"></span>Dock Quadrant 2</a></li>
     }
     else
     {
-        <li><a href="#" style="padding: 5px;"><span class="glyphicon glyphicon-resize-small" style="padding-right: 5px;"></span>Dock Quadrant 2</a></li>
+        <li><a href="#" style="padding: 5px; color: black;" class="quadrantDocker" data-destination-quadrant="2" data-origin-quadrant="@Model"><span class="glyphicon glyphicon-resize-small" style="padding-right: 5px;"></span>Dock Quadrant 2</a></li>
     }
 
-    @if (quadrant == "3")
+    @if (Model == 3)
     {
         <li><a href="#" style="padding: 5px;" disabled="disabled"><span class="glyphicon glyphicon-resize-small" style="padding-right: 5px;"></span>Dock Quadrant 3</a></li>
     }
     else
     {
-        <li><a href="#" style="padding: 5px;"><span class="glyphicon glyphicon-resize-small" style="padding-right: 5px;"></span>Dock Quadrant 3</a></li>
+        <li><a href="#" style="padding: 5px; color: black;" class="quadrantDocker" data-destination-quadrant="3" data-origin-quadrant="@Model"><span class="glyphicon glyphicon-resize-small" style="padding-right: 5px;"></span>Dock Quadrant 3</a></li>
     }
 
-    @if (quadrant == "4")
+    @if (Model == 4)
     {
         <li><a href="#" style="padding: 5px;" disabled="disabled"><span class="glyphicon glyphicon-resize-small" style="padding-right: 5px;"></span>Dock Quadrant 4</a></li>
     }
     else
     {
-        <li><a href="#" style="padding: 5px;"><span class="glyphicon glyphicon-resize-small" style="padding-right: 5px;"></span>Dock Quadrant 4</a></li>
+        <li><a href="#" style="padding: 5px; color: black;" class="quadrantDocker" data-destination-quadrant="4" data-origin-quadrant="@Model"><span class="glyphicon glyphicon-resize-small" style="padding-right: 5px;"></span>Dock Quadrant 4</a></li>
     }
 </ul>
-

@@ -71,6 +71,9 @@ else
             if (Cookies.get('tutorialMode') === 'on') {
                 $('#tutorialMode').html('ON');
             }
+        } else {
+            Cookies.set('tutorialMode', 'on');
+            $('#tutorialMode').html('ON');
         }
 
         $('#tutorialToggle').click(function () {

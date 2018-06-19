@@ -445,6 +445,9 @@ namespace NetMud.Websock
             //Grab the user
             var authTicketValue = new Regex(".AspNet.ApplicationCookie=(.*)").Match(handshake).Groups[1].Value.Trim();
 
+            if (authTicketValue.Contains(";"))
+                authTicketValue = authTicketValue.Substring(0, authTicketValue.IndexOf(';'));
+
             GetUserIDFromCookie(authTicketValue);
 
             var authedUser = UserManager.FindById(_userId);

@@ -40,5 +40,11 @@ namespace Controllers
 
             return View(model);
         }
+
+        [HttpGet]
+        public ActionResult ModularWindow()
+        {
+            return View("~/Views/GameClient/ModularWindow.cshtml");
+        }
     }
 }

@@ -36,3 +36,23 @@ function HelpTipTutorial(parent, text) {
 
     var instance = new Tooltip(parent, options);
 }
+
+function openModularUI(width, height, windowTitle, content) {
+    var s = 'menubar=no, toolbar=no, location=no, resizable=no, scrollbars=yes, status=no, width = ' + width + ', height = ' + height;
+    var styles = '';
+    var scripts = '';
+
+    var NFW = window.open('/GameClient/ModularWindow', windowTitle, s, true);
+
+    NFW.addEventListener('load', function () {
+        content.appendTo(this.document.querySelector('#contentArea'));
+    }, false); 
+
+    NFW.blur();
+
+    window.focus();
+
+    NFW.resizeTo(width, height);
+
+    NFW.focus();
+}

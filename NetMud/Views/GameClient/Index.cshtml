@@ -6,35 +6,35 @@
 
 <div class="parserClientTop">
     <div id="locationBreadcrumbs">
-        <span output-data-binding="Local.ZoneName"></span>
-        <span output-eval-key="Local.LocaleName" output-eval-code="if(data.length === 0) { element.css({'display': 'none'}); } else { element.css({'display' : 'block'}); }">&nbsp;>&nbsp;<span output-data-binding="Local.LocaleName"></span></span>
-        <span output-eval-key="Local.RoomName" output-eval-code="if(data.length === 0) { element.css({'display': 'none'}); } else { element.css({'display' : 'block'}); }">&nbsp;>&nbsp;<span output-data-binding="Local.RoomName"></span></span>
+        <span class="contentContainer" output-data-binding="Local.ZoneName"></span>
+        <span class="contentContainer" output-eval-key="Local.LocaleName" output-eval-code="if(data.length === 0) { element.css({'display': 'none'}); } else { element.css({'display' : 'block'}); }">&nbsp;>&nbsp;<span output-data-binding="Local.LocaleName"></span></span>
+        <span class="contentContainer" output-eval-key="Local.RoomName" output-eval-code="if(data.length === 0) { element.css({'display': 'none'}); } else { element.css({'display' : 'block'}); }">&nbsp;>&nbsp;<span output-data-binding="Local.RoomName"></span></span>
     </div>
     <div id="locationDescription">
-        <span output-data-binding="Local.LocationDescriptive"></span>
+        <span class="contentContainer" output-data-binding="Local.LocationDescriptive"></span>
     </div>
 </div>
 <div class="parserClient">
     <div class="parserClientLeft sidebar">
-        <div id="quadrentOne" class="quadrant">
-            @Html.Partial("DockerSettings", new { quadrant = "1" })
-            <span output-data-binding="Environment"></span>
+        <div id="quadrant-1" class="quadrant">
+            @Html.Partial("DockerSettings", 1)
+            <span class="contentContainer" output-data-binding="Environment"></span>
         </div>
-        <div id="quadrentTwo" class="quadrant">
-            @Html.Partial("DockerSettings", new { quadrant = "2" })
-            <span output-eval-key="Local.Exits" output-eval-code="if(data[0] != undefined && data[0].length === 0) { element.css({'display': 'none'}); } else { element.css({'display' : 'block'}); }">Exits: <span output-data-binding="Local.Exits"></span></span>
-            <span output-eval-key="Local.Populace" output-eval-code="if(data[0] != undefined && data[0].length === 0) { element.css({'display': 'none'}); } else { element.css({'display' : 'block'}); }">Populace: <span output-data-binding="Local.Populace"></span></span>
-            <span output-eval-key="Local.Inventory" output-eval-code="if(data[0] != undefined && data[0].length === 0) { element.css({'display': 'none'}); } else { element.css({'display' : 'block'}); }">Inventory: <span output-data-binding="Local.Inventory"></span></span>
+        <div id="quadrant-2" class="quadrant">
+            @Html.Partial("DockerSettings", 2)
+            <span class="contentContainer" output-eval-key="Local.Exits" output-eval-code="if(data[0] != undefined && data[0].length === 0) { element.css({'display': 'none'}); } else { element.css({'display' : 'block'}); }">Exits: <span output-data-binding="Local.Exits"></span></span>
+            <span class="contentContainer" output-eval-key="Local.Populace" output-eval-code="if(data[0] != undefined && data[0].length === 0) { element.css({'display': 'none'}); } else { element.css({'display' : 'block'}); }">Populace: <span output-data-binding="Local.Populace"></span></span>
+            <span class="contentContainer" output-eval-key="Local.Inventory" output-eval-code="if(data[0] != undefined && data[0].length === 0) { element.css({'display': 'none'}); } else { element.css({'display' : 'block'}); }">Inventory: <span output-data-binding="Local.Inventory"></span></span>
         </div>
     </div>
     <div class="parserClientRight sidebar">
-        <div id="quadrentThree" class="quadrant">
-            @Html.Partial("DockerSettings", new { quadrant = "3" })
-            <span output-data-binding="Self"></span>
+        <div id="quadrant-3" class="quadrant">
+            @Html.Partial("DockerSettings", 3)
+            <span class="contentContainer" output-data-binding="Self"></span>
         </div>
-        <div id="quadrentFour" class="quadrant">
-            @Html.Partial("DockerSettings", new { quadrant = "4" })
-            <span output-data-binding="Extended"></span>
+        <div id="quadrant-4" class="quadrant">
+            @Html.Partial("DockerSettings", 4)
+            <span class="contentContainer" output-data-binding="Extended"></span>
         </div>
     </div>
     <div class="textParserClient">
@@ -42,6 +42,7 @@
         <input type="text" id="input" name="input" class="parserInput" />
     </div>
     <a href="./GameClient" id="clientReload">Reload Client</a>
+    <a href="#" id="disconnect">Disconnect</a>
 </div>
 
 @Styles.Render("~/Content/GameClient.css")
@@ -50,7 +51,47 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        Tutorial($('#locationBreadcrumbs'), "This is where you are.");
+        Tutorial($('#locationBreadcrumbs'), "This is where you are in the world.");
         Tutorial($('#input'), "This is where you type commands. The UP and DOWN arrow keys will cycle through prior input. Hit ENTER to submit commands.");
+
+        $('#disconnect').click(function (e) {
+            AppendOutput('Connection TERMINATED.');
+            window.connection.close();
+
+            $('disconnect').off('click');
+            return false;
+        });
+
+        $(".quadrantDocker[data-destination-quadrant!='-1']").click(function (e) {
+            var $this = $(this);
+
+            var originNumber = $this.attr('data-origin-quadrant');
+            var $origin = $('div#quadrant-' + originNumber + '.quadrant');
+
+            var destinationNumber = $this.attr('data-destination-quadrant');
+            var $destination = $('div#quadrant-' + destinationNumber + '.quadrant');
+
+            var myContent = $origin.children('.contentContainer');
+            var theirContent = $destination.children('.contentContainer');
+
+            myContent.detach();
+            theirContent.detach();
+
+            myContent.appendTo($destination);
+            theirContent.appendTo($origin);
+        });
+
+        $(".quadrantDocker[data-destination-quadrant='-1']").click(function (e) {
+            var $this = $(this);
+
+            var originNumber = $this.attr('data-origin-quadrant');
+            var $origin = $('div#quadrant-' + originNumber + '.quadrant');
+
+            var myContent = $origin.children('.contentContainer');
+
+            myContent.detach();
+
+            openModularUI(500, 500, 'Quadrant ' + originNumber, myContent);
+        });
     });
 </script>
