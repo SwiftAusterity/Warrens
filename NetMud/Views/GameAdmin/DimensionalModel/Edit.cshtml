@@ -30,115 +30,78 @@
         <div class="clearfix"></div>
         <h3>Manual Model</h3>
         <hr />
+
+        <div class="form-group row" style="display: inline-flex;">
+            <label class="col-sm-2 col-form-label">Type Selector</label>
+            <div class="col-sm-10">
+                @Html.DropDownList("PaintbrushSymbol", Enum.GetNames(typeof(DamageType)).Select(rl =>
+                       new SelectListItem() { Text = ((DamageType)Enum.Parse(typeof(DamageType), rl)).GetDescription(), Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString() })
+                                    , htmlAttributes: new { id = "PaintbrushSymbol", @class = "form-control" })
+                <span style="padding: 15px; font-style: italic;">Hold Shift to paint or click on nodes individually.</span>
+            </div>
+            <a href="#" class="btn" id="clearFields" style="color: red;">Clear Fields</a>
+        </div>
+
         for (i = 10; i >= 0; i--)
         {
             <div class="row">
                 <div>
-                    <label id="lblModelPlaneNames" name="lblModelPlaneNames" for="ModelPlaneNames" class="col-sm-1 col-form-label">Name</label>
+                    @Html.DescriptiveLabelFor(m => m.ModelPlaneNames, new { @class = "col-sm-1 col-form-label" })
                     <input type="text" id="ModelPlaneNames" name="ModelPlaneNames" value="@Model.DataObject.ModelPlanes.ElementAt(i).TagName" class="col-sm-1" />
                 </div>
                 <div>
-                    <label id="lblCoordinateDamageTypes" name="lblCoordinateDamageTypes" for="CoordinateDamageTypes" class="col-sm-1 col-form-label">X-Plane</label>
-                    @Html.DropDownList("CoordinateDamageTypes", Enum.GetNames(typeof(DamageType)).Select(rl =>
-                    new SelectListItem()
-                    {
-                        Text = ((DamageType)Enum.Parse(typeof(DamageType), rl)).GetDescription(),
-                        Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString(),
-                        Selected = rl.Equals(Enum.GetName(typeof(DamageType), Model.DataObject.ModelPlanes.ElementAt(i).ModelNodes.ElementAt(0).Style))
-                    }), htmlAttributes: new { id = "CoordinateDamageTypes", @class = "dimModelNode edge" })
+                    <div class="col-md-offset-0 col-md-10 dimModelPlane">
+                        @Html.DescriptiveLabelFor(m => m.CoordinateDamageTypes, new { @class = "col-sm-1 col-form-label" })
 
-                    @Html.DropDownList("CoordinateDamageTypes", Enum.GetNames(typeof(DamageType)).Select(rl =>
-                    new SelectListItem()
-                    {
-                        Text = ((DamageType)Enum.Parse(typeof(DamageType), rl)).GetDescription(),
-                        Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString(),
-                        Selected = rl.Equals(Enum.GetName(typeof(DamageType), Model.DataObject.ModelPlanes.ElementAt(i).ModelNodes.ElementAt(1).Style))
-                    }), htmlAttributes: new { id = "CoordinateDamageTypes", @class = "dimModelNode exterior" })
-                    @Html.DropDownList("CoordinateDamageTypes", Enum.GetNames(typeof(DamageType)).Select(rl =>
-                    new SelectListItem()
-                    {
-                        Text = ((DamageType)Enum.Parse(typeof(DamageType), rl)).GetDescription(),
-                        Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString(),
-                        Selected = rl.Equals(Enum.GetName(typeof(DamageType), Model.DataObject.ModelPlanes.ElementAt(i).ModelNodes.ElementAt(2).Style))
-                    }), htmlAttributes: new { id = "CoordinateDamageTypes", @class = "dimModelNode exterior" })
-                    @Html.DropDownList("CoordinateDamageTypes", Enum.GetNames(typeof(DamageType)).Select(rl =>
-                    new SelectListItem()
-                    {
-                        Text = ((DamageType)Enum.Parse(typeof(DamageType), rl)).GetDescription(),
-                        Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString(),
-                        Selected = rl.Equals(Enum.GetName(typeof(DamageType), Model.DataObject.ModelPlanes.ElementAt(i).ModelNodes.ElementAt(3).Style))
-                    }), htmlAttributes: new { id = "CoordinateDamageTypes", @class = "dimModelNode interior" })
-                    @Html.DropDownList("CoordinateDamageTypes", Enum.GetNames(typeof(DamageType)).Select(rl =>
-                    new SelectListItem()
-                    {
-                        Text = ((DamageType)Enum.Parse(typeof(DamageType), rl)).GetDescription(),
-                        Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString(),
-                        Selected = rl.Equals(Enum.GetName(typeof(DamageType), Model.DataObject.ModelPlanes.ElementAt(i).ModelNodes.ElementAt(4).Style))
-                    }), htmlAttributes: new { id = "CoordinateDamageTypes", @class = "dimModelNode interior" })
-                    @Html.DropDownList("CoordinateDamageTypes", Enum.GetNames(typeof(DamageType)).Select(rl =>
-                    new SelectListItem()
-                    {
-                        Text = ((DamageType)Enum.Parse(typeof(DamageType), rl)).GetDescription(),
-                        Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString(),
-                        Selected = rl.Equals(Enum.GetName(typeof(DamageType), Model.DataObject.ModelPlanes.ElementAt(i).ModelNodes.ElementAt(5).Style))
-                    }), htmlAttributes: new { id = "CoordinateDamageTypes", @class = "dimModelNode center" })
-                    @Html.DropDownList("CoordinateDamageTypes", Enum.GetNames(typeof(DamageType)).Select(rl =>
-                    new SelectListItem()
-                    {
-                        Text = ((DamageType)Enum.Parse(typeof(DamageType), rl)).GetDescription(),
-                        Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString(),
-                        Selected = rl.Equals(Enum.GetName(typeof(DamageType), Model.DataObject.ModelPlanes.ElementAt(i).ModelNodes.ElementAt(6).Style))
-                    }), htmlAttributes: new { id = "CoordinateDamageTypes", @class = "dimModelNode interior" })
-
-                    @Html.DropDownList("CoordinateDamageTypes", Enum.GetNames(typeof(DamageType)).Select(rl =>
-                    new SelectListItem()
-                    {
-                        Text = ((DamageType)Enum.Parse(typeof(DamageType), rl)).GetDescription(),
-                        Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString(),
-                        Selected = rl.Equals(Enum.GetName(typeof(DamageType), Model.DataObject.ModelPlanes.ElementAt(i).ModelNodes.ElementAt(7).Style))
-                    }), htmlAttributes: new { id = "CoordinateDamageTypes", @class = "dimModelNode interior" })
-
-                    @Html.DropDownList("CoordinateDamageTypes", Enum.GetNames(typeof(DamageType)).Select(rl =>
-                    new SelectListItem()
-                    {
-                        Text = ((DamageType)Enum.Parse(typeof(DamageType), rl)).GetDescription(),
-                        Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString(),
-                        Selected = rl.Equals(Enum.GetName(typeof(DamageType), Model.DataObject.ModelPlanes.ElementAt(i).ModelNodes.ElementAt(8).Style))
-                    }), htmlAttributes: new { id = "CoordinateDamageTypes", @class = "dimModelNode exterior" })
-
-                    @Html.DropDownList("CoordinateDamageTypes", Enum.GetNames(typeof(DamageType)).Select(rl =>
-                    new SelectListItem()
-                    {
-                        Text = ((DamageType)Enum.Parse(typeof(DamageType), rl)).GetDescription(),
-                        Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString(),
-                        Selected = rl.Equals(Enum.GetName(typeof(DamageType), Model.DataObject.ModelPlanes.ElementAt(i).ModelNodes.ElementAt(9).Style))
-                    }), htmlAttributes: new { id = "CoordinateDamageTypes", @class = "dimModelNode exterior" })
-
-                    @Html.DropDownList("CoordinateDamageTypes", Enum.GetNames(typeof(DamageType)).Select(rl =>
-                    new SelectListItem()
-                    {
-                        Text = ((DamageType)Enum.Parse(typeof(DamageType), rl)).GetDescription(),
-                        Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString(),
-                        Selected = rl.Equals(Enum.GetName(typeof(DamageType), Model.DataObject.ModelPlanes.ElementAt(i).ModelNodes.ElementAt(10).Style))
-                    }), htmlAttributes: new { id = "CoordinateDamageTypes", @class = "dimModelNode edge" })
+                        @for (var n = 0; n <= 10; n++)
+                        {
+                            var nodeValue = (short)Model.DataObject.ModelPlanes.ElementAt(i).ModelNodes.ElementAt(n).Style;
+                            var nodeText = Model.DataObject.ModelPlanes.ElementAt(i).ModelNodes.ElementAt(n).Style.GetDescription().Substring(0, 1);
+                            <div class="dimModelNode" data-value="@nodeValue"><input type="hidden" id="CoordinateDamageTypes" name="CoordinateDamageTypes" class="CoordinateDamageTypes" value="@nodeValue" /><span id="nodeValue" class="nodeValue">@nodeText</span></div>
+                        }
+                    </div>
                 </div>
             </div>
         }
 
         <div class="clearfix"></div>
-        @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Dimensional Model", IncludeCancel = true })
+        @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "DimensionalModel", IncludeCancel = true })
     }
 </section>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+
     <script>
         $(document).ready(function () {
-            $('select.dimModelNode').each(function () {
-                $(this).attr('data-value', $(this).children(':selected').val());
-            }).on('change', function (ev) {
-                $(this).attr('data-value', $(this).children(':selected').val());
+            $(document).keydown(function (e) {
+                if (e.keyCode === 16) {
+                    $('div.dimModelNode').on('mouseenter', function () { paint($(this)) });
+                }
+            }).keyup(function (e) {
+                if (e.keyCode === 16) {
+                    $('div.dimModelNode').off('mouseenter');
+                }
+            });
+
+            $('div.dimModelNode').click(function () { paint($(this)) });
+
+            $('#clearFields').click(function () {
+                $('.dimModelNode').attr('data-value', '0');
+                $('.CoordinateDamageTypes').val('0');
+                $('.nodeValue').text('0');
+
+                return false;
             });
         });
+
+        function paint(nodeCell) {
+            var symbol = $('#PaintbrushSymbol option:selected').text().substr(0, 1);
+            var value = $('#PaintbrushSymbol option:selected').val();
+
+            nodeCell.children('input').val(value);
+            nodeCell.children('span').text(symbol);
+            nodeCell.attr('data-value', value);
+        }
     </script>
 }

@@ -106,15 +106,21 @@ div.form-group a.removeRow {
     position: absolute;
 }
 
+.dimModelPlane {
+    display: inline-flex;
+}
+
 .dimModelNode {
-    width: 32px;
+    width: 14px;
+    height: 26px;
+    padding: 1px;
     background-color: black;
     color: chartreuse;
+    text-align: center;
 }
 
     .dimModelNode[data-value='0'] {
         color: darkgrey;
-        background-color: white;
     }
 
 .adminDashboard {
