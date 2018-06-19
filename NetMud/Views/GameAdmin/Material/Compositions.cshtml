@@ -8,7 +8,7 @@
         <div class="form-group row">
             <label class="col-sm-1 col-form-label"><a href="#" class="removeRow" id="removeCompositionRow" title="Remove this">X</a></label>
             @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Compositions", "Material", Model.ValidMaterials, -1))
-            @Html.LabelFor(m => m.CompositionPercentages, new { @class = "col-sm-1 col-form-label" })
+            @Html.DescriptiveLabelFor(m => m.CompositionPercentages, new { @class = "col-sm-1 col-form-label" })
             <div class="col-md-3">
                 @Html.TextBoxFor(m => m.CompositionPercentages, new { @class = "form-control" })
             </div>
@@ -22,7 +22,7 @@
                 <label class="col-sm-1 col-form-label"><a href="#" class="removeRow" id="removeCompositionRow" title="Remove this">X</a></label>
                 @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Compositions", "Material", Model.ValidMaterials, Composition.Key.Id))
 
-                @Html.LabelFor(m => m.CompositionPercentages, new { @class = "col-sm-1 col-form-label" })
+                @Html.DescriptiveLabelFor(m => m.CompositionPercentages, new { @class = "col-sm-1 col-form-label" })
                 <div class="col-md-3">
                     <input id="CompositionPercentages" name="CompositionPercentages" class="form-control" type="text" value="@Composition.Value.ToString()">
                 </div>
@@ -33,7 +33,7 @@
 
 <script type="text/javascript">
         var compositionDropdown = decodeHtml('@Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Compositions", "Material", Model.ValidMaterials, -1)).ToString().Replace(Environment.NewLine, "")');
-        var textboxLabel = decodeHtml('@Html.LabelFor(m => m.CompositionPercentages, new { @class = "col-sm-1 col-form-label" }).ToString().Replace(Environment.NewLine, "")');
+        var textboxLabel = decodeHtml('@Html.DescriptiveLabelFor(m => m.CompositionPercentages, new { @class = "col-sm-1 col-form-label" }).ToString().Replace(Environment.NewLine, "")');
         var textboxControl = decodeHtml('@Html.TextBoxFor(m => m.CompositionPercentages, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');
 
         $(document).ready(function () {

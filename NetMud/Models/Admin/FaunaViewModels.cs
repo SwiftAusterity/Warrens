@@ -41,13 +41,13 @@ namespace NetMud.Models.Admin
         }
 
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
-        [Display(Name = "Name")]
+        [Display(Name = "Name", Description = "The keyword name used for this.")]
         [DataType(DataType.Text)]
         public string Name { get; set; }
 
         [StringLength(2000, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 20)]
         [DataType(DataType.MultilineText)]
-        [Display(Name = "Help Text")]
+        [Display(Name = "Help Text", Description = "The description shown when the Help command is used against this.")]
         public string HelpText { get; set; }
 
         [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]

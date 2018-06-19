@@ -14,7 +14,7 @@
 <h4>Dimensional Properties</h4>
 <hr />
 <div class="form-group row">
-    @Html.LabelFor(m => m.DimensionalModelId, new { @class = "col-sm-2 col-form-label" })
+    @Html.DescriptiveLabelFor(m => m.DimensionalModelId, new { @class = "col-sm-2 col-form-label" })
     <div class="col-md-4">
         @Html.DropDownList("DimensionalModelId", Model.ValidModels.Select(rl =>
                                                                 new SelectListItem() { Text = rl.Name, Value = rl.Id.ToString(), Selected = rl.Id.Equals(Model.DimensionalModelId) })
@@ -31,11 +31,11 @@
         foreach (var container in Model.ModelDataObject.Composition)
         {
             <div class="form-group row">
-                @Html.LabelFor(m => m.ModelPartNames, new { @class = "col-sm-2 col-form-label" })
+                @Html.DescriptiveLabelFor(m => m.ModelPartNames, new { @class = "col-sm-2 col-form-label" })
                 <div class="col-sm-4">
                     <input id="ModelPartNames" name="ModelPartNames" class="form-control" type="text" value="@container.Key">
                 </div>
-                @Html.LabelFor(m => m.ModelPartMaterials, new { @class = "col-sm-2 col-form-label" })
+                @Html.DescriptiveLabelFor(m => m.ModelPartMaterials, new { @class = "col-sm-2 col-form-label" })
                 <div class="col-sm-4">
                     @Html.DropDownList("ModelPartMaterials", new SelectList(Model.ValidMaterials, "Id", "Name", container.Value.Id)
                                                                , "Select One" , htmlAttributes: new { id = "ModelPartMaterials", @class = "form-control" })

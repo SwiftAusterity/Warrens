@@ -7,7 +7,7 @@
     var cssClass = ViewData["cssClass"] == null ? "form-control" : ViewData["cssClass"];
 }
 
-@Html.LabelFor(m => m, new { @class = String.Format("col-sm-{0} col-form-label", columnLabelValue) })
+@Html.DescriptiveLabelFor(m => m, new { @class = String.Format("col-sm-{0} col-form-label", columnLabelValue) })
 <div class="col-sm-@columnInputValue">
     @Html.EnumDropDownListFor(m => m, new { @class = cssClass })
     @Html.ValidationMessageFor(m => m, "", new { @class = "text-danger" })

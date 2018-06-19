@@ -10,7 +10,7 @@
         @using (Html.BeginForm("Index", "Logging", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
             @Html.AntiForgeryToken()
-            @Html.LabelFor(m => m.SelectedLog, new { @class = "col-sm-2 col-form-label" })
+            @Html.DescriptiveLabelFor(m => m.SelectedLog, new { @class = "col-sm-2 col-form-label" })
             <div class="col-sm-2">
                 @Html.DropDownList("SelectedLog", Model.ChannelNames.Select(rl =>
                             new SelectListItem() { Text = rl, Value = rl })

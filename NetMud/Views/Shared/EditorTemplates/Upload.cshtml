@@ -7,7 +7,7 @@
     var cssClass = ViewData["cssClass"] == null ? "form-control" : ViewData["cssClass"];
 }
 
-@Html.LabelFor(m => m, new { @class = String.Format("col-sm-{0} col-form-label", columnLabelValue) })
+@Html.DescriptiveLabelFor(m => m, new { @class = String.Format("col-sm-{0} col-form-label", columnLabelValue) })
 <div class="col-sm-@columnInputValue">
     <input type="file" name="ModelFile" id="ModelFile" class="@cssClass" style="border: none;" />
 </div>

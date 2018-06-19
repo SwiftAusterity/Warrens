@@ -15,13 +15,13 @@
 
         <ul class="nav navbar-nav navbar-right">
             <li>@Html.ActionLink("Test Client", "Index", "GameClient", routeValues: null, htmlAttributes: new { title = "The Game Client", Style = "color: orange" })</li>
-            <li>
+            <li id="currentCharacterSelector">
                 @if (authUser.GameAccount.Characters.Count() > 0)
                 {
                     @Html.DropDownList("CurrentlySelectedCharacter", authUser.GameAccount.Characters.Select(ch =>
                     new SelectListItem() { Text = ch.FullName()
                                         , Value = ch.Id.ToString()
-                                        , Selected = authUser.GameAccount.CurrentlySelectedCharacter != default(long) && authUser.GameAccount.CurrentlySelectedCharacter.Equals(ch.Id) })
+                                        , Selected = authUser.GameAccount.CurrentlySelectedCharacter >= 0 && authUser.GameAccount.CurrentlySelectedCharacter.Equals(ch.Id) })
                                         , "Select One", htmlAttributes: new { id = "currentCharacter", Style = "margin: 15px;" })
                 }
                 else
@@ -36,6 +36,7 @@
                         <li class="dropdown-header" style="color: mediumvioletred">Characters</li>
                         <li>@Html.ActionLink("Dashboard", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })</li>
                         <li>@Html.ActionLink("Manage Characters", "ManageCharacters", "Manage", routeValues: null, htmlAttributes: new { title = "Manage Characters" })</li>
+                        <li><a href="#" id="tutorialToggle">Tutorials <span id="tutorialMode" class="tutorialToggle">OFF</span></a></li>
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="divider"></li>
@@ -48,7 +49,7 @@
                             <li>@Html.ActionLink("Manage Players", "Index", "Player", routeValues: null, htmlAttributes: new { title = "Manage Players" })</li>
                         }
                         <li class="divider"></li>
-                        <li ><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+                        <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
                     </ul>
                 </div>
             </li>
@@ -62,10 +63,28 @@ else
         <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
     </ul>
 }
-@section Scripts {
-    @Scripts.Render("~/bundles/bootstrap")
 
-    <script type="text/javascript">
+<script type="text/javascript">
+    $(document).ready(function () {
+        if (Cookies.get('tutorialMode') !== undefined) {
 
-    </script>
-}
+            if (Cookies.get('tutorialMode') === 'on') {
+                $('#tutorialMode').html('ON');
+            }
+        }
+
+        $('#tutorialToggle').click(function () {
+            if ($('#tutorialMode').html() === 'OFF') {
+                Cookies.set('tutorialMode', 'on');
+                $('#tutorialMode').html('ON');
+            } else {
+                Cookies.set('tutorialMode', 'off');
+                $('#tutorialMode').html('OFF');
+            }
+
+            return false;
+        });
+
+        Tutorial($('#currentCharacterSelector'), 'Select a Character');
+    });
+</script>

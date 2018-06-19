@@ -13,7 +13,7 @@
         <hr />
         <div class="form-group row">
             @Html.EditorFor(e => e.Strength, new { columnCount = 3 })
-            @Html.LabelFor(m => m.SensoryType, new { @class = "col-sm-1 col-form-label" })
+            @Html.DescriptiveLabelFor(m => m.SensoryType, new { @class = "col-sm-1 col-form-label" })
             <div class="col-md-3">
                 @Html.DropDownList("SensoryType", Enum.GetNames(typeof(MessagingType)).Select(rl =>
                                                                                 new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(MessagingType), rl)).ToString(), Selected = rl.Equals(Enum.GetName(typeof(MessagingType), Model.SensoryType)) })

@@ -9,7 +9,7 @@
         <div class="form-group row">
             <label class="col-sm-1 col-form-label"><a href="#" class="removeRow" id="removeInternalCompositionRow" title="Remove this">X</a></label>
             @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("InternalCompositionIds", "Piece", Model.ValidInanimateDatas, -1))
-            @Html.LabelFor(m => m.InternalCompositionPercentages, new { @class = "col-sm-1 col-form-label" })
+            @Html.DescriptiveLabelFor(m => m.InternalCompositionPercentages, new { @class = "col-sm-1 col-form-label" })
             <div class="col-md-3">
                 @Html.TextBoxFor(m => m.InternalCompositionPercentages, new { @class = "form-control" })
             </div>
@@ -23,7 +23,7 @@
                 <label class="col-sm-1 col-form-label"><a href="#" class="removeRow" id="removeInternalCompositionRow" title="Remove this">X</a></label>
                 @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("InternalCompositionIds", "Inanimate", Model.ValidInanimateDatas, internalComposition.Key.Id))
 
-                @Html.LabelFor(m => m.InternalCompositionPercentages, new { @class = "col-sm-1 col-form-label" })
+                @Html.DescriptiveLabelFor(m => m.InternalCompositionPercentages, new { @class = "col-sm-1 col-form-label" })
                 <div class="col-md-3">
                     <input id="InternalCompositionPercentages" name="InternalCompositionPercentages" class="form-control" type="text" value="@internalComposition.Value.ToString()">
                 </div>
@@ -35,7 +35,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
         var compositionDropdown = decodeHtml('@Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("InternalCompositionIds", "Inanimate", Model.ValidInanimateDatas, -1)).ToString().Replace(Environment.NewLine, "")');
-        var textboxLabel = decodeHtml('@Html.LabelFor(m => m.InternalCompositionPercentages, new { @class = "col-sm-1 col-form-label" }).ToString().Replace(Environment.NewLine, "")');
+        var textboxLabel = decodeHtml('@Html.DescriptiveLabelFor(m => m.InternalCompositionPercentages, new { @class = "col-sm-1 col-form-label" }).ToString().Replace(Environment.NewLine, "")');
         var textboxControl = decodeHtml('@Html.TextBoxFor(m => m.InternalCompositionPercentages, new { @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');
 
         $("#addInternalCompositionRow").click(function () {
