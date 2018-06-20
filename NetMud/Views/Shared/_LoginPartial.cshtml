@@ -19,10 +19,10 @@
                 @if (authUser.GameAccount.Characters.Count() > 0)
                 {
                     @Html.DropDownList("CurrentlySelectedCharacter", authUser.GameAccount.Characters.Select(ch =>
-                    new SelectListItem() { Text = ch.FullName()
-                                        , Value = ch.Id.ToString()
-                                        , Selected = authUser.GameAccount.CurrentlySelectedCharacter >= 0 && authUser.GameAccount.CurrentlySelectedCharacter.Equals(ch.Id) })
-                                        , "Select One", htmlAttributes: new { id = "currentCharacter", Style = "margin: 15px;" })
+                 new SelectListItem() { Text = ch.FullName()
+                                     , Value = ch.Id.ToString()
+                                     , Selected = authUser.GameAccount.CurrentlySelectedCharacter >= 0 && authUser.GameAccount.CurrentlySelectedCharacter.Equals(ch.Id) })
+                                     , "Select One", htmlAttributes: new { id = "currentCharacter", Style = "margin: 15px;" })
                 }
                 else
                 {
@@ -67,27 +67,27 @@ else
 
 <script type="text/javascript">
     $(document).ready(function () {
-        if (Cookies.get('tutorialMode') !== undefined) {
+        if ('@Request.IsAuthenticated' === 'True' && '@if(authUser != null) { Html.Raw("authed"); }' == 'Authed') {
+            var tutorialModeCurrent = '@authUser.GameAccount.Config.UITutorialMode';
 
-            if (Cookies.get('tutorialMode') === 'on') {
-                $('#tutorialMode').html('ON').css({ 'color': 'green' });
-            }
-        } else {
-            Cookies.set('tutorialMode', 'on');
-            $('#tutorialMode').html('ON').css({ 'color': 'green' });
-        }
-
-        $('#tutorialToggle').click(function () {
-            if ($('#tutorialMode').html() === 'OFF') {
-                Cookies.set('tutorialMode', 'on');
+            if (tutorialModeCurrent === 'True') {
                 $('#tutorialMode').html('ON').css({ 'color': 'green' });
             } else {
-                Cookies.set('tutorialMode', 'off');
                 $('#tutorialMode').html('OFF').css({ 'color': 'darkgrey' });
             }
 
-            return false;
-        });
+            $('#tutorialToggle').click(function () {
+                if ($('#tutorialMode').html() === 'OFF') {
+                    $('#tutorialMode').html('ON').css({ 'color': 'green' });
+                    $.post('/Manage/ToggleTutorialMode/true');
+                } else {
+                    $('#tutorialMode').html('OFF').css({ 'color': 'darkgrey' });
+                    $.post('/Manage/ToggleTutorialMode/false');
+               }
+
+                return false;
+            });
+        }
 
         Tutorial($('#currentCharacterSelector'), 'Select a Character');
 

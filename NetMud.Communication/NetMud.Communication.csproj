@@ -59,10 +59,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NetMud.Authentication\NetMud.Authentication.csproj">
-      <Project>{DBC07A3D-3A1E-48C1-9A72-D115FF3E4349}</Project>
-      <Name>NetMud.Authentication</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NetMud.Cartography\NetMud.Cartography.csproj">
       <Project>{f4eab5d7-93fa-4b7b-9e6d-b7f191e66945}</Project>
       <Name>NetMud.Cartography</Name>

@@ -21,5 +21,11 @@ namespace NetMud.DataStructure.Base.PlayerConfiguration
         /// The ui config for this player
         /// </summary>
         IModularUIConfig UIConfig { get; set; }
+
+        /// <summary>
+        /// Attempt to restore the config from file
+        /// </summary>
+        /// <returns>False = no file, True = file</returns>
+        bool RestoreConfig();
     }
 }

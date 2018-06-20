@@ -51,6 +51,18 @@ namespace NetMud.DataAccess.Cache
         }
 
         /// <summary>
+        /// Generate a live key for a live object
+        /// </summary>
+        /// <param name="objectType">System type of the entity being cached</param>
+        /// <param name="marker">Unique signature for a live entity</param>
+        [JsonConstructor]
+        public ConfigDataCacheKey(Type objectType, string name, ConfigDataType type)
+        {
+            ObjectType = objectType;
+            BirthMark = string.Format("{0}_{1}", type, name); ;
+        }
+
+        /// <summary>
         /// Hash key used by the cache system
         /// </summary>
         /// <returns>the key's hash</returns>

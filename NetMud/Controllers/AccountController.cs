@@ -6,6 +6,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using NetMud.Authentication;
+using NetMud.Data.ConfigData;
+using NetMud.Data.System;
 using NetMud.Models;
 
 namespace NetMud.Controllers
@@ -81,7 +83,7 @@ namespace NetMud.Controllers
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, model.RememberMe });
                 case SignInStatus.Failure:
                 default:
                     ModelState.AddModelError("", "Invalid login attempt.");
@@ -154,11 +156,17 @@ namespace NetMud.Controllers
             if (ModelState.IsValid)
             {
                 var newGameAccount = new Account(model.GlobalUserHandle);
+                var newAccountConfig = new AccountConfig(newGameAccount)
+                {
+                    UITutorialMode = true
+                };
 
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email, GameAccount = newGameAccount };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    //Save the new config
+                    newAccountConfig.Save();
                     await UserManager.AddToRoleAsync(user.Id, "Player");
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
                     

@@ -4,6 +4,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Data.Entity;
 using System.ComponentModel.DataAnnotations.Schema;
+using NetMud.Data.System;
 
 namespace NetMud.Authentication
 {

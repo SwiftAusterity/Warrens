@@ -87,10 +87,10 @@ namespace NetMud.Controllers
 
             var userId = User.Identity.GetUserId();
             var model = new ManageCharactersViewModel
-             {
-                 authedUser = UserManager.FindById(userId),
-                 ValidRoles = (StaffRank[])Enum.GetValues(typeof(StaffRank))
-             };
+            {
+                authedUser = UserManager.FindById(userId),
+                ValidRoles = (StaffRank[])Enum.GetValues(typeof(StaffRank))
+            };
 
             model.ValidRaces = BackingDataCache.GetAll<Race>();
 
@@ -157,6 +157,26 @@ namespace NetMud.Controllers
             }
 
             return RedirectToAction("ManageCharacters", new { Message = message });
+        }
+
+        [HttpPost]
+        public ActionResult ToggleTutorialMode(bool state)
+        {
+            string message = string.Empty;
+
+            var userId = User.Identity.GetUserId();
+            var authedUser = UserManager.FindById(userId);
+            var account = authedUser.GameAccount;
+
+            if (account == null)
+                message = "That account does not exist";
+            else
+            {
+                account.Config.UITutorialMode = state;
+                account.Config.Save();
+            }
+
+            return new EmptyResult();
         }
 
         #region AuthStuff

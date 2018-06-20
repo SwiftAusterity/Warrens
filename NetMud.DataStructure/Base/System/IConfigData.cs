@@ -13,6 +13,6 @@
         /// <summary>
         /// The type of data this is (for storage)
         /// </summary>
-        ConfigDataType Type { get; set; }
+        ConfigDataType Type { get; }
     }
 }

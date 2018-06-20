@@ -1,8 +1,9 @@
-﻿
+﻿using NetMud.Data.ConfigData;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataAccess.Database;
 using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.DataStructure.Base.PlayerConfiguration;
 using NetMud.DataStructure.Base.System;
 using NetMud.Utility;
 using System;
@@ -11,7 +12,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Linq;
 
-namespace NetMud.Authentication
+namespace NetMud.Data.System
 {
     /// <summary>
     /// User account
@@ -41,6 +42,8 @@ namespace NetMud.Authentication
         {
             GlobalIdentityHandle = handle;
             LogChannelSubscriptions = new List<string>();
+
+            var forceLoad = Config;
         }
 
         /// <summary>
@@ -56,6 +59,8 @@ namespace NetMud.Authentication
                 LogChannelSubscriptions = logSubscriptions.Split('|');
             else
                 LogChannelSubscriptions = new List<string>();
+
+            var forceLoad = Config;
         }
 
         /// <summary>
@@ -105,6 +110,48 @@ namespace NetMud.Authentication
             {
                 _characters = value.ToList();
             }
+        }
+
+        /// <summary>
+        /// The config values for this account
+        /// </summary>
+        private IAccountConfig _config;
+
+        /// <summary>
+        /// The config values for this account
+        /// </summary>
+        public IAccountConfig Config
+        {
+            get
+            {
+                if (_config == null)
+                {
+                    _config = ConfigDataCache.Get<IAccountConfig>(new ConfigDataCacheKey(typeof(IAccountConfig), GlobalIdentityHandle, ConfigDataType.Player));
+                }
+
+                if (_config == null)
+                {
+                    //Try and get it from the file
+                    var _config = new AccountConfig(this);
+
+                    if (!_config.RestoreConfig())
+                    {
+                        //Just make it new and save it
+                        _config = new AccountConfig(this)
+                        {
+                            UITutorialMode = true
+                        };
+                        _config.Save();
+                    }
+                }
+
+                return _config;
+            }
+            set
+            {
+                _config = value;
+            }
+
         }
 
         /// <summary>

@@ -77,7 +77,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Account.cs" />
     <Compile Include="IdentityConfig.cs" />
     <Compile Include="IdentityModels.cs" />
     <Compile Include="Migrations\201606230321457_one.cs" />
@@ -123,6 +122,10 @@
     <ProjectReference Include="..\NetMud.DataStructure\NetMud.DataStructure.csproj">
       <Project>{88b7a648-fe23-4e88-9b60-ae17c8858af4}</Project>
       <Name>NetMud.DataStructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NetMud.Data\NetMud.Data.csproj">
+      <Project>{8b2cb5f6-65ca-4458-856b-6957e9309dbb}</Project>
+      <Name>NetMud.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\NetMud.Utility\NetMud.Utility.csproj">
       <Project>{9F3CAEC0-73DC-463C-8EF7-13B83BC8FB12}</Project>

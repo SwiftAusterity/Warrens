@@ -1,4 +1,5 @@
 ﻿using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.DataStructure.Base.PlayerConfiguration;
 using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Base.System
@@ -22,6 +23,11 @@ namespace NetMud.DataStructure.Base.System
         /// What characters this account owns
         /// </summary>
         IList<ICharacter> Characters { get; set; }
+
+        /// <summary>
+        /// The config values for this account
+        /// </summary>
+        IAccountConfig Config { get; set; }
 
         /// <summary>
         /// Id for currently selected character

@@ -79,7 +79,6 @@ namespace NetMud
                 namespaces: new string[] { "NetMud.Controllers.GameAdmin" }
             );
 
-
             routes.MapRoute(
                 name: "GameAdminSubControllers",
                 url: "GameAdmin/{controller}/{action}/{id}",
@@ -92,6 +91,12 @@ namespace NetMud
                 url: "GameAdmin/{action}/{id}",
                 defaults: new { controller = "GameAdmin", action = "Index", id = UrlParameter.Optional },
                 namespaces: new string[] { "NetMud.Controllers.GameAdmin" }
+            );
+
+            routes.MapRoute(
+                name: "Manage_Toggle_Tutorial",
+                url: "Manage/ToggleTutorialMode/{state}",
+                defaults: new { controller = "Manage", action = "ToggleTutorialMode" }
             );
 
             routes.MapRoute(

@@ -102,7 +102,7 @@ namespace NetMud.DataAccess.FileSystem
             }
         }
 
-        private string GetCurrentDirectoryForEntity(IConfigData entity)
+        public string GetCurrentDirectoryForEntity(IConfigData entity)
         {
             var dirName = BaseDirectory;
 
@@ -112,7 +112,7 @@ namespace NetMud.DataAccess.FileSystem
                     dirName += "WorldConfig/" + CurrentDirectoryName;
                     break;
                 case ConfigDataType.Player:
-                    dirName += BaseDirectory + "Players/" + entity.Name + "/" + CurrentDirectoryName;
+                    dirName += "Players/" + entity.Name + "/" + CurrentDirectoryName;
                     break;
             }
 
@@ -162,7 +162,7 @@ namespace NetMud.DataAccess.FileSystem
         /// </summary>
         /// <param name="entity">The entity in question</param>
         /// <returns>the filename</returns>
-        private string GetEntityFilename(IConfigData entity)
+        public string GetEntityFilename(IConfigData entity)
         {
             return string.Format("{0}.{1}", entity.Name, entity.GetType().Name);
         }
