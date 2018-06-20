@@ -11,6 +11,22 @@ namespace NetMud.DataStructure.Base.EntityBackingData
     /// </summary>
     public interface ICharacter : IEntityBackingData, IDescribable, IGender
     {
+
+        /// <summary>
+        /// Account data object unique key
+        /// </summary>
+        string AccountHandle { get; set; }
+
+        /// <summary>
+        /// What account owns this character
+        /// </summary>
+        IAccount Account { get; }
+
+        /// <summary>
+        /// Command permissions for player character
+        /// </summary>
+        StaffRank GamePermissionsRank { get; set; }
+
         /// <summary>
         /// Family name for character
         /// </summary>
@@ -22,24 +38,9 @@ namespace NetMud.DataStructure.Base.EntityBackingData
         IRace RaceData { get; set; }
 
         /// <summary>
-        /// Account data object unique key
-        /// </summary>
-        string AccountHandle { get; set; }
-
-        /// <summary>
         /// Is this character not graduated from the tutorial
         /// </summary>
         bool StillANoob { get; set; }
-
-        /// <summary>
-        /// What account owns this character
-        /// </summary>
-        IAccount Account { get; }
-
-        /// <summary>
-        /// Command permissions for player character
-        /// </summary>
-        StaffRank GamePermissionsRank { get; set; }
 
         /// <summary>
         /// Last known location Id for character in live world

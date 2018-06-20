@@ -24,7 +24,8 @@ namespace NetMud.DataAccess
         AccountActivity,
         Authentication,
         ProcessingLoops,
-        SocketCommunication
+        SocketCommunication,
+        BugReport
     }
 
     /// <summary>
