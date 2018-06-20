@@ -1,0 +1,20 @@
+﻿@model NetMud.Models.BugReportModel
+
+@{
+    ViewBag.Title = "Report Bug";
+}
+
+<section id="addDescriptiveSection">
+    @using (Html.BeginForm("ReportBug", "Home", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        <hr />
+        <div class="form-group row">
+            @Html.EditorFor(e => e.Body)
+        </div>
+
+        <div class="clearfix"></div>
+
+        @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Home", ReturnController = "Index", ModalWindow = true })
+    }
+</section>

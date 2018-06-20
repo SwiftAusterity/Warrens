@@ -37,6 +37,7 @@
                         <li>@Html.ActionLink("Dashboard", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })</li>
                         <li>@Html.ActionLink("Manage Characters", "ManageCharacters", "Manage", routeValues: null, htmlAttributes: new { title = "Manage Characters" })</li>
                         <li><a href="#" id="tutorialToggle">Tutorials <span id="tutorialMode" class="tutorialToggle" style="color: darkgrey;">OFF</span></a></li>
+                        <li><a href="#" id="bugReport">Report A Bug</a></li>
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="divider"></li>
@@ -89,5 +90,11 @@ else
         });
 
         Tutorial($('#currentCharacterSelector'), 'Select a Character');
+
+        $('#bugReport').click(function () {
+            openFrameless(500, 500, 500, 500, '/Home/ReportBug', 'Report A Bug');
+
+            return false;
+        });
     });
 </script>

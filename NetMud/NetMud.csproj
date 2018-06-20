@@ -231,6 +231,7 @@
     <Compile Include="Models\ListTableViewModel.cs" />
     <Compile Include="Models\LoggingViewModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\BugReportModel.cs" />
     <Compile Include="Models\SubmitButtonModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -253,7 +254,6 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Scripts\adminModal.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -296,6 +296,7 @@
     <Content Include="Views\GameAdmin\Inanimate\Occurrence.cshtml" />
     <Content Include="Views\GameClient\DockerSettings.cshtml" />
     <Content Include="Views\GameClient\ModularWindow.cshtml" />
+    <Content Include="Views\Shared\ReportBug.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />
