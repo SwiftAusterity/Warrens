@@ -4,9 +4,9 @@ using System.Collections.Generic;
 namespace NetMud.DataStructure.Base.System
 {
     /// <summary>
-    /// Framework for Database objects
+    /// Framework for ID Stored objects
     /// </summary>
-    public interface IData : IFileStored, IComparable<IData>, IEquatable<IData>, IEqualityComparer<IData>
+    public interface IKeyedData : IData, IComparable<IKeyedData>, IEquatable<IKeyedData>, IEqualityComparer<IKeyedData>
     {
         /// <summary>
         /// Unique, iterative Id for this entry
@@ -40,19 +40,25 @@ namespace NetMud.DataStructure.Base.System
         bool FitnessProblems { get; }
 
         /// <summary>
-        /// Create a new db entry
+        /// Create a new entry
         /// </summary>
         /// <returns>the new, filled db object</returns>
-        IData Create();
+        IKeyedData Create();
+    }
 
+    /// <summary>
+    /// Framework for Database objects
+    /// </summary>
+    public interface IData : IFileStored
+    {
         /// <summary>
-        /// Remove this entry from the database permenantly
+        /// Remove this entry perma
         /// </summary>
         /// <returns>success status</returns>
         bool Remove();
 
         /// <summary>
-        /// Update this entry to the db
+        /// Update this entry
         /// </summary>
         /// <returns></returns>
         bool Save();

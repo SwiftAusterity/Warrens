@@ -228,7 +228,7 @@ namespace NetMud.DataAccess.Cache
         /// Gets birthmarks for live entities
         /// </summary>
         /// <returns>the birthmark string</returns>
-        public static string GetUniqueIdentifier(IData obj)
+        public static string GetUniqueIdentifier(IKeyedData obj)
         {
             return GetUniqueIdentifier(obj.Id.ToString());
         }

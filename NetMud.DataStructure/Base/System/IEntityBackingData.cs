@@ -6,7 +6,7 @@ namespace NetMud.DataStructure.Base.System
     /// <summary>
     /// Mid-point Interface for entity backing data
     /// </summary>
-    public interface IEntityBackingData : IData, IHasAffects
+    public interface IEntityBackingData : IKeyedData, IHasAffects
     {
         /// <summary>
         /// Entity class this backing data attaches to

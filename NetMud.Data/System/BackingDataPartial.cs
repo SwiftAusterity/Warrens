@@ -13,7 +13,7 @@ namespace NetMud.Data.System
     /// <summary>
     /// Partial for all backing data
     /// </summary>
-    public abstract class BackingDataPartial : SerializableDataPartial, IData
+    public abstract class BackingDataPartial : SerializableDataPartial, IKeyedData
     {
         #region Data ID Parameters
         /// <summary>
@@ -81,7 +81,7 @@ namespace NetMud.Data.System
         /// Add it to the cache and save it to the file system
         /// </summary>
         /// <returns>the object with Id and other db fields set</returns>
-        public virtual IData Create()
+        public virtual IKeyedData Create()
         {
             var accessor = new DataAccess.FileSystem.BackingData();
 
@@ -168,7 +168,7 @@ namespace NetMud.Data.System
         /// </summary>
         internal void GetNextId()
         {
-            IEnumerable<IData> allOfMe = BackingDataCache.GetAll().Where(bdc => bdc.GetType() == GetType());
+            IEnumerable<IKeyedData> allOfMe = BackingDataCache.GetAll().Where(bdc => bdc.GetType() == GetType());
 
             //Zero ordered list
             if (allOfMe.Count() > 0)
@@ -187,7 +187,7 @@ namespace NetMud.Data.System
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public int CompareTo(IData other)
+        public int CompareTo(IKeyedData other)
         {
             if (other != null)
             {
@@ -215,9 +215,9 @@ namespace NetMud.Data.System
         /// </summary>
         /// <param name="other">the object to compare to</param>
         /// <returns>true if the same object</returns>
-        public bool Equals(IData other)
+        public bool Equals(IKeyedData other)
         {
-            if (other != default(IData))
+            if (other != default(IKeyedData))
             {
                 try
                 {
@@ -238,7 +238,7 @@ namespace NetMud.Data.System
         /// <param name="x">the object to compare to</param>
         /// <param name="y">the object to compare to</param>
         /// <returns>true if the same object</returns>
-        public bool Equals(IData x, IData y)
+        public bool Equals(IKeyedData x, IKeyedData y)
         {
             return x.Equals(y);
         }
@@ -248,7 +248,7 @@ namespace NetMud.Data.System
         /// </summary>
         /// <param name="obj">the thing to get the hashcode for</param>
         /// <returns>the hash code</returns>
-        public int GetHashCode(IData obj)
+        public int GetHashCode(IKeyedData obj)
         {
             return obj.GetType().GetHashCode() + obj.Id.GetHashCode();
         }

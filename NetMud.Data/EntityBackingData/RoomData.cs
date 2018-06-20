@@ -168,7 +168,7 @@ namespace NetMud.Data.EntityBackingData
             return LiveCache.Get<IRoom>(Id);
         }
 
-        public override IData Create()
+        public override IKeyedData Create()
         {
             var obj = base.Create();
 

@@ -5,7 +5,7 @@ namespace NetMud.Models.Admin
 {
     public class ReferenceDataDropdownModel
     {
-        public ReferenceDataDropdownModel(string controlName, string label, IEnumerable<IData> validItemList, long selectedItemId)
+        public ReferenceDataDropdownModel(string controlName, string label, IEnumerable<IKeyedData> validItemList, long selectedItemId)
         {
             ControlName = controlName;
             Label = label;
@@ -15,7 +15,7 @@ namespace NetMud.Models.Admin
 
         public string ControlName { get; set; }
         public string Label { get; set; }
-        public IEnumerable<IData> ValidList { get; set; }
+        public IEnumerable<IKeyedData> ValidList { get; set; }
         public long SelectedItemId { get; set; }
     }
 }

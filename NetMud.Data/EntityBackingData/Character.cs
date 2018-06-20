@@ -182,7 +182,7 @@ namespace NetMud.Data.EntityBackingData
         /// Add it to the cache and save it to the file system
         /// </summary>
         /// <returns>the object with Id and other db fields set</returns>
-        public override IData Create()
+        public override IKeyedData Create()
         {
             var accessor = new DataAccess.FileSystem.PlayerData();
 

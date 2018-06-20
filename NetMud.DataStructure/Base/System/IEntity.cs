@@ -33,7 +33,7 @@ namespace NetMud.DataStructure.Base.System
         /// <summary>
         /// The backing data for this entity in the db
         /// </summary>
-        T DataTemplate<T>() where T : IData;
+        T DataTemplate<T>() where T : IKeyedData;
 
         /// <summary>
         /// Get's the entity's model dimensions

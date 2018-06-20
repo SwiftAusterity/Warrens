@@ -74,13 +74,13 @@ namespace NetMud.Backup
         /// </summary>
         /// <typeparam name="T">the type to get and store</typeparam>
         /// <returns>success status</returns>
-        public bool PreLoadAll<T>() where T : IData
+        public bool PreLoadAll<T>() where T : IKeyedData
         {
             var backingClass = Activator.CreateInstance(typeof(T)) as IEntityBackingData;
 
             var implimentingEntityClass = backingClass.EntityClass;
 
-            foreach (IData thing in BackingDataCache.GetAll<T>())
+            foreach (IKeyedData thing in BackingDataCache.GetAll<T>())
             {
                 try
                 {

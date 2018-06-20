@@ -44,7 +44,7 @@ namespace NetMud.DataAccess.Cache
         /// Make a new cache key using the object
         /// </summary>
         /// <param name="data">the object</param>
-        public BackingDataCacheKey(IData data)
+        public BackingDataCacheKey(IKeyedData data)
         {
             ObjectType = data.GetType();
             BirthMark = data.Id;

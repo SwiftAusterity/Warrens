@@ -36,19 +36,19 @@ namespace NetMud.DataAccess.FileSystem
             }
         }
 
-        public IData ReadEntity(FileInfo file, Type entityType)
+        public IKeyedData ReadEntity(FileInfo file, Type entityType)
         {
             var fileData = ReadFile(file);
-            var blankEntity = Activator.CreateInstance(entityType) as IData;
+            var blankEntity = Activator.CreateInstance(entityType) as IKeyedData;
 
-            return blankEntity.FromBytes(fileData) as IData;
+            return blankEntity.FromBytes(fileData) as IKeyedData;
         }
 
         /// <summary>
         /// Write one backing data entity out
         /// </summary>
         /// <param name="entity">the thing to write out to current</param>
-        public void WriteEntity(IData entity)
+        public void WriteEntity(IKeyedData entity)
         {
             try
             {
@@ -80,7 +80,7 @@ namespace NetMud.DataAccess.FileSystem
         /// Archive a backing data entity
         /// </summary>
         /// <param name="entity">the thing to archive</param>
-        public void ArchiveEntity(IData entity)
+        public void ArchiveEntity(IKeyedData entity)
         {
             var dirName = BaseDirectory + CurrentDirectoryName + entity.GetType().Name + "/";
 
@@ -147,7 +147,7 @@ namespace NetMud.DataAccess.FileSystem
         /// </summary>
         /// <param name="entity">The entity in question</param>
         /// <returns>the filename</returns>
-        private string GetEntityFilename(IData entity)
+        private string GetEntityFilename(IKeyedData entity)
         {
             return string.Format("{0}.{1}", entity.Id, entity.GetType().Name);
         }

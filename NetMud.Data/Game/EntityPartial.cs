@@ -58,7 +58,7 @@ namespace NetMud.Data.Game
         /// <summary>
         /// The backing data for this live entity
         /// </summary>
-        public abstract T DataTemplate<T>() where T : IData;
+        public abstract T DataTemplate<T>() where T : IKeyedData;
 
         /// <summary>
         /// Get's the entity's model dimensions
