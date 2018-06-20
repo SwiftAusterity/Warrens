@@ -5,6 +5,7 @@
         Live,
         BackingData,
         LookupData,
-        PlayerData
+        PlayerData,
+        ConfigData
     }
 }

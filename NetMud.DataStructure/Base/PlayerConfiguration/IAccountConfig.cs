@@ -5,13 +5,8 @@ namespace NetMud.DataStructure.Base.PlayerConfiguration
     /// <summary>
     /// The account configuration for a player
     /// </summary>
-    public interface IAccountConfig : IData
+    public interface IAccountConfig : IConfigData
     {
-        /// <summary>
-        /// Account data object unique key
-        /// </summary>
-        string AccountHandle { get; set; }
-
         /// <summary>
         /// What account owns this config
         /// </summary>

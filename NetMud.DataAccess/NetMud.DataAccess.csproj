@@ -62,12 +62,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cache\ConfigDataCache.cs" />
+    <Compile Include="Cache\ConfigDataCacheKey.cs" />
     <Compile Include="Cache\BackingDataCacheKey.cs" />
     <Compile Include="Cache\LiveCacheKey.cs" />
     <Compile Include="Cache\PlayerDataCache.cs" />
     <Compile Include="Cache\CacheAccessor.cs" />
     <Compile Include="Cache\BackingDataCache.cs" />
     <Compile Include="Cache\PlayerDataCacheKey.cs" />
+    <Compile Include="FileSystem\ConfigData.cs" />
     <Compile Include="FileSystem\BackingData.cs" />
     <Compile Include="FileSystem\FileAccessor.cs" />
     <Compile Include="FileSystem\LiveData.cs" />
