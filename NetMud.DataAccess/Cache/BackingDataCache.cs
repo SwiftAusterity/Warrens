@@ -57,8 +57,12 @@ namespace NetMud.DataAccess.Cache
         /// </summary>
         /// <typeparam name="T">the system type for the entity</typeparam>
         /// <returns>a list of the entities from the cache</returns>
-        public static IEnumerable<T> GetAll<T>()
+        public static IEnumerable<T> GetAll<T>(bool onlyApproved = false)
         {
+            //Don't waste the time with the where if it's false
+            if (onlyApproved)
+                return BackingCache.GetAll<T>().Where(data => ((IKeyedData)data).Approved);
+
             return BackingCache.GetAll<T>();
         }
 
@@ -66,8 +70,12 @@ namespace NetMud.DataAccess.Cache
         /// Only for the hotbackup procedure
         /// </summary>
         /// <returns>All entities in the entire system</returns>
-        public static IEnumerable<IKeyedData> GetAll()
+        public static IEnumerable<IKeyedData> GetAll(bool onlyApproved = false)
         {
+            //Don't waste the time with the where if it's false
+            if(onlyApproved)
+                return BackingCache.GetAll<IKeyedData>().Where(data => data.Approved);
+
             return BackingCache.GetAll<IKeyedData>();
         }
 

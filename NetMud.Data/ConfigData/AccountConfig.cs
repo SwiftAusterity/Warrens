@@ -18,6 +18,8 @@ namespace NetMud.Data.ConfigData
         /// <summary>
         /// The type of data this is (for storage)
         /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
         public override ConfigDataType Type { get { return ConfigDataType.Player; } }
 
         [ScriptIgnore]

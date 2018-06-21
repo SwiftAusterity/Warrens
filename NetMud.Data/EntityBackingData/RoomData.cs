@@ -35,6 +35,8 @@ namespace NetMud.Data.EntityBackingData
         /// <summary>
         /// What type of approval is necessary for this content
         /// </summary>
+        [JsonIgnore]
+        [ScriptIgnore]
         public override ContentApprovalType ApprovalType { get { return ContentApprovalType.Leader; } }
 
         /// <summary>

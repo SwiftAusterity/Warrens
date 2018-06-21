@@ -2,7 +2,9 @@
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.System;
+using Newtonsoft.Json;
 using System;
+using System.Web.Script.Serialization;
 
 namespace NetMud.Data.ConfigData
 {
@@ -13,14 +15,16 @@ namespace NetMud.Data.ConfigData
     public abstract class ConfigData : SerializableDataPartial, IConfigData
     {
         /// <summary>
+        /// The type of data this is (for storage)
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public abstract ConfigDataType Type { get; }
+
+        /// <summary>
         /// The unique name of this configuration data
         /// </summary>
         public string Name { get; set; }
-
-        /// <summary>
-        /// The type of data this is (for storage)
-        /// </summary>
-        public abstract ConfigDataType Type { get; }
 
         #region Data persistence functions
         /// <summary>

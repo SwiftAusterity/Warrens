@@ -1,7 +1,9 @@
 ﻿using NetMud.DataStructure.Base.PlayerConfiguration;
 using NetMud.DataStructure.Base.System;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Web.Script.Serialization;
 
 namespace NetMud.Data.ConfigData
 {
@@ -14,6 +16,8 @@ namespace NetMud.Data.ConfigData
         /// <summary>
         /// The type of data this is (for storage)
         /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
         public override ConfigDataType Type { get { return ConfigDataType.GameWorld; } }
 
         /// <summary>

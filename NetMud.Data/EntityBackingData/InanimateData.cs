@@ -22,11 +22,6 @@ namespace NetMud.Data.EntityBackingData
     public class InanimateData : EntityBackingDataPartial, IInanimateData
     {
         /// <summary>
-        /// What type of approval is necessary for this content
-        /// </summary>
-        public override ContentApprovalType ApprovalType { get { return ContentApprovalType.Staff; } }
-
-        /// <summary>
         /// The system type for the entity this attaches to
         /// </summary>
         [JsonIgnore]
@@ -35,6 +30,13 @@ namespace NetMud.Data.EntityBackingData
         {
             get { return typeof(Game.Inanimate); }
         }
+
+        /// <summary>
+        /// What type of approval is necessary for this content
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public override ContentApprovalType ApprovalType { get { return ContentApprovalType.Staff; } }
 
         /// <summary>
         /// keywords this entity is referrable by in the world by the parser

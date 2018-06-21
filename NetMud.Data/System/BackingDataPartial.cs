@@ -81,6 +81,8 @@ namespace NetMud.Data.System
         /// <summary>
         /// What type of approval is necessary for this content
         /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
         public abstract ContentApprovalType ApprovalType { get; }
 
         /// <summary>

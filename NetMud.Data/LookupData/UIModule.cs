@@ -1,6 +1,8 @@
 ﻿using NetMud.DataStructure.Base.PlayerConfiguration;
 using NetMud.DataStructure.Behaviors.System;
+using Newtonsoft.Json;
 using System;
+using System.Web.Script.Serialization;
 
 namespace NetMud.Data.LookupData
 {
@@ -13,6 +15,8 @@ namespace NetMud.Data.LookupData
         /// <summary>
         /// What type of approval is necessary for this content
         /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
         public override ContentApprovalType ApprovalType { get { return ContentApprovalType.Staff; } }
 
         /// <summary>

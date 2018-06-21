@@ -4,9 +4,11 @@ using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Behaviors.System;
 using NetMud.Physics;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.Script.Serialization;
 
 namespace NetMud.Data.LookupData
 {
@@ -19,6 +21,8 @@ namespace NetMud.Data.LookupData
         /// <summary>
         /// What type of approval is necessary for this content
         /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
         public override ContentApprovalType ApprovalType { get { return ContentApprovalType.ReviewOnly; } }
 
         /// <summary>

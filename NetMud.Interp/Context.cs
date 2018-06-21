@@ -565,7 +565,7 @@ namespace NetMud.Interp
 
                 var validObject = BackingDataCache.GetByName<T>(currentParmString);
 
-                if (validObject != null && !validObject.Equals(default(T)))
+                if (validObject != null && !validObject.Equals(default(T)) && validObject.Approved)
                 {
                     switch (currentNeededParm.Usage)
                     {
@@ -618,7 +618,7 @@ namespace NetMud.Interp
                 else
                     validObject = BackingDataCache.Get<T>(parmID);
 
-                if (validObject != null && !validObject.Equals(default(T)))
+                if (validObject != null && !validObject.Equals(default(T)) && validObject.Approved)
                 {
                     switch (currentNeededParm.Usage)
                     {
