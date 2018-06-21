@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNet.Identity;
-using Microsoft.Owin.Security;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.Authentication;
 using NetMud.DataStructure.SupportingClasses;
+using NetMud.DataStructure.Base.System;
 
 namespace NetMud.Models
 {
@@ -12,11 +11,18 @@ namespace NetMud.Models
     {
         public ApplicationUser authedUser { get; set; }
 
-        public bool HasPassword { get; set; }
-        public IList<UserLoginInfo> Logins { get; set; }
-        public string PhoneNumber { get; set; }
-        public bool TwoFactor { get; set; }
-        public bool BrowserRemembered { get; set; }
+        [Display(Name = "Tutorial Mode")]
+        public bool UITutorialMode { get; set; }
+
+        [Display(Name = "Log Subscriptions")]
+        [DataType(DataType.Text)]
+        public string[] LogChannelSubscriptions { get; set; }
+
+        [Display(Name = "Global Handle")]
+        [DataType(DataType.Text)]
+        public string GlobalIdentityHandle { get; set; }
+
+        public IAccount DataObject { get; set; }
     }
 
     public class ManageCharactersViewModel : BaseViewModel
@@ -37,7 +43,6 @@ namespace NetMud.Models
         [Display(Name = "Gender")]
         [DataType(DataType.Text)]
         public string Gender { get; set; }
-
         
         [Display(Name = "Race")]
         public long RaceId { get; set; }
@@ -48,17 +53,6 @@ namespace NetMud.Models
 
         [Display(Name = "Chosen Role")]
         public string ChosenRole { get; set; }
-    }
-
-    public class ManageLoginsViewModel
-    {
-        public IList<UserLoginInfo> CurrentLogins { get; set; }
-        public IList<AuthenticationDescription> OtherLogins { get; set; }
-    }
-
-    public class FactorViewModel
-    {
-        public string Purpose { get; set; }
     }
 
     public class SetPasswordViewModel
@@ -94,31 +88,5 @@ namespace NetMud.Models
         [Display(Name = "Confirm new password")]
         [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
-    }
-
-    public class AddPhoneNumberViewModel
-    {
-        [Required]
-        [Phone]
-        [Display(Name = "Phone Number")]
-        public string Number { get; set; }
-    }
-
-    public class VerifyPhoneNumberViewModel
-    {
-        [Required]
-        [Display(Name = "Code")]
-        public string Code { get; set; }
-
-        [Required]
-        [Phone]
-        [Display(Name = "Phone Number")]
-        public string PhoneNumber { get; set; }
-    }
-
-    public class ConfigureTwoFactorViewModel
-    {
-        public string SelectedProvider { get; set; }
-        public ICollection<System.Web.Mvc.SelectListItem> Providers { get; set; }
     }
 }

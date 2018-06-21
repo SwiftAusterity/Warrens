@@ -3,6 +3,7 @@ using NetMud.Data.System;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
+using NetMud.DataStructure.Behaviors.System;
 using NetMud.DataStructure.SupportingClasses;
 using Newtonsoft.Json;
 using System;
@@ -17,6 +18,11 @@ namespace NetMud.Data.Game
     [IgnoreAutomatedBackup]
     public class World : BackingDataPartial
     {
+        /// <summary>
+        /// What type of approval is necessary for this content
+        /// </summary>
+        public override ContentApprovalType ApprovalType { get { return ContentApprovalType.Admin; } }
+
         /// <summary>
         /// A map of the world
         /// </summary>

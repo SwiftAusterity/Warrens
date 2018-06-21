@@ -3,27 +3,52 @@
     ViewBag.Title = "Manage";
 }
 
-<div>
-    <h4>Manage your account and characters</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>Password:</dt>
-        <dd>
-            [
-            @if (Model.HasPassword)
-            {
-                @Html.ActionLink("Change your password", "ChangePassword")
-            }
-            else
-            {
-                @Html.ActionLink("Create", "SetPassword")
-            }
-            ]
-        </dd>
-        <dt>Registered Characters:</dt>
-        <dd>
-            @Model.authedUser.GameAccount.Characters.Count() [
-            @Html.ActionLink("Manage", "ManageCharacters") ]
-        </dd>
-    </dl>
+<div class="adminDashboard">
+    <div>
+        <dl class="dl-horizontal">
+            <dt>Password:</dt>
+            <dd>
+                [ @Html.ActionLink("Change your password", "ChangePassword") ]
+            </dd>
+        </dl>
+    </div>
+    <div>
+        <dl class="dl-horizontal">
+            <dt>Registered Characters:</dt>
+            <dd>
+                @Model.authedUser.GameAccount.Characters.Count() [
+                @Html.ActionLink("Manage", "ManageCharacters") ]
+            </dd>
+        </dl>
+    </div>
+    <div>
+        <dl class="dl-horizontal">
+            <dt>Client UI Configuration:</dt>
+            <dd>
+                [ <a href="#">Manage</a> ]
+            </dd>
+        </dl>
+    </div>
 </div>
+<div class="clearfix"></div>
+
+<h3>Account Config</h3>
+<section id="accountConfig">
+    @using (Html.BeginForm("EditAccountConfig", "Manage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group row">
+            @Html.EditorFor(e => e.UITutorialMode)
+        </div>
+
+        if (User.IsInRole("Admin"))
+        {
+            @Html.Partial("~/Views/Manage/LogSubscriptions.cshtml", Model)
+        }
+
+        @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Manage", IncludeCancel = false })
+    }
+    </section>
+

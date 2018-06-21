@@ -4,6 +4,7 @@
     tableColumns.Add("Name", obj => obj.FullName());
     tableColumns.Add("Race", obj => obj.RaceData.Name);
     tableColumns.Add("Gender", obj => obj.Gender);
+    tableColumns.Add("N00b", obj => obj.StillANoob);
     tableColumns.Add("Permissions", obj => obj.GamePermissionsRank.ToString());
 
     ViewBag.Title = "Manage your characters";

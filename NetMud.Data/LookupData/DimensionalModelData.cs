@@ -2,6 +2,7 @@
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Behaviors.System;
 using NetMud.Physics;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,11 @@ namespace NetMud.Data.LookupData
     [Serializable]
     public class DimensionalModelData : LookupDataPartial, IDimensionalModelData
     {
+        /// <summary>
+        /// What type of approval is necessary for this content
+        /// </summary>
+        public override ContentApprovalType ApprovalType { get { return ContentApprovalType.ReviewOnly; } }
+
         /// <summary>
         /// Governs what sort of model planes we're looking for
         /// </summary>

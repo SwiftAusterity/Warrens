@@ -11,6 +11,7 @@ using NetMud.DataAccess.Cache;
 using System.Collections.Generic;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Behaviors.Rendering;
+using NetMud.DataStructure.Behaviors.System;
 
 namespace NetMud.Data.EntityBackingData
 {
@@ -29,6 +30,11 @@ namespace NetMud.Data.EntityBackingData
         {
             get { return typeof(Game.Pathway); }
         }
+
+        /// <summary>
+        /// What type of approval is necessary for this content
+        /// </summary>
+        public override ContentApprovalType ApprovalType { get { return ContentApprovalType.Leader; } }
 
         /// <summary>
         /// keywords this entity is referrable by in the world by the parser

@@ -1,5 +1,6 @@
 ﻿using NetMud.Data.DataIntegrity;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Behaviors.System;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
 using Newtonsoft.Json;
@@ -20,6 +21,11 @@ namespace NetMud.Data.System
         /// </summary>
         [FilledContainerDataIntegrity("Lookup Criteria entry has no values.")]
         public Dictionary<ILookupCriteria, HashSet<string>> Values { get; set; }
+
+        /// <summary>
+        /// What type of approval is necessary for this content
+        /// </summary>
+        public override ContentApprovalType ApprovalType { get { return ContentApprovalType.Admin; } }
 
         /// <summary>
         /// Empty constructor for serialization

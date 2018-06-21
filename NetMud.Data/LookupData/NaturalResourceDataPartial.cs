@@ -19,6 +19,11 @@ namespace NetMud.Data.LookupData
     public abstract class NaturalResourceDataPartial : LookupDataPartial, INaturalResource
     {
         /// <summary>
+        /// What type of approval is necessary for this content
+        /// </summary>
+        public override ContentApprovalType ApprovalType { get { return ContentApprovalType.Staff; } }
+
+        /// <summary>
         /// How much spawns in one place in one spawn tick
         /// </summary>
         [IntDataIntegrity("Amount Multiplier must be between 0 and 100.", 0, 100)]

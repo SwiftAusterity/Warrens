@@ -1,4 +1,5 @@
 ﻿using NetMud.DataStructure.Base.PlayerConfiguration;
+using NetMud.DataStructure.Behaviors.System;
 using System;
 
 namespace NetMud.Data.LookupData
@@ -9,6 +10,11 @@ namespace NetMud.Data.LookupData
     [Serializable]
     public class UIModule : LookupDataPartial, IUIModule
     {
+        /// <summary>
+        /// What type of approval is necessary for this content
+        /// </summary>
+        public override ContentApprovalType ApprovalType { get { return ContentApprovalType.Staff; } }
+
         /// <summary>
         /// The content to load in
         /// </summary>

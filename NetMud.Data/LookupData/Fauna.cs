@@ -2,6 +2,7 @@
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Behaviors.System;
 using Newtonsoft.Json;
 using System;
 using System.Web.Script.Serialization;

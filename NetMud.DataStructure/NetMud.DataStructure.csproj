@@ -166,6 +166,7 @@
     <Compile Include="Behaviors\Rendering\ISensible.cs" />
     <Compile Include="Behaviors\Rendering\ISmellable.cs" />
     <Compile Include="Behaviors\Rendering\ITrackable.cs" />
+    <Compile Include="Behaviors\System\INeedApproval.cs" />
     <Compile Include="Behaviors\System\ISpawnAsMultiple.cs" />
     <Compile Include="Behaviors\System\ISpawnAsSingleton.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -5,6 +5,7 @@ using NetMud.Data.System;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
+using NetMud.DataStructure.Behaviors.System;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,11 @@ namespace NetMud.Data.EntityBackingData
         {
             get { return typeof(Locale); }
         }
+
+        /// <summary>
+        /// What type of approval is necessary for this content
+        /// </summary>
+        public override ContentApprovalType ApprovalType { get { return ContentApprovalType.Staff; } }
 
         /// <summary>
         /// keywords this entity is referrable by in the world by the parser

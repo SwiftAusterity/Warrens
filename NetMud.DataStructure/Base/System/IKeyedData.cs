@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NetMud.DataStructure.Behaviors.System;
+using System;
 using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Base.System
@@ -6,7 +7,7 @@ namespace NetMud.DataStructure.Base.System
     /// <summary>
     /// Framework for ID Stored objects
     /// </summary>
-    public interface IKeyedData : IData, IComparable<IKeyedData>, IEquatable<IKeyedData>, IEqualityComparer<IKeyedData>
+    public interface IKeyedData : IData, INeedApproval, IComparable<IKeyedData>, IEquatable<IKeyedData>, IEqualityComparer<IKeyedData>
     {
         /// <summary>
         /// Unique, iterative Id for this entry

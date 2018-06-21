@@ -5,6 +5,7 @@ using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Behaviors.Actionable;
 using NetMud.DataStructure.Behaviors.Automation;
+using NetMud.DataStructure.Behaviors.System;
 using NetMud.Utility;
 using Newtonsoft.Json;
 using System;
@@ -23,6 +24,11 @@ namespace NetMud.Data.LookupData
     {
         [JsonProperty("Arms")]
         private Tuple<BackingDataCacheKey, short> _arms { get; set; }
+
+        /// <summary>
+        /// What type of approval is necessary for this content
+        /// </summary>
+        public override ContentApprovalType ApprovalType { get { return ContentApprovalType.Admin; } }
 
         /// <summary>
         /// The arm objects

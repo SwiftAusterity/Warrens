@@ -1,6 +1,7 @@
 ﻿using NetMud.Data.DataIntegrity;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Behaviors.System;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,11 @@ namespace NetMud.Data.LookupData
     [Serializable]
     public class Material : LookupDataPartial, IMaterial
     {
+        /// <summary>
+        /// What type of approval is necessary for this content
+        /// </summary>
+        public override ContentApprovalType ApprovalType { get { return ContentApprovalType.Admin; } }
+
         /// <summary>
         /// Is this material energy conduction
         /// </summary>

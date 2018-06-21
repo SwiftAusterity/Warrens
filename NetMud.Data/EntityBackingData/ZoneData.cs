@@ -16,6 +16,11 @@ namespace NetMud.Data.EntityBackingData
     public class ZoneData : LocationDataEntityPartial, IZoneData
     {
         /// <summary>
+        /// What type of approval is necessary for this content
+        /// </summary>
+        public override ContentApprovalType ApprovalType { get { return ContentApprovalType.Admin; } }
+
+        /// <summary>
         /// The system type of data this attaches to
         /// </summary>
         [ScriptIgnore]

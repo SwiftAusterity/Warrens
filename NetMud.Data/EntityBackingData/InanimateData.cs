@@ -5,6 +5,7 @@ using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Behaviors.System;
 using NetMud.DataStructure.SupportingClasses;
 using Newtonsoft.Json;
 using System;
@@ -20,6 +21,11 @@ namespace NetMud.Data.EntityBackingData
     [Serializable]
     public class InanimateData : EntityBackingDataPartial, IInanimateData
     {
+        /// <summary>
+        /// What type of approval is necessary for this content
+        /// </summary>
+        public override ContentApprovalType ApprovalType { get { return ContentApprovalType.Staff; } }
+
         /// <summary>
         /// The system type for the entity this attaches to
         /// </summary>

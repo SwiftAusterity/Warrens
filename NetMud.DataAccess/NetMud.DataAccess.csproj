@@ -76,7 +76,9 @@
     <Compile Include="FileSystem\LiveData.cs" />
     <Compile Include="FileSystem\PlayerData.cs" />
     <Compile Include="Cache\LiveCache.cs" />
+    <Compile Include="LogChannels.cs" />
     <Compile Include="Logger.cs" />
+    <Compile Include="LoggingUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Database\SqlWrapper.cs" />
   </ItemGroup>
