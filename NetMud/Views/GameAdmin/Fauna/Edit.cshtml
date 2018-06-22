@@ -1,7 +1,4 @@
 ﻿@model NetMud.Models.Admin.AddEditFaunaViewModel
-@{
-    ViewBag.Title = "Edit Fauna";
-}
 
 <section id="newCharacterForm">
     @using (Html.BeginForm("Edit", "Fauna", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))

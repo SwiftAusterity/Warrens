@@ -1,5 +1,6 @@
 ﻿using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.PlayerConfiguration;
+using System;
 using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Base.System
@@ -7,7 +8,7 @@ namespace NetMud.DataStructure.Base.System
     /// <summary>
     /// A player's "user"
     /// </summary>
-    public interface IAccount
+    public interface IAccount : IComparable<IAccount>, IEquatable<IAccount>, IEqualityComparer<IAccount>
     {
         /// <summary>
         /// Unique string key for player user accounts

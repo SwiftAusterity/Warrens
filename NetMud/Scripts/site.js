@@ -45,7 +45,11 @@ function openModularUI(width, height, windowTitle, content) {
     var NFW = window.open('/GameClient/ModularWindow', windowTitle, s, true);
 
     NFW.addEventListener('load', function () {
-        content.appendTo(this.document.querySelector('#contentArea'));
+        var contentArea = this.document.querySelector('#contentArea');
+
+        $(contentArea).attr('data-module-name', windowTitle);
+
+        content.appendTo(contentArea);
     }, false); 
 
     NFW.blur();
@@ -62,7 +66,11 @@ function openFrameless(width, height, fromLeft, fromTop, targetUrl, windowTitle)
     var styles = '';
     var scripts = '';
 
-    var NFW = window.open(targetUrl, 'adminModal', s);
+    if (windowTitle == '') {
+        windowTitle = 'adminModal';
+    }
+
+    var NFW = window.open(targetUrl, windowTitle, s);
 
     NFW.blur();
 

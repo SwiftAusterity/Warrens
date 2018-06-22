@@ -1,6 +1,7 @@
 ﻿using NetMud.Authentication;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
+using NetMud.DataStructure.Base.PlayerConfiguration;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using System.Collections.Generic;
@@ -26,8 +27,12 @@ namespace NetMud.Models.Admin
             Materials = Enumerable.Empty<IMaterial>();
             Races = Enumerable.Empty<IRace>();
             Constants = Enumerable.Empty<IConstants>();
+            Flora = Enumerable.Empty<IFlora>();
+            Fauna = Enumerable.Empty<IFauna>();
+            Minerals = Enumerable.Empty<IMineral>();
+            UIModules = Enumerable.Empty<IUIModule>();
 
-            WebsocketServers = Enumerable.Empty<NetMud.Websock.Server>();
+            WebsocketServers = Enumerable.Empty<Websock.Server>();
 
             LiveZones = 0;
             LiveLocales = 0;
@@ -54,11 +59,12 @@ namespace NetMud.Models.Admin
         public IEnumerable<IFlora> Flora { get; set; }
         public IEnumerable<IFauna> Fauna { get; set; }
         public IEnumerable<IMineral> Minerals { get; set; }
+        public IEnumerable<IUIModule> UIModules { get; set; }
 
         //Running Data
         public Dictionary<string, CancellationTokenSource> LiveTaskTokens { get; set; }
 
-        public IEnumerable<NetMud.Websock.Server> WebsocketServers { get; set; }
+        public IEnumerable<Websock.Server> WebsocketServers { get; set; }
 
         public int LiveZones { get; set; }
         public int LiveLocales { get; set; }

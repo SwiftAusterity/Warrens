@@ -6,8 +6,6 @@
     tableColumns.Add("Gender", obj => obj.Gender);
     tableColumns.Add("N00b", obj => obj.StillANoob.ToString());
     tableColumns.Add("Permissions", obj => obj.GamePermissionsRank.ToString());
-
-    ViewBag.Title = "Manage your characters";
 }
 
 @if (Model.authedUser.GameAccount.Characters.Count() > 0)

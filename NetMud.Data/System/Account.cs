@@ -6,6 +6,7 @@ using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.PlayerConfiguration;
 using NetMud.DataStructure.Base.System;
 using NetMud.Utility;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -115,41 +116,50 @@ namespace NetMud.Data.System
         /// <summary>
         /// The config values for this account
         /// </summary>
-        private IAccountConfig _config;
+        [JsonIgnore]
+        private ConfigDataCacheKey _config;
 
         /// <summary>
         /// The config values for this account
         /// </summary>
+        [JsonIgnore]
         public IAccountConfig Config
         {
             get
             {
-                if (_config == null)
+                IAccountConfig returnValue = null;
+
+                if (_config != null)
                 {
-                    _config = ConfigDataCache.Get<IAccountConfig>(new ConfigDataCacheKey(typeof(IAccountConfig), GlobalIdentityHandle, ConfigDataType.Player));
+                    returnValue = ConfigDataCache.Get<IAccountConfig>(_config);
                 }
 
-                if (_config == null)
+                if (returnValue == null)
                 {
                     //Try and get it from the file
-                    var _config = new AccountConfig(this);
+                    returnValue = new AccountConfig(this);
 
-                    if (!_config.RestoreConfig())
+                    if (!returnValue.RestoreConfig())
                     {
                         //Just make it new and save it
-                        _config = new AccountConfig(this)
+                        returnValue = new AccountConfig(this)
                         {
                             UITutorialMode = true
                         };
-                        _config.Save();
+
+                        returnValue.Save(this, DataStructure.SupportingClasses.StaffRank.Player); //personal config doesnt need approval yet but your rank is ALWAYS player here
                     }
+
+                    if (returnValue != null)
+                        _config = new ConfigDataCacheKey(returnValue);
                 }
 
-                return _config;
+                return returnValue;
             }
             set
             {
-                _config = value;
+                _config = new ConfigDataCacheKey(value);
+                ConfigDataCache.Add(value);
             }
 
         }
@@ -167,7 +177,7 @@ namespace NetMud.Data.System
                 return "A character with that name already exists, please choose another.";
 
             newChar.AccountHandle = GlobalIdentityHandle;
-            newChar.Create();
+            newChar.Create(this, DataStructure.SupportingClasses.StaffRank.Player); //characters dont need approval yet but your rank is ALWAYS player here
 
             Characters.Add(newChar);
 
@@ -219,5 +229,92 @@ namespace NetMud.Data.System
             
             return new Account(outHandle, outLogSubs);
         }
+
+
+        #region Equality Functions
+        /// <summary>
+        /// -99 = null input
+        /// -1 = wrong type
+        /// 0 = same type, wrong id
+        /// 1 = same reference (same id, same type)
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public int CompareTo(IAccount other)
+        {
+            if (other != null)
+            {
+                try
+                {
+                    if (other.GetType() != GetType())
+                        return -1;
+
+                    if (other.GlobalIdentityHandle.Equals(GlobalIdentityHandle))
+                        return 1;
+
+                    return 0;
+                }
+                catch (Exception ex)
+                {
+                    LoggingUtility.LogError(ex);
+                }
+            }
+
+            return -99;
+        }
+
+        /// <summary>
+        /// Compares this object to another one to see if they are the same object
+        /// </summary>
+        /// <param name="other">the object to compare to</param>
+        /// <returns>true if the same object</returns>
+        public bool Equals(IAccount other)
+        {
+            if (other != default(IAccount))
+            {
+                try
+                {
+                    return other.GetType() == GetType() && other.GlobalIdentityHandle.Equals(GlobalIdentityHandle);
+                }
+                catch (Exception ex)
+                {
+                    LoggingUtility.LogError(ex);
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Compares an object to another one to see if they are the same object
+        /// </summary>
+        /// <param name="x">the object to compare to</param>
+        /// <param name="y">the object to compare to</param>
+        /// <returns>true if the same object</returns>
+        public bool Equals(IAccount x, IAccount y)
+        {
+            return x.Equals(y);
+        }
+
+        /// <summary>
+        /// Get the hash code for comparison purposes
+        /// </summary>
+        /// <param name="obj">the thing to get the hashcode for</param>
+        /// <returns>the hash code</returns>
+        public int GetHashCode(IAccount obj)
+        {
+            return obj.GetType().GetHashCode() + obj.GlobalIdentityHandle.GetHashCode();
+        }
+
+        /// <summary>
+        /// Get the hash code for comparison purposes
+        /// </summary>
+        /// <returns>the hash code</returns>
+        public override int GetHashCode()
+        {
+            return GetType().GetHashCode() + GlobalIdentityHandle.GetHashCode();
+        }
+        #endregion
+
     }
 }

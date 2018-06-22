@@ -1,9 +1,5 @@
 ﻿@model NetMud.Models.Admin.AddEditLocaleDataViewModel
-@{
-    ViewBag.Title = "Add New Locale";
-}
 
-@{
 <section id="newLocaleForm">
     @using (Html.BeginForm("Add", "Locale", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {
@@ -17,7 +13,7 @@
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Zone", IncludeCancel = true })
     }
 </section>
-}
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

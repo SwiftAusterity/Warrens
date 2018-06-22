@@ -1,4 +1,5 @@
 ﻿using NetMud.DataStructure.Base.System;
+using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Base.PlayerConfiguration
 {
@@ -18,9 +19,9 @@ namespace NetMud.DataStructure.Base.PlayerConfiguration
         bool UITutorialMode { get; set; }
 
         /// <summary>
-        /// The ui config for this player
+        /// The modules to load. Module, quadrant
         /// </summary>
-        IModularUIConfig UIConfig { get; set; }
+        IDictionary<IUIModule, int> UIModules { get; set; }
 
         /// <summary>
         /// Attempt to restore the config from file

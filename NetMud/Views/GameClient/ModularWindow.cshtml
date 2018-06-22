@@ -1,7 +1,6 @@
 ﻿@model string
 
 @{
-    ViewBag.Title = "";
     Layout = "~/Views/Shared/_chromelessLayout.cshtml";
 }
 
@@ -14,6 +13,9 @@
         <li><a href="#" style="padding: 5px; color: black;" class="quadrantDocker" data-destination-quadrant="2"><span class="glyphicon glyphicon-resize-small" style="padding-right: 5px;"></span>Dock Quadrant 2</a></li>
         <li><a href="#" style="padding: 5px; color: black;" class="quadrantDocker" data-destination-quadrant="3"><span class="glyphicon glyphicon-resize-small" style="padding-right: 5px;"></span>Dock Quadrant 3</a></li>
         <li><a href="#" style="padding: 5px; color: black;" class="quadrantDocker" data-destination-quadrant="4"><span class="glyphicon glyphicon-resize-small" style="padding-right: 5px;"></span>Dock Quadrant 4</a></li>
+        <li class="divider"></li>
+        <li><a href="#" style="padding: 5px; color: black;" class="quadrantLoad" data-origin-quadrant="@Model"><span class="glyphicon glyphicon-cloud-download" style="padding-right: 5px;"></span>Load Module</a></li>
+        <li><a href="#" style="padding: 5px; color: black;" class="quadrantSave" data-origin-quadrant="@Model"><span class="glyphicon glyphicon-cloud-upload" style="padding-right: 5px;"></span>Save Module</a></li>
     </ul>
 </div>
 

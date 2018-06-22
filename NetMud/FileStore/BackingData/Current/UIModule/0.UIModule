@@ -1,0 +1,15 @@
+{
+  "BodyHtml": "            <span class=\"contentContainer\" output-eval-key=\"Local.Exits\" output-eval-code=\"if(data[0] != undefined && data[0].length === 0) { element.css({'display': 'none'}); } else { element.css({'display' : 'block'}); }\">Exits: <span output-data-binding=\"Local.Exits\"></span></span>\r\n            <span class=\"contentContainer\" output-eval-key=\"Local.Populace\" output-eval-code=\"if(data[0] != undefined && data[0].length === 0) { element.css({'display': 'none'}); } else { element.css({'display' : 'block'}); }\">Populace: <span output-data-binding=\"Local.Populace\"></span></span>\r\n            <span class=\"contentContainer\" output-eval-key=\"Local.Inventory\" output-eval-code=\"if(data[0] != undefined && data[0].length === 0) { element.css({'display': 'none'}); } else { element.css({'display' : 'block'}); }\">Inventory: <span output-data-binding=\"Local.Inventory\"></span></span>",
+  "Height": 250,
+  "Width": 250,
+  "PlayerMade": false,
+  "HelpText": "The base system Location Container module. Has Exits, location inventory (objects) and population (npcs, players)",
+  "Id": 0,
+  "Created": "2018-06-22T12:02:25.2733403-05:00",
+  "LastRevised": "0001-01-01T00:00:00",
+  "Name": "LocationSidebar",
+  "Approved": false,
+  "ApprovedOn": "0001-01-01T00:00:00",
+  "CreatorHandle": "SwiftAusterity",
+  "ApproverHandle": null
+}

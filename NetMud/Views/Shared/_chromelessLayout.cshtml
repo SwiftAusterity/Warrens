@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - TwinMUD</title>
+    <title>netMUD</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
@@ -23,8 +23,6 @@
 </head>
 <body style="padding: 0px;">
     <div class="container body-content">
-        <h2>@ViewBag.Title</h2>
-
         <h3><p id="statusMessage" name="statusMessage" class="text-success">@ViewBag.StatusMessage</p></h3>
         @RenderBody()
     </div>

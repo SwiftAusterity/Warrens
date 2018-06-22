@@ -3,8 +3,6 @@
 @using NetMud.DataStructure.Behaviors.Actionable
 
 @model NetMud.Models.Admin.AddEditRaceViewModel
-@{
-    ViewBag.Title = "Edit Race";
 
 <section id="newCharacterForm">
     @using (Html.BeginForm("Edit", "Race", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
@@ -81,7 +79,7 @@
 
     }
 </section>
-}
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

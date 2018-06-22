@@ -5,6 +5,10 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using System.Data.Entity;
 using System.ComponentModel.DataAnnotations.Schema;
 using NetMud.Data.System;
+using NetMud.DataStructure.SupportingClasses;
+using System.Linq;
+using System;
+using System.Security.Principal;
 
 namespace NetMud.Authentication
 {
@@ -35,6 +39,24 @@ namespace NetMud.Authentication
         /// </summary>
         [ForeignKey("GlobalIdentityHandle")]
         public virtual Account GameAccount { get; set; }
+
+        /// <summary>
+        /// Get the staffrank of this account
+        /// </summary>
+        /// <returns>the staffrank</returns>
+        public StaffRank GetStaffRank(IPrincipal identity)
+        {
+            var rank = StaffRank.Player;
+
+            if (identity.IsInRole("Admin"))
+                rank = StaffRank.Admin;
+            else if (identity.IsInRole("Builder"))
+                rank = StaffRank.Builder;
+            else if (identity.IsInRole("Guest"))
+                rank = StaffRank.Guest;
+
+            return rank;
+        }
     }
 
     /// <summary>

@@ -70,7 +70,7 @@ namespace NetMud.Controllers.GameAdmin
 
                 if (obj == null)
                     message = "That does not exist";
-                else if (obj.Remove())
+                else if (obj.Remove(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                 {
                     LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveMinerals[" + ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Delete Successful.";
@@ -151,7 +151,7 @@ namespace NetMud.Controllers.GameAdmin
 
             if (string.IsNullOrWhiteSpace(message))
             {
-                if (newObj.Create() == null)
+                if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
                     message = "Error; Creation failed.";
                 else
                 {
@@ -262,7 +262,7 @@ namespace NetMud.Controllers.GameAdmin
 
             if (string.IsNullOrWhiteSpace(message))
             {
-                if (obj.Save())
+                if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                 {
                     LoggingUtility.LogAdminCommandUsage("*WEB* - EditMinerals[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Edit Successful.";
