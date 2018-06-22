@@ -19,7 +19,6 @@
             @Html.EditorFor(e => e.HelpText, new { columnCount = 1 })
         </div>
 
-
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "UIModules", IncludeCancel = true })
 
     }
