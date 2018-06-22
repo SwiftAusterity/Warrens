@@ -89,5 +89,28 @@
 
             openModularUI(500, 500, 'Quadrant ' + originNumber, myContent);
         });
+
+        $(".quadrantLoad").click(function (e) {
+            var $this = $(this);
+
+            var moduleName = prompt("Module Name?", "");
+
+            $.get('/api/ClientDataApi/GetUIModuleContent/' + moduleName, function (data) {
+                var newContent = data.BodyHtml;
+
+                if (newContent != '') {
+                    var originNumber = $this.attr('data-origin-quadrant');
+                    var $origin = $('div#quadrant-' + originNumber + '.quadrant');
+
+                    var myContent = $origin.children('.contentContainer');
+
+                    myContent.detach();
+
+                    $(newContent).appendTo($origin);
+
+                    ReloadUIModules();
+                }
+            });
+        });
     });
 </script>

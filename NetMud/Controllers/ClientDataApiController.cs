@@ -1,9 +1,11 @@
 ﻿using NetMud.Cartography;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.DataStructure.Base.PlayerConfiguration;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.Physics;
 using System.Web.Http;
+using System.Web.Http.Results;
 
 namespace NetMud.Controllers
 {
@@ -29,6 +31,17 @@ namespace NetMud.Controllers
                 return "Invalid inputs.";
 
             return Rendering.RenderRadiusMap(centerRoom, radius, false);
+        }
+
+        [HttpGet]
+        public JsonResult<IUIModule> GetUIModuleContent(string moduleName)
+        {
+            var module = BackingDataCache.GetByName<IUIModule>(moduleName);
+
+            if (module != null)
+                return Json(module);
+
+            return null;
         }
     }
 }

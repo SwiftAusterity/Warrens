@@ -46,15 +46,21 @@ namespace NetMud
             #region "ClientAPI"
             config.Routes.MapHttpRoute(
               name: "ClientApi_GetEntityModelView",
-              routeTemplate: "api/AdminDataApi/GetEntityModelView/{modelId}",
+              routeTemplate: "api/ClientDataApi/GetEntityModelView/{modelId}",
               defaults: new { controller = "ClientDataApi", action = "GetEntityModelView" }
               );
 
             config.Routes.MapHttpRoute(
                 name: "ClientApi_RenderRoomWithRadius",
-                routeTemplate: "api/AdminDataApi/RenderRoomWithRadius/{id}/{radius}",
+                routeTemplate: "api/ClientDataApi/RenderRoomWithRadius/{id}/{radius}",
                 defaults: new { controller = "ClientDataApi", action = "RenderRoomWithRadius" }
                 );
+
+            config.Routes.MapHttpRoute(
+               name: "ClientApi_GetUIModule",
+               routeTemplate: "api/ClientDataApi/GetUIModuleContent/{moduleName}",
+               defaults: new { controller = "ClientDataApi", action = "GetUIModuleContent" }
+               );
             #endregion
 
             config.Routes.MapHttpRoute(

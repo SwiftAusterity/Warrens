@@ -2,6 +2,7 @@
     window.connection;
     window.commandArray = ['look'];
     window.commandPointer = 0;
+    window.lastOutput = '';
 
     TestBrowser();
 
@@ -20,13 +21,21 @@ function submitCharacter() {
     });
 }
 
-function submitCommand() {
-    var commandText = $('#input').val();
+function submitCommand(overrideCommand) {
+    var commandText = overrideCommand;
+    var wipe = false;
+
+    if (commandText === '') {
+        commandText = $('#input').val();
+        wipe = true;
+    }
 
     window.connection.send(commandText);
 
-    window.commandArray.push(commandText);
-    window.commandPointer = commandArray.length - 1;
+    if (wipe) {
+        window.commandArray.push(commandText);
+        window.commandPointer = commandArray.length - 1;
+    }
 }
 
 function TestBrowser() {
@@ -56,6 +65,8 @@ function TestBrowser() {
 
         window.connection.onmessage = function (e) {
             var server_message = JSON.parse(e.data);
+
+            window.lastOutput = server_message;
             AppendOutput(server_message);
         }
 
@@ -114,10 +125,8 @@ function TestBrowser() {
     }
 }
 
-function AppendOutput(output) {
+function AppendOutput(output, UIOnly) {
     var $outputArea = $("#OutputArea");
-
-    $outputArea.append(output.Occurrence);
 
     $('[output-data-binding]').each(function () {
         var $this = $(this);
@@ -140,7 +149,10 @@ function AppendOutput(output) {
         return funct($this, dataToAppend);
     });
 
-    $outputArea[0].scrollTop = $outputArea[0].scrollHeight;
+    if (!UIOnly) {
+        $outputArea.append(output.Occurrence);
+        $outputArea[0].scrollTop = $outputArea[0].scrollHeight;
+   }
 }
 
 function getObjects(collection, key, depth) {
@@ -157,4 +169,8 @@ function getObjects(collection, key, depth) {
     }
 
     return objects;
+}
+
+function ReloadUIModules() {
+    AppendOutput(window.lastOutput, true);
 }
