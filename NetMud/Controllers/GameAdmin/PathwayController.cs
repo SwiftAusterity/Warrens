@@ -65,7 +65,7 @@ namespace NetMud.Controllers.GameAdmin
 
                 if (obj == null)
                     message = "That does not exist";
-                else if (obj.Remove())
+                else if (obj.Remove(authedUser.GameAccount, authedUser.GetStaffRank()))
                 {
                     LoggingUtility.LogAdminCommandUsage("*WEB* - RemovePathway[" + ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Delete Successful.";
@@ -151,7 +151,7 @@ namespace NetMud.Controllers.GameAdmin
                 {
                     newRoom.ParentLocation = locale;
 
-                    if (newRoom.Create() == null)
+                    if (newRoom.Create(authedUser.GameAccount, authedUser.GetStaffRank()) == null)
                         roomMessage = "Error; Creation failed.";
                     else
                     {
@@ -217,7 +217,7 @@ namespace NetMud.Controllers.GameAdmin
                 newObj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth,
                     vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation, new BackingDataCacheKey(dimModel), materialParts);
 
-                if (newObj.Create() == null)
+                if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank()) == null)
                     message = "Error; Creation failed.";
                 else
                 {
@@ -232,7 +232,7 @@ namespace NetMud.Controllers.GameAdmin
                             Model = newObj.Model
                         };
 
-                        if (reversePath.Create() == null)
+                        if (reversePath.Create(authedUser.GameAccount, authedUser.GetStaffRank()) == null)
                         {
                             message = "Reverse Path creation FAILED. Origin path creation SUCCESS.";
                         }
@@ -301,7 +301,7 @@ namespace NetMud.Controllers.GameAdmin
                 newObj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth,
                     vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation, new BackingDataCacheKey(dimModel), materialParts);
 
-                if (newObj.Create() == null)
+                if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank()) == null)
                     message = "Error; Creation failed.";
                 else
                 {
@@ -412,7 +412,7 @@ namespace NetMud.Controllers.GameAdmin
                 obj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth,
                     vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation, new BackingDataCacheKey(dimModel), materialParts);
 
-                if (obj.Save())
+                if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank()))
                 {
                     LoggingUtility.LogAdminCommandUsage("*WEB* - EditPathwayData[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 }
@@ -520,7 +520,7 @@ namespace NetMud.Controllers.GameAdmin
                                                     && occ.Event.Phrase.Equals(phraseF, StringComparison.InvariantCultureIgnoreCase));
             obj.Descriptives.Add(existingOccurrence);
 
-            if (obj.Save())
+            if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank()))
             {
                 LoggingUtility.LogAdminCommandUsage("*WEB* - AddEditDescriptive[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
             }
@@ -564,7 +564,7 @@ namespace NetMud.Controllers.GameAdmin
                         {
                             obj.Descriptives.Remove(existingOccurrence);
 
-                            if (obj.Save())
+                            if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank()))
                             {
                                 LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveDescriptive[" + id.ToString() + "|" + type.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                                 message = "Delete Successful.";

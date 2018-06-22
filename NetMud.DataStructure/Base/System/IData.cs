@@ -1,4 +1,6 @@
-﻿namespace NetMud.DataStructure.Base.System
+﻿using NetMud.DataStructure.SupportingClasses;
+
+namespace NetMud.DataStructure.Base.System
 {
     /// <summary>
     /// Framework for Database objects
@@ -9,12 +11,12 @@
         /// Remove this entry perma
         /// </summary>
         /// <returns>success status</returns>
-        bool Remove();
+        bool Remove(IAccount remover, StaffRank creatorRank);
 
         /// <summary>
         /// Update this entry
         /// </summary>
         /// <returns></returns>
-        bool Save();
+        bool Save(IAccount editor, StaffRank creatorRank);
     }
 }

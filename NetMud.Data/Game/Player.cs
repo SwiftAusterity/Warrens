@@ -354,7 +354,7 @@ namespace NetMud.Data.Game
 
             //Set the data context's stuff too so we don't have to do this over again
             ch.CurrentLocation = position;
-            ch.Save();
+            ch.Save(ch.Account, StaffRank.Player); //characters/players dont actually need approval
 
             spawnTo.MoveInto<IPlayer>(this);
 

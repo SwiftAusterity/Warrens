@@ -3,6 +3,7 @@ using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.System;
+using NetMud.DataStructure.SupportingClasses;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -45,8 +46,8 @@ namespace NetMud.Data.System
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
-        public bool FitnessProblems 
-        { 
+        public bool FitnessProblems
+        {
             get
             {
                 return FitnessReport().Any();
@@ -162,6 +163,13 @@ namespace NetMud.Data.System
                 _approvedBy = value;
             }
         }
+
+        internal void ApproveMe(IAccount approver)
+        {
+            Approved = true;
+            ApprovedBy = approver;
+            ApprovedOn = DateTime.Now;
+        }
         #endregion  
 
         #region Data persistence functions
@@ -169,20 +177,36 @@ namespace NetMud.Data.System
         /// Add it to the cache and save it to the file system
         /// </summary>
         /// <returns>the object with Id and other db fields set</returns>
-        public virtual IKeyedData Create()
+        public virtual IKeyedData Create(IAccount creator, StaffRank rank)
         {
             var accessor = new DataAccess.FileSystem.BackingData();
 
             try
             {
                 if (Created != DateTime.MinValue)
-                    Save();
+                    Save(creator, rank);
                 else
                 {
 
                     //reset this guy's Id to the next one in the list
                     GetNextId();
                     Created = DateTime.Now;
+                    Creator = creator;
+
+                    //Figure out automated approvals, always throw reviewonly in there
+                    if (rank < StaffRank.Admin && ApprovalType != ContentApprovalType.ReviewOnly)
+                    {
+                        switch (ApprovalType)
+                        {
+                            case ContentApprovalType.None:
+                                ApproveMe(creator);
+                                break;
+                            case ContentApprovalType.Leader:
+                                if (rank == StaffRank.Builder)
+                                    ApproveMe(creator);
+                                break;
+                        }
+                    }
 
                     BackingDataCache.Add(this);
                     accessor.WriteEntity(this);
@@ -196,17 +220,23 @@ namespace NetMud.Data.System
 
             return this;
         }
-        
+
         /// <summary>
         /// Remove this object from the db permenantly
         /// </summary>
         /// <returns>success status</returns>
-        public virtual bool Remove()
+        public virtual bool Remove(IAccount remover, StaffRank rank)
         {
             var accessor = new DataAccess.FileSystem.BackingData();
 
             try
             {
+                //Not allowed to remove stuff you didn't make unless you're an admin, TODO: Make this more nuanced for guilds
+                if (rank < StaffRank.Admin && !remover.Equals(Creator))
+                {
+                    return false;
+                }
+
                 //Remove from cache first
                 BackingDataCache.Remove(new BackingDataCacheKey(this));
 
@@ -226,16 +256,47 @@ namespace NetMud.Data.System
         /// Update the field data for this object to the db
         /// </summary>
         /// <returns>success status</returns>
-        public virtual bool Save()
+        public virtual bool Save(IAccount editor, StaffRank rank)
         {
             var accessor = new DataAccess.FileSystem.BackingData();
 
             try
             {
                 if (Created == DateTime.MinValue)
-                    Create();
+                    Create(editor, rank);
                 else
                 {
+                    //Not allowed to edit stuff you didn't make unless you're an admin, TODO: Make this more nuanced for guilds
+                    if (rank < StaffRank.Admin && !editor.Equals(Creator))
+                    {
+                        return false;
+                    }
+
+                    //Disapprove of things first
+                    Approved = false;
+                    ApprovedBy = null;
+                    ApprovedOn = DateTime.MinValue;
+
+                    //Figure out automated approvals, always throw reviewonly in there
+                    if (rank < StaffRank.Admin && ApprovalType != ContentApprovalType.ReviewOnly)
+                    {
+                        switch (ApprovalType)
+                        {
+                            case ContentApprovalType.None:
+                                ApproveMe(editor);
+                                break;
+                            case ContentApprovalType.Leader:
+                                if (rank == StaffRank.Builder)
+                                    ApproveMe(editor);
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        //Staff Admin always get approved
+                        ApproveMe(editor);
+                    }
+
                     LastRevised = DateTime.Now;
 
                     BackingDataCache.Add(this);
@@ -254,7 +315,7 @@ namespace NetMud.Data.System
         /// <summary>
         /// Grabs the next Id in the chain of all objects of this type.
         /// </summary>
-        internal void GetNextId()
+        internal virtual void GetNextId()
         {
             IEnumerable<IKeyedData> allOfMe = BackingDataCache.GetAll().Where(bdc => bdc.GetType() == GetType());
 

@@ -68,7 +68,7 @@ namespace NetMud.Controllers.GameAdmin
 
                 if (obj == null)
                     message = "That does not exist";
-                else if (obj.Remove())
+                else if (obj.Remove(authedUser.GameAccount, authedUser.GetStaffRank()))
                 {
                     LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveConstantsFile[" + ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Delete Successful.";
@@ -98,7 +98,7 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var newObj = new NetMud.Data.System.Constants
+            var newObj = new Data.System.Constants
             {
                 Name = vModel.Name
             };
@@ -142,7 +142,7 @@ namespace NetMud.Controllers.GameAdmin
 
             newObj.AddOrUpdate(newLookup, newValues);
 
-            if (newObj.Create() == null)
+            if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank()) == null)
                 message = "Error; Creation failed.";
             else
             {
@@ -225,7 +225,7 @@ namespace NetMud.Controllers.GameAdmin
 
             obj.AddOrUpdate(newLookup, newValues);
 
-            if (obj.Save())
+            if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank()))
             {
                 LoggingUtility.LogAdminCommandUsage("*WEB* - EditConstantsFile[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 message = "Edit Successful.";

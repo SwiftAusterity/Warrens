@@ -176,9 +176,10 @@ namespace NetMud.Data.EntityBackingData
             return LiveCache.Get<IRoom>(Id);
         }
 
-        public override IKeyedData Create()
+        public override IKeyedData Create(IAccount creator, StaffRank rank)
         {
-            var obj = base.Create();
+            //approval will be handled inside the base call
+            var obj = base.Create(creator, rank);
 
             ParentLocation.RemapInterior();
 

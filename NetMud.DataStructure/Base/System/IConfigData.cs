@@ -1,9 +1,11 @@
-﻿namespace NetMud.DataStructure.Base.System
+﻿using NetMud.DataStructure.Behaviors.System;
+
+namespace NetMud.DataStructure.Base.System
 {
     /// <summary>
     /// Configuration data. Only one of these spawns forever
     /// </summary>
-    public interface IConfigData : IData
+    public interface IConfigData : IData, INeedApproval
     {
         /// <summary>
         /// The unique name of this configuration data

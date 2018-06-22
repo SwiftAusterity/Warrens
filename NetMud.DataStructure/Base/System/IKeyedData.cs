@@ -1,4 +1,5 @@
 ﻿using NetMud.DataStructure.Behaviors.System;
+using NetMud.DataStructure.SupportingClasses;
 using System;
 using System.Collections.Generic;
 
@@ -44,6 +45,6 @@ namespace NetMud.DataStructure.Base.System
         /// Create a new entry
         /// </summary>
         /// <returns>the new, filled db object</returns>
-        IKeyedData Create();
+        IKeyedData Create(IAccount creator, StaffRank creatorRank);
     }
 }

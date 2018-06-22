@@ -5,6 +5,9 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using System.Data.Entity;
 using System.ComponentModel.DataAnnotations.Schema;
 using NetMud.Data.System;
+using NetMud.DataStructure.SupportingClasses;
+using System.Linq;
+using System;
 
 namespace NetMud.Authentication
 {
@@ -35,6 +38,19 @@ namespace NetMud.Authentication
         /// </summary>
         [ForeignKey("GlobalIdentityHandle")]
         public virtual Account GameAccount { get; set; }
+
+        /// <summary>
+        /// Get the staffrank of this account
+        /// </summary>
+        /// <returns>the staffrank</returns>
+        public StaffRank GetStaffRank()
+        {
+            var rank = StaffRank.Player;
+
+            rank = (StaffRank)Enum.Parse(typeof(StaffRank), Enum.GetNames(typeof(StaffRank)).First(vR => Roles.Select(rol => rol.RoleId).Contains(vR)));
+
+            return rank;
+        }
     }
 
     /// <summary>

@@ -141,7 +141,7 @@ namespace NetMud.Data.System
                         {
                             UITutorialMode = true
                         };
-                        _config.Save();
+                        _config.Save(this, DataStructure.SupportingClasses.StaffRank.Player); //personal config doesnt need approval yet but your rank is ALWAYS player here
                     }
                 }
 
@@ -167,7 +167,7 @@ namespace NetMud.Data.System
                 return "A character with that name already exists, please choose another.";
 
             newChar.AccountHandle = GlobalIdentityHandle;
-            newChar.Create();
+            newChar.Create(this, DataStructure.SupportingClasses.StaffRank.Player); //characters dont need approval yet but your rank is ALWAYS player here
 
             Characters.Add(newChar);
 
@@ -219,5 +219,92 @@ namespace NetMud.Data.System
             
             return new Account(outHandle, outLogSubs);
         }
+
+
+        #region Equality Functions
+        /// <summary>
+        /// -99 = null input
+        /// -1 = wrong type
+        /// 0 = same type, wrong id
+        /// 1 = same reference (same id, same type)
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public int CompareTo(IAccount other)
+        {
+            if (other != null)
+            {
+                try
+                {
+                    if (other.GetType() != GetType())
+                        return -1;
+
+                    if (other.GlobalIdentityHandle.Equals(GlobalIdentityHandle))
+                        return 1;
+
+                    return 0;
+                }
+                catch (Exception ex)
+                {
+                    LoggingUtility.LogError(ex);
+                }
+            }
+
+            return -99;
+        }
+
+        /// <summary>
+        /// Compares this object to another one to see if they are the same object
+        /// </summary>
+        /// <param name="other">the object to compare to</param>
+        /// <returns>true if the same object</returns>
+        public bool Equals(IAccount other)
+        {
+            if (other != default(IAccount))
+            {
+                try
+                {
+                    return other.GetType() == GetType() && other.GlobalIdentityHandle.Equals(GlobalIdentityHandle);
+                }
+                catch (Exception ex)
+                {
+                    LoggingUtility.LogError(ex);
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Compares an object to another one to see if they are the same object
+        /// </summary>
+        /// <param name="x">the object to compare to</param>
+        /// <param name="y">the object to compare to</param>
+        /// <returns>true if the same object</returns>
+        public bool Equals(IAccount x, IAccount y)
+        {
+            return x.Equals(y);
+        }
+
+        /// <summary>
+        /// Get the hash code for comparison purposes
+        /// </summary>
+        /// <param name="obj">the thing to get the hashcode for</param>
+        /// <returns>the hash code</returns>
+        public int GetHashCode(IAccount obj)
+        {
+            return obj.GetType().GetHashCode() + obj.GlobalIdentityHandle.GetHashCode();
+        }
+
+        /// <summary>
+        /// Get the hash code for comparison purposes
+        /// </summary>
+        /// <returns>the hash code</returns>
+        public override int GetHashCode()
+        {
+            return GetType().GetHashCode() + GlobalIdentityHandle.GetHashCode();
+        }
+        #endregion
+
     }
 }

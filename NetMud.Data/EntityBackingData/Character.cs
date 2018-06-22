@@ -12,6 +12,7 @@ using NetMud.DataStructure.SupportingClasses;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.EntityBackingData
@@ -190,12 +191,20 @@ namespace NetMud.Data.EntityBackingData
         /// Add it to the cache and save it to the file system
         /// </summary>
         /// <returns>the object with Id and other db fields set</returns>
-        public override IKeyedData Create()
+        public override IKeyedData Create(IAccount creator, StaffRank rank)
         {
             var accessor = new DataAccess.FileSystem.PlayerData();
 
             try
             {
+                //reset this guy's Id to the next one in the list
+                GetNextId();
+                Created = DateTime.Now;
+                Creator = creator;
+
+                //No approval stuff necessary here
+                ApproveMe(creator);
+
                 PlayerDataCache.Add(this);
                 accessor.WriteCharacter(this);
             }
@@ -212,7 +221,7 @@ namespace NetMud.Data.EntityBackingData
         /// Remove this object from the db permenantly
         /// </summary>
         /// <returns>success status</returns>
-        public override bool Remove()
+        public override bool Remove(IAccount remover, StaffRank rank)
         {
             var accessor = new DataAccess.FileSystem.PlayerData();
 
@@ -237,12 +246,17 @@ namespace NetMud.Data.EntityBackingData
         /// Update the field data for this object to the db
         /// </summary>
         /// <returns>success status</returns>
-        public override bool Save()
+        public override bool Save(IAccount editor, StaffRank rank)
         {
             var accessor = new DataAccess.FileSystem.PlayerData();
 
             try
             {
+                //No approval stuff necessary here
+                ApproveMe(editor);
+
+                LastRevised = DateTime.Now;
+
                 accessor.WriteCharacter(this);
             }
             catch (Exception ex)
@@ -252,6 +266,20 @@ namespace NetMud.Data.EntityBackingData
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Grabs the next Id in the chain of all objects of this type.
+        /// </summary>
+        internal override void GetNextId()
+        {
+            var allOfMe = Account.Characters;
+
+            //Zero ordered list
+            if (allOfMe.Count() > 0)
+                Id = allOfMe.Max(dp => dp.Id) + 1;
+            else
+                Id = 0;
         }
         #endregion
     }

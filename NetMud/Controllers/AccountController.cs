@@ -8,6 +8,7 @@ using Microsoft.Owin.Security;
 using NetMud.Authentication;
 using NetMud.Data.ConfigData;
 using NetMud.Data.System;
+using NetMud.DataStructure.SupportingClasses;
 using NetMud.Models;
 
 namespace NetMud.Controllers
@@ -166,7 +167,7 @@ namespace NetMud.Controllers
                 if (result.Succeeded)
                 {
                     //Save the new config
-                    newAccountConfig.Save();
+                    newAccountConfig.Save(newGameAccount, StaffRank.Player);
                     await UserManager.AddToRoleAsync(user.Id, "Player");
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
                     
