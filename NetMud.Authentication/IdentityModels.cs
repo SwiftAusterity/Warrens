@@ -8,6 +8,7 @@ using NetMud.Data.System;
 using NetMud.DataStructure.SupportingClasses;
 using System.Linq;
 using System;
+using System.Security.Principal;
 
 namespace NetMud.Authentication
 {
@@ -43,11 +44,16 @@ namespace NetMud.Authentication
         /// Get the staffrank of this account
         /// </summary>
         /// <returns>the staffrank</returns>
-        public StaffRank GetStaffRank()
+        public StaffRank GetStaffRank(IPrincipal identity)
         {
             var rank = StaffRank.Player;
 
-            rank = (StaffRank)Enum.Parse(typeof(StaffRank), Enum.GetNames(typeof(StaffRank)).First(vR => Roles.Select(rol => rol.RoleId).Contains(vR)));
+            if (identity.IsInRole("Admin"))
+                rank = StaffRank.Admin;
+            else if (identity.IsInRole("Builder"))
+                rank = StaffRank.Builder;
+            else if (identity.IsInRole("Guest"))
+                rank = StaffRank.Guest;
 
             return rank;
         }

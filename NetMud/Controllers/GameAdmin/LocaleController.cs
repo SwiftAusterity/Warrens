@@ -51,7 +51,7 @@ namespace NetMud.Controllers.GameAdmin
 
                 if (obj == null)
                     message = "That does not exist";
-                else if (obj.Remove(authedUser.GameAccount, authedUser.GetStaffRank()))
+                else if (obj.Remove(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                 {
                     LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveLocale[" + ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Delete Successful.";
@@ -102,7 +102,7 @@ namespace NetMud.Controllers.GameAdmin
                 ParentLocation = zone
             };
 
-            if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank()) == null)
+            if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
                 message = "Error; Creation failed.";
             else
             {
@@ -166,7 +166,7 @@ namespace NetMud.Controllers.GameAdmin
 
             obj.Name = vModel.Name;
 
-            if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank()))
+            if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {
                 LoggingUtility.LogAdminCommandUsage("*WEB* - EditLocale[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 message = "Edit Successful.";

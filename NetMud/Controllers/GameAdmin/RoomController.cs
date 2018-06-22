@@ -84,7 +84,7 @@ namespace NetMud.Controllers.GameAdmin
 
                 if (obj == null)
                     message = "That does not exist";
-                else if (obj.Remove(authedUser.GameAccount, authedUser.GetStaffRank()))
+                else if (obj.Remove(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                 {
                     LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveRoom[" + ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Delete Successful.";
@@ -133,7 +133,7 @@ namespace NetMud.Controllers.GameAdmin
                 newObj.ParentLocation = locale;
                 newObj.Coordinates = new Tuple<int, int, int>(0, 0, 0); //TODO: fix this
 
-                if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank()) == null)
+                if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
                     message = "Error; Creation failed.";
                 else
                 {
@@ -252,10 +252,10 @@ namespace NetMud.Controllers.GameAdmin
 
                 }
 
-                if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank()))
+                if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                 {
                     if (zoneDestination != null)
-                        zoneDestination.Save(authedUser.GameAccount, authedUser.GetStaffRank());
+                        zoneDestination.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
 
                     LoggingUtility.LogAdminCommandUsage("*WEB* - EditRoomData[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 }
@@ -365,7 +365,7 @@ namespace NetMud.Controllers.GameAdmin
                                                     && occ.Event.Phrase.Equals(phraseF, StringComparison.InvariantCultureIgnoreCase));
             obj.Descriptives.Add(existingOccurrence);
 
-            if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank()))
+            if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {
                 LoggingUtility.LogAdminCommandUsage("*WEB* - Room AddEditDescriptive[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
             }
@@ -409,7 +409,7 @@ namespace NetMud.Controllers.GameAdmin
                         {
                             obj.Descriptives.Remove(existingOccurrence);
 
-                            if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank()))
+                            if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                             {
                                 LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveDescriptive[" + id.ToString() + "|" + type.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                                 message = "Delete Successful.";

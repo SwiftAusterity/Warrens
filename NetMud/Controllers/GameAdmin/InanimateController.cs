@@ -74,7 +74,7 @@ namespace NetMud.Controllers.GameAdmin
 
                 if (obj == null)
                     message = "That does not exist";
-                else if (obj.Remove(authedUser.GameAccount, authedUser.GetStaffRank()))
+                else if (obj.Remove(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                 {
                     LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveInanimate[" + ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Delete Successful.";
@@ -220,7 +220,7 @@ namespace NetMud.Controllers.GameAdmin
                 newObj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth
                     , vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation, new BackingDataCacheKey(dimModel), materialParts);
 
-                if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank()) == null)
+                if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
                     message = "Error; Creation failed.";
                 else
                 {
@@ -410,7 +410,7 @@ namespace NetMud.Controllers.GameAdmin
                 obj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth, 
                     vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation, new BackingDataCacheKey(dimModel), materialParts);
 
-                if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank()))
+                if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                 {
                     LoggingUtility.LogAdminCommandUsage("*WEB* - EditInanimateData[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Edit Successful.";
@@ -519,7 +519,7 @@ namespace NetMud.Controllers.GameAdmin
                                                     && occ.Event.Phrase.Equals(phraseF, StringComparison.InvariantCultureIgnoreCase));
             obj.Descriptives.Add(existingOccurrence);
 
-            if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank()))
+            if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {
                 LoggingUtility.LogAdminCommandUsage("*WEB* - Inanimate AddEditDescriptive[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
             }
@@ -563,7 +563,7 @@ namespace NetMud.Controllers.GameAdmin
                         {
                             obj.Descriptives.Remove(existingOccurrence);
 
-                            if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank()))
+                            if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                             {
                                 LoggingUtility.LogAdminCommandUsage("*WEB* - Inanimate RemoveDescriptive[" + id.ToString() + "|" + type.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                                 message = "Delete Successful.";

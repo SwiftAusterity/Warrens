@@ -68,7 +68,7 @@ namespace NetMud.Controllers.GameAdmin
 
                 if (obj == null)
                     message = "That does not exist";
-                else if (obj.Remove(authedUser.GameAccount, authedUser.GetStaffRank()))
+                else if (obj.Remove(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                 {
                     LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveDimensionalModelData[" + ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Delete Successful.";
@@ -152,7 +152,7 @@ namespace NetMud.Controllers.GameAdmin
 
                     if (newModel.IsModelValid())
                     {
-                        if (newModel.Create(authedUser.GameAccount, authedUser.GetStaffRank()) == null)
+                        if (newModel.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
                             message = "Error; Creation failed.";
                         else
                         {
@@ -260,7 +260,7 @@ namespace NetMud.Controllers.GameAdmin
                         obj.ModelType = newModel.ModelType;
                         obj.ModelPlanes = newModel.ModelPlanes;
 
-                        if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank()))
+                        if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                         {
                             LoggingUtility.LogAdminCommandUsage("*WEB* - EditDimensionalModelData[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                             message = "Edit Successful.";

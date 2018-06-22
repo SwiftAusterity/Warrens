@@ -14,7 +14,11 @@
                 @Html.ActionLink("Add", "Add", "Zone") ]
                 @if (Model.Zones.Any(r => r.FitnessProblems))
                 {
-                    <span style="color:red;">DATA PROBLEMS</span>
+                    <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
+                }
+                @if (Model.Zones.Any(r => !r.Approved))
+                {
+                    <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                 }
             </dd>
             <dt>Locales:</dt>
@@ -22,7 +26,11 @@
                 @Model.Locales.Count().ToString() [ Use Zones Yo ]
                 @if (Model.Locales.Any(r => r.FitnessProblems))
                 {
-                    <span style="color:red;">DATA PROBLEMS</span>
+                    <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
+                }
+                @if (Model.Locales.Any(r => !r.Approved))
+                {
+                    <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                 }
             </dd>
             <dt>Rooms:</dt>
@@ -30,7 +38,11 @@
                 @Model.Rooms.Count().ToString() [ Use Zones Yo ]
                 @if (Model.Rooms.Any(r => r.FitnessProblems))
                 {
-                    <span style="color:red;">DATA PROBLEMS</span>
+                    <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
+                }
+                @if (Model.Rooms.Any(r => !r.Approved))
+                {
+                    <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                 }
             </dd>
             <dt>NPCs:</dt>
@@ -40,7 +52,11 @@
                 @Html.ActionLink("Add", "Add", "NPC") ]
                 @if (Model.NPCs.Any(r => r.FitnessProblems))
                 {
-                    <span style="color:red;">DATA PROBLEMS</span>
+                    <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
+                }
+                @if (Model.NPCs.Any(r => !r.Approved))
+                {
+                    <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                 }
             </dd>
             <dt>Inanimates:</dt>
@@ -50,7 +66,11 @@
                 @Html.ActionLink("Add", "Add", "Inanimate") ]
                 @if (Model.Inanimates.Any(r => r.FitnessProblems))
                 {
-                    <span style="color:red;">DATA PROBLEMS</span>
+                    <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
+                }
+                @if (Model.Inanimates.Any(r => !r.Approved))
+                {
+                    <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                 }
             </dd>
         </dl>
@@ -65,7 +85,11 @@
                 @Html.ActionLink("Add", "Add", "Help") ]
                 @if (Model.HelpFiles.Any(r => r.FitnessProblems))
                 {
-                    <span style="color:red;">DATA PROBLEMS</span>
+                    <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
+                }
+                @if (Model.HelpFiles.Any(r => !r.Approved))
+                {
+                    <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                 }
             </dd>
             <dt>Dimensional Models:</dt>
@@ -75,7 +99,11 @@
                 @Html.ActionLink("Add", "Add", "DimensionalModel") ]
                 @if (Model.DimensionalModels.Any(r => r.FitnessProblems))
                 {
-                    <span style="color:red;">DATA PROBLEMS</span>
+                    <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
+                }
+                @if (Model.DimensionalModels.Any(r => !r.Approved))
+                {
+                    <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                 }
             </dd>
             <dt>Materials:</dt>
@@ -85,7 +113,11 @@
                 @Html.ActionLink("Add", "Add", "Material") ]
                 @if (Model.Materials.Any(r => r.FitnessProblems))
                 {
-                    <span style="color:red;">DATA PROBLEMS</span>
+                    <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
+                }
+                @if (Model.Materials.Any(r => !r.Approved))
+                {
+                    <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                 }
             </dd>
             <dt>Races:</dt>
@@ -95,7 +127,11 @@
                 @Html.ActionLink("Add", "Add", "Race") ]
                 @if (Model.Races.Any(r => r.FitnessProblems))
                 {
-                    <span style="color:red;">DATA PROBLEMS</span>
+                    <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
+                }
+                @if (Model.Races.Any(r => !r.Approved))
+                {
+                    <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                 }
             </dd>
             <dt>Constants:</dt>
@@ -105,7 +141,11 @@
                 @Html.ActionLink("Add", "Add", "Constants") ]
                 @if (Model.Constants.Any(r => r.FitnessProblems))
                 {
-                    <span style="color:red;">DATA PROBLEMS</span>
+                    <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
+                }
+                @if (Model.Constants.Any(r => !r.Approved))
+                {
+                    <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                 }
             </dd>
             <dt>Flora:</dt>
@@ -115,7 +155,11 @@
                 @Html.ActionLink("Add", "Add", "Flora") ]
                 @if (Model.Flora.Any(r => r.FitnessProblems))
                 {
-                    <span style="color:red;">DATA PROBLEMS</span>
+                    <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
+                }
+                @if (Model.Flora.Any(r => !r.Approved))
+                {
+                    <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                 }
             </dd>
             <dt>Fauna:</dt>
@@ -125,7 +169,11 @@
                 @Html.ActionLink("Add", "Add", "Fauna") ]
                 @if (Model.Fauna.Any(r => r.FitnessProblems))
                 {
-                    <span style="color:red;">DATA PROBLEMS</span>
+                    <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
+                }
+                @if (Model.Fauna.Any(r => !r.Approved))
+                {
+                    <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                 }
             </dd>
             <dt>Minerals:</dt>
@@ -135,7 +183,11 @@
                 @Html.ActionLink("Add", "Add", "Minerals") ]
                 @if (Model.Minerals.Any(r => r.FitnessProblems))
                 {
-                    <span style="color:red;">DATA PROBLEMS</span>
+                    <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
+                }
+                @if (Model.Minerals.Any(r => !r.Approved))
+                {
+                    <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                 }
             </dd>
         </dl>

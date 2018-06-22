@@ -90,7 +90,7 @@ namespace NetMud.Controllers
 
             UserManager.UpdateAsync(authedUser);
 
-            if (obj.Config.Save(authedUser.GameAccount, authedUser.GetStaffRank()))
+            if (obj.Config.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {
                 LoggingUtility.Log("*WEB* - EditGameAccount[" + authedUser.GameAccount.GlobalIdentityHandle + "]", LogChannels.AccountActivity);
                 message = "Edit Successful.";
@@ -172,7 +172,7 @@ namespace NetMud.Controllers
 
                 if (character == null)
                     message = "That character does not exist";
-                else if (character.Remove(model.authedUser.GameAccount, model.authedUser.GetStaffRank()))
+                else if (character.Remove(model.authedUser.GameAccount, model.authedUser.GetStaffRank(User)))
                     message = "Character successfully deleted.";
                 else
                     message = "Error. Character not removed.";
@@ -195,7 +195,7 @@ namespace NetMud.Controllers
             else
             {
                 account.Config.UITutorialMode = state;
-                account.Config.Save(authedUser.GameAccount, authedUser.GetStaffRank());
+                account.Config.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
             }
 
             return new EmptyResult();
