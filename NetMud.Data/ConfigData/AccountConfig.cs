@@ -5,6 +5,7 @@ using NetMud.DataStructure.Base.System;
 using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.Linq;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.ConfigData
@@ -74,21 +75,36 @@ namespace NetMud.Data.ConfigData
 
             var directory = configData.GetCurrentDirectoryForEntity(this);
 
-            if (!configData.VerifyDirectory(directory, false))
+            var charDirectory = new DirectoryInfo(directory);
+            IAccountConfig newConfig = null;
+
+            try
             {
-                LoggingUtility.LogError(new AccessViolationException(string.Format("Current directory for account config data {0} does not exist.", Name)));
-                return false;
+                var file = charDirectory.EnumerateFiles("*.AccountConfig", SearchOption.TopDirectoryOnly).FirstOrDefault();
+
+                if (file == null)
+                    return false;
+
+                newConfig = (IAccountConfig)configData.ReadEntity(file, GetType());
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex);
+                //Let it keep going
             }
 
-            var file = new FileInfo(directory + configData.GetEntityFilename(this));
-            IAccountConfig newConfig = (IAccountConfig)configData.ReadEntity(file, GetType());
+            if (newConfig != null)
+            {
 
-            UIConfig = newConfig.UIConfig;
-            UITutorialMode = newConfig.UITutorialMode;
+                UIConfig = newConfig.UIConfig;
+                UITutorialMode = newConfig.UITutorialMode;
 
-            ConfigDataCache.Add(this);
+                ConfigDataCache.Add(this);
 
-            return true;
+                return true;
+            }
+
+            return false;
         }
     }
 }

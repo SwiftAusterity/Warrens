@@ -1,5 +1,5 @@
-﻿function Tutorial(parent, text) {
-    if (Cookies.get('tutorialMode') === 'off') {
+﻿function Tutorial(parent, text, tutorialMode) {
+    if (!tutorialMode) {
         return;
     }
 

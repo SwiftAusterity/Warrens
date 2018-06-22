@@ -3,7 +3,7 @@
 @model NetMud.Models.ManageAccountViewModel
 
 <h4>Log Subscriptions</h4>
-@if (Model.DataObject == null || Model.LogChannelSubscriptions == null || Model.LogChannelSubscriptions.Count() == 0)
+@if (Model.DataObject == null || Model.DataObject.LogChannelSubscriptions == null || Model.DataObject.LogChannelSubscriptions.Count == 0)
 {
     <a href="#" id="addLogRow" class="addRow">Add another row...</a>
     <div id="logRows">
@@ -20,16 +20,15 @@
 }
 else
 {
-    foreach (var subscription in Model.LogChannelSubscriptions)
+    foreach (var subscription in Model.DataObject.LogChannelSubscriptions)
     {
         <a href="#" id="addLogRow" class="addRow">Add another row...</a>
         <div id="logRows">
             <div class="form-group row">
                 <label class="col-sm-1 col-form-label"><a href="#" class="removeRow" id="removeLogRow" title="Remove this">X</a></label>
                 <div class="col-md-3">
-                    @Html.DropDownList("LogChannelSubscriptions", Enum.GetNames(typeof(LogChannels)).Select(rl =>
-                                                            new SelectListItem() { Text = rl, Value = rl, Selected = rl == subscription })
-                                                            , "Select One", htmlAttributes: new { id = "LogChannelSubscriptions", @class = "form-control" })
+                    @Html.DropDownList("LogChannelSubscriptions", new SelectList(Enum.GetNames(typeof(LogChannels)), subscription)
+                        , "Select One", htmlAttributes: new { id = "LogChannelSubscriptions", @class = "form-control" })
                 </div>
             </div>
         </div>
@@ -39,7 +38,6 @@ else
 
 <script type="text/javascript">
     $(document).ready(function () {
-        var criterionLabel = decodeHtml('@Html.DescriptiveLabelFor(m => m.LogChannelSubscriptions, new { @class = "col-sm-1 col-form-label" }).ToString().Replace(Environment.NewLine, "")');
         var criterionDropdown = decodeHtml('@Html.DropDownList("LogChannelSubscriptions", Enum.GetNames(typeof(LogChannels)).Select(rl =>
                                                     new SelectListItem() { Text = rl, Value = rl })
                                                     , "Select One", htmlAttributes: new { id = "LogChannelSubscriptions", @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');
@@ -48,7 +46,7 @@ else
             $("#logRows").append(
                 '<div class="form-group row">' +
                 '<label class="col-sm-1 col-form-label"><a href="#" class="removeRow" id="removeLogRow" title="Remove this">X</a></label>' +
-                criterionLabel + '<div class="col-md-3">' + criterionDropdown + '</div></div>'
+                '<div class="col-md-3">' + criterionDropdown + '</div></div>'
             );
 
             $(".removeRow").click(function () {

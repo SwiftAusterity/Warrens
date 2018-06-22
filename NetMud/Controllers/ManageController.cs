@@ -67,8 +67,6 @@ namespace NetMud.Controllers
             {
                 authedUser = user,
                 DataObject = account,
-                UITutorialMode = config.UITutorialMode,
-                LogChannelSubscriptions = account.LogChannelSubscriptions.ToArray(),
                 GlobalIdentityHandle = account.GlobalIdentityHandle
             };
 

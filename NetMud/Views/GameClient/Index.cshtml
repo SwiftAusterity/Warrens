@@ -51,8 +51,9 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        Tutorial($('#locationBreadcrumbs'), "This is where you are in the world.");
-        Tutorial($('#input'), "This is where you type commands. The UP and DOWN arrow keys will cycle through prior input. Hit ENTER to submit commands.");
+        var tutorialMode = '@Model.authedUser.GameAccount.Config.UITutorialMode' === 'True';
+        Tutorial($('#locationBreadcrumbs'), "This is where you are in the world.", tutorialMode);
+        Tutorial($('#input'), "This is where you type commands. The UP and DOWN arrow keys will cycle through prior input. Hit ENTER to submit commands.", tutorialMode);
 
         $('#disconnect').click(function (e) {
             AppendOutput('Connection TERMINATED.');

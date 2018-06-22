@@ -94,12 +94,6 @@ namespace NetMud
             );
 
             routes.MapRoute(
-                name: "Manage_Toggle_Tutorial",
-                url: "Manage/ToggleTutorialMode/{state}",
-                defaults: new { controller = "Manage", action = "ToggleTutorialMode" }
-            );
-
-            routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional },
