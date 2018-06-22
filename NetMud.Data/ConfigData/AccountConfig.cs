@@ -116,8 +116,7 @@ namespace NetMud.Data.ConfigData
 
             if (newConfig != null)
             {
-
-                UIConfig = newConfig.UIConfig;
+                UIModules = newConfig.UIModules;
                 UITutorialMode = newConfig.UITutorialMode;
 
                 ConfigDataCache.Add(this);
