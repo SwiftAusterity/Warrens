@@ -6,6 +6,7 @@ using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.PlayerConfiguration;
 using NetMud.DataStructure.Base.System;
 using NetMud.Utility;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -115,41 +116,50 @@ namespace NetMud.Data.System
         /// <summary>
         /// The config values for this account
         /// </summary>
-        private IAccountConfig _config;
+        [JsonIgnore]
+        private ConfigDataCacheKey _config;
 
         /// <summary>
         /// The config values for this account
         /// </summary>
+        [JsonIgnore]
         public IAccountConfig Config
         {
             get
             {
-                if (_config == null)
+                IAccountConfig returnValue = null;
+
+                if (_config != null)
                 {
-                    _config = ConfigDataCache.Get<IAccountConfig>(new ConfigDataCacheKey(typeof(IAccountConfig), GlobalIdentityHandle, ConfigDataType.Player));
+                    returnValue = ConfigDataCache.Get<IAccountConfig>(_config);
                 }
 
-                if (_config == null)
+                if (returnValue == null)
                 {
                     //Try and get it from the file
-                    var _config = new AccountConfig(this);
+                    returnValue = new AccountConfig(this);
 
-                    if (!_config.RestoreConfig())
+                    if (!returnValue.RestoreConfig())
                     {
                         //Just make it new and save it
-                        _config = new AccountConfig(this)
+                        returnValue = new AccountConfig(this)
                         {
                             UITutorialMode = true
                         };
-                        _config.Save(this, DataStructure.SupportingClasses.StaffRank.Player); //personal config doesnt need approval yet but your rank is ALWAYS player here
+
+                        returnValue.Save(this, DataStructure.SupportingClasses.StaffRank.Player); //personal config doesnt need approval yet but your rank is ALWAYS player here
                     }
+
+                    if (returnValue != null)
+                        _config = new ConfigDataCacheKey(returnValue);
                 }
 
-                return _config;
+                return returnValue;
             }
             set
             {
-                _config = value;
+                _config = new ConfigDataCacheKey(value);
+                ConfigDataCache.Add(value);
             }
 
         }

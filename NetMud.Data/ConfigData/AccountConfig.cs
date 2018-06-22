@@ -4,7 +4,9 @@ using NetMud.DataStructure.Base.PlayerConfiguration;
 using NetMud.DataStructure.Base.System;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.ConfigData
@@ -47,14 +49,34 @@ namespace NetMud.Data.ConfigData
         /// </summary>
         public bool UITutorialMode { get; set; }
 
+        [JsonProperty("UIModules")]
+        public IDictionary<BackingDataCacheKey, int> _UIModules { get; set; }
+
         /// <summary>
-        /// The ui config for this player
+        /// The modules to load. Module, quadrant
         /// </summary>
-        public IModularUIConfig UIConfig { get; set; }
+        [ScriptIgnore]
+        [JsonIgnore]
+        public IDictionary<IUIModule, int> UIModules
+        {
+            get
+            {
+                if (_UIModules == null)
+                    _UIModules = new Dictionary<BackingDataCacheKey, int>();
+
+                return _UIModules.ToDictionary(k => BackingDataCache.Get<IUIModule>(k.Key), k => k.Value);
+            }
+            set
+            {
+                if (value == null)
+                    return;
+
+                _UIModules = value.ToDictionary(k => new BackingDataCacheKey(k.Key), k => k.Value);
+            }
+        }
 
         public AccountConfig()
         {
-
         }
 
         public AccountConfig(IAccount account)
@@ -83,7 +105,7 @@ namespace NetMud.Data.ConfigData
             var file = new FileInfo(directory + configData.GetEntityFilename(this));
             IAccountConfig newConfig = (IAccountConfig)configData.ReadEntity(file, GetType());
 
-            UIConfig = newConfig.UIConfig;
+            UIModules = newConfig.UIModules;
             UITutorialMode = newConfig.UITutorialMode;
 
             ConfigDataCache.Add(this);

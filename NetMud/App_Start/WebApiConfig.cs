@@ -61,6 +61,12 @@ namespace NetMud
                routeTemplate: "api/ClientDataApi/GetUIModuleContent/{moduleName}",
                defaults: new { controller = "ClientDataApi", action = "GetUIModuleContent" }
                );
+
+            config.Routes.MapHttpRoute(
+               name: "ClientApi_SaveUIModuleContent",
+               routeTemplate: "api/ClientDataApi/SaveUIModuleContent/{moduleName}/{location}",
+               defaults: new { controller = "ClientDataApi", action = "SaveUIModuleContent" }
+               );
             #endregion
 
             config.Routes.MapHttpRoute(

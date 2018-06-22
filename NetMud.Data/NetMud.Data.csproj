@@ -48,7 +48,6 @@
   <ItemGroup>
     <Compile Include="ConfigData\AccountConfig.cs" />
     <Compile Include="ConfigData\ConfigData.cs" />
-    <Compile Include="ConfigData\ModularUIConfig.cs" />
     <Compile Include="DataIntegrity\BaseDataIntegrity.cs" />
     <Compile Include="DataIntegrity\FilledContainerDataIntegrityAttribute.cs" />
     <Compile Include="DataIntegrity\ShortDataIntegrityAttribute.cs" />

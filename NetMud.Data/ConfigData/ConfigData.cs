@@ -165,7 +165,7 @@ namespace NetMud.Data.ConfigData
             try
             {
                 //Not allowed to edit stuff you didn't make unless you're an admin, TODO: Make this more nuanced for guilds
-                if (rank < StaffRank.Admin && !editor.Equals(Creator))
+                if (ApprovalType != ContentApprovalType.None && rank < StaffRank.Admin && !editor.Equals(Creator))
                 {
                     return false;
                 }

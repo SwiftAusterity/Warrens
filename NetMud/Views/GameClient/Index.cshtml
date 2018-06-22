@@ -12,11 +12,11 @@
 </div>
 <div class="parserClient">
     <div class="parserClientLeft sidebar">
-        <div id="quadrant-1" class="quadrant">
+        <div id="quadrant-1" data-module-name="" class="quadrant">
             @Html.Partial("DockerSettings", 1)
             <span class="contentContainer" output-data-binding="Environment"></span>
         </div>
-        <div id="quadrant-2" class="quadrant">
+        <div id="quadrant-2" data-module-name="" class="quadrant">
             @Html.Partial("DockerSettings", 2)
             <span class="contentContainer" output-eval-key="Local.Exits" output-eval-code="if(data[0] != undefined && data[0].length === 0) { element.css({'display': 'none'}); } else { element.css({'display' : 'block'}); }">Exits: <span output-data-binding="Local.Exits"></span></span>
             <span class="contentContainer" output-eval-key="Local.Populace" output-eval-code="if(data[0] != undefined && data[0].length === 0) { element.css({'display': 'none'}); } else { element.css({'display' : 'block'}); }">Populace: <span output-data-binding="Local.Populace"></span></span>
@@ -24,11 +24,11 @@
         </div>
     </div>
     <div class="parserClientRight sidebar">
-        <div id="quadrant-3" class="quadrant">
+        <div id="quadrant-3" data-module-name="" class="quadrant">
             @Html.Partial("DockerSettings", 3)
             <span class="contentContainer" output-data-binding="Self"></span>
         </div>
-        <div id="quadrant-4" class="quadrant">
+        <div id="quadrant-4" data-module-name="" class="quadrant">
             @Html.Partial("DockerSettings", 4)
             <span class="contentContainer" output-data-binding="Extended"></span>
         </div>
@@ -63,9 +63,11 @@
 
             var originNumber = $this.attr('data-origin-quadrant');
             var $origin = $('div#quadrant-' + originNumber + '.quadrant');
+            var originName = $origin.attr('data-module-name');
 
             var destinationNumber = $this.attr('data-destination-quadrant');
             var $destination = $('div#quadrant-' + destinationNumber + '.quadrant');
+            var destinationName = $destination.attr('data-module-name');
 
             var myContent = $origin.children('.contentContainer');
             var theirContent = $destination.children('.contentContainer');
@@ -75,6 +77,9 @@
 
             myContent.appendTo($destination);
             theirContent.appendTo($origin);
+
+            $origin.attr('data-module-name', destinationName);
+            $destination.attr('data-module-name', originName);
         });
 
         $(".quadrantDocker[data-destination-quadrant='-1']").click(function (e) {
@@ -82,12 +87,13 @@
 
             var originNumber = $this.attr('data-origin-quadrant');
             var $origin = $('div#quadrant-' + originNumber + '.quadrant');
+            var originName = $origin.attr('data-module-name');
 
             var myContent = $origin.children('.contentContainer');
 
             myContent.detach();
 
-            openModularUI(500, 500, 'Quadrant ' + originNumber, myContent);
+            openModularUI(500, 500, originName, myContent);
         });
 
         $(".quadrantLoad").click(function (e) {
@@ -101,6 +107,7 @@
                 if (newContent != '') {
                     var originNumber = $this.attr('data-origin-quadrant');
                     var $origin = $('div#quadrant-' + originNumber + '.quadrant');
+                    $origin.attr('data-module-name', data.Name);
 
                     var myContent = $origin.children('.contentContainer');
 
@@ -112,5 +119,16 @@
                 }
             });
         });
+
+        $(".quadrantSave").click(function (e) {
+            var $this = $(this);
+
+            var originNumber = $this.attr('data-origin-quadrant');
+            var $origin = $('div#quadrant-' + originNumber + '.quadrant');
+            var moduleName = $origin.attr('data-module-name');
+
+            $.post('/api/ClientDataApi/SaveUIModuleContent/' + moduleName + '/' + originNumber);
+        });
+
     });
 </script>
