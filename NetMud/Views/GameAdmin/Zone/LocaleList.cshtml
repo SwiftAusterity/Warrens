@@ -12,8 +12,9 @@
     tableColumns.Add("Pathway From Here", obj =>
         pathLinkText.Replace("99999999", obj.Id.ToString())
         .Replace("Add/EditPathway", Model.DataObject.GetLocalePathways().Any(path => ((NetMud.DataStructure.Base.EntityBackingData.IRoomData)path.Destination).ParentLocation.Id == obj.Id)
-            ? "Edit Pathway to " + Model.DataObject.GetLocalePathways().FirstOrDefault(path => ((NetMud.DataStructure.Base.EntityBackingData.IRoomData)path.Destination).ParentLocation.Id == obj.Id).Destination.Name 
+            ? "Edit Pathway to " + Model.DataObject.GetLocalePathways().FirstOrDefault(path => ((NetMud.DataStructure.Base.EntityBackingData.IRoomData)path.Destination).ParentLocation.Id == obj.Id).Destination.Name
             : "Add Pathway"));
+    tableColumns.Add("Approved", obj => obj.Approved.ToString());
 }
 
 <div>

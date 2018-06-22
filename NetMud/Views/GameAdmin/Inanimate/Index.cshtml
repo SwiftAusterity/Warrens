@@ -6,6 +6,7 @@
     var tableColumns = new Dictionary<string, Func<dynamic, string>>();
     tableColumns.Add("ID", obj => linkText.Replace("99999999", obj.Id.ToString()));
     tableColumns.Add("Name", obj => obj.FitnessProblems ? string.Format("<span style='color:red;' title='{0}'>{1}</span>", String.Join(", ", obj.FitnessReport()), obj.Name) : obj.Name);
+    tableColumns.Add("Approved", obj => obj.Approved.ToString());
 }
 
 @Html.Partial("AddContentLink")
