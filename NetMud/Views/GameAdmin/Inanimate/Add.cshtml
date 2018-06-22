@@ -1,7 +1,4 @@
 ﻿@model NetMud.Models.Admin.AddEditInanimateDataViewModel
-@{
-    ViewBag.Title = "Add New Inanimate";
-}
 
 <section id="newCharacterForm">
     @using (Html.BeginForm("Add", "Inanimate", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))

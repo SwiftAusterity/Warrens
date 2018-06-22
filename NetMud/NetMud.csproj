@@ -185,6 +185,7 @@
     <Compile Include="Controllers\GameAdmin\ConstantsController.cs" />
     <Compile Include="Controllers\GameAdmin\FaunaController.cs" />
     <Compile Include="Controllers\GameAdmin\LocaleController.cs" />
+    <Compile Include="Controllers\GameAdmin\UIModulesController.cs" />
     <Compile Include="Controllers\GameAdmin\ZoneController.cs" />
     <Compile Include="Controllers\GameAdmin\RoomController.cs" />
     <Compile Include="Controllers\GameAdmin\RaceController.cs" />
@@ -203,6 +204,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Admin\UIModulesViewModels.cs" />
     <Compile Include="Models\Admin\LexicalViewModels.cs" />
     <Compile Include="Models\Admin\FloraViewModels.cs" />
     <Compile Include="Models\Admin\MineralsViewModels.cs" />
@@ -211,7 +213,7 @@
     <Compile Include="Models\Admin\PartialInterfaces\ITwoDimensionalEntityViewModel.cs" />
     <Compile Include="Models\Admin\ReferenceDataDropdownModel.cs" />
     <Compile Include="Models\Admin\DimensionalModelViewModels.cs" />
-    <Compile Include="Models\Admin\ConstantsViewModel.cs" />
+    <Compile Include="Models\Admin\ConstantsViewModels.cs" />
     <Compile Include="Models\Admin\EntityContainerViewModel.cs" />
     <Compile Include="Models\Admin\PlayerViewModels.cs" />
     <Compile Include="Models\Admin\PathwayViewModels.cs" />
@@ -298,6 +300,9 @@
     <Content Include="Views\GameClient\ModularWindow.cshtml" />
     <Content Include="Views\Shared\ReportBug.cshtml" />
     <Content Include="Views\Manage\LogSubscriptions.cshtml" />
+    <Content Include="Views\GameAdmin\UIModules\Index.cshtml" />
+    <Content Include="Views\GameAdmin\UIModules\Edit.cshtml" />
+    <Content Include="Views\GameAdmin\UIModules\Add.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />
@@ -359,18 +364,13 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\ConfirmEmail.cshtml" />
-    <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
-    <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
     <Content Include="Views\Account\ForgotPassword.cshtml" />
     <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
-    <Content Include="Views\Account\SendCode.cshtml" />
-    <Content Include="Views\Account\VerifyCode.cshtml" />
     <Content Include="Views\Manage\ChangePassword.cshtml" />
     <Content Include="Views\Manage\Index.cshtml" />
     <Content Include="Views\Manage\SetPassword.cshtml" />
@@ -531,7 +531,9 @@
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\index.d.ts" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Views\UIModules\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

@@ -8,6 +8,7 @@ using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
+using NetMud.DataStructure.Base.PlayerConfiguration;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.Models.Admin;
@@ -62,6 +63,7 @@ namespace NetMud.Controllers.GameAdmin
                 Fauna = BackingDataCache.GetAll<IFauna>(),
                 Flora = BackingDataCache.GetAll<IFlora>(),
                 Minerals = BackingDataCache.GetAll<IMineral>(),
+                UIModules = BackingDataCache.GetAll<IUIModule>(),
 
                 LiveTaskTokens = Processor.GetAllLiveTaskStatusTokens(),
                 LivePlayers = LiveCache.GetAll<IPlayer>().Count(),

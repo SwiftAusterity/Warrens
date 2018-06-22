@@ -2,10 +2,6 @@
 
 @model NetMud.Models.Admin.OccurrenceViewModel
 
-@{
-    ViewBag.Title = Model.DataUnitTitle;
-}
-
 <section id="addDescriptiveSection">
     @using (Html.BeginForm("AddEditDescriptive", Model.AdminTypeName, new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {

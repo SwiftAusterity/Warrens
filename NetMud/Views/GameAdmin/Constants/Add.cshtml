@@ -1,8 +1,6 @@
 ﻿@using NetMud.DataStructure.SupportingClasses
 
 @model NetMud.Models.Admin.AddEditConstantsViewModel
-@{
-    ViewBag.Title = "Add New Constant Value";
 
 <section id="newConstantsForm">
     @using (Html.BeginForm("Add", "Constants", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
@@ -20,7 +18,6 @@
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Create", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Constants", IncludeCancel = true })
     }
 </section>
-}
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

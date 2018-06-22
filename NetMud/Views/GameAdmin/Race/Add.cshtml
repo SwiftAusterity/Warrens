@@ -3,8 +3,6 @@
 @using NetMud.DataStructure.Behaviors.Actionable
 
 @model NetMud.Models.Admin.AddEditRaceViewModel
-@{
-    ViewBag.Title = "Add New Race";
 
 <section id="newCharacterForm">
     @using (Html.BeginForm("Add", "Race", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
@@ -80,7 +78,7 @@
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Create", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Race", IncludeCancel = true })
     }
 </section>
-}
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

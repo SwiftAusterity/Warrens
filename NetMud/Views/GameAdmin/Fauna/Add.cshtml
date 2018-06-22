@@ -1,6 +1,4 @@
 ﻿@model NetMud.Models.Admin.AddEditFaunaViewModel
-@{
-    ViewBag.Title = "Add New Fauna";
 
 <section id="newCharacterForm">
     @using (Html.BeginForm("Add", "Fauna", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
@@ -43,7 +41,7 @@
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Create", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Fauna", IncludeCancel = true })
     }
 </section>
-}
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

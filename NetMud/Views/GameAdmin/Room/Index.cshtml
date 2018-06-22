@@ -1,6 +1,5 @@
 ﻿@model NetMud.Models.Admin.ManageRoomDataViewModel
 @{
-    ViewBag.Title = "Manage Rooms";
     var linkText = Html.ActionLink("99999999", "Edit", new { id = 99999999 }).ToString() + [@Html.ActionLink("Map", "Map", new { id = 99999999 })];
     var tableColumns = new Dictionary<string, Func<dynamic, string>>();
     tableColumns.Add("Id", obj => linkText.Replace("99999999", obj.Id.ToString()));

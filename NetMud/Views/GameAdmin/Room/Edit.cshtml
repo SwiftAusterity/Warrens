@@ -1,9 +1,5 @@
 ﻿@model NetMud.Models.Admin.AddEditRoomDataViewModel
 
-@{
-    ViewBag.Title = "Edit Room";
-}
-
 <section id="editRoomForm">
     @using (Html.BeginForm("Edit", "Room", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {

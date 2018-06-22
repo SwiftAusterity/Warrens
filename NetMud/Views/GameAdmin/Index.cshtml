@@ -1,7 +1,4 @@
 ﻿@model NetMud.Models.Admin.DashboardViewModel
-@{
-    ViewBag.Title = "Administrative Dashboard";
-}
 
 <div class="adminDashboard">
     <div>
@@ -186,6 +183,20 @@
                     <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
                 }
                 @if (Model.Minerals.Any(r => !r.Approved))
+                {
+                    <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
+                }
+            </dd>
+            <dt>UI Modules:</dt>
+            <dd>
+                @Model.UIModules.Count().ToString() [
+                @Html.ActionLink("Manage", "Index", "UIModules")
+                @Html.ActionLink("Add", "Add", "UIModules") ]
+                @if (Model.UIModules.Any(r => r.FitnessProblems))
+                {
+                    <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
+                }
+                @if (Model.UIModules.Any(r => !r.Approved))
                 {
                     <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                 }

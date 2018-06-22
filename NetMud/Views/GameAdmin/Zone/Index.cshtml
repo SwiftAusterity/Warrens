@@ -1,6 +1,5 @@
 ﻿@model NetMud.Models.Admin.ManageZoneDataViewModel
 @{
-    ViewBag.Title = "Manage Zones";
     var prevPageState = Model.CurrentPageNumber > 1 ? String.Empty : "disabled";
     var nextPageState = Model.CurrentPageNumber < Model.NumberOfPages ? String.Empty : "disabled";
 

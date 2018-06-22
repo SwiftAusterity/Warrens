@@ -1,9 +1,7 @@
 ﻿@using NetMud.DataStructure.Base.Supporting
 
 @model NetMud.Models.Admin.AddEditMaterialViewModel
-@{
-    ViewBag.Title = "Edit Material";
-}
+
 <section id="newCharacterForm">
     @using (Html.BeginForm("Edit", "Material", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {

@@ -1,9 +1,5 @@
 ﻿@model NetMud.Models.BugReportModel
 
-@{
-    ViewBag.Title = "Report Bug";
-}
-
 <section id="addDescriptiveSection">
     @using (Html.BeginForm("ReportBug", "Home", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {

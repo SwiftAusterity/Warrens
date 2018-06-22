@@ -1,7 +1,5 @@
 ﻿@model NetMud.Models.Admin.ManageHelpDataViewModel
 @{
-    ViewBag.Title = "Manage Help Files";
-
     var linkText = Html.ActionLink("99999999", "Edit", new { id = 99999999 }).ToString();
     var tableColumns = new Dictionary<string, Func<dynamic, string>>();
     tableColumns.Add("Id", obj => linkText.Replace("99999999", obj.Id.ToString()));

@@ -2,9 +2,6 @@
 
 @model NetMud.Models.Admin.AddEditConstantsViewModel
 
-@{
-    ViewBag.Title = "Edit Constant";
-
 <section id="newCharacterForm">
     @using (Html.BeginForm("Edit", "Constants", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {
@@ -22,7 +19,7 @@
 
     }
 </section>
-}
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
