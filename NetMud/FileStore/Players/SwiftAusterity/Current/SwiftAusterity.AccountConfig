@@ -1,1 +1,1 @@
-{"UITutorialMode":false,"UIConfig":null,"Name":"SwiftAusterity"}
+{"UITutorialMode":false,"UIModules":[{"Key":{"ObjectType":"NetMud.Data.LookupData.UIModule, NetMud.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null","BirthMark":0},"Value":1}],"Name":"SwiftAusterity","Approved":true,"ApprovedOn":"2018-06-22T21:40:09.9428204-05:00","CreatorHandle":"SwiftAusterity","ApproverHandle":"SwiftAusterity"}

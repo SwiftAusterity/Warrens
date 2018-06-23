@@ -1,7 +1,9 @@
-﻿using NetMud.DataAccess;
+﻿using NetMud.Data.Serialization;
+using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.PlayerConfiguration;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Behaviors.System;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -17,6 +19,13 @@ namespace NetMud.Data.ConfigData
     [Serializable]
     public class AccountConfig : ConfigData, IAccountConfig
     {
+        /// <summary>
+        /// What type of approval is necessary for this content
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public override ContentApprovalType ApprovalType { get { return ContentApprovalType.None; } }
+
         /// <summary>
         /// The type of data this is (for storage)
         /// </summary>
@@ -50,6 +59,7 @@ namespace NetMud.Data.ConfigData
         public bool UITutorialMode { get; set; }
 
         [JsonProperty("UIModules")]
+        [JsonConverter(typeof(DictionaryConverter<BackingDataCacheKey, int>))]
         public IDictionary<BackingDataCacheKey, int> _UIModules { get; set; }
 
         /// <summary>

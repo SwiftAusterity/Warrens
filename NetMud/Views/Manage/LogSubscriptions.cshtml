@@ -3,13 +3,12 @@
 @model NetMud.Models.ManageAccountViewModel
 
 <h4>Log Subscriptions</h4>
+<a href="#" id="addLogRow" class="addRow">Add another row...</a>
 @if (Model.DataObject == null || Model.DataObject.LogChannelSubscriptions == null || Model.DataObject.LogChannelSubscriptions.Count == 0)
 {
-    <a href="#" id="addLogRow" class="addRow">Add another row...</a>
     <div id="logRows">
         <div class="form-group row">
             <label class="col-sm-1 col-form-label"><a href="#" class="removeRow" id="removeLogRow" title="Remove this">X</a></label>
-            @Html.DescriptiveLabelFor(m => m.LogChannelSubscriptions, new { @class = "col-sm-1 col-form-label" })
             <div class="col-md-3">
                 @Html.DropDownList("LogChannelSubscriptions", Enum.GetNames(typeof(LogChannels)).Select(rl =>
                                                                 new SelectListItem() { Text = rl, Value = rl })
@@ -22,7 +21,6 @@ else
 {
     foreach (var subscription in Model.DataObject.LogChannelSubscriptions)
     {
-        <a href="#" id="addLogRow" class="addRow">Add another row...</a>
         <div id="logRows">
             <div class="form-group row">
                 <label class="col-sm-1 col-form-label"><a href="#" class="removeRow" id="removeLogRow" title="Remove this">X</a></label>

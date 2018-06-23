@@ -117,22 +117,11 @@ namespace NetMud.Data.System
         /// The config values for this account
         /// </summary>
         [JsonIgnore]
-        private ConfigDataCacheKey _config;
-
-        /// <summary>
-        /// The config values for this account
-        /// </summary>
-        [JsonIgnore]
         public IAccountConfig Config
         {
             get
             {
-                IAccountConfig returnValue = null;
-
-                if (_config != null)
-                {
-                    returnValue = ConfigDataCache.Get<IAccountConfig>(_config);
-                }
+                IAccountConfig returnValue = ConfigDataCache.Get<IAccountConfig>(new ConfigDataCacheKey(typeof(IAccountConfig), GlobalIdentityHandle, ConfigDataType.Player));
 
                 if (returnValue == null)
                 {
@@ -149,16 +138,12 @@ namespace NetMud.Data.System
 
                         returnValue.Save(this, DataStructure.SupportingClasses.StaffRank.Player); //personal config doesnt need approval yet but your rank is ALWAYS player here
                     }
-
-                    if (returnValue != null)
-                        _config = new ConfigDataCacheKey(returnValue);
                 }
 
                 return returnValue;
             }
             set
             {
-                _config = new ConfigDataCacheKey(value);
                 ConfigDataCache.Add(value);
             }
 
@@ -226,7 +211,7 @@ namespace NetMud.Data.System
         {
             string outHandle = DataUtility.GetFromDataRow<string>(dr, "GlobalIdentityHandle");
             string outLogSubs = DataUtility.GetFromDataRow<string>(dr, "LogChannelSubscriptions");
-            
+
             return new Account(outHandle, outLogSubs);
         }
 

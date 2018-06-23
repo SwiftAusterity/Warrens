@@ -195,6 +195,11 @@ namespace NetMud.Data.ConfigData
                     ApproveMe(editor);
                 }
 
+                if (Creator == null)
+                {
+                    Creator = editor;
+                }
+
                 ConfigDataCache.Add(this);
                 accessor.WriteEntity(this);
             }

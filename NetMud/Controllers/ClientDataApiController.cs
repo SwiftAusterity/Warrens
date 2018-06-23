@@ -84,7 +84,7 @@ namespace NetMud.Controllers
                 return "Invalid Module.";
             }
 
-            if((location < 1 && location != -1) || location > 4)
+            if ((location < 1 && location != -1) || location > 4)
             {
                 return "Invalid Location";
             }
