@@ -7,6 +7,7 @@ using NetMud.Models;
 
 namespace Controllers
 {
+    [Authorize]
     public class GameClientController : Controller
     {
         private ApplicationUserManager _userManager;

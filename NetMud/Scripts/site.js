@@ -37,30 +37,6 @@ function HelpTipTutorial(parent, text) {
     var instance = new Tooltip(parent, options);
 }
 
-function openModularUI(width, height, windowTitle, content) {
-    var s = 'menubar=no, toolbar=no, location=no, resizable=no, scrollbars=yes, status=no, width = ' + width + ', height = ' + height;
-    var styles = '';
-    var scripts = '';
-
-    var NFW = window.open('/GameClient/ModularWindow', windowTitle, s, true);
-
-    NFW.addEventListener('load', function () {
-        var contentArea = this.document.querySelector('#contentArea');
-
-        $(contentArea).attr('data-module-name', windowTitle);
-
-        content.appendTo(contentArea);
-    }, false); 
-
-    NFW.blur();
-
-    window.focus();
-
-    NFW.resizeTo(width, height);
-
-    NFW.focus();
-}
-
 function openFrameless(width, height, fromLeft, fromTop, targetUrl, windowTitle) {
     var s = 'menubar=no, toolbar=no, location=no, resizable=no, scrollbars=yes, status=no, width = ' + width + ', height = ' + height;
     var styles = '';

@@ -7,15 +7,15 @@
 <div id="contentArea">
     <a class="dropdown-toggle" data-toggle="dropdown" href="#" style="float: right;"><span class="glyphicon glyphicon-cog dockable" title="Settings"></span></a>
     <ul class="dropdown-menu dropdown-menu-left dockingMenu" role="menu" aria-labelledby="dropdownMenu">
-        <li class="dropdown-header" style="color: mediumvioletred">Modular Window</li>
+        <li class="dropdown-header" style="color: mediumvioletred" id="quadrantName"></li>
         <li class="divider"></li>
         <li><a href="#" style="padding: 5px; color: black;" class="quadrantDocker" data-destination-quadrant="1"><span class="glyphicon glyphicon-resize-small" style="padding-right: 5px;"></span>Dock Quadrant 1</a></li>
         <li><a href="#" style="padding: 5px; color: black;" class="quadrantDocker" data-destination-quadrant="2"><span class="glyphicon glyphicon-resize-small" style="padding-right: 5px;"></span>Dock Quadrant 2</a></li>
         <li><a href="#" style="padding: 5px; color: black;" class="quadrantDocker" data-destination-quadrant="3"><span class="glyphicon glyphicon-resize-small" style="padding-right: 5px;"></span>Dock Quadrant 3</a></li>
         <li><a href="#" style="padding: 5px; color: black;" class="quadrantDocker" data-destination-quadrant="4"><span class="glyphicon glyphicon-resize-small" style="padding-right: 5px;"></span>Dock Quadrant 4</a></li>
         <li class="divider"></li>
-        <li><a href="#" style="padding: 5px; color: black;" class="quadrantLoad" data-origin-quadrant="@Model"><span class="glyphicon glyphicon-cloud-download" style="padding-right: 5px;"></span>Load Module</a></li>
-        <li><a href="#" style="padding: 5px; color: black;" class="quadrantSave" data-origin-quadrant="@Model"><span class="glyphicon glyphicon-cloud-upload" style="padding-right: 5px;"></span>Save Module</a></li>
+        <li><a href="#" style="padding: 5px; color: black;" class="quadrantLoad"><span class="glyphicon glyphicon-cloud-download" style="padding-right: 5px;"></span>Load Module</a></li>
+        <li><a href="#" style="padding: 5px; color: black;" class="quadrantSave"><span class="glyphicon glyphicon-cloud-upload" style="padding-right: 5px;"></span>Save Module</a></li>
     </ul>
 </div>
 
@@ -33,6 +33,34 @@
         myContent.appendTo($destination);
 
         window.close();
+    });
+
+    $(".quadrantLoad").click(function (e) {
+        var moduleName = prompt("Module Name?", "");
+
+        $.get('/api/ClientDataApi/GetUIModuleContent/' + moduleName, function (data) {
+            var newContent = data.BodyHtml;
+
+            if (newContent != '') {
+                $('#quadrantName').text(moduleName);
+
+                var myContent = $('.contentContainer');
+                var contentArea = $('#contentArea');
+
+                myContent.detach();
+
+                $(newContent).appendTo(contentArea);
+
+                ReloadUIModules();
+            }
+        });
+    });
+
+    $(".quadrantSave").click(function (e) {
+        var $origin = $('#contentArea');
+        var moduleName = $('#quadrantName').text();
+
+        $.post('/api/ClientDataApi/SaveUIModuleContent/' + moduleName + '/-1');
     });
 </script>
 

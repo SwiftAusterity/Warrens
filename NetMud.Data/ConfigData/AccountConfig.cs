@@ -59,29 +59,28 @@ namespace NetMud.Data.ConfigData
         public bool UITutorialMode { get; set; }
 
         [JsonProperty("UIModules")]
-        [JsonConverter(typeof(DictionaryConverter<BackingDataCacheKey, int>))]
-        public IDictionary<BackingDataCacheKey, int> _UIModules { get; set; }
+        public IList<Tuple<BackingDataCacheKey, int>> _UIModules { get; set; }
 
         /// <summary>
         /// The modules to load. Module, quadrant
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
-        public IDictionary<IUIModule, int> UIModules
+        public IEnumerable<Tuple<IUIModule, int>> UIModules
         {
             get
             {
                 if (_UIModules == null)
-                    _UIModules = new Dictionary<BackingDataCacheKey, int>();
+                    _UIModules = new List<Tuple<BackingDataCacheKey, int>>();
 
-                return _UIModules.ToDictionary(k => BackingDataCache.Get<IUIModule>(k.Key), k => k.Value);
+                return _UIModules.Select(k => new Tuple<IUIModule, int>(BackingDataCache.Get<IUIModule>(k.Item1), k.Item2));
             }
             set
             {
                 if (value == null)
                     return;
 
-                _UIModules = value.ToDictionary(k => new BackingDataCacheKey(k.Key), k => k.Value);
+                _UIModules = value.Select(k => new Tuple<BackingDataCacheKey, int>(new BackingDataCacheKey(k.Item1), k.Item2)).ToList();
             }
         }
 

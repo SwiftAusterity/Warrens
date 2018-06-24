@@ -1,4 +1,5 @@
 ﻿using NetMud.DataStructure.Base.System;
+using System;
 using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Base.PlayerConfiguration
@@ -21,7 +22,7 @@ namespace NetMud.DataStructure.Base.PlayerConfiguration
         /// <summary>
         /// The modules to load. Module, quadrant
         /// </summary>
-        IDictionary<IUIModule, int> UIModules { get; set; }
+        IEnumerable<Tuple<IUIModule, int>> UIModules { get; set; }
 
         /// <summary>
         /// Attempt to restore the config from file

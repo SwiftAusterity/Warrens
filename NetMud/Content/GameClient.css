@@ -59,6 +59,17 @@ body {
         margin-left: 10%;
     }
 
+    .parserClientTop .rightNav {
+        float: right;
+        padding-right: 5px;
+        font-size: 18px;
+        margin-top: -35px;
+    }
+
+        .parserClientTop .rightNav a span {
+            color: blue;
+        }
+
 .parserClient {
     position: relative;
     padding-bottom: 0;

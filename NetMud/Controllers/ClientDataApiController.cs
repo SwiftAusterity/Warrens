@@ -9,6 +9,7 @@ using NetMud.DataStructure.Base.PlayerConfiguration;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Physics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -89,24 +90,40 @@ namespace NetMud.Controllers
                 return "Invalid Location";
             }
 
-            var modules = account.Config.UIModules;
+            var modules = account.Config.UIModules.ToList();
+            var moduleTuple = new Tuple<IUIModule, int>(module, location);
 
             //Remove this module
-            if (modules.ContainsKey(module))
-                modules.Remove(module);
+            if (modules.Any(mod => mod.Item1.Equals(module)))
+                modules.Remove(moduleTuple);
 
             //Remove the module in its place
-            if (location != -1 && modules.Values.Contains(location))
-                modules.Remove(account.Config.UIModules.First(kvp => kvp.Value.Equals(location)));
+            if (location != -1 && modules.Any(mod => mod.Item2.Equals(location)))
+                modules.RemoveAll(mod => mod.Item2.Equals(location));
 
             //Add it finally
-            modules.Add(module, location);
+            modules.Add(moduleTuple);
 
             account.Config.UIModules = modules;
 
             account.Config.Save(account, StaffRank.Player);
 
             return "Success";
+        }
+
+        [HttpGet]
+        public JsonResult<IEnumerable<Tuple<IUIModule, int>>> LoadUIModules()
+        {
+            var user = UserManager.FindById(User.Identity.GetUserId());
+
+            var account = user.GameAccount;
+
+            if (account == null)
+            {
+                return null;
+            }
+
+            return Json(account.Config.UIModules);
         }
 
     }
