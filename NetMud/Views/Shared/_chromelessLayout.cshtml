@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>netMUD</title>
     @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/jqueryui-css")
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryui")
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.8.2/umd/popper.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.8.2/umd/popper-utils.js"></script>
@@ -17,13 +19,10 @@
     @Scripts.Render("~/Scripts/site.js")
     @RenderSection("scripts", required: false)
     @RenderSection("styles", required: false)
-    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 </head>
-<body style="padding: 0px;">
-    <div class="container body-content">
-        <h3><p id="statusMessage" name="statusMessage" class="text-success">@ViewBag.StatusMessage</p></h3>
+<body>
+    <div>
+        <p id="statusMessage" name="statusMessage" class="text-success">@ViewBag.StatusMessage</p>
         @RenderBody()
     </div>
     <script type="text/javascript">

@@ -13,14 +13,14 @@
         <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-th-list" title="Client Settings"></span></a>
         <ul class="dropdown-menu dropdown-menu-left" role="menu" aria-labelledby="dropdownMenu">
             <li class="dropdown-header" style="color: mediumvioletred">Global UI Settings</li>
-            <li><a href="#" style="padding: 5px; color: black;" id="clientReload"><span class="glyphicon glyphicon-resize-upload" style="padding-right: 5px;"></span>Reload Client</a></li>
-            <li><a href="#" style="padding: 5px; color: black;" id="openModulePopup"><span class="glyphicon glyphicon-resize-upload" style="padding-right: 5px;"></span>Popup Module</a></li>
+            <li><a href="#" style="padding: 5px; color: black;" id="clientReload"><span class="glyphicon glyphicon-refresh" style="padding-right: 5px;"></span>Reload Client</a></li>
+            <li><a href="#" style="padding: 5px; color: black;" id="openModulePopup"><span class="glyphicon glyphicon-open" style="padding-right: 5px;"></span>Popup Module</a></li>
             <li class="divider"></li>
-            <li><a href="#" style="padding: 5px; color: black;" id="saveAllModules"><span class="glyphicon glyphicon-resize-upload" style="padding-right: 5px;"></span>Save All Modules</a></li>
-            <li><a href="#" style="padding: 5px; color: black;" id="reloadAllModules"><span class="glyphicon glyphicon-resize-download" style="padding-right: 5px;"></span>Load UI From Config</a></li>
-            <li><a href="#" style="padding: 5px; color: black;" id="wipeUI"><span class="glyphicon glyphicon-resize-download" style="padding-right: 5px;"></span>Wipe UI</a></li>
+            <li><a href="#" style="padding: 5px; color: black;" id="saveAllModules"><span class="glyphicon glyphicon-upload" style="padding-right: 5px;"></span>Save All Modules</a></li>
+            <li><a href="#" style="padding: 5px; color: black;" id="reloadAllModules"><span class="glyphicon glyphicon-download" style="padding-right: 5px;"></span>Load UI From Config</a></li>
+            <li><a href="#" style="padding: 5px; color: black;" id="wipeUI"><span class="glyphicon glyphicon-remove" style="padding-right: 5px;"></span>Wipe UI</a></li>
             <li class="divider"></li>
-            <li><a href="#" style="padding: 5px; color: black;" id="disconnect"><span class="glyphicon glyphicon-resize-download" style="padding-right: 5px;"></span>Disconnect From Server</a></li>
+            <li><a href="#" style="padding: 5px; color: black;" id="disconnect"><span class="glyphicon glyphicon-remove-sign" style="padding-right: 5px;"></span>Disconnect From Server</a></li>
         </ul>
     </div>
 </div>
@@ -53,6 +53,8 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        $('input#loadModuleName').hide();
+
         var tutorialMode = '@Model.authedUser.GameAccount.Config.UITutorialMode' === 'True';
         Tutorial($('#locationBreadcrumbs'), "This is where you are in the world.", tutorialMode);
         Tutorial($('#input'), "This is where you type commands. The UP and DOWN arrow keys will cycle through prior input. Hit ENTER to submit commands.", tutorialMode);
@@ -120,26 +122,26 @@
         $(".quadrantLoad").click(function (e) {
             var $this = $(this);
 
-            var moduleName = prompt("Module Name?", "");
+            $('input#loadModuleName').show().focus();
+            $(this).hide();
 
-            $.get('/api/ClientDataApi/GetUIModuleContent/' + moduleName, function (data) {
-                var newContent = data.BodyHtml;
+            $('input#loadModuleName').keydown(function (e) {
+                var moduleName = $(this).val();
+                var originNumber = $(this).prev().attr('data-origin-quadrant');
 
-                if (newContent != '') {
-                    var originNumber = $this.attr('data-origin-quadrant');
-                    var $origin = $('div#quadrant-' + originNumber + '.quadrant');
-                    $origin.attr('data-module-name', data.Name);
-                    $origin.children('ul').children('li#quadrantName').text(data.Name);
-
-                    var myContent = $origin.children('.contentContainer');
-
-                    myContent.detach();
-
-                    $(newContent).appendTo($origin);
-
-                    ReloadUI();
+                switch (e.keyCode) {
+                    case 13: //enter
+                        GetModuleUI(originNumber, moduleName);
+                        break;
+                    default:
+                        return true;
                 }
+
+                $('input#loadModuleName').off('keydown');
+                $('input#loadModuleName').hide();
+                $(".quadrantLoad").show();
             });
+
             return false;
        });
 
@@ -149,7 +151,23 @@
             var originNumber = $this.attr('data-origin-quadrant');
             SaveUIModule(originNumber);
             return false;
-       });
+        });
+
+        $('.quadrantWipe').click(function (e) {
+            var $this = $(this);
+
+            var originNumber = $this.attr('data-origin-quadrant');
+
+            var $origin = $('div#quadrant-' + originNumber + '.quadrant');
+            $origin.attr('data-module-name', '');
+            $origin.children('ul').children('li#quadrantName').text('');
+
+            var myContent = $origin.children('.contentContainer');
+
+            myContent.detach();
+ 
+            return false;
+        });
 
         $("#clientReload").click(function (e) {
             ReloadUI();
@@ -196,7 +214,39 @@
             });
             return false;
         });
+
+        $("input#loadModuleName").autocomplete({
+            source: "/api/ClientDataApi/GetUIModuleNames",
+            minLength: 3,
+            select: function (event, ui) {
+                var originNumber = $(this).prev().attr('data-origin-quadrant');
+                GetModuleUI(originNumber, ui.item.value);
+
+                $('input#loadModuleName').hide();
+                $(".quadrantLoad").show();
+            }
+        });
     });
+
+    function GetModuleUI(originNumber, moduleName) {
+        $.get('/api/ClientDataApi/GetUIModuleContent/' + moduleName, function (data) {
+            var newContent = data.BodyHtml;
+
+            if (newContent != '') {
+                var $origin = $('div#quadrant-' + originNumber + '.quadrant');
+                $origin.attr('data-module-name', data.Name);
+                $origin.children('ul').children('li#quadrantName').text(data.Name);
+
+                var myContent = $origin.children('.contentContainer');
+
+                myContent.detach();
+
+                $(newContent).appendTo($origin);
+
+                ReloadUI();
+            }
+        });
+    }
 
     function WipeUI() {
         $('.quadrant').each(function () {

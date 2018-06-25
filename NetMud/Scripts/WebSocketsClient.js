@@ -71,7 +71,7 @@ function TestBrowser() {
 
         $('#input').keydown(function (e) {
             switch (e.keyCode) {
-                case 13:
+                case 13: //enter
                     submitCommand();
 
                     $(this).val('');

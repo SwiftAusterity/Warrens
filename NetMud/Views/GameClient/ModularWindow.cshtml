@@ -5,7 +5,7 @@
 }
 
 <div id="contentArea">
-    <a class="dropdown-toggle" data-toggle="dropdown" href="#" style="float: right;"><span class="glyphicon glyphicon-cog dockable" title="Settings"></span></a>
+    <a class="dropdown-toggle" data-toggle="dropdown" href="#" style="float: right; padding-right: 10px;"><span class="glyphicon glyphicon-cog dockable" title="Settings"></span></a>
     <ul class="dropdown-menu dropdown-menu-left dockingMenu" role="menu" aria-labelledby="dropdownMenu">
         <li class="dropdown-header" style="color: mediumvioletred" id="quadrantName"></li>
         <li class="divider"></li>
@@ -14,34 +14,88 @@
         <li><a href="#" style="padding: 5px; color: black;" class="quadrantDocker" data-destination-quadrant="3"><span class="glyphicon glyphicon-resize-small" style="padding-right: 5px;"></span>Dock Quadrant 3</a></li>
         <li><a href="#" style="padding: 5px; color: black;" class="quadrantDocker" data-destination-quadrant="4"><span class="glyphicon glyphicon-resize-small" style="padding-right: 5px;"></span>Dock Quadrant 4</a></li>
         <li class="divider"></li>
-        <li><a href="#" style="padding: 5px; color: black;" class="quadrantLoad"><span class="glyphicon glyphicon-cloud-download" style="padding-right: 5px;"></span>Load Module</a></li>
+        <li>
+            <a href="#" style="padding: 5px; color: black;" class="quadrantLoad" data-origin-quadrant="@Model">
+                <span class="glyphicon glyphicon-cloud-download" style="padding-right: 5px;"></span>Load Module
+            </a>
+            <input id="loadModuleName" title="Module Name?" />
+        </li>
         <li><a href="#" style="padding: 5px; color: black;" class="quadrantSave"><span class="glyphicon glyphicon-cloud-upload" style="padding-right: 5px;"></span>Save Module</a></li>
     </ul>
 </div>
 
+@Styles.Render("~/Content/GameClient.css")
+@Scripts.Render("~/Scripts/WebSocketsClient.js")
+@Styles.Render("http://fonts.googleapis.com/css?family=Berkshire+Swash")
 
 <script type="text/javascript">
-    $(".quadrantDocker").click(function (e) {
-        var $this = $(this);
+    $(document).ready(function () {
+        $('input#loadModuleName').hide();
 
-        var myContent = $('.contentContainer');
 
-        var destinationNumber = $this.attr('data-destination-quadrant');
-        var $destination = window.opener.document.querySelector('div#quadrant-' + destinationNumber + '.quadrant');
+        $(".quadrantDocker").click(function (e) {
+            var $this = $(this);
 
-        myContent.detach();
-        myContent.appendTo($destination);
+            var myContent = $('.contentContainer');
 
-        window.close();
+            var destinationNumber = $this.attr('data-destination-quadrant');
+            var $destination = window.opener.document.querySelector('div#quadrant-' + destinationNumber + '.quadrant');
+
+            myContent.detach();
+            myContent.appendTo($destination);
+
+            window.close();
+        });
+
+        $(".quadrantLoad").click(function (e) {
+            var $this = $(this);
+
+            $('input#loadModuleName').show().focus();
+            $(this).hide();
+
+            $('input#loadModuleName').keydown(function (e) {
+                var moduleName = $(this).val();
+
+                switch (e.keyCode) {
+                    case 13: //enter
+                        GetModuleUI(originNumber, moduleName);
+                        break;
+                    default:
+                        return true;
+                }
+
+                $('input#loadModuleName').off('keydown');
+                $('input#loadModuleName').hide();
+                $(".quadrantLoad").show();
+            });
+
+            return false;
+        });
+
+        $(".quadrantSave").click(function (e) {
+            var $origin = $('#contentArea');
+            var moduleName = $('#quadrantName').text();
+
+            $.post('/api/ClientDataApi/SaveUIModuleContent/' + moduleName + '/-1');
+        });
+
+        $("input#loadModuleName").autocomplete({
+            source: "/api/ClientDataApi/GetUIModuleNames",
+            minLength: 3,
+            select: function (event, ui) {
+                var originNumber = $(this).prev().attr('data-origin-quadrant');
+                GetModuleUI(originNumber, ui.item.value);
+
+                $('input#loadModuleName').hide();
+                $(".quadrantLoad").show();
+            }
+        });
     });
 
-    $(".quadrantLoad").click(function (e) {
-        var moduleName = prompt("Module Name?", "");
-
+    function GetModuleUI(originNumber, moduleName) {
         $.get('/api/ClientDataApi/GetUIModuleContent/' + moduleName, function (data) {
-            var newContent = data.BodyHtml;
-
             if (newContent != '') {
+                var newContent = data.BodyHtml;
                 $('#quadrantName').text(moduleName);
 
                 var myContent = $('.contentContainer');
@@ -51,16 +105,9 @@
 
                 $(newContent).appendTo(contentArea);
 
-                ReloadUIModules();
+                ReloadUI();
             }
         });
-    });
-
-    $(".quadrantSave").click(function (e) {
-        var $origin = $('#contentArea');
-        var moduleName = $('#quadrantName').text();
-
-        $.post('/api/ClientDataApi/SaveUIModuleContent/' + moduleName + '/-1');
-    });
+    }
 </script>
 

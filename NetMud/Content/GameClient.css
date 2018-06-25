@@ -165,10 +165,6 @@ body {
             padding-top: 5px;
         }
 
-    .parserControls #clientReload {
-        float: right;
-    }
-
 ul.nav li a img {
     width: 28px;
     height: 28px;
@@ -176,11 +172,6 @@ ul.nav li a img {
 
 #clearInput {
     color: red;
-}
-
-#clientReload {
-    color: yellow;
-    float: right;
 }
 
 ul.nav li input {

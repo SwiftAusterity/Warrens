@@ -10,6 +10,9 @@ namespace NetMud
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-{version}.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include(
+                        "~/Scripts/jquery-ui.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
 
@@ -27,6 +30,11 @@ namespace NetMud
                       "~/Content/bootstrap.lumen.css",
                       "~/Content/popper.css",
                       "~/Content/Site.css"));
+
+            bundles.Add(new StyleBundle("~/Content/jqueryui-css").Include(
+                      "~/Content/jquery-ui.css",
+                      "~/Content/jquery-ui-structure.css",
+                      "~/Content/jquery-ui-theme.css"));
         }
     }
 }

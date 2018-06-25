@@ -126,5 +126,21 @@ namespace NetMud.Controllers
             return Json(account.Config.UIModules);
         }
 
+        [HttpGet]
+        public JsonResult<string[]> GetUIModuleNames()
+        {
+            var user = UserManager.FindById(User.Identity.GetUserId());
+
+            var account = user.GameAccount;
+
+            if (account == null)
+            {
+                return Json(new string[0]);
+            }
+
+            var modules = BackingDataCache.GetAll<IUIModule>(true);
+
+            return Json(modules.Select(mod => mod.Name).ToArray());
+        }
     }
 }

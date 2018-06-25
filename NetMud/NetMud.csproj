@@ -253,6 +253,15 @@
     <Content Include="Content\bootstrap.lumen.min.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\GameClient.css" />
+    <Content Include="Content\images\ui-icons_444444_256x240.png" />
+    <Content Include="Content\images\ui-icons_555555_256x240.png" />
+    <Content Include="Content\images\ui-icons_777620_256x240.png" />
+    <Content Include="Content\images\ui-icons_777777_256x240.png" />
+    <Content Include="Content\images\ui-icons_cc0000_256x240.png" />
+    <Content Include="Content\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Content\jquery-ui.css" />
+    <Content Include="Content\jquery-ui.structure.css" />
+    <Content Include="Content\jquery-ui.theme.css" />
     <Content Include="Content\jquery.gridster.min.css" />
     <Content Include="Content\popper.css" />
     <Content Include="favicon.ico" />
@@ -285,6 +294,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Scripts\jquery-ui.js" />
     <Content Include="Scripts\js-cookie.js" />
     <Content Include="Scripts\site.js" />
     <Content Include="Scripts\tooltip.js" />
