@@ -182,6 +182,7 @@
     <Compile Include="Controllers\AdminDataApiController.cs" />
     <Compile Include="Controllers\ClientDataApiController.cs" />
     <Compile Include="Controllers\FeaturesController.cs" />
+    <Compile Include="Controllers\GameAdmin\ContentApprovalController.cs" />
     <Compile Include="Controllers\GameAdmin\FloraController.cs" />
     <Compile Include="Controllers\GameAdmin\MineralsController.cs" />
     <Compile Include="Controllers\GameAdmin\GameAdminController.cs" />
@@ -207,6 +208,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Admin\ContentApprovalViewModels.cs" />
     <Compile Include="Models\Admin\UIModulesViewModels.cs" />
     <Compile Include="Models\Admin\LexicalViewModels.cs" />
     <Compile Include="Models\Admin\FloraViewModels.cs" />
@@ -316,6 +318,10 @@
     <Content Include="Views\GameAdmin\UIModules\Index.cshtml" />
     <Content Include="Views\GameAdmin\UIModules\Edit.cshtml" />
     <Content Include="Views\GameAdmin\UIModules\Add.cshtml" />
+    <Content Include="Views\Manage\AddUIModule.cshtml" />
+    <Content Include="Views\Manage\EditUIModule.cshtml" />
+    <Content Include="Views\Manage\UIModules.cshtml" />
+    <Content Include="Views\GameAdmin\ContentApproval\Index.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />

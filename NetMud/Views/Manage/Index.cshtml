@@ -25,7 +25,8 @@
         <dl class="dl-horizontal">
             <dt>Client UI Configuration:</dt>
             <dd>
-                [ <a href="#">Manage</a> ]
+                @Model.UIModuleCount [
+                @Html.ActionLink("Manage", "UIModules") ]
             </dd>
         </dl>
     </div>

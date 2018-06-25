@@ -209,3 +209,15 @@ div.roomAsciiMap {
     float: right;
     margin-left: -1px;
 }
+
+.contentPreviewFields div:nth-child(even) {
+    background-color: lightcyan;
+    margin: -15px 0 -15px 0;
+    height: 15px;
+}
+
+.contentPreviewFields div:nth-child(odd) {
+    background-color: lightgoldenrodyellow;
+    margin: -15px 0 -15px 0;
+    height: 15px;
+}

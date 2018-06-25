@@ -22,6 +22,7 @@ namespace NetMud.Models
         [DataType(DataType.Text)]
         public string GlobalIdentityHandle { get; set; }
 
+        public int UIModuleCount { get; set; }
         public IAccount DataObject { get; set; }
     }
 
