@@ -1,24 +1,112 @@
-﻿using NetMud.DataAccess.Cache;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using NetMud.Authentication;
+using NetMud.DataAccess;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.System;
 using NetMud.Models.Admin;
+using System;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 
 namespace NetMud.Controllers.GameAdmin
 {
     public class ContentApprovalController : Controller
     {
-        // GET: ContentApproval
+        private ApplicationUserManager _userManager;
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+            private set
+            {
+                _userManager = value;
+            }
+        }
+
+        public ContentApprovalController()
+        {
+        }
+
+        public ContentApprovalController(ApplicationUserManager userManager)
+        {
+            UserManager = userManager;
+        }
+
+        [HttpGet]
         public ActionResult Index()
         {
             var newList = BackingDataCache.GetAll().Where(item => item.GetType().GetInterfaces().Contains(typeof(INeedApproval))
                                                                 && item.GetType().GetInterfaces().Contains(typeof(IKeyedData))
-                                                                && !item.Approved).OrderBy(item => item.GetType().Name);
+                                                               /* && item.State == ApprovalState.Pending */).OrderBy(item => item.GetType().Name);
 
             var viewModel = new ManageContentApprovalsViewModel(newList);
 
             return View("~/Views/GameAdmin/ContentApproval/Index.cshtml", viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ApproveDeny(long? approvalId, string authorizeApproval, long? denialId, string authorizeDenial)
+        {
+            string message = string.Empty;
+            var approve = true;
+
+            var approvalIdSplit = authorizeApproval.Split(new string[] { "|||" }, StringSplitOptions.RemoveEmptyEntries);
+            var denialIdSplit = authorizeDenial?.Split(new string[] { "|||" }, StringSplitOptions.RemoveEmptyEntries);
+
+            if ((!string.IsNullOrWhiteSpace(authorizeApproval) && approvalIdSplit.Length > 0 && approvalId.ToString().Equals(approvalIdSplit[0])) ||
+                (!string.IsNullOrWhiteSpace(authorizeDenial) && denialIdSplit.Length > 0 && denialId.ToString().Equals(denialIdSplit[0])))
+            {
+                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+                IKeyedData obj = null;
+
+                if (!string.IsNullOrWhiteSpace(authorizeDenial) && denialIdSplit.Length > 0 && denialId.ToString().Equals(denialIdSplit[0]))
+                {
+                    var type = Type.GetType(denialIdSplit[1]);
+
+                    approve = false;
+                    obj = (IKeyedData)BackingDataCache.Get(new BackingDataCacheKey(type, denialId.Value));
+                }
+                else if (!string.IsNullOrWhiteSpace(authorizeApproval) && approvalIdSplit.Length > 0 && approvalId.ToString().Equals(approvalIdSplit[0]))
+                {
+                    var type = Type.GetType(approvalIdSplit[1]);
+
+                    obj = (IKeyedData)BackingDataCache.Get(new BackingDataCacheKey(type, approvalId.Value));
+                }
+
+                if (obj == null)
+                    message = "That does not exist";
+                else
+                {
+                    if(approve)
+                    {
+                        if (obj.ChangeApprovalStatus(authedUser.GameAccount, authedUser.GetStaffRank(User), ApprovalState.Approved))
+                            message = "Approve Successful.";
+                        else
+                            message = "Error; Approve failed.";
+
+                        LoggingUtility.LogAdminCommandUsage("*WEB* - Approve Content[" + authorizeApproval + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    }
+                    else
+                    {
+                        if (obj.ChangeApprovalStatus(authedUser.GameAccount, authedUser.GetStaffRank(User), ApprovalState.Returned))
+                            message = "Deny Successful.";
+                        else
+                            message = "Error; Deny failed.";
+
+                        LoggingUtility.LogAdminCommandUsage("*WEB* - Deny Content[" + authorizeDenial + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    }
+                }
+            }
+            else
+                message = "You must check the proper radio button first.";
+
+            return RedirectToAction("Index", new { Message = message });
         }
     }
 }

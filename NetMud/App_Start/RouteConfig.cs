@@ -57,7 +57,6 @@ namespace NetMud
                 namespaces: new string[] { "NetMud.Controllers.GameAdmin" }
             );
 
-
             routes.MapRoute(
                 name: "Room Add Edit Descriptive Modal",
                 url: "GameAdmin/Room/AddEditDescriptive/{id}/{descriptiveType}/{phrase}",
@@ -80,9 +79,16 @@ namespace NetMud
             );
 
             routes.MapRoute(
+                name: "Content ApprovalDenial",
+                url: "GameAdmin/ContentApproval/ApproveDeny/{approvalId}/{authorizeApproval}/{denialId}/{authorizeDenial}",
+                defaults: new { controller = "ContentApproval", action = "ApproveDeny", approvalId = UrlParameter.Optional, authorizeApproval = UrlParameter.Optional, denialId = UrlParameter.Optional, authorizeDenial = UrlParameter.Optional },
+                namespaces: new string[] { "NetMud.Controllers.GameAdmin" }
+            );
+
+            routes.MapRoute(
                 name: "GameAdminSubControllers",
                 url: "GameAdmin/{controller}/{action}/{id}",
-                defaults: new { controller = "Player", action = "Index", id = UrlParameter.Optional },
+                defaults: new { controller = "GameAdmin", action = "Index", id = UrlParameter.Optional },
                 namespaces: new string[] { "NetMud.Controllers.GameAdmin" }
             );
 

@@ -17,6 +17,7 @@ using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Base.Place;
+using NetMud.DataStructure.Behaviors.System;
 
 namespace NetMud.Interp
 {
@@ -565,7 +566,7 @@ namespace NetMud.Interp
 
                 var validObject = BackingDataCache.GetByName<T>(currentParmString);
 
-                if (validObject != null && !validObject.Equals(default(T)) && validObject.Approved)
+                if (validObject != null && !validObject.Equals(default(T)) && validObject.State == ApprovalState.Approved)
                 {
                     switch (currentNeededParm.Usage)
                     {
@@ -618,7 +619,7 @@ namespace NetMud.Interp
                 else
                     validObject = BackingDataCache.Get<T>(parmID);
 
-                if (validObject != null && !validObject.Equals(default(T)) && validObject.Approved)
+                if (validObject != null && !validObject.Equals(default(T)) && validObject.State == ApprovalState.Approved)
                 {
                     switch (currentNeededParm.Usage)
                     {

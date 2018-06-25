@@ -1,4 +1,5 @@
 ﻿using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.SupportingClasses;
 using System;
 
 namespace NetMud.DataStructure.Behaviors.System
@@ -26,7 +27,7 @@ namespace NetMud.DataStructure.Behaviors.System
         /// <summary>
         /// Has this been approved?
         /// </summary>
-        bool Approved { get; set; }
+        ApprovalState State { get; set; }
 
         /// <summary>
         /// When was this approved
@@ -42,17 +43,11 @@ namespace NetMud.DataStructure.Behaviors.System
         /// Who approved this thing
         /// </summary>
         IAccount ApprovedBy { get; set; }
-    }
 
-    /// <summary>
-    /// Types of approval necessary for content to be made live.
-    /// </summary>
-    public enum ContentApprovalType
-    {
-        None, //Doesn't even get shown in the ui for the approval system
-        ReviewOnly, //Gets tossed in the review list just to make it seen
-        Leader, //for eventual guild content changing
-        Staff, //Any staff can approve
-        Admin //Highest admin rank approval required
+        /// <summary>
+        /// Change the approval status of this thing
+        /// </summary>
+        /// <returns>success</returns>
+        bool ChangeApprovalStatus(IAccount approver, StaffRank rank, ApprovalState newState);
     }
 }

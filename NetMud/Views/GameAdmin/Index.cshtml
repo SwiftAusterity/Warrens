@@ -1,4 +1,6 @@
-﻿@model NetMud.Models.Admin.DashboardViewModel
+﻿@using NetMud.DataStructure.Behaviors.System
+
+@model NetMud.Models.Admin.DashboardViewModel
 
 <div class="adminDashboard">
     <div>
@@ -13,7 +15,7 @@
                 {
                     <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
                 }
-                @if (Model.Zones.Any(r => !r.Approved))
+                @if (Model.Zones.Any(r => r.State != ApprovalState.Approved))
                 {
                     <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                 }
@@ -25,7 +27,7 @@
                 {
                     <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
                 }
-                @if (Model.Locales.Any(r => !r.Approved))
+                @if (Model.Locales.Any(r => r.State != ApprovalState.Approved))
                 {
                     <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                 }
@@ -37,7 +39,7 @@
                 {
                     <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
                 }
-                @if (Model.Rooms.Any(r => !r.Approved))
+                @if (Model.Rooms.Any(r => r.State != ApprovalState.Approved))
                 {
                     <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                 }
@@ -51,7 +53,7 @@
                 {
                     <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
                 }
-                @if (Model.NPCs.Any(r => !r.Approved))
+                @if (Model.NPCs.Any(r => r.State != ApprovalState.Approved))
                 {
                     <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                 }
@@ -65,7 +67,7 @@
                 {
                     <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
                 }
-                @if (Model.Inanimates.Any(r => !r.Approved))
+                @if (Model.Inanimates.Any(r => r.State != ApprovalState.Approved))
                 {
                     <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                 }
@@ -84,7 +86,7 @@
                 {
                     <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
                 }
-                @if (Model.HelpFiles.Any(r => !r.Approved))
+                @if (Model.HelpFiles.Any(r => r.State != ApprovalState.Approved))
                 {
                     <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                 }
@@ -98,7 +100,7 @@
                 {
                     <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
                 }
-                @if (Model.DimensionalModels.Any(r => !r.Approved))
+                @if (Model.DimensionalModels.Any(r => r.State != ApprovalState.Approved))
                 {
                     <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                 }
@@ -112,7 +114,7 @@
                 {
                     <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
                 }
-                @if (Model.Materials.Any(r => !r.Approved))
+                @if (Model.Materials.Any(r => r.State != ApprovalState.Approved))
                 {
                     <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                 }
@@ -126,7 +128,7 @@
                 {
                     <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
                 }
-                @if (Model.Races.Any(r => !r.Approved))
+                @if (Model.Races.Any(r => r.State != ApprovalState.Approved))
                 {
                     <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                 }
@@ -140,7 +142,7 @@
                 {
                     <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
                 }
-                @if (Model.Constants.Any(r => !r.Approved))
+                @if (Model.Constants.Any(r => r.State != ApprovalState.Approved))
                 {
                     <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                 }
@@ -154,7 +156,7 @@
                 {
                     <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
                 }
-                @if (Model.Flora.Any(r => !r.Approved))
+                @if (Model.Flora.Any(r => r.State != ApprovalState.Approved))
                 {
                     <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                 }
@@ -168,7 +170,7 @@
                 {
                     <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
                 }
-                @if (Model.Fauna.Any(r => !r.Approved))
+                @if (Model.Fauna.Any(r => r.State != ApprovalState.Approved))
                 {
                     <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                 }
@@ -182,7 +184,7 @@
                 {
                     <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
                 }
-                @if (Model.Minerals.Any(r => !r.Approved))
+                @if (Model.Minerals.Any(r => r.State != ApprovalState.Approved))
                 {
                     <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                 }
@@ -196,7 +198,7 @@
                 {
                     <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
                 }
-                @if (Model.UIModules.Any(r => !r.Approved))
+                @if (Model.UIModules.Any(r => r.State != ApprovalState.Approved))
                 {
                     <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                 }

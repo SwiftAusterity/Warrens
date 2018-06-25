@@ -45,14 +45,14 @@
 
                         <td>
                             <div>
-                                <button type="submit" name="ID" id="ID" class="removeData" value="@val.Id" title="Approve this" style="color: green;"><span class="glyphicon glyphicon-play-circle" aria-hidden="true"></span></button>
-                                <input type="radio" name="authorizeApproval" value="@val.Id" style="margin-left: 15px;" />
+                                <button type="submit" name="approvalId" id="approvalId" class="removeData" value="@val.Id" title="Approve this" style="color: green;"><span class="glyphicon glyphicon-play-circle" aria-hidden="true"></span></button>
+                                <input type="radio" name="authorizeApproval" value="@val.Id|||@val.GetType().AssemblyQualifiedName" style="margin-left: 15px;" />
                             </div>
                         </td>
                         <td>
                             <div>
-                                <button type="submit" name="ID" id="ID" class="removeData" value="@val.Id" title="Deny this"><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span></button>
-                                <input type="radio" name="authorizeDenial" value="@val.Id" style="margin-left: 15px;" />
+                                <button type="submit" name="denialId" id="denialId" class="removeData" value="@val.Id" title="Deny this"><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span></button>
+                                <input type="radio" name="authorizeDenial" value="@val.Id|||@val.GetType().AssemblyQualifiedName" style="margin-left: 15px;" />
                             </div>
                         </td>
                     </tr>

@@ -89,7 +89,7 @@ namespace NetMud.Data.System
         /// <summary>
         /// Has this been approved?
         /// </summary>
-        public bool Approved { get; set; }
+        public ApprovalState State { get; set; }
 
         /// <summary>
         /// When was this approved
@@ -164,9 +164,23 @@ namespace NetMud.Data.System
             }
         }
 
-        internal void ApproveMe(IAccount approver)
+        /// <summary>
+        /// Change the approval status of this thing
+        /// </summary>
+        /// <returns>success</returns>
+        public bool ChangeApprovalStatus(IAccount approver, StaffRank rank, ApprovalState newState)
         {
-            Approved = true;
+            //Can't approve/deny your own stuff
+            if (rank < StaffRank.Admin && Creator.Equals(approver))
+                return false;
+
+            ApproveMe(approver, newState);
+            return true;
+        }
+
+        internal void ApproveMe(IAccount approver, ApprovalState state = ApprovalState.Approved)
+        {
+            State = state;
             ApprovedBy = approver;
             ApprovedOn = DateTime.Now;
         }
@@ -273,7 +287,7 @@ namespace NetMud.Data.System
                     }
 
                     //Disapprove of things first
-                    Approved = false;
+                    State = ApprovalState.Pending;
                     ApprovedBy = null;
                     ApprovedOn = DateTime.MinValue;
 
