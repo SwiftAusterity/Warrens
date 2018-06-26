@@ -63,6 +63,11 @@ namespace NetMud.Data.ConfigData
         /// </summary>
         public string CreatorHandle { get; set; }
 
+        /// <summary>
+        /// The creator's account permissions level
+        /// </summary>
+        public StaffRank CreatorRank { get; set; }
+
         [ScriptIgnore]
         [JsonIgnore]
         private IAccount _creator { get; set; }
@@ -96,6 +101,11 @@ namespace NetMud.Data.ConfigData
         /// Who approved this thing, their GlobalAccountHandle
         /// </summary>
         public string ApproverHandle { get; set; }
+
+        /// <summary>
+        /// The approver's account permissions level
+        /// </summary>
+        public StaffRank ApproverRank { get; set; }
 
         [ScriptIgnore]
         [JsonIgnore]
@@ -133,7 +143,7 @@ namespace NetMud.Data.ConfigData
         /// <returns>If it can</returns>
         public bool CanIBeApprovedBy(StaffRank rank, IAccount approver)
         {
-            return rank >= StaffRank.Admin || Creator.Equals(approver);
+            return rank >= CreatorRank || Creator.Equals(approver);
         }
 
         /// <summary>
@@ -146,7 +156,12 @@ namespace NetMud.Data.ConfigData
             if (rank < StaffRank.Admin && Creator.Equals(approver))
                 return false;
 
-            ApproveMe(approver, newState);
+            var accessor = new DataAccess.FileSystem.ConfigData();
+            ApproveMe(approver, rank, newState);
+
+            ConfigDataCache.Add(this);
+            accessor.WriteEntity(this);
+
             return true;
         }
 
@@ -159,17 +174,19 @@ namespace NetMud.Data.ConfigData
             var returnList = new Dictionary<string, string>
             {
                 { "Name", Name },
-                { "Creator", CreatorHandle }
-            };
+                { "Creator", CreatorHandle },
+                { "Creator Rank", CreatorRank.ToString() }
+           };
 
             return returnList;
         }
 
-        internal void ApproveMe(IAccount approver, ApprovalState state = ApprovalState.Approved)
+        internal void ApproveMe(IAccount approver, StaffRank rank, ApprovalState state = ApprovalState.Approved)
         {
             State = state;
             ApprovedBy = approver;
             ApprovedOn = DateTime.Now;
+            ApproverRank = rank;
         }
         #endregion  
 
@@ -232,23 +249,24 @@ namespace NetMud.Data.ConfigData
                     switch (ApprovalType)
                     {
                         case ContentApprovalType.None:
-                            ApproveMe(editor);
+                            ApproveMe(editor, rank);
                             break;
                         case ContentApprovalType.Leader:
                             if (rank == StaffRank.Builder)
-                                ApproveMe(editor);
+                                ApproveMe(editor, rank);
                             break;
                     }
                 }
                 else
                 {
                     //Staff Admin always get approved
-                    ApproveMe(editor);
+                    ApproveMe(editor, rank);
                 }
 
                 if (Creator == null)
                 {
                     Creator = editor;
+                    CreatorRank = rank;
                 }
 
                 ConfigDataCache.Add(this);

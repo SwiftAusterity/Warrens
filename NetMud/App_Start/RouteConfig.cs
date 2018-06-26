@@ -85,6 +85,7 @@ namespace NetMud
                 namespaces: new string[] { "NetMud.Controllers.GameAdmin" }
             );
 
+
             routes.MapRoute(
                 name: "GameAdminSubControllers",
                 url: "GameAdmin/{controller}/{action}/{id}",

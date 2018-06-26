@@ -112,6 +112,11 @@ namespace NetMud.Data.System
         /// </summary>
         public string CreatorHandle { get; set; }
 
+        /// <summary>
+        /// The creator's account permissions level
+        /// </summary>
+        public StaffRank CreatorRank { get; set; }
+
         [ScriptIgnore]
         [JsonIgnore]
         private IAccount _creator { get; set; }
@@ -145,6 +150,11 @@ namespace NetMud.Data.System
         /// Who approved this thing, their GlobalAccountHandle
         /// </summary>
         public string ApproverHandle { get; set; }
+
+        /// <summary>
+        /// The approver's account permissions level
+        /// </summary>
+        public StaffRank ApproverRank { get; set; }
 
         [ScriptIgnore]
         [JsonIgnore]
@@ -182,7 +192,7 @@ namespace NetMud.Data.System
         /// <returns>If it can</returns>
         public bool CanIBeApprovedBy(StaffRank rank, IAccount approver)
         {
-            return rank >= StaffRank.Admin || Creator.Equals(approver);
+            return rank >= CreatorRank || Creator.Equals(approver);
         }
 
         /// <summary>
@@ -195,7 +205,14 @@ namespace NetMud.Data.System
             if (rank < StaffRank.Admin && Creator.Equals(approver))
                 return false;
 
-            ApproveMe(approver, newState);
+            var accessor = new DataAccess.FileSystem.BackingData();
+            ApproveMe(approver, rank, newState);
+
+            LastRevised = DateTime.Now;
+
+            BackingDataCache.Add(this);
+            accessor.WriteEntity(this);
+
             return true;
         }
 
@@ -209,17 +226,19 @@ namespace NetMud.Data.System
             {
                 { "Name", Name },
                 { "Creator", CreatorHandle },
+                { "Creator Rank", CreatorRank.ToString() },
                 { "Valid", FitnessProblems.ToString() }
             };
 
             return returnList;
         }
 
-        internal void ApproveMe(IAccount approver, ApprovalState state = ApprovalState.Approved)
+        internal void ApproveMe(IAccount approver, StaffRank rank, ApprovalState state = ApprovalState.Approved)
         {
             State = state;
             ApprovedBy = approver;
             ApprovedOn = DateTime.Now;
+            ApproverRank = rank;
         }
         #endregion  
 
@@ -243,6 +262,7 @@ namespace NetMud.Data.System
                     GetNextId();
                     Created = DateTime.Now;
                     Creator = creator;
+                    CreatorRank = rank;
 
                     //Figure out automated approvals, always throw reviewonly in there
                     if (rank < StaffRank.Admin && ApprovalType != ContentApprovalType.ReviewOnly)
@@ -250,11 +270,11 @@ namespace NetMud.Data.System
                         switch (ApprovalType)
                         {
                             case ContentApprovalType.None:
-                                ApproveMe(creator);
+                                ApproveMe(creator, rank);
                                 break;
                             case ContentApprovalType.Leader:
                                 if (rank == StaffRank.Builder)
-                                    ApproveMe(creator);
+                                    ApproveMe(creator, rank);
                                 break;
                         }
                     }
@@ -283,7 +303,7 @@ namespace NetMud.Data.System
             try
             {
                 //Not allowed to remove stuff you didn't make unless you're an admin, TODO: Make this more nuanced for guilds
-                if (rank < StaffRank.Admin && !remover.Equals(Creator))
+                if (rank <= CreatorRank && !remover.Equals(Creator))
                 {
                     return false;
                 }
@@ -334,18 +354,18 @@ namespace NetMud.Data.System
                         switch (ApprovalType)
                         {
                             case ContentApprovalType.None:
-                                ApproveMe(editor);
+                                ApproveMe(editor, rank);
                                 break;
                             case ContentApprovalType.Leader:
                                 if (rank == StaffRank.Builder)
-                                    ApproveMe(editor);
+                                    ApproveMe(editor, rank);
                                 break;
                         }
                     }
                     else
                     {
                         //Staff Admin always get approved
-                        ApproveMe(editor);
+                        ApproveMe(editor, rank);
                     }
 
                     LastRevised = DateTime.Now;

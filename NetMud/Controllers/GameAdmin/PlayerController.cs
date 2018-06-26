@@ -67,7 +67,7 @@ namespace NetMud.Controllers.GameAdmin
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Remove(long ID, string authorize)
+        public ActionResult Remove(long removeId, string authorizeRemove, long unapproveId, string authorizeUnapprove)
         {
             string message = "Not Implimented";
 

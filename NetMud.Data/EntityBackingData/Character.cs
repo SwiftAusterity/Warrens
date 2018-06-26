@@ -201,9 +201,10 @@ namespace NetMud.Data.EntityBackingData
                 GetNextId();
                 Created = DateTime.Now;
                 Creator = creator;
+                CreatorRank = rank;
 
                 //No approval stuff necessary here
-                ApproveMe(creator);
+                ApproveMe(creator, rank);
 
                 PlayerDataCache.Add(this);
                 accessor.WriteCharacter(this);
@@ -253,7 +254,7 @@ namespace NetMud.Data.EntityBackingData
             try
             {
                 //No approval stuff necessary here
-                ApproveMe(editor);
+                ApproveMe(editor, rank);
 
                 LastRevised = DateTime.Now;
 

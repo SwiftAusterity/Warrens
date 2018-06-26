@@ -26,6 +26,11 @@ namespace NetMud.DataStructure.Behaviors.System
         IAccount Creator { get; set; }
 
         /// <summary>
+        /// The creator's account permissions level
+        /// </summary>
+        StaffRank CreatorRank { get; set; }
+
+        /// <summary>
         /// Has this been approved?
         /// </summary>
         ApprovalState State { get; set; }
@@ -49,6 +54,11 @@ namespace NetMud.DataStructure.Behaviors.System
         /// Who approved this thing
         /// </summary>
         IAccount ApprovedBy { get; set; }
+
+        /// <summary>
+        /// The approver's account permissions level
+        /// </summary>
+        StaffRank ApproverRank { get; set; }
 
         /// <summary>
         /// Can the given rank approve this or not

@@ -9,6 +9,7 @@ namespace NetMud.Models
         public IEnumerable<dynamic> Values { get; set; }
         public Dictionary<string, Func<dynamic, string>> Columns { get; set; }
         public bool IncludeDelete { get; set; }
+        public bool IncludeUnapprove { get; set; }
         public string Name { get; set; }
 
         public ListTableViewModel()
@@ -16,6 +17,7 @@ namespace NetMud.Models
             Values = Enumerable.Empty<object>();
             Columns = new Dictionary<string, Func<dynamic, string>>();
             IncludeDelete = true;
+            IncludeUnapprove = true;
         }
     }
 }

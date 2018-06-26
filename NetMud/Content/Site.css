@@ -60,8 +60,22 @@ a.addRow {
     padding: 10px;
 }
 
+button[type=submit].approveData {
+    color: green;
+    border: none;
+    padding: 0;
+    background-color: inherit;
+}
+
 button[type=submit].removeData {
     color: red;
+    border: none;
+    padding: 0;
+    background-color: inherit;
+}
+
+button[type=submit].unapproveData {
+    color: orange;
     border: none;
     padding: 0;
     background-color: inherit;

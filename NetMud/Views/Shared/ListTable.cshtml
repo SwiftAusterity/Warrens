@@ -16,26 +16,40 @@
             {
                 <th>DELETE</th>
             }
+
+            @if (Model.IncludeUnapprove)
+            {
+                <th>UNAPPROVE</th>
+            }
         </tr>
     </thead>
     <tbody>
         @foreach (var val in Model.Values)
         {
-            <tr>
-                @foreach (var column in Model.Columns)
-                {
-                    <td>@Html.Raw(column.Value(val))</td>
-                }
+        <tr>
+            @foreach (var column in Model.Columns)
+            {
+                <td>@Html.Raw(column.Value(val))</td>
+            }
 
-                @if (Model.IncludeDelete)
-                {
-                    <td>
-                        <div>
-                            @Html.Partial("RemoveDataItem", (long)val.Id)
-                        </div>
-                    </td>
-                }
-            </tr>
+            @if (Model.IncludeDelete)
+            {
+                <td>
+                    <div>
+                        @Html.Partial("RemoveDataItem", (long)val.Id)
+                    </div>
+                </td>
+            }
+
+            @if (Model.IncludeUnapprove)
+            {
+                <td>
+                    <div>
+                        @Html.Partial("UnapproveDataItem", (long)val.Id)
+                    </div>
+                </td>
+            }
+        </tr>
         }
     </tbody>
 </table>
