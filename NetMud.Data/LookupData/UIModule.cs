@@ -2,6 +2,7 @@
 using NetMud.DataStructure.Behaviors.System;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.LookupData
@@ -38,5 +39,21 @@ namespace NetMud.Data.LookupData
         /// Did a player make this or is this staff made?
         /// </summary>
         public bool PlayerMade { get; set; }
+
+        /// <summary>
+        /// Get the significant details of what needs approval
+        /// </summary>
+        /// <returns>A list of strings</returns>
+        public override IDictionary<string, string> SignificantDetails()
+        {
+            var returnList = base.SignificantDetails();
+
+            returnList.Add("Height", Height.ToString());
+            returnList.Add("Width", Width.ToString());
+
+            returnList.Add("BodyHtml", BodyHtml);
+
+            return returnList;
+        }
     }
 }

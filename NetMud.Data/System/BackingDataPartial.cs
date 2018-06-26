@@ -87,6 +87,17 @@ namespace NetMud.Data.System
         public abstract ContentApprovalType ApprovalType { get; }
 
         /// <summary>
+        /// Is this able to be seen and used for live purposes
+        /// </summary>
+        public bool SuitableForUse
+        {
+            get
+            {
+                return State == ApprovalState.Approved || ApprovalType == ContentApprovalType.None || ApprovalType == ContentApprovalType.ReviewOnly;
+            }
+        }
+
+        /// <summary>
         /// Has this been approved?
         /// </summary>
         public ApprovalState State { get; set; }
@@ -165,6 +176,16 @@ namespace NetMud.Data.System
         }
 
         /// <summary>
+        /// Can the given rank approve this or not
+        /// </summary>
+        /// <param name="rank">Approver's rank</param>
+        /// <returns>If it can</returns>
+        public bool CanIBeApprovedBy(StaffRank rank, IAccount approver)
+        {
+            return rank >= StaffRank.Admin || Creator.Equals(approver);
+        }
+
+        /// <summary>
         /// Change the approval status of this thing
         /// </summary>
         /// <returns>success</returns>
@@ -176,6 +197,22 @@ namespace NetMud.Data.System
 
             ApproveMe(approver, newState);
             return true;
+        }
+
+        /// <summary>
+        /// Get the significant details of what needs approval
+        /// </summary>
+        /// <returns>A list of strings</returns>
+        public virtual IDictionary<string, string> SignificantDetails()
+        {
+            var returnList = new Dictionary<string, string>
+            {
+                { "Name", Name },
+                { "Creator", CreatorHandle },
+                { "Valid", FitnessProblems.ToString() }
+            };
+
+            return returnList;
         }
 
         internal void ApproveMe(IAccount approver, ApprovalState state = ApprovalState.Approved)

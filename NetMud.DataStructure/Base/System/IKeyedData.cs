@@ -28,6 +28,7 @@ namespace NetMud.DataStructure.Base.System
         /// <summary>
         /// The name/keyword for this entry
         /// </summary>
+        
         string Name { get; set; }
 
         /// <summary>
@@ -39,6 +40,7 @@ namespace NetMud.DataStructure.Base.System
         /// <summary>
         /// Does this data have fitness problems?
         /// </summary>
+        
         bool FitnessProblems { get; }
 
         /// <summary>

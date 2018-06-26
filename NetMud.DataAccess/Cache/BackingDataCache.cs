@@ -61,7 +61,7 @@ namespace NetMud.DataAccess.Cache
         {
             //Don't waste the time with the where if it's false
             if (onlyApproved)
-                return BackingCache.GetAll<T>().Where(data => ((IKeyedData)data).State == DataStructure.Behaviors.System.ApprovalState.Approved);
+                return BackingCache.GetAll<T>().Where(data => ((IKeyedData)data).SuitableForUse);
 
             return BackingCache.GetAll<T>();
         }
@@ -74,7 +74,7 @@ namespace NetMud.DataAccess.Cache
         {
             //Don't waste the time with the where if it's false
             if(onlyApproved)
-                return BackingCache.GetAll<IKeyedData>().Where(data => data.State == DataStructure.Behaviors.System.ApprovalState.Approved);
+                return BackingCache.GetAll<IKeyedData>().Where(data => data.SuitableForUse);
 
             return BackingCache.GetAll<IKeyedData>();
         }

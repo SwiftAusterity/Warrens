@@ -158,5 +158,25 @@ namespace NetMud.Data.EntityBackingData
         {
             return LiveCache.Get<IZone>(Id);
         }
+
+        /// <summary>
+        /// Get the significant details of what needs approval
+        /// </summary>
+        /// <returns>A list of strings</returns>
+        public override IDictionary<string, string> SignificantDetails()
+        {
+            var returnList = base.SignificantDetails();
+
+            returnList.Add("Elevation", BaseElevation.ToString());
+            returnList.Add("Temperature", TemperatureCoefficient.ToString());
+            returnList.Add("Pressure", PressureCoefficient.ToString());
+            returnList.Add("Biome", BaseBiome.ToString());
+            returnList.Add("Always Discovered", AlwaysDiscovered.ToString());
+
+            foreach (var desc in Descriptives)
+                returnList.Add("Descriptives", string.Format("{0} ({1}): {2}", desc.SensoryType, desc.Strength, desc.Event.ToString()));
+
+            return returnList;
+        }
     }
 }

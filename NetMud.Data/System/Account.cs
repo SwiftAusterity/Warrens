@@ -215,7 +215,6 @@ namespace NetMud.Data.System
             return new Account(outHandle, outLogSubs);
         }
 
-
         #region Equality Functions
         /// <summary>
         /// -99 = null input
@@ -300,6 +299,5 @@ namespace NetMud.Data.System
             return GetType().GetHashCode() + GlobalIdentityHandle.GetHashCode();
         }
         #endregion
-
     }
 }

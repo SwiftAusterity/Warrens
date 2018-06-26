@@ -41,6 +41,7 @@ namespace NetMud.DataStructure.Base.Supporting
         /// <summary>
         /// Dietary type of this race
         /// </summary>
+        
         DietType DietaryNeeds { get; set; }
 
         /// <summary>
@@ -81,6 +82,7 @@ namespace NetMud.DataStructure.Base.Supporting
         /// <summary>
         /// The name used to describe a large gathering of this race
         /// </summary>
+        
         string CollectiveNoun { get; set; }
 
         /// <summary>

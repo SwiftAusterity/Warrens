@@ -1,14 +1,11 @@
-﻿using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNet.Identity;
+﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using System.Data.Entity;
-using System.ComponentModel.DataAnnotations.Schema;
 using NetMud.Data.System;
 using NetMud.DataStructure.SupportingClasses;
-using System.Linq;
-using System;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Security.Claims;
 using System.Security.Principal;
+using System.Threading.Tasks;
 
 namespace NetMud.Authentication
 {
@@ -57,38 +54,5 @@ namespace NetMud.Authentication
 
             return rank;
         }
-    }
-
-    /// <summary>
-    /// DB Context for the user manager
-    /// </summary>
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
-    {
-        /// <summary>
-        /// New up the db context
-        /// </summary>
-        public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
-        {
-        }
-
-        /// <summary>
-        /// Get a new db context for the user manager
-        /// </summary>
-        /// <returns>the db context</returns>
-        public static ApplicationDbContext Create()
-        {
-            return new ApplicationDbContext();
-        }
-
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-
-            modelBuilder.Entity<ApplicationUser>()
-                .HasRequired(u => u.GameAccount);
-        }
-
-        public DbSet<Account> GameAccount { get; set; }
     }
 }

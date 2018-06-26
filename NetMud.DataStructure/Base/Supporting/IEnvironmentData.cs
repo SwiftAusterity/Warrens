@@ -11,11 +11,13 @@ namespace NetMud.DataStructure.Base.Supporting
         /// <summary>
         /// The fudge value for temperature variance
         /// </summary>
+        
         int TemperatureCoefficient { get; set; }
 
         /// <summary>
         /// The fudge value for pressure (weather pattern) variance
         /// </summary>
+        
         int PressureCoefficient { get; set; }
 
         /// <summary>
@@ -26,6 +28,7 @@ namespace NetMud.DataStructure.Base.Supporting
         /// <summary>
         /// The biome this is supposed to be
         /// </summary>
+        
         Biome BaseBiome { get; set; }
     }
 }

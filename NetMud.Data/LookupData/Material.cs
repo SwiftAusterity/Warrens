@@ -137,5 +137,28 @@ namespace NetMud.Data.LookupData
 
             return dataProblems;
         }
+
+        /// <summary>
+        /// Get the significant details of what needs approval
+        /// </summary>
+        /// <returns>A list of strings</returns>
+        public override IDictionary<string, string> SignificantDetails()
+        {
+            var returnList = base.SignificantDetails();
+
+            returnList.Add("Conductive", Conductive.ToString());
+            returnList.Add("Magnetic", Magnetic.ToString());
+            returnList.Add("Flammable", Flammable.ToString());
+            returnList.Add("Viscosity", Viscosity.ToString());
+            returnList.Add("Density", Density.ToString());
+            returnList.Add("Mallebility", Mallebility.ToString());
+            returnList.Add("Ductility", Ductility.ToString());
+            returnList.Add("Porosity", Porosity.ToString());
+            returnList.Add("Solid Point", SolidPoint.ToString());
+            returnList.Add("Gas Point", GasPoint.ToString());
+            returnList.Add("Temperature Retention", TemperatureRetention.ToString());
+
+            return returnList;
+        }
     }
 }

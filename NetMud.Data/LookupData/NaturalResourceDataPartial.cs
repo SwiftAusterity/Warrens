@@ -128,6 +128,30 @@ namespace NetMud.Data.LookupData
             return dataProblems;
         }
 
+        /// <summary>
+        /// Get the significant details of what needs approval
+        /// </summary>
+        /// <returns>A list of strings</returns>
+        public override IDictionary<string, string> SignificantDetails()
+        {
+            var returnList = base.SignificantDetails();
+
+            returnList.Add("Amount Multiplier", AmountMultiplier.ToString());
+            returnList.Add("Rarity", Rarity.ToString());
+            returnList.Add("Puissance Variance", PuissanceVariance.ToString());
+            returnList.Add("Elevation", string.Format("{0} - {1}", ElevationRange.Item1, ElevationRange.Item2));
+            returnList.Add("Temperature", string.Format("{0} - {1}", TemperatureRange.Item1, TemperatureRange.Item2));
+            returnList.Add("Humidity", string.Format("{0} - {1}", HumidityRange.Item1, HumidityRange.Item2));
+
+            foreach (var occur in OccursIn)
+                returnList.Add("Occurs In", occur.ToString());
+
+            foreach (var affect in Affects)
+                returnList.Add("Affect", string.Format("{0} ({1})", affect.Target, affect.Duration));
+
+            return returnList;
+        }
+
         #region Rendering
         /// <summary>
         /// Render this to a look command (what something sees when it 'look's at this)

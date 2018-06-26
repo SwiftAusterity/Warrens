@@ -2,9 +2,9 @@
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.Behaviors.System;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.LookupData
@@ -46,6 +46,21 @@ namespace NetMud.Data.LookupData
             {
                 _race = new BackingDataCacheKey(value);
             }
+        }
+
+        /// <summary>
+        /// Get the significant details of what needs approval
+        /// </summary>
+        /// <returns>A list of strings</returns>
+        public override IDictionary<string, string> SignificantDetails()
+        {
+            var returnList = base.SignificantDetails();
+
+            returnList.Add("Race", Race.Name);
+            returnList.Add("Female Ratio", FemaleRatio.ToString());
+            returnList.Add("Population Cap", PopulationHardCap.ToString());
+
+            return returnList;
         }
 
         #region Rendering

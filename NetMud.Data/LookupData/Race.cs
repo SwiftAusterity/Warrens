@@ -314,5 +314,34 @@ namespace NetMud.Data.LookupData
 
             return dataProblems;
         }
+
+        /// <summary>
+        /// Get the significant details of what needs approval
+        /// </summary>
+        /// <returns>A list of strings</returns>
+        public override IDictionary<string, string> SignificantDetails()
+        {
+            var returnList = base.SignificantDetails();
+
+            returnList.Add("Collective", CollectiveNoun);
+            returnList.Add("Starting Zone", StartingLocation.Name);
+            returnList.Add("Recall Zone", EmergencyLocation.Name);
+
+            returnList.Add("Head", Head.Name);
+            returnList.Add("Torso", Torso.Name);
+            returnList.Add("Legs", string.Format("{1} {0}", Legs.Item1.Name, Legs.Item2));
+            returnList.Add("Arms", string.Format("{1} {0}", Arms.Item1.Name, Arms.Item2));
+            returnList.Add("Blood", SanguinaryMaterial.Name);
+            returnList.Add("Teeth", TeethType.ToString());
+            returnList.Add("Breathes", Breathes.ToString());
+            returnList.Add("Diet", DietaryNeeds.ToString());
+            returnList.Add("Vision Range", string.Format("{0} - {1}", VisionRange.Item1, VisionRange.Item2));
+            returnList.Add("Temperature Tolerance", string.Format("{0} - {1}", TemperatureTolerance.Item1, TemperatureTolerance.Item2));
+
+            foreach (var part in BodyParts)
+                returnList.Add("Body Parts", string.Format("{0} - {1} ({2})", part.Item3.ToString(), part.Item1.Name, part.Item3));
+
+            return returnList;
+        }
     }
 }

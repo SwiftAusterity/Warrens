@@ -77,8 +77,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IdentityConfig.cs" />
-    <Compile Include="IdentityModels.cs" />
+    <Compile Include="ApplicationDbContext.cs" />
+    <Compile Include="ApplicationSignInManager.cs" />
+    <Compile Include="ApplicationUser.cs" />
+    <Compile Include="ApplicationUserManager.cs" />
+    <Compile Include="EmailService.cs" />
     <Compile Include="Migrations\201606230321457_one.cs" />
     <Compile Include="Migrations\201606230321457_one.Designer.cs">
       <DependentUpon>201606230321457_one.cs</DependentUpon>
@@ -113,6 +116,7 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SmsService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NetMud.DataAccess\NetMud.DataAccess.csproj">

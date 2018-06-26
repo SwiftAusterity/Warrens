@@ -40,9 +40,11 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Index()
         {
+            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
             var newList = BackingDataCache.GetAll().Where(item => item.GetType().GetInterfaces().Contains(typeof(INeedApproval))
                                                                 && item.GetType().GetInterfaces().Contains(typeof(IKeyedData))
-                                                               /* && item.State == ApprovalState.Pending */).OrderBy(item => item.GetType().Name);
+                                                                && !item.SuitableForUse && item.CanIBeApprovedBy(authedUser.GetStaffRank(User), authedUser.GameAccount)).OrderBy(item => item.GetType().Name);
 
             var viewModel = new ManageContentApprovalsViewModel(newList);
 

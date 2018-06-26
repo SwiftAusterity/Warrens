@@ -49,6 +49,21 @@ namespace NetMud.Data.System
         }
 
         /// <summary>
+        /// Get the significant details of what needs approval
+        /// </summary>
+        /// <returns>A list of strings</returns>
+        public override IDictionary<string, string> SignificantDetails()
+        {
+            var returnList = base.SignificantDetails();
+
+            foreach (var val in Values)
+                foreach(var crit in val.Key.Criterion)
+                    returnList.Add("Values", string.Format("{0} + {1} : ", crit.Key.ToString(), crit.Value, val.Value.CommaList()));
+
+            return returnList;
+        }
+
+        /// <summary>
         /// Adds or updates an entire string cluster
         /// </summary>
         /// <param name="key">the value to affect</param>

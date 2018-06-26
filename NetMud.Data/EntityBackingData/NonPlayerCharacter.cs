@@ -132,5 +132,23 @@ namespace NetMud.Data.EntityBackingData
 
             return new Tuple<int, int, int>(0, 0, 0);
         }
+
+        /// <summary>
+        /// Get the significant details of what needs approval
+        /// </summary>
+        /// <returns>A list of strings</returns>
+        public override IDictionary<string, string> SignificantDetails()
+        {
+            var returnList = base.SignificantDetails();
+
+            returnList.Add("Race", RaceData.Name);
+            returnList.Add("SurName", SurName);
+            returnList.Add("Gender", Gender);
+
+            foreach (var desc in Descriptives)
+                returnList.Add("Descriptives", string.Format("{0} ({1}): {2}", desc.SensoryType, desc.Strength, desc.Event.ToString()));
+
+            return returnList;
+        }
     }
 }

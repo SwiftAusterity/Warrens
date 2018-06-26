@@ -21,6 +21,7 @@ namespace NetMud.DataStructure.Base.Supporting
         /// <summary>
         /// How hollow something is
         /// </summary>
+        
         int Vacuity { get; set; }
 
         /// <summary>

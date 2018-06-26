@@ -37,5 +37,18 @@ namespace NetMud.Data.LookupData
 
             return sb;
         }
+
+        /// <summary>
+        /// Get the significant details of what needs approval
+        /// </summary>
+        /// <returns>A list of strings</returns>
+        public override IDictionary<string, string> SignificantDetails()
+        {
+            var returnList = base.SignificantDetails();
+
+            returnList.Add("Help", HelpText);
+
+            return returnList;
+        }
     }
 }

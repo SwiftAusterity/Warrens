@@ -134,7 +134,7 @@ namespace NetMud.Utility
         /// <param name="stringList">The string list to join</param>
         /// <param name="mode">The punctuation mode</param>
         /// <returns>A commalist format string</returns>
-        public static string CommaList(this IEnumerable<string> stringList, SplitListType mode)
+        public static string CommaList(this IEnumerable<string> stringList, SplitListType mode = SplitListType.AllComma)
         {
             return stringList.ToArray().CommaList(mode);
         }

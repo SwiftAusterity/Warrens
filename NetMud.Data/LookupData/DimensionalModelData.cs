@@ -187,5 +187,19 @@ namespace NetMud.Data.LookupData
                 throw new FormatException("Invalid delimitedPlanes format.", ex);
             }
         }
+
+        /// <summary>
+        /// Get the significant details of what needs approval
+        /// </summary>
+        /// <returns>A list of strings</returns>
+        public override IDictionary<string, string> SignificantDetails()
+        {
+            var returnList = base.SignificantDetails();
+
+            returnList.Add("Vacuity", HelpText);
+            returnList.Add("Model", ViewFlattenedModel(true));
+            
+            return returnList;
+        }
     }
 }

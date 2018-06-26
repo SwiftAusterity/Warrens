@@ -12,6 +12,7 @@ namespace NetMud.DataStructure.Base.EntityBackingData
         /// <summary>
         /// Family name for NPCs
         /// </summary>
+        
         string SurName { get; set; }
 
         /// <summary>

@@ -30,6 +30,7 @@ namespace NetMud.DataStructure.Base.EntityBackingData
         /// <summary>
         /// Family name for character
         /// </summary>
+        
         string SurName { get; set; }
 
         /// <summary>

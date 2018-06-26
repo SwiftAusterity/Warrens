@@ -1,4 +1,6 @@
-﻿@model NetMud.Models.Admin.ManageContentApprovalsViewModel
+﻿@using NetMud.DataStructure.SupportingClasses
+
+@model NetMud.Models.Admin.ManageContentApprovalsViewModel
 
 @if (Model.Items.Count() > 0)
 {
@@ -32,11 +34,9 @@
                                 <h5>Fields</h5>
                                 <div>
                                     <pre class="contentPreviewFields">
-                                        @foreach (var prop in val.GetType().GetProperties().Where(prp => prp.MemberType == System.Reflection.MemberTypes.Property 
-                                                                                                    && prp.PropertyType.IsValueType 
-                                                                                                    && prp.GetValue(val) != null).OrderBy(prp => prp.Name))
+                                        @foreach (var detail in val.SignificantDetails())
                                         {
-                                            <div><span style="float: left;">@prop.Name</span><span style="float: right;">@prop.GetValue(val)</span></div>
+                                            <div><span style="float: left;">@detail.Key</span><span style="float: right;">@detail.Value</span></div>
                                         }
                                     </pre>
                                 </div>

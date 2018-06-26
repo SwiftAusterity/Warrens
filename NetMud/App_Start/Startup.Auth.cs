@@ -89,6 +89,13 @@ namespace NetMud
             }
 
             roles = manager.Roles.ToList();
+            if (!roles.Any(r => r.Name.Equals("Guest", StringComparison.OrdinalIgnoreCase)))
+            {
+                IdentityRole role = new IdentityRole("Guest");
+                await manager.CreateAsync(role);
+            }
+
+            roles = manager.Roles.ToList();
             if (!roles.Any(r => r.Name.Equals("Player", StringComparison.OrdinalIgnoreCase)))
             {
                 IdentityRole role = new IdentityRole("Player");

@@ -89,5 +89,24 @@ namespace NetMud.Data.LookupData
                 _ores = value.Select(m => new BackingDataCacheKey(m));
             }
         }
+
+        /// <summary>
+        /// Get the significant details of what needs approval
+        /// </summary>
+        /// <returns>A list of strings</returns>
+        public override IDictionary<string, string> SignificantDetails()
+        {
+            var returnList = base.SignificantDetails();
+
+            returnList.Add("Solubility", Solubility.ToString());
+            returnList.Add("Fertility", Fertility.ToString());
+            returnList.Add("Rock", Rock.Name);
+            returnList.Add("Dirt", Dirt.ToString());
+
+            foreach(var ore in Ores)
+                returnList.Add("Ore", ore.Name);
+
+            return returnList;
+        }
     }
 }

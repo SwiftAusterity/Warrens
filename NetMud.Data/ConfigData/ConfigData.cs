@@ -6,6 +6,7 @@ using NetMud.DataStructure.Behaviors.System;
 using NetMud.DataStructure.SupportingClasses;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.ConfigData
@@ -35,6 +36,17 @@ namespace NetMud.Data.ConfigData
         [ScriptIgnore]
         [JsonIgnore]
         public virtual ContentApprovalType ApprovalType { get { return ContentApprovalType.Admin; } } //Config data defaults to admin
+
+        /// <summary>
+        /// Is this able to be seen and used for live purposes
+        /// </summary>
+        public bool SuitableForUse
+        {
+            get
+            {
+                return State == ApprovalState.Approved || ApprovalType == ContentApprovalType.None || ApprovalType == ContentApprovalType.ReviewOnly;
+            }
+        }
 
         /// <summary>
         /// Has this been approved?
@@ -115,6 +127,16 @@ namespace NetMud.Data.ConfigData
         }
 
         /// <summary>
+        /// Can the given rank approve this or not
+        /// </summary>
+        /// <param name="rank">Approver's rank</param>
+        /// <returns>If it can</returns>
+        public bool CanIBeApprovedBy(StaffRank rank, IAccount approver)
+        {
+            return rank >= StaffRank.Admin || Creator.Equals(approver);
+        }
+
+        /// <summary>
         /// Change the approval status of this thing
         /// </summary>
         /// <returns>success</returns>
@@ -126,6 +148,21 @@ namespace NetMud.Data.ConfigData
 
             ApproveMe(approver, newState);
             return true;
+        }
+
+        /// <summary>
+        /// Get the significant details of what needs approval
+        /// </summary>
+        /// <returns>A list of strings</returns>
+        public virtual IDictionary<string, string> SignificantDetails()
+        {
+            var returnList = new Dictionary<string, string>
+            {
+                { "Name", Name },
+                { "Creator", CreatorHandle }
+            };
+
+            return returnList;
         }
 
         internal void ApproveMe(IAccount approver, ApprovalState state = ApprovalState.Approved)

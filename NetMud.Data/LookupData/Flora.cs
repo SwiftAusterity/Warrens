@@ -147,5 +147,24 @@ namespace NetMud.Data.LookupData
 
             return dataProblems;
         }
+
+        /// <summary>
+        /// Get the significant details of what needs approval
+        /// </summary>
+        /// <returns>A list of strings</returns>
+        public override IDictionary<string, string> SignificantDetails()
+        {
+            var returnList = base.SignificantDetails();
+
+            returnList.Add("Sunlight", SunlightPreference.ToString());
+            returnList.Add("Coniferous", Coniferous.ToString());
+            returnList.Add("Wood", Wood.Name);
+            returnList.Add("Flower", Flower.Name);
+            returnList.Add("Leaf", Leaf.Name);
+            returnList.Add("Fruit", Fruit.Name);
+            returnList.Add("Seed", Seed.Name);
+
+            return returnList;
+        }
     }
 }
