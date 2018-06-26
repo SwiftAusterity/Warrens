@@ -22,16 +22,16 @@ namespace NetMud.Models
 
         [Range(1, 10000, ErrorMessage = "Page number must be at least 1.")]
         [RegularExpression("[0-9]+")]
-        [Display(Name = "Items Per Page")]
+        [Display(Name = "Page Number", Description = "Your current page number.")]
         public int CurrentPageNumber { get; set; }
 
         [Range(1, 100, ErrorMessage = "Items per page must be between {1} and {2}.")]
         [RegularExpression("[0-9]+")]
-        [Display(Name = "Items Per Page")]
+        [Display(Name = "Items Per Page", Description = "How many items to display per page.")]
         public int ItemsPerPage { get; set; }
 
         [StringLength(2000, ErrorMessage = "Search Terms must be at least {2} characters long.", MinimumLength = 2)]
-        [Display(Name = "Search")]
+        [Display(Name = "Search", Description = "Filter by keywords and names.")]
         public string SearchTerms { get; set; }
 
         public IEnumerable<T> Items { get; private set; }

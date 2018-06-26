@@ -37,7 +37,7 @@ namespace NetMud.Models.Admin
         }
 
         [StringLength(100, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
-        [Display(Name = "Name")]
+        [Display(Name = "Name", Description = "The descriptive name for this Locale. Shows above the output window of the client.")]
         [DataType(DataType.Text)]
         public string Name { get; set; }
 

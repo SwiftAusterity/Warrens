@@ -214,8 +214,6 @@
     <Compile Include="Models\Admin\FloraViewModels.cs" />
     <Compile Include="Models\Admin\MineralsViewModels.cs" />
     <Compile Include="Models\Admin\FaunaViewModels.cs" />
-    <Compile Include="Models\Admin\PartialInterfaces\IDimensionalEntityViewModel.cs" />
-    <Compile Include="Models\Admin\PartialInterfaces\ITwoDimensionalEntityViewModel.cs" />
     <Compile Include="Models\Admin\ReferenceDataDropdownModel.cs" />
     <Compile Include="Models\Admin\DimensionalModelViewModels.cs" />
     <Compile Include="Models\Admin\ConstantsViewModels.cs" />

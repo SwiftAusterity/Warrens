@@ -30,13 +30,13 @@ namespace NetMud.Models.Admin
 
         public virtual string ContainerFriendlyName { get; set; }
 
-        [Display(Name = "Name")]
+        [Display(Name = "Name", Description = "The descriptive name of the pocket.")]
         public virtual string[] ContainerNames { get; set; }
 
-        [Display(Name = "Weight Capacity")]
+        [Display(Name = "Weight Capacity", Description = "The total weight capacity of this pocket.")]
         public virtual long[] ContainerWeights { get; set; }
 
-        [Display(Name = "Internal Volume")]
+        [Display(Name = "Internal Volume", Description = "The total dimensional size of the pocket internally.")]
         public virtual long[] ContainerVolumes { get; set; }
 
         public virtual HashSet<IEntityContainerData<T>> Containers { get; set; }

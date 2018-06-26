@@ -36,28 +36,28 @@ namespace NetMud.Models.Admin
         }
 
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
-        [Display(Name = "Name")]
+        [Display(Name = "Name", Description = "The identifying name of the UI Module. Will be used to find it in the UI Module Load in the client.")]
         [DataType(DataType.Text)]
         public string Name { get; set; }
 
         [StringLength(2000, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 20)]
         [DataType(DataType.MultilineText)]
-        [Display(Name = "Help Text")]
+        [Display(Name = "Help Text", Description = "Descriptive text shown on the UI Modules list page.")]
         public string HelpText { get; set; }
 
         [StringLength(8000, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 20)]
-        [Display(Name = "Body Content (HTML)")]
+        [Display(Name = "Body Content (HTML)", Description = "HTML, css and javascript which drives your module.")]
         [DataType(DataType.MultilineText)]
         [AllowHtml]
         public string BodyHtml { get; set; }
 
         [Range(100, 1000, ErrorMessage = "The {0} must be between {2} and {1}.")]
-        [Display(Name = "Height")]
+        [Display(Name = "Height", Description = "The default height of the window your module will spawn in if put into a popup.")]
         [DataType(DataType.Text)]
         public int Height { get; set; }
 
         [Range(100, 1000, ErrorMessage = "The {0} must be between {2} and {1}.")]
-        [Display(Name = "Width")]
+        [Display(Name = "Width", Description = "The default width of the window your module will spawn in if put into a popup.")]
         [DataType(DataType.Text)]
         public int Width { get; set; }
 
