@@ -298,6 +298,7 @@
     <Content Include="Scripts\js-cookie.js" />
     <Content Include="Scripts\site.js" />
     <Content Include="Scripts\tooltip.js" />
+    <Content Include="Scripts\ClientHelpers.js" />
     <Content Include="Views\Shared\Occurrence.cshtml" />
     <Content Include="Views\Shared\Lexica.cshtml" />
     <Content Include="Views\GameAdmin\Pathway\OccurrenceList.cshtml" />

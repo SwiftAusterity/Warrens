@@ -66,6 +66,54 @@ namespace NetMud.Controllers
         }
 
         [HttpPost]
+        public string RemoveUIModuleContent(string moduleName, int location)
+        {
+            var user = UserManager.FindById(User.Identity.GetUserId());
+
+            var account = user.GameAccount;
+
+            if (account == null)
+            {
+                return "Invalid Account.";
+            }
+
+            var modules = account.Config.UIModules.ToList();
+            if (moduleName == "**anymodule**" && location != -1)
+            {
+                if (modules.Any(mod => mod.Item2.Equals(location)))
+                {
+                    var moduleTuple = modules.FirstOrDefault(mod => mod.Item2.Equals(location));
+                    modules.Remove(moduleTuple);
+                }
+            }
+            else
+            {
+                var module = BackingDataCache.GetByName<IUIModule>(moduleName);
+
+                if (module == null)
+                {
+                    return "Invalid Module.";
+                }
+
+                if ((location < 1 && location != -1) || location > 4)
+                {
+                    return "Invalid Location";
+                }
+
+                var moduleTuple = new Tuple<IUIModule, int>(module, location);
+
+                //Remove this module
+                if (modules.Any(mod => mod.Item1.Equals(module) && mod.Item2.Equals(location)))
+                    modules.Remove(moduleTuple);
+            }
+
+            account.Config.UIModules = modules;
+            account.Config.Save(account, StaffRank.Player);
+
+            return "Success";
+        }
+
+        [HttpPost]
         public string SaveUIModuleContent(string moduleName, int location)
         {
             var user = UserManager.FindById(User.Identity.GetUserId());

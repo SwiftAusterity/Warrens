@@ -1,5 +1,4 @@
 ﻿@model NetMud.Models.GameContextModel
-
 <div class="parserClientTop">
     <div id="locationBreadcrumbs">
         <span class="contentContainer" output-data-binding="Local.ZoneName"></span>
@@ -46,8 +45,8 @@
         <input type="text" id="input" name="input" class="parserInput" />
     </div>
 </div>
-
 @Styles.Render("~/Content/GameClient.css")
+@Scripts.Render("~/Scripts/ClientHelpers.js")
 @Scripts.Render("~/Scripts/WebSocketsClient.js")
 @Styles.Render("http://fonts.googleapis.com/css?family=Berkshire+Swash")
 
@@ -165,7 +164,7 @@
             var myContent = $origin.children('.contentContainer');
 
             myContent.detach();
- 
+
             return false;
         });
 
@@ -191,10 +190,17 @@
             SaveUIModule(4);
 
             window.openedWindows.forEach(function (win) {
-                var contentArea = win.window.document.querySelector('#contentArea');
+                var wTest = window.open("", win.name);
 
-                var moduleName = $(contentArea).attr('data-module-name');
-                $.post('/api/ClientDataApi/SaveUIModuleContent/' + moduleName + '/-1');
+                if (wTest.document.querySelector('#contentArea') != undefined) {
+                    var contentArea = win.window.document.querySelector('#contentArea');
+
+                    var moduleName = $(contentArea).attr('data-module-name');
+                    $.post('/api/ClientDataApi/SaveUIModuleContent/' + moduleName + '/-1');
+                } else {
+                    //remove it
+                    $.post('/api/ClientDataApi/RemoveUIModuleContent/' + win.name + '/-1');
+                }
             });
 
             return false;
@@ -270,7 +276,12 @@
         var $origin = $('div#quadrant-' + originNumber + '.quadrant');
         var moduleName = $origin.attr('data-module-name');
 
-        $.post('/api/ClientDataApi/SaveUIModuleContent/' + moduleName + '/' + originNumber);
+        if (moduleName != '') {
+            $.post('/api/ClientDataApi/SaveUIModuleContent/' + moduleName + '/' + originNumber);
+        } else {
+            //remove it
+            $.post('/api/ClientDataApi/RemoveUIModuleContent/**anymodule**/' + originNumber);
+        }
     }
 
     function LoadUIModules() {
