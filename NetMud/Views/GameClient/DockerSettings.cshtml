@@ -3,48 +3,28 @@
 <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-cog dockable" title="Settings"></span></a>
 <ul class="dropdown-menu dropdown-menu-left dockingMenu" role="menu" aria-labelledby="dropdownMenu">
     <li class="dropdown-header" style="color: mediumvioletred" id="quadrantName">Quadrant @Model</li>
-    <li><a href="#" style="padding: 5px; color: black;" class="quadrantDocker" data-destination-quadrant="-1" data-origin-quadrant="@Model"><span class="glyphicon glyphicon-resize-full" style="padding-right: 5px;"></span>Undock</a></li>
+    <li><a href="#" class="quadrantDocker moduleMenuItem" data-destination-quadrant="-1" data-origin-quadrant="@Model"><span class="glyphicon glyphicon-resize-full"></span>Undock</a></li>
     <li class="divider"></li>
-    @if (Model == 1)
+    @for (var i = 1; i <= 4; i++)
     {
-        <li><a href="#" style="padding: 5px;" disabled="disabled"><span class="glyphicon glyphicon-resize-small" style="padding-right: 5px;"></span>Dock Quadrant 1</a></li>
-    }
-    else
-    {
-        <li><a href="#" style="padding: 5px; color: black;" class="quadrantDocker" data-destination-quadrant="1" data-origin-quadrant="@Model"><span class="glyphicon glyphicon-resize-small" style="padding-right: 5px;"></span>Dock Quadrant 1</a></li>
-    }
-    @if (Model == 2)
-    {
-        <li><a href="#" style="padding: 5px;" disabled="disabled"><span class="glyphicon glyphicon-resize-small" style="padding-right: 5px;"></span>Dock Quadrant 2</a></li>
-    }
-    else
-    {
-        <li><a href="#" style="padding: 5px; color: black;" class="quadrantDocker" data-destination-quadrant="2" data-origin-quadrant="@Model"><span class="glyphicon glyphicon-resize-small" style="padding-right: 5px;"></span>Dock Quadrant 2</a></li>
-    }
-    @if (Model == 3)
-    {
-        <li><a href="#" style="padding: 5px;" disabled="disabled"><span class="glyphicon glyphicon-resize-small" style="padding-right: 5px;"></span>Dock Quadrant 3</a></li>
-    }
-    else
-    {
-        <li><a href="#" style="padding: 5px; color: black;" class="quadrantDocker" data-destination-quadrant="3" data-origin-quadrant="@Model"><span class="glyphicon glyphicon-resize-small" style="padding-right: 5px;"></span>Dock Quadrant 3</a></li>
-    }
-    @if (Model == 4)
-    {
-        <li><a href="#" style="padding: 5px;" disabled="disabled"><span class="glyphicon glyphicon-resize-small" style="padding-right: 5px;"></span>Dock Quadrant 4</a></li>
-    }
-    else
-    {
-        <li><a href="#" style="padding: 5px; color: black;" class="quadrantDocker" data-destination-quadrant="4" data-origin-quadrant="@Model"><span class="glyphicon glyphicon-resize-small" style="padding-right: 5px;"></span>Dock Quadrant 4</a></li>
+        if (Model == i)
+        {
+            <li><a href="#" disabled="disabled" class="moduleMenuItem"><span class="glyphicon glyphicon-resize-small"></span>Dock Quadrant @i</a></li>
+        }
+        else
+        {
+            <li>
+                <a href="#" class="quadrantDocker moduleMenuItem" data-destination-quadrant="@i" data-origin-quadrant="@Model">
+                    <span class="glyphicon glyphicon-resize-small"></span>Dock Quadrant @i</a>
+            </li>
+        }
     }
     <li class="divider"></li>
     <li>
-        <a href="#" style="padding: 5px; color: black;" class="quadrantLoad" data-origin-quadrant="@Model">
-            <span class="glyphicon glyphicon-cloud-download" style="padding-right: 5px;"></span>Load Module
-        </a>
-        <input id="loadModuleName" title="Module Name?" />
+        <a href="#" class="quadrantLoad moduleMenuItem" data-origin-quadrant="@Model"><span class="glyphicon glyphicon-cloud-download"></span>Load Module</a>
+        <input id="loadModuleName" title="Module Name?" class="moduleNameFinder" />
     </li>
-    <li><a href="#" style="padding: 5px; color: black;" class="quadrantSave" data-origin-quadrant="@Model"><span class="glyphicon glyphicon-cloud-upload" style="padding-right: 5px;"></span>Save Module</a></li>
+    <li><a href="#" class="quadrantSave moduleMenuItem" data-origin-quadrant="@Model"><span class="glyphicon glyphicon-cloud-upload"></span>Save Module</a></li>
     <li class="divider"></li>
-    <li><a href="#" style="padding: 5px; color: black;" class="quadrantWipe" data-origin-quadrant="@Model"><span class="glyphicon glyphicon-remove-circle" style="padding-right: 5px;"></span>Wipe Module</a></li>
+    <li><a href="#" class="quadrantWipe moduleMenuItem" data-origin-quadrant="@Model"><span class="glyphicon glyphicon-remove-circle"></span>Wipe Module</a></li>
 </ul>

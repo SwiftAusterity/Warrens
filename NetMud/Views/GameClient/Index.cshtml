@@ -1,4 +1,5 @@
 ﻿@model NetMud.Models.GameContextModel
+
 <div class="parserClientTop">
     <div id="locationBreadcrumbs">
         <span class="contentContainer" output-data-binding="Local.ZoneName"></span>
@@ -12,14 +13,17 @@
         <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-th-list" title="Client Settings"></span></a>
         <ul class="dropdown-menu dropdown-menu-left" role="menu" aria-labelledby="dropdownMenu">
             <li class="dropdown-header" style="color: mediumvioletred">Global UI Settings</li>
-            <li><a href="#" style="padding: 5px; color: black;" id="clientReload"><span class="glyphicon glyphicon-refresh" style="padding-right: 5px;"></span>Reload Client</a></li>
-            <li><a href="#" style="padding: 5px; color: black;" id="openModulePopup"><span class="glyphicon glyphicon-open" style="padding-right: 5px;"></span>Popup Module</a></li>
+            <li><a href="#" id="clientReload" class="moduleMenuItem"><span class="glyphicon glyphicon-refresh"></span>Reload Client</a></li>
+            <li>
+                <a href="#" class="openModulePopup moduleMenuItem" data-origin-quadrant="@Model"><span class="glyphicon glyphicon-open"></span>Popup Module</a>
+                <input id="loadModulePopupName" title="Module Name?" class="moduleNameFinder" />
+            </li>
             <li class="divider"></li>
-            <li><a href="#" style="padding: 5px; color: black;" id="saveAllModules"><span class="glyphicon glyphicon-upload" style="padding-right: 5px;"></span>Save All Modules</a></li>
-            <li><a href="#" style="padding: 5px; color: black;" id="reloadAllModules"><span class="glyphicon glyphicon-download" style="padding-right: 5px;"></span>Load UI From Config</a></li>
-            <li><a href="#" style="padding: 5px; color: black;" id="wipeUI"><span class="glyphicon glyphicon-remove" style="padding-right: 5px;"></span>Wipe UI</a></li>
+            <li><a href="#" id="saveAllModules" class="moduleMenuItem"><span class="glyphicon glyphicon-upload"></span>Save All Modules</a></li>
+            <li><a href="#" id="reloadAllModules" class="moduleMenuItem"><span class="glyphicon glyphicon-download"></span>Load UI From Config</a></li>
+            <li><a href="#" id="wipeUI" class="moduleMenuItem"><span class="glyphicon glyphicon-remove"></span>Wipe UI</a></li>
             <li class="divider"></li>
-            <li><a href="#" style="padding: 5px; color: black;" id="disconnect"><span class="glyphicon glyphicon-remove-sign" style="padding-right: 5px;"></span>Disconnect From Server</a></li>
+            <li><a href="#" id="disconnect" class="moduleMenuItem"><span class="glyphicon glyphicon-remove-sign"></span>Disconnect From Server</a></li>
         </ul>
     </div>
 </div>
@@ -45,14 +49,22 @@
         <input type="text" id="input" name="input" class="parserInput" />
     </div>
 </div>
-@Styles.Render("~/Content/GameClient.css")
-@Scripts.Render("~/Scripts/ClientHelpers.js")
-@Scripts.Render("~/Scripts/WebSocketsClient.js")
-@Styles.Render("http://fonts.googleapis.com/css?family=Berkshire+Swash")
+
+
+@section styles {
+    @Styles.Render("~/Content/GameClient.css")
+    @Styles.Render("http://fonts.googleapis.com/css?family=Berkshire+Swash")
+}
+
+@section scripts {
+    @Scripts.Render("~/Scripts/ClientHelpers.js")
+    @Scripts.Render("~/Scripts/WebSocketsClient.js")
+}
 
 <script type="text/javascript">
     $(document).ready(function () {
         $('input#loadModuleName').hide();
+        $('input#loadModulePopupName').hide();
 
         var tutorialMode = '@Model.authedUser.GameAccount.Config.UITutorialMode' === 'True';
         Tutorial($('#locationBreadcrumbs'), "This is where you are in the world.", tutorialMode);
@@ -142,7 +154,40 @@
             });
 
             return false;
-       });
+        });
+
+        $(".openModulePopup").click(function (e) {
+            var $this = $(this);
+
+            $('input#loadModulePopupName').show().focus();
+            $(this).hide();
+
+            $('input#loadModulePopupName').keydown(function (e) {
+                var moduleName = $(this).val();
+
+                switch (e.keyCode) {
+                    case 13: //enter
+                        $.get('/api/ClientDataApi/GetUIModuleContent/' + moduleName, function (data) {
+                            var newContent = data.BodyHtml;
+
+                            if (newContent != '') {
+                                openModularUI(500, 500, moduleName, newContent);
+
+                                ReloadUI();
+                            }
+                        });
+                        break;
+                    default:
+                        return true;
+                }
+
+                $('input#loadModulePopupName').off('keydown');
+                $('input#loadModulePopupName').hide();
+                $(".openModulePopup").show();
+            });
+
+            return false;
+        });
 
         $(".quadrantSave").click(function (e) {
             var $this = $(this);
@@ -206,22 +251,7 @@
             return false;
         });
 
-        $('#openModulePopup').click(function (e) {
-            var moduleName = prompt("Module Name?", "");
-
-            $.get('/api/ClientDataApi/GetUIModuleContent/' + moduleName, function (data) {
-                var newContent = data.BodyHtml;
-
-                if (newContent != '') {
-                    openModularUI(500, 500, moduleName, newContent);
-
-                    ReloadUI();
-                }
-            });
-            return false;
-        });
-
-        $("input#loadModuleName").autocomplete({
+        $(".moduleNameFinder").autocomplete({
             source: "/api/ClientDataApi/GetUIModuleNames",
             minLength: 3,
             select: function (event, ui) {

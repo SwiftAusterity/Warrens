@@ -3,31 +3,13 @@ body {
     padding-bottom: 20px;
 }
 
+.body-content {
+    background-color: black;
+    color: white;
+}
+
 .navbar-brand {
     padding: 20px;
-}
-
-/* Wrapping element */
-/* Set some basic padding to keep content from hitting the edges */
-.body-content {
-    width: 1340px;
-    max-width: 1340px;
-}
-
-/* Carousel */
-.carousel-caption p {
-    font-size: 20px;
-    line-height: 1.4;
-}
-
-/* Make .svg files in the carousel display properly in older browsers */
-.carousel-inner .item img[src$=".svg"] {
-    width: 100%;
-}
-
-/* QR code generator */
-#qrCode {
-    margin: 15px;
 }
 
 .selected {
@@ -39,7 +21,7 @@ body {
     padding: 5px 0;
     background: black;
     color: whitesmoke;
-    width: 1280px;
+    min-height: 100px;
 }
 
     .parserClientTop #locationBreadcrumbs {
@@ -48,15 +30,15 @@ body {
         color: lightsteelblue;
         text-shadow: 1px 1px 0 slategray, 4px 4px 0 rgba(0,0,0,0.15);
         margin-bottom: 3px;
-        width: 80%;
-        margin-left: 10%;
+        width: 70%;
+        margin-left: 15%;
     }
 
     .parserClientTop #locationDescription {
         display: inline-flex;
         font-size: 14px;
-        width: 80%;
-        margin-left: 10%;
+        width: 70%;
+        margin-left: 15%;
     }
 
     .parserClientTop .rightNav {
@@ -73,45 +55,47 @@ body {
 .parserClient {
     position: relative;
     padding-bottom: 0;
-    height: 750px;
-    width: 1280px;
+    height: 100%;
     font-family: Courier New, Courier, monospace;
     font-size: 11px;
-    background: lightgray;
-    border: 1px black solid;
+    border: 4px darkgray groove;
+    min-height: 760px;
 }
 
     .parserClient .textParserClient {
-        background-color: black;
         font-family: Courier New, Courier, monospace;
         height: 750px;
-        width: 80%;
+        width: 70%;
         position: relative;
         overflow-y: hidden;
         overflow-x: hidden;
         float: left;
-        border-top: 1px dotted white;
     }
 
     .parserClient .sidebar {
-        position: relative;
-        padding: 0 10px;
-        width: 10%;
-        height: 100%;
+        padding: 10px;
+        width: 15%;
+        min-height: 730px;
         overflow-wrap: break-word;
     }
 
     .parserClient .parserClientLeft {
         float: left;
+        border-right: 4px darkgray groove;
     }
 
     .parserClient .parserClientRight {
         float: right;
+        border-left: 4px darkgray groove;
     }
 
     .parserClient .sidebar .quadrant {
         height: 50%;
-        width: 100%;
+        min-height: 365px;
+    }
+
+    .parserClient .sidebar .quadrant:first-child {
+        border-bottom: 4px darkgray groove;
     }
 
 .text-output {
@@ -119,15 +103,14 @@ body {
 }
 
 .parserOutput {
-    color: white;
-    height: 96%;
     width: 100%;
     overflow-y: scroll;
     overflow-x: visible;
-    padding: 5px;
+    padding: 0 5px 0 5px;
     vertical-align: bottom;
     text-align: left;
     z-index: 999;
+    min-height: 730px;
 }
 
     .parserOutput p {
@@ -141,7 +124,6 @@ body {
     width: 100%;
     max-width: inherit;
     font-family: Courier New, Courier, monospace;
-    margin-top: 8px;
     border-top: 1px gray solid;
 }
 
@@ -164,6 +146,10 @@ body {
             height: 32px;
             padding-top: 5px;
         }
+
+a.dropdown-toggle {
+    float: right;
+}
 
 ul.nav li a img {
     width: 28px;
@@ -248,7 +234,6 @@ ul.animated-list {
 
 .dockable {
     color: blue;
-    float: right;
     padding-top: 3px;
     left: 7px;
 }
@@ -257,6 +242,19 @@ ul.animated-list {
     border: black solid 1px;
     top: 20px !important;
 }
+
+.moduleMenuItem {
+    padding: 5px;
+    color: black;
+}
+
+    .moduleMenuItem:disabled {
+        color: dimgrey;
+    }
+
+    .moduleMenuItem span {
+        padding-right: 5px;
+    }
 
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {

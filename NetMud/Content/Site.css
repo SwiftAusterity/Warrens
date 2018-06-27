@@ -6,6 +6,7 @@
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
+    width: 100%;
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 
@@ -24,6 +25,7 @@ select {
 textarea {
     max-width: 750px;
     max-height: 500px;
+    height: 250px;
 }
 
     textarea.logDisplay {
@@ -217,11 +219,9 @@ div.roomAsciiMap {
 }
 
 .helpTip {
-    position: relative;
+    position: absolute;
     top: -0.5em;
     color: blue;
-    float: right;
-    margin-left: -1px;
 }
 
 .contentPreviewFields div:nth-child(even) {
@@ -235,3 +235,27 @@ div.roomAsciiMap {
     margin: -15px 0 -15px 0;
     height: 15px;
 }
+
+.accordion-collapsed {
+    min-height: 0;
+    height: 1px;
+    overflow-y: hidden
+}
+
+.topNavCollapser {
+    width: 2%;
+    margin-left: 48%;
+    height: 10px;
+    background-color: lightgray;
+    position: relative;
+    border-radius: 0 0 15px 15px;
+    cursor: pointer;
+    margin-top: -3px;
+}
+
+    .topNavCollapser span {
+        margin-left: 38%;
+        top: -1px;
+        position: absolute;
+        font-size: x-small;
+    }

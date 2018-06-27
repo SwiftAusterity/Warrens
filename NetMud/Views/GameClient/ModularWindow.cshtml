@@ -1,32 +1,35 @@
 ﻿@model string
-
 @{
     Layout = "~/Views/Shared/_chromelessLayout.cshtml";
 }
-
 <div id="contentArea">
     <a class="dropdown-toggle" data-toggle="dropdown" href="#" style="float: right; padding-right: 10px;"><span class="glyphicon glyphicon-cog dockable" title="Settings"></span></a>
     <ul class="dropdown-menu dropdown-menu-left dockingMenu" role="menu" aria-labelledby="dropdownMenu">
         <li class="dropdown-header" style="color: mediumvioletred" id="quadrantName"></li>
         <li class="divider"></li>
-        <li><a href="#" style="padding: 5px; color: black;" class="quadrantDocker" data-destination-quadrant="1"><span class="glyphicon glyphicon-resize-small" style="padding-right: 5px;"></span>Dock Quadrant 1</a></li>
-        <li><a href="#" style="padding: 5px; color: black;" class="quadrantDocker" data-destination-quadrant="2"><span class="glyphicon glyphicon-resize-small" style="padding-right: 5px;"></span>Dock Quadrant 2</a></li>
-        <li><a href="#" style="padding: 5px; color: black;" class="quadrantDocker" data-destination-quadrant="3"><span class="glyphicon glyphicon-resize-small" style="padding-right: 5px;"></span>Dock Quadrant 3</a></li>
-        <li><a href="#" style="padding: 5px; color: black;" class="quadrantDocker" data-destination-quadrant="4"><span class="glyphicon glyphicon-resize-small" style="padding-right: 5px;"></span>Dock Quadrant 4</a></li>
+        @for (var i = 1; i <= 4; i++)
+        {
+            <li><a href="#" class="quadrantDocker moduleMenuItem" data-destination-quadrant="@i"><span class="glyphicon glyphicon-resize-small"></span>Dock Quadrant @i</a></li>
+        }
         <li class="divider"></li>
         <li>
-            <a href="#" style="padding: 5px; color: black;" class="quadrantLoad" data-origin-quadrant="@Model">
-                <span class="glyphicon glyphicon-cloud-download" style="padding-right: 5px;"></span>Load Module
+            <a href="#" class="quadrantLoad moduleMenuItem" data-origin-quadrant="@Model">
+                <span class="glyphicon glyphicon-cloud-download"></span>Load Module
             </a>
             <input id="loadModuleName" title="Module Name?" />
         </li>
-        <li><a href="#" style="padding: 5px; color: black;" class="quadrantSave"><span class="glyphicon glyphicon-cloud-upload" style="padding-right: 5px;"></span>Save Module</a></li>
+        <li><a href="#" class="quadrantSave moduleMenuItem"><span class="glyphicon glyphicon-cloud-upload"></span>Save Module</a></li>
     </ul>
 </div>
 
-@Styles.Render("~/Content/GameClient.css")
-@Scripts.Render("~/Scripts/ClientHelpers.js")
-@Styles.Render("http://fonts.googleapis.com/css?family=Berkshire+Swash")
+@section styles {
+    @Styles.Render("~/Content/GameClient.css")
+    @Styles.Render("http://fonts.googleapis.com/css?family=Berkshire+Swash")
+}
+
+@section scripts {
+    @Scripts.Render("~/Scripts/ClientHelpers.js")
+}
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -110,4 +113,3 @@
         });
     }
 </script>
-

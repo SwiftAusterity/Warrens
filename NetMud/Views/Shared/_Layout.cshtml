@@ -55,6 +55,9 @@
             </div>
         </div>
     </div>
+    <div class="topNavCollapser">
+        <span class="glyphicon glyphicon-chevron-up"></span>
+    </div>
     <div class="container body-content">
         <h3><p id="statusMessage" name="statusMessage" class="text-success">@ViewBag.StatusMessage</p></h3>
         @RenderBody()
@@ -72,6 +75,12 @@
 
             $('.helpTip').each(function () {
                 HelpTipTutorial($(this), $(this).attr('title'));
+            });
+
+            $('.topNavCollapser').click(function () {
+                $('.navbar-top').toggleClass('accordion-collapsed');
+                $('.topNavCollapser span').toggleClass('glyphicon-chevron-up');
+                $('.topNavCollapser span').toggleClass('glyphicon-chevron-down');
             });
         });
     </script>
