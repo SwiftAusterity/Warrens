@@ -9,7 +9,9 @@
     tableColumns.Add("State", obj => obj.State.ToString());
 }
 
-@Html.Partial("AddContentLink")
+<div>
+    @Html.ActionLink("Add New", "AddUIModule", null, new { @class = "addNew" })
+</div>
 
 @if (Model.Items.Count() > 0)
 {

@@ -39,7 +39,7 @@ namespace NetMud.Cartography
 
             var over = RenderRadiusMap(centerRoom, radius, forAdmin, withPathways, locale, MapRenderMode.Upwards);
             var here = RenderRadiusMap(centerRoom, radius, forAdmin, withPathways, locale, MapRenderMode.Normal);
-            var under = RenderRadiusMap(centerRoom, radius, forAdmin, withPathways, locale, MapRenderMode.Downwards); 
+            var under = RenderRadiusMap(centerRoom, radius, forAdmin, withPathways, locale, MapRenderMode.Downwards);
 
             return new Tuple<string, string, string>(over, here, under);
         }
@@ -60,7 +60,7 @@ namespace NetMud.Cartography
             if (room == null)
             {
                 //Don't show "add room" to non admins, if we're not requesting this for a locale and if the locale has actual rooms
-                if(!forAdmin || locale == null || locale.Rooms().Count() > 0)
+                if (!forAdmin || locale == null || locale.Rooms().Count() > 0)
                     return string.Empty;
 
                 return string.Format("<a href='#' class='addData pathway AdminAddInitialRoom' localeId='{0}' title='New Room'>Add Initial Room</a>", locale.Id);
@@ -278,9 +278,6 @@ namespace NetMud.Cartography
             var returnValue = string.Empty;
             var asciiCharacter = Utilities.TranslateDirectionToAsciiCharacter(directionType);
 
-            if (!forAdmin)
-                return "&nbsp;";
-
             if (path != null)
                 destination = (IRoomData)path.Destination;
 
@@ -292,21 +289,26 @@ namespace NetMud.Cartography
                 destinationId = destination.Id;
             }
 
-            if (path != null)
+            if (forAdmin)
             {
-                returnValue = string.Format("<a href='#' class='editData pathway AdminEditPathway' pathwayId='{0}' fromRoom='{3}' toRoom='{4}' title='Edit - {5} path to {1}' data-id='{0}'>{2}</a>",
-                    path.Id, destinationName, asciiCharacter, originId, destinationId, directionType.ToString());
-            }
-            else
-            {
-                var roomString = string.Format("Add - {0} path and room", directionType.ToString());
+                if (path != null)
+                {
+                    returnValue = string.Format("<a href='#' class='editData pathway AdminEditPathway' pathwayId='{0}' fromRoom='{3}' toRoom='{4}' title='Edit - {5} path to {1}' data-id='{0}'>{2}</a>",
+                        path.Id, destinationName, asciiCharacter, originId, destinationId, directionType.ToString());
+                }
+                else
+                {
+                    var roomString = string.Format("Add - {0} path and room", directionType.ToString());
 
-                if (!string.IsNullOrWhiteSpace(destinationName))
-                    roomString = string.Format("Add {0} path to {1}", directionType.ToString(), destinationName);
+                    if (!string.IsNullOrWhiteSpace(destinationName))
+                        roomString = string.Format("Add {0} path to {1}", directionType.ToString(), destinationName);
 
-                returnValue = string.Format("<a href='#' class='addData pathway AdminAddPathway' pathwayId='-1' fromRoom='{0}' toRoom='{3}' data-direction='{1}' title='{2}'>+</a>",
-                    originId, Utilities.TranslateDirectionToDegrees(directionType).Item1, roomString, destinationId);
+                    returnValue = string.Format("<a href='#' class='addData pathway AdminAddPathway' pathwayId='-1' fromRoom='{0}' toRoom='{3}' data-direction='{1}' title='{2}'>+</a>",
+                        originId, Utilities.TranslateDirectionToDegrees(directionType).Item1, roomString, destinationId);
+                }
             }
+            else if (path != null)
+                return asciiCharacter;
 
             return returnValue;
         }

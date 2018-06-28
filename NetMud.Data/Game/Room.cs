@@ -144,10 +144,6 @@ namespace NetMud.Data.Game
             if (NaturalResources != null)
                 sb.AddRange(NaturalResources.Select(kvp => kvp.Key.RenderResourceCollection(viewer, kvp.Value)));
 
-            //sb.AddRange(GetPathways().SelectMany(path => path.RenderAsContents(viewer)));
-            //sb.AddRange(GetContents<IInanimate>().SelectMany(path => path.RenderAsContents(viewer)));
-            //sb.AddRange(GetContents<IMobile>().Where(player => !player.Equals(viewer)).SelectMany(path => path.RenderAsContents(viewer)));
-
             return sb;
         }
 
@@ -158,11 +154,8 @@ namespace NetMud.Data.Game
         /// <returns>the string</returns>
         public string RenderCenteredMap(int radius, bool visibleOnly)
         {
-            var sb = new StringBuilder();
-
-            //TODO: This
-
-            return sb.ToString();
+            //TODO: fix visibility
+            return Cartography.Rendering.RenderRadiusMap(this, 3);
         }
         #endregion
 
