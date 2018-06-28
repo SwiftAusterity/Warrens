@@ -90,6 +90,12 @@ namespace NetMud.DataStructure.Base.Supporting
         /// </summary>
         IEnumerable<Tuple<IInanimateData, string>> FullAnatomy();
 
+        /// <summary>
+        /// Render this race's body as an ascii.. thing
+        /// </summary>
+        /// <returns>List of strings as rows for rendering</returns>
+        IEnumerable<string> RenderAnatomy(bool forWeb);
+
         //TODO: Poison glands
     }
 }

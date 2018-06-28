@@ -276,16 +276,62 @@ namespace NetMud.Data.LookupData
                 }
             }
 
-            if(Head != null)
+            if (Head != null)
                 anatomy.Add(new Tuple<IInanimateData, string>(Head, "Head"));
 
             if (Torso != null)
                 anatomy.Add(new Tuple<IInanimateData, string>(Torso, "Torso"));
 
-            foreach(var bit in BodyParts)
+            foreach (var bit in BodyParts)
                 anatomy.Add(new Tuple<IInanimateData, string>(bit.Item1, bit.Item3));
 
             return anatomy;
+        }
+
+        /// <summary>
+        /// Render this race's body as an ascii.. thing
+        /// </summary>
+        /// <returns>List of strings as rows for rendering</returns>
+        public IEnumerable<string> RenderAnatomy(bool forWeb)
+        {
+            var stringList = new List<string>();
+
+            if (Head != null)
+                stringList.Add(Head.Model.ModelBackingData.ViewFlattenedModel(forWeb));
+
+            if (Arms.Item1 != null)
+            {
+                var armCount = 0;
+                while(armCount < Arms.Item2)
+                {
+                    armCount++;
+                    stringList.Add(Arms.Item1.Model.ModelBackingData.ViewFlattenedModel(forWeb));
+                }
+            }
+
+            if (Head != null)
+                stringList.Add(Torso.Model.ModelBackingData.ViewFlattenedModel(forWeb));
+
+            if (Legs.Item1 != null)
+            {
+                var legCount = 0;
+                while (legCount < Legs.Item2)
+                {
+                    legCount++;
+                    stringList.Add(Legs.Item1.Model.ModelBackingData.ViewFlattenedModel(forWeb));
+                }
+            }
+
+            foreach (var bit in BodyParts)
+            {
+                if (bit.Item1 == null)
+                    continue;
+
+                for(var i = 0; i < bit.Item2; i++)
+                    stringList.Add(bit.Item1.Model.ModelBackingData.ViewFlattenedModel(forWeb));
+            }
+
+            return stringList;
         }
 
         /// <summary>
