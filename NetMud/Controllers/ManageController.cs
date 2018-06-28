@@ -186,7 +186,7 @@ namespace NetMud.Controllers
         {
             var user = UserManager.FindById(User.Identity.GetUserId());
 
-            var vModel = new ManageUIModulesViewModel(BackingDataCache.GetAll<IUIModule>(true).Where(uimod => uimod.CreatorHandle.Equals(user.GameAccount.GlobalIdentityHandle)))
+            var vModel = new ManageUIModulesViewModel(BackingDataCache.GetAll<IUIModule>().Where(uimod => uimod.CreatorHandle.Equals(user.GameAccount.GlobalIdentityHandle)))
             {
                 authedUser = user,
                 CurrentPageNumber = CurrentPageNumber,

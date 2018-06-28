@@ -257,6 +257,11 @@ ul.animated-list {
         padding-right: 5px;
     }
 
+.moduleNameFinder {
+    color: black;
+    padding: 1px;
+}
+
 .contentContainer h4 {
     font-size: 14px;
     color: blueviolet;
