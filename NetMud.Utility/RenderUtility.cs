@@ -194,9 +194,10 @@ namespace NetMud.Utility
 
                 var attributes = memInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
 
+                //Is there a description? Otherwise to-string it.
                 return attributes.Length > 0
                         ? ((DescriptionAttribute)attributes[0]).Description
-                        : string.Empty;
+                        : enumVal.ToString();
             }
             catch
             {

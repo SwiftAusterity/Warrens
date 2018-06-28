@@ -1,4 +1,6 @@
-﻿using System;
+﻿using NetMud.Data.Serialization;
+using Newtonsoft.Json;
+using System;
 
 namespace NetMud.Websock.OutputFormatting
 {
@@ -6,7 +8,10 @@ namespace NetMud.Websock.OutputFormatting
     public class AnatomicalPart
     {
         public string Name { get; set; }
+
+        [JsonConverter(typeof(DescriptiveEnumConverter<OverallStatus>))]
         public OverallStatus Overall { get; set; }
+
         public string[] Wounds { get; set; }
     }
 }

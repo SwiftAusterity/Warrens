@@ -86,6 +86,7 @@
     <Compile Include="LookupData\LookupDataPartial.cs" />
     <Compile Include="Game\Zone.cs" />
     <Compile Include="Serialization\CacheKeyDictionaryConverter.cs" />
+    <Compile Include="Serialization\DescriptiveEnumConverter.cs" />
     <Compile Include="System\Account.cs" />
     <Compile Include="System\Affect.cs" />
     <Compile Include="Serialization\ConcreteTypeConverter.cs" />
