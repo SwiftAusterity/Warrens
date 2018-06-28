@@ -1,4 +1,5 @@
 ﻿using NetMud.DataStructure.Base.System;
+using System;
 
 namespace NetMud.DataStructure.Base.PlayerConfiguration
 {
@@ -25,6 +26,6 @@ namespace NetMud.DataStructure.Base.PlayerConfiguration
         /// <summary>
         /// Did a player make this or is this staff made?
         /// </summary>
-        bool PlayerMade { get; set; }
+        int SystemDefault { get; set; }
     }
 }

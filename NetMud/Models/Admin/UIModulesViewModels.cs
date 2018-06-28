@@ -61,6 +61,10 @@ namespace NetMud.Models.Admin
         [DataType(DataType.Text)]
         public int Width { get; set; }
 
+        [Display(Name = "System Default", Description = "If newly registered accounts get this as a defaulted UI Module or not (and which quadrant it goes in).")]
+        [DataType(DataType.Text)]
+        public int SystemDefault { get; set; }
+
         public IUIModule DataObject { get; set; }
     }
 }

@@ -6,7 +6,9 @@ using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.PlayerConfiguration;
 using NetMud.DataStructure.Behaviors.System;
+using NetMud.DataStructure.SupportingClasses;
 using NetMud.Models.Admin;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
@@ -120,13 +122,23 @@ namespace NetMud.Controllers.GameAdmin
                 BodyHtml = vModel.BodyHtml,
                 Height = vModel.Height,
                 Width = vModel.Width,
-                HelpText = vModel.HelpText
+                HelpText = vModel.HelpText,
+                SystemDefault = vModel.SystemDefault
             };
+
+            var uiModules = BackingDataCache.GetAll<IUIModule>().Where(uim => vModel.SystemDefault > 0 && uim.SystemDefault == vModel.SystemDefault);
 
             if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
                 message = "Error; Creation failed.";
             else
             {
+                if (uiModules.Count() > 0)
+                {
+                    var revertModule = uiModules.First();
+                    revertModule.SystemDefault = 0;
+                    revertModule.Save(authedUser.GameAccount, StaffRank.Admin);
+                }
+
                 LoggingUtility.LogAdminCommandUsage("*WEB* - AddUIModule[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 message = "Creation Successful.";
             }
@@ -157,6 +169,7 @@ namespace NetMud.Controllers.GameAdmin
             vModel.Height = obj.Height;
             vModel.Width = obj.Width;
             vModel.HelpText = obj.HelpText;
+            vModel.SystemDefault = obj.SystemDefault;
 
             return View("~/Views/GameAdmin/UIModules/Edit.cshtml", vModel);
         }
@@ -175,14 +188,24 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = message });
             }
 
+            var uiModules = BackingDataCache.GetAll<IUIModule>().Where(uim => vModel.SystemDefault > 0 && uim.SystemDefault == vModel.SystemDefault);
+
             obj.Name = vModel.Name;
             obj.BodyHtml = vModel.BodyHtml;
             obj.Height = vModel.Height;
             obj.Width = vModel.Width;
             obj.HelpText = vModel.HelpText;
+            obj.SystemDefault = vModel.SystemDefault;
 
             if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {
+                if (uiModules.Count() > 0)
+                {
+                    var revertModule = uiModules.First();
+                    revertModule.SystemDefault = 0;
+                    revertModule.Save(authedUser.GameAccount, StaffRank.Admin);
+                }
+
                 LoggingUtility.LogAdminCommandUsage("*WEB* - EditUIModule[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 message = "Edit Successful.";
             }

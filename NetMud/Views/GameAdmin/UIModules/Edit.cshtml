@@ -9,6 +9,13 @@
         <input type="hidden" name="id" id="id" value="@Model.DataObject.Id" />
         <div class="form-group row">
             @Html.EditorFor(e => e.Name)
+            @Html.DescriptiveLabelFor(e => e.SystemDefault, new { @class = "col-sm-1 col-form-label" })
+            <div class="col-sm-3">
+                @Html.DropDownList("SystemDefault", new SelectList(new int[] { 1, 2, 3, 4 }, Model.SystemDefault)
+                                        , "Select One", htmlAttributes: new { id = "SystemDefault", @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group row">
             @Html.EditorFor(e => e.Height)
             @Html.EditorFor(e => e.Width)
         </div>

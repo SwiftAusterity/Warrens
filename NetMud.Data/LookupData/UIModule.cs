@@ -38,7 +38,12 @@ namespace NetMud.Data.LookupData
         /// <summary>
         /// Did a player make this or is this staff made?
         /// </summary>
-        public bool PlayerMade { get; set; }
+        public int SystemDefault { get; set; }
+
+        public UIModule()
+        {
+            SystemDefault = -1;
+        }
 
         /// <summary>
         /// Get the significant details of what needs approval
@@ -50,6 +55,7 @@ namespace NetMud.Data.LookupData
 
             returnList.Add("Height", Height.ToString());
             returnList.Add("Width", Width.ToString());
+            returnList.Add("SystemDefault", SystemDefault.ToString());
 
             returnList.Add("BodyHtml", BodyHtml);
 

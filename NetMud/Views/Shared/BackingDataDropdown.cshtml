@@ -1,6 +1,6 @@
 ﻿@model NetMud.Models.Admin.ReferenceDataDropdownModel
 
-<label class="col-sm-1 col-form-label" for="@Model.ControlName">@Model.Label</label>
+@Html.DescriptiveLabelFor(m => m.ControlName, new { @class = "col-sm-1 col-form-label" })
 <div class="col-sm-3">
     @Html.DropDownList(Model.ControlName, new SelectList(Model.ValidList, "Id", "Name", Model.SelectedItemId)
                             , "Select One", htmlAttributes: new { id = Model.ControlName, @class = "form-control" })
