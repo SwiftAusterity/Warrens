@@ -35,9 +35,13 @@
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -47,7 +51,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="InternalChannel.cs" />
-    <Compile Include="Lexicon\Dictata.cs" />
     <Compile Include="Lexicon\LexicalProcessor.cs" />
     <Compile Include="Lexicon\Thesaurus.cs" />
     <Compile Include="Messaging\Lexica.cs" />

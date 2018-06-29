@@ -9,8 +9,8 @@ namespace NetMud
         public static void PreloadSupportingEntities()
         {
             //Load the "referential" data first
+            ConfigData.LoadEverythingToCache();
             BackingData.LoadEverythingToCache();
-            //BackingData.LoadEverythingToCacheFromDatabase();
 
             var hotBack = new HotBackup();
 

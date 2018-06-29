@@ -18,6 +18,13 @@ namespace NetMud.Data.ConfigData
     public abstract class ConfigData : SerializableDataPartial, IConfigData
     {
         /// <summary>
+        /// The unique key used to identify, store and retrieve data
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public virtual string UniqueKey => Name;
+
+        /// <summary>
         /// The type of data this is (for storage)
         /// </summary>
         [ScriptIgnore]
@@ -35,18 +42,12 @@ namespace NetMud.Data.ConfigData
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
-        public virtual ContentApprovalType ApprovalType { get { return ContentApprovalType.Admin; } } //Config data defaults to admin
+        public virtual ContentApprovalType ApprovalType => ContentApprovalType.Admin; //Config data defaults to admin
 
         /// <summary>
         /// Is this able to be seen and used for live purposes
         /// </summary>
-        public bool SuitableForUse
-        {
-            get
-            {
-                return State == ApprovalState.Approved || ApprovalType == ContentApprovalType.None || ApprovalType == ContentApprovalType.ReviewOnly;
-            }
-        }
+        public bool SuitableForUse => State == ApprovalState.Approved || ApprovalType == ContentApprovalType.None || ApprovalType == ContentApprovalType.ReviewOnly;
 
         /// <summary>
         /// Has this been approved?

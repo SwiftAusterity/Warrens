@@ -8,6 +8,11 @@ namespace NetMud.DataStructure.Base.System
     public interface IConfigData : IData, INeedApproval
     {
         /// <summary>
+        /// The unique key used to identify, store and retrieve data
+        /// </summary>
+        string UniqueKey { get; }
+
+        /// <summary>
         /// The unique name of this configuration data
         /// </summary>
         string Name { get; set; }

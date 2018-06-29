@@ -1,4 +1,5 @@
 ﻿using NetMud.DataAccess;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
 using System;
@@ -46,6 +47,15 @@ namespace NetMud.Communication.Messaging
             Role = role;
 
             Modifiers = new HashSet<ILexica>();
+        }
+
+        /// <summary>
+        /// Get the dictata from this lexica
+        /// </summary>
+        /// <returns>A dictata</returns>
+        public IDictata GetDictata()
+        {
+            return ConfigDataCache.Get<IDictata>(new ConfigDataCacheKey(typeof(IDictata), string.Format("{0}_{1}", Type.ToString(), Phrase)));
         }
 
         /// <summary>

@@ -111,6 +111,9 @@ namespace NetMud.DataAccess.FileSystem
                 case ConfigDataType.GameWorld:
                     dirName += "WorldConfig/" + CurrentDirectoryName;
                     break;
+                case ConfigDataType.Dictionary:
+                    dirName += "Dictionary/" + CurrentDirectoryName;
+                    break;
                 case ConfigDataType.Player:
                     dirName += "Players/" + entity.Name + "/" + CurrentDirectoryName;
                     break;
@@ -118,6 +121,13 @@ namespace NetMud.DataAccess.FileSystem
 
 
             return dirName;
+        }
+
+        public string GetCurrentDirectoryForType(Type entityType)
+        {
+            var entityThing = Activator.CreateInstance(entityType) as IConfigData;
+
+            return GetCurrentDirectoryForEntity(entityThing);
         }
 
         private string GetArchiveDirectoryForEntity(IConfigData entity)
@@ -128,6 +138,9 @@ namespace NetMud.DataAccess.FileSystem
             {
                 case ConfigDataType.GameWorld:
                     dirName += "WorldConfig/" + DatedBackupDirectory;
+                    break;
+                case ConfigDataType.Dictionary:
+                    dirName += "Dictionary/" + DatedBackupDirectory;
                     break;
                 case ConfigDataType.Player:
                     dirName += BaseDirectory + "Players/" + entity.Name + "/" + DatedBackupDirectory;

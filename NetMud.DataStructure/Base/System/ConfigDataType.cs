@@ -3,6 +3,7 @@
     public enum ConfigDataType
     {
         GameWorld,
-        Player
+        Player,
+        Dictionary
     }
 }

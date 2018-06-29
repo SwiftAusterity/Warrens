@@ -35,5 +35,11 @@ namespace NetMud.DataStructure.SupportingClasses
         /// <param name="conjunction">the joining text</param>
         /// <returns>Whether or not it succeeded</returns>
         bool TryModify(ILexica modifier);
+
+        /// <summary>
+        /// Get the dictata from this lexica
+        /// </summary>
+        /// <returns>A dictata</returns>
+        IDictata GetDictata();
     }
 }

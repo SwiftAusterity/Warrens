@@ -87,9 +87,9 @@ namespace NetMud.DataAccess.Cache
         /// <typeparam name="T">the type of the entity</typeparam>
         /// <param name="id">the id</param>
         /// <returns>the entity requested</returns>
-        public static T Get<T>(string name) where T : IConfigData
+        public static T Get<T>(string uniqueKey) where T : IConfigData
         {
-            var key = new ConfigDataCacheKey(typeof(T), name);
+            var key = new ConfigDataCacheKey(typeof(T), uniqueKey);
 
             return Get<T>(key);
         }

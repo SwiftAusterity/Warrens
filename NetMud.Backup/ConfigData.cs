@@ -1,4 +1,5 @@
-﻿using NetMud.Data.EntityBackingData;
+﻿using NetMud.Data.ConfigData;
+using NetMud.Data.EntityBackingData;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.System;
@@ -13,7 +14,7 @@ namespace NetMud.Backup
     /// <summary>
     /// Responsible for retrieving backingdata and putting it into the cache
     /// </summary>
-    public static class BackingData
+    public static class ConfigData
     {
         /// <summary>
         /// Writes everything in the cache back to the file system
@@ -46,16 +47,12 @@ namespace NetMud.Backup
         /// <returns>full or partial success</returns>
         public static bool LoadEverythingToCache()
         {
-            var implimentedTypes = typeof(EntityBackingDataPartial).Assembly.GetTypes().Where(ty => ty.GetInterfaces().Contains(typeof(IKeyedData))
+            var implimentedTypes = typeof(Data.ConfigData.ConfigData).Assembly.GetTypes().Where(ty => ty.GetInterfaces().Contains(typeof(IConfigData))
                                                                                 && ty.IsClass
                                                                                 && !ty.IsAbstract
                                                                                 && !ty.GetCustomAttributes<IgnoreAutomatedBackupAttribute>().Any());
 
-            foreach (var t in implimentedTypes.OrderByDescending(type => type == typeof(ZoneData) ? 5 :
-                                                                            type == typeof(LocaleData) ? 4 :
-                                                                            type == typeof(RoomData) ? 3 :
-                                                                            type == typeof(PathwayData) ? 2 : 
-                                                                            type.GetInterfaces().Contains(typeof(ILookupData)) ? 1 : 0))
+            foreach (var t in implimentedTypes.OrderByDescending(type => type == typeof(Dictata) ? 5 : 0))
                 LoadAllToCache(t);
 
             return true;
@@ -71,8 +68,8 @@ namespace NetMud.Backup
             if (!objectType.GetInterfaces().Contains(typeof(IKeyedData)))
                 return false;
 
-            var fileAccessor = new DataAccess.FileSystem.BackingData();
-            var typeDirectory = fileAccessor.BaseDirectory + fileAccessor.CurrentDirectoryName + objectType.Name + "/";
+            var fileAccessor = new DataAccess.FileSystem.ConfigData();
+            var typeDirectory = fileAccessor.GetCurrentDirectoryForType(objectType);
 
             if (!fileAccessor.VerifyDirectory(typeDirectory, false))
             {
@@ -86,7 +83,7 @@ namespace NetMud.Backup
             {
                 try
                 {
-                    BackingDataCache.Add(fileAccessor.ReadEntity(file, objectType));
+                    ConfigDataCache.Add(fileAccessor.ReadEntity(file, objectType));
                 }
                 catch (Exception ex)
                 {

@@ -13,10 +13,7 @@ namespace NetMud.DataAccess.Cache
     {
         [JsonIgnore]
         [ScriptIgnore]
-        public CacheType CacheType
-        {
-            get { return CacheType.ConfigData; }
-        }
+        public CacheType CacheType => CacheType.ConfigData;
 
         /// <summary>
         /// System type of the object being cached
@@ -47,7 +44,7 @@ namespace NetMud.DataAccess.Cache
         public ConfigDataCacheKey(IConfigData data)
         {
             ObjectType = data.GetType();
-            BirthMark  = string.Format("{0}_{1}", data.Type, data.Name);
+            BirthMark  = string.Format("{0}_{1}", data.Type, data.UniqueKey);
         }
 
         /// <summary>
@@ -56,10 +53,10 @@ namespace NetMud.DataAccess.Cache
         /// <param name="objectType">System type of the entity being cached</param>
         /// <param name="marker">Unique signature for a live entity</param>
         [JsonConstructor]
-        public ConfigDataCacheKey(Type objectType, string name, ConfigDataType type)
+        public ConfigDataCacheKey(Type objectType, string uniqueKey, ConfigDataType type)
         {
             ObjectType = objectType;
-            BirthMark = string.Format("{0}_{1}", type, name); ;
+            BirthMark = string.Format("{0}_{1}", type, uniqueKey); ;
         }
 
         /// <summary>

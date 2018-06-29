@@ -4,6 +4,7 @@ using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.PlayerConfiguration;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.SupportingClasses;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -31,6 +32,8 @@ namespace NetMud.Models.Admin
             Fauna = Enumerable.Empty<IFauna>();
             Minerals = Enumerable.Empty<IMineral>();
             UIModules = Enumerable.Empty<IUIModule>();
+
+            DictionaryWords = Enumerable.Empty<IDictata>();
 
             WebsocketServers = Enumerable.Empty<Websock.Server>();
 
@@ -60,6 +63,9 @@ namespace NetMud.Models.Admin
         public IEnumerable<IFauna> Fauna { get; set; }
         public IEnumerable<IMineral> Minerals { get; set; }
         public IEnumerable<IUIModule> UIModules { get; set; }
+
+        //Config Data
+        public IEnumerable<IDictata> DictionaryWords { get; set; }
 
         //Running Data
         public Dictionary<string, CancellationTokenSource> LiveTaskTokens { get; set; }

@@ -1,0 +1,16 @@
+﻿@using NetMud.DataStructure.SupportingClasses
+
+@model NetMud.Models.Admin.AddEditDictionaryViewModel
+
+<h4>Lexica</h4>
+<div class="form-group row">
+    @Html.EditorFor(e => e.Name, new { columnCount = 3 })
+</div>
+<div class="form-group row">
+    @Html.DescriptiveLabelFor(m => m.Type, new { @class = "col-sm-1 col-form-label" })
+    <div class="col-md-3">
+        @Html.DropDownList("Type", Enum.GetNames(typeof(LexicalType)).Select(rl =>
+                                                        new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(LexicalType), rl)).ToString() })
+                                                        , "Select One", htmlAttributes: new { id = "Type", @class = "form-control" })
+    </div>
+</div>

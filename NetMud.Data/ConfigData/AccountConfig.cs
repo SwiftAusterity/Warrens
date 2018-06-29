@@ -3,6 +3,7 @@ using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.PlayerConfiguration;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.System;
+using NetMud.DataStructure.SupportingClasses;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ namespace NetMud.Data.ConfigData
     /// The account configuration for a player
     /// </summary>
     [Serializable]
+    [IgnoreAutomatedBackup]
     public class AccountConfig : ConfigData, IAccountConfig
     {
         /// <summary>
@@ -23,14 +25,14 @@ namespace NetMud.Data.ConfigData
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
-        public override ContentApprovalType ApprovalType { get { return ContentApprovalType.None; } }
+        public override ContentApprovalType ApprovalType => ContentApprovalType.None; 
 
         /// <summary>
         /// The type of data this is (for storage)
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
-        public override ConfigDataType Type { get { return ConfigDataType.Player; } }
+        public override ConfigDataType Type => ConfigDataType.Player; 
 
         [ScriptIgnore]
         [JsonIgnore]
