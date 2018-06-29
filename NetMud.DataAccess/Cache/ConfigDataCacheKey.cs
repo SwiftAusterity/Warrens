@@ -52,7 +52,6 @@ namespace NetMud.DataAccess.Cache
         /// </summary>
         /// <param name="objectType">System type of the entity being cached</param>
         /// <param name="marker">Unique signature for a live entity</param>
-        [JsonConstructor]
         public ConfigDataCacheKey(Type objectType, string uniqueKey, ConfigDataType type)
         {
             ObjectType = objectType;

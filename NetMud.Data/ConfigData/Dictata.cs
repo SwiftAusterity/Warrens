@@ -38,7 +38,7 @@ namespace NetMud.Data.ConfigData
         public LexicalType WordType { get; set; }
 
         [JsonProperty("Synonyms")]
-        private IEnumerable<ConfigDataCacheKey> _synonyms { get; set; }
+        private HashSet<ConfigDataCacheKey> _synonyms { get; set; }
 
         /// <summary>
         /// Things this is the same as mostly
@@ -50,7 +50,7 @@ namespace NetMud.Data.ConfigData
             get
             {
                 if (_synonyms == null)
-                    _synonyms = Enumerable.Empty<ConfigDataCacheKey>();
+                    _synonyms = new HashSet<ConfigDataCacheKey>();
 
                 return _synonyms.Select(k => ConfigDataCache.Get<IDictata>(k));
             }
@@ -59,12 +59,12 @@ namespace NetMud.Data.ConfigData
                 if (value == null)
                     return;
 
-                _synonyms = value.Select(k => new ConfigDataCacheKey(k));
+                _synonyms = new HashSet<ConfigDataCacheKey>(value.Select(k => new ConfigDataCacheKey(k)));
             }
         }
 
         [JsonProperty("Antonyms")]
-        private IEnumerable<ConfigDataCacheKey> _antonyms { get; set; }
+        private HashSet<ConfigDataCacheKey> _antonyms { get; set; }
 
         /// <summary>
         /// Things this is specifically opposite of mostly
@@ -76,7 +76,7 @@ namespace NetMud.Data.ConfigData
             get
             {
                 if (_antonyms == null)
-                    _antonyms = Enumerable.Empty<ConfigDataCacheKey>();
+                    _antonyms = new HashSet<ConfigDataCacheKey>();
 
                 return _antonyms.Select(k => ConfigDataCache.Get<IDictata>(k));
             }
@@ -85,12 +85,13 @@ namespace NetMud.Data.ConfigData
                 if (value == null)
                     return;
 
-                _antonyms = value.Select(k => new ConfigDataCacheKey(k));
+                _antonyms = new HashSet<ConfigDataCacheKey>(value.Select(k => new ConfigDataCacheKey(k)));
             }
         }
 
         public override ContentApprovalType ApprovalType => ContentApprovalType.None;
 
+        [JsonConstructor]
         public Dictata()
         {
             Antonyms = Enumerable.Empty<IDictata>();

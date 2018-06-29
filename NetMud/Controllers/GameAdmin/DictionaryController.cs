@@ -126,7 +126,7 @@ namespace NetMud.Controllers.GameAdmin
                 authedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
-            var obj = ConfigDataCache.Get<IDictata>(id);
+            var obj = ConfigDataCache.Get<IDictata>(new ConfigDataCacheKey(typeof(IDictata), id, ConfigDataType.Dictionary));
 
             if (obj == null)
             {
@@ -138,7 +138,7 @@ namespace NetMud.Controllers.GameAdmin
             vModel.Name = obj.Name;
             vModel.Type = (short)obj.WordType;
 
-            return View("~/Views/GameAdmin/Constants/Edit.cshtml", vModel);
+            return View("~/Views/GameAdmin/Dictionary/Edit.cshtml", vModel);
         }
 
         [HttpPost]

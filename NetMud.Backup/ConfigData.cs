@@ -65,7 +65,7 @@ namespace NetMud.Backup
         /// <returns>full or partial success</returns>
         public static bool LoadAllToCache(Type objectType)
         {
-            if (!objectType.GetInterfaces().Contains(typeof(IKeyedData)))
+            if (!objectType.GetInterfaces().Contains(typeof(IConfigData)))
                 return false;
 
             var fileAccessor = new DataAccess.FileSystem.ConfigData();
@@ -83,7 +83,7 @@ namespace NetMud.Backup
             {
                 try
                 {
-                    ConfigDataCache.Add(fileAccessor.ReadEntity(file, objectType));
+                     ConfigDataCache.Add(fileAccessor.ReadEntity(file, objectType));
                 }
                 catch (Exception ex)
                 {

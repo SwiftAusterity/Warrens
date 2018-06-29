@@ -177,7 +177,7 @@ namespace NetMud.DataAccess.FileSystem
         /// <returns>the filename</returns>
         public string GetEntityFilename(IConfigData entity)
         {
-            return string.Format("{0}.{1}", entity.Name, entity.GetType().Name);
+            return string.Format("{0}.{1}", entity.UniqueKey, entity.GetType().Name);
         }
     }
 }

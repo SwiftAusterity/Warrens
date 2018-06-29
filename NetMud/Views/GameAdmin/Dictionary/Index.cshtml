@@ -2,10 +2,9 @@
 @{
     var linkText = Html.ActionLink("99999999", "Edit", new { id = 99999999 }).ToString();
     var tableColumns = new Dictionary<string, Func<dynamic, string>>();
-    tableColumns.Add("ID", obj => linkText.Replace("99999999", obj.Id.ToString()));
+    tableColumns.Add("Unique Key", obj => linkText.Replace("99999999", obj.UniqueKey));
     tableColumns.Add("Phrase", obj => obj.Name);
     tableColumns.Add("Type", obj => obj.WordType.ToString());
-    tableColumns.Add("State", obj => obj.State.ToString());
 }
 
 @Html.Partial("AddContentLink")
@@ -17,7 +16,7 @@
     using (Html.BeginForm("Remove", "Dictionary"))
     {
         @Html.AntiForgeryToken()
-        @Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Name = "Dictionary", Columns = tableColumns, Values = Model.CurrentPageOfItems.OrderBy(obj => obj.Id) })
+        @Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Name = "Dictionary", Columns = tableColumns, Values = Model.CurrentPageOfItems.OrderBy(obj => obj.UniqueKey), IncludeUnapprove = false, IncludeDelete = false })
     }
 }
 
