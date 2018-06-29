@@ -8,7 +8,7 @@
         @Html.AntiForgeryToken()
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <h4>Lexica</h4>
+        <h3>Lexica</h3>
         <div class="form-group row">
             @Html.EditorFor(e => e.Name, new { columnCount = 3, disabled = true })
             @Html.DescriptiveLabelFor(m => m.Type, new { @class = "col-sm-1 col-form-label" })
@@ -18,10 +18,89 @@
                                                                 , "Select One", htmlAttributes: new { id = "Type", @class = "form-control", disabled = true })
             </div>
         </div>
+
+        <h4>Synonyms</h4>
+        <div class="form-group row">
+            @Html.HiddenFor(m => m.Synonyms)
+            <div class="col-md-2">
+                <input type="text" id="addSynonyms" /><span class="glyphicon glyphicon-plus-sign addWord" style="" data-item-source="Synonyms"></span>
+            </div>
+            <div class="col-md-10" id="SynonymsContainer" style="margin-top: 10px;">
+                @foreach (var synonym in Model.DataObject.Synonyms)
+                {
+                    <span class="touchWord" data-item-source="Synonyms" data-item-value="@synonym.Name">@synonym.Name</span>
+                }
+            </div>
+        </div>
+
+        <h4>Antonyms</h4>
+        <div class="form-group row">
+            @Html.HiddenFor(m => m.Antonyms)
+            <div class="col-md-2">
+                <input type="text" id="addAntonyms" /><span class="glyphicon glyphicon-plus-sign addWord" style="" data-item-source="Antonyms"></span>
+            </div>
+            <div class="col-md-10" id="AntonymsContainer" style="margin-top: 10px;">
+                @foreach (var antonym in Model.DataObject.Antonyms)
+                {
+                    <span class="touchWord" data-item-source="Antonyms" data-item-value="@antonym.Name">@antonym.Name</span>
+                }
+            </div>
+        </div>
+
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Dictionary", IncludeCancel = true })
     }
 </section>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.touchWord').click(function () {
+                $this = $(this);
+                var sourceName = $this.attr('data-item-source');
+                var word = $this.attr('data-item-value');
+
+                var $source = $('#' + sourceName);
+                var sourceValue = $source.val();
+
+                $this.detatch();
+
+                $source.val(sourceValue.replace('||' + word + '||', ''));
+            });
+
+            $('.addWord').click(function () {
+                $this = $(this);
+                var sourceName = $this.attr('data-item-source');
+                var word = $('#add' + sourceName).val();
+
+                var $source = $('#' + sourceName);
+                var sourceValue = $source.val();
+
+                if (word !== '' && sourceValue.indexOf('||' + word + '||') === -1) {
+                    $('#add' + sourceName).val('');
+                    sourceValue = sourceValue + '||' + word + '||';
+
+                    $source.val(sourceValue);
+
+                    var $newWord = $('<span class="touchWord" data-item-source="' + sourceName + '" data-item-value="' + word + '">' + word + '</span>');
+
+                    $newWord.appendTo('#' + sourceName + 'Container');
+
+                    $newWord.click(function () {
+                        $this = $(this);
+                        var sourceName = $this.attr('data-item-source');
+                        var word = $this.attr('data-item-value');
+
+                        var $source = $('#' + sourceName);
+                        var sourceValue = $source.val();
+
+                        $this.detatch();
+
+                        $source.val(sourceValue.replace('||' + word + '||', ''));
+                    });
+                }
+            });
+        });
+    </script>
 }

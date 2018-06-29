@@ -2,14 +2,14 @@
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
 using NetMud.Data.ConfigData;
-using NetMud.Data.System;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.Behaviors.System;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Models.Admin;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
@@ -148,7 +148,7 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = ConfigDataCache.Get<IDictata>(id);
+            var obj = ConfigDataCache.Get<IDictata>(new ConfigDataCacheKey(typeof(IDictata), id, ConfigDataType.Dictionary));
             if (obj == null)
             {
                 message = "That does not exist";
@@ -157,6 +157,66 @@ namespace NetMud.Controllers.GameAdmin
 
             obj.Name = vModel.Name;
             obj.WordType = (LexicalType)vModel.Type;
+
+            var synonyms = vModel.Synonyms.Split(new string[] { "||" }, StringSplitOptions.RemoveEmptyEntries);
+            var newSynonyms = new List<IDictata>();
+            foreach (var synonym in synonyms)
+            {
+                var potentialDictata = new Dictata() { Name = synonym, WordType = obj.WordType };
+                var dictata = ConfigDataCache.Get<IDictata>(new ConfigDataCacheKey(potentialDictata));
+
+                if (dictata == null && potentialDictata.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+                {
+                    dictata = potentialDictata;
+                }
+
+                if (dictata != null)
+                {
+                    newSynonyms.Add(dictata);
+
+                    if (!dictata.Synonyms.Any(dict => dict.Equals(obj)))
+                    {
+                        var newDictSyns = new List<IDictata>(dictata.Synonyms)
+                        {
+                            obj
+                        };
+
+                        dictata.Synonyms = newDictSyns;
+                        dictata.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
+                    }
+                }
+            }
+            obj.Synonyms = newSynonyms;
+
+            var antonyms = vModel.Synonyms.Split(new string[] { "||" }, StringSplitOptions.RemoveEmptyEntries);
+            var newAntonyms = new List<IDictata>();
+            foreach (var antonym in antonyms)
+            {
+                var potentialDictata = new Dictata() { Name = antonym, WordType = obj.WordType };
+                var dictata = ConfigDataCache.Get<IDictata>(new ConfigDataCacheKey(potentialDictata));
+
+                if (dictata == null && potentialDictata.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+                {
+                    dictata = potentialDictata;
+                }
+
+                if (dictata != null)
+                {
+                    newAntonyms.Add(dictata);
+
+                    if(!dictata.Antonyms.Any(dict => dict.Equals(obj)))
+                    {
+                        var newDictAnts = new List<IDictata>(dictata.Antonyms)
+                        {
+                            obj
+                        };
+
+                        dictata.Antonyms = newDictAnts;
+                        dictata.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
+                    }
+                }
+            }
+            obj.Antonyms = newAntonyms;
 
             if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {

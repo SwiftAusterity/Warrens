@@ -259,3 +259,17 @@ div.roomAsciiMap {
         position: absolute;
         font-size: x-small;
     }
+
+.touchWord {
+    border: 1px dotted red;
+    font-size: small;
+    padding: 1px;
+    cursor: pointer;
+    margin: 3px;
+}
+
+.addWord {
+    color: green;
+    cursor: pointer;
+    padding-left: 5px;
+}
