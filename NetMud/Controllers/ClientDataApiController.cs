@@ -174,7 +174,8 @@ namespace NetMud.Controllers
         }
 
         [HttpGet]
-        public JsonResult<string[]> GetUIModuleNames()
+        [Route("api/ClientDataApi/GetUIModuleNames", Name = "ClientDataAPI_GetUIModuleNames")]
+        public JsonResult<string[]> GetUIModuleNames(string term)
         {
             var user = UserManager.FindById(User.Identity.GetUserId());
 
@@ -185,7 +186,7 @@ namespace NetMud.Controllers
                 return Json(new string[0]);
             }
 
-            var modules = BackingDataCache.GetAll<IUIModule>(true);
+            var modules = BackingDataCache.GetAll<IUIModule>(true).Where(uim => uim.Name.Contains(term));
 
             return Json(modules.Select(mod => mod.Name).ToArray());
         }

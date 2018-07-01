@@ -1,6 +1,6 @@
 ﻿using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.SupportingClasses;
+using NetMud.DataStructure.Linguistic;
 using NetMud.Utility;
 using System;
 using System.Collections.Generic;

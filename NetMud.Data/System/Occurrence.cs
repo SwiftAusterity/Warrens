@@ -1,4 +1,5 @@
-﻿using NetMud.DataStructure.SupportingClasses;
+﻿using NetMud.DataStructure.Linguistic;
+using NetMud.DataStructure.SupportingClasses;
 using System;
 
 namespace NetMud.Data.System
@@ -15,7 +16,6 @@ namespace NetMud.Data.System
         /// The perceptive strength (higher = easier to see and greater distance noticed)
         /// </summary>
         public int Strength { get; set; }
-
 
         /// <summary>
         /// The type of sense used to detect this

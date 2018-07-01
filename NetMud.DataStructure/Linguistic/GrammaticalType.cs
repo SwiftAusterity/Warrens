@@ -1,4 +1,4 @@
-﻿namespace NetMud.DataStructure.SupportingClasses
+﻿namespace NetMud.DataStructure.Linguistic
 {
     /// <summary>
     /// The type of grammatical parts of a sentence

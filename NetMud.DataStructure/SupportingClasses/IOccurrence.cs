@@ -1,4 +1,6 @@
-﻿namespace NetMud.DataStructure.SupportingClasses
+﻿using NetMud.DataStructure.Linguistic;
+
+namespace NetMud.DataStructure.SupportingClasses
 {
     /// <summary>
     /// Wrapper for pairing perceptive strength with lexica eventing

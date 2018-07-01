@@ -5,7 +5,7 @@ using NetMud.Data.ConfigData;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.SupportingClasses;
+using NetMud.DataStructure.Linguistic;
 using NetMud.Models.Admin;
 using System;
 using System.Collections.Generic;
@@ -103,7 +103,11 @@ namespace NetMud.Controllers.GameAdmin
             var newObj = new Dictata
             {
                 Name = vModel.Name,
-                WordType = (LexicalType)vModel.Type
+                WordType = (LexicalType)vModel.Type,
+                Severity = vModel.Severity,
+                Quality = vModel.Quality,
+                Elegance = vModel.Elegance,
+                Tense = (LexicalTense)vModel.Tense
             };
 
             if (newObj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
@@ -137,6 +141,11 @@ namespace NetMud.Controllers.GameAdmin
             vModel.DataObject = obj;
             vModel.Name = obj.Name;
             vModel.Type = (short)obj.WordType;
+            vModel.Severity = obj.Severity;
+            vModel.Quality = obj.Quality;
+            vModel.Elegance = obj.Elegance;
+            vModel.Tense = (short)obj.Tense;
+
 
             return View("~/Views/GameAdmin/Dictionary/Edit.cshtml", vModel);
         }
@@ -154,6 +163,11 @@ namespace NetMud.Controllers.GameAdmin
                 message = "That does not exist";
                 return RedirectToAction("Index", new { Message = message });
             }
+
+            obj.Severity = vModel.Severity;
+            obj.Quality = vModel.Quality;
+            obj.Elegance = vModel.Elegance;
+            obj.Tense = (LexicalTense)vModel.Tense;
 
             var newSynonyms = new List<IDictata>();
             if (!string.IsNullOrWhiteSpace(vModel.Synonyms))

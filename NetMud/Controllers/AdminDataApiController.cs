@@ -3,7 +3,7 @@ using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.SupportingClasses;
+using NetMud.DataStructure.Linguistic;
 using NetMud.Physics;
 using System.Linq;
 using System.Web.Http;
@@ -64,9 +64,9 @@ namespace NetMud.Controllers
 
         [HttpGet]
         [Route("api/AdminDataApi/GetDictata/{wordType}", Name = "AdminAPI_GetDictata")]
-        public JsonResult<string[]> GetDictata(LexicalType wordType)
+        public JsonResult<string[]> GetDictata(LexicalType wordType, string term)
         {
-            var words = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.WordType == wordType);
+            var words = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.WordType == wordType && dict.Name.Contains(term));
 
             return Json(words.Select(word => word.Name).ToArray());
         }

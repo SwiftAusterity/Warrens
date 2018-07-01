@@ -3,7 +3,7 @@ using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.System;
-using NetMud.DataStructure.SupportingClasses;
+using NetMud.DataStructure.Linguistic;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -18,6 +18,8 @@ namespace NetMud.Data.ConfigData
     [Serializable]
     public class Dictata : ConfigData, IDictata, IComparable<IDictata>, IEquatable<IDictata>, IEqualityComparer<IDictata>
     {
+        public override ContentApprovalType ApprovalType => ContentApprovalType.ReviewOnly;
+
         /// <summary>
         /// The unique key used to identify, store and retrieve data
         /// </summary>
@@ -36,6 +38,52 @@ namespace NetMud.Data.ConfigData
         /// The type of word this is in general
         /// </summary>
         public LexicalType WordType { get; set; }
+
+        /// <summary>
+        /// Chronological tense of word
+        /// </summary>
+        public LexicalTense Tense { get; set; }
+
+        /// <summary>
+        /// Strength rating of word in relation to synonyms
+        /// </summary>
+        public int Severity { get; set; }
+
+        /// <summary>
+        /// Synonym rating for elegance
+        /// </summary>
+        public int Elegance { get; set; }
+
+        /// <summary>
+        /// Finesse synonym rating; execution of form
+        /// </summary>
+        public int Quality { get; set; }
+
+        [JsonProperty("Language")]
+        private ConfigDataCacheKey _language { get; set; }
+
+        /// <summary>
+        /// The language this is derived from
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public ILanguage Language
+        {
+            get
+            {
+                if (_language == null)
+                    return null;
+
+                return ConfigDataCache.Get<ILanguage>(_language);
+            }
+            set
+            {
+                if (value == null)
+                    _language = null;
+
+                _language = new ConfigDataCacheKey(value);
+            }
+        }
 
         [JsonProperty("Synonyms")]
         private HashSet<ConfigDataCacheKey> _synonyms { get; set; }
@@ -88,8 +136,6 @@ namespace NetMud.Data.ConfigData
                 _antonyms = new HashSet<ConfigDataCacheKey>(value.Select(k => new ConfigDataCacheKey(k)));
             }
         }
-
-        public override ContentApprovalType ApprovalType => ContentApprovalType.None;
 
         [JsonConstructor]
         public Dictata()

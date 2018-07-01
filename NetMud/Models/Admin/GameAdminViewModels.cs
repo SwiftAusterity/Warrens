@@ -4,7 +4,7 @@ using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.PlayerConfiguration;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.SupportingClasses;
+using NetMud.DataStructure.Linguistic;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;

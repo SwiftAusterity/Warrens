@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace NetMud.DataStructure.SupportingClasses
+namespace NetMud.DataStructure.Linguistic
 {
     /// <summary>
     /// A gramatical element

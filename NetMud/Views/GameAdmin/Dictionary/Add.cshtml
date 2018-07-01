@@ -1,4 +1,4 @@
-﻿@using NetMud.DataStructure.SupportingClasses
+﻿@using NetMud.DataStructure.Linguistic
 
 @model NetMud.Models.Admin.AddEditDictionaryViewModel
 
@@ -6,9 +6,8 @@
     @using (Html.BeginForm("Add", "Dictionary", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {
         @Html.AntiForgeryToken()
-        <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <h4>Lexica</h4>
+        <h3>Lexica</h3>
         <div class="form-group row">
             @Html.EditorFor(e => e.Name, new { columnCount = 3 })
             @Html.DescriptiveLabelFor(m => m.Type, new { @class = "col-sm-1 col-form-label" })
@@ -17,6 +16,19 @@
                                                                 new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(LexicalType), rl)).ToString() })
                                                                 , "Select One", htmlAttributes: new { id = "Type", @class = "form-control" })
             </div>
+        </div>
+        <div class="form-group row">
+            @Html.DescriptiveLabelFor(m => m.Tense, new { @class = "col-sm-1 col-form-label" })
+            <div class="col-md-3">
+                @Html.DropDownList("Tense", Enum.GetNames(typeof(LexicalTense)).Select(rl =>
+                                                                new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(LexicalTense), rl)).ToString() })
+                                                                , "Select One", htmlAttributes: new { id = "Tense", @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group row">
+            @Html.EditorFor(e => e.Severity, new { columnCount = 3 })
+            @Html.EditorFor(e => e.Elegance, new { columnCount = 3 })
+            @Html.EditorFor(e => e.Quality, new { columnCount = 3 })
         </div>
 
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Create", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Dictionary", IncludeCancel = true })

@@ -13,6 +13,14 @@
 
 @Html.DescriptiveLabelFor(m => m, new { @class = String.Format("col-sm-{0} col-form-label", columnLabelValue) })
 <div class="col-sm-10">
-    @Html.TextAreaFor(m => m, new { @class = cssClass, @disabled = disabled })
+    @if (disabled)
+    {
+        @Html.TextAreaFor(m => m, new { @class = cssClass, @disabled = disabled })
+    }
+    else
+    {
+        @Html.TextAreaFor(m => m, new { @class = cssClass })
+    }
+
     @Html.ValidationMessageFor(m => m, "", new { @class = "text-danger" })
 </div>

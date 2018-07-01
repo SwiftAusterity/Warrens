@@ -1,5 +1,5 @@
 ﻿using NetMud.Authentication;
-using NetMud.DataStructure.SupportingClasses;
+using NetMud.DataStructure.Linguistic;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -41,6 +41,24 @@ namespace NetMud.Models.Admin
 
         [Display(Name = "Type", Description = "The type of word this is.")]
         public short Type { get; set; }
+
+        [Display(Name = "Tense", Description = "Chronological tense (past, present, future)")]
+        public short Tense { get; set; }
+
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Severity", Description = "Strength rating of word in relation to synonyms.")]
+        [DataType(DataType.Text)]
+        public int Severity { get; set; }
+
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Elegance", Description = "Crudeness rating of word in relation to synonyms.")]
+        [DataType(DataType.Text)]
+        public int Elegance { get; set; }
+
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Quality", Description = "Finesse synonym rating; quality of execution of form or function.")]
+        [DataType(DataType.Text)]
+        public int Quality { get; set; }
 
         [Display(Name = "Synonyms", Description = "The synonyms (similar) of this word/phrase.")]
         [DataType(DataType.Text)]

@@ -10,6 +10,7 @@ using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Automation;
 using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.Rendering;
+using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.SupportingClasses;
 using Newtonsoft.Json;
 using System;
