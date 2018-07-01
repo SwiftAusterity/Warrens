@@ -103,7 +103,7 @@
             });
 
             $(".dictataList").autocomplete({
-                source: "/api/AdminDataApi/GetDictata",
+                source: "/api/AdminDataApi/GetDictata/" + '@Model.DataObject.WordType.ToString()',
                 minLength: 2,
                 select: function (event, ui) {
                     $(this).val(ui.item.value);

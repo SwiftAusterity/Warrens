@@ -1,13 +1,1 @@
-{
-  "WordType": 0,
-  "Synonyms": [],
-  "Antonyms": [],
-  "Name": "fish",
-  "SuitableForUse": true,
-  "State": 2,
-  "ApprovedOn": "2018-06-29T11:22:12.1158806-05:00",
-  "CreatorHandle": "SwiftAusterity",
-  "CreatorRank": 3,
-  "ApproverHandle": "SwiftAusterity",
-  "ApproverRank": 3
-}
+{"WordType":0,"Synonyms":[{"ObjectType":"NetMud.Data.ConfigData.Dictata, NetMud.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null","BirthMark":"Dictionary_Noun_poisson"}],"Antonyms":[],"Name":"fish","SuitableForUse":true,"State":2,"ApprovedOn":"2018-07-01T10:55:58.6600832-05:00","CreatorHandle":"SwiftAusterity","CreatorRank":3,"ApproverHandle":"SwiftAusterity","ApproverRank":3}
