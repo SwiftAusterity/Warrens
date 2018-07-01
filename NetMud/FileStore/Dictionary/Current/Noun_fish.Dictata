@@ -1,5 +1,7 @@
 {
   "WordType": 0,
+  "Synonyms": [],
+  "Antonyms": [],
   "Name": "fish",
   "SuitableForUse": true,
   "State": 2,

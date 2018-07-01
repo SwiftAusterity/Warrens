@@ -155,64 +155,67 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = message });
             }
 
-            obj.Name = vModel.Name;
-            obj.WordType = (LexicalType)vModel.Type;
-
-            var synonyms = vModel.Synonyms.Split(new string[] { "||" }, StringSplitOptions.RemoveEmptyEntries);
             var newSynonyms = new List<IDictata>();
-            foreach (var synonym in synonyms)
+            if (!string.IsNullOrWhiteSpace(vModel.Synonyms))
             {
-                var potentialDictata = new Dictata() { Name = synonym, WordType = obj.WordType };
-                var dictata = ConfigDataCache.Get<IDictata>(new ConfigDataCacheKey(potentialDictata));
-
-                if (dictata == null && potentialDictata.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+                var synonyms = vModel.Synonyms.Split(new string[] { "||" }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (var synonym in synonyms)
                 {
-                    dictata = potentialDictata;
-                }
+                    var potentialDictata = new Dictata() { Name = synonym, WordType = obj.WordType };
+                    var dictata = ConfigDataCache.Get<IDictata>(new ConfigDataCacheKey(potentialDictata));
 
-                if (dictata != null)
-                {
-                    newSynonyms.Add(dictata);
-
-                    if (!dictata.Synonyms.Any(dict => dict.Equals(obj)))
+                    if (dictata == null && potentialDictata.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                     {
-                        var newDictSyns = new List<IDictata>(dictata.Synonyms)
+                        dictata = potentialDictata;
+                    }
+
+                    if (dictata != null)
+                    {
+                        newSynonyms.Add(dictata);
+
+                        if (!dictata.Synonyms.Any(dict => dict.Equals(obj)))
+                        {
+                            var newDictSyns = new List<IDictata>(dictata.Synonyms)
                         {
                             obj
                         };
 
-                        dictata.Synonyms = newDictSyns;
-                        dictata.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
+                            dictata.Synonyms = newDictSyns;
+                            dictata.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
+                        }
                     }
                 }
             }
             obj.Synonyms = newSynonyms;
 
-            var antonyms = vModel.Synonyms.Split(new string[] { "||" }, StringSplitOptions.RemoveEmptyEntries);
             var newAntonyms = new List<IDictata>();
-            foreach (var antonym in antonyms)
+            if (!string.IsNullOrWhiteSpace(vModel.Antonyms))
             {
-                var potentialDictata = new Dictata() { Name = antonym, WordType = obj.WordType };
-                var dictata = ConfigDataCache.Get<IDictata>(new ConfigDataCacheKey(potentialDictata));
-
-                if (dictata == null && potentialDictata.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+                var antonyms = vModel.Antonyms.Split(new string[] { "||" }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (var antonym in antonyms)
                 {
-                    dictata = potentialDictata;
-                }
+                    var potentialDictata = new Dictata() { Name = antonym, WordType = obj.WordType };
+                    var dictata = ConfigDataCache.Get<IDictata>(new ConfigDataCacheKey(potentialDictata));
 
-                if (dictata != null)
-                {
-                    newAntonyms.Add(dictata);
-
-                    if(!dictata.Antonyms.Any(dict => dict.Equals(obj)))
+                    if (dictata == null && potentialDictata.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                     {
-                        var newDictAnts = new List<IDictata>(dictata.Antonyms)
+                        dictata = potentialDictata;
+                    }
+
+                    if (dictata != null)
+                    {
+                        newAntonyms.Add(dictata);
+
+                        if (!dictata.Antonyms.Any(dict => dict.Equals(obj)))
+                        {
+                            var newDictAnts = new List<IDictata>(dictata.Antonyms)
                         {
                             obj
                         };
 
-                        dictata.Antonyms = newDictAnts;
-                        dictata.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
+                            dictata.Antonyms = newDictAnts;
+                            dictata.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
+                        }
                     }
                 }
             }

@@ -23,7 +23,7 @@
         <div class="form-group row">
             @Html.HiddenFor(m => m.Synonyms)
             <div class="col-md-2">
-                <input type="text" id="addSynonyms" /><span class="glyphicon glyphicon-plus-sign addWord" style="" data-item-source="Synonyms"></span>
+                <input type="text" id="addSynonyms" class="dictataList" /><span class="glyphicon glyphicon-plus-sign addWord" style="" data-item-source="Synonyms"></span>
             </div>
             <div class="col-md-10" id="SynonymsContainer" style="margin-top: 10px;">
                 @foreach (var synonym in Model.DataObject.Synonyms)
@@ -37,7 +37,7 @@
         <div class="form-group row">
             @Html.HiddenFor(m => m.Antonyms)
             <div class="col-md-2">
-                <input type="text" id="addAntonyms" /><span class="glyphicon glyphicon-plus-sign addWord" style="" data-item-source="Antonyms"></span>
+                <input type="text" id="addAntonyms" class="dictataList" /><span class="glyphicon glyphicon-plus-sign addWord" style="" data-item-source="Antonyms"></span>
             </div>
             <div class="col-md-10" id="AntonymsContainer" style="margin-top: 10px;">
                 @foreach (var antonym in Model.DataObject.Antonyms)
@@ -99,6 +99,15 @@
 
                         $source.val(sourceValue.replace('||' + word + '||', ''));
                     });
+                }
+            });
+
+            $(".dictataList").autocomplete({
+                source: "/api/AdminDataApi/GetDictata",
+                minLength: 2,
+                select: function (event, ui) {
+                    $(this).val(ui.item.value);
+                    return false;
                 }
             });
         });

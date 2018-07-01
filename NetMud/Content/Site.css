@@ -263,9 +263,12 @@ div.roomAsciiMap {
 .touchWord {
     border: 1px dotted red;
     font-size: small;
-    padding: 1px;
+    padding: 3px 2px;
     cursor: pointer;
     margin: 3px;
+    background-color: pink;
+    border-radius: 10px;
+    color: darkolivegreen;
 }
 
 .addWord {

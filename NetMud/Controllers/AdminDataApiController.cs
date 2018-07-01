@@ -3,9 +3,11 @@ using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.SupportingClasses;
 using NetMud.Physics;
 using System.Linq;
 using System.Web.Http;
+using System.Web.Http.Results;
 
 namespace NetMud.Controllers
 {
@@ -57,6 +59,16 @@ namespace NetMud.Controllers
             var maps = Rendering.RenderRadiusMap(locale, 10, zIndex);
 
             return new string[] { maps.Item1, maps.Item2, maps.Item3 };
+        }
+
+
+        [HttpGet]
+        [Route("api/AdminDataApi/GetDictata", Name = "AdminAPI_GetDictata")]
+        public JsonResult<IDictata[]> GetDictata(LexicalType wordType)
+        {
+            var words = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.WordType == wordType);
+
+            return Json(words.ToArray());
         }
     }
 }
