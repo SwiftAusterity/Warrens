@@ -34,3 +34,4 @@ NetMud/FileStore/*/Backups/
 *.mdf
 *.ldf
 /.vs/*
+/NetMud.Gossip/App.config
