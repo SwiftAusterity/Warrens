@@ -182,6 +182,7 @@
     <Compile Include="Controllers\AdminDataApiController.cs" />
     <Compile Include="Controllers\ClientDataApiController.cs" />
     <Compile Include="Controllers\FeaturesController.cs" />
+    <Compile Include="Controllers\GameAdmin\LanguageController.cs" />
     <Compile Include="Controllers\GameAdmin\DictionaryController.cs" />
     <Compile Include="Controllers\GameAdmin\ContentApprovalController.cs" />
     <Compile Include="Controllers\GameAdmin\FloraController.cs" />
@@ -209,6 +210,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Admin\LanguageViewModels.cs" />
     <Compile Include="Models\Admin\DictionaryViewModels.cs" />
     <Compile Include="Models\Admin\ContentApprovalViewModels.cs" />
     <Compile Include="Models\Admin\UIModulesViewModels.cs" />
@@ -327,6 +329,9 @@
     <Content Include="Views\GameAdmin\Dictionary\Index.cshtml" />
     <Content Include="Views\GameAdmin\Dictionary\Add.cshtml" />
     <Content Include="Views\GameAdmin\Dictionary\Edit.cshtml" />
+    <Content Include="Views\GameAdmin\Language\Add.cshtml" />
+    <Content Include="Views\GameAdmin\Language\Edit.cshtml" />
+    <Content Include="Views\GameAdmin\Language\Index.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />

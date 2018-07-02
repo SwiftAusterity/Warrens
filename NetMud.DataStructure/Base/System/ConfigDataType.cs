@@ -4,6 +4,7 @@
     {
         GameWorld,
         Player,
-        Dictionary
+        Dictionary,
+        Language
     }
 }

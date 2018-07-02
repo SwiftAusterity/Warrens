@@ -68,6 +68,7 @@ namespace NetMud.Controllers.GameAdmin
                 UIModules = BackingDataCache.GetAll<IUIModule>(),
 
                 DictionaryWords = ConfigDataCache.GetAll<IDictata>(),
+                Languages = ConfigDataCache.GetAll<ILanguage>(),
 
                 LiveTaskTokens = Processor.GetAllLiveTaskStatusTokens(),
                 LivePlayers = LiveCache.GetAll<IPlayer>().Count(),

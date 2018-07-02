@@ -108,17 +108,15 @@ namespace NetMud.DataAccess.FileSystem
 
             switch(entity.Type)
             {
-                case ConfigDataType.GameWorld:
-                    dirName += "WorldConfig/" + CurrentDirectoryName;
-                    break;
-                case ConfigDataType.Dictionary:
-                    dirName += "Dictionary/" + CurrentDirectoryName;
+                default:
+                    dirName += entity.Type.ToString();
                     break;
                 case ConfigDataType.Player:
-                    dirName += "Players/" + entity.Name + "/" + CurrentDirectoryName;
+                    dirName += "Players/" + entity.Name;
                     break;
             }
 
+            dirName += "/" + CurrentDirectoryName;
 
             return dirName;
         }
@@ -136,16 +134,15 @@ namespace NetMud.DataAccess.FileSystem
 
             switch (entity.Type)
             {
-                case ConfigDataType.GameWorld:
-                    dirName += "WorldConfig/" + DatedBackupDirectory;
-                    break;
-                case ConfigDataType.Dictionary:
-                    dirName += "Dictionary/" + DatedBackupDirectory;
+                default:
+                    dirName += entity.Type.ToString();
                     break;
                 case ConfigDataType.Player:
-                    dirName += BaseDirectory + "Players/" + entity.Name + "/" + DatedBackupDirectory;
+                    dirName += BaseDirectory + "Players/" + entity.Name;
                     break;
             }
+
+            dirName += "/" + DatedBackupDirectory;
 
             return dirName;
         }

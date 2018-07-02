@@ -34,6 +34,7 @@ namespace NetMud.Models.Admin
             UIModules = Enumerable.Empty<IUIModule>();
 
             DictionaryWords = Enumerable.Empty<IDictata>();
+            Languages = Enumerable.Empty<ILanguage>();
 
             WebsocketServers = Enumerable.Empty<Websock.Server>();
 
@@ -66,6 +67,7 @@ namespace NetMud.Models.Admin
 
         //Config Data
         public IEnumerable<IDictata> DictionaryWords { get; set; }
+        public IEnumerable<ILanguage> Languages { get; set; }
 
         //Running Data
         public Dictionary<string, CancellationTokenSource> LiveTaskTokens { get; set; }
