@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NetMud.Gossip</RootNamespace>
     <AssemblyName>NetMud.Gossip</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,7 +31,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -38,14 +43,39 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="websocket-sharp, Version=1.0.1.0, Culture=neutral, PublicKeyToken=5660b08a1845a91e, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebSocketSharp-netstandard.1.0.1\lib\net45\websocket-sharp.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GossipServer.cs" />
+    <Compile Include="Messaging\Authentication.cs" />
+    <Compile Include="Messaging\Broadcast.cs" />
+    <Compile Include="Messaging\Channel.cs" />
+    <Compile Include="Messaging\Game.cs" />
+    <Compile Include="Messaging\Heartbeat.cs" />
+    <Compile Include="Messaging\NewMessage.cs" />
+    <Compile Include="Messaging\Subscriptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="App.Expected.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NetMud.DataAccess\NetMud.DataAccess.csproj">
+      <Project>{25B53EF7-E51C-4EE5-A04C-DD8797CFF58F}</Project>
+      <Name>NetMud.DataAccess</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NetMud.DataStructure\NetMud.DataStructure.csproj">
+      <Project>{88B7A648-FE23-4E88-9B60-AE17C8858AF4}</Project>
+      <Name>NetMud.DataStructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NetMud.Websock\NetMud.Websock.csproj">
+      <Project>{AFCDE9D8-2E19-4CD0-95B7-FE40E3575149}</Project>
+      <Name>NetMud.Websock</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

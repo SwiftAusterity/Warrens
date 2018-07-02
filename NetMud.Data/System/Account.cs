@@ -196,7 +196,7 @@ namespace NetMud.Data.System
             }
             catch (Exception ex)
             {
-                LoggingUtility.LogError(ex, "AccountDatabaseFailures");
+                LoggingUtility.LogError(ex, LogChannels.SystemWarnings);
             }
 
             return account;

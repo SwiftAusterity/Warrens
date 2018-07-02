@@ -13,6 +13,9 @@
         Authentication,
         ProcessingLoops,
         SocketCommunication,
-        BugReport
+        BugReport,
+        GossipServer,
+        SystemErrors,
+        SystemWarnings
     }
 }

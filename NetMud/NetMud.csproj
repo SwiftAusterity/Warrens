@@ -533,6 +533,10 @@
       <Project>{8b2cb5f6-65ca-4458-856b-6957e9309dbb}</Project>
       <Name>NetMud.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NetMud.Gossip\NetMud.Gossip.csproj">
+      <Project>{d98549e9-9d8c-46a7-83b2-9a4d68504f31}</Project>
+      <Name>NetMud.Gossip</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NetMud.Interp\NetMud.Interp.csproj">
       <Project>{0c46dab6-27fd-4117-acf6-0b8440614aa0}</Project>
       <Name>NetMud.Interp</Name>
