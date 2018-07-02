@@ -48,5 +48,11 @@ namespace NetMud.DataStructure.Base.System
         /// </summary>
         /// <returns>the new, filled db object</returns>
         IKeyedData Create(IAccount creator, StaffRank creatorRank);
+
+        /// <summary>
+        /// Create a new entry authored by the System
+        /// </summary>
+        /// <returns>The new data</returns>
+        IKeyedData SystemCreate();
     }
 }

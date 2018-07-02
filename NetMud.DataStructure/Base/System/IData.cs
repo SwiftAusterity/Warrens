@@ -16,7 +16,13 @@ namespace NetMud.DataStructure.Base.System
         /// <summary>
         /// Update this entry
         /// </summary>
-        /// <returns></returns>
+        /// <returns>success status</returns>
         bool Save(IAccount editor, StaffRank creatorRank);
+
+        /// <summary>
+        /// Update this entry by the system
+        /// </summary>
+        /// <returns>success status</returns>
+        bool SystemSave();
     }
 }

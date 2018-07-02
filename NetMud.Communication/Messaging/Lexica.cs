@@ -1,4 +1,5 @@
-﻿using NetMud.DataAccess;
+﻿using NetMud.Communication.Lexicon;
+using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Linguistic;
 using NetMud.Utility;
@@ -47,6 +48,8 @@ namespace NetMud.Communication.Messaging
             Role = role;
 
             Modifiers = new HashSet<ILexica>();
+
+            LexicalProcessor.VerifyDictata(this);
         }
 
         /// <summary>

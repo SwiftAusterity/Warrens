@@ -281,6 +281,41 @@ namespace NetMud.Data.ConfigData
 
             return true;
         }
+
+        /// <summary>
+        /// Update the field data for this object to the db
+        /// </summary>
+        /// <returns>success status</returns>
+        public virtual bool SystemSave()
+        {
+            var accessor = new DataAccess.FileSystem.ConfigData();
+
+            try
+            {
+                if (String.IsNullOrWhiteSpace(CreatorHandle))
+                    CreatorHandle = "INTERNAL_SYSTEM";
+
+                //only able to edit its own crap
+                if (CreatorHandle != "INTERNAL_SYSTEM")
+                    return false;
+
+                State = ApprovalState.Approved;
+                ApproverHandle = "INTERNAL_SYSTEM";
+                ApprovedOn = DateTime.Now;
+                ApproverRank = StaffRank.Builder;
+
+                ConfigDataCache.Add(this);
+                accessor.WriteEntity(this);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex);
+                return false;
+            }
+
+            return true;
+        }
+
         #endregion
     }
 }

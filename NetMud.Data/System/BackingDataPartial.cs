@@ -293,6 +293,46 @@ namespace NetMud.Data.System
         }
 
         /// <summary>
+        /// Add it to the cache and save it to the file system made by SYSTEM
+        /// </summary>
+        /// <returns>the object with Id and other db fields set</returns>
+        public virtual IKeyedData SystemCreate()
+        {
+            var accessor = new DataAccess.FileSystem.BackingData();
+
+            try
+            {
+                if (Created != DateTime.MinValue)
+                    SystemSave();
+                else
+                {
+
+                    //reset this guy's Id to the next one in the list
+                    GetNextId();
+                    Created = DateTime.Now;
+                    CreatorHandle = "INTERNAL_SYSTEM";
+                    CreatorRank = StaffRank.Builder;
+
+                    BackingDataCache.Add(this);
+                    accessor.WriteEntity(this);
+                }
+
+
+                State = ApprovalState.Approved;
+                ApproverHandle = "INTERNAL_SYSTEM";
+                ApprovedOn = DateTime.Now;
+                ApproverRank = StaffRank.Builder;
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex);
+                return null;
+            }
+
+            return this;
+        }
+
+        /// <summary>
         /// Remove this object from the db permenantly
         /// </summary>
         /// <returns>success status</returns>
@@ -368,6 +408,43 @@ namespace NetMud.Data.System
                         ApproveMe(editor, rank);
                     }
 
+                    LastRevised = DateTime.Now;
+
+                    BackingDataCache.Add(this);
+                    accessor.WriteEntity(this);
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex);
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Update the field data for this object to the db
+        /// </summary>
+        /// <returns>success status</returns>
+        public virtual bool SystemSave()
+        {
+            var accessor = new DataAccess.FileSystem.BackingData();
+
+            try
+            {
+                if (Created == DateTime.MinValue)
+                    SystemCreate();
+                else
+                {
+                    //only able to edit its own crap
+                    if (CreatorHandle != "INTERNAL_SYSTEM")
+                        return false;
+
+                    State = ApprovalState.Approved;
+                    ApproverHandle = "INTERNAL_SYSTEM";
+                    ApprovedOn = DateTime.Now;
+                    ApproverRank = StaffRank.Builder;
                     LastRevised = DateTime.Now;
 
                     BackingDataCache.Add(this);
