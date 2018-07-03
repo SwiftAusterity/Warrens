@@ -50,5 +50,13 @@ namespace NetMud.Data.LookupData
 
             return returnList;
         }
+
+        #region Caching
+        /// <summary>
+        /// What type of cache is this using
+        /// </summary>
+        public override CacheType CachingType => CacheType.LookupData;
+        #endregion
+
     }
 }

@@ -146,7 +146,6 @@ namespace NetMud.Data.System
             {
                 ConfigDataCache.Add(value);
             }
-
         }
 
         /// <summary>

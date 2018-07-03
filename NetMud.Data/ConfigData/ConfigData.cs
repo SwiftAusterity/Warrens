@@ -160,7 +160,7 @@ namespace NetMud.Data.ConfigData
             var accessor = new DataAccess.FileSystem.ConfigData();
             ApproveMe(approver, rank, newState);
 
-            ConfigDataCache.Add(this);
+            PersistToCache();
             accessor.WriteEntity(this);
 
             return true;
@@ -189,7 +189,33 @@ namespace NetMud.Data.ConfigData
             ApprovedOn = DateTime.Now;
             ApproverRank = rank;
         }
-        #endregion  
+        #endregion
+
+        #region Caching
+        /// <summary>
+        /// What type of cache is this using
+        /// </summary>
+        public virtual CacheType CachingType => CacheType.ConfigData;
+
+        /// <summary>
+        /// Put it in the cache
+        /// </summary>
+        /// <returns>success status</returns>
+        public virtual bool PersistToCache()
+        {
+            try
+            {
+                ConfigDataCache.Add(this);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex, LogChannels.SystemWarnings);
+                return false;
+            }
+
+            return true;
+        }
+        #endregion
 
         #region Data persistence functions
         /// <summary>
@@ -270,7 +296,7 @@ namespace NetMud.Data.ConfigData
                     CreatorRank = rank;
                 }
 
-                ConfigDataCache.Add(this);
+                PersistToCache();
                 accessor.WriteEntity(this);
             }
             catch (Exception ex)
@@ -293,18 +319,18 @@ namespace NetMud.Data.ConfigData
             try
             {
                 if (String.IsNullOrWhiteSpace(CreatorHandle))
-                    CreatorHandle = "INTERNAL_SYSTEM";
+                    CreatorHandle = DataHelpers.SystemUserHandle;
 
                 //only able to edit its own crap
-                if (CreatorHandle != "INTERNAL_SYSTEM")
+                if (CreatorHandle != DataHelpers.SystemUserHandle)
                     return false;
 
                 State = ApprovalState.Approved;
-                ApproverHandle = "INTERNAL_SYSTEM";
+                ApproverHandle = DataHelpers.SystemUserHandle;
                 ApprovedOn = DateTime.Now;
                 ApproverRank = StaffRank.Builder;
 
-                ConfigDataCache.Add(this);
+                PersistToCache();
                 accessor.WriteEntity(this);
             }
             catch (Exception ex)

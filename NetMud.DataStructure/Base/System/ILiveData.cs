@@ -6,7 +6,7 @@ namespace NetMud.DataStructure.Base.System
     /// <summary>
     /// Signifies the object is cached in the livecache
     /// </summary>
-    public interface ILiveData : IComparable<ILiveData>, IEquatable<ILiveData>, IEqualityComparer<ILiveData>
+    public interface ILiveData : ILiveInCache, IComparable<ILiveData>, IEquatable<ILiveData>, IEqualityComparer<ILiveData>
     {
         /// <summary>
         /// Indelible guid that helps the system figure out where stuff is, generated when the object is spawned into the world

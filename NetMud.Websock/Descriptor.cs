@@ -77,7 +77,7 @@ namespace NetMud.Websock
             BirthMark = LiveCache.GetUniqueIdentifier(string.Format(cacheKeyFormat, Client.Client.RemoteEndPoint.Serialize().ToString()));
             Birthdate = DateTime.Now;
 
-            LiveCache.Add<IDescriptor>(this);
+            PersistToCache();
         }
 
         /// <summary>
@@ -92,8 +92,34 @@ namespace NetMud.Websock
             BirthMark = LiveCache.GetUniqueIdentifier(string.Format(cacheKeyFormat, Client.Client.RemoteEndPoint.Serialize().ToString()));
             Birthdate = DateTime.Now;
 
-            LiveCache.Add<IDescriptor>(this);
+            PersistToCache();
         }
+
+        #region Caching
+        /// <summary>
+        /// What type of cache is this using
+        /// </summary>
+        public virtual CacheType CachingType => CacheType.Live;
+
+        /// <summary>
+        /// Put it in the cache
+        /// </summary>
+        /// <returns>success status</returns>
+        public virtual bool PersistToCache()
+        {
+            try
+            {
+                LiveCache.Add<IDescriptor>(this);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex, LogChannels.SystemWarnings);
+                return false;
+            }
+
+            return true;
+        }
+        #endregion
 
         /// <summary>
         /// Wraps sending messages to the connected descriptor

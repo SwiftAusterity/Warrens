@@ -93,6 +93,7 @@
     <Compile Include="System\Affect.cs" />
     <Compile Include="Serialization\ConcreteTypeConverter.cs" />
     <Compile Include="System\Constants.cs" />
+    <Compile Include="System\DataHelpers.cs" />
     <Compile Include="System\EntityContainer.cs" />
     <Compile Include="System\BackingDataPartial.cs" />
     <Compile Include="LookupData\Fauna.cs" />

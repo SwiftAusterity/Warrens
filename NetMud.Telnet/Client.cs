@@ -68,6 +68,32 @@ namespace NetMud.Telnet
             throw new NotImplementedException();
         }
 
+        #region Caching
+        /// <summary>
+        /// What type of cache is this using
+        /// </summary>
+        public virtual CacheType CachingType => CacheType.Live;
+
+        /// <summary>
+        /// Put it in the cache
+        /// </summary>
+        /// <returns>success status</returns>
+        public virtual bool PersistToCache()
+        {
+            try
+            {
+                LiveCache.Add<IDescriptor>(this);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex, LogChannels.SystemWarnings);
+                return false;
+            }
+
+            return true;
+        }
+        #endregion
+
         #region Equality Functions
         /// <summary>
         /// -99 = null input

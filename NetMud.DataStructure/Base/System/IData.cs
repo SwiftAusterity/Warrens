@@ -5,7 +5,7 @@ namespace NetMud.DataStructure.Base.System
     /// <summary>
     /// Framework for Database objects
     /// </summary>
-    public interface IData : IFileStored
+    public interface IData : IFileStored, ILiveInCache
     {
         /// <summary>
         /// Remove this entry perma

@@ -47,7 +47,7 @@ namespace NetMud.Data.Game
             {
                 _descriptorKey = new LiveCacheKey(value);
 
-                LiveCache.Add(value);
+                PersistToCache();
             }
         }
 

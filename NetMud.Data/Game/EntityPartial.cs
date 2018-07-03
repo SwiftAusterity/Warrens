@@ -261,6 +261,31 @@ namespace NetMud.Data.Game
             return true;
         }
 
+        #region Caching
+        /// <summary>
+        /// What type of cache is this using
+        /// </summary>
+        public virtual CacheType CachingType => CacheType.Live;
+
+        /// <summary>
+        /// Put it in the cache
+        /// </summary>
+        /// <returns>success status</returns>
+        public virtual bool PersistToCache()
+        {
+            try
+            {
+                UpsertToLiveWorldCache();
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex, LogChannels.SystemWarnings);
+                return false;
+            }
+
+            return true;
+        }
+
         /// <summary>
         /// Update this entry to the live world cache
         /// </summary>
@@ -276,6 +301,7 @@ namespace NetMud.Data.Game
                 Save();
             }
         }
+        #endregion
 
         /// <summary>
         /// Save this to the filesystem in Current

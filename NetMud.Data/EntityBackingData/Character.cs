@@ -186,6 +186,33 @@ namespace NetMud.Data.EntityBackingData
             return new Tuple<int, int, int>(0, 0, 0);
         }
 
+
+        #region Caching
+        /// <summary>
+        /// What type of cache is this using
+        /// </summary>
+        public override CacheType CachingType => CacheType.PlayerData;
+
+        /// <summary>
+        /// Put it in the cache
+        /// </summary>
+        /// <returns>success status</returns>
+        public override bool PersistToCache()
+        {
+            try
+            {
+                PlayerDataCache.Add(this);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex, LogChannels.SystemWarnings);
+                return false;
+            }
+
+            return true;
+        }
+        #endregion
+
         #region data persistence
         /// <summary>
         /// Add it to the cache and save it to the file system
@@ -206,7 +233,7 @@ namespace NetMud.Data.EntityBackingData
                 //No approval stuff necessary here
                 ApproveMe(creator, rank);
 
-                PlayerDataCache.Add(this);
+                PersistToCache();
                 accessor.WriteCharacter(this);
             }
             catch (Exception ex)
@@ -258,6 +285,7 @@ namespace NetMud.Data.EntityBackingData
 
                 LastRevised = DateTime.Now;
 
+                PersistToCache();
                 accessor.WriteCharacter(this);
             }
             catch (Exception ex)

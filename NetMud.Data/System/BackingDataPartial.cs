@@ -78,6 +78,32 @@ namespace NetMud.Data.System
             return dataProblems;
         }
 
+        #region Caching
+        /// <summary>
+        /// What type of cache is this using
+        /// </summary>
+        public virtual CacheType CachingType => CacheType.BackingData;
+
+        /// <summary>
+        /// Put it in the cache
+        /// </summary>
+        /// <returns>success status</returns>
+        public virtual bool PersistToCache()
+        {
+            try
+            {
+                BackingDataCache.Add(this);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex, LogChannels.SystemWarnings);
+                return false;
+            }
+
+            return true;
+        }
+        #endregion
+
         #region Approval System
         /// <summary>
         /// What type of approval is necessary for this content
@@ -210,7 +236,7 @@ namespace NetMud.Data.System
 
             LastRevised = DateTime.Now;
 
-            BackingDataCache.Add(this);
+            PersistToCache();
             accessor.WriteEntity(this);
 
             return true;
@@ -279,7 +305,7 @@ namespace NetMud.Data.System
                         }
                     }
 
-                    BackingDataCache.Add(this);
+                    PersistToCache();
                     accessor.WriteEntity(this);
                 }
             }
@@ -310,16 +336,16 @@ namespace NetMud.Data.System
                     //reset this guy's Id to the next one in the list
                     GetNextId();
                     Created = DateTime.Now;
-                    CreatorHandle = "INTERNAL_SYSTEM";
+                    CreatorHandle = DataHelpers.SystemUserHandle;
                     CreatorRank = StaffRank.Builder;
 
-                    BackingDataCache.Add(this);
+                    PersistToCache();
                     accessor.WriteEntity(this);
                 }
 
 
                 State = ApprovalState.Approved;
-                ApproverHandle = "INTERNAL_SYSTEM";
+                ApproverHandle = DataHelpers.SystemUserHandle;
                 ApprovedOn = DateTime.Now;
                 ApproverRank = StaffRank.Builder;
             }
@@ -410,7 +436,7 @@ namespace NetMud.Data.System
 
                     LastRevised = DateTime.Now;
 
-                    BackingDataCache.Add(this);
+                    PersistToCache();
                     accessor.WriteEntity(this);
                 }
             }
@@ -438,16 +464,16 @@ namespace NetMud.Data.System
                 else
                 {
                     //only able to edit its own crap
-                    if (CreatorHandle != "INTERNAL_SYSTEM")
+                    if (CreatorHandle != DataHelpers.SystemUserHandle)
                         return false;
 
                     State = ApprovalState.Approved;
-                    ApproverHandle = "INTERNAL_SYSTEM";
+                    ApproverHandle = DataHelpers.SystemUserHandle;
                     ApprovedOn = DateTime.Now;
                     ApproverRank = StaffRank.Builder;
                     LastRevised = DateTime.Now;
 
-                    BackingDataCache.Add(this);
+                    PersistToCache();
                     accessor.WriteEntity(this);
                 }
             }

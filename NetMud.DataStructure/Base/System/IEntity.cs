@@ -59,18 +59,4 @@ namespace NetMud.DataStructure.Base.System
         /// </summary>
         bool WriteTo(IEnumerable<string> input);
     }
-
-    /// <summary>
-    /// Trigger types for output sent to this entity
-    /// </summary>
-    public enum AITriggerType
-    {
-        SpokenTo,
-        Heard,
-        Seen,
-        Sensed,
-        Smelled,
-        PassiveActAt,
-        AggressiveActAt
-    }
 }
