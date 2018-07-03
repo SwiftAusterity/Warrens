@@ -7,9 +7,10 @@ using System.Reflection;
 namespace NetMud.Gossip.Messaging
 {
     [Serializable]
-    [JsonObject(Id = "authenticate")]
-    public class Authentication
+    public class Authentication : IPayload
     {
+        public string Type => "authenticate";
+
         [JsonProperty("client_id")]
         public string ClientId => ConfigurationManager.AppSettings["clientId"];
 

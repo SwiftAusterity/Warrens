@@ -21,8 +21,8 @@ namespace NetMud
             var customSockServer = new Websock.Server();
             customSockServer.Launch(2929);
 
-            //var gossipServer = new Gossip.GossipServer();
-            //gossipServer.Launch(4001);
+            var gossipServer = new Gossip.GossipClient();
+            gossipServer.Launch();
 
             Func<bool> backupFunction = hotBack.WriteLiveBackup;
             Func<bool> backingDataBackupFunction = BackingData.WriteFullBackup;

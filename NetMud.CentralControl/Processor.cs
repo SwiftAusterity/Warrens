@@ -16,8 +16,8 @@ namespace NetMud.CentralControl
     {
         private static ObjectCache globalCache = MemoryCache.Default;
         private static CacheItemPolicy globalPolicy = new CacheItemPolicy();
-        private static string cancellationTokenCacheKeyFormat = "AsyncCancellationToken.{0}";
-        private static string subscriptionLoopCacheKeyFormat = "SubscriptionLoop.{0}";
+        private static readonly string cancellationTokenCacheKeyFormat = "AsyncCancellationToken.{0}";
+        private static readonly string subscriptionLoopCacheKeyFormat = "SubscriptionLoop.{0}";
         private static int _maxPulseCount = 18000; //half an hour
 
         /// <summary>
@@ -86,11 +86,11 @@ namespace NetMud.CentralControl
 
             StoreCancellationToken(designator, cancelTokenSource);
 
-            Func<bool> loopedProcess = () =>
+            bool loopedProcess()
             {
                 StartLoop(workProcess, rampupDelay);
                 return true;
-            };
+            }
 
             var newLoop = new Task<bool>(loopedProcess, cancelTokenSource.Token, TaskCreationOptions.LongRunning);
 

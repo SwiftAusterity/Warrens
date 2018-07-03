@@ -84,6 +84,7 @@
     <Compile Include="Base\System\CacheType.cs" />
     <Compile Include="Base\System\ConfigDataType.cs" />
     <Compile Include="Base\System\IConfigData.cs" />
+    <Compile Include="Base\System\IGossipClient.cs" />
     <Compile Include="Base\System\IKeyedData.cs" />
     <Compile Include="Behaviors\Actionable\ICanBeAffected.cs" />
     <Compile Include="Behaviors\Actionable\ICanBeWounded.cs" />

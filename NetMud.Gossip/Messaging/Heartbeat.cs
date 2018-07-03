@@ -1,11 +1,10 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 
 namespace NetMud.Gossip.Messaging
 {
     [Serializable]
-    [JsonObject(Id = "heartbeat")]
-    public class Heartbeat
+    public class Heartbeat : IPayload
     {
+        public string Type => "heartbeat";
     }
 }

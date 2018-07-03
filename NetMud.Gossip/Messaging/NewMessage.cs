@@ -4,9 +4,10 @@ using System;
 namespace NetMud.Gossip.Messaging
 {
     [Serializable]
-    [JsonObject(Id ="messages/new")]
-    public class NewMessage
+    public class NewMessage : IPayload
     {
+        public string Type => "messages/new";
+
         [JsonProperty("channel")]
         public string ChannelName { get; set; }
 
