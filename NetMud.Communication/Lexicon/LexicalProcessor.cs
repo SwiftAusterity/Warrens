@@ -32,7 +32,12 @@ namespace NetMud.Communication.Lexicon
             var maybeDictata = ConfigDataCache.Get<IDictata>(cacheKey);
 
             if (maybeDictata != null)
+            {
+                if (maybeDictata.Language != null)
+                    return;
+
                 dictata = maybeDictata;
+            }
 
             //Set the language to default if it is absent and save it, if it has a language it already exists
             if (dictata.Language == null)
@@ -43,7 +48,6 @@ namespace NetMud.Communication.Lexicon
                 if (baseLanguage != null)
                     dictata.Language = baseLanguage;
             }
-
 
             dictata.SystemSave();
         }
