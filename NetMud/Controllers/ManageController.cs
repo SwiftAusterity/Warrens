@@ -84,8 +84,9 @@ namespace NetMud.Controllers
             var obj = authedUser.GameAccount;
 
             obj.Config.UITutorialMode = vModel.UITutorialMode;
+            obj.Config.GossipSubscriber = vModel.GossipSubscriber;
 
-            if(vModel.LogChannelSubscriptions != null)
+            if (vModel.LogChannelSubscriptions != null)
                 obj.LogChannelSubscriptions = vModel.LogChannelSubscriptions;
 
             UserManager.UpdateAsync(authedUser);

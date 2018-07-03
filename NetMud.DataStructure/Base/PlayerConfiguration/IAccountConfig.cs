@@ -20,6 +20,11 @@ namespace NetMud.DataStructure.Base.PlayerConfiguration
         bool UITutorialMode { get; set; }
 
         /// <summary>
+        /// Does someone see chatter from the Gossip network?
+        /// </summary>
+        bool GossipSubscriber { get; set; }
+
+        /// <summary>
         /// The modules to load. Module, quadrant
         /// </summary>
         IEnumerable<Tuple<IUIModule, int>> UIModules { get; set; }

@@ -3,6 +3,7 @@ using NetMud.Communication.Messaging;
 using NetMud.Data.System;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Entity;
+using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.SupportingClasses;
 using NutMud.Commands.Attributes;
@@ -30,10 +31,24 @@ namespace NetMud.Commands.Comm
         /// </summary>
         public override void Execute()
         {
-            var sb = new List<string>
+            var sb = new List<string>();
+            IPlayer playerActor = Actor.GetType().GetInterfaces().Contains(typeof(IPlayer)) ? Actor as IPlayer : null;
+
+            if (playerActor != null && !playerActor.DataTemplate<ICharacter>().Account.Config.GossipSubscriber)
+                sb.Add(string.Format("You have disabled the Gossip network.", Subject));
+            else
             {
-                string.Format("You gossip '{0}'", Subject)
-            };
+                var gossipClient = LiveCache.Get<IGossipClient>("GossipWebClient");
+
+                var userName = Actor.DataTemplateName;
+
+                if (playerActor != null)
+                    userName = playerActor.AccountHandle;
+
+                gossipClient.SendMessage(userName, Subject.ToString());
+
+                sb.Add(string.Format("You gossip '{0}'", Subject));
+            }
 
             var toActor = new Message(MessagingType.Audible, new Occurrence() { Strength = 1 })
             {
@@ -44,15 +59,6 @@ namespace NetMud.Commands.Comm
             var messagingObject = new MessageCluster(toActor);
 
             messagingObject.ExecuteMessaging(Actor, null, null, null, null);
-
-            var gossipClient = LiveCache.Get<IGossipClient>("GossipWebClient");
-
-            var userName = Actor.DataTemplateName;
-
-            if (Actor.GetType().GetInterfaces().Contains(typeof(IPlayer)))
-                userName = ((IPlayer)Actor).AccountHandle;
-
-            gossipClient.SendMessage(userName, Subject.ToString());
         }
 
         /// <summary>
@@ -76,7 +82,7 @@ namespace NetMud.Commands.Comm
         {
             get
             {
-                return string.Format("Gossip allows you to speak over the gossip inter-mud network.");
+                return string.Format("Gossip allows you to speak over the gossip inter-mud chat network.");
             }
             set { }
         }

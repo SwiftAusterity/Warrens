@@ -59,6 +59,11 @@ namespace NetMud.Data.ConfigData
         /// </summary>
         public bool UITutorialMode { get; set; }
 
+        /// <summary>
+        /// Does someone see chatter from the Gossip network?
+        /// </summary>
+        public bool GossipSubscriber { get; set; }
+
         [JsonProperty("UIModules")]
         public IList<Tuple<BackingDataCacheKey, int>> _UIModules { get; set; }
 

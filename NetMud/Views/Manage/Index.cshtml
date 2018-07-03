@@ -42,6 +42,7 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group row">
             @Html.EditorFor(e => e.UITutorialMode)
+            @Html.EditorFor(e => e.GossipSubscriber)
         </div>
 
         if (User.IsInRole("Admin"))

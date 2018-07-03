@@ -1,6 +1,7 @@
 ﻿using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Entity;
+using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.System;
 using NetMud.Gossip.Messaging;
 using NetMud.Utility;
@@ -78,7 +79,9 @@ namespace NetMud.Gossip
                 switch (newReply.Event)
                 {
                     case "messages/direct":
-                        var validPlayer = LiveCache.GetAll<IPlayer>().FirstOrDefault(player => player.AccountHandle.Equals(newReply.Payload.name) && player.Descriptor != null);
+                        var validPlayer = LiveCache.GetAll<IPlayer>().FirstOrDefault(player => player.DataTemplate<ICharacter>().Account.Config.GossipSubscriber
+                                                                && player.AccountHandle.Equals(newReply.Payload.name) 
+                                                                && player.Descriptor != null);
 
                         if (validPlayer != null)
                             validPlayer.Descriptor.SendWrapper(newReply.Payload.MessageBody);
@@ -91,7 +94,7 @@ namespace NetMud.Gossip
 
                         if (!string.IsNullOrWhiteSpace(messageText))
                         {
-                            var validPlayers = LiveCache.GetAll<IPlayer>().Where(player => player.Descriptor != null);
+                            var validPlayers = LiveCache.GetAll<IPlayer>().Where(player => player.Descriptor != null && player.DataTemplate<ICharacter>().Account.Config.GossipSubscriber);
                             foreach (var player in validPlayers)
                                 player.WriteTo(new string[] { string.Format("{0}@{1} {3}s, '{2}'", messageSender, source, messageText, channel) });
                         }
