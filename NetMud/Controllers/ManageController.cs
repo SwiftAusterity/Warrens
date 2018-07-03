@@ -69,7 +69,9 @@ namespace NetMud.Controllers
                 authedUser = user,
                 DataObject = account,
                 GlobalIdentityHandle = account.GlobalIdentityHandle,
-                UIModuleCount = BackingDataCache.GetAll<IUIModule>(true).Count(uimod => uimod.CreatorHandle.Equals(account.GlobalIdentityHandle))
+                UIModuleCount = BackingDataCache.GetAll<IUIModule>(true).Count(uimod => uimod.CreatorHandle.Equals(account.GlobalIdentityHandle)),
+                UITutorialMode = account.Config.UITutorialMode,
+                GossipSubscriber = account.Config.GossipSubscriber
             };
 
             return View(model);

@@ -33,6 +33,6 @@ namespace NetMud.DataStructure.Base.PlayerConfiguration
         /// Attempt to restore the config from file
         /// </summary>
         /// <returns>False = no file, True = file</returns>
-        bool RestoreConfig();
+        bool RestoreConfig(IAccount account);
     }
 }

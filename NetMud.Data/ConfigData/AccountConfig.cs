@@ -90,6 +90,7 @@ namespace NetMud.Data.ConfigData
             }
         }
 
+        [JsonConstructor]
         public AccountConfig()
         {
         }
@@ -99,13 +100,16 @@ namespace NetMud.Data.ConfigData
             _account = account;
 
             if (string.IsNullOrWhiteSpace(Name))
-                Name = account.GlobalIdentityHandle;
+                Name = _account.GlobalIdentityHandle;
         }
 
-        public bool RestoreConfig()
+        public bool RestoreConfig(IAccount account)
         {
-            if (Account == null)
+            if (account == null)
                 return false;
+
+            if (_account == null)
+                _account = account;
 
             var configData = new DataAccess.FileSystem.ConfigData();
 

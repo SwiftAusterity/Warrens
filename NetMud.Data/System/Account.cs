@@ -5,6 +5,7 @@ using NetMud.DataAccess.Database;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.PlayerConfiguration;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
 using Newtonsoft.Json;
 using System;
@@ -128,7 +129,7 @@ namespace NetMud.Data.System
                     //Try and get it from the file
                     returnValue = new AccountConfig(this);
 
-                    if (!returnValue.RestoreConfig())
+                    if (!returnValue.RestoreConfig(this))
                     {
                         //Just make it new and save it
                         returnValue = new AccountConfig(this)
@@ -136,7 +137,7 @@ namespace NetMud.Data.System
                             UITutorialMode = true
                         };
 
-                        returnValue.Save(this, DataStructure.SupportingClasses.StaffRank.Player); //personal config doesnt need approval yet but your rank is ALWAYS player here
+                        returnValue.Save(this, StaffRank.Player); //personal config doesnt need approval yet but your rank is ALWAYS player here
                     }
                 }
 
@@ -161,7 +162,7 @@ namespace NetMud.Data.System
                 return "A character with that name already exists, please choose another.";
 
             newChar.AccountHandle = GlobalIdentityHandle;
-            newChar.Create(this, DataStructure.SupportingClasses.StaffRank.Player); //characters dont need approval yet but your rank is ALWAYS player here
+            newChar.Create(this, StaffRank.Player); //characters dont need approval yet but your rank is ALWAYS player here
 
             Characters.Add(newChar);
 
@@ -177,7 +178,7 @@ namespace NetMud.Data.System
         {
             var parms = new Dictionary<string, object>();
 
-            var sql = "select * from [dbo].[Accounts] where GlobalIdentityHandle = @handle";
+            var sql = "select * from [Accounts] where GlobalIdentityHandle = @handle";
 
             parms.Add("handle", handle);
 
@@ -199,6 +200,38 @@ namespace NetMud.Data.System
             }
 
             return account;
+        }
+
+
+        /// <summary>
+        /// Delete this account
+        /// </summary>
+        /// <param name="remover">The person removing this account</param>
+        /// <param name="removerRank">The remover's staff ranking</param>
+        /// <returns>success</returns>
+        public bool Delete(IAccount remover, StaffRank removerRank)
+        {
+            //No one but Admin can delete player accounts
+            if (removerRank < StaffRank.Admin)
+                return false;
+
+            var parms = new Dictionary<string, object>();
+
+            var sql = "delete from [Accounts] where GlobalIdentityHandle = @handle";
+
+            parms.Add("handle", GlobalIdentityHandle);
+
+            try
+            {
+                SqlWrapper.RunNonQuery(sql, CommandType.Text, parms);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex, LogChannels.SystemWarnings);
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>

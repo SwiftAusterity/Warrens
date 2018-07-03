@@ -2,6 +2,8 @@
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
+using NetMud.Data.System;
+using NetMud.DataAccess;
 using NetMud.Models.Admin;
 using System.Linq;
 using System.Web;
@@ -67,11 +69,32 @@ namespace NetMud.Controllers.GameAdmin
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Remove(long removeId, string authorizeRemove, long unapproveId, string authorizeUnapprove)
+        [Route(@"GameAdmin/Player/Remove/{removeId?}/{authorizeRemove?}")]
+        public ActionResult Remove(string removeId, string authorizeRemove)
         {
-            string message = "Not Implimented";
+            string message = string.Empty;
+
+            if (!string.IsNullOrWhiteSpace(authorizeRemove) && removeId.ToString().Equals(authorizeRemove))
+            {
+                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+                var obj = Account.GetByHandle(removeId);
+
+                if (obj == null)
+                    message = "That does not exist";
+                else if (obj.Delete(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+                {
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveAccount[" + removeId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    message = "Delete Successful.";
+                }
+                else
+                    message = "Error; Removal failed.";
+            }
+            else
+                message = "You must check the proper remove or unapprove authorization radio button first.";
 
             return RedirectToAction("Index", new { Message = message });
+
         }
     }
 }

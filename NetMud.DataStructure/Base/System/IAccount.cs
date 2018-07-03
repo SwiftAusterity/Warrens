@@ -1,5 +1,6 @@
 ﻿using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.PlayerConfiguration;
+using NetMud.DataStructure.SupportingClasses;
 using System;
 using System.Collections.Generic;
 
@@ -41,5 +42,13 @@ namespace NetMud.DataStructure.Base.System
         /// <param name="newCharacter">the character to add</param>
         /// <returns>success status</returns>
         string AddCharacter(ICharacter newCharacter);
+
+        /// <summary>
+        /// Delete this account
+        /// </summary>
+        /// <param name="remover">The person removing this account</param>
+        /// <param name="removerRank">The remover's staff ranking</param>
+        /// <returns>success</returns>
+        bool Delete(IAccount remover, StaffRank removerRank);
     }
 }

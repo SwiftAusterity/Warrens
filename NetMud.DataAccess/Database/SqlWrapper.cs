@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
+using System.Data.SqlServerCe;
 
 namespace NetMud.DataAccess.Database
 {
@@ -32,8 +32,8 @@ namespace NetMud.DataAccess.Database
         /// <param name="args">parameters being passed to the query</param>
         public static void RunNonQuery(string sqlText, CommandType commandType, IDictionary<string, object> args)
         {
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            using (SqlCommand cmd = conn.CreateCommand())
+            using (SqlCeConnection conn = new SqlCeConnection(connectionString))
+            using (SqlCeCommand cmd = conn.CreateCommand())
             {
                 cmd.CommandText = sqlText;
                 cmd.CommandType = commandType;
@@ -67,9 +67,9 @@ namespace NetMud.DataAccess.Database
         public static T RunScalar<T>(string sqlText, CommandType commandType, IDictionary<string, object> args)
         {
             T returnThing;
- 
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            using (SqlCommand cmd = conn.CreateCommand())
+
+            using (SqlCeConnection conn = new SqlCeConnection(connectionString))
+            using (SqlCeCommand cmd = conn.CreateCommand())
             {
                 cmd.CommandText = sqlText;
                 cmd.CommandType = commandType;
@@ -106,8 +106,8 @@ namespace NetMud.DataAccess.Database
         {
             DataTable dt = new DataTable();
 
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            using (SqlCommand cmd = conn.CreateCommand())
+            using (SqlCeConnection conn = new SqlCeConnection(connectionString))
+            using (SqlCeCommand cmd = conn.CreateCommand())
             {
                 cmd.CommandText = sqlString;
                 cmd.CommandType = commandType;
@@ -119,7 +119,7 @@ namespace NetMud.DataAccess.Database
 
                 conn.Open();
 
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                using (SqlCeDataReader reader = cmd.ExecuteReader())
                 {
                     dt.Load(reader);
                 }

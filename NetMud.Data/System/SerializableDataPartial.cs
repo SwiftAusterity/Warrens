@@ -65,9 +65,9 @@ namespace NetMud.Data.System
             //Finds containers and inits them to empty after this thing is deserialized
             foreach (var container in obj.GetType().GetProperties())
             {
-                if (container.GetValue(obj) == null
-                    && !container.PropertyType.GetCustomAttributes<JsonIgnoreAttribute>().Any()
-                    && (container.PropertyType.IsArray || (!typeof(string).Equals(container.PropertyType) && typeof(IEnumerable).IsAssignableFrom(container.PropertyType))))
+                if (!container.PropertyType.GetCustomAttributes<JsonIgnoreAttribute>().Any()
+                    && (container.PropertyType.IsArray || (!typeof(string).Equals(container.PropertyType) && typeof(IEnumerable).IsAssignableFrom(container.PropertyType)))
+                    && container.GetValue(obj) == null)
                 {
                     try
                     {
