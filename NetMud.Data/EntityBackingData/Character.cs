@@ -1,4 +1,7 @@
-﻿using NetMud.Data.DataIntegrity;
+﻿using NetMud.Communication.Lexicon;
+using NetMud.Communication.Messaging;
+using NetMud.Data.ConfigData;
+using NetMud.Data.DataIntegrity;
 using NetMud.Data.Serialization;
 using NetMud.Data.System;
 using NetMud.DataAccess;
@@ -8,6 +11,7 @@ using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.System;
+using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.SupportingClasses;
 using Newtonsoft.Json;
 using System;
@@ -201,6 +205,17 @@ namespace NetMud.Data.EntityBackingData
         {
             try
             {
+                var dictatas = new List<IDictata>
+                {
+                    new Dictata(new Lexica(LexicalType.ProperNoun, GrammaticalType.Subject, SurName)),
+                    new Dictata(new Lexica(LexicalType.ProperNoun, GrammaticalType.Subject, FullName())),
+                    new Dictata(new Lexica(LexicalType.ProperNoun, GrammaticalType.Subject, Name)),
+                };
+                dictatas.AddRange(Descriptives.Select(desc => desc.Event.GetDictata()));
+
+                foreach (var dictata in dictatas)
+                    LexicalProcessor.VerifyDictata(dictata);
+
                 PlayerDataCache.Add(this);
             }
             catch (Exception ex)

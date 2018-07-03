@@ -1,6 +1,10 @@
-﻿using NetMud.Data.DataIntegrity;
+﻿using NetMud.Communication.Lexicon;
+using NetMud.Communication.Messaging;
+using NetMud.Data.ConfigData;
+using NetMud.Data.DataIntegrity;
 using NetMud.Data.Game;
 using NetMud.Data.LookupData;
+using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
@@ -8,10 +12,12 @@ using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.Behaviors.System;
+using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.SupportingClasses;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.EntityBackingData
@@ -200,6 +206,34 @@ namespace NetMud.Data.EntityBackingData
                 returnList.Add("Descriptives", string.Format("{0} ({1}): {2}", desc.SensoryType, desc.Strength, desc.Event.ToString()));
 
             return returnList;
+        }
+
+        /// <summary>
+        /// Put it in the cache
+        /// </summary>
+        /// <returns>success status</returns>
+        public override bool PersistToCache()
+        {
+            try
+            {
+                var dictatas = new List<IDictata>
+                {
+                    new Dictata(new Lexica(LexicalType.Noun, GrammaticalType.Subject, Name))
+                };
+                dictatas.AddRange(Descriptives.Select(desc => desc.Event.GetDictata()));
+
+                foreach (var dictata in dictatas)
+                    LexicalProcessor.VerifyDictata(dictata);
+
+                BackingDataCache.Add(this);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex, LogChannels.SystemWarnings);
+                return false;
+            }
+
+            return true;
         }
     }
 }

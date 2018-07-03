@@ -12,8 +12,8 @@
             <ul class="pagination" style="float: right;">
                 <li style="float: left;">
                     <div class="col-md-9" style="width: inherit;">
-                        @Html.TextBoxFor(m => m.Item1.SearchTerms, new { @class = "form-control", @style = "width: 200px;float: left;margin-right: 15px;", @title = "Search Term", @onchange = "paginationForm.submit();" })
-                        @Html.TextBoxFor(m => m.Item1.ItemsPerPage, new { @class = "form-control", @style = "width: 50px;float: left;", @title = "Items Per Page", @onchange = "paginationForm.submit();" })
+                        @Html.TextBox("SearchTerms", Model.Item1.SearchTerms, new { @id = "SearchTerms", @class = "form-control", @style = "width: 200px;float: left;margin-right: 15px;", @title = "Search Term", @onchange = "paginationForm.submit();" })
+                        @Html.TextBox("ItemsPerPage", Model.Item1.ItemsPerPage, new { @id = "ItemsPerPage", @class = "form-control", @style = "width: 50px;float: left;", @title = "Items Per Page", @onchange = "paginationForm.submit();" })
                     </div>
                 </li>
                 <li class="@prevPageState">

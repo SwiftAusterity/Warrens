@@ -24,6 +24,9 @@ namespace NetMud.Communication.Lexicon
         /// <param name="dictata">dictata to check</param>
         public static void VerifyDictata(IDictata dictata)
         {
+            if (dictata == null)
+                return;
+
             var cacheKey = new ConfigDataCacheKey(dictata);
 
             var maybeDictata = ConfigDataCache.Get<IDictata>(cacheKey);
@@ -39,9 +42,10 @@ namespace NetMud.Communication.Lexicon
 
                 if (baseLanguage != null)
                     dictata.Language = baseLanguage;
-
-                dictata.SystemSave();
             }
+
+
+            dictata.SystemSave();
         }
     }
 }

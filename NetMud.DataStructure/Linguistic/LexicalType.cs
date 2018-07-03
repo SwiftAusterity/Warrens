@@ -11,6 +11,7 @@
         Adjective = 3,
         Adverb = 4,
         Conjunction = 5,
-        Interjection = 6
+        Interjection = 6,
+        ProperNoun = 7
     }
 }
