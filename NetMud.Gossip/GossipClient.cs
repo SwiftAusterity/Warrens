@@ -5,6 +5,7 @@ using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.System;
 using NetMud.Gossip.Messaging;
 using NetMud.Utility;
+using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Linq;
@@ -78,6 +79,23 @@ namespace NetMud.Gossip
 
                 switch (newReply.Event)
                 {
+                    case "heartbeat":
+                        var whoList = LiveCache.GetAll<IPlayer>().Where(player => player.DataTemplate<ICharacter>().Account.Config.GossipSubscriber
+                                                                && player.Descriptor != null);
+
+                        var whoBlock = new HeartbeatResponse()
+                        {
+                            Players = whoList.Select(player => player.AccountHandle).ToArray()
+                        };
+
+                        var response = new TransportMessage()
+                        {
+                            Event = whoBlock.Type,
+                            Payload = whoBlock
+                        };
+
+                        MyClient.Send(Serialize(response));
+                        break;
                     case "messages/direct":
                         var validPlayer = LiveCache.GetAll<IPlayer>().FirstOrDefault(player => player.DataTemplate<ICharacter>().Account.Config.GossipSubscriber
                                                                 && player.AccountHandle.Equals(newReply.Payload.name) 
@@ -100,7 +118,6 @@ namespace NetMud.Gossip
                         }
                         break;
                     case "channels/subscribed":
-                        break;
                     default:
                         //do nothing
                         break;
@@ -155,6 +172,8 @@ namespace NetMud.Gossip
         private string Serialize(TransportMessage message)
         {
             var serializer = SerializationUtility.GetSerializer();
+
+            serializer.TypeNameHandling = TypeNameHandling.None;
 
             var sb = new StringBuilder();
             var writer = new StringWriter(sb);

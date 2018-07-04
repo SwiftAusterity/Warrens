@@ -6,6 +6,7 @@ namespace NetMud.Gossip.Messaging
     [Serializable]
     public class Broadcast : IPayload
     {
+        [JsonIgnore]
         public string Type => "messages/broadcast";
 
         [JsonProperty("channel")]

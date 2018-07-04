@@ -9,6 +9,7 @@ namespace NetMud.Gossip.Messaging
     [Serializable]
     public class Authentication : IPayload
     {
+        [JsonIgnore]
         public string Type => "authenticate";
 
         [JsonProperty("client_id")]
