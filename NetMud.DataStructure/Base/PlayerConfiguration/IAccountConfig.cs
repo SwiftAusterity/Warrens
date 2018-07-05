@@ -30,6 +30,16 @@ namespace NetMud.DataStructure.Base.PlayerConfiguration
         IEnumerable<Tuple<IUIModule, int>> UIModules { get; set; }
 
         /// <summary>
+        /// Friends and Foes of this account
+        /// </summary>
+        IEnumerable<IAcquaintance> Acquaintances { get; set; }
+
+        /// <summary>
+        /// Messages to this account
+        /// </summary>
+        IEnumerable<IPlayerMessage> Notifications { get; set; }
+
+        /// <summary>
         /// Attempt to restore the config from file
         /// </summary>
         /// <returns>False = no file, True = file</returns>

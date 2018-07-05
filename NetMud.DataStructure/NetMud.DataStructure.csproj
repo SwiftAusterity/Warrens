@@ -54,7 +54,10 @@
     <Compile Include="Base\Place\IPathway.cs" />
     <Compile Include="Base\Place\IRoom.cs" />
     <Compile Include="Base\Place\IZone.cs" />
+    <Compile Include="Base\PlayerConfiguration\AcquaintanceNotifications.cs" />
     <Compile Include="Base\PlayerConfiguration\IAccountConfig.cs" />
+    <Compile Include="Base\PlayerConfiguration\IAcquaintence.cs" />
+    <Compile Include="Base\PlayerConfiguration\IPlayerMessage.cs" />
     <Compile Include="Base\PlayerConfiguration\IUIModule.cs" />
     <Compile Include="Base\Skills\ISkpell.cs" />
     <Compile Include="Base\Supporting\AilmentType.cs" />

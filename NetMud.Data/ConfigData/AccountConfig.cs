@@ -25,14 +25,14 @@ namespace NetMud.Data.ConfigData
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
-        public override ContentApprovalType ApprovalType => ContentApprovalType.None; 
+        public override ContentApprovalType ApprovalType => ContentApprovalType.None;
 
         /// <summary>
         /// The type of data this is (for storage)
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
-        public override ConfigDataType Type => ConfigDataType.Player; 
+        public override ConfigDataType Type => ConfigDataType.Player;
 
         [ScriptIgnore]
         [JsonIgnore]
@@ -90,6 +90,54 @@ namespace NetMud.Data.ConfigData
             }
         }
 
+        [JsonProperty("Acquaintances")]
+        public HashSet<ConfigDataCacheKey> _acquaintances { get; set; }
+
+        /// <summary>
+        /// Friends and Foes of this account
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public IEnumerable<IAcquaintance> Acquaintances
+        {
+            get
+            {
+                if (_acquaintances == null)
+                    _acquaintances = new HashSet<ConfigDataCacheKey>();
+
+                return ConfigDataCache.GetMany<IAcquaintance>(_acquaintances);
+            }
+            set
+            {
+                if (value != null)
+                    _acquaintances = new HashSet<ConfigDataCacheKey>(value.Select(acq => new ConfigDataCacheKey(acq)));
+            }
+        }
+
+        [JsonProperty("Notifications")]
+        public HashSet<ConfigDataCacheKey> _notifications { get; set; }
+
+        /// <summary>
+        /// Messages to this account
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public IEnumerable<IPlayerMessage> Notifications
+        {
+            get
+            {
+                if (_notifications == null)
+                    _notifications = new HashSet<ConfigDataCacheKey>();
+
+                return ConfigDataCache.GetMany<IPlayerMessage>(_notifications);
+            }
+            set
+            {
+                if (value != null)
+                    _notifications = new HashSet<ConfigDataCacheKey>(value.Select(note => new ConfigDataCacheKey(note)));
+            }
+        }
+
         [JsonConstructor]
         public AccountConfig()
         {
@@ -138,12 +186,75 @@ namespace NetMud.Data.ConfigData
                 UIModules = newConfig.UIModules;
                 UITutorialMode = newConfig.UITutorialMode;
 
+                GetNotifications(configData, charDirectory);
+                GetAcquaintances(configData, charDirectory);
+
                 ConfigDataCache.Add(this);
 
                 return true;
             }
 
             return false;
+        }
+
+        private void GetNotifications(DataAccess.FileSystem.ConfigData dataAccessor, DirectoryInfo charDirectory)
+        {
+            try
+            {
+                var files = charDirectory.EnumerateFiles("*.PlayerMessage", SearchOption.TopDirectoryOnly);
+
+                var dataList = new List<IPlayerMessage>();
+                foreach(var file in files)
+                {
+                    if (file == null)
+                        continue;
+
+                    var newMessage = (IPlayerMessage)dataAccessor.ReadEntity(file, typeof(IPlayerMessage));
+
+                    if (newMessage != null)
+                    {
+                        ConfigDataCache.Add(newMessage);
+                        dataList.Add(newMessage);
+                    }
+                }
+
+                Notifications = dataList;
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex);
+                //Let it keep going
+            }
+        }
+
+        private void GetAcquaintances(DataAccess.FileSystem.ConfigData dataAccessor, DirectoryInfo charDirectory)
+        {
+            try
+            {
+                var files = charDirectory.EnumerateFiles("*.Acquaintance", SearchOption.TopDirectoryOnly);
+
+                var dataList = new List<IAcquaintance>();
+                foreach (var file in files)
+                {
+                    if (file == null)
+                        continue;
+
+                    var newPerson = (IAcquaintance)dataAccessor.ReadEntity(file, typeof(IAcquaintance));
+
+                    if (newPerson != null)
+                    {
+                        ConfigDataCache.Add(newPerson);
+                        dataList.Add(newPerson);
+                    }
+                }
+
+                Acquaintances = dataList;
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex);
+                //Let it keep going
+            }
         }
     }
 }

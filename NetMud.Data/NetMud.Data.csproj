@@ -48,6 +48,8 @@
   <ItemGroup>
     <Compile Include="ConfigData\AccountConfig.cs" />
     <Compile Include="ConfigData\ConfigData.cs" />
+    <Compile Include="ConfigData\Acquaintence.cs" />
+    <Compile Include="ConfigData\PlayerMessage.cs" />
     <Compile Include="ConfigData\Language.cs" />
     <Compile Include="ConfigData\Dictata.cs" />
     <Compile Include="DataIntegrity\BaseDataIntegrity.cs" />
