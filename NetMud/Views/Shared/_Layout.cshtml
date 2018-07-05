@@ -65,7 +65,8 @@
     <footer>
         <br class="clearfix" />
         <hr />
-        <p>TwinMUD &copy; @DateTime.Now.Year - Daniel Nissenfeld</p>
+        <p>TwinMUD &copy; 1997-@DateTime.Now.Year - SwiftAusterity Productions</p>
+        <div id="guildWebRing" style="width: 100%; padding-left: 40%;" />
     </footer>
     <script type="text/javascript">
         $(document).ready(function () {
@@ -84,5 +85,6 @@
             });
         });
     </script>
+    @Scripts.Render("~/Scripts/mcgWebRing.js")
 </body>
 </html>

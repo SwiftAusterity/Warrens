@@ -9,8 +9,8 @@ using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Linq;
-using System.Net.Sockets;
 using System.Text;
+using System.Threading.Tasks;
 using WebSocketSharp;
 
 namespace NetMud.Gossip
@@ -33,18 +33,53 @@ namespace NetMud.Gossip
             try
             {
                 //Connect to the gossip service
-                MyClient = new WebSocket("wss://gossip.haus/socket");
-
-                MyClient.Log.Level = LogLevel.Error;
-                MyClient.Log.Output = (data, eventing) => LoggingUtility.Log(data.Message, LogChannels.GossipServer, true);
-
-                MyClient.OnMessage += (sender, e) => OnMessage(sender, e);
-
-                MyClient.OnOpen += (sender, e) => OnOpen(sender, e);
+                GetNewSocket();
 
                 MyClient.Connect();
 
                 LiveCache.Add(this, CacheKey);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex, LogChannels.GossipServer);
+            }
+        }
+
+        /// <summary>
+        /// Handles initial connection
+        /// </summary>
+        private void OnClose(object sender, EventArgs e)
+        {
+            LoggingUtility.Log("Gossip Server Connection Terminated.", LogChannels.GossipServer);
+
+            MyClient = null;
+
+            ReconnectLoop(Launch);
+        }
+
+        /// <summary>
+        /// Handles the wait loop for accepting input from the socket
+        /// </summary>
+        /// <param name="worker">the function that actually takes in a full message from the socker</param>
+        private async void ReconnectLoop(Action worker)
+        {
+            if (MyClient != null && MyClient.IsAlive)
+                return;
+
+            try
+            {
+                if (MyClient == null)
+                    GetNewSocket();
+
+                if (MyClient.Ping())
+                {
+                    worker.Invoke();
+                    return;
+                }
+
+                await Task.Delay(10000);
+
+                ReconnectLoop(worker);
             }
             catch (Exception ex)
             {
@@ -98,7 +133,7 @@ namespace NetMud.Gossip
                         break;
                     case "messages/direct":
                         var validPlayer = LiveCache.GetAll<IPlayer>().FirstOrDefault(player => player.DataTemplate<ICharacter>().Account.Config.GossipSubscriber
-                                                                && player.AccountHandle.Equals(newReply.Payload.name) 
+                                                                && player.AccountHandle.Equals(newReply.Payload.name)
                                                                 && player.Descriptor != null);
 
                         if (validPlayer != null)
@@ -123,6 +158,20 @@ namespace NetMud.Gossip
                         break;
                 }
             }
+        }
+
+        private void GetNewSocket()
+        {
+            MyClient = new WebSocket("wss://gossip.haus/socket");
+
+            MyClient.Log.Level = LogLevel.Error;
+            MyClient.Log.Output = (data, eventing) => LoggingUtility.Log(data.Message, LogChannels.GossipServer, true);
+
+            MyClient.OnMessage += (sender, e) => OnMessage(sender, e);
+
+            MyClient.OnOpen += (sender, e) => OnOpen(sender, e);
+
+            MyClient.OnClose += (sender, e) => OnClose(sender, e);
         }
 
         public void SendMessage(string userName, string messageBody, string channel = "gossip")
