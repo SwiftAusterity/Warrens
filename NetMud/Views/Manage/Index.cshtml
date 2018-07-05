@@ -1,4 +1,4 @@
-﻿@model NetMud.Models.ManageAccountViewModel
+﻿@model NetMud.Models.PlayerManagement.ManageAccountViewModel
 @{
     Model.UITutorialMode = Model.DataObject.Config.UITutorialMode;
 }
@@ -18,6 +18,17 @@
             <dd>
                 @Model.authedUser.GameAccount.Characters.Count() [
                 @Html.ActionLink("Manage", "ManageCharacters") ]
+            </dd>
+            <dt>Notifications and Mail:</dt>
+            <dd>
+                @Model.authedUser.GameAccount.Config.Notifications.Count() [
+                @Html.ActionLink("Manage", "Notifications") ]
+            </dd>
+
+            <dt>Acquaintences:</dt>
+            <dd>
+                @Model.authedUser.GameAccount.Config.Acquaintances.Count() [
+                @Html.ActionLink("Manage", "Acquaintences") ]
             </dd>
         </dl>
     </div>

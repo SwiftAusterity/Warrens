@@ -15,6 +15,10 @@ using NetMud.DataStructure.SupportingClasses;
 using NetMud.DataAccess;
 using NetMud.Models.Admin;
 using NetMud.DataStructure.Base.PlayerConfiguration;
+using NetMud.Models.PlayerManagement;
+using NetMud.Data.ConfigData;
+using NetMud.Data.System;
+using NetMud.DataStructure.Base.EntityBackingData;
 
 namespace NetMud.Controllers
 {
@@ -104,7 +108,7 @@ namespace NetMud.Controllers
             return RedirectToAction("Index", new { Message = message });
         }
 
-
+        #region Characters
         [HttpGet]
         public ActionResult ManageCharacters(string message)
         {
@@ -183,6 +187,172 @@ namespace NetMud.Controllers
 
             return RedirectToAction("ManageCharacters", new { Message = message });
         }
+        #endregion
+
+        #region Notifications
+        [HttpGet]
+        public ActionResult Notifications(string message)
+        {
+            ViewBag.StatusMessage = message;
+
+            var userId = User.Identity.GetUserId();
+            var authedUser = UserManager.FindById(userId);
+
+            var notifications = authedUser.GameAccount.Config.Notifications;
+
+            var model = new ManageNotificationsViewModel(notifications)
+            {
+                authedUser = authedUser
+            };
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public ActionResult AddViewNotification(string id)
+        {
+            var userId = User.Identity.GetUserId();
+            var model = new AddViewNotificationViewModel
+            {
+                authedUser = UserManager.FindById(userId)
+            };
+
+            if (!string.IsNullOrWhiteSpace(id))
+            {
+                var message = ConfigDataCache.Get<IPlayerMessage>(id);
+
+                if (message != null)
+                {
+                    model.DataObject = message;
+                    model.Body = message.Body;
+                    model.Recipient = message.RecipientName;
+                    model.Subject = message.Subject;
+                }
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddViewNotification(AddViewNotificationViewModel vModel)
+        {
+            string message = string.Empty;
+            var userId = User.Identity.GetUserId();
+            var authedUser = UserManager.FindById(userId);
+
+            try
+            {
+                if (string.IsNullOrWhiteSpace(vModel.Body) || string.IsNullOrWhiteSpace(vModel.Subject))
+                    message = "You must include a valid body and subject.";
+                else
+                {
+                    if (string.IsNullOrWhiteSpace(vModel.RecipientAccount))
+                        message = "You must include a valid recipient.";
+                    else
+                    {
+                        var recipient = Account.GetByHandle(vModel.RecipientAccount);
+
+                        if (recipient == null || recipient.Config.Acquaintances.Any(acq => acq.IsFriend == false && acq.Name.Equals(authedUser.GameAccount.GlobalIdentityHandle)))
+                            message = "You must include a valid recipient.";
+                        else
+                        {
+                            var newMessage = new PlayerMessage
+                            {
+                                Body = vModel.Body,
+                                Subject = vModel.Subject,
+                                Sender = authedUser.GameAccount,
+                                RecipientAccount = recipient
+                            };
+
+                            var recipientCharacter = BackingDataCache.GetByName<ICharacter>(vModel.Recipient);
+
+                            if (recipientCharacter != null)
+                                newMessage.Recipient = recipientCharacter;
+
+                            //messages come from players always here
+                            if (newMessage.Save(authedUser.GameAccount, StaffRank.Player))
+                            {
+                                message = "Successfully sent.";
+                            }
+                            else
+                            {
+                                LoggingUtility.Log("Message unsuccessful.", LogChannels.SystemWarnings);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex, LogChannels.SystemWarnings);
+            }
+
+            return RedirectToAction("Notifications", new { Message = message });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult MarkAsReadNotification(string id, AddViewNotificationViewModel vModel)
+        {
+            string message = string.Empty;
+            var userId = User.Identity.GetUserId();
+            var authedUser = UserManager.FindById(userId);
+
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(id))
+                {
+                    var notification = ConfigDataCache.Get<IPlayerMessage>(id);
+
+                    if (notification != null)
+                    {
+                        notification.Read = true;
+                        notification.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
+                    }
+                }
+                else
+                    message = "Invalid message.";
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex, LogChannels.SystemWarnings);
+            }
+
+            return RedirectToAction("Notifications", new { Message = message });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult RemoveNotification(string ID, string authorize)
+        {
+            string message = string.Empty;
+
+            if (string.IsNullOrWhiteSpace(authorize) || !ID.ToString().Equals(authorize))
+                message = "You must check the proper authorize radio button first.";
+            else
+            {
+
+                var userId = User.Identity.GetUserId();
+                var authedUser = UserManager.FindById(userId);
+
+                var notification = authedUser.GameAccount.Config.Notifications.FirstOrDefault(ch => ch.UniqueKey.Equals(ID));
+
+                if (notification == null)
+                    message = "That message does not exist";
+                else if (notification.Remove(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+                    message = "Message successfully deleted.";
+                else
+                    message = "Error. Message not removed.";
+            }
+
+            return RedirectToAction("Notifications", new { Message = message });
+        }
+
+        #endregion
+
+        #region Acquaintences
+        #endregion
 
         #region UIModules
         public ActionResult UIModules(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)

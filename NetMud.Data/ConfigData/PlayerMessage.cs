@@ -31,6 +31,13 @@ namespace NetMud.Data.ConfigData
         public override ConfigDataType Type => ConfigDataType.Player;
 
         /// <summary>
+        /// The unique key used to identify, store and retrieve data
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public override string UniqueKey => string.Format("{0}_{1}_{2}", Name, RecipientName, Sent.ToBinary());
+
+        /// <summary>
         /// The body of the message
         /// </summary>
         public string Body { get; set; }
@@ -39,6 +46,16 @@ namespace NetMud.Data.ConfigData
         /// Subject of the message
         /// </summary>
         public string Subject { get; set; }
+
+        /// <summary>
+        /// When this was sent
+        /// </summary>
+        public DateTime Sent { get; set; }
+
+        /// <summary>
+        /// Name of the recipient character (can be blank)
+        /// </summary>
+        public string SenderName { get; set; }
 
         [ScriptIgnore]
         [JsonIgnore]
@@ -53,16 +70,47 @@ namespace NetMud.Data.ConfigData
         {
             get
             {
-                //Name = SenderHandle
-                if (_sender == null && !string.IsNullOrWhiteSpace(Name))
-                    _sender = System.Account.GetByHandle(Name);
+                if (_sender == null && !string.IsNullOrWhiteSpace(SenderName))
+                    _sender = System.Account.GetByHandle(SenderName);
 
                 return _sender;
             }
             set
             {
                 if (value != null)
+                {
+                    SenderName = value.GlobalIdentityHandle;
+                    _sender = value;
+                }
+            }
+        }
+
+        [ScriptIgnore]
+        [JsonIgnore]
+        private IAccount _recipientAccount { get; set; }
+
+        //Name = recipientAccountName
+        /// <summary>
+        /// The account recieving this
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public IAccount RecipientAccount
+        {
+            get
+            {
+                if (_recipientAccount == null && !string.IsNullOrWhiteSpace(Name))
+                    _recipientAccount = System.Account.GetByHandle(Name);
+
+                return _recipientAccount;
+            }
+            set
+            {
+                if (value != null)
+                {
                     Name = value.GlobalIdentityHandle;
+                    _recipientAccount = value;
+                }
             }
         }
 
@@ -99,5 +147,10 @@ namespace NetMud.Data.ConfigData
         /// Is this important? Does it make the UI bell ring
         /// </summary>
         public bool Important { get; set; }
+
+        /// <summary>
+        /// Has this been read yet?
+        /// </summary>
+        public bool Read { get; set; }
     }
 }

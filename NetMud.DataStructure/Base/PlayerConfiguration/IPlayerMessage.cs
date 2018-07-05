@@ -1,5 +1,6 @@
 ﻿using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.System;
+using System;
 
 namespace NetMud.DataStructure.Base.PlayerConfiguration
 {
@@ -8,7 +9,11 @@ namespace NetMud.DataStructure.Base.PlayerConfiguration
     /// </summary>
     public interface IPlayerMessage : IConfigData
     {
-        //Name = SenderHandle
+        //Name = recipientAccountName
+        /// <summary>
+        /// The account recieving this
+        /// </summary>
+        IAccount RecipientAccount { get; set; }
 
         /// <summary>
         /// The body of the message
@@ -19,6 +24,11 @@ namespace NetMud.DataStructure.Base.PlayerConfiguration
         /// Subject of the message
         /// </summary>
         string Subject { get; set; }
+
+        /// <summary>
+        /// Name of the sender character
+        /// </summary>
+        string SenderName { get; set; }
 
         /// <summary>
         /// Account of the sender
@@ -39,5 +49,15 @@ namespace NetMud.DataStructure.Base.PlayerConfiguration
         /// Is this important? Does it make the UI bell ring
         /// </summary>
         bool Important { get; set; }
+
+        /// <summary>
+        /// Has this been read yet?
+        /// </summary>
+        bool Read { get; set; }
+
+        /// <summary>
+        /// When this was sent
+        /// </summary>
+        DateTime Sent { get; set; }
     }
 }

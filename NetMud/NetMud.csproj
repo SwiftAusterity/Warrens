@@ -240,9 +240,13 @@
     <Compile Include="Models\IPagedDataModel.cs" />
     <Compile Include="Models\ListTableViewModel.cs" />
     <Compile Include="Models\LoggingViewModels.cs" />
-    <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\PlayerManagement\ChangePasswordViewModel.cs" />
+    <Compile Include="Models\PlayerManagement\ManageAccountViewModel.cs" />
+    <Compile Include="Models\PlayerManagement\ManageCharactersViewModel.cs" />
     <Compile Include="Models\BugReportModel.cs" />
     <Compile Include="Models\PagedDataModel.cs" />
+    <Compile Include="Models\PlayerManagement\NotificationsViewModels.cs" />
+    <Compile Include="Models\PlayerManagement\SetPasswordViewModel.cs" />
     <Compile Include="Models\SubmitButtonModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -335,6 +339,9 @@
     <Content Include="Views\GameAdmin\Language\Add.cshtml" />
     <Content Include="Views\GameAdmin\Language\Edit.cshtml" />
     <Content Include="Views\GameAdmin\Language\Index.cshtml" />
+    <Content Include="Views\Manage\Notifications.cshtml" />
+    <Content Include="Views\Shared\ConfigListTable.cshtml" />
+    <Content Include="Views\Manage\AddViewNotification.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />

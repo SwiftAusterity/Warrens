@@ -190,5 +190,25 @@ namespace NetMud.Controllers
 
             return Json(modules.Select(mod => mod.Name).ToArray());
         }
+
+        [HttpGet]
+        [Route("api/ClientDataApi/GetAccountNames", Name = "ClientDataAPI_GetAccountNames")]
+        public JsonResult<string[]> GetAccountNames(string term)
+        {
+            var accounts = UserManager.Users;
+
+            return Json(accounts.Where(acct => acct.GlobalIdentityHandle.Contains(term)).Select(acct => acct.GlobalIdentityHandle).ToArray());
+        }
+
+        [HttpGet]
+        [Route("api/ClientDataApi/GetCharacterNamesForAccount/{accountName}", Name = "ClientDataAPI_GetCharacterNamesForAccount")]
+        public JsonResult<string[]> GetCharacterNamesForAccount(string accountName, string term)
+        {
+            var user = UserManager.FindById(User.Identity.GetUserId());
+
+            var characters = PlayerDataCache.GetAll().Where(chr => chr.AccountHandle.Equals(user.GlobalIdentityHandle) && chr.Name.Contains(term));
+
+            return Json(characters.Select(chr => chr.Name).ToArray());
+        }
     }
 }

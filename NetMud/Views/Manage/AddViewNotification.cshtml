@@ -1,0 +1,71 @@
+﻿@model NetMud.Models.Admin.AddViewNotificationViewModel
+
+@if (Model.DataObject == null)
+{
+    <section id="newNotificationForm">
+        @using (Html.BeginForm("AddViewNotification", "Manage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group row">
+                @Html.EditorFor(e => e.RecipientAccount)
+                @Html.EditorFor(e => e.Recipient)
+            </div>
+            <div class="form-group row">
+                @Html.EditorFor(e => e.Subject, new { columnCount = 1 })
+            </div>
+            <div class="form-group row">
+                @Html.EditorFor(e => e.Body)
+            </div>
+
+            @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Send", CancelName = "Cancel", ReturnAction = "Notifications", ReturnController = "Manage", IncludeCancel = true })
+        }
+    </section>
+}
+else
+{
+    <section id="newNotificationForm">
+        @using (Html.BeginForm("MarkAsReadNotification", "Manage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-group row">
+                @Html.EditorFor(e => e.RecipientAccount, new { disabled = true })
+                @Html.EditorFor(e => e.Recipient, new { disabled = true })
+            </div>
+            <div class="form-group row">
+                @Html.EditorFor(e => e.Subject, new { columnCount = 1, disabled = true })
+            </div>
+            <div class="form-group row">
+                @Html.EditorFor(e => e.Body, new { disabled = true })
+            </div>
+
+            @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Mark As Read", CancelName = "Cancel", ReturnAction = "Notifications", ReturnController = "Manage", IncludeCancel = true })
+        }
+    </section>
+
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+        $("#RecipientAccount").autocomplete({
+            source: "/api/ClientDataApi/GetAccountNames",
+            minLength: 3,
+            select: function (event, ui) {
+                $(this).val(ui.item.value);
+
+                $("#Recipient").autocomplete({
+                    source: "/api/ClientDataApi/GetCharacterNamesForAccount/" + ui.item.value,
+                    minLength: 3,
+                    select: function (event, ui) {
+                        $(this).val(ui.item.value);
+                        return false;
+                    }
+                });
+
+                return false;
+            }
+        });
+    </script>
+}
