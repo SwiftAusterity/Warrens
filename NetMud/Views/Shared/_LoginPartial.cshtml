@@ -19,7 +19,7 @@
                 @if (authUser.GameAccount.Characters.Count() > 0)
                 {
                     @Html.DropDownList("CurrentlySelectedCharacter", authUser.GameAccount.Characters.Select(ch =>
-                 new SelectListItem() { Text = ch.FullName()
+                     new SelectListItem() { Text = ch.FullName()
                                      , Value = ch.Id.ToString()
                                      , Selected = authUser.GameAccount.CurrentlySelectedCharacter >= 0 && authUser.GameAccount.CurrentlySelectedCharacter.Equals(ch.Id) })
                                      , "Select One", htmlAttributes: new { id = "currentCharacter", Style = "margin: 15px;" })
@@ -28,6 +28,9 @@
                 {
                     @Html.ActionLink("Create a Character", "ManageCharacters", "Manage", routeValues: null, htmlAttributes: new { id = "ManageCharacters" })
                 }
+            </li>
+            <li>
+                <a href="#" id="notificationsBell"><span class="glyphicon glyphicon-bell" /></a>
             </li>
             <li>
                 <div style="padding-top: 15px; padding-bottom: 15px;">
