@@ -4,9 +4,12 @@ using System;
 namespace NetMud.Gossip.Messaging
 {
     [Serializable]
-    public class Heartbeat : IPayload
+    public class HeartbeatResponse : IPayload
     {
         [JsonIgnore]
         public string Type => "heartbeat";
+
+        [JsonProperty("players")]
+        public string[] Players { get; set; }
     }
 }

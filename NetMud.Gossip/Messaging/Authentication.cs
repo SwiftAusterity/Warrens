@@ -12,6 +12,12 @@ namespace NetMud.Gossip.Messaging
         [JsonIgnore]
         public string Type => "authenticate";
 
+        [JsonProperty("supports")]
+        public string[] FeaturesSupported => new string[] { "channels" };
+
+        [JsonProperty("channels")]
+        public string[] Channels => new string[] { "gossip" };
+
         [JsonProperty("client_id")]
         public string ClientId => ConfigurationManager.AppSettings["clientId"];
 

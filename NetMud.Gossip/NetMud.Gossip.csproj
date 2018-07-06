@@ -54,10 +54,12 @@
     <Compile Include="Messaging\Channel.cs" />
     <Compile Include="Messaging\Game.cs" />
     <Compile Include="Messaging\Heartbeat.cs" />
+    <Compile Include="Messaging\HeartbeatResponse.cs" />
     <Compile Include="Messaging\IPayload.cs" />
+    <Compile Include="Messaging\Subscribe.cs" />
     <Compile Include="Messaging\TransportMessage.cs" />
     <Compile Include="Messaging\NewMessage.cs" />
-    <Compile Include="Messaging\Subscriptions.cs" />
+    <Compile Include="Messaging\Unsubscribe.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

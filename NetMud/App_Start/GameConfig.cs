@@ -8,8 +8,10 @@ namespace NetMud
     {
         public static void PreloadSupportingEntities()
         {
-            //Load the "referential" data first
+            //Load the "config" data first
             ConfigData.LoadEverythingToCache();
+
+            //Load structural data next
             BackingData.LoadEverythingToCache();
 
             var hotBack = new HotBackup();

@@ -177,7 +177,7 @@ namespace NetMud.CentralControl
                 cancelToken.CancelAfter(shutdownDelay * 1000);
 
             if (!string.IsNullOrWhiteSpace(shutdownAnnouncement))
-                SystemComm.BroadcastToAll(string.Format(shutdownAnnouncement, shutdownDelay));
+                SystemCommunicationsUtility.BroadcastToAll(string.Format(shutdownAnnouncement, shutdownDelay));
 
             if (shutdownAnnouncementFrequency > 0)
             {
@@ -217,7 +217,7 @@ namespace NetMud.CentralControl
             }
 
             if (!string.IsNullOrWhiteSpace(shutdownAnnouncement))
-                SystemComm.BroadcastToAll(string.Format(shutdownAnnouncement, shutdownDelay));
+                SystemCommunicationsUtility.BroadcastToAll(string.Format(shutdownAnnouncement, shutdownDelay));
 
             if (shutdownAnnouncementFrequency > 0)
             {
@@ -236,7 +236,7 @@ namespace NetMud.CentralControl
             int secondsLeftBeforeShutdown = shutdownDelay;
             while (secondsLeftBeforeShutdown > 0)
             {
-                SystemComm.BroadcastToAll(string.Format(shutdownAnnouncement, secondsLeftBeforeShutdown));
+                SystemCommunicationsUtility.BroadcastToAll(string.Format(shutdownAnnouncement, secondsLeftBeforeShutdown));
                 await Task.Delay(shutdownAnnouncementFrequency * 1000);
                 secondsLeftBeforeShutdown -= shutdownAnnouncementFrequency;
             }

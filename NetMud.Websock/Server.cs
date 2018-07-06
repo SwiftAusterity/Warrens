@@ -22,8 +22,13 @@ namespace NetMud.Websock
         {
             ConnectedClients = new List<IDescriptor>();
 
-            var service = new TcpListener(IPAddress.Parse("127.0.0.1"), portNumber);
+            var myIp = "127.0.0.1";
 
+#if !DEBUG
+            myIp = SystemCommunicationsUtility.GetPublicIP();
+#endif
+
+            var service = new TcpListener(IPAddress.Parse(myIp), portNumber);
             PortNumber = portNumber;
 
             LiveCache.Add(service, string.Format(cacheKeyFormat, portNumber));

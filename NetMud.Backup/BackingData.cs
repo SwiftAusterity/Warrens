@@ -75,7 +75,6 @@ namespace NetMud.Backup
 
             if (!fileAccessor.VerifyDirectory(typeDirectory, false))
             {
-                LoggingUtility.LogError(new AccessViolationException(string.Format("Current directory for type {0} does not exist.", objectType.Name)));
                 return false;
             }
 

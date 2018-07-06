@@ -7,4 +7,4 @@
     tableColumns.Add("Description", obj => string.Join(Environment.NewLine, obj.RenderHelpBody()));
 }
 
-@Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Name = "", Columns = tableColumns, Values = Model.OrderBy(obj => obj.Name) })
+@Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Name = "", Columns = tableColumns, Values = Model.OrderBy(obj => obj.Name), IncludeDelete = false, IncludeUnapprove = false })

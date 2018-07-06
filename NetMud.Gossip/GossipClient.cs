@@ -152,7 +152,6 @@ namespace NetMud.Gossip
                                 player.WriteTo(new string[] { string.Format("{0}@{1} {3}s, '{2}'", messageSender, source, messageText, channel) });
                         }
                         break;
-                    case "channels/subscribed":
                     default:
                         //do nothing
                         break;
