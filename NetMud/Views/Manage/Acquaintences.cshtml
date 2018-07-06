@@ -1,0 +1,113 @@
+﻿@model NetMud.Models.PlayerManagement.ManageAcquaintencesViewModel
+@{
+    var tableColumns = new Dictionary<string, Func<dynamic, string>>();
+    tableColumns.Add("Account", obj => obj.Name);
+    tableColumns.Add("Friend?", obj => obj.IsFriend.ToString());
+    tableColumns.Add("External Gossip User", obj => obj.GossipSystem.ToString());
+    tableColumns.Add("Notifications Subscribed To", obj => obj.NotificationSubscriptions);
+}
+@Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model, "Acquaintences"))
+@using (Html.BeginForm("RemoveAcquaintence", "Manage"))
+{
+    @Html.AntiForgeryToken()
+    @Html.Partial("ConfigListTable", new NetMud.Models.ListTableViewModel() { Name = "Acquaintences", Columns = tableColumns, Values = Model.CurrentPageOfItems.OrderByDescending(obj => obj.IsFriend).OrderBy(obj => obj.Name), IncludeUnapprove = false, IncludeDelete = true })
+}
+<section id="newAcquaintenceForm">
+    @using (Html.BeginForm("AddAcquaintence", "Manage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        <h4>New Acquaintence</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group row">
+            @Html.EditorFor(e => e.AcquaintenceName, new { columnCount = 3 })
+            @Html.EditorFor(e => e.IsFriend, new { columnCount = 3 })
+            @Html.EditorFor(e => e.GossipSystem, new { columnCount = 3 })
+        </div>
+        <h4>Notifications</h4>
+        <div class="form-group row">
+            @Html.HiddenFor(m => m.Notifications)
+            <div class="col-md-2">
+                <input type="text" id="addNotifications" class="notificationList" /><span class="glyphicon glyphicon-plus-sign addWord"></span>
+            </div>
+            <div class="col-md-10" id="NotificationsContainer" style="margin-top: 10px;">
+            </div>
+        </div>
+
+
+        @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Add", CancelName = "Cancel", ReturnAction = "Acquaintences", ReturnController = "Manage", IncludeCancel = false })
+    }
+</section>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+        $("#AcquaintenceName").autocomplete({
+            source: "/api/ClientDataApi/GetAccountNames",
+            minLength: 3,
+            select: function (event, ui) {
+                $(this).val(ui.item.value);
+                return false;
+            }
+        });
+
+        $('.touchWord').click(function () {
+            $this = $(this);
+            var word = $this.attr('data-item-value');
+
+            var $source = $('#Notifications');
+            var sourceValue = $source.val();
+
+            $this.detatch();
+
+            $source.val(sourceValue.replace('||' + word + '||', ''));
+        });
+
+        $('.addWord').click(function () {
+            $this = $(this);
+            var word = $('#addNotifications').val();
+
+            var $source = $('#Notifications');
+            var sourceValue = $source.val();
+
+            if (word !== '' && sourceValue.indexOf('||' + word + '||') === -1) {
+                $('#addNotifications').val('');
+                sourceValue = sourceValue + '||' + word + '||';
+
+                $source.val(sourceValue);
+
+                var $newWord = $('<span class="touchWord" data-item-value="' + word + '">' + word + '</span>');
+
+                $newWord.appendTo('#NotificationsContainer');
+
+                $newWord.click(function () {
+                    $this = $(this);
+                    var word = $this.attr('data-item-value');
+
+                    var $source = $('#Notifications');
+                    var sourceValue = $source.val();
+
+                    $this.detatch();
+
+                    $source.val(sourceValue.replace('||' + word + '||', ''));
+                });
+            }
+        });
+
+        /*
+        LogIn = 0,
+        LogOff = 1,
+        EnterGame = 2,
+        LeaveGame = 3
+        */
+
+        $(".notificationList").autocomplete({
+            source: ['LogIn', 'LogOff', 'EnterGame', 'LeaveGame'],
+            minLength: 2,
+            select: function (event, ui) {
+                $(this).val(ui.item.value);
+                return false;
+            }
+        });
+    </script>
+}

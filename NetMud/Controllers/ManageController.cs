@@ -13,7 +13,9 @@ using NetMud.DataStructure.Base.PlayerConfiguration;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Models.Admin;
 using NetMud.Models.PlayerManagement;
+using NetMud.Utility;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -347,10 +349,104 @@ namespace NetMud.Controllers
 
             return RedirectToAction("Notifications", new { Message = message });
         }
-
         #endregion
 
         #region Acquaintences
+        [HttpGet]
+        public ActionResult Acquaintences(string message = "")
+        {
+            ViewBag.StatusMessage = message;
+
+            var userId = User.Identity.GetUserId();
+            var authedUser = UserManager.FindById(userId);
+
+            var acquaintences = authedUser.GameAccount.Config.Acquaintances;
+
+            var model = new ManageAcquaintencesViewModel(acquaintences)
+            {
+                authedUser = authedUser
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddAcquaintence(string AcquaintenceName, bool IsFriend, bool GossipSystem, string Notifications)
+        {
+            string message = string.Empty;
+            var userId = User.Identity.GetUserId();
+            var authedUser = UserManager.FindById(userId);
+
+            if (AcquaintenceName.Equals(authedUser.GlobalIdentityHandle, StringComparison.InvariantCultureIgnoreCase))
+            {
+                message = "You can't become an acquaintence of yourself.";
+            }
+            else
+            {
+                var notificationsList = new List<AcquaintanceNotifications>();
+
+                foreach (var notification in Notifications.Split(new string[] { "|||" }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    var anShort = (AcquaintanceNotifications)Enum.Parse(typeof(AcquaintanceNotifications), notification);
+
+                    notificationsList.Add(anShort);
+                }
+
+                var newAcq = new Acquaintance
+                {
+                    Name = AcquaintenceName,
+                    IsFriend = IsFriend,
+                    GossipSystem = GossipSystem,
+                    NotificationSubscriptions = notificationsList.ToArray()
+                };
+
+                var acquaintances = authedUser.GameAccount.Config.Acquaintances.ToList();
+
+                if (acquaintances.Contains(newAcq))
+                    acquaintances.Remove(newAcq);
+
+                acquaintances.Add(newAcq);
+
+                if (newAcq.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+                {
+                    authedUser.GameAccount.Config.Acquaintances = acquaintances;
+                    authedUser.GameAccount.Config.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
+                    message = "Acquaintence successfully added.";
+                }
+                else
+                    message = "Error. Acquaintence not added.";
+            }
+
+            return RedirectToAction("ManageCharacters", new { Message = message });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult RemoveAcquaintance(string ID, string authorize)
+        {
+            string message = string.Empty;
+
+            if (string.IsNullOrWhiteSpace(authorize) || !ID.ToString().Equals(authorize))
+                message = "You must check the proper authorize radio button first.";
+            else
+            {
+
+                var userId = User.Identity.GetUserId();
+                var authedUser = UserManager.FindById(userId);
+
+                var acquaintence = authedUser.GameAccount.Config.Acquaintances.FirstOrDefault(ch => ch.UniqueKey.Equals(ID));
+
+                if (acquaintence == null)
+                    message = "That Acquaintence does not exist";
+                else if (acquaintence.Remove(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+                    message = "Acquaintence successfully deleted.";
+                else
+                    message = "Error. Acquaintence not removed.";
+            }
+
+            return RedirectToAction("Acquaintances", new { Message = message });
+        }
         #endregion
 
         #region UIModules

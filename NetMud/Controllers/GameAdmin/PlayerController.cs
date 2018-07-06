@@ -11,7 +11,7 @@ using System.Web.Mvc;
 
 namespace NetMud.Controllers.GameAdmin
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     public class PlayerController : Controller
     {
         private ApplicationUserManager _userManager;
@@ -36,6 +36,23 @@ namespace NetMud.Controllers.GameAdmin
             UserManager = userManager;
         }
 
+
+        [HttpPost]
+        public JsonResult SelectCharacter(long CurrentlySelectedCharacter)
+        {
+            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            if (authedUser != null && CurrentlySelectedCharacter > 0)
+            {
+                authedUser.GameAccount.CurrentlySelectedCharacter = CurrentlySelectedCharacter;
+                UserManager.Update(authedUser);
+            }
+
+            return new JsonResult();
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
@@ -55,22 +72,9 @@ namespace NetMud.Controllers.GameAdmin
         }
 
         [HttpPost]
-        public JsonResult SelectCharacter(long CurrentlySelectedCharacter)
-        {
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
-
-            if (authedUser != null && CurrentlySelectedCharacter > 0)
-            {
-                authedUser.GameAccount.CurrentlySelectedCharacter = CurrentlySelectedCharacter;
-                UserManager.Update(authedUser);
-            }
-
-            return new JsonResult();
-        }
-
-        [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route(@"GameAdmin/Player/Remove/{removeId?}/{authorizeRemove?}")]
+        [Authorize(Roles="Admin")]
+        [Route(@"Player/Remove/{removeId?}/{authorizeRemove?}")]
         public ActionResult Remove(string removeId, string authorizeRemove)
         {
             string message = string.Empty;

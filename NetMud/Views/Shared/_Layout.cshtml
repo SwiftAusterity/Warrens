@@ -18,8 +18,6 @@
     @Scripts.Render("~/Scripts/tooltip.js")
     @Scripts.Render("~/Scripts/HtmlUtilities.js")
     @Scripts.Render("~/Scripts/site.js")
-    @RenderSection("scripts", required: false)
-    @RenderSection("styles", required: false)
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-top">
@@ -87,5 +85,7 @@
         });
     </script>
     @Scripts.Render("//cdn.swiftausterity.com/mcgWebRing.js")
+    @RenderSection("scripts", required: false)
+    @RenderSection("styles", required: false)
 </body>
 </html>
