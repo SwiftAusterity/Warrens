@@ -306,7 +306,6 @@
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="Scripts\jquery-ui.js" />
     <Content Include="Scripts\js-cookie.js" />
-    <Content Include="Scripts\mcgWebRing.js" />
     <Content Include="Scripts\site.js" />
     <Content Include="Scripts\tooltip.js" />
     <Content Include="Scripts\ClientHelpers.js" />
