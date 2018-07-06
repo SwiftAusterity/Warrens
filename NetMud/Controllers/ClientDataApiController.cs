@@ -17,6 +17,7 @@ using System.Web.Http.Results;
 
 namespace NetMud.Controllers
 {
+    [Authorize]
     public class ClientDataApiController : ApiController
     {
         private ApplicationUserManager _userManager;

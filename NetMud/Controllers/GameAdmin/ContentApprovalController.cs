@@ -13,6 +13,7 @@ using System.Web.Mvc;
 
 namespace NetMud.Controllers.GameAdmin
 {
+    [Authorize(Roles = "Admin,Builder")]
     public class ContentApprovalController : Controller
     {
         private ApplicationUserManager _userManager;

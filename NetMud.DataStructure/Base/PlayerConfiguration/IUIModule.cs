@@ -1,5 +1,4 @@
 ﻿using NetMud.DataStructure.Base.System;
-using System;
 
 namespace NetMud.DataStructure.Base.PlayerConfiguration
 {

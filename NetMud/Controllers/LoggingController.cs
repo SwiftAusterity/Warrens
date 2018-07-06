@@ -1,13 +1,14 @@
-﻿using NetMud.Authentication;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using NetMud.Authentication;
+using NetMud.DataAccess;
+using NetMud.Models.Logging;
 using System.Web;
 using System.Web.Mvc;
 
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using NetMud.Models.Logging;
-using NetMud.DataAccess;
 namespace NetMud.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class LoggingController : Controller
     {
         private ApplicationUserManager _userManager;

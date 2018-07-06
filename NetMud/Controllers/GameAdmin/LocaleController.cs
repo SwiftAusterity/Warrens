@@ -12,6 +12,7 @@ using System.Web.Mvc;
 
 namespace NetMud.Controllers.GameAdmin
 {
+    [Authorize(Roles = "Admin,Builder")]
     public class LocaleController : Controller
     {
         private ApplicationUserManager _userManager;

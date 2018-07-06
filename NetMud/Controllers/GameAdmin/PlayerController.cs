@@ -11,6 +11,7 @@ using System.Web.Mvc;
 
 namespace NetMud.Controllers.GameAdmin
 {
+    [Authorize(Roles = "Admin")]
     public class PlayerController : Controller
     {
         private ApplicationUserManager _userManager;

@@ -20,6 +20,7 @@ using System.Web.Mvc;
 
 namespace NetMud.Controllers.GameAdmin
 {
+    [Authorize(Roles = "Admin,Builder")]
     public class RaceController : Controller
     {
         private ApplicationUserManager _userManager;

@@ -16,6 +16,7 @@ using System.Web.Mvc;
 
 namespace NetMud.Controllers.GameAdmin
 {
+    [Authorize(Roles = "Admin,Builder")]
     public class FaunaController : Controller
     {
         private ApplicationUserManager _userManager;

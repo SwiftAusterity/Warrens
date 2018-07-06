@@ -12,7 +12,6 @@ using NetMud.DataStructure.Base.PlayerConfiguration;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Linguistic;
-using NetMud.DataStructure.SupportingClasses;
 using NetMud.Models.Admin;
 using System.Linq;
 using System.Web;
@@ -20,6 +19,7 @@ using System.Web.Mvc;
 
 namespace NetMud.Controllers.GameAdmin
 {
+    [Authorize(Roles = "Admin,Builder")]
     public class GameAdminController : Controller
     {
         private ApplicationUserManager _userManager;

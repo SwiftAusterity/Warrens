@@ -21,6 +21,7 @@ using System.Web.Mvc;
 
 namespace NetMud.Controllers.GameAdmin
 {
+    [Authorize(Roles = "Admin,Builder")]
     public class RoomController : Controller
     {
         private ApplicationUserManager _userManager;
