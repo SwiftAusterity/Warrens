@@ -91,6 +91,8 @@
     <Compile Include="Base\System\IGossipClient.cs" />
     <Compile Include="Base\System\IKeyedData.cs" />
     <Compile Include="Base\System\ILiveInCache.cs" />
+    <Compile Include="Base\World\CelestialOrientation.cs" />
+    <Compile Include="Base\World\ICelestial.cs" />
     <Compile Include="Behaviors\Actionable\ICanBeAffected.cs" />
     <Compile Include="Behaviors\Actionable\ICanBeWounded.cs" />
     <Compile Include="Behaviors\Actionable\ICanGainExperience.cs" />
