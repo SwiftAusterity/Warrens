@@ -341,6 +341,7 @@
     <Content Include="Views\Manage\Notifications.cshtml" />
     <Content Include="Views\Shared\ConfigListTable.cshtml" />
     <Content Include="Views\Manage\AddViewNotification.cshtml" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />
