@@ -20,13 +20,10 @@
     <a href="#" class="addNew">Add New Descriptive</a>
 </div>
 
-@if (Model.Descriptives.Count() > 0)
+@using (Html.BeginForm("RemoveDescriptive", "Zone"))
 {
-    using (Html.BeginForm("RemoveDescriptive", "Zone"))
-    {
-        @Html.AntiForgeryToken()
-        @Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Name = "", Columns = tableColumns, Values = Model.Descriptives, IncludeDelete = false, IncludeUnapprove = false })
-    }
+    @Html.AntiForgeryToken()
+    @Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Name = "", Columns = tableColumns, Values = Model.Descriptives, IncludeDelete = false, IncludeUnapprove = false })
 }
 
 <script>

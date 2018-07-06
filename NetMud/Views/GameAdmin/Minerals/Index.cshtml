@@ -8,17 +8,14 @@
 }
 @Html.Partial("AddContentLink")
 
-@if (Model.Items.Count() > 0)
+@Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model, "Minerals"))
+
+@using (Html.BeginForm("Remove", "Minerals"))
 {
-    @Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model, "Minerals"))
-
-    using (Html.BeginForm("Remove", "Minerals"))
-    {
-        @Html.AntiForgeryToken()
-        @Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Name = "Minerals", Columns = tableColumns, Values = Model.CurrentPageOfItems.OrderBy(obj => obj.Id) })
-    }
-
+    @Html.AntiForgeryToken()
+    @Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Name = "Minerals", Columns = tableColumns, Values = Model.CurrentPageOfItems.OrderBy(obj => obj.Id) })
 }
+
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

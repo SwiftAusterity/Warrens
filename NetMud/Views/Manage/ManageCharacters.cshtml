@@ -7,15 +7,10 @@
     tableColumns.Add("N00b", obj => obj.StillANoob.ToString());
     tableColumns.Add("Permissions", obj => obj.GamePermissionsRank.ToString());
 }
-
-@if (Model.authedUser.GameAccount.Characters.Count() > 0)
+@using (Html.BeginForm("RemoveCharacter", "Manage"))
 {
-    using (Html.BeginForm("RemoveCharacter", "Manage"))
-    {
-        @Html.AntiForgeryToken()
-        @Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Name = "Registered Characters", Columns = tableColumns, Values = Model.authedUser.GameAccount.Characters })
-    }
-
+    @Html.AntiForgeryToken()
+    @Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Name = "Registered Characters", Columns = tableColumns, Values = Model.authedUser.GameAccount.Characters })
 }
 <section id="newCharacterForm">
     @using (Html.BeginForm("AddCharacter", "Manage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
@@ -52,7 +47,6 @@
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Create", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Manage", IncludeCancel = true })
     }
 </section>
-
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

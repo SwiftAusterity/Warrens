@@ -11,15 +11,12 @@
 
 @Html.Partial("AddContentLink")
 
-@if (Model.Items.Count() > 0)
-{
-    @Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model, "NPC"))
+@Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model, "NPC"))
 
-    using (Html.BeginForm("Remove", "NPC"))
-    {
-        @Html.AntiForgeryToken()
-        @Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Name = "NPCs", Columns = tableColumns, Values = Model.CurrentPageOfItems.OrderBy(obj => obj.Id) })
-    }
+@using (Html.BeginForm("Remove", "NPC"))
+{
+    @Html.AntiForgeryToken()
+    @Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Name = "NPCs", Columns = tableColumns, Values = Model.CurrentPageOfItems.OrderBy(obj => obj.Id) })
 }
 
 @section Scripts {

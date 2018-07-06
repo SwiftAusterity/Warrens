@@ -20,14 +20,12 @@
     <a href="#" class="addNew">Add New Descriptive</a>
 </div>
 
-@if (Model.Descriptives.Count() > 0)
+@using (Html.BeginForm("RemoveDescriptive", "Pathway"))
 {
-    using (Html.BeginForm("RemoveDescriptive", "Pathway"))
-    {
-        @Html.AntiForgeryToken()
-        @Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Name = "", Columns = tableColumns, Values = Model.Descriptives, IncludeDelete = false, IncludeUnapprove = false })
-    }
+    @Html.AntiForgeryToken()
+    @Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Name = "", Columns = tableColumns, Values = Model.Descriptives, IncludeDelete = false, IncludeUnapprove = false })
 }
+
 
 <script>
         $(document).ready(function () {
@@ -38,7 +36,7 @@
             });
 
             $('.editDescriptive').click(function () {
-                openFrameless(1400, 900, 0, 0, "/GameAdmin/Pathway/AddEditDescriptive/" + @Model.Id 
+                openFrameless(1400, 900, 0, 0, "/GameAdmin/Pathway/AddEditDescriptive/" + @Model.Id
                     + '/' + $(this).attr('data-descriptive-type')
                     + '/' + $(this).attr('data-descriptive-phrase'), 'Edit Descriptive', true);
 

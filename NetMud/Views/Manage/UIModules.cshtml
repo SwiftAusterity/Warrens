@@ -8,27 +8,20 @@
                                 , obj.Id, Html.Raw(obj.BodyHtml)));
     tableColumns.Add("State", obj => obj.State.ToString());
 }
-
 <div>
     @Html.ActionLink("Add New", "AddUIModule", null, new { @class = "addNew" })
 </div>
-
-@if (Model.Items.Count() > 0)
+@Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model, "UIModules"))
+@using (Html.BeginForm("RemoveUIModule", "Manage"))
 {
-    @Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model, "UIModules"))
-
-    using (Html.BeginForm("RemoveUIModule", "Manage"))
-    {
-        @Html.AntiForgeryToken()
-        @Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Name = "UIModules", Columns = tableColumns, Values = Model.CurrentPageOfItems.OrderBy(obj => obj.Id) })
-    }
-
+    @Html.AntiForgeryToken()
+    @Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Name = "UIModules", Columns = tableColumns, Values = Model.CurrentPageOfItems.OrderBy(obj => obj.Id) })
 }
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-
-    <script type="text/javascript">$(function () {
+    <script type="text/javascript">
+    $(function () {
             $(".dimensionalModel").accordion({
                 collapsible: true,
                 active: false
