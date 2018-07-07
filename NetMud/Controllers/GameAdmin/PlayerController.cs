@@ -42,7 +42,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            if (authedUser != null && CurrentlySelectedCharacter > 0)
+            if (authedUser != null && CurrentlySelectedCharacter >= 0)
             {
                 authedUser.GameAccount.CurrentlySelectedCharacter = CurrentlySelectedCharacter;
                 UserManager.Update(authedUser);

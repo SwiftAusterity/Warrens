@@ -20,22 +20,29 @@ namespace NetMud.Websock
         /// <param name="portNumber">the port it is listening on</param>
         public void Launch(int portNumber)
         {
-            ConnectedClients = new List<IDescriptor>();
+            try
+            {
+                ConnectedClients = new List<IDescriptor>();
 
-            var myIp = "127.0.0.1";
+                IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
+                IPAddress ipAddress = ipHostInfo.AddressList[0];
+                IPEndPoint localEndPoint = new IPEndPoint(ipAddress, portNumber);
 
-#if !DEBUG
-            myIp = SystemCommunicationsUtility.GetPublicIP();
-#endif
+                var service = new TcpListener(localEndPoint);
+                PortNumber = portNumber;
 
-            var service = new TcpListener(IPAddress.Parse(myIp), portNumber);
-            PortNumber = portNumber;
+                LoggingUtility.Log(string.Format("Websocket Connecting on: {0}, {1}", ipHostInfo.HostName, ipAddress.ToString()), LogChannels.SocketCommunication);
 
-            LiveCache.Add(service, string.Format(cacheKeyFormat, portNumber));
+                LiveCache.Add(service, string.Format(cacheKeyFormat, portNumber));
 
-            service.Start(128);
+                service.Start(128);
 
-            service.BeginAcceptTcpClient(new AsyncCallback(OnAccept), service);
+                service.BeginAcceptTcpClient(new AsyncCallback(OnAccept), service);
+            }
+            catch(Exception ex)
+            {
+                LoggingUtility.LogError(ex, LogChannels.SocketCommunication);
+            }
         }
 
         public IList<IDescriptor> ConnectedClients { get; private set; }
@@ -84,9 +91,9 @@ namespace NetMud.Websock
 
                 newDescriptor.Open();
             }
-            catch
+            catch(Exception ex)
             {
-                //TODO: Logging
+                LoggingUtility.LogError(ex, LogChannels.SocketCommunication);
             }
 
             service.BeginAcceptTcpClient(new AsyncCallback(OnAccept), service);

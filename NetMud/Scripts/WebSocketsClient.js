@@ -42,7 +42,7 @@ function submitCommand(overrideCommand) {
 
 function TestBrowser() {
     if ('WebSocket' in window) {
-        window.connection = new WebSocket('ws://localhost:2929');
+        window.connection = new WebSocket('wss://' + window.location.host + ':2929');
 
         window.connection.onopen = function () {
             //Send a small message to the console once the connection is established

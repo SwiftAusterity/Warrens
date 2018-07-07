@@ -66,7 +66,7 @@ namespace NetMud.Commands.Comm
                 "Valid Syntax: shout &lt;text&gt;",
                 "yell &lt;text&gt;".PadWithString(14, "&nbsp;", true),
                 "scream &lt;text&gt;".PadWithString(14, "&nbsp;", true)
-            };,
+            };
 
             return sb;
         }

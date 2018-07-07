@@ -261,6 +261,8 @@ namespace NetMud.Websock
             //translate bytes of request to string
             var data = Encoding.UTF8.GetString(bytes);
 
+            LoggingUtility.Log(content: "Opening socket client", channel: LogChannels.SocketCommunication);
+
             //initial connection
             if (new Regex("^GET").IsMatch(data))
             {
@@ -284,6 +286,8 @@ namespace NetMud.Websock
 
                 ValidateUser(data);
             }
+
+            LoggingUtility.Log(content: "Socket client accepted", channel: LogChannels.SocketCommunication);
 
             StartLoop(OnMessage);
 
