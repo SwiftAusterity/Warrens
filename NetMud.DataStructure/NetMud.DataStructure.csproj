@@ -54,7 +54,7 @@
     <Compile Include="Base\Place\IPathway.cs" />
     <Compile Include="Base\Place\IRoom.cs" />
     <Compile Include="Base\Place\IZone.cs" />
-    <Compile Include="Base\PlayerConfiguration\AcquaintanceNotifications.cs" />
+    <Compile Include="Base\PlayerConfiguration\AcquaintenceNotifications.cs" />
     <Compile Include="Base\PlayerConfiguration\IAccountConfig.cs" />
     <Compile Include="Base\PlayerConfiguration\IAcquaintence.cs" />
     <Compile Include="Base\PlayerConfiguration\IPlayerMessage.cs" />

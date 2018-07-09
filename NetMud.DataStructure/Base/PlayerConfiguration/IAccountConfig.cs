@@ -32,7 +32,7 @@ namespace NetMud.DataStructure.Base.PlayerConfiguration
         /// <summary>
         /// Friends and Foes of this account
         /// </summary>
-        IEnumerable<IAcquaintance> Acquaintances { get; set; }
+        IEnumerable<IAcquaintence> Acquaintences { get; set; }
 
         /// <summary>
         /// Messages to this account

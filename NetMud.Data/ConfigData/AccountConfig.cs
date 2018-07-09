@@ -93,7 +93,7 @@ namespace NetMud.Data.ConfigData
         /// <summary>
         /// Friends and Foes of this account
         /// </summary>
-        public IEnumerable<IAcquaintance> Acquaintances { get; set; }
+        public IEnumerable<IAcquaintence> Acquaintences { get; set; }
 
         [JsonProperty("Notifications")]
         public HashSet<ConfigDataCacheKey> _notifications { get; set; }
@@ -166,11 +166,14 @@ namespace NetMud.Data.ConfigData
             {
                 UIModules = newConfig.UIModules;
                 UITutorialMode = newConfig.UITutorialMode;
+                GossipSubscriber = newConfig.GossipSubscriber;
 
                 GetNotifications(configData, charDirectory);
 
-                if (Acquaintances == null)
-                    Acquaintances = Enumerable.Empty<IAcquaintance>();
+                if (newConfig.Acquaintences == null)
+                    Acquaintences = Enumerable.Empty<IAcquaintence>();
+                else
+                    Acquaintences = newConfig.Acquaintences;
 
                 ConfigDataCache.Add(this);
 

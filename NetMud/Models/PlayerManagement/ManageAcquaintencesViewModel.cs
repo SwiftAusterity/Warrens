@@ -6,18 +6,18 @@ using NetMud.DataStructure.Base.PlayerConfiguration;
 
 namespace NetMud.Models.PlayerManagement
 {
-    public class ManageAcquaintencesViewModel : PagedDataModel<IAcquaintance>, BaseViewModel
+    public class ManageAcquaintencesViewModel : PagedDataModel<IAcquaintence>, BaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
-        public ManageAcquaintencesViewModel(IEnumerable<IAcquaintance> items)
+        public ManageAcquaintencesViewModel(IEnumerable<IAcquaintence> items)
             : base(items)
         {
             CurrentPageNumber = 1;
             ItemsPerPage = 20;
         }
 
-        internal override Func<IAcquaintance, bool> SearchFilter
+        internal override Func<IAcquaintence, bool> SearchFilter
         {
             get
             {

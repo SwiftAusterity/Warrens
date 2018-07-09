@@ -1,6 +1,5 @@
 ﻿using NetMud.DataStructure.Base.PlayerConfiguration;
 using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.Behaviors.System;
 using Newtonsoft.Json;
 using System;
 using System.Web.Script.Serialization;
@@ -11,7 +10,7 @@ namespace NetMud.Data.ConfigData
     /// player-to-player connections
     /// </summary>
     [Serializable]
-    public class Acquaintance : IAcquaintance
+    public class Acquaintence : IAcquaintence
     {
         /// <summary>
         /// The account handle of the person involved
@@ -57,6 +56,6 @@ namespace NetMud.Data.ConfigData
         /// <summary>
         /// What notifications are you subscribed to for this person
         /// </summary>
-        public AcquaintanceNotifications[] NotificationSubscriptions { get; set; }
+        public AcquaintenceNotifications[] NotificationSubscriptions { get; set; }
     }
 }

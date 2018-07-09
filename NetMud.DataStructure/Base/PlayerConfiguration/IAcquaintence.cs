@@ -5,7 +5,7 @@ namespace NetMud.DataStructure.Base.PlayerConfiguration
     /// <summary>
     /// player-to-player connections
     /// </summary>
-    public interface IAcquaintance
+    public interface IAcquaintence
     {
         /// <summary>
         /// The account handle of the person involved
@@ -30,6 +30,6 @@ namespace NetMud.DataStructure.Base.PlayerConfiguration
         /// <summary>
         /// What notifications are you subscribed to for this person
         /// </summary>
-        AcquaintanceNotifications[] NotificationSubscriptions { get; set; }
+        AcquaintenceNotifications[] NotificationSubscriptions { get; set; }
     }
 }

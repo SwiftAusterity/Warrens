@@ -3,7 +3,7 @@
     /// <summary>
     /// Notification events for friends
     /// </summary>
-    public enum AcquaintanceNotifications : short
+    public enum AcquaintenceNotifications : short
     {
         LogIn = 0,
         LogOff = 1,
