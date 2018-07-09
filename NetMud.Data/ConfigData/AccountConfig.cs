@@ -169,6 +169,9 @@ namespace NetMud.Data.ConfigData
 
                 GetNotifications(configData, charDirectory);
 
+                if (Acquaintances == null)
+                    Acquaintances = Enumerable.Empty<IAcquaintance>();
+
                 ConfigDataCache.Add(this);
 
                 return true;

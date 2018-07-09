@@ -14,7 +14,7 @@ namespace NetMud.Websock.TestServer
         /// <summary>
         /// The format the cachekeys for the comms objects take
         /// </summary>
-        public string cacheKeyFormat { get { return "LiveWebSocket.{0}"; } }
+        public string cacheKeyFormat => "LiveWebSocket.{0}";
 
         public IList<IDescriptor> ConnectedClients { get; set; }
 
@@ -25,13 +25,6 @@ namespace NetMud.Websock.TestServer
             Log.Output = (data, eventing) => LoggingUtility.Log(data.Message, LogChannels.SocketCommunication, true);
             Log.Level = LogLevel.Trace;
             AddWebSocketService<Descriptor>("/");
-            LiveCache.Add(this, string.Format(cacheKeyFormat, port));
-            Start();
-
-            if(IsListening)
-            {
-                LoggingUtility.Log(string.Format("{1} websocket started on port {0}.", port, secure ? "Secure" : "Insecure"), LogChannels.SocketCommunication, true);
-            }
         }
 
         public bool Broadcast(string message)
@@ -65,7 +58,13 @@ namespace NetMud.Websock.TestServer
 
         public void Launch(int portNumber)
         {
-            throw new NotImplementedException("Use the constructor.");
+            LiveCache.Add(this, string.Format(cacheKeyFormat, Port));
+            Start();
+
+            if (IsListening)
+            {
+                LoggingUtility.Log(string.Format("{1} websocket started on port {0}.", Port, IsSecure ? "Secure" : "Insecure"), LogChannels.SocketCommunication, true);
+            }
         }
     }
 }
