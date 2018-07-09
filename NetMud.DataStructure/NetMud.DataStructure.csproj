@@ -53,6 +53,7 @@
     <Compile Include="Base\Place\IMap.cs" />
     <Compile Include="Base\Place\IPathway.cs" />
     <Compile Include="Base\Place\IRoom.cs" />
+    <Compile Include="Base\Place\IGaia.cs" />
     <Compile Include="Base\Place\IZone.cs" />
     <Compile Include="Base\PlayerConfiguration\AcquaintenceNotifications.cs" />
     <Compile Include="Base\PlayerConfiguration\IAccountConfig.cs" />
@@ -93,6 +94,9 @@
     <Compile Include="Base\System\ILiveInCache.cs" />
     <Compile Include="Base\World\CelestialOrientation.cs" />
     <Compile Include="Base\World\ICelestial.cs" />
+    <Compile Include="Base\World\IChronology.cs" />
+    <Compile Include="Base\EntityBackingData\IGaiaData.cs" />
+    <Compile Include="Base\World\ITimeOfDay.cs" />
     <Compile Include="Behaviors\Actionable\ICanBeAffected.cs" />
     <Compile Include="Behaviors\Actionable\ICanBeWounded.cs" />
     <Compile Include="Behaviors\Actionable\ICanGainExperience.cs" />

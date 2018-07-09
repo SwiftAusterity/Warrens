@@ -91,6 +91,20 @@ namespace NetMud.Data.Game
         }
 
         /// <summary>
+        /// Get the live world associated with this live zone
+        /// </summary>
+        /// <returns>The world</returns>
+        public IGaia GetWorld()
+        {
+            var gaiaData = DataTemplate<IZoneData>().World;
+
+            if (gaiaData != null)
+                return gaiaData.GetLiveInstance();
+
+            return null;
+        }
+
+        /// <summary>
         /// Generate a new random locale with rooms, put it in the world (and this zone) as temporary
         /// </summary>
         /// <param name="name">The name of the new locale, empty = generate a new one</param>

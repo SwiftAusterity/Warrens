@@ -6,6 +6,7 @@ using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Base.World;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.Behaviors.System;
 using NetMud.DataStructure.Linguistic;
@@ -83,6 +84,30 @@ namespace NetMud.Data.EntityBackingData
         /// Set of output relevant to this exit. These are essentially single word descriptions to render the path
         /// </summary>
         public HashSet<IOccurrence> Descriptives { get; set; }
+
+        [JsonProperty("World")]
+        private BackingDataCacheKey _world { get; set; }
+
+        /// <summary>
+        /// What world does this belong to
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public IGaiaData World
+        {
+            get
+            {
+                if (_world == null)
+                    return null;
+
+                return BackingDataCache.Get<IGaiaData>(_world);
+            }
+            set
+            {
+                if (value != null)
+                    _world = new BackingDataCacheKey(value);
+            }
+        }
 
         [JsonProperty("Templates")]
         private HashSet<BackingDataCacheKey> _templates { get; set; }

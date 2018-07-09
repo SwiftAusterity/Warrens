@@ -15,5 +15,11 @@ namespace NetMud.DataStructure.Base.Place
         /// <param name="name">The name of the template requested, blank = use random</param>
         /// <returns>The locale generated</returns>
         ILocale GenerateAdventure(string templateName = "");
+
+        /// <summary>
+        /// Get the live world associated with this live zone
+        /// </summary>
+        /// <returns>The world</returns>
+        IGaia GetWorld();
     }
 }
