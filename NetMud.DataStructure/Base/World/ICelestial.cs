@@ -1,4 +1,5 @@
-﻿using NetMud.DataStructure.Base.System;
+﻿using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Base.System;
 
 namespace NetMud.DataStructure.Base.World
 {
@@ -31,5 +32,10 @@ namespace NetMud.DataStructure.Base.World
         /// How bright is this thing
         /// </summary>
         int Luminosity { get; set; }
+
+        /// <summary>
+        /// Physical model for the celestial object
+        /// </summary>
+        IDimensionalModel Model { get; set; }
     }
 }
