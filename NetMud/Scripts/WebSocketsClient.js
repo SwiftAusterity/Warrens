@@ -27,7 +27,7 @@ function submitCommand(overrideCommand) {
     var commandText = overrideCommand;
     var wipe = false;
 
-    if (commandText === '' || commandText == undefined) {
+    if (commandText === '' || commandText === undefined) {
         commandText = $('#input').val();
         wipe = true;
     }
@@ -42,32 +42,32 @@ function submitCommand(overrideCommand) {
 
 function TestBrowser() {
     if ('WebSocket' in window) {
-        window.connection = new WebSocket('wss://' + window.location.host + ':2929');
+        window.connection = new WebSocket('ws://localhost:2929');
 
         window.connection.onopen = function () {
             //Send a small message to the console once the connection is established
             AppendTextToOutput('Connection established with host.');
             $('#currentCharacter').prop('disabled', true);
-        }
+        };
 
         window.connection.onclose = function () {
             AppendTextToOutput('Connection closed by host.');
 
             //Unlock this on close
             $('#currentCharacter').prop('disabled', false);
-        }
+        };
 
         window.connection.onerror = function (error) {
             $('#currentCharacter').prop('disabled', false);
             AppendTextToOutput('Connection error detected: ' + error);
-        }
+        };
 
         window.connection.onmessage = function (e) {
             var server_message = JSON.parse(e.data);
 
             window.lastOutput = server_message;
             AppendOutput(server_message);
-        }
+        };
 
         $('#input').keydown(function (e) {
             switch (e.keyCode) {
