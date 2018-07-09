@@ -21,7 +21,7 @@ namespace NetMud.Models.PlayerManagement
         {
             get
             {
-                return item => item.Name.ToLower().Contains(SearchTerms.ToLower());
+                return item => item.PersonHandle.ToLower().Contains(SearchTerms.ToLower());
             }
         }
 
@@ -34,7 +34,6 @@ namespace NetMud.Models.PlayerManagement
 
         [Display(Name = "Gossip User", Description = "Is this person an external user coming from the InterMUD Gossip Network.")]
         public bool GossipSystem { get; set; }
-
 
         [Display(Name = "Notifications", Description = "Events you want to be notified about concerning this person.")]
         [DataType(DataType.Text)]

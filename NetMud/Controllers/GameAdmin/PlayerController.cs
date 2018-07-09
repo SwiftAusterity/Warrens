@@ -38,13 +38,14 @@ namespace NetMud.Controllers.GameAdmin
 
 
         [HttpPost]
-        public JsonResult SelectCharacter(long CurrentlySelectedCharacter)
+        [Route(@"Player/SelectCharacter/{id}")]
+        public JsonResult SelectCharacter(long id)
         {
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            if (authedUser != null && CurrentlySelectedCharacter >= 0)
+            if (authedUser != null && id >= 0)
             {
-                authedUser.GameAccount.CurrentlySelectedCharacter = CurrentlySelectedCharacter;
+                authedUser.GameAccount.CurrentlySelectedCharacter = id;
                 UserManager.Update(authedUser);
             }
 

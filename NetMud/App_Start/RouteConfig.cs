@@ -17,12 +17,6 @@ namespace NetMud
               );
 
             routes.MapRoute(
-                name: "SelectCharacterAjax",
-                url: "GameAdmin/Player/SelectCharacter/{CurrentlySelectedCharacter}",
-                defaults: new { controller = "Player", action = "SelectCharacter" }
-                );
-
-            routes.MapRoute(
                 name: "Room Add Modal",
                 url: "GameAdmin/Room/Add/{localeId}",
                 defaults: new { controller = "Room", action = "Add" },

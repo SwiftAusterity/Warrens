@@ -11,21 +11,12 @@ namespace NetMud.Data.ConfigData
     /// player-to-player connections
     /// </summary>
     [Serializable]
-    public class Acquaintance : ConfigData, IAcquaintance
+    public class Acquaintance : IAcquaintance
     {
         /// <summary>
-        /// What type of approval is necessary for this content
+        /// The account handle of the person involved
         /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        public override ContentApprovalType ApprovalType => ContentApprovalType.None; //Config data defaults to admin
-
-        /// <summary>
-        /// Type of configuation data this is
-        /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        public override ConfigDataType Type => ConfigDataType.Player;
+        public string PersonHandle { get; set; }
 
         [ScriptIgnore]
         [JsonIgnore]
@@ -41,15 +32,15 @@ namespace NetMud.Data.ConfigData
             get
             {
                 //Name = PersonHandle
-                if (_person == null && !string.IsNullOrWhiteSpace(Name))
-                    _person = System.Account.GetByHandle(Name);
+                if (_person == null && !string.IsNullOrWhiteSpace(PersonHandle))
+                    _person = System.Account.GetByHandle(PersonHandle);
 
                 return _person;
             }
             set
             {
                 if (value != null)
-                    Name = value.GlobalIdentityHandle;
+                    PersonHandle = value.GlobalIdentityHandle;
             }
         }
 

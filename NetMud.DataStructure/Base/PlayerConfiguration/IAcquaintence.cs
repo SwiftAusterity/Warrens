@@ -5,9 +5,12 @@ namespace NetMud.DataStructure.Base.PlayerConfiguration
     /// <summary>
     /// player-to-player connections
     /// </summary>
-    public interface IAcquaintance : IConfigData
+    public interface IAcquaintance
     {
-        //Name = PersonHandle
+        /// <summary>
+        /// The account handle of the person involved
+        /// </summary>
+        string PersonHandle { get; set; }
 
         /// <summary>
         /// The account in question

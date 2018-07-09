@@ -1,11 +1,16 @@
-﻿@model NetMud.Models.PlayerManagement.ManageAcquaintencesViewModel
+﻿@using System.Linq
+@using NetMud.DataStructure.Base.PlayerConfiguration
+
+@model NetMud.Models.PlayerManagement.ManageAcquaintencesViewModel
+
 @{
     var tableColumns = new Dictionary<string, Func<dynamic, string>>();
-    tableColumns.Add("Account", obj => obj.Name);
+    tableColumns.Add("Account", obj => obj.PersonHandle);
     tableColumns.Add("Friend?", obj => obj.IsFriend.ToString());
     tableColumns.Add("External Gossip User", obj => obj.GossipSystem.ToString());
-    tableColumns.Add("Notifications Subscribed To", obj => obj.NotificationSubscriptions);
+    tableColumns.Add("Notifications Subscribed To", obj => string.Join(", ", ((AcquaintanceNotifications[])obj.NotificationSubscriptions).Select(ns => ns.ToString())));
 }
+
 @Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model, "Acquaintences"))
 @using (Html.BeginForm("RemoveAcquaintence", "Manage"))
 {

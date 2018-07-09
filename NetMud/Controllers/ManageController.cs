@@ -254,7 +254,7 @@ namespace NetMud.Controllers
                     {
                         var recipient = Account.GetByHandle(vModel.RecipientAccount);
 
-                        if (recipient == null || recipient.Config.Acquaintances.Any(acq => acq.IsFriend == false && acq.Name.Equals(authedUser.GameAccount.GlobalIdentityHandle)))
+                        if (recipient == null || recipient.Config.Acquaintances.Any(acq => acq.IsFriend == false && acq.PersonHandle.Equals(authedUser.GameAccount.GlobalIdentityHandle)))
                             message = "You must include a valid recipient.";
                         else
                         {
@@ -395,7 +395,7 @@ namespace NetMud.Controllers
 
                 var newAcq = new Acquaintance
                 {
-                    Name = AcquaintenceName,
+                    PersonHandle = AcquaintenceName,
                     IsFriend = IsFriend,
                     GossipSystem = GossipSystem,
                     NotificationSubscriptions = notificationsList.ToArray()
@@ -407,13 +407,10 @@ namespace NetMud.Controllers
                     acquaintances.Remove(newAcq);
 
                 acquaintances.Add(newAcq);
+                authedUser.GameAccount.Config.Acquaintances = acquaintances;
 
-                if (newAcq.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
-                {
-                    authedUser.GameAccount.Config.Acquaintances = acquaintances;
-                    authedUser.GameAccount.Config.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
+                if (authedUser.GameAccount.Config.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                     message = "Acquaintence successfully added.";
-                }
                 else
                     message = "Error. Acquaintence not added.";
             }
@@ -435,14 +432,21 @@ namespace NetMud.Controllers
                 var userId = User.Identity.GetUserId();
                 var authedUser = UserManager.FindById(userId);
 
-                var acquaintence = authedUser.GameAccount.Config.Acquaintances.FirstOrDefault(ch => ch.UniqueKey.Equals(ID));
+                var acquaintence = authedUser.GameAccount.Config.Acquaintances.FirstOrDefault(ch => ch.PersonHandle.Equals(ID));
 
                 if (acquaintence == null)
                     message = "That Acquaintence does not exist";
-                else if (acquaintence.Remove(authedUser.GameAccount, authedUser.GetStaffRank(User)))
-                    message = "Acquaintence successfully deleted.";
                 else
-                    message = "Error. Acquaintence not removed.";
+                {
+                    var acquaintances = authedUser.GameAccount.Config.Acquaintances.ToList();
+
+                    acquaintances.Remove(acquaintence);
+
+                    if (authedUser.GameAccount.Config.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+                        message = "Acquaintence successfully deleted.";
+                    else
+                        message = "Error. Acquaintence not removed.";
+                }
             }
 
             return RedirectToAction("Acquaintances", new { Message = message });
