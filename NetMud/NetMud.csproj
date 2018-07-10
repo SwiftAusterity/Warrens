@@ -352,6 +352,7 @@
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <Content Include="Views\Manage\Acquaintences.cshtml" />
     <Content Include="WebSocketService.ashx" />
+    <Content Include="Views\GameAdmin\GlobalConfig.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />

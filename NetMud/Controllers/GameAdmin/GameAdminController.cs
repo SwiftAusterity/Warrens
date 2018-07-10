@@ -11,6 +11,7 @@ using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.PlayerConfiguration;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Base.World;
 using NetMud.DataStructure.Linguistic;
 using NetMud.Models.Admin;
 using System.Linq;
@@ -77,8 +78,6 @@ namespace NetMud.Controllers.GameAdmin
                 LiveNPCs = LiveCache.GetAll<IIntelligence>().Count(),
                 LiveLocales = LiveCache.GetAll<ILocale>().Count(),
                 LiveZones = LiveCache.GetAll<IZone>().Count(),
-
-                WebsocketServers = LiveCache.GetAll<NetMud.Websock.Server>()
             };
 
             return View(dashboardModel);
@@ -117,39 +116,6 @@ namespace NetMud.Controllers.GameAdmin
         }
         #endregion
 
-        #region "Communication"
-        public ActionResult StopRunningAllWebsockets()
-        {
-            string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
-
-            var servers = LiveCache.GetAll<NetMud.Websock.Server>();
-
-            foreach (var server in servers)
-                server.Shutdown();
-
-            LoggingUtility.LogAdminCommandUsage("*WEB* - StopALLWebSockets", authedUser.GameAccount.GlobalIdentityHandle);
-            message = "Cancel signal sent for all websockets.";
-
-            return RedirectToAction("Index", new { Message = message });
-        }
-
-        public ActionResult StopWebSocket(int port)
-        {
-            string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
-
-            var server = LiveCache.Get<NetMud.Websock.Server>("NetMud.Websock.Server_" + port.ToString());
-
-            server.Shutdown();
-
-            LoggingUtility.LogAdminCommandUsage("*WEB* - StopWebSocket[" + port.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-            message = "Cancel signal sent.";
-
-            return RedirectToAction("Index", new { Message = message });
-        }
-        #endregion
-
         #region Running Data
         public ActionResult BackupWorld()
         {
@@ -174,6 +140,44 @@ namespace NetMud.Controllers.GameAdmin
             hotBack.RestoreLiveBackup();
 
             return RedirectToAction("Index", new { Message = "Restore Started" });
+        }
+        #endregion
+
+        #region "Global Config"
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public ActionResult GlobalConfig()
+        {
+            var globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
+            var vModel = new GlobalConfigViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                DataObject = globalConfig,
+                WebsocketPortalActive = globalConfig.WebsocketPortalActive
+            };
+
+            return View(vModel);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public ActionResult GlobalConfig(GlobalConfigViewModel vModel)
+        {
+            string message = string.Empty;
+            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            var globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
+
+            globalConfig.WebsocketPortalActive = vModel.WebsocketPortalActive;
+
+            if (globalConfig.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+            {
+                LoggingUtility.LogAdminCommandUsage("*WEB* - EditGlobalConfig[" + globalConfig.UniqueKey.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                message = "Edit Successful.";
+            }
+            else
+                message = "Error; Edit failed.";
+
+            return RedirectToAction("Index", new { Message = message });
         }
         #endregion
     }

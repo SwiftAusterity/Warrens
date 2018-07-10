@@ -1,0 +1,15 @@
+﻿@model NetMud.Models.Admin.GlobalConfigViewModel
+<h3>Global Settings</h3>
+<section id="globalConfig">
+    @using (Html.BeginForm("GlobalConfig", "GameAdmin", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group row">
+            @Html.EditorFor(e => e.WebsocketPortalActive)
+        </div>
+
+        @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "GameAdmin", IncludeCancel = true })
+    }
+</section>

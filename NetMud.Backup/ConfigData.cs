@@ -2,6 +2,7 @@
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Base.World;
 using NetMud.DataStructure.SupportingClasses;
 using System;
 using System.IO;

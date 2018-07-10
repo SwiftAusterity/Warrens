@@ -18,6 +18,8 @@ namespace NetMud.Data.ConfigData
     [Serializable]
     public class Dictata : ConfigData, IDictata, IComparable<IDictata>, IEquatable<IDictata>, IEqualityComparer<IDictata>
     {
+        [ScriptIgnore]
+        [JsonIgnore]
         public override ContentApprovalType ApprovalType => ContentApprovalType.ReviewOnly;
 
         /// <summary>

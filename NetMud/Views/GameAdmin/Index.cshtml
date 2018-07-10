@@ -3,6 +3,9 @@
 @model NetMud.Models.Admin.DashboardViewModel
 
 <div class="adminDashboard">
+    <div style="width:100%">
+        @Html.ActionLink("Modify Global Settings", "GlobalConfig", "GameAdmin", new { @class = "addNew" })
+    </div>
     <div>
         <h4>Backing Data</h4>
         <dl class="dl-horizontal">
@@ -283,23 +286,6 @@
                         @Html.ActionLink("Stop", "StopRunningProcess", "GameAdmin", new { processName = token.Key }, new { @class = "btn btn-default stop" })
                     </dd>
                 }
-            }
-        </dl>
-    </div>
-    <div>
-        <h4>Communications</h4>
-        <dl class="dl-horizontal">
-            <dt>[@Model.WebsocketServers.Count().ToString()] WebSocket Ports</dt>
-            <dd>
-                @Html.ActionLink("Stop All", "StopAllWebsockets", "GameAdmin", new { @class = "btn btn-default caution" })
-            </dd>
-            @foreach (var server in Model.WebsocketServers)
-            {
-                <dt style="padding-top: 25px;">@server.PortNumber.ToString()</dt>
-                <dd style="padding-top: 25px;">
-                    <span style="color:green;">Listening</span>
-                    @Html.ActionLink("Stop", "StopWebSocket", "GameAdmin", new { portNumber = server.PortNumber }, new { @class = "btn btn-default stop" })
-                </dd>
             }
         </dl>
     </div>

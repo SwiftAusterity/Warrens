@@ -15,6 +15,8 @@ namespace NetMud.Data.ConfigData
     [Serializable]
     public class Language : ConfigData, ILanguage, IComparable<ILanguage>, IEquatable<ILanguage>, IEqualityComparer<ILanguage>
     {
+        [ScriptIgnore]
+        [JsonIgnore]
         public override ContentApprovalType ApprovalType => ContentApprovalType.ReviewOnly;
 
         /// <summary>

@@ -4,8 +4,10 @@ using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.PlayerConfiguration;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Base.World;
 using NetMud.DataStructure.Linguistic;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
 
@@ -35,8 +37,6 @@ namespace NetMud.Models.Admin
 
             DictionaryWords = Enumerable.Empty<IDictata>();
             Languages = Enumerable.Empty<ILanguage>();
-
-            WebsocketServers = Enumerable.Empty<Websock.Server>();
 
             LiveZones = 0;
             LiveLocales = 0;
@@ -72,13 +72,21 @@ namespace NetMud.Models.Admin
         //Running Data
         public Dictionary<string, CancellationTokenSource> LiveTaskTokens { get; set; }
 
-        public IEnumerable<Websock.Server> WebsocketServers { get; set; }
-
         public int LiveZones { get; set; }
         public int LiveLocales { get; set; }
         public int LiveRooms { get; set; }
         public int LiveInanimates { get; set; }
         public int LiveNPCs { get; set; }
         public int LivePlayers { get; set; }
+    }
+
+    public class GlobalConfigViewModel : BaseViewModel
+    {
+        public ApplicationUser authedUser { get; set; }
+
+        [Display(Name = "Websocket Portal Available", Description = "Are new connections being accepted over websockets?")]
+        public bool WebsocketPortalActive { get; set; }
+
+        public IGlobalConfig DataObject { get; set; }
     }
 }
