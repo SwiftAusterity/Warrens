@@ -318,7 +318,7 @@ namespace NetMud.Websock.ListenerServer
             //We need to barf out to the connected client the welcome message. The client will only indicate connection has been established.
             var welcomeMessage = new List<string>
             {
-                string.Format("Welcome to alpha phase twinMUD, {0}", currentCharacter.FullName()),
+                string.Format("Welcome to alpha phase Under the Eclipse, {0}", currentCharacter.FullName()),
                 "Please feel free to LOOK around."
             };
 
