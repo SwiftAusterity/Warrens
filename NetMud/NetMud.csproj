@@ -186,6 +186,8 @@
     <Compile Include="Controllers\AdminDataApiController.cs" />
     <Compile Include="Controllers\ClientDataApiController.cs" />
     <Compile Include="Controllers\FeaturesController.cs" />
+    <Compile Include="Controllers\GameAdmin\CelestialsController.cs" />
+    <Compile Include="Controllers\GameAdmin\GaiaController.cs" />
     <Compile Include="Controllers\GameAdmin\LanguageController.cs" />
     <Compile Include="Controllers\GameAdmin\DictionaryController.cs" />
     <Compile Include="Controllers\GameAdmin\ContentApprovalController.cs" />
@@ -217,6 +219,8 @@
     <Compile Include="Models\Admin\LanguageViewModels.cs" />
     <Compile Include="Models\Admin\DictionaryViewModels.cs" />
     <Compile Include="Models\Admin\ContentApprovalViewModels.cs" />
+    <Compile Include="Models\Admin\CelestialViewModels.cs" />
+    <Compile Include="Models\Admin\GaiaViewModels.cs" />
     <Compile Include="Models\Admin\UIModulesViewModels.cs" />
     <Compile Include="Models\Admin\LexicalViewModels.cs" />
     <Compile Include="Models\Admin\FloraViewModels.cs" />
@@ -585,7 +589,10 @@
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\index.d.ts" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Views\GameAdmin\Celestials\" />
+    <Folder Include="Views\GameAdmin\Gaia\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

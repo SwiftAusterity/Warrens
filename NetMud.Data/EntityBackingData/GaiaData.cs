@@ -50,10 +50,31 @@ namespace NetMud.Data.EntityBackingData
             set { _keywords = value; }
         }
 
+        [JsonProperty("CelestialBodies")]
+        public IEnumerable<BackingDataCacheKey> _celestialBodies { get; set; }
+
         /// <summary>
         /// Celestial bodies for this world
         /// </summary>
-        public IEnumerable<ICelestial> CelestialBodies { get; set; }
+        [JsonIgnore]
+        [ScriptIgnore]
+        public IEnumerable<ICelestial> CelestialBodies
+        {
+            get
+            {
+                if (_celestialBodies == null)
+                    _celestialBodies = Enumerable.Empty<BackingDataCacheKey>();
+
+                return _celestialBodies.Select(cp => BackingDataCache.Get<ICelestial>(cp));
+            }
+            set
+            {
+                if (value == null)
+                    return;
+
+                _celestialBodies = value.Select(cp => new BackingDataCacheKey(cp));
+            }
+        }
 
         /// <summary>
         /// Time keeping for this world

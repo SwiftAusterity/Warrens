@@ -46,17 +46,42 @@ namespace NetMud.Data.Game
         /// <summary>
         /// Collection of weather patterns for this world
         /// </summary>
+        [ScriptIgnore] //TODO: Stop ignoring weather and economy once these are figured out
+        [JsonIgnore]
         public IEnumerable<IWeatherPattern> MeterologicalFronts { get; set; }
 
         /// <summary>
         /// Economic controller for this world
         /// </summary>
+        [ScriptIgnore] //TODO: Stop ignoring weather and economy once these are figured out
+        [JsonIgnore]
         public IEconomy Macroeconomy { get; set; }
+
+        [JsonProperty("CelestialPositions")]
+        public IEnumerable<Tuple<BackingDataCacheKey, float>> _celestialPositions { get; set; }
 
         /// <summary>
         /// Where the various celestial bodies are along their paths
         /// </summary>
-        public IEnumerable<Tuple<ICelestial, float>> CelestialPositions { get; set; }
+        [ScriptIgnore]
+        [JsonIgnore]
+        public IEnumerable<Tuple<ICelestial, float>> CelestialPositions
+        {
+            get
+            {
+                if (_celestialPositions == null)
+                    _celestialPositions = Enumerable.Empty<Tuple<BackingDataCacheKey, float>>();
+
+                return _celestialPositions.Select(cp => new Tuple<ICelestial, float>(BackingDataCache.Get<ICelestial>(cp.Item1), cp.Item2));
+            }
+            set
+            {
+                if (value == null)
+                    return;
+
+                _celestialPositions = value.Select(cp => new Tuple<BackingDataCacheKey, float>(new BackingDataCacheKey(cp.Item1), cp.Item2));
+            }
+        }
 
         public void GetFromWorldOrSpawn()
         {
