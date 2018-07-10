@@ -24,12 +24,21 @@ namespace NetMud.Websock.TestServer
         {
             Log.Output = (data, eventing) => LoggingUtility.Log(data.Message, LogChannels.SocketCommunication, true);
             Log.Level = LogLevel.Trace;
+
+            if (secure)
+            {
+                SslConfiguration.ServerCertificate = new System.Security.Cryptography.X509Certificates.X509Certificate2(@"c:\websites\ute\App_Data\sslCert.cer");
+                SslConfiguration.ClientCertificateRequired = false;
+                SslConfiguration.CheckCertificateRevocation = false;
+                SslConfiguration.ClientCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
+            }
+
             AddWebSocketService<Descriptor>("/");
         }
 
         public bool Broadcast(string message)
         {
-            foreach(var client in ConnectedClients)
+            foreach (var client in ConnectedClients)
             {
                 client.SendWrapper(message);
             }
