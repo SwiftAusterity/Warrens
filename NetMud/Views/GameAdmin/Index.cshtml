@@ -9,6 +9,20 @@
     <div>
         <h4>Backing Data</h4>
         <dl class="dl-horizontal">
+            <dt>Worlds:</dt>
+            <dd>
+                @Model.Worlds.Count().ToString() [
+                @Html.ActionLink("Manage", "Index", "Gaia")
+                @Html.ActionLink("Add", "Add", "Gaia") ]
+                @if (Model.Worlds.Any(r => r.FitnessProblems))
+                {
+                    <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
+                }
+                @if (Model.Zones.Any(r => r.State != ApprovalState.Approved))
+                {
+                    <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
+                }
+            </dd>
             <dt>Zones:</dt>
             <dd>
                 @Model.Zones.Count().ToString() [
@@ -206,6 +220,20 @@
                     <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                 }
             </dd>
+            <dt>Celestial Bodies:</dt>
+            <dd>
+                @Model.Celestials.Count().ToString() [
+                @Html.ActionLink("Manage", "Index", "Celestials")
+                @Html.ActionLink("Add", "Add", "Celestials") ]
+                @if (Model.Celestials.Any(r => r.FitnessProblems))
+                {
+                    <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
+                }
+                @if (Model.UIModules.Any(r => r.State != ApprovalState.Approved))
+                {
+                    <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
+                }
+            </dd>
         </dl>
     </div>
     <div>
@@ -232,6 +260,10 @@
             <dd>
                 @Model.LivePlayers [
                 @Html.ActionLink("Manage", "Index", "Player") ]
+            </dd>
+            <dt>Worlds:</dt>
+            <dd>
+                @Model.LiveWorlds [ ]
             </dd>
             <dt>Zones:</dt>
             <dd>

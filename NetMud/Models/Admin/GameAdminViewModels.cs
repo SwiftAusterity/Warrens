@@ -24,6 +24,7 @@ namespace NetMud.Models.Admin
             NPCs = Enumerable.Empty<INonPlayerCharacter>();
             Zones = Enumerable.Empty<IZoneData>();
             Locales = Enumerable.Empty<ILocaleData>();
+            Worlds = Enumerable.Empty<IGaiaData>();
 
             DimensionalModels = Enumerable.Empty<IDimensionalModelData>();
             HelpFiles = Enumerable.Empty<IHelp>();
@@ -34,10 +35,12 @@ namespace NetMud.Models.Admin
             Fauna = Enumerable.Empty<IFauna>();
             Minerals = Enumerable.Empty<IMineral>();
             UIModules = Enumerable.Empty<IUIModule>();
+            Celestials = Enumerable.Empty<ICelestial>();
 
             DictionaryWords = Enumerable.Empty<IDictata>();
             Languages = Enumerable.Empty<ILanguage>();
 
+            LiveWorlds = 0;
             LiveZones = 0;
             LiveLocales = 0;
             LiveRooms = 0;
@@ -53,6 +56,7 @@ namespace NetMud.Models.Admin
         public IEnumerable<INonPlayerCharacter> NPCs { get; set; }
         public IEnumerable<IZoneData> Zones { get; set; }
         public IEnumerable<ILocaleData> Locales { get; set; }
+        public IEnumerable<IGaiaData> Worlds { get; set; }
 
         //Lookup Data
         public IEnumerable<IDimensionalModelData> DimensionalModels { get; set; }
@@ -64,6 +68,7 @@ namespace NetMud.Models.Admin
         public IEnumerable<IFauna> Fauna { get; set; }
         public IEnumerable<IMineral> Minerals { get; set; }
         public IEnumerable<IUIModule> UIModules { get; set; }
+        public IEnumerable<ICelestial> Celestials { get; set; }
 
         //Config Data
         public IEnumerable<IDictata> DictionaryWords { get; set; }
@@ -72,6 +77,7 @@ namespace NetMud.Models.Admin
         //Running Data
         public Dictionary<string, CancellationTokenSource> LiveTaskTokens { get; set; }
 
+        public int LiveWorlds { get; set; }
         public int LiveZones { get; set; }
         public int LiveLocales { get; set; }
         public int LiveRooms { get; set; }

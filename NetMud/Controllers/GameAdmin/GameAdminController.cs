@@ -57,6 +57,7 @@ namespace NetMud.Controllers.GameAdmin
                 NPCs = BackingDataCache.GetAll<INonPlayerCharacter>(),
                 Zones = BackingDataCache.GetAll<IZoneData>(),
                 Locales = BackingDataCache.GetAll<ILocaleData>(),
+                Worlds = BackingDataCache.GetAll<IGaiaData>(),
 
                 HelpFiles = BackingDataCache.GetAll<IHelp>(),
                 DimensionalModels = BackingDataCache.GetAll<IDimensionalModelData>(),
@@ -67,6 +68,7 @@ namespace NetMud.Controllers.GameAdmin
                 Flora = BackingDataCache.GetAll<IFlora>(),
                 Minerals = BackingDataCache.GetAll<IMineral>(),
                 UIModules = BackingDataCache.GetAll<IUIModule>(),
+                Celestials = BackingDataCache.GetAll<ICelestial>(),
 
                 DictionaryWords = ConfigDataCache.GetAll<IDictata>(),
                 Languages = ConfigDataCache.GetAll<ILanguage>(),
@@ -78,6 +80,7 @@ namespace NetMud.Controllers.GameAdmin
                 LiveNPCs = LiveCache.GetAll<IIntelligence>().Count(),
                 LiveLocales = LiveCache.GetAll<ILocale>().Count(),
                 LiveZones = LiveCache.GetAll<IZone>().Count(),
+                LiveWorlds = LiveCache.GetAll<IGaia>().Count(),
             };
 
             return View(dashboardModel);
