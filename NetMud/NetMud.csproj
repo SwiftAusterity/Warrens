@@ -255,6 +255,9 @@
     <Compile Include="Models\SubmitButtonModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="WebSocketService.ashx.cs">
+      <DependentUpon>WebSocketService.ashx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\dbo.Account.sql" />
@@ -348,6 +351,7 @@
     <Content Include="Views\Manage\AddViewNotification.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <Content Include="Views\Manage\Acquaintences.cshtml" />
+    <Content Include="WebSocketService.ashx" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />

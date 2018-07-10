@@ -20,8 +20,8 @@ namespace NetMud
             if (!hotBack.RestoreLiveBackup())
                 hotBack.NewWorldFallback();
 
-            var customSockServer = new Websock.TestServer.Server(2929, false);
-            customSockServer.Launch(2929);
+            //var customSockServer = new Websock.TestServer.Server(2929, false);
+            //customSockServer.Launch(2929);
 
             var gossipServer = new Gossip.GossipClient();
             gossipServer.Launch();
