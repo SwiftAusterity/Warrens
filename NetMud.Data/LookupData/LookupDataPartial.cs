@@ -1,6 +1,7 @@
 ﻿using NetMud.Data.DataIntegrity;
 using NetMud.Data.System;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.SupportingClasses;
 using System.Collections.Generic;
 
 namespace NetMud.Data.LookupData
@@ -14,7 +15,7 @@ namespace NetMud.Data.LookupData
         /// Extra text for the help command to display
         /// </summary>
         [StringDataIntegrity("Help text empty.", warning: true)]
-        public string HelpText { get; set; }
+        public MarkdownString HelpText { get; set; }
 
         /// <summary>
         /// Make a new one of these
@@ -32,7 +33,7 @@ namespace NetMud.Data.LookupData
         {
             var sb = new List<string>
             {
-                HelpText
+                 HelpText
             };
 
             return sb;

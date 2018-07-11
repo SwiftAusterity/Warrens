@@ -1,5 +1,6 @@
 ﻿using NetMud.Authentication;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.SupportingClasses;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -41,7 +42,7 @@ namespace NetMud.Models.Admin
         public string Name { get; set; }
 
         [StringLength(2000, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 20)]
-        [DataType(DataType.MultilineText)]
+        [DataType("Markdown")]
         [Display(Name = "Help Text", Description = "The descriptive text shown in the public help pages and when HELP is used in game.")]
         public string HelpText { get; set; }
 

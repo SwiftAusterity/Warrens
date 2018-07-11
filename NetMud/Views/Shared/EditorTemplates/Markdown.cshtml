@@ -1,4 +1,6 @@
 ﻿@using NetMud.Models
+@using NetMud.DataStructure.SupportingClasses
+
 @model string
 @{
     double columnCount = ViewData["columnCount"] == null ? 1 : (int)ViewData["columnCount"];
@@ -11,11 +13,11 @@
 <div class="col-sm-5">
     @if (disabled)
     {
-        @Html.TextAreaFor(m => m, 20, 80, new Dictionary<string, object>() { { "class", cssClass }, { "disabled", "disabled" } })
+        @Html.TextAreaFor(m => m, 20, 80, new Dictionary<string, object>() { { "class", cssClass }, { "disabled", "disabled" }, { "data-provide", "markdown" } })
     }
     else
     {
-        @Html.TextAreaFor(m => m, 20, 80, new Dictionary<string, object>() { { "class", cssClass } })
+        @Html.TextAreaFor(m => m, 20, 80, new Dictionary<string, object>() { { "class", cssClass }, { "data-provide", "markdown" } })
     }
     @Html.ValidationMessageFor(m => m, "", new { @class = "text-danger" })
 </div>

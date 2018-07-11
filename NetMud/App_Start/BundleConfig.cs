@@ -22,11 +22,14 @@ namespace NetMud
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js",
+                      "~/Scripts/marked.js",
+                      "~/Scripts/bootstrap-markdown.js",
                       "~/Scripts/respond.js",
                       "~/Scripts/js-cookie.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.lumen.css",
+                      "~/Content/bootstrap-markdown.min.css",
                       "~/Content/popper.css",
                       "~/Content/Site.css"));
 

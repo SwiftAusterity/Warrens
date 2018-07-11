@@ -84,7 +84,7 @@ namespace NetMud.Commands.System
         /// <summary>
         /// The custom body of help text
         /// </summary>
-        public override string HelpText
+        public override MarkdownString HelpText
         {
             get
             {

@@ -1,6 +1,7 @@
 ﻿using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.Rendering;
+using NetMud.DataStructure.SupportingClasses;
 using System.Collections.Generic;
 
 namespace NetMud.Commands.Attributes
@@ -44,7 +45,7 @@ namespace NetMud.Commands.Attributes
         /// <summary>
         /// The custom body of help text
         /// </summary>
-        public abstract string HelpText { get; set; }
+        public abstract MarkdownString HelpText { get; set; }
 
         public virtual IEnumerable<string> RenderHelpBody()
         {

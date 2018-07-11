@@ -270,6 +270,7 @@
     <Content Include="App_Data\testingDB.sdf" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
+    <Content Include="Content\bootstrap-markdown.min.css" />
     <Content Include="Content\bootstrap-reboot.css" />
     <Content Include="Content\bootstrap-reboot.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -292,6 +293,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Scripts\bootstrap-markdown.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -359,6 +361,7 @@
     <Content Include="Views\Manage\Acquaintences.cshtml" />
     <Content Include="WebSocketService.ashx" />
     <Content Include="Views\GameAdmin\GlobalConfig.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Markdown.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />
