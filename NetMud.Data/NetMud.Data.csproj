@@ -49,6 +49,7 @@
     <Compile Include="ConfigData\AccountConfig.cs" />
     <Compile Include="ConfigData\ConfigData.cs" />
     <Compile Include="ConfigData\Acquaintence.cs" />
+    <Compile Include="ConfigData\GlobalConfig.cs" />
     <Compile Include="ConfigData\PlayerMessage.cs" />
     <Compile Include="ConfigData\Language.cs" />
     <Compile Include="ConfigData\Dictata.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="DataIntegrity\IntDataIntegrityAttribute.cs" />
     <Compile Include="DataIntegrity\StringDataIntegrityAttribute.cs" />
     <Compile Include="EntityBackingData\EntityBackingDataPartial.cs" />
+    <Compile Include="EntityBackingData\GaiaData.cs" />
     <Compile Include="EntityBackingData\LocaleData.cs" />
     <Compile Include="EntityBackingData\LocationDataEntityPartial.cs" />
     <Compile Include="EntityBackingData\NonPlayerCharacter.cs" />
@@ -69,6 +71,7 @@
     <Compile Include="EntityBackingData\RoomData.cs" />
     <Compile Include="EntityBackingData\ZoneData.cs" />
     <Compile Include="Game\EntityPartial.cs" />
+    <Compile Include="Game\Gaia.cs" />
     <Compile Include="Game\Inanimate.cs" />
     <Compile Include="Game\Locale.cs" />
     <Compile Include="Game\LocationEntityPartial.cs" />
@@ -76,6 +79,7 @@
     <Compile Include="Game\Intelligence.cs" />
     <Compile Include="Game\Player.cs" />
     <Compile Include="Game\Room.cs" />
+    <Compile Include="LookupData\Celestial.cs" />
     <Compile Include="LookupData\NaturalResourceDataPartial.cs" />
     <Compile Include="Game\World.cs" />
     <Compile Include="LookupData\UIModule.cs" />
@@ -94,6 +98,7 @@
     <Compile Include="System\Account.cs" />
     <Compile Include="System\Affect.cs" />
     <Compile Include="Serialization\ConcreteTypeConverter.cs" />
+    <Compile Include="System\Chronology.cs" />
     <Compile Include="System\Constants.cs" />
     <Compile Include="System\DataHelpers.cs" />
     <Compile Include="System\EntityContainer.cs" />
@@ -107,6 +112,7 @@
     <Compile Include="LookupData\Mineral.cs" />
     <Compile Include="System\Occurrence.cs" />
     <Compile Include="System\SerializableDataPartial.cs" />
+    <Compile Include="System\TimeOfDay.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NetMud.Cartography\NetMud.Cartography.csproj">

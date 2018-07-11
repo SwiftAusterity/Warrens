@@ -1,5 +1,9 @@
 ﻿using NetMud.Backup;
 using NetMud.CentralControl;
+using NetMud.Data.ConfigData;
+using NetMud.DataAccess.Cache;
+using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Base.World;
 using System;
 
 namespace NetMud
@@ -9,7 +13,21 @@ namespace NetMud
         public static void PreloadSupportingEntities()
         {
             //Load the "config" data first
-            ConfigData.LoadEverythingToCache();
+            Backup.ConfigData.LoadEverythingToCache();
+
+            var globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
+
+            //We dont move forward without a global config
+            if (globalConfig == null)
+            {
+                globalConfig = new GlobalConfig()
+                {
+                    Name = "LiveSettings",
+                    WebsocketPortalActive = true
+                };
+
+                globalConfig.SystemSave();
+            }
 
             //Load structural data next
             BackingData.LoadEverythingToCache();
@@ -20,8 +38,8 @@ namespace NetMud
             if (!hotBack.RestoreLiveBackup())
                 hotBack.NewWorldFallback();
 
-            var customSockServer = new Websock.TestServer.Server(2929, false);
-            customSockServer.Launch(2929);
+            //var customSockServer = new Websock.TestServer.Server(2929, false);
+            //customSockServer.Launch(2929);
 
             var gossipServer = new Gossip.GossipClient();
             gossipServer.Launch();

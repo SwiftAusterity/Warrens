@@ -1,12 +1,11 @@
-﻿using NetMud.DataStructure.Base.System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Base.World
 {
     /// <summary>
     /// Time keeping config data for a world
     /// </summary>
-    public interface IChronology : ILookupData
+    public interface IChronology
     {
         /// <summary>
         /// List of monthnames in order

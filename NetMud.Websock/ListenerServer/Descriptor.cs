@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
 using NetMud.Data.Game;
 using NetMud.DataAccess;
@@ -17,13 +18,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using WebSocketSharp;
-using WebSocketSharp.Net;
 
-namespace NetMud.Websock.TestServer
+namespace NetMud.Websock.ListenerServer
 {
     /// <summary>
     /// Main handler of descriptor connections for websockets
@@ -66,7 +65,7 @@ namespace NetMud.Websock.TestServer
         /// Creates an instance of the command negotiator with a specified user manager
         /// </summary>
         /// <param name="userManager">the authentication manager from the web</param>
-        public Descriptor(ApplicationUserManager userManager)
+        public Descriptor(ApplicationUserManager userManager) 
         {
             UserManager = userManager;
 
@@ -223,36 +222,30 @@ namespace NetMud.Websock.TestServer
         /// <summary>
         /// Handles initial connection
         /// </summary>
-        protected override void OnOpen()
+        public override void OnOpen()
         {
             base.OnOpen();
 
-            BirthMark = LiveCache.GetUniqueIdentifier(string.Format(cacheKeyFormat, ID));
+            BirthMark = LiveCache.GetUniqueIdentifier(string.Format(cacheKeyFormat, WebSocketContext.AnonymousID));
             PersistToCache();
 
-            ValidateUser(Context.CookieCollection[".AspNet.ApplicationCookie"]);
+            UserManager = new ApplicationUserManager(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+
+            ValidateUser(WebSocketContext.CookieCollection[".AspNet.ApplicationCookie"]);
 
             LoggingUtility.Log(content: "Socket client accepted", channel: LogChannels.SocketCommunication);
-        }
-
-        protected override void OnMessage(MessageEventArgs e)
-        {
-            if (e.IsPing)
-                SendPing();
-            else if (e.IsText)
-                OnMessage(e.Data);
         }
 
         /// <summary>
         /// Handles when the connected descriptor sends input
         /// </summary>
         /// <param name="e">the events of the message</param>
-        private bool OnMessage(string message)
+        public override void OnMessage(string message)
         {
             if (_currentPlayer == null)
             {
                 OnError(new Exception("Invalid character; please reload the client and try again."));
-                return false;
+                return;
             }
 
             var errors = Interpret.Render(message, _currentPlayer);
@@ -260,8 +253,6 @@ namespace NetMud.Websock.TestServer
             //It only sends the errors
             if (errors.Any(str => !string.IsNullOrWhiteSpace(str)))
                 SendWrapper(errors);
-
-            return true;
         }
 
         /// <summary>

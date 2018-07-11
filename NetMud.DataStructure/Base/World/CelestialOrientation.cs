@@ -3,12 +3,12 @@
     /// <summary>
     /// Types of orbits
     /// </summary>
-    public enum CelestialOrientation
+    public enum CelestialOrientation : short
     {
-        HelioCentric,
-        Fixed,
-        EllipticalOrbit,
-        GeostationaryOrbit,
-        GeosynchronousOrbit
+        HelioCentric = 0,
+        Fixed = 1,
+        EllipticalOrbit = 2,
+        GeostationaryOrbit = 3,
+        GeosynchronousOrbit = 4
     }
 }

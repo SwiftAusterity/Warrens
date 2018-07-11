@@ -186,6 +186,8 @@
     <Compile Include="Controllers\AdminDataApiController.cs" />
     <Compile Include="Controllers\ClientDataApiController.cs" />
     <Compile Include="Controllers\FeaturesController.cs" />
+    <Compile Include="Controllers\GameAdmin\CelestialsController.cs" />
+    <Compile Include="Controllers\GameAdmin\GaiaController.cs" />
     <Compile Include="Controllers\GameAdmin\LanguageController.cs" />
     <Compile Include="Controllers\GameAdmin\DictionaryController.cs" />
     <Compile Include="Controllers\GameAdmin\ContentApprovalController.cs" />
@@ -217,6 +219,8 @@
     <Compile Include="Models\Admin\LanguageViewModels.cs" />
     <Compile Include="Models\Admin\DictionaryViewModels.cs" />
     <Compile Include="Models\Admin\ContentApprovalViewModels.cs" />
+    <Compile Include="Models\Admin\CelestialViewModels.cs" />
+    <Compile Include="Models\Admin\GaiaViewModels.cs" />
     <Compile Include="Models\Admin\UIModulesViewModels.cs" />
     <Compile Include="Models\Admin\LexicalViewModels.cs" />
     <Compile Include="Models\Admin\FloraViewModels.cs" />
@@ -255,6 +259,9 @@
     <Compile Include="Models\SubmitButtonModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="WebSocketService.ashx.cs">
+      <DependentUpon>WebSocketService.ashx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\dbo.Account.sql" />
@@ -348,6 +355,8 @@
     <Content Include="Views\Manage\AddViewNotification.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <Content Include="Views\Manage\Acquaintences.cshtml" />
+    <Content Include="WebSocketService.ashx" />
+    <Content Include="Views\GameAdmin\GlobalConfig.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />
@@ -580,7 +589,10 @@
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\index.d.ts" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Views\GameAdmin\Celestials\" />
+    <Folder Include="Views\GameAdmin\Gaia\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
