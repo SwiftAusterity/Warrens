@@ -69,6 +69,7 @@ namespace NetMud.Controllers.GameAdmin
                 Minerals = BackingDataCache.GetAll<IMineral>(),
                 UIModules = BackingDataCache.GetAll<IUIModule>(),
                 Celestials = BackingDataCache.GetAll<ICelestial>(),
+                Journals = BackingDataCache.GetAll<IJournalEntry>(),
 
                 DictionaryWords = ConfigDataCache.GetAll<IDictata>(),
                 Languages = ConfigDataCache.GetAll<ILanguage>(),

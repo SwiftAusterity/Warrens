@@ -36,6 +36,7 @@ namespace NetMud.Models.Admin
             Minerals = Enumerable.Empty<IMineral>();
             UIModules = Enumerable.Empty<IUIModule>();
             Celestials = Enumerable.Empty<ICelestial>();
+            Journals = Enumerable.Empty<IJournalEntry>();
 
             DictionaryWords = Enumerable.Empty<IDictata>();
             Languages = Enumerable.Empty<ILanguage>();
@@ -69,6 +70,7 @@ namespace NetMud.Models.Admin
         public IEnumerable<IMineral> Minerals { get; set; }
         public IEnumerable<IUIModule> UIModules { get; set; }
         public IEnumerable<ICelestial> Celestials { get; set; }
+        public IEnumerable<IJournalEntry> Journals { get; set; }
 
         //Config Data
         public IEnumerable<IDictata> DictionaryWords { get; set; }

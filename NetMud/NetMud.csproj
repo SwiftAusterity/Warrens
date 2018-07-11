@@ -188,6 +188,7 @@
     <Compile Include="Controllers\FeaturesController.cs" />
     <Compile Include="Controllers\GameAdmin\CelestialsController.cs" />
     <Compile Include="Controllers\GameAdmin\GaiaController.cs" />
+    <Compile Include="Controllers\GameAdmin\JournalEntryController.cs" />
     <Compile Include="Controllers\GameAdmin\LanguageController.cs" />
     <Compile Include="Controllers\GameAdmin\DictionaryController.cs" />
     <Compile Include="Controllers\GameAdmin\ContentApprovalController.cs" />
@@ -216,6 +217,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Admin\JournalEntryViewModels.cs" />
     <Compile Include="Models\Admin\LanguageViewModels.cs" />
     <Compile Include="Models\Admin\DictionaryViewModels.cs" />
     <Compile Include="Models\Admin\ContentApprovalViewModels.cs" />
@@ -592,6 +594,7 @@
   <ItemGroup>
     <Folder Include="Views\GameAdmin\Celestials\" />
     <Folder Include="Views\GameAdmin\Gaia\" />
+    <Folder Include="Views\GameAdmin\JournalEntry\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

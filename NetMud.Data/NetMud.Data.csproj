@@ -80,6 +80,7 @@
     <Compile Include="Game\Player.cs" />
     <Compile Include="Game\Room.cs" />
     <Compile Include="LookupData\Celestial.cs" />
+    <Compile Include="LookupData\JournalEntry.cs" />
     <Compile Include="LookupData\NaturalResourceDataPartial.cs" />
     <Compile Include="Game\World.cs" />
     <Compile Include="LookupData\UIModule.cs" />

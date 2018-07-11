@@ -18,7 +18,7 @@
                 {
                     <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
                 }
-                @if (Model.Zones.Any(r => r.State != ApprovalState.Approved))
+                @if (Model.Worlds.Any(r => r.State != ApprovalState.Approved))
                 {
                     <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                 }
@@ -94,6 +94,20 @@
     <div>
         <h4>Lookup Data</h4>
         <dl class="dl-horizontal">
+            <dt>Journal Entries:</dt>
+            <dd>
+                @Model.Journals.Count().ToString() [
+                @Html.ActionLink("Manage", "Index", "JournalEntry")
+                @Html.ActionLink("Add", "Add", "JournalEntry") ]
+                @if (Model.Journals.Any(r => r.FitnessProblems))
+                {
+                    <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
+                }
+                @if (Model.Journals.Any(r => r.State != ApprovalState.Approved))
+                {
+                    <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
+                }
+            </dd>
             <dt>Help Files:</dt>
             <dd>
                 @Model.HelpFiles.Count().ToString() [
@@ -229,7 +243,7 @@
                 {
                     <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
                 }
-                @if (Model.UIModules.Any(r => r.State != ApprovalState.Approved))
+                @if (Model.Celestials.Any(r => r.State != ApprovalState.Approved))
                 {
                     <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                 }
