@@ -1,4 +1,5 @@
-﻿using NetMud.DataStructure.Base.System;
+﻿using Microsoft.Web.WebSockets;
+using NetMud.DataStructure.Base.System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -7,12 +8,12 @@ namespace NetMud.Websock
     /// <summary>
     /// Partial class for websocket channel details
     /// </summary>
-    public abstract class Channel : IChannelType
+    public abstract class Channel : WebSocketHandler, IChannelType
     {
         /// <summary>
         /// The format the cachekeys for the comms objects take
         /// </summary>
-        public string cacheKeyFormat { get { return "LiveWebSocket.{0}"; } }
+        public string cacheKeyFormat { get { return "LiveWebSocketClient.{0}"; } }
 
         /// <summary>
         /// What type of connection the player has

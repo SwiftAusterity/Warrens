@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Web.WebSockets;
 using NetMud.Authentication;
-using NetMud.Websock.ListenerServer;
+using NetMud.Websock;
 using System.Web;
 
 namespace NetMud

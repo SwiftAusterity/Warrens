@@ -17,11 +17,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Net.Sockets;
+using System.Net;
 using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace NetMud.Websock
@@ -32,19 +29,9 @@ namespace NetMud.Websock
     public class Descriptor : Channel, IDescriptor
     {
         /// <summary>
-        /// For Websocket handshaking
-        /// </summary>
-        static private string guid = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
-
-        /// <summary>
         /// The user manager for the application, handles authentication from the web
         /// </summary>
         public ApplicationUserManager UserManager { get; private set; }
-
-        /// <summary>
-        /// The actual connection's client handler
-        /// </summary>
-        internal TcpClient Client { get; set; }
 
         /// <summary>
         /// Unique string for this live entity
@@ -69,30 +56,19 @@ namespace NetMud.Websock
         /// <summary>
         /// Creates an instance of the command negotiator
         /// </summary>
-        public Descriptor(TcpClient tcpClient)
+        public Descriptor() : this(new ApplicationUserManager(new UserStore<ApplicationUser>(new ApplicationDbContext())))
         {
-            Client = tcpClient;
-            UserManager = new ApplicationUserManager(new UserStore<ApplicationUser>(new ApplicationDbContext()));
-
-            BirthMark = LiveCache.GetUniqueIdentifier(string.Format(cacheKeyFormat, Client.Client.RemoteEndPoint.Serialize().ToString()));
-            Birthdate = DateTime.Now;
-
-            PersistToCache();
         }
 
         /// <summary>
         /// Creates an instance of the command negotiator with a specified user manager
         /// </summary>
         /// <param name="userManager">the authentication manager from the web</param>
-        public Descriptor(TcpClient tcpClient, ApplicationUserManager userManager)
+        public Descriptor(ApplicationUserManager userManager) 
         {
-            Client = tcpClient;
             UserManager = userManager;
 
-            BirthMark = LiveCache.GetUniqueIdentifier(string.Format(cacheKeyFormat, Client.Client.RemoteEndPoint.Serialize().ToString()));
             Birthdate = DateTime.Now;
-
-            PersistToCache();
         }
 
         #region Caching
@@ -230,8 +206,6 @@ namespace NetMud.Websock
         public void Disconnect(string finalMessage)
         {
             SendWrapper(finalMessage);
-
-            Client.Close();
         }
 
         /// <summary>
@@ -247,63 +221,30 @@ namespace NetMud.Websock
         /// <summary>
         /// Handles initial connection
         /// </summary>
-        private async void OnOpen()
+        public override void OnOpen()
         {
-            NetworkStream stream = Client.GetStream();
+            base.OnOpen();
 
-            //enter to an infinite cycle to be able to handle every change in stream
-            await DataAvailable(stream);
+            BirthMark = LiveCache.GetUniqueIdentifier(string.Format(cacheKeyFormat, WebSocketContext.AnonymousID));
+            PersistToCache();
 
-            var bytes = new Byte[Client.Available];
+            UserManager = new ApplicationUserManager(new UserStore<ApplicationUser>(new ApplicationDbContext()));
 
-            stream.Read(bytes, 0, bytes.Length);
-
-            //translate bytes of request to string
-            var data = Encoding.UTF8.GetString(bytes);
-
-            LoggingUtility.Log(content: "Opening socket client", channel: LogChannels.SocketCommunication);
-
-            //initial connection
-            if (new Regex("^GET").IsMatch(data))
-            {
-                var response = "HTTP/1.1 101 Switching Protocols" + Environment.NewLine
-                    + "Connection: Upgrade" + Environment.NewLine
-                    + "Upgrade: websocket" + Environment.NewLine
-                    + "Sec-WebSocket-Accept: "
-                    + Convert.ToBase64String(
-                        SHA1.Create().ComputeHash(
-                            Encoding.UTF8.GetBytes(
-                                new Regex("Sec-WebSocket-Key: (.*)").Match(data).Groups[1].Value.Trim() + guid
-                            )
-                        )
-                    ) + Environment.NewLine
-                    + Environment.NewLine;
-
-                //Send the handshake
-                var replyBytes = Encoding.UTF8.GetBytes(response);
-
-                stream.BeginWrite(replyBytes, 0, replyBytes.Length, new AsyncCallback(WriteData), null);
-
-                ValidateUser(data);
-            }
+            ValidateUser(WebSocketContext.CookieCollection[".AspNet.ApplicationCookie"]);
 
             LoggingUtility.Log(content: "Socket client accepted", channel: LogChannels.SocketCommunication);
-
-            StartLoop(OnMessage);
-
-            return;
         }
 
         /// <summary>
         /// Handles when the connected descriptor sends input
         /// </summary>
         /// <param name="e">the events of the message</param>
-        private bool OnMessage(string message)
+        public override void OnMessage(string message)
         {
             if (_currentPlayer == null)
             {
                 OnError(new Exception("Invalid character; please reload the client and try again."));
-                return false;
+                return;
             }
 
             var errors = Interpret.Render(message, _currentPlayer);
@@ -311,8 +252,6 @@ namespace NetMud.Websock
             //It only sends the errors
             if (errors.Any(str => !string.IsNullOrWhiteSpace(str)))
                 SendWrapper(errors);
-
-            return true;
         }
 
         /// <summary>
@@ -326,159 +265,28 @@ namespace NetMud.Websock
         }
 
         /// <summary>
-        /// Begins the send process for putting data into the socket stream
-        /// </summary>
-        /// <param name="message">the string message</param>
-        private void Send(string message)
-        {
-            var response = EncodeSocket(message);
-
-            var stream = Client.GetStream();
-
-            stream.BeginWrite(response, 0, response.Length, new AsyncCallback(WriteData), null);
-        }
-
-        /// <summary>
         /// Ping the client for keepalive
         /// </summary>
         private void SendPing()
         {
-            var stream = Client.GetStream();
-
             var ping = new byte[2];
 
             ping[0] = 9 | 0x80;
             ping[1] = 0;
 
-            stream.BeginWrite(ping, 0, 2, new AsyncCallback(WriteData), null);
-        }
-
-        /// <summary>
-        /// Ends the send loop
-        /// </summary>
-        /// <param name="result">the async object for the thread</param>
-        private void WriteData(IAsyncResult result)
-        {
-            try
-            {
-                var stream = Client.GetStream();
-
-                stream.EndWrite(result);
-            }
-            catch (Exception ex)
-            {
-                OnError(ex);
-            }
+            Send(ping);
         }
         #endregion
 
         #region "Helpers"
-
-        /// <summary>
-        /// Handles when the connection closes
-        /// </summary>
-        private void OnClose()
-        {
-            Client.Close();
-        }
-
-        /// <summary>
-        /// Handles the wait loop for accepting input from the socket
-        /// </summary>
-        /// <param name="worker">the function that actually takes in a full message from the socker</param>
-        private async void StartLoop(Func<string, bool> worker)
-        {
-            if (Client == null)
-                OnClose();
-
-            try
-            {
-                NetworkStream stream = Client.GetStream();
-
-                await DataAvailable(stream);
-
-                var bytes = new Byte[Client.Available];
-
-                stream.Read(bytes, 0, bytes.Length);
-
-                //translate bytes of request to string
-                var data = DecodeSocket(bytes);
-
-                if (!string.IsNullOrWhiteSpace(data))
-                {
-                    if (worker.Invoke(data))
-                        StartLoop(OnMessage);
-                    else
-                        OnClose();
-                }
-                else
-                    StartLoop(OnMessage);
-            }
-            catch (Exception ex)
-            {
-                OnError(ex);
-            }
-        }
-
-        /// <summary>
-        /// Just sits on the stream waiting for a messgae to be sent
-        /// </summary>
-        /// <param name="stream">the network stream of the client</param>
-        /// <returns>junk boolean cause it's a task</returns>
-        private async Task<bool> DataAvailable(NetworkStream stream)
-        {
-            var timeIdle = 0;
-            while (!stream.DataAvailable)
-            {
-                if (Client == null)
-                {
-                    OnClose();
-                    return false;
-                }
-
-                await Task.Delay(500);
-
-                switch (timeIdle)
-                {
-                    default:
-                        {
-                            if (timeIdle > 0 && timeIdle % 15 == 0)
-                                SendPing();
-
-                            break;
-                        }
-                    case 600:
-                        {
-                            Send("You have been idle for an extended period of time. You will be logged out shortly.");
-                            break;
-                        }
-                    case 1200:
-                        {
-                            Disconnect("You have been idle too long. You have been disconnected.");
-                            return false;
-                        }
-                }
-
-                timeIdle++;
-            }
-
-            return true;
-        }
-
-
         /// <summary>
         /// Validates the game account from the aspnet cookie
         /// </summary>
         /// <param name="handshake">the headers from the http request</param>
-        private void ValidateUser(string handshake)
+        private void ValidateUser(Cookie cookie)
         {
             //Grab the user
-            var authTicketValue = new Regex(".AspNet.ApplicationCookie=(.*)").Match(handshake).Groups[1].Value.Trim();
-
-            if (authTicketValue.Contains(";"))
-                authTicketValue = authTicketValue.Substring(0, authTicketValue.IndexOf(';'));
-
-            GetUserIDFromCookie(authTicketValue);
+            GetUserIDFromCookie(cookie.Value);
 
             var authedUser = UserManager.FindById(_userId);
 
@@ -517,119 +325,6 @@ namespace NetMud.Websock
 
             //Send the look command in
             Interpret.Render("look", _currentPlayer);
-        }
-
-        /// <summary>
-        /// Decodes WS headers and data from the stream
-        /// </summary>
-        /// <param name="buffer">the stream's incoming data</param>
-        /// <returns>the message sent</returns>
-        private string DecodeSocket(byte[] buffer)
-        {
-            var length = buffer.Length;
-            byte b = buffer[1];
-            int dataLength = 0;
-            int totalLength = 0;
-            int keyIndex = 0;
-
-            if (b - 128 <= 125)
-            {
-                dataLength = b - 128;
-                keyIndex = 2;
-                totalLength = dataLength + 6;
-            }
-
-            if (b - 128 == 126)
-            {
-                dataLength = BitConverter.ToInt16(new byte[] { buffer[3], buffer[2] }, 0);
-                keyIndex = 4;
-                totalLength = dataLength + 8;
-            }
-
-            if (b - 128 == 127)
-            {
-                dataLength = (int)BitConverter.ToInt64(new byte[] { buffer[9], buffer[8], buffer[7], buffer[6], buffer[5], buffer[4], buffer[3], buffer[2] }, 0);
-                keyIndex = 10;
-                totalLength = dataLength + 14;
-            }
-
-            if (totalLength > length)
-                throw new Exception("The buffer length is small than the data length");
-
-            byte[] key = new byte[] { buffer[keyIndex], buffer[keyIndex + 1], buffer[keyIndex + 2], buffer[keyIndex + 3] };
-
-            int dataIndex = keyIndex + 4;
-            int count = 0;
-            for (int i = dataIndex; i < totalLength; i++)
-            {
-                buffer[i] = (byte)(buffer[i] ^ key[count % 4]);
-                count++;
-            }
-
-            return Encoding.ASCII.GetString(buffer, dataIndex, dataLength);
-        }
-
-        /// <summary>
-        /// Encodes string messages into ws socket language
-        /// </summary>
-        /// <param name="message">the data to encode</param>
-        /// <returns>the data to put on the stream</returns>
-        private Byte[] EncodeSocket(string message)
-        {
-            Byte[] response;
-            Byte[] bytesRaw = Encoding.UTF8.GetBytes(message);
-            Byte[] frame = new Byte[10];
-
-            Int32 indexStartRawData = -1;
-            Int32 length = bytesRaw.Length;
-
-            frame[0] = 129;
-            if (length <= 125)
-            {
-                frame[1] = (Byte)length;
-                indexStartRawData = 2;
-            }
-            else if (length >= 126 && length <= 65535)
-            {
-                frame[1] = 126;
-                frame[2] = (Byte)((length >> 8) & 255);
-                frame[3] = (Byte)(length & 255);
-                indexStartRawData = 4;
-            }
-            else
-            {
-                frame[1] = 127;
-                frame[2] = (Byte)((length >> 56) & 255);
-                frame[3] = (Byte)((length >> 48) & 255);
-                frame[4] = (Byte)((length >> 40) & 255);
-                frame[5] = (Byte)((length >> 32) & 255);
-                frame[6] = (Byte)((length >> 24) & 255);
-                frame[7] = (Byte)((length >> 16) & 255);
-                frame[8] = (Byte)((length >> 8) & 255);
-                frame[9] = (Byte)(length & 255);
-
-                indexStartRawData = 10;
-            }
-
-            response = new Byte[indexStartRawData + length];
-
-            Int32 i, reponseIdx = 0;
-
-            //Add the frame bytes to the reponse
-            for (i = 0; i < indexStartRawData; i++)
-            {
-                response[reponseIdx] = frame[i];
-                reponseIdx++;
-            }
-
-            //Add the data bytes to the response
-            for (i = 0; i < length; i++)
-            {
-                response[reponseIdx] = bytesRaw[i];
-                reponseIdx++;
-            }
-
-            return response;
         }
 
         /// <summary>
