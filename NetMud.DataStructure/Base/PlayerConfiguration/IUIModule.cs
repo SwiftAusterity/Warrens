@@ -1,4 +1,5 @@
 ﻿using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.SupportingClasses;
 
 namespace NetMud.DataStructure.Base.PlayerConfiguration
 {
@@ -10,7 +11,7 @@ namespace NetMud.DataStructure.Base.PlayerConfiguration
         /// <summary>
         /// The content to load in
         /// </summary>
-        string BodyHtml { get; set; }
+        MarkdownString BodyHtml { get; set; }
 
         /// <summary>
         /// If made into a popout what is the height of the window

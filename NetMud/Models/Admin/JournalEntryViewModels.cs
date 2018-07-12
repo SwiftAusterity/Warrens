@@ -40,7 +40,7 @@ namespace NetMud.Models.Admin
 
         [StringLength(2000, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 20)]
         [Display(Name = "Body", Description = "The body content of the entry.")]
-        [DataType(DataType.MultilineText)]
+        [DataType("Markdown")]
         public string Body { get; set; }
 
         [Display(Name = "Is Public?", Description = "Can this be seen by people who are not logged in. Overrides Minimum Read Level if true.")]

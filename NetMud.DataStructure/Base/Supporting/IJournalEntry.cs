@@ -12,7 +12,7 @@ namespace NetMud.DataStructure.Base.Supporting
         /// <summary>
         /// The body of the post
         /// </summary>
-        string Body { get; set; }
+        MarkdownString Body { get; set; }
 
         /// <summary>
         /// When this should be published

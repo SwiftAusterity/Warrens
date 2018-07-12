@@ -203,7 +203,7 @@ namespace NetMud.Controllers.GameAdmin
 
             vModel.DataObject = obj;
             vModel.Name = obj.Name;
-            vModel.HelpText = obj.HelpText;
+            vModel.HelpText = obj.HelpText.Value;
             vModel.Solubility = obj.Solubility;
             vModel.Fertility = obj.Fertility;
             vModel.AmountMultiplier = obj.AmountMultiplier;

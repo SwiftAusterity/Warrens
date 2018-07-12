@@ -41,7 +41,7 @@ namespace NetMud.Models.Admin
         public string Name { get; set; }
 
         [StringLength(2000, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 20)]
-        [DataType(DataType.MultilineText)]
+        [DataType("Markdown")]
         [Display(Name = "Help Text", Description = "Descriptive text shown on the UI Modules list page.")]
         public string HelpText { get; set; }
 

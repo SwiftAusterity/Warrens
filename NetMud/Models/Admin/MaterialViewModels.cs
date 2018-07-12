@@ -106,11 +106,11 @@ namespace NetMud.Models.Admin
         public short[] CompositionPercentages { get; set; }
 
         [StringLength(2000, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
-        [DataType(DataType.MultilineText)]
+        [DataType("Markdown")]
         [Display(Name = "Help Text Body", Description = "The descriptive text shown on the materials list page and when help is used in game.")]
         public string HelpBody { get; set; }
 
         public IEnumerable<IMaterial> ValidMaterials { get; set; }
-        public Material DataObject { get; set; }
+        public IMaterial DataObject { get; set; }
     }
 }

@@ -194,7 +194,7 @@ namespace NetMud.Controllers.GameAdmin
 
             vModel.DataObject = obj;
             vModel.Name = obj.Name;
-            vModel.HelpText = obj.HelpText;
+            vModel.HelpText = obj.HelpText.Value;
             vModel.SunlightPreference = obj.SunlightPreference;
             vModel.Coniferous = obj.Coniferous;
             vModel.AmountMultiplier = obj.AmountMultiplier;

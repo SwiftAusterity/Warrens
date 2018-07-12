@@ -130,7 +130,7 @@ namespace NetMud.Models.Admin
         public long RecallLocationId { get; set; }
 
         [StringLength(2000, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
-        [DataType(DataType.MultilineText)]
+        [DataType("Markdown")]
         [Display(Name = "Help Text Body", Description = "The descriptive text shown in the public help pages and when HELP is used in game.")]
         public string HelpBody { get; set; }
 

@@ -296,7 +296,7 @@ namespace NetMud.Controllers.GameAdmin
             vModel.TorsoId = obj.Torso.Id;
             vModel.VisionRangeHigh = obj.VisionRange.Item2;
             vModel.VisionRangeLow = obj.VisionRange.Item1;
-            vModel.HelpBody = obj.HelpText;
+            vModel.HelpBody = obj.HelpText.Value;
             vModel.CollectiveNoun = obj.CollectiveNoun;
 
             return View("~/Views/GameAdmin/Race/Edit.cshtml", vModel);

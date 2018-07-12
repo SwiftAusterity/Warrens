@@ -166,10 +166,10 @@ namespace NetMud.Controllers.GameAdmin
 
             vModel.DataObject = obj;
             vModel.Name = obj.Name;
-            vModel.BodyHtml = obj.BodyHtml;
+            vModel.BodyHtml = obj.BodyHtml.Value;
             vModel.Height = obj.Height;
             vModel.Width = obj.Width;
-            vModel.HelpText = obj.HelpText;
+            vModel.HelpText = obj.HelpText.Value;
             vModel.SystemDefault = obj.SystemDefault;
 
             return View("~/Views/GameAdmin/UIModules/Edit.cshtml", vModel);

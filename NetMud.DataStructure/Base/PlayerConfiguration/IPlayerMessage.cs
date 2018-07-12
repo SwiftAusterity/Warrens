@@ -1,5 +1,6 @@
 ﻿using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.SupportingClasses;
 using System;
 
 namespace NetMud.DataStructure.Base.PlayerConfiguration
@@ -18,7 +19,7 @@ namespace NetMud.DataStructure.Base.PlayerConfiguration
         /// <summary>
         /// The body of the message
         /// </summary>
-        string Body { get; set; }
+        MarkdownString Body { get; set; }
 
         /// <summary>
         /// Subject of the message

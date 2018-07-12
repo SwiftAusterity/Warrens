@@ -217,7 +217,7 @@ namespace NetMud.Controllers.GameAdmin
             vModel.SolidPoint = obj.SolidPoint;
             vModel.TemperatureRetention = obj.TemperatureRetention;
             vModel.Viscosity = obj.Viscosity;
-            vModel.HelpBody = obj.HelpText;
+            vModel.HelpBody = obj.HelpText.Value;
 
             return View("~/Views/GameAdmin/Material/Edit.cshtml", vModel);
         }

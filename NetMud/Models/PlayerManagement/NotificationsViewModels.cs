@@ -49,7 +49,7 @@ namespace NetMud.Models.Admin
 
         [StringLength(2000, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 10)]
         [Display(Name = "Body", Description = "The body of the message.")]
-        [DataType(DataType.MultilineText)]
+        [DataType("Markdown")]
         public string Body { get; set; }
 
         public IPlayerMessage DataObject { get; set; }
