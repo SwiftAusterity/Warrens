@@ -56,6 +56,10 @@
     <Compile Include="Messaging\Heartbeat.cs" />
     <Compile Include="Messaging\HeartbeatResponse.cs" />
     <Compile Include="Messaging\IPayload.cs" />
+    <Compile Include="Messaging\SignIn.cs" />
+    <Compile Include="Messaging\SignInEvent.cs" />
+    <Compile Include="Messaging\SignOut.cs" />
+    <Compile Include="Messaging\SignOutEvent.cs" />
     <Compile Include="Messaging\Subscribe.cs" />
     <Compile Include="Messaging\TransportMessage.cs" />
     <Compile Include="Messaging\NewMessage.cs" />

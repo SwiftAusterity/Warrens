@@ -20,8 +20,5 @@ namespace NetMud.Gossip.Messaging
 
         [JsonProperty("game")]
         public string GameName { get; set; }
-
-        [JsonProperty("id")]
-        public Guid MessageId { get; set; }
     }
 }

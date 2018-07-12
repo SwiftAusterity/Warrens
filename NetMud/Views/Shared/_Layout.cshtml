@@ -19,6 +19,10 @@
     @Scripts.Render("~/Scripts/HtmlUtilities.js")
     @Scripts.Render("~/Scripts/site.js")
 </head>
+@{ 
+    Version v = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+    var assemblyVersion = string.Format(System.Globalization.CultureInfo.InvariantCulture, @"netMUD v{0}.{1}.{2} (r{3})", v.Major, v.Minor, v.Build, v.Revision);
+}
 <body>
     <div class="navbar navbar-inverse navbar-top">
         <div class="container">
@@ -64,7 +68,9 @@
     <footer>
         <br class="clearfix" />
         <hr />
-        <p>netMUD &copy; 1997-@DateTime.Now.Year - SwiftAusterity Productions (Member of <a href="//gossip.haus/"><img src="//gossip.haus/images/gossip.png" onerror="this.src='/content/images/broken-image.png'" style="max-width: 50px; max-height: 50px;" title="Gossip Network" /></a>)</p>
+        <p>Under the Eclipse &copy; 1997-@DateTime.Now.Year - SwiftAusterity Productions</p>
+        <p>Running on <a href="https://github.com/swiftausterity/netmud" title="Github Repository">@assemblyVersion</a></p>
+        <p>Member of <a href="//gossip.haus/"><img src="//gossip.haus/images/gossip.png" onerror="this.src='/content/images/broken-image.png'" style="max-width: 50px; max-height: 50px;" title="Gossip Network" /></a></p>
         <div id="guildWebRing" style="width: 100%; padding-left: 40%;" />
     </footer>
     <script type="text/javascript">

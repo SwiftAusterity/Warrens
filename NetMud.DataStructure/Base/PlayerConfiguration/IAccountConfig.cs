@@ -44,5 +44,23 @@ namespace NetMud.DataStructure.Base.PlayerConfiguration
         /// </summary>
         /// <returns>False = no file, True = file</returns>
         bool RestoreConfig(IAccount account);
+
+        /// <summary>
+        /// Does this person want this notification
+        /// </summary>
+        /// <param name="playerName">The player's name who's triggering the notification</param>
+        /// <param name="isGossipSystem">Is this the gossip system</param>
+        /// <param name="type">what type of notification is this</param>
+        /// <returns>Whether or not they want it</returns>
+        bool WantsNotification(string playerName, bool isGossipSystem, AcquaintenceNotifications type);
+
+        /// <summary>
+        /// Does this person want this notification
+        /// </summary>
+        /// <param name="playerName">The player's name who's triggering the notification</param>
+        /// <param name="isGossipSystem">Is this the gossip system</param>
+        /// <param name="type">what type of notification is this</param>
+        /// <returns>Whether or not they want it</returns>
+        bool IsBlocking(string playerName, bool isGossipSystem);
     }
 }

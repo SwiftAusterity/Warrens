@@ -26,7 +26,7 @@ namespace NetMud.Data.LookupData
         /// The body of the post
         /// </summary>
         [StringDataIntegrity("Body must be between 20 and 2000 characters", 20, 2000)]
-        public string Body { get; set; }
+        public MarkdownString Body { get; set; }
 
         /// <summary>
         /// When this should be published

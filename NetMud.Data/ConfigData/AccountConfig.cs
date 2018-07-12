@@ -1,5 +1,7 @@
 ﻿using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
+using NetMud.DataStructure.Base.Entity;
+using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.PlayerConfiguration;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.System;
@@ -130,6 +132,35 @@ namespace NetMud.Data.ConfigData
 
             if (string.IsNullOrWhiteSpace(Name))
                 Name = _account.GlobalIdentityHandle;
+        }
+
+        /// <summary>
+        /// Does this person want this notification
+        /// </summary>
+        /// <param name="playerName">The player's name who's triggering the notification</param>
+        /// <param name="isGossipSystem">Is this the gossip system</param>
+        /// <param name="type">what type of notification is this</param>
+        /// <returns>Whether or not they want it</returns>
+        public bool WantsNotification(string playerName, bool isGossipSystem, AcquaintenceNotifications type)
+        {
+            return Acquaintences.Any(acq => acq.IsFriend
+                                                && acq.PersonHandle.Equals(playerName, StringComparison.InvariantCultureIgnoreCase)
+                                                && acq.NotificationSubscriptions.Contains(type)
+                                                && isGossipSystem == acq.GossipSystem);
+        }
+
+        /// <summary>
+        /// Does this person want this notification
+        /// </summary>
+        /// <param name="playerName">The player's name who's triggering the notification</param>
+        /// <param name="isGossipSystem">Is this the gossip system</param>
+        /// <param name="type">what type of notification is this</param>
+        /// <returns>Whether or not they want it</returns>
+        public bool IsBlocking(string playerName, bool isGossipSystem)
+        {
+            return Acquaintences.Any(acq => !acq.IsFriend
+                                                && acq.PersonHandle.Equals(playerName, StringComparison.InvariantCultureIgnoreCase)
+                                                && isGossipSystem == acq.GossipSystem);
         }
 
         public bool RestoreConfig(IAccount account)

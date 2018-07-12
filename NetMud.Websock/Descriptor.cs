@@ -6,6 +6,8 @@ using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataAccess.FileSystem;
 using NetMud.DataStructure.Base.Entity;
+using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.DataStructure.Base.PlayerConfiguration;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
@@ -206,6 +208,8 @@ namespace NetMud.Websock
         public void Disconnect(string finalMessage)
         {
             SendWrapper(finalMessage);
+
+            Close();
         }
 
         /// <summary>
@@ -217,6 +221,24 @@ namespace NetMud.Websock
         }
 
         #region "Socket Management"
+        public override void OnClose()
+        {
+            var validPlayers = LiveCache.GetAll<IPlayer>().Where(player => player.Descriptor != null
+                        && player.DataTemplate<ICharacter>().Account.Config.WantsNotification(_currentPlayer.AccountHandle, false, AcquaintenceNotifications.LeaveGame));
+
+            foreach (var player in validPlayers)
+                player.WriteTo(new string[] { string.Format("{0} has left the game.", _currentPlayer.AccountHandle) });
+
+            if (_currentPlayer.DataTemplate<ICharacter>().Account.Config.GossipSubscriber)
+            {
+                var gossipClient = LiveCache.Get<IGossipClient>("GossipWebClient");
+
+                if (gossipClient != null)
+                    gossipClient.SendNotification(_currentPlayer.AccountHandle, AcquaintenceNotifications.LeaveGame);
+            }
+
+            base.OnClose();
+        }
 
         /// <summary>
         /// Handles initial connection
@@ -325,6 +347,20 @@ namespace NetMud.Websock
 
             //Send the look command in
             Interpret.Render("look", _currentPlayer);
+
+            var validPlayers = LiveCache.GetAll<IPlayer>().Where(player => player.Descriptor != null
+            && player.DataTemplate<ICharacter>().Account.Config.WantsNotification(_currentPlayer.AccountHandle, false, AcquaintenceNotifications.EnterGame));
+
+            foreach (var player in validPlayers)
+                player.WriteTo(new string[] { string.Format("{0} has entered the game.", _currentPlayer.AccountHandle) });
+
+            if (authedUser.GameAccount.Config.GossipSubscriber)
+            {
+                var gossipClient = LiveCache.Get<IGossipClient>("GossipWebClient");
+
+                if(gossipClient != null)
+                    gossipClient.SendNotification(authedUser.GlobalIdentityHandle, DataStructure.Base.PlayerConfiguration.AcquaintenceNotifications.EnterGame);
+            }
         }
 
         /// <summary>

@@ -1,5 +1,6 @@
 ﻿using NetMud.DataStructure.Base.PlayerConfiguration;
 using NetMud.DataStructure.Behaviors.System;
+using NetMud.DataStructure.SupportingClasses;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,7 @@ namespace NetMud.Data.LookupData
         /// <summary>
         /// The content to load in
         /// </summary>
-        public string BodyHtml { get; set; }
+        public MarkdownString BodyHtml { get; set; }
 
         /// <summary>
         /// If made into a popout what is the height of the window

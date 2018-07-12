@@ -3,6 +3,7 @@ using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.PlayerConfiguration;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.System;
+using NetMud.DataStructure.SupportingClasses;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
@@ -40,7 +41,7 @@ namespace NetMud.Data.ConfigData
         /// <summary>
         /// The body of the message
         /// </summary>
-        public string Body { get; set; }
+        public MarkdownString Body { get; set; }
 
         /// <summary>
         /// Subject of the message
