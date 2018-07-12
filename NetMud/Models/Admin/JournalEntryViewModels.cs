@@ -27,8 +27,10 @@ namespace NetMud.Models.Admin
 
     }
 
-    public class AddEditJournalEntryViewModel : TwoDimensionalEntityEditViewModel
+    public class AddEditJournalEntryViewModel : BaseViewModel
     {
+        public ApplicationUser authedUser { get; set; }
+
         public AddEditJournalEntryViewModel()
         {
         }
@@ -44,25 +46,25 @@ namespace NetMud.Models.Admin
         public string Body { get; set; }
 
         [Display(Name = "Is Public?", Description = "Can this be seen by people who are not logged in. Overrides Minimum Read Level if true.")]
-        bool Public { get; set; }
+        public bool Public { get; set; }
 
         [Display(Name = "Force Expiry", Description = "If set to true will be considered expired no matter what the date is.")]
-        bool Expired { get; set; }
+        public bool Expired { get; set; }
 
         [Display(Name = "Minimum Read Level", Description = "Sets the minimum rank someone's account must be to see this.")]
-        short MinimumReadLevel { get; set; }
+        public short MinimumReadLevel { get; set; }
 
         [Display(Name = "Publish On", Description = "The date this will be considered active and available to see.")]
-        [DataType(DataType.Date)]
-        DateTime PublishDate { get; set; }
+        [DataType("Date")]
+        public string PublishDate { get; set; }
 
         [Display(Name = "Expires On", Description = "The date this will be considered expired.")]
-        [DataType(DataType.Date)]
-        DateTime ExpireDate { get; set; }
+        [DataType("Date")]
+        public string ExpireDate { get; set; }
 
         [Display(Name = "Tags", Description = "Filtering tags such as Blog, Patch Notes, Update, etc.")]
         [DataType(DataType.Text)]
-        string Tags { get; set; }
+        public string Tags { get; set; }
 
         public IJournalEntry DataObject { get; set; }
     }

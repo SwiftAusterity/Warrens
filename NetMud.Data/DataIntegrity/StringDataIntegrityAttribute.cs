@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NetMud.DataStructure.SupportingClasses;
+using System;
 
 namespace NetMud.Data.DataIntegrity
 {
@@ -23,9 +24,19 @@ namespace NetMud.Data.DataIntegrity
         /// </summary>
         internal override bool Verify(object val)
         {
-            string value = Utility.DataUtility.TryConvert<string>(val);
+            string compareValue = "";
 
-            return !string.IsNullOrWhiteSpace(value) && value.Length >= MinimumLength && value.Length <= MaximumLength;
+            if (val != null && val.GetType() == typeof(MarkdownString))
+            {
+                var mdString = Utility.DataUtility.TryConvert<MarkdownString>(val);
+
+                if(!MarkdownString.IsNullOrWhiteSpace(mdString))
+                    compareValue = mdString.Value;
+            }
+            else
+                compareValue = Utility.DataUtility.TryConvert<string>(val);
+
+            return !string.IsNullOrWhiteSpace(compareValue) && compareValue.Length >= MinimumLength && compareValue.Length <= MaximumLength;
         }
 
         /// <summary>

@@ -3,7 +3,7 @@
 @model object
 
 @{
-    double columnCount = ViewData["columnCount"] == null ? 1 : (int)ViewData["columnCount"];
+    double columnCount = ViewData["columnCount"] == null ? 3 : (int)ViewData["columnCount"];
     bool disabled = ViewData["disabled"] != null;
     var columnLabelValue = columnCount > 2 ? 1 : 2;
     var columnInputValue = (int)Math.Round(9 / columnCount);

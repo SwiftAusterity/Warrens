@@ -73,7 +73,7 @@ namespace NetMud.Data.LookupData
         /// <returns>Whether it's published or not</returns>
         public bool IsPublished()
         {
-            return DateTime.Now > PublishDate;
+            return DateTime.Now > PublishDate && !IsExpired();
         }
 
         /// <summary>

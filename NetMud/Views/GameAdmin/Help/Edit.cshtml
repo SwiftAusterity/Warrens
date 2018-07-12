@@ -4,7 +4,6 @@
     @using (Html.BeginForm("Edit", "Help", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {
         @Html.AntiForgeryToken()
-        <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <input type="hidden" name="id" id="id" value="@Model.DataObject.Id" />
         <div class="form-group row">
