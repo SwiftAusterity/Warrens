@@ -34,27 +34,34 @@ namespace NetMud.Models.Admin
         }
 
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
-        [Display(Name = "Given Name", Description = "First Name.")]
+        [Display(Name = "Name", Description = "The name of this celestial body.")]
         [DataType(DataType.Text)]
         public string Name { get; set; }
 
-        /// <summary>
-        /// Orbit Type
-        /// </summary>
         [Display(Name = "Orbital Orientation", Description = "What type of orbit this has. Heliocentric means the world orbits this.")]
-        short OrientationType { get; set; }
+        [DataType(DataType.Text)]
+        public short OrientationType { get; set; }
 
         [Display(Name = "Apogee", Description = "Maximal distance this is from the world it orbits. (eliptical orbits only, this is averaged with Perigree for circular orbits)")]
-        int Apogee { get; set; }
+        [DataType(DataType.Text)]
+        public int Apogee { get; set; }
 
         [Display(Name = "Perigree", Description = "Minimal distance this is from the world it orbits. (eliptical orbits only, this is averaged with Perigree for circular orbits)")]
-        int Perigree { get; set; }
+        [DataType(DataType.Text)]
+        public int Perigree { get; set; }
 
         [Display(Name = "Velocity", Description = "How fast is this hurtling through space. (affects a LOT of things)")]
-        int Velocity { get; set; }
+        [DataType(DataType.Text)]
+        public int Velocity { get; set; }
 
         [Display(Name = "Velocity", Description = "How bright is this. Measured in thousands. Anything less than 1000 is not visible to the naked eye.")]
-        int Luminosity { get; set; }
+        [DataType(DataType.Text)]
+        public int Luminosity { get; set; }
+
+        [StringLength(2000, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 20)]
+        [DataType("Markdown")]
+        [Display(Name = "Help Text", Description = "The description shown when the Help command is used against this.")]
+        public string HelpText { get; set; }
 
         public ICelestial DataObject { get; set; }
     }

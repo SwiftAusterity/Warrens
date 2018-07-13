@@ -5,6 +5,7 @@ using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Base.World;
 using System;
+using System.Threading.Tasks;
 
 namespace NetMud
 {
@@ -39,7 +40,7 @@ namespace NetMud
                 hotBack.NewWorldFallback();
 
             var gossipServer = new Gossip.GossipClient();
-            gossipServer.Launch();
+            Task.Run(() => gossipServer.Launch());
 
             Func<bool> backupFunction = hotBack.WriteLiveBackup;
             Func<bool> backingDataBackupFunction = BackingData.WriteFullBackup;

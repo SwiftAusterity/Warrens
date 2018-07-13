@@ -22,7 +22,7 @@ namespace NetMud.Models.Admin
         public string DataUnitTitle { get; set; }
 
         public IOccurrence OccurrenceDataObject { get; set; }
-        public IEntityBackingData DataObject { get; set; }
+        public IKeyedData DataObject { get; set; }
     }
 
     public partial class LexicaViewModel

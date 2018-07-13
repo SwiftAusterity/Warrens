@@ -203,7 +203,7 @@ namespace NetMud.Controllers.GameAdmin
                 int icIndex = 0;
                 foreach (var id in vModel.InternalCompositionIds)
                 {
-                    if (id > 0)
+                    if (id >= 0)
                     {
                         if (vModel.InternalCompositionPercentages.Count() <= icIndex)
                             break;
@@ -311,9 +311,9 @@ namespace NetMud.Controllers.GameAdmin
                         if (vModel.InanimateContainerWeights.Count() <= inanimateIndex || vModel.InanimateContainerVolumes.Count() <= inanimateIndex)
                             break;
 
-                        if (obj.InanimateContainers.Any(ic => ic.Name.Equals(name, System.StringComparison.InvariantCultureIgnoreCase)))
+                        if (obj.InanimateContainers.Any(ic => ic.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
                         {
-                            var editIc = obj.InanimateContainers.Single(ic => ic.Name.Equals(name, System.StringComparison.InvariantCultureIgnoreCase));
+                            var editIc = obj.InanimateContainers.Single(ic => ic.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
                             editIc.CapacityVolume = vModel.InanimateContainerVolumes[inanimateIndex];
                             editIc.CapacityWeight = vModel.InanimateContainerWeights[inanimateIndex];
                         }
@@ -344,9 +344,9 @@ namespace NetMud.Controllers.GameAdmin
                         if (vModel.MobileContainerWeights.Count() <= mobileIndex || vModel.MobileContainerVolumes.Count() <= mobileIndex)
                             break;
 
-                        if (obj.MobileContainers.Any(ic => ic.Name.Equals(name, System.StringComparison.InvariantCultureIgnoreCase)))
+                        if (obj.MobileContainers.Any(ic => ic.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
                         {
-                            var editIc = obj.MobileContainers.Single(ic => ic.Name.Equals(name, System.StringComparison.InvariantCultureIgnoreCase));
+                            var editIc = obj.MobileContainers.Single(ic => ic.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
                             editIc.CapacityVolume = vModel.MobileContainerVolumes[mobileIndex];
                             editIc.CapacityWeight = vModel.MobileContainerWeights[mobileIndex];
                         }
@@ -378,7 +378,7 @@ namespace NetMud.Controllers.GameAdmin
                         if (vModel.ModelPartMaterials.Count() <= nameIndex)
                             break;
 
-                        var material = BackingDataCache.Get<Material>(vModel.ModelPartMaterials[nameIndex]);
+                        var material = BackingDataCache.Get<IMaterial>(vModel.ModelPartMaterials[nameIndex]);
 
                         if (material != null)
                             materialParts.Add(partName, material);
@@ -394,12 +394,12 @@ namespace NetMud.Controllers.GameAdmin
                 int icIndex = 0;
                 foreach (var icId in vModel.InternalCompositionIds)
                 {
-                    if (icId > 0)
+                    if (icId >= 0)
                     {
                         if (vModel.InternalCompositionPercentages.Count() <= icIndex)
                             break;
 
-                        var internalObj = BackingDataCache.Get<InanimateData>(icId);
+                        var internalObj = BackingDataCache.Get<IInanimateData>(icId);
 
                         if (internalObj != null)
                             internalCompositions.Add(internalObj, vModel.InternalCompositionPercentages[icIndex]);
@@ -410,7 +410,7 @@ namespace NetMud.Controllers.GameAdmin
             }
             obj.InternalComposition = internalCompositions;
 
-            var dimModel = BackingDataCache.Get<DimensionalModelData>(vModel.DimensionalModelId);
+            var dimModel = BackingDataCache.Get<IDimensionalModelData>(vModel.DimensionalModelId);
             bool validData = true;
 
             if (dimModel == null)
@@ -450,7 +450,7 @@ namespace NetMud.Controllers.GameAdmin
             var obj = BackingDataCache.Get<IInanimateData>(id);
             if (obj == null)
             {
-                message = "That zone does not exist";
+                message = "That does not exist";
                 return RedirectToRoute("ModalErrorOrClose", new { Message = message });
             }
 
@@ -491,7 +491,7 @@ namespace NetMud.Controllers.GameAdmin
             var obj = BackingDataCache.Get<IInanimateData>(id);
             if (obj == null)
             {
-                message = "That zone does not exist";
+                message = "That does not exist";
                 return RedirectToRoute("ModalErrorOrClose", new { Message = message });
             }
 

@@ -1,12 +1,13 @@
 ﻿using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Behaviors.Rendering;
 
 namespace NetMud.DataStructure.Base.World
 {
     /// <summary>
     /// Celestial bodies
     /// </summary>
-    public interface ICelestial : ILookupData
+    public interface ICelestial : ILookupData, IDescribable
     {
         /// <summary>
         /// Orbit Type

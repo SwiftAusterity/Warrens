@@ -112,6 +112,17 @@ namespace NetMud.Data.EntityBackingData
         {
             var returnList = base.SignificantDetails();
 
+            returnList.Add("Hours Per Day", ChronologicalSystem.HoursPerDay.ToString());
+            returnList.Add("Days Per Month", ChronologicalSystem.DaysPerMonth.ToString());
+            returnList.Add("Starting Year", ChronologicalSystem.StartingYear.ToString());
+            returnList.Add("Days Per Month", ChronologicalSystem.Months.ToString());
+
+            foreach (var month in ChronologicalSystem.Months)
+                returnList.Add("Month", month);
+
+            foreach (var celestial in CelestialBodies)
+                returnList.Add("Celestial", celestial.Name);
+
             return returnList;
         }
     }

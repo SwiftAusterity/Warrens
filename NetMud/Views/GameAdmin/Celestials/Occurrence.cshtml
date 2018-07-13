@@ -17,10 +17,10 @@
             </div>
         </div>
 
-        @Html.Partial("~/Views/GameAdmin/" + Model.AdminTypeName  +"/Lexica.cshtml", Model)
+        @Html.Partial("~/Views/GameAdmin/" + Model.AdminTypeName  + "/Lexica.cshtml", Model)
 
         <div class="clearfix"></div>
 
-        @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = Model.AdminTypeName, ModalWindow = true })
+        @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Zone", ModalWindow = true })
     }
 </section>

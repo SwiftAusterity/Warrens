@@ -36,7 +36,7 @@ namespace NetMud.Models.Admin
         }
 
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
-        [Display(Name = "Given Name", Description = "First Name.")]
+        [Display(Name = "Name", Description = "The name of the world.")]
         [DataType(DataType.Text)]
         public string Name { get; set; }
 
@@ -45,16 +45,19 @@ namespace NetMud.Models.Admin
 
         [Display(Name = "Month Name", Description = "A name of the month, in order.")]
         [DataType(DataType.Text)]
-        public string[] MonthNames { get; set; }
+        public string MonthNames { get; set; }
 
         [Display(Name = "Days per Month", Description = "How many days there are per month.")]
-        int DaysPerMonth { get; set; }
+        [DataType(DataType.Text)]
+        public int DaysPerMonth { get; set; }
 
         [Display(Name = "Hours per Day", Description = "How many hours there are per day.")]
-        int HoursPerDay { get; set; }
+        [DataType(DataType.Text)]
+        public int HoursPerDay { get; set; }
 
         [Display(Name = "Reset Year", Description = "What year this world resets to if made from nothing.")]
-        int StartingYear { get; set; }
+        [DataType(DataType.Text)]
+        public int StartingYear { get; set; }
 
         public IEnumerable<ICelestial> ValidCelestials { get; set; }
         public IGaiaData DataObject { get; set; }

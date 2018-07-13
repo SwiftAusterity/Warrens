@@ -14,7 +14,7 @@
             @Html.DescriptiveLabelFor(m => m.MinimumReadLevel, new { @class = "col-sm-1 col-form-label" })
             <div class="col-md-3">
                 @Html.DropDownList("MinimumReadLevel", Enum.GetNames(typeof(StaffRank)).Select(rl =>
-                                                                new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(StaffRank), rl)).ToString() })
+                                                                new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(StaffRank), rl)).ToString(), Selected = rl.Equals(Enum.GetName(typeof(StaffRank), Model.MinimumReadLevel)) })
                                                                 , "Select One", htmlAttributes: new { id = "Type", @class = "form-control" })
             </div>
         </div>

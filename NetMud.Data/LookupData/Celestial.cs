@@ -2,6 +2,7 @@
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.World;
 using NetMud.DataStructure.Behaviors.System;
+using NetMud.DataStructure.SupportingClasses;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -58,6 +59,11 @@ namespace NetMud.Data.LookupData
         public IDimensionalModel Model { get; set; }
 
         /// <summary>
+        /// Set of output relevant to this exit. These are essentially single word descriptions to render the path
+        /// </summary>
+        public HashSet<IOccurrence> Descriptives { get; set; }
+
+        /// <summary>
         /// Get the significant details of what needs approval
         /// </summary>
         /// <returns>A list of strings</returns>
@@ -70,6 +76,9 @@ namespace NetMud.Data.LookupData
             returnList.Add("Perigree", Perigree.ToString());
             returnList.Add("Velocity", Velocity.ToString());
             returnList.Add("Luminosity", Luminosity.ToString());
+
+            foreach (var desc in Descriptives)
+                returnList.Add("Descriptives", string.Format("{0} ({1}): {2}", desc.SensoryType, desc.Strength, desc.Event.ToString()));
 
             return returnList;
         }

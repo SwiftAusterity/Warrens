@@ -29,7 +29,7 @@ namespace NetMud.Gossip
         /// Registers this for a service on a port
         /// </summary>
         /// <param name="portNumber">the port it is listening on</param>
-        public void Launch()
+        public async void Launch()
         {
             try
             {
@@ -52,10 +52,14 @@ namespace NetMud.Gossip
                 LoggingUtility.LogError(tex, LogChannels.GossipServer);
                 ReconnectLoop(60);
             }
+            catch(System.Net.Sockets.SocketException sex)
+            {
+                LoggingUtility.LogError(sex, LogChannels.GossipServer); //Dont retry on this
+            }
             catch (Exception ex)
             {
                 LoggingUtility.LogError(ex, LogChannels.GossipServer);
-                ReconnectLoop();
+                ReconnectLoop(1);
             }
         }
 
