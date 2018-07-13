@@ -322,8 +322,8 @@
                 var obj = data[i];
                 var quadrant = obj.Item2;
                 var module = obj.Item1;
-
-                var moduleContent = module.BodyHtml;
+            
+                var moduleContent = module.BodyHtml.Value;
 
                 if (moduleContent != '') {
                     var $origin = $('div#quadrant-' + quadrant + '.quadrant');

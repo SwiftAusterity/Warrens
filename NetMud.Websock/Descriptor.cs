@@ -348,18 +348,25 @@ namespace NetMud.Websock
             //Send the look command in
             Interpret.Render("look", _currentPlayer);
 
-            var validPlayers = LiveCache.GetAll<IPlayer>().Where(player => player.Descriptor != null
-            && player.DataTemplate<ICharacter>().Account.Config.WantsNotification(_currentPlayer.AccountHandle, false, AcquaintenceNotifications.EnterGame));
-
-            foreach (var player in validPlayers)
-                player.WriteTo(new string[] { string.Format("{0} has entered the game.", _currentPlayer.AccountHandle) });
-
-            if (authedUser.GameAccount.Config.GossipSubscriber)
+            try
             {
-                var gossipClient = LiveCache.Get<IGossipClient>("GossipWebClient");
+                var validPlayers = LiveCache.GetAll<IPlayer>().Where(player => player.Descriptor != null
+                && player.DataTemplate<ICharacter>().Account.Config.WantsNotification(_currentPlayer.AccountHandle, false, AcquaintenceNotifications.EnterGame));
 
-                if(gossipClient != null)
-                    gossipClient.SendNotification(authedUser.GlobalIdentityHandle, DataStructure.Base.PlayerConfiguration.AcquaintenceNotifications.EnterGame);
+                foreach (var player in validPlayers)
+                    player.WriteTo(new string[] { string.Format("{0} has entered the game.", _currentPlayer.AccountHandle) });
+
+                if (authedUser.GameAccount.Config.GossipSubscriber)
+                {
+                    var gossipClient = LiveCache.Get<IGossipClient>("GossipWebClient");
+
+                    if (gossipClient != null)
+                        gossipClient.SendNotification(authedUser.GlobalIdentityHandle, DataStructure.Base.PlayerConfiguration.AcquaintenceNotifications.EnterGame);
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex, LogChannels.SocketCommunication);
             }
         }
 

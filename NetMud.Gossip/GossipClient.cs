@@ -38,7 +38,7 @@ namespace NetMud.Gossip
 
                 MyClient.Connect();
 
-                if (MyClient.IsAlive)
+                if (MyClient.ReadyState == WebSocketState.Open)
                 {
                     LiveCache.Add(this, CacheKey);
                 }
@@ -50,12 +50,12 @@ namespace NetMud.Gossip
             catch (TimeoutException tex)
             {
                 LoggingUtility.LogError(tex, LogChannels.GossipServer);
-                ReconnectLoop(Launch, 60);
+                ReconnectLoop(60);
             }
             catch (Exception ex)
             {
                 LoggingUtility.LogError(ex, LogChannels.GossipServer);
-                ReconnectLoop(Launch);
+                ReconnectLoop();
             }
         }
 
@@ -68,32 +68,36 @@ namespace NetMud.Gossip
 
             MyClient = null;
 
-            ReconnectLoop(Launch);
+            ReconnectLoop();
         }
 
         /// <summary>
         /// Handles the wait loop for accepting input from the socket
         /// </summary>
         /// <param name="worker">the function that actually takes in a full message from the socker</param>
-        private async void ReconnectLoop(Action worker, double suspendMultiplier = 1)
+        private async void ReconnectLoop(double suspendMultiplier = 1)
         {
             if (MyClient != null && MyClient.IsAlive || suspendMultiplier > 500)
                 return;
+
+            LoggingUtility.Log("Gossip Server Reconnect Loop Pulse x" + suspendMultiplier.ToString(), LogChannels.GossipServer);
 
             try
             {
                 if (MyClient == null)
                     GetNewSocket();
 
-                if (MyClient.Ping())
+                MyClient.Connect();
+
+                if (MyClient.ReadyState == WebSocketState.Open)
                 {
-                    worker.Invoke();
+                    LoggingUtility.Log("Gossip Server Reconnect Loop Successful.", LogChannels.GossipServer);
                     return;
                 }
 
                 await Task.Delay(Convert.ToInt32(10000 * suspendMultiplier));
 
-                ReconnectLoop(worker, suspendMultiplier * 1.15);
+                ReconnectLoop(suspendMultiplier * 1.15);
             }
             catch (Exception ex)
             {
@@ -119,112 +123,109 @@ namespace NetMud.Gossip
 
         private void OnMessage(object sender, MessageEventArgs e)
         {
-            if (e.IsPing)
-                return; //pong maybe?
-            else
+            if(e == null || e.Data == null)
+                return;
+
+            var newReply = DeSerialize(e.Data);
+
+            switch (newReply.Event)
             {
-                LoggingUtility.Log(e.Data, LogChannels.GossipServer, true);
-                var newReply = DeSerialize(e.Data);
+                case "heartbeat":
+                    var whoList = LiveCache.GetAll<IPlayer>().Where(player => player.Descriptor != null && player.DataTemplate<ICharacter>().Account.Config.GossipSubscriber);
 
-                switch (newReply.Event)
-                {
-                    case "heartbeat":
-                        var whoList = LiveCache.GetAll<IPlayer>().Where(player => player.Descriptor != null && player.DataTemplate<ICharacter>().Account.Config.GossipSubscriber);
+                    var whoBlock = new HeartbeatResponse()
+                    {
+                        Players = whoList.Select(player => player.AccountHandle).ToArray()
+                    };
 
-                        var whoBlock = new HeartbeatResponse()
-                        {
-                            Players = whoList.Select(player => player.AccountHandle).ToArray()
-                        };
+                    var response = new TransportMessage()
+                    {
+                        Event = whoBlock.Type,
+                        Payload = whoBlock
+                    };
 
-                        var response = new TransportMessage()
-                        {
-                            Event = whoBlock.Type,
-                            Payload = whoBlock
-                        };
+                    MyClient.Send(Serialize(response));
+                    break;
+                case "messages/direct":
+                    var myName = newReply.Payload.playerName.Value;
+                    var theirName = newReply.Payload.name.Value;
+                    var theirGame = newReply.Payload.game.Value;
+                    var messageBody = newReply.Payload.message.Value;
+                    var fullName = string.Format("{0}@{1}", newReply.Payload.game.Value, newReply.Payload.name.Value);
 
-                        MyClient.Send(Serialize(response));
-                        break;
-                    case "messages/direct":
-                        var myName = newReply.Payload.playerName.Value;
-                        var theirName = newReply.Payload.name.Value;
-                        var theirGame = newReply.Payload.game.Value;
-                        var messageBody = newReply.Payload.message.Value;
-                        var fullName = string.Format("{0}@{1}", newReply.Payload.game.Value, newReply.Payload.name.Value);
+                    var validPlayer = LiveCache.GetAll<IPlayer>().FirstOrDefault(player => player.Descriptor != null
+                                                            && player.DataTemplate<ICharacter>().Account.Config.GossipSubscriber
+                                                            && player.AccountHandle.Equals(myName)
+                                                            && !player.DataTemplate<ICharacter>().Account.Config.IsBlocking(fullName, true));
 
-                        var validPlayer = LiveCache.GetAll<IPlayer>().FirstOrDefault(player => player.Descriptor != null
-                                                                && player.DataTemplate<ICharacter>().Account.Config.GossipSubscriber
-                                                                && player.AccountHandle.Equals(myName)
-                                                                && !player.DataTemplate<ICharacter>().Account.Config.IsBlocking(fullName, true));
+                    if (validPlayer != null)
+                        validPlayer.WriteTo(new string[] { string.Format("{0} gossip-tells you, '{1}'", fullName, messageBody) });
+                    break;
+                case "messages/broadcast":
+                    var messageText = newReply.Payload.message.Value;
+                    var messageSender = newReply.Payload.name.Value;
+                    var source = newReply.Payload.game.Value;
+                    var channel = newReply.Payload.channel.Value;
 
-                        if (validPlayer != null)
-                            validPlayer.WriteTo(new string[] { string.Format("{0} gossip-tells you, '{1}'", fullName, messageBody) });
-                        break;
-                    case "messages/broadcast":
-                        var messageText = newReply.Payload.message.Value;
-                        var messageSender = newReply.Payload.name.Value;
-                        var source = newReply.Payload.game.Value;
-                        var channel = newReply.Payload.channel.Value;
+                    if (!string.IsNullOrWhiteSpace(messageText))
+                    {
+                        var validPlayers = LiveCache.GetAll<IPlayer>().Where(player => player.Descriptor != null
+                                    && player.DataTemplate<ICharacter>().Account.Config.GossipSubscriber
+                                    && !player.DataTemplate<ICharacter>().Account.Config.IsBlocking(messageSender, true));
 
-                        if (!string.IsNullOrWhiteSpace(messageText))
-                        {
-                            var validPlayers = LiveCache.GetAll<IPlayer>().Where(player => player.Descriptor != null
-                                        && player.DataTemplate<ICharacter>().Account.Config.GossipSubscriber
-                                        && !player.DataTemplate<ICharacter>().Account.Config.IsBlocking(messageSender, true));
+                        foreach (var player in validPlayers)
+                            player.WriteTo(new string[] { string.Format("{0}@{1} {3}s, '{2}'", messageSender, source, messageText, channel) });
+                    }
+                    break;
+                case "players/sign-in":
+                    if (newReply.ReferenceID == null)
+                    {
+                        //This is a request from the server
+                        var fullSignInName = string.Format("{0}@{1}", newReply.Payload.game.Value, newReply.Payload.name.Value);
 
-                            foreach (var player in validPlayers)
-                                player.WriteTo(new string[] { string.Format("{0}@{1} {3}s, '{2}'", messageSender, source, messageText, channel) });
-                        }
-                        break;
-                    case "players/sign-in":
-                        if (newReply.ReferenceID == null)
-                        {
-                            //This is a request from the server
-                            var fullSignInName = string.Format("{0}@{1}", newReply.Payload.game.Value, newReply.Payload.name.Value);
+                        var validPlayers = LiveCache.GetAll<IPlayer>().Where(player => player.Descriptor != null
+                                                                    && player.DataTemplate<ICharacter>().Account.Config.GossipSubscriber
+                                                                    && player.DataTemplate<ICharacter>().Account.Config.WantsNotification(fullSignInName, true, AcquaintenceNotifications.LogIn));
+                        foreach (var player in validPlayers)
+                            player.WriteTo(new string[] { string.Format("{0} has logged into GOSSIP.", fullSignInName) });
+                    }
+                    else
+                    {
+                        //This is a response to our request
+                    }
+                    break;
+                case "players/sign-out":
+                    if (newReply.ReferenceID == null)
+                    {
+                        //This is a request from the server
+                        var fullSignoutName = string.Format("{0}@{1}", newReply.Payload.game.Value, newReply.Payload.name.Value);
 
-                            var validPlayers = LiveCache.GetAll<IPlayer>().Where(player => player.Descriptor != null
-                                                                        && player.DataTemplate<ICharacter>().Account.Config.GossipSubscriber
-                                                                        && player.DataTemplate<ICharacter>().Account.Config.WantsNotification(fullSignInName, true, AcquaintenceNotifications.LogIn));
-                            foreach (var player in validPlayers)
-                                player.WriteTo(new string[] { string.Format("{0} has logged into GOSSIP.", fullSignInName) });
-                        }
-                        else
-                        {
-                            //This is a response to our request
-                        }
-                        break;
-                    case "players/sign-out":
-                        if (newReply.ReferenceID == null)
-                        {
-                            //This is a request from the server
-                            var fullSignoutName = string.Format("{0}@{1}", newReply.Payload.game.Value, newReply.Payload.name.Value);
+                        var validPlayers = LiveCache.GetAll<IPlayer>().Where(player => player.Descriptor != null
+                                                                    && player.DataTemplate<ICharacter>().Account.Config.GossipSubscriber
+                                                                    && player.DataTemplate<ICharacter>().Account.Config.WantsNotification(fullSignoutName, true, AcquaintenceNotifications.LogOff));
+                        foreach (var player in validPlayers)
+                            player.WriteTo(new string[] { string.Format("{0} has logged out of GOSSIP.", fullSignoutName) });
+                    }
+                    else
+                    {
+                        //This is a response to our request
+                    }
+                    break;
 
-                            var validPlayers = LiveCache.GetAll<IPlayer>().Where(player => player.Descriptor != null
-                                                                        && player.DataTemplate<ICharacter>().Account.Config.GossipSubscriber
-                                                                        && player.DataTemplate<ICharacter>().Account.Config.WantsNotification(fullSignoutName, true, AcquaintenceNotifications.LogOff));
-                            foreach (var player in validPlayers)
-                                player.WriteTo(new string[] { string.Format("{0} has logged out of GOSSIP.", fullSignoutName) });
-                        }
-                        else
-                        {
-                            //This is a response to our request
-                        }
-                        break;
+                case "channels/subscribe":
+                case "channels/unsubscribe":
+                case "messages/new":
+                case "authenticate":
+                    //These are the "request-response"
+                    if (newReply.Status.Equals("failure"))
+                    {
+                        //Do something?
+                    }
 
-                    case "channels/subscribe":
-                    case "channels/unsubscribe":
-                    case "messages/new":
-                    case "authenticate":
-                        //These are the "request-response"
-                        if (newReply.Status.Equals("failure"))
-                        {
-                            //Do something?
-                        }
-
-                        break;
-                    default:
-                        //do nothing
-                        break;
-                }
+                    break;
+                default:
+                    //do nothing
+                    break;
             }
         }
 

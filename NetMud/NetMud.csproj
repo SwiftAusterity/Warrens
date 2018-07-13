@@ -328,6 +328,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="Scripts\jquery-ui.js" />
     <Content Include="Scripts\js-cookie.js" />
+    <Content Include="Scripts\marked.js" />
     <Content Include="Scripts\moment-with-locales.js" />
     <Content Include="Scripts\moment-with-locales.min.js" />
     <Content Include="Scripts\moment.js" />

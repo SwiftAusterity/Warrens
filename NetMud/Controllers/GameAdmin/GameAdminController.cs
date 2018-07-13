@@ -15,6 +15,7 @@ using NetMud.DataStructure.Base.World;
 using NetMud.DataStructure.Linguistic;
 using NetMud.Models.Admin;
 using System.Linq;
+using System.Net.WebSockets;
 using System.Web;
 using System.Web.Mvc;
 
@@ -144,6 +145,21 @@ namespace NetMud.Controllers.GameAdmin
             hotBack.RestoreLiveBackup();
 
             return RedirectToAction("Index", new { Message = "Restore Started" });
+        }
+
+        public ActionResult RestartGossipServer()
+        {
+            var gossipServers = LiveCache.GetAll<WebSocket>();
+
+            foreach (var server in gossipServers)
+            {
+                server.Abort();
+            }
+
+            var gossipServer = new Gossip.GossipClient();
+            gossipServer.Launch();
+
+            return RedirectToAction("Index", new { Message = "Gossip Server Restarted" });
         }
         #endregion
 
