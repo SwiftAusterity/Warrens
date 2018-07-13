@@ -1,4 +1,5 @@
 ﻿using NetMud.Data.DataIntegrity;
+using NetMud.Data.System;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Supporting;
@@ -16,7 +17,7 @@ namespace NetMud.Data.LookupData
     /// Backing data for physical models
     /// </summary>
     [Serializable]
-    public class DimensionalModelData : LookupDataPartial, IDimensionalModelData
+    public class DimensionalModelData : BackingDataPartial, IDimensionalModelData
     {
         /// <summary>
         /// What type of approval is necessary for this content
@@ -124,16 +125,6 @@ namespace NetMud.Data.LookupData
         }
 
         /// <summary>
-        /// Renders the help text for this data object
-        /// </summary>
-        /// <returns>help text</returns>
-        public override IEnumerable<string> RenderHelpBody()
-        {
-            //TODO: Render the actual model flattened in ascii, probably require a fair bit of work so just returning name for now
-            return base.RenderHelpBody();
-        }
-
-        /// <summary>
         /// Turn a comma delimited list of planes into the modelplane set
         /// </summary>
         /// <param name="delimitedPlanes">comma delimited list of planes</param>
@@ -196,7 +187,7 @@ namespace NetMud.Data.LookupData
         {
             var returnList = base.SignificantDetails();
 
-            returnList.Add("Vacuity", HelpText);
+            returnList.Add("Vacuity", Vacuity.ToString());
             returnList.Add("Model", ViewFlattenedModel(true));
             
             return returnList;

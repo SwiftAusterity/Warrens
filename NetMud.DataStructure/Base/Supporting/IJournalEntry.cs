@@ -7,7 +7,7 @@ namespace NetMud.DataStructure.Base.Supporting
     /// <summary>
     /// Blog/PatchNotes/etc
     /// </summary>
-    public interface IJournalEntry : ILookupData
+    public interface IJournalEntry : IKeyedData
     {
         /// <summary>
         /// The body of the post

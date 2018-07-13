@@ -1,4 +1,5 @@
 ﻿using NetMud.Data.DataIntegrity;
+using NetMud.Data.System;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Behaviors.System;
 using NetMud.DataStructure.SupportingClasses;
@@ -13,7 +14,7 @@ namespace NetMud.Data.LookupData
     /// Blog/PatchNotes/etc
     /// </summary>
     [Serializable]
-    public class JournalEntry : LookupDataPartial, IJournalEntry
+    public class JournalEntry : BackingDataPartial, IJournalEntry
     {
         /// <summary>
         /// What type of approval is necessary for this content

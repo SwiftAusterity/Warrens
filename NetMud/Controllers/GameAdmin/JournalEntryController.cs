@@ -134,7 +134,6 @@ namespace NetMud.Controllers.GameAdmin
             {
                 Name = vModel.Name,
                 Body = vModel.Body,
-                HelpText = vModel.Name,
                 Expired = vModel.Expired,
                 ExpireDate = DateTime.Parse(vModel.ExpireDate),
                 MinimumReadLevel = (StaffRank)vModel.MinimumReadLevel,

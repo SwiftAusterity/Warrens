@@ -213,6 +213,7 @@ namespace NetMud.Gossip
                     case "channels/subscribe":
                     case "channels/unsubscribe":
                     case "messages/new":
+                    case "authenticate":
                         //These are the "request-response"
                         if (newReply.Status.Equals("failure"))
                         {
