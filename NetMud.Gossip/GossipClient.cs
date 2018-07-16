@@ -46,6 +46,8 @@ namespace NetMud.Gossip
                 {
                     throw new TimeoutException("Gossip Server unresponsive on open. Starting reconnect loop.");
                 }
+
+                await Task.Delay(1);
             }
             catch (TimeoutException tex)
             {

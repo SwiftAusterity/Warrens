@@ -155,7 +155,7 @@ namespace NetMud.Data.Game
 
             Keywords = new string[] { bS.Name.ToLower() };
 
-            if (CelestialPositions == null)
+            if (CelestialPositions == null || CelestialPositions.Count() == 0)
             {
                 var celestials = new List<Tuple<ICelestial, float>>();
 
@@ -165,7 +165,7 @@ namespace NetMud.Data.Game
                 CelestialPositions = celestials;
             }
 
-            if (MeterologicalFronts == null)
+            if (MeterologicalFronts == null || MeterologicalFronts.Count() == 0)
                 MeterologicalFronts = Enumerable.Empty<IWeatherPattern>();
 
             CurrentTimeOfDay = new TimeOfDay(bS.ChronologicalSystem);
@@ -204,11 +204,14 @@ namespace NetMud.Data.Game
             foreach (var celestial in CelestialPositions)
             {
                 if (celestial.Item1.OrientationType == CelestialOrientation.HelioCentric)
+                {
+                    newCelestials.Add(celestial);
                     continue;
+                }
 
                 var newPosition = celestial.Item2 + celestial.Item1.Velocity;
 
-                var orbitalRadius = celestial.Item1.Apogee + celestial.Item1.Perigree / 2;
+                var orbitalRadius = (celestial.Item1.Apogee + celestial.Item1.Perigree) / 2;
                 float fullOrbitDistance = (float)Math.PI * (orbitalRadius ^ 2);
 
                 //There are 
