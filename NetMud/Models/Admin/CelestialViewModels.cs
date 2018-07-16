@@ -54,7 +54,7 @@ namespace NetMud.Models.Admin
         [DataType(DataType.Text)]
         public int Velocity { get; set; }
 
-        [Display(Name = "Velocity", Description = "How bright is this. Measured in thousands. Anything less than 1000 is not visible to the naked eye.")]
+        [Display(Name = "Luminosity", Description = "How bright is this. Measured in thousands. Anything less than 1000 is not visible to the naked eye.")]
         [DataType(DataType.Text)]
         public int Luminosity { get; set; }
 

@@ -2,11 +2,9 @@
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
 using NetMud.Data.EntityBackingData;
-using NetMud.Data.LookupData;
 using NetMud.Data.System;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.World;
 using NetMud.DataStructure.Behaviors.System;
 using NetMud.Models.Admin;
@@ -54,7 +52,7 @@ namespace NetMud.Controllers.GameAdmin
                 SearchTerms = SearchTerms
             };
 
-            return View("~/Views/GameAdmin/Celestials/Index.cshtml", vModel);
+            return View("~/Views/GameAdmin/Gaia/Index.cshtml", vModel);
         }
 
         [HttpPost]
@@ -126,8 +124,11 @@ namespace NetMud.Controllers.GameAdmin
             };
 
             var monthNames = new List<string>();
-            foreach (var tag in vModel.MonthNames.Split(new string[] { "||" }, StringSplitOptions.RemoveEmptyEntries))
-                monthNames.Add(tag);
+            if (vModel.MonthNames != null)
+            {
+                foreach (var tag in vModel.MonthNames.Split(new string[] { "||" }, StringSplitOptions.RemoveEmptyEntries))
+                    monthNames.Add(tag);
+            }
 
             var chrono = new Chronology
             {
@@ -136,6 +137,7 @@ namespace NetMud.Controllers.GameAdmin
                 DaysPerMonth = vModel.DaysPerMonth,
                 Months = monthNames
             };
+
             newObj.ChronologicalSystem = chrono;
 
             var bodies = new List<ICelestial>();
@@ -210,8 +212,11 @@ namespace NetMud.Controllers.GameAdmin
                 obj.Name = vModel.Name;
 
                 var monthNames = new List<string>();
-                foreach (var tag in vModel.MonthNames.Split(new string[] { "||" }, StringSplitOptions.RemoveEmptyEntries))
-                    monthNames.Add(tag);
+                if (vModel.MonthNames != null)
+                {
+                    foreach (var tag in vModel.MonthNames.Split(new string[] { "||" }, StringSplitOptions.RemoveEmptyEntries))
+                        monthNames.Add(tag);
+                }
 
                 var chrono = new Chronology
                 {
@@ -220,6 +225,7 @@ namespace NetMud.Controllers.GameAdmin
                     DaysPerMonth = vModel.DaysPerMonth,
                     Months = monthNames
                 };
+
                 obj.ChronologicalSystem = chrono;
 
                 var bodies = new List<ICelestial>();

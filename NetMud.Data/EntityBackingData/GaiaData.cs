@@ -51,7 +51,7 @@ namespace NetMud.Data.EntityBackingData
         }
 
         [JsonProperty("CelestialBodies")]
-        public IEnumerable<BackingDataCacheKey> _celestialBodies { get; set; }
+        public HashSet<BackingDataCacheKey> _celestialBodies { get; set; }
 
         /// <summary>
         /// Celestial bodies for this world
@@ -63,7 +63,7 @@ namespace NetMud.Data.EntityBackingData
             get
             {
                 if (_celestialBodies == null)
-                    _celestialBodies = Enumerable.Empty<BackingDataCacheKey>();
+                    _celestialBodies = new HashSet<BackingDataCacheKey>();
 
                 return _celestialBodies.Select(cp => BackingDataCache.Get<ICelestial>(cp));
             }
@@ -72,7 +72,7 @@ namespace NetMud.Data.EntityBackingData
                 if (value == null)
                     return;
 
-                _celestialBodies = value.Select(cp => new BackingDataCacheKey(cp));
+                _celestialBodies = new HashSet<BackingDataCacheKey>(value.Select(cp => new BackingDataCacheKey(cp)));
             }
         }
 
@@ -115,13 +115,12 @@ namespace NetMud.Data.EntityBackingData
             returnList.Add("Hours Per Day", ChronologicalSystem.HoursPerDay.ToString());
             returnList.Add("Days Per Month", ChronologicalSystem.DaysPerMonth.ToString());
             returnList.Add("Starting Year", ChronologicalSystem.StartingYear.ToString());
-            returnList.Add("Days Per Month", ChronologicalSystem.Months.ToString());
 
             foreach (var month in ChronologicalSystem.Months)
-                returnList.Add("Month", month);
+                returnList.Add("Months-" + month, month);
 
             foreach (var celestial in CelestialBodies)
-                returnList.Add("Celestial", celestial.Name);
+                returnList.Add("Celestials-" + celestial.Name, celestial.Name);
 
             return returnList;
         }

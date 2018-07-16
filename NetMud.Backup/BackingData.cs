@@ -1,4 +1,5 @@
 ﻿using NetMud.Data.EntityBackingData;
+using NetMud.Data.LookupData;
 using NetMud.DataAccess;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.SupportingClasses;
@@ -50,7 +51,9 @@ namespace NetMud.Backup
                                                                                 && !ty.IsAbstract
                                                                                 && !ty.GetCustomAttributes<IgnoreAutomatedBackupAttribute>().Any());
 
-            foreach (var t in implimentedTypes.OrderByDescending(type => type == typeof(ZoneData) ? 5 :
+            foreach (var t in implimentedTypes.OrderByDescending(type => type == typeof(DimensionalModelData) ? 7 : 
+                                                                            type == typeof(GaiaData) ? 6 :
+                                                                            type == typeof(ZoneData) ? 5 :
                                                                             type == typeof(LocaleData) ? 4 :
                                                                             type == typeof(RoomData) ? 3 :
                                                                             type == typeof(PathwayData) ? 2 :

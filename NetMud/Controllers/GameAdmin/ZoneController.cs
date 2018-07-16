@@ -10,6 +10,7 @@ using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Base.World;
 using NetMud.DataStructure.Behaviors.System;
 using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.SupportingClasses;
@@ -63,7 +64,7 @@ namespace NetMud.Controllers.GameAdmin
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route(@"GameAdmin/Zone/Remove/{removeId?}/{authorizeRemove?}/{unapproveId?}/{authorizeUnapprove?}")] 
+        [Route(@"GameAdmin/Zone/Remove/{removeId?}/{authorizeRemove?}/{unapproveId?}/{authorizeUnapprove?}")]
         public ActionResult Remove(long removeId = -1, string authorizeRemove = "", long unapproveId = -1, string authorizeUnapprove = "")
         {
             string message = string.Empty;
@@ -111,7 +112,8 @@ namespace NetMud.Controllers.GameAdmin
         {
             var vModel = new AddEditZoneDataViewModel()
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId())
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                ValidWorlds = BackingDataCache.GetAll<IGaiaData>(true)
             };
 
             return View("~/Views/GameAdmin/Zone/Add.cshtml", vModel);
@@ -132,14 +134,22 @@ namespace NetMud.Controllers.GameAdmin
                 TemperatureCoefficient = vModel.TemperatureCoefficient
             };
 
-            if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
-                message = "Error; Creation failed.";
+            var world = BackingDataCache.Get<IGaiaData>(vModel.World);
+
+            if (world == null)
+                message = "Error; You must choose a valid world.";
             else
             {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - AddZone[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                message = "Creation Successful.";
-            }
+                newObj.World = world;
 
+                if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
+                    message = "Error; Creation failed.";
+                else
+                {
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddZone[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    message = "Creation Successful.";
+                }
+            }
             return RedirectToAction("Index", new { Message = message });
         }
 
@@ -166,7 +176,9 @@ namespace NetMud.Controllers.GameAdmin
                 Name = obj.Name,
                 BaseElevation = obj.BaseElevation,
                 PressureCoefficient = obj.PressureCoefficient,
-                TemperatureCoefficient = obj.TemperatureCoefficient
+                TemperatureCoefficient = obj.TemperatureCoefficient,
+                ValidWorlds = BackingDataCache.GetAll<IGaiaData>(true),
+                World = obj.World == null ? -1 : obj.World.Id
             };
 
             return View("~/Views/GameAdmin/Zone/Edit.cshtml", vModel);
@@ -191,14 +203,22 @@ namespace NetMud.Controllers.GameAdmin
             obj.PressureCoefficient = vModel.PressureCoefficient;
             obj.TemperatureCoefficient = vModel.TemperatureCoefficient;
 
-            if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
-            {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - EditZone[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                message = "Edit Successful.";
-            }
-            else
-                message = "Error; Edit failed.";
+            var world = BackingDataCache.Get<IGaiaData>(vModel.World);
 
+            if (world == null)
+                message = "Error; You must choose a valid world.";
+            else
+            {
+                obj.World = world;
+
+                if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+                {
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - EditZone[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    message = "Edit Successful.";
+                }
+                else
+                    message = "Error; Edit failed.";
+            }
             return RedirectToAction("Index", new { Message = message });
         }
 
@@ -207,14 +227,14 @@ namespace NetMud.Controllers.GameAdmin
         {
             var locale = BackingDataCache.Get<ILocaleData>(localeId);
 
-            if(locale == null)
+            if (locale == null)
             {
                 return RedirectToAction("Edit", new { Message = "Locale has no rooms", id });
             }
 
             var validRooms = BackingDataCache.GetAll<IRoomData>().Where(rm => rm.ParentLocation.Equals(locale));
 
-            if(validRooms.Count() == 0)
+            if (validRooms.Count() == 0)
             {
                 return RedirectToAction("Edit", new { Message = "Locale has no rooms", id });
             }
@@ -237,7 +257,7 @@ namespace NetMud.Controllers.GameAdmin
                 DestinationID = -1
             };
 
-            if(existingPathway != null)
+            if (existingPathway != null)
             {
                 vModel.Name = existingPathway.Name;
                 vModel.Destination = (IRoomData)existingPathway.Destination;
@@ -414,7 +434,7 @@ namespace NetMud.Controllers.GameAdmin
             if (descriptiveType > -1)
             {
                 var grammaticalType = (GrammaticalType)descriptiveType;
-                vModel.OccurrenceDataObject = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType 
+                vModel.OccurrenceDataObject = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType
                                                                                         && occurrence.Event.Phrase.Equals(phrase, StringComparison.InvariantCultureIgnoreCase));
             }
 

@@ -63,6 +63,11 @@ namespace NetMud.Data.LookupData
         /// </summary>
         public HashSet<IOccurrence> Descriptives { get; set; }
 
+        public Celestial()
+        {
+            Descriptives = new HashSet<IOccurrence>();
+        }
+
         /// <summary>
         /// Get the significant details of what needs approval
         /// </summary>

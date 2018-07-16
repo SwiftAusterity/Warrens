@@ -2,6 +2,7 @@
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Base.World;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -79,6 +80,11 @@ namespace NetMud.Models.Admin
         [DataType(DataType.Text)]
         public int PressureCoefficient { get; set; }
 
+        [Display(Name = "World", Description = "The World/Dimension this belongs to.")]
+        [DataType(DataType.Text)]
+        public long World { get; set; }
+
+        public IEnumerable<IGaiaData> ValidWorlds { get; set; }
         public IZoneData DataObject { get; set; }
     }
 

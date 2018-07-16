@@ -39,7 +39,7 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            var currentMonth = [@Model.DataObject.ChronologicalSystem.Months.Select(tag => string.Format("'{0}', ", tag))];
+            var currentMonth = [@Html.Raw(String.Join(",", Model.DataObject.ChronologicalSystem.Months.Select(tag => string.Format("'{0}'", tag))))];
 
             currentMonth.forEach(function (tag) {
                 var word = tag;

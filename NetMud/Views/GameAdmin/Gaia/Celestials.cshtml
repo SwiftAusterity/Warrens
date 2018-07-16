@@ -7,7 +7,7 @@
     {
         <div class="form-group row">
             <label class="col-sm-1 col-form-label"><a href="#" class="removeRow" id="removeCelestialsRow" title="Remove this">X</a></label>
-            @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("CelestialsIds", "Celestial", Model.ValidCelestials, -1))
+            @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("CelestialBodies", "Celestial", Model.ValidCelestials, -1))
         </div>
     }
     else
@@ -16,7 +16,7 @@
         {
             <div class="form-group row">
                 <label class="col-sm-1 col-form-label"><a href="#" class="removeRow" id="removeCelestialsRow" title="Remove this">X</a></label>
-                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("CelestialsIds", "Celestial", Model.ValidCelestials, celestial.Id))
+                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("CelestialBodies", "Celestial", Model.ValidCelestials, celestial.Id))
             </div>
         }
     }
@@ -24,7 +24,7 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        var celestialDropdown = decodeHtml('@Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("CelestialsIds", "Celestial", Model.ValidCelestials, -1)).ToString().Replace(Environment.NewLine, "")');
+        var celestialDropdown = decodeHtml('@Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("CelestialBodies", "Celestial", Model.ValidCelestials, -1)).ToString().Replace(Environment.NewLine, "")');
 
         $("#addCelestialsRow").click(function () {
             $("#CelestialsRows").append(
