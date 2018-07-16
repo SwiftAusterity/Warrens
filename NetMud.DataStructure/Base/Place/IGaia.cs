@@ -17,6 +17,16 @@ namespace NetMud.DataStructure.Base.Place
         ITimeOfDay CurrentTimeOfDay { get; set; }
 
         /// <summary>
+        /// Where the planet is rotationally
+        /// </summary>
+        float PlanetaryRotation { get; set; }
+
+        /// <summary>
+        /// Where the planet is in its orbit
+        /// </summary>
+        float OrbitalPosition { get; set; }
+
+        /// <summary>
         /// Collection of weather patterns for this world
         /// </summary>
         IEnumerable<IWeatherPattern> MeterologicalFronts { get; set; }

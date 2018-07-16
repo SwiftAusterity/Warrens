@@ -46,6 +46,16 @@ namespace NetMud.Data.Game
         public ITimeOfDay CurrentTimeOfDay { get; set; }
 
         /// <summary>
+        /// Where the planet is rotationally
+        /// </summary>
+        public float PlanetaryRotation { get; set; }
+
+        /// <summary>
+        /// Where the planet is in its orbit
+        /// </summary>
+        public float OrbitalPosition { get; set; }
+
+        /// <summary>
         /// Collection of weather patterns for this world
         /// </summary>
         [ScriptIgnore] //TODO: Stop ignoring weather and economy once these are figured out
@@ -193,6 +203,17 @@ namespace NetMud.Data.Game
         private bool AdvanceTime()
         {
             CurrentTimeOfDay.AdvanceByHour();
+            var chronoSystem = DataTemplate<IGaiaData>().ChronologicalSystem;
+
+            if (CelestialPositions.Any(cp => cp.Item1.OrientationType == CelestialOrientation.HelioCentric))
+            {
+                var rotationalChange = 360 / chronoSystem.HoursPerDay;
+                PlanetaryRotation += rotationalChange;
+
+                var orbitalChange = 1 / (chronoSystem.Months.Count() * chronoSystem.DaysPerMonth * chronoSystem.HoursPerDay);
+                OrbitalPosition += orbitalChange;
+            }
+
             Save();
 
             return true;
