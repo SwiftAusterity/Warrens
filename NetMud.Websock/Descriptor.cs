@@ -170,7 +170,8 @@ namespace NetMud.Websock
                 VisibleMap = currentLocation.GetRoom() == null ? string.Empty : currentLocation.GetRoom().RenderCenteredMap(3, true)
             };
 
-            var timeOfDayString = string.Format("{0} of {1} in the year of {2}", currentWorld.CurrentTimeOfDay.Day
+            var timeOfDayString = string.Format("The hour of {0} in the day of {1} in {2} in the year of {3}", currentWorld.CurrentTimeOfDay.Hour
+                                                                               , currentWorld.CurrentTimeOfDay.Day
                                                                                , currentWorld.CurrentTimeOfDay.MonthName()
                                                                                , currentWorld.CurrentTimeOfDay.Year);
 

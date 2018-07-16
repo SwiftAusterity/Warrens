@@ -124,6 +124,8 @@ namespace NetMud.Data.Game
                 MeterologicalFronts = me.MeterologicalFronts;
                 Macroeconomy = me.Macroeconomy;
                 CelestialPositions = me.CelestialPositions;
+
+                KickoffProcesses();
             }
         }
 

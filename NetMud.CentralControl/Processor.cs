@@ -38,7 +38,7 @@ namespace NetMud.CentralControl
 
                 StoreCancellationToken(designator, cancelTokenSource);
 
-                Func<object, SubscriptionLoopArgs> looperProcess = (args) =>
+                async void looperProcess(object args)
                 {
                     var subArgs = args as SubscriptionLoopArgs;
                     while (1 == 1)
@@ -52,17 +52,19 @@ namespace NetMud.CentralControl
 
                         if (subArgs.CurrentPulse == _maxPulseCount)
                             subArgs.CurrentPulse = 0;
-                    }
-                };
 
-                var newLoop = new Task<SubscriptionLoopArgs>(looperProcess, new SubscriptionLoopArgs(designator, 0), cancelTokenSource.Token, TaskCreationOptions.LongRunning);
+                        await Task.Delay(10000);
+                    }
+                }
+
+                var newLoop = new Task(looperProcess, new SubscriptionLoopArgs(designator, 0), cancelTokenSource.Token, TaskCreationOptions.LongRunning);
 
                 newLoop.ContinueWith((previousTask) =>
                 {
                     //Just end it
                     RemoveSubscriberList(designator);
                     RemoveCancellationToken(designator);
-                });
+                }, TaskContinuationOptions.NotOnRanToCompletion);
 
                 newLoop.Start();
             }
@@ -128,11 +130,11 @@ namespace NetMud.CentralControl
 
             StoreCancellationToken(designator, cancelTokenSource);
 
-            Func<bool> loopedProcess = () =>
+            bool loopedProcess()
             {
                 StartLoop(workProcess, rampupDelay);
                 return true;
-            };
+            }
 
             var newLoop = new Task<bool>(loopedProcess, cancelTokenSource.Token, TaskCreationOptions.LongRunning);
 
@@ -289,9 +291,7 @@ namespace NetMud.CentralControl
         {
             var taskKey = string.Format(subscriptionLoopCacheKeyFormat, designator);
 
-            IList<Tuple<Func<bool>, int>> taskList = globalCache.Get(taskKey) as IList<Tuple<Func<bool>, int>>;
-
-            if (taskList == null)
+            if (!(globalCache.Get(taskKey) is IList<Tuple<Func<bool>, int>> taskList))
                 taskList = new List<Tuple<Func<bool>, int>>();
 
             taskList.Add(new Tuple<Func<bool>, int>(subscriber, pulseCount));
@@ -305,6 +305,9 @@ namespace NetMud.CentralControl
 
         private static IList<Tuple<Func<bool>, int>> GetAllCurrentSubscribers(string designator, int pulseCount, bool fireOnce)
         {
+            if (pulseCount == 0)
+                return new List<Tuple<Func<bool>, int>>();
+
             var loopSubscribers = GetLoopSubscribers(designator);
 
             return loopSubscribers.Where(ls => (fireOnce && ls.Item2.Equals(pulseCount)) || ls.Item2 % pulseCount == 0).ToList();
