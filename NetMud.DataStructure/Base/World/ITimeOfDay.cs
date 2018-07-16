@@ -23,6 +23,21 @@
         /// <summary>
         /// Current minute
         /// </summary>
-        int Minute { get; set; }
+        int Hour { get; set; }
+
+        /// <summary>
+        /// The name of the month
+        /// </summary>
+        string MonthName();
+
+        /// <summary>
+        /// Advance time by one hour
+        /// </summary>
+        void AdvanceByHour();
+
+        /// <summary>
+        /// Set the time to something specific
+        /// </summary>
+        void Set(int year, int month, int day, int hour);
     }
 }

@@ -166,7 +166,7 @@ namespace NetMud.Controllers.GameAdmin
 
             if (vModel.StartingLocationId >= 0)
             {
-                var zone = BackingDataCache.Get<ZoneData>(vModel.StartingLocationId);
+                var zone = BackingDataCache.Get<IZoneData>(vModel.StartingLocationId);
 
                 if (zone != null)
                     newObj.StartingLocation = zone;
@@ -174,7 +174,7 @@ namespace NetMud.Controllers.GameAdmin
 
             if (vModel.RecallLocationId >= 0)
             {
-                var zone = BackingDataCache.Get<ZoneData>(vModel.RecallLocationId);
+                var zone = BackingDataCache.Get<IZoneData>(vModel.RecallLocationId);
 
                 if (zone != null)
                     newObj.EmergencyLocation = zone;
@@ -182,7 +182,7 @@ namespace NetMud.Controllers.GameAdmin
 
             if (vModel.BloodId >= 0)
             {
-                var blood = BackingDataCache.Get<Material>(vModel.BloodId);
+                var blood = BackingDataCache.Get<IMaterial>(vModel.BloodId);
 
                 if (blood != null)
                     newObj.SanguinaryMaterial = blood;

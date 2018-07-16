@@ -1,4 +1,6 @@
-﻿using NetMud.Data.EntityBackingData;
+﻿using NetMud.CentralControl;
+using NetMud.Data.EntityBackingData;
+using NetMud.Data.System;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.World;
@@ -83,6 +85,26 @@ namespace NetMud.Data.Game
             }
         }
 
+        public Gaia()
+        {
+        }
+
+        /// <summary>
+        /// News up an entity with its backing data
+        /// </summary>
+        /// <param name="room">the backing data</param>
+        public Gaia(IGaiaData world)
+        {
+            DataTemplateId = world.Id;
+
+            GetFromWorldOrSpawn();
+        }
+
+        public override Tuple<int, int, int> GetModelDimensions()
+        {
+            return DataTemplate<IGaiaData>().GetModelDimensions();
+        }
+
         public void GetFromWorldOrSpawn()
         {
             //Try to see if they are already there
@@ -110,11 +132,6 @@ namespace NetMud.Data.Game
             return this;
         }
 
-        public override Tuple<int, int, int> GetModelDimensions()
-        {
-            return DataTemplate<IGaiaData>().GetModelDimensions();
-        }
-
         /// <summary>
         /// Get the zones associated with this world
         /// </summary>
@@ -137,10 +154,19 @@ namespace NetMud.Data.Game
             Keywords = new string[] { bS.Name.ToLower() };
 
             if (CelestialPositions == null)
-                CelestialPositions = new List<Tuple<ICelestial, float>>();
+            {
+                var celestials = new List<Tuple<ICelestial, float>>();
+
+                foreach (var body in bS.CelestialBodies)
+                    celestials.Add(new Tuple<ICelestial, float>(body, 0));
+
+                CelestialPositions = celestials;
+            }
 
             if (MeterologicalFronts == null)
                 MeterologicalFronts = Enumerable.Empty<IWeatherPattern>();
+
+            CurrentTimeOfDay = new TimeOfDay(bS.ChronologicalSystem);
 
             if (String.IsNullOrWhiteSpace(BirthMark))
             {
@@ -149,6 +175,51 @@ namespace NetMud.Data.Game
             }
 
             UpsertToLiveWorldCache(true);
+
+            KickoffProcesses();
+        }
+
+        private void KickoffProcesses()
+        {
+            //every 15 minutes after half an hour
+            Processor.StartSubscriptionLoop("Time", () => AdvanceTime(), 5 * 60, false);
+
+            //every 15 minutes after half an hour
+            Processor.StartSubscriptionLoop("CelestialBodies", () => AdvanceCelestials(), 5 * 60, false);
+        }
+
+        private bool AdvanceTime()
+        {
+            CurrentTimeOfDay.AdvanceByHour();
+            Save();
+
+            return true;
+        }
+
+        private bool AdvanceCelestials()
+        {
+            var newCelestials = new List<Tuple<ICelestial, float>>();
+            foreach (var celestial in CelestialPositions)
+            {
+                if (celestial.Item1.OrientationType == CelestialOrientation.HelioCentric)
+                    continue;
+
+                var newPosition = celestial.Item2 + celestial.Item1.Velocity;
+
+                var orbitalRadius = celestial.Item1.Apogee + celestial.Item1.Perigree / 2;
+                float fullOrbitDistance = (float)Math.PI * (orbitalRadius ^ 2);
+
+                //There are 
+                if(newPosition > fullOrbitDistance)
+                    newPosition = fullOrbitDistance - newPosition;
+
+                newCelestials.Add(new Tuple<ICelestial, float>(celestial.Item1, newPosition));
+            }
+
+            CelestialPositions = newCelestials;
+            Save();
+
+            return true;
         }
     }
 }

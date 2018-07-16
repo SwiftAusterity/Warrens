@@ -8,6 +8,7 @@ using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Base.World;
 using NetMud.DataStructure.Behaviors.System;
 using NetMud.DataStructure.SupportingClasses;
 using System;
@@ -32,11 +33,14 @@ namespace NetMud.Backup
         {
             //Only load in stuff that is static and spawns as singleton
             //We need to pick up any places that aren't already live from the file system incase someone added them during the last session\
+            foreach (var thing in BackingDataCache.GetAll<IGaiaData>())
+            {
+                var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IGaia;
+            }
+
             foreach (var thing in BackingDataCache.GetAll<IZoneData>())
             {
                 var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IZone;
-
-                entityThing.GetFromWorldOrSpawn();
             }
 
             foreach (var thing in BackingDataCache.GetAll<ILocaleData>())
@@ -58,8 +62,6 @@ namespace NetMud.Backup
             foreach (var thing in BackingDataCache.GetAll<IPathwayData>())
             {
                 var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IPathway;
-
-                entityThing.GetFromWorldOrSpawn();
             }
 
             ParseDimension();
@@ -196,10 +198,20 @@ namespace NetMud.Backup
                     entity.UpsertToLiveWorldCache();
 
                 //Check we found actual data
+                if (!entitiesToLoad.Any(ent => ent.GetType() == typeof(Gaia)))
+                    throw new Exception("No Worlds found, failover.");
+
                 if (!entitiesToLoad.Any(ent => ent.GetType() == typeof(Zone)))
                     throw new Exception("No zones found, failover.");
 
                 //We need to pick up any places that aren't already live from the file system incase someone added them during the last session\
+                foreach (var thing in BackingDataCache.GetAll<IGaiaData>().Where(dt => !entitiesToLoad.Any(ent => ent.DataTemplateId.Equals(dt.Id))))
+                {
+                    var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IGaia;
+
+                    entityThing.GetFromWorldOrSpawn();
+                }
+
                 foreach (var thing in BackingDataCache.GetAll<IZoneData>().Where(dt => !entitiesToLoad.Any(ent => ent.DataTemplateId.Equals(dt.Id))))
                 {
                     var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IZone;

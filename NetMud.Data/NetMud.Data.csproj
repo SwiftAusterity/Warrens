@@ -123,6 +123,10 @@
       <Project>{f4eab5d7-93fa-4b7b-9e6d-b7f191e66945}</Project>
       <Name>NetMud.Cartography</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NetMud.CentralControl\NetMud.CentralControl.csproj">
+      <Project>{1E404CFB-4CED-42AD-B28E-BFEE270C88F9}</Project>
+      <Name>NetMud.CentralControl</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NetMud.Communication\NetMud.Communication.csproj">
       <Project>{7f19324f-1b9c-467d-816a-74a36eb74cde}</Project>
       <Name>NetMud.Communication</Name>

@@ -141,6 +141,8 @@ namespace NetMud.Websock
 
             var currentLocation = _currentPlayer.CurrentLocation;
             var currentContainer = currentLocation.CurrentLocation;
+            var currentZone = currentLocation.GetZone();
+            var currentWorld = currentZone.GetWorld();
 
             var pathways = ((ILocation)currentContainer).GetPathways().SelectMany(data => data.RenderAsContents(_currentPlayer));
             var inventory = currentContainer.GetContents<IInanimate>().SelectMany(data => data.RenderAsContents(_currentPlayer));
@@ -148,7 +150,7 @@ namespace NetMud.Websock
 
             var local = new LocalStatus
             {
-                ZoneName = currentLocation.GetZone().DataTemplateName,
+                ZoneName = currentZone.DataTemplateName,
                 LocaleName = currentLocation.GetLocale()?.DataTemplateName,
                 RoomName = currentLocation.GetRoom()?.DataTemplateName,
                 Inventory = inventory.ToArray(),
@@ -168,12 +170,18 @@ namespace NetMud.Websock
                 VisibleMap = currentLocation.GetRoom() == null ? string.Empty : currentLocation.GetRoom().RenderCenteredMap(3, true)
             };
 
+            var timeOfDayString = string.Format("{0} of {1} in the year of {2}", currentWorld.CurrentTimeOfDay.Day
+                                                                               , currentWorld.CurrentTimeOfDay.MonthName()
+                                                                               , currentWorld.CurrentTimeOfDay.Year);
+
+            var celestialString = String.Join(",", currentWorld.CelestialPositions.Select(cp => cp.Item1.Name));
+
             var environment = new EnvironmentStatus
             {
-                Celestial = "The sun peaks over the horizon",
+                Celestial = celestialString,
                 Visibility = "Twilight darkness",
                 Weather = "It is lightly raining",
-                TimeOfDay = "Onesday, 12th of Onesmonth in the year of 13109"
+                TimeOfDay = timeOfDayString
             };
 
             var outputFormat = new OutputStatus
