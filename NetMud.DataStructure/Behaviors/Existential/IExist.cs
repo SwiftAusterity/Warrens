@@ -30,5 +30,11 @@ namespace NetMud.DataStructure.Behaviors.Existential
         /// <param name="viewer">the viewing entity</param>
         /// <returns>If this is visible</returns>
         bool IsVisibleTo(IEntity viewer);
+
+        /// <summary>
+        /// Get the current luminosity rating of the place you're in
+        /// </summary>
+        /// <returns>The current Luminosity</returns>
+        float GetCurrentLuminosity();
     }
 }

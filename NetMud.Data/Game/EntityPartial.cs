@@ -446,6 +446,12 @@ namespace NetMud.Data.Game
         /// <returns>the working modifier</returns>
         public abstract float GetVisionModifier(float currentBrightness);
 
+        /// <summary>
+        /// Get the current luminosity rating of the place you're in
+        /// </summary>
+        /// <returns>The current Luminosity</returns>
+        public abstract float GetCurrentLuminosity();
+
         #region Equality Functions
         /// <summary>
         /// -99 = null input

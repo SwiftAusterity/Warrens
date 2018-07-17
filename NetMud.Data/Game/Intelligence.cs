@@ -107,6 +107,22 @@ namespace NetMud.Data.Game
             return returnValue;
         }
 
+        /// <summary>
+        /// Get the current luminosity rating of the place you're in
+        /// </summary>
+        /// <returns>The current Luminosity</returns>
+        public override float GetCurrentLuminosity()
+        {
+            float lumins = 0;
+
+            foreach (var dude in Inventory.EntitiesContained())
+                lumins += dude.GetCurrentLuminosity();
+
+            //TODO: Magical light, equipment, make inventory less bright depending on where it is
+
+            return lumins;
+        }
+
         #region Rendering
         /// <summary>
         /// Render this to a look command (what something sees when it 'look's at this

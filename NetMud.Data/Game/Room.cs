@@ -161,7 +161,11 @@ namespace NetMud.Data.Game
             var zone = AbsolutePosition().GetZone();
             float lumins = zone.GetCurrentLuminosity();
 
-            //TODO: add entities in the room that give off light
+            foreach (var dude in MobilesInside.EntitiesContained())
+                lumins += dude.GetCurrentLuminosity();
+
+            foreach (var thing in Contents.EntitiesContained())
+                lumins += thing.GetCurrentLuminosity();
 
             return lumins;
         }

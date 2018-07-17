@@ -285,7 +285,12 @@ namespace NetMud.Data.Game
                 }
             }
 
-            //TODO: add entities in the zone that give off light
+            foreach (var dude in MobilesInside.EntitiesContained())
+                lumins += dude.GetCurrentLuminosity();
+
+            lumins += Contents.EntitiesContained().Sum(c => c.GetCurrentLuminosity());
+            lumins += MobilesInside.EntitiesContained().Sum(c => c.GetCurrentLuminosity());
+            lumins += LiveCache.GetAll<ILocale>().Where(loc => loc.ParentLocation.Equals(this)).Sum(c => c.GetCurrentLuminosity());
 
             return lumins;
         }

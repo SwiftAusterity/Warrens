@@ -128,6 +128,15 @@ namespace NetMud.Data.Game
             return DataTemplate<IGaiaData>().VisualAcuity;
         }
 
+        /// <summary>
+        /// Get the current luminosity rating of the place you're in
+        /// </summary>
+        /// <returns>The current Luminosity</returns>
+        public override float GetCurrentLuminosity()
+        {
+            return GetZones().Sum(z => z.GetCurrentLuminosity());
+        }
+
         public void GetFromWorldOrSpawn()
         {
             //Try to see if they are already there

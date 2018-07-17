@@ -40,11 +40,5 @@ namespace NetMud.DataStructure.Behaviors.Rendering
         /// <param name="viewer">Whom is looking</param>
         /// <returns>What celestials are visible</returns>
         IEnumerable<ICelestial> GetVisibileCelestials(IActor viewer);
-
-        /// <summary>
-        /// Get the current luminosity rating of the place you're in
-        /// </summary>
-        /// <returns>The current Luminosity</returns>
-        float GetCurrentLuminosity();
     }
 }

@@ -285,12 +285,6 @@ namespace NetMud.Data.Game
         public abstract IEnumerable<ICelestial> GetVisibileCelestials(IActor viewer);
 
         /// <summary>
-        /// Get the current luminosity rating of the place you're in
-        /// </summary>
-        /// <returns>The current Luminosity</returns>
-        public abstract float GetCurrentLuminosity();
-
-        /// <summary>
         /// "Functional" Humiditiy
         /// </summary>
         /// <returns></returns>

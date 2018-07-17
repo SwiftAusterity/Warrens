@@ -110,9 +110,14 @@ namespace NetMud.Data.Game
         /// <returns>The current Luminosity</returns>
         public override float GetCurrentLuminosity()
         {
-            //TODO: add the luminosity of this object and its contents to brighten up the insides
+            float lumins = 0;
+            foreach (var dude in MobilesInside.EntitiesContained())
+                lumins += dude.GetCurrentLuminosity();
 
-            return 0;
+            foreach (var thing in Contents.EntitiesContained())
+                lumins += thing.GetCurrentLuminosity();
+
+            return lumins;
         }
 
         /// <summary>

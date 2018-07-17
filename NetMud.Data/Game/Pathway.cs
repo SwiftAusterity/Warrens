@@ -161,6 +161,19 @@ namespace NetMud.Data.Game
             return DataTemplate<IPathwayData>().VisualAcuity;
         }
 
+        /// <summary>
+        /// Get the current luminosity rating of the place you're in
+        /// </summary>
+        /// <returns>The current Luminosity</returns>
+        public override float GetCurrentLuminosity()
+        {
+            float lumins = 0;
+
+            //TODO: ???
+
+            return lumins;
+        }
+
         #region spawning
         /// <summary>
         /// Tries to find this entity in the world based on its Id or gets a new one from the db and puts it in the world

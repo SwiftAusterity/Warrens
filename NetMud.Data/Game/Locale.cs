@@ -172,6 +172,15 @@ namespace NetMud.Data.Game
         }
 
         /// <summary>
+        /// Get the current luminosity rating of the place you're in
+        /// </summary>
+        /// <returns>The current Luminosity</returns>
+        public override float GetCurrentLuminosity()
+        {
+            return Rooms().Sum(r => r.GetCurrentLuminosity());
+        }
+
+        /// <summary>
         /// Render the locale to a specific look
         /// </summary>
         /// <param name="actor">Who is looking</param>
