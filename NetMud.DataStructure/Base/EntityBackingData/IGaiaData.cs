@@ -21,6 +21,11 @@ namespace NetMud.DataStructure.Base.World
         IChronology ChronologicalSystem { get; set; }
 
         /// <summary>
+        /// The angle at which this world rotates in space. Irrelevant for fixed objects.
+        /// </summary>
+        float RotationalAngle { get; set; }
+
+        /// <summary>
         /// Get the zones associated with this world
         /// </summary>
         /// <returns>list of zones</returns>

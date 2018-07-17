@@ -159,6 +159,19 @@ namespace NetMud.Data.Game
         }
 
         /// <summary>
+        /// Gets the actual vision modifier taking into account blindness and other factors
+        /// </summary>
+        /// <returns>the working modifier</returns>
+        public override float GetVisionModifier(float currentBrightness)
+        {
+            //Base case doesn't count "lumin vision range" mobiles/players have, inanimate entities are assumed to have unlimited light and dark vision
+
+            //TODO: Check for blindess/magical type affects
+
+            return DataTemplate<ILocaleData>().VisualAcuity;
+        }
+
+        /// <summary>
         /// Render the locale to a specific look
         /// </summary>
         /// <param name="actor">Who is looking</param>

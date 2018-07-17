@@ -5,5 +5,10 @@
     /// </summary>
     public interface ICanSee
     {
+        /// <summary>
+        /// Gets the actual vision modifier taking into account blindness and other factors
+        /// </summary>
+        /// <returns>the working modifier</returns>
+        float GetVisionModifier(float currentBrightness);
     }
 }

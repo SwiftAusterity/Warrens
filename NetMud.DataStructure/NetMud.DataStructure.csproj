@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base\EntityBackingData\HemispherePlacement.cs" />
     <Compile Include="Base\EntityBackingData\ILocaleData.cs" />
     <Compile Include="Base\EntityBackingData\INonPlayerCharacter.cs" />
     <Compile Include="Base\EntityBackingData\IInanimateData.cs" />

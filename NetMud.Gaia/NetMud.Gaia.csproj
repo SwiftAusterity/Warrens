@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Astronomical\AstronomicalUtilities.cs" />
     <Compile Include="Geographical\DimensionalSizeDescription.cs" />
     <Compile Include="Geographical\GeographicalUtilities.cs" />
     <Compile Include="Meteorological\HumidityType.cs" />
@@ -54,8 +55,6 @@
       <Name>NetMud.DataStructure</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Astronomical\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

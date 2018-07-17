@@ -10,6 +10,7 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group row">
             @Html.EditorFor(e => e.Name)
+            @Html.EditorFor(e => e.RotationalAngle)
         </div>
         <div class="form-group row">
             @Html.EditorFor(e => e.StartingYear)

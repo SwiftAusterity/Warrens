@@ -89,6 +89,7 @@ namespace NetMud.Data.Game
         }
         #endregion
 
+        #region Connection Stuff
         /// <summary>
         /// Method by which this entity has output (from commands and events) "shown" to it
         /// </summary>
@@ -113,6 +114,7 @@ namespace NetMud.Data.Game
                 return _internalDescriptor;
             }
         }
+        #endregion
 
         /// <summary>
         /// Where in the live world this is
@@ -129,6 +131,7 @@ namespace NetMud.Data.Game
             return CurrentLocation;
         }
 
+        #region Affects
         /// <summary>
         /// Affects to add to a live entity when it is spawned
         /// </summary>
@@ -206,6 +209,7 @@ namespace NetMud.Data.Game
 
             return returnValue;
         }
+        #endregion
 
         /// <summary>
         /// Spawn this new into the live world
@@ -218,6 +222,7 @@ namespace NetMud.Data.Game
         /// <param name="spawnTo">the location/container this should spawn into</param>
         public abstract void SpawnNewInWorld(IGlobalPosition spawnTo);
 
+        #region Movement
         /// <summary>
         /// Change the position of this
         /// </summary>
@@ -260,6 +265,7 @@ namespace NetMud.Data.Game
 
             return true;
         }
+        #endregion
 
         #region Caching
         /// <summary>
@@ -334,6 +340,7 @@ namespace NetMud.Data.Game
             return true;
         }
 
+        #region Rendering
         /// <summary>
         /// Render this to a look command (what something sees when it 'look's at this)
         /// </summary>
@@ -402,6 +409,7 @@ namespace NetMud.Data.Game
 
             return DataTemplateName;
         }
+        #endregion
 
         /// <summary>
         /// Retrieve all of the descriptors that are tagged as visible output
@@ -426,11 +434,17 @@ namespace NetMud.Data.Game
         /// </summary>
         /// <param name="viewer">the viewing entity</param>
         /// <returns>If this is visible</returns>
-        public bool IsVisibleTo(IEntity viewer)
+        public virtual bool IsVisibleTo(IEntity viewer)
         {
             //TODO: this
             return true;
         }
+
+        /// <summary>
+        /// Gets the actual vision modifier taking into account blindness and other factors
+        /// </summary>
+        /// <returns>the working modifier</returns>
+        public abstract float GetVisionModifier(float currentBrightness);
 
         #region Equality Functions
         /// <summary>

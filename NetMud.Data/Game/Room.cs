@@ -7,9 +7,11 @@ using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Base.World;
 using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.Behaviors.System;
+using NetMud.Gaia.Geographical;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -117,6 +119,52 @@ namespace NetMud.Data.Game
             return new Tuple<int, IPathway>(distance, nextStep);
         }
 
+        /// <summary>
+        /// Gets the actual vision modifier taking into account blindness and other factors
+        /// </summary>
+        /// <returns>the working modifier</returns>
+        public override float GetVisionModifier(float currentBrightness)
+        {
+            //Base case doesn't count "lumin vision range" mobiles/players have, inanimate entities are assumed to have unlimited light and dark vision
+
+            //TODO: Check for blindess/magical type affects
+
+            return DataTemplate<IRoomData>().VisualAcuity;
+        }
+
+        /// <summary>
+        /// Get the visibile celestials. Depends on luminosity, viewer perception and celestial positioning
+        /// </summary>
+        /// <param name="viewer">Whom is looking</param>
+        /// <returns>What celestials are visible</returns>
+        public override IEnumerable<ICelestial> GetVisibileCelestials(IActor viewer)
+        {
+            var dT = DataTemplate<IRoomData>();
+            var zone = AbsolutePosition().GetZone();
+
+            var canSeeSky = GeographicalUtilities.IsOutside(GetBiome()) 
+                            && dT.Coordinates.Item3 >= zone.DataTemplate<IZoneData>().BaseElevation;
+
+            if (!canSeeSky)
+                return Enumerable.Empty<ICelestial>();
+
+            //The zone knows about the celestial positioning
+            return zone.GetVisibileCelestials(viewer);
+        }
+
+        /// <summary>
+        /// Get the current luminosity rating of the place you're in
+        /// </summary>
+        /// <returns>The current Luminosity</returns>
+        public override float GetCurrentLuminosity()
+        {
+            var zone = AbsolutePosition().GetZone();
+            float lumins = zone.GetCurrentLuminosity();
+
+            //TODO: add entities in the room that give off light
+
+            return lumins;
+        }
 
         /// <summary>
         /// Get the live version of this in the world

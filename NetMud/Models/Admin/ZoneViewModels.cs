@@ -84,6 +84,11 @@ namespace NetMud.Models.Admin
         [DataType(DataType.Text)]
         public long World { get; set; }
 
+        [Display(Name = "Hemisphere", Description = "The hemisphere of the world this zone is in.")]
+        [DataType(DataType.Text)]
+        public short Hemisphere { get; set; }
+
+
         public IEnumerable<IGaiaData> ValidWorlds { get; set; }
         public IZoneData DataObject { get; set; }
     }

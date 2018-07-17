@@ -131,7 +131,8 @@ namespace NetMud.Controllers.GameAdmin
                 Name = vModel.Name,
                 BaseElevation = vModel.BaseElevation,
                 PressureCoefficient = vModel.PressureCoefficient,
-                TemperatureCoefficient = vModel.TemperatureCoefficient
+                TemperatureCoefficient = vModel.TemperatureCoefficient,
+                Hemisphere = (HemispherePlacement)vModel.Hemisphere
             };
 
             var world = BackingDataCache.Get<IGaiaData>(vModel.World);
@@ -178,7 +179,8 @@ namespace NetMud.Controllers.GameAdmin
                 PressureCoefficient = obj.PressureCoefficient,
                 TemperatureCoefficient = obj.TemperatureCoefficient,
                 ValidWorlds = BackingDataCache.GetAll<IGaiaData>(true),
-                World = obj.World == null ? -1 : obj.World.Id
+                World = obj.World == null ? -1 : obj.World.Id,
+                Hemisphere = (short)obj.Hemisphere
             };
 
             return View("~/Views/GameAdmin/Zone/Edit.cshtml", vModel);
@@ -202,6 +204,7 @@ namespace NetMud.Controllers.GameAdmin
             obj.BaseElevation = vModel.BaseElevation;
             obj.PressureCoefficient = vModel.PressureCoefficient;
             obj.TemperatureCoefficient = vModel.TemperatureCoefficient;
+            obj.Hemisphere = (HemispherePlacement)vModel.Hemisphere;
 
             var world = BackingDataCache.Get<IGaiaData>(vModel.World);
 

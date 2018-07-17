@@ -1,4 +1,5 @@
-﻿using NetMud.DataStructure.Behaviors.Existential;
+﻿using NetMud.DataStructure.Behaviors.Actionable;
+using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.Rendering;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ namespace NetMud.DataStructure.Base.System
     /// <summary>
     /// Framework for live entities
     /// </summary>
-    public interface IEntity : IExist, ILookable, IFileStored, ILiveData
+    public interface IEntity : IExist, ICanSee, ILookable, IFileStored, ILiveData
     {
         /// <summary>
         /// Keywords this entity can be found with in command parsing

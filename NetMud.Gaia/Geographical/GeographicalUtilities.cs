@@ -1,6 +1,7 @@
 ﻿using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Base.World;
 using System;
 using System.Linq;
 
@@ -8,6 +9,32 @@ namespace NetMud.Gaia.Geographical
 {
     public static class GeographicalUtilities
     {
+        public static bool IsOutside(Biome biome)
+        {
+            var returnValue = true;
+
+            switch (biome)
+            {
+                case Biome.Aquatic:
+                case Biome.AquaticFloor:
+                case Biome.Cavernous:
+                case Biome.Fabricated:
+                    returnValue = false;
+                    break;
+                case Biome.Air:
+                case Biome.AquaticSurface:
+                case Biome.Desert:
+                case Biome.Forest:
+                case Biome.Mountainous:
+                case Biome.Plains:
+                case Biome.Rainforest:
+                case Biome.Swamp:
+                    break;
+            }
+
+            return returnValue;
+        }
+
         public static DimensionalSizeDescription ConvertSizeToType(Tuple<int, int, int> Dimensions, Type entityType)
         {
             //x,y,z in inches currently
@@ -104,5 +131,6 @@ namespace NetMud.Gaia.Geographical
 
             return DimensionalSizeDescription.Medium;
         }
+
     }
 }

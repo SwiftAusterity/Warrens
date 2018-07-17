@@ -40,6 +40,11 @@ namespace NetMud.Models.Admin
         [DataType(DataType.Text)]
         public string Name { get; set; }
 
+        [Range(0, 359, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Rotational Angle", Description = "The angle at which this world rotates in space. Irrelevant for fixed objects.")]
+        [DataType(DataType.Text)]
+        public float RotationalAngle { get; set; }
+
         [Display(Name = "Celestial Body", Description = "The Celestial bodies that orbit this world. (or the one this orbits)")]
         public long[] CelestialBodies { get; set; }
 

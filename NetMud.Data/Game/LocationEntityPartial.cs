@@ -2,6 +2,7 @@
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Base.World;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.Behaviors.System;
 using NetMud.DataStructure.SupportingClasses;
@@ -275,6 +276,19 @@ namespace NetMud.Data.Game
 
             return radiusLocations;
         }
+
+        /// <summary>
+        /// Get the visibile celestials. Depends on luminosity, viewer perception and celestial positioning
+        /// </summary>
+        /// <param name="viewer">Whom is looking</param>
+        /// <returns>What celestials are visible</returns>
+        public abstract IEnumerable<ICelestial> GetVisibileCelestials(IActor viewer);
+
+        /// <summary>
+        /// Get the current luminosity rating of the place you're in
+        /// </summary>
+        /// <returns>The current Luminosity</returns>
+        public abstract float GetCurrentLuminosity();
 
         /// <summary>
         /// "Functional" Humiditiy

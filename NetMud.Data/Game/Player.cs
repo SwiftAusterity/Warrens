@@ -149,6 +149,26 @@ namespace NetMud.Data.Game
             return this;
         }
 
+        /// <summary>
+        /// Gets the actual vision modifier taking into account blindness and other factors
+        /// </summary>
+        /// <returns>the working modifier</returns>
+        public override float GetVisionModifier(float currentBrightness)
+        {
+            var dT = DataTemplate<ICharacter>();
+            var returnValue = dT.VisualAcuity;
+
+            //TODO: Check for blindess/magical type affects
+
+            if (currentBrightness <= dT.RaceData.VisionRange.Item1)
+                returnValue *= (currentBrightness / dT.RaceData.VisionRange.Item1);
+
+            if (currentBrightness >= dT.RaceData.VisionRange.Item2)
+                returnValue *= (dT.RaceData.VisionRange.Item2 / currentBrightness);
+
+            return returnValue;
+        }
+
         #region Rendering
         /// <summary>
         /// Render this to a look command (what something sees when it 'look's at this

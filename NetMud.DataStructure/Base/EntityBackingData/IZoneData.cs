@@ -11,6 +11,11 @@ namespace NetMud.DataStructure.Base.Place
     public interface IZoneData : ILocationData, IEnvironmentData, IDescribable, IDiscoverableData
     {
         /// <summary>
+        /// What hemisphere this zone is in
+        /// </summary>
+        HemispherePlacement Hemisphere { get; set; }
+
+        /// <summary>
         /// The midline elevation point "sea level" for this zone
         /// </summary>
         int BaseElevation { get; set; }

@@ -1,4 +1,5 @@
-﻿using NetMud.DataAccess.Cache;
+﻿using NetMud.Data.DataIntegrity;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.World;
 using NetMud.DataStructure.Behaviors.System;
@@ -80,6 +81,11 @@ namespace NetMud.Data.EntityBackingData
         /// Time keeping for this world
         /// </summary>
         public IChronology ChronologicalSystem { get; set; }
+
+        /// <summary>
+        /// The angle at which this world rotates in space. Irrelevant for fixed objects.
+        /// </summary>
+        public float RotationalAngle { get; set; }
 
         public IGaia GetLiveInstance()
         {

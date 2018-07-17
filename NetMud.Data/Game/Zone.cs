@@ -5,6 +5,7 @@ using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Base.World;
 using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.Behaviors.System;
@@ -200,6 +201,93 @@ namespace NetMud.Data.Game
         {
             //TODO
             return new Tuple<int, int, int>(1, 1, 1);
+        }
+
+        /// <summary>
+        /// Gets the actual vision modifier taking into account blindness and other factors
+        /// </summary>
+        /// <returns>the working modifier</returns>
+        public override float GetVisionModifier(float currentBrightness)
+        {
+            //Base case doesn't count "lumin vision range" mobiles/players have, inanimate entities are assumed to have unlimited light and dark vision
+
+            //TODO: Check for blindess/magical type affects
+
+            return DataTemplate<IZoneData>().VisualAcuity;
+        }
+
+        /// <summary>
+        /// Get the visibile celestials. Depends on luminosity, viewer perception and celestial positioning
+        /// </summary>
+        /// <param name="viewer">Whom is looking</param>
+        /// <returns>What celestials are visible</returns>
+        public override IEnumerable<ICelestial> GetVisibileCelestials(IActor viewer)
+        {
+            var zD = DataTemplate<IZoneData>();
+            var canSeeSky = GeographicalUtilities.IsOutside(GetBiome());
+
+            var returnList = new List<ICelestial>();
+
+            if (!canSeeSky)
+                return returnList;
+
+            var world = GetWorld();
+            var celestials = world.CelestialPositions;
+
+            if (celestials.Count() > 0)
+            {
+                //TODO: Add cloud cover stuff
+                var rotationalPosition = world.PlanetaryRotation;
+                var orbitalPosition = world.OrbitalPosition;
+                var brightness = GetCurrentLuminosity();
+
+                foreach(var celestial in celestials)
+                {
+                    var celestialLumins = celestial.Item1.Luminosity * AstronomicalUtilities.GetCelestialLuminosityModifier(celestial.Item1, celestial.Item2, rotationalPosition, orbitalPosition
+                                                                                                   , zD.Hemisphere, world.DataTemplate<IGaiaData>().RotationalAngle);
+
+                    //Modify the brightness of the thing by the person looking at it
+                    celestialLumins *= viewer.GetVisionModifier(brightness);
+
+                    //how washed out is this thing compared to how bright the room is
+                    if (celestialLumins >= brightness)
+                        returnList.Add(celestial.Item1);
+                }
+            }
+
+            return returnList;
+        }
+
+        /// <summary>
+        /// Get the current luminosity rating of the place you're in
+        /// </summary>
+        /// <returns>The current Luminosity</returns>
+        public override float GetCurrentLuminosity()
+        {
+            var zD = DataTemplate<IZoneData>();
+            float lumins = 0;
+            var canSeeSky = GeographicalUtilities.IsOutside(GetBiome());
+
+            //TODO: Add cloud cover
+            if (canSeeSky)
+            {
+                var world = GetWorld();
+                var celestials = world.CelestialPositions;
+                var rotationalPosition = world.PlanetaryRotation;
+                var orbitalPosition = world.OrbitalPosition;
+
+                foreach (var celestial in celestials)
+                {
+                    var celestialAffectModifier = AstronomicalUtilities.GetCelestialLuminosityModifier(celestial.Item1, celestial.Item2, rotationalPosition, orbitalPosition
+                                                                                                        , zD.Hemisphere, world.DataTemplate<IGaiaData>().RotationalAngle);
+
+                    lumins += celestial.Item1.Luminosity * celestialAffectModifier;
+                }
+            }
+
+            //TODO: add entities in the zone that give off light
+
+            return lumins;
         }
 
         /// <summary>

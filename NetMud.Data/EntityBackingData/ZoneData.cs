@@ -56,6 +56,11 @@ namespace NetMud.Data.EntityBackingData
         }
 
         /// <summary>
+        /// What hemisphere this zone is in
+        /// </summary>
+        public HemispherePlacement Hemisphere { get; set; }
+
+        /// <summary>
         /// Base elevation used in generating locales
         /// </summary>
         public int BaseElevation { get; set; }

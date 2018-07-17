@@ -10,6 +10,7 @@ using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.PlayerConfiguration;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Base.World;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.Interp;
 using NetMud.Utility;
@@ -143,6 +144,7 @@ namespace NetMud.Websock
             var currentContainer = currentLocation.CurrentLocation;
             var currentZone = currentLocation.GetZone();
             var currentWorld = currentZone.GetWorld();
+            var currentRoom = currentLocation.GetRoom();
 
             var pathways = ((ILocation)currentContainer).GetPathways().SelectMany(data => data.RenderAsContents(_currentPlayer));
             var inventory = currentContainer.GetContents<IInanimate>().SelectMany(data => data.RenderAsContents(_currentPlayer));
@@ -152,7 +154,7 @@ namespace NetMud.Websock
             {
                 ZoneName = currentZone.DataTemplateName,
                 LocaleName = currentLocation.GetLocale()?.DataTemplateName,
-                RoomName = currentLocation.GetRoom()?.DataTemplateName,
+                RoomName = currentRoom?.DataTemplateName,
                 Inventory = inventory.ToArray(),
                 Populace = populace.ToArray(),
                 Exits = pathways.ToArray(),
@@ -175,13 +177,29 @@ namespace NetMud.Websock
                                                                                , currentWorld.CurrentTimeOfDay.MonthName()
                                                                                , currentWorld.CurrentTimeOfDay.Year);
 
-            var celestialString = String.Join(",", currentWorld.CelestialPositions.Select(cp => cp.Item1.Name));
+            var visibleCelestials = Enumerable.Empty<ICelestial>();
+            var visibilityString = string.Empty;
+
+            if (currentRoom != null)
+            {
+                visibilityString = string.Format("{0} lumins", currentRoom.GetCurrentLuminosity());
+                visibleCelestials = currentRoom.GetVisibileCelestials(_currentPlayer);
+            }
+            else if (currentZone != null)
+            {
+                visibilityString = string.Format("{0} lumins", currentZone.GetCurrentLuminosity());
+                visibleCelestials = currentZone.GetVisibileCelestials(_currentPlayer);
+            }
+            else
+                visibilityString = "I don't know";
+
+            var celestialString = String.Join(",", visibleCelestials.Select(cp => cp.Name));
 
             var environment = new EnvironmentStatus
             {
                 Celestial = celestialString,
-                Visibility = "Twilight darkness",
-                Weather = "It is lightly raining",
+                Visibility = visibilityString,
+                Weather = "I don't know",
                 TimeOfDay = timeOfDayString
             };
 
