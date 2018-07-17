@@ -2,6 +2,7 @@
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Base.World;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.Behaviors.System;
@@ -282,7 +283,7 @@ namespace NetMud.Data.Game
         /// </summary>
         /// <param name="viewer">Whom is looking</param>
         /// <returns>What celestials are visible</returns>
-        public abstract IEnumerable<ICelestial> GetVisibileCelestials(IActor viewer);
+        public abstract IEnumerable<ICelestial> GetVisibileCelestials(IEntity viewer);
 
         /// <summary>
         /// "Functional" Humiditiy

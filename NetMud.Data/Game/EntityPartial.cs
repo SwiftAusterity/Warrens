@@ -418,15 +418,17 @@ namespace NetMud.Data.Game
         public virtual IEnumerable<IOccurrence> GetVisibleDescriptives(IEntity viewer)
         {
             //TODO: Check for visibility, and also list descriptives
-            return new Occurrence[]
+            var descriptives = new List<IOccurrence>
             {
                 new Occurrence()
                 {
                     SensoryType = MessagingType.Visible,
                     Strength = 30,
-                    Event = new Lexica() {  Phrase = DataTemplateName, Type = LexicalType.Noun, Role = GrammaticalType.Subject }
+                    Event = new Lexica() { Phrase = DataTemplateName, Type = LexicalType.Noun, Role = GrammaticalType.Subject }
                 }
             };
+
+            return descriptives.Where(d => d.Strength * GetCurrentLuminosity() < viewer.GetVisionModifier());
         }
 
         /// <summary>
@@ -436,15 +438,14 @@ namespace NetMud.Data.Game
         /// <returns>If this is visible</returns>
         public virtual bool IsVisibleTo(IEntity viewer)
         {
-            //TODO: this
-            return true;
+            return GetCurrentLuminosity() > viewer.GetVisionModifier();
         }
 
         /// <summary>
         /// Gets the actual vision modifier taking into account blindness and other factors
         /// </summary>
         /// <returns>the working modifier</returns>
-        public abstract float GetVisionModifier(float currentBrightness);
+        public abstract float GetVisionModifier();
 
         /// <summary>
         /// Get the current luminosity rating of the place you're in

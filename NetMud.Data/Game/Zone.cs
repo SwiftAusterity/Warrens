@@ -9,6 +9,7 @@ using NetMud.DataStructure.Base.World;
 using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.Behaviors.System;
+using NetMud.DataStructure.SupportingClasses;
 using NetMud.Gaia.Geographical;
 using NetMud.Gaia.Meteorological;
 using Newtonsoft.Json;
@@ -207,7 +208,7 @@ namespace NetMud.Data.Game
         /// Gets the actual vision modifier taking into account blindness and other factors
         /// </summary>
         /// <returns>the working modifier</returns>
-        public override float GetVisionModifier(float currentBrightness)
+        public override float GetVisionModifier()
         {
             //Base case doesn't count "lumin vision range" mobiles/players have, inanimate entities are assumed to have unlimited light and dark vision
 
@@ -221,7 +222,7 @@ namespace NetMud.Data.Game
         /// </summary>
         /// <param name="viewer">Whom is looking</param>
         /// <returns>What celestials are visible</returns>
-        public override IEnumerable<ICelestial> GetVisibileCelestials(IActor viewer)
+        public override IEnumerable<ICelestial> GetVisibileCelestials(IEntity viewer)
         {
             var zD = DataTemplate<IZoneData>();
             var canSeeSky = GeographicalUtilities.IsOutside(GetBiome());
@@ -239,23 +240,37 @@ namespace NetMud.Data.Game
                 //TODO: Add cloud cover stuff
                 var rotationalPosition = world.PlanetaryRotation;
                 var orbitalPosition = world.OrbitalPosition;
-                var brightness = GetCurrentLuminosity();
+                var currentBrightness = CurrentLocation.CurrentLocation.GetCurrentLuminosity();
 
-                foreach(var celestial in celestials)
+                foreach (var celestial in celestials)
                 {
                     var celestialLumins = celestial.Item1.Luminosity * AstronomicalUtilities.GetCelestialLuminosityModifier(celestial.Item1, celestial.Item2, rotationalPosition, orbitalPosition
                                                                                                    , zD.Hemisphere, world.DataTemplate<IGaiaData>().RotationalAngle);
 
                     //Modify the brightness of the thing by the person looking at it
-                    celestialLumins *= viewer.GetVisionModifier(brightness);
+                    celestialLumins *= viewer.GetVisionModifier();
 
                     //how washed out is this thing compared to how bright the room is
-                    if (celestialLumins >= brightness)
+                    if (celestialLumins >= currentBrightness)
                         returnList.Add(celestial.Item1);
                 }
             }
 
             return returnList;
+        }
+
+        /// <summary>
+        /// Retrieve all of the descriptors that are tagged as visible output
+        /// </summary>
+        /// <returns>A collection of the descriptors</returns>
+        public override IEnumerable<IOccurrence> GetVisibleDescriptives(IEntity viewer)
+        {
+            var descriptives = base.GetVisibleDescriptives(viewer).ToList();
+
+            descriptives.AddRange(DataTemplate<IZoneData>().Descriptives);
+            descriptives.AddRange(GetVisibileCelestials(viewer).SelectMany(c => c.Descriptives));
+
+            return descriptives.Where(d => d.Strength * GetCurrentLuminosity() < viewer.GetVisionModifier());
         }
 
         /// <summary>

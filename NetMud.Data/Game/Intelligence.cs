@@ -91,10 +91,11 @@ namespace NetMud.Data.Game
         /// Gets the actual vision modifier taking into account blindness and other factors
         /// </summary>
         /// <returns>the working modifier</returns>
-        public override float GetVisionModifier(float currentBrightness)
+        public override float GetVisionModifier()
         {
             var dT = DataTemplate<INonPlayerCharacter>();
             var returnValue = dT.VisualAcuity;
+            var currentBrightness = CurrentLocation.CurrentLocation.GetCurrentLuminosity();
 
             //TODO: Check for blindess/magical type affects
 

@@ -152,7 +152,7 @@ namespace NetMud.Data.Game
         /// Gets the actual vision modifier taking into account blindness and other factors
         /// </summary>
         /// <returns>the working modifier</returns>
-        public override float GetVisionModifier(float currentBrightness)
+        public override float GetVisionModifier()
         {
             //Base case doesn't count "lumin vision range" mobiles/players have, inanimate entities are assumed to have unlimited light and dark vision
 

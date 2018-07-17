@@ -1,6 +1,7 @@
 ﻿using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Base.World;
 using NetMud.DataStructure.SupportingClasses;
 using System.Collections.Generic;
@@ -39,6 +40,6 @@ namespace NetMud.DataStructure.Behaviors.Rendering
         /// </summary>
         /// <param name="viewer">Whom is looking</param>
         /// <returns>What celestials are visible</returns>
-        IEnumerable<ICelestial> GetVisibileCelestials(IActor viewer);
+        IEnumerable<ICelestial> GetVisibileCelestials(IEntity viewer);
     }
 }

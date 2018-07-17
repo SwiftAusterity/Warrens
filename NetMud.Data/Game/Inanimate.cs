@@ -124,7 +124,7 @@ namespace NetMud.Data.Game
         /// Gets the actual vision modifier taking into account blindness and other factors
         /// </summary>
         /// <returns>the working modifier</returns>
-        public override float GetVisionModifier(float currentBrightness)
+        public override float GetVisionModifier()
         {
             //Base case doesn't count "lumin vision range" mobiles/players have, inanimate entities are assumed to have unlimited light and dark vision
 
@@ -138,7 +138,7 @@ namespace NetMud.Data.Game
         /// </summary>
         /// <param name="viewer">Whom is looking</param>
         /// <returns>What celestials are visible</returns>
-        public override IEnumerable<ICelestial> GetVisibileCelestials(IActor viewer)
+        public override IEnumerable<ICelestial> GetVisibileCelestials(IEntity viewer)
         {
             //No celestials inside an object
             return Enumerable.Empty<ICelestial>();
