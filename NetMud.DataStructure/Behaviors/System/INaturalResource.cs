@@ -2,6 +2,7 @@
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.Rendering;
+using NetMud.DataStructure.SupportingClasses;
 using System;
 using System.Collections.Generic;
 
@@ -10,7 +11,7 @@ namespace NetMud.DataStructure.Behaviors.System
     /// <summary>
     /// Natural resources (minerals, flora, fauna)
     /// </summary>
-    public interface INaturalResource : ILookupData, ILookable, IRenderInLocation
+    public interface INaturalResource : ILookupData, ILookable, ISmellable, ITouchable, ITasteable, IAudible, ISensible, IRenderInLocation
     {
         /// <summary>
         /// How much spawns in one place in one spawn tick
@@ -72,6 +73,6 @@ namespace NetMud.DataStructure.Behaviors.System
         /// <param name="viewer">the entity looking</param>
         /// <param name="amount">How much of it there is</param>
         /// <returns>a view string</returns>
-        string RenderResourceCollection(IEntity viewer, int amount);
+        IOccurrence RenderResourceCollection(IEntity viewer, int amount);
     }
 }

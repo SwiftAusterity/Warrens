@@ -127,7 +127,7 @@ namespace NetMud.Data.Game
             //Zone is always 1
             return base.GetSurroundings(1);
         }
-        
+
         /// <summary>
         /// Does this entity know about this thing
         /// </summary>
@@ -151,18 +151,12 @@ namespace NetMud.Data.Game
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public override IEnumerable<string> GetImmediateDescription(IEntity viewer)
+        public override IOccurrence GetImmediateDescription(IEntity viewer, MessagingType[] sensoryTypes)
         {
-            if (!IsVisibleTo(viewer))
-                return Enumerable.Empty<string>();
+            if (sensoryTypes == null || sensoryTypes.Count() == 0)
+                sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
 
-            return new List<string>()
-            {
-                String.Format("A {0} and {1} {2} {3} area.", GeographicalUtilities.ConvertSizeToType(GetModelDimensions(), GetType()),
-                                                            MeteorologicalUtilities.ConvertTemperatureToType(EffectiveTemperature()),
-                                                            MeteorologicalUtilities.ConvertHumidityToType(EffectiveHumidity()),
-                                                            GetBiome())
-            };
+            return GetSelf(MessagingType.Visible);
         }
 
         /// <summary>
@@ -170,27 +164,32 @@ namespace NetMud.Data.Game
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public override IEnumerable<string> GetFullDescription(IEntity viewer)
+        public override IOccurrence GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes)
         {
             if (!IsVisibleTo(viewer))
-                return Enumerable.Empty<string>();
+                return null;
 
-            var sb = new List<string>();
+            if (sensoryTypes == null || sensoryTypes.Count() == 0)
+                sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
 
-            //Weather/biome
-            sb.Add(String.Format("A {0} and {1} {2} {3} area.", GeographicalUtilities.ConvertSizeToType(GetModelDimensions(), GetType()),
+            var me = GetSelf(MessagingType.Visible);
+
+            if (NaturalResources != null)
+                foreach (var resource in NaturalResources)
+                    me.Event.TryModify(resource.Key.RenderResourceCollection(viewer, resource.Value).Event);
+
+            return me;
+            /*
+                //Weather/biome
+                sb.Add(String.Format("A {0} and {1} {2} {3} area.", GeographicalUtilities.ConvertSizeToType(GetModelDimensions(), GetType()),
                                                             MeteorologicalUtilities.ConvertTemperatureToType(EffectiveTemperature()),
                                                             MeteorologicalUtilities.ConvertHumidityToType(EffectiveHumidity()),
                                                             GetBiome()));
 
-            if (NaturalResources != null)
-                sb.AddRange(NaturalResources.Select(kvp => kvp.Key.RenderResourceCollection(viewer, kvp.Value)));
-
-            //sb.AddRange(GetPathways().SelectMany(path => path.RenderAsContents(viewer)));
-            //sb.AddRange(GetContents<IInanimate>().SelectMany(path => path.RenderAsContents(viewer)));
-            //sb.AddRange(GetContents<IMobile>().Where(player => !player.Equals(viewer)).SelectMany(path => path.RenderAsContents(viewer)));
-
-            return sb;
+                //sb.AddRange(GetPathways().SelectMany(path => path.RenderAsContents(viewer)));
+                //sb.AddRange(GetContents<IInanimate>().SelectMany(path => path.RenderAsContents(viewer)));
+                //sb.AddRange(GetContents<IMobile>().Where(player => !player.Equals(viewer)).SelectMany(path => path.RenderAsContents(viewer)));
+            */
         }
 
 
@@ -329,7 +328,7 @@ namespace NetMud.Data.Game
 
             Keywords = new string[] { bS.Name.ToLower() };
 
-            if(NaturalResources == null)
+            if (NaturalResources == null)
                 NaturalResources = new Dictionary<INaturalResource, int>();
 
             if (String.IsNullOrWhiteSpace(BirthMark))
@@ -341,7 +340,7 @@ namespace NetMud.Data.Game
             if (spawnTo?.CurrentLocation == null)
                 spawnTo = new GlobalPosition(this);
 
-                CurrentLocation = spawnTo;
+            CurrentLocation = spawnTo;
 
             UpsertToLiveWorldCache(true);
         }

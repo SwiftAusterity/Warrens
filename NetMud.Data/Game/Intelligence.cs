@@ -124,25 +124,6 @@ namespace NetMud.Data.Game
             return lumins;
         }
 
-        #region Rendering
-        /// <summary>
-        /// Render this to a look command (what something sees when it 'look's at this
-        /// </summary>
-        /// <returns>the output strings</returns>
-        public override IEnumerable<string> RenderToLook(IEntity viewer)
-        {
-            if (!IsVisibleTo(viewer))
-                return Enumerable.Empty<string>();
-
-            var sb = new List<string>();
-            var ch = DataTemplate<INonPlayerCharacter>(); ;
-
-            sb.Add(string.Format("This is {0}", ch.FullName()));
-
-            return sb;
-        }
-        #endregion
-
         #region Container
         /// <summary>
         /// Inanimates contained in this

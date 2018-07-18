@@ -20,7 +20,7 @@ namespace NetMud.DataStructure.Behaviors.Rendering
         /// Retrieve all of the descriptors that are tagged as Taste output
         /// </summary>
         /// <returns>A collection of the descriptors</returns>
-        IEnumerable<IOccurrence> GetTasteDescriptives();
+        IEnumerable<IOccurrence> GetTasteDescriptives(IEntity viewer);
 
         /// <summary>
         /// Is this thing sensible to the entity

@@ -1,7 +1,10 @@
-﻿using NetMud.Data.DataIntegrity;
+﻿using NetMud.Communication.Messaging;
+using NetMud.Data.DataIntegrity;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Linguistic;
+using NetMud.DataStructure.SupportingClasses;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -70,9 +73,17 @@ namespace NetMud.Data.LookupData
         /// <param name="viewer">the entity looking</param>
         /// <param name="amount">How much of it there is</param>
         /// <returns>a view string</returns>
-        public override string RenderResourceCollection(IEntity viewer, int amount)
+        public override IOccurrence RenderResourceCollection(IEntity viewer, int amount)
         {
-            return string.Format("a {0} of {1} {2}s", Race.CollectiveNoun, amount, GetDescribedName(viewer));
+            if (!IsVisibleTo(viewer))
+                return null;
+
+            var me = GetSelf(MessagingType.Visible);
+            var collectiveNoun = new Lexica(LexicalType.Noun, GrammaticalType.Descriptive, Race.CollectiveNoun);
+            collectiveNoun.TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, amount.ToString()));
+            me.Event.TryModify(collectiveNoun);
+
+            return me;
         }
         #endregion
     }

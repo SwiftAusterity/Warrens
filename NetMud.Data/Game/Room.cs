@@ -11,6 +11,7 @@ using NetMud.DataStructure.Base.World;
 using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.Behaviors.System;
+using NetMud.DataStructure.SupportingClasses;
 using NetMud.Gaia.Geographical;
 using Newtonsoft.Json;
 using System;
@@ -184,18 +185,18 @@ namespace NetMud.Data.Game
         /// Render this to a look command (what something sees when it 'look's at this
         /// </summary>
         /// <returns>the output strings</returns>
-        public override IEnumerable<string> RenderToLook(IEntity viewer)
+        public override IOccurrence RenderToLook(IEntity viewer)
         {
             if (!IsVisibleTo(viewer))
-                return Enumerable.Empty<string>();
+                return null;
 
-            var sb = new List<string>();
-            sb.AddRange(GetImmediateDescription(viewer));
+            var me = GetFullDescription(viewer, new[] { MessagingType.Visible });
 
             if (NaturalResources != null)
-                sb.AddRange(NaturalResources.Select(kvp => kvp.Key.RenderResourceCollection(viewer, kvp.Value)));
+                foreach (var resource in NaturalResources)
+                    me.Event.TryModify(resource.Key.RenderResourceCollection(viewer, resource.Value).Event);
 
-            return sb;
+            return me;
         }
 
         /// <summary>

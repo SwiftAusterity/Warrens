@@ -61,6 +61,18 @@ namespace NetMud.Communication.Messaging
         }
 
         /// <summary>
+        /// New up a clister with just toactor for system messages
+        /// </summary>
+        public MessageCluster(List<IMessage> toActor)
+        {
+            ToActor = toActor;
+            ToSubject = Enumerable.Empty<IMessage>();
+            ToTarget = Enumerable.Empty<IMessage>();
+            ToOrigin = Enumerable.Empty<IMessage>();
+            ToDestination = Enumerable.Empty<IMessage>();
+        }
+
+        /// <summary>
         /// New up a full cluster
         /// </summary>
         /// <param name="actor">Message to send to the acting entity</param>

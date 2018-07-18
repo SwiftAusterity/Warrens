@@ -45,13 +45,10 @@ namespace NutMud.Commands.Rendering
                 blankMessenger.ExecuteMessaging(Actor, (IEntity)Subject, null, OriginLocation.CurrentLocation, null);
                 return;
             }
-            else
-            {
-                var lookTarget = (ILookable)Subject;
-                sb.AddRange(lookTarget.RenderToLook(Actor));
-            }
 
-            var toActor = new Message(MessagingType.Visible, new Occurrence() { Strength = 999 })
+            var lookTarget = (ILookable)Subject;
+
+            var toActor = new Message(MessagingType.Visible, lookTarget.RenderToLook(Actor))
             {
                 Override = sb
             };

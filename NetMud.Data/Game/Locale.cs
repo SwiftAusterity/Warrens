@@ -181,19 +181,6 @@ namespace NetMud.Data.Game
         }
 
         /// <summary>
-        /// Render the locale to a specific look
-        /// </summary>
-        /// <param name="actor">Who is looking</param>
-        /// <returns>The locale's description</returns>
-        public override IEnumerable<string> RenderToLook(IEntity viewer)
-        {
-            if (!IsVisibleTo(viewer))
-                return Enumerable.Empty<string>();
-
-            return Enumerable.Empty<string>();
-        }
-
-        /// <summary>
         /// Spawn this into the world and live cache
         /// </summary>
         public override void SpawnNewInWorld()

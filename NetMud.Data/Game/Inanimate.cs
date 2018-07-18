@@ -8,6 +8,7 @@ using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Base.World;
 using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.Rendering;
+using NetMud.DataStructure.SupportingClasses;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -182,49 +183,16 @@ namespace NetMud.Data.Game
         #endregion
 
         #region rendering
-        /// <summary>
-        /// Render this to a look command (what something sees when it 'look's at this
-        /// </summary>
-        /// <returns>the output strings</returns>
-        public override IEnumerable<string> RenderToLook(IEntity viewer)
+        public override IOccurrence RenderAsWorn(IEntity viewer, IEntity wearer)
         {
-            if (!IsVisibleTo(viewer))
-                return Enumerable.Empty<string>();
-
-            var backingStore = DataTemplate<IInanimateData>();
-
-            var sb = new List<string>
-            {
-                string.Format("There is a {0} here", backingStore.Name)
-            };
-
-            return sb;
+            //TODO: Worn position
+            return GetImmediateDescription(viewer, new[] { MessagingType.Visible });
         }
 
-        public IEnumerable<string> RenderAsWorn(IEntity viewer, IEntity wearer)
+        public override IOccurrence RenderAsHeld(IEntity viewer, IEntity holder)
         {
-            if (!IsVisibleTo(viewer))
-                return Enumerable.Empty<string>();
-
-            var sb = new List<string>
-            {
-                string.Format("{0} is wearing {1}", wearer.DataTemplateName, GetDescribedName(viewer))
-            };
-
-            return sb;
-        }
-
-        public IEnumerable<string> RenderAsHeld(IEntity viewer, IEntity holder)
-        {
-            if (!IsVisibleTo(viewer))
-                return Enumerable.Empty<string>();
-
-            var sb = new List<string>
-            {
-                string.Format("{0} is holding {1}", holder.DataTemplateName, GetDescribedName(viewer))
-            };
-
-            return sb;
+            //TODO: Worn position
+            return GetImmediateDescription(viewer, new[] { MessagingType.Visible });
         }
         #endregion
     }

@@ -153,74 +153,135 @@ namespace NetMud.Data.LookupData
             return returnList;
         }
 
-        #region Rendering
+        #region Generic Rendering
+        /// <summary>
+        /// Set of output relevant to this exit. These are essentially single word descriptions to render the path
+        /// </summary>
+        public HashSet<IOccurrence> Descriptives { get; set; }
+
+        /// <summary>
+        /// Renders output for this entity when Look targets it
+        /// </summary>
+        /// <param name="actor">entity initiating the command</param>
+        /// <returns>the output</returns>
+        public virtual IOccurrence RenderToTrack(IEntity actor)
+        {
+            //Default for "tracking" is null
+            return null;
+        }
+
+        /// <summary>
+        /// Render this in a short descriptive style
+        /// </summary>
+        /// <param name="viewer">The entity looking</param>
+        /// <returns>the output strings</returns>
+        public virtual IOccurrence GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes)
+        {
+            if (!IsVisibleTo(viewer))
+                return null;
+
+            var self = GetSelf(MessagingType.Visible);
+
+            if (sensoryTypes == null || sensoryTypes.Count() == 0)
+                sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
+
+            foreach (var descriptive in GetVisibleDescriptives(viewer))
+                self.Event.TryModify(descriptive.Event);
+
+            return self;
+        }
+
+        /// <summary>
+        /// Render this in a short descriptive style
+        /// </summary>
+        /// <param name="viewer">The entity looking</param>
+        /// <returns>the output strings</returns>
+        public virtual IOccurrence GetImmediateDescription(IEntity viewer, MessagingType[] sensoryTypes)
+        {
+            if (!IsVisibleTo(viewer))
+                return null;
+
+            if (sensoryTypes == null || sensoryTypes.Count() == 0)
+                sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
+
+
+            return GetSelf(MessagingType.Visible);
+        }
+
+        /// <summary>
+        /// Render this in a short descriptive style
+        /// </summary>
+        /// <param name="viewer">The entity looking</param>
+        /// <returns>the output strings</returns>
+        public virtual string GetDescribableName(IEntity viewer)
+        {
+            if (!IsVisibleTo(viewer))
+                return string.Empty;
+
+            return GetSelf(MessagingType.Visible).ToString();
+        }
+
+        internal IOccurrence GetSelf(MessagingType type, int strength = 100)
+        {
+            return new Occurrence()
+            {
+                SensoryType = type,
+                Strength = strength,
+                Event = new Lexica() { Phrase = Name, Type = LexicalType.Noun, Role = GrammaticalType.Subject }
+            };
+        }
+        #endregion
+
+        #region Visual Rendering
+        /// <summary>
+        /// Is this visible to the viewer
+        /// </summary>
+        /// <param name="viewer">the viewing entity</param>
+        /// <returns>If this is visible</returns>
+        public virtual bool IsVisibleTo(IEntity viewer)
+        {
+            return viewer.GetVisionModifier() > 0;
+        }
+
         /// <summary>
         /// Render this to a look command (what something sees when it 'look's at this)
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public virtual IEnumerable<string> RenderToLook(IEntity viewer)
+        public virtual IOccurrence RenderToLook(IEntity viewer)
         {
-            //if (!IsVisibleTo(viewer))
-            //    return Enumerable.Empty<string>();
+            if (!IsVisibleTo(viewer))
+                return null;
 
-            return GetFullDescription(viewer);
+            return GetFullDescription(viewer, new[] { MessagingType.Visible });
         }
 
         /// <summary>
-        /// Render this in a short descriptive style
+        /// Renders "display" from scan command
         /// </summary>
-        /// <param name="viewer">The entity looking</param>
-        /// <returns>the output strings</returns>
-        public virtual IEnumerable<string> GetFullDescription(IEntity viewer)
+        /// <param name="viewer">entity initiating the command</param>
+        /// <returns>the scan output</returns>
+        public virtual IOccurrence RenderToScan(IEntity viewer)
         {
-            //if (!IsVisibleTo(viewer))
-            //    return Enumerable.Empty<string>();
+            //TODO: Make this half power
+            if (!IsVisibleTo(viewer))
+                return null;
 
-            var sb = new List<string>();
-            var descriptives = GetVisibleDescriptives(viewer);
-            sb.AddRange(descriptives.Select(desc => desc.Event.ToString()));
-
-            return sb;
+            return GetImmediateDescription(viewer, new[] { MessagingType.Visible });
         }
 
         /// <summary>
-        /// Render this as being show inside a container
+        /// Renders "display" from scan command
         /// </summary>
-        /// <param name="viewer">The entity looking</param>
-        /// <returns>the output strings</returns>
-        public virtual IEnumerable<string> RenderAsContents(IEntity viewer)
+        /// <param name="viewer">entity initiating the command</param>
+        /// <returns>the scan output</returns>
+        public virtual IOccurrence RenderToInspect(IEntity viewer)
         {
-            //if (!IsVisibleTo(viewer))
-            //    return Enumerable.Empty<string>();
+            //TODO: Make this double power
+            if (!IsVisibleTo(viewer))
+                return null;
 
-            return GetImmediateDescription(viewer);
-        }
-
-        /// <summary>
-        /// Render this in a short descriptive style
-        /// </summary>
-        /// <param name="viewer">The entity looking</param>
-        /// <returns>the output strings</returns>
-        public virtual IEnumerable<string> GetImmediateDescription(IEntity viewer)
-        {
-            //if (!IsVisibleTo(viewer))
-            //    return Enumerable.Empty<string>();
-
-            return new List<string> { Name }; ;
-        }
-
-        /// <summary>
-        /// Render this in a short descriptive style
-        /// </summary>
-        /// <param name="viewer">The entity looking</param>
-        /// <returns>the output strings</returns>
-        public virtual string GetDescribedName(IEntity viewer)
-        {
-            //if (!IsVisibleTo(viewer))
-            //    return string.Empty;
-
-            return Name;
+            return GetFullDescription(viewer, new[] { MessagingType.Visible });
         }
 
         /// <summary>
@@ -229,29 +290,235 @@ namespace NetMud.Data.LookupData
         /// <returns>A collection of the descriptors</returns>
         public virtual IEnumerable<IOccurrence> GetVisibleDescriptives(IEntity viewer)
         {
-            //TODO: Check for visibility, and also list descriptives
-            return new Occurrence[]
-            {
-                new Occurrence()
-                {
-                    SensoryType = MessagingType.Visible,
-                    Strength = 30,
-                    Event = new Lexica() {  Phrase = Name, Type = LexicalType.Noun, Role = GrammaticalType.Subject }
-                }
-            };
-        }
-
-
-        /// <summary>
-        /// Render a natural resource collection to a viewer
-        /// </summary>
-        /// <param name="viewer">the entity looking</param>
-        /// <param name="amount">How much of it there is</param>
-        /// <returns>a view string</returns>
-        public virtual string RenderResourceCollection(IEntity viewer, int amount)
-        {
-            return string.Format("{0} {1}s", amount, GetDescribedName(viewer));
+            return Descriptives.Where(desc => desc.SensoryType == MessagingType.Visible);
         }
         #endregion
+
+        #region Auditory Rendering
+        /// <summary>
+        /// Is this detectable to the viewer
+        /// </summary>
+        /// <param name="viewer">the observing entity</param>
+        /// <returns>If this is observable</returns>
+        public virtual bool IsAudibleTo(IEntity viewer)
+        {
+            //TODO: Do detection lowering stuff
+            return viewer.GetAuditoryModifier() > 0;
+        }
+
+        /// <summary>
+        /// Render this to a look command (what something sees when it 'look's at this)
+        /// </summary>
+        /// <param name="viewer">The entity looking</param>
+        /// <returns>the output strings</returns>
+        public virtual IOccurrence RenderToAudible(IEntity viewer)
+        {
+            if (!IsAudibleTo(viewer))
+                return null;
+
+            var self = GetSelf(MessagingType.Audible);
+
+            foreach (var descriptive in GetAudibleDescriptives(viewer))
+                self.Event.TryModify(descriptive.Event);
+
+            return self;
+        }
+
+        /// <summary>
+        /// Retrieve all of the descriptors that are tagged as visible output
+        /// </summary>
+        /// <returns>A collection of the descriptors</returns>
+        public virtual IEnumerable<IOccurrence> GetAudibleDescriptives(IEntity viewer)
+        {
+            return Descriptives.Where(desc => desc.SensoryType == MessagingType.Audible);
+        }
+        #endregion
+
+        #region Psychic (sense) Rendering
+        /// <summary>
+        /// Is this detectable to the viewer
+        /// </summary>
+        /// <param name="viewer">the observing entity</param>
+        /// <returns>If this is observable</returns>
+        public virtual bool IsSensibleTo(IEntity viewer)
+        {
+            //TODO: Do detection lowering stuff
+            return viewer.GetPsychicModifier() > 0;
+        }
+
+        /// <summary>
+        /// Render this to a look command (what something sees when it 'look's at this)
+        /// </summary>
+        /// <param name="viewer">The entity looking</param>
+        /// <returns>the output strings</returns>
+        public virtual IOccurrence RenderToSense(IEntity viewer)
+        {
+            if (!IsSensibleTo(viewer))
+                return null;
+
+            var self = GetSelf(MessagingType.Psychic);
+
+            foreach (var descriptive in GetPsychicDescriptives(viewer))
+                self.Event.TryModify(descriptive.Event);
+
+            return self;
+        }
+
+        /// <summary>
+        /// Retrieve all of the descriptors that are tagged as visible output
+        /// </summary>
+        /// <returns>A collection of the descriptors</returns>
+        public virtual IEnumerable<IOccurrence> GetPsychicDescriptives(IEntity viewer)
+        {
+            return Descriptives.Where(desc => desc.SensoryType == MessagingType.Psychic);
+        }
+        #endregion
+
+        #region Taste Rendering
+        /// <summary>
+        /// Is this detectable to the viewer
+        /// </summary>
+        /// <param name="viewer">the observing entity</param>
+        /// <returns>If this is observable</returns>
+        public virtual bool IsTastableTo(IEntity viewer)
+        {
+            //TODO: Do detection lowering stuff
+            return viewer.GetTasteModifier() > 0;
+        }
+
+        /// <summary>
+        /// Render this to a look command (what something sees when it 'look's at this)
+        /// </summary>
+        /// <param name="viewer">The entity looking</param>
+        /// <returns>the output strings</returns>
+        public virtual IOccurrence RenderToTaste(IEntity viewer)
+        {
+            if (!IsTastableTo(viewer))
+                return null;
+
+            var self = GetSelf(MessagingType.Taste);
+
+            foreach (var descriptive in GetTasteDescriptives(viewer))
+                self.Event.TryModify(descriptive.Event);
+
+            return self;
+        }
+
+        /// <summary>
+        /// Retrieve all of the descriptors that are tagged
+        /// </summary>
+        /// <returns>A collection of the descriptors</returns>
+        public virtual IEnumerable<IOccurrence> GetTasteDescriptives(IEntity viewer)
+        {
+            return Descriptives.Where(desc => desc.SensoryType == MessagingType.Taste);
+        }
+        #endregion
+
+        #region Smell Rendering
+        /// <summary>
+        /// Is this detectable to the viewer
+        /// </summary>
+        /// <param name="viewer">the observing entity</param>
+        /// <returns>If this is observable</returns>
+        public virtual bool IsSmellableTo(IEntity viewer)
+        {
+            //TODO: Do detection lowering stuff
+            return viewer.GetOlefactoryModifier() > 0;
+        }
+
+        /// <summary>
+        /// Render this to a look command (what something sees when it 'look's at this)
+        /// </summary>
+        /// <param name="viewer">The entity looking</param>
+        /// <returns>the output strings</returns>
+        public virtual IOccurrence RenderToSmell(IEntity viewer)
+        {
+            if (!IsSmellableTo(viewer))
+                return null;
+
+            var self = GetSelf(MessagingType.Olefactory);
+
+            foreach (var descriptive in GetSmellableDescriptives(viewer))
+                self.Event.TryModify(descriptive.Event);
+
+            return self;
+        }
+
+        /// <summary>
+        /// Retrieve all of the descriptors that are tagged
+        /// </summary>
+        /// <returns>A collection of the descriptors</returns>
+        public virtual IEnumerable<IOccurrence> GetSmellableDescriptives(IEntity viewer)
+        {
+            return Descriptives.Where(desc => desc.SensoryType == MessagingType.Olefactory);
+        }
+        #endregion
+
+        #region Touch Rendering
+        /// <summary>
+        /// Is this detectable to the viewer
+        /// </summary>
+        /// <param name="viewer">the observing entity</param>
+        /// <returns>If this is observable</returns>
+        public virtual bool IsTouchableTo(IEntity viewer)
+        {
+            //TODO: Do detection lowering stuff
+            return viewer.GetTactileModifier() > 0;
+        }
+
+        /// <summary>
+        /// Render this to a look command (what something sees when it 'look's at this)
+        /// </summary>
+        /// <param name="viewer">The entity looking</param>
+        /// <returns>the output strings</returns>
+        public virtual IOccurrence RenderToTouch(IEntity viewer)
+        {
+            if (!IsTouchableTo(viewer))
+                return null;
+
+            var self = GetSelf(MessagingType.Tactile);
+
+            foreach (var descriptive in GetTouchDescriptives(viewer))
+                self.Event.TryModify(descriptive.Event);
+
+            return self;
+        }
+
+        /// <summary>
+        /// Retrieve all of the descriptors that are tagged
+        /// </summary>
+        /// <returns>A collection of the descriptors</returns>
+        public virtual IEnumerable<IOccurrence> GetTouchDescriptives(IEntity viewer)
+        {
+            return Descriptives.Where(desc => desc.SensoryType == MessagingType.Tactile);
+        }
+        #endregion
+
+        #region Containment Rendering
+        /// <summary>
+        /// Render this as being show inside a container
+        /// </summary>
+        /// <param name="viewer">The entity looking</param>
+        /// <returns>the output strings</returns>
+        public virtual IOccurrence RenderAsContents(IEntity viewer, MessagingType[] sensoryTypes)
+        {
+            if (sensoryTypes == null || sensoryTypes.Count() == 0)
+                sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
+
+            return GetImmediateDescription(viewer, sensoryTypes);
+        }
+
+        public virtual IOccurrence RenderResourceCollection(IEntity viewer, int amount)
+        {
+            if (!IsVisibleTo(viewer))
+                return null;
+
+            var me = GetSelf(MessagingType.Visible);
+            me.Event.TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, amount.ToString()));
+
+            return me;
+        }
+        #endregion
+
     }
 }

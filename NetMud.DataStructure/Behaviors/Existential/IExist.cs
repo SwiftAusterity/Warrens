@@ -1,6 +1,4 @@
-﻿using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.Behaviors.Rendering;
-using NetMud.DataStructure.SupportingClasses;
+﻿using NetMud.DataStructure.Behaviors.Rendering;
 
 namespace NetMud.DataStructure.Behaviors.Existential
 {
@@ -31,26 +29,5 @@ namespace NetMud.DataStructure.Behaviors.Existential
         /// </summary>
         /// <returns>The current Luminosity</returns>
         float GetCurrentLuminosity();
-
-        /// <summary>
-        /// A fully described short description (includes adjectives)
-        /// </summary>
-        /// <param name="viewer">entity initiating the command</param>
-        /// <returns>the output</returns>
-        IOccurrence GetFullDescription(IEntity viewer);
-
-        /// <summary>
-        /// A fully described short description (includes adjectives)
-        /// </summary>
-        /// <param name="viewer">entity initiating the command</param>
-        /// <returns>the output</returns>
-        IOccurrence GetImmediateDescription(IEntity viewer);
-
-        /// <summary>
-        /// The name of a thing based on visual description
-        /// </summary>
-        /// <param name="viewer">Who is looking</param>
-        /// <returns>a string of the name</returns>
-        string GetDescribableName(IEntity viewer);
     }
 }

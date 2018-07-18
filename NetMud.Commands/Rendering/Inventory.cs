@@ -30,16 +30,16 @@ namespace NetMud.Commands.Rendering
         {
             var sb = new List<string>();
             var chr = (IMobile)Actor;
+            var toActor = new List<IMessage>();
 
-            sb.Add("You look through your belongings.");
+            toActor.Add(
+                new Message(MessagingType.Visible, new Occurrence() { Strength = 9999 })
+                {
+                    Override = new string[] { "You look through your belongings." }
+                });
 
             foreach (var thing in chr.Inventory.EntitiesContained())
-                sb.AddRange(thing.RenderAsContents(chr));
-
-            var toActor = new Message(MessagingType.Visible, new Occurrence() { Strength = 1 })
-            {
-                Override = sb
-            };
+                toActor.Add(new Message(MessagingType.Visible, thing.RenderAsContents(chr, new[] { MessagingType.Visible })));
 
             var toOrigin = new Message(MessagingType.Visible, new Occurrence() { Strength = 30 })
             {

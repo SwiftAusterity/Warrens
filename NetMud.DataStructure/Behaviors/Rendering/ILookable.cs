@@ -20,7 +20,7 @@ namespace NetMud.DataStructure.Behaviors.Rendering
         /// Retrieve all of the descriptors that are tagged as visible output
         /// </summary>
         /// <returns>A collection of the descriptors</returns>
-        IEnumerable<IOccurrence> GetVisibleDescriptives();
+        IEnumerable<IOccurrence> GetVisibleDescriptives(IEntity viewer);
 
         /// <summary>
         /// Is this thing sensible to the entity

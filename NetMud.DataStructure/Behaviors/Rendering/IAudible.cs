@@ -20,7 +20,7 @@ namespace NetMud.DataStructure.Behaviors.Rendering
         /// Retrieve all of the descriptors that are tagged as Audible output
         /// </summary>
         /// <returns>A collection of the descriptors</returns>
-        IEnumerable<IOccurrence> GetAudibleDescriptives();
+        IEnumerable<IOccurrence> GetAudibleDescriptives(IEntity viewer);
 
         /// <summary>
         /// Is this thing sensible to the entity

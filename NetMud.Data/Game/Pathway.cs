@@ -8,6 +8,7 @@ using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.Rendering;
+using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.SupportingClasses;
 using Newtonsoft.Json;
 using System;
@@ -247,33 +248,42 @@ namespace NetMud.Data.Game
         /// Render this to a look command (what something sees when it 'look's at this
         /// </summary>
         /// <returns>the output strings</returns>
-        public override IEnumerable<string> RenderToLook(IEntity viewer)
+        public override IOccurrence RenderToLook(IEntity viewer)
         {
             if (!IsVisibleTo(viewer))
-                return Enumerable.Empty<string>();
+                return null;
 
-            var sb = new List<string>();
             var bS = DataTemplate<IPathwayData>();
+            var me = GetSelf(MessagingType.Visible);
 
             if (bS.Descriptives.Any())
             {
-                foreach(var desc in bS.Descriptives)
-                {
-                    sb.Add(desc.Event.ToString());
-                }
+                foreach (var desc in bS.Descriptives)
+                    me.Event.TryModify(desc.Event);
             }
             else
             {
+                var verb = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "leads");
+
                 //Fallback to using names
                 if (MovementDirection == MovementDirectionType.None)
-                    sb.Add(string.Format("{0} leads from {2} to {3}.", DataTemplateName, MovementDirection.ToString(),
-                        Origin.DataTemplateName, Destination.DataTemplateName));
+                {
+                    var origin = new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, Origin.DataTemplateName);
+                    origin.TryModify(new Lexica(LexicalType.Noun, GrammaticalType.IndirectObject, Destination.DataTemplateName));
+                    verb.TryModify(origin);
+                }
                 else
-                    sb.Add(string.Format("{0} heads in the direction of {1} from {2} to {3}.", DataTemplateName, MovementDirection.ToString(),
-                        Origin.DataTemplateName, Destination.DataTemplateName));
+                {
+                    var direction = new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, MovementDirection.ToString());
+                    var origin = new Lexica(LexicalType.Noun, GrammaticalType.IndirectObject, Origin.DataTemplateName);
+                    origin.TryModify(new Lexica(LexicalType.Noun, GrammaticalType.IndirectObject, Destination.DataTemplateName));
+                    direction.TryModify(origin);
+                }
+
+                me.Event.TryModify(verb);
             }
 
-            return sb;
+            return me;
         }
 
         /// <summary>

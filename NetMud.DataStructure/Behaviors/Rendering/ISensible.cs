@@ -19,7 +19,7 @@ namespace NetMud.DataStructure.Behaviors.Rendering
         /// Retrieve all of the descriptors that are tagged as Psychic output
         /// </summary>
         /// <returns>A collection of the descriptors</returns>
-        IEnumerable<IOccurrence> GetPsychicDescriptives();
+        IEnumerable<IOccurrence> GetPsychicDescriptives(IEntity viewer);
 
         /// <summary>
         /// Is this thing sensible to the entity

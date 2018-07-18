@@ -117,11 +117,6 @@ namespace NetMud.Data.Game
         #endregion
 
         /// <summary>
-        /// Set of output relevant to this exit. These are essentially single word descriptions to render the path
-        /// </summary>
-        public HashSet<IOccurrence> Descriptives { get; set; }
-
-        /// <summary>
         /// Where in the live world this is
         /// </summary>
         [JsonConverter(typeof(ConcreteTypeConverter<GlobalPosition>))]
@@ -216,17 +211,6 @@ namespace NetMud.Data.Game
         }
         #endregion
 
-        /// <summary>
-        /// Spawn this new into the live world
-        /// </summary>
-        public abstract void SpawnNewInWorld();
-
-        /// <summary>
-        /// Spawn this new into the live world into a specified container
-        /// </summary>
-        /// <param name="spawnTo">the location/container this should spawn into</param>
-        public abstract void SpawnNewInWorld(IGlobalPosition spawnTo);
-
         #region Movement
         /// <summary>
         /// Change the position of this
@@ -277,6 +261,17 @@ namespace NetMud.Data.Game
         /// What type of cache is this using
         /// </summary>
         public virtual CacheType CachingType => CacheType.Live;
+
+        /// <summary>
+        /// Spawn this new into the live world
+        /// </summary>
+        public abstract void SpawnNewInWorld();
+
+        /// <summary>
+        /// Spawn this new into the live world into a specified container
+        /// </summary>
+        /// <param name="spawnTo">the location/container this should spawn into</param>
+        public abstract void SpawnNewInWorld(IGlobalPosition spawnTo);
 
         /// <summary>
         /// Put it in the cache
@@ -347,6 +342,11 @@ namespace NetMud.Data.Game
 
         #region Generic Rendering
         /// <summary>
+        /// Set of output relevant to this exit. These are essentially single word descriptions to render the path
+        /// </summary>
+        public HashSet<IOccurrence> Descriptives { get; set; }
+
+        /// <summary>
         /// Renders output for this entity when Look targets it
         /// </summary>
         /// <param name="actor">entity initiating the command</param>
@@ -362,14 +362,17 @@ namespace NetMud.Data.Game
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public virtual IOccurrence GetFullDescription(IEntity viewer)
+        public virtual IOccurrence GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes)
         {
             if (!IsVisibleTo(viewer))
                 return null;
 
-            var self = GetSelf(MessagingType.Tactile);
+            if (sensoryTypes == null || sensoryTypes.Count() == 0)
+                sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
 
-            foreach (var descriptive in GetVisibleDescriptives())
+            var self = GetSelf(MessagingType.Visible);
+
+            foreach (var descriptive in GetVisibleDescriptives(viewer))
                 self.Event.TryModify(descriptive.Event);
 
             return self;
@@ -380,10 +383,13 @@ namespace NetMud.Data.Game
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public virtual IOccurrence GetImmediateDescription(IEntity viewer)
+        public virtual IOccurrence GetImmediateDescription(IEntity viewer, MessagingType[] sensoryTypes)
         {
             if (!IsVisibleTo(viewer))
                 return null;
+
+            if (sensoryTypes == null || sensoryTypes.Count() == 0)
+                sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
 
             return GetSelf(MessagingType.Visible);
         }
@@ -401,7 +407,7 @@ namespace NetMud.Data.Game
             return GetSelf(MessagingType.Visible).ToString();
         }
 
-        private IOccurrence GetSelf(MessagingType type, int strength = 100)
+        internal IOccurrence GetSelf(MessagingType type, int strength = 100)
         {
             return new Occurrence()
             {
@@ -417,7 +423,11 @@ namespace NetMud.Data.Game
         /// Gets the actual vision modifier taking into account blindness and other factors
         /// </summary>
         /// <returns>the working modifier</returns>
-        public abstract float GetVisionModifier();
+        public virtual float GetVisionModifier()
+        {
+            //Base is "infinite" for things like rocks and zones
+            return 999999;
+        }
 
         /// <summary>
         /// Is this visible to the viewer
@@ -439,7 +449,7 @@ namespace NetMud.Data.Game
             if (!IsVisibleTo(viewer))
                 return null;
 
-            return GetFullDescription(viewer);
+            return GetFullDescription(viewer, new [] { MessagingType.Visible });
         }
 
         /// <summary>
@@ -453,7 +463,7 @@ namespace NetMud.Data.Game
             if (!IsVisibleTo(viewer))
                 return null;
 
-            return GetImmediateDescription(viewer);
+            return GetImmediateDescription(viewer, new[] { MessagingType.Visible });
         }
 
         /// <summary>
@@ -467,14 +477,14 @@ namespace NetMud.Data.Game
             if (!IsVisibleTo(viewer))
                 return null;
 
-            return GetFullDescription(viewer);
+            return GetFullDescription(viewer, new[] { MessagingType.Visible });
         }
 
         /// <summary>
         /// Retrieve all of the descriptors that are tagged as visible output
         /// </summary>
         /// <returns>A collection of the descriptors</returns>
-        public virtual IEnumerable<IOccurrence> GetVisibleDescriptives()
+        public virtual IEnumerable<IOccurrence> GetVisibleDescriptives(IEntity viewer)
         {
             return Descriptives.Where(desc => desc.SensoryType == MessagingType.Visible);
         }
@@ -485,7 +495,11 @@ namespace NetMud.Data.Game
         /// Gets the actual modifier taking into account other factors
         /// </summary>
         /// <returns>the working modifier</returns>
-        public abstract float GetAuditoryModifier();
+        public virtual float GetAuditoryModifier()
+        {
+            //Base is "infinite" for things like rocks and zones
+            return 999999;
+        }
 
         /// <summary>
         /// Is this detectable to the viewer
@@ -510,7 +524,7 @@ namespace NetMud.Data.Game
 
             var self = GetSelf(MessagingType.Audible);
 
-            foreach (var descriptive in GetAudibleDescriptives())
+            foreach (var descriptive in GetAudibleDescriptives(viewer))
                 self.Event.TryModify(descriptive.Event);
 
             return self;
@@ -520,7 +534,7 @@ namespace NetMud.Data.Game
         /// Retrieve all of the descriptors that are tagged as visible output
         /// </summary>
         /// <returns>A collection of the descriptors</returns>
-        public virtual IEnumerable<IOccurrence> GetAudibleDescriptives()
+        public virtual IEnumerable<IOccurrence> GetAudibleDescriptives(IEntity viewer)
         {
             return Descriptives.Where(desc => desc.SensoryType == MessagingType.Audible);
         }
@@ -531,7 +545,11 @@ namespace NetMud.Data.Game
         /// Gets the actual modifier taking into account other factors
         /// </summary>
         /// <returns>the working modifier</returns>
-        public abstract float GetPsychicModifier();
+        public virtual float GetPsychicModifier()
+        {
+            //Base is "infinite" for things like rocks and zones
+            return 999999;
+        }
 
         /// <summary>
         /// Is this detectable to the viewer
@@ -556,7 +574,7 @@ namespace NetMud.Data.Game
 
             var self = GetSelf(MessagingType.Psychic);
 
-            foreach (var descriptive in GetPsychicDescriptives())
+            foreach (var descriptive in GetPsychicDescriptives(viewer))
                 self.Event.TryModify(descriptive.Event);
 
             return self;
@@ -566,7 +584,7 @@ namespace NetMud.Data.Game
         /// Retrieve all of the descriptors that are tagged as visible output
         /// </summary>
         /// <returns>A collection of the descriptors</returns>
-        public virtual IEnumerable<IOccurrence> GetPsychicDescriptives()
+        public virtual IEnumerable<IOccurrence> GetPsychicDescriptives(IEntity viewer)
         {
             return Descriptives.Where(desc => desc.SensoryType == MessagingType.Psychic);
         }
@@ -577,7 +595,11 @@ namespace NetMud.Data.Game
         /// Gets the actual modifier taking into account other factors
         /// </summary>
         /// <returns>the working modifier</returns>
-        public abstract float GetTasteModifier();
+        public virtual float GetTasteModifier()
+        {
+            //Base is "infinite" for things like rocks and zones
+            return 999999;
+        }
 
         /// <summary>
         /// Is this detectable to the viewer
@@ -602,7 +624,7 @@ namespace NetMud.Data.Game
 
             var self = GetSelf(MessagingType.Taste);
 
-            foreach (var descriptive in GetTasteDescriptives())
+            foreach (var descriptive in GetTasteDescriptives(viewer))
                 self.Event.TryModify(descriptive.Event);
 
             return self;
@@ -612,7 +634,7 @@ namespace NetMud.Data.Game
         /// Retrieve all of the descriptors that are tagged
         /// </summary>
         /// <returns>A collection of the descriptors</returns>
-        public virtual IEnumerable<IOccurrence> GetTasteDescriptives()
+        public virtual IEnumerable<IOccurrence> GetTasteDescriptives(IEntity viewer)
         {
             return Descriptives.Where(desc => desc.SensoryType == MessagingType.Taste);
         }
@@ -623,7 +645,11 @@ namespace NetMud.Data.Game
         /// Gets the actual modifier taking into account other factors
         /// </summary>
         /// <returns>the working modifier</returns>
-        public abstract float GetOlefactoryModifier();
+        public virtual float GetOlefactoryModifier()
+        {
+            //Base is "infinite" for things like rocks and zones
+            return 999999;
+        }
 
         /// <summary>
         /// Is this detectable to the viewer
@@ -648,7 +674,7 @@ namespace NetMud.Data.Game
 
             var self = GetSelf(MessagingType.Olefactory);
 
-            foreach (var descriptive in GetOlefactoryDescriptives())
+            foreach (var descriptive in GetSmellableDescriptives(viewer))
                 self.Event.TryModify(descriptive.Event);
 
             return self;
@@ -658,7 +684,7 @@ namespace NetMud.Data.Game
         /// Retrieve all of the descriptors that are tagged
         /// </summary>
         /// <returns>A collection of the descriptors</returns>
-        public virtual IEnumerable<IOccurrence> GetSmellableDescriptives()
+        public virtual IEnumerable<IOccurrence> GetSmellableDescriptives(IEntity viewer)
         {
             return Descriptives.Where(desc => desc.SensoryType == MessagingType.Olefactory);
         }
@@ -669,7 +695,11 @@ namespace NetMud.Data.Game
         /// Gets the actual modifier taking into account other factors
         /// </summary>
         /// <returns>the working modifier</returns>
-        public abstract float GetTactileModifier();
+        public virtual float GetTactileModifier()
+        {
+            //Base is "infinite" for things like rocks and zones
+            return 999999;
+        }
 
         /// <summary>
         /// Is this detectable to the viewer
@@ -694,7 +724,7 @@ namespace NetMud.Data.Game
 
             var self = GetSelf(MessagingType.Tactile);
 
-            foreach (var descriptive in GetTouchDescriptives())
+            foreach (var descriptive in GetTouchDescriptives(viewer))
                 self.Event.TryModify(descriptive.Event);
 
             return self;
@@ -704,7 +734,7 @@ namespace NetMud.Data.Game
         /// Retrieve all of the descriptors that are tagged
         /// </summary>
         /// <returns>A collection of the descriptors</returns>
-        public virtual IEnumerable<IOccurrence> GetTouchDescriptives()
+        public virtual IEnumerable<IOccurrence> GetTouchDescriptives(IEntity viewer)
         {
             return Descriptives.Where(desc => desc.SensoryType == MessagingType.Tactile);
         }
@@ -716,9 +746,12 @@ namespace NetMud.Data.Game
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public virtual IOccurrence RenderAsContents(IEntity viewer)
+        public virtual IOccurrence RenderAsContents(IEntity viewer, MessagingType[] sensoryTypes)
         {
-            return GetImmediateDescription(viewer);
+            if(sensoryTypes == null || sensoryTypes.Count() == 0)
+                 sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
+
+            return GetImmediateDescription(viewer, sensoryTypes);
         }
 
         /// <summary>
@@ -729,7 +762,7 @@ namespace NetMud.Data.Game
         /// <returns>the output</returns>
         public virtual IOccurrence RenderAsHeld(IEntity viewer, IEntity holder)
         {
-            return GetImmediateDescription(viewer);
+            return GetImmediateDescription(viewer, new[] { MessagingType.Visible });
         }
 
         /// <summary>

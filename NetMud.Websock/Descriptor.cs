@@ -12,6 +12,7 @@ using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Base.World;
 using NetMud.DataStructure.Behaviors.Rendering;
+using NetMud.DataStructure.SupportingClasses;
 using NetMud.Interp;
 using NetMud.Utility;
 using NetMud.Websock.OutputFormatting;
@@ -146,9 +147,9 @@ namespace NetMud.Websock
             var currentWorld = currentZone.GetWorld();
             var currentRoom = currentLocation.GetRoom();
 
-            var pathways = ((ILocation)currentContainer).GetPathways().SelectMany(data => data.RenderAsContents(_currentPlayer));
-            var inventory = currentContainer.GetContents<IInanimate>().SelectMany(data => data.RenderAsContents(_currentPlayer));
-            var populace = currentContainer.GetContents<IMobile>().Where(player => !player.Equals(_currentPlayer)).SelectMany(data => data.RenderAsContents(_currentPlayer));
+            var pathways = ((ILocation)currentContainer).GetPathways().Select(data => data.RenderAsContents(_currentPlayer, new[] { MessagingType.Visible }).ToString());
+            var inventory = currentContainer.GetContents<IInanimate>().Select(data => data.RenderAsContents(_currentPlayer, new[] { MessagingType.Visible }).ToString());
+            var populace = currentContainer.GetContents<IMobile>().Where(player => !player.Equals(_currentPlayer)).Select(data => data.RenderAsContents(_currentPlayer, new[] { MessagingType.Visible }).ToString());
 
             var local = new LocalStatus
             {
@@ -158,7 +159,7 @@ namespace NetMud.Websock
                 Inventory = inventory.ToArray(),
                 Populace = populace.ToArray(),
                 Exits = pathways.ToArray(),
-                LocationDescriptive = currentLocation.CurrentLocation.RenderToLook(_currentPlayer).ParagraphList()
+                LocationDescriptive = currentLocation.CurrentLocation.RenderToLook(_currentPlayer).ToString()
             };
 
             //The next two are mostly hard coded, TODO, also fix how we get the map as that's an admin thing
