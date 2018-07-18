@@ -5,28 +5,28 @@ using System.Collections.Generic;
 namespace NetMud.DataStructure.Behaviors.Rendering
 {
     /// <summary>
-    /// Indicates something is heard and affects audible triggers
+    /// Framework for rendering Tactile output
     /// </summary>
-    public interface IAudible : IDescribable
+    public interface ITouchable : IDescribable
     {
         /// <summary>
-        /// Renders "display" from scan command
+        /// Renders output for this entity when Look targets it
         /// </summary>
         /// <param name="actor">entity initiating the command</param>
-        /// <returns>the scan output</returns>
-        IOccurrence RenderToAudible(IEntity actor);
+        /// <returns>the output</returns>
+        IOccurrence RenderToTouch(IEntity actor);
 
         /// <summary>
-        /// Retrieve all of the descriptors that are tagged as Audible output
+        /// Retrieve all of the descriptors that are tagged as Tactile output
         /// </summary>
         /// <returns>A collection of the descriptors</returns>
-        IEnumerable<IOccurrence> GetAudibleDescriptives();
+        IEnumerable<IOccurrence> GetTouchDescriptives();
 
         /// <summary>
         /// Is this thing sensible to the entity
         /// </summary>
         /// <param name="actor">the observing entity</param>
         /// <returns>If this is observeable</returns>
-        bool IsAudibleTo(IEntity actor);
+        bool IsTouchableTo(IEntity actor);
     }
 }

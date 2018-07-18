@@ -1,5 +1,5 @@
 ﻿using NetMud.DataStructure.Base.System;
-using System.Collections.Generic;
+using NetMud.DataStructure.SupportingClasses;
 
 namespace NetMud.DataStructure.Behaviors.Rendering
 {
@@ -14,6 +14,6 @@ namespace NetMud.DataStructure.Behaviors.Rendering
         /// <param name="viewer">entity initiating the command</param>
         /// <param name="wearer">entity wearing the item</param>
         /// <returns>the output</returns>
-        IEnumerable<string> RenderAsWorn(IEntity viewer, IEntity wearer);
+        IOccurrence RenderAsWorn(IEntity viewer, IEntity wearer);
     }
 }

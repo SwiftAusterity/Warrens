@@ -164,7 +164,7 @@ namespace NetMud.Data.LookupData
             //if (!IsVisibleTo(viewer))
             //    return Enumerable.Empty<string>();
 
-            return GetLongDescription(viewer);
+            return GetFullDescription(viewer);
         }
 
         /// <summary>
@@ -172,7 +172,7 @@ namespace NetMud.Data.LookupData
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public virtual IEnumerable<string> GetLongDescription(IEntity viewer)
+        public virtual IEnumerable<string> GetFullDescription(IEntity viewer)
         {
             //if (!IsVisibleTo(viewer))
             //    return Enumerable.Empty<string>();
@@ -194,7 +194,7 @@ namespace NetMud.Data.LookupData
             //if (!IsVisibleTo(viewer))
             //    return Enumerable.Empty<string>();
 
-            return GetShortDescription(viewer);
+            return GetImmediateDescription(viewer);
         }
 
         /// <summary>
@@ -202,7 +202,7 @@ namespace NetMud.Data.LookupData
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public virtual IEnumerable<string> GetShortDescription(IEntity viewer)
+        public virtual IEnumerable<string> GetImmediateDescription(IEntity viewer)
         {
             //if (!IsVisibleTo(viewer))
             //    return Enumerable.Empty<string>();

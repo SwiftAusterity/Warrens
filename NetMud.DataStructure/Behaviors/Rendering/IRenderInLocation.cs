@@ -1,5 +1,5 @@
 ﻿using NetMud.DataStructure.Base.System;
-using System.Collections.Generic;
+using NetMud.DataStructure.SupportingClasses;
 
 namespace NetMud.DataStructure.Behaviors.Rendering
 {
@@ -13,13 +13,6 @@ namespace NetMud.DataStructure.Behaviors.Rendering
         /// </summary>
         /// <param name="viewer">entity initiating the command</param>
         /// <returns>the output</returns>
-        IEnumerable<string> RenderAsContents(IEntity viewer);
-
-        /// <summary>
-        /// A fully described short description (includes adjectives)
-        /// </summary>
-        /// <param name="viewer">entity initiating the command</param>
-        /// <returns>the output</returns>
-        IEnumerable<string> GetShortDescription(IEntity viewer);
+        IOccurrence RenderAsContents(IEntity viewer);
     }
 }

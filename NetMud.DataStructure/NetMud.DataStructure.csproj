@@ -107,6 +107,10 @@
     <Compile Include="Behaviors\Actionable\ICanBeWounded.cs" />
     <Compile Include="Behaviors\Actionable\ICanGainExperience.cs" />
     <Compile Include="Behaviors\Actionable\ICanReproduce.cs" />
+    <Compile Include="Behaviors\Actionable\ICanSense.cs" />
+    <Compile Include="Behaviors\Actionable\ICanSmell.cs" />
+    <Compile Include="Behaviors\Actionable\ICanTaste.cs" />
+    <Compile Include="Behaviors\Actionable\ICanTouch.cs" />
     <Compile Include="Behaviors\Automation\IIlluminated.cs" />
     <Compile Include="Behaviors\Existential\IAccumulation.cs" />
     <Compile Include="Behaviors\Existential\ICanAccumulate.cs" />
@@ -121,6 +125,8 @@
     <Compile Include="Behaviors\Existential\ILocationData.cs" />
     <Compile Include="Behaviors\Rendering\IRenderAsHeld.cs" />
     <Compile Include="Behaviors\Rendering\IRenderAsWorn.cs" />
+    <Compile Include="Behaviors\Rendering\ITasteable.cs" />
+    <Compile Include="Behaviors\Rendering\ITouchable.cs" />
     <Compile Include="Behaviors\System\ApprovalState.cs" />
     <Compile Include="Behaviors\System\ContentApprovalType.cs" />
     <Compile Include="Behaviors\System\INaturalResource.cs" />

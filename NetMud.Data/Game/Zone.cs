@@ -151,7 +151,7 @@ namespace NetMud.Data.Game
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public override IEnumerable<string> GetShortDescription(IEntity viewer)
+        public override IEnumerable<string> GetImmediateDescription(IEntity viewer)
         {
             if (!IsVisibleTo(viewer))
                 return Enumerable.Empty<string>();
@@ -170,7 +170,7 @@ namespace NetMud.Data.Game
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public override IEnumerable<string> GetLongDescription(IEntity viewer)
+        public override IEnumerable<string> GetFullDescription(IEntity viewer)
         {
             if (!IsVisibleTo(viewer))
                 return Enumerable.Empty<string>();

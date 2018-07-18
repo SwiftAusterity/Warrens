@@ -1,5 +1,6 @@
 ﻿using NetMud.DataStructure.Base.System;
-using System.Collections.Generic;
+using NetMud.DataStructure.SupportingClasses;
+
 namespace NetMud.DataStructure.Behaviors.Rendering
 {
     /// <summary>
@@ -12,6 +13,6 @@ namespace NetMud.DataStructure.Behaviors.Rendering
         /// </summary>
         /// <param name="actor">entity initiating the command</param>
         /// <returns>the output</returns>
-        IEnumerable<string> RenderToTrack(IEntity actor);
+        IOccurrence RenderToTrack(IEntity actor);
     }
 }

@@ -1,5 +1,7 @@
 ﻿using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.SupportingClasses;
 using System.Collections.Generic;
+
 namespace NetMud.DataStructure.Behaviors.Rendering
 {
     /// <summary>
@@ -12,14 +14,6 @@ namespace NetMud.DataStructure.Behaviors.Rendering
         /// </summary>
         /// <param name="viewer">entity initiating the command</param>
         /// <returns>the scan output</returns>
-        IEnumerable<string> RenderToInspect(IEntity viewer);
-
-        /// <summary>
-        /// Renders "display" from scan command
-        /// </summary>
-        /// <param name="teller">entity describer</param>
-        /// <param name="reciever">entity being described to</param>
-        /// <returns>the scan output</returns>
-        IEnumerable<string> DescribeTo(IEntity teller, IEntity reciever);
+        IOccurrence RenderToInspect(IEntity viewer);
     }
 }

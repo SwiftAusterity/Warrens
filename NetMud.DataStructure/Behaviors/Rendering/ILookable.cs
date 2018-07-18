@@ -14,26 +14,19 @@ namespace NetMud.DataStructure.Behaviors.Rendering
         /// </summary>
         /// <param name="viewer">entity initiating the command</param>
         /// <returns>the output</returns>
-        IEnumerable<string> RenderToLook(IEntity viewer);
-
-        /// <summary>
-        /// A fully described short description (includes adjectives)
-        /// </summary>
-        /// <param name="viewer">entity initiating the command</param>
-        /// <returns>the output</returns>
-        IEnumerable<string> GetLongDescription(IEntity viewer);
+        IOccurrence RenderToLook(IEntity viewer);
 
         /// <summary>
         /// Retrieve all of the descriptors that are tagged as visible output
         /// </summary>
         /// <returns>A collection of the descriptors</returns>
-        string GetDescribedName(IEntity viewer);
+        IEnumerable<IOccurrence> GetVisibleDescriptives();
 
         /// <summary>
-        /// Retrieve all of the descriptors that are tagged as visible output
+        /// Is this thing sensible to the entity
         /// </summary>
-        /// <returns>A collection of the descriptors</returns>
-        IEnumerable<IOccurrence> GetVisibleDescriptives(IEntity viewer);
-
+        /// <param name="actor">the observing entity</param>
+        /// <returns>If this is observeable</returns>
+        bool IsVisibleTo(IEntity actor);
     }
 }

@@ -1,5 +1,5 @@
 ﻿using NetMud.DataStructure.Base.System;
-using System.Collections.Generic;
+using NetMud.DataStructure.SupportingClasses;
 
 namespace NetMud.DataStructure.Behaviors.Rendering
 {
@@ -14,6 +14,6 @@ namespace NetMud.DataStructure.Behaviors.Rendering
         /// <param name="viewer">entity initiating the command</param>
         /// <param name="holder">entity holding the thing</param>
         /// <returns>the output</returns>
-        IEnumerable<string> RenderAsHeld(IEntity viewer, IEntity holder);
+        IOccurrence RenderAsHeld(IEntity viewer, IEntity holder);
     }
 }

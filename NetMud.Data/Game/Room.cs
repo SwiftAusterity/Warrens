@@ -190,7 +190,7 @@ namespace NetMud.Data.Game
                 return Enumerable.Empty<string>();
 
             var sb = new List<string>();
-            sb.AddRange(GetShortDescription(viewer));
+            sb.AddRange(GetImmediateDescription(viewer));
 
             if (NaturalResources != null)
                 sb.AddRange(NaturalResources.Select(kvp => kvp.Key.RenderResourceCollection(viewer, kvp.Value)));
