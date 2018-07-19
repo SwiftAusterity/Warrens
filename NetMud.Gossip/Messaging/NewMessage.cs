@@ -7,7 +7,7 @@ namespace NetMud.Gossip.Messaging
     public class NewMessage : IPayload
     {
         [JsonIgnore]
-        public string Type => "messages/new";
+        public string Type => "channels/send";
 
         [JsonProperty("channel")]
         public string ChannelName { get; set; }

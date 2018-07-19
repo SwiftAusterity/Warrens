@@ -167,7 +167,7 @@ namespace NetMud.Gossip
                     if (validPlayer != null)
                         validPlayer.WriteTo(new string[] { string.Format("{0} gossip-tells you, '{1}'", fullName, messageBody) });
                     break;
-                case "messages/broadcast":
+                case "channels/broadcast":
                     var messageText = newReply.Payload.message.Value;
                     var messageSender = newReply.Payload.name.Value;
                     var source = newReply.Payload.game.Value;
@@ -220,7 +220,7 @@ namespace NetMud.Gossip
 
                 case "channels/subscribe":
                 case "channels/unsubscribe":
-                case "messages/new":
+                case "channels/send":
                 case "authenticate":
                     //These are the "request-response"
                     if (newReply.Status.Equals("failure"))
