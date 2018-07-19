@@ -25,7 +25,7 @@ namespace NetMud.Data.DataIntegrity
         {
             int value = Utility.DataUtility.TryConvert<int>(val);
 
-            return value > LowerBound && value < UpperBound;
+            return value >= LowerBound && value <= UpperBound;
         }
 
         /// <summary>

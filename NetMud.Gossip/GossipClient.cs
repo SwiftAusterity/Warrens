@@ -152,7 +152,7 @@ namespace NetMud.Gossip
 
                     MyClient.Send(Serialize(response));
                     break;
-                case "messages/direct":
+                case "tells/receive":
                     var myName = newReply.Payload.playerName.Value;
                     var theirName = newReply.Payload.name.Value;
                     var theirGame = newReply.Payload.game.Value;

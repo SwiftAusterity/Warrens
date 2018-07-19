@@ -365,7 +365,7 @@ namespace NetMud.Data.Game
         public virtual IOccurrence GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes)
         {
             if (!IsVisibleTo(viewer))
-                return null;
+                return new Occurrence(MessagingType.Visible);
 
             if (sensoryTypes == null || sensoryTypes.Count() == 0)
                 sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
@@ -386,7 +386,7 @@ namespace NetMud.Data.Game
         public virtual IOccurrence GetImmediateDescription(IEntity viewer, MessagingType[] sensoryTypes)
         {
             if (!IsVisibleTo(viewer))
-                return null;
+                return new Occurrence(MessagingType.Visible);
 
             if (sensoryTypes == null || sensoryTypes.Count() == 0)
                 sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
@@ -420,13 +420,13 @@ namespace NetMud.Data.Game
 
         #region Visual Rendering
         /// <summary>
-        /// Gets the actual vision modifier taking into account blindness and other factors
+        /// Gets the actual vision Range taking into account blindness and other factors
         /// </summary>
-        /// <returns>the working modifier</returns>
-        public virtual float GetVisionModifier()
+        /// <returns>the working Range</returns>
+        public virtual Tuple<float, float> GetVisualRange()
         {
             //Base is "infinite" for things like rocks and zones
-            return 999999;
+            return new Tuple<float, float>(-999999, 999999);
         }
 
         /// <summary>
@@ -436,7 +436,10 @@ namespace NetMud.Data.Game
         /// <returns>If this is visible</returns>
         public virtual bool IsVisibleTo(IEntity viewer)
         {
-            return GetCurrentLuminosity() > viewer.GetVisionModifier();
+            var value = GetCurrentLuminosity();
+            var range = viewer.GetVisualRange();
+
+            return value >= range.Item1 && value <= range.Item2;
         }
 
         /// <summary>
@@ -447,7 +450,7 @@ namespace NetMud.Data.Game
         public virtual IOccurrence RenderToLook(IEntity viewer)
         {
             if (!IsVisibleTo(viewer))
-                return null;
+                return new Occurrence(MessagingType.Visible);
 
             return GetFullDescription(viewer, new [] { MessagingType.Visible });
         }
@@ -461,7 +464,7 @@ namespace NetMud.Data.Game
         {
             //TODO: Make this half power
             if (!IsVisibleTo(viewer))
-                return null;
+                return new Occurrence(MessagingType.Visible);
 
             return GetImmediateDescription(viewer, new[] { MessagingType.Visible });
         }
@@ -475,7 +478,7 @@ namespace NetMud.Data.Game
         {
             //TODO: Make this double power
             if (!IsVisibleTo(viewer))
-                return null;
+                return new Occurrence(MessagingType.Visible);
 
             return GetFullDescription(viewer, new[] { MessagingType.Visible });
         }
@@ -492,13 +495,13 @@ namespace NetMud.Data.Game
 
         #region Auditory Rendering
         /// <summary>
-        /// Gets the actual modifier taking into account other factors
+        /// Gets the actual Range taking into account other factors
         /// </summary>
-        /// <returns>the working modifier</returns>
-        public virtual float GetAuditoryModifier()
+        /// <returns>the working Range</returns>
+        public virtual Tuple<float, float> GetAuditoryRange()
         {
             //Base is "infinite" for things like rocks and zones
-            return 999999;
+            return new Tuple<float, float>(-999999, 999999);
         }
 
         /// <summary>
@@ -508,8 +511,10 @@ namespace NetMud.Data.Game
         /// <returns>If this is observable</returns>
         public virtual bool IsAudibleTo(IEntity viewer)
         {
-            //TODO: Do detection lowering stuff
-            return viewer.GetAuditoryModifier() > 0;
+            var value = 0;
+            var range = viewer.GetAuditoryRange();
+
+            return value >= range.Item1 && value <= range.Item2;
         }
 
         /// <summary>
@@ -520,7 +525,7 @@ namespace NetMud.Data.Game
         public virtual IOccurrence RenderToAudible(IEntity viewer)
         {
             if (!IsAudibleTo(viewer))
-                return null;
+                return new Occurrence(MessagingType.Audible);
 
             var self = GetSelf(MessagingType.Audible);
 
@@ -542,13 +547,13 @@ namespace NetMud.Data.Game
 
         #region Psychic (sense) Rendering
         /// <summary>
-        /// Gets the actual modifier taking into account other factors
+        /// Gets the actual Range taking into account other factors
         /// </summary>
-        /// <returns>the working modifier</returns>
-        public virtual float GetPsychicModifier()
+        /// <returns>the working Range</returns>
+        public virtual Tuple<float, float> GetPsychicRange()
         {
             //Base is "infinite" for things like rocks and zones
-            return 999999;
+            return new Tuple<float, float>(-999999, 999999);
         }
 
         /// <summary>
@@ -558,8 +563,10 @@ namespace NetMud.Data.Game
         /// <returns>If this is observable</returns>
         public virtual bool IsSensibleTo(IEntity viewer)
         {
-            //TODO: Do detection lowering stuff
-            return viewer.GetPsychicModifier() > 0;
+            var value = 0;
+            var range = viewer.GetPsychicRange();
+
+            return value >= range.Item1 && value <= range.Item2;
         }
 
         /// <summary>
@@ -570,7 +577,7 @@ namespace NetMud.Data.Game
         public virtual IOccurrence RenderToSense(IEntity viewer)
         {
             if (!IsSensibleTo(viewer))
-                return null;
+                return new Occurrence(MessagingType.Psychic);
 
             var self = GetSelf(MessagingType.Psychic);
 
@@ -592,13 +599,13 @@ namespace NetMud.Data.Game
 
         #region Taste Rendering
         /// <summary>
-        /// Gets the actual modifier taking into account other factors
+        /// Gets the actual Range taking into account other factors
         /// </summary>
-        /// <returns>the working modifier</returns>
-        public virtual float GetTasteModifier()
+        /// <returns>the working Range</returns>
+        public virtual Tuple<float, float> GetTasteRange()
         {
             //Base is "infinite" for things like rocks and zones
-            return 999999;
+            return new Tuple<float, float>(-999999, 999999);
         }
 
         /// <summary>
@@ -608,8 +615,10 @@ namespace NetMud.Data.Game
         /// <returns>If this is observable</returns>
         public virtual bool IsTastableTo(IEntity viewer)
         {
-            //TODO: Do detection lowering stuff
-            return viewer.GetTasteModifier() > 0;
+            var value = 0;
+            var range = viewer.GetTasteRange();
+
+            return value >= range.Item1 && value <= range.Item2;
         }
 
         /// <summary>
@@ -620,7 +629,7 @@ namespace NetMud.Data.Game
         public virtual IOccurrence RenderToTaste(IEntity viewer)
         {
             if (!IsTastableTo(viewer))
-                return null;
+                return new Occurrence(MessagingType.Taste);
 
             var self = GetSelf(MessagingType.Taste);
 
@@ -642,13 +651,13 @@ namespace NetMud.Data.Game
 
         #region Smell Rendering
         /// <summary>
-        /// Gets the actual modifier taking into account other factors
+        /// Gets the actual Range taking into account other factors
         /// </summary>
-        /// <returns>the working modifier</returns>
-        public virtual float GetOlefactoryModifier()
+        /// <returns>the working Range</returns>
+        public virtual Tuple<float, float> GetOlefactoryRange()
         {
             //Base is "infinite" for things like rocks and zones
-            return 999999;
+            return new Tuple<float, float>(-999999, 999999);
         }
 
         /// <summary>
@@ -658,8 +667,10 @@ namespace NetMud.Data.Game
         /// <returns>If this is observable</returns>
         public virtual bool IsSmellableTo(IEntity viewer)
         {
-            //TODO: Do detection lowering stuff
-            return viewer.GetOlefactoryModifier() > 0;
+            var value = 0;
+            var range = viewer.GetOlefactoryRange();
+
+            return value >= range.Item1 && value <= range.Item2;
         }
 
         /// <summary>
@@ -670,7 +681,7 @@ namespace NetMud.Data.Game
         public virtual IOccurrence RenderToSmell(IEntity viewer)
         {
             if (!IsSmellableTo(viewer))
-                return null;
+                return new Occurrence(MessagingType.Olefactory);
 
             var self = GetSelf(MessagingType.Olefactory);
 
@@ -692,13 +703,13 @@ namespace NetMud.Data.Game
 
         #region Touch Rendering
         /// <summary>
-        /// Gets the actual modifier taking into account other factors
+        /// Gets the actual Range taking into account other factors
         /// </summary>
-        /// <returns>the working modifier</returns>
-        public virtual float GetTactileModifier()
+        /// <returns>the working Range</returns>
+        public virtual Tuple<float, float> GetTactileRange()
         {
             //Base is "infinite" for things like rocks and zones
-            return 999999;
+            return new Tuple<float, float>(-999999, 999999);
         }
 
         /// <summary>
@@ -708,8 +719,10 @@ namespace NetMud.Data.Game
         /// <returns>If this is observable</returns>
         public virtual bool IsTouchableTo(IEntity viewer)
         {
-            //TODO: Do detection lowering stuff
-            return viewer.GetTactileModifier() > 0;
+            var value = 0;
+            var range = viewer.GetTactileRange();
+
+            return value >= range.Item1 && value <= range.Item2;
         }
 
         /// <summary>
@@ -720,7 +733,7 @@ namespace NetMud.Data.Game
         public virtual IOccurrence RenderToTouch(IEntity viewer)
         {
             if (!IsTouchableTo(viewer))
-                return null;
+                return new Occurrence(MessagingType.Tactile);
 
             var self = GetSelf(MessagingType.Tactile);
 

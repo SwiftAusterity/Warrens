@@ -85,6 +85,10 @@ namespace NetMud.Communication.Messaging
         /// <returns>a sentence fragment</returns>
         public override string ToString()
         {
+            //short circuit empty lexica
+            if (string.IsNullOrWhiteSpace(Phrase))
+                return string.Empty;
+
             var sb = new StringBuilder();
             var adjectives = Modifiers.Where(mod => mod.Role == GrammaticalType.Descriptive);
 

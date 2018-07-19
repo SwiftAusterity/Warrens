@@ -19,13 +19,13 @@ namespace NetMud.Data.System
         /// <summary>
         /// How many days are per month
         /// </summary>
-        [IntDataIntegrity("Days Per Month must be greater than 0.", 0)]
+        [IntDataIntegrity("Days Per Month must be greater than 0.", 1)]
         public int DaysPerMonth { get; set; }
 
         /// <summary>
         /// How many hours per day
         /// </summary>
-        [IntDataIntegrity("Hours Per Day must be greater than 0.", 0)]
+        [IntDataIntegrity("Hours Per Day must be greater than 0.", 1)]
         public int HoursPerDay { get; set; }
 
         /// <summary>

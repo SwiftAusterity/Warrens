@@ -39,7 +39,7 @@ namespace NetMud.Data.LookupData
         /// <summary>
         /// How hollow something is
         /// </summary>
-        [IntDataIntegrity("Vacuity must be at least zero.", -1)]
+        [IntDataIntegrity("Vacuity must be at least zero.", 0)]
         public int Vacuity { get; set; }
 
         /// <summary>

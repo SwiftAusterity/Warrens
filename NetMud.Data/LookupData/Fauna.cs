@@ -21,13 +21,13 @@ namespace NetMud.Data.LookupData
         /// <summary>
         /// What is the % chance of generating a female instead of a male on birth
         /// </summary>
-        [IntDataIntegrity("Female to male ratio must be greater than 0.", 0)]
+        [IntDataIntegrity("Female to male ratio must be greater than 0.", 1)]
         public int FemaleRatio { get; set; }
 
         /// <summary>
         /// The absolute hard cap to natural population growth
         /// </summary>
-        [IntDataIntegrity("Population Hard Cap must be greater than 0.", 0)]
+        [IntDataIntegrity("Population Hard Cap must be greater than 0.", 1)]
         public int PopulationHardCap { get; set; }
 
         [JsonProperty("Race")]

@@ -240,7 +240,10 @@ namespace NetMud.Data.LookupData
         /// <returns>If this is visible</returns>
         public virtual bool IsVisibleTo(IEntity viewer)
         {
-            return viewer.GetVisionModifier() > 0;
+            var value = 0;
+            var range = viewer.GetVisualRange();
+
+            return value >= range.Item1 && value <= range.Item2;
         }
 
         /// <summary>
@@ -302,8 +305,10 @@ namespace NetMud.Data.LookupData
         /// <returns>If this is observable</returns>
         public virtual bool IsAudibleTo(IEntity viewer)
         {
-            //TODO: Do detection lowering stuff
-            return viewer.GetAuditoryModifier() > 0;
+            var value = 0;
+            var range = viewer.GetAuditoryRange();
+
+            return value >= range.Item1 && value <= range.Item2;
         }
 
         /// <summary>
@@ -342,8 +347,10 @@ namespace NetMud.Data.LookupData
         /// <returns>If this is observable</returns>
         public virtual bool IsSensibleTo(IEntity viewer)
         {
-            //TODO: Do detection lowering stuff
-            return viewer.GetPsychicModifier() > 0;
+            var value = 0;
+            var range = viewer.GetPsychicRange();
+
+            return value >= range.Item1 && value <= range.Item2;
         }
 
         /// <summary>
@@ -382,8 +389,10 @@ namespace NetMud.Data.LookupData
         /// <returns>If this is observable</returns>
         public virtual bool IsTastableTo(IEntity viewer)
         {
-            //TODO: Do detection lowering stuff
-            return viewer.GetTasteModifier() > 0;
+            var value = 0;
+            var range = viewer.GetTasteRange();
+
+            return value >= range.Item1 && value <= range.Item2;
         }
 
         /// <summary>
@@ -422,8 +431,10 @@ namespace NetMud.Data.LookupData
         /// <returns>If this is observable</returns>
         public virtual bool IsSmellableTo(IEntity viewer)
         {
-            //TODO: Do detection lowering stuff
-            return viewer.GetOlefactoryModifier() > 0;
+            var value = 0;
+            var range = viewer.GetOlefactoryRange();
+
+            return value >= range.Item1 && value <= range.Item2;
         }
 
         /// <summary>
@@ -462,8 +473,10 @@ namespace NetMud.Data.LookupData
         /// <returns>If this is observable</returns>
         public virtual bool IsTouchableTo(IEntity viewer)
         {
-            //TODO: Do detection lowering stuff
-            return viewer.GetTactileModifier() > 0;
+            var value = 0;
+            var range = viewer.GetTactileRange();
+
+            return value >= range.Item1 && value <= range.Item2;
         }
 
         /// <summary>
@@ -511,7 +524,7 @@ namespace NetMud.Data.LookupData
         public virtual IOccurrence RenderResourceCollection(IEntity viewer, int amount)
         {
             if (!IsVisibleTo(viewer))
-                return null;
+                return new Occurrence(MessagingType.Visible);
 
             var me = GetSelf(MessagingType.Visible);
             me.Event.TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, amount.ToString()));

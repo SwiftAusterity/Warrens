@@ -144,7 +144,7 @@ namespace NetMud.Data.ConfigData
         /// <returns>If it can</returns>
         public bool CanIBeApprovedBy(StaffRank rank, IAccount approver)
         {
-            return rank >= CreatorRank || Creator.Equals(approver);
+            return rank == StaffRank.Admin || rank >= CreatorRank || Creator.Equals(approver);
         }
 
         /// <summary>

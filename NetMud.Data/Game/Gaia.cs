@@ -116,19 +116,6 @@ namespace NetMud.Data.Game
         }
 
         /// <summary>
-        /// Gets the actual vision modifier taking into account blindness and other factors
-        /// </summary>
-        /// <returns>the working modifier</returns>
-        public override float GetVisionModifier()
-        {
-            //Base case doesn't count "lumin vision range" mobiles/players have, inanimate entities are assumed to have unlimited light and dark vision
-
-            //TODO: Check for blindess/magical type affects
-
-            return DataTemplate<IGaiaData>().VisualAcuity;
-        }
-
-        /// <summary>
         /// Get the current luminosity rating of the place you're in
         /// </summary>
         /// <returns>The current Luminosity</returns>
@@ -260,10 +247,10 @@ namespace NetMud.Data.Game
                 var newPosition = celestial.Item2 + celestial.Item1.Velocity;
 
                 var orbitalRadius = (celestial.Item1.Apogee + celestial.Item1.Perigree) / 2;
-                float fullOrbitDistance = (float)Math.PI * (orbitalRadius ^ 2);
+                float fullOrbitDistance = (float)Math.PI * (float)Math.Pow(orbitalRadius, 2);
 
                 //There are 
-                if(newPosition > fullOrbitDistance)
+                if (newPosition > fullOrbitDistance)
                     newPosition = fullOrbitDistance - newPosition;
 
                 newCelestials.Add(new Tuple<ICelestial, float>(celestial.Item1, newPosition));

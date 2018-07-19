@@ -41,11 +41,6 @@ namespace NetMud.Data.EntityBackingData
         /// </summary>
         public HashSet<IAffect> Affects { get; set; }
 
-        /// <summary>
-        /// The perceptive vision strength modifier something has
-        /// </summary>
-        public virtual float VisualAcuity => 100;
-
         public EntityBackingDataPartial()
         {
             //empty instance for getting the dataTableName

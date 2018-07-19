@@ -1,4 +1,5 @@
-﻿using NetMud.DataStructure.Linguistic;
+﻿using NetMud.Communication.Messaging;
+using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.SupportingClasses;
 using System;
 
@@ -24,7 +25,7 @@ namespace NetMud.Data.System
 
         public Occurrence()
         {
-
+            
         }
 
         public Occurrence(ILexica happening, int strength, MessagingType sensoryType)
@@ -32,6 +33,25 @@ namespace NetMud.Data.System
             Event = happening;
             Strength = strength;
             SensoryType = sensoryType;
+        }
+
+        /// <summary>
+        /// Use this to create a "blank" occurrence
+        /// </summary>
+        public Occurrence(MessagingType sensoryType)
+        {
+            SensoryType = sensoryType;
+            Strength = -1;
+            Event = new Lexica(LexicalType.Noun, GrammaticalType.Descriptive, string.Empty);
+        }
+
+        /// <summary>
+        /// Render this lexica to a sentence fragment (or whole sentence if it's a Subject role)
+        /// </summary>
+        /// <returns>a sentence fragment</returns>
+        public override string ToString()
+        {
+            return Event.ToString();
         }
     }
 }

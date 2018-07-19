@@ -1,4 +1,5 @@
-﻿using NetMud.Data.EntityBackingData;
+﻿using NetMud.Communication.Messaging;
+using NetMud.Data.EntityBackingData;
 using NetMud.Data.System;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Entity;
@@ -9,6 +10,7 @@ using NetMud.DataStructure.Base.World;
 using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.Behaviors.System;
+using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Gaia.Geographical;
 using NetMud.Gaia.Meteorological;
@@ -178,18 +180,23 @@ namespace NetMud.Data.Game
                 foreach (var resource in NaturalResources)
                     me.Event.TryModify(resource.Key.RenderResourceCollection(viewer, resource.Value).Event);
 
-            return me;
-            /*
-                //Weather/biome
-                sb.Add(String.Format("A {0} and {1} {2} {3} area.", GeographicalUtilities.ConvertSizeToType(GetModelDimensions(), GetType()),
-                                                            MeteorologicalUtilities.ConvertTemperatureToType(EffectiveTemperature()),
-                                                            MeteorologicalUtilities.ConvertHumidityToType(EffectiveHumidity()),
-                                                            GetBiome()));
+            foreach (var celestial in GetVisibileCelestials(viewer))
+                me.Event.TryModify(celestial.RenderAsContents(viewer, sensoryTypes).Event);
 
-                //sb.AddRange(GetPathways().SelectMany(path => path.RenderAsContents(viewer)));
-                //sb.AddRange(GetContents<IInanimate>().SelectMany(path => path.RenderAsContents(viewer)));
-                //sb.AddRange(GetContents<IMobile>().Where(player => !player.Equals(viewer)).SelectMany(path => path.RenderAsContents(viewer)));
-            */
+            foreach (var path in GetPathways())
+                me.Event.TryModify(path.RenderAsContents(viewer, sensoryTypes).Event);
+
+            foreach (var obj in GetContents<IInanimate>())
+                me.Event.TryModify(obj.RenderAsContents(viewer, sensoryTypes).Event);
+
+            foreach (var mob in GetContents<IMobile>().Where(player => !player.Equals(viewer)))
+                me.Event.TryModify(mob.RenderAsContents(viewer, sensoryTypes).Event);
+
+            me.Event.TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, GeographicalUtilities.ConvertSizeToType(GetModelDimensions(), GetType()).ToString()));
+            me.Event.TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, MeteorologicalUtilities.ConvertHumidityToType(EffectiveHumidity()).ToString()));
+            me.Event.TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, MeteorologicalUtilities.ConvertTemperatureToType(EffectiveTemperature()).ToString()));
+
+            return me;
         }
 
 
@@ -204,19 +211,6 @@ namespace NetMud.Data.Game
         }
 
         /// <summary>
-        /// Gets the actual vision modifier taking into account blindness and other factors
-        /// </summary>
-        /// <returns>the working modifier</returns>
-        public override float GetVisionModifier()
-        {
-            //Base case doesn't count "lumin vision range" mobiles/players have, inanimate entities are assumed to have unlimited light and dark vision
-
-            //TODO: Check for blindess/magical type affects
-
-            return DataTemplate<IZoneData>().VisualAcuity;
-        }
-
-        /// <summary>
         /// Get the visibile celestials. Depends on luminosity, viewer perception and celestial positioning
         /// </summary>
         /// <param name="viewer">Whom is looking</param>
@@ -228,8 +222,8 @@ namespace NetMud.Data.Game
 
             var returnList = new List<ICelestial>();
 
-            if (!canSeeSky)
-                return returnList;
+            //if (!canSeeSky)
+            //   return returnList;
 
             var world = GetWorld();
             var celestials = world.CelestialPositions;
@@ -245,9 +239,6 @@ namespace NetMud.Data.Game
                 {
                     var celestialLumins = celestial.Item1.Luminosity * AstronomicalUtilities.GetCelestialLuminosityModifier(celestial.Item1, celestial.Item2, rotationalPosition, orbitalPosition
                                                                                                    , zD.Hemisphere, world.DataTemplate<IGaiaData>().RotationalAngle);
-
-                    //Modify the brightness of the thing by the person looking at it
-                    celestialLumins *= viewer.GetVisionModifier();
 
                     //how washed out is this thing compared to how bright the room is
                     if (celestialLumins >= currentBrightness)
@@ -265,11 +256,13 @@ namespace NetMud.Data.Game
         public override IEnumerable<IOccurrence> GetVisibleDescriptives(IEntity viewer)
         {
             var descriptives = base.GetVisibleDescriptives(viewer).ToList();
+            var currentLumins = GetCurrentLuminosity();
+            var viewerRange = viewer.GetVisualRange();
 
             descriptives.AddRange(DataTemplate<IZoneData>().Descriptives);
             descriptives.AddRange(GetVisibileCelestials(viewer).SelectMany(c => c.Descriptives));
 
-            return descriptives.Where(d => d.Strength * GetCurrentLuminosity() < viewer.GetVisionModifier());
+            return descriptives.Where(d => currentLumins >= viewerRange.Item1 / d.Strength && currentLumins <= d.Strength * viewerRange.Item2);
         }
 
         /// <summary>
@@ -282,9 +275,9 @@ namespace NetMud.Data.Game
             float lumins = 0;
             var canSeeSky = GeographicalUtilities.IsOutside(GetBiome());
 
-            //TODO: Add cloud cover
-            if (canSeeSky)
-            {
+            //TODO: Add cloud cover. Commented out for testing purposes ATM
+            //if (canSeeSky)
+            //{
                 var world = GetWorld();
                 var celestials = world.CelestialPositions;
                 var rotationalPosition = world.PlanetaryRotation;
@@ -297,14 +290,10 @@ namespace NetMud.Data.Game
 
                     lumins += celestial.Item1.Luminosity * celestialAffectModifier;
                 }
-            }
-
-            foreach (var dude in MobilesInside.EntitiesContained())
-                lumins += dude.GetCurrentLuminosity();
+            //}
 
             lumins += Contents.EntitiesContained().Sum(c => c.GetCurrentLuminosity());
             lumins += MobilesInside.EntitiesContained().Sum(c => c.GetCurrentLuminosity());
-            lumins += LiveCache.GetAll<ILocale>().Where(loc => loc.ParentLocation.Equals(this)).Sum(c => c.GetCurrentLuminosity());
 
             return lumins;
         }

@@ -121,19 +121,6 @@ namespace NetMud.Data.Game
         }
 
         /// <summary>
-        /// Gets the actual vision modifier taking into account blindness and other factors
-        /// </summary>
-        /// <returns>the working modifier</returns>
-        public override float GetVisionModifier()
-        {
-            //Base case doesn't count "lumin vision range" mobiles/players have, inanimate entities are assumed to have unlimited light and dark vision
-
-            //TODO: Check for blindess/magical type affects
-
-            return DataTemplate<IRoomData>().VisualAcuity;
-        }
-
-        /// <summary>
         /// Get the visibile celestials. Depends on luminosity, viewer perception and celestial positioning
         /// </summary>
         /// <param name="viewer">Whom is looking</param>

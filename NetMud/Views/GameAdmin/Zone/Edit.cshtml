@@ -15,7 +15,7 @@
             @Html.DescriptiveLabelFor(m => m.Hemisphere, new { @class = "col-sm-1 col-form-label" })
             <div class="col-md-3">
                 @Html.DropDownList("Hemisphere", Enum.GetNames(typeof(HemispherePlacement)).Select(rl =>
-                                                                                new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(HemispherePlacement), rl)).ToString(), Selected = rl.Equals(Enum.GetName(typeof(MessagingType), Model.SensoryType)) })
+                                                                                new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(HemispherePlacement), rl)).ToString(), Selected = rl.Equals(Enum.GetName(typeof(HemispherePlacement), Model.Hemisphere)) })
                                                                                 , "Select One", htmlAttributes: new { id = "Hemisphere", @class = "form-control" })
             </div>
 

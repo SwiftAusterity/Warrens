@@ -2,6 +2,7 @@
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Behaviors.System;
+using NetMud.DataStructure.SupportingClasses;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -82,6 +83,11 @@ namespace NetMud.Data.LookupData
         /// </summary>
         public IDictionary<DamageType, short> Resistance { get; set; }
 
+        /// <summary>
+        /// Set of output relevant to this exit. These are essentially single word descriptions to render the path
+        /// </summary>
+        public HashSet<IOccurrence> Descriptives { get; set; }
+
         [JsonProperty("Composition")]
         private IDictionary<BackingDataCacheKey, short> _composition { get; set; }
 
@@ -157,6 +163,9 @@ namespace NetMud.Data.LookupData
             returnList.Add("Solid Point", SolidPoint.ToString());
             returnList.Add("Gas Point", GasPoint.ToString());
             returnList.Add("Temperature Retention", TemperatureRetention.ToString());
+
+            foreach (var desc in Descriptives)
+                returnList.Add("Descriptives", string.Format("{0} ({1}): {2}", desc.SensoryType, desc.Strength, desc.Event.ToString()));
 
             return returnList;
         }

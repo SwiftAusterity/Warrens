@@ -7,7 +7,7 @@ namespace NetMud.DataStructure.Base.World
     /// <summary>
     /// Celestial bodies
     /// </summary>
-    public interface ICelestial : ILookupData, IDescribable
+    public interface ICelestial : ILookupData, IDescribable, ILookable, ISensible, IRenderInLocation
     {
         /// <summary>
         /// Orbit Type

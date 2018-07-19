@@ -23,10 +23,5 @@ namespace NetMud.DataStructure.Base.System
         /// </summary>
         /// <returns>height, length, width</returns>
         Tuple<int, int, int> GetModelDimensions();
-
-        /// <summary>
-        /// The perceptive vision strength modifier something has
-        /// </summary>
-        float VisualAcuity { get; }
     }
 }
