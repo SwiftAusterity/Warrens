@@ -10,11 +10,13 @@ using NutMud.Commands.Attributes;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NetMud.Commands.Comm
+namespace NetMud.Commands.GossipServer
 {
     [CommandKeyword("gossip", false)]
     [CommandPermission(StaffRank.Player)]
-    [CommandParameter(CommandUsage.Subject, typeof(string), new CacheReferenceType[] { CacheReferenceType.Text }, false)]
+    [CommandParameter(CommandUsage.Subject, typeof(string), new CacheReferenceType[] { CacheReferenceType.Entity }, "[a-zA-z]+@[a-zA-z]+", true)]
+    [CommandParameter(CommandUsage.Subject, typeof(string), new CacheReferenceType[] { CacheReferenceType.Entity }, "@[a-zA-z]+", true)]
+    [CommandParameter(CommandUsage.Target, typeof(string), new CacheReferenceType[] { CacheReferenceType.Text }, false)]
     [CommandRange(CommandRangeType.Touch, 0)]
     public class Gossip : CommandPartial
     {
@@ -38,6 +40,24 @@ namespace NetMud.Commands.Comm
                 sb.Add(string.Format("You have disabled the Gossip network.", Subject));
             else
             {
+                var directTarget = string.Empty;
+                var directTargetGame = string.Empty;
+
+                if (Subject != null)
+                {
+                    var names = Subject.ToString().Split(new char[] { '@' });
+
+                    if(names.Count() == 2)
+                    {
+                        directTarget = names[0];
+                        directTargetGame = names[1];
+                    }
+                    else if(names.Count() == 1)
+                    {
+                        directTarget = names[0];
+                    }
+                }
+
                 var gossipClient = LiveCache.Get<IGossipClient>("GossipWebClient");
 
                 var userName = Actor.DataTemplateName;
@@ -45,9 +65,24 @@ namespace NetMud.Commands.Comm
                 if (playerActor != null)
                     userName = playerActor.AccountHandle;
 
-                gossipClient.SendMessage(userName, Subject.ToString());
-
-                sb.Add(string.Format("You gossip '{0}'", Subject));
+                if (!string.IsNullOrWhiteSpace(directTarget) && !string.IsNullOrWhiteSpace(directTargetGame))
+                {
+                    gossipClient.SendDirectMessage(userName, directTargetGame, directTarget, Target.ToString());
+                    sb.Add(string.Format("You gossip '{0}'", Target));
+                }
+                else
+                {
+                    if (string.IsNullOrWhiteSpace(directTarget))
+                    {
+                        gossipClient.SendMessage(userName, Target.ToString());
+                        sb.Add(string.Format("You gossip '{0}'", Target));
+                    }
+                    else
+                    {
+                        gossipClient.SendMessage(userName, Target.ToString(), directTarget);
+                        sb.Add(string.Format("You gossip '{0}'", Target));
+                    }
+                }
             }
 
             var toActor = new Message(MessagingType.Audible, new Occurrence() { Strength = 1 })

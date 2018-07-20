@@ -18,20 +18,4 @@ namespace NetMud.Gossip.Messaging
         [JsonProperty("message")]
         public string MessageBody { get; set; }
     }
-
-    [Serializable]
-    public class NewDirectMessage : IPayload
-    {
-        [JsonIgnore]
-        public string Type => "tells/send";
-
-        [JsonProperty("name")]
-        public string Username { get; set; }
-
-        [JsonProperty("target")]
-        public string Target { get; set; }
-
-        [JsonProperty("message")]
-        public string MessageBody { get; set; }
-    }
 }

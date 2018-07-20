@@ -51,7 +51,7 @@
     <Compile Include="Attributes\CommandPartial.cs" />
     <Compile Include="Attributes\CommandPermissionAttribute.cs" />
     <Compile Include="Attributes\CommandRangeAttribute.cs" />
-    <Compile Include="Comm\Gossip.cs" />
+    <Compile Include="GossipServer\Gossip.cs" />
     <Compile Include="Comm\Shout.cs" />
     <Compile Include="Comm\Say.cs" />
     <Compile Include="EntityManipulation\Drop.cs" />

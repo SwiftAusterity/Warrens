@@ -8,6 +8,7 @@ namespace NetMud.DataStructure.Base.System
         void Launch();
         void Shutdown();
         void SendMessage(string userName, string messageBody, string channel = "gossip");
+        void SendDirectMessage(string userName, string targetGame, string targetPlayer, string messageBody);
         void SendNotification(string userName, AcquaintenceNotifications type);
     }
 }

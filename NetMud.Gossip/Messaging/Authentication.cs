@@ -30,7 +30,7 @@ namespace NetMud.Gossip.Messaging
             get
             {
                 Version v = Assembly.GetExecutingAssembly().GetName().Version;
-                return string.Format(CultureInfo.InvariantCulture, @"NetMud {0}.{1}.{2} (r{3})", v.Major, v.Minor, v.Build, v.Revision);
+                return string.Format(CultureInfo.InvariantCulture, @"netMUD {0}.{1}.{2} (r{3})", v.Major, v.Minor, v.Build, v.Revision);
             }
         }
     }

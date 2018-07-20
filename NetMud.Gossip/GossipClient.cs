@@ -153,11 +153,11 @@ namespace NetMud.Gossip
                     MyClient.Send(Serialize(response));
                     break;
                 case "tells/receive":
-                    var myName = newReply.Payload.playerName.Value;
-                    var theirName = newReply.Payload.name.Value;
+                    var myName = newReply.Payload.player.Value;
+                    var theirName = newReply.Payload.from.Value;
                     var theirGame = newReply.Payload.game.Value;
                     var messageBody = newReply.Payload.message.Value;
-                    var fullName = string.Format("{0}@{1}", newReply.Payload.game.Value, newReply.Payload.name.Value);
+                    var fullName = string.Format("{0}@{1}", theirGame, theirName);
 
                     var validPlayer = LiveCache.GetAll<IPlayer>().FirstOrDefault(player => player.Descriptor != null
                                                             && player.DataTemplate<ICharacter>().Account.Config.GossipSubscriber
@@ -221,6 +221,7 @@ namespace NetMud.Gossip
                 case "channels/subscribe":
                 case "channels/unsubscribe":
                 case "channels/send":
+                case "tells/send":
                 case "authenticate":
                     //These are the "request-response"
                     if (newReply.Status.Equals("failure"))
@@ -266,6 +267,26 @@ namespace NetMud.Gossip
 
             MyClient.Send(Serialize(message));
         }
+
+        public void SendDirectMessage(string userName, string targetGame, string targetPlayer, string messageBody)
+        {
+            var messageBlock = new NewDirectMessage()
+            {
+                Gamename = targetGame,
+                Target = targetPlayer,
+                MessageBody = messageBody,
+                Username = userName
+            };
+
+            var message = new TransportMessage()
+            {
+                Event = messageBlock.Type,
+                Payload = messageBlock
+            };
+
+            MyClient.Send(Serialize(message));
+        }
+
 
         public void SendNotification(string userName, AcquaintenceNotifications type)
         {
