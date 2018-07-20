@@ -46,6 +46,26 @@ namespace NetMud.Data.System
         }
 
         /// <summary>
+        /// Try to add a modifier to a lexica
+        /// </summary>
+        /// <param name="modifier">the lexica that is the modifier</param>
+        /// <returns>Whether or not it succeeded</returns>
+        public ILexica TryModify(ILexica modifier)
+        {
+            return Event.TryModify(modifier);
+        }
+
+        /// <summary>
+        /// Try to add a modifier to a lexica
+        /// </summary>
+        /// <param name="modifier">the lexica that is the modifier</param>
+        /// <returns>Whether or not it succeeded</returns>
+        public ILexica TryModify(LexicalType type, GrammaticalType role, string phrase)
+        {
+            return Event.TryModify(type, role, phrase);
+        }
+
+        /// <summary>
         /// Render this lexica to a sentence fragment (or whole sentence if it's a Subject role)
         /// </summary>
         /// <returns>a sentence fragment</returns>

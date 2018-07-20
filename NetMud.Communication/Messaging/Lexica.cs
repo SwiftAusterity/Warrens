@@ -65,18 +65,27 @@ namespace NetMud.Communication.Messaging
         /// Try to add a modifier to a lexica
         /// </summary>
         /// <param name="modifier">the lexica that is the modifier</param>
-        /// <param name="conjunction">the joining text</param>
         /// <returns>Whether or not it succeeded</returns>
-        public bool TryModify(ILexica modifier)
+        public ILexica TryModify(ILexica modifier)
         {
-            if (Modifiers.Contains(modifier))
-                return false;
-            else
-            {
+            if (!Modifiers.Contains(modifier))
                 Modifiers.Add(modifier);
-            }
 
-            return true;
+            return modifier;
+        }
+
+        /// <summary>
+        /// Try to add a modifier to a lexica
+        /// </summary>
+        /// <param name="modifier">the lexica that is the modifier</param>
+        /// <returns>Whether or not it succeeded</returns>
+        public ILexica TryModify(LexicalType type, GrammaticalType role, string phrase)
+        {
+            var modifier = new Lexica(type, role, phrase);
+            if (!Modifiers.Contains(modifier))
+                Modifiers.Add(modifier);
+
+            return modifier;
         }
 
         /// <summary>

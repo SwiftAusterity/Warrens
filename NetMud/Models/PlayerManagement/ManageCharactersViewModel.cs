@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.Authentication;
 using NetMud.DataStructure.SupportingClasses;
+using NetMud.DataStructure.Base.EntityBackingData;
 
 namespace NetMud.Models.PlayerManagement
 {
@@ -35,4 +36,31 @@ namespace NetMud.Models.PlayerManagement
         [Display(Name = "Chosen Role", Description = "The administrative role.")]
         public string ChosenRole { get; set; }
     }
+
+
+    public class AddEditCharacterViewModel : BaseViewModel
+    {
+        public ApplicationUser authedUser { get; set; }
+
+        public AddEditCharacterViewModel()
+        {
+        }
+
+        [Display(Name = "Super Senses", Description = "What sensory ranges are maxed for testing purposes.")]
+        [DataType(DataType.Text)]
+        public short[] SuperSenses { get; set; }
+
+        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
+        [Display(Name = "Given Name", Description = "First name.")]
+        [DataType(DataType.Text)]
+        public string Name { get; set; }
+
+        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
+        [Display(Name = "Family Name", Description = "Last Name.")]
+        [DataType(DataType.Text)]
+        public string SurName { get; set; }
+
+        public ICharacter DataObject { get; set; }
+    }
+
 }

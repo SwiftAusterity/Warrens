@@ -158,6 +158,65 @@ namespace NetMud.Controllers
             return RedirectToAction("ManageCharacters", new { Message = message });
         }
 
+        [HttpGet]
+        public ActionResult EditCharacter(long id)
+        {
+            string message = string.Empty;
+            var userId = User.Identity.GetUserId();
+            var user = UserManager.FindById(userId);
+
+            var obj = PlayerDataCache.Get(new PlayerDataCacheKey(typeof(ICharacter), user.GlobalIdentityHandle, id));
+            var model = new AddEditCharacterViewModel
+            {
+                authedUser  = user,
+                DataObject = obj,
+                Name = obj.Name,
+                SurName = obj.SurName,
+                SuperSenses = obj.SuperSenses.Where(ss => ss.Value).Select(ss => (short)ss.Key).ToArray()
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditCharacter(long id, AddEditCharacterViewModel vModel)
+        {
+            string message = string.Empty;
+            var userId = User.Identity.GetUserId();
+            var authedUser = UserManager.FindById(userId);
+            var obj = PlayerDataCache.Get(new PlayerDataCacheKey(typeof(ICharacter), authedUser.GlobalIdentityHandle, id));
+
+            if (obj == null)
+                message = "That character does not exist";
+            else
+            {
+                var senses = new Dictionary<MessagingType, bool>();
+                foreach(var senseValue in vModel.SuperSenses)
+                    senses.Add((MessagingType)senseValue, true);
+
+                foreach (var sense in Enum.GetNames(typeof(MessagingType)))
+                {
+                    var currentEnum = (MessagingType)Enum.Parse(typeof(MessagingType), sense);
+
+                    if(!senses.ContainsKey(currentEnum))
+                        senses.Add(currentEnum, false);
+                }
+
+                obj.SuperSenses = senses;
+
+                if(obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+                {
+                    LoggingUtility.Log("*WEB* - EditCharacter[" + authedUser.GameAccount.GlobalIdentityHandle + "]", LogChannels.AccountActivity);
+                    message = "Edit Successful.";
+                }
+                else
+                    message = "Error; edit failed.";
+            }
+
+            return RedirectToAction("ManageCharacters", new { Message = message });
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult RemoveCharacter(long ID, string authorize)

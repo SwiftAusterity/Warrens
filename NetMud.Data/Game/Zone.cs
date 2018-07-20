@@ -223,7 +223,7 @@ namespace NetMud.Data.Game
             var returnList = new List<ICelestial>();
 
             //if (!canSeeSky)
-            //   return returnList;
+            //  return returnList;
 
             var world = GetWorld();
             var celestials = world.CelestialPositions;

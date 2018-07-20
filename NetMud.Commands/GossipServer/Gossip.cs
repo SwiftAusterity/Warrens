@@ -68,7 +68,7 @@ namespace NetMud.Commands.GossipServer
                 if (!string.IsNullOrWhiteSpace(directTarget) && !string.IsNullOrWhiteSpace(directTargetGame))
                 {
                     gossipClient.SendDirectMessage(userName, directTargetGame, directTarget, Target.ToString());
-                    sb.Add(string.Format("You gossip '{0}'", Target));
+                    sb.Add(string.Format("You tell {1}@{2} '{0}'", Target, directTarget, directTargetGame));
                 }
                 else
                 {
@@ -80,7 +80,7 @@ namespace NetMud.Commands.GossipServer
                     else
                     {
                         gossipClient.SendMessage(userName, Target.ToString(), directTarget);
-                        sb.Add(string.Format("You gossip '{0}'", Target));
+                        sb.Add(string.Format("You {1} '{0}'", Target, directTarget));
                     }
                 }
             }

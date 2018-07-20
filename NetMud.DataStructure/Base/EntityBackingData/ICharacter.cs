@@ -3,6 +3,8 @@ using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.SupportingClasses;
+using System;
+using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Base.EntityBackingData
 {
@@ -29,8 +31,7 @@ namespace NetMud.DataStructure.Base.EntityBackingData
 
         /// <summary>
         /// Family name for character
-        /// </summary>
-        
+        /// </summary>     
         string SurName { get; set; }
 
         /// <summary>
@@ -42,6 +43,11 @@ namespace NetMud.DataStructure.Base.EntityBackingData
         /// Is this character not graduated from the tutorial
         /// </summary>
         bool StillANoob { get; set; }
+
+        /// <summary>
+        /// Sensory overrides for staff member characters
+        /// </summary>
+        IDictionary<MessagingType, bool> SuperSenses { get; set; }
 
         /// <summary>
         /// Last known location Id for character in live world

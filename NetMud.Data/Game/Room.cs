@@ -133,8 +133,8 @@ namespace NetMud.Data.Game
             var canSeeSky = GeographicalUtilities.IsOutside(GetBiome()) 
                             && dT.Coordinates.Item3 >= zone.DataTemplate<IZoneData>().BaseElevation;
 
-            if (!canSeeSky)
-                return Enumerable.Empty<ICelestial>();
+            //if (!canSeeSky)
+            //    return Enumerable.Empty<ICelestial>();
 
             //The zone knows about the celestial positioning
             return zone.GetVisibileCelestials(viewer);

@@ -149,6 +149,7 @@ namespace NetMud.Data.Game
             return this;
         }
 
+        #region sensory range checks
         /// <summary>
         /// Gets the actual vision modifier taking into account blindness and other factors
         /// </summary>
@@ -156,6 +157,10 @@ namespace NetMud.Data.Game
         public override Tuple<float, float> GetVisualRange()
         {
             var dT = DataTemplate<ICharacter>();
+
+            if(dT.SuperSenses[MessagingType.Visible])
+                return new Tuple<float, float>(-999999, 999999);
+
             var returnTop = (float)dT.RaceData.VisionRange.Item1;
             var returnBottom = (float)dT.RaceData.VisionRange.Item2;
 
@@ -163,6 +168,102 @@ namespace NetMud.Data.Game
 
             return new Tuple<float, float>(returnTop, returnBottom);
         }
+
+        /// <summary>
+        /// Gets the actual modifier taking into account other factors
+        /// </summary>
+        /// <returns>the working modifier</returns>
+        public override Tuple<float, float> GetAuditoryRange()
+        {
+            var dT = DataTemplate<ICharacter>();
+
+            if (dT.SuperSenses[MessagingType.Audible])
+                return new Tuple<float, float>(-999999, 999999);
+
+            var returnTop = 1; //TODO: Add this to race or something
+            var returnBottom = 100;
+
+            //TODO: Check for magical type affects
+
+            return new Tuple<float, float>(returnTop, returnBottom);
+        }
+
+        /// <summary>
+        /// Gets the actual modifier taking into account other factors
+        /// </summary>
+        /// <returns>the working modifier</returns>
+        public override Tuple<float, float> GetPsychicRange()
+        {
+            var dT = DataTemplate<ICharacter>();
+
+            if (dT.SuperSenses[MessagingType.Psychic])
+                return new Tuple<float, float>(-999999, 999999);
+
+            var returnTop = 0; //TODO: Add this to race or something
+            var returnBottom = 0;
+
+            //TODO: Check for magical type affects
+
+            return new Tuple<float, float>(returnTop, returnBottom);
+        }
+
+        /// <summary>
+        /// Gets the actual modifier taking into account other factors
+        /// </summary>
+        /// <returns>the working modifier</returns>
+        public override Tuple<float, float> GetTasteRange()
+        {
+            var dT = DataTemplate<ICharacter>();
+
+            if (dT.SuperSenses[MessagingType.Taste])
+                return new Tuple<float, float>(-999999, 999999);
+
+            var returnTop = 1; //TODO: Add this to race or something
+            var returnBottom = 100;
+
+            //TODO: Check for magical type affects
+
+            return new Tuple<float, float>(returnTop, returnBottom);
+        }
+
+        /// <summary>
+        /// Gets the actual modifier taking into account other factors
+        /// </summary>
+        /// <returns>the working modifier</returns>
+        public override Tuple<float, float> GetTactileRange()
+        {
+            var dT = DataTemplate<ICharacter>();
+
+            if (dT.SuperSenses[MessagingType.Tactile])
+                return new Tuple<float, float>(-999999, 999999);
+
+            var returnTop = 1; //TODO: Add this to race or something
+            var returnBottom = 100;
+
+            //TODO: Check for magical type affects
+
+            return new Tuple<float, float>(returnTop, returnBottom);
+        }
+
+        /// <summary>
+        /// Gets the actual modifier taking into account other factors
+        /// </summary>
+        /// <returns>the working modifier</returns>
+        public override Tuple<float, float> GetOlefactoryRange()
+        {
+            var dT = DataTemplate<ICharacter>();
+
+            if (dT.SuperSenses[MessagingType.Olefactory])
+                return new Tuple<float, float>(-999999, 999999);
+
+            var returnTop = 1; //TODO: Add this to race or something
+            var returnBottom = 100;
+
+            //TODO: Check for magical type affects
+
+            return new Tuple<float, float>(returnTop, returnBottom);
+        }
+
 
         /// <summary>
         /// Get the current luminosity rating of the place you're in
@@ -179,6 +280,7 @@ namespace NetMud.Data.Game
 
             return lumins;
         }
+        #endregion
 
         #region Rendering
         #endregion

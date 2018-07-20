@@ -395,6 +395,7 @@
     <Content Include="Views\GameAdmin\Gaia\Edit.cshtml" />
     <Content Include="Views\GameAdmin\Gaia\Index.cshtml" />
     <Content Include="Views\GameAdmin\Gaia\Celestials.cshtml" />
+    <Content Include="Views\Manage\EditCharacter.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />

@@ -34,7 +34,16 @@ namespace NetMud.DataStructure.Linguistic
         /// <param name="modifier">the lexica that is the modifier</param>
         /// <param name="conjunction">the joining text</param>
         /// <returns>Whether or not it succeeded</returns>
-        bool TryModify(ILexica modifier);
+        ILexica TryModify(ILexica modifier);
+
+        /// <summary>
+        /// Try to add a modifier to a lexica
+        /// </summary>
+        /// <param name="modifier">the lexica that is the modifier</param>
+        /// <param name="conjunction">the joining text</param>
+        /// <returns>Whether or not it succeeded</returns>
+        ILexica TryModify(LexicalType type, GrammaticalType role, string phrase);
+
 
         /// <summary>
         /// Get the dictata from this lexica

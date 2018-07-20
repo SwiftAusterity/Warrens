@@ -80,6 +80,11 @@ namespace NetMud.Data.EntityBackingData
         public bool StillANoob { get; set; }
 
         /// <summary>
+        /// Sensory overrides for staff member characters
+        /// </summary>
+        public IDictionary<MessagingType, bool> SuperSenses { get; set; }
+
+        /// <summary>
         /// Set of output relevant to this exit. These are essentially single word descriptions to render the path
         /// </summary>
         public HashSet<IOccurrence> Descriptives { get; set; }
@@ -148,11 +153,13 @@ namespace NetMud.Data.EntityBackingData
         /// </summary>
         public Character()
         {
+            SuperSenses = new Dictionary<MessagingType, bool>();
         }
 
         [JsonConstructor]
         public Character(GlobalPosition currentLocation)
         {
+            SuperSenses = new Dictionary<MessagingType, bool>();
             CurrentLocation = currentLocation;
         }
 
@@ -244,6 +251,17 @@ namespace NetMud.Data.EntityBackingData
                 Created = DateTime.Now;
                 Creator = creator;
                 CreatorRank = rank;
+
+                //Default godsight to all false on creation unless you're making a new administrator
+                SuperSenses = new Dictionary<MessagingType, bool>
+                {
+                    { MessagingType.Audible, rank == StaffRank.Admin },
+                    { MessagingType.Olefactory, rank == StaffRank.Admin },
+                    { MessagingType.Psychic, rank == StaffRank.Admin },
+                    { MessagingType.Tactile, rank == StaffRank.Admin },
+                    { MessagingType.Taste, rank == StaffRank.Admin },
+                    { MessagingType.Visible, rank == StaffRank.Admin }
+                };
 
                 //No approval stuff necessary here
                 ApproveMe(creator, rank);
