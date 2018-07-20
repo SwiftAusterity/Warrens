@@ -89,6 +89,74 @@ namespace NetMud.Communication.Messaging
         }
 
         /// <summary>
+        /// Create a narrative description from this
+        /// </summary>
+        /// <param name="normalization">How much sentence splitting should be done</param>
+        /// <param name="verbosity">A measure of how much flourish should be added as well as how far words get synonym-upgraded by "finesse". (0 to 100)</param>
+        /// <param name="chronology">The time tensing of the sentence structure</param>
+        /// <param name="perspective">The personage of the sentence structure</param>
+        /// <param name="omitName">Should we omit the proper name of the initial subject entirely (and only resort to pronouns)</param>
+        /// <returns>A long description</returns>
+        public string Describe(NarrativeNormalization normalization, int verbosity, NarrativeChronology chronology = NarrativeChronology.Present, 
+            NarrativePerspective perspective = NarrativePerspective.SecondPerson, bool omitName = true)
+        {
+            var sentences = new List<Tuple<SentenceType, ILexica>>();
+
+            var subjects = new List<ILexica>
+            {
+                this
+            };
+            subjects.AddRange(Modifiers.Where(mod => mod.Role == GrammaticalType.Subject));
+
+            foreach(var subject in subjects)
+            {
+                var lexicas = new List<ILexica>();
+                switch(normalization)
+                {
+                    case NarrativeNormalization.Hemmingway:
+                        //Don't just add the name in as its own sentence that's cray
+                        if (subject.Modifiers.Any(mod => mod.Role != GrammaticalType.Descriptive && mod.Role != GrammaticalType.Subject))
+                        {
+                            var newSubject = new Lexica(subject.Type, subject.Role, subject.Phrase)
+                            {
+                                Modifiers = new HashSet<ILexica>(subject.Modifiers.Where(mod => mod.Role != GrammaticalType.Descriptive))
+                            };
+
+                            lexicas.Add(newSubject);
+                        }
+
+                        foreach(var adj in subject.Modifiers.Where(mod => mod.Role == GrammaticalType.Descriptive))
+                        {
+                            var newSplitSubject = new Lexica(subject.Type, subject.Role, subject.Phrase);
+                            newSplitSubject.TryModify(adj).TryModify(LexicalType.Conjunction, GrammaticalType.Descriptive, "is");
+                            lexicas.Add(newSplitSubject);
+                        }
+                        break;
+                    case NarrativeNormalization.Runon: //todo: figure this one out
+                    case NarrativeNormalization.Normal:
+                        lexicas.Add(subject);
+                        break;
+                }
+
+                foreach (var lex in lexicas)
+                    sentences.Add(new Tuple<SentenceType, ILexica>(SentenceType.Statement, lex));
+            }
+
+            //join the sentences together with a space and add punctuation
+            var finalOutput = new List<string>();
+
+            foreach(var sentence in sentences)
+            {
+                if (sentence.Item2.Equals(this))
+                    finalOutput.Add(sentence.Item2.ToString() + LexicalProcessor.GetPunctuationMark(sentence.Item1));
+                else
+                    finalOutput.Add(sentence.Item2.Describe(normalization, verbosity, chronology, perspective, omitName));
+            }
+
+            return string.Join(" ", finalOutput);
+        }
+
+        /// <summary>
         /// Render this lexica to a sentence fragment (or whole sentence if it's a Subject role)
         /// </summary>
         /// <returns>a sentence fragment</returns>
@@ -112,7 +180,7 @@ namespace NetMud.Communication.Messaging
                         }
                         else
                         {
-                            sb.AppendFormat("{0}, {1}", Phrase, adjectives.Select(adj => adj.ToString()).CommaList(RenderUtility.SplitListType.AllComma));
+                            sb.AppendFormat("{1} {0}", Phrase, adjectives.Select(adj => adj.ToString()).CommaList(RenderUtility.SplitListType.AllComma));
                         }
                     }
                     else
@@ -182,9 +250,9 @@ namespace NetMud.Communication.Messaging
                                                  .Select(adj => adj.ToString()).CommaList(RenderUtility.SplitListType.AllComma);
 
                 var conjunctive = adjectives.FirstOrDefault(adj => adj.Type == LexicalType.Conjunction || adj.Type == LexicalType.Interjection);
-                var conjunctiveString = conjunctive != null ? conjunctive.ToString() : string.Empty;
+                var conjunctiveString = conjunctive != null ? conjunctive.ToString() + " " : string.Empty;
 
-                described = string.Format("{1} {2} {0}", phrase, conjunctiveString, decorativeString);
+                described = string.Format("{0} {1}{2}", phrase, conjunctiveString, decorativeString);
             }
 
             return described;

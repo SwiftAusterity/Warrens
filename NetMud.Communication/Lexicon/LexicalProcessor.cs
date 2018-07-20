@@ -53,5 +53,30 @@ namespace NetMud.Communication.Lexicon
 
             dictata.SystemSave();
         }
+
+        public static string GetPunctuationMark(SentenceType type)
+        {
+            var punctuation = string.Empty;
+            switch(type)
+            {
+                case SentenceType.Exclamation:
+                    punctuation = "!";
+                    break;
+                case SentenceType.ExclamitoryQuestion:
+                    punctuation = "?!";
+                    break;
+                case SentenceType.Partial:
+                    punctuation = ";";
+                    break;
+                case SentenceType.Question:
+                    punctuation = "?";
+                    break;
+                case SentenceType.Statement:
+                    punctuation = ".";
+                    break;
+            }
+
+            return punctuation;
+        }
     }
 }

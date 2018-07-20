@@ -12,6 +12,7 @@ using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Base.World;
 using NetMud.DataStructure.Behaviors.Rendering;
+using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Interp;
 using NetMud.Utility;
@@ -159,7 +160,7 @@ namespace NetMud.Websock
                 Inventory = inventory.ToArray(),
                 Populace = populace.ToArray(),
                 Exits = pathways.ToArray(),
-                LocationDescriptive = currentLocation.CurrentLocation.RenderToLook(_currentPlayer).ToString()
+                LocationDescriptive = currentLocation.CurrentLocation.RenderToLook(_currentPlayer).Describe(NarrativeNormalization.Hemmingway, 1)
             };
 
             //The next two are mostly hard coded, TODO, also fix how we get the map as that's an admin thing

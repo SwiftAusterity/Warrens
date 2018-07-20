@@ -25,7 +25,7 @@ namespace NetMud.Data.System
 
         public Occurrence()
         {
-            
+
         }
 
         public Occurrence(ILexica happening, int strength, MessagingType sensoryType)
@@ -63,6 +63,21 @@ namespace NetMud.Data.System
         public ILexica TryModify(LexicalType type, GrammaticalType role, string phrase)
         {
             return Event.TryModify(type, role, phrase);
+        }
+
+        /// <summary>
+        /// Create a narrative description from this
+        /// </summary>
+        /// <param name="normalization">How much sentence splitting should be done</param>
+        /// <param name="verbosity">A measure of how much flourish should be added as well as how far words get synonym-upgraded by "finesse". (0 to 100)</param>
+        /// <param name="chronology">The time tensing of the sentence structure</param>
+        /// <param name="perspective">The personage of the sentence structure</param>
+        /// <param name="omitName">Should we omit the proper name of the initial subject entirely (and only resort to pronouns)</param>
+        /// <returns>A long description</returns>
+        public string Describe(NarrativeNormalization normalization, int verbosity, NarrativeChronology chronology = NarrativeChronology.Present,
+            NarrativePerspective perspective = NarrativePerspective.SecondPerson, bool omitName = true)
+        {
+            return Event.Describe(normalization, verbosity, chronology, perspective, omitName);
         }
 
         /// <summary>
