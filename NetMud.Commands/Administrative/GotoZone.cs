@@ -13,7 +13,7 @@ namespace NutMud.Commands.Administrative
     /// <summary>
     /// Invokes the current container's RenderToLook
     /// </summary>
-    [CommandKeyword("gotozone", false)]
+    [CommandKeyword("gotozone", false, true, true)]
     [CommandPermission(StaffRank.Guest)]
     [CommandParameter(CommandUsage.Subject, typeof(Zone), new CacheReferenceType[] { CacheReferenceType.Entity }, false)] //for names
     [CommandRange(CommandRangeType.Global, 0)]

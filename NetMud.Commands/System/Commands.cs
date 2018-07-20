@@ -13,7 +13,7 @@ using System.Text;
 
 namespace NetMud.Commands.System
 {
-    [CommandKeyword("commands", false)]
+    [CommandKeyword("commands", false, false, true)]
     [CommandPermission(StaffRank.Player)]
     [CommandRange(CommandRangeType.Touch, 0)]
     public class Commands : CommandPartial

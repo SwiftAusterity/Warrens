@@ -17,7 +17,7 @@ namespace NutMud.Commands.System
     /// <summary>
     /// Spawns a new inanimate into the world.  Missing target parameter = container you're standing in
     /// </summary>
-    [CommandKeyword("SpawnNewObject", false)]
+    [CommandKeyword("SpawnNewObject", false, true, true)]
     [CommandPermission(StaffRank.Admin)]
     [CommandParameter(CommandUsage.Subject, typeof(InanimateData), new CacheReferenceType[] { CacheReferenceType.Data }, "[0-9]+", false)] //for IDs
     [CommandParameter(CommandUsage.Subject, typeof(InanimateData), new CacheReferenceType[] { CacheReferenceType.Data }, "[a-zA-z]+", false)] //for names

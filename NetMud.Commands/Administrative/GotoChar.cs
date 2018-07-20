@@ -13,7 +13,7 @@ namespace NutMud.Commands.Administrative
     /// <summary>
     /// Invokes the current container's RenderToLook
     /// </summary>
-    [CommandKeyword("gotochar", false)]
+    [CommandKeyword("gotochar", false, true, true)]
     [CommandPermission(StaffRank.Guest)]
     [CommandParameter(CommandUsage.Subject, typeof(Player), new CacheReferenceType[] { CacheReferenceType.Entity }, true)]
     [CommandParameter(CommandUsage.Subject, typeof(Intelligence), new CacheReferenceType[] { CacheReferenceType.Entity }, true)]

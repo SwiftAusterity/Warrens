@@ -6,13 +6,14 @@ using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.SupportingClasses;
+using NetMud.Utility;
 using NutMud.Commands.Attributes;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace NetMud.Commands.GossipServer
 {
-    [CommandKeyword("gossip", false)]
+    [CommandKeyword("gossip", false, true, true)]
     [CommandPermission(StaffRank.Player)]
     [CommandParameter(CommandUsage.Subject, typeof(string), new CacheReferenceType[] { CacheReferenceType.Entity }, "[a-zA-z]+@[a-zA-z]+", true)]
     [CommandParameter(CommandUsage.Subject, typeof(string), new CacheReferenceType[] { CacheReferenceType.Entity }, "@[a-zA-z]+", true)]
@@ -105,6 +106,8 @@ namespace NetMud.Commands.GossipServer
             var sb = new List<string>
             {
                 "Valid Syntax: gossip &lt;text&gt;",
+                "gossip @&lt;channel&gt; &lt;text&gt;".PadWithString(14, "&nbsp;", true),
+                "gossip &lt;username&gt;@&lt;gamename&gt; &lt;text&gt;".PadWithString(14, "&nbsp;", true)
             };
 
             return sb;

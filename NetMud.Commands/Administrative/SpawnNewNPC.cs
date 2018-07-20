@@ -16,7 +16,7 @@ namespace NutMud.Commands.System
     /// <summary>
     /// Spawns a new NPC into the world. Missing target parameter = container you're standing in
     /// </summary>
-    [CommandKeyword("SpawnNewNPC", false)]
+    [CommandKeyword("SpawnNewNPC", false, true, true)]
     [CommandPermission(StaffRank.Admin)]
     [CommandParameter(CommandUsage.Subject, typeof(NetMud.Data.EntityBackingData.NonPlayerCharacter), new CacheReferenceType[] { CacheReferenceType.Data }, "[0-9]+", false)] //for IDs
     [CommandParameter(CommandUsage.Subject, typeof(NetMud.Data.EntityBackingData.NonPlayerCharacter), new CacheReferenceType[] { CacheReferenceType.Data }, "[a-zA-z]+", false)] //for names

@@ -581,6 +581,10 @@
       <Project>{1e404cfb-4ced-42ad-b28e-bfee270c88f9}</Project>
       <Name>NetMud.CentralControl</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NetMud.Commands\NetMud.Commands.csproj">
+      <Project>{39B7F303-CF48-41DF-B56B-325987E7F7E6}</Project>
+      <Name>NetMud.Commands</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NetMud.Communication\NetMud.Communication.csproj">
       <Project>{7F19324F-1B9C-467D-816A-74A36EB74CDE}</Project>
       <Name>NetMud.Communication</Name>

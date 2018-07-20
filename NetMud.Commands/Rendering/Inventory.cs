@@ -9,8 +9,8 @@ using System.Collections.Generic;
 
 namespace NetMud.Commands.Rendering
 {
-    [CommandKeyword("inventory", false)]
-    [CommandKeyword("inv", false)]
+    [CommandKeyword("inventory", false, true, true)]
+    [CommandKeyword("inv", false, false, true)]
     [CommandPermission(StaffRank.Player)]
     [CommandRange(CommandRangeType.Touch, 0)]
     public class Inventory : CommandPartial

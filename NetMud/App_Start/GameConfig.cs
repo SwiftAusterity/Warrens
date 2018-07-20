@@ -1,10 +1,16 @@
 ﻿using NetMud.Backup;
 using NetMud.CentralControl;
+using NetMud.Communication.Lexicon;
+using NetMud.Communication.Messaging;
 using NetMud.Data.ConfigData;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Base.World;
+using NetMud.DataStructure.Linguistic;
+using NutMud.Commands.Attributes;
 using System;
+using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace NetMud
@@ -39,6 +45,9 @@ namespace NetMud
             if (!hotBack.RestoreLiveBackup())
                 hotBack.NewWorldFallback();
 
+            //Hoover up all the verbs from commands that someone might have coded
+            ProcessSystemVerbs();
+
             var gossipServer = new Gossip.GossipClient();
             Task.Run(() => gossipServer.Launch());
 
@@ -50,6 +59,21 @@ namespace NetMud
 
             //every 2 hours after 1 hour
             Processor.StartSingeltonChainedLoop("BackingDataFullBackup", 60 * 60, 120 * 60, -1, backingDataBackupFunction);
+        }
+
+        private static void ProcessSystemVerbs()
+        {
+            var commandsAssembly = Assembly.GetAssembly(typeof(CommandParameterAttribute));
+            var loadedCommands = commandsAssembly.GetTypes().Where(t => t.GetInterfaces().Contains(typeof(ICommand)));
+
+            foreach (var comm in loadedCommands)
+            {
+                var commandVerbs = comm.GetCustomAttributes<CommandKeywordAttribute>().Where(att => !att.PreventBecomingAVerb).Select(att => att.Keyword);
+
+                foreach (var verb in commandVerbs)
+                    LexicalProcessor.VerifyDictata(new Lexica(LexicalType.Verb, GrammaticalType.Subject, verb));
+            }
+
         }
     }
 }

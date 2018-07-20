@@ -8,9 +8,9 @@ using System.Text;
 
 namespace NetMud.Commands.Social
 {
-    [CommandKeyword("laid", false)]
-    [CommandKeyword("fucked", false)]
-    [CommandKeyword("fapfapfap", false)]
+    [CommandKeyword("laid", false, false, true)]
+    [CommandKeyword("fucked", false, false, true)]
+    [CommandKeyword("fapfapfap", false, false, true)]
     [CommandPermission(StaffRank.Player)]
     [CommandRange(CommandRangeType.Touch, 0)]
     public class Laid : CommandPartial
