@@ -194,7 +194,6 @@
     <Compile Include="Behaviors\System\INeedApproval.cs" />
     <Compile Include="Behaviors\System\ISpawnAsMultiple.cs" />
     <Compile Include="Behaviors\System\ISpawnAsSingleton.cs" />
-    <Compile Include="Linguistic\NarrativeChronology.cs" />
     <Compile Include="Linguistic\NarrativeNormalization.cs" />
     <Compile Include="Linguistic\NarrativePerspective.cs" />
     <Compile Include="Linguistic\SentenceType.cs" />

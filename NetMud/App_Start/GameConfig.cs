@@ -71,7 +71,7 @@ namespace NetMud
                 var commandVerbs = comm.GetCustomAttributes<CommandKeywordAttribute>().Where(att => !att.PreventBecomingAVerb).Select(att => att.Keyword);
 
                 foreach (var verb in commandVerbs)
-                    LexicalProcessor.VerifyDictata(new Lexica(LexicalType.Verb, GrammaticalType.Subject, verb));
+                    LexicalProcessor.VerifyDictata(new Dictata() { WordType = LexicalType.Verb, Name = verb, Elegance = 1, Severity = 1, Quality = 1, Tense = LexicalTense.Present });
             }
 
         }

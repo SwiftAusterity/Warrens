@@ -97,7 +97,7 @@ namespace NetMud.Communication.Messaging
         /// <param name="perspective">The personage of the sentence structure</param>
         /// <param name="omitName">Should we omit the proper name of the initial subject entirely (and only resort to pronouns)</param>
         /// <returns>A long description</returns>
-        public string Describe(NarrativeNormalization normalization, int verbosity, NarrativeChronology chronology = NarrativeChronology.Present, 
+        public string Describe(NarrativeNormalization normalization, int verbosity, LexicalTense chronology = LexicalTense.Present, 
             NarrativePerspective perspective = NarrativePerspective.SecondPerson, bool omitName = true)
         {
             var sentences = new List<Tuple<SentenceType, ILexica>>();
