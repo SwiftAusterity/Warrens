@@ -135,6 +135,7 @@ div.form-group a.removeRow {
     background-color: black;
     color: chartreuse;
     text-align: center;
+    cursor: pointer;
 }
 
     .dimModelNode[data-value='0'] {
@@ -176,6 +177,15 @@ div.form-group a.removeRow {
     border: 5px solid grey;
 }
 
+    .twoDModel a {
+        text-decoration: none;
+        color: chartreuse;
+        cursor: pointer;
+    }
+
+        .twoDModel a:empty {
+            color: darkgrey;
+        }
 
 div.roomAsciiMap {
     width: 100%;

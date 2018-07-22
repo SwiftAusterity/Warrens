@@ -16,7 +16,7 @@ namespace NetMud.Physics
         /// <returns>the flattened view</returns>
         public static string FlattenModelForWeb(IDimensionalModelData model)
         {
-            switch(model.ModelType)
+            switch (model.ModelType)
             {
                 case DimensionalModelType.Flat:
                     return FlattenFlatModel(model, true);
@@ -181,35 +181,52 @@ namespace NetMud.Physics
             //load the plane up with blanks
             List<string[]> flattenedPlane = new List<string[]>
             {
-                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
-                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
-                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
-                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
-                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
-                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
-                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
-                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
-                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
-                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
-                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " }
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " }
             };
 
             short xI, yI;
-            for (yI = 0; yI < 11; yI++)
+            for (yI = 0; yI < 21; yI++)
             {
-                for (xI = 0; xI < 11; xI++)
+                for (xI = 0; xI < 21; xI++)
                 {
                     short xIs = (short)(xI + 1);
                     short yIs = (short)(yI + 1);
 
                     var node = model.GetNode(xIs, yIs);
 
-                    var nodeString = DamageTypeToCharacter(node.Style, xI < 5);
+                    var nodeString = string.Empty;
 
-                    if (forWeb)
-                        nodeString = string.Format("<a title='{0}'>{1}</a>"
-                            , node.Composition == null ? string.Empty : node.Composition.Name 
-                            , nodeString);
+                    if (node != null)
+                    {
+                        nodeString = DamageTypeToCharacter(node.Style, xI < 5);
+
+                        if (forWeb)
+                            nodeString = string.Format("<a title='{0}'>{1}</a>"
+                                , node.Composition == null ? string.Empty : node.Composition.Name
+                                , nodeString);
+                    }
+                    else if (forWeb)
+                        nodeString = "<a title=''> </a>";
 
                     flattenedPlane[yI][xI] = nodeString;
                 }

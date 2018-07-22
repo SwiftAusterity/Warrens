@@ -8,19 +8,19 @@ namespace NetMud.DataStructure.Base.Supporting
     public interface IDimensionalModel
     {
         /// <summary>
-        /// Y axis of the 11 plane model
+        /// Y axis of the 21 plane model
         /// </summary>
         
         int Length { get; set; }
 
         /// <summary>
-        /// Measurement of all 11 planes vertically
+        /// Measurement of all 21 planes vertically
         /// </summary>
         
         int Height { get; set; }
 
         /// <summary>
-        /// X axis of the 11 plane model
+        /// X axis of the 21 plane model
         /// </summary>
         
         int Width { get; set; }

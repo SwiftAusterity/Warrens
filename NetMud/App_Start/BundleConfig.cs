@@ -33,8 +33,7 @@ namespace NetMud
                       "~/Content/bootstrap.lumen.css",
                       "~/Content/bootstrap-markdown.min.css",
                       "~/Content/bootstrap-datetimepicker.min.css",
-                      "~/Content/popper.css",
-                      "~/Content/Site.css"));
+                      "~/Content/popper.css"));
 
             bundles.Add(new StyleBundle("~/Content/jqueryui-css").Include(
                       "~/Content/jquery-ui.css",

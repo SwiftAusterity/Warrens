@@ -38,23 +38,28 @@
             <a href="#" class="btn" id="clearFields" style="color: red;">Clear Fields</a>
         </div>
 
-        for (i = 10; i >= 0; i--)
+        for (i = 20; i >= 0; i--)
         {
+            var tagName = Model.DataObject.ModelPlanes.Count() - 1 >= i ? Model.DataObject.ModelPlanes.ElementAt(i).TagName : "";
             <div class="row">
                 <div>
                     @Html.DescriptiveLabelFor(m => m.ModelPlaneNames, new { @class = "col-sm-1 col-form-label" })
-                    <input type="text" id="ModelPlaneNames" name="ModelPlaneNames" value="@Model.DataObject.ModelPlanes.ElementAt(i).TagName" class="col-sm-1" />
+                    <input type="text" id="ModelPlaneNames" name="ModelPlaneNames" value="@tagName" class="col-sm-1" />
                 </div>
                 <div>
                     <div class="col-md-offset-0 col-md-10 dimModelPlane">
                         @Html.DescriptiveLabelFor(m => m.CoordinateDamageTypes, new { @class = "col-sm-1 col-form-label" })
 
-                        @for (var n = 0; n <= 10; n++)
+                        <span style="width: 15px;">@(i + 1)</span>
+                        @for (var n = 0; n <= 20; n++)
                         {
-                            var nodeValue = (short)Model.DataObject.ModelPlanes.ElementAt(i).ModelNodes.ElementAt(n).Style;
-                            var nodeText = Model.DataObject.ModelPlanes.ElementAt(i).ModelNodes.ElementAt(n).Style.GetDescription().Substring(0, 1);
+                            var nodeValue = Model.DataObject.ModelPlanes.Count() - 1 >= i && Model.DataObject.ModelPlanes.ElementAt(i).ModelNodes.Count() - 1 >= n
+                                            ? (short)Model.DataObject.ModelPlanes.ElementAt(i).ModelNodes.ElementAt(n).Style : -1;
+                            var nodeText = Model.DataObject.ModelPlanes.Count() - 1 >= i && Model.DataObject.ModelPlanes.ElementAt(i).ModelNodes.Count() - 1 >= n
+                                            ? Model.DataObject.ModelPlanes.ElementAt(i).ModelNodes.ElementAt(n).Style.GetDescription().Substring(0, 1) : "";
                             <div class="dimModelNode" data-value="@nodeValue"><input type="hidden" id="CoordinateDamageTypes" name="CoordinateDamageTypes" class="CoordinateDamageTypes" value="@nodeValue" /><span id="nodeValue" class="nodeValue">@nodeText</span></div>
                         }
+                        <span style="width: 15px;">@(i + 1)</span>
                     </div>
                 </div>
             </div>

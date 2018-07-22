@@ -6,13 +6,13 @@ using System.Linq;
 namespace NetMud.Data.LookupData
 {
     /// <summary>
-    /// A single 11x11 grid of the 11 planes that compose the dimensional model
+    /// A single 11x11 grid of the 21 planes that compose the dimensional model
     /// </summary>
     [Serializable]
     public class DimensionalModelPlane : IDimensionalModelPlane
     {
         /// <summary>
-        /// The collection of 121 nodes in the plane
+        /// The collection of [math] nodes in the plane
         /// </summary>
         public HashSet<IDimensionalModelNode> ModelNodes { get; set; }
 

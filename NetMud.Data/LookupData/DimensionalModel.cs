@@ -17,17 +17,17 @@ namespace NetMud.Data.LookupData
     public class DimensionalModel : IDimensionalModel
     {
         /// <summary>
-        /// Y axis of the 11 plane model
+        /// Y axis of the 21 plane model
         /// </summary>
         public int Length { get; set; }
 
         /// <summary>
-        /// Measurement of all 11 planes vertically
+        /// Measurement of all 21 planes vertically
         /// </summary>
         public int Height { get; set; }
 
         /// <summary>
-        /// X axis of the 11 plane model
+        /// X axis of the 21 plane model
         /// </summary>
         public int Width { get; set; }
 

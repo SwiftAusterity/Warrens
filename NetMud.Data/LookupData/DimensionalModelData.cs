@@ -32,7 +32,7 @@ namespace NetMud.Data.LookupData
         public DimensionalModelType ModelType { get; set; }
 
         /// <summary>
-        /// The 11 planes that compose the physical model
+        /// The 21 planes that compose the physical model
         /// </summary>
         public HashSet<IDimensionalModelPlane> ModelPlanes { get; set; }
 
@@ -51,9 +51,9 @@ namespace NetMud.Data.LookupData
         }
 
         /// <summary>
-        /// Create model serialized from a comma delimited string of an 11x11 plane
+        /// Create model serialized from a comma delimited string of an 21x21 plane
         /// </summary>
-        /// <param name="delimitedPlane">comma delimited string of an 11x11 plane</param>
+        /// <param name="delimitedPlane">comma delimited string of an 21x21 plane</param>
         public DimensionalModelData(string delimitedPlanes, DimensionalModelType type)
         {
             ModelType = type;
@@ -115,8 +115,8 @@ namespace NetMud.Data.LookupData
         {
             switch (ModelType)
             {
-                case DimensionalModelType.Flat: //2d has 11 planes, but they're all flat (11 X nodes)
-                    return ModelPlanes.Count == 11 && !ModelPlanes.Any(plane => string.IsNullOrWhiteSpace(plane.TagName) || plane.ModelNodes.Count != 11);
+                case DimensionalModelType.Flat: //2d has 21 planes, but they're all flat (21 X nodes)
+                    return ModelPlanes.Count == 21 && !ModelPlanes.Any(plane => string.IsNullOrWhiteSpace(plane.TagName) || plane.ModelNodes.Count != 21);
                 case DimensionalModelType.None: //0d is always valid, it doesn't care about the model
                     return true;
             }
@@ -136,7 +136,7 @@ namespace NetMud.Data.LookupData
 
             try
             {
-                short yCount = 11;
+                short yCount = 21;
                 foreach (var myString in delimitedPlanes.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
                 {
                     var newPlane = new DimensionalModelPlane();
@@ -167,7 +167,7 @@ namespace NetMud.Data.LookupData
                         xCount++;
                     }
 
-                    //This ensures the linecount is always 11 for flats
+                    //This ensures the linecount is always 21 for flats
                     ModelPlanes.Add(newPlane);
                     yCount--;
                 }
