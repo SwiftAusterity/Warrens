@@ -22,6 +22,18 @@ namespace NetMud.Interp
         {
             try
             {
+                //kind of cheaty for now
+                if(commandString.StartsWith("lexicaltest "))
+                {
+                    var lexicalInterp = new LexicalInterpretationEngine();
+                    return lexicalInterp.Parse(actor, commandString.Replace("lexicaltest ", "")).Select(dict => string.Format("{0} : {1}", dict.Name, dict.WordType));
+                }
+                else if(commandString.StartsWith("lexicalpush "))
+                {
+                    var lexicalInterp = new LexicalInterpretationEngine();
+                    return lexicalInterp.Parse(actor, commandString.Replace("lexicaltest ", ""), true).Select(dict => string.Format("{0} : {1}", dict.Name, dict.WordType));
+                }
+
                 var commandContext = new Context(commandString, actor);
 
                 //Derp, we had an error with accessing the command somehow, usually to do with parameter collection or access permissions
@@ -35,7 +47,7 @@ namespace NetMud.Interp
                 //TODO: Dont return this sort of thing, testing phase only, should return some sort of randomized error
                 LoggingUtility.LogError(ex);
 
-                return new string[] { "SYSTEM ERROR ALPHA ONLY: " + ex.Message };
+                return new string[] { "SYSTEM ERROR ALEPH PHASE ONLY SHOWN (this was already logged): " + ex.Message };
             }
 
             return new string[] { };
