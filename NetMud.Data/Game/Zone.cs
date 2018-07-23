@@ -192,9 +192,23 @@ namespace NetMud.Data.Game
             foreach (var mob in GetContents<IMobile>().Where(player => !player.Equals(viewer)))
                 me.Event.TryModify(mob.RenderAsContents(viewer, sensoryTypes).Event);
 
-            me.Event.TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, GeographicalUtilities.ConvertSizeToType(GetModelDimensions(), GetType()).ToString()));
-            me.Event.TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, MeteorologicalUtilities.ConvertHumidityToType(EffectiveHumidity()).ToString()));
-            me.Event.TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, MeteorologicalUtilities.ConvertTemperatureToType(EffectiveTemperature()).ToString()));
+            var area = new Lexica(LexicalType.Noun, GrammaticalType.Subject, "space");
+            area.TryModify(LexicalType.Conjunction, GrammaticalType.Descriptive, "the");
+            area.TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, GeographicalUtilities.ConvertSizeToType(GetModelDimensions(), GetType()).ToString());
+
+            area.TryModify(LexicalType.Verb, GrammaticalType.Verb, "extends")
+                .TryModify(LexicalType.Noun, GrammaticalType.DirectObject, "you")
+                    .TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, "around");
+
+            me.TryModify(area);
+
+            var humidityTemp = new Lexica(LexicalType.Noun, GrammaticalType.Subject, "air");
+            humidityTemp.TryModify(LexicalType.Verb, GrammaticalType.Verb, "feels").TryModify(new Lexica[] {
+                new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, MeteorologicalUtilities.ConvertHumidityToType(EffectiveHumidity()).ToString()),
+                new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, MeteorologicalUtilities.ConvertTemperatureToType(EffectiveTemperature()).ToString())
+            });
+
+            me.TryModify(humidityTemp);
 
             return me;
         }

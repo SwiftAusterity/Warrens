@@ -153,6 +153,9 @@ namespace NetMud.Communication.Messaging
             var isMe = true;
             foreach (var subject in subjects)
             {
+                if (subject.Type == LexicalType.Noun && !subject.Modifiers.Any(mod => mod.Type == LexicalType.Conjunction))
+                    subject.TryModify(LexicalType.Conjunction, GrammaticalType.Descriptive, "the");
+
                 var lexicas = new List<ILexica>();
                 switch (normalization)
                 {
@@ -188,7 +191,8 @@ namespace NetMud.Communication.Messaging
                         }
                         break;
                     default:
-                        if (isMe)
+                        //This is to catch directly described entities
+                        if (isMe && subject.Modifiers.Any(mod => mod.Role == GrammaticalType.Descriptive))
                         {
                             Lexica newSubject = new Lexica(subject.Type, subject.Role, subject.Phrase);
                             newSubject.TryModify(subject.Modifiers.Where(mod => mod.Role != GrammaticalType.Descriptive).ToArray());
@@ -196,7 +200,7 @@ namespace NetMud.Communication.Messaging
 
                             lexicas.Add(newSubject);
                         }
-                        else
+                        else if(subject.Modifiers.Any())
                             lexicas.Add(subject);
                         break;
                 }

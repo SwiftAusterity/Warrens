@@ -160,7 +160,7 @@ namespace NetMud.Websock
                 Inventory = inventory.ToArray(),
                 Populace = populace.ToArray(),
                 Exits = pathways.ToArray(),
-                LocationDescriptive = currentLocation.CurrentLocation.RenderToLook(_currentPlayer).Describe(NarrativeNormalization.Runon, 1)
+                LocationDescriptive = currentLocation.CurrentLocation.RenderToLook(_currentPlayer).Describe(NarrativeNormalization.Normal, 1)
             };
 
             //The next two are mostly hard coded, TODO, also fix how we get the map as that's an admin thing
