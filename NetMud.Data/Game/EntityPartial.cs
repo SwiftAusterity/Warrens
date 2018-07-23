@@ -413,7 +413,7 @@ namespace NetMud.Data.Game
             {
                 SensoryType = type,
                 Strength = strength,
-                Event = new Lexica() { Phrase = DataTemplateName, Type = LexicalType.Noun, Role = GrammaticalType.Subject }
+                Event = new Lexica() { Phrase = DataTemplateName, Type = LexicalType.ProperNoun, Role = GrammaticalType.Subject }
             };
         }
         #endregion
@@ -761,10 +761,15 @@ namespace NetMud.Data.Game
         /// <returns>the output strings</returns>
         public virtual IOccurrence RenderAsContents(IEntity viewer, MessagingType[] sensoryTypes)
         {
-            if(sensoryTypes == null || sensoryTypes.Count() == 0)
-                 sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
+            if (sensoryTypes == null || sensoryTypes.Count() == 0)
+                sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
 
-            return GetImmediateDescription(viewer, sensoryTypes);
+            //Add the existential modifiers
+            var me = GetImmediateDescription(viewer, sensoryTypes);
+            me.TryModify(LexicalType.Conjunction, GrammaticalType.Verb, "is")
+                .TryModify(LexicalType.Noun, GrammaticalType.DirectObject, "here");
+
+            return me;
         }
 
         /// <summary>

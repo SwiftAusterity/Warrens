@@ -60,9 +60,39 @@ namespace NetMud.Data.System
         /// </summary>
         /// <param name="modifier">the lexica that is the modifier</param>
         /// <returns>Whether or not it succeeded</returns>
+        public void TryModify(ILexica[] modifier)
+        {
+            Event.TryModify(modifier);
+        }
+
+        /// <summary>
+        /// Try to add a modifier to a lexica
+        /// </summary>
+        /// <param name="modifier">the lexica that is the modifier</param>
+        /// <returns>Whether or not it succeeded</returns>
         public ILexica TryModify(LexicalType type, GrammaticalType role, string phrase)
         {
             return Event.TryModify(type, role, phrase);
+        }
+
+        /// <summary>
+        /// Try to add a modifier to a lexica
+        /// </summary>
+        /// <param name="modifier">the lexica that is the modifier</param>
+        /// <returns>Whether or not it succeeded</returns>
+        public ILexica TryModify(Tuple<LexicalType, GrammaticalType, string> modifier)
+        {
+            return TryModify(modifier.Item1, modifier.Item2, modifier.Item3);
+        }
+
+        /// <summary>
+        /// Try to add a modifier to a lexica
+        /// </summary>
+        /// <param name="modifier">the lexica that is the modifier</param>
+        /// <returns>Whether or not it succeeded</returns>
+        public void TryModify(Tuple<LexicalType, GrammaticalType, string>[] modifier)
+        {
+            Event.TryModify(modifier);
         }
 
         /// <summary>

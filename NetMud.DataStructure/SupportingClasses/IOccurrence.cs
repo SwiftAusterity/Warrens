@@ -1,4 +1,5 @@
 ﻿using NetMud.DataStructure.Linguistic;
+using System;
 
 namespace NetMud.DataStructure.SupportingClasses
 {
@@ -26,7 +27,6 @@ namespace NetMud.DataStructure.SupportingClasses
         /// Try to add a modifier to a lexica
         /// </summary>
         /// <param name="modifier">the lexica that is the modifier</param>
-        /// <param name="conjunction">the joining text</param>
         /// <returns>Whether or not it succeeded</returns>
         ILexica TryModify(ILexica modifier);
 
@@ -34,9 +34,29 @@ namespace NetMud.DataStructure.SupportingClasses
         /// Try to add a modifier to a lexica
         /// </summary>
         /// <param name="modifier">the lexica that is the modifier</param>
-        /// <param name="conjunction">the joining text</param>
+        /// <returns>Whether or not it succeeded</returns>
+        void TryModify(ILexica[] modifier);
+
+        /// <summary>
+        /// Try to add a modifier to a lexica
+        /// </summary>
+        /// <param name="modifier">the lexica that is the modifier</param>
         /// <returns>Whether or not it succeeded</returns>
         ILexica TryModify(LexicalType type, GrammaticalType role, string phrase);
+
+        /// <summary>
+        /// Try to add a modifier to a lexica
+        /// </summary>
+        /// <param name="modifier">the lexica that is the modifier</param>
+        /// <returns>Whether or not it succeeded</returns>
+        ILexica TryModify(Tuple<LexicalType, GrammaticalType, string> modifier);
+
+        /// <summary>
+        /// Try to add a modifier to a lexica
+        /// </summary>
+        /// <param name="modifier">the lexica that is the modifier</param>
+        /// <returns>Whether or not it succeeded</returns>
+        void TryModify(Tuple<LexicalType, GrammaticalType, string>[] modifier);
 
         /// <summary>
         /// Create a narrative description from this

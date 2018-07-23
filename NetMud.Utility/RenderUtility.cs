@@ -12,6 +12,41 @@ namespace NetMud.Utility
     {
         #region Extensions
         /// <summary>
+        /// Make the first letter caps, the rest lower
+        /// </summary>
+        /// <param name="value">the string to caps</param>
+        /// <returns>String</returns>
+        public static string ProperCaps(this string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                return value;
+
+            var words = value.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            return string.Join(" ", words.Select(word => word.CapsFirstLetter()));
+        }
+
+        /// <summary>
+        /// Converts the string to uppercase for the first letter
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="onlyFirstLetter"></param>
+        /// <returns></returns>
+        public static string CapsFirstLetter(this string value, bool onlyFirstLetter = false)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                return value;
+
+            if (value.Length == 1)
+                return value.ToUpperInvariant();
+
+            var firstLetter = value.Substring(0, 1).ToUpperInvariant();
+            var wordRemainder = onlyFirstLetter ? value.Substring(1) : value.Substring(1).ToLowerInvariant();
+
+            return string.Format("{0}{1}", firstLetter, wordRemainder);
+        }
+
+        /// <summary>
         /// Split a string with a single delimiter
         /// </summary>
         /// <param name="value">the string being split</param>

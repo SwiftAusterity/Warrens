@@ -241,7 +241,7 @@ namespace NetMud.Data.Game
                                                                                                    , zD.Hemisphere, world.DataTemplate<IGaiaData>().RotationalAngle);
 
                     //how washed out is this thing compared to how bright the room is
-                    if (celestialLumins >= currentBrightness)
+                    if (celestialLumins >= currentBrightness / 10)
                         returnList.Add(celestial.Item1);
                 }
             }

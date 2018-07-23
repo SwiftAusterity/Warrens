@@ -518,7 +518,18 @@ namespace NetMud.Data.LookupData
             if (sensoryTypes == null || sensoryTypes.Count() == 0)
                 sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
 
-            return GetImmediateDescription(viewer, sensoryTypes);
+            //Add the existential modifiers
+            var me = GetImmediateDescription(viewer, sensoryTypes);
+            me.TryModify(LexicalType.Conjunction, GrammaticalType.Verb, "is")
+                .TryModify(LexicalType.Noun, GrammaticalType.DirectObject, "ground")
+                    .TryModify(
+                        new Tuple<LexicalType, GrammaticalType, string>[] {
+                                new Tuple<LexicalType, GrammaticalType, string>(LexicalType.Conjunction, GrammaticalType.Descriptive, "the"),
+                                new Tuple<LexicalType, GrammaticalType, string>(LexicalType.Conjunction, GrammaticalType.IndirectObject, "in")
+                            }
+                        );
+
+            return me;
         }
 
         public virtual IOccurrence RenderResourceCollection(IEntity viewer, int amount)
