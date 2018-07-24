@@ -1,4 +1,5 @@
-﻿using NetMud.Data.DataIntegrity;
+﻿using NetMud.Communication.Messaging;
+using NetMud.Data.DataIntegrity;
 using NetMud.Data.EntityBackingData;
 using NetMud.Data.System;
 using NetMud.DataAccess.Cache;
@@ -11,8 +12,10 @@ using NetMud.DataStructure.Base.World;
 using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.Behaviors.System;
+using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Gaia.Geographical;
+using NetMud.Gaia.Meteorological;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -174,14 +177,56 @@ namespace NetMud.Data.Game
         /// <returns>the output strings</returns>
         public override IOccurrence RenderToLook(IEntity viewer)
         {
-            if (!IsVisibleTo(viewer))
-                return null;
+            return GetFullDescription(viewer, new[] { MessagingType.Visible });
+        }
 
-            var me = GetFullDescription(viewer, new[] { MessagingType.Visible });
+        /// <summary>
+        /// Render this in a short descriptive style
+        /// </summary>
+        /// <param name="viewer">The entity looking</param>
+        /// <returns>the output strings</returns>
+        public override IOccurrence GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes)
+        {
+            if (sensoryTypes == null || sensoryTypes.Count() == 0)
+                sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
+
+            var me = base.GetFullDescription(viewer, sensoryTypes);
+
+            if (me == null)
+                me = new Occurrence(sensoryTypes[0]);
 
             if (NaturalResources != null)
                 foreach (var resource in NaturalResources)
                     me.Event.TryModify(resource.Key.RenderResourceCollection(viewer, resource.Value).Event);
+
+            foreach (var celestial in GetVisibileCelestials(viewer))
+                me.Event.TryModify(celestial.RenderAsContents(viewer, sensoryTypes).Event);
+
+            foreach (var path in GetPathways())
+                me.Event.TryModify(path.RenderAsContents(viewer, sensoryTypes).Event);
+
+            foreach (var obj in GetContents<IInanimate>())
+                me.Event.TryModify(obj.RenderAsContents(viewer, sensoryTypes).Event);
+
+            foreach (var mob in GetContents<IMobile>().Where(player => !player.Equals(viewer)))
+                me.Event.TryModify(mob.RenderAsContents(viewer, sensoryTypes).Event);
+
+            var area = new Lexica(LexicalType.Noun, GrammaticalType.Subject, "space");
+            area.TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, GeographicalUtilities.ConvertSizeToType(GetModelDimensions(), GetType()).ToString());
+
+            area.TryModify(LexicalType.Verb, GrammaticalType.Verb, "extends")
+                .TryModify(LexicalType.Pronoun, GrammaticalType.DirectObject, "you")
+                    .TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, "around");
+
+            me.TryModify(area);
+
+            var humidityTemp = new Lexica(LexicalType.Noun, GrammaticalType.Subject, "air");
+            humidityTemp.TryModify(LexicalType.Verb, GrammaticalType.Verb, "feels").TryModify(new Lexica[] {
+                new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, MeteorologicalUtilities.ConvertHumidityToType(EffectiveHumidity()).ToString()),
+                new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, MeteorologicalUtilities.ConvertTemperatureToType(EffectiveTemperature()).ToString())
+            });
+
+            me.TryModify(humidityTemp);
 
             return me;
         }

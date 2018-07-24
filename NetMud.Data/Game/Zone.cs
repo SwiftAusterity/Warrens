@@ -153,51 +153,159 @@ namespace NetMud.Data.Game
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public override IOccurrence GetImmediateDescription(IEntity viewer, MessagingType[] sensoryTypes)
-        {
-            if (sensoryTypes == null || sensoryTypes.Count() == 0)
-                sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
-
-            return GetSelf(MessagingType.Visible);
-        }
-
-        /// <summary>
-        /// Render this in a short descriptive style
-        /// </summary>
-        /// <param name="viewer">The entity looking</param>
-        /// <returns>the output strings</returns>
         public override IOccurrence GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes)
         {
-            if (!IsVisibleTo(viewer))
-                return null;
-
             if (sensoryTypes == null || sensoryTypes.Count() == 0)
                 sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
 
-            var me = GetSelf(MessagingType.Visible);
+            //Self becomes the first sense in the list
+            IOccurrence me = null;
+            foreach (var sense in sensoryTypes)
+            {
+                switch (sense)
+                {
+                    case MessagingType.Audible:
+                        if (!IsAudibleTo(viewer))
+                            continue;
 
-            if (NaturalResources != null)
-                foreach (var resource in NaturalResources)
-                    me.Event.TryModify(resource.Key.RenderResourceCollection(viewer, resource.Value).Event);
+                        if (me == null)
+                            me = GetSelf(sense);
+
+                        var aDescs = GetAudibleDescriptives(viewer);
+
+                        if (aDescs.Any(adesc => adesc.Event.Role != GrammaticalType.Subject))
+                        {
+                            var uberSounds = new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you");
+                            uberSounds.TryModify(LexicalType.Verb, GrammaticalType.Verb, "hear")
+                                .TryModify(aDescs.Where(adesc => adesc.Event.Role != GrammaticalType.Subject).Select(adesc => adesc.Event));
+
+                            me.TryModify(uberSounds);
+                        }
+
+                        foreach (var desc in aDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
+                        {
+                            desc.TryModify(LexicalType.Conjunction, GrammaticalType.Verb, "in")
+                                    .TryModify(LexicalType.Noun, GrammaticalType.DirectObject, "distance")
+                                        .TryModify(LexicalType.Conjunction, GrammaticalType.Descriptive, "the");
+
+                            me.TryModify(desc);
+                        }
+                        break;
+                    case MessagingType.Olefactory:
+                        if (!IsSmellableTo(viewer))
+                            continue;
+
+                        if (me == null)
+                            me = GetSelf(sense);
+
+                        var oDescs = GetSmellableDescriptives(viewer);
+
+                        if (oDescs.Any(adesc => adesc.Event.Role != GrammaticalType.Subject))
+                        {
+                            var uberSmells = new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you");
+                            uberSmells.TryModify(LexicalType.Verb, GrammaticalType.Verb, "smell")
+                                .TryModify(oDescs.Where(adesc => adesc.Event.Role != GrammaticalType.Subject).Select(adesc => adesc.Event));
+
+                            me.TryModify(uberSmells);
+                        }
+
+                        foreach (var desc in oDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
+                        {
+                            desc.TryModify(LexicalType.Verb, GrammaticalType.Verb, "in")
+                                .TryModify(LexicalType.Noun, GrammaticalType.DirectObject, "air")
+                                    .TryModify(LexicalType.Conjunction, GrammaticalType.Descriptive, "the");
+
+
+                            me.TryModify(desc);
+                        }
+                        break;
+                    case MessagingType.Psychic:
+                        if (!IsSensibleTo(viewer))
+                            continue;
+
+                        if (me == null)
+                            me = GetSelf(sense);
+
+                        var pDescs = GetPsychicDescriptives(viewer);
+
+                        if (pDescs.Any(adesc => adesc.Event.Role != GrammaticalType.Subject))
+                        {
+                            var uberPsy = new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you");
+                            uberPsy.TryModify(LexicalType.Verb, GrammaticalType.Verb, "sense")
+                                .TryModify(pDescs.Where(adesc => adesc.Event.Role != GrammaticalType.Subject).Select(adesc => adesc.Event));
+
+                            me.TryModify(uberPsy);
+                        }
+
+                        foreach (var desc in pDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
+                        {
+                            desc.TryModify(LexicalType.Conjunction, GrammaticalType.Verb, "in")
+                                    .TryModify(LexicalType.Noun, GrammaticalType.DirectObject, "area")
+                                        .TryModify(LexicalType.Conjunction, GrammaticalType.Descriptive, "the");
+
+                            me.TryModify(desc);
+                        }
+                        break;
+                    case MessagingType.Tactile:
+                        continue;
+                    case MessagingType.Visible:
+                        if (!IsVisibleTo(viewer))
+                            continue;
+
+                        if (me == null)
+                            me = GetSelf(sense);
+
+                        var vDescs = GetVisibleDescriptives(viewer);
+
+                        me.TryModify(vDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
+
+                        var collectiveSight = new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you");
+
+                        var uberSight = collectiveSight.TryModify(LexicalType.Verb, GrammaticalType.Verb, "see");
+                        uberSight.TryModify(vDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
+
+                        foreach (var desc in vDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
+                        {
+                            var newSight = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase);
+                            newSight.TryModify(desc.Event.Modifiers);
+
+                            newSight.TryModify(LexicalType.Noun, GrammaticalType.IndirectObject, "distance")
+                                        .TryModify(LexicalType.Conjunction, GrammaticalType.Descriptive, "in")
+                                            .TryModify(LexicalType.Conjunction, GrammaticalType.Descriptive, "the");
+
+                            uberSight.TryModify(newSight);
+                        }
+
+                        if (uberSight.Modifiers.Any(mod => mod.Role == GrammaticalType.DirectObject))
+                            me.TryModify(collectiveSight);
+                        break;
+                }
+            }
+            if (me == null)
+                return new Occurrence(sensoryTypes[0]);
 
             foreach (var celestial in GetVisibileCelestials(viewer))
                 me.Event.TryModify(celestial.RenderAsContents(viewer, sensoryTypes).Event);
 
-            foreach (var path in GetPathways())
-                me.Event.TryModify(path.RenderAsContents(viewer, sensoryTypes).Event);
+            //TODO: different way of rendering natural resources
+            if (NaturalResources != null)
+                foreach (var resource in NaturalResources)
+                    me.Event.TryModify(resource.Key.RenderResourceCollection(viewer, resource.Value).Event);
 
-            foreach (var obj in GetContents<IInanimate>())
-                me.Event.TryModify(obj.RenderAsContents(viewer, sensoryTypes).Event);
+            //TODO: Different way of rendering pathways - likely as the locale
+            //foreach (var path in GetPathways())
+            //    me.Event.TryModify(path.RenderAsContents(viewer, sensoryTypes).Event);
 
-            foreach (var mob in GetContents<IMobile>().Where(player => !player.Equals(viewer)))
-                me.Event.TryModify(mob.RenderAsContents(viewer, sensoryTypes).Event);
+            //TODO: Different way of rendering people and inanimates
+            //foreach (var mob in GetContents<IMobile>().Where(player => !player.Equals(viewer)))
+            //    me.Event.TryModify(mob.RenderAsContents(viewer, sensoryTypes).Event);
 
             var area = new Lexica(LexicalType.Noun, GrammaticalType.Subject, "space");
-            area.TryModify(LexicalType.Conjunction, GrammaticalType.Descriptive, "the");
+            area.TryModify(LexicalType.Conjunction, GrammaticalType.Descriptive, "this");
             area.TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, GeographicalUtilities.ConvertSizeToType(GetModelDimensions(), GetType()).ToString());
 
             area.TryModify(LexicalType.Verb, GrammaticalType.Verb, "extends")
-                .TryModify(LexicalType.Noun, GrammaticalType.DirectObject, "you")
+                .TryModify(LexicalType.Pronoun, GrammaticalType.DirectObject, "you")
                     .TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, "around");
 
             me.TryModify(area);
@@ -292,18 +400,18 @@ namespace NetMud.Data.Game
             //TODO: Add cloud cover. Commented out for testing purposes ATM
             //if (canSeeSky)
             //{
-                var world = GetWorld();
-                var celestials = world.CelestialPositions;
-                var rotationalPosition = world.PlanetaryRotation;
-                var orbitalPosition = world.OrbitalPosition;
+            var world = GetWorld();
+            var celestials = world.CelestialPositions;
+            var rotationalPosition = world.PlanetaryRotation;
+            var orbitalPosition = world.OrbitalPosition;
 
-                foreach (var celestial in celestials)
-                {
-                    var celestialAffectModifier = AstronomicalUtilities.GetCelestialLuminosityModifier(celestial.Item1, celestial.Item2, rotationalPosition, orbitalPosition
-                                                                                                        , zD.Hemisphere, world.DataTemplate<IGaiaData>().RotationalAngle);
+            foreach (var celestial in celestials)
+            {
+                var celestialAffectModifier = AstronomicalUtilities.GetCelestialLuminosityModifier(celestial.Item1, celestial.Item2, rotationalPosition, orbitalPosition
+                                                                                                    , zD.Hemisphere, world.DataTemplate<IGaiaData>().RotationalAngle);
 
-                    lumins += celestial.Item1.Luminosity * celestialAffectModifier;
-                }
+                lumins += celestial.Item1.Luminosity * celestialAffectModifier;
+            }
             //}
 
             lumins += Contents.EntitiesContained().Sum(c => c.GetCurrentLuminosity());

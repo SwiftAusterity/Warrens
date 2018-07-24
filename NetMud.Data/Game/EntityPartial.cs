@@ -364,16 +364,71 @@ namespace NetMud.Data.Game
         /// <returns>the output strings</returns>
         public virtual IOccurrence GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes)
         {
-            if (!IsVisibleTo(viewer))
-                return new Occurrence(MessagingType.Visible);
-
             if (sensoryTypes == null || sensoryTypes.Count() == 0)
                 sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
 
-            var self = GetSelf(MessagingType.Visible);
+            //Self becomes the first sense in the list
+            IOccurrence self = null;
+            foreach(var sense in sensoryTypes)
+            {
+                switch(sense)
+                {
+                    case MessagingType.Audible:
+                        if (!IsAudibleTo(viewer))
+                            continue;
 
-            foreach (var descriptive in GetVisibleDescriptives(viewer))
-                self.Event.TryModify(descriptive.Event);
+                        if (self == null)
+                            self = GetSelf(sense);
+
+                        self.TryModify(GetAudibleDescriptives(viewer));
+                        break;
+                    case MessagingType.Olefactory:
+                        if (!IsSmellableTo(viewer))
+                            continue;
+
+                        if (self == null)
+                            self = GetSelf(sense);
+
+                        self.TryModify(GetSmellableDescriptives(viewer));
+                        break;
+                    case MessagingType.Psychic:
+                        if (!IsSensibleTo(viewer))
+                            continue;
+
+                        if (self == null)
+                            self = GetSelf(sense);
+
+                        self.TryModify(GetPsychicDescriptives(viewer));
+                        break;
+                    case MessagingType.Tactile:
+                        if (!IsTouchableTo(viewer))
+                            continue;
+
+                        if (self == null)
+                            self = GetSelf(sense);
+
+                        self.TryModify(GetTouchDescriptives(viewer));
+                        break;
+                    case MessagingType.Taste:
+                        if (!IsTastableTo(viewer))
+                            continue;
+
+                        if (self == null)
+                            self = GetSelf(sense);
+
+                        self.TryModify(GetTasteDescriptives(viewer));
+                        break;
+                    case MessagingType.Visible:
+                        if (!IsVisibleTo(viewer))
+                            continue;
+
+                        if (self == null)
+                            self = GetSelf(sense);
+
+                        self.TryModify(GetVisibleDescriptives(viewer));
+                        break;
+                }
+            }
 
             return self;
         }
@@ -383,15 +438,37 @@ namespace NetMud.Data.Game
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public virtual IOccurrence GetImmediateDescription(IEntity viewer, MessagingType[] sensoryTypes)
+        public virtual IOccurrence GetImmediateDescription(IEntity viewer, MessagingType sense)
         {
-            if (!IsVisibleTo(viewer))
-                return new Occurrence(MessagingType.Visible);
+            switch (sense)
+            {
+                case MessagingType.Audible:
+                    if (!IsAudibleTo(viewer))
+                        return new Occurrence(sense);
+                    break;
+                case MessagingType.Olefactory:
+                    if (!IsSmellableTo(viewer))
+                        return new Occurrence(sense);
+                    break;
+                case MessagingType.Psychic:
+                    if (!IsSensibleTo(viewer))
+                        return new Occurrence(sense);
+                    break;
+                case MessagingType.Tactile:
+                    if (!IsTouchableTo(viewer))
+                        return new Occurrence(sense);
+                    break;
+                case MessagingType.Taste:
+                    if (!IsTastableTo(viewer))
+                        return new Occurrence(sense);
+                    break;
+                case MessagingType.Visible:
+                    if (!IsVisibleTo(viewer))
+                        return new Occurrence(sense);
+                    break;
+            }
 
-            if (sensoryTypes == null || sensoryTypes.Count() == 0)
-                sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
-
-            return GetSelf(MessagingType.Visible);
+            return GetSelf(sense);
         }
 
         /// <summary>
@@ -401,10 +478,7 @@ namespace NetMud.Data.Game
         /// <returns>the output strings</returns>
         public virtual string GetDescribableName(IEntity viewer)
         {
-            if (!IsVisibleTo(viewer))
-                return string.Empty;
-
-            return GetSelf(MessagingType.Visible).ToString();
+            return GetImmediateDescription(viewer, MessagingType.Visible).ToString();
         }
 
         internal IOccurrence GetSelf(MessagingType type, int strength = 100)
@@ -466,7 +540,7 @@ namespace NetMud.Data.Game
             if (!IsVisibleTo(viewer))
                 return new Occurrence(MessagingType.Visible);
 
-            return GetImmediateDescription(viewer, new[] { MessagingType.Visible });
+            return GetImmediateDescription(viewer, MessagingType.Visible);
         }
 
         /// <summary>
@@ -489,6 +563,9 @@ namespace NetMud.Data.Game
         /// <returns>A collection of the descriptors</returns>
         public virtual IEnumerable<IOccurrence> GetVisibleDescriptives(IEntity viewer)
         {
+            if (Descriptives == null)
+                return Enumerable.Empty<IOccurrence>();
+
             return Descriptives.Where(desc => desc.SensoryType == MessagingType.Visible);
         }
         #endregion
@@ -541,6 +618,9 @@ namespace NetMud.Data.Game
         /// <returns>A collection of the descriptors</returns>
         public virtual IEnumerable<IOccurrence> GetAudibleDescriptives(IEntity viewer)
         {
+            if (Descriptives == null)
+                return Enumerable.Empty<IOccurrence>();
+
             return Descriptives.Where(desc => desc.SensoryType == MessagingType.Audible);
         }
         #endregion
@@ -593,6 +673,9 @@ namespace NetMud.Data.Game
         /// <returns>A collection of the descriptors</returns>
         public virtual IEnumerable<IOccurrence> GetPsychicDescriptives(IEntity viewer)
         {
+            if (Descriptives == null)
+                return Enumerable.Empty<IOccurrence>();
+
             return Descriptives.Where(desc => desc.SensoryType == MessagingType.Psychic);
         }
         #endregion
@@ -645,6 +728,9 @@ namespace NetMud.Data.Game
         /// <returns>A collection of the descriptors</returns>
         public virtual IEnumerable<IOccurrence> GetTasteDescriptives(IEntity viewer)
         {
+            if (Descriptives == null)
+                return Enumerable.Empty<IOccurrence>();
+
             return Descriptives.Where(desc => desc.SensoryType == MessagingType.Taste);
         }
         #endregion
@@ -697,6 +783,9 @@ namespace NetMud.Data.Game
         /// <returns>A collection of the descriptors</returns>
         public virtual IEnumerable<IOccurrence> GetSmellableDescriptives(IEntity viewer)
         {
+            if (Descriptives == null)
+                return Enumerable.Empty<IOccurrence>();
+
             return Descriptives.Where(desc => desc.SensoryType == MessagingType.Olefactory);
         }
         #endregion
@@ -749,6 +838,9 @@ namespace NetMud.Data.Game
         /// <returns>A collection of the descriptors</returns>
         public virtual IEnumerable<IOccurrence> GetTouchDescriptives(IEntity viewer)
         {
+            if (Descriptives == null)
+                return Enumerable.Empty<IOccurrence>();
+
             return Descriptives.Where(desc => desc.SensoryType == MessagingType.Tactile);
         }
         #endregion
@@ -765,7 +857,7 @@ namespace NetMud.Data.Game
                 sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
 
             //Add the existential modifiers
-            var me = GetImmediateDescription(viewer, sensoryTypes);
+            var me = GetImmediateDescription(viewer, sensoryTypes[0]);
             me.TryModify(LexicalType.Conjunction, GrammaticalType.Verb, "is")
                 .TryModify(LexicalType.Noun, GrammaticalType.DirectObject, "here");
 
@@ -780,7 +872,7 @@ namespace NetMud.Data.Game
         /// <returns>the output</returns>
         public virtual IOccurrence RenderAsHeld(IEntity viewer, IEntity holder)
         {
-            return GetImmediateDescription(viewer, new[] { MessagingType.Visible });
+            return GetImmediateDescription(viewer, MessagingType.Visible);
         }
 
         /// <summary>

@@ -90,6 +90,17 @@ namespace NetMud.Communication.Messaging
         /// </summary>
         /// <param name="modifier">the lexica that is the modifier</param>
         /// <returns>Whether or not it succeeded</returns>
+        public void TryModify(IEnumerable<ILexica> modifier)
+        {
+            foreach (var mod in modifier)
+                TryModify(mod);
+        }
+
+        /// <summary>
+        /// Try to add a modifier to a lexica
+        /// </summary>
+        /// <param name="modifier">the lexica that is the modifier</param>
+        /// <returns>Whether or not it succeeded</returns>
         public ILexica TryModify(LexicalType type, GrammaticalType role, string phrase)
         {
             var modifier = new Lexica(type, role, phrase);
@@ -140,7 +151,7 @@ namespace NetMud.Communication.Messaging
             {
                 me = new Lexica(LexicalType.Pronoun, Role, "it")
                 {
-                    Modifiers = Modifiers
+                    Modifiers = new HashSet<ILexica>(Modifiers.Where(mod => mod.Role != GrammaticalType.Subject))
                 };
             }
 
@@ -153,9 +164,6 @@ namespace NetMud.Communication.Messaging
             var isMe = true;
             foreach (var subject in subjects)
             {
-                if (subject.Type == LexicalType.Noun && !subject.Modifiers.Any(mod => mod.Type == LexicalType.Conjunction))
-                    subject.TryModify(LexicalType.Conjunction, GrammaticalType.Descriptive, "the");
-
                 var lexicas = new List<ILexica>();
                 switch (normalization)
                 {
@@ -192,10 +200,10 @@ namespace NetMud.Communication.Messaging
                         break;
                     default:
                         //This is to catch directly described entities
-                        if (isMe && subject.Modifiers.Any(mod => mod.Role == GrammaticalType.Descriptive))
+                        if (subject.Modifiers.Any(mod => mod.Role == GrammaticalType.Descriptive) && !subject.Modifiers.Any(mod => mod.Role == GrammaticalType.Verb))
                         {
                             Lexica newSubject = new Lexica(subject.Type, subject.Role, subject.Phrase);
-                            newSubject.TryModify(subject.Modifiers.Where(mod => mod.Role != GrammaticalType.Descriptive).ToArray());
+                            newSubject.TryModify(subject.Modifiers.Where(mod => mod.Type == LexicalType.Conjunction || mod.Role != GrammaticalType.Descriptive));
                             newSubject.TryModify(LexicalType.Conjunction, GrammaticalType.Verb, "is").TryModify(subject.Modifiers.Where(mod => mod.Role == GrammaticalType.Descriptive).ToArray());
 
                             lexicas.Add(newSubject);
@@ -268,9 +276,15 @@ namespace NetMud.Communication.Messaging
                     }
                     break;
                 case GrammaticalType.IndirectObject:
+                    if ((Type == LexicalType.Noun || Type == LexicalType.ProperNoun) && !Modifiers.Any(mod => mod.Type == LexicalType.Conjunction))
+                        TryModify(LexicalType.Conjunction, GrammaticalType.Descriptive, "a"); //TODO: make an a/an/the thing
+
                     sb.Append(AppendDescriptors(adjectives, Phrase));
                     break;
                 case GrammaticalType.DirectObject:
+                    if ((Type == LexicalType.Noun || Type == LexicalType.ProperNoun) && !Modifiers.Any(mod => mod.Type == LexicalType.Conjunction))
+                        TryModify(LexicalType.Conjunction, GrammaticalType.Descriptive, "a"); //TODO: make an a/an/the thing
+
                     var describedNoun = AppendDescriptors(adjectives, Phrase);
 
                     if (Modifiers.Any(mod => mod.Role == GrammaticalType.IndirectObject || mod.Role == GrammaticalType.Descriptive))
@@ -302,6 +316,9 @@ namespace NetMud.Communication.Messaging
                         sb.AppendFormat("{1} {0} {2}", Phrase, adverbString, adjectiveString);
                     break;
                 case GrammaticalType.Subject:
+                    if ((Type == LexicalType.Noun || Type == LexicalType.ProperNoun) && !Modifiers.Any(mod => mod.Type == LexicalType.Conjunction))
+                        TryModify(LexicalType.Conjunction, GrammaticalType.Descriptive, "the"); //TODO: make an a/an/the thing
+
                     var describedSubject = AppendDescriptors(adjectives, Phrase);
 
                     if (Modifiers.Any(mod => mod.Role == GrammaticalType.Verb))

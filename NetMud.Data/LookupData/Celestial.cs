@@ -90,16 +90,35 @@ namespace NetMud.Data.LookupData
         /// <returns>the output strings</returns>
         public virtual IOccurrence GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes)
         {
-            if (!IsVisibleTo(viewer))
-                return new Occurrence(MessagingType.Visible);
-
             if (sensoryTypes == null || sensoryTypes.Count() == 0)
                 sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
 
-            var self = GetSelf(MessagingType.Visible);
+            //Self becomes the first sense in the list
+            IOccurrence self = null;
+            foreach (var sense in sensoryTypes)
+            {
+                switch (sense)
+                {
+                    case MessagingType.Psychic:
+                        if (!IsSensibleTo(viewer))
+                            continue;
 
-            foreach (var descriptive in GetVisibleDescriptives(viewer))
-                self.Event.TryModify(descriptive.Event);
+                        if (self == null)
+                            self = GetSelf(sense);
+
+                        self.TryModify(GetPsychicDescriptives(viewer));
+                        break;
+                    case MessagingType.Visible:
+                        if (!IsVisibleTo(viewer))
+                            continue;
+
+                        if (self == null)
+                            self = GetSelf(sense);
+
+                        self.TryModify(GetVisibleDescriptives(viewer));
+                        break;
+                }
+            }
 
             return self;
         }
@@ -109,15 +128,27 @@ namespace NetMud.Data.LookupData
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public virtual IOccurrence GetImmediateDescription(IEntity viewer, MessagingType[] sensoryTypes)
+        public virtual IOccurrence GetImmediateDescription(IEntity viewer, MessagingType sense)
         {
-            if (!IsVisibleTo(viewer))
-                return new Occurrence(MessagingType.Visible);
+            switch (sense)
+            {
+                case MessagingType.Audible:
+                case MessagingType.Olefactory:
+                case MessagingType.Tactile:
+                case MessagingType.Taste:
+                    return new Occurrence(sense);
+                case MessagingType.Psychic:
+                    if (!IsSensibleTo(viewer))
+                        return new Occurrence(sense);
+                    break;
 
-            if (sensoryTypes == null || sensoryTypes.Count() == 0)
-                sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
+                case MessagingType.Visible:
+                    if (!IsVisibleTo(viewer))
+                        return new Occurrence(sense);
+                    break;
+            }
 
-            return GetSelf(MessagingType.Visible);
+            return GetSelf(sense);
         }
 
         /// <summary>
@@ -127,10 +158,7 @@ namespace NetMud.Data.LookupData
         /// <returns>the output strings</returns>
         public virtual string GetDescribableName(IEntity viewer)
         {
-            if (!IsVisibleTo(viewer))
-                return string.Empty;
-
-            return GetSelf(MessagingType.Visible).ToString();
+            return GetImmediateDescription(viewer, MessagingType.Visible).ToString();
         }
 
         /// <summary>
@@ -141,10 +169,11 @@ namespace NetMud.Data.LookupData
         public virtual IOccurrence RenderAsContents(IEntity viewer, MessagingType[] sensoryTypes)
         {
             if (sensoryTypes == null || sensoryTypes.Count() == 0)
-                sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
+                sensoryTypes = new MessagingType[] { MessagingType.Psychic, MessagingType.Visible };
 
             //Add the existential modifiers
-            var me = GetImmediateDescription(viewer, sensoryTypes);
+            var me = GetImmediateDescription(viewer, sensoryTypes[0]);
+
             me.TryModify(LexicalType.Conjunction, GrammaticalType.Verb, "is")
                 .TryModify(LexicalType.Noun, GrammaticalType.DirectObject, "sky")
                     .TryModify(

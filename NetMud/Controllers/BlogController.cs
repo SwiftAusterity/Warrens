@@ -4,8 +4,6 @@ using NetMud.Authentication;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.Models;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;

@@ -7,7 +7,6 @@ using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Base.World;
 using NetMud.DataStructure.Behaviors.Existential;
-using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.SupportingClasses;
 using Newtonsoft.Json;
 using System;
@@ -173,13 +172,13 @@ namespace NetMud.Data.Game
         public override IOccurrence RenderAsWorn(IEntity viewer, IEntity wearer)
         {
             //TODO: Worn position
-            return GetImmediateDescription(viewer, new[] { MessagingType.Visible });
+            return GetImmediateDescription(viewer, MessagingType.Visible);
         }
 
         public override IOccurrence RenderAsHeld(IEntity viewer, IEntity holder)
         {
             //TODO: Worn position
-            return GetImmediateDescription(viewer, new[] { MessagingType.Visible });
+            return GetImmediateDescription(viewer, MessagingType.Visible);
         }
         #endregion
     }

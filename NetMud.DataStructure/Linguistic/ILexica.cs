@@ -47,6 +47,13 @@ namespace NetMud.DataStructure.Linguistic
         /// </summary>
         /// <param name="modifier">the lexica that is the modifier</param>
         /// <returns>Whether or not it succeeded</returns>
+        void TryModify(IEnumerable<ILexica> modifier);
+
+        /// <summary>
+        /// Try to add a modifier to a lexica
+        /// </summary>
+        /// <param name="modifier">the lexica that is the modifier</param>
+        /// <returns>Whether or not it succeeded</returns>
         ILexica TryModify(LexicalType type, GrammaticalType role, string phrase);
 
         /// <summary>

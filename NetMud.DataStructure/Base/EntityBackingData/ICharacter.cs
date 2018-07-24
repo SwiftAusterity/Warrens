@@ -3,7 +3,6 @@ using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.SupportingClasses;
-using System;
 using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Base.EntityBackingData

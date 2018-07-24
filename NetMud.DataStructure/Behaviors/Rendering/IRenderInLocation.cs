@@ -30,7 +30,7 @@ namespace NetMud.DataStructure.Behaviors.Rendering
         /// <param name="viewer">entity initiating the command</param>
         /// <param name="sensoryTypes">What senses to include. EMPTY/NULL = ALL</param>
         /// <returns>the output</returns>
-        IOccurrence GetImmediateDescription(IEntity viewer, MessagingType[] sensoryTypes);
+        IOccurrence GetImmediateDescription(IEntity viewer, MessagingType sense);
 
         /// <summary>
         /// The name of a thing based on visual description

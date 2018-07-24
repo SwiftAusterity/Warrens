@@ -1,5 +1,6 @@
 ﻿using NetMud.DataStructure.Linguistic;
 using System;
+using System.Collections.Generic;
 
 namespace NetMud.DataStructure.SupportingClasses
 {
@@ -36,6 +37,34 @@ namespace NetMud.DataStructure.SupportingClasses
         /// <param name="modifier">the lexica that is the modifier</param>
         /// <returns>Whether or not it succeeded</returns>
         void TryModify(ILexica[] modifier);
+
+        /// <summary>
+        /// Try to add a modifier to a lexica
+        /// </summary>
+        /// <param name="modifier">the lexica that is the modifier</param>
+        /// <returns>Whether or not it succeeded</returns>
+        void TryModify(IEnumerable<ILexica> modifier);
+
+        /// <summary>
+        /// Try to add a modifier to a lexica
+        /// </summary>
+        /// <param name="modifier">the lexica that is the modifier</param>
+        /// <returns>Whether or not it succeeded</returns>
+        ILexica TryModify(IOccurrence modifier);
+
+        /// <summary>
+        /// Try to add a modifier to a lexica
+        /// </summary>
+        /// <param name="modifier">the lexica that is the modifier</param>
+        /// <returns>Whether or not it succeeded</returns>
+        void TryModify(IOccurrence[] modifier);
+
+        /// <summary>
+        /// Try to add a modifier to a lexica
+        /// </summary>
+        /// <param name="modifier">the lexica that is the modifier</param>
+        /// <returns>Whether or not it succeeded</returns>
+        void TryModify(IEnumerable<IOccurrence> modifier);
 
         /// <summary>
         /// Try to add a modifier to a lexica

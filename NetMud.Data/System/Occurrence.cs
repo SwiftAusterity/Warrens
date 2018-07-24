@@ -2,6 +2,8 @@
 using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.SupportingClasses;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace NetMud.Data.System
 {
@@ -63,6 +65,46 @@ namespace NetMud.Data.System
         public void TryModify(ILexica[] modifier)
         {
             Event.TryModify(modifier);
+        }
+
+        /// <summary>
+        /// Try to add a modifier to a lexica
+        /// </summary>
+        /// <param name="modifier">the lexica that is the modifier</param>
+        /// <returns>Whether or not it succeeded</returns>
+        public void TryModify(IEnumerable<ILexica> modifier)
+        {
+            Event.TryModify(modifier);
+        }
+
+        /// <summary>
+        /// Try to add a modifier to a lexica
+        /// </summary>
+        /// <param name="modifier">the lexica that is the modifier</param>
+        /// <returns>Whether or not it succeeded</returns>
+        public ILexica TryModify(IOccurrence modifier)
+        {
+            return TryModify(modifier.Event);
+        }
+
+        /// <summary>
+        /// Try to add a modifier to a lexica
+        /// </summary>
+        /// <param name="modifier">the lexica that is the modifier</param>
+        /// <returns>Whether or not it succeeded</returns>
+        public void TryModify(IOccurrence[] modifier)
+        {
+            TryModify(modifier.Select(occ => occ.Event));
+        }
+
+        /// <summary>
+        /// Try to add a modifier to a lexica
+        /// </summary>
+        /// <param name="modifier">the lexica that is the modifier</param>
+        /// <returns>Whether or not it succeeded</returns>
+        public void TryModify(IEnumerable<IOccurrence> modifier)
+        {
+            TryModify(modifier.Select(occ => occ.Event));
         }
 
         /// <summary>

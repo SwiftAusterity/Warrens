@@ -1,4 +1,6 @@
-﻿using NetMud.DataAccess.Cache;
+﻿using NetMud.Communication.Messaging;
+using NetMud.Data.System;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
@@ -6,7 +8,10 @@ using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Base.World;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.Behaviors.System;
+using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.SupportingClasses;
+using NetMud.Gaia.Geographical;
+using NetMud.Gaia.Meteorological;
 using NetMud.Utility;
 using Newtonsoft.Json;
 using System.Collections.Generic;
@@ -242,8 +247,8 @@ namespace NetMud.Data.Game
 
         public IEnumerable<IPathway> GetPathways(bool inward = false)
         {
-            return LiveCache.GetAll<IPathway>().Where(path => path.Destination != null 
-                                                            && path.Origin != null 
+            return LiveCache.GetAll<IPathway>().Where(path => path.Destination != null
+                                                            && path.Origin != null
                                                             && (path.Origin.Equals(this) || (inward && path.Destination.Equals(this))));
         }
 

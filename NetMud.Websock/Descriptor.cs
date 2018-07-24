@@ -148,9 +148,9 @@ namespace NetMud.Websock
             var currentWorld = currentZone.GetWorld();
             var currentRoom = currentLocation.GetRoom();
 
-            var pathways = ((ILocation)currentContainer).GetPathways().Select(data => data.RenderAsContents(_currentPlayer, new[] { MessagingType.Visible }).ToString());
-            var inventory = currentContainer.GetContents<IInanimate>().Select(data => data.RenderAsContents(_currentPlayer, new[] { MessagingType.Visible }).ToString());
-            var populace = currentContainer.GetContents<IMobile>().Where(player => !player.Equals(_currentPlayer)).Select(data => data.RenderAsContents(_currentPlayer, new[] { MessagingType.Visible }).ToString());
+            var pathways = ((ILocation)currentContainer).GetPathways().Select(data => data.GetDescribableName(_currentPlayer).ToString());
+            var inventory = currentContainer.GetContents<IInanimate>().Select(data => data.GetDescribableName(_currentPlayer).ToString());
+            var populace = currentContainer.GetContents<IMobile>().Where(player => !player.Equals(_currentPlayer)).Select(data => data.GetDescribableName(_currentPlayer).ToString());
 
             var local = new LocalStatus
             {

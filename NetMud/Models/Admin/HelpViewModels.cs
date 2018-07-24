@@ -1,6 +1,5 @@
 ﻿using NetMud.Authentication;
 using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.SupportingClasses;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

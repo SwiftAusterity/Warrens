@@ -1,7 +1,6 @@
 ﻿using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.Base.World;
 using System;
 using System.Linq;
 
