@@ -143,8 +143,30 @@ namespace NetMud.Communication.Messaging
         public string Describe(NarrativeNormalization normalization, int verbosity, LexicalTense chronology = LexicalTense.Present,
             NarrativePerspective perspective = NarrativePerspective.SecondPerson, bool omitName = true)
         {
+            var sentences = GetSentences(this, normalization, verbosity, chronology, perspective, omitName);
+
+            if (normalization == NarrativeNormalization.Runon)
+            {
+                return string.Join(" and ", sentences.Select(sentence => sentence.Item2.ToString())).CapsFirstLetter() + LexicalProcessor.GetPunctuationMark(sentences.First().Item1);
+            }
+
+            //join the sentences together with a space and add punctuation
+            var finalOutput = new List<string>();
+            foreach (var sentence in sentences)
+            {
+                //Ensure every sentence starts with a caps letter
+                var sentenceText = sentence.Item2.ToString().CapsFirstLetter(true) + LexicalProcessor.GetPunctuationMark(sentence.Item1);
+
+                finalOutput.Add(sentenceText);
+            }
+
+            return string.Join(" ", finalOutput);
+        }
+
+        private IEnumerable<Tuple<SentenceType, ILexica>> GetSentences(ILexica me, NarrativeNormalization normalization, 
+                                                                        int verbosity, LexicalTense chronology, NarrativePerspective perspective, bool omitName)
+        {
             var sentences = new List<Tuple<SentenceType, ILexica>>();
-            var me = this;
 
             //TODO: make a get pronoun thing in the thesaurus
             if (omitName)
@@ -208,33 +230,29 @@ namespace NetMud.Communication.Messaging
 
                             lexicas.Add(newSubject);
                         }
-                        else if(subject.Modifiers.Any())
+                        else if (subject.Modifiers.Any())
                             lexicas.Add(subject);
                         break;
                 }
 
                 foreach (var lex in lexicas)
-                    sentences.Add(new Tuple<SentenceType, ILexica>(SentenceType.Statement, lex));
+                {
+                    if (lex.Modifiers.Any(mod => mod.Role == GrammaticalType.Subject))
+                    {
+                        sentences.Add(new Tuple<SentenceType, ILexica>(SentenceType.Partial, lex));
+
+                        //fragment sentences
+                        foreach (var subLex in lex.Modifiers.Where(mod => mod.Role == GrammaticalType.Subject))
+                            sentences.Add(new Tuple<SentenceType, ILexica>(SentenceType.Statement, subLex));
+                    }
+                    else
+                        sentences.Add(new Tuple<SentenceType, ILexica>(SentenceType.Statement, lex));
+                }
 
                 isMe = false;
             }
 
-            if (normalization == NarrativeNormalization.Runon)
-            {
-                return string.Join(" and ", sentences.Select(sentence => sentence.Item2.ToString())).CapsFirstLetter() + LexicalProcessor.GetPunctuationMark(sentences.First().Item1);
-            }
-
-            //join the sentences together with a space and add punctuation
-            var finalOutput = new List<string>();
-            foreach (var sentence in sentences)
-            {
-                //Ensure every sentence starts with a caps letter
-                var sentenceText = sentence.Item2.ToString().CapsFirstLetter(true) + LexicalProcessor.GetPunctuationMark(sentence.Item1);
-
-                finalOutput.Add(sentenceText);
-            }
-
-            return string.Join(" ", finalOutput);
+            return sentences;
         }
 
         /// <summary>

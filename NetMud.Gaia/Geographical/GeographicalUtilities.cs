@@ -8,6 +8,27 @@ namespace NetMud.Gaia.Geographical
 {
     public static class GeographicalUtilities
     {
+        public static CrowdSizeDescription GetCrowdSize(int crowd)
+        {
+            if (crowd > 100)
+                return CrowdSizeDescription.Tremendous;
+
+            if (crowd > 50)
+                return CrowdSizeDescription.Huge;
+
+            if (crowd > 25)
+                return CrowdSizeDescription.Large;
+
+            if (crowd > 12)
+                return CrowdSizeDescription.Moderate;
+
+            if (crowd > 4)
+                return CrowdSizeDescription.Small;
+
+            return CrowdSizeDescription.Intimate;
+        }
+
+
         public static bool IsOutside(Biome biome)
         {
             var returnValue = true;
