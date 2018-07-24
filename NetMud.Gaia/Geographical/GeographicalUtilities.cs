@@ -8,27 +8,7 @@ namespace NetMud.Gaia.Geographical
 {
     public static class GeographicalUtilities
     {
-        public static CrowdSizeDescription GetCrowdSize(int crowd)
-        {
-            if (crowd > 100)
-                return CrowdSizeDescription.Tremendous;
-
-            if (crowd > 50)
-                return CrowdSizeDescription.Huge;
-
-            if (crowd > 25)
-                return CrowdSizeDescription.Large;
-
-            if (crowd > 12)
-                return CrowdSizeDescription.Moderate;
-
-            if (crowd > 4)
-                return CrowdSizeDescription.Small;
-
-            return CrowdSizeDescription.Intimate;
-        }
-
-
+        #region Biomes
         public static bool IsOutside(Biome biome)
         {
             var returnValue = true;
@@ -54,7 +34,9 @@ namespace NetMud.Gaia.Geographical
 
             return returnValue;
         }
+        #endregion
 
+        #region Size
         public static DimensionalSizeDescription ConvertSizeToType(Tuple<int, int, int> Dimensions, Type entityType)
         {
             //x,y,z in inches currently
@@ -152,5 +134,25 @@ namespace NetMud.Gaia.Geographical
             return DimensionalSizeDescription.Medium;
         }
 
+        public static CrowdSizeDescription GetCrowdSize(int crowd)
+        {
+            if (crowd > 100)
+                return CrowdSizeDescription.Tremendous;
+
+            if (crowd > 50)
+                return CrowdSizeDescription.Huge;
+
+            if (crowd > 25)
+                return CrowdSizeDescription.Large;
+
+            if (crowd > 12)
+                return CrowdSizeDescription.Moderate;
+
+            if (crowd > 4)
+                return CrowdSizeDescription.Small;
+
+            return CrowdSizeDescription.Intimate;
+        }
+        #endregion
     }
 }

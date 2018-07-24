@@ -190,43 +190,170 @@ namespace NetMud.Data.Game
             if (sensoryTypes == null || sensoryTypes.Count() == 0)
                 sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
 
-            var me = base.GetFullDescription(viewer, sensoryTypes);
+            //Self becomes the first sense in the list
+            IOccurrence me = null;
+            foreach (var sense in sensoryTypes)
+            {
+                switch (sense)
+                {
+                    case MessagingType.Audible:
+                        if (!IsAudibleTo(viewer))
+                            continue;
 
+                        if (me == null)
+                            me = GetSelf(sense);
+
+                        var aDescs = GetAudibleDescriptives(viewer);
+
+                        me.TryModify(aDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
+
+                        var collectiveSounds = new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you");
+
+                        var uberSounds = collectiveSounds.TryModify(LexicalType.Verb, GrammaticalType.Verb, "hear");
+                        uberSounds.TryModify(aDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
+
+                        foreach (var desc in aDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
+                        {
+                            var newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase);
+                            newDesc.TryModify(desc.Event.Modifiers);
+
+                            uberSounds.TryModify(newDesc);
+                        }
+
+                        if (uberSounds.Modifiers.Any(mod => mod.Role == GrammaticalType.DirectObject))
+                            me.TryModify(collectiveSounds);
+                        break;
+                    case MessagingType.Olefactory:
+                        if (!IsSmellableTo(viewer))
+                            continue;
+
+                        if (me == null)
+                            me = GetSelf(sense);
+
+                        var oDescs = GetSmellableDescriptives(viewer);
+
+                        me.TryModify(oDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
+
+                        var collectiveSmells = new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you");
+
+                        var uberSmells = collectiveSmells.TryModify(LexicalType.Verb, GrammaticalType.Verb, "smell");
+                        uberSmells.TryModify(oDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
+
+                        foreach (var desc in oDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
+                        {
+                            var newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase);
+                            newDesc.TryModify(desc.Event.Modifiers);
+
+                            uberSmells.TryModify(newDesc);
+                        }
+
+                        if (uberSmells.Modifiers.Any(mod => mod.Role == GrammaticalType.DirectObject))
+                            me.TryModify(collectiveSmells);
+                        break;
+                    case MessagingType.Psychic:
+                        if (!IsSensibleTo(viewer))
+                            continue;
+
+                        if (me == null)
+                            me = GetSelf(sense);
+
+                        var pDescs = GetPsychicDescriptives(viewer);
+
+                        me.TryModify(pDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
+
+                        var collectivePsy = new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you");
+
+                        var uberPsy = collectivePsy.TryModify(LexicalType.Verb, GrammaticalType.Verb, "sense");
+                        uberPsy.TryModify(pDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
+
+                        foreach (var desc in pDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
+                        {
+                            var newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase);
+                            newDesc.TryModify(desc.Event.Modifiers);
+
+                            uberPsy.TryModify(newDesc);
+                        }
+
+                        if (uberPsy.Modifiers.Any(mod => mod.Role == GrammaticalType.DirectObject))
+                            me.TryModify(collectivePsy);
+                        break;
+                    case MessagingType.Tactile:
+                        continue;
+                    case MessagingType.Visible:
+                        if (!IsVisibleTo(viewer))
+                            continue;
+
+                        if (me == null)
+                            me = GetSelf(sense);
+
+                        var vDescs = GetVisibleDescriptives(viewer);
+
+                        me.TryModify(vDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
+
+                        var collectiveSight = new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you");
+
+                        var uberSight = collectiveSight.TryModify(LexicalType.Verb, GrammaticalType.Verb, "see");
+                        uberSight.TryModify(vDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
+
+                        foreach (var desc in vDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
+                        {
+                            var newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase);
+                            newDesc.TryModify(desc.Event.Modifiers);
+
+                            uberSight.TryModify(newDesc);
+                        }
+
+                        if (uberSight.Modifiers.Any(mod => mod.Role == GrammaticalType.DirectObject))
+                            me.TryModify(collectiveSight);
+                        break;
+                }
+            }
+
+            //If we get through that and me is still null it means we can't detect anything at all
             if (me == null)
-                me = new Occurrence(sensoryTypes[0]);
+                return new Occurrence(sensoryTypes[0]);
+
+            foreach (var celestial in GetVisibileCelestials(viewer))
+                me.TryModify(celestial.RenderAsContents(viewer, sensoryTypes).Event);
 
             if (NaturalResources != null)
                 foreach (var resource in NaturalResources)
-                    me.Event.TryModify(resource.Key.RenderResourceCollection(viewer, resource.Value).Event);
-
-            foreach (var celestial in GetVisibileCelestials(viewer))
-                me.Event.TryModify(celestial.RenderAsContents(viewer, sensoryTypes).Event);
+                    me.TryModify(resource.Key.RenderResourceCollection(viewer, resource.Value).Event);
 
             foreach (var path in GetPathways())
-                me.Event.TryModify(path.RenderAsContents(viewer, sensoryTypes).Event);
+                me.TryModify(path.RenderAsContents(viewer, sensoryTypes).Event);
 
             foreach (var obj in GetContents<IInanimate>())
-                me.Event.TryModify(obj.RenderAsContents(viewer, sensoryTypes).Event);
+                me.TryModify(obj.RenderAsContents(viewer, sensoryTypes).Event);
 
             foreach (var mob in GetContents<IMobile>().Where(player => !player.Equals(viewer)))
-                me.Event.TryModify(mob.RenderAsContents(viewer, sensoryTypes).Event);
+                me.TryModify(mob.RenderAsContents(viewer, sensoryTypes).Event);
+
+            //Describe the size and population of this zone
+            var roomSize = GeographicalUtilities.ConvertSizeToType(GetModelDimensions(), GetType());
 
             var area = new Lexica(LexicalType.Noun, GrammaticalType.Subject, "space");
-            area.TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, GeographicalUtilities.ConvertSizeToType(GetModelDimensions(), GetType()).ToString());
+            area.TryModify(LexicalType.Conjunction, GrammaticalType.Descriptive, "this");
+            area.TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, roomSize.ToString());
 
-            area.TryModify(LexicalType.Verb, GrammaticalType.Verb, "extends")
-                .TryModify(LexicalType.Pronoun, GrammaticalType.DirectObject, "you")
-                    .TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, "around");
-
-            me.TryModify(area);
-
-            var humidityTemp = new Lexica(LexicalType.Noun, GrammaticalType.Subject, "air");
-            humidityTemp.TryModify(LexicalType.Verb, GrammaticalType.Verb, "feels").TryModify(new Lexica[] {
+            //Add the temperature
+            area.TryModify(LexicalType.Verb, GrammaticalType.Verb, "feels").TryModify(new Lexica[] {
                 new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, MeteorologicalUtilities.ConvertHumidityToType(EffectiveHumidity()).ToString()),
                 new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, MeteorologicalUtilities.ConvertTemperatureToType(EffectiveTemperature()).ToString())
             });
 
-            me.TryModify(humidityTemp);
+            //Render people in the zone
+            var populationSize = GeographicalUtilities.GetCrowdSize(GetContents<IMobile>().Count());
+
+            var crowdSize = "lonely";
+            if ((short)populationSize > (short)roomSize)
+                crowdSize = "crowded";
+            else if (populationSize > CrowdSizeDescription.Intimate)
+                crowdSize = "sparsely populated";
+
+            area.TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, crowdSize);
+
+            me.TryModify(area);
 
             return me;
         }
