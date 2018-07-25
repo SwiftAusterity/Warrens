@@ -1,9 +1,13 @@
-﻿using NetMud.Data.System;
+﻿using NetMud.Data.Lexical;
+using NetMud.Data.System;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Existential;
+using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.SupportingClasses;
+using NetMud.Gaia.Geographical;
 using NetMud.Utility;
 using Newtonsoft.Json;
 using System;
@@ -117,6 +121,203 @@ namespace NetMud.Data.Game
 
             return lumins;
         }
+
+        #region Rendering
+        /// <summary>
+        /// Render this in a short descriptive style
+        /// </summary>
+        /// <param name="viewer">The entity looking</param>
+        /// <returns>the output strings</returns>
+        public override IOccurrence GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes)
+        {
+            if (sensoryTypes == null || sensoryTypes.Count() == 0)
+                sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
+
+            //Self becomes the first sense in the list
+            IOccurrence me = null;
+            foreach (var sense in sensoryTypes)
+            {
+                switch (sense)
+                {
+                    case MessagingType.Audible:
+                        if (!IsAudibleTo(viewer))
+                            continue;
+
+                        if (me == null)
+                            me = GetSelf(sense);
+
+                        var aDescs = GetAudibleDescriptives(viewer);
+
+                        me.TryModify(aDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
+
+                        var collectiveSounds = new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you");
+
+                        var uberSounds = collectiveSounds.TryModify(LexicalType.Verb, GrammaticalType.Verb, "hear");
+                        uberSounds.TryModify(aDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
+
+                        foreach (var desc in aDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
+                        {
+                            var newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase);
+                            newDesc.TryModify(desc.Event.Modifiers);
+
+                            newDesc.TryModify(LexicalType.Pronoun, GrammaticalType.IndirectObject, "it")
+                                    .TryModify(LexicalType.Conjunction, GrammaticalType.Descriptive, "from");
+
+                            uberSounds.TryModify(newDesc);
+                        }
+
+                        if (uberSounds.Modifiers.Any(mod => mod.Role == GrammaticalType.DirectObject))
+                            me.TryModify(collectiveSounds);
+                        break;
+                    case MessagingType.Olefactory:
+                        if (!IsSmellableTo(viewer))
+                            continue;
+
+                        if (me == null)
+                            me = GetSelf(sense);
+
+                        var oDescs = GetSmellableDescriptives(viewer);
+
+                        me.TryModify(oDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
+
+                        var uberSmells = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "smell");
+                        uberSmells.TryModify(oDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
+
+                        foreach (var desc in oDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
+                        {
+                            var newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase);
+                            newDesc.TryModify(desc.Event.Modifiers);
+
+                            newDesc.TryModify(LexicalType.Pronoun, GrammaticalType.IndirectObject, "it")
+                                        .TryModify(LexicalType.Conjunction, GrammaticalType.Descriptive, "from");
+
+                            uberSmells.TryModify(newDesc);
+                        }
+
+                        if (uberSmells.Modifiers.Any(mod => mod.Role == GrammaticalType.DirectObject))
+                            me.TryModify(uberSmells);
+                        break;
+                    case MessagingType.Psychic:
+                        if (!IsSensibleTo(viewer))
+                            continue;
+
+                        if (me == null)
+                            me = GetSelf(sense);
+
+                        var pDescs = GetPsychicDescriptives(viewer);
+
+                        me.TryModify(pDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
+
+                        var collectivePsy = new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you");
+
+                        var uberPsy = collectivePsy.TryModify(LexicalType.Verb, GrammaticalType.Verb, "sense");
+                        uberPsy.TryModify(pDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
+
+                        foreach (var desc in pDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
+                        {
+                            var newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase);
+                            newDesc.TryModify(desc.Event.Modifiers);
+
+                            newDesc.TryModify(LexicalType.Pronoun, GrammaticalType.IndirectObject, "it")
+                                        .TryModify(LexicalType.Conjunction, GrammaticalType.Descriptive, "from");
+
+                            uberPsy.TryModify(newDesc);
+                        }
+
+                        if (uberPsy.Modifiers.Any(mod => mod.Role == GrammaticalType.DirectObject))
+                            me.TryModify(collectivePsy);
+                        break;
+                    case MessagingType.Taste:
+                        if (!IsTastableTo(viewer))
+                            continue;
+
+                        if (me == null)
+                            me = GetSelf(sense);
+
+                        var taDescs = GetTasteDescriptives(viewer);
+
+                        me.TryModify(taDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
+
+                        var uberTaste = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "taste");
+                        uberTaste.TryModify(taDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
+
+                        foreach (var desc in taDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
+                        {
+                            var newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase);
+                            newDesc.TryModify(desc.Event.Modifiers);
+
+                            newDesc.TryModify(LexicalType.Pronoun, GrammaticalType.IndirectObject, "it");
+
+                            uberTaste.TryModify(newDesc);
+                        }
+
+                        if (uberTaste.Modifiers.Any(mod => mod.Role == GrammaticalType.DirectObject))
+                            me.TryModify(uberTaste);
+                        break;
+                    case MessagingType.Tactile:
+                        if (!IsTouchableTo(viewer))
+                            continue;
+
+                        if (me == null)
+                            me = GetSelf(sense);
+
+                        var tDescs = GetSmellableDescriptives(viewer);
+
+                        me.TryModify(tDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
+
+                        var uberTouch = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "feel");
+                        uberTouch.TryModify(tDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
+
+                        foreach (var desc in tDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
+                        {
+                            var newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase);
+                            newDesc.TryModify(desc.Event.Modifiers);
+
+                            newDesc.TryModify(LexicalType.Pronoun, GrammaticalType.IndirectObject, "it");
+
+                            uberTouch.TryModify(newDesc);
+                        }
+
+                        if (uberTouch.Modifiers.Any(mod => mod.Role == GrammaticalType.DirectObject))
+                            me.TryModify(uberTouch);
+                        break;
+                    case MessagingType.Visible:
+                        if (!IsVisibleTo(viewer))
+                            continue;
+
+                        if (me == null)
+                            me = GetSelf(sense);
+
+                        var vDescs = GetVisibleDescriptives(viewer);
+
+                        me.TryModify(vDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
+
+                        var uberSight = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "appears");
+                        uberSight.TryModify(vDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
+
+                        foreach (var desc in vDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
+                        {
+                            var newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase);
+                            newDesc.TryModify(desc.Event.Modifiers);
+
+                            newDesc.TryModify(LexicalType.Pronoun, GrammaticalType.IndirectObject, "it");
+
+                            uberSight.TryModify(newDesc);
+                        }
+
+                        if (uberSight.Modifiers.Any(mod => mod.Role == GrammaticalType.DirectObject))
+                            me.TryModify(uberSight);
+                        break;
+                }
+            }
+
+            //If we get through that and me is still null it means we can't detect anything at all
+            if (me == null)
+                return new Occurrence(sensoryTypes[0]);
+
+            return me;
+        }
+        #endregion
 
         #region Container
         /// <summary>
