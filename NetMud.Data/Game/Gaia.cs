@@ -60,7 +60,7 @@ namespace NetMud.Data.Game
         /// </summary>
         [ScriptIgnore] //TODO: Stop ignoring weather and economy once these are figured out
         [JsonIgnore]
-        public IEnumerable<IWeatherPattern> MeterologicalFronts { get; set; }
+        public IEnumerable<IPressureSystem> MeterologicalFronts { get; set; }
 
         /// <summary>
         /// Economic controller for this world
@@ -185,7 +185,7 @@ namespace NetMud.Data.Game
             }
 
             if (MeterologicalFronts == null || MeterologicalFronts.Count() == 0)
-                MeterologicalFronts = Enumerable.Empty<IWeatherPattern>();
+                MeterologicalFronts = Enumerable.Empty<IPressureSystem>();
 
             CurrentTimeOfDay = new TimeOfDay(bS.ChronologicalSystem);
 

@@ -29,7 +29,7 @@ namespace NetMud.DataStructure.Base.Place
         /// <summary>
         /// Collection of weather patterns for this world
         /// </summary>
-        IEnumerable<IWeatherPattern> MeterologicalFronts { get; set; }
+        IEnumerable<IPressureSystem> MeterologicalFronts { get; set; }
 
         /// <summary>
         /// Economic controller for this world

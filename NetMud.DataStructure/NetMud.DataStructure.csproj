@@ -103,6 +103,8 @@
     <Compile Include="Base\EntityBackingData\IGaiaData.cs" />
     <Compile Include="Base\World\IGlobalConfig.cs" />
     <Compile Include="Base\World\ITimeOfDay.cs" />
+    <Compile Include="Base\World\IWeatherEvent.cs" />
+    <Compile Include="Base\World\WeatherEventType.cs" />
     <Compile Include="Behaviors\Actionable\ICanBeAffected.cs" />
     <Compile Include="Behaviors\Actionable\ICanBeWounded.cs" />
     <Compile Include="Behaviors\Actionable\ICanGainExperience.cs" />
@@ -158,7 +160,7 @@
     <Compile Include="Base\Skills\ISkillNode.cs" />
     <Compile Include="Base\World\IFaction.cs" />
     <Compile Include="Linguistic\ILanguage.cs" />
-    <Compile Include="Base\World\IWeatherPattern.cs" />
+    <Compile Include="Base\World\IPressureSystem.cs" />
     <Compile Include="Behaviors\Actionable\IAmCasted.cs" />
     <Compile Include="Behaviors\Actionable\ICanBreathe.cs" />
     <Compile Include="Behaviors\Actionable\ICanConsume.cs" />
