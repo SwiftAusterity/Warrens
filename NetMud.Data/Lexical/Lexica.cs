@@ -1,5 +1,4 @@
-﻿using NetMud.Communication.Lexicon;
-using NetMud.DataAccess;
+﻿using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Linguistic;
 using NetMud.Utility;
@@ -8,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace NetMud.Communication.Messaging
+namespace NetMud.Data.Lexical
 {
     /// <summary>
     /// A gramatical element
@@ -66,12 +65,12 @@ namespace NetMud.Communication.Messaging
         /// </summary>
         /// <param name="modifier">the lexica that is the modifier</param>
         /// <returns>Whether or not it succeeded</returns>
-        public ILexica TryModify(ILexica modifier)
+        public ILexica TryModify(ILexica modifier, bool passthru = false)
         {
             if (!Modifiers.Contains(modifier))
                 Modifiers.Add(modifier);
 
-            return modifier;
+            return passthru ? this : modifier;
         }
 
         /// <summary>
@@ -101,13 +100,13 @@ namespace NetMud.Communication.Messaging
         /// </summary>
         /// <param name="modifier">the lexica that is the modifier</param>
         /// <returns>Whether or not it succeeded</returns>
-        public ILexica TryModify(LexicalType type, GrammaticalType role, string phrase)
+        public ILexica TryModify(LexicalType type, GrammaticalType role, string phrase, bool passthru = false)
         {
             var modifier = new Lexica(type, role, phrase);
             if (!Modifiers.Contains(modifier))
                 Modifiers.Add(modifier);
 
-            return modifier;
+            return passthru ? this : modifier;
         }
 
         /// <summary>
@@ -115,9 +114,9 @@ namespace NetMud.Communication.Messaging
         /// </summary>
         /// <param name="modifier">the lexica that is the modifier</param>
         /// <returns>Whether or not it succeeded</returns>
-        public ILexica TryModify(Tuple<LexicalType, GrammaticalType, string> modifier)
+        public ILexica TryModify(Tuple<LexicalType, GrammaticalType, string> modifier, bool passthru = false)
         {
-            return TryModify(modifier.Item1, modifier.Item2, modifier.Item3);
+            return TryModify(modifier.Item1, modifier.Item2, modifier.Item3, passthru);
         }
 
         /// <summary>

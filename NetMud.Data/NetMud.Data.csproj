@@ -82,6 +82,9 @@
     <Compile Include="Game\Intelligence.cs" />
     <Compile Include="Game\Player.cs" />
     <Compile Include="Game\Room.cs" />
+    <Compile Include="Lexical\Lexica.cs" />
+    <Compile Include="Lexical\LexicalProcessor.cs" />
+    <Compile Include="Lexical\Thesaurus.cs" />
     <Compile Include="LookupData\Celestial.cs" />
     <Compile Include="LookupData\JournalEntry.cs" />
     <Compile Include="LookupData\NaturalResourceDataPartial.cs" />
@@ -113,7 +116,7 @@
     <Compile Include="System\LookupCriteria.cs" />
     <Compile Include="System\Map.cs" />
     <Compile Include="LookupData\Mineral.cs" />
-    <Compile Include="System\Occurrence.cs" />
+    <Compile Include="Lexical\Occurrence.cs" />
     <Compile Include="System\SerializableDataPartial.cs" />
     <Compile Include="System\TimeOfDay.cs" />
   </ItemGroup>

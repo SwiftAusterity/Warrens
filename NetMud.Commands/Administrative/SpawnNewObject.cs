@@ -10,7 +10,7 @@ using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.DataStructure.Behaviors.Existential;
-using NetMud.Data.System;
+using NetMud.Data.Lexical;
 
 namespace NutMud.Commands.System
 {

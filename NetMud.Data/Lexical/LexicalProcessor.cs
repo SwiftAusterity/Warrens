@@ -1,8 +1,9 @@
-﻿using NetMud.DataAccess.Cache;
+﻿using NetMud.Data.ConfigData;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Linguistic;
 using System.Linq;
 
-namespace NetMud.Communication.Lexicon
+namespace NetMud.Data.Lexical
 {
     /// <summary>
     /// Processes Lexica and outputs formatted prose
@@ -15,17 +16,19 @@ namespace NetMud.Communication.Lexicon
         /// <param name="lexica">lexica to check</param>
         public static void VerifyDictata(ILexica lexica)
         {
-            VerifyDictata(lexica.GetDictata());
+            //Experiment: make new everything
+            if (!VerifyDictata(lexica.GetDictata()))
+                VerifyDictata(new Dictata(lexica));
         }
 
         /// <summary>
         /// Verify the dictionary has this word already
         /// </summary>
         /// <param name="dictata">dictata to check</param>
-        public static void VerifyDictata(IDictata dictata)
+        public static bool VerifyDictata(IDictata dictata)
         {
             if (dictata == null)
-                return;
+                return false;
 
             var cacheKey = new ConfigDataCacheKey(dictata);
 
@@ -34,7 +37,7 @@ namespace NetMud.Communication.Lexicon
             if (maybeDictata != null)
             {
                 if (maybeDictata.Language != null)
-                    return;
+                    return true;
 
                 dictata = maybeDictata;
             }
@@ -50,12 +53,14 @@ namespace NetMud.Communication.Lexicon
             }
 
             dictata.SystemSave();
+
+            return true;
         }
 
         public static string GetPunctuationMark(SentenceType type)
         {
             var punctuation = string.Empty;
-            switch(type)
+            switch (type)
             {
                 case SentenceType.Exclamation:
                     punctuation = "!";

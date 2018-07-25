@@ -42,6 +42,12 @@ namespace NetMud.DataStructure.Base.System
         Tuple<int, int, int> GetModelDimensions();
 
         /// <summary>
+        /// Get's the entity's model dimensions
+        /// </summary>
+        /// <returns>height, length, width</returns>
+        float GetModelVolume();
+
+        /// <summary>
         /// Update this to the live cache
         /// </summary>
         void UpsertToLiveWorldCache(bool forceSave = false);

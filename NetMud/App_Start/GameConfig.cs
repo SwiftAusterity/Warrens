@@ -1,7 +1,7 @@
 ﻿using NetMud.Backup;
 using NetMud.CentralControl;
-using NetMud.Communication.Lexicon;
 using NetMud.Data.ConfigData;
+using NetMud.Data.Lexical;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Base.World;

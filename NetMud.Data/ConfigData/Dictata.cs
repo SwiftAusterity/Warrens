@@ -1,4 +1,4 @@
-﻿using NetMud.Communication.Messaging;
+﻿using NetMud.Data.Lexical;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.System;

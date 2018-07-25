@@ -1,6 +1,7 @@
 ﻿using NetMud.Cartography;
 using NetMud.Communication.Messaging;
 using NetMud.Data.DataIntegrity;
+using NetMud.Data.Lexical;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;

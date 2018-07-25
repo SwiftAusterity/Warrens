@@ -1,5 +1,6 @@
 ﻿using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
+using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.SupportingClasses;
 using System.Collections.Generic;
 using System.Linq;
@@ -113,7 +114,7 @@ namespace NetMud.Communication.Messaging
                 if (ToActor.SelectMany(msg => msg.Override).Any(str => !string.IsNullOrEmpty(str)))
                     Actor.WriteTo(TranslateOutput(ToActor.SelectMany(msg => msg.Override), entities));
                 else
-                    Actor.WriteTo(TranslateOutput(ToActor.Select(msg => msg.Occurrence?.Event?.ToString()), entities));
+                    Actor.WriteTo(TranslateOutput(ToActor.Select(msg => msg.Occurrence?.Event?.Describe(NarrativeNormalization.Normal, 1, LexicalTense.Present, NarrativePerspective.FirstPerson, false)), entities));
             }
 
             if (Subject != null && ToSubject.Any())
@@ -121,7 +122,7 @@ namespace NetMud.Communication.Messaging
                 if (ToSubject.SelectMany(msg => msg.Override).Any(str => !string.IsNullOrEmpty(str)))
                     Subject.WriteTo(TranslateOutput(ToSubject.SelectMany(msg => msg.Override), entities));
                 else
-                    Subject.WriteTo(TranslateOutput(ToSubject.Select(msg => msg.Occurrence?.Event?.ToString()), entities));
+                    Subject.WriteTo(TranslateOutput(ToSubject.Select(msg => msg.Occurrence?.Event?.Describe(NarrativeNormalization.Normal, 1, LexicalTense.Present, NarrativePerspective.SecondPerson, false)), entities));
             }
 
             if (Target != null && ToTarget.Any())
@@ -129,7 +130,7 @@ namespace NetMud.Communication.Messaging
                 if (ToTarget.SelectMany(msg => msg.Override).Any(str => !string.IsNullOrEmpty(str)))
                     Target.WriteTo(TranslateOutput(ToTarget.SelectMany(msg => msg.Override), entities));
                 else
-                    Target.WriteTo(TranslateOutput(ToTarget.Select(msg => msg.Occurrence?.Event?.ToString()), entities));
+                    Target.WriteTo(TranslateOutput(ToTarget.Select(msg => msg.Occurrence?.Event?.Describe(NarrativeNormalization.Normal, 1, LexicalTense.Present, NarrativePerspective.SecondPerson, false)), entities));
             }
 
             //TODO: origin and destination are areas of effect on their surrounding areas
@@ -144,7 +145,7 @@ namespace NetMud.Communication.Messaging
                     if (ToOrigin.SelectMany(msg => msg.Override).Any(str => !string.IsNullOrEmpty(str)))
                         dude.WriteTo(TranslateOutput(ToOrigin.SelectMany(msg => msg.Override), entities));
                     else
-                        dude.WriteTo(TranslateOutput(ToOrigin.Select(msg => msg.Occurrence?.Event?.ToString()), entities));
+                        dude.WriteTo(TranslateOutput(ToOrigin.Select(msg => msg.Occurrence?.Event?.Describe(NarrativeNormalization.Normal, 1, LexicalTense.Present, NarrativePerspective.ThirdPerson, false)), entities));
                 }
             }
 
@@ -158,7 +159,7 @@ namespace NetMud.Communication.Messaging
                     if (ToDestination.SelectMany(msg => msg.Override).Any(str => !string.IsNullOrEmpty(str)))
                         dude.WriteTo(TranslateOutput(ToDestination.SelectMany(msg => msg.Override), entities));
                     else
-                        dude.WriteTo(TranslateOutput(ToDestination.Select(msg => msg.Occurrence?.Event?.ToString()), entities));
+                        dude.WriteTo(TranslateOutput(ToDestination.Select(msg => msg.Occurrence?.Event?.Describe(NarrativeNormalization.Normal, 1, LexicalTense.Present, NarrativePerspective.ThirdPerson, false)), entities));
                 }
             }
         }

@@ -1,11 +1,10 @@
-﻿using NetMud.Communication.Messaging;
-using NetMud.DataStructure.Linguistic;
+﻿using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.SupportingClasses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NetMud.Data.System
+namespace NetMud.Data.Lexical
 {
     [Serializable]
     public class Occurrence : IOccurrence
@@ -52,9 +51,9 @@ namespace NetMud.Data.System
         /// </summary>
         /// <param name="modifier">the lexica that is the modifier</param>
         /// <returns>Whether or not it succeeded</returns>
-        public ILexica TryModify(ILexica modifier)
+        public ILexica TryModify(ILexica modifier, bool passthru = false)
         {
-            return Event.TryModify(modifier);
+            return Event.TryModify(modifier, passthru);
         }
 
         /// <summary>
@@ -82,9 +81,9 @@ namespace NetMud.Data.System
         /// </summary>
         /// <param name="modifier">the lexica that is the modifier</param>
         /// <returns>Whether or not it succeeded</returns>
-        public ILexica TryModify(IOccurrence modifier)
+        public ILexica TryModify(IOccurrence modifier, bool passthru = false)
         {
-            return TryModify(modifier.Event);
+            return TryModify(modifier.Event, passthru);
         }
 
         /// <summary>
@@ -112,9 +111,9 @@ namespace NetMud.Data.System
         /// </summary>
         /// <param name="modifier">the lexica that is the modifier</param>
         /// <returns>Whether or not it succeeded</returns>
-        public ILexica TryModify(LexicalType type, GrammaticalType role, string phrase)
+        public ILexica TryModify(LexicalType type, GrammaticalType role, string phrase, bool passthru = false)
         {
-            return Event.TryModify(type, role, phrase);
+            return Event.TryModify(type, role, phrase, passthru);
         }
 
         /// <summary>
@@ -122,9 +121,9 @@ namespace NetMud.Data.System
         /// </summary>
         /// <param name="modifier">the lexica that is the modifier</param>
         /// <returns>Whether or not it succeeded</returns>
-        public ILexica TryModify(Tuple<LexicalType, GrammaticalType, string> modifier)
+        public ILexica TryModify(Tuple<LexicalType, GrammaticalType, string> modifier, bool passthru = false)
         {
-            return TryModify(modifier.Item1, modifier.Item2, modifier.Item3);
+            return TryModify(modifier.Item1, modifier.Item2, modifier.Item3, passthru);
         }
 
         /// <summary>

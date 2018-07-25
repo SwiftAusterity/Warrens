@@ -1,6 +1,5 @@
-﻿using NetMud.Communication.Messaging;
-using NetMud.Data.DataIntegrity;
-using NetMud.Data.System;
+﻿using NetMud.Data.DataIntegrity;
+using NetMud.Data.Lexical;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Base.World;
@@ -130,6 +129,7 @@ namespace NetMud.Data.LookupData
         /// <returns>the output strings</returns>
         public virtual IOccurrence GetImmediateDescription(IEntity viewer, MessagingType sense)
         {
+            var me = GetSelf(sense);
             switch (sense)
             {
                 case MessagingType.Audible:
@@ -140,15 +140,18 @@ namespace NetMud.Data.LookupData
                 case MessagingType.Psychic:
                     if (!IsSensibleTo(viewer))
                         return new Occurrence(sense);
-                    break;
 
+                    me.TryModify(GetPsychicDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
+                    break;
                 case MessagingType.Visible:
                     if (!IsVisibleTo(viewer))
                         return new Occurrence(sense);
+
+                    me.TryModify(GetVisibleDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
             }
 
-            return GetSelf(sense);
+            return me;
         }
 
         /// <summary>
@@ -158,7 +161,10 @@ namespace NetMud.Data.LookupData
         /// <returns>the output strings</returns>
         public virtual string GetDescribableName(IEntity viewer)
         {
-            return GetImmediateDescription(viewer, MessagingType.Visible).ToString();
+            if (!IsVisibleTo(viewer))
+                return string.Empty;
+
+            return GetSelf(MessagingType.Visible).ToString();
         }
 
         /// <summary>

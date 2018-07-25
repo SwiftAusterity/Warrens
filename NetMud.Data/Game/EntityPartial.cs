@@ -1,5 +1,6 @@
 ﻿using NetMud.Communication;
 using NetMud.Communication.Messaging;
+using NetMud.Data.Lexical;
 using NetMud.Data.Serialization;
 using NetMud.Data.System;
 using NetMud.DataAccess;
@@ -66,6 +67,17 @@ namespace NetMud.Data.Game
         /// </summary>
         /// <returns>height, length, width</returns>
         public abstract Tuple<int, int, int> GetModelDimensions();
+
+        /// <summary>
+        /// Get's the entity's model dimensions
+        /// </summary>
+        /// <returns>height, length, width</returns>
+        public virtual float GetModelVolume()
+        {
+            var dimensions = GetModelDimensions();
+
+            return Math.Max(1, dimensions.Item1) * Math.Max(1, dimensions.Item2) * Math.Max(1, dimensions.Item3);
+        }
 
         /// <summary>
         /// keywords this entity is referrable by in the world by the parser
@@ -440,35 +452,48 @@ namespace NetMud.Data.Game
         /// <returns>the output strings</returns>
         public virtual IOccurrence GetImmediateDescription(IEntity viewer, MessagingType sense)
         {
+            var me = GetSelf(sense);
             switch (sense)
             {
                 case MessagingType.Audible:
                     if (!IsAudibleTo(viewer))
                         return new Occurrence(sense);
+
+                    me.TryModify(GetAudibleDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
                 case MessagingType.Olefactory:
                     if (!IsSmellableTo(viewer))
                         return new Occurrence(sense);
+
+                    me.TryModify(GetSmellableDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
                 case MessagingType.Psychic:
                     if (!IsSensibleTo(viewer))
                         return new Occurrence(sense);
+
+                    me.TryModify(GetPsychicDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
                 case MessagingType.Tactile:
                     if (!IsTouchableTo(viewer))
                         return new Occurrence(sense);
+
+                    me.TryModify(GetTouchDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
                 case MessagingType.Taste:
                     if (!IsTastableTo(viewer))
                         return new Occurrence(sense);
+
+                    me.TryModify(GetTasteDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
                 case MessagingType.Visible:
                     if (!IsVisibleTo(viewer))
                         return new Occurrence(sense);
+
+                    me.TryModify(GetVisibleDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
             }
 
-            return GetSelf(sense);
+            return me;
         }
 
         /// <summary>
@@ -478,7 +503,10 @@ namespace NetMud.Data.Game
         /// <returns>the output strings</returns>
         public virtual string GetDescribableName(IEntity viewer)
         {
-            return GetImmediateDescription(viewer, MessagingType.Visible).ToString();
+            if (!IsVisibleTo(viewer))
+                return string.Empty;
+
+            return GetSelf(MessagingType.Visible).ToString();
         }
 
         internal IOccurrence GetSelf(MessagingType type, int strength = 100)

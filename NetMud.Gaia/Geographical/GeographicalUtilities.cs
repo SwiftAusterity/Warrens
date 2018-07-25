@@ -153,6 +153,34 @@ namespace NetMud.Gaia.Geographical
 
             return CrowdSizeDescription.Intimate;
         }
+
+        public static ObjectContainmentSizeDescription GetObjectContainmentSize(float contents, float size)
+        {
+            var remainder = size - contents;
+
+            if (remainder > 50)
+                return ObjectContainmentSizeDescription.Slim;
+
+            if (remainder > 0)
+                return ObjectContainmentSizeDescription.Full;
+
+            if (remainder > -10)
+                return ObjectContainmentSizeDescription.Bulging;
+
+            if (remainder > -25)
+                return ObjectContainmentSizeDescription.Overflowing;
+
+            return ObjectContainmentSizeDescription.Bursting;
+        }
         #endregion
+    }
+
+    public enum ObjectContainmentSizeDescription : short
+    {
+        Slim = 0,
+        Full = 1,
+        Bulging = 2,
+        Overflowing = 3,
+        Bursting = 4
     }
 }

@@ -29,7 +29,7 @@ namespace NetMud.DataStructure.SupportingClasses
         /// </summary>
         /// <param name="modifier">the lexica that is the modifier</param>
         /// <returns>Whether or not it succeeded</returns>
-        ILexica TryModify(ILexica modifier);
+        ILexica TryModify(ILexica modifier, bool passthru = false);
 
         /// <summary>
         /// Try to add a modifier to a lexica
@@ -50,7 +50,7 @@ namespace NetMud.DataStructure.SupportingClasses
         /// </summary>
         /// <param name="modifier">the lexica that is the modifier</param>
         /// <returns>Whether or not it succeeded</returns>
-        ILexica TryModify(IOccurrence modifier);
+        ILexica TryModify(IOccurrence modifier, bool passthru = false);
 
         /// <summary>
         /// Try to add a modifier to a lexica
@@ -71,14 +71,14 @@ namespace NetMud.DataStructure.SupportingClasses
         /// </summary>
         /// <param name="modifier">the lexica that is the modifier</param>
         /// <returns>Whether or not it succeeded</returns>
-        ILexica TryModify(LexicalType type, GrammaticalType role, string phrase);
+        ILexica TryModify(LexicalType type, GrammaticalType role, string phrase, bool passthru = false);
 
         /// <summary>
         /// Try to add a modifier to a lexica
         /// </summary>
         /// <param name="modifier">the lexica that is the modifier</param>
         /// <returns>Whether or not it succeeded</returns>
-        ILexica TryModify(Tuple<LexicalType, GrammaticalType, string> modifier);
+        ILexica TryModify(Tuple<LexicalType, GrammaticalType, string> modifier, bool passthru = false);
 
         /// <summary>
         /// Try to add a modifier to a lexica

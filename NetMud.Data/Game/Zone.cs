@@ -1,5 +1,5 @@
-﻿using NetMud.Communication.Messaging;
-using NetMud.Data.EntityBackingData;
+﻿using NetMud.Data.EntityBackingData;
+using NetMud.Data.Lexical;
 using NetMud.Data.System;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Entity;
@@ -257,6 +257,7 @@ namespace NetMud.Data.Game
                         if (uberPsy.Modifiers.Any(mod => mod.Role == GrammaticalType.DirectObject))
                             me.TryModify(collectivePsy);
                         break;
+                    case MessagingType.Taste:
                     case MessagingType.Tactile:
                         continue;
                     case MessagingType.Visible:

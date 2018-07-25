@@ -248,6 +248,8 @@ namespace NetMud.Gossip
             MyClient.OnOpen += (sender, e) => OnOpen(sender, e);
 
             MyClient.OnClose += (sender, e) => OnClose(sender, e);
+
+            MyClient.WaitTime = new TimeSpan(0, 0, 10);
         }
 
         public void SendMessage(string userName, string messageBody, string channel = "gossip")

@@ -1,4 +1,4 @@
-﻿namespace NetMud.Communication.Lexicon
+﻿namespace NetMud.Data.Lexical
 {
     /// <summary>
     /// Finds synonyms and antonyms

@@ -14,10 +14,9 @@ using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.Behaviors.System;
 using NetMud.DataStructure.Linguistic;
 using NetMud.Data.ConfigData;
-using NetMud.Communication.Messaging;
-using NetMud.Communication.Lexicon;
 using System.Linq;
 using NetMud.DataAccess;
+using NetMud.Data.Lexical;
 
 namespace NetMud.Data.EntityBackingData
 {

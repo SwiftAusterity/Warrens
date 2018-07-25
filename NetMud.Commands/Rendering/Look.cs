@@ -7,7 +7,7 @@ using NetMud.Utility;
 using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
 using NetMud.DataStructure.SupportingClasses;
-using NetMud.Data.System;
+using NetMud.Data.Lexical;
 
 namespace NutMud.Commands.Rendering
 {

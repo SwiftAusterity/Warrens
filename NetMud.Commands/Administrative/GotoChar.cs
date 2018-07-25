@@ -5,8 +5,8 @@ using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
 using System;
 using NetMud.DataStructure.SupportingClasses;
-using NetMud.Data.System;
 using NetMud.DataStructure.Base.System;
+using NetMud.Data.Lexical;
 
 namespace NutMud.Commands.Administrative
 {

@@ -1,7 +1,6 @@
-﻿using NetMud.Communication.Lexicon;
-using NetMud.Communication.Messaging;
-using NetMud.Data.ConfigData;
+﻿using NetMud.Data.ConfigData;
 using NetMud.Data.DataIntegrity;
+using NetMud.Data.Lexical;
 using NetMud.Data.Serialization;
 using NetMud.Data.System;
 using NetMud.DataAccess;

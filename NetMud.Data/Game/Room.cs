@@ -1,6 +1,6 @@
-﻿using NetMud.Communication.Messaging;
-using NetMud.Data.DataIntegrity;
+﻿using NetMud.Data.DataIntegrity;
 using NetMud.Data.EntityBackingData;
+using NetMud.Data.Lexical;
 using NetMud.Data.System;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Entity;
@@ -277,8 +277,60 @@ namespace NetMud.Data.Game
                         if (uberPsy.Modifiers.Any(mod => mod.Role == GrammaticalType.DirectObject))
                             me.TryModify(collectivePsy);
                         break;
+                    case MessagingType.Taste:
+                        if (!IsTastableTo(viewer))
+                            continue;
+
+                        if (me == null)
+                            me = GetSelf(sense);
+
+                        var taDescs = GetPsychicDescriptives(viewer);
+
+                        me.TryModify(taDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
+
+                        var collectiveTaste = new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you");
+
+                        var uberTaste = collectiveTaste.TryModify(LexicalType.Verb, GrammaticalType.Verb, "taste");
+                        uberTaste.TryModify(taDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
+
+                        foreach (var desc in taDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
+                        {
+                            var newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase);
+                            newDesc.TryModify(desc.Event.Modifiers);
+
+                            uberTaste.TryModify(newDesc);
+                        }
+
+                        if (uberTaste.Modifiers.Any(mod => mod.Role == GrammaticalType.DirectObject))
+                            me.TryModify(collectiveTaste);
+                        break;
                     case MessagingType.Tactile:
-                        continue;
+                        if (!IsTouchableTo(viewer))
+                            continue;
+
+                        if (me == null)
+                            me = GetSelf(sense);
+
+                        var tDescs = GetTouchDescriptives(viewer);
+
+                        me.TryModify(tDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
+
+                        var collectiveTouch = new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you");
+
+                        var uberTouch = collectiveTouch.TryModify(LexicalType.Verb, GrammaticalType.Verb, "feel");
+                        uberTouch.TryModify(tDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
+
+                        foreach (var desc in tDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
+                        {
+                            var newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase);
+                            newDesc.TryModify(desc.Event.Modifiers);
+
+                            uberTouch.TryModify(newDesc);
+                        }
+
+                        if (uberTouch.Modifiers.Any(mod => mod.Role == GrammaticalType.DirectObject))
+                            me.TryModify(collectiveTouch);
+                        break;
                     case MessagingType.Visible:
                         if (!IsVisibleTo(viewer))
                             continue;
