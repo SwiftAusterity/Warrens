@@ -16,6 +16,9 @@ namespace NetMud.Data.Lexical
         /// <param name="lexica">lexica to check</param>
         public static void VerifyDictata(ILexica lexica)
         {
+            if (string.IsNullOrWhiteSpace(lexica.Phrase))
+                return;
+
             //Experiment: make new everything
             if (!VerifyDictata(lexica.GetDictata()))
                 VerifyDictata(new Dictata(lexica));
@@ -27,7 +30,7 @@ namespace NetMud.Data.Lexical
         /// <param name="dictata">dictata to check</param>
         public static bool VerifyDictata(IDictata dictata)
         {
-            if (dictata == null)
+            if (dictata == null || string.IsNullOrWhiteSpace(dictata.Name))
                 return false;
 
             var cacheKey = new ConfigDataCacheKey(dictata);
