@@ -173,7 +173,9 @@ namespace NetMud.Controllers.GameAdmin
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
                 DataObject = globalConfig,
-                WebsocketPortalActive = globalConfig.WebsocketPortalActive
+                WebsocketPortalActive = globalConfig.WebsocketPortalActive,
+                ValidLanguages = ConfigDataCache.GetAll<ILanguage>(),
+                SystemLanguage = globalConfig.SystemLanguage?.Name
             };
 
             return View(vModel);
@@ -187,7 +189,10 @@ namespace NetMud.Controllers.GameAdmin
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
             var globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
 
+            var languageChosen = ConfigDataCache.Get<ILanguage>(new ConfigDataCacheKey(typeof(ILanguage), vModel.SystemLanguage, ConfigDataType.Language));
+
             globalConfig.WebsocketPortalActive = vModel.WebsocketPortalActive;
+            globalConfig.SystemLanguage = languageChosen;
 
             if (globalConfig.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {

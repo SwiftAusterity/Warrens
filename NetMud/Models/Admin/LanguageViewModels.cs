@@ -40,7 +40,10 @@ namespace NetMud.Models.Admin
         [DataType(DataType.Text)]
         public string Name { get; set; }
 
-        
+        [Display(Name = "Language Code", Description = "The language code Google Translate uses to identify this language.")]
+        [DataType(DataType.Text)]
+        public string GoogleLanguageCode { get; set; }
+
         [Display(Name = "UI Only", Description = "Only for use in translating the input/output, not an 'in game' language.")]
         public bool UIOnly { get; set; }
 

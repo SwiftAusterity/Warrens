@@ -118,7 +118,8 @@ namespace NetMud.Controllers.GameAdmin
             var newObj = new Language
             {
                 Name = vModel.Name,
-                UIOnly = vModel.UIOnly
+                UIOnly = vModel.UIOnly,
+                GoogleLanguageCode = vModel.GoogleLanguageCode
             };
 
             if (!newObj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
@@ -151,6 +152,7 @@ namespace NetMud.Controllers.GameAdmin
 
             vModel.DataObject = obj;
             vModel.Name = obj.Name;
+            vModel.GoogleLanguageCode = obj.GoogleLanguageCode;
             vModel.UIOnly = obj.UIOnly;
 
             return View("~/Views/GameAdmin/Language/Edit.cshtml", vModel);
@@ -171,6 +173,7 @@ namespace NetMud.Controllers.GameAdmin
             }
 
             obj.UIOnly = vModel.UIOnly;
+            obj.GoogleLanguageCode = vModel.GoogleLanguageCode;
 
             if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {

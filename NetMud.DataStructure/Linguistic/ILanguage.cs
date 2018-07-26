@@ -11,5 +11,10 @@ namespace NetMud.DataStructure.Linguistic
         /// Languages only used for input and output translation
         /// </summary>
         bool UIOnly { get; set; }
+
+        /// <summary>
+        /// Google's name for a language for the translation service
+        /// </summary>
+        string GoogleLanguageCode { get; set; }
     }
 }

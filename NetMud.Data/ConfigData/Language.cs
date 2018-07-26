@@ -32,6 +32,11 @@ namespace NetMud.Data.ConfigData
         public bool UIOnly { get; set; }
 
         /// <summary>
+        /// The code google translate uses to identify this language
+        /// </summary>
+        public string GoogleLanguageCode { get; set; }
+
+        /// <summary>
         /// Get the significant details of what needs approval
         /// </summary>
         /// <returns>A list of strings</returns>

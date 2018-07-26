@@ -8,6 +8,12 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group row">
             @Html.EditorFor(e => e.WebsocketPortalActive)
+            @Html.DescriptiveLabelFor(m => m.SystemLanguage, new { @class = "col-sm-1 col-form-label" })
+            <div class="col-md-4">
+                @Html.DropDownList("SystemLanguage", Model.ValidLanguages.Select(rl =>
+                                                new SelectListItem() { Text = rl.Name, Value = rl.Name, Selected = rl.Name.Equals(Model.SystemLanguage) })
+                                                 , "Select One", htmlAttributes: new { id = "SystemLanguage", @class="form-control" })
+            </div>
         </div>
 
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "GameAdmin", IncludeCancel = true })

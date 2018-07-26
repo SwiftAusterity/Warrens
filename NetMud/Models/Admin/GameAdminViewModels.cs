@@ -95,6 +95,11 @@ namespace NetMud.Models.Admin
         [Display(Name = "Websocket Portal Available", Description = "Are new connections being accepted over websockets?")]
         public bool WebsocketPortalActive { get; set; }
 
+        [Display(Name = "System Language", Description = "The default language used for the system.")]
+        [DataType(DataType.Text)]
+        public string SystemLanguage { get; set; }
+
+        public IEnumerable<ILanguage> ValidLanguages { get; set; }
         public IGlobalConfig DataObject { get; set; }
     }
 }
