@@ -1,29 +1,25 @@
 ﻿@model NetMud.Models.Admin.AddEditInanimateDataViewModel
-@{
-    ViewBag.Title = "Add New Inanimate";
-}
 
-@{
-    <section id="newCharacterForm">
-        @using (Html.BeginForm("Add", "Inanimate", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-        {
-            @Html.AntiForgeryToken()
-            <hr />
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            <div class="form-group one-column">
-                @Html.EditorFor(e => e.Name)
-            </div>
+<section id="newCharacterForm">
+    @using (Html.BeginForm("Add", "Inanimate", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group row">
+            @Html.EditorFor(e => e.Name)
+        </div>
 
-            @Html.Partial("InanimateEntityContainer", new NetMud.Models.Admin.EntityContainerViewModel<NetMud.DataStructure.Base.Entity.IInanimate>("Inanimate", "Inanimate Containers"))
-            @Html.Partial("MobileEntityContainer", new NetMud.Models.Admin.EntityContainerViewModel<NetMud.DataStructure.Base.Supporting.IMobile>("Mobile", "Character Containers"))
+        @Html.Partial("~/Views/GameAdmin/Inanimate/InternalComposition.cshtml", Model)
 
-            @Html.Partial("TwoDimensionalEntityEditor", Model)
-            @Html.Partial("~/Views/GameAdmin/Inanimate/InternalComposition.cshtml", Model)
+        @Html.Partial("InanimateEntityContainer", new NetMud.Models.Admin.EntityContainerViewModel<NetMud.DataStructure.Base.Entity.IInanimate>("Inanimate", "Inanimate Containers"))
+        @Html.Partial("MobileEntityContainer", new NetMud.Models.Admin.EntityContainerViewModel<NetMud.DataStructure.Base.Supporting.IMobile>("Mobile", "Character Containers"))
 
-            @Html.Partial("SubmitButton", "Create")
-        }
-    </section>
-}
+        @Html.Partial("TwoDimensionalEntityEditor", Model)
+
+        @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Create", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Inanimate", IncludeCancel = true })
+    }
+</section>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

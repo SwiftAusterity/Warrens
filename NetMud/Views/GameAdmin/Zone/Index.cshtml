@@ -1,66 +1,27 @@
 ﻿@model NetMud.Models.Admin.ManageZoneDataViewModel
 @{
-    ViewBag.Title = "Manage Zones";
     var prevPageState = Model.CurrentPageNumber > 1 ? String.Empty : "disabled";
     var nextPageState = Model.CurrentPageNumber < Model.NumberOfPages ? String.Empty : "disabled";
+
+    var linkText = Html.ActionLink("99999999", "Edit", new { id = 99999999 }).ToString();
+    var tableColumns = new Dictionary<string, Func<dynamic, string>>();
+    tableColumns.Add("ID", obj => linkText.Replace("99999999", obj.Id.ToString()));
+    tableColumns.Add("Name", obj => obj.FitnessProblems ? string.Format("<span style='color:red;' title='{0}'>{1}</span>", String.Join(", ", obj.FitnessReport()), obj.Name) : obj.Name);
+    tableColumns.Add("World", obj => obj.World.Name);
+    tableColumns.Add("State", obj => obj.State.ToString());
 }
 
-@{
-    @Html.Partial("AddContentLink");
+@Html.Partial("AddContentLink")
 
-                                   if (Model.Items.Count() > 0)
-                                   {
-                                    @Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model, "Zone"))
+@Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model, "Zone"))
 
-                                       using (Html.BeginForm("Remove", "Zone"))
-                                       {
-                                        @Html.AntiForgeryToken()
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <td>
-                                                        ID
-                                                    </td>
-                                                    <td>
-                                                        Name
-                                                    </td>
-                                                    <td>
-                                                        World Name
-                                                    </td>
-                                                    <td>
-                                                        Remove
-                                                    </td>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach (var obj in Model.CurrentPageOfItems)
-                                                {
-                                                    <tr>
-                                                        <td>@Html.ActionLink(@obj.ID.ToString(), "Edit", new { id = obj.ID })</td>
-                                                        <td>
-                                                            @if (obj.FitnessProblems)
-                                                            {
-                                                                <span style="color:red;" title="@String.Join(", ", obj.FitnessReport())">@obj.Name</span>
-                                                            }
-                                                            else
-                                                            {
-                                                                @obj.Name
-                                                            }
-                                                        </td>
-                                                        <td>@obj.WorldName</td>
-                                                        <td>
-                                                            <div>
-                                                                @Html.Partial("RemoveDataItem", @obj.ID)
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                }
-                                            </tbody>
-                                        </table>
-                                       }
-
-                                   }
+@using (Html.BeginForm("Remove", "Zone"))
+{
+    @Html.AntiForgeryToken()
+    @Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Name = "Zone Data", Columns = tableColumns, Values = Model.CurrentPageOfItems.OrderBy(obj => obj.Id) })
 }
+
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

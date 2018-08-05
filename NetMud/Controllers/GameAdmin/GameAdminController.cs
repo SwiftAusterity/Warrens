@@ -8,15 +8,20 @@ using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Place;
+using NetMud.DataStructure.Base.PlayerConfiguration;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Base.World;
+using NetMud.DataStructure.Linguistic;
 using NetMud.Models.Admin;
 using System.Linq;
+using System.Net.WebSockets;
 using System.Web;
 using System.Web.Mvc;
 
 namespace NetMud.Controllers.GameAdmin
 {
+    [Authorize(Roles = "Admin,Builder")]
     public class GameAdminController : Controller
     {
         private ApplicationUserManager _userManager;
@@ -44,31 +49,48 @@ namespace NetMud.Controllers.GameAdmin
         //Also called Dashboard in most of the html
         public ActionResult Index()
         {
-            var dashboardModel = new DashboardViewModel();
-            dashboardModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            var dashboardModel = new DashboardViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
-            dashboardModel.Inanimates = BackingDataCache.GetAll<IInanimateData>();
-            dashboardModel.NPCs = BackingDataCache.GetAll<INonPlayerCharacter>();
-            dashboardModel.Worlds = BackingDataCache.GetAll<IWorld>();
+                Inanimates = BackingDataCache.GetAll<IInanimateData>(),
+                Rooms = BackingDataCache.GetAll<IRoomData>(),
+                NPCs = BackingDataCache.GetAll<INonPlayerCharacter>(),
+                Zones = BackingDataCache.GetAll<IZoneData>(),
+                Locales = BackingDataCache.GetAll<ILocaleData>(),
+                Worlds = BackingDataCache.GetAll<IGaiaData>(),
 
-            dashboardModel.HelpFiles = BackingDataCache.GetAll<IHelp>();
-            dashboardModel.DimensionalModels = BackingDataCache.GetAll<IDimensionalModelData>();
-            dashboardModel.Materials = BackingDataCache.GetAll<IMaterial>();
-            dashboardModel.Races = BackingDataCache.GetAll<IRace>();
-            dashboardModel.Constants = BackingDataCache.GetAll<IConstants>();
-            dashboardModel.Fauna = BackingDataCache.GetAll<IFauna>();
-            dashboardModel.Flora = BackingDataCache.GetAll<IFlora>();
-            dashboardModel.Minerals = BackingDataCache.GetAll<IMineral>();
+                HelpFiles = BackingDataCache.GetAll<IHelp>(),
+                DimensionalModels = BackingDataCache.GetAll<IDimensionalModelData>(),
+                Materials = BackingDataCache.GetAll<IMaterial>(),
+                Races = BackingDataCache.GetAll<IRace>(),
+                Constants = BackingDataCache.GetAll<IConstants>(),
+                Fauna = BackingDataCache.GetAll<IFauna>(),
+                Flora = BackingDataCache.GetAll<IFlora>(),
+                Minerals = BackingDataCache.GetAll<IMineral>(),
+                UIModules = BackingDataCache.GetAll<IUIModule>(),
+                Celestials = BackingDataCache.GetAll<ICelestial>(),
+                Journals = BackingDataCache.GetAll<IJournalEntry>(),
 
-            dashboardModel.LiveTaskTokens = Processor.GetAllLiveTaskStatusTokens();
-            dashboardModel.LivePlayers = LiveCache.GetAll<IPlayer>().Count();
-            dashboardModel.LiveInanimates = LiveCache.GetAll<IInanimate>().Count();
-            dashboardModel.LiveNPCs = LiveCache.GetAll<IIntelligence>().Count();
-            dashboardModel.LiveChunks = LiveCache.GetAll<IChunk>().Count();
+                DictionaryWords = ConfigDataCache.GetAll<IDictata>(),
+                Languages = ConfigDataCache.GetAll<ILanguage>(),
 
-            dashboardModel.WebsocketServers = LiveCache.GetAll<NetMud.Websock.Server>();
+                LiveTaskTokens = Processor.GetAllLiveTaskStatusTokens(),
+                LivePlayers = LiveCache.GetAll<IPlayer>().Count(),
+                LiveInanimates = LiveCache.GetAll<IInanimate>().Count(),
+                LiveRooms = LiveCache.GetAll<IRoom>().Count(),
+                LiveNPCs = LiveCache.GetAll<IIntelligence>().Count(),
+                LiveLocales = LiveCache.GetAll<ILocale>().Count(),
+                LiveZones = LiveCache.GetAll<IZone>().Count(),
+                LiveWorlds = LiveCache.GetAll<IGaia>().Count(),
+            };
 
             return View(dashboardModel);
+        }
+
+        public ActionResult ModalErrorOrClose(string Message = "")
+        {
+            return View("~/Views/GameAdmin/ModalErrorOrClose.cshtml", "_chromelessLayout", Message);
         }
 
         #region Live Threads
@@ -99,39 +121,6 @@ namespace NetMud.Controllers.GameAdmin
         }
         #endregion
 
-        #region "Communication"
-        public ActionResult StopRunningAllWebsockets()
-        {
-            string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
-
-            var servers = LiveCache.GetAll<NetMud.Websock.Server>();
-
-            foreach (var server in servers)
-                server.Shutdown();
-
-            LoggingUtility.LogAdminCommandUsage("*WEB* - StopALLWebSockets", authedUser.GameAccount.GlobalIdentityHandle);
-            message = "Cancel signal sent for all websockets.";
-
-            return RedirectToAction("Index", new { Message = message });
-        }
-
-        public ActionResult StopWebSocket(int port)
-        {
-            string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
-
-            var server = LiveCache.Get<NetMud.Websock.Server>("NetMud.Websock.Server_" + port.ToString());
-
-            server.Shutdown();
-
-            LoggingUtility.LogAdminCommandUsage("*WEB* - StopWebSocket[" + port.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-            message = "Cancel signal sent.";
-
-            return RedirectToAction("Index", new { Message = message });
-        }
-        #endregion
-
         #region Running Data
         public ActionResult BackupWorld()
         {
@@ -156,6 +145,64 @@ namespace NetMud.Controllers.GameAdmin
             hotBack.RestoreLiveBackup();
 
             return RedirectToAction("Index", new { Message = "Restore Started" });
+        }
+
+        public ActionResult RestartGossipServer()
+        {
+            var gossipServers = LiveCache.GetAll<WebSocket>();
+
+            foreach (var server in gossipServers)
+            {
+                server.Abort();
+            }
+
+            var gossipServer = new Gossip.GossipClient();
+            gossipServer.Launch();
+
+            return RedirectToAction("Index", new { Message = "Gossip Server Restarted" });
+        }
+        #endregion
+
+        #region "Global Config"
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public ActionResult GlobalConfig()
+        {
+            var globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
+            var vModel = new GlobalConfigViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                DataObject = globalConfig,
+                WebsocketPortalActive = globalConfig.WebsocketPortalActive,
+                ValidLanguages = ConfigDataCache.GetAll<ILanguage>(),
+                SystemLanguage = globalConfig.SystemLanguage?.Name
+            };
+
+            return View(vModel);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public ActionResult GlobalConfig(GlobalConfigViewModel vModel)
+        {
+            string message = string.Empty;
+            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            var globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
+
+            var languageChosen = ConfigDataCache.Get<ILanguage>(new ConfigDataCacheKey(typeof(ILanguage), vModel.SystemLanguage, ConfigDataType.Language));
+
+            globalConfig.WebsocketPortalActive = vModel.WebsocketPortalActive;
+            globalConfig.SystemLanguage = languageChosen;
+
+            if (globalConfig.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+            {
+                LoggingUtility.LogAdminCommandUsage("*WEB* - EditGlobalConfig[" + globalConfig.UniqueKey.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                message = "Edit Successful.";
+            }
+            else
+                message = "Error; Edit failed.";
+
+            return RedirectToAction("Index", new { Message = message });
         }
         #endregion
     }

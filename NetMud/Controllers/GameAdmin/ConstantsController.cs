@@ -5,6 +5,7 @@ using NetMud.Data.System;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Behaviors.System;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Models.Admin;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ using System.Web.Mvc;
 
 namespace NetMud.Controllers.GameAdmin
 {
+    [Authorize(Roles = "Admin,Builder")]
     public class ConstantsController : Controller
     {
         private ApplicationUserManager _userManager;
@@ -39,41 +41,59 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageConstantsDataViewModel(BackingDataCache.GetAll<IConstants>());
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            var vModel = new ManageConstantsDataViewModel(BackingDataCache.GetAll<IConstants>())
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
-            vModel.CurrentPageNumber = CurrentPageNumber;
-            vModel.ItemsPerPage = ItemsPerPage;
-            vModel.SearchTerms = SearchTerms;
+                CurrentPageNumber = CurrentPageNumber,
+                ItemsPerPage = ItemsPerPage,
+                SearchTerms = SearchTerms
+            };
 
             return View("~/Views/GameAdmin/Constants/Index.cshtml", vModel);
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Remove(long ID, string authorize)
+        [Route(@"GameAdmin/Constants/Remove/{removeId?}/{authorizeRemove?}/{unapproveId?}/{authorizeUnapprove?}")]
+        public ActionResult Remove(long removeId = -1, string authorizeRemove = "", long unapproveId = -1, string authorizeUnapprove = "")
         {
             string message = string.Empty;
 
-            if (string.IsNullOrWhiteSpace(authorize) || !ID.ToString().Equals(authorize))
-                message = "You must check the proper authorize radio button first.";
-            else
+            if (!string.IsNullOrWhiteSpace(authorizeRemove) && removeId.ToString().Equals(authorizeRemove))
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<IConstants>(ID);
+                var obj = BackingDataCache.Get<IConstants>(removeId);
 
                 if (obj == null)
                     message = "That does not exist";
-                else if (obj.Remove())
+                else if (obj.Remove(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                 {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveConstantsFile[" + ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveConstants[" + removeId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Delete Successful.";
                 }
                 else
                     message = "Error; Removal failed.";
             }
+            else if (!string.IsNullOrWhiteSpace(authorizeUnapprove) && unapproveId.ToString().Equals(authorizeUnapprove))
+            {
+                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+                var obj = BackingDataCache.Get<IConstants>(unapproveId);
+
+                if (obj == null)
+                    message = "That does not exist";
+                else if (obj.ChangeApprovalStatus(authedUser.GameAccount, authedUser.GetStaffRank(User), ApprovalState.Returned))
+                {
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - UnapproveConstants[" + unapproveId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    message = "Unapproval Successful.";
+                }
+                else
+                    message = "Error; Unapproval failed.";
+            }
+            else
+                message = "You must check the proper remove or unapprove authorization radio button first.";
 
             return RedirectToAction("Index", new { Message = message });
         }
@@ -81,8 +101,10 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add()
         {
-            var vModel = new AddEditConstantsViewModel();
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            var vModel = new AddEditConstantsViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId())
+            };
 
             return View("~/Views/GameAdmin/Constants/Add.cshtml", vModel);
         }
@@ -94,8 +116,10 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var newObj = new NetMud.Data.System.Constants();
-            newObj.Name = vModel.Name;
+            var newObj = new Data.System.Constants
+            {
+                Name = vModel.Name
+            };
 
             var criterion = new Dictionary<CriteriaType, string>();
             if (vModel.CriterionTypes != null && vModel.CriterionValues != null)
@@ -129,16 +153,18 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = message });
             }
 
-            var newLookup = new LookupCriteria();
-            newLookup.Criterion = criterion;
+            var newLookup = new LookupCriteria
+            {
+                Criterion = criterion
+            };
 
             newObj.AddOrUpdate(newLookup, newValues);
 
-            if (newObj.Create() == null)
+            if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
                 message = "Error; Creation failed.";
             else
             {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - AddConstantsFile[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                LoggingUtility.LogAdminCommandUsage("*WEB* - AddConstantsFile[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 message = "Creation Successful.";
             }
 
@@ -149,8 +175,10 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(long id)
         {
             string message = string.Empty;
-            var vModel = new AddEditConstantsViewModel();
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            var vModel = new AddEditConstantsViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId())
+            };
 
             var obj = BackingDataCache.Get<IConstants>(id);
 
@@ -208,14 +236,16 @@ namespace NetMud.Controllers.GameAdmin
                     if (!string.IsNullOrWhiteSpace(newValue) && !newValues.Contains(newValue))
                         newValues.Add(newValue);
 
-            var newLookup = new LookupCriteria();
-            newLookup.Criterion = criterion;
+            var newLookup = new LookupCriteria
+            {
+                Criterion = criterion
+            };
 
             obj.AddOrUpdate(newLookup, newValues);
 
-            if (obj.Save())
+            if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - EditConstantsFile[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                LoggingUtility.LogAdminCommandUsage("*WEB* - EditConstantsFile[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 message = "Edit Successful.";
             }
             else

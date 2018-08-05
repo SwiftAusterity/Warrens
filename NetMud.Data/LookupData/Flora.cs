@@ -1,7 +1,7 @@
-﻿using NetMud.DataAccess.Cache;
+﻿using NetMud.Data.DataIntegrity;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.Behaviors.Existential;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -26,13 +26,14 @@ namespace NetMud.Data.LookupData
         public bool Coniferous { get; set; }
 
         [JsonProperty("Wood")]
-        private long _wood { get; set; }
+        private BackingDataCacheKey _wood { get; set; }
 
         /// <summary>
         /// Bulk material of plant. Stem, trunk, etc.
         /// </summary>
         [JsonIgnore]
         [ScriptIgnore]
+        [NonNullableDataIntegrity("Wood must have a value.")]
         public IMaterial Wood
         { 
             get
@@ -41,12 +42,12 @@ namespace NetMud.Data.LookupData
             }
             set
             {
-                _wood = value.ID;
+                _wood = new BackingDataCacheKey(value);
             }
         }
 
         [JsonProperty("Flower")]
-        private long _flower { get; set; }
+        private BackingDataCacheKey _flower { get; set; }
 
         /// <summary>
         /// Flowering element of plant
@@ -61,12 +62,12 @@ namespace NetMud.Data.LookupData
             }
             set
             {
-                _flower = value.ID;
+                _flower = new BackingDataCacheKey(value);
             }
         }
 
         [JsonProperty("Leaf")]
-        private long _leaf { get; set; }
+        private BackingDataCacheKey _leaf { get; set; }
 
         /// <summary>
         /// Leaves of the plant.
@@ -81,12 +82,12 @@ namespace NetMud.Data.LookupData
             }
             set
             {
-                _leaf = value.ID;
+                _leaf = new BackingDataCacheKey(value);
             }
         }
 
         [JsonProperty("Fruit")]
-        private long _fruit { get; set; }
+        private BackingDataCacheKey _fruit { get; set; }
 
         /// <summary>
         /// Fruit of the plant, can be inedible like a pinecone
@@ -101,12 +102,12 @@ namespace NetMud.Data.LookupData
             }
             set
             {
-                _fruit = value.ID;
+                _fruit = new BackingDataCacheKey(value);
             }
         }
 
         [JsonProperty("Seed")]
-        private long _seed { get; set; }
+        private BackingDataCacheKey _seed { get; set; }
 
         /// <summary>
         /// Seed of the plant.
@@ -121,7 +122,7 @@ namespace NetMud.Data.LookupData
             }
             set
             {
-                _seed = value.ID;
+                _seed = new BackingDataCacheKey(value);
             }
         }
 
@@ -141,27 +142,29 @@ namespace NetMud.Data.LookupData
         {
             var dataProblems = base.FitnessReport();
 
-            if (Wood == null)
-                dataProblems.Add("Wood must have a value.");
-
             if (Flower == null && Seed == null && Leaf == null && Fruit == null)
                 dataProblems.Add("At least one part of this plant must have a value.");
 
             return dataProblems;
         }
 
-        public override bool CanSpawnIn(IGlobalPosition location)
+        /// <summary>
+        /// Get the significant details of what needs approval
+        /// </summary>
+        /// <returns>A list of strings</returns>
+        public override IDictionary<string, string> SignificantDetails()
         {
-            var returnValue = true;
+            var returnList = base.SignificantDetails();
 
-            return base.CanSpawnIn(location) && returnValue;
-        }
+            returnList.Add("Sunlight", SunlightPreference.ToString());
+            returnList.Add("Coniferous", Coniferous.ToString());
+            returnList.Add("Wood", Wood.Name);
+            returnList.Add("Flower", Flower.Name);
+            returnList.Add("Leaf", Leaf.Name);
+            returnList.Add("Fruit", Fruit.Name);
+            returnList.Add("Seed", Seed.Name);
 
-        public override bool ShouldSpawnIn(IGlobalPosition location)
-        {
-            var returnValue = true;
-
-            return base.ShouldSpawnIn(location) && returnValue;
+            return returnList;
         }
     }
 }

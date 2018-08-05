@@ -8,6 +8,7 @@
         /// <summary>
         /// Freeform string for entity gender
         /// </summary>
+        
         string Gender { get; set; }
     }
 }

@@ -1,10 +1,6 @@
 ﻿using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NetMud.DataStructure.SupportingClasses
 {
@@ -20,24 +16,9 @@ namespace NetMud.DataStructure.SupportingClasses
         MessagingType Type { get; set; }
 
         /// <summary>
-        /// Quality of the output to be graded against sensory ability and environmental factors
+        /// The composed message
         /// </summary>
-        int Strength { get; set; }
-
-        /// <summary>
-        /// Grammatical subject
-        /// </summary>
-        string Subject { get; set; }
-
-        /// <summary>
-        /// Object of the sentence
-        /// </summary>
-        string Object { get; set; }
-
-        /// <summary>
-        /// Action being taken
-        /// </summary>
-        string Verb { get; set; }
+        IOccurrence Occurrence { get; set; }
 
         /// <summary>
         /// Overrides the grammatical generator

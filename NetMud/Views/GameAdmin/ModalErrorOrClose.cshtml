@@ -1,0 +1,15 @@
+﻿@model string
+
+@{
+    Layout = "~/Views/Shared/_chromelessLayout.cshtml";
+}
+
+@section Scripts {
+    <script type="text/javascript">
+        var message = '@Model';
+
+        if (message === '') {
+            window.close();
+        }
+    </script>
+}

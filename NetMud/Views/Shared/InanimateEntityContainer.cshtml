@@ -7,73 +7,73 @@
     var containerNameId = Model.ContainerName + "ContainerNames";
     var containerWeightsId = Model.ContainerName + "ContainerWeights";
     var containerVolumesId = Model.ContainerName + "ContainerVolumes";
+}
 
-    <label class="control-label">@Model.ContainerFriendlyName</label>
-    <a href="#" id="@addRowId" class="addRow">Add another row...</a>
-    <div id="@containerRowsId">
-        @if (Model.Containers == null || Model.Containers.Count == 0)
+<h3>@Model.ContainerFriendlyName</h3>
+<a href="#" id="@addRowId" class="addRow">Add another row...</a>
+<div id="@containerRowsId">
+    @if (Model.Containers == null || Model.Containers.Count == 0)
+    {
+        <div class="form-group row">
+            <label class="col-sm-1 col-form-label"><a href="#" class="removeRow" id="@removeRowId" title="Remove this">X</a></label>
+            @Html.DescriptiveLabelFor(m => m.ContainerNames, new { @class = "col-sm-1 col-form-label" })
+            <div class="col-sm-2">
+                <input id="@containerNameId" name="@containerNameId" class="form-control" type="text" value="">
+            </div>
+            @Html.DescriptiveLabelFor(m => m.ContainerWeights, new { @class = "col-sm-1 col-form-label" })
+            <div class="col-sm-2">
+                <input id="@containerWeightsId" name="@containerWeightsId" class="form-control" type="text" value="">
+            </div>
+            @Html.DescriptiveLabelFor(m => m.ContainerVolumes, new { @class = "col-sm-1 col-form-label" })
+            <div class="col-sm-2">
+                <input id="@containerVolumesId" name="@containerVolumesId" class="form-control" type="text" value="">
+            </div>
+        </div>
+    }
+    else
+    {
+        foreach (var container in Model.Containers)
         {
-            <div class="form-group three-column">
-                <a href="#" class="removeRow" id="@removeRowId" title="Remove this">X</a>
-                @Html.LabelFor(m => m.ContainerNames, new { @class = "control-label" })
-                <div>
-                    <input id="@containerNameId" name="@containerNameId" class="form-control" type="text" value="">
+            <div class="form-group row">
+                <label class="col-sm-1 col-form-label"><a href="#" class="removeRow" id="@removeRowId" title="Remove this">X</a></label>
+                @Html.DescriptiveLabelFor(m => m.ContainerNames, new { @class = "col-sm-1 col-form-label" })
+                <div class="col-sm-2">
+                    <input id="@containerNameId" name="@containerNameId" class="form-control" type="text" value="@container.Name">
                 </div>
-                @Html.LabelFor(m => m.ContainerWeights, new { @class = "control-label" })
-                <div>
-                    <input id="@containerWeightsId" name="@containerWeightsId" class="form-control" type="text" value="">
+                @Html.DescriptiveLabelFor(m => m.ContainerWeights, new { @class = "col-sm-1 col-form-label" })
+                <div class="col-sm-2">
+                    <input id="@containerWeightsId" name="@containerWeightsId" class="form-control" type="text" value="@container.CapacityWeight.ToString()">
                 </div>
-                @Html.LabelFor(m => m.ContainerVolumes, new { @class = "control-label" })
-                <div>
-                    <input id="@containerVolumesId" name="@containerVolumesId" class="form-control" type="text" value="">
+                @Html.DescriptiveLabelFor(m => m.ContainerVolumes, new { @class = "col-sm-1 col-form-label" })
+                <div class="col-sm-2">
+                    <input id="@containerVolumesId" name="@containerVolumesId" class="form-control" type="text" value="@container.CapacityVolume.ToString()">
                 </div>
             </div>
         }
-        else
-        {
-            foreach (var container in Model.Containers)
-            {
-                <div class="form-group three-column">
-                    <a href="#" class="removeRow" id="@removeRowId" title="Remove this">X</a>
-                    @Html.LabelFor(m => m.ContainerNames, new { @class = "control-label" })
-                    <div>
-                        <input id="@containerNameId" name="@containerNameId" class="form-control" type="text" value="@container.Name">
-                    </div>
-                    @Html.LabelFor(m => m.ContainerWeights, new { @class = "control-label" })
-                    <div>
-                        <input id="@containerWeightsId" name="@containerWeightsId" class="form-control" type="text" value="@container.CapacityWeight.ToString()">
-                    </div>
-                    @Html.LabelFor(m => m.ContainerVolumes, new { @class = "control-label" })
-                    <div>
-                        <input id="@containerVolumesId" name="@containerVolumesId" class="form-control" type="text" value="@container.CapacityVolume.ToString()">
-                    </div>
-                </div>
-            }
-        }
-    </div>
-}
+    }
+</div>
 
 <script type="text/javascript">
     $(document).ready(function () {
-        var containerNamesLabel = decodeHtml('@Html.LabelFor(m => m.ContainerNames, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "")');
+        var containerNamesLabel = decodeHtml('@Html.DescriptiveLabelFor(m => m.ContainerNames, new { @class = "col-sm-1 col-form-label" }).ToString().Replace(Environment.NewLine, "")');
         var containerNamesBox = '<input id="@containerNameId" name="@containerNameId" class="form-control" type="text" value="">';
-        var containerWeightsLabel = decodeHtml('@Html.LabelFor(m => m.ContainerWeights, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "")');
+        var containerWeightsLabel = decodeHtml('@Html.DescriptiveLabelFor(m => m.ContainerWeights, new { @class = "col-sm-1 col-form-label" }).ToString().Replace(Environment.NewLine, "")');
         var containerWeightsBox = '<input id="@containerWeightsId" name="@containerWeightsId" class="form-control" type="text" value="">';
-        var containerVolumesLabel = decodeHtml('@Html.LabelFor(m => m.ContainerVolumes, new { @class = "control-label" }).ToString().Replace(Environment.NewLine, "")');
+        var containerVolumesLabel = decodeHtml('@Html.DescriptiveLabelFor(m => m.ContainerVolumes, new { @class = "col-sm-1 col-form-label" }).ToString().Replace(Environment.NewLine, "")');
         var containerVolumesBox = '<input id="@containerVolumesId" name="@containerVolumesId" class="form-control" type="text" value="">';
 
         $('#@addRowId').click(function () {
             $('#@containerRowsId').append(
-                    '<div class="form-group three-column">' +
-                    '<a href="#" class="removeRow" id="@removeRowId" title="Remove this">X</a>' +
-                    containerNamesLabel + '<div>' + containerNamesBox + '</div>' +
-                    containerWeightsLabel + '<div>' + containerWeightsBox + '</div>' +
-                    containerVolumesLabel + '<div>' + containerVolumesBox + '</div>' +
+                    '<div class="form-group row">' +
+                    '<label class="col-sm-1 col-form-label"><a href="#" class="removeRow" id="@removeRowId" title="Remove this">X</a></label>' +
+                containerNamesLabel + '<div class="col-sm-2">' + containerNamesBox + '</div>' +
+                containerWeightsLabel + '<div class="col-sm-2">' + containerWeightsBox + '</div>' +
+                containerVolumesLabel + '<div class="col-sm-2">' + containerVolumesBox + '</div>' +
                     '</div>'
                 );
 
             $(".removeRow").click(function () {
-                $(this).parent().remove();
+                $(this).parent().parent().remove();
                 return false;
             });
             return false;

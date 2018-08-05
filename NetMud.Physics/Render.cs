@@ -1,5 +1,4 @@
 ﻿using NetMud.DataStructure.Base.Supporting;
-using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -17,13 +16,13 @@ namespace NetMud.Physics
         /// <returns>the flattened view</returns>
         public static string FlattenModelForWeb(IDimensionalModelData model)
         {
-            switch(model.ModelType)
+            switch (model.ModelType)
             {
                 case DimensionalModelType.Flat:
                     return FlattenFlatModel(model, true);
             }
 
-            return String.Empty;
+            return string.Empty;
         }
 
         /// <summary>
@@ -39,7 +38,7 @@ namespace NetMud.Physics
                     return FlattenFlatModel(model);
             }
 
-            return String.Empty;
+            return string.Empty;
         }
 
         /// <summary>
@@ -180,35 +179,54 @@ namespace NetMud.Physics
             var flattenedModel = new StringBuilder();
 
             //load the plane up with blanks
-            List<string[]> flattenedPlane = new List<string[]>();
-            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
-            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
-            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
-            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
-            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
-            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
-            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
-            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
-            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
-            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
-            flattenedPlane.Add(new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " });
+            List<string[]> flattenedPlane = new List<string[]>
+            {
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
+                new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " }
+            };
 
             short xI, yI;
-            for (yI = 0; yI < 11; yI++)
+            for (yI = 0; yI < 21; yI++)
             {
-                for (xI = 0; xI < 11; xI++)
+                for (xI = 0; xI < 21; xI++)
                 {
                     short xIs = (short)(xI + 1);
                     short yIs = (short)(yI + 1);
 
                     var node = model.GetNode(xIs, yIs);
 
-                    var nodeString = DamageTypeToCharacter(node.Style, xI < 5);
+                    var nodeString = string.Empty;
 
-                    if (forWeb)
-                        nodeString = String.Format("<a title='{0}'>{1}</a>"
-                            , node.Composition == null ? String.Empty : node.Composition.Name 
-                            , nodeString);
+                    if (node != null)
+                    {
+                        nodeString = DamageTypeToCharacter(node.Style, xI < 5);
+
+                        if (forWeb)
+                            nodeString = string.Format("<a title='{0}'>{1}</a>"
+                                , node.Composition == null ? string.Empty : node.Composition.Name
+                                , nodeString);
+                    }
+                    else if (forWeb)
+                        nodeString = "<a title=''> </a>";
 
                     flattenedPlane[yI][xI] = nodeString;
                 }

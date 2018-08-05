@@ -4,14 +4,13 @@ using NetMud.DataStructure.SupportingClasses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NetMud.Communication.Messaging
 {
     /// <summary>
     /// Singular message object for output parsing
     /// </summary>
+    [Serializable]
     public class Message : IMessage
     {
         /// <summary>
@@ -20,24 +19,9 @@ namespace NetMud.Communication.Messaging
         public MessagingType Type { get; set; }
 
         /// <summary>
-        /// Quality of the output to be graded against sensory ability and environmental factors
+        /// The composed message and strength
         /// </summary>
-        public int Strength { get; set; }
-
-        /// <summary>
-        /// Grammatical subject
-        /// </summary>
-        public string Subject { get; set; }
-
-        /// <summary>
-        /// Object of the sentence
-        /// </summary>
-        public string Object { get; set; }
-
-        /// <summary>
-        /// Action being taken
-        /// </summary>
-        public string Verb { get; set; }
+        public IOccurrence Occurrence { get; set; }
 
         /// <summary>
         /// Overrides the grammatical generator
@@ -49,10 +33,10 @@ namespace NetMud.Communication.Messaging
         /// </summary>
         /// <param name="type"></param>
         /// <param name="strength"></param>
-        public Message(MessagingType type, int strength)
+        public Message(MessagingType type, IOccurrence occurrence)
         {
             Type = type;
-            Strength = strength;
+            Occurrence = occurrence;
 
             Override = Enumerable.Empty<string>();
         }

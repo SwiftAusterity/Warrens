@@ -1,0 +1,62 @@
+﻿@using NetMud.DataAccess
+
+@model NetMud.Models.PlayerManagement.ManageAccountViewModel
+
+<h4>Log Subscriptions</h4>
+<a href="#" id="addLogRow" class="addRow">Add another row...</a>
+@if (Model.DataObject == null || Model.DataObject.LogChannelSubscriptions == null || Model.DataObject.LogChannelSubscriptions.Count == 0)
+{
+    <div id="logRows">
+        <div class="form-group row">
+            <label class="col-sm-1 col-form-label"><a href="#" class="removeRow" id="removeLogRow" title="Remove this">X</a></label>
+            <div class="col-md-3">
+                @Html.DropDownList("LogChannelSubscriptions", Enum.GetNames(typeof(LogChannels)).Select(rl =>
+                                                                new SelectListItem() { Text = rl, Value = rl })
+                                                                , "Select One", htmlAttributes: new { id = "LogChannelSubscriptions", @class = "form-control" })
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    foreach (var subscription in Model.DataObject.LogChannelSubscriptions)
+    {
+        <div id="logRows">
+            <div class="form-group row">
+                <label class="col-sm-1 col-form-label"><a href="#" class="removeRow" id="removeLogRow" title="Remove this">X</a></label>
+                <div class="col-md-3">
+                    @Html.DropDownList("LogChannelSubscriptions", new SelectList(Enum.GetNames(typeof(LogChannels)), subscription)
+                        , "Select One", htmlAttributes: new { id = "LogChannelSubscriptions", @class = "form-control" })
+                </div>
+            </div>
+        </div>
+    }
+}
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var criterionDropdown = decodeHtml('@Html.DropDownList("LogChannelSubscriptions", Enum.GetNames(typeof(LogChannels)).Select(rl =>
+                                                    new SelectListItem() { Text = rl, Value = rl })
+                                                    , "Select One", htmlAttributes: new { id = "LogChannelSubscriptions", @class = "form-control" }).ToString().Replace(Environment.NewLine, "")');
+
+        $("#addLogRow").click(function () {
+            $("#logRows").append(
+                '<div class="form-group row">' +
+                '<label class="col-sm-1 col-form-label"><a href="#" class="removeRow" id="removeLogRow" title="Remove this">X</a></label>' +
+                '<div class="col-md-3">' + criterionDropdown + '</div></div>'
+            );
+
+            $(".removeRow").click(function () {
+                $(this).parent().parent().remove();
+                return false;
+            });
+            return false;
+        });
+
+        $(".removeRow").click(function () {
+            $(this).parent().parent().remove();
+            return false;
+        });
+    });
+</script>

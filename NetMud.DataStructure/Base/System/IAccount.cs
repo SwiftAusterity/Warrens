@@ -1,4 +1,7 @@
 ﻿using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.DataStructure.Base.PlayerConfiguration;
+using NetMud.DataStructure.SupportingClasses;
+using System;
 using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Base.System
@@ -6,7 +9,7 @@ namespace NetMud.DataStructure.Base.System
     /// <summary>
     /// A player's "user"
     /// </summary>
-    public interface IAccount
+    public interface IAccount : IComparable<IAccount>, IEquatable<IAccount>, IEqualityComparer<IAccount>
     {
         /// <summary>
         /// Unique string key for player user accounts
@@ -24,7 +27,12 @@ namespace NetMud.DataStructure.Base.System
         IList<ICharacter> Characters { get; set; }
 
         /// <summary>
-        /// ID for currently selected character
+        /// The config values for this account
+        /// </summary>
+        IAccountConfig Config { get; set; }
+
+        /// <summary>
+        /// Id for currently selected character
         /// </summary>
         long CurrentlySelectedCharacter { get; set; }
 
@@ -34,5 +42,13 @@ namespace NetMud.DataStructure.Base.System
         /// <param name="newCharacter">the character to add</param>
         /// <returns>success status</returns>
         string AddCharacter(ICharacter newCharacter);
+
+        /// <summary>
+        /// Delete this account
+        /// </summary>
+        /// <param name="remover">The person removing this account</param>
+        /// <param name="removerRank">The remover's staff ranking</param>
+        /// <returns>success</returns>
+        bool Delete(IAccount remover, StaffRank removerRank);
     }
 }

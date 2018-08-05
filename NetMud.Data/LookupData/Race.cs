@@ -1,9 +1,12 @@
-﻿using NetMud.DataAccess.Cache;
+﻿using NetMud.Data.DataIntegrity;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Behaviors.Actionable;
 using NetMud.DataStructure.Behaviors.Automation;
-using NetMud.DataStructure.Behaviors.Existential;
+using NetMud.DataStructure.Behaviors.System;
+using NetMud.Utility;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -13,11 +16,19 @@ using System.Web.Script.Serialization;
 
 namespace NetMud.Data.LookupData
 {
+    /// <summary>
+    /// Character race, determines loads of things
+    /// </summary>
     [Serializable]
     public class Race : LookupDataPartial, IRace
     {
         [JsonProperty("Arms")]
-        private Tuple<long, short> _arms { get; set; }
+        private Tuple<BackingDataCacheKey, short> _arms { get; set; }
+
+        /// <summary>
+        /// What type of approval is necessary for this content
+        /// </summary>
+        public override ContentApprovalType ApprovalType { get { return ContentApprovalType.Admin; } }
 
         /// <summary>
         /// The arm objects
@@ -38,12 +49,12 @@ namespace NetMud.Data.LookupData
                 if (value == null)
                     return;
 
-                _arms = new Tuple<long, short>(value.Item1.ID, value.Item2);
+                _arms = new Tuple<BackingDataCacheKey, short>(new BackingDataCacheKey(value.Item1), value.Item2);
             }
         }
 
         [JsonProperty("Legs")]
-        private Tuple<long, short> _legs { get; set; }
+        private Tuple<BackingDataCacheKey, short> _legs { get; set; }
 
         /// <summary>
         /// The leg objects
@@ -64,18 +75,19 @@ namespace NetMud.Data.LookupData
                 if (value == null)
                     return;
 
-                _legs = new Tuple<long, short>(value.Item1.ID, value.Item2);
+                _legs = new Tuple<BackingDataCacheKey, short>(new BackingDataCacheKey(value.Item1), value.Item2);
             }
         }
 
         [JsonProperty("Torso")]
-        private long _torso { get; set; }
+        private BackingDataCacheKey _torso { get; set; }
 
         /// <summary>
         /// the torso object
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
+        [NonNullableDataIntegrity("Torso is invalid.")]
         public IInanimateData Torso
         {
             get
@@ -84,18 +96,19 @@ namespace NetMud.Data.LookupData
             }
             set
             {
-                _torso = value.ID;
+                _torso = new BackingDataCacheKey(value);
             }
         }
 
         [JsonProperty("Head")]
-        private long _head { get; set; }
+        private BackingDataCacheKey _head { get; set; }
 
         /// <summary>
         /// The head object
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
+        [NonNullableDataIntegrity("Head is invalid.")]
         public IInanimateData Head
         {
             get
@@ -104,12 +117,12 @@ namespace NetMud.Data.LookupData
             }
             set
             {
-                _head = value.ID;
+                _head = new BackingDataCacheKey(value);
             }
         }
 
         [JsonProperty("BodyParts")]
-        private HashSet<Tuple<long, short, string>> _bodyParts { get; set; }
+        private HashSet<Tuple<BackingDataCacheKey, short, string>> _bodyParts { get; set; }
 
         /// <summary>
         /// The list of additional body parts used by this race. Part Object, Amount, Name
@@ -130,7 +143,7 @@ namespace NetMud.Data.LookupData
                 if (value == null)
                     return;
 
-                _bodyParts = new HashSet<Tuple<long, short, string>>(value.Select(bp => new Tuple<long, short, string>(bp.Item1.ID, bp.Item2, bp.Item3)));
+                _bodyParts = new HashSet<Tuple<BackingDataCacheKey, short, string>>(value.Select(bp => new Tuple<BackingDataCacheKey, short, string>(new BackingDataCacheKey(bp.Item1), bp.Item2, bp.Item3)));
             }
         }
 
@@ -140,13 +153,14 @@ namespace NetMud.Data.LookupData
         public DietType DietaryNeeds { get; set; }
 
         [JsonProperty("SanguinaryMaterial")]
-        private long _sanguinaryMaterial { get; set; }
+        private BackingDataCacheKey _sanguinaryMaterial { get; set; }
 
         /// <summary>
         /// Material that is the blood
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
+        [NonNullableDataIntegrity("Blood material is invalid.")]
         public IMaterial SanguinaryMaterial
         {
             get
@@ -155,7 +169,7 @@ namespace NetMud.Data.LookupData
             }
             set
             {
-                _sanguinaryMaterial = value.ID;
+                _sanguinaryMaterial = new BackingDataCacheKey(value);
             }
         }
 
@@ -179,9 +193,145 @@ namespace NetMud.Data.LookupData
         /// </summary>
         public DamageType TeethType { get; set; }
 
+        /// <summary>
+        /// The name used to describe a large gathering of this race
+        /// </summary>
+        [StringDataIntegrity("Races must have a collective noun between 2 and 50 characters long.", 2, 50)]
+        public string CollectiveNoun { get; set; }
+
+        [JsonProperty("StartingLocation")]
+        private BackingDataCacheKey _startingLocation { get; set; }
+
+        /// <summary>
+        /// What is the starting room of new players
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        [NonNullableDataIntegrity("Starting Location is invalid.")]
+        public IZoneData StartingLocation
+        {
+            get
+            {
+                return BackingDataCache.Get<IZoneData>(_startingLocation);
+            }
+            set
+            {
+                _startingLocation = new BackingDataCacheKey(value);
+            }
+        }
+
+        [JsonProperty("EmergencyLocation")]
+        private BackingDataCacheKey _emergencyLocation { get; set; }
+
+        /// <summary>
+        /// When a player loads without a location where do we send them
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        [NonNullableDataIntegrity("Emergency Location is invalid.")]
+        public IZoneData EmergencyLocation
+        {
+            get
+            {
+                return BackingDataCache.Get<IZoneData>(_emergencyLocation);
+            }
+            set
+            {
+                _emergencyLocation = new BackingDataCacheKey(value);
+            }
+        }
+
+        /// <summary>
+        /// Make a new blank race
+        /// </summary>
         public Race()
         {
             BodyParts = Enumerable.Empty<Tuple<IInanimateData, short, string>>();
+        }
+
+        /// <summary>
+        /// Method to get the full list of anatomical features of this race
+        /// </summary>
+        public IEnumerable<Tuple<IInanimateData, string>> FullAnatomy()
+        {
+            var anatomy = new List<Tuple<IInanimateData, string>>();
+
+            if (Arms.Item1 != null)
+            {
+                var i = 1;
+                while (i < Arms.Item2)
+                {
+                    anatomy.Add(new Tuple<IInanimateData, string>(Arms.Item1, string.Format("Arm {0}", i.ToGreek(true))));
+                    i++;
+                }
+            }
+
+            if (Legs.Item1 != null)
+            {
+                var i = 1;
+                while (i < Arms.Item2)
+                {
+                    anatomy.Add(new Tuple<IInanimateData, string>(Legs.Item1, string.Format("Leg {0}", i.ToGreek(true))));
+                    i++;
+                }
+            }
+
+            if (Head != null)
+                anatomy.Add(new Tuple<IInanimateData, string>(Head, "Head"));
+
+            if (Torso != null)
+                anatomy.Add(new Tuple<IInanimateData, string>(Torso, "Torso"));
+
+            foreach (var bit in BodyParts)
+                anatomy.Add(new Tuple<IInanimateData, string>(bit.Item1, bit.Item3));
+
+            return anatomy;
+        }
+
+        /// <summary>
+        /// Render this race's body as an ascii.. thing
+        /// </summary>
+        /// <returns>List of strings as rows for rendering</returns>
+        public IEnumerable<string> RenderAnatomy(bool forWeb)
+        {
+            var stringList = new List<string>();
+
+            if (Head != null)
+                stringList.Add(Head.Model.ModelBackingData.ViewFlattenedModel(forWeb));
+
+            if (Arms.Item1 != null)
+            {
+                var armCount = 0;
+                while(armCount < Arms.Item2)
+                {
+                    armCount++;
+                    stringList.Add(Arms.Item1.Model.ModelBackingData.ViewFlattenedModel(forWeb));
+                }
+            }
+
+            if (Head != null)
+                stringList.Add(Torso.Model.ModelBackingData.ViewFlattenedModel(forWeb));
+
+            if (Legs.Item1 != null)
+            {
+                var legCount = 0;
+                while (legCount < Legs.Item2)
+                {
+                    legCount++;
+                    stringList.Add(Legs.Item1.Model.ModelBackingData.ViewFlattenedModel(forWeb));
+                }
+            }
+
+            foreach (var bit in BodyParts)
+            {
+                if (bit.Item1 == null)
+                    continue;
+
+                for(var i = 0; i < bit.Item2; i++)
+                    stringList.Add(bit.Item1.Model.ModelBackingData.ViewFlattenedModel(forWeb));
+            }
+
+            return stringList;
         }
 
         /// <summary>
@@ -192,23 +342,15 @@ namespace NetMud.Data.LookupData
         {
             var dataProblems = base.FitnessReport();
 
-            if (Arms == null || Arms.Item1 == null || Arms.Item2 == 0)
+            //Gotta keep most of these in due to the tuple thing
+            if (Arms == null || Arms.Item1 == null || Arms.Item2 < 0)
                 dataProblems.Add("Arms are invalid.");
 
-            if (Legs == null || Legs.Item1 == null || Legs.Item2 == 0)
+            if (Legs == null || Legs.Item1 == null || Legs.Item2 < 0)
                 dataProblems.Add("Legs are invalid.");
 
-            if (Torso == null)
-                dataProblems.Add("Torso is invalid.");
-
-            if (Head == null)
-                dataProblems.Add("Head is invalid.");
-
-            if (BodyParts != null && BodyParts.Any(a => a.Item1 == null || a.Item2 == 0 || String.IsNullOrWhiteSpace(a.Item3)))
+            if (BodyParts != null && BodyParts.Any(a => a.Item1 == null || a.Item2 == 0 || string.IsNullOrWhiteSpace(a.Item3)))
                 dataProblems.Add("BodyParts are invalid.");
-
-            if (SanguinaryMaterial == null)
-                dataProblems.Add("Blood material is invalid.");
 
             if (VisionRange == null || VisionRange.Item1 >= VisionRange.Item2)
                 dataProblems.Add("Vision range is invalid.");
@@ -220,17 +362,32 @@ namespace NetMud.Data.LookupData
         }
 
         /// <summary>
-        /// Renders the help text for this data object
+        /// Get the significant details of what needs approval
         /// </summary>
-        /// <returns>help text</returns>
-        public override IEnumerable<string> RenderHelpBody()
+        /// <returns>A list of strings</returns>
+        public override IDictionary<string, string> SignificantDetails()
         {
-            return base.RenderHelpBody();
+            var returnList = base.SignificantDetails();
+
+            returnList.Add("Collective", CollectiveNoun);
+            returnList.Add("Starting Zone", StartingLocation.Name);
+            returnList.Add("Recall Zone", EmergencyLocation.Name);
+
+            returnList.Add("Head", Head.Name);
+            returnList.Add("Torso", Torso.Name);
+            returnList.Add("Legs", string.Format("{1} {0}", Legs.Item1.Name, Legs.Item2));
+            returnList.Add("Arms", string.Format("{1} {0}", Arms.Item1.Name, Arms.Item2));
+            returnList.Add("Blood", SanguinaryMaterial.Name);
+            returnList.Add("Teeth", TeethType.ToString());
+            returnList.Add("Breathes", Breathes.ToString());
+            returnList.Add("Diet", DietaryNeeds.ToString());
+            returnList.Add("Vision Range", string.Format("{0} - {1}", VisionRange.Item1, VisionRange.Item2));
+            returnList.Add("Temperature Tolerance", string.Format("{0} - {1}", TemperatureTolerance.Item1, TemperatureTolerance.Item2));
+
+            foreach (var part in BodyParts)
+                returnList.Add("Body Parts", string.Format("{0} - {1} ({2})", part.Item3.ToString(), part.Item1.Name, part.Item3));
+
+            return returnList;
         }
-
-
-        public IGlobalPosition StartingLocation { get; set; }
-
-        public IGlobalPosition EmergencyLocation { get; set; }
     }
 }

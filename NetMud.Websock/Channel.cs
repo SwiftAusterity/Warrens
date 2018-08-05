@@ -1,5 +1,5 @@
-﻿using NetMud.DataStructure.Base.System;
-using System;
+﻿using Microsoft.Web.WebSockets;
+using NetMud.DataStructure.Base.System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,12 +8,12 @@ namespace NetMud.Websock
     /// <summary>
     /// Partial class for websocket channel details
     /// </summary>
-    public abstract class Channel : IChannelType
+    public abstract class Channel : WebSocketHandler, IChannelType
     {
         /// <summary>
         /// The format the cachekeys for the comms objects take
         /// </summary>
-        public string cacheKeyFormat { get { return "LiveWebSocket.{0}"; } }
+        public string cacheKeyFormat { get { return "LiveWebSocketClient.{0}"; } }
 
         /// <summary>
         /// What type of connection the player has
@@ -31,9 +31,9 @@ namespace NetMud.Websock
         private const string BumperElement = "<br />";
 
         /// <summary>
-        /// List of style types to element
+        /// Returns a list of all supported systems colors and what colors they can become
         /// </summary>
-        private Dictionary<SupportedColors, string> _colors = new Dictionary<SupportedColors, string> 
+        public Dictionary<SupportedColors, string> SupportedColorTranslations { get; } = new Dictionary<SupportedColors, string>
         {
             { SupportedColors.Bold,         "font-weight: bold;" },
             { SupportedColors.Italics,      "font-weight: italic;" },
@@ -54,17 +54,6 @@ namespace NetMud.Websock
         };
 
         /// <summary>
-        /// Returns a list of all supported systems colors and what colors they can become
-        /// </summary>
-        public Dictionary<SupportedColors, string> SupportedColorTranslations
-        {
-            get
-            {
-                return _colors;
-            }
-        }
-
-        /// <summary>
         /// Engine for translating output text with color codes into proper output
         /// </summary>
         /// <param name="message">the text to translate</param>
@@ -78,8 +67,8 @@ namespace NetMud.Websock
             var styleElement = SupportedColorTranslations[styleType];
 
             //If the destination string is blank, just remove them all since they'd come back empty anyways
-            if (String.IsNullOrWhiteSpace(styleElement))
-                originalString = originalString.Replace(formatToReplace, String.Empty);
+            if (string.IsNullOrWhiteSpace(styleElement))
+                originalString = originalString.Replace(formatToReplace, string.Empty);
             else
             {
                 var firstIndex = originalString.IndexOf(formatToReplace);
@@ -132,7 +121,7 @@ namespace NetMud.Websock
         public string EncapsulateOutput(string str)
         {
             if (!string.IsNullOrWhiteSpace(str))
-                return String.Format("<{0}>{1}</{0}>", EncapsulationElement, str);
+                return string.Format("<{0}>{1}</{0}>", EncapsulationElement, str);
             else
                 return BumperElement; //blank strings mean carriage returns
         }

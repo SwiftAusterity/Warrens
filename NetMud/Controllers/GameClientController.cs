@@ -7,6 +7,7 @@ using NetMud.Models;
 
 namespace Controllers
 {
+    [Authorize]
     public class GameClientController : Controller
     {
         private ApplicationUserManager _userManager;
@@ -33,10 +34,18 @@ namespace Controllers
 
         public ActionResult Index()
         {
-            var model = new GameContextModel();
-            model.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            var model = new GameContextModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId())
+            };
 
             return View(model);
+        }
+
+        [HttpGet]
+        public ActionResult ModularWindow()
+        {
+            return View("~/Views/GameClient/ModularWindow.cshtml");
         }
     }
 }

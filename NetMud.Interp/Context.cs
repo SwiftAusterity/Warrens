@@ -15,6 +15,9 @@ using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.SupportingClasses;
+using NetMud.DataStructure.Behaviors.Existential;
+using NetMud.DataStructure.Base.Place;
+using NetMud.DataStructure.Behaviors.System;
 
 namespace NetMud.Interp
 {
@@ -66,7 +69,7 @@ namespace NetMud.Interp
         /// <summary>
         /// Container the Actor is in when the command is invoked
         /// </summary>
-        public ILocation Location { get; private set; }
+        public IGlobalPosition Position { get; private set; }
 
         /// <summary>
         /// Valid containers by range from OriginLocation
@@ -106,7 +109,7 @@ namespace NetMud.Interp
             OriginalCommandString = fullCommand;
             Actor = actor;
 
-            Location = (ILocation)Actor.InsideOf;
+            Position = Actor.CurrentLocation;
 
             AccessErrors = new List<string>();
             CommandStringRemainder = Enumerable.Empty<string>();
@@ -184,7 +187,7 @@ namespace NetMud.Interp
                 }
 
                 Command.Actor = Actor;
-                Command.OriginLocation = Location;
+                Command.OriginLocation = Position;
                 Command.Surroundings = Surroundings;
 
                 Command.Subject = Subject;
@@ -435,25 +438,43 @@ namespace NetMud.Interp
 
                 var validObjects = new List<T>();
 
-                switch(seekRange.Type)
+                switch (seekRange.Type)
                 {
                     case CommandRangeType.Self:
                         validObjects.Add((T)Actor);
                         break;
                     case CommandRangeType.Touch:
-                        validObjects.AddRange(Location.GetContents<T>().Where(ent => ((IEntity)ent).Keywords.Any(key => key.Contains(currentParmString))));
+                        validObjects.AddRange(Position.CurrentLocation.GetContents<T>().Where(ent => ((IEntity)ent).Keywords.Any(key => key.Contains(currentParmString))));
 
-                        if(Actor.GetType().GetInterfaces().Any(typ => typ == typeof(IContains)))
+                        //Add the pathways
+                        if(Utility.DataUtility.GetAllImplimentingedTypes(typeof(IPathway)).Contains(typeof(T)) && Position.CurrentLocation.GetType().GetInterfaces().Contains(typeof(ILocation)))
+                        {
+                            var location = (ILocation)Position.CurrentLocation;
+                            var validPathways = location.GetPathways();
+
+                            if (validPathways.Any())
+                            {
+                                validObjects.AddRange(validPathways.Select(path => (T)path));
+                            }
+                        }
+
+                        if (Actor.GetType().GetInterfaces().Any(typ => typ == typeof(IContains)))
+                        {
                             validObjects.AddRange(((IContains)Actor).GetContents<T>().Where(ent => ((IEntity)ent).Keywords.Any(key => key.Contains(currentParmString))));
+                        }
 
                         //Containers only matter for touch usage subject paramaters, actor's inventory is already handled
                         //Don't sift through another intelligence's stuff
                         //TODO: write "does entity have permission to another entity's inventories" function on IEntity
                         if (hasContainer && currentNeededParm.Usage == CommandUsage.Subject)
-                            foreach(IContains thing in Location.GetContents<T>().Where(ent => ent.GetType().GetInterfaces().Any(intf => intf == typeof(IContains))
-                                                                                                && !ent.GetType().GetInterfaces().Any(intf => intf == typeof(IMobile))
-                                                                                                && !ent.Equals(Actor)))
+                        {
+                            foreach (IContains thing in Position.CurrentLocation.GetContents<T>().Where(ent => ent.GetType().GetInterfaces().Any(intf => intf == typeof(IContains))
+                                                                                                 && !ent.GetType().GetInterfaces().Any(intf => intf == typeof(IMobile))
+                                                                                                 && !ent.Equals(Actor)))
+                            {
                                 validObjects.AddRange(thing.GetContents<T>().Where(ent => ((IEntity)ent).Keywords.Any(key => key.Contains(currentParmString))));
+                            }
+                        }
                         break;
                     case CommandRangeType.Local: //requires Range to be working
                         break;
@@ -545,7 +566,7 @@ namespace NetMud.Interp
 
                 var validObject = BackingDataCache.GetByName<T>(currentParmString);
 
-                if (validObject != null && !validObject.Equals(default(T)))
+                if (validObject != null && !validObject.Equals(default(T)) && validObject.State == ApprovalState.Approved)
                 {
                     switch (currentNeededParm.Usage)
                     {
@@ -574,7 +595,7 @@ namespace NetMud.Interp
         /// <typeparam name="T">the system type of the data</typeparam>
         /// <param name="commandType">the system type of the command</param>
         /// <param name="currentNeededParm">the conditions for the parameter we're after</param>
-        public void SeekInBackingData<T>(Type commandType, CommandParameterAttribute currentNeededParm) where T : IData
+        public void SeekInBackingData<T>(Type commandType, CommandParameterAttribute currentNeededParm) where T : IEntityBackingData
         {
             var internalCommandString = CommandStringRemainder.ToList();
 
@@ -594,11 +615,11 @@ namespace NetMud.Interp
 
                 long parmID = -1;
                 if(!long.TryParse(currentParmString, out parmID))
-                    validObject = BackingDataCache.GetByName<T>(currentParmString);
+                    validObject = BackingDataCache.GetByKeywords<T>(currentParmString);
                 else
                     validObject = BackingDataCache.Get<T>(parmID);
 
-                if (validObject != null && !validObject.Equals(default(T)))
+                if (validObject != null && !validObject.Equals(default(T)) && validObject.State == ApprovalState.Approved)
                 {
                     switch (currentNeededParm.Usage)
                     {
@@ -659,7 +680,7 @@ namespace NetMud.Interp
 
                 var validObjects = new List<T>();
 
-                validObjects.AddRange(subjectCollection.Select(sbj => sbj.InsideOf)
+                validObjects.AddRange(subjectCollection.Select(sbj => sbj.CurrentLocation.CurrentLocation)
                                                         .Where(cl => cl.Keywords.Any(key => key.Contains(currentParmString))).Select(ent => (T)ent));
 
                 if (validObjects.Count() > 0)
@@ -709,7 +730,7 @@ namespace NetMud.Interp
 
                         var validSubjects = new List<IEntity>();
 
-                        validSubjects.AddRange(subjectCollection.Where(sbj => sbj.InsideOf.Equals(container)));
+                        validSubjects.AddRange(subjectCollection.Where(sbj => sbj.CurrentLocation.CurrentLocation.Equals(container)));
 
                         if (validSubjects.Count() > 1)
                         {

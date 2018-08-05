@@ -11,11 +11,13 @@ namespace NetMud.DataStructure.Base.Supporting
         /// <summary>
         /// How much sunlight does this need to spawn
         /// </summary>
+        
         int SunlightPreference { get; set; }
 
         /// <summary>
         /// Does this plant go dormant in colder weather
         /// </summary>
+        
         bool Coniferous { get; set; }
 
         /// <summary>

@@ -1,0 +1,22 @@
+﻿@model NetMud.Models.Admin.ManageLanguageDataViewModel
+@{
+    var linkText = Html.ActionLink("99999999", "Edit", new { id = "99999999" }).ToString();
+    var tableColumns = new Dictionary<string, Func<dynamic, string>>();
+    tableColumns.Add("Name", obj => linkText.Replace("99999999", obj.Name));
+    tableColumns.Add("UIOnly", obj => obj.UIOnly.ToString());
+    tableColumns.Add("State", obj => obj.State.ToString());
+}
+
+@Html.Partial("AddContentLink")
+
+@Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model, "Language"))
+
+@using (Html.BeginForm("Remove", "Language"))
+{
+    @Html.AntiForgeryToken()
+    @Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Name = "Language", Columns = tableColumns, Values = Model.CurrentPageOfItems.OrderBy(obj => obj.Name), IncludeDelete = false, IncludeUnapprove = false })
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

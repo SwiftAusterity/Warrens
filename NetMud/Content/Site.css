@@ -1,12 +1,12 @@
-﻿body {
-    padding-top: 50px;
-    padding-bottom: 20px;
+﻿footer {
+    padding: 15px;
 }
 
 /* Set padding to keep content from hitting the edges */
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
+    width: 100%;
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 
@@ -25,18 +25,22 @@ select {
 textarea {
     max-width: 750px;
     max-height: 500px;
+    height: 250px;
 }
 
-textarea.logDisplay {
-     width: 100%; 
-     height: 500px; 
-     max-height: 1000px; 
-     max-width: 1000px; 
-     margin-top: 20px;
-}
+    textarea.logDisplay {
+        width: 100%;
+        height: 500px;
+        max-height: 1000px;
+        max-width: 1000px;
+        margin-top: 20px;
+    }
+
 
 input[type=checkbox].form-control {
-    margin: 9px;
+    border: none;
+    box-shadow: none;
+    background: none;
     width: inherit;
     height: inherit;
 }
@@ -60,62 +64,56 @@ a.addRow {
     padding: 10px;
 }
 
+button[type=submit].approveData {
+    color: green;
+    border: none;
+    padding: 0;
+    background-color: inherit;
+}
+
 button[type=submit].removeData {
-    color: red; 
-    border: none; 
-    padding: 0; 
+    color: red;
+    border: none;
+    padding: 0;
+    background-color: inherit;
+}
+
+button[type=submit].unapproveData {
+    color: orange;
+    border: none;
+    padding: 0;
     background-color: inherit;
 }
 
 .btn.cancel {
-    color: orange; 
+    color: orange;
     border-color: red;
 }
 
 .btn.save {
-     color: green; 
-     border-color: cadetblue;
+    color: green;
+    border-color: cadetblue;
 }
 
 .btn.caution {
-    color: red; 
-    background-color: black; 
+    color: red;
+    background-color: black;
     border-color: red;
 }
 
 .btn.stop {
-    color: red; 
+    color: red;
     border-color: red;
 }
 
-div.form-group div, div.form-group label {
-    float: left;
-    padding-right: 10px;
+.submitButtons {
+    float: right;
+    padding: 15px;
 }
 
-div.form-group.one-column label {
-    width: 13.33333333%;
-}
-
-div.form-group.one-column div {
-    width: 20%;
-}
-
-div.form-group.two-column label {
-    width: 13.33333333%;
-}
-
-div.form-group.two-column div {
-    width: 20%;
-}
-
-div.form-group.three-column label {
-    width: 13.33333333%;
-}
-
-div.form-group.three-column div {
-    width: 20%;
-}
+    .submitButtons input.save {
+        margin-right: 15px;
+    }
 
 div.form-group a.removeRow {
     color: red;
@@ -126,43 +124,68 @@ div.form-group a.removeRow {
     position: absolute;
 }
 
-.dimModelNode {
-    width:32px;
-    background-color: black;
-    color: chartreuse;
+.dimModelPlane {
+    display: inline-flex;
 }
 
-.dimModelNode[data-value='0'] {
-    color: darkgrey;
-    background-color: white;
+.dimModelNode {
+    width: 14px;
+    height: 26px;
+    padding: 1px;
+    background-color: black;
+    color: chartreuse;
+    text-align: center;
+    cursor: pointer;
 }
+
+    .dimModelNode[data-value='0'] {
+        color: darkgrey;
+    }
+
+.adminDashboard {
+    padding: 10px;
+    display: inline-table;
+}
+
+    .adminDashboard div {
+        padding: 15px;
+        float: left;
+    }
 
 /* Ascii maps for object dim models and room maps */
 .asciiMap {
-    font-family: Courier New, Courier, monospace; 
-    font-size: large;
-    letter-spacing: 7px;
-    padding: 15px; 
-    min-width: 200px; 
+    font-family: Courier New, Courier, monospace;
+    font-size: small;
+    letter-spacing: 1px;
+    padding: 15px;
+    min-width: 200px;
     min-height: 200px;
-    text-align: center; 
+    text-align: center;
     background-color: black;
 }
 
 .twoDModel {
-    font-family: Courier New, Courier, monospace; 
-    font-size: large;
-    letter-spacing: 7px;
-    padding: 15px; 
-    width: 400px; 
-    height: 400px;
-    text-align: center; 
+    font-family: Courier New, Courier, monospace;
+    font-size: small;
+    letter-spacing: 0;
+    padding: 15px;
+    max-width: 400px;
+    text-align: center;
     background-color: black;
     color: white;
     overflow: hidden;
     border: 5px solid grey;
 }
 
+    .twoDModel a {
+        text-decoration: none;
+        color: chartreuse;
+        cursor: pointer;
+    }
+
+        .twoDModel a:empty {
+            color: darkgrey;
+        }
 
 div.roomAsciiMap {
     width: 100%;
@@ -173,19 +196,95 @@ div.roomAsciiMap {
 }
 
 .roomAsciiMap p {
-    float:right; 
-    display:inline-block;
+    float: right;
+    display: inline-block;
 }
 
-.roomAsciiMap p a {
-    padding: 5px; 
+    .roomAsciiMap p a {
+        padding: 5px;
+        cursor: pointer;
+    }
+
+        .roomAsciiMap p a.Up {
+            color: green;
+        }
+
+        .roomAsciiMap p a.Down {
+            color: red;
+        }
+
+.renderModeSelector {
+    position: relative;
+    float: right;
+    color: yellow;
+    left: -15px;
+}
+
+.searchCriteria {
+    width: 100%;
+    height: 70px;
+    padding-bottom: 5px;
+}
+
+.tutorialToggle {
+    font-weight: bold;
+}
+
+.helpTip {
+    position: absolute;
+    top: -0.5em;
+    color: blue;
+}
+
+.contentPreviewFields div:nth-child(even) {
+    background-color: lightcyan;
+    margin: -15px 0 -15px 0;
+    height: 15px;
+}
+
+.contentPreviewFields div:nth-child(odd) {
+    background-color: lightgoldenrodyellow;
+    margin: -15px 0 -15px 0;
+    height: 15px;
+}
+
+.accordion-collapsed {
+    min-height: 0;
+    height: 1px;
+    overflow-y: hidden
+}
+
+.topNavCollapser {
+    width: 40px;
+    margin-left: 48%;
+    height: 10px;
+    background-color: lightgray;
+    position: relative;
+    border-radius: 0 0 15px 15px;
     cursor: pointer;
+    margin-top: -3px;
 }
 
-.roomAsciiMap p a.Up {
-     color: green; 
+    .topNavCollapser span {
+        margin-left: 38%;
+        top: -1px;
+        position: absolute;
+        font-size: x-small;
+    }
+
+.touchWord {
+    border: 1px dotted red;
+    font-size: small;
+    padding: 3px 2px;
+    cursor: pointer;
+    margin: 3px;
+    background-color: pink;
+    border-radius: 10px;
+    color: darkolivegreen;
 }
 
-.roomAsciiMap p a.Down {
-    color: red;
+.addWord {
+    color: green;
+    cursor: pointer;
+    padding-left: 5px;
 }

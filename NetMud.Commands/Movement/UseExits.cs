@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
 using NutMud.Commands.Attributes;
+using NetMud.DataStructure.Base.Place;
 using NetMud.Utility;
+using NetMud.DataStructure.Base.Supporting;
 using NetMud.Commands.Attributes;
 using NetMud.DataStructure.SupportingClasses;
+using NutMud.Commands.Rendering;
 
 namespace NetMud.Commands.Movement
 {
@@ -11,32 +14,32 @@ namespace NetMud.Commands.Movement
     /// </summary>
     [CommandSuppressName]
     [CommandKeyword("enter", false)]
-    [CommandKeyword("east", true)]
-    [CommandKeyword("north", true)]
-    [CommandKeyword("northeast", true)]
-    [CommandKeyword("northwest", true)]
-    [CommandKeyword("south", true)]
-    [CommandKeyword("southwest", true)]
-    [CommandKeyword("southeast", true)]
-    [CommandKeyword("west", true)]
-    [CommandKeyword("up", true)]
-    [CommandKeyword("down", true)]
-    [CommandKeyword("upnorth", true)]
-    [CommandKeyword("upnortheast", true)]
-    [CommandKeyword("upnorthwest", true)]
-    [CommandKeyword("upsouth", true)]
-    [CommandKeyword("upsouthwest", true)]
-    [CommandKeyword("upsoutheast", true)]
-    [CommandKeyword("upwest", true)]
-    [CommandKeyword("downnorth", true)]
-    [CommandKeyword("downnortheast", true)]
-    [CommandKeyword("downnorthwest", true)]
-    [CommandKeyword("downsouth", true)]
-    [CommandKeyword("downsouthwest", true)]
-    [CommandKeyword("downsoutheast", true)]
-    [CommandKeyword("downwest", true)]
+    [CommandKeyword("east", true, false, true)]
+    [CommandKeyword("north", true, false, true)]
+    [CommandKeyword("northeast", true, false, true)]
+    [CommandKeyword("northwest", true, false, true)]
+    [CommandKeyword("south", true, false, true)]
+    [CommandKeyword("southwest", true, false, true)]
+    [CommandKeyword("southeast", true, false, true)]
+    [CommandKeyword("west", true, false, true)]
+    [CommandKeyword("up", true, false, true)]
+    [CommandKeyword("down", true, false, true)]
+    [CommandKeyword("upnorth", true, false, true)]
+    [CommandKeyword("upnortheast", true, false, true)]
+    [CommandKeyword("upnorthwest", true, false, true)]
+    [CommandKeyword("upsouth", true, false, true)]
+    [CommandKeyword("upsouthwest", true, false, true)]
+    [CommandKeyword("upsoutheast", true, false, true)]
+    [CommandKeyword("upwest", true, false, true)]
+    [CommandKeyword("downnorth", true, false, true)]
+    [CommandKeyword("downnortheast", true, false, true)]
+    [CommandKeyword("downnorthwest", true, false, true)]
+    [CommandKeyword("downsouth", true, false, true)]
+    [CommandKeyword("downsouthwest", true, false, true)]
+    [CommandKeyword("downsoutheast", true, false, true)]
+    [CommandKeyword("downwest", true, false, true)]
     [CommandPermission(StaffRank.Player)]
-    //[CommandParameter(CommandUsage.Subject, typeof(IPathway), new CacheReferenceType[] { CacheReferenceType.Entity }, "[a-zA-z]+", true)]
+    [CommandParameter(CommandUsage.Subject, typeof(IPathway), new CacheReferenceType[] { CacheReferenceType.Entity }, "[a-zA-z]+", true)]
     [CommandRange(CommandRangeType.Touch, 0)]
     public class UseExits : CommandPartial
     {
@@ -54,12 +57,17 @@ namespace NetMud.Commands.Movement
         public override void Execute()
         {
             var sb = new List<string>();
-           // IPathway targetPath = (IPathway)Subject;
+            IPathway targetPath = (IPathway)Subject;
 
-           // targetPath.FromLocation.MoveFrom((IMobile)Actor);
-           // targetPath.ToLocation.MoveInto((IMobile)Actor);
+            targetPath.Origin.MoveFrom((IMobile)Actor);
+            targetPath.Destination.MoveInto((IMobile)Actor);
 
-            //targetPath.Enter.ExecuteMessaging(Actor, targetPath, null, targetPath.FromLocation, targetPath.ToLocation);
+            targetPath.Enter.ExecuteMessaging(Actor, targetPath, null, targetPath.Origin, targetPath.Destination);
+
+            //Render the next room to them
+            var lookCommand = new Look() { Actor = Actor, Subject = null, OriginLocation = Actor.CurrentLocation };
+
+            lookCommand.Execute();
         }
 
         /// <summary>
@@ -68,37 +76,18 @@ namespace NetMud.Commands.Movement
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            var sb = new List<string>();
+            var dirList = new List<string>() {
+                "east", "north", "northeast", "northwest", "south", "southeast", "southwest", "west", "up", "down",
+                "upeast", "upnorth", "upnortheast", "upnorthwest", "upsouth", "upsoutheast", "upsouthwest", "upwest",
+                "downeast", "downnorth", "downnortheast", "downnorthwest", "downsouth", "downsoutheast", "downwest",
+                "enter &lt;exit name&gt;"
+            };
 
-            sb.Add(string.Format("Valid Syntax:"));
-            sb.Add("east".PadWithString(14, "&nbsp;", true));
-            sb.Add("north".PadWithString(14, "&nbsp;", true));
-            sb.Add("northeast".PadWithString(14, "&nbsp;", true));
-            sb.Add("northwest".PadWithString(14, "&nbsp;", true));
-            sb.Add("south".PadWithString(14, "&nbsp;", true));
-            sb.Add("southeast".PadWithString(14, "&nbsp;", true));
-            sb.Add("southwest".PadWithString(14, "&nbsp;", true));
-            sb.Add("west".PadWithString(14, "&nbsp;", true));
-            sb.Add("up".PadWithString(14, "&nbsp;", true));
-            sb.Add("down".PadWithString(14, "&nbsp;", true));
-            sb.Add("upeast".PadWithString(14, "&nbsp;", true));
-            sb.Add("upnorth".PadWithString(14, "&nbsp;", true));
-            sb.Add("upnortheast".PadWithString(14, "&nbsp;", true));
-            sb.Add("upnorthwest".PadWithString(14, "&nbsp;", true));
-            sb.Add("upsouth".PadWithString(14, "&nbsp;", true));
-            sb.Add("upsoutheast".PadWithString(14, "&nbsp;", true));
-            sb.Add("upsouthwest".PadWithString(14, "&nbsp;", true));
-            sb.Add("upwest".PadWithString(14, "&nbsp;", true));
-            sb.Add("downeast".PadWithString(14, "&nbsp;", true));
-            sb.Add("downnorth".PadWithString(14, "&nbsp;", true));
-            sb.Add("downnortheast".PadWithString(14, "&nbsp;", true));
-            sb.Add("downnorthwest".PadWithString(14, "&nbsp;", true));
-            sb.Add("downsouth".PadWithString(14, "&nbsp;", true));
-            sb.Add("downsoutheast".PadWithString(14, "&nbsp;", true));
-            sb.Add("downsouthwest".PadWithString(14, "&nbsp;", true));
-            sb.Add("downwest".PadWithString(14, "&nbsp;", true));
-
-            sb.Add("enter &lt;exit name&gt;".PadWithString(14, "&nbsp;", true));
+            var sb = new List<string>
+            {
+                string.Format("Valid Syntax:"),
+                dirList.CommaList(RenderUtility.SplitListType.AllComma)
+            };
 
             return sb;
         }
@@ -106,7 +95,7 @@ namespace NetMud.Commands.Movement
         /// <summary>
         /// The custom body of help text
         /// </summary>
-        public override string HelpText
+        public override MarkdownString HelpText
         {
             get
             {

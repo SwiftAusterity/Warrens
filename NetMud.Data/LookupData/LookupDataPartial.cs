@@ -1,39 +1,63 @@
-﻿using NetMud.Data.System;
+﻿using NetMud.Data.DataIntegrity;
+using NetMud.Data.System;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.SupportingClasses;
 using System.Collections.Generic;
 
 namespace NetMud.Data.LookupData
 {
+    /// <summary>
+    /// Partial for anything that is considered lookup data (non-entity backing data)
+    /// </summary>
     public abstract class LookupDataPartial : BackingDataPartial, ILookupData
     {
+        /// <summary>
+        /// Extra text for the help command to display
+        /// </summary>
+        [StringDataIntegrity("Help text empty.", warning: true)]
+        public MarkdownString HelpText { get; set; }
+
+        /// <summary>
+        /// Make a new one of these
+        /// </summary>
         public LookupDataPartial()
         {
             //empty instance for getting the dataTableName
         }
 
         /// <summary>
-        /// Gets the errors for data fitness
+        /// Render out the display for the help command
         /// </summary>
-        /// <returns>a bunch of text saying how awful your data is</returns>
-        public override IList<string> FitnessReport()
-        {
-            var dataProblems = base.FitnessReport();
-
-            if (string.IsNullOrWhiteSpace(HelpText))
-                dataProblems.Add("Help text empty.");
-
-            return dataProblems;
-        }
-
-        public string HelpText { get; set; }
-
+        /// <returns>Help text</returns>
         public virtual IEnumerable<string> RenderHelpBody()
         {
-            var sb = new List<string>();
-
-            sb.Add(HelpText);
+            var sb = new List<string>
+            {
+                 HelpText
+            };
 
             return sb;
         }
+
+        /// <summary>
+        /// Get the significant details of what needs approval
+        /// </summary>
+        /// <returns>A list of strings</returns>
+        public override IDictionary<string, string> SignificantDetails()
+        {
+            var returnList = base.SignificantDetails();
+
+            returnList.Add("Help", HelpText);
+
+            return returnList;
+        }
+
+        #region Caching
+        /// <summary>
+        /// What type of cache is this using
+        /// </summary>
+        public override CacheType CachingType => CacheType.LookupData;
+        #endregion
+
     }
 }

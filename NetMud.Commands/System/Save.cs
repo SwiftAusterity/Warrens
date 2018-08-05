@@ -5,6 +5,7 @@ using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
 using NetMud.DataAccess.FileSystem;
 using NetMud.DataStructure.SupportingClasses;
+using NetMud.Data.Lexical;
 
 namespace NutMud.Commands.System
 {
@@ -35,12 +36,14 @@ namespace NutMud.Commands.System
 
             sb.Add("You save your life.");
 
-            var toActor = new Message(MessagingType.Visible, 1);
-            toActor.Override = sb;
+            var toActor = new Message(MessagingType.Visible, new Occurrence() { Strength = 1 })
+            {
+                Override = sb
+            };
 
             var messagingObject = new MessageCluster(toActor);
 
-            messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation, null);
+            messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation.CurrentLocation, null);
 
             var playerDataWrapper = new PlayerData();
 
@@ -54,9 +57,10 @@ namespace NutMud.Commands.System
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            var sb = new List<string>();
-
-            sb.Add("Valid Syntax: save");
+            var sb = new List<string>
+            {
+                "Valid Syntax: save"
+            };
 
             return sb;
         }
@@ -64,7 +68,7 @@ namespace NutMud.Commands.System
         /// <summary>
         /// The custom body of help text
         /// </summary>
-        public override string HelpText
+        public override MarkdownString HelpText
         {
             get
             {

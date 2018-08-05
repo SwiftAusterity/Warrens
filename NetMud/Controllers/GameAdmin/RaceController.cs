@@ -6,9 +6,11 @@ using NetMud.Data.LookupData;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Behaviors.Actionable;
 using NetMud.DataStructure.Behaviors.Automation;
+using NetMud.DataStructure.Behaviors.System;
 using NetMud.Models.Admin;
 using System;
 using System.Collections.Generic;
@@ -18,6 +20,7 @@ using System.Web.Mvc;
 
 namespace NetMud.Controllers.GameAdmin
 {
+    [Authorize(Roles = "Admin,Builder")]
     public class RaceController : Controller
     {
         private ApplicationUserManager _userManager;
@@ -44,51 +47,74 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageRaceDataViewModel(BackingDataCache.GetAll<IRace>());
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            var vModel = new ManageRaceDataViewModel(BackingDataCache.GetAll<IRace>())
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
-            vModel.CurrentPageNumber = CurrentPageNumber;
-            vModel.ItemsPerPage = ItemsPerPage;
-            vModel.SearchTerms = SearchTerms;
+                CurrentPageNumber = CurrentPageNumber,
+                ItemsPerPage = ItemsPerPage,
+                SearchTerms = SearchTerms
+            };
 
             return View("~/Views/GameAdmin/Race/Index.cshtml", vModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Remove(long ID, string authorize)
+        [Route(@"GameAdmin/Race/Remove/{removeId?}/{authorizeRemove?}/{unapproveId?}/{authorizeUnapprove?}")]
+        public ActionResult Remove(long removeId = -1, string authorizeRemove = "", long unapproveId = -1, string authorizeUnapprove = "")
         {
             string message = string.Empty;
 
-            if (string.IsNullOrWhiteSpace(authorize) || !ID.ToString().Equals(authorize))
-                message = "You must check the proper authorize radio button first.";
-            else
+            if (!string.IsNullOrWhiteSpace(authorizeRemove) && removeId.ToString().Equals(authorizeRemove))
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<Race>(ID);
+                var obj = BackingDataCache.Get<IRace>(removeId);
 
                 if (obj == null)
                     message = "That does not exist";
-                else if (obj.Remove())
+                else if (obj.Remove(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                 {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveRace[" + ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveRace[" + removeId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Delete Successful.";
                 }
                 else
                     message = "Error; Removal failed.";
             }
+            else if (!string.IsNullOrWhiteSpace(authorizeUnapprove) && unapproveId.ToString().Equals(authorizeUnapprove))
+            {
+                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+                var obj = BackingDataCache.Get<IRace>(unapproveId);
+
+                if (obj == null)
+                    message = "That does not exist";
+                else if (obj.ChangeApprovalStatus(authedUser.GameAccount, authedUser.GetStaffRank(User), ApprovalState.Returned))
+                {
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - UnapproveRace[" + unapproveId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    message = "Unapproval Successful.";
+                }
+                else
+                    message = "Error; Unapproval failed.";
+            }
+            else
+                message = "You must check the proper remove or unapprove authorization radio button first.";
 
             return RedirectToAction("Index", new { Message = message });
         }
 
+
         [HttpGet]
         public ActionResult Add()
         {
-            var vModel = new AddEditRaceViewModel();
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-            vModel.ValidMaterials = BackingDataCache.GetAll<IMaterial>();
-            vModel.ValidObjects = BackingDataCache.GetAll<IInanimateData>();
+            var vModel = new AddEditRaceViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                ValidMaterials = BackingDataCache.GetAll<IMaterial>(),
+                ValidObjects = BackingDataCache.GetAll<IInanimateData>(),
+                ValidZones = BackingDataCache.GetAll<IZoneData>()
+            };
 
             return View("~/Views/GameAdmin/Race/Add.cshtml", vModel);
         }
@@ -101,10 +127,12 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var newObj = new Race();
-            newObj.Name = vModel.Name;
+            var newObj = new Race
+            {
+                Name = vModel.Name
+            };
 
-            if (vModel.ArmsID > 0 && vModel.ArmsAmount > 0)
+            if (vModel.ArmsID >= 0 && vModel.ArmsAmount > 0)
             {
                 var arm = BackingDataCache.Get<InanimateData>(vModel.ArmsID);
 
@@ -112,7 +140,7 @@ namespace NetMud.Controllers.GameAdmin
                     newObj.Arms = new Tuple<IInanimateData, short>(arm, vModel.ArmsAmount);
             }
 
-            if (vModel.LegsID > 0 && vModel.LegsAmount > 0)
+            if (vModel.LegsID >= 0 && vModel.LegsAmount > 0)
             {
                 var leg = BackingDataCache.Get<IInanimateData>(vModel.LegsID);
 
@@ -120,7 +148,7 @@ namespace NetMud.Controllers.GameAdmin
                     newObj.Legs = new Tuple<IInanimateData, short>(leg, vModel.LegsAmount);
             }
 
-            if (vModel.TorsoId > 0)
+            if (vModel.TorsoId >= 0)
             {
                 var torso = BackingDataCache.Get<IInanimateData>(vModel.TorsoId);
 
@@ -128,7 +156,7 @@ namespace NetMud.Controllers.GameAdmin
                     newObj.Torso = torso;
             }
 
-            if (vModel.HeadId > 0)
+            if (vModel.HeadId >= 0)
             {
                 var head = BackingDataCache.Get<IInanimateData>(vModel.HeadId);
 
@@ -136,25 +164,25 @@ namespace NetMud.Controllers.GameAdmin
                     newObj.Head = head;
             }
 
-            //if (vModel.StartingLocationId > 0)
-            //{
-            //    var room = BackingDataCache.Get<RoomData>(vModel.StartingLocationId);
-
-            //    if (room != null)
-            //        newObj.StartingLocation = room;
-            //}
-
-            //if (vModel.RecallLocationId > 0)
-            //{
-            //    var room = BackingDataCache.Get<RoomData>(vModel.RecallLocationId);
-
-            //    if (room != null)
-            //        newObj.EmergencyLocation = room;
-            //}
-
-            if (vModel.BloodId > 0)
+            if (vModel.StartingLocationId >= 0)
             {
-                var blood = BackingDataCache.Get<Material>(vModel.BloodId);
+                var zone = BackingDataCache.Get<IZoneData>(vModel.StartingLocationId);
+
+                if (zone != null)
+                    newObj.StartingLocation = zone;
+            }
+
+            if (vModel.RecallLocationId >= 0)
+            {
+                var zone = BackingDataCache.Get<IZoneData>(vModel.RecallLocationId);
+
+                if (zone != null)
+                    newObj.EmergencyLocation = zone;
+            }
+
+            if (vModel.BloodId >= 0)
+            {
+                var blood = BackingDataCache.Get<IMaterial>(vModel.BloodId);
 
                 if (blood != null)
                     newObj.SanguinaryMaterial = blood;
@@ -167,6 +195,7 @@ namespace NetMud.Controllers.GameAdmin
             newObj.DietaryNeeds = (DietType)vModel.DietaryNeeds;
             newObj.TeethType = (DamageType)vModel.TeethType;
             newObj.HelpText = vModel.HelpBody;
+            newObj.CollectiveNoun = vModel.CollectiveNoun;
 
             if (vModel.ExtraPartsId != null)
             {
@@ -174,7 +203,7 @@ namespace NetMud.Controllers.GameAdmin
                 var bodyBits = new List<Tuple<IInanimateData, short, string>>();
                 foreach (var id in vModel.ExtraPartsId)
                 {
-                    if (id > 0)
+                    if (id >= 0)
                     {
                         if (vModel.ExtraPartsAmount.Count() <= partIndex || vModel.ExtraPartsName.Count() <= partIndex)
                             break;
@@ -193,11 +222,11 @@ namespace NetMud.Controllers.GameAdmin
                 newObj.BodyParts = bodyBits;
             }
 
-            if (newObj.Create() == null)
+            if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
                 message = "Error; Creation failed.";
             else
             {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - AddRaceData[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                LoggingUtility.LogAdminCommandUsage("*WEB* - AddRaceData[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 message = "Creation Successful.";
             }
 
@@ -208,10 +237,13 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(int id)
         {
             string message = string.Empty;
-            var vModel = new AddEditRaceViewModel();
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-            vModel.ValidMaterials = BackingDataCache.GetAll<IMaterial>();
-            vModel.ValidObjects = BackingDataCache.GetAll<IInanimateData>();
+            var vModel = new AddEditRaceViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                ValidMaterials = BackingDataCache.GetAll<IMaterial>(),
+                ValidObjects = BackingDataCache.GetAll<IInanimateData>(),
+                ValidZones = BackingDataCache.GetAll<IZoneData>()
+            };
 
             var obj = BackingDataCache.Get<IRace>(id);
 
@@ -227,40 +259,45 @@ namespace NetMud.Controllers.GameAdmin
             if (obj.Arms != null)
             {
                 vModel.ArmsAmount = obj.Arms.Item2;
-                vModel.ArmsID = obj.Arms.Item1.ID;
+                vModel.ArmsID = obj.Arms.Item1.Id;
             }
 
             if (obj.Legs != null)
             {
                 vModel.LegsAmount = obj.Legs.Item2;
-                vModel.LegsID = obj.Legs.Item1.ID;
+                vModel.LegsID = obj.Legs.Item1.Id;
             }
 
             if (obj.BodyParts != null)
             {
                 vModel.ExtraPartsAmount = obj.BodyParts.Select(bp => bp.Item2).ToArray();
-                vModel.ExtraPartsId = obj.BodyParts.Select(bp => bp.Item1.ID).ToArray(); ;
+                vModel.ExtraPartsId = obj.BodyParts.Select(bp => bp.Item1.Id).ToArray(); ;
                 vModel.ExtraPartsName = obj.BodyParts.Select(bp => bp.Item3).ToArray(); ;
             }
 
             if (obj.SanguinaryMaterial != null)
             {
-                vModel.BloodId = obj.SanguinaryMaterial.ID;
+                vModel.BloodId = obj.SanguinaryMaterial.Id;
             }
 
             vModel.Breathes = (short)obj.Breathes;
             vModel.DietaryNeeds = (short)obj.DietaryNeeds;
-            vModel.HeadId = obj.Head.ID;
-          //  vModel.RecallLocationId = obj.EmergencyLocation.ID;
-           // vModel.StartingLocationId = obj.StartingLocation.ID;
+            vModel.HeadId = obj.Head.Id;
+
+            if(obj.EmergencyLocation != null)
+                vModel.RecallLocationId = obj.EmergencyLocation.Id;
+
+            if(obj.StartingLocation != null)
+                vModel.StartingLocationId = obj.StartingLocation.Id;
+
             vModel.TeethType = (short)obj.TeethType;
             vModel.TemperatureToleranceHigh = obj.TemperatureTolerance.Item2;
             vModel.TemperatureToleranceLow = obj.TemperatureTolerance.Item1;
-            vModel.TorsoId = obj.Torso.ID;
+            vModel.TorsoId = obj.Torso.Id;
             vModel.VisionRangeHigh = obj.VisionRange.Item2;
             vModel.VisionRangeLow = obj.VisionRange.Item1;
-            vModel.HelpBody = obj.HelpText;
-
+            vModel.HelpBody = obj.HelpText.Value;
+            vModel.CollectiveNoun = obj.CollectiveNoun;
 
             return View("~/Views/GameAdmin/Race/Edit.cshtml", vModel);
         }
@@ -313,21 +350,21 @@ namespace NetMud.Controllers.GameAdmin
                     obj.Head = head;
             }
 
-            //if (vModel.StartingLocationId > 0)
-            //{
-            //    var room = BackingDataCache.Get<RoomData>(vModel.StartingLocationId);
+            if (vModel.StartingLocationId >= 0)
+            {
+                var zone = BackingDataCache.Get<ZoneData>(vModel.StartingLocationId);
 
-            //    if (room != null)
-            //        obj.StartingLocation = room;
-            //}
+                if (zone != null)
+                    obj.StartingLocation = zone;
+            }
 
-            //if (vModel.RecallLocationId > 0)
-            //{
-            //    var room = BackingDataCache.Get<RoomData>(vModel.RecallLocationId);
+            if (vModel.RecallLocationId >= 0)
+            {
+                var zone = BackingDataCache.Get<ZoneData>(vModel.RecallLocationId);
 
-            //    if (room != null)
-            //        obj.EmergencyLocation = room;
-            //}
+                if (zone != null)
+                    obj.EmergencyLocation = zone;
+            }
 
             if (vModel.BloodId > -1)
             {
@@ -344,9 +381,10 @@ namespace NetMud.Controllers.GameAdmin
             obj.DietaryNeeds = (DietType)vModel.DietaryNeeds;
             obj.TeethType = (DamageType)vModel.TeethType;
             obj.HelpText = vModel.HelpBody;
+            obj.CollectiveNoun = vModel.CollectiveNoun;
 
             var bodyBits = new List<Tuple<IInanimateData, short, string>>();
-            if (vModel.ExtraPartsId != null)
+            if (vModel.ExtraPartsId != null && vModel.ExtraPartsAmount != null && vModel.ExtraPartsName != null)
             {
                 int partIndex = 0;
                 foreach (var partId in vModel.ExtraPartsId)
@@ -370,9 +408,9 @@ namespace NetMud.Controllers.GameAdmin
                 obj.BodyParts = bodyBits;
             }
 
-            if (obj.Save())
+            if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - EditRaceData[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                LoggingUtility.LogAdminCommandUsage("*WEB* - EditRaceData[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 message = "Edit Successful.";
             }
             else

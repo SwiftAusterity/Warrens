@@ -1,5 +1,7 @@
 ﻿using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Behaviors.Existential;
 using NetMud.DataStructure.Behaviors.Rendering;
+using NetMud.DataStructure.SupportingClasses;
 using System.Collections.Generic;
 
 namespace NetMud.Commands.Attributes
@@ -33,7 +35,7 @@ namespace NetMud.Commands.Attributes
         /// <summary>
         /// Container the Actor is in when the command is invoked
         /// </summary>
-        public ILocation OriginLocation { get; set; }
+        public IGlobalPosition OriginLocation { get; set; }
 
         /// <summary>
         /// Valid containers by range from OriginLocation
@@ -43,13 +45,14 @@ namespace NetMud.Commands.Attributes
         /// <summary>
         /// The custom body of help text
         /// </summary>
-        public abstract string HelpText { get; set; }
+        public abstract MarkdownString HelpText { get; set; }
 
         public virtual IEnumerable<string> RenderHelpBody()
         {
-            var sb = new List<string>();
-
-            sb.Add(HelpText);
+            var sb = new List<string>
+            {
+                HelpText
+            };
 
             return sb;
         }

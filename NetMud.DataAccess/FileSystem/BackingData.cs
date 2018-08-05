@@ -1,4 +1,5 @@
 ﻿using NetMud.DataStructure.Base.System;
+using NetMud.Utility;
 using System;
 using System.IO;
 using System.Web.Hosting;
@@ -25,7 +26,7 @@ namespace NetMud.DataAccess.FileSystem
         {
             get
             {
-                return String.Format("{0}{1}{2}{3}_{4}{5}/",
+                return string.Format("{0}{1}{2}{3}_{4}{5}/",
                                         ArchiveDirectoryName
                                         , DateTime.Now.Year
                                         , DateTime.Now.Month
@@ -35,36 +36,38 @@ namespace NetMud.DataAccess.FileSystem
             }
         }
 
-        public IData ReadEntity(FileInfo file, Type entityType)
+        public IKeyedData ReadEntity(FileInfo file, Type entityType)
         {
             var fileData = ReadFile(file);
-            var blankEntity = Activator.CreateInstance(entityType) as IData;
+            var blankEntity = Activator.CreateInstance(entityType) as IKeyedData;
 
-            return blankEntity.FromBytes(fileData) as IData;
+            return blankEntity.FromBytes(fileData) as IKeyedData;
         }
 
         /// <summary>
         /// Write one backing data entity out
         /// </summary>
         /// <param name="entity">the thing to write out to current</param>
-        public void WriteEntity(IData entity)
+        public void WriteEntity(IKeyedData entity)
         {
-            var dirName = BaseDirectory + CurrentDirectoryName + entity.GetType().Name + "/";
-
-            if (!VerifyDirectory(dirName))
-                throw new Exception("Unable to locate or create base live data directory.");
-
-            var entityFileName = GetEntityFilename(entity);
-
-            if (string.IsNullOrWhiteSpace(entityFileName))
-                return;
-
-            var fullFileName = dirName + entityFileName;
-            var archiveFileDirectory = BaseDirectory + DatedBackupDirectory + entity.GetType().Name + "/";
-
             try
             {
-                RollingArchiveFile(fullFileName, archiveFileDirectory + entityFileName, archiveFileDirectory);
+                if (entity.FitnessProblems)
+                    throw new Exception("Attempt to write bad entity.");
+
+                var dirName = BaseDirectory + CurrentDirectoryName + entity.GetType().Name + "/";
+
+                if (!VerifyDirectory(dirName))
+                    throw new Exception("Unable to locate or create base backing data directory.");
+
+                var entityFileName = GetEntityFilename(entity);
+
+                if (string.IsNullOrWhiteSpace(entityFileName))
+                    return;
+
+                var fullFileName = dirName + entityFileName;
+
+                ArchiveEntity(entity);
                 WriteToFile(fullFileName, entity.ToBytes());
             }
             catch (Exception ex)
@@ -77,7 +80,7 @@ namespace NetMud.DataAccess.FileSystem
         /// Archive a backing data entity
         /// </summary>
         /// <param name="entity">the thing to archive</param>
-        public void ArchiveEntity(IData entity)
+        public void ArchiveEntity(IKeyedData entity)
         {
             var dirName = BaseDirectory + CurrentDirectoryName + entity.GetType().Name + "/";
 
@@ -118,7 +121,7 @@ namespace NetMud.DataAccess.FileSystem
             if (File.Exists(archiveFile))
                 File.Delete(archiveFile);
 
-            File.Move(currentFile, archiveFile);
+            File.Copy(currentFile, archiveFile, true);
         }
 
         /// <summary>
@@ -131,8 +134,7 @@ namespace NetMud.DataAccess.FileSystem
             {
                 var currentRoot = new DirectoryInfo(BaseDirectory + CurrentDirectoryName);
 
-                //move is literal move, no need to delete afterwards
-                currentRoot.MoveTo(BaseDirectory + DatedBackupDirectory);
+                currentRoot.CopyTo(BaseDirectory + DatedBackupDirectory);
             }
 
             //something very wrong is happening, it'll get logged
@@ -145,9 +147,9 @@ namespace NetMud.DataAccess.FileSystem
         /// </summary>
         /// <param name="entity">The entity in question</param>
         /// <returns>the filename</returns>
-        private string GetEntityFilename(IData entity)
+        private string GetEntityFilename(IKeyedData entity)
         {
-            return String.Format("{0}.{1}", entity.ID, entity.GetType().Name);
+            return string.Format("{0}.{1}", entity.Id, entity.GetType().Name);
         }
     }
 }

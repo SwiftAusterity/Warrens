@@ -1,5 +1,8 @@
-﻿using NetMud.DataStructure.SupportingClasses;
+﻿using NetMud.DataAccess.Cache;
+using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.DataStructure.SupportingClasses;
 using System;
+using System.Linq;
 
 namespace NetMud.Cartography
 {
@@ -9,6 +12,31 @@ namespace NetMud.Cartography
     /// </summary>
     public static class Utilities
     {
+        /// <summary>
+        /// Gets the opposite room from the origin based on direction
+        /// </summary>
+        /// <param name="origin">The room we're looking to oppose</param>
+        /// <param name="direction">The direction the room would be in (this method will reverse the direction itself)</param>
+        /// <returns>The room that is in the direction from our room</returns>
+        public static IRoomData GetOpposingRoom(IRoomData origin, MovementDirectionType direction)
+        {
+            //There is no opposite of none directionals
+            if (origin == null || direction == MovementDirectionType.None)
+                return null;
+
+            var oppositeDirection = ReverseDirection(direction);
+
+            var paths = BackingDataCache.GetAll<IPathwayData>();
+
+            var ourPath = paths.FirstOrDefault(pt => origin.Equals(pt.Destination) 
+                                            && pt.DirectionType == oppositeDirection);
+
+            if(ourPath != null)
+                return (IRoomData)ourPath.Destination;
+
+            return null;
+        }
+
         /// <summary>
         /// Is this coordinate out of bounds of the map
         /// </summary>
@@ -314,93 +342,71 @@ namespace NetMud.Cartography
         }
 
         /// <summary>
-        /// Calculates the x,y distance per move
+        /// X, Y, Z
         /// </summary>
-        /// <param name="degreesFromNorth">what direction you're moving in</param>
-        /// <param name="distance">how far you're trying to move</param>
-        /// <returns>x,y distance to move</returns>
-        public static Tuple<int, int> CalculateMovementDistance(int degreesFromNorth, int distance)
+        /// <param name="transversalDirection">The direction being faced</param>
+        /// <returns>the coordinates for the direction needed to move one unit "forward"</returns>
+        public static Tuple<int, int, int> GetDirectionStep(MovementDirectionType transversalDirection)
         {
-            var x = distance;
-            var y = distance;
-
-            //north
-            if (degreesFromNorth > 22 && degreesFromNorth < 67)
+            switch (transversalDirection)
             {
-                if (degreesFromNorth <= 30)
-                    x = (int)(x * .75);
-
-                if (degreesFromNorth >= 60)
-                    y = (int)(y * .75);
+                default: //We already defaulted to 0,0,0
+                    break;
+                case MovementDirectionType.East:
+                    return new Tuple<int, int, int>(1, 0, 0);
+                case MovementDirectionType.North:
+                    return new Tuple<int, int, int>(0, 1, 0);
+                case MovementDirectionType.NorthEast:
+                    return new Tuple<int, int, int>(1, 1, 0);
+                case MovementDirectionType.NorthWest:
+                    return new Tuple<int, int, int>(-1, 1, 0);
+                case MovementDirectionType.South:
+                    return new Tuple<int, int, int>(0, -1, 0);
+                case MovementDirectionType.SouthEast:
+                    return new Tuple<int, int, int>(1, -1, 0);
+                case MovementDirectionType.SouthWest:
+                    return new Tuple<int, int, int>(-1, -1, 0);
+                case MovementDirectionType.West:
+                    return new Tuple<int, int, int>(-1, 0, 0);
+                case MovementDirectionType.Up:
+                    return new Tuple<int, int, int>(0, 0, 1);
+                case MovementDirectionType.Down:
+                    return new Tuple<int, int, int>(0, 0, -1);
+                case MovementDirectionType.UpEast:
+                    return new Tuple<int, int, int>(1, 0, 1);
+                case MovementDirectionType.UpNorth:
+                    return new Tuple<int, int, int>(0, 1, 1);
+                case MovementDirectionType.UpNorthEast:
+                    return new Tuple<int, int, int>(1, 1, 1);
+                case MovementDirectionType.UpNorthWest:
+                    return new Tuple<int, int, int>(-1, 1, 1);
+                case MovementDirectionType.UpSouth:
+                    return new Tuple<int, int, int>(0, -1, 1);
+                case MovementDirectionType.UpSouthEast:
+                    return new Tuple<int, int, int>(1, -1, 1);
+                case MovementDirectionType.UpSouthWest:
+                    return new Tuple<int, int, int>(-1, -1, 1);
+                case MovementDirectionType.UpWest:
+                    return new Tuple<int, int, int>(-1, 0, 1);
+                case MovementDirectionType.DownEast:
+                    return new Tuple<int, int, int>(1, 0, -1);
+                case MovementDirectionType.DownNorth:
+                    return new Tuple<int, int, int>(0, 1, -1);
+                case MovementDirectionType.DownNorthEast:
+                    return new Tuple<int, int, int>(1, 1, -1);
+                case MovementDirectionType.DownNorthWest:
+                    return new Tuple<int, int, int>(-1, 1, -1);
+                case MovementDirectionType.DownSouth:
+                    return new Tuple<int, int, int>(0, -1, -1);
+                case MovementDirectionType.DownSouthEast:
+                    return new Tuple<int, int, int>(1, -1, -1);
+                case MovementDirectionType.DownSouthWest:
+                    return new Tuple<int, int, int>(-1, -1, -1);
+                case MovementDirectionType.DownWest:
+                    return new Tuple<int, int, int>(-1, 0, -1);
             }
 
-
-            //east
-            if (degreesFromNorth > 66 && degreesFromNorth < 111)
-            {
-                if (degreesFromNorth <= 75 || degreesFromNorth >= 105)
-                    x = (int)(x * .75);
-
-                if (degreesFromNorth <= 75 || degreesFromNorth >= 105)
-                    y = (int)(y * .25);
-            }
-
-            //southeast
-            if (degreesFromNorth > 110 && degreesFromNorth < 155)
-            {
-                if (degreesFromNorth >= 140)
-                    x = (int)(x * .25);
-
-                y = (int)(y * -1);
-            }
-
-            //south
-            if (degreesFromNorth > 154 && degreesFromNorth < 199)
-            {
-                if (degreesFromNorth <= 165 || degreesFromNorth >= 195)
-                    x = (int)(x * .25);
-
-                if (degreesFromNorth <= 165 || degreesFromNorth >= 195) 
-                    y = (int)(y * .75);
-
-                y = (int)(y * -1);
-            }
-
-            //southwest
-            if (degreesFromNorth > 198 && degreesFromNorth < 243)
-            {
-                if (degreesFromNorth <= 210)
-                    x = (int)(x * .75);
-
-                if (degreesFromNorth <= 210 || degreesFromNorth >= 240)
-                    y = (int)(y * .75);
-
-                y = (int)(y * -1);
-                x = (int)(x * -1);
-            }
-
-            //west
-            if (degreesFromNorth > 242 && degreesFromNorth < 287)
-            {
-                if (degreesFromNorth <= 260)
-                    y = (int)(y * .25);
-
-                x = (int)(x * -1);
-            }
-
-            //Northwest
-            if (degreesFromNorth > 286 && degreesFromNorth < 331)
-            {
-                if (degreesFromNorth <= 300 || degreesFromNorth >= 330)
-                    x = (int)(x * .75);
-
-                if (degreesFromNorth <= 300)
-                    y = (int)(y * .25);
-
-                x = (int)(x * -1);
-            }
-
-            return new Tuple<int, int>(x,y);
+            return new Tuple<int, int, int>(0, 0, 0);
         }
     }
 }

@@ -42,12 +42,17 @@
   <ItemGroup>
     <Compile Include="Context.cs" />
     <Compile Include="Interpret.cs" />
+    <Compile Include="LexicalInterpretationEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NetMud.Commands\NetMud.Commands.csproj">
       <Project>{39b7f303-cf48-41df-b56b-325987e7f7e6}</Project>
       <Name>NetMud.Commands</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NetMud.Communication\NetMud.Communication.csproj">
+      <Project>{7f19324f-1b9c-467d-816a-74a36eb74cde}</Project>
+      <Name>NetMud.Communication</Name>
     </ProjectReference>
     <ProjectReference Include="..\NetMud.DataAccess\NetMud.DataAccess.csproj">
       <Project>{25b53ef7-e51c-4ee5-a04c-dd8797cff58f}</Project>

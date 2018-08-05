@@ -1,43 +1,37 @@
-﻿using NetMud.DataStructure.Base.Place;
-using NetMud.DataStructure.Behaviors.Rendering;
-using System;
+﻿using NetMud.DataStructure.Behaviors.Rendering;
 
 namespace NetMud.DataStructure.Behaviors.Existential
 {
     /// <summary>
     /// Var collection for IExist
     /// </summary>
-    public interface IHasPositioning
+    public interface IHasPositioning : IRenderInLocation
     {
         /// <summary>
-        /// x,y,z position in the worlds
+        /// position in the worlds
         /// </summary>
-        IGlobalPosition Position { get; }
+        IGlobalPosition CurrentLocation { get; }
 
         /// <summary>
-        /// What direction is this facing, 0/360 = north, 0-180 incline
+        /// Change the position of this
         /// </summary>
-        Tuple<int, int> Facing { get; }
+        /// <param name="direction">the 0-360 direction we're moving</param>
+        /// <param name="newPosition">The new position the thing is in, will return with the original one if nothing moved</param>
+        /// <returns>was this thing moved?</returns>
+        bool TryMoveDirection(int direction, IGlobalPosition newPosition);
 
         /// <summary>
-        /// Current location this entity is in
+        /// Move this inside of something
         /// </summary>
-        IContains InsideOf { get; set; }
-    }
-
-    /// <summary>
-    /// Coords + world designator
-    /// </summary>
-    public interface IGlobalPosition
-    {
-        /// <summary>
-        /// x,y,z position in the world
-        /// </summary>
-        Tuple<long, long, long> Coordinates { get; set; }
+        /// <param name="container">The container to move into</param>
+        /// <returns>was this thing moved?</returns>
+        bool TryMoveInto(IContains container);
 
         /// <summary>
-        /// The world this is in
+        /// Change the position of this without physical movement
         /// </summary>
-        IWorld World { get; set;  }
+        /// <param name="newPosition">The new position the thing is in, will return with the original one if nothing moved</param>
+        /// <returns>was this thing moved?</returns>
+        bool TryTeleport(IGlobalPosition newPosition);
     }
 }

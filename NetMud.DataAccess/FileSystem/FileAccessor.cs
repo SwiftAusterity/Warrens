@@ -45,7 +45,7 @@ namespace NetMud.DataAccess.FileSystem
         {
             get
             {
-                return String.Format("{0}{1}{2}{3}{4}_{5}{6}{7}/",
+                return string.Format("{0}{1}{2}{3}{4}_{5}{6}{7}/",
                                         BaseDirectory
                                         , ArchiveDirectoryName
                                         , DateTime.Now.Year
@@ -108,7 +108,7 @@ namespace NetMud.DataAccess.FileSystem
             var mappedName = directoryName;
 
             if (!directoryName.Contains(BaseDirectory))
-                mappedName = String.Format("{0}{1}", BaseDirectory, directoryName);
+                mappedName = string.Format("{0}{1}", BaseDirectory, directoryName);
 
             if(!mappedName.EndsWith("/"))
                 mappedName = mappedName + "/";
@@ -128,7 +128,7 @@ namespace NetMud.DataAccess.FileSystem
             catch (Exception ex)
             {
                 //Log any filesystem errors
-                LoggingUtility.LogError(ex);
+                LoggingUtility.LogError(ex, false);
             }
 
             return false;
@@ -141,9 +141,10 @@ namespace NetMud.DataAccess.FileSystem
         /// <param name="bytes">the data to write</param>
         /// <param name="backupFirst">should this file be archived first using the default archiving directory structure</param>
         /// <param name="writeMode">should this file be overwritten or appended to</param>
-        public void WriteToFile(string fullFileName, byte[] bytes, FileMode writeMode = FileMode.Truncate)
+        public bool WriteToFile(string fullFileName, byte[] bytes, FileMode writeMode = FileMode.Truncate)
         {
             FileStream entityFile = null;
+            var success = true;
 
             try
             {
@@ -160,12 +161,15 @@ namespace NetMud.DataAccess.FileSystem
             catch (Exception ex)
             {
                 LoggingUtility.LogError(ex);
+                success = false;
             }
             finally
             {
                 if (entityFile != null)
                     entityFile.Dispose();
             }
+
+            return success;
         }
 
         /// <summary>
@@ -176,8 +180,8 @@ namespace NetMud.DataAccess.FileSystem
         /// <returns>success</returns>
         public bool ArchiveFile(string currentFileName, string archiveFileName)
         {
-            currentFileName = String.Format("{0}{1}{2}", BaseDirectory, CurrentDirectoryName, currentFileName);
-            archiveFileName = String.Format("{0}{1}{2}", BaseDirectory, ArchiveDirectoryName, archiveFileName);
+            currentFileName = string.Format("{0}{1}{2}", BaseDirectory, CurrentDirectoryName, currentFileName);
+            archiveFileName = string.Format("{0}{1}{2}", BaseDirectory, ArchiveDirectoryName, archiveFileName);
 
             //Why backup something that doesnt exist
             if (!VerifyDirectory(BaseDirectory + CurrentDirectoryName)
@@ -198,11 +202,11 @@ namespace NetMud.DataAccess.FileSystem
         /// <returns>success</returns>
         public bool ArchiveDatedFile(string fileName, string dateFormattedDirectory = "")
         {
-            if (String.IsNullOrWhiteSpace(dateFormattedDirectory))
+            if (string.IsNullOrWhiteSpace(dateFormattedDirectory))
                 dateFormattedDirectory = DatedBackupDirectory;
 
-            var currentFileName = String.Format("{0}{1}{2}", BaseDirectory, CurrentDirectoryName, fileName);
-            var archiveFileName = String.Format("{0}{1}", dateFormattedDirectory, fileName);
+            var currentFileName = string.Format("{0}{1}{2}", BaseDirectory, CurrentDirectoryName, fileName);
+            var archiveFileName = string.Format("{0}{1}", dateFormattedDirectory, fileName);
 
             //Why backup something that doesnt exist
             if (!VerifyDirectory(BaseDirectory + CurrentDirectoryName)

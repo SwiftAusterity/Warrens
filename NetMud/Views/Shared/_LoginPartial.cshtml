@@ -15,14 +15,14 @@
 
         <ul class="nav navbar-nav navbar-right">
             <li>@Html.ActionLink("Test Client", "Index", "GameClient", routeValues: null, htmlAttributes: new { title = "The Game Client", Style = "color: orange" })</li>
-            <li>
+            <li id="currentCharacterSelector">
                 @if (authUser.GameAccount.Characters.Count() > 0)
                 {
                     @Html.DropDownList("CurrentlySelectedCharacter", authUser.GameAccount.Characters.Select(ch =>
-                    new SelectListItem() { Text = ch.FullName()
-                                        , Value = ch.ID.ToString()
-                                        , Selected = authUser.GameAccount.CurrentlySelectedCharacter != default(long) && authUser.GameAccount.CurrentlySelectedCharacter.Equals(ch.ID) })
-                                        , htmlAttributes: new { id = "currentCharacter", Style = "margin: 15px;" })
+                     new SelectListItem() { Text = ch.FullName()
+                                     , Value = ch.Id.ToString()
+                                     , Selected = authUser.GameAccount.CurrentlySelectedCharacter >= 0 && authUser.GameAccount.CurrentlySelectedCharacter.Equals(ch.Id) })
+                                     , "Select One", htmlAttributes: new { id = "currentCharacter", Style = "margin: 15px;" })
                 }
                 else
                 {
@@ -30,25 +30,27 @@
                 }
             </li>
             <li>
+                <a href="/manage/notifications" id="notificationsBell"><span class="glyphicon glyphicon-bell" /></a>
+            </li>
+            <li>
                 <div style="padding-top: 15px; padding-bottom: 15px;">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">Hello @authUser.GameAccount.GlobalIdentityHandle<span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
-                        <li class="dropdown-header" style="color: mediumvioletred">Characters</li>
+                        <li class="dropdown-header" style="color: mediumvioletred">Management</li>
                         <li>@Html.ActionLink("Dashboard", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })</li>
                         <li>@Html.ActionLink("Manage Characters", "ManageCharacters", "Manage", routeValues: null, htmlAttributes: new { title = "Manage Characters" })</li>
+                        <li><a href="#" id="bugReport">Report A Bug</a></li>
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="divider"></li>
                             <li class="dropdown-header" style="color: mediumvioletred">Administrative</li>
                             <li>@Html.ActionLink("Dashboard", "Index", "GameAdmin", routeValues: null, htmlAttributes: new { title = "Dashboard" })</li>
                             <li>@Html.ActionLink("Logs", "Index", "Logging", routeValues: null, htmlAttributes: new { title = "Logs" })</li>
-                            <li>@Html.ActionLink("Manage NPCs", "Index", "NPC", routeValues: null, htmlAttributes: new { title = "Manage NPCs" })</li>
-                            <li>@Html.ActionLink("Manage Zones", "Index", "Zone", routeValues: null, htmlAttributes: new { title = "Manage Zones" })</li>
-                            <li>@Html.ActionLink("Manage Inanimates", "Index", "Inanimate", routeValues: null, htmlAttributes: new { title = "Manage Inanimates" })</li>
+                            <li>@Html.ActionLink("Content Approval", "Index", "ContentApproval", routeValues: null, htmlAttributes: new { title = "Content Approval" })</li>
                             <li>@Html.ActionLink("Manage Players", "Index", "Player", routeValues: null, htmlAttributes: new { title = "Manage Players" })</li>
                         }
                         <li class="divider"></li>
-                        <li ><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+                        <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
                     </ul>
                 </div>
             </li>
@@ -62,10 +64,13 @@ else
         <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
     </ul>
 }
-@section Scripts {
-    @Scripts.Render("~/bundles/bootstrap")
 
-    <script type="text/javascript">
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#bugReport').click(function () {
+            openFrameless(500, 500, 500, 500, '/Home/ReportBug', 'Report A Bug');
 
-    </script>
-}
+            return false;
+        });
+    });
+</script>

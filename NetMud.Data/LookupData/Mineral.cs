@@ -1,4 +1,5 @@
-﻿using NetMud.DataAccess.Cache;
+﻿using NetMud.Data.DataIntegrity;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Behaviors.Existential;
 using Newtonsoft.Json;
@@ -26,13 +27,14 @@ namespace NetMud.Data.LookupData
         public int Fertility { get; set; }
 
         [JsonProperty("Rock")]
-        private long _rock { get; set; }
+        private BackingDataCacheKey _rock { get; set; }
 
         /// <summary>
         /// What is the solid, crystallized form of this
         /// </summary>
         [JsonIgnore]
         [ScriptIgnore]
+        [NonNullableDataIntegrity("Rock must have a value.")]
         public IMaterial Rock
         {
             get
@@ -41,18 +43,19 @@ namespace NetMud.Data.LookupData
             }
             set
             {
-                _rock = value.ID;
+                _rock = new BackingDataCacheKey(value);
             }
         }
 
         [JsonProperty("Dirt")]
-        private long _dirt { get; set; }
+        private BackingDataCacheKey _dirt { get; set; }
 
         /// <summary>
         /// What is the scattered, ground form of this
         /// </summary>
         [JsonIgnore]
         [ScriptIgnore]
+        [NonNullableDataIntegrity("Dirt must have a value.")]
         public IMaterial Dirt
         {
             get
@@ -61,46 +64,50 @@ namespace NetMud.Data.LookupData
             }
             set
             {
-                _dirt = value.ID;
+                _dirt = new BackingDataCacheKey(value);
             }
         }
+
         [JsonProperty("Ores")]
-        private IEnumerable<long> _ores { get; set; }
+        private IEnumerable<BackingDataCacheKey> _ores { get; set; }
 
         /// <summary>
         /// What medium minerals this can spawn in
         /// </summary>
+        [JsonIgnore]
+        [ScriptIgnore]
         public IEnumerable<IMineral> Ores
         {
             get
             {
                 if (_ores == null)
-                    _ores = new HashSet<long>();
+                    _ores = new HashSet<BackingDataCacheKey>();
 
                 return BackingDataCache.GetMany<IMineral>(_ores);
             }
             set
             {
-                _ores = value.Select(m => m.ID);
+                _ores = value.Select(m => new BackingDataCacheKey(m));
             }
         }
 
-
         /// <summary>
-        /// Gets the errors for data fitness
+        /// Get the significant details of what needs approval
         /// </summary>
-        /// <returns>a bunch of text saying how awful your data is</returns>
-        public override IList<string> FitnessReport()
+        /// <returns>A list of strings</returns>
+        public override IDictionary<string, string> SignificantDetails()
         {
-            var dataProblems = base.FitnessReport();
+            var returnList = base.SignificantDetails();
 
-            if (Dirt == null)
-                dataProblems.Add("Dirt must have a value.");
+            returnList.Add("Solubility", Solubility.ToString());
+            returnList.Add("Fertility", Fertility.ToString());
+            returnList.Add("Rock", Rock.Name);
+            returnList.Add("Dirt", Dirt.ToString());
 
-            if (Rock == null)
-                dataProblems.Add("Rock must have a value.");
+            foreach(var ore in Ores)
+                returnList.Add("Ore", ore.Name);
 
-            return dataProblems;
+            return returnList;
         }
 
         public override bool CanSpawnIn(IGlobalPosition location)

@@ -1,20 +1,19 @@
 ﻿@model NetMud.Models.Logging.DashboardViewModel
-@{
-    ViewBag.Title = "Logs";
-}
 
 <div style="padding-bottom: 25px;">
     <h4>Live Channels</h4>
     <hr />
-    <div class="form-group one-column">
+    <div class="form-group row">
         @using (Html.BeginForm("Index", "Logging", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
             @Html.AntiForgeryToken()
-            @Html.LabelFor(m => m.SelectedLog, new { @class = "control-label" })
-            <div>
+            @Html.DescriptiveLabelFor(m => m.SelectedLog, new { @class = "col-sm-2 col-form-label" })
+            <div class="col-sm-2">
                 @Html.DropDownList("SelectedLog", Model.ChannelNames.Select(rl =>
                             new SelectListItem() { Text = rl, Value = rl })
-                            , htmlAttributes: new { id = "selectedLog", Style = "padding: 7px;" })
+                            , "Select One", htmlAttributes: new { id = "selectedLog", Style = "padding: 7px;" })
+            </div>
+            <div class="col-sm-1">
                 <input type="submit" value="Load" class="btn btn-default" />
             </div>
         }

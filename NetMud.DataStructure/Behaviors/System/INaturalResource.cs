@@ -1,7 +1,8 @@
 ﻿using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.Behaviors.Automation;
 using NetMud.DataStructure.Behaviors.Existential;
+using NetMud.DataStructure.Behaviors.Rendering;
+using NetMud.DataStructure.SupportingClasses;
 using System;
 using System.Collections.Generic;
 
@@ -10,7 +11,7 @@ namespace NetMud.DataStructure.Behaviors.System
     /// <summary>
     /// Natural resources (minerals, flora, fauna)
     /// </summary>
-    public interface INaturalResource : ILookupData, IHasAffects
+    public interface INaturalResource : ILookupData, ILookable, ISmellable, ITouchable, ITasteable, IAudible, ISensible, IRenderInLocation
     {
         /// <summary>
         /// How much spawns in one place in one spawn tick
@@ -57,13 +58,21 @@ namespace NetMud.DataStructure.Behaviors.System
         /// </summary>
         /// <param name="room">The room to spawn in</param>
         /// <returns>if this can spawn there</returns>
-        bool CanSpawnIn(IGlobalPosition location);
+        bool CanSpawnIn(IGlobalPosition room);
 
         /// <summary>
         /// Should this resource spawn in this room. Combines the "can" logic with checks against total local population
         /// </summary>
         /// <param name="room">The room to spawn in</param>
         /// <returns>if this should spawn there</returns>
-        bool ShouldSpawnIn(IGlobalPosition location);
+        bool ShouldSpawnIn(IGlobalPosition room);
+
+        /// <summary>
+        /// Render a natural resource collection to a viewer
+        /// </summary>
+        /// <param name="viewer">the entity looking</param>
+        /// <param name="amount">How much of it there is</param>
+        /// <returns>a view string</returns>
+        IOccurrence RenderResourceCollection(IEntity viewer, int amount);
     }
 }

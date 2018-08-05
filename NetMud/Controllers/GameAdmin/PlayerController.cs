@@ -2,6 +2,8 @@
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
+using NetMud.Data.System;
+using NetMud.DataAccess;
 using NetMud.Models.Admin;
 using System.Linq;
 using System.Web;
@@ -9,6 +11,7 @@ using System.Web.Mvc;
 
 namespace NetMud.Controllers.GameAdmin
 {
+    [Authorize]
     public class PlayerController : Controller
     {
         private ApplicationUserManager _userManager;
@@ -33,43 +36,71 @@ namespace NetMud.Controllers.GameAdmin
             UserManager = userManager;
         }
 
-        public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
-        {
-            var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
-
-            var vModel = new ManagePlayersViewModel(UserManager.Users);
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-
-            vModel.CurrentPageNumber = CurrentPageNumber;
-            vModel.ItemsPerPage = ItemsPerPage;
-            vModel.SearchTerms = SearchTerms;
-
-            vModel.ValidRoles = roleManager.Roles.ToList();
-
-            return View("~/Views/GameAdmin/Player/Index.cshtml", vModel);
-        }
 
         [HttpPost]
-        public JsonResult SelectCharacter(long CurrentlySelectedCharacter)
+        [Route(@"Player/SelectCharacter/{id}")]
+        public JsonResult SelectCharacter(long id)
         {
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            if (authedUser != null && CurrentlySelectedCharacter > 0)
+            if (authedUser != null && id >= 0)
             {
-                authedUser.GameAccount.CurrentlySelectedCharacter = CurrentlySelectedCharacter;
+                authedUser.GameAccount.CurrentlySelectedCharacter = id;
                 UserManager.Update(authedUser);
             }
 
             return new JsonResult();
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
+        {
+            var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
+
+            var vModel = new ManagePlayersViewModel(UserManager.Users)
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+
+                CurrentPageNumber = CurrentPageNumber,
+                ItemsPerPage = ItemsPerPage,
+                SearchTerms = SearchTerms,
+
+                ValidRoles = roleManager.Roles.ToList()
+            };
+
+            return View("~/Views/GameAdmin/Player/Index.cshtml", vModel);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Remove(long ID, string authorize)
+        [Authorize(Roles="Admin")]
+        [Route(@"Player/Remove/{removeId?}/{authorizeRemove?}")]
+        public ActionResult Remove(string removeId, string authorizeRemove)
         {
-            string message = "Not Implimented";
+            string message = string.Empty;
+
+            if (!string.IsNullOrWhiteSpace(authorizeRemove) && removeId.ToString().Equals(authorizeRemove))
+            {
+                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+                var obj = Account.GetByHandle(removeId);
+
+                if (obj == null)
+                    message = "That does not exist";
+                else if (obj.Delete(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+                {
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveAccount[" + removeId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    message = "Delete Successful.";
+                }
+                else
+                    message = "Error; Removal failed.";
+            }
+            else
+                message = "You must check the proper remove or unapprove authorization radio button first.";
 
             return RedirectToAction("Index", new { Message = message });
+
         }
     }
 }

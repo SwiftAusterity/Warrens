@@ -1,5 +1,8 @@
-﻿using NetMud.DataAccess.Cache;
+﻿using NetMud.Data.DataIntegrity;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Behaviors.System;
+using NetMud.DataStructure.SupportingClasses;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -11,6 +14,11 @@ namespace NetMud.Data.LookupData
     [Serializable]
     public class Material : LookupDataPartial, IMaterial
     {
+        /// <summary>
+        /// What type of approval is necessary for this content
+        /// </summary>
+        public override ContentApprovalType ApprovalType { get { return ContentApprovalType.Admin; } }
+
         /// <summary>
         /// Is this material energy conduction
         /// </summary>
@@ -29,21 +37,25 @@ namespace NetMud.Data.LookupData
         /// <summary>
         /// How viscous is this material (higher = more viscous)
         /// </summary>
+        [ShortDataIntegrity("Viscosity has to be greater than 0.", 0)]
         public short Viscosity { get; set; }
 
         /// <summary>
         /// How dense is this material
         /// </summary>
+        [ShortDataIntegrity("Density has to be greater than 0.", 0)]
         public short Density { get; set; }
 
         /// <summary>
         /// How well does this material bend without breaking
         /// </summary>
+        [ShortDataIntegrity("Mallebility has to be greater than 0.", 0)]
         public short Mallebility { get; set; }
 
         /// <summary>
         /// How stretchable is this material
         /// </summary>
+        [ShortDataIntegrity("Ductility has to be greater than 0.", 0)]
         public short Ductility { get; set; }
 
         /// <summary>
@@ -71,8 +83,13 @@ namespace NetMud.Data.LookupData
         /// </summary>
         public IDictionary<DamageType, short> Resistance { get; set; }
 
+        /// <summary>
+        /// Set of output relevant to this exit. These are essentially single word descriptions to render the path
+        /// </summary>
+        public HashSet<IOccurrence> Descriptives { get; set; }
+
         [JsonProperty("Composition")]
-        private IDictionary<long, short> _composition { get; set; }
+        private IDictionary<BackingDataCacheKey, short> _composition { get; set; }
 
         /// <summary>
         /// Collection of model section name to material composition mappings
@@ -93,10 +110,13 @@ namespace NetMud.Data.LookupData
                 if (value == null)
                     return;
 
-                _composition = value.ToDictionary(k => k.Key.ID, k => k.Value);
+                _composition = value.ToDictionary(k => new BackingDataCacheKey(k.Key), k => k.Value);
             }
         }
 
+        /// <summary>
+        /// Make a new empty instance of this
+        /// </summary>
         public Material()
         {
             Resistance = new Dictionary<DamageType, short>();
@@ -111,21 +131,10 @@ namespace NetMud.Data.LookupData
         {
             var dataProblems = base.FitnessReport();
 
-            if (Viscosity == 0)
-                dataProblems.Add("Viscosity has to be greater than 0.");
-
-            if (Density == 0)
-                dataProblems.Add("Density has to be greater than 0.");
-
-            if (Mallebility == 0)
-                dataProblems.Add("Mallebility has to be greater than 0.");
-
-            if (Ductility == 0)
-                dataProblems.Add("Ductility has to be greater than 0.");
-
             if (SolidPoint >= GasPoint)
                 dataProblems.Add("Solidification point must be lower than gaseous point.");
 
+            //Specific interior value checking
             if (Resistance == null || !Resistance.Any() || Resistance.Any(r => r.Value == 0))
                 dataProblems.Add("Resistances are invalid.");
 
@@ -136,12 +145,29 @@ namespace NetMud.Data.LookupData
         }
 
         /// <summary>
-        /// Renders the help text for this data object
+        /// Get the significant details of what needs approval
         /// </summary>
-        /// <returns>help text</returns>
-        public override IEnumerable<string> RenderHelpBody()
+        /// <returns>A list of strings</returns>
+        public override IDictionary<string, string> SignificantDetails()
         {
-            return base.RenderHelpBody();
+            var returnList = base.SignificantDetails();
+
+            returnList.Add("Conductive", Conductive.ToString());
+            returnList.Add("Magnetic", Magnetic.ToString());
+            returnList.Add("Flammable", Flammable.ToString());
+            returnList.Add("Viscosity", Viscosity.ToString());
+            returnList.Add("Density", Density.ToString());
+            returnList.Add("Mallebility", Mallebility.ToString());
+            returnList.Add("Ductility", Ductility.ToString());
+            returnList.Add("Porosity", Porosity.ToString());
+            returnList.Add("Solid Point", SolidPoint.ToString());
+            returnList.Add("Gas Point", GasPoint.ToString());
+            returnList.Add("Temperature Retention", TemperatureRetention.ToString());
+
+            foreach (var desc in Descriptives)
+                returnList.Add("Descriptives", string.Format("{0} ({1}): {2}", desc.SensoryType, desc.Strength, desc.Event.ToString()));
+
+            return returnList;
         }
     }
 }

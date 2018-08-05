@@ -21,11 +21,13 @@ namespace NetMud.DataStructure.Base.Supporting
         /// <summary>
         /// How soluble the dirt is
         /// </summary>
+        
         int Solubility { get; set; }
 
         /// <summary>
         /// How fertile the dirt generally is
         /// </summary>
+        
         int Fertility { get; set; }
 
         /// <summary>

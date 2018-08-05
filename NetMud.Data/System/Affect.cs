@@ -30,14 +30,24 @@ namespace NetMud.Data.System
         /// </summary>
         public int DispelResistance { get; set; }
 
+        /// <summary>
+        /// Make a new affect with default values
+        /// </summary>
         public Affect()
         {
             Duration = -1;
             Value = 0;
-            Target = String.Empty;
+            Target = string.Empty;
             DispelResistance = 0;
         }
 
+        /// <summary>
+        /// Make a new affect with values
+        /// </summary>
+        /// <param name="duration">How long this affect runs</param>
+        /// <param name="value">The strength of the affect</param>
+        /// <param name="target">The target attribute this affects</param>
+        /// <param name="dispelResistance">How hard is it to remove and the transmission chance</param>
         public Affect(int duration, int value, string target, int dispelResistance)
         {
             Duration = duration;
@@ -46,6 +56,7 @@ namespace NetMud.Data.System
             DispelResistance = dispelResistance;
         }
 
+        #region Equality Functions
         /// <summary>
         /// -99 = null input
         /// -1 = wrong type
@@ -60,10 +71,10 @@ namespace NetMud.Data.System
             {
                 try
                 {
-                    if (other.GetType() != this.GetType())
+                    if (other.GetType() != GetType())
                         return -1;
 
-                    if (other.Target.Equals(this.Target, StringComparison.InvariantCultureIgnoreCase))
+                    if (other.Target.Equals(Target, StringComparison.InvariantCultureIgnoreCase))
                         return 1;
 
                     return 0;
@@ -88,8 +99,8 @@ namespace NetMud.Data.System
             {
                 try
                 {
-                    return other.GetType() == this.GetType() 
-                        && other.Target.Equals(this.Target, StringComparison.InvariantCultureIgnoreCase);
+                    return other.GetType() == GetType() 
+                        && other.Target.Equals(Target, StringComparison.InvariantCultureIgnoreCase);
                 }
                 catch (Exception ex)
                 {
@@ -99,5 +110,6 @@ namespace NetMud.Data.System
 
             return false;
         }
+        #endregion
     }
 }

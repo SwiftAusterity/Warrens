@@ -1,5 +1,6 @@
 ﻿using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
+using NetMud.Data.Lexical;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.System;
@@ -12,7 +13,7 @@ using System.Text;
 
 namespace NetMud.Commands.System
 {
-    [CommandKeyword("commands", false)]
+    [CommandKeyword("commands", false, false, true)]
     [CommandPermission(StaffRank.Player)]
     [CommandRange(CommandRangeType.Touch, 0)]
     public class Commands : CommandPartial
@@ -42,24 +43,28 @@ namespace NetMud.Commands.System
 
             returnStrings.Add("Commands:");
 
-            var commandNames = new HashSet<string>();
+            var commandNames = new List<string>();
             foreach (var command in loadedCommands)
             {
                 foreach(var commandName in command.GetCustomAttributes<CommandKeywordAttribute>().Where(key => key.DisplayInHelpAndCommands))
                     if(!commandNames.Contains(commandName.Keyword))
                         commandNames.Add(commandName.Keyword);
 
-                if (!commandNames.Contains(command.Name) && command.GetCustomAttribute<CommandSuppressName>() != null)
+                if (!commandNames.Contains(command.Name) && command.GetCustomAttribute<CommandSuppressName>() == null)
                     commandNames.Add(command.Name);
             }
+
+            sb.AppendLine(string.Join(", ", commandNames.Select(cmd => cmd.ToLower()).Distinct()));
 
             if(sb.Length > 0)
                 sb.Length -= 2;
 
             returnStrings.Add(sb.ToString());
 
-            var toActor = new Message(MessagingType.Visible, 1);
-            toActor.Override = returnStrings;
+            var toActor = new Message(MessagingType.Visible, new Occurrence() { Strength = 1 })
+            {
+                Override = returnStrings
+            };
 
             var messagingObject = new MessageCluster(toActor);
 
@@ -68,9 +73,10 @@ namespace NetMud.Commands.System
 
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            var sb = new List<string>();
-
-            sb.Add("Valid Syntax: commands");
+            var sb = new List<string>
+            {
+                "Valid Syntax: commands"
+            };
 
             return sb;
         }
@@ -78,7 +84,7 @@ namespace NetMud.Commands.System
         /// <summary>
         /// The custom body of help text
         /// </summary>
-        public override string HelpText
+        public override MarkdownString HelpText
         {
             get
             {

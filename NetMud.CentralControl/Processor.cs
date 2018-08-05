@@ -16,8 +16,8 @@ namespace NetMud.CentralControl
     {
         private static ObjectCache globalCache = MemoryCache.Default;
         private static CacheItemPolicy globalPolicy = new CacheItemPolicy();
-        private static string cancellationTokenCacheKeyFormat = "AsyncCancellationToken.{0}";
-        private static string subscriptionLoopCacheKeyFormat = "SubscriptionLoop.{0}";
+        private static readonly string cancellationTokenCacheKeyFormat = "AsyncCancellationToken.{0}";
+        private static readonly string subscriptionLoopCacheKeyFormat = "SubscriptionLoop.{0}";
         private static int _maxPulseCount = 18000; //half an hour
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace NetMud.CentralControl
 
                 StoreCancellationToken(designator, cancelTokenSource);
 
-                Func<object, SubscriptionLoopArgs> looperProcess = (args) =>
+                async void looperProcess(object args)
                 {
                     var subArgs = args as SubscriptionLoopArgs;
                     while (1 == 1)
@@ -52,19 +52,19 @@ namespace NetMud.CentralControl
 
                         if (subArgs.CurrentPulse == _maxPulseCount)
                             subArgs.CurrentPulse = 0;
+
+                        await Task.Delay(10000);
                     }
+                }
 
-                    return subArgs;
-                };
+                var newLoop = new Task(looperProcess, new SubscriptionLoopArgs(designator, 0), cancelTokenSource.Token, TaskCreationOptions.LongRunning);
 
-                var newLoop = new Task<SubscriptionLoopArgs>(looperProcess, new SubscriptionLoopArgs(designator, 0), cancelTokenSource.Token, TaskCreationOptions.LongRunning);
-
-                newLoop.ContinueWith(async (previousTask) =>
+                newLoop.ContinueWith((previousTask) =>
                 {
                     //Just end it
                     RemoveSubscriberList(designator);
                     RemoveCancellationToken(designator);
-                });
+                }, TaskContinuationOptions.NotOnRanToCompletion);
 
                 newLoop.Start();
             }
@@ -88,11 +88,11 @@ namespace NetMud.CentralControl
 
             StoreCancellationToken(designator, cancelTokenSource);
 
-            Func<bool> loopedProcess = () =>
+            bool loopedProcess()
             {
                 StartLoop(workProcess, rampupDelay);
                 return true;
-            };
+            }
 
             var newLoop = new Task<bool>(loopedProcess, cancelTokenSource.Token, TaskCreationOptions.LongRunning);
 
@@ -130,11 +130,11 @@ namespace NetMud.CentralControl
 
             StoreCancellationToken(designator, cancelTokenSource);
 
-            Func<bool> loopedProcess = () =>
+            bool loopedProcess()
             {
                 StartLoop(workProcess, rampupDelay);
                 return true;
-            };
+            }
 
             var newLoop = new Task<bool>(loopedProcess, cancelTokenSource.Token, TaskCreationOptions.LongRunning);
 
@@ -179,7 +179,7 @@ namespace NetMud.CentralControl
                 cancelToken.CancelAfter(shutdownDelay * 1000);
 
             if (!string.IsNullOrWhiteSpace(shutdownAnnouncement))
-                SystemComm.BroadcastToAll(String.Format(shutdownAnnouncement, shutdownDelay));
+                SystemCommunicationsUtility.BroadcastToAll(string.Format(shutdownAnnouncement, shutdownDelay));
 
             if (shutdownAnnouncementFrequency > 0)
             {
@@ -196,7 +196,7 @@ namespace NetMud.CentralControl
         {
             var returnDict = new Dictionary<string, CancellationTokenSource>();
             foreach (var kvp in globalCache.Where(kvp => kvp.Value.GetType() == typeof(CancellationTokenSource)))
-                returnDict.Add(kvp.Key.Replace("AsyncCancellationToken.", String.Empty), (CancellationTokenSource)kvp.Value);
+                returnDict.Add(kvp.Key.Replace("AsyncCancellationToken.", string.Empty), (CancellationTokenSource)kvp.Value);
 
             return returnDict;
         }
@@ -219,7 +219,7 @@ namespace NetMud.CentralControl
             }
 
             if (!string.IsNullOrWhiteSpace(shutdownAnnouncement))
-                SystemComm.BroadcastToAll(String.Format(shutdownAnnouncement, shutdownDelay));
+                SystemCommunicationsUtility.BroadcastToAll(string.Format(shutdownAnnouncement, shutdownDelay));
 
             if (shutdownAnnouncementFrequency > 0)
             {
@@ -238,7 +238,7 @@ namespace NetMud.CentralControl
             int secondsLeftBeforeShutdown = shutdownDelay;
             while (secondsLeftBeforeShutdown > 0)
             {
-                SystemComm.BroadcastToAll(String.Format(shutdownAnnouncement, secondsLeftBeforeShutdown));
+                SystemCommunicationsUtility.BroadcastToAll(string.Format(shutdownAnnouncement, secondsLeftBeforeShutdown));
                 await Task.Delay(shutdownAnnouncementFrequency * 1000);
                 secondsLeftBeforeShutdown -= shutdownAnnouncementFrequency;
             }
@@ -251,7 +251,7 @@ namespace NetMud.CentralControl
         /// <param name="token">the token to store</param>
         private static void StoreCancellationToken(string designator, CancellationTokenSource token)
         {
-            globalCache.AddOrGetExisting(String.Format(cancellationTokenCacheKeyFormat, designator), token, globalPolicy);
+            globalCache.AddOrGetExisting(string.Format(cancellationTokenCacheKeyFormat, designator), token, globalPolicy);
         }
 
         /// <summary>
@@ -263,11 +263,11 @@ namespace NetMud.CentralControl
         {
             try
             {
-                return (CancellationTokenSource)globalCache[String.Format(cancellationTokenCacheKeyFormat, designator)];
+                return (CancellationTokenSource)globalCache[string.Format(cancellationTokenCacheKeyFormat, designator)];
             }
             catch (Exception ex)
             {
-                LoggingUtility.LogError(ex);
+                LoggingUtility.LogError(ex, false);
             }
 
             return null;
@@ -279,7 +279,7 @@ namespace NetMud.CentralControl
         /// <param name="designator">The token's designator</param>
         private static void RemoveCancellationToken(string designator)
         {
-            globalCache.Remove(String.Format(cancellationTokenCacheKeyFormat, designator));
+            globalCache.Remove(string.Format(cancellationTokenCacheKeyFormat, designator));
         }
 
         /// <summary>
@@ -289,11 +289,9 @@ namespace NetMud.CentralControl
         /// <param name="token">the token to store</param>
         private static IList<Tuple<Func<bool>, int>> SubscribeToLoop(string designator, Func<bool> subscriber, int pulseCount)
         {
-            var taskKey = String.Format(subscriptionLoopCacheKeyFormat, designator);
+            var taskKey = string.Format(subscriptionLoopCacheKeyFormat, designator);
 
-            IList<Tuple<Func<bool>, int>> taskList = globalCache.Get(taskKey) as IList<Tuple<Func<bool>, int>>;
-
-            if (taskList == null)
+            if (!(globalCache.Get(taskKey) is IList<Tuple<Func<bool>, int>> taskList))
                 taskList = new List<Tuple<Func<bool>, int>>();
 
             taskList.Add(new Tuple<Func<bool>, int>(subscriber, pulseCount));
@@ -307,6 +305,9 @@ namespace NetMud.CentralControl
 
         private static IList<Tuple<Func<bool>, int>> GetAllCurrentSubscribers(string designator, int pulseCount, bool fireOnce)
         {
+            if (pulseCount == 0)
+                return new List<Tuple<Func<bool>, int>>();
+
             var loopSubscribers = GetLoopSubscribers(designator);
 
             return loopSubscribers.Where(ls => (fireOnce && ls.Item2.Equals(pulseCount)) || ls.Item2 % pulseCount == 0).ToList();
@@ -319,7 +320,7 @@ namespace NetMud.CentralControl
         /// <returns>the token</returns>
         private static IList<Tuple<Func<bool>, int>> GetLoopSubscribers(string designator)
         {
-            var taskKey = String.Format(subscriptionLoopCacheKeyFormat, designator);
+            var taskKey = string.Format(subscriptionLoopCacheKeyFormat, designator);
 
             try
             {
@@ -332,7 +333,7 @@ namespace NetMud.CentralControl
             }
             catch (Exception ex)
             {
-                LoggingUtility.LogError(ex);
+                LoggingUtility.LogError(ex, false);
             }
 
             return null;
@@ -344,7 +345,7 @@ namespace NetMud.CentralControl
         /// <param name="designator">The token's designator</param>
         private static void RemoveSubscriberList(string designator)
         {
-            var taskKey = String.Format(subscriptionLoopCacheKeyFormat, designator);
+            var taskKey = string.Format(subscriptionLoopCacheKeyFormat, designator);
 
             globalCache.Remove(taskKey);
         }

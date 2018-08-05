@@ -31,13 +31,60 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="CommonMark, Version=0.1.0.0, Culture=neutral, PublicKeyToken=001ef8810438905d, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommonMark.NET.0.15.1\lib\net45\CommonMark.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Api.Gax, Version=2.4.0.0, Culture=neutral, PublicKeyToken=3ec5ea7f18953e47, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Api.Gax.2.4.0\lib\net45\Google.Api.Gax.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Api.Gax.Rest, Version=2.4.0.0, Culture=neutral, PublicKeyToken=3ec5ea7f18953e47, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Api.Gax.Rest.2.4.0\lib\net45\Google.Api.Gax.Rest.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis, Version=1.35.1.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.1.35.1\lib\net45\Google.Apis.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Auth, Version=1.35.1.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Auth.1.35.1\lib\net45\Google.Apis.Auth.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Auth.PlatformServices, Version=1.35.1.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Auth.1.35.1\lib\net45\Google.Apis.Auth.PlatformServices.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Core, Version=1.35.1.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Core.1.35.1\lib\net45\Google.Apis.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.PlatformServices, Version=1.35.1.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.1.35.1\lib\net45\Google.Apis.PlatformServices.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Translate.v2, Version=1.34.0.875, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Translate.v2.1.34.0.875\lib\net45\Google.Apis.Translate.v2.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Cloud.Translation.V2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=185c282632e132a0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Cloud.Translation.V2.1.0.0\lib\net45\Google.Cloud.Translation.V2.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Interactive.Async, Version=3.2.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Interactive.Async.3.2.0\lib\net46\System.Interactive.Async.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http, Version=4.1.1.2, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.Http.4.3.3\lib\net46\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Algorithms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.1\lib\net46\System.Security.Cryptography.Algorithms.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Encoding, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Encoding.4.3.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Primitives.4.3.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.2\lib\net46\System.Security.Cryptography.X509Certificates.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
@@ -47,20 +94,46 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConfigData\AccountConfig.cs" />
+    <Compile Include="ConfigData\ConfigData.cs" />
+    <Compile Include="ConfigData\Acquaintence.cs" />
+    <Compile Include="ConfigData\GlobalConfig.cs" />
+    <Compile Include="ConfigData\PlayerMessage.cs" />
+    <Compile Include="ConfigData\Language.cs" />
+    <Compile Include="ConfigData\Dictata.cs" />
+    <Compile Include="DataIntegrity\BaseDataIntegrity.cs" />
+    <Compile Include="DataIntegrity\FilledContainerDataIntegrityAttribute.cs" />
+    <Compile Include="DataIntegrity\ShortDataIntegrityAttribute.cs" />
+    <Compile Include="DataIntegrity\NonNullableDataIntegrityAttribute.cs" />
+    <Compile Include="DataIntegrity\LongDataIntegrityAttribute.cs" />
+    <Compile Include="DataIntegrity\IntDataIntegrityAttribute.cs" />
+    <Compile Include="DataIntegrity\StringDataIntegrityAttribute.cs" />
     <Compile Include="EntityBackingData\EntityBackingDataPartial.cs" />
+    <Compile Include="EntityBackingData\GaiaData.cs" />
+    <Compile Include="EntityBackingData\LocaleData.cs" />
+    <Compile Include="EntityBackingData\LocationDataEntityPartial.cs" />
     <Compile Include="EntityBackingData\NonPlayerCharacter.cs" />
     <Compile Include="EntityBackingData\Character.cs" />
     <Compile Include="EntityBackingData\InanimateData.cs" />
+    <Compile Include="EntityBackingData\PathwayData.cs" />
+    <Compile Include="EntityBackingData\RoomData.cs" />
+    <Compile Include="EntityBackingData\ZoneData.cs" />
     <Compile Include="Game\EntityPartial.cs" />
+    <Compile Include="Game\Gaia.cs" />
     <Compile Include="Game\Inanimate.cs" />
+    <Compile Include="Game\Locale.cs" />
     <Compile Include="Game\LocationEntityPartial.cs" />
+    <Compile Include="Game\Pathway.cs" />
     <Compile Include="Game\Intelligence.cs" />
     <Compile Include="Game\Player.cs" />
-    <Compile Include="Game\Chunk.cs" />
-    <Compile Include="LookupData\Chunk.cs" />
+    <Compile Include="Game\Room.cs" />
+    <Compile Include="Lexical\Lexica.cs" />
+    <Compile Include="Lexical\LexicalProcessor.cs" />
+    <Compile Include="Lexical\Thesaurus.cs" />
+    <Compile Include="LookupData\Celestial.cs" />
+    <Compile Include="LookupData\JournalEntry.cs" />
     <Compile Include="LookupData\NaturalResourceDataPartial.cs" />
-    <Compile Include="LookupData\Stratum.cs" />
-    <Compile Include="LookupData\World.cs" />
+    <Compile Include="LookupData\UIModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="LookupData\DimensionalModel.cs" />
     <Compile Include="LookupData\DimensionalModelData.cs" />
@@ -70,25 +143,36 @@
     <Compile Include="LookupData\Material.cs" />
     <Compile Include="LookupData\Race.cs" />
     <Compile Include="LookupData\LookupDataPartial.cs" />
+    <Compile Include="Game\Zone.cs" />
+    <Compile Include="Serialization\CacheKeyDictionaryConverter.cs" />
+    <Compile Include="Serialization\DescriptiveEnumConverter.cs" />
+    <Compile Include="System\Account.cs" />
     <Compile Include="System\Affect.cs" />
+    <Compile Include="Serialization\ConcreteTypeConverter.cs" />
+    <Compile Include="System\Chronology.cs" />
     <Compile Include="System\Constants.cs" />
+    <Compile Include="System\DataHelpers.cs" />
     <Compile Include="System\EntityContainer.cs" />
     <Compile Include="System\BackingDataPartial.cs" />
     <Compile Include="LookupData\Fauna.cs" />
     <Compile Include="LookupData\Flora.cs" />
+    <Compile Include="System\EntityContainerData.cs" />
+    <Compile Include="System\GlobalPosition.cs" />
     <Compile Include="System\LookupCriteria.cs" />
+    <Compile Include="System\Map.cs" />
     <Compile Include="LookupData\Mineral.cs" />
+    <Compile Include="Lexical\Occurrence.cs" />
     <Compile Include="System\SerializableDataPartial.cs" />
-    <Compile Include="System\SerializationUtility.cs" />
+    <Compile Include="System\TimeOfDay.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NetMud.Authentication\NetMud.Authentication.csproj">
-      <Project>{dbc07a3d-3a1e-48c1-9a72-d115ff3e4349}</Project>
-      <Name>NetMud.Authentication</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NetMud.Cartography\NetMud.Cartography.csproj">
       <Project>{f4eab5d7-93fa-4b7b-9e6d-b7f191e66945}</Project>
       <Name>NetMud.Cartography</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NetMud.CentralControl\NetMud.CentralControl.csproj">
+      <Project>{1E404CFB-4CED-42AD-B28E-BFEE270C88F9}</Project>
+      <Name>NetMud.CentralControl</Name>
     </ProjectReference>
     <ProjectReference Include="..\NetMud.Communication\NetMud.Communication.csproj">
       <Project>{7f19324f-1b9c-467d-816a-74a36eb74cde}</Project>
@@ -101,6 +185,10 @@
     <ProjectReference Include="..\NetMud.DataStructure\NetMud.DataStructure.csproj">
       <Project>{88b7a648-fe23-4e88-9b60-ae17c8858af4}</Project>
       <Name>NetMud.DataStructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NetMud.Gaia\NetMud.Gaia.csproj">
+      <Project>{69f61bfc-0e4d-484d-bef2-dcb1f4181340}</Project>
+      <Name>NetMud.Gaia</Name>
     </ProjectReference>
     <ProjectReference Include="..\NetMud.Physics\NetMud.Physics.csproj">
       <Project>{28aabdf5-250e-40ce-88de-be3b9d23d95f}</Project>

@@ -1,9 +1,13 @@
-﻿namespace NetMud.Communication
+﻿using System;
+using System.IO;
+using System.Net;
+
+namespace NetMud.Communication
 {
     /// <summary>
     /// Negotiation and access to ALL player connection descriptors
     /// </summary>
-    public static class SystemComm
+    public static class SystemCommunicationsUtility
     {
         /// <summary>
         /// Sends a message to all live descriptors everywhere
@@ -26,6 +30,24 @@
         {
             //TODO: Make these find all servers of this port cached and send to them
             return true;
+        }
+
+        public static string GetPublicIP()
+        {
+            String direction = "";
+            WebRequest request = WebRequest.Create("http://checkip.dyndns.org/");
+            using (WebResponse response = request.GetResponse())
+            using (StreamReader stream = new StreamReader(response.GetResponseStream()))
+            {
+                direction = stream.ReadToEnd();
+            }
+
+            //Search for the ip in the html
+            int first = direction.IndexOf("Address: ") + 9;
+            int last = direction.LastIndexOf("</body>");
+            direction = direction.Substring(first, last - first);
+
+            return direction;
         }
     }
 }

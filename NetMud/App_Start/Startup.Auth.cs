@@ -7,6 +7,7 @@ using Microsoft.Owin.Security.Cookies;
 using Owin;
 using NetMud.Authentication;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System.Data.Entity;
 
 namespace NetMud
 {
@@ -15,6 +16,8 @@ namespace NetMud
         // For more information on configuring authentication, please visit http://go.microsoft.com/fwlink/?LinkId=301864
         public void ConfigureAuth(IAppBuilder app)
         {
+            Database.SetInitializer<ApplicationDbContext>(null);
+
             // Configure the db context, user manager and signin manager to use a single instance per request
             app.CreatePerOwinContext(ApplicationDbContext.Create);
             app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
@@ -82,6 +85,13 @@ namespace NetMud
             if (!roles.Any(r => r.Name.Equals("Builder", StringComparison.OrdinalIgnoreCase)))
             {
                 IdentityRole role = new IdentityRole("Builder");
+                await manager.CreateAsync(role);
+            }
+
+            roles = manager.Roles.ToList();
+            if (!roles.Any(r => r.Name.Equals("Guest", StringComparison.OrdinalIgnoreCase)))
+            {
+                IdentityRole role = new IdentityRole("Guest");
                 await manager.CreateAsync(role);
             }
 

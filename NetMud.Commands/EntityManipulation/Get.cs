@@ -1,5 +1,6 @@
 ﻿using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
+using NetMud.Data.Lexical;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.SupportingClasses;
@@ -52,16 +53,22 @@ namespace NetMud.Commands.EntityManipulation
             place.MoveFrom(thing);
             actor.MoveInto(thing);
 
-            var toActor = new Message(MessagingType.Visible, 1);
-            toActor.Override = sb;
+            var toActor = new Message(MessagingType.Visible, new Occurrence() { Strength = 1 })
+            {
+                Override = sb
+            };
 
-            var toOrigin = new Message(MessagingType.Visible, 30);
-            toOrigin.Override = new string[] { toRoomMessage };
+            var toOrigin = new Message(MessagingType.Visible, new Occurrence() { Strength = 30 })
+            {
+                Override = new string[] { toRoomMessage }
+            };
 
-            var messagingObject = new MessageCluster(toActor);
-            messagingObject.ToOrigin = new List<IMessage> { toOrigin };
+            var messagingObject = new MessageCluster(toActor)
+            {
+                ToOrigin = new List<IMessage> { toOrigin }
+            };
 
-            messagingObject.ExecuteMessaging(Actor, thing, (IEntity)Target, OriginLocation, null);
+            messagingObject.ExecuteMessaging(Actor, thing, (IEntity)Target, OriginLocation.CurrentLocation, null);
         }
 
         /// <summary>
@@ -70,19 +77,20 @@ namespace NetMud.Commands.EntityManipulation
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            var sb = new List<string>();
-
-            sb.Add("Valid Syntax: get &lt;object&gt;");
-            sb.Add("take &lt;object&gt;".PadWithString(14, "&nbsp;", true));
-            sb.Add("get &lt;object&gt; &lt;container&gt;".PadWithString(14, "&nbsp;", true));
-            sb.Add("take &lt;object&gt; &lt;container&gt;".PadWithString(14, "&nbsp;", true));
+            var sb = new List<string>
+            {
+                "Valid Syntax: get &lt;object&gt;",
+                "take &lt;object&gt;".PadWithString(14, "&nbsp;", true),
+                "get &lt;object&gt; &lt;container&gt;".PadWithString(14, "&nbsp;", true),
+                "take &lt;object&gt; &lt;container&gt;".PadWithString(14, "&nbsp;", true)
+            };
             return sb;
         }
 
         /// <summary>
         /// The custom body of help text
         /// </summary>
-        public override string HelpText
+        public override MarkdownString HelpText
         {
             get
             {

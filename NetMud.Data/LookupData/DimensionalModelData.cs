@@ -1,10 +1,15 @@
-﻿using NetMud.DataAccess;
+﻿using NetMud.Data.DataIntegrity;
+using NetMud.Data.System;
+using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Behaviors.System;
 using NetMud.Physics;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.Script.Serialization;
 
 namespace NetMud.Data.LookupData
 {
@@ -12,21 +17,29 @@ namespace NetMud.Data.LookupData
     /// Backing data for physical models
     /// </summary>
     [Serializable]
-    public class DimensionalModelData : LookupDataPartial, IDimensionalModelData
+    public class DimensionalModelData : BackingDataPartial, IDimensionalModelData
     {
+        /// <summary>
+        /// What type of approval is necessary for this content
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public override ContentApprovalType ApprovalType { get { return ContentApprovalType.ReviewOnly; } }
+
         /// <summary>
         /// Governs what sort of model planes we're looking for
         /// </summary>
         public DimensionalModelType ModelType { get; set; }
 
         /// <summary>
-        /// The 11 planes that compose the physical model
+        /// The 21 planes that compose the physical model
         /// </summary>
         public HashSet<IDimensionalModelPlane> ModelPlanes { get; set; }
 
         /// <summary>
         /// How hollow something is
         /// </summary>
+        [IntDataIntegrity("Vacuity must be at least zero.", 0)]
         public int Vacuity { get; set; }
 
         /// <summary>
@@ -38,9 +51,9 @@ namespace NetMud.Data.LookupData
         }
 
         /// <summary>
-        /// Create model serialized from a comma delimited string of an 11x11 plane
+        /// Create model serialized from a comma delimited string of an 21x21 plane
         /// </summary>
-        /// <param name="delimitedPlane">comma delimited string of an 11x11 plane</param>
+        /// <param name="delimitedPlane">comma delimited string of an 21x21 plane</param>
         public DimensionalModelData(string delimitedPlanes, DimensionalModelType type)
         {
             ModelType = type;
@@ -57,11 +70,8 @@ namespace NetMud.Data.LookupData
             var dataProblems = base.FitnessReport();
 
             if (ModelPlanes == null || !ModelPlanes.Any() 
-                || ModelPlanes.Any(m => m == null || String.IsNullOrWhiteSpace(m.TagName) || !m.ModelNodes.Any()))
+                || ModelPlanes.Any(m => m == null || string.IsNullOrWhiteSpace(m.TagName) || !m.ModelNodes.Any()))
                 dataProblems.Add("Model Planes are invalid.");
-
-            if (Vacuity < 0)
-                dataProblems.Add("Vacuity is invalid.");
 
             if (!IsModelValid())
                 dataProblems.Add("Model is invalid entirely.");
@@ -105,23 +115,13 @@ namespace NetMud.Data.LookupData
         {
             switch (ModelType)
             {
-                case DimensionalModelType.Flat: //2d has 11 planes, but they're all flat (11 X nodes)
-                    return ModelPlanes.Count == 11 && !ModelPlanes.Any(plane => String.IsNullOrWhiteSpace(plane.TagName) || plane.ModelNodes.Count != 11);
+                case DimensionalModelType.Flat: //2d has 21 planes, but they're all flat (21 X nodes)
+                    return ModelPlanes.Count == 21 && !ModelPlanes.Any(plane => string.IsNullOrWhiteSpace(plane.TagName) || plane.ModelNodes.Count != 21);
                 case DimensionalModelType.None: //0d is always valid, it doesn't care about the model
                     return true;
             }
 
             return false;
-        }
-
-        /// <summary>
-        /// Renders the help text for this data object
-        /// </summary>
-        /// <returns>help text</returns>
-        public override IEnumerable<string> RenderHelpBody()
-        {
-            //TODO: Render the actual model flattened in ascii, probably require a fair bit of work so just returning name for now
-            return base.RenderHelpBody();
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace NetMud.Data.LookupData
 
             try
             {
-                short yCount = 11;
+                short yCount = 21;
                 foreach (var myString in delimitedPlanes.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
                 {
                     var newPlane = new DimensionalModelPlane();
@@ -155,19 +155,19 @@ namespace NetMud.Data.LookupData
                         newNode.XAxis = xCount;
                         newNode.YAxis = yCount;
 
-                        newNode.Style = String.IsNullOrWhiteSpace(nodeStringComponents[0])
+                        newNode.Style = string.IsNullOrWhiteSpace(nodeStringComponents[0])
                                             ? DamageType.None
                                             : Render.CharacterToDamageType(nodeStringComponents[0]);
 
                         //May not always indicate material id
-                        if (nodeStringComponents.Count() > 1 && String.IsNullOrWhiteSpace(nodeStringComponents[1]))
+                        if (nodeStringComponents.Count() > 1 && string.IsNullOrWhiteSpace(nodeStringComponents[1]))
                             newNode.Composition = BackingDataCache.Get<IMaterial>(long.Parse(nodeStringComponents[1]));
 
                         newPlane.ModelNodes.Add(newNode);
                         xCount++;
                     }
 
-                    //This ensures the linecount is always 11 for flats
+                    //This ensures the linecount is always 21 for flats
                     ModelPlanes.Add(newPlane);
                     yCount--;
                 }
@@ -177,6 +177,20 @@ namespace NetMud.Data.LookupData
                 LoggingUtility.LogError(ex);
                 throw new FormatException("Invalid delimitedPlanes format.", ex);
             }
+        }
+
+        /// <summary>
+        /// Get the significant details of what needs approval
+        /// </summary>
+        /// <returns>A list of strings</returns>
+        public override IDictionary<string, string> SignificantDetails()
+        {
+            var returnList = base.SignificantDetails();
+
+            returnList.Add("Vacuity", Vacuity.ToString());
+            returnList.Add("Model", ViewFlattenedModel(true));
+            
+            return returnList;
         }
     }
 }

@@ -1,0 +1,13 @@
+﻿@model NetMud.Models.BlogViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var tableColumns = new Dictionary<string, Func<dynamic, string>>();
+    tableColumns.Add("Subject", obj => obj.Name);
+    tableColumns.Add("Entry", obj => obj.Body);
+}
+
+@Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model, "JournalEntry"))
+
+@Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Name = "", Columns = tableColumns, Values = Model.Items.OrderByDescending(obj => obj.PublishDate), IncludeDelete = false, IncludeUnapprove = false })

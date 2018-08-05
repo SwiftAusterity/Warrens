@@ -1,14 +1,14 @@
-﻿using NetMud.Authentication;
-using System;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using NetMud.Authentication;
+using NetMud.DataAccess;
+using NetMud.Models.Logging;
 using System.Web;
 using System.Web.Mvc;
 
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using NetMud.Models.Logging;
-using NetMud.DataAccess;
 namespace NetMud.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class LoggingController : Controller
     {
         private ApplicationUserManager _userManager;
@@ -35,12 +35,14 @@ namespace NetMud.Controllers
 
         public ActionResult Index(string selectedLog)
         {
-            var dashboardModel = new DashboardViewModel();
-            dashboardModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            var dashboardModel = new DashboardViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
-            dashboardModel.ChannelNames = LoggingUtility.GetCurrentLogNames();
+                ChannelNames = LoggingUtility.GetCurrentLogNames()
+            };
 
-            if (!String.IsNullOrWhiteSpace(selectedLog))
+            if (!string.IsNullOrWhiteSpace(selectedLog))
             {
                 dashboardModel.SelectedLogContent = LoggingUtility.GetCurrentLogContent(selectedLog);
                 dashboardModel.SelectedLog = selectedLog;
@@ -53,8 +55,8 @@ namespace NetMud.Controllers
         public ActionResult Rollover(string selectedLog)
         {
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
-            var message = String.Empty;
-            if (!String.IsNullOrWhiteSpace(selectedLog))
+            var message = string.Empty;
+            if (!string.IsNullOrWhiteSpace(selectedLog))
             {
                 if (!LoggingUtility.RolloverLog(selectedLog))
                     message = "Error rolling over log.";

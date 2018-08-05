@@ -1,16 +1,11 @@
 ﻿@model NetMud.Models.Admin.RoomMapViewModel
-@{
-    ViewBag.Title = "Room Mapper";
-}
 
 <div>
-    <pre id="expandedModelContainer" class="asciiMap" data-id="@Model.Here.ID"></pre>
+    <pre id="expandedModelContainer" class="asciiMap" data-id="@Model.Here.Id"></pre>
 </div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-
-    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
     <script type="text/javascript">
         $(function () {

@@ -1,5 +1,6 @@
 ﻿using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
+using NetMud.Data.Lexical;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.SupportingClasses;
@@ -43,8 +44,10 @@ namespace NutMud.Commands.System
                 sb = sb.Concat(subject.RenderSyntaxHelp()).ToList();
             }
 
-            var toActor = new Message(MessagingType.Audible, 1);
-            toActor.Override = sb;
+            var toActor = new Message(MessagingType.Audible, new Occurrence() { Strength = 1 })
+            {
+                Override = sb
+            };
 
             var messagingObject = new MessageCluster(toActor);
 
@@ -57,9 +60,10 @@ namespace NutMud.Commands.System
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            var sb = new List<string>();
-
-            sb.Add(string.Format("Valid Syntax: help &lt;topic&gt;"));
+            var sb = new List<string>
+            {
+                string.Format("Valid Syntax: help &lt;topic&gt;")
+            };
 
             return sb;
         }
@@ -67,7 +71,7 @@ namespace NutMud.Commands.System
         /// <summary>
         /// The custom body of help text
         /// </summary>
-        public override string HelpText
+        public override MarkdownString HelpText
         {
             get
             {

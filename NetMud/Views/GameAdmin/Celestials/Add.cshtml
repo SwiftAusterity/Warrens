@@ -1,0 +1,38 @@
+﻿@using NetMud.DataStructure.Base.World
+
+@model NetMud.Models.Admin.AddEditCelestialViewModel
+
+<section id="newCelestialForm">
+    @using (Html.BeginForm("Add", "Celestials", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group row">
+            @Html.EditorFor(e => e.Name)
+            @Html.EditorFor(e => e.Luminosity)
+            @Html.DescriptiveLabelFor(m => m.OrientationType, new { @class = "col-sm-1 col-form-label" })
+            <div class="col-md-3">
+                @Html.DropDownList("OrientationType", Enum.GetNames(typeof(CelestialOrientation)).Select(rl =>
+                                                new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(CelestialOrientation), rl)).ToString() })
+                                                , "Select One", htmlAttributes: new { id = "Type", @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group row">
+            @Html.EditorFor(e => e.Apogee)
+            @Html.EditorFor(e => e.Perigree)
+            @Html.EditorFor(e => e.Velocity)
+        </div>
+        <div class="form-group row">
+            @Html.EditorFor(e => e.HelpText)
+        </div>
+
+        @Html.Partial("TwoDimensionalEntityEditor", Model)
+
+        @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Create", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Celestials", IncludeCancel = true })
+    }
+</section>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

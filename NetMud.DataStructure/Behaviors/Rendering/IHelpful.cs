@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using NetMud.DataStructure.SupportingClasses;
+using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Behaviors.Rendering
 {
@@ -10,7 +11,7 @@ namespace NetMud.DataStructure.Behaviors.Rendering
         /// <summary>
         /// Extra custom body text for help rendering
         /// </summary>
-        string HelpText { get; set; }
+        MarkdownString HelpText { get; set; }
 
         /// <summary>
         /// the text to render when Help targets this

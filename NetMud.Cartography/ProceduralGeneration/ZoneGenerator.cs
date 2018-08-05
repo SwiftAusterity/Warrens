@@ -1,11 +1,13 @@
-﻿using System;
+﻿using NetMud.DataStructure.Base.Place;
+using System;
+using System.Linq;
 
 namespace NetMud.Cartography.ProceduralGeneration
 {
     /// <summary>
     /// Generate some zones procedurally
     /// </summary>
-    public class ZoneGenerator
+    public class LocaleGenerator
     {
         private Random _randomizer;
         private const string roomSymbol = "*";
@@ -76,6 +78,11 @@ namespace NetMud.Cartography.ProceduralGeneration
         public Tuple<int, int, int> Center { get; private set; }
 
         /// <summary>
+        /// The zone we're filling
+        /// </summary>
+        public ILocale Locale { get; private set; }
+
+        /// <summary>
         /// The room map array
         /// </summary>
         public long[, ,] RoomMap { get; private set; }
@@ -85,13 +92,15 @@ namespace NetMud.Cartography.ProceduralGeneration
         /// </summary>
         public bool Primed { get; private set; }
 
-        public ZoneGenerator(int seed, int width, int length, int elevation, int depth)
+        public LocaleGenerator(int seed, ILocale locale, int width, int length, int elevation, int depth)
         {
+            VerifyLocale(locale);
             VerifyDimensions(width, length, elevation, depth);
 
             _randomizer = new Random(Seed);
 
             Seed = seed;
+            Locale = locale;
 
             Width = width;
             Length = length;
@@ -101,14 +110,16 @@ namespace NetMud.Cartography.ProceduralGeneration
             RoomMap = new long[width * 3 + 1, length * 3 + 1, (elevation + depth) * 3 + 1];
         }
 
-        public ZoneGenerator(int width, int length, int elevation, int depth)
+        public LocaleGenerator(ILocale locale, int width, int length, int elevation, int depth)
         {
+            VerifyLocale(locale);
             VerifyDimensions(width, length, elevation, depth);
 
-            var rand = new System.Random();
+            var rand = new Random();
             _randomizer = new Random(Seed);
 
             Seed = rand.Next(10000);
+            Locale = locale;
             Width = width;
             Length = length;
             Elevation = elevation;
@@ -205,6 +216,21 @@ namespace NetMud.Cartography.ProceduralGeneration
                 throw new AccessViolationException("Map is not primed yet.");
 
             //Create rooms and pathways
+        }
+
+        /// <summary>
+        /// We just throw errors, no need for a return value
+        /// </summary>
+        private void VerifyLocale(ILocale locale)
+        {
+            if (locale == null)
+                throw new ArgumentNullException("Locale must not be null.");
+
+            if (locale.Rooms().Any())
+                throw new ArgumentOutOfRangeException("Locale must be devoid of rooms.");
+
+            if (locale.DataTemplate<ILocaleData>().FitnessProblems)
+                throw new ArgumentOutOfRangeException("Zone must have data integrity.");
         }
 
         private void VerifyDimensions(int width, int length, int elevation, int depth)

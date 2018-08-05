@@ -1,5 +1,6 @@
 ﻿using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
+using NetMud.Data.Lexical;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.SupportingClasses;
@@ -37,16 +38,22 @@ namespace NetMud.Commands.EntityManipulation
 
             sb.Add("You drop $S$.");
 
-            var toActor = new Message(MessagingType.Visible, 1);
-            toActor.Override = sb;
+            var toActor = new Message(MessagingType.Visible, new Occurrence() { Strength = 1 })
+            {
+                Override = sb
+            };
 
-            var toOrigin = new Message(MessagingType.Visible, 30);
-            toOrigin.Override = new string[] { "$A$ drops $S$." };
+            var toOrigin = new Message(MessagingType.Visible, new Occurrence() { Strength = 30 })
+            {
+                Override = new string[] { "$A$ drops $S$." }
+            };
 
-            var messagingObject = new MessageCluster(toActor);
-            messagingObject.ToOrigin = new List<IMessage> { toOrigin };
+            var messagingObject = new MessageCluster(toActor)
+            {
+                ToOrigin = new List<IMessage> { toOrigin }
+            };
 
-            messagingObject.ExecuteMessaging(Actor, thing, null, OriginLocation, null);
+            messagingObject.ExecuteMessaging(Actor, thing, null, OriginLocation.CurrentLocation, null);
         }
 
         /// <summary>
@@ -55,9 +62,10 @@ namespace NetMud.Commands.EntityManipulation
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            var sb = new List<string>();
-
-            sb.Add("Valid Syntax: drop &lt;object&gt;");
+            var sb = new List<string>
+            {
+                "Valid Syntax: drop &lt;object&gt;"
+            };
 
             return sb;
         }
@@ -65,7 +73,7 @@ namespace NetMud.Commands.EntityManipulation
         /// <summary>
         /// The custom body of help text
         /// </summary>
-        public override string HelpText
+        public override MarkdownString HelpText
         {
             get
             {

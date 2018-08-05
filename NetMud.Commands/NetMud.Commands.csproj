@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Administrative\GotoZone.cs" />
     <Compile Include="Administrative\SpawnNewNPC.cs" />
     <Compile Include="Administrative\SpawnNewObject.cs" />
     <Compile Include="Attributes\CommandSuppressName.cs" />
@@ -50,14 +51,17 @@
     <Compile Include="Attributes\CommandPartial.cs" />
     <Compile Include="Attributes\CommandPermissionAttribute.cs" />
     <Compile Include="Attributes\CommandRangeAttribute.cs" />
+    <Compile Include="GossipServer\Gossip.cs" />
+    <Compile Include="Comm\Shout.cs" />
     <Compile Include="Comm\Say.cs" />
     <Compile Include="EntityManipulation\Drop.cs" />
     <Compile Include="EntityManipulation\Get.cs" />
     <Compile Include="EntityManipulation\Put.cs" />
     <Compile Include="Movement\UseExits.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Administrative\Goto.cs" />
+    <Compile Include="Administrative\GotoChar.cs" />
     <Compile Include="Rendering\Inventory.cs" />
+    <Compile Include="Social\Laid.cs" />
     <Compile Include="System\Commands.cs" />
     <Compile Include="System\Save.cs" />
     <Compile Include="System\Quit.cs" />
@@ -93,6 +97,7 @@
   <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

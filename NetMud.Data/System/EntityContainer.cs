@@ -18,7 +18,7 @@ namespace NetMud.Data.System
         /// <summary>
         /// What this actually contains, yeah it's a hashtable of hashtables but whatever
         /// </summary>
-        private Dictionary<string, HashSet<string>> Birthmarks;
+        private Dictionary<string, HashSet<LiveCacheKey>> Birthmarks { get; set; }
 
         /// <summary>
         /// What named containers are attached to this
@@ -30,25 +30,10 @@ namespace NetMud.Data.System
         /// </summary>
         public EntityContainer()
         {
-            Birthmarks = new Dictionary<string, HashSet<string>>();
             NamedContainers = Enumerable.Empty<IEntityContainerData<T>>();
+            Birthmarks = new Dictionary<string, HashSet<LiveCacheKey>>();
 
-            Birthmarks.Add(genericCollectionLabel, new HashSet<string>());
-        }
-
-        /// <summary>
-        /// New up an empty container
-        /// </summary>
-        [JsonConstructor]
-        public EntityContainer(IEnumerable<EntityContainerData<T>> namedContainers)
-        {
-            Birthmarks = new Dictionary<string, HashSet<string>>();
-            NamedContainers = namedContainers;
-
-            Birthmarks.Add(genericCollectionLabel, new HashSet<string>());
-
-            foreach (var container in namedContainers)
-                Birthmarks.Add(container.Name, new HashSet<string>());
+            Birthmarks.Add(genericCollectionLabel, new HashSet<LiveCacheKey>());
         }
 
         /// <summary>
@@ -56,13 +41,30 @@ namespace NetMud.Data.System
         /// </summary>
         public EntityContainer(IEnumerable<IEntityContainerData<T>> namedContainers)
         {
-            Birthmarks = new Dictionary<string, HashSet<string>>();
             NamedContainers = namedContainers;
+            Birthmarks = new Dictionary<string, HashSet<LiveCacheKey>>
+            {
+                { genericCollectionLabel, new HashSet<LiveCacheKey>() }
+            };
 
-            Birthmarks.Add(genericCollectionLabel, new HashSet<string>());
+            foreach (var container in namedContainers)
+                Birthmarks.Add(container.Name, new HashSet<LiveCacheKey>());
+        }
 
-            foreach(var container in namedContainers)
-                Birthmarks.Add(container.Name, new HashSet<string>());
+
+        /// <summary>
+        /// New up an empty container
+        /// </summary>
+        [JsonConstructor]
+        public EntityContainer(IEnumerable<EntityContainerData<T>> namedContainers)
+        {
+            NamedContainers = namedContainers;
+            Birthmarks = new Dictionary<string, HashSet<LiveCacheKey>>();
+
+            Birthmarks.Add(genericCollectionLabel, new HashSet<LiveCacheKey>());
+
+            foreach (var container in namedContainers)
+                Birthmarks.Add(container.Name, new HashSet<LiveCacheKey>());
         }
 
         #region Universal Accessors
@@ -104,7 +106,10 @@ namespace NetMud.Data.System
         /// <returns>success status</returns>
         public bool Add(T entity)
         {
-            return Birthmarks[genericCollectionLabel].Add(entity.BirthMark);
+            if (Birthmarks[genericCollectionLabel].Contains(new LiveCacheKey(entity)))
+                return false;
+
+            return Birthmarks[genericCollectionLabel].Add(new LiveCacheKey(entity));
         }
 
         /// <summary>
@@ -114,7 +119,7 @@ namespace NetMud.Data.System
         /// <returns>yes it contains it or no it does not</returns>
         public bool Contains(T entity)
         {
-            return Birthmarks.Values.Any(hs => hs.Contains(entity.BirthMark));
+            return Birthmarks.Values.Any(hs => hs.Contains(new LiveCacheKey(entity)));
         }
 
         /// <summary>
@@ -124,7 +129,10 @@ namespace NetMud.Data.System
         /// <returns>success status</returns>
         public bool Remove(T entity)
         {
-            return Birthmarks[genericCollectionLabel].Remove(entity.BirthMark);
+            if (!Birthmarks[genericCollectionLabel].Contains(new LiveCacheKey(entity)))
+                return false;
+
+            return Birthmarks[genericCollectionLabel].Remove(new LiveCacheKey(entity));
         }
 
         /// <summary>
@@ -132,9 +140,14 @@ namespace NetMud.Data.System
         /// </summary>
         /// <param name="birthMark">the entity's birthmark to remove</param>
         /// <returns>success status</returns>
-        public bool Remove(string birthMark)
+        public bool Remove(ICacheKey cacheKey)
         {
-            return Birthmarks[genericCollectionLabel].Remove(birthMark);
+            var key = (LiveCacheKey)cacheKey;
+
+            if (!Birthmarks[genericCollectionLabel].Contains(key))
+                return false;
+
+            return Birthmarks[genericCollectionLabel].Remove(key);
         }
 
         /// <summary>
@@ -153,7 +166,7 @@ namespace NetMud.Data.System
         /// </summary>
         public IEnumerable<T> EntitiesContained(string namedContainer)
         {
-            if (String.IsNullOrWhiteSpace(namedContainer))
+            if (string.IsNullOrWhiteSpace(namedContainer))
                 return EntitiesContained();
 
             if (Count(namedContainer) > 0)
@@ -169,10 +182,15 @@ namespace NetMud.Data.System
         /// <returns>success status</returns>
         public bool Add(T entity, string namedContainer)
         {
-            if (String.IsNullOrWhiteSpace(namedContainer))
+            if (string.IsNullOrWhiteSpace(namedContainer))
                 return Add(entity);
 
-            return Birthmarks[namedContainer].Add(entity.BirthMark);
+            var key = new LiveCacheKey(entity);
+
+            if (Birthmarks[namedContainer].Contains(key))
+                return false;
+
+            return Birthmarks[namedContainer].Add(key);
         }
 
         /// <summary>
@@ -182,10 +200,12 @@ namespace NetMud.Data.System
         /// <returns>yes it contains it or no it does not</returns>
         public bool Contains(T entity, string namedContainer)
         {
-            if (String.IsNullOrWhiteSpace(namedContainer))
+            if (string.IsNullOrWhiteSpace(namedContainer))
                 return Contains(entity);
 
-            return Birthmarks[namedContainer].Contains(entity.BirthMark);
+            var key = new LiveCacheKey(entity);
+
+            return Birthmarks[namedContainer].Contains(key);
         }
 
         /// <summary>
@@ -195,10 +215,15 @@ namespace NetMud.Data.System
         /// <returns>success status</returns>
         public bool Remove(T entity, string namedContainer)
         {
-            if (String.IsNullOrWhiteSpace(namedContainer))
+            if (string.IsNullOrWhiteSpace(namedContainer))
                 return Remove(entity);
 
-            return Birthmarks[namedContainer].Remove(entity.BirthMark);
+            var key = new LiveCacheKey(entity);
+
+            if (!Birthmarks[namedContainer].Contains(key))
+                return false;
+
+            return Birthmarks[namedContainer].Remove(key);
         }
 
         /// <summary>
@@ -206,12 +231,17 @@ namespace NetMud.Data.System
         /// </summary>
         /// <param name="birthMark">the entity's birthmark to remove</param>
         /// <returns>success status</returns>
-        public bool Remove(string birthMark, string namedContainer)
+        public bool Remove(ICacheKey cacheKey, string namedContainer)
         {
-            if (String.IsNullOrWhiteSpace(namedContainer))
-                return Remove(birthMark);
+            if (string.IsNullOrWhiteSpace(namedContainer))
+                return Remove(cacheKey);
 
-            return Birthmarks[namedContainer].Remove(birthMark);
+            var key = (LiveCacheKey)cacheKey;
+
+            if (!Birthmarks[namedContainer].Contains(key))
+                return false;
+
+            return Birthmarks[namedContainer].Remove(key);
         }
 
         /// <summary>
@@ -220,72 +250,11 @@ namespace NetMud.Data.System
         /// <returns>the count</returns>
         public int Count(string namedContainer)
         {
-            if (String.IsNullOrWhiteSpace(namedContainer))
+            if (string.IsNullOrWhiteSpace(namedContainer))
                 return Count();
 
             return Birthmarks[namedContainer].Count;
         }
         #endregion
-    }
-
-    /// <summary>
-    /// Framework for storage/retrieval/management of entity containers in backing data
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    [Serializable]
-    public class EntityContainerData<T> : IEntityContainerData<T> where T : IEntity
-    {
-        /// <summary>
-        /// Instansiate this empty
-        /// </summary>
-        public EntityContainerData()
-        {
-            CapacityVolume = -1;
-            CapacityWeight = -1;
-            Name = "NotImpl";
-        }
-
-        /// <summary>
-        /// Instansiate this with parameters
-        /// </summary>
-        /// <param name="capacityVolume">How large is this container</param>
-        /// <param name="capacityWeight">How much weight can it carry before taking damage</param>
-        /// <param name="name"> The name of the container; can be string empty without issue</param>
-        public EntityContainerData(long capacityVolume, long capacityWeight, string name)
-        {
-            CapacityVolume = capacityVolume;
-            CapacityWeight = capacityWeight;
-            Name = name;
-        }
-
-        /// <summary>
-        /// How large is this container
-        /// </summary>
-        public long CapacityVolume { get; set; }
-
-        /// <summary>
-        /// How much weight can it carry before taking damage
-        /// </summary>
-        public long CapacityWeight { get; set; }
-
-        /// <summary>
-        /// The name of the container; can be string empty without issue
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Will an entity fit inside
-        /// </summary>
-        /// <param name="entity">the entity you want to cram in</param>
-        /// <returns>does it fit (true) or not (false)</returns>
-        public bool WillItFit(T entity)
-        {
-            //-1 volume means infinite
-            if (CapacityVolume < 0)
-                return true;
-
-            //TODO: Entity dimensions
-            return true;
-        }
     }
 }

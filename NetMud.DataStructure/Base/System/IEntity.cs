@@ -1,5 +1,5 @@
-﻿using NetMud.DataStructure.Behaviors.Existential;
-using NetMud.DataStructure.Behaviors.Rendering;
+﻿using NetMud.DataStructure.Behaviors.Actionable;
+using NetMud.DataStructure.Behaviors.Existential;
 using System;
 using System.Collections.Generic;
 
@@ -8,7 +8,7 @@ namespace NetMud.DataStructure.Base.System
     /// <summary>
     /// Framework for live entities
     /// </summary>
-    public interface IEntity : IExist, ILookable, IFileStored, ILiveData, IComparable<IEntity>, IEquatable<IEntity>
+    public interface IEntity : IExist, ICanSee, ICanHear, ICanSense, ICanTouch, ICanTaste, ICanSmell, IFileStored, ILiveData
     {
         /// <summary>
         /// Keywords this entity can be found with in command parsing
@@ -16,7 +16,7 @@ namespace NetMud.DataStructure.Base.System
         string[] Keywords { get; set; }
 
         /// <summary>
-        /// The ID for the data template
+        /// The Id for the data template
         /// </summary>
         long DataTemplateId { get; set; }
 
@@ -33,7 +33,7 @@ namespace NetMud.DataStructure.Base.System
         /// <summary>
         /// The backing data for this entity in the db
         /// </summary>
-        T DataTemplate<T>() where T : IData;
+        T DataTemplate<T>() where T : IKeyedData;
 
         /// <summary>
         /// Get's the entity's model dimensions
@@ -42,9 +42,15 @@ namespace NetMud.DataStructure.Base.System
         Tuple<int, int, int> GetModelDimensions();
 
         /// <summary>
+        /// Get's the entity's model dimensions
+        /// </summary>
+        /// <returns>height, length, width</returns>
+        float GetModelVolume();
+
+        /// <summary>
         /// Update this to the live cache
         /// </summary>
-        void UpsertToLiveWorldCache();
+        void UpsertToLiveWorldCache(bool forceSave = false);
 
         /// <summary>
         /// For non-player entities - accepts output "shown" to it by the parser as a result of commands and events
@@ -58,19 +64,5 @@ namespace NetMud.DataStructure.Base.System
         /// Method by which this entity has output (from commands and events) "shown" to it
         /// </summary>
         bool WriteTo(IEnumerable<string> input);
-    }
-
-    /// <summary>
-    /// Trigger types for output sent to this entity
-    /// </summary>
-    public enum AITriggerType
-    {
-        SpokenTo,
-        Heard,
-        Seen,
-        Sensed,
-        Smelled,
-        PassiveActAt,
-        AggressiveActAt
     }
 }

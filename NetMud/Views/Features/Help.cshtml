@@ -1,0 +1,10 @@
+﻿@model IEnumerable<NetMud.DataStructure.Base.System.IHelp>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var tableColumns = new Dictionary<string, Func<dynamic, string>>();
+    tableColumns.Add("Name", obj => obj.Name);
+    tableColumns.Add("Description", obj => string.Join(Environment.NewLine, obj.RenderHelpBody()));
+}
+
+@Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Name = "", Columns = tableColumns, Values = Model.OrderBy(obj => obj.Name), IncludeDelete = false, IncludeUnapprove = false })

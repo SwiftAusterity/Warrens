@@ -7,11 +7,10 @@
         <a id="TravelDown" name="TravelDown" class="Down" title="Down"><span class="glyphicon glyphicon-download" aria-hidden="true"></span></a>
     </p>
     <div>
+        <a id="renderModeSelector" name="renderModeSelector" class="Normal renderModeSelector" title="Toggle Render Mode" data-renderMode="normal"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></a>
         <pre id="expandedModelContainer" class="asciiMap" data-id="@Model.DataID" data-zindex="@Model.ZIndex"></pre>
     </div>
 </div>
-
-@Scripts.Render("/Scripts/adminModal.js")
 
 <script type="text/javascript">
     $(function () {
@@ -33,11 +32,40 @@
             var currentZ = parseInt($exModelContainer.attr('data-zIndex'));
             var newZ = currentZ - 1;
 
-            if (currentZ < 0)
-                return;
+            if (currentZ == 0) {
+                return false;
+            }
 
             $exModelContainer.attr('data-zIndex', newZ);
             $('#levelIndicator').html('Level ' + newZ);
+
+            GetMap();
+        });
+
+        $('#renderModeSelector').click(function () {
+            var $this = $(this);
+
+            $this.removeClass('Up');
+            $this.removeClass('Down');
+            $this.removeClass('Normal');
+            $this.children().removeClass('glyphicon-upload');
+            $this.children().removeClass('glyphicon-download');
+            $this.children().removeClass('glyphicon-asterisk');
+
+            if ($this.attr('data-renderMode') == 'up') {
+                $this.attr('data-renderMode', 'normal');
+                $this.addClass('Normal');
+                $this.children().addClass('glyphicon-asterisk');
+
+            } else if ($this.attr('data-renderMode') == 'normal') {
+                $this.attr('data-renderMode', 'down');
+                $this.addClass('Down');
+                $this.children().addClass('glyphicon-download');
+            } else {
+                $this.attr('data-renderMode', 'up');
+                $this.addClass('Up');
+                $this.children().addClass('glyphicon-upload');
+            }
 
             GetMap();
         });
@@ -57,6 +85,24 @@
 
             $.get('/api/AdminDataApi/' + mapRenderType + '/' + dataId + '/' + radius, function (data) {
                 $exModelContainer.html(data);
+                $exModelContainer.css({ 'height': data.length * 6 + 'pc' });
+
+                BindRoomsAndPaths();
+            });
+        } else if (mapRenderType == 'RenderLocaleMapForEdit') {
+            var zIndex = $exModelContainer.attr("data-zindex");
+
+            $.get('/api/AdminDataApi/' + mapRenderType + '/' + dataId + '/' + zIndex, function (data) {
+                var renderMode = 1;
+
+                if ($('#renderModeSelector').attr('data-renderMode') == 'up') {
+                    renderMode = 0;
+                } else if ($('#renderModeSelector').attr('data-renderMode') == 'down') {
+                    renderMode = 2;
+                }
+
+                $exModelContainer.html(data[renderMode]);
+                $exModelContainer.css({ 'height': data.length * 6 + 'pc' });
 
                 BindRoomsAndPaths();
             });
@@ -65,6 +111,7 @@
 
             $.get('/api/AdminDataApi/' + mapRenderType + '/' + dataId + '/' + zIndex, function (data) {
                 $exModelContainer.html(data);
+                $exModelContainer.css({ 'height': data.length * 6 + 'pc' });
 
                 BindRoomsAndPaths();
             });
@@ -73,19 +120,27 @@
 
     function BindRoomsAndPaths() {
         $('.AdminAddPathway').click(function () {
-            openFrameless(1400, 900, 0, 0, "/GameAdmin/Pathway/Add/" + $(this).attr('pathwayId') + '/' + $(this).attr('fromRoom') + '/' + $(this).attr('toRoom'), 'Add Pathway', true);
+            var degress = $(this).attr("data-direction");
+
+            openFrameless(1400, 900, 0, 0, "/GameAdmin/Pathway/Add/" + $(this).attr('pathwayid') + '/' + $(this).attr('fromroom') + '/' + $(this).attr('toroom') + '/' + degress, 'Add Pathway', true);
 
             return false;
         });
 
         $('.AdminEditPathway').click(function () {
-            openFrameless(1400, 900, 0, 0, "/GameAdmin/Pathway/Edit/" + $(this).attr('pathwayId') + '/' + $(this).attr('fromRoom') + '/' + $(this).attr('toRoom'), 'Add Pathway', true);
+            openFrameless(1400, 900, 0, 0, "/GameAdmin/Pathway/Edit/" + $(this).attr('pathwayid') + '/' + $(this).attr('fromroom') + '/' + $(this).attr('toroom'), 'Edit Pathway', true);
 
             return false;
         });
 
         $('.AdminEditRoom').click(function () {
-            openFrameless(1400, 900, 0, 0, "/GameAdmin/Room/Add/" + $(this).attr('roomId'), 'Add Pathway', true);
+            openFrameless(1400, 900, 0, 0, "/GameAdmin/Room/Edit/" + $(this).attr('roomid'), 'Edit Room', true);
+
+            return false;
+        });
+
+        $('.AdminAddInitialRoom').click(function () {
+            openFrameless(1400, 900, 0, 0, "/GameAdmin/Room/Add/" + $(this).attr('localeid'), 'Add Initial Room', true);
 
             return false;
         });

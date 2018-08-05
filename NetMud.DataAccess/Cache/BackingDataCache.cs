@@ -1,5 +1,4 @@
 ﻿using NetMud.DataStructure.Base.System;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -16,12 +15,9 @@ namespace NetMud.DataAccess.Cache
         /// Adds a single entity into the cache
         /// </summary>
         /// <param name="objectToCache">the entity to cache</param>
-        public static void Add<T>(T objectToCache) where T : IData
+        public static void Add<T>(T objectToCache) where T : IKeyedData
         {
-            var entityToCache = (IData)objectToCache;
-            var cacheKey = new BackingDataCacheKey(objectToCache.GetType(), entityToCache.ID);
-
-            BackingCache.Add(objectToCache, cacheKey);
+            BackingCache.Add(objectToCache, new BackingDataCacheKey(objectToCache));
         }
 
         /// <summary>
@@ -40,9 +36,20 @@ namespace NetMud.DataAccess.Cache
         /// <typeparam name="T">the system type for the entity</typeparam>
         /// <param name="birthmarks">the birthmarks to retrieve</param>
         /// <returns>a list of the entities from the cache</returns>
-        public static IEnumerable<T> GetMany<T>(IEnumerable<long> ids) where T : IData
+        public static IEnumerable<T> GetMany<T>(IEnumerable<long> ids) where T : IKeyedData
         {
             return BackingCache.GetMany<T>(ids);
+        }
+
+        /// <summary>
+        /// fills a list of entities from the cache of a single type that match the birthmarks sent in
+        /// </summary>
+        /// <typeparam name="T">the system type for the entity</typeparam>
+        /// <param name="keys">the keys to retrieve</param>
+        /// <returns>a list of the entities from the cache</returns>
+        public static IEnumerable<T> GetMany<T>(IEnumerable<BackingDataCacheKey> keys) where T : IKeyedData
+        {
+            return BackingCache.GetMany<T>(keys);
         }
 
         /// <summary>
@@ -50,8 +57,12 @@ namespace NetMud.DataAccess.Cache
         /// </summary>
         /// <typeparam name="T">the system type for the entity</typeparam>
         /// <returns>a list of the entities from the cache</returns>
-        public static IEnumerable<T> GetAll<T>()
+        public static IEnumerable<T> GetAll<T>(bool onlyApproved = false)
         {
+            //Don't waste the time with the where if it's false
+            if (onlyApproved)
+                return BackingCache.GetAll<T>().Where(data => ((IKeyedData)data).SuitableForUse);
+
             return BackingCache.GetAll<T>();
         }
 
@@ -59,9 +70,13 @@ namespace NetMud.DataAccess.Cache
         /// Only for the hotbackup procedure
         /// </summary>
         /// <returns>All entities in the entire system</returns>
-        public static IEnumerable<IData> GetAll()
+        public static IEnumerable<IKeyedData> GetAll(bool onlyApproved = false)
         {
-            return BackingCache.GetAll<IData>();
+            //Don't waste the time with the where if it's false
+            if(onlyApproved)
+                return BackingCache.GetAll<IKeyedData>().Where(data => data.SuitableForUse);
+
+            return BackingCache.GetAll<IKeyedData>();
         }
 
         /// <summary>
@@ -70,11 +85,24 @@ namespace NetMud.DataAccess.Cache
         /// <typeparam name="T">the type of the entity</typeparam>
         /// <param name="key">the key it was cached with</param>
         /// <returns>the entity requested</returns>
-        public static T GetByName<T>(string name) where T : IData
+        public static T GetByName<T>(string name) where T : IKeyedData
         {
             var cacheItems = BackingCache.GetAll<T>();
 
-            return cacheItems.FirstOrDefault<T>(ci => ci.Name.Contains(name));
+            return cacheItems.FirstOrDefault<T>(ci => ci.Name.ToLower().Contains(name.ToLower()));
+        }
+
+        /// <summary>
+        /// Gets one non-entity from the cache by its key
+        /// </summary>
+        /// <typeparam name="T">the type of the entity</typeparam>
+        /// <param name="key">the key it was cached with</param>
+        /// <returns>the entity requested</returns>
+        public static T GetByKeywords<T>(string word) where T : IEntityBackingData
+        {
+            var cacheItems = BackingCache.GetAll<T>();
+
+            return cacheItems.FirstOrDefault(ci => ci.Keywords.Contains(word.ToLower()));
         }
 
         /// <summary>
@@ -94,18 +122,29 @@ namespace NetMud.DataAccess.Cache
         /// <typeparam name="T">the type of the entity</typeparam>
         /// <param name="key">the key it was cached with</param>
         /// <returns>the entity requested</returns>
-        public static T Get<T>(BackingDataCacheKey key) where T : IData
+        public static T Get<T>(BackingDataCacheKey key) where T : IKeyedData
         {
             return BackingCache.Get<T>(key);
         }
 
         /// <summary>
-        /// Gets one entity from the cache by its ID, only works for Singleton spawners with data templates(IEntities)
+        /// Gets one entity from the cache by its key
+        /// </summary>
+        /// <typeparam name="T">the type of the entity</typeparam>
+        /// <param name="key">the key it was cached with</param>
+        /// <returns>the entity requested</returns>
+        public static object Get(BackingDataCacheKey key)
+        {
+            return BackingCache.Get(key);
+        }
+
+        /// <summary>
+        /// Gets one entity from the cache by its Id, only works for Singleton spawners with data templates(IEntities)
         /// </summary>
         /// <typeparam name="T">the type of the entity</typeparam>
         /// <param name="id">the id</param>
         /// <returns>the entity requested</returns>
-        public static T Get<T>(long id) where T : IData
+        public static T Get<T>(long id) where T : IKeyedData
         {
             var key = new BackingDataCacheKey(typeof(T), id);
 
@@ -129,53 +168,6 @@ namespace NetMud.DataAccess.Cache
         public static bool Exists(BackingDataCacheKey key)
         {
             return BackingCache.Exists(key);
-        }
-    }
-
-    /// <summary>
-    /// A cache key for live entities
-    /// </summary>
-    public class BackingDataCacheKey : ICacheKey
-    {
-        public CacheType CacheType
-        {
-            get { return CacheType.BackingData; }
-        }
-
-        /// <summary>
-        /// System type of the object being cached
-        /// </summary>
-        public Type ObjectType { get; set; }
-
-        /// <summary>
-        /// Unique signature for a live object
-        /// </summary>
-        public long BirthMark { get; set; }
-
-        /// <summary>
-        /// Generate a live key for a live object
-        /// </summary>
-        /// <param name="objectType">System type of the entity being cached</param>
-        /// <param name="marker">Unique signature for a live entity</param>
-        public BackingDataCacheKey(Type objectType, long marker)
-        {
-            ObjectType = objectType;
-            BirthMark = marker;
-        }
-
-        /// <summary>
-        /// Hash key used by the cache system
-        /// </summary>
-        /// <returns>the key's hash</returns>
-        public string KeyHash()
-        {
-            var typeName = ObjectType.Name;
-
-            //Normalize interfaces versus classnames
-            if (ObjectType.IsInterface)
-                typeName = typeName.Substring(1);
-
-            return string.Format("{0}_{1}_{2}", CacheType.ToString(), typeName, BirthMark.ToString());
         }
     }
 }

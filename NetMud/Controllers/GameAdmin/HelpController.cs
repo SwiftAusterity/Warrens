@@ -5,12 +5,14 @@ using NetMud.Data.LookupData;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Behaviors.System;
 using NetMud.Models.Admin;
 using System.Web;
 using System.Web.Mvc;
 
 namespace NetMud.Controllers.GameAdmin
 {
+    [Authorize(Roles = "Admin,Builder")]
     public class HelpController : Controller
     {
         private ApplicationUserManager _userManager;
@@ -37,41 +39,59 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageHelpDataViewModel(BackingDataCache.GetAll<IHelp>());
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            var vModel = new ManageHelpDataViewModel(BackingDataCache.GetAll<IHelp>())
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
-            vModel.CurrentPageNumber = CurrentPageNumber;
-            vModel.ItemsPerPage = ItemsPerPage;
-            vModel.SearchTerms = SearchTerms;
+                CurrentPageNumber = CurrentPageNumber,
+                ItemsPerPage = ItemsPerPage,
+                SearchTerms = SearchTerms
+            };
 
             return View("~/Views/GameAdmin/Help/Index.cshtml", vModel);
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Remove(long ID, string authorize)
+        [Route(@"GameAdmin/Help/Remove/{removeId?}/{authorizeRemove?}/{unapproveId?}/{authorizeUnapprove?}")]
+        public ActionResult Remove(long removeId = -1, string authorizeRemove = "", long unapproveId = -1, string authorizeUnapprove = "")
         {
             string message = string.Empty;
 
-            if (string.IsNullOrWhiteSpace(authorize) || !ID.ToString().Equals(authorize))
-                message = "You must check the proper authorize radio button first.";
-            else
+            if (!string.IsNullOrWhiteSpace(authorizeRemove) && removeId.ToString().Equals(authorizeRemove))
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<IHelp>(ID);
+                var obj = BackingDataCache.Get<IHelp>(removeId);
 
                 if (obj == null)
                     message = "That does not exist";
-                else if (obj.Remove())
+                else if (obj.Remove(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                 {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveHelpFile[" + ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveHelp[" + removeId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Delete Successful.";
                 }
                 else
                     message = "Error; Removal failed.";
             }
+            else if (!string.IsNullOrWhiteSpace(authorizeUnapprove) && unapproveId.ToString().Equals(authorizeUnapprove))
+            {
+                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+                var obj = BackingDataCache.Get<IHelp>(unapproveId);
+
+                if (obj == null)
+                    message = "That does not exist";
+                else if (obj.ChangeApprovalStatus(authedUser.GameAccount, authedUser.GetStaffRank(User), ApprovalState.Returned))
+                {
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - UnapproveHelp[" + unapproveId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    message = "Unapproval Successful.";
+                }
+                else
+                    message = "Error; Unapproval failed.";
+            }
+            else
+                message = "You must check the proper remove or unapprove authorization radio button first.";
 
             return RedirectToAction("Index", new { Message = message });
         }
@@ -79,8 +99,10 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add()
         {
-            var vModel = new AddEditHelpDataViewModel();
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            var vModel = new AddEditHelpDataViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId())
+            };
 
             return View("~/Views/GameAdmin/Help/Add.cshtml", vModel);
         }
@@ -92,15 +114,17 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var newObj = new Help();
-            newObj.Name = Name;
-            newObj.HelpText = HelpText;
+            var newObj = new Help
+            {
+                Name = Name,
+                HelpText = HelpText
+            };
 
-            if (newObj.Create() == null)
+            if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
                 message = "Error; Creation failed.";
             else
             {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - AddHelpFile[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                LoggingUtility.LogAdminCommandUsage("*WEB* - AddHelpFile[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 message = "Creation Successful.";
             }
 
@@ -111,8 +135,10 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(long id)
         {
             string message = string.Empty;
-            var vModel = new AddEditHelpDataViewModel();
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            var vModel = new AddEditHelpDataViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId())
+            };
 
             var obj = BackingDataCache.Get<IHelp>(id);
 
@@ -124,7 +150,7 @@ namespace NetMud.Controllers.GameAdmin
 
             vModel.DataObject = obj;
             vModel.Name = obj.Name;
-            vModel.HelpText = obj.HelpText;
+            vModel.HelpText = obj.HelpText.Value;
 
             return View("~/Views/GameAdmin/Help/Edit.cshtml", vModel);
         }
@@ -146,9 +172,9 @@ namespace NetMud.Controllers.GameAdmin
             obj.Name = Name;
             obj.HelpText = HelpText;
 
-            if (obj.Save())
+            if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - EditHelpFile[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                LoggingUtility.LogAdminCommandUsage("*WEB* - EditHelpFile[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 message = "Edit Successful.";
             }
             else

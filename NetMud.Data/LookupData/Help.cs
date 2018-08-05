@@ -1,4 +1,5 @@
 ﻿using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Behaviors.System;
 using System;
 
 namespace NetMud.Data.LookupData
@@ -10,13 +11,16 @@ namespace NetMud.Data.LookupData
     public class Help : LookupDataPartial, IHelp
     {
         /// <summary>
+        /// What type of approval is necessary for this content
+        /// </summary>
+        public override ContentApprovalType ApprovalType { get { return ContentApprovalType.Staff; } }
+
+        /// <summary>
         /// New up a "blank" help entry
         /// </summary>
         public Help()
         {
-            ID = -1;
-            Created = DateTime.UtcNow;
-            LastRevised = DateTime.UtcNow;
+            Id = -1;
             Name = "NotImpl";
             HelpText = "NotImpl";
         }

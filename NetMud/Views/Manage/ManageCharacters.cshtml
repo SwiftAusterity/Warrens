@@ -1,76 +1,52 @@
-﻿@model NetMud.Models.ManageCharactersViewModel
+﻿@model NetMud.Models.PlayerManagement.ManageCharactersViewModel
 @{
-    ViewBag.Title = "Manage your characters";
+    var tableColumns = new Dictionary<string, Func<dynamic, string>>();
+    var linkText = Html.ActionLink("99999999", "EditCharacter", new { id = 99999999 }).ToString();
+    tableColumns.Add("ID", obj => linkText.Replace("99999999", obj.Id.ToString()));
+    tableColumns.Add("Name", obj => obj.FullName());
+    tableColumns.Add("Race", obj => obj.RaceData.Name);
+    tableColumns.Add("Gender", obj => obj.Gender);
+    tableColumns.Add("N00b", obj => obj.StillANoob.ToString());
+    tableColumns.Add("Permissions", obj => obj.GamePermissionsRank.ToString());
 }
-
-@{
-    if (Model.authedUser.GameAccount.Characters.Count() > 0)
+@using (Html.BeginForm("RemoveCharacter", "Manage"))
+{
+    @Html.AntiForgeryToken()
+    @Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Name = "Registered Characters", Columns = tableColumns, Values = Model.authedUser.GameAccount.Characters, IncludeUnapprove = false })
+}
+<section id="newCharacterForm">
+    @using (Html.BeginForm("AddCharacter", "Manage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {
-        <h4>Registered Characters</h4>
-        using (Html.BeginForm("RemoveCharacter", "Manage"))
-        {
-            @Html.AntiForgeryToken()
-            <table class="table">
-                <tbody>
-
-
-                    @foreach (var ch in Model.authedUser.GameAccount.Characters)
-                    {
-                        <tr>
-                            <td>@ch.FullName()</td>
-                            <td>@ch.RaceData.Name</td>
-                            <td>@ch.Gender</td>
-                            <td>@ch.GamePermissionsRank.ToString()</td>
-                            <td>
-                                <div>
-                                    @Html.Hidden("ID", ch.ID)
-                                    <input type="submit" style="color: red; border: none; padding: 0; background-color: inherit;" value="X" title="Delete this character" />
-                                    <input type="radio" name="authorize" value="@ch.ID" style="margin-left: 15px;" />
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
-
-    }
-    <section id="newCharacterForm">
-        @using (Html.BeginForm("AddCharacter", "Manage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-        {
-            @Html.AntiForgeryToken()
-            <h4>New Character</h4>
-            <hr />
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            <div class="form-group two-column">
-                @Html.EditorFor(e => e.Name)
-                @Html.EditorFor(e => e.SurName)
+        @Html.AntiForgeryToken()
+        <h4>New Character</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group row">
+            @Html.EditorFor(e => e.Name, new { columnCount = 3 })
+            @Html.EditorFor(e => e.SurName, new { columnCount = 3 })
+            @Html.EditorFor(e => e.Gender, new { columnCount = 3 })
+        </div>
+        <div class="form-group row">
+            @Html.DescriptiveLabelFor(m => m.RaceId, new { @class = "col-sm-1 col-form-label" })
+            <div class="col-sm-3">
+                @Html.DropDownList("RaceId", Model.ValidRaces.Select(rl =>
+                                new SelectListItem() { Text = rl.Name, Value = rl.Id.ToString() })
+                                 , "Select One", htmlAttributes: new { id = "raceId", Style = "padding: 7px;" })
             </div>
-            <div class="form-group two-column">
-                @Html.EditorFor(e => e.Gender)
-                @Html.LabelFor(m => m.RaceId, new { @class = "control-label" })
-                <div>
-                    @Html.DropDownList("RaceId", Model.ValidRaces.Select(rl =>
-                                    new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
-                                     , htmlAttributes: new { id = "raceId", Style = "padding: 7px;" })
-                </div>
-            </div>
-
-            if (User.IsInRole("Admin"))
+            @if (User.IsInRole("Admin"))
             {
-                <div class="form-group one-column">
-                    @Html.LabelFor(m => m.ChosenRole, new { @class = "control-label" })
-                    <div>
-                        @Html.DropDownList("ChosenRole", Model.ValidRoles.Select(rl =>
-                            new SelectListItem() { Text = rl.ToString(), Value = rl.ToString() })
-                            , htmlAttributes: new { id = "chosenRole", Style = "padding: 7px;" })
-                    </div>
+                @Html.DescriptiveLabelFor(m => m.ChosenRole, new { @class = "col-sm-1 col-form-label" })
+                <div class="col-sm-3">
+                    @Html.DropDownList("ChosenRole", Model.ValidRoles.Select(rl =>
+                        new SelectListItem() { Text = rl.ToString(), Value = rl.ToString() })
+                        , "Select One", htmlAttributes: new { id = "chosenRole", Style = "padding: 7px;" })
                 </div>
             }
-            @Html.Partial("SubmitButton", "Create")
-        }
-    </section>
-}
+        </div>
+
+        @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Create", CancelName = "Cancel", ReturnAction = "ManageCharacters", ReturnController = "Manage", IncludeCancel = true})
+    }
+</section>
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

@@ -1,0 +1,26 @@
+﻿@using NetMud.DataStructure.SupportingClasses
+
+@model NetMud.Models.Admin.OccurrenceViewModel
+
+<section id="addDescriptiveSection">
+    @using (Html.BeginForm("AddEditDescriptive", Model.AdminTypeName, new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        <hr />
+        <div class="form-group row">
+            @Html.EditorFor(e => e.Strength, new { columnCount = 3 })
+            @Html.DescriptiveLabelFor(m => m.SensoryType, new { @class = "col-sm-1 col-form-label" })
+            <div class="col-md-3">
+                @Html.DropDownList("SensoryType", Enum.GetNames(typeof(MessagingType)).Select(rl =>
+                                                                                new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(MessagingType), rl)).ToString(), Selected = rl.Equals(Enum.GetName(typeof(MessagingType), Model.SensoryType)) })
+                                                                                , "Select One", htmlAttributes: new { id = "SensoryType", @class = "form-control" })
+            </div>
+        </div>
+
+        @Html.Partial("~/Views/GameAdmin/" + Model.AdminTypeName  +"/Lexica.cshtml", Model)
+
+        <div class="clearfix"></div>
+
+        @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = Model.AdminTypeName, ModalWindow = true })
+    }
+</section>

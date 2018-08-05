@@ -6,6 +6,7 @@ using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Behaviors.System;
 using NetMud.Models.Admin;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ using System.Web.Mvc;
 
 namespace NetMud.Controllers.GameAdmin
 {
+    [Authorize(Roles = "Admin,Builder")]
     public class FloraController : Controller
     {
         private ApplicationUserManager _userManager;
@@ -41,41 +43,59 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageFloraViewModel(BackingDataCache.GetAll<IFlora>());
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            var vModel = new ManageFloraViewModel(BackingDataCache.GetAll<IFlora>())
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
-            vModel.CurrentPageNumber = CurrentPageNumber;
-            vModel.ItemsPerPage = ItemsPerPage;
-            vModel.SearchTerms = SearchTerms;
+                CurrentPageNumber = CurrentPageNumber,
+                ItemsPerPage = ItemsPerPage,
+                SearchTerms = SearchTerms
+            };
 
             return View("~/Views/GameAdmin/Flora/Index.cshtml", vModel);
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Remove(long ID, string authorize)
+        [Route(@"GameAdmin/Flora/Remove/{removeId?}/{authorizeRemove?}/{unapproveId?}/{authorizeUnapprove?}")]
+        public ActionResult Remove(long removeId = -1, string authorizeRemove = "", long unapproveId = -1, string authorizeUnapprove = "")
         {
             string message = string.Empty;
 
-            if (string.IsNullOrWhiteSpace(authorize) || !ID.ToString().Equals(authorize))
-                message = "You must check the proper authorize radio button first.";
-            else
+            if (!string.IsNullOrWhiteSpace(authorizeRemove) && removeId.ToString().Equals(authorizeRemove))
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<IFlora>(ID);
+                var obj = BackingDataCache.Get<IFlora>(removeId);
 
                 if (obj == null)
                     message = "That does not exist";
-                else if (obj.Remove())
+                else if (obj.Remove(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                 {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveFlora[" + ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveFlora[" + removeId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Delete Successful.";
                 }
                 else
                     message = "Error; Removal failed.";
             }
+            else if (!string.IsNullOrWhiteSpace(authorizeUnapprove) && unapproveId.ToString().Equals(authorizeUnapprove))
+            {
+                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+                var obj = BackingDataCache.Get<IFlora>(unapproveId);
+
+                if (obj == null)
+                    message = "That does not exist";
+                else if (obj.ChangeApprovalStatus(authedUser.GameAccount, authedUser.GetStaffRank(User), ApprovalState.Returned))
+                {
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - UnapproveFlora[" + unapproveId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    message = "Unapproval Successful.";
+                }
+                else
+                    message = "Error; Unapproval failed.";
+            }
+            else
+                message = "You must check the proper remove or unapprove authorization radio button first.";
 
             return RedirectToAction("Index", new { Message = message });
         }
@@ -83,10 +103,12 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add()
         {
-            var vModel = new AddEditFloraViewModel();
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-            vModel.ValidMaterials = BackingDataCache.GetAll<IMaterial>();
-            vModel.ValidInanimateDatas = BackingDataCache.GetAll<IInanimateData>();
+            var vModel = new AddEditFloraViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                ValidMaterials = BackingDataCache.GetAll<IMaterial>(),
+                ValidInanimateDatas = BackingDataCache.GetAll<IInanimateData>()
+            };
 
             return View("~/Views/GameAdmin/Flora/Add.cshtml", vModel);
         }
@@ -98,17 +120,19 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var newObj = new Flora();
-            newObj.Name = vModel.Name;
-            newObj.HelpText = vModel.HelpText;
-            newObj.SunlightPreference = vModel.SunlightPreference;
-            newObj.Coniferous = vModel.Coniferous;
-            newObj.AmountMultiplier = vModel.AmountMultiplier;
-            newObj.Rarity = vModel.Rarity;
-            newObj.PuissanceVariance = vModel.PuissanceVariance;
-            newObj.ElevationRange = new Tuple<int, int>(vModel.ElevationRangeLow, vModel.ElevationRangeHigh);
-            newObj.TemperatureRange = new Tuple<int, int>(vModel.TemperatureRangeLow, vModel.TemperatureRangeHigh);
-            newObj.HumidityRange = new Tuple<int, int>(vModel.HumidityRangeLow, vModel.HumidityRangeHigh);
+            var newObj = new Flora
+            {
+                Name = vModel.Name,
+                HelpText = vModel.HelpText,
+                SunlightPreference = vModel.SunlightPreference,
+                Coniferous = vModel.Coniferous,
+                AmountMultiplier = vModel.AmountMultiplier,
+                Rarity = vModel.Rarity,
+                PuissanceVariance = vModel.PuissanceVariance,
+                ElevationRange = new Tuple<int, int>(vModel.ElevationRangeLow, vModel.ElevationRangeHigh),
+                TemperatureRange = new Tuple<int, int>(vModel.TemperatureRangeLow, vModel.TemperatureRangeHigh),
+                HumidityRange = new Tuple<int, int>(vModel.HumidityRangeLow, vModel.HumidityRangeHigh)
+            };
 
             var newWood = BackingDataCache.Get<IMaterial>(vModel.Wood);
             if (newWood != null)
@@ -135,13 +159,13 @@ namespace NetMud.Controllers.GameAdmin
 
             newObj.OccursIn = new HashSet<Biome>(vModel.OccursIn);
 
-            if (String.IsNullOrWhiteSpace(message))
+            if (string.IsNullOrWhiteSpace(message))
             {
-                if (newObj.Create() == null)
+                if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
                     message = "Error; Creation failed.";
                 else
                 {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddFlora[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddFlora[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Creation Successful.";
                 }
             }
@@ -153,10 +177,12 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(long id)
         {
             string message = string.Empty;
-            var vModel = new AddEditFloraViewModel();
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-            vModel.ValidMaterials = BackingDataCache.GetAll<IMaterial>();
-            vModel.ValidInanimateDatas = BackingDataCache.GetAll<IInanimateData>();
+            var vModel = new AddEditFloraViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                ValidMaterials = BackingDataCache.GetAll<IMaterial>(),
+                ValidInanimateDatas = BackingDataCache.GetAll<IInanimateData>()
+            };
 
             var obj = BackingDataCache.Get<IFlora>(id);
 
@@ -168,7 +194,7 @@ namespace NetMud.Controllers.GameAdmin
 
             vModel.DataObject = obj;
             vModel.Name = obj.Name;
-            vModel.HelpText = obj.HelpText;
+            vModel.HelpText = obj.HelpText.Value;
             vModel.SunlightPreference = obj.SunlightPreference;
             vModel.Coniferous = obj.Coniferous;
             vModel.AmountMultiplier = obj.AmountMultiplier;
@@ -180,11 +206,11 @@ namespace NetMud.Controllers.GameAdmin
             vModel.TemperatureRangeLow = obj.TemperatureRange.Item1;
             vModel.HumidityRangeHigh = obj.HumidityRange.Item2;
             vModel.HumidityRangeLow = obj.HumidityRange.Item1;
-            vModel.Wood = obj.Wood.ID;
-            vModel.Flower = obj.Flower.ID;
-            vModel.Fruit = obj.Fruit.ID;
-            vModel.Seed = obj.Seed.ID;
-            vModel.Leaf = obj.Leaf.ID;
+            vModel.Wood = obj.Wood.Id;
+            vModel.Flower = obj.Flower.Id;
+            vModel.Fruit = obj.Fruit.Id;
+            vModel.Seed = obj.Seed.Id;
+            vModel.Leaf = obj.Leaf.Id;
             vModel.OccursIn = obj.OccursIn.ToArray();
 
             return View("~/Views/GameAdmin/Flora/Edit.cshtml", vModel);
@@ -243,11 +269,11 @@ namespace NetMud.Controllers.GameAdmin
 
             obj.OccursIn = new HashSet<Biome>(vModel.OccursIn);
 
-            if (String.IsNullOrWhiteSpace(message))
+            if (string.IsNullOrWhiteSpace(message))
             {
-                if (obj.Save())
+                if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                 {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - EditFlora[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - EditFlora[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Edit Successful.";
                 }
                 else

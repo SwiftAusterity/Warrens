@@ -54,10 +54,7 @@ namespace NetMud.DataAccess.Cache
         /// <param name="cacheKey">the key to cache it under</param>
         public void Add(object objectToCache, ICacheKey cacheKey)
         {
-            if (Exists(cacheKey))
-                Remove(cacheKey);
-
-            _globalCache.AddOrGetExisting(cacheKey.KeyHash(), objectToCache, _globalPolicy);
+            Add(objectToCache, cacheKey.KeyHash());
         }
 
         /// <summary>
@@ -70,7 +67,28 @@ namespace NetMud.DataAccess.Cache
             if (Exists(cacheKey))
                 Remove(cacheKey);
 
-            _globalCache.AddOrGetExisting(cacheKey, objectToCache, _globalPolicy);
+            _globalCache.Add(cacheKey, objectToCache, _globalPolicy);
+        }
+
+        /// <summary>
+        /// fills a list of entities from the cache of a single type that match the birthmarks sent in
+        /// </summary>
+        /// <typeparam name="T">the system type for the entity</typeparam>
+        /// <param name="keys">the keys to retrieve</param>
+        /// <returns>a list of the entities from the cache</returns>
+        public IEnumerable<T> GetMany<T>(IEnumerable<ICacheKey> keys)
+        {
+            try
+            {
+                return _globalCache.Where(keyValuePair => keyValuePair.Value.GetType().GetInterfaces().Contains(typeof(T)) && keys.Any(key => key.KeyHash().Equals(keyValuePair.Key)))
+                                  .Select(kvp => (T)kvp.Value);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex);
+            }
+
+            return Enumerable.Empty<T>();
         }
 
         /// <summary>
@@ -121,12 +139,12 @@ namespace NetMud.DataAccess.Cache
         /// <typeparam name="T">the system type for the entity</typeparam>
         /// <param name="birthmarks">the birthmarks to retrieve</param>
         /// <returns>a list of the entities from the cache</returns>
-        public IEnumerable<T> GetMany<T>(IEnumerable<long> ids) where T : IData
+        public IEnumerable<T> GetMany<T>(IEnumerable<long> ids) where T : IKeyedData
         {
             try
             {
                 return _globalCache.Where(keyValuePair => keyValuePair.Value.GetType().GetInterfaces().Contains(typeof(T)) 
-                                                        && ids.Contains(((T)keyValuePair.Value).ID))
+                                                        && ids.Contains(((T)keyValuePair.Value).Id))
                                   .Select(kvp => (T)kvp.Value);
             }
             catch (Exception ex)
@@ -209,7 +227,7 @@ namespace NetMud.DataAccess.Cache
         {
             try
             {
-                return (T)_globalCache[key.KeyHash()];
+                return Get<T>(key.KeyHash());
             }
             catch (Exception ex)
             {
@@ -220,12 +238,39 @@ namespace NetMud.DataAccess.Cache
         }
 
         /// <summary>
+        /// Gets one entity from the cache by its key
+        /// </summary>
+        /// <typeparam name="T">the type of the entity</typeparam>
+        /// <param name="key">the key it was cached with</param>
+        /// <returns>the entity requested</returns>
+        public object Get(ICacheKey key)
+        {
+            try
+            {
+                return _globalCache[key.KeyHash()];
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex);
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Removes an entity from the cache by its key
         /// </summary>
         /// <param name="key">the key of the entity to remove</param>
         public void Remove(ICacheKey key)
         {
-            _globalCache.Remove(key.KeyHash());
+            try
+            {
+                Remove(key.KeyHash());
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex);
+            }
         }
 
         /// <summary>
@@ -244,7 +289,7 @@ namespace NetMud.DataAccess.Cache
         /// <returns>if it is in the cache of not</returns>
         public bool Exists(ICacheKey key)
         {
-            return _globalCache.Get(key.KeyHash()) != null;
+            return Exists(key.KeyHash());
         }
 
         /// <summary>

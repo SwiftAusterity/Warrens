@@ -1,4 +1,6 @@
-﻿using NetMud.DataStructure.Base.System;
+﻿using NetMud.Data.DataIntegrity;
+using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Behaviors.System;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
 using Newtonsoft.Json;
@@ -17,7 +19,13 @@ namespace NetMud.Data.System
         /// <summary>
         /// All string values
         /// </summary>
+        [FilledContainerDataIntegrity("Lookup Criteria entry has no values.")]
         public Dictionary<ILookupCriteria, HashSet<string>> Values { get; set; }
+
+        /// <summary>
+        /// What type of approval is necessary for this content
+        /// </summary>
+        public override ContentApprovalType ApprovalType { get { return ContentApprovalType.Admin; } }
 
         /// <summary>
         /// Empty constructor for serialization
@@ -41,25 +49,18 @@ namespace NetMud.Data.System
         }
 
         /// <summary>
-        /// Gets the errors for data fitness
+        /// Get the significant details of what needs approval
         /// </summary>
-        /// <returns>a bunch of text saying how awful your data is</returns>
-        public override IList<string> FitnessReport()
+        /// <returns>A list of strings</returns>
+        public override IDictionary<string, string> SignificantDetails()
         {
-            var dataProblems = base.FitnessReport();
+            var returnList = base.SignificantDetails();
 
-            if (Values == null)
-                dataProblems.Add("Values table is null.");
-            else
-            {
-                if (Values.Any(kvp => kvp.Key == null))
-                    dataProblems.Add("Lookup Criteria for a cluster is null.");
+            foreach (var val in Values)
+                foreach(var crit in val.Key.Criterion)
+                    returnList.Add("Values", string.Format("{0} + {1} : ", crit.Key.ToString(), crit.Value, val.Value.CommaList()));
 
-                if (Values.Any(kvp => !kvp.Value.Any() || kvp.Value.Any(v => String.IsNullOrWhiteSpace(v))))
-                    dataProblems.Add("Lookup Criteria entry has empty values or none at all.");
-            }
-
-            return dataProblems;
+            return returnList;
         }
 
         /// <summary>

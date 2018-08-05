@@ -1,9 +1,22 @@
 ﻿@model bool
 
-@Html.LabelFor(m => m, new { @class = "control-label" })
-<div>
-    @Html.CheckBoxFor(m => m, new { @class = "form-control" })
+@{
+    double columnCount = ViewData["columnCount"] == null ? 3 : (int)ViewData["columnCount"];
+    bool disabled = ViewData["disabled"] != null;
+    var columnLabelValue = columnCount > 2 ? 1 : 2;
+    var columnInputValue = (int)Math.Round(10 / columnCount);
+    var cssClass = ViewData["cssClass"] == null ? "form-control" : ViewData["cssClass"];
+}
+
+@Html.DescriptiveLabelFor(m => m, new { @class = String.Format("col-sm-{0} col-form-label", columnLabelValue) })
+<div class="col-sm-2">
+    @if (disabled)
+    {
+        @Html.CheckBoxFor(m => m, new { @class = cssClass, @disabled = disabled })
+    }
+    else
+    {
+        @Html.CheckBoxFor(m => m, new { @class = cssClass })
+    }
     @Html.ValidationMessageFor(m => m, "", new { @class = "text-danger" })
 </div>
-
-

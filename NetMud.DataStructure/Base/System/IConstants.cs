@@ -6,7 +6,7 @@ namespace NetMud.DataStructure.Base.System
     /// <summary>
     /// Constant values for use in the game code for localization purposes
     /// </summary>
-    public interface IConstants : IFileStored, IData
+    public interface IConstants : IFileStored, IKeyedData
     {
         /// <summary>
         /// All string values

@@ -1,9 +1,15 @@
-﻿using NetMud.Data.LookupData;
+﻿using NetMud.Data.ConfigData;
+using NetMud.Data.DataIntegrity;
+using NetMud.Data.Lexical;
+using NetMud.Data.LookupData;
 using NetMud.Data.System;
+using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Behaviors.System;
+using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.SupportingClasses;
 using Newtonsoft.Json;
 using System;
@@ -20,17 +26,44 @@ namespace NetMud.Data.EntityBackingData
     public class InanimateData : EntityBackingDataPartial, IInanimateData
     {
         /// <summary>
-        /// Framework for the physics model of an entity
-        /// </summary>
-        public IDimensionalModel Model { get; set; }
-
-        /// <summary>
         /// The system type for the entity this attaches to
         /// </summary>
+        [JsonIgnore]
+        [ScriptIgnore]
         public override Type EntityClass
         {
             get { return typeof(Game.Inanimate); }
         }
+
+        /// <summary>
+        /// What type of approval is necessary for this content
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public override ContentApprovalType ApprovalType { get { return ContentApprovalType.Staff; } }
+
+        /// <summary>
+        /// keywords this entity is referrable by in the world by the parser
+        /// </summary>
+        [JsonIgnore]
+        [ScriptIgnore]
+        public override string[] Keywords
+        {
+            get
+            {
+                if (_keywords == null || _keywords.Length == 0)
+                    _keywords = new string[] { Name.ToLower() };
+
+                return _keywords;
+            }
+            set { _keywords = value; }
+        }
+
+        /// <summary>
+        /// Framework for the physics model of an entity
+        /// </summary>
+        [NonNullableDataIntegrity("Physical model is invalid.")]
+        public IDimensionalModel Model { get; set; }
 
         /// <summary>
         /// Definition for the room's capacity for mobiles
@@ -42,8 +75,13 @@ namespace NetMud.Data.EntityBackingData
         /// </summary>
         public HashSet<IEntityContainerData<IInanimate>> InanimateContainers { get; set; }
 
+        /// <summary>
+        /// Set of output relevant to this exit. These are essentially single word descriptions to render the path
+        /// </summary>
+        public HashSet<IOccurrence> Descriptives { get; set; }
+
         [JsonProperty("InternalComposition")]
-        private IDictionary<long, short> _internalComposition { get; set; }
+        private IDictionary<BackingDataCacheKey, short> _internalComposition { get; set; }
 
         /// <summary>
         /// The list of internal compositions for separate/explosion/sharding
@@ -64,8 +102,19 @@ namespace NetMud.Data.EntityBackingData
                 if (value == null)
                     return;
 
-                _internalComposition = value.ToDictionary(k => k.Key.ID, k => k.Value);
+                _internalComposition = value.ToDictionary(k => new BackingDataCacheKey(k.Key), k => k.Value);
             }
+        }
+
+
+        /// <summary>
+        /// Spawns a new empty inanimate object
+        /// </summary>
+        public InanimateData()
+        {
+            MobileContainers = new HashSet<IEntityContainerData<IMobile>>();
+            InanimateContainers = new HashSet<IEntityContainerData<IInanimate>>();
+            InternalComposition = new Dictionary<IInanimateData, short>();
         }
 
         /// <summary>
@@ -82,13 +131,12 @@ namespace NetMud.Data.EntityBackingData
         }
 
         /// <summary>
-        /// Spawns a new empty inanimate object
+        /// Get's the entity's model dimensions
         /// </summary>
-        public InanimateData()
+        /// <returns>height, length, width</returns>
+        public override Tuple<int, int, int> GetModelDimensions()
         {
-            MobileContainers = new HashSet<IEntityContainerData<IMobile>>();
-            InanimateContainers = new HashSet<IEntityContainerData<IInanimate>>();
-            InternalComposition = new Dictionary<IInanimateData, short>();
+            return new Tuple<int, int, int>(Model.Height, Model.Length, Model.Width);
         }
 
         /// <summary>
@@ -99,14 +147,11 @@ namespace NetMud.Data.EntityBackingData
         {
             var dataProblems = base.FitnessReport();
 
-            if(Model == null)
-                dataProblems.Add("Physical model is invalid.");
-
-            if(InternalComposition == null)
+            if (InternalComposition == null)
                 dataProblems.Add("Internal composition cluster is null.");
             else
             {
-                if(InternalComposition.Any(kvp => kvp.Key == null))
+                if (InternalComposition.Any(kvp => kvp.Key == null))
                     dataProblems.Add("Internal composition key object is null.");
 
                 if (InternalComposition.Any(kvp => kvp.Value < 0))
@@ -117,12 +162,31 @@ namespace NetMud.Data.EntityBackingData
         }
 
         /// <summary>
-        /// Get's the entity's model dimensions
+        /// Put it in the cache
         /// </summary>
-        /// <returns>height, length, width</returns>
-        public override Tuple<int, int, int> GetModelDimensions()
+        /// <returns>success status</returns>
+        public override bool PersistToCache()
         {
-            return new Tuple<int, int, int>(Model.Height, Model.Length, Model.Width);
+            try
+            {
+                var dictatas = new List<IDictata>
+                {
+                    new Dictata(new Lexica(LexicalType.Noun, GrammaticalType.Subject, Name))
+                };
+                dictatas.AddRange(Descriptives.Select(desc => desc.Event.GetDictata()));
+
+                foreach (var dictata in dictatas)
+                    LexicalProcessor.VerifyDictata(dictata);
+
+                BackingDataCache.Add(this);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex, LogChannels.SystemWarnings);
+                return false;
+            }
+
+            return true;
         }
     }
 }

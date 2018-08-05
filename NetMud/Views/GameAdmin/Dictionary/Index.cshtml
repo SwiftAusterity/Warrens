@@ -1,0 +1,21 @@
+﻿@model NetMud.Models.Admin.ManageDictionaryViewModel
+@{
+    var linkText = Html.ActionLink("99999999", "Edit", new { id = 99999999 }).ToString();
+    var tableColumns = new Dictionary<string, Func<dynamic, string>>();
+    tableColumns.Add("Unique Key", obj => linkText.Replace("99999999", obj.UniqueKey));
+    tableColumns.Add("Phrase", obj => obj.Name);
+    tableColumns.Add("Type", obj => obj.WordType.ToString());
+}
+
+@Html.Partial("AddContentLink")
+@Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model, "Dictionary"))
+
+@using (Html.BeginForm("Remove", "Dictionary"))
+{
+    @Html.AntiForgeryToken()
+    @Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Name = "Dictionary", Columns = tableColumns, Values = Model.CurrentPageOfItems.OrderBy(obj => obj.UniqueKey), IncludeUnapprove = false, IncludeDelete = false })
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

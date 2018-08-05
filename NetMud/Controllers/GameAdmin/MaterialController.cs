@@ -5,6 +5,7 @@ using NetMud.Data.LookupData;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Behaviors.System;
 using NetMud.Models.Admin;
 using System.Linq;
 using System.Web;
@@ -12,6 +13,7 @@ using System.Web.Mvc;
 
 namespace NetMud.Controllers.GameAdmin
 {
+    [Authorize(Roles = "Admin,Builder")]
     public class MaterialController : Controller
     {
         private ApplicationUserManager _userManager;
@@ -38,40 +40,59 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageMaterialDataViewModel(BackingDataCache.GetAll<Material>());
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            var vModel = new ManageMaterialDataViewModel(BackingDataCache.GetAll<Material>())
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
-            vModel.CurrentPageNumber = CurrentPageNumber;
-            vModel.ItemsPerPage = ItemsPerPage;
-            vModel.SearchTerms = SearchTerms;
+                CurrentPageNumber = CurrentPageNumber,
+                ItemsPerPage = ItemsPerPage,
+                SearchTerms = SearchTerms
+            };
 
             return View("~/Views/GameAdmin/Material/Index.cshtml", vModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Remove(long ID, string authorize)
+        [Route(@"GameAdmin/Material/Remove/{removeId?}/{authorizeRemove?}/{unapproveId?}/{authorizeUnapprove?}")]
+        public ActionResult Remove(long removeId = -1, string authorizeRemove = "", long unapproveId = -1, string authorizeUnapprove = "")
         {
             string message = string.Empty;
 
-            if (string.IsNullOrWhiteSpace(authorize) || !ID.ToString().Equals(authorize))
-                message = "You must check the proper authorize radio button first.";
-            else
+            if (!string.IsNullOrWhiteSpace(authorizeRemove) && removeId.ToString().Equals(authorizeRemove))
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<Material>(ID);
+                var obj = BackingDataCache.Get<IMaterial>(removeId);
 
                 if (obj == null)
                     message = "That does not exist";
-                else if (obj.Remove())
+                else if (obj.Remove(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                 {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveMaterial[" + ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveMaterial[" + removeId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Delete Successful.";
                 }
                 else
                     message = "Error; Removal failed.";
             }
+            else if (!string.IsNullOrWhiteSpace(authorizeUnapprove) && unapproveId.ToString().Equals(authorizeUnapprove))
+            {
+                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+                var obj = BackingDataCache.Get<IMaterial>(unapproveId);
+
+                if (obj == null)
+                    message = "That does not exist";
+                else if (obj.ChangeApprovalStatus(authedUser.GameAccount, authedUser.GetStaffRank(User), ApprovalState.Returned))
+                {
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - UnapproveMaterial[" + unapproveId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    message = "Unapproval Successful.";
+                }
+                else
+                    message = "Error; Unapproval failed.";
+            }
+            else
+                message = "You must check the proper remove or unapprove authorization radio button first.";
 
             return RedirectToAction("Index", new { Message = message });
         }
@@ -79,9 +100,11 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add()
         {
-            var vModel = new AddEditMaterialViewModel();
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-            vModel.ValidMaterials = BackingDataCache.GetAll<IMaterial>();
+            var vModel = new AddEditMaterialViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                ValidMaterials = BackingDataCache.GetAll<IMaterial>()
+            };
 
             return View("~/Views/GameAdmin/Material/Add.cshtml", vModel);
         }
@@ -94,20 +117,22 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var newObj = new Material();
-            newObj.Name = vModel.Name;
-            newObj.Conductive = vModel.Conductive;
-            newObj.Density = vModel.Density;
-            newObj.Ductility = vModel.Ductility;
-            newObj.Flammable = vModel.Flammable;
-            newObj.GasPoint = vModel.GasPoint;
-            newObj.Magnetic = vModel.Magnetic;
-            newObj.Mallebility = vModel.Mallebility;
-            newObj.Porosity = vModel.Porosity;
-            newObj.SolidPoint = vModel.SolidPoint;
-            newObj.TemperatureRetention = vModel.TemperatureRetention;
-            newObj.Viscosity = vModel.Viscosity;
-            newObj.HelpText = vModel.HelpBody;
+            var newObj = new Material
+            {
+                Name = vModel.Name,
+                Conductive = vModel.Conductive,
+                Density = vModel.Density,
+                Ductility = vModel.Ductility,
+                Flammable = vModel.Flammable,
+                GasPoint = vModel.GasPoint,
+                Magnetic = vModel.Magnetic,
+                Mallebility = vModel.Mallebility,
+                Porosity = vModel.Porosity,
+                SolidPoint = vModel.SolidPoint,
+                TemperatureRetention = vModel.TemperatureRetention,
+                Viscosity = vModel.Viscosity,
+                HelpText = vModel.HelpBody
+            };
 
             if (vModel.Resistances != null)
             {
@@ -150,11 +175,11 @@ namespace NetMud.Controllers.GameAdmin
                 }
             }
 
-            if (newObj.Create() == null)
+            if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
                 message = "Error; Creation failed.";
             else
             {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - AddMaterialData[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                LoggingUtility.LogAdminCommandUsage("*WEB* - AddMaterialData[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 message = "Creation Successful.";
             }
 
@@ -165,9 +190,11 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(int id)
         {
             string message = string.Empty;
-            var vModel = new AddEditMaterialViewModel();
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-            vModel.ValidMaterials = BackingDataCache.GetAll<Material>();
+            var vModel = new AddEditMaterialViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                ValidMaterials = BackingDataCache.GetAll<Material>()
+            };
 
             var obj = BackingDataCache.Get<Material>(id);
 
@@ -190,7 +217,7 @@ namespace NetMud.Controllers.GameAdmin
             vModel.SolidPoint = obj.SolidPoint;
             vModel.TemperatureRetention = obj.TemperatureRetention;
             vModel.Viscosity = obj.Viscosity;
-            vModel.HelpBody = obj.HelpText;
+            vModel.HelpBody = obj.HelpText.Value;
 
             return View("~/Views/GameAdmin/Material/Edit.cshtml", vModel);
         }
@@ -270,7 +297,7 @@ namespace NetMud.Controllers.GameAdmin
 
                         if (material != null)
                         {
-                            if (obj.Composition.Any(ic => ic.Key.ID == materialId))
+                            if (obj.Composition.Any(ic => ic.Key.Id == materialId))
                             {
 
                                 obj.Composition.Remove(material);
@@ -287,12 +314,12 @@ namespace NetMud.Controllers.GameAdmin
                 }
             }
 
-            foreach (var container in obj.Composition.Where(ic => !vModel.Compositions.Contains(ic.Key.ID)))
+            foreach (var container in obj.Composition.Where(ic => !vModel.Compositions.Contains(ic.Key.Id)))
                 obj.Composition.Remove(container);
 
-            if (obj.Save())
+            if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - EditMaterialData[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                LoggingUtility.LogAdminCommandUsage("*WEB* - EditMaterialData[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 message = "Edit Successful.";
             }
             else

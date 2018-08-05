@@ -1,0 +1,133 @@
+﻿@using NetMud.DataStructure.SupportingClasses;
+
+@model NetMud.Models.Admin.AddEditJournalEntryViewModel
+
+<section id="newEntryForm">
+    @using (Html.BeginForm("Edit", "JournalEntry", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <input type="hidden" name="id" id="id" value="@Model.DataObject.Id" />
+        <div class="form-group row">
+            @Html.EditorFor(e => e.Name)
+            @Html.EditorFor(e => e.Public)
+            @Html.DescriptiveLabelFor(m => m.MinimumReadLevel, new { @class = "col-sm-1 col-form-label" })
+            <div class="col-md-3">
+                @Html.DropDownList("MinimumReadLevel", Enum.GetNames(typeof(StaffRank)).Select(rl =>
+                                                                new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(StaffRank), rl)).ToString(), Selected = rl.Equals(Enum.GetName(typeof(StaffRank), Model.MinimumReadLevel)) })
+                                                                , "Select One", htmlAttributes: new { id = "Type", @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group row">
+            @Html.EditorFor(e => e.Expired)
+            @Html.EditorFor(e => e.PublishDate)
+            @Html.EditorFor(e => e.ExpireDate)
+        </div>
+        <div class="form-group row">
+            @Html.EditorFor(e => e.Body)
+        </div>
+        <h4>Tags</h4>
+        <div class="form-group row">
+            @Html.HiddenFor(m => m.Tags)
+            <div class="col-md-2">
+                <input type="text" id="addTags" class="TagList" /><span class="glyphicon glyphicon-plus-sign addWord"></span>
+            </div>
+            <div class="col-md-10" id="TagsContainer" style="margin-top: 10px;">
+            </div>
+        </div>
+
+        @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "JournalEntry", IncludeCancel = true })
+    }
+</section>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var currentTags = [@Model.DataObject.Tags.Select(tag => string.Format("'{0}', ", tag))];
+
+            currentTags.forEach(function (tag) {
+                var word = tag;
+
+                var $source = $('#Tags');
+                var sourceValue = $source.val();
+
+                if (word !== '' && sourceValue.indexOf('||' + word + '||') === -1) {
+                    $('#addTags').val('');
+                    sourceValue = sourceValue + '||' + word + '||';
+
+                    $source.val(sourceValue);
+
+                    var $newWord = $('<span class="touchWord" data-item-value="' + word + '">' + word + '</span>');
+
+                    $newWord.appendTo('#TagsContainer');
+
+                    $newWord.click(function () {
+                        $this = $(this);
+                        var word = $this.attr('data-item-value');
+
+                        var $source = $('#Tags');
+                        var sourceValue = $source.val();
+
+                        $this.detatch();
+
+                        $source.val(sourceValue.replace('||' + word + '||', ''));
+                    });
+                }
+            });
+        });
+
+        $('.touchWord').click(function () {
+            $this = $(this);
+            var word = $this.attr('data-item-value');
+
+            var $source = $('#Tags');
+            var sourceValue = $source.val();
+
+            $this.detatch();
+
+            $source.val(sourceValue.replace('||' + word + '||', ''));
+        });
+
+        $('.addWord').click(function () {
+            $this = $(this);
+            var word = $('#addTags').val();
+
+            var $source = $('#Tags');
+            var sourceValue = $source.val();
+
+            if (word !== '' && sourceValue.indexOf('||' + word + '||') === -1) {
+                $('#addTags').val('');
+                sourceValue = sourceValue + '||' + word + '||';
+
+                $source.val(sourceValue);
+
+                var $newWord = $('<span class="touchWord" data-item-value="' + word + '">' + word + '</span>');
+
+                $newWord.appendTo('#TagsContainer');
+
+                $newWord.click(function () {
+                    $this = $(this);
+                    var word = $this.attr('data-item-value');
+
+                    var $source = $('#Tags');
+                    var sourceValue = $source.val();
+
+                    $this.detatch();
+
+                    $source.val(sourceValue.replace('||' + word + '||', ''));
+                });
+            }
+        });
+
+        $(".TagList").autocomplete({
+            source: ['Blog', 'Announcement', 'ReleaseNotes'],
+            minLength: 2,
+            select: function (event, ui) {
+                $(this).val(ui.item.value);
+                return false;
+            }
+        });
+    </script>
+}

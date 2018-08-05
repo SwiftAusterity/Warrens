@@ -1,5 +1,8 @@
 ﻿using NetMud.DataStructure.Base.Entity;
+using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Base.World;
 using NetMud.DataStructure.SupportingClasses;
 using System.Collections.Generic;
 
@@ -10,6 +13,11 @@ namespace NetMud.DataStructure.Behaviors.Rendering
     /// </summary>
     public interface ILocation : IContains, IEnvironment
     {
+        /// <summary>
+        /// Pathways leading out of (or into) this
+        /// </summary>
+        IEnumerable<IPathway> GetPathways(bool inward = false);
+
         /// <summary>
         /// Mobiles (NPC, Players) in the room
         /// </summary>
@@ -26,5 +34,12 @@ namespace NetMud.DataStructure.Behaviors.Rendering
         /// <param name="strength">number of places to go out</param>
         /// <returns>list of valid surrounding locations</returns>
         IEnumerable<ILocation> GetSurroundings(int strength);
+
+        /// <summary>
+        /// Get the visibile celestials. Depends on luminosity, viewer perception and celestial positioning
+        /// </summary>
+        /// <param name="viewer">Whom is looking</param>
+        /// <returns>What celestials are visible</returns>
+        IEnumerable<ICelestial> GetVisibileCelestials(IEntity viewer);
     }
 }

@@ -1,5 +1,11 @@
 ﻿using NetMud.DataStructure.Base.System;
+using NetMud.Utility;
+using Newtonsoft.Json;
+using System;
+using System.Collections;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace NetMud.Data.System
@@ -33,7 +39,7 @@ namespace NetMud.Data.System
 
             var reader = new StringReader(jsonData);
 
-            return serializer.Deserialize(reader, this.GetType()) as IFileStored;
+            return serializer.Deserialize(reader, GetType()) as IFileStored;
         }
 
         /// <summary>
@@ -54,7 +60,27 @@ namespace NetMud.Data.System
         {
             var strData = Encoding.ASCII.GetString(bytes);
 
-            return DeSerialize(strData);
+            var obj = DeSerialize(strData);
+
+            //Finds containers and inits them to empty after this thing is deserialized
+            foreach (var container in obj.GetType().GetProperties())
+            {
+                if (!container.PropertyType.GetCustomAttributes<JsonIgnoreAttribute>().Any()
+                    && (container.PropertyType.IsArray || (!typeof(string).Equals(container.PropertyType) && typeof(IEnumerable).IsAssignableFrom(container.PropertyType)))
+                    && container.GetValue(obj) == null)
+                {
+                    try
+                    {
+                        container.SetValue(obj, Activator.CreateInstance(container.PropertyType, new object[] { }));
+                    }
+                    catch
+                    {
+                        //Oh well, can't init this on deserialization that's ok mostly
+                    }
+                }
+            }
+
+            return obj;
         }
     }
 }

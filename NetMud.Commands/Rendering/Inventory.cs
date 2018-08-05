@@ -1,5 +1,6 @@
 ﻿using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
+using NetMud.Data.Lexical;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
@@ -8,8 +9,8 @@ using System.Collections.Generic;
 
 namespace NetMud.Commands.Rendering
 {
-    [CommandKeyword("inventory", false)]
-    [CommandKeyword("inv", false)]
+    [CommandKeyword("inventory", false, true, true)]
+    [CommandKeyword("inv", false, false, true)]
     [CommandPermission(StaffRank.Player)]
     [CommandRange(CommandRangeType.Touch, 0)]
     public class Inventory : CommandPartial
@@ -29,22 +30,28 @@ namespace NetMud.Commands.Rendering
         {
             var sb = new List<string>();
             var chr = (IMobile)Actor;
+            var toActor = new List<IMessage>();
 
-            sb.Add("You look through your belongings.");
+            toActor.Add(
+                new Message(MessagingType.Visible, new Occurrence() { Strength = 9999 })
+                {
+                    Override = new string[] { "You look through your belongings." }
+                });
 
             foreach (var thing in chr.Inventory.EntitiesContained())
-                sb.AddRange(thing.RenderToLook(chr));
+                toActor.Add(new Message(MessagingType.Visible, thing.RenderAsContents(chr, new[] { MessagingType.Visible })));
 
-            var toActor = new Message(MessagingType.Visible, 1);
-            toActor.Override = sb;
+            var toOrigin = new Message(MessagingType.Visible, new Occurrence() { Strength = 30 })
+            {
+                Override = new string[] { "$A$ sifts through $G$ belongings." }
+            };
 
-            var toOrigin = new Message(MessagingType.Visible, 30);
-            toOrigin.Override = new string[] { "$A$ sifts through $G$ belongings." };
+            var messagingObject = new MessageCluster(toActor)
+            {
+                ToOrigin = new List<IMessage> { toOrigin }
+            };
 
-            var messagingObject = new MessageCluster(toActor);
-            messagingObject.ToOrigin = new List<IMessage> { toOrigin };
-
-            messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation, null);
+            messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation.CurrentLocation, null);
         }
 
         /// <summary>
@@ -53,10 +60,11 @@ namespace NetMud.Commands.Rendering
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            var sb = new List<string>();
-
-            sb.Add("Valid Syntax: inventory");
-            sb.Add("inv".PadWithString(14, "&nbsp;", true));
+            var sb = new List<string>
+            {
+                "Valid Syntax: inventory",
+                "inv".PadWithString(14, "&nbsp;", true)
+            };
 
             return sb;
         }
@@ -64,7 +72,7 @@ namespace NetMud.Commands.Rendering
         /// <summary>
         /// The custom body of help text
         /// </summary>
-        public override string HelpText
+        public override MarkdownString HelpText
         {
             get
             {

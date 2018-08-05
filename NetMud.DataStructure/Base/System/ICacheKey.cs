@@ -16,12 +16,4 @@
         /// <returns>the key's hash</returns>
         string KeyHash();
     }
-
-    public enum CacheType
-    {
-        Live,
-        BackingData,
-        LookupData,
-        PlayerData
-    }
 }

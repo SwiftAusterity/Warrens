@@ -1,0 +1,115 @@
+﻿@model string
+@{
+    Layout = "~/Views/Shared/_chromelessLayout.cshtml";
+}
+<div id="contentArea">
+    <a class="dropdown-toggle" data-toggle="dropdown" href="#" style="float: right; padding-right: 10px;"><span class="glyphicon glyphicon-cog dockable" title="Settings"></span></a>
+    <ul class="dropdown-menu dropdown-menu-left dockingMenu" role="menu" aria-labelledby="dropdownMenu">
+        <li class="dropdown-header" style="color: mediumvioletred" id="quadrantName"></li>
+        <li class="divider"></li>
+        @for (var i = 1; i <= 4; i++)
+        {
+            <li><a href="#" class="quadrantDocker moduleMenuItem" data-destination-quadrant="@i"><span class="glyphicon glyphicon-resize-small"></span>Dock Quadrant @i</a></li>
+        }
+        <li class="divider"></li>
+        <li>
+            <a href="#" class="quadrantLoad moduleMenuItem" data-origin-quadrant="@Model">
+                <span class="glyphicon glyphicon-cloud-download"></span>Load Module
+            </a>
+            <input id="loadModuleName" title="Module Name?" />
+        </li>
+        <li><a href="#" class="quadrantSave moduleMenuItem"><span class="glyphicon glyphicon-cloud-upload"></span>Save Module</a></li>
+    </ul>
+</div>
+
+@section styles {
+    @Styles.Render("~/Content/GameClient.css")
+    @Styles.Render("//fonts.googleapis.com/css?family=Berkshire+Swash")
+}
+
+@section scripts {
+    @Scripts.Render("~/Scripts/ClientHelpers.js")
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('input#loadModuleName').hide();
+
+
+        $(".quadrantDocker").click(function (e) {
+            var $this = $(this);
+
+            var myContent = $('.contentContainer');
+
+            var destinationNumber = $this.attr('data-destination-quadrant');
+            var $destination = window.opener.document.querySelector('div#quadrant-' + destinationNumber + '.quadrant');
+
+            myContent.detach();
+            myContent.appendTo($destination);
+
+            window.close();
+        });
+
+        $(".quadrantLoad").click(function (e) {
+            var $this = $(this);
+
+            $('input#loadModuleName').show().focus();
+            $(this).hide();
+
+            $('input#loadModuleName').keydown(function (e) {
+                var moduleName = $(this).val();
+
+                switch (e.keyCode) {
+                    case 13: //enter
+                        GetModuleUI(originNumber, moduleName);
+                        break;
+                    default:
+                        return true;
+                }
+
+                $('input#loadModuleName').off('keydown');
+                $('input#loadModuleName').hide();
+                $(".quadrantLoad").show();
+            });
+
+            return false;
+        });
+
+        $(".quadrantSave").click(function (e) {
+            var $origin = $('#contentArea');
+            var moduleName = $('#quadrantName').text();
+
+            $.post('/api/ClientDataApi/SaveUIModuleContent/' + moduleName + '/-1');
+        });
+
+        $("input#loadModuleName").autocomplete({
+            source: "/api/ClientDataApi/GetUIModuleNames",
+            minLength: 3,
+            select: function (event, ui) {
+                var originNumber = $(this).prev().attr('data-origin-quadrant');
+                GetModuleUI(originNumber, ui.item.value);
+
+                $('input#loadModuleName').hide();
+                $(".quadrantLoad").show();
+            }
+        });
+    });
+
+    function GetModuleUI(originNumber, moduleName) {
+        $.get('/api/ClientDataApi/GetUIModuleContent/' + moduleName, function (data) {
+            if (newContent != '') {
+                var newContent = data.BodyHtml;
+                $('#quadrantName').text(moduleName);
+
+                var myContent = $('.contentContainer');
+                var contentArea = $('#contentArea');
+
+                myContent.detach();
+
+                $(newContent).appendTo(contentArea);
+
+                ReloadUI();
+            }
+        });
+    }
+</script>

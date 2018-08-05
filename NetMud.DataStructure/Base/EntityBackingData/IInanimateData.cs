@@ -1,6 +1,7 @@
 ﻿using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.SupportingClasses;
 using System.Collections.Generic;
 
@@ -9,7 +10,7 @@ namespace NetMud.DataStructure.Base.EntityBackingData
     /// <summary>
     /// Backing data for "object"s
     /// </summary>
-    public interface IInanimateData : IEntityBackingData
+    public interface IInanimateData : IEntityBackingData, IDescribable
     {
         /// <summary>
         /// Definition for the room's capacity for mobiles

@@ -8,28 +8,33 @@ namespace NetMud.DataStructure.Base.Supporting
     public interface IDimensionalModel
     {
         /// <summary>
-        /// Y axis of the 11 plane model
+        /// Y axis of the 21 plane model
         /// </summary>
+        
         int Length { get; set; }
 
         /// <summary>
-        /// Measurement of all 11 planes vertically
+        /// Measurement of all 21 planes vertically
         /// </summary>
+        
         int Height { get; set; }
 
         /// <summary>
-        /// X axis of the 11 plane model
+        /// X axis of the 21 plane model
         /// </summary>
+        
         int Width { get; set; }
 
         /// <summary>
         /// How hollow something is, we have to maintain current vacuity versus the spawned vacuity in the ModelData
         /// </summary>
+        
         int Vacuity { get; set; }
 
         /// <summary>
         /// How pock-marked the surface areas are of the object
         /// </summary>
+        
         int SurfaceCavitation { get; set; }
 
         /// <summary>

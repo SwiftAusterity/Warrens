@@ -12,7 +12,7 @@ namespace NetMud.Models.Logging
         public string SelectedLogContent { get; set; }
 
         
-        [Display(Name = "Selected Channel:")]
+        [Display(Name = "Selected Channel:", Description = "Logs channels are named by purpose and function.")]
         public string SelectedLog { get; set; }
     }
 }

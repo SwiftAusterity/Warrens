@@ -6,6 +6,9 @@ using System.Web.Script.Serialization;
 
 namespace NetMud.Data.LookupData
 {
+    /// <summary>
+    /// Single node for a dimensional model
+    /// </summary>
     [Serializable]
     public class DimensionalModelNode : IDimensionalModelNode
     {
@@ -25,7 +28,7 @@ namespace NetMud.Data.LookupData
         public DamageType Style { get; set; }
 
         [JsonProperty("CompositionId")]
-        private long _compositionId { get; set; }
+        private BackingDataCacheKey _compositionId { get; set; }
 
         /// <summary>
         /// Material composition of the node
@@ -40,7 +43,7 @@ namespace NetMud.Data.LookupData
             }
             set
             {
-                _compositionId = value.ID;
+                _compositionId = new BackingDataCacheKey(value);
             }
         }
     }

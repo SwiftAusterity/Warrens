@@ -7,6 +7,7 @@ using NetMud.Utility;
 using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
 using NetMud.DataStructure.SupportingClasses;
+using NetMud.Data.Lexical;
 
 namespace NutMud.Commands.Rendering
 {
@@ -15,7 +16,7 @@ namespace NutMud.Commands.Rendering
     /// </summary>
     [CommandKeyword("look", false)]
     [CommandPermission(StaffRank.Player)]
-    [CommandParameter(CommandUsage.Subject, typeof(ILookable), new CacheReferenceType[] { CacheReferenceType.Entity }, true )]
+    [CommandParameter(CommandUsage.Subject, typeof(ILookable), new CacheReferenceType[] { CacheReferenceType.Entity }, true)]
     [CommandRange(CommandRangeType.Touch, 0)]
     public class Look : CommandPartial
     {
@@ -34,29 +35,41 @@ namespace NutMud.Commands.Rendering
         {
             var sb = new List<string>();
 
-            //Just do a look on the room
+            //Just do a blank execution as the channel will handle doing the room updates
             if (Subject == null)
-                sb.AddRange(OriginLocation.RenderToLook(Actor));
-            else
             {
-                var lookTarget = (ILookable)Subject;
-                sb.AddRange(lookTarget.RenderToLook(Actor));
+                //sb.AddRange(OriginLocation.CurrentLocation.RenderToLook(Actor));
+
+                var blankMessenger = new MessageCluster(new Message(MessagingType.Visible, new Occurrence() { Strength = 999 }) { Override = new string[] { "You observe your surroundings." } });
+
+                blankMessenger.ExecuteMessaging(Actor, (IEntity)Subject, null, OriginLocation.CurrentLocation, null);
+                return;
             }
 
-            var toActor = new Message(MessagingType.Visible, 1);
-            toActor.Override = sb;
+            var lookTarget = (ILookable)Subject;
 
-            var toOrigin = new Message(MessagingType.Visible, 5);
-            toOrigin.Override = new string[] { "$A$ looks at $T$." };
+            var toActor = new Message(MessagingType.Visible, lookTarget.RenderToLook(Actor))
+            {
+                Override = sb
+            };
 
-            var toSubject = new Message(MessagingType.Visible, 1);
-            toSubject.Override = new string[] { "$A$ looks at $T$." };
+            var toOrigin = new Message(MessagingType.Visible, new Occurrence() { Strength = 5 })
+            {
+                Override = new string[] { "$A$ looks at $T$." }
+            };
 
-            var messagingObject = new MessageCluster(toActor);
-            messagingObject.ToOrigin = new List<IMessage> { toOrigin };
-            messagingObject.ToSubject = new List<IMessage> { toSubject };
+            var toSubject = new Message(MessagingType.Visible, new Occurrence() { Strength = 1 })
+            {
+                Override = new string[] { "$A$ looks at $T$." }
+            };
 
-            messagingObject.ExecuteMessaging(Actor, (IEntity)Subject, null, OriginLocation, null);
+            var messagingObject = new MessageCluster(toActor)
+            {
+                ToOrigin = new List<IMessage> { toOrigin },
+                ToSubject = new List<IMessage> { toSubject }
+            };
+
+            messagingObject.ExecuteMessaging(Actor, (IEntity)Subject, null, OriginLocation.CurrentLocation, null);
         }
 
         /// <summary>
@@ -65,10 +78,11 @@ namespace NutMud.Commands.Rendering
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            var sb = new List<string>();
-
-            sb.Add("Valid Syntax: look");
-            sb.Add("look &lt;target&gt;".PadWithString(14, "&nbsp;", true));
+            var sb = new List<string>
+            {
+                "Valid Syntax: look",
+                "look &lt;target&gt;".PadWithString(14, "&nbsp;", true)
+            };
 
             return sb;
         }
@@ -76,7 +90,7 @@ namespace NutMud.Commands.Rendering
         /// <summary>
         /// The custom body of help text
         /// </summary>
-        public override string HelpText
+        public override MarkdownString HelpText
         {
             get
             {

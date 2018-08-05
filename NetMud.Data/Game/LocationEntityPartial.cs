@@ -1,17 +1,81 @@
-﻿using NetMud.DataStructure.Base.Entity;
+﻿using NetMud.DataAccess.Cache;
+using NetMud.DataStructure.Base.Entity;
+using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Base.World;
 using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataStructure.Behaviors.System;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
-using System;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Game
 {
+    /// <summary>
+    /// Partial template for live Location entities
+    /// </summary>
     public abstract class LocationEntityPartial : EntityPartial, ILocation
     {
+        /// <summary>
+        /// The name of the object in the data template
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public override string DataTemplateName
+        {
+            get
+            {
+                return DataTemplate<ILocationData>()?.Name;
+            }
+        }
+
+        /// <summary>
+        /// The backing data for this entity
+        /// </summary>
+        public override T DataTemplate<T>()
+        {
+            return (T)BackingDataCache.Get(new BackingDataCacheKey(typeof(ILocationData), DataTemplateId));
+        }
+
+        /// <summary>
+        /// Current base humidity
+        /// </summary>
+        public virtual int Humidity { get; set; }
+
+        /// <summary>
+        /// Base temperature
+        /// </summary>
+        public virtual int Temperature { get; set; }
+
+        [JsonProperty("NaturalResources")]
+        private IDictionary<BackingDataCacheKey, int> _naturalResources { get; set; }
+
+        /// <summary>
+        /// Collection of model section name to material composition mappings
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public IDictionary<INaturalResource, int> NaturalResources
+        {
+            get
+            {
+                if (_naturalResources != null)
+                    return _naturalResources.ToDictionary(k => BackingDataCache.Get<INaturalResource>(k.Key), k => k.Value);
+
+                return null;
+            }
+            set
+            {
+                if (value == null)
+                    return;
+
+                _naturalResources = value.ToDictionary(k => new BackingDataCacheKey(k.Key), k => k.Value);
+            }
+        }
 
         #region Container
         /// <summary>
@@ -73,7 +137,7 @@ namespace NetMud.Data.Game
         /// <returns>errors</returns>
         public string MoveInto<T>(T thing)
         {
-            return MoveInto<T>(thing, string.Empty);
+            return MoveInto(thing, string.Empty);
         }
 
         /// <summary>
@@ -94,9 +158,11 @@ namespace NetMud.Data.Game
                 if (Contents.Contains(obj, containerName))
                     return "That is already in the container";
 
+                if (!obj.TryMoveInto(this))
+                    return "Unable to move into that container.";
+
                 Contents.Add(obj, containerName);
-                obj.InsideOf = this;
-                this.UpsertToLiveWorldCache();
+                UpsertToLiveWorldCache();
 
                 return string.Empty;
             }
@@ -108,9 +174,11 @@ namespace NetMud.Data.Game
                 if (MobilesInside.Contains(obj, containerName))
                     return "That is already in the container";
 
+                if (!obj.TryMoveInto(this))
+                    return "Unable to move into that container.";
+
                 MobilesInside.Add(obj, containerName);
-                obj.InsideOf = this;
-                this.UpsertToLiveWorldCache();
+                UpsertToLiveWorldCache();
 
                 return string.Empty;
             }
@@ -126,7 +194,7 @@ namespace NetMud.Data.Game
         /// <returns>errors</returns>
         public string MoveFrom<T>(T thing)
         {
-            return MoveFrom<T>(thing, string.Empty);
+            return MoveFrom(thing, string.Empty);
         }
 
         /// <summary>
@@ -147,13 +215,12 @@ namespace NetMud.Data.Game
                 if (!Contents.Contains(obj, containerName))
                     return "That is not in the container";
 
+                obj.TryMoveInto(null);
                 Contents.Remove(obj, containerName);
-                obj.InsideOf = null;
-                this.UpsertToLiveWorldCache();
+                UpsertToLiveWorldCache();
 
                 return string.Empty;
             }
-
 
             if (implimentedTypes.Contains(typeof(IMobile)))
             {
@@ -162,9 +229,9 @@ namespace NetMud.Data.Game
                 if (!MobilesInside.Contains(obj, containerName))
                     return "That is not in the container";
 
+                obj.TryMoveInto(null);
                 MobilesInside.Remove(obj, containerName);
-                obj.InsideOf = null;
-                this.UpsertToLiveWorldCache();
+                UpsertToLiveWorldCache();
 
                 return string.Empty;
             }
@@ -172,6 +239,13 @@ namespace NetMud.Data.Game
             return "Invalid type to move from container.";
         }
         #endregion
+
+        public IEnumerable<IPathway> GetPathways(bool inward = false)
+        {
+            return LiveCache.GetAll<IPathway>().Where(path => path.Destination != null
+                                                            && path.Origin != null
+                                                            && (path.Origin.Equals(this) || (inward && path.Destination.Equals(this))));
+        }
 
         /// <summary>
         /// Get the surrounding locations based on a strength radius
@@ -181,48 +255,72 @@ namespace NetMud.Data.Game
         public virtual IEnumerable<ILocation> GetSurroundings(int strength)
         {
             var radiusLocations = new List<ILocation>();
+            var paths = GetPathways();
 
-            //TODO
+            //If we don't have any paths out what can we even do
+            if (paths.Count() == 0)
+                return radiusLocations;
+
+            var currentRadius = 0;
+            while (currentRadius <= strength && paths.Count() > 0)
+            {
+                var currentLocsSet = paths.Select(path => path.Destination);
+
+                if (currentLocsSet.Count() == 0)
+                    break;
+
+                radiusLocations.AddRange(currentLocsSet);
+                paths = currentLocsSet.SelectMany(ro => ro.GetPathways());
+
+                currentRadius++;
+            }
 
             return radiusLocations;
         }
 
-        public virtual int Humidity { get; set; }
+        /// <summary>
+        /// Get the visibile celestials. Depends on luminosity, viewer perception and celestial positioning
+        /// </summary>
+        /// <param name="viewer">Whom is looking</param>
+        /// <returns>What celestials are visible</returns>
+        public abstract IEnumerable<ICelestial> GetVisibileCelestials(IEntity viewer);
 
-        public virtual int Temperature { get; set; }
-
+        /// <summary>
+        /// "Functional" Humiditiy
+        /// </summary>
+        /// <returns></returns>
         public virtual int EffectiveHumidity()
         {
             //TODO: More stuff
             return Humidity;
         }
 
-        public virtual int EffectiveCurrentTemperature()
+        /// <summary>
+        /// Functional temperature
+        /// </summary>
+        /// <returns></returns>
+        public virtual int EffectiveTemperature()
         {
             //TODO: More Stuff
             return Temperature;
         }
 
+        /// <summary>
+        /// Are we out doors?
+        /// </summary>
+        /// <returns>if we are outside</returns>
         public virtual bool IsOutside()
         {
             return false;
         }
 
+        /// <summary>
+        /// Get the biome
+        /// </summary>
+        /// <returns>the biome</returns>
         public virtual Biome GetBiome()
         {
             return Biome.Fabricated;
-        }
-
-        public Dictionary<Tuple<long, long, long>, Tuple<INaturalResource, int>> NaturalResources
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
         }
     }
 }

@@ -1,8 +1,5 @@
 ﻿@using NetMud.Models
 @model LoginViewModel
-@{
-    ViewBag.Title = "Log in";
-}
 
 <div class="row">
     <div class="col-md-8">
@@ -10,32 +7,23 @@
             @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
                 @Html.AntiForgeryToken()
-                <h4>Use a local account to log in.</h4>
+                <h4>Log in or @Html.ActionLink("register a new account", "Register") to get started.</h4>
                 <hr />
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                <div class="form-group one-column">
+                <div class="form-group row">
                     @Html.EditorFor(e => e.Email)
                 </div>
-                <div class="form-group one-column">
+                <div class="form-group row">
                     @Html.EditorFor(e => e.Password)
                 </div>
-                <div class="form-group one-column">
+                <div class="form-group row">
                     @Html.EditorFor(e => e.RememberMe)
                 </div>
-                @Html.Partial("SubmitButton", "Login")
-                <p>
-                    @Html.ActionLink("Register as a new user", "Register")
-                </p>
-                @* Enable this once you have account confirmation enabled for password reset functionality
-                    <p>
-                        @Html.ActionLink("Forgot your password?", "ForgotPassword")
-                    </p>*@
+                @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Login", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Home", IncludeCancel = false })
+                <div class="form-group row">
+                    @Html.ActionLink("Forgot your password?", "ForgotPassword")
+                </div>
             }
-        </section>
-    </div>
-    <div class="col-md-4">
-        <section id="socialLoginForm">
-            @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
         </section>
     </div>
 </div>

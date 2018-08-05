@@ -1,60 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using NetMud.DataStructure.SupportingClasses;
 
 namespace NetMud.DataStructure.Base.System
 {
     /// <summary>
     /// Framework for Database objects
     /// </summary>
-    public interface IData : IFileStored, IComparable<IData>, IEquatable<IData>
+    public interface IData : IFileStored, ILiveInCache
     {
         /// <summary>
-        /// Unique, iterative ID for this entry
-        /// </summary>
-        long ID { get; set; }
-
-        /// <summary>
-        /// When this entry was first created
-        /// </summary>
-        DateTime Created { get; set; }
-
-        /// <summary>
-        /// The last time this entry was revised
-        /// </summary>
-        DateTime LastRevised { get; set; }
-
-        /// <summary>
-        /// The name/keyword for this entry
-        /// </summary>
-        string Name { get; set; }
-
-        /// <summary>
-        /// Gets the errors for data fitness
-        /// </summary>
-        /// <returns>a bunch of text saying how awful your data is</returns>
-        IList<string> FitnessReport();
-
-        /// <summary>
-        /// Does this data have fitness problems?
-        /// </summary>
-        bool FitnessProblems { get; }
-
-        /// <summary>
-        /// Create a new db entry
-        /// </summary>
-        /// <returns>the new, filled db object</returns>
-        IData Create();
-
-        /// <summary>
-        /// Remove this entry from the database permenantly
+        /// Remove this entry perma
         /// </summary>
         /// <returns>success status</returns>
-        bool Remove();
+        bool Remove(IAccount remover, StaffRank creatorRank);
 
         /// <summary>
-        /// Update this entry to the db
+        /// Update this entry
         /// </summary>
-        /// <returns></returns>
-        bool Save();
+        /// <returns>success status</returns>
+        bool Save(IAccount editor, StaffRank creatorRank);
+
+        /// <summary>
+        /// Update this entry by the system
+        /// </summary>
+        /// <returns>success status</returns>
+        bool SystemSave();
     }
 }

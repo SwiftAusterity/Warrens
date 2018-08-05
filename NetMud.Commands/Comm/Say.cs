@@ -1,9 +1,9 @@
 ﻿using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
+using NetMud.Data.Lexical;
 using NetMud.DataStructure.SupportingClasses;
 using NetMud.Utility;
 using NutMud.Commands.Attributes;
-using System;
 using System.Collections.Generic;
 
 namespace NetMud.Commands.Comm
@@ -28,23 +28,30 @@ namespace NetMud.Commands.Comm
         /// </summary>
         public override void Execute()
         {
-            var sb = new List<string>();
+            var sb = new List<string>
+            {
+                string.Format("You say '{0}'", Subject)
+            };
 
-            sb.Add(String.Format("You say '{0}'", Subject));
+            var toActor = new Message(MessagingType.Audible, new Occurrence() { Strength = 1 })
+            {
+                Override = sb
+            };
 
-            var toActor = new Message(MessagingType.Audible, 1);
-            toActor.Override = sb;
+            var areaString = new string[] { string.Format("$A$ says '{0}'", Subject) };
 
-            var areaString = new string[] { String.Format("$A$ says '{0}'", Subject) };
-
-            var toArea = new Message(MessagingType.Audible, 30);
-            toArea.Override = areaString;
+            var toArea = new Message(MessagingType.Audible, new Occurrence() { Strength = 30 })
+            {
+                Override = areaString
+            };
 
             //TODO: language outputs
-            var messagingObject = new MessageCluster(toActor);
-            messagingObject.ToOrigin = new List<IMessage> { toArea };
+            var messagingObject = new MessageCluster(toActor)
+            {
+                ToOrigin = new List<IMessage> { toArea }
+            };
 
-            messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation, null);
+            messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation.CurrentLocation, null);
         }
 
         /// <summary>
@@ -53,10 +60,11 @@ namespace NetMud.Commands.Comm
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            var sb = new List<string>();
-
-            sb.Add("Valid Syntax: say &lt;text&gt;");
-            sb.Add("speak &lt;text&gt;".PadWithString(14, "&nbsp;", true));
+            var sb = new List<string>
+            {
+                "Valid Syntax: say &lt;text&gt;",
+                "speak &lt;text&gt;".PadWithString(14, "&nbsp;", true)
+            };
 
             return sb;
         }
@@ -64,7 +72,7 @@ namespace NetMud.Commands.Comm
         /// <summary>
         /// The custom body of help text
         /// </summary>
-        public override string HelpText
+        public override MarkdownString HelpText
         {
             get
             {

@@ -5,7 +5,7 @@ namespace NetMud.DataStructure.Base.System
     /// <summary>
     /// Framework for Lookup Data
     /// </summary>
-    public interface ILookupData : IData, IHelpful
+    public interface ILookupData : IKeyedData, IHelpful
     {
     }
 }

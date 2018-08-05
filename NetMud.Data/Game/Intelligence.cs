@@ -1,15 +1,19 @@
-﻿using NetMud.Data.System;
+﻿using NetMud.Data.Lexical;
+using NetMud.Data.System;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Entity;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Existential;
-using NetMud.DataStructure.Behaviors.Rendering;
+using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.SupportingClasses;
+using NetMud.Gaia.Geographical;
 using NetMud.Utility;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Game
 {
@@ -22,15 +26,22 @@ namespace NetMud.Data.Game
         /// <summary>
         /// The name of the object in the data template
         /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
         public override string DataTemplateName
         {
             get
             {
-                if (DataTemplate<INonPlayerCharacter>() == null)
-                    return String.Empty;
-
-                return DataTemplate<INonPlayerCharacter>().Name;
+                return DataTemplate<INonPlayerCharacter>()?.Name;
             }
+        }
+
+        /// <summary>
+        /// The backing data for this entity
+        /// </summary>
+        public override T DataTemplate<T>()
+        {
+            return (T)BackingDataCache.Get(new BackingDataCacheKey(typeof(INonPlayerCharacter), DataTemplateId));
         }
 
         /// <summary>
@@ -49,7 +60,7 @@ namespace NetMud.Data.Game
         public Intelligence(INonPlayerCharacter backingStore)
         {
             Inventory = new EntityContainer<IInanimate>();
-            DataTemplateId = backingStore.ID;
+            DataTemplateId = backingStore.Id;
             SpawnNewInWorld();
         }
 
@@ -58,10 +69,10 @@ namespace NetMud.Data.Game
         /// </summary>
         /// <param name="backingStore">the backing data</param>
         /// <param name="spawnTo">where to spawn this into</param>
-        public Intelligence(INonPlayerCharacter backingStore, IContains spawnTo)
+        public Intelligence(INonPlayerCharacter backingStore, IGlobalPosition spawnTo)
         {
             Inventory = new EntityContainer<IInanimate>();
-            DataTemplateId = backingStore.ID;
+            DataTemplateId = backingStore.Id;
             SpawnNewInWorld(spawnTo);
         }
 
@@ -79,19 +90,232 @@ namespace NetMud.Data.Game
             return new Tuple<int, int, int>(height, length, width);
         }
 
+        /// <summary>
+        /// Gets the actual vision modifier taking into account blindness and other factors
+        /// </summary>
+        /// <returns>the working modifier</returns>
+        public override Tuple<float, float> GetVisualRange()
+        {
+            var dT = DataTemplate<ICharacter>();
+            var returnTop = (float)dT.RaceData.VisionRange.Item1;
+            var returnBottom = (float)dT.RaceData.VisionRange.Item2;
+
+            //TODO: Check for blindess/magical type affects
+
+            return new Tuple<float, float>(returnTop, returnBottom);
+        }
+
+
+        /// <summary>
+        /// Get the current luminosity rating of the place you're in
+        /// </summary>
+        /// <returns>The current Luminosity</returns>
+        public override float GetCurrentLuminosity()
+        {
+            float lumins = 0;
+
+            foreach (var dude in Inventory.EntitiesContained())
+                lumins += dude.GetCurrentLuminosity();
+
+            //TODO: Magical light, equipment, make inventory less bright depending on where it is
+
+            return lumins;
+        }
+
         #region Rendering
         /// <summary>
-        /// Render this to a look command (what something sees when it 'look's at this
+        /// Render this in a short descriptive style
         /// </summary>
+        /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public override IEnumerable<string> RenderToLook(IEntity actor)
+        public override IOccurrence GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes)
         {
-            var sb = new List<string>();
-            var ch = DataTemplate<INonPlayerCharacter>(); ;
+            if (sensoryTypes == null || sensoryTypes.Count() == 0)
+                sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
 
-            sb.Add(string.Format("This is {0}", ch.FullName()));
+            //Self becomes the first sense in the list
+            IOccurrence me = null;
+            foreach (var sense in sensoryTypes)
+            {
+                switch (sense)
+                {
+                    case MessagingType.Audible:
+                        if (!IsAudibleTo(viewer))
+                            continue;
 
-            return sb;
+                        if (me == null)
+                            me = GetSelf(sense);
+
+                        var aDescs = GetAudibleDescriptives(viewer);
+
+                        me.TryModify(aDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
+
+                        var collectiveSounds = new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you");
+
+                        var uberSounds = collectiveSounds.TryModify(LexicalType.Verb, GrammaticalType.Verb, "hear");
+                        uberSounds.TryModify(aDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
+
+                        foreach (var desc in aDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
+                        {
+                            var newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase);
+                            newDesc.TryModify(desc.Event.Modifiers);
+
+                            newDesc.TryModify(LexicalType.Pronoun, GrammaticalType.IndirectObject, "it")
+                                    .TryModify(LexicalType.Conjunction, GrammaticalType.Descriptive, "from");
+
+                            uberSounds.TryModify(newDesc);
+                        }
+
+                        if (uberSounds.Modifiers.Any(mod => mod.Role == GrammaticalType.DirectObject))
+                            me.TryModify(collectiveSounds);
+                        break;
+                    case MessagingType.Olefactory:
+                        if (!IsSmellableTo(viewer))
+                            continue;
+
+                        if (me == null)
+                            me = GetSelf(sense);
+
+                        var oDescs = GetSmellableDescriptives(viewer);
+
+                        me.TryModify(oDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
+
+                        var uberSmells = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "smell");
+                        uberSmells.TryModify(oDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
+
+                        foreach (var desc in oDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
+                        {
+                            var newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase);
+                            newDesc.TryModify(desc.Event.Modifiers);
+
+                            newDesc.TryModify(LexicalType.Pronoun, GrammaticalType.IndirectObject, "it")
+                                        .TryModify(LexicalType.Conjunction, GrammaticalType.Descriptive, "from");
+
+                            uberSmells.TryModify(newDesc);
+                        }
+
+                        if (uberSmells.Modifiers.Any(mod => mod.Role == GrammaticalType.DirectObject))
+                            me.TryModify(uberSmells);
+                        break;
+                    case MessagingType.Psychic:
+                        if (!IsSensibleTo(viewer))
+                            continue;
+
+                        if (me == null)
+                            me = GetSelf(sense);
+
+                        var pDescs = GetPsychicDescriptives(viewer);
+
+                        me.TryModify(pDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
+
+                        var collectivePsy = new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you");
+
+                        var uberPsy = collectivePsy.TryModify(LexicalType.Verb, GrammaticalType.Verb, "sense");
+                        uberPsy.TryModify(pDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
+
+                        foreach (var desc in pDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
+                        {
+                            var newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase);
+                            newDesc.TryModify(desc.Event.Modifiers);
+
+                            newDesc.TryModify(LexicalType.Pronoun, GrammaticalType.IndirectObject, "it")
+                                        .TryModify(LexicalType.Conjunction, GrammaticalType.Descriptive, "from");
+
+                            uberPsy.TryModify(newDesc);
+                        }
+
+                        if (uberPsy.Modifiers.Any(mod => mod.Role == GrammaticalType.DirectObject))
+                            me.TryModify(collectivePsy);
+                        break;
+                    case MessagingType.Taste:
+                        if (!IsTastableTo(viewer))
+                            continue;
+
+                        if (me == null)
+                            me = GetSelf(sense);
+
+                        var taDescs = GetTasteDescriptives(viewer);
+
+                        me.TryModify(taDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
+
+                        var uberTaste = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "taste");
+                        uberTaste.TryModify(taDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
+
+                        foreach (var desc in taDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
+                        {
+                            var newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase);
+                            newDesc.TryModify(desc.Event.Modifiers);
+
+                            newDesc.TryModify(LexicalType.Pronoun, GrammaticalType.IndirectObject, "it");
+
+                            uberTaste.TryModify(newDesc);
+                        }
+
+                        if (uberTaste.Modifiers.Any(mod => mod.Role == GrammaticalType.DirectObject))
+                            me.TryModify(uberTaste);
+                        break;
+                    case MessagingType.Tactile:
+                        if (!IsTouchableTo(viewer))
+                            continue;
+
+                        if (me == null)
+                            me = GetSelf(sense);
+
+                        var tDescs = GetSmellableDescriptives(viewer);
+
+                        me.TryModify(tDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
+
+                        var uberTouch = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "feel");
+                        uberTouch.TryModify(tDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
+
+                        foreach (var desc in tDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
+                        {
+                            var newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase);
+                            newDesc.TryModify(desc.Event.Modifiers);
+
+                            newDesc.TryModify(LexicalType.Pronoun, GrammaticalType.IndirectObject, "it");
+
+                            uberTouch.TryModify(newDesc);
+                        }
+
+                        if (uberTouch.Modifiers.Any(mod => mod.Role == GrammaticalType.DirectObject))
+                            me.TryModify(uberTouch);
+                        break;
+                    case MessagingType.Visible:
+                        if (!IsVisibleTo(viewer))
+                            continue;
+
+                        if (me == null)
+                            me = GetSelf(sense);
+
+                        var vDescs = GetVisibleDescriptives(viewer);
+
+                        me.TryModify(vDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
+
+                        var uberSight = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "appears");
+                        uberSight.TryModify(vDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
+
+                        foreach (var desc in vDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
+                        {
+                            var newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase);
+                            newDesc.TryModify(desc.Event.Modifiers);
+
+                            newDesc.TryModify(LexicalType.Pronoun, GrammaticalType.IndirectObject, "it");
+
+                            uberSight.TryModify(newDesc);
+                        }
+
+                        if (uberSight.Modifiers.Any(mod => mod.Role == GrammaticalType.DirectObject))
+                            me.TryModify(uberSight);
+                        break;
+                }
+            }
+
+            //If we get through that and me is still null it means we can't detect anything at all
+            if (me == null)
+                return new Occurrence(sensoryTypes[0]);
+
+            return me;
         }
         #endregion
 
@@ -144,7 +368,7 @@ namespace NetMud.Data.Game
         /// <returns>errors</returns>
         public string MoveInto<T>(T thing)
         {
-            return MoveInto<T>(thing, string.Empty);
+            return MoveInto(thing, string.Empty);
         }
 
         /// <summary>
@@ -166,8 +390,8 @@ namespace NetMud.Data.Game
                     return "That is already in the container";
 
                 Inventory.Add(obj, containerName);
-                obj.InsideOf = this;
-                this.UpsertToLiveWorldCache();
+                obj.TryMoveInto(this);
+                UpsertToLiveWorldCache();
                 return string.Empty;
             }
 
@@ -182,7 +406,7 @@ namespace NetMud.Data.Game
         /// <returns>errors</returns>
         public string MoveFrom<T>(T thing)
         {
-            return MoveFrom<T>(thing, string.Empty);
+            return MoveFrom(thing, string.Empty);
         }
 
         /// <summary>
@@ -204,8 +428,8 @@ namespace NetMud.Data.Game
                     return "That is not in the container";
 
                 Inventory.Remove(obj, containerName);
-                obj.InsideOf = null;
-                this.UpsertToLiveWorldCache();
+                obj.TryMoveInto(null);
+                UpsertToLiveWorldCache();
                 return string.Empty;
             }
 
@@ -219,60 +443,33 @@ namespace NetMud.Data.Game
         /// </summary>
         public override void SpawnNewInWorld()
         {
-            throw new NotImplementedException("NPCs can't spawn to nothing");
-        }
+            if (CurrentLocation == null)
+                throw new NotImplementedException("NPCs can't spawn to nothing");
 
-        /// <summary>
-        /// Spawn a new instance of this entity into the live world in a set position
-        /// </summary>
-        /// <param name="position">x,y,z coordinates to spawn into</param>
-        public override void SpawnNewInWorld(IGlobalPosition position)
-        {
-            //We can't even try this until we know if the data is there
-            if (DataTemplate<INonPlayerCharacter>() == null)
-                throw new InvalidOperationException("Missing backing data store on NPC spawn event.");
-
-            var bS = DataTemplate<INonPlayerCharacter>();
-
-            BirthMark = LiveCache.GetUniqueIdentifier(bS);
-            Keywords = new string[] { bS.Name.ToLower() };
-            Birthdate = DateTime.Now;
-
-            Inventory = new EntityContainer<IInanimate>();
-
-            this.Reposition(position, null);
-
-            LiveCache.Add(this);
+            SpawnNewInWorld(CurrentLocation);
         }
 
         /// <summary>
         /// Spawn this new into the live world into a specified container
         /// </summary>
         /// <param name="spawnTo">the location/container this should spawn into</param>
-        public override void SpawnNewInWorld(IContains spawnTo)
+        public override void SpawnNewInWorld(IGlobalPosition position)
         {
-            //We can't even try this until we know if the data is there
-            if (DataTemplate<INonPlayerCharacter>() == null)
-                throw new InvalidOperationException("Missing backing data store on NPC spawn event.");
+            var bS = DataTemplate<INonPlayerCharacter>() ?? throw new InvalidOperationException("Missing backing data store on NPC spawn event.");
 
-            var bS = DataTemplate<INonPlayerCharacter>(); ;
+            CurrentLocation = position ?? throw new NotImplementedException("NPCs can't spawn to nothing");
 
-            BirthMark = LiveCache.GetUniqueIdentifier(bS);
             Keywords = new string[] { bS.Name.ToLower() };
-            Birthdate = DateTime.Now;
 
-            if (spawnTo == null)
+            if (String.IsNullOrWhiteSpace(BirthMark))
             {
-                throw new NotImplementedException("NPCs can't spawn to nothing");
+                BirthMark = LiveCache.GetUniqueIdentifier(bS);
+                Birthdate = DateTime.Now;
             }
 
-            InsideOf = spawnTo;
+            position.CurrentLocation.MoveInto<IIntelligence>(this);
 
-            spawnTo.MoveInto<IIntelligence>(this);
-
-            Inventory = new EntityContainer<IInanimate>();
-
-            LiveCache.Add(this);
+            UpsertToLiveWorldCache(true);
         }
         #endregion
     }

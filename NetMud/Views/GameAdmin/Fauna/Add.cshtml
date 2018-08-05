@@ -1,50 +1,47 @@
 ﻿@model NetMud.Models.Admin.AddEditFaunaViewModel
-@{
-    ViewBag.Title = "Add New Fauna";
 
-    <section id="newCharacterForm">
-        @using (Html.BeginForm("Add", "Fauna", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-        {
-            @Html.AntiForgeryToken()
-            <hr />
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            <div class="form-group two-column">
-                @Html.EditorFor(e => e.Name)
-                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Race", "Race", Model.ValidRaces, -1))
-            </div>
+<section id="newCharacterForm">
+    @using (Html.BeginForm("Add", "Fauna", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group row">
+            @Html.EditorFor(e => e.Name, new { columnCount = 3 })
+            @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Race", "Race", Model.ValidRaces, -1))
+        </div>
 
-            <div class="form-group three-column">
-                @Html.EditorFor(e => e.Rarity)
-                @Html.EditorFor(e => e.AmountMultiplier)
-                @Html.EditorFor(e => e.PuissanceVariance)
-            </div>
-            <div class="form-group two-column">
-                @Html.EditorFor(m => m.FemaleRatio)
-                @Html.EditorFor(m => m.PopulationHardCap)
-            </div>
-            <div class="form-group two-column">
-                @Html.EditorFor(m => m.TemperatureRangeLow)
-                @Html.EditorFor(m => m.TemperatureRangeHigh)
-            </div>
-            <div class="form-group two-column">
-                @Html.EditorFor(m => m.HumidityRangeLow)
-                @Html.EditorFor(m => m.HumidityRangeHigh)
-            </div>
-            <div class="form-group two-column">
-                @Html.EditorFor(m => m.ElevationRangeLow)
-                @Html.EditorFor(m => m.ElevationRangeHigh)
-            </div>
+        <div class="form-group row">
+            @Html.EditorFor(e => e.Rarity, new { columnCount = 3 })
+            @Html.EditorFor(e => e.AmountMultiplier, new { columnCount = 3 })
+            @Html.EditorFor(e => e.PuissanceVariance, new { columnCount = 3 })
+        </div>
+        <div class="form-group row">
+            @Html.EditorFor(m => m.FemaleRatio, new { columnCount = 3 })
+            @Html.EditorFor(m => m.PopulationHardCap, new { columnCount = 3 })
+        </div>
+        <div class="form-group row">
+            @Html.EditorFor(m => m.TemperatureRangeLow, new { columnCount = 3 })
+            @Html.EditorFor(m => m.TemperatureRangeHigh, new { columnCount = 3 })
+        </div>
+        <div class="form-group row">
+            @Html.EditorFor(m => m.HumidityRangeLow, new { columnCount = 3 })
+            @Html.EditorFor(m => m.HumidityRangeHigh, new { columnCount = 3 })
+        </div>
+        <div class="form-group row">
+            @Html.EditorFor(m => m.ElevationRangeLow, new { columnCount = 3 })
+            @Html.EditorFor(m => m.ElevationRangeHigh, new { columnCount = 3 })
+        </div>
 
-            @Html.Partial("~/Views/GameAdmin/Fauna/OccursIn.cshtml", Model)
+        @Html.Partial("~/Views/GameAdmin/Fauna/OccursIn.cshtml", Model)
 
-            <div class="form-group one-column">
-                @Html.EditorFor(e => e.HelpText)
-            </div>
-            @Html.Partial("SubmitButton", "Create")
+        <div class="form-group row">
+            @Html.EditorFor(e => e.HelpText)
+        </div>
+        @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Create", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Fauna", IncludeCancel = true })
+    }
+</section>
 
-        }
-    </section>
-}
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

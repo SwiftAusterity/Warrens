@@ -1,9 +1,11 @@
 ﻿using NetMud.Data.System;
 using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.Script.Serialization;
 
 namespace NetMud.Data.EntityBackingData
 {
@@ -16,7 +18,23 @@ namespace NetMud.Data.EntityBackingData
         /// <summary>
         /// The system type for the entity this attaches to
         /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
         public abstract Type EntityClass { get; }
+
+        /// <summary>
+        /// keywords this entity is referrable by in the world by the parser
+        /// </summary>
+        [JsonIgnore]
+        [ScriptIgnore]
+        internal string[] _keywords;
+
+        /// <summary>
+        /// keywords this entity is referrable by in the world by the parser
+        /// </summary>
+        [JsonIgnore]
+        [ScriptIgnore]
+        public abstract string[] Keywords { get; set; }
 
         /// <summary>
         /// Affects to add to a live entity when it is spawned

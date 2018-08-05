@@ -1,38 +1,34 @@
 ﻿@model NetMud.Models.Admin.AddEditRoomDataViewModel
-@{
-    ViewBag.Title = "Add New Room";
 
-    <section id="newRoomForm">
-        @using (Html.BeginForm("Add", "Room", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-        {
-            @Html.AntiForgeryToken()
-            <hr />
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            <div class="form-group two-column">
-                @Html.EditorFor(e => e.Name)
-                @Html.LabelFor(m => m.Zone, new { @class = "control-label" })
-                <div>
-                    @Html.DropDownList("Zone", Model.ValidZones.Select(rl =>
-                                            new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
-                                             , htmlAttributes: new { id = "Zone", @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.Zone, "", new { @class = "text-danger" })
-                </div>
+<section id="newRoomForm">
+    @using (Html.BeginForm("Add", "Room", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group row">
+            <label for="Locale" class="col-sm-1 col-form-label">Locale</label>
+            <input type="text" id="Locale" name="Locale" disabled="disabled" title="Locale" value="@Model.Locale.Name" class="col-md-4" />
+        </div>
+        <div class="form-group row">
+            @Html.EditorFor(e => e.Name, new { columnCount = 3 })
+            @Html.DescriptiveLabelFor(m => m.Medium, new { @class = "col-sm-1 col-form-label" })
+            <div class="col-md-4">
+                @Html.DropDownList("Medium", Model.ValidMaterials.Select(rl =>
+                    new SelectListItem() { Text = rl.Name, Value = rl.Id.ToString() })
+                    , "Select One", htmlAttributes: new { id = "Medium", @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Medium, "", new { @class = "text-danger" })
             </div>
-            @Html.Partial("DimensionalEntityEditor", Model)
-            <div class="form-group one-column">
-                @Html.LabelFor(m => m.Medium, new { @class = "control-label" })
-                <div>
-                    @Html.DropDownList("Medium", Model.ValidMaterials.Select(rl =>
-                        new SelectListItem() { Text = rl.Name, Value = rl.ID.ToString() })
-                        , htmlAttributes: new { id = "Medium", @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.Medium, "", new { @class = "text-danger" })
-                </div>
-            </div>
-            
-            @Html.Partial("SubmitButton", "Create")
-        }
-    </section>
-}
+        </div>
+        <div class="clearfix"></div>
+        <h4>Dimensional Properties</h4>
+        <hr />
+        @Html.Partial("DimensionalEntityEditor", Model)
+
+        @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Create", CancelName = "Cancel", ModalWindow = true })
+    }
+</section>
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

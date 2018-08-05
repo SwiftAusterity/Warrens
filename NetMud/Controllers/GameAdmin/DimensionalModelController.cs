@@ -5,6 +5,7 @@ using NetMud.Data.LookupData;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Behaviors.System;
 using NetMud.Models.Admin;
 using System;
 using System.Linq;
@@ -14,6 +15,7 @@ using System.Web.Mvc;
 
 namespace NetMud.Controllers.GameAdmin
 {
+    [Authorize(Roles = "Admin,Builder")]
     public class DimensionalModelController : Controller
     {
         private ApplicationUserManager _userManager;
@@ -40,40 +42,59 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageDimensionalModelDataViewModel(BackingDataCache.GetAll<DimensionalModelData>());
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            var vModel = new ManageDimensionalModelDataViewModel(BackingDataCache.GetAll<DimensionalModelData>())
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
-            vModel.CurrentPageNumber = CurrentPageNumber;
-            vModel.ItemsPerPage = ItemsPerPage;
-            vModel.SearchTerms = SearchTerms;
+                CurrentPageNumber = CurrentPageNumber,
+                ItemsPerPage = ItemsPerPage,
+                SearchTerms = SearchTerms
+            };
 
             return View("~/Views/GameAdmin/DimensionalModel/Index.cshtml", vModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Remove(long ID, string authorize)
+        [Route(@"GameAdmin/DimensionalModel/Remove/{removeId?}/{authorizeRemove?}/{unapproveId?}/{authorizeUnapprove?}")]
+        public ActionResult Remove(long removeId = -1, string authorizeRemove = "", long unapproveId = -1, string authorizeUnapprove = "")
         {
             string message = string.Empty;
 
-            if (string.IsNullOrWhiteSpace(authorize) || !ID.ToString().Equals(authorize))
-                message = "You must check the proper authorize radio button first.";
-            else
+            if (!string.IsNullOrWhiteSpace(authorizeRemove) && removeId.ToString().Equals(authorizeRemove))
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<DimensionalModelData>(ID);
+                var obj = BackingDataCache.Get<IDimensionalModelData>(removeId);
 
                 if (obj == null)
                     message = "That does not exist";
-                else if (obj.Remove())
+                else if (obj.Remove(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                 {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveDimensionalModelData[" + ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveDimensionalModelData[" + removeId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Delete Successful.";
                 }
                 else
                     message = "Error; Removal failed.";
             }
+            else if (!string.IsNullOrWhiteSpace(authorizeUnapprove) && unapproveId.ToString().Equals(authorizeUnapprove))
+            {
+                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+                var obj = BackingDataCache.Get<IDimensionalModelData>(unapproveId);
+
+                if (obj == null)
+                    message = "That does not exist";
+                else if (obj.ChangeApprovalStatus(authedUser.GameAccount, authedUser.GetStaffRank(User), ApprovalState.Returned))
+                {
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - UnapproveDimensionalModelData[" + unapproveId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    message = "Unapproval Successful.";
+                }
+                else
+                    message = "Error; Unapproval failed.";
+            }
+            else
+                message = "You must check the proper remove or unapprove authorization radio button first.";
 
             return RedirectToAction("Index", new { Message = message });
         }
@@ -81,8 +102,10 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add()
         {
-            var vModel = new AddEditDimensionalModelDataViewModel();
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            var vModel = new AddEditDimensionalModelDataViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId())
+            };
 
             return View("~/Views/GameAdmin/DimensionalModel/Add.cshtml", vModel);
         }
@@ -107,29 +130,39 @@ namespace NetMud.Controllers.GameAdmin
 
                     newModel = new DimensionalModelData(fileContents, vModel.ModelType);
                 }
-                else if(vModel.ModelPlaneNames.Count(m => !String.IsNullOrEmpty(m)) == 11
+                else if(vModel.ModelPlaneNames.Count(m => !string.IsNullOrEmpty(m)) == 21
                     && vModel.CoordinateDamageTypes.Any(m => !m.Equals(0))) //can't have an entirely null typed model
                 {
                     //We're going to be cheaty and build a cDel string based on the arrays
                     var arrayString = new StringBuilder();
 
-                    var i = 11;
-                    foreach(var name in vModel.ModelPlaneNames)
+                    var i = 21;
+                    foreach(var name in vModel.ModelPlaneNames.Reverse())
                     {
                         arrayString.AppendLine(
-                            String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}"
+                            string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21}"
                                 , name
-                                , NetMud.Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 11 - 1]))
-                                , NetMud.Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 11 - 2]))
-                                , NetMud.Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 11 - 3]))
-                                , NetMud.Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 11 - 4]))
-                                , NetMud.Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 11 - 5]))
-                                , NetMud.Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 11 - 6]))
-                                , NetMud.Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 11 - 7]))
-                                , NetMud.Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 11 - 8]))
-                                , NetMud.Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 11 - 9]))
-                                , NetMud.Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 11 - 10]))
-                                , NetMud.Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 11 - 11]))
+                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 1]))
+                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 2]))
+                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 3]))
+                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 4]))
+                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 5]))
+                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 6]))
+                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 7]))
+                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 8]))
+                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 9]))
+                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 10]))
+                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 11]))
+                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 12]))
+                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 13]))
+                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 14]))
+                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 15]))
+                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 16]))
+                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 17]))
+                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 18]))
+                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 19]))
+                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 20]))
+                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 21]))
                             )
                         );
 
@@ -144,25 +177,24 @@ namespace NetMud.Controllers.GameAdmin
                 if (newModel != null)
                 {
                     newModel.Name = vModel.Name;
-                    newModel.HelpText = vModel.HelpText;
 
                     if (newModel.IsModelValid())
                     {
-                        if (newModel.Create() == null)
+                        if (newModel.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
                             message = "Error; Creation failed.";
                         else
                         {
-                            LoggingUtility.LogAdminCommandUsage("*WEB* - AddDimensionalModelData[" + newModel.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                            LoggingUtility.LogAdminCommandUsage("*WEB* - AddDimensionalModelData[" + newModel.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                             message = "Creation Successful.";
                         }
                     }
                     else
-                        message = "Invalid model file; Model files must contain 11 planes of a tag name followed by 11 rows of 11 nodes.";
+                        message = "Invalid model file; Model files must contain 21 planes of a tag name followed by 21 rows of 21 nodes.";
                 }
             }
             catch (Exception ex)
             {
-                LoggingUtility.LogError(ex);
+                LoggingUtility.LogError(ex, false);
                 message = "Error; Creation failed.";
             }
 
@@ -174,8 +206,10 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(long id)
         {
             string message = string.Empty;
-            var vModel = new AddEditDimensionalModelDataViewModel();
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            var vModel = new AddEditDimensionalModelDataViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId())
+            };
 
             var obj = BackingDataCache.Get<IDimensionalModelData>(id);
 
@@ -188,7 +222,6 @@ namespace NetMud.Controllers.GameAdmin
             vModel.DataObject = obj;
             vModel.Name = obj.Name;
             vModel.ModelType = obj.ModelType;
-            vModel.HelpText = obj.HelpText;
 
             return View("~/Views/GameAdmin/DimensionalModel/Edit.cshtml", vModel);
         }
@@ -211,29 +244,39 @@ namespace NetMud.Controllers.GameAdmin
             {
                 DimensionalModelData newModel = null;
                 
-                if (vModel.ModelPlaneNames.Count(m => !String.IsNullOrEmpty(m)) == 11
+                if (vModel.ModelPlaneNames.Count(m => !string.IsNullOrEmpty(m)) == 21
                     && vModel.CoordinateDamageTypes.Any(m => !m.Equals(0))) //can't have an entirely null typed model
                 {
                     //We're going to be cheaty and build a cDel string based on the arrays
                     var arrayString = new StringBuilder();
 
-                    var i = 11;
-                    foreach (var name in vModel.ModelPlaneNames)
+                    var i = 21;
+                    foreach (var name in vModel.ModelPlaneNames.Reverse())
                     {
                         arrayString.AppendLine(
-                            String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}"
+                            string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21}"
                                 , name
-                                , NetMud.Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 11 - 1]))
-                                , NetMud.Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 11 - 2]))
-                                , NetMud.Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 11 - 3]))
-                                , NetMud.Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 11 - 4]))
-                                , NetMud.Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 11 - 5]))
-                                , NetMud.Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 11 - 6]))
-                                , NetMud.Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 11 - 7]))
-                                , NetMud.Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 11 - 8]))
-                                , NetMud.Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 11 - 9]))
-                                , NetMud.Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 11 - 10]))
-                                , NetMud.Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 11 - 11]))
+                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 1]))
+                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 2]))
+                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 3]))
+                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 4]))
+                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 5]))
+                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 6]))
+                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 7]))
+                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 8]))
+                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 9]))
+                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 10]))
+                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 11]))
+                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 12]))
+                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 13]))
+                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 14]))
+                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 15]))
+                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 16]))
+                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 17]))
+                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 18]))
+                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 19]))
+                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 20]))
+                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 21]))
                             )
                         );
 
@@ -250,25 +293,24 @@ namespace NetMud.Controllers.GameAdmin
                     if (newModel.IsModelValid())
                     {
                         obj.Name = vModel.Name;
-                        obj.HelpText = vModel.HelpText;
                         obj.ModelType = newModel.ModelType;
                         obj.ModelPlanes = newModel.ModelPlanes;
 
-                        if (obj.Save())
+                        if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                         {
-                            LoggingUtility.LogAdminCommandUsage("*WEB* - EditDimensionalModelData[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                            LoggingUtility.LogAdminCommandUsage("*WEB* - EditDimensionalModelData[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                             message = "Edit Successful.";
                         }
                         else
                             message = "Error; Edit failed.";
                     }
                     else
-                        message = "Invalid model; Models must contain 11 planes of a tag name followed by 11 rows of 11 nodes.";
+                        message = "Invalid model; Models must contain 21 planes of a tag name followed by 21 rows of 21 nodes.";
                 }
             }
             catch (Exception ex)
             {
-                LoggingUtility.LogError(ex);
+                LoggingUtility.LogError(ex, false);
                 message = "Error; Creation failed.";
             }
 

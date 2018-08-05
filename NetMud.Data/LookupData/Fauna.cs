@@ -1,6 +1,10 @@
-﻿using NetMud.DataAccess.Cache;
+﻿using NetMud.Data.DataIntegrity;
+using NetMud.Data.Lexical;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.Behaviors.Existential;
+using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Linguistic;
+using NetMud.DataStructure.SupportingClasses;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -14,14 +18,27 @@ namespace NetMud.Data.LookupData
     [Serializable]
     public class Fauna : NaturalResourceDataPartial, IFauna
     {
+        /// <summary>
+        /// What is the % chance of generating a female instead of a male on birth
+        /// </summary>
+        [IntDataIntegrity("Female to male ratio must be greater than 0.", 1)]
+        public int FemaleRatio { get; set; }
+
+        /// <summary>
+        /// The absolute hard cap to natural population growth
+        /// </summary>
+        [IntDataIntegrity("Population Hard Cap must be greater than 0.", 1)]
+        public int PopulationHardCap { get; set; }
+
         [JsonProperty("Race")]
-        private long _race { get; set; }
+        private BackingDataCacheKey _race { get; set; }
 
         /// <summary>
         /// What we're spawning
         /// </summary>
         [JsonIgnore]
         [ScriptIgnore]
+        [NonNullableDataIntegrity("Race must be set.")]
         public IRace Race
         {
             get
@@ -30,52 +47,44 @@ namespace NetMud.Data.LookupData
             }
             set
             {
-                _race = value.ID;
+                _race = new BackingDataCacheKey(value);
             }
         }
 
         /// <summary>
-        /// What is the % chance of generating a female instead of a male on birth
+        /// Get the significant details of what needs approval
         /// </summary>
-        public int FemaleRatio { get; set; }
+        /// <returns>A list of strings</returns>
+        public override IDictionary<string, string> SignificantDetails()
+        {
+            var returnList = base.SignificantDetails();
 
+            returnList.Add("Race", Race.Name);
+            returnList.Add("Female Ratio", FemaleRatio.ToString());
+            returnList.Add("Population Cap", PopulationHardCap.ToString());
+
+            return returnList;
+        }
+
+        #region Rendering
         /// <summary>
-        /// The absolute hard cap to natural population growth
+        /// Render a natural resource collection to a viewer
         /// </summary>
-        public int PopulationHardCap { get; set; }
-
-        /// <summary>
-        /// Gets the errors for data fitness
-        /// </summary>
-        /// <returns>a bunch of text saying how awful your data is</returns>
-        public override IList<string> FitnessReport()
+        /// <param name="viewer">the entity looking</param>
+        /// <param name="amount">How much of it there is</param>
+        /// <returns>a view string</returns>
+        public override IOccurrence RenderResourceCollection(IEntity viewer, int amount)
         {
-            var dataProblems = base.FitnessReport();
+            if (!IsVisibleTo(viewer))
+                return null;
 
-            if (Race == null)
-                dataProblems.Add("Race must be set.");
+            var me = GetSelf(MessagingType.Visible);
+            var collectiveNoun = new Lexica(LexicalType.Noun, GrammaticalType.Descriptive, Race.CollectiveNoun);
+            collectiveNoun.TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, amount.ToString()));
+            me.Event.TryModify(collectiveNoun);
 
-            if (PopulationHardCap <= 0)
-                dataProblems.Add("Population Hard Cap must be greater than 0.");
-
-            if (FemaleRatio <= 0)
-                dataProblems.Add("Female to male ratio must be greater than 0.");
-
-            return dataProblems;
+            return me;
         }
-
-        public override bool CanSpawnIn(IGlobalPosition location)
-        {
-            var returnValue = true;
-
-            return base.CanSpawnIn(location) && returnValue;
-        }
-
-        public override bool ShouldSpawnIn(IGlobalPosition location)
-        {
-            var returnValue = true;
-
-            return base.ShouldSpawnIn(location) && returnValue;
-        }
+        #endregion
     }
 }

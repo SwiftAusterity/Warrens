@@ -6,6 +6,7 @@ using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Base.EntityBackingData;
 using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Behaviors.System;
 using NetMud.Models.Admin;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ using System.Web.Mvc;
 
 namespace NetMud.Controllers.GameAdmin
 {
+    [Authorize(Roles = "Admin,Builder")]
     public class FaunaController : Controller
     {
         private ApplicationUserManager _userManager;
@@ -41,41 +43,59 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageFaunaViewModel(BackingDataCache.GetAll<IFauna>());
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
+            var vModel = new ManageFaunaViewModel(BackingDataCache.GetAll<IFauna>())
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
-            vModel.CurrentPageNumber = CurrentPageNumber;
-            vModel.ItemsPerPage = ItemsPerPage;
-            vModel.SearchTerms = SearchTerms;
+                CurrentPageNumber = CurrentPageNumber,
+                ItemsPerPage = ItemsPerPage,
+                SearchTerms = SearchTerms
+            };
 
             return View("~/Views/GameAdmin/Fauna/Index.cshtml", vModel);
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Remove(long ID, string authorize)
+        [Route(@"GameAdmin/Fauna/Remove/{removeId?}/{authorizeRemove?}/{unapproveId?}/{authorizeUnapprove?}")]
+        public ActionResult Remove(long removeId = -1, string authorizeRemove = "", long unapproveId = -1, string authorizeUnapprove = "")
         {
             string message = string.Empty;
 
-            if (string.IsNullOrWhiteSpace(authorize) || !ID.ToString().Equals(authorize))
-                message = "You must check the proper authorize radio button first.";
-            else
+            if (!string.IsNullOrWhiteSpace(authorizeRemove) && removeId.ToString().Equals(authorizeRemove))
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<IFauna>(ID);
+                var obj = BackingDataCache.Get<IFauna>(removeId);
 
                 if (obj == null)
                     message = "That does not exist";
-                else if (obj.Remove())
+                else if (obj.Remove(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                 {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveFauna[" + ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveFauna[" + removeId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Delete Successful.";
                 }
                 else
                     message = "Error; Removal failed.";
             }
+            else if (!string.IsNullOrWhiteSpace(authorizeUnapprove) && unapproveId.ToString().Equals(authorizeUnapprove))
+            {
+                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+                var obj = BackingDataCache.Get<IFauna>(unapproveId);
+
+                if (obj == null)
+                    message = "That does not exist";
+                else if (obj.ChangeApprovalStatus(authedUser.GameAccount, authedUser.GetStaffRank(User), ApprovalState.Returned))
+                {
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - UnapproveFauna[" + unapproveId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    message = "Unapproval Successful.";
+                }
+                else
+                    message = "Error; Unapproval failed.";
+            }
+            else
+                message = "You must check the proper remove or unapprove authorization radio button first.";
 
             return RedirectToAction("Index", new { Message = message });
         }
@@ -83,11 +103,13 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add()
         {
-            var vModel = new AddEditFaunaViewModel();
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-            vModel.ValidMaterials = BackingDataCache.GetAll<IMaterial>();
-            vModel.ValidInanimateDatas = BackingDataCache.GetAll<IInanimateData>();
-            vModel.ValidRaces = BackingDataCache.GetAll<IRace>();
+            var vModel = new AddEditFaunaViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                ValidMaterials = BackingDataCache.GetAll<IMaterial>(),
+                ValidInanimateDatas = BackingDataCache.GetAll<IInanimateData>(),
+                ValidRaces = BackingDataCache.GetAll<IRace>()
+            };
 
             return View("~/Views/GameAdmin/Fauna/Add.cshtml", vModel);
         }
@@ -99,16 +121,19 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var newObj = new Fauna();
-            newObj.Name = vModel.Name;
-            newObj.HelpText = vModel.HelpText;
-            newObj.AmountMultiplier = vModel.AmountMultiplier;
-            newObj.Rarity = vModel.Rarity;
-            newObj.PuissanceVariance = vModel.PuissanceVariance;
-            newObj.ElevationRange = new Tuple<int, int>(vModel.ElevationRangeLow, vModel.ElevationRangeHigh);
-            newObj.TemperatureRange = new Tuple<int, int>(vModel.TemperatureRangeLow, vModel.TemperatureRangeHigh);
-            newObj.HumidityRange = new Tuple<int, int>(vModel.HumidityRangeLow, vModel.HumidityRangeHigh);
-            newObj.PopulationHardCap = vModel.PopulationHardCap;
+            var newObj = new Fauna
+            {
+                Name = vModel.Name,
+                HelpText = vModel.HelpText,
+                AmountMultiplier = vModel.AmountMultiplier,
+                Rarity = vModel.Rarity,
+                PuissanceVariance = vModel.PuissanceVariance,
+                ElevationRange = new Tuple<int, int>(vModel.ElevationRangeLow, vModel.ElevationRangeHigh),
+                TemperatureRange = new Tuple<int, int>(vModel.TemperatureRangeLow, vModel.TemperatureRangeHigh),
+                HumidityRange = new Tuple<int, int>(vModel.HumidityRangeLow, vModel.HumidityRangeHigh),
+                PopulationHardCap = vModel.PopulationHardCap,
+                FemaleRatio = vModel.FemaleRatio
+            };
             newObj.AmountMultiplier = vModel.AmountMultiplier;
 
             var newRace = BackingDataCache.Get<IRace>(vModel.Race);
@@ -119,13 +144,13 @@ namespace NetMud.Controllers.GameAdmin
 
             newObj.OccursIn = new HashSet<Biome>(vModel.OccursIn);
 
-            if (String.IsNullOrWhiteSpace(message))
+            if (string.IsNullOrWhiteSpace(message))
             {
-                if (newObj.Create() == null)
+                if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
                     message = "Error; Creation failed.";
                 else
                 {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddFauna[" + newObj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddFauna[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Creation Successful.";
                 }
             }
@@ -137,11 +162,13 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(long id)
         {
             string message = string.Empty;
-            var vModel = new AddEditFaunaViewModel();
-            vModel.authedUser = UserManager.FindById(User.Identity.GetUserId());
-            vModel.ValidMaterials = BackingDataCache.GetAll<IMaterial>();
-            vModel.ValidInanimateDatas = BackingDataCache.GetAll<IInanimateData>();
-            vModel.ValidRaces = BackingDataCache.GetAll<IRace>();
+            var vModel = new AddEditFaunaViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                ValidMaterials = BackingDataCache.GetAll<IMaterial>(),
+                ValidInanimateDatas = BackingDataCache.GetAll<IInanimateData>(),
+                ValidRaces = BackingDataCache.GetAll<IRace>()
+            };
 
             var obj = BackingDataCache.Get<IFauna>(id);
 
@@ -153,7 +180,7 @@ namespace NetMud.Controllers.GameAdmin
 
             vModel.DataObject = obj;
             vModel.Name = obj.Name;
-            vModel.HelpText = obj.HelpText;
+            vModel.HelpText = obj.HelpText.Value;
             vModel.AmountMultiplier = obj.AmountMultiplier;
             vModel.Rarity = obj.Rarity;
             vModel.PuissanceVariance = obj.PuissanceVariance;
@@ -166,7 +193,7 @@ namespace NetMud.Controllers.GameAdmin
             vModel.PopulationHardCap = obj.PopulationHardCap;
             vModel.AmountMultiplier = obj.AmountMultiplier;
             vModel.FemaleRatio = obj.FemaleRatio;
-            vModel.Race = obj.Race.ID;
+            vModel.Race = obj.Race.Id;
             vModel.OccursIn = obj.OccursIn.ToArray();
 
             return View("~/Views/GameAdmin/Fauna/Edit.cshtml", vModel);
@@ -206,11 +233,11 @@ namespace NetMud.Controllers.GameAdmin
 
             obj.OccursIn = new HashSet<Biome>(vModel.OccursIn);
 
-            if (String.IsNullOrWhiteSpace(message))
+            if (string.IsNullOrWhiteSpace(message))
             {
-                if (obj.Save())
+                if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                 {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - EditFauna[" + obj.ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - EditFauna[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Edit Successful.";
                 }
                 else

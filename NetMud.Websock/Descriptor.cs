@@ -6,18 +6,23 @@ using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataAccess.FileSystem;
 using NetMud.DataStructure.Base.Entity;
+using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.DataStructure.Base.PlayerConfiguration;
+using NetMud.DataStructure.Base.Supporting;
 using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Base.World;
+using NetMud.DataStructure.Behaviors.Rendering;
+using NetMud.DataStructure.Linguistic;
 using NetMud.Interp;
+using NetMud.Utility;
+using NetMud.Websock.OutputFormatting;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Net.Sockets;
+using System.Net;
 using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace NetMud.Websock
@@ -28,19 +33,9 @@ namespace NetMud.Websock
     public class Descriptor : Channel, IDescriptor
     {
         /// <summary>
-        /// For Websocket handshaking
-        /// </summary>
-        static private string guid = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
-
-        /// <summary>
         /// The user manager for the application, handles authentication from the web
         /// </summary>
         public ApplicationUserManager UserManager { get; private set; }
-
-        /// <summary>
-        /// The actual connection's client handler
-        /// </summary>
-        internal TcpClient Client { get; set; }
 
         /// <summary>
         /// Unique string for this live entity
@@ -65,31 +60,46 @@ namespace NetMud.Websock
         /// <summary>
         /// Creates an instance of the command negotiator
         /// </summary>
-        public Descriptor(TcpClient tcpClient)
+        public Descriptor() : this(new ApplicationUserManager(new UserStore<ApplicationUser>(new ApplicationDbContext())))
         {
-            Client = tcpClient;
-            UserManager = new ApplicationUserManager(new UserStore<ApplicationUser>(new ApplicationDbContext()));
-
-            BirthMark = LiveCache.GetUniqueIdentifier(String.Format(cacheKeyFormat, Client.Client.RemoteEndPoint.Serialize().ToString()));
-            Birthdate = DateTime.Now;
-
-            LiveCache.Add<IDescriptor>(this);
         }
 
         /// <summary>
         /// Creates an instance of the command negotiator with a specified user manager
         /// </summary>
         /// <param name="userManager">the authentication manager from the web</param>
-        public Descriptor(TcpClient tcpClient, ApplicationUserManager userManager)
+        public Descriptor(ApplicationUserManager userManager) 
         {
-            Client = tcpClient;
             UserManager = userManager;
 
-            BirthMark = LiveCache.GetUniqueIdentifier(String.Format(cacheKeyFormat, Client.Client.RemoteEndPoint.Serialize().ToString()));
             Birthdate = DateTime.Now;
-
-            LiveCache.Add<IDescriptor>(this);
         }
+
+        #region Caching
+        /// <summary>
+        /// What type of cache is this using
+        /// </summary>
+        public virtual CacheType CachingType => CacheType.Live;
+
+        /// <summary>
+        /// Put it in the cache
+        /// </summary>
+        /// <returns>success status</returns>
+        public virtual bool PersistToCache()
+        {
+            try
+            {
+                LiveCache.Add<IDescriptor>(this);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex, LogChannels.SystemWarnings);
+                return false;
+            }
+
+            return true;
+        }
+        #endregion
 
         /// <summary>
         /// Wraps sending messages to the connected descriptor
@@ -98,7 +108,112 @@ namespace NetMud.Websock
         /// <returns>success status</returns>
         public bool SendWrapper(IEnumerable<string> strings)
         {
-            Send(EncapsulateOutput(strings));
+            //TODO: Stop hardcoding this but we have literally no sense of injury/self status yet
+            var self = new SelfStatus
+            {
+                Body = new BodyStatus
+                {
+                    Overall = OverallStatus.Excellent,
+                    Anatomy = new AnatomicalPart[] {
+                        new AnatomicalPart {
+                            Name = "Arm",
+                            Overall = OverallStatus.Good,
+                            Wounds = new string[] {
+                                "Light scrape"
+                            }
+                        },
+                        new AnatomicalPart {
+                            Name = "Leg",
+                            Overall = OverallStatus.Excellent,
+                            Wounds = new string[] {
+                            }
+
+                        }
+                    }
+                },
+                Mind = new MindStatus
+                {
+                    Overall = OverallStatus.Excellent,
+                    States = new string[]
+                    {
+                        "Fearful"
+                    }
+                }
+            };
+
+            var currentLocation = _currentPlayer.CurrentLocation;
+            var currentContainer = currentLocation.CurrentLocation;
+            var currentZone = currentLocation.GetZone();
+            var currentWorld = currentZone.GetWorld();
+            var currentRoom = currentLocation.GetRoom();
+
+            var pathways = ((ILocation)currentContainer).GetPathways().Select(data => data.GetDescribableName(_currentPlayer).ToString());
+            var inventory = currentContainer.GetContents<IInanimate>().Select(data => data.GetDescribableName(_currentPlayer).ToString());
+            var populace = currentContainer.GetContents<IMobile>().Where(player => !player.Equals(_currentPlayer)).Select(data => data.GetDescribableName(_currentPlayer).ToString());
+
+            var local = new LocalStatus
+            {
+                ZoneName = currentZone.DataTemplateName,
+                LocaleName = currentLocation.GetLocale()?.DataTemplateName,
+                RoomName = currentRoom?.DataTemplateName,
+                Inventory = inventory.ToArray(),
+                Populace = populace.ToArray(),
+                Exits = pathways.ToArray(),
+                LocationDescriptive = currentLocation.CurrentLocation.RenderToLook(_currentPlayer).Describe(NarrativeNormalization.Normal, 1)
+            };
+
+            //The next two are mostly hard coded, TODO, also fix how we get the map as that's an admin thing
+            var extended = new ExtendedStatus
+            {
+                Horizon = new string[]
+                {
+                     "A hillside",
+                     "A dense forest"
+                },
+                VisibleMap = currentLocation.GetRoom() == null ? string.Empty : currentLocation.GetRoom().RenderCenteredMap(3, true)
+            };
+
+            var timeOfDayString = string.Format("The hour of {0} in the day of {1} in {2} in the year of {3}", currentWorld.CurrentTimeOfDay.Hour
+                                                                               , currentWorld.CurrentTimeOfDay.Day
+                                                                               , currentWorld.CurrentTimeOfDay.MonthName()
+                                                                               , currentWorld.CurrentTimeOfDay.Year);
+
+            var visibleCelestials = Enumerable.Empty<ICelestial>();
+            var visibilityString = string.Empty;
+
+            if (currentRoom != null)
+            {
+                visibilityString = string.Format("{0} lumins", currentRoom.GetCurrentLuminosity());
+                visibleCelestials = currentRoom.GetVisibileCelestials(_currentPlayer);
+            }
+            else if (currentZone != null)
+            {
+                visibilityString = string.Format("{0} lumins", currentZone.GetCurrentLuminosity());
+                visibleCelestials = currentZone.GetVisibileCelestials(_currentPlayer);
+            }
+            else
+                visibilityString = "I don't know";
+
+            var celestialString = String.Join(",", visibleCelestials.Select(cp => cp.Name));
+
+            var environment = new EnvironmentStatus
+            {
+                Celestial = celestialString,
+                Visibility = visibilityString,
+                Weather = "I don't know",
+                TimeOfDay = timeOfDayString
+            };
+
+            var outputFormat = new OutputStatus
+            {
+                Occurrence = EncapsulateOutput(strings),
+                Self = self,
+                Local = local,
+                Extended = extended,
+                Environment = environment
+            };
+
+            Send(SerializationUtility.Serialize(outputFormat));
 
             return true;
         }
@@ -110,9 +225,8 @@ namespace NetMud.Websock
         /// <returns>success status</returns>
         public bool SendWrapper(string str)
         {
-            Send(EncapsulateOutput(str));
-
-            return true;
+            //Easier just to handle it in one place
+            return SendWrapper(new List<string>() { str });
         }
 
         /// <summary>
@@ -121,9 +235,9 @@ namespace NetMud.Websock
         /// <param name="finalMessage">the final string data to send the socket before closing it</param>
         public void Disconnect(string finalMessage)
         {
-            Send(EncapsulateOutput(finalMessage));
+            SendWrapper(finalMessage);
 
-            Client.Close();
+            Close();
         }
 
         /// <summary>
@@ -135,63 +249,52 @@ namespace NetMud.Websock
         }
 
         #region "Socket Management"
+        public override void OnClose()
+        {
+            var validPlayers = LiveCache.GetAll<IPlayer>().Where(player => player.Descriptor != null
+                        && player.DataTemplate<ICharacter>().Account.Config.WantsNotification(_currentPlayer.AccountHandle, false, AcquaintenceNotifications.LeaveGame));
+
+            foreach (var player in validPlayers)
+                player.WriteTo(new string[] { string.Format("{0} has left the game.", _currentPlayer.AccountHandle) });
+
+            if (_currentPlayer.DataTemplate<ICharacter>().Account.Config.GossipSubscriber)
+            {
+                var gossipClient = LiveCache.Get<IGossipClient>("GossipWebClient");
+
+                if (gossipClient != null)
+                    gossipClient.SendNotification(_currentPlayer.AccountHandle, AcquaintenceNotifications.LeaveGame);
+            }
+
+            base.OnClose();
+        }
 
         /// <summary>
         /// Handles initial connection
         /// </summary>
-        private async void OnOpen()
+        public override void OnOpen()
         {
-            NetworkStream stream = Client.GetStream();
+            base.OnOpen();
 
-            //enter to an infinite cycle to be able to handle every change in stream
-            await DataAvailable(stream);
+            BirthMark = LiveCache.GetUniqueIdentifier(string.Format(cacheKeyFormat, WebSocketContext.AnonymousID));
+            PersistToCache();
 
-            var bytes = new Byte[Client.Available];
+            UserManager = new ApplicationUserManager(new UserStore<ApplicationUser>(new ApplicationDbContext()));
 
-            stream.Read(bytes, 0, bytes.Length);
+            ValidateUser(WebSocketContext.CookieCollection[".AspNet.ApplicationCookie"]);
 
-            //translate bytes of request to string
-            var data = Encoding.UTF8.GetString(bytes);
-
-            //initial connection
-            if (new Regex("^GET").IsMatch(data))
-            {
-                var response = "HTTP/1.1 101 Switching Protocols" + Environment.NewLine
-                    + "Connection: Upgrade" + Environment.NewLine
-                    + "Upgrade: websocket" + Environment.NewLine
-                    + "Sec-WebSocket-Accept: "
-                    + Convert.ToBase64String(
-                        SHA1.Create().ComputeHash(
-                            Encoding.UTF8.GetBytes(
-                                new Regex("Sec-WebSocket-Key: (.*)").Match(data).Groups[1].Value.Trim() + guid
-                            )
-                        )
-                    ) + Environment.NewLine
-                    + Environment.NewLine;
-
-                //Send the handshake
-                var replyBytes = Encoding.UTF8.GetBytes(response);
-
-                stream.BeginWrite(replyBytes, 0, replyBytes.Length, new AsyncCallback(WriteData), null);
-
-                ValidateUser(data);
-            }
-
-            StartLoop(OnMessage);
-
-            return;
+            LoggingUtility.Log(content: "Socket client accepted", channel: LogChannels.SocketCommunication);
         }
 
         /// <summary>
         /// Handles when the connected descriptor sends input
         /// </summary>
         /// <param name="e">the events of the message</param>
-        private bool OnMessage(string message)
+        public override void OnMessage(string message)
         {
             if (_currentPlayer == null)
             {
                 OnError(new Exception("Invalid character; please reload the client and try again."));
-                return false;
+                return;
             }
 
             var errors = Interpret.Render(message, _currentPlayer);
@@ -199,31 +302,16 @@ namespace NetMud.Websock
             //It only sends the errors
             if (errors.Any(str => !string.IsNullOrWhiteSpace(str)))
                 SendWrapper(errors);
-
-            return true;
         }
 
         /// <summary>
         /// Handles when the connection faults
         /// </summary>
         /// <param name="err">the error</param>
-        private void OnError(Exception err)
+        private void OnError(Exception ex)
         {
             //Log it
-            LoggingUtility.LogError(err);
-        }
-
-        /// <summary>
-        /// Begins the send process for putting data into the socket stream
-        /// </summary>
-        /// <param name="message">the string message</param>
-        private void Send(string message)
-        {
-            var response = EncodeSocket(message);
-
-            var stream = Client.GetStream();
-
-            stream.BeginWrite(response, 0, response.Length, new AsyncCallback(WriteData), null);
+            LoggingUtility.LogError(ex, false);
         }
 
         /// <summary>
@@ -231,143 +319,28 @@ namespace NetMud.Websock
         /// </summary>
         private void SendPing()
         {
-            var stream = Client.GetStream();
-
             var ping = new byte[2];
 
-            ping[0] = (Byte)(9 | 0x80);
-            ping[1] = (Byte)0;
+            ping[0] = 9 | 0x80;
+            ping[1] = 0;
 
-            stream.BeginWrite(ping, 0, 2, new AsyncCallback(WriteData), null);
-        }
-
-        /// <summary>
-        /// Ends the send loop
-        /// </summary>
-        /// <param name="result">the async object for the thread</param>
-        private void WriteData(IAsyncResult result)
-        {
-            try
-            {
-                var stream = Client.GetStream();
-
-                stream.EndWrite(result);
-            }
-            catch (Exception ex)
-            {
-                OnError(ex);
-            }
+            Send(ping);
         }
         #endregion
 
         #region "Helpers"
-
-        /// <summary>
-        /// Handles when the connection closes
-        /// </summary>
-        private void OnClose()
-        {
-            Client.Close();
-        }
-
-        /// <summary>
-        /// Handles the wait loop for accepting input from the socket
-        /// </summary>
-        /// <param name="worker">the function that actually takes in a full message from the socker</param>
-        private async void StartLoop(Func<string, bool> worker)
-        {
-            if (Client == null)
-                OnClose();
-
-            try
-            {
-                NetworkStream stream = Client.GetStream();
-
-                await DataAvailable(stream);
-
-                var bytes = new Byte[Client.Available];
-
-                stream.Read(bytes, 0, bytes.Length);
-
-                //translate bytes of request to string
-                var data = DecodeSocket(bytes);
-
-                if (!String.IsNullOrWhiteSpace(data))
-                {
-                    if (worker.Invoke(data))
-                        StartLoop(OnMessage);
-                    else
-                        OnClose();
-                }
-                else
-                    StartLoop(OnMessage);
-            }
-            catch (Exception ex)
-            {
-                OnError(ex);
-            }
-        }
-
-        /// <summary>
-        /// Just sits on the stream waiting for a messgae to be sent
-        /// </summary>
-        /// <param name="stream">the network stream of the client</param>
-        /// <returns>junk boolean cause it's a task</returns>
-        private async Task<bool> DataAvailable(NetworkStream stream)
-        {
-            var timeIdle = 0;
-            while (!stream.DataAvailable)
-            {
-                if (Client == null)
-                {
-                    OnClose();
-                    return false;
-                }
-
-                await Task.Delay(500);
-
-                switch (timeIdle)
-                {
-                    default:
-                        {
-                            if (timeIdle > 0 && timeIdle % 15 == 0)
-                                SendPing();
-
-                            break;
-                        }
-                    case 600:
-                        {
-                            Send("You have been idle for an extended period of time. You will be logged out shortly.");
-                            break;
-                        }
-                    case 1200:
-                        {
-                            Disconnect("You have been idle too long. You have been disconnected.");
-                            return false;
-                        }
-                }
-
-                timeIdle++;
-            }
-
-            return true;
-        }
-
-
         /// <summary>
         /// Validates the game account from the aspnet cookie
         /// </summary>
         /// <param name="handshake">the headers from the http request</param>
-        private void ValidateUser(string handshake)
+        private void ValidateUser(Cookie cookie)
         {
             //Grab the user
-            var authTicketValue = new Regex(".AspNet.ApplicationCookie=(.*)").Match(handshake).Groups[1].Value.Trim();
-
-            GetUserIDFromCookie(authTicketValue);
+            GetUserIDFromCookie(cookie.Value);
 
             var authedUser = UserManager.FindById(_userId);
 
-            var currentCharacter = authedUser.GameAccount.Characters.FirstOrDefault(ch => ch.ID.Equals(authedUser.GameAccount.CurrentlySelectedCharacter));
+            var currentCharacter = authedUser.GameAccount.Characters.FirstOrDefault(ch => ch.Id.Equals(authedUser.GameAccount.CurrentlySelectedCharacter));
 
             if (currentCharacter == null)
             {
@@ -376,13 +349,13 @@ namespace NetMud.Websock
             }
 
             //Try to see if they are already live
-            _currentPlayer = LiveCache.Get<IPlayer>(currentCharacter.ID);
+            _currentPlayer = LiveCache.Get<IPlayer>(currentCharacter.Id);
 
             //Check the backup
             if (_currentPlayer == null)
             {
                 var playerDataWrapper = new PlayerData();
-                _currentPlayer = playerDataWrapper.RestorePlayer(currentCharacter.AccountHandle, currentCharacter.ID);
+                _currentPlayer = playerDataWrapper.RestorePlayer(currentCharacter.AccountHandle, currentCharacter.Id);
             }
 
             //else new them up
@@ -392,132 +365,41 @@ namespace NetMud.Websock
             _currentPlayer.Descriptor = this;
 
             //We need to barf out to the connected client the welcome message. The client will only indicate connection has been established.
-            var welcomeMessage = new List<String>();
-
-            welcomeMessage.Add(string.Format("Welcome to alpha phase twinMUD, {0}", currentCharacter.FullName()));
-            welcomeMessage.Add("Please feel free to LOOK around.");
+            var welcomeMessage = new List<string>
+            {
+                string.Format("Welcome to alpha phase Under the Eclipse, {0}", currentCharacter.FullName()),
+                "Please feel free to LOOK around."
+            };
 
             _currentPlayer.WriteTo(welcomeMessage);
 
             //Send the look command in
             Interpret.Render("look", _currentPlayer);
+
+            try
+            {
+                var validPlayers = LiveCache.GetAll<IPlayer>().Where(player => player.Descriptor != null
+                && player.DataTemplate<ICharacter>().Account.Config.WantsNotification(_currentPlayer.AccountHandle, false, AcquaintenceNotifications.EnterGame));
+
+                foreach (var player in validPlayers)
+                    player.WriteTo(new string[] { string.Format("{0} has entered the game.", _currentPlayer.AccountHandle) });
+
+                if (authedUser.GameAccount.Config.GossipSubscriber)
+                {
+                    var gossipClient = LiveCache.Get<IGossipClient>("GossipWebClient");
+
+                    if (gossipClient != null)
+                        gossipClient.SendNotification(authedUser.GlobalIdentityHandle, DataStructure.Base.PlayerConfiguration.AcquaintenceNotifications.EnterGame);
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex, LogChannels.SocketCommunication);
+            }
         }
 
         /// <summary>
-        /// Decodes WS headers and data from the stream
-        /// </summary>
-        /// <param name="buffer">the stream's incoming data</param>
-        /// <returns>the message sent</returns>
-        private string DecodeSocket(byte[] buffer)
-        {
-            var length = buffer.Length;
-            byte b = buffer[1];
-            int dataLength = 0;
-            int totalLength = 0;
-            int keyIndex = 0;
-
-            if (b - 128 <= 125)
-            {
-                dataLength = b - 128;
-                keyIndex = 2;
-                totalLength = dataLength + 6;
-            }
-
-            if (b - 128 == 126)
-            {
-                dataLength = BitConverter.ToInt16(new byte[] { buffer[3], buffer[2] }, 0);
-                keyIndex = 4;
-                totalLength = dataLength + 8;
-            }
-
-            if (b - 128 == 127)
-            {
-                dataLength = (int)BitConverter.ToInt64(new byte[] { buffer[9], buffer[8], buffer[7], buffer[6], buffer[5], buffer[4], buffer[3], buffer[2] }, 0);
-                keyIndex = 10;
-                totalLength = dataLength + 14;
-            }
-
-            if (totalLength > length)
-                throw new Exception("The buffer length is small than the data length");
-
-            byte[] key = new byte[] { buffer[keyIndex], buffer[keyIndex + 1], buffer[keyIndex + 2], buffer[keyIndex + 3] };
-
-            int dataIndex = keyIndex + 4;
-            int count = 0;
-            for (int i = dataIndex; i < totalLength; i++)
-            {
-                buffer[i] = (byte)(buffer[i] ^ key[count % 4]);
-                count++;
-            }
-
-            return Encoding.ASCII.GetString(buffer, dataIndex, dataLength);
-        }
-
-        /// <summary>
-        /// Encodes string messages into ws socket language
-        /// </summary>
-        /// <param name="message">the data to encode</param>
-        /// <returns>the data to put on the stream</returns>
-        private Byte[] EncodeSocket(string message)
-        {
-            Byte[] response;
-            Byte[] bytesRaw = Encoding.UTF8.GetBytes(message);
-            Byte[] frame = new Byte[10];
-
-            Int32 indexStartRawData = -1;
-            Int32 length = bytesRaw.Length;
-
-            frame[0] = (Byte)129;
-            if (length <= 125)
-            {
-                frame[1] = (Byte)length;
-                indexStartRawData = 2;
-            }
-            else if (length >= 126 && length <= 65535)
-            {
-                frame[1] = (Byte)126;
-                frame[2] = (Byte)((length >> 8) & 255);
-                frame[3] = (Byte)(length & 255);
-                indexStartRawData = 4;
-            }
-            else
-            {
-                frame[1] = (Byte)127;
-                frame[2] = (Byte)((length >> 56) & 255);
-                frame[3] = (Byte)((length >> 48) & 255);
-                frame[4] = (Byte)((length >> 40) & 255);
-                frame[5] = (Byte)((length >> 32) & 255);
-                frame[6] = (Byte)((length >> 24) & 255);
-                frame[7] = (Byte)((length >> 16) & 255);
-                frame[8] = (Byte)((length >> 8) & 255);
-                frame[9] = (Byte)(length & 255);
-
-                indexStartRawData = 10;
-            }
-
-            response = new Byte[indexStartRawData + length];
-
-            Int32 i, reponseIdx = 0;
-
-            //Add the frame bytes to the reponse
-            for (i = 0; i < indexStartRawData; i++)
-            {
-                response[reponseIdx] = frame[i];
-                reponseIdx++;
-            }
-
-            //Add the data bytes to the response
-            for (i = 0; i < length; i++)
-            {
-                response[reponseIdx] = bytesRaw[i];
-                reponseIdx++;
-            }
-
-            return response;
-        }
-
-        /// <summary>
-        /// Gets the user ID from the web from the aspnet cookie
+        /// Gets the user Id from the web from the aspnet cookie
         /// </summary>
         /// <param name="authTicketValue">the cookie's value</param>
         private void GetUserIDFromCookie(string authTicketValue)
@@ -576,6 +458,91 @@ namespace NetMud.Websock
                     }
                 }
             }
+        }
+        #endregion
+
+        #region Equality Functions
+        /// <summary>
+        /// -99 = null input
+        /// -1 = wrong type
+        /// 0 = same type, wrong id
+        /// 1 = same reference (same id, same type)
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public int CompareTo(ILiveData other)
+        {
+            if (other != null)
+            {
+                try
+                {
+                    if (other.GetType() != GetType())
+                        return -1;
+
+                    if (other.BirthMark.Equals(BirthMark))
+                        return 1;
+
+                    return 0;
+                }
+                catch (Exception ex)
+                {
+                    LoggingUtility.LogError(ex);
+                }
+            }
+
+            return -99;
+        }
+
+        /// <summary>
+        /// Compares this object to another one to see if they are the same object
+        /// </summary>
+        /// <param name="other">the object to compare to</param>
+        /// <returns>true if the same object</returns>
+        public bool Equals(ILiveData other)
+        {
+            if (other != default(ILiveData))
+            {
+                try
+                {
+                    return other.GetType() == GetType() && other.BirthMark.Equals(BirthMark);
+                }
+                catch (Exception ex)
+                {
+                    LoggingUtility.LogError(ex);
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Compares an object to another one to see if they are the same object
+        /// </summary>
+        /// <param name="x">the object to compare to</param>
+        /// <param name="y">the object to compare to</param>
+        /// <returns>true if the same object</returns>
+        public bool Equals(ILiveData x, ILiveData y)
+        {
+            return x.Equals(y);
+        }
+
+        /// <summary>
+        /// Get the hash code for comparison purposes
+        /// </summary>
+        /// <param name="obj">the thing to get the hashcode for</param>
+        /// <returns>the hash code</returns>
+        public int GetHashCode(ILiveData obj)
+        {
+            return obj.GetType().GetHashCode() + obj.BirthMark.GetHashCode();
+        }
+
+        /// <summary>
+        /// Get the hash code for comparison purposes
+        /// </summary>
+        /// <returns>the hash code</returns>
+        public override int GetHashCode()
+        {
+            return GetType().GetHashCode() + BirthMark.GetHashCode();
         }
         #endregion
     }

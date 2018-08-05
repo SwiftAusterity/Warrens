@@ -1,8 +1,8 @@
 ﻿using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.DataStructure.Base.Place;
 using NetMud.DataStructure.Base.System;
 using NetMud.DataStructure.Behaviors.Actionable;
 using NetMud.DataStructure.Behaviors.Automation;
-using NetMud.DataStructure.Behaviors.Existential;
 using System;
 using System.Collections.Generic;
 
@@ -41,6 +41,7 @@ namespace NetMud.DataStructure.Base.Supporting
         /// <summary>
         /// Dietary type of this race
         /// </summary>
+        
         DietType DietaryNeeds { get; set; }
 
         /// <summary>
@@ -71,12 +72,29 @@ namespace NetMud.DataStructure.Base.Supporting
         /// <summary>
         /// What is the starting room of new players
         /// </summary>
-        IGlobalPosition StartingLocation { get; set; }
+        IZoneData StartingLocation { get; set; }
 
         /// <summary>
         /// When a player loads without a location where do we sent them
         /// </summary>
-        IGlobalPosition EmergencyLocation { get; set; }
+        IZoneData EmergencyLocation { get; set; }
+
+        /// <summary>
+        /// The name used to describe a large gathering of this race
+        /// </summary>
+        
+        string CollectiveNoun { get; set; }
+
+        /// <summary>
+        /// Method to get the full list of anatomical features of this race
+        /// </summary>
+        IEnumerable<Tuple<IInanimateData, string>> FullAnatomy();
+
+        /// <summary>
+        /// Render this race's body as an ascii.. thing
+        /// </summary>
+        /// <returns>List of strings as rows for rendering</returns>
+        IEnumerable<string> RenderAnatomy(bool forWeb);
 
         //TODO: Poison glands
     }

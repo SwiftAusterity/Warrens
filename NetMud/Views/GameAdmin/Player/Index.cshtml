@@ -1,55 +1,62 @@
-﻿@model NetMud.Models.Admin.ManagePlayersViewModel
-@{
-    ViewBag.Title = "Manage Registered Users";
+﻿@using NetMud.DataStructure.SupportingClasses
 
-    if (Model.Items.Count() > 0)
-    {
-        @Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model, "Player"))
-    
-        using (Html.BeginForm("Remove", "Player"))
-        {
-            @Html.AntiForgeryToken()
-            <table class="table">
-                <thead>
-                    <tr>
-                        <td>
-                            ID
-                        </td>
-                        <td>
-                            Global Handle
-                        </td>
-                        <td>
-                            Email
-                        </td>
-                        <td>
-                            Roles
-                        </td>
-                        <td>
-                            Remove
-                        </td>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var obj in Model.CurrentPageOfItems)
-                    {
-                        <tr>
-                            <td>@obj.Id</td>
-                            <td>@obj.GameAccount.GlobalIdentityHandle</td>
-                            <td>@obj.Email</td>
-                            <td>@String.Join(",", obj.Roles.Select(rol => Model.ValidRoles.First(vR => vR.Id.Equals(rol.RoleId)).Name))</td>
-                            <td>
-                                <div>
-                                    @Html.Partial("RemoveDataItem", @obj.Id)
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
+@model NetMud.Models.Admin.ManagePlayersViewModel
 
-    }
+@Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model, "Player"))
+
+@using (Html.BeginForm("Remove", "Player"))
+{
+    @Html.AntiForgeryToken()
+    <h4>Approvals</h4>
+    <table class="table table-striped table-bordered table-hover table-dark">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Global Handle</th>
+                <th scope="col">Email</th>
+                <th scope="col">Role</th>
+                <th>DELETE</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var val in Model.Items)
+            {
+                <tr>
+                    <td>@val.Id.ToString()</td>
+                    <td>@val.GameAccount.GlobalIdentityHandle</td>
+                    <td>@val.Email</td>
+                    <td>
+                        @Html.DropDownList("Role", Enum.GetNames(typeof(StaffRank)).Select(rl =>
+                                                                        new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(StaffRank), rl)).ToString(),
+                                                                            Selected = ((NetMud.Authentication.ApplicationUser)val).Roles.Select(rol => Model.ValidRoles.First(vR => vR.Id.Equals(rol.RoleId)).Name).Contains(rl) })
+                                                                        , "Select One", htmlAttributes: new { id = "Role", @class = "staffRole" })
+                    </td>
+                    <td>
+                        <div>
+                            <button type="submit" name="removeId" id="removeId" class="removeData" value="@val.GlobalIdentityHandle" title="Delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                            <input type="radio" name="authorizeRemove" value="@val.GlobalIdentityHandle" style="margin-left: 15px;" />
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 }
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.staffRole').change(function () {
+                var $this = $(this);
+
+                var role = $this.val();
+                var accountName = $this.parent().prev()[0].innerHTML;
+
+                $.post('/api/AdminDataApi/ChangeAccountRole/' + accountName + '/' + role, function (data) {
+                    window.location = window.location;
+                });
+            });
+        });
+    </script>
 }

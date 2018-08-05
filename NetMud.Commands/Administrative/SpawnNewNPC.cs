@@ -8,13 +8,15 @@ using NetMud.Data.Game;
 using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
 using NetMud.DataStructure.SupportingClasses;
+using NetMud.DataStructure.Behaviors.Existential;
+using NetMud.Data.Lexical;
 
 namespace NutMud.Commands.System
 {
     /// <summary>
     /// Spawns a new NPC into the world. Missing target parameter = container you're standing in
     /// </summary>
-    [CommandKeyword("SpawnNewNPC", false)]
+    [CommandKeyword("SpawnNewNPC", false, true, true)]
     [CommandPermission(StaffRank.Admin)]
     [CommandParameter(CommandUsage.Subject, typeof(NetMud.Data.EntityBackingData.NonPlayerCharacter), new CacheReferenceType[] { CacheReferenceType.Data }, "[0-9]+", false)] //for IDs
     [CommandParameter(CommandUsage.Subject, typeof(NetMud.Data.EntityBackingData.NonPlayerCharacter), new CacheReferenceType[] { CacheReferenceType.Data }, "[a-zA-z]+", false)] //for names
@@ -37,33 +39,41 @@ namespace NutMud.Commands.System
         {
             var newObject = (INonPlayerCharacter)Subject;
             var sb = new List<string>();
-            IContains spawnTo;
+            IGlobalPosition spawnTo;
 
             //No target = spawn to room you're in
             if (Target != null)
-                spawnTo = (IContains)Target;
+                spawnTo = (IGlobalPosition)Target;
             else
                 spawnTo = OriginLocation;
 
             var entityObject = new Intelligence(newObject, spawnTo);
 
             //TODO: keywords is janky, location should have its own identifier name somehow for output purposes - DISPLAY short/long NAME
-            sb.Add(string.Format("{0} spawned to {1}", entityObject.DataTemplateName, spawnTo.Keywords[0]));
+            sb.Add(string.Format("{0} spawned to {1}", entityObject.DataTemplateName, spawnTo.CurrentLocation.Keywords[0]));
 
-            var toActor = new Message(MessagingType.Visible, 1);
-            toActor.Override = sb;
+            var toActor = new Message(MessagingType.Visible, new Occurrence() { Strength = 1 })
+            {
+                Override = sb
+            };
 
-            var toOrigin = new Message(MessagingType.Visible, 30);
-            toOrigin.Override = new string[] { "$S$ appears suddenly." };
+            var toOrigin = new Message(MessagingType.Visible, new Occurrence() { Strength = 30 })
+            {
+                Override = new string[] { "$S$ appears suddenly." }
+            };
 
-            var toSubject = new Message(MessagingType.Visible, 30);
-            toSubject.Override = new string[] { "You are ALIVE" };
+            var toSubject = new Message(MessagingType.Visible, new Occurrence() { Strength = 30 })
+            {
+                Override = new string[] { "You are ALIVE" }
+            };
 
-            var messagingObject = new MessageCluster(toActor);
-            messagingObject.ToOrigin = new List<IMessage> { toOrigin };
-            messagingObject.ToSubject = new List<IMessage> { toSubject };
+            var messagingObject = new MessageCluster(toActor)
+            {
+                ToOrigin = new List<IMessage> { toOrigin },
+                ToSubject = new List<IMessage> { toSubject }
+            };
 
-            messagingObject.ExecuteMessaging(Actor, entityObject, spawnTo, OriginLocation, null);
+            messagingObject.ExecuteMessaging(Actor, entityObject, spawnTo.CurrentLocation, OriginLocation.CurrentLocation, null);
         }
 
         /// <summary>
@@ -72,10 +82,11 @@ namespace NutMud.Commands.System
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            var sb = new List<string>();
-
-            sb.Add(string.Format("Valid Syntax: spawnNewNPC &lt;object name&gt;"));
-            sb.Add("spawnNewNPC  &lt;NPC name&gt;  &lt;location name to spawn to&gt;".PadWithString(14, "&nbsp;", true));
+            var sb = new List<string>
+            {
+                string.Format("Valid Syntax: spawnNewNPC &lt;NPC name&gt;"),
+                "spawnNewNPC  &lt;NPC name&gt;  &lt;location name to spawn to&gt;".PadWithString(14, "&nbsp;", true)
+            };
 
             return sb;
         }
@@ -83,7 +94,7 @@ namespace NutMud.Commands.System
         /// <summary>
         /// The custom body of help text
         /// </summary>
-        public override string HelpText
+        public override MarkdownString HelpText
         {
             get
             {

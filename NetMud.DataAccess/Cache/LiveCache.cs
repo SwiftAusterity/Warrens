@@ -18,10 +18,7 @@ namespace NetMud.DataAccess.Cache
         /// <param name="objectToCache">the entity to cache</param>
         public static void Add<T>(T objectToCache) where T : ILiveData
         {
-            var entityToCache = (ILiveData)objectToCache;
-            var cacheKey = new LiveCacheKey(objectToCache.GetType(), entityToCache.BirthMark);
-
-            BackingCache.Add(objectToCache, cacheKey);
+            BackingCache.Add(objectToCache, new LiveCacheKey(objectToCache));
         }
 
         /// <summary>
@@ -66,6 +63,16 @@ namespace NetMud.DataAccess.Cache
             return BackingCache.GetMany<T>(birthmarks);
         }
 
+        /// <summary>
+        /// fills a list of entities from the cache of a single type that match the birthmarks sent in
+        /// </summary>
+        /// <typeparam name="T">the system type for the entity</typeparam>
+        /// <param name="keys">the keys to retrieve</param>
+        /// <returns>a list of the entities from the cache</returns>
+        public static IEnumerable<T> GetMany<T>(IEnumerable<LiveCacheKey> keys) where T : ILiveData
+        {
+            return BackingCache.GetMany<T>(keys);
+        }
 
         /// <summary>
         /// Only for the hotbackup procedure
@@ -110,7 +117,18 @@ namespace NetMud.DataAccess.Cache
         }
 
         /// <summary>
-        /// Gets one entity from the cache by its ID, only works for Singleton spawners with data templates(IEntities)
+        /// Gets one entity from the cache by its key
+        /// </summary>
+        /// <typeparam name="T">the type of the entity</typeparam>
+        /// <param name="key">the key it was cached with</param>
+        /// <returns>the entity (as an object) requested</returns>
+        public static object Get(LiveCacheKey key)
+        {
+            return BackingCache.Get(key);
+        }
+
+        /// <summary>
+        /// Gets one entity from the cache by its Id, only works for Singleton spawners with data templates(IEntities)
         /// </summary>
         /// <typeparam name="T">the type of the entity</typeparam>
         /// <param name="id">the id</param>
@@ -133,7 +151,7 @@ namespace NetMud.DataAccess.Cache
         }
 
         /// <summary>
-        /// Gets one entity from the cache by its ID, only works for Singleton spawners
+        /// Gets one entity from the cache by its Id, only works for Singleton spawners
         /// </summary>
         /// <typeparam name="T">the underlying type of the entity</typeparam>
         /// <param name="id">the id</param>
@@ -210,9 +228,9 @@ namespace NetMud.DataAccess.Cache
         /// Gets birthmarks for live entities
         /// </summary>
         /// <returns>the birthmark string</returns>
-        public static string GetUniqueIdentifier(IData obj)
+        public static string GetUniqueIdentifier(IKeyedData obj)
         {
-            return GetUniqueIdentifier(obj.ID.ToString());
+            return GetUniqueIdentifier(obj.Id.ToString());
         }
 
         /// <summary>
@@ -221,49 +239,7 @@ namespace NetMud.DataAccess.Cache
         /// <returns>the birthmark string</returns>
         public static string GetUniqueIdentifier(string marker)
         {
-            return string.Format("{0}.{1}.{2}", marker, DateTime.Now.ToBinary(), Guid.NewGuid().ToString().Replace("-", string.Empty));
-        }
-    }
-
-    /// <summary>
-    /// A cache key for live entities
-    /// </summary>
-    public class LiveCacheKey : ICacheKey
-    {
-        public CacheType CacheType
-        {
-            get { return CacheType.Live; }
-        }
-
-        /// <summary>
-        /// System type of the object being cached
-        /// </summary>
-        public Type ObjectType { get; set; }
-
-        /// <summary>
-        /// Unique signature for a live object
-        /// </summary>
-        public string BirthMark { get; set; }
-
-        /// <summary>
-        /// Generate a live key for a live object
-        /// </summary>
-        /// <param name="objectType">System type of the entity being cached</param>
-        /// <param name="marker">Unique signature for a live entity</param>
-        public LiveCacheKey(Type objectType, string marker)
-        {
-            ObjectType = objectType;
-            BirthMark = marker;
-        }
-
-        /// <summary>
-        /// Hash key used by the cache system
-        /// </summary>
-        /// <returns>the key's hash</returns>
-        public string KeyHash()
-        {
-            //Not using type name right now, birthmarks are unique globally anyways
-            return string.Format("{0}_{1}", CacheType.ToString(), BirthMark);
+            return string.Format("{0}.{1}.{2}", marker, DateTime.Now.ToBinary(), Guid.NewGuid().ToString().Substring(30));
         }
     }
 }

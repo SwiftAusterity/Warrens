@@ -1,0 +1,26 @@
+﻿@model NetMud.Models.Admin.ManageNotificationsViewModel
+
+@{
+    var linkText = Html.ActionLink("99999999", "AddViewNotification", new { id = "99999999" }).ToString();
+    var tableColumns = new Dictionary<string, Func<dynamic, string>>();
+    tableColumns.Add("Id", obj => linkText.Replace("99999999", obj.UniqueKey));
+    tableColumns.Add("Subject", obj => obj.Subject);
+    tableColumns.Add("Sender", obj => obj.SenderName);
+    tableColumns.Add("Character Recipient", obj => obj.RecipientName);
+    tableColumns.Add("Recieved", obj => obj.Sent.ToString("MM/dd/yyyy hh:mm tt"));
+    tableColumns.Add("Marked As Read", obj => obj.Read.ToString());
+    tableColumns.Add("Important", obj => obj.Important.ToString());
+}
+<div>
+    @Html.ActionLink("Add New", "AddViewNotification", null, new { @class = "addNew" })
+</div>
+@Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model, "Notifications"))
+@using (Html.BeginForm("RemoveNotification", "Manage"))
+{
+    @Html.AntiForgeryToken()
+    @Html.Partial("ConfigListTable", new NetMud.Models.ListTableViewModel() { Name = "Notifications", Columns = tableColumns, Values = Model.CurrentPageOfItems.OrderByDescending(obj => obj.Read).OrderByDescending(obj => obj.Sent), IncludeUnapprove = false, IncludeDelete = false })
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

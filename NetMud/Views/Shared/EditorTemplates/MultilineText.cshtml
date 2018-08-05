@@ -1,7 +1,21 @@
-﻿@model string
-
-@Html.LabelFor(m => m, new { @class = "control-label" })
-<div>
-    @Html.TextAreaFor(m => m, new { @class = "form-control" })
+﻿@using NetMud.Models
+@model string
+@{
+    double columnCount = ViewData["columnCount"] == null ? 1 : (int)ViewData["columnCount"];
+    bool disabled = ViewData["disabled"] != null;
+    var columnLabelValue = columnCount > 2 ? 1 : 2;
+    var columnInputValue = (int)Math.Round(9 / columnCount);
+    var cssClass = ViewData["cssClass"] == null ? "form-control" : ViewData["cssClass"];
+}
+@Html.DescriptiveLabelFor(m => m, new { @class = String.Format("col-sm-{0} col-form-label", columnLabelValue) })
+<div class="col-sm-5">
+    @if (disabled)
+    {
+        @Html.TextAreaFor(m => m, 20, 80, new Dictionary<string, object>() { { "class", cssClass }, { "disabled", "disabled" } })
+    }
+    else
+    {
+        @Html.TextAreaFor(m => m, 20, 80, new Dictionary<string, object>() { { "class", cssClass } })
+    }
     @Html.ValidationMessageFor(m => m, "", new { @class = "text-danger" })
 </div>
