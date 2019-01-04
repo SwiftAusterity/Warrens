@@ -1,0 +1,26 @@
+﻿@{
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Interactions: In Depth", new string[] { "Home" }, new string[] { "/" });
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="informationalGroup">
+    <p>
+        Interactions are essentially the sum total of mechanics in hmrMUD. You register an Interaction to a TileType, NPC or Item which means everything you can do in hmrMUD is an
+        action taken <strong>against</strong> something. Interactions have: The Target (the thing the interaction is on), Pre-Requisites and a Tool. Filling a watering can is an action taken against
+        a water source using a watering can as the Tool.
+    </p>
+</div>
+<div class="informationalGroup">
+    <h4>Tool</h4>
+    <p>
+        A Tool is designated by the Quality. Qualities are simply word tags on an Item. This is so multiple distinct Items may be used for the same purpose. You would use the tag "pickaxe" for
+        an interaction involving breaking rocks. Any item designated as a Pickaxe is then legal to use for that interaction.
+    </p>
+</div>
+<div class="informationalGroup">
+    <h4>Pre-requisites</h4>
+    <p>
+        Both the Tool and the Target can have prerequisites associated with them. Prerequisites are a Quality and a Quality Value. For example you might have a "break rock" interaction on various rock items.
+        A smaller rock item might only require any Pickaxe tool but larger or denser rocks might require "Pickaxe: 5:" which would warrant an Item with the Pickaxe Quality of 5 or greater.
+    </p>
+</div>

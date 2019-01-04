@@ -24,7 +24,7 @@ namespace NetMud
             app.CreatePerOwinContext<ApplicationSignInManager>(ApplicationSignInManager.Create);
 
             //make sure the roles exist
-            var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
+            RoleManager<IdentityRole> roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
             AddRoleToStore(roleManager);
 
             // Enable the application to use a cookie to store information for the signed in user
@@ -74,7 +74,7 @@ namespace NetMud
 
         private async void AddRoleToStore(RoleManager<IdentityRole> manager)
         {
-            var roles = manager.Roles.ToList();
+            System.Collections.Generic.List<IdentityRole> roles = manager.Roles.ToList();
             if (!roles.Any(r => r.Name.Equals("Admin", StringComparison.OrdinalIgnoreCase)))
             {
                 IdentityRole role = new IdentityRole("Admin");

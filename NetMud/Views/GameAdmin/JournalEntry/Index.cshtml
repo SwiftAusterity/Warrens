@@ -1,5 +1,7 @@
 ﻿@model NetMud.Models.Admin.ManageJournalEntriesViewModel
 @{
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Journal Entries", new string[] { "Dashboard" }, new string[] { "/GameAdmin" });
+
     var linkText = Html.ActionLink("99999999", "Edit", new { id = 99999999 }).ToString();
     var tableColumns = new Dictionary<string, Func<dynamic, string>>();
     tableColumns.Add("Id", obj => linkText.Replace("99999999", obj.Id.ToString()));
@@ -13,15 +15,7 @@
     tableColumns.Add("Expired On", obj => obj.ExpireDate.ToShortDateString());
 }
 
-@Html.Partial("AddContentLink")
-
-@Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model, "JournalEntry"))
-
-@using (Html.BeginForm("Remove", "JournalEntry"))
-{
-    @Html.AntiForgeryToken()
-    @Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Name = "Entries", Columns = tableColumns, Values = Model.CurrentPageOfItems.OrderBy(obj => obj.Id), IncludeDelete = true, IncludeUnapprove = true })
-}
+@Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Columns = tableColumns, Values = Model.CurrentPageOfItems.OrderBy(obj => obj.Id), PagingModel = Model, EntityTypeName = "JournalEntry" })
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

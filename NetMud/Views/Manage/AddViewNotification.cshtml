@@ -1,19 +1,23 @@
 ﻿@model NetMud.Models.Admin.AddViewNotificationViewModel
 
+@{
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Send Notification", new string[] { "Dashboard", "Mailbox" }, new string[] { "/Manage", "/Manage/Notifications" });
+}
+
+
 @if (Model.DataObject == null)
 {
     <section id="newNotificationForm">
         @using (Html.BeginForm("AddViewNotification", "Manage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
             @Html.AntiForgeryToken()
-            <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <div class="form-group row">
                 @Html.EditorFor(e => e.RecipientAccount)
                 @Html.EditorFor(e => e.Recipient)
             </div>
             <div class="form-group row">
-                @Html.EditorFor(e => e.Subject, new { columnCount = 1 })
+                @Html.EditorFor(e => e.Subject, new { columnCount = 2 })
             </div>
             <div class="form-group row">
                 @Html.EditorFor(e => e.Body)

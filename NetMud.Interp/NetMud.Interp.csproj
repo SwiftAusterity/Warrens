@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NetMud.Interp</RootNamespace>
     <AssemblyName>NetMud.Interp</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -40,9 +40,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandPackage.cs" />
     <Compile Include="Context.cs" />
     <Compile Include="Interpret.cs" />
-    <Compile Include="LexicalInterpretationEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -61,10 +61,6 @@
     <ProjectReference Include="..\NetMud.DataStructure\NetMud.DataStructure.csproj">
       <Project>{88b7a648-fe23-4e88-9b60-ae17c8858af4}</Project>
       <Name>NetMud.DataStructure</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NetMud.Data\NetMud.Data.csproj">
-      <Project>{8b2cb5f6-65ca-4458-856b-6957e9309dbb}</Project>
-      <Name>NetMud.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\NetMud.Utility\NetMud.Utility.csproj">
       <Project>{9f3caec0-73dc-463c-8ef7-13b83bc8fb12}</Project>

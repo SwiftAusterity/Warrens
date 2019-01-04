@@ -1,22 +1,22 @@
-﻿using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.Behaviors.Rendering;
-using NutMud.Commands.Attributes;
-using System.Collections.Generic;
-
-using NetMud.Utility;
+﻿using NetMud.Cartography;
 using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
-using NetMud.DataStructure.SupportingClasses;
-using NetMud.Data.Lexical;
+using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.Player;
+using NetMud.DataStructure.System;
+using NetMud.Utility;
+using System.Collections.Generic;
 
-namespace NutMud.Commands.Rendering
+namespace NetMud.Commands.Rendering
 {
     /// <summary>
     /// Invokes the current container's RenderToLook
     /// </summary>
-    [CommandKeyword("look", false)]
+    [CommandKeyword("look", false, "l")]
     [CommandPermission(StaffRank.Player)]
-    [CommandParameter(CommandUsage.Subject, typeof(ILookable), new CacheReferenceType[] { CacheReferenceType.Entity }, true)]
+    [CommandParameter(CommandUsage.Subject, typeof(ILookable), CacheReferenceType.Entity, true)]
     [CommandRange(CommandRangeType.Touch, 0)]
     public class Look : CommandPartial
     {
@@ -33,43 +33,44 @@ namespace NutMud.Commands.Rendering
         /// </summary>
         public override void Execute()
         {
-            var sb = new List<string>();
+            List<string> sb = new List<string>();
 
             //Just do a blank execution as the channel will handle doing the room updates
             if (Subject == null)
             {
                 //sb.AddRange(OriginLocation.CurrentLocation.RenderToLook(Actor));
 
-                var blankMessenger = new MessageCluster(new Message(MessagingType.Visible, new Occurrence() { Strength = 999 }) { Override = new string[] { "You observe your surroundings." } });
+                //Send a full map refresh
+                if (Actor.ImplementsType<IPlayer>())
+                    Utilities.SendMapToPlayer((IPlayer)Actor);
 
-                blankMessenger.ExecuteMessaging(Actor, (IEntity)Subject, null, OriginLocation.CurrentLocation, null);
                 return;
             }
 
-            var lookTarget = (ILookable)Subject;
+            ILookable lookTarget = (ILookable)Subject;
 
-            var toActor = new Message(MessagingType.Visible, lookTarget.RenderToLook(Actor))
+            Message toActor = new Message()
             {
-                Override = sb
+                Body = sb
             };
 
-            var toOrigin = new Message(MessagingType.Visible, new Occurrence() { Strength = 5 })
+            Message toOrigin = new Message()
             {
-                Override = new string[] { "$A$ looks at $T$." }
+                Body = new string[] { "$A$ looks at $T$." }
             };
 
-            var toSubject = new Message(MessagingType.Visible, new Occurrence() { Strength = 1 })
+            Message toSubject = new Message()
             {
-                Override = new string[] { "$A$ looks at $T$." }
+                Body = new string[] { "$A$ looks at $T$." }
             };
 
-            var messagingObject = new MessageCluster(toActor)
+            MessageCluster messagingObject = new MessageCluster(toActor)
             {
                 ToOrigin = new List<IMessage> { toOrigin },
                 ToSubject = new List<IMessage> { toSubject }
             };
 
-            messagingObject.ExecuteMessaging(Actor, (IEntity)Subject, null, OriginLocation.CurrentLocation, null);
+            messagingObject.ExecuteMessaging(Actor, (IEntity)Subject, null, OriginLocation.CurrentZone, null);
         }
 
         /// <summary>
@@ -78,7 +79,7 @@ namespace NutMud.Commands.Rendering
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            var sb = new List<string>
+            List<string> sb = new List<string>
             {
                 "Valid Syntax: look",
                 "look &lt;target&gt;".PadWithString(14, "&nbsp;", true)

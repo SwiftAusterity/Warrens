@@ -1,22 +1,22 @@
-﻿using NutMud.Commands.Attributes;
-using System.Collections.Generic;
-using NetMud.Data.Game;
-using NetMud.Commands.Attributes;
+﻿using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
+using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.NPC;
+using NetMud.DataStructure.Player;
+using NetMud.DataStructure.System;
 using System;
-using NetMud.DataStructure.SupportingClasses;
-using NetMud.DataStructure.Base.System;
-using NetMud.Data.Lexical;
+using System.Collections.Generic;
 
-namespace NutMud.Commands.Administrative
+namespace NetMud.Commands.Administrative
 {
     /// <summary>
     /// Invokes the current container's RenderToLook
     /// </summary>
-    [CommandKeyword("gotochar", false, true, true)]
+    [CommandKeyword("gotochar", false)]
     [CommandPermission(StaffRank.Guest)]
-    [CommandParameter(CommandUsage.Subject, typeof(Player), new CacheReferenceType[] { CacheReferenceType.Entity }, true)]
-    [CommandParameter(CommandUsage.Subject, typeof(Intelligence), new CacheReferenceType[] { CacheReferenceType.Entity }, true)]
+    [CommandParameter(CommandUsage.Subject, new Type[] { typeof(IPlayer), typeof(INonPlayerCharacter) }, CacheReferenceType.Entity, true)]
     [CommandRange(CommandRangeType.Global, 0)]
     public class GotoChar : CommandPartial
     {
@@ -38,35 +38,35 @@ namespace NutMud.Commands.Administrative
             if (moveToPerson.CurrentLocation == null)
                 throw new Exception("Invalid goto target.");
 
-            var moveTo = moveToPerson.CurrentLocation;
+            var moveTo = moveToPerson.CurrentLocation.Clone(moveToPerson.CurrentLocation.CurrentCoordinates);
 
-            var sb = new List<string>
+            List<string> sb = new List<string>
             {
                 "You teleport."
             };
 
-            var toActor = new Message(MessagingType.Visible, new Occurrence() { Strength = 1 })
+            Message toActor = new Message()
             {
-                Override = sb
+                Body = sb
             };
 
-            var toOrigin = new Message(MessagingType.Visible, new Occurrence() { Strength = 30 })
+            Message toOrigin = new Message()
             {
-                Override = new string[] { "$A$ disappears in a puff of smoke." }
+                Body = new string[] { "$A$ disappears in a puff of smoke." }
             };
 
-            var toDest = new Message(MessagingType.Visible, new Occurrence() { Strength = 30 })
+            Message toDest = new Message()
             {
-                Override = new string[] { "$A$ appears out of nowhere." }
+                Body = new string[] { "$A$ appears out of nowhere." }
             };
 
-            var messagingObject = new MessageCluster(toActor)
+            MessageCluster messagingObject = new MessageCluster(toActor)
             {
                 ToOrigin = new List<IMessage> { toOrigin },
                 ToDestination = new List<IMessage> { toDest }
             };
 
-            messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation.CurrentLocation, null);
+            messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation.CurrentZone, null);
 
             Actor.TryTeleport(moveTo);
         }
@@ -77,7 +77,7 @@ namespace NutMud.Commands.Administrative
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            var sb = new List<string>
+            List<string> sb = new List<string>
             {
                 "Valid Syntax: goto &lt;room name&gt;"
             };

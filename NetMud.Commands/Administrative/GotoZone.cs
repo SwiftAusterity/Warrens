@@ -1,22 +1,21 @@
-﻿using NetMud.DataStructure.Behaviors.Rendering;
-using NutMud.Commands.Attributes;
-using System.Collections.Generic;
-using NetMud.Data.Game;
-using NetMud.Commands.Attributes;
+﻿using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
+using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.System;
+using NetMud.DataStructure.Zone;
 using System;
-using NetMud.DataStructure.SupportingClasses;
-using NetMud.Data.System;
-using NetMud.Data.Lexical;
+using System.Collections.Generic;
 
-namespace NutMud.Commands.Administrative
+namespace NetMud.Commands.Administrative
 {
     /// <summary>
     /// Invokes the current container's RenderToLook
     /// </summary>
-    [CommandKeyword("gotozone", false, true, true)]
+    [CommandKeyword("gotozone", false)]
     [CommandPermission(StaffRank.Guest)]
-    [CommandParameter(CommandUsage.Subject, typeof(Zone), new CacheReferenceType[] { CacheReferenceType.Entity }, false)] //for names
+    [CommandParameter(CommandUsage.Subject, typeof(IZone), CacheReferenceType.Entity, false)] //for names
     [CommandRange(CommandRangeType.Global, 0)]
     public class GotoZone : CommandPartial
     {
@@ -33,36 +32,36 @@ namespace NutMud.Commands.Administrative
         /// </summary>
         public override void Execute()
         {
-            var moveTo = (ILocation)Subject;
-            var sb = new List<string>
+            var moveTo = (IZone)Subject;
+            List<string> sb = new List<string>
             {
                 "You teleport."
             };
 
-            var toActor = new Message(MessagingType.Visible, new Occurrence() { Strength = 1 })
+            Message toActor = new Message()
             {
-                Override = sb
+                Body = sb
             };
 
-            var toOrigin = new Message(MessagingType.Visible, new Occurrence() { Strength = 30 })
+            Message toOrigin = new Message()
             {
-                Override = new string[] { "$A$ disappears in a puff of smoke." }
+                Body = new string[] { "$A$ disappears in a puff of smoke." }
             };
 
-            var toDest = new Message(MessagingType.Visible, new Occurrence() { Strength = 30 })
+            Message toDest = new Message()
             {
-                Override = new string[] { "$A$ appears out of nowhere." }
+                Body = new string[] { "$A$ appears out of nowhere." }
             };
 
-            var messagingObject = new MessageCluster(toActor)
+            MessageCluster messagingObject = new MessageCluster(toActor)
             {
                 ToOrigin = new List<IMessage> { toOrigin },
                 ToDestination = new List<IMessage> { toDest }
             };
 
-            messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation.CurrentLocation, null);
+            messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation.CurrentZone, null);
 
-            Actor.TryTeleport(new GlobalPosition(moveTo));
+            Actor.TryTeleport((IGlobalPosition)moveTo.CurrentLocation.Clone());
         }
 
         /// <summary>
@@ -71,7 +70,7 @@ namespace NutMud.Commands.Administrative
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            var sb = new List<string>
+            List<string> sb = new List<string>
             {
                 "Valid Syntax: goto &lt;room name&gt;"
             };

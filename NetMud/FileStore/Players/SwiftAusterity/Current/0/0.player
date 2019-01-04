@@ -1,1 +1,27 @@
-{"AccountHandle":"SwiftAusterity","Inventory":{"$type":"NetMud.Data.System.EntityContainer`1[[NetMud.DataStructure.Base.Entity.IInanimate, NetMud.DataStructure]], NetMud.Data","NamedContainers":{"$type":"NetMud.DataStructure.SupportingClasses.IEntityContainerData`1[[NetMud.DataStructure.Base.Entity.IInanimate, NetMud.DataStructure]][], NetMud.DataStructure","$values":[]}},"BirthMark":"0.-8586691451988606284.9452ce","Birthdate":"2018-07-24T14:48:06.6169524-05:00","DataTemplateId":0,"CurrentLocation":{"CurrentLocation":{"ObjectType":"NetMud.Data.Game.Zone, NetMud.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null","BirthMark":"0.-8586691453728289911.a231cc"}},"Affects":null,"CachingType":0,"Descriptives":null}
+{
+  "AccountHandle": "SwiftAusterity",
+  "Inventory": null,
+  "Capacity": 0,
+  "CurrentStamina": 0,
+  "CurrentHealth": 0,
+  "BirthMark": "0.-8586634559936748357.2e3516",
+  "Birthdate": "2018-09-28T11:08:11.8027451-05:00",
+  "DataTemplateId": 0,
+  "CreatorHandle": "INTERNAL_SYSTEM",
+  "Creator": null,
+  "CreatorRank": 2,
+  "DecayEvents": [],
+  "Qualities": [],
+  "CurrentLocation": {
+    "CurrentCoordinates": {
+      "Item1": 0,
+      "Item2": 0
+    },
+    "CurrentZone": {
+      "ObjectType": "NetMud.Data.Zones.Zone, NetMud.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "BirthMark": "0.-8586634560207647741.07d935"
+    },
+    "CurrentContainer": null
+  },
+  "CachingType": 0
+}

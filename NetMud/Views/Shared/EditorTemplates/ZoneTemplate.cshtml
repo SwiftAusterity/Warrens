@@ -1,0 +1,35 @@
+﻿@using NetMud.Data.Zones
+
+@model ZoneTemplate
+
+<h4>Details</h4>
+<div class="form-group row">
+    @Html.EditorFor(e => e.Name)
+    @Html.EditorFor(e => e.World, new { validItems = ViewData["ValidWorlds"] })
+</div>
+<h4>Environment</h4>
+<div class="form-group row">
+    @Html.EditorFor(m => m.BaseBiome)
+    @Html.EditorFor(m => m.Hemisphere)
+    @Html.EditorFor(m => m.TemperatureCoefficient)
+    @Html.EditorFor(m => m.PressureCoefficient)
+</div>
+<h4>Appearance</h4>
+<div class="form-group row">
+    @Html.EditorFor(e => e.Font)
+    @Html.EditorFor(e => e.BackgroundHexColor)
+    @Html.EditorFor(e => e.BaseTileType, new { validItems = ViewData["ValidTileTypes"] })
+</div>
+<h4>Default Spawning</h4>
+<div class="form-group row">
+    @Html.EditorFor(e => e.BaseCoordinates)
+</div>
+
+<div class="form-group row">
+    @Html.EditorFor(e => e.Description)
+</div>
+
+<div class="clearfix"></div>
+<div>
+    @Html.EditorFor(e => e.Map)
+</div>

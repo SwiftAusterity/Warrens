@@ -1,16 +1,16 @@
 ﻿using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
-using NetMud.Data.Lexical;
-using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.SupportingClasses;
+using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Architectural.ActorBase;
+using NetMud.DataStructure.Inanimate;
+using NetMud.DataStructure.System;
 using NetMud.Utility;
-using NutMud.Commands.Attributes;
 using System.Collections.Generic;
 
 namespace NetMud.Commands.Rendering
 {
-    [CommandKeyword("inventory", false, true, true)]
-    [CommandKeyword("inv", false, false, true)]
+    [CommandKeyword("inventory", false, new string[] { "inv", "i" })]
     [CommandPermission(StaffRank.Player)]
     [CommandRange(CommandRangeType.Touch, 0)]
     public class Inventory : CommandPartial
@@ -28,30 +28,28 @@ namespace NetMud.Commands.Rendering
         /// </summary>
         public override void Execute()
         {
-            var sb = new List<string>();
-            var chr = (IMobile)Actor;
-            var toActor = new List<IMessage>();
-
-            toActor.Add(
-                new Message(MessagingType.Visible, new Occurrence() { Strength = 9999 })
+            List<string> sb = new List<string>();
+            IMobile chr = (IMobile)Actor;
+            List<IMessage> toActor = new List<IMessage>
+            {
+                new Message()
                 {
-                    Override = new string[] { "You look through your belongings." }
+                    Body = new string[] { "You look through your belongings." }
+                }
+            };
+
+            foreach (IInanimate thing in chr.Inventory.EntitiesContained())
+            {
+                string itemString = string.Format("{0} {1}", thing.Template<IInanimateTemplate>().AsciiCharacter, thing.GetDescribableName(Actor));
+                toActor.Add(new Message()
+                {
+                    Body = new string[] { itemString }
                 });
+            }
 
-            foreach (var thing in chr.Inventory.EntitiesContained())
-                toActor.Add(new Message(MessagingType.Visible, thing.RenderAsContents(chr, new[] { MessagingType.Visible })));
+            MessageCluster messagingObject = new MessageCluster(toActor);
 
-            var toOrigin = new Message(MessagingType.Visible, new Occurrence() { Strength = 30 })
-            {
-                Override = new string[] { "$A$ sifts through $G$ belongings." }
-            };
-
-            var messagingObject = new MessageCluster(toActor)
-            {
-                ToOrigin = new List<IMessage> { toOrigin }
-            };
-
-            messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation.CurrentLocation, null);
+            messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation.CurrentZone, null);
         }
 
         /// <summary>
@@ -60,7 +58,7 @@ namespace NetMud.Commands.Rendering
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            var sb = new List<string>
+            List<string> sb = new List<string>
             {
                 "Valid Syntax: inventory",
                 "inv".PadWithString(14, "&nbsp;", true)

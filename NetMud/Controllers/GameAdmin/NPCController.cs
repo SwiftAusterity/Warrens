@@ -1,17 +1,19 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
-using NetMud.Data.EntityBackingData;
-using NetMud.Data.Lexical;
+using NetMud.Data.Action;
+using NetMud.Data.NPCs;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.Behaviors.System;
-using NetMud.DataStructure.Linguistic;
-using NetMud.DataStructure.SupportingClasses;
+using NetMud.DataStructure.Action;
+using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Inanimate;
+using NetMud.DataStructure.NPC;
+using NetMud.DataStructure.Tile;
+using NetMud.Models;
 using NetMud.Models.Admin;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -43,9 +45,9 @@ namespace NetMud.Controllers.GameAdmin
             UserManager = userManager;
         }
 
-        public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
+        public System.Web.Mvc.ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageNPCDataViewModel(BackingDataCache.GetAll<INonPlayerCharacter>())
+            ManageNPCDataViewModel vModel = new ManageNPCDataViewModel(TemplateCache.GetAll<INonPlayerCharacterTemplate>())
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -60,55 +62,68 @@ namespace NetMud.Controllers.GameAdmin
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route(@"GameAdmin/NPC/Remove/{removeId?}/{authorizeRemove?}/{unapproveId?}/{authorizeUnapprove?}")]
-        public ActionResult Remove(long removeId = -1, string authorizeRemove = "", long unapproveId = -1, string authorizeUnapprove = "")
+        public System.Web.Mvc.ActionResult Remove(long removeId = -1, string authorizeRemove = "", long unapproveId = -1, string authorizeUnapprove = "")
         {
             string message = string.Empty;
 
             if (!string.IsNullOrWhiteSpace(authorizeRemove) && removeId.ToString().Equals(authorizeRemove))
             {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<INonPlayerCharacter>(removeId);
+                var obj = TemplateCache.Get<INonPlayerCharacterTemplate>(removeId);
 
                 if (obj == null)
+                {
                     message = "That does not exist";
+                }
                 else if (obj.Remove(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                 {
                     LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveNPC[" + removeId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Delete Successful.";
                 }
                 else
+                {
                     message = "Error; Removal failed.";
+                }
             }
             else if (!string.IsNullOrWhiteSpace(authorizeUnapprove) && unapproveId.ToString().Equals(authorizeUnapprove))
             {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<INonPlayerCharacter>(unapproveId);
+                var obj = TemplateCache.Get<INonPlayerCharacterTemplate>(unapproveId);
 
                 if (obj == null)
+                {
                     message = "That does not exist";
-                else if (obj.ChangeApprovalStatus(authedUser.GameAccount, authedUser.GetStaffRank(User), ApprovalState.Returned))
+                }
+                else if (obj.ChangeApprovalStatus(authedUser.GameAccount, authedUser.GetStaffRank(User), ApprovalState.Unapproved))
                 {
                     LoggingUtility.LogAdminCommandUsage("*WEB* - UnapproveNPC[" + unapproveId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Unapproval Successful.";
                 }
                 else
+                {
                     message = "Error; Unapproval failed.";
+                }
             }
             else
+            {
                 message = "You must check the proper remove or unapprove authorization radio button first.";
+            }
 
             return RedirectToAction("Index", new { Message = message });
         }
 
         [HttpGet]
-        public ActionResult Add()
+        public System.Web.Mvc.ActionResult Add(long Template = -1)
         {
-            var vModel = new AddEditNPCDataViewModel
+            AddEditNPCDataViewModel vModel = new AddEditNPCDataViewModel(Template)
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidRaces = BackingDataCache.GetAll<IRace>()
+                ValidInanimateDatas = TemplateCache.GetAll<IInanimateTemplate>(),
+                ValidNPCDatas = TemplateCache.GetAll<INonPlayerCharacterTemplate>(),
+                ValidTileDatas = TemplateCache.GetAll<ITileTemplate>(),
+                DataObject = new NonPlayerCharacterTemplate()
             };
 
             return View("~/Views/GameAdmin/NPC/Add.cshtml", vModel);
@@ -116,27 +131,39 @@ namespace NetMud.Controllers.GameAdmin
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Add(string Name, string SurName, string Gender, long raceId)
+        public System.Web.Mvc.ActionResult Add(AddEditNPCDataViewModel vModel)
         {
             string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var newObj = new NonPlayerCharacter
+            var incomingData = vModel.DataObject;
+
+            NonPlayerCharacterTemplate obj = new NonPlayerCharacterTemplate
             {
-                Name = Name,
-                SurName = SurName,
-                Gender = Gender
+                Name = incomingData.Name,
+                SurName = incomingData.SurName,
+                Gender = incomingData.Gender,
+                AsciiCharacter = incomingData.AsciiCharacter,
+                Description = incomingData.Description,
+                HexColorCode = incomingData.HexColorCode,
+                TotalHealth = 100,
+                TotalStamina = 100,
+                Race = incomingData.Race,
+                TeachableAbilities = incomingData.TeachableAbilities,
+                TeachableProficencies = incomingData.TeachableProficencies,
+                WillPurchase = incomingData.WillPurchase,
+                WillSell = incomingData.WillSell,
+                InventoryRestock = incomingData.InventoryRestock,
+                Personality = incomingData.Personality
             };
-            var race = BackingDataCache.Get<IRace>(raceId);
 
-            if (race != null)
-                newObj.RaceData = race;
-
-            if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
+            if (obj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
+            {
                 message = "Error; Creation failed.";
+            }
             else
             {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - AddNPCData[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                LoggingUtility.LogAdminCommandUsage("*WEB* - AddNPCData[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 message = "Creation Successful.";
             }
 
@@ -144,16 +171,18 @@ namespace NetMud.Controllers.GameAdmin
         }
 
         [HttpGet]
-        public ActionResult Edit(int id)
+        public System.Web.Mvc.ActionResult Edit(long id, INonPlayerCharacterTemplate Template = null)
         {
             string message = string.Empty;
-            var vModel = new AddEditNPCDataViewModel
+            AddEditNPCDataViewModel vModel = new AddEditNPCDataViewModel(-1)
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidRaces = BackingDataCache.GetAll<IRace>()
+                ValidInanimateDatas = TemplateCache.GetAll<IInanimateTemplate>(),
+                ValidNPCDatas = TemplateCache.GetAll<INonPlayerCharacterTemplate>(),
+                ValidTileDatas = TemplateCache.GetAll<ITileTemplate>()
             };
 
-            var obj = BackingDataCache.Get<INonPlayerCharacter>(id);
+            var obj = TemplateCache.Get<NonPlayerCharacterTemplate>(id);
 
             if (obj == null)
             {
@@ -162,34 +191,84 @@ namespace NetMud.Controllers.GameAdmin
             }
 
             vModel.DataObject = obj;
-            vModel.Name = obj.Name;
-            vModel.Gender = obj.Gender;
-            vModel.SurName = obj.SurName;
+
+            //Apply the Actions from this other guy, dont suck in actions from ourself thats stupid
+            if (Template != null && id != Template.Id)
+            {
+                bool changedActions = false;
+
+                List<IDecayEvent> decayEvents = new List<IDecayEvent>();
+                foreach (var action in Template.DecayEvents)
+                {
+                    decayEvents.Add((IDecayEvent)action.Clone());
+                    changedActions = true;
+                }
+                obj.DecayEvents = new HashSet<IDecayEvent>(decayEvents);
+
+                List<IInteraction> interactions = new List<IInteraction>();
+                foreach (var action in Template.Interactions)
+                {
+                    interactions.Add((IInteraction)action.Clone());
+                    changedActions = true;
+                }
+                obj.Interactions = new HashSet<IInteraction>(interactions);
+
+                List<IUse> uses = new List<IUse>();
+                foreach (var action in Template.UsableAbilities)
+                {
+                    uses.Add((IUse)action.Clone());
+                    changedActions = true;
+                }
+                obj.UsableAbilities = new HashSet<IUse>(uses);
+
+                if (changedActions)
+                {
+                    if (obj.Save(vModel.authedUser.GameAccount, vModel.authedUser.GetStaffRank(User)))
+                    {
+                        LoggingUtility.LogAdminCommandUsage("*WEB* - EditInanimateData[" + obj.Id.ToString() + "]", vModel.authedUser.GameAccount.GlobalIdentityHandle);
+                        message = "Edit Successful.";
+                    }
+                    else
+                    {
+                        message = "Error; Edit failed.";
+                    }
+                }
+            }
 
             return View("~/Views/GameAdmin/NPC/Edit.cshtml", vModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(string Name, string SurName, string Gender, long raceId, int id)
+        public System.Web.Mvc.ActionResult Edit(long id, AddEditNPCDataViewModel vModel)
         {
             string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = BackingDataCache.Get<NonPlayerCharacter>(id);
+            NonPlayerCharacterTemplate obj = TemplateCache.Get<NonPlayerCharacterTemplate>(id);
             if (obj == null)
             {
                 message = "That does not exist";
                 return RedirectToAction("Index", new { Message = message });
             }
 
-            obj.Name = Name;
-            obj.SurName = SurName;
-            obj.Gender = Gender;
-            var race = BackingDataCache.Get<IRace>(raceId);
+            obj = vModel.DataObject;
+            obj.Name = vModel.DataObject.Name;
+            obj.SurName = vModel.DataObject.SurName;
+            obj.Gender = vModel.DataObject.Gender;
+            obj.AsciiCharacter = vModel.DataObject.AsciiCharacter;
+            obj.Description = vModel.DataObject.Description;
+            obj.HexColorCode = vModel.DataObject.HexColorCode;
+            obj.Race = vModel.DataObject.Race;
 
-            if (race != null)
-                obj.RaceData = race;
+            obj.TeachableAbilities = vModel.DataObject.TeachableAbilities;
+            obj.TeachableProficencies = vModel.DataObject.TeachableProficencies;
+
+            obj.WillPurchase = vModel.DataObject.WillPurchase;
+            obj.WillSell = vModel.DataObject.WillSell;
+            obj.InventoryRestock = vModel.DataObject.InventoryRestock;
+
+            obj.Personality = vModel.DataObject.Personality;
 
             if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {
@@ -197,168 +276,344 @@ namespace NetMud.Controllers.GameAdmin
                 message = "Edit Successful.";
             }
             else
+            {
                 message = "Error; Edit failed.";
+            }
 
             return RedirectToAction("Index", new { Message = message });
         }
 
+        #region Actions
         [HttpGet]
-        public ActionResult AddEditDescriptive(long id, short descriptiveType, string phrase)
+        public System.Web.Mvc.ActionResult AddInteraction(long id)
         {
-            string message = string.Empty;
+            var origin = TemplateCache.Get<INonPlayerCharacterTemplate>(id);
 
-            var obj = BackingDataCache.Get<INonPlayerCharacter>(id);
-            if (obj == null)
+            if (origin == null)
             {
-                message = "That zone does not exist";
-                return RedirectToRoute("ModalErrorOrClose", new { Message = message });
+                return RedirectToAction("Index", new { Message = "Invalid Tile" });
             }
 
-            var vModel = new OccurrenceViewModel
+            AddEditInteractionViewModel vModel = new AddEditInteractionViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                DataObject = obj
+                ParentObject = origin,
+                DataObject = new Interaction(),
+                ClassType = "NPC"
             };
 
-            if (descriptiveType > -1)
-            {
-                var grammaticalType = (GrammaticalType)descriptiveType;
-                vModel.OccurrenceDataObject = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType
-                                                                                        && occurrence.Event.Phrase.Equals(phrase, StringComparison.InvariantCultureIgnoreCase));
-            }
-
-            if (vModel.OccurrenceDataObject != null)
-            {
-                vModel.LexicaDataObject = vModel.OccurrenceDataObject.Event;
-                vModel.Strength = vModel.OccurrenceDataObject.Strength;
-                vModel.SensoryType = (short)vModel.OccurrenceDataObject.SensoryType;
-
-                vModel.Role = (short)vModel.LexicaDataObject.Role;
-                vModel.Type = (short)vModel.LexicaDataObject.Type;
-                vModel.Phrase = vModel.LexicaDataObject.Phrase;
-            }
-
-            return View("~/Views/GameAdmin/NPC/Occurrence.cshtml", "_chromelessLayout", vModel);
+            return View(vModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddEditDescriptive(long id, OccurrenceViewModel vModel)
+        public System.Web.Mvc.ActionResult AddInteraction(long id, AddEditInteractionViewModel vModel)
         {
-            string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            var origin = TemplateCache.Get<INonPlayerCharacterTemplate>(id);
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = BackingDataCache.Get<INonPlayerCharacter>(id);
-            if (obj == null)
+            return RedirectToAction("Edit", new { Message = ActionUtility.AddInteraction(origin, vModel.DataObject, authedUser, User), id });
+        }
+
+        [HttpGet]
+        public System.Web.Mvc.ActionResult EditInteraction(long id, string actionName)
+        {
+            var origin = TemplateCache.Get<INonPlayerCharacterTemplate>(id);
+
+            if (origin == null)
             {
-                message = "That zone does not exist";
-                return RedirectToRoute("ModalErrorOrClose", new { Message = message });
+                return RedirectToAction("Index", new { Message = "Invalid NPC" });
             }
 
-            var grammaticalType = (GrammaticalType)vModel.Role;
-            var phraseF = vModel.Phrase;
-            var existingOccurrence = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType
-                                                                                && occurrence.Event.Phrase.Equals(phraseF, StringComparison.InvariantCultureIgnoreCase));
+            var action = origin.Interactions.FirstOrDefault(act => act.Name.Equals(actionName, StringComparison.InvariantCultureIgnoreCase));
 
-            if (existingOccurrence == null)
-                existingOccurrence = new Occurrence();
-
-            existingOccurrence.Strength = vModel.Strength;
-            existingOccurrence.SensoryType = (MessagingType)vModel.SensoryType;
-
-            var existingEvent = existingOccurrence.Event;
-
-            if (existingEvent == null)
-                existingEvent = new Lexica();
-
-            existingEvent.Role = grammaticalType;
-            existingEvent.Phrase = vModel.Phrase;
-            existingEvent.Type = (LexicalType)vModel.Type;
-
-            int modifierIndex = 0;
-            foreach (var currentPhrase in vModel.ModifierPhrases)
+            if (action == null)
             {
-                if (!string.IsNullOrWhiteSpace(currentPhrase))
-                {
-                    if (vModel.ModifierRoles.Count() <= modifierIndex || vModel.ModifierLexicalTypes.Count() <= modifierIndex)
-                        break;
-
-                    var phrase = currentPhrase;
-                    var role = (GrammaticalType)vModel.ModifierRoles[modifierIndex];
-                    var type = (LexicalType)vModel.ModifierLexicalTypes[modifierIndex];
-
-                    existingEvent.TryModify(new Lexica { Role = role, Type = type, Phrase = phrase });
-                }
-
-                modifierIndex++;
+                return RedirectToAction("Edit", new { Message = "That is an invalid action.", id });
             }
 
-            existingOccurrence.Event = existingEvent;
-
-            obj.Descriptives.RemoveWhere(occ => occ.Event.Role == grammaticalType
-                                                    && occ.Event.Phrase.Equals(phraseF, StringComparison.InvariantCultureIgnoreCase));
-            obj.Descriptives.Add(existingOccurrence);
-
-            if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+            AddEditInteractionViewModel vModel = new AddEditInteractionViewModel
             {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - Zone AddEditDescriptive[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-            }
-            else
-                message = "Error; Edit failed.";
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                ParentObject = origin,
+                DataObject = action,
+                ClassType = "NPC"
+            };
 
-            return RedirectToRoute("ModalErrorOrClose", new { Message = message });
+            return View(vModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult RemoveDescriptive(long id, string authorize)
+        public System.Web.Mvc.ActionResult EditInteraction(long id, string actionName, AddEditInteractionViewModel vModel)
+        {
+            var origin = TemplateCache.Get<INonPlayerCharacterTemplate>(id);
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            if (origin == null)
+            {
+                return RedirectToAction("Index", new { Message = "Invalid NPC" });
+            }
+
+            var action = origin.Interactions.FirstOrDefault(act => act.Name.Equals(actionName, StringComparison.InvariantCultureIgnoreCase));
+
+            if (action == null)
+            {
+                return RedirectToAction("Edit", new { Message = "That is an invalid action.", id });
+            }
+
+            return RedirectToAction("Edit", new { Message = ActionUtility.EditInteraction(origin, action, vModel.DataObject, authedUser, User), id });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public System.Web.Mvc.ActionResult RemoveInteraction(long id, string removeId, string authorize)
         {
             string message = string.Empty;
 
             if (string.IsNullOrWhiteSpace(authorize))
+            {
                 message = "You must check the proper authorize radio button first.";
+            }
             else
             {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
-                var values = authorize.Split(new string[] { "|||" }, StringSplitOptions.RemoveEmptyEntries);
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                if (values.Count() != 2)
+                if (!authorize.Equals(removeId))
+                {
                     message = "You must check the proper authorize radio button first.";
+                }
                 else
                 {
-                    var type = short.Parse(values[0]);
-                    var phrase = values[1];
+                    var origin = TemplateCache.Get<INonPlayerCharacterTemplate>(id);
 
-                    var obj = BackingDataCache.Get<INonPlayerCharacter>(id);
-
-                    if (obj == null)
-                        message = "That does not exist";
-                    else
-                    {
-                        var grammaticalType = (GrammaticalType)type;
-                        var existingOccurrence = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType
-                                                                                            && occurrence.Event.Phrase.Equals(phrase, StringComparison.InvariantCultureIgnoreCase));
-
-                        if (existingOccurrence != null)
-                        {
-                            obj.Descriptives.Remove(existingOccurrence);
-
-                            if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
-                            {
-                                LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveDescriptive[" + id.ToString() + "|" + type.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                                message = "Delete Successful.";
-                            }
-                            else
-                                message = "Error; Removal failed.";
-                        }
-                        else
-                            message = "That does not exist";
-                    }
+                    message = ActionUtility.RemoveInteraction(origin, authorize, authedUser, User);
                 }
             }
 
-            return RedirectToRoute("ModalErrorOrClose", new { Message = message });
+            return RedirectToAction("Edit", new { Message = message, id });
         }
 
+        [HttpGet]
+        public System.Web.Mvc.ActionResult AddUse(long id)
+        {
+            var origin = TemplateCache.Get<INonPlayerCharacterTemplate>(id);
+
+            if (origin == null)
+            {
+                return RedirectToAction("Index", new { Message = "Invalid Tile" });
+            }
+
+            AddEditUseViewModel vModel = new AddEditUseViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                ParentObject = origin,
+                DataObject = new Use(),
+                ClassType = "NPC"
+            };
+
+            return View(vModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public System.Web.Mvc.ActionResult AddUse(long id, AddEditUseViewModel vModel)
+        {
+            var origin = TemplateCache.Get<INonPlayerCharacterTemplate>(id);
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            return RedirectToAction("Edit", new { Message = ActionUtility.AddUse(origin, vModel.DataObject, authedUser, User), id });
+        }
+
+        [HttpGet]
+        public System.Web.Mvc.ActionResult EditUse(long id, string actionName)
+        {
+            var origin = TemplateCache.Get<INonPlayerCharacterTemplate>(id);
+
+            if (origin == null)
+            {
+                return RedirectToAction("Index", new { Message = "Invalid NPC" });
+            }
+
+            var action = origin.UsableAbilities.FirstOrDefault(act => act.Name.Equals(actionName, StringComparison.InvariantCultureIgnoreCase));
+
+            if (action == null)
+            {
+                return RedirectToAction("Edit", new { Message = "That is an invalid action.", id });
+            }
+
+            AddEditUseViewModel vModel = new AddEditUseViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                ParentObject = origin,
+                DataObject = action,
+                ClassType = "NPC"
+            };
+
+            return View(vModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public System.Web.Mvc.ActionResult EditUse(long id, string actionName, AddEditUseViewModel vModel)
+        {
+            var origin = TemplateCache.Get<INonPlayerCharacterTemplate>(id);
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            if (origin == null)
+            {
+                return RedirectToAction("Index", new { Message = "Invalid NPC" });
+            }
+
+            var action = origin.UsableAbilities.FirstOrDefault(act => act.Name.Equals(actionName, StringComparison.InvariantCultureIgnoreCase));
+
+            if (action == null)
+            {
+                return RedirectToAction("Edit", new { Message = "That is an invalid action.", id });
+            }
+
+            return RedirectToAction("Edit", new { Message = ActionUtility.EditUse(origin, action, vModel.DataObject, authedUser, User), id });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public System.Web.Mvc.ActionResult RemoveUse(long id, string removeId, string authorize)
+        {
+            string message = string.Empty;
+
+            if (string.IsNullOrWhiteSpace(authorize))
+            {
+                message = "You must check the proper authorize radio button first.";
+            }
+            else
+            {
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+                if (!authorize.Equals(removeId))
+                {
+                    message = "You must check the proper authorize radio button first.";
+                }
+                else
+                {
+                    var origin = TemplateCache.Get<INonPlayerCharacterTemplate>(id);
+
+                    message = ActionUtility.RemoveUse(origin, authorize, authedUser, User);
+                }
+            }
+
+            return RedirectToAction("Edit", new { Message = message, id });
+        }
+
+
+        [HttpGet]
+        public System.Web.Mvc.ActionResult AddDecayEvent(long id)
+        {
+            var origin = TemplateCache.Get<INonPlayerCharacterTemplate>(id);
+
+            if (origin == null)
+            {
+                return RedirectToAction("Index", new { Message = "Invalid Tile" });
+            }
+
+            AddEditDecayEventViewModel vModel = new AddEditDecayEventViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                ParentObject = origin,
+                DataObject = new DecayEvent(),
+                ClassType = "NPC"
+            };
+
+            return View(vModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public System.Web.Mvc.ActionResult AddDecayEvent(long id, AddEditDecayEventViewModel vModel)
+        {
+            var origin = TemplateCache.Get<INonPlayerCharacterTemplate>(id);
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            return RedirectToAction("Edit", new { Message = ActionUtility.AddDecayEvent(origin, vModel.DataObject, authedUser, User), id });
+        }
+
+        [HttpGet]
+        public System.Web.Mvc.ActionResult EditDecayEvent(long id, string actionName)
+        {
+            var origin = TemplateCache.Get<INonPlayerCharacterTemplate>(id);
+
+            if (origin == null)
+            {
+                return RedirectToAction("Index", new { Message = "Invalid NPC" });
+            }
+
+            var action = origin.DecayEvents.FirstOrDefault(act => act.Name.Equals(actionName, StringComparison.InvariantCultureIgnoreCase));
+
+            if (action == null)
+            {
+                return RedirectToAction("Edit", new { Message = "That is an invalid action.", id });
+            }
+
+            AddEditDecayEventViewModel vModel = new AddEditDecayEventViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                ParentObject = origin,
+                DataObject = action,
+                ClassType = "NPC"
+            };
+
+            return View(vModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public System.Web.Mvc.ActionResult EditDecayEvent(long id, string actionName, AddEditDecayEventViewModel vModel)
+        {
+            var origin = TemplateCache.Get<INonPlayerCharacterTemplate>(id);
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            if (origin == null)
+            {
+                return RedirectToAction("Index", new { Message = "Invalid NPC" });
+            }
+
+            var action = origin.DecayEvents.FirstOrDefault(act => act.Name.Equals(actionName, StringComparison.InvariantCultureIgnoreCase));
+
+            if (action == null)
+            {
+                return RedirectToAction("Edit", new { Message = "That is an invalid action.", id });
+            }
+
+            return RedirectToAction("Edit", new { Message = ActionUtility.EditDecayEvent(origin, action, vModel.DataObject, authedUser, User), id });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public System.Web.Mvc.ActionResult RemoveDecayEvent(long id, string removeId, string authorize)
+        {
+            string message = string.Empty;
+
+            if (string.IsNullOrWhiteSpace(authorize))
+            {
+                message = "You must check the proper authorize radio button first.";
+            }
+            else
+            {
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+                if (!authorize.Equals(removeId))
+                {
+                    message = "You must check the proper authorize radio button first.";
+                }
+                else
+                {
+                    var origin = TemplateCache.Get<INonPlayerCharacterTemplate>(id);
+
+                    message = ActionUtility.RemoveDecayEvent(origin, authorize, authedUser, User);
+                }
+            }
+
+            return RedirectToAction("Edit", new { Message = message, id });
+        }
+        #endregion
     }
 }

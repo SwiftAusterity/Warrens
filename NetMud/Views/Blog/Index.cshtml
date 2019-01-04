@@ -1,13 +1,99 @@
 ﻿@model NetMud.Models.BlogViewModel
-
 @{
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Journal Entries", new string[] { "Home" }, new string[] { "/" });
     Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using (Html.BeginForm("Index", "Blog", FormMethod.Post, new { id = "paginationForm" }))
+{
+    <div class="itemsTable">
+        <div class="itemsTableList" style="display: block;">
+            @Html.DisplayFor(m => m.Items)
+        </div>
+        <div class="itemsTableSidebar">
+            <div class="sideBarFilter">
+                <h4>Include Tags</h4>
+                <div>
+                    @foreach (var tag in Model.AllTags)
+                    {
+                        <div class="form-group row" style="text-align: left;">
+                            @if (Model.IncludeTags.Contains(tag))
+                            {
+                                <input id="includedTags" name="includedTags" type="checkbox" value="@tag" checked="checked" />
+                            }
+                            else
+                            {
+                                <input id="includedTags" name="includedTags" type="checkbox" value="@tag" />
+                            }
+                            @Html.Label(tag, new { @class = "col-form-label" })
+                        </div>
+                    }
+                    <div class="form-group row submitButtons">
+                        <input type="submit" value="Search" class="btn btn-default save" />
+                    </div>
+                </div>
+                <hr />
+                <h4>Publish Dates</h4>
+                <div>
+                    @Html.Hidden("monthYearPair", "", new { @id = "monthYearPair" })
+                    @foreach (var monthYear in Model.MonthYearPairs)
+                    {
+                        <h4>
+                            <a href="#" onclick="javascript: updateMonthYearPair(this); return false;" data-month="@monthYear.Item1" data-year="@monthYear.Item2">@string.Format("{0}, {1}", monthYear.Item1, monthYear.Item2)</a>
+                        </h4>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@section Scripts {
+    <script type="text/javascript">
+        function updateMonthYearPair(thisElement) {
+            var $this = $(thisElement);
+            var month = $this.attr('data-month');
+            var year = $this.attr('data-year');
 
-    var tableColumns = new Dictionary<string, Func<dynamic, string>>();
-    tableColumns.Add("Subject", obj => obj.Name);
-    tableColumns.Add("Entry", obj => obj.Body);
+            $('#monthYearPair').val(month + "|||" + year);
+            $('#paginationForm').submit();
+        }
+    </script>
 }
 
-@Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model, "JournalEntry"))
+@section Styles {
+    <style>
+        body {
+            background-image: url(/Content/images/farmBkg.jpg);
+            background-size: cover;
+            background-attachment: fixed;
+            color: white;
+        }
 
-@Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Name = "", Columns = tableColumns, Values = Model.Items.OrderByDescending(obj => obj.PublishDate), IncludeDelete = false, IncludeUnapprove = false })
+        hr {
+            border-color: black;
+        }
+
+        h3 {
+            color: white;
+        }
+
+        /* unvisited link */
+        footer a:link {
+            color: blueviolet;
+        }
+
+        /* visited link */
+        footer a:visited {
+            color: white;
+        }
+
+        /* mouse over link */
+        footer a:hover {
+            color: hotpink;
+        }
+
+        /* selected link */
+        footer a:active {
+            color: red;
+        }
+    </style>
+}

@@ -1,20 +1,74 @@
-﻿<div class="jumbotron">
-    <h1>netMUD: A .net MUD architecture</h1>
+﻿@using NetMud.Models;
+@{
+    var gameName = Html.RandomizeGameName().ToHtmlString();
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model HomeViewModel
+
+<div style="width: 100%;">
+    <div class="descriptiveSection">
+        <h2>@gameName</h2>
+        <h3>A shameless ascii based MMORPG Harvest Moon ripoff</h3>
+        <h4>Current Phase: Aleph</h4>
+        <p>Claim your land and work your farm. Tend to crops and animals. Breed your animals.</p>
+        <p>Sell or horde, it's your choice.</p>
+    </div>
+    @if (Model.LatestPatchNotes != null)
+    {
+        <div class="descriptiveContainer">
+            <h2>Latest Patch Notes</h2>
+            <hr />
+            @Html.DisplayFor(m => m.LatestPatchNotes)
+        </div>
+    }
+
+    @if (Model.LatestNews.Count() > 0)
+    {
+        <div class="descriptiveContainer">
+            <h2>Latest News</h2>
+            <hr />
+            @Html.DisplayFor(m => m.LatestNews)
+        </div>
+    }
+
 </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Make an account</h2>
-        <p>
-            Register an account to get started.
-        </p>
-    </div>
-    <div class="col-md-4">
-        <h2>Make characters</h2>
-        <p>Once you've registered an account, make some characters.</p>
-    </div>
-    <div class="col-md-4">
-        <h2>Hit up the client</h2>
-        <p>Once you have a character made and select it on the top nav hit the test client link to start playing!</p>
-    </div>
-</div>
+@section Styles {
+    <style>
+        body {
+            background-image: url(/Content/images/farmBkg.jpg);
+            background-size: cover;
+            background-attachment: fixed;
+            color: white;
+        }
+
+        hr {
+            border-color: white;
+        }
+
+        h3 {
+            color: white;
+        }
+
+        /* unvisited link */
+        footer a:link {
+            color: blueviolet;
+        }
+
+        /* visited link */
+        footer a:visited {
+            color: white;
+        }
+
+        /* mouse over link */
+        footer a:hover {
+            color: hotpink;
+        }
+
+        /* selected link */
+        footer a:active {
+            color: red;
+        }
+    </style>
+}

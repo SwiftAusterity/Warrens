@@ -1,0 +1,57 @@
+﻿@using NetMud.DataStructure.Architectural
+
+@model NetMud.Models.Admin.DashboardViewModel
+
+@{
+    var validItems = new List<QualityValue>();
+    if (Model.ConfigDataObject != null && Model.ConfigDataObject.DeathSettings.QualityChanges?.Count() > 0)
+    {
+        validItems = Model.ConfigDataObject.DeathSettings.QualityChanges.ToList();
+    }
+    else if(Model.QualityChange != null && Model.QualityChange.Count() > 0)
+    {
+        var i = 0;
+        foreach (var name in Model.QualityChange)
+        {
+            if (Model.QualityChangeValue.Count() <= i)
+            {
+                break;
+            }
+
+            var value = Model.QualityChangeValue[i];
+            validItems.Add(new QualityValue(name, value));
+
+            i++;
+        }
+    }
+    else
+    {
+        validItems.Add(new QualityValue("", 0));
+    }
+}
+
+<h4>Death Quality Changes</h4>
+<div id="QualityRows" class="iterativeContainer">
+    <div class="addRowContainer">
+        <div class="col-sm-1">
+            <a href="#" class="addRow btn" onclick="javascript: $('#QualityRows').append(newDeathQualitiesRow); return false;"><span class="addWord">Add Row</span></a>
+        </div>
+    </div>
+    @foreach (var quality in validItems)
+    {
+        <div class="form-group row">
+            <a href="#" class="removeRow col-form-label" title="Remove this" onclick="javascript: $(this).parent().remove(); return false;">X</a>
+            @Html.EditorFor(e => e.QualityChange, new { noValidation = "true", htmlAttributes = new Dictionary<string, object>() { { "Value", quality.Quality } } })
+            @Html.EditorFor(e => e.QualityChangeValue, new { noValidation = "true", htmlAttributes = new Dictionary<string, object>() { { "Value", quality.Value.ToString() } } })
+        </div>
+    }
+</div>
+
+<script type="text/javascript">
+    var deathQualityName = decodeHtml('@Html.EditorFor(e => e.QualityChange, new { noValidation = "true" }).ToString().Replace(Environment.NewLine, "")');
+    var deathQualityValue = decodeHtml('@Html.EditorFor(m => m.QualityChangeValue, new { noValidation = "true" }).ToString().Replace(Environment.NewLine, "")');
+
+    var newDeathQualitiesRow = '<div class="form-group row">' +
+        '<a href="#" class="removeRow col-form-label" title="Remove this" onclick="javascript: $(this).parent().remove(); return false;">X</a>' +
+        deathQualityName + deathQualityValue + '</div>';
+</script>

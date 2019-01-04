@@ -3,19 +3,26 @@ using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
 using NetMud.Backup;
 using NetMud.CentralControl;
+using NetMud.Data.Players;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Base.Entity;
-using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.Place;
-using NetMud.DataStructure.Base.PlayerConfiguration;
-using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.Base.World;
-using NetMud.DataStructure.Linguistic;
+using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Gaia;
+using NetMud.DataStructure.Gossip;
+using NetMud.DataStructure.Inanimate;
+using NetMud.DataStructure.NPC;
+using NetMud.DataStructure.Player;
+using NetMud.DataStructure.System;
+using NetMud.DataStructure.Tile;
+using NetMud.DataStructure.Zone;
+using NetMud.Gossip;
 using NetMud.Models.Admin;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.WebSockets;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -49,40 +56,58 @@ namespace NetMud.Controllers.GameAdmin
         //Also called Dashboard in most of the html
         public ActionResult Index()
         {
-            var dashboardModel = new DashboardViewModel
+            IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
+            IGossipConfig gossipConfig = ConfigDataCache.Get<IGossipConfig>(new ConfigDataCacheKey(typeof(IGossipConfig), "GossipSettings", ConfigDataType.GameWorld));
+            DashboardViewModel dashboardModel = new DashboardViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
-                Inanimates = BackingDataCache.GetAll<IInanimateData>(),
-                Rooms = BackingDataCache.GetAll<IRoomData>(),
-                NPCs = BackingDataCache.GetAll<INonPlayerCharacter>(),
-                Zones = BackingDataCache.GetAll<IZoneData>(),
-                Locales = BackingDataCache.GetAll<ILocaleData>(),
-                Worlds = BackingDataCache.GetAll<IGaiaData>(),
+                Inanimates = TemplateCache.GetAll<IInanimateTemplate>(),
+                TileTypes = TemplateCache.GetAll<ITileTemplate>(),
+                NPCs = TemplateCache.GetAll<INonPlayerCharacterTemplate>(),
+                Zones = TemplateCache.GetAll<IZoneTemplate>(),
+                Worlds = TemplateCache.GetAll<IGaiaTemplate>(),
 
-                HelpFiles = BackingDataCache.GetAll<IHelp>(),
-                DimensionalModels = BackingDataCache.GetAll<IDimensionalModelData>(),
-                Materials = BackingDataCache.GetAll<IMaterial>(),
-                Races = BackingDataCache.GetAll<IRace>(),
-                Constants = BackingDataCache.GetAll<IConstants>(),
-                Fauna = BackingDataCache.GetAll<IFauna>(),
-                Flora = BackingDataCache.GetAll<IFlora>(),
-                Minerals = BackingDataCache.GetAll<IMineral>(),
-                UIModules = BackingDataCache.GetAll<IUIModule>(),
-                Celestials = BackingDataCache.GetAll<ICelestial>(),
-                Journals = BackingDataCache.GetAll<IJournalEntry>(),
-
-                DictionaryWords = ConfigDataCache.GetAll<IDictata>(),
-                Languages = ConfigDataCache.GetAll<ILanguage>(),
+                HelpFiles = TemplateCache.GetAll<IHelp>(),
+                Races = TemplateCache.GetAll<IRace>(),
+                Celestials = TemplateCache.GetAll<ICelestial>(),
+                Journals = TemplateCache.GetAll<IJournalEntry>(),
 
                 LiveTaskTokens = Processor.GetAllLiveTaskStatusTokens(),
                 LivePlayers = LiveCache.GetAll<IPlayer>().Count(),
                 LiveInanimates = LiveCache.GetAll<IInanimate>().Count(),
-                LiveRooms = LiveCache.GetAll<IRoom>().Count(),
-                LiveNPCs = LiveCache.GetAll<IIntelligence>().Count(),
-                LiveLocales = LiveCache.GetAll<ILocale>().Count(),
+                LiveNPCs = LiveCache.GetAll<INonPlayerCharacter>().Count(),
                 LiveZones = LiveCache.GetAll<IZone>().Count(),
                 LiveWorlds = LiveCache.GetAll<IGaia>().Count(),
+
+                ConfigDataObject = globalConfig,
+                WebsocketPortalActive = globalConfig.WebsocketPortalActive,
+                AdminsOnly = globalConfig.AdminsOnly,
+                UserCreationActive = globalConfig.UserCreationActive,
+
+                DeathRecallZone = globalConfig.DeathSettings.DeathRecallZone == null ? -1 : globalConfig.DeathSettings.DeathRecallZone.Id,
+                DeathRecallCoordinateX = globalConfig.DeathSettings.DeathRecallCoordinates.X,
+                DeathRecallCoordinateY = globalConfig.DeathSettings.DeathRecallCoordinates.Y,
+                DeathNoticeSubject = globalConfig.DeathSettings.DeathNoticeSubject,
+                DeathNoticeFrom = globalConfig.DeathSettings.DeathNoticeFrom,
+                DeathNoticeBody = globalConfig.DeathSettings.DeathNoticeBody.Value,
+                QualityChange = new string[0],
+                QualityChangeValue = new int[0],
+
+                Basis = globalConfig.PersonalZoneSettings.Basis == null ? -1 : globalConfig.PersonalZoneSettings.Basis.Id,
+                WildAnimals = new long[0],
+                WildAnimalMaximum = new short[0],
+
+                ValidZones = TemplateCache.GetAll<IZoneTemplate>(true).Where(zone => zone.OwnerWorld == null || zone.OwnerWorld.Id == 0),
+                ValidAnimals = TemplateCache.GetAll<INonPlayerCharacterTemplate>(true), //TODO add where statement that only gets non-sentients
+
+                GossipConfigDataObject = gossipConfig,
+                GossipActive = gossipConfig.GossipActive,
+                ClientId = gossipConfig.ClientId,
+                ClientSecret = gossipConfig.ClientSecret,
+                ClientName = gossipConfig.ClientName,
+                SuspendMultiplier = gossipConfig.SuspendMultiplier,
+                SuspendMultiplierMaximum = gossipConfig.SuspendMultiplierMaximum
             };
 
             return View(dashboardModel);
@@ -94,10 +119,11 @@ namespace NetMud.Controllers.GameAdmin
         }
 
         #region Live Threads
+        [Authorize(Roles = "Admin")]
         public ActionResult StopRunningProcess(string processName)
         {
             string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             Processor.ShutdownLoop(processName, 600, "{0} seconds before " + processName + " is shutdown.", 60);
 
@@ -107,10 +133,11 @@ namespace NetMud.Controllers.GameAdmin
             return RedirectToAction("Index", new { Message = message });
         }
 
+        [Authorize(Roles = "Admin")]
         public ActionResult StopRunningAllProcess()
         {
             string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             Processor.ShutdownAll(600, "{0} seconds before TOTAL WORLD SHUTDOWN.", 60);
 
@@ -122,19 +149,21 @@ namespace NetMud.Controllers.GameAdmin
         #endregion
 
         #region Running Data
+        [Authorize(Roles = "Admin")]
         public ActionResult BackupWorld()
         {
-            var hotBack = new HotBackup();
+            HotBackup hotBack = new HotBackup();
 
             hotBack.WriteLiveBackup();
-            BackingData.WriteFullBackup();
+            Templates.WriteFullBackup();
 
             return RedirectToAction("Index", new { Message = "Backup Started" });
         }
 
+        [Authorize(Roles = "Admin")]
         public ActionResult RestoreWorld()
         {
-            var hotBack = new HotBackup();
+            HotBackup hotBack = new HotBackup();
 
             //TODO: Ensure we suspend EVERYTHING going on (fights, etc), add some sort of announcement globally and delay the entire thing on a timer
 
@@ -147,56 +176,159 @@ namespace NetMud.Controllers.GameAdmin
             return RedirectToAction("Index", new { Message = "Restore Started" });
         }
 
+        [Authorize(Roles = "Admin")]
         public ActionResult RestartGossipServer()
         {
-            var gossipServers = LiveCache.GetAll<WebSocket>();
+            IEnumerable<WebSocket> gossipServers = LiveCache.GetAll<WebSocket>();
 
-            foreach (var server in gossipServers)
+            foreach (WebSocket server in gossipServers)
             {
                 server.Abort();
             }
 
-            var gossipServer = new Gossip.GossipClient();
-            gossipServer.Launch();
+            IGossipConfig gossipConfig = ConfigDataCache.Get<IGossipConfig>(new ConfigDataCacheKey(typeof(IGossipConfig), "GossipSettings", ConfigDataType.GameWorld));
+            Func<Member[]> playerList = () => LiveCache.GetAll<IPlayer>()
+                .Where(player => player.Descriptor != null && player.Template<IPlayerTemplate>().Account.Config.GossipSubscriber)
+                .Select(player => new Member()
+                {
+                    Name = player.AccountHandle,
+                    WriteTo = (message) => player.WriteTo(new string[] { message }),
+                    BlockedMembers = player.Template<IPlayerTemplate>().Account.Config.Acquaintences.Where(acq => !acq.IsFriend).Select(acq => acq.PersonHandle),
+                    Friends = player.Template<IPlayerTemplate>().Account.Config.Acquaintences.Where(acq => acq.IsFriend).Select(acq => acq.PersonHandle)
+                }).ToArray();
+
+            void exceptionLogger(Exception ex) => LoggingUtility.LogError(ex);
+            void activityLogger(string message) => LoggingUtility.Log(message, LogChannels.GossipServer);
+
+            GossipClient gossipServer = new GossipClient(gossipConfig, exceptionLogger, activityLogger, playerList);
+
+            Task.Run(() => gossipServer.Launch());
+
+            LiveCache.Add(gossipServer, "GossipWebClient");
 
             return RedirectToAction("Index", new { Message = "Gossip Server Restarted" });
         }
         #endregion
 
         #region "Global Config"
-        [HttpGet]
-        [Authorize(Roles = "Admin")]
-        public ActionResult GlobalConfig()
-        {
-            var globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
-            var vModel = new GlobalConfigViewModel
-            {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                DataObject = globalConfig,
-                WebsocketPortalActive = globalConfig.WebsocketPortalActive,
-                ValidLanguages = ConfigDataCache.GetAll<ILanguage>(),
-                SystemLanguage = globalConfig.SystemLanguage?.Name
-            };
-
-            return View(vModel);
-        }
-
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public ActionResult GlobalConfig(GlobalConfigViewModel vModel)
+        public ActionResult GlobalConfig(DashboardViewModel vModel)
         {
             string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
-            var globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
-
-            var languageChosen = ConfigDataCache.Get<ILanguage>(new ConfigDataCacheKey(typeof(ILanguage), vModel.SystemLanguage, ConfigDataType.Language));
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+            IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
 
             globalConfig.WebsocketPortalActive = vModel.WebsocketPortalActive;
-            globalConfig.SystemLanguage = languageChosen;
+            globalConfig.AdminsOnly = vModel.AdminsOnly;
+            globalConfig.UserCreationActive = vModel.UserCreationActive;
+
+            DeathConfig deathSettings = new DeathConfig
+            {
+                DeathRecallZone = TemplateCache.Get<IZoneTemplate>(vModel.DeathRecallZone),
+                DeathRecallCoordinates = new Coordinate(vModel.DeathRecallCoordinateX, vModel.DeathRecallCoordinateY),
+                DeathNoticeSubject = vModel.DeathNoticeSubject,
+                DeathNoticeFrom = vModel.DeathNoticeFrom,
+                DeathNoticeBody = vModel.DeathNoticeBody
+            };
+
+            HashSet<QualityValue> qualities = new HashSet<QualityValue>();
+            if (vModel.QualityChange != null)
+            {
+                int icIndex = 0;
+                foreach (string quality in vModel.QualityChange)
+                {
+                    if (!string.IsNullOrWhiteSpace(quality))
+                    {
+                        if (vModel.QualityChangeValue.Count() <= icIndex)
+                            break;
+
+                        if (vModel.QualityChangeValue[icIndex] != 0)
+                            qualities.Add(new QualityValue(quality, vModel.QualityChangeValue[icIndex]));
+                    }
+
+                    icIndex++;
+                }
+            }
+            deathSettings.QualityChanges = qualities;
+
+            globalConfig.DeathSettings = deathSettings;
+
+            PersonalZoneConfig personalFarmZoneSettings = new PersonalZoneConfig
+            {
+                Basis = TemplateCache.Get<IZoneTemplate>(vModel.Basis)
+            };
+
+            HashSet<INPCRepop> wildAnimals = new HashSet<INPCRepop>();
+            if (vModel.WildAnimals != null)
+            {
+                int icIndex = 0;
+                foreach (long animalId in vModel.WildAnimals)
+                {
+                    INonPlayerCharacterTemplate animal = TemplateCache.Get<INonPlayerCharacterTemplate>(animalId);
+                    if (animal != null)
+                    {
+                        if (vModel.WildAnimalMaximum.Count() <= icIndex)
+                            break;
+
+                        if (vModel.WildAnimalMaximum[icIndex] != 0)
+                            wildAnimals.Add(new NPCRepop(animal, vModel.WildAnimalMaximum[icIndex]));
+                    }
+
+                    icIndex++;
+                }
+            }
+            personalFarmZoneSettings.WildAnimals = wildAnimals;
+
+
+            globalConfig.PersonalZoneSettings = personalFarmZoneSettings;
 
             if (globalConfig.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {
                 LoggingUtility.LogAdminCommandUsage("*WEB* - EditGlobalConfig[" + globalConfig.UniqueKey.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                message = "Edit Successful.";
+            }
+            else
+                message = "Error; Edit failed.";
+
+            return RedirectToAction("Index", new { Message = message });
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public ActionResult GossipConfig(DashboardViewModel vModel)
+        {
+            string message = string.Empty;
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+            IGossipConfig gossipConfig = ConfigDataCache.Get<IGossipConfig>(new ConfigDataCacheKey(typeof(IGossipConfig), "GossipSettings", ConfigDataType.GameWorld));
+
+            gossipConfig.GossipActive = vModel.GossipActive;
+            gossipConfig.ClientId = vModel.ClientId;
+            gossipConfig.ClientName = vModel.ClientName;
+            gossipConfig.ClientSecret = vModel.ClientSecret;
+            gossipConfig.SuspendMultiplierMaximum = vModel.SuspendMultiplierMaximum;
+            gossipConfig.SuspendMultiplier = vModel.SuspendMultiplier;
+
+            HashSet<string> channelList = new HashSet<string>();
+
+            if (vModel.SupportedChannels != null)
+                foreach (string tag in vModel.SupportedChannels.Split(new string[] { "||" }, StringSplitOptions.RemoveEmptyEntries))
+                    channelList.Add(tag);
+
+
+            gossipConfig.SupportedChannels = channelList;
+
+            HashSet<string> featureList = new HashSet<string>();
+
+            if (vModel.SupportedFeatures != null)
+                foreach (string tag in vModel.SupportedFeatures.Split(new string[] { "||" }, StringSplitOptions.RemoveEmptyEntries))
+                    featureList.Add(tag);
+
+            gossipConfig.SupportedFeatures = featureList;
+
+            if (gossipConfig.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+            {
+                LoggingUtility.LogAdminCommandUsage("*WEB* - EditGossipConfig[" + gossipConfig.UniqueKey.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 message = "Edit Successful.";
             }
             else

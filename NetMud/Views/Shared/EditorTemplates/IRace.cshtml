@@ -1,0 +1,25 @@
+﻿@using NetMud.Data.NPCs
+
+@model Race
+
+<h4>Racial</h4>
+<div class="form-group row">
+    @Html.EditorFor(e => e.Name)
+    @Html.EditorFor(e => e.CollectiveNoun)
+    @Html.EditorFor(e => e.Aquatic)
+    @Html.EditorFor(e => e.Diet)
+</div>
+<h4>Tolerances</h4>
+<div class="form-group row">
+    @Html.EditorFor(e => e.TemperatureTolerance)
+</div>
+<h4>Reproduction</h4>
+<div class="form-group row">
+    @Html.EditorFor(e => e.ReproductionType)
+    @Html.EditorFor(e => e.SpawningCoefficient)
+    @Html.EditorFor(e => e.TraitInheritanceCoefficient)
+    @Html.EditorFor(e => e.TraitMutationCoefficient)
+</div>
+
+<h4>Butchering Results</h4>
+@Html.EditorFor(e => e.ButcherResults, new { validItems = ViewData["ValidInanimateDatas"] })

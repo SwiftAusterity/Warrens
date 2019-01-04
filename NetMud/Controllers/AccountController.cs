@@ -1,17 +1,28 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
+﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using NetMud.Authentication;
-using NetMud.Data.ConfigData;
-using NetMud.Data.System;
+using NetMud.Data.Architectural;
+using NetMud.Data.Inanimates;
+using NetMud.Data.Players;
+using NetMud.Data.Zones;
 using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Base.PlayerConfiguration;
-using NetMud.DataStructure.SupportingClasses;
+using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Gaia;
+using NetMud.DataStructure.Inanimate;
+using NetMud.DataStructure.Player;
+using NetMud.DataStructure.System;
+using NetMud.DataStructure.Tile;
+using NetMud.DataStructure.Zone;
 using NetMud.Models;
+using NetMud.Utility;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Mvc;
 
 namespace NetMud.Controllers
 {
@@ -25,7 +36,7 @@ namespace NetMud.Controllers
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -37,9 +48,9 @@ namespace NetMud.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -72,17 +83,52 @@ namespace NetMud.Controllers
                 return View(model);
             }
 
+            ApplicationUser potentialUser = UserManager.FindByName(model.Email);
+
+            if(potentialUser != null)
+            {
+                IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
+                if (globalConfig.AdminsOnly && potentialUser.GetStaffRank(User) == StaffRank.Player)
+                {
+                    ModelState.AddModelError("", "The system is currently locked to staff members only. Please try again later and check the home page for any announcements and news.");
+
+                    return View(model);
+                }
+            }
+
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+            SignInStatus result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
             switch (result)
             {
                 case SignInStatus.Success:
+                    //Check for a valid character, zone and account
+                    var account = potentialUser.GameAccount;
+
+                    if(account == null)
+                    {
+                        ModelState.AddModelError("", "Your account is having technical difficulties. Please contact an administrator.");
+                        return View(model);
+                    }
+
+                    if(account.Character == null)
+                    {
+                        var rand = new Random();
+                        var newChar = CreateAccountPlayerAndConfig(account, "Farmhand", rand.Next(10000, 99999).ToString(), "Unspecified");
+                        var newZone = CreateAccountZone(account);
+
+                        newChar.CurrentLocation = new GlobalPosition(newZone)
+                        {
+                            CurrentCoordinates = new Coordinate(50, 0)
+                        };
+
+                        newChar.SystemSave();
+                    }
+
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, model.RememberMe });
                 case SignInStatus.Failure:
                 default:
                     ModelState.AddModelError("", "Invalid login attempt.");
@@ -93,7 +139,16 @@ namespace NetMud.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
-            return View();
+            IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
+            RegisterViewModel vModel = new RegisterViewModel();
+
+            if (!globalConfig.UserCreationActive)
+            {
+                ModelState.AddModelError("", "New account registration is currently locked.");
+                vModel.NewUserLocked = true;
+            }
+
+            return View(vModel);
         }
 
         [HttpPost]
@@ -107,31 +162,29 @@ namespace NetMud.Controllers
 
             if (ModelState.IsValid)
             {
-                var newGameAccount = new Account(model.GlobalUserHandle);
+                Account newGameAccount = new Account(model.GlobalUserHandle);
 
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, GameAccount = newGameAccount };
-                var result = await UserManager.CreateAsync(user, model.Password);
+                ApplicationUser user = new ApplicationUser { UserName = model.Email, Email = model.Email, GameAccount = newGameAccount };
+                IdentityResult result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    var newAccountConfig = new AccountConfig(newGameAccount)
+                    var newCharacter = CreateAccountPlayerAndConfig(newGameAccount, model.Name, model.SurName, model.Gender);
+                    var farmLiveZone = CreateAccountZone(newGameAccount);
+
+                    newCharacter.CurrentLocation = new GlobalPosition(farmLiveZone)
                     {
-                        UITutorialMode = true
+                        CurrentCoordinates = new Coordinate(50, 0)
                     };
 
-                    var uiModules = BackingDataCache.GetAll<IUIModule>().Where(uim => uim.SystemDefault > 0);
+                    newCharacter.SystemSave();
 
-                    foreach(var module in uiModules)
-                        newAccountConfig.UIModules = uiModules.Select(uim => new System.Tuple<IUIModule, int>(uim, uim.SystemDefault));
-
-                    //Save the new config
-                    newAccountConfig.Save(newGameAccount, StaffRank.Player);
                     await UserManager.AddToRoleAsync(user.Id, "Player");
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
                     string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code }, protocol: Request.Url.Scheme);
+                    string callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code }, protocol: Request.Url.Scheme);
                     await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
                     return RedirectToAction("Index", "Home");
@@ -144,6 +197,158 @@ namespace NetMud.Controllers
             return View(model);
         }
 
+        private IPlayerTemplate CreateAccountPlayerAndConfig(IAccount account, string name, string surName, string gender)
+        {
+            if (account.Config == null)
+            {
+                AccountConfig newAccountConfig = new AccountConfig(account)
+                {
+                    UITutorialMode = true,
+                    MusicMuted = true,
+                    GossipSubscriber = true
+                };
+
+                //Save the new config
+                newAccountConfig.Save(account, StaffRank.Player);
+            }
+
+            if (account.Character == null)
+            {
+                PlayerTemplate newCharacter = new PlayerTemplate
+                {
+                    Name = name,
+                    SurName = surName,
+                    Gender = gender,
+                    HexColorCode = "#FFFFFF",
+                    AsciiCharacter = "☺",
+                    AccountHandle = account.GlobalIdentityHandle,
+                    StillANoob = true,
+                    GamePermissionsRank = StaffRank.Player,
+                    TotalHealth = 100,
+                    TotalStamina = 100
+                };
+
+                //Save the new character
+                newCharacter.Create(account, StaffRank.Player);
+
+                account.AddCharacter(newCharacter);
+            }
+
+            return account.Character;
+        }
+
+        private IZone CreateAccountZone(IAccount account)
+        {
+            //Add their personal farm map
+            IGaiaTemplate baseWorld = TemplateCache.Get<IGaiaTemplate>(0);
+            IZoneTemplate baseZone = TemplateCache.Get<IZoneTemplate>(0);
+
+            Random rand = new Random();
+            HemispherePlacement hemi = HemispherePlacement.NorthEast;
+            switch (rand.Next(1, 4))
+            {
+                case 1:
+                    hemi = HemispherePlacement.NorthWest;
+                    break;
+                case 2:
+                    hemi = HemispherePlacement.SouthEast;
+                    break;
+                case 3:
+                    hemi = HemispherePlacement.SouthWest;
+                    break;
+            }
+
+            ITileTemplate dirtTile = TemplateCache.Get<ITileTemplate>(0);
+            ZoneTemplate farmZone = new ZoneTemplate
+            {
+                BackgroundHexColor = "#010101",
+                AsciiCharacter = "0",
+                BaseBiome = Biome.Field,
+                BaseCoordinates = new Coordinate(0, 0),
+                BaseTileType = dirtTile,
+                Description = string.Format("{0}'s farm.", account.GlobalIdentityHandle),
+                Font = "Courier New, Courier, monospace;",
+                Hemisphere = hemi,
+                HexColorCode = "#FFFFFF",
+                Name = string.Format("{0}'s farm", account.GlobalIdentityHandle),
+                PressureCoefficient = 0,
+                TemperatureCoefficient = 0,
+                World = baseWorld,
+                State = ApprovalState.Approved,
+                Pathways = new HashSet<IPathway>(),
+                OwnerWorld = baseWorld
+            };
+
+            farmZone.Pathways.Add(new PathwayData()
+            {
+                BorderHexColor = "#FFFFFF",
+                OriginCoordinates = new Coordinate(50, 0),
+                Destinations = new HashSet<IPathwayDestination>()
+                        {
+                            new PathwayDestination()
+                            {
+                                Coordinates = new Coordinate(5, 99),
+                                Destination = baseZone,
+                                Name = "To Town"
+                            }
+                        }
+            });
+
+            farmZone.Map.CoordinateTilePlane.Populate(dirtTile.Id);
+
+            farmZone.Create(account, StaffRank.Player);
+            farmZone.ChangeApprovalStatus(account, StaffRank.Player, ApprovalState.Approved);
+
+            Zone farmLiveZone = new Zone(farmZone);
+
+            //Gotta make all the rando debris. TODO: Make items gaia dependent
+            IEnumerable<IInanimateTemplate> potentialDebris = TemplateCache.GetAll<IInanimateTemplate>(true).Where(item => item.RandomDebris);
+
+            farmLiveZone.SpawnNewInWorld();
+
+            foreach (IInanimateTemplate debris in potentialDebris)
+            {
+                int i = 0;
+                int maxItems = rand.Next(100, 1000);
+
+                while (i < maxItems)
+                {
+                    Coordinate debrisTile = new Coordinate((short)rand.Next(0, 99), (short)rand.Next(0, 99));
+                    Inanimate newItem = new Inanimate(debris, new GlobalPosition(farmLiveZone) { CurrentCoordinates = debrisTile });
+                    i++;
+                }
+            }
+
+            farmLiveZone.Save();
+
+            //Add a pathway to the new farm on the designated spot
+            IPathway busStop = baseZone.Pathways.FirstOrDefault(stop => stop.OriginCoordinates.X == 5 && stop.OriginCoordinates.Y == 99);
+
+            //No bus stop? then make it
+            if (busStop == null)
+            {
+                busStop = new PathwayData()
+                {
+                    BorderHexColor = "#FFFFFF",
+                    OriginCoordinates = new Coordinate(5, 99),
+                    Destinations = new HashSet<IPathwayDestination>()
+                };
+            }
+
+            baseZone.Pathways.Add(busStop);
+
+            busStop.Destinations.Add(new PathwayDestination()
+            {
+                Coordinates = new Coordinate(50, 0),
+                Destination = farmZone,
+                Name = string.Format("{0}'s farm", account.GlobalIdentityHandle)
+            });
+
+            baseZone.SystemSave();
+
+            return farmLiveZone;
+        }
+
         [AllowAnonymous]
         public async Task<ActionResult> ConfirmEmail(string userId, string code)
         {
@@ -151,7 +356,7 @@ namespace NetMud.Controllers
             {
                 return View("Error");
             }
-            var result = await UserManager.ConfirmEmailAsync(userId, code);
+            IdentityResult result = await UserManager.ConfirmEmailAsync(userId, code);
             return View(result.Succeeded ? "ConfirmEmail" : "Error");
         }
 
@@ -168,7 +373,7 @@ namespace NetMud.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await UserManager.FindByNameAsync(model.Email);
+                ApplicationUser user = await UserManager.FindByNameAsync(model.Email);
                 if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
                 {
                     // Don't reveal that the user does not exist or is not confirmed
@@ -178,7 +383,7 @@ namespace NetMud.Controllers
                 // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                 // Send an email with this link
                 string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code }, protocol: Request.Url.Scheme);		
+                string callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code }, protocol: Request.Url.Scheme);
                 await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
                 return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
@@ -208,13 +413,13 @@ namespace NetMud.Controllers
             {
                 return View(model);
             }
-            var user = await UserManager.FindByNameAsync(model.Email);
+            ApplicationUser user = await UserManager.FindByNameAsync(model.Email);
             if (user == null)
             {
                 // Don't reveal that the user does not exist
                 return RedirectToAction("ResetPasswordConfirmation", "Account");
             }
-            var result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
+            IdentityResult result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
             if (result.Succeeded)
             {
                 return RedirectToAction("ResetPasswordConfirmation", "Account");
@@ -249,7 +454,7 @@ namespace NetMud.Controllers
 
         private void AddErrors(IdentityResult result)
         {
-            foreach (var error in result.Errors)
+            foreach (string error in result.Errors)
             {
                 ModelState.AddModelError("", error);
             }
@@ -283,7 +488,7 @@ namespace NetMud.Controllers
 
             public override void ExecuteResult(ControllerContext context)
             {
-                var properties = new AuthenticationProperties { RedirectUri = RedirectUri };
+                AuthenticationProperties properties = new AuthenticationProperties { RedirectUri = RedirectUri };
                 context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
             }
         }

@@ -1,0 +1,23 @@
+﻿@model NetMud.Models.Admin.ManageTileDataViewModel
+@{
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Tile Types", new string[] { "Dashboard" }, new string[] { "/GameAdmin" });
+
+    var prevPageState = Model.CurrentPageNumber > 1 ? String.Empty : "disabled";
+    var nextPageState = Model.CurrentPageNumber < Model.NumberOfPages ? String.Empty : "disabled";
+
+    var linkText = Html.ActionLink("99999999", "Edit", new { id = 99999999 }).ToString();
+    var tableColumns = new Dictionary<string, Func<dynamic, string>>();
+    tableColumns.Add("Id", obj => linkText.Replace("99999999", obj.Id.ToString()));
+    tableColumns.Add("Name", obj => obj.FitnessProblems ? string.Format("<span style='color:red;' title='{0}'>{1}</span>", String.Join(", ", obj.FitnessReport()), obj.Name) : obj.Name);
+    tableColumns.Add("Appearance", obj => string.Format("<span style='color: {1}; background-color: {2};'>{0}</span>", obj.AsciiCharacter, obj.HexColorCode, obj.BackgroundHexColor));
+    tableColumns.Add("Pathable", obj => obj.Pathable.ToString());
+    tableColumns.Add("Air", obj => obj.Air.ToString());
+    tableColumns.Add("Aquatic", obj => obj.Aquatic.ToString());
+    tableColumns.Add("State", obj => obj.State.ToString());
+}
+
+@Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Columns = tableColumns, Values = Model.CurrentPageOfItems.OrderBy(obj => obj.Id), PagingModel = Model, EntityTypeName = "Tile" })
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -1,4 +1,4 @@
-﻿using NetMud.DataStructure.Base.System;
+﻿using NetMud.DataStructure.Architectural;
 using System;
 using System.IO;
 using System.Web.Hosting;
@@ -38,8 +38,8 @@ namespace NetMud.DataAccess.FileSystem
 
         public IConfigData ReadEntity(FileInfo file, Type entityType)
         {
-            var fileData = ReadFile(file);
-            var blankEntity = Activator.CreateInstance(entityType) as IConfigData;
+            byte[] fileData = ReadFile(file);
+            IConfigData blankEntity = Activator.CreateInstance(entityType) as IConfigData;
 
             return blankEntity.FromBytes(fileData) as IConfigData;
         }
@@ -52,17 +52,17 @@ namespace NetMud.DataAccess.FileSystem
         {
             try
             {
-                var dirName = GetCurrentDirectoryForEntity(entity);
+                string dirName = GetCurrentDirectoryForEntity(entity);
 
                 if (!VerifyDirectory(dirName))
                     throw new Exception("Unable to locate or create base backing data directory.");
 
-                var entityFileName = GetEntityFilename(entity);
+                string entityFileName = GetEntityFilename(entity);
 
                 if (string.IsNullOrWhiteSpace(entityFileName))
                     return;
 
-                var fullFileName = dirName + entityFileName;
+                string fullFileName = dirName + entityFileName;
 
                 ArchiveEntity(entity);
                 WriteToFile(fullFileName, entity.ToBytes());
@@ -79,18 +79,20 @@ namespace NetMud.DataAccess.FileSystem
         /// <param name="entity">the thing to archive</param>
         public void ArchiveEntity(IConfigData entity)
         {
-            var dirName = GetCurrentDirectoryForEntity(entity);
+            string dirName = GetCurrentDirectoryForEntity(entity);
 
             if (!VerifyDirectory(dirName))
                 throw new Exception("Unable to locate or create base live data directory.");
 
-            var entityFileName = GetEntityFilename(entity);
+            string entityFileName = GetEntityFilename(entity);
 
             if (string.IsNullOrWhiteSpace(entityFileName))
                 return;
 
-            var fullFileName = dirName + entityFileName;
-            var archiveFileDirectory = GetArchiveDirectoryForEntity(entity);
+            string fullFileName = dirName + entityFileName;
+            string archiveFileDirectory = GetArchiveDirectoryForEntity(entity);
+
+            CullDirectoryCount(archiveFileDirectory);
 
             try
             {
@@ -104,7 +106,7 @@ namespace NetMud.DataAccess.FileSystem
 
         public string GetCurrentDirectoryForEntity(IConfigData entity)
         {
-            var dirName = BaseDirectory;
+            string dirName = BaseDirectory;
 
             switch(entity.Type)
             {
@@ -123,14 +125,14 @@ namespace NetMud.DataAccess.FileSystem
 
         public string GetCurrentDirectoryForType(Type entityType)
         {
-            var entityThing = Activator.CreateInstance(entityType) as IConfigData;
+            IConfigData entityThing = Activator.CreateInstance(entityType) as IConfigData;
 
             return GetCurrentDirectoryForEntity(entityThing);
         }
 
         private string GetArchiveDirectoryForEntity(IConfigData entity)
         {
-            var dirName = BaseDirectory;
+            string dirName = BaseDirectory;
 
             switch (entity.Type)
             {

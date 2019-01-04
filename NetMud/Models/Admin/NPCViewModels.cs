@@ -1,24 +1,27 @@
 ﻿using NetMud.Authentication;
-using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.Supporting;
+using NetMud.Data.Architectural.PropertyBinding;
+using NetMud.Data.NPCs;
+using NetMud.DataStructure.Inanimate;
+using NetMud.DataStructure.NPC;
+using NetMud.DataStructure.Tile;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageNPCDataViewModel : PagedDataModel<INonPlayerCharacter>, BaseViewModel
+    public class ManageNPCDataViewModel : PagedDataModel<INonPlayerCharacterTemplate>, IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
-        public ManageNPCDataViewModel(IEnumerable<INonPlayerCharacter> items)
+        public ManageNPCDataViewModel(IEnumerable<INonPlayerCharacterTemplate> items)
             : base(items)
         {
             CurrentPageNumber = 1;
             ItemsPerPage = 20;
         }
 
-        internal override Func<INonPlayerCharacter, bool> SearchFilter
+        internal override Func<INonPlayerCharacterTemplate, bool> SearchFilter
         {
             get
             {
@@ -28,33 +31,37 @@ namespace NetMud.Models.Admin
 
     }
 
-    public class AddEditNPCDataViewModel : BaseViewModel
+    public class AddEditNPCDataViewModel : AddContentModel<INonPlayerCharacterTemplate>, IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
-        public AddEditNPCDataViewModel()
+        [Display(Name = "Apply Existing Template", Description = "Apply an existing object's data to this new data.")]
+        [UIHint("NonPlayerCharacterTemplateList")]
+        [NonPlayerCharacterTemplateDataBinder]
+        public override INonPlayerCharacterTemplate Template { get; set; }
+
+        public AddEditNPCDataViewModel() : base(-1)
         {
         }
 
-        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
-        [Display(Name = "Given Name", Description = "First Name.")]
-        [DataType(DataType.Text)]
-        public string Name { get; set; }
+        public AddEditNPCDataViewModel(long templateId) : base(templateId)
+        {
+            //apply template
+            if (DataTemplate == null)
+            {
+                //set defaults
+            }
+            else
+            {
+                //TODO
+            }
+        }
 
-        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
-        [Display(Name = "Family Name", Description = "Last Name.")]
-        [DataType(DataType.Text)]
-        public string SurName { get; set; }
+        public IEnumerable<IInanimateTemplate> ValidInanimateDatas { get; set; }
+        public IEnumerable<INonPlayerCharacterTemplate> ValidNPCDatas { get; set; }
+        public IEnumerable<ITileTemplate> ValidTileDatas { get; set; }
 
-        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
-        [Display(Name = "Gender", Description = "The gender of the NPC. You can use an existing gender or select free text. Non-approved gender groups will get it/they/them pronouns.")]
-        [DataType(DataType.Text)]
-        public string Gender { get; set; }
-        
-        [Display(Name = "Race", Description = "The race of the NPC.")]
-        public long RaceId { get; set; }
-
-        public IEnumerable<IRace> ValidRaces { get; set; }
-        public INonPlayerCharacter DataObject { get; set; }
+        [UIHint("NonPlayerCharacterTemplate")]
+        public NonPlayerCharacterTemplate DataObject { get; set; }
     }
 }

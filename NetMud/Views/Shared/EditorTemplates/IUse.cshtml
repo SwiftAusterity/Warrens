@@ -1,0 +1,27 @@
+﻿@using NetMud.Data.Action
+
+@model Use
+
+<h4>Details</h4>
+<div class="form-group row">
+    @Html.EditorFor(e => e.Name)
+    @Html.EditorFor(e => e.FoleyUri)
+    @Html.EditorFor(e => e.StaminaCost)
+    @Html.EditorFor(e => e.HealthCost)
+</div>
+<h4>Messaging</h4>
+<div class="form-group row">
+    @Html.EditorFor(e => e.ToActorMessage)
+    @Html.EditorFor(e => e.ToLocalMessage)
+</div>
+
+<h4>Range Pattern</h4>
+<div class="form-group row">
+    @Html.EditorFor(e => e.AffectPattern)
+</div>
+
+<h4>Criteria</h4>
+@Html.EditorFor(e => e.Criteria, "IActionCriteriaList")
+
+<h4>Results</h4>
+@Html.EditorFor(e => e.Results, "IActionResultList")

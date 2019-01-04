@@ -1,0 +1,21 @@
+﻿@using NetMud.Data.Tiles
+
+@model TileTemplate
+
+<h4>Details</h4>
+<div class="form-group row">
+    @Html.EditorFor(e => e.Name)
+    @Html.EditorFor(e => e.AsciiCharacter)
+    @Html.EditorFor(e => e.HexColorCode)
+    @Html.EditorFor(e => e.BackgroundHexColor)
+</div>
+<h4>Walkability</h4>
+<div class="form-group row">
+    @Html.EditorFor(e => e.Pathable)
+    @Html.EditorFor(e => e.Aquatic)
+    @Html.EditorFor(e => e.Air)
+</div>
+
+<div class="form-group row">
+    @Html.EditorFor(e => e.Description)
+</div>

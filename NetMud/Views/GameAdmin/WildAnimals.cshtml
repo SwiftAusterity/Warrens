@@ -1,0 +1,44 @@
+﻿@using NetMud.DataStructure.Player
+@using NetMud.Data.Players
+
+@model NetMud.Models.Admin.DashboardViewModel
+
+@{
+    var validComponents = new List<INPCRepop>();
+    if (Model.ConfigDataObject != null && Model.ConfigDataObject.PersonalZoneSettings.WildAnimals?.Count() > 0)
+    {
+        validComponents = Model.ConfigDataObject.PersonalZoneSettings.WildAnimals.ToList();
+    }
+    else
+    {
+        validComponents.Add(new NPCRepop(null, 0));
+    }
+}
+<h4>Wild Animal Spawns</h4>
+<div id="ComponentRows" class="iterativeContainer">
+    <div class="addRowContainer">
+        <div class="col-sm-1">
+            <a href="#" class="addRow btn" onclick="javascript: addComponentRow(); return false;"><span class="addWord">Add Row</span></a>
+        </div>
+    </div>
+    @foreach (var quality in validComponents)
+    {
+        <div class="form-group row">
+            <a href="#" class="removeRow col-form-label" title="Remove this" onclick="javascript: $(this).parent().remove(); return false;">X</a>
+            @Html.EditorFor(e => e.WildAnimals, new { noValidation = "true", validItems = Model.ValidAnimals, selectedItem = quality.NPC != null ? quality.NPC.Id : -1 })
+            @Html.EditorFor(e => e.WildAnimalMaximum, new { noValidation = "true", htmlAttributes = new Dictionary<string, object>() { { "Value", quality.Amount.ToString() } } })
+        </div>
+    }
+</div>
+<script type="text/javascript">
+    var componentItem = decodeHtml('@Html.EditorFor(e => e.WildAnimals, new { noValidation = "true", validItems = Model.ValidAnimals }).ToString().Replace(Environment.NewLine, "")');
+    var componentAmount = decodeHtml('@Html.EditorFor(m => m.WildAnimalMaximum, new { noValidation = "true" }).ToString().Replace(Environment.NewLine, "")');
+
+    var newComponentRow = '<div class="form-group row">' +
+        '<a href="#" class="removeRow col-form-label" title="Remove this" onclick="javascript: $(this).parent().remove(); return false;">X</a>' +
+        componentItem + componentAmount + '</div>';
+
+    function addComponentRow() {
+        $('#ComponentRows').append(newComponentRow);
+    }
+</script>

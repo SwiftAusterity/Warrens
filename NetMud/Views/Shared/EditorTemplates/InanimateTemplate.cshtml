@@ -1,0 +1,30 @@
+﻿@using NetMud.Data.Inanimates
+
+@model InanimateTemplate
+
+<h4>Details</h4>
+<div class="form-group row">
+    @Html.EditorFor(e => e.Name)
+    @Html.EditorFor(e => e.AccumulationCap)
+    @Html.EditorFor(e => e.AsciiCharacter)
+    @Html.EditorFor(e => e.HexColorCode)
+    @Html.EditorFor(e => e.RandomDebris)
+</div>
+
+<div class="form-group row">
+    @Html.EditorFor(e => e.Description, new { columnCount = 1 })
+</div>
+
+@Html.EditorFor(e => e.Qualities)
+
+<h3>Crafting Blueprint</h3>
+<hr />
+<div class="form-group row">
+    @Html.EditorFor(e => e.Produces)
+</div>
+
+<h4>Components</h4>
+@Html.EditorFor(e => e.Components)
+
+<h4>Skill Requirements</h4>
+@Html.EditorFor(e => e.SkillRequirements)

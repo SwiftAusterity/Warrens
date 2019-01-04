@@ -1,0 +1,27 @@
+﻿@model NetMud.Models.Admin.AddEditDecayEventViewModel
+
+@{
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>(
+        "Edit Decay Event", 
+        new string[] { "Dashboard", Model.ClassType, Model.ParentObject.Name },
+        new string[] { "/GameAdmin", string.Format("/{0}", Model.ClassType), string.Format("/{0}/Edit/{1}", Model.ClassType, Model.ParentObject.Id) });
+}
+
+<section id="newDecayEventForm">
+    @using (Html.BeginForm("EditDecayEvent", Model.ClassType, new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <input type="hidden" id="id" name="id" value="@Model.ParentObject.Id" />
+
+        @Html.EditorFor(e => e.DataObject, "IDecayEvent", new { ValidInanimateDatas = Model.ValidInanimateDatas, ValidTileDatas = Model.ValidTileDatas, ValidNPCDatas = Model.ValidNPCDatas })
+
+        <div class="clearfix"></div>
+        @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Edit",
+                                                                                ReturnRouteValues = new { controller = Model.ClassType, id = Model.ParentObject.Id } })
+    }
+</section>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -1,21 +1,26 @@
 ﻿@model NetMud.Models.Admin.AddEditInanimateDataViewModel
 
-<section id="newCharacterForm">
+@{
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("New Inanimate", new string[] { "Dashboard", "Inanimates" }, new string[] { "/GameAdmin", "/Inanimate" });
+}
+
+<section id="templateApply">
+    @using (Html.BeginForm("Add", "Inanimate", FormMethod.Get, new { @class = "form-horizontal", role = "form", @name = "applyTemplateForm", @id = "applyTemplateForm" }))
+    {
+        <div class="form-group row">
+            @Html.EditorFor(m => m.Template, new { validItems = Model.ValidTemplateBases })
+            <input type="submit" value="Apply" class="btn btn-default save" , style="margin-left: 25px;" />
+        </div>
+    }
+</section>
+
+<section id="newInanimateForm">
     @using (Html.BeginForm("Add", "Inanimate", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {
         @Html.AntiForgeryToken()
-        <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group row">
-            @Html.EditorFor(e => e.Name)
-        </div>
 
-        @Html.Partial("~/Views/GameAdmin/Inanimate/InternalComposition.cshtml", Model)
-
-        @Html.Partial("InanimateEntityContainer", new NetMud.Models.Admin.EntityContainerViewModel<NetMud.DataStructure.Base.Entity.IInanimate>("Inanimate", "Inanimate Containers"))
-        @Html.Partial("MobileEntityContainer", new NetMud.Models.Admin.EntityContainerViewModel<NetMud.DataStructure.Base.Supporting.IMobile>("Mobile", "Character Containers"))
-
-        @Html.Partial("TwoDimensionalEntityEditor", Model)
+        @Html.EditorFor(m => m.DataObject, new { validComponents = Model.ValidComponents })
 
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Create", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Inanimate", IncludeCancel = true })
     }

@@ -1,16 +1,12 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
-using NetMud.Data.EntityBackingData;
-using NetMud.Data.System;
+using NetMud.Data.Gaias;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Base.World;
-using NetMud.DataStructure.Behaviors.System;
+using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Gaia;
 using NetMud.Models.Admin;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
@@ -43,7 +39,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageGaiaViewModel(BackingDataCache.GetAll<IGaiaData>())
+            ManageGaiaViewModel vModel = new ManageGaiaViewModel(TemplateCache.GetAll<IGaiaTemplate>())
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -64,9 +60,9 @@ namespace NetMud.Controllers.GameAdmin
 
             if (!string.IsNullOrWhiteSpace(authorizeRemove) && removeId.ToString().Equals(authorizeRemove))
             {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<IGaiaData>(removeId);
+                var obj = TemplateCache.Get<IGaiaTemplate>(removeId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -80,13 +76,13 @@ namespace NetMud.Controllers.GameAdmin
             }
             else if (!string.IsNullOrWhiteSpace(authorizeUnapprove) && unapproveId.ToString().Equals(authorizeUnapprove))
             {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<IGaiaData>(unapproveId);
+                var obj = TemplateCache.Get<IGaiaTemplate>(unapproveId);
 
                 if (obj == null)
                     message = "That does not exist";
-                else if (obj.ChangeApprovalStatus(authedUser.GameAccount, authedUser.GetStaffRank(User), ApprovalState.Returned))
+                else if (obj.ChangeApprovalStatus(authedUser.GameAccount, authedUser.GetStaffRank(User), ApprovalState.Unapproved))
                 {
                     LoggingUtility.LogAdminCommandUsage("*WEB* - UnapproveGaiaData[" + unapproveId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Unapproval Successful.";
@@ -101,12 +97,13 @@ namespace NetMud.Controllers.GameAdmin
         }
 
         [HttpGet]
-        public ActionResult Add()
+        public ActionResult Add(long Template = -1)
         {
-            var vModel = new AddEditGaiaViewModel
+            AddEditGaiaViewModel vModel = new AddEditGaiaViewModel(Template)
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidCelestials = BackingDataCache.GetAll<ICelestial>(true)
+                ValidCelestials = TemplateCache.GetAll<ICelestial>(true),
+                DataObject = new GaiaTemplate()
             };
 
             return View("~/Views/GameAdmin/Gaia/Add.cshtml", vModel);
@@ -117,42 +114,14 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Add(AddEditGaiaViewModel vModel)
         {
             string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
-            var newObj = new GaiaData
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+            GaiaTemplate newObj = new GaiaTemplate
             {
-                Name = vModel.Name
+                Name = vModel.DataObject.Name,
+                RotationalAngle = vModel.DataObject.RotationalAngle,
+                CelestialBodies = vModel.DataObject.CelestialBodies,
+                ChronologicalSystem = vModel.DataObject.ChronologicalSystem
             };
-
-            var monthNames = new List<string>();
-            if (vModel.MonthNames != null)
-            {
-                foreach (var tag in vModel.MonthNames.Split(new string[] { "||" }, StringSplitOptions.RemoveEmptyEntries))
-                    monthNames.Add(tag);
-            }
-
-            var chrono = new Chronology
-            {
-                StartingYear = vModel.StartingYear,
-                HoursPerDay = vModel.HoursPerDay,
-                DaysPerMonth = vModel.DaysPerMonth,
-                Months = monthNames
-            };
-
-            newObj.ChronologicalSystem = chrono;
-
-            var bodies = new List<ICelestial>();
-            if (vModel.CelestialBodies != null)
-            {
-                foreach (var id in vModel.CelestialBodies.Where(cId => cId >= 0))
-                {
-                    var celestial = BackingDataCache.Get<ICelestial>(id);
-
-                    if (celestial != null)
-                        bodies.Add(celestial);
-                }
-            }
-
-            newObj.CelestialBodies = bodies;
 
             if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
                 message = "Error; Creation failed.";
@@ -169,13 +138,13 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(long id)
         {
             string message = string.Empty;
-            var vModel = new AddEditGaiaViewModel
+            AddEditGaiaViewModel vModel = new AddEditGaiaViewModel(-1)
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidCelestials = BackingDataCache.GetAll<ICelestial>(true)
+                ValidCelestials = TemplateCache.GetAll<ICelestial>(true)
             };
 
-            var obj = BackingDataCache.Get<IGaiaData>(id);
+            var obj = TemplateCache.Get<GaiaTemplate>(id);
 
             if (obj == null)
             {
@@ -184,11 +153,6 @@ namespace NetMud.Controllers.GameAdmin
             }
 
             vModel.DataObject = obj;
-            vModel.Name = obj.Name;
-            vModel.StartingYear = obj.ChronologicalSystem.StartingYear;
-            vModel.HoursPerDay = obj.ChronologicalSystem.HoursPerDay;
-            vModel.DaysPerMonth = obj.ChronologicalSystem.DaysPerMonth;
-            vModel.CelestialBodies = obj.CelestialBodies.Select(cb => cb.Id).ToArray();
 
             return View("~/Views/GameAdmin/Gaia/Edit.cshtml", vModel);
         }
@@ -198,9 +162,9 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(long id, AddEditGaiaViewModel vModel)
         {
             string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = BackingDataCache.Get<IGaiaData>(id);
+            var obj = TemplateCache.Get<IGaiaTemplate>(id);
             if (obj == null)
             {
                 message = "That does not exist";
@@ -209,38 +173,10 @@ namespace NetMud.Controllers.GameAdmin
 
             try
             {
-                obj.Name = vModel.Name;
-
-                var monthNames = new List<string>();
-                if (vModel.MonthNames != null)
-                {
-                    foreach (var tag in vModel.MonthNames.Split(new string[] { "||" }, StringSplitOptions.RemoveEmptyEntries))
-                        monthNames.Add(tag);
-                }
-
-                var chrono = new Chronology
-                {
-                    StartingYear = vModel.StartingYear,
-                    HoursPerDay = vModel.HoursPerDay,
-                    DaysPerMonth = vModel.DaysPerMonth,
-                    Months = monthNames
-                };
-
-                obj.ChronologicalSystem = chrono;
-
-                var bodies = new List<ICelestial>();
-                if (vModel.CelestialBodies != null)
-                {
-                    foreach (var cId in vModel.CelestialBodies.Where(cId => cId >= 0))
-                    {
-                        var celestial = BackingDataCache.Get<ICelestial>(cId);
-
-                        if (celestial != null)
-                            bodies.Add(celestial);
-                    }
-                }
-
-                obj.CelestialBodies = bodies;
+                obj.Name = vModel.DataObject.Name;
+                obj.CelestialBodies = vModel.DataObject.CelestialBodies;
+                obj.ChronologicalSystem = vModel.DataObject.ChronologicalSystem;
+                obj.RotationalAngle = vModel.DataObject.RotationalAngle;
 
                 if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                 {

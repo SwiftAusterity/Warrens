@@ -1,0 +1,6 @@
+﻿@using NetMud.DataStructure.Inanimate
+
+@model IInanimateComponent
+
+@Html.EditorFor(e => e.Item, new { validItems = ViewData["ValidComponents"] })
+@Html.EditorFor(e => e.Amount)

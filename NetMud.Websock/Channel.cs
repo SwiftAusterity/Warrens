@@ -1,5 +1,5 @@
 ﻿using Microsoft.Web.WebSockets;
-using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -64,27 +64,27 @@ namespace NetMud.Websock
             if (string.IsNullOrWhiteSpace(originalString) || string.IsNullOrWhiteSpace(formatToReplace))
                 return false;
 
-            var styleElement = SupportedColorTranslations[styleType];
+            string styleElement = SupportedColorTranslations[styleType];
 
             //If the destination string is blank, just remove them all since they'd come back empty anyways
             if (string.IsNullOrWhiteSpace(styleElement))
                 originalString = originalString.Replace(formatToReplace, string.Empty);
             else
             {
-                var firstIndex = originalString.IndexOf(formatToReplace);
+                int firstIndex = originalString.IndexOf(formatToReplace);
 
                 if (firstIndex < 0)
                     return false;
                 else
                 {
-                    var secondIndex = originalString.IndexOf(formatToReplace, firstIndex + formatToReplace.Length);
+                    int secondIndex = originalString.IndexOf(formatToReplace, firstIndex + formatToReplace.Length);
 
                     //Yes 1st instance but no second instance? replace them all with empty string to scrub the string.
                     if (secondIndex < 0)
                         originalString = originalString.Replace(formatToReplace, string.Empty);
                     else
                     {
-                        var lengthToSkip = formatToReplace.Length;
+                        int lengthToSkip = formatToReplace.Length;
 
                         originalString = string.Format("{0}<span style=\"{3}\">{1}</span>{2}"
                             , firstIndex == 0 ? string.Empty : originalString.Substring(0, firstIndex)
@@ -105,9 +105,9 @@ namespace NetMud.Websock
         /// <returns>a single string blob of all the output encapsulated</returns>
         public string EncapsulateOutput(IEnumerable<string> lines)
         {
-            var returnString = new StringBuilder();
+            StringBuilder returnString = new StringBuilder();
 
-            foreach (var line in lines)
+            foreach (string line in lines)
                 returnString.AppendFormat(EncapsulateOutput(line));
 
             return returnString.ToString();

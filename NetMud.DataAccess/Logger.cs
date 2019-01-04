@@ -1,7 +1,6 @@
 ﻿using NetMud.DataAccess.Cache;
 using NetMud.DataAccess.FileSystem;
-using NetMud.DataStructure.Base.Entity;
-using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.DataStructure.Player;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -53,8 +52,8 @@ namespace NetMud.DataAccess
             if (!beQuiet)
             {
                 //write to people in game
-                var peeps = LiveCache.GetAll<IPlayer>().Where(peep => peep.DataTemplate<ICharacter>() != null && peep.DataTemplate<ICharacter>().Account != null && 
-                                                                        peep.DataTemplate<ICharacter>().Account.LogChannelSubscriptions.Contains(channel));
+                var peeps = LiveCache.GetAll<IPlayer>().Where(peep => peep.Template<IPlayerTemplate>() != null && peep.Template<IPlayerTemplate>().Account != null && 
+                                                                        peep.Template<IPlayerTemplate>().Account.LogChannelSubscriptions.Contains(channel));
 
                 foreach (var peep in peeps)
                     peep.WriteTo(new string[] { content });
@@ -67,7 +66,7 @@ namespace NetMud.DataAccess
         /// <returns>a list of the log file names</returns>
         public IEnumerable<string> GetCurrentLogNames()
         {
-            var names = Enumerable.Empty<string>();
+            IEnumerable<string> names = Enumerable.Empty<string>();
 
             if (VerifyDirectory(CurrentDirectoryName, false))
                 names = Directory.EnumerateFiles(BaseDirectory + "Current/", "*.txt", SearchOption.TopDirectoryOnly);
@@ -82,7 +81,7 @@ namespace NetMud.DataAccess
         /// <returns>success status</returns>
         public bool RolloverLog(string channel)
         {
-            var archiveLogName = string.Format("{0}_{1}{2}{3}_{4}{5}{6}.txt",
+            string archiveLogName = string.Format("{0}_{1}{2}{3}_{4}{5}{6}.txt",
                     channel
                     , DateTime.Now.Year
                     , DateTime.Now.Month
@@ -101,9 +100,9 @@ namespace NetMud.DataAccess
         /// <returns>the content</returns>
         public string GetCurrentLogContent(string channel)
         {
-            var content = string.Empty;
+            string content = string.Empty;
 
-            var bytes = ReadCurrentFileByPath(channel + ".txt");
+            byte[] bytes = ReadCurrentFileByPath(channel + ".txt");
 
             if(bytes.Length > 0)
                 content = Encoding.UTF8.GetString(bytes);
@@ -118,18 +117,18 @@ namespace NetMud.DataAccess
         /// <param name="channel">the log file to append it to</param>
         private void WriteLine(string content, string channel)
         {
-            var dirName = BaseDirectory + CurrentDirectoryName;
+            string dirName = BaseDirectory + CurrentDirectoryName;
 
             if (!VerifyDirectory(CurrentDirectoryName))
                 throw new Exception("Unable to locate or create base live logs directory.");
 
-            var fileName = channel + ".txt";
-            var timeStamp = string.Format("[{0:0000}/{1:00}/{2:00} {3:00}:{4:00}:{5:00}]:  ", DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+            string fileName = channel + ".txt";
+            string timeStamp = string.Format("[{0:0000}/{1:00}/{2:00} {3:00}:{4:00}:{5:00}]:  ", DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
 
             //Add a line terminator PLEASE
             content += Environment.NewLine;
 
-            var bytes = Encoding.UTF8.GetBytes(timeStamp + content);
+            byte[] bytes = Encoding.UTF8.GetBytes(timeStamp + content);
 
             WriteToFile(dirName + fileName, bytes, FileMode.Append);
         }

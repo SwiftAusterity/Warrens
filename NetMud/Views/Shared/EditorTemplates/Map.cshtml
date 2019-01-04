@@ -1,0 +1,423 @@
+﻿@using NetMud.DataStructure.Architectural
+@using NetMud.DataStructure.Inanimate
+@using NetMud.DataStructure.Tile
+@using NetMud.DataStructure.NPC
+@using NetMud.Data.Zones
+@using NetMud.DataAccess.Cache;
+
+@model ZoneTemplateMap
+@{
+    short i = 0;
+
+    var brushTypes = new List<SelectListItem>()
+{
+new SelectListItem() { Text = "Single", Value = "1", Selected = true },
+new SelectListItem() { Text = "3 High", Value = "3", Selected = false },
+new SelectListItem() { Text = "3 Wide", Value = "-3", Selected = false },
+new SelectListItem() { Text = "4 Square", Value = "4", Selected = false },
+new SelectListItem() { Text = "9 Square", Value = "9", Selected = false },
+new SelectListItem() { Text = "30 Square", Value = "30", Selected = false },
+new SelectListItem() { Text = "70 Square", Value = "70", Selected = false }
+};
+
+    var brushSymbols = ((IEnumerable<ITileTemplate>)ViewData["ValidTileTypes"]).Select(brush => new SelectListItem() { Text = string.Format("{0} - {1} - {2} - {3}", brush.AsciiCharacter, brush.Name, brush.HexColorCode, brush.BackgroundHexColor), Value = brush.Id.ToString() });
+    var itemSymbols = ((IEnumerable<IInanimateTemplate>)ViewData["ValidItems"]).Select(brush => new SelectListItem() { Text = string.Format("{0} - {1} - {2}", brush.AsciiCharacter, brush.Name, brush.HexColorCode), Value = brush.Id.ToString() });
+    var npcSymbols = ((IEnumerable<INonPlayerCharacterTemplate>)ViewData["ValidNPCs"]).Select(brush => new SelectListItem() { Text = string.Format("{0} - {1} - {2}", brush.AsciiCharacter, brush.Name, brush.HexColorCode), Value = brush.Id.ToString() });
+}
+
+<div id="tabs">
+    <ul>
+        <li><a href="#tabs-1">Tile Brush</a></li>
+        <li><a href="#tabs-2">Items</a></li>
+        <li><a href="#tabs-3">NPCs</a></li>
+    </ul>
+    <div id="tabs-1" data-tabNumber="1">
+        <div class="form-group row">
+            <div class="col-sm-3">
+                @Html.DropDownList("PaintbrushSymbol", new SelectList(brushSymbols, "Value", "Text", -1)
+                                        , "Select One", htmlAttributes: new { id = "PaintbrushSymbol", @class = "form-control" })
+            </div>
+            <div class="col-sm-3">
+                @Html.DropDownList("PaintbrushType", brushTypes, htmlAttributes: new { id = "PaintbrushType", @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group row">
+            <span style="padding: 15px; font-style: italic;">Click on nodes individually and use the Tool selector to change the size of the paintbrush.</span>
+        </div>
+        <div class="form-group row">
+            <a href="#" class="btn" id="clearFields" style="color: red;">Clear Fields</a>
+            <a href="#" class="btn" id="fillFields" style="color: red;">Fill All With Selected Paintbrush Symbol</a>
+        </div>
+    </div>
+    <div id="tabs-2" data-tabNumber="2">
+        <div class="form-group row">
+            <div class="col-sm-3">
+                @Html.DropDownList("ItemType", new SelectList(itemSymbols, "Value", "Text", -1), "Select One", htmlAttributes: new { id = "ItemType", @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group row">
+            <span style="padding: 15px; font-style: italic;">Click on nodes individually to place Items.</span>
+        </div>
+        <div class="form-group row">
+            <a href="#" class="btn" id="clearItems" style="color: red;">Clear Items</a>
+        </div>
+    </div>
+    <div id="tabs-3" data-tabNumber="3">
+        <div class="form-group row">
+            <div class="col-sm-3">
+                @Html.DropDownList("NPCType", new SelectList(npcSymbols, "Value", "Text", -1), "Select One", htmlAttributes: new { id = "NPCType", @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group row">
+            <span style="padding: 15px; font-style: italic;">Click on nodes individually to place NPCs.</span>
+        </div>
+        <div class="form-group row">
+            <a href="#" class="btn" id="clearNPCs" style="color: red;">Clear NPCs</a>
+        </div>
+    </div>
+</div>
+<div class="clearfix"></div>
+<div class="mapEditor">
+    @for (i = 99; i >= 0; i--)
+    {
+        <div class="mapEditorRow">
+            @for (short n = 0; n <= 99; n++)
+            {
+                var tile = Model.GetTile(new Coordinate(n, i));
+                var tileId = (long)-1;
+                var itemId = (long)-1;
+                var npcId = (long)-1;
+                var nodeText = " ";
+                var hexColor = "#FFFFFF";
+                var bkgColor = "#000000";
+                var tileColor = "#FFFFFF";
+                var tileText = " ";
+                var dataType = "1";
+                var currentTileLocation = 9900 - (i * 100) + n;
+                var tileName = string.Format("CoordinateTilePlane[{0},{1}]", n, i);
+                var itemName = string.Format("ItemSpawns[{0}]", currentTileLocation);
+                var npcName = string.Format("NPCSpawns[{0}]", currentTileLocation);
+
+                if (tile != null)
+                {
+                    tileId = tile.Id;
+                    nodeText = tileText = tile.AsciiCharacter;
+                    hexColor = tileColor = tile.HexColorCode;
+                    bkgColor = tile.BackgroundHexColor;
+                }
+
+                var itemSpawn = Model.ItemSpawns.FirstOrDefault(item => item.Placement.X == n && item.Placement.Y == i);
+                var npcSpawn = Model.NPCSpawns.FirstOrDefault(item => item.Placement.X == n && item.Placement.Y == i);
+                if (itemSpawn != null)
+                {
+                    var spawnItem = TemplateCache.Get<IInanimateTemplate>(itemSpawn.ItemId);
+                    nodeText = spawnItem.AsciiCharacter;
+                    hexColor = spawnItem.HexColorCode;
+                    itemId = spawnItem.Id;
+                    dataType = "2";
+                }
+                else if (npcSpawn != null)
+                {
+                    var spawnItem = TemplateCache.Get<INonPlayerCharacterTemplate>(npcSpawn.NPCId);
+                    nodeText = spawnItem.AsciiCharacter;
+                    hexColor = spawnItem.HexColorCode;
+                    npcId = spawnItem.Id;
+                    dataType = "3";
+                }
+
+                <div class="dimModelNode" data-value="@tileId" data-x="@n" data-y="@i" style="background-color: @bkgColor;">
+                    @Html.Hidden(tileName, tileId, htmlAttributes: new { @class = "MapNodes" })
+                    @Html.Hidden(itemName, itemId, htmlAttributes: new { @class = "ItemSpawns" })
+                    @Html.Hidden(npcName, npcId, htmlAttributes: new { @class = "NPCSpawns" })
+
+                    <span id="nodeValue" class="nodeValue" style="color: @hexColor;" data-type="@dataType" data-tileColor="@tileColor" data-tileText="@tileText">@nodeText</span>
+                </div>
+            }
+        </div>
+    }
+</div>
+<style>
+    body {
+        line-height: 0.7;
+    }
+</style>
+<script type="text/javascript">
+    var paintMode = '1'; //1 - tile, 2 - Item, 3 - NPC
+
+    $(document).ready(function () {
+        $('div.dimModelNode').click(function () { paint($(this)) });
+
+        $('#clearFields').click(function () {
+            $('.dimModelNode').attr('data-value', ' ');
+            $('.dimModelNode').css("background-color", "#000000");
+            $('.MapNodes').val(' ');
+            $('.nodeValue').text(' ');
+            $('.nodeValue').css("color", "#FFFFFF");
+
+            return false;
+        });
+
+        $('#clearItems').click(function () {
+            $('.ItemSpawns').val(' ');
+
+            $('.nodeValue[data-type="2"]').each(function () {
+                var $this = $(this);
+
+                $this.text($this.attr('data-tileText'));
+                $this.css('color', $this.attr('data-tileColor'));
+                $this.attr('data-type', '1');
+            });
+
+            return false;
+        });
+
+        $('#clearNPCs').click(function () {
+            $('.NPCSpawns').val(' ');
+
+            $('.nodeValue[data-type="3"]').each(function () {
+                var $this = $(this);
+
+                $this.text($this.attr('data-tileText'));
+                $this.css('color', $this.attr('data-tileColor'));
+                $this.attr('data-type', '1');
+            });
+
+            return false;
+        });
+
+        $('#fillFields').click(function () {
+            var paintPhrase = $('#PaintbrushSymbol option:selected').text();
+
+            //Don't paint random S letters everywhere
+            if (paintPhrase === 'Select One') {
+                return;
+            }
+
+            var symbol = paintPhrase.substr(0, 1);
+            var value = $('#PaintbrushSymbol option:selected').val();
+            var bkgColor = paintPhrase.split(" - ")[3];
+            var symbolColor = paintPhrase.split(" - ")[2];
+
+            $('.dimModelNode').attr('data-value', value);
+            $('.dimModelNode').css("background-color", bkgColor);
+            $('.MapNodes').val(value);
+            $('.nodeValue').text(symbol);
+            $('.nodeValue').css("color", symbolColor);
+
+            return false;
+        });
+
+        $("#tabs").tabs({
+            activate: function (e) {
+                paintMode = e.currentTarget.id.slice(-1);
+            }
+        });
+    });
+
+    function paint(nodeCell) {
+        switch (paintMode) {
+            case '1': paintWithTile(nodeCell);
+                break;
+            case '2': paintWithItem(nodeCell);
+                break;
+            case '3': paintWithNPC(nodeCell);
+                break;
+        }
+
+    }
+
+    function paintWithTile(nodeCell) {
+        var paintPhrase = $('#PaintbrushSymbol option:selected').text();
+        //Don't paint random S letters everywhere
+        if (paintPhrase === 'Select One') {
+            return;
+        }
+
+        var symbol = paintPhrase.substr(0, 1);
+        var bkgColor = paintPhrase.split(" - ")[3];
+        var symbolColor = paintPhrase.split(" - ")[2];
+        var value = $('#PaintbrushSymbol option:selected').val();
+        var brushSize = $('#PaintbrushType option:selected').val();
+
+        var cellX = parseInt(nodeCell.attr('data-x'));
+        var cellY = parseInt(nodeCell.attr('data-y'));
+
+        applySymbol(cellY, cellX, value, symbol, bkgColor, symbolColor);
+
+        //3 high
+        if (brushSize === '3') {
+            applySymbol(cellY + 1, cellX, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY - 1, cellX, value, symbol, bkgColor, symbolColor);
+        }
+
+        //3 wide
+        if (brushSize === '-3') {
+            applySymbol(cellY, cellX + 1, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY, cellX - 1, value, symbol, bkgColor, symbolColor);
+        }
+
+        //4 square, key is upper left
+        if (brushSize === '4') {
+            applySymbol(cellY, cellX + 1, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY - 1, cellX, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY - 1, cellX + 1, value, symbol, bkgColor, symbolColor);
+        }
+
+        //9 square, key is center
+        if (brushSize === '9') {
+            applySymbol(cellY + 1, cellX, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY - 1, cellX, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY, cellX + 1, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY, cellX - 1, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY - 1, cellX + 1, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY - 1, cellX - 1, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY + 1, cellX + 1, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY + 1, cellX - 1, value, symbol, bkgColor, symbolColor);
+        }
+
+        //30 square, key is center
+        if (brushSize === '30') {
+            applySymbol(cellY + 1, cellX, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY - 1, cellX, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY, cellX + 1, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY, cellX - 1, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY - 1, cellX + 1, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY - 1, cellX - 1, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY + 1, cellX + 1, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY + 1, cellX - 1, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY + 2, cellX, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY - 2, cellX, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY, cellX + 2, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY, cellX - 2, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY - 2, cellX + 2, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY - 2, cellX - 2, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY + 2, cellX + 2, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY + 2, cellX - 2, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY - 1, cellX + 2, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY - 1, cellX - 2, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY + 1, cellX + 2, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY + 1, cellX - 2, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY - 2, cellX + 1, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY - 2, cellX - 1, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY + 2, cellX + 1, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY + 2, cellX - 1, value, symbol, bkgColor, symbolColor);
+        }
+
+        //30 square, key is center
+        if (brushSize === '70') {
+            //9
+            applySymbol(cellY + 1, cellX, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY - 1, cellX, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY, cellX + 1, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY, cellX - 1, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY - 1, cellX + 1, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY - 1, cellX - 1, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY + 1, cellX + 1, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY + 1, cellX - 1, value, symbol, bkgColor, symbolColor);
+            //30
+            applySymbol(cellY + 2, cellX, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY - 2, cellX, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY, cellX + 2, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY, cellX - 2, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY - 1, cellX + 2, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY - 1, cellX - 2, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY + 1, cellX + 2, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY + 1, cellX - 2, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY - 2, cellX + 1, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY - 2, cellX - 1, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY + 2, cellX + 1, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY + 2, cellX - 1, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY - 2, cellX + 2, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY - 2, cellX - 2, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY + 2, cellX + 2, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY + 2, cellX - 2, value, symbol, bkgColor, symbolColor);
+            //70
+            applySymbol(cellY + 3, cellX, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY - 3, cellX, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY, cellX + 3, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY, cellX - 3, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY - 1, cellX + 3, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY - 1, cellX - 3, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY + 1, cellX + 3, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY + 1, cellX - 3, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY - 3, cellX + 1, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY - 3, cellX - 1, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY + 3, cellX + 1, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY + 3, cellX - 1, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY - 2, cellX + 3, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY - 2, cellX - 3, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY + 2, cellX + 3, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY + 2, cellX - 3, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY - 3, cellX + 2, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY - 3, cellX - 2, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY + 3, cellX + 2, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY + 3, cellX - 2, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY - 3, cellX + 3, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY - 3, cellX - 3, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY + 3, cellX + 3, value, symbol, bkgColor, symbolColor);
+            applySymbol(cellY + 3, cellX - 3, value, symbol, bkgColor, symbolColor);
+        }
+
+    }
+
+    function paintWithItem(nodeCell) {
+        var paintPhrase = $('#ItemType option:selected').text();
+        //Don't paint random S letters everywhere
+        if (paintPhrase === 'Select One') {
+            return;
+        }
+
+        var symbol = paintPhrase.substr(0, 1);
+        var symbolColor = paintPhrase.split(" - ")[2];
+        var cellX = parseInt(nodeCell.attr('data-x'));
+        var cellY = parseInt(nodeCell.attr('data-y'));
+        var value = $('#ItemType option:selected').val();
+
+        $('.dimModelNode[data-y="' + cellY + '"][data-x="' + cellX + '"]').children('.ItemSpawns').val(value);
+
+        $(this).attr('data-type', '2');
+
+        applySymbol(cellY, cellX, null, symbol, null, symbolColor);
+    }
+
+    function paintWithNPC(nodeCell) {
+        var paintPhrase = $('#NPCType option:selected').text();
+        //Don't paint random S letters everywhere
+        if (paintPhrase === 'Select One') {
+            return;
+        }
+
+        var symbol = paintPhrase.substr(0, 1);
+        var symbolColor = paintPhrase.split(" - ")[2];
+        var cellX = parseInt(nodeCell.attr('data-x'));
+        var cellY = parseInt(nodeCell.attr('data-y'));
+        var value = $('#NPCType option:selected').val();
+
+        $('.dimModelNode[data-y="' + cellY + '"][data-x="' + cellX + '"]').children('.NPCSpawns').val(value);
+
+        $(this).attr('data-type', '3');
+
+        applySymbol(cellY, cellX, null, symbol, null, symbolColor);
+    }
+
+    function applySymbol(y, x, value, symbol, bkgColor, symbolColor) {
+        var $cell = $('.dimModelNode[data-y="' + y + '"][data-x="' + x + '"]');
+        if ($cell !== null && $cell !== undefined) {
+            $cell.children('span').text(symbol);
+            $cell.children('span').css("color", symbolColor);
+            //These are for tile only
+            if (value != null) {
+                $cell.attr('data-value', value);
+                $cell.children('input.MapNodes').val(value);
+                $(this).attr('data-tileText', symbol);
+                $(this).attr('data-tileColor', symbolColor);
+                $(this).attr('data-type', '1');
+            }
+
+            if (bkgColor != null) {
+                $cell.css("background-color", bkgColor);
+            }
+
+        }
+    }
+</script>

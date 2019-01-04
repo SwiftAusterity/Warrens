@@ -1,0 +1,29 @@
+﻿@using NetMud.Models
+@using NetMud.Data.Architectural.EntityBase
+@using NetMud.DataStructure.Architectural.EntityBase
+
+@model HashSet<IQuality>
+
+@{
+    var rowsName = ViewData.ModelMetadata.PropertyName + "Rows";
+}
+
+<div id="@rowsName" class="iterativeContainer">
+    <div class="addRowContainer">
+        <div class="col-sm-1">
+            @Html.DescriptionFor(m => m)
+            <a href="#" class="addRow btn" onclick="javascript: $('#@rowsName').append(newProficenciesRow); return false;"><span class="addWord">Add Row</span></a>
+        </div>
+    </div>
+    <div class="form-group row">
+        <a href="#" class="removeRow col-form-label" title="Remove this" onclick="javascript: $(this).parent().remove(); return false;">X</a>
+        @Html.EditorForMany(e => e, null, 0, "TeachableProficency")
+    </div>
+</div>
+
+<script type="text/javascript">
+    var newProficenciesRow = '<div class="form-group row">' +
+        '<a href="#" class="removeRow col-form-label" title="Remove this" onclick="javascript: $(this).parent().remove(); return false;">X</a>' +
+        decodeHtml('@Html.EmptyEditorForMany(e => e, null, Model.Count(), "TeachableProficency")') +
+        '</div>';
+</script>

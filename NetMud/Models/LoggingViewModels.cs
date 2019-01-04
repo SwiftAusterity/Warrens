@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.Models.Logging
 {
-    public class DashboardViewModel : BaseViewModel
+    public class DashboardViewModel : IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 

@@ -1,0 +1,45 @@
+﻿@model NetMud.DataStructure.Action.IUse
+
+<div style="text-align: center; font-weight: 800;">
+    Use - @Model.Name
+</div>
+@if (Model.StaminaCost > 0 || Model.HealthCost > 0)
+{
+    <div>
+        <span>Cost S/H</span>
+        <span>@Model.StaminaCost/@Model.HealthCost</span>
+    </div>
+}
+@if (!string.IsNullOrWhiteSpace(Model.FoleyUri))
+{
+    <div>
+        <span>Foley Effect</span>
+        <span><a href="@Model.FoleyUri">play</a></span>
+    </div>
+}
+@if (!string.IsNullOrWhiteSpace(Model.ToActorMessage))
+{
+    <div>
+        <span>Actor Message</span>
+        <span>@Model.ToActorMessage</span>
+    </div>
+}
+@if (!string.IsNullOrWhiteSpace(Model.ToLocalMessage))
+{
+    <div>
+        <span>Area Message</span>
+        <span>@Model.ToLocalMessage</span>
+    </div>
+}
+@foreach (var item in Model.Criteria)
+{
+    <div style="padding: 5px; border-radius: 9px;">
+        @Html.DisplayFor(m => item)
+    </div>
+}
+@foreach (var item in Model.Results)
+{
+    <div style="padding: 5px; border-radius: 9px;">
+        @Html.DisplayFor(m => item)
+    </div>
+}

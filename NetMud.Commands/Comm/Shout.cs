@@ -1,18 +1,16 @@
 ﻿using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
-using NetMud.Data.Lexical;
-using NetMud.DataStructure.SupportingClasses;
+using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.System;
 using NetMud.Utility;
-using NutMud.Commands.Attributes;
 using System.Collections.Generic;
 
 namespace NetMud.Commands.Comm
 {
-    [CommandKeyword("shout", false)]
-    [CommandKeyword("yell", false)]
-    [CommandKeyword("scream", false)]
+    [CommandKeyword("shout", false, new string[] { "yell", "scream", "global" })]
     [CommandPermission(StaffRank.Player)]
-    [CommandParameter(CommandUsage.Subject, typeof(string), new CacheReferenceType[] { CacheReferenceType.Text }, false)]
+    [CommandParameter(CommandUsage.Subject, typeof(string), CacheReferenceType.Greedy, false)]
     [CommandRange(CommandRangeType.Touch, 0)]
     public class Shout : CommandPartial
     {
@@ -29,30 +27,30 @@ namespace NetMud.Commands.Comm
         /// </summary>
         public override void Execute()
         {
-            var sb = new List<string>
+            List<string> sb = new List<string>
             {
                 string.Format("You shout '{0}'", Subject)
             };
 
-            var toActor = new Message(MessagingType.Audible, new Occurrence() { Strength = 1 })
+            Message toActor = new Message()
             {
-                Override = sb
+                Body = sb
             };
 
-            var areaString = new string[] { string.Format("$A$ shouts '{0}'", Subject) };
+            string[] areaString = new string[] { string.Format("$A$ shouts '{0}'", Subject) };
 
-            var toArea = new Message(MessagingType.Audible, new Occurrence() { Strength = 900 })
+            Message toArea = new Message()
             {
-                Override = areaString
+                Body = areaString
             };
 
             //TODO: language outputs
-            var messagingObject = new MessageCluster(toActor)
+            MessageCluster messagingObject = new MessageCluster(toActor)
             {
                 ToOrigin = new List<IMessage> { toArea }
             };
 
-            messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation.CurrentLocation, null);
+            messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation.CurrentZone, null);
         }
 
         /// <summary>
@@ -61,7 +59,7 @@ namespace NetMud.Commands.Comm
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            var sb = new List<string>
+            List<string> sb = new List<string>
             {
                 "Valid Syntax: shout &lt;text&gt;",
                 "yell &lt;text&gt;".PadWithString(14, "&nbsp;", true),
@@ -78,7 +76,7 @@ namespace NetMud.Commands.Comm
         {
             get
             {
-                return string.Format("Shout communicates in whatever your current language is to the immediate surroundings at an audible strength 30x say/speak. Characters with good hearing may be able to hear from further away.");
+                return string.Format("Shout communicates in whatever your current language is to the immediate surroundings at an audible strength 30x say/speak. Character with good hearing may be able to hear from further away.");
             }
             set { }
         }

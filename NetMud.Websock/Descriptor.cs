@@ -1,18 +1,18 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using NetMud.Authentication;
-using NetMud.Data.Game;
+using NetMud.Data.Players;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataAccess.FileSystem;
-using NetMud.DataStructure.Base.Entity;
-using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.PlayerConfiguration;
-using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.Base.World;
-using NetMud.DataStructure.Behaviors.Rendering;
-using NetMud.DataStructure.Linguistic;
+using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Gaia;
+using NetMud.DataStructure.Gossip;
+using NetMud.DataStructure.Inanimate;
+using NetMud.DataStructure.Player;
+using NetMud.DataStructure.System;
+using NetMud.DataStructure.Zone;
+using NetMud.Gaia.Geographical;
 using NetMud.Interp;
 using NetMud.Utility;
 using NetMud.Websock.OutputFormatting;
@@ -50,7 +50,7 @@ namespace NetMud.Websock
         /// <summary>
         /// User id of connected player
         /// </summary>
-        private string _userId;
+        public string _userId { get; set; }
 
         /// <summary>
         /// The player connected
@@ -58,21 +58,31 @@ namespace NetMud.Websock
         private IPlayer _currentPlayer;
 
         /// <summary>
+        /// The assigned radius of the client app of tiles to show
+        /// </summary>
+        public ValueRange<short> MapRadius { get; set; }
+
+        /// <summary>
         /// Creates an instance of the command negotiator
         /// </summary>
         public Descriptor() : this(new ApplicationUserManager(new UserStore<ApplicationUser>(new ApplicationDbContext())))
         {
+            //Hardcoded for now
+            MapRadius = new ValueRange<short>(30, 13);
         }
 
         /// <summary>
         /// Creates an instance of the command negotiator with a specified user manager
         /// </summary>
         /// <param name="userManager">the authentication manager from the web</param>
-        public Descriptor(ApplicationUserManager userManager) 
+        public Descriptor(ApplicationUserManager userManager)
         {
             UserManager = userManager;
 
             Birthdate = DateTime.Now;
+
+            //Hardcoded for now
+            MapRadius = new ValueRange<short>(30, 13);
         }
 
         #region Caching
@@ -102,115 +112,54 @@ namespace NetMud.Websock
         #endregion
 
         /// <summary>
+        /// Sends the full map to the client
+        /// </summary>
+        /// <returns>Success</returns>
+        public bool SendMap()
+        {
+            return SendWrapper(null);
+        }
+
+        /// <summary>
+        /// Sends map deltas to the client
+        /// </summary>
+        /// <param name="partialUpdates">the deltas for the map</param>
+        /// <returns>success</returns>
+        public bool SendMapDeltas(HashSet<Tuple<long, long, string>> partialUpdates)
+        {
+            return SendWrapper(partialUpdates);
+        }
+
+        /// <summary>
+        /// Send just ui updates like inventory
+        /// </summary>
+        /// <returns>success</returns>
+        public bool SendUIUpdates()
+        {
+            return SendWrapper(null, true);
+        }
+
+        /// <summary>
         /// Wraps sending messages to the connected descriptor
         /// </summary>
-        /// <param name="strings">the output</param>
+        /// <param name="str">the output</param>
         /// <returns>success status</returns>
-        public bool SendWrapper(IEnumerable<string> strings)
+        public bool SendOutput(string str)
         {
-            //TODO: Stop hardcoding this but we have literally no sense of injury/self status yet
-            var self = new SelfStatus
-            {
-                Body = new BodyStatus
-                {
-                    Overall = OverallStatus.Excellent,
-                    Anatomy = new AnatomicalPart[] {
-                        new AnatomicalPart {
-                            Name = "Arm",
-                            Overall = OverallStatus.Good,
-                            Wounds = new string[] {
-                                "Light scrape"
-                            }
-                        },
-                        new AnatomicalPart {
-                            Name = "Leg",
-                            Overall = OverallStatus.Excellent,
-                            Wounds = new string[] {
-                            }
+            //Easier just to handle it in one place
+            return SendOutput(new List<string>() { str });
+        }
 
-                        }
-                    }
-                },
-                Mind = new MindStatus
-                {
-                    Overall = OverallStatus.Excellent,
-                    States = new string[]
-                    {
-                        "Fearful"
-                    }
-                }
-            };
-
-            var currentLocation = _currentPlayer.CurrentLocation;
-            var currentContainer = currentLocation.CurrentLocation;
-            var currentZone = currentLocation.GetZone();
-            var currentWorld = currentZone.GetWorld();
-            var currentRoom = currentLocation.GetRoom();
-
-            var pathways = ((ILocation)currentContainer).GetPathways().Select(data => data.GetDescribableName(_currentPlayer).ToString());
-            var inventory = currentContainer.GetContents<IInanimate>().Select(data => data.GetDescribableName(_currentPlayer).ToString());
-            var populace = currentContainer.GetContents<IMobile>().Where(player => !player.Equals(_currentPlayer)).Select(data => data.GetDescribableName(_currentPlayer).ToString());
-
-            var local = new LocalStatus
-            {
-                ZoneName = currentZone.DataTemplateName,
-                LocaleName = currentLocation.GetLocale()?.DataTemplateName,
-                RoomName = currentRoom?.DataTemplateName,
-                Inventory = inventory.ToArray(),
-                Populace = populace.ToArray(),
-                Exits = pathways.ToArray(),
-                LocationDescriptive = currentLocation.CurrentLocation.RenderToLook(_currentPlayer).Describe(NarrativeNormalization.Normal, 1)
-            };
-
-            //The next two are mostly hard coded, TODO, also fix how we get the map as that's an admin thing
-            var extended = new ExtendedStatus
-            {
-                Horizon = new string[]
-                {
-                     "A hillside",
-                     "A dense forest"
-                },
-                VisibleMap = currentLocation.GetRoom() == null ? string.Empty : currentLocation.GetRoom().RenderCenteredMap(3, true)
-            };
-
-            var timeOfDayString = string.Format("The hour of {0} in the day of {1} in {2} in the year of {3}", currentWorld.CurrentTimeOfDay.Hour
-                                                                               , currentWorld.CurrentTimeOfDay.Day
-                                                                               , currentWorld.CurrentTimeOfDay.MonthName()
-                                                                               , currentWorld.CurrentTimeOfDay.Year);
-
-            var visibleCelestials = Enumerable.Empty<ICelestial>();
-            var visibilityString = string.Empty;
-
-            if (currentRoom != null)
-            {
-                visibilityString = string.Format("{0} lumins", currentRoom.GetCurrentLuminosity());
-                visibleCelestials = currentRoom.GetVisibileCelestials(_currentPlayer);
-            }
-            else if (currentZone != null)
-            {
-                visibilityString = string.Format("{0} lumins", currentZone.GetCurrentLuminosity());
-                visibleCelestials = currentZone.GetVisibileCelestials(_currentPlayer);
-            }
-            else
-                visibilityString = "I don't know";
-
-            var celestialString = String.Join(",", visibleCelestials.Select(cp => cp.Name));
-
-            var environment = new EnvironmentStatus
-            {
-                Celestial = celestialString,
-                Visibility = visibilityString,
-                Weather = "I don't know",
-                TimeOfDay = timeOfDayString
-            };
-
-            var outputFormat = new OutputStatus
+        /// <summary>
+        /// Wraps sending messages to the connected descriptor
+        /// </summary>
+        /// <param name="str">the output</param>
+        /// <returns>success status</returns>
+        public bool SendOutput(IEnumerable<string> strings)
+        {
+            OutputStatus outputFormat = new OutputStatus
             {
                 Occurrence = EncapsulateOutput(strings),
-                Self = self,
-                Local = local,
-                Extended = extended,
-                Environment = environment
             };
 
             Send(SerializationUtility.Serialize(outputFormat));
@@ -219,14 +168,20 @@ namespace NetMud.Websock
         }
 
         /// <summary>
-        /// Wraps sending messages to the connected descriptor
+        /// Send a sound file to play
         /// </summary>
-        /// <param name="str">the output</param>
-        /// <returns>success status</returns>
-        public bool SendWrapper(string str)
+        /// <param name="soundUri"></param>
+        /// <returns></returns>
+        public bool SendSound(string soundUri)
         {
-            //Easier just to handle it in one place
-            return SendWrapper(new List<string>() { str });
+            OutputStatus outputFormat = new OutputStatus
+            {
+                SoundToPlay = soundUri
+            };
+
+            Send(SerializationUtility.Serialize(outputFormat));
+
+            return true;
         }
 
         /// <summary>
@@ -235,7 +190,7 @@ namespace NetMud.Websock
         /// <param name="finalMessage">the final string data to send the socket before closing it</param>
         public void Disconnect(string finalMessage)
         {
-            SendWrapper(finalMessage);
+            SendOutput(finalMessage);
 
             Close();
         }
@@ -251,15 +206,15 @@ namespace NetMud.Websock
         #region "Socket Management"
         public override void OnClose()
         {
-            var validPlayers = LiveCache.GetAll<IPlayer>().Where(player => player.Descriptor != null
-                        && player.DataTemplate<ICharacter>().Account.Config.WantsNotification(_currentPlayer.AccountHandle, false, AcquaintenceNotifications.LeaveGame));
+            IEnumerable<IPlayer> validPlayers = LiveCache.GetAll<IPlayer>().Where(player => player.Descriptor != null
+                        && player.Template<IPlayerTemplate>().Account.Config.WantsNotification(_currentPlayer.AccountHandle, false, AcquaintenceNotifications.LeaveGame));
 
-            foreach (var player in validPlayers)
+            foreach (IPlayer player in validPlayers)
                 player.WriteTo(new string[] { string.Format("{0} has left the game.", _currentPlayer.AccountHandle) });
 
-            if (_currentPlayer.DataTemplate<ICharacter>().Account.Config.GossipSubscriber)
+            if (_currentPlayer != null && _currentPlayer.Template<IPlayerTemplate>().Account.Config.GossipSubscriber)
             {
-                var gossipClient = LiveCache.Get<IGossipClient>("GossipWebClient");
+                IGossipClient gossipClient = LiveCache.Get<IGossipClient>("GossipWebClient");
 
                 if (gossipClient != null)
                     gossipClient.SendNotification(_currentPlayer.AccountHandle, AcquaintenceNotifications.LeaveGame);
@@ -297,11 +252,11 @@ namespace NetMud.Websock
                 return;
             }
 
-            var errors = Interpret.Render(message, _currentPlayer);
+            IEnumerable<string> errors = Interpret.Render(message, _currentPlayer);
 
             //It only sends the errors
             if (errors.Any(str => !string.IsNullOrWhiteSpace(str)))
-                SendWrapper(errors);
+                SendOutput(errors);
         }
 
         /// <summary>
@@ -319,7 +274,7 @@ namespace NetMud.Websock
         /// </summary>
         private void SendPing()
         {
-            var ping = new byte[2];
+            byte[] ping = new byte[2];
 
             ping[0] = 9 | 0x80;
             ping[1] = 0;
@@ -330,6 +285,121 @@ namespace NetMud.Websock
 
         #region "Helpers"
         /// <summary>
+        /// Wraps sending messages to the connected descriptor
+        /// </summary>
+        /// <param name="strings">the output</param>
+        /// <returns>success status</returns>
+        public bool SendWrapper(HashSet<Tuple<long, long, string>> partialUpdates, bool justWrapper = false)
+        {
+            bool fullUpdate = partialUpdates == null && !justWrapper;
+
+            //TODO: Stop hardcoding this but we have literally no sense of injury/self status yet
+            SelfStatus self = new SelfStatus
+            {
+                TotalHealth = _currentPlayer.TotalHealth,
+                CurrentHealth = _currentPlayer.CurrentHealth,
+                TotalStamina = _currentPlayer.TotalStamina,
+                CurrentStamina = _currentPlayer.CurrentStamina,
+                Qualities = _currentPlayer.Qualities
+            };
+
+            DataStructure.Architectural.EntityBase.IGlobalPosition currentLocation = _currentPlayer.CurrentLocation;
+            IZone currentZone = currentLocation.CurrentZone;
+            IGaia currentWorld = currentZone.GetWorld();
+
+            LocalStatus local = new LocalStatus
+            {
+                ZoneName = currentZone.TemplateName,
+                LocationDescriptive = string.Join(" ", currentLocation.CurrentZone.RenderToLook(_currentPlayer))
+            };
+
+            string timeOfDayString = string.Format("The hour of {0} in the day of {1} in {2} in the year of {3}", currentWorld.CurrentTimeOfDay.Hour
+                                                                               , currentWorld.CurrentTimeOfDay.Day
+                                                                               , currentWorld.CurrentTimeOfDay.MonthName()
+                                                                               , currentWorld.CurrentTimeOfDay.Year);
+
+            string sun = "0";
+            string moon = "0";
+            string visibilityString = "5";
+            Tuple<string, string, string[]> weatherTuple = new Tuple<string, string, string[]>("", "", new string[] { });
+
+            if (currentZone != null)
+            {
+                Tuple<PrecipitationAmount, PrecipitationType, HashSet<WeatherType>> forecast = currentZone.CurrentForecast();
+                weatherTuple = new Tuple<string, string, string[]>(forecast.Item1.ToString(), forecast.Item2.ToString(), forecast.Item3.Select(wt => wt.ToString()).ToArray());
+
+                visibilityString = currentZone.GetCurrentLuminosity().ToString();
+
+                if (currentWorld != null)
+                {
+                    IEnumerable<ICelestial> bodies = currentZone.GetVisibileCelestials(_currentPlayer);
+                    ICelestial theSun = bodies.FirstOrDefault(cest => cest.Name.Equals("sun", StringComparison.InvariantCultureIgnoreCase));
+                    ICelestial theMoon = bodies.FirstOrDefault(cest => cest.Name.Equals("moon", StringComparison.InvariantCultureIgnoreCase));
+
+                    if (theSun != null)
+                    {
+                        ICelestialPosition celestialPosition = currentWorld.CelestialPositions.FirstOrDefault(celest => celest.CelestialObject == theSun);
+
+                        sun = AstronomicalUtilities.GetCelestialLuminosityModifier(celestialPosition.CelestialObject, celestialPosition.Position, currentWorld.PlanetaryRotation
+                            , currentWorld.OrbitalPosition, currentZone.Template<IZoneTemplate>().Hemisphere, currentWorld.Template<IGaiaTemplate>().RotationalAngle).ToString();
+                    }
+
+                    if (theMoon != null)
+                    {
+                        ICelestialPosition celestialPosition = currentWorld.CelestialPositions.FirstOrDefault(celest => celest.CelestialObject == theMoon);
+
+                        moon = AstronomicalUtilities.GetCelestialLuminosityModifier(celestialPosition.CelestialObject, celestialPosition.Position, currentWorld.PlanetaryRotation
+                            , currentWorld.OrbitalPosition, currentZone.Template<IZoneTemplate>().Hemisphere, currentWorld.Template<IGaiaTemplate>().RotationalAngle).ToString();
+                    }
+                }
+            }
+
+            EnvironmentStatus environment = new EnvironmentStatus
+            {
+                Sun = sun,
+                Moon = moon,
+                Visibility = visibilityString,
+                Weather = weatherTuple,
+                Temperature = currentZone.EffectiveTemperature().ToString(),
+                Humidity = currentZone.EffectiveHumidity().ToString(),
+                TimeOfDay = timeOfDayString
+            };
+
+            OutputStatus outputFormat = new OutputStatus
+            {
+                Self = self,
+                Local = local,
+                Environment = environment,
+                FullMap = fullUpdate ? currentLocation.GetTile().RenderCenteredMap(MapRadius.Low, MapRadius.High, true, _currentPlayer, false) : string.Empty,
+                VisibleMapDeltas = partialUpdates,
+                Inventory = new HashSet<InventoryItem>(_currentPlayer.ShowStacks(_currentPlayer).Select(stack => GetInventoryItem(stack)))
+            };
+
+            string output = SerializationUtility.Serialize(outputFormat);
+            Send(output);
+
+            return true;
+        }
+
+        private InventoryItem GetInventoryItem(IItemStack stack)
+        {
+            if (stack == null || stack.FullStackSize == 0)
+                return null;
+
+            InventoryItem returnValue = new InventoryItem
+            {
+                Color = stack.Item.HexColorCode,
+                Icon = stack.Item.AsciiCharacter,
+                Name = stack.Item.Name,
+                StackSize = stack.FullStackSize,
+                Description = stack.Description,
+                UseNames = stack.Item.Uses.Select(use => use.Name).ToArray()
+            };
+
+            return returnValue;
+        }
+
+        /// <summary>
         /// Validates the game account from the aspnet cookie
         /// </summary>
         /// <param name="handshake">the headers from the http request</param>
@@ -338,24 +408,24 @@ namespace NetMud.Websock
             //Grab the user
             GetUserIDFromCookie(cookie.Value);
 
-            var authedUser = UserManager.FindById(_userId);
+            ApplicationUser authedUser = UserManager.FindById(_userId);
 
-            var currentCharacter = authedUser.GameAccount.Characters.FirstOrDefault(ch => ch.Id.Equals(authedUser.GameAccount.CurrentlySelectedCharacter));
+            IPlayerTemplate currentCharacter = authedUser.GameAccount.Character;
 
             if (currentCharacter == null)
             {
-                Send("<p>No character selected</p>");
+                Send("<p>No character available</p>");
                 return;
             }
 
             //Try to see if they are already live
-            _currentPlayer = LiveCache.Get<IPlayer>(currentCharacter.Id);
+            _currentPlayer = LiveCache.GetAll<IPlayer>().FirstOrDefault(player => player.Descriptor != null && player.Descriptor._userId == _userId);
 
             //Check the backup
             if (_currentPlayer == null)
             {
-                var playerDataWrapper = new PlayerData();
-                _currentPlayer = playerDataWrapper.RestorePlayer(currentCharacter.AccountHandle, currentCharacter.Id);
+                PlayerData playerDataWrapper = new PlayerData();
+                _currentPlayer = playerDataWrapper.RestorePlayer(currentCharacter.AccountHandle, currentCharacter);
             }
 
             //else new them up
@@ -365,31 +435,31 @@ namespace NetMud.Websock
             _currentPlayer.Descriptor = this;
 
             //We need to barf out to the connected client the welcome message. The client will only indicate connection has been established.
-            var welcomeMessage = new List<string>
+            List<string> welcomeMessage = new List<string>
             {
-                string.Format("Welcome to alpha phase Under the Eclipse, {0}", currentCharacter.FullName()),
+                string.Format("Welcome to HMR's aleph phase, {0}", currentCharacter.FullName()),
                 "Please feel free to LOOK around."
             };
 
             _currentPlayer.WriteTo(welcomeMessage);
 
-            //Send the look command in
-            Interpret.Render("look", _currentPlayer);
+            //render the initial map
+            _currentPlayer.Descriptor.SendMap();
 
             try
             {
-                var validPlayers = LiveCache.GetAll<IPlayer>().Where(player => player.Descriptor != null
-                && player.DataTemplate<ICharacter>().Account.Config.WantsNotification(_currentPlayer.AccountHandle, false, AcquaintenceNotifications.EnterGame));
+                IEnumerable<IPlayer> validPlayers = LiveCache.GetAll<IPlayer>().Where(player => player.Descriptor != null
+                && player.Template<IPlayerTemplate>().Account.Config.WantsNotification(_currentPlayer.AccountHandle, false, AcquaintenceNotifications.EnterGame));
 
-                foreach (var player in validPlayers)
+                foreach (IPlayer player in validPlayers)
                     player.WriteTo(new string[] { string.Format("{0} has entered the game.", _currentPlayer.AccountHandle) });
 
                 if (authedUser.GameAccount.Config.GossipSubscriber)
                 {
-                    var gossipClient = LiveCache.Get<IGossipClient>("GossipWebClient");
+                    IGossipClient gossipClient = LiveCache.Get<IGossipClient>("GossipWebClient");
 
                     if (gossipClient != null)
-                        gossipClient.SendNotification(authedUser.GlobalIdentityHandle, DataStructure.Base.PlayerConfiguration.AcquaintenceNotifications.EnterGame);
+                        gossipClient.SendNotification(authedUser.GlobalIdentityHandle, AcquaintenceNotifications.EnterGame);
                 }
             }
             catch (Exception ex)
@@ -406,21 +476,21 @@ namespace NetMud.Websock
         {
             authTicketValue = authTicketValue.Replace('-', '+').Replace('_', '/');
 
-            var padding = 3 - ((authTicketValue.Length + 3) % 4);
+            int padding = 3 - ((authTicketValue.Length + 3) % 4);
             if (padding != 0)
                 authTicketValue = authTicketValue + new string('=', padding);
 
-            var bytes = Convert.FromBase64String(authTicketValue);
+            byte[] bytes = Convert.FromBase64String(authTicketValue);
 
             bytes = System.Web.Security.MachineKey.Unprotect(bytes,
                 "Microsoft.Owin.Security.Cookies.CookieAuthenticationMiddleware",
                         "ApplicationCookie", "v1");
 
-            using (var memory = new MemoryStream(bytes))
+            using (MemoryStream memory = new MemoryStream(bytes))
             {
-                using (var compression = new GZipStream(memory, CompressionMode.Decompress))
+                using (GZipStream compression = new GZipStream(memory, CompressionMode.Decompress))
                 {
-                    using (var reader = new BinaryReader(compression))
+                    using (BinaryReader reader = new BinaryReader(compression))
                     {
                         reader.ReadInt32(); // Ignoring version here
                         string authenticationType = reader.ReadString();
@@ -429,7 +499,7 @@ namespace NetMud.Websock
 
                         int count = reader.ReadInt32(); // count of claims in the ticket
 
-                        var claims = new Claim[count];
+                        Claim[] claims = new Claim[count];
                         for (int index = 0; index != count; ++index)
                         {
                             string type = reader.ReadString();
@@ -450,10 +520,10 @@ namespace NetMud.Websock
                             claims[index] = new Claim(type, value, valueType, issuer, originalIssuer);
                         }
 
-                        var identity = new ClaimsIdentity(claims, authenticationType,
+                        ClaimsIdentity identity = new ClaimsIdentity(claims, authenticationType,
                                                               ClaimTypes.Name, ClaimTypes.Role);
 
-                        var principal = new ClaimsPrincipal(identity);
+                        ClaimsPrincipal principal = new ClaimsPrincipal(identity);
                         _userId = principal.Identity.GetUserId();
                     }
                 }
@@ -545,5 +615,10 @@ namespace NetMud.Websock
             return GetType().GetHashCode() + BirthMark.GetHashCode();
         }
         #endregion
+
+        public object Clone()
+        {
+            throw new NotImplementedException("Not much point cloning descriptors.");
+        }
     }
 }

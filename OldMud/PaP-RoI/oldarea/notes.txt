@@ -1,343 +1,0 @@
-Sender  Flux~
-Date    Wed Jul 14 15:13:31 1999~
-Stamp   931979611
-To      all~
-Subject Critical Strike~
-Protect 0
-Board   0
-Text
-No its not a new skill, its something that goes along with weapon
-confidence.  Everyone has a very slim chance to get a critical (*1.4
-damage) strike every hit.  
- 
-The equation is horrible odds (if u have 100% confidence, its a less than 5% chance)
-But it should add a point to the weapon confidence coding, besides the minor
-hitroll it adds.
-Flux.
-~
-
-Sender  Flux~
-Date    Wed Jul 14 15:25:35 1999~
-Stamp   931980335
-To      all~
-Subject Specs~
-Protect 0
-Board   0
-Text
-Two new specs, spec_assassin and spec_snake_charmer
-snake charmer is rather nasty, and assassin backstabs people occasionally.
--Flux.
-~
-
-Sender  Flux~
-Date    Wed Jul 14 16:10:34 1999~
-Stamp   931983034
-To      all~
-Subject marriage~
-Protect 0
-Board   0
-Text
-I added marriage, divorce, etc. We now have marriage in the mud
-what a great day for love.
--Flux.
-~
-
-Sender  Flux~
-Date    Thu Jul 15 18:18:15 1999~
-Stamp   932077095
-To      all~
-Subject Memory~
-Protect 0
-Board   0
-Text
-Ive coded it so mobs remember who was fighting them if they run away or die.
-With this, mobs will attack the person in their memory, and also throw some
-expletive phrases at them before they attack.
- 
-I've got 6 phrases in the coding, but if you think of any, please note them.
-The phrase should be in the context of the you hurt me so now I kill you realm.
-DIE BITCH DIE is a good one, stuff like that.
--Flux.
-~
-
-Sender  Flux~
-Date    Thu Jul 15 18:20:01 1999~
-Stamp   932077201
-To      all~
-Subject Woops~
-Protect 0
-Board   0
-Text
-I forgot to mention, the peace command, and even the peace world command
-erases mob's memory.
--Flux.
-~
-
-Sender  Flux~
-Date    Thu Jul 15 18:32:20 1999~
-Stamp   932077940
-To      all~
-Subject typos ideas~
-Protect 0
-Board   0
-Text
-I fixed the typos and ideas commands so if you use the argument "clear"
-with either of them, they clear the file.
- 
-This is with the assumption that players will use those commands
-to alert us of ideas or typos.
- 
-Usage example: typos clear
--Flux.
-~
-
-Sender  Flux~
-Date    Fri Jul 16 17:02:58 1999~
-Stamp   932158978
-To      all~
-Subject skills~
-Protect 0
-Board   0
-Text
-Ok, Ive formally, and finally, removed all dodge and parry skills, these
-include dodge, enhanced dodge and parry. Dodge is based on agi/dex while
-parry is related to agi, dex, str, weapon confidence and a weapon length equation.
- 
-I also have added a skill called ripotse, it is what it is in RL, a single attack
-following a well placed parry.
--Flux.
-~
-
-Sender  Flux~
-Date    Sat Jul 17 07:59:31 1999~
-Stamp   932212771
-To      all~
-Subject Armor~
-Protect 0
-Board   0
-Text
-I'm redoing the manner in which the system handles armor damage.
-It'll be checked for each damage, instead of simply combat damage.
-It should make it a bit more realistic.
--Flux.
-~
-
-Sender  Flux~
-Date    Sat Jul 17 10:45:33 1999~
-Stamp   932222733
-To      all~
-Subject detect magic, focus~
-Protect 0
-Board   0
-Text
-I fixed detect magic, it works on NPC's now.
-I also redid the focus skill, but noone should really notice the difference.
--Flux.
-~
-
-Sender  Flux~
-Date    Sat Jul 17 11:49:41 1999~
-Stamp   932226581
-To      all~
-Subject regeneration~
-Protect 0
-Board   0
-Text
-I've reinstated Swift's old regen coding.
-This means that Heretic, pagan and occultist classes will have a variable regen.
-Each will have to pray, offer a sacrifice, etc to reset their regen value to full.
-With a lesser regen value, they will regen less.
-However, upon resetting, the regen value jumps to 200% as opposed to the
-stagnant 100% that everyone else has.
- 
-We will also be able to set regen ourselves to whatever as prizes or gifts
-to players who do things or as war prizes etc.
-Its already coded into mset as mset <victim> regen <#>
-It's a direct percentage relationship to regen, so it's a value that matters
-quite a bit, set yours to whatever u want, but dont make it more than 3 digits.
--Flux.
-~
-
-Sender  Flux~
-Date    Sun Jul 18 06:22:45 1999~
-Stamp   932293365
-To      all~
-Subject editors~
-Protect 0
-Board   0
-Text
-I have fixed it so if you are in an editor, you wont recieve any messages.
-This is for description editors only, it will filter all says, tells,
-and system messages, so editing should be a bit easier now.
--Flux.
-~
-
-Sender  Flux~
-Date    Sun Jul 18 07:06:44 1999~
-Stamp   932296004
-To      all~
-Subject Sectors~
-Protect 0
-Board   0
-Text
-I redid all the sectors so they work now.
-as the player doesn't have gills or the breath water spell on.
- 
-Heaven now adds to regen, and badland takes away from it.
-I also redid all the movement ratios, so everything sectorwise is finished.
--Flux.
-~
-
-Sender  Flux~
-Date    Sun Jul 18 14:20:37 1999~
-Stamp   932322037
-To      all~
-Subject Typos~
-Protect 0
-Board   0
-Text
-We now have a rotating typo message.  Instead of just 'Huh?  ' we now
-have a randomizer filled with seven different typo phrases, if you come up
-with any good ones.  Note them to me and I'll add them, I want to have 15 or
-20 so we can really confuse the players.  
--Flux.
-~
-
-Sender  Flux~
-Date    Mon Jul 19 09:10:36 1999~
-Stamp   932389836
-To      all~
-Subject Shadow Walk, Astral Gate~
-Protect 0
-Board   0
-Text
-I've got the prototype for the shadow walk skill working.  I added both
-the shadow realm and astral realm.  From now on, shadow walk and astral
-gate(spell) will take you to their respective areas from where you can walk
-to people or find gates to people as well.  
- 
-There will be mobs in both areas, so the propect of easy travel will
-be eliminated.
--Flux.
-~
-
-Sender  Flux~
-Date    Mon Jul 19 13:38:53 1999~
-Stamp   932405933
-To      all~
-Subject Shadow Walk~
-Protect 0
-Board   0
-Text
-Well, shadow walk is completely finished.  I'll be adding a lot to the
-Shadow Realm so it can be an area for people to level in besides being a
-part of the shadow walk command itself.  I'll do the same with Astral Gate
-as soon as I build the main part of the area and fix the spell itself.  
--Flux.
-~
-
-Sender  Flux~
-Date    Tue Jul 20 01:09:51 1999~
-Stamp   932447391
-To      all~
-Subject Sheaths~
-Protect 0
-Board   0
-Text
-Ok, Sheaths are done.  All sheath armor now has an extra value that is
-settable in oedit.  Value 8 of the object is now weapon vnum, its just like
-a door and a key, every sheath can only accept one specfic object.  Every
-sheath also can only hold one object at a time, like a real sheath.  I coded
-the sheath and unsheath commands.  They both work perfectly, to the best of
-my knowledge.  You can look in the sheath, but if one is wearing it, others
-can not.  This is the point of the sheaths, to hide whatever weaponry you
-might have.  Theives and Vandiliers will get auto-unsheath skills so they
-can hide their weapons right up until the moment of combat.  
- 
-If you have any Q's, please note me.
--Flux.
-~
-
-Sender  Flux~
-Date    Tue Jul 20 08:08:05 1999~
-Stamp   932472485
-To      all~
-Subject Sheaths~
-Protect 0
-Board   0
-Text
-I thought over the sheath coding I did, and realized that I ommitted
-general sheaths.  IE: I made sheaths totally specific, and I felt that that
-would be wrong.  I have added two more values to sheaths only armor, v6 and
-v7.  Weapon type is v6, and it is the same as the weapon class for weapons. 
-Weapon length is the same as weapon length for weapons.  So if you set v6 to
-slash and v7 to 1(short) then only short slash weapons could fit in the
-sheath.  If you set v6 and v7, set v8 to 0 please, and vice versa.  
--Flux.
-~
-
-Sender  Flux~
-Date    Tue Jul 20 09:50:32 1999~
-Stamp   932478632
-To      all~
-Subject Quick Draw~
-Protect 0
-Board   0
-Text
-I did the quick draw skill, and it works.  It auto-unsheaths right before
-combat starts and it auto-sheaths after the victim is dead.  
-Once again, it'll be for thieves and vandiliers.
--Flux.
-~
-
-Sender  Flux~
-Date    Tue Jul 20 10:46:38 1999~
-Stamp   932481998
-To      /\-OoO-/\~
-Subject test~
-Protect 0
-Board   0
-Text
-Test
-~
-
-Sender  Flux~
-Date    Tue Jul 20 11:30:05 1999~
-Stamp   932484605
-To      all~
-Subject Clans~
-Protect 0
-Board   0
-Text
-I fixed the clan commands and added a help clans to explain them.
-I'll do other clan stuff(like territory) later on.
--Flux.
-~
-
-Sender  Flux~
-Date    Tue Jul 20 22:33:33 1999~
-Stamp   932524413
-To      all~
-Subject ACT_PROG~
-Protect 0
-Board   0
-Text
-I fixed act_progs, they now work.  I also fixed act so it shouldnt crash
-the mud anymore, and we wont get messages in editors either.  
--Flux.
-~
-
-Sender  Flux~
-Date    Tue Jul 20 22:59:50 1999~
-Stamp   932525990
-To      all~
-Subject Doors~
-Protect 0
-Board   0
-Text
-I've noticed quite a few doors missing mirrored names.
-If you make a door and name it, make sure to name it from the other side
-as well, otherwise it'll lack a name on the other side.
--Flux.
-~
-

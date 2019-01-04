@@ -1,0 +1,53 @@
+﻿@{
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("The World", new string[] { "Home" }, new string[] { "/" });
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="informationalGroup">
+    <h4>Gaia</h4>
+    <p>
+        Gaias are the top level collective unit. Zones belong to Gaias. Gaias determine what celestial bodies are present (the sun, moon, stars) and chronological events such as month names,
+        how long days are, how long years are, etc. Every personal player Zone belongs to a clone of the primary Gaia all the farms belong to. Other Gaias might be added later for stranger places
+        to visit like other realms, space or the deep ocean. Players can not change or affect the Gaia even of their own zones so it's moreso just meta data.
+    </p>
+</div>
+<div class="informationalGroup">
+    <h4>Zones</h4>
+    <p>
+        A Zone is equivelant to a single map. Each map is 100x100 Tiles. Zones have weather patterns (which are inherited from their Gaia) and some other minor details but for the most part all
+        Zone data is related to their map. Players can (eventually) create their own Zones and edit the maps themselves for other players to experience. Players have full control over their Zones
+        and have in-game control over their personal farm Zone but can't edit the settings.
+    </p>
+</div>
+<div class="informationalGroup">
+    <h4>Tiles</h4>
+    <p>
+        Tiles are the individual occupyable cells in a Zone map. There are 100x100 on each map. A Tile can have a <a href="/TileTypes">Tile Type</a> which determines what it is and can hold one Item or
+        Mobile at a time. If anything is in a Tile it becomes unpathable until the obstruction is removed. Tiles are visually represented by a Background Color and potentially a Symbol and Symbol Color.
+    </p>
+</div>
+<div class="informationalGroup">
+    <h4>Items and Mobiles</h4>
+    <p>
+        Items are just objects. A sword, watering can, piece of rock, seed, plant, etc. Items can be held and stored in containers that are on the ground. Items can be dropped on the ground and picked back
+        up from it. An Item on the ground makes the Tile it is in unpathable. Items and Mobiles are represented by a Symbol and a Symbol Color. Players can set their own "skin" on their settings page
+        to customize the symbol and color. hmrMUD makes full use of 32bit unicode and as such can handle most emojis. You can find all of the legal symbols and emoji <a href="https://www.unicode.org/">here</a>.
+    </p>
+    <p>
+        Mobiles are NPCs and Players.
+    </p>
+</div>
+<div class="informationalGroup">
+    <h4>Interactions</h4>
+    <p>
+        Interactions are the actions you can take against a Tile, Item or Mobile. This may be watering a patch of dirt, sowing seeds, reaping crops or filling a watering can. Players can create Interactions
+        for Tiles, Items and Mobiles on their personal Zones to create the experience they want other players to have there.
+    </p>
+</div>
+<div class="informationalGroup">
+    <h4>Pathways</h4>
+    <p>
+        Pathways are a special designation for Tiles within the Zone settings. They have an origination point (the tile they are in) and a destination point. (in Zone or to another Zone) Players, if they are
+        standing on a Pathway can "enter [name of pathway]" to instantly travel to its destination. Pathways are visually represented by a colored dotted border around the Tile they originate in.
+    </p>
+</div>

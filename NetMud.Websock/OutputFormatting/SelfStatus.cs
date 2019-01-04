@@ -1,11 +1,16 @@
-﻿using System;
+﻿using NetMud.DataStructure.Architectural.EntityBase;
+using System;
+using System.Collections.Generic;
 
 namespace NetMud.Websock.OutputFormatting
 {
     [Serializable]
     public class SelfStatus
     {
-        public BodyStatus Body { get; set; }
-        public MindStatus Mind { get; set; }
+        public int TotalHealth { get; set; }
+        public int CurrentHealth { get; set; }
+        public int TotalStamina { get; set; }
+        public int CurrentStamina { get; set; }
+        public HashSet<IQuality> Qualities { get; set; }
     }
 }

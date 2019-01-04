@@ -1,26 +1,24 @@
-﻿using NetMud.DataStructure.Behaviors.Rendering;
-using NutMud.Commands.Attributes;
+﻿using NetMud.Commands.Attributes;
+using NetMud.Communication.Messaging;
+using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.NPC;
+using NetMud.DataStructure.System;
+using NetMud.Utility;
+using System;
 using System.Collections.Generic;
 
-using NetMud.Utility;
-using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.Data.Game;
-using NetMud.Commands.Attributes;
-using NetMud.Communication.Messaging;
-using NetMud.DataStructure.SupportingClasses;
-using NetMud.DataStructure.Behaviors.Existential;
-using NetMud.Data.Lexical;
-
-namespace NutMud.Commands.System
+namespace NetMud.Commands.System
 {
     /// <summary>
     /// Spawns a new NPC into the world. Missing target parameter = container you're standing in
     /// </summary>
-    [CommandKeyword("SpawnNewNPC", false, true, true)]
+    [CommandKeyword("SpawnNewNPC", false, "mspawn")]
     [CommandPermission(StaffRank.Admin)]
-    [CommandParameter(CommandUsage.Subject, typeof(NetMud.Data.EntityBackingData.NonPlayerCharacter), new CacheReferenceType[] { CacheReferenceType.Data }, "[0-9]+", false)] //for IDs
-    [CommandParameter(CommandUsage.Subject, typeof(NetMud.Data.EntityBackingData.NonPlayerCharacter), new CacheReferenceType[] { CacheReferenceType.Data }, "[a-zA-z]+", false)] //for names
-    [CommandParameter(CommandUsage.Target, typeof(IContains), new CacheReferenceType[] { CacheReferenceType.Entity }, true)]
+    [CommandParameter(CommandUsage.Subject, typeof(INonPlayerCharacterTemplate), CacheReferenceType.Data, "[0-9]+", false)] //for IDs
+    [CommandParameter(CommandUsage.Subject, typeof(INonPlayerCharacterTemplate), CacheReferenceType.Data, "[a-zA-z]+", false)] //for names
+    [CommandParameter(CommandUsage.Target, typeof(IContains), CacheReferenceType.Entity, true)]
     [CommandRange(CommandRangeType.Touch, 0)]
     public class SpawnNewNPC : CommandPartial
     {
@@ -37,8 +35,8 @@ namespace NutMud.Commands.System
         /// </summary>
         public override void Execute()
         {
-            var newObject = (INonPlayerCharacter)Subject;
-            var sb = new List<string>();
+            INonPlayerCharacterTemplate newObject = (INonPlayerCharacterTemplate)Subject;
+            List<string> sb = new List<string>();
             IGlobalPosition spawnTo;
 
             //No target = spawn to room you're in
@@ -47,33 +45,33 @@ namespace NutMud.Commands.System
             else
                 spawnTo = OriginLocation;
 
-            var entityObject = new Intelligence(newObject, spawnTo);
+            INonPlayerCharacter entityObject = Activator.CreateInstance(newObject.EntityClass, new object[] { newObject, spawnTo }) as INonPlayerCharacter;
 
             //TODO: keywords is janky, location should have its own identifier name somehow for output purposes - DISPLAY short/long NAME
-            sb.Add(string.Format("{0} spawned to {1}", entityObject.DataTemplateName, spawnTo.CurrentLocation.Keywords[0]));
+            sb.Add(string.Format("{0} spawned to {1}", entityObject.TemplateName, spawnTo.CurrentZone.Keywords[0]));
 
-            var toActor = new Message(MessagingType.Visible, new Occurrence() { Strength = 1 })
+            Message toActor = new Message()
             {
-                Override = sb
+                Body = sb
             };
 
-            var toOrigin = new Message(MessagingType.Visible, new Occurrence() { Strength = 30 })
+            Message toOrigin = new Message()
             {
-                Override = new string[] { "$S$ appears suddenly." }
+                Body = new string[] { "$S$ appears suddenly." }
             };
 
-            var toSubject = new Message(MessagingType.Visible, new Occurrence() { Strength = 30 })
+            Message toSubject = new Message()
             {
-                Override = new string[] { "You are ALIVE" }
+                Body = new string[] { "You are ALIVE" }
             };
 
-            var messagingObject = new MessageCluster(toActor)
+            MessageCluster messagingObject = new MessageCluster(toActor)
             {
                 ToOrigin = new List<IMessage> { toOrigin },
                 ToSubject = new List<IMessage> { toSubject }
             };
 
-            messagingObject.ExecuteMessaging(Actor, entityObject, spawnTo.CurrentLocation, OriginLocation.CurrentLocation, null);
+            messagingObject.ExecuteMessaging(Actor, entityObject, spawnTo.CurrentZone, OriginLocation.CurrentZone, null);
         }
 
         /// <summary>
@@ -82,7 +80,7 @@ namespace NutMud.Commands.System
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            var sb = new List<string>
+            List<string> sb = new List<string>
             {
                 string.Format("Valid Syntax: spawnNewNPC &lt;NPC name&gt;"),
                 "spawnNewNPC  &lt;NPC name&gt;  &lt;location name to spawn to&gt;".PadWithString(14, "&nbsp;", true)

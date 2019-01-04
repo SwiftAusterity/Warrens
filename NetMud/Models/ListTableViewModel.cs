@@ -6,11 +6,17 @@ namespace NetMud.Models
 {
     public class ListTableViewModel
     {
+        public string Name { get; set; }
         public IEnumerable<dynamic> Values { get; set; }
         public Dictionary<string, Func<dynamic, string>> Columns { get; set; }
+
+        public IPagedDataModel PagingModel { get; set; }
+        public string EntityTypeName { get; set; }
+
         public bool IncludeDelete { get; set; }
         public bool IncludeUnapprove { get; set; }
-        public string Name { get; set; }
+        public bool IncludeBasicPagingandSearch { get; set; }
+        public bool IncludeAddLink { get; set; }
 
         public ListTableViewModel()
         {
@@ -18,6 +24,8 @@ namespace NetMud.Models
             Columns = new Dictionary<string, Func<dynamic, string>>();
             IncludeDelete = true;
             IncludeUnapprove = true;
+            IncludeBasicPagingandSearch = true;
+            IncludeAddLink = true;
         }
     }
 }

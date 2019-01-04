@@ -1,0 +1,46 @@
+﻿@using NetMud.Data.Zones;
+@using NetMud.DataStructure.Architectural
+@using NetMud.DataStructure.Zone
+
+@model NetMud.Models.Admin.AddZonePathwayDataViewModel
+
+@{
+    var validDestinations = new List<IPathwayDestination>();
+    if (Model.DataObject != null && Model.DataObject.Destinations?.Count() > 0)
+    {
+        validDestinations = Model.DataObject.Destinations.ToList();
+    }
+    else
+    {
+        validDestinations.Add(new PathwayDestination() { Coordinates = new Coordinate(0, 0) });
+    }
+}
+
+<div id="pathDestinationRows" class="iterativeContainer">
+    <div class="addRowContainer">
+        <div class="col-sm-1">
+            <a href="#" class="addRow btn" onclick="javascript: $('#pathDestinationRows').append(newPathwayDestinationRow); return false;"><span class="addWord">Add Row</span></a>
+        </div>
+    </div>
+    @foreach (var pathDestination in validDestinations)
+    {
+        <div class="form-group row">
+            <a href="#" class="removeRow col-form-label" title="Remove this" onclick="javascript: $(this).parent().remove(); return false;">X</a>
+            @Html.EditorFor(m => m.DestinationName, new { htmlAttributes = new Dictionary<string, object>() { { "Value", pathDestination.Name } } })
+            @Html.EditorFor(e => e.DestinationId, new { validItems = Model.ValidZones, selectedItem = pathDestination.Destination?.Id })
+            @Html.EditorFor(e => e.DestinationCoordinateX, new { htmlAttributes = new Dictionary<string, object>() { { "Value", pathDestination.Coordinates.X.ToString() } } })
+            @Html.EditorFor(e => e.DestinationCoordinateY, new { htmlAttributes = new Dictionary<string, object>() { { "Value", pathDestination.Coordinates.Y.ToString() } } })
+        </div>
+    }
+</div>
+
+<script type="text/javascript">
+    var destinationDropdown = decodeHtml('@Html.EditorFor(e => e.DestinationId, new { validItems = Model.ValidZones }).ToString().Replace(Environment.NewLine, "")');
+    var textboxName = decodeHtml('@Html.EditorFor(m => m.DestinationName).ToString().Replace(Environment.NewLine, "")');
+    var textboxX = decodeHtml('@Html.EditorFor(e => e.DestinationCoordinateX).ToString().Replace(Environment.NewLine, "")');
+    var textboxY = decodeHtml('@Html.EditorFor(e => e.DestinationCoordinateY).ToString().Replace(Environment.NewLine, "")');
+
+    var newPathwayDestinationRow = '<div class="form-group row">' +
+        '<a href="#" class="removeRow col-form-label" title="Remove this" onclick="javascript: $(this).parent().remove(); return false;">X</a>' +
+        textboxName + destinationDropdown + textboxX + textboxY + '</div>';
+</script>

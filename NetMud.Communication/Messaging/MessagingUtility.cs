@@ -1,8 +1,6 @@
-﻿using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.SupportingClasses;
+﻿using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace NetMud.Communication.Messaging
@@ -80,8 +78,7 @@ namespace NetMud.Communication.Messaging
         /// <returns>translated text</returns>
         public static IEnumerable<string> TranslateEntityVariables(string[] messages, Dictionary<MessagingTargetType, IEntity[]> entities)
         {
-            int i = 0;
-            for(i = 0; i < messages.Length; i++)
+            for(int i = 0; i < messages.Length; i++)
                 messages[i] = TranslateEntityVariables(messages[i], entities);
 
             return messages;
@@ -109,42 +106,28 @@ namespace NetMud.Communication.Messaging
                 switch (kvp.Key)
                 {
                     case MessagingTargetType.Actor:
-                        message = message.Replace("$A$", thing.DataTemplateName);
+                        message = message.Replace("$A$", thing.TemplateName);
                         break;
                     case MessagingTargetType.DestinationLocation:
-                        message = message.Replace("$D$", thing.DataTemplateName);
+                        message = message.Replace("$D$", thing.TemplateName);
                         break;
                     case MessagingTargetType.OriginLocation:
-                         message = message.Replace("$O$", thing.DataTemplateName);
+                         message = message.Replace("$O$", thing.TemplateName);
                         break;
                     case MessagingTargetType.Subject:
-                        message = message.Replace("$S$", thing.DataTemplateName);
+                        message = message.Replace("$S$", thing.TemplateName);
                         break;
                     case MessagingTargetType.Target:
-                        message = message.Replace("$T$", thing.DataTemplateName);
+                        message = message.Replace("$T$", thing.TemplateName);
                         break;
                     case MessagingTargetType.GenderPronoun:
-                        if (!thing.GetType().GetInterfaces().Contains(typeof(IGender)))
-                            break;
-
-                        IGender chr = (IGender)thing;
-                        message = message.Replace("$G$", chr.Gender);
+                        //TODO
                         break;
                     case MessagingTargetType.AmountOfSubject:
                         message = message.Replace("$#S$", kvp.Value.Length.ToString());
                         break;
                     case MessagingTargetType.AmountOfTarget:
                         message = message.Replace("$#T$", kvp.Value.Length.ToString());
-                        break;
-                    case MessagingTargetType.Direction:
-                    case MessagingTargetType.ReverseDirection:
-                        /* TODO
-                        if (!thing.GetType().GetInterfaces().Contains(typeof(IPathway)))
-                            break;
-
-                        var pathData = thing.DataTemplate<IPathwayData>();
-                        message = message.Replace("$DIR$", Utilities.TranslateToDirection(pathData.DegreesFromNorth, 0, kvp.Key == MessagingTargetType.ReverseDirection).ToString());
-                         */
                         break;
                 }
             }

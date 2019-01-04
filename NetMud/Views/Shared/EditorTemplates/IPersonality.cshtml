@@ -1,0 +1,9 @@
+﻿@using NetMud.Data.NPCs.IntelligenceControl
+@using NetMud.DataStructure.NPC.IntelligenceControl
+
+@model IPersonality
+
+<h3>Personality</h3>
+<hr />
+<h4>Preferences</h4>
+@Html.EditorFor(m => m.Preferences)

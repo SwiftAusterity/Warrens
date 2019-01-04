@@ -3,23 +3,41 @@
         return;
     }
 
-    var options = {
-        title: text,
-        trigger: 'hover',
-        template: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>',
-        offset: 5,
-        popperOptions: {
-            removeOnDestroy: true,
-            placements: 'auto',
+    parent.ready(function () {
+        var parentCoords = parent[0].getBoundingClientRect();
+
+        var modal = $('<div />');
+        modal.html('<div class="glyphicon glyphicon-info-sign tutorialOverlayTip" title="Tutorial Tip"></div>');
+        modal.css('display', 'inline-flex');
+        modal.css('left', parentCoords.left);
+        modal.css('width', parentCoords.width + 'px');
+
+        if (parentCoords.height > 0) {
+            modal.css('height', parentCoords.height + 'px');
         }
-    };
+        modal.attr('class', 'tutorialContainer');
 
-    var instance = new Tooltip(parent, options);
-    instance.show();
+        parent.append(modal);
 
-    parent.on('mouseenter', function () {
-        instance.dispose();
-        parent.off('mouseenter');
+        modal.ready(function () {
+            var options = {
+                title: text,
+                trigger: 'hover',
+                template: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>',
+                offset: 5,
+                popperOptions: {
+                    removeOnDestroy: true,
+                    placements: 'auto',
+                }
+            };
+
+            var instance = new Tooltip(modal, options);
+
+            modal.click(function () {
+                instance.dispose();
+                $(this).remove();
+            });
+        });
     });
 }
 

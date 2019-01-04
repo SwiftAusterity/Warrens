@@ -1,8 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Configuration;
-using System.Globalization;
-using System.Reflection;
+using System.Linq;
 
 namespace NetMud.Gossip.Messaging
 {
@@ -13,25 +11,32 @@ namespace NetMud.Gossip.Messaging
         public string Type => "authenticate";
 
         [JsonProperty("supports")]
-        public string[] FeaturesSupported => new string[] { "channels" };
+        public string[] FeaturesSupported { get; }
 
         [JsonProperty("channels")]
-        public string[] Channels => new string[] { "gossip" };
+        public string[] Channels { get; }
 
         [JsonProperty("client_id")]
-        public string ClientId => ConfigurationManager.AppSettings["clientId"];
+        public string ClientId { get; }
 
         [JsonProperty("client_secret")]
-        public string ClientSecret => ConfigurationManager.AppSettings["clientSecret"];
+        public string ClientSecret { get; }
+
+        [JsonProperty("version")]
+        public string Version { get; }
 
         [JsonProperty("user_agent")]
-        public string UserAgent
+        public string UserAgent { get; }
+
+        public Authentication(IConfig config)
         {
-            get
-            {
-                Version v = Assembly.GetExecutingAssembly().GetName().Version;
-                return string.Format(CultureInfo.InvariantCulture, @"netMUD {0}.{1}.{2} (r{3})", v.Major, v.Minor, v.Build, v.Revision);
-            }
+            ClientId = config.ClientId;
+            ClientSecret = config.ClientSecret;
+
+            Channels = config.SupportedChannels.ToArray();
+            FeaturesSupported = config.SupportedFeatures.ToArray();
+            UserAgent = config.UserAgent;
+            Version = config.Version;
         }
     }
 }

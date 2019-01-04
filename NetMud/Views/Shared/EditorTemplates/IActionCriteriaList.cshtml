@@ -1,0 +1,27 @@
+﻿@using NetMud.Models
+@using NetMud.DataStructure.Action
+
+@model HashSet<IActionCriteria>
+
+@{
+    var newDefaultRow = "<div class=\"form-group row\"><a href=\"#\" class=\"removeRow col-form-label\" title=\"Remove this\" onclick=\"javascript: $(this).parent().remove(); return false;\">X</a>"
+                    + Html.EmptyEditorForMany(e => e, null, Model.Count(), "IActionCriteriaDefault") + "</div>";
+    var newItemRow = "<div class=\"form-group row\"><a href=\"#\" class=\"removeRow col-form-label\" title=\"Remove this\" onclick=\"javascript: $(this).parent().remove(); return false;\">X</a>"
+                    + Html.EmptyEditorForMany(e => e, null, Model.Count(), "IActionCriteriaItem") + "</div>";
+    var newNPCRow = "<div class=\"form-group row\"><a href=\"#\" class=\"removeRow col-form-label\" title=\"Remove this\" onclick=\"javascript: $(this).parent().remove(); return false;\">X</a>"
+                    + Html.EmptyEditorForMany(e => e, null, Model.Count(), "IActionCriteriaNPC") + "</div>";
+    var newTileRow = "<div class=\"form-group row\"><a href=\"#\" class=\"removeRow col-form-label\" title=\"Remove this\" onclick=\"javascript: $(this).parent().remove(); return false;\">X</a>"
+                    + Html.EmptyEditorForMany(e => e, null, Model.Count(), "IActionCriteriaTile") + "</div>";
+}
+
+<div id="ActionCriteriaRows" class="iterativeContainer">
+    <div class="addRowContainer">
+        <div class="col-sm-1" style="margin-bottom: 15px; display: inline-flex;">
+            @Html.DescriptionFor(m => m)
+            <a href="#" class="addRow btn" onclick="javascript: $('#ActionCriteriaRows').append(decodeHtml('@newDefaultRow')); return false;"><span class="addWord">Add Basic Criteria</span></a>
+            <a href="#" class="addRow btn" onclick="javascript: $('#ActionCriteriaRows').append(decodeHtml('@newNPCRow')); return false;"><span class="addWord">Add NPC Target Criteria</span></a>
+            <a href="#" class="addRow btn" onclick="javascript: $('#ActionCriteriaRows').append(decodeHtml('@newItemRow')); return false;"><span class="addWord">Add Item Target Criteria</span></a>
+            <a href="#" class="addRow btn" onclick="javascript: $('#ActionCriteriaRows').append(decodeHtml('@newTileRow')); return false;"><span class="addWord">Add Tile Target Criteria</span></a>
+        </div>
+    </div>
+</div>

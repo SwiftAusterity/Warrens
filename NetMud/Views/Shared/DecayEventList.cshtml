@@ -1,0 +1,62 @@
+﻿@model Tuple<long, string, IEnumerable<NetMud.DataStructure.Action.IDecayEvent>>
+
+@{
+    var dataObjectId = Model.Item1;
+    var dataType = Model.Item2;
+    var interactions = Model.Item3;
+}
+
+<div>
+    @Html.ActionLink("Add New Decay Event", "AddDecayEvent", dataType, new { id = dataObjectId }, new { @class = "addNew" })
+</div>
+
+@using (Html.BeginForm("RemoveDecayEvent", dataType))
+{
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id" id="id" value="@dataObjectId" />
+
+    <table class="table table-striped table-bordered table-hover table-dark">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Timer</th>
+                <th scope="col">Criteria</th>
+                <th scope="col">Results</th>
+                <th scope="col">Foley</th>
+                <th>DELETE</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var val in interactions)
+            {
+                <tr>
+                    <td>
+                        @Html.ActionLink(val.Name, "EditDecayEvent", dataType, new { id = dataObjectId, actionName = val.Name }, null)
+                    </td>
+                    <td>
+                        @val.Timer seconds
+                    </td>
+                    <td>
+                        @string.Format("{0}", val.Criteria.Count() == 0 ? "None" :
+                            string.Join(";", val.Criteria.Select(crit => string.Format("{0}-{1} {2}:{3}", crit.Target, crit.Quality, crit.ValueRange.Low, crit.ValueRange.High))))
+                    </td>
+                    <td>
+                        @string.Format("{0}", val.Results.Count() == 0 ? "None" :
+                            string.Join(";", val.Results.Select(crit => string.Format("{0}", crit.Target))))
+                    </td>
+                    <td><a href="@val.FoleyUri">@val.FoleyUri</a></td>
+                    <td>
+                        <div>
+                            <button type="submit" name="removeId" id="removeId" class="removeData" value="@val.Name" title="Delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                            <input type="radio" name="authorize" value="@val.Name" style="margin-left: 15px;" />
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

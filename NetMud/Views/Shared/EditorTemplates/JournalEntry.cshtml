@@ -1,0 +1,23 @@
+﻿@using NetMud.Data.Administrative
+
+@model JournalEntry
+
+<div class="form-group row">
+    @Html.EditorFor(e => e.Name)
+    @Html.EditorFor(e => e.MinimumReadLevel)
+    @Html.EditorFor(e => e.Public)
+</div>
+<h4>Publishing</h4>
+<div class="form-group row">
+    @Html.EditorFor(e => e.PublishDate)
+    @Html.EditorFor(e => e.ExpireDate)
+    @Html.EditorFor(e => e.Expired)
+</div>
+<h4>Tags</h4>
+@Html.EditorFor(e => e.Tags)
+
+<h4>Entry Body</h4>
+<div class="form-group row">
+    @Html.EditorFor(e => e.Body)
+</div>
+

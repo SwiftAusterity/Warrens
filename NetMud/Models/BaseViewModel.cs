@@ -2,7 +2,7 @@
 
 namespace NetMud.Models
 {
-    public interface BaseViewModel
+    public interface IBaseViewModel
     {
         ApplicationUser authedUser { get; set; }
     }

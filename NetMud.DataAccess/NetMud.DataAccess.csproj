@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NetMud.DataAccess</RootNamespace>
     <AssemblyName>NetMud.DataAccess</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -40,8 +40,8 @@
     <Reference Include="EntityFramework.SqlServerCompact, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.SqlServerCompact.6.2.0\lib\net45\EntityFramework.SqlServerCompact.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -64,18 +64,20 @@
   <ItemGroup>
     <Compile Include="Cache\ConfigDataCache.cs" />
     <Compile Include="Cache\ConfigDataCacheKey.cs" />
-    <Compile Include="Cache\BackingDataCacheKey.cs" />
+    <Compile Include="Cache\TemplateCacheKey.cs" />
     <Compile Include="Cache\LiveCacheKey.cs" />
     <Compile Include="Cache\PlayerDataCache.cs" />
     <Compile Include="Cache\CacheAccessor.cs" />
-    <Compile Include="Cache\BackingDataCache.cs" />
+    <Compile Include="Cache\TemplateCache.cs" />
     <Compile Include="Cache\PlayerDataCacheKey.cs" />
+    <Compile Include="ContentUtility.cs" />
     <Compile Include="FileSystem\ConfigData.cs" />
-    <Compile Include="FileSystem\BackingData.cs" />
+    <Compile Include="FileSystem\TemplateData.cs" />
     <Compile Include="FileSystem\FileAccessor.cs" />
     <Compile Include="FileSystem\LiveData.cs" />
     <Compile Include="FileSystem\PlayerData.cs" />
     <Compile Include="Cache\LiveCache.cs" />
+    <Compile Include="IDictionary.cs" />
     <Compile Include="LogChannels.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="LoggingUtility.cs" />

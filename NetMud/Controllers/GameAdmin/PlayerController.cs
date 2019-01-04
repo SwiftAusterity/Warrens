@@ -2,7 +2,7 @@
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
-using NetMud.Data.System;
+using NetMud.Data.Players;
 using NetMud.DataAccess;
 using NetMud.Models.Admin;
 using System.Linq;
@@ -36,29 +36,13 @@ namespace NetMud.Controllers.GameAdmin
             UserManager = userManager;
         }
 
-
-        [HttpPost]
-        [Route(@"Player/SelectCharacter/{id}")]
-        public JsonResult SelectCharacter(long id)
-        {
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
-
-            if (authedUser != null && id >= 0)
-            {
-                authedUser.GameAccount.CurrentlySelectedCharacter = id;
-                UserManager.Update(authedUser);
-            }
-
-            return new JsonResult();
-        }
-
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
+            RoleManager<IdentityRole> roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
 
-            var vModel = new ManagePlayersViewModel(UserManager.Users)
+            ManagePlayersViewModel vModel = new ManagePlayersViewModel(UserManager.Users)
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -82,9 +66,9 @@ namespace NetMud.Controllers.GameAdmin
 
             if (!string.IsNullOrWhiteSpace(authorizeRemove) && removeId.ToString().Equals(authorizeRemove))
             {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = Account.GetByHandle(removeId);
+                DataStructure.Player.IAccount obj = Account.GetByHandle(removeId);
 
                 if (obj == null)
                     message = "That does not exist";

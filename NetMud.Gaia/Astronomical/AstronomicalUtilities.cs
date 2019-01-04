@@ -1,5 +1,5 @@
-﻿using NetMud.DataStructure.Base.Place;
-using NetMud.DataStructure.Base.World;
+﻿using NetMud.DataStructure.Gaia;
+using NetMud.DataStructure.Zone;
 using System;
 
 namespace NetMud.Gaia.Geographical
@@ -14,8 +14,8 @@ namespace NetMud.Gaia.Geographical
                 return 0;
 
             //TODO: This only works for things orbiting the world (or heliocentric) right now
-            var distanceFromWorld = (float)celestial.Apogee;
-            var orbitalRadius = (celestial.Apogee + celestial.Perigree) / 2;
+            float distanceFromWorld = (float)celestial.Apogee;
+            int orbitalRadius = (celestial.Apogee + celestial.Perigree) / 2;
             float fullOrbitDistance = (float)Math.PI * (float)Math.Pow(orbitalRadius, 2);
 
             if (celestial.OrientationType != CelestialOrientation.SolarBody && celestial.OrientationType != CelestialOrientation.ExtraSolar)
@@ -32,7 +32,7 @@ namespace NetMud.Gaia.Geographical
             * 
             */
 
-            var portionalModifier = (float)Math.Max(.001, (celestialOrbitPosition / fullOrbitDistance)) * (rotationalPosition / 360);
+            float portionalModifier = (float)Math.Max(.001, (celestialOrbitPosition / fullOrbitDistance)) * (rotationalPosition / 90);
 
             return portionalModifier * (10000 / distanceFromWorld);
         }

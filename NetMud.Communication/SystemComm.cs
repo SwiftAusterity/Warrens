@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Net;
 
 namespace NetMud.Communication
@@ -34,7 +33,7 @@ namespace NetMud.Communication
 
         public static string GetPublicIP()
         {
-            String direction = "";
+            string direction = "";
             WebRequest request = WebRequest.Create("http://checkip.dyndns.org/");
             using (WebResponse response = request.GetResponse())
             using (StreamReader stream = new StreamReader(response.GetResponseStream()))

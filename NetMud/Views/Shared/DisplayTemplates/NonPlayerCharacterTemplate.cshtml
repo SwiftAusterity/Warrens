@@ -1,0 +1,59 @@
+﻿@model NetMud.DataStructure.NPC.INonPlayerCharacterTemplate
+
+@{
+    var tolerancesString = string.Format("{2} / Temp Range: {0} - {1}",
+        Model.Race.TemperatureTolerance.Low, Model.Race.TemperatureTolerance.High,
+        Model.Race.Aquatic ? "Aquatic" : "Terrestrial");
+}
+
+<div class="entityDataInfoCard">
+    <h4>@Model.FullName() - @Model.Gender</h4>
+    <hr />
+    <div style="font-weight: normal; margin-bottom: 10px;">
+        @Model.Description
+    </div>
+    <div>
+        <span>Stats</span>
+        <span>@Model.TotalHealth / @Model.TotalStamina</span>
+    </div>
+    <div>
+        <span>Race</span>
+        <span>@Model.Race.Name (of @Model.Race.CollectiveNoun)</span>
+    </div>
+    <div>
+        <span>Reproduction</span>
+        <span>@Model.Race.ReproductionType : @Model.Race.SpawningCoefficient</span>
+    </div>
+    <div>
+        <span>Inheritance / Mutation</span>
+        <span>@Model.Race.TraitInheritanceCoefficient / @Model.Race.TraitMutationCoefficient</span>
+    </div>
+    <div>
+        <span>Habitat</span>
+        <span>@tolerancesString</span>
+    </div>
+    <div>
+        <span>Dietary Needs</span>
+        <span>@Model.Race.Diet</span>
+    </div>
+    <div>
+        <span>Appearance</span>
+        <span style="color: @Model.HexColorCode;">@Model.AsciiCharacter</span>
+    </div>
+    @foreach (var quality in Model.Qualities)
+    {
+        @Html.DisplayFor(m => quality)
+    }
+    @foreach (var item in Model.Interactions)
+    {
+        <div style="background-color: lightgray; padding: 5px; border-radius: 9px;">
+            @Html.DisplayFor(m => item)
+        </div>
+    }
+    @foreach (var item in Model.DecayEvents)
+    {
+        <div style="background-color: lightgray; padding: 5px; border-radius: 9px;">
+            @Html.DisplayFor(m => item)
+        </div>
+    }
+</div>

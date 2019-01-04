@@ -1,7 +1,11 @@
 ﻿using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.SupportingClasses;
+using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Player;
+using NetMud.DataStructure.System;
+using NetMud.DataStructure.Zone;
+using NetMud.Utility;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace NetMud.Cartography
@@ -13,28 +17,53 @@ namespace NetMud.Cartography
     public static class Utilities
     {
         /// <summary>
-        /// Gets the opposite room from the origin based on direction
+        /// Send the entire map to all players in the zone
         /// </summary>
-        /// <param name="origin">The room we're looking to oppose</param>
-        /// <param name="direction">The direction the room would be in (this method will reverse the direction itself)</param>
-        /// <returns>The room that is in the direction from our room</returns>
-        public static IRoomData GetOpposingRoom(IRoomData origin, MovementDirectionType direction)
+        /// <param name="zone">The zone in question</param>
+        public static void SendMapToZone(IZone zone)
         {
-            //There is no opposite of none directionals
-            if (origin == null || direction == MovementDirectionType.None)
-                return null;
+            IEnumerable<IPlayer> viewers = LiveCache.GetAll<IPlayer>().Where(pl => pl.CurrentLocation?.CurrentZone == zone);
 
-            var oppositeDirection = ReverseDirection(direction);
+            foreach (IPlayer viewer in viewers)
+                SendMapToPlayer(viewer);
+        }
 
-            var paths = BackingDataCache.GetAll<IPathwayData>();
+        /// <summary>
+        /// Send specific tile updates to all players in the zone
+        /// </summary>
+        /// <param name="zone">The zone in question</param>
+        /// <param name="tiles">the coordinates set to send</param>
+        public static void SendMapUpdatesToZone(IZone zone, HashSet<Coordinate> tiles)
+        {
+            IEnumerable<IPlayer> viewers = LiveCache.GetAll<IPlayer>().Where(pl => pl.CurrentLocation?.CurrentZone == zone);
 
-            var ourPath = paths.FirstOrDefault(pt => origin.Equals(pt.Destination) 
-                                            && pt.DirectionType == oppositeDirection);
+            foreach (IPlayer viewer in viewers)
+                SendMapUpdatesToPlayer(viewer, tiles);
+        }
 
-            if(ourPath != null)
-                return (IRoomData)ourPath.Destination;
+        /// <summary>
+        /// Send the entire map to one player
+        /// </summary>
+        /// <param name="player">the player to send the map to</param>
+        public static void SendMapToPlayer(IPlayer player)
+        {
+            player.Descriptor.SendMap();
+        }
 
-            return null;
+        /// <summary>
+        /// Send specific tile updates to a specific player
+        /// </summary>
+        /// <param name="player">the player to send the map to</param>
+        /// <param name="tiles">the coordinates set to send</param>
+        public static void SendMapUpdatesToPlayer(IPlayer player, HashSet<Coordinate> tiles)
+        {
+            IZone myZone = player.CurrentLocation.CurrentZone;
+
+            HashSet<Tuple<long, long, string>> mapDeltas = new HashSet<Tuple<long, long, string>>(
+                tiles.Select(tile => new Tuple<long, long, string>(tile.X, tile.Y, Rendering.RenderOneTile(myZone, tile.X, tile.Y, player)))
+                );
+
+            player.Descriptor.SendMapDeltas(mapDeltas);
         }
 
         /// <summary>
@@ -43,24 +72,11 @@ namespace NetMud.Cartography
         /// <param name="boundings">a 3d coordinate x,y,z</param>
         /// <param name="map">the 3d map in question</param>
         /// <returns>whether it is out of bounds of the map</returns>
-        public static bool IsOutOfBounds(Tuple<int, int, int> boundings, long[,,] map)
+        public static bool IsOutOfBounds(Coordinate boundings, long[,] map)
         {
-            return map.GetUpperBound(0) < boundings.Item1 || map.GetLowerBound(0) > boundings.Item1
-                || map.GetUpperBound(1) < boundings.Item2 || map.GetLowerBound(1) > boundings.Item2
-                || map.GetUpperBound(2) < boundings.Item3 || map.GetLowerBound(2) > boundings.Item3;
+            return map.GetUpperBound(0) < boundings.X || map.GetLowerBound(0) > boundings.X
+                || map.GetUpperBound(1) < boundings.Y || map.GetLowerBound(1) > boundings.Y;
 
-        }
-
-        /// <summary>
-        /// Is this coordinate out of bounds of the map
-        /// </summary>
-        /// <param name="boundings">a 2d coordinate x,y,z</param>
-        /// <param name="map">the 2d map in question</param>
-        /// <returns>whether it is out of bounds of the map</returns>
-        public static bool IsOutOfBounds(Tuple<int, int> boundings, long[,] map)
-        {
-            return map.GetUpperBound(0) < boundings.Item1 || map.GetLowerBound(0) > boundings.Item1
-                || map.GetUpperBound(1) < boundings.Item2 || map.GetLowerBound(1) > boundings.Item2;
         }
 
         /// <summary>
@@ -70,9 +86,9 @@ namespace NetMud.Cartography
         /// <param name="inclineGrade">the value to translate</param>
         /// <param name="reverse">reverse the direction or not</param>
         /// <returns>translated text</returns>
-        public static MovementDirectionType TranslateToDirection(int degreesFromNorth, int inclineGrade = 0, bool reverse = false)
+        public static MovementDirectionType TranslateToDirection(int degreesFromNorth, bool reverse = false)
         {
-            var trueDegrees = degreesFromNorth;
+            int trueDegrees = degreesFromNorth;
 
             if (trueDegrees < 0)
                 return MovementDirectionType.None;
@@ -81,79 +97,25 @@ namespace NetMud.Cartography
                 trueDegrees = degreesFromNorth < 180 ? degreesFromNorth + 180 : degreesFromNorth - 180;
 
             if (trueDegrees > 22 && trueDegrees < 67)
-            {
-                if (inclineGrade > 0)
-                    return MovementDirectionType.UpNorthEast;
-                else if (inclineGrade < 0)
-                    return MovementDirectionType.DownNorthEast;
-
                 return MovementDirectionType.NorthEast;
-            }
 
             if (trueDegrees > 66 && trueDegrees < 111)
-            {
-                if (inclineGrade > 0)
-                    return MovementDirectionType.UpEast;
-                else if (inclineGrade < 0)
-                    return MovementDirectionType.DownEast;
-
                 return MovementDirectionType.East;
-            }
 
             if (trueDegrees > 110 && trueDegrees < 155)
-            {
-                if (inclineGrade > 0)
-                    return MovementDirectionType.UpSouthEast;
-                else if (inclineGrade < 0)
-                    return MovementDirectionType.DownSouthEast;
-
                 return MovementDirectionType.SouthEast;
-            }
 
             if (trueDegrees > 154 && trueDegrees < 199)
-            {
-                if (inclineGrade > 0)
-                    return MovementDirectionType.UpSouth;
-                else if (inclineGrade < 0)
-                    return MovementDirectionType.DownSouth;
-
                 return MovementDirectionType.South;
-            }
 
             if (trueDegrees > 198 && trueDegrees < 243)
-            {
-                if (inclineGrade > 0)
-                    return MovementDirectionType.UpSouthWest;
-                else if (inclineGrade < 0)
-                    return MovementDirectionType.DownSouthWest;
-
                 return MovementDirectionType.SouthWest;
-            }
 
             if (trueDegrees > 242 && trueDegrees < 287)
-            {
-                if (inclineGrade > 0)
-                    return MovementDirectionType.UpWest;
-                else if (inclineGrade < 0)
-                    return MovementDirectionType.DownWest;
-
                 return MovementDirectionType.West;
-            }
 
             if (trueDegrees > 286 && trueDegrees < 331)
-            {
-                if (inclineGrade > 0)
-                    return MovementDirectionType.UpNorthWest;
-                else if (inclineGrade < 0)
-                    return MovementDirectionType.DownNorthWest;
-
                 return MovementDirectionType.NorthWest;
-            }
-
-            if (inclineGrade > 0)
-                return MovementDirectionType.UpNorth;
-            else if (inclineGrade < 0)
-                return MovementDirectionType.DownNorth;
 
             return MovementDirectionType.North;
         }
@@ -163,66 +125,30 @@ namespace NetMud.Cartography
         /// </summary>
         /// <param name="direction">the value to translate</param>
         /// <returns>degrees from north, incline grade</returns>
-        public static Tuple<int,int> TranslateDirectionToDegrees(MovementDirectionType direction)
+        public static Coordinate TranslateDirectionToDegrees(MovementDirectionType direction)
         {
             switch (direction)
             {
                 case MovementDirectionType.East:
-                    return new Tuple<int, int>(90, 0); 
+                    return new Coordinate(90, 0);
                 case MovementDirectionType.North:
-                    return new Tuple<int, int>(0, 0);
+                    return new Coordinate(0, 0);
                 case MovementDirectionType.NorthEast:
-                    return new Tuple<int, int>(45, 0); 
+                    return new Coordinate(45, 0);
                 case MovementDirectionType.NorthWest:
-                    return new Tuple<int, int>(315, 0);
+                    return new Coordinate(315, 0);
                 case MovementDirectionType.South:
-                    return new Tuple<int, int>(180, 0);
+                    return new Coordinate(180, 0);
                 case MovementDirectionType.SouthEast:
-                    return new Tuple<int, int>(135, 0);
+                    return new Coordinate(135, 0);
                 case MovementDirectionType.SouthWest:
-                    return new Tuple<int, int>(225, 0);
+                    return new Coordinate(225, 0);
                 case MovementDirectionType.West:
-                    return new Tuple<int, int>(270, 0);
-                case MovementDirectionType.Up:
-                    return new Tuple<int, int>(-1, 25);
-                case MovementDirectionType.Down:
-                    return new Tuple<int, int>(-1, -25);
-                case MovementDirectionType.UpEast:
-                    return new Tuple<int, int>(90, 23);
-                case MovementDirectionType.UpNorth:
-                    return new Tuple<int, int>(0, 25);
-                case MovementDirectionType.UpNorthEast:
-                    return new Tuple<int, int>(45, 25);
-                case MovementDirectionType.UpNorthWest:
-                    return new Tuple<int, int>(315, 25);
-                case MovementDirectionType.UpSouth:
-                    return new Tuple<int, int>(180, 25);
-                case MovementDirectionType.UpSouthEast:
-                    return new Tuple<int, int>(135, 25);
-                case MovementDirectionType.UpSouthWest:
-                    return new Tuple<int, int>(225, 25);
-                case MovementDirectionType.UpWest:
-                    return new Tuple<int, int>(270, 25);
-                case MovementDirectionType.DownEast:
-                    return new Tuple<int, int>(90, -25);
-                case MovementDirectionType.DownNorth:
-                    return new Tuple<int, int>(0, -25);
-                case MovementDirectionType.DownNorthEast:
-                    return new Tuple<int, int>(45, -25);
-                case MovementDirectionType.DownNorthWest:
-                    return new Tuple<int, int>(315, -25);
-                case MovementDirectionType.DownSouth:
-                    return new Tuple<int, int>(180, -25);
-                case MovementDirectionType.DownSouthEast:
-                    return new Tuple<int, int>(135, -25);
-                case MovementDirectionType.DownSouthWest:
-                    return new Tuple<int, int>(225, -25);
-                case MovementDirectionType.DownWest:
-                    return new Tuple<int, int>(270, -25);
+                    return new Coordinate(270, 0);
             }
 
             //return none, neutral for anything not counted
-            return new Tuple<int, int>(-1, 0);
+            return new Coordinate(-1, 0);
         }
 
         public static MovementDirectionType ReverseDirection(MovementDirectionType direction)
@@ -245,42 +171,6 @@ namespace NetMud.Cartography
                     return MovementDirectionType.NorthEast;
                 case MovementDirectionType.West:
                     return MovementDirectionType.East;
-                case MovementDirectionType.Up:
-                    return MovementDirectionType.Down;
-                case MovementDirectionType.Down:
-                    return MovementDirectionType.Up;
-                case MovementDirectionType.UpEast:
-                    return MovementDirectionType.DownWest;
-                case MovementDirectionType.UpNorth:
-                    return MovementDirectionType.DownSouth;
-                case MovementDirectionType.UpNorthEast:
-                    return MovementDirectionType.DownSouthWest;
-                case MovementDirectionType.UpNorthWest:
-                    return MovementDirectionType.DownSouthEast;
-                case MovementDirectionType.UpSouth:
-                    return MovementDirectionType.DownNorth;
-                case MovementDirectionType.UpSouthEast:
-                    return MovementDirectionType.DownNorthWest;
-                case MovementDirectionType.UpSouthWest:
-                    return MovementDirectionType.DownNorthEast;
-                case MovementDirectionType.UpWest:
-                    return MovementDirectionType.DownEast;
-                case MovementDirectionType.DownEast:
-                    return MovementDirectionType.UpWest;
-                case MovementDirectionType.DownNorth:
-                    return MovementDirectionType.UpSouth;
-                case MovementDirectionType.DownNorthEast:
-                    return MovementDirectionType.UpSouthWest;
-                case MovementDirectionType.DownNorthWest:
-                    return MovementDirectionType.UpSouthEast;
-                case MovementDirectionType.DownSouth:
-                    return MovementDirectionType.UpNorth;
-                case MovementDirectionType.DownSouthEast:
-                    return MovementDirectionType.UpNorthWest;
-                case MovementDirectionType.DownSouthWest:
-                    return MovementDirectionType.UpNorthEast;
-                case MovementDirectionType.DownWest:
-                    return MovementDirectionType.UpEast;
             }
 
             //return none, neutral for anything not counted
@@ -310,34 +200,6 @@ namespace NetMud.Cartography
                 case MovementDirectionType.SouthEast:
                 case MovementDirectionType.NorthWest:
                     return @"\";
-                case MovementDirectionType.Up:
-                    return "^";
-                case MovementDirectionType.UpEast:
-                case MovementDirectionType.UpWest:
-                    return "3";
-                case MovementDirectionType.UpSouth:
-                case MovementDirectionType.UpNorth:
-                    return "}";
-                case MovementDirectionType.UpSouthWest:
-                case MovementDirectionType.UpNorthEast:
-                    return ">";
-                case MovementDirectionType.UpSouthEast:
-                case MovementDirectionType.UpNorthWest:
-                    return "]";
-                case MovementDirectionType.Down:
-                    return "v";
-                case MovementDirectionType.DownEast:
-                case MovementDirectionType.DownWest:
-                    return "E";
-                case MovementDirectionType.DownSouth:
-                case MovementDirectionType.DownNorth:
-                    return "{";
-                case MovementDirectionType.DownSouthWest:
-                case MovementDirectionType.DownNorthEast:
-                    return "<";
-                case MovementDirectionType.DownSouthEast:
-                case MovementDirectionType.DownNorthWest:
-                    return "[";
             }
         }
 
@@ -346,67 +208,122 @@ namespace NetMud.Cartography
         /// </summary>
         /// <param name="transversalDirection">The direction being faced</param>
         /// <returns>the coordinates for the direction needed to move one unit "forward"</returns>
-        public static Tuple<int, int, int> GetDirectionStep(MovementDirectionType transversalDirection)
+        public static Coordinate GetDirectionStep(MovementDirectionType transversalDirection)
         {
             switch (transversalDirection)
             {
                 default: //We already defaulted to 0,0,0
                     break;
                 case MovementDirectionType.East:
-                    return new Tuple<int, int, int>(1, 0, 0);
+                    return new Coordinate(1, 0);
                 case MovementDirectionType.North:
-                    return new Tuple<int, int, int>(0, 1, 0);
+                    return new Coordinate(0, 1);
                 case MovementDirectionType.NorthEast:
-                    return new Tuple<int, int, int>(1, 1, 0);
+                    return new Coordinate(1, 1);
                 case MovementDirectionType.NorthWest:
-                    return new Tuple<int, int, int>(-1, 1, 0);
+                    return new Coordinate(-1, 1);
                 case MovementDirectionType.South:
-                    return new Tuple<int, int, int>(0, -1, 0);
+                    return new Coordinate(0, -1);
                 case MovementDirectionType.SouthEast:
-                    return new Tuple<int, int, int>(1, -1, 0);
+                    return new Coordinate(1, -1);
                 case MovementDirectionType.SouthWest:
-                    return new Tuple<int, int, int>(-1, -1, 0);
+                    return new Coordinate(-1, -1);
                 case MovementDirectionType.West:
-                    return new Tuple<int, int, int>(-1, 0, 0);
-                case MovementDirectionType.Up:
-                    return new Tuple<int, int, int>(0, 0, 1);
-                case MovementDirectionType.Down:
-                    return new Tuple<int, int, int>(0, 0, -1);
-                case MovementDirectionType.UpEast:
-                    return new Tuple<int, int, int>(1, 0, 1);
-                case MovementDirectionType.UpNorth:
-                    return new Tuple<int, int, int>(0, 1, 1);
-                case MovementDirectionType.UpNorthEast:
-                    return new Tuple<int, int, int>(1, 1, 1);
-                case MovementDirectionType.UpNorthWest:
-                    return new Tuple<int, int, int>(-1, 1, 1);
-                case MovementDirectionType.UpSouth:
-                    return new Tuple<int, int, int>(0, -1, 1);
-                case MovementDirectionType.UpSouthEast:
-                    return new Tuple<int, int, int>(1, -1, 1);
-                case MovementDirectionType.UpSouthWest:
-                    return new Tuple<int, int, int>(-1, -1, 1);
-                case MovementDirectionType.UpWest:
-                    return new Tuple<int, int, int>(-1, 0, 1);
-                case MovementDirectionType.DownEast:
-                    return new Tuple<int, int, int>(1, 0, -1);
-                case MovementDirectionType.DownNorth:
-                    return new Tuple<int, int, int>(0, 1, -1);
-                case MovementDirectionType.DownNorthEast:
-                    return new Tuple<int, int, int>(1, 1, -1);
-                case MovementDirectionType.DownNorthWest:
-                    return new Tuple<int, int, int>(-1, 1, -1);
-                case MovementDirectionType.DownSouth:
-                    return new Tuple<int, int, int>(0, -1, -1);
-                case MovementDirectionType.DownSouthEast:
-                    return new Tuple<int, int, int>(1, -1, -1);
-                case MovementDirectionType.DownSouthWest:
-                    return new Tuple<int, int, int>(-1, -1, -1);
-                case MovementDirectionType.DownWest:
-                    return new Tuple<int, int, int>(-1, 0, -1);
+                    return new Coordinate(-1, 0);
             }
 
-            return new Tuple<int, int, int>(0, 0, 0);
+            return new Coordinate(0, 0);
+        }
+
+        /// <summary>
+        /// Get something's direction from yourself
+        /// </summary>
+        /// <param name="here">you</param>
+        /// <param name="there">them</param>
+        /// <returns>A direction, or None if it's the same coordinate</returns>
+        public static MovementDirectionType DirectionFrom(Coordinate here, Coordinate there)
+        {
+            bool isNorth = false;
+            bool isEast = false;
+            bool isWest = false;
+            bool isSouth = false;
+
+            //East/west
+            if (there.X > here.X)
+                isEast = true;
+            else if (there.X < here.X)
+                isWest = true;
+
+            //North/South
+            if (there.Y > here.Y)
+                isNorth = true;
+            else if (there.Y < here.Y)
+                isSouth = true;
+
+            if(isNorth)
+            {
+                if (isEast)
+                    return MovementDirectionType.NorthEast;
+                else if (isWest)
+                    return MovementDirectionType.NorthWest;
+
+                return MovementDirectionType.North;
+            }
+
+            if (isSouth)
+            {
+                if (isEast)
+                    return MovementDirectionType.SouthEast;
+                else if (isWest)
+                    return MovementDirectionType.SouthWest;
+
+                return MovementDirectionType.South;
+            }
+
+            if (isEast)
+                return MovementDirectionType.East;
+            if (isWest)
+                return MovementDirectionType.West;
+
+            return MovementDirectionType.None;
+        }
+
+        /// <summary>
+        /// Rotates the current deltas. Assumes North is the initial direction
+        /// </summary>
+        /// <param name="currentDeltas">the current coordinate deltas</param>
+        /// <param name="direction">where we're rotating to</param>
+        /// <returns>the new deltas</returns>
+        public static Coordinate RotateCoordinateDeltas(Coordinate currentDeltas, MovementDirectionType direction)
+        {
+            var x = currentDeltas.X;
+            var y = currentDeltas.Y;
+
+            switch(direction)
+            {
+                case MovementDirectionType.South:
+                    return new Coordinate(x, -1 * y);
+
+                case MovementDirectionType.East:
+                    return new Coordinate(y, x);
+
+                case MovementDirectionType.West:
+                    return new Coordinate(-1 * y, x * -1);
+
+                case MovementDirectionType.NorthEast:
+                    return new Coordinate(x + y, y - x.TowardsZero());
+
+                case MovementDirectionType.NorthWest:
+                    return new Coordinate(x - y, y + x.TowardsZero());
+
+                case MovementDirectionType.SouthEast:
+                    return new Coordinate(x + y.TowardsZero(), -1 * y - x.TowardsZero());
+
+                case MovementDirectionType.SouthWest:
+                    return new Coordinate(x - y.TowardsZero(), -1 * y + x.TowardsZero());
+            }
+
+            return currentDeltas;
         }
     }
 }

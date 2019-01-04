@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NetMud.Commands</RootNamespace>
     <AssemblyName>NetMud.Commands</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -45,30 +45,45 @@
     <Compile Include="Administrative\GotoZone.cs" />
     <Compile Include="Administrative\SpawnNewNPC.cs" />
     <Compile Include="Administrative\SpawnNewObject.cs" />
+    <Compile Include="Attributes\CacheReferenceType.cs" />
     <Compile Include="Attributes\CommandSuppressName.cs" />
     <Compile Include="Attributes\CommandKeywordAttribute.cs" />
     <Compile Include="Attributes\CommandParameterAttribute.cs" />
     <Compile Include="Attributes\CommandPartial.cs" />
     <Compile Include="Attributes\CommandPermissionAttribute.cs" />
     <Compile Include="Attributes\CommandRangeAttribute.cs" />
+    <Compile Include="Attributes\CommandUsage.cs" />
+    <Compile Include="EntityManipulation\Craft.cs" />
+    <Compile Include="EntityManipulation\Use.cs" />
+    <Compile Include="EntityManipulation\Interact.cs" />
     <Compile Include="GossipServer\Gossip.cs" />
     <Compile Include="Comm\Shout.cs" />
     <Compile Include="Comm\Say.cs" />
     <Compile Include="EntityManipulation\Drop.cs" />
     <Compile Include="EntityManipulation\Get.cs" />
-    <Compile Include="EntityManipulation\Put.cs" />
-    <Compile Include="Movement\UseExits.cs" />
+    <Compile Include="Mercantile\Sell.cs" />
+    <Compile Include="Mercantile\Buy.cs" />
+    <Compile Include="Mercantile\Appraise.cs" />
+    <Compile Include="Mercantile\List.cs" />
+    <Compile Include="Movement\DirectionalMovement.cs" />
+    <Compile Include="Movement\Enter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Administrative\GotoChar.cs" />
     <Compile Include="Rendering\Inventory.cs" />
+    <Compile Include="Comm\Who.cs" />
     <Compile Include="Social\Laid.cs" />
     <Compile Include="System\Commands.cs" />
     <Compile Include="System\Save.cs" />
     <Compile Include="System\Quit.cs" />
     <Compile Include="Rendering\Look.cs" />
     <Compile Include="System\Help.cs" />
+    <Compile Include="Trainer\Train.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NetMud.Cartography\NetMud.Cartography.csproj">
+      <Project>{F4EAB5D7-93FA-4B7B-9E6D-B7F191E66945}</Project>
+      <Name>NetMud.Cartography</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NetMud.Communication\NetMud.Communication.csproj">
       <Project>{7F19324F-1B9C-467D-816A-74A36EB74CDE}</Project>
       <Name>NetMud.Communication</Name>
@@ -81,13 +96,9 @@
       <Project>{88b7a648-fe23-4e88-9b60-ae17c8858af4}</Project>
       <Name>NetMud.DataStructure</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NetMud.Data\NetMud.Data.csproj">
-      <Project>{8b2cb5f6-65ca-4458-856b-6957e9309dbb}</Project>
-      <Name>NetMud.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NetMud.Backup\NetMud.Backup.csproj">
-      <Project>{d16eb03b-8da6-49c3-8922-cd05af30fd20}</Project>
-      <Name>NetMud.Backup</Name>
+    <ProjectReference Include="..\NetMud.Gossip\NetMud.Gossip.csproj">
+      <Project>{D98549E9-9D8C-46A7-83B2-9A4D68504F31}</Project>
+      <Name>NetMud.Gossip</Name>
     </ProjectReference>
     <ProjectReference Include="..\NetMud.Utility\NetMud.Utility.csproj">
       <Project>{9f3caec0-73dc-463c-8ef7-13b83bc8fb12}</Project>

@@ -1,4 +1,4 @@
-﻿using NetMud.DataStructure.Base.System;
+﻿using NetMud.DataStructure.Architectural;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -180,7 +180,7 @@ namespace NetMud.DataAccess.Cache
         /// When base type and maintype want to be less ambigious
         /// </summary>
         /// <typeparam name="T">The base type (like ILocation)</typeparam>
-        /// <param name="mainType">The inheriting type (like IRoom)</param>
+        /// <param name="mainType">The inheriting type (like ITile)</param>
         /// <returns>all the stuff and things</returns>
         public IEnumerable<T> GetAll<T>(Type mainType)
         {

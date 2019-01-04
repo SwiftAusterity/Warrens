@@ -1,0 +1,39 @@
+﻿@using NetMud.Data.NPCs
+
+@model NonPlayerCharacterTemplate
+
+<h4>Details</h4>
+<div class="form-group row">
+    @Html.EditorFor(e => e.Name)
+    @Html.EditorFor(e => e.SurName)
+    @Html.EditorFor(e => e.Gender)
+    @Html.EditorFor(e => e.AsciiCharacter)
+    @Html.EditorFor(e => e.HexColorCode)
+</div>
+
+<div class="form-group row">
+    @Html.EditorFor(e => e.Description)
+</div>
+
+@Html.EditorFor(e => e.Race)
+
+@Html.EditorFor(e => e.Personality)
+
+<h3>Merchant Settings</h3>
+<hr />
+<h4>Restock</h4>
+@Html.EditorFor(m => m.InventoryRestock)
+
+<h4>Selling</h4>
+@Html.EditorFor(m => m.WillSell)
+
+<h4>Buying</h4>
+@Html.EditorFor(m => m.WillPurchase)
+
+<h3>Trainer Settings</h3>
+<hr />
+<h4>Abilities</h4>
+@Html.EditorFor(m => m.TeachableAbilities)
+
+<h4>Proficencies</h4>
+@Html.EditorFor(m => m.TeachableProficencies)

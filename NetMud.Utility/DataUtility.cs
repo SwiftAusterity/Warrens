@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -15,6 +17,259 @@ namespace NetMud.Utility
     /// </summary>
     public static class DataUtility
     {
+        #region Randomizer
+        public static decimal Next(this Random rnd, decimal from, decimal to)
+        {
+            byte fromScale = new System.Data.SqlTypes.SqlDecimal(from).Scale;
+            byte toScale = new System.Data.SqlTypes.SqlDecimal(to).Scale;
+
+            byte scale = (byte)(fromScale + toScale);
+
+            if (scale > 28)
+            {
+                scale = 28;
+            }
+
+            decimal r = new decimal(rnd.Next(), rnd.Next(), rnd.Next(), false, scale);
+
+            if (Math.Sign(from) == Math.Sign(to) || from == 0 || to == 0)
+            {
+                return decimal.Remainder(r, to - from) + from;
+            }
+
+            if ((double)from + rnd.NextDouble() * ((double)to - (double)from) < 0)
+            {
+                return decimal.Remainder(r, -from) + from;
+            }
+
+            return decimal.Remainder(r, to);
+        }
+        #endregion
+
+        #region String Ext
+        public static StringBuilder AppendFormattedLine(this StringBuilder sb, IFormatProvider provider, string format, params object[] args)
+        {
+            return sb.AppendLine(string.Format(provider, format, args));
+        }
+
+        public static StringBuilder AppendFormattedLine(this StringBuilder sb, string format, object arg0, object arg1, object arg2)
+        {
+            return sb.AppendLine(string.Format(format, arg0, arg1, arg2));
+        }
+
+        public static StringBuilder AppendFormattedLine(this StringBuilder sb, string format, params object[] args)
+        {
+            return sb.AppendLine(string.Format(format, args));
+        }
+
+        public static StringBuilder AppendFormattedLine(this StringBuilder sb, IFormatProvider provider, string format, object arg0)
+        {
+            return sb.AppendLine(string.Format(provider, format, arg0));
+        }
+
+        public static StringBuilder AppendFormattedLine(this StringBuilder sb, IFormatProvider provider, string format, object arg0, object arg1)
+        {
+            return sb.AppendLine(string.Format(provider, format, arg0, arg1));
+        }
+
+        public static StringBuilder AppendFormattedLine(this StringBuilder sb, IFormatProvider provider, string format, object arg0, object arg1, object arg2)
+        {
+            return sb.AppendLine(string.Format(provider, format, arg0, arg1, arg2));
+        }
+
+        public static StringBuilder AppendFormattedLine(this StringBuilder sb, string format, object arg0)
+        {
+            return sb.AppendLine(string.Format(format, arg0));
+        }
+
+        public static StringBuilder AppendFormattedLine(this StringBuilder sb, string format, object arg0, object arg1)
+        {
+            return sb.AppendLine(string.Format(format, arg0, arg1));
+        }
+        #endregion
+
+        #region TypeManipulation
+        public static int TowardsZero(this int obj, int value = 1)
+        {
+            if (obj < 0)
+            {
+                return obj += value;
+            }
+
+            if (obj > 0)
+            {
+                obj -= value;
+            }
+
+            return obj;
+        }
+
+        public static long TowardsZero(this long obj, long value = 1)
+        {
+            if (obj < 0)
+            {
+                return obj += value;
+            }
+
+            if (obj > 0)
+            {
+                obj -= value;
+            }
+
+            return obj;
+        }
+
+        public static double TowardsZero(this double obj, double value = 1)
+        {
+            if (obj < 0)
+            {
+                return obj += value;
+            }
+
+            if (obj > 0)
+            {
+                obj -= value;
+            }
+
+            return obj;
+        }
+
+        public static float TowardsZero(this float obj, float value = 1)
+        {
+            if (obj < 0)
+            {
+                return obj += value;
+            }
+
+            if (obj > 0)
+            {
+                obj -= value;
+            }
+
+            return obj;
+        }
+
+        public static decimal TowardsZero(this decimal obj, decimal value = 1)
+        {
+            if (obj < 0)
+            {
+                return obj += value;
+            }
+
+            if (obj > 0)
+            {
+                obj -= value;
+            }
+
+            return obj;
+        }
+
+        public static short TowardsZero(this short obj, short value = 1)
+        {
+            if (obj < 0)
+            {
+                return obj += value;
+            }
+
+            if (obj > 0)
+            {
+                obj -= value;
+            }
+
+            return obj;
+        }
+
+        public static bool IsBetweenOrEqual(this int obj, int lower, int higher)
+        {
+            return obj >= lower && obj <= higher;
+        }
+
+        public static bool IsBetween(this int obj, int lower, int higher)
+        {
+            return obj > lower && obj < higher;
+        }
+
+        public static bool IsBetweenOrEqual(this float obj, float lower, float higher)
+        {
+            return obj >= lower && obj <= higher;
+        }
+
+        public static bool IsBetween(this float obj, float lower, float higher)
+        {
+            return obj > lower && obj < higher;
+        }
+
+        public static bool IsBetweenOrEqual(this double obj, double lower, double higher)
+        {
+            return obj >= lower && obj <= higher;
+        }
+
+        public static bool IsBetween(this double obj, double lower, double higher)
+        {
+            return obj > lower && obj < higher;
+        }
+
+        public static bool IsBetweenOrEqual(this decimal obj, decimal lower, decimal higher)
+        {
+            return obj >= lower && obj <= higher;
+        }
+
+        public static bool IsBetween(this decimal obj, decimal lower, decimal higher)
+        {
+            return obj > lower && obj < higher;
+        }
+
+        public static bool IsBetweenOrEqual(this long obj, long lower, long higher)
+        {
+            return obj >= lower && obj <= higher;
+        }
+
+        public static bool IsBetween(this long obj, long lower, long higher)
+        {
+            return obj > lower && obj < higher;
+        }
+
+        public static bool IsBetweenOrEqual(this short obj, short lower, short higher)
+        {
+            return obj >= lower && obj <= higher;
+        }
+
+        public static bool IsBetween(this short obj, short lower, short higher)
+        {
+            return obj > lower && obj < higher;
+        }
+
+        public static bool IsBetweenOrEqual(this uint obj, uint lower, uint higher)
+        {
+            return obj >= lower && obj <= higher;
+        }
+
+        public static bool IsBetween(this uint obj, uint lower, uint higher)
+        {
+            return obj > lower && obj < higher;
+        }
+
+        public static bool IsBetweenOrEqual(this ushort obj, ushort lower, ushort higher)
+        {
+            return obj >= lower && obj <= higher;
+        }
+
+        public static bool IsBetween(this ushort obj, ushort lower, ushort higher)
+        {
+            return obj > lower && obj < higher;
+        }
+
+        public static bool IsBetweenOrEqual(this ulong obj, ulong lower, ulong higher)
+        {
+            return obj >= lower && obj <= higher;
+        }
+
+        public static bool IsBetween(this ulong obj, ulong lower, ulong higher)
+        {
+            return obj > lower && obj < higher;
+        }
+        #endregion
+
         #region "Type Conversion"
         /// <summary>
         /// Fault safe type converted
@@ -28,17 +283,25 @@ namespace NetMud.Utility
             try
             {
                 if (thing == null)
+                {
                     return false;
+                }
 
                 if (typeof(T).IsEnum)
                 {
-                    if (thing is Int16 || thing is Int32)
+                    if (thing is short || thing is int)
+                    {
                         newThing = (T)thing;
+                    }
                     else
+                    {
                         newThing = (T)Enum.Parse(typeof(T), thing.ToString());
+                    }
                 }
                 else
+                {
                     newThing = (T)Convert.ChangeType(thing, typeof(T));
+                }
 
                 return true;
             }
@@ -60,12 +323,14 @@ namespace NetMud.Utility
         /// <returns>success status</returns>
         public static T TryConvert<T>(object thing)
         {
-            var newThing = default(T);
+            T newThing = default(T);
 
             try
             {
                 if (thing != null)
+                {
                     newThing = (T)Convert.ChangeType(thing, typeof(T));
+                }
             }
             catch
             {
@@ -83,8 +348,86 @@ namespace NetMud.Utility
         /// <returns>all types that touch the input type</returns>
         public static IEnumerable<Type> GetAllImplimentingedTypes(Type t)
         {
-            var implimentedTypes = t.Assembly.GetTypes().Where(ty => ty.GetInterfaces().Contains(t) || ty == t);
+            IEnumerable<Type> implimentedTypes = t.Assembly.GetTypes().Where(ty => ty.GetInterfaces().Contains(t) || ty == t);
             return implimentedTypes.Concat(t.GetInterfaces());
+        }
+
+        /// <summary>
+        /// Gets all system types and interfaces implemented by or with for a type, including itself
+        /// </summary>
+        /// <param name="t">the system type in question</param>
+        /// <returns>all types that touch the input type</returns>
+        public static bool ImplementsType<T>(this object obj)
+        {
+            if (obj == null)
+            {
+                return false;
+            }
+
+            Type type = obj.GetType();
+            return GetAllImplimentingedTypes(type).Any(ty => ty == typeof(T));
+        }
+
+        /// <summary>
+        /// Make an instance of a thing
+        /// </summary>
+        /// <typeparam name="T">The type of the thing</typeparam>
+        /// <param name="fillAtWill">if T is a collection add a blank thing in it</param>
+        /// <returns>A thing or default(T) if it can't make the thing</returns>
+        public static T InsantiateThing<T>(Assembly thingConcreteAssembly, bool fillAtWill = true)
+        {
+            Type thingType = typeof(T);
+            T thing = default(T);
+
+            if (thingType.IsInterface)
+            {
+                var concreteClassType = thingConcreteAssembly.GetTypes().FirstOrDefault(ty => ty.GetInterfaces().Contains(thingType));
+
+                if (concreteClassType != null)
+                {
+                    thing = (T)Activator.CreateInstance(concreteClassType);
+                }
+            }
+            else if (thingType.IsArray 
+                || (!typeof(string).Equals(thingType) && typeof(IEnumerable).IsAssignableFrom(thingType)))
+            {
+                var underlyingTypes = thingType.GenericTypeArguments;
+                thing = (T)Activator.CreateInstance(thingType, underlyingTypes.Select(typ => InstantiateSingleThing(typ, thingConcreteAssembly, fillAtWill)));
+            }
+            else if(!typeof(string).Equals(thingType))
+            {
+                thing = Activator.CreateInstance<T>();
+            }
+
+            return thing;
+        }
+
+        internal static object InstantiateSingleThing(Type thingType, Assembly thingConcreteAssembly, bool fillAtWill)
+        {
+            object thing = null;
+            var thingAssembly = thingType.Assembly;
+
+            if (thingType.IsInterface)
+            {
+                var concreteClassType = thingAssembly.GetTypes().FirstOrDefault(ty => ty.GetInterfaces().Contains(thingType));
+
+                if (concreteClassType != null)
+                {
+                    thing = Activator.CreateInstance(concreteClassType);
+                }
+            }
+            else if (thingType.IsArray
+                || (!typeof(string).Equals(thingType) && typeof(IEnumerable).IsAssignableFrom(thingType)))
+            {
+                var underlyingTypes = thingType.GenericTypeArguments;
+                thing = Activator.CreateInstance(thingType, underlyingTypes.Select(typ => InstantiateSingleThing(typ, thingConcreteAssembly, fillAtWill)));
+            }
+            else
+            {
+                thing = Activator.CreateInstance(thingType);
+            }
+
+            return thing;
         }
         #endregion
 
@@ -104,9 +447,11 @@ namespace NetMud.Utility
             try
             {
                 if (dr == null || !dr.Table.Columns.Contains(columnName))
+                {
                     return thing;
+                }
 
-                TryConvert<T>(dr[columnName], ref thing);
+                TryConvert(dr[columnName], ref thing);
             }
             catch
             {
@@ -128,14 +473,16 @@ namespace NetMud.Utility
         /// <returns>the value or default(T)</returns>
         public static T GetSafeElementValue<T>(this XContainer element, string xName)
         {
-            var returnValue = default(T);
+            T returnValue = default(T);
 
             try
             {
                 if (element != null && element.Element(xName) != null)
                 {
-                    if (!TryConvert<T>(element.Element(xName).Value, ref returnValue))
+                    if (!TryConvert(element.Element(xName).Value, ref returnValue))
+                    {
                         returnValue = default(T);
+                    }
                 }
             }
             catch
@@ -154,12 +501,14 @@ namespace NetMud.Utility
         /// <returns>the value or string.empty</returns>
         public static string GetSafeElementValue(this XContainer element, string xName)
         {
-            var returnValue = string.Empty;
+            string returnValue = string.Empty;
 
             try
             {
                 if (element != null && element.Element(xName) != null)
+                {
                     returnValue = element.Element(xName).Value;
+                }
             }
             catch
             {
@@ -178,14 +527,16 @@ namespace NetMud.Utility
         /// <returns>the value or default(T)</returns>
         public static T GetSafeAttributeValue<T>(this XElement element, string xName)
         {
-            var returnValue = default(T);
+            T returnValue = default(T);
 
             try
             {
                 if (element != null && element.Attribute(xName) != null)
                 {
-                    if (!TryConvert<T>(element.Attribute(xName).Value, ref returnValue))
+                    if (!TryConvert(element.Attribute(xName).Value, ref returnValue))
+                    {
                         returnValue = default(T);
+                    }
                 }
             }
             catch
@@ -204,12 +555,14 @@ namespace NetMud.Utility
         /// <returns>the value or string.empty</returns>
         public static string GetSafeAttributeValue(this XElement element, string xName)
         {
-            var returnValue = string.Empty;
+            string returnValue = string.Empty;
 
             try
             {
                 if (element != null && element.Attribute(xName) != null)
+                {
                     returnValue = element.Attribute(xName).Value;
+                }
             }
             catch
             {
@@ -254,7 +607,7 @@ namespace NetMud.Utility
             {
                 get
                 {
-                    var xml = Encoding.UTF8.GetString(XmlBinary);
+                    string xml = Encoding.UTF8.GetString(XmlBinary);
                     xml = Regex.Replace(xml, @"[^\u0000-\u007F]", string.Empty); // Removes non ascii characters
                     return xml;
                 }
@@ -272,18 +625,18 @@ namespace NetMud.Utility
             {
                 get
                 {
-                    using (var memoryStream = new MemoryStream(XmlBinary))
-                    using (var xmlReader = XmlReader.Create(memoryStream))
+                    using (MemoryStream memoryStream = new MemoryStream(XmlBinary))
+                    using (XmlReader xmlReader = XmlReader.Create(memoryStream))
                     {
-                        var xml = XDocument.Load(xmlReader);
+                        XDocument xml = XDocument.Load(xmlReader);
                         return xml;
                     }
                 }
                 set
                 {
-                    var settings = new XmlWriterSettings { OmitXmlDeclaration = true, Encoding = Encoding.UTF8 };
-                    using (var memoryStream = new MemoryStream())
-                    using (var xmlWriter = XmlWriter.Create(memoryStream, settings))
+                    XmlWriterSettings settings = new XmlWriterSettings { OmitXmlDeclaration = true, Encoding = Encoding.UTF8 };
+                    using (MemoryStream memoryStream = new MemoryStream())
+                    using (XmlWriter xmlWriter = XmlWriter.Create(memoryStream, settings))
                     {
                         value.WriteTo(xmlWriter);
                         xmlWriter.Flush();

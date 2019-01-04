@@ -1,30 +1,46 @@
-﻿@model NetMud.Models.Admin.AddEditNPCDataViewModel
+﻿@using NetMud.DataStructure.Action
 
-<section id="newNPCForm">
+@model NetMud.Models.Admin.AddEditNPCDataViewModel
+
+@{
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Edit NPC", new string[] { "Dashboard", "NPCs" }, new string[] { "/GameAdmin", "/NPC" });
+}
+
+<section id="templateApply">
+    @using (Html.BeginForm("Edit", "NPC", FormMethod.Get, new { @class = "form-horizontal", role = "form", @name = "applyTemplateForm", @id = "applyTemplateForm" }))
+    {
+        <div class="form-group row">
+            @Html.EditorFor(m => m.Template, new { validItems = Model.ValidTemplateBases })
+            <input type="submit" value="Overwrite Actions" class="btn btn-default caution" , style="margin-left: 25px;" />
+            <span style="color:red; font-style: italic;">WARNING: This will remove all existing Actions permenantly</span>
+        </div>
+    }
+</section>
+
+<section id="editNPCForm">
     @using (Html.BeginForm("Edit", "NPC", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {
         @Html.AntiForgeryToken()
-        <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <input type="hidden" name="id" id="id" value="@Model.DataObject.Id" />
-        <div class="form-group row">
-            @Html.EditorFor(e => e.Name, new { columnCount = 3 })
-            @Html.EditorFor(e => e.SurName, new { columnCount = 3 })
-        </div>
-        <div class="form-group row">
-            @Html.EditorFor(e => e.Gender, new { columnCount = 3 })
-            @Html.DescriptiveLabelFor(m => m.RaceId, new { @class = "col-sm-1 col-form-label" })
-            <div class="col-md-4">
-                @Html.DropDownList("RaceId", Model.ValidRaces.Select(rl =>
-                                                new SelectListItem() { Text = rl.Name, Value = rl.Id.ToString(), Selected = rl.Id.Equals(Model.RaceId) })
-                                                 , "Select One", htmlAttributes: new { id = "raceId", @class="form-control" })
-            </div>
-        </div>
+
+        @Html.EditorFor(e => e.DataObject, new { ValidInanimateDatas = Model.ValidInanimateDatas, ValidTileDatas = Model.ValidTileDatas, ValidNPCDatas = Model.ValidNPCDatas })
+
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "NPC", IncludeCancel = true })
     }
 </section>
 
-@Html.Partial("~/Views/GameAdmin/NPC/OccurrenceList.cshtml", Model.DataObject)
+<h3>Timers, Interactions and Abilities</h3>
+<h4>Interactions</h4>
+@Html.Partial("InteractionList",
+    new Tuple<long, string, IEnumerable<IInteraction>>(Model.DataObject.Id, "NPC", Model.DataObject.Interactions))
+
+<h4>Timers</h4>
+@Html.Partial("DecayEventList",
+    new Tuple<long, string, IEnumerable<IDecayEvent>>(Model.DataObject.Id, "NPC", Model.DataObject.DecayEvents))
+
+<h4>Abilities</h4>
+@Html.Partial("UseList",
+    new Tuple<long, string, IEnumerable<IUse>>(Model.DataObject.Id, "NPC", Model.DataObject.UsableAbilities))
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

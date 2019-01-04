@@ -1,0 +1,33 @@
+﻿@model NetMud.Models.Admin.AddZonePathwayDataViewModel
+
+@{
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>(
+        "New Zone Pathway", 
+        new string[] { "Dashboard", "Zones", Model.Origin.Name }, 
+        new string[] { "/GameAdmin", "/Zone", string.Format("/Zone/Edit/{0}", Model.Origin.Id) });
+}
+
+<section id="newZonePathForm">
+    @using (Html.BeginForm("AddZonePathway", "Zone", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <input type="hidden" id="id" name="id" value="@Model.Origin.Id" />
+        <div class="form-group row">
+            @Html.EditorFor(e => e.OriginCoordinateX)
+            @Html.EditorFor(e => e.OriginCoordinateY)
+            @Html.EditorFor(e => e.BorderHexColor)
+        </div>
+
+        <h4>Pathway Destinations</h4>
+        @Html.Partial("~/Views/GameAdmin/Zone/PathwayDestination.cshtml", Model)
+
+        <div class="clearfix"></div>
+        @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Edit",
+                                                                                ReturnRouteValues = new { controller = "Zone", id = Model.Origin.Id } })
+    }
+</section>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

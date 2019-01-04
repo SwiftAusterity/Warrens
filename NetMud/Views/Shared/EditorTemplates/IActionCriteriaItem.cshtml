@@ -1,0 +1,15 @@
+﻿@using NetMud.DataStructure.Action
+
+@model IActionCriteria
+
+@{
+    var targetList = new Dictionary<string, string>();
+    targetList.Add(ActionTarget.Item.ToString(), ActionTarget.Item.ToString());
+}
+
+<div class="form-group row">
+    @Html.EditorFor(m => m.Target, new { validItems = targetList, selectedItem = ActionTarget.Item })
+    @Html.EditorFor(m => m.AffectsMemberId, "KeyedTemplateList", new { validItems = ViewData["ValidInanimateDatas"] })
+    @Html.EditorFor(m => m.Quality)
+    @Html.EditorFor(m => m.ValueRange)
+</div>

@@ -1,0 +1,57 @@
+﻿@model NetMud.DataStructure.Tile.ITileTemplate
+
+@{
+    var pathability = new List<string>();
+
+    if (Model.Pathable)
+    {
+        pathability.Add("Pathable");
+    }
+
+    if (Model.Aquatic)
+    {
+        pathability.Add("Aquatic");
+    }
+
+    if (Model.Air)
+    {
+        pathability.Add("Air");
+    }
+
+    if (pathability.Count() == 0)
+    {
+        pathability.Add("Impassable");
+    }
+
+    var pathString = string.Join(",", pathability);
+
+    var asciiChar = string.IsNullOrWhiteSpace(Model.AsciiCharacter) ? "&nbsp;" : Model.AsciiCharacter;
+}
+
+<div class="entityDataInfoCard">
+    <h4>@Model.Name</h4>
+    <hr />
+    <div style="font-weight: normal; margin-bottom: 10px;">
+        @Model.Description
+    </div>
+    <div>
+        <span>Pathing</span>
+        <span>@pathString</span>
+    </div>
+    <div>
+        <span>Appearance</span>
+        <span style="color: @Model.HexColorCode; background-color: @Model.BackgroundHexColor;">@Html.Raw(asciiChar)</span>
+    </div>
+    @foreach (var item in Model.Interactions)
+    {
+        <div style="background-color: lightgray; padding: 5px; border-radius: 9px;">
+            @Html.DisplayFor(m => item)
+        </div>
+    }
+    @foreach (var item in Model.DecayEvents)
+    {
+        <div style="background-color: lightgray; padding: 5px; border-radius: 9px;">
+            @Html.DisplayFor(m => item)
+        </div>
+    }
+</div>

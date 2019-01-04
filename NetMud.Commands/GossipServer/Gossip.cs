@@ -1,23 +1,21 @@
 ﻿using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
-using NetMud.Data.Lexical;
 using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Base.Entity;
-using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.SupportingClasses;
+using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Player;
+using NetMud.Gossip;
 using NetMud.Utility;
-using NutMud.Commands.Attributes;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace NetMud.Commands.GossipServer
 {
-    [CommandKeyword("gossip", false, true, true)]
+    [CommandKeyword("gossip", false)]
     [CommandPermission(StaffRank.Player)]
-    [CommandParameter(CommandUsage.Subject, typeof(string), new CacheReferenceType[] { CacheReferenceType.Entity }, "[a-zA-z]+@[a-zA-z]+", true)]
-    [CommandParameter(CommandUsage.Subject, typeof(string), new CacheReferenceType[] { CacheReferenceType.Entity }, "@[a-zA-z]+", true)]
-    [CommandParameter(CommandUsage.Target, typeof(string), new CacheReferenceType[] { CacheReferenceType.Text }, false)]
+    [CommandParameter(CommandUsage.Subject, typeof(string), CacheReferenceType.String, "[a-zA-Z]+@[a-zA-Z]+$", true)]
+    [CommandParameter(CommandUsage.Subject, typeof(string), CacheReferenceType.String, "@[a-zA-Z]+$", true)]
+    [CommandParameter(CommandUsage.Target, typeof(string), CacheReferenceType.Greedy, false)]
     [CommandRange(CommandRangeType.Touch, 0)]
     public class Gossip : CommandPartial
     {
@@ -34,19 +32,19 @@ namespace NetMud.Commands.GossipServer
         /// </summary>
         public override void Execute()
         {
-            var sb = new List<string>();
+            List<string> sb = new List<string>();
             IPlayer playerActor = Actor.GetType().GetInterfaces().Contains(typeof(IPlayer)) ? Actor as IPlayer : null;
 
-            if (playerActor != null && !playerActor.DataTemplate<ICharacter>().Account.Config.GossipSubscriber)
+            if (playerActor != null && !playerActor.Template<IPlayerTemplate>().Account.Config.GossipSubscriber)
                 sb.Add(string.Format("You have disabled the Gossip network.", Subject));
             else
             {
-                var directTarget = string.Empty;
-                var directTargetGame = string.Empty;
+                string directTarget = string.Empty;
+                string directTargetGame = string.Empty;
 
                 if (Subject != null)
                 {
-                    var names = Subject.ToString().Split(new char[] { '@' });
+                    string[] names = Subject.ToString().Split(new char[] { '@' });
 
                     if(names.Count() == 2)
                     {
@@ -59,9 +57,9 @@ namespace NetMud.Commands.GossipServer
                     }
                 }
 
-                var gossipClient = LiveCache.Get<IGossipClient>("GossipWebClient");
+                GossipClient gossipClient = LiveCache.Get<GossipClient>("GossipWebClient");
 
-                var userName = Actor.DataTemplateName;
+                string userName = Actor.TemplateName;
 
                 if (playerActor != null)
                     userName = playerActor.AccountHandle;
@@ -86,13 +84,13 @@ namespace NetMud.Commands.GossipServer
                 }
             }
 
-            var toActor = new Message(MessagingType.Audible, new Occurrence() { Strength = 1 })
+            Message toActor = new Message()
             {
-                Override = sb
+                Body = sb
             };
 
             //TODO: language outputs
-            var messagingObject = new MessageCluster(toActor);
+            MessageCluster messagingObject = new MessageCluster(toActor);
 
             messagingObject.ExecuteMessaging(Actor, null, null, null, null);
         }
@@ -103,7 +101,7 @@ namespace NetMud.Commands.GossipServer
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            var sb = new List<string>
+            List<string> sb = new List<string>
             {
                 "Valid Syntax: gossip &lt;text&gt;",
                 "gossip @&lt;channel&gt; &lt;text&gt;".PadWithString(14, "&nbsp;", true),

@@ -15,7 +15,7 @@ namespace NetMud.Utility
         /// <returns>the serializer</returns>
         public static JsonSerializer GetSerializer()
         {
-            var serializer = JsonSerializer.Create();
+            JsonSerializer serializer = JsonSerializer.Create();
 
             serializer.TypeNameHandling = TypeNameHandling.Auto;
 
@@ -28,10 +28,10 @@ namespace NetMud.Utility
         /// <returns>json string</returns>
         public static string Serialize(object thingToSerialize)
         {
-            var serializer = GetSerializer();
+            JsonSerializer serializer = GetSerializer();
 
-            var sb = new StringBuilder();
-            var writer = new StringWriter(sb);
+            StringBuilder sb = new StringBuilder();
+            StringWriter writer = new StringWriter(sb);
 
             serializer.Serialize(writer, thingToSerialize);
 

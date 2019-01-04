@@ -1,10 +1,16 @@
 ﻿<!DOCTYPE html>
 <html>
+@{
+    Version v = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+    var assemblyVersion = string.Format(System.Globalization.CultureInfo.InvariantCulture, @"Warrens: Leaf Green v{0}.{1}.{2} (r{3})", v.Major, v.Minor, v.Build, v.Revision);
+
+    var gameName = Html.RandomizeGameName().ToHtmlString();
+}
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta Access-Control-Allow-Origin="cdn.swiftausterity.com" />
-    <title>netMUD</title>
+    <title>@gameName</title>
     @Styles.Render("~/Content/css")
     @Styles.Render("~/Content/jqueryui-css")
     @Scripts.Render("~/bundles/modernizr")
@@ -20,10 +26,6 @@
     @Scripts.Render("~/Scripts/site.js")
     @Styles.Render("~/Content/Site.css")
 </head>
-@{ 
-    Version v = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-    var assemblyVersion = string.Format(System.Globalization.CultureInfo.InvariantCulture, @"netMUD v{0}.{1}.{2} (r{3})", v.Major, v.Minor, v.Build, v.Revision);
-}
 <body>
     <div class="navbar navbar-inverse navbar-top">
         <div class="container">
@@ -33,7 +35,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Under the Eclipse", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink(gameName, "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
@@ -46,12 +48,14 @@
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">Features<span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
                                 <li class="dropdown-header" style="color: mediumvioletred">Knowledge</li>
+                                <li>@Html.ActionLink("Tile Types", "TileTypes", "Features", routeValues: null, htmlAttributes: new { title = "Tile Types" })</li>
+                                <li>@Html.ActionLink("Items", "Items", "Features", routeValues: null, htmlAttributes: new { title = "Items" })</li>
+                                <li>@Html.ActionLink("NPCs", "NPCs", "Features", routeValues: null, htmlAttributes: new { title = "NPCs" })</li>
                                 <li>@Html.ActionLink("Help Files", "Help", "Features", routeValues: null, htmlAttributes: new { title = "Help Files" })</li>
-                                <li>@Html.ActionLink("Races", "Races", "Features", routeValues: null, htmlAttributes: new { title = "Races" })</li>
-                                <li>@Html.ActionLink("Flora", "Flora", "Features", routeValues: null, htmlAttributes: new { title = "Flora" })</li>
-                                <li>@Html.ActionLink("Minerals", "Minerals", "Features", routeValues: null, htmlAttributes: new { title = "Minerals" })</li>
                                 <li class="dropdown-header" style="color: mediumvioletred">Systems</li>
-                                <li>@Html.ActionLink("Skills", "Skills", "Features", routeValues: null, htmlAttributes: new { title = "Skills" })</li>
+                                <li>@Html.ActionLink("The World", "TheWorld", "Features", routeValues: null, htmlAttributes: new { title = "The World" })</li>
+                                <li>@Html.ActionLink("The Lore", "Lore", "Features", routeValues: null, htmlAttributes: new { title = "The Lore" })</li>
+                                <li>@Html.ActionLink("Interactions", "Interactions", "Features", routeValues: null, htmlAttributes: new { title = "Interactions" })</li>
                             </ul>
                         </div>
                     </li>
@@ -65,15 +69,25 @@
     </div>
     <div class="container body-content">
         <h3><p id="statusMessage" name="statusMessage" class="text-success">@ViewBag.StatusMessage</p></h3>
+        @if (ViewBag.Breadcrumbs != null)
+        {
+            @Html.Partial("TitleAndBreadcrumbs", ViewBag.Breadcrumbs as Tuple<string, string[], string[]>)
+        }
         @RenderBody()
     </div>
     <footer>
         <br class="clearfix" />
         <hr />
-        <p>Under the Eclipse &copy; 1997-@DateTime.Now.Year - SwiftAusterity Productions</p>
+        <p>@gameName &copy; @DateTime.Now.Year - SwiftAusterity Productions</p>
         <p>Running on <a href="https://github.com/swiftausterity/netmud" title="Github Repository" target="_blank">@assemblyVersion</a></p>
+        <p>Many of the icons used are shamelessly taken from and &copy; <a href="http://www.toicon.com/" target="_blank">The Artificial</a>.</p>
+        <p>Background music provided by &copy; <a href="https://an-odd-hue.bandcamp.com/" target="_blank">sean o</a>.</p>
         <p>Member of <a href="//gossip.haus/" target="_blank"><img src="//gossip.haus/images/gossip.png" onerror="this.src='/content/images/broken-image.png'" style="max-width: 50px; max-height: 50px;" title="Gossip Network" /></a></p>
         <div id="guildWebRing" style="width: 100%; padding-left: 40%;" />
+        <p>
+            For authentication purposes and to help prevent ancient curses from befalling you we use cookies. By clicking on or navigating the site, you agree to allow us to ward off evil spirits 
+            attempting to haunt you. We store no personal details.
+        </p>
     </footer>
     <script type="text/javascript">
         $(document).ready(function () {

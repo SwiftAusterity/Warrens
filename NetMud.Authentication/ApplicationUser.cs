@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using NetMud.Data.System;
-using NetMud.DataStructure.SupportingClasses;
+using NetMud.Data.Players;
+using NetMud.DataStructure.Administrative;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Security.Claims;
 using System.Security.Principal;
@@ -22,7 +22,7 @@ namespace NetMud.Authentication
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
-            var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
+            ClaimsIdentity userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
 
             // Add custom user claims here
             return userIdentity;
@@ -43,7 +43,7 @@ namespace NetMud.Authentication
         /// <returns>the staffrank</returns>
         public StaffRank GetStaffRank(IPrincipal identity)
         {
-            var rank = StaffRank.Player;
+            StaffRank rank = StaffRank.Player;
 
             if (identity.IsInRole("Admin"))
                 rank = StaffRank.Admin;

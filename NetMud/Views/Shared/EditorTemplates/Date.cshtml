@@ -1,36 +1,60 @@
 ﻿@using NetMud.Models
+@model DateTime
 
-@model string
 @{
-    double columnCount = ViewData["columnCount"] == null ? 3 : (int)ViewData["columnCount"];
+    double columnCount = ViewData["columnCount"] == null ? 5 : (int)ViewData["columnCount"];
     bool disabled = ViewData["disabled"] != null;
     var columnLabelValue = columnCount > 2 ? 1 : 2;
-    var columnInputValue = (int)Math.Round(9 / columnCount);
+    var columnInputValue = (int)Math.Round(10 / columnCount);
     var cssClass = ViewData["cssClass"] == null ? "form-control datePicker" : ViewData["cssClass"] + " datePicker";
-}
+    var htmlAttributes = new Dictionary<string, object>() { { "class", cssClass }, { "placeholder", ViewData.ModelMetadata.DisplayName }, { "title", ViewData.ModelMetadata.DisplayName } };
+    var forceOptional = ViewData["forceOptional"] != null;
+    var forceBlankValue = Model == null || Model.GetType().IsArray ? true : false;
+    var archivedValue = ViewData["archivedValue"] == null ? "" : ViewData["archivedValue"].ToString();
 
-@Html.DescriptiveLabelFor(m => m, new { @class = String.Format("col-sm-{0} col-form-label", columnLabelValue) })
-<div class="col-sm-@columnInputValue">
-    @if (disabled)
+    if (ViewData["disabled"] != null)
     {
-        <div class="form-group">
-            <div class="input-group date" id="picker">
-                @Html.TextBoxFor(m => m, new { @class = cssClass, @disabled = disabled })
-            </div>
-        </div> 
+        htmlAttributes.Add("disabled", true);
     }
-    else
+
+    if (ViewData["htmlAttributes"] != null)
     {
-        <div class="form-group">
-            <div class="input-group date" id="picker">
-                @Html.TextBoxFor(m => m, new { @class = cssClass })
-            </div>
-        </div>
+        var additionalAttribs = ViewData["htmlAttributes"] as IDictionary<string, object>;
+        if (additionalAttribs != null)
+        {
+            foreach (var kvp in additionalAttribs)
+            {
+                htmlAttributes.Add(kvp.Key, kvp.Value);
+            }
+        }
+    }
+
+    if (forceBlankValue && !htmlAttributes.ContainsKey("Value"))
+    {
+        htmlAttributes.Add("Value", "");
+    }
+}
+<div class="col-sm-@columnInputValue">
+    <span class="ghostNameTip">@ViewData.ModelMetadata.DisplayName</span>
+
+    @if (ViewData.ModelMetadata.IsRequired && !forceOptional)
+    {
+        <span class="glyphicon glyphicon-exclamation-sign ghostRequired" title="Required"></span>
+    }
+
+    @Html.DescriptionFor(m => m)
+    <div class="input-group date" id="picker">
+        @Html.TextBoxFor(m => m, htmlAttributes)
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(archivedValue))
+    {
+        <span class="archive">Archived Value: @archivedValue</span>
+        <span title="apply value to field" class="glyphicon glyphicon-plus archiveApply" onclick="javascript: $('#@ViewData.ModelMetadata.PropertyName').val('@archivedValue');"></span>
     }
 
     @Html.ValidationMessageFor(m => m, "", new { @class = "text-danger" })
 </div>
-
 <script type="text/javascript">
     $(function () {
         $('.datePicker').datetimepicker({ format: 'MM/DD/YYYY' });

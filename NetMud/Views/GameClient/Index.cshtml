@@ -1,349 +1,174 @@
 ﻿@model NetMud.Models.GameContextModel
-
+<div class="keyLegend entityDataInfoCard">
+    <div>
+        <span>KEY</span>
+        <span>FUNCTION</span>
+    </div>
+    <div>
+        <span>alt</span>
+        <span>Batman Mode</span>
+    </div>
+    <div>
+        <span>enter</span>
+        <span>Submit/Focus</span>
+    </div>
+    <div>
+        <span>esc</span>
+        <span>Clear Input</span>
+    </div>
+    <div>
+        <span>Page Up/Down</span>
+        <span>Output Scroll Page</span>
+    </div>
+    <div>
+        <span>End/Home</span>
+        <span>Output Scroll Max</span>
+    </div>
+    <div>
+        <span>Up/Down Arrow</span>
+        <span>Command History</span>
+    </div>
+    <div>
+        <span>Left/Right Arrow</span>
+        <span>Inventory Select</span>
+    </div>
+    <div>
+        <span>Numpad Arrows</span>
+        <span>Character Movement</span>
+    </div>
+    <div>
+        <span>Numpad 5</span>
+        <span>Batman Mode</span>
+    </div>
+</div>
 <div class="parserClientTop">
+    <div class="statusIndicators">
+        <div output-data-binding="Environment.Sun" title="Sun">
+        </div>
+        <div output-data-binding="Environment.Moon" title="Moon">
+        </div>
+        <div output-data-binding="Environment.Weather">
+        </div>
+        <div output-data-binding="Environment.Visibility" title="Brightness">
+        </div>
+    </div>
     <div id="locationBreadcrumbs">
         <span class="contentContainer" output-data-binding="Local.ZoneName"></span>
-        <span class="contentContainer" output-eval-key="Local.LocaleName" output-eval-code="if(data.length === 0) { element.css({'display': 'none'}); } else { element.css({'display' : 'block'}); }">&nbsp;>&nbsp;<span output-data-binding="Local.LocaleName"></span></span>
-        <span class="contentContainer" output-eval-key="Local.RoomName" output-eval-code="if(data.length === 0) { element.css({'display': 'none'}); } else { element.css({'display' : 'block'}); }">&nbsp;>&nbsp;<span output-data-binding="Local.RoomName"></span></span>
     </div>
     <div id="locationDescription">
-        <span class="contentContainer" output-data-binding="Local.LocationDescriptive"></span>
+        <div class="contentContainer" output-data-binding="Environment.TimeOfDay"></div>
+        <div class="contentContainer" output-data-binding="Local.LocationDescriptive"></div>
     </div>
-    <div class="rightNav" style="float: right;">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-th-list" title="Client Settings"></span></a>
-        <ul class="dropdown-menu dropdown-menu-left" role="menu" aria-labelledby="dropdownMenu">
-            <li class="dropdown-header" style="color: mediumvioletred">Global UI Settings</li>
-            <li><a href="#" id="clientReload" class="moduleMenuItem"><span class="glyphicon glyphicon-refresh"></span>Reload Client</a></li>
-            <li>
-                <a href="#" class="openModulePopup moduleMenuItem" data-origin-quadrant="@Model"><span class="glyphicon glyphicon-open"></span>Popup Module</a>
-                <input id="loadModulePopupName" title="Module Name?" class="moduleNameFinder" />
-            </li>
-            <li class="divider"></li>
-            <li><a href="#" id="saveAllModules" class="moduleMenuItem"><span class="glyphicon glyphicon-upload"></span>Save All Modules</a></li>
-            <li><a href="#" id="reloadAllModules" class="moduleMenuItem"><span class="glyphicon glyphicon-download"></span>Load UI From Config</a></li>
-            <li><a href="#" id="wipeUI" class="moduleMenuItem"><span class="glyphicon glyphicon-remove"></span>Wipe UI</a></li>
-            <li class="divider"></li>
-            <li><a href="#" id="disconnect" class="moduleMenuItem"><span class="glyphicon glyphicon-remove-sign"></span>Disconnect From Server</a></li>
-        </ul>
+    <div class="rightNav" id="userControls">
+        <div style="float: right">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-th-list" title="Client Settings"></span></a>
+            <ul class="dropdown-menu dropdown-menu-left" role="menu" aria-labelledby="dropdownMenu">
+                <li class="dropdown-header" style="color: mediumvioletred;">Client</li>
+                <li><a href="#" id="keyMap" class="moduleMenuItem"><span class="glyphicon glyphicon-new-window"></span>Key Legend</a></li>
+                <li><a href="#" id="clientReload" class="moduleMenuItem"><span class="glyphicon glyphicon-refresh"></span>Reload UI</a></li>
+                <li><a href="#" id="disconnect" class="moduleMenuItem"><span class="glyphicon glyphicon-remove-sign"></span>Disconnect From Server</a></li>
+                <li class="dropdown-header" style="color: mediumvioletred;">Account Config</li>
+                @if (@Model.authedUser.GameAccount.Config.UITutorialMode)
+                {
+                    <li><a href="#" id="tutorialModeSwap" class="moduleMenuItem" onclick="javascript: changeTutorialMode(this);"><span class="glyphicon glyphicon-info-sign" style="color:green;"></span>: Tutorial Mode</a></li>
+                }
+                else
+                {
+                    <li><a href="#" id="tutorialModeSwap" class="moduleMenuItem" onclick="javascript: changeTutorialMode(this);"><span class="glyphicon glyphicon-info-sign" style="color:red;"></span>: Tutorial Mode</a></li>
+                }
+                @if (@Model.authedUser.GameAccount.Config.GossipSubscriber)
+                {
+                    <li><a href="#" id="gossipSwap" class="moduleMenuItem" onclick="javascript: changeGossipMode(this);"><span class="glyphicon glyphicon-globe" style="color:green;"></span>: Gossip Network</a></li>
+                }
+                else
+                {
+                    <li><a href="#" id="gossipSwap" class="moduleMenuItem" onclick="javascript: changeGossipMode(this);"><span class="glyphicon glyphicon-globe" style="color:red;"></span>: Gossip Network</a></li>
+                }
+            </ul>
+        </div>
+        <div style="float: right">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#" style="padding-right: 15px;"><span class="glyphicon glyphicon-volume-up" title="Sound & Music"></span></a>
+            <ul class="dropdown-menu dropdown-menu-left" role="menu" aria-labelledby="dropdownMenu">
+                <li class="dropdown-header" style="color: mediumvioletred">Volume Control</li>
+                <li><a href="#" id="muteSounds" class="moduleMenuItem"><span class="glyphicon glyphicon-volume-up" style="color: green;"></span>: Sound</a></li>
+                <li><a href="#" id="muteMusic" class="moduleMenuItem"><span class="glyphicon glyphicon-volume-up" style="color: green;"></span>: Music</a></li>
+                <li><a href="#" id="loopTracks" class="moduleMenuItem"><span class="glyphicon glyphicon-repeat" style="color: red;"></span>: Loop Track</a></li>
+                @if (Model.MusicPlaylists?.Count() > 0)
+                {
+                    <li class="dropdown-header" style="color: mediumvioletred">Your Playlists</li>
+                    for (var i = 0; i < Model.MusicPlaylists.Count(); i++)
+                    {
+                        <li><a href="#" class="moduleMenuItem playlistSelector" data-playlist-index="@i" onclick="javascript: changePlaylist(this);"><span class="glyphicon glyphicon-volume-off songSelection" style="color: red;"></span>@Model.MusicPlaylists.ElementAt(i).Name</a></li>
+                    }
+                }
+                <li class="dropdown-header" style="color: mediumvioletred">Sounds of the Zone</li>
+                @for (var i = 0; i < Model.MusicTracks.Count(); i++)
+                {
+                    var songPair = Model.MusicTracks.ElementAt(i);
+                    <li><a href="#" class="moduleMenuItem audioTrackSelector" data-playlist-index="@i" data-song-uri="@songPair.Value" onclick="javascript: changeTrack(this);"><span class="glyphicon glyphicon-volume-off songSelection" style="color: red;"></span>@songPair.Key</a></li>
+                }
+            </ul>
+        </div>
     </div>
 </div>
 <div class="parserClient">
-    <div class="parserClientLeft sidebar">
-        <div id="quadrant-1" data-module-name="" quadrant-number="1" class="quadrant">
-            @Html.Partial("DockerSettings", 1)
-        </div>
-        <div id="quadrant-2" data-module-name="" quadrant-number="2" class="quadrant">
-            @Html.Partial("DockerSettings", 2)
-        </div>
-    </div>
-    <div class="parserClientRight sidebar">
-        <div id="quadrant-3" data-module-name="" quadrant-number="3" class="quadrant">
-            @Html.Partial("DockerSettings", 3)
-        </div>
-        <div id="quadrant-4" data-module-name="" quadrant-number="4" class="quadrant">
-            @Html.Partial("DockerSettings", 4)
-        </div>
-    </div>
     <div class="textParserClient">
         <div id="OutputArea" class="parserOutput"></div>
-        <input type="text" id="input" name="input" class="parserInput" />
+    </div>
+    <div class="statusBars">
+        <div id="healthBars">
+            <div class="health" output-data-binding="Self.CurrentHealth">Health</div>
+            <div class="stamina" output-data-binding="Self.CurrentStamina">Stamina</div>
+        </div>
+        <div id="inventoryContainers">
+            <div class="inventoryContainer" id="inventoryContainer" style="padding-bottom: 4px;">
+            </div>
+            <div class="inventoryContainer" id="qualitiesContainer">
+            </div>
+        </div>
+    </div>
+    <div class="parserClientOutput" id="parserClientOutput">
     </div>
 </div>
-
-
+<div class="inputContainer">
+    <input type="text" id="input" name="input" class="parserInput" />
+    <div id="useList" class="useList"><span>Uses: </span></div>
+</div>
+<audio id="backgroundMusic" name="backgroundMusic"></audio>
 @section styles {
     @Styles.Render("~/Content/GameClient.css")
     @Styles.Render("//fonts.googleapis.com/css?family=Berkshire+Swash")
 }
-
 @section scripts {
     @Scripts.Render("~/Scripts/ClientHelpers.js")
     @Scripts.Render("~/Scripts/WebSocketsClient.js")
-}
-
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('input#loadModuleName').hide();
-        $('input#loadModulePopupName').hide();
-
-        var tutorialMode = '@Model.authedUser.GameAccount.Config.UITutorialMode' === 'True';
-        Tutorial($('#locationBreadcrumbs'), "This is where you are in the world.", tutorialMode);
-        Tutorial($('#input'), "This is where you type commands. The UP and DOWN arrow keys will cycle through prior input. Hit ENTER to submit commands.", tutorialMode);
-        LoadUIModules();
-
-        $('#disconnect').click(function (e) {
-            $('#input').val('');
-            $("#OutputArea").html('');
-            $("#OutputArea")[0].scrollTop = $("#OutputArea")[0].scrollHeight;
-
-            AppendTextToOutput('Connection TERMINATED.');
-            window.connection.close();
-
-            WipeUI();
-
-            $('disconnect').off('click');
-            return false;
-        });
-
-        $(".quadrantDocker[data-destination-quadrant!='-1']").click(function (e) {
-            var $this = $(this);
-
-            var originNumber = $this.attr('data-origin-quadrant');
-            var $origin = $('div#quadrant-' + originNumber + '.quadrant');
-            var originName = $origin.attr('data-module-name');
-
-            var destinationNumber = $this.attr('data-destination-quadrant');
-            var $destination = $('div#quadrant-' + destinationNumber + '.quadrant');
-            var destinationName = $destination.attr('data-module-name');
-
-            var myContent = $origin.children('.contentContainer');
-            var theirContent = $destination.children('.contentContainer');
-
-            myContent.detach();
-            theirContent.detach();
-
-            myContent.appendTo($destination);
-            theirContent.appendTo($origin);
-
-            $origin.attr('data-module-name', destinationName);
-            $destination.attr('data-module-name', originName);
-
-            $origin.children('ul').children('li#quadrantName').text(destinationName);
-            $destination.children('ul').children('li#quadrantName').text(originName);
-            return false;
-       });
-
-        $(".quadrantDocker[data-destination-quadrant='-1']").click(function (e) {
-            var $this = $(this);
-
-            var originNumber = $this.attr('data-origin-quadrant');
-            var $origin = $('div#quadrant-' + originNumber + '.quadrant');
-            var originName = $origin.attr('data-module-name');
-
-            var myContent = $origin.children('.contentContainer');
-
-            myContent.detach();
-            $origin.attr('data-module-name', 'Quadrant ' + originNumber);
-            $origin.children('ul').children('li#quadrantName').text('Quadrant ' + originNumber);
-
-            openModularUI(500, 500, originName, myContent);
-            return false;
-        });
-
-        $(".quadrantLoad").click(function (e) {
-            var $this = $(this);
-
-            $('input#loadModuleName').show().focus();
-            $(this).hide();
-
-            $('input#loadModuleName').keydown(function (e) {
-                var moduleName = $(this).val();
-                var originNumber = $(this).prev().attr('data-origin-quadrant');
-
-                switch (e.keyCode) {
-                    case 13: //enter
-                        GetModuleUI(originNumber, moduleName);
-                        break;
-                    default:
-                        return true;
-                }
-
-                $('input#loadModuleName').off('keydown');
-                $('input#loadModuleName').hide();
-                $(".quadrantLoad").show();
-            });
-
-            return false;
-        });
-
-        $(".openModulePopup").click(function (e) {
-            var $this = $(this);
-
-            $('input#loadModulePopupName').show().focus();
-            $(this).hide();
-
-            $('input#loadModulePopupName').keydown(function (e) {
-                var moduleName = $(this).val();
-
-                switch (e.keyCode) {
-                    case 13: //enter
-                        $.get('/api/ClientDataApi/GetUIModuleContent/' + moduleName, function (data) {
-                            var newContent = data.BodyHtml;
-
-                            if (newContent != '') {
-                                openModularUI(500, 500, moduleName, newContent);
-
-                                ReloadUI();
-                            }
-                        });
-                        break;
-                    default:
-                        return true;
-                }
-
-                $('input#loadModulePopupName').off('keydown');
-                $('input#loadModulePopupName').hide();
-                $(".openModulePopup").show();
-            });
-
-            return false;
-        });
-
-        $(".quadrantSave").click(function (e) {
-            var $this = $(this);
-
-            var originNumber = $this.attr('data-origin-quadrant');
-            SaveUIModule(originNumber);
-            return false;
-        });
-
-        $('.quadrantWipe').click(function (e) {
-            var $this = $(this);
-
-            var originNumber = $this.attr('data-origin-quadrant');
-
-            var $origin = $('div#quadrant-' + originNumber + '.quadrant');
-            $origin.attr('data-module-name', '');
-            $origin.children('ul').children('li#quadrantName').text('');
-
-            var myContent = $origin.children('.contentContainer');
-
-            myContent.detach();
-
-            return false;
-        });
-
-        $("#clientReload").click(function (e) {
-            ReloadUI();
-            return false;
-       });
-
-        $("#reloadAllModules").click(function (e) {
-            LoadUIModules();
-            return false;
-       });
-
-        $('#wipeUI').click(function (e) {
-            WipeUI();
-            return false;
-        });
-
-        $("#saveAllModules").click(function (e) {
-            SaveUIModule(1);
-            SaveUIModule(2);
-            SaveUIModule(3);
-            SaveUIModule(4);
-
-            window.openedWindows.forEach(function (win) {
-                var wTest = window.open("", win.name);
-
-                if (wTest.document.querySelector('#contentArea') != undefined) {
-                    var contentArea = win.window.document.querySelector('#contentArea');
-
-                    var moduleName = $(contentArea).attr('data-module-name');
-                    $.post('/api/ClientDataApi/SaveUIModuleContent/' + moduleName + '/-1');
-                } else {
-                    //remove it
-                    $.post('/api/ClientDataApi/RemoveUIModuleContent/' + win.name + '/-1');
-                }
-            });
-
-            return false;
-        });
-
-        $(".moduleNameFinder").autocomplete({
-            source: "/api/ClientDataApi/GetUIModuleNames",
-            minLength: 3,
-            select: function (event, ui) {
-                var originNumber = $(this).prev().attr('data-origin-quadrant');
-                GetModuleUI(originNumber, ui.item.value);
-
-                $('input#loadModuleName').hide();
-                $(".quadrantLoad").show();
-            }
-        });
-    });
-
-    function GetModuleUI(originNumber, moduleName) {
-        $.get('/api/ClientDataApi/GetUIModuleContent/' + moduleName, function (data) {
-            var newContent = data.BodyHtml;
-
-            if (newContent != '') {
-                var $origin = $('div#quadrant-' + originNumber + '.quadrant');
-                $origin.attr('data-module-name', data.Name);
-                $origin.children('ul').children('li#quadrantName').text(data.Name);
-
-                var myContent = $origin.children('.contentContainer');
-
-                myContent.detach();
-
-                $(newContent).appendTo($origin);
-
-                ReloadUI();
-            }
-        });
-    }
-
-    function WipeUI() {
-        $('.quadrant').each(function () {
-            var $quad = $(this);
-
-            var quadNumber = $quad.attr('quadrant-number');
-            $quad.attr('data-module-name', 'Quadrant ' + quadNumber);
-            $quad.children('ul').children('li#quadrantName').text('Quadrant ' + quadNumber);
-
-            var myContent = $quad.children('.contentContainer');
-
-            myContent.detach();
-        });
-
-        window.openedWindows.forEach(function (win) {
-            win.close();
-        });
-    }
-
-    function SaveUIModule(originNumber) {
-        var $origin = $('div#quadrant-' + originNumber + '.quadrant');
-        var moduleName = $origin.attr('data-module-name');
-
-        if (moduleName != '') {
-            $.post('/api/ClientDataApi/SaveUIModuleContent/' + moduleName + '/' + originNumber);
-        } else {
-            //remove it
-            $.post('/api/ClientDataApi/RemoveUIModuleContent/**anymodule**/' + originNumber);
-        }
-    }
-
-    function LoadUIModules() {
+    <script type="text/javascript">
+        window.connection;
+        window.soundMuted = '@Model.authedUser.GameAccount.Config.SoundMuted' === 'True';
+        window.musicMuted = '@Model.authedUser.GameAccount.Config.MusicMuted' === 'True';
+        window.tutorialMode = '@Model.authedUser.GameAccount.Config.UITutorialMode' === 'True';
+        window.gossipMode = '@Model.authedUser.GameAccount.Config.GossipSubscriber' === 'True';
+        window.loopTrack = false;
+        window.currentPlaylist = 0;
+        window.currentPlaylistTrack = 0;
+        window.currentTrack = 0;
+        window.tooltips = [];
+        window.stopToggle = false;
+        window.selectedInventoryItem = -1;
+
+        window.commandArray = ['look'];
+        window.commandPointer = 0;
+        window.lastOutput = '';
+        window.openedWindows = [];
         window.UILoading = true;
+        window.BatmanMode = false;
 
-        $.get('/api/ClientDataApi/LoadUIModules', function (data) {
-            for (var i = 0; i < data.length; i++) {
-                var obj = data[i];
-                var quadrant = obj.Item2;
-                var module = obj.Item1;
-            
-                var moduleContent = module.BodyHtml.Value;
 
-                if (moduleContent != '') {
-                    var $origin = $('div#quadrant-' + quadrant + '.quadrant');
-
-                    $origin.children('.contentContainer').detach();
-
-                    if (quadrant == -1) {
-                        openModularUI(500, 500, module.Name, moduleContent);
-                    } else {
-                        $origin.attr('data-module-name', module.Name);
-                        $origin.children('ul').children('li#quadrantName').text(module.Name);
-
-                        $(moduleContent).appendTo($origin);
-                    }
+        window.playlists = [
+                @foreach(var playlist in Model.MusicPlaylists)
+                {
+                    @Html.Raw(string.Format("{{ \"name\" : \"{0}\", songs : [ {1} ]}}", playlist.Name, string.Join(",", playlist.Songs.Select(song => "'" + song + "'"))))
                 }
-            }
-
-            window.UILoading = false;
-
-            ReloadUI();
-        });
-    }
-</script>
+            ];
+    </script>
+}

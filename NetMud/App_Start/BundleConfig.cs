@@ -27,12 +27,14 @@ namespace NetMud
                       "~/Scripts/moment.js",
                       "~/Scripts/bootstrap-datetimepicker.js",
                       "~/Scripts/respond.js",
+                      "~/Scripts/spectrum.js",
                       "~/Scripts/js-cookie.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.lumen.css",
                       "~/Content/bootstrap-markdown.min.css",
                       "~/Content/bootstrap-datetimepicker.min.css",
+                      "~/Content/spectrum.css",
                       "~/Content/popper.css"));
 
             bundles.Add(new StyleBundle("~/Content/jqueryui-css").Include(

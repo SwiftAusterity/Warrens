@@ -1,17 +1,20 @@
-﻿using NetMud.Commands.Attributes;
+﻿using NetMud.Cartography;
+using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
-using NetMud.Data.Lexical;
-using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.Behaviors.Rendering;
-using NetMud.DataStructure.SupportingClasses;
-using NutMud.Commands.Attributes;
+using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.Inanimate;
+using NetMud.DataStructure.System;
+using NetMud.DataStructure.Tile;
 using System.Collections.Generic;
 
 namespace NetMud.Commands.EntityManipulation
 {
-    [CommandKeyword("drop", false)]
-    [CommandPermission(StaffRank.Player)]
-    [CommandParameter(CommandUsage.Subject, typeof(IEntity), new CacheReferenceType[] { CacheReferenceType.Entity }, false)]
+    [CommandKeyword("drop", false, new string[] { "place", "put" })]
+    [CommandPermission(StaffRank.Player, true)]
+    [CommandParameter(CommandUsage.Subject, typeof(IInanimate), CacheReferenceType.Inventory, false)]
+    [CommandParameter(CommandUsage.Target, typeof(ITile), CacheReferenceType.Direction, false)]
     [CommandRange(CommandRangeType.Touch, 0)]
     public class Drop : CommandPartial
     {
@@ -28,32 +31,57 @@ namespace NetMud.Commands.EntityManipulation
         /// </summary>
         public override void Execute()
         {
-            var sb = new List<string>();
-            var thing = (IEntity)Subject;
+            List<string> sb = new List<string>();
+            IInanimate thing = (IInanimate)Subject;
             var actor = (IContains)Actor;
-            IContains place = (IContains)OriginLocation;
 
-            actor.MoveFrom(thing);
-            place.MoveInto(thing);
+            if (Target == null)
+            {
+                RenderError("There is nothing in that direction.");
+                return;
+            }
+
+            ITile tile = (ITile)Target;
+
+            var intruder = tile.TopContents()?.Template<ITemplate>();
+
+            if (intruder != null)
+            {
+                RenderError("There is something in your way.");
+                return;
+            }
+
+            string error = thing.TryMoveTo(actor.GetContainerAsLocation());
+
+            if(!string.IsNullOrWhiteSpace(error))
+            {
+                RenderError(error);
+                return;
+            }
 
             sb.Add("You drop $S$.");
 
-            var toActor = new Message(MessagingType.Visible, new Occurrence() { Strength = 1 })
+            Message toActor = new Message()
             {
-                Override = sb
+                Body = sb
             };
 
-            var toOrigin = new Message(MessagingType.Visible, new Occurrence() { Strength = 30 })
+            Message toOrigin = new Message()
             {
-                Override = new string[] { "$A$ drops $S$." }
+                Body = new string[] { "$A$ drops $S$." }
             };
 
-            var messagingObject = new MessageCluster(toActor)
+            MessageCluster messagingObject = new MessageCluster(toActor)
             {
                 ToOrigin = new List<IMessage> { toOrigin }
             };
 
-            messagingObject.ExecuteMessaging(Actor, thing, null, OriginLocation.CurrentLocation, null);
+            messagingObject.ExecuteMessaging(Actor, thing, null, OriginLocation.CurrentZone, null);
+
+            //Cause a map delta
+            Utilities.SendMapUpdatesToZone(Actor.CurrentLocation.CurrentZone, new HashSet<Coordinate>() { tile.Coordinate });
+            Actor.Save();
+            tile.ParentLocation.Save();
         }
 
         /// <summary>
@@ -62,9 +90,9 @@ namespace NetMud.Commands.EntityManipulation
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            var sb = new List<string>
+            List<string> sb = new List<string>
             {
-                "Valid Syntax: drop &lt;object&gt;"
+                "Valid Syntax: drop &lt;object&gt; &lt;direction&gt;"
             };
 
             return sb;

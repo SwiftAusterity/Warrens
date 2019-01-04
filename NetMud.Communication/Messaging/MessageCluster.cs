@@ -1,7 +1,7 @@
-﻿using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.Behaviors.Rendering;
-using NetMud.DataStructure.Linguistic;
-using NetMud.DataStructure.SupportingClasses;
+﻿using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.System;
+using NetMud.DataStructure.Zone;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -10,6 +10,7 @@ namespace NetMud.Communication.Messaging
     /// <summary>
     /// Used by the system to produce output for commands and events
     /// </summary>
+    [Serializable]
     public class MessageCluster : IMessageCluster
     {
         /// <summary>
@@ -98,9 +99,9 @@ namespace NetMud.Communication.Messaging
         /// <param name="Target">The command's target entity</param>
         /// <param name="OriginLocation">The location the acting entity acted in</param>
         /// <param name="DestinationLocation">The location the command is targetting</param>
-        public void ExecuteMessaging(IEntity Actor, IEntity Subject, IEntity Target, IEntity OriginLocation, IEntity DestinationLocation)
+        public void ExecuteMessaging(IEntity Actor, IEntity Subject, IEntity Target, IZone OriginLocation, IZone DestinationLocation)
         {
-            var entities = new Dictionary<MessagingTargetType, IEntity[]>
+            Dictionary<MessagingTargetType, IEntity[]> entities = new Dictionary<MessagingTargetType, IEntity[]>
             {
                 { MessagingTargetType.Actor, new IEntity[] { Actor } },
                 { MessagingTargetType.Subject, new IEntity[] { Subject } },
@@ -111,55 +112,43 @@ namespace NetMud.Communication.Messaging
 
             if (Actor != null && ToActor.Any())
             {
-                if (ToActor.SelectMany(msg => msg.Override).Any(str => !string.IsNullOrEmpty(str)))
-                    Actor.WriteTo(TranslateOutput(ToActor.SelectMany(msg => msg.Override), entities));
-                else
-                    Actor.WriteTo(TranslateOutput(ToActor.Select(msg => msg.Occurrence?.Event?.Describe(NarrativeNormalization.Normal, 1, LexicalTense.Present, NarrativePerspective.FirstPerson, false)), entities));
+                if (ToActor.SelectMany(msg => msg.Body).Any(str => !string.IsNullOrEmpty(str)))
+                    Actor.WriteTo(TranslateOutput(ToActor.SelectMany(msg => msg.Body), entities));
             }
 
             if (Subject != null && ToSubject.Any())
             {
-                if (ToSubject.SelectMany(msg => msg.Override).Any(str => !string.IsNullOrEmpty(str)))
-                    Subject.WriteTo(TranslateOutput(ToSubject.SelectMany(msg => msg.Override), entities));
-                else
-                    Subject.WriteTo(TranslateOutput(ToSubject.Select(msg => msg.Occurrence?.Event?.Describe(NarrativeNormalization.Normal, 1, LexicalTense.Present, NarrativePerspective.SecondPerson, false)), entities));
+                if (ToSubject.SelectMany(msg => msg.Body).Any(str => !string.IsNullOrEmpty(str)))
+                    Subject.WriteTo(TranslateOutput(ToSubject.SelectMany(msg => msg.Body), entities));
             }
 
             if (Target != null && ToTarget.Any())
             {
-                if (ToTarget.SelectMany(msg => msg.Override).Any(str => !string.IsNullOrEmpty(str)))
-                    Target.WriteTo(TranslateOutput(ToTarget.SelectMany(msg => msg.Override), entities));
-                else
-                    Target.WriteTo(TranslateOutput(ToTarget.Select(msg => msg.Occurrence?.Event?.Describe(NarrativeNormalization.Normal, 1, LexicalTense.Present, NarrativePerspective.SecondPerson, false)), entities));
+                if (ToTarget.SelectMany(msg => msg.Body).Any(str => !string.IsNullOrEmpty(str)))
+                    Target.WriteTo(TranslateOutput(ToTarget.SelectMany(msg => msg.Body), entities));
             }
 
-            //TODO: origin and destination are areas of effect on their surrounding areas
             if (OriginLocation != null && ToOrigin.Any())
             {
-                var oLoc = (IContains)OriginLocation;
-                var validContents = oLoc.GetContents<IEntity>().Where(dud => !dud.Equals(Actor) && !dud.Equals(Subject) && !dud.Equals(Target));
+                IEnumerable<IEntity> validContents = OriginLocation.GetContainedEntities().Where(dud => !dud.Equals(Actor) && !dud.Equals(Subject) && !dud.Equals(Target));
 
                 //Message dudes in the location, including non-person entities since they might have triggers
-                foreach (var dude in validContents)
+                foreach (IEntity dude in validContents)
                 {
-                    if (ToOrigin.SelectMany(msg => msg.Override).Any(str => !string.IsNullOrEmpty(str)))
-                        dude.WriteTo(TranslateOutput(ToOrigin.SelectMany(msg => msg.Override), entities));
-                    else
-                        dude.WriteTo(TranslateOutput(ToOrigin.Select(msg => msg.Occurrence?.Event?.Describe(NarrativeNormalization.Normal, 1, LexicalTense.Present, NarrativePerspective.ThirdPerson, false)), entities));
+                    if (ToOrigin.SelectMany(msg => msg.Body).Any(str => !string.IsNullOrEmpty(str)))
+                        dude.WriteTo(TranslateOutput(ToOrigin.SelectMany(msg => msg.Body), entities));
                 }
             }
 
             if (DestinationLocation != null && ToDestination.Any())
             {
-                var oLoc = (IContains)DestinationLocation;
+                IEnumerable<IEntity> validContents = DestinationLocation.GetContainedEntities().Where(dud => !dud.Equals(Actor) && !dud.Equals(Subject) && !dud.Equals(Target));
 
                 //Message dudes in the location, including non-person entities since they might have triggers
-                foreach (var dude in oLoc.GetContents<IEntity>().Where(dud => !dud.Equals(Actor) && !dud.Equals(Subject) && !dud.Equals(Target)))
+                foreach (IEntity dude in validContents)
                 {
-                    if (ToDestination.SelectMany(msg => msg.Override).Any(str => !string.IsNullOrEmpty(str)))
-                        dude.WriteTo(TranslateOutput(ToDestination.SelectMany(msg => msg.Override), entities));
-                    else
-                        dude.WriteTo(TranslateOutput(ToDestination.Select(msg => msg.Occurrence?.Event?.Describe(NarrativeNormalization.Normal, 1, LexicalTense.Present, NarrativePerspective.ThirdPerson, false)), entities));
+                    if (ToDestination.SelectMany(msg => msg.Body).Any(str => !string.IsNullOrEmpty(str)))
+                        dude.WriteTo(TranslateOutput(ToDestination.SelectMany(msg => msg.Body), entities));
                 }
             }
         }

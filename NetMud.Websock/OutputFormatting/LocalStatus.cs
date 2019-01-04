@@ -6,8 +6,7 @@ namespace NetMud.Websock.OutputFormatting
     public class LocalStatus
     {
         public string ZoneName { get; set; }
-        public string LocaleName { get; set; }
-        public string RoomName { get; set; }
+        public string Tile { get; set; }
         public string LocationDescriptive { get; set; }
         public string[] Exits { get; set; }
         public string[] Populace { get; set; }

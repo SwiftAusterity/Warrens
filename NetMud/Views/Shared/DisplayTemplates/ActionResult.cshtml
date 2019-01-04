@@ -1,0 +1,40 @@
+﻿@model NetMud.DataStructure.Action.IActionResult
+
+<div style="text-align: center; font-weight: 800;">
+    Result Targets: @Model.Target.ToString() @(Model.Consumes ? "(consumes)" : "")
+</div>
+@if (Model.OccurrenceChanceGroupId > 0)
+{
+    <div>
+        <span>Occurrence Chance Group</span>
+        <span>@Model.OccurrenceChanceGroupId (@Model.OccurrenceChanceRate%)</span>
+    </div>
+}
+@if (Model.StaminaDamage > 0 || Model.HealthDamage > 0)
+{
+    <div>
+        <span>Damage S/H</span>
+        <span>@Model.StaminaDamage/@Model.HealthDamage</span>
+    </div>
+}
+@if (!string.IsNullOrWhiteSpace(Model.Quality))
+{
+    <div>
+        <span>Applies Quality</span>
+        <span>@Model.Quality: @Model.QualityValue @(Model.AdditiveQuality ? "(adds)" : "(sets)")</span>
+    </div>
+}
+@if (Model.Result != null)
+{
+    <div>
+        <span>Changes tile to</span>
+        <span>@Model.Result.Name</span>
+    </div>
+}
+@if (Model.Produces != null)
+{
+    <div>
+        <span>Produces</span>
+        <span>(@Model.ProducesAmount) @Model.Produces.Name @(Model.ProducesToInventory ? "to inventory" : "")</span>
+    </div>
+}

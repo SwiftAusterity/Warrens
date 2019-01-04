@@ -1,4 +1,4 @@
-﻿using NetMud.DataStructure.Base.System;
+﻿using NetMud.DataStructure.Architectural;
 using System.Collections.Generic;
 
 namespace NetMud.DataAccess.Cache
@@ -89,7 +89,7 @@ namespace NetMud.DataAccess.Cache
         /// <returns>the entity requested</returns>
         public static T Get<T>(string uniqueKey) where T : IConfigData
         {
-            var key = new ConfigDataCacheKey(typeof(T), uniqueKey);
+            ConfigDataCacheKey key = new ConfigDataCacheKey(typeof(T), uniqueKey);
 
             return Get<T>(key);
         }

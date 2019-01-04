@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
+using NetMud.DataAccess;
 using NetMud.Models;
 
 namespace Controllers
@@ -34,18 +35,15 @@ namespace Controllers
 
         public ActionResult Index()
         {
-            var model = new GameContextModel
+            GameContextModel model = new GameContextModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
-            return View(model);
-        }
+            model.MusicTracks = ContentUtility.GetMusicTracksForZone(model.authedUser.GameAccount.Character.CurrentLocation.CurrentZone);
+            model.MusicPlaylists = model.authedUser.GameAccount.Config.Playlists;
 
-        [HttpGet]
-        public ActionResult ModularWindow()
-        {
-            return View("~/Views/GameClient/ModularWindow.cshtml");
+            return View(model);
         }
     }
 }

@@ -1,18 +1,16 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
-using NetMud.Data.EntityBackingData;
-using NetMud.Data.Lexical;
-using NetMud.Data.LookupData;
+using NetMud.Data.Zones;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.Place;
-using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.Base.World;
-using NetMud.DataStructure.Behaviors.System;
-using NetMud.DataStructure.Linguistic;
-using NetMud.DataStructure.SupportingClasses;
+using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Gaia;
+using NetMud.DataStructure.Inanimate;
+using NetMud.DataStructure.NPC;
+using NetMud.DataStructure.Tile;
+using NetMud.DataStructure.Zone;
 using NetMud.Models.Admin;
 using System;
 using System.Collections.Generic;
@@ -49,7 +47,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageZoneDataViewModel(BackingDataCache.GetAll<IZoneData>())
+            ManageZoneDataViewModel vModel = new ManageZoneDataViewModel(TemplateCache.GetAll<IZoneTemplate>())
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -70,49 +68,70 @@ namespace NetMud.Controllers.GameAdmin
 
             if (!string.IsNullOrWhiteSpace(authorizeRemove) && removeId.ToString().Equals(authorizeRemove))
             {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<IZoneData>(removeId);
+                var obj = TemplateCache.Get<IZoneTemplate>(removeId);
 
                 if (obj == null)
+                {
                     message = "That does not exist";
+                }
                 else if (obj.Remove(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                 {
+                    var liveObj = LiveCache.Get<IZone>(removeId);
+
+                    if (liveObj != null)
+                    {
+                        liveObj.Remove();
+                    }
+
                     LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveZone[" + removeId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Delete Successful.";
                 }
                 else
+                {
                     message = "Error; Removal failed.";
+                }
             }
             else if (!string.IsNullOrWhiteSpace(authorizeUnapprove) && unapproveId.ToString().Equals(authorizeUnapprove))
             {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<IZoneData>(unapproveId);
+                var obj = TemplateCache.Get<IZoneTemplate>(unapproveId);
 
                 if (obj == null)
+                {
                     message = "That does not exist";
-                else if (obj.ChangeApprovalStatus(authedUser.GameAccount, authedUser.GetStaffRank(User), ApprovalState.Returned))
+                }
+                else if (obj.ChangeApprovalStatus(authedUser.GameAccount, authedUser.GetStaffRank(User), ApprovalState.Unapproved))
                 {
                     LoggingUtility.LogAdminCommandUsage("*WEB* - UnapproveZone[" + unapproveId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Unapproval Successful.";
                 }
                 else
+                {
                     message = "Error; Unapproval failed.";
+                }
             }
             else
+            {
                 message = "You must check the proper remove or unapprove authorization radio button first.";
+            }
 
             return RedirectToAction("Index", new { Message = message });
         }
 
         [HttpGet]
-        public ActionResult Add()
+        public ActionResult Add(long Template = -1)
         {
-            var vModel = new AddEditZoneDataViewModel()
+            AddEditZoneDataViewModel vModel = new AddEditZoneDataViewModel(Template)
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidWorlds = BackingDataCache.GetAll<IGaiaData>(true)
+                ValidTileTypes = TemplateCache.GetAll<ITileTemplate>(true),
+                ValidWorlds = TemplateCache.GetAll<IGaiaTemplate>(true),
+                ValidItems = TemplateCache.GetAll<IInanimateTemplate>(true),
+                ValidNPCs = TemplateCache.GetAll<INonPlayerCharacterTemplate>(true),
+                DataObject = new ZoneTemplate()
             };
 
             return View("~/Views/GameAdmin/Zone/Add.cshtml", vModel);
@@ -123,27 +142,35 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Add(AddEditZoneDataViewModel vModel)
         {
             string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var newObj = new ZoneData
+            ZoneTemplate newObj = new ZoneTemplate
             {
-                Name = vModel.Name,
-                BaseElevation = vModel.BaseElevation,
-                PressureCoefficient = vModel.PressureCoefficient,
-                TemperatureCoefficient = vModel.TemperatureCoefficient,
-                Hemisphere = (HemispherePlacement)vModel.Hemisphere
+                Name = vModel.DataObject.Name,
+                Hemisphere = vModel.DataObject.Hemisphere,
+                AsciiCharacter = "0",
+                BaseTileType = vModel.DataObject.BaseTileType,
+                BackgroundHexColor = vModel.DataObject.BackgroundHexColor,
+                Font = vModel.DataObject.Font,
+                Description = vModel.DataObject.Description,
+                BaseBiome = vModel.DataObject.BaseBiome,
+                PressureCoefficient = vModel.DataObject.PressureCoefficient,
+                TemperatureCoefficient = vModel.DataObject.TemperatureCoefficient,
+                BaseCoordinates = vModel.DataObject.BaseCoordinates,
+                World = vModel.DataObject.World,
+                Map = vModel.DataObject.Map
             };
 
-            var world = BackingDataCache.Get<IGaiaData>(vModel.World);
-
-            if (world == null)
+            if (newObj.World == null)
+            {
                 message = "Error; You must choose a valid world.";
+            }
             else
             {
-                newObj.World = world;
-
                 if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
+                {
                     message = "Error; Creation failed.";
+                }
                 else
                 {
                     LoggingUtility.LogAdminCommandUsage("*WEB* - AddZone[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
@@ -158,7 +185,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             string message = string.Empty;
 
-            IZoneData obj = BackingDataCache.Get<IZoneData>(id);
+            IZoneTemplate obj = TemplateCache.Get<IZoneTemplate>(id);
 
             if (obj == null)
             {
@@ -166,20 +193,17 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = message });
             }
 
-            var locales = BackingDataCache.GetAll<ILocaleData>().Where(locale => locale.ParentLocation.Equals(obj));
+            if (obj.Map == null)
+                obj.Map = new ZoneTemplateMap();
 
-            var vModel = new AddEditZoneDataViewModel(locales)
+            AddEditZoneDataViewModel vModel = new AddEditZoneDataViewModel(-1)
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
-
                 DataObject = obj,
-                Name = obj.Name,
-                BaseElevation = obj.BaseElevation,
-                PressureCoefficient = obj.PressureCoefficient,
-                TemperatureCoefficient = obj.TemperatureCoefficient,
-                ValidWorlds = BackingDataCache.GetAll<IGaiaData>(true),
-                World = obj.World == null ? -1 : obj.World.Id,
-                Hemisphere = (short)obj.Hemisphere
+                ValidWorlds = TemplateCache.GetAll<IGaiaTemplate>(true),
+                ValidTileTypes = TemplateCache.GetAll<ITileTemplate>(true),
+                ValidItems = TemplateCache.GetAll<IInanimateTemplate>(true),
+                ValidNPCs = TemplateCache.GetAll<INonPlayerCharacterTemplate>(true),
             };
 
             return View("~/Views/GameAdmin/Zone/Edit.cshtml", vModel);
@@ -190,155 +214,138 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(AddEditZoneDataViewModel vModel, long id)
         {
             string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            IZoneData obj = BackingDataCache.Get<IZoneData>(id);
+            IZoneTemplate obj = TemplateCache.Get<IZoneTemplate>(id);
             if (obj == null)
             {
                 message = "That does not exist";
                 return RedirectToAction("Index", new { Message = message });
             }
 
-            obj.Name = vModel.Name;
-            obj.BaseElevation = vModel.BaseElevation;
-            obj.PressureCoefficient = vModel.PressureCoefficient;
-            obj.TemperatureCoefficient = vModel.TemperatureCoefficient;
-            obj.Hemisphere = (HemispherePlacement)vModel.Hemisphere;
+            obj.Name = vModel.DataObject.Name;
+            obj.Hemisphere = vModel.DataObject.Hemisphere;
+            obj.BaseTileType = vModel.DataObject.BaseTileType;
+            obj.BackgroundHexColor = vModel.DataObject.BackgroundHexColor;
+            obj.Font = vModel.DataObject.Font;
+            obj.Description = vModel.DataObject.Description;
+            obj.BaseBiome = vModel.DataObject.BaseBiome;
+            obj.PressureCoefficient = vModel.DataObject.PressureCoefficient;
+            obj.TemperatureCoefficient = vModel.DataObject.TemperatureCoefficient;
+            obj.BaseCoordinates = vModel.DataObject.BaseCoordinates;
+            obj.World = vModel.DataObject.World;
+            obj.Map = vModel.DataObject.Map;
 
-            var world = BackingDataCache.Get<IGaiaData>(vModel.World);
-
-            if (world == null)
+            if (obj.World == null)
+            {
                 message = "Error; You must choose a valid world.";
+            }
             else
             {
-                obj.World = world;
-
                 if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                 {
                     LoggingUtility.LogAdminCommandUsage("*WEB* - EditZone[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Edit Successful.";
                 }
                 else
+                {
                     message = "Error; Edit failed.";
+                }
             }
+
             return RedirectToAction("Index", new { Message = message });
         }
 
         [HttpGet]
-        public ActionResult AddEditLocalePath(long id, long localeId)
+        public ActionResult AddZonePathway(long id)
         {
-            var locale = BackingDataCache.Get<ILocaleData>(localeId);
+            var origin = TemplateCache.Get<IZoneTemplate>(id);
 
-            if (locale == null)
+            if (origin == null)
             {
-                return RedirectToAction("Edit", new { Message = "Locale has no rooms", id });
+                return RedirectToAction("Index", new { Message = "Invalid Zone" });
             }
 
-            var validRooms = BackingDataCache.GetAll<IRoomData>().Where(rm => rm.ParentLocation.Equals(locale));
-
-            if (validRooms.Count() == 0)
-            {
-                return RedirectToAction("Edit", new { Message = "Locale has no rooms", id });
-            }
-
-            var origin = BackingDataCache.Get<IZoneData>(id);
-
-            var existingPathway = origin.GetLocalePathways().FirstOrDefault(path => ((IRoomData)path.Destination).ParentLocation.Equals(locale));
-
-            var vModel = new AddEditZonePathwayDataViewModel
+            AddZonePathwayDataViewModel vModel = new AddZonePathwayDataViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
-
-                ValidMaterials = BackingDataCache.GetAll<IMaterial>(),
-                ValidModels = BackingDataCache.GetAll<IDimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat),
-                ValidRooms = validRooms,
-
-                Origin = origin,
-                OriginID = id,
-
-                DestinationID = -1
+                ValidZones = TemplateCache.GetAll<IZoneTemplate>(),
+                Origin = origin
             };
 
-            if (existingPathway != null)
-            {
-                vModel.Name = existingPathway.Name;
-                vModel.Destination = (IRoomData)existingPathway.Destination;
-                vModel.DestinationID = existingPathway.Destination.Id;
-
-                vModel.DimensionalModelId = existingPathway.Model.ModelBackingData.Id;
-                vModel.DimensionalModelHeight = existingPathway.Model.Height;
-                vModel.DimensionalModelLength = existingPathway.Model.Length;
-                vModel.DimensionalModelWidth = existingPathway.Model.Width;
-                vModel.DimensionalModelVacuity = existingPathway.Model.Vacuity;
-                vModel.DimensionalModelCavitation = existingPathway.Model.SurfaceCavitation;
-                vModel.ModelDataObject = existingPathway.Model;
-
-                vModel.DataObject = existingPathway;
-            }
-
-            return View("~/Views/GameAdmin/Zone/AddEditLocalePath.cshtml", vModel);
+            return View("~/Views/GameAdmin/Zone/AddZonePathway.cshtml", vModel);
         }
 
         [HttpPost]
-        public ActionResult AddLocalePathway(long id, AddEditZonePathwayDataViewModel vModel)
+        [ValidateAntiForgeryToken]
+        public ActionResult AddZonePathway(long id, AddZonePathwayDataViewModel vModel)
         {
+            var origin = TemplateCache.Get<IZoneTemplate>(id);
+
+            if (origin == null)
+            {
+                return RedirectToAction("Index", new { Message = "Invalid Zone" });
+            }
+
             string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var newObj = new PathwayData
+            if (origin.Pathways.Any(path => path.OriginCoordinates.X == vModel.OriginCoordinateX && path.OriginCoordinates.Y == vModel.OriginCoordinateY))
             {
-                Name = vModel.Name,
-                DegreesFromNorth = -1,
-                Origin = BackingDataCache.Get<IZoneData>(vModel.OriginID),
-                Destination = BackingDataCache.Get<IRoomData>(vModel.DestinationID),
-            };
-
-            var materialParts = new Dictionary<string, IMaterial>();
-            if (vModel.ModelPartNames != null)
+                message = "Pathway already exists at origin coordinates. Choose new coordinates or remove the existing pathway first.";
+            }
+            else
             {
-                int nameIndex = 0;
-                foreach (var partName in vModel.ModelPartNames)
+                PathwayData newObj = new PathwayData
                 {
-                    if (!string.IsNullOrWhiteSpace(partName))
+                    OriginCoordinates = new Coordinate(vModel.OriginCoordinateX, vModel.OriginCoordinateY),
+                    BorderHexColor = vModel.BorderHexColor
+                };
+
+                HashSet<IPathwayDestination> destinations = new HashSet<IPathwayDestination>();
+                if (vModel.DestinationId != null)
+                {
+                    int icIndex = 0;
+                    foreach (long dId in vModel.DestinationId)
                     {
-                        if (vModel.ModelPartMaterials.Count() <= nameIndex)
-                            break;
+                        if (dId >= 0)
+                        {
+                            if (vModel.DestinationCoordinateX.Count() <= icIndex || vModel.DestinationCoordinateY.Count() <= icIndex || vModel.DestinationName.Count() <= icIndex)
+                            {
+                                break;
+                            }
 
-                        var material = BackingDataCache.Get<IMaterial>(vModel.ModelPartMaterials[nameIndex]);
+                            var destinationZone = TemplateCache.Get<IZoneTemplate>(dId);
 
-                        if (material != null && !string.IsNullOrWhiteSpace(partName))
-                            materialParts.Add(partName, material);
+                            if (destinationZone != null
+                                && vModel.DestinationCoordinateX[icIndex] >= 0 && vModel.DestinationCoordinateX[icIndex] <= 100
+                                && vModel.DestinationCoordinateY[icIndex] >= 0 && vModel.DestinationCoordinateY[icIndex] <= 100
+                                && !string.IsNullOrWhiteSpace(vModel.DestinationName[icIndex]))
+                            {
+                                destinations.Add(new PathwayDestination()
+                                {
+                                    Destination = destinationZone,
+                                    Coordinates = new Coordinate(vModel.DestinationCoordinateX[icIndex], vModel.DestinationCoordinateY[icIndex]),
+                                    Name = vModel.DestinationName[icIndex]
+                                });
+                            }
+                        }
+
+                        icIndex++;
                     }
-
-                    nameIndex++;
                 }
-            }
 
-            var dimModel = BackingDataCache.Get<IDimensionalModelData>(vModel.DimensionalModelId);
-            bool validData = true;
+                newObj.Destinations = destinations;
 
-            if (dimModel == null)
-            {
-                message = "Choose a valid dimensional model.";
-                validData = false;
-            }
+                origin.Pathways.Add(newObj);
 
-            if (dimModel.ModelPlanes.Any(plane => !materialParts.ContainsKey(plane.TagName)))
-            {
-                message = "You need to choose a material for each Dimensional Model planar section. (" + string.Join(",", dimModel.ModelPlanes.Select(plane => plane.TagName)) + ")";
-                validData = false;
-            }
-
-            if (validData)
-            {
-                newObj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth,
-                    vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation, new BackingDataCacheKey(dimModel), materialParts);
-
-                if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
+                if (!origin.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+                {
                     message = "Error; Creation failed.";
+                }
                 else
                 {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddPathway[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddZonePathway[" + id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 }
             }
 
@@ -346,232 +353,63 @@ namespace NetMud.Controllers.GameAdmin
         }
 
         [HttpPost]
-        public ActionResult EditLocalePathway(long id, AddEditZonePathwayDataViewModel vModel)
-        {
-            string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
-            vModel.ValidRooms = BackingDataCache.GetAll<IRoomData>();
-
-            var obj = BackingDataCache.Get<IPathwayData>(id);
-            if (obj == null)
-            {
-                message = "That does not exist";
-                return RedirectToAction("Edit", new { Message = message, id });
-            }
-
-            obj.Name = vModel.Name;
-            obj.Destination = BackingDataCache.Get<IRoomData>(vModel.DestinationID);
-
-            var materialParts = new Dictionary<string, IMaterial>();
-            if (vModel.ModelPartNames != null)
-            {
-                int nameIndex = 0;
-                foreach (var partName in vModel.ModelPartNames)
-                {
-                    if (!string.IsNullOrWhiteSpace(partName))
-                    {
-                        if (vModel.ModelPartMaterials.Count() <= nameIndex)
-                            break;
-
-                        var material = BackingDataCache.Get<Material>(vModel.ModelPartMaterials[nameIndex]);
-
-                        if (material != null)
-                            materialParts.Add(partName, material);
-                    }
-
-                    nameIndex++;
-                }
-            }
-
-            var dimModel = BackingDataCache.Get<DimensionalModelData>(vModel.DimensionalModelId);
-            bool validData = true;
-
-            if (dimModel == null)
-            {
-                message = "Choose a valid dimensional model.";
-                validData = false;
-            }
-
-            if (dimModel.ModelPlanes.Any(plane => !materialParts.ContainsKey(plane.TagName)))
-            {
-                message = "You need to choose a material for each Dimensional Model planar section. (" + string.Join(",", dimModel.ModelPlanes.Select(plane => plane.TagName)) + ")";
-                validData = false;
-            }
-
-            if (validData)
-            {
-                obj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth,
-                    vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation, new BackingDataCacheKey(dimModel), materialParts);
-
-                if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
-                {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - EditPathwayData[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                }
-                else
-                    message = "Error; Edit failed.";
-            }
-
-
-            return RedirectToAction("Edit", new { Message = message, id });
-        }
-
-        [HttpGet]
-        public ActionResult AddEditDescriptive(long id, short descriptiveType, string phrase)
-        {
-            string message = string.Empty;
-
-            var obj = BackingDataCache.Get<IZoneData>(id);
-            if (obj == null)
-            {
-                message = "That zone does not exist";
-                return RedirectToRoute("ModalErrorOrClose", new { Message = message });
-            }
-
-            var vModel = new OccurrenceViewModel
-            {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                DataObject = obj
-            };
-
-            if (descriptiveType > -1)
-            {
-                var grammaticalType = (GrammaticalType)descriptiveType;
-                vModel.OccurrenceDataObject = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType
-                                                                                        && occurrence.Event.Phrase.Equals(phrase, StringComparison.InvariantCultureIgnoreCase));
-            }
-
-            if (vModel.OccurrenceDataObject != null)
-            {
-                vModel.LexicaDataObject = vModel.OccurrenceDataObject.Event;
-                vModel.Strength = vModel.OccurrenceDataObject.Strength;
-                vModel.SensoryType = (short)vModel.OccurrenceDataObject.SensoryType;
-
-                vModel.Role = (short)vModel.LexicaDataObject.Role;
-                vModel.Type = (short)vModel.LexicaDataObject.Type;
-                vModel.Phrase = vModel.LexicaDataObject.Phrase;
-            }
-
-            return View("~/Views/Shared/Occurrence.cshtml", "_chromelessLayout", vModel);
-        }
-
-        [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddEditDescriptive(long id, OccurrenceViewModel vModel)
-        {
-            string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
-
-            var obj = BackingDataCache.Get<IZoneData>(id);
-            if (obj == null)
-            {
-                message = "That zone does not exist";
-                return RedirectToRoute("ModalErrorOrClose", new { Message = message });
-            }
-
-            var grammaticalType = (GrammaticalType)vModel.Role;
-            var phraseF = vModel.Phrase;
-            var existingOccurrence = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType
-                                                                                && occurrence.Event.Phrase.Equals(phraseF, StringComparison.InvariantCultureIgnoreCase));
-
-            if (existingOccurrence == null)
-                existingOccurrence = new Occurrence();
-
-            existingOccurrence.Strength = vModel.Strength;
-            existingOccurrence.SensoryType = (MessagingType)vModel.SensoryType;
-
-            var existingEvent = existingOccurrence.Event;
-
-            if (existingEvent == null)
-                existingEvent = new Lexica();
-
-            existingEvent.Role = grammaticalType;
-            existingEvent.Phrase = vModel.Phrase;
-            existingEvent.Type = (LexicalType)vModel.Type;
-
-            int modifierIndex = 0;
-            foreach (var currentPhrase in vModel.ModifierPhrases)
-            {
-                if (!string.IsNullOrWhiteSpace(currentPhrase))
-                {
-                    if (vModel.ModifierRoles.Count() <= modifierIndex || vModel.ModifierLexicalTypes.Count() <= modifierIndex)
-                        break;
-
-                    var phrase = currentPhrase;
-                    var role = (GrammaticalType)vModel.ModifierRoles[modifierIndex];
-                    var type = (LexicalType)vModel.ModifierLexicalTypes[modifierIndex];
-
-                    existingEvent.TryModify(new Lexica { Role = role, Type = type, Phrase = phrase });
-                }
-
-                modifierIndex++;
-            }
-
-            existingOccurrence.Event = existingEvent;
-
-            obj.Descriptives.RemoveWhere(occ => occ.Event.Role == grammaticalType
-                                                    && occ.Event.Phrase.Equals(phraseF, StringComparison.InvariantCultureIgnoreCase));
-            obj.Descriptives.Add(existingOccurrence);
-
-            if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
-            {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - Zone AddEditDescriptive[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-            }
-            else
-                message = "Error; Edit failed.";
-
-            return RedirectToRoute("ModalErrorOrClose", new { Message = message });
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult RemoveDescriptive(long id, string authorize)
+        [Route(@"GameAdmin/Zone/RemoveZonePathway/{removePathwayId?}/{authorizeRemovePathway?}")]
+        public ActionResult RemoveZonePathway(long removePathwayId = -1, string authorizeRemovePathway = "")
         {
             string message = string.Empty;
 
-            if (string.IsNullOrWhiteSpace(authorize))
+            if (string.IsNullOrWhiteSpace(authorizeRemovePathway))
+            {
                 message = "You must check the proper authorize radio button first.";
+            }
             else
             {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
-                var values = authorize.Split(new string[] { "|||" }, StringSplitOptions.RemoveEmptyEntries);
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+                string[] values = authorizeRemovePathway.Split(new string[] { "|||" }, StringSplitOptions.RemoveEmptyEntries);
 
                 if (values.Count() != 2)
+                {
                     message = "You must check the proper authorize radio button first.";
+                }
                 else
                 {
-                    var type = short.Parse(values[0]);
-                    var phrase = values[1];
+                    long originX = long.Parse(values[0]);
+                    long originY = long.Parse(values[1]);
 
-                    var obj = BackingDataCache.Get<IZoneData>(id);
+                    var origin = TemplateCache.Get<IZoneTemplate>(removePathwayId);
 
-                    if (obj == null)
-                        message = "That does not exist";
+                    if (origin == null)
+                    {
+                        message = "That zone does not exist";
+                    }
                     else
                     {
-                        var grammaticalType = (GrammaticalType)type;
-                        var existingOccurrence = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType
-                                                                                            && occurrence.Event.Phrase.Equals(phrase, StringComparison.InvariantCultureIgnoreCase));
+                        var existingPath = origin.Pathways.FirstOrDefault(path => path.OriginCoordinates.X == originX && path.OriginCoordinates.Y == originY);
 
-                        if (existingOccurrence != null)
+                        if (existingPath != null)
                         {
-                            obj.Descriptives.Remove(existingOccurrence);
+                            origin.Pathways.Remove(existingPath);
 
-                            if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+                            if (origin.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                             {
-                                LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveDescriptive[" + id.ToString() + "|" + type.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                                LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveZonePath[" + removePathwayId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                                 message = "Delete Successful.";
                             }
                             else
+                            {
                                 message = "Error; Removal failed.";
+                            }
                         }
                         else
+                        {
                             message = "That does not exist";
+                        }
                     }
                 }
             }
 
-            return RedirectToRoute("ModalErrorOrClose", new { Message = message });
+            return RedirectToAction("Edit", new { Message = message, id = removePathwayId });
         }
-
     }
 }

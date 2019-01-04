@@ -1,15 +1,11 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
-using NetMud.Cartography;
 using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.PlayerConfiguration;
-using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.SupportingClasses;
-using NetMud.Physics;
-using System;
-using System.Collections.Generic;
+using NetMud.DataStructure.Inanimate;
+using NetMud.DataStructure.NPC;
+using NetMud.DataStructure.Player;
+using NetMud.DataStructure.Zone;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
@@ -33,170 +29,67 @@ namespace NetMud.Controllers
             }
         }
 
-        [HttpGet]
-        public string GetEntityModelView(long modelId)
+        [HttpPost]
+        [Route("api/ClientDataApi/ToggleTutorialMode", Name = "ClientDataAPI_ToggleTutorialMode")]
+        public JsonResult<bool> ToggleTutorialMode()
         {
-            var model = BackingDataCache.Get<IDimensionalModelData>(modelId);
+            ApplicationUser user = UserManager.FindById(User.Identity.GetUserId());
 
-            if (model == null)
-                return string.Empty;
+            if(user != null)
+            {
+                user.GameAccount.Config.UITutorialMode = !user.GameAccount.Config.UITutorialMode;
+            }
 
-            return Render.FlattenModelForWeb(model);
-        }
-
-        [HttpGet]
-        public string RenderRoomWithRadius(long id, int radius)
-        {
-            var centerRoom = BackingDataCache.Get<IRoomData>(id);
-
-            if (centerRoom == null || radius < 0)
-                return "Invalid inputs.";
-
-            return Rendering.RenderRadiusMap(centerRoom, radius, false);
-        }
-
-        [HttpGet]
-        public JsonResult<IUIModule> GetUIModuleContent(string moduleName)
-        {
-            var module = BackingDataCache.GetByName<IUIModule>(moduleName);
-
-            if (module != null)
-                return Json(module);
-
-            return null;
+            return Json(user.GameAccount.Config.UITutorialMode);
         }
 
         [HttpPost]
-        public string RemoveUIModuleContent(string moduleName, int location)
+        [Route("api/ClientDataApi/ToggleSoundMute", Name = "ClientDataAPI_ToggleSoundMute")]
+        public JsonResult<bool> ToggleSoundMute()
         {
-            var user = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser user = UserManager.FindById(User.Identity.GetUserId());
 
-            var account = user.GameAccount;
-
-            if (account == null)
+            if (user != null)
             {
-                return "Invalid Account.";
+                user.GameAccount.Config.SoundMuted = !user.GameAccount.Config.SoundMuted;
             }
 
-            var modules = account.Config.UIModules.ToList();
-            if (moduleName == "**anymodule**" && location != -1)
-            {
-                if (modules.Any(mod => mod.Item2.Equals(location)))
-                {
-                    var moduleTuple = modules.FirstOrDefault(mod => mod.Item2.Equals(location));
-                    modules.Remove(moduleTuple);
-                }
-            }
-            else
-            {
-                var module = BackingDataCache.GetByName<IUIModule>(moduleName);
-
-                if (module == null)
-                {
-                    return "Invalid Module.";
-                }
-
-                if ((location < 1 && location != -1) || location > 4)
-                {
-                    return "Invalid Location";
-                }
-
-                var moduleTuple = new Tuple<IUIModule, int>(module, location);
-
-                //Remove this module
-                if (modules.Any(mod => mod.Item1.Equals(module) && mod.Item2.Equals(location)))
-                    modules.Remove(moduleTuple);
-            }
-
-            account.Config.UIModules = modules;
-            account.Config.Save(account, StaffRank.Player);
-
-            return "Success";
+            return Json(user.GameAccount.Config.SoundMuted);
         }
 
         [HttpPost]
-        public string SaveUIModuleContent(string moduleName, int location)
+        [Route("api/ClientDataApi/ToggleMusicMute", Name = "ClientDataAPI_ToggleMusicMute")]
+        public JsonResult<bool> ToggleMusicMute()
         {
-            var user = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser user = UserManager.FindById(User.Identity.GetUserId());
 
-            var account = user.GameAccount;
-
-            if (account == null)
+            if (user != null)
             {
-                return "Invalid Account.";
+                user.GameAccount.Config.MusicMuted = !user.GameAccount.Config.MusicMuted;
             }
 
-            var module = BackingDataCache.GetByName<IUIModule>(moduleName);
-
-            if (module == null)
-            {
-                return "Invalid Module.";
-            }
-
-            if ((location < 1 && location != -1) || location > 4)
-            {
-                return "Invalid Location";
-            }
-
-            var modules = account.Config.UIModules.ToList();
-            var moduleTuple = new Tuple<IUIModule, int>(module, location);
-
-            //Remove this module
-            if (modules.Any(mod => mod.Item1.Equals(module)))
-                modules.Remove(moduleTuple);
-
-            //Remove the module in its place
-            if (location != -1 && modules.Any(mod => mod.Item2.Equals(location)))
-                modules.RemoveAll(mod => mod.Item2.Equals(location));
-
-            //Add it finally
-            modules.Add(moduleTuple);
-
-            account.Config.UIModules = modules;
-
-            account.Config.Save(account, StaffRank.Player);
-
-            return "Success";
+            return Json(user.GameAccount.Config.MusicMuted);
         }
 
-        [HttpGet]
-        public JsonResult<IEnumerable<Tuple<IUIModule, int>>> LoadUIModules()
+        [HttpPost]
+        [Route("api/ClientDataApi/ToggleGossipParticipation", Name = "ClientDataAPI_ToggleGossipParticipation")]
+        public JsonResult<bool> ToggleGossipParticipation()
         {
-            var user = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser user = UserManager.FindById(User.Identity.GetUserId());
 
-            var account = user.GameAccount;
-
-            if (account == null)
+            if (user != null)
             {
-                return null;
+                user.GameAccount.Config.GossipSubscriber = !user.GameAccount.Config.GossipSubscriber;
             }
 
-            return Json(account.Config.UIModules);
-        }
-
-        [HttpGet]
-        [Route("api/ClientDataApi/GetUIModuleNames", Name = "ClientDataAPI_GetUIModuleNames")]
-        public JsonResult<string[]> GetUIModuleNames(string term)
-        {
-            var user = UserManager.FindById(User.Identity.GetUserId());
-
-            var account = user.GameAccount;
-
-            if (account == null)
-            {
-                return Json(new string[0]);
-            }
-
-            var modules = BackingDataCache.GetAll<IUIModule>(true).Where(uim => uim.Name.Contains(term));
-
-            return Json(modules.Select(mod => mod.Name).ToArray());
+            return Json(user.GameAccount.Config.GossipSubscriber);
         }
 
         [HttpGet]
         [Route("api/ClientDataApi/GetAccountNames", Name = "ClientDataAPI_GetAccountNames")]
         public JsonResult<string[]> GetAccountNames(string term)
         {
-            var accounts = UserManager.Users;
+            IQueryable<ApplicationUser> accounts = UserManager.Users;
 
             return Json(accounts.Where(acct => acct.GlobalIdentityHandle.Contains(term)).Select(acct => acct.GlobalIdentityHandle).ToArray());
         }
@@ -205,11 +98,111 @@ namespace NetMud.Controllers
         [Route("api/ClientDataApi/GetCharacterNamesForAccount/{accountName}", Name = "ClientDataAPI_GetCharacterNamesForAccount")]
         public JsonResult<string[]> GetCharacterNamesForAccount(string accountName, string term)
         {
-            var user = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser user = UserManager.FindById(User.Identity.GetUserId());
 
-            var characters = PlayerDataCache.GetAll().Where(chr => chr.AccountHandle.Equals(user.GlobalIdentityHandle) && chr.Name.Contains(term));
+            System.Collections.Generic.IEnumerable<IPlayerTemplate> characters = PlayerDataCache.GetAll().Where(chr => chr.AccountHandle.Equals(user.GlobalIdentityHandle) && chr.Name.Contains(term));
 
             return Json(characters.Select(chr => chr.Name).ToArray());
         }
+
+        [HttpGet]
+        [Route("api/ClientDataApi/GetEntityInfo/{key}/{typeName}", Name = "ClientDataAPI_GetEntityInfo")]
+        public JsonResult<string> GetEntityInfo(string key, string typeName)
+        {
+            ApplicationUser user = UserManager.FindById(User.Identity.GetUserId());
+
+            var player = LiveCache.Get<IPlayer>(user.GameAccount.Character.Id);
+
+            if (player == null)
+            {
+                //error
+                return Json("Bad User.");
+            }
+
+            string returnString = string.Empty;
+            switch (typeName)
+            {
+                case "Item":
+                    var item = LiveCache.Get<IInanimate>(new LiveCacheKey(typeof(IInanimate), key));
+
+                    if (item != null)
+                    {
+                        returnString = item.RenderToInfo(player);
+                    }
+                    break;
+                case "Player":
+                    var playr = LiveCache.Get<IPlayer>(new LiveCacheKey(typeof(IPlayer), key));
+
+                    if (playr != null)
+                    {
+                        returnString = playr.RenderToInfo(player);
+                    }
+                    break;
+                case "NPC":
+                    var npc = LiveCache.Get<INonPlayerCharacter>(new LiveCacheKey(typeof(INonPlayerCharacter), key));
+
+                    if (npc != null)
+                    {
+                        returnString = npc.RenderToInfo(player);
+                    }
+                    break;
+                case "Zone":
+                    var zone = LiveCache.Get<IZone>(new LiveCacheKey(typeof(IZone), key));
+
+                    if (zone != null)
+                    {
+                        returnString = zone.RenderToInfo(player);
+                    }
+                    break;
+                case "Tile":
+                    return Json("Use GetTileInfo.");
+            }
+
+            if (string.IsNullOrWhiteSpace(returnString))
+            {
+                return Json("Invalid target.");
+            }
+
+            return Json(returnString);
+        }
+
+        [HttpGet]
+        [Route("api/ClientDataApi/GetTileInfo/{zoneId}/{x}/{y}", Name = "ClientDataAPI_GetTileInfo")]
+        public JsonResult<string> GetTileInfo(long zoneId, int x, int y)
+        {
+            ApplicationUser user = UserManager.FindById(User.Identity.GetUserId());
+
+            var player = LiveCache.Get<IPlayer>(user.GameAccount.Character.Id);
+
+            if(player == null)
+            {
+                //error
+                return Json("Bad User.");
+            }
+
+            var zone = LiveCache.Get<IZone>(zoneId);
+
+            if(zone == null)
+            {
+                //error
+                return Json("Invalid zone.");
+            }
+            else if(x > 100 || x < 0 || y > 100 || y < 0)
+            {
+                //error
+                return Json("Invalid coordinates.");
+            }
+
+            var tile = zone.Map.CoordinateTilePlane[x, y];
+
+            if(tile == null)
+            {
+                //error
+                return Json("Invalid tile.");
+            }
+
+            return Json(tile.RenderToInfo(player));
+        }
+
     }
 }

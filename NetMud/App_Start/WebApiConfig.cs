@@ -44,36 +44,6 @@ namespace NetMud
             #endregion
 
             #region "ClientAPI"
-            config.Routes.MapHttpRoute(
-              name: "ClientApi_GetEntityModelView",
-              routeTemplate: "api/ClientDataApi/GetEntityModelView/{modelId}",
-              defaults: new { controller = "ClientDataApi", action = "GetEntityModelView" }
-              );
-
-            config.Routes.MapHttpRoute(
-                name: "ClientApi_RenderRoomWithRadius",
-                routeTemplate: "api/ClientDataApi/RenderRoomWithRadius/{id}/{radius}",
-                defaults: new { controller = "ClientDataApi", action = "RenderRoomWithRadius" }
-                );
-
-            config.Routes.MapHttpRoute(
-               name: "ClientApi_GetUIModule",
-               routeTemplate: "api/ClientDataApi/GetUIModuleContent/{moduleName}",
-               defaults: new { controller = "ClientDataApi", action = "GetUIModuleContent" }
-               );
-
-            config.Routes.MapHttpRoute(
-               name: "ClientApi_SaveUIModuleContent",
-               routeTemplate: "api/ClientDataApi/SaveUIModuleContent/{moduleName}/{location}",
-               defaults: new { controller = "ClientDataApi", action = "SaveUIModuleContent" }
-               );
-
-            config.Routes.MapHttpRoute(
-               name: "ClientApi_RemoveUIModuleContent",
-               routeTemplate: "api/ClientDataApi/RemoveUIModuleContent/{moduleName}/{location}",
-               defaults: new { controller = "ClientDataApi", action = "RemoveUIModuleContent" }
-               );
-
             #endregion
 
             config.Routes.MapHttpRoute(

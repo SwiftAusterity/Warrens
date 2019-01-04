@@ -1,0 +1,13 @@
+﻿@using NetMud.DataStructure.Gaia
+
+@model IChronology
+
+<h4>Chronology</h4>
+<div class="form-group row">
+    @Html.EditorFor(e => e.StartingYear)
+    @Html.EditorFor(e => e.HoursPerDay)
+    @Html.EditorFor(e => e.DaysPerMonth)
+</div>
+
+<h4>Month Names</h4>
+@Html.EditorFor(e => e.Months, new { tagList = string.Join(",", Model.Months) })

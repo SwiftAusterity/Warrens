@@ -1,0 +1,39 @@
+﻿@model NetMud.DataStructure.Inanimate.IInanimateTemplate
+
+<div class="entityDataInfoCard">
+    <h4>@Model.Name</h4>
+    <hr />
+    <div>
+        <span style="font-weight: normal;">@Model.Description</span>
+    </div>
+    <div>
+        <span>Accumulation Cap:</span>
+        <span>@Model.AccumulationCap</span>
+    </div>
+    <div>
+        <span>Appearance</span>
+        <span style="color: @Model.HexColorCode;">@Model.AsciiCharacter</span>
+    </div>
+    @foreach (var quality in Model.Qualities)
+    {
+        @Html.DisplayFor(m => quality)
+    }
+    @foreach (var item in Model.Interactions)
+    {
+        <div style="background-color: lightgray; padding: 5px; border-radius: 9px;">
+            @Html.DisplayFor(m => item)
+        </div>
+    }
+    @foreach (var item in Model.Uses)
+    {
+        <div style="background-color: lightgray; padding: 5px; border-radius: 9px;">
+            @Html.DisplayFor(m => item)
+        </div>
+    }
+    @foreach (var item in Model.DecayEvents)
+    {
+        <div style="background-color: lightgray; padding: 5px; border-radius: 9px;">
+            @Html.DisplayFor(m => item)
+        </div>
+    }
+</div>

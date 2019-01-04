@@ -1,0 +1,41 @@
+﻿@model NetMud.Models.Admin.AddEditZoneDataViewModel
+
+<h4>Exit Pathways</h4>
+<div>
+    @Html.ActionLink("Add New Pathway", "AddZonePathway", "Zone", new { id = Model.DataObject.Id }, new { @class = "addNew" })
+</div>
+
+@using (Html.BeginForm("RemoveZonePathway", "Zone"))
+{
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="removePathwayId" id="removePathwayId" value="@Model.DataObject.Id" />
+
+    <table class="table table-striped table-bordered table-hover table-dark">
+        <thead>
+            <tr>
+                <th scope="col">Origin</th>
+                <th scope="col">Destinations</th>
+                <th>DELETE</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var val in Model.DataObject.Pathways)
+            {
+                <tr>
+                    <td style="color: @val.BorderHexColor">
+                        @string.Format("{0}, {1}", val.OriginCoordinates.X, val.OriginCoordinates.Y)
+                    </td>
+                    <td>
+                        @string.Join(",", val.Destinations.Select(dest => dest.Destination.Name))
+                    </td>
+                    <td>
+                        <div>
+                            <button type="submit" name="removePathwayId" id="removePathwayId" class="removeData" value="@val.OriginCoordinates.X|||@val.OriginCoordinates.Y" title="Delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                            <input type="radio" name="authorizeRemovePathway" value="@val.OriginCoordinates.X|||@val.OriginCoordinates.Y" style="margin-left: 15px;" />
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

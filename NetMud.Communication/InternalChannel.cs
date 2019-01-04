@@ -1,4 +1,4 @@
-﻿using NetMud.DataStructure.Base.System;
+﻿using NetMud.DataStructure.System;
 using System.Collections.Generic;
 
 namespace NetMud.Communication

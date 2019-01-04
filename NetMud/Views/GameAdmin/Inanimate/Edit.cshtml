@@ -1,29 +1,46 @@
 ﻿@model NetMud.Models.Admin.AddEditInanimateDataViewModel
+@{
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Edit Inanimate", new string[] { "Dashboard", "Inanimates" }, new string[] { "/GameAdmin", "/Inanimate" });
+}
 
-<section id="newCharacterForm">
+<section id="templateApply">
+    @using (Html.BeginForm("Edit", "Inanimate", FormMethod.Get, new { @class = "form-horizontal", role = "form", @name = "applyTemplateForm", @id = "applyTemplateForm" }))
+    {
+        <div class="form-group row">
+            @Html.EditorFor(m => m.Template, new { validItems = Model.ValidTemplateBases })
+            <input type="submit" value="Overwrite Actions" class="btn btn-default caution" , style="margin-left: 25px;" />
+            <span style="color:red; font-style: italic;">WARNING: This will remove all existing Actions permenantly</span>
+        </div>
+    }
+</section>
+
+<section id="editInanimateForm">
     @using (Html.BeginForm("Edit", "Inanimate", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {
         @Html.AntiForgeryToken()
-        <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <input type="hidden" name="id" id="id" value="@Model.DataObject.Id" />
-        <div class="form-group row">
-            @Html.EditorFor(e => e.Name)
-        </div>
 
-        @Html.Partial("~/Views/GameAdmin/Inanimate/InternalComposition.cshtml", Model)
-
-        @Html.Partial("InanimateEntityContainer", new NetMud.Models.Admin.EntityContainerViewModel<NetMud.DataStructure.Base.Entity.IInanimate>(Model.DataObject.InanimateContainers, "Inanimate", "Inanimate Containers"))
-        @Html.Partial("MobileEntityContainer", new NetMud.Models.Admin.EntityContainerViewModel<NetMud.DataStructure.Base.Supporting.IMobile>(Model.DataObject.MobileContainers, "Mobile", "Character Containers"))
-
-        @Html.Partial("TwoDimensionalEntityEditor", Model)
+        @Html.EditorFor(m => m.DataObject, new { validComponents = Model.ValidComponents })
 
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Inanimate", IncludeCancel = true })
     }
 </section>
-
-@Html.Partial("~/Views/GameAdmin/Inanimate/OccurrenceList.cshtml", Model.DataObject)
-
+<div class="clearfix"></div>
+<div style="padding-top: 5px;">
+    @Html.Partial("InteractionList",
+        new Tuple<long, string, IEnumerable<NetMud.DataStructure.Action.IInteraction>>(Model.DataObject.Id, "Inanimate", Model.DataObject.Interactions))
+</div>
+<div class="clearfix"></div>
+<div style="padding-top: 5px;">
+    @Html.Partial("DecayEventList",
+        new Tuple<long, string, IEnumerable<NetMud.DataStructure.Action.IDecayEvent>>(Model.DataObject.Id, "Inanimate", Model.DataObject.DecayEvents))
+</div>
+<div class="clearfix"></div>
+<div style="padding-top: 5px;">
+    @Html.Partial("UseList",
+        new Tuple<long, string, IEnumerable<NetMud.DataStructure.Action.IUse>>(Model.DataObject.Id, "Inanimate", Model.DataObject.Uses))
+</div>
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

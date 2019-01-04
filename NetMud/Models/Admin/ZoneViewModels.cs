@@ -1,8 +1,11 @@
 ﻿using NetMud.Authentication;
-using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.Place;
-using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.Base.World;
+using NetMud.Data.Architectural.PropertyBinding;
+using NetMud.DataStructure.Gaia;
+using NetMud.DataStructure.Inanimate;
+using NetMud.DataStructure.NPC;
+using NetMud.DataStructure.Tile;
+using NetMud.DataStructure.Zone;
+using NetMud.Utility;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,18 +13,18 @@ using System.Linq;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageZoneDataViewModel : PagedDataModel<IZoneData>, BaseViewModel
+    public class ManageZoneDataViewModel : PagedDataModel<IZoneTemplate>, IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
-        public ManageZoneDataViewModel(IEnumerable<IZoneData> items)
+        public ManageZoneDataViewModel(IEnumerable<IZoneTemplate> items)
             : base(items)
         {
             CurrentPageNumber = 1;
             ItemsPerPage = 20;
         }
 
-        internal override Func<IZoneData, bool> SearchFilter
+        internal override Func<IZoneTemplate, bool> SearchFilter
         {
             get
             {
@@ -30,95 +33,80 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditZoneDataViewModel : PagedDataModel<ILocaleData>, BaseViewModel
+    public class AddEditZoneDataViewModel : AddContentModel<IZoneTemplate>, IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
+        [Display(Name = "Apply Existing Template", Description = "Apply an existing object's data to this new data.")]
+        [UIHint("ZoneTemplateList")]
+        [ZoneTemplateDataBinder]
+        public override IZoneTemplate Template { get; set; }
 
-        internal override Func<ILocaleData, bool> SearchFilter
+        public AddEditZoneDataViewModel() : base(-1)
         {
-            get
+        }
+
+        public AddEditZoneDataViewModel(long templateId) : base(templateId)
+        {
+            //apply template
+            if (DataTemplate == null)
             {
-                return item => item.Name.ToLower().Contains(SearchTerms.ToLower());
+                //set defaults
+            }
+            else
+            {
+                //todo
             }
         }
 
-        public AddEditZoneDataViewModel(IEnumerable<ILocaleData> items)
-        : base(items)
-        {
-            CurrentPageNumber = 1;
-            ItemsPerPage = 20;
-        }
-
-        public AddEditZoneDataViewModel() : base(Enumerable.Empty<ILocaleData>())
-        {
-            CurrentPageNumber = 1;
-            ItemsPerPage = 20;
-        }
-
-
-        [StringLength(100, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
-        [Display(Name = "Name", Description = "The identifying name of the zone. Displays above the output window.")]
-        [DataType(DataType.Text)]
-        public string Name { get; set; }
-
-        [Display(Name = "Claimable", Description = "Can players create locations in this zone (Likely FALSE).")]
-        public bool Claimable { get; set; }
-
-        [Range(-5000, 5000, ErrorMessage = "The {0} must be between {2} and {1}.")]
-        [Display(Name = "Base Elevation", Description = "The 'sea level' for this zone. All locales will treat this as Y=0.")]
-        [DataType(DataType.Text)]
-        public int BaseElevation { get; set; }
-
-        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
-        [Display(Name = "Temperature Coefficient", Description = "The volatility of the temperatures of this zone. Used in the weather system.")]
-        [DataType(DataType.Text)]
-        public int TemperatureCoefficient { get; set; }
-
-        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
-        [Display(Name = "Pressure Coefficient", Description = "The volitility of humditity in this zone. Used in the weather system.")]
-        [DataType(DataType.Text)]
-        public int PressureCoefficient { get; set; }
-
-        [Display(Name = "World", Description = "The World/Dimension this belongs to.")]
-        [DataType(DataType.Text)]
-        public long World { get; set; }
-
-        [Display(Name = "Hemisphere", Description = "The hemisphere of the world this zone is in.")]
-        [DataType(DataType.Text)]
-        public short Hemisphere { get; set; }
-
-
-        public IEnumerable<IGaiaData> ValidWorlds { get; set; }
-        public IZoneData DataObject { get; set; }
+        public IEnumerable<IInanimateTemplate> ValidItems { get; set; }
+        public IEnumerable<INonPlayerCharacterTemplate> ValidNPCs { get; set; }
+        public IEnumerable<ITileTemplate> ValidTileTypes { get; set; }
+        public IEnumerable<IGaiaTemplate> ValidWorlds { get; set; }
+        public IZoneTemplate DataObject { get; set; }
     }
 
-    public class AddEditZonePathwayDataViewModel : TwoDimensionalEntityEditViewModel, BaseViewModel
+    public class AddZonePathwayDataViewModel : IBaseViewModel
     {
-        public AddEditZonePathwayDataViewModel()
+        public ApplicationUser authedUser { get; set; }
+
+        public AddZonePathwayDataViewModel()
         {
-            ValidModels = Enumerable.Empty<IDimensionalModelData>();
-            ValidMaterials = Enumerable.Empty<IMaterial>();
-            ValidRooms = Enumerable.Empty<IRoomData>();
+            ValidZones = Enumerable.Empty<IZoneTemplate>();
         }
 
-        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
-        [Display(Name = "Name", Description = "The identifying name of the pathway.")]
+        [Display(Name = "Name", Description = "The identifying name and keyword of the pathway.")]
         [DataType(DataType.Text)]
-        public string Name { get; set; }
+        public string[] DestinationName { get; set; }
 
-        [Display(Name = "To Room", Description = "What room this will send you to.")]
+        [Display(Name = "Destination", Description = "The zone this leads to.")]
         [DataType(DataType.Text)]
-        public long DestinationID { get; set; }
+        public long[] DestinationId { get; set; }
 
-        [Display(Name = "From Zone", Description = "The zone this originates from.")]
+        [Display(Name = "Destination X", Description = "What coordinate tile this will send you to.")]
         [DataType(DataType.Text)]
-        public long OriginID { get; set; }
+        public short[] DestinationCoordinateX { get; set; }
 
-        public IEnumerable<IRoomData> ValidRooms { get; set; }
+        [Display(Name = "Destination Y", Description = "What coordinate tile this will send you to.")]
+        [DataType(DataType.Text)]
+        public short[] DestinationCoordinateY { get; set; }
 
-        public IZoneData Origin { get; set; }
-        public IRoomData Destination { get; set; }
-        public IPathwayData DataObject { get; set; }
+        [Display(Name = "Origin X", Description = "What coordinate tile this originates from.")]
+        [DataType(DataType.Text)]
+        public short OriginCoordinateX { get; set; }
+
+        [Display(Name = "Origin Y", Description = "What coordinate tile this originates from.")]
+        [DataType(DataType.Text)]
+        public short OriginCoordinateY { get; set; }
+
+        [Display(Name = "Border Color", Description = "The hex code of the color of the border of the origin tile.")]
+        [DataType(DataType.Text)]
+        [UIHint("ColorPicker")]
+        public string BorderHexColor { get; set; }
+
+        public IEnumerable<IZoneTemplate> ValidZones { get; set; }
+
+        public IZoneTemplate Origin { get; set; }
+        public IPathway DataObject { get; set; }
     }
 }

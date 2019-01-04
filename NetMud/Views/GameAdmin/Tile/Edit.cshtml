@@ -1,0 +1,45 @@
+﻿@model NetMud.Models.Admin.AddEditTileDataViewModel
+
+@{
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Edit TileType", new string[] { "Dashboard", "Tiles" }, new string[] { "/GameAdmin", "/Tile" });
+}
+
+<section id="templateApply">
+    @using (Html.BeginForm("Edit", "Tile", FormMethod.Get, new { @class = "form-horizontal", role = "form", @name = "applyTemplateForm", @id = "applyTemplateForm" }))
+    {
+        <div class="form-group row">
+            @Html.EditorFor(m => m.Template, new { validItems = Model.ValidTemplateBases, forceOptional = "true" })
+            <input type="submit" value="Overwrite Actions" class="btn btn-default caution" , style="margin-left: 25px;" />
+            <span style="color:red; font-style: italic;">WARNING: This will remove all existing Actions permenantly</span>
+        </div>
+    }
+</section>
+
+<section id="editTileForm">
+    @using (Html.BeginForm("Edit", "Tile", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <input type="hidden" name="id" id="id" value="@Model.DataObject.Id" />
+
+        @Html.EditorFor(e => e.DataObject)
+
+        @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnController = "Tile", ReturnAction = "Index" })
+    }
+</section>
+
+<div class="clearfix"></div>
+<div style="padding-top: 5px;">
+    @Html.Partial("InteractionList",
+        new Tuple<long, string, IEnumerable<NetMud.DataStructure.Action.IInteraction>>(Model.DataObject.Id, "Tile", Model.DataObject.Interactions))
+</div>
+
+<div class="clearfix"></div>
+<div style="padding-top: 5px;">
+    @Html.Partial("DecayEventList",
+        new Tuple<long, string, IEnumerable<NetMud.DataStructure.Action.IDecayEvent>>(Model.DataObject.Id, "Tile", Model.DataObject.DecayEvents))
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

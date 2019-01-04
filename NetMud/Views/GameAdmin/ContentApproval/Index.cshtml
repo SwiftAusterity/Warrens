@@ -1,6 +1,7 @@
-﻿@using NetMud.DataStructure.SupportingClasses
-@model NetMud.Models.Admin.ManageContentApprovalsViewModel
+﻿@model NetMud.Models.Admin.ManageContentApprovalsViewModel
+
 @Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model, "ContentApproval"))
+
 <!--can't use the partial for list table here, we need a custom one-->
 @using (Html.BeginForm("ApproveDeny", "ContentApproval"))
 {
@@ -29,11 +30,11 @@
                             <h5>Fields</h5>
                             <div>
                                 <pre class="contentPreviewFields">
-                                        @foreach (var detail in val.SignificantDetails())
-                                        {
-                                <div><span style="float: left;">@detail.Key</span><span style="float: right;">@detail.Value</span></div>
-                                        }
-                                    </pre>
+                                    @foreach (var detail in val.SignificantDetails())
+                                    {
+                                        <span style="float: left;">@detail.Key</span><span style="float: right;">@detail.Value</span>
+                                    }
+                                </pre>
                             </div>
                         </div>
                     </td>

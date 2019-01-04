@@ -1,11 +1,4 @@
-﻿using NetMud.DataAccess;
-using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Base.Entity;
-using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.PlayerConfiguration;
-using NetMud.DataStructure.Base.System;
-using NetMud.Gossip.Messaging;
-using NetMud.Utility;
+﻿using NetMud.Gossip.Messaging;
 using Newtonsoft.Json;
 using System;
 using System.IO;
@@ -16,14 +9,25 @@ using WebSocketSharp;
 
 namespace NetMud.Gossip
 {
-    public class GossipClient : IGossipClient
+    public class GossipClient
     {
-        /// <summary>
-        /// The format the cachekeys for the comms objects take
-        /// </summary>
-        public string CacheKey => "GossipWebClient";
-
         private WebSocket MyClient { get; set; }
+
+        private IConfig ConfigSettings { get; }
+
+        private Action<Exception> ExceptionLogger { get; }
+
+        private Action<string> ActivityLogger { get; }
+
+        private Func<Member[]> UserList { get; }
+
+        public GossipClient(IConfig config, Action<Exception> exLogger, Action<string> activityLogger, Func<Member[]> getUserList)
+        {
+            ConfigSettings = config;
+            ExceptionLogger = exLogger;
+            ActivityLogger = activityLogger;
+            UserList = getUserList;
+        }
 
         /// <summary>
         /// Registers this for a service on a port
@@ -31,6 +35,12 @@ namespace NetMud.Gossip
         /// <param name="portNumber">the port it is listening on</param>
         public async void Launch()
         {
+            if (string.IsNullOrWhiteSpace(ConfigSettings.ClientId) || string.IsNullOrWhiteSpace(ConfigSettings.ClientSecret))
+            {
+                DoLog("No credentials to connect to Gossip with, ending.");
+                return;
+            }
+
             try
             {
                 //Connect to the gossip service
@@ -38,11 +48,7 @@ namespace NetMud.Gossip
 
                 MyClient.Connect();
 
-                if (MyClient.ReadyState == WebSocketState.Open)
-                {
-                    LiveCache.Add(this, CacheKey);
-                }
-                else
+                if (MyClient.ReadyState != WebSocketState.Open)
                 {
                     throw new TimeoutException("Gossip Server unresponsive on open. Starting reconnect loop.");
                 }
@@ -51,17 +57,17 @@ namespace NetMud.Gossip
             }
             catch (TimeoutException tex)
             {
-                LoggingUtility.LogError(tex, LogChannels.GossipServer);
+                DoLog(tex);
                 ReconnectLoop(60);
             }
             catch(System.Net.Sockets.SocketException sex)
             {
-                LoggingUtility.LogError(sex, LogChannels.GossipServer); //Dont retry on this
+                DoLog(sex); //Dont retry on this
             }
             catch (Exception ex)
             {
-                LoggingUtility.LogError(ex, LogChannels.GossipServer);
-                ReconnectLoop(1);
+                DoLog(ex);
+                ReconnectLoop(10);
             }
         }
 
@@ -70,7 +76,7 @@ namespace NetMud.Gossip
         /// </summary>
         private void OnClose(object sender, EventArgs e)
         {
-            LoggingUtility.Log("Gossip Server Connection Terminated.", LogChannels.GossipServer);
+            DoLog(new Exception("Gossip Server Connection Terminated."));
 
             MyClient = null;
 
@@ -83,10 +89,10 @@ namespace NetMud.Gossip
         /// <param name="worker">the function that actually takes in a full message from the socker</param>
         private async void ReconnectLoop(double suspendMultiplier = 1)
         {
-            if (MyClient != null && MyClient.IsAlive || suspendMultiplier > 500)
+            if (MyClient != null && MyClient.IsAlive || suspendMultiplier > ConfigSettings.SuspendMultiplierMaximum)
                 return;
 
-            LoggingUtility.Log("Gossip Server Reconnect Loop Pulse x" + suspendMultiplier.ToString(), LogChannels.GossipServer);
+            DoLog("Gossip Server Reconnect Loop Pulse x" + suspendMultiplier.ToString());
 
             try
             {
@@ -97,17 +103,17 @@ namespace NetMud.Gossip
 
                 if (MyClient.ReadyState == WebSocketState.Open)
                 {
-                    LoggingUtility.Log("Gossip Server Reconnect Loop Successful.", LogChannels.GossipServer);
+                    DoLog("Gossip Server Reconnect Loop Successful.");
                     return;
                 }
 
                 await Task.Delay(Convert.ToInt32(10000 * suspendMultiplier));
 
-                ReconnectLoop(suspendMultiplier * 1.15);
+                ReconnectLoop(suspendMultiplier * ConfigSettings.SuspendMultiplier);
             }
             catch (Exception ex)
             {
-                LoggingUtility.LogError(ex, LogChannels.GossipServer);
+                DoLog(ex);
             }
         }
 
@@ -116,9 +122,9 @@ namespace NetMud.Gossip
         /// </summary>
         private void OnOpen(object sender, EventArgs e)
         {
-            var authenticateBlock = new Authentication();
+            Authentication authenticateBlock = new Authentication(ConfigSettings);
 
-            var auth = new TransportMessage()
+            TransportMessage auth = new TransportMessage()
             {
                 Event = authenticateBlock.Type,
                 Payload = authenticateBlock
@@ -132,19 +138,27 @@ namespace NetMud.Gossip
             if(e == null || e.Data == null)
                 return;
 
-            var newReply = DeSerialize(e.Data);
+            TransportMessage newReply = DeSerialize(e.Data);
 
             switch (newReply.Event)
             {
-                case "heartbeat":
-                    var whoList = LiveCache.GetAll<IPlayer>().Where(player => player.Descriptor != null && player.DataTemplate<ICharacter>().Account.Config.GossipSubscriber);
+                case "restart":
+                    dynamic downtime = newReply.Payload.downtime;
 
-                    var whoBlock = new HeartbeatResponse()
+                    MyClient.Close(CloseStatusCode.Normal);
+
+                    Task.Run(() => Task.Delay(Convert.ToInt32(1000 * downtime)))
+                        .ContinueWith((t) => ReconnectLoop());      
+
+                    ReconnectLoop();
+                    break;
+                case "heartbeat":
+                    HeartbeatResponse whoBlock = new HeartbeatResponse()
                     {
-                        Players = whoList.Select(player => player.AccountHandle).ToArray()
+                        Players = UserList().Select(player => player.Name).ToArray()
                     };
 
-                    var response = new TransportMessage()
+                    TransportMessage response = new TransportMessage()
                     {
                         Event = whoBlock.Type,
                         Payload = whoBlock
@@ -153,47 +167,37 @@ namespace NetMud.Gossip
                     MyClient.Send(Serialize(response));
                     break;
                 case "tells/receive":
-                    var myName = newReply.Payload.player.Value;
-                    var theirName = newReply.Payload.from.Value;
-                    var theirGame = newReply.Payload.game.Value;
-                    var messageBody = newReply.Payload.message.Value;
-                    var fullName = string.Format("{0}@{1}", theirGame, theirName);
+                    dynamic myName = newReply.Payload.player.Value;
+                    dynamic theirName = newReply.Payload.from.Value;
+                    dynamic theirGame = newReply.Payload.game.Value;
+                    dynamic messageBody = newReply.Payload.message.Value;
+                    dynamic fullName = string.Format("{0}@{1}", theirGame, theirName);
 
-                    var validPlayer = LiveCache.GetAll<IPlayer>().FirstOrDefault(player => player.Descriptor != null
-                                                            && player.DataTemplate<ICharacter>().Account.Config.GossipSubscriber
-                                                            && player.AccountHandle.Equals(myName)
-                                                            && !player.DataTemplate<ICharacter>().Account.Config.IsBlocking(fullName, true));
+                    Member validPlayer = UserList().FirstOrDefault(user => user.Name.Equals(myName, StringComparison.InvariantCultureIgnoreCase));
 
                     if (validPlayer != null)
-                        validPlayer.WriteTo(new string[] { string.Format("{0} gossip-tells you, '{1}'", fullName, messageBody) });
+                        validPlayer.WriteTo(string.Format("{0} gossip-tells you, '{1}'", fullName, messageBody));
                     break;
                 case "channels/broadcast":
-                    var messageText = newReply.Payload.message.Value;
-                    var messageSender = newReply.Payload.name.Value;
-                    var source = newReply.Payload.game.Value;
-                    var channel = newReply.Payload.channel.Value;
+                    string messageText = newReply.Payload.message.Value;
+                    string messageSender = newReply.Payload.name.Value;
+                    string source = newReply.Payload.game.Value;
+                    string channel = newReply.Payload.channel.Value;
 
                     if (!string.IsNullOrWhiteSpace(messageText))
                     {
-                        var validPlayers = LiveCache.GetAll<IPlayer>().Where(player => player.Descriptor != null
-                                    && player.DataTemplate<ICharacter>().Account.Config.GossipSubscriber
-                                    && !player.DataTemplate<ICharacter>().Account.Config.IsBlocking(messageSender, true));
-
-                        foreach (var player in validPlayers)
-                            player.WriteTo(new string[] { string.Format("{0}@{1} {3}s, '{2}'", messageSender, source, messageText, channel) });
+                        foreach (Member user in UserList().Where(usr => !usr.BlockedMembers.Contains(messageSender)))
+                            user.WriteTo(string.Format("{0}@{1} {3}s, '{2}'", messageSender, source, messageText, channel));
                     }
                     break;
                 case "players/sign-in":
                     if (newReply.ReferenceID == null)
                     {
                         //This is a request from the server
-                        var fullSignInName = string.Format("{0}@{1}", newReply.Payload.game.Value, newReply.Payload.name.Value);
+                        string fullSignInName = string.Format("{0}@{1}", newReply.Payload.game.Value, newReply.Payload.name.Value);
 
-                        var validPlayers = LiveCache.GetAll<IPlayer>().Where(player => player.Descriptor != null
-                                                                    && player.DataTemplate<ICharacter>().Account.Config.GossipSubscriber
-                                                                    && player.DataTemplate<ICharacter>().Account.Config.WantsNotification(fullSignInName, true, AcquaintenceNotifications.LogIn));
-                        foreach (var player in validPlayers)
-                            player.WriteTo(new string[] { string.Format("{0} has logged into GOSSIP.", fullSignInName) });
+                        foreach (Member user in UserList().Where(usr => usr.Friends.Contains(fullSignInName)))
+                            user.WriteTo(string.Format("{0} has logged into GOSSIP.", fullSignInName));
                     }
                     else
                     {
@@ -204,20 +208,16 @@ namespace NetMud.Gossip
                     if (newReply.ReferenceID == null)
                     {
                         //This is a request from the server
-                        var fullSignoutName = string.Format("{0}@{1}", newReply.Payload.game.Value, newReply.Payload.name.Value);
+                        string fullSignoutName = string.Format("{0}@{1}", newReply.Payload.game.Value, newReply.Payload.name.Value);
 
-                        var validPlayers = LiveCache.GetAll<IPlayer>().Where(player => player.Descriptor != null
-                                                                    && player.DataTemplate<ICharacter>().Account.Config.GossipSubscriber
-                                                                    && player.DataTemplate<ICharacter>().Account.Config.WantsNotification(fullSignoutName, true, AcquaintenceNotifications.LogOff));
-                        foreach (var player in validPlayers)
-                            player.WriteTo(new string[] { string.Format("{0} has logged out of GOSSIP.", fullSignoutName) });
+                        foreach (Member user in UserList().Where(usr => usr.Friends.Contains(fullSignoutName)))
+                            user.WriteTo(string.Format("{0} has logged out of GOSSIP.", fullSignoutName));
                     }
                     else
                     {
                         //This is a response to our request
                     }
                     break;
-
                 case "channels/subscribe":
                 case "channels/unsubscribe":
                 case "channels/send":
@@ -241,7 +241,7 @@ namespace NetMud.Gossip
             MyClient = new WebSocket("wss://gossip.haus/socket");
 
             MyClient.Log.Level = LogLevel.Error;
-            MyClient.Log.Output = (data, eventing) => LoggingUtility.Log(data.Message, LogChannels.GossipServer, true);
+            MyClient.Log.Output = (data, eventing) => DoLog(data.Message);
 
             MyClient.OnMessage += (sender, e) => OnMessage(sender, e);
 
@@ -254,14 +254,14 @@ namespace NetMud.Gossip
 
         public void SendMessage(string userName, string messageBody, string channel = "gossip")
         {
-            var messageBlock = new NewMessage()
+            NewMessage messageBlock = new NewMessage()
             {
                 ChannelName = channel,
                 MessageBody = messageBody,
                 Username = userName
             };
 
-            var message = new TransportMessage()
+            TransportMessage message = new TransportMessage()
             {
                 Event = messageBlock.Type,
                 Payload = messageBlock
@@ -272,7 +272,7 @@ namespace NetMud.Gossip
 
         public void SendDirectMessage(string userName, string targetGame, string targetPlayer, string messageBody)
         {
-            var messageBlock = new NewDirectMessage()
+            NewDirectMessage messageBlock = new NewDirectMessage()
             {
                 Gamename = targetGame,
                 Target = targetPlayer,
@@ -280,7 +280,7 @@ namespace NetMud.Gossip
                 Username = userName
             };
 
-            var message = new TransportMessage()
+            TransportMessage message = new TransportMessage()
             {
                 Event = messageBlock.Type,
                 Payload = messageBlock
@@ -290,14 +290,15 @@ namespace NetMud.Gossip
         }
 
 
-        public void SendNotification(string userName, AcquaintenceNotifications type)
+        public void SendNotification(string userName, Notifications type)
         {
-            var message = new TransportMessage();
+            TransportMessage message = new TransportMessage();
 
             switch (type)
             {
-                case AcquaintenceNotifications.EnterGame:
-                    var loginNotify = new SignIn()
+                case Notifications.LogIn:
+                case Notifications.EnterGame:
+                    SignIn loginNotify = new SignIn()
                     {
                         PlayerName = userName
                     };
@@ -305,8 +306,9 @@ namespace NetMud.Gossip
                     message.Event = loginNotify.Type;
                     message.Payload = loginNotify;
                     break;
-                case AcquaintenceNotifications.LeaveGame:
-                    var logoutNotify = new SignOut()
+                case Notifications.LogOff:
+                case Notifications.LeaveGame:
+                    SignOut logoutNotify = new SignOut()
                     {
                         PlayerName = userName
                     };
@@ -314,9 +316,6 @@ namespace NetMud.Gossip
                     message.Event = logoutNotify.Type;
                     message.Payload = logoutNotify;
                     break;
-                case AcquaintenceNotifications.LogIn:
-                case AcquaintenceNotifications.LogOff:
-                    break; //Unused for now, when the "gossip client" comes in these can be used.
             }
 
             MyClient.Send(Serialize(message));
@@ -324,24 +323,8 @@ namespace NetMud.Gossip
 
         public void Shutdown()
         {
-            var service = GetActiveService();
-
-            if (service != null)
-                service.Close();
-        }
-
-        public WebSocket GetActiveService()
-        {
-            try
-            {
-                return LiveCache.Get<WebSocket>(CacheKey);
-            }
-            catch (Exception ex)
-            {
-                LoggingUtility.LogError(ex, false);
-            }
-
-            return null;
+            if (MyClient != null)
+                MyClient.Close();
         }
 
         /// <summary>
@@ -350,12 +333,12 @@ namespace NetMud.Gossip
         /// <returns>json string</returns>
         private string Serialize(TransportMessage message)
         {
-            var serializer = SerializationUtility.GetSerializer();
+            JsonSerializer serializer = SerializationUtility.GetSerializer();
 
             serializer.TypeNameHandling = TypeNameHandling.None;
 
-            var sb = new StringBuilder();
-            var writer = new StringWriter(sb);
+            StringBuilder sb = new StringBuilder();
+            StringWriter writer = new StringWriter(sb);
 
             serializer.Serialize(writer, message);
 
@@ -369,11 +352,36 @@ namespace NetMud.Gossip
         /// <returns>the entity</returns>
         private TransportMessage DeSerialize(string jsonData)
         {
-            var serializer = SerializationUtility.GetSerializer();
+            try
+            {
+                JsonSerializer serializer = SerializationUtility.GetSerializer();
 
-            var reader = new StringReader(jsonData);
+                StringReader reader = new StringReader(jsonData);
 
-            return serializer.Deserialize(reader, typeof(TransportMessage)) as TransportMessage;
+                return serializer.Deserialize(reader, typeof(TransportMessage)) as TransportMessage;
+            }
+            catch (Exception ex)
+            {
+                DoLog(ex);
+            }
+
+            return new TransportMessage() { Status = "failure" };
+        }
+
+        private void DoLog(string toLog)
+        {
+            if (ActivityLogger == null)
+                return;
+
+            ActivityLogger(toLog);
+        }
+
+        private void DoLog(Exception ex)
+        {
+            if (ExceptionLogger == null)
+                return;
+
+            ExceptionLogger(ex);
         }
     }
 

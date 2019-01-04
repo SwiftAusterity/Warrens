@@ -1,13 +1,12 @@
-﻿using NutMud.Commands.Attributes;
-using System.Collections.Generic;
-using NetMud.Data.Game;
-using NetMud.Commands.Attributes;
+﻿using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
 using NetMud.DataAccess.FileSystem;
-using NetMud.DataStructure.SupportingClasses;
-using NetMud.Data.Lexical;
+using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Player;
+using System.Collections.Generic;
 
-namespace NutMud.Commands.System
+namespace NetMud.Commands.System
 {
     /// <summary>
     /// Invokes the current container's RenderToLook
@@ -30,22 +29,22 @@ namespace NutMud.Commands.System
         /// </summary>
         public override void Execute()
         {
-            var sb = new List<string>();
+            List<string> sb = new List<string>();
 
-            var player = (Player)Actor;
+            IPlayer player = (IPlayer)Actor;
 
             sb.Add("You save your life.");
 
-            var toActor = new Message(MessagingType.Visible, new Occurrence() { Strength = 1 })
+            Message toActor = new Message()
             {
-                Override = sb
+                Body = sb
             };
 
-            var messagingObject = new MessageCluster(toActor);
+            MessageCluster messagingObject = new MessageCluster(toActor);
 
-            messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation.CurrentLocation, null);
+            messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation.CurrentZone, null);
 
-            var playerDataWrapper = new PlayerData();
+            PlayerData playerDataWrapper = new PlayerData();
 
             //Save the player out
             playerDataWrapper.WriteOnePlayer(player);
@@ -57,7 +56,7 @@ namespace NutMud.Commands.System
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            var sb = new List<string>
+            List<string> sb = new List<string>
             {
                 "Valid Syntax: save"
             };

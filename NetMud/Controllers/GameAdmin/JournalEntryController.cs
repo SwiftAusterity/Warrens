@@ -1,15 +1,11 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
-using NetMud.Data.LookupData;
+using NetMud.Data.Administrative;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.Behaviors.System;
-using NetMud.DataStructure.SupportingClasses;
+using NetMud.DataStructure.Administrative;
 using NetMud.Models.Admin;
-using System;
-using System.Collections.Generic;
 using System.Web;
 using System.Web.Mvc;
 
@@ -42,7 +38,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageJournalEntriesViewModel(BackingDataCache.GetAll<IJournalEntry>())
+            ManageJournalEntriesViewModel vModel = new ManageJournalEntriesViewModel(TemplateCache.GetAll<IJournalEntry>())
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -63,9 +59,9 @@ namespace NetMud.Controllers.GameAdmin
 
             if (!string.IsNullOrWhiteSpace(authorizeRemove) && removeId.ToString().Equals(authorizeRemove))
             {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<IJournalEntry>(removeId);
+                var obj = TemplateCache.Get<IJournalEntry>(removeId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -79,13 +75,13 @@ namespace NetMud.Controllers.GameAdmin
             }
             else if (!string.IsNullOrWhiteSpace(authorizeUnapprove) && unapproveId.ToString().Equals(authorizeUnapprove))
             {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<IJournalEntry>(unapproveId);
+                var obj = TemplateCache.Get<IJournalEntry>(unapproveId);
 
                 if (obj == null)
                     message = "That does not exist";
-                else if (obj.ChangeApprovalStatus(authedUser.GameAccount, authedUser.GetStaffRank(User), ApprovalState.Returned))
+                else if (obj.ChangeApprovalStatus(authedUser.GameAccount, authedUser.GetStaffRank(User), ApprovalState.Unapproved))
                 {
                     LoggingUtility.LogAdminCommandUsage("*WEB* - UnapproveJournalEntry[" + unapproveId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Unapproval Successful.";
@@ -102,17 +98,10 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add()
         {
-            var vModel = new AddEditJournalEntryViewModel
+            AddEditJournalEntryViewModel vModel = new AddEditJournalEntryViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                PublishDate = DateTime.Now.AddDays(1).ToShortDateString(),
-                ExpireDate = DateTime.Now.AddDays(30).ToShortDateString(),
-                Public = true,
-                Expired = false,
-                Body = string.Empty,
-                MinimumReadLevel = (short)StaffRank.Player,
-                Name = "",
-                Tags = ""
+                DataObject = new JournalEntry()
             };
 
             return View("~/Views/GameAdmin/JournalEntry/Add.cshtml", vModel);
@@ -123,23 +112,18 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Add(AddEditJournalEntryViewModel vModel)
         {
             string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var tagList = new List<string>();
-
-            foreach (var tag in vModel.Tags.Split(new string[] { "||" }, StringSplitOptions.RemoveEmptyEntries))
-                tagList.Add(tag);
-
-            var newObj = new JournalEntry
+            JournalEntry newObj = new JournalEntry
             {
-                Name = vModel.Name,
-                Body = vModel.Body,
-                Expired = vModel.Expired,
-                ExpireDate = DateTime.Parse(vModel.ExpireDate),
-                MinimumReadLevel = (StaffRank)vModel.MinimumReadLevel,
-                Public = vModel.Public,
-                PublishDate = DateTime.Parse(vModel.PublishDate),
-                Tags = tagList.ToArray()
+                Name = vModel.DataObject.Name,
+                Body = vModel.DataObject.Body,
+                Expired = vModel.DataObject.Expired,
+                ExpireDate = vModel.DataObject.ExpireDate,
+                MinimumReadLevel = vModel.DataObject.MinimumReadLevel,
+                Public = vModel.DataObject.Public,
+                PublishDate = vModel.DataObject.PublishDate,
+                Tags = vModel.DataObject.Tags
             };
 
             if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
@@ -157,12 +141,12 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(long id)
         {
             string message = string.Empty;
-            var vModel = new AddEditJournalEntryViewModel
+            AddEditJournalEntryViewModel vModel = new AddEditJournalEntryViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
-            var obj = BackingDataCache.Get<IJournalEntry>(id);
+            var obj = TemplateCache.Get<IJournalEntry>(id);
 
             if (obj == null)
             {
@@ -171,13 +155,6 @@ namespace NetMud.Controllers.GameAdmin
             }
 
             vModel.DataObject = obj;
-            vModel.Name = obj.Name;
-            vModel.Body = obj.Body.Value;
-            vModel.Expired = obj.Expired;
-            vModel.ExpireDate = obj.ExpireDate.ToShortDateString();
-            vModel.MinimumReadLevel = (short)obj.MinimumReadLevel;
-            vModel.Public = obj.Public;
-            vModel.PublishDate = obj.PublishDate.ToShortDateString();
 
             return View("~/Views/GameAdmin/JournalEntry/Edit.cshtml", vModel);
         }
@@ -187,9 +164,9 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(long id, AddEditJournalEntryViewModel vModel)
         {
             string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = BackingDataCache.Get<IJournalEntry>(id);
+            var obj = TemplateCache.Get<IJournalEntry>(id);
             if (obj == null)
             {
                 message = "That does not exist";
@@ -198,20 +175,14 @@ namespace NetMud.Controllers.GameAdmin
 
             try
             {
-                obj.Name = vModel.Name;
-                obj.Body = vModel.Body;
-                obj.Expired = vModel.Expired;
-                obj.ExpireDate = DateTime.Parse(vModel.ExpireDate);
-                obj.MinimumReadLevel = (StaffRank)vModel.MinimumReadLevel;
-                obj.Public = vModel.Public;
-                obj.PublishDate = DateTime.Parse(vModel.PublishDate);
-
-                var tagList = new List<string>();
-
-                foreach (var tag in vModel.Tags.Split(new string[] { "||" }, StringSplitOptions.RemoveEmptyEntries))
-                    tagList.Add(tag);
-
-                obj.Tags = tagList.ToArray();
+                obj.Name = vModel.DataObject.Name;
+                obj.Body = vModel.DataObject.Body;
+                obj.Expired = vModel.DataObject.Expired;
+                obj.ExpireDate =vModel.DataObject.ExpireDate;
+                obj.MinimumReadLevel = vModel.DataObject.MinimumReadLevel;
+                obj.Public = vModel.DataObject.Public;
+                obj.PublishDate = vModel.DataObject.PublishDate;
+                obj.Tags = vModel.DataObject.Tags;
 
                 if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                 {

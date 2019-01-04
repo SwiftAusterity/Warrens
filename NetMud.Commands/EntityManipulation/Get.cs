@@ -1,20 +1,19 @@
-﻿using NetMud.Commands.Attributes;
+﻿using NetMud.Cartography;
+using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
-using NetMud.Data.Lexical;
-using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.Behaviors.Rendering;
-using NetMud.DataStructure.SupportingClasses;
+using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.System;
+using NetMud.DataStructure.Tile;
 using NetMud.Utility;
-using NutMud.Commands.Attributes;
 using System.Collections.Generic;
 
 namespace NetMud.Commands.EntityManipulation
 {
-    [CommandKeyword("get", false)]
-    [CommandKeyword("take", false)]
-    [CommandPermission(StaffRank.Player)]
-    [CommandParameter(CommandUsage.Subject, typeof(IEntity), new CacheReferenceType[] { CacheReferenceType.Entity }, false)]
-    [CommandParameter(CommandUsage.Target, typeof(IContains), new CacheReferenceType[] { CacheReferenceType.Container }, true)]
+    [CommandKeyword("get", false, "take")]
+    [CommandPermission(StaffRank.Player, true)]
+    [CommandParameter(CommandUsage.Subject, typeof(ITile), CacheReferenceType.Direction, false)]
     [CommandRange(CommandRangeType.Touch, 0)]
     public class Get : CommandPartial
     {
@@ -31,44 +30,57 @@ namespace NetMud.Commands.EntityManipulation
         /// </summary>
         public override void Execute()
         {
-            var sb = new List<string>();
-            var thing = (IEntity)Subject;
-            var actor = (IContains)Actor;
-            IContains place;
+            List<string> sb = new List<string>();
+            IContains actor = (IContains)Actor;
 
             string toRoomMessage = "$A$ gets $S$.";
 
-            if (Target != null)
+            if (Subject == null)
             {
-                place = (IContains)Target;
-                toRoomMessage = "$A$ gets $S$ from $T$."; 
-                sb.Add("You get $S$ from $T$.");
-            }
-            else
-            {
-                place = (IContains)OriginLocation;
-                sb.Add("You get $S$.");
+                RenderError("There is nothing in that direction.");
+                return;
             }
 
-            place.MoveFrom(thing);
-            actor.MoveInto(thing);
+            ITile tile = (ITile)Subject;
+            IEntity thing = tile.TopContents();
 
-            var toActor = new Message(MessagingType.Visible, new Occurrence() { Strength = 1 })
+            if (thing == null)
             {
-                Override = sb
+                RenderError("There is nothing there.");
+                return;
+            }
+
+            string error = thing.TryMoveTo(actor.GetContainerAsLocation());
+
+            if (!string.IsNullOrWhiteSpace(error))
+            {
+                RenderError(error);
+                return;
+            }
+
+            sb.Add("You get $S$.");
+
+            Message toActor = new Message()
+            {
+                Body = sb
             };
 
-            var toOrigin = new Message(MessagingType.Visible, new Occurrence() { Strength = 30 })
+            Message toOrigin = new Message()
             {
-                Override = new string[] { toRoomMessage }
+                Body = new string[] { toRoomMessage }
             };
 
-            var messagingObject = new MessageCluster(toActor)
+            MessageCluster messagingObject = new MessageCluster(toActor)
             {
                 ToOrigin = new List<IMessage> { toOrigin }
             };
 
-            messagingObject.ExecuteMessaging(Actor, thing, (IEntity)Target, OriginLocation.CurrentLocation, null);
+            messagingObject.ExecuteMessaging(Actor, thing, null, OriginLocation.CurrentZone, null);
+
+            //Cause a map delta
+            Utilities.SendMapUpdatesToZone(Actor.CurrentLocation.CurrentZone, new HashSet<Coordinate>() { tile.Coordinate });
+            Actor.Save();
+            tile.ParentLocation.Save();
         }
 
         /// <summary>
@@ -77,12 +89,10 @@ namespace NetMud.Commands.EntityManipulation
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            var sb = new List<string>
+            List<string> sb = new List<string>
             {
-                "Valid Syntax: get &lt;object&gt;",
-                "take &lt;object&gt;".PadWithString(14, "&nbsp;", true),
-                "get &lt;object&gt; &lt;container&gt;".PadWithString(14, "&nbsp;", true),
-                "take &lt;object&gt; &lt;container&gt;".PadWithString(14, "&nbsp;", true)
+                "Valid Syntax: get &lt;direction&gt;",
+                "take &lt;direction&gt;".PadWithString(14, "&nbsp;", true)
             };
             return sb;
         }

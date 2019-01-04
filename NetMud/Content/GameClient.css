@@ -1,11 +1,11 @@
-﻿/*Experimental*/
-body {
+﻿body {
     padding-bottom: 20px;
 }
 
 .body-content {
-    background-color: black;
-    color: white;
+    background-image: url(/Content/images/farmBkg.jpg);
+    background-size: cover;
+    background-attachment: fixed;
 }
 
 .navbar-brand {
@@ -17,11 +17,29 @@ body {
     background-clip: content-box;
 }
 
+.keyLegend {
+    display: none;
+    position: absolute;
+    width: 15%;
+    border: 2px solid black;
+    border-radius: 5px;
+    left: 84%;
+}
+
+    .keyLegend.expanded {
+        display: inline;
+    }
+
 .parserClientTop {
     padding: 5px 0;
     background: black;
     color: whitesmoke;
     min-height: 100px;
+    max-width: 1280px;
+    margin: 0 auto;
+    border-radius: 9px 9px 0 0;
+    border: 4px darkgray groove;
+    border-bottom: none;
 }
 
     .parserClientTop #locationBreadcrumbs {
@@ -30,22 +48,19 @@ body {
         color: lightsteelblue;
         text-shadow: 1px 1px 0 slategray, 4px 4px 0 rgba(0,0,0,0.15);
         margin-bottom: 3px;
-        width: 70%;
-        margin-left: 15%;
+        width: 60%;
     }
 
     .parserClientTop #locationDescription {
-        display: inline-flex;
+        display: inline-block;
         font-size: 14px;
-        width: 70%;
-        margin-left: 15%;
+        width: 60%;
     }
 
     .parserClientTop .rightNav {
         float: right;
         padding-right: 5px;
         font-size: 18px;
-        margin-top: -35px;
     }
 
         .parserClientTop .rightNav a span {
@@ -53,50 +68,30 @@ body {
         }
 
 .parserClient {
-    position: relative;
     padding-bottom: 0;
-    height: 100%;
     font-family: Courier New, Courier, monospace;
     font-size: 11px;
     border: 4px darkgray groove;
-    min-height: 760px;
+    height: 775px;
+    max-width: 1280px;
+    margin: 0 auto;
+    background: black;
+    border-radius: 0 0 9px 9px;
 }
 
     .parserClient .textParserClient {
         font-family: Courier New, Courier, monospace;
-        height: 750px;
-        width: 70%;
-        position: relative;
+        max-width: 1275px;
+        height: 75%;
         overflow-y: hidden;
-        overflow-x: hidden;
-        float: left;
     }
 
-    .parserClient .sidebar {
+    .parserClient .parserClientOutput {
+        border-top: 4px darkgray groove;
+        height: 22.5%;
         padding: 10px;
-        width: 15%;
-        min-height: 730px;
-        overflow-wrap: break-word;
-        max-height: 755px;
-    }
-
-    .parserClient .parserClientLeft {
-        float: left;
-        border-right: 4px darkgray groove;
-    }
-
-    .parserClient .parserClientRight {
-        float: right;
-        border-left: 4px darkgray groove;
-    }
-
-    .parserClient .sidebar .quadrant {
-        height: 50%;
-        min-height: 365px;
-    }
-
-    .parserClient .sidebar .quadrant:first-child {
-        border-bottom: 4px darkgray groove;
+        overflow-y: scroll;
+        color: white;
     }
 
 .text-output {
@@ -105,13 +100,11 @@ body {
 
 .parserOutput {
     width: 100%;
-    overflow-y: scroll;
-    overflow-x: visible;
+    overflow: hidden;
     padding: 0 5px 0 5px;
     vertical-align: bottom;
     text-align: left;
     z-index: 999;
-    min-height: 730px;
 }
 
     .parserOutput p {
@@ -270,3 +263,138 @@ ul.animated-list {
 .contentContainer pre {
     color: white;
 }
+
+.tile {
+    height: 21px;
+    width: 21px;
+    display: inline-flex;
+    vertical-align: middle;
+    overflow: hidden;
+    line-height: .8;
+    font-size: 14px;
+    padding-left: 2px;
+    cursor: help;
+    text-align: center;
+}
+
+    .tile span {
+        margin: auto;
+    }
+
+.statusIndicators {
+    float: left;
+    margin: 0;
+    width: 10%;
+    height: 95px;
+}
+
+    .statusIndicators > div:not(.tooltip) {
+        width: 45%;
+        height: 45%;
+        float: left;
+    }
+
+        .statusIndicators > div:not(.tooltip) svg {
+            width: 100%;
+            height: 100%;
+        }
+
+.statusBars {
+    width: 100%;
+    min-height: 20px;
+    border-top: 4px darkgray groove;
+    display: inline-flex;
+}
+
+    .statusBars > div {
+        width: 50%;
+    }
+
+        .statusBars > div:first-child {
+            text-align: center;
+            border-right: 4px darkgray groove;
+        }
+
+    .statusBars div.health {
+        color: navajowhite;
+        background-color: indianred;
+    }
+
+    .statusBars div.stamina {
+        color: indianred;
+        background-color: navajowhite;
+    }
+
+    .statusBars .inventoryItem {
+        border: 1px white solid;
+        height: 50%;
+        width: 2%;
+        vertical-align: middle;
+        overflow: hidden;
+        line-height: .8;
+        font-size: 14px;
+        cursor: help;
+        text-align: center;
+    }
+
+        .statusBars .inventoryItem.selected {
+            border: 1px navajowhite solid;
+        }
+
+        .statusBars .inventoryItem span {
+            margin: auto;
+        }
+
+    .statusBars .inventoryContainer {
+        float: right;
+        display: inline-flex;
+        width: 100%;
+    }
+
+    .statusBars .qualityItem {
+        border: 1px blue solid;
+        height: 13px;
+        width: 4%;
+        vertical-align: middle;
+        overflow: hidden;
+        font-size: 10px;
+        text-align: center;
+        border-radius: 9px;
+        background-color: powderblue;
+        color: black;
+        font-weight: 900;
+    }
+
+        .statusBars .qualityItem span {
+            margin: auto;
+        }
+
+.inputContainer {
+    padding-bottom: 3px;
+    width: 1275px;
+    margin: auto;
+}
+
+.useList {
+    margin: 2px;
+    display: none;
+    background-color: lightgray;
+}
+
+    .useList span {
+        background-color: navajowhite;
+        color: indianred;
+        font-weight: 600;
+        border-radius: 5px;
+        border: 1px solid floralwhite;
+        padding: 2px;
+        margin: 2px 5px 2px 2px;
+    }
+
+        .useList span:first-child {
+            background-color: inherit;
+            color: black;
+            border: none;
+            margin: 2px 5px 2px 2px;
+            border-radius: 0;
+        }

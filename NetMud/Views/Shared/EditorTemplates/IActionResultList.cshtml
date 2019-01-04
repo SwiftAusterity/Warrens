@@ -1,0 +1,22 @@
+﻿@using NetMud.Models
+@using NetMud.DataStructure.Action
+
+@model HashSet<IActionResult>
+
+@{
+    var newRow = "<div class=\"form-group row\"><a href=\"#\" class=\"removeRow col-form-label\" title=\"Remove this\" onclick=\"javascript: $(this).parent().remove(); return false;\">X</a>"
+                  + Html.EmptyEditorForMany(e => e, null, Model.Count(), "IActionResult") + "</div>";
+}
+
+<div id="ActionResultsRows" class="iterativeContainer">
+    <div class="addRowContainer">
+        <div class="col-sm-1">
+            @Html.DescriptionFor(m => m)
+            <a href="#" class="addRow btn" onclick="javascript: $(&#39;#ActionResultsRows&#39;).append(decodeHtml(&#39;@newRow&#39;)); return false;"><span class="addWord">Add Row</span></a>
+        </div>
+    </div>
+    <div class="form-group row">
+        <a href="#" class="removeRow col-form-label" title="Remove this" onclick="javascript: $(this).parent().remove(); return false;">X</a>
+        @Html.EditorForMany(e => e, null, 0, "IActionResult")
+    </div>
+</div>

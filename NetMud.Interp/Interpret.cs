@@ -1,9 +1,9 @@
-﻿using System;
-using System.Linq;
-
-using NetMud.DataStructure.Behaviors.Rendering;
-using NetMud.DataAccess;
+﻿using NetMud.DataAccess;
+using NetMud.DataStructure.Architectural.ActorBase;
+using NetMud.DataStructure.System;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NetMud.Interp
 {
@@ -22,19 +22,7 @@ namespace NetMud.Interp
         {
             try
             {
-                //kind of cheaty for now
-                if(commandString.StartsWith("lexicaltest "))
-                {
-                    var lexicalInterp = new LexicalInterpretationEngine();
-                    return lexicalInterp.Parse(actor, commandString.Replace("lexicaltest ", "")).Select(dict => string.Format("{0} : {1}", dict.Name, dict.WordType));
-                }
-                else if(commandString.StartsWith("lexicalpush "))
-                {
-                    var lexicalInterp = new LexicalInterpretationEngine();
-                    return lexicalInterp.Parse(actor, commandString.Replace("lexicaltest ", ""), true).Select(dict => string.Format("{0} : {1}", dict.Name, dict.WordType));
-                }
-
-                var commandContext = new Context(commandString, actor);
+                IContext commandContext = new Context(commandString, actor);
 
                 //Derp, we had an error with accessing the command somehow, usually to do with parameter collection or access permissions
                 if (commandContext.AccessErrors.Count() > 0)

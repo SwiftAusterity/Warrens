@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NetMud.Data</RootNamespace>
     <AssemblyName>NetMud.Data</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -34,47 +34,62 @@
     <Reference Include="CommonMark, Version=0.1.0.0, Culture=neutral, PublicKeyToken=001ef8810438905d, processorArchitecture=MSIL">
       <HintPath>..\packages\CommonMark.NET.0.15.1\lib\net45\CommonMark.dll</HintPath>
     </Reference>
-    <Reference Include="Google.Api.Gax, Version=2.4.0.0, Culture=neutral, PublicKeyToken=3ec5ea7f18953e47, processorArchitecture=MSIL">
-      <HintPath>..\packages\Google.Api.Gax.2.4.0\lib\net45\Google.Api.Gax.dll</HintPath>
+    <Reference Include="Google.Api.Gax, Version=2.5.0.0, Culture=neutral, PublicKeyToken=3ec5ea7f18953e47, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Api.Gax.2.5.0\lib\net45\Google.Api.Gax.dll</HintPath>
     </Reference>
-    <Reference Include="Google.Api.Gax.Rest, Version=2.4.0.0, Culture=neutral, PublicKeyToken=3ec5ea7f18953e47, processorArchitecture=MSIL">
-      <HintPath>..\packages\Google.Api.Gax.Rest.2.4.0\lib\net45\Google.Api.Gax.Rest.dll</HintPath>
+    <Reference Include="Google.Api.Gax.Rest, Version=2.5.0.0, Culture=neutral, PublicKeyToken=3ec5ea7f18953e47, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Api.Gax.Rest.2.5.0\lib\net45\Google.Api.Gax.Rest.dll</HintPath>
     </Reference>
-    <Reference Include="Google.Apis, Version=1.35.1.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
-      <HintPath>..\packages\Google.Apis.1.35.1\lib\net45\Google.Apis.dll</HintPath>
+    <Reference Include="Google.Apis, Version=1.36.1.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.1.36.1\lib\net45\Google.Apis.dll</HintPath>
     </Reference>
-    <Reference Include="Google.Apis.Auth, Version=1.35.1.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
-      <HintPath>..\packages\Google.Apis.Auth.1.35.1\lib\net45\Google.Apis.Auth.dll</HintPath>
+    <Reference Include="Google.Apis.Auth, Version=1.36.1.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Auth.1.36.1\lib\net45\Google.Apis.Auth.dll</HintPath>
     </Reference>
-    <Reference Include="Google.Apis.Auth.PlatformServices, Version=1.35.1.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
-      <HintPath>..\packages\Google.Apis.Auth.1.35.1\lib\net45\Google.Apis.Auth.PlatformServices.dll</HintPath>
+    <Reference Include="Google.Apis.Auth.PlatformServices, Version=1.36.1.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Auth.1.36.1\lib\net45\Google.Apis.Auth.PlatformServices.dll</HintPath>
     </Reference>
-    <Reference Include="Google.Apis.Core, Version=1.35.1.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
-      <HintPath>..\packages\Google.Apis.Core.1.35.1\lib\net45\Google.Apis.Core.dll</HintPath>
+    <Reference Include="Google.Apis.Core, Version=1.36.1.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Core.1.36.1\lib\net45\Google.Apis.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Google.Apis.PlatformServices, Version=1.35.1.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
-      <HintPath>..\packages\Google.Apis.1.35.1\lib\net45\Google.Apis.PlatformServices.dll</HintPath>
+    <Reference Include="Google.Apis.PlatformServices, Version=1.36.1.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.1.36.1\lib\net45\Google.Apis.PlatformServices.dll</HintPath>
     </Reference>
-    <Reference Include="Google.Apis.Translate.v2, Version=1.34.0.875, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
-      <HintPath>..\packages\Google.Apis.Translate.v2.1.34.0.875\lib\net45\Google.Apis.Translate.v2.dll</HintPath>
+    <Reference Include="Google.Apis.Translate.v2, Version=1.36.1.875, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Translate.v2.1.36.1.875\lib\net45\Google.Apis.Translate.v2.dll</HintPath>
     </Reference>
-    <Reference Include="Google.Cloud.Translation.V2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=185c282632e132a0, processorArchitecture=MSIL">
-      <HintPath>..\packages\Google.Cloud.Translation.V2.1.0.0\lib\net45\Google.Cloud.Translation.V2.dll</HintPath>
+    <Reference Include="Google.Cloud.Translation.V2, Version=1.1.0.0, Culture=neutral, PublicKeyToken=185c282632e132a0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Cloud.Translation.V2.1.1.0\lib\net45\Google.Cloud.Translation.V2.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Interactive.Async, Version=3.2.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Interactive.Async.3.2.0\lib\net46\System.Interactive.Async.dll</HintPath>
     </Reference>
-    <Reference Include="System.Net.Http, Version=4.1.1.2, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Net.Http.4.3.3\lib\net46\System.Net.Http.dll</HintPath>
+    <Reference Include="System.IO, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.4.3.0\lib\net462\System.IO.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="System.Security.Cryptography.Algorithms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.1\lib\net46\System.Security.Cryptography.Algorithms.dll</HintPath>
+    <Reference Include="System.Net.Http, Version=4.1.1.3, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.Http.4.3.4\lib\net46\System.Net.Http.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.4.3.0\lib\net462\System.Runtime.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Algorithms, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.1\lib\net463\System.Security.Cryptography.Algorithms.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Security.Cryptography.Encoding, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Security.Cryptography.Encoding.4.3.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
@@ -82,8 +97,8 @@
     <Reference Include="System.Security.Cryptography.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Security.Cryptography.Primitives.4.3.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
     </Reference>
-    <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.2\lib\net46\System.Security.Cryptography.X509Certificates.dll</HintPath>
+    <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.1.1.2, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.2\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
     </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -94,76 +109,87 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConfigData\AccountConfig.cs" />
-    <Compile Include="ConfigData\ConfigData.cs" />
-    <Compile Include="ConfigData\Acquaintence.cs" />
-    <Compile Include="ConfigData\GlobalConfig.cs" />
-    <Compile Include="ConfigData\PlayerMessage.cs" />
-    <Compile Include="ConfigData\Language.cs" />
-    <Compile Include="ConfigData\Dictata.cs" />
-    <Compile Include="DataIntegrity\BaseDataIntegrity.cs" />
-    <Compile Include="DataIntegrity\FilledContainerDataIntegrityAttribute.cs" />
-    <Compile Include="DataIntegrity\ShortDataIntegrityAttribute.cs" />
-    <Compile Include="DataIntegrity\NonNullableDataIntegrityAttribute.cs" />
-    <Compile Include="DataIntegrity\LongDataIntegrityAttribute.cs" />
-    <Compile Include="DataIntegrity\IntDataIntegrityAttribute.cs" />
-    <Compile Include="DataIntegrity\StringDataIntegrityAttribute.cs" />
-    <Compile Include="EntityBackingData\EntityBackingDataPartial.cs" />
-    <Compile Include="EntityBackingData\GaiaData.cs" />
-    <Compile Include="EntityBackingData\LocaleData.cs" />
-    <Compile Include="EntityBackingData\LocationDataEntityPartial.cs" />
-    <Compile Include="EntityBackingData\NonPlayerCharacter.cs" />
-    <Compile Include="EntityBackingData\Character.cs" />
-    <Compile Include="EntityBackingData\InanimateData.cs" />
-    <Compile Include="EntityBackingData\PathwayData.cs" />
-    <Compile Include="EntityBackingData\RoomData.cs" />
-    <Compile Include="EntityBackingData\ZoneData.cs" />
-    <Compile Include="Game\EntityPartial.cs" />
-    <Compile Include="Game\Gaia.cs" />
-    <Compile Include="Game\Inanimate.cs" />
-    <Compile Include="Game\Locale.cs" />
-    <Compile Include="Game\LocationEntityPartial.cs" />
-    <Compile Include="Game\Pathway.cs" />
-    <Compile Include="Game\Intelligence.cs" />
-    <Compile Include="Game\Player.cs" />
-    <Compile Include="Game\Room.cs" />
-    <Compile Include="Lexical\Lexica.cs" />
-    <Compile Include="Lexical\LexicalProcessor.cs" />
-    <Compile Include="Lexical\Thesaurus.cs" />
-    <Compile Include="LookupData\Celestial.cs" />
-    <Compile Include="LookupData\JournalEntry.cs" />
-    <Compile Include="LookupData\NaturalResourceDataPartial.cs" />
-    <Compile Include="LookupData\UIModule.cs" />
+    <Compile Include="Actions\Action.cs" />
+    <Compile Include="Actions\ActionCriteria.cs" />
+    <Compile Include="Actions\ActionResult.cs" />
+    <Compile Include="Actions\DecayEvent.cs" />
+    <Compile Include="Actions\Use.cs" />
+    <Compile Include="Architectural\PropertyBinding\AffectPatternDataBinder.cs" />
+    <Compile Include="Architectural\PropertyBinding\InanimateTemplateDataBinder.cs" />
+    <Compile Include="Architectural\PropertyBinding\NonPlayerCharacterTemplateDataBinder.cs" />
+    <Compile Include="Architectural\PropertyBinding\TileTemplateDataBinder.cs" />
+    <Compile Include="Architectural\PropertyBinding\ZoneTemplateDataBinder.cs" />
+    <Compile Include="Architectural\PropertyBinding\GaiaTemplateDataBinder.cs" />
+    <Compile Include="Architectural\PropertyBinding\InanimateCollectionTemplateDataBinder.cs" />
+    <Compile Include="Architectural\PropertyBinding\CelestialDataBinder.cs" />
+    <Compile Include="Gaias\CelestialPosition.cs" />
+    <Compile Include="Inanimates\InanimateComponent.cs" />
+    <Compile Include="NPCs\IntelligenceControl\Memory.cs" />
+    <Compile Include="NPCs\IntelligenceControl\Reflection.cs" />
+    <Compile Include="NPCs\Race.cs" />
+    <Compile Include="Players\AccountConfig.cs" />
+    <Compile Include="Architectural\ConfigData.cs" />
+    <Compile Include="Players\Acquaintence.cs" />
+    <Compile Include="Players\DeathConfig.cs" />
+    <Compile Include="Gossip\GossipConfig.cs" />
+    <Compile Include="Players\NPCRepop.cs" />
+    <Compile Include="System\GlobalConfig.cs" />
+    <Compile Include="Players\PersonalZoneConfig.cs" />
+    <Compile Include="Players\Playlist.cs" />
+    <Compile Include="Players\PlayerMessage.cs" />
+    <Compile Include="Architectural\DataIntegrity\BaseDataIntegrity.cs" />
+    <Compile Include="Architectural\DataIntegrity\FilledContainerDataIntegrityAttribute.cs" />
+    <Compile Include="Architectural\DataIntegrity\ShortDataIntegrityAttribute.cs" />
+    <Compile Include="Architectural\DataIntegrity\NonNullableDataIntegrityAttribute.cs" />
+    <Compile Include="Architectural\DataIntegrity\LongDataIntegrityAttribute.cs" />
+    <Compile Include="Architectural\DataIntegrity\IntDataIntegrityAttribute.cs" />
+    <Compile Include="Architectural\DataIntegrity\StringDataIntegrityAttribute.cs" />
+    <Compile Include="Architectural\EntityBase\EntityTemplatePartial.cs" />
+    <Compile Include="Gaias\GaiaTemplate.cs" />
+    <Compile Include="NPCs\NonPlayerCharacterTemplate.cs" />
+    <Compile Include="Players\PlayerTemplate.cs" />
+    <Compile Include="Inanimates\InanimateTemplate.cs" />
+    <Compile Include="Zones\ZoneTemplateMap.cs" />
+    <Compile Include="Zones\PathwayData.cs" />
+    <Compile Include="Zones\PathwayDestination.cs" />
+    <Compile Include="Tiles\TileTemplate.cs" />
+    <Compile Include="Zones\ZoneTemplate.cs" />
+    <Compile Include="Architectural\EntityBase\EntityPartial.cs" />
+    <Compile Include="Gaias\Gaia.cs" />
+    <Compile Include="Inanimates\Inanimate.cs" />
+    <Compile Include="NPCs\NonPlayerCharacter.cs" />
+    <Compile Include="Players\Player.cs" />
+    <Compile Include="Tiles\Tile.cs" />
+    <Compile Include="Gaias\EconomicBasis.cs" />
+    <Compile Include="Gaias\EconomicTrend.cs" />
+    <Compile Include="Gaias\Economy.cs" />
+    <Compile Include="Gaias\PressureSystem.cs" />
+    <Compile Include="Zones\WeatherEvent.cs" />
+    <Compile Include="NPCs\IntelligenceControl\Personality.cs" />
+    <Compile Include="NPCs\IntelligenceControl\Preference.cs" />
+    <Compile Include="Gaias\Celestial.cs" />
+    <Compile Include="Administrative\JournalEntry.cs" />
+    <Compile Include="Actions\Interaction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="LookupData\DimensionalModel.cs" />
-    <Compile Include="LookupData\DimensionalModelData.cs" />
-    <Compile Include="LookupData\DimensionalModelNode.cs" />
-    <Compile Include="LookupData\DimensionalModelPlane.cs" />
-    <Compile Include="LookupData\Help.cs" />
-    <Compile Include="LookupData\Material.cs" />
-    <Compile Include="LookupData\Race.cs" />
-    <Compile Include="LookupData\LookupDataPartial.cs" />
-    <Compile Include="Game\Zone.cs" />
-    <Compile Include="Serialization\CacheKeyDictionaryConverter.cs" />
-    <Compile Include="Serialization\DescriptiveEnumConverter.cs" />
-    <Compile Include="System\Account.cs" />
-    <Compile Include="System\Affect.cs" />
-    <Compile Include="Serialization\ConcreteTypeConverter.cs" />
-    <Compile Include="System\Chronology.cs" />
-    <Compile Include="System\Constants.cs" />
-    <Compile Include="System\DataHelpers.cs" />
-    <Compile Include="System\EntityContainer.cs" />
-    <Compile Include="System\BackingDataPartial.cs" />
-    <Compile Include="LookupData\Fauna.cs" />
-    <Compile Include="LookupData\Flora.cs" />
-    <Compile Include="System\EntityContainerData.cs" />
-    <Compile Include="System\GlobalPosition.cs" />
-    <Compile Include="System\LookupCriteria.cs" />
-    <Compile Include="System\Map.cs" />
-    <Compile Include="LookupData\Mineral.cs" />
-    <Compile Include="Lexical\Occurrence.cs" />
-    <Compile Include="System\SerializableDataPartial.cs" />
-    <Compile Include="System\TimeOfDay.cs" />
+    <Compile Include="Administrative\Help.cs" />
+    <Compile Include="Architectural\LookupDataPartial.cs" />
+    <Compile Include="Zones\Zone.cs" />
+    <Compile Include="Architectural\Serialization\CacheKeyDictionaryConverter.cs" />
+    <Compile Include="Architectural\Serialization\DescriptiveEnumConverter.cs" />
+    <Compile Include="Players\Account.cs" />
+    <Compile Include="Architectural\Serialization\ConcreteTypeConverter.cs" />
+    <Compile Include="Gaias\Chronology.cs" />
+    <Compile Include="Architectural\DataHelpers.cs" />
+    <Compile Include="Architectural\EntityBase\EntityContainer.cs" />
+    <Compile Include="Architectural\TemplatePartial.cs" />
+    <Compile Include="Architectural\EntityBase\EntityContainerData.cs" />
+    <Compile Include="Architectural\GlobalPosition.cs" />
+    <Compile Include="Inanimates\ItemStack.cs" />
+    <Compile Include="Zones\Map.cs" />
+    <Compile Include="NPCs\Merchandise.cs" />
+    <Compile Include="Architectural\EntityBase\Quality.cs" />
+    <Compile Include="Architectural\Serialization\SerializableDataPartial.cs" />
+    <Compile Include="Gaias\TimeOfDay.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NetMud.Cartography\NetMud.Cartography.csproj">
@@ -190,9 +216,17 @@
       <Project>{69f61bfc-0e4d-484d-bef2-dcb1f4181340}</Project>
       <Name>NetMud.Gaia</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NetMud.Physics\NetMud.Physics.csproj">
-      <Project>{28aabdf5-250e-40ce-88de-be3b9d23d95f}</Project>
-      <Name>NetMud.Physics</Name>
+    <ProjectReference Include="..\NetMud.Gossip\NetMud.Gossip.csproj">
+      <Project>{D98549E9-9D8C-46A7-83B2-9A4D68504F31}</Project>
+      <Name>NetMud.Gossip</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NetMud.Intelligence\NetMud.Intelligence.csproj">
+      <Project>{780050f3-603f-4396-94b2-5bfef50a4265}</Project>
+      <Name>NetMud.Intelligence</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NetMud.Interp\NetMud.Interp.csproj">
+      <Project>{0c46dab6-27fd-4117-acf6-0b8440614aa0}</Project>
+      <Name>NetMud.Interp</Name>
     </ProjectReference>
     <ProjectReference Include="..\NetMud.Utility\NetMud.Utility.csproj">
       <Project>{9f3caec0-73dc-463c-8ef7-13b83bc8fb12}</Project>
@@ -203,6 +237,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

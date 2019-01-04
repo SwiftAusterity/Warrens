@@ -1,12 +1,12 @@
 ﻿using NetMud.Authentication;
-using NetMud.DataStructure.Base.PlayerConfiguration;
+using NetMud.DataStructure.Player;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageNotificationsViewModel : PagedDataModel<IPlayerMessage>, BaseViewModel
+    public class ManageNotificationsViewModel : PagedDataModel<IPlayerMessage>, IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
@@ -26,7 +26,7 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddViewNotificationViewModel : BaseViewModel
+    public class AddViewNotificationViewModel : IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 

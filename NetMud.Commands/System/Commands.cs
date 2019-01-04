@@ -1,11 +1,9 @@
 ﻿using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
-using NetMud.Data.Lexical;
-using NetMud.DataStructure.Base.Entity;
-using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.SupportingClasses;
-using NutMud.Commands.Attributes;
+using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Player;
+using NetMud.DataStructure.System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -13,7 +11,7 @@ using System.Text;
 
 namespace NetMud.Commands.System
 {
-    [CommandKeyword("commands", false, false, true)]
+    [CommandKeyword("commands", false, false)]
     [CommandPermission(StaffRank.Player)]
     [CommandRange(CommandRangeType.Touch, 0)]
     public class Commands : CommandPartial
@@ -32,21 +30,21 @@ namespace NetMud.Commands.System
             if (!Actor.GetType().GetInterfaces().Contains(typeof(IPlayer)))
                 return;
 
-            var returnStrings = new List<string>();
-            var sb = new StringBuilder();
+            List<string> returnStrings = new List<string>();
+            StringBuilder sb = new StringBuilder();
 
-            var commandsAssembly = Assembly.GetAssembly(typeof(CommandParameterAttribute));
+            Assembly commandsAssembly = Assembly.GetAssembly(typeof(CommandParameterAttribute));
 
-            var loadedCommands = commandsAssembly.GetTypes().Where(t => t.GetInterfaces().Contains(typeof(ICommand)));
+            IEnumerable<global::System.Type> loadedCommands = commandsAssembly.GetTypes().Where(t => t.GetInterfaces().Contains(typeof(ICommand)));
 
-            loadedCommands = loadedCommands.Where(comm => comm.GetCustomAttributes<CommandPermissionAttribute>().Any(att => att.MinimumRank <= Actor.DataTemplate<ICharacter>().GamePermissionsRank));
+            loadedCommands = loadedCommands.Where(comm => comm.GetCustomAttributes<CommandPermissionAttribute>().Any(att => att.MinimumRank <= Actor.Template<IPlayerTemplate>().GamePermissionsRank));
 
             returnStrings.Add("Commands:");
 
-            var commandNames = new List<string>();
-            foreach (var command in loadedCommands)
+            List<string> commandNames = new List<string>();
+            foreach (global::System.Type command in loadedCommands)
             {
-                foreach(var commandName in command.GetCustomAttributes<CommandKeywordAttribute>().Where(key => key.DisplayInHelpAndCommands))
+                foreach(CommandKeywordAttribute commandName in command.GetCustomAttributes<CommandKeywordAttribute>().Where(key => key.DisplayInHelpAndCommands))
                     if(!commandNames.Contains(commandName.Keyword))
                         commandNames.Add(commandName.Keyword);
 
@@ -61,19 +59,19 @@ namespace NetMud.Commands.System
 
             returnStrings.Add(sb.ToString());
 
-            var toActor = new Message(MessagingType.Visible, new Occurrence() { Strength = 1 })
+            Message toActor = new Message()
             {
-                Override = returnStrings
+                Body = returnStrings
             };
 
-            var messagingObject = new MessageCluster(toActor);
+            MessageCluster messagingObject = new MessageCluster(toActor);
 
             messagingObject.ExecuteMessaging(Actor, null, null, null, null);
         }
 
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            var sb = new List<string>
+            List<string> sb = new List<string>
             {
                 "Valid Syntax: commands"
             };

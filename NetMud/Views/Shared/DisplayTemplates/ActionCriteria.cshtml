@@ -1,0 +1,40 @@
+﻿@using NetMud.DataStructure.Inanimate
+@using NetMud.DataStructure.NPC
+@using NetMud.DataStructure.Tile
+
+@model NetMud.DataStructure.Action.IActionCriteria
+
+<div style="text-align: center; font-weight: 800;">
+    Criteria Targets: @Model.Target.ToString()
+</div>
+@if (!string.IsNullOrWhiteSpace(Model.Quality))
+{
+    <div>
+        <span>Required Quality</span>
+        <span>@Model.Quality: @Model.ValueRange.Low-@Model.ValueRange.High</span>
+    </div>
+}
+@if (Model.AffectsMemberId > -1)
+{
+    switch (Model.Target)
+    {
+        case NetMud.DataStructure.Action.ActionTarget.NPC:
+            <div>
+                <span>Affects Only</span>
+                <span>@(Model.GetMember<INonPlayerCharacterTemplate>().Name)</span>
+            </div>
+            break;
+        case NetMud.DataStructure.Action.ActionTarget.Tile:
+            <div>
+                <span>Affects Only</span>
+                <span>@(Model.GetMember<ITileTemplate>().Name)</span>
+            </div>
+            break;
+        case NetMud.DataStructure.Action.ActionTarget.Item:
+            <div>
+                <span>Affects Only</span>
+                <span>@(Model.GetMember<IInanimateTemplate>().Name)</span>
+            </div>
+            break;
+    }
+}

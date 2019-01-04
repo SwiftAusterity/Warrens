@@ -1,0 +1,23 @@
+﻿@using NetMud.Data.Gaias
+
+@model Celestial
+
+<h4>Details</h4>
+<div class="form-group row">
+    @Html.EditorFor(e => e.Name)
+    @Html.EditorFor(e => e.Luminosity)
+</div>
+<h4>Movement</h4>
+<div class="form-group row">
+    @Html.EditorFor(e => e.OrientationType)
+    @Html.EditorFor(e => e.Apogee)
+    @Html.EditorFor(e => e.Perigree)
+    @Html.EditorFor(e => e.Velocity)
+</div>
+<h4>Help Text</h4>
+<div class="form-group row">
+    @Html.EditorFor(e => e.HelpText)
+</div>
+
+
+

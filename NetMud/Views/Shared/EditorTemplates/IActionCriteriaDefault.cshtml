@@ -1,0 +1,25 @@
+﻿@using NetMud.DataStructure.Action
+
+@model IActionCriteria
+
+@{
+    var targetList = new Dictionary<string, string>();
+    var validList = new List<ActionTarget>()
+    {
+        ActionTarget.Self,
+        ActionTarget.Player,
+        ActionTarget.Tool
+    };
+
+    foreach (var name in validList)
+    {
+        targetList.Add(name.ToString(), name.ToString());
+    }
+}
+
+<div class="form-group row">
+    @Html.EditorFor(m => m.Target, new { validItems = targetList })
+    @Html.EditorFor(m => m.AffectsMemberId, "KeyedTemplateList", new { validItems = ViewData["ValidNPCDatas"], disabled = true, forceOptional = true, noValidation = true })
+    @Html.EditorFor(m => m.Quality)
+    @Html.EditorFor(m => m.ValueRange)
+</div>

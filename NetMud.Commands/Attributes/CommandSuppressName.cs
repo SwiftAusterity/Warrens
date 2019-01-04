@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NutMud.Commands.Attributes
+namespace NetMud.Commands.Attributes
 {
     /// <summary>
     /// Force suppression of command name in help and commands listings

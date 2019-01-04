@@ -1,14 +1,12 @@
 ﻿using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
-using NetMud.Data.Lexical;
-using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.Behaviors.Rendering;
-using NetMud.DataStructure.SupportingClasses;
-using NutMud.Commands.Attributes;
+using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NutMud.Commands.System
+namespace NetMud.Commands.System
 {
     /// <summary>
     /// Displays help text for a help file (data) or command (RenderHelpBody)
@@ -32,7 +30,7 @@ namespace NutMud.Commands.System
         public override void Execute()
         {
             var topic = (IHelpful)Subject;
-            var sb = GetHelpHeader(topic);
+            IList<string> sb = GetHelpHeader(topic);
 
             sb = sb.Concat(topic.RenderHelpBody()).ToList();
 
@@ -44,12 +42,12 @@ namespace NutMud.Commands.System
                 sb = sb.Concat(subject.RenderSyntaxHelp()).ToList();
             }
 
-            var toActor = new Message(MessagingType.Audible, new Occurrence() { Strength = 1 })
+            Message toActor = new Message()
             {
-                Override = sb
+                Body = sb
             };
 
-            var messagingObject = new MessageCluster(toActor);
+            MessageCluster messagingObject = new MessageCluster(toActor);
 
             messagingObject.ExecuteMessaging(Actor, null, null, null, null);
         }
@@ -60,7 +58,7 @@ namespace NutMud.Commands.System
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            var sb = new List<string>
+            List<string> sb = new List<string>
             {
                 string.Format("Valid Syntax: help &lt;topic&gt;")
             };
@@ -82,9 +80,9 @@ namespace NutMud.Commands.System
 
         private IList<string> GetHelpHeader(IHelpful subject)
         {
-            var sb = new List<string>();
+            List<string> sb = new List<string>();
             var subjectName = subject.GetType().Name;
-            var typeName = "Help";
+            string typeName = "Help";
 
             if (subject.GetType().GetInterfaces().Contains(typeof(ILookupData)))
             {
