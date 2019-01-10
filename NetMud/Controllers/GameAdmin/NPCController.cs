@@ -1,15 +1,16 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
-using NetMud.Data.EntityBackingData;
-using NetMud.Data.Lexical;
+using NetMud.Communication.Lexical;
+using NetMud.Data.Linguistic;
+using NetMud.Data.NPC;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.Behaviors.System;
+using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Linguistic;
-using NetMud.DataStructure.SupportingClasses;
+using NetMud.DataStructure.NPC;
+using NetMud.DataStructure.System;
 using NetMud.Models.Admin;
 using System;
 using System.Linq;
@@ -45,7 +46,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageNPCDataViewModel(BackingDataCache.GetAll<INonPlayerCharacter>())
+            var vModel = new ManageNPCDataViewModel(TemplateCache.GetAll<INonPlayerCharacterTemplate>())
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -68,7 +69,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<INonPlayerCharacter>(removeId);
+                var obj = TemplateCache.Get<INonPlayerCharacterTemplate>(removeId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -84,7 +85,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<INonPlayerCharacter>(unapproveId);
+                var obj = TemplateCache.Get<INonPlayerCharacterTemplate>(unapproveId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -108,7 +109,7 @@ namespace NetMud.Controllers.GameAdmin
             var vModel = new AddEditNPCDataViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidRaces = BackingDataCache.GetAll<IRace>()
+                ValidRaces = TemplateCache.GetAll<IRace>()
             };
 
             return View("~/Views/GameAdmin/NPC/Add.cshtml", vModel);
@@ -121,16 +122,16 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var newObj = new NonPlayerCharacter
+            var newObj = new NonPlayerCharacterTemplate
             {
                 Name = Name,
                 SurName = SurName,
                 Gender = Gender
             };
-            var race = BackingDataCache.Get<IRace>(raceId);
+            var race = TemplateCache.Get<IRace>(raceId);
 
             if (race != null)
-                newObj.RaceData = race;
+                newObj.Race = race;
 
             if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
                 message = "Error; Creation failed.";
@@ -150,10 +151,10 @@ namespace NetMud.Controllers.GameAdmin
             var vModel = new AddEditNPCDataViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidRaces = BackingDataCache.GetAll<IRace>()
+                ValidRaces = TemplateCache.GetAll<IRace>()
             };
 
-            var obj = BackingDataCache.Get<INonPlayerCharacter>(id);
+            var obj = TemplateCache.Get<INonPlayerCharacterTemplate>(id);
 
             if (obj == null)
             {
@@ -176,7 +177,7 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = BackingDataCache.Get<NonPlayerCharacter>(id);
+            var obj = TemplateCache.Get<INonPlayerCharacterTemplate>(id);
             if (obj == null)
             {
                 message = "That does not exist";
@@ -186,10 +187,10 @@ namespace NetMud.Controllers.GameAdmin
             obj.Name = Name;
             obj.SurName = SurName;
             obj.Gender = Gender;
-            var race = BackingDataCache.Get<IRace>(raceId);
+            var race = TemplateCache.Get<IRace>(raceId);
 
             if (race != null)
-                obj.RaceData = race;
+                obj.Race = race;
 
             if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {
@@ -207,7 +208,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             string message = string.Empty;
 
-            var obj = BackingDataCache.Get<INonPlayerCharacter>(id);
+            var obj = TemplateCache.Get<INonPlayerCharacterTemplate>(id);
             if (obj == null)
             {
                 message = "That zone does not exist";
@@ -248,7 +249,7 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = BackingDataCache.Get<INonPlayerCharacter>(id);
+            var obj = TemplateCache.Get<INonPlayerCharacterTemplate>(id);
             if (obj == null)
             {
                 message = "That zone does not exist";
@@ -329,7 +330,7 @@ namespace NetMud.Controllers.GameAdmin
                     var type = short.Parse(values[0]);
                     var phrase = values[1];
 
-                    var obj = BackingDataCache.Get<INonPlayerCharacter>(id);
+                    var obj = TemplateCache.Get<INonPlayerCharacterTemplate>(id);
 
                     if (obj == null)
                         message = "That does not exist";

@@ -1,4 +1,4 @@
-﻿using NetMud.DataStructure.Base.Supporting;
+﻿using NetMud.DataStructure.Architectural.EntityBase;
 using System.Collections.Generic;
 using System.Text;
 

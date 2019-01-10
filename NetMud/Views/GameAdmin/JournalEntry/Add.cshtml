@@ -1,42 +1,16 @@
-﻿@using NetMud.DataStructure.SupportingClasses;
+﻿@model NetMud.Models.Admin.AddEditJournalEntryViewModel
 
-@model NetMud.Models.Admin.AddEditJournalEntryViewModel
+@{
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("New Entry", new string[] { "Dashboard", "Journal Entries" }, new string[] { "/GameAdmin", "/JournalEntry" });
+}
 
 <section id="newEntryForm">
     @using (Html.BeginForm("Add", "JournalEntry", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group row">
-            @Html.EditorFor(e => e.Name)
-        </div>
-        <div class="form-group row">
-            @Html.DescriptiveLabelFor(m => m.MinimumReadLevel, new { @class = "col-sm-1 col-form-label" })
-            <div class="col-md-3">
-                @Html.DropDownList("MinimumReadLevel", Enum.GetNames(typeof(StaffRank)).Select(rl =>
-                                                                new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(StaffRank), rl)).ToString() })
-                                                                , "Select One", htmlAttributes: new { id = "Type", @class = "form-control" })
-            </div>
-            @Html.EditorFor(e => e.Public)
-        </div>
-        <div class="form-group row">
-            @Html.EditorFor(e => e.PublishDate)
-        </div>
-        <div class="form-group row">
-            @Html.EditorFor(e => e.ExpireDate)
-            @Html.EditorFor(e => e.Expired)
-        </div>
-        <h4>Tags</h4>
-        <div class="form-group row">
-            @Html.HiddenFor(m => m.Tags)
-            <div class="col-md-2">
-                <input type="text" id="addTags" class="TagList" /><span class="glyphicon glyphicon-plus-sign addWord"></span>
-            </div>
-            <div class="col-md-10" id="TagsContainer" style="margin-top: 10px;"></div>
-        </div>
-        <div class="form-group row" style="margin-top: 15px;">
-            @Html.EditorFor(e => e.Body)
-        </div>
+
+        @Html.EditorFor(m => m.DataObject)
 
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Create", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "JournalEntry", IncludeCancel = true })
     }
@@ -44,59 +18,4 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-
-    <script type="text/javascript">
-        $('.touchWord').click(function () {
-            $this = $(this);
-            var word = $this.attr('data-item-value');
-
-            var $source = $('#Tags');
-            var sourceValue = $source.val();
-
-            $this.detatch();
-
-            $source.val(sourceValue.replace('||' + word + '||', ''));
-        });
-
-        $('.addWord').click(function () {
-            $this = $(this);
-            var word = $('#addTags').val();
-
-            var $source = $('#Tags');
-            var sourceValue = $source.val();
-
-            if (word !== '' && sourceValue.indexOf('||' + word + '||') === -1) {
-                $('#addTags').val('');
-                sourceValue = sourceValue + '||' + word + '||';
-
-                $source.val(sourceValue);
-
-                var $newWord = $('<span class="touchWord" data-item-value="' + word + '">' + word + '</span>');
-
-                $newWord.appendTo('#TagsContainer');
-
-                $newWord.click(function () {
-                    $this = $(this);
-                    var word = $this.attr('data-item-value');
-
-                    var $source = $('#Tags');
-                    var sourceValue = $source.val();
-
-                    $this.detatch();
-
-                    $source.val(sourceValue.replace('||' + word + '||', ''));
-                });
-            }
-        });
-
-        $(".TagList").autocomplete({
-            source: ['Blog', 'Announcement', 'ReleaseNotes'],
-            minLength: 2,
-            select: function (event, ui) {
-                $(this).val(ui.item.value);
-                return false;
-            }
-        });
-    </script>
-
 }

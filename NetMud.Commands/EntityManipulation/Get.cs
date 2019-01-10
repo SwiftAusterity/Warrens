@@ -1,11 +1,11 @@
 ﻿using NetMud.Commands.Attributes;
+using NetMud.Communication.Lexical;
 using NetMud.Communication.Messaging;
-using NetMud.Data.Lexical;
-using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.Behaviors.Rendering;
-using NetMud.DataStructure.SupportingClasses;
+using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.System;
 using NetMud.Utility;
-using NutMud.Commands.Attributes;
 using System.Collections.Generic;
 
 namespace NetMud.Commands.EntityManipulation
@@ -14,7 +14,7 @@ namespace NetMud.Commands.EntityManipulation
     [CommandKeyword("take", false)]
     [CommandPermission(StaffRank.Player)]
     [CommandParameter(CommandUsage.Subject, typeof(IEntity), new CacheReferenceType[] { CacheReferenceType.Entity }, false)]
-    [CommandParameter(CommandUsage.Target, typeof(IContains), new CacheReferenceType[] { CacheReferenceType.Container }, true)]
+    [CommandParameter(CommandUsage.Target, typeof(IContains), new CacheReferenceType[] { CacheReferenceType.Inventory }, true)]
     [CommandRange(CommandRangeType.Touch, 0)]
     public class Get : CommandPartial
     {
@@ -68,7 +68,7 @@ namespace NetMud.Commands.EntityManipulation
                 ToOrigin = new List<IMessage> { toOrigin }
             };
 
-            messagingObject.ExecuteMessaging(Actor, thing, (IEntity)Target, OriginLocation.CurrentLocation, null);
+            messagingObject.ExecuteMessaging(Actor, thing, (IEntity)Target, OriginLocation.CurrentRoom, null);
         }
 
         /// <summary>

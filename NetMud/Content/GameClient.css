@@ -1,5 +1,4 @@
-﻿/*Experimental*/
-body {
+﻿body {
     padding-bottom: 20px;
 }
 
@@ -22,6 +21,11 @@ body {
     background: black;
     color: whitesmoke;
     min-height: 100px;
+    max-width: 1280px;
+    margin: 0 auto;
+    border-radius: 9px 9px 0 0;
+    border: 4px darkgray groove;
+    border-bottom: none;
 }
 
     .parserClientTop #locationBreadcrumbs {

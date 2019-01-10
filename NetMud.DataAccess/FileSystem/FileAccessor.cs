@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 
 namespace NetMud.DataAccess.FileSystem
 {
@@ -65,12 +66,12 @@ namespace NetMud.DataAccess.FileSystem
         public byte[] ReadCurrentFileByPath(string fileName)
         {
             byte[] bytes = new byte[0];
-            var filePath = BaseDirectory + CurrentDirectoryName + fileName;
+            string filePath = BaseDirectory + CurrentDirectoryName + fileName;
 
             if (VerifyDirectory(BaseDirectory)
                 || VerifyDirectory(BaseDirectory + CurrentDirectoryName)
                 || File.Exists(BaseDirectory + CurrentDirectoryName + fileName))
-                using (var stream = File.Open(filePath, FileMode.Open))
+                using (FileStream stream = File.Open(filePath, FileMode.Open))
                 {
                     bytes = new byte[stream.Length];
                     stream.Read(bytes, 0, (int)stream.Length);
@@ -88,7 +89,7 @@ namespace NetMud.DataAccess.FileSystem
         {
             byte[] bytes = new byte[0];
 
-            using (var stream = file.Open(FileMode.Open))
+            using (FileStream stream = file.Open(FileMode.Open))
             {
                 bytes = new byte[stream.Length];
                 stream.Read(bytes, 0, (int)stream.Length);
@@ -105,7 +106,7 @@ namespace NetMud.DataAccess.FileSystem
         /// <returns>success</returns>
         public bool VerifyDirectory(string directoryName, bool createIfMissing = true)
         {
-            var mappedName = directoryName;
+            string mappedName = directoryName;
 
             if (!directoryName.Contains(BaseDirectory))
                 mappedName = string.Format("{0}{1}", BaseDirectory, directoryName);
@@ -144,7 +145,7 @@ namespace NetMud.DataAccess.FileSystem
         public bool WriteToFile(string fullFileName, byte[] bytes, FileMode writeMode = FileMode.Truncate)
         {
             FileStream entityFile = null;
-            var success = true;
+            bool success = true;
 
             try
             {
@@ -157,6 +158,11 @@ namespace NetMud.DataAccess.FileSystem
 
                 //Don't forget to write the file out
                 entityFile.Flush();
+            }
+            catch(IOException)
+            {
+                //TODO: want to retry this one, def dont log errors
+                success = false;
             }
             catch (Exception ex)
             {
@@ -189,6 +195,8 @@ namespace NetMud.DataAccess.FileSystem
                 || !File.Exists(currentFileName))
                 return false;
 
+            CullDirectoryCount(BaseDirectory + ArchiveDirectoryName);
+
             File.Move(currentFileName, archiveFileName);
 
             return true;
@@ -205,8 +213,8 @@ namespace NetMud.DataAccess.FileSystem
             if (string.IsNullOrWhiteSpace(dateFormattedDirectory))
                 dateFormattedDirectory = DatedBackupDirectory;
 
-            var currentFileName = string.Format("{0}{1}{2}", BaseDirectory, CurrentDirectoryName, fileName);
-            var archiveFileName = string.Format("{0}{1}", dateFormattedDirectory, fileName);
+            string currentFileName = string.Format("{0}{1}{2}", BaseDirectory, CurrentDirectoryName, fileName);
+            string archiveFileName = string.Format("{0}{1}", dateFormattedDirectory, fileName);
 
             //Why backup something that doesnt exist
             if (!VerifyDirectory(BaseDirectory + CurrentDirectoryName)
@@ -214,8 +222,32 @@ namespace NetMud.DataAccess.FileSystem
                 || !File.Exists(currentFileName))
                 return false;
 
+            CullDirectoryCount(BaseDirectory + ArchiveDirectoryName);
+
             File.Move(currentFileName, archiveFileName);
             return true;
+        }
+
+        internal void CullDirectoryCount(string baseDirectoryPath)
+        {
+            try
+            {
+                string[] backupDirs = Directory.GetDirectories(baseDirectoryPath);
+
+                //TODO: Make this a system setting
+                if (backupDirs.Count() >= 10)
+                {
+                    //Remove some
+                    foreach (string dirName in backupDirs.Skip(10))
+                    {
+                        Directory.Delete(dirName, true);
+                    }
+                }
+            }
+            catch
+            {
+                //just eat it for now
+            }
         }
     }
 }

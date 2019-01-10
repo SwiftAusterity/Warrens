@@ -1,7 +1,7 @@
 ﻿using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.Place;
-using NetMud.DataStructure.SupportingClasses;
+using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Room;
+using NetMud.DataStructure.System;
 using NetMud.Utility;
 using System;
 using System.Collections.Generic;
@@ -19,8 +19,8 @@ namespace NetMud.Cartography
         /// </summary>
         /// <param name="origin">The room we're starting in</param>
         /// <param name="direction">The direction we're moving in</param>
-        /// <returns>null or a RoomData</returns>
-        public static IRoomData GetRoomInDirection(IRoomData origin, MovementDirectionType direction)
+        /// <returns>null or a RoomTemplate</returns>
+        public static IRoomTemplate GetRoomInDirection(IRoomTemplate origin, MovementDirectionType direction)
         {
             //We can't find none directions on a map
             if (origin == null || direction == MovementDirectionType.None)
@@ -29,16 +29,16 @@ namespace NetMud.Cartography
             var worldMap = origin.ParentLocation.Interior.CoordinatePlane;
 
             var steps = Utilities.GetDirectionStep(direction);
-            var newX = origin.Coordinates.Item1 + steps.Item1;
-            var newY = origin.Coordinates.Item2 + steps.Item2;
-            var newZ = origin.Coordinates.Item3 + steps.Item3;
+            var newX = origin.Coordinates.X + steps.Item1;
+            var newY = origin.Coordinates.Y + steps.Item2;
+            var newZ = origin.Coordinates.Z + steps.Item3;
 
             //out of bounds
-            if (Utilities.IsOutOfBounds(new Tuple<int, int, int>(newX, newY, newZ), worldMap))
+            if (Utilities.IsOutOfBounds(new Coordinate(newX, newY, newZ), worldMap))
                 return null;
 
             if (worldMap[newX, newY, newZ] > -1)
-                return BackingDataCache.Get<IRoomData>(worldMap[newX, newY, newZ]);
+                return TemplateCache.Get<IRoomTemplate>(worldMap[newX, newY, newZ]);
 
             return null;
         }
@@ -80,7 +80,7 @@ namespace NetMud.Cartography
                 for (y = 0; y <= fullMap.GetUpperBound(1); y++)
                     for (z = 0; z <= fullMap.GetUpperBound(2); z++)
                     {
-                        var room = BackingDataCache.Get<IRoomData>(fullMap[x, y, z]);
+                        var room = TemplateCache.Get<IRoomTemplate>(fullMap[x, y, z]);
 
                         if (room == null || room.ParentLocation == null || !room.ParentLocation.Id.Equals(localeId))
                             continue;
@@ -114,7 +114,7 @@ namespace NetMud.Cartography
         /// <param name="radius">the radius of rooms to go out to. -1 means "generate the entire world"</param>
         /// <param name="recenter">find the center node of the array and return an array with that node at absolute center</param>
         /// <returns>a 3d array of rooms</returns>
-        public static long[,,] GenerateMapFromRoom(IRoomData room, int radius, HashSet<IRoomData> roomPool, bool shrink = false)
+        public static long[,,] GenerateMapFromRoom(IRoomTemplate room, int radius, HashSet<IRoomTemplate> roomPool, bool shrink = false)
         {
             if (room == null || radius < 0)
                 throw new InvalidOperationException("Invalid inputs.");
@@ -154,12 +154,12 @@ namespace NetMud.Cartography
                         if (coordinatePlane[x, y, z] < 0)
                             continue;
 
-                        var room = BackingDataCache.Get<IRoomData>(coordinatePlane[x, y, z]);
+                        var room = TemplateCache.Get<IRoomTemplate>(coordinatePlane[x, y, z]);
 
                         if (room == null)
                             continue;
 
-                        room.Coordinates = new Tuple<int, int, int>(x, y, z);
+                        room.Coordinates = new Coordinate(x, y, z);
                     }
         }
 
@@ -226,7 +226,7 @@ namespace NetMud.Cartography
         /// <param name="map">the map x,y,z</param>
         /// <param name="zIndex">If > -1 we're looking for the x,y center of the single plane as opposed to the actual x,y,z center of the whole map</param>
         /// <returns>the central room</returns>
-        public static IRoomData FindCenterOfMap(long[,,] map, int zIndex = -1)
+        public static IRoomTemplate FindCenterOfMap(long[,,] map, int zIndex = -1)
         {
             var zCenter = zIndex;
             long roomId = -1;
@@ -273,7 +273,7 @@ namespace NetMud.Cartography
             //Well, no valid rooms on this Z so try another Z unless all we got was this one Z
             if (roomId < 0 && zIndex == -1)
             {
-                IRoomData returnRoom = null;
+                IRoomTemplate returnRoom = null;
 
                 for (var variance = 1;
                 variance < zCenter - map.GetLowerBound(2) && variance < map.GetUpperBound(2) - zCenter
@@ -293,11 +293,11 @@ namespace NetMud.Cartography
                 return returnRoom;
             }
 
-            return BackingDataCache.Get<IRoomData>(roomId);
+            return TemplateCache.Get<IRoomTemplate>(roomId);
         }
 
         //It's just easier to pass the ints we already calculated along instead of doing the math every single time, this cascades each direction fully because it calls itself for existant rooms
-        private static long[,,] AddFullRoomToMap(long[,,] dataMap, IRoomData origin, int diameter, int centerX, int centerY, int centerZ, HashSet<IRoomData> roomPool)
+        private static long[,,] AddFullRoomToMap(long[,,] dataMap, IRoomTemplate origin, int diameter, int centerX, int centerY, int centerZ, HashSet<IRoomTemplate> roomPool)
         {
             if (roomPool != null && roomPool.Count > 0 && roomPool.Contains(origin))
                 roomPool.Remove(origin);
@@ -335,7 +335,7 @@ namespace NetMud.Cartography
         }
 
         //We have to render our pathway out, an empty space for the potential pathway back and the destination room
-        private static long[,,] AddDirectionToMap(long[,,] dataMap, MovementDirectionType transversalDirection, IRoomData origin, int diameter, int centerX, int centerY, int centerZ, HashSet<IRoomData> roomPool)
+        private static long[,,] AddDirectionToMap(long[,,] dataMap, MovementDirectionType transversalDirection, IRoomTemplate origin, int diameter, int centerX, int centerY, int centerZ, HashSet<IRoomTemplate> roomPool)
         {
             var pathways = origin.GetPathways(true);
             var directionalSteps = Utilities.GetDirectionStep(transversalDirection);
@@ -362,7 +362,7 @@ namespace NetMud.Cartography
                     if (thisPath.Destination.Id.Equals(origin.Id))
                         locId = thisPath.Origin.Id;
 
-                    var passdownOrigin = BackingDataCache.Get<IRoomData>(locId);
+                    var passdownOrigin = TemplateCache.Get<IRoomTemplate>(locId);
 
                     if (passdownOrigin != null)
                     {

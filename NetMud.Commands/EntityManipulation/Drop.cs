@@ -1,10 +1,10 @@
 ﻿using NetMud.Commands.Attributes;
+using NetMud.Communication.Lexical;
 using NetMud.Communication.Messaging;
-using NetMud.Data.Lexical;
-using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.Behaviors.Rendering;
-using NetMud.DataStructure.SupportingClasses;
-using NutMud.Commands.Attributes;
+using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.System;
 using System.Collections.Generic;
 
 namespace NetMud.Commands.EntityManipulation
@@ -53,7 +53,7 @@ namespace NetMud.Commands.EntityManipulation
                 ToOrigin = new List<IMessage> { toOrigin }
             };
 
-            messagingObject.ExecuteMessaging(Actor, thing, null, OriginLocation.CurrentLocation, null);
+            messagingObject.ExecuteMessaging(Actor, thing, null, OriginLocation.CurrentRoom, null);
         }
 
         /// <summary>

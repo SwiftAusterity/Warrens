@@ -1,0 +1,68 @@
+﻿@using NetMud.Models
+@using NetMud.DataStructure.Architectural
+
+@model ValueRange<int>
+
+@{
+    double columnCount = ViewData["columnCount"] == null ? 5 : (int)ViewData["columnCount"];
+    bool disabled = ViewData["disabled"] != null;
+    var columnLabelValue = columnCount > 2 ? 1 : 2;
+    var columnInputValue = (int)Math.Round(10 / columnCount);
+    var cssClass = ViewData["cssClass"] == null ? "form-control" : ViewData["cssClass"];
+    var htmlAttributes = new Dictionary<string, object>() { { "class", cssClass }, { "placeholder", ViewData.ModelMetadata.DisplayName }, { "title", ViewData.ModelMetadata.DisplayName } };
+    var forceOptional = ViewData["forceOptional"] != null;
+    var forceBlankValue = Model == null || Model.GetType().IsArray ? true : false;
+    var noValidation = ViewData["noValidation"] != null;
+    var archivedValue = ViewData["archivedValue"] == null ? "" : ViewData["archivedValue"].ToString();
+
+    if (ViewData["disabled"] != null)
+    {
+        htmlAttributes.Add("disabled", true);
+    }
+
+    if (ViewData["htmlAttributes"] != null)
+    {
+        var additionalAttribs = ViewData["htmlAttributes"] as IDictionary<string, object>;
+
+        if (additionalAttribs != null)
+        {
+            foreach (var kvp in additionalAttribs)
+            {
+                htmlAttributes.Add(kvp.Key, kvp.Value);
+            }
+        }
+    }
+
+    if (forceBlankValue && !htmlAttributes.ContainsKey("Value"))
+    {
+        htmlAttributes.Add("Value", "");
+    }
+}
+
+<div class="col-sm-@columnInputValue">
+    <span class="ghostNameTip">@ViewData.ModelMetadata.DisplayName</span>
+
+    @if (ViewData.ModelMetadata.IsRequired && !forceOptional)
+    {
+        <span class="glyphicon glyphicon-exclamation-sign ghostRequired" title="Required"></span>
+    }
+
+    @Html.DescriptionFor(m => m)
+    <div style="display: inline-flex;">
+        @Html.TextBoxFor(m => m.Low, htmlAttributes)<span style="padding: 5px;">to</span>@Html.TextBoxFor(m => m.High, htmlAttributes)
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(archivedValue))
+    {
+        <span class="archive">Archived Value: @archivedValue</span>
+        <span title="apply value to field" class="glyphicon glyphicon-plus archiveApply" onclick="javascript: $('#@ViewData.ModelMetadata.PropertyName').val('@archivedValue');"></span>
+    }
+
+    @if (!noValidation)
+    {
+        @Html.ValidationMessageFor(m => m, "", new { @class = "text-danger" })
+    }
+</div>
+
+
+

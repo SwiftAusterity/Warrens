@@ -1,0 +1,14 @@
+﻿@using NetMud.Data.Gaia
+
+@model GaiaTemplate
+
+<h4>Details</h4>
+<div class="form-group row">
+    @Html.EditorFor(e => e.Name)
+    @Html.EditorFor(e => e.RotationalAngle)
+</div>
+
+@Html.EditorFor(e => e.ChronologicalSystem)
+
+<h4>Celestial Bodies</h4>
+@Html.EditorFor(e => e.CelestialBodies, new { validItems = ViewData["ValidCelestials"] })

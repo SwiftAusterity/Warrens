@@ -1,0 +1,23 @@
+﻿@model NetMud.Models.PlayerManagement.ManagePlaylistsViewModel
+
+@{
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Playlists", new string[] { "Dashboard" }, new string[] { "/Manage" });
+
+    var linkText = Html.ActionLink("99999999", "EditPlaylist", new { name = "99999999" }).ToString();
+    var tableColumns = new Dictionary<string, Func<dynamic, string>>();
+    tableColumns.Add("Name", obj => linkText.Replace("99999999", obj.Name));
+    tableColumns.Add("Songs", obj => string.Join(",", obj.Songs));
+}
+<div>
+    @Html.ActionLink("New Playlist", "AddPlaylist", null, new { @class = "addNew" })
+</div>
+@Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model, "Playlists"))
+@using (Html.BeginForm("RemovePlaylist", "Manage"))
+{
+    @Html.AntiForgeryToken()
+    @Html.Partial("ConfigListTable", new NetMud.Models.ListTableViewModel() { Name = "", Columns = tableColumns, Values = Model.CurrentPageOfItems, IncludeUnapprove = false, IncludeDelete = true })
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

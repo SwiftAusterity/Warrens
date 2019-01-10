@@ -1,18 +1,18 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
-using NetMud.Data.EntityBackingData;
-using NetMud.Data.Lexical;
-using NetMud.Data.LookupData;
-using NetMud.Data.System;
+using NetMud.Communication.Lexical;
+using NetMud.Data.Architectural.EntityBase;
+using NetMud.Data.Inanimate;
+using NetMud.Data.Linguistic;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Base.Entity;
-using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.Behaviors.System;
+using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural.ActorBase;
+using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.Inanimate;
 using NetMud.DataStructure.Linguistic;
-using NetMud.DataStructure.SupportingClasses;
+using NetMud.DataStructure.System;
 using NetMud.Models.Admin;
 using System;
 using System.Collections.Generic;
@@ -49,7 +49,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageInanimateDataViewModel(BackingDataCache.GetAll<InanimateData>())
+            var vModel = new ManageInanimateTemplateViewModel(TemplateCache.GetAll<IInanimateTemplate>())
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -72,7 +72,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<IInanimateData>(removeId);
+                var obj = TemplateCache.Get<IInanimateTemplate>(removeId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -88,7 +88,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<IInanimateData>(unapproveId);
+                var obj = TemplateCache.Get<IInanimateTemplate>(unapproveId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -109,12 +109,12 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add()
         {
-            var vModel = new AddEditInanimateDataViewModel
+            var vModel = new AddEditInanimateTemplateViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidMaterials = BackingDataCache.GetAll<Material>(),
-                ValidModels = BackingDataCache.GetAll<DimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat),
-                ValidInanimateDatas = BackingDataCache.GetAll<InanimateData>()
+                ValidMaterials = TemplateCache.GetAll<Material>(),
+                ValidModels = TemplateCache.GetAll<DimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat),
+                ValidInanimateTemplates = TemplateCache.GetAll<IInanimateTemplate>()
             };
 
             return View("~/Views/GameAdmin/Inanimate/Add.cshtml", vModel);
@@ -123,12 +123,12 @@ namespace NetMud.Controllers.GameAdmin
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Add(AddEditInanimateDataViewModel vModel)
+        public ActionResult Add(AddEditInanimateTemplateViewModel vModel)
         {
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var newObj = new InanimateData
+            var newObj = new InanimateTemplate
             {
                 Name = vModel.Name
             };
@@ -187,7 +187,7 @@ namespace NetMud.Controllers.GameAdmin
                         if (vModel.ModelPartMaterials.Count() <= nameIndex)
                             break;
 
-                        var material = BackingDataCache.Get<IMaterial>(vModel.ModelPartMaterials[nameIndex]);
+                        var material = TemplateCache.Get<IMaterial>(vModel.ModelPartMaterials[nameIndex]);
 
                         if (material != null && !string.IsNullOrWhiteSpace(partName))
                             materialParts.Add(partName, material);
@@ -197,7 +197,7 @@ namespace NetMud.Controllers.GameAdmin
                 }
             }
 
-            var internalCompositions = new Dictionary<IInanimateData, short>();
+            var internalCompositions = new HashSet<IInanimateComponent>();
             if (vModel.InternalCompositionIds != null)
             {
                 int icIndex = 0;
@@ -208,10 +208,10 @@ namespace NetMud.Controllers.GameAdmin
                         if (vModel.InternalCompositionPercentages.Count() <= icIndex)
                             break;
 
-                        var internalObj = BackingDataCache.Get<IInanimateData>(id);
+                        var internalObj = TemplateCache.Get<IInanimateTemplate>(id);
 
                         if (internalObj != null && vModel.InternalCompositionPercentages[icIndex] > 0)
-                            internalCompositions.Add(internalObj, vModel.InternalCompositionPercentages[icIndex]);
+                            internalCompositions.Add(new InanimateComponent(internalObj, vModel.InternalCompositionPercentages[icIndex]));
                     }
 
                     icIndex++;
@@ -220,7 +220,7 @@ namespace NetMud.Controllers.GameAdmin
 
             newObj.InternalComposition = internalCompositions;
 
-            var dimModel = BackingDataCache.Get<IDimensionalModelData>(vModel.DimensionalModelId);
+            var dimModel = TemplateCache.Get<IDimensionalModelData>(vModel.DimensionalModelId);
             bool validData = true;
 
             if (dimModel == null)
@@ -238,13 +238,13 @@ namespace NetMud.Controllers.GameAdmin
             if (validData)
             {
                 newObj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth
-                    , vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation, new BackingDataCacheKey(dimModel), materialParts);
+                    , vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation, new TemplateCacheKey(dimModel), materialParts);
 
                 if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
                     message = "Error; Creation failed.";
                 else
                 {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddInanimateData[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddInanimateTemplate[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Creation Successful.";
                 }
             }
@@ -256,15 +256,15 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(int id)
         {
             string message = string.Empty;
-            var vModel = new AddEditInanimateDataViewModel
+            var vModel = new AddEditInanimateTemplateViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidMaterials = BackingDataCache.GetAll<Material>(),
-                ValidModels = BackingDataCache.GetAll<DimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat),
-                ValidInanimateDatas = BackingDataCache.GetAll<InanimateData>()
+                ValidMaterials = TemplateCache.GetAll<Material>(),
+                ValidModels = TemplateCache.GetAll<DimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat),
+                ValidInanimateTemplates = TemplateCache.GetAll<InanimateTemplate>()
             };
 
-            var obj = BackingDataCache.Get<InanimateData>(id);
+            var obj = TemplateCache.Get<InanimateTemplate>(id);
 
             if (obj == null)
             {
@@ -274,7 +274,7 @@ namespace NetMud.Controllers.GameAdmin
 
             vModel.DataObject = obj;
             vModel.Name = obj.Name;
-            vModel.DimensionalModelId = obj.Model.ModelBackingData.Id;
+            vModel.DimensionalModelId = obj.Model.ModelTemplate.Id;
             vModel.DimensionalModelHeight = obj.Model.Height;
             vModel.DimensionalModelLength = obj.Model.Length;
             vModel.DimensionalModelWidth = obj.Model.Width;
@@ -287,12 +287,12 @@ namespace NetMud.Controllers.GameAdmin
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, AddEditInanimateDataViewModel vModel)
+        public ActionResult Edit(int id, AddEditInanimateTemplateViewModel vModel)
         {
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = BackingDataCache.Get<InanimateData>(id);
+            var obj = TemplateCache.Get<IInanimateTemplate>(id);
             if (obj == null)
             {
                 message = "That does not exist";
@@ -378,7 +378,7 @@ namespace NetMud.Controllers.GameAdmin
                         if (vModel.ModelPartMaterials.Count() <= nameIndex)
                             break;
 
-                        var material = BackingDataCache.Get<IMaterial>(vModel.ModelPartMaterials[nameIndex]);
+                        var material = TemplateCache.Get<IMaterial>(vModel.ModelPartMaterials[nameIndex]);
 
                         if (material != null)
                             materialParts.Add(partName, material);
@@ -388,7 +388,7 @@ namespace NetMud.Controllers.GameAdmin
                 }
             }
 
-            var internalCompositions = new Dictionary<IInanimateData, short>();
+            var internalCompositions = new HashSet<IInanimateComponent>();
             if (vModel.InternalCompositionIds != null)
             {
                 int icIndex = 0;
@@ -399,10 +399,10 @@ namespace NetMud.Controllers.GameAdmin
                         if (vModel.InternalCompositionPercentages.Count() <= icIndex)
                             break;
 
-                        var internalObj = BackingDataCache.Get<IInanimateData>(icId);
+                        var internalObj = TemplateCache.Get<IInanimateTemplate>(icId);
 
                         if (internalObj != null)
-                            internalCompositions.Add(internalObj, vModel.InternalCompositionPercentages[icIndex]);
+                            internalCompositions.Add(new InanimateComponent(internalObj, vModel.InternalCompositionPercentages[icIndex]));
                     }
 
                     icIndex++;
@@ -410,7 +410,7 @@ namespace NetMud.Controllers.GameAdmin
             }
             obj.InternalComposition = internalCompositions;
 
-            var dimModel = BackingDataCache.Get<IDimensionalModelData>(vModel.DimensionalModelId);
+            var dimModel = TemplateCache.Get<IDimensionalModelData>(vModel.DimensionalModelId);
             bool validData = true;
 
             if (dimModel == null)
@@ -428,11 +428,11 @@ namespace NetMud.Controllers.GameAdmin
             if (validData)
             {
                 obj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth, 
-                    vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation, new BackingDataCacheKey(dimModel), materialParts);
+                    vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation, new TemplateCacheKey(dimModel), materialParts);
 
                 if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                 {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - EditInanimateData[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - EditInanimateTemplate[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Edit Successful.";
                 }
                 else
@@ -447,7 +447,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             string message = string.Empty;
 
-            var obj = BackingDataCache.Get<IInanimateData>(id);
+            var obj = TemplateCache.Get<IInanimateTemplate>(id);
             if (obj == null)
             {
                 message = "That does not exist";
@@ -488,7 +488,7 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = BackingDataCache.Get<IInanimateData>(id);
+            var obj = TemplateCache.Get<IInanimateTemplate>(id);
             if (obj == null)
             {
                 message = "That does not exist";
@@ -569,7 +569,7 @@ namespace NetMud.Controllers.GameAdmin
                     var type = short.Parse(values[0]);
                     var phrase = values[1];
 
-                    var obj = BackingDataCache.Get<IInanimateData>(id);
+                    var obj = TemplateCache.Get<IInanimateTemplate>(id);
 
                     if (obj == null)
                         message = "That does not exist";

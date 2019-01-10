@@ -1,0 +1,29 @@
+﻿@model NetMud.Models.Admin.ViewInanimateViewModel
+@{
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("View Inanimate", new string[] { "Dashboard", "Inanimates" }, new string[] { "/GameAdmin", "/LiveAdmin/Inanimates" });
+}
+
+<h3>@Model.DataObject.TemplateName</h3>
+
+<div id="tabs">
+    <ul>
+        <li><a href="#tabs-1">Edit</a></li>
+        <li><a href="#tabs-2">Find</a></li>
+    </ul>
+    <div id="tabs-1" data-tabNumber="1">
+    </div>
+    <div id="tabs-2" data-tabNumber="2">
+        @Html.Partial("ShowLiveEntity", Model.DataObject)
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#tabs").tabs();
+        });
+    </script>
+}
+

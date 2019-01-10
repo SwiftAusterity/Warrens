@@ -1,16 +1,13 @@
 ﻿using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
-using NetMud.Data.Lexical;
-using NetMud.DataStructure.SupportingClasses;
-using NutMud.Commands.Attributes;
+using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural;
 using System.Collections.Generic;
 using System.Text;
 
 namespace NetMud.Commands.Social
 {
-    [CommandKeyword("laid", false, false, true)]
-    [CommandKeyword("fucked", false, false, true)]
-    [CommandKeyword("fapfapfap", false, false, true)]
+    [CommandKeyword("laid", false, new string[] { "fucked", "fapfapfap" }, false)]
     [CommandPermission(StaffRank.Player)]
     [CommandRange(CommandRangeType.Touch, 0)]
     public class Laid : CommandPartial
@@ -25,24 +22,24 @@ namespace NetMud.Commands.Social
 
         public override void Execute()
         {
-            var returnStrings = new List<string>();
-            var sb = new StringBuilder();
+            List<string> returnStrings = new List<string>();
+            StringBuilder sb = new StringBuilder();
 
             returnStrings.Add("You get laid, fucked, fapfapfap.");
 
-            var toActor = new Message(MessagingType.Visible, new Occurrence() { Strength = 1 })
+            Message toActor = new Message()
             {
                 Override = returnStrings
             };
 
-            var messagingObject = new MessageCluster(toActor);
+            MessageCluster messagingObject = new MessageCluster(toActor);
 
             messagingObject.ExecuteMessaging(Actor, null, null, null, null);
         }
 
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            var sb = new List<string>
+            List<string> sb = new List<string>
             {
                 "Valid Syntax: laid"
             };

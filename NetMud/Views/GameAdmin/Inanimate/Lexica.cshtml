@@ -1,10 +1,10 @@
-﻿@using NetMud.DataStructure.Base.EntityBackingData
+﻿@using NetMud.DataStructure.Inanimate
 @using NetMud.DataStructure.Linguistic
 
 @model NetMud.Models.Admin.OccurrenceViewModel
 
 @{
-    var dataObject = (IInanimateData)Model.DataObject;
+    var dataObject = (IInanimateTemplate)Model.DataObject;
 }
 
 <h4>Lexica</h4>

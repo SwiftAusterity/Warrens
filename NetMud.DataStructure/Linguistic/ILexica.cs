@@ -87,5 +87,11 @@ namespace NetMud.DataStructure.Linguistic
         /// </summary>
         /// <returns>A dictata</returns>
         IDictata GetDictata();
+
+        /// <summary>
+        /// Generates a new dictata
+        /// </summary>
+        /// <returns>the new one</returns>
+        bool GenerateDictata();
     }
 }

@@ -1,6 +1,8 @@
-﻿using NetMud.DataStructure.Base.Entity;
-using NetMud.DataStructure.Base.Place;
-using NetMud.DataStructure.Base.Supporting;
+﻿using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Architectural.ActorBase;
+using NetMud.DataStructure.Inanimate;
+using NetMud.DataStructure.Room;
+using NetMud.DataStructure.Zone;
 using System;
 using System.Linq;
 
@@ -11,7 +13,7 @@ namespace NetMud.Gaia.Geographical
         #region Biomes
         public static bool IsOutside(Biome biome)
         {
-            var returnValue = true;
+            bool returnValue = true;
 
             switch (biome)
             {
@@ -37,10 +39,10 @@ namespace NetMud.Gaia.Geographical
         #endregion
 
         #region Size
-        public static DimensionalSizeDescription ConvertSizeToType(Tuple<int, int, int> Dimensions, Type entityType)
+        public static DimensionalSizeDescription ConvertSizeToType(Dimensions Dimensions, Type entityType)
         {
             //x,y,z in inches currently
-            var volume = Dimensions.Item1 * Dimensions.Item2 * Dimensions.Item3;
+            int volume = Dimensions.Height * Dimensions.Width * Dimensions.Length;
 
             //TODO: Include variances for "tall" or "long" versus "wide"
             if (entityType.GetInterfaces().Contains(typeof(IMobile)))
@@ -156,7 +158,7 @@ namespace NetMud.Gaia.Geographical
 
         public static ObjectContainmentSizeDescription GetObjectContainmentSize(float contents, float size)
         {
-            var remainder = size - contents;
+            float remainder = size - contents;
 
             if (remainder > 50)
                 return ObjectContainmentSizeDescription.Slim;
@@ -173,14 +175,5 @@ namespace NetMud.Gaia.Geographical
             return ObjectContainmentSizeDescription.Bursting;
         }
         #endregion
-    }
-
-    public enum ObjectContainmentSizeDescription : short
-    {
-        Slim = 0,
-        Full = 1,
-        Bulging = 2,
-        Overflowing = 3,
-        Bursting = 4
     }
 }

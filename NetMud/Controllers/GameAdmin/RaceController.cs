@@ -1,17 +1,16 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
-using NetMud.Data.EntityBackingData;
-using NetMud.Data.LookupData;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.Place;
-using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.Behaviors.Actionable;
-using NetMud.DataStructure.Behaviors.Automation;
-using NetMud.DataStructure.Behaviors.System;
+using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Architectural.ActorBase;
+using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.Inanimate;
+using NetMud.DataStructure.Zone;
 using NetMud.Models.Admin;
+using NetMud.Data.Architectural.ActorBase;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,7 +46,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageRaceDataViewModel(BackingDataCache.GetAll<IRace>())
+            var vModel = new ManageRaceDataViewModel(TemplateCache.GetAll<IRace>())
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -70,7 +69,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<IRace>(removeId);
+                var obj = TemplateCache.Get<IRace>(removeId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -86,7 +85,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<IRace>(unapproveId);
+                var obj = TemplateCache.Get<IRace>(unapproveId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -111,9 +110,9 @@ namespace NetMud.Controllers.GameAdmin
             var vModel = new AddEditRaceViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidMaterials = BackingDataCache.GetAll<IMaterial>(),
-                ValidObjects = BackingDataCache.GetAll<IInanimateData>(),
-                ValidZones = BackingDataCache.GetAll<IZoneData>()
+                ValidMaterials = TemplateCache.GetAll<IMaterial>(),
+                ValidObjects = TemplateCache.GetAll<IInanimateTemplate>(),
+                ValidZones = TemplateCache.GetAll<IZoneTemplate>()
             };
 
             return View("~/Views/GameAdmin/Race/Add.cshtml", vModel);
@@ -134,23 +133,23 @@ namespace NetMud.Controllers.GameAdmin
 
             if (vModel.ArmsID >= 0 && vModel.ArmsAmount > 0)
             {
-                var arm = BackingDataCache.Get<InanimateData>(vModel.ArmsID);
+                var arm = TemplateCache.Get<IInanimateTemplate>(vModel.ArmsID);
 
                 if (arm != null)
-                    newObj.Arms = new Tuple<IInanimateData, short>(arm, vModel.ArmsAmount);
+                    newObj.Arms = new Tuple<IInanimateTemplate, short>(arm, vModel.ArmsAmount);
             }
 
             if (vModel.LegsID >= 0 && vModel.LegsAmount > 0)
             {
-                var leg = BackingDataCache.Get<IInanimateData>(vModel.LegsID);
+                var leg = TemplateCache.Get<IInanimateTemplate>(vModel.LegsID);
 
                 if (leg != null)
-                    newObj.Legs = new Tuple<IInanimateData, short>(leg, vModel.LegsAmount);
+                    newObj.Legs = new Tuple<IInanimateTemplate, short>(leg, vModel.LegsAmount);
             }
 
             if (vModel.TorsoId >= 0)
             {
-                var torso = BackingDataCache.Get<IInanimateData>(vModel.TorsoId);
+                var torso = TemplateCache.Get<IInanimateTemplate>(vModel.TorsoId);
 
                 if (torso != null)
                     newObj.Torso = torso;
@@ -158,7 +157,7 @@ namespace NetMud.Controllers.GameAdmin
 
             if (vModel.HeadId >= 0)
             {
-                var head = BackingDataCache.Get<IInanimateData>(vModel.HeadId);
+                var head = TemplateCache.Get<IInanimateTemplate>(vModel.HeadId);
 
                 if (head != null)
                     newObj.Head = head;
@@ -166,7 +165,7 @@ namespace NetMud.Controllers.GameAdmin
 
             if (vModel.StartingLocationId >= 0)
             {
-                var zone = BackingDataCache.Get<IZoneData>(vModel.StartingLocationId);
+                var zone = TemplateCache.Get<IZoneTemplate>(vModel.StartingLocationId);
 
                 if (zone != null)
                     newObj.StartingLocation = zone;
@@ -174,7 +173,7 @@ namespace NetMud.Controllers.GameAdmin
 
             if (vModel.RecallLocationId >= 0)
             {
-                var zone = BackingDataCache.Get<IZoneData>(vModel.RecallLocationId);
+                var zone = TemplateCache.Get<IZoneTemplate>(vModel.RecallLocationId);
 
                 if (zone != null)
                     newObj.EmergencyLocation = zone;
@@ -182,14 +181,14 @@ namespace NetMud.Controllers.GameAdmin
 
             if (vModel.BloodId >= 0)
             {
-                var blood = BackingDataCache.Get<IMaterial>(vModel.BloodId);
+                var blood = TemplateCache.Get<IMaterial>(vModel.BloodId);
 
                 if (blood != null)
                     newObj.SanguinaryMaterial = blood;
             }
 
-            newObj.VisionRange = new Tuple<short, short>(vModel.VisionRangeLow, vModel.VisionRangeHigh);
-            newObj.TemperatureTolerance = new Tuple<short, short>(vModel.TemperatureToleranceLow, vModel.TemperatureToleranceHigh);
+            newObj.VisionRange = new ValueRange<short>(vModel.VisionRangeLow, vModel.VisionRangeHigh);
+            newObj.TemperatureTolerance = new ValueRange<short>(vModel.TemperatureToleranceLow, vModel.TemperatureToleranceHigh);
 
             newObj.Breathes = (RespiratoryType)vModel.Breathes;
             newObj.DietaryNeeds = (DietType)vModel.DietaryNeeds;
@@ -200,7 +199,7 @@ namespace NetMud.Controllers.GameAdmin
             if (vModel.ExtraPartsId != null)
             {
                 int partIndex = 0;
-                var bodyBits = new List<Tuple<IInanimateData, short, string>>();
+                var bodyBits = new List<Tuple<IInanimateTemplate, short, string>>();
                 foreach (var id in vModel.ExtraPartsId)
                 {
                     if (id >= 0)
@@ -210,10 +209,10 @@ namespace NetMud.Controllers.GameAdmin
 
                         var currentName = vModel.ExtraPartsName[partIndex];
                         var currentAmount = vModel.ExtraPartsAmount[partIndex];
-                        var partObject = BackingDataCache.Get<IInanimateData>(id);
+                        var partObject = TemplateCache.Get<IInanimateTemplate>(id);
 
                         if (partObject != null && currentAmount > 0 && !string.IsNullOrWhiteSpace(currentName))
-                            bodyBits.Add(new Tuple<IInanimateData, short, string>(partObject, currentAmount, currentName));
+                            bodyBits.Add(new Tuple<IInanimateTemplate, short, string>(partObject, currentAmount, currentName));
                     }
 
                     partIndex++;
@@ -240,12 +239,12 @@ namespace NetMud.Controllers.GameAdmin
             var vModel = new AddEditRaceViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidMaterials = BackingDataCache.GetAll<IMaterial>(),
-                ValidObjects = BackingDataCache.GetAll<IInanimateData>(),
-                ValidZones = BackingDataCache.GetAll<IZoneData>()
+                ValidMaterials = TemplateCache.GetAll<IMaterial>(),
+                ValidObjects = TemplateCache.GetAll<IInanimateTemplate>(),
+                ValidZones = TemplateCache.GetAll<IZoneTemplate>()
             };
 
-            var obj = BackingDataCache.Get<IRace>(id);
+            var obj = TemplateCache.Get<IRace>(id);
 
             if (obj == null)
             {
@@ -291,11 +290,11 @@ namespace NetMud.Controllers.GameAdmin
                 vModel.StartingLocationId = obj.StartingLocation.Id;
 
             vModel.TeethType = (short)obj.TeethType;
-            vModel.TemperatureToleranceHigh = obj.TemperatureTolerance.Item2;
-            vModel.TemperatureToleranceLow = obj.TemperatureTolerance.Item1;
+            vModel.TemperatureToleranceHigh = obj.TemperatureTolerance.High;
+            vModel.TemperatureToleranceLow = obj.TemperatureTolerance.Low;
             vModel.TorsoId = obj.Torso.Id;
-            vModel.VisionRangeHigh = obj.VisionRange.Item2;
-            vModel.VisionRangeLow = obj.VisionRange.Item1;
+            vModel.VisionRangeHigh = obj.VisionRange.High;
+            vModel.VisionRangeLow = obj.VisionRange.Low;
             vModel.HelpBody = obj.HelpText.Value;
             vModel.CollectiveNoun = obj.CollectiveNoun;
 
@@ -309,7 +308,7 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = BackingDataCache.Get<IRace>(id);
+            var obj = TemplateCache.Get<IRace>(id);
             if (obj == null)
             {
                 message = "That does not exist";
@@ -320,23 +319,23 @@ namespace NetMud.Controllers.GameAdmin
 
             if (vModel.ArmsID > -1 && vModel.ArmsAmount > 0)
             {
-                var arm = BackingDataCache.Get<InanimateData>(vModel.ArmsID);
+                var arm = TemplateCache.Get<IInanimateTemplate>(vModel.ArmsID);
 
                 if (arm != null)
-                    obj.Arms = new Tuple<IInanimateData, short>(arm, vModel.ArmsAmount);
+                    obj.Arms = new Tuple<IInanimateTemplate, short>(arm, vModel.ArmsAmount);
             }
 
             if (vModel.LegsID > -1 && vModel.LegsAmount > 0)
             {
-                var leg = BackingDataCache.Get<IInanimateData>(vModel.LegsID);
+                var leg = TemplateCache.Get<IInanimateTemplate>(vModel.LegsID);
 
                 if (leg != null)
-                    obj.Legs = new Tuple<IInanimateData, short>(leg, vModel.LegsAmount);
+                    obj.Legs = new Tuple<IInanimateTemplate, short>(leg, vModel.LegsAmount);
             }
 
             if (vModel.TorsoId > -1)
             {
-                var torso = BackingDataCache.Get<IInanimateData>(vModel.TorsoId);
+                var torso = TemplateCache.Get<IInanimateTemplate>(vModel.TorsoId);
 
                 if (torso != null)
                     obj.Torso = torso;
@@ -344,7 +343,7 @@ namespace NetMud.Controllers.GameAdmin
 
             if (vModel.HeadId > -1)
             {
-                var head = BackingDataCache.Get<IInanimateData>(vModel.HeadId);
+                var head = TemplateCache.Get<IInanimateTemplate>(vModel.HeadId);
 
                 if (head != null)
                     obj.Head = head;
@@ -352,7 +351,7 @@ namespace NetMud.Controllers.GameAdmin
 
             if (vModel.StartingLocationId >= 0)
             {
-                var zone = BackingDataCache.Get<ZoneData>(vModel.StartingLocationId);
+                var zone = TemplateCache.Get<IZoneTemplate>(vModel.StartingLocationId);
 
                 if (zone != null)
                     obj.StartingLocation = zone;
@@ -360,7 +359,7 @@ namespace NetMud.Controllers.GameAdmin
 
             if (vModel.RecallLocationId >= 0)
             {
-                var zone = BackingDataCache.Get<ZoneData>(vModel.RecallLocationId);
+                var zone = TemplateCache.Get<IZoneTemplate>(vModel.RecallLocationId);
 
                 if (zone != null)
                     obj.EmergencyLocation = zone;
@@ -368,14 +367,14 @@ namespace NetMud.Controllers.GameAdmin
 
             if (vModel.BloodId > -1)
             {
-                var blood = BackingDataCache.Get<Material>(vModel.BloodId);
+                var blood = TemplateCache.Get<IMaterial>(vModel.BloodId);
 
                 if (blood != null)
                     obj.SanguinaryMaterial = blood;
             }
 
-            obj.VisionRange = new Tuple<short, short>(vModel.VisionRangeLow, vModel.VisionRangeHigh);
-            obj.TemperatureTolerance = new Tuple<short, short>(vModel.TemperatureToleranceLow, vModel.TemperatureToleranceHigh);
+            obj.VisionRange = new ValueRange<short>(vModel.VisionRangeLow, vModel.VisionRangeHigh);
+            obj.TemperatureTolerance = new ValueRange<short>(vModel.TemperatureToleranceLow, vModel.TemperatureToleranceHigh);
 
             obj.Breathes = (RespiratoryType)vModel.Breathes;
             obj.DietaryNeeds = (DietType)vModel.DietaryNeeds;
@@ -383,7 +382,7 @@ namespace NetMud.Controllers.GameAdmin
             obj.HelpText = vModel.HelpBody;
             obj.CollectiveNoun = vModel.CollectiveNoun;
 
-            var bodyBits = new List<Tuple<IInanimateData, short, string>>();
+            var bodyBits = new List<Tuple<IInanimateTemplate, short, string>>();
             if (vModel.ExtraPartsId != null && vModel.ExtraPartsAmount != null && vModel.ExtraPartsName != null)
             {
                 int partIndex = 0;
@@ -396,10 +395,10 @@ namespace NetMud.Controllers.GameAdmin
 
                         var currentName = vModel.ExtraPartsName[partIndex];
                         var currentAmount = vModel.ExtraPartsAmount[partIndex];
-                        var partObject = BackingDataCache.Get<IInanimateData>(partId);
+                        var partObject = TemplateCache.Get<IInanimateTemplate>(partId);
 
                         if (partObject != null && currentAmount > 0 && !string.IsNullOrWhiteSpace(currentName))
-                            bodyBits.Add(new Tuple<IInanimateData, short, string>(partObject, currentAmount, currentName));
+                            bodyBits.Add(new Tuple<IInanimateTemplate, short, string>(partObject, currentAmount, currentName));
                     }
 
                     partIndex++;

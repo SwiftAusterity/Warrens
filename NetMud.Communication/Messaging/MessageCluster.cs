@@ -1,7 +1,7 @@
-﻿using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.Behaviors.Rendering;
+﻿using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Linguistic;
-using NetMud.DataStructure.SupportingClasses;
+using NetMud.DataStructure.System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -10,6 +10,7 @@ namespace NetMud.Communication.Messaging
     /// <summary>
     /// Used by the system to produce output for commands and events
     /// </summary>
+    [Serializable]
     public class MessageCluster : IMessageCluster
     {
         /// <summary>
@@ -100,7 +101,7 @@ namespace NetMud.Communication.Messaging
         /// <param name="DestinationLocation">The location the command is targetting</param>
         public void ExecuteMessaging(IEntity Actor, IEntity Subject, IEntity Target, IEntity OriginLocation, IEntity DestinationLocation)
         {
-            var entities = new Dictionary<MessagingTargetType, IEntity[]>
+            Dictionary<MessagingTargetType, IEntity[]> entities = new Dictionary<MessagingTargetType, IEntity[]>
             {
                 { MessagingTargetType.Actor, new IEntity[] { Actor } },
                 { MessagingTargetType.Subject, new IEntity[] { Subject } },

@@ -1,6 +1,6 @@
-﻿@model NetMud.Models.Admin.ManageRoomDataViewModel
+﻿@model NetMud.Models.Admin.ManageRoomTemplateViewModel
 @{
-    var linkText = Html.ActionLink("99999999", "Edit", new { id = 99999999 }).ToString() + [@Html.ActionLink("Map", "Map", new { id = 99999999 })];
+    var linkText = Html.ActionLink("99999999", "Edit", new { id = 99999999 }).ToString();
     var tableColumns = new Dictionary<string, Func<dynamic, string>>();
     tableColumns.Add("Id", obj => linkText.Replace("99999999", obj.Id.ToString()));
     tableColumns.Add("Name", obj => obj.FitnessProblems ? string.Format("<span style='color:red;' title='{0}'>{1}</span>", String.Join(", ", obj.FitnessReport()), obj.Name) : obj.Name);

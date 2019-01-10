@@ -1,12 +1,11 @@
 ﻿using NetMud.Authentication;
-using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Linguistic;
-using NetMud.DataStructure.SupportingClasses;
 using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.Models.Admin
 {
-    public partial class OccurrenceViewModel : LexicaViewModel, BaseViewModel
+    public partial class OccurrenceViewModel : LexicaViewModel, IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 

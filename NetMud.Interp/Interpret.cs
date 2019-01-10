@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
-
-using NetMud.DataStructure.Behaviors.Rendering;
 using NetMud.DataAccess;
 using System.Collections.Generic;
+using NetMud.DataStructure.Architectural.ActorBase;
+using NetMud.DataStructure.System;
 
 namespace NetMud.Interp
 {
@@ -34,7 +34,7 @@ namespace NetMud.Interp
                     return lexicalInterp.Parse(actor, commandString.Replace("lexicaltest ", ""), true).Select(dict => string.Format("{0} : {1}", dict.Name, dict.WordType));
                 }
 
-                var commandContext = new Context(commandString, actor);
+                IContext commandContext = new Context(commandString, actor);
 
                 //Derp, we had an error with accessing the command somehow, usually to do with parameter collection or access permissions
                 if (commandContext.AccessErrors.Count() > 0)

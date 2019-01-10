@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageDictionaryViewModel : PagedDataModel<IDictata>, BaseViewModel
+    public class ManageDictionaryViewModel : PagedDataModel<IDictata>, IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
@@ -26,7 +26,7 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditDictionaryViewModel : BaseViewModel
+    public class AddEditDictionaryViewModel : IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 

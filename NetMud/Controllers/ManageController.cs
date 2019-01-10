@@ -2,15 +2,14 @@
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using NetMud.Authentication;
-using NetMud.Data.ConfigData;
-using NetMud.Data.EntityBackingData;
 using NetMud.Data.LookupData;
-using NetMud.Data.System;
+using NetMud.Data.Players;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.PlayerConfiguration;
-using NetMud.DataStructure.SupportingClasses;
+using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural.ActorBase;
+using NetMud.DataStructure.Player;
+using NetMud.DataStructure.System;
 using NetMud.Models.Admin;
 using NetMud.Models.PlayerManagement;
 using System;
@@ -65,17 +64,21 @@ namespace NetMud.Controllers
         [HttpGet]
         public ActionResult Index()
         {
-            var user = UserManager.FindById(User.Identity.GetUserId());
-            var account = user.GameAccount;
+            ApplicationUser user = UserManager.FindById(User.Identity.GetUserId());
+            Account account = user.GameAccount;
 
-            var model = new ManageAccountViewModel
+            ManageAccountViewModel model = new ManageAccountViewModel
             {
                 authedUser = user,
                 DataObject = account,
                 GlobalIdentityHandle = account.GlobalIdentityHandle,
-                UIModuleCount = BackingDataCache.GetAll<IUIModule>(true).Count(uimod => uimod.CreatorHandle.Equals(account.GlobalIdentityHandle)),
+                UIModuleCount = TemplateCache.GetAll<IUIModule>(true).Count(uimod => uimod.CreatorHandle.Equals(account.GlobalIdentityHandle)),
                 UITutorialMode = account.Config.UITutorialMode,
-                GossipSubscriber = account.Config.GossipSubscriber
+                GossipSubscriber = account.Config.GossipSubscriber,
+                PermanentlyMuteMusic = account.Config.MusicMuted,
+                PermanentlyMuteSound = account.Config.SoundMuted,
+                ChosenRole = user.GetStaffRank(User),
+                ValidRoles = (StaffRank[])Enum.GetValues(typeof(StaffRank))
             };
 
             return View(model);
@@ -86,14 +89,16 @@ namespace NetMud.Controllers
         public ActionResult EditAccountConfig(ManageAccountViewModel vModel)
         {
             string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
-            var obj = authedUser.GameAccount;
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+            Account obj = authedUser.GameAccount;
 
             obj.Config.UITutorialMode = vModel.UITutorialMode;
             obj.Config.GossipSubscriber = vModel.GossipSubscriber;
+            obj.Config.MusicMuted = vModel.PermanentlyMuteMusic;
+            obj.Config.SoundMuted = vModel.PermanentlyMuteSound;
 
-            if (vModel.LogChannelSubscriptions != null)
-                obj.LogChannelSubscriptions = vModel.LogChannelSubscriptions;
+            if (vModel.LogChannels != null)
+                obj.LogChannelSubscriptions = vModel.LogChannels;
 
             UserManager.UpdateAsync(authedUser);
 
@@ -121,7 +126,7 @@ namespace NetMud.Controllers
                 ValidRoles = (StaffRank[])Enum.GetValues(typeof(StaffRank))
             };
 
-            model.ValidRaces = BackingDataCache.GetAll<Race>();
+            model.ValidRaces = TemplateCache.GetAll<IRace>();
 
             return View(model);
         }
@@ -137,16 +142,16 @@ namespace NetMud.Controllers
                 authedUser = UserManager.FindById(userId)
             };
 
-            var newChar = new Character
+            var newChar = new PlayerTemplate
             {
                 Name = Name,
                 SurName = SurName,
                 Gender = Gender
             };
-            var race = BackingDataCache.Get<Race>(raceId);
+            var race = TemplateCache.Get<IRace>(raceId);
 
             if (race != null)
-                newChar.RaceData = race;
+                newChar.Race = race;
 
             if (User.IsInRole("Admin"))
                 newChar.GamePermissionsRank = chosenRole;
@@ -165,7 +170,7 @@ namespace NetMud.Controllers
             var userId = User.Identity.GetUserId();
             var user = UserManager.FindById(userId);
 
-            var obj = PlayerDataCache.Get(new PlayerDataCacheKey(typeof(ICharacter), user.GlobalIdentityHandle, id));
+            var obj = PlayerDataCache.Get(new PlayerDataCacheKey(typeof(IPlayerTemplate), user.GlobalIdentityHandle, id));
             var model = new AddEditCharacterViewModel
             {
                 authedUser  = user,
@@ -185,7 +190,7 @@ namespace NetMud.Controllers
             string message = string.Empty;
             var userId = User.Identity.GetUserId();
             var authedUser = UserManager.FindById(userId);
-            var obj = PlayerDataCache.Get(new PlayerDataCacheKey(typeof(ICharacter), authedUser.GlobalIdentityHandle, id));
+            var obj = PlayerDataCache.Get(new PlayerDataCacheKey(typeof(IPlayerTemplate), authedUser.GlobalIdentityHandle, id));
 
             if (obj == null)
                 message = "That character does not exist";
@@ -254,12 +259,12 @@ namespace NetMud.Controllers
         {
             ViewBag.StatusMessage = message;
 
-            var userId = User.Identity.GetUserId();
-            var authedUser = UserManager.FindById(userId);
+            string userId = User.Identity.GetUserId();
+            ApplicationUser authedUser = UserManager.FindById(userId);
 
-            var notifications = authedUser.GameAccount.Config.Notifications;
+            IEnumerable<IPlayerMessage> notifications = authedUser.GameAccount.Config.Notifications;
 
-            var model = new ManageNotificationsViewModel(notifications)
+            ManageNotificationsViewModel model = new ManageNotificationsViewModel(notifications)
             {
                 authedUser = authedUser
             };
@@ -270,8 +275,8 @@ namespace NetMud.Controllers
         [HttpGet]
         public ActionResult AddViewNotification(string id)
         {
-            var userId = User.Identity.GetUserId();
-            var model = new AddViewNotificationViewModel
+            string userId = User.Identity.GetUserId();
+            AddViewNotificationViewModel model = new AddViewNotificationViewModel
             {
                 authedUser = UserManager.FindById(userId)
             };
@@ -297,8 +302,8 @@ namespace NetMud.Controllers
         public ActionResult AddViewNotification(AddViewNotificationViewModel vModel)
         {
             string message = string.Empty;
-            var userId = User.Identity.GetUserId();
-            var authedUser = UserManager.FindById(userId);
+            string userId = User.Identity.GetUserId();
+            ApplicationUser authedUser = UserManager.FindById(userId);
 
             try
             {
@@ -310,13 +315,13 @@ namespace NetMud.Controllers
                         message = "You must include a valid recipient.";
                     else
                     {
-                        var recipient = Account.GetByHandle(vModel.RecipientAccount);
+                        IAccount recipient = Account.GetByHandle(vModel.RecipientAccount);
 
                         if (recipient == null || recipient.Config.Acquaintences.Any(acq => acq.IsFriend == false && acq.PersonHandle.Equals(authedUser.GameAccount.GlobalIdentityHandle)))
                             message = "You must include a valid recipient.";
                         else
                         {
-                            var newMessage = new PlayerMessage
+                            PlayerMessage newMessage = new PlayerMessage
                             {
                                 Body = vModel.Body,
                                 Subject = vModel.Subject,
@@ -324,7 +329,7 @@ namespace NetMud.Controllers
                                 RecipientAccount = recipient
                             };
 
-                            var recipientCharacter = BackingDataCache.GetByName<ICharacter>(vModel.Recipient);
+                            var recipientCharacter = TemplateCache.GetByName<IPlayerTemplate>(vModel.Recipient);
 
                             if (recipientCharacter != null)
                                 newMessage.Recipient = recipientCharacter;
@@ -355,8 +360,8 @@ namespace NetMud.Controllers
         public ActionResult MarkAsReadNotification(string id, AddViewNotificationViewModel vModel)
         {
             string message = string.Empty;
-            var userId = User.Identity.GetUserId();
-            var authedUser = UserManager.FindById(userId);
+            string userId = User.Identity.GetUserId();
+            ApplicationUser authedUser = UserManager.FindById(userId);
 
             try
             {
@@ -392,10 +397,10 @@ namespace NetMud.Controllers
             else
             {
 
-                var userId = User.Identity.GetUserId();
-                var authedUser = UserManager.FindById(userId);
+                string userId = User.Identity.GetUserId();
+                ApplicationUser authedUser = UserManager.FindById(userId);
 
-                var notification = authedUser.GameAccount.Config.Notifications.FirstOrDefault(ch => ch.UniqueKey.Equals(ID));
+                IPlayerMessage notification = authedUser.GameAccount.Config.Notifications.FirstOrDefault(ch => ch.UniqueKey.Equals(ID));
 
                 if (notification == null)
                     message = "That message does not exist";
@@ -415,12 +420,12 @@ namespace NetMud.Controllers
         {
             ViewBag.StatusMessage = message;
 
-            var userId = User.Identity.GetUserId();
-            var authedUser = UserManager.FindById(userId);
+            string userId = User.Identity.GetUserId();
+            ApplicationUser authedUser = UserManager.FindById(userId);
 
-            var acquaintences = authedUser.GameAccount.Config.Acquaintences;
+            IEnumerable<IAcquaintence> acquaintences = authedUser.GameAccount.Config.Acquaintences;
 
-            var model = new ManageAcquaintencesViewModel(acquaintences)
+            ManageAcquaintencesViewModel model = new ManageAcquaintencesViewModel(acquaintences)
             {
                 authedUser = authedUser
             };
@@ -433,8 +438,8 @@ namespace NetMud.Controllers
         public ActionResult AddAcquaintence(string AcquaintenceName, bool IsFriend, bool GossipSystem, string Notifications)
         {
             string message = string.Empty;
-            var userId = User.Identity.GetUserId();
-            var authedUser = UserManager.FindById(userId);
+            string userId = User.Identity.GetUserId();
+            ApplicationUser authedUser = UserManager.FindById(userId);
 
             if (AcquaintenceName.Equals(authedUser.GlobalIdentityHandle, StringComparison.InvariantCultureIgnoreCase))
             {
@@ -442,16 +447,16 @@ namespace NetMud.Controllers
             }
             else
             {
-                var notificationsList = new List<AcquaintenceNotifications>();
+                List<AcquaintenceNotifications> notificationsList = new List<AcquaintenceNotifications>();
 
-                foreach (var notification in Notifications.Split(new string[] { "||" }, StringSplitOptions.RemoveEmptyEntries))
+                foreach (string notification in Notifications.Split(new string[] { "||" }, StringSplitOptions.RemoveEmptyEntries))
                 {
                     var anShort = (AcquaintenceNotifications)Enum.Parse(typeof(AcquaintenceNotifications), notification);
 
                     notificationsList.Add(anShort);
                 }
 
-                var newAcq = new Acquaintence
+                Acquaintence newAcq = new Acquaintence
                 {
                     PersonHandle = AcquaintenceName,
                     IsFriend = IsFriend,
@@ -459,7 +464,7 @@ namespace NetMud.Controllers
                     NotificationSubscriptions = notificationsList.ToArray()
                 };
 
-                var acquaintences = authedUser.GameAccount.Config.Acquaintences.ToList();
+                List<IAcquaintence> acquaintences = authedUser.GameAccount.Config.Acquaintences.ToList();
 
                 if (acquaintences.Contains(newAcq))
                     acquaintences.Remove(newAcq);
@@ -488,16 +493,16 @@ namespace NetMud.Controllers
             else
             {
 
-                var userId = User.Identity.GetUserId();
-                var authedUser = UserManager.FindById(userId);
+                string userId = User.Identity.GetUserId();
+                ApplicationUser authedUser = UserManager.FindById(userId);
 
-                var acquaintence = authedUser.GameAccount.Config.Acquaintences.FirstOrDefault(ch => ch.PersonHandle.Equals(ID));
+                IAcquaintence acquaintence = authedUser.GameAccount.Config.Acquaintences.FirstOrDefault(ch => ch.PersonHandle.Equals(ID));
 
                 if (acquaintence == null)
                     message = "That Acquaintence does not exist";
                 else
                 {
-                    var acquaintences = authedUser.GameAccount.Config.Acquaintences.ToList();
+                    List<IAcquaintence> acquaintences = authedUser.GameAccount.Config.Acquaintences.ToList();
 
                     acquaintences.Remove(acquaintence);
 
@@ -517,7 +522,7 @@ namespace NetMud.Controllers
         {
             var user = UserManager.FindById(User.Identity.GetUserId());
 
-            var vModel = new ManageUIModulesViewModel(BackingDataCache.GetAll<IUIModule>().Where(uimod => uimod.CreatorHandle.Equals(user.GameAccount.GlobalIdentityHandle)))
+            var vModel = new ManageUIModulesViewModel(TemplateCache.GetAll<IUIModule>().Where(uimod => uimod.CreatorHandle.Equals(user.GameAccount.GlobalIdentityHandle)))
             {
                 authedUser = user,
                 CurrentPageNumber = CurrentPageNumber,
@@ -540,7 +545,7 @@ namespace NetMud.Controllers
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<IUIModule>(ID);
+                var obj = TemplateCache.Get<IUIModule>(ID);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -603,7 +608,7 @@ namespace NetMud.Controllers
                 authedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
-            var obj = BackingDataCache.Get<IUIModule>(id);
+            var obj = TemplateCache.Get<IUIModule>(id);
 
             if (obj == null)
             {
@@ -628,7 +633,7 @@ namespace NetMud.Controllers
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = BackingDataCache.Get<IUIModule>(id);
+            var obj = TemplateCache.Get<IUIModule>(id);
             if (obj == null)
             {
                 message = "That does not exist";
@@ -671,10 +676,10 @@ namespace NetMud.Controllers
             {
                 return View(model);
             }
-            var result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
+            IdentityResult result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
             if (result.Succeeded)
             {
-                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                ApplicationUser user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
                 if (user != null)
                 {
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
@@ -697,10 +702,10 @@ namespace NetMud.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await UserManager.AddPasswordAsync(User.Identity.GetUserId(), model.NewPassword);
+                IdentityResult result = await UserManager.AddPasswordAsync(User.Identity.GetUserId(), model.NewPassword);
                 if (result.Succeeded)
                 {
-                    var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                    ApplicationUser user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
                     if (user != null)
                     {
                         await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
@@ -737,7 +742,7 @@ namespace NetMud.Controllers
 
         private void AddErrors(IdentityResult result)
         {
-            foreach (var error in result.Errors)
+            foreach (string error in result.Errors)
             {
                 ModelState.AddModelError("", error);
             }

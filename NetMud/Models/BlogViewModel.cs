@@ -1,28 +1,23 @@
 ﻿using NetMud.Authentication;
-using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Administrative;
 using System;
 using System.Collections.Generic;
 
 namespace NetMud.Models
 {
-    public class BlogViewModel : PagedDataModel<IJournalEntry>, BaseViewModel
+    public class BlogViewModel : IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
+        public IEnumerable<IJournalEntry> Items { get; set; }
+        public IEnumerable<Tuple<string, int>> MonthYearPairs { get; set; }
+        public string[] IncludeTags { get; set; }
+        public string[] AllTags { get; set; }
 
         public BlogViewModel(IEnumerable<IJournalEntry> items)
-            : base(items)
         {
-            CurrentPageNumber = 1;
-            ItemsPerPage = 20;
+            Items = items;
+            IncludeTags = new string[0];
+            AllTags = new string[0];
         }
-
-        internal override Func<IJournalEntry, bool> SearchFilter
-        {
-            get
-            {
-                return item => item.Name.ToLower().Contains(SearchTerms.ToLower()) || item.Body.ToLower().Contains(SearchTerms.ToLower());
-            }
-        }
-
     }
 }

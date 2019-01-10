@@ -1,17 +1,17 @@
-﻿@using NetMud.DataStructure.Base.EntityBackingData
+﻿@using NetMud.DataStructure.NPC
 @using NetMud.DataStructure.Linguistic
 
 @model NetMud.Models.Admin.OccurrenceViewModel
 
 @{
-    var dataObject = (INonPlayerCharacter)Model.DataObject;
+    var dataObject = (INonPlayerCharacterTemplate)Model.DataObject;
 }
 
 <h4>Lexica</h4>
 <div class="form-group row">
     @Html.DescriptiveLabelFor(m => m.Phrase, new { @class = "col-sm-1 col-form-label" })
     <div class="col-md-3">
-        @Html.DropDownList("Phrase", dataObject.RaceData.FullAnatomy().Select(rl =>
+        @Html.DropDownList("Phrase", dataObject.Race.FullAnatomy().Select(rl =>
                                                         new SelectListItem() { Text = rl.Item2, Value = rl.Item2 })
                                                         , "Select One", htmlAttributes: new { id = "Phrase", @class = "form-control" })
     </div>

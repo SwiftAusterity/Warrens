@@ -1,6 +1,5 @@
 ﻿using NetMud.Authentication;
-using NetMud.Data.LookupData;
-using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Architectural.EntityBase;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,18 +8,18 @@ using System.Linq;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageMaterialDataViewModel : PagedDataModel<Material>, BaseViewModel
+    public class ManageMaterialDataViewModel : PagedDataModel<IMaterial>, IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
-        public ManageMaterialDataViewModel(IEnumerable<Material> items)
+        public ManageMaterialDataViewModel(IEnumerable<IMaterial> items)
             : base(items)
         {
             CurrentPageNumber = 1;
             ItemsPerPage = 20;
         }
 
-        internal override Func<Material, bool> SearchFilter
+        internal override Func<IMaterial, bool> SearchFilter
         {
             get
             {
@@ -29,7 +28,7 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditMaterialViewModel : BaseViewModel
+    public class AddEditMaterialViewModel : IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 

@@ -1,24 +1,24 @@
 ﻿using NetMud.Authentication;
-using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Architectural.ActorBase;
+using NetMud.DataStructure.NPC;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageNPCDataViewModel : PagedDataModel<INonPlayerCharacter>, BaseViewModel
+    public class ManageNPCDataViewModel : PagedDataModel<INonPlayerCharacterTemplate>, IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
-        public ManageNPCDataViewModel(IEnumerable<INonPlayerCharacter> items)
+        public ManageNPCDataViewModel(IEnumerable<INonPlayerCharacterTemplate> items)
             : base(items)
         {
             CurrentPageNumber = 1;
             ItemsPerPage = 20;
         }
 
-        internal override Func<INonPlayerCharacter, bool> SearchFilter
+        internal override Func<INonPlayerCharacterTemplate, bool> SearchFilter
         {
             get
             {
@@ -28,7 +28,7 @@ namespace NetMud.Models.Admin
 
     }
 
-    public class AddEditNPCDataViewModel : BaseViewModel
+    public class AddEditNPCDataViewModel : IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
@@ -55,6 +55,6 @@ namespace NetMud.Models.Admin
         public long RaceId { get; set; }
 
         public IEnumerable<IRace> ValidRaces { get; set; }
-        public INonPlayerCharacter DataObject { get; set; }
+        public INonPlayerCharacterTemplate DataObject { get; set; }
     }
 }

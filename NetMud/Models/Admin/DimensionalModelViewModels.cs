@@ -1,5 +1,5 @@
 ﻿using NetMud.Authentication;
-using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Architectural.EntityBase;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -7,7 +7,7 @@ using System.Web;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageDimensionalModelDataViewModel : PagedDataModel<IDimensionalModelData>, BaseViewModel
+    public class ManageDimensionalModelDataViewModel : PagedDataModel<IDimensionalModelData>, IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
@@ -27,7 +27,7 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditDimensionalModelDataViewModel : BaseViewModel
+    public class AddEditDimensionalModelDataViewModel : IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
@@ -58,7 +58,7 @@ namespace NetMud.Models.Admin
         public IDimensionalModelData DataObject { get; set; }
     }
 
-    public class DimensionalEntityEditViewModel : BaseViewModel
+    public class DimensionalEntityEditViewModel : IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 

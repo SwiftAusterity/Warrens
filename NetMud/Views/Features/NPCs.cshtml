@@ -1,0 +1,64 @@
+﻿@model NetMud.Models.Features.NPCsViewModel
+
+@{
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("NPCs", new string[] { "Home" }, new string[] { "/" });
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("Items", "Features", FormMethod.Post, new { id = "paginationForm" }))
+{
+    <div class="itemsTable">
+        <div class="itemsTableList">
+            @Html.DisplayFor(m => m.Items)
+        </div>
+        <div class="itemsTableSidebar">
+            <div class="sideBarFilter">
+                <div class="form-group row">
+                    @Html.EditorFor(m => m.SearchTerm, new { columnCount = 1 })
+                </div>
+                <div class="form-group row submitButtons">
+                    <input type="submit" value="Search" class="btn btn-default save" />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Styles {
+    <style>
+        body {
+            background-image: url(/Content/images/farmBkg.jpg);
+            background-size: cover;
+            background-attachment: fixed;
+            color: white;
+        }
+
+        hr {
+            border-color: white;
+        }
+
+        h3 {
+            color: white;
+        }
+
+        /* unvisited link */
+        footer a:link {
+            color: blueviolet;
+        }
+
+        /* visited link */
+        footer a:visited {
+            color: white;
+        }
+
+        /* mouse over link */
+        footer a:hover {
+            color: hotpink;
+        }
+
+        /* selected link */
+        footer a:active {
+            color: red;
+        }
+    </style>
+}

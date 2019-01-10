@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
-using NetMud.Data.LookupData;
+using NetMud.Data.Administrative;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.Behaviors.System;
+using NetMud.DataStructure.Administrative;
 using NetMud.Models.Admin;
 using System.Web;
 using System.Web.Mvc;
@@ -39,7 +38,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageHelpDataViewModel(BackingDataCache.GetAll<IHelp>())
+            ManageHelpDataViewModel vModel = new ManageHelpDataViewModel(TemplateCache.GetAll<IHelp>())
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -60,9 +59,9 @@ namespace NetMud.Controllers.GameAdmin
 
             if (!string.IsNullOrWhiteSpace(authorizeRemove) && removeId.ToString().Equals(authorizeRemove))
             {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<IHelp>(removeId);
+                var obj = TemplateCache.Get<IHelp>(removeId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -76,13 +75,13 @@ namespace NetMud.Controllers.GameAdmin
             }
             else if (!string.IsNullOrWhiteSpace(authorizeUnapprove) && unapproveId.ToString().Equals(authorizeUnapprove))
             {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<IHelp>(unapproveId);
+                var obj = TemplateCache.Get<IHelp>(unapproveId);
 
                 if (obj == null)
                     message = "That does not exist";
-                else if (obj.ChangeApprovalStatus(authedUser.GameAccount, authedUser.GetStaffRank(User), ApprovalState.Returned))
+                else if (obj.ChangeApprovalStatus(authedUser.GameAccount, authedUser.GetStaffRank(User), ApprovalState.Unapproved))
                 {
                     LoggingUtility.LogAdminCommandUsage("*WEB* - UnapproveHelp[" + unapproveId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Unapproval Successful.";
@@ -99,9 +98,10 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add()
         {
-            var vModel = new AddEditHelpDataViewModel
+            AddEditHelpDataViewModel vModel = new AddEditHelpDataViewModel
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId())
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                DataObject = new Help()
             };
 
             return View("~/Views/GameAdmin/Help/Add.cshtml", vModel);
@@ -109,15 +109,15 @@ namespace NetMud.Controllers.GameAdmin
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Add(string Name, string HelpText)
+        public ActionResult Add(AddEditHelpDataViewModel vModel)
         {
             string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var newObj = new Help
+            Help newObj = new Help
             {
-                Name = Name,
-                HelpText = HelpText
+                Name = vModel.DataObject.Name,
+                HelpText = vModel.DataObject.HelpText
             };
 
             if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
@@ -135,12 +135,12 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(long id)
         {
             string message = string.Empty;
-            var vModel = new AddEditHelpDataViewModel
+            AddEditHelpDataViewModel vModel = new AddEditHelpDataViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
-            var obj = BackingDataCache.Get<IHelp>(id);
+            var obj = TemplateCache.Get<IHelp>(id);
 
             if (obj == null)
             {
@@ -149,28 +149,26 @@ namespace NetMud.Controllers.GameAdmin
             }
 
             vModel.DataObject = obj;
-            vModel.Name = obj.Name;
-            vModel.HelpText = obj.HelpText.Value;
 
             return View("~/Views/GameAdmin/Help/Edit.cshtml", vModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(string Name, string HelpText, long id)
+        public ActionResult Edit(long id, AddEditHelpDataViewModel vModel)
         {
             string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = BackingDataCache.Get<IHelp>(id);
+            var obj = TemplateCache.Get<IHelp>(id);
             if (obj == null)
             {
                 message = "That does not exist";
                 return RedirectToAction("Index", new { Message = message });
             }
 
-            obj.Name = Name;
-            obj.HelpText = HelpText;
+            obj.Name = vModel.DataObject.Name;
+            obj.HelpText = vModel.DataObject.HelpText;
 
             if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {

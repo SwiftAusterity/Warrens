@@ -29,23 +29,23 @@ namespace NetMud.CentralControl
         /// <param name="fireOnce">Does this fire only once or does it fire every X pulses</param>
         public static void StartSubscriptionLoop(string designator, Func<bool> subscriberProcess, int pulseCount, bool fireOnce)
         {
-            var currentList = SubscribeToLoop(designator, subscriberProcess, pulseCount);
+            IList<Tuple<Func<bool>, int>> currentList = SubscribeToLoop(designator, subscriberProcess, pulseCount);
 
             //Only one means we need to start the loop
             if (currentList.Count() == 1)
             {
-                var cancelTokenSource = new CancellationTokenSource();
+                CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
 
                 StoreCancellationToken(designator, cancelTokenSource);
 
                 async void looperProcess(object args)
                 {
-                    var subArgs = args as SubscriptionLoopArgs;
+                    SubscriptionLoopArgs subArgs = args as SubscriptionLoopArgs;
                     while (1 == 1)
                     {
-                        var subList = GetAllCurrentSubscribers(subArgs.Designation, subArgs.CurrentPulse, fireOnce);
+                        IList<Tuple<Func<bool>, int>> subList = GetAllCurrentSubscribers(subArgs.Designation, subArgs.CurrentPulse, fireOnce);
 
-                        foreach (var pulsar in subList)
+                        foreach (Tuple<Func<bool>, int> pulsar in subList)
                             pulsar.Item1.Invoke();
 
                         subArgs.CurrentPulse++;
@@ -57,7 +57,7 @@ namespace NetMud.CentralControl
                     }
                 }
 
-                var newLoop = new Task(looperProcess, new SubscriptionLoopArgs(designator, 0), cancelTokenSource.Token, TaskCreationOptions.LongRunning);
+                Task newLoop = new Task(looperProcess, new SubscriptionLoopArgs(designator, 0), cancelTokenSource.Token, TaskCreationOptions.LongRunning);
 
                 newLoop.ContinueWith((previousTask) =>
                 {
@@ -81,7 +81,7 @@ namespace NetMud.CentralControl
         /// <param name="workProcess">What delegate process to call for the loop</param>
         public static void StartSingeltonChainedLoop(string designator, int rampupDelay, int cooldownDelay, int maxDuration, Func<bool> workProcess)
         {
-            var cancelTokenSource = new CancellationTokenSource();
+            CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
 
             if (maxDuration > 0)
                 cancelTokenSource.CancelAfter(maxDuration * 1000); //seconds * 1000 for miliseconds
@@ -94,7 +94,7 @@ namespace NetMud.CentralControl
                 return true;
             }
 
-            var newLoop = new Task<bool>(loopedProcess, cancelTokenSource.Token, TaskCreationOptions.LongRunning);
+            Task<bool> newLoop = new Task<bool>(loopedProcess, cancelTokenSource.Token, TaskCreationOptions.LongRunning);
 
             newLoop.ContinueWith(async (previousTask) =>
             {
@@ -123,7 +123,7 @@ namespace NetMud.CentralControl
         public static void StartSingeltonLoop(string designator, int rampupDelay, int cooldownDelay, int maxDuration
             , Func<bool> workProcess, Func<bool> successTailProcess = null, Func<bool> failedTailProcess = null)
         {
-            var cancelTokenSource = new CancellationTokenSource();
+            CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
 
             if (maxDuration > 0)
                 cancelTokenSource.CancelAfter(maxDuration * 1000); //seconds * 1000 for miliseconds
@@ -136,7 +136,7 @@ namespace NetMud.CentralControl
                 return true;
             }
 
-            var newLoop = new Task<bool>(loopedProcess, cancelTokenSource.Token, TaskCreationOptions.LongRunning);
+            Task<bool> newLoop = new Task<bool>(loopedProcess, cancelTokenSource.Token, TaskCreationOptions.LongRunning);
 
             newLoop.ContinueWith(async (previousTask) =>
             {
@@ -173,7 +173,7 @@ namespace NetMud.CentralControl
         /// <param name="shutdownAnnouncement">What to announce (string.format format) before shutting down, empty string = no announcements, ex "World shutting down in {0} seconds."</param>
         public static void ShutdownLoop(string designator, int shutdownDelay, string shutdownAnnouncement, int shutdownAnnouncementFrequency = -1)
         {
-            var cancelToken = GetCancellationToken(designator);
+            CancellationTokenSource cancelToken = GetCancellationToken(designator);
 
             if (cancelToken != null && cancelToken.Token.CanBeCanceled)
                 cancelToken.CancelAfter(shutdownDelay * 1000);
@@ -194,8 +194,8 @@ namespace NetMud.CentralControl
         /// <returns>All the tokens in the live cache</returns>
         public static Dictionary<string, CancellationTokenSource> GetAllLiveTaskStatusTokens()
         {
-            var returnDict = new Dictionary<string, CancellationTokenSource>();
-            foreach (var kvp in globalCache.Where(kvp => kvp.Value.GetType() == typeof(CancellationTokenSource)))
+            Dictionary<string, CancellationTokenSource> returnDict = new Dictionary<string, CancellationTokenSource>();
+            foreach (KeyValuePair<string, object> kvp in globalCache.Where(kvp => kvp.Value.GetType() == typeof(CancellationTokenSource)))
                 returnDict.Add(kvp.Key.Replace("AsyncCancellationToken.", string.Empty), (CancellationTokenSource)kvp.Value);
 
             return returnDict;
@@ -212,7 +212,7 @@ namespace NetMud.CentralControl
             IEnumerable<CancellationTokenSource> tokens
                 = globalCache.Where(kvp => kvp.Value.GetType() == typeof(CancellationTokenSource)).Select(kvp => (CancellationTokenSource)kvp.Value);
 
-            foreach (var token in tokens.Where(tk => !tk.IsCancellationRequested && tk.Token.CanBeCanceled))
+            foreach (CancellationTokenSource token in tokens.Where(tk => !tk.IsCancellationRequested && tk.Token.CanBeCanceled))
             {
                 if (token != null)
                     token.CancelAfter(shutdownDelay * 1000);
@@ -289,7 +289,7 @@ namespace NetMud.CentralControl
         /// <param name="token">the token to store</param>
         private static IList<Tuple<Func<bool>, int>> SubscribeToLoop(string designator, Func<bool> subscriber, int pulseCount)
         {
-            var taskKey = string.Format(subscriptionLoopCacheKeyFormat, designator);
+            string taskKey = string.Format(subscriptionLoopCacheKeyFormat, designator);
 
             if (!(globalCache.Get(taskKey) is IList<Tuple<Func<bool>, int>> taskList))
                 taskList = new List<Tuple<Func<bool>, int>>();
@@ -308,9 +308,7 @@ namespace NetMud.CentralControl
             if (pulseCount == 0)
                 return new List<Tuple<Func<bool>, int>>();
 
-            var loopSubscribers = GetLoopSubscribers(designator);
-
-            return loopSubscribers.Where(ls => (fireOnce && ls.Item2.Equals(pulseCount)) || ls.Item2 % pulseCount == 0).ToList();
+            return GetLoopSubscribers(designator).Where(ls => (fireOnce && ls.Item2.Equals(pulseCount)) || ls.Item2 % pulseCount == 0).ToList();
         }
 
         /// <summary>
@@ -320,13 +318,11 @@ namespace NetMud.CentralControl
         /// <returns>the token</returns>
         private static IList<Tuple<Func<bool>, int>> GetLoopSubscribers(string designator)
         {
-            var taskKey = string.Format(subscriptionLoopCacheKeyFormat, designator);
+            string taskKey = string.Format(subscriptionLoopCacheKeyFormat, designator);
 
             try
             {
-                IList<Tuple<Func<bool>, int>> subscriberList = globalCache.Get(taskKey) as IList<Tuple<Func<bool>, int>>;
-
-                if (subscriberList == null)
+                if (!(globalCache.Get(taskKey) is IList<Tuple<Func<bool>, int>> subscriberList))
                     subscriberList = new List<Tuple<Func<bool>, int>>();
 
                 return subscriberList;
@@ -345,7 +341,7 @@ namespace NetMud.CentralControl
         /// <param name="designator">The token's designator</param>
         private static void RemoveSubscriberList(string designator)
         {
-            var taskKey = string.Format(subscriptionLoopCacheKeyFormat, designator);
+            string taskKey = string.Format(subscriptionLoopCacheKeyFormat, designator);
 
             globalCache.Remove(taskKey);
         }

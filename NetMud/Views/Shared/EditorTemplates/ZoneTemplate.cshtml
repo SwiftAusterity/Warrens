@@ -1,0 +1,16 @@
+﻿@using NetMud.Data.Zone
+
+@model ZoneTemplate
+
+<h4>Details</h4>
+<div class="form-group row">
+    @Html.EditorFor(e => e.Name)
+    @Html.EditorFor(e => e.World, new { validItems = ViewData["ValidWorlds"] })
+</div>
+<h4>Environment</h4>
+<div class="form-group row">
+    @Html.EditorFor(m => m.BaseBiome)
+    @Html.EditorFor(m => m.Hemisphere)
+    @Html.EditorFor(m => m.TemperatureCoefficient)
+    @Html.EditorFor(m => m.PressureCoefficient)
+</div>

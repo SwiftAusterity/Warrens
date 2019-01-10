@@ -1,278 +1,0 @@
-Sender  Aloran~
-Date    Sat Jun 22 23:24:37 2002~
-Stamp   1024806277
-To      all~
-Subject NWN~
-Protect 0
-Board   0
-Text
-*twitch twitch*
-
-- Aloran
-~
-
-Sender  Flux~
-Date    Sun Jun 23 00:25:08 2002~
-Stamp   1024809908
-To      all~
-Subject Bah!~
-Protect 0
-Board   0
-Text
-I need you to look through that skill tree listing.
-Think of every spell, skill or situation that might come up, and refer back to the skills
-tree for a combonation of those divisions and sub-divisions, if we're lacking something
-it needs to be addressed right now, as I'm not changing that at all once we get it in.
- 
-I'll be doing the same.
--Flux
-~
-
-Sender  Flux~
-Date    Sun Jun 23 12:49:39 2002~
-Stamp   1024854579
-To      all~
-Subject files~
-Protect 0
-Board   0
-Text
-There is a crossroads concerning the OLC save/load of objects and mobiles.
- 
-The first choice is to go totally LP style.
-This means we'd lose the ability to do mass polls (like "ofind sword"), but we could
-sectionalize the directory and I'd do up a shell so we can look in those directories for things.
- 
-The second choice is to make one gigantic file, like for the race data, that contains every
-object or mob, the system would then load these in on startup. We could do polling, but the downside
-is it's one gigantic file.
- 
-The third choice is more iffy.
-It's sort of how the area files work, where we have all different files, like in LP style, but
-there is a ".list" file that catalogues every other file in the directory, and the system then
-loads those upon startup.
- 
-The first choice will probably save us RAM in the long run, but it may be a hinderance to builders.
-I could make it user-friendly, but it doesn't save the fact that you either need to make up
-many many names for things that are similar, or make a billion directories to keep things in.
- 
-We'd need to keep a strict watch on what is in what directory too.
- 
-Note over what you think is the best way to go about it.
- 
--Flux
-~
-
-Sender  Aloran~
-Date    Mon Jun 24 15:59:52 2002~
-Stamp   1024952392
-To      all~
-Subject Building OLC~
-Protect 0
-Board   0
-Text
-Again, using telnet, so forgive any grievous mistakes ;)
-It seems to me, that the first one would be the best way to go.
-Assuming I'm understanding it correctly.
-Like, just as an example, let's take this.
-Would this be a fairly accurate idea of the nested directories?
-
-Items
-+Sword
--Long
-- Short (etc)
-+Axes
-
-and so on and so on
-because if so, that might actually be easier on the builders in the long run
-Just my thoughts ;)
-
-- Aloran (Lleweryn)
-(Level 18 Ranger and champion of Neverwinter ;) )
-
-P.S. Speaking of whih, do you have that yet?
-~
-
-Sender  Flux~
-Date    Mon Jun 24 22:09:23 2002~
-Stamp   1024974563
-To      all~
-Subject Blahity blah blah~
-Protect 0
-Board   0
-Text
-No, NN is in the mail, I should have it Tuesday or Wednesday.
- 
-And yeah, I'd set everyone up with a new value on player files, "directory" where the actual
-directory you have access to view is dynamically on you, so typing things like "ls" or "cd" would
-manipulate it.
- 
-This would mean 0 mobiles and objects would load upon startup and everything would be read on the fly.
-Honestly I've no clue which saves processor time more at this point, having 50 million things in
-resident memory or loading them from files every time you need something.
- 
-The problem arises as how we can save things to character files, but I may have the solution to that too.
-I'm just not sure if it'd work yet.
- 
-I'm going to put the mobile and object index data files in a cyclical xml that was developed for the
-racial data, but it can't be saved in that manner on character files.
- 
-A possibility is saving object files in the directory of the players, but I don't know about that yet.
- 
-Mobile data is easily saved, however, since we don't need to worry about mobile data nested on c-files.
- 
-I could also do one seperate file for character's inventory, we'll see I suppose.
- 
-The next thing we're doing is installing the new skills tree.
-It's modeled after the discworld system in both form and function, if you've forgotten how it works
-I suggest you visit Discworld MUD again and look at how the tree looks and works.
- 
-I'm even using their syntax (skill.subskill.subskill).
- 
-I'll talk more about the skills tree soon, I hope to have it in by Friday.
--Flux
-~
-
-Sender  Flux~
-Date    Tue Jun 25 13:25:41 2002~
-Stamp   1025029541
-To      all~
-Subject Skllz~
-Protect 0
-Board   0
-Text
-There's a whole bunch that is related to the skills system that needs to be done:
-The new training commands:
-Practice - same as it was before, except that it needs to be changed to fit the new system.
- 
-Instruct - this one is harder, as it depends on a response from someone wanting to practice.
-I'm not quite sure how to handle this yet, but I have some ideas.
- 
-We'll need to make a new "mentor data" for mobiles too, as they'll not only have skills they can teach
-but also have actual spells and usable skills they'll know that they can pass on.
- 
-We need to come up with a payment model for some too, but I think we can manage on one-time fees using
-the quest system.
- 
-Or mentor data could include a "payment per skill level" dealy.
- 
-As always, we'll see. I only intend to have the actual skills system and the wiz command in by friday.
--Flux
-~
-
-Sender  Flux~
-Date    Wed Jun 26 13:36:46 2002~
-Stamp   1025116606
-To      all~
-Subject skills tree functionality~
-Protect 0
-Board   0
-Text
-A note on the skills tree:
-I believe the structure will involve a reverse listing, where each skill data entry will have a "parent"
-and a unique identifier, so multiple instances of one word can be used (like perception).
- 
-The "translator" function will read whatever someone types in, say "magic.arcane.invoke"
-and throw out everything but the last two, in this case "arcane" and "invoke"
-Arcane becomes the parent, and invoke becomes the skill name, and it determines the unique
-identifier for that skill entry and then acts on that.
- 
-It'll be mostly a cheaty workaround, since I'll include in skill data the "number of levels deep"
-each skill point is to determine how expensive or when it can start training.
- 
-I hope to get it in with reader function and some relevant equations thursday and friday.
-Over the weekend I'll outline some stuff you can do in relation to it, probably the practice
-and instruct commands for players, and I'll work on the mobile mentoring data and functions over
-the next week, hopefully this deal will be done by next weekend.
- 
-One other thing that needs to be done after this is the elimination of the "level" variable and the
-changing of the "Security" variable to be the new staff/player status thing.
- 
-This is a *huge* job, so I think I'll split up the files between the two of us and we'll work on
-changing it for those specifically.
- 
-Technically speaking it's an easy task, just seeing where it checks for level requirements,
-but in reality its huge due to the number of level checks there are.
- 
--Flux
-~
-
-Sender  Flux~
-Date    Fri Jun 28 01:55:14 2002~
-Stamp   1025247314
-To      all~
-Subject skill equations~
-Protect 0
-Board   0
-Text
-Experience Calculator:
-350 max per kill.
- 
-Training costs:
-Exp cost = (current level^2 * skill modifier)
- 
-Cost addition = ((cumu of other family levels / 4) - family level) * (skill modifier * 3)
-Cost Discount = (teacher skill level \ student skill) with a max cap of 50
- 
-Value modifiers:
-Blood loss potential = physical.athletics.bodybuilding * 10
-Stamina points = (physical.athletics.bodybuilding * 7) + (magic.spellcraft * 3)
-Chi energy = (magic.spellcraft * 5)
- 
-PaP people never get beyond base chi energy points, due to the lack of the magic tree.
-Stamina is also comprimised, due to the lack of the ma.spellcraft skill entry.
- 
-Example of skill cost:
-Let's say you want to advance craftsmanship.smithing.weapons from 10 to 11.
-The skill modifier for that is 7, so we get (10*10*7) for the base, which is 700.
- 
-Let's also say that you're pretty late in the game, and crafts hasn't been your main focus.
-You have 115 levels in physical, 75 in evaluation, 0 in magical, 10 in technology and 45 in covert.
-You only have 10 levels in craftsmanship in general.
-(245 / 4) - 10 = 51 * 21 = 1071
-We add those together to get 1771 for 1 level of cr.sm.weapons.
- 
-If you had found an instructor, most likely someone with a much higher level than 10, you could get a
-50% discount, bringing it down to something around 900, which would be 3 or 4 decent kills.
- 
-Focusing on one discipline rewards you only in that discipline and will hurt you later on
-when you attempt to branch out.
--Flux
-~
-
-Sender  Flux~
-Date    Fri Jun 28 15:53:06 2002~
-Stamp   1025297586
-To      all~
-Subject Blah~
-Protect 0
-Board   0
-Text
-It figures I'd forget something.
- 
-I added in a function to retrieve the proper skill on the tree based on name entry as well as one to
-calculate the proper modifier value each skill has.
- 
-The thing I forgot was to include the stat distribution modifiers into the skill tree table.
-If you'd like to see them, they're in const.c now, in the tree table.
- 
-Nothing relies on only 1 stat, and they vary quite a bit within each family, though I tried to keep them
-mostly similar within sub-families.
- 
-I think it's a pretty good distribution, charisma even comes into play.
- 
-Things left to do on this front:
-A new "score" display for the skill tree.
-Reman of the sset command for staffers.
-Save functionality for the new skill tree for characters (mobiles come later with the data reman).
-The new skill table data itself.
-Reman of the interp system to go along with the new skill table data.
-The instruct and practice commands.
-Removal of the level based system, inclusion of the new security system.
-Changing of the fighting engine to reflect the new skill tree entries for it.
-New hp, mana and movement functions to reflect the new skill tree system.
- 
-Changing all the existing skills we want to keep, dumping the ones we dont.
-I'm sure there's more too, I just can't think of it right now.
--Flux
-~
-

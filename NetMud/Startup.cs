@@ -1,7 +1,7 @@
 ﻿using Microsoft.Owin;
 using Owin;
 
-[assembly: OwinStartupAttribute(typeof(NetMud.Startup))]
+[assembly: OwinStartup(typeof(NetMud.Startup))]
 namespace NetMud
 {
     public partial class Startup

@@ -1,13 +1,24 @@
 ﻿@model NetMud.Models.GameContextModel
 
 <div class="parserClientTop">
+    <div class="statusIndicators">
+        <div output-data-binding="Environment.Sun" title="Sun">
+        </div>
+        <div output-data-binding="Environment.Moon" title="Moon">
+        </div>
+        <div output-data-binding="Environment.Weather">
+        </div>
+        <div output-data-binding="Environment.Visibility" title="Brightness">
+        </div>
+    </div>
     <div id="locationBreadcrumbs">
         <span class="contentContainer" output-data-binding="Local.ZoneName"></span>
         <span class="contentContainer" output-eval-key="Local.LocaleName" output-eval-code="if(data.length === 0) { element.css({'display': 'none'}); } else { element.css({'display' : 'block'}); }">&nbsp;>&nbsp;<span output-data-binding="Local.LocaleName"></span></span>
         <span class="contentContainer" output-eval-key="Local.RoomName" output-eval-code="if(data.length === 0) { element.css({'display': 'none'}); } else { element.css({'display' : 'block'}); }">&nbsp;>&nbsp;<span output-data-binding="Local.RoomName"></span></span>
     </div>
     <div id="locationDescription">
-        <span class="contentContainer" output-data-binding="Local.LocationDescriptive"></span>
+        <div class="contentContainer" output-data-binding="Environment.TimeOfDay"></div>
+        <div class="contentContainer" output-data-binding="Local.LocationDescriptive"></div>
     </div>
     <div class="rightNav" style="float: right;">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-th-list" title="Client Settings"></span></a>

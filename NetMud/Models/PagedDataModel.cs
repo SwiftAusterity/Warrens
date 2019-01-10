@@ -28,6 +28,7 @@ namespace NetMud.Models
         [Display(Name = "Search", Description = "Filter by keywords and names.")]
         public string SearchTerms { get; set; }
 
+        [Display(Name = "Item", Description = "Valid items for the display list.")]
         public IEnumerable<T> Items { get; private set; }
 
         internal abstract Func<T, bool> SearchFilter { get; }
@@ -39,8 +40,8 @@ namespace NetMud.Models
                 if(Items == null || Items.Count() == 0)
                     return Enumerable.Empty<T>();
 
-                var skip = (CurrentPageNumber - 1) * ItemsPerPage;
-                var take = Math.Abs(Items.Count() - skip) >= ItemsPerPage ? ItemsPerPage : Math.Abs(Items.Count() - skip);
+                int skip = (CurrentPageNumber - 1) * ItemsPerPage;
+                int take = Math.Abs(Items.Count() - skip) >= ItemsPerPage ? ItemsPerPage : Math.Abs(Items.Count() - skip);
 
                 if(!string.IsNullOrWhiteSpace(SearchTerms))
                     return Items.Where(item => SearchFilter(item)).Skip(skip).Take(take);
@@ -53,7 +54,7 @@ namespace NetMud.Models
         {
             get
             {
-                return (int)Math.Ceiling(Math.Max((double)1, (double)Items.Count() / (double)ItemsPerPage));
+                return (int)Math.Ceiling(Math.Max(1, Items.Count() / (double)ItemsPerPage));
             }
         }
     }

@@ -1,48 +1,7 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.Models
 {
-    public class ExternalLoginConfirmationViewModel
-    {
-        [Required]
-        [Display(Name = "Email")]
-        [DataType(DataType.EmailAddress)]
-        public string Email { get; set; }
-    }
-
-    public class ExternalLoginListViewModel
-    {
-        public string ReturnUrl { get; set; }
-    }
-
-    public class SendCodeViewModel
-    {
-        public string SelectedProvider { get; set; }
-        public ICollection<System.Web.Mvc.SelectListItem> Providers { get; set; }
-        public string ReturnUrl { get; set; }
-        public bool RememberMe { get; set; }
-    }
-
-    public class VerifyCodeViewModel
-    {
-        [Required]
-        [DataType(DataType.Text)]
-        public string Provider { get; set; }
-
-        [Required]
-        [Display(Name = "Code")]
-        [DataType(DataType.Text)]
-        public string Code { get; set; }
-
-        public string ReturnUrl { get; set; }
-
-        [Display(Name = "Remember this browser?")]
-        public bool RememberBrowser { get; set; }
-
-        public bool RememberMe { get; set; }
-    }
-
     public class ForgotViewModel
     {
         [Required]
@@ -61,6 +20,7 @@ namespace NetMud.Models
 
         [Required]
         [DataType(DataType.Password)]
+        [UIHint("Password")]
         [Display(Name = "Password")]
         public string Password { get; set; }
 
@@ -93,6 +53,23 @@ namespace NetMud.Models
         [StringLength(200, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 4)]
         [DataType(DataType.Text)]
         public string GlobalUserHandle { get; set; }
+
+        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
+        [Display(Name = "Character Name", Description = "First name for you in-game.")]
+        [DataType(DataType.Text)]
+        public string Name { get; set; }
+
+        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
+        [Display(Name = "Family Name", Description = "Last Name for you in-game.")]
+        [DataType(DataType.Text)]
+        public string SurName { get; set; }
+
+        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
+        [Display(Name = "Gender", Description = "Your gender. You can use an existing gender or select free text. Non-approved gender groups will get it/they/them pronouns.")]
+        [DataType(DataType.Text)]
+        public string Gender { get; set; }
+
+        public bool NewUserLocked { get; set; }
     }
 
     public class ResetPasswordViewModel

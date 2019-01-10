@@ -1,6 +1,6 @@
 ﻿using NetMud.DataAccess.FileSystem;
-using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Player;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,9 +18,9 @@ namespace NetMud.DataAccess.Cache
         /// Adds a single entity into the cache
         /// </summary>
         /// <param name="objectToCache">the entity to cache</param>
-        public static void Add(ICharacter objectToCache)
+        public static void Add(IPlayerTemplate objectToCache)
         {
-            var cacheKey = new PlayerDataCacheKey(objectToCache);
+            PlayerDataCacheKey cacheKey = new PlayerDataCacheKey(objectToCache);
 
             BackingCache.Add(objectToCache, cacheKey);
         }
@@ -30,7 +30,7 @@ namespace NetMud.DataAccess.Cache
         /// </summary>
         /// <typeparam name="T">the system type for the entity</typeparam>
         /// <returns>a list of the entities from the cache</returns>
-        public static IEnumerable<ICharacter> GetAllForAccountHandle(string accountHandle)
+        public static IEnumerable<IPlayerTemplate> GetAllForAccountHandle(string accountHandle)
         {
             return EnsureAccountCharacters(accountHandle);
         }
@@ -39,9 +39,9 @@ namespace NetMud.DataAccess.Cache
         /// Only for the hotbackup procedure
         /// </summary>
         /// <returns>All entities in the entire system</returns>
-        public static IEnumerable<ICharacter> GetAll()
+        public static IEnumerable<IPlayerTemplate> GetAll()
         {
-            return BackingCache.GetAll<ICharacter>();
+            return BackingCache.GetAll<IPlayerTemplate>();
         }
 
         /// <summary>
@@ -50,11 +50,11 @@ namespace NetMud.DataAccess.Cache
         /// <typeparam name="T">the type of the entity</typeparam>
         /// <param name="key">the key it was cached with</param>
         /// <returns>the entity requested</returns>
-        public static ICharacter Get(PlayerDataCacheKey key)
+        public static IPlayerTemplate Get(PlayerDataCacheKey key)
         {
             EnsureAccountCharacters(key.AccountHandle);
 
-            return BackingCache.Get<ICharacter>(key);
+            return BackingCache.Get<IPlayerTemplate>(key);
         }
 
         /// <summary>
@@ -76,17 +76,17 @@ namespace NetMud.DataAccess.Cache
             return BackingCache.Exists(key);
         }
 
-        private static IEnumerable<ICharacter> EnsureAccountCharacters(string accountHandle)
+        private static IEnumerable<IPlayerTemplate> EnsureAccountCharacters(string accountHandle)
         {
             //No shenanigans
             if(string.IsNullOrWhiteSpace(accountHandle))
-                return Enumerable.Empty<ICharacter>();
+                return Enumerable.Empty<IPlayerTemplate>();
 
-            var chars = BackingCache.GetAll<ICharacter>().Where(ch => ch.AccountHandle.Equals(accountHandle, StringComparison.InvariantCultureIgnoreCase));
+            var chars = GetAll().Where(ch => ch.AccountHandle.Equals(accountHandle, StringComparison.InvariantCultureIgnoreCase));
 
             if(!chars.Any())
             {
-                var pData = new PlayerData();
+                PlayerData pData = new PlayerData();
 
                 pData.LoadAllCharactersForAccountToCache(accountHandle);
             }

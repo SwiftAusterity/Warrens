@@ -1,0 +1,13 @@
+﻿@using NetMud.Data.Administrative
+
+@model Help
+
+<div class="form-group row">
+    @Html.EditorFor(e => e.Name)
+</div>
+<h4>Body</h4>
+<div class="form-group row">
+    @Html.EditorFor(e => e.HelpText)
+</div>
+
+

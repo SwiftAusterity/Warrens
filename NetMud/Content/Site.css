@@ -25,7 +25,8 @@ select {
 textarea {
     max-width: 750px;
     max-height: 500px;
-    height: 250px;
+    width: 750px;
+    height: 200px;
 }
 
     textarea.logDisplay {
@@ -41,7 +42,7 @@ input[type=checkbox].form-control {
     border: none;
     box-shadow: none;
     background: none;
-    width: inherit;
+    width: 20px;
     height: inherit;
 }
 
@@ -61,7 +62,7 @@ a.addNew {
 }
 
 a.addRow {
-    padding: 10px;
+    padding: 0 15px 0 15px;
 }
 
 button[type=submit].approveData {
@@ -107,8 +108,7 @@ button[type=submit].unapproveData {
 }
 
 .submitButtons {
-    float: right;
-    padding: 15px;
+    padding: 25px;
 }
 
     .submitButtons input.save {
@@ -119,9 +119,9 @@ div.form-group a.removeRow {
     color: red;
     border: none;
     padding: 10px;
+    padding-left: 30px;
     background-color: inherit;
     float: left;
-    position: absolute;
 }
 
 .dimModelPlane {
@@ -232,8 +232,28 @@ div.roomAsciiMap {
 
 .helpTip {
     position: absolute;
-    top: -0.5em;
+    top: -5px;
     color: blue;
+    left: 97%;
+    z-index: 101;
+}
+
+.ghostRequired {
+    position: absolute;
+    top: -5px;
+    color: red;
+    left: 90%;
+    z-index: 101;
+}
+
+.ghostNameTip {
+    position: absolute;
+    color: lightslategrey;
+    left: 19px;
+    top: -15px;
+    font-size: 10px;
+    font-style: italic;
+    z-index: 101;
 }
 
 .contentPreviewFields div:nth-child(even) {
@@ -262,7 +282,9 @@ div.roomAsciiMap {
     position: relative;
     border-radius: 0 0 15px 15px;
     cursor: pointer;
-    margin-top: -3px;
+    margin-top: -2px;
+    margin-bottom: -6px;
+    border: 1px lightgray solid;
 }
 
     .topNavCollapser span {
@@ -287,4 +309,248 @@ div.roomAsciiMap {
     color: green;
     cursor: pointer;
     padding-left: 5px;
+}
+
+.colorPickerGroup {
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-top: 5px;
+}
+
+.iterativeContainer {
+    border: black 1px dotted;
+}
+
+    .iterativeContainer .iterativeContainer {
+        margin-top: 15px;
+        margin-left: 5%;
+        width: 90%;
+        padding-bottom: 15px;
+        border: black 1px solid;
+    }
+
+        .iterativeContainer .iterativeContainer .form-group {
+            background-color: slategray;
+        }
+
+    .iterativeContainer .addRowContainer {
+        margin-top: 15px;
+        width: 100%;
+        padding-bottom: 15px;
+    }
+
+    .iterativeContainer .form-group {
+        background-color: lightgrey;
+        padding: 15px 0 15px 0;
+        border-radius: 9px;
+        margin: 9px 15px 9px 15px;
+    }
+
+        .iterativeContainer .form-group .row {
+            margin: 9px 15px 9px 50px;
+            padding: 15px 0 15px 0;
+        }
+
+.descriptiveSection {
+    background-color: white;
+    color: black;
+    border-radius: 9px;
+    max-width: 60%;
+    padding: 15px;
+    text-align: center;
+    margin: 15px auto 15px auto;
+}
+
+.descriptiveContainer {
+    background-color: lightgrey;
+    color: black;
+    border-radius: 9px;
+    max-width: 60%;
+    padding: 15px;
+    text-align: center;
+    margin: 15px auto 15px auto;
+    border: 1px solid darkgray;
+}
+
+    .descriptiveContainer hr {
+        margin-left: 25px;
+        margin-right: 25px;
+        border-color: black;
+    }
+
+    .descriptiveContainer .helpItem {
+        border: 2px solid darkgray;
+    }
+
+.helpItem {
+    background-color: white;
+    color: black;
+    border-radius: 9px;
+    padding: 15px;
+    text-align: center;
+    margin: 15px;
+}
+
+    .helpItem hr {
+        margin-left: 25px;
+        margin-right: 25px;
+    }
+
+.itemsTable .itemsTableSidebar {
+    width: 20%;
+    float: right;
+}
+
+.itemsTable .itemsTableList {
+    width: 80%;
+    padding: 5px;
+    float: left;
+    display: inline-block;
+}
+
+.entityDataInfoCard {
+    background-color: white;
+    color: black;
+    border-radius: 9px;
+    padding: 5px;
+    margin: 10px;
+    width: 30%;
+    min-height: 350px;
+    text-align: left;
+    float: left;
+}
+
+    .entityDataInfoCard h4 {
+        font-weight: 700;
+        text-align: center;
+    }
+
+    .entityDataInfoCard div {
+        margin: 5px;
+    }
+
+    .entityDataInfoCard span:first-of-type {
+        font-weight: 600;
+    }
+
+    .entityDataInfoCard span:last-of-type {
+        float: right;
+    }
+
+.tooltip-inner .helpItem {
+    margin: 0;
+}
+
+    .tooltip-inner .helpItem hr {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    .tooltip-inner .helpItem h4 {
+        margin-bottom: 0px;
+    }
+
+.sideBarFilter {
+    background-color: white;
+    color: black;
+    border-radius: 9px;
+    padding: 15px;
+    text-align: center;
+    margin: 15px;
+}
+
+.listPagination {
+    display: inline-flex;
+    float: right;
+}
+
+    .listPagination div {
+        margin: 3px;
+    }
+
+    .listPagination button {
+        border-radius: 15px;
+        background-color: lightgrey;
+        border: 1px solid gray;
+        padding: 1px 5px;
+        text-align: center;
+    }
+
+        .listPagination button.pagingArrow {
+            border-radius: 9px;
+            padding: 1px 2px;
+        }
+
+.informationalGroup {
+    padding: 15px;
+}
+
+    .informationalGroup h4 {
+        margin: 5px 0;
+        text-decoration: underline;
+        font-weight: 600;
+    }
+
+
+.affectRangeContainer {
+    margin: 0 0 0 15px;
+    background-color: black;
+    width: 29%;
+    padding: 15px;
+    line-height: 0;
+    font-size: 0;
+}
+
+    .affectRangeContainer .row {
+        width: 100%;
+        display: inline-flex;
+    }
+
+.affectRangeNode {
+    background-color: gray;
+}
+
+.tutorialContainer {
+    background-color: black;
+    opacity: .75;
+    position: absolute;
+    font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    text-shadow: none;
+    color: black;
+    border-radius: 9px;
+    border: white 2px solid;
+}
+
+.tutorialOverlayTip {
+    color: yellow;
+    z-index: 1001;
+    margin: auto;
+}
+
+.tutorialModal {
+    margin: auto;
+    background-color: white;
+    width: 50%;
+    height: 50%;
+    opacity: 1;
+    z-index: 9999;
+    text-align: center;
+    border-radius: 9px;
+    border: white 2px solid;
+    box-shadow: 0 0 0 3px slategrey;
+}
+
+.archive {
+    color: orangered;
+    font-size: 10px;
+    font-style: italic;
+    z-index: 101;
+    margin-left: 5px;
+}
+
+.archiveApply {
+    font-size: 10px;
+    margin-left: 3px;
+    color: orangered;
+    cursor: pointer;
 }

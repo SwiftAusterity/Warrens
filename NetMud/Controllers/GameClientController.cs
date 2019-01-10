@@ -34,7 +34,7 @@ namespace Controllers
 
         public ActionResult Index()
         {
-            var model = new GameContextModel
+            GameContextModel model = new GameContextModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId())
             };

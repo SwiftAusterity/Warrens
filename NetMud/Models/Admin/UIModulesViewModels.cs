@@ -1,5 +1,5 @@
 ﻿using NetMud.Authentication;
-using NetMud.DataStructure.Base.PlayerConfiguration;
+using NetMud.DataStructure.Player;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -7,7 +7,7 @@ using System.Web.Mvc;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageUIModulesViewModel : PagedDataModel<IUIModule>, BaseViewModel
+    public class ManageUIModulesViewModel : PagedDataModel<IUIModule>, IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
@@ -27,7 +27,7 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditUIModuleViewModel : BaseViewModel
+    public class AddEditUIModuleViewModel : IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 

@@ -1,13 +1,12 @@
-﻿using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.Behaviors.Rendering;
-using NutMud.Commands.Attributes;
-using System.Collections.Generic;
-
-using NetMud.Utility;
-using NetMud.Commands.Attributes;
+﻿using NetMud.Commands.Attributes;
+using NetMud.Communication.Lexical;
 using NetMud.Communication.Messaging;
-using NetMud.DataStructure.SupportingClasses;
-using NetMud.Data.Lexical;
+using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.System;
+using NetMud.Utility;
+using System.Collections.Generic;
 
 namespace NutMud.Commands.Rendering
 {
@@ -42,7 +41,7 @@ namespace NutMud.Commands.Rendering
 
                 var blankMessenger = new MessageCluster(new Message(MessagingType.Visible, new Occurrence() { Strength = 999 }) { Override = new string[] { "You observe your surroundings." } });
 
-                blankMessenger.ExecuteMessaging(Actor, (IEntity)Subject, null, OriginLocation.CurrentLocation, null);
+                blankMessenger.ExecuteMessaging(Actor, (IEntity)Subject, null, OriginLocation.CurrentRoom, null);
                 return;
             }
 
@@ -69,7 +68,7 @@ namespace NutMud.Commands.Rendering
                 ToSubject = new List<IMessage> { toSubject }
             };
 
-            messagingObject.ExecuteMessaging(Actor, (IEntity)Subject, null, OriginLocation.CurrentLocation, null);
+            messagingObject.ExecuteMessaging(Actor, (IEntity)Subject, null, OriginLocation.CurrentRoom, null);
         }
 
         /// <summary>

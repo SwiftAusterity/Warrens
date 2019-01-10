@@ -1,12 +1,12 @@
 ﻿using NetMud.Authentication;
-using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Administrative;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageJournalEntriesViewModel : PagedDataModel<IJournalEntry>, BaseViewModel
+    public class ManageJournalEntriesViewModel : PagedDataModel<IJournalEntry>, IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
@@ -27,7 +27,7 @@ namespace NetMud.Models.Admin
 
     }
 
-    public class AddEditJournalEntryViewModel : BaseViewModel
+    public class AddEditJournalEntryViewModel : IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 

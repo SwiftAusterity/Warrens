@@ -1,4 +1,4 @@
-﻿using NetMud.DataStructure.Base.System;
+﻿using NetMud.DataStructure.Architectural;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,16 +1,22 @@
 ﻿using NetMud.Cartography;
-using NetMud.Data.Game;
-using NetMud.Data.System;
+using NetMud.Data.Architectural.EntityBase;
+using NetMud.Data.Gaia;
+using NetMud.Data.Inanimate;
+using NetMud.Data.NPC;
+using NetMud.Data.Room;
+using NetMud.Data.Zone;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataAccess.FileSystem;
-using NetMud.DataStructure.Base.Entity;
-using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.Place;
-using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.Base.World;
-using NetMud.DataStructure.Behaviors.System;
-using NetMud.DataStructure.SupportingClasses;
+using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.Gaia;
+using NetMud.DataStructure.Inanimate;
+using NetMud.DataStructure.Locale;
+using NetMud.DataStructure.NPC;
+using NetMud.DataStructure.Player;
+using NetMud.DataStructure.Room;
+using NetMud.DataStructure.Zone;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -31,35 +37,49 @@ namespace NetMud.Backup
         /// <returns>success state</returns>
         public bool NewWorldFallback()
         {
+            LiveData liveDataAccessor = new LiveData();
+
+            //This means we delete the entire Current livedata dir since we're falling back.
+            string currentLiveDirectory = liveDataAccessor.BaseDirectory + liveDataAccessor.CurrentDirectoryName;
+
+            //No backup directory? No live data.
+            if (Directory.Exists(currentLiveDirectory))
+            {
+                DirectoryInfo currentDir = new DirectoryInfo(currentLiveDirectory);
+
+                LoggingUtility.Log("Current Live directory deleted during New World Fallback Procedures.", LogChannels.Backup, true);
+                currentDir.Delete(true);
+            }
+
             //Only load in stuff that is static and spawns as singleton
             //We need to pick up any places that aren't already live from the file system incase someone added them during the last session\
-            foreach (var thing in BackingDataCache.GetAll<IGaiaData>())
+            foreach (IGaiaTemplate thing in TemplateCache.GetAll<IGaiaTemplate>())
             {
-                var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IGaia;
+                IGaia entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IGaia;
             }
 
-            foreach (var thing in BackingDataCache.GetAll<IZoneData>())
+            foreach (IZoneTemplate thing in TemplateCache.GetAll<IZoneTemplate>())
             {
-                var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IZone;
+                IZone entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IZone;
             }
 
-            foreach (var thing in BackingDataCache.GetAll<ILocaleData>())
+            foreach (var thing in TemplateCache.GetAll<ILocaleTemplate>())
             {
                 var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as ILocale;
 
-                entityThing.ParentLocation = (IZone)entityThing.DataTemplate<ILocaleData>().ParentLocation.GetLiveInstance();
+                entityThing.ParentLocation = entityThing.ParentLocation.GetLiveInstance();
                 entityThing.GetFromWorldOrSpawn();
             }
 
-            foreach (var thing in BackingDataCache.GetAll<IRoomData>())
+            foreach (var thing in TemplateCache.GetAll<IRoomTemplate>())
             {
                 var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IRoom;
 
-                entityThing.ParentLocation = entityThing.DataTemplate<IRoomData>().ParentLocation.GetLiveInstance();
+                entityThing.ParentLocation = entityThing.Template<IRoomTemplate>().ParentLocation.GetLiveInstance();
                 entityThing.GetFromWorldOrSpawn();
             }
 
-            foreach (var thing in BackingDataCache.GetAll<IPathwayData>())
+            foreach (var thing in TemplateCache.GetAll<IPathwayTemplate>())
             {
                 var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IPathway;
             }
@@ -78,15 +98,15 @@ namespace NetMud.Backup
         /// <returns>success status</returns>
         public bool PreLoadAll<T>() where T : IKeyedData
         {
-            var backingClass = Activator.CreateInstance(typeof(T)) as IEntityBackingData;
+            ITemplate backingClass = Activator.CreateInstance(typeof(T)) as ITemplate;
 
-            var implimentingEntityClass = backingClass.EntityClass;
+            Type implimentingEntityClass = backingClass.EntityClass;
 
-            foreach (IKeyedData thing in BackingDataCache.GetAll<T>())
+            foreach (IKeyedData thing in TemplateCache.GetAll<T>())
             {
                 try
                 {
-                    var entityThing = Activator.CreateInstance(implimentingEntityClass, new object[] { (T)thing }) as IEntity;
+                    IEntity entityThing = Activator.CreateInstance(implimentingEntityClass, new object[] { (T)thing }) as IEntity;
 
                     if(typeof(T).GetInterfaces().Contains(typeof(ISpawnAsMultiple)))
                         entityThing.SpawnNewInWorld();
@@ -109,7 +129,7 @@ namespace NetMud.Backup
         /// <returns>Success state</returns>
         public bool WriteLiveBackup()
         {
-            var liveDataAccessor = new LiveData();
+            LiveData liveDataAccessor = new LiveData();
 
             try
             {
@@ -135,15 +155,15 @@ namespace NetMud.Backup
         /// <returns>whether or not it succeeded</returns>
         public bool WritePlayers()
         {
-            var playerAccessor = new PlayerData();
+            PlayerData playerAccessor = new PlayerData();
             try
             {
                 LoggingUtility.Log("All Players backup INITIATED.", LogChannels.Backup, true);
 
                 //Get all the players
-                var entities = LiveCache.GetAll<Player>();
+                IEnumerable<IPlayer> entities = LiveCache.GetAll<IPlayer>();
 
-                foreach (var entity in entities)
+                foreach (IPlayer entity in entities)
                     playerAccessor.WriteOnePlayer(entity);
 
                 LoggingUtility.Log("All players written.", LogChannels.Backup, true);
@@ -163,9 +183,9 @@ namespace NetMud.Backup
         /// <returns>Success state</returns>
         public bool RestoreLiveBackup()
         {
-            var liveDataAccessor = new LiveData();
+            LiveData liveDataAccessor = new LiveData();
 
-            var currentBackupDirectory = liveDataAccessor.BaseDirectory + liveDataAccessor.CurrentDirectoryName;
+            string currentBackupDirectory = liveDataAccessor.BaseDirectory + liveDataAccessor.CurrentDirectoryName;
 
             //No backup directory? No live data.
             if (!Directory.Exists(currentBackupDirectory))
@@ -176,26 +196,28 @@ namespace NetMud.Backup
             try
             {
                 //dont load players here
-                var entitiesToLoad = new List<IEntity>();
-                var implimentedTypes = typeof(EntityPartial).Assembly.GetTypes().Where(ty => ty.GetInterfaces().Contains(typeof(IEntity))
+                List<IEntity> entitiesToLoad = new List<IEntity>();
+                IEnumerable<Type> implimentedTypes = typeof(EntityPartial).Assembly.GetTypes().Where(ty => ty.GetInterfaces().Contains(typeof(IEntity))
                                                                                                 && ty.IsClass
                                                                                                 && !ty.IsAbstract
                                                                                                 && !ty.GetCustomAttributes<IgnoreAutomatedBackupAttribute>().Any());
 
-                foreach (var type in implimentedTypes)
+                foreach (Type type in implimentedTypes)
                 {
                     if (!Directory.Exists(currentBackupDirectory + type.Name))
                         continue;
 
-                    var entityFilesDirectory = new DirectoryInfo(currentBackupDirectory + type.Name);
+                    DirectoryInfo entityFilesDirectory = new DirectoryInfo(currentBackupDirectory + type.Name);
 
-                    foreach (var file in entityFilesDirectory.EnumerateFiles())
+                    foreach (FileInfo file in entityFilesDirectory.EnumerateFiles())
                         entitiesToLoad.Add(liveDataAccessor.ReadEntity(file, type));
                 }
 
                 //Shove them all into the live system first
-                foreach (var entity in entitiesToLoad.OrderBy(ent => ent.Birthdate))
+                foreach (IEntity entity in entitiesToLoad.OrderBy(ent => ent.Birthdate))
+                {
                     entity.UpsertToLiveWorldCache();
+                }
 
                 //Check we found actual data
                 if (!entitiesToLoad.Any(ent => ent.GetType() == typeof(Gaia)))
@@ -205,37 +227,37 @@ namespace NetMud.Backup
                     throw new Exception("No zones found, failover.");
 
                 //We need to pick up any places that aren't already live from the file system incase someone added them during the last session\
-                foreach (var thing in BackingDataCache.GetAll<IGaiaData>().Where(dt => !entitiesToLoad.Any(ent => ent.DataTemplateId.Equals(dt.Id))))
+                foreach (IGaiaTemplate thing in TemplateCache.GetAll<IGaiaTemplate>().Where(dt => !entitiesToLoad.Any(ent => ent.TemplateId.Equals(dt.Id))))
                 {
-                    var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IGaia;
+                    IGaia entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IGaia;
 
                     entityThing.GetFromWorldOrSpawn();
                 }
 
-                foreach (var thing in BackingDataCache.GetAll<IZoneData>().Where(dt => !entitiesToLoad.Any(ent => ent.DataTemplateId.Equals(dt.Id))))
+                foreach (IZoneTemplate thing in TemplateCache.GetAll<IZoneTemplate>().Where(dt => !entitiesToLoad.Any(ent => ent.TemplateId.Equals(dt.Id))))
                 {
-                    var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IZone;
+                    IZone entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IZone;
 
                     entityThing.GetFromWorldOrSpawn();
                 }
 
-                foreach (var thing in BackingDataCache.GetAll<ILocaleData>().Where(dt => !entitiesToLoad.Any(ent => ent.DataTemplateId.Equals(dt.Id))))
+                foreach (var thing in TemplateCache.GetAll<ILocaleTemplate>().Where(dt => !entitiesToLoad.Any(ent => ent.TemplateId.Equals(dt.Id))))
                 {
                     var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as ILocale;
 
-                    entityThing.ParentLocation = (IZone)entityThing.DataTemplate<ILocaleData>().ParentLocation.GetLiveInstance();
+                    entityThing.ParentLocation = entityThing.ParentLocation.GetLiveInstance();
                     entityThing.UpsertToLiveWorldCache();
                 }
 
-                foreach (var thing in BackingDataCache.GetAll<IRoomData>().Where(dt => !entitiesToLoad.Any(ent => ent.DataTemplateId.Equals(dt.Id))))
+                foreach (var thing in TemplateCache.GetAll<IRoomTemplate>().Where(dt => !entitiesToLoad.Any(ent => ent.TemplateId.Equals(dt.Id))))
                 {
                     var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IRoom;
 
-                    entityThing.ParentLocation = entityThing.DataTemplate<IRoomData>().ParentLocation.GetLiveInstance();
+                    entityThing.ParentLocation = entityThing.Template<IRoomTemplate>().ParentLocation.GetLiveInstance();
                     entityThing.GetFromWorldOrSpawn();
                 }
 
-                foreach (var thing in BackingDataCache.GetAll<IPathwayData>().Where(dt => !entitiesToLoad.Any(ent => ent.DataTemplateId.Equals(dt.Id))))
+                foreach (var thing in TemplateCache.GetAll<IPathwayTemplate>().Where(dt => !entitiesToLoad.Any(ent => ent.TemplateId.Equals(dt.Id))))
                 {
                     var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IPathway;
 
@@ -253,15 +275,15 @@ namespace NetMud.Backup
                         entity.MoveInto(fullObj);
                     }
 
-                    foreach (IIntelligence obj in entity.MobilesInside.EntitiesContained())
+                    foreach (INonPlayerCharacter obj in entity.MobilesInside.EntitiesContained())
                     {
-                        var fullObj = LiveCache.Get<IIntelligence>(new LiveCacheKey(obj));
+                        var fullObj = LiveCache.Get<INonPlayerCharacter>(new LiveCacheKey(obj));
                         entity.MoveFrom(obj);
                         entity.MoveInto(fullObj);
                     }
                 }
 
-                foreach (Intelligence entity in entitiesToLoad.Where(ent => ent.GetType() == typeof(Intelligence)))
+                foreach (NonPlayerCharacter entity in entitiesToLoad.Where(ent => ent.GetType() == typeof(NonPlayerCharacter)))
                 {
                     foreach (IInanimate obj in entity.Inventory.EntitiesContained())
                     {
@@ -280,10 +302,10 @@ namespace NetMud.Backup
                         entity.MoveInto(fullObj, obj.Item1);
                     }
 
-                    foreach (var obj in entity.MobilesInside.EntitiesContainedByName())
+                    foreach (var obj in entity.Contents.EntitiesContainedByName())
                     {
-                        var fullObj = LiveCache.Get<IIntelligence>(new LiveCacheKey(obj.Item2));
-                        entity.MoveFrom((IIntelligence)obj.Item2);
+                        var fullObj = LiveCache.Get<INonPlayerCharacter>(new LiveCacheKey(obj.Item2));
+                        entity.MoveFrom((INonPlayerCharacter)obj.Item2);
                         entity.MoveInto(fullObj, obj.Item1);
                     }
                 }
@@ -304,9 +326,9 @@ namespace NetMud.Backup
 
         private void ParseDimension()
         {
-            //var zonePool = new HashSet<IZoneData>(BackingDataCache.GetAll<IZoneData>());
-            var localePool = new HashSet<ILocaleData>(BackingDataCache.GetAll<ILocaleData>());
-            //var roomPool = new HashSet<IRoomData>(BackingDataCache.GetAll<IRoomData>());
+            //var zonePool = new HashSet<IZoneTemplate>(TemplateCache.GetAll<IZoneTemplate>());
+            var localePool = new HashSet<ILocaleTemplate>(TemplateCache.GetAll<ILocaleTemplate>());
+            //var roomPool = new HashSet<IRoomTemplate>(TemplateCache.GetAll<IRoomTemplate>());
 
             foreach (var locale in localePool)
                 locale.RemapInterior();
@@ -322,7 +344,7 @@ namespace NetMud.Backup
 
             //    GenerateWorld(currentRoom, roomPool);
 
-            //    //BackingDataCache.Add(newWorld);
+            //    //TemplateCache.Add(newWorld);
             //}
         }
 
@@ -334,12 +356,12 @@ namespace NetMud.Backup
         /// <param name="startingRoom">The room to start with</param>
         /// <param name="remainingRooms">The list of remaining rooms to work against (will remove used rooms from this)</param>
         /// <returns>A whole new world</returns>
-        private void GenerateWorld(IRoomData startingRoom, HashSet<IRoomData> remainingRooms)
+        private void GenerateWorld(IRoomTemplate startingRoom, HashSet<IRoomTemplate> remainingRooms)
         {
             if (startingRoom == null || remainingRooms.Count() == 0)
                 throw new InvalidOperationException("Invalid inputs.");
 
-            startingRoom.Coordinates = new Tuple<int, int, int>(0, 0, 0);
+            startingRoom.Coordinates = new Coordinate(0, 0, 0);
 
             //We're kind of faking array size for radius, it will be shrunk later
             var returnMap = Cartographer.GenerateMapFromRoom(startingRoom, remainingRooms.Count() / 2, remainingRooms, true);

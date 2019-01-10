@@ -1,23 +1,29 @@
 ﻿@model HttpPostedFileBase
 
 @{
-    double columnCount = ViewData["columnCount"] == null ? 3 : (int)ViewData["columnCount"];
+    double columnCount = ViewData["columnCount"] == null ? 5 : (int)ViewData["columnCount"];
     bool disabled = ViewData["disabled"] != null;
     var columnLabelValue = columnCount > 2 ? 1 : 2;
     var columnInputValue = (int)Math.Round(10 / columnCount);
     var cssClass = ViewData["cssClass"] == null ? "form-control" : ViewData["cssClass"];
+    var forceOptional = ViewData["forceOptional"] != null;
 }
 
-@Html.DescriptiveLabelFor(m => m, new { @class = String.Format("col-sm-{0} col-form-label", columnLabelValue) })
 <div class="col-sm-@columnInputValue">
+    <span class="ghostNameTip">@ViewData.ModelMetadata.DisplayName</span>
+
+    @if (ViewData.ModelMetadata.IsRequired && !forceOptional)
+    {
+        <span class="glyphicon glyphicon-exclamation-sign ghostRequired" title="Required"></span>
+    }
+
+    @Html.DescriptionFor(m => m)
     @if (disabled)
     {
-        <input type="file" name="ModelFile" id="ModelFile" class="@cssClass" style="border: none;" disabled="disabled" />
+        <input type="file" name="ModelFile" id="ModelFile" class="@cssClass" style="border: none;" disabled="disabled" title="@ViewData.ModelMetadata.DisplayName" placeholder="@ViewData.ModelMetadata.DisplayName" />
     }
     else
     {
-        <input type="file" name="ModelFile" id="ModelFile" class="@cssClass" style="border: none;" />
+        <input type="file" name="ModelFile" id="ModelFile" class="@cssClass" style="border: none;" title="@ViewData.ModelMetadata.DisplayName" placeholder="@ViewData.ModelMetadata.DisplayName" />
     }
 </div>
-
-

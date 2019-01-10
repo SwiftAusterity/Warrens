@@ -4,9 +4,13 @@ using NetMud.Authentication;
 using NetMud.Data.LookupData;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.Behaviors.System;
+using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Architectural.ActorBase;
+using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.Inanimate;
+using NetMud.DataStructure.NaturalResource;
+using NetMud.DataStructure.Zone;
 using NetMud.Models.Admin;
 using System;
 using System.Collections.Generic;
@@ -43,7 +47,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageFaunaViewModel(BackingDataCache.GetAll<IFauna>())
+            var vModel = new ManageFaunaViewModel(TemplateCache.GetAll<IFauna>())
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -66,7 +70,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<IFauna>(removeId);
+                var obj = TemplateCache.Get<IFauna>(removeId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -82,7 +86,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<IFauna>(unapproveId);
+                var obj = TemplateCache.Get<IFauna>(unapproveId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -106,9 +110,9 @@ namespace NetMud.Controllers.GameAdmin
             var vModel = new AddEditFaunaViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidMaterials = BackingDataCache.GetAll<IMaterial>(),
-                ValidInanimateDatas = BackingDataCache.GetAll<IInanimateData>(),
-                ValidRaces = BackingDataCache.GetAll<IRace>()
+                ValidMaterials = TemplateCache.GetAll<IMaterial>(),
+                ValidInanimateTemplates = TemplateCache.GetAll<IInanimateTemplate>(),
+                ValidRaces = TemplateCache.GetAll<IRace>()
             };
 
             return View("~/Views/GameAdmin/Fauna/Add.cshtml", vModel);
@@ -128,15 +132,15 @@ namespace NetMud.Controllers.GameAdmin
                 AmountMultiplier = vModel.AmountMultiplier,
                 Rarity = vModel.Rarity,
                 PuissanceVariance = vModel.PuissanceVariance,
-                ElevationRange = new Tuple<int, int>(vModel.ElevationRangeLow, vModel.ElevationRangeHigh),
-                TemperatureRange = new Tuple<int, int>(vModel.TemperatureRangeLow, vModel.TemperatureRangeHigh),
-                HumidityRange = new Tuple<int, int>(vModel.HumidityRangeLow, vModel.HumidityRangeHigh),
+                ElevationRange = new ValueRange<int>(vModel.ElevationRangeLow, vModel.ElevationRangeHigh),
+                TemperatureRange = new ValueRange<int>(vModel.TemperatureRangeLow, vModel.TemperatureRangeHigh),
+                HumidityRange = new ValueRange<int>(vModel.HumidityRangeLow, vModel.HumidityRangeHigh),
                 PopulationHardCap = vModel.PopulationHardCap,
                 FemaleRatio = vModel.FemaleRatio
             };
             newObj.AmountMultiplier = vModel.AmountMultiplier;
 
-            var newRace = BackingDataCache.Get<IRace>(vModel.Race);
+            var newRace = TemplateCache.Get<IRace>(vModel.Race);
             if (newRace != null)
                 newObj.Race = newRace;
             else
@@ -165,12 +169,12 @@ namespace NetMud.Controllers.GameAdmin
             var vModel = new AddEditFaunaViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidMaterials = BackingDataCache.GetAll<IMaterial>(),
-                ValidInanimateDatas = BackingDataCache.GetAll<IInanimateData>(),
-                ValidRaces = BackingDataCache.GetAll<IRace>()
+                ValidMaterials = TemplateCache.GetAll<IMaterial>(),
+                ValidInanimateTemplates = TemplateCache.GetAll<IInanimateTemplate>(),
+                ValidRaces = TemplateCache.GetAll<IRace>()
             };
 
-            var obj = BackingDataCache.Get<IFauna>(id);
+            var obj = TemplateCache.Get<IFauna>(id);
 
             if (obj == null)
             {
@@ -184,12 +188,12 @@ namespace NetMud.Controllers.GameAdmin
             vModel.AmountMultiplier = obj.AmountMultiplier;
             vModel.Rarity = obj.Rarity;
             vModel.PuissanceVariance = obj.PuissanceVariance;
-            vModel.ElevationRangeHigh = obj.ElevationRange.Item2;
-            vModel.ElevationRangeLow = obj.ElevationRange.Item1;
-            vModel.TemperatureRangeHigh = obj.TemperatureRange.Item2;
-            vModel.TemperatureRangeLow = obj.TemperatureRange.Item1;
-            vModel.HumidityRangeHigh = obj.HumidityRange.Item2;
-            vModel.HumidityRangeLow = obj.HumidityRange.Item1;
+            vModel.ElevationRangeHigh = obj.ElevationRange.High;
+            vModel.ElevationRangeLow = obj.ElevationRange.Low;
+            vModel.TemperatureRangeHigh = obj.TemperatureRange.High;
+            vModel.TemperatureRangeLow = obj.TemperatureRange.Low;
+            vModel.HumidityRangeHigh = obj.HumidityRange.High;
+            vModel.HumidityRangeLow = obj.HumidityRange.Low;
             vModel.PopulationHardCap = obj.PopulationHardCap;
             vModel.AmountMultiplier = obj.AmountMultiplier;
             vModel.FemaleRatio = obj.FemaleRatio;
@@ -206,7 +210,7 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = BackingDataCache.Get<IFauna>(id);
+            var obj = TemplateCache.Get<IFauna>(id);
             if (obj == null)
             {
                 message = "That does not exist";
@@ -218,14 +222,14 @@ namespace NetMud.Controllers.GameAdmin
             obj.AmountMultiplier = vModel.AmountMultiplier;
             obj.Rarity = vModel.Rarity;
             obj.PuissanceVariance = vModel.PuissanceVariance;
-            obj.ElevationRange = new Tuple<int, int>(vModel.ElevationRangeLow, vModel.ElevationRangeHigh);
-            obj.TemperatureRange = new Tuple<int, int>(vModel.TemperatureRangeLow, vModel.TemperatureRangeHigh);
-            obj.HumidityRange = new Tuple<int, int>(vModel.HumidityRangeLow, vModel.HumidityRangeHigh);
+            obj.ElevationRange = new ValueRange<int>(vModel.ElevationRangeLow, vModel.ElevationRangeHigh);
+            obj.TemperatureRange = new ValueRange<int>(vModel.TemperatureRangeLow, vModel.TemperatureRangeHigh);
+            obj.HumidityRange = new ValueRange<int>(vModel.HumidityRangeLow, vModel.HumidityRangeHigh);
             obj.PopulationHardCap = vModel.PopulationHardCap;
             obj.AmountMultiplier = vModel.AmountMultiplier;
             obj.FemaleRatio = vModel.FemaleRatio;
 
-            var newRace = BackingDataCache.Get<IRace>(vModel.Race);
+            var newRace = TemplateCache.Get<IRace>(vModel.Race);
             if (newRace != null)
                 obj.Race = newRace;
             else

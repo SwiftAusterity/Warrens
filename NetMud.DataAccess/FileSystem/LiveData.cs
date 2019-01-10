@@ -1,4 +1,4 @@
-﻿using NetMud.DataStructure.Base.System;
+﻿using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.Utility;
 using System;
 using System.IO;
@@ -21,16 +21,16 @@ namespace NetMud.DataAccess.FileSystem
 
         public IEntity ReadEntity(FileInfo file, Type entityType)
         {
-            var fileData = ReadFile(file);
-            var blankEntity = Activator.CreateInstance(entityType) as IEntity;
+            byte[] fileData = ReadFile(file);
+            IEntity blankEntity = Activator.CreateInstance(entityType) as IEntity;
 
             return blankEntity.FromBytes(fileData) as IEntity;
         }
 
         public void WriteEntity(IEntity entity)
         {
-            var baseTypeName = entity.GetType().Name;
-            var dirName = BaseDirectory + CurrentDirectoryName + baseTypeName;
+            string baseTypeName = entity.GetType().Name;
+            string dirName = BaseDirectory + CurrentDirectoryName + baseTypeName;
 
             if (!VerifyDirectory(dirName))
                 throw new Exception("Unable to locate or create base live data directory.");
@@ -45,12 +45,12 @@ namespace NetMud.DataAccess.FileSystem
         /// <param name="entity">The entity to write out</param>
         public void WriteSpecificEntity(DirectoryInfo dir, IEntity entity)
         {
-            var entityFileName = GetEntityFilename(entity);
+            string entityFileName = GetEntityFilename(entity);
 
             if (string.IsNullOrWhiteSpace(entityFileName))
                 return;
 
-            var fullFileName = dir.FullName + "/" + entityFileName;
+            string fullFileName = dir.FullName + "/" + entityFileName;
 
             try
             {
@@ -63,14 +63,27 @@ namespace NetMud.DataAccess.FileSystem
         }
 
         /// <summary>
+        /// Removes a live entity from the system and files
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public bool RemoveEntity(IEntity entity)
+        {
+            string fileName = GetEntityFilename(entity);
+            return ArchiveFile(fileName, fileName);
+        }
+
+        /// <summary>
         /// Archives EVERYTHING
         /// </summary>
         public void ArchiveFull()
         {
             //wth, no current directory? Noithing to move then
-            if (VerifyDirectory(CurrentDirectoryName, false) && VerifyDirectory(ArchiveDirectoryName))
+            if (VerifyDirectory(BaseDirectory + CurrentDirectoryName, false) && VerifyDirectory(BaseDirectory + ArchiveDirectoryName))
             {
-                var currentRoot = new DirectoryInfo(BaseDirectory + CurrentDirectoryName);
+                CullDirectoryCount(BaseDirectory + ArchiveDirectoryName);
+
+                DirectoryInfo currentRoot = new DirectoryInfo(BaseDirectory + CurrentDirectoryName);
 
                 currentRoot.CopyTo(DatedBackupDirectory);
             }

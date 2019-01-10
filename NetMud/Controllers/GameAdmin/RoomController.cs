@@ -1,17 +1,20 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
-using NetMud.Data.EntityBackingData;
-using NetMud.Data.Lexical;
-using NetMud.Data.LookupData;
+using NetMud.Communication.Lexical;
+using NetMud.Data.Architectural.EntityBase;
+using NetMud.Data.Linguistic;
+using NetMud.Data.Room;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.Place;
-using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.Behaviors.System;
+using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Linguistic;
-using NetMud.DataStructure.SupportingClasses;
+using NetMud.DataStructure.Locale;
+using NetMud.DataStructure.Room;
+using NetMud.DataStructure.System;
+using NetMud.DataStructure.Zone;
 using NetMud.Models.Admin;
 using System;
 using System.Linq;
@@ -47,7 +50,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageRoomDataViewModel(BackingDataCache.GetAll<IRoomData>())
+            var vModel = new ManageRoomTemplateViewModel(TemplateCache.GetAll<IRoomTemplate>())
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -64,7 +67,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             var vModel = new RoomMapViewModel
             {
-                Here = BackingDataCache.Get<IRoomData>(ID)
+                Here = TemplateCache.Get<IRoomTemplate>(ID)
             };
 
             return View("~/Views/GameAdmin/Room/Map.cshtml", vModel);
@@ -82,7 +85,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<IRoomData>(removeId);
+                var obj = TemplateCache.Get<IRoomTemplate>(removeId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -98,7 +101,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<IRoomData>(unapproveId);
+                var obj = TemplateCache.Get<IRoomTemplate>(unapproveId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -119,11 +122,11 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add(long localeId)
         {
-            var vModel = new AddEditRoomDataViewModel
+            var vModel = new AddEditRoomTemplateViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidMaterials = BackingDataCache.GetAll<IMaterial>(),
-                Locale = BackingDataCache.Get<ILocaleData>(localeId)
+                ValidMaterials = TemplateCache.GetAll<IMaterial>(),
+                Locale = TemplateCache.Get<ILocaleTemplate>(localeId)
             };
 
             return View("~/Views/GameAdmin/Room/Add.cshtml", "_chromelessLayout", vModel);
@@ -131,13 +134,13 @@ namespace NetMud.Controllers.GameAdmin
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Add(long localeId, AddEditRoomDataViewModel vModel)
+        public ActionResult Add(long localeId, AddEditRoomTemplateViewModel vModel)
         {
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
-            var locale = BackingDataCache.Get<ILocaleData>(localeId);
+            var locale = TemplateCache.Get<ILocaleTemplate>(localeId);
 
-            var newObj = new RoomData
+            var newObj = new RoomTemplate
             {
                 Name = vModel.Name,
                 Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth
@@ -145,19 +148,19 @@ namespace NetMud.Controllers.GameAdmin
             };
 
             var mediumId = vModel.Medium;
-            var medium = BackingDataCache.Get<IMaterial>(mediumId);
+            var medium = TemplateCache.Get<IMaterial>(mediumId);
 
             if (medium != null)
             {
                 newObj.Medium = medium;
                 newObj.ParentLocation = locale;
-                newObj.Coordinates = new Tuple<int, int, int>(0, 0, 0); //TODO: fix this
+                newObj.Coordinates = new Coordinate(0, 0, 0); //TODO: fix this
 
                 if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
                     message = "Error; Creation failed.";
                 else
                 {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddRoomData[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddRoomTemplate[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 }
             }
             else
@@ -170,14 +173,14 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(int id)
         {
             string message = string.Empty;
-            var vModel = new AddEditRoomDataViewModel
+            var vModel = new AddEditRoomTemplateViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidMaterials = BackingDataCache.GetAll<IMaterial>(),
-                ValidZones = BackingDataCache.GetAll<IZoneData>(),
+                ValidMaterials = TemplateCache.GetAll<IMaterial>(),
+                ValidZones = TemplateCache.GetAll<IZoneTemplate>(),
             };
 
-            var obj = BackingDataCache.Get<RoomData>(id);
+            var obj = TemplateCache.Get<IRoomTemplate>(id);
 
             if (obj == null)
             {
@@ -215,13 +218,13 @@ namespace NetMud.Controllers.GameAdmin
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, AddEditRoomDataViewModel vModel)
+        public ActionResult Edit(int id, AddEditRoomTemplateViewModel vModel)
         {
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
-            IPathwayData zoneDestination = null;
+            IPathwayTemplate zoneDestination = null;
 
-            var obj = BackingDataCache.Get<RoomData>(id);
+            var obj = TemplateCache.Get<IRoomTemplate>(id);
             if (obj == null)
             {
                 message = "That does not exist";
@@ -229,7 +232,7 @@ namespace NetMud.Controllers.GameAdmin
             }
 
             var mediumId = vModel.Medium;
-            var medium = BackingDataCache.Get<IMaterial>(mediumId);
+            var medium = TemplateCache.Get<IMaterial>(mediumId);
 
             if (medium != null)
             {
@@ -241,20 +244,20 @@ namespace NetMud.Controllers.GameAdmin
                 obj.Model.Vacuity = vModel.DimensionalModelVacuity;
                 obj.Medium = medium;
 
-                var destination = BackingDataCache.Get<IZoneData>(vModel.ZoneDestinationId);
+                var destination = TemplateCache.Get<IZoneTemplate>(vModel.ZoneDestinationId);
                 if (destination != null)
                 {
                     zoneDestination = obj.GetZonePathways().FirstOrDefault();
                     
                     if(zoneDestination == null)
                     {
-                        zoneDestination = new PathwayData(new DimensionalModel(vModel.ZoneDimensionalModelLength, vModel.ZoneDimensionalModelHeight, vModel.ZoneDimensionalModelWidth,
+                        zoneDestination = new PathwayTemplate(new DimensionalModel(vModel.ZoneDimensionalModelLength, vModel.ZoneDimensionalModelHeight, vModel.ZoneDimensionalModelWidth,
                                                                                 vModel.ZoneDimensionalModelVacuity, vModel.ZoneDimensionalModelCavitation))
                         {
                             DegreesFromNorth = -1,
                             Name = vModel.ZonePathwayName,
                             Origin = obj,
-                            Destination = destination
+                            Destination = (ILocationData)destination
                         };
                     }
                     else
@@ -266,7 +269,7 @@ namespace NetMud.Controllers.GameAdmin
                         //We switched zones, this makes things more complicated
                         if (zoneDestination.Id != vModel.ZoneDestinationId)
                         {
-                            zoneDestination.Destination = destination;
+                            zoneDestination.Destination = (ILocationData)destination;
                         }
                     }
 
@@ -277,7 +280,7 @@ namespace NetMud.Controllers.GameAdmin
                     if (zoneDestination != null)
                         zoneDestination.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
 
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - EditRoomData[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - EditRoomTemplate[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 }
                 else
                     message = "Error; Edit failed.";
@@ -293,7 +296,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             string message = string.Empty;
 
-            var obj = BackingDataCache.Get<IRoomData>(id);
+            var obj = TemplateCache.Get<IRoomTemplate>(id);
             if (obj == null)
             {
                 message = "That room does not exist";
@@ -334,7 +337,7 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = BackingDataCache.Get<IZoneData>(id);
+            var obj = TemplateCache.Get<IZoneTemplate>(id);
             if (obj == null)
             {
                 message = "That room does not exist";
@@ -344,7 +347,7 @@ namespace NetMud.Controllers.GameAdmin
             var grammaticalType = (GrammaticalType)vModel.Role;
             var phraseF = vModel.Phrase;
             var existingOccurrence = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType
-                                                                                && occurrence.Event.Phrase.Equals(phraseF, System.StringComparison.InvariantCultureIgnoreCase));
+                                                                                && occurrence.Event.Phrase.Equals(phraseF, StringComparison.InvariantCultureIgnoreCase));
 
             if (existingOccurrence == null)
                 existingOccurrence = new Occurrence();
@@ -415,7 +418,7 @@ namespace NetMud.Controllers.GameAdmin
                     var type = short.Parse(values[0]);
                     var phrase = values[1];
 
-                    var obj = BackingDataCache.Get<IRoomData>(id);
+                    var obj = TemplateCache.Get<IRoomTemplate>(id);
 
                     if (obj == null)
                         message = "That does not exist";

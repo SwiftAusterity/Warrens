@@ -1,17 +1,19 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
+﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using NetMud.Authentication;
-using NetMud.Data.ConfigData;
-using NetMud.Data.System;
+using NetMud.Data.Players;
 using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Base.PlayerConfiguration;
-using NetMud.DataStructure.SupportingClasses;
+using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Player;
+using NetMud.DataStructure.System;
 using NetMud.Models;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Mvc;
 
 namespace NetMud.Controllers
 {
@@ -25,7 +27,7 @@ namespace NetMud.Controllers
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -37,9 +39,9 @@ namespace NetMud.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -72,12 +74,42 @@ namespace NetMud.Controllers
                 return View(model);
             }
 
+            ApplicationUser potentialUser = UserManager.FindByName(model.Email);
+
+            if(potentialUser != null)
+            {
+                IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
+                if (globalConfig.AdminsOnly && potentialUser.GetStaffRank(User) == StaffRank.Player)
+                {
+                    ModelState.AddModelError("", "The system is currently locked to staff members only. Please try again later and check the home page for any announcements and news.");
+
+                    return View(model);
+                }
+            }
+
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+            SignInStatus result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
             switch (result)
             {
                 case SignInStatus.Success:
+                    //Check for a valid character, zone and account
+                    var account = potentialUser.GameAccount;
+
+                    if(account == null)
+                    {
+                        ModelState.AddModelError("", "Your account is having technical difficulties. Please contact an administrator.");
+                        return View(model);
+                    }
+
+                    if(!account.Characters.Any())
+                    {
+                        var rand = new Random();
+                        var newChar = CreateAccountPlayerAndConfig(account, "Rabbit", rand.Next(10000, 99999).ToString(), "Unspecified");
+
+                        newChar.SystemSave();
+                    }
+
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -93,7 +125,16 @@ namespace NetMud.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
-            return View();
+            IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
+            RegisterViewModel vModel = new RegisterViewModel();
+
+            if (!globalConfig.UserCreationActive)
+            {
+                ModelState.AddModelError("", "New account registration is currently locked.");
+                vModel.NewUserLocked = true;
+            }
+
+            return View(vModel);
         }
 
         [HttpPost]
@@ -107,31 +148,25 @@ namespace NetMud.Controllers
 
             if (ModelState.IsValid)
             {
-                var newGameAccount = new Account(model.GlobalUserHandle);
+                Account newGameAccount = new Account(model.GlobalUserHandle);
 
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, GameAccount = newGameAccount };
-                var result = await UserManager.CreateAsync(user, model.Password);
+                ApplicationUser user = new ApplicationUser { UserName = model.Email, Email = model.Email, GameAccount = newGameAccount };
+                IdentityResult result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    var newAccountConfig = new AccountConfig(newGameAccount)
-                    {
-                        UITutorialMode = true
-                    };
-
-                    var uiModules = BackingDataCache.GetAll<IUIModule>().Where(uim => uim.SystemDefault > 0);
+                    var newCharacter = CreateAccountPlayerAndConfig(newGameAccount, model.Name, model.SurName, model.Gender);
+                    var uiModules = TemplateCache.GetAll<IUIModule>().Where(uim => uim.SystemDefault > 0);
 
                     foreach(var module in uiModules)
-                        newAccountConfig.UIModules = uiModules.Select(uim => new System.Tuple<IUIModule, int>(uim, uim.SystemDefault));
+                        newGameAccount.Config.UIModules = uiModules.Select(uim => new Tuple<IUIModule, int>(uim, uim.SystemDefault));
 
-                    //Save the new config
-                    newAccountConfig.Save(newGameAccount, StaffRank.Player);
                     await UserManager.AddToRoleAsync(user.Id, "Player");
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
                     string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code }, protocol: Request.Url.Scheme);
+                    string callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code }, protocol: Request.Url.Scheme);
                     await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
                     return RedirectToAction("Index", "Home");
@@ -144,6 +179,46 @@ namespace NetMud.Controllers
             return View(model);
         }
 
+        private IPlayerTemplate CreateAccountPlayerAndConfig(IAccount account, string name, string surName, string gender)
+        {
+            if (account.Config == null)
+            {
+                AccountConfig newAccountConfig = new AccountConfig(account)
+                {
+                    UITutorialMode = true,
+                    MusicMuted = true,
+                    GossipSubscriber = true
+                };
+
+                //Save the new config
+                newAccountConfig.Save(account, StaffRank.Player);
+            }
+
+            IPlayerTemplate currentCharacter = null;
+            if (!account.Characters.Any())
+            {
+                PlayerTemplate newCharacter = new PlayerTemplate
+                {
+                    Name = name,
+                    SurName = surName,
+                    Gender = gender,
+                    AccountHandle = account.GlobalIdentityHandle,
+                    StillANoob = true,
+                    GamePermissionsRank = StaffRank.Player,
+                    TotalHealth = 100,
+                    TotalStamina = 100
+                };
+
+                //Save the new character
+                newCharacter.Create(account, StaffRank.Player);
+
+                account.AddCharacter(newCharacter);
+
+                currentCharacter = newCharacter;
+            }
+
+            return currentCharacter;
+        }
         [AllowAnonymous]
         public async Task<ActionResult> ConfirmEmail(string userId, string code)
         {
@@ -151,7 +226,7 @@ namespace NetMud.Controllers
             {
                 return View("Error");
             }
-            var result = await UserManager.ConfirmEmailAsync(userId, code);
+            IdentityResult result = await UserManager.ConfirmEmailAsync(userId, code);
             return View(result.Succeeded ? "ConfirmEmail" : "Error");
         }
 
@@ -168,7 +243,7 @@ namespace NetMud.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await UserManager.FindByNameAsync(model.Email);
+                ApplicationUser user = await UserManager.FindByNameAsync(model.Email);
                 if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
                 {
                     // Don't reveal that the user does not exist or is not confirmed
@@ -178,7 +253,7 @@ namespace NetMud.Controllers
                 // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                 // Send an email with this link
                 string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code }, protocol: Request.Url.Scheme);		
+                string callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code }, protocol: Request.Url.Scheme);
                 await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
                 return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
@@ -208,13 +283,13 @@ namespace NetMud.Controllers
             {
                 return View(model);
             }
-            var user = await UserManager.FindByNameAsync(model.Email);
+            ApplicationUser user = await UserManager.FindByNameAsync(model.Email);
             if (user == null)
             {
                 // Don't reveal that the user does not exist
                 return RedirectToAction("ResetPasswordConfirmation", "Account");
             }
-            var result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
+            IdentityResult result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
             if (result.Succeeded)
             {
                 return RedirectToAction("ResetPasswordConfirmation", "Account");
@@ -249,7 +324,7 @@ namespace NetMud.Controllers
 
         private void AddErrors(IdentityResult result)
         {
-            foreach (var error in result.Errors)
+            foreach (string error in result.Errors)
             {
                 ModelState.AddModelError("", error);
             }
@@ -283,7 +358,7 @@ namespace NetMud.Controllers
 
             public override void ExecuteResult(ControllerContext context)
             {
-                var properties = new AuthenticationProperties { RedirectUri = RedirectUri };
+                AuthenticationProperties properties = new AuthenticationProperties { RedirectUri = RedirectUri };
                 context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
             }
         }

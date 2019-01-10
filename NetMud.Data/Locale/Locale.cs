@@ -1,0 +1,295 @@
+﻿using NetMud.Cartography;
+using NetMud.Data.Architectural;
+using NetMud.Data.Architectural.DataIntegrity;
+using NetMud.Data.Architectural.EntityBase;
+using NetMud.DataAccess.Cache;
+using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.Locale;
+using NetMud.DataStructure.Room;
+using NetMud.DataStructure.Zone;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web.Script.Serialization;
+
+namespace NetMud.Data.Locale
+{
+    /// <summary>
+    /// Live locale (collection of rooms in a zone)
+    /// </summary>
+    public class Locale : EntityPartial, ILocale
+    {
+        /// <summary>
+        /// The name of the object in the data template
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public override string TemplateName
+        {
+            get
+            {
+                return Template<ILocaleTemplate>()?.Name;
+            }
+        }
+
+        /// <summary>
+        /// The backing data for this entity
+        /// </summary>
+        public override T Template<T>()
+        {
+            return (T)TemplateCache.Get(new TemplateCacheKey(typeof(ILocaleTemplate), TemplateId));
+        }
+
+        /// <summary>
+        /// The name used in the tag for discovery checking
+        /// </summary>
+        [JsonIgnore]
+        [ScriptIgnore]
+        public string DiscoveryName
+        {
+            get
+            {
+                return "Locale_" + TemplateName;
+            }
+        }
+
+        /// <summary>
+        /// The interior map of the locale
+        /// </summary>
+        [JsonIgnore]
+        [ScriptIgnore]
+        public IMap Interior { get; set; }
+
+        [JsonProperty("ParentLocation")]
+        private LiveCacheKey _parentLocation { get; set; }
+
+        /// <summary>
+        /// The zone this belongs to
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        [NonNullableDataIntegrity("Locales must have a zone affiliation.")]
+        public IZone ParentLocation
+        {
+            get
+            {
+                return LiveCache.Get<IZone>(_parentLocation);
+            }
+            set
+            {
+                if (value != null)
+                    _parentLocation = new LiveCacheKey(value);
+            }
+        }
+
+
+        /// <summary>
+        /// New up a "blank" zone entry
+        /// </summary>
+        public Locale()
+        {
+        }
+
+        /// <summary>
+        /// News up an entity with its backing data
+        /// </summary>
+        /// <param name="room">the backing data</param>
+        public Locale(ILocaleTemplate locale)
+        {
+            TemplateId = locale.Id;
+
+            GetFromWorldOrSpawn();
+        }
+
+        /// <summary>
+        /// Live rooms in this locale
+        /// </summary>
+        public IEnumerable<IRoom> Rooms()
+        {
+            return LiveCache.GetAll<IRoom>().Where(room => room.ParentLocation.Equals(this));
+        }
+
+        /// <summary>
+        /// Does this entity know about this thing
+        /// </summary>
+        /// <param name="discoverer">The onlooker</param>
+        /// <returns>If this is known to the discoverer</returns>
+        public bool IsDiscovered(IEntity discoverer)
+        {
+            if (Template<ILocaleTemplate>().AlwaysDiscovered)
+                return true;
+
+            //TODO
+
+            //discoverer.HasAccomplishment(DiscoveryName);
+
+            //For now
+            return true;
+        }
+
+        /// <summary>
+        /// The center room of the specific zindex plane. TODO: Not sure if this should be a thing
+        /// </summary>
+        /// <param name="zIndex">The Z plane to find the central room for</param>
+        /// <returns>The central room</returns>
+        public IRoom CentralRoom(int zIndex = -1)
+        {
+            return (IRoom)Cartographer.FindCenterOfMap(Template<ILocaleTemplate>().Interior.CoordinatePlane, zIndex).GetLiveInstance();
+        }
+
+        /// <summary>
+        /// How big (on average) this is in all 3 dimensions
+        /// </summary>
+        /// <returns>dimensional size</returns>
+        public Dimensions Diameter()
+        {
+            //TODO
+            return new Dimensions(1, 1, 1);
+        }
+
+        /// <summary>
+        /// Absolute max dimensions in each direction
+        /// </summary>
+        /// <returns>absolute max dimensional size</returns>
+        public Dimensions FullDimensions()
+        {
+            //TODO
+            return new Dimensions(1, 1, 1);
+        }
+
+        /// <summary>
+        /// Get the current luminosity rating of the place you're in
+        /// </summary>
+        /// <returns>The current Luminosity</returns>
+        public override float GetCurrentLuminosity()
+        {
+            return Rooms().Sum(r => r.GetCurrentLuminosity());
+        }
+
+        /// <summary>
+        /// Spawn this into the world and live cache
+        /// </summary>
+        public override void SpawnNewInWorld()
+        {
+            SpawnNewInWorld(new GlobalPosition(ParentLocation));
+        }
+
+        /// <summary>
+        /// Spawn this into the world and live cache
+        /// </summary>
+        public override void SpawnNewInWorld(IGlobalPosition spawnTo)
+        {
+            //We can't even try this until we know if the data is there
+            var bS = Template<ILocaleTemplate>() ?? throw new InvalidOperationException("Missing backing data store on locale spawn event.");
+
+            Keywords = new string[] { bS.Name.ToLower() };
+
+            if (string.IsNullOrWhiteSpace(BirthMark))
+            {
+                BirthMark = LiveCache.GetUniqueIdentifier(bS);
+                Birthdate = DateTime.Now;
+            }
+
+            ParentLocation = LiveCache.Get<IZone>(bS.ParentLocation.Id);
+
+            if (spawnTo?.CurrentZone == null)
+            {
+                spawnTo = new GlobalPosition(ParentLocation);
+            }
+
+            CurrentLocation = spawnTo;
+
+            UpsertToLiveWorldCache(true);
+        }
+
+        /// <summary>
+        /// Get this from the world or make a new one and put it in
+        /// </summary>
+        public void GetFromWorldOrSpawn()
+        {
+            //Try to see if they are already there
+            var me = LiveCache.Get<ILocale>(TemplateId, typeof(LocaleTemplate));
+
+            //Isn't in the world currently
+            if (me == default(ILocale))
+                SpawnNewInWorld();
+            else
+            {
+                BirthMark = me.BirthMark;
+                Birthdate = me.Birthdate;
+                TemplateId = me.TemplateId;
+                Keywords = me.Keywords;
+                CurrentLocation = me.CurrentLocation;
+                ParentLocation = me.ParentLocation;
+            }
+        }
+
+        /// <summary>
+        /// Gets the model dimensions, actually a passthru to FullDimensions
+        /// </summary>
+        /// <returns></returns>
+        public override Dimensions GetModelDimensions()
+        {
+            return FullDimensions();
+        }
+
+        /// <summary>
+        /// Renders the map
+        /// </summary>
+        /// <param name="zIndex">the Z plane to render flat</param>
+        /// <param name="forAdmin">Is this visibility agnostic</param>
+        /// <returns>The rendered flat map</returns>
+        public string RenderMap(int zIndex, bool forAdmin = false)
+        {
+            return Template<ILocaleTemplate>().RenderMap(zIndex, forAdmin);
+        }
+
+        /// <summary>
+        /// Get adjascent surrounding locales and zones
+        /// </summary>
+        /// <returns>The adjascent locales and zones</returns>
+        public IEnumerable<ILocation> GetSurroundings()
+        {
+            var radiusLocations = new List<ILocation>();
+            var paths = LiveCache.GetAll<IPathway>().Where(path => path.Origin.Equals(this));
+
+            //If we don't have any paths out what can we even do
+            if (paths.Count() == 0)
+                return radiusLocations;
+
+            while (paths.Count() > 0)
+            {
+                var currentLocsSet = paths.Select(path => path.Destination);
+
+                if (currentLocsSet.Count() == 0)
+                    break;
+
+                radiusLocations.AddRange(currentLocsSet);
+                paths = currentLocsSet.SelectMany(ro => ro.GetPathways());
+            }
+
+            return radiusLocations;
+        }
+
+        /// <summary>
+        /// Get the live version of this in the world
+        /// </summary>
+        /// <returns>The live data</returns>
+        public ILocale GetLiveInstance()
+        {
+            return this;
+        }
+
+        public override string TryMoveTo(IGlobalPosition newPosition)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override object Clone()
+        {
+            throw new NotImplementedException();
+        }
+    }
+}

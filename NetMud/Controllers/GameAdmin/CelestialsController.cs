@@ -1,15 +1,17 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
-using NetMud.Data.Lexical;
-using NetMud.Data.LookupData;
+using NetMud.Communication.Lexical;
+using NetMud.Data.Architectural.EntityBase;
+using NetMud.Data.Gaia;
+using NetMud.Data.Linguistic;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.Base.World;
-using NetMud.DataStructure.Behaviors.System;
+using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.Gaia;
 using NetMud.DataStructure.Linguistic;
-using NetMud.DataStructure.SupportingClasses;
+using NetMud.DataStructure.System;
 using NetMud.Models.Admin;
 using System;
 using System.Collections.Generic;
@@ -46,7 +48,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageCelestialsViewModel(BackingDataCache.GetAll<ICelestial>())
+            var vModel = new ManageCelestialsViewModel(TemplateCache.GetAll<ICelestial>())
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -69,7 +71,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<ICelestial>(removeId);
+                var obj = TemplateCache.Get<ICelestial>(removeId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -85,7 +87,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<ICelestial>(unapproveId);
+                var obj = TemplateCache.Get<ICelestial>(unapproveId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -109,8 +111,8 @@ namespace NetMud.Controllers.GameAdmin
             var vModel = new AddEditCelestialViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidMaterials = BackingDataCache.GetAll<IMaterial>(true),
-                ValidModels = BackingDataCache.GetAll<IDimensionalModelData>(true)
+                ValidMaterials = TemplateCache.GetAll<IMaterial>(true),
+                ValidModels = TemplateCache.GetAll<IDimensionalModelData>(true)
             };
 
             return View("~/Views/GameAdmin/Celestials/Add.cshtml", vModel);
@@ -144,7 +146,7 @@ namespace NetMud.Controllers.GameAdmin
                         if (vModel.ModelPartMaterials.Count() <= nameIndex)
                             break;
 
-                        var material = BackingDataCache.Get<IMaterial>(vModel.ModelPartMaterials[nameIndex]);
+                        var material = TemplateCache.Get<IMaterial>(vModel.ModelPartMaterials[nameIndex]);
 
                         if (material != null && !string.IsNullOrWhiteSpace(partName))
                             materialParts.Add(partName, material);
@@ -154,7 +156,7 @@ namespace NetMud.Controllers.GameAdmin
                 }
             }
 
-            var dimModel = BackingDataCache.Get<IDimensionalModelData>(vModel.DimensionalModelId);
+            var dimModel = TemplateCache.Get<IDimensionalModelData>(vModel.DimensionalModelId);
             bool validData = true;
 
             if (dimModel == null)
@@ -172,7 +174,7 @@ namespace NetMud.Controllers.GameAdmin
             if (validData)
             {
                 newObj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth
-                    , vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation, new BackingDataCacheKey(dimModel), materialParts);
+                    , vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation, new TemplateCacheKey(dimModel), materialParts);
 
                 if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
                     message = "Error; Creation failed.";
@@ -193,11 +195,11 @@ namespace NetMud.Controllers.GameAdmin
             var vModel = new AddEditCelestialViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidMaterials = BackingDataCache.GetAll<IMaterial>(true),
-                ValidModels = BackingDataCache.GetAll<IDimensionalModelData>(true)
+                ValidMaterials = TemplateCache.GetAll<IMaterial>(true),
+                ValidModels = TemplateCache.GetAll<IDimensionalModelData>(true)
             };
 
-            var obj = BackingDataCache.Get<ICelestial>(id);
+            var obj = TemplateCache.Get<ICelestial>(id);
 
             if (obj == null)
             {
@@ -214,7 +216,7 @@ namespace NetMud.Controllers.GameAdmin
             vModel.OrientationType = (short)obj.OrientationType;
             vModel.HelpText = obj.HelpText.Value;
 
-            vModel.DimensionalModelId = obj.Model.ModelBackingData.Id;
+            vModel.DimensionalModelId = obj.Model.ModelTemplate.Id;
             vModel.DimensionalModelHeight = obj.Model.Height;
             vModel.DimensionalModelLength = obj.Model.Length;
             vModel.DimensionalModelWidth = obj.Model.Width;
@@ -232,7 +234,7 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = BackingDataCache.Get<ICelestial>(id);
+            var obj = TemplateCache.Get<ICelestial>(id);
             if (obj == null)
             {
                 message = "That does not exist";
@@ -260,7 +262,7 @@ namespace NetMud.Controllers.GameAdmin
                             if (vModel.ModelPartMaterials.Count() <= nameIndex)
                                 break;
 
-                            var material = BackingDataCache.Get<IMaterial>(vModel.ModelPartMaterials[nameIndex]);
+                            var material = TemplateCache.Get<IMaterial>(vModel.ModelPartMaterials[nameIndex]);
 
                             if (material != null)
                                 materialParts.Add(partName, material);
@@ -270,7 +272,7 @@ namespace NetMud.Controllers.GameAdmin
                     }
                 }
 
-                var dimModel = BackingDataCache.Get<DimensionalModelData>(vModel.DimensionalModelId);
+                var dimModel = TemplateCache.Get<DimensionalModelData>(vModel.DimensionalModelId);
                 bool validData = true;
 
                 if (dimModel == null)
@@ -288,7 +290,7 @@ namespace NetMud.Controllers.GameAdmin
                 if (validData)
                 {
                     obj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth,
-                        vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation, new BackingDataCacheKey(dimModel), materialParts);
+                        vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation, new TemplateCacheKey(dimModel), materialParts);
 
                     if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                     {
@@ -312,7 +314,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             string message = string.Empty;
 
-            var obj = BackingDataCache.Get<ICelestial>(id);
+            var obj = TemplateCache.Get<ICelestial>(id);
             if (obj == null)
             {
                 message = "That does not exist";
@@ -353,7 +355,7 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = BackingDataCache.Get<ICelestial>(id);
+            var obj = TemplateCache.Get<ICelestial>(id);
             if (obj == null)
             {
                 message = "That does not exist";
@@ -434,7 +436,7 @@ namespace NetMud.Controllers.GameAdmin
                     var type = short.Parse(values[0]);
                     var phrase = values[1];
 
-                    var obj = BackingDataCache.Get<ICelestial>(id);
+                    var obj = TemplateCache.Get<ICelestial>(id);
 
                     if (obj == null)
                         message = "That does not exist";

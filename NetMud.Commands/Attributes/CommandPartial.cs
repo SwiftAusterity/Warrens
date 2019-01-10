@@ -1,7 +1,8 @@
-﻿using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.Behaviors.Existential;
-using NetMud.DataStructure.Behaviors.Rendering;
-using NetMud.DataStructure.SupportingClasses;
+﻿using NetMud.Communication.Messaging;
+using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Architectural.ActorBase;
+using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.System;
 using System.Collections.Generic;
 
 namespace NetMud.Commands.Attributes
@@ -11,6 +12,11 @@ namespace NetMud.Commands.Attributes
         public abstract void Execute();
 
         public abstract IEnumerable<string> RenderSyntaxHelp();
+
+        /// <summary>
+        /// The command word originally used to find this command
+        /// </summary>
+        public string CommandWord { get; set; }
 
         /// <summary>
         /// The entity invoking the command
@@ -49,12 +55,24 @@ namespace NetMud.Commands.Attributes
 
         public virtual IEnumerable<string> RenderHelpBody()
         {
-            var sb = new List<string>
+            List<string> sb = new List<string>
             {
                 HelpText
             };
 
             return sb;
+        }
+
+        public virtual void RenderError(string error)
+        {
+            Message toActor = new Message()
+            {
+                Override = new string[] { error }
+            };
+
+            MessageCluster messagingObject = new MessageCluster(toActor);
+
+            messagingObject.ExecuteMessaging(Actor, null, null, null, null);
         }
     }
 }

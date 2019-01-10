@@ -1,0 +1,13 @@
+﻿@using NetMud.Data.Architectural.ActorBase
+
+@model Race
+
+<h4>Racial</h4>
+<div class="form-group row">
+    @Html.EditorFor(e => e.Name)
+    @Html.EditorFor(e => e.CollectiveNoun)
+</div>
+<h4>Tolerances</h4>
+<div class="form-group row">
+    @Html.EditorFor(e => e.TemperatureTolerance)
+</div>

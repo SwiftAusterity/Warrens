@@ -1,8 +1,7 @@
-﻿using NetMud.Data.ConfigData;
+﻿using NetMud.Data.Linguistic;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.SupportingClasses;
+using NetMud.DataStructure.Architectural;
 using System;
 using System.IO;
 using System.Linq;
@@ -21,7 +20,7 @@ namespace NetMud.Backup
         /// <returns>full or partial success</returns>
         public static bool WriteFullBackup()
         {
-            var fileAccessor = new DataAccess.FileSystem.BackingData();
+            DataAccess.FileSystem.TemplateData fileAccessor = new DataAccess.FileSystem.TemplateData();
 
             try
             {
@@ -46,7 +45,7 @@ namespace NetMud.Backup
         /// <returns>full or partial success</returns>
         public static bool LoadEverythingToCache()
         {
-            var implimentedTypes = typeof(Data.ConfigData.ConfigData).Assembly.GetTypes().Where(ty => ty.GetInterfaces().Contains(typeof(IConfigData))
+            var implimentedTypes = typeof(Data.Architectural.ConfigData).Assembly.GetTypes().Where(ty => ty.GetInterfaces().Contains(typeof(IConfigData))
                                                                                 && ty.IsClass
                                                                                 && !ty.IsAbstract
                                                                                 && !ty.GetCustomAttributes<IgnoreAutomatedBackupAttribute>().Any());
@@ -67,17 +66,17 @@ namespace NetMud.Backup
             if (!objectType.GetInterfaces().Contains(typeof(IConfigData)))
                 return false;
 
-            var fileAccessor = new DataAccess.FileSystem.ConfigData();
-            var typeDirectory = fileAccessor.GetCurrentDirectoryForType(objectType);
+            DataAccess.FileSystem.ConfigData fileAccessor = new DataAccess.FileSystem.ConfigData();
+            string typeDirectory = fileAccessor.GetCurrentDirectoryForType(objectType);
 
             if (!fileAccessor.VerifyDirectory(typeDirectory, false))
             {
                 return false;
             }
 
-            var filesDirectory = new DirectoryInfo(typeDirectory);
+            DirectoryInfo filesDirectory = new DirectoryInfo(typeDirectory);
 
-            foreach (var file in filesDirectory.EnumerateFiles())
+            foreach (FileInfo file in filesDirectory.EnumerateFiles())
             {
                 try
                 {

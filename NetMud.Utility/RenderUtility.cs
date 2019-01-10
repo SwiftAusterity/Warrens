@@ -21,7 +21,7 @@ namespace NetMud.Utility
             if (string.IsNullOrWhiteSpace(value))
                 return value;
 
-            var words = value.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            string[] words = value.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
             return string.Join(" ", words.Select(word => word.CapsFirstLetter()));
         }
@@ -40,8 +40,8 @@ namespace NetMud.Utility
             if (value.Length == 1)
                 return value.ToUpperInvariant();
 
-            var firstLetter = value.Substring(0, 1).ToUpperInvariant();
-            var wordRemainder = onlyFirstLetter ? value.Substring(1) : value.Substring(1).ToLowerInvariant();
+            string firstLetter = value.Substring(0, 1).ToUpperInvariant();
+            string wordRemainder = onlyFirstLetter ? value.Substring(1) : value.Substring(1).ToLowerInvariant();
 
             return string.Format("{0}{1}", firstLetter, wordRemainder);
         }
@@ -188,7 +188,7 @@ namespace NetMud.Utility
             if (stringList.Length == 1)
                 return stringList[0];
 
-            var returnString = string.Empty;
+            string returnString = string.Empty;
             switch (mode)
             {
                 case SplitListType.AllAnd:
@@ -199,13 +199,13 @@ namespace NetMud.Utility
                     break;
                 case SplitListType.CommaWithAnd:
                     returnString = string.Join(", ", stringList);
-                    var lastComma = returnString.LastIndexOf(',');
+                    int lastComma = returnString.LastIndexOf(',');
 
                     returnString = string.Format("{0} and {1}", returnString.Substring(0, lastComma), returnString.Substring(lastComma + 1));
                     break;
                 case SplitListType.OxfordComma:
                     returnString = string.Join(", ", stringList);
-                    var lastOxfordComma = returnString.LastIndexOf(',');
+                    int lastOxfordComma = returnString.LastIndexOf(',');
 
                     returnString = string.Format("{0}, and {1}", returnString.Substring(0, lastOxfordComma), returnString.Substring(lastOxfordComma + 1));
                     break;
@@ -224,10 +224,10 @@ namespace NetMud.Utility
         {
             try
             {
-                var type = enumVal.GetType();
-                var memInfo = type.GetMember(enumVal.ToString());
+                Type type = enumVal.GetType();
+                System.Reflection.MemberInfo[] memInfo = type.GetMember(enumVal.ToString());
 
-                var attributes = memInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
+                object[] attributes = memInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
 
                 //Is there a description? Otherwise to-string it.
                 return attributes.Length > 0
@@ -250,7 +250,7 @@ namespace NetMud.Utility
         /// <returns>A string, only works 1-24</returns>
         public static string ToGreek(this int iterator, bool specialCharacter = false)
         {
-            var returnValue = "";
+            string returnValue = "";
             switch (iterator)
             {
                 case 1:

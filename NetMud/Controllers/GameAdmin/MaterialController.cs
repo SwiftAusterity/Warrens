@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
-using NetMud.Data.LookupData;
+using NetMud.Data.Architectural.EntityBase;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.Behaviors.System;
+using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.Models.Admin;
 using System.Linq;
 using System.Web;
@@ -40,7 +40,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageMaterialDataViewModel(BackingDataCache.GetAll<Material>())
+            var vModel = new ManageMaterialDataViewModel(TemplateCache.GetAll<Material>())
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -63,7 +63,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<IMaterial>(removeId);
+                var obj = TemplateCache.Get<IMaterial>(removeId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -79,7 +79,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<IMaterial>(unapproveId);
+                var obj = TemplateCache.Get<IMaterial>(unapproveId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -103,7 +103,7 @@ namespace NetMud.Controllers.GameAdmin
             var vModel = new AddEditMaterialViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidMaterials = BackingDataCache.GetAll<IMaterial>()
+                ValidMaterials = TemplateCache.GetAll<IMaterial>()
             };
 
             return View("~/Views/GameAdmin/Material/Add.cshtml", vModel);
@@ -165,7 +165,7 @@ namespace NetMud.Controllers.GameAdmin
                             break;
 
                         var currentValue = vModel.CompositionPercentages[compositionsIndex];
-                        var material = BackingDataCache.Get<Material>(materialId);
+                        var material = TemplateCache.Get<Material>(materialId);
 
                         if (material != null && currentValue > 0)
                             newObj.Composition.Add(material, currentValue);
@@ -193,10 +193,10 @@ namespace NetMud.Controllers.GameAdmin
             var vModel = new AddEditMaterialViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidMaterials = BackingDataCache.GetAll<Material>()
+                ValidMaterials = TemplateCache.GetAll<Material>()
             };
 
-            var obj = BackingDataCache.Get<Material>(id);
+            var obj = TemplateCache.Get<Material>(id);
 
             if (obj == null)
             {
@@ -229,7 +229,7 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = BackingDataCache.Get<Material>(id);
+            var obj = TemplateCache.Get<Material>(id);
             if (obj == null)
             {
                 message = "That does not exist";
@@ -292,7 +292,7 @@ namespace NetMud.Controllers.GameAdmin
                         if (vModel.CompositionPercentages.Count() <= compositionsIndex)
                             break;
 
-                        var material = BackingDataCache.Get<Material>(materialId);
+                        var material = TemplateCache.Get<Material>(materialId);
                         short currentValue = -1;
 
                         if (material != null)

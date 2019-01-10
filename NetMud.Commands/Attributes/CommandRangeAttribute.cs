@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NutMud.Commands.Attributes
+namespace NetMud.Commands.Attributes
 {
     /// <summary>
     /// Dictates the range at which a command can be used

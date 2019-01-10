@@ -1,339 +1,260 @@
-﻿@using NetMud.DataStructure.Behaviors.System
+﻿@using NetMud.DataStructure.Administrative
 
 @model NetMud.Models.Admin.DashboardViewModel
 
-<div class="adminDashboard">
-    <div style="width:100%">
-        @Html.ActionLink("Modify Global Settings", "GlobalConfig", "GameAdmin", new { @class = "addNew" })
-    </div>
-    <div>
-        <h4>Backing Data</h4>
-        <dl class="dl-horizontal">
-            <dt>Worlds:</dt>
-            <dd>
-                @Model.Worlds.Count().ToString() [
-                @Html.ActionLink("Manage", "Index", "Gaia")
-                @Html.ActionLink("Add", "Add", "Gaia") ]
-                @if (Model.Worlds.Any(r => r.FitnessProblems))
-                {
-                    <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
-                }
-                @if (Model.Worlds.Any(r => r.State != ApprovalState.Approved))
-                {
-                    <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
-                }
-            </dd>
-            <dt>Zones:</dt>
-            <dd>
-                @Model.Zones.Count().ToString() [
-                @Html.ActionLink("Manage", "Index", "Zone")
-                @Html.ActionLink("Add", "Add", "Zone") ]
-                @if (Model.Zones.Any(r => r.FitnessProblems))
-                {
-                    <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
-                }
-                @if (Model.Zones.Any(r => r.State != ApprovalState.Approved))
-                {
-                    <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
-                }
-            </dd>
-            <dt>Locales:</dt>
-            <dd>
-                @Model.Locales.Count().ToString() [ Use Zones Yo ]
-                @if (Model.Locales.Any(r => r.FitnessProblems))
-                {
-                    <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
-                }
-                @if (Model.Locales.Any(r => r.State != ApprovalState.Approved))
-                {
-                    <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
-                }
-            </dd>
-            <dt>Rooms:</dt>
-            <dd>
-                @Model.Rooms.Count().ToString() [ Use Zones Yo ]
-                @if (Model.Rooms.Any(r => r.FitnessProblems))
-                {
-                    <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
-                }
-                @if (Model.Rooms.Any(r => r.State != ApprovalState.Approved))
-                {
-                    <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
-                }
-            </dd>
-            <dt>NPCs:</dt>
-            <dd>
-                @Model.NPCs.Count().ToString() [
-                @Html.ActionLink("Manage", "Index", "NPC")
-                @Html.ActionLink("Add", "Add", "NPC") ]
-                @if (Model.NPCs.Any(r => r.FitnessProblems))
-                {
-                    <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
-                }
-                @if (Model.NPCs.Any(r => r.State != ApprovalState.Approved))
-                {
-                    <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
-                }
-            </dd>
-            <dt>Inanimates:</dt>
-            <dd>
-                @Model.Inanimates.Count().ToString() [
-                @Html.ActionLink("Manage", "Index", "Inanimate")
-                @Html.ActionLink("Add", "Add", "Inanimate") ]
-                @if (Model.Inanimates.Any(r => r.FitnessProblems))
-                {
-                    <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
-                }
-                @if (Model.Inanimates.Any(r => r.State != ApprovalState.Approved))
-                {
-                    <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
-                }
-            </dd>
-        </dl>
-    </div>
-    <div>
-        <h4>Lookup Data</h4>
-        <dl class="dl-horizontal">
-            <dt>Journal Entries:</dt>
-            <dd>
-                @Model.Journals.Count().ToString() [
-                @Html.ActionLink("Manage", "Index", "JournalEntry")
-                @Html.ActionLink("Add", "Add", "JournalEntry") ]
-                @if (Model.Journals.Any(r => r.FitnessProblems))
-                {
-                    <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
-                }
-                @if (Model.Journals.Any(r => r.State != ApprovalState.Approved))
-                {
-                    <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
-                }
-            </dd>
-            <dt>Help Files:</dt>
-            <dd>
-                @Model.HelpFiles.Count().ToString() [
-                @Html.ActionLink("Manage", "Index", "Help")
-                @Html.ActionLink("Add", "Add", "Help") ]
-                @if (Model.HelpFiles.Any(r => r.FitnessProblems))
-                {
-                    <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
-                }
-                @if (Model.HelpFiles.Any(r => r.State != ApprovalState.Approved))
-                {
-                    <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
-                }
-            </dd>
-            <dt>Dimensional Models:</dt>
-            <dd>
-                @Model.DimensionalModels.Count().ToString() [
-                @Html.ActionLink("Manage", "Index", "DimensionalModel")
-                @Html.ActionLink("Add", "Add", "DimensionalModel") ]
-                @if (Model.DimensionalModels.Any(r => r.FitnessProblems))
-                {
-                    <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
-                }
-                @if (Model.DimensionalModels.Any(r => r.State != ApprovalState.Approved))
-                {
-                    <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
-                }
-            </dd>
-            <dt>Materials:</dt>
-            <dd>
-                @Model.Materials.Count().ToString() [
-                @Html.ActionLink("Manage", "Index", "Material")
-                @Html.ActionLink("Add", "Add", "Material") ]
-                @if (Model.Materials.Any(r => r.FitnessProblems))
-                {
-                    <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
-                }
-                @if (Model.Materials.Any(r => r.State != ApprovalState.Approved))
-                {
-                    <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
-                }
-            </dd>
-            <dt>Races:</dt>
-            <dd>
-                @Model.Races.Count().ToString() [
-                @Html.ActionLink("Manage", "Index", "Race")
-                @Html.ActionLink("Add", "Add", "Race") ]
-                @if (Model.Races.Any(r => r.FitnessProblems))
-                {
-                    <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
-                }
-                @if (Model.Races.Any(r => r.State != ApprovalState.Approved))
-                {
-                    <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
-                }
-            </dd>
-            <dt>Constants:</dt>
-            <dd>
-                @Model.Constants.Count().ToString() [
-                @Html.ActionLink("Manage", "Index", "Constants")
-                @Html.ActionLink("Add", "Add", "Constants") ]
-                @if (Model.Constants.Any(r => r.FitnessProblems))
-                {
-                    <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
-                }
-                @if (Model.Constants.Any(r => r.State != ApprovalState.Approved))
-                {
-                    <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
-                }
-            </dd>
-            <dt>Flora:</dt>
-            <dd>
-                @Model.Flora.Count().ToString() [
-                @Html.ActionLink("Manage", "Index", "Flora")
-                @Html.ActionLink("Add", "Add", "Flora") ]
-                @if (Model.Flora.Any(r => r.FitnessProblems))
-                {
-                    <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
-                }
-                @if (Model.Flora.Any(r => r.State != ApprovalState.Approved))
-                {
-                    <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
-                }
-            </dd>
-            <dt>Fauna:</dt>
-            <dd>
-                @Model.Fauna.Count().ToString() [
-                @Html.ActionLink("Manage", "Index", "Fauna")
-                @Html.ActionLink("Add", "Add", "Fauna") ]
-                @if (Model.Fauna.Any(r => r.FitnessProblems))
-                {
-                    <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
-                }
-                @if (Model.Fauna.Any(r => r.State != ApprovalState.Approved))
-                {
-                    <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
-                }
-            </dd>
-            <dt>Minerals:</dt>
-            <dd>
-                @Model.Minerals.Count().ToString() [
-                @Html.ActionLink("Manage", "Index", "Minerals")
-                @Html.ActionLink("Add", "Add", "Minerals") ]
-                @if (Model.Minerals.Any(r => r.FitnessProblems))
-                {
-                    <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
-                }
-                @if (Model.Minerals.Any(r => r.State != ApprovalState.Approved))
-                {
-                    <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
-                }
-            </dd>
-            <dt>UI Modules:</dt>
-            <dd>
-                @Model.UIModules.Count().ToString() [
-                @Html.ActionLink("Manage", "Index", "UIModules")
-                @Html.ActionLink("Add", "Add", "UIModules") ]
-                @if (Model.UIModules.Any(r => r.FitnessProblems))
-                {
-                    <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
-                }
-                @if (Model.UIModules.Any(r => r.State != ApprovalState.Approved))
-                {
-                    <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
-                }
-            </dd>
-            <dt>Celestial Bodies:</dt>
-            <dd>
-                @Model.Celestials.Count().ToString() [
-                @Html.ActionLink("Manage", "Index", "Celestials")
-                @Html.ActionLink("Add", "Add", "Celestials") ]
-                @if (Model.Celestials.Any(r => r.FitnessProblems))
-                {
-                    <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
-                }
-                @if (Model.Celestials.Any(r => r.State != ApprovalState.Approved))
-                {
-                    <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
-                }
-            </dd>
-        </dl>
-    </div>
-    <div>
-        <h4>Configuration Data</h4>
-        <dl class="dl-horizontal">
-            <dt>Dictionary:</dt>
-            <dd>
-                @Model.DictionaryWords.Count().ToString() [
-                @Html.ActionLink("Manage", "Index", "Dictionary")
-                @Html.ActionLink("Add", "Add", "Dictionary") ]
-            </dd>
-            <dt>Languages:</dt>
-            <dd>
-                @Model.Languages.Count().ToString() [
-                @Html.ActionLink("Manage", "Index", "Language")
-                @Html.ActionLink("Add", "Add", "Language") ]
-            </dd>
-        </dl>
-    </div>
-    <div>
-        <h4>Live Data</h4>
-        <dl class="dl-horizontal">
-            <dt>Players:</dt>
-            <dd>
-                @Model.LivePlayers [
-                @Html.ActionLink("Manage", "Index", "Player") ]
-            </dd>
-            <dt>Worlds:</dt>
-            <dd>
-                @Model.LiveWorlds [ ]
-            </dd>
-            <dt>Zones:</dt>
-            <dd>
-                @Model.LiveZones [ ]
-            </dd>
-            <dt>Locales:</dt>
-            <dd>
-                @Model.LiveLocales [ ]
-            </dd>
-            <dt>Rooms:</dt>
-            <dd>
-                @Model.LiveRooms [ ]
-            </dd>
-            <dt>Inanimates:</dt>
-            <dd>
-                @Model.LiveInanimates [ ]
-            </dd>
-            <dt>NPCs:</dt>
-            <dd>
-                @Model.LiveNPCs [ ]
-            </dd>
-        </dl>
-    </div>
-    <div>
-        <h4>World State</h4>
-        <dl class="dl-horizontal">
-            <dt>Do stuff</dt>
-            <dd>
-                @Html.ActionLink("Backup World", "BackupWorld", "GameAdmin", new { @class = "btn btn-default save" })
-                @Html.ActionLink("Suspend and Restore World", "RestoreWorld", "GameAdmin", new { @class = "btn btn-default caution" })
-                @Html.ActionLink("Restart Gossip Server", "RestartGossipServer", "GameAdmin", new { @class = "btn btn-default caution" })
-            </dd>
-        </dl>
-    </div>
-    <div>
-        <h4>Live Processes</h4>
-        <dl class="dl-horizontal">
-            <dt>[@Model.LiveTaskTokens.Count().ToString()] Running Threads</dt>
-            <dd>
-                @Html.ActionLink("Stop All", "StopAllRunningProcess", "GameAdmin", new { @class = "btn btn-default caution" })
-            </dd>
-            @foreach (var token in Model.LiveTaskTokens)
-            {
-                <dt style="padding-top: 25px;">@token.Key</dt>
-                if (token.Value.IsCancellationRequested)
-                {
-                    <dd style="color:red; padding-top: 25px;">Stopping</dd>
-                }
-                else
-                {
-                    <dd style="padding-top: 25px;">
-                        <span style="color:green;">Running</span>
-                        @Html.ActionLink("Stop", "StopRunningProcess", "GameAdmin", new { processName = token.Key }, new { @class = "btn btn-default stop" })
+<div id="tabs">
+    <ul>
+        <li><a href="#tabs-1">Templates</a></li>
+        <li><a href="#tabs-2">Live Data</a></li>
+        <li><a href="#tabs-3">Gossip</a></li>
+        <li><a href="#tabs-4">Processes</a></li>
+        <li><a href="#tabs-5">Global Configuration</a></li>
+    </ul>
+    <div id="tabs-1" data-tabNumber="1">
+        <div class="adminDashboard">
+            <div>
+                <h4>Templates</h4>
+                <dl class="dl-horizontal">
+                    <dt>Worlds:</dt>
+                    <dd>
+                        @Model.Worlds.Count().ToString() [
+                        @Html.ActionLink("Manage", "Index", "Gaia")
+                        @Html.ActionLink("Add", "Add", "Gaia") ]
+                        @if (Model.Worlds.Any(r => r.FitnessProblems))
+                        {
+                            <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
+                        }
+                        @if (Model.Worlds.Any(r => r.State != ApprovalState.Approved))
+                        {
+                            <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
+                        }
                     </dd>
-                }
+                    <dt>Zones:</dt>
+                    <dd>
+                        @Model.Zones.Count().ToString() [
+                        @Html.ActionLink("Manage", "Index", "Zone")
+                        @Html.ActionLink("Add", "Add", "Zone") ]
+                        @if (Model.Zones.Any(r => r.FitnessProblems))
+                        {
+                            <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
+                        }
+                        @if (Model.Zones.Any(r => r.State != ApprovalState.Approved))
+                        {
+                            <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
+                        }
+                    </dd>
+                    <dt>NPCs:</dt>
+                    <dd>
+                        @Model.NPCs.Count().ToString() [
+                        @Html.ActionLink("Manage", "Index", "NPC")
+                        @Html.ActionLink("Add", "Add", "NPC") ]
+                        @if (Model.NPCs.Any(r => r.FitnessProblems))
+                        {
+                            <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
+                        }
+                        @if (Model.NPCs.Any(r => r.State != ApprovalState.Approved))
+                        {
+                            <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
+                        }
+                    </dd>
+                    <dt>Items:</dt>
+                    <dd>
+                        @Model.Inanimates.Count().ToString() [
+                        @Html.ActionLink("Manage", "Index", "Inanimate")
+                        @Html.ActionLink("Add", "Add", "Inanimate") ]
+                        @if (Model.Inanimates.Any(r => r.FitnessProblems))
+                        {
+                            <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
+                        }
+                        @if (Model.Inanimates.Any(r => r.State != ApprovalState.Approved))
+                        {
+                            <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
+                        }
+                    </dd>
+                </dl>
+            </div>
+            <div>
+                <h4>Lookup Data</h4>
+                <dl class="dl-horizontal">
+                    <dt>Journal Entries:</dt>
+                    <dd>
+                        @Model.Journals.Count().ToString() [
+                        @Html.ActionLink("Manage", "Index", "JournalEntry")
+                        @Html.ActionLink("Add", "Add", "JournalEntry") ]
+                        @if (Model.Journals.Any(r => r.FitnessProblems))
+                        {
+                            <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
+                        }
+                        @if (Model.Journals.Any(r => r.State != ApprovalState.Approved))
+                        {
+                            <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
+                        }
+                    </dd>
+                    <dt>Help Files:</dt>
+                    <dd>
+                        @Model.HelpFiles.Count().ToString() [
+                        @Html.ActionLink("Manage", "Index", "Help")
+                        @Html.ActionLink("Add", "Add", "Help") ]
+                        @if (Model.HelpFiles.Any(r => r.FitnessProblems))
+                        {
+                            <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
+                        }
+                        @if (Model.HelpFiles.Any(r => r.State != ApprovalState.Approved))
+                        {
+                            <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
+                        }
+                    </dd>
+                    <dt>Celestial Bodies:</dt>
+                    <dd>
+                        @Model.Celestials.Count().ToString() [
+                        @Html.ActionLink("Manage", "Index", "Celestials")
+                        @Html.ActionLink("Add", "Add", "Celestials") ]
+                        @if (Model.Celestials.Any(r => r.FitnessProblems))
+                        {
+                            <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
+                        }
+                        @if (Model.Celestials.Any(r => r.State != ApprovalState.Approved))
+                        {
+                            <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
+                        }
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+    <div id="tabs-2" data-tabNumber="2">
+        <div class="adminDashboard">
+            <h4>Live Data</h4>
+            <dl class="dl-horizontal">
+                <dt>Players:</dt>
+                <dd>
+                    @Model.LivePlayers [ @Html.ActionLink("Manage", "Index", "Player") ]
+                </dd>
+                <dt>Worlds:</dt>
+                <dd>
+                    @Model.LiveWorlds [ @Html.ActionLink("Manage", "Worlds", "LiveAdmin")  ]
+                </dd>
+                <dt>Zones:</dt>
+                <dd>
+                    @Model.LiveZones [ @Html.ActionLink("Manage", "Zones", "LiveAdmin") ]
+                </dd>
+                <dt>Inanimates:</dt>
+                <dd>
+                    @Model.LiveInanimates [ @Html.ActionLink("Manage", "Inanimates", "LiveAdmin") ]
+                </dd>
+                <dt>NPCs:</dt>
+                <dd>
+                    @Model.LiveNPCs [ @Html.ActionLink("Manage", "NPCs", "LiveAdmin") ]
+                </dd>
+            </dl>
+        </div>
+    </div>
+    <div id="tabs-3" data-tabNumber="3">
+        <div>
+            @Html.ActionLink("Restart Gossip Server", "RestartGossipServer", "GameAdmin", new { @class = "btn btn-default caution" })
+        </div>
+        <h4>Settings</h4>
+        <section id="gossipConfig">
+            @using (Html.BeginForm("GossipConfig", "GameAdmin", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group row">
+                @Html.EditorFor(e => e.ClientName)
+                @Html.EditorFor(e => e.ClientSecret)
+                @Html.EditorFor(e => e.ClientId)
+            </div>
+                <div class="form-group row">
+                    @Html.EditorFor(e => e.GossipActive)
+                    @Html.EditorFor(e => e.SuspendMultiplier)
+                    @Html.EditorFor(e => e.SuspendMultiplierMaximum)
+                </div>
+
+                <h4>Supported Features</h4>
+                @Html.EditorFor(e => e.SupportedFeatures, new { tagList = Model.GossipConfigDataObject.SupportedFeatures.ToArray() })
+
+                <h4>Supported Channels</h4>
+                @Html.EditorFor(e => e.SupportedChannels, new { tagList = Model.GossipConfigDataObject.SupportedChannels.ToArray() })
+
+
+                @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "GameAdmin", IncludeCancel = false })
             }
-        </dl>
+        </section>
+    </div>
+    <div id="tabs-4" data-tabNumber="4">
+        <div>
+            <h4>World State</h4>
+            <dl class="dl-horizontal">
+                <dt>Data Systems</dt>
+                <dd>
+                    @Html.ActionLink("Backup World", "BackupWorld", "GameAdmin", new { @class = "btn btn-default save" })
+                    @Html.ActionLink("Suspend and Restore World", "RestoreWorld", "GameAdmin", new { @class = "btn btn-default caution" })
+                </dd>
+            </dl>
+        </div>
+        <div>
+            <h4>Live Processes</h4>
+            <div>
+                <div>
+                    @Html.ActionLink("Stop All", "StopAllRunningProcess", "GameAdmin", new { @class = "btn btn-default caution" })
+                </div>
+                <div style="display: inline-flex; flex-wrap: wrap;">
+                    @foreach (var token in Model.LiveTaskTokens)
+                    {
+                        <div style="padding: 15px; width: 25%;">
+                            @if (token.Value.IsCancellationRequested)
+                            {
+                                <span style="color:red;">Stopping @token.Key</span>
+                            }
+                            else
+                            {
+                                <span style="color:green;">Running</span>
+                                @Html.ActionLink("Stop " + @token.Key, "StopRunningProcess", "GameAdmin", new { processName = token.Key }, new { @class = "btn btn-default stop" })
+                            }
+                        </div>
+
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="tabs-5" data-tabNumber="5">
+        <h4>Settings</h4>
+        <section id="globalConfig">
+            @using (Html.BeginForm("GlobalConfig", "GameAdmin", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group row">
+                    @Html.EditorFor(e => e.WebsocketPortalActive)
+                    @Html.EditorFor(e => e.UserCreationActive)
+                    @Html.EditorFor(e => e.AdminsOnly)
+                </div>
+                <h4>Death Recall Settings</h4>
+                <div class="form-group row">
+                    @Html.EditorFor(e => e.DeathRecallZone, new { validItems = Model.ValidZones })
+                    @Html.EditorFor(e => e.DeathRecallCoordinateX)
+                    @Html.EditorFor(e => e.DeathRecallCoordinateY)
+                </div>
+                <h4>Death Notice Settings</h4>
+                <div class="form-group row">
+                    @Html.EditorFor(e => e.DeathNoticeFrom)
+                    @Html.EditorFor(e => e.DeathNoticeSubject)
+                </div>
+                <div class="form-group row">
+                    @Html.EditorFor(e => e.DeathNoticeBody)
+                </div>
+
+                @Html.Partial("~/Views/GameAdmin/DeathQualities.cshtml", Model)
+
+                @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "GameAdmin", IncludeCancel = false })
+            }
+        </section>
     </div>
 </div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#tabs").tabs();
+    });
+</script>

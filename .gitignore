@@ -30,9 +30,10 @@ NetMud/Web.config
 NetMud.Interp/obj
 NetMud/FileStore/Logs/*
 NetMud/FileStore/*/Backups/
+NetMud/FileStore/Players/*
+NetMud/FileStore/GameWorld/*
 *Backups*/
 *.mdf
 *.ldf
 /.vs/*
-/NetMud.Gossip/App.config
-Gossip.config
+/NetMud/Content/Sounds/BkgMusic/*

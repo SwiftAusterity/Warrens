@@ -1,5 +1,5 @@
 ﻿using NetMud.Authentication;
-using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Administrative;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageHelpDataViewModel : PagedDataModel<IHelp>, BaseViewModel
+    public class ManageHelpDataViewModel : PagedDataModel<IHelp>, IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
@@ -27,7 +27,7 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditHelpDataViewModel : BaseViewModel
+    public class AddEditHelpDataViewModel : IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 

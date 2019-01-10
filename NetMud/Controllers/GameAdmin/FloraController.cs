@@ -4,11 +4,13 @@ using NetMud.Authentication;
 using NetMud.Data.LookupData;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.Behaviors.System;
+using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.Inanimate;
+using NetMud.DataStructure.NaturalResource;
+using NetMud.DataStructure.Zone;
 using NetMud.Models.Admin;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -43,7 +45,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageFloraViewModel(BackingDataCache.GetAll<IFlora>())
+            var vModel = new ManageFloraViewModel(TemplateCache.GetAll<IFlora>())
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -66,7 +68,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<IFlora>(removeId);
+                var obj = TemplateCache.Get<IFlora>(removeId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -82,7 +84,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<IFlora>(unapproveId);
+                var obj = TemplateCache.Get<IFlora>(unapproveId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -106,8 +108,8 @@ namespace NetMud.Controllers.GameAdmin
             var vModel = new AddEditFloraViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidMaterials = BackingDataCache.GetAll<IMaterial>(),
-                ValidInanimateDatas = BackingDataCache.GetAll<IInanimateData>()
+                ValidMaterials = TemplateCache.GetAll<IMaterial>(),
+                ValidInanimateTemplates = TemplateCache.GetAll<IInanimateTemplate>()
             };
 
             return View("~/Views/GameAdmin/Flora/Add.cshtml", vModel);
@@ -129,28 +131,28 @@ namespace NetMud.Controllers.GameAdmin
                 AmountMultiplier = vModel.AmountMultiplier,
                 Rarity = vModel.Rarity,
                 PuissanceVariance = vModel.PuissanceVariance,
-                ElevationRange = new Tuple<int, int>(vModel.ElevationRangeLow, vModel.ElevationRangeHigh),
-                TemperatureRange = new Tuple<int, int>(vModel.TemperatureRangeLow, vModel.TemperatureRangeHigh),
-                HumidityRange = new Tuple<int, int>(vModel.HumidityRangeLow, vModel.HumidityRangeHigh)
+                ElevationRange = new ValueRange<int>(vModel.ElevationRangeLow, vModel.ElevationRangeHigh),
+                TemperatureRange = new ValueRange<int>(vModel.TemperatureRangeLow, vModel.TemperatureRangeHigh),
+                HumidityRange = new ValueRange<int>(vModel.HumidityRangeLow, vModel.HumidityRangeHigh)
             };
 
-            var newWood = BackingDataCache.Get<IMaterial>(vModel.Wood);
+            var newWood = TemplateCache.Get<IMaterial>(vModel.Wood);
             if (newWood != null)
                 newObj.Wood = newWood;
 
-            var newFlower = BackingDataCache.Get<IInanimateData>(vModel.Flower);
+            var newFlower = TemplateCache.Get<IInanimateTemplate>(vModel.Flower);
             if (newFlower != null)
                 newObj.Flower = newFlower;
 
-            var newSeed = BackingDataCache.Get<IInanimateData>(vModel.Seed);
+            var newSeed = TemplateCache.Get<IInanimateTemplate>(vModel.Seed);
             if (newSeed != null)
                 newObj.Seed = newSeed;
 
-            var newLeaf = BackingDataCache.Get<IInanimateData>(vModel.Leaf);
+            var newLeaf = TemplateCache.Get<IInanimateTemplate>(vModel.Leaf);
             if (newLeaf != null)
                 newObj.Leaf = newLeaf;
 
-            var newFruit = BackingDataCache.Get<IInanimateData>(vModel.Fruit);
+            var newFruit = TemplateCache.Get<IInanimateTemplate>(vModel.Fruit);
             if (newFruit != null)
                 newObj.Fruit = newFruit;
 
@@ -180,11 +182,11 @@ namespace NetMud.Controllers.GameAdmin
             var vModel = new AddEditFloraViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidMaterials = BackingDataCache.GetAll<IMaterial>(),
-                ValidInanimateDatas = BackingDataCache.GetAll<IInanimateData>()
+                ValidMaterials = TemplateCache.GetAll<IMaterial>(),
+                ValidInanimateTemplates = TemplateCache.GetAll<IInanimateTemplate>()
             };
 
-            var obj = BackingDataCache.Get<IFlora>(id);
+            var obj = TemplateCache.Get<IFlora>(id);
 
             if (obj == null)
             {
@@ -200,12 +202,12 @@ namespace NetMud.Controllers.GameAdmin
             vModel.AmountMultiplier = obj.AmountMultiplier;
             vModel.Rarity = obj.Rarity;
             vModel.PuissanceVariance = obj.PuissanceVariance;
-            vModel.ElevationRangeHigh = obj.ElevationRange.Item2;
-            vModel.ElevationRangeLow = obj.ElevationRange.Item1;
-            vModel.TemperatureRangeHigh = obj.TemperatureRange.Item2;
-            vModel.TemperatureRangeLow = obj.TemperatureRange.Item1;
-            vModel.HumidityRangeHigh = obj.HumidityRange.Item2;
-            vModel.HumidityRangeLow = obj.HumidityRange.Item1;
+            vModel.ElevationRangeHigh = obj.ElevationRange.High;
+            vModel.ElevationRangeLow = obj.ElevationRange.Low;
+            vModel.TemperatureRangeHigh = obj.TemperatureRange.High;
+            vModel.TemperatureRangeLow = obj.TemperatureRange.Low;
+            vModel.HumidityRangeHigh = obj.HumidityRange.High;
+            vModel.HumidityRangeLow = obj.HumidityRange.Low;
             vModel.Wood = obj.Wood.Id;
             vModel.Flower = obj.Flower.Id;
             vModel.Fruit = obj.Fruit.Id;
@@ -223,7 +225,7 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = BackingDataCache.Get<IFlora>(id);
+            var obj = TemplateCache.Get<IFlora>(id);
             if (obj == null)
             {
                 message = "That does not exist";
@@ -237,27 +239,27 @@ namespace NetMud.Controllers.GameAdmin
             obj.AmountMultiplier = vModel.AmountMultiplier;
             obj.Rarity = vModel.Rarity;
             obj.PuissanceVariance = vModel.PuissanceVariance;
-            obj.ElevationRange = new Tuple<int, int>(vModel.ElevationRangeLow, vModel.ElevationRangeHigh);
-            obj.TemperatureRange = new Tuple<int, int>(vModel.TemperatureRangeLow, vModel.TemperatureRangeHigh);
-            obj.HumidityRange = new Tuple<int, int>(vModel.HumidityRangeLow, vModel.HumidityRangeHigh);
+            obj.ElevationRange = new ValueRange<int>(vModel.ElevationRangeLow, vModel.ElevationRangeHigh);
+            obj.TemperatureRange = new ValueRange<int>(vModel.TemperatureRangeLow, vModel.TemperatureRangeHigh);
+            obj.HumidityRange = new ValueRange<int>(vModel.HumidityRangeLow, vModel.HumidityRangeHigh);
 
-            var newWood = BackingDataCache.Get<IMaterial>(vModel.Wood);
+            var newWood = TemplateCache.Get<IMaterial>(vModel.Wood);
             if (newWood != null)
                 obj.Wood = newWood;
 
-            var newFlower = BackingDataCache.Get<IInanimateData>(vModel.Flower);
+            var newFlower = TemplateCache.Get<IInanimateTemplate>(vModel.Flower);
             if (newFlower != null)
                 obj.Flower = newFlower;
 
-            var newSeed = BackingDataCache.Get<IInanimateData>(vModel.Seed);
+            var newSeed = TemplateCache.Get<IInanimateTemplate>(vModel.Seed);
             if (newSeed != null)
                 obj.Seed = newSeed;
 
-            var newLeaf = BackingDataCache.Get<IInanimateData>(vModel.Leaf);
+            var newLeaf = TemplateCache.Get<IInanimateTemplate>(vModel.Leaf);
             if (newLeaf != null)
                 obj.Leaf = newLeaf;
 
-            var newFruit = BackingDataCache.Get<IInanimateData>(vModel.Fruit);
+            var newFruit = TemplateCache.Get<IInanimateTemplate>(vModel.Fruit);
             if (newFruit != null)
                 obj.Fruit = newFruit;
 

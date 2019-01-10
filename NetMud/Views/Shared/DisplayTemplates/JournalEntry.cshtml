@@ -1,0 +1,14 @@
+﻿@model NetMud.DataStructure.Administrative.IJournalEntry
+
+@{ 
+    var subject = Model.Name;
+    var body = Model.Body;
+}
+
+<div class="helpItem">
+    <h2>@subject</h2>
+    <hr />
+    <div style="text-align: left;">
+        @Html.Raw(body)
+    </div>
+</div>

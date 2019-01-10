@@ -1,12 +1,18 @@
 ﻿using NetMud.Backup;
 using NetMud.CentralControl;
-using NetMud.Data.ConfigData;
-using NetMud.Data.Lexical;
+using NetMud.Commands.Attributes;
+using NetMud.Communication.Lexical;
+using NetMud.Data.Gossip;
+using NetMud.Data.Linguistic;
+using NetMud.Data.System;
+using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.Base.World;
+using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Gossip;
 using NetMud.DataStructure.Linguistic;
-using NutMud.Commands.Attributes;
+using NetMud.DataStructure.Player;
+using NetMud.DataStructure.System;
+using NetMud.Gossip;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -19,42 +25,67 @@ namespace NetMud
         public static void PreloadSupportingEntities()
         {
             //Load the "config" data first
-            Backup.ConfigData.LoadEverythingToCache();
+            ConfigData.LoadEverythingToCache();
 
             var globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
 
             //We dont move forward without a global config
             if (globalConfig == null)
             {
-                globalConfig = new GlobalConfig()
-                {
-                    Name = "LiveSettings",
-                    WebsocketPortalActive = true
-                };
+                globalConfig = new GlobalConfig();
 
                 globalConfig.SystemSave();
             }
 
-            //Load structural data next
-            BackingData.LoadEverythingToCache();
+            var gossipConfig = ConfigDataCache.Get<IGossipConfig>(new ConfigDataCacheKey(typeof(IGossipConfig), "GossipSettings", ConfigDataType.GameWorld));
 
-            var hotBack = new HotBackup();
+            //We dont move forward without a global config
+            if (gossipConfig == null)
+            {
+                gossipConfig = new GossipConfig();
+
+                gossipConfig.SystemSave();
+            }
+
+            //Load structural data next
+            Templates.LoadEverythingToCache();
+
+            HotBackup hotBack = new HotBackup();
 
             //Our live data restore failed, reload the entire world from backing data
             if (!hotBack.RestoreLiveBackup())
                 hotBack.NewWorldFallback();
 
+            if (gossipConfig.GossipActive)
+            {
+                Func<Member[]> playerList = () => LiveCache.GetAll<IPlayer>()
+                    .Where(player => player.Descriptor != null  && player.Template<IPlayerTemplate>().Account.Config.GossipSubscriber)
+                    .Select(player => new Member()
+                    {
+                        Name = player.AccountHandle,
+                        WriteTo = (message) => player.WriteTo(new string[] { message }),
+                        BlockedMembers = player.Template<IPlayerTemplate>().Account.Config.Acquaintences.Where(acq => !acq.IsFriend).Select(acq => acq.PersonHandle),
+                        Friends = player.Template<IPlayerTemplate>().Account.Config.Acquaintences.Where(acq => acq.IsFriend).Select(acq => acq.PersonHandle)
+                    }).ToArray();
+
+                void exceptionLogger(Exception ex) => LoggingUtility.LogError(ex);
+                void activityLogger(string message) => LoggingUtility.Log(message, LogChannels.GossipServer);
+
+                GossipClient gossipServer = new GossipClient(gossipConfig, exceptionLogger, activityLogger, playerList);
+
+                Task.Run(() => gossipServer.Launch());
+
+                LiveCache.Add(gossipServer, "GossipWebClient");
+            }
+			
             //Hoover up all the verbs from commands that someone might have coded
             ProcessSystemVerbs();
 
-            var gossipServer = new Gossip.GossipClient();
-            Task.Run(() => gossipServer.Launch());
-
             Func<bool> backupFunction = hotBack.WriteLiveBackup;
-            Func<bool> backingDataBackupFunction = BackingData.WriteFullBackup;
+            Func<bool> backingDataBackupFunction = Templates.WriteFullBackup;
 
-            //every 15 minutes after half an hour
-            Processor.StartSingeltonChainedLoop("HotBackup", 30 * 60, 15 * 60, -1, backupFunction);
+            //every 30 minutes after half an hour
+            Processor.StartSingeltonChainedLoop("HotBackup", 30 * 60, 30 * 60, -1, backupFunction);
 
             //every 2 hours after 1 hour
             Processor.StartSingeltonChainedLoop("BackingDataFullBackup", 60 * 60, 120 * 60, -1, backingDataBackupFunction);

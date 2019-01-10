@@ -3,10 +3,10 @@ using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
 using NetMud.Cartography;
 using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.PlayerConfiguration;
-using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.SupportingClasses;
+using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.Player;
+using NetMud.DataStructure.Room;
 using NetMud.Physics;
 using System;
 using System.Collections.Generic;
@@ -33,10 +33,24 @@ namespace NetMud.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("api/ClientDataApi/ToggleTutorialMode", Name = "ClientDataAPI_ToggleTutorialMode")]
+        public JsonResult<bool> ToggleTutorialMode()
+        {
+            ApplicationUser user = UserManager.FindById(User.Identity.GetUserId());
+
+            if(user != null)
+            {
+                user.GameAccount.Config.UITutorialMode = !user.GameAccount.Config.UITutorialMode;
+            }
+
+            return Json(user.GameAccount.Config.UITutorialMode);
+        }
+		
         [HttpGet]
         public string GetEntityModelView(long modelId)
         {
-            var model = BackingDataCache.Get<IDimensionalModelData>(modelId);
+            var model = TemplateCache.Get<IDimensionalModelData>(modelId);
 
             if (model == null)
                 return string.Empty;
@@ -47,7 +61,7 @@ namespace NetMud.Controllers
         [HttpGet]
         public string RenderRoomWithRadius(long id, int radius)
         {
-            var centerRoom = BackingDataCache.Get<IRoomData>(id);
+            var centerRoom = TemplateCache.Get<IRoomTemplate>(id);
 
             if (centerRoom == null || radius < 0)
                 return "Invalid inputs.";
@@ -58,7 +72,7 @@ namespace NetMud.Controllers
         [HttpGet]
         public JsonResult<IUIModule> GetUIModuleContent(string moduleName)
         {
-            var module = BackingDataCache.GetByName<IUIModule>(moduleName);
+            var module = TemplateCache.GetByName<IUIModule>(moduleName);
 
             if (module != null)
                 return Json(module);
@@ -66,6 +80,48 @@ namespace NetMud.Controllers
             return null;
         }
 
+        [HttpPost]
+        [Route("api/ClientDataApi/ToggleSoundMute", Name = "ClientDataAPI_ToggleSoundMute")]
+        public JsonResult<bool> ToggleSoundMute()
+        {
+            ApplicationUser user = UserManager.FindById(User.Identity.GetUserId());
+
+            if (user != null)
+            {
+                user.GameAccount.Config.SoundMuted = !user.GameAccount.Config.SoundMuted;
+            }
+
+            return Json(user.GameAccount.Config.SoundMuted);
+        }
+
+        [HttpPost]
+        [Route("api/ClientDataApi/ToggleMusicMute", Name = "ClientDataAPI_ToggleMusicMute")]
+        public JsonResult<bool> ToggleMusicMute()
+        {
+            ApplicationUser user = UserManager.FindById(User.Identity.GetUserId());
+
+            if (user != null)
+            {
+                user.GameAccount.Config.MusicMuted = !user.GameAccount.Config.MusicMuted;
+            }
+
+            return Json(user.GameAccount.Config.MusicMuted);
+        }
+
+        [HttpPost]
+        [Route("api/ClientDataApi/ToggleGossipParticipation", Name = "ClientDataAPI_ToggleGossipParticipation")]
+        public JsonResult<bool> ToggleGossipParticipation()
+        {
+            ApplicationUser user = UserManager.FindById(User.Identity.GetUserId());
+
+            if (user != null)
+            {
+                user.GameAccount.Config.GossipSubscriber = !user.GameAccount.Config.GossipSubscriber;
+            }
+
+            return Json(user.GameAccount.Config.GossipSubscriber);
+        }
+		
         [HttpPost]
         public string RemoveUIModuleContent(string moduleName, int location)
         {
@@ -89,7 +145,7 @@ namespace NetMud.Controllers
             }
             else
             {
-                var module = BackingDataCache.GetByName<IUIModule>(moduleName);
+                var module = TemplateCache.GetByName<IUIModule>(moduleName);
 
                 if (module == null)
                 {
@@ -126,7 +182,7 @@ namespace NetMud.Controllers
                 return "Invalid Account.";
             }
 
-            var module = BackingDataCache.GetByName<IUIModule>(moduleName);
+            var module = TemplateCache.GetByName<IUIModule>(moduleName);
 
             if (module == null)
             {
@@ -187,7 +243,7 @@ namespace NetMud.Controllers
                 return Json(new string[0]);
             }
 
-            var modules = BackingDataCache.GetAll<IUIModule>(true).Where(uim => uim.Name.Contains(term));
+            var modules = TemplateCache.GetAll<IUIModule>(true).Where(uim => uim.Name.Contains(term));
 
             return Json(modules.Select(mod => mod.Name).ToArray());
         }
@@ -196,7 +252,7 @@ namespace NetMud.Controllers
         [Route("api/ClientDataApi/GetAccountNames", Name = "ClientDataAPI_GetAccountNames")]
         public JsonResult<string[]> GetAccountNames(string term)
         {
-            var accounts = UserManager.Users;
+            IQueryable<ApplicationUser> accounts = UserManager.Users;
 
             return Json(accounts.Where(acct => acct.GlobalIdentityHandle.Contains(term)).Select(acct => acct.GlobalIdentityHandle).ToArray());
         }
@@ -205,9 +261,9 @@ namespace NetMud.Controllers
         [Route("api/ClientDataApi/GetCharacterNamesForAccount/{accountName}", Name = "ClientDataAPI_GetCharacterNamesForAccount")]
         public JsonResult<string[]> GetCharacterNamesForAccount(string accountName, string term)
         {
-            var user = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser user = UserManager.FindById(User.Identity.GetUserId());
 
-            var characters = PlayerDataCache.GetAll().Where(chr => chr.AccountHandle.Equals(user.GlobalIdentityHandle) && chr.Name.Contains(term));
+            System.Collections.Generic.IEnumerable<IPlayerTemplate> characters = PlayerDataCache.GetAll().Where(chr => chr.AccountHandle.Equals(user.GlobalIdentityHandle) && chr.Name.Contains(term));
 
             return Json(characters.Select(chr => chr.Name).ToArray());
         }

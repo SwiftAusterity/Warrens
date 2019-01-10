@@ -1,0 +1,6 @@
+﻿@using NetMud.DataStructure.NPC
+
+@model MerchandiseStock
+
+@Html.EditorFor(e => e.Item, new { validItems = ViewData["ValidInanimateDatas"] })
+@Html.EditorFor(e => e.Amount)

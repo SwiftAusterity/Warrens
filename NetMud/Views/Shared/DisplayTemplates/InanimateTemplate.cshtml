@@ -1,0 +1,14 @@
+﻿@model NetMud.DataStructure.Inanimate.IInanimateTemplate
+
+<div class="entityDataInfoCard">
+    <h4>@Model.Name</h4>
+    <hr />
+    <div>
+        <span>Accumulation Cap:</span>
+        <span>@Model.AccumulationCap</span>
+    </div>
+    @foreach(var quality in Model.Qualities)
+    {
+        @Html.DisplayFor(m => quality)
+    }
+</div>

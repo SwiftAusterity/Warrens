@@ -1,6 +1,9 @@
 ﻿using NetMud.Authentication;
-using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Architectural.ActorBase;
+using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.Inanimate;
+using NetMud.DataStructure.NaturalResource;
+using NetMud.DataStructure.Zone;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,7 +12,7 @@ using System.Linq;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageFaunaViewModel : PagedDataModel<IFauna>, BaseViewModel
+    public class ManageFaunaViewModel : PagedDataModel<IFauna>, IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
@@ -29,13 +32,13 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditFaunaViewModel : BaseViewModel
+    public class AddEditFaunaViewModel : IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
         public AddEditFaunaViewModel()
         {
-            ValidInanimateDatas = Enumerable.Empty<IInanimateData>();
+            ValidInanimateTemplates = Enumerable.Empty<IInanimateTemplate>();
             ValidMaterials = Enumerable.Empty<IMaterial>();
             ValidRaces = Enumerable.Empty<IRace>();
         }
@@ -112,7 +115,7 @@ namespace NetMud.Models.Admin
         public long Race { get; set; }
 
         public IEnumerable<IRace> ValidRaces { get; set; }
-        public IEnumerable<IInanimateData> ValidInanimateDatas { get; set; }
+        public IEnumerable<IInanimateTemplate> ValidInanimateTemplates { get; set; }
         public IEnumerable<IMaterial> ValidMaterials { get; set; }
         public IFauna DataObject { get; set; }
     }

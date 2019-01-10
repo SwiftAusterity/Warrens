@@ -34,6 +34,11 @@
     </div>
     <div>
         <dl class="dl-horizontal">
+            <dt>Background Music Playlists:</dt>
+            <dd>
+                @Model.authedUser.GameAccount.Config.Playlists.Count() [
+                @Html.ActionLink("Manage", "Playlists") ]
+            </dd>
             <dt>Client UI Configuration:</dt>
             <dd>
                 @Model.UIModuleCount [
@@ -54,6 +59,8 @@
         <div class="form-group row">
             @Html.EditorFor(e => e.UITutorialMode)
             @Html.EditorFor(e => e.GossipSubscriber)
+            @Html.EditorFor(e => e.PermanentlyMuteMusic)
+            @Html.EditorFor(e => e.PermanentlyMuteSound)
         </div>
 
         if (User.IsInRole("Admin"))
@@ -61,7 +68,10 @@
             @Html.Partial("~/Views/Manage/LogSubscriptions.cshtml", Model)
         }
 
-        @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Manage", IncludeCancel = false })
+        @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", ReturnAction = "Index", ReturnController = "Manage", IncludeCancel = false })
     }
-    </section>
+</section>
 
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

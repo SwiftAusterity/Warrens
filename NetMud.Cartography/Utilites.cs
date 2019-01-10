@@ -1,6 +1,7 @@
 ﻿using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.SupportingClasses;
+using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Room;
+using NetMud.DataStructure.System;
 using System;
 using System.Linq;
 
@@ -18,7 +19,7 @@ namespace NetMud.Cartography
         /// <param name="origin">The room we're looking to oppose</param>
         /// <param name="direction">The direction the room would be in (this method will reverse the direction itself)</param>
         /// <returns>The room that is in the direction from our room</returns>
-        public static IRoomData GetOpposingRoom(IRoomData origin, MovementDirectionType direction)
+        public static IRoomTemplate GetOpposingRoom(IRoomTemplate origin, MovementDirectionType direction)
         {
             //There is no opposite of none directionals
             if (origin == null || direction == MovementDirectionType.None)
@@ -26,13 +27,13 @@ namespace NetMud.Cartography
 
             var oppositeDirection = ReverseDirection(direction);
 
-            var paths = BackingDataCache.GetAll<IPathwayData>();
+            var paths = TemplateCache.GetAll<IPathwayTemplate>();
 
             var ourPath = paths.FirstOrDefault(pt => origin.Equals(pt.Destination) 
                                             && pt.DirectionType == oppositeDirection);
 
             if(ourPath != null)
-                return (IRoomData)ourPath.Destination;
+                return (IRoomTemplate)ourPath.Destination;
 
             return null;
         }
@@ -43,11 +44,11 @@ namespace NetMud.Cartography
         /// <param name="boundings">a 3d coordinate x,y,z</param>
         /// <param name="map">the 3d map in question</param>
         /// <returns>whether it is out of bounds of the map</returns>
-        public static bool IsOutOfBounds(Tuple<int, int, int> boundings, long[,,] map)
+        public static bool IsOutOfBounds(Coordinate boundings, long[,,] map)
         {
-            return map.GetUpperBound(0) < boundings.Item1 || map.GetLowerBound(0) > boundings.Item1
-                || map.GetUpperBound(1) < boundings.Item2 || map.GetLowerBound(1) > boundings.Item2
-                || map.GetUpperBound(2) < boundings.Item3 || map.GetLowerBound(2) > boundings.Item3;
+            return map.GetUpperBound(0) < boundings.X || map.GetLowerBound(0) > boundings.X
+                || map.GetUpperBound(1) < boundings.Y || map.GetLowerBound(1) > boundings.Y
+                || map.GetUpperBound(2) < boundings.Z || map.GetLowerBound(2) > boundings.Z;
 
         }
 

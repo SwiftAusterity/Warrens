@@ -1,19 +1,19 @@
-﻿using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.Place;
-using NetMud.DataStructure.Base.Supporting;
+﻿using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.Locale;
+using NetMud.DataStructure.Room;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace NetMud.Models.Admin
 {
-    public class AddEditPathwayDataViewModel : TwoDimensionalEntityEditViewModel, BaseViewModel
+    public class AddEditPathwayTemplateViewModel : TwoDimensionalEntityEditViewModel, IBaseViewModel
     {
-        public AddEditPathwayDataViewModel()
+        public AddEditPathwayTemplateViewModel()
         {
             ValidModels = Enumerable.Empty<IDimensionalModelData>();
             ValidMaterials = Enumerable.Empty<IMaterial>();
-            ValidRooms = Enumerable.Empty<IRoomData>();
+            ValidRooms = Enumerable.Empty<IRoomTemplate>();
         }
 
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
@@ -34,15 +34,15 @@ namespace NetMud.Models.Admin
         [DataType(DataType.Text)]
         public int DegreesFromNorth { get; set; }
 
-        public IEnumerable<IRoomData> ValidRooms { get; set; }
-        public IRoomData Origin { get; set; }
-        public IRoomData Destination { get; set; }
-        public IPathwayData DataObject { get; set; }
+        public IEnumerable<IRoomTemplate> ValidRooms { get; set; }
+        public IRoomTemplate Origin { get; set; }
+        public IRoomTemplate Destination { get; set; }
+        public IPathwayTemplate DataObject { get; set; }
     }
 
-    public class AddPathwayWithRoomDataViewModel : TwoDimensionalEntityEditViewModel, BaseViewModel
+    public class AddPathwayWithRoomTemplateViewModel : TwoDimensionalEntityEditViewModel, IBaseViewModel
     {
-        public AddPathwayWithRoomDataViewModel()
+        public AddPathwayWithRoomTemplateViewModel()
         {
             ValidModels = Enumerable.Empty<IDimensionalModelData>();
             ValidMaterials = Enumerable.Empty<IMaterial>();
@@ -74,7 +74,7 @@ namespace NetMud.Models.Admin
         public long Medium { get; set; }
 
         [Display(Name = "Locale", Description = "The locale this belongs to.")]
-        public ILocaleData Locale { get; set; }
+        public ILocaleTemplate Locale { get; set; }
 
         [Range(1, 1200, ErrorMessage = "The {0} must be between {2} and {1}.")]
         [Display(Name = "Length (inches)", Description = "The dimensional length of the pathway.")]
@@ -106,8 +106,8 @@ namespace NetMud.Models.Admin
 
         public long LocaleId { get; set; }
 
-        public IEnumerable<IRoomData> ValidRooms { get; set; }
-        public IRoomData Origin { get; set; }
-        public IPathwayData DataObject { get; set; }
+        public IEnumerable<IRoomTemplate> ValidRooms { get; set; }
+        public IRoomTemplate Origin { get; set; }
+        public IPathwayTemplate DataObject { get; set; }
     }
 }

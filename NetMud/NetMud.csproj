@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\Microsoft.Net.Compilers.2.8.2\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.2.8.2\build\Microsoft.Net.Compilers.props')" />
-  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -16,8 +15,8 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NetMud</RootNamespace>
     <AssemblyName>NetMud</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-    <MvcBuildViews>false</MvcBuildViews>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <MvcBuildViews>true</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
@@ -26,7 +25,7 @@
     <UseGlobalApplicationHostFile />
     <TargetFrameworkProfile />
     <Use64BitIISExpress />
-    <TypeScriptToolsVersion>2.8</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
   </PropertyGroup>
@@ -38,6 +37,19 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptJSXEmit>None</TypeScriptJSXEmit>
+    <TypeScriptModuleKind />
+    <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
+    <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
+    <TypeScriptRemoveComments>False</TypeScriptRemoveComments>
+    <TypeScriptOutFile />
+    <TypeScriptOutDir />
+    <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
+    <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
+    <TypeScriptSourceMap>True</TypeScriptSourceMap>
+    <TypeScriptMapRoot />
+    <TypeScriptSourceRoot />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -70,12 +82,15 @@
     <Reference Include="Microsoft.AspNet.Identity.Owin, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.2.2\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=2.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Owin, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.4.0.0\lib\net451\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Cors, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Cors.4.0.0\lib\net451\Microsoft.Owin.Cors.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.4.0.0\lib\net451\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
@@ -104,24 +119,40 @@
     <Reference Include="Microsoft.WebSockets, Version=0.2.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.WebSockets.0.2.3.1\lib\net45\Microsoft.WebSockets.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.SqlServer.Compact.4.0.8876.1\lib\net40\System.Data.SqlServerCe.dll</HintPath>
     </Reference>
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.3.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.5.1\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    </Reference>
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Net.Http, Version=4.1.1.2, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Net.Http.4.3.3\lib\net46\System.Net.Http.dll</HintPath>
+    <Reference Include="System.IO, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.4.3.0\lib\net462\System.IO.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="System.Net.Http.Formatting, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.6\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    <Reference Include="System.Net.Http, Version=4.1.1.3, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.Http.4.3.4\lib\net46\System.Net.Http.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="System.Security.Cryptography.Algorithms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.1\lib\net46\System.Security.Cryptography.Algorithms.dll</HintPath>
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.4.3.0\lib\net462\System.Runtime.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Algorithms, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.1\lib\net461\System.Security.Cryptography.Algorithms.dll</HintPath>
     </Reference>
     <Reference Include="System.Security.Cryptography.Encoding, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Security.Cryptography.Encoding.4.3.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
@@ -129,8 +160,11 @@
     <Reference Include="System.Security.Cryptography.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Security.Cryptography.Primitives.4.3.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
     </Reference>
-    <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.2\lib\net46\System.Security.Cryptography.X509Certificates.dll</HintPath>
+    <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.1.1.2, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.2\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Cors, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Cors.5.2.7\lib\net45\System.Web.Cors.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -140,32 +174,32 @@
     <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.6\lib\net45\System.Web.Helpers.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Http, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.6\lib\net45\System.Web.Http.dll</HintPath>
+    <Reference Include="System.Web.Http, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.7\lib\net45\System.Web.Http.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Http.Owin, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Owin.5.2.6\lib\net45\System.Web.Http.Owin.dll</HintPath>
+    <Reference Include="System.Web.Http.Owin, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Owin.5.2.7\lib\net45\System.Web.Http.Owin.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Http.WebHost, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.6\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.7\lib\net45\System.Web.Http.WebHost.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Mvc, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.6\lib\net45\System.Web.Mvc.dll</HintPath>
+    <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.6\lib\net45\System.Web.Razor.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.7\lib\net45\System.Web.Razor.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Routing" />
     <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.6\lib\net45\System.Web.WebPages.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.6\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.6\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
@@ -185,7 +219,6 @@
       <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="websocket-sharp, Version=1.0.1.0, Culture=neutral, PublicKeyToken=5660b08a1845a91e" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Owin">
@@ -210,9 +243,9 @@
     <Compile Include="Controllers\GameAdmin\DictionaryController.cs" />
     <Compile Include="Controllers\GameAdmin\ContentApprovalController.cs" />
     <Compile Include="Controllers\GameAdmin\FloraController.cs" />
+    <Compile Include="Controllers\GameAdmin\LiveAdminController.cs" />
     <Compile Include="Controllers\GameAdmin\MineralsController.cs" />
     <Compile Include="Controllers\GameAdmin\GameAdminController.cs" />
-    <Compile Include="Controllers\GameAdmin\ConstantsController.cs" />
     <Compile Include="Controllers\GameAdmin\FaunaController.cs" />
     <Compile Include="Controllers\GameAdmin\LocaleController.cs" />
     <Compile Include="Controllers\GameAdmin\UIModulesController.cs" />
@@ -234,12 +267,14 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\AddContentModel.cs" />
     <Compile Include="Models\Admin\JournalEntryViewModels.cs" />
     <Compile Include="Models\Admin\LanguageViewModels.cs" />
     <Compile Include="Models\Admin\DictionaryViewModels.cs" />
     <Compile Include="Models\Admin\ContentApprovalViewModels.cs" />
     <Compile Include="Models\Admin\CelestialViewModels.cs" />
     <Compile Include="Models\Admin\GaiaViewModels.cs" />
+    <Compile Include="Models\Admin\LiveDataModels.cs" />
     <Compile Include="Models\Admin\UIModulesViewModels.cs" />
     <Compile Include="Models\Admin\LexicalViewModels.cs" />
     <Compile Include="Models\Admin\FloraViewModels.cs" />
@@ -247,7 +282,6 @@
     <Compile Include="Models\Admin\FaunaViewModels.cs" />
     <Compile Include="Models\Admin\ReferenceDataDropdownModel.cs" />
     <Compile Include="Models\Admin\DimensionalModelViewModels.cs" />
-    <Compile Include="Models\Admin\ConstantsViewModels.cs" />
     <Compile Include="Models\Admin\EntityContainerViewModel.cs" />
     <Compile Include="Models\Admin\PlayerViewModels.cs" />
     <Compile Include="Models\Admin\PathwayViewModels.cs" />
@@ -263,9 +297,14 @@
     <Compile Include="Models\AsciiMapViewModel.cs" />
     <Compile Include="Controllers\BlogController.cs" />
     <Compile Include="Models\BlogViewModel.cs" />
+    <Compile Include="Models\Features\HelpViewModel.cs" />
+    <Compile Include="Models\Features\ItemsViewModel.cs" />
+    <Compile Include="Models\Features\NPCsViewModel.cs" />
     <Compile Include="Models\GameContextModel.cs" />
     <Compile Include="Models\BaseViewModel.cs" />
+    <Compile Include="Models\HomeViewModel.cs" />
     <Compile Include="Models\HtmlHelpers.cs" />
+    <Compile Include="Models\InterfaceModelBinder.cs" />
     <Compile Include="Models\IPagedDataModel.cs" />
     <Compile Include="Models\ListTableViewModel.cs" />
     <Compile Include="Models\LoggingViewModels.cs" />
@@ -276,6 +315,7 @@
     <Compile Include="Models\BugReportModel.cs" />
     <Compile Include="Models\PagedDataModel.cs" />
     <Compile Include="Models\PlayerManagement\NotificationsViewModels.cs" />
+    <Compile Include="Models\PlayerManagement\PlaylistViewModels.cs" />
     <Compile Include="Models\PlayerManagement\SetPasswordViewModel.cs" />
     <Compile Include="Models\SubmitButtonModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -300,6 +340,20 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\GameClient.css" />
     <Content Include="Content\images\broken-image.png" />
+    <Content Include="Content\images\icons\feather_battle.svg" />
+    <Content Include="Content\images\icons\feather_defend.svg" />
+    <Content Include="Content\images\icons\feather_die.svg" />
+    <Content Include="Content\images\icons\feather_edit.svg" />
+    <Content Include="Content\images\icons\feather_glow.svg" />
+    <Content Include="Content\images\icons\feather_love.svg" />
+    <Content Include="Content\images\icons\feather_mute.svg" />
+    <Content Include="Content\images\icons\feather_radiate.svg" />
+    <Content Include="Content\images\icons\feather_rain.svg" />
+    <Content Include="Content\images\icons\feather_say.svg" />
+    <Content Include="Content\images\icons\feather_search.svg" />
+    <Content Include="Content\images\icons\feather_see.svg" />
+    <Content Include="Content\images\icons\feather_sound.svg" />
+    <Content Include="Content\images\icons\feather_stop.svg" />
     <Content Include="Content\images\ui-icons_444444_256x240.png" />
     <Content Include="Content\images\ui-icons_555555_256x240.png" />
     <Content Include="Content\images\ui-icons_777620_256x240.png" />
@@ -311,6 +365,18 @@
     <Content Include="Content\jquery-ui.theme.css" />
     <Content Include="Content\jquery.gridster.min.css" />
     <Content Include="Content\popper.css" />
+    <Content Include="Content\spectrum.css" />
+    <Content Include="Scripts\bootstrap.bundle.js" />
+    <Content Include="Scripts\bootstrap.bundle.min.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\moment-with-locales.js" />
+    <Content Include="Scripts\moment-with-locales.min.js" />
+    <Content Include="Scripts\moment.js" />
+    <Content Include="Scripts\moment.min.js" />
+    <Content Include="Scripts\spectrum.js" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -318,10 +384,6 @@
     <Content Include="Scripts\bootstrap-datetimepicker.js" />
     <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
     <Content Include="Scripts\bootstrap-markdown.js" />
-    <Content Include="Scripts\bootstrap.bundle.js" />
-    <Content Include="Scripts\bootstrap.bundle.min.js" />
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\esm\popper-utils.js" />
     <Content Include="Scripts\esm\popper-utils.min.js" />
     <Content Include="Scripts\esm\popper.js" />
@@ -337,10 +399,6 @@
     <Content Include="Scripts\jquery-ui.js" />
     <Content Include="Scripts\js-cookie.js" />
     <Content Include="Scripts\marked.js" />
-    <Content Include="Scripts\moment-with-locales.js" />
-    <Content Include="Scripts\moment-with-locales.min.js" />
-    <Content Include="Scripts\moment.js" />
-    <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\site.js" />
     <Content Include="Scripts\tooltip.js" />
     <Content Include="Scripts\ClientHelpers.js" />
@@ -407,6 +465,72 @@
     <Content Include="Scripts\bootstrap.js.map" />
     <Content Include="Scripts\bootstrap.bundle.min.js.map" />
     <Content Include="Scripts\bootstrap.bundle.js.map" />
+    <Content Include="Views\Shared\ApplyTemplate.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\Help.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\InanimateTemplate.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\JournalEntry.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\NonPlayerCharacterTemplate.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\Quality.cshtml" />
+    <Content Include="Views\Shared\LiveListTable.cshtml" />
+    <Content Include="Views\Shared\ShowLiveEntity.cshtml" />
+    <Content Include="Views\Shared\TitleAndBreadcrumbs.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\AffectPattern.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Celestial.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\CelestialList.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\CollectionCelestialList.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\CollectionCelestialListItem.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\CollectionInanimateTemplateList.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\CollectionInanimateTemplateListItem.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\ColorPicker.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Coordinate.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\GaiaTemplate.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\GaiaTemplateList.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Help.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\ICelestialList.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\IChronology.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\IMerchandise.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\InanimateTemplate.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\InanimateTemplateList.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\InventoryRestockList.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\IPersonality.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\IPreference.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\IPreferenceList.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\IQuality.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\IQualityList.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\IRace.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\JournalEntry.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\KeyedTemplateList.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\MerchandiseList.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\NonPlayerCharacterTemplate.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\NonPlayerCharacterTemplateList.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\QualityValue.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\QualityValueList.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\RestockControl.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\SimpleDropdown.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\TagContainer.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\TagItem.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\TeachableProficencies.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\TeachableProficency.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\ValueRangeInt.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\ValueRangeShort.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\ZoneTemplate.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\ZoneTemplateList.cshtml" />
+    <Content Include="Views\Manage\AddPlaylist.cshtml" />
+    <Content Include="Views\Manage\EditPlaylist.cshtml" />
+    <Content Include="Views\Manage\Playlists.cshtml" />
+    <Content Include="Views\Manage\Songs.cshtml" />
+    <Content Include="Views\Features\Items.cshtml" />
+    <Content Include="Views\Features\Lore.cshtml" />
+    <Content Include="Views\Features\NPCs.cshtml" />
+    <Content Include="Views\Features\TheWorld.cshtml" />
+    <Content Include="Views\LiveAdmin\Inanimate.cshtml" />
+    <Content Include="Views\LiveAdmin\Inanimates.cshtml" />
+    <Content Include="Views\LiveAdmin\NPC.cshtml" />
+    <Content Include="Views\LiveAdmin\NPCs.cshtml" />
+    <Content Include="Views\LiveAdmin\World.cshtml" />
+    <Content Include="Views\LiveAdmin\Worlds.cshtml" />
+    <Content Include="Views\LiveAdmin\Zone.cshtml" />
+    <Content Include="Views\LiveAdmin\Zones.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />
@@ -517,9 +641,6 @@
     <Content Include="Views\Shared\EditorTemplates\EnumDropDownList.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Upload.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Boolean.cshtml" />
-    <Content Include="Views\GameAdmin\Constants\Add.cshtml" />
-    <Content Include="Views\GameAdmin\Constants\Edit.cshtml" />
-    <Content Include="Views\GameAdmin\Constants\Index.cshtml" />
     <Content Include="Views\GameAdmin\Room\Map.cshtml" />
     <Content Include="Views\Shared\RemoveDataItem.cshtml" />
     <Content Include="Views\Shared\AsciiMap.cshtml" />
@@ -531,7 +652,6 @@
     <Content Include="Views\GameAdmin\Material\Resistances.cshtml" />
     <Content Include="Views\GameAdmin\Material\Compositions.cshtml" />
     <Content Include="Views\GameAdmin\Race\ExtraBodyParts.cshtml" />
-    <Content Include="Views\GameAdmin\Constants\CriterionValue.cshtml" />
     <Content Include="Views\Shared\InanimateEntityContainer.cshtml" />
     <Content Include="Views\Shared\MobileEntityContainer.cshtml" />
     <Content Include="Views\GameAdmin\DimensionalModel\ModelPlane.cshtml" />
@@ -677,8 +797,7 @@
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.2.8.2\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.2.8.2\build\Microsoft.Net.Compilers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

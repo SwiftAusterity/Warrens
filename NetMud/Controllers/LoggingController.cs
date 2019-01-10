@@ -35,7 +35,7 @@ namespace NetMud.Controllers
 
         public ActionResult Index(string selectedLog)
         {
-            var dashboardModel = new DashboardViewModel
+            DashboardViewModel dashboardModel = new DashboardViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -54,8 +54,8 @@ namespace NetMud.Controllers
         [HttpPost]
         public ActionResult Rollover(string selectedLog)
         {
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
-            var message = string.Empty;
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+            string message = string.Empty;
             if (!string.IsNullOrWhiteSpace(selectedLog))
             {
                 if (!LoggingUtility.RolloverLog(selectedLog))

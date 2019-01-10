@@ -1,4 +1,4 @@
-﻿using NetMud.Data.Serialization;
+﻿using NetMud.Data.Architectural.Serialization;
 using Newtonsoft.Json;
 using System;
 

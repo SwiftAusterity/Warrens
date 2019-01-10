@@ -1,17 +1,18 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
-using NetMud.Data.EntityBackingData;
-using NetMud.Data.Lexical;
-using NetMud.Data.LookupData;
+using NetMud.Communication.Lexical;
+using NetMud.Data.Architectural.EntityBase;
+using NetMud.Data.Linguistic;
+using NetMud.Data.Room;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.Place;
-using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.Behaviors.System;
+using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Linguistic;
-using NetMud.DataStructure.SupportingClasses;
+using NetMud.DataStructure.Locale;
+using NetMud.DataStructure.Room;
+using NetMud.DataStructure.System;
 using NetMud.Models.Admin;
 using System;
 using System.Collections.Generic;
@@ -51,7 +52,7 @@ namespace NetMud.Controllers.GameAdmin
         [Route(@"GameAdmin/Pathway/Remove/{removeId?}/{authorizeRemove?}/{unapproveId?}/{authorizeUnapprove?}")]
         public ActionResult Remove(long removeId = -1, string authorizeRemove = "", long unapproveId = -1, string authorizeUnapprove = "")
         {
-            var vModel = new AddEditPathwayDataViewModel
+            var vModel = new AddEditPathwayTemplateViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId())
             };
@@ -62,7 +63,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<IPathwayData>(removeId);
+                var obj = TemplateCache.Get<IPathwayTemplate>(removeId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -78,7 +79,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<IPathwayData>(unapproveId);
+                var obj = TemplateCache.Get<IPathwayTemplate>(unapproveId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -103,15 +104,15 @@ namespace NetMud.Controllers.GameAdmin
             //New room or existing room
             if (destinationRoomId.Equals(-1))
             {
-                var vModel = new AddPathwayWithRoomDataViewModel
+                var vModel = new AddPathwayWithRoomTemplateViewModel
                 {
                     authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
-                    ValidMaterials = BackingDataCache.GetAll<IMaterial>(),
-                    ValidModels = BackingDataCache.GetAll<IDimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat),
-                    ValidRooms = BackingDataCache.GetAll<IRoomData>().Where(rm => !rm.Id.Equals(originRoomId)),
+                    ValidMaterials = TemplateCache.GetAll<IMaterial>(),
+                    ValidModels = TemplateCache.GetAll<IDimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat),
+                    ValidRooms = TemplateCache.GetAll<IRoomTemplate>().Where(rm => !rm.Id.Equals(originRoomId)),
 
-                    Origin = BackingDataCache.Get<IRoomData>(originRoomId),
+                    Origin = TemplateCache.Get<IRoomTemplate>(originRoomId),
                     OriginID = originRoomId,
 
                     DegreesFromNorth = degreesFromNorth
@@ -124,20 +125,20 @@ namespace NetMud.Controllers.GameAdmin
             }
             else
             {
-                var vModel = new AddEditPathwayDataViewModel
+                var vModel = new AddEditPathwayTemplateViewModel
                 {
                     authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
-                    ValidMaterials = BackingDataCache.GetAll<IMaterial>(),
-                    ValidModels = BackingDataCache.GetAll<IDimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat),
-                    ValidRooms = BackingDataCache.GetAll<IRoomData>().Where(rm => !rm.Id.Equals(originRoomId)),
+                    ValidMaterials = TemplateCache.GetAll<IMaterial>(),
+                    ValidModels = TemplateCache.GetAll<IDimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat),
+                    ValidRooms = TemplateCache.GetAll<IRoomTemplate>().Where(rm => !rm.Id.Equals(originRoomId)),
 
-                    Origin = BackingDataCache.Get<IRoomData>(originRoomId),
+                    Origin = TemplateCache.Get<IRoomTemplate>(originRoomId),
                     OriginID = originRoomId,
 
                     DegreesFromNorth = degreesFromNorth,
                     DestinationID = destinationRoomId,
-                    Destination = BackingDataCache.Get<IRoomData>(destinationRoomId)
+                    Destination = TemplateCache.Get<IRoomTemplate>(destinationRoomId)
                 };
 
                 return View("~/Views/GameAdmin/Pathway/AddEdit.cshtml", "_chromelessLayout", vModel);
@@ -146,12 +147,12 @@ namespace NetMud.Controllers.GameAdmin
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddWithRoom(AddPathwayWithRoomDataViewModel vModel)
+        public ActionResult AddWithRoom(AddPathwayWithRoomTemplateViewModel vModel)
         {
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             string roomMessage = string.Empty;
-            var newRoom = new RoomData
+            var newRoom = new RoomTemplate
             {
                 Name = vModel.RoomName,
                 Model = new DimensionalModel(vModel.RoomDimensionalModelHeight, vModel.RoomDimensionalModelLength, vModel.RoomDimensionalModelWidth
@@ -159,13 +160,13 @@ namespace NetMud.Controllers.GameAdmin
             };
 
             var mediumId = vModel.Medium;
-            var medium = BackingDataCache.Get<IMaterial>(mediumId);
+            var medium = TemplateCache.Get<IMaterial>(mediumId);
 
             if (medium != null)
             {
                 newRoom.Medium = medium;
 
-                var locale = BackingDataCache.Get<ILocaleData>(vModel.LocaleId);
+                var locale = TemplateCache.Get<ILocaleTemplate>(vModel.LocaleId);
 
                 if (locale != null)
                 {
@@ -175,7 +176,7 @@ namespace NetMud.Controllers.GameAdmin
                         roomMessage = "Error; Creation failed.";
                     else
                     {
-                        LoggingUtility.LogAdminCommandUsage("*WEB* - AddRoomDataWithPathway[" + newRoom.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                        LoggingUtility.LogAdminCommandUsage("*WEB* - AddRoomTemplateWithPathway[" + newRoom.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     }
                 }
                 else
@@ -188,11 +189,11 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToRoute("ModalErrorOrClose", new { Message = roomMessage });
 
             string message = string.Empty;
-            var newObj = new PathwayData
+            var newObj = new PathwayTemplate
             {
                 Name = vModel.Name,
                 DegreesFromNorth = vModel.DegreesFromNorth,
-                Origin = BackingDataCache.Get<IRoomData>(vModel.OriginID),
+                Origin = TemplateCache.Get<IRoomTemplate>(vModel.OriginID),
                 Destination = newRoom
             };
 
@@ -207,7 +208,7 @@ namespace NetMud.Controllers.GameAdmin
                         if (vModel.ModelPartMaterials.Count() <= nameIndex)
                             break;
 
-                        var material = BackingDataCache.Get<Material>(vModel.ModelPartMaterials[nameIndex]);
+                        var material = TemplateCache.Get<Material>(vModel.ModelPartMaterials[nameIndex]);
 
                         if (material != null && !string.IsNullOrWhiteSpace(partName))
                             materialParts.Add(partName, material);
@@ -217,7 +218,7 @@ namespace NetMud.Controllers.GameAdmin
                 }
             }
 
-            var dimModel = BackingDataCache.Get<DimensionalModelData>(vModel.DimensionalModelId);
+            var dimModel = TemplateCache.Get<DimensionalModelData>(vModel.DimensionalModelId);
             bool validData = true;
 
             if (dimModel == null)
@@ -235,7 +236,7 @@ namespace NetMud.Controllers.GameAdmin
             if (validData)
             {
                 newObj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth,
-                    vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation, new BackingDataCacheKey(dimModel), materialParts);
+                    vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation, new TemplateCacheKey(dimModel), materialParts);
 
                 if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
                     message = "Error; Creation failed.";
@@ -243,7 +244,7 @@ namespace NetMud.Controllers.GameAdmin
                 {
                     if (vModel.CreateReciprocalPath)
                     {
-                        var reversePath = new PathwayData
+                        var reversePath = new PathwayTemplate
                         {
                             Name = newObj.Name,
                             DegreesFromNorth = newObj.DegreesFromNorth,
@@ -267,17 +268,17 @@ namespace NetMud.Controllers.GameAdmin
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Add(AddEditPathwayDataViewModel vModel)
+        public ActionResult Add(AddEditPathwayTemplateViewModel vModel)
         {
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var newObj = new PathwayData
+            var newObj = new PathwayTemplate
             {
                 Name = vModel.Name,
                 DegreesFromNorth = vModel.DegreesFromNorth,
-                Origin = BackingDataCache.Get<IRoomData>(vModel.OriginID),
-                Destination = BackingDataCache.Get<IRoomData>(vModel.DestinationID),
+                Origin = TemplateCache.Get<IRoomTemplate>(vModel.OriginID),
+                Destination = TemplateCache.Get<IRoomTemplate>(vModel.DestinationID),
             };
 
             var materialParts = new Dictionary<string, IMaterial>();
@@ -291,7 +292,7 @@ namespace NetMud.Controllers.GameAdmin
                         if (vModel.ModelPartMaterials.Count() <= nameIndex)
                             break;
 
-                        var material = BackingDataCache.Get<IMaterial>(vModel.ModelPartMaterials[nameIndex]);
+                        var material = TemplateCache.Get<IMaterial>(vModel.ModelPartMaterials[nameIndex]);
 
                         if (material != null && !string.IsNullOrWhiteSpace(partName))
                             materialParts.Add(partName, material);
@@ -301,7 +302,7 @@ namespace NetMud.Controllers.GameAdmin
                 }
             }
 
-            var dimModel = BackingDataCache.Get<IDimensionalModelData>(vModel.DimensionalModelId);
+            var dimModel = TemplateCache.Get<IDimensionalModelData>(vModel.DimensionalModelId);
             bool validData = true;
 
             if (dimModel == null)
@@ -319,7 +320,7 @@ namespace NetMud.Controllers.GameAdmin
             if (validData)
             {
                 newObj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth,
-                    vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation, new BackingDataCacheKey(dimModel), materialParts);
+                    vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation, new TemplateCacheKey(dimModel), materialParts);
 
                 if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
                     message = "Error; Creation failed.";
@@ -336,15 +337,15 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(long id, long originRoomId, long destinationRoomId)
         {
             string message = string.Empty;
-            var vModel = new AddEditPathwayDataViewModel
+            var vModel = new AddEditPathwayTemplateViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
-                ValidMaterials = BackingDataCache.GetAll<IMaterial>(),
-                ValidModels = BackingDataCache.GetAll<IDimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat)
+                ValidMaterials = TemplateCache.GetAll<IMaterial>(),
+                ValidModels = TemplateCache.GetAll<IDimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat)
             };
 
-            var obj = BackingDataCache.Get<PathwayData>(id);
+            var obj = TemplateCache.Get<PathwayTemplate>(id);
 
             if (obj == null)
             {
@@ -352,16 +353,16 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", "Room", new { Message = message });
             }
 
-            vModel.ValidRooms = BackingDataCache.GetAll<IRoomData>().Where(rm => !rm.Equals(obj.Origin) && !rm.Equals(obj.Destination));
+            vModel.ValidRooms = TemplateCache.GetAll<IRoomTemplate>().Where(rm => !rm.Equals(obj.Origin) && !rm.Equals(obj.Destination));
 
             vModel.DataObject = obj;
             vModel.Name = obj.Name;
 
             vModel.DegreesFromNorth = obj.DegreesFromNorth;
-            vModel.Destination = (IRoomData)obj.Destination;
-            vModel.Origin = (IRoomData)obj.Origin;
+            vModel.Destination = (IRoomTemplate)obj.Destination;
+            vModel.Origin = (IRoomTemplate)obj.Origin;
 
-            vModel.DimensionalModelId = obj.Model.ModelBackingData.Id;
+            vModel.DimensionalModelId = obj.Model.ModelTemplate.Id;
             vModel.DimensionalModelHeight = obj.Model.Height;
             vModel.DimensionalModelLength = obj.Model.Length;
             vModel.DimensionalModelWidth = obj.Model.Width;
@@ -374,12 +375,12 @@ namespace NetMud.Controllers.GameAdmin
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(long id, AddEditPathwayDataViewModel vModel)
+        public ActionResult Edit(long id, AddEditPathwayTemplateViewModel vModel)
         {
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = BackingDataCache.Get<IPathwayData>(id);
+            var obj = TemplateCache.Get<IPathwayTemplate>(id);
             if (obj == null)
             {
                 message = "That does not exist";
@@ -388,8 +389,8 @@ namespace NetMud.Controllers.GameAdmin
 
             obj.Name = vModel.Name;
             obj.DegreesFromNorth = vModel.DegreesFromNorth;
-            obj.Origin = BackingDataCache.Get<IRoomData>(vModel.OriginID);
-            obj.Destination = BackingDataCache.Get<IRoomData>(vModel.DestinationID);
+            obj.Origin = TemplateCache.Get<IRoomTemplate>(vModel.OriginID);
+            obj.Destination = TemplateCache.Get<IRoomTemplate>(vModel.DestinationID);
 
             var materialParts = new Dictionary<string, IMaterial>();
             if (vModel.ModelPartNames != null)
@@ -402,7 +403,7 @@ namespace NetMud.Controllers.GameAdmin
                         if (vModel.ModelPartMaterials.Count() <= nameIndex)
                             break;
 
-                        var material = BackingDataCache.Get<Material>(vModel.ModelPartMaterials[nameIndex]);
+                        var material = TemplateCache.Get<Material>(vModel.ModelPartMaterials[nameIndex]);
 
                         if (material != null)
                             materialParts.Add(partName, material);
@@ -412,7 +413,7 @@ namespace NetMud.Controllers.GameAdmin
                 }
             }
 
-            var dimModel = BackingDataCache.Get<DimensionalModelData>(vModel.DimensionalModelId);
+            var dimModel = TemplateCache.Get<DimensionalModelData>(vModel.DimensionalModelId);
             bool validData = true;
 
             if (dimModel == null)
@@ -430,11 +431,11 @@ namespace NetMud.Controllers.GameAdmin
             if (validData)
             {
                 obj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth,
-                    vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation, new BackingDataCacheKey(dimModel), materialParts);
+                    vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation, new TemplateCacheKey(dimModel), materialParts);
 
                 if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                 {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - EditPathwayData[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - EditPathwayTemplate[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 }
                 else
                     message = "Error; Edit failed.";
@@ -448,7 +449,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             string message = string.Empty;
 
-            var obj = BackingDataCache.Get<IPathwayData>(id);
+            var obj = TemplateCache.Get<IPathwayTemplate>(id);
             if (obj == null)
             {
                 message = "That pathway does not exist";
@@ -489,7 +490,7 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = BackingDataCache.Get<IPathwayData>(id);
+            var obj = TemplateCache.Get<IPathwayTemplate>(id);
             if (obj == null)
             {
                 message = "That pathway does not exist";
@@ -570,7 +571,7 @@ namespace NetMud.Controllers.GameAdmin
                     var type = short.Parse(values[0]);
                     var phrase = values[1];
 
-                    var obj = BackingDataCache.Get<IPathwayData>(id);
+                    var obj = TemplateCache.Get<IPathwayTemplate>(id);
 
                     if (obj == null)
                         message = "That does not exist";

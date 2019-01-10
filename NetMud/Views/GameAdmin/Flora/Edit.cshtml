@@ -1,6 +1,4 @@
-﻿@using NetMud.DataStructure.Base.Supporting
-
-@model NetMud.Models.Admin.AddEditFloraViewModel
+﻿@model NetMud.Models.Admin.AddEditFloraViewModel
 
 <section id="newCharacterForm">
     @using (Html.BeginForm("Edit", "Flora", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
@@ -33,12 +31,12 @@
         </div>
         <div class="form-group row">
             @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Wood", "Wood", Model.ValidMaterials, Model.Wood))
-            @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Leaf", "Leaf", Model.ValidInanimateDatas, Model.Leaf))
-            @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Flower", "Flower", Model.ValidInanimateDatas, Model.Flower))
+            @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Leaf", "Leaf", Model.ValidInanimateTemplates, Model.Leaf))
+            @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Flower", "Flower", Model.ValidInanimateTemplates, Model.Flower))
         </div>
         <div class="form-group row">
-            @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Fruit", "Fruit", Model.ValidInanimateDatas, Model.Fruit))
-            @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Seed", "Seed", Model.ValidInanimateDatas, Model.Seed))
+            @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Fruit", "Fruit", Model.ValidInanimateTemplates, Model.Fruit))
+            @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("Seed", "Seed", Model.ValidInanimateTemplates, Model.Seed))
         </div>
 
         @Html.Partial("~/Views/GameAdmin/Flora/OccursIn.cshtml", Model)

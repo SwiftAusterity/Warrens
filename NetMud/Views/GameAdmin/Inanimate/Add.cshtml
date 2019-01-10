@@ -1,4 +1,4 @@
-﻿@model NetMud.Models.Admin.AddEditInanimateDataViewModel
+﻿@model NetMud.Models.Admin.AddEditInanimateTemplateViewModel
 
 <section id="newCharacterForm">
     @using (Html.BeginForm("Add", "Inanimate", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
@@ -12,8 +12,8 @@
 
         @Html.Partial("~/Views/GameAdmin/Inanimate/InternalComposition.cshtml", Model)
 
-        @Html.Partial("InanimateEntityContainer", new NetMud.Models.Admin.EntityContainerViewModel<NetMud.DataStructure.Base.Entity.IInanimate>("Inanimate", "Inanimate Containers"))
-        @Html.Partial("MobileEntityContainer", new NetMud.Models.Admin.EntityContainerViewModel<NetMud.DataStructure.Base.Supporting.IMobile>("Mobile", "Character Containers"))
+        @Html.Partial("InanimateEntityContainer", new NetMud.Models.Admin.EntityContainerViewModel<NetMud.DataStructure.Inanimate.IInanimate>("Inanimate", "Inanimate Containers"))
+        @Html.Partial("MobileEntityContainer", new NetMud.Models.Admin.EntityContainerViewModel<NetMud.DataStructure.Architectural.ActorBase.IMobile>("Mobile", "Character Containers"))
 
         @Html.Partial("TwoDimensionalEntityEditor", Model)
 

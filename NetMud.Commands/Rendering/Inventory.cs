@@ -1,10 +1,11 @@
 ﻿using NetMud.Commands.Attributes;
+using NetMud.Communication.Lexical;
 using NetMud.Communication.Messaging;
-using NetMud.Data.Lexical;
-using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.SupportingClasses;
+using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Architectural.ActorBase;
+using NetMud.DataStructure.System;
 using NetMud.Utility;
-using NutMud.Commands.Attributes;
 using System.Collections.Generic;
 
 namespace NetMud.Commands.Rendering
@@ -30,13 +31,13 @@ namespace NetMud.Commands.Rendering
         {
             var sb = new List<string>();
             var chr = (IMobile)Actor;
-            var toActor = new List<IMessage>();
-
-            toActor.Add(
+            var toActor = new List<IMessage>
+            {
                 new Message(MessagingType.Visible, new Occurrence() { Strength = 9999 })
                 {
                     Override = new string[] { "You look through your belongings." }
-                });
+                }
+            };
 
             foreach (var thing in chr.Inventory.EntitiesContained())
                 toActor.Add(new Message(MessagingType.Visible, thing.RenderAsContents(chr, new[] { MessagingType.Visible })));
@@ -51,7 +52,7 @@ namespace NetMud.Commands.Rendering
                 ToOrigin = new List<IMessage> { toOrigin }
             };
 
-            messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation.CurrentLocation, null);
+            messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation.CurrentRoom, null);
         }
 
         /// <summary>

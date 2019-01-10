@@ -3,8 +3,8 @@ using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.Behaviors.System;
+using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural;
 using NetMud.Models.Admin;
 using System;
 using System.Linq;
@@ -41,13 +41,13 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Index()
         {
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var newList = BackingDataCache.GetAll().Where(item => item.GetType().GetInterfaces().Contains(typeof(INeedApproval))
+            IOrderedEnumerable<IKeyedData> newList = TemplateCache.GetAll().Where(item => item.GetType().GetInterfaces().Contains(typeof(INeedApproval))
                                                                 && item.GetType().GetInterfaces().Contains(typeof(IKeyedData))
                                                                 && !item.SuitableForUse && item.CanIBeApprovedBy(authedUser.GetStaffRank(User), authedUser.GameAccount)).OrderBy(item => item.GetType().Name);
 
-            var viewModel = new ManageContentApprovalsViewModel(newList);
+            ManageContentApprovalsViewModel viewModel = new ManageContentApprovalsViewModel(newList);
 
             return View("~/Views/GameAdmin/ContentApproval/Index.cshtml", viewModel);
         }
@@ -57,29 +57,29 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult ApproveDeny(long? approvalId, string authorizeApproval, long? denialId, string authorizeDenial)
         {
             string message = string.Empty;
-            var approve = true;
+            bool approve = true;
 
-            var approvalIdSplit = authorizeApproval.Split(new string[] { "|||" }, StringSplitOptions.RemoveEmptyEntries);
-            var denialIdSplit = authorizeDenial?.Split(new string[] { "|||" }, StringSplitOptions.RemoveEmptyEntries);
+            string[] approvalIdSplit = authorizeApproval?.Split(new string[] { "|||" }, StringSplitOptions.RemoveEmptyEntries);
+            string[] denialIdSplit = authorizeDenial?.Split(new string[] { "|||" }, StringSplitOptions.RemoveEmptyEntries);
 
             if ((!string.IsNullOrWhiteSpace(authorizeApproval) && approvalIdSplit.Length > 0 && approvalId.ToString().Equals(approvalIdSplit[0])) ||
                 (!string.IsNullOrWhiteSpace(authorizeDenial) && denialIdSplit.Length > 0 && denialId.ToString().Equals(denialIdSplit[0])))
             {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
                 IKeyedData obj = null;
 
                 if (!string.IsNullOrWhiteSpace(authorizeDenial) && denialIdSplit.Length > 0 && denialId.ToString().Equals(denialIdSplit[0]))
                 {
-                    var type = Type.GetType(denialIdSplit[1]);
+                    Type type = Type.GetType(denialIdSplit[1]);
 
                     approve = false;
-                    obj = (IKeyedData)BackingDataCache.Get(new BackingDataCacheKey(type, denialId.Value));
+                    obj = (IKeyedData)TemplateCache.Get(new TemplateCacheKey(type, denialId.Value));
                 }
                 else if (!string.IsNullOrWhiteSpace(authorizeApproval) && approvalIdSplit.Length > 0 && approvalId.ToString().Equals(approvalIdSplit[0]))
                 {
-                    var type = Type.GetType(approvalIdSplit[1]);
+                    Type type = Type.GetType(approvalIdSplit[1]);
 
-                    obj = (IKeyedData)BackingDataCache.Get(new BackingDataCacheKey(type, approvalId.Value));
+                    obj = (IKeyedData)TemplateCache.Get(new TemplateCacheKey(type, approvalId.Value));
                 }
 
                 if (obj == null)
@@ -97,7 +97,7 @@ namespace NetMud.Controllers.GameAdmin
                     }
                     else
                     {
-                        if (obj.ChangeApprovalStatus(authedUser.GameAccount, authedUser.GetStaffRank(User), ApprovalState.Returned))
+                        if (obj.ChangeApprovalStatus(authedUser.GameAccount, authedUser.GetStaffRank(User), ApprovalState.Unapproved))
                             message = "Deny Successful.";
                         else
                             message = "Error; Deny failed.";

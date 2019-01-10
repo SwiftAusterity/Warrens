@@ -1,4 +1,5 @@
-﻿using NetMud.DataStructure.Base.System;
+﻿using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Architectural.EntityBase;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -137,10 +138,10 @@ namespace NetMud.DataAccess.Cache
         {
             try
             {
-                var dataCluster = GetAll<T>();
+                IEnumerable<T> dataCluster = GetAll<T>();
 
-                if (dataCluster.Any(p => ((IEntity)p).DataTemplateId.Equals(id)))
-                    return dataCluster.First(p => ((IEntity)p).DataTemplateId.Equals(id));
+                if (dataCluster.Any(p => ((IEntity)p).TemplateId.Equals(id)))
+                    return dataCluster.First(p => ((IEntity)p).TemplateId.Equals(id));
             }
             catch (Exception ex)
             {
@@ -161,12 +162,12 @@ namespace NetMud.DataAccess.Cache
         {
             try
             {
-                var backingData = Activator.CreateInstance(backingDataType) as IEntityBackingData;
+                ITemplate backingData = Activator.CreateInstance(backingDataType) as ITemplate;
 
-                var dataCluster = GetAll<T>().Where(thing => thing.GetType() == backingData.EntityClass);
+                IEnumerable<T> dataCluster = GetAll<T>().Where(thing => thing.GetType() == backingData.EntityClass);
 
-                if (dataCluster.Any(p => ((IEntity)p).DataTemplateId.Equals(id)))
-                    return dataCluster.First(p => ((IEntity)p).DataTemplateId.Equals(id));
+                if (dataCluster.Any(p => ((IEntity)p).TemplateId.Equals(id)))
+                    return dataCluster.First(p => ((IEntity)p).TemplateId.Equals(id));
             }
             catch (Exception ex)
             {
@@ -221,7 +222,7 @@ namespace NetMud.DataAccess.Cache
         /// <returns>the birthmark string</returns>
         public static string GetUniqueIdentifier(IEntity obj)
         {
-            return GetUniqueIdentifier(obj.DataTemplateId.ToString());
+            return GetUniqueIdentifier(obj.TemplateId.ToString());
         }
 
         /// <summary>

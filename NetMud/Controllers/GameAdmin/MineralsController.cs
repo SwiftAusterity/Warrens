@@ -4,9 +4,12 @@ using NetMud.Authentication;
 using NetMud.Data.LookupData;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.Behaviors.System;
+using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.Inanimate;
+using NetMud.DataStructure.NaturalResource;
+using NetMud.DataStructure.Zone;
 using NetMud.Models.Admin;
 using System;
 using System.Collections.Generic;
@@ -43,7 +46,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageMineralsViewModel(BackingDataCache.GetAll<IMineral>())
+            var vModel = new ManageMineralsViewModel(TemplateCache.GetAll<IMineral>())
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -66,7 +69,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<IMineral>(removeId);
+                var obj = TemplateCache.Get<IMineral>(removeId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -82,7 +85,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<IMineral>(unapproveId);
+                var obj = TemplateCache.Get<IMineral>(unapproveId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -106,9 +109,9 @@ namespace NetMud.Controllers.GameAdmin
             var vModel = new AddEditMineralsViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidMaterials = BackingDataCache.GetAll<IMaterial>(),
-                ValidInanimateDatas = BackingDataCache.GetAll<IInanimateData>(),
-                ValidMinerals = BackingDataCache.GetAll<IMineral>()
+                ValidMaterials = TemplateCache.GetAll<IMaterial>(),
+                ValidInanimateTemplates = TemplateCache.GetAll<IInanimateTemplate>(),
+                ValidMinerals = TemplateCache.GetAll<IMineral>()
             };
 
             return View("~/Views/GameAdmin/Minerals/Add.cshtml", vModel);
@@ -130,18 +133,18 @@ namespace NetMud.Controllers.GameAdmin
                 AmountMultiplier = vModel.AmountMultiplier,
                 Rarity = vModel.Rarity,
                 PuissanceVariance = vModel.PuissanceVariance,
-                ElevationRange = new Tuple<int, int>(vModel.ElevationRangeLow, vModel.ElevationRangeHigh),
-                TemperatureRange = new Tuple<int, int>(vModel.TemperatureRangeLow, vModel.TemperatureRangeHigh),
-                HumidityRange = new Tuple<int, int>(vModel.HumidityRangeLow, vModel.HumidityRangeHigh)
+                ElevationRange = new ValueRange<int>(vModel.ElevationRangeLow, vModel.ElevationRangeHigh),
+                TemperatureRange = new ValueRange<int>(vModel.TemperatureRangeLow, vModel.TemperatureRangeHigh),
+                HumidityRange = new ValueRange<int>(vModel.HumidityRangeLow, vModel.HumidityRangeHigh)
             };
 
-            var newRock = BackingDataCache.Get<IMaterial>(vModel.Rock);
+            var newRock = TemplateCache.Get<IMaterial>(vModel.Rock);
             if (newRock != null)
                 newObj.Rock = newRock;
             else
                 message += "Invalid rock material.";
 
-            var newDirt = BackingDataCache.Get<IMaterial>(vModel.Dirt);
+            var newDirt = TemplateCache.Get<IMaterial>(vModel.Dirt);
             if (newDirt != null)
                 newObj.Dirt = newDirt;
             else
@@ -156,7 +159,7 @@ namespace NetMud.Controllers.GameAdmin
                 {
                     if (mineralId >= 0)
                     {
-                        var mineral = BackingDataCache.Get<IMineral>(mineralId);
+                        var mineral = TemplateCache.Get<IMineral>(mineralId);
 
                         if (mineral != null)
                             newOres.Add(mineral);
@@ -188,12 +191,12 @@ namespace NetMud.Controllers.GameAdmin
             var vModel = new AddEditMineralsViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidMaterials = BackingDataCache.GetAll<IMaterial>(),
-                ValidMinerals = BackingDataCache.GetAll<IMineral>().Where(m => m.Id != id),
-                ValidInanimateDatas = BackingDataCache.GetAll<IInanimateData>()
+                ValidMaterials = TemplateCache.GetAll<IMaterial>(),
+                ValidMinerals = TemplateCache.GetAll<IMineral>().Where(m => m.Id != id),
+                ValidInanimateTemplates = TemplateCache.GetAll<IInanimateTemplate>()
             };
 
-            var obj = BackingDataCache.Get<IMineral>(id);
+            var obj = TemplateCache.Get<IMineral>(id);
 
             if (obj == null)
             {
@@ -209,12 +212,12 @@ namespace NetMud.Controllers.GameAdmin
             vModel.AmountMultiplier = obj.AmountMultiplier;
             vModel.Rarity = obj.Rarity;
             vModel.PuissanceVariance = obj.PuissanceVariance;
-            vModel.ElevationRangeHigh = obj.ElevationRange.Item2;
-            vModel.ElevationRangeLow = obj.ElevationRange.Item1;
-            vModel.TemperatureRangeHigh = obj.TemperatureRange.Item2;
-            vModel.TemperatureRangeLow = obj.TemperatureRange.Item1;
-            vModel.HumidityRangeHigh = obj.HumidityRange.Item2;
-            vModel.HumidityRangeLow = obj.HumidityRange.Item1;
+            vModel.ElevationRangeHigh = obj.ElevationRange.High;
+            vModel.ElevationRangeLow = obj.ElevationRange.Low;
+            vModel.TemperatureRangeHigh = obj.TemperatureRange.High;
+            vModel.TemperatureRangeLow = obj.TemperatureRange.Low;
+            vModel.HumidityRangeHigh = obj.HumidityRange.High;
+            vModel.HumidityRangeLow = obj.HumidityRange.Low;
             vModel.Rock = obj.Rock.Id;
             vModel.Dirt = obj.Dirt.Id;
 
@@ -228,7 +231,7 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = BackingDataCache.Get<IMineral>(id);
+            var obj = TemplateCache.Get<IMineral>(id);
             if (obj == null)
             {
                 message = "That does not exist";
@@ -242,17 +245,17 @@ namespace NetMud.Controllers.GameAdmin
             obj.AmountMultiplier = vModel.AmountMultiplier;
             obj.Rarity = vModel.Rarity;
             obj.PuissanceVariance = vModel.PuissanceVariance;
-            obj.ElevationRange = new Tuple<int, int>(vModel.ElevationRangeLow, vModel.ElevationRangeHigh);
-            obj.TemperatureRange = new Tuple<int, int>(vModel.TemperatureRangeLow, vModel.TemperatureRangeHigh);
-            obj.HumidityRange = new Tuple<int, int>(vModel.HumidityRangeLow, vModel.HumidityRangeHigh);
+            obj.ElevationRange = new ValueRange<int>(vModel.ElevationRangeLow, vModel.ElevationRangeHigh);
+            obj.TemperatureRange = new ValueRange<int>(vModel.TemperatureRangeLow, vModel.TemperatureRangeHigh);
+            obj.HumidityRange = new ValueRange<int>(vModel.HumidityRangeLow, vModel.HumidityRangeHigh);
 
-            var newDirt = BackingDataCache.Get<IMaterial>(vModel.Dirt);
+            var newDirt = TemplateCache.Get<IMaterial>(vModel.Dirt);
             if (newDirt != null)
                 obj.Dirt = newDirt;
             else
                 message += "Invalid dirt material.";
 
-            var newRock = BackingDataCache.Get<IMaterial>(vModel.Rock);
+            var newRock = TemplateCache.Get<IMaterial>(vModel.Rock);
             if (newRock != null)
                 obj.Rock = newRock;
             else
@@ -265,7 +268,7 @@ namespace NetMud.Controllers.GameAdmin
                 {
                     if (mineralId >= 0)
                     {
-                        var mineral = BackingDataCache.Get<IMineral>(mineralId);
+                        var mineral = TemplateCache.Get<IMineral>(mineralId);
 
                         if (mineral != null)
                             newOres.Add(mineral);

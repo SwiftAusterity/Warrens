@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using NetMud.DataStructure.Base.Supporting;
 using NetMud.Authentication;
-using NetMud.DataStructure.SupportingClasses;
-using NetMud.DataStructure.Base.EntityBackingData;
+using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural.ActorBase;
+using NetMud.DataStructure.Player;
 
 namespace NetMud.Models.PlayerManagement
 {
-    public class ManageCharactersViewModel : BaseViewModel
+    public class ManageCharactersViewModel : IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
@@ -38,7 +38,7 @@ namespace NetMud.Models.PlayerManagement
     }
 
 
-    public class AddEditCharacterViewModel : BaseViewModel
+    public class AddEditCharacterViewModel : IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
@@ -60,7 +60,7 @@ namespace NetMud.Models.PlayerManagement
         [DataType(DataType.Text)]
         public string SurName { get; set; }
 
-        public ICharacter DataObject { get; set; }
+        public IPlayerTemplate DataObject { get; set; }
     }
 
 }

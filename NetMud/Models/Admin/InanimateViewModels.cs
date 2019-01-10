@@ -1,6 +1,6 @@
 ﻿using NetMud.Authentication;
-using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.Inanimate;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,18 +9,18 @@ using System.Linq;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageInanimateDataViewModel : PagedDataModel<IInanimateData>, BaseViewModel
+    public class ManageInanimateTemplateViewModel : PagedDataModel<IInanimateTemplate>, IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
-        public ManageInanimateDataViewModel(IEnumerable<IInanimateData> items)
+        public ManageInanimateTemplateViewModel(IEnumerable<IInanimateTemplate> items)
             : base(items)
         {
             CurrentPageNumber = 1;
             ItemsPerPage = 20;
         }
 
-        internal override Func<IInanimateData, bool> SearchFilter
+        internal override Func<IInanimateTemplate, bool> SearchFilter
         {
             get
             {
@@ -29,9 +29,9 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditInanimateDataViewModel : TwoDimensionalEntityEditViewModel
+    public class AddEditInanimateTemplateViewModel : TwoDimensionalEntityEditViewModel
     {
-        public AddEditInanimateDataViewModel()
+        public AddEditInanimateTemplateViewModel()
         {
             ValidModels = Enumerable.Empty<IDimensionalModelData>();
             ValidMaterials = Enumerable.Empty<IMaterial>();
@@ -66,8 +66,8 @@ namespace NetMud.Models.Admin
         [Display(Name = "Percentage", Description = "The percentage of the total object body this specific object comprises of the whole.")]
         public short[] InternalCompositionPercentages { get; set; }
 
-        public IEnumerable<IInanimateData> ValidInanimateDatas { get; set; }
+        public IEnumerable<IInanimateTemplate> ValidInanimateTemplates { get; set; }
 
-        public IInanimateData DataObject { get; set; }
+        public IInanimateTemplate DataObject { get; set; }
     }
 }

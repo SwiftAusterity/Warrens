@@ -4,9 +4,8 @@ using NetMud.Authentication;
 using NetMud.Data.LookupData;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Base.PlayerConfiguration;
-using NetMud.DataStructure.Behaviors.System;
-using NetMud.DataStructure.SupportingClasses;
+using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Player;
 using NetMud.Models.Admin;
 using System.Linq;
 using System.Web;
@@ -41,7 +40,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageUIModulesViewModel(BackingDataCache.GetAll<IUIModule>())
+            var vModel = new ManageUIModulesViewModel(TemplateCache.GetAll<IUIModule>())
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -65,7 +64,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<IUIModule>(removeId);
+                var obj = TemplateCache.Get<IUIModule>(removeId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -81,7 +80,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<IUIModule>(unapproveId);
+                var obj = TemplateCache.Get<IUIModule>(unapproveId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -127,7 +126,7 @@ namespace NetMud.Controllers.GameAdmin
                 SystemDefault = vModel.SystemDefault
             };
 
-            var uiModules = BackingDataCache.GetAll<IUIModule>().Where(uim => vModel.SystemDefault > 0 && uim.SystemDefault == vModel.SystemDefault);
+            var uiModules = TemplateCache.GetAll<IUIModule>().Where(uim => vModel.SystemDefault > 0 && uim.SystemDefault == vModel.SystemDefault);
 
             if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
                 message = "Error; Creation failed.";
@@ -156,7 +155,7 @@ namespace NetMud.Controllers.GameAdmin
                 authedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
-            var obj = BackingDataCache.Get<IUIModule>(id);
+            var obj = TemplateCache.Get<IUIModule>(id);
 
             if (obj == null)
             {
@@ -182,14 +181,14 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = BackingDataCache.Get<IUIModule>(id);
+            var obj = TemplateCache.Get<IUIModule>(id);
             if (obj == null)
             {
                 message = "That does not exist";
                 return RedirectToAction("Index", new { Message = message });
             }
 
-            var uiModules = BackingDataCache.GetAll<IUIModule>().Where(uim => vModel.SystemDefault > 0 && uim.SystemDefault == vModel.SystemDefault);
+            var uiModules = TemplateCache.GetAll<IUIModule>().Where(uim => vModel.SystemDefault > 0 && uim.SystemDefault == vModel.SystemDefault);
 
             obj.Name = vModel.Name;
             obj.BodyHtml = vModel.BodyHtml;

@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
-using NetMud.Data.EntityBackingData;
+using NetMud.Data.Locale;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Base.Place;
-using NetMud.DataStructure.Behaviors.System;
+using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Locale;
+using NetMud.DataStructure.Zone;
 using NetMud.Models.Admin;
 using System.Web;
 using System.Web.Mvc;
@@ -48,7 +49,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<ILocaleData>(removeId);
+                var obj = TemplateCache.Get<ILocaleTemplate>(removeId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -64,7 +65,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<ILocaleData>(unapproveId);
+                var obj = TemplateCache.Get<ILocaleTemplate>(unapproveId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -85,14 +86,14 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add(long zoneId)
         {
-            IZoneData zone = BackingDataCache.Get<IZoneData>(zoneId);
+            IZoneTemplate zone = TemplateCache.Get<IZoneTemplate>(zoneId);
 
             if(zone == null)
             {
                 return RedirectToAction("Index", "Zone", new { Id = zoneId, Message = "Invalid zone" });
             }
 
-            var vModel = new AddEditLocaleDataViewModel
+            var vModel = new AddEditLocaleTemplateViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
                 ZoneId = zoneId
@@ -103,19 +104,19 @@ namespace NetMud.Controllers.GameAdmin
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Add(long zoneId, AddEditLocaleDataViewModel vModel)
+        public ActionResult Add(long zoneId, AddEditLocaleTemplateViewModel vModel)
         {
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            IZoneData zone = BackingDataCache.Get<IZoneData>(zoneId);
+            IZoneTemplate zone = TemplateCache.Get<IZoneTemplate>(zoneId);
 
             if (zone == null)
             {
                 return RedirectToAction("Index", "Zone", new { Id = zoneId, Message = "Invalid zone" });
             }
 
-            var newObj = new LocaleData
+            var newObj = new LocaleTemplate
             {
                 Name = vModel.Name,
                 ParentLocation = zone
@@ -135,7 +136,7 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Edit(long zoneId, long id)
         {
-            IZoneData zone = BackingDataCache.Get<IZoneData>(zoneId);
+            IZoneTemplate zone = TemplateCache.Get<IZoneTemplate>(zoneId);
 
             if (zone == null)
             {
@@ -143,12 +144,12 @@ namespace NetMud.Controllers.GameAdmin
             }
 
             string message = string.Empty;
-            var vModel = new AddEditLocaleDataViewModel
+            var vModel = new AddEditLocaleTemplateViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
-            ILocaleData obj = BackingDataCache.Get<ILocaleData>(id);
+            ILocaleTemplate obj = TemplateCache.Get<ILocaleTemplate>(id);
 
             if (obj == null)
             {
@@ -164,9 +165,9 @@ namespace NetMud.Controllers.GameAdmin
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(long zoneId, AddEditLocaleDataViewModel vModel, long id)
+        public ActionResult Edit(long zoneId, AddEditLocaleTemplateViewModel vModel, long id)
         {
-            IZoneData zone = BackingDataCache.Get<IZoneData>(zoneId);
+            IZoneTemplate zone = TemplateCache.Get<IZoneTemplate>(zoneId);
 
             if (zone == null)
             {
@@ -176,7 +177,7 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            ILocaleData obj = BackingDataCache.Get<ILocaleData>(id);
+            ILocaleTemplate obj = TemplateCache.Get<ILocaleTemplate>(id);
             if (obj == null)
             {
                 message = "That does not exist";

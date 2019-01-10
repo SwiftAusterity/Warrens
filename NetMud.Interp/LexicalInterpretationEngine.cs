@@ -1,10 +1,9 @@
-﻿using NetMud.Data.ConfigData;
-using NetMud.Data.Lexical;
+﻿using NetMud.Communication.Lexical;
+using NetMud.Data.Linguistic;
 using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Base.Entity;
-using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.Behaviors.Rendering;
+using NetMud.DataStructure.Architectural.ActorBase;
+using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.Inanimate;
 using NetMud.DataStructure.Linguistic;
 using NetMud.Utility;
 using System;
@@ -108,7 +107,7 @@ namespace NetMud.Interp
              * kick the large red can
              */
             var returnList = new List<IDictata>();
-            ILocation currentPlace = (ILocation)actor.CurrentLocation.CurrentLocation;
+            ILocation currentPlace = actor.CurrentLocation.CurrentRoom;
 
             var brandedWords = BrandWords(actor, words, currentPlace);
 
@@ -150,8 +149,12 @@ namespace NetMud.Interp
             returnList.AddRange(descriptors.Select(desc => desc));
 
             if (push)
+            {
                 foreach (var item in returnList)
+                {
                     LexicalProcessor.VerifyDictata(item);
+                }
+            }
 
             return returnList;
         }
@@ -172,7 +175,7 @@ namespace NetMud.Interp
              */
             var returnList = new List<IDictata>();
 
-            var currentPlace = actor.CurrentLocation.CurrentLocation;
+            var currentPlace = actor.CurrentLocation.CurrentRoom;
 
             var brandedWords = BrandWords(actor, words, currentPlace);
 
@@ -298,7 +301,7 @@ namespace NetMud.Interp
                 while (cleanString.Contains("%%"))
                 {
                     var i = DataUtility.TryConvert<int>(cleanString.Substring(cleanString.IndexOf("%%") + 2, 1));
-                    cleanString = cleanString.Replace(String.Format("%%{0}%%", i), foundStrings[i].Item1);
+                    cleanString = cleanString.Replace(string.Format("%%{0}%%", i), foundStrings[i].Item1);
                 }
 
                 cleanerList.Add(new Tuple<int, string>(dirtyIndex, cleanString));
@@ -387,9 +390,9 @@ namespace NetMud.Interp
             var allContext = new List<string>();
 
             //Get all local nouns
-            allContext.AddRange(actor.CurrentLocation.CurrentLocation.GetContents<IInanimate>().SelectMany(thing => thing.Keywords));
-            allContext.AddRange(actor.CurrentLocation.CurrentLocation.GetContents<IMobile>().SelectMany(thing => thing.Keywords));
-            allContext.AddRange(actor.CurrentLocation.CurrentLocation.Keywords);
+            allContext.AddRange(actor.CurrentLocation.CurrentRoom.GetContents<IInanimate>().SelectMany(thing => thing.Keywords));
+            allContext.AddRange(actor.CurrentLocation.CurrentRoom.GetContents<IMobile>().SelectMany(thing => thing.Keywords));
+            allContext.AddRange(actor.CurrentLocation.CurrentRoom.Keywords);
             allContext.AddRange(actor.Keywords);
 
             //Brand all the words with their current meaning

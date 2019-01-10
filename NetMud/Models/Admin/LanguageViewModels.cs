@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageLanguageDataViewModel : PagedDataModel<ILanguage>, BaseViewModel
+    public class ManageLanguageDataViewModel : PagedDataModel<ILanguage>, IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
@@ -27,7 +27,7 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditLanguageViewModel : BaseViewModel
+    public class AddEditLanguageViewModel : IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 

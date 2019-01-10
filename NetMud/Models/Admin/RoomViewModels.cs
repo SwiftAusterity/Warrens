@@ -1,25 +1,26 @@
 ﻿using NetMud.Authentication;
-using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.Place;
-using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.Locale;
+using NetMud.DataStructure.Room;
+using NetMud.DataStructure.Zone;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageRoomDataViewModel : PagedDataModel<IRoomData>, BaseViewModel
+    public class ManageRoomTemplateViewModel : PagedDataModel<IRoomTemplate>, IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
-        public ManageRoomDataViewModel(IEnumerable<IRoomData> items)
+        public ManageRoomTemplateViewModel(IEnumerable<IRoomTemplate> items)
             : base(items)
         {
             CurrentPageNumber = 1;
             ItemsPerPage = 20;
         }
 
-        internal override Func<IRoomData, bool> SearchFilter
+        internal override Func<IRoomTemplate, bool> SearchFilter
         {
             get
             {
@@ -28,9 +29,9 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditRoomDataViewModel : DimensionalEntityEditViewModel
+    public class AddEditRoomTemplateViewModel : DimensionalEntityEditViewModel
     {
-        public AddEditRoomDataViewModel()
+        public AddEditRoomTemplateViewModel()
         {
         }
 
@@ -44,7 +45,7 @@ namespace NetMud.Models.Admin
         public long Medium { get; set; }
 
         [Display(Name = "Locale", Description = "The locale this belongs to.")]
-        public ILocaleData Locale { get; set; }
+        public ILocaleTemplate Locale { get; set; }
 
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
         [Display(Name = "Name", Description = "The name of the pathway that leads out of this to a zone.")]
@@ -81,14 +82,14 @@ namespace NetMud.Models.Admin
         [DataType(DataType.Text)]
         public int ZoneDimensionalModelCavitation { get; set; }
 
-        public IEnumerable<IZoneData> ValidZones { get; set; }
+        public IEnumerable<IZoneTemplate> ValidZones { get; set; }
 
-        public IPathwayData ZonePathway { get; set; }
+        public IPathwayTemplate ZonePathway { get; set; }
 
-        public IRoomData DataObject { get; set; }
+        public IRoomTemplate DataObject { get; set; }
     }
 
-    public class RoomMapViewModel : BaseViewModel
+    public class RoomMapViewModel : IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
@@ -96,6 +97,6 @@ namespace NetMud.Models.Admin
         {
         }
 
-        public IRoomData Here { get; set; }
+        public IRoomTemplate Here { get; set; }
     }
 }

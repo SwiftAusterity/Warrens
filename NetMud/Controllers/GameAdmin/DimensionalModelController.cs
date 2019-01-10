@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
-using NetMud.Data.LookupData;
+using NetMud.Data.Architectural.EntityBase;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.Behaviors.System;
+using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.Models.Admin;
 using System;
 using System.Linq;
@@ -42,7 +42,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageDimensionalModelDataViewModel(BackingDataCache.GetAll<DimensionalModelData>())
+            var vModel = new ManageDimensionalModelDataViewModel(TemplateCache.GetAll<DimensionalModelData>())
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -65,7 +65,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<IDimensionalModelData>(removeId);
+                var obj = TemplateCache.Get<IDimensionalModelData>(removeId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -81,7 +81,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = BackingDataCache.Get<IDimensionalModelData>(unapproveId);
+                var obj = TemplateCache.Get<IDimensionalModelData>(unapproveId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -211,7 +211,7 @@ namespace NetMud.Controllers.GameAdmin
                 authedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
-            var obj = BackingDataCache.Get<IDimensionalModelData>(id);
+            var obj = TemplateCache.Get<IDimensionalModelData>(id);
 
             if (obj == null)
             {
@@ -233,7 +233,7 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = BackingDataCache.Get<IDimensionalModelData>(id);
+            var obj = TemplateCache.Get<IDimensionalModelData>(id);
             if (obj == null)
             {
                 message = "That does not exist";

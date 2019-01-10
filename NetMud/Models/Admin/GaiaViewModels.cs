@@ -1,23 +1,23 @@
 ﻿using NetMud.Authentication;
-using NetMud.DataStructure.Base.World;
+using NetMud.DataStructure.Gaia;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageGaiaViewModel : PagedDataModel<IGaiaData>, BaseViewModel
+    public class ManageGaiaViewModel : PagedDataModel<IGaiaTemplate>, IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
-        public ManageGaiaViewModel(IEnumerable<IGaiaData> items)
+        public ManageGaiaViewModel(IEnumerable<IGaiaTemplate> items)
             : base(items)
         {
             CurrentPageNumber = 1;
             ItemsPerPage = 20;
         }
 
-        internal override Func<IGaiaData, bool> SearchFilter
+        internal override Func<IGaiaTemplate, bool> SearchFilter
         {
             get
             {
@@ -27,7 +27,7 @@ namespace NetMud.Models.Admin
 
     }
 
-    public class AddEditGaiaViewModel : BaseViewModel
+    public class AddEditGaiaViewModel : IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
@@ -65,6 +65,6 @@ namespace NetMud.Models.Admin
         public int StartingYear { get; set; }
 
         public IEnumerable<ICelestial> ValidCelestials { get; set; }
-        public IGaiaData DataObject { get; set; }
+        public IGaiaTemplate DataObject { get; set; }
     }
 }

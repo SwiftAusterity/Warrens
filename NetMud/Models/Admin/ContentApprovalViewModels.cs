@@ -1,11 +1,11 @@
 ﻿using NetMud.Authentication;
-using NetMud.DataStructure.Base.System;
+using NetMud.DataStructure.Architectural;
 using System;
 using System.Collections.Generic;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageContentApprovalsViewModel : PagedDataModel<IKeyedData>, BaseViewModel
+    public class ManageContentApprovalsViewModel : PagedDataModel<IKeyedData>, IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 

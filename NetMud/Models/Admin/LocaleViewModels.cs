@@ -1,5 +1,5 @@
 ﻿using NetMud.Authentication;
-using NetMud.DataStructure.Base.Place;
+using NetMud.DataStructure.Locale;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -7,18 +7,18 @@ using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageLocaleDataViewModel : PagedDataModel<ILocaleData>, BaseViewModel
+    public class ManageLocaleTemplateViewModel : PagedDataModel<ILocaleTemplate>, IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
-        public ManageLocaleDataViewModel(IEnumerable<ILocaleData> items)
+        public ManageLocaleTemplateViewModel(IEnumerable<ILocaleTemplate> items)
             : base(items)
         {
             CurrentPageNumber = 1;
             ItemsPerPage = 20;
         }
 
-        internal override Func<ILocaleData, bool> SearchFilter
+        internal override Func<ILocaleTemplate, bool> SearchFilter
         {
             get
             {
@@ -27,12 +27,12 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditLocaleDataViewModel : BaseViewModel
+    public class AddEditLocaleTemplateViewModel : IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
         public long ZoneId { get; set; }
 
-        public AddEditLocaleDataViewModel()
+        public AddEditLocaleTemplateViewModel()
         {
         }
 
@@ -41,6 +41,6 @@ namespace NetMud.Models.Admin
         [DataType(DataType.Text)]
         public string Name { get; set; }
 
-        public ILocaleData DataObject { get; set; }
+        public ILocaleTemplate DataObject { get; set; }
     }
 }

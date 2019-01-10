@@ -1,7 +1,8 @@
 ﻿using NetMud.Authentication;
-using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.Place;
-using NetMud.DataStructure.Base.Supporting;
+using NetMud.DataStructure.Architectural.ActorBase;
+using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.Inanimate;
+using NetMud.DataStructure.Zone;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,7 +10,7 @@ using System.Linq;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageRaceDataViewModel : PagedDataModel<IRace>, BaseViewModel
+    public class ManageRaceDataViewModel : PagedDataModel<IRace>, IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
@@ -29,14 +30,14 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditRaceViewModel : BaseViewModel
+    public class AddEditRaceViewModel : IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
         public AddEditRaceViewModel()
         {
             ValidMaterials = Enumerable.Empty<IMaterial>();
-            ValidObjects = Enumerable.Empty<IInanimateData>();
+            ValidObjects = Enumerable.Empty<IInanimateTemplate>();
         }
 
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]  
@@ -134,8 +135,8 @@ namespace NetMud.Models.Admin
         [Display(Name = "Help Text Body", Description = "The descriptive text shown in the public help pages and when HELP is used in game.")]
         public string HelpBody { get; set; }
 
-        public IEnumerable<IZoneData> ValidZones { get; set; }
-        public IEnumerable<IInanimateData> ValidObjects { get; set; }
+        public IEnumerable<IZoneTemplate> ValidZones { get; set; }
+        public IEnumerable<IInanimateTemplate> ValidObjects { get; set; }
         public IEnumerable<IMaterial> ValidMaterials { get; set; }
         public IRace DataObject { get; set; }
     }

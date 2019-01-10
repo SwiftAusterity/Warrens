@@ -1,18 +1,21 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using NetMud.Authentication;
-using NetMud.Data.Game;
+using NetMud.Data.Players;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataAccess.FileSystem;
-using NetMud.DataStructure.Base.Entity;
-using NetMud.DataStructure.Base.EntityBackingData;
-using NetMud.DataStructure.Base.PlayerConfiguration;
-using NetMud.DataStructure.Base.Supporting;
-using NetMud.DataStructure.Base.System;
-using NetMud.DataStructure.Base.World;
-using NetMud.DataStructure.Behaviors.Rendering;
+using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Architectural.ActorBase;
+using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.Gaia;
+using NetMud.DataStructure.Gossip;
+using NetMud.DataStructure.Inanimate;
 using NetMud.DataStructure.Linguistic;
+using NetMud.DataStructure.Player;
+using NetMud.DataStructure.System;
+using NetMud.DataStructure.Zone;
+using NetMud.Gaia.Geographical;
 using NetMud.Interp;
 using NetMud.Utility;
 using NetMud.Websock.OutputFormatting;
@@ -50,7 +53,7 @@ namespace NetMud.Websock
         /// <summary>
         /// User id of connected player
         /// </summary>
-        private string _userId;
+        public string _userId { get; set; }
 
         /// <summary>
         /// The player connected
@@ -102,11 +105,28 @@ namespace NetMud.Websock
         #endregion
 
         /// <summary>
+        /// Send a sound file to play
+        /// </summary>
+        /// <param name="soundUri"></param>
+        /// <returns></returns>
+        public bool SendSound(string soundUri)
+        {
+            OutputStatus outputFormat = new OutputStatus
+            {
+                SoundToPlay = soundUri
+            };
+
+            Send(SerializationUtility.Serialize(outputFormat));
+
+            return true;
+        }
+
+        /// <summary>
         /// Wraps sending messages to the connected descriptor
         /// </summary>
         /// <param name="strings">the output</param>
         /// <returns>success status</returns>
-        public bool SendWrapper(IEnumerable<string> strings)
+        public bool SendOutput(IEnumerable<string> strings)
         {
             //TODO: Stop hardcoding this but we have literally no sense of injury/self status yet
             var self = new SelfStatus
@@ -142,10 +162,10 @@ namespace NetMud.Websock
             };
 
             var currentLocation = _currentPlayer.CurrentLocation;
-            var currentContainer = currentLocation.CurrentLocation;
-            var currentZone = currentLocation.GetZone();
+            var currentContainer = currentLocation.CurrentContainer;
+            var currentZone = currentLocation.CurrentZone;
             var currentWorld = currentZone.GetWorld();
-            var currentRoom = currentLocation.GetRoom();
+            var currentRoom = currentLocation.CurrentRoom;
 
             var pathways = ((ILocation)currentContainer).GetPathways().Select(data => data.GetDescribableName(_currentPlayer).ToString());
             var inventory = currentContainer.GetContents<IInanimate>().Select(data => data.GetDescribableName(_currentPlayer).ToString());
@@ -153,13 +173,13 @@ namespace NetMud.Websock
 
             var local = new LocalStatus
             {
-                ZoneName = currentZone.DataTemplateName,
-                LocaleName = currentLocation.GetLocale()?.DataTemplateName,
-                RoomName = currentRoom?.DataTemplateName,
+                ZoneName = currentZone.TemplateName,
+                LocaleName = currentLocation.CurrentLocale?.TemplateName,
+                RoomName = currentRoom?.TemplateName,
                 Inventory = inventory.ToArray(),
                 Populace = populace.ToArray(),
                 Exits = pathways.ToArray(),
-                LocationDescriptive = currentLocation.CurrentLocation.RenderToLook(_currentPlayer).Describe(NarrativeNormalization.Normal, 1)
+                LocationDescriptive = currentLocation.CurrentRoom.RenderToLook(_currentPlayer).Describe(NarrativeNormalization.Normal, 1)
             };
 
             //The next two are mostly hard coded, TODO, also fix how we get the map as that's an admin thing
@@ -170,37 +190,58 @@ namespace NetMud.Websock
                      "A hillside",
                      "A dense forest"
                 },
-                VisibleMap = currentLocation.GetRoom() == null ? string.Empty : currentLocation.GetRoom().RenderCenteredMap(3, true)
+                VisibleMap = currentLocation.CurrentRoom == null ? string.Empty : currentLocation.CurrentRoom.RenderCenteredMap(3, true)
             };
 
-            var timeOfDayString = string.Format("The hour of {0} in the day of {1} in {2} in the year of {3}", currentWorld.CurrentTimeOfDay.Hour
+            string timeOfDayString = string.Format("The hour of {0} in the day of {1} in {2} in the year of {3}", currentWorld.CurrentTimeOfDay.Hour
                                                                                , currentWorld.CurrentTimeOfDay.Day
                                                                                , currentWorld.CurrentTimeOfDay.MonthName()
                                                                                , currentWorld.CurrentTimeOfDay.Year);
 
-            var visibleCelestials = Enumerable.Empty<ICelestial>();
-            var visibilityString = string.Empty;
+            string sun = "0";
+            string moon = "0";
+            string visibilityString = "5";
+            Tuple<string, string, string[]> weatherTuple = new Tuple<string, string, string[]>("", "", new string[] { });
 
-            if (currentRoom != null)
+            if (currentZone != null)
             {
-                visibilityString = string.Format("{0} lumins", currentRoom.GetCurrentLuminosity());
-                visibleCelestials = currentRoom.GetVisibileCelestials(_currentPlayer);
+                Tuple<PrecipitationAmount, PrecipitationType, HashSet<WeatherType>> forecast = currentZone.CurrentForecast();
+                weatherTuple = new Tuple<string, string, string[]>(forecast.Item1.ToString(), forecast.Item2.ToString(), forecast.Item3.Select(wt => wt.ToString()).ToArray());
+
+                visibilityString = currentZone.GetCurrentLuminosity().ToString();
+
+                if (currentWorld != null)
+                {
+                    IEnumerable<ICelestial> bodies = currentZone.GetVisibileCelestials(_currentPlayer);
+                    ICelestial theSun = bodies.FirstOrDefault(cest => cest.Name.Equals("sun", StringComparison.InvariantCultureIgnoreCase));
+                    ICelestial theMoon = bodies.FirstOrDefault(cest => cest.Name.Equals("moon", StringComparison.InvariantCultureIgnoreCase));
+
+                    if (theSun != null)
+                    {
+                        ICelestialPosition celestialPosition = currentWorld.CelestialPositions.FirstOrDefault(celest => celest.CelestialObject == theSun);
+
+                        sun = AstronomicalUtilities.GetCelestialLuminosityModifier(celestialPosition.CelestialObject, celestialPosition.Position, currentWorld.PlanetaryRotation
+                            , currentWorld.OrbitalPosition, currentZone.Template<IZoneTemplate>().Hemisphere, currentWorld.Template<IGaiaTemplate>().RotationalAngle).ToString();
+                    }
+
+                    if (theMoon != null)
+                    {
+                        ICelestialPosition celestialPosition = currentWorld.CelestialPositions.FirstOrDefault(celest => celest.CelestialObject == theMoon);
+
+                        moon = AstronomicalUtilities.GetCelestialLuminosityModifier(celestialPosition.CelestialObject, celestialPosition.Position, currentWorld.PlanetaryRotation
+                            , currentWorld.OrbitalPosition, currentZone.Template<IZoneTemplate>().Hemisphere, currentWorld.Template<IGaiaTemplate>().RotationalAngle).ToString();
+                    }
+                }
             }
-            else if (currentZone != null)
-            {
-                visibilityString = string.Format("{0} lumins", currentZone.GetCurrentLuminosity());
-                visibleCelestials = currentZone.GetVisibileCelestials(_currentPlayer);
-            }
-            else
-                visibilityString = "I don't know";
 
-            var celestialString = String.Join(",", visibleCelestials.Select(cp => cp.Name));
-
-            var environment = new EnvironmentStatus
+            EnvironmentStatus environment = new EnvironmentStatus
             {
-                Celestial = celestialString,
+                Sun = sun,
+                Moon = moon,
                 Visibility = visibilityString,
-                Weather = "I don't know",
+                Weather = weatherTuple,
+                Temperature = currentZone.EffectiveTemperature().ToString(),
+                Humidity = currentZone.EffectiveHumidity().ToString(),
                 TimeOfDay = timeOfDayString
             };
 
@@ -223,10 +264,10 @@ namespace NetMud.Websock
         /// </summary>
         /// <param name="str">the output</param>
         /// <returns>success status</returns>
-        public bool SendWrapper(string str)
+        public bool SendOutput(string str)
         {
             //Easier just to handle it in one place
-            return SendWrapper(new List<string>() { str });
+            return SendOutput(new List<string>() { str });
         }
 
         /// <summary>
@@ -235,7 +276,7 @@ namespace NetMud.Websock
         /// <param name="finalMessage">the final string data to send the socket before closing it</param>
         public void Disconnect(string finalMessage)
         {
-            SendWrapper(finalMessage);
+            SendOutput(finalMessage);
 
             Close();
         }
@@ -251,15 +292,15 @@ namespace NetMud.Websock
         #region "Socket Management"
         public override void OnClose()
         {
-            var validPlayers = LiveCache.GetAll<IPlayer>().Where(player => player.Descriptor != null
-                        && player.DataTemplate<ICharacter>().Account.Config.WantsNotification(_currentPlayer.AccountHandle, false, AcquaintenceNotifications.LeaveGame));
+            IEnumerable<IPlayer> validPlayers = LiveCache.GetAll<IPlayer>().Where(player => player.Descriptor != null
+                        && player.Template<IPlayerTemplate>().Account.Config.WantsNotification(_currentPlayer.AccountHandle, false, AcquaintenceNotifications.LeaveGame));
 
-            foreach (var player in validPlayers)
+            foreach (IPlayer player in validPlayers)
                 player.WriteTo(new string[] { string.Format("{0} has left the game.", _currentPlayer.AccountHandle) });
 
-            if (_currentPlayer.DataTemplate<ICharacter>().Account.Config.GossipSubscriber)
+            if (_currentPlayer != null && _currentPlayer.Template<IPlayerTemplate>().Account.Config.GossipSubscriber)
             {
-                var gossipClient = LiveCache.Get<IGossipClient>("GossipWebClient");
+                IGossipClient gossipClient = LiveCache.Get<IGossipClient>("GossipWebClient");
 
                 if (gossipClient != null)
                     gossipClient.SendNotification(_currentPlayer.AccountHandle, AcquaintenceNotifications.LeaveGame);
@@ -297,11 +338,11 @@ namespace NetMud.Websock
                 return;
             }
 
-            var errors = Interpret.Render(message, _currentPlayer);
+            IEnumerable<string> errors = Interpret.Render(message, _currentPlayer);
 
             //It only sends the errors
             if (errors.Any(str => !string.IsNullOrWhiteSpace(str)))
-                SendWrapper(errors);
+                SendOutput(errors);
         }
 
         /// <summary>
@@ -319,7 +360,7 @@ namespace NetMud.Websock
         /// </summary>
         private void SendPing()
         {
-            var ping = new byte[2];
+            byte[] ping = new byte[2];
 
             ping[0] = 9 | 0x80;
             ping[1] = 0;
@@ -338,7 +379,7 @@ namespace NetMud.Websock
             //Grab the user
             GetUserIDFromCookie(cookie.Value);
 
-            var authedUser = UserManager.FindById(_userId);
+            ApplicationUser authedUser = UserManager.FindById(_userId);
 
             var currentCharacter = authedUser.GameAccount.Characters.FirstOrDefault(ch => ch.Id.Equals(authedUser.GameAccount.CurrentlySelectedCharacter));
 
@@ -349,13 +390,13 @@ namespace NetMud.Websock
             }
 
             //Try to see if they are already live
-            _currentPlayer = LiveCache.Get<IPlayer>(currentCharacter.Id);
+            _currentPlayer = LiveCache.GetAll<IPlayer>().FirstOrDefault(player => player.Descriptor != null && player.Descriptor._userId == _userId);
 
             //Check the backup
             if (_currentPlayer == null)
             {
-                var playerDataWrapper = new PlayerData();
-                _currentPlayer = playerDataWrapper.RestorePlayer(currentCharacter.AccountHandle, currentCharacter.Id);
+                PlayerData playerDataWrapper = new PlayerData();
+                _currentPlayer = playerDataWrapper.RestorePlayer(currentCharacter.AccountHandle, currentCharacter);
             }
 
             //else new them up
@@ -365,7 +406,7 @@ namespace NetMud.Websock
             _currentPlayer.Descriptor = this;
 
             //We need to barf out to the connected client the welcome message. The client will only indicate connection has been established.
-            var welcomeMessage = new List<string>
+            List<string> welcomeMessage = new List<string>
             {
                 string.Format("Welcome to alpha phase Under the Eclipse, {0}", currentCharacter.FullName()),
                 "Please feel free to LOOK around."
@@ -378,18 +419,18 @@ namespace NetMud.Websock
 
             try
             {
-                var validPlayers = LiveCache.GetAll<IPlayer>().Where(player => player.Descriptor != null
-                && player.DataTemplate<ICharacter>().Account.Config.WantsNotification(_currentPlayer.AccountHandle, false, AcquaintenceNotifications.EnterGame));
+                IEnumerable<IPlayer> validPlayers = LiveCache.GetAll<IPlayer>().Where(player => player.Descriptor != null
+                && player.Template<IPlayerTemplate>().Account.Config.WantsNotification(_currentPlayer.AccountHandle, false, AcquaintenceNotifications.EnterGame));
 
-                foreach (var player in validPlayers)
+                foreach (IPlayer player in validPlayers)
                     player.WriteTo(new string[] { string.Format("{0} has entered the game.", _currentPlayer.AccountHandle) });
 
                 if (authedUser.GameAccount.Config.GossipSubscriber)
                 {
-                    var gossipClient = LiveCache.Get<IGossipClient>("GossipWebClient");
+                    IGossipClient gossipClient = LiveCache.Get<IGossipClient>("GossipWebClient");
 
                     if (gossipClient != null)
-                        gossipClient.SendNotification(authedUser.GlobalIdentityHandle, DataStructure.Base.PlayerConfiguration.AcquaintenceNotifications.EnterGame);
+                        gossipClient.SendNotification(authedUser.GlobalIdentityHandle, AcquaintenceNotifications.EnterGame);
                 }
             }
             catch (Exception ex)
@@ -406,21 +447,21 @@ namespace NetMud.Websock
         {
             authTicketValue = authTicketValue.Replace('-', '+').Replace('_', '/');
 
-            var padding = 3 - ((authTicketValue.Length + 3) % 4);
+            int padding = 3 - ((authTicketValue.Length + 3) % 4);
             if (padding != 0)
                 authTicketValue = authTicketValue + new string('=', padding);
 
-            var bytes = Convert.FromBase64String(authTicketValue);
+            byte[] bytes = Convert.FromBase64String(authTicketValue);
 
             bytes = System.Web.Security.MachineKey.Unprotect(bytes,
                 "Microsoft.Owin.Security.Cookies.CookieAuthenticationMiddleware",
                         "ApplicationCookie", "v1");
 
-            using (var memory = new MemoryStream(bytes))
+            using (MemoryStream memory = new MemoryStream(bytes))
             {
-                using (var compression = new GZipStream(memory, CompressionMode.Decompress))
+                using (GZipStream compression = new GZipStream(memory, CompressionMode.Decompress))
                 {
-                    using (var reader = new BinaryReader(compression))
+                    using (BinaryReader reader = new BinaryReader(compression))
                     {
                         reader.ReadInt32(); // Ignoring version here
                         string authenticationType = reader.ReadString();
@@ -429,7 +470,7 @@ namespace NetMud.Websock
 
                         int count = reader.ReadInt32(); // count of claims in the ticket
 
-                        var claims = new Claim[count];
+                        Claim[] claims = new Claim[count];
                         for (int index = 0; index != count; ++index)
                         {
                             string type = reader.ReadString();
@@ -450,10 +491,10 @@ namespace NetMud.Websock
                             claims[index] = new Claim(type, value, valueType, issuer, originalIssuer);
                         }
 
-                        var identity = new ClaimsIdentity(claims, authenticationType,
+                        ClaimsIdentity identity = new ClaimsIdentity(claims, authenticationType,
                                                               ClaimTypes.Name, ClaimTypes.Role);
 
-                        var principal = new ClaimsPrincipal(identity);
+                        ClaimsPrincipal principal = new ClaimsPrincipal(identity);
                         _userId = principal.Identity.GetUserId();
                     }
                 }
@@ -545,5 +586,10 @@ namespace NetMud.Websock
             return GetType().GetHashCode() + BirthMark.GetHashCode();
         }
         #endregion
+
+        public object Clone()
+        {
+            throw new NotImplementedException("Not much point cloning descriptors.");
+        }
     }
 }

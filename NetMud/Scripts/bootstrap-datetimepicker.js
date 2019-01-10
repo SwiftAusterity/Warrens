@@ -1400,9 +1400,9 @@
                 var format = options.format || 'L LT';
 
                 actualFormat = format.replace(/(\[[^\[]*\])|(\\)?(LTS|LT|LL?L?L?|l{1,4})/g, function (formatInput) {
-                    var newinput = date.localeData().longDateFormat(formatInput) || formatInput;
+                    var newinput = date.LocaleTemplate().longDateFormat(formatInput) || formatInput;
                     return newinput.replace(/(\[[^\[]*\])|(\\)?(LTS|LT|LL?L?L?|l{1,4})/g, function (formatInput2) { //temp fix for #740
-                        return date.localeData().longDateFormat(formatInput2) || formatInput2;
+                        return date.LocaleTemplate().longDateFormat(formatInput2) || formatInput2;
                     });
                 });
 
@@ -1803,7 +1803,7 @@
                 return options.locale;
             }
 
-            if (!moment.localeData(locale)) {
+            if (!moment.LocaleTemplate(locale)) {
                 throw new TypeError('locale() locale ' + locale + ' is not loaded from moment locales!');
             }
 

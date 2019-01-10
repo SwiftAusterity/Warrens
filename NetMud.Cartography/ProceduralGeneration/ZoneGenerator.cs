@@ -1,4 +1,4 @@
-﻿using NetMud.DataStructure.Base.Place;
+﻿using NetMud.DataStructure.Locale;
 using System;
 using System.Linq;
 
@@ -229,7 +229,7 @@ namespace NetMud.Cartography.ProceduralGeneration
             if (locale.Rooms().Any())
                 throw new ArgumentOutOfRangeException("Locale must be devoid of rooms.");
 
-            if (locale.DataTemplate<ILocaleData>().FitnessProblems)
+            if (locale.Template<ILocaleTemplate>().FitnessProblems)
                 throw new ArgumentOutOfRangeException("Zone must have data integrity.");
         }
 

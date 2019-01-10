@@ -1,4 +1,4 @@
-﻿@model NetMud.Models.Admin.AddEditZoneDataViewModel
+﻿@model NetMud.Models.Admin.AddEditZoneTemplateViewModel
 @{
     var prevPageState = Model.CurrentPageNumber > 1 ? string.Empty : "disabled";
     var nextPageState = Model.CurrentPageNumber < Model.NumberOfPages ? string.Empty : "disabled";
@@ -11,8 +11,8 @@
     tableColumns.Add("Name", obj => obj.FitnessProblems ? string.Format("<span style='color:red;' title='{0}'>{1}</span>", string.Join(", ", obj.FitnessReport()), obj.Name) : obj.Name);
     tableColumns.Add("Pathway From Here", obj =>
         pathLinkText.Replace("99999999", obj.Id.ToString())
-        .Replace("Add/EditPathway", Model.DataObject.GetLocalePathways().Any(path => ((NetMud.DataStructure.Base.EntityBackingData.IRoomData)path.Destination).ParentLocation.Id == obj.Id)
-            ? "Edit Pathway to " + Model.DataObject.GetLocalePathways().FirstOrDefault(path => ((NetMud.DataStructure.Base.EntityBackingData.IRoomData)path.Destination).ParentLocation.Id == obj.Id).Destination.Name
+        .Replace("Add/EditPathway", Model.DataObject.GetLocalePathways().Any(path => ((NetMud.DataStructure.Room.IRoomTemplate)path.Destination).ParentLocation.Id == obj.Id)
+            ? "Edit Pathway to " + Model.DataObject.GetLocalePathways().FirstOrDefault(path => ((NetMud.DataStructure.Room.IRoomTemplate)path.Destination).ParentLocation.Id == obj.Id).Destination.Name
             : "Add Pathway"));
     tableColumns.Add("State", obj => obj.State.ToString());
 }
