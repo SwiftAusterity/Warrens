@@ -19,6 +19,9 @@ namespace NetMud.DataStructure.Inanimate
         /// </summary>
         HashSet<IEntityContainerData<IInanimate>> InanimateContainers { get; set; }
 
+        /// <summary>
+        /// What this is made of
+        /// </summary>
         HashSet<IInanimateComponent> InternalComposition { get; set; }
     }
 }

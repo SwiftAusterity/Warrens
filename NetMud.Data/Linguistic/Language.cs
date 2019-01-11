@@ -6,6 +6,7 @@ using NetMud.DataStructure.Linguistic;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Linguistic
@@ -30,11 +31,14 @@ namespace NetMud.Data.Linguistic
         /// <summary>
         /// Languages only used for input and output translation
         /// </summary>
+        [Display(Name = "UI Only", Description = "Only for use in translating the input/output, not an 'in game' language.")]
         public bool UIOnly { get; set; }
 
         /// <summary>
         /// The code google translate uses to identify this language
         /// </summary>
+        [Display(Name = "Language Code", Description = "The language code Google Translate uses to identify this language.")]
+        [DataType(DataType.Text)]
         public string GoogleLanguageCode { get; set; }
 
         /// <summary>

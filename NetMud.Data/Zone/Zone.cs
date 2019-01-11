@@ -18,6 +18,7 @@ using NetMud.Gaia.Meteorological;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Script.Serialization;
 
@@ -57,11 +58,6 @@ namespace NetMud.Data.Zone
         }
 
         /// <summary>
-        /// The entrance coordinates if someone ends up in this zone without entrance coordinates
-        /// </summary>
-        public Coordinate BaseCoordinates { get; set; }
-
-        /// <summary>
         /// Paths out of this zone
         /// </summary>
         public HashSet<IPathway> Pathways { get; set; }
@@ -70,11 +66,15 @@ namespace NetMud.Data.Zone
         /// <summary>
         /// What hemisphere this zone is in
         /// </summary>
+        [Display(Name = "Hemisphere", Description = "The hemisphere of the world this zone is in.")]
+        [UIHint("EnumDropDownList")]
         public HemispherePlacement Hemisphere { get; set; }
 
         /// <summary>
         /// Base elevation used in generating locales
         /// </summary>
+        [Display(Name = "Base Elevation", Description = "What the central elevation is.")]
+        [DataType(DataType.Text)]
         public int BaseElevation { get; set; }
 
         [JsonIgnore]

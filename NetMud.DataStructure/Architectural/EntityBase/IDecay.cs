@@ -5,6 +5,9 @@
     /// </summary>
     public interface IDecay
     {
+        /// <summary>
+        /// How much of this is left
+        /// </summary>
         int Integrity { get; set; }
     }
 }

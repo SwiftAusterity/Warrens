@@ -14,6 +14,7 @@ using NetMud.DataStructure.Room;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Script.Serialization;
 
@@ -74,6 +75,8 @@ namespace NetMud.Data.Room
         [ScriptIgnore]
         [JsonIgnore]
         [NonNullableDataIntegrity("Medium material is invalid.")]
+        [Display(Name = "Medium", Description = "What the 'empty' space of the room is made of. (likely AIR, sometimes stone or dirt)")]
+        [DataType(DataType.Text)]
         public IMaterial Medium
         {
             get

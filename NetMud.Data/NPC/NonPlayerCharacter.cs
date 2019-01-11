@@ -18,6 +18,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web.Script.Serialization;
+using System.ComponentModel.DataAnnotations;
+using NetMud.DataStructure.Architectural.PropertyValidation;
 
 namespace NetMud.Data.NPC
 {
@@ -67,21 +69,32 @@ namespace NetMud.Data.NPC
         /// <summary>
         /// Gender data string for NPCs
         /// </summary>
+        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
+        [Display(Name = "Gender", Description = "The gender of the NPC. You can use an existing gender or select free text. Non-approved gender groups will get it/they/them pronouns.")]
+        [DataType(DataType.Text)]
+        [Required]
         public string Gender { get; set; }
 
         /// <summary>
         /// "family name" for NPCs
         /// </summary>
+        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
+        [Display(Name = "Family Name", Description = "Last Name.")]
+        [DataType(DataType.Text)]
+        [Required]
         public string SurName { get; set; }
 
         /// <summary>
         /// NPC's race data
         /// </summary>
+        [UIHint("IRace")]
+        [RaceValidator]
         public IRace Race { get; set; }
 
         /// <summary>
         /// The matrix of preferences and AI details
         /// </summary>
+        [UIHint("Personality")]
         public IPersonality Personality { get; set; }
 
         /// <summary>
@@ -102,6 +115,7 @@ namespace NetMud.Data.NPC
         /// <summary>
         /// Qualities this teacher can impart, the quality value is the max level it can be taught to (1 at a time)
         /// </summary>
+        [UIHint("TeachableProficency")]
         public HashSet<IQuality> TeachableProficencies { get; set; }
         #endregion
 

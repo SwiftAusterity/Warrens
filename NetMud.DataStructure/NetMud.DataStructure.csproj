@@ -62,7 +62,6 @@
     <Compile Include="Architectural\ActorBase\ICanHear.cs" />
     <Compile Include="Architectural\ActorBase\ICanHold.cs" />
     <Compile Include="Architectural\ActorBase\ICanMove.cs" />
-    <Compile Include="Architectural\ActorBase\ICanReproduce.cs" />
     <Compile Include="Architectural\ActorBase\ICanSee.cs" />
     <Compile Include="Architectural\ActorBase\ICanSense.cs" />
     <Compile Include="Architectural\ActorBase\ICanSleep.cs" />
@@ -81,11 +80,14 @@
     <Compile Include="Architectural\ActorBase\IRace.cs" />
     <Compile Include="Architectural\ActorBase\IThink.cs" />
     <Compile Include="Architectural\ActorBase\MobilityState.cs" />
+    <Compile Include="Architectural\ActorBase\RespiratoryType.cs" />
     <Compile Include="Architectural\CacheType.cs" />
     <Compile Include="Architectural\ConfigDataType.cs" />
     <Compile Include="Architectural\Coordinate.cs" />
     <Compile Include="Architectural\Dimensions.cs" />
     <Compile Include="Architectural\EntityBase\DamageType.cs" />
+    <Compile Include="Architectural\EntityBase\Qualification.cs" />
+    <Compile Include="Architectural\ISingleton.cs" />
     <Compile Include="Inanimate\IAccumulation.cs" />
     <Compile Include="Architectural\EntityBase\IAudible.cs" />
     <Compile Include="Architectural\EntityBase\IContains.cs" />
@@ -212,7 +214,6 @@
     <Compile Include="Player\IAcquaintence.cs" />
     <Compile Include="Player\IDeathConfig.cs" />
     <Compile Include="NPC\IFaction.cs" />
-    <Compile Include="Player\INPCRepop.cs" />
     <Compile Include="Player\IPlayer.cs" />
     <Compile Include="Player\IPlayerFramework.cs" />
     <Compile Include="Player\IPlayerMessage.cs" />
@@ -232,7 +233,6 @@
     <Compile Include="Room\IRoomFramework.cs" />
     <Compile Include="Room\IRoomTemplate.cs" />
     <Compile Include="System\ConnectionType.cs" />
-    <Compile Include="System\CriteriaType.cs" />
     <Compile Include="System\IChannelType.cs" />
     <Compile Include="System\ICommand.cs" />
     <Compile Include="System\IContext.cs" />
@@ -260,6 +260,7 @@
     <Compile Include="Zone\IZone.cs" />
     <Compile Include="Zone\IZoneFramework.cs" />
     <Compile Include="Zone\IZoneTemplate.cs" />
+    <Compile Include="Zone\INaturalResourceSpawn.cs" />
     <Compile Include="Zone\PrecipitationAmount.cs" />
     <Compile Include="Zone\PrecipitationType.cs" />
     <Compile Include="Zone\WeatherEventType.cs" />

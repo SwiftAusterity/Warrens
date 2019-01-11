@@ -6,6 +6,7 @@ using NetMud.DataStructure.NaturalResource;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.LookupData
@@ -24,6 +25,7 @@ namespace NetMud.Data.LookupData
         /// <summary>
         /// Does this plant go dormant in colder weather
         /// </summary>
+        [Display(Name = "Coniferous", Description = "Does this continue to grow in the winter.")]
         public bool Coniferous { get; set; }
 
         [JsonProperty("Wood")]
@@ -35,6 +37,7 @@ namespace NetMud.Data.LookupData
         [JsonIgnore]
         [ScriptIgnore]
         [NonNullableDataIntegrity("Wood must have a value.")]
+        [Display(Name = "Wood/Bark")]
         public IMaterial Wood
         { 
             get
@@ -55,6 +58,7 @@ namespace NetMud.Data.LookupData
         /// </summary>
         [JsonIgnore]
         [ScriptIgnore]
+        [Display(Name = "Flower")]
         public IInanimateTemplate Flower
         { 
             get
@@ -75,6 +79,7 @@ namespace NetMud.Data.LookupData
         /// </summary>
         [JsonIgnore]
         [ScriptIgnore]
+        [Display(Name = "Leaves")]
         public IInanimateTemplate Leaf 
         { 
             get
@@ -95,6 +100,7 @@ namespace NetMud.Data.LookupData
         /// </summary>
         [JsonIgnore]
         [ScriptIgnore]
+        [Display(Name = "Fruit")]
         public IInanimateTemplate Fruit
         { 
             get
@@ -115,6 +121,7 @@ namespace NetMud.Data.LookupData
         /// </summary>
         [JsonIgnore]
         [ScriptIgnore]
+        [Display(Name = "Seed")]
         public IInanimateTemplate Seed 
         { 
             get

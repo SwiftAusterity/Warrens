@@ -15,6 +15,7 @@ using NetMud.Utility;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Script.Serialization;
 
@@ -154,6 +155,7 @@ namespace NetMud.Data.Players
         /// <summary>
         /// NPC's race data
         /// </summary>
+        [Display(Name = "Race", Description = "Your genetic basis. Many races must be unlocked through specific means.")]
         public IRace Race { get; set; }
 
         /// <summary>

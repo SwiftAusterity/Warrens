@@ -7,6 +7,7 @@ using NetMud.DataStructure.Player;
 using NetMud.DataStructure.System;
 using Newtonsoft.Json;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.System
@@ -28,21 +29,28 @@ namespace NetMud.Data.System
         /// <summary>
         /// Is the websockets portal allowing new connections
         /// </summary>
+        [Display(Name = "Websocket Portal Available", Description = "Are new connections being accepted over websockets?")]
+        [UIHint("Boolean")]
         public bool WebsocketPortalActive { get; set; }
 
         /// <summary>
         /// Are new users allowed to register
         /// </summary>
+        [Display(Name = "User Creation", Description = "Are new users allowed to register?")]
+        [UIHint("Boolean")]
         public bool UserCreationActive { get; set; }
 
         /// <summary>
         /// Are only admins allowed to log in - noone at StaffRank.Player
         /// </summary>
+        [Display(Name = "Admins Only", Description = "Are only admins allowed to log in - noone at StaffRank.Player?")]
+        [UIHint("Boolean")]
         public bool AdminsOnly { get; set; }
 
         /// <summary>
         /// Config to handle player death
         /// </summary>
+        [Display(Name = "Death", Description = "What happens when players die.")]
         public IDeathConfig DeathSettings { get; set; }
 
         public GlobalConfig()

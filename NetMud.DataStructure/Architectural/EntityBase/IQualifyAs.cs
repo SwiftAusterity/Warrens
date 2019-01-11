@@ -12,9 +12,4 @@ namespace NetMud.DataStructure.Architectural.EntityBase
 
         IDictionary<string, string> SupportingData { get; set; }
     }
-
-    public enum Qualification
-    {
-        PadLock
-    }
 }

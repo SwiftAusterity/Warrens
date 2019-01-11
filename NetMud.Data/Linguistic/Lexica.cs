@@ -5,6 +5,7 @@ using NetMud.DataStructure.Linguistic;
 using NetMud.Utility;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 
@@ -19,21 +20,28 @@ namespace NetMud.Data.Linguistic
         /// <summary>
         /// The type of word this is to the sentence
         /// </summary>
+        [Display(Name = "Grammatical Role", Description = "The role this phrase plays in a sentence.")]
         public GrammaticalType Role { get; set; }
 
         /// <summary>
         /// The type of word this is in general
         /// </summary>
+        [Display(Name = "Type", Description = "The type of word this is.")]
         public LexicalType Type { get; set; }
 
         /// <summary>
         /// The actual word/phrase
         /// </summary>
+        [StringLength(100, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
+        [DataType(DataType.Text)]
+        [Display(Name = "Phrase", Description = "The base phrase.")]
         public string Phrase { get; set; }
 
         /// <summary>
         /// Modifiers for this lexica
         /// </summary>
+        [DataType(DataType.Text)]
+        [Display(Name = "Modifier", Description = "A modifying phrase of the base word.")]
         public HashSet<ILexica> Modifiers { get; set; }
 
         public Lexica()

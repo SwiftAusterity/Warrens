@@ -12,6 +12,7 @@ using NetMud.DataStructure.Zone;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Script.Serialization;
 
@@ -34,39 +35,58 @@ namespace NetMud.Data.LookupData
         /// How much spawns in one place in one spawn tick
         /// </summary>
         [IntDataIntegrity("Amount Multiplier must be between 0 and 100.", 0, 100)]
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Spawn Multiplier", Description = "The factor that governs how much of this spawns in a new location.")]
+        [DataType(DataType.Text)]
         public int AmountMultiplier { get; set; }
 
         /// <summary>
         /// How rare this is to spawn even in its optimal range
         /// </summary>
         [IntDataIntegrity("Rarity must be between 0 and 100.", 0, 100)]
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Spawn Rarity", Description = "How rare is this to spawn at all in a new location.")]
+        [DataType(DataType.Text)]
         public int Rarity { get; set; }
 
         /// <summary>
         /// How much the spawned puissance varies
         /// </summary>
         [IntDataIntegrity("Puissance Variance must be between 0 and 100.", 0, 100)]
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Puissance Variance", Description = "How much deviation in random magical strength will be spawned in.")]
+        [DataType(DataType.Text)]
         public int PuissanceVariance { get; set; }
 
         /// <summary>
         /// Spawns in elevations within this range
         /// </summary>
+        [Range(-1000, 1000, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Y-Axis High", Description = "The upper elevation cap this will allow to spawn in.")]
+        [DataType(DataType.Text)]
         public ValueRange<int> ElevationRange { get; set; }
 
         /// <summary>
         /// Spawns in temperatures within this range
         /// </summary>
+        [Range(-2000, 2000, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Temperature High", Description = "The upper temperature cap this will allow to spawn in.")]
+        [DataType(DataType.Text)]
         public ValueRange<int> TemperatureRange { get; set; }
 
         /// <summary>
         /// Spawns in humidities within this range
         /// </summary>
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Humidity High", Description = "The upper barometric pressure cap this will allow to spawn in.")]
+        [DataType(DataType.Text)]
         public ValueRange<int> HumidityRange { get; set; }
 
         /// <summary>
         /// What medium biomes this can spawn in
         /// </summary>
         [FilledContainerDataIntegrity("This resource must occur in at least one biome.")]
+        [Display(Name = "Occurs in Biome", Description = "What biomes this will allow to spawn in.")]
         public HashSet<Biome> OccursIn { get; set; }
 
         /// <summary>

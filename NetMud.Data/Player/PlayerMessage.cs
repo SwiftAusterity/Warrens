@@ -5,6 +5,7 @@ using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Player;
 using Newtonsoft.Json;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Script.Serialization;
 
@@ -40,11 +41,17 @@ namespace NetMud.Data.Players
         /// <summary>
         /// The body of the message
         /// </summary>
+        [StringLength(2000, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 10)]
+        [Display(Name = "Body", Description = "The body of the message.")]
+        [DataType("Markdown")]
         public MarkdownString Body { get; set; }
 
         /// <summary>
         /// Subject of the message
         /// </summary>
+        [StringLength(255, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
+        [Display(Name = "Subject", Description = "The subject of your message.")]
+        [DataType(DataType.Text)]
         public string Subject { get; set; }
 
         /// <summary>
@@ -95,6 +102,8 @@ namespace NetMud.Data.Players
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
+        [Display(Name = "Recipient Account", Description = "The account you are sending this to.")]
+        [DataType(DataType.Text)]
         public IAccount RecipientAccount
         {
             get
@@ -124,6 +133,8 @@ namespace NetMud.Data.Players
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
+        [Display(Name = "Recipient", Description = "The character you are sending this to. Can be blank.")]
+        [DataType(DataType.Text)]
         public IPlayerTemplate Recipient
         {
             get

@@ -1,6 +1,7 @@
 ﻿using NetMud.DataStructure.Player;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.Data.Players
 {
@@ -18,11 +19,15 @@ namespace NetMud.Data.Players
         /// <summary>
         /// The name of the playlist
         /// </summary>
+        [Display(Name = "Name", Description = "The name of the playlist.")]
+        [DataType(DataType.Text)]
         public string Name { get; set; }
 
         /// <summary>
         /// List of song uris
         /// </summary>
+        [Display(Name = "Song", Description = "A song in the playlist.")]
+        [DataType(DataType.Text)]
         public HashSet<string> Songs { get; set; }
     }
 }

@@ -7,8 +7,7 @@
     {
         /// <summary>
         /// Freeform string for entity gender
-        /// </summary>
-        
+        /// </summary>      
         string Gender { get; set; }
     }
 }

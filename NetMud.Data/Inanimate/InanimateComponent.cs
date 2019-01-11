@@ -2,6 +2,7 @@
 using NetMud.DataStructure.Inanimate;
 using Newtonsoft.Json;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Inanimate
@@ -14,6 +15,8 @@ namespace NetMud.Data.Inanimate
 
         [JsonIgnore]
         [ScriptIgnore]
+        [Display(Name = "Component", Description = "A required component of the crafting recipe.")]
+        [UIHint("InanimateTemplateList")]
         public IInanimateTemplate Item
         {
             get
@@ -29,6 +32,8 @@ namespace NetMud.Data.Inanimate
             }
         }
 
+        [Display(Name = "Needed", Description = "Amount of the component item needed.")]
+        [DataType(DataType.Text)]
         public int Amount { get; set; }
 
         public InanimateComponent()

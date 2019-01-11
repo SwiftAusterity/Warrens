@@ -13,6 +13,7 @@ using NetMud.DataStructure.System;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Players
@@ -62,12 +63,18 @@ namespace NetMud.Data.Players
         /// Gender data string for player characters
         /// </summary>
         [StringDataIntegrity("Gender is required.")]
+        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
+        [Display(Name = "Gender", Description = "Your gender. You can use an existing gender or select free text. Non-approved gender groups will get it/they/them pronouns.")]
+        [DataType(DataType.Text)]
         public string Gender { get; set; }
 
         /// <summary>
         /// "family name" for player character
         /// </summary>
         [StringDataIntegrity("Surname is required.")]
+        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
+        [Display(Name = "Family Name", Description = "Last Name for you in-game.")]
+        [DataType(DataType.Text)]
         public string SurName { get; set; }
 
         /// <summary>
@@ -78,6 +85,8 @@ namespace NetMud.Data.Players
         /// <summary>
         /// The "user" level for commands and accessibility
         /// </summary>
+        [Display(Name = "Chosen Role", Description = "The administrative role.")]
+        [UIHint("EnumDropDownList")]
         public StaffRank GamePermissionsRank { get; set; }
 
         /// <summary>
@@ -94,6 +103,7 @@ namespace NetMud.Data.Players
         [ScriptIgnore]
         [JsonIgnore]
         [NonNullableDataIntegrity("Missing racial data.")]
+        [Display(Name = "Race", Description = "Your genetic basis. Many races must be unlocked through specific means.")]
         public IRace Race
         {
             get

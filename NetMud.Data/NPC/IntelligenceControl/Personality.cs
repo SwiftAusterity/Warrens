@@ -11,7 +11,7 @@ namespace NetMud.Data.NPC.IntelligenceControl
     [Serializable]
     public class Personality : IPersonality
     {
-        [UIHint("IPreferenceList")]
+        [UIHint("PreferenceList")]
         public HashSet<IPreference> Preferences { get; set; }
 
         public HashSet<IMemory> Memories { get; set; }

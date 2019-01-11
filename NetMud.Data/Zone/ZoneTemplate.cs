@@ -6,7 +6,6 @@ using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Gaia;
-using NetMud.DataStructure.NaturalResource;
 using NetMud.DataStructure.Room;
 using NetMud.DataStructure.Zone;
 using Newtonsoft.Json;
@@ -24,8 +23,8 @@ namespace NetMud.Data.Zone
         /// <summary>
         /// The system type of data this attaches to
         /// </summary>
-        [ScriptIgnore]
         [JsonIgnore]
+        [ScriptIgnore]
         public override Type EntityClass
         {
             get { return typeof(Zone); }
@@ -89,10 +88,11 @@ namespace NetMud.Data.Zone
         [Required]
         public Biome BaseBiome { get; set; }
 
-
         /// <summary>
         /// Is this zone always discovered by players (ie no need to be discovered)
         /// </summary>
+        [Display(Name = "Default Discovered", Description = "Is this zone always discovered by players (ie no need to be discovered).")]
+        [UIHint("Boolean")]
         public bool AlwaysDiscovered { get; set; }
 
         [JsonProperty("World")]
@@ -154,31 +154,14 @@ namespace NetMud.Data.Zone
             }
         }
 
-        [JsonProperty("NaturalResourceSpawn")]
-        private IDictionary<TemplateCacheKey, int> _naturalResourceSpawn { get; set; }
-
         /// <summary>
         /// Collection of model section name to material composition mappings
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
-        public IDictionary<INaturalResource, int> NaturalResourceSpawn
-        {
-            get
-            {
-                if (_naturalResourceSpawn != null)
-                    return _naturalResourceSpawn.ToDictionary(k => TemplateCache.Get<INaturalResource>(k.Key), k => k.Value);
-
-                return null;
-            }
-            set
-            {
-                if (value == null)
-                    return;
-
-                _naturalResourceSpawn = value.ToDictionary(k => new TemplateCacheKey(k.Key), k => k.Value);
-            }
-        }
+        [Display(Name = "Natural Resource Spawn", Description = "Spawn rates for natural resources.")]
+        [UIHint("NaturalResourceSpawnList")]
+        public HashSet<INaturalResourceSpawn> NaturalResourceSpawn { get; set; }
 
         /// <summary>
         /// Blank constructor
@@ -186,7 +169,7 @@ namespace NetMud.Data.Zone
         public ZoneTemplate()
         {
             Templates = new HashSet<IAdventureTemplate>();
-            NaturalResourceSpawn = new Dictionary<INaturalResource, int>();
+            NaturalResourceSpawn = new HashSet<INaturalResourceSpawn>();
         }
 
         /// <summary>

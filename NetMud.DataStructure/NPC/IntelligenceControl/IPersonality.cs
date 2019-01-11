@@ -8,7 +8,6 @@ namespace NetMud.DataStructure.NPC.IntelligenceControl
     /// </summary>
     public interface IPersonality
     {
-        [UIHint("IPreferenceList")]
         HashSet<IPreference> Preferences { get; set; }
 
         HashSet<IMemory> Memories { get; set; }

@@ -1,5 +1,4 @@
-﻿using NetMud.DataStructure.NaturalResource;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Zone
 {
@@ -21,7 +20,7 @@ namespace NetMud.DataStructure.Zone
         /// <summary>
         /// Natural resources that can spawn here with rate/chance factor
         /// </summary>
-        IDictionary<INaturalResource, int> NaturalResourceSpawn { get; set; }
+        HashSet<INaturalResourceSpawn> NaturalResourceSpawn { get; set; }
 
         /// <summary>
         /// The biome this is supposed to be

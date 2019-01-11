@@ -365,6 +365,7 @@
     <Content Include="Content\jquery-ui.theme.css" />
     <Content Include="Content\jquery.gridster.min.css" />
     <Content Include="Content\popper.css" />
+    <Content Include="Content\Sounds\floop.wav" />
     <Content Include="Content\spectrum.css" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
@@ -763,7 +764,9 @@
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\index.d.ts" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Content\Sounds\BkgMusic\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

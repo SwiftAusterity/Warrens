@@ -9,6 +9,7 @@ using NetMud.DataStructure.System;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.LookupData
@@ -23,12 +24,18 @@ namespace NetMud.Data.LookupData
         /// What is the % chance of generating a female instead of a male on birth
         /// </summary>
         [IntDataIntegrity("Female to male ratio must be greater than 0.", 1)]
+        [Range(1, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Ratio Female to Male", Description = "The split of both how often males vs females will be spawned but also the general fertility rate of this herd.")]
+        [DataType(DataType.Text)]
         public int FemaleRatio { get; set; }
 
         /// <summary>
         /// The absolute hard cap to natural population growth
         /// </summary>
         [IntDataIntegrity("Population Hard Cap must be greater than 0.", 1)]
+        [Range(1, 2000, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Total Pop Cap", Description = "Total max pool strength this herd can get to.")]
+        [DataType(DataType.Text)]
         public int PopulationHardCap { get; set; }
 
         [JsonProperty("Race")]
@@ -40,6 +47,7 @@ namespace NetMud.Data.LookupData
         [JsonIgnore]
         [ScriptIgnore]
         [NonNullableDataIntegrity("Race must be set.")]
+        [Display(Name = "Race", Description = "What race this herd is composed of. Non-sentient races only.")]
         public IRace Race
         {
             get

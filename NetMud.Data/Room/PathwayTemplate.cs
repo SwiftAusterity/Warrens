@@ -14,6 +14,7 @@ using NetMud.DataStructure.System;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Script.Serialization;
 
@@ -75,6 +76,9 @@ namespace NetMud.Data.Room
         /// <summary>
         /// 0->360 degrees with 0 being absolute north (meaning 90 is west, 180 south, etc) -1 means no cardinality
         /// </summary>
+        [Range(-1, 360, ErrorMessage = "The {0} must be between {2} and {1}. -1 is for non-cardinal exits.")]
+        [Display(Name = "Degrees From North", Description = "The direction on a 360 plane. 360 and 0 are both directional north. 90 is east, 180 is south, 270 is west.")]
+        [DataType(DataType.Text)]
         public int DegreesFromNorth { get; set; }
 
         /// <summary>
@@ -91,6 +95,8 @@ namespace NetMud.Data.Room
         [ScriptIgnore]
         [JsonIgnore]
         [NonNullableDataIntegrity("Destination is invalid.")]
+        [Display(Name = "To Room", Description = "The room this leads to.")]
+        [DataType(DataType.Text)]
         public ILocationData Destination
         {
             get
@@ -113,6 +119,8 @@ namespace NetMud.Data.Room
         [ScriptIgnore]
         [JsonIgnore]
         [NonNullableDataIntegrity("Origin is invalid.")]
+        [Display(Name = "From Room", Description = "The room this originates from.")]
+        [DataType(DataType.Text)]
         public ILocationData Origin
         {
             get

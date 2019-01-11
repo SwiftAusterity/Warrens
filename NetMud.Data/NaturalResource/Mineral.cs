@@ -5,6 +5,7 @@ using NetMud.DataStructure.NaturalResource;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Script.Serialization;
 
@@ -19,11 +20,17 @@ namespace NetMud.Data.LookupData
         /// <summary>
         /// How soluble the dirt is
         /// </summary>
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Solubility", Description = "The factor of how well this dissolves in water.")]
+        [DataType(DataType.Text)]
         public int Solubility { get; set; }
 
         /// <summary>
         /// How fertile the dirt generally is
         /// </summary>
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Dirt Fertility", Description = "How likely are fauna to grow in this if it is used as dirt.")]
+        [DataType(DataType.Text)]
         public int Fertility { get; set; }
 
         [JsonProperty("Rock")]
@@ -35,6 +42,7 @@ namespace NetMud.Data.LookupData
         [JsonIgnore]
         [ScriptIgnore]
         [NonNullableDataIntegrity("Rock must have a value.")]
+        [Display(Name = "Rock", Description = "What object is used to refer to this in rock form.")]
         public IMaterial Rock
         {
             get
@@ -56,6 +64,7 @@ namespace NetMud.Data.LookupData
         [JsonIgnore]
         [ScriptIgnore]
         [NonNullableDataIntegrity("Dirt must have a value.")]
+        [Display(Name = "Dirt", Description = "What object is used to refer to this in dirt form.")]
         public IMaterial Dirt
         {
             get
@@ -76,6 +85,7 @@ namespace NetMud.Data.LookupData
         /// </summary>
         [JsonIgnore]
         [ScriptIgnore]
+        [Display(Name = "Ores", Description = "What ores this contains when mined as rock.")]
         public IEnumerable<IMineral> Ores
         {
             get

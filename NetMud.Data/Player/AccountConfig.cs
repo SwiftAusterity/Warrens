@@ -7,6 +7,7 @@ using NetMud.DataStructure.Player;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Web.Script.Serialization;
@@ -57,21 +58,29 @@ namespace NetMud.Data.Players
         /// <summary>
         /// Whether or not the person wants the tutorial tooltips on; false = off
         /// </summary>
+        [Display(Name = "Tutorial Mode", Description = "Toggle the Game Client UI Tutorial mode off to remove tip popups permenantly.")]
+        [UIHint("Boolean")]
         public bool UITutorialMode { get; set; }
 
         /// <summary>
         /// Does someone see chatter from the Gossip network?
         /// </summary>
+        [Display(Name = "Gossip Enabled", Description = "Toggle whether or not you see chat coming from the InterMUD Gossip Network.")]
+        [UIHint("Boolean")]
         public bool GossipSubscriber { get; set; }
 
         /// <summary>
         /// Whether or not the person wants foley effects on; true == muted
         /// </summary>
+        [Display(Name = "Perma-Mute Sound", Description = "Toggle to mute foley effects in game by default.")]
+        [UIHint("Boolean")]
         public bool SoundMuted { get; set; }
 
         /// <summary>
         /// Whether or not the person wants background music on; true == muted
         /// </summary>
+        [Display(Name = "Perma-Mute Music", Description = "Toggle to mute music in game by default.")]
+        [UIHint("Boolean")]
         public bool MusicMuted { get; set; }
 
         /// <summary>

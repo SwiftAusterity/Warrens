@@ -7,6 +7,7 @@ using NetMud.DataStructure.Linguistic;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Script.Serialization;
 
@@ -39,26 +40,37 @@ namespace NetMud.Data.Linguistic
         /// <summary>
         /// The type of word this is in general
         /// </summary>
+        [Display(Name = "Type", Description = "The type of word this is.")]
         public LexicalType WordType { get; set; }
 
         /// <summary>
         /// Chronological tense of word
         /// </summary>
+        [Display(Name = "Tense", Description = "Chronological tense (past, present, future)")]
         public LexicalTense Tense { get; set; }
 
         /// <summary>
         /// Strength rating of word in relation to synonyms
         /// </summary>
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Severity", Description = "Strength rating of word in relation to synonyms.")]
+        [DataType(DataType.Text)]
         public int Severity { get; set; }
 
         /// <summary>
         /// Synonym rating for elegance
         /// </summary>
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Elegance", Description = "Crudeness rating of word in relation to synonyms.")]
+        [DataType(DataType.Text)]
         public int Elegance { get; set; }
 
         /// <summary>
         /// Finesse synonym rating; execution of form
         /// </summary>
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Quality", Description = "Finesse synonym rating; quality of execution of form or function.")]
+        [DataType(DataType.Text)]
         public int Quality { get; set; }
 
         [JsonProperty("Language")]
@@ -95,6 +107,8 @@ namespace NetMud.Data.Linguistic
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
+        [Display(Name = "Synonyms", Description = "The synonyms (similar) of this word/phrase.")]
+        [DataType(DataType.Text)]
         public IEnumerable<IDictata> Synonyms
         {
             get
@@ -121,6 +135,8 @@ namespace NetMud.Data.Linguistic
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
+        [Display(Name = "Antonyms", Description = "The antonyms (opposite) of this word/phrase.")]
+        [DataType(DataType.Text)]
         public IEnumerable<IDictata> Antonyms
         {
             get

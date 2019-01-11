@@ -11,6 +11,7 @@ using NetMud.DataStructure.Room;
 using NetMud.DataStructure.System;
 using Newtonsoft.Json;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Script.Serialization;
 
@@ -75,6 +76,8 @@ namespace NetMud.Data.Room
         [ScriptIgnore]
         [JsonIgnore]
         [NonNullableDataIntegrity("To Location must be valid.")]
+        [Display(Name = "To Room", Description = "The room this leads to.")]
+        [DataType(DataType.Text)]
         public ILocation Destination
         {
             get
@@ -105,6 +108,8 @@ namespace NetMud.Data.Room
         [ScriptIgnore]
         [JsonIgnore]
         [NonNullableDataIntegrity("From Location must be valid.")]
+        [Display(Name = "From Room", Description = "The room this originates from.")]
+        [DataType(DataType.Text)]
         public ILocation Origin
         {
             get
@@ -124,7 +129,12 @@ namespace NetMud.Data.Room
         }
 
         public MovementDirectionType DirectionType { get; set; }
+
+        [Range(-1, 360, ErrorMessage = "The {0} must be between {2} and {1}. -1 is for non-cardinal exits.")]
+        [Display(Name = "Degrees From North", Description = "The direction on a 360 plane. 360 and 0 are both directional north. 90 is east, 180 is south, 270 is west.")]
+        [DataType(DataType.Text)]
         public int DegreesFromNorth { get; set; }
+
         public int InclineGrade { get; set; }
 
         /// <summary>

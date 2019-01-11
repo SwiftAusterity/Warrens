@@ -102,7 +102,7 @@ namespace NetMud.Data.NPC
         /// <summary>
         /// The matrix of preferences and AI details
         /// </summary>
-        [UIHint("IPersonality")]
+        [UIHint("Personality")]
         public IPersonality Personality { get; set; }
 
         /// <summary>
