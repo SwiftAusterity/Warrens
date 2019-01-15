@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using NetMud.Data.Inanimate;
 
 namespace NetMud.Controllers.GameAdmin
 {
@@ -136,7 +137,7 @@ namespace NetMud.Controllers.GameAdmin
                 var arm = TemplateCache.Get<IInanimateTemplate>(vModel.ArmsID);
 
                 if (arm != null)
-                    newObj.Arms = new Tuple<IInanimateTemplate, short>(arm, vModel.ArmsAmount);
+                    newObj.Arms = new InanimateComponent(arm, vModel.ArmsAmount);
             }
 
             if (vModel.LegsID >= 0 && vModel.LegsAmount > 0)
@@ -144,7 +145,7 @@ namespace NetMud.Controllers.GameAdmin
                 var leg = TemplateCache.Get<IInanimateTemplate>(vModel.LegsID);
 
                 if (leg != null)
-                    newObj.Legs = new Tuple<IInanimateTemplate, short>(leg, vModel.LegsAmount);
+                    newObj.Legs = new InanimateComponent(leg, vModel.LegsAmount);
             }
 
             if (vModel.TorsoId >= 0)
@@ -199,7 +200,7 @@ namespace NetMud.Controllers.GameAdmin
             if (vModel.ExtraPartsId != null)
             {
                 int partIndex = 0;
-                var bodyBits = new List<Tuple<IInanimateTemplate, short, string>>();
+                var bodyBits = new HashSet<Tuple<IInanimateComponent, string>>();
                 foreach (var id in vModel.ExtraPartsId)
                 {
                     if (id >= 0)
@@ -212,7 +213,7 @@ namespace NetMud.Controllers.GameAdmin
                         var partObject = TemplateCache.Get<IInanimateTemplate>(id);
 
                         if (partObject != null && currentAmount > 0 && !string.IsNullOrWhiteSpace(currentName))
-                            bodyBits.Add(new Tuple<IInanimateTemplate, short, string>(partObject, currentAmount, currentName));
+                            bodyBits.Add(new Tuple<IInanimateComponent, string>(new InanimateComponent(partObject, currentAmount), currentName));
                     }
 
                     partIndex++;
@@ -257,21 +258,21 @@ namespace NetMud.Controllers.GameAdmin
 
             if (obj.Arms != null)
             {
-                vModel.ArmsAmount = obj.Arms.Item2;
-                vModel.ArmsID = obj.Arms.Item1.Id;
+                vModel.ArmsAmount = obj.Arms.Amount;
+                vModel.ArmsID = obj.Arms.Item.Id;
             }
 
             if (obj.Legs != null)
             {
-                vModel.LegsAmount = obj.Legs.Item2;
-                vModel.LegsID = obj.Legs.Item1.Id;
+                vModel.LegsAmount = obj.Legs.Amount;
+                vModel.LegsID = obj.Legs.Item.Id;
             }
 
             if (obj.BodyParts != null)
             {
-                vModel.ExtraPartsAmount = obj.BodyParts.Select(bp => bp.Item2).ToArray();
-                vModel.ExtraPartsId = obj.BodyParts.Select(bp => bp.Item1.Id).ToArray(); ;
-                vModel.ExtraPartsName = obj.BodyParts.Select(bp => bp.Item3).ToArray(); ;
+                vModel.ExtraPartsAmount = obj.BodyParts.Select(bp => bp.Item1.Amount).ToArray();
+                vModel.ExtraPartsId = obj.BodyParts.Select(bp => bp.Item1.Item.Id).ToArray(); ;
+                vModel.ExtraPartsName = obj.BodyParts.Select(bp => bp.Item2).ToArray(); ;
             }
 
             if (obj.SanguinaryMaterial != null)
@@ -322,7 +323,7 @@ namespace NetMud.Controllers.GameAdmin
                 var arm = TemplateCache.Get<IInanimateTemplate>(vModel.ArmsID);
 
                 if (arm != null)
-                    obj.Arms = new Tuple<IInanimateTemplate, short>(arm, vModel.ArmsAmount);
+                    obj.Arms = new InanimateComponent(arm, vModel.ArmsAmount);
             }
 
             if (vModel.LegsID > -1 && vModel.LegsAmount > 0)
@@ -330,7 +331,7 @@ namespace NetMud.Controllers.GameAdmin
                 var leg = TemplateCache.Get<IInanimateTemplate>(vModel.LegsID);
 
                 if (leg != null)
-                    obj.Legs = new Tuple<IInanimateTemplate, short>(leg, vModel.LegsAmount);
+                    obj.Legs = new InanimateComponent(leg, vModel.LegsAmount);
             }
 
             if (vModel.TorsoId > -1)
@@ -382,7 +383,7 @@ namespace NetMud.Controllers.GameAdmin
             obj.HelpText = vModel.HelpBody;
             obj.CollectiveNoun = vModel.CollectiveNoun;
 
-            var bodyBits = new List<Tuple<IInanimateTemplate, short, string>>();
+            var bodyBits = new HashSet<Tuple<IInanimateComponent, string>>();
             if (vModel.ExtraPartsId != null && vModel.ExtraPartsAmount != null && vModel.ExtraPartsName != null)
             {
                 int partIndex = 0;
@@ -398,7 +399,7 @@ namespace NetMud.Controllers.GameAdmin
                         var partObject = TemplateCache.Get<IInanimateTemplate>(partId);
 
                         if (partObject != null && currentAmount > 0 && !string.IsNullOrWhiteSpace(currentName))
-                            bodyBits.Add(new Tuple<IInanimateTemplate, short, string>(partObject, currentAmount, currentName));
+                            bodyBits.Add(new Tuple<IInanimateComponent, string>(new InanimateComponent(partObject, currentAmount), currentName));
                     }
 
                     partIndex++;

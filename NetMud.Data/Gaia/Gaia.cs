@@ -10,6 +10,7 @@ using NetMud.Utility;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Script.Serialization;
 
@@ -46,6 +47,10 @@ namespace NetMud.Data.Gaia
         /// <summary>
         /// The angle at which this world rotates in space. Irrelevant for fixed objects.
         /// </summary>
+        [Range(0, 359, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Rotational Angle", Description = "The angle at which this world rotates in space. Irrelevant for fixed objects.")]
+        [DataType(DataType.Text)]
+        [Required]
         public float RotationalAngle { get; set; }
         #endregion
 

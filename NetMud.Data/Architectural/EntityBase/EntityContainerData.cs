@@ -1,5 +1,6 @@
 ﻿using NetMud.DataStructure.Architectural.EntityBase;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.Data.Architectural.EntityBase
 {
@@ -13,16 +14,23 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <summary>
         /// How large is this container
         /// </summary>
+        [Display(Name = "Volume", Description = "The size of the container.")]
+        [DataType(DataType.Text)]
         public long CapacityVolume { get; set; }
 
         /// <summary>
         /// How much weight can it carry before taking damage
         /// </summary>
+        [Display(Name = "Weight", Description = "How much weight the container can hold.")]
+        [DataType(DataType.Text)]
         public long CapacityWeight { get; set; }
 
         /// <summary>
         /// The name of the container; can be string empty without issue
         /// </summary>
+        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
+        [Display(Name = "Name", Description = "The descriptive name used to refer to this.")]
+        [DataType(DataType.Text)]
         public string Name { get; set; }
 
         /// <summary>

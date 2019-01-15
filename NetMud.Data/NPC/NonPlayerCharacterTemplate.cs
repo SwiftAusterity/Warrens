@@ -140,7 +140,7 @@ namespace NetMud.Data.NPC
 
                 var height = (Race?.Head?.Model != null ? Race.Head.Model.Height : 0)
                             + (Race?.Torso?.Model != null ? Race.Torso.Model.Height : 0)
-                            + (Race?.Legs?.Item1?.Model != null ? Race.Legs.Item1.Model.Height : 0);
+                            + (Race?.Legs?.Item?.Model != null ? Race.Legs.Item.Model.Height : 0);
                 var length = Race?.Torso?.Model != null ? Race.Torso.Model.Length : 0;
                 var width = Race?.Torso?.Model != null ? Race.Torso.Model.Width : 0;
 

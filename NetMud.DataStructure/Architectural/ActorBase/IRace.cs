@@ -14,12 +14,12 @@ namespace NetMud.DataStructure.Architectural.ActorBase
         /// <summary>
         /// The arm objects
         /// </summary>
-        Tuple<IInanimateTemplate, short> Arms { get; set; }
+        IInanimateComponent Arms { get; set; }
 
         /// <summary>
         /// The leg objects
         /// </summary>
-        Tuple<IInanimateTemplate, short> Legs { get; set; }
+        IInanimateComponent Legs { get; set; }
 
         /// <summary>
         /// the torso object
@@ -34,12 +34,11 @@ namespace NetMud.DataStructure.Architectural.ActorBase
         /// <summary>
         /// The list of additional body parts used by this race. Part Object, Amount, Name
         /// </summary>
-        IEnumerable<Tuple<IInanimateTemplate, short, string>> BodyParts { get; set; }
+        HashSet<Tuple<IInanimateComponent, string>> BodyParts { get; set; }
 
         /// <summary>
         /// Dietary type of this race
-        /// </summary>
-        
+        /// </summary>       
         DietType DietaryNeeds { get; set; }
 
         /// <summary>

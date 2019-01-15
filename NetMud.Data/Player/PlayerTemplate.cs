@@ -182,7 +182,7 @@ namespace NetMud.Data.Players
                 if (Race == null)
                     return new Dimensions(0, 0, 0);
 
-                var height = Race.Head.Model.Height + Race.Torso.Model.Height + Race.Legs.Item1.Model.Height;
+                var height = Race.Head.Model.Height + Race.Torso.Model.Height + Race.Legs.Item.Model.Height;
                 var length = Race.Torso.Model.Length;
                 var width = Race.Torso.Model.Width;
 

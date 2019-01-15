@@ -8,6 +8,7 @@ using NetMud.DataStructure.Player;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Architectural
@@ -30,11 +31,18 @@ namespace NetMud.Data.Architectural
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
+        [Display(Name = "Type", Description = "The storage type of the config data.")]
+        [DataType(DataType.Text)]
+        [Required]
         public abstract ConfigDataType Type { get; }
 
         /// <summary>
         /// The unique name of this configuration data
         /// </summary>
+        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
+        [Display(Name = "Name", Description = "The Name of the data type.")]
+        [DataType(DataType.Text)]
+        [Required]
         public string Name { get; set; }
 
         #region Approval System

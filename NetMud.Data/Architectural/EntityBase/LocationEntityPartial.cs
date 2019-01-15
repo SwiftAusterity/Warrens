@@ -9,6 +9,7 @@ using NetMud.DataStructure.Zone;
 using NetMud.Utility;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Script.Serialization;
 
@@ -43,11 +44,17 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <summary>
         /// Current base humidity
         /// </summary>
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Humidity", Description = "The current barometric pressure.")]
+        [DataType(DataType.Text)]
         public virtual int Humidity { get; set; }
 
         /// <summary>
         /// Base temperature
         /// </summary>
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Temperature", Description = "The current ambient temperature.")]
+        [DataType(DataType.Text)]
         public virtual int Temperature { get; set; }
 
         [JsonProperty("NaturalResources")]

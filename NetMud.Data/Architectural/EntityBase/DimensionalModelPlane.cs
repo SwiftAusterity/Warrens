@@ -1,6 +1,7 @@
 ﻿using NetMud.DataStructure.Architectural.EntityBase;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace NetMud.Data.Architectural.EntityBase
@@ -19,11 +20,15 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <summary>
         /// The name of this plane (for a sword it might be 'Blade' or 'Hilt')
         /// </summary>
+        [Display(Name = "Name", Description = "Descriptive name for this Y-axis row. Things like Blade, Hilt, Handle, etc.")]
+        [DataType(DataType.Text)]
         public string TagName { get; set; }
 
         /// <summary>
         /// All nodes in a plane are of the same YAxis so bubble it up here so we have access
         /// </summary>
+        [Display(Name = "Y-Axis", Description = "The Y-Axis of the model this row is for.")]
+        [DataType(DataType.Text)]
         public short YAxis { get; set; }
 
         /// <summary>

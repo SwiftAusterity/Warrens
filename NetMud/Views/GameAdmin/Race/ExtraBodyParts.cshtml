@@ -26,9 +26,9 @@
                 <label class="col-sm-1 col-form-label"><a href="#" class="removeRow" id="removeExtraPartsRow" title="Remove this">X</a></label>
                 @Html.DescriptiveLabelFor(m => m.ExtraPartsName, new { @class = "col-sm-1 col-form-label" })
                 <div class="col-md-2">
-                    <input id="ExtraPartsName" name="ExtraPartsName" class="form-control" type="text" value="@dataItem.Item3">
+                    <input id="ExtraPartsName" name="ExtraPartsName" class="form-control" type="text" value="@dataItem.Item2">
                 </div>
-                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("ExtraPartsId", "Extra Part", Model.ValidObjects, dataItem.Item1.Id))
+                @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("ExtraPartsId", "Extra Part", Model.ValidObjects, dataItem.Item1.Item.Id))
 
                 @Html.DescriptiveLabelFor(m => m.ExtraPartsAmount, new { @class = "col-sm-1 col-form-label" })
                 <div class="col-md-2">

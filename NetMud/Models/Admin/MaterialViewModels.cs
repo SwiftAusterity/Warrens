@@ -44,12 +44,15 @@ namespace NetMud.Models.Admin
         public string Name { get; set; }
 
         [Display(Name = "Conductive", Description = "Does this conduct electricity?")]
+        [UIHint("Boolean")]
         public bool Conductive { get; set; }
         
         [Display(Name = "Magnetic", Description = "Is this magnetic?")]
+        [UIHint("Boolean")]
         public bool Magnetic { get; set; }
 
         [Display(Name = "Flammable", Description = "Is this flammable?")]
+        [UIHint("Boolean")]
         public bool Flammable { get; set; }
 
         [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]

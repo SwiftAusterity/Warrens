@@ -15,7 +15,7 @@ namespace NetMud.Data.Inanimate
 
         [JsonIgnore]
         [ScriptIgnore]
-        [Display(Name = "Component", Description = "A required component of the crafting recipe.")]
+        [Display(Name = "Component", Description = "The object of the collection.")]
         [UIHint("InanimateTemplateList")]
         public IInanimateTemplate Item
         {
@@ -32,7 +32,7 @@ namespace NetMud.Data.Inanimate
             }
         }
 
-        [Display(Name = "Needed", Description = "Amount of the component item needed.")]
+        [Display(Name = "Amount", Description = "Amount of the component item in the collection.")]
         [DataType(DataType.Text)]
         public int Amount { get; set; }
 

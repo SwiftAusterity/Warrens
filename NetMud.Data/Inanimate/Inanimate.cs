@@ -16,6 +16,7 @@ using NetMud.Utility;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Web.Script.Serialization;
@@ -53,6 +54,10 @@ namespace NetMud.Data.Inanimate
         /// <summary>
         /// How many of this can be in a stack
         /// </summary>
+        [Display(Name = "Accumulation Cap", Description = "How many of this can go in one 'stack'.")]
+        [Range(0, 999, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [DataType(DataType.Text)]
+        [Required]
         public int AccumulationCap { get; set; }
 
         /// <summary>

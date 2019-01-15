@@ -52,7 +52,7 @@ namespace NetMud.Models.Admin
         [Range(0, 8)]
         [Display(Name = "# of Arms", Description = "The number of arms this thing has. Humans have 2, dogs have ZERO. It doesn't have to have arms.")]
         [DataType(DataType.Text)]
-        public short ArmsAmount { get; set; }
+        public int ArmsAmount { get; set; }
       
         [Display(Name = "Leg Object", Description = "The object that this thing's legs are made of.")]
         [DataType(DataType.Text)]
@@ -61,13 +61,12 @@ namespace NetMud.Models.Admin
         [Range(0, 8)]
         [Display(Name = "# of Legs", Description = "The number of legs this thing has. Humans have 2, dogs have 4. It doesn't have to have legs at all.")]
         [DataType(DataType.Text)]
-        public short LegsAmount { get; set; }
+        public int LegsAmount { get; set; }
         
         [Display(Name = "Torso Object", Description = "The object that this thing's torso is made of.")]
         [DataType(DataType.Text)]
         public long TorsoId { get; set; }
-
-        
+    
         [Display(Name = "Head Object", Description = "The object that this thing's head is made of.")]
         [DataType(DataType.Text)]
         public long HeadId { get; set; }
@@ -76,7 +75,7 @@ namespace NetMud.Models.Admin
         public long[] ExtraPartsId { get; set; }
 
         [Display(Name = "Amount", Description = "The number of this extra part this race has.")]
-        public short[] ExtraPartsAmount { get; set; }
+        public int[] ExtraPartsAmount { get; set; }
         
         [Display(Name = "Name", Description = "The descriptive name of this extra part.")]
         public string[] ExtraPartsName { get; set; }

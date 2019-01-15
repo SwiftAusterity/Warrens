@@ -6,6 +6,7 @@ using NetMud.DataStructure.Linguistic;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Script.Serialization;
 
@@ -22,65 +23,96 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <summary>
         /// Is this material energy conduction
         /// </summary>
+        [Display(Name = "Conductive", Description = "Does this conduct electricity?")]
+        [UIHint("Boolean")]
         public bool Conductive { get; set; }
 
         /// <summary>
         /// Is this material magnetic
         /// </summary>
+        [Display(Name = "Magnetic", Description = "Is this magnetic?")]
+        [UIHint("Boolean")]
         public bool Magnetic { get; set; }
 
         /// <summary>
         /// Is this material flammable
         /// </summary>
+        [Display(Name = "Flammable", Description = "Is this flammable?")]
+        [UIHint("Boolean")]
         public bool Flammable { get; set; }
 
         /// <summary>
         /// How viscous is this material (higher = more viscous)
         /// </summary>
         [ShortDataIntegrity("Viscosity has to be greater than 0.", 0)]
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Viscosity", Description = "How easily this material flows across other materials. High viscosity = flows less easily.")]
+        [DataType(DataType.Text)]
         public short Viscosity { get; set; }
 
         /// <summary>
         /// How dense is this material
         /// </summary>
         [ShortDataIntegrity("Density has to be greater than 0.", 0)]
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Density", Description = "The density of this material. High density = higher weight of objects. Also factors into damage resistance.")]
+        [DataType(DataType.Text)]
         public short Density { get; set; }
 
         /// <summary>
         /// How well does this material bend without breaking
         /// </summary>
         [ShortDataIntegrity("Mallebility has to be greater than 0.", 0)]
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Mallebility", Description = "How easily this material is deformed by impact damage without breaking or fracturing.")]
+        [DataType(DataType.Text)]
         public short Mallebility { get; set; }
 
         /// <summary>
         /// How stretchable is this material
         /// </summary>
         [ShortDataIntegrity("Ductility has to be greater than 0.", 0)]
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Ductility", Description = "How easily this material is deformed by tensile stress (stretching, bending) without breaking.")]
+        [DataType(DataType.Text)]
         public short Ductility { get; set; }
 
         /// <summary>
         /// How porous is this material
         /// </summary>
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Porosity", Description = "How porous (full of holes) this material is when formed. Highly porous materials may become pass thru for small objects and creatures.")]
+        [DataType(DataType.Text)]
         public short Porosity { get; set; }
 
         /// <summary>
         /// What is the freezing point of this material
         /// </summary>
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Fusion Point", Description = "The temperature at which this material becomes a solid.")]
+        [DataType(DataType.Text)]
         public short SolidPoint { get; set; }
 
         /// <summary>
         /// What is the temperature gasous point of this material
         /// </summary>
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Vaporization Point", Description = "The temperature at which this material becomes a gas.")]
+        [DataType(DataType.Text)]
         public short GasPoint { get; set; }
 
         /// <summary>
         /// How well does this material hold temperature changes
         /// </summary>
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Temperature Retention", Description = "How well does this material retain its temperature.")]
+        [DataType(DataType.Text)]
         public short TemperatureRetention { get; set; }
 
         /// <summary>
         /// Any elemental resistances the material has
         /// </summary>
+        [Display(Name = "Damage Resistance", Description = "The type of damage this has special resistances to.")]
         public IDictionary<DamageType, short> Resistance { get; set; }
 
         /// <summary>
@@ -96,6 +128,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
+        [Display(Name = "Material Composition", Description = "Is this material an alloy of other materials?")]
         public IDictionary<IMaterial, short> Composition
         {
             get
@@ -114,6 +147,9 @@ namespace NetMud.Data.Architectural.EntityBase
             }
         }
 
+        [Display(Name = "Accumulation Cap", Description = "How many of this can go in one 'stack'.")]
+        [Range(0, 999, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [DataType(DataType.Text)]
         public int AccumulationCap { get; set; }
 
         /// <summary>

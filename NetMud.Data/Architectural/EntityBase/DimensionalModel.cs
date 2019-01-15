@@ -3,6 +3,7 @@ using NetMud.DataStructure.Architectural.EntityBase;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Script.Serialization;
 
@@ -17,26 +18,41 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <summary>
         /// Y axis of the 21 plane model
         /// </summary>
+        [Range(1, 1200, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Length (inches)", Description = "The dimensional length of this model.")]
+        [DataType(DataType.Text)]
         public int Length { get; set; }
 
         /// <summary>
         /// Measurement of all 21 planes vertically
         /// </summary>
+        [Range(1, 1200, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Height (in)", Description = "The dimensional height of this model.")]
+        [DataType(DataType.Text)]
         public int Height { get; set; }
 
         /// <summary>
         /// X axis of the 21 plane model
         /// </summary>
+        [Range(1, 1200, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Width (in)", Description = "The dimensional width of this model.")]
+        [DataType(DataType.Text)]
         public int Width { get; set; }
 
         /// <summary>
         /// How hollow something is, we have to maintain current vacuity versus the spawned vacuity in the ModelData
         /// </summary>
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Hollowness", Description = "The hollowness of the model. Hollowness can increase sturctural integrity up to a point.")]
+        [DataType(DataType.Text)]
         public int Vacuity { get; set; }
 
         /// <summary>
         /// How pock-marked the surface areas are of the object
         /// </summary>
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Surface Cavitation", Description = "The cavitation of the model surface. Cavitation can decrease sturctural integrity and account for things passing through.")]
+        [DataType(DataType.Text)]
         public int SurfaceCavitation { get; set; }
 
         [JsonProperty("ModelTemplate")]
@@ -47,6 +63,8 @@ namespace NetMud.Data.Architectural.EntityBase
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
+        [Display(Name = "Model", Description = "The model we're following.")]
+        [UIHint("DimensionalModelDataList")]
         public IDimensionalModelData ModelTemplate
         {
             get

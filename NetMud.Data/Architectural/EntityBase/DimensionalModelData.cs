@@ -7,6 +7,7 @@ using NetMud.Physics;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Script.Serialization;
 
@@ -28,6 +29,8 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <summary>
         /// Governs what sort of model planes we're looking for
         /// </summary>
+        [Display(Name = "Model Type", Description = "The type of model this is. Flat models are used for everything.")]
+        [UIHint("EnumDropDownList")]
         public DimensionalModelType ModelType { get; set; }
 
         /// <summary>
@@ -39,6 +42,9 @@ namespace NetMud.Data.Architectural.EntityBase
         /// How hollow something is
         /// </summary>
         [IntDataIntegrity("Vacuity must be at least zero.", 0)]
+        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Hollowness", Description = "The hollowness of the model. Hollowness can increase sturctural integrity up to a point.")]
+        [DataType(DataType.Text)]
         public int Vacuity { get; set; }
 
         /// <summary>

@@ -1,5 +1,4 @@
-﻿using NetMud.Data.Architectural;
-using NetMud.Data.Architectural.DataIntegrity;
+﻿using NetMud.Data.Architectural.DataIntegrity;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
@@ -11,7 +10,7 @@ using NetMud.Utility;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Data;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Script.Serialization;
 
@@ -23,9 +22,6 @@ namespace NetMud.Data.Architectural.ActorBase
     [Serializable]
     public class Race : LookupDataPartial, IRace
     {
-        [JsonProperty("Arms")]
-        private Tuple<TemplateCacheKey, short> _arms { get; set; }
-
         /// <summary>
         /// What type of approval is necessary for this content
         /// </summary>
@@ -34,51 +30,16 @@ namespace NetMud.Data.Architectural.ActorBase
         /// <summary>
         /// The arm objects
         /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        public Tuple<IInanimateTemplate, short> Arms
-        {
-            get
-            {
-                if (_arms != null)
-                    return new Tuple<IInanimateTemplate, short>(TemplateCache.Get<IInanimateTemplate>(_arms.Item1), _arms.Item2);
-
-                return null;
-            }
-            set
-            {
-                if (value == null)
-                    return;
-
-                _arms = new Tuple<TemplateCacheKey, short>(new TemplateCacheKey(value.Item1), value.Item2);
-            }
-        }
-
-        [JsonProperty("Legs")]
-        private Tuple<TemplateCacheKey, short> _legs { get; set; }
+        [Display(Name = "Arm Object", Description = "The object that this thing's arms are made of.")]
+        [UIHint("InanimateComponent")]
+        public IInanimateComponent Arms { get; set; }
 
         /// <summary>
         /// The leg objects
         /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        public Tuple<IInanimateTemplate, short> Legs
-        {
-            get
-            {
-                if (_legs != null)
-                    return new Tuple<IInanimateTemplate, short>(TemplateCache.Get<IInanimateTemplate>(_legs.Item1), _legs.Item2);
-
-                return null;
-            }
-            set
-            {
-                if (value == null)
-                    return;
-
-                _legs = new Tuple<TemplateCacheKey, short>(new TemplateCacheKey(value.Item1), value.Item2);
-            }
-        }
+        [Display(Name = "Leg Object", Description = "The object that this thing's legs are made of.")]
+        [UIHint("InanimateComponent")]
+        public IInanimateComponent Legs { get; set; }
 
         [JsonProperty("Torso")]
         private TemplateCacheKey _torso { get; set; }
@@ -89,6 +50,8 @@ namespace NetMud.Data.Architectural.ActorBase
         [ScriptIgnore]
         [JsonIgnore]
         [NonNullableDataIntegrity("Torso is invalid.")]
+        [Display(Name = "Torso Object", Description = "The object that this thing's torso is made of.")]
+        [UIHint("InanimateTemplateList")]
         public IInanimateTemplate Torso
         {
             get
@@ -110,6 +73,8 @@ namespace NetMud.Data.Architectural.ActorBase
         [ScriptIgnore]
         [JsonIgnore]
         [NonNullableDataIntegrity("Head is invalid.")]
+        [Display(Name = "Head Object", Description = "The object that this thing's head is made of.")]
+        [UIHint("InanimateTemplateList")]
         public IInanimateTemplate Head
         {
             get
@@ -122,35 +87,18 @@ namespace NetMud.Data.Architectural.ActorBase
             }
         }
 
-        [JsonProperty("BodyParts")]
-        private HashSet<Tuple<TemplateCacheKey, short, string>> _bodyParts { get; set; }
-
         /// <summary>
         /// The list of additional body parts used by this race. Part Object, Amount, Name
         /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        public IEnumerable<Tuple<IInanimateTemplate, short, string>> BodyParts
-        {
-            get
-            {
-                if (_legs != null)
-                    return _bodyParts.Select(bp => new Tuple<IInanimateTemplate, short, string>(TemplateCache.Get<IInanimateTemplate>(bp.Item1), bp.Item2, bp.Item3));
-
-                return null;
-            }
-            set
-            {
-                if (value == null)
-                    return;
-
-                _bodyParts = new HashSet<Tuple<TemplateCacheKey, short, string>>(value.Select(bp => new Tuple<TemplateCacheKey, short, string>(new TemplateCacheKey(bp.Item1), bp.Item2, bp.Item3)));
-            }
-        }
+        [Display(Name = "Extra Parts", Description = "The additional non-standard anatomical features this has. Tails, head fins, wings and unique forms (like eleven ears) qualify.")]
+        [UIHint("BodyParts")]
+        public HashSet<Tuple<IInanimateComponent, string>> BodyParts { get; set; }
 
         /// <summary>
         /// Dietary type of this race
         /// </summary>
+        [Display(Name = "Diet", Description = "What this can eat for nutritional purposes.")]
+        [UIHint("EnumDropDownList")]
         public DietType DietaryNeeds { get; set; }
 
         [JsonProperty("SanguinaryMaterial")]
@@ -162,6 +110,8 @@ namespace NetMud.Data.Architectural.ActorBase
         [ScriptIgnore]
         [JsonIgnore]
         [NonNullableDataIntegrity("Blood material is invalid.")]
+        [Display(Name = "Blood Type", Description = "The material this thing's blood is composed of.")]
+        [UIHint("MaterialList")]
         public IMaterial SanguinaryMaterial
         {
             get
@@ -177,27 +127,40 @@ namespace NetMud.Data.Architectural.ActorBase
         /// <summary>
         /// Low and High luminosity vision range
         /// </summary>
+        [Range(0, 200)]
+        [Display(Name = "Vision Range", Description = "The range of luminosity this can see clearly in.")]
+        [UIHint("ValueRangeShort")]
         public ValueRange<short> VisionRange { get; set; }
 
         /// <summary>
         /// Low and High temperature range before damage starts to occur
         /// </summary>
+        [Range(0, 200)]
+        [Display(Name = "Heat Tolerence", Description = "The range of what temperature this can tolerate. Below this is 'too cold' and the thing will suffer ill effects.")]
+        [UIHint("ValueRangeShort")]
         public ValueRange<short> TemperatureTolerance { get; set; }
 
         /// <summary>
         /// What mode of breathing
         /// </summary>
+        [Display(Name = "Breathes", Description = "What mediums this can breathe in.")]
+        [UIHint("EnumDropDownList")]
         public RespiratoryType Breathes { get; set; }
 
         /// <summary>
         /// The type of damage biting inflicts
         /// </summary>
+        [Display(Name = "Teeth", Description = "What style of teeth this thing has.")]
+        [UIHint("EnumDropDownList")]
         public DamageType TeethType { get; set; }
 
         /// <summary>
         /// The name used to describe a large gathering of this race
         /// </summary>
         [StringDataIntegrity("Races must have a collective noun between 2 and 50 characters long.", 2, 50)]
+        [StringLength(50, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
+        [Display(Name = "Collective Noun", Description = "The 'herd name' for this race. Like 'herd' for deer and cows or 'pack' for wolves.")]
+        [DataType(DataType.Text)]
         public string CollectiveNoun { get; set; }
 
         [JsonProperty("StartingLocation")]
@@ -209,6 +172,8 @@ namespace NetMud.Data.Architectural.ActorBase
         [ScriptIgnore]
         [JsonIgnore]
         [NonNullableDataIntegrity("Starting Location is invalid.")]
+        [Display(Name = "Starting Zone", Description = "The zone this begins in when made as a player.")]
+        [UIHint("ZoneTemplateList")]
         public IZoneTemplate StartingLocation
         {
             get
@@ -230,6 +195,9 @@ namespace NetMud.Data.Architectural.ActorBase
         [ScriptIgnore]
         [JsonIgnore]
         [NonNullableDataIntegrity("Emergency Location is invalid.")]
+        [Display(Name = "Recall Zone", Description = "The 'emergency' zone this shows up in when the system can't figure out where else to put it. (post-newbie zone for players)")]
+        [DataType(DataType.Text)]
+        [UIHint("ZoneTemplateList")]
         public IZoneTemplate EmergencyLocation
         {
             get
@@ -247,7 +215,7 @@ namespace NetMud.Data.Architectural.ActorBase
         /// </summary>
         public Race()
         {
-            BodyParts = Enumerable.Empty<Tuple<IInanimateTemplate, short, string>>();
+            BodyParts = new HashSet<Tuple<IInanimateComponent, string>>();
         }
 
         /// <summary>
@@ -257,22 +225,22 @@ namespace NetMud.Data.Architectural.ActorBase
         {
             var anatomy = new List<Tuple<IInanimateTemplate, string>>();
 
-            if (Arms.Item1 != null)
+            if (Arms != null)
             {
                 var i = 1;
-                while (i < Arms.Item2)
+                while (i < Arms.Amount)
                 {
-                    anatomy.Add(new Tuple<IInanimateTemplate, string>(Arms.Item1, string.Format("Arm {0}", i.ToGreek(true))));
+                    anatomy.Add(new Tuple<IInanimateTemplate, string>(Arms.Item, string.Format("Arm {0}", i.ToGreek(true))));
                     i++;
                 }
             }
 
-            if (Legs.Item1 != null)
+            if (Legs != null)
             {
                 var i = 1;
-                while (i < Arms.Item2)
+                while (i < Arms.Amount)
                 {
-                    anatomy.Add(new Tuple<IInanimateTemplate, string>(Legs.Item1, string.Format("Leg {0}", i.ToGreek(true))));
+                    anatomy.Add(new Tuple<IInanimateTemplate, string>(Legs.Item, string.Format("Leg {0}", i.ToGreek(true))));
                     i++;
                 }
             }
@@ -284,7 +252,14 @@ namespace NetMud.Data.Architectural.ActorBase
                 anatomy.Add(new Tuple<IInanimateTemplate, string>(Torso, "Torso"));
 
             foreach (var bit in BodyParts)
-                anatomy.Add(new Tuple<IInanimateTemplate, string>(bit.Item1, bit.Item3));
+            {
+                var i = 1;
+                while (i < bit.Item1.Amount)
+                {
+                    anatomy.Add(new Tuple<IInanimateTemplate, string>(bit.Item1.Item, bit.Item2));
+                    i++;
+                }
+            }
 
             return anatomy;
         }
@@ -300,26 +275,26 @@ namespace NetMud.Data.Architectural.ActorBase
             if (Head != null)
                 stringList.Add(Head.Model.ModelTemplate.ViewFlattenedModel(forWeb));
 
-            if (Arms.Item1 != null)
+            if (Arms != null)
             {
                 var armCount = 0;
-                while(armCount < Arms.Item2)
+                while(armCount < Arms.Amount)
                 {
                     armCount++;
-                    stringList.Add(Arms.Item1.Model.ModelTemplate.ViewFlattenedModel(forWeb));
+                    stringList.Add(Arms.Item.Model.ModelTemplate.ViewFlattenedModel(forWeb));
                 }
             }
 
             if (Head != null)
                 stringList.Add(Torso.Model.ModelTemplate.ViewFlattenedModel(forWeb));
 
-            if (Legs.Item1 != null)
+            if (Legs != null)
             {
                 var legCount = 0;
-                while (legCount < Legs.Item2)
+                while (legCount < Legs.Amount)
                 {
                     legCount++;
-                    stringList.Add(Legs.Item1.Model.ModelTemplate.ViewFlattenedModel(forWeb));
+                    stringList.Add(Legs.Item.Model.ModelTemplate.ViewFlattenedModel(forWeb));
                 }
             }
 
@@ -328,8 +303,15 @@ namespace NetMud.Data.Architectural.ActorBase
                 if (bit.Item1 == null)
                     continue;
 
-                for(var i = 0; i < bit.Item2; i++)
-                    stringList.Add(bit.Item1.Model.ModelTemplate.ViewFlattenedModel(forWeb));
+                for(var i = 0; i < bit.Item1.Amount; i++)
+                {
+                    var legCount = 0;
+                    while (legCount < Legs.Amount)
+                    {
+                        legCount++;
+                        stringList.Add(bit.Item1.Item.Model.ModelTemplate.ViewFlattenedModel(forWeb));
+                    }
+                }
             }
 
             return stringList;
@@ -344,13 +326,13 @@ namespace NetMud.Data.Architectural.ActorBase
             var TemplateProblems = base.FitnessReport();
 
             //Gotta keep most of these in due to the tuple thing
-            if (Arms == null || Arms.Item1 == null || Arms.Item2 < 0)
+            if (Arms == null || Arms.Item == null || Arms.Amount < 0)
                 TemplateProblems.Add("Arms are invalid.");
 
-            if (Legs == null || Legs.Item1 == null || Legs.Item2 < 0)
+            if (Legs == null || Legs.Item == null || Legs.Amount < 0)
                 TemplateProblems.Add("Legs are invalid.");
 
-            if (BodyParts != null && BodyParts.Any(a => a.Item1 == null || a.Item2 == 0 || string.IsNullOrWhiteSpace(a.Item3)))
+            if (BodyParts != null && BodyParts.Any(a => a.Item1 == null || a.Item1.Amount == 0 || string.IsNullOrWhiteSpace(a.Item2)))
                 TemplateProblems.Add("BodyParts are invalid.");
 
             if (VisionRange == null || VisionRange.Low >= VisionRange.High)
@@ -376,8 +358,8 @@ namespace NetMud.Data.Architectural.ActorBase
 
             returnList.Add("Head", Head.Name);
             returnList.Add("Torso", Torso.Name);
-            returnList.Add("Legs", string.Format("{1} {0}", Legs.Item1.Name, Legs.Item2));
-            returnList.Add("Arms", string.Format("{1} {0}", Arms.Item1.Name, Arms.Item2));
+            returnList.Add("Legs", string.Format("{1} {0}", Legs.Item.Name, Legs.Amount));
+            returnList.Add("Arms", string.Format("{1} {0}", Arms.Item.Name, Arms.Amount));
             returnList.Add("Blood", SanguinaryMaterial.Name);
             returnList.Add("Teeth", TeethType.ToString());
             returnList.Add("Breathes", Breathes.ToString());
@@ -386,7 +368,7 @@ namespace NetMud.Data.Architectural.ActorBase
             returnList.Add("Temperature Tolerance", string.Format("{0} - {1}", TemperatureTolerance.Low, TemperatureTolerance.High));
 
             foreach (var part in BodyParts)
-                returnList.Add("Body Parts", string.Format("{0} - {1} ({2})", part.Item3.ToString(), part.Item1.Name, part.Item3));
+                returnList.Add("Body Parts", string.Format("{0} - {1} ({2})", part.Item1.Amount.ToString(), part.Item1.Item.Name, part.Item2));
 
             return returnList;
         }
