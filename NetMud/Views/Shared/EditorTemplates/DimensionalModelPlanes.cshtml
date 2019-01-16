@@ -1,0 +1,26 @@
+﻿@using NetMud.Models
+@using NetMud.Data.Architectural.EntityBase
+@using NetMud.DataStructure.Architectural.EntityBase
+
+@model HashSet<IDimensionalModelPlane>
+
+@{
+    //if its blank we need 21 of them exactly
+    if (Model.Count() == 0)
+    {
+        short i = 0;
+        while (i < 21)
+        {
+            Model.Add(new DimensionalModelPlane() { YAxis = i });
+            i++;
+        }
+    }
+
+    var currentCount = Model.Count();
+    var rowsName = ViewData.ModelMetadata.PropertyName + "Rows";
+}
+
+<div id="@rowsName">
+    @Html.EditorForMany(e => e, null, 0, "DimensionalModelPlane")
+</div>
+

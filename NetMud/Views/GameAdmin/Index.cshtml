@@ -43,6 +43,34 @@
                             <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                         }
                     </dd>
+                    <dt>Locales:</dt>
+                    <dd>
+                        @Model.Locales.Count().ToString() [
+                        @Html.ActionLink("Manage", "Index", "Locale")
+                        @Html.ActionLink("Add", "Add", "Locale") ]
+                        @if (Model.Inanimates.Any(r => r.FitnessProblems))
+                        {
+                            <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
+                        }
+                        @if (Model.Inanimates.Any(r => r.State != ApprovalState.Approved))
+                        {
+                            <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
+                        }
+                    </dd>
+                    <dt>Rooms:</dt>
+                    <dd>
+                        @Model.Rooms.Count().ToString() [
+                        @Html.ActionLink("Manage", "Index", "Room")
+                        @Html.ActionLink("Add", "Add", "Room") ]
+                        @if (Model.Inanimates.Any(r => r.FitnessProblems))
+                        {
+                            <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
+                        }
+                        @if (Model.Inanimates.Any(r => r.State != ApprovalState.Approved))
+                        {
+                            <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
+                        }
+                    </dd>
                     <dt>NPCs:</dt>
                     <dd>
                         @Model.NPCs.Count().ToString() [
@@ -104,6 +132,20 @@
                             <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                         }
                     </dd>
+                    <dt>Races:</dt>
+                    <dd>
+                        @Model.Races.Count().ToString() [
+                        @Html.ActionLink("Manage", "Index", "Race")
+                        @Html.ActionLink("Add", "Add", "Race") ]
+                        @if (Model.Races.Any(r => r.FitnessProblems))
+                        {
+                            <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
+                        }
+                        @if (Model.Races.Any(r => r.State != ApprovalState.Approved))
+                        {
+                            <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
+                        }
+                    </dd>
                     <dt>Celestial Bodies:</dt>
                     <dd>
                         @Model.Celestials.Count().ToString() [
@@ -114,6 +156,76 @@
                             <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
                         }
                         @if (Model.Celestials.Any(r => r.State != ApprovalState.Approved))
+                        {
+                            <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
+                        }
+                    </dd>
+                    <dt>Materials:</dt>
+                    <dd>
+                        @Model.Materials.Count().ToString() [
+                        @Html.ActionLink("Manage", "Index", "Material")
+                        @Html.ActionLink("Add", "Add", "Material") ]
+                        @if (Model.Materials.Any(r => r.FitnessProblems))
+                        {
+                            <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
+                        }
+                        @if (Model.Materials.Any(r => r.State != ApprovalState.Approved))
+                        {
+                            <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
+                        }
+                    </dd>
+                    <dt>Dimensional Models:</dt>
+                    <dd>
+                        @Model.DimensionalModels.Count().ToString() [
+                        @Html.ActionLink("Manage", "Index", "DimensionalModel")
+                        @Html.ActionLink("Add", "Add", "DimensionalModel") ]
+                        @if (Model.DimensionalModels.Any(r => r.FitnessProblems))
+                        {
+                            <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
+                        }
+                        @if (Model.DimensionalModels.Any(r => r.State != ApprovalState.Approved))
+                        {
+                            <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
+                        }
+                    </dd>
+                    <dt>Flora:</dt>
+                    <dd>
+                        @Model.Flora.Count().ToString() [
+                        @Html.ActionLink("Manage", "Index", "Flora")
+                        @Html.ActionLink("Add", "Add", "Flora") ]
+                        @if (Model.Flora.Any(r => r.FitnessProblems))
+                        {
+                            <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
+                        }
+                        @if (Model.Flora.Any(r => r.State != ApprovalState.Approved))
+                        {
+                            <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
+                        }
+                    </dd>
+                    <dt>Fauna:</dt>
+                    <dd>
+                        @Model.Fauna.Count().ToString() [
+                        @Html.ActionLink("Manage", "Index", "Fauna")
+                        @Html.ActionLink("Add", "Add", "Fauna") ]
+                        @if (Model.Fauna.Any(r => r.FitnessProblems))
+                        {
+                            <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
+                        }
+                        @if (Model.Fauna.Any(r => r.State != ApprovalState.Approved))
+                        {
+                            <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
+                        }
+                    </dd>
+                    <dt>Minerals:</dt>
+                    <dd>
+                        @Model.Minerals.Count().ToString() [
+                        @Html.ActionLink("Manage", "Index", "Minerals")
+                        @Html.ActionLink("Add", "Add", "Minerals") ]
+                        @if (Model.Minerals.Any(r => r.FitnessProblems))
+                        {
+                            <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
+                        }
+                        @if (Model.Minerals.Any(r => r.State != ApprovalState.Approved))
                         {
                             <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                         }
@@ -244,8 +356,6 @@
                 <div class="form-group row">
                     @Html.EditorFor(e => e.DeathNoticeBody)
                 </div>
-
-                @Html.Partial("~/Views/GameAdmin/DeathQualities.cshtml", Model)
 
                 @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "GameAdmin", IncludeCancel = false })
             }

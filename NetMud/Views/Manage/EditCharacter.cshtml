@@ -9,36 +9,7 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <input type="hidden" name="id" id="id" value="@Model.DataObject.Id" />
-        <div class="form-group row">
-            @Html.EditorFor(e => e.Name, new { disabled = true })
-            @Html.EditorFor(e => e.SurName, new { disabled = true })
-        </div>
-
-        if (User.IsInRole("Admin") || User.IsInRole("Builder") || User.IsInRole("Guest"))
-        {
-
-            <div class="form-group row">
-                @Html.DescriptiveLabelFor(e => e.SuperSenses, new { @class = "col-sm-1 col-form-label" })
-                <div class="col-md-10">
-                    @foreach (var enumName in Enum.GetNames(typeof(MessagingType)))
-                    {
-                        MessagingType currentEnum = (MessagingType)Enum.Parse(typeof(MessagingType), enumName);
-
-                        <label for="SuperSenses">@enumName</label>
-                        <input type="checkbox" value="@((short)currentEnum)" style="margin: 15px;" name="SuperSenses" id="SuperSenses" title="@enumName" checked="@Model.DataObject.SuperSenses.ContainsKey(currentEnum)" />
-                    }
-                </div>
-            </div>
-        }
-        else
-        {
-            foreach (var enumName in Enum.GetNames(typeof(MessagingType)))
-            {
-                MessagingType currentEnum = (MessagingType)Enum.Parse(typeof(MessagingType), enumName);
-
-                <input type="hidden" value="@((short)currentEnum).ToString()" name="SuperSenses" id="SuperSenses" checked="@Model.DataObject.SuperSenses.ContainsKey(currentEnum)" />
-            }
-        }
+        @Html.EditorFor(e => e.DataObject)
 
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "ManageCharacters", ReturnController = "Manage", IncludeCancel = true })
     }

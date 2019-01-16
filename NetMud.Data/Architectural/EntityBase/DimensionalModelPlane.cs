@@ -1,4 +1,5 @@
-﻿using NetMud.DataStructure.Architectural.EntityBase;
+﻿using NetMud.Data.Architectural.PropertyBinding;
+using NetMud.DataStructure.Architectural.EntityBase;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -15,6 +16,8 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <summary>
         /// The collection of [math] nodes in the plane
         /// </summary>
+        [UIHint("DimensionalModelNodes")]
+        [DimensionalModelNodeDataBinder]
         public HashSet<IDimensionalModelNode> ModelNodes { get; set; }
 
         /// <summary>
@@ -37,6 +40,11 @@ namespace NetMud.Data.Architectural.EntityBase
         public DimensionalModelPlane()
         {
             ModelNodes = new HashSet<IDimensionalModelNode>();
+
+            for (var i = 0; i < 21; i++)
+            {
+                ModelNodes.Add(new DimensionalModelNode());
+            }
         }
 
         /// <summary>

@@ -1,0 +1,19 @@
+﻿@using NetMud.Data.Players
+
+@model PlayerTemplate
+
+<h4>Details</h4>
+<div class="form-group row">
+    @Html.EditorFor(e => e.Name)
+    @Html.EditorFor(e => e.SurName)
+    @Html.EditorFor(e => e.Gender)
+    @Html.EditorFor(e => e.Race, new { validItems = ViewData["ValidRaces"] })
+    @if (User.IsInRole("Admin"))
+    {
+        @Html.EditorFor(e => e.GamePermissionsRank)
+    }
+</div>
+@if (User.IsInRole("Admin") || User.IsInRole("Builder") || User.IsInRole("Guest"))
+{
+    @Html.EditorFor(e => e.SuperSenses)
+}

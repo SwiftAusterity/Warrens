@@ -498,7 +498,7 @@
     <Content Include="Views\Shared\EditorTemplates\IPreferenceList.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\IQuality.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\IQualityList.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\IRace.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Race.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\JournalEntry.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\KeyedTemplateList.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\MerchandiseList.cshtml" />
@@ -532,6 +532,13 @@
     <Content Include="Views\LiveAdmin\Worlds.cshtml" />
     <Content Include="Views\LiveAdmin\Zone.cshtml" />
     <Content Include="Views\LiveAdmin\Zones.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\PlayerTemplate.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\SuperSenses.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\CollectionEnumDropDownListItem.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\RaceList.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\DimensionalModelData.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\DimensionalModelPlanes.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\DimensionalModelNodes.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />
@@ -655,7 +662,7 @@
     <Content Include="Views\GameAdmin\Race\ExtraBodyParts.cshtml" />
     <Content Include="Views\Shared\InanimateEntityContainer.cshtml" />
     <Content Include="Views\Shared\MobileEntityContainer.cshtml" />
-    <Content Include="Views\GameAdmin\DimensionalModel\ModelPlane.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\DimensionalModelPlane.cshtml" />
     <Content Include="Views\GameAdmin\DimensionalModel\Edit.cshtml" />
     <Content Include="Views\Shared\AddContentLink.cshtml" />
     <Content Include="Views\Shared\_chromelessLayout.cshtml" />

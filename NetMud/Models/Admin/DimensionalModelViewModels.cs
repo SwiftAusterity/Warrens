@@ -55,6 +55,7 @@ namespace NetMud.Models.Admin
         [Display(Name = "Name", Description = "Descriptive name for this Y-axis row. Things like Blade, Hilt, Handle, etc.")]
         public string[] ModelPlaneNames { get; set; }
 
+        [UIHint("DimensionalModelData")]
         public IDimensionalModelData DataObject { get; set; }
     }
 

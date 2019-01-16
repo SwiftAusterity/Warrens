@@ -8,8 +8,6 @@ using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.Models.Admin;
 using System;
-using System.Linq;
-using System.Text;
 using System.Web;
 using System.Web.Mvc;
 
@@ -68,14 +66,18 @@ namespace NetMud.Controllers.GameAdmin
                 var obj = TemplateCache.Get<IDimensionalModelData>(removeId);
 
                 if (obj == null)
+                {
                     message = "That does not exist";
+                }
                 else if (obj.Remove(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                 {
                     LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveDimensionalModelData[" + removeId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Delete Successful.";
                 }
                 else
+                {
                     message = "Error; Removal failed.";
+                }
             }
             else if (!string.IsNullOrWhiteSpace(authorizeUnapprove) && unapproveId.ToString().Equals(authorizeUnapprove))
             {
@@ -84,17 +86,23 @@ namespace NetMud.Controllers.GameAdmin
                 var obj = TemplateCache.Get<IDimensionalModelData>(unapproveId);
 
                 if (obj == null)
+                {
                     message = "That does not exist";
+                }
                 else if (obj.ChangeApprovalStatus(authedUser.GameAccount, authedUser.GetStaffRank(User), ApprovalState.Returned))
                 {
                     LoggingUtility.LogAdminCommandUsage("*WEB* - UnapproveDimensionalModelData[" + unapproveId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Unapproval Successful.";
                 }
                 else
+                {
                     message = "Error; Unapproval failed.";
+                }
             }
             else
+            {
                 message = "You must check the proper remove or unapprove authorization radio button first.";
+            }
 
             return RedirectToAction("Index", new { Message = message });
         }
@@ -104,7 +112,8 @@ namespace NetMud.Controllers.GameAdmin
         {
             var vModel = new AddEditDimensionalModelDataViewModel
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId())
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                DataObject = new DimensionalModelData()
             };
 
             return View("~/Views/GameAdmin/DimensionalModel/Add.cshtml", vModel);
@@ -119,77 +128,31 @@ namespace NetMud.Controllers.GameAdmin
 
             try
             {
-                DimensionalModelData newModel = null;
+                IDimensionalModelData newModel = vModel.DataObject;
 
-                //So we have file OR manual now so file trumps manual
-                if (modelFile != null && modelFile.ContentLength > 0)
+                foreach (var plane in newModel.ModelPlanes)
                 {
-                    byte[] bytes = new byte[modelFile.InputStream.Length];
-                    modelFile.InputStream.Read(bytes, 0, (int)modelFile.InputStream.Length);
-                    var fileContents = Encoding.UTF8.GetString(bytes);
-
-                    newModel = new DimensionalModelData(fileContents, vModel.ModelType);
-                }
-                else if(vModel.ModelPlaneNames.Count(m => !string.IsNullOrEmpty(m)) == 21
-                    && vModel.CoordinateDamageTypes.Any(m => !m.Equals(0))) //can't have an entirely null typed model
-                {
-                    //We're going to be cheaty and build a cDel string based on the arrays
-                    var arrayString = new StringBuilder();
-
-                    var i = 21;
-                    foreach(var name in vModel.ModelPlaneNames.Reverse())
+                    foreach (var node in plane.ModelNodes)
                     {
-                        arrayString.AppendLine(
-                            string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21}"
-                                , name
-                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 1]))
-                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 2]))
-                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 3]))
-                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 4]))
-                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 5]))
-                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 6]))
-                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 7]))
-                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 8]))
-                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 9]))
-                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 10]))
-                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 11]))
-                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 12]))
-                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 13]))
-                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 14]))
-                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 15]))
-                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 16]))
-                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 17]))
-                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 18]))
-                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 19]))
-                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 20]))
-                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 21]))
-                            )
-                        );
-
-                        i--;
+                        node.YAxis = plane.YAxis;
                     }
-
-                    newModel = new DimensionalModelData(arrayString.ToString(), vModel.ModelType);
                 }
-                else
-                    message = "You must post a comma delimited file with the model in it or use the manual form.";
 
-                if (newModel != null)
+                if (newModel.IsModelValid())
                 {
-                    newModel.Name = vModel.Name;
-
-                    if (newModel.IsModelValid())
+                    if (newModel.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
                     {
-                        if (newModel.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
-                            message = "Error; Creation failed.";
-                        else
-                        {
-                            LoggingUtility.LogAdminCommandUsage("*WEB* - AddDimensionalModelData[" + newModel.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                            message = "Creation Successful.";
-                        }
+                        message = "Error; Creation failed.";
                     }
                     else
-                        message = "Invalid model file; Model files must contain 21 planes of a tag name followed by 21 rows of 21 nodes.";
+                    {
+                        LoggingUtility.LogAdminCommandUsage("*WEB* - AddDimensionalModelData[" + newModel.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                        message = "Creation Successful.";
+                    }
+                }
+                else
+                {
+                    message = "Invalid model file; Model files must contain 21 planes of a tag name followed by 21 rows of 21 nodes.";
                 }
             }
             catch (Exception ex)
@@ -220,8 +183,6 @@ namespace NetMud.Controllers.GameAdmin
             }
 
             vModel.DataObject = obj;
-            vModel.Name = obj.Name;
-            vModel.ModelType = obj.ModelType;
 
             return View("~/Views/GameAdmin/DimensionalModel/Edit.cshtml", vModel);
         }
@@ -242,70 +203,33 @@ namespace NetMud.Controllers.GameAdmin
 
             try
             {
-                DimensionalModelData newModel = null;
-                
-                if (vModel.ModelPlaneNames.Count(m => !string.IsNullOrEmpty(m)) == 21
-                    && vModel.CoordinateDamageTypes.Any(m => !m.Equals(0))) //can't have an entirely null typed model
+                foreach (var plane in vModel.DataObject.ModelPlanes)
                 {
-                    //We're going to be cheaty and build a cDel string based on the arrays
-                    var arrayString = new StringBuilder();
-
-                    var i = 21;
-                    foreach (var name in vModel.ModelPlaneNames.Reverse())
+                    foreach (var node in plane.ModelNodes)
                     {
-                        arrayString.AppendLine(
-                            string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21}"
-                                , name
-                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 1]))
-                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 2]))
-                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 3]))
-                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 4]))
-                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 5]))
-                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 6]))
-                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 7]))
-                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 8]))
-                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 9]))
-                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 10]))
-                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 11]))
-                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 12]))
-                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 13]))
-                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 14]))
-                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 15]))
-                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 16]))
-                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 17]))
-                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 18]))
-                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 19]))
-                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 20]))
-                                , Physics.Render.DamageTypeToCharacter(((DamageType)vModel.CoordinateDamageTypes[i * 21 - 21]))
-                            )
-                        );
-
-                        i--;
+                        node.YAxis = plane.YAxis;
                     }
-
-                    newModel = new DimensionalModelData(arrayString.ToString(), vModel.ModelType);
                 }
-                else
-                    message = "You must post a comma delimited file with the model in it or use the manual form.";
 
-                if (newModel != null)
+                if (vModel.DataObject.IsModelValid())
                 {
-                    if (newModel.IsModelValid())
-                    {
-                        obj.Name = vModel.Name;
-                        obj.ModelType = newModel.ModelType;
-                        obj.ModelPlanes = newModel.ModelPlanes;
+                    obj.Name = vModel.DataObject.Name;
+                    obj.ModelType = vModel.DataObject.ModelType;
+                    obj.ModelPlanes = vModel.DataObject.ModelPlanes;
 
-                        if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
-                        {
-                            LoggingUtility.LogAdminCommandUsage("*WEB* - EditDimensionalModelData[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                            message = "Edit Successful.";
-                        }
-                        else
-                            message = "Error; Edit failed.";
+                    if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+                    {
+                        LoggingUtility.LogAdminCommandUsage("*WEB* - EditDimensionalModelData[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                        message = "Edit Successful.";
                     }
                     else
-                        message = "Invalid model; Models must contain 21 planes of a tag name followed by 21 rows of 21 nodes.";
+                    {
+                        message = "Error; Edit failed.";
+                    }
+                }
+                else
+                {
+                    message = "Invalid model; Models must contain 21 planes of a tag name followed by 21 rows of 21 nodes.";
                 }
             }
             catch (Exception ex)

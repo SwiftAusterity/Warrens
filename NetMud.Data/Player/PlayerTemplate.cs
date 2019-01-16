@@ -1,6 +1,7 @@
 ﻿using NetMud.Data.Architectural;
 using NetMud.Data.Architectural.DataIntegrity;
 using NetMud.Data.Architectural.EntityBase;
+using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.Data.Architectural.Serialization;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
@@ -52,7 +53,9 @@ namespace NetMud.Data.Players
             get
             {
                 if (_keywords == null || _keywords.Length == 0)
+                {
                     _keywords = new string[] { FullName().ToLower(), Name.ToLower(), SurName.ToLower() };
+                }
 
                 return _keywords;
             }
@@ -92,7 +95,9 @@ namespace NetMud.Data.Players
         /// <summary>
         /// Sensory overrides for staff member characters
         /// </summary>
-        public IDictionary<MessagingType, bool> SuperSenses { get; set; }
+        [Display(Name = "Super Senses", Description = "What sensory ranges are maxed for testing purposes.")]
+        [UIHint("SuperSenses")]
+        public HashSet<MessagingType> SuperSenses { get; set; }
 
         [JsonProperty("RaceData")]
         private TemplateCacheKey _race { get; set; }
@@ -104,6 +109,8 @@ namespace NetMud.Data.Players
         [JsonIgnore]
         [NonNullableDataIntegrity("Missing racial data.")]
         [Display(Name = "Race", Description = "Your genetic basis. Many races must be unlocked through specific means.")]
+        [UIHint("RaceList")]
+        [RaceDataBinder]
         public IRace Race
         {
             get
@@ -143,7 +150,9 @@ namespace NetMud.Data.Players
             get
             {
                 if (_account == null && !string.IsNullOrWhiteSpace(AccountHandle))
+                {
                     _account = Players.Account.GetByHandle(AccountHandle);
+                }
 
                 return _account;
             }
@@ -160,6 +169,7 @@ namespace NetMud.Data.Players
             TotalHealth = 100;
             TotalStamina = 100;
             Qualities = new HashSet<IQuality>();
+            SuperSenses = new HashSet<MessagingType>();
         }
 
         [JsonConstructor]
@@ -169,6 +179,7 @@ namespace NetMud.Data.Players
             TotalHealth = 100;
             TotalStamina = 100;
             Qualities = new HashSet<IQuality>();
+            SuperSenses = new HashSet<MessagingType>();
         }
 
         /// <summary>
@@ -180,7 +191,9 @@ namespace NetMud.Data.Players
             try
             {
                 if (Race == null)
+                {
                     return new Dimensions(0, 0, 0);
+                }
 
                 var height = Race.Head.Model.Height + Race.Torso.Model.Height + Race.Legs.Item.Model.Height;
                 var length = Race.Torso.Model.Length;
@@ -249,15 +262,18 @@ namespace NetMud.Data.Players
                 CreatorRank = rank;
 
                 //Default godsight to all false on creation unless you're making a new administrator
-                SuperSenses = new Dictionary<MessagingType, bool>
+                if (rank == StaffRank.Admin)
                 {
-                    { MessagingType.Audible, rank == StaffRank.Admin },
-                    { MessagingType.Olefactory, rank == StaffRank.Admin },
-                    { MessagingType.Psychic, rank == StaffRank.Admin },
-                    { MessagingType.Tactile, rank == StaffRank.Admin },
-                    { MessagingType.Taste, rank == StaffRank.Admin },
-                    { MessagingType.Visible, rank == StaffRank.Admin }
-                };
+                    SuperSenses = new HashSet<MessagingType>()
+                    {
+                        MessagingType.Audible,
+                        MessagingType.Olefactory,
+                        MessagingType.Psychic,
+                        MessagingType.Tactile,
+                        MessagingType.Taste,
+                        MessagingType.Visible
+                    };
+                }
 
                 //No approval stuff necessary here
                 ApproveMe(creator, rank);
@@ -285,7 +301,9 @@ namespace NetMud.Data.Players
             try
             {
                 if (Created != DateTime.MinValue)
+                {
                     SystemSave();
+                }
                 else
                 {
 
@@ -377,12 +395,16 @@ namespace NetMud.Data.Players
             try
             {
                 if (Created == DateTime.MinValue)
+                {
                     SystemCreate();
+                }
                 else
                 {
                     //only able to edit its own crap
                     if (CreatorHandle != DataHelpers.SystemUserHandle)
+                    {
                         return false;
+                    }
 
                     State = ApprovalState.Approved;
                     ApproverHandle = DataHelpers.SystemUserHandle;

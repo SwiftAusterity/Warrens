@@ -31,7 +31,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// The damage type inflicted when this part of the model strikes
         /// </summary>
         [Display(Name = "Surface", Description = "The style of the surface of this node.")]
-        [UIHint("EnumDropDownList")]
+        [DataType(DataType.Text)]
         public DamageType Style { get; set; }
 
         [JsonProperty("CompositionId")]

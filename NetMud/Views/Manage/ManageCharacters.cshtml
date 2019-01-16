@@ -4,7 +4,7 @@
     var linkText = Html.ActionLink("99999999", "EditCharacter", new { id = 99999999 }).ToString();
     tableColumns.Add("ID", obj => linkText.Replace("99999999", obj.Id.ToString()));
     tableColumns.Add("Name", obj => obj.FullName());
-    tableColumns.Add("Race", obj => obj.RaceData.Name);
+    tableColumns.Add("Race", obj => obj.Race.Name);
     tableColumns.Add("Gender", obj => obj.Gender);
     tableColumns.Add("N00b", obj => obj.StillANoob.ToString());
     tableColumns.Add("Permissions", obj => obj.GamePermissionsRank.ToString());
@@ -21,28 +21,7 @@
         <h4>New Character</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group row">
-            @Html.EditorFor(e => e.Name, new { columnCount = 3 })
-            @Html.EditorFor(e => e.SurName, new { columnCount = 3 })
-            @Html.EditorFor(e => e.Gender, new { columnCount = 3 })
-        </div>
-        <div class="form-group row">
-            @Html.DescriptiveLabelFor(m => m.RaceId, new { @class = "col-sm-1 col-form-label" })
-            <div class="col-sm-3">
-                @Html.DropDownList("RaceId", Model.ValidRaces.Select(rl =>
-                                new SelectListItem() { Text = rl.Name, Value = rl.Id.ToString() })
-                                 , "Select One", htmlAttributes: new { id = "raceId", Style = "padding: 7px;" })
-            </div>
-            @if (User.IsInRole("Admin"))
-            {
-                @Html.DescriptiveLabelFor(m => m.ChosenRole, new { @class = "col-sm-1 col-form-label" })
-                <div class="col-sm-3">
-                    @Html.DropDownList("ChosenRole", Model.ValidRoles.Select(rl =>
-                        new SelectListItem() { Text = rl.ToString(), Value = rl.ToString() })
-                        , "Select One", htmlAttributes: new { id = "chosenRole", Style = "padding: 7px;" })
-                </div>
-            }
-        </div>
+        @Html.EditorFor(e => e.NewCharacter, new { ValidRaces = Model.ValidRaces })
 
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Create", CancelName = "Cancel", ReturnAction = "ManageCharacters", ReturnController = "Manage", IncludeCancel = true})
     }

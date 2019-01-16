@@ -71,11 +71,6 @@ namespace NetMud.Data.Players
         public bool StillANoob { get; set; }
 
         /// <summary>
-        /// Sensory overrides for staff member characters
-        /// </summary>
-        public bool SuperVision { get; set; }
-
-        /// <summary>
         /// The "user" level for commands and accessibility
         /// </summary>
         public StaffRank GamePermissionsRank { get; set; }
@@ -115,7 +110,9 @@ namespace NetMud.Data.Players
             get
             {
                 if (_descriptorKey == null)
+                {
                     return default(IDescriptor);
+                }
 
                 return LiveCache.Get<IDescriptor>(_descriptorKey);
             }
@@ -150,7 +147,7 @@ namespace NetMud.Data.Players
         /// <summary>
         /// Sensory overrides for staff member characters
         /// </summary>
-        public IDictionary<MessagingType, bool> SuperSenses { get; set; }
+        public HashSet<MessagingType> SuperSenses { get; set; }
 
         /// <summary>
         /// NPC's race data
@@ -245,8 +242,10 @@ namespace NetMud.Data.Players
         {
             IPlayerTemplate dT = Template<IPlayerTemplate>();
 
-            if (dT.SuperSenses[MessagingType.Visible])
+            if (dT.SuperSenses.Contains(MessagingType.Visible))
+            {
                 return new ValueRange<float>(-999999, 999999);
+            }
 
             int returnTop = 1;
             int returnBottom = 100;
@@ -264,8 +263,10 @@ namespace NetMud.Data.Players
         {
             IPlayerTemplate dT = Template<IPlayerTemplate>();
 
-            if (dT.SuperSenses[MessagingType.Audible])
+            if (dT.SuperSenses.Contains(MessagingType.Audible))
+            {
                 return new ValueRange<float>(-999999, 999999);
+            }
 
             var returnTop = 1; //TODO: Add this to race or something
             var returnBottom = 100;
@@ -283,8 +284,10 @@ namespace NetMud.Data.Players
         {
             IPlayerTemplate dT = Template<IPlayerTemplate>();
 
-            if (dT.SuperSenses[MessagingType.Psychic])
+            if (dT.SuperSenses.Contains(MessagingType.Psychic))
+            {
                 return new ValueRange<float>(-999999, 999999);
+            }
 
             var returnTop = 0; //TODO: Add this to race or something
             var returnBottom = 0;
@@ -302,8 +305,10 @@ namespace NetMud.Data.Players
         {
             IPlayerTemplate dT = Template<IPlayerTemplate>();
 
-            if (dT.SuperSenses[MessagingType.Taste])
+            if (dT.SuperSenses.Contains(MessagingType.Taste))
+            {
                 return new ValueRange<float>(-999999, 999999);
+            }
 
             var returnTop = 1; //TODO: Add this to race or something
             var returnBottom = 100;
@@ -321,8 +326,10 @@ namespace NetMud.Data.Players
         {
             IPlayerTemplate dT = Template<IPlayerTemplate>();
 
-            if (dT.SuperSenses[MessagingType.Tactile])
+            if (dT.SuperSenses.Contains(MessagingType.Tactile))
+            {
                 return new ValueRange<float>(-999999, 999999);
+            }
 
             var returnTop = 1; //TODO: Add this to race or something
             var returnBottom = 100;
@@ -340,8 +347,10 @@ namespace NetMud.Data.Players
         {
             IPlayerTemplate dT = Template<IPlayerTemplate>();
 
-            if (dT.SuperSenses[MessagingType.Olefactory])
+            if (dT.SuperSenses.Contains(MessagingType.Olefactory))
+            {
                 return new ValueRange<float>(-999999, 999999);
+            }
 
             var returnTop = 1; //TODO: Add this to race or something
             var returnBottom = 100;
@@ -360,7 +369,9 @@ namespace NetMud.Data.Players
             float lumins = 0;
 
             foreach (IInanimate dude in Inventory.EntitiesContained())
+            {
                 lumins += dude.GetCurrentLuminosity();
+            }
 
             //TODO: Magical light, equipment, make inventory less bright depending on where it is
 
@@ -396,10 +407,14 @@ namespace NetMud.Data.Players
             var contents = new List<T>();
 
             if (implimentedTypes.Contains(typeof(IMobile)))
+            {
                 contents.AddRange(MobilesInside.EntitiesContained().Select(ent => (T)ent));
+            }
 
             if (implimentedTypes.Contains(typeof(IInanimate)))
+            {
                 contents.AddRange(Inventory.EntitiesContained().Select(ent => (T)ent));
+            }
 
             return contents;
         }
@@ -417,10 +432,14 @@ namespace NetMud.Data.Players
             var contents = new List<T>();
 
             if (implimentedTypes.Contains(typeof(IMobile)))
+            {
                 contents.AddRange(MobilesInside.EntitiesContained(containerName).Select(ent => (T)ent));
+            }
 
             if (implimentedTypes.Contains(typeof(IInanimate)))
+            {
                 contents.AddRange(Inventory.EntitiesContained(containerName).Select(ent => (T)ent));
+            }
 
             return contents;
         }
@@ -452,11 +471,15 @@ namespace NetMud.Data.Players
                 var obj = (IInanimate)thing;
 
                 if (Inventory.Contains(obj, containerName))
+                {
                     return "That is already in the container";
+                }
 
                 string moveError = MoveInto(obj);
                 if (!string.IsNullOrWhiteSpace(moveError))
+                {
                     return moveError;
+                }
 
                 Inventory.Add(obj, containerName);
                 UpsertToLiveWorldCache();
@@ -469,11 +492,15 @@ namespace NetMud.Data.Players
                 var obj = (IMobile)thing;
 
                 if (MobilesInside.Contains(obj, containerName))
+                {
                     return "That is already in the container";
+                }
 
                 string moveError = MoveInto(obj);
                 if (!string.IsNullOrWhiteSpace(moveError))
+                {
                     return moveError;
+                }
 
                 MobilesInside.Add(obj, containerName);
                 UpsertToLiveWorldCache();
@@ -511,7 +538,9 @@ namespace NetMud.Data.Players
                 var obj = (IInanimate)thing;
 
                 if (!Inventory.Contains(obj, containerName))
+                {
                     return "That is not in the container";
+                }
 
                 obj.TryMoveTo(null);
                 Inventory.Remove(obj, containerName);
@@ -525,7 +554,9 @@ namespace NetMud.Data.Players
                 var obj = (IMobile)thing;
 
                 if (!MobilesInside.Contains(obj, containerName))
+                {
                     return "That is not in the container";
+                }
 
                 obj.TryMoveTo(null);
                 MobilesInside.Remove(obj, containerName);
@@ -554,7 +585,9 @@ namespace NetMud.Data.Players
 
             //Isn't in the world currently
             if (me == default(IPlayer))
+            {
                 SpawnNewInWorld();
+            }
             else
             {
                 var ch = me.Template<IPlayerTemplate>();
@@ -575,10 +608,14 @@ namespace NetMud.Data.Players
                 GamePermissionsRank = me.GamePermissionsRank;
 
                 if (CurrentHealth == 0)
+                {
                     CurrentHealth = ch.TotalHealth;
+                }
 
                 if (CurrentStamina == 0)
+                {
                     CurrentStamina = ch.TotalStamina;
+                }
 
                 if (me.CurrentLocation == null)
                 {
@@ -600,7 +637,9 @@ namespace NetMud.Data.Players
             IPlayerTemplate ch = Template<IPlayerTemplate>();
 
             if (ch.CurrentLocation?.CurrentZone == null)
+            {
                 ch.CurrentLocation = GetBaseSpawn();
+            }
 
             SpawnNewInWorld(ch.CurrentLocation);
         }

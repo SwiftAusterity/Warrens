@@ -165,11 +165,11 @@ namespace NetMud.Models.Admin
 
         [Display(Name = "Features", Description = "The name this sends to gossip to represent itself.")]
         [UIHint("TagContainer")]
-        public string SupportedFeatures { get; set; }
+        public HashSet<string> SupportedFeatures { get; set; }
 
         [Display(Name = "Channels", Description = "The name this sends to gossip to represent itself.")]
         [UIHint("TagContainer")]
-        public string SupportedChannels { get; set; }
+        public HashSet<string> SupportedChannels { get; set; }
 
         [Display(Name = "Retry Loop Maximum", Description = "The maximum retry value. Higher = more retries.")]
         [Range(200, 1000, ErrorMessage = "Must be between 200 and 1000.")]

@@ -102,7 +102,9 @@ namespace NetMud.Controllers.GameAdmin
                 ClientSecret = gossipConfig.ClientSecret,
                 ClientName = gossipConfig.ClientName,
                 SuspendMultiplier = gossipConfig.SuspendMultiplier,
-                SuspendMultiplierMaximum = gossipConfig.SuspendMultiplierMaximum
+                SuspendMultiplierMaximum = gossipConfig.SuspendMultiplierMaximum,
+                SupportedChannels = gossipConfig.SupportedChannels,
+                SupportedFeatures = gossipConfig.SupportedFeatures
             };
 
             return View(dashboardModel);
@@ -274,23 +276,8 @@ namespace NetMud.Controllers.GameAdmin
             gossipConfig.ClientSecret = vModel.ClientSecret;
             gossipConfig.SuspendMultiplierMaximum = vModel.SuspendMultiplierMaximum;
             gossipConfig.SuspendMultiplier = vModel.SuspendMultiplier;
-
-            HashSet<string> channelList = new HashSet<string>();
-
-            if (vModel.SupportedChannels != null)
-                foreach (string tag in vModel.SupportedChannels.Split(new string[] { "||" }, StringSplitOptions.RemoveEmptyEntries))
-                    channelList.Add(tag);
-
-
-            gossipConfig.SupportedChannels = channelList;
-
-            HashSet<string> featureList = new HashSet<string>();
-
-            if (vModel.SupportedFeatures != null)
-                foreach (string tag in vModel.SupportedFeatures.Split(new string[] { "||" }, StringSplitOptions.RemoveEmptyEntries))
-                    featureList.Add(tag);
-
-            gossipConfig.SupportedFeatures = featureList;
+            gossipConfig.SupportedChannels = vModel.SupportedChannels;
+            gossipConfig.SupportedFeatures = vModel.SupportedFeatures;
 
             if (gossipConfig.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {

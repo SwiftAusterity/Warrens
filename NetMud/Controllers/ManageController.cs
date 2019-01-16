@@ -123,7 +123,7 @@ namespace NetMud.Controllers
             var model = new ManageCharactersViewModel
             {
                 authedUser = UserManager.FindById(userId),
-                ValidRoles = (StaffRank[])Enum.GetValues(typeof(StaffRank))
+                NewCharacter = new PlayerTemplate()
             };
 
             model.ValidRaces = TemplateCache.GetAll<IRace>();
@@ -133,7 +133,7 @@ namespace NetMud.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddCharacter(string Name, string SurName, string Gender, long raceId, StaffRank chosenRole = StaffRank.Player)
+        public ActionResult AddCharacter(ManageCharactersViewModel vModel)
         {
             string message = string.Empty;
             var userId = User.Identity.GetUserId();
@@ -144,19 +144,16 @@ namespace NetMud.Controllers
 
             var newChar = new PlayerTemplate
             {
-                Name = Name,
-                SurName = SurName,
-                Gender = Gender
+                Name = vModel.NewCharacter.Name,
+                SurName = vModel.NewCharacter.SurName,
+                Gender = vModel.NewCharacter.Gender,
+                SuperSenses = vModel.NewCharacter.SuperSenses,
+                GamePermissionsRank = StaffRank.Player,
+                Race = vModel.NewCharacter.Race
             };
-            var race = TemplateCache.Get<IRace>(raceId);
-
-            if (race != null)
-                newChar.Race = race;
 
             if (User.IsInRole("Admin"))
-                newChar.GamePermissionsRank = chosenRole;
-            else
-                newChar.GamePermissionsRank = StaffRank.Player;
+                newChar.GamePermissionsRank = vModel.NewCharacter.GamePermissionsRank;
 
             message = model.authedUser.GameAccount.AddCharacter(newChar);
 
@@ -174,10 +171,7 @@ namespace NetMud.Controllers
             var model = new AddEditCharacterViewModel
             {
                 authedUser  = user,
-                DataObject = obj,
-                Name = obj.Name,
-                SurName = obj.SurName,
-                SuperSenses = obj.SuperSenses.Where(ss => ss.Value).Select(ss => (short)ss.Key).ToArray()
+                DataObject = obj
             };
 
             return View(model);
@@ -192,24 +186,17 @@ namespace NetMud.Controllers
             var authedUser = UserManager.FindById(userId);
             var obj = PlayerDataCache.Get(new PlayerDataCacheKey(typeof(IPlayerTemplate), authedUser.GlobalIdentityHandle, id));
 
+            obj.Name = vModel.DataObject.Name;
+            obj.SurName = vModel.DataObject.SurName;
+            obj.Gender = vModel.DataObject.Gender;
+            obj.SuperSenses = vModel.DataObject.SuperSenses;
+            obj.GamePermissionsRank = vModel.DataObject.GamePermissionsRank;
+            obj.Race = vModel.DataObject.Race;
+            
             if (obj == null)
                 message = "That character does not exist";
             else
             {
-                var senses = new Dictionary<MessagingType, bool>();
-                foreach(var senseValue in vModel.SuperSenses)
-                    senses.Add((MessagingType)senseValue, true);
-
-                foreach (var sense in Enum.GetNames(typeof(MessagingType)))
-                {
-                    var currentEnum = (MessagingType)Enum.Parse(typeof(MessagingType), sense);
-
-                    if(!senses.ContainsKey(currentEnum))
-                        senses.Add(currentEnum, false);
-                }
-
-                obj.SuperSenses = senses;
-
                 if(obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                 {
                     LoggingUtility.Log("*WEB* - EditCharacter[" + authedUser.GameAccount.GlobalIdentityHandle + "]", LogChannels.AccountActivity);

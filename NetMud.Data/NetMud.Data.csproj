@@ -135,12 +135,13 @@
     <Compile Include="Architectural\EntityBase\Quality.cs" />
     <Compile Include="Architectural\GlobalPosition.cs" />
     <Compile Include="Architectural\LookupDataPartial.cs" />
+    <Compile Include="Architectural\PropertyBinding\PhysicalModelDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\AffectPatternDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\PathwayTemplateDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\LocaleTemplateDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\RoomTemplateDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\MaterialDataBinder.cs" />
-    <Compile Include="Architectural\PropertyBinding\DimensionalModelDataBinder.cs" />
+    <Compile Include="Architectural\PropertyBinding\DimensionalModelNodeDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\FaunaDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\FloraDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\RaceDataBinder.cs" />

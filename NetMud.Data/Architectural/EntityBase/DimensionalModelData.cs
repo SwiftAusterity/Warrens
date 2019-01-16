@@ -36,6 +36,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <summary>
         /// The 21 planes that compose the physical model
         /// </summary>
+        [UIHint("DimensionalModelPlanes")]
         public HashSet<IDimensionalModelPlane> ModelPlanes { get; set; }
 
         /// <summary>

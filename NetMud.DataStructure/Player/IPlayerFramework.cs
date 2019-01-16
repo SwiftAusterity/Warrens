@@ -43,6 +43,6 @@ namespace NetMud.DataStructure.Player
         /// <summary>
         /// Sensory overrides for staff member characters
         /// </summary>
-        IDictionary<MessagingType, bool> SuperSenses { get; set; }
+        HashSet<MessagingType> SuperSenses { get; set; }
     }
 }

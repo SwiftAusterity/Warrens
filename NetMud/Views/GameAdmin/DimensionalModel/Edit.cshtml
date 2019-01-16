@@ -3,106 +3,16 @@
 
 @model NetMud.Models.Admin.AddEditDimensionalModelDataViewModel
 
-@{
-    var i = 0;
-}
-
 <section id="newCharacterForm">
     @using (Html.BeginForm("Edit", "DimensionalModel", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group row">
-            @Html.EditorFor(e => e.Name, new { columnCount = 3 })
-            @Html.EditorFor(e => e.ModelType, new { columnCount = 3 })
-        </div>
-        <div class="form-group row">
-            @Html.EditorFor(e => e.ModelFile, new { columnCount = 1 })
-        </div>
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label">-OR-</label>
-        </div>
-        <div class="clearfix"></div>
-        <h3>Manual Model</h3>
-        <hr />
 
-        <div class="form-group row" style="display: inline-flex;">
-            <label class="col-sm-2 col-form-label">Type Selector</label>
-            <div class="col-sm-10">
-                @Html.DropDownList("PaintbrushSymbol", Enum.GetNames(typeof(DamageType)).Select(rl =>
-                       new SelectListItem() { Text = ((DamageType)Enum.Parse(typeof(DamageType), rl)).GetDescription(), Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString() })
-                                    , htmlAttributes: new { id = "PaintbrushSymbol", @class = "form-control" })
-                <span style="padding: 15px; font-style: italic;">Hold Shift to paint or click on nodes individually.</span>
-            </div>
-            <a href="#" class="btn" id="clearFields" style="color: red;">Clear Fields</a>
-        </div>
-
-        for (i = 20; i >= 0; i--)
-        {
-            var tagName = Model.DataObject.ModelPlanes.Count() - 1 >= i ? Model.DataObject.ModelPlanes.ElementAt(i).TagName : "";
-            <div class="row">
-                <div>
-                    @Html.DescriptiveLabelFor(m => m.ModelPlaneNames, new { @class = "col-sm-1 col-form-label" })
-                    <input type="text" id="ModelPlaneNames" name="ModelPlaneNames" value="@tagName" class="col-sm-1" />
-                </div>
-                <div>
-                    <div class="col-md-offset-0 col-md-10 dimModelPlane">
-                        @Html.DescriptiveLabelFor(m => m.CoordinateDamageTypes, new { @class = "col-sm-1 col-form-label" })
-
-                        <span style="width: 15px;">@(i + 1)</span>
-                        @for (var n = 0; n <= 20; n++)
-                        {
-                            var nodeValue = Model.DataObject.ModelPlanes.Count() - 1 >= i && Model.DataObject.ModelPlanes.ElementAt(i).ModelNodes.Count() - 1 >= n
-                                            ? (short)Model.DataObject.ModelPlanes.ElementAt(i).ModelNodes.ElementAt(n).Style : -1;
-                            var nodeText = Model.DataObject.ModelPlanes.Count() - 1 >= i && Model.DataObject.ModelPlanes.ElementAt(i).ModelNodes.Count() - 1 >= n
-                                            ? Model.DataObject.ModelPlanes.ElementAt(i).ModelNodes.ElementAt(n).Style.GetDescription().Substring(0, 1) : "";
-                            <div class="dimModelNode" data-value="@nodeValue"><input type="hidden" id="CoordinateDamageTypes" name="CoordinateDamageTypes" class="CoordinateDamageTypes" value="@nodeValue" /><span id="nodeValue" class="nodeValue">@nodeText</span></div>
-                        }
-                        <span style="width: 15px;">@(i + 1)</span>
-                    </div>
-                </div>
-            </div>
-        }
+        @Html.EditorFor(e => e.DataObject)
 
         <div class="clearfix"></div>
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "DimensionalModel", IncludeCancel = true })
     }
 </section>
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-
-    <script>
-        $(document).ready(function () {
-            $(document).keydown(function (e) {
-                if (e.keyCode === 16) {
-                    $('div.dimModelNode').on('mouseenter', function () { paint($(this)) });
-                }
-            }).keyup(function (e) {
-                if (e.keyCode === 16) {
-                    $('div.dimModelNode').off('mouseenter');
-                }
-            });
-
-            $('div.dimModelNode').click(function () { paint($(this)) });
-
-            $('#clearFields').click(function () {
-                $('.dimModelNode').attr('data-value', '0');
-                $('.CoordinateDamageTypes').val('0');
-                $('.nodeValue').text('0');
-
-                return false;
-            });
-        });
-
-        function paint(nodeCell) {
-            var symbol = $('#PaintbrushSymbol option:selected').text().substr(0, 1);
-            var value = $('#PaintbrushSymbol option:selected').val();
-
-            nodeCell.children('input').val(value);
-            nodeCell.children('span').text(symbol);
-            nodeCell.attr('data-value', value);
-        }
-    </script>
-}
