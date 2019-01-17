@@ -14,18 +14,38 @@ namespace NetMud.Models
         {
             if (modelType.IsInterface)
             {
-                var type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(modelType));
-
-                if (type == null)
+                if (!modelType.IsGenericType)
                 {
-                    throw new Exception("Invalid Binding Interface");
+                    var type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(modelType));
+
+                    if (type == null)
+                    {
+                        throw new Exception("Invalid Binding Interface");
+                    }
+
+                    var concreteInstance = Activator.CreateInstance(type);
+
+                    bindingContext.ModelMetadata = ModelMetadataProviders.Current.GetMetadataForType(() => concreteInstance, type);
+
+                    return concreteInstance;
                 }
+                else
+                {
+                    var genericName = modelType.Name.Substring(1);
+                    var type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.IsGenericType && x.Name.Equals(genericName));
 
-                var concreteInstance = Activator.CreateInstance(type);
+                    if (type == null)
+                    {
+                        throw new Exception("Invalid Binding Interface");
+                    }
 
-                bindingContext.ModelMetadata = ModelMetadataProviders.Current.GetMetadataForType(() => concreteInstance, type);
+                    var genericType = type.MakeGenericType(modelType.GenericTypeArguments);
+                    var concreteInstance = Activator.CreateInstance(genericType);
 
-                return concreteInstance;
+                    bindingContext.ModelMetadata = ModelMetadataProviders.Current.GetMetadataForType(() => concreteInstance, genericType);
+
+                    return concreteInstance;
+                }
             }
 
             return base.CreateModel(controllerContext, bindingContext, modelType);

@@ -40,23 +40,23 @@
     <Reference Include="Google.Api.Gax.Rest, Version=2.5.0.0, Culture=neutral, PublicKeyToken=3ec5ea7f18953e47, processorArchitecture=MSIL">
       <HintPath>..\packages\Google.Api.Gax.Rest.2.5.0\lib\net45\Google.Api.Gax.Rest.dll</HintPath>
     </Reference>
-    <Reference Include="Google.Apis, Version=1.36.1.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
-      <HintPath>..\packages\Google.Apis.1.36.1\lib\net45\Google.Apis.dll</HintPath>
+    <Reference Include="Google.Apis, Version=1.37.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.1.37.0\lib\net45\Google.Apis.dll</HintPath>
     </Reference>
-    <Reference Include="Google.Apis.Auth, Version=1.36.1.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
-      <HintPath>..\packages\Google.Apis.Auth.1.36.1\lib\net45\Google.Apis.Auth.dll</HintPath>
+    <Reference Include="Google.Apis.Auth, Version=1.37.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Auth.1.37.0\lib\net45\Google.Apis.Auth.dll</HintPath>
     </Reference>
-    <Reference Include="Google.Apis.Auth.PlatformServices, Version=1.36.1.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
-      <HintPath>..\packages\Google.Apis.Auth.1.36.1\lib\net45\Google.Apis.Auth.PlatformServices.dll</HintPath>
+    <Reference Include="Google.Apis.Auth.PlatformServices, Version=1.37.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Auth.1.37.0\lib\net45\Google.Apis.Auth.PlatformServices.dll</HintPath>
     </Reference>
-    <Reference Include="Google.Apis.Core, Version=1.36.1.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
-      <HintPath>..\packages\Google.Apis.Core.1.36.1\lib\net45\Google.Apis.Core.dll</HintPath>
+    <Reference Include="Google.Apis.Core, Version=1.37.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Core.1.37.0\lib\net45\Google.Apis.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Google.Apis.PlatformServices, Version=1.36.1.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
-      <HintPath>..\packages\Google.Apis.1.36.1\lib\net45\Google.Apis.PlatformServices.dll</HintPath>
+    <Reference Include="Google.Apis.PlatformServices, Version=1.37.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.1.37.0\lib\net45\Google.Apis.PlatformServices.dll</HintPath>
     </Reference>
-    <Reference Include="Google.Apis.Translate.v2, Version=1.36.1.875, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
-      <HintPath>..\packages\Google.Apis.Translate.v2.1.36.1.875\lib\net45\Google.Apis.Translate.v2.dll</HintPath>
+    <Reference Include="Google.Apis.Translate.v2, Version=1.37.0.875, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Translate.v2.1.37.0.875\lib\net45\Google.Apis.Translate.v2.dll</HintPath>
     </Reference>
     <Reference Include="Google.Cloud.Translation.V2, Version=1.1.0.0, Culture=neutral, PublicKeyToken=185c282632e132a0, processorArchitecture=MSIL">
       <HintPath>..\packages\Google.Cloud.Translation.V2.1.1.0\lib\net45\Google.Cloud.Translation.V2.dll</HintPath>
@@ -129,16 +129,20 @@
     <Compile Include="Architectural\EntityBase\EntityContainerData.cs" />
     <Compile Include="Architectural\EntityBase\EntityPartial.cs" />
     <Compile Include="Architectural\EntityBase\EntityTemplatePartial.cs" />
+    <Compile Include="Architectural\EntityBase\MaterialComposition.cs" />
+    <Compile Include="Architectural\EntityBase\ModelPartComposition.cs" />
     <Compile Include="Architectural\EntityBase\LocationTemplateEntityPartial.cs" />
     <Compile Include="Architectural\EntityBase\LocationEntityPartial.cs" />
     <Compile Include="Architectural\EntityBase\Material.cs" />
     <Compile Include="Architectural\EntityBase\Quality.cs" />
     <Compile Include="Architectural\GlobalPosition.cs" />
     <Compile Include="Architectural\LookupDataPartial.cs" />
+    <Compile Include="Architectural\PropertyBinding\DimensionalModelDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\PhysicalModelDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\AffectPatternDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\PathwayTemplateDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\LocaleTemplateDataBinder.cs" />
+    <Compile Include="Architectural\PropertyBinding\MarkdownBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\RoomTemplateDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\MaterialDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\DimensionalModelNodeDataBinder.cs" />

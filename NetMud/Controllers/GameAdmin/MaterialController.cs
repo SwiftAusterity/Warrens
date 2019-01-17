@@ -103,7 +103,8 @@ namespace NetMud.Controllers.GameAdmin
             var vModel = new AddEditMaterialViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidMaterials = TemplateCache.GetAll<IMaterial>()
+                ValidMaterials = TemplateCache.GetAll<IMaterial>(),
+                DataObject = new Material()
             };
 
             return View("~/Views/GameAdmin/Material/Add.cshtml", vModel);
@@ -117,63 +118,7 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var newObj = new Material
-            {
-                Name = vModel.Name,
-                Conductive = vModel.Conductive,
-                Density = vModel.Density,
-                Ductility = vModel.Ductility,
-                Flammable = vModel.Flammable,
-                GasPoint = vModel.GasPoint,
-                Magnetic = vModel.Magnetic,
-                Mallebility = vModel.Mallebility,
-                Porosity = vModel.Porosity,
-                SolidPoint = vModel.SolidPoint,
-                TemperatureRetention = vModel.TemperatureRetention,
-                Viscosity = vModel.Viscosity,
-                HelpText = vModel.HelpBody
-            };
-
-            if (vModel.Resistances != null)
-            {
-                int resistancesIndex = 0;
-                foreach (var type in vModel.Resistances)
-                {
-                    if (type > 0)
-                    {
-                        if (vModel.ResistanceValues.Count() <= resistancesIndex)
-                            break;
-
-                        var currentValue = vModel.ResistanceValues[resistancesIndex];
-
-                        if (currentValue > 0)
-                            newObj.Resistance.Add((DamageType)type, currentValue);
-                    }
-
-                    resistancesIndex++;
-                }
-            }
-
-            if (vModel.Compositions != null)
-            {
-                int compositionsIndex = 0;
-                foreach (var materialId in vModel.Compositions)
-                {
-                    if (materialId > 0)
-                    {
-                        if (vModel.CompositionPercentages.Count() <= compositionsIndex)
-                            break;
-
-                        var currentValue = vModel.CompositionPercentages[compositionsIndex];
-                        var material = TemplateCache.Get<Material>(materialId);
-
-                        if (material != null && currentValue > 0)
-                            newObj.Composition.Add(material, currentValue);
-                    }
-
-                    compositionsIndex++;
-                }
-            }
+            var newObj = vModel.DataObject;
 
             if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
                 message = "Error; Creation failed.";
@@ -205,19 +150,6 @@ namespace NetMud.Controllers.GameAdmin
             }
 
             vModel.DataObject = obj;
-            vModel.Name = obj.Name;
-            vModel.Conductive = obj.Conductive;
-            vModel.Density = obj.Density;
-            vModel.Ductility = obj.Ductility;
-            vModel.Flammable = obj.Flammable;
-            vModel.GasPoint = obj.GasPoint;
-            vModel.Magnetic = obj.Magnetic;
-            vModel.Mallebility = obj.Mallebility;
-            vModel.Porosity = obj.Porosity;
-            vModel.SolidPoint = obj.SolidPoint;
-            vModel.TemperatureRetention = obj.TemperatureRetention;
-            vModel.Viscosity = obj.Viscosity;
-            vModel.HelpBody = obj.HelpText.Value;
 
             return View("~/Views/GameAdmin/Material/Edit.cshtml", vModel);
         }
@@ -236,86 +168,21 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = message });
             }
 
-            obj.Name = vModel.Name;
-            obj.Conductive = vModel.Conductive;
-            obj.Density = vModel.Density;
-            obj.Ductility = vModel.Ductility;
-            obj.Flammable = vModel.Flammable;
-            obj.GasPoint = vModel.GasPoint;
-            obj.Magnetic = vModel.Magnetic;
-            obj.Mallebility = vModel.Mallebility;
-            obj.Porosity = vModel.Porosity;
-            obj.SolidPoint = vModel.SolidPoint;
-            obj.TemperatureRetention = vModel.TemperatureRetention;
-            obj.Viscosity = vModel.Viscosity;
-            obj.HelpText = vModel.HelpBody;
-
-            if (vModel.Resistances != null)
-            {
-                int resistancesIndex = 0;
-                foreach (var type in vModel.Resistances)
-                {
-                    if (type > 0)
-                    {
-                        if (vModel.ResistanceValues.Count() <= resistancesIndex)
-                            break;
-
-                        if (obj.Resistance.Any(ic => (short)ic.Key == type))
-                        {
-                            obj.Resistance.Remove((DamageType)type);
-                            var currentValue = vModel.ResistanceValues[resistancesIndex];
-
-                            obj.Resistance.Add((DamageType)type, currentValue);
-                        }
-                        else
-                        {
-                            var currentValue = vModel.ResistanceValues[resistancesIndex];
-
-                            obj.Resistance.Add((DamageType)type, currentValue);
-                        }
-                    }
-
-                    resistancesIndex++;
-                }
-            }
-
-            foreach (var container in obj.Resistance.Where(ic => !vModel.Resistances.Contains((short)ic.Key)))
-                obj.Resistance.Remove(container);
-
-            if (vModel.Compositions != null)
-            {
-                int compositionsIndex = 0;
-                foreach (var materialId in vModel.Compositions)
-                {
-                    if (materialId > 0)
-                    {
-                        if (vModel.CompositionPercentages.Count() <= compositionsIndex)
-                            break;
-
-                        var material = TemplateCache.Get<Material>(materialId);
-                        short currentValue = -1;
-
-                        if (material != null)
-                        {
-                            if (obj.Composition.Any(ic => ic.Key.Id == materialId))
-                            {
-
-                                obj.Composition.Remove(material);
-                                currentValue = vModel.CompositionPercentages[compositionsIndex];
-                            }
-                            else
-                                currentValue = vModel.CompositionPercentages[compositionsIndex];
-
-                            obj.Composition.Add(material, currentValue);
-                        }
-                    }
-
-                    compositionsIndex++;
-                }
-            }
-
-            foreach (var container in obj.Composition.Where(ic => !vModel.Compositions.Contains(ic.Key.Id)))
-                obj.Composition.Remove(container);
+            obj.Name = vModel.DataObject.Name;
+            obj.Conductive = vModel.DataObject.Conductive;
+            obj.Density = vModel.DataObject.Density;
+            obj.Ductility = vModel.DataObject.Ductility;
+            obj.Flammable = vModel.DataObject.Flammable;
+            obj.GasPoint = vModel.DataObject.GasPoint;
+            obj.Magnetic = vModel.DataObject.Magnetic;
+            obj.Mallebility = vModel.DataObject.Mallebility;
+            obj.Porosity = vModel.DataObject.Porosity;
+            obj.SolidPoint = vModel.DataObject.SolidPoint;
+            obj.TemperatureRetention = vModel.DataObject.TemperatureRetention;
+            obj.Viscosity = vModel.DataObject.Viscosity;
+            obj.HelpText = vModel.DataObject.HelpText;
+            obj.Resistance = vModel.DataObject.Resistance;
+            obj.Composition = vModel.DataObject.Composition;
 
             if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {

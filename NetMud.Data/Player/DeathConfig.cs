@@ -1,6 +1,7 @@
 ﻿using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Architectural.PropertyValidation;
 using NetMud.DataStructure.Player;
 using NetMud.DataStructure.Zone;
 using Newtonsoft.Json;
@@ -74,10 +75,11 @@ namespace NetMud.Data.Players
         /// <summary>
         /// The body of the death notice
         /// </summary>
-        [StringLength(2000, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 20)]
+        [MarkdownStringLengthValidator(ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 20)]
         [DataType("Markdown")]
         [Display(Name = "Body", Description = "The body of the death notice.")]
         [Required]
+        [MarkdownBinder]
         public MarkdownString DeathNoticeBody { get; set; }
 
         /// <summary>

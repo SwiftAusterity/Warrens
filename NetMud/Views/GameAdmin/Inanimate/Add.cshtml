@@ -4,18 +4,9 @@
     @using (Html.BeginForm("Add", "Inanimate", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {
         @Html.AntiForgeryToken()
-        <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group row">
-            @Html.EditorFor(e => e.Name)
-        </div>
 
-        @Html.Partial("~/Views/GameAdmin/Inanimate/InternalComposition.cshtml", Model)
-
-        @Html.Partial("InanimateEntityContainer", new NetMud.Models.Admin.EntityContainerViewModel<NetMud.DataStructure.Inanimate.IInanimate>("Inanimate", "Inanimate Containers"))
-        @Html.Partial("MobileEntityContainer", new NetMud.Models.Admin.EntityContainerViewModel<NetMud.DataStructure.Architectural.ActorBase.IMobile>("Mobile", "Character Containers"))
-
-        @Html.Partial("TwoDimensionalEntityEditor", Model)
+        @Html.EditorFor(e => e.DataObject, new { ValidInanimateTemplates = Model.ValidInanimateTemplates, ValidModels = Model.ValidModels, ValidMaterials = Model.ValidMaterials })
 
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Create", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Inanimate", IncludeCancel = true })
     }

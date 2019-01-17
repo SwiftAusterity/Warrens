@@ -1,4 +1,5 @@
-﻿using NetMud.DataAccess.Cache;
+﻿using NetMud.Data.Architectural.PropertyBinding;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Inanimate;
 using Newtonsoft.Json;
 using System;
@@ -17,6 +18,7 @@ namespace NetMud.Data.Inanimate
         [ScriptIgnore]
         [Display(Name = "Component", Description = "The object of the collection.")]
         [UIHint("InanimateTemplateList")]
+        [InanimateTemplateDataBinder]
         public IInanimateTemplate Item
         {
             get

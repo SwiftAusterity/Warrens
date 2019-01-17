@@ -2,7 +2,6 @@
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
 using NetMud.Communication.Lexical;
-using NetMud.Data.Architectural.EntityBase;
 using NetMud.Data.Linguistic;
 using NetMud.Data.Room;
 using NetMud.Data.Zone;
@@ -18,7 +17,6 @@ using NetMud.DataStructure.System;
 using NetMud.DataStructure.Zone;
 using NetMud.Models.Admin;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -78,14 +76,18 @@ namespace NetMud.Controllers.GameAdmin
                 var obj = TemplateCache.Get<IZoneTemplate>(removeId);
 
                 if (obj == null)
+                {
                     message = "That does not exist";
+                }
                 else if (obj.Remove(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                 {
                     LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveZone[" + removeId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Delete Successful.";
                 }
                 else
+                {
                     message = "Error; Removal failed.";
+                }
             }
             else if (!string.IsNullOrWhiteSpace(authorizeUnapprove) && unapproveId.ToString().Equals(authorizeUnapprove))
             {
@@ -94,17 +96,23 @@ namespace NetMud.Controllers.GameAdmin
                 var obj = TemplateCache.Get<IZoneTemplate>(unapproveId);
 
                 if (obj == null)
+                {
                     message = "That does not exist";
+                }
                 else if (obj.ChangeApprovalStatus(authedUser.GameAccount, authedUser.GetStaffRank(User), ApprovalState.Returned))
                 {
                     LoggingUtility.LogAdminCommandUsage("*WEB* - UnapproveZone[" + unapproveId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Unapproval Successful.";
                 }
                 else
+                {
                     message = "Error; Unapproval failed.";
+                }
             }
             else
+            {
                 message = "You must check the proper remove or unapprove authorization radio button first.";
+            }
 
             return RedirectToAction("Index", new { Message = message });
         }
@@ -140,13 +148,17 @@ namespace NetMud.Controllers.GameAdmin
             var world = TemplateCache.Get<IGaiaTemplate>(vModel.World);
 
             if (world == null)
+            {
                 message = "Error; You must choose a valid world.";
+            }
             else
             {
                 newObj.World = world;
 
                 if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
+                {
                     message = "Error; Creation failed.";
+                }
                 else
                 {
                     LoggingUtility.LogAdminCommandUsage("*WEB* - AddZone[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
@@ -211,7 +223,9 @@ namespace NetMud.Controllers.GameAdmin
             var world = TemplateCache.Get<IGaiaTemplate>(vModel.World);
 
             if (world == null)
+            {
                 message = "Error; You must choose a valid world.";
+            }
             else
             {
                 obj.World = world;
@@ -222,7 +236,9 @@ namespace NetMud.Controllers.GameAdmin
                     message = "Edit Successful.";
                 }
                 else
+                {
                     message = "Error; Edit failed.";
+                }
             }
             return RedirectToAction("Index", new { Message = message });
         }
@@ -268,12 +284,6 @@ namespace NetMud.Controllers.GameAdmin
                 vModel.Destination = (IRoomTemplate)existingPathway.Destination;
                 vModel.DestinationID = existingPathway.Destination.Id;
 
-                vModel.DimensionalModelId = existingPathway.Model.ModelTemplate.Id;
-                vModel.DimensionalModelHeight = existingPathway.Model.Height;
-                vModel.DimensionalModelLength = existingPathway.Model.Length;
-                vModel.DimensionalModelWidth = existingPathway.Model.Width;
-                vModel.DimensionalModelVacuity = existingPathway.Model.Vacuity;
-                vModel.DimensionalModelCavitation = existingPathway.Model.SurfaceCavitation;
                 vModel.ModelDataObject = existingPathway.Model;
 
                 vModel.DataObject = existingPathway;
@@ -292,57 +302,17 @@ namespace NetMud.Controllers.GameAdmin
             {
                 Name = vModel.Name,
                 DegreesFromNorth = -1,
-                Origin = (ILocationData)TemplateCache.Get<IZoneTemplate>(vModel.OriginID),
+                Origin = TemplateCache.Get<IZoneTemplate>(vModel.OriginID),
                 Destination = TemplateCache.Get<IRoomTemplate>(vModel.DestinationID),
             };
 
-            var materialParts = new Dictionary<string, IMaterial>();
-            if (vModel.ModelPartNames != null)
+            if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
             {
-                int nameIndex = 0;
-                foreach (var partName in vModel.ModelPartNames)
-                {
-                    if (!string.IsNullOrWhiteSpace(partName))
-                    {
-                        if (vModel.ModelPartMaterials.Count() <= nameIndex)
-                            break;
-
-                        var material = TemplateCache.Get<IMaterial>(vModel.ModelPartMaterials[nameIndex]);
-
-                        if (material != null && !string.IsNullOrWhiteSpace(partName))
-                            materialParts.Add(partName, material);
-                    }
-
-                    nameIndex++;
-                }
+                message = "Error; Creation failed.";
             }
-
-            var dimModel = TemplateCache.Get<IDimensionalModelData>(vModel.DimensionalModelId);
-            bool validData = true;
-
-            if (dimModel == null)
+            else
             {
-                message = "Choose a valid dimensional model.";
-                validData = false;
-            }
-
-            if (dimModel.ModelPlanes.Any(plane => !materialParts.ContainsKey(plane.TagName)))
-            {
-                message = "You need to choose a material for each Dimensional Model planar section. (" + string.Join(",", dimModel.ModelPlanes.Select(plane => plane.TagName)) + ")";
-                validData = false;
-            }
-
-            if (validData)
-            {
-                newObj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth,
-                    vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation, new TemplateCacheKey(dimModel), materialParts);
-
-                if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
-                    message = "Error; Creation failed.";
-                else
-                {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddPathway[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                }
+                LoggingUtility.LogAdminCommandUsage("*WEB* - AddPathway[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
             }
 
             return RedirectToAction("Edit", new { Message = message, id });
@@ -365,55 +335,14 @@ namespace NetMud.Controllers.GameAdmin
             obj.Name = vModel.Name;
             obj.Destination = TemplateCache.Get<IRoomTemplate>(vModel.DestinationID);
 
-            var materialParts = new Dictionary<string, IMaterial>();
-            if (vModel.ModelPartNames != null)
+            if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {
-                int nameIndex = 0;
-                foreach (var partName in vModel.ModelPartNames)
-                {
-                    if (!string.IsNullOrWhiteSpace(partName))
-                    {
-                        if (vModel.ModelPartMaterials.Count() <= nameIndex)
-                            break;
-
-                        var material = TemplateCache.Get<Material>(vModel.ModelPartMaterials[nameIndex]);
-
-                        if (material != null)
-                            materialParts.Add(partName, material);
-                    }
-
-                    nameIndex++;
-                }
+                LoggingUtility.LogAdminCommandUsage("*WEB* - EditPathwayTemplate[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
             }
-
-            var dimModel = TemplateCache.Get<DimensionalModelData>(vModel.DimensionalModelId);
-            bool validData = true;
-
-            if (dimModel == null)
+            else
             {
-                message = "Choose a valid dimensional model.";
-                validData = false;
+                message = "Error; Edit failed.";
             }
-
-            if (dimModel.ModelPlanes.Any(plane => !materialParts.ContainsKey(plane.TagName)))
-            {
-                message = "You need to choose a material for each Dimensional Model planar section. (" + string.Join(",", dimModel.ModelPlanes.Select(plane => plane.TagName)) + ")";
-                validData = false;
-            }
-
-            if (validData)
-            {
-                obj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth,
-                    vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation, new TemplateCacheKey(dimModel), materialParts);
-
-                if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
-                {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - EditPathwayTemplate[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                }
-                else
-                    message = "Error; Edit failed.";
-            }
-
 
             return RedirectToAction("Edit", new { Message = message, id });
         }
@@ -477,7 +406,9 @@ namespace NetMud.Controllers.GameAdmin
                                                                                 && occurrence.Event.Phrase.Equals(phraseF, StringComparison.InvariantCultureIgnoreCase));
 
             if (existingOccurrence == null)
+            {
                 existingOccurrence = new Occurrence();
+            }
 
             existingOccurrence.Strength = vModel.Strength;
             existingOccurrence.SensoryType = (MessagingType)vModel.SensoryType;
@@ -485,7 +416,9 @@ namespace NetMud.Controllers.GameAdmin
             var existingEvent = existingOccurrence.Event;
 
             if (existingEvent == null)
+            {
                 existingEvent = new Lexica();
+            }
 
             existingEvent.Role = grammaticalType;
             existingEvent.Phrase = vModel.Phrase;
@@ -497,7 +430,9 @@ namespace NetMud.Controllers.GameAdmin
                 if (!string.IsNullOrWhiteSpace(currentPhrase))
                 {
                     if (vModel.ModifierRoles.Count() <= modifierIndex || vModel.ModifierLexicalTypes.Count() <= modifierIndex)
+                    {
                         break;
+                    }
 
                     var phrase = currentPhrase;
                     var role = (GrammaticalType)vModel.ModifierRoles[modifierIndex];
@@ -520,7 +455,9 @@ namespace NetMud.Controllers.GameAdmin
                 LoggingUtility.LogAdminCommandUsage("*WEB* - Zone AddEditDescriptive[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
             }
             else
+            {
                 message = "Error; Edit failed.";
+            }
 
             return RedirectToRoute("ModalErrorOrClose", new { Message = message });
         }
@@ -532,14 +469,18 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
 
             if (string.IsNullOrWhiteSpace(authorize))
+            {
                 message = "You must check the proper authorize radio button first.";
+            }
             else
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
                 var values = authorize.Split(new string[] { "|||" }, StringSplitOptions.RemoveEmptyEntries);
 
                 if (values.Count() != 2)
+                {
                     message = "You must check the proper authorize radio button first.";
+                }
                 else
                 {
                     var type = short.Parse(values[0]);
@@ -548,7 +489,9 @@ namespace NetMud.Controllers.GameAdmin
                     var obj = TemplateCache.Get<IZoneTemplate>(id);
 
                     if (obj == null)
+                    {
                         message = "That does not exist";
+                    }
                     else
                     {
                         var grammaticalType = (GrammaticalType)type;
@@ -565,10 +508,14 @@ namespace NetMud.Controllers.GameAdmin
                                 message = "Delete Successful.";
                             }
                             else
+                            {
                                 message = "Error; Removal failed.";
+                            }
                         }
                         else
+                        {
                             message = "That does not exist";
+                        }
                     }
                 }
             }

@@ -1,5 +1,7 @@
 ﻿@model NetMud.Models.Admin.ManageNPCDataViewModel
 @{
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("NPCs", new string[] { "Dashboard" }, new string[] { "/GameAdmin" });
+
     var linkText = Html.ActionLink("99999999", "Edit", new { id = 99999999 }).ToString();
     var tableColumns = new Dictionary<string, Func<dynamic, string>>();
     tableColumns.Add("Id", obj => linkText.Replace("99999999", obj.Id.ToString()));
@@ -8,16 +10,8 @@
     tableColumns.Add("Gender", obj => obj.Gender);
     tableColumns.Add("State", obj => obj.State.ToString());
 }
-
-@Html.Partial("AddContentLink")
-
-@Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model, "NPC"))
-
-@using (Html.BeginForm("Remove", "NPC"))
-{
-    @Html.AntiForgeryToken()
-    @Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Name = "NPCs", Columns = tableColumns, Values = Model.CurrentPageOfItems.OrderBy(obj => obj.Id) })
-}
+ 
+@Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { EntityTypeName = "NPC", Columns = tableColumns, Values = Model.CurrentPageOfItems.OrderBy(obj => obj.Id), PagingModel = Model })
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

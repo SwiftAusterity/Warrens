@@ -75,14 +75,18 @@ namespace NetMud.Controllers.GameAdmin
                 var obj = TemplateCache.Get<IInanimateTemplate>(removeId);
 
                 if (obj == null)
+                {
                     message = "That does not exist";
+                }
                 else if (obj.Remove(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                 {
                     LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveInanimate[" + removeId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Delete Successful.";
                 }
                 else
+                {
                     message = "Error; Removal failed.";
+                }
             }
             else if (!string.IsNullOrWhiteSpace(authorizeUnapprove) && unapproveId.ToString().Equals(authorizeUnapprove))
             {
@@ -91,17 +95,23 @@ namespace NetMud.Controllers.GameAdmin
                 var obj = TemplateCache.Get<IInanimateTemplate>(unapproveId);
 
                 if (obj == null)
+                {
                     message = "That does not exist";
+                }
                 else if (obj.ChangeApprovalStatus(authedUser.GameAccount, authedUser.GetStaffRank(User), ApprovalState.Returned))
                 {
                     LoggingUtility.LogAdminCommandUsage("*WEB* - UnapproveInanimate[" + unapproveId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Unapproval Successful.";
                 }
                 else
+                {
                     message = "Error; Unapproval failed.";
+                }
             }
             else
+            {
                 message = "You must check the proper remove or unapprove authorization radio button first.";
+            }
 
             return RedirectToAction("Index", new { Message = message });
         }
@@ -114,7 +124,8 @@ namespace NetMud.Controllers.GameAdmin
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
                 ValidMaterials = TemplateCache.GetAll<Material>(),
                 ValidModels = TemplateCache.GetAll<DimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat),
-                ValidInanimateTemplates = TemplateCache.GetAll<IInanimateTemplate>()
+                ValidInanimateTemplates = TemplateCache.GetAll<IInanimateTemplate>(),
+                DataObject = new InanimateTemplate()
             };
 
             return View("~/Views/GameAdmin/Inanimate/Add.cshtml", vModel);
@@ -128,125 +139,16 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var newObj = new InanimateTemplate
+            var newObj = vModel.DataObject;
+
+            if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
             {
-                Name = vModel.Name
-            };
-
-            if (vModel.InanimateContainerNames != null)
-            {
-                int inanimateIndex = 0;
-                foreach (var name in vModel.InanimateContainerNames)
-                {
-                    if (!string.IsNullOrWhiteSpace(name))
-                    {
-
-                        if (vModel.InanimateContainerWeights.Count() <= inanimateIndex || vModel.InanimateContainerVolumes.Count() <= inanimateIndex)
-                            break;
-
-                        var currentWeight = vModel.InanimateContainerWeights[inanimateIndex];
-                        var currentVolume = vModel.InanimateContainerVolumes[inanimateIndex];
-
-                        if (currentVolume > 0 && currentVolume > 0)
-                            newObj.InanimateContainers.Add(new EntityContainerData<IInanimate>(currentVolume, currentWeight, name));
-                    }
-
-                    inanimateIndex++;
-                }
+                message = "Error; Creation failed.";
             }
-
-            if (vModel.MobileContainerNames != null)
+            else
             {
-                int mobileIndex = 0;
-                foreach (var name in vModel.MobileContainerNames)
-                {
-                    if (string.IsNullOrWhiteSpace(name))
-                    {
-                        if (vModel.MobileContainerWeights.Count() <= mobileIndex || vModel.MobileContainerVolumes.Count() <= mobileIndex)
-                            break;
-
-                        var currentWeight = vModel.MobileContainerWeights[mobileIndex];
-                        var currentVolume = vModel.MobileContainerVolumes[mobileIndex];
-
-                        if (currentVolume > 0 && currentVolume > 0)
-                            newObj.MobileContainers.Add(new EntityContainerData<IMobile>(currentVolume, currentWeight, name));
-                    }
-
-                    mobileIndex++;
-                }
-            }
-
-            var materialParts = new Dictionary<string, IMaterial>();
-            if (vModel.ModelPartNames != null)
-            {
-                int nameIndex = 0;
-                foreach (var partName in vModel.ModelPartNames)
-                {
-                    if (!string.IsNullOrWhiteSpace(partName))
-                    {
-                        if (vModel.ModelPartMaterials.Count() <= nameIndex)
-                            break;
-
-                        var material = TemplateCache.Get<IMaterial>(vModel.ModelPartMaterials[nameIndex]);
-
-                        if (material != null && !string.IsNullOrWhiteSpace(partName))
-                            materialParts.Add(partName, material);
-                    }
-
-                    nameIndex++;
-                }
-            }
-
-            var internalCompositions = new HashSet<IInanimateComponent>();
-            if (vModel.InternalCompositionIds != null)
-            {
-                int icIndex = 0;
-                foreach (var id in vModel.InternalCompositionIds)
-                {
-                    if (id >= 0)
-                    {
-                        if (vModel.InternalCompositionPercentages.Count() <= icIndex)
-                            break;
-
-                        var internalObj = TemplateCache.Get<IInanimateTemplate>(id);
-
-                        if (internalObj != null && vModel.InternalCompositionPercentages[icIndex] > 0)
-                            internalCompositions.Add(new InanimateComponent(internalObj, vModel.InternalCompositionPercentages[icIndex]));
-                    }
-
-                    icIndex++;
-                }
-            }
-
-            newObj.InternalComposition = internalCompositions;
-
-            var dimModel = TemplateCache.Get<IDimensionalModelData>(vModel.DimensionalModelId);
-            bool validData = true;
-
-            if (dimModel == null)
-            {
-                message = "Choose a valid dimensional model.";
-                validData = false;
-            }
-
-            if (dimModel.ModelPlanes.Any(plane => !materialParts.ContainsKey(plane.TagName)))
-            {
-                message = "You need to choose a material for each Dimensional Model planar section. (" + string.Join(",", dimModel.ModelPlanes.Select(plane => plane.TagName)) + ")";
-                validData = false;
-            }
-
-            if (validData)
-            {
-                newObj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth
-                    , vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation, new TemplateCacheKey(dimModel), materialParts);
-
-                if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
-                    message = "Error; Creation failed.";
-                else
-                {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddInanimateTemplate[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                    message = "Creation Successful.";
-                }
+                LoggingUtility.LogAdminCommandUsage("*WEB* - AddInanimateTemplate[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                message = "Creation Successful.";
             }
 
             return RedirectToAction("Index", new { Message = message });
@@ -273,14 +175,6 @@ namespace NetMud.Controllers.GameAdmin
             }
 
             vModel.DataObject = obj;
-            vModel.Name = obj.Name;
-            vModel.DimensionalModelId = obj.Model.ModelTemplate.Id;
-            vModel.DimensionalModelHeight = obj.Model.Height;
-            vModel.DimensionalModelLength = obj.Model.Length;
-            vModel.DimensionalModelWidth = obj.Model.Width;
-            vModel.DimensionalModelVacuity = obj.Model.Vacuity;
-            vModel.DimensionalModelCavitation = obj.Model.SurfaceCavitation;
-            vModel.ModelDataObject = obj.Model;
 
             return View("~/Views/GameAdmin/Inanimate/Edit.cshtml", vModel);
         }
@@ -299,144 +193,25 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = message });
             }
 
-            obj.Name = vModel.Name;
+            obj.Name = vModel.DataObject.Name;
+            obj.AccumulationCap = vModel.DataObject.AccumulationCap;
+            obj.Components = vModel.DataObject.Components;
+            //obj.Descriptives = vModel.DataObject.Descriptives;
+            obj.InanimateContainers = vModel.DataObject.InanimateContainers;
+            obj.MobileContainers = vModel.DataObject.MobileContainers;
+            obj.Model = vModel.DataObject.Model;
+            obj.Produces = vModel.DataObject.Produces;
+            obj.Qualities = vModel.DataObject.Qualities;
+            obj.SkillRequirements = vModel.DataObject.SkillRequirements;
 
-            if (vModel.InanimateContainerNames != null)
+            if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {
-                int inanimateIndex = 0;
-                foreach (var name in vModel.InanimateContainerNames)
-                {
-                    if (!string.IsNullOrWhiteSpace(name))
-                    {
-                        if (vModel.InanimateContainerWeights.Count() <= inanimateIndex || vModel.InanimateContainerVolumes.Count() <= inanimateIndex)
-                            break;
-
-                        if (obj.InanimateContainers.Any(ic => ic.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
-                        {
-                            var editIc = obj.InanimateContainers.Single(ic => ic.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
-                            editIc.CapacityVolume = vModel.InanimateContainerVolumes[inanimateIndex];
-                            editIc.CapacityWeight = vModel.InanimateContainerWeights[inanimateIndex];
-                        }
-                        else
-                        {
-                            var currentWeight = vModel.InanimateContainerWeights[inanimateIndex];
-                            var currentVolume = vModel.InanimateContainerVolumes[inanimateIndex];
-
-                            if (currentVolume > 0 && currentWeight > 0)
-                                obj.InanimateContainers.Add(new EntityContainerData<IInanimate>(currentVolume, currentWeight, name));
-                        }
-                    }
-
-                    inanimateIndex++;
-                }
+                LoggingUtility.LogAdminCommandUsage("*WEB* - EditInanimateTemplate[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                message = "Edit Successful.";
             }
-
-            foreach (var container in obj.InanimateContainers.Where(ic => !vModel.InanimateContainerNames.Contains(ic.Name)))
-                obj.InanimateContainers.Remove(container);
-
-            if (vModel.MobileContainerNames != null)
+            else
             {
-                int mobileIndex = 0;
-                foreach (var name in vModel.MobileContainerNames)
-                {
-                    if (!string.IsNullOrWhiteSpace(name))
-                    {
-                        if (vModel.MobileContainerWeights.Count() <= mobileIndex || vModel.MobileContainerVolumes.Count() <= mobileIndex)
-                            break;
-
-                        if (obj.MobileContainers.Any(ic => ic.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
-                        {
-                            var editIc = obj.MobileContainers.Single(ic => ic.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
-                            editIc.CapacityVolume = vModel.MobileContainerVolumes[mobileIndex];
-                            editIc.CapacityWeight = vModel.MobileContainerWeights[mobileIndex];
-                        }
-                        else
-                        {
-                            var currentWeight = vModel.MobileContainerWeights[mobileIndex];
-                            var currentVolume = vModel.MobileContainerVolumes[mobileIndex];
-
-                            if (currentVolume > 0 && currentWeight > 0)
-                                obj.MobileContainers.Add(new EntityContainerData<IMobile>(currentVolume, currentWeight, name));
-                        }
-                    }
-
-                    mobileIndex++;
-                }
-            }
-
-            foreach (var container in obj.MobileContainers.Where(ic => !vModel.MobileContainerNames.Contains(ic.Name)))
-                obj.MobileContainers.Remove(container);
-
-            var materialParts = new Dictionary<string, IMaterial>();
-            if (vModel.ModelPartNames != null)
-            {
-                int nameIndex = 0;
-                foreach (var partName in vModel.ModelPartNames)
-                {
-                    if (!string.IsNullOrWhiteSpace(partName))
-                    {
-                        if (vModel.ModelPartMaterials.Count() <= nameIndex)
-                            break;
-
-                        var material = TemplateCache.Get<IMaterial>(vModel.ModelPartMaterials[nameIndex]);
-
-                        if (material != null)
-                            materialParts.Add(partName, material);
-                    }
-
-                    nameIndex++;
-                }
-            }
-
-            var internalCompositions = new HashSet<IInanimateComponent>();
-            if (vModel.InternalCompositionIds != null)
-            {
-                int icIndex = 0;
-                foreach (var icId in vModel.InternalCompositionIds)
-                {
-                    if (icId >= 0)
-                    {
-                        if (vModel.InternalCompositionPercentages.Count() <= icIndex)
-                            break;
-
-                        var internalObj = TemplateCache.Get<IInanimateTemplate>(icId);
-
-                        if (internalObj != null)
-                            internalCompositions.Add(new InanimateComponent(internalObj, vModel.InternalCompositionPercentages[icIndex]));
-                    }
-
-                    icIndex++;
-                }
-            }
-            obj.InternalComposition = internalCompositions;
-
-            var dimModel = TemplateCache.Get<IDimensionalModelData>(vModel.DimensionalModelId);
-            bool validData = true;
-
-            if (dimModel == null)
-            {
-                message = "Choose a valid dimensional model.";
-                validData = false;
-            }
-
-            if (dimModel.ModelPlanes.Any(plane => !materialParts.ContainsKey(plane.TagName)))
-            {
-                message = "You need to choose a material for each Dimensional Model planar section. (" + string.Join(",", dimModel.ModelPlanes.Select(plane => plane.TagName)) + ")";
-                validData = false;
-            }
-
-            if (validData)
-            {
-                obj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth, 
-                    vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation, new TemplateCacheKey(dimModel), materialParts);
-
-                if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
-                {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - EditInanimateTemplate[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                    message = "Edit Successful.";
-                }
-                else
-                    message = "Error; Edit failed.";
+                message = "Error; Edit failed.";
             }
 
             return RedirectToAction("Index", new { Message = message });
@@ -501,7 +276,9 @@ namespace NetMud.Controllers.GameAdmin
                                                                                 && occurrence.Event.Phrase.Equals(phraseF, StringComparison.InvariantCultureIgnoreCase));
 
             if (existingOccurrence == null)
+            {
                 existingOccurrence = new Occurrence();
+            }
 
             existingOccurrence.Strength = vModel.Strength;
             existingOccurrence.SensoryType = (MessagingType)vModel.SensoryType;
@@ -509,7 +286,9 @@ namespace NetMud.Controllers.GameAdmin
             var existingEvent = existingOccurrence.Event;
 
             if (existingEvent == null)
+            {
                 existingEvent = new Lexica();
+            }
 
             existingEvent.Role = grammaticalType;
             existingEvent.Phrase = vModel.Phrase;
@@ -521,7 +300,9 @@ namespace NetMud.Controllers.GameAdmin
                 if (!string.IsNullOrWhiteSpace(currentPhrase))
                 {
                     if (vModel.ModifierRoles.Count() <= modifierIndex || vModel.ModifierLexicalTypes.Count() <= modifierIndex)
+                    {
                         break;
+                    }
 
                     var phrase = currentPhrase;
                     var role = (GrammaticalType)vModel.ModifierRoles[modifierIndex];
@@ -544,7 +325,9 @@ namespace NetMud.Controllers.GameAdmin
                 LoggingUtility.LogAdminCommandUsage("*WEB* - Inanimate AddEditDescriptive[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
             }
             else
+            {
                 message = "Error; Edit failed.";
+            }
 
             return RedirectToRoute("ModalErrorOrClose", new { Message = message });
         }
@@ -556,14 +339,18 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
 
             if (string.IsNullOrWhiteSpace(authorize))
+            {
                 message = "You must check the proper authorize radio button first.";
+            }
             else
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
                 var values = authorize.Split(new string[] { "|||" }, StringSplitOptions.RemoveEmptyEntries);
 
                 if (values.Count() != 2)
+                {
                     message = "You must check the proper authorize radio button first.";
+                }
                 else
                 {
                     var type = short.Parse(values[0]);
@@ -572,7 +359,9 @@ namespace NetMud.Controllers.GameAdmin
                     var obj = TemplateCache.Get<IInanimateTemplate>(id);
 
                     if (obj == null)
+                    {
                         message = "That does not exist";
+                    }
                     else
                     {
                         var grammaticalType = (GrammaticalType)type;
@@ -589,10 +378,14 @@ namespace NetMud.Controllers.GameAdmin
                                 message = "Delete Successful.";
                             }
                             else
+                            {
                                 message = "Error; Removal failed.";
+                            }
                         }
                         else
+                        {
                             message = "That does not exist";
+                        }
                     }
                 }
             }

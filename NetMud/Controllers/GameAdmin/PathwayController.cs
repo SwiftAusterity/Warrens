@@ -15,7 +15,6 @@ using NetMud.DataStructure.Room;
 using NetMud.DataStructure.System;
 using NetMud.Models.Admin;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -66,14 +65,18 @@ namespace NetMud.Controllers.GameAdmin
                 var obj = TemplateCache.Get<IPathwayTemplate>(removeId);
 
                 if (obj == null)
+                {
                     message = "That does not exist";
+                }
                 else if (obj.Remove(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                 {
                     LoggingUtility.LogAdminCommandUsage("*WEB* - RemovePathway[" + removeId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Delete Successful.";
                 }
                 else
+                {
                     message = "Error; Removal failed.";
+                }
             }
             else if (!string.IsNullOrWhiteSpace(authorizeUnapprove) && unapproveId.ToString().Equals(authorizeUnapprove))
             {
@@ -82,17 +85,23 @@ namespace NetMud.Controllers.GameAdmin
                 var obj = TemplateCache.Get<IPathwayTemplate>(unapproveId);
 
                 if (obj == null)
+                {
                     message = "That does not exist";
+                }
                 else if (obj.ChangeApprovalStatus(authedUser.GameAccount, authedUser.GetStaffRank(User), ApprovalState.Returned))
                 {
                     LoggingUtility.LogAdminCommandUsage("*WEB* - UnapprovePathway[" + unapproveId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Unapproval Successful.";
                 }
                 else
+                {
                     message = "Error; Unapproval failed.";
+                }
             }
             else
+            {
                 message = "You must check the proper remove or unapprove authorization radio button first.";
+            }
 
             return View("~/Views/GameAdmin/Pathway/AddEdit.cshtml", vModel);
         }
@@ -173,20 +182,28 @@ namespace NetMud.Controllers.GameAdmin
                     newRoom.ParentLocation = locale;
 
                     if (newRoom.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
+                    {
                         roomMessage = "Error; Creation failed.";
+                    }
                     else
                     {
                         LoggingUtility.LogAdminCommandUsage("*WEB* - AddRoomTemplateWithPathway[" + newRoom.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     }
                 }
                 else
+                {
                     roomMessage = "You must include a valid Locale.";
+                }
             }
             else
+            {
                 roomMessage = "You must include a valid Medium material.";
+            }
 
             if (!string.IsNullOrWhiteSpace(roomMessage))
+            {
                 return RedirectToRoute("ModalErrorOrClose", new { Message = roomMessage });
+            }
 
             string message = string.Empty;
             var newObj = new PathwayTemplate
@@ -197,70 +214,30 @@ namespace NetMud.Controllers.GameAdmin
                 Destination = newRoom
             };
 
-            var materialParts = new Dictionary<string, IMaterial>();
-            if (vModel.ModelPartNames != null)
+            if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
             {
-                int nameIndex = 0;
-                foreach (var partName in vModel.ModelPartNames)
+                message = "Error; Creation failed.";
+            }
+            else
+            {
+                if (vModel.CreateReciprocalPath)
                 {
-                    if (!string.IsNullOrWhiteSpace(partName))
+                    var reversePath = new PathwayTemplate
                     {
-                        if (vModel.ModelPartMaterials.Count() <= nameIndex)
-                            break;
+                        Name = newObj.Name,
+                        DegreesFromNorth = newObj.DegreesFromNorth,
+                        Origin = newObj.Destination,
+                        Destination = newObj.Origin,
+                        Model = newObj.Model
+                    };
 
-                        var material = TemplateCache.Get<Material>(vModel.ModelPartMaterials[nameIndex]);
-
-                        if (material != null && !string.IsNullOrWhiteSpace(partName))
-                            materialParts.Add(partName, material);
-                    }
-
-                    nameIndex++;
-                }
-            }
-
-            var dimModel = TemplateCache.Get<DimensionalModelData>(vModel.DimensionalModelId);
-            bool validData = true;
-
-            if (dimModel == null)
-            {
-                message = "Choose a valid dimensional model.";
-                validData = false;
-            }
-
-            if (dimModel.ModelPlanes.Any(plane => !materialParts.ContainsKey(plane.TagName)))
-            {
-                message = "You need to choose a material for each Dimensional Model planar section. (" + string.Join(",", dimModel.ModelPlanes.Select(plane => plane.TagName)) + ")";
-                validData = false;
-            }
-
-            if (validData)
-            {
-                newObj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth,
-                    vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation, new TemplateCacheKey(dimModel), materialParts);
-
-                if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
-                    message = "Error; Creation failed.";
-                else
-                {
-                    if (vModel.CreateReciprocalPath)
+                    if (reversePath.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
                     {
-                        var reversePath = new PathwayTemplate
-                        {
-                            Name = newObj.Name,
-                            DegreesFromNorth = newObj.DegreesFromNorth,
-                            Origin = newObj.Destination,
-                            Destination = newObj.Origin,
-                            Model = newObj.Model
-                        };
-
-                        if (reversePath.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
-                        {
-                            message = "Reverse Path creation FAILED. Origin path creation SUCCESS.";
-                        }
+                        message = "Reverse Path creation FAILED. Origin path creation SUCCESS.";
                     }
-
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddPathwayWithRoom[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 }
+
+                LoggingUtility.LogAdminCommandUsage("*WEB* - AddPathwayWithRoom[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
             }
 
             return RedirectToRoute("ModalErrorOrClose", new { Message = message });
@@ -281,53 +258,13 @@ namespace NetMud.Controllers.GameAdmin
                 Destination = TemplateCache.Get<IRoomTemplate>(vModel.DestinationID),
             };
 
-            var materialParts = new Dictionary<string, IMaterial>();
-            if (vModel.ModelPartNames != null)
+            if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
             {
-                int nameIndex = 0;
-                foreach (var partName in vModel.ModelPartNames)
-                {
-                    if (!string.IsNullOrWhiteSpace(partName))
-                    {
-                        if (vModel.ModelPartMaterials.Count() <= nameIndex)
-                            break;
-
-                        var material = TemplateCache.Get<IMaterial>(vModel.ModelPartMaterials[nameIndex]);
-
-                        if (material != null && !string.IsNullOrWhiteSpace(partName))
-                            materialParts.Add(partName, material);
-                    }
-
-                    nameIndex++;
-                }
+                message = "Error; Creation failed.";
             }
-
-            var dimModel = TemplateCache.Get<IDimensionalModelData>(vModel.DimensionalModelId);
-            bool validData = true;
-
-            if (dimModel == null)
+            else
             {
-                message = "Choose a valid dimensional model.";
-                validData = false;
-            }
-
-            if (dimModel.ModelPlanes.Any(plane => !materialParts.ContainsKey(plane.TagName)))
-            {
-                message = "You need to choose a material for each Dimensional Model planar section. (" + string.Join(",", dimModel.ModelPlanes.Select(plane => plane.TagName)) + ")";
-                validData = false;
-            }
-
-            if (validData)
-            {
-                newObj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth,
-                    vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation, new TemplateCacheKey(dimModel), materialParts);
-
-                if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
-                    message = "Error; Creation failed.";
-                else
-                {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddPathway[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                }
+                LoggingUtility.LogAdminCommandUsage("*WEB* - AddPathway[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
             }
 
             return RedirectToRoute("ModalErrorOrClose", new { Message = message });
@@ -362,12 +299,6 @@ namespace NetMud.Controllers.GameAdmin
             vModel.Destination = (IRoomTemplate)obj.Destination;
             vModel.Origin = (IRoomTemplate)obj.Origin;
 
-            vModel.DimensionalModelId = obj.Model.ModelTemplate.Id;
-            vModel.DimensionalModelHeight = obj.Model.Height;
-            vModel.DimensionalModelLength = obj.Model.Length;
-            vModel.DimensionalModelWidth = obj.Model.Width;
-            vModel.DimensionalModelVacuity = obj.Model.Vacuity;
-            vModel.DimensionalModelCavitation = obj.Model.SurfaceCavitation;
             vModel.ModelDataObject = obj.Model;
 
             return View("~/Views/GameAdmin/Pathway/AddEdit.cshtml", "_chromelessLayout", vModel);
@@ -392,53 +323,13 @@ namespace NetMud.Controllers.GameAdmin
             obj.Origin = TemplateCache.Get<IRoomTemplate>(vModel.OriginID);
             obj.Destination = TemplateCache.Get<IRoomTemplate>(vModel.DestinationID);
 
-            var materialParts = new Dictionary<string, IMaterial>();
-            if (vModel.ModelPartNames != null)
+            if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {
-                int nameIndex = 0;
-                foreach (var partName in vModel.ModelPartNames)
-                {
-                    if (!string.IsNullOrWhiteSpace(partName))
-                    {
-                        if (vModel.ModelPartMaterials.Count() <= nameIndex)
-                            break;
-
-                        var material = TemplateCache.Get<Material>(vModel.ModelPartMaterials[nameIndex]);
-
-                        if (material != null)
-                            materialParts.Add(partName, material);
-                    }
-
-                    nameIndex++;
-                }
+                LoggingUtility.LogAdminCommandUsage("*WEB* - EditPathwayTemplate[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
             }
-
-            var dimModel = TemplateCache.Get<DimensionalModelData>(vModel.DimensionalModelId);
-            bool validData = true;
-
-            if (dimModel == null)
+            else
             {
-                message = "Choose a valid dimensional model.";
-                validData = false;
-            }
-
-            if (dimModel.ModelPlanes.Any(plane => !materialParts.ContainsKey(plane.TagName)))
-            {
-                message = "You need to choose a material for each Dimensional Model planar section. (" + string.Join(",", dimModel.ModelPlanes.Select(plane => plane.TagName)) + ")";
-                validData = false;
-            }
-
-            if (validData)
-            {
-                obj.Model = new DimensionalModel(vModel.DimensionalModelHeight, vModel.DimensionalModelLength, vModel.DimensionalModelWidth,
-                    vModel.DimensionalModelVacuity, vModel.DimensionalModelCavitation, new TemplateCacheKey(dimModel), materialParts);
-
-                if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
-                {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - EditPathwayTemplate[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                }
-                else
-                    message = "Error; Edit failed.";
+                message = "Error; Edit failed.";
             }
 
             return RedirectToRoute("ModalErrorOrClose", new { Message = message });
@@ -503,7 +394,9 @@ namespace NetMud.Controllers.GameAdmin
                                                                                 && occurrence.Event.Phrase.Equals(phraseF, System.StringComparison.InvariantCultureIgnoreCase));
 
             if (existingOccurrence == null)
+            {
                 existingOccurrence = new Occurrence();
+            }
 
             existingOccurrence.Strength = vModel.Strength;
             existingOccurrence.SensoryType = (MessagingType)vModel.SensoryType;
@@ -511,7 +404,9 @@ namespace NetMud.Controllers.GameAdmin
             var existingEvent = existingOccurrence.Event;
 
             if (existingEvent == null)
+            {
                 existingEvent = new Lexica();
+            }
 
             existingEvent.Role = grammaticalType;
             existingEvent.Phrase = vModel.Phrase;
@@ -523,7 +418,9 @@ namespace NetMud.Controllers.GameAdmin
                 if (!string.IsNullOrWhiteSpace(currentPhrase))
                 {
                     if (vModel.ModifierRoles.Count() <= modifierIndex || vModel.ModifierLexicalTypes.Count() <= modifierIndex)
+                    {
                         break;
+                    }
 
                     var phrase = currentPhrase;
                     var role = (GrammaticalType)vModel.ModifierRoles[modifierIndex];
@@ -546,7 +443,9 @@ namespace NetMud.Controllers.GameAdmin
                 LoggingUtility.LogAdminCommandUsage("*WEB* - AddEditDescriptive[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
             }
             else
+            {
                 message = "Error; Edit failed.";
+            }
 
             return RedirectToRoute("ModalErrorOrClose", new { Message = message });
         }
@@ -558,14 +457,18 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
 
             if (string.IsNullOrWhiteSpace(authorize))
+            {
                 message = "You must check the proper authorize radio button first.";
+            }
             else
             {
                 var authedUser = UserManager.FindById(User.Identity.GetUserId());
                 var values = authorize.Split(new string[] { "|||" }, StringSplitOptions.RemoveEmptyEntries);
 
                 if (values.Count() != 2)
+                {
                     message = "You must check the proper authorize radio button first.";
+                }
                 else
                 {
                     var type = short.Parse(values[0]);
@@ -574,7 +477,9 @@ namespace NetMud.Controllers.GameAdmin
                     var obj = TemplateCache.Get<IPathwayTemplate>(id);
 
                     if (obj == null)
+                    {
                         message = "That does not exist";
+                    }
                     else
                     {
                         var grammaticalType = (GrammaticalType)type;
@@ -591,10 +496,14 @@ namespace NetMud.Controllers.GameAdmin
                                 message = "Delete Successful.";
                             }
                             else
+                            {
                                 message = "Error; Removal failed.";
+                            }
                         }
                         else
+                        {
                             message = "That does not exist";
+                        }
                     }
                 }
             }

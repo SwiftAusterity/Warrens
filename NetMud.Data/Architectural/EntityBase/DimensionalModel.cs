@@ -1,10 +1,10 @@
-﻿using NetMud.DataAccess.Cache;
+﻿using NetMud.Data.Architectural.PropertyBinding;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural.EntityBase;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Architectural.EntityBase
@@ -65,6 +65,7 @@ namespace NetMud.Data.Architectural.EntityBase
         [JsonIgnore]
         [Display(Name = "Model", Description = "The model we're following.")]
         [UIHint("DimensionalModelDataList")]
+        [DimensionalModelDataBinder]
         public IDimensionalModelData ModelTemplate
         {
             get
@@ -91,38 +92,23 @@ namespace NetMud.Data.Architectural.EntityBase
             }
         }
 
-        [JsonProperty("Composition")]
-        private IDictionary<string, TemplateCacheKey> _composition { get; set; }
-
         /// <summary>
         /// Collection of model section name to material composition mappings
         /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        public IDictionary<string, IMaterial> Composition
-        {
-            get
-            {
-                if (_composition != null)
-                    return _composition.ToDictionary(k => k.Key, k => TemplateCache.Get<IMaterial>(k.Value));
-
-                return null;
-            }
-            set
-            {
-                if (value == null)
-                    return;
-
-                _composition = value.ToDictionary(k =>k.Key, k => new TemplateCacheKey(k.Value));
-            }
-        }
+        [UIHint("ModelPartCompositions")]
+        public HashSet<IModelPartComposition> Composition { get; set; }
 
         /// <summary>
         /// Default constructor
         /// </summary>
         public DimensionalModel()
         {
+            Composition = new HashSet<IModelPartComposition>();
 
+            ModelTemplate = new DimensionalModelData
+            {
+                ModelType = DimensionalModelType.None
+            };
         }
 
         /// <summary>
@@ -133,7 +119,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <param name="width">Width parameter of the model</param>
         /// <param name="backingDataKey">dimensional model backing data id</param>
         /// <param name="materialComps">The material compositions</param>
-        public DimensionalModel(int length, int height, int width, int vacuity, int surfaceCavitation, TemplateCacheKey backingDataKey, IDictionary<string, IMaterial> materialComps)
+        public DimensionalModel(int length, int height, int width, int vacuity, int surfaceCavitation, TemplateCacheKey backingDataKey, HashSet<IModelPartComposition> materialComps)
         {
             Length = length;
             Height = height;
@@ -158,7 +144,7 @@ namespace NetMud.Data.Architectural.EntityBase
             Width = width;
             Vacuity = vacuity;
             SurfaceCavitation = surfaceCavitation;
-            Composition = new Dictionary<string, IMaterial>();
+            Composition = new HashSet<IModelPartComposition>();
 
             ModelTemplate = new DimensionalModelData
             {

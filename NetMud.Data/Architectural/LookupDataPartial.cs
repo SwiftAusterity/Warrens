@@ -1,5 +1,7 @@
 ﻿using NetMud.Data.Architectural.DataIntegrity;
+using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Architectural.PropertyValidation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -15,10 +17,11 @@ namespace NetMud.Data.Architectural
         /// Extra text for the help command to display
         /// </summary>
         [StringDataIntegrity("Help text empty.", warning: true)]
-        [StringLength(2000, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 20)]
+        [MarkdownStringLengthValidator(ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 20)]
         [DataType("Markdown")]
         [Display(Name = "Help Text", Description = "The descriptive text shown in the public help pages and when HELP is used in game.")]
         [Required]
+        [MarkdownBinder]
         public MarkdownString HelpText { get; set; }
 
         /// <summary>

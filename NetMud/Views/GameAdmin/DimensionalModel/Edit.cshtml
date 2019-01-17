@@ -1,13 +1,9 @@
-﻿@using NetMud.DataStructure.Architectural.EntityBase
-@using NetMud.Utility
-
-@model NetMud.Models.Admin.AddEditDimensionalModelDataViewModel
+﻿@model NetMud.Models.Admin.AddEditDimensionalModelDataViewModel
 
 <section id="newCharacterForm">
     @using (Html.BeginForm("Edit", "DimensionalModel", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
-        <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
         @Html.EditorFor(e => e.DataObject)

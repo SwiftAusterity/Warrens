@@ -216,6 +216,7 @@ namespace NetMud.Controllers.GameAdmin
                     obj.Name = vModel.DataObject.Name;
                     obj.ModelType = vModel.DataObject.ModelType;
                     obj.ModelPlanes = vModel.DataObject.ModelPlanes;
+                    obj.Vacuity = vModel.DataObject.Vacuity;
 
                     if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                     {

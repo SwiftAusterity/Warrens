@@ -2,6 +2,10 @@
 
 @model NetMud.Models.Admin.ManagePlayersViewModel
 
+@{ 
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Players", new string[] { "Dashboard" }, new string[] { "/GameAdmin" });
+}
+
 @Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model, "Player"))
 
 @using (Html.BeginForm("Remove", "Player"))

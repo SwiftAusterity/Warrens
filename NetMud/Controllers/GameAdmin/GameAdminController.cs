@@ -9,11 +9,15 @@ using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.ActorBase;
+using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Gaia;
 using NetMud.DataStructure.Gossip;
 using NetMud.DataStructure.Inanimate;
+using NetMud.DataStructure.Locale;
+using NetMud.DataStructure.NaturalResource;
 using NetMud.DataStructure.NPC;
 using NetMud.DataStructure.Player;
+using NetMud.DataStructure.Room;
 using NetMud.DataStructure.System;
 using NetMud.DataStructure.Zone;
 using NetMud.Gossip;
@@ -67,11 +71,18 @@ namespace NetMud.Controllers.GameAdmin
                 NPCs = TemplateCache.GetAll<INonPlayerCharacterTemplate>(),
                 Zones = TemplateCache.GetAll<IZoneTemplate>(),
                 Worlds = TemplateCache.GetAll<IGaiaTemplate>(),
+                Locales = TemplateCache.GetAll<ILocaleTemplate>(),
+                Rooms = TemplateCache.GetAll<IRoomTemplate>(),
 
                 HelpFiles = TemplateCache.GetAll<IHelp>(),
                 Races = TemplateCache.GetAll<IRace>(),
                 Celestials = TemplateCache.GetAll<ICelestial>(),
                 Journals = TemplateCache.GetAll<IJournalEntry>(),
+                DimensionalModels = TemplateCache.GetAll<IDimensionalModelData>(),
+                Flora = TemplateCache.GetAll<IFlora>(),
+                Fauna = TemplateCache.GetAll<IFauna>(),
+                Minerals = TemplateCache.GetAll<IMineral>(),
+                Materials = TemplateCache.GetAll<IMaterial>(),
 
                 LiveTaskTokens = Processor.GetAllLiveTaskStatusTokens(),
                 LivePlayers = LiveCache.GetAll<IPlayer>().Count(),
@@ -79,6 +90,8 @@ namespace NetMud.Controllers.GameAdmin
                 LiveNPCs = LiveCache.GetAll<INonPlayerCharacter>().Count(),
                 LiveZones = LiveCache.GetAll<IZone>().Count(),
                 LiveWorlds = LiveCache.GetAll<IGaia>().Count(),
+                LiveLocales = LiveCache.GetAll<ILocale>().Count(),
+                LiveRooms = LiveCache.GetAll<IRoom>().Count(),
 
                 ConfigDataObject = globalConfig,
                 WebsocketPortalActive = globalConfig.WebsocketPortalActive,

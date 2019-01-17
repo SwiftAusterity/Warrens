@@ -1,14 +1,11 @@
 ﻿using NetMud.Data.Architectural.DataIntegrity;
-using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Linguistic;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Architectural.EntityBase
 {
@@ -110,42 +107,9 @@ namespace NetMud.Data.Architectural.EntityBase
         public short TemperatureRetention { get; set; }
 
         /// <summary>
-        /// Any elemental resistances the material has
-        /// </summary>
-        [Display(Name = "Damage Resistance", Description = "The type of damage this has special resistances to.")]
-        public IDictionary<DamageType, short> Resistance { get; set; }
-
-        /// <summary>
         /// Set of output relevant to this exit. These are essentially single word descriptions to render the path
         /// </summary>
         public HashSet<IOccurrence> Descriptives { get; set; }
-
-        [JsonProperty("Composition")]
-        private IDictionary<TemplateCacheKey, short> _composition { get; set; }
-
-        /// <summary>
-        /// Collection of model section name to material composition mappings
-        /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        [Display(Name = "Material Composition", Description = "Is this material an alloy of other materials?")]
-        public IDictionary<IMaterial, short> Composition
-        {
-            get
-            {
-                if (_composition != null)
-                    return _composition.ToDictionary(k => TemplateCache.Get<IMaterial>(k.Key), k => k.Value);
-
-                return null;
-            }
-            set
-            {
-                if (value == null)
-                    return;
-
-                _composition = value.ToDictionary(k => new TemplateCacheKey(k.Key), k => k.Value);
-            }
-        }
 
         [Display(Name = "Accumulation Cap", Description = "How many of this can go in one 'stack'.")]
         [Range(0, 999, ErrorMessage = "The {0} must be between {2} and {1}.")]
@@ -153,12 +117,24 @@ namespace NetMud.Data.Architectural.EntityBase
         public int AccumulationCap { get; set; }
 
         /// <summary>
+        /// Any elemental resistances the material has
+        /// </summary>
+        [UIHint("DamageResistances")]
+        public HashSet<DamageResistance> Resistance { get; set; }
+
+        /// <summary>
+        /// Is this material an alloy of other materials
+        /// </summary>
+        [UIHint("MaterialCompositions")]
+        public HashSet<IMaterialComposition> Composition { get; set; }
+
+        /// <summary>
         /// Make a new empty instance of this
         /// </summary>
         public Material()
         {
-            Resistance = new Dictionary<DamageType, short>();
-            Composition = new Dictionary<IMaterial, short>();
+            Resistance = new HashSet<DamageResistance>();
+            Composition = new HashSet<IMaterialComposition>();
         }
 
         /// <summary>
@@ -173,10 +149,10 @@ namespace NetMud.Data.Architectural.EntityBase
                 dataProblems.Add("Solidification point must be lower than gaseous point.");
 
             //Specific interior value checking
-            if (Resistance == null || !Resistance.Any() || Resistance.Any(r => r.Value == 0))
+            if (Resistance == null || !Resistance.Any() || Resistance.Any(r => r.Resistance == 0))
                 dataProblems.Add("Resistances are invalid.");
 
-            if (Composition == null || Composition.Any(r => r.Key == null || r.Value == 0))
+            if (Composition == null || Composition.Any(r => r.Material == null || r.PercentageOfComposition == 0))
                 dataProblems.Add("Compositions are invalid.");
 
             return dataProblems;

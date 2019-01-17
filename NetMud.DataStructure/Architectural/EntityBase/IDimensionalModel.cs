@@ -40,6 +40,6 @@ namespace NetMud.DataStructure.Architectural.EntityBase
         /// <summary>
         /// Collection of model section name to material composition mappings
         /// </summary>
-        IDictionary<string, IMaterial> Composition { get; set; }
+        HashSet<IModelPartComposition> Composition { get; set; }
     }
 }

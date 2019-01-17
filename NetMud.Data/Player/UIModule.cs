@@ -1,6 +1,8 @@
 ﻿using NetMud.Data.Architectural;
+using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Architectural.PropertyValidation;
 using NetMud.DataStructure.Player;
 using Newtonsoft.Json;
 using System;
@@ -26,9 +28,10 @@ namespace NetMud.Data.LookupData
         /// <summary>
         /// The content to load in
         /// </summary>
-        [StringLength(8000, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 20)]
+        [MarkdownStringLengthValidator(ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 20)]
         [Display(Name = "Body Content (HTML)", Description = "HTML, css and javascript which drives your module.")]
         [DataType(DataType.MultilineText)]
+        [MarkdownBinder]
         public MarkdownString BodyHtml { get; set; }
 
         /// <summary>

@@ -1,7 +1,9 @@
 ﻿using NetMud.Data.Architectural;
 using NetMud.Data.Architectural.DataIntegrity;
+using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Architectural.PropertyValidation;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -28,10 +30,11 @@ namespace NetMud.Data.Administrative
         /// The body of the post
         /// </summary>
         [StringDataIntegrity("Body must be between 20 and 2000 characters", 20, 2000)]
-        [StringLength(2000, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 20)]
+        [MarkdownStringLengthValidator(ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 20)]
         [Display(Name = "Body", Description = "The body content of the entry.")]
         [DataType("Markdown")]
         [Required]
+        [MarkdownBinder]
         public MarkdownString Body { get; set; }
 
         /// <summary>

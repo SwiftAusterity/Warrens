@@ -18,10 +18,5 @@ namespace NetMud.DataStructure.Inanimate
         /// Definition for the room's capacity for inanimates
         /// </summary>
         HashSet<IEntityContainerData<IInanimate>> InanimateContainers { get; set; }
-
-        /// <summary>
-        /// What this is made of
-        /// </summary>
-        HashSet<IInanimateComponent> InternalComposition { get; set; }
     }
 }

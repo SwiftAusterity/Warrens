@@ -66,11 +66,11 @@ namespace NetMud.DataStructure.Architectural.EntityBase
         /// <summary>
         /// Any elemental resistances the material has
         /// </summary>
-        IDictionary<DamageType, short> Resistance { get; set; }
+        HashSet<DamageResistance> Resistance { get; set; }
 
         /// <summary>
         /// Is this material an alloy of other materials
         /// </summary>
-        IDictionary<IMaterial, short> Composition { get; set; }
+        HashSet<IMaterialComposition> Composition { get; set; }
     }
 }

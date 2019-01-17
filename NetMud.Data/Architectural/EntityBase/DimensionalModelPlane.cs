@@ -1,5 +1,6 @@
 ﻿using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.DataStructure.Architectural.EntityBase;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -37,7 +38,13 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <summary>
         /// New up an empty model plane
         /// </summary>
+        [JsonConstructor]
         public DimensionalModelPlane()
+        {
+            ModelNodes = new HashSet<IDimensionalModelNode>();
+        }
+
+        public DimensionalModelPlane(bool emptyNodes = true)
         {
             ModelNodes = new HashSet<IDimensionalModelNode>();
 

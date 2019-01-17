@@ -65,17 +65,14 @@ namespace NetMud.Data.Inanimate
         /// <summary>
         /// Definition for the room's capacity for mobiles
         /// </summary>
+        [UIHint("MobileEntityContainers")]
         public HashSet<IEntityContainerData<IMobile>> MobileContainers { get; set; }
 
         /// <summary>
         /// Definition for the room's capacity for inanimates
         /// </summary>
+        [UIHint("InanimateEntityContainers")]
         public HashSet<IEntityContainerData<IInanimate>> InanimateContainers { get; set; }
-
-        /// <summary>
-        /// The list of internal compositions for separate/explosion/sharding
-        /// </summary>
-        public HashSet<IInanimateComponent> InternalComposition { get; set; }
 
         /// <summary>
         /// How many of this can be in a stack
@@ -90,6 +87,7 @@ namespace NetMud.Data.Inanimate
         /// Framework for the physics model of an entity
         /// </summary>
         [NonNullableDataIntegrity("Physical model is invalid.")]
+        [UIHint("TwoDimensionalModel")]
         public IDimensionalModel Model { get; set; }
 
         #region Crafting
@@ -103,7 +101,7 @@ namespace NetMud.Data.Inanimate
         /// <summary>
         /// Object type + amount needed to craft this
         /// </summary>
-        [UIHint("IInanimateComponentList")]
+        [UIHint("InanimateComponents")]
         public IEnumerable<IInanimateComponent> Components { get; set; }
 
         /// <summary>
@@ -191,9 +189,11 @@ namespace NetMud.Data.Inanimate
         public InanimateTemplate()
         {
             InanimateContainers = new HashSet<IEntityContainerData<IInanimate>>();
+            MobileContainers = new HashSet<IEntityContainerData<IMobile>>();
             Components = new HashSet<IInanimateComponent>();
             Qualities = new HashSet<IQuality>();
             SkillRequirements = new HashSet<QualityValue>();
+            Model = new DimensionalModel();
         }
 
         /// <summary>
