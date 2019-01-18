@@ -109,7 +109,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <summary>
         /// Set of output relevant to this exit. These are essentially single word descriptions to render the path
         /// </summary>
-        public HashSet<IOccurrence> Descriptives { get; set; }
+        public HashSet<ISensoryEvent> Descriptives { get; set; }
 
         [Display(Name = "Accumulation Cap", Description = "How many of this can go in one 'stack'.")]
         [Range(0, 999, ErrorMessage = "The {0} must be between {2} and {1}.")]

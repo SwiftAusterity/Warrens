@@ -14,6 +14,6 @@ namespace NetMud.DataStructure.Inanimate
         /// <param name="viewer">entity initiating the command</param>
         /// <param name="holder">entity holding the thing</param>
         /// <returns>the output</returns>
-        IOccurrence RenderAsWorn(IEntity viewer, IEntity holder);
+        ISensoryEvent RenderAsWorn(IEntity viewer, IEntity holder);
     }
 }

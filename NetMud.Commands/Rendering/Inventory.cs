@@ -33,7 +33,7 @@ namespace NetMud.Commands.Rendering
             var chr = (IMobile)Actor;
             var toActor = new List<IMessage>
             {
-                new Message(MessagingType.Visible, new Occurrence() { Strength = 9999 })
+                new Message(MessagingType.Visible, new SensoryEvent() { Strength = 9999 })
                 {
                     Override = new string[] { "You look through your belongings." }
                 }
@@ -42,7 +42,7 @@ namespace NetMud.Commands.Rendering
             foreach (var thing in chr.Inventory.EntitiesContained())
                 toActor.Add(new Message(MessagingType.Visible, thing.RenderAsContents(chr, new[] { MessagingType.Visible })));
 
-            var toOrigin = new Message(MessagingType.Visible, new Occurrence() { Strength = 30 })
+            var toOrigin = new Message(MessagingType.Visible, new SensoryEvent() { Strength = 30 })
             {
                 Override = new string[] { "$A$ sifts through $G$ belongings." }
             };

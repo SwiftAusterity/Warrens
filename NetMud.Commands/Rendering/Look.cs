@@ -39,7 +39,7 @@ namespace NutMud.Commands.Rendering
             {
                 //sb.AddRange(OriginLocation.CurrentLocation.RenderToLook(Actor));
 
-                var blankMessenger = new MessageCluster(new Message(MessagingType.Visible, new Occurrence() { Strength = 999 }) { Override = new string[] { "You observe your surroundings." } });
+                var blankMessenger = new MessageCluster(new Message(MessagingType.Visible, new SensoryEvent() { Strength = 999 }) { Override = new string[] { "You observe your surroundings." } });
 
                 blankMessenger.ExecuteMessaging(Actor, (IEntity)Subject, null, OriginLocation.CurrentRoom, null);
                 return;
@@ -52,12 +52,12 @@ namespace NutMud.Commands.Rendering
                 Override = sb
             };
 
-            var toOrigin = new Message(MessagingType.Visible, new Occurrence() { Strength = 5 })
+            var toOrigin = new Message(MessagingType.Visible, new SensoryEvent() { Strength = 5 })
             {
                 Override = new string[] { "$A$ looks at $T$." }
             };
 
-            var toSubject = new Message(MessagingType.Visible, new Occurrence() { Strength = 1 })
+            var toSubject = new Message(MessagingType.Visible, new SensoryEvent() { Strength = 1 })
             {
                 Override = new string[] { "$A$ looks at $T$." }
             };

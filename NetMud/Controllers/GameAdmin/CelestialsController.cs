@@ -258,22 +258,16 @@ namespace NetMud.Controllers.GameAdmin
             if (descriptiveType > -1)
             {
                 var grammaticalType = (GrammaticalType)descriptiveType;
-                vModel.OccurrenceDataObject = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType
+                vModel.SensoryEventDataObject = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType
                                                                                         && occurrence.Event.Phrase.Equals(phrase, StringComparison.InvariantCultureIgnoreCase));
             }
 
-            if (vModel.OccurrenceDataObject != null)
+            if (vModel.SensoryEventDataObject != null)
             {
-                vModel.LexicaDataObject = vModel.OccurrenceDataObject.Event;
-                vModel.Strength = vModel.OccurrenceDataObject.Strength;
-                vModel.SensoryType = (short)vModel.OccurrenceDataObject.SensoryType;
-
-                vModel.Role = (short)vModel.LexicaDataObject.Role;
-                vModel.Type = (short)vModel.LexicaDataObject.Type;
-                vModel.Phrase = vModel.LexicaDataObject.Phrase;
+                vModel.LexicaDataObject = vModel.SensoryEventDataObject.Event;
             }
 
-            return View("~/Views/GameAdmin/Celestials/Occurrence.cshtml", "_chromelessLayout", vModel);
+            return View("~/Views/GameAdmin/Celestials/SensoryEvent.cshtml", "_chromelessLayout", vModel);
         }
 
         [HttpPost]
@@ -290,19 +284,13 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToRoute("ModalErrorOrClose", new { Message = message });
             }
 
-            var grammaticalType = (GrammaticalType)vModel.Role;
-            var phraseF = vModel.Phrase;
-            var existingOccurrence = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType
-                                                                                && occurrence.Event.Phrase.Equals(phraseF, StringComparison.InvariantCultureIgnoreCase));
+            var existingOccurrence = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == vModel.SensoryEventDataObject.Event.Role
+                                                                                && occurrence.Event.Phrase.Equals(vModel.SensoryEventDataObject.Event.Phrase, StringComparison.InvariantCultureIgnoreCase));
 
             if (existingOccurrence == null)
             {
-                existingOccurrence = new Occurrence();
+                existingOccurrence = new SensoryEvent();
             }
-
-            existingOccurrence.Strength = vModel.Strength;
-            existingOccurrence.SensoryType = (MessagingType)vModel.SensoryType;
-
             var existingEvent = existingOccurrence.Event;
 
             if (existingEvent == null)
@@ -310,34 +298,8 @@ namespace NetMud.Controllers.GameAdmin
                 existingEvent = new Lexica();
             }
 
-            existingEvent.Role = grammaticalType;
-            existingEvent.Phrase = vModel.Phrase;
-            existingEvent.Type = (LexicalType)vModel.Type;
-
-            int modifierIndex = 0;
-            foreach (var currentPhrase in vModel.ModifierPhrases)
-            {
-                if (!string.IsNullOrWhiteSpace(currentPhrase))
-                {
-                    if (vModel.ModifierRoles.Count() <= modifierIndex || vModel.ModifierLexicalTypes.Count() <= modifierIndex)
-                    {
-                        break;
-                    }
-
-                    var phrase = currentPhrase;
-                    var role = (GrammaticalType)vModel.ModifierRoles[modifierIndex];
-                    var type = (LexicalType)vModel.ModifierLexicalTypes[modifierIndex];
-
-                    existingEvent.TryModify(new Lexica { Role = role, Type = type, Phrase = phrase });
-                }
-
-                modifierIndex++;
-            }
-
             existingOccurrence.Event = existingEvent;
 
-            obj.Descriptives.RemoveWhere(occ => occ.Event.Role == grammaticalType
-                                                    && occ.Event.Phrase.Equals(phraseF, StringComparison.InvariantCultureIgnoreCase));
             obj.Descriptives.Add(existingOccurrence);
 
             if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))

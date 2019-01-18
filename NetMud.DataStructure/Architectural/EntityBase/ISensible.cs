@@ -13,13 +13,13 @@ namespace NetMud.DataStructure.Architectural.EntityBase
         /// </summary>
         /// <param name="actor">entity initiating the command</param>
         /// <returns>the output</returns>
-        IOccurrence RenderToSense(IEntity actor);
+        ISensoryEvent RenderToSense(IEntity actor);
 
         /// <summary>
         /// Retrieve all of the descriptors that are tagged as Psychic output
         /// </summary>
         /// <returns>A collection of the descriptors</returns>
-        IEnumerable<IOccurrence> GetPsychicDescriptives(IEntity viewer);
+        IEnumerable<ISensoryEvent> GetPsychicDescriptives(IEntity viewer);
 
         /// <summary>
         /// Is this thing sensible to the entity

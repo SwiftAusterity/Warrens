@@ -12,6 +12,6 @@ namespace NetMud.DataStructure.Architectural.EntityBase
         /// </summary>
         /// <param name="viewer">entity initiating the command</param>
         /// <returns>the scan output</returns>
-        IOccurrence RenderToScan(IEntity viewer);
+        ISensoryEvent RenderToScan(IEntity viewer);
     }
 }

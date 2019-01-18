@@ -2,35 +2,42 @@
 using NetMud.DataStructure.System;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace NetMud.Communication.Lexical
 {
     [Serializable]
-    public class Occurrence : IOccurrence
+    public class SensoryEvent : ISensoryEvent
     {
         /// <summary>
         /// The thing happening
         /// </summary>
+        [UIHint("Lexica")]
         public ILexica Event { get; set; }
 
         /// <summary>
         /// The perceptive strength (higher = easier to see and greater distance noticed)
         /// </summary>
+        [Range(-1, 1000, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [DataType(DataType.Text)]
+        [Display(Name = "Strength", Description = "How easy is this to sense. Stronger means it can be detected more easily and from a greater distance.")]
         public int Strength { get; set; }
 
         /// <summary>
         /// The type of sense used to detect this
         /// </summary>
+        [Display(Name = "Sensory Type", Description = "The type of sense used to 'see' this.")]
+        [UIHint("EnumDropDownList")]
         public MessagingType SensoryType { get; set; }
 
-        public Occurrence()
+        public SensoryEvent()
         {
             SensoryType = MessagingType.Visible;
             Strength = 30;
         }
 
-        public Occurrence(ILexica happening, int strength, MessagingType sensoryType)
+        public SensoryEvent(ILexica happening, int strength, MessagingType sensoryType)
         {
             Event = happening;
             Strength = strength;
@@ -40,7 +47,7 @@ namespace NetMud.Communication.Lexical
         /// <summary>
         /// Use this to create a "blank" occurrence
         /// </summary>
-        public Occurrence(MessagingType sensoryType)
+        public SensoryEvent(MessagingType sensoryType)
         {
             SensoryType = sensoryType;
             Strength = 30;
@@ -81,7 +88,7 @@ namespace NetMud.Communication.Lexical
         /// </summary>
         /// <param name="modifier">the lexica that is the modifier</param>
         /// <returns>Whether or not it succeeded</returns>
-        public ILexica TryModify(IOccurrence modifier, bool passthru = false)
+        public ILexica TryModify(ISensoryEvent modifier, bool passthru = false)
         {
             return TryModify(modifier.Event, passthru);
         }
@@ -91,7 +98,7 @@ namespace NetMud.Communication.Lexical
         /// </summary>
         /// <param name="modifier">the lexica that is the modifier</param>
         /// <returns>Whether or not it succeeded</returns>
-        public void TryModify(IOccurrence[] modifier)
+        public void TryModify(ISensoryEvent[] modifier)
         {
             TryModify(modifier.Select(occ => occ.Event));
         }
@@ -101,7 +108,7 @@ namespace NetMud.Communication.Lexical
         /// </summary>
         /// <param name="modifier">the lexica that is the modifier</param>
         /// <returns>Whether or not it succeeded</returns>
-        public void TryModify(IEnumerable<IOccurrence> modifier)
+        public void TryModify(IEnumerable<ISensoryEvent> modifier)
         {
             TryModify(modifier.Select(occ => occ.Event));
         }

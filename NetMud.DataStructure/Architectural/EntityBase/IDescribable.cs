@@ -11,6 +11,6 @@ namespace NetMud.DataStructure.Architectural.EntityBase
         /// <summary>
         /// Set of output relevant to this exit
         /// </summary>
-        HashSet<IOccurrence> Descriptives { get; set; }
+        HashSet<ISensoryEvent> Descriptives { get; set; }
     }
 }

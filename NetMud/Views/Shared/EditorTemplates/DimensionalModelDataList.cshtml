@@ -39,10 +39,7 @@
         ViewData.Model = (IDimensionalModelData)selectedItemOverride;
     }
 
-    IEnumerable<SelectListItem> validList = ((IEnumerable<IDimensionalModelData>)ViewData["validItems"]).Select(li => new SelectListItem() { Text = li.Name, Value = li.Id.ToString(), Selected = Model != null && li.Id == Model.Id });
-
-    var listItems = new List<SelectListItem>() { new SelectListItem() { Text = "Select One", Value = "-1" } };
-    listItems.AddRange(validList);
+    var itemList = ((IEnumerable<IDimensionalModelData>)ViewData["validItems"]).Select(item => new SelectListItem() { Text = item.Name, Value = item.Id.ToString(), Selected = Model != null && item.Id == Model.Id });
 }
 
 <div class="col-sm-@columnInputValue">
@@ -54,7 +51,7 @@
     }
 
     @Html.DescriptionFor(m => m)
-    @Html.DropDownListFor(m => m, listItems, htmlAttributes: htmlAttributes)
+    @Html.DropDownList(ViewData.ModelMetadata.PropertyName, itemList, optionLabel: "Select One", htmlAttributes: htmlAttributes)
 
     @if (!string.IsNullOrWhiteSpace(archivedValue))
     {

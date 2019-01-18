@@ -252,7 +252,7 @@ namespace NetMud.Data.Room
         /// Render this to a look command (what something sees when it 'look's at this
         /// </summary>
         /// <returns>the output strings</returns>
-        public override IOccurrence RenderToLook(IEntity viewer)
+        public override ISensoryEvent RenderToLook(IEntity viewer)
         {
             if (!IsVisibleTo(viewer))
                 return null;

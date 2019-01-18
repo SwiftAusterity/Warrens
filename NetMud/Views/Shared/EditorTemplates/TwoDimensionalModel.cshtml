@@ -2,6 +2,16 @@
 
 @model DimensionalModel
 
+@{ 
+    if(Model.Composition.Count() < Model.ModelTemplate.ModelPlanes.GroupBy(mp => mp.TagName).Count())
+    {
+        foreach(var tagName in Model.ModelTemplate.ModelPlanes.GroupBy(mp => mp.TagName).Where(tgn => !Model.Composition.Any(comp => comp.PartName.Equals(tgn.Key))))
+        {
+            Model.Composition.Add(new ModelPartComposition() { PartName = tagName.Key });
+        }
+    }
+}
+
 <div class="form-group row">
     @Html.EditorFor(m => m.ModelTemplate, new { validItems = ViewData["ValidModels"] })
     @Html.EditorFor(m => m.SurfaceCavitation)

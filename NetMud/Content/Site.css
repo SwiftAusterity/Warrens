@@ -332,6 +332,7 @@ div.roomAsciiMap {
 
 .iterativeContainer {
     border: black 1px dotted;
+    min-height: 60px;
 }
 
     .iterativeContainer .iterativeContainer {

@@ -35,26 +35,20 @@
         ViewData.Model = (IInanimateTemplate)selectedItemOverride;
     }
 
-    IEnumerable<SelectListItem> validList = ((IEnumerable<IInanimateTemplate>)ViewData["validItems"]).Select(li => new SelectListItem() { Text = li.Name, Value = li.Id.ToString(), Selected = Model != null && li.Id == Model.Id });
-
-    var listItems = new List<SelectListItem>() { new SelectListItem() { Text = "Select One", Value = "-1" } };
-    listItems.AddRange(validList);
-
     var removeName = "remove" + ViewData.ModelMetadata.PropertyName + "Row";
-
+    var itemList = ((IEnumerable<IInanimateTemplate>)ViewData["validItems"]).Select(item => new SelectListItem() { Text = item.Name, Value = item.Id.ToString(), Selected = item.Id == Model.Id });
 }
 
 <div class="form-group row">
     <a href="#" class="removeRow col-form-label" title="Remove this" onclick="javascript: $(this).parent().remove(); return false;">X</a>
     <div class="col-sm-@columnInputValue">
-        @Html.DropDownListFor(m => m, listItems, htmlAttributes: htmlAttributes)
+        @Html.DropDownList(ViewData.ModelMetadata.PropertyName, itemList, optionLabel: "Select One", htmlAttributes: htmlAttributes)
 
         @if (!string.IsNullOrWhiteSpace(archivedValue))
         {
             <span class="archive">Archived Value: @archivedValue</span>
             <span title="apply value to field" class="glyphicon glyphicon-plus archiveApply" onclick="javascript: $('#@ViewData.ModelMetadata.PropertyName').val('@archivedValue');"></span>
         }
-
         @Html.ValidationMessageFor(m => m, "", new { @class = "text-danger" })
     </div>
 </div>

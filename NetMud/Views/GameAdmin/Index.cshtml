@@ -48,11 +48,11 @@
                         @Model.Locales.Count().ToString() [
                         @Html.ActionLink("Manage", "Index", "Locale")
                         @Html.ActionLink("Add", "Add", "Locale") ]
-                        @if (Model.Inanimates.Any(r => r.FitnessProblems))
+                        @if (Model.Locales.Any(r => r.FitnessProblems))
                         {
                             <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
                         }
-                        @if (Model.Inanimates.Any(r => r.State != ApprovalState.Approved))
+                        @if (Model.Locales.Any(r => r.State != ApprovalState.Approved))
                         {
                             <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                         }
@@ -62,11 +62,11 @@
                         @Model.Rooms.Count().ToString() [
                         @Html.ActionLink("Manage", "Index", "Room")
                         @Html.ActionLink("Add", "Add", "Room") ]
-                        @if (Model.Inanimates.Any(r => r.FitnessProblems))
+                        @if (Model.Rooms.Any(r => r.FitnessProblems))
                         {
                             <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
                         }
-                        @if (Model.Inanimates.Any(r => r.State != ApprovalState.Approved))
+                        @if (Model.Rooms.Any(r => r.State != ApprovalState.Approved))
                         {
                             <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                         }

@@ -9,7 +9,7 @@
     tableColumns.Add("State", obj => obj.State.ToString());
 }
 
-@Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { EntityTypeName = "Inanimate Objects", Columns = tableColumns, Values = Model.CurrentPageOfItems.OrderBy(obj => obj.Id), PagingModel = Model })
+@Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { EntityTypeName = "Inanimate", Columns = tableColumns, Values = Model.CurrentPageOfItems.OrderBy(obj => obj.Id), PagingModel = Model })
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

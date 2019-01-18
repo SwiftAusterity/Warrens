@@ -12,6 +12,6 @@ namespace NetMud.DataStructure.Architectural.EntityBase
         /// </summary>
         /// <param name="actor">entity initiating the command</param>
         /// <returns>the output</returns>
-        IOccurrence RenderToTrack(IEntity actor);
+        ISensoryEvent RenderToTrack(IEntity actor);
     }
 }

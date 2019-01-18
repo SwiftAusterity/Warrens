@@ -13,13 +13,13 @@ namespace NetMud.DataStructure.Architectural.EntityBase
         /// </summary>
         /// <param name="actor">entity initiating the command</param>
         /// <returns>the output</returns>
-        IOccurrence RenderToTouch(IEntity actor);
+        ISensoryEvent RenderToTouch(IEntity actor);
 
         /// <summary>
         /// Retrieve all of the descriptors that are tagged as Tactile output
         /// </summary>
         /// <returns>A collection of the descriptors</returns>
-        IEnumerable<IOccurrence> GetTouchDescriptives(IEntity viewer);
+        IEnumerable<ISensoryEvent> GetTouchDescriptives(IEntity viewer);
 
         /// <summary>
         /// Is this thing sensible to the entity

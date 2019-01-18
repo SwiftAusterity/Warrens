@@ -21,7 +21,7 @@ namespace NetMud.Communication.Messaging
         /// <summary>
         /// The composed message and strength
         /// </summary>
-        public IOccurrence Occurrence { get; set; }
+        public ISensoryEvent Occurrence { get; set; }
 
         /// <summary>
         /// Overrides the grammatical generator
@@ -54,7 +54,7 @@ namespace NetMud.Communication.Messaging
         /// </summary>
         /// <param name="type"></param>
         /// <param name="occurrence"></param>
-        public Message(MessagingType type, IOccurrence occurrence)
+        public Message(MessagingType type, ISensoryEvent occurrence)
         {
             Type = type;
             Occurrence = occurrence;

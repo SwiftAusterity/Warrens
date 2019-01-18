@@ -79,7 +79,7 @@ namespace NetMud.Data.Gaia
         /// <summary>
         /// Set of output relevant to this exit. These are essentially single word descriptions to render the path
         /// </summary>
-        public HashSet<IOccurrence> Descriptives { get; set; }
+        public HashSet<ISensoryEvent> Descriptives { get; set; }
 
         public Celestial()
         {
@@ -90,10 +90,10 @@ namespace NetMud.Data.Gaia
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public IOccurrence GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes)
+        public ISensoryEvent GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes)
         {
             if (!IsVisibleTo(viewer))
-                return new Occurrence(MessagingType.Visible);
+                return new SensoryEvent(MessagingType.Visible);
 
             return RenderToLook(viewer);
         }
@@ -103,9 +103,9 @@ namespace NetMud.Data.Gaia
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public IOccurrence GetImmediateDescription(IEntity viewer, MessagingType sensoryType)
+        public ISensoryEvent GetImmediateDescription(IEntity viewer, MessagingType sensoryType)
         {
-            return new Occurrence(sensoryType);
+            return new SensoryEvent(sensoryType);
         }
 
         /// <summary>
@@ -126,7 +126,7 @@ namespace NetMud.Data.Gaia
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public IOccurrence RenderAsContents(IEntity viewer, MessagingType[] sensoryTypes)
+        public ISensoryEvent RenderAsContents(IEntity viewer, MessagingType[] sensoryTypes)
         {
             return GetImmediateDescription(viewer, sensoryTypes[0]);
         }
@@ -160,10 +160,10 @@ namespace NetMud.Data.Gaia
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public IOccurrence RenderToLook(IEntity viewer)
+        public ISensoryEvent RenderToLook(IEntity viewer)
         {
             if (!IsVisibleTo(viewer))
-                return new Occurrence(MessagingType.Visible);
+                return new SensoryEvent(MessagingType.Visible);
 
             return GetFullDescription(viewer, new MessagingType[] { MessagingType.Visible });
         }

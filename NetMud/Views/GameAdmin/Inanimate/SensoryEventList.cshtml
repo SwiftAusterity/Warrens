@@ -1,4 +1,4 @@
-﻿@model NetMud.DataStructure.NPC.INonPlayerCharacterTemplate
+﻿@model NetMud.DataStructure.Inanimate.IInanimateTemplate
 
 @{
     var tableColumns = new Dictionary<string, Func<dynamic, string>>();
@@ -20,23 +20,18 @@
     <a href="#" class="addNew">Add New Descriptive</a>
 </div>
 
-@using (Html.BeginForm("RemoveDescriptive", "NPC"))
-{
-    @Html.AntiForgeryToken()
-    @Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Name = "", Columns = tableColumns, Values = Model.Descriptives, IncludeDelete = false, IncludeUnapprove = false })
-}
-
+@Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { IncludeAddLink = false, IncludeBasicPagingandSearch = false, EntityTypeName = "SensoryEvent", Columns = tableColumns, Values = Model.Descriptives, IncludeDelete = false, IncludeUnapprove = false })
 
 <script>
         $(document).ready(function () {
             $('.addNew').click(function () {
-                openFrameless(1400, 900, 0, 0, "/GameAdmin/NPC/AddEditDescriptive/" + @Model.Id + '/-1', 'Add Descriptive', true);
+                openFrameless(1400, 900, 0, 0, "/GameAdmin/Inanimate/AddEditDescriptive/" + @Model.Id + '/-1', 'Add Descriptive', true);
 
                 return false;
             });
 
             $('.editDescriptive').click(function () {
-                openFrameless(1400, 900, 0, 0, "/GameAdmin/NPC/AddEditDescriptive/" + @Model.Id
+                openFrameless(1400, 900, 0, 0, "/GameAdmin/Inanimate/AddEditDescriptive/" + @Model.Id
                     + '/' + $(this).attr('data-descriptive-type')
                     + '/' + $(this).attr('data-descriptive-phrase'), 'Edit Descriptive', true);
 

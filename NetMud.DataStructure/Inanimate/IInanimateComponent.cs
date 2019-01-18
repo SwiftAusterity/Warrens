@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace NetMud.DataStructure.Inanimate
+﻿namespace NetMud.DataStructure.Inanimate
 {
     public interface IInanimateComponent
     {

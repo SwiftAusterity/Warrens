@@ -13,13 +13,13 @@ namespace NetMud.DataStructure.Architectural.EntityBase
         /// </summary>
         /// <param name="actor">entity initiating the command</param>
         /// <returns>the output</returns>
-        IOccurrence RenderToSmell(IEntity actor);
+        ISensoryEvent RenderToSmell(IEntity actor);
 
         /// <summary>
         /// Retrieve all of the descriptors that are tagged as Olefactory output
         /// </summary>
         /// <returns>A collection of the descriptors</returns>
-        IEnumerable<IOccurrence> GetSmellableDescriptives(IEntity viewer);
+        IEnumerable<ISensoryEvent> GetSmellableDescriptives(IEntity viewer);
 
         /// <summary>
         /// Is this thing sensible to the entity

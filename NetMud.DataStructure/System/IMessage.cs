@@ -17,7 +17,7 @@ namespace NetMud.DataStructure.System
         /// <summary>
         /// The composed message and strength
         /// </summary>
-        IOccurrence Occurrence { get; set; }
+        ISensoryEvent Occurrence { get; set; }
 
         /// <summary>
         /// Overrides the grammatical generator

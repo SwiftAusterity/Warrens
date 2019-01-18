@@ -39,7 +39,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <summary>
         /// Set of output relevant to this exit. These are essentially single word descriptions to render the path
         /// </summary>
-        public HashSet<IOccurrence> Descriptives { get; set; }
+        public HashSet<ISensoryEvent> Descriptives { get; set; }
 
         /// <summary>
         /// List of live qualities of this entity

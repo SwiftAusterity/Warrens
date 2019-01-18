@@ -82,7 +82,7 @@ namespace NetMud.Data.LookupData
         /// <param name="viewer">the entity looking</param>
         /// <param name="amount">How much of it there is</param>
         /// <returns>a view string</returns>
-        public override IOccurrence RenderResourceCollection(IEntity viewer, int amount)
+        public override ISensoryEvent RenderResourceCollection(IEntity viewer, int amount)
         {
             if (!IsVisibleTo(viewer))
                 return null;

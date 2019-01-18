@@ -1,0 +1,11 @@
+﻿@using NetMud.Communication.Lexical
+
+@model SensoryEvent
+
+<h4>Sensory Event</h4>
+<div class="form-group row">
+    @Html.EditorFor(e => e.Strength)
+    @Html.EditorFor(e => e.SensoryType)
+</div>
+
+@Html.EditorFor(e => e.Event)

@@ -214,7 +214,7 @@ namespace NetMud.Data.Room
         /// Render this to a look command (what something sees when it 'look's at this
         /// </summary>
         /// <returns>the output strings</returns>
-        public override IOccurrence RenderToLook(IEntity viewer)
+        public override ISensoryEvent RenderToLook(IEntity viewer)
         {
             return GetFullDescription(viewer, new[] { MessagingType.Visible });
         }
@@ -224,13 +224,13 @@ namespace NetMud.Data.Room
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public override IOccurrence GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes)
+        public override ISensoryEvent GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes)
         {
             if (sensoryTypes == null || sensoryTypes.Count() == 0)
                 sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
 
             //Self becomes the first sense in the list
-            IOccurrence me = null;
+            ISensoryEvent me = null;
             foreach (var sense in sensoryTypes)
             {
                 switch (sense)
@@ -402,7 +402,7 @@ namespace NetMud.Data.Room
 
             //If we get through that and me is still null it means we can't detect anything at all
             if (me == null)
-                return new Occurrence(sensoryTypes[0]);
+                return new SensoryEvent(sensoryTypes[0]);
 
             foreach (var celestial in GetVisibileCelestials(viewer))
                 me.TryModify(celestial.RenderAsContents(viewer, sensoryTypes).Event);

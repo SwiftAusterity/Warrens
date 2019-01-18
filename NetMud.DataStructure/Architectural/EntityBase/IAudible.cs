@@ -13,13 +13,13 @@ namespace NetMud.DataStructure.Architectural.EntityBase
         /// </summary>
         /// <param name="actor">entity initiating the command</param>
         /// <returns>the scan output</returns>
-        IOccurrence RenderToAudible(IEntity actor);
+        ISensoryEvent RenderToAudible(IEntity actor);
 
         /// <summary>
         /// Retrieve all of the descriptors that are tagged as Audible output
         /// </summary>
         /// <returns>A collection of the descriptors</returns>
-        IEnumerable<IOccurrence> GetAudibleDescriptives(IEntity viewer);
+        IEnumerable<ISensoryEvent> GetAudibleDescriptives(IEntity viewer);
 
         /// <summary>
         /// Is this thing sensible to the entity

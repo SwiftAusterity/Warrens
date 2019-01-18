@@ -39,29 +39,23 @@
         ViewData.Model = (IZoneTemplate)selectedItemOverride;
     }
 
-    IEnumerable<SelectListItem> validList = ((IEnumerable<IZoneTemplate>)ViewData["validItems"]).Select(li => new SelectListItem() { Text = li.Name, Value = li.Id.ToString(), Selected = Model != null && li.Id == Model.Id });
-
-    var listItems = new List<SelectListItem>() { new SelectListItem() { Text = "Select One", Value = "-1" } };
-    listItems.AddRange(validList);
+    var itemList = ((IEnumerable<IZoneTemplate>)ViewData["validItems"]).Select(item => new SelectListItem() { Text = item.Name, Value = item.Id.ToString(), Selected = Model != null && item.Id == Model.Id });
 }
 
 <div class="col-sm-@columnInputValue">
     <span class="ghostNameTip">@ViewData.ModelMetadata.DisplayName</span>
-
     @if (ViewData.ModelMetadata.IsRequired && !forceOptional)
     {
         <span class="glyphicon glyphicon-exclamation-sign ghostRequired" title="Required"></span>
     }
-
     @Html.DescriptionFor(m => m)
-    @Html.DropDownListFor(m => m, listItems, htmlAttributes: htmlAttributes)
+    @Html.DropDownList(ViewData.ModelMetadata.PropertyName, itemList, optionLabel: "Select One", htmlAttributes: htmlAttributes)
 
     @if (!string.IsNullOrWhiteSpace(archivedValue))
     {
         <span class="archive">Archived Value: @archivedValue</span>
         <span title="apply value to field" class="glyphicon glyphicon-plus archiveApply" onclick="javascript: $('#@ViewData.ModelMetadata.PropertyName').val('@archivedValue');"></span>
     }
-
     @if (!noValidation)
     {
         @Html.ValidationMessageFor(m => m, "", new { @class = "text-danger" })

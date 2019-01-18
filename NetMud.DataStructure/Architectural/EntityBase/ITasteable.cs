@@ -13,13 +13,13 @@ namespace NetMud.DataStructure.Architectural.EntityBase
         /// </summary>
         /// <param name="actor">entity initiating the command</param>
         /// <returns>the output</returns>
-        IOccurrence RenderToTaste(IEntity actor);
+        ISensoryEvent RenderToTaste(IEntity actor);
 
         /// <summary>
         /// Retrieve all of the descriptors that are tagged as Taste output
         /// </summary>
         /// <returns>A collection of the descriptors</returns>
-        IEnumerable<IOccurrence> GetTasteDescriptives(IEntity viewer);
+        IEnumerable<ISensoryEvent> GetTasteDescriptives(IEntity viewer);
 
         /// <summary>
         /// Is this thing sensible to the entity

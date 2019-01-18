@@ -21,12 +21,14 @@ namespace NetMud.Data.Linguistic
         /// The type of word this is to the sentence
         /// </summary>
         [Display(Name = "Grammatical Role", Description = "The role this phrase plays in a sentence.")]
+        [UIHint("EnumDropDownList")]
         public GrammaticalType Role { get; set; }
 
         /// <summary>
         /// The type of word this is in general
         /// </summary>
         [Display(Name = "Type", Description = "The type of word this is.")]
+        [UIHint("EnumDropDownList")]
         public LexicalType Type { get; set; }
 
         /// <summary>
@@ -40,8 +42,8 @@ namespace NetMud.Data.Linguistic
         /// <summary>
         /// Modifiers for this lexica
         /// </summary>
-        [DataType(DataType.Text)]
         [Display(Name = "Modifier", Description = "A modifying phrase of the base word.")]
+        [UIHint("LexicalModifiers")]
         public HashSet<ILexica> Modifiers { get; set; }
 
         public Lexica()

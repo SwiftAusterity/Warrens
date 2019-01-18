@@ -71,6 +71,6 @@ namespace NetMud.DataStructure.NaturalResource
         /// <param name="viewer">the entity looking</param>
         /// <param name="amount">How much of it there is</param>
         /// <returns>a view string</returns>
-        IOccurrence RenderResourceCollection(IEntity viewer, int amount);
+        ISensoryEvent RenderResourceCollection(IEntity viewer, int amount);
     }
 }

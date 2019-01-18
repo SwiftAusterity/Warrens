@@ -53,12 +53,12 @@ namespace NetMud.Commands.EntityManipulation
             place.MoveFrom(thing);
             actor.MoveInto(thing);
 
-            var toActor = new Message(MessagingType.Visible, new Occurrence() { Strength = 1 })
+            var toActor = new Message(MessagingType.Visible, new SensoryEvent() { Strength = 1 })
             {
                 Override = sb
             };
 
-            var toOrigin = new Message(MessagingType.Visible, new Occurrence() { Strength = 30 })
+            var toOrigin = new Message(MessagingType.Visible, new SensoryEvent() { Strength = 30 })
             {
                 Override = new string[] { toRoomMessage }
             };

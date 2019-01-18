@@ -365,14 +365,14 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <summary>
         /// Set of output relevant to this exit. These are essentially single word descriptions to render the path
         /// </summary>
-        public HashSet<IOccurrence> Descriptives { get; set; }
+        public HashSet<ISensoryEvent> Descriptives { get; set; }
 
         /// <summary>
         /// Renders output for this entity when Look targets it
         /// </summary>
         /// <param name="actor">entity initiating the command</param>
         /// <returns>the output</returns>
-        public virtual IOccurrence RenderToTrack(IEntity actor)
+        public virtual ISensoryEvent RenderToTrack(IEntity actor)
         {
             //Default for "tracking" is null
             return null;
@@ -383,13 +383,13 @@ namespace NetMud.Data.Architectural.EntityBase
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public virtual IOccurrence GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes)
+        public virtual ISensoryEvent GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes)
         {
             if (sensoryTypes == null || sensoryTypes.Count() == 0)
                 sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
 
             //Self becomes the first sense in the list
-            IOccurrence self = null;
+            ISensoryEvent self = null;
             foreach (var sense in sensoryTypes)
             {
                 switch (sense)
@@ -459,44 +459,44 @@ namespace NetMud.Data.Architectural.EntityBase
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public virtual IOccurrence GetImmediateDescription(IEntity viewer, MessagingType sense)
+        public virtual ISensoryEvent GetImmediateDescription(IEntity viewer, MessagingType sense)
         {
             var me = GetSelf(sense);
             switch (sense)
             {
                 case MessagingType.Audible:
                     if (!IsAudibleTo(viewer))
-                        return new Occurrence(sense);
+                        return new SensoryEvent(sense);
 
                     me.TryModify(GetAudibleDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
                 case MessagingType.Olefactory:
                     if (!IsSmellableTo(viewer))
-                        return new Occurrence(sense);
+                        return new SensoryEvent(sense);
 
                     me.TryModify(GetSmellableDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
                 case MessagingType.Psychic:
                     if (!IsSensibleTo(viewer))
-                        return new Occurrence(sense);
+                        return new SensoryEvent(sense);
 
                     me.TryModify(GetPsychicDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
                 case MessagingType.Tactile:
                     if (!IsTouchableTo(viewer))
-                        return new Occurrence(sense);
+                        return new SensoryEvent(sense);
 
                     me.TryModify(GetTouchDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
                 case MessagingType.Taste:
                     if (!IsTastableTo(viewer))
-                        return new Occurrence(sense);
+                        return new SensoryEvent(sense);
 
                     me.TryModify(GetTasteDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
                 case MessagingType.Visible:
                     if (!IsVisibleTo(viewer))
-                        return new Occurrence(sense);
+                        return new SensoryEvent(sense);
 
                     me.TryModify(GetVisibleDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
@@ -518,9 +518,9 @@ namespace NetMud.Data.Architectural.EntityBase
             return GetSelf(MessagingType.Visible).ToString();
         }
 
-        internal IOccurrence GetSelf(MessagingType type, int strength = 100)
+        internal ISensoryEvent GetSelf(MessagingType type, int strength = 100)
         {
-            return new Occurrence()
+            return new SensoryEvent()
             {
                 SensoryType = type,
                 Strength = strength,
@@ -558,10 +558,10 @@ namespace NetMud.Data.Architectural.EntityBase
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public virtual IOccurrence RenderToLook(IEntity viewer)
+        public virtual ISensoryEvent RenderToLook(IEntity viewer)
         {
             if (!IsVisibleTo(viewer))
-                return new Occurrence(MessagingType.Visible);
+                return new SensoryEvent(MessagingType.Visible);
 
             return GetFullDescription(viewer, new[] { MessagingType.Visible });
         }
@@ -571,11 +571,11 @@ namespace NetMud.Data.Architectural.EntityBase
         /// </summary>
         /// <param name="viewer">entity initiating the command</param>
         /// <returns>the scan output</returns>
-        public virtual IOccurrence RenderToScan(IEntity viewer)
+        public virtual ISensoryEvent RenderToScan(IEntity viewer)
         {
             //TODO: Make this half power
             if (!IsVisibleTo(viewer))
-                return new Occurrence(MessagingType.Visible);
+                return new SensoryEvent(MessagingType.Visible);
 
             return GetImmediateDescription(viewer, MessagingType.Visible);
         }
@@ -585,11 +585,11 @@ namespace NetMud.Data.Architectural.EntityBase
         /// </summary>
         /// <param name="viewer">entity initiating the command</param>
         /// <returns>the scan output</returns>
-        public virtual IOccurrence RenderToInspect(IEntity viewer)
+        public virtual ISensoryEvent RenderToInspect(IEntity viewer)
         {
             //TODO: Make this double power
             if (!IsVisibleTo(viewer))
-                return new Occurrence(MessagingType.Visible);
+                return new SensoryEvent(MessagingType.Visible);
 
             return GetFullDescription(viewer, new[] { MessagingType.Visible });
         }
@@ -598,10 +598,10 @@ namespace NetMud.Data.Architectural.EntityBase
         /// Retrieve all of the descriptors that are tagged as visible output
         /// </summary>
         /// <returns>A collection of the descriptors</returns>
-        public virtual IEnumerable<IOccurrence> GetVisibleDescriptives(IEntity viewer)
+        public virtual IEnumerable<ISensoryEvent> GetVisibleDescriptives(IEntity viewer)
         {
             if (Descriptives == null)
-                return Enumerable.Empty<IOccurrence>();
+                return Enumerable.Empty<ISensoryEvent>();
 
             return Descriptives.Where(desc => desc.SensoryType == MessagingType.Visible);
         }
@@ -636,10 +636,10 @@ namespace NetMud.Data.Architectural.EntityBase
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public virtual IOccurrence RenderToAudible(IEntity viewer)
+        public virtual ISensoryEvent RenderToAudible(IEntity viewer)
         {
             if (!IsAudibleTo(viewer))
-                return new Occurrence(MessagingType.Audible);
+                return new SensoryEvent(MessagingType.Audible);
 
             var self = GetSelf(MessagingType.Audible);
 
@@ -653,10 +653,10 @@ namespace NetMud.Data.Architectural.EntityBase
         /// Retrieve all of the descriptors that are tagged as visible output
         /// </summary>
         /// <returns>A collection of the descriptors</returns>
-        public virtual IEnumerable<IOccurrence> GetAudibleDescriptives(IEntity viewer)
+        public virtual IEnumerable<ISensoryEvent> GetAudibleDescriptives(IEntity viewer)
         {
             if (Descriptives == null)
-                return Enumerable.Empty<IOccurrence>();
+                return Enumerable.Empty<ISensoryEvent>();
 
             return Descriptives.Where(desc => desc.SensoryType == MessagingType.Audible);
         }
@@ -691,10 +691,10 @@ namespace NetMud.Data.Architectural.EntityBase
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public virtual IOccurrence RenderToSense(IEntity viewer)
+        public virtual ISensoryEvent RenderToSense(IEntity viewer)
         {
             if (!IsSensibleTo(viewer))
-                return new Occurrence(MessagingType.Psychic);
+                return new SensoryEvent(MessagingType.Psychic);
 
             var self = GetSelf(MessagingType.Psychic);
 
@@ -708,10 +708,10 @@ namespace NetMud.Data.Architectural.EntityBase
         /// Retrieve all of the descriptors that are tagged as visible output
         /// </summary>
         /// <returns>A collection of the descriptors</returns>
-        public virtual IEnumerable<IOccurrence> GetPsychicDescriptives(IEntity viewer)
+        public virtual IEnumerable<ISensoryEvent> GetPsychicDescriptives(IEntity viewer)
         {
             if (Descriptives == null)
-                return Enumerable.Empty<IOccurrence>();
+                return Enumerable.Empty<ISensoryEvent>();
 
             return Descriptives.Where(desc => desc.SensoryType == MessagingType.Psychic);
         }
@@ -746,10 +746,10 @@ namespace NetMud.Data.Architectural.EntityBase
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public virtual IOccurrence RenderToTaste(IEntity viewer)
+        public virtual ISensoryEvent RenderToTaste(IEntity viewer)
         {
             if (!IsTastableTo(viewer))
-                return new Occurrence(MessagingType.Taste);
+                return new SensoryEvent(MessagingType.Taste);
 
             var self = GetSelf(MessagingType.Taste);
 
@@ -763,10 +763,10 @@ namespace NetMud.Data.Architectural.EntityBase
         /// Retrieve all of the descriptors that are tagged
         /// </summary>
         /// <returns>A collection of the descriptors</returns>
-        public virtual IEnumerable<IOccurrence> GetTasteDescriptives(IEntity viewer)
+        public virtual IEnumerable<ISensoryEvent> GetTasteDescriptives(IEntity viewer)
         {
             if (Descriptives == null)
-                return Enumerable.Empty<IOccurrence>();
+                return Enumerable.Empty<ISensoryEvent>();
 
             return Descriptives.Where(desc => desc.SensoryType == MessagingType.Taste);
         }
@@ -801,10 +801,10 @@ namespace NetMud.Data.Architectural.EntityBase
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public virtual IOccurrence RenderToSmell(IEntity viewer)
+        public virtual ISensoryEvent RenderToSmell(IEntity viewer)
         {
             if (!IsSmellableTo(viewer))
-                return new Occurrence(MessagingType.Olefactory);
+                return new SensoryEvent(MessagingType.Olefactory);
 
             var self = GetSelf(MessagingType.Olefactory);
 
@@ -818,10 +818,10 @@ namespace NetMud.Data.Architectural.EntityBase
         /// Retrieve all of the descriptors that are tagged
         /// </summary>
         /// <returns>A collection of the descriptors</returns>
-        public virtual IEnumerable<IOccurrence> GetSmellableDescriptives(IEntity viewer)
+        public virtual IEnumerable<ISensoryEvent> GetSmellableDescriptives(IEntity viewer)
         {
             if (Descriptives == null)
-                return Enumerable.Empty<IOccurrence>();
+                return Enumerable.Empty<ISensoryEvent>();
 
             return Descriptives.Where(desc => desc.SensoryType == MessagingType.Olefactory);
         }
@@ -856,10 +856,10 @@ namespace NetMud.Data.Architectural.EntityBase
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public virtual IOccurrence RenderToTouch(IEntity viewer)
+        public virtual ISensoryEvent RenderToTouch(IEntity viewer)
         {
             if (!IsTouchableTo(viewer))
-                return new Occurrence(MessagingType.Tactile);
+                return new SensoryEvent(MessagingType.Tactile);
 
             var self = GetSelf(MessagingType.Tactile);
 
@@ -873,10 +873,10 @@ namespace NetMud.Data.Architectural.EntityBase
         /// Retrieve all of the descriptors that are tagged
         /// </summary>
         /// <returns>A collection of the descriptors</returns>
-        public virtual IEnumerable<IOccurrence> GetTouchDescriptives(IEntity viewer)
+        public virtual IEnumerable<ISensoryEvent> GetTouchDescriptives(IEntity viewer)
         {
             if (Descriptives == null)
-                return Enumerable.Empty<IOccurrence>();
+                return Enumerable.Empty<ISensoryEvent>();
 
             return Descriptives.Where(desc => desc.SensoryType == MessagingType.Tactile);
         }
@@ -888,7 +888,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public virtual IOccurrence RenderAsContents(IEntity viewer, MessagingType[] sensoryTypes)
+        public virtual ISensoryEvent RenderAsContents(IEntity viewer, MessagingType[] sensoryTypes)
         {
             if (sensoryTypes == null || sensoryTypes.Count() == 0)
                 sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
@@ -907,7 +907,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <param name="viewer">entity initiating the command</param>
         /// <param name="holder">entity holding the thing</param>
         /// <returns>the output</returns>
-        public virtual IOccurrence RenderAsHeld(IEntity viewer, IEntity holder)
+        public virtual ISensoryEvent RenderAsHeld(IEntity viewer, IEntity holder)
         {
             return GetImmediateDescription(viewer, MessagingType.Visible);
         }
@@ -919,9 +919,9 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <param name="wearer">entity wearing the item</param>
         /// <returns>the output</returns>
 
-        public virtual IOccurrence RenderAsWorn(IEntity viewer, IEntity wearer)
+        public virtual ISensoryEvent RenderAsWorn(IEntity viewer, IEntity wearer)
         {
-            return new Occurrence()
+            return new SensoryEvent()
             {
                 SensoryType = MessagingType.Visible,
                 Strength = 30,

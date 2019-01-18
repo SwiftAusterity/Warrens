@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace NetMud.DataStructure.NPC.IntelligenceControl
+﻿namespace NetMud.DataStructure.NPC.IntelligenceControl
 {
     /// <summary>
     /// A single preference pairing

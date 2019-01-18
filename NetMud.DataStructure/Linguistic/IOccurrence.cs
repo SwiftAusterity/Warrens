@@ -7,7 +7,7 @@ namespace NetMud.DataStructure.Linguistic
     /// <summary>
     /// Wrapper for pairing perceptive strength with lexica eventing
     /// </summary>
-    public interface IOccurrence
+    public interface ISensoryEvent
     {
         /// <summary>
         /// The thing happening
@@ -50,21 +50,21 @@ namespace NetMud.DataStructure.Linguistic
         /// </summary>
         /// <param name="modifier">the lexica that is the modifier</param>
         /// <returns>Whether or not it succeeded</returns>
-        ILexica TryModify(IOccurrence modifier, bool passthru = false);
+        ILexica TryModify(ISensoryEvent modifier, bool passthru = false);
 
         /// <summary>
         /// Try to add a modifier to a lexica
         /// </summary>
         /// <param name="modifier">the lexica that is the modifier</param>
         /// <returns>Whether or not it succeeded</returns>
-        void TryModify(IOccurrence[] modifier);
+        void TryModify(ISensoryEvent[] modifier);
 
         /// <summary>
         /// Try to add a modifier to a lexica
         /// </summary>
         /// <param name="modifier">the lexica that is the modifier</param>
         /// <returns>Whether or not it succeeded</returns>
-        void TryModify(IEnumerable<IOccurrence> modifier);
+        void TryModify(IEnumerable<ISensoryEvent> modifier);
 
         /// <summary>
         /// Try to add a modifier to a lexica
