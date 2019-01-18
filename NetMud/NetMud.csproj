@@ -365,6 +365,7 @@
     <Content Include="Content\jquery-ui.theme.css" />
     <Content Include="Content\jquery.gridster.min.css" />
     <Content Include="Content\popper.css" />
+    <Content Include="Content\pretty-checkbox.min.css" />
     <Content Include="Content\Sounds\floop.wav" />
     <Content Include="Content\spectrum.css" />
     <Content Include="Scripts\bootstrap.bundle.js" />

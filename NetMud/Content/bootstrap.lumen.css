@@ -3034,6 +3034,7 @@ input[type="month"] {
 
 .form-group {
     margin-bottom: 15px;
+    padding-top: 10px;
     margin-top: 15px;
 }
 

@@ -35,7 +35,8 @@ namespace NetMud
                       "~/Content/bootstrap-markdown.min.css",
                       "~/Content/bootstrap-datetimepicker.min.css",
                       "~/Content/spectrum.css",
-                      "~/Content/popper.css"));
+                      "~/Content/popper.css",
+                      "~/Content/pretty-checkbox.min.css"));
 
             bundles.Add(new StyleBundle("~/Content/jqueryui-css").Include(
                       "~/Content/jquery-ui.css",

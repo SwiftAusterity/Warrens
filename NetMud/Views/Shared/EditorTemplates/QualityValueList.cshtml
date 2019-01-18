@@ -4,19 +4,23 @@
 @model HashSet<QualityValue>
 
 @{
-    var newRow = "<div class=\"form-group row\"><a href=\"#\" class=\"removeRow col-form-label\" title=\"Remove this\" onclick=\"javascript: $(this).parent().remove(); return false;\">X</a>"
-                  + Html.EmptyEditorForMany(e => e, null, Model.Count(), "QualityValue") + "</div>";
+    var currentCount = Model.Count();
+    var rowsName = ViewData.ModelMetadata.PropertyName + "Rows";
 }
 
-<div id="QualityValueRows" class="iterativeContainer">
+<div id="@rowsName" class="iterativeContainer">
     <div class="addRowContainer">
         <div class="col-sm-1">
             @Html.DescriptionFor(m => m)
-            <a href="#" class="addRow btn" onclick="javascript: $(&#39;#QualityValueRows&#39;).append(decodeHtml(&#39;@newRow&#39;)); return false;"><span class="addWord">Add Row</span></a>
+            <a href="#" class="addRow btn" onclick="javascript: $('#@rowsName').append(newQualityValueList); return false;"><span class="addWord">Add Row</span></a>
         </div>
     </div>
-    <div class="form-group row">
-        <a href="#" class="removeRow col-form-label" title="Remove this" onclick="javascript: $(this).parent().remove(); return false;">X</a>
+    @if (Model.Count() > 0)
+    {
         @Html.EditorForMany(e => e, null, 0, "QualityValue")
-    </div>
+    }
 </div>
+
+<script type="text/javascript">
+    var newQualityValueList = decodeHtml('@Html.EmptyEditorForMany(e => e, null, currentCount, "QualityValue")');
+</script>

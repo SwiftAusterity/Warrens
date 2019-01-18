@@ -239,34 +239,27 @@ div.roomAsciiMap {
     padding-bottom: 5px;
 }
 
-.tutorialToggle {
-    font-weight: bold;
-}
-
 .helpTip {
     position: absolute;
-    top: -5px;
-    color: blue;
-    left: 97%;
+    top: 0;
+    color: cornflowerblue;
     z-index: 101;
-}
-
-.ghostRequired {
-    position: absolute;
-    top: -5px;
-    color: red;
-    left: 90%;
-    z-index: 101;
+    font-size: 10px;
+    padding: 4px 1px 1px 2px;
 }
 
 .ghostNameTip {
     position: absolute;
-    color: lightslategrey;
+    color: black;
     left: 19px;
     top: -15px;
     font-size: 10px;
     font-style: italic;
     z-index: 101;
+}
+
+.ghostRequired {
+    color: red;
 }
 
 .contentPreviewFields div:nth-child(even) {

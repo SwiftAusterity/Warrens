@@ -7,15 +7,16 @@
     var columnInputValue = (int)Math.Round(10 / columnCount);
     var cssClass = ViewData["cssClass"] == null ? "form-control" : ViewData["cssClass"];
     var forceOptional = ViewData["forceOptional"] != null;
+
+    var ghostNameClass = "ghostNameTip";
+    if (ViewData.ModelMetadata.IsRequired && !forceOptional)
+    {
+        ghostNameClass += " ghostRequired";
+    }
 }
 
 <div class="col-sm-@columnInputValue">
-    <span class="ghostNameTip">@ViewData.ModelMetadata.DisplayName</span>
-
-    @if (ViewData.ModelMetadata.IsRequired && !forceOptional)
-    {
-        <span class="glyphicon glyphicon-exclamation-sign ghostRequired" title="Required"></span>
-    }
+    <span class="@ghostNameClass">@ViewData.ModelMetadata.DisplayName</span>
 
     @Html.DescriptionFor(m => m)
     @if (disabled)

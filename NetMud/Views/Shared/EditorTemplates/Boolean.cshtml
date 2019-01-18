@@ -1,5 +1,4 @@
 ﻿@model object
-
 @{
     double columnCount = ViewData["columnCount"] == null ? 5 : (int)ViewData["columnCount"];
     var columnLabelValue = columnCount > 2 ? 1 : 2;
@@ -37,18 +36,21 @@
         }
     }
 }
-
 <div class="col-sm-@columnInputValue" style="display: inline-flex;">
     @Html.DescriptionFor(m => m)
-    @Html.CheckBox("", modelValue, htmlAttributes)
-    @Html.LabelFor(m => m, new { @class = "col-form-label" })
+
+    <div class="pretty p-switch p-fill">
+        @Html.CheckBox("", modelValue, htmlAttributes)    
+        <div class="state">
+            @Html.LabelFor(m => m, new { @class = "col-form-label" })
+        </div>
+    </div>
 
     @if (!string.IsNullOrWhiteSpace(archivedValue))
     {
         <span class="archive">Archived Value: @archivedValue</span>
         <span title="apply value to field" class="glyphicon glyphicon-plus archiveApply" onclick="javascript: $('#@ViewData.ModelMetadata.PropertyName').val('@archivedValue');"></span>
     }
-
     @if (!noValidation)
     {
         @Html.ValidationMessageFor(m => m, "", new { @class = "text-danger" })

@@ -7,6 +7,7 @@ using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Inanimate;
+using NetMud.DataStructure.Linguistic;
 using NetMud.Utility;
 using Newtonsoft.Json;
 using System;
@@ -194,6 +195,7 @@ namespace NetMud.Data.Inanimate
             Qualities = new HashSet<IQuality>();
             SkillRequirements = new HashSet<QualityValue>();
             Model = new DimensionalModel();
+            Descriptives = new HashSet<ISensoryEvent>();
         }
 
         /// <summary>
