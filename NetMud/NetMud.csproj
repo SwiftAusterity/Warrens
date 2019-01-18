@@ -340,6 +340,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\GameClient.css" />
     <Content Include="Content\images\broken-image.png" />
+    <Content Include="Content\images\BTg4pEaT8.jpg" />
     <Content Include="Content\images\icons\feather_battle.svg" />
     <Content Include="Content\images\icons\feather_defend.svg" />
     <Content Include="Content\images\icons\feather_die.svg" />
