@@ -1,18 +1,21 @@
 ﻿using NetMud.Data.Architectural.DataIntegrity;
+using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.Data.Linguistic;
 using NetMud.DataAccess.Cache;
+using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.NaturalResource;
 using NetMud.DataStructure.System;
+using NetMud.DataStructure.Zone;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Script.Serialization;
 
-namespace NetMud.Data.LookupData
+namespace NetMud.Data.NaturalResource
 {
     /// <summary>
     /// Animal spawns
@@ -41,6 +44,14 @@ namespace NetMud.Data.LookupData
         [JsonProperty("Race")]
         private TemplateCacheKey _race { get; set; }
 
+        public Fauna()
+        {
+            OccursIn = new HashSet<Biome>();
+            ElevationRange = new ValueRange<int>();
+            TemperatureRange = new ValueRange<int>();
+            HumidityRange = new ValueRange<int>();
+        }
+
         /// <summary>
         /// What we're spawning
         /// </summary>
@@ -48,6 +59,7 @@ namespace NetMud.Data.LookupData
         [ScriptIgnore]
         [NonNullableDataIntegrity("Race must be set.")]
         [Display(Name = "Race", Description = "What race this herd is composed of. Non-sentient races only.")]
+        [RaceDataBinder]
         public IRace Race
         {
             get

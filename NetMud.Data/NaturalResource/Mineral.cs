@@ -1,7 +1,10 @@
 ﻿using NetMud.Data.Architectural.DataIntegrity;
+using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.DataAccess.Cache;
+using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.NaturalResource;
+using NetMud.DataStructure.Zone;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -9,7 +12,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Script.Serialization;
 
-namespace NetMud.Data.LookupData
+namespace NetMud.Data.NaturalResource
 {
     /// <summary>
     /// Rocks, minable metals and dirt
@@ -43,6 +46,7 @@ namespace NetMud.Data.LookupData
         [ScriptIgnore]
         [NonNullableDataIntegrity("Rock must have a value.")]
         [Display(Name = "Rock", Description = "What object is used to refer to this in rock form.")]
+        [MaterialDataBinder]
         public IMaterial Rock
         {
             get
@@ -65,6 +69,7 @@ namespace NetMud.Data.LookupData
         [ScriptIgnore]
         [NonNullableDataIntegrity("Dirt must have a value.")]
         [Display(Name = "Dirt", Description = "What object is used to refer to this in dirt form.")]
+        [MaterialDataBinder]
         public IMaterial Dirt
         {
             get
@@ -78,7 +83,7 @@ namespace NetMud.Data.LookupData
         }
 
         [JsonProperty("Ores")]
-        private IEnumerable<TemplateCacheKey> _ores { get; set; }
+        private HashSet<TemplateCacheKey> _ores { get; set; }
 
         /// <summary>
         /// What medium minerals this can spawn in
@@ -86,19 +91,33 @@ namespace NetMud.Data.LookupData
         [JsonIgnore]
         [ScriptIgnore]
         [Display(Name = "Ores", Description = "What ores this contains when mined as rock.")]
-        public IEnumerable<IMineral> Ores
+        [UIHint("CollectionMineralList")]
+        [MineralCollectionDataBinder]
+        public HashSet<IMineral> Ores
         {
             get
             {
                 if (_ores == null)
                     _ores = new HashSet<TemplateCacheKey>();
 
-                return TemplateCache.GetMany<IMineral>(_ores);
+                return new HashSet<IMineral>(TemplateCache.GetMany<IMineral>(_ores));
             }
             set
             {
-                _ores = value.Select(m => new TemplateCacheKey(m));
+                _ores = new HashSet<TemplateCacheKey>(value.Select(m => new TemplateCacheKey(m)));
             }
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public Mineral()
+        {
+            Ores = new HashSet<IMineral>();
+            OccursIn = new HashSet<Biome>();
+            ElevationRange = new ValueRange<int>();
+            TemperatureRange = new ValueRange<int>();
+            HumidityRange = new ValueRange<int>();
         }
 
         /// <summary>

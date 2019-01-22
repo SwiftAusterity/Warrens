@@ -1,0 +1,28 @@
+﻿@using NetMud.Data.NaturalResource
+
+@model Fauna
+
+<h4>Details</h4>
+<div class="form-group row">
+    @Html.EditorFor(m => m.Name)
+    @Html.EditorFor(m => m.Race, new { validItems = ViewData["ValidRaces"] })
+    @Html.EditorFor(m => m.Rarity)
+    @Html.EditorFor(m => m.AmountMultiplier)
+    @Html.EditorFor(m => m.PuissanceVariance)
+</div>
+<div class="form-group row">
+    @Html.EditorFor(m => m.HelpText)
+</div>
+
+<h4>Spawning Criterion</h4>
+<div class="form-group row">
+    @Html.EditorFor(m => m.FemaleRatio)
+    @Html.EditorFor(m => m.PopulationHardCap)
+    @Html.EditorFor(m => m.TemperatureRange)
+    @Html.EditorFor(m => m.HumidityRange)
+    @Html.EditorFor(m => m.ElevationRange)
+</div>
+
+<h4>Occurs In</h4>
+@Html.EditorFor(m => m.OccursIn)
+

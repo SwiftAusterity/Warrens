@@ -1,0 +1,10 @@
+﻿@using NetMud.Data.Linguistic
+
+@model Language
+
+<h4>Details</h4>
+<div class="form-group row">
+    @Html.EditorFor(m => m.Name)
+    @Html.EditorFor(m => m.GoogleLanguageCode)
+    @Html.EditorFor(m => m.UIOnly)
+</div>

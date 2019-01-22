@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Script.Serialization;
 
-namespace NetMud.Data.LookupData
+namespace NetMud.Data.Player
 {
     /// <summary>
     /// The definition for a UI Module

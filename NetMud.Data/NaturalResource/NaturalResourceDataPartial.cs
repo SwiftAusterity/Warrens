@@ -16,7 +16,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Script.Serialization;
 
-namespace NetMud.Data.LookupData
+namespace NetMud.Data.NaturalResource
 {
     /// <summary>
     /// Partial class for handling the basics of natural resources (rocks, trees, etc)
@@ -62,24 +62,24 @@ namespace NetMud.Data.LookupData
         /// Spawns in elevations within this range
         /// </summary>
         [Range(-1000, 1000, ErrorMessage = "The {0} must be between {2} and {1}.")]
-        [Display(Name = "Y-Axis High", Description = "The upper elevation cap this will allow to spawn in.")]
-        [DataType(DataType.Text)]
+        [Display(Name = "Elevation", Description = "The upper elevation cap this will allow to spawn in.")]
+        [UIHint("ValueRangeInt")]
         public ValueRange<int> ElevationRange { get; set; }
 
         /// <summary>
         /// Spawns in temperatures within this range
         /// </summary>
         [Range(-2000, 2000, ErrorMessage = "The {0} must be between {2} and {1}.")]
-        [Display(Name = "Temperature High", Description = "The upper temperature cap this will allow to spawn in.")]
-        [DataType(DataType.Text)]
+        [Display(Name = "Temperature", Description = "The upper temperature cap this will allow to spawn in.")]
+        [UIHint("ValueRangeInt")]
         public ValueRange<int> TemperatureRange { get; set; }
 
         /// <summary>
         /// Spawns in humidities within this range
         /// </summary>
         [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
-        [Display(Name = "Humidity High", Description = "The upper barometric pressure cap this will allow to spawn in.")]
-        [DataType(DataType.Text)]
+        [Display(Name = "Humidity", Description = "The upper barometric pressure cap this will allow to spawn in.")]
+        [UIHint("ValueRangeInt")]
         public ValueRange<int> HumidityRange { get; set; }
 
         /// <summary>
@@ -87,11 +87,13 @@ namespace NetMud.Data.LookupData
         /// </summary>
         [FilledContainerDataIntegrity("This resource must occur in at least one biome.")]
         [Display(Name = "Occurs in Biome", Description = "What biomes this will allow to spawn in.")]
+        [UIHint("OccursIn")]
         public HashSet<Biome> OccursIn { get; set; }
 
         /// <summary>
         /// Can spawn in system zones like non-player owned cities
         /// </summary>
+        [Display(Name = "System Area Spawning", Description = "Can spawn in system zones like non-player owned cities.")]
         public bool CanSpawnInSystemAreas { get; set; }
 
         /// <summary>

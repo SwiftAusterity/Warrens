@@ -1,15 +1,18 @@
 ﻿using NetMud.Data.Architectural.DataIntegrity;
+using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.DataAccess.Cache;
+using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Inanimate;
 using NetMud.DataStructure.NaturalResource;
+using NetMud.DataStructure.Zone;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Script.Serialization;
 
-namespace NetMud.Data.LookupData
+namespace NetMud.Data.NaturalResource
 {
     /// <summary>
     /// Plants, all elements can be nullable (one has to exist)
@@ -20,12 +23,14 @@ namespace NetMud.Data.LookupData
         /// <summary>
         /// How much sunlight does this need to spawn
         /// </summary>
+        [DataType(DataType.Text)]
         public int SunlightPreference { get; set; }
 
         /// <summary>
         /// Does this plant go dormant in colder weather
         /// </summary>
         [Display(Name = "Coniferous", Description = "Does this continue to grow in the winter.")]
+        [UIHint("Boolean")]
         public bool Coniferous { get; set; }
 
         [JsonProperty("Wood")]
@@ -37,7 +42,8 @@ namespace NetMud.Data.LookupData
         [JsonIgnore]
         [ScriptIgnore]
         [NonNullableDataIntegrity("Wood must have a value.")]
-        [Display(Name = "Wood/Bark")]
+        [Display(Name = "Wood/Bark", Description = "Bulk material of plant. Stem, trunk, etc.")]
+        [MaterialDataBinder]
         public IMaterial Wood
         { 
             get
@@ -58,7 +64,8 @@ namespace NetMud.Data.LookupData
         /// </summary>
         [JsonIgnore]
         [ScriptIgnore]
-        [Display(Name = "Flower")]
+        [Display(Name = "Flower", Description = "Flowering element of plant")]
+        [InanimateTemplateDataBinder]
         public IInanimateTemplate Flower
         { 
             get
@@ -79,7 +86,8 @@ namespace NetMud.Data.LookupData
         /// </summary>
         [JsonIgnore]
         [ScriptIgnore]
-        [Display(Name = "Leaves")]
+        [Display(Name = "Leaves", Description = "Leaves of the plant.")]
+        [InanimateTemplateDataBinder]
         public IInanimateTemplate Leaf 
         { 
             get
@@ -100,7 +108,8 @@ namespace NetMud.Data.LookupData
         /// </summary>
         [JsonIgnore]
         [ScriptIgnore]
-        [Display(Name = "Fruit")]
+        [Display(Name = "Fruit", Description = "Fruit of the plant, can be inedible like a pinecone")]
+        [InanimateTemplateDataBinder]
         public IInanimateTemplate Fruit
         { 
             get
@@ -121,7 +130,8 @@ namespace NetMud.Data.LookupData
         /// </summary>
         [JsonIgnore]
         [ScriptIgnore]
-        [Display(Name = "Seed")]
+        [Display(Name = "Seed", Description = "Seed of the plant.")]
+        [InanimateTemplateDataBinder]
         public IInanimateTemplate Seed 
         { 
             get
@@ -139,7 +149,10 @@ namespace NetMud.Data.LookupData
         /// </summary>
         public Flora()
         {
-
+            OccursIn = new HashSet<Biome>();
+            ElevationRange = new ValueRange<int>();
+            TemperatureRange = new ValueRange<int>();
+            HumidityRange = new ValueRange<int>();
         }
 
         /// <summary>

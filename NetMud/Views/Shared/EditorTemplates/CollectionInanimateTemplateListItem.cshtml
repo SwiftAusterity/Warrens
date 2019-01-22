@@ -35,7 +35,6 @@
         ViewData.Model = (IInanimateTemplate)selectedItemOverride;
     }
 
-    var removeName = "remove" + ViewData.ModelMetadata.PropertyName + "Row";
     var itemList = ((IEnumerable<IInanimateTemplate>)ViewData["validItems"]).Select(item => new SelectListItem() { Text = item.Name, Value = item.Id.ToString(), Selected = item.Id == Model.Id });
 }
 

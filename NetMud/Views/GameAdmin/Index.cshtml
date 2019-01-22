@@ -230,6 +230,26 @@
                             <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                         }
                     </dd>
+                    <dt>Languages:</dt>
+                    <dd>
+                        @Model.Languages.Count().ToString() [
+                        @Html.ActionLink("Manage", "Index", "Language")
+                        @Html.ActionLink("Add", "Add", "Language") ]
+                        @if (Model.Languages.Any(r => r.State != ApprovalState.Approved))
+                        {
+                            <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
+                        }
+                    </dd>
+                    <dt>Dictata (words):</dt>
+                    <dd>
+                        @Model.DictionaryWords.Count().ToString() [
+                        @Html.ActionLink("Manage", "Index", "Dictionary")
+                        @Html.ActionLink("Add", "Add", "Dictionary") ]
+                        @if (Model.DictionaryWords.Any(r => r.State != ApprovalState.Approved))
+                        {
+                            <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
+                        }
+                    </dd>
                 </dl>
             </div>
         </div>

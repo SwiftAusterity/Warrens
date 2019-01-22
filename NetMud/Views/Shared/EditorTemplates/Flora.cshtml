@@ -1,0 +1,38 @@
+﻿@using NetMud.Data.NaturalResource
+
+@model Flora
+
+<h4>Details</h4>
+<div class="form-group row">
+    @Html.EditorFor(m => m.Name)
+    @Html.EditorFor(m => m.SunlightPreference)
+    @Html.EditorFor(m => m.Coniferous)
+</div>
+<div class="form-group row">
+    @Html.EditorFor(m => m.HelpText)
+</div>
+
+<h4>Anatomy</h4>
+<div class="form-group row">
+    @Html.EditorFor(m => m.Wood, new { validItems = ViewData["ValidItems"] })
+    @Html.EditorFor(m => m.Leaf, new { validItems = ViewData["ValidItems"] })
+    @Html.EditorFor(m => m.Flower, new { validItems = ViewData["ValidItems"] })
+    @Html.EditorFor(m => m.Fruit, new { validItems = ViewData["ValidItems"] })
+    @Html.EditorFor(m => m.Seed, new { validItems = ViewData["ValidItems"] })
+</div>
+
+<h4>Spawning Criterion</h4>
+<div class="form-group row">
+    @Html.EditorFor(m => m.Rarity)
+    @Html.EditorFor(m => m.AmountMultiplier)
+    @Html.EditorFor(m => m.PuissanceVariance)
+</div>
+<div class="form-group row">
+    @Html.EditorFor(m => m.TemperatureRange)
+    @Html.EditorFor(m => m.HumidityRange)
+    @Html.EditorFor(m => m.ElevationRange)
+</div>
+
+<h4>Occurs In</h4>
+@Html.EditorFor(m => m.OccursIn)
+

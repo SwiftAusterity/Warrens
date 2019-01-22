@@ -10,7 +10,6 @@ using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Gaia;
 using NetMud.DataStructure.Linguistic;
-using NetMud.DataStructure.System;
 using NetMud.Models.Admin;
 using System;
 using System.Linq;

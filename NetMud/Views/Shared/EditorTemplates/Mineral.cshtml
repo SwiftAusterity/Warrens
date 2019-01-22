@@ -1,0 +1,35 @@
+﻿@using NetMud.Data.NaturalResource
+
+@model Mineral
+
+<h4>Details</h4>
+<div class="form-group row">
+    @Html.EditorFor(m => m.Name)
+    @Html.EditorFor(m => m.Solubility)
+    @Html.EditorFor(m => m.Fertility)
+    @Html.EditorFor(m => m.Rock, new { validItems = ViewData["ValidMaterials"] })
+    @Html.EditorFor(m => m.Dirt, new { validItems = ViewData["ValidMaterials"] })
+</div>
+
+<div class="form-group row">
+    @Html.EditorFor(m => m.HelpText)
+</div>
+
+<h4>Spawning Criterion</h4>
+<div class="form-group row">
+    @Html.EditorFor(m => m.Rarity)
+    @Html.EditorFor(m => m.AmountMultiplier)
+    @Html.EditorFor(m => m.PuissanceVariance)
+</div>
+
+<div class="form-group row">
+    @Html.EditorFor(m => m.TemperatureRange)
+    @Html.EditorFor(m => m.HumidityRange)
+    @Html.EditorFor(m => m.ElevationRange)
+</div>
+
+<h4>Occurs In</h4>
+@Html.EditorFor(m => m.OccursIn)
+
+<h4>Ores</h4>
+@Html.EditorFor(m => m.Ores, new { validItems = ViewData["ValidMinerals"] })

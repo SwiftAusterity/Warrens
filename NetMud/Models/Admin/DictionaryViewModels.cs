@@ -68,6 +68,7 @@ namespace NetMud.Models.Admin
         [DataType(DataType.Text)]
         public string Antonyms { get; set; }
 
+        public IEnumerable<IDictata> ValidWords { get; set; }
         public IDictata DataObject { get; set; }
     }
 }

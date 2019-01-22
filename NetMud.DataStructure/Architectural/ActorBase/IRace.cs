@@ -1,7 +1,6 @@
 ﻿using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Inanimate;
 using NetMud.DataStructure.Zone;
-using System;
 using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Architectural.ActorBase

@@ -12,7 +12,6 @@ using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.Locale;
 using NetMud.DataStructure.Room;
-using NetMud.DataStructure.System;
 using NetMud.Models.Admin;
 using System;
 using System.Linq;

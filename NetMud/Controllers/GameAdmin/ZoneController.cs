@@ -13,7 +13,6 @@ using NetMud.DataStructure.Gaia;
 using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.Locale;
 using NetMud.DataStructure.Room;
-using NetMud.DataStructure.System;
 using NetMud.DataStructure.Zone;
 using NetMud.Models.Admin;
 using System;

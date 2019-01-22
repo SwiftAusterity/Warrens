@@ -31,6 +31,6 @@ namespace NetMud.DataStructure.NaturalResource
         /// <summary>
         /// What medium materials this can spawn in
         /// </summary>
-        IEnumerable<IMineral> Ores { get; set; }
+        HashSet<IMineral> Ores { get; set; }
     }
 }

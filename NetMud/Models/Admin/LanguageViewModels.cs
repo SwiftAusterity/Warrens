@@ -35,18 +35,6 @@ namespace NetMud.Models.Admin
         {
         }
 
-        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
-        [Display(Name = "Name", Description = "The descriptive name for this language. Used to find and refer to it in code.")]
-        [DataType(DataType.Text)]
-        public string Name { get; set; }
-
-        [Display(Name = "Language Code", Description = "The language code Google Translate uses to identify this language.")]
-        [DataType(DataType.Text)]
-        public string GoogleLanguageCode { get; set; }
-
-        [Display(Name = "UI Only", Description = "Only for use in translating the input/output, not an 'in game' language.")]
-        public bool UIOnly { get; set; }
-
         public ILanguage DataObject { get; set; }
     }
 }

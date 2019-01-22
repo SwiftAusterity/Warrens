@@ -74,13 +74,10 @@ namespace NetMud.Models
 
             if (items.Count() == 0)
             {
-                List<TValue> plusOne = new List<TValue>();
-
-                TValue newThing = DataUtility.InsantiateThing<TValue>(typeof(EntityTemplatePartial).Assembly);
-
-                plusOne.Add(newThing);
-
-                items = plusOne;
+                items = new List<TValue>()
+                {
+                    DataUtility.InsantiateThing<TValue>(typeof(EntityTemplatePartial).Assembly)
+                };
             }
 
             string templateNameOverride = string.IsNullOrWhiteSpace(templateName) ? html.ViewData.ModelMetadata.TemplateHint : templateName;

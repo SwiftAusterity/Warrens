@@ -11,7 +11,7 @@
     <div class="addRowContainer">
         <div class="col-sm-1">
             @Html.DescriptionFor(m => m)
-            <a href="#" class="addRow btn" onclick="javascript:  $('#@rowsName').append(newDropdown); return false;"><span class="addWord">Add Row</span></a>
+            <a href="#" class="addRow btn" onclick="javascript:  $('#@rowsName').append(newSense); return false;"><span class="addWord">Add Row</span></a>
         </div>
     </div>
     @if (Model.Count() > 0)
@@ -21,6 +21,6 @@
 
 </div>
 <script type="text/javascript">
-    var newDropdown = decodeHtml('@Html.EmptyEditorForMany(e => e, null, currentCount, "CollectionEnumDropDownListItem")');
+    var newSense = decodeHtml('@Html.EmptyEditorForMany(e => e, null, currentCount, "CollectionEnumDropDownListItem")');
 </script>
 

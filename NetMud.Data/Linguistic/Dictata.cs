@@ -1,4 +1,5 @@
 ﻿using NetMud.Data.Architectural;
+using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
@@ -41,12 +42,14 @@ namespace NetMud.Data.Linguistic
         /// The type of word this is in general
         /// </summary>
         [Display(Name = "Type", Description = "The type of word this is.")]
+        [UIHint("EnumDropDownList")]
         public LexicalType WordType { get; set; }
 
         /// <summary>
         /// Chronological tense of word
         /// </summary>
         [Display(Name = "Tense", Description = "Chronological tense (past, present, future)")]
+        [UIHint("EnumDropDownList")]
         public LexicalTense Tense { get; set; }
 
         /// <summary>
@@ -81,6 +84,8 @@ namespace NetMud.Data.Linguistic
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
+        [UIHint("LanguageList")]
+        [LanguageDataBinder]
         public ILanguage Language
         {
             get
@@ -108,15 +113,16 @@ namespace NetMud.Data.Linguistic
         [ScriptIgnore]
         [JsonIgnore]
         [Display(Name = "Synonyms", Description = "The synonyms (similar) of this word/phrase.")]
-        [DataType(DataType.Text)]
-        public IEnumerable<IDictata> Synonyms
+        [UIHint("CollectionDictataList")]
+        [DictataCollectionDataBinder]
+        public HashSet<IDictata> Synonyms
         {
             get
             {
                 if (_synonyms == null)
                     _synonyms = new HashSet<ConfigDataCacheKey>();
 
-                return _synonyms.Select(k => ConfigDataCache.Get<IDictata>(k));
+                return new HashSet<IDictata>(_synonyms.Select(k => ConfigDataCache.Get<IDictata>(k)));
             }
             set
             {
@@ -136,15 +142,16 @@ namespace NetMud.Data.Linguistic
         [ScriptIgnore]
         [JsonIgnore]
         [Display(Name = "Antonyms", Description = "The antonyms (opposite) of this word/phrase.")]
-        [DataType(DataType.Text)]
-        public IEnumerable<IDictata> Antonyms
+        [UIHint("CollectionDictataList")]
+        [DictataCollectionDataBinder]
+        public HashSet<IDictata> Antonyms
         {
             get
             {
                 if (_antonyms == null)
                     _antonyms = new HashSet<ConfigDataCacheKey>();
 
-                return _antonyms.Select(k => ConfigDataCache.Get<IDictata>(k));
+                return new HashSet<IDictata>(_antonyms.Select(k => ConfigDataCache.Get<IDictata>(k)));
             }
             set
             {
@@ -158,8 +165,9 @@ namespace NetMud.Data.Linguistic
         [JsonConstructor]
         public Dictata()
         {
-            Antonyms = Enumerable.Empty<IDictata>();
-            Synonyms = Enumerable.Empty<IDictata>();
+            Antonyms = new HashSet<IDictata>();
+            Synonyms = new HashSet<IDictata>();
+            Name = string.Empty;
         }
 
 
@@ -169,8 +177,8 @@ namespace NetMud.Data.Linguistic
         /// <param name="lexica">the incoming lexica phrase</param>
         public Dictata(ILexica lexica)
         {
-            Antonyms = Enumerable.Empty<IDictata>();
-            Synonyms = Enumerable.Empty<IDictata>();
+            Antonyms = new HashSet<IDictata>();
+            Synonyms = new HashSet<IDictata>();
 
             Name = lexica.Phrase;
             WordType = lexica.Type;

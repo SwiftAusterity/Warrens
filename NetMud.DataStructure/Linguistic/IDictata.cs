@@ -38,11 +38,11 @@ namespace NetMud.DataStructure.Linguistic
         /// <summary>
         /// Things this is the same as mostly
         /// </summary>
-        IEnumerable<IDictata> Synonyms { get; set; }
+        HashSet<IDictata> Synonyms { get; set; }
 
         /// <summary>
         /// Things this is specifically opposite of mostly
         /// </summary>
-        IEnumerable<IDictata> Antonyms { get; set; }
+        HashSet<IDictata> Antonyms { get; set; }
     }
 }

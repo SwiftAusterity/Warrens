@@ -32,6 +32,7 @@ namespace NetMud.Data.Linguistic
         /// Languages only used for input and output translation
         /// </summary>
         [Display(Name = "UI Only", Description = "Only for use in translating the input/output, not an 'in game' language.")]
+        [UIHint("Boolean")]
         public bool UIOnly { get; set; }
 
         /// <summary>
@@ -40,6 +41,11 @@ namespace NetMud.Data.Linguistic
         [Display(Name = "Language Code", Description = "The language code Google Translate uses to identify this language.")]
         [DataType(DataType.Text)]
         public string GoogleLanguageCode { get; set; }
+
+        public Language()
+        {
+            Name = string.Empty;
+        }
 
         /// <summary>
         /// Get the significant details of what needs approval

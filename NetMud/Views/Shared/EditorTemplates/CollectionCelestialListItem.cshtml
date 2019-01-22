@@ -35,7 +35,6 @@
         ViewData.Model = (ICelestial)selectedItemOverride;
     }
 
-    var removeName = "remove" + ViewData.ModelMetadata.PropertyName + "Row";
     var itemList = ((IEnumerable<ICelestial>)ViewData["validItems"]).Select(item => new SelectListItem() { Text = item.Name, Value = item.Id.ToString(), Selected = Model != null && item.Id == Model.Id });
 }
 

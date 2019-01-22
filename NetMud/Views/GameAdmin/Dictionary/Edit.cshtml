@@ -1,63 +1,16 @@
-﻿@using NetMud.DataStructure.Linguistic
+﻿@model NetMud.Models.Admin.AddEditDictionaryViewModel
 
-@model NetMud.Models.Admin.AddEditDictionaryViewModel
+@{
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Edit Word", new string[] { "Dashboard", "Dictionary" }, new string[] { "/GameAdmin", "/Dictionary" });
+}
 
 <section id="newForm">
     @using (Html.BeginForm("Edit", "Dictionary", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <h3>Lexica</h3>
-        <div class="form-group row">
-            @Html.EditorFor(m => m.Name, new { columnCount = 3, disabled = true })
-            @Html.DescriptiveLabelFor(m => m.Type, new { @class = "col-sm-1 col-form-label" })
-            <div class="col-md-3">
-                @Html.DropDownList("Type", Enum.GetNames(typeof(LexicalType)).Select(rl =>
-                                                                new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(LexicalType), rl)).ToString(), Selected = ((short)Enum.Parse(typeof(LexicalType), rl)) == Model.Type })
-                                                                , "Select One", htmlAttributes: new { id = "Type", @class = "form-control", disabled = true })
-            </div>
-        </div>
-        <div class="form-group row">
-            @Html.DescriptiveLabelFor(m => m.Tense, new { @class = "col-sm-1 col-form-label" })
-            <div class="col-md-3">
-                @Html.DropDownList("Tense", Enum.GetNames(typeof(LexicalTense)).Select(rl =>
-                                                                new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(LexicalTense), rl)).ToString(), Selected = ((short)Enum.Parse(typeof(LexicalTense), rl)) == Model.Tense })
-                                                                , "Select One", htmlAttributes: new { id = "Tense", @class = "form-control" })
-            </div>
-        </div>
-        <div class="form-group row">
-            @Html.EditorFor(m => m.Severity, new { columnCount = 3 })
-            @Html.EditorFor(m => m.Elegance, new { columnCount = 3 })
-            @Html.EditorFor(m => m.Quality, new { columnCount = 3 })
-        </div>
 
-        <h4>Synonyms</h4>
-        <div class="form-group row">
-            @Html.HiddenFor(m => m.Synonyms)
-            <div class="col-md-2">
-                <input type="text" id="addSynonyms" class="dictataList" /><span class="glyphicon glyphicon-plus-sign addWord" style="" data-item-source="Synonyms"></span>
-            </div>
-            <div class="col-md-10" id="SynonymsContainer" style="margin-top: 10px;">
-                @foreach (var synonym in Model.DataObject.Synonyms)
-                {
-                    <span class="touchWord" data-item-source="Synonyms" data-item-value="@synonym.Name">@synonym.Name</span>
-                }
-            </div>
-        </div>
-
-        <h4>Antonyms</h4>
-        <div class="form-group row">
-            @Html.HiddenFor(m => m.Antonyms)
-            <div class="col-md-2">
-                <input type="text" id="addAntonyms" class="dictataList" /><span class="glyphicon glyphicon-plus-sign addWord" style="" data-item-source="Antonyms"></span>
-            </div>
-            <div class="col-md-10" id="AntonymsContainer" style="margin-top: 10px;">
-                @foreach (var antonym in Model.DataObject.Antonyms)
-                {
-                    <span class="touchWord" data-item-source="Antonyms" data-item-value="@antonym.Name">@antonym.Name</span>
-                }
-            </div>
-        </div>
+        @Html.EditorFor(m => m.DataObject)
 
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Dictionary", IncludeCancel = true })
     }
@@ -65,63 +18,4 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('.touchWord').click(function () {
-                $this = $(this);
-                var sourceName = $this.attr('data-item-source');
-                var word = $this.attr('data-item-value');
-
-                var $source = $('#' + sourceName);
-                var sourceValue = $source.val();
-
-                $this.detatch();
-
-                $source.val(sourceValue.replace('||' + word + '||', ''));
-            });
-
-            $('.addWord').click(function () {
-                $this = $(this);
-                var sourceName = $this.attr('data-item-source');
-                var word = $('#add' + sourceName).val();
-
-                var $source = $('#' + sourceName);
-                var sourceValue = $source.val();
-
-                if (word !== '' && sourceValue.indexOf('||' + word + '||') === -1) {
-                    $('#add' + sourceName).val('');
-                    sourceValue = sourceValue + '||' + word + '||';
-
-                    $source.val(sourceValue);
-
-                    var $newWord = $('<span class="touchWord" data-item-source="' + sourceName + '" data-item-value="' + word + '">' + word + '</span>');
-
-                    $newWord.appendTo('#' + sourceName + 'Container');
-
-                    $newWord.click(function () {
-                        $this = $(this);
-                        var sourceName = $this.attr('data-item-source');
-                        var word = $this.attr('data-item-value');
-
-                        var $source = $('#' + sourceName);
-                        var sourceValue = $source.val();
-
-                        $this.detatch();
-
-                        $source.val(sourceValue.replace('||' + word + '||', ''));
-                    });
-                }
-            });
-
-            $(".dictataList").autocomplete({
-                source: "/api/AdminDataApi/GetDictata/" + '@Model.DataObject.WordType.ToString()',
-                minLength: 2,
-                select: function (event, ui) {
-                    $(this).val(ui.item.value);
-                    return false;
-                }
-            });
-        });
-    </script>
 }

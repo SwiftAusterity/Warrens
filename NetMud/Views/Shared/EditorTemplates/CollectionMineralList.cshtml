@@ -1,0 +1,26 @@
+﻿@using NetMud.Models
+@using NetMud.DataStructure.NaturalResource
+
+@model HashSet<IMineral>
+
+@{
+    var currentCount = Model.Count();
+    var rowsName = ViewData.ModelMetadata.PropertyName + "Rows";
+}
+
+<div id="@rowsName" class="iterativeContainer">
+    <div class="addRowContainer">
+        <div class="col-sm-1">
+            @Html.DescriptionFor(m => m)
+            <a href="#" class="addRow btn" onclick="javascript: $('#@rowsName').append(newMineralList); return false;"><span class="addWord">Add Row</span></a>
+        </div>
+    </div>
+    @if (currentCount > 0)
+    {
+        @Html.EditorForMany(e => e, null, 0, "CollectionMineralListItem")
+    }
+</div>
+
+<script type="text/javascript">
+    var newMineralList = decodeHtml('@Html.EmptyEditorForMany(e => e, null, currentCount, "CollectionMineralListItem")');
+</script>

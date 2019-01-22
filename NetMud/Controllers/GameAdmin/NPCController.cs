@@ -10,7 +10,6 @@ using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.NPC;
-using NetMud.DataStructure.System;
 using NetMud.Models.Admin;
 using System;
 using System.Linq;

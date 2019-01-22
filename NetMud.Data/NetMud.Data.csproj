@@ -138,6 +138,10 @@
     <Compile Include="Architectural\GlobalPosition.cs" />
     <Compile Include="Architectural\LookupDataPartial.cs" />
     <Compile Include="Architectural\PropertyBinding\DimensionalModelDataBinder.cs" />
+    <Compile Include="Architectural\PropertyBinding\DictataCollectionDataBinder.cs" />
+    <Compile Include="Architectural\PropertyBinding\MineralCollectionDataBinder.cs" />
+    <Compile Include="Architectural\PropertyBinding\LanguageDataBinder.cs" />
+    <Compile Include="Architectural\PropertyBinding\MineralDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\PhysicalModelDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\AffectPatternDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\PathwayTemplateDataBinder.cs" />

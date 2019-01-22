@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
-using NetMud.Data.LookupData;
+using NetMud.Data.NaturalResource;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
@@ -109,7 +109,8 @@ namespace NetMud.Controllers.GameAdmin
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
                 ValidMaterials = TemplateCache.GetAll<IMaterial>(),
-                ValidInanimateTemplates = TemplateCache.GetAll<IInanimateTemplate>()
+                ValidInanimateTemplates = TemplateCache.GetAll<IInanimateTemplate>(),
+                DataObject = new Flora()
             };
 
             return View("~/Views/GameAdmin/Flora/Add.cshtml", vModel);
@@ -122,44 +123,10 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var newObj = new Flora
-            {
-                Name = vModel.Name,
-                HelpText = vModel.HelpText,
-                SunlightPreference = vModel.SunlightPreference,
-                Coniferous = vModel.Coniferous,
-                AmountMultiplier = vModel.AmountMultiplier,
-                Rarity = vModel.Rarity,
-                PuissanceVariance = vModel.PuissanceVariance,
-                ElevationRange = new ValueRange<int>(vModel.ElevationRangeLow, vModel.ElevationRangeHigh),
-                TemperatureRange = new ValueRange<int>(vModel.TemperatureRangeLow, vModel.TemperatureRangeHigh),
-                HumidityRange = new ValueRange<int>(vModel.HumidityRangeLow, vModel.HumidityRangeHigh)
-            };
+            var newObj = vModel.DataObject;
 
-            var newWood = TemplateCache.Get<IMaterial>(vModel.Wood);
-            if (newWood != null)
-                newObj.Wood = newWood;
-
-            var newFlower = TemplateCache.Get<IInanimateTemplate>(vModel.Flower);
-            if (newFlower != null)
-                newObj.Flower = newFlower;
-
-            var newSeed = TemplateCache.Get<IInanimateTemplate>(vModel.Seed);
-            if (newSeed != null)
-                newObj.Seed = newSeed;
-
-            var newLeaf = TemplateCache.Get<IInanimateTemplate>(vModel.Leaf);
-            if (newLeaf != null)
-                newObj.Leaf = newLeaf;
-
-            var newFruit = TemplateCache.Get<IInanimateTemplate>(vModel.Fruit);
-            if (newFruit != null)
-                newObj.Fruit = newFruit;
-
-            if (newWood == null && newFlower == null && newSeed == null && newLeaf == null && newFruit == null)
+            if (newObj.Wood == null && newObj.Flower == null && newObj.Seed == null && newObj.Leaf == null && newObj.Fruit == null)
                 message = "At least one of the parts of this plant must be valid.";
-
-            newObj.OccursIn = new HashSet<Biome>(vModel.OccursIn);
 
             if (string.IsNullOrWhiteSpace(message))
             {
@@ -195,25 +162,6 @@ namespace NetMud.Controllers.GameAdmin
             }
 
             vModel.DataObject = obj;
-            vModel.Name = obj.Name;
-            vModel.HelpText = obj.HelpText.Value;
-            vModel.SunlightPreference = obj.SunlightPreference;
-            vModel.Coniferous = obj.Coniferous;
-            vModel.AmountMultiplier = obj.AmountMultiplier;
-            vModel.Rarity = obj.Rarity;
-            vModel.PuissanceVariance = obj.PuissanceVariance;
-            vModel.ElevationRangeHigh = obj.ElevationRange.High;
-            vModel.ElevationRangeLow = obj.ElevationRange.Low;
-            vModel.TemperatureRangeHigh = obj.TemperatureRange.High;
-            vModel.TemperatureRangeLow = obj.TemperatureRange.Low;
-            vModel.HumidityRangeHigh = obj.HumidityRange.High;
-            vModel.HumidityRangeLow = obj.HumidityRange.Low;
-            vModel.Wood = obj.Wood.Id;
-            vModel.Flower = obj.Flower.Id;
-            vModel.Fruit = obj.Fruit.Id;
-            vModel.Seed = obj.Seed.Id;
-            vModel.Leaf = obj.Leaf.Id;
-            vModel.OccursIn = obj.OccursIn.ToArray();
 
             return View("~/Views/GameAdmin/Flora/Edit.cshtml", vModel);
         }
@@ -232,44 +180,25 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = message });
             }
 
-            obj.Name = vModel.Name;
-            obj.HelpText = vModel.HelpText;
-            obj.SunlightPreference = vModel.SunlightPreference;
-            obj.Coniferous = vModel.Coniferous;
-            obj.AmountMultiplier = vModel.AmountMultiplier;
-            obj.Rarity = vModel.Rarity;
-            obj.PuissanceVariance = vModel.PuissanceVariance;
-            obj.ElevationRange = new ValueRange<int>(vModel.ElevationRangeLow, vModel.ElevationRangeHigh);
-            obj.TemperatureRange = new ValueRange<int>(vModel.TemperatureRangeLow, vModel.TemperatureRangeHigh);
-            obj.HumidityRange = new ValueRange<int>(vModel.HumidityRangeLow, vModel.HumidityRangeHigh);
+            obj.Name = vModel.DataObject.Name;
+            obj.HelpText = vModel.DataObject.HelpText;
+            obj.SunlightPreference = vModel.DataObject.SunlightPreference;
+            obj.Coniferous = vModel.DataObject.Coniferous;
+            obj.AmountMultiplier = vModel.DataObject.AmountMultiplier;
+            obj.Rarity = vModel.DataObject.Rarity;
+            obj.PuissanceVariance = vModel.DataObject.PuissanceVariance;
+            obj.ElevationRange = vModel.DataObject.ElevationRange;
+            obj.TemperatureRange = vModel.DataObject.TemperatureRange;
+            obj.HumidityRange = vModel.DataObject.HumidityRange;
+            obj.Wood = vModel.DataObject.Wood;
+            obj.Flower = vModel.DataObject.Flower;
+            obj.Seed = vModel.DataObject.Seed;
+            obj.Leaf = vModel.DataObject.Leaf;
+            obj.Fruit = vModel.DataObject.Fruit;
+            obj.OccursIn = vModel.DataObject.OccursIn;
 
-            var newWood = TemplateCache.Get<IMaterial>(vModel.Wood);
-            if (newWood != null)
-                obj.Wood = newWood;
-
-            var newFlower = TemplateCache.Get<IInanimateTemplate>(vModel.Flower);
-            if (newFlower != null)
-                obj.Flower = newFlower;
-
-            var newSeed = TemplateCache.Get<IInanimateTemplate>(vModel.Seed);
-            if (newSeed != null)
-                obj.Seed = newSeed;
-
-            var newLeaf = TemplateCache.Get<IInanimateTemplate>(vModel.Leaf);
-            if (newLeaf != null)
-                obj.Leaf = newLeaf;
-
-            var newFruit = TemplateCache.Get<IInanimateTemplate>(vModel.Fruit);
-            if (newFruit != null)
-                obj.Fruit = newFruit;
-
-            if(newWood == null)
-                message = "Wood must be valid.";
-
-            if (newFlower == null && newSeed == null && newLeaf == null && newFruit == null)
+            if (obj.Wood == null && obj.Flower == null && obj.Seed == null && obj.Leaf == null && obj.Fruit == null)
                 message = "At least one of the parts of this plant must be valid.";
-
-            obj.OccursIn = new HashSet<Biome>(vModel.OccursIn);
 
             if (string.IsNullOrWhiteSpace(message))
             {

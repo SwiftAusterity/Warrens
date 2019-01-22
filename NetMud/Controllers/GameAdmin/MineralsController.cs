@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
-using NetMud.Data.LookupData;
+using NetMud.Data.NaturalResource;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
@@ -110,7 +110,8 @@ namespace NetMud.Controllers.GameAdmin
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
                 ValidMaterials = TemplateCache.GetAll<IMaterial>(),
                 ValidInanimateTemplates = TemplateCache.GetAll<IInanimateTemplate>(),
-                ValidMinerals = TemplateCache.GetAll<IMineral>()
+                ValidMinerals = TemplateCache.GetAll<IMineral>(),
+                DataObject = new Mineral()
             };
 
             return View("~/Views/GameAdmin/Minerals/Add.cshtml", vModel);
@@ -123,51 +124,7 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var newObj = new Mineral
-            {
-                Name = vModel.Name,
-                HelpText = vModel.HelpText,
-                Solubility = vModel.Solubility,
-                Fertility = vModel.Fertility,
-                AmountMultiplier = vModel.AmountMultiplier,
-                Rarity = vModel.Rarity,
-                PuissanceVariance = vModel.PuissanceVariance,
-                ElevationRange = new ValueRange<int>(vModel.ElevationRangeLow, vModel.ElevationRangeHigh),
-                TemperatureRange = new ValueRange<int>(vModel.TemperatureRangeLow, vModel.TemperatureRangeHigh),
-                HumidityRange = new ValueRange<int>(vModel.HumidityRangeLow, vModel.HumidityRangeHigh)
-            };
-
-            var newRock = TemplateCache.Get<IMaterial>(vModel.Rock);
-            if (newRock != null)
-                newObj.Rock = newRock;
-            else
-                message += "Invalid rock material.";
-
-            var newDirt = TemplateCache.Get<IMaterial>(vModel.Dirt);
-            if (newDirt != null)
-                newObj.Dirt = newDirt;
-            else
-                message += "Invalid dirt material.";
-
-            newObj.OccursIn = new HashSet<Biome>(vModel.OccursIn);
-            
-            var newOres = new List<IMineral>();
-            if (vModel.Ores != null)
-            {
-                foreach (var mineralId in vModel.Ores)
-                {
-                    if (mineralId >= 0)
-                    {
-                        var mineral = TemplateCache.Get<IMineral>(mineralId);
-
-                        if (mineral != null)
-                            newOres.Add(mineral);
-                    }
-                }
-
-                if (newOres.Count > 0)
-                    newObj.Ores = newOres;
-            }
+            var newObj = vModel.DataObject;
 
             if (string.IsNullOrWhiteSpace(message))
             {
@@ -204,21 +161,6 @@ namespace NetMud.Controllers.GameAdmin
             }
 
             vModel.DataObject = obj;
-            vModel.Name = obj.Name;
-            vModel.HelpText = obj.HelpText.Value;
-            vModel.Solubility = obj.Solubility;
-            vModel.Fertility = obj.Fertility;
-            vModel.AmountMultiplier = obj.AmountMultiplier;
-            vModel.Rarity = obj.Rarity;
-            vModel.PuissanceVariance = obj.PuissanceVariance;
-            vModel.ElevationRangeHigh = obj.ElevationRange.High;
-            vModel.ElevationRangeLow = obj.ElevationRange.Low;
-            vModel.TemperatureRangeHigh = obj.TemperatureRange.High;
-            vModel.TemperatureRangeLow = obj.TemperatureRange.Low;
-            vModel.HumidityRangeHigh = obj.HumidityRange.High;
-            vModel.HumidityRangeLow = obj.HumidityRange.Low;
-            vModel.Rock = obj.Rock.Id;
-            vModel.Dirt = obj.Dirt.Id;
 
             return View("~/Views/GameAdmin/Minerals/Edit.cshtml", vModel);
         }
@@ -237,48 +179,20 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = message });
             }
 
-            obj.Name = vModel.Name;
-            obj.HelpText = vModel.HelpText;
-            obj.Solubility = vModel.Solubility;
-            obj.Fertility = vModel.Fertility;
-            obj.AmountMultiplier = vModel.AmountMultiplier;
-            obj.Rarity = vModel.Rarity;
-            obj.PuissanceVariance = vModel.PuissanceVariance;
-            obj.ElevationRange = new ValueRange<int>(vModel.ElevationRangeLow, vModel.ElevationRangeHigh);
-            obj.TemperatureRange = new ValueRange<int>(vModel.TemperatureRangeLow, vModel.TemperatureRangeHigh);
-            obj.HumidityRange = new ValueRange<int>(vModel.HumidityRangeLow, vModel.HumidityRangeHigh);
-
-            var newDirt = TemplateCache.Get<IMaterial>(vModel.Dirt);
-            if (newDirt != null)
-                obj.Dirt = newDirt;
-            else
-                message += "Invalid dirt material.";
-
-            var newRock = TemplateCache.Get<IMaterial>(vModel.Rock);
-            if (newRock != null)
-                obj.Rock = newRock;
-            else
-                message += "Invalid rock material.";
-
-            var newOres = new List<IMineral>();
-            if (vModel.Ores != null)
-            {
-                foreach (var mineralId in vModel.Ores)
-                {
-                    if (mineralId >= 0)
-                    {
-                        var mineral = TemplateCache.Get<IMineral>(mineralId);
-
-                        if (mineral != null)
-                            newOres.Add(mineral);
-                    }
-                }
-
-                if (newOres.Count > 0)
-                    obj.Ores = newOres;
-            }
-
-            obj.OccursIn = new HashSet<Biome>(vModel.OccursIn);
+            obj.Name = vModel.DataObject.Name;
+            obj.HelpText = vModel.DataObject.HelpText;
+            obj.Solubility = vModel.DataObject.Solubility;
+            obj.Fertility = vModel.DataObject.Fertility;
+            obj.AmountMultiplier = vModel.DataObject.AmountMultiplier;
+            obj.Rarity = vModel.DataObject.Rarity;
+            obj.PuissanceVariance = vModel.DataObject.PuissanceVariance;
+            obj.ElevationRange = vModel.DataObject.ElevationRange;
+            obj.TemperatureRange = vModel.DataObject.TemperatureRange;
+            obj.HumidityRange = vModel.DataObject.HumidityRange;
+            obj.Dirt = vModel.DataObject.Dirt;
+            obj.Rock = vModel.DataObject.Rock;
+            obj.Ores = vModel.DataObject.Ores;
+            obj.OccursIn = vModel.DataObject.OccursIn;
 
             if (string.IsNullOrWhiteSpace(message))
             {

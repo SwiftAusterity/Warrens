@@ -102,7 +102,8 @@ namespace NetMud.Controllers.GameAdmin
         {
             var vModel = new AddEditLanguageViewModel
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId())
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                DataObject = new Language()
             };
 
             return View("~/Views/GameAdmin/Language/Add.cshtml", vModel);
@@ -115,12 +116,7 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var newObj = new Language
-            {
-                Name = vModel.Name,
-                UIOnly = vModel.UIOnly,
-                GoogleLanguageCode = vModel.GoogleLanguageCode
-            };
+            var newObj = vModel.DataObject;
 
             if (!newObj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                 message = "Error; Creation failed.";
@@ -151,9 +147,6 @@ namespace NetMud.Controllers.GameAdmin
             }
 
             vModel.DataObject = obj;
-            vModel.Name = obj.Name;
-            vModel.GoogleLanguageCode = obj.GoogleLanguageCode;
-            vModel.UIOnly = obj.UIOnly;
 
             return View("~/Views/GameAdmin/Language/Edit.cshtml", vModel);
         }
@@ -172,8 +165,9 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = message });
             }
 
-            obj.UIOnly = vModel.UIOnly;
-            obj.GoogleLanguageCode = vModel.GoogleLanguageCode;
+            obj.Name = vModel.DataObject.Name;
+            obj.UIOnly = vModel.DataObject.UIOnly;
+            obj.GoogleLanguageCode = vModel.DataObject.GoogleLanguageCode;
 
             if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {
