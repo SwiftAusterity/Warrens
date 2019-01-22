@@ -57,10 +57,10 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group row">
-            @Html.EditorFor(e => e.UITutorialMode)
-            @Html.EditorFor(e => e.GossipSubscriber)
-            @Html.EditorFor(e => e.PermanentlyMuteMusic)
-            @Html.EditorFor(e => e.PermanentlyMuteSound)
+            @Html.EditorFor(m => m.UITutorialMode)
+            @Html.EditorFor(m => m.GossipSubscriber)
+            @Html.EditorFor(m => m.PermanentlyMuteMusic)
+            @Html.EditorFor(m => m.PermanentlyMuteSound)
         </div>
 
         if (User.IsInRole("Admin"))

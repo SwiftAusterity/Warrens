@@ -1,7 +1,7 @@
 ﻿@model NetMud.Models.Admin.AddEditHelpDataViewModel
 
 @{
-    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("New Help File", new string[] { "Dashboard", "Help Files" }, new string[] { "/GameAdmin", "/Help" });
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Add Race", new string[] { "Dashboard", "Races" }, new string[] { "/GameAdmin", "/Race" });
 }
 
 <section id="newCharacterForm">
@@ -15,7 +15,6 @@
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Create", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Help", IncludeCancel = true })
     }
 </section>
-
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

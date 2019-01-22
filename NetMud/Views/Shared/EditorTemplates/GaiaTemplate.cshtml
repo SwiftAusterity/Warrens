@@ -4,11 +4,11 @@
 
 <h4>Details</h4>
 <div class="form-group row">
-    @Html.EditorFor(e => e.Name)
-    @Html.EditorFor(e => e.RotationalAngle)
+    @Html.EditorFor(m => m.Name)
+    @Html.EditorFor(m => m.RotationalAngle)
 </div>
 
-@Html.EditorFor(e => e.ChronologicalSystem)
+@Html.EditorFor(m => m.ChronologicalSystem)
 
 <h4>Celestial Bodies</h4>
-@Html.EditorFor(e => e.CelestialBodies, new { validItems = ViewData["ValidCelestials"] })
+@Html.EditorFor(m => m.CelestialBodies, new { validItems = ViewData["ValidCelestials"] })

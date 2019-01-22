@@ -4,8 +4,8 @@
 
 <h4>Details</h4>
 <div class="form-group row">
-    @Html.EditorFor(e => e.Name)
-    @Html.EditorFor(e => e.World, new { validItems = ViewData["ValidWorlds"] })
+    @Html.EditorFor(m => m.Name)
+    @Html.EditorFor(m => m.World, new { validItems = ViewData["ValidWorlds"] })
 </div>
 <h4>Environment</h4>
 <div class="form-group row">

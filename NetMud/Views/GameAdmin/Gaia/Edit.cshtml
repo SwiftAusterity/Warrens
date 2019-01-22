@@ -8,13 +8,13 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <input type="hidden" name="id" id="id" value="@Model.DataObject.Id" />
         <div class="form-group row">
-            @Html.EditorFor(e => e.Name)
-            @Html.EditorFor(e => e.RotationalAngle)
+            @Html.EditorFor(m => m.Name)
+            @Html.EditorFor(m => m.RotationalAngle)
         </div>
         <div class="form-group row">
-            @Html.EditorFor(e => e.StartingYear)
-            @Html.EditorFor(e => e.HoursPerDay)
-            @Html.EditorFor(e => e.DaysPerMonth)
+            @Html.EditorFor(m => m.StartingYear)
+            @Html.EditorFor(m => m.HoursPerDay)
+            @Html.EditorFor(m => m.DaysPerMonth)
         </div>
 
         <h4>Month Names</h4>

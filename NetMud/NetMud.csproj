@@ -547,6 +547,9 @@
     <Content Include="Views\Shared\EditorTemplates\Lexica.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\LexicalModifier.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\LexicalModifiers.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\IndividualInanimateComponent.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\BodyParts.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\BodyPart.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />
@@ -662,7 +665,6 @@
     <Content Include="Views\Shared\SearchCriteriaAndPaging.cshtml" />
     <Content Include="Views\GameAdmin\Pathway\AddWithRoom.cshtml" />
     <Content Include="Views\Shared\BackingDataDropdown.cshtml" />
-    <Content Include="Views\GameAdmin\Race\ExtraBodyParts.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\InanimateEntityContainers.cshtml" />
     <Content Include="Views\Shared\MobileEntityContainer.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\DimensionalModelPlane.cshtml" />

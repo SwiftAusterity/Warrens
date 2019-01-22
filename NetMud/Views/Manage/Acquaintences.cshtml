@@ -51,9 +51,9 @@
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <div class="form-group row">
-                @Html.EditorFor(e => e.AcquaintenceName, new { columnCount = 3 })
-                @Html.EditorFor(e => e.IsFriend, new { columnCount = 3 })
-                @Html.EditorFor(e => e.GossipSystem, new { columnCount = 3 })
+                @Html.EditorFor(m => m.AcquaintenceName, new { columnCount = 3 })
+                @Html.EditorFor(m => m.IsFriend, new { columnCount = 3 })
+                @Html.EditorFor(m => m.GossipSystem, new { columnCount = 3 })
             </div>
 
             <h4>Notification Subscriptions</h4>

@@ -6,9 +6,9 @@
 
 <h4>Details</h4>
 <div class="form-group row">
-    @Html.EditorFor(e => e.Name)
-    @Html.EditorFor(e => e.ModelType)
-    @Html.EditorFor(e => e.Vacuity)
+    @Html.EditorFor(m => m.Name)
+    @Html.EditorFor(m => m.ModelType)
+    @Html.EditorFor(m => m.Vacuity)
 </div>
 <h4>Physical Model</h4>
 <hr />
@@ -24,7 +24,7 @@
     <a href="#" class="btn" id="clearFields" style="color: red;">Clear Fields</a>
 </div>
 
-@Html.EditorFor(e => e.ModelPlanes)
+@Html.EditorFor(m => m.ModelPlanes)
 
 <script>
     $(document).ready(function () {

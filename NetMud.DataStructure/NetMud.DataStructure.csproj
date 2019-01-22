@@ -92,6 +92,7 @@
     <Compile Include="Architectural\EntityBase\Qualification.cs" />
     <Compile Include="Architectural\ISingleton.cs" />
     <Compile Include="Architectural\PropertyValidation\MarkdownStringLengthValidator.cs" />
+    <Compile Include="Inanimate\BodyPart.cs" />
     <Compile Include="Inanimate\IAccumulation.cs" />
     <Compile Include="Architectural\EntityBase\IAudible.cs" />
     <Compile Include="Architectural\EntityBase\IContains.cs" />

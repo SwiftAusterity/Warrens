@@ -9,15 +9,14 @@
 
         if (Model.Item2 != null && Model.Item2.Count() > 0)
         {
-            breadcrumbs = string.Join(" > ", Model.Item2.Select((str, i) => Model.Item3 != null && linkCount > i 
-            ? string.Format("<a href='{1}' title='{0}'>{0}</a>", Model.Item2[i], Model.Item3[i])
-            : string.Format("<span>{0}</span>", Model.Item2[i])));
+            breadcrumbs = string.Join("<span class='glyphicon glyphicon-chevron-right'></span>", Model.Item2.Select((str, i) => Model.Item3 != null && linkCount > i 
+            ? string.Format("<a href='{1}' title='{0}' class='breadcrumb-item'>{0}</a>", Model.Item2[i], Model.Item3[i])
+            : string.Format("<span class='breadcrumb-item'>{0}</span>", Model.Item2[i])));
 
-            breadcrumbs += string.Format(" > <span>{0}</span>", title);
+            breadcrumbs += string.Format("<span class='glyphicon glyphicon-chevron-right'></span><span class='breadcrumb-item'>{0}</span>", title);
         }
 
         <h3>@title</h3>
-        <span>@Html.Raw(breadcrumbs)</span>
-        <hr />
+        <div class="breadcrumb">@Html.Raw(breadcrumbs)</div>
     }
 }

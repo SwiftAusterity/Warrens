@@ -4,29 +4,29 @@
 
 <h4>Details</h4>
 <div class="form-group row">
-    @Html.EditorFor(e => e.Name)
-    @Html.EditorFor(e => e.Conductive)
-    @Html.EditorFor(e => e.Magnetic)
-    @Html.EditorFor(e => e.Flammable)
+    @Html.EditorFor(m => m.Name)
+    @Html.EditorFor(m => m.Conductive)
+    @Html.EditorFor(m => m.Magnetic)
+    @Html.EditorFor(m => m.Flammable)
 </div>
 <div class="form-group row">
-    @Html.EditorFor(e => e.Viscosity)
-    @Html.EditorFor(e => e.Density)
-    @Html.EditorFor(e => e.Mallebility)
-    @Html.EditorFor(e => e.Ductility)
-    @Html.EditorFor(e => e.Porosity)
+    @Html.EditorFor(m => m.Viscosity)
+    @Html.EditorFor(m => m.Density)
+    @Html.EditorFor(m => m.Mallebility)
+    @Html.EditorFor(m => m.Ductility)
+    @Html.EditorFor(m => m.Porosity)
 </div>
 <div class="form-group row">
-    @Html.EditorFor(e => e.SolidPoint)
-    @Html.EditorFor(e => e.GasPoint)
-    @Html.EditorFor(e => e.TemperatureRetention)
+    @Html.EditorFor(m => m.SolidPoint)
+    @Html.EditorFor(m => m.GasPoint)
+    @Html.EditorFor(m => m.TemperatureRetention)
 </div>
 <div class="form-group row">
-    @Html.EditorFor(e => e.HelpText)
+    @Html.EditorFor(m => m.HelpText)
 </div>
 
 <h4>Damage Resistances</h4>
-@Html.EditorFor(e => e.Resistance)
+@Html.EditorFor(m => m.Resistance)
 
 <h4>Alloy Composition</h4>
-@Html.EditorFor(e => e.Composition)
+@Html.EditorFor(m => m.Composition)

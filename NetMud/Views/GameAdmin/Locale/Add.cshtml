@@ -8,7 +8,7 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <input type="hidden" name="zoneId" id="zoneId" value="@Model.ZoneId" />
         <div class="form-group row">
-            @Html.EditorFor(e => e.Name, new { columnCount = 1 })
+            @Html.EditorFor(m => m.Name, new { columnCount = 1 })
         </div>
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Zone", IncludeCancel = true })
     }

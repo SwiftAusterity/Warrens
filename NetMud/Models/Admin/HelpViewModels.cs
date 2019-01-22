@@ -35,16 +35,7 @@ namespace NetMud.Models.Admin
         {
         }
 
-        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
-        [Display(Name = "Name", Description = "The name used to find and refer to this help file.")]
-        [DataType(DataType.Text)]
-        public string Name { get; set; }
-
-        [StringLength(2000, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 20)]
-        [DataType("Markdown")]
-        [Display(Name = "Help Text", Description = "The descriptive text shown in the public help pages and when HELP is used in game.")]
-        public string HelpText { get; set; }
-
+        [UIHint("Help")]
         public IHelp DataObject { get; set; }
     }
 }

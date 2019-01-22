@@ -8,11 +8,11 @@
 
         <h3>Language</h3>
         <div class="form-group row">
-            @Html.EditorFor(e => e.Name)
+            @Html.EditorFor(m => m.Name)
         </div>
         <div class="form-group row">
-            @Html.EditorFor(e => e.GoogleLanguageCode)
-            @Html.EditorFor(e => e.UIOnly)
+            @Html.EditorFor(m => m.GoogleLanguageCode)
+            @Html.EditorFor(m => m.UIOnly)
         </div>
 
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Create", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Language", IncludeCancel = true })

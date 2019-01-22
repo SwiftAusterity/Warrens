@@ -21,7 +21,7 @@
         <h4>New Character</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.EditorFor(e => e.NewCharacter, new { ValidRaces = Model.ValidRaces })
+        @Html.EditorFor(m => m.NewCharacter, new { ValidRaces = Model.ValidRaces })
 
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Create", CancelName = "Cancel", ReturnAction = "ManageCharacters", ReturnController = "Manage", IncludeCancel = true})
     }

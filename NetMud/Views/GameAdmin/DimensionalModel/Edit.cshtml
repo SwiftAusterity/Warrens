@@ -6,7 +6,7 @@
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-        @Html.EditorFor(e => e.DataObject)
+        @Html.EditorFor(m => m.DataObject)
 
         <div class="clearfix"></div>
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "DimensionalModel", IncludeCancel = true })

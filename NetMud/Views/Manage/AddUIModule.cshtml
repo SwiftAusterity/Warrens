@@ -9,15 +9,15 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group row">
-            @Html.EditorFor(e => e.Name)
-            @Html.EditorFor(e => e.Height)
-            @Html.EditorFor(e => e.Width)
+            @Html.EditorFor(m => m.Name)
+            @Html.EditorFor(m => m.Height)
+            @Html.EditorFor(m => m.Width)
         </div>
         <div class="form-group row">
-            @Html.EditorFor(e => e.BodyHtml, new { columnCount = 1 })
+            @Html.EditorFor(m => m.BodyHtml, new { columnCount = 1 })
         </div>
         <div class="form-group row">
-            @Html.EditorFor(e => e.HelpText, new { columnCount = 1 })
+            @Html.EditorFor(m => m.HelpText, new { columnCount = 1 })
         </div>
 
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Create", CancelName = "Cancel", ReturnAction = "UIModules", ReturnController = "Manage", IncludeCancel = true })

@@ -4,16 +4,16 @@
 
 <h4>Details</h4>
 <div class="form-group row">
-    @Html.EditorFor(e => e.Name)
-    @Html.EditorFor(e => e.SurName)
-    @Html.EditorFor(e => e.Gender)
-    @Html.EditorFor(e => e.Race, new { validItems = ViewData["ValidRaces"] })
+    @Html.EditorFor(m => m.Name)
+    @Html.EditorFor(m => m.SurName)
+    @Html.EditorFor(m => m.Gender)
+    @Html.EditorFor(m => m.Race, new { validItems = ViewData["ValidRaces"] })
     @if (User.IsInRole("Admin"))
     {
-        @Html.EditorFor(e => e.GamePermissionsRank)
+        @Html.EditorFor(m => m.GamePermissionsRank)
     }
 </div>
 @if (User.IsInRole("Admin") || User.IsInRole("Builder") || User.IsInRole("Guest"))
 {
-    @Html.EditorFor(e => e.SuperSenses)
+    @Html.EditorFor(m => m.SuperSenses)
 }

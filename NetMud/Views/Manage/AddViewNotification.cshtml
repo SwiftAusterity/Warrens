@@ -13,14 +13,14 @@
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <div class="form-group row">
-                @Html.EditorFor(e => e.RecipientAccount)
-                @Html.EditorFor(e => e.Recipient)
+                @Html.EditorFor(m => m.RecipientAccount)
+                @Html.EditorFor(m => m.Recipient)
             </div>
             <div class="form-group row">
-                @Html.EditorFor(e => e.Subject, new { columnCount = 2 })
+                @Html.EditorFor(m => m.Subject, new { columnCount = 2 })
             </div>
             <div class="form-group row">
-                @Html.EditorFor(e => e.Body)
+                @Html.EditorFor(m => m.Body)
             </div>
 
             @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Send", CancelName = "Cancel", ReturnAction = "Notifications", ReturnController = "Manage", IncludeCancel = true })
@@ -34,14 +34,14 @@ else
         {
             @Html.AntiForgeryToken()
             <div class="form-group row">
-                @Html.EditorFor(e => e.RecipientAccount, new { disabled = true })
-                @Html.EditorFor(e => e.Recipient, new { disabled = true })
+                @Html.EditorFor(m => m.RecipientAccount, new { disabled = true })
+                @Html.EditorFor(m => m.Recipient, new { disabled = true })
             </div>
             <div class="form-group row">
-                @Html.EditorFor(e => e.Subject, new { columnCount = 1, disabled = true })
+                @Html.EditorFor(m => m.Subject, new { columnCount = 1, disabled = true })
             </div>
             <div class="form-group row">
-                @Html.EditorFor(e => e.Body, new { disabled = true })
+                @Html.EditorFor(m => m.Body, new { disabled = true })
             </div>
 
             @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Mark As Read", CancelName = "Cancel", ReturnAction = "Notifications", ReturnController = "Manage", IncludeCancel = true })

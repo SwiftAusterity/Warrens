@@ -9,7 +9,7 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group row">
-            @Html.EditorFor(e => e.Name)
+            @Html.EditorFor(m => m.Name)
 
             @Html.DescriptiveLabelFor(m => m.Hemisphere, new { @class = "col-sm-1 col-form-label" })
             <div class="col-md-3">
@@ -21,12 +21,12 @@
             @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("World", "World", Model.ValidWorlds, -1))
         </div>
         <div class="form-group row">
-            @Html.EditorFor(e => e.TemperatureCoefficient, new { columnCount = 2 })
-            @Html.EditorFor(e => e.PressureCoefficient, new { columnCount = 2 })
+            @Html.EditorFor(m => m.TemperatureCoefficient, new { columnCount = 2 })
+            @Html.EditorFor(m => m.PressureCoefficient, new { columnCount = 2 })
         </div>
         <div class="form-group row">
-            @Html.EditorFor(e => e.BaseElevation, new { columnCount = 2 })
-            @Html.EditorFor(e => e.Claimable, new { columnCount = 2 })
+            @Html.EditorFor(m => m.BaseElevation, new { columnCount = 2 })
+            @Html.EditorFor(m => m.Claimable, new { columnCount = 2 })
         </div>
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Create", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Zone", IncludeCancel = true })
     }

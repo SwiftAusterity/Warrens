@@ -3,21 +3,21 @@
 @model JournalEntry
 
 <div class="form-group row">
-    @Html.EditorFor(e => e.Name)
-    @Html.EditorFor(e => e.MinimumReadLevel)
-    @Html.EditorFor(e => e.Public)
+    @Html.EditorFor(m => m.Name)
+    @Html.EditorFor(m => m.MinimumReadLevel)
+    @Html.EditorFor(m => m.Public)
 </div>
 <h4>Publishing</h4>
 <div class="form-group row">
-    @Html.EditorFor(e => e.PublishDate)
-    @Html.EditorFor(e => e.ExpireDate)
-    @Html.EditorFor(e => e.Expired)
+    @Html.EditorFor(m => m.PublishDate)
+    @Html.EditorFor(m => m.ExpireDate)
+    @Html.EditorFor(m => m.Expired)
 </div>
 <h4>Tags</h4>
-@Html.EditorFor(e => e.Tags)
+@Html.EditorFor(m => m.Tags)
 
 <h4>Entry Body</h4>
 <div class="form-group row">
-    @Html.EditorFor(e => e.Body)
+    @Html.EditorFor(m => m.Body)
 </div>
 

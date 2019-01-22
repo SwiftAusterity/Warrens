@@ -2,7 +2,7 @@
 
 @model IMerchandise
 
-@Html.EditorFor(e => e.Item, new { validItems = ViewData["ValidInanimateDatas"] })
-@Html.EditorFor(e => e.Quality)
-@Html.EditorFor(e => e.QualityRange)
-@Html.EditorFor(e => e.MarkRate)
+@Html.EditorFor(m => m.Item, new { validItems = ViewData["ValidInanimateDatas"] })
+@Html.EditorFor(m => m.Quality)
+@Html.EditorFor(m => m.QualityRange)
+@Html.EditorFor(m => m.MarkRate)

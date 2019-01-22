@@ -4,29 +4,29 @@
 
 <h4>Details</h4>
 <div class="form-group row">
-    @Html.EditorFor(e => e.Name)
-    @Html.EditorFor(e => e.AccumulationCap)
+    @Html.EditorFor(m => m.Name)
+    @Html.EditorFor(m => m.AccumulationCap)
 </div>
 
-@Html.EditorFor(e => e.Qualities)
+@Html.EditorFor(m => m.Qualities)
 
 <h4>Item Containers</h4>
-@Html.EditorFor(e => e.InanimateContainers)
+@Html.EditorFor(m => m.InanimateContainers)
 
 <h4>NPC Containers</h4>
-@Html.EditorFor(e => e.MobileContainers)
+@Html.EditorFor(m => m.MobileContainers)
 
 <h4>Dimensional Model</h4>
-@Html.EditorFor(e => e.Model)
+@Html.EditorFor(m => m.Model)
 
 <h3>Crafting Blueprint</h3>
 <hr />
 <div class="form-group row">
-    @Html.EditorFor(e => e.Produces)
+    @Html.EditorFor(m => m.Produces)
 </div>
 
 <h4>Components</h4>
-@Html.EditorFor(e => e.Components)
+@Html.EditorFor(m => m.Components)
 
 <h4>Skill Requirements</h4>
-@Html.EditorFor(e => e.SkillRequirements)
+@Html.EditorFor(m => m.SkillRequirements)

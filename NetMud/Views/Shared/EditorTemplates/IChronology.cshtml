@@ -4,10 +4,10 @@
 
 <h4>Chronology</h4>
 <div class="form-group row">
-    @Html.EditorFor(e => e.StartingYear)
-    @Html.EditorFor(e => e.HoursPerDay)
-    @Html.EditorFor(e => e.DaysPerMonth)
+    @Html.EditorFor(m => m.StartingYear)
+    @Html.EditorFor(m => m.HoursPerDay)
+    @Html.EditorFor(m => m.DaysPerMonth)
 </div>
 
 <h4>Month Names</h4>
-@Html.EditorFor(e => e.Months, new { tagList = string.Join(",", Model.Months) })
+@Html.EditorFor(m => m.Months, new { tagList = string.Join(",", Model.Months) })

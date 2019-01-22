@@ -11,13 +11,13 @@
             <hr />
             <h4>Account</h4>
             <div class="form-group row">
-                @Html.EditorFor(e => e.GlobalUserHandle)
-                @Html.EditorFor(e => e.Email)
+                @Html.EditorFor(m => m.GlobalUserHandle)
+                @Html.EditorFor(m => m.Email)
             </div>
             <h4>Password</h4>
             <div class="form-group row">
-                @Html.EditorFor(e => e.Password)
-                @Html.EditorFor(e => e.ConfirmPassword)
+                @Html.EditorFor(m => m.Password)
+                @Html.EditorFor(m => m.ConfirmPassword)
             </div>
     @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Register", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Home", IncludeCancel = false })
 

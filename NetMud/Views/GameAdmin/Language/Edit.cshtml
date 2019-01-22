@@ -7,11 +7,11 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <h3>Language</h3>
         <div class="form-group row">
-            @Html.EditorFor(e => e.Name, new { disabled = true })
+            @Html.EditorFor(m => m.Name, new { disabled = true })
         </div>
         <div class="form-group row">
-            @Html.EditorFor(e => e.GoogleLanguageCode)
-            @Html.EditorFor(e => e.UIOnly)
+            @Html.EditorFor(m => m.GoogleLanguageCode)
+            @Html.EditorFor(m => m.UIOnly)
         </div>
 
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Language", IncludeCancel = true })

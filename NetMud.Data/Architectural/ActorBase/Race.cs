@@ -1,4 +1,5 @@
 ﻿using NetMud.Data.Architectural.DataIntegrity;
+using NetMud.Data.Inanimate;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
@@ -30,15 +31,15 @@ namespace NetMud.Data.Architectural.ActorBase
         /// <summary>
         /// The arm objects
         /// </summary>
-        [Display(Name = "Arm Object", Description = "The object that this thing's arms are made of.")]
-        [UIHint("InanimateComponent")]
+        [Display(Name = "Arm Object", Description = "The # of and object that this thing's arms are made of.")]
+        [UIHint("IndividualInanimateComponent")]
         public IInanimateComponent Arms { get; set; }
 
         /// <summary>
         /// The leg objects
         /// </summary>
-        [Display(Name = "Leg Object", Description = "The object that this thing's legs are made of.")]
-        [UIHint("InanimateComponent")]
+        [Display(Name = "Leg Object", Description = "The # of and object that this thing's legs are made of.")]
+        [UIHint("IndividualInanimateComponent")]
         public IInanimateComponent Legs { get; set; }
 
         [JsonProperty("Torso")]
@@ -50,7 +51,7 @@ namespace NetMud.Data.Architectural.ActorBase
         [ScriptIgnore]
         [JsonIgnore]
         [NonNullableDataIntegrity("Torso is invalid.")]
-        [Display(Name = "Torso Object", Description = "The object that this thing's torso is made of.")]
+        [Display(Name = "Torso Object", Description = "The # of and object that this thing's torso is made of.")]
         [UIHint("InanimateTemplateList")]
         public IInanimateTemplate Torso
         {
@@ -92,7 +93,7 @@ namespace NetMud.Data.Architectural.ActorBase
         /// </summary>
         [Display(Name = "Extra Parts", Description = "The additional non-standard anatomical features this has. Tails, head fins, wings and unique forms (like eleven ears) qualify.")]
         [UIHint("BodyParts")]
-        public HashSet<Tuple<IInanimateComponent, string>> BodyParts { get; set; }
+        public HashSet<BodyPart> BodyParts { get; set; }
 
         /// <summary>
         /// Dietary type of this race
@@ -215,22 +216,22 @@ namespace NetMud.Data.Architectural.ActorBase
         /// </summary>
         public Race()
         {
-            BodyParts = new HashSet<Tuple<IInanimateComponent, string>>();
+            BodyParts = new HashSet<BodyPart>();
         }
 
         /// <summary>
         /// Method to get the full list of anatomical features of this race
         /// </summary>
-        public IEnumerable<Tuple<IInanimateTemplate, string>> FullAnatomy()
+        public IEnumerable<BodyPart> FullAnatomy()
         {
-            var anatomy = new List<Tuple<IInanimateTemplate, string>>();
+            var anatomy = new List<BodyPart>();
 
             if (Arms != null)
             {
                 var i = 1;
                 while (i < Arms.Amount)
                 {
-                    anatomy.Add(new Tuple<IInanimateTemplate, string>(Arms.Item, string.Format("Arm {0}", i.ToGreek(true))));
+                    anatomy.Add(new BodyPart(Arms, string.Format("Arm {0}", i.ToGreek(true))));
                     i++;
                 }
             }
@@ -240,23 +241,23 @@ namespace NetMud.Data.Architectural.ActorBase
                 var i = 1;
                 while (i < Arms.Amount)
                 {
-                    anatomy.Add(new Tuple<IInanimateTemplate, string>(Legs.Item, string.Format("Leg {0}", i.ToGreek(true))));
+                    anatomy.Add(new BodyPart(Legs, string.Format("Leg {0}", i.ToGreek(true))));
                     i++;
                 }
             }
 
             if (Head != null)
-                anatomy.Add(new Tuple<IInanimateTemplate, string>(Head, "Head"));
+                anatomy.Add(new BodyPart(new InanimateComponent(Head, 1), "Head"));
 
             if (Torso != null)
-                anatomy.Add(new Tuple<IInanimateTemplate, string>(Torso, "Torso"));
+                anatomy.Add(new BodyPart(new InanimateComponent(Torso, 1), "Torso"));
 
             foreach (var bit in BodyParts)
             {
                 var i = 1;
-                while (i < bit.Item1.Amount)
+                while (i < bit.Part.Amount)
                 {
-                    anatomy.Add(new Tuple<IInanimateTemplate, string>(bit.Item1.Item, bit.Item2));
+                    anatomy.Add(new BodyPart(bit.Part, bit.Name));
                     i++;
                 }
             }
@@ -300,16 +301,16 @@ namespace NetMud.Data.Architectural.ActorBase
 
             foreach (var bit in BodyParts)
             {
-                if (bit.Item1 == null)
+                if (bit.Part == null)
                     continue;
 
-                for(var i = 0; i < bit.Item1.Amount; i++)
+                for(var i = 0; i < bit.Part.Amount; i++)
                 {
                     var legCount = 0;
                     while (legCount < Legs.Amount)
                     {
                         legCount++;
-                        stringList.Add(bit.Item1.Item.Model.ModelTemplate.ViewFlattenedModel(forWeb));
+                        stringList.Add(bit.Part.Item.Model.ModelTemplate.ViewFlattenedModel(forWeb));
                     }
                 }
             }
@@ -332,7 +333,7 @@ namespace NetMud.Data.Architectural.ActorBase
             if (Legs == null || Legs.Item == null || Legs.Amount < 0)
                 TemplateProblems.Add("Legs are invalid.");
 
-            if (BodyParts != null && BodyParts.Any(a => a.Item1 == null || a.Item1.Amount == 0 || string.IsNullOrWhiteSpace(a.Item2)))
+            if (BodyParts != null && BodyParts.Any(a => a.Part == null || a.Part.Amount == 0 || string.IsNullOrWhiteSpace(a.Name)))
                 TemplateProblems.Add("BodyParts are invalid.");
 
             if (VisionRange == null || VisionRange.Low >= VisionRange.High)
@@ -368,7 +369,7 @@ namespace NetMud.Data.Architectural.ActorBase
             returnList.Add("Temperature Tolerance", string.Format("{0} - {1}", TemperatureTolerance.Low, TemperatureTolerance.High));
 
             foreach (var part in BodyParts)
-                returnList.Add("Body Parts", string.Format("{0} - {1} ({2})", part.Item1.Amount.ToString(), part.Item1.Item.Name, part.Item2));
+                returnList.Add("Body Parts", string.Format("{0} - {1} ({2})", part.Part.Amount.ToString(), part.Part.Item.Name, part.Name));
 
             return returnList;
         }

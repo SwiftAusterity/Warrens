@@ -9,22 +9,22 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group row">
-            @Html.EditorFor(e => e.Name)
-            @Html.DescriptiveLabelFor(e => e.SystemDefault, new { @class = "col-sm-1 col-form-label" })
+            @Html.EditorFor(m => m.Name)
+            @Html.DescriptiveLabelFor(m => m.SystemDefault, new { @class = "col-sm-1 col-form-label" })
             <div class="col-sm-3">
                 @Html.DropDownList("SystemDefault", new SelectList(new int[] { 1, 2, 3, 4 })
                                         , "Select One", htmlAttributes: new { id = "SystemDefault", @class = "form-control" })
             </div>
         </div>
         <div class="form-group row">
-            @Html.EditorFor(e => e.Height)
-            @Html.EditorFor(e => e.Width)
+            @Html.EditorFor(m => m.Height)
+            @Html.EditorFor(m => m.Width)
         </div>
         <div class="form-group row">
-            @Html.EditorFor(e => e.BodyHtml, new { columnCount = 1 })
+            @Html.EditorFor(m => m.BodyHtml, new { columnCount = 1 })
         </div>
         <div class="form-group row">
-            @Html.EditorFor(e => e.HelpText, new { columnCount = 1 })
+            @Html.EditorFor(m => m.HelpText, new { columnCount = 1 })
         </div>
 
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Create", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "UIModules", IncludeCancel = true })

@@ -34,7 +34,7 @@ namespace NetMud.DataStructure.Architectural.ActorBase
         /// <summary>
         /// The list of additional body parts used by this race. Part Object, Amount, Name
         /// </summary>
-        HashSet<Tuple<IInanimateComponent, string>> BodyParts { get; set; }
+        HashSet<BodyPart> BodyParts { get; set; }
 
         /// <summary>
         /// Dietary type of this race
@@ -84,7 +84,7 @@ namespace NetMud.DataStructure.Architectural.ActorBase
         /// <summary>
         /// Method to get the full list of anatomical features of this race
         /// </summary>
-        IEnumerable<Tuple<IInanimateTemplate, string>> FullAnatomy();
+        IEnumerable<BodyPart> FullAnatomy();
 
         /// <summary>
         /// Render this race's body as an ascii.. thing

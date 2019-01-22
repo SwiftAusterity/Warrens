@@ -280,21 +280,21 @@
                 @Html.AntiForgeryToken()
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <div class="form-group row">
-                @Html.EditorFor(e => e.ClientName)
-                @Html.EditorFor(e => e.ClientSecret)
-                @Html.EditorFor(e => e.ClientId)
+                @Html.EditorFor(m => m.ClientName)
+                @Html.EditorFor(m => m.ClientSecret)
+                @Html.EditorFor(m => m.ClientId)
             </div>
                 <div class="form-group row">
-                    @Html.EditorFor(e => e.GossipActive)
-                    @Html.EditorFor(e => e.SuspendMultiplier)
-                    @Html.EditorFor(e => e.SuspendMultiplierMaximum)
+                    @Html.EditorFor(m => m.GossipActive)
+                    @Html.EditorFor(m => m.SuspendMultiplier)
+                    @Html.EditorFor(m => m.SuspendMultiplierMaximum)
                 </div>
 
                 <h4>Supported Features</h4>
-                @Html.EditorFor(e => e.SupportedFeatures, new { tagList = Model.GossipConfigDataObject.SupportedFeatures.ToArray() })
+                @Html.EditorFor(m => m.SupportedFeatures, new { tagList = Model.GossipConfigDataObject.SupportedFeatures.ToArray() })
 
                 <h4>Supported Channels</h4>
-                @Html.EditorFor(e => e.SupportedChannels, new { tagList = Model.GossipConfigDataObject.SupportedChannels.ToArray() })
+                @Html.EditorFor(m => m.SupportedChannels, new { tagList = Model.GossipConfigDataObject.SupportedChannels.ToArray() })
 
 
                 @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "GameAdmin", IncludeCancel = false })
@@ -346,23 +346,23 @@
                 @Html.AntiForgeryToken()
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 <div class="form-group row">
-                    @Html.EditorFor(e => e.WebsocketPortalActive)
-                    @Html.EditorFor(e => e.UserCreationActive)
-                    @Html.EditorFor(e => e.AdminsOnly)
+                    @Html.EditorFor(m => m.WebsocketPortalActive)
+                    @Html.EditorFor(m => m.UserCreationActive)
+                    @Html.EditorFor(m => m.AdminsOnly)
                 </div>
                 <h4>Death Recall Settings</h4>
                 <div class="form-group row">
-                    @Html.EditorFor(e => e.DeathRecallZone, new { validItems = Model.ValidZones })
-                    @Html.EditorFor(e => e.DeathRecallCoordinateX)
-                    @Html.EditorFor(e => e.DeathRecallCoordinateY)
+                    @Html.EditorFor(m => m.DeathRecallZone, new { validItems = Model.ValidZones })
+                    @Html.EditorFor(m => m.DeathRecallCoordinateX)
+                    @Html.EditorFor(m => m.DeathRecallCoordinateY)
                 </div>
                 <h4>Death Notice Settings</h4>
                 <div class="form-group row">
-                    @Html.EditorFor(e => e.DeathNoticeFrom)
-                    @Html.EditorFor(e => e.DeathNoticeSubject)
+                    @Html.EditorFor(m => m.DeathNoticeFrom)
+                    @Html.EditorFor(m => m.DeathNoticeSubject)
                 </div>
                 <div class="form-group row">
-                    @Html.EditorFor(e => e.DeathNoticeBody)
+                    @Html.EditorFor(m => m.DeathNoticeBody)
                 </div>
 
                 @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "GameAdmin", IncludeCancel = false })

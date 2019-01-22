@@ -7,15 +7,15 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group row">
-            @Html.EditorFor(e => e.Name, new { columnCount = 3 })
-            @Html.EditorFor(e => e.Solubility, new { columnCount = 3 })
-            @Html.EditorFor(e => e.Fertility, new { columnCount = 3 })
+            @Html.EditorFor(m => m.Name, new { columnCount = 3 })
+            @Html.EditorFor(m => m.Solubility, new { columnCount = 3 })
+            @Html.EditorFor(m => m.Fertility, new { columnCount = 3 })
         </div>
 
         <div class="form-group row">
-            @Html.EditorFor(e => e.Rarity, new { columnCount = 3 })
-            @Html.EditorFor(e => e.AmountMultiplier, new { columnCount = 3 })
-            @Html.EditorFor(e => e.PuissanceVariance, new { columnCount = 3 })
+            @Html.EditorFor(m => m.Rarity, new { columnCount = 3 })
+            @Html.EditorFor(m => m.AmountMultiplier, new { columnCount = 3 })
+            @Html.EditorFor(m => m.PuissanceVariance, new { columnCount = 3 })
         </div>
         <div class="form-group row">
             @Html.EditorFor(m => m.TemperatureRangeLow, new { columnCount = 3 })
@@ -39,7 +39,7 @@
         @Html.Partial("~/Views/GameAdmin/Minerals/OccursIn.cshtml", Model)
 
         <div class="form-group row">
-            @Html.EditorFor(e => e.HelpText)
+            @Html.EditorFor(m => m.HelpText)
         </div>
 
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Create", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Minerals", IncludeCancel = true })

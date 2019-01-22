@@ -2,12 +2,34 @@
 
 @model Race
 
-<h4>Racial</h4>
+<h4>Details</h4>
 <div class="form-group row">
-    @Html.EditorFor(e => e.Name)
-    @Html.EditorFor(e => e.CollectiveNoun)
+    @Html.EditorFor(m => m.Name)
+    @Html.EditorFor(m => m.CollectiveNoun)
+    @Html.EditorFor(m => m.StartingLocation, new { validItems = ViewData["ValidZones"] })
+    @Html.EditorFor(m => m.EmergencyLocation, new { validItems = ViewData["ValidZones"] })
 </div>
-<h4>Tolerances</h4>
+
 <div class="form-group row">
-    @Html.EditorFor(e => e.TemperatureTolerance)
+    @Html.EditorFor(m => m.HelpText)
 </div>
+
+<h4>Biology</h4>
+<div class="form-group row">
+    @Html.EditorFor(m => m.VisionRange)
+    @Html.EditorFor(m => m.TemperatureTolerance)
+    @Html.EditorFor(m => m.Breathes)
+    @Html.EditorFor(m => m.DietaryNeeds)
+    @Html.EditorFor(m => m.TeethType)
+</div>
+
+<h4>Anatomy</h4>
+<div class="form-group row">
+    @Html.EditorFor(m => m.SanguinaryMaterial, new { validItems = ViewData["ValidMaterials"] })
+    @Html.EditorFor(m => m.Head, new { validItems = ViewData["ValidItems"] })
+    @Html.EditorFor(m => m.Torso, new { validItems = ViewData["ValidItems"] })
+    @Html.EditorFor(m => m.Arms, new { validItems = ViewData["ValidItems"] })
+    @Html.EditorFor(m => m.Legs, new { validItems = ViewData["ValidItems"] })
+</div>
+
+@Html.EditorFor(m => m.BodyParts, new { validItems = ViewData["ValidItems"] })

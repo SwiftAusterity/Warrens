@@ -284,20 +284,21 @@ div.roomAsciiMap {
     width: 40px;
     margin-left: 48%;
     height: 10px;
-    background-color: lightgray;
+    background-color: cornflowerblue;
     position: relative;
     border-radius: 0 0 15px 15px;
     cursor: pointer;
     margin-top: -2px;
     margin-bottom: -6px;
-    border: 1px lightgray solid;
+    border: 1px dodgerblue solid;
 }
 
     .topNavCollapser span {
-        margin-left: 38%;
+        margin-left: 37%;
         top: -1px;
         position: absolute;
         font-size: x-small;
+        color: white;
     }
 
 .touchWord {
@@ -477,15 +478,17 @@ div.roomAsciiMap {
 
     .listPagination button {
         border-radius: 15px;
-        background-color: lightgrey;
-        border: 1px solid gray;
+        background-color: cornflowerblue;
         padding: 1px 5px;
         text-align: center;
+        color: white;
+        box-shadow: 1px 1px 1px 1px dodgerblue;
     }
 
         .listPagination button.pagingArrow {
-            border-radius: 9px;
-            padding: 1px 2px;
+            height: 20px;
+            vertical-align: middle;
+            line-height: 1;
         }
 
 .informationalGroup {
@@ -560,4 +563,10 @@ div.roomAsciiMap {
     margin-left: 3px;
     color: orangered;
     cursor: pointer;
+}
+
+.breadcrumb .glyphicon-chevron-right {
+    font-size: xx-small;
+    padding: 0 3px 0 3px;
+    top: 0;
 }

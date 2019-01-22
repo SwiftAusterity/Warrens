@@ -2,5 +2,5 @@
 
 @model MerchandiseStock
 
-@Html.EditorFor(e => e.Item, new { validItems = ViewData["ValidInanimateDatas"] })
-@Html.EditorFor(e => e.Amount)
+@Html.EditorFor(m => m.Item, new { validItems = ViewData["ValidInanimateDatas"] })
+@Html.EditorFor(m => m.Amount)
