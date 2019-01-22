@@ -120,7 +120,9 @@ namespace NetMud.Controllers.GameAdmin
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
                 ValidMaterials = TemplateCache.GetAll<IMaterial>(true),
-                ValidModels = TemplateCache.GetAll<IDimensionalModelData>(true)
+                ValidModels = TemplateCache.GetAll<IDimensionalModelData>(true),
+                ValidTemplateBases = TemplateCache.GetAll<ICelestial>(true),
+                DataObject = new Celestial()
             };
 
             return View("~/Views/GameAdmin/Celestials/Add.cshtml", vModel);
@@ -132,16 +134,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
-            var newObj = new Celestial
-            {
-                Name = vModel.Name,
-                Apogee = vModel.Apogee,
-                Perigree = vModel.Perigree,
-                Luminosity = vModel.Luminosity,
-                Velocity = vModel.Velocity,
-                OrientationType = (CelestialOrientation)vModel.OrientationType,
-                HelpText = vModel.HelpText
-            };
+            var newObj = vModel.DataObject;
 
             if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
             {
@@ -164,7 +157,8 @@ namespace NetMud.Controllers.GameAdmin
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
                 ValidMaterials = TemplateCache.GetAll<IMaterial>(true),
-                ValidModels = TemplateCache.GetAll<IDimensionalModelData>(true)
+                ValidModels = TemplateCache.GetAll<IDimensionalModelData>(true),
+                ValidTemplateBases = TemplateCache.GetAll<ICelestial>(true)
             };
 
             var obj = TemplateCache.Get<ICelestial>(id);
@@ -176,21 +170,6 @@ namespace NetMud.Controllers.GameAdmin
             }
 
             vModel.DataObject = obj;
-            vModel.Name = obj.Name;
-            vModel.Apogee = obj.Apogee;
-            vModel.Perigree = obj.Perigree;
-            vModel.Luminosity = obj.Luminosity;
-            vModel.Velocity = obj.Velocity;
-            vModel.OrientationType = (short)obj.OrientationType;
-            vModel.HelpText = obj.HelpText.Value;
-
-            vModel.DimensionalModelId = obj.Model.ModelTemplate.Id;
-            vModel.DimensionalModelHeight = obj.Model.Height;
-            vModel.DimensionalModelLength = obj.Model.Length;
-            vModel.DimensionalModelWidth = obj.Model.Width;
-            vModel.DimensionalModelVacuity = obj.Model.Vacuity;
-            vModel.DimensionalModelCavitation = obj.Model.SurfaceCavitation;
-            vModel.ModelDataObject = obj.Model;
 
             return View("~/Views/GameAdmin/Celestials/Edit.cshtml", vModel);
         }
@@ -211,13 +190,14 @@ namespace NetMud.Controllers.GameAdmin
 
             try
             {
-                obj.Name = vModel.Name;
-                obj.Apogee = vModel.Apogee;
-                obj.Perigree = vModel.Perigree;
-                obj.Luminosity = vModel.Luminosity;
-                obj.Velocity = vModel.Velocity;
-                obj.OrientationType = (CelestialOrientation)vModel.OrientationType;
-                obj.HelpText = vModel.HelpText;
+                obj.Name = vModel.DataObject.Name;
+                obj.Apogee = vModel.DataObject.Apogee;
+                obj.Perigree = vModel.DataObject.Perigree;
+                obj.Luminosity = vModel.DataObject.Luminosity;
+                obj.Velocity = vModel.DataObject.Velocity;
+                obj.OrientationType = vModel.DataObject.OrientationType;
+                obj.HelpText = vModel.DataObject.HelpText;
+                obj.Model = vModel.DataObject.Model;
 
                 if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                 {

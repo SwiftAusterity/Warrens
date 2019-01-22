@@ -1,6 +1,7 @@
 ﻿using NetMud.Communication.Lexical;
 using NetMud.Data.Architectural;
 using NetMud.Data.Architectural.DataIntegrity;
+using NetMud.Data.Architectural.EntityBase;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.EntityBase;
@@ -74,6 +75,8 @@ namespace NetMud.Data.Gaia
         /// <summary>
         /// Framework for the physics model of an entity
         /// </summary>
+        [NonNullableDataIntegrity("Physical model is invalid.")]
+        [UIHint("TwoDimensionalModel")]
         public IDimensionalModel Model { get; set; }
 
         /// <summary>
@@ -83,6 +86,7 @@ namespace NetMud.Data.Gaia
 
         public Celestial()
         {
+            Model = new DimensionalModel();
         }
 
         /// <summary>

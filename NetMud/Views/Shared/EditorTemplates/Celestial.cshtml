@@ -7,6 +7,7 @@
     @Html.EditorFor(m => m.Name)
     @Html.EditorFor(m => m.Luminosity)
 </div>
+
 <h4>Movement</h4>
 <div class="form-group row">
     @Html.EditorFor(m => m.OrientationType)
@@ -14,10 +15,10 @@
     @Html.EditorFor(m => m.Perigree)
     @Html.EditorFor(m => m.Velocity)
 </div>
-<h4>Help Text</h4>
+
 <div class="form-group row">
     @Html.EditorFor(m => m.HelpText)
 </div>
 
-
-
+<h4>Dimensional Model</h4>
+@Html.EditorFor(m => m.Model)
