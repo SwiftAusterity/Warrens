@@ -7,10 +7,11 @@
     @Html.EditorFor(m => m.Name)
     @Html.EditorFor(m => m.SurName)
     @Html.EditorFor(m => m.Gender)
+    @Html.EditorFor(m => m.Race, new { validItems = ViewData["ValidRaces"] })
 </div>
 
-@Html.EditorFor(m => m.Race)
-
+<h3>Personality</h3>
+<hr />
 @Html.EditorFor(m => m.Personality)
 
 <h3>Merchant Settings</h3>

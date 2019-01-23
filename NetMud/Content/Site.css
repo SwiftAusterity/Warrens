@@ -57,7 +57,6 @@ input[type=checkbox].form-control {
 }
 
 a.addNew {
-    float: left;
     margin-top: 30px;
 }
 
@@ -569,4 +568,27 @@ div.roomAsciiMap {
     font-size: xx-small;
     padding: 0 3px 0 3px;
     top: 0;
+}
+
+.liveProcess {
+    display: inline-flex;
+    flex-wrap: wrap;
+}
+
+    .liveProcess .liveControls {
+        padding: 5px;
+        margin: 10px;
+        border: 5px solid green;
+        background: green;
+        border-radius: 15px;
+    }
+
+.liveControls.go {
+    background-color: green;
+    border-color: green;
+}
+
+.liveControls.stop {
+    background-color: red;
+    border-color: red;
 }

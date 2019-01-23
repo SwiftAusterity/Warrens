@@ -16,10 +16,10 @@
     </div>
     @if (Model.Count() > 0)
     {
-        @Html.EditorForMany(e => e, null, 0, "MaterialComposition")
+        @Html.EditorForMany(m => m, null, 0, "MaterialComposition")
     }
 </div>
 
 <script type="text/javascript">
-    var newMaterialComposition = decodeHtml('@Html.EmptyEditorForMany(e => e, null, currentCount, "MaterialComposition")');
+    var newMaterialComposition = decodeHtml('@Html.EmptyEditorForMany(m => m, null, currentCount, "MaterialComposition")');
 </script>

@@ -17,10 +17,10 @@
     </div>
     @if (Model.Count() > 0)
     {
-        @Html.EditorForMany(e => e, null, 0, "InanimateEntityContainer")
+        @Html.EditorForMany(m => m, null, 0, "InanimateEntityContainer")
     }
 </div>
 
 <script type="text/javascript">
-    var newInanimateEntityContainer = decodeHtml('@Html.EmptyEditorForMany(e => e, null, currentCount, "InanimateEntityContainer")');
+    var newInanimateEntityContainer = decodeHtml('@Html.EmptyEditorForMany(m => m, null, currentCount, "InanimateEntityContainer")');
 </script>

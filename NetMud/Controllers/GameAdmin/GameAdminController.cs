@@ -13,6 +13,7 @@ using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Gaia;
 using NetMud.DataStructure.Gossip;
 using NetMud.DataStructure.Inanimate;
+using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.Locale;
 using NetMud.DataStructure.NaturalResource;
 using NetMud.DataStructure.NPC;
@@ -83,6 +84,8 @@ namespace NetMud.Controllers.GameAdmin
                 Fauna = TemplateCache.GetAll<IFauna>(),
                 Minerals = TemplateCache.GetAll<IMineral>(),
                 Materials = TemplateCache.GetAll<IMaterial>(),
+                DictionaryWords = ConfigDataCache.GetAll<IDictata>(),
+                Languages = ConfigDataCache.GetAll<ILanguage>(),
 
                 LiveTaskTokens = Processor.GetAllLiveTaskStatusTokens(),
                 LivePlayers = LiveCache.GetAll<IPlayer>().Count(),

@@ -1,0 +1,26 @@
+﻿@using NetMud.Models
+@using NetMud.DataStructure.NPC.IntelligenceControl
+
+@model HashSet<IPreference>
+
+@{
+    var currentCount = Model.Count();
+    var rowsName = ViewData.ModelMetadata.PropertyName + "Rows";
+}
+
+<div id="@rowsName" class="iterativeContainer">
+    <div class="addRowContainer">
+        <div class="col-sm-1">
+            @Html.DescriptionFor(m => m)
+            <a href="#" class="addRow btn" onclick="javascript: $('#@rowsName').append(ifwPreferenceRow); return false;"><span class="addWord">Add Row</span></a>
+        </div>
+    </div>
+    @if (currentCount > 0)
+    {
+        @Html.EditorForMany(m => m, null, 0, "Preference")
+    }
+</div>
+
+<script type="text/javascript">
+    var ifwPreferenceRow = decodeHtml('@Html.EmptyEditorForMany(m => m, null, currentCount, "Preference")');
+</script>

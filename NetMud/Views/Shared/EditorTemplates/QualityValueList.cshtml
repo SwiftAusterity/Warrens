@@ -17,10 +17,10 @@
     </div>
     @if (Model.Count() > 0)
     {
-        @Html.EditorForMany(e => e, null, 0, "QualityValue")
+        @Html.EditorForMany(m => m, null, 0, "QualityValue")
     }
 </div>
 
 <script type="text/javascript">
-    var newQualityValueList = decodeHtml('@Html.EmptyEditorForMany(e => e, null, currentCount, "QualityValue")');
+    var newQualityValueList = decodeHtml('@Html.EmptyEditorForMany(m => m, null, currentCount, "QualityValue")');
 </script>

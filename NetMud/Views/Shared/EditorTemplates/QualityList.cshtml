@@ -5,7 +5,7 @@
 
 @{
     var newRow = "<div class=\"form-group row\"><a href=\"#\" class=\"removeRow col-form-label\" title=\"Remove this\" onclick=\"javascript: $(this).parent().remove(); return false;\">X</a>"
-                  + Html.EmptyEditorForMany(e => e, null, Model.Count(), "IQuality") + "</div>";
+                  + Html.EmptyEditorForMany(m => m, null, Model.Count(), "IQuality") + "</div>";
 }
 
 <div id="QualitiesRows" class="iterativeContainer">
@@ -17,6 +17,6 @@
     </div>
     <div class="form-group row">
         <a href="#" class="removeRow col-form-label" title="Remove this" onclick="javascript: $(this).parent().remove(); return false;">X</a>
-        @Html.EditorForMany(e => e, null, 0, "IQuality")
+        @Html.EditorForMany(m => m, null, 0, "IQuality")
     </div>
 </div>

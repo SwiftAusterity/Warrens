@@ -120,10 +120,6 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(string id)
         {
             string message = string.Empty;
-            var vModel = new AddEditDictionaryViewModel
-            {
-                authedUser = UserManager.FindById(User.Identity.GetUserId())
-            };
 
             var obj = ConfigDataCache.Get<IDictata>(new ConfigDataCacheKey(typeof(IDictata), id, ConfigDataType.Dictionary));
 
@@ -133,7 +129,12 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = message });
             }
 
-            vModel.DataObject = obj;
+            var vModel = new AddEditDictionaryViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                ValidWords = ConfigDataCache.GetAll<IDictata>().Where(word => word.UniqueKey != obj.UniqueKey),
+                DataObject = obj
+            };
 
             return View("~/Views/GameAdmin/Dictionary/Edit.cshtml", vModel);
         }

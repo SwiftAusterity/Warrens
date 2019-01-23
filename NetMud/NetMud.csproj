@@ -480,13 +480,13 @@
     <Content Include="Views\Shared\EditorTemplates\GaiaTemplateList.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Help.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\IChronology.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\IMerchandise.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Merchandise.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\InanimateTemplate.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\InanimateTemplateList.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\InventoryRestockList.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\IPersonality.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\IPreference.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\IPreferenceList.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Personality.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Preference.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\PreferenceList.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Quality.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\QualityList.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Race.cshtml" />
@@ -561,6 +561,7 @@
     <Content Include="Views\Shared\EditorTemplates\LanguageList.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\CollectionDictataListItem.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\CollectionDictataList.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\MerchandiseItem.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />

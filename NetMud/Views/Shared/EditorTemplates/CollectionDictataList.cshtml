@@ -17,10 +17,10 @@
     </div>
     @if (currentCount > 0)
     {
-        @Html.EditorForMany(e => e, null, 0, "CollectionDictataListItem")
+        @Html.EditorForMany(m => m, null, 0, "CollectionDictataListItem")
     }
 </div>
 
 <script type="text/javascript">
-    var newMineralList = decodeHtml('@Html.EmptyEditorForMany(e => e, null, currentCount, "CollectionDictataListItem")');
+    var newMineralList = decodeHtml('@Html.EmptyEditorForMany(m => m, null, currentCount, "CollectionDictataListItem")');
 </script>

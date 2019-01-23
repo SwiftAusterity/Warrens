@@ -8,6 +8,7 @@ using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural.ActorBase;
+using NetMud.DataStructure.Inanimate;
 using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.NPC;
 using NetMud.Models.Admin;
@@ -108,7 +109,9 @@ namespace NetMud.Controllers.GameAdmin
             var vModel = new AddEditNPCDataViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidRaces = TemplateCache.GetAll<IRace>()
+                ValidRaces = TemplateCache.GetAll<IRace>(),
+                ValidItems = TemplateCache.GetAll<IInanimateTemplate>(),
+                DataObject = new NonPlayerCharacterTemplate()
             };
 
             return View("~/Views/GameAdmin/NPC/Add.cshtml", vModel);
@@ -116,21 +119,12 @@ namespace NetMud.Controllers.GameAdmin
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Add(string Name, string SurName, string Gender, long raceId)
+        public ActionResult Add(AddEditNPCDataViewModel vModel)
         {
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var newObj = new NonPlayerCharacterTemplate
-            {
-                Name = Name,
-                SurName = SurName,
-                Gender = Gender
-            };
-            var race = TemplateCache.Get<IRace>(raceId);
-
-            if (race != null)
-                newObj.Race = race;
+            var newObj = vModel.DataObject;
 
             if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
                 message = "Error; Creation failed.";
@@ -150,7 +144,8 @@ namespace NetMud.Controllers.GameAdmin
             var vModel = new AddEditNPCDataViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidRaces = TemplateCache.GetAll<IRace>()
+                ValidRaces = TemplateCache.GetAll<IRace>(),
+                ValidItems = TemplateCache.GetAll<IInanimateTemplate>()
             };
 
             var obj = TemplateCache.Get<INonPlayerCharacterTemplate>(id);
@@ -162,16 +157,13 @@ namespace NetMud.Controllers.GameAdmin
             }
 
             vModel.DataObject = obj;
-            vModel.Name = obj.Name;
-            vModel.Gender = obj.Gender;
-            vModel.SurName = obj.SurName;
 
             return View("~/Views/GameAdmin/NPC/Edit.cshtml", vModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(string Name, string SurName, string Gender, long raceId, int id)
+        public ActionResult Edit(int id, AddEditNPCDataViewModel vModel)
         {
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
@@ -183,13 +175,16 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = message });
             }
 
-            obj.Name = Name;
-            obj.SurName = SurName;
-            obj.Gender = Gender;
-            var race = TemplateCache.Get<IRace>(raceId);
-
-            if (race != null)
-                obj.Race = race;
+            obj.Name = vModel.DataObject.Name;
+            obj.SurName = vModel.DataObject.SurName;
+            obj.Gender = vModel.DataObject.Gender;
+            obj.Race = vModel.DataObject.Race;
+            obj.Personality = vModel.DataObject.Personality;
+            obj.Qualities = vModel.DataObject.Qualities;
+            obj.InventoryRestock = vModel.DataObject.InventoryRestock;
+            obj.TeachableProficencies = vModel.DataObject.TeachableProficencies;
+            obj.WillPurchase = vModel.DataObject.WillPurchase;
+            obj.WillSell = vModel.DataObject.WillSell;
 
             if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {
@@ -249,7 +244,7 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToRoute("ModalErrorOrClose", new { Message = message });
             }
 
-            var grammaticalType = (GrammaticalType)vModel.SensoryEventDataObject.Event.Role;
+            var grammaticalType = vModel.SensoryEventDataObject.Event.Role;
             var phraseF = vModel.SensoryEventDataObject.Event.Phrase;
             var existingOccurrence = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType
                                                                                 && occurrence.Event.Phrase.Equals(phraseF, StringComparison.InvariantCultureIgnoreCase));

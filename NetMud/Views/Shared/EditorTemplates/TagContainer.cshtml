@@ -11,9 +11,9 @@
             <a href="#" class="addRow btn" onclick="javascript: $('#@rowsName').append(newMerchandiseRow); return false;"><span class="addWord">Add Tag</span></a>
         </div>
     </div>
-    @Html.EditorForMany(e => e, null, 0, "TagItem")
+    @Html.EditorForMany(m => m, null, 0, "TagItem")
 </div>
 
 <script type="text/javascript">
-    var newMerchandiseRow = decodeHtml('@Html.EmptyEditorForMany(e => e, null, Model.Count(), "TagItem")');
+    var newMerchandiseRow = decodeHtml('@Html.EmptyEditorForMany(m => m, null, Model.Count(), "TagItem")');
 </script>

@@ -15,11 +15,9 @@
             <div>
                 <h4>Templates</h4>
                 <dl class="dl-horizontal">
-                    <dt>Worlds:</dt>
+                    <dt>Worlds [@Html.ActionLink(Model.Worlds.Count().ToString(), "Index", "Gaia", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" })]</dt>
                     <dd>
-                        @Model.Worlds.Count().ToString() [
-                        @Html.ActionLink("Manage", "Index", "Gaia")
-                        @Html.ActionLink("Add", "Add", "Gaia") ]
+                        @Html.ActionLink(" ", "Add", "Gaia", null, htmlAttributes: new { @class = "glyphicon-plus-sign glyphicon", @style = "color: green;", @title = "Add New" })
                         @if (Model.Worlds.Any(r => r.FitnessProblems))
                         {
                             <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
@@ -29,11 +27,9 @@
                             <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                         }
                     </dd>
-                    <dt>Zones:</dt>
+                    <dt>Zones [@Html.ActionLink(Model.Zones.Count().ToString(), "Index", "Zone", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" })]</dt>
                     <dd>
-                        @Model.Zones.Count().ToString() [
-                        @Html.ActionLink("Manage", "Index", "Zone")
-                        @Html.ActionLink("Add", "Add", "Zone") ]
+                        @Html.ActionLink(" ", "Add", "Zone", null, htmlAttributes: new { @class = "glyphicon-plus-sign glyphicon", @style = "color: green;", @title = "Add New" })
                         @if (Model.Zones.Any(r => r.FitnessProblems))
                         {
                             <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
@@ -43,11 +39,9 @@
                             <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                         }
                     </dd>
-                    <dt>Locales:</dt>
+                    <dt>Locales [@Html.ActionLink(Model.Locales.Count().ToString(), "Index", "Locale", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" })]</dt>
                     <dd>
-                        @Model.Locales.Count().ToString() [
-                        @Html.ActionLink("Manage", "Index", "Locale")
-                        @Html.ActionLink("Add", "Add", "Locale") ]
+                        @Html.ActionLink(" ", "Add", "Locale", null, htmlAttributes: new { @class = "glyphicon-plus-sign glyphicon", @style = "color: green;", @title = "Add New" })
                         @if (Model.Locales.Any(r => r.FitnessProblems))
                         {
                             <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
@@ -57,11 +51,9 @@
                             <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                         }
                     </dd>
-                    <dt>Rooms:</dt>
+                    <dt>Rooms [@Html.ActionLink(Model.Rooms.Count().ToString(), "Index", "Room", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" })]</dt>
                     <dd>
-                        @Model.Rooms.Count().ToString() [
-                        @Html.ActionLink("Manage", "Index", "Room")
-                        @Html.ActionLink("Add", "Add", "Room") ]
+                        @Html.ActionLink(" ", "Add", "Room", null, htmlAttributes: new { @class = "glyphicon-plus-sign glyphicon", @style = "color: green;", @title = "Add New" })
                         @if (Model.Rooms.Any(r => r.FitnessProblems))
                         {
                             <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
@@ -71,11 +63,9 @@
                             <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                         }
                     </dd>
-                    <dt>NPCs:</dt>
+                    <dt>NPCs [@Html.ActionLink(Model.NPCs.Count().ToString(), "Index", "NPC", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" })]</dt>
                     <dd>
-                        @Model.NPCs.Count().ToString() [
-                        @Html.ActionLink("Manage", "Index", "NPC")
-                        @Html.ActionLink("Add", "Add", "NPC") ]
+                        @Html.ActionLink(" ", "Add", "NPC", null, htmlAttributes: new { @class = "glyphicon-plus-sign glyphicon", @style = "color: green;", @title = "Add New" })
                         @if (Model.NPCs.Any(r => r.FitnessProblems))
                         {
                             <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
@@ -85,11 +75,9 @@
                             <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                         }
                     </dd>
-                    <dt>Items:</dt>
+                    <dt>Items [@Html.ActionLink(Model.Inanimates.Count().ToString(), "Index", "Inanimate", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" })]</dt>
                     <dd>
-                        @Model.Inanimates.Count().ToString() [
-                        @Html.ActionLink("Manage", "Index", "Inanimate")
-                        @Html.ActionLink("Add", "Add", "Inanimate") ]
+                        @Html.ActionLink(" ", "Add", "Inanimate", null, htmlAttributes: new { @class = "glyphicon-plus-sign glyphicon", @style = "color: green;", @title = "Add New" })
                         @if (Model.Inanimates.Any(r => r.FitnessProblems))
                         {
                             <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
@@ -102,13 +90,11 @@
                 </dl>
             </div>
             <div>
-                <h4>Lookup Data</h4>
+                <h4>Administrative</h4>
                 <dl class="dl-horizontal">
-                    <dt>Journal Entries:</dt>
+                    <dt>Journal Entries [@Html.ActionLink(Model.Journals.Count().ToString(), "Index", "JournalEntry", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" })]</dt>
                     <dd>
-                        @Model.Journals.Count().ToString() [
-                        @Html.ActionLink("Manage", "Index", "JournalEntry")
-                        @Html.ActionLink("Add", "Add", "JournalEntry") ]
+                        @Html.ActionLink(" ", "Add", "JournalEntry", null, htmlAttributes: new { @class = "glyphicon-plus-sign glyphicon", @style = "color: green;", @title = "Add New" })
                         @if (Model.Journals.Any(r => r.FitnessProblems))
                         {
                             <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
@@ -118,11 +104,9 @@
                             <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                         }
                     </dd>
-                    <dt>Help Files:</dt>
+                    <dt>Help Files [@Html.ActionLink(Model.HelpFiles.Count().ToString(), "Index", "Help", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" })]</dt>
                     <dd>
-                        @Model.HelpFiles.Count().ToString() [
-                        @Html.ActionLink("Manage", "Index", "Help")
-                        @Html.ActionLink("Add", "Add", "Help") ]
+                        @Html.ActionLink(" ", "Add", "Help", null, htmlAttributes: new { @class = "glyphicon-plus-sign glyphicon", @style = "color: green;", @title = "Add New" })
                         @if (Model.HelpFiles.Any(r => r.FitnessProblems))
                         {
                             <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
@@ -132,11 +116,30 @@
                             <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                         }
                     </dd>
-                    <dt>Races:</dt>
+                    <dt>Languages [@Html.ActionLink(Model.Languages.Count().ToString(), "Index", "Language", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" })]</dt>
                     <dd>
-                        @Model.Races.Count().ToString() [
-                        @Html.ActionLink("Manage", "Index", "Race")
-                        @Html.ActionLink("Add", "Add", "Race") ]
+                        @Html.ActionLink(" ", "Add", "Language", null, htmlAttributes: new { @class = "glyphicon-plus-sign glyphicon", @style = "color: green;", @title = "Add New" })
+                        @if (Model.Languages.Any(r => r.State != ApprovalState.Approved))
+                        {
+                            <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
+                        }
+                    </dd>
+                    <dt>Dictata (words) [@Html.ActionLink(Model.DictionaryWords.Count().ToString(), "Index", "Dictionary", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" })]</dt>
+                    <dd>
+                        @Html.ActionLink(" ", "Add", "Dictionary", null, htmlAttributes: new { @class = "glyphicon-plus-sign glyphicon", @style = "color: green;", @title = "Add New" })
+                        @if (Model.DictionaryWords.Any(r => r.State != ApprovalState.Approved))
+                        {
+                            <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
+                        }
+                    </dd>
+                </dl>
+            </div>
+            <div>
+                <h4>Supporting</h4>
+                <dl class="dl-horizontal">
+                    <dt>Races [@Html.ActionLink(Model.Races.Count().ToString(), "Index", "Race", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" })]</dt>
+                    <dd>
+                        @Html.ActionLink(" ", "Add", "Race", null, htmlAttributes: new { @class = "glyphicon-plus-sign glyphicon", @style = "color: green;", @title = "Add New" })
                         @if (Model.Races.Any(r => r.FitnessProblems))
                         {
                             <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
@@ -146,11 +149,9 @@
                             <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                         }
                     </dd>
-                    <dt>Celestial Bodies:</dt>
+                    <dt>Celestial Bodies [@Html.ActionLink(Model.Celestials.Count().ToString(), "Index", "Celestials", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" })]</dt>
                     <dd>
-                        @Model.Celestials.Count().ToString() [
-                        @Html.ActionLink("Manage", "Index", "Celestials")
-                        @Html.ActionLink("Add", "Add", "Celestials") ]
+                        @Html.ActionLink(" ", "Add", "Celestials", null, htmlAttributes: new { @class = "glyphicon-plus-sign glyphicon", @style = "color: green;", @title = "Add New" })
                         @if (Model.Celestials.Any(r => r.FitnessProblems))
                         {
                             <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
@@ -160,11 +161,9 @@
                             <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                         }
                     </dd>
-                    <dt>Materials:</dt>
+                    <dt>Materials [@Html.ActionLink(Model.Materials.Count().ToString(), "Index", "Material", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" })]</dt>
                     <dd>
-                        @Model.Materials.Count().ToString() [
-                        @Html.ActionLink("Manage", "Index", "Material")
-                        @Html.ActionLink("Add", "Add", "Material") ]
+                        @Html.ActionLink(" ", "Add", "Material", null, htmlAttributes: new { @class = "glyphicon-plus-sign glyphicon", @style = "color: green;", @title = "Add New" })
                         @if (Model.Materials.Any(r => r.FitnessProblems))
                         {
                             <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
@@ -174,11 +173,9 @@
                             <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                         }
                     </dd>
-                    <dt>Dimensional Models:</dt>
+                    <dt>Dimensional Models [@Html.ActionLink(Model.DimensionalModels.Count().ToString(), "Index", "DimensionalModel", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" })]</dt>
                     <dd>
-                        @Model.DimensionalModels.Count().ToString() [
-                        @Html.ActionLink("Manage", "Index", "DimensionalModel")
-                        @Html.ActionLink("Add", "Add", "DimensionalModel") ]
+                        @Html.ActionLink(" ", "Add", "DimensionalModel", null, htmlAttributes: new { @class = "glyphicon-plus-sign glyphicon", @style = "color: green;", @title = "Add New" })
                         @if (Model.DimensionalModels.Any(r => r.FitnessProblems))
                         {
                             <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
@@ -188,11 +185,14 @@
                             <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                         }
                     </dd>
-                    <dt>Flora:</dt>
+                </dl>
+            </div>
+            <div>
+                <h4>Natural Resources</h4>
+                <dl class="dl-horizontal">
+                    <dt>Flora [@Html.ActionLink(Model.Flora.Count().ToString(), "Index", "Flora", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" })]</dt>
                     <dd>
-                        @Model.Flora.Count().ToString() [
-                        @Html.ActionLink("Manage", "Index", "Flora")
-                        @Html.ActionLink("Add", "Add", "Flora") ]
+                        @Html.ActionLink(" ", "Add", "Flora", null, htmlAttributes: new { @class = "glyphicon-plus-sign glyphicon", @style = "color: green;", @title = "Add New" })
                         @if (Model.Flora.Any(r => r.FitnessProblems))
                         {
                             <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
@@ -202,11 +202,9 @@
                             <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                         }
                     </dd>
-                    <dt>Fauna:</dt>
+                    <dt>Fauna [@Html.ActionLink(Model.Fauna.Count().ToString(), "Index", "Fauna", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" })]</dt>
                     <dd>
-                        @Model.Fauna.Count().ToString() [
-                        @Html.ActionLink("Manage", "Index", "Fauna")
-                        @Html.ActionLink("Add", "Add", "Fauna") ]
+                        @Html.ActionLink(" ", "Add", "Fauna", null, htmlAttributes: new { @class = "glyphicon-plus-sign glyphicon", @style = "color: green;", @title = "Add New" })
                         @if (Model.Fauna.Any(r => r.FitnessProblems))
                         {
                             <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
@@ -216,36 +214,14 @@
                             <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                         }
                     </dd>
-                    <dt>Minerals:</dt>
+                    <dt>Minerals [@Html.ActionLink(Model.Minerals.Count().ToString(), "Index", "Minerals", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" })]</dt>
                     <dd>
-                        @Model.Minerals.Count().ToString() [
-                        @Html.ActionLink("Manage", "Index", "Minerals")
-                        @Html.ActionLink("Add", "Add", "Minerals") ]
+                        @Html.ActionLink(" ", "Add", "Minerals", null, htmlAttributes: new { @class = "glyphicon-plus-sign glyphicon", @style = "color: green;", @title = "Add New" })
                         @if (Model.Minerals.Any(r => r.FitnessProblems))
                         {
                             <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
                         }
                         @if (Model.Minerals.Any(r => r.State != ApprovalState.Approved))
-                        {
-                            <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
-                        }
-                    </dd>
-                    <dt>Languages:</dt>
-                    <dd>
-                        @Model.Languages.Count().ToString() [
-                        @Html.ActionLink("Manage", "Index", "Language")
-                        @Html.ActionLink("Add", "Add", "Language") ]
-                        @if (Model.Languages.Any(r => r.State != ApprovalState.Approved))
-                        {
-                            <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
-                        }
-                    </dd>
-                    <dt>Dictata (words):</dt>
-                    <dd>
-                        @Model.DictionaryWords.Count().ToString() [
-                        @Html.ActionLink("Manage", "Index", "Dictionary")
-                        @Html.ActionLink("Add", "Add", "Dictionary") ]
-                        @if (Model.DictionaryWords.Any(r => r.State != ApprovalState.Approved))
                         {
                             <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                         }
@@ -260,31 +236,31 @@
             <dl class="dl-horizontal">
                 <dt>Players:</dt>
                 <dd>
-                    @Model.LivePlayers [ @Html.ActionLink("Manage", "Index", "Player") ]
+                    @Model.LivePlayers [ @Html.ActionLink("Manage", "Index", "Player", htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" }) ]
                 </dd>
                 <dt>Worlds:</dt>
                 <dd>
-                    @Model.LiveWorlds [ @Html.ActionLink("Manage", "Worlds", "LiveAdmin")  ]
+                    @Model.LiveWorlds [ @Html.ActionLink("Manage", "Worlds", "LiveAdmin", htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" })  ]
                 </dd>
                 <dt>Zones:</dt>
                 <dd>
-                    @Model.LiveZones [ @Html.ActionLink("Manage", "Zones", "LiveAdmin") ]
+                    @Model.LiveZones [ @Html.ActionLink("Manage", "Zones", "LiveAdmin", htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" }) ]
                 </dd>
                 <dt>Locales:</dt>
                 <dd>
-                    @Model.LiveLocales [ @Html.ActionLink("Manage", "Locales", "LiveAdmin") ]
+                    @Model.LiveLocales [ @Html.ActionLink("Manage", "Locales", "LiveAdmin", htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" }) ]
                 </dd>
                 <dt>Rooms:</dt>
                 <dd>
-                    @Model.LiveRooms [ @Html.ActionLink("Manage", "Rooms", "LiveAdmin") ]
+                    @Model.LiveRooms [ @Html.ActionLink("Manage", "Rooms", "LiveAdmin", htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" }) ]
                 </dd>
                 <dt>Inanimates:</dt>
                 <dd>
-                    @Model.LiveInanimates [ @Html.ActionLink("Manage", "Inanimates", "LiveAdmin") ]
+                    @Model.LiveInanimates [ @Html.ActionLink("Manage", "Inanimates", "LiveAdmin", htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" }) ]
                 </dd>
                 <dt>NPCs:</dt>
                 <dd>
-                    @Model.LiveNPCs [ @Html.ActionLink("Manage", "NPCs", "LiveAdmin") ]
+                    @Model.LiveNPCs [ @Html.ActionLink("Manage", "NPCs", "LiveAdmin", htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" }) ]
                 </dd>
             </dl>
         </div>
@@ -299,11 +275,11 @@
             {
                 @Html.AntiForgeryToken()
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            <div class="form-group row">
-                @Html.EditorFor(m => m.ClientName)
-                @Html.EditorFor(m => m.ClientSecret)
-                @Html.EditorFor(m => m.ClientId)
-            </div>
+                <div class="form-group row">
+                    @Html.EditorFor(m => m.ClientName)
+                    @Html.EditorFor(m => m.ClientSecret)
+                    @Html.EditorFor(m => m.ClientId)
+                </div>
                 <div class="form-group row">
                     @Html.EditorFor(m => m.GossipActive)
                     @Html.EditorFor(m => m.SuspendMultiplier)
@@ -338,21 +314,21 @@
                 <div>
                     @Html.ActionLink("Stop All", "StopAllRunningProcess", "GameAdmin", new { @class = "btn btn-default caution" })
                 </div>
-                <div style="display: inline-flex; flex-wrap: wrap;">
+                <div class="liveProcess">
                     @foreach (var token in Model.LiveTaskTokens)
                     {
-                        <div style="padding: 15px; width: 25%;">
-                            @if (token.Value.IsCancellationRequested)
-                            {
-                                <span style="color:red;">Stopping @token.Key</span>
-                            }
-                            else
-                            {
-                                <span style="color:green;">Running</span>
+                        if (token.Value.IsCancellationRequested)
+                        {
+                            <div class="liveControls stop">
+                                <span>Stopping @token.Key</span>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="liveControls go">
                                 @Html.ActionLink("Stop " + @token.Key, "StopRunningProcess", "GameAdmin", new { processName = token.Key }, new { @class = "btn btn-default stop" })
-                            }
-                        </div>
-
+                            </div>
+                        }
                     }
                 </div>
             </div>

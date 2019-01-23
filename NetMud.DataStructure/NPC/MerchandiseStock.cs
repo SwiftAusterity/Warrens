@@ -8,7 +8,7 @@ namespace NetMud.DataStructure.NPC
     public class MerchandiseStock
     {
         [Display(Name = "Stock", Description = "The item type to be kept in stock.")]
-        [UIHint("IMerchandise")]
+        [UIHint("Merchandise")]
         [MerchandiseValidator]
         public IMerchandise Item { get; set; }
 

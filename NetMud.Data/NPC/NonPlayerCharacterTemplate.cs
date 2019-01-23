@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Script.Serialization;
+using NetMud.Data.Architectural.PropertyBinding;
 
 namespace NetMud.Data.NPC
 {
@@ -85,8 +86,10 @@ namespace NetMud.Data.NPC
         /// NPC's race data
         /// </summary>
         [NonNullableDataIntegrity("Invalid racial data.")]
-        [UIHint("IRace")]
+        [UIHint("RaceList")]
+        [Display(Name = "Race", Description = "The NPC's Race")]
         [RaceValidator]
+        [RaceDataBinder]
         public IRace Race { get; set; }
 
         /// <summary>

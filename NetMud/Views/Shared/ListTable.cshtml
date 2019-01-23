@@ -14,9 +14,9 @@
 
 @if (Model.IncludeAddLink)
 {
-    <div>
-        @Html.ActionLink("Add New", "Add", null, new { @class = "addNew" })
-    </div>
+<div>
+    @Html.ActionLink(" ", "Add", Model.EntityTypeName, htmlAttributes: new { @class = "glyphicon-plus-sign glyphicon addNew", @style = "color: green;", @title = "Add New" })
+</div>
 }
 
 @using (Html.BeginForm("Remove", Model.EntityTypeName))

@@ -1,11 +1,14 @@
-﻿@using NetMud.DataStructure.NPC
+﻿@using NetMud.Data.NPC
 
-@model MerchandiseStock
+@model Merchandise
 
 <div class="form-group row">
     <a href="#" class="removeRow col-form-label" title="Remove this" onclick="javascript: $(this).parent().remove(); return false;">X</a>
     <div class="col-sm-10">
         @Html.EditorFor(m => m.Item, new { validItems = ViewData["ValidItems"] })
-        @Html.EditorFor(m => m.Amount)
+        @Html.EditorFor(m => m.Quality)
+        @Html.EditorFor(m => m.QualityRange)
+        @Html.EditorFor(m => m.MarkRate)
     </div>
 </div>
+
