@@ -105,7 +105,8 @@ namespace NetMud.Controllers.GameAdmin
             var vModel = new AddEditGaiaViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidCelestials = TemplateCache.GetAll<ICelestial>(true)
+                ValidCelestials = TemplateCache.GetAll<ICelestial>(true),
+                DataObject = new GaiaTemplate()
             };
 
             return View("~/Views/GameAdmin/Gaia/Add.cshtml", vModel);
@@ -117,41 +118,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
-            var newObj = new GaiaTemplate
-            {
-                Name = vModel.Name
-            };
-
-            var monthNames = new HashSet<string>();
-            if (vModel.MonthNames != null)
-            {
-                foreach (var tag in vModel.MonthNames.Split(new string[] { "||" }, StringSplitOptions.RemoveEmptyEntries))
-                    monthNames.Add(tag);
-            }
-
-            var chrono = new Chronology
-            {
-                StartingYear = vModel.StartingYear,
-                HoursPerDay = vModel.HoursPerDay,
-                DaysPerMonth = vModel.DaysPerMonth,
-                Months = monthNames
-            };
-
-            newObj.ChronologicalSystem = chrono;
-
-            var bodies = new HashSet<ICelestial>();
-            if (vModel.CelestialBodies != null)
-            {
-                foreach (var id in vModel.CelestialBodies.Where(cId => cId >= 0))
-                {
-                    var celestial = TemplateCache.Get<ICelestial>(id);
-
-                    if (celestial != null)
-                        bodies.Add(celestial);
-                }
-            }
-
-            newObj.CelestialBodies = bodies;
+            var newObj = vModel.DataObject;
 
             if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
                 message = "Error; Creation failed.";
@@ -183,11 +150,6 @@ namespace NetMud.Controllers.GameAdmin
             }
 
             vModel.DataObject = obj;
-            vModel.Name = obj.Name;
-            vModel.StartingYear = obj.ChronologicalSystem.StartingYear;
-            vModel.HoursPerDay = obj.ChronologicalSystem.HoursPerDay;
-            vModel.DaysPerMonth = obj.ChronologicalSystem.DaysPerMonth;
-            vModel.CelestialBodies = obj.CelestialBodies.Select(cb => cb.Id).ToArray();
 
             return View("~/Views/GameAdmin/Gaia/Edit.cshtml", vModel);
         }
@@ -208,38 +170,11 @@ namespace NetMud.Controllers.GameAdmin
 
             try
             {
-                obj.Name = vModel.Name;
-
-                var monthNames = new HashSet<string>();
-                if (vModel.MonthNames != null)
-                {
-                    foreach (var tag in vModel.MonthNames.Split(new string[] { "||" }, StringSplitOptions.RemoveEmptyEntries))
-                        monthNames.Add(tag);
-                }
-
-                var chrono = new Chronology
-                {
-                    StartingYear = vModel.StartingYear,
-                    HoursPerDay = vModel.HoursPerDay,
-                    DaysPerMonth = vModel.DaysPerMonth,
-                    Months = monthNames
-                };
-
-                obj.ChronologicalSystem = chrono;
-
-                var bodies = new HashSet<ICelestial>();
-                if (vModel.CelestialBodies != null)
-                {
-                    foreach (var cId in vModel.CelestialBodies.Where(cId => cId >= 0))
-                    {
-                        var celestial = TemplateCache.Get<ICelestial>(cId);
-
-                        if (celestial != null)
-                            bodies.Add(celestial);
-                    }
-                }
-
-                obj.CelestialBodies = bodies;
+                obj.Name = vModel.DataObject.Name;
+                obj.CelestialBodies = vModel.DataObject.CelestialBodies;
+                obj.ChronologicalSystem = vModel.DataObject.ChronologicalSystem;
+                obj.Qualities = vModel.DataObject.Qualities;
+                obj.RotationalAngle = vModel.DataObject.RotationalAngle;
 
                 if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                 {

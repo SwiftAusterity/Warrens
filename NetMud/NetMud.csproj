@@ -452,7 +452,6 @@
     <Content Include="Views\GameAdmin\Gaia\Add.cshtml" />
     <Content Include="Views\GameAdmin\Gaia\Edit.cshtml" />
     <Content Include="Views\GameAdmin\Gaia\Index.cshtml" />
-    <Content Include="Views\GameAdmin\Gaia\Celestials.cshtml" />
     <Content Include="Views\Manage\EditCharacter.cshtml" />
     <Content Include="Scripts\bootstrap.min.js.map" />
     <Content Include="Scripts\bootstrap.js.map" />
@@ -479,7 +478,7 @@
     <Content Include="Views\Shared\EditorTemplates\GaiaTemplate.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\GaiaTemplateList.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Help.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\IChronology.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Chronology.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Merchandise.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\InanimateTemplate.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\InanimateTemplateList.cshtml" />

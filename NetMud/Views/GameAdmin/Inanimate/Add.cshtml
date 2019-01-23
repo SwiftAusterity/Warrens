@@ -1,5 +1,9 @@
 ﻿@model NetMud.Models.Admin.AddEditInanimateTemplateViewModel
 
+@{
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Add Item", new string[] { "Dashboard", "Inanimate" }, new string[] { "/GameAdmin", "/Inanimate" });
+}
+
 <section id="newCharacterForm">
     @using (Html.BeginForm("Add", "Inanimate", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {

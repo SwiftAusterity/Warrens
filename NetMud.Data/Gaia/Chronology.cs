@@ -45,5 +45,10 @@ namespace NetMud.Data.Gaia
         [DataType(DataType.Text)]
         [Required]
         public int StartingYear { get; set; }
+
+        public Chronology()
+        {
+            Months = new HashSet<string>();
+        }
     }
 }

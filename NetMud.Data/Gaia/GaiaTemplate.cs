@@ -84,7 +84,7 @@ namespace NetMud.Data.Gaia
         /// <summary>
         /// Time keeping for this world
         /// </summary>
-        [UIHint("IChronology")]
+        [UIHint("Chronology")]
         public IChronology ChronologicalSystem { get; set; }
 
         /// <summary>
@@ -95,6 +95,12 @@ namespace NetMud.Data.Gaia
         [DataType(DataType.Text)]
         [Required]
         public float RotationalAngle { get; set; }
+
+        public GaiaTemplate()
+        {
+            ChronologicalSystem = new Chronology();
+            CelestialBodies = new HashSet<ICelestial>();
+        }
 
         public IGaia GetLiveInstance()
         {

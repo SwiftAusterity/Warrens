@@ -1,33 +1,17 @@
 ﻿@model NetMud.Models.Admin.AddEditGaiaViewModel
 
+@{
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Edit World", new string[] { "Dashboard", "Gaia" }, new string[] { "/GameAdmin", "/Gaia" });
+}
+
 <section id="newCelestialForm">
     @using (Html.BeginForm("Edit", "Gaia", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {
         @Html.AntiForgeryToken()
-        <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <input type="hidden" name="id" id="id" value="@Model.DataObject.Id" />
-        <div class="form-group row">
-            @Html.EditorFor(m => m.Name)
-            @Html.EditorFor(m => m.RotationalAngle)
-        </div>
-        <div class="form-group row">
-            @Html.EditorFor(m => m.StartingYear)
-            @Html.EditorFor(m => m.HoursPerDay)
-            @Html.EditorFor(m => m.DaysPerMonth)
-        </div>
 
-        <h4>Month Names</h4>
-        <div class="form-group row">
-            @Html.HiddenFor(m => m.MonthNames)
-            <div class="col-md-2">
-                <input type="text" id="addMonths" class="MonthList" /><span class="glyphicon glyphicon-plus-sign addWord"></span>
-            </div>
-            <div class="col-md-10" id="MonthContainer" style="margin-top: 10px;">
-            </div>
-        </div>
-
-        @Html.Partial("~/Views/GameAdmin/Gaia/Celestials.cshtml", Model)
+        @Html.EditorFor(m => m.DataObject, new { ValidCelestials = Model.ValidCelestials })
 
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Gaia", IncludeCancel = true })
     }
@@ -35,84 +19,4 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-
-    <script type="text/javascript">
-        $(document).ready(function () {
-            var currentMonth = [@Html.Raw(String.Join(",", Model.DataObject.ChronologicalSystem.Months.Select(tag => string.Format("'{0}'", tag))))];
-
-            currentMonth.forEach(function (tag) {
-                var word = tag;
-
-                var $source = $('#MonthNames');
-                var sourceValue = $source.val();
-
-                if (word !== '' && sourceValue.indexOf('||' + word + '||') === -1) {
-                    $('#addMonths').val('');
-                    sourceValue = sourceValue + '||' + word + '||';
-
-                    $source.val(sourceValue);
-
-                    var $newWord = $('<span class="touchWord" data-item-value="' + word + '">' + word + '</span>');
-
-                    $newWord.appendTo('#MonthContainer');
-
-                    $newWord.click(function () {
-                        $this = $(this);
-                        var word = $this.attr('data-item-value');
-
-                        var $source = $('#MonthNames');
-                        var sourceValue = $source.val();
-
-                        $this.detatch();
-
-                        $source.val(sourceValue.replace('||' + word + '||', ''));
-                    });
-                }
-            });
-        });
-
-        $('.touchWord').click(function () {
-            $this = $(this);
-            var word = $this.attr('data-item-value');
-
-            var $source = $('#MonthNames');
-            var sourceValue = $source.val();
-
-            $this.detatch();
-
-            $source.val(sourceValue.replace('||' + word + '||', ''));
-        });
-
-        $('.addWord').click(function () {
-            $this = $(this);
-            var word = $('#addMonths').val();
-
-            var $source = $('#MonthNames');
-            var sourceValue = $source.val();
-
-            if (word !== '' && sourceValue.indexOf('||' + word + '||') === -1) {
-                $('#addMonth').val('');
-                sourceValue = sourceValue + '||' + word + '||';
-
-                $source.val(sourceValue);
-
-                var $newWord = $('<span class="touchWord" data-item-value="' + word + '">' + word + '</span>');
-
-                $newWord.appendTo('#MonthContainer');
-
-                $newWord.click(function () {
-                    $this = $(this);
-                    var word = $this.attr('data-item-value');
-
-                    var $source = $('#MonthNames');
-                    var sourceValue = $source.val();
-
-                    $this.detatch();
-
-                    $source.val(sourceValue.replace('||' + word + '||', ''));
-                });
-            }
-        });
-    </script>
-
 }
