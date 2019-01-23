@@ -79,6 +79,8 @@ namespace NetMud
                 namespaces: new string[] { "NetMud.Controllers.GameAdmin" }
             );
 
+            routes.MapMvcAttributeRoutes();
+
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",

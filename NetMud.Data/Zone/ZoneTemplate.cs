@@ -6,6 +6,7 @@ using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Gaia;
+using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.Room;
 using NetMud.DataStructure.Zone;
 using Newtonsoft.Json;
@@ -170,6 +171,7 @@ namespace NetMud.Data.Zone
         {
             Templates = new HashSet<IAdventureTemplate>();
             NaturalResourceSpawn = new HashSet<INaturalResourceSpawn>();
+            Descriptives = new HashSet<ISensoryEvent>();
         }
 
         /// <summary>

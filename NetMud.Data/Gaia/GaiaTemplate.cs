@@ -1,4 +1,5 @@
 ﻿using NetMud.Data.Architectural.EntityBase;
+using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
@@ -63,6 +64,7 @@ namespace NetMud.Data.Gaia
         [ScriptIgnore]
         [Display(Name = "Celestial Body", Description = "The Celestial bodies that orbit this world. (or the one this orbits)")]
         [UIHint("CollectionCelestialList")]
+        [CelestialCollectionDataBinder]
         public HashSet<ICelestial> CelestialBodies
         {
             get

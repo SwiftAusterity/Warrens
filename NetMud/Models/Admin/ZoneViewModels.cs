@@ -57,39 +57,6 @@ namespace NetMud.Models.Admin
             ItemsPerPage = 20;
         }
 
-
-        [StringLength(100, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
-        [Display(Name = "Name", Description = "The identifying name of the zone. Displays above the output window.")]
-        [DataType(DataType.Text)]
-        public string Name { get; set; }
-
-        [Display(Name = "Claimable", Description = "Can players create locations in this zone (Likely FALSE).")]
-        public bool Claimable { get; set; }
-
-        [Range(-5000, 5000, ErrorMessage = "The {0} must be between {2} and {1}.")]
-        [Display(Name = "Base Elevation", Description = "The 'sea level' for this zone. All locales will treat this as Y=0.")]
-        [DataType(DataType.Text)]
-        public int BaseElevation { get; set; }
-
-        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
-        [Display(Name = "Temperature Coefficient", Description = "The volatility of the temperatures of this zone. Used in the weather system.")]
-        [DataType(DataType.Text)]
-        public int TemperatureCoefficient { get; set; }
-
-        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
-        [Display(Name = "Pressure Coefficient", Description = "The volitility of humditity in this zone. Used in the weather system.")]
-        [DataType(DataType.Text)]
-        public int PressureCoefficient { get; set; }
-
-        [Display(Name = "World", Description = "The World/Dimension this belongs to.")]
-        [DataType(DataType.Text)]
-        public long World { get; set; }
-
-        [Display(Name = "Hemisphere", Description = "The hemisphere of the world this zone is in.")]
-        [DataType(DataType.Text)]
-        public short Hemisphere { get; set; }
-
-
         public IEnumerable<IGaiaTemplate> ValidWorlds { get; set; }
         public IZoneTemplate DataObject { get; set; }
     }

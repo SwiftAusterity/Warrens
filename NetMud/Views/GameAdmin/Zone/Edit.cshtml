@@ -17,13 +17,9 @@
     }
 </section>
 
-<div style="padding-top: 5px;">
-    @Html.Partial("~/Views/GameAdmin/Zone/OccurrenceList.cshtml", Model.DataObject)
-</div>
+@Html.Partial("~/Views/GameAdmin/Zone/SensoryEventList.cshtml", Model.DataObject)
 
-<div style="padding-top: 5px;">
-    @Html.Partial("~/Views/GameAdmin/Zone/LocaleList.cshtml", Model)
-</div>
+@Html.Partial("~/Views/GameAdmin/Zone/LocaleList.cshtml", Model)
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

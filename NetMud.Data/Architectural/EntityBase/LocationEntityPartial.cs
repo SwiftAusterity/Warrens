@@ -94,7 +94,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// </summary>
         public IEntityContainer<IMobile> MobilesInside { get; set; }
 
-        public int Capacity => throw new global::System.NotImplementedException();
+        public int Capacity => 1;
 
         /// <summary>
         /// Get all of the entities matching a type inside this

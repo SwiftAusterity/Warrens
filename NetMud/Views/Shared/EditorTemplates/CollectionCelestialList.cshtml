@@ -1,17 +1,13 @@
 ﻿@using NetMud.Models
 @using NetMud.DataStructure.Gaia
-
 @model HashSet<ICelestial>
-
 @{
     var currentCount = Model.Count();
     var rowsName = ViewData.ModelMetadata.PropertyName + "Rows";
 }
-
 <div id="@rowsName" class="iterativeContainer">
     <div class="addRowContainer">
         <div class="col-sm-1">
-            @Html.DescriptionFor(m => m)
             <a href="#" class="addRow btn" onclick="javascript: $('#@rowsName').append(newCelestialDropdown); return false;"><span class="addWord">Add Row</span></a>
         </div>
     </div>
@@ -20,7 +16,6 @@
         @Html.EditorForMany(m => m, null, 0, "CollectionCelestialListItem")
     }
 </div>
-
 <script type="text/javascript">
     var newCelestialDropdown = decodeHtml('@Html.EmptyEditorForMany(m => m, null, currentCount, "CollectionCelestialListItem")');
 </script>

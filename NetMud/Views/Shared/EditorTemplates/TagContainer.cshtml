@@ -1,9 +1,8 @@
 ﻿@model HashSet<string>
-
 @{
+    var currentCount = Model.Count();
     var rowsName = ViewData.ModelMetadata.PropertyName + "Rows";
 }
-
 <div id="@rowsName" class="iterativeContainer">
     <div class="addRowContainer">
         <div class="col-sm-1">
@@ -11,9 +10,11 @@
             <a href="#" class="addRow btn" onclick="javascript: $('#@rowsName').append(newMerchandiseRow); return false;"><span class="addWord">Add Tag</span></a>
         </div>
     </div>
-    @Html.EditorForMany(m => m, null, 0, "TagItem")
+    @if (currentCount > 0)
+    {
+        @Html.EditorForMany(m => m, null, 0, "TagItem")
+    }
 </div>
-
 <script type="text/javascript">
-    var newMerchandiseRow = decodeHtml('@Html.EmptyEditorForMany(m => m, null, Model.Count(), "TagItem")');
+    var newMerchandiseRow = decodeHtml('@Html.EmptyEditorForMany(m => m, null, currentCount, "TagItem")');
 </script>

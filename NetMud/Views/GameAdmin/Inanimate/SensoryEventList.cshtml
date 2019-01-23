@@ -20,7 +20,7 @@
     <a href="#" class="addNew">Add New Descriptive</a>
 </div>
 
-@Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { IncludeAddLink = false, IncludeBasicPagingandSearch = false, EntityTypeName = "SensoryEvent", Columns = tableColumns, Values = Model.Descriptives, IncludeDelete = false, IncludeUnapprove = false })
+@Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { IncludeAddLink = false, IncludeBasicPagingandSearch = false, EntityTypeName = "Inanimate/SensoryEvent", Columns = tableColumns, Values = Model.Descriptives, IncludeDelete = false, IncludeUnapprove = false })
 
 <script>
         $(document).ready(function () {

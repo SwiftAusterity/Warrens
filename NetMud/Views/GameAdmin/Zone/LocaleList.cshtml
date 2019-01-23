@@ -17,17 +17,9 @@
     tableColumns.Add("State", obj => obj.State.ToString());
 }
 
-<div>
-    @Html.ActionLink("Add New Locale", "Add", "Locale", new { zoneId = Model.DataObject.Id }, new { @class = "addNew" })
-</div>
-
-@Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model, "Locale"))
-
-@using (Html.BeginForm("Remove", "Locale"))
-{
-    @Html.AntiForgeryToken()
-    @Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Name = "Locales in this Zone", Columns = tableColumns, Values = Model.CurrentPageOfItems.OrderBy(obj => obj.Id) })
-}
+<h3>Locales</h3>
+@Html.ActionLink("Add New Locale", "Add", "Locale", new { zoneId = Model.DataObject.Id }, new { @class = "addNew" })
+@Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { EntityTypeName = "Locale", IncludeAddLink = false, Columns = tableColumns, Values = Model.CurrentPageOfItems.OrderBy(obj => obj.Id) })
 
 
 @section Scripts {

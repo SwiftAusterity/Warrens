@@ -1,56 +1,42 @@
 ﻿@model string
+@{
+    double columnCount = ViewData["columnCount"] == null ? 5 : (int)ViewData["columnCount"];
+    bool disabled = ViewData["disabled"] != null;
+    var columnLabelValue = columnCount > 2 ? 1 : 2;
+    var columnInputValue = (int)Math.Round(10 / columnCount);
+    var cssClass = ViewData["cssClass"] == null ? "form-control" : ViewData["cssClass"];
+    var htmlAttributes = new Dictionary<string, object>() { { "class", cssClass }, { "placeholder", ViewData.ModelMetadata.DisplayName }, { "title", ViewData.ModelMetadata.DisplayName } };
+    var forceOptional = ViewData["forceOptional"] != null;
+    var forceBlankValue = Model == null || Model.GetType().IsArray ? true : false;
+    var noValidation = ViewData["noValidation"] != null;
+    var archivedValue = ViewData["archivedValue"] == null ? "" : ViewData["archivedValue"].ToString();
 
-    @{
-        double columnCount = ViewData["columnCount"] == null ? 5 : (int)ViewData["columnCount"];
-        bool disabled = ViewData["disabled"] != null;
-        var columnLabelValue = columnCount > 2 ? 1 : 2;
-        var columnInputValue = (int)Math.Round(10 / columnCount);
-        var cssClass = ViewData["cssClass"] == null ? "form-control" : ViewData["cssClass"];
-        var htmlAttributes = new Dictionary<string, object>() { { "class", cssClass }, { "placeholder", ViewData.ModelMetadata.DisplayName }, { "title", ViewData.ModelMetadata.DisplayName } };
-        var forceOptional = ViewData["forceOptional"] != null;
-        var forceBlankValue = Model == null || Model.GetType().IsArray ? true : false;
-        var noValidation = ViewData["noValidation"] != null;
-        var archivedValue = ViewData["archivedValue"] == null ? "" : ViewData["archivedValue"].ToString();
+    if (ViewData["disabled"] != null)
+    {
+        htmlAttributes.Add("disabled", true);
+    }
 
-        if (ViewData["disabled"] != null)
+    if (ViewData["htmlAttributes"] != null)
+    {
+        var additionalAttribs = ViewData["htmlAttributes"] as IDictionary<string, object>;
+
+        if (additionalAttribs != null)
         {
-            htmlAttributes.Add("disabled", true);
-        }
-
-        if (ViewData["htmlAttributes"] != null)
-        {
-            var additionalAttribs = ViewData["htmlAttributes"] as IDictionary<string, object>;
-
-            if (additionalAttribs != null)
+            foreach (var kvp in additionalAttribs)
             {
-                foreach (var kvp in additionalAttribs)
-                {
-                    htmlAttributes.Add(kvp.Key, kvp.Value);
-                }
+                htmlAttributes.Add(kvp.Key, kvp.Value);
             }
-        }
-
-        if (forceBlankValue && !htmlAttributes.ContainsKey("Value"))
-        {
-            htmlAttributes.Add("Value", "");
         }
     }
 
-    <div class="form-group row">
-        <a href="#" class="removeRow col-form-label" title="Remove this" onclick="javascript: $(this).parent().remove(); return false;">X</a>
-        <div class="col-sm-@columnInputValue">
-            @Html.TextBoxFor(m => m, htmlAttributes)
-
-            @if (!string.IsNullOrWhiteSpace(archivedValue))
-            {
-                <span class="archive">Archived Value: @archivedValue</span>
-                <span title="apply value to field" class="glyphicon glyphicon-plus archiveApply" onclick="javascript: $('#@ViewData.ModelMetadata.PropertyName').val('@archivedValue');"></span>
-            }
-
-            @if (!noValidation)
-            {
-                @Html.ValidationMessageFor(m => m, "", new { @class = "text-danger" })
-            }
-        </div>
+    if (forceBlankValue && !htmlAttributes.ContainsKey("Value"))
+    {
+        htmlAttributes.Add("Value", "");
+    }
+}
+<div class="form-group row">
+    <a href="#" class="removeRow col-form-label" title="Remove this" onclick="javascript: $(this).parent().remove(); return false;">X</a>
+    <div class="col-sm-@columnInputValue">
+        @Html.TextBoxFor(m => m, htmlAttributes)
     </div>
-
+</div>

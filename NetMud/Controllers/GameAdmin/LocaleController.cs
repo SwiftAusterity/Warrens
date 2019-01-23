@@ -40,7 +40,7 @@ namespace NetMud.Controllers.GameAdmin
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route(@"GameAdmin/Locale/Remove/{zoneId}/{removeId?}/{authorizeRemove?}/{unapproveId?}/{authorizeUnapprove?}")]
+        [Route(@"Locale/Remove/{zoneId}/{removeId?}/{authorizeRemove?}/{unapproveId?}/{authorizeUnapprove?}")]
         public ActionResult Remove(long zoneId, long removeId = -1, string authorizeRemove = "", long unapproveId = -1, string authorizeUnapprove = "")
         {
             string message = string.Empty;
@@ -96,7 +96,8 @@ namespace NetMud.Controllers.GameAdmin
             var vModel = new AddEditLocaleTemplateViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ZoneId = zoneId
+                ZoneId = zoneId,
+                DataObject = new LocaleTemplate()
             };
 
             return View("~/Views/GameAdmin/Locale/Add.cshtml", vModel);
@@ -118,7 +119,8 @@ namespace NetMud.Controllers.GameAdmin
 
             var newObj = new LocaleTemplate
             {
-                Name = vModel.Name,
+                Name = vModel.DataObject.Name,
+                AlwaysDiscovered = vModel.DataObject.AlwaysDiscovered,
                 ParentLocation = zone
             };
 
@@ -158,7 +160,6 @@ namespace NetMud.Controllers.GameAdmin
             }
 
             vModel.DataObject = obj;
-            vModel.Name = obj.Name;
 
             return View("~/Views/GameAdmin/Locale/Edit.cshtml", vModel);
         }
@@ -184,7 +185,8 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = message });
             }
 
-            obj.Name = vModel.Name;
+            obj.Name = vModel.DataObject.Name;
+            obj.AlwaysDiscovered = vModel.DataObject.AlwaysDiscovered;
 
             if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {

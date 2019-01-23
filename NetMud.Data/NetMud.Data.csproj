@@ -137,6 +137,7 @@
     <Compile Include="Architectural\EntityBase\Quality.cs" />
     <Compile Include="Architectural\GlobalPosition.cs" />
     <Compile Include="Architectural\LookupDataPartial.cs" />
+    <Compile Include="Architectural\PropertyBinding\CelestialCollectionDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\DimensionalModelDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\DictataCollectionDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\MineralCollectionDataBinder.cs" />

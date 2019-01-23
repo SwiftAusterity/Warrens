@@ -8,6 +8,7 @@ using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Gaia;
+using NetMud.DataStructure.Inanimate;
 using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.Locale;
 using NetMud.DataStructure.Room;
@@ -110,6 +111,8 @@ namespace NetMud.Data.Zone
         {
             Qualities = new HashSet<IQuality>();
             WeatherEvents = Enumerable.Empty<IWeatherEvent>();
+            MobilesInside = new EntityContainer<IMobile>();
+            Contents = new EntityContainer<IInanimate>();
         }
 
         /// <summary>
@@ -121,6 +124,8 @@ namespace NetMud.Data.Zone
             TemplateId = zone.Id;
             Qualities = new HashSet<IQuality>();
             WeatherEvents = Enumerable.Empty<IWeatherEvent>();
+            MobilesInside = new EntityContainer<IMobile>();
+            Contents = new EntityContainer<IInanimate>();
 
             GetFromWorldOrSpawn();
         }

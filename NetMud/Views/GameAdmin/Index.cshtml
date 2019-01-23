@@ -14,7 +14,7 @@
         <div class="adminDashboard">
             <div>
                 <h4>Templates</h4>
-                <dl class="dl-horizontal">
+                <dl class="dl-horizontal dashboardItem">
                     <dt>Worlds [@Html.ActionLink(Model.Worlds.Count().ToString(), "Index", "Gaia", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" })]</dt>
                     <dd>
                         @Html.ActionLink(" ", "Add", "Gaia", null, htmlAttributes: new { @class = "glyphicon-plus-sign glyphicon", @style = "color: green;", @title = "Add New" })
@@ -91,7 +91,7 @@
             </div>
             <div>
                 <h4>Administrative</h4>
-                <dl class="dl-horizontal">
+                <dl class="dl-horizontal dashboardItem">
                     <dt>Journal Entries [@Html.ActionLink(Model.Journals.Count().ToString(), "Index", "JournalEntry", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" })]</dt>
                     <dd>
                         @Html.ActionLink(" ", "Add", "JournalEntry", null, htmlAttributes: new { @class = "glyphicon-plus-sign glyphicon", @style = "color: green;", @title = "Add New" })
@@ -136,7 +136,7 @@
             </div>
             <div>
                 <h4>Supporting</h4>
-                <dl class="dl-horizontal">
+                <dl class="dl-horizontal dashboardItem">
                     <dt>Races [@Html.ActionLink(Model.Races.Count().ToString(), "Index", "Race", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" })]</dt>
                     <dd>
                         @Html.ActionLink(" ", "Add", "Race", null, htmlAttributes: new { @class = "glyphicon-plus-sign glyphicon", @style = "color: green;", @title = "Add New" })
@@ -189,7 +189,7 @@
             </div>
             <div>
                 <h4>Natural Resources</h4>
-                <dl class="dl-horizontal">
+                <dl class="dl-horizontal dashboardItem">
                     <dt>Flora [@Html.ActionLink(Model.Flora.Count().ToString(), "Index", "Flora", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" })]</dt>
                     <dd>
                         @Html.ActionLink(" ", "Add", "Flora", null, htmlAttributes: new { @class = "glyphicon-plus-sign glyphicon", @style = "color: green;", @title = "Add New" })

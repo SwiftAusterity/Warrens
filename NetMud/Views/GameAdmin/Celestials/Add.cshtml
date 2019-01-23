@@ -4,7 +4,7 @@
     ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("New Celestial Body", new string[] { "Dashboard", "Celestial Bodies" }, new string[] { "/GameAdmin", "/Celestials" });
 }
 
-<section id="templateApply">
+<section id="templateApply" class="template">
     @using (Html.BeginForm("Add", "Celestials", FormMethod.Get, new { @class = "form-horizontal", role = "form", @name = "applyTemplateForm", @id = "applyTemplateForm" }))
     {
         <div class="form-group row">

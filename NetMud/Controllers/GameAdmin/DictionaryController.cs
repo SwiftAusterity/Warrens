@@ -56,7 +56,7 @@ namespace NetMud.Controllers.GameAdmin
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route(@"GameAdmin/Dictionary/Remove/{removeId}/{authorizeRemove}")]
+        [Route(@"Dictionary/Remove/{removeId}/{authorizeRemove}")]
         public ActionResult Remove(string removeId, string authorizeRemove)
         {
             string message = string.Empty;

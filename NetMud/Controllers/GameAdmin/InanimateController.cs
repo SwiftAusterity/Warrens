@@ -60,7 +60,7 @@ namespace NetMud.Controllers.GameAdmin
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route(@"GameAdmin/Inanimate/Remove/{removeId?}/{authorizeRemove?}/{unapproveId?}/{authorizeUnapprove?}")]
+        [Route(@"Inanimate/Remove/{removeId?}/{authorizeRemove?}/{unapproveId?}/{authorizeUnapprove?}")]
         public ActionResult Remove(long removeId = -1, string authorizeRemove = "", long unapproveId = -1, string authorizeUnapprove = "")
         {
             string message = string.Empty;
@@ -246,8 +246,10 @@ namespace NetMud.Controllers.GameAdmin
             }
             else
             {
-                vModel.SensoryEventDataObject = new SensoryEvent();
-                vModel.SensoryEventDataObject.Event = new Lexica();
+                vModel.SensoryEventDataObject = new SensoryEvent
+                {
+                    Event = new Lexica()
+                };
             }
 
             return View("~/Views/GameAdmin/Inanimate/SensoryEvent.cshtml", "_chromelessLayout", vModel);
@@ -314,6 +316,7 @@ namespace NetMud.Controllers.GameAdmin
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route(@"Inanimate/SensoryEvent/Remove/{id?}/{authorize?}", Name = "RemoveInanimateDescriptive")]
         public ActionResult RemoveDescriptive(long id, string authorize)
         {
             string message = string.Empty;
@@ -333,7 +336,7 @@ namespace NetMud.Controllers.GameAdmin
                 }
                 else
                 {
-                    var type = short.Parse(values[0]);
+                    var type = values[0];
                     var phrase = values[1];
 
                     var obj = TemplateCache.Get<IInanimateTemplate>(id);
@@ -344,7 +347,7 @@ namespace NetMud.Controllers.GameAdmin
                     }
                     else
                     {
-                        var grammaticalType = (GrammaticalType)type;
+                        GrammaticalType grammaticalType = (GrammaticalType)Enum.Parse(typeof(GrammaticalType), type);
                         var existingOccurrence = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType
                                                                                             && occurrence.Event.Phrase.Equals(phrase, StringComparison.InvariantCultureIgnoreCase));
 

@@ -63,7 +63,7 @@ namespace NetMud.Controllers.GameAdmin
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route(@"GameAdmin/Zone/Remove/{removeId?}/{authorizeRemove?}/{unapproveId?}/{authorizeUnapprove?}")]
+        [Route(@"Zone/Remove/{removeId?}/{authorizeRemove?}/{unapproveId?}/{authorizeUnapprove?}")]
         public ActionResult Remove(long removeId = -1, string authorizeRemove = "", long unapproveId = -1, string authorizeUnapprove = "")
         {
             string message = string.Empty;
@@ -136,35 +136,18 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var newObj = new ZoneTemplate
-            {
-                Name = vModel.Name,
-                BaseElevation = vModel.BaseElevation,
-                PressureCoefficient = vModel.PressureCoefficient,
-                TemperatureCoefficient = vModel.TemperatureCoefficient,
-                Hemisphere = (HemispherePlacement)vModel.Hemisphere
-            };
+            var newObj = vModel.DataObject;
 
-            var world = TemplateCache.Get<IGaiaTemplate>(vModel.World);
-
-            if (world == null)
+            if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
             {
-                message = "Error; You must choose a valid world.";
+                message = "Error; Creation failed.";
             }
             else
             {
-                newObj.World = world;
-
-                if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
-                {
-                    message = "Error; Creation failed.";
-                }
-                else
-                {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddZone[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                    message = "Creation Successful.";
-                }
+                LoggingUtility.LogAdminCommandUsage("*WEB* - AddZone[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                message = "Creation Successful.";
             }
+
             return RedirectToAction("Index", new { Message = message });
         }
 
@@ -186,15 +169,8 @@ namespace NetMud.Controllers.GameAdmin
             var vModel = new AddEditZoneTemplateViewModel(locales)
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
-
                 DataObject = obj,
-                Name = obj.Name,
-                BaseElevation = obj.BaseElevation,
-                PressureCoefficient = obj.PressureCoefficient,
-                TemperatureCoefficient = obj.TemperatureCoefficient,
                 ValidWorlds = TemplateCache.GetAll<IGaiaTemplate>(true),
-                World = obj.World == null ? -1 : obj.World.Id,
-                Hemisphere = (short)obj.Hemisphere
             };
 
             return View("~/Views/GameAdmin/Zone/Edit.cshtml", vModel);
@@ -214,32 +190,23 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = message });
             }
 
-            obj.Name = vModel.Name;
-            obj.BaseElevation = vModel.BaseElevation;
-            obj.PressureCoefficient = vModel.PressureCoefficient;
-            obj.TemperatureCoefficient = vModel.TemperatureCoefficient;
-            obj.Hemisphere = (HemispherePlacement)vModel.Hemisphere;
+            obj.Name = vModel.DataObject.Name;
+            obj.BaseElevation = vModel.DataObject.BaseElevation;
+            obj.PressureCoefficient = vModel.DataObject.PressureCoefficient;
+            obj.TemperatureCoefficient = vModel.DataObject.TemperatureCoefficient;
+            obj.Hemisphere = vModel.DataObject.Hemisphere;
+            obj.World = vModel.DataObject.World;
 
-            var world = TemplateCache.Get<IGaiaTemplate>(vModel.World);
-
-            if (world == null)
+            if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {
-                message = "Error; You must choose a valid world.";
+                LoggingUtility.LogAdminCommandUsage("*WEB* - EditZone[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                message = "Edit Successful.";
             }
             else
             {
-                obj.World = world;
-
-                if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
-                {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - EditZone[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                    message = "Edit Successful.";
-                }
-                else
-                {
-                    message = "Error; Edit failed.";
-                }
+                message = "Error; Edit failed.";
             }
+
             return RedirectToAction("Index", new { Message = message });
         }
 
@@ -293,6 +260,7 @@ namespace NetMud.Controllers.GameAdmin
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult AddLocalePathway(long id, AddEditZonePathwayTemplateViewModel vModel)
         {
             string message = string.Empty;
@@ -319,6 +287,7 @@ namespace NetMud.Controllers.GameAdmin
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult EditLocalePathway(long id, AddEditZonePathwayTemplateViewModel vModel)
         {
             string message = string.Empty;
@@ -355,14 +324,15 @@ namespace NetMud.Controllers.GameAdmin
             var obj = TemplateCache.Get<IZoneTemplate>(id);
             if (obj == null)
             {
-                message = "That zone does not exist";
+                message = "That does not exist";
                 return RedirectToRoute("ModalErrorOrClose", new { Message = message });
             }
 
             var vModel = new OccurrenceViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                DataObject = obj
+                DataObject = obj,
+                AdminTypeName = "Zone"
             };
 
             if (descriptiveType > -1)
@@ -376,8 +346,15 @@ namespace NetMud.Controllers.GameAdmin
             {
                 vModel.LexicaDataObject = vModel.SensoryEventDataObject.Event;
             }
+            else
+            {
+                vModel.SensoryEventDataObject = new SensoryEvent
+                {
+                    Event = new Lexica()
+                };
+            }
 
-            return View("~/Views/Shared/SensoryEvent.cshtml", "_chromelessLayout", vModel);
+            return View("~/Views/GameAdmin/Zone/SensoryEvent.cshtml", "_chromelessLayout", vModel);
         }
 
         [HttpPost]
@@ -390,33 +367,41 @@ namespace NetMud.Controllers.GameAdmin
             var obj = TemplateCache.Get<IZoneTemplate>(id);
             if (obj == null)
             {
-                message = "That zone does not exist";
+                message = "That does not exist";
                 return RedirectToRoute("ModalErrorOrClose", new { Message = message });
             }
 
-            var grammaticalType = vModel.SensoryEventDataObject.Event.Role;
-            var phraseF = vModel.SensoryEventDataObject.Event.Phrase;
-            var existingOccurrence = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType
-                                                                                && occurrence.Event.Phrase.Equals(phraseF, StringComparison.InvariantCultureIgnoreCase));
+            var existingOccurrence = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == vModel.SensoryEventDataObject.Event.Role
+                                                                                && occurrence.Event.Phrase.Equals(vModel.SensoryEventDataObject.Event.Phrase, StringComparison.InvariantCultureIgnoreCase));
 
             if (existingOccurrence == null)
             {
-                existingOccurrence = new SensoryEvent();
+                existingOccurrence = new SensoryEvent(vModel.SensoryEventDataObject.SensoryType)
+                {
+                    Strength = vModel.SensoryEventDataObject.Strength,
+                    Event = new Lexica(vModel.SensoryEventDataObject.Event.Type,
+                                        vModel.SensoryEventDataObject.Event.Role,
+                                        vModel.SensoryEventDataObject.Event.Phrase)
+                    {
+                        Modifiers = vModel.SensoryEventDataObject.Event.Modifiers
+                    }
+                };
             }
-
-            var existingEvent = existingOccurrence.Event;
-
-            if (existingEvent == null)
+            else
             {
-                existingEvent = new Lexica();
+                existingOccurrence.Strength = vModel.SensoryEventDataObject.Strength;
+                existingOccurrence.SensoryType = vModel.SensoryEventDataObject.SensoryType;
+                existingOccurrence.Event = new Lexica(vModel.SensoryEventDataObject.Event.Type,
+                                                        vModel.SensoryEventDataObject.Event.Role,
+                                                        vModel.SensoryEventDataObject.Event.Phrase)
+                {
+                    Modifiers = vModel.SensoryEventDataObject.Event.Modifiers
+                };
             }
 
-            existingEvent.Role = grammaticalType;
+            obj.Descriptives.RemoveWhere(occurrence => occurrence.Event.Role == vModel.SensoryEventDataObject.Event.Role
+                                                && occurrence.Event.Phrase.Equals(vModel.SensoryEventDataObject.Event.Phrase, StringComparison.InvariantCultureIgnoreCase));
 
-            existingOccurrence.Event = existingEvent;
-
-            obj.Descriptives.RemoveWhere(occ => occ.Event.Role == grammaticalType
-                                                    && occ.Event.Phrase.Equals(phraseF, StringComparison.InvariantCultureIgnoreCase));
             obj.Descriptives.Add(existingOccurrence);
 
             if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
@@ -433,7 +418,8 @@ namespace NetMud.Controllers.GameAdmin
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult RemoveDescriptive(long id, string authorize)
+        [Route(@"Zone/SensoryEvent/Remove/{id?}/{authorize?}", Name = "RemoveZoneDescriptive")]
+        public ActionResult RemoveDescriptive(long id = -1, string authorize = "")
         {
             string message = string.Empty;
 
@@ -452,7 +438,7 @@ namespace NetMud.Controllers.GameAdmin
                 }
                 else
                 {
-                    var type = short.Parse(values[0]);
+                    var type = values[0];
                     var phrase = values[1];
 
                     var obj = TemplateCache.Get<IZoneTemplate>(id);
@@ -463,7 +449,7 @@ namespace NetMud.Controllers.GameAdmin
                     }
                     else
                     {
-                        var grammaticalType = (GrammaticalType)type;
+                        GrammaticalType grammaticalType = (GrammaticalType)Enum.Parse(typeof(GrammaticalType), type);
                         var existingOccurrence = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType
                                                                                             && occurrence.Event.Phrase.Equals(phrase, StringComparison.InvariantCultureIgnoreCase));
 

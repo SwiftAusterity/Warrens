@@ -1,5 +1,4 @@
-﻿@using NetMud.Data.NaturalResource
-@using NetMud.DataStructure.NaturalResource
+﻿@using NetMud.DataStructure.NaturalResource
 
 @model IMineral
 @{
@@ -40,13 +39,6 @@
 <div class="form-group row">
     <a href="#" class="removeRow col-form-label" title="Remove this" onclick="javascript: $(this).parent().remove(); return false;">X</a>
     <div class="col-sm-@columnInputValue">
-        @Html.DropDownListFor(m => m, itemList, optionLabel: "Select One", htmlAttributes: htmlAttributes)
-
-        @if (!string.IsNullOrWhiteSpace(archivedValue))
-        {
-            <span class="archive">Archived Value: @archivedValue</span>
-            <span title="apply value to field" class="glyphicon glyphicon-plus archiveApply" onclick="javascript: $('#@ViewData.ModelMetadata.PropertyName').val('@archivedValue');"></span>
-        }
-        @Html.ValidationMessageFor(m => m, "", new { @class = "text-danger" })
+        @Html.DropDownList("", itemList, optionLabel: "Select One", htmlAttributes: htmlAttributes)
     </div>
 </div>

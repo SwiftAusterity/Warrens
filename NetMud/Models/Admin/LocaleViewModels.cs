@@ -2,7 +2,6 @@
 using NetMud.DataStructure.Locale;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 
 namespace NetMud.Models.Admin
@@ -35,11 +34,6 @@ namespace NetMud.Models.Admin
         public AddEditLocaleTemplateViewModel()
         {
         }
-
-        [StringLength(100, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
-        [Display(Name = "Name", Description = "The descriptive name for this Locale. Shows above the output window of the client.")]
-        [DataType(DataType.Text)]
-        public string Name { get; set; }
 
         public ILocaleTemplate DataObject { get; set; }
     }

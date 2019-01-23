@@ -1,22 +1,21 @@
 ﻿@model NetMud.Models.ListTableViewModel
-
 @if (!string.IsNullOrWhiteSpace(Model.Name))
 {
     <h4>@Model.Name</h4>
 }
 
-<div class="searchCriteria">
-    @if (Model.IncludeBasicPagingandSearch && Model.PagingModel != null && !string.IsNullOrWhiteSpace(Model.EntityTypeName))
-    {
+@if (Model.IncludeBasicPagingandSearch && Model.PagingModel != null && !string.IsNullOrWhiteSpace(Model.EntityTypeName))
+{
+    <div class="searchCriteria">
         @Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model.PagingModel, Model.EntityTypeName))
-    }
-</div>
+    </div>
+}
 
 @if (Model.IncludeAddLink)
 {
-<div>
-    @Html.ActionLink(" ", "Add", Model.EntityTypeName, htmlAttributes: new { @class = "glyphicon-plus-sign glyphicon addNew", @style = "color: green;", @title = "Add New" })
-</div>
+    <div>
+        @Html.ActionLink(" ", "Add", Model.EntityTypeName, htmlAttributes: new { @class = "glyphicon-plus-sign glyphicon addNew", @style = "color: green;", @title = "Add New" })
+    </div>
 }
 
 @using (Html.BeginForm("Remove", Model.EntityTypeName))
@@ -29,12 +28,10 @@
                 {
                     <th scope="col">@column.Key</th>
                 }
-
                 @if (Model.IncludeDelete)
                 {
                     <th>DELETE</th>
                 }
-
                 @if (Model.IncludeUnapprove)
                 {
                     <th>UNAPPROVE</th>
@@ -49,7 +46,6 @@
                     {
                         <td>@Html.Raw(column.Value(val))</td>
                     }
-
                     @if (Model.IncludeDelete)
                     {
                         <td>
@@ -58,7 +54,6 @@
                             </div>
                         </td>
                     }
-
                     @if (Model.IncludeUnapprove)
                     {
                         <td>

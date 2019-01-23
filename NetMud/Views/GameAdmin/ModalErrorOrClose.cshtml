@@ -4,12 +4,14 @@
     Layout = "~/Views/Shared/_chromelessLayout.cshtml";
 }
 
-@section Scripts {
-    <script type="text/javascript">
-        var message = '@Model';
+<div id="messagePlace"></div>
 
-        if (message === '') {
-            window.close();
-        }
-    </script>
-}
+<script type="text/javascript">
+    var message = '@Model';
+
+    if (message === '') {
+        window.close();
+    } else {
+        $('#messagePlace').html(message);
+    }
+</script>
