@@ -27,7 +27,7 @@ namespace NetMud
             //Load the "config" data first
             ConfigData.LoadEverythingToCache();
 
-            var globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
+            IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
 
             //We dont move forward without a global config
             if (globalConfig == null)
@@ -37,7 +37,7 @@ namespace NetMud
                 globalConfig.SystemSave();
             }
 
-            var gossipConfig = ConfigDataCache.Get<IGossipConfig>(new ConfigDataCacheKey(typeof(IGossipConfig), "GossipSettings", ConfigDataType.GameWorld));
+            IGossipConfig gossipConfig = ConfigDataCache.Get<IGossipConfig>(new ConfigDataCacheKey(typeof(IGossipConfig), "GossipSettings", ConfigDataType.GameWorld));
 
             //We dont move forward without a global config
             if (gossipConfig == null)
@@ -93,14 +93,14 @@ namespace NetMud
 
         private static void ProcessSystemVerbs()
         {
-            var commandsAssembly = Assembly.GetAssembly(typeof(CommandParameterAttribute));
-            var loadedCommands = commandsAssembly.GetTypes().Where(t => t.GetInterfaces().Contains(typeof(ICommand)));
+            Assembly commandsAssembly = Assembly.GetAssembly(typeof(CommandParameterAttribute));
+            System.Collections.Generic.IEnumerable<Type> loadedCommands = commandsAssembly.GetTypes().Where(t => t.GetInterfaces().Contains(typeof(ICommand)));
 
-            foreach (var comm in loadedCommands)
+            foreach (Type comm in loadedCommands)
             {
-                var commandVerbs = comm.GetCustomAttributes<CommandKeywordAttribute>().Where(att => !att.PreventBecomingAVerb).Select(att => att.Keyword);
+                System.Collections.Generic.IEnumerable<string> commandVerbs = comm.GetCustomAttributes<CommandKeywordAttribute>().Where(att => !att.PreventBecomingAVerb).Select(att => att.Keyword);
 
-                foreach (var verb in commandVerbs)
+                foreach (string verb in commandVerbs)
                     LexicalProcessor.VerifyDictata(new Dictata() { WordType = LexicalType.Verb, Name = verb, Elegance = 1, Severity = 1, Quality = 1, Tense = LexicalTense.Present });
             }
 

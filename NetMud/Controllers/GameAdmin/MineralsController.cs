@@ -45,7 +45,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageMineralsViewModel(TemplateCache.GetAll<IMineral>())
+            ManageMineralsViewModel vModel = new ManageMineralsViewModel(TemplateCache.GetAll<IMineral>())
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -66,9 +66,9 @@ namespace NetMud.Controllers.GameAdmin
 
             if (!string.IsNullOrWhiteSpace(authorizeRemove) && removeId.ToString().Equals(authorizeRemove))
             {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = TemplateCache.Get<IMineral>(removeId);
+                IMineral obj = TemplateCache.Get<IMineral>(removeId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -82,9 +82,9 @@ namespace NetMud.Controllers.GameAdmin
             }
             else if (!string.IsNullOrWhiteSpace(authorizeUnapprove) && unapproveId.ToString().Equals(authorizeUnapprove))
             {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = TemplateCache.Get<IMineral>(unapproveId);
+                IMineral obj = TemplateCache.Get<IMineral>(unapproveId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -105,7 +105,7 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add()
         {
-            var vModel = new AddEditMineralsViewModel
+            AddEditMineralsViewModel vModel = new AddEditMineralsViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
                 ValidMaterials = TemplateCache.GetAll<IMaterial>(),
@@ -122,9 +122,9 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Add(AddEditMineralsViewModel vModel)
         {
             string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var newObj = vModel.DataObject;
+            IMineral newObj = vModel.DataObject;
 
             if (string.IsNullOrWhiteSpace(message))
             {
@@ -144,7 +144,7 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(long id)
         {
             string message = string.Empty;
-            var vModel = new AddEditMineralsViewModel
+            AddEditMineralsViewModel vModel = new AddEditMineralsViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
                 ValidMaterials = TemplateCache.GetAll<IMaterial>(),
@@ -152,7 +152,7 @@ namespace NetMud.Controllers.GameAdmin
                 ValidInanimateTemplates = TemplateCache.GetAll<IInanimateTemplate>()
             };
 
-            var obj = TemplateCache.Get<IMineral>(id);
+            IMineral obj = TemplateCache.Get<IMineral>(id);
 
             if (obj == null)
             {
@@ -170,9 +170,9 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(long id, AddEditMineralsViewModel vModel)
         {
             string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = TemplateCache.Get<IMineral>(id);
+            IMineral obj = TemplateCache.Get<IMineral>(id);
             if (obj == null)
             {
                 message = "That does not exist";

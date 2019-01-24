@@ -49,12 +49,12 @@ namespace NetMud.Backup
         /// <returns>full or partial success</returns>
         public static bool LoadEverythingToCache()
         {
-            var implimentedTypes = typeof(EntityTemplatePartial).Assembly.GetTypes().Where(ty => ty.GetInterfaces().Contains(typeof(IKeyedData))
+            System.Collections.Generic.IEnumerable<Type> implimentedTypes = typeof(EntityTemplatePartial).Assembly.GetTypes().Where(ty => ty.GetInterfaces().Contains(typeof(IKeyedData))
                                                                                 && ty.IsClass
                                                                                 && !ty.IsAbstract
                                                                                 && !ty.GetCustomAttributes<IgnoreAutomatedBackupAttribute>().Any());
 
-            foreach (var t in implimentedTypes.OrderByDescending(type => type == typeof(GaiaTemplate) ? 6 :
+            foreach (Type t in implimentedTypes.OrderByDescending(type => type == typeof(GaiaTemplate) ? 6 :
                                                                             type == typeof(ZoneTemplate) ? 5 :
                                                                             type == typeof(LocaleTemplate) ? 3 :
                                                                             type == typeof(RoomTemplate) ? 3 :

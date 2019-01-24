@@ -32,7 +32,7 @@ namespace NetMud.Commands.Administrative
         /// </summary>
         public override void Execute()
         {
-            var moveTo = (IZone)Subject;
+            IZone moveTo = (IZone)Subject;
             List<string> sb = new List<string>
             {
                 "You teleport."

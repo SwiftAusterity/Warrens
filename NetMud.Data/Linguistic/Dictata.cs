@@ -199,7 +199,7 @@ namespace NetMud.Data.Linguistic
         /// <returns>A list of strings</returns>
         public override IDictionary<string, string> SignificantDetails()
         {
-            var returnList = base.SignificantDetails();
+            IDictionary<string, string> returnList = base.SignificantDetails();
 
             returnList.Add("WordType", WordType.ToString());
 

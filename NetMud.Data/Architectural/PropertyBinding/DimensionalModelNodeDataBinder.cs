@@ -10,11 +10,11 @@ namespace NetMud.Data.Architectural.PropertyBinding
     {
         public override object Convert(object input)
         {
-            var nodes = new HashSet<IDimensionalModelNode>();
-            var nodeValues = input as IEnumerable<string>;
+            HashSet<IDimensionalModelNode> nodes = new HashSet<IDimensionalModelNode>();
+            IEnumerable<string> nodeValues = input as IEnumerable<string>;
 
             short i = 0;
-            foreach(var nodeValue in nodeValues)
+            foreach(string nodeValue in nodeValues)
             {
                 nodes.Add(new DimensionalModelNode() { XAxis = i, Style = (DamageType)Enum.Parse(typeof(DamageType), nodeValue) });
                 i++;

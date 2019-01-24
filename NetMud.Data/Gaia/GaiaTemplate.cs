@@ -141,7 +141,7 @@ namespace NetMud.Data.Gaia
             returnList.Add("Days Per Month", ChronologicalSystem.DaysPerMonth.ToString());
             returnList.Add("Starting Year", ChronologicalSystem.StartingYear.ToString());
 
-            foreach (var month in ChronologicalSystem.Months)
+            foreach (string month in ChronologicalSystem.Months)
                 returnList.Add("Months-" + month, month);
 
             foreach (ICelestial celestial in CelestialBodies)

@@ -93,7 +93,7 @@ namespace NetMud.Data.Players
             {
                 if (_characters == null)
                 {
-                    var returnValue = new HashSet<IPlayerTemplate>(PlayerDataCache.GetAllForAccountHandle(GlobalIdentityHandle));
+                    HashSet<IPlayerTemplate> returnValue = new HashSet<IPlayerTemplate>(PlayerDataCache.GetAllForAccountHandle(GlobalIdentityHandle));
                     _characters = returnValue;
                 }
 

@@ -110,18 +110,18 @@ namespace NetMud.Controllers
             if(IncludeInGame)
             {
                 //All the entities with helps
-                var entityHelps = TemplateCache.GetAll<ILookupData>(true).Where(data => !data.ImplementsType<IHelp>());
+                IEnumerable<ILookupData> entityHelps = TemplateCache.GetAll<ILookupData>(true).Where(data => !data.ImplementsType<IHelp>());
                 validEntries.AddRange(entityHelps.Select(helpful => new Data.Administrative.Help() { Name = helpful.Name, HelpText = helpful.HelpText }));
 
                 //All the commands
                 Assembly commandsAssembly = Assembly.GetAssembly(typeof(CommandParameterAttribute));
-                var validTargetTypes = commandsAssembly.GetTypes().Where(t => !t.IsAbstract && t.ImplementsType<IHelpful>());
+                IEnumerable<Type> validTargetTypes = commandsAssembly.GetTypes().Where(t => !t.IsAbstract && t.ImplementsType<IHelpful>());
 
-                foreach(var command in validTargetTypes)
+                foreach(Type command in validTargetTypes)
                 {
-                    var instance = (IHelpful)Activator.CreateInstance(command);
-                    var body = instance.HelpText;
-                    var subject = command.Name;
+                    IHelpful instance = (IHelpful)Activator.CreateInstance(command);
+                    MarkdownString body = instance.HelpText;
+                    string subject = command.Name;
 
                     validEntries.Add(new Data.Administrative.Help() { Name = subject, HelpText = body });
                 }

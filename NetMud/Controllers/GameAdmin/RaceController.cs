@@ -42,7 +42,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageRaceDataViewModel(TemplateCache.GetAll<IRace>())
+            ManageRaceDataViewModel vModel = new ManageRaceDataViewModel(TemplateCache.GetAll<IRace>())
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -63,9 +63,9 @@ namespace NetMud.Controllers.GameAdmin
 
             if (!string.IsNullOrWhiteSpace(authorizeRemove) && removeId.ToString().Equals(authorizeRemove))
             {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = TemplateCache.Get<IRace>(removeId);
+                IRace obj = TemplateCache.Get<IRace>(removeId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -79,9 +79,9 @@ namespace NetMud.Controllers.GameAdmin
             }
             else if (!string.IsNullOrWhiteSpace(authorizeUnapprove) && unapproveId.ToString().Equals(authorizeUnapprove))
             {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = TemplateCache.Get<IRace>(unapproveId);
+                IRace obj = TemplateCache.Get<IRace>(unapproveId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -103,7 +103,7 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add()
         {
-            var vModel = new AddEditRaceViewModel
+            AddEditRaceViewModel vModel = new AddEditRaceViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
                 ValidMaterials = TemplateCache.GetAll<IMaterial>(),
@@ -121,9 +121,9 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Add(AddEditRaceViewModel vModel)
         {
             string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var newObj = vModel.DataObject;
+            IRace newObj = vModel.DataObject;
 
             if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
                 message = "Error; Creation failed.";
@@ -140,7 +140,7 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(int id)
         {
             string message = string.Empty;
-            var vModel = new AddEditRaceViewModel
+            AddEditRaceViewModel vModel = new AddEditRaceViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
                 ValidMaterials = TemplateCache.GetAll<IMaterial>(),
@@ -148,7 +148,7 @@ namespace NetMud.Controllers.GameAdmin
                 ValidZones = TemplateCache.GetAll<IZoneTemplate>()
             };
 
-            var obj = TemplateCache.Get<IRace>(id);
+            IRace obj = TemplateCache.Get<IRace>(id);
 
             if (obj == null)
             {
@@ -166,9 +166,9 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(int id, AddEditRaceViewModel vModel)
         {
             string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = TemplateCache.Get<IRace>(id);
+            IRace obj = TemplateCache.Get<IRace>(id);
             if (obj == null)
             {
                 message = "That does not exist";

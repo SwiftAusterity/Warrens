@@ -8,7 +8,7 @@ namespace NetMud.Data.Architectural.PropertyBinding
     {
         public override object Convert(object input)
         {
-            var stringInput = input.ToString();
+            string stringInput = input.ToString();
             if (string.IsNullOrWhiteSpace(stringInput))
                 return null;
 

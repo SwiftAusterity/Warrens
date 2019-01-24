@@ -124,7 +124,7 @@ namespace NetMud.Interp
             LoadedCommands = LoadedCommands.Where(comm => comm.GetCustomAttributes<CommandPermissionAttribute>().Any(att => att.MinimumRank <= effectiveRank));
 
             //find out command's type
-            var potentialCommands = ParseCommand();
+            IEnumerable<CommandPackage> potentialCommands = ParseCommand();
 
             if (potentialCommands == null || potentialCommands.Count() == 0)
             {
@@ -133,14 +133,14 @@ namespace NetMud.Interp
             }
 
             IList<ICommand> validCommands = new List<ICommand>();
-            foreach (var currentCommand in potentialCommands)
+            foreach (CommandPackage currentCommand in potentialCommands)
             {
                 bool requiresZoneOwnership = currentCommand.CommandType.GetCustomAttributes<CommandPermissionAttribute>().Any(att => att.RequiresTargetOwnership);
 
                 //if (requiresZoneOwnership && !Actor.CurrentLocation.CurrentZone.HasOwnershipRights(Actor))
                 //    continue;
 
-                var commandRemainder = currentCommand.InputRemainder;
+                IEnumerable<string> commandRemainder = currentCommand.InputRemainder;
 
                 //Log people using and even attempting to use admin commands in game
                 if (currentCommand.CommandType.GetCustomAttributes<CommandPermissionAttribute>().Any(att => att.MinimumRank == StaffRank.Admin))
@@ -161,7 +161,7 @@ namespace NetMud.Interp
                     if (AccessErrors.Count > 0)
                         continue;
 
-                    var command = Activator.CreateInstance(currentCommand.CommandType) as ICommand;
+                    ICommand command = Activator.CreateInstance(currentCommand.CommandType) as ICommand;
 
                     if (
                         (parmList.Any(parm => !parm.Optional && parm.Usage == CommandUsage.Subject) && Subject == null)
@@ -204,7 +204,7 @@ namespace NetMud.Interp
                 }
             }
 
-            var validCount = validCommands.Count();
+            int validCount = validCommands.Count();
             if (validCount == 0)
             {
                 AccessErrors.Add("Unknown Command."); //TODO: Add generic errors class for rando error messages
@@ -214,7 +214,7 @@ namespace NetMud.Interp
             {
                 AccessErrors.Add(string.Format("There are {0} potential commands with that name and parameter structure.", validCommands.Count()));
 
-                foreach (var currentCommand in validCommands)
+                foreach (ICommand currentCommand in validCommands)
                     AccessErrors.AddRange(currentCommand.RenderSyntaxHelp());
                 return;
             }
@@ -242,7 +242,7 @@ namespace NetMud.Interp
                 IEnumerable<Type> validCommands = LoadedCommands.Where(comm => comm.GetCustomAttributes<CommandKeywordAttribute>()
                                             .Any(att => att.Aliases.Any(alias => alias.Equals(currentCommandString, StringComparison.InvariantCultureIgnoreCase))));
 
-                foreach(var commandType in validCommands)
+                foreach(Type commandType in validCommands)
                 {
                     //Distinct this stuff
                     if (commands.Any(com => com.CommandType == commandType))
@@ -251,7 +251,7 @@ namespace NetMud.Interp
                     CommandKeywordAttribute keywordAttribute = commandType.GetCustomAttributes<CommandKeywordAttribute>().Single(att => att.Aliases.Any(alias =>
                                                             alias.Equals(currentCommandString, StringComparison.InvariantCultureIgnoreCase)));
 
-                    var newCommand = new CommandPackage
+                    CommandPackage newCommand = new CommandPackage
                     {
                         CommandType = commandType,
                         CommandPhrase = keywordAttribute.Keyword
@@ -572,8 +572,8 @@ namespace NetMud.Interp
                         //Add the pathways
                         if(DataUtility.GetAllImplimentingedTypes(typeof(IPathway)).Contains(typeof(T)) && Position.CurrentLocation().GetType().GetInterfaces().Contains(typeof(ILocation)))
                         {
-                            var location = Position.CurrentLocation();
-                            var validPathways = location.GetPathways();
+                            ILocation location = Position.CurrentLocation();
+                            IEnumerable<IPathway> validPathways = location.GetPathways();
 
                             if (validPathways.Any())
                             {
@@ -675,11 +675,11 @@ namespace NetMud.Interp
         {
             List<string> internalCommandString = command.InputRemainder.ToList();
 
-            var parmWords = internalCommandString.Count();
+            int parmWords = internalCommandString.Count();
 
             while (parmWords > 0)
             {
-                var currentParmString = string.Join(" ", RemoveGrammaticalNiceities(internalCommandString.Take(parmWords)));
+                string currentParmString = string.Join(" ", RemoveGrammaticalNiceities(internalCommandString.Take(parmWords)));
 
                 if (!currentNeededParm.MatchesPattern(currentParmString))
                 {
@@ -687,7 +687,7 @@ namespace NetMud.Interp
                     continue;
                 }
 
-                var validObject = TemplateCache.GetByName<T>(currentParmString);
+                T validObject = TemplateCache.GetByName<T>(currentParmString);
 
                 if (validObject != null && !validObject.Equals(default(T)) && validObject.State == ApprovalState.Approved)
                 {
@@ -722,11 +722,11 @@ namespace NetMud.Interp
         {
             List<string> internalCommandString = command.InputRemainder.ToList();
 
-            var parmWords = internalCommandString.Count();
+            int parmWords = internalCommandString.Count();
 
             while (parmWords > 0)
             {
-                var currentParmString = string.Join(" ", internalCommandString.Take(parmWords));
+                string currentParmString = string.Join(" ", internalCommandString.Take(parmWords));
 
                 if (!currentNeededParm.MatchesPattern(currentParmString))
                 {
@@ -734,7 +734,7 @@ namespace NetMud.Interp
                     continue;
                 }
 
-                var validObject = default(T);
+                T validObject = default(T);
 
                 long parmID = -1;
                 if(!long.TryParse(currentParmString, out parmID))
@@ -777,16 +777,16 @@ namespace NetMud.Interp
             if (Subject == null || !((ICollection<IEntity>)Subject).Any())
                 return;
 
-            var subjectCollection = (ICollection<IEntity>)Subject;
+            ICollection<IEntity> subjectCollection = (ICollection<IEntity>)Subject;
 
             //Containers are touch range only
             List<string> internalCommandString = command.InputRemainder.ToList();
-            var disambiguator = -1;
-            var parmWords = internalCommandString.Count();
+            int disambiguator = -1;
+            int parmWords = internalCommandString.Count();
 
             while (parmWords > 0)
             {
-                var currentParmString = string.Join(" ", RemoveGrammaticalNiceities(internalCommandString.Take(parmWords))).ToLower();
+                string currentParmString = string.Join(" ", RemoveGrammaticalNiceities(internalCommandString.Take(parmWords))).ToLower();
 
                 //We have disambiguation here, we need to pick the first object we get back in the list
                 if (Regex.IsMatch(currentParmString, LiveWorldDisambiguationSyntax))
@@ -801,7 +801,7 @@ namespace NetMud.Interp
                     continue;
                 }
 
-                var validObjects = new List<T>();
+                List<T> validObjects = new List<T>();
 
                 validObjects.AddRange(subjectCollection.Select(sbj => sbj.CurrentLocation.CurrentLocation())
                                                         .Where(cl => cl.Keywords.Any(key => key.Contains(currentParmString))).Select(ent => (T)ent));
@@ -817,9 +817,9 @@ namespace NetMud.Interp
                         AccessErrors.Add(string.Format("There are {0} potential containers with that name for the {1} command. Try using one of the following disambiguators:", validObjects.Count(), command.CommandPhrase));
 
                         int iterator = 1;
-                        foreach (var obj in validObjects)
+                        foreach (T obj in validObjects)
                         {
-                            var entityObject = (IEntity)obj;
+                            IEntity entityObject = (IEntity)obj;
 
                             AccessErrors.Add(string.Format("{0}.{1}", iterator++, entityObject.TemplateName));
                         }
@@ -828,7 +828,7 @@ namespace NetMud.Interp
                     }
                     else if (validObjects.Count() == 1)
                     {
-                        var parm = validObjects.First();
+                        T parm = validObjects.First();
 
                         if (parm != null)
                         {
@@ -849,9 +849,9 @@ namespace NetMud.Interp
                         command.InputRemainder = command.InputRemainder.Skip(parmWords);
 
                         //Now try to set the subject
-                        var container = (IContains)parm;
+                        IContains container = (IContains)parm;
 
-                        var validSubjects = new List<IEntity>();
+                        List<IEntity> validSubjects = new List<IEntity>();
 
                         validSubjects.AddRange(subjectCollection.Where(sbj => sbj.CurrentLocation.CurrentLocation().Equals(container)));
 
@@ -861,7 +861,7 @@ namespace NetMud.Interp
                                 , validObjects.Count(), parmWords, command.CommandPhrase));
 
                             int iterator = 1;
-                            foreach (var obj in validSubjects)
+                            foreach (IEntity obj in validSubjects)
                                 AccessErrors.Add(string.Format("{0}.{1}", iterator++, obj.TemplateName));
                         }
                         else if (validObjects.Count() == 1)

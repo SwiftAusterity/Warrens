@@ -268,8 +268,8 @@ namespace NetMud.Data.Players
                 return new ValueRange<float>(-999999, 999999);
             }
 
-            var returnTop = 1; //TODO: Add this to race or something
-            var returnBottom = 100;
+            int returnTop = 1; //TODO: Add this to race or something
+            int returnBottom = 100;
 
             //TODO: Check for magical type affects
 
@@ -289,8 +289,8 @@ namespace NetMud.Data.Players
                 return new ValueRange<float>(-999999, 999999);
             }
 
-            var returnTop = 0; //TODO: Add this to race or something
-            var returnBottom = 0;
+            int returnTop = 0; //TODO: Add this to race or something
+            int returnBottom = 0;
 
             //TODO: Check for magical type affects
 
@@ -310,8 +310,8 @@ namespace NetMud.Data.Players
                 return new ValueRange<float>(-999999, 999999);
             }
 
-            var returnTop = 1; //TODO: Add this to race or something
-            var returnBottom = 100;
+            int returnTop = 1; //TODO: Add this to race or something
+            int returnBottom = 100;
 
             //TODO: Check for magical type affects
 
@@ -331,8 +331,8 @@ namespace NetMud.Data.Players
                 return new ValueRange<float>(-999999, 999999);
             }
 
-            var returnTop = 1; //TODO: Add this to race or something
-            var returnBottom = 100;
+            int returnTop = 1; //TODO: Add this to race or something
+            int returnBottom = 100;
 
             //TODO: Check for magical type affects
 
@@ -352,8 +352,8 @@ namespace NetMud.Data.Players
                 return new ValueRange<float>(-999999, 999999);
             }
 
-            var returnTop = 1; //TODO: Add this to race or something
-            var returnBottom = 100;
+            int returnTop = 1; //TODO: Add this to race or something
+            int returnBottom = 100;
 
             //TODO: Check for magical type affects
 
@@ -402,9 +402,9 @@ namespace NetMud.Data.Players
         /// <returns>the contained entities</returns>
         public IEnumerable<T> GetContents<T>()
         {
-            var implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
+            IEnumerable<Type> implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
 
-            var contents = new List<T>();
+            List<T> contents = new List<T>();
 
             if (implimentedTypes.Contains(typeof(IMobile)))
             {
@@ -427,9 +427,9 @@ namespace NetMud.Data.Players
         /// <param name="containerName">the name of the container</param>
         public IEnumerable<T> GetContents<T>(string containerName)
         {
-            var implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
+            IEnumerable<Type> implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
 
-            var contents = new List<T>();
+            List<T> contents = new List<T>();
 
             if (implimentedTypes.Contains(typeof(IMobile)))
             {
@@ -464,11 +464,11 @@ namespace NetMud.Data.Players
         /// <returns>errors</returns>
         public string MoveInto<T>(T thing, string containerName)
         {
-            var implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
+            IEnumerable<Type> implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
 
             if (implimentedTypes.Contains(typeof(IInanimate)))
             {
-                var obj = (IInanimate)thing;
+                IInanimate obj = (IInanimate)thing;
 
                 if (Inventory.Contains(obj, containerName))
                 {
@@ -489,7 +489,7 @@ namespace NetMud.Data.Players
 
             if (implimentedTypes.Contains(typeof(IMobile)))
             {
-                var obj = (IMobile)thing;
+                IMobile obj = (IMobile)thing;
 
                 if (MobilesInside.Contains(obj, containerName))
                 {
@@ -531,11 +531,11 @@ namespace NetMud.Data.Players
         /// <returns>errors</returns>
         public string MoveFrom<T>(T thing, string containerName)
         {
-            var implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
+            IEnumerable<Type> implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
 
             if (implimentedTypes.Contains(typeof(IInanimate)))
             {
-                var obj = (IInanimate)thing;
+                IInanimate obj = (IInanimate)thing;
 
                 if (!Inventory.Contains(obj, containerName))
                 {
@@ -551,7 +551,7 @@ namespace NetMud.Data.Players
 
             if (implimentedTypes.Contains(typeof(IMobile)))
             {
-                var obj = (IMobile)thing;
+                IMobile obj = (IMobile)thing;
 
                 if (!MobilesInside.Contains(obj, containerName))
                 {
@@ -590,7 +590,7 @@ namespace NetMud.Data.Players
             }
             else
             {
-                var ch = me.Template<IPlayerTemplate>();
+                IPlayerTemplate ch = me.Template<IPlayerTemplate>();
                 BirthMark = me.BirthMark;
                 Birthdate = me.Birthdate;
                 TemplateId = ch.Id;
@@ -727,9 +727,9 @@ namespace NetMud.Data.Players
         /// <returns>height, length, width</returns>
         public override Dimensions GetModelDimensions()
         {
-            var height = Race.Head.Model.Height + Race.Torso.Model.Height + Race.Legs.Item.Model.Height;
-            var length = Race.Torso.Model.Length;
-            var width = Race.Torso.Model.Width;
+            int height = Race.Head.Model.Height + Race.Torso.Model.Height + Race.Legs.Item.Model.Height;
+            int length = Race.Torso.Model.Length;
+            int width = Race.Torso.Model.Width;
 
             return new Dimensions(height, length, width);
         }

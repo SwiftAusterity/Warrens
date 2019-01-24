@@ -161,7 +161,7 @@ namespace NetMud.Data.NaturalResource
         /// <returns>a bunch of text saying how awful your data is</returns>
         public override IList<string> FitnessReport()
         {
-            var dataProblems = base.FitnessReport();
+            IList<string> dataProblems = base.FitnessReport();
 
             if (Flower == null && Seed == null && Leaf == null && Fruit == null)
                 dataProblems.Add("At least one part of this plant must have a value.");
@@ -175,7 +175,7 @@ namespace NetMud.Data.NaturalResource
         /// <returns>A list of strings</returns>
         public override IDictionary<string, string> SignificantDetails()
         {
-            var returnList = base.SignificantDetails();
+            IDictionary<string, string> returnList = base.SignificantDetails();
 
             returnList.Add("Sunlight", SunlightPreference.ToString());
             returnList.Add("Coniferous", Coniferous.ToString());

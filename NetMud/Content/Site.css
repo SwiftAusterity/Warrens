@@ -224,29 +224,50 @@ div.roomAsciiMap {
     clear: both;
 }
 
-.roomAsciiMap p {
+    .roomAsciiMap div.map {
+        box-shadow: 0px 0px 5px 0px dodgerblue;
+        border: 2px cornflowerblue;
+    }
+
+.zLevelControls {
     float: right;
-    display: inline-block;
+    display: inline-flex;
+    margin: 15px 0px 5px 15px;
 }
 
-    .roomAsciiMap p a {
-        padding: 5px;
+    .zLevelControls div {
+        box-shadow: 0px 0px 5px 1px lightgrey;
+        border: 1px solid lightgray;
+    }
+
+    .zLevelControls .levelIndicator {
+        font-size: larger;
+        color: cornflowerblue;
+        vertical-align: bottom;
+    }
+
+    .zLevelControls a {
         cursor: pointer;
     }
 
-        .roomAsciiMap p a.Up {
+    .zLevelControls div a {
+        padding: 5px;
+    }
+
+        .zLevelControls div a.Up {
             color: green;
         }
 
-        .roomAsciiMap p a.Down {
+        .zLevelControls div a.Down {
             color: red;
         }
 
+
 .renderModeSelector {
-    position: relative;
-    float: right;
-    color: yellow;
-    left: -15px;
+    color: dodgerblue;
+    margin-right: 10px;
+    font-size: large;
+    padding: 0;
 }
 
 .searchCriteria {

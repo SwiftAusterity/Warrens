@@ -45,7 +45,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageFloraViewModel(TemplateCache.GetAll<IFlora>())
+            ManageFloraViewModel vModel = new ManageFloraViewModel(TemplateCache.GetAll<IFlora>())
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -66,9 +66,9 @@ namespace NetMud.Controllers.GameAdmin
 
             if (!string.IsNullOrWhiteSpace(authorizeRemove) && removeId.ToString().Equals(authorizeRemove))
             {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = TemplateCache.Get<IFlora>(removeId);
+                IFlora obj = TemplateCache.Get<IFlora>(removeId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -82,9 +82,9 @@ namespace NetMud.Controllers.GameAdmin
             }
             else if (!string.IsNullOrWhiteSpace(authorizeUnapprove) && unapproveId.ToString().Equals(authorizeUnapprove))
             {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = TemplateCache.Get<IFlora>(unapproveId);
+                IFlora obj = TemplateCache.Get<IFlora>(unapproveId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -105,7 +105,7 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add()
         {
-            var vModel = new AddEditFloraViewModel
+            AddEditFloraViewModel vModel = new AddEditFloraViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
                 ValidMaterials = TemplateCache.GetAll<IMaterial>(),
@@ -121,9 +121,9 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Add(AddEditFloraViewModel vModel)
         {
             string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var newObj = vModel.DataObject;
+            IFlora newObj = vModel.DataObject;
 
             if (newObj.Wood == null && newObj.Flower == null && newObj.Seed == null && newObj.Leaf == null && newObj.Fruit == null)
                 message = "At least one of the parts of this plant must be valid.";
@@ -146,14 +146,14 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(long id)
         {
             string message = string.Empty;
-            var vModel = new AddEditFloraViewModel
+            AddEditFloraViewModel vModel = new AddEditFloraViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
                 ValidMaterials = TemplateCache.GetAll<IMaterial>(),
                 ValidInanimateTemplates = TemplateCache.GetAll<IInanimateTemplate>()
             };
 
-            var obj = TemplateCache.Get<IFlora>(id);
+            IFlora obj = TemplateCache.Get<IFlora>(id);
 
             if (obj == null)
             {
@@ -171,9 +171,9 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(long id, AddEditFloraViewModel vModel)
         {
             string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = TemplateCache.Get<IFlora>(id);
+            IFlora obj = TemplateCache.Get<IFlora>(id);
             if (obj == null)
             {
                 message = "That does not exist";

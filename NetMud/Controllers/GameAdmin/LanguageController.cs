@@ -40,7 +40,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageLanguageDataViewModel(ConfigDataCache.GetAll<ILanguage>())
+            ManageLanguageDataViewModel vModel = new ManageLanguageDataViewModel(ConfigDataCache.GetAll<ILanguage>())
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -61,9 +61,9 @@ namespace NetMud.Controllers.GameAdmin
 
             if (!string.IsNullOrWhiteSpace(authorizeRemove) && removeId.ToString().Equals(authorizeRemove))
             {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = ConfigDataCache.Get<ILanguage>(removeId);
+                ILanguage obj = ConfigDataCache.Get<ILanguage>(removeId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -77,9 +77,9 @@ namespace NetMud.Controllers.GameAdmin
             }
             else if (!string.IsNullOrWhiteSpace(authorizeUnapprove) && unapproveId.ToString().Equals(authorizeUnapprove))
             {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = ConfigDataCache.Get<ILanguage>(unapproveId);
+                ILanguage obj = ConfigDataCache.Get<ILanguage>(unapproveId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -100,7 +100,7 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add()
         {
-            var vModel = new AddEditLanguageViewModel
+            AddEditLanguageViewModel vModel = new AddEditLanguageViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
                 DataObject = new Language()
@@ -114,9 +114,9 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Add(AddEditLanguageViewModel vModel)
         {
             string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var newObj = vModel.DataObject;
+            ILanguage newObj = vModel.DataObject;
 
             if (!newObj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                 message = "Error; Creation failed.";
@@ -133,12 +133,12 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(string id)
         {
             string message = string.Empty;
-            var vModel = new AddEditLanguageViewModel
+            AddEditLanguageViewModel vModel = new AddEditLanguageViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
-            var obj = ConfigDataCache.Get<ILanguage>(new ConfigDataCacheKey(typeof(ILanguage), id, ConfigDataType.Language));
+            ILanguage obj = ConfigDataCache.Get<ILanguage>(new ConfigDataCacheKey(typeof(ILanguage), id, ConfigDataType.Language));
 
             if (obj == null)
             {
@@ -156,9 +156,9 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(string id, AddEditLanguageViewModel vModel)
         {
             string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = ConfigDataCache.Get<ILanguage>(new ConfigDataCacheKey(typeof(ILanguage), id, ConfigDataType.Language));
+            ILanguage obj = ConfigDataCache.Get<ILanguage>(new ConfigDataCacheKey(typeof(ILanguage), id, ConfigDataType.Language));
             if (obj == null)
             {
                 message = "That does not exist";

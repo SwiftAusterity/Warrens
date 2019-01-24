@@ -137,11 +137,11 @@ namespace NetMud.Communication.Messaging
             //TODO: origin and destination are areas of effect on their surrounding areas
             if (OriginLocation != null && ToOrigin.Any())
             {
-                var oLoc = (IContains)OriginLocation;
-                var validContents = oLoc.GetContents<IEntity>().Where(dud => !dud.Equals(Actor) && !dud.Equals(Subject) && !dud.Equals(Target));
+                IContains oLoc = (IContains)OriginLocation;
+                IEnumerable<IEntity> validContents = oLoc.GetContents<IEntity>().Where(dud => !dud.Equals(Actor) && !dud.Equals(Subject) && !dud.Equals(Target));
 
                 //Message dudes in the location, including non-person entities since they might have triggers
-                foreach (var dude in validContents)
+                foreach (IEntity dude in validContents)
                 {
                     if (ToOrigin.SelectMany(msg => msg.Override).Any(str => !string.IsNullOrEmpty(str)))
                         dude.WriteTo(TranslateOutput(ToOrigin.SelectMany(msg => msg.Override), entities));
@@ -152,10 +152,10 @@ namespace NetMud.Communication.Messaging
 
             if (DestinationLocation != null && ToDestination.Any())
             {
-                var oLoc = (IContains)DestinationLocation;
+                IContains oLoc = (IContains)DestinationLocation;
 
                 //Message dudes in the location, including non-person entities since they might have triggers
-                foreach (var dude in oLoc.GetContents<IEntity>().Where(dud => !dud.Equals(Actor) && !dud.Equals(Subject) && !dud.Equals(Target)))
+                foreach (IEntity dude in oLoc.GetContents<IEntity>().Where(dud => !dud.Equals(Actor) && !dud.Equals(Subject) && !dud.Equals(Target)))
                 {
                     if (ToDestination.SelectMany(msg => msg.Override).Any(str => !string.IsNullOrEmpty(str)))
                         dude.WriteTo(TranslateOutput(ToDestination.SelectMany(msg => msg.Override), entities));

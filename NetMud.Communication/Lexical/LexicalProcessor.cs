@@ -35,9 +35,9 @@ namespace NetMud.Communication.Lexical
             if (dictata == null || string.IsNullOrWhiteSpace(dictata.Name))
                 return false;
 
-            var cacheKey = new ConfigDataCacheKey(dictata);
+            ConfigDataCacheKey cacheKey = new ConfigDataCacheKey(dictata);
 
-            var maybeDictata = ConfigDataCache.Get<IDictata>(cacheKey);
+            IDictata maybeDictata = ConfigDataCache.Get<IDictata>(cacheKey);
 
             if (maybeDictata != null)
             {
@@ -51,7 +51,7 @@ namespace NetMud.Communication.Lexical
             if (dictata.Language == null)
             {
                 //TODO: WorldConfig so base language can be set
-                var baseLanguage = ConfigDataCache.GetAll<ILanguage>().FirstOrDefault(lang => lang.SuitableForUse);
+                ILanguage baseLanguage = ConfigDataCache.GetAll<ILanguage>().FirstOrDefault(lang => lang.SuitableForUse);
 
                 if (baseLanguage != null)
                     dictata.Language = baseLanguage;
@@ -64,7 +64,7 @@ namespace NetMud.Communication.Lexical
 
         public static string GetPunctuationMark(SentenceType type)
         {
-            var punctuation = string.Empty;
+            string punctuation = string.Empty;
             switch (type)
             {
                 case SentenceType.Exclamation:

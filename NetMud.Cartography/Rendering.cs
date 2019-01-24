@@ -35,11 +35,11 @@ namespace NetMud.Cartography
         /// <returns>a single string that is an ascii map</returns>
         public static Tuple<string, string, string> RenderRadiusMap(ILocaleTemplate locale, int radius, int zIndex, bool forAdmin = true, bool withPathways = true)
         {
-            var centerRoom = locale.CentralRoom(zIndex);
+            IRoomTemplate centerRoom = locale.CentralRoom(zIndex);
 
-            var over = RenderRadiusMap(centerRoom, radius, forAdmin, withPathways, locale, MapRenderMode.Upwards);
-            var here = RenderRadiusMap(centerRoom, radius, forAdmin, withPathways, locale, MapRenderMode.Normal);
-            var under = RenderRadiusMap(centerRoom, radius, forAdmin, withPathways, locale, MapRenderMode.Downwards);
+            string over = RenderRadiusMap(centerRoom, radius, forAdmin, withPathways, locale, MapRenderMode.Upwards);
+            string here = RenderRadiusMap(centerRoom, radius, forAdmin, withPathways, locale, MapRenderMode.Normal);
+            string under = RenderRadiusMap(centerRoom, radius, forAdmin, withPathways, locale, MapRenderMode.Downwards);
 
             return new Tuple<string, string, string>(over, here, under);
         }
@@ -54,7 +54,7 @@ namespace NetMud.Cartography
         /// <returns>a single string that is an ascii map</returns>
         public static string RenderRadiusMap(IRoomTemplate room, int radius, bool forAdmin = true, bool withPathways = true, ILocaleTemplate locale = null, MapRenderMode renderMode = MapRenderMode.Normal)
         {
-            var asciiMap = new StringBuilder();
+            StringBuilder asciiMap = new StringBuilder();
 
             //Why?
             if (room == null)
@@ -67,16 +67,16 @@ namespace NetMud.Cartography
             }
 
             //1. Get world map
-            var ourLocale = room.ParentLocation;
+            ILocaleTemplate ourLocale = room.ParentLocation;
 
             //2. Get slice of room from world map
-            var map = Cartographer.TakeSliceOfMap(new Tuple<int, int>(Math.Max(room.Coordinates.X - radius, 0), room.Coordinates.X + radius)
+            long[,,] map = Cartographer.TakeSliceOfMap(new Tuple<int, int>(Math.Max(room.Coordinates.X - radius, 0), room.Coordinates.X + radius)
                                                 , new Tuple<int, int>(Math.Max(room.Coordinates.Y - radius, 0), room.Coordinates.Y + radius)
                                                 , new Tuple<int, int>(Math.Max(room.Coordinates.Z - 1, 0), room.Coordinates.Z + 1)
                                                 , ourLocale.Interior.CoordinatePlane, true);
 
             //3. Flatten the map
-            var flattenedMap = Cartographer.GetSinglePlane(map, room.Coordinates.Z);
+            long[,] flattenedMap = Cartographer.GetSinglePlane(map, room.Coordinates.Z);
 
             //4. Render slice of room
             return RenderMap(flattenedMap, forAdmin, withPathways, room, renderMode);
@@ -92,17 +92,17 @@ namespace NetMud.Cartography
         /// <returns>the rendered map</returns>
         public static string RenderMap(long[,] map, bool forAdmin, bool withPathways, IRoomTemplate centerRoom, MapRenderMode renderMode = MapRenderMode.Normal)
         {
-            var sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder();
 
             if (!withPathways)
             {
                 int x, y;
                 for (y = map.GetUpperBound(1); y >= 0; y--)
                 {
-                    var rowString = string.Empty;
+                    string rowString = string.Empty;
                     for (x = 0; x < map.GetUpperBound(0); x++)
                     {
-                        var RoomTemplate = TemplateCache.Get<IRoomTemplate>(map[x, y]);
+                        IRoomTemplate RoomTemplate = TemplateCache.Get<IRoomTemplate>(map[x, y]);
 
                         if (RoomTemplate != null)
                             rowString += RenderRoomToAscii(RoomTemplate, RoomTemplate.GetZonePathways().Any(), forAdmin);
@@ -115,14 +115,14 @@ namespace NetMud.Cartography
             }
             else
             {
-                var expandedMap = new string[(map.GetUpperBound(0) + 1) * 3 + 1, (map.GetUpperBound(1) + 1) * 3 + 1];
+                string[,] expandedMap = new string[(map.GetUpperBound(0) + 1) * 3 + 1, (map.GetUpperBound(1) + 1) * 3 + 1];
 
                 int x, y;
                 for (y = map.GetUpperBound(1); y >= 0; y--)
                 {
                     for (x = 0; x <= map.GetUpperBound(0); x++)
                     {
-                        var RoomTemplate = TemplateCache.Get<IRoomTemplate>(map[x, y]);
+                        IRoomTemplate RoomTemplate = TemplateCache.Get<IRoomTemplate>(map[x, y]);
 
                         if (RoomTemplate != null)
                             expandedMap = RenderRoomAndPathwaysForMapNode(x, y, RoomTemplate, centerRoom, expandedMap, forAdmin, renderMode);
@@ -131,7 +131,7 @@ namespace NetMud.Cartography
 
                 for (y = expandedMap.GetUpperBound(1); y >= 0; y--)
                 {
-                    var rowString = string.Empty;
+                    string rowString = string.Empty;
                     for (x = 0; x <= expandedMap.GetUpperBound(0); x++)
                         rowString += expandedMap[x, y];
 
@@ -144,21 +144,21 @@ namespace NetMud.Cartography
 
         private static string[,] RenderRoomAndPathwaysForMapNode(int x, int y, IRoomTemplate RoomTemplate, IRoomTemplate centerRoom, string[,] expandedMap, bool forAdmin, MapRenderMode renderMode)
         {
-            var pathways = RoomTemplate.GetPathways();
-            var expandedRoomX = x * 3 + 1;
-            var expandedRoomY = y * 3 + 1;
+            System.Collections.Generic.IEnumerable<IPathwayTemplate> pathways = RoomTemplate.GetPathways();
+            int expandedRoomX = x * 3 + 1;
+            int expandedRoomY = y * 3 + 1;
 
             switch (renderMode)
             {
                 case MapRenderMode.Normal:
-                    var ePath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.East);
-                    var nPath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.North);
-                    var nePath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.NorthEast);
-                    var nwPath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.NorthWest);
-                    var sPath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.South);
-                    var sePath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.SouthEast);
-                    var swPath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.SouthWest);
-                    var wPath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.West);
+                    IPathwayTemplate ePath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.East);
+                    IPathwayTemplate nPath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.North);
+                    IPathwayTemplate nePath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.NorthEast);
+                    IPathwayTemplate nwPath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.NorthWest);
+                    IPathwayTemplate sPath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.South);
+                    IPathwayTemplate sePath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.SouthEast);
+                    IPathwayTemplate swPath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.SouthWest);
+                    IPathwayTemplate wPath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.West);
 
                     //The room
                     expandedMap[expandedRoomX, expandedRoomY] = RenderRoomToAscii(RoomTemplate, RoomTemplate.GetZonePathways().Any(), forAdmin);
@@ -189,15 +189,15 @@ namespace NetMud.Cartography
 
                     break;
                 case MapRenderMode.Upwards:
-                    var upPath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.Up);
-                    var upePath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.UpEast);
-                    var upnPath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.UpNorth);
-                    var upnePath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.UpNorthEast);
-                    var upnwPath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.UpNorthWest);
-                    var upsPath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.UpSouth);
-                    var upsePath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.UpSouthEast);
-                    var upswPath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.UpSouthWest);
-                    var upwPath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.UpWest);
+                    IPathwayTemplate upPath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.Up);
+                    IPathwayTemplate upePath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.UpEast);
+                    IPathwayTemplate upnPath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.UpNorth);
+                    IPathwayTemplate upnePath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.UpNorthEast);
+                    IPathwayTemplate upnwPath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.UpNorthWest);
+                    IPathwayTemplate upsPath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.UpSouth);
+                    IPathwayTemplate upsePath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.UpSouthEast);
+                    IPathwayTemplate upswPath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.UpSouthWest);
+                    IPathwayTemplate upwPath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.UpWest);
 
                     //The room
                     expandedMap[expandedRoomX, expandedRoomY] = RenderPathwayToAsciiForModals(upPath, RoomTemplate.Id, MovementDirectionType.Up
@@ -229,15 +229,15 @@ namespace NetMud.Cartography
 
                     break;
                 case MapRenderMode.Downwards:
-                    var downPath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.Down);
-                    var downePath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.DownEast);
-                    var downnPath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.DownNorth);
-                    var downnePath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.DownNorthEast);
-                    var downnwPath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.DownNorthWest);
-                    var downsPath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.DownSouth);
-                    var downsePath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.DownSouthEast);
-                    var downswPath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.DownSouthWest);
-                    var downwPath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.DownWest);
+                    IPathwayTemplate downPath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.Down);
+                    IPathwayTemplate downePath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.DownEast);
+                    IPathwayTemplate downnPath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.DownNorth);
+                    IPathwayTemplate downnePath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.DownNorthEast);
+                    IPathwayTemplate downnwPath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.DownNorthWest);
+                    IPathwayTemplate downsPath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.DownSouth);
+                    IPathwayTemplate downsePath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.DownSouthEast);
+                    IPathwayTemplate downswPath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.DownSouthWest);
+                    IPathwayTemplate downwPath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.DownWest);
 
                     //The room
                     expandedMap[expandedRoomX, expandedRoomY] = RenderPathwayToAsciiForModals(downPath, RoomTemplate.Id, MovementDirectionType.Down
@@ -275,14 +275,14 @@ namespace NetMud.Cartography
 
         private static string RenderPathwayToAsciiForModals(IPathwayTemplate path, long originId, MovementDirectionType directionType, IRoomTemplate destination, bool forAdmin = false)
         {
-            var returnValue = string.Empty;
-            var asciiCharacter = Utilities.TranslateDirectionToAsciiCharacter(directionType);
+            string returnValue = string.Empty;
+            string asciiCharacter = Utilities.TranslateDirectionToAsciiCharacter(directionType);
 
             if (path != null)
                 destination = (IRoomTemplate)path.Destination;
 
             long destinationId = -1;
-            var destinationName = string.Empty;
+            string destinationName = string.Empty;
             if (destination != null)
             {
                 destinationName = destination.Name;
@@ -298,7 +298,7 @@ namespace NetMud.Cartography
                 }
                 else
                 {
-                    var roomString = string.Format("Add - {0} path and room", directionType.ToString());
+                    string roomString = string.Format("Add - {0} path and room", directionType.ToString());
 
                     if (!string.IsNullOrWhiteSpace(destinationName))
                         roomString = string.Format("Add {0} path to {1}", directionType.ToString(), destinationName);
@@ -315,7 +315,7 @@ namespace NetMud.Cartography
 
         private static string RenderRoomToAscii(IRoomTemplate destination, bool hasZoneExits, bool forAdmin = false)
         {
-            var character = hasZoneExits ? "@" : "O";
+            string character = hasZoneExits ? "@" : "O";
 
             if (forAdmin)
                 return string.Format("<a href='#' class='editData AdminEditRoom' roomId='{0}' title='Edit - {2}'>{1}</a>", destination.Id, character, destination.Name);

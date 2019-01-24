@@ -37,7 +37,7 @@ namespace NetMud.Controllers
         [HttpGet]
         public string GetEntityModelView(long modelId)
         {
-            var model = TemplateCache.Get<IDimensionalModelData>(modelId);
+            IDimensionalModelData model = TemplateCache.Get<IDimensionalModelData>(modelId);
 
             if (model == null)
                 return string.Empty;
@@ -48,7 +48,7 @@ namespace NetMud.Controllers
         [HttpGet]
         public string[] GetDimensionalData(long id)
         {
-            var model = TemplateCache.Get<IDimensionalModelData>(id);
+            IDimensionalModelData model = TemplateCache.Get<IDimensionalModelData>(id);
 
             if (model == null)
                 return new string[0];
@@ -60,7 +60,7 @@ namespace NetMud.Controllers
         [Route("api/AdminDataApi/RenderRoomForEditWithRadius/{id}/{radius}", Name = "RenderRoomForEditWithRadius")]
         public string RenderRoomForEditWithRadius(long id, int radius)
         {
-            var centerRoom = TemplateCache.Get<IRoomTemplate>(id);
+            IRoomTemplate centerRoom = TemplateCache.Get<IRoomTemplate>(id);
 
             if (centerRoom == null || radius < 0)
                 return "Invalid inputs.";
@@ -72,12 +72,12 @@ namespace NetMud.Controllers
         [Route("api/AdminDataApi/RenderLocaleMapForEdit/{id}/{zIndex}", Name = "RenderLocaleMapForEdit")]
         public string[] RenderLocaleMapForEdit(long id, int zIndex)
         {
-            var locale = TemplateCache.Get<ILocaleTemplate>(id);
+            ILocaleTemplate locale = TemplateCache.Get<ILocaleTemplate>(id);
 
             if (locale == null)
                 return new string[] { "Invalid inputs." };
 
-            var maps = Rendering.RenderRadiusMap(locale, 10, zIndex);
+            System.Tuple<string, string, string> maps = Rendering.RenderRadiusMap(locale, 10, zIndex);
 
             return new string[] { maps.Item1, maps.Item2, maps.Item3 };
         }
@@ -87,7 +87,7 @@ namespace NetMud.Controllers
         [Route("api/AdminDataApi/GetDictata/{wordType}", Name = "AdminAPI_GetDictata")]
         public JsonResult<string[]> GetDictata(LexicalType wordType, string term)
         {
-            var words = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.WordType == wordType && dict.Name.Contains(term));
+            System.Collections.Generic.IEnumerable<IDictata> words = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.WordType == wordType && dict.Name.Contains(term));
 
             return Json(words.Select(word => word.Name).ToArray());
         }

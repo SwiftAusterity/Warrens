@@ -40,7 +40,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageDimensionalModelDataViewModel(TemplateCache.GetAll<DimensionalModelData>())
+            ManageDimensionalModelDataViewModel vModel = new ManageDimensionalModelDataViewModel(TemplateCache.GetAll<DimensionalModelData>())
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -61,9 +61,9 @@ namespace NetMud.Controllers.GameAdmin
 
             if (!string.IsNullOrWhiteSpace(authorizeRemove) && removeId.ToString().Equals(authorizeRemove))
             {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = TemplateCache.Get<IDimensionalModelData>(removeId);
+                IDimensionalModelData obj = TemplateCache.Get<IDimensionalModelData>(removeId);
 
                 if (obj == null)
                 {
@@ -81,9 +81,9 @@ namespace NetMud.Controllers.GameAdmin
             }
             else if (!string.IsNullOrWhiteSpace(authorizeUnapprove) && unapproveId.ToString().Equals(authorizeUnapprove))
             {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = TemplateCache.Get<IDimensionalModelData>(unapproveId);
+                IDimensionalModelData obj = TemplateCache.Get<IDimensionalModelData>(unapproveId);
 
                 if (obj == null)
                 {
@@ -110,7 +110,7 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add()
         {
-            var vModel = new AddEditDimensionalModelDataViewModel
+            AddEditDimensionalModelDataViewModel vModel = new AddEditDimensionalModelDataViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
                 DataObject = new DimensionalModelData()
@@ -124,15 +124,15 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Add(AddEditDimensionalModelDataViewModel vModel, HttpPostedFileBase modelFile)
         {
             string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             try
             {
                 IDimensionalModelData newModel = vModel.DataObject;
 
-                foreach (var plane in newModel.ModelPlanes)
+                foreach (IDimensionalModelPlane plane in newModel.ModelPlanes)
                 {
-                    foreach (var node in plane.ModelNodes)
+                    foreach (IDimensionalModelNode node in plane.ModelNodes)
                     {
                         node.YAxis = plane.YAxis;
                     }
@@ -169,12 +169,12 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(long id)
         {
             string message = string.Empty;
-            var vModel = new AddEditDimensionalModelDataViewModel
+            AddEditDimensionalModelDataViewModel vModel = new AddEditDimensionalModelDataViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
-            var obj = TemplateCache.Get<IDimensionalModelData>(id);
+            IDimensionalModelData obj = TemplateCache.Get<IDimensionalModelData>(id);
 
             if (obj == null)
             {
@@ -192,9 +192,9 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(long id, AddEditDimensionalModelDataViewModel vModel)
         {
             string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = TemplateCache.Get<IDimensionalModelData>(id);
+            IDimensionalModelData obj = TemplateCache.Get<IDimensionalModelData>(id);
             if (obj == null)
             {
                 message = "That does not exist";
@@ -203,9 +203,9 @@ namespace NetMud.Controllers.GameAdmin
 
             try
             {
-                foreach (var plane in vModel.DataObject.ModelPlanes)
+                foreach (IDimensionalModelPlane plane in vModel.DataObject.ModelPlanes)
                 {
-                    foreach (var node in plane.ModelNodes)
+                    foreach (IDimensionalModelNode node in plane.ModelNodes)
                     {
                         node.YAxis = plane.YAxis;
                     }

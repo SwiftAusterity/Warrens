@@ -18,7 +18,7 @@ namespace NetMud.Models
                 //Convert the interface to the concrete class by finding a concrete class that impls this interface
                 if (!modelType.IsGenericType)
                 {
-                    var type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(modelType));
+                    Type type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(modelType));
 
                     if(type == null)
                     {
@@ -30,7 +30,7 @@ namespace NetMud.Models
                         throw new Exception("Invalid Binding Interface");
                     }
 
-                    var concreteInstance = Activator.CreateInstance(type);
+                    object concreteInstance = Activator.CreateInstance(type);
 
                     bindingContext.ModelMetadata = ModelMetadataProviders.Current.GetMetadataForType(() => concreteInstance, type);
 
@@ -39,16 +39,16 @@ namespace NetMud.Models
                 else
                 {
                     //Our interface involves generics so go find the concrete class by type name match so we can build it out using the correct type for the generic parameter
-                    var genericName = modelType.Name.Substring(1);
-                    var type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.IsGenericType && x.Name.Equals(genericName));
+                    string genericName = modelType.Name.Substring(1);
+                    Type type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.IsGenericType && x.Name.Equals(genericName));
 
                     if (type == null)
                     {
                         throw new Exception("Invalid Binding Interface");
                     }
 
-                    var genericType = type.MakeGenericType(modelType.GenericTypeArguments);
-                    var concreteInstance = Activator.CreateInstance(genericType);
+                    Type genericType = type.MakeGenericType(modelType.GenericTypeArguments);
+                    object concreteInstance = Activator.CreateInstance(genericType);
 
                     bindingContext.ModelMetadata = ModelMetadataProviders.Current.GetMetadataForType(() => concreteInstance, genericType);
 
@@ -63,26 +63,26 @@ namespace NetMud.Models
         protected override void BindProperty(ControllerContext controllerContext, ModelBindingContext bindingContext, PropertyDescriptor propertyDescriptor)
         {
             // Check if the property has the PropertyBinderAttribute, meaning it's specifying a different binder to use.
-            var propertyBinderAttribute = TryFindPropertyBinderAttribute(propertyDescriptor);
+            PropertyBinderAttribute propertyBinderAttribute = TryFindPropertyBinderAttribute(propertyDescriptor);
             if (propertyBinderAttribute != null)
             {
-                var keyName = string.Format("{0}.{1}", bindingContext.ModelName, propertyDescriptor.Name);
+                string keyName = string.Format("{0}.{1}", bindingContext.ModelName, propertyDescriptor.Name);
 
                 //Is this a collection of other things?
                 if (propertyDescriptor.PropertyType.IsArray || (!typeof(string).Equals(propertyDescriptor.PropertyType) && typeof(IEnumerable).IsAssignableFrom(propertyDescriptor.PropertyType)))
                 {
-                    var formValueProvider = (FormValueProvider)((ValueProviderCollection)bindingContext.ValueProvider).FirstOrDefault(vp => vp.GetType() == typeof(FormValueProvider));
+                    FormValueProvider formValueProvider = (FormValueProvider)((ValueProviderCollection)bindingContext.ValueProvider).FirstOrDefault(vp => vp.GetType() == typeof(FormValueProvider));
 
                     //We have to get the keys from the valid provider that match the pattern razor is feeding us "type.type.type[#].type[#] potentially"
-                    var keys = formValueProvider.GetKeysFromPrefix(keyName);
+                    System.Collections.Generic.IDictionary<string, string> keys = formValueProvider.GetKeysFromPrefix(keyName);
 
-                    var values = keys.Select(kvp => bindingContext.ValueProvider.GetValue(kvp.Value).AttemptedValue);
+                    System.Collections.Generic.IEnumerable<string> values = keys.Select(kvp => bindingContext.ValueProvider.GetValue(kvp.Value).AttemptedValue);
 
                     propertyDescriptor.SetValue(bindingContext.Model, propertyBinderAttribute.Convert(values));
                 }
                 else 
                 {
-                    var value = bindingContext.ValueProvider.GetValue(keyName);
+                    ValueProviderResult value = bindingContext.ValueProvider.GetValue(keyName);
 
                     if (value != null)
                     {
@@ -91,24 +91,24 @@ namespace NetMud.Models
                     }
                     else if ((propertyDescriptor.PropertyType.IsInterface || propertyDescriptor.PropertyType.IsClass) && !typeof(string).Equals(propertyDescriptor.PropertyType))
                     {
-                        var props = new object[propertyDescriptor.GetChildProperties().Count];
-                        var i = 0;
+                        object[] props = new object[propertyDescriptor.GetChildProperties().Count];
+                        int i = 0;
 
                         //Do we have a class or interface? We want top parse ALL the submitted values in the post and try to fill that one class object up with its props
                         foreach (PropertyDescriptor prop in propertyDescriptor.GetChildProperties())
                         {
-                            var childBinder = TryFindPropertyBinderAttribute(prop);
-                            var childKeyName = string.Format("{0}.{1}", keyName, prop.Name);
+                            PropertyBinderAttribute childBinder = TryFindPropertyBinderAttribute(prop);
+                            string childKeyName = string.Format("{0}.{1}", keyName, prop.Name);
 
                             //Collection shenanigans, we need to create the right collection and put it back on the post value collection so a later call to this can fill it correctly
                             if (prop.PropertyType.IsArray || (!typeof(string).Equals(prop.PropertyType) && typeof(IEnumerable).IsAssignableFrom(prop.PropertyType)))
                             {
-                                var formValueProvider = (FormValueProvider)((ValueProviderCollection)bindingContext.ValueProvider).FirstOrDefault(vp => vp.GetType() == typeof(FormValueProvider));
+                                FormValueProvider formValueProvider = (FormValueProvider)((ValueProviderCollection)bindingContext.ValueProvider).FirstOrDefault(vp => vp.GetType() == typeof(FormValueProvider));
 
-                                var keys = formValueProvider.GetKeysFromPrefix(childKeyName);
+                                System.Collections.Generic.IDictionary<string, string> keys = formValueProvider.GetKeysFromPrefix(childKeyName);
                                 if (keys.Count > 0)
                                 {
-                                    var values = keys.Select(kvp => bindingContext.ValueProvider.GetValue(kvp.Value).AttemptedValue);
+                                    System.Collections.Generic.IEnumerable<string> values = keys.Select(kvp => bindingContext.ValueProvider.GetValue(kvp.Value).AttemptedValue);
 
                                     if (childBinder != null)
                                     {
@@ -123,7 +123,7 @@ namespace NetMud.Models
                             else
                             {
                                 //I guess we didnt have a class so just try and use the modelbinder to convert the value correctly
-                                var childValue = bindingContext.ValueProvider.GetValue(childKeyName);
+                                ValueProviderResult childValue = bindingContext.ValueProvider.GetValue(childKeyName);
 
                                 if (childValue != null)
                                 {
@@ -147,14 +147,14 @@ namespace NetMud.Models
                             //Interface shenanigans again
                             if (propertyDescriptor.PropertyType.IsInterface)
                             {
-                                var type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(propertyDescriptor.PropertyType));
+                                Type type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(propertyDescriptor.PropertyType));
 
                                 if (type == null)
                                 {
                                     throw new Exception("Invalid Binding Interface");
                                 }
 
-                                var concreteInstance = Activator.CreateInstance(type, props);
+                                object concreteInstance = Activator.CreateInstance(type, props);
 
                                 if (concreteInstance != null)
                                 {
@@ -163,7 +163,7 @@ namespace NetMud.Models
                             }
                             else
                             {
-                                var newItem = Activator.CreateInstance(propertyDescriptor.PropertyType, props);
+                                object newItem = Activator.CreateInstance(propertyDescriptor.PropertyType, props);
 
                                 if (newItem != null)
                                 {

@@ -129,7 +129,7 @@ namespace NetMud.Websock
         public bool SendOutput(IEnumerable<string> strings)
         {
             //TODO: Stop hardcoding this but we have literally no sense of injury/self status yet
-            var self = new SelfStatus
+            SelfStatus self = new SelfStatus
             {
                 Body = new BodyStatus
                 {
@@ -161,17 +161,17 @@ namespace NetMud.Websock
                 }
             };
 
-            var currentLocation = _currentPlayer.CurrentLocation;
-            var currentContainer = currentLocation.CurrentContainer;
-            var currentZone = currentLocation.CurrentZone;
-            var currentWorld = currentZone.GetWorld();
-            var currentRoom = currentLocation.CurrentRoom;
+            IGlobalPosition currentLocation = _currentPlayer.CurrentLocation;
+            IContains currentContainer = currentLocation.CurrentContainer;
+            IZone currentZone = currentLocation.CurrentZone;
+            IGaia currentWorld = currentZone.GetWorld();
+            DataStructure.Room.IRoom currentRoom = currentLocation.CurrentRoom;
 
-            var pathways = ((ILocation)currentContainer).GetPathways().Select(data => data.GetDescribableName(_currentPlayer).ToString());
-            var inventory = currentContainer.GetContents<IInanimate>().Select(data => data.GetDescribableName(_currentPlayer).ToString());
-            var populace = currentContainer.GetContents<IMobile>().Where(player => !player.Equals(_currentPlayer)).Select(data => data.GetDescribableName(_currentPlayer).ToString());
+            IEnumerable<string> pathways = ((ILocation)currentContainer).GetPathways().Select(data => data.GetDescribableName(_currentPlayer).ToString());
+            IEnumerable<string> inventory = currentContainer.GetContents<IInanimate>().Select(data => data.GetDescribableName(_currentPlayer).ToString());
+            IEnumerable<string> populace = currentContainer.GetContents<IMobile>().Where(player => !player.Equals(_currentPlayer)).Select(data => data.GetDescribableName(_currentPlayer).ToString());
 
-            var local = new LocalStatus
+            LocalStatus local = new LocalStatus
             {
                 ZoneName = currentZone.TemplateName,
                 LocaleName = currentLocation.CurrentLocale?.TemplateName,
@@ -183,7 +183,7 @@ namespace NetMud.Websock
             };
 
             //The next two are mostly hard coded, TODO, also fix how we get the map as that's an admin thing
-            var extended = new ExtendedStatus
+            ExtendedStatus extended = new ExtendedStatus
             {
                 Horizon = new string[]
                 {
@@ -245,7 +245,7 @@ namespace NetMud.Websock
                 TimeOfDay = timeOfDayString
             };
 
-            var outputFormat = new OutputStatus
+            OutputStatus outputFormat = new OutputStatus
             {
                 Occurrence = EncapsulateOutput(strings),
                 Self = self,
@@ -381,7 +381,7 @@ namespace NetMud.Websock
 
             ApplicationUser authedUser = UserManager.FindById(_userId);
 
-            var currentCharacter = authedUser.GameAccount.Characters.FirstOrDefault(ch => ch.Id.Equals(authedUser.GameAccount.CurrentlySelectedCharacter));
+            IPlayerTemplate currentCharacter = authedUser.GameAccount.Characters.FirstOrDefault(ch => ch.Id.Equals(authedUser.GameAccount.CurrentlySelectedCharacter));
 
             if (currentCharacter == null)
             {

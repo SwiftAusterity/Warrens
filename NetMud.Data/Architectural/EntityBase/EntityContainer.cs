@@ -47,7 +47,7 @@ namespace NetMud.Data.Architectural.EntityBase
                 { genericCollectionLabel, new HashSet<LiveCacheKey>() }
             };
 
-            foreach (var container in namedContainers)
+            foreach (IEntityContainerData<T> container in namedContainers)
                 Birthmarks.Add(container.Name, new HashSet<LiveCacheKey>());
         }
 
@@ -63,7 +63,7 @@ namespace NetMud.Data.Architectural.EntityBase
 
             Birthmarks.Add(genericCollectionLabel, new HashSet<LiveCacheKey>());
 
-            foreach (var container in namedContainers)
+            foreach (EntityContainerData<T> container in namedContainers)
                 Birthmarks.Add(container.Name, new HashSet<LiveCacheKey>());
         }
 
@@ -76,10 +76,10 @@ namespace NetMud.Data.Architectural.EntityBase
         {
             if (Count() > 0)
             {
-                var returnList = new List<Tuple<string, T>>();
+                List<Tuple<string, T>> returnList = new List<Tuple<string, T>>();
 
-                foreach (var hashKeySet in Birthmarks)
-                    foreach (var value in LiveCache.GetMany<T>(hashKeySet.Value))
+                foreach (KeyValuePair<string, HashSet<LiveCacheKey>> hashKeySet in Birthmarks)
+                    foreach (T value in LiveCache.GetMany<T>(hashKeySet.Value))
                         returnList.Add(new Tuple<string, T>(hashKeySet.Key, value));
 
                 return returnList;
@@ -142,7 +142,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <returns>success status</returns>
         public bool Remove(ICacheKey cacheKey)
         {
-            var key = (LiveCacheKey)cacheKey;
+            LiveCacheKey key = (LiveCacheKey)cacheKey;
 
             if (!Birthmarks[genericCollectionLabel].Contains(key))
                 return false;
@@ -185,7 +185,7 @@ namespace NetMud.Data.Architectural.EntityBase
             if (string.IsNullOrWhiteSpace(namedContainer))
                 return Add(entity);
 
-            var key = new LiveCacheKey(entity);
+            LiveCacheKey key = new LiveCacheKey(entity);
 
             if (Birthmarks[namedContainer].Contains(key))
                 return false;
@@ -203,7 +203,7 @@ namespace NetMud.Data.Architectural.EntityBase
             if (string.IsNullOrWhiteSpace(namedContainer))
                 return Contains(entity);
 
-            var key = new LiveCacheKey(entity);
+            LiveCacheKey key = new LiveCacheKey(entity);
 
             return Birthmarks[namedContainer].Contains(key);
         }
@@ -218,7 +218,7 @@ namespace NetMud.Data.Architectural.EntityBase
             if (string.IsNullOrWhiteSpace(namedContainer))
                 return Remove(entity);
 
-            var key = new LiveCacheKey(entity);
+            LiveCacheKey key = new LiveCacheKey(entity);
 
             if (!Birthmarks[namedContainer].Contains(key))
                 return false;
@@ -236,7 +236,7 @@ namespace NetMud.Data.Architectural.EntityBase
             if (string.IsNullOrWhiteSpace(namedContainer))
                 return Remove(cacheKey);
 
-            var key = (LiveCacheKey)cacheKey;
+            LiveCacheKey key = (LiveCacheKey)cacheKey;
 
             if (!Birthmarks[namedContainer].Contains(key))
                 return false;

@@ -131,7 +131,7 @@ namespace NetMud.Data.Inanimate
 
             //Find components
             List<IInanimate> itemsToUse = new List<IInanimate>();
-            foreach (var component in Components)
+            foreach (IInanimateComponent component in Components)
             {
                 int inventoryCount = crafterInventory.Count(item => item.TemplateId.Equals(component.Item.Id));
 
@@ -169,13 +169,13 @@ namespace NetMud.Data.Inanimate
             returnValue.AppendFormattedLine("Crafts: ({0}) {1}", Produces, Name);
 
             returnValue.AppendLine("Components");
-            foreach (var component in Components.Where(item => item.Item != null && item.Amount > 0))
+            foreach (IInanimateComponent component in Components.Where(item => item.Item != null && item.Amount > 0))
             {
                 returnValue.AppendFormattedLine("({0}) {1}{2}", component.Amount, component.Item, component.Amount > 1 ? "s" : "");
             }
 
             returnValue.AppendLine("Required Skills");
-            foreach (var component in SkillRequirements.Where(item => !string.IsNullOrWhiteSpace(item.Quality) && item.Value > 0))
+            foreach (QualityValue component in SkillRequirements.Where(item => !string.IsNullOrWhiteSpace(item.Quality) && item.Value > 0))
             {
                 returnValue.AppendFormattedLine("{0}:{1}", component.Quality, component.Value);
             }

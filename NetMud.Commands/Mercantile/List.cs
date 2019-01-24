@@ -36,7 +36,7 @@ namespace NetMud.Commands.EntityManipulation
                 return;
             }
 
-            var merchant = (INonPlayerCharacter)Target;
+            INonPlayerCharacter merchant = (INonPlayerCharacter)Target;
 
             if (merchant == null || (!merchant.DoIBuyThings() && !merchant.DoISellThings()))
             {

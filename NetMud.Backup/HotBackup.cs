@@ -63,25 +63,25 @@ namespace NetMud.Backup
                 IZone entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IZone;
             }
 
-            foreach (var thing in TemplateCache.GetAll<ILocaleTemplate>())
+            foreach (ILocaleTemplate thing in TemplateCache.GetAll<ILocaleTemplate>())
             {
-                var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as ILocale;
+                ILocale entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as ILocale;
 
                 entityThing.ParentLocation = entityThing.ParentLocation.GetLiveInstance();
                 entityThing.GetFromWorldOrSpawn();
             }
 
-            foreach (var thing in TemplateCache.GetAll<IRoomTemplate>())
+            foreach (IRoomTemplate thing in TemplateCache.GetAll<IRoomTemplate>())
             {
-                var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IRoom;
+                IRoom entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IRoom;
 
                 entityThing.ParentLocation = entityThing.Template<IRoomTemplate>().ParentLocation.GetLiveInstance();
                 entityThing.GetFromWorldOrSpawn();
             }
 
-            foreach (var thing in TemplateCache.GetAll<IPathwayTemplate>())
+            foreach (IPathwayTemplate thing in TemplateCache.GetAll<IPathwayTemplate>())
             {
-                var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IPathway;
+                IPathway entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IPathway;
             }
 
             ParseDimension();
@@ -241,25 +241,25 @@ namespace NetMud.Backup
                     entityThing.GetFromWorldOrSpawn();
                 }
 
-                foreach (var thing in TemplateCache.GetAll<ILocaleTemplate>().Where(dt => !entitiesToLoad.Any(ent => ent.TemplateId.Equals(dt.Id))))
+                foreach (ILocaleTemplate thing in TemplateCache.GetAll<ILocaleTemplate>().Where(dt => !entitiesToLoad.Any(ent => ent.TemplateId.Equals(dt.Id))))
                 {
-                    var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as ILocale;
+                    ILocale entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as ILocale;
 
                     entityThing.ParentLocation = entityThing.ParentLocation.GetLiveInstance();
                     entityThing.UpsertToLiveWorldCache();
                 }
 
-                foreach (var thing in TemplateCache.GetAll<IRoomTemplate>().Where(dt => !entitiesToLoad.Any(ent => ent.TemplateId.Equals(dt.Id))))
+                foreach (IRoomTemplate thing in TemplateCache.GetAll<IRoomTemplate>().Where(dt => !entitiesToLoad.Any(ent => ent.TemplateId.Equals(dt.Id))))
                 {
-                    var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IRoom;
+                    IRoom entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IRoom;
 
                     entityThing.ParentLocation = entityThing.Template<IRoomTemplate>().ParentLocation.GetLiveInstance();
                     entityThing.GetFromWorldOrSpawn();
                 }
 
-                foreach (var thing in TemplateCache.GetAll<IPathwayTemplate>().Where(dt => !entitiesToLoad.Any(ent => ent.TemplateId.Equals(dt.Id))))
+                foreach (IPathwayTemplate thing in TemplateCache.GetAll<IPathwayTemplate>().Where(dt => !entitiesToLoad.Any(ent => ent.TemplateId.Equals(dt.Id))))
                 {
-                    var entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IPathway;
+                    IPathway entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IPathway;
 
                     entityThing.GetFromWorldOrSpawn();
                 }
@@ -270,14 +270,14 @@ namespace NetMud.Backup
                 {
                     foreach (IInanimate obj in entity.Contents.EntitiesContained())
                     {
-                        var fullObj = LiveCache.Get<IInanimate>(new LiveCacheKey(obj));
+                        IInanimate fullObj = LiveCache.Get<IInanimate>(new LiveCacheKey(obj));
                         entity.MoveFrom(obj);
                         entity.MoveInto(fullObj);
                     }
 
                     foreach (INonPlayerCharacter obj in entity.MobilesInside.EntitiesContained())
                     {
-                        var fullObj = LiveCache.Get<INonPlayerCharacter>(new LiveCacheKey(obj));
+                        INonPlayerCharacter fullObj = LiveCache.Get<INonPlayerCharacter>(new LiveCacheKey(obj));
                         entity.MoveFrom(obj);
                         entity.MoveInto(fullObj);
                     }
@@ -287,7 +287,7 @@ namespace NetMud.Backup
                 {
                     foreach (IInanimate obj in entity.Inventory.EntitiesContained())
                     {
-                        var fullObj = LiveCache.Get<IInanimate>(new LiveCacheKey(obj));
+                        IInanimate fullObj = LiveCache.Get<IInanimate>(new LiveCacheKey(obj));
                         entity.MoveFrom(obj);
                         entity.MoveInto(fullObj);
                     }
@@ -295,16 +295,16 @@ namespace NetMud.Backup
 
                 foreach (Inanimate entity in entitiesToLoad.Where(ent => ent.GetType() == typeof(Inanimate)))
                 {
-                    foreach (var obj in entity.Contents.EntitiesContainedByName())
+                    foreach (Tuple<string, IInanimate> obj in entity.Contents.EntitiesContainedByName())
                     {
-                        var fullObj = LiveCache.Get<IInanimate>(new LiveCacheKey(obj.Item2));
+                        IInanimate fullObj = LiveCache.Get<IInanimate>(new LiveCacheKey(obj.Item2));
                         entity.MoveFrom(obj.Item2);
                         entity.MoveInto(fullObj, obj.Item1);
                     }
 
-                    foreach (var obj in entity.Contents.EntitiesContainedByName())
+                    foreach (Tuple<string, IInanimate> obj in entity.Contents.EntitiesContainedByName())
                     {
-                        var fullObj = LiveCache.Get<INonPlayerCharacter>(new LiveCacheKey(obj.Item2));
+                        INonPlayerCharacter fullObj = LiveCache.Get<INonPlayerCharacter>(new LiveCacheKey(obj.Item2));
                         entity.MoveFrom((INonPlayerCharacter)obj.Item2);
                         entity.MoveInto(fullObj, obj.Item1);
                     }
@@ -327,10 +327,10 @@ namespace NetMud.Backup
         private void ParseDimension()
         {
             //var zonePool = new HashSet<IZoneTemplate>(TemplateCache.GetAll<IZoneTemplate>());
-            var localePool = new HashSet<ILocaleTemplate>(TemplateCache.GetAll<ILocaleTemplate>());
+            HashSet<ILocaleTemplate> localePool = new HashSet<ILocaleTemplate>(TemplateCache.GetAll<ILocaleTemplate>());
             //var roomPool = new HashSet<IRoomTemplate>(TemplateCache.GetAll<IRoomTemplate>());
 
-            foreach (var locale in localePool)
+            foreach (ILocaleTemplate locale in localePool)
                 locale.RemapInterior();
 
             //This will cycle through every room building massive (in theory) maps and spitting out the remaining items to make more worlds from.
@@ -364,7 +364,7 @@ namespace NetMud.Backup
             startingRoom.Coordinates = new Coordinate(0, 0, 0);
 
             //We're kind of faking array size for radius, it will be shrunk later
-            var returnMap = Cartographer.GenerateMapFromRoom(startingRoom, remainingRooms.Count() / 2, remainingRooms, true);
+            long[,,] returnMap = Cartographer.GenerateMapFromRoom(startingRoom, remainingRooms.Count() / 2, remainingRooms, true);
 
             startingRoom.ParentLocation.Interior = new Map(returnMap, false);
 

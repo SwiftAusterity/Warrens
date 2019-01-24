@@ -25,12 +25,12 @@ namespace NetMud.Interp
                 //kind of cheaty for now
                 if(commandString.StartsWith("lexicaltest "))
                 {
-                    var lexicalInterp = new LexicalInterpretationEngine();
+                    LexicalInterpretationEngine lexicalInterp = new LexicalInterpretationEngine();
                     return lexicalInterp.Parse(actor, commandString.Replace("lexicaltest ", "")).Select(dict => string.Format("{0} : {1}", dict.Name, dict.WordType));
                 }
                 else if(commandString.StartsWith("lexicalpush "))
                 {
-                    var lexicalInterp = new LexicalInterpretationEngine();
+                    LexicalInterpretationEngine lexicalInterp = new LexicalInterpretationEngine();
                     return lexicalInterp.Parse(actor, commandString.Replace("lexicaltest ", ""), true).Select(dict => string.Format("{0} : {1}", dict.Name, dict.WordType));
                 }
 

@@ -68,7 +68,7 @@ namespace NetMud.Data.Player
         /// <returns>A list of strings</returns>
         public override IDictionary<string, string> SignificantDetails()
         {
-            var returnList = base.SignificantDetails();
+            IDictionary<string, string> returnList = base.SignificantDetails();
 
             returnList.Add("Height", Height.ToString());
             returnList.Add("Width", Width.ToString());

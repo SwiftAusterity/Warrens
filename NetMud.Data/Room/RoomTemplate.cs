@@ -147,7 +147,7 @@ namespace NetMud.Data.Room
         /// <returns>a bunch of text saying how awful your data is</returns>
         public override IList<string> FitnessReport()
         {
-            var dataProblems = base.FitnessReport();
+            IList<string> dataProblems = base.FitnessReport();
 
             if (Coordinates?.X < 0 || Coordinates?.Y < 0 || Coordinates?.Z < 0)
                 dataProblems.Add("Coordinates are invalid.");
@@ -186,7 +186,7 @@ namespace NetMud.Data.Room
         public override IKeyedData Create(IAccount creator, StaffRank rank)
         {
             //approval will be handled inside the base call
-            var obj = base.Create(creator, rank);
+            IKeyedData obj = base.Create(creator, rank);
 
             ParentLocation.RemapInterior();
 
@@ -199,11 +199,11 @@ namespace NetMud.Data.Room
         /// <returns>A list of strings</returns>
         public override IDictionary<string, string> SignificantDetails()
         {
-            var returnList = base.SignificantDetails();
+            IDictionary<string, string> returnList = base.SignificantDetails();
 
             returnList.Add("Medium", Medium.Name);
 
-            foreach (var desc in Descriptives)
+            foreach (ISensoryEvent desc in Descriptives)
                 returnList.Add("Descriptives", string.Format("{0} ({1}): {2}", desc.SensoryType, desc.Strength, desc.Event.ToString()));
 
             return returnList;
@@ -217,13 +217,13 @@ namespace NetMud.Data.Room
         {
             try
             {
-                var dictatas = new List<IDictata>
+                List<IDictata> dictatas = new List<IDictata>
                 {
                     new Dictata(new Lexica(LexicalType.Noun, GrammaticalType.Subject, Name))
                 };
                 dictatas.AddRange(Descriptives.Select(desc => desc.Event.GetDictata()));
 
-                foreach (var dictata in dictatas)
+                foreach (IDictata dictata in dictatas)
                     LexicalProcessor.VerifyDictata(dictata);
 
                 TemplateCache.Add(this);

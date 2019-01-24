@@ -42,7 +42,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageGaiaViewModel(TemplateCache.GetAll<IGaiaTemplate>())
+            ManageGaiaViewModel vModel = new ManageGaiaViewModel(TemplateCache.GetAll<IGaiaTemplate>())
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -63,9 +63,9 @@ namespace NetMud.Controllers.GameAdmin
 
             if (!string.IsNullOrWhiteSpace(authorizeRemove) && removeId.ToString().Equals(authorizeRemove))
             {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = TemplateCache.Get<IGaiaTemplate>(removeId);
+                IGaiaTemplate obj = TemplateCache.Get<IGaiaTemplate>(removeId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -79,9 +79,9 @@ namespace NetMud.Controllers.GameAdmin
             }
             else if (!string.IsNullOrWhiteSpace(authorizeUnapprove) && unapproveId.ToString().Equals(authorizeUnapprove))
             {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = TemplateCache.Get<IGaiaTemplate>(unapproveId);
+                IGaiaTemplate obj = TemplateCache.Get<IGaiaTemplate>(unapproveId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -102,7 +102,7 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add()
         {
-            var vModel = new AddEditGaiaViewModel
+            AddEditGaiaViewModel vModel = new AddEditGaiaViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
                 ValidCelestials = TemplateCache.GetAll<ICelestial>(true),
@@ -117,8 +117,8 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Add(AddEditGaiaViewModel vModel)
         {
             string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
-            var newObj = vModel.DataObject;
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+            IGaiaTemplate newObj = vModel.DataObject;
 
             if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
                 message = "Error; Creation failed.";
@@ -135,13 +135,13 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(long id)
         {
             string message = string.Empty;
-            var vModel = new AddEditGaiaViewModel
+            AddEditGaiaViewModel vModel = new AddEditGaiaViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
                 ValidCelestials = TemplateCache.GetAll<ICelestial>(true)
             };
 
-            var obj = TemplateCache.Get<IGaiaTemplate>(id);
+            IGaiaTemplate obj = TemplateCache.Get<IGaiaTemplate>(id);
 
             if (obj == null)
             {
@@ -159,9 +159,9 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(long id, AddEditGaiaViewModel vModel)
         {
             string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = TemplateCache.Get<IGaiaTemplate>(id);
+            IGaiaTemplate obj = TemplateCache.Get<IGaiaTemplate>(id);
             if (obj == null)
             {
                 message = "That does not exist";

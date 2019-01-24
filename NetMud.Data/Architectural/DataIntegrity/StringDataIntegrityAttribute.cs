@@ -28,7 +28,7 @@ namespace NetMud.Data.Architectural.DataIntegrity
 
             if (val != null && val.GetType() == typeof(MarkdownString))
             {
-                var mdString = Utility.DataUtility.TryConvert<MarkdownString>(val);
+                MarkdownString mdString = Utility.DataUtility.TryConvert<MarkdownString>(val);
 
                 if(!MarkdownString.IsNullOrWhiteSpace(mdString))
                     compareValue = mdString.Value;

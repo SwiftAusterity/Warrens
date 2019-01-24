@@ -46,7 +46,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageNPCDataViewModel(TemplateCache.GetAll<INonPlayerCharacterTemplate>())
+            ManageNPCDataViewModel vModel = new ManageNPCDataViewModel(TemplateCache.GetAll<INonPlayerCharacterTemplate>())
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -67,9 +67,9 @@ namespace NetMud.Controllers.GameAdmin
 
             if (!string.IsNullOrWhiteSpace(authorizeRemove) && removeId.ToString().Equals(authorizeRemove))
             {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = TemplateCache.Get<INonPlayerCharacterTemplate>(removeId);
+                INonPlayerCharacterTemplate obj = TemplateCache.Get<INonPlayerCharacterTemplate>(removeId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -83,9 +83,9 @@ namespace NetMud.Controllers.GameAdmin
             }
             else if (!string.IsNullOrWhiteSpace(authorizeUnapprove) && unapproveId.ToString().Equals(authorizeUnapprove))
             {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = TemplateCache.Get<INonPlayerCharacterTemplate>(unapproveId);
+                INonPlayerCharacterTemplate obj = TemplateCache.Get<INonPlayerCharacterTemplate>(unapproveId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -106,7 +106,7 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add()
         {
-            var vModel = new AddEditNPCDataViewModel
+            AddEditNPCDataViewModel vModel = new AddEditNPCDataViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
                 ValidRaces = TemplateCache.GetAll<IRace>(),
@@ -122,9 +122,9 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Add(AddEditNPCDataViewModel vModel)
         {
             string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var newObj = vModel.DataObject;
+            INonPlayerCharacterTemplate newObj = vModel.DataObject;
 
             if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
                 message = "Error; Creation failed.";
@@ -141,14 +141,14 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(int id)
         {
             string message = string.Empty;
-            var vModel = new AddEditNPCDataViewModel
+            AddEditNPCDataViewModel vModel = new AddEditNPCDataViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
                 ValidRaces = TemplateCache.GetAll<IRace>(),
                 ValidItems = TemplateCache.GetAll<IInanimateTemplate>()
             };
 
-            var obj = TemplateCache.Get<INonPlayerCharacterTemplate>(id);
+            INonPlayerCharacterTemplate obj = TemplateCache.Get<INonPlayerCharacterTemplate>(id);
 
             if (obj == null)
             {
@@ -166,9 +166,9 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(int id, AddEditNPCDataViewModel vModel)
         {
             string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = TemplateCache.Get<INonPlayerCharacterTemplate>(id);
+            INonPlayerCharacterTemplate obj = TemplateCache.Get<INonPlayerCharacterTemplate>(id);
             if (obj == null)
             {
                 message = "That does not exist";
@@ -202,14 +202,14 @@ namespace NetMud.Controllers.GameAdmin
         {
             string message = string.Empty;
 
-            var obj = TemplateCache.Get<INonPlayerCharacterTemplate>(id);
+            INonPlayerCharacterTemplate obj = TemplateCache.Get<INonPlayerCharacterTemplate>(id);
             if (obj == null)
             {
                 message = "That zone does not exist";
                 return RedirectToRoute("ModalErrorOrClose", new { Message = message });
             }
 
-            var vModel = new OccurrenceViewModel
+            OccurrenceViewModel vModel = new OccurrenceViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
                 DataObject = obj
@@ -217,7 +217,7 @@ namespace NetMud.Controllers.GameAdmin
 
             if (descriptiveType > -1)
             {
-                var grammaticalType = (GrammaticalType)descriptiveType;
+                GrammaticalType grammaticalType = (GrammaticalType)descriptiveType;
                 vModel.SensoryEventDataObject = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType
                                                                                         && occurrence.Event.Phrase.Equals(phrase, StringComparison.InvariantCultureIgnoreCase));
             }
@@ -235,24 +235,24 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult AddEditDescriptive(long id, OccurrenceViewModel vModel)
         {
             string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = TemplateCache.Get<INonPlayerCharacterTemplate>(id);
+            INonPlayerCharacterTemplate obj = TemplateCache.Get<INonPlayerCharacterTemplate>(id);
             if (obj == null)
             {
                 message = "That zone does not exist";
                 return RedirectToRoute("ModalErrorOrClose", new { Message = message });
             }
 
-            var grammaticalType = vModel.SensoryEventDataObject.Event.Role;
-            var phraseF = vModel.SensoryEventDataObject.Event.Phrase;
-            var existingOccurrence = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType
+            GrammaticalType grammaticalType = vModel.SensoryEventDataObject.Event.Role;
+            string phraseF = vModel.SensoryEventDataObject.Event.Phrase;
+            ISensoryEvent existingOccurrence = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType
                                                                                 && occurrence.Event.Phrase.Equals(phraseF, StringComparison.InvariantCultureIgnoreCase));
 
             if (existingOccurrence == null)
                 existingOccurrence = new SensoryEvent();
 
-            var existingEvent = existingOccurrence.Event;
+            ILexica existingEvent = existingOccurrence.Event;
 
             if (existingEvent == null)
                 existingEvent = new Lexica();
@@ -285,24 +285,24 @@ namespace NetMud.Controllers.GameAdmin
                 message = "You must check the proper authorize radio button first.";
             else
             {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
-                var values = authorize.Split(new string[] { "|||" }, StringSplitOptions.RemoveEmptyEntries);
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+                string[] values = authorize.Split(new string[] { "|||" }, StringSplitOptions.RemoveEmptyEntries);
 
                 if (values.Count() != 2)
                     message = "You must check the proper authorize radio button first.";
                 else
                 {
-                    var type = short.Parse(values[0]);
-                    var phrase = values[1];
+                    short type = short.Parse(values[0]);
+                    string phrase = values[1];
 
-                    var obj = TemplateCache.Get<INonPlayerCharacterTemplate>(id);
+                    INonPlayerCharacterTemplate obj = TemplateCache.Get<INonPlayerCharacterTemplate>(id);
 
                     if (obj == null)
                         message = "That does not exist";
                     else
                     {
-                        var grammaticalType = (GrammaticalType)type;
-                        var existingOccurrence = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType
+                        GrammaticalType grammaticalType = (GrammaticalType)type;
+                        ISensoryEvent existingOccurrence = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType
                                                                                             && occurrence.Event.Phrase.Equals(phrase, StringComparison.InvariantCultureIgnoreCase));
 
                         if (existingOccurrence != null)

@@ -126,7 +126,7 @@ namespace NetMud.Data.Gaia
         public void GetFromWorldOrSpawn()
         {
             //Try to see if they are already there
-            var me = LiveCache.Get<IGaia>(TemplateId, typeof(GaiaTemplate));
+            IGaia me = LiveCache.Get<IGaia>(TemplateId, typeof(GaiaTemplate));
 
             //Isn't in the world currently
             if (me == default(IGaia))
@@ -209,7 +209,7 @@ namespace NetMud.Data.Gaia
         public override void SpawnNewInWorld(IGlobalPosition spawnTo)
         {
             //We can't even try this until we know if the data is there
-            var bS = Template<IGaiaTemplate>() ?? throw new InvalidOperationException("Missing backing data store on gaia spawn event.");
+            IGaiaTemplate bS = Template<IGaiaTemplate>() ?? throw new InvalidOperationException("Missing backing data store on gaia spawn event.");
 
             Keywords = bS.Keywords;
 
@@ -217,7 +217,7 @@ namespace NetMud.Data.Gaia
             {
                 List<ICelestialPosition> celestials = new List<ICelestialPosition>();
 
-                foreach (var body in bS.CelestialBodies)
+                foreach (ICelestial body in bS.CelestialBodies)
                     celestials.Add(new CelestialPosition(body, 0));
 
                 CelestialPositions = celestials;
@@ -353,7 +353,7 @@ namespace NetMud.Data.Gaia
 
         private bool AdvanceEconomy()
         {
-            foreach (var trend in Macroeconomy.Trends)
+            foreach (IEconomicTrend trend in Macroeconomy.Trends)
             {
                 if (trend.Trend < 1)
                 {
@@ -367,7 +367,7 @@ namespace NetMud.Data.Gaia
                 }
             }
 
-            foreach (var basis in Macroeconomy.Bases)
+            foreach (IEconomicBasis basis in Macroeconomy.Bases)
             {
                 if (basis.Trend < 1)
                 {
@@ -390,16 +390,16 @@ namespace NetMud.Data.Gaia
         {
             CurrentTimeOfDay.AdvanceByHour();
             BroadcastEvent("Tick.");
-            var chronoSystem = Template<IGaiaTemplate>().ChronologicalSystem;
+            IChronology chronoSystem = Template<IGaiaTemplate>().ChronologicalSystem;
 
             if (CelestialPositions.Any(cp => cp.CelestialObject.OrientationType == CelestialOrientation.SolarBody))
             {
-                var rotationalChange = 360 / chronoSystem.HoursPerDay;
+                int rotationalChange = 360 / chronoSystem.HoursPerDay;
                 PlanetaryRotation += rotationalChange;
 
-                var maxOrbit = chronoSystem.Months.Count() * chronoSystem.DaysPerMonth * chronoSystem.HoursPerDay;
+                int maxOrbit = chronoSystem.Months.Count() * chronoSystem.DaysPerMonth * chronoSystem.HoursPerDay;
 
-                var orbitalChange = 1 / maxOrbit;
+                int orbitalChange = 1 / maxOrbit;
                 OrbitalPosition += orbitalChange;
 
                 if (OrbitalPosition >= maxOrbit)
@@ -415,19 +415,19 @@ namespace NetMud.Data.Gaia
         {
             Random rander = new Random();
             List<MeterologicalFront> newFronts = new List<MeterologicalFront>();
-            foreach (var front in MeterologicalFronts)
+            foreach (MeterologicalFront front in MeterologicalFronts)
             {
                 //TODO: Fix my bullshit math and switch weather event cloud types as they shift and fix altitude
-                var frontFront = front.Event;
-                var originalPressure = frontFront.Pressure;
+                IPressureSystem frontFront = front.Event;
+                float originalPressure = frontFront.Pressure;
 
                 //Calculate strength and pressure changes
-                var myZones = LiveCache.GetAll<IZone>().Where(z => z.IsOutside() && z.Template<IZoneTemplate>().Hemisphere == frontFront.Direction);
+                IEnumerable<IZone> myZones = LiveCache.GetAll<IZone>().Where(z => z.IsOutside() && z.Template<IZoneTemplate>().Hemisphere == frontFront.Direction);
 
                 if (myZones.Count() > 0)
                 {
-                    var zoneInfluenceUp = myZones.Average(z => z.EffectiveHumidity());
-                    var zoneInfluenceDown = myZones.Average(z => z.EffectiveTemperature());
+                    double zoneInfluenceUp = myZones.Average(z => z.EffectiveHumidity());
+                    double zoneInfluenceDown = myZones.Average(z => z.EffectiveTemperature());
 
                     frontFront.Pressure += DataUtility.TryConvert<float>(zoneInfluenceUp - (zoneInfluenceDown * 45));
 
@@ -435,12 +435,12 @@ namespace NetMud.Data.Gaia
                     frontFront.Strength = Math.Max(1, Math.Min(100, frontFront.Strength + frontVariance));
 
                     //Alter zones
-                    foreach (var zone in myZones)
+                    foreach (IZone zone in myZones)
                     {
-                        var zoneVariance = zone.WeatherEvents.Sum(wEvent => (wEvent.Strength + wEvent.Drain) / (wEvent.Altitude / 10000));
+                        float zoneVariance = zone.WeatherEvents.Sum(wEvent => (wEvent.Strength + wEvent.Drain) / (wEvent.Altitude / 10000));
 
                         List<IWeatherEvent> zoneEventList = new List<IWeatherEvent>();
-                        foreach (var cloud in zone.WeatherEvents)
+                        foreach (IWeatherEvent cloud in zone.WeatherEvents)
                         {
                             cloud.Drain += zoneVariance;
                             cloud.Coverage += cloud.Drain;
@@ -475,7 +475,7 @@ namespace NetMud.Data.Gaia
                 }
 
                 //Move it
-                var newPosition = front.Position + frontFront.Speed;
+                float newPosition = front.Position + frontFront.Speed;
 
                 //TODO: Not hardcode this, but this is HMR not a normal mud
                 int hemisphericLength = 3185495;
@@ -522,9 +522,9 @@ namespace NetMud.Data.Gaia
                     continue;
                 }
 
-                var newPosition = celestial.Position + celestial.CelestialObject.Velocity;
+                float newPosition = celestial.Position + celestial.CelestialObject.Velocity;
 
-                var orbitalRadius = (celestial.CelestialObject.Apogee + celestial.CelestialObject.Perigree) / 2;
+                int orbitalRadius = (celestial.CelestialObject.Apogee + celestial.CelestialObject.Perigree) / 2;
                 float fullOrbitDistance = (float)Math.PI * (float)Math.Pow(orbitalRadius, 2);
 
                 //There are 

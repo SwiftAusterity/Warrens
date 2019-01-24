@@ -118,8 +118,8 @@ namespace NetMud.Controllers
         {
             ViewBag.StatusMessage = message;
 
-            var userId = User.Identity.GetUserId();
-            var model = new ManageCharactersViewModel
+            string userId = User.Identity.GetUserId();
+            ManageCharactersViewModel model = new ManageCharactersViewModel
             {
                 authedUser = UserManager.FindById(userId),
                 NewCharacter = new PlayerTemplate()
@@ -135,13 +135,13 @@ namespace NetMud.Controllers
         public ActionResult AddCharacter(ManageCharactersViewModel vModel)
         {
             string message = string.Empty;
-            var userId = User.Identity.GetUserId();
-            var model = new ManageCharactersViewModel
+            string userId = User.Identity.GetUserId();
+            ManageCharactersViewModel model = new ManageCharactersViewModel
             {
                 authedUser = UserManager.FindById(userId)
             };
 
-            var newChar = new PlayerTemplate
+            PlayerTemplate newChar = new PlayerTemplate
             {
                 Name = vModel.NewCharacter.Name,
                 SurName = vModel.NewCharacter.SurName,
@@ -163,11 +163,11 @@ namespace NetMud.Controllers
         public ActionResult EditCharacter(long id)
         {
             string message = string.Empty;
-            var userId = User.Identity.GetUserId();
-            var user = UserManager.FindById(userId);
+            string userId = User.Identity.GetUserId();
+            ApplicationUser user = UserManager.FindById(userId);
 
-            var obj = PlayerDataCache.Get(new PlayerDataCacheKey(typeof(IPlayerTemplate), user.GlobalIdentityHandle, id));
-            var model = new AddEditCharacterViewModel
+            IPlayerTemplate obj = PlayerDataCache.Get(new PlayerDataCacheKey(typeof(IPlayerTemplate), user.GlobalIdentityHandle, id));
+            AddEditCharacterViewModel model = new AddEditCharacterViewModel
             {
                 authedUser  = user,
                 DataObject = obj
@@ -181,9 +181,9 @@ namespace NetMud.Controllers
         public ActionResult EditCharacter(long id, AddEditCharacterViewModel vModel)
         {
             string message = string.Empty;
-            var userId = User.Identity.GetUserId();
-            var authedUser = UserManager.FindById(userId);
-            var obj = PlayerDataCache.Get(new PlayerDataCacheKey(typeof(IPlayerTemplate), authedUser.GlobalIdentityHandle, id));
+            string userId = User.Identity.GetUserId();
+            ApplicationUser authedUser = UserManager.FindById(userId);
+            IPlayerTemplate obj = PlayerDataCache.Get(new PlayerDataCacheKey(typeof(IPlayerTemplate), authedUser.GlobalIdentityHandle, id));
 
             obj.Name = vModel.DataObject.Name;
             obj.SurName = vModel.DataObject.SurName;
@@ -219,13 +219,13 @@ namespace NetMud.Controllers
             else
             {
 
-                var userId = User.Identity.GetUserId();
-                var model = new ManageCharactersViewModel
+                string userId = User.Identity.GetUserId();
+                ManageCharactersViewModel model = new ManageCharactersViewModel
                 {
                     authedUser = UserManager.FindById(userId)
                 };
 
-                var character = model.authedUser.GameAccount.Characters.FirstOrDefault(ch => ch.Id.Equals(ID));
+                IPlayerTemplate character = model.authedUser.GameAccount.Characters.FirstOrDefault(ch => ch.Id.Equals(ID));
 
                 if (character == null)
                     message = "That character does not exist";
@@ -269,7 +269,7 @@ namespace NetMud.Controllers
 
             if (!string.IsNullOrWhiteSpace(id))
             {
-                var message = ConfigDataCache.Get<IPlayerMessage>(id);
+                IPlayerMessage message = ConfigDataCache.Get<IPlayerMessage>(id);
 
                 if (message != null)
                 {
@@ -315,7 +315,7 @@ namespace NetMud.Controllers
                                 RecipientAccount = recipient
                             };
 
-                            var recipientCharacter = TemplateCache.GetByName<IPlayerTemplate>(vModel.Recipient);
+                            IPlayerTemplate recipientCharacter = TemplateCache.GetByName<IPlayerTemplate>(vModel.Recipient);
 
                             if (recipientCharacter != null)
                                 newMessage.Recipient = recipientCharacter;
@@ -353,7 +353,7 @@ namespace NetMud.Controllers
             {
                 if (!string.IsNullOrWhiteSpace(id))
                 {
-                    var notification = ConfigDataCache.Get<IPlayerMessage>(id);
+                    IPlayerMessage notification = ConfigDataCache.Get<IPlayerMessage>(id);
 
                     if (notification != null)
                     {
@@ -437,7 +437,7 @@ namespace NetMud.Controllers
 
                 foreach (string notification in Notifications.Split(new string[] { "||" }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    var anShort = (AcquaintenceNotifications)Enum.Parse(typeof(AcquaintenceNotifications), notification);
+                    AcquaintenceNotifications anShort = (AcquaintenceNotifications)Enum.Parse(typeof(AcquaintenceNotifications), notification);
 
                     notificationsList.Add(anShort);
                 }
@@ -506,9 +506,9 @@ namespace NetMud.Controllers
         #region UIModules
         public ActionResult UIModules(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var user = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser user = UserManager.FindById(User.Identity.GetUserId());
 
-            var vModel = new ManageUIModulesViewModel(TemplateCache.GetAll<IUIModule>().Where(uimod => uimod.CreatorHandle.Equals(user.GameAccount.GlobalIdentityHandle)))
+            ManageUIModulesViewModel vModel = new ManageUIModulesViewModel(TemplateCache.GetAll<IUIModule>().Where(uimod => uimod.CreatorHandle.Equals(user.GameAccount.GlobalIdentityHandle)))
             {
                 authedUser = user,
                 CurrentPageNumber = CurrentPageNumber,
@@ -529,9 +529,9 @@ namespace NetMud.Controllers
                 message = "You must check the proper authorize radio button first.";
             else
             {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = TemplateCache.Get<IUIModule>(ID);
+                IUIModule obj = TemplateCache.Get<IUIModule>(ID);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -550,7 +550,7 @@ namespace NetMud.Controllers
         [HttpGet]
         public ActionResult AddUIModule()
         {
-            var vModel = new AddEditUIModuleViewModel
+            AddEditUIModuleViewModel vModel = new AddEditUIModuleViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId())
             };
@@ -563,9 +563,9 @@ namespace NetMud.Controllers
         public ActionResult AddUIModule(AddEditUIModuleViewModel vModel)
         {
             string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var newObj = new UIModule
+            UIModule newObj = new UIModule
             {
                 Name = vModel.Name,
                 BodyHtml = vModel.BodyHtml,
@@ -589,12 +589,12 @@ namespace NetMud.Controllers
         public ActionResult EditUIModule(long id)
         {
             string message = string.Empty;
-            var vModel = new AddEditUIModuleViewModel
+            AddEditUIModuleViewModel vModel = new AddEditUIModuleViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
-            var obj = TemplateCache.Get<IUIModule>(id);
+            IUIModule obj = TemplateCache.Get<IUIModule>(id);
 
             if (obj == null)
             {
@@ -617,9 +617,9 @@ namespace NetMud.Controllers
         public ActionResult EditUIModule(long id, AddEditUIModuleViewModel vModel)
         {
             string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = TemplateCache.Get<IUIModule>(id);
+            IUIModule obj = TemplateCache.Get<IUIModule>(id);
             if (obj == null)
             {
                 message = "That does not exist";

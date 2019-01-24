@@ -68,7 +68,7 @@ namespace NetMud.Data.Gaia
             if (BaseChronology?.Months == null)
                 return "Month";
 
-            var monthName = BaseChronology.Months.FirstOrDefault();
+            string monthName = BaseChronology.Months.FirstOrDefault();
 
             if (Month <= BaseChronology.Months.Count())
                 monthName = BaseChronology.Months.ElementAt(Month);

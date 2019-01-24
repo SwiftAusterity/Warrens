@@ -186,7 +186,7 @@ namespace NetMud.Data.Room
         public void GetFromWorldOrSpawn()
         {
             //Try to see if they are already there
-            var me = LiveCache.Get<Pathway>(TemplateId);
+            Pathway me = LiveCache.Get<Pathway>(TemplateId);
 
             //Isn't in the world currently
             if (me == default(Pathway))
@@ -221,7 +221,7 @@ namespace NetMud.Data.Room
         public override void SpawnNewInWorld(IGlobalPosition position)
         {
             //We can't even try this until we know if the data is there
-            var bS = Template<IPathwayTemplate>() ?? throw new InvalidOperationException("Missing backing data store on pathway spawn event.");
+            IPathwayTemplate bS = Template<IPathwayTemplate>() ?? throw new InvalidOperationException("Missing backing data store on pathway spawn event.");
 
             Keywords = new string[] { bS.Name.ToLower(), MovementDirection.ToString().ToLower() };
 
@@ -257,29 +257,29 @@ namespace NetMud.Data.Room
             if (!IsVisibleTo(viewer))
                 return null;
 
-            var bS = Template<IPathwayTemplate>();
-            var me = GetSelf(MessagingType.Visible);
+            IPathwayTemplate bS = Template<IPathwayTemplate>();
+            ISensoryEvent me = GetSelf(MessagingType.Visible);
 
             if (bS.Descriptives.Any())
             {
-                foreach (var desc in bS.Descriptives)
+                foreach (ISensoryEvent desc in bS.Descriptives)
                     me.Event.TryModify(desc.Event);
             }
             else
             {
-                var verb = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "leads");
+                Lexica verb = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "leads");
 
                 //Fallback to using names
                 if (MovementDirection == MovementDirectionType.None)
                 {
-                    var origin = new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, Origin.TemplateName);
+                    Lexica origin = new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, Origin.TemplateName);
                     origin.TryModify(new Lexica(LexicalType.Noun, GrammaticalType.IndirectObject, Destination.TemplateName));
                     verb.TryModify(origin);
                 }
                 else
                 {
-                    var direction = new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, MovementDirection.ToString());
-                    var origin = new Lexica(LexicalType.Noun, GrammaticalType.IndirectObject, Origin.TemplateName);
+                    Lexica direction = new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, MovementDirection.ToString());
+                    Lexica origin = new Lexica(LexicalType.Noun, GrammaticalType.IndirectObject, Origin.TemplateName);
                     origin.TryModify(new Lexica(LexicalType.Noun, GrammaticalType.IndirectObject, Destination.TemplateName));
                     direction.TryModify(origin);
                 }

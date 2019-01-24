@@ -143,7 +143,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <returns>a bunch of text saying how awful your data is</returns>
         public override IList<string> FitnessReport()
         {
-            var dataProblems = base.FitnessReport();
+            IList<string> dataProblems = base.FitnessReport();
 
             if (SolidPoint >= GasPoint)
                 dataProblems.Add("Solidification point must be lower than gaseous point.");
@@ -164,7 +164,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <returns>A list of strings</returns>
         public override IDictionary<string, string> SignificantDetails()
         {
-            var returnList = base.SignificantDetails();
+            IDictionary<string, string> returnList = base.SignificantDetails();
 
             returnList.Add("Conductive", Conductive.ToString());
             returnList.Add("Magnetic", Magnetic.ToString());
@@ -178,7 +178,7 @@ namespace NetMud.Data.Architectural.EntityBase
             returnList.Add("Gas Point", GasPoint.ToString());
             returnList.Add("Temperature Retention", TemperatureRetention.ToString());
 
-            foreach (var desc in Descriptives)
+            foreach (ISensoryEvent desc in Descriptives)
                 returnList.Add("Descriptives", string.Format("{0} ({1}): {2}", desc.SensoryType, desc.Strength, desc.Event.ToString()));
 
             return returnList;

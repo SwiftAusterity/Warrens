@@ -75,7 +75,7 @@ namespace NetMud.Data.Architectural.EntityBase
                 else
                 {
                     // 0d models don't have real values
-                    var returnValue = new DimensionalModelData
+                    DimensionalModelData returnValue = new DimensionalModelData
                     {
                         ModelType = DimensionalModelType.None
                     };

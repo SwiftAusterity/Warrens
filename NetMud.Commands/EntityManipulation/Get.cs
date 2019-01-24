@@ -31,9 +31,9 @@ namespace NetMud.Commands.EntityManipulation
         /// </summary>
         public override void Execute()
         {
-            var sb = new List<string>();
-            var thing = (IEntity)Subject;
-            var actor = (IContains)Actor;
+            List<string> sb = new List<string>();
+            IEntity thing = (IEntity)Subject;
+            IContains actor = (IContains)Actor;
             IContains place;
 
             string toRoomMessage = "$A$ gets $S$.";
@@ -53,17 +53,17 @@ namespace NetMud.Commands.EntityManipulation
             place.MoveFrom(thing);
             actor.MoveInto(thing);
 
-            var toActor = new Message(MessagingType.Visible, new SensoryEvent() { Strength = 1 })
+            Message toActor = new Message(MessagingType.Visible, new SensoryEvent() { Strength = 1 })
             {
                 Override = sb
             };
 
-            var toOrigin = new Message(MessagingType.Visible, new SensoryEvent() { Strength = 30 })
+            Message toOrigin = new Message(MessagingType.Visible, new SensoryEvent() { Strength = 30 })
             {
                 Override = new string[] { toRoomMessage }
             };
 
-            var messagingObject = new MessageCluster(toActor)
+            MessageCluster messagingObject = new MessageCluster(toActor)
             {
                 ToOrigin = new List<IMessage> { toOrigin }
             };
@@ -77,7 +77,7 @@ namespace NetMud.Commands.EntityManipulation
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            var sb = new List<string>
+            List<string> sb = new List<string>
             {
                 "Valid Syntax: get &lt;object&gt;",
                 "take &lt;object&gt;".PadWithString(14, "&nbsp;", true),

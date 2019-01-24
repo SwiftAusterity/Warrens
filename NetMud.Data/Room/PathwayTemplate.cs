@@ -185,9 +185,9 @@ namespace NetMud.Data.Room
         /// <returns>A list of strings</returns>
         public override IDictionary<string, string> SignificantDetails()
         {
-            var returnList = base.SignificantDetails();
+            IDictionary<string, string> returnList = base.SignificantDetails();
 
-            foreach (var desc in Descriptives)
+            foreach (ISensoryEvent desc in Descriptives)
                 returnList.Add("Descriptives", string.Format("{0} ({1}): {2}", desc.SensoryType, desc.Strength, desc.Event.ToString()));
 
             return returnList;
@@ -201,13 +201,13 @@ namespace NetMud.Data.Room
         {
             try
             {
-                var dictatas = new List<IDictata>
+                List<IDictata> dictatas = new List<IDictata>
                 {
                     new Dictata(new Lexica(LexicalType.Noun, GrammaticalType.Subject, Name))
                 };
                 dictatas.AddRange(Descriptives.Select(desc => desc.Event.GetDictata()));
 
-                foreach (var dictata in dictatas)
+                foreach (IDictata dictata in dictatas)
                     LexicalProcessor.VerifyDictata(dictata);
 
                 TemplateCache.Add(this);

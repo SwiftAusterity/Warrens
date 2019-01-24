@@ -55,7 +55,7 @@ namespace NetMud.Commands.Movement
         /// </summary>
         public override void Execute()
         {
-            var sb = new List<string>();
+            List<string> sb = new List<string>();
             IPathway targetPath = (IPathway)Subject;
 
             Actor.TryMoveTo(targetPath.Destination.CurrentLocation);
@@ -63,7 +63,7 @@ namespace NetMud.Commands.Movement
             targetPath.Enter.ExecuteMessaging(Actor, targetPath, null, targetPath.Origin, targetPath.Destination);
 
             //Render the next room to them
-            var lookCommand = new Look() { Actor = Actor, Subject = null, OriginLocation = Actor.CurrentLocation };
+            Look lookCommand = new Look() { Actor = Actor, Subject = null, OriginLocation = Actor.CurrentLocation };
 
             lookCommand.Execute();
         }

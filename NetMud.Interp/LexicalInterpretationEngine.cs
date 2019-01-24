@@ -28,12 +28,12 @@ namespace NetMud.Interp
         /// <returns>A list of the new contexts generated</returns>
         public IEnumerable<IDictata> Parse(IEntity actor, string action, bool push = false)
         {
-            var returnList = Enumerable.Empty<IDictata>();
-            var sentences = IsolateSentences(action);
+            IEnumerable<IDictata> returnList = Enumerable.Empty<IDictata>();
+            IEnumerable<string> sentences = IsolateSentences(action);
 
-            foreach (var sentence in sentences)
+            foreach (string sentence in sentences)
             {
-                var words = IsolateIndividuals(sentence, actor);
+                IList<Tuple<string, bool>> words = IsolateIndividuals(sentence, actor);
 
                 //can't parse nothing
                 if (words.Count == 0)
@@ -56,15 +56,15 @@ namespace NetMud.Interp
         /// <param name="newContext">The new context</param>
         public IEnumerable<IDictata> Merge(IEnumerable<IDictata> originContext, IEnumerable<IDictata> newContext)
         {
-            var returnContext = new List<IDictata>(originContext);
+            List<IDictata> returnContext = new List<IDictata>(originContext);
 
-            foreach (var item in newContext)
+            foreach (IDictata item in newContext)
             {
                 item.Severity++;
 
                 if (originContext.Any(ctx => ctx.Name.Equals(item.Name)))
                 {
-                    foreach (var currentContext in originContext.Where(ctx => ctx.Name.Equals(item.Name)))
+                    foreach (IDictata currentContext in originContext.Where(ctx => ctx.Name.Equals(item.Name)))
                     {
                         returnContext.Remove(currentContext);
 
@@ -106,17 +106,17 @@ namespace NetMud.Interp
              * kick the red can
              * kick the large red can
              */
-            var returnList = new List<IDictata>();
+            List<IDictata> returnList = new List<IDictata>();
             ILocation currentPlace = actor.CurrentLocation.CurrentRoom;
 
-            var brandedWords = BrandWords(actor, words, currentPlace);
+            Dictionary<string, IDictata> brandedWords = BrandWords(actor, words, currentPlace);
 
             IDictata currentVerb = null;
 
             //No verb?
             if (!brandedWords.Any(ctx => ctx.Value?.WordType == LexicalType.Verb))
             {
-                var verbWord = brandedWords.First(ctx => ctx.Value == null).Key;
+                string verbWord = brandedWords.First(ctx => ctx.Value == null).Key;
 
                 currentVerb = new Dictata() { Name = verbWord, WordType = LexicalType.Verb };
                 brandedWords[verbWord] = currentVerb;
@@ -138,8 +138,8 @@ namespace NetMud.Interp
                 brandedWords[targetWord] = new Dictata() { Name = targetWord, WordType = LexicalType.Noun };
             }
 
-            var descriptors = new List<IDictata>();
-            foreach (var adjective in brandedWords.Where(ctx => ctx.Value == null))
+            List<IDictata> descriptors = new List<IDictata>();
+            foreach (KeyValuePair<string, IDictata> adjective in brandedWords.Where(ctx => ctx.Value == null))
             {
                 descriptors.Add(new Dictata() { Name = adjective.Key, WordType = LexicalType.Adjective });
             }
@@ -150,7 +150,7 @@ namespace NetMud.Interp
 
             if (push)
             {
-                foreach (var item in returnList)
+                foreach (IDictata item in returnList)
                 {
                     LexicalProcessor.VerifyDictata(item);
                 }
@@ -173,13 +173,13 @@ namespace NetMud.Interp
              * what are you doing there
              * I saw a red ball in the living room
              */
-            var returnList = new List<IDictata>();
+            List<IDictata> returnList = new List<IDictata>();
 
-            var currentPlace = actor.CurrentLocation.CurrentRoom;
+            DataStructure.Room.IRoom currentPlace = actor.CurrentLocation.CurrentRoom;
 
-            var brandedWords = BrandWords(actor, words, currentPlace);
+            Dictionary<string, IDictata> brandedWords = BrandWords(actor, words, currentPlace);
 
-            var targetWord = string.Empty;
+            string targetWord = string.Empty;
 
             //No valid nouns to make the target? Pick the last one
             if (!brandedWords.Any(ctx => ctx.Value == null))
@@ -189,8 +189,8 @@ namespace NetMud.Interp
 
             brandedWords.Remove(targetWord);
 
-            var descriptors = new List<IDictata>();
-            foreach (var adjective in brandedWords.Where(ctx => ctx.Value == null || ctx.Value?.WordType == LexicalType.Adjective || ctx.Value?.WordType == LexicalType.Adverb))
+            List<IDictata> descriptors = new List<IDictata>();
+            foreach (KeyValuePair<string, IDictata> adjective in brandedWords.Where(ctx => ctx.Value == null || ctx.Value?.WordType == LexicalType.Adjective || ctx.Value?.WordType == LexicalType.Adverb))
             {
                 if (adjective.Value != null)
                     descriptors.Add(adjective.Value);
@@ -205,10 +205,10 @@ namespace NetMud.Interp
 
         private Dictionary<string, IDictata> BrandWords(IEntity actor, IList<Tuple<string, bool>> words, IContains currentPlace)
         {
-            var brandedWords = new Dictionary<string, IDictata>();
+            Dictionary<string, IDictata> brandedWords = new Dictionary<string, IDictata>();
 
             //Brand all the words with their current meaning. Continues are in there because the listword inflation might cause collision
-            foreach (var word in words.Distinct())
+            foreach (Tuple<string, bool> word in words.Distinct())
             {
                 if (brandedWords.ContainsKey(word.Item1))
                     continue;
@@ -216,10 +216,10 @@ namespace NetMud.Interp
                 //We have a comma/and list
                 if (word.Item2)
                 {
-                    var listWords = word.Item1.Split(new string[] { "and", ",", " " }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] listWords = word.Item1.Split(new string[] { "and", ",", " " }, StringSplitOptions.RemoveEmptyEntries);
 
                     IDictata listMeaning = null;
-                    foreach (var listWord in listWords)
+                    foreach (string listWord in listWords)
                     {
                         if (listMeaning != null)
                             break;
@@ -231,7 +231,7 @@ namespace NetMud.Interp
                             listMeaning = GetExistingMeaning(listWord, actor, currentPlace);
                     }
 
-                    foreach (var listWord in listWords)
+                    foreach (string listWord in listWords)
                     {
                         if (brandedWords.ContainsKey(listWord))
                             continue;
@@ -250,7 +250,7 @@ namespace NetMud.Interp
 
         private IDictata GetExistingMeaning(string word, IEntity actor, IContains currentPlace)
         {
-            var allContext = new List<string>();
+            List<string> allContext = new List<string>();
 
             //Get all local nouns
             allContext.AddRange(currentPlace.GetContents<IInanimate>().SelectMany(thing => thing.Keywords));
@@ -282,46 +282,46 @@ namespace NetMud.Interp
             int iterator = 0;
             baseString = baseString.ToLower();
 
-            var foundStrings = ParseQuotesOut(ref baseString, ref iterator);
+            List<Tuple<string, bool>> foundStrings = ParseQuotesOut(ref baseString, ref iterator);
 
             foundStrings.AddRange(ParseEntitiesOut(actor, ref iterator, ref baseString));
 
             foundStrings.AddRange(ParseCommaListsOut(ref iterator, ref baseString));
 
-            var originalStrings = new List<string>();
+            List<string> originalStrings = new List<string>();
             originalStrings.AddRange(RemoveGrammaticalNiceities(baseString.Split(new char[] { ' ', ',', ':' }, StringSplitOptions.RemoveEmptyEntries)));
 
             //So thanks to the commalist puller potentially adding replacement strings to the found collection we have to do a pass there first
-            var cleanerList = new List<Tuple<int, string>>();
-            foreach (var dirtyString in foundStrings.Where(str => str.Item1.Contains("%%")))
+            List<Tuple<int, string>> cleanerList = new List<Tuple<int, string>>();
+            foreach (Tuple<string, bool> dirtyString in foundStrings.Where(str => str.Item1.Contains("%%")))
             {
-                var dirtyIndex = foundStrings.IndexOf(dirtyString);
-                var cleanString = dirtyString.Item1;
+                int dirtyIndex = foundStrings.IndexOf(dirtyString);
+                string cleanString = dirtyString.Item1;
 
                 while (cleanString.Contains("%%"))
                 {
-                    var i = DataUtility.TryConvert<int>(cleanString.Substring(cleanString.IndexOf("%%") + 2, 1));
+                    int i = DataUtility.TryConvert<int>(cleanString.Substring(cleanString.IndexOf("%%") + 2, 1));
                     cleanString = cleanString.Replace(string.Format("%%{0}%%", i), foundStrings[i].Item1);
                 }
 
                 cleanerList.Add(new Tuple<int, string>(dirtyIndex, cleanString));
             }
 
-            foreach (var cleaner in cleanerList)
+            foreach (Tuple<int, string> cleaner in cleanerList)
             {
-                var dirtyIndex = cleaner.Item1;
-                var cleanString = cleaner.Item2;
+                int dirtyIndex = cleaner.Item1;
+                string cleanString = cleaner.Item2;
 
                 foundStrings[dirtyIndex] = new Tuple<string, bool>(cleanString, foundStrings[dirtyIndex].Item2);
             }
 
             //Either add the modified one or add the normal one
-            var returnStrings = new List<Tuple<string, bool>>();
-            foreach (var returnString in originalStrings)
+            List<Tuple<string, bool>> returnStrings = new List<Tuple<string, bool>>();
+            foreach (string returnString in originalStrings)
             {
                 if (returnString.StartsWith("%%") && returnString.EndsWith("%%"))
                 {
-                    var i = DataUtility.TryConvert<int>(returnString.Substring(2, returnString.Length - 4));
+                    int i = DataUtility.TryConvert<int>(returnString.Substring(2, returnString.Length - 4));
                     returnStrings.Add(foundStrings[i]);
                 }
                 else
@@ -339,11 +339,11 @@ namespace NetMud.Interp
          */
         private IList<Tuple<string, bool>> ParseCommaListsOut(ref int iterator, ref string baseString)
         {
-            var foundStrings = new List<Tuple<string, bool>>();
-            var cccPattern = new Regex(@"([a-zA-Z0-9_.-|(%%\d%%)]+)((,|,\s)[a-zA-Z0-9_.-|(%%\d%%)]+)+", RegexOptions.IgnorePatternWhitespace);
-            var ccaPattern = new Regex(@"([a-zA-Z0-9_.-|(%%\d%%)]+)((,|,\s)[a-zA-Z0-9_.-|(%%\d%%)]+)+(\sand\s)([a-zA-Z0-9_.-|(%%\d%%)]+)", RegexOptions.IgnorePatternWhitespace);
-            var ccacPattern = new Regex(@"([a-zA-Z0-9_.-|(%%\d%%)]+)((,|,\s)[a-zA-Z0-9_.-|(%%\d%%)]+)+(,\sand\s)([a-zA-Z0-9_.-|(%%\d%%)]+)", RegexOptions.IgnorePatternWhitespace);
-            var aaaPattern = new Regex(@"([a-zA-Z0-9_.-|(%%\d%%)]+)((\sand\s)[a-zA-Z0-9_.-|(%%\d%%)]+)+", RegexOptions.IgnorePatternWhitespace);
+            List<Tuple<string, bool>> foundStrings = new List<Tuple<string, bool>>();
+            Regex cccPattern = new Regex(@"([a-zA-Z0-9_.-|(%%\d%%)]+)((,|,\s)[a-zA-Z0-9_.-|(%%\d%%)]+)+", RegexOptions.IgnorePatternWhitespace);
+            Regex ccaPattern = new Regex(@"([a-zA-Z0-9_.-|(%%\d%%)]+)((,|,\s)[a-zA-Z0-9_.-|(%%\d%%)]+)+(\sand\s)([a-zA-Z0-9_.-|(%%\d%%)]+)", RegexOptions.IgnorePatternWhitespace);
+            Regex ccacPattern = new Regex(@"([a-zA-Z0-9_.-|(%%\d%%)]+)((,|,\s)[a-zA-Z0-9_.-|(%%\d%%)]+)+(,\sand\s)([a-zA-Z0-9_.-|(%%\d%%)]+)", RegexOptions.IgnorePatternWhitespace);
+            Regex aaaPattern = new Regex(@"([a-zA-Z0-9_.-|(%%\d%%)]+)((\sand\s)[a-zA-Z0-9_.-|(%%\d%%)]+)+", RegexOptions.IgnorePatternWhitespace);
 
             foundStrings.AddRange(RunListPattern(ccacPattern, ref iterator, ref baseString));
             foundStrings.AddRange(RunListPattern(ccaPattern, ref iterator, ref baseString));
@@ -355,25 +355,25 @@ namespace NetMud.Interp
 
         private IList<Tuple<string, bool>> RunListPattern(Regex capturePattern, ref int iterator, ref string baseString)
         {
-            var foundStrings = new List<Tuple<string, bool>>();
+            List<Tuple<string, bool>> foundStrings = new List<Tuple<string, bool>>();
 
-            var cccMatches = capturePattern.Matches(baseString);
-            for (var i = 0; i < cccMatches.Count; i++)
+            MatchCollection cccMatches = capturePattern.Matches(baseString);
+            for (int i = 0; i < cccMatches.Count; i++)
             {
-                var currentMatch = cccMatches[i];
+                Match currentMatch = cccMatches[i];
 
                 if (currentMatch == null || !currentMatch.Success)
                     continue;
 
-                var cccCaptures = currentMatch.Captures;
-                for (var iC = 0; iC < cccCaptures.Count; iC++)
+                CaptureCollection cccCaptures = currentMatch.Captures;
+                for (int iC = 0; iC < cccCaptures.Count; iC++)
                 {
-                    var currentCapture = cccCaptures[iC];
+                    Capture currentCapture = cccCaptures[iC];
 
                     if (currentCapture == null || currentCapture.Length == 0)
                         continue;
 
-                    var commaList = currentCapture.Value;
+                    string commaList = currentCapture.Value;
 
                     foundStrings.Add(new Tuple<string, bool>(commaList, true));
                     baseString = baseString.Replace(commaList, "%%" + iterator.ToString() + "%%");
@@ -386,8 +386,8 @@ namespace NetMud.Interp
 
         private IList<Tuple<string, bool>> ParseEntitiesOut(IEntity actor, ref int iterator, ref string baseString)
         {
-            var foundStrings = new List<Tuple<string, bool>>();
-            var allContext = new List<string>();
+            List<Tuple<string, bool>> foundStrings = new List<Tuple<string, bool>>();
+            List<string> allContext = new List<string>();
 
             //Get all local nouns
             allContext.AddRange(actor.CurrentLocation.CurrentRoom.GetContents<IInanimate>().SelectMany(thing => thing.Keywords));
@@ -396,7 +396,7 @@ namespace NetMud.Interp
             allContext.AddRange(actor.Keywords);
 
             //Brand all the words with their current meaning
-            foreach (var word in allContext.Distinct())
+            foreach (string word in allContext.Distinct())
             {
                 if (baseString.Contains(word))
                 {
@@ -415,7 +415,7 @@ namespace NetMud.Interp
         /// <returns>the right parameters</returns>
         private List<Tuple<string, bool>> ParseQuotesOut(ref string baseString, ref int iterator)
         {
-            var foundStrings = new List<Tuple<string, bool>>();
+            List<Tuple<string, bool>> foundStrings = new List<Tuple<string, bool>>();
 
             baseString = IsolateStrings(baseString, "\"", foundStrings, ref iterator);
             baseString = IsolateStrings(baseString, "'", foundStrings, ref iterator);
@@ -428,8 +428,8 @@ namespace NetMud.Interp
         {
             while (baseString.Contains("\""))
             {
-                var firstQuoteIndex = baseString.IndexOf('"');
-                var secondQuoteIndex = baseString.IndexOf('"', firstQuoteIndex + 1);
+                int firstQuoteIndex = baseString.IndexOf('"');
+                int secondQuoteIndex = baseString.IndexOf('"', firstQuoteIndex + 1);
 
                 //What? Why would this even happen
                 if (firstQuoteIndex < 0)
@@ -442,7 +442,7 @@ namespace NetMud.Interp
                     break;
                 }
 
-                var foundString = baseString.Substring(firstQuoteIndex + 1, secondQuoteIndex - firstQuoteIndex - 1);
+                string foundString = baseString.Substring(firstQuoteIndex + 1, secondQuoteIndex - firstQuoteIndex - 1);
 
                 foundStrings.Add(new Tuple<string, bool>(foundString, false));
                 baseString = baseString.Replace(string.Format("\"{0}\"", foundString), "%%" + foundStringIterator.ToString() + "%%");
@@ -454,14 +454,14 @@ namespace NetMud.Interp
 
         IEnumerable<string> IsolateSentences(string input)
         {
-            var sentences = new List<string>();
+            List<string> sentences = new List<string>();
 
             //TODO: recognize "and <verb>"
-            var initialSplit = input.Split(new string[] { ";", "?", ". ", "!" }, StringSplitOptions.RemoveEmptyEntries);
+            string[] initialSplit = input.Split(new string[] { ";", "?", ". ", "!" }, StringSplitOptions.RemoveEmptyEntries);
 
-            foreach (var phrase in initialSplit)
+            foreach (string phrase in initialSplit)
             {
-                var potentialWords = phrase.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] potentialWords = phrase.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
                 if (potentialWords.Count() > 1)
                 {
@@ -483,7 +483,7 @@ namespace NetMud.Interp
         /// <returns>the scrubbed params</returns>
         private IList<string> RemoveGrammaticalNiceities(IList<string> currentParams)
         {
-            var parmList = currentParams.ToList();
+            List<string> parmList = currentParams.ToList();
 
             parmList.RemoveAll(str => str.Equals("the", StringComparison.InvariantCulture)
                                         || str.Equals("of", StringComparison.InvariantCulture)

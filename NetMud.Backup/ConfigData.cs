@@ -45,12 +45,12 @@ namespace NetMud.Backup
         /// <returns>full or partial success</returns>
         public static bool LoadEverythingToCache()
         {
-            var implimentedTypes = typeof(Data.Architectural.ConfigData).Assembly.GetTypes().Where(ty => ty.GetInterfaces().Contains(typeof(IConfigData))
+            System.Collections.Generic.IEnumerable<Type> implimentedTypes = typeof(Data.Architectural.ConfigData).Assembly.GetTypes().Where(ty => ty.GetInterfaces().Contains(typeof(IConfigData))
                                                                                 && ty.IsClass
                                                                                 && !ty.IsAbstract
                                                                                 && !ty.GetCustomAttributes<IgnoreAutomatedBackupAttribute>().Any());
 
-            foreach (var t in implimentedTypes.OrderByDescending(type => type == typeof(Dictata) ? 5 : 0))
+            foreach (Type t in implimentedTypes.OrderByDescending(type => type == typeof(Dictata) ? 5 : 0))
                 LoadAllToCache(t);
 
             return true;

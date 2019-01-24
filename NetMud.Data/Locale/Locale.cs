@@ -182,7 +182,7 @@ namespace NetMud.Data.Locale
         public override void SpawnNewInWorld(IGlobalPosition spawnTo)
         {
             //We can't even try this until we know if the data is there
-            var bS = Template<ILocaleTemplate>() ?? throw new InvalidOperationException("Missing backing data store on locale spawn event.");
+            ILocaleTemplate bS = Template<ILocaleTemplate>() ?? throw new InvalidOperationException("Missing backing data store on locale spawn event.");
 
             Keywords = new string[] { bS.Name.ToLower() };
 
@@ -210,7 +210,7 @@ namespace NetMud.Data.Locale
         public void GetFromWorldOrSpawn()
         {
             //Try to see if they are already there
-            var me = LiveCache.Get<ILocale>(TemplateId, typeof(LocaleTemplate));
+            ILocale me = LiveCache.Get<ILocale>(TemplateId, typeof(LocaleTemplate));
 
             //Isn't in the world currently
             if (me == default(ILocale))
@@ -252,8 +252,8 @@ namespace NetMud.Data.Locale
         /// <returns>The adjascent locales and zones</returns>
         public IEnumerable<ILocation> GetSurroundings()
         {
-            var radiusLocations = new List<ILocation>();
-            var paths = LiveCache.GetAll<IPathway>().Where(path => path.Origin.Equals(this));
+            List<ILocation> radiusLocations = new List<ILocation>();
+            IEnumerable<IPathway> paths = LiveCache.GetAll<IPathway>().Where(path => path.Origin.Equals(this));
 
             //If we don't have any paths out what can we even do
             if (paths.Count() == 0)
@@ -261,7 +261,7 @@ namespace NetMud.Data.Locale
 
             while (paths.Count() > 0)
             {
-                var currentLocsSet = paths.Select(path => path.Destination);
+                IEnumerable<ILocation> currentLocsSet = paths.Select(path => path.Destination);
 
                 if (currentLocsSet.Count() == 0)
                     break;

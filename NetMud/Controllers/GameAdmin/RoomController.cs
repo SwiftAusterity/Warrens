@@ -48,7 +48,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageRoomTemplateViewModel(TemplateCache.GetAll<IRoomTemplate>())
+            ManageRoomTemplateViewModel vModel = new ManageRoomTemplateViewModel(TemplateCache.GetAll<IRoomTemplate>())
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -63,7 +63,7 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Map(long ID)
         {
-            var vModel = new RoomMapViewModel
+            RoomMapViewModel vModel = new RoomMapViewModel
             {
                 Here = TemplateCache.Get<IRoomTemplate>(ID)
             };
@@ -81,9 +81,9 @@ namespace NetMud.Controllers.GameAdmin
 
             if (!string.IsNullOrWhiteSpace(authorizeRemove) && removeId.ToString().Equals(authorizeRemove))
             {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = TemplateCache.Get<IRoomTemplate>(removeId);
+                IRoomTemplate obj = TemplateCache.Get<IRoomTemplate>(removeId);
 
                 if (obj == null)
                 {
@@ -101,9 +101,9 @@ namespace NetMud.Controllers.GameAdmin
             }
             else if (!string.IsNullOrWhiteSpace(authorizeUnapprove) && unapproveId.ToString().Equals(authorizeUnapprove))
             {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = TemplateCache.Get<IRoomTemplate>(unapproveId);
+                IRoomTemplate obj = TemplateCache.Get<IRoomTemplate>(unapproveId);
 
                 if (obj == null)
                 {
@@ -130,14 +130,14 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add(long localeId)
         {
-            var myLocale = TemplateCache.Get<ILocaleTemplate>(localeId);
+            ILocaleTemplate myLocale = TemplateCache.Get<ILocaleTemplate>(localeId);
 
             if (myLocale == null)
             {
                 return RedirectToAction("Index", new { Message = "Invalid Locale" });
             }
 
-            var vModel = new AddEditRoomTemplateViewModel
+            AddEditRoomTemplateViewModel vModel = new AddEditRoomTemplateViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
                 ValidMaterials = TemplateCache.GetAll<IMaterial>(),
@@ -155,17 +155,17 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Add(long localeId, AddEditRoomTemplateViewModel vModel)
         {
             string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
-            var locale = TemplateCache.Get<ILocaleTemplate>(localeId);
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ILocaleTemplate locale = TemplateCache.Get<ILocaleTemplate>(localeId);
 
-            var newObj = vModel.DataObject;
+            IRoomTemplate newObj = vModel.DataObject;
             newObj.ParentLocation = locale;
             newObj.Coordinates = new Coordinate(0, 0, 0); //TODO: fix this
 
             PathwayTemplate zoneDestination = null;
             if (vModel.ZonePathway?.Destination != null)
             {
-                var destination = TemplateCache.Get<IZoneTemplate>(vModel.ZonePathway.Destination.Id);
+                IZoneTemplate destination = TemplateCache.Get<IZoneTemplate>(vModel.ZonePathway.Destination.Id);
                 zoneDestination = new PathwayTemplate()
                 {
                     DegreesFromNorth = -1,
@@ -198,7 +198,7 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(int id)
         {
             string message = string.Empty;
-            var vModel = new AddEditRoomTemplateViewModel
+            AddEditRoomTemplateViewModel vModel = new AddEditRoomTemplateViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
                 ValidMaterials = TemplateCache.GetAll<IMaterial>(),
@@ -206,7 +206,7 @@ namespace NetMud.Controllers.GameAdmin
                 ValidModels = TemplateCache.GetAll<IDimensionalModelData>()
             };
 
-            var obj = TemplateCache.Get<IRoomTemplate>(id);
+            IRoomTemplate obj = TemplateCache.Get<IRoomTemplate>(id);
 
             if (obj == null)
             {
@@ -216,11 +216,15 @@ namespace NetMud.Controllers.GameAdmin
 
             vModel.DataObject = obj;
 
-            var zoneDestination = obj.GetZonePathways().FirstOrDefault();
+            IPathwayTemplate zoneDestination = obj.GetZonePathways().FirstOrDefault();
 
             if (zoneDestination != null)
             {
                 vModel.ZonePathway = zoneDestination;
+            }
+            else
+            {
+                vModel.ZonePathway = new PathwayTemplate() { Destination = obj.ParentLocation.ParentLocation };
             }
 
             return View("~/Views/GameAdmin/Room/Edit.cshtml", "_chromelessLayout", vModel);
@@ -231,20 +235,20 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(int id, AddEditRoomTemplateViewModel vModel)
         {
             string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
             IPathwayTemplate zoneDestination = null;
 
-            var obj = TemplateCache.Get<IRoomTemplate>(id);
+            IRoomTemplate obj = TemplateCache.Get<IRoomTemplate>(id);
             if (obj == null)
             {
                 message = "That does not exist";
                 return RedirectToRoute("ModalErrorOrClose", new { Message = message });
             }
 
-            var mediumId = vModel.DataObject.Medium;
+            IMaterial mediumId = vModel.DataObject.Medium;
             obj.Name = vModel.DataObject.Name;
 
-            var destination = TemplateCache.Get<IZoneTemplate>(vModel.ZonePathway.Destination.Id);
+            IZoneTemplate destination = TemplateCache.Get<IZoneTemplate>(vModel.ZonePathway.Destination.Id);
             if (vModel.ZonePathway?.Destination != null)
             {
                 zoneDestination = obj.GetZonePathways().FirstOrDefault();
@@ -298,14 +302,14 @@ namespace NetMud.Controllers.GameAdmin
         {
             string message = string.Empty;
 
-            var obj = TemplateCache.Get<IRoomTemplate>(id);
+            IRoomTemplate obj = TemplateCache.Get<IRoomTemplate>(id);
             if (obj == null)
             {
                 message = "That room does not exist";
                 return RedirectToRoute("ModalErrorOrClose", new { Message = message });
             }
 
-            var vModel = new OccurrenceViewModel
+            OccurrenceViewModel vModel = new OccurrenceViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
                 DataObject = obj
@@ -313,7 +317,7 @@ namespace NetMud.Controllers.GameAdmin
 
             if (descriptiveType > -1)
             {
-                var grammaticalType = (GrammaticalType)descriptiveType;
+                GrammaticalType grammaticalType = (GrammaticalType)descriptiveType;
                 vModel.SensoryEventDataObject = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType
                                                                                         && occurrence.Event.Phrase.Equals(phrase, System.StringComparison.InvariantCultureIgnoreCase));
             }
@@ -331,18 +335,18 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult AddEditDescriptive(long id, OccurrenceViewModel vModel)
         {
             string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = TemplateCache.Get<IZoneTemplate>(id);
+            IZoneTemplate obj = TemplateCache.Get<IZoneTemplate>(id);
             if (obj == null)
             {
                 message = "That room does not exist";
                 return RedirectToRoute("ModalErrorOrClose", new { Message = message });
             }
 
-            var grammaticalType = vModel.SensoryEventDataObject.Event.Role;
-            var phraseF = vModel.SensoryEventDataObject.Event.Phrase;
-            var existingOccurrence = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType
+            GrammaticalType grammaticalType = vModel.SensoryEventDataObject.Event.Role;
+            string phraseF = vModel.SensoryEventDataObject.Event.Phrase;
+            ISensoryEvent existingOccurrence = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType
                                                                                 && occurrence.Event.Phrase.Equals(phraseF, StringComparison.InvariantCultureIgnoreCase));
 
             if (existingOccurrence == null)
@@ -350,7 +354,7 @@ namespace NetMud.Controllers.GameAdmin
                 existingOccurrence = new SensoryEvent();
             }
 
-            var existingEvent = existingOccurrence.Event;
+            ILexica existingEvent = existingOccurrence.Event;
 
             if (existingEvent == null)
             {
@@ -389,8 +393,8 @@ namespace NetMud.Controllers.GameAdmin
             }
             else
             {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
-                var values = authorize.Split(new string[] { "|||" }, StringSplitOptions.RemoveEmptyEntries);
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+                string[] values = authorize.Split(new string[] { "|||" }, StringSplitOptions.RemoveEmptyEntries);
 
                 if (values.Count() != 2)
                 {
@@ -398,10 +402,10 @@ namespace NetMud.Controllers.GameAdmin
                 }
                 else
                 {
-                    var type = short.Parse(values[0]);
-                    var phrase = values[1];
+                    short type = short.Parse(values[0]);
+                    string phrase = values[1];
 
-                    var obj = TemplateCache.Get<IRoomTemplate>(id);
+                    IRoomTemplate obj = TemplateCache.Get<IRoomTemplate>(id);
 
                     if (obj == null)
                     {
@@ -409,8 +413,8 @@ namespace NetMud.Controllers.GameAdmin
                     }
                     else
                     {
-                        var grammaticalType = (GrammaticalType)type;
-                        var existingOccurrence = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType
+                        GrammaticalType grammaticalType = (GrammaticalType)type;
+                        ISensoryEvent existingOccurrence = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType
                                                                                             && occurrence.Event.Phrase.Equals(phrase, StringComparison.InvariantCultureIgnoreCase));
 
                         if (existingOccurrence != null)

@@ -61,7 +61,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = TemplateCache.Get<IHelp>(removeId);
+                IHelp obj = TemplateCache.Get<IHelp>(removeId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -77,7 +77,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = TemplateCache.Get<IHelp>(unapproveId);
+                IHelp obj = TemplateCache.Get<IHelp>(unapproveId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -140,7 +140,7 @@ namespace NetMud.Controllers.GameAdmin
                 authedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
-            var obj = TemplateCache.Get<IHelp>(id);
+            IHelp obj = TemplateCache.Get<IHelp>(id);
 
             if (obj == null)
             {
@@ -160,7 +160,7 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = TemplateCache.Get<IHelp>(id);
+            IHelp obj = TemplateCache.Get<IHelp>(id);
             if (obj == null)
             {
                 message = "That does not exist";

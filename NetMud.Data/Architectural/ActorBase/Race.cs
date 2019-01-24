@@ -224,11 +224,11 @@ namespace NetMud.Data.Architectural.ActorBase
         /// </summary>
         public IEnumerable<BodyPart> FullAnatomy()
         {
-            var anatomy = new List<BodyPart>();
+            List<BodyPart> anatomy = new List<BodyPart>();
 
             if (Arms != null)
             {
-                var i = 1;
+                int i = 1;
                 while (i < Arms.Amount)
                 {
                     anatomy.Add(new BodyPart(Arms, string.Format("Arm {0}", i.ToGreek(true))));
@@ -238,7 +238,7 @@ namespace NetMud.Data.Architectural.ActorBase
 
             if (Legs != null)
             {
-                var i = 1;
+                int i = 1;
                 while (i < Arms.Amount)
                 {
                     anatomy.Add(new BodyPart(Legs, string.Format("Leg {0}", i.ToGreek(true))));
@@ -252,9 +252,9 @@ namespace NetMud.Data.Architectural.ActorBase
             if (Torso != null)
                 anatomy.Add(new BodyPart(new InanimateComponent(Torso, 1), "Torso"));
 
-            foreach (var bit in BodyParts)
+            foreach (BodyPart bit in BodyParts)
             {
-                var i = 1;
+                int i = 1;
                 while (i < bit.Part.Amount)
                 {
                     anatomy.Add(new BodyPart(bit.Part, bit.Name));
@@ -271,14 +271,14 @@ namespace NetMud.Data.Architectural.ActorBase
         /// <returns>List of strings as rows for rendering</returns>
         public IEnumerable<string> RenderAnatomy(bool forWeb)
         {
-            var stringList = new List<string>();
+            List<string> stringList = new List<string>();
 
             if (Head != null)
                 stringList.Add(Head.Model.ModelTemplate.ViewFlattenedModel(forWeb));
 
             if (Arms != null)
             {
-                var armCount = 0;
+                int armCount = 0;
                 while(armCount < Arms.Amount)
                 {
                     armCount++;
@@ -291,7 +291,7 @@ namespace NetMud.Data.Architectural.ActorBase
 
             if (Legs != null)
             {
-                var legCount = 0;
+                int legCount = 0;
                 while (legCount < Legs.Amount)
                 {
                     legCount++;
@@ -299,14 +299,14 @@ namespace NetMud.Data.Architectural.ActorBase
                 }
             }
 
-            foreach (var bit in BodyParts)
+            foreach (BodyPart bit in BodyParts)
             {
                 if (bit.Part == null)
                     continue;
 
-                for(var i = 0; i < bit.Part.Amount; i++)
+                for(int i = 0; i < bit.Part.Amount; i++)
                 {
-                    var legCount = 0;
+                    int legCount = 0;
                     while (legCount < Legs.Amount)
                     {
                         legCount++;
@@ -324,7 +324,7 @@ namespace NetMud.Data.Architectural.ActorBase
         /// <returns>a bunch of text saying how awful your Template is</returns>
         public override IList<string> FitnessReport()
         {
-            var TemplateProblems = base.FitnessReport();
+            IList<string> TemplateProblems = base.FitnessReport();
 
             //Gotta keep most of these in due to the tuple thing
             if (Arms == null || Arms.Item == null || Arms.Amount < 0)
@@ -351,7 +351,7 @@ namespace NetMud.Data.Architectural.ActorBase
         /// <returns>A list of strings</returns>
         public override IDictionary<string, string> SignificantDetails()
         {
-            var returnList = base.SignificantDetails();
+            IDictionary<string, string> returnList = base.SignificantDetails();
 
             returnList.Add("Collective", CollectiveNoun);
             returnList.Add("Starting Zone", StartingLocation.Name);
@@ -368,7 +368,7 @@ namespace NetMud.Data.Architectural.ActorBase
             returnList.Add("Vision Range", string.Format("{0} - {1}", VisionRange.Low, VisionRange.High));
             returnList.Add("Temperature Tolerance", string.Format("{0} - {1}", TemperatureTolerance.Low, TemperatureTolerance.High));
 
-            foreach (var part in BodyParts)
+            foreach (BodyPart part in BodyParts)
                 returnList.Add("Body Parts", string.Format("{0} - {1} ({2})", part.Part.Amount.ToString(), part.Part.Item.Name, part.Name));
 
             return returnList;

@@ -34,7 +34,7 @@ namespace NetMud.Commands.System
         {
             List<string> sb = new List<string>();
 
-            var player = (IPlayer)Actor;
+            IPlayer player = (IPlayer)Actor;
 
             sb.Add("You exit this reality.");
 

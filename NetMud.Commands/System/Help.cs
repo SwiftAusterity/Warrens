@@ -29,7 +29,7 @@ namespace NetMud.Commands.System
         /// </summary>
         public override void Execute()
         {
-            var topic = (IHelpful)Subject;
+            IHelpful topic = (IHelpful)Subject;
             IList<string> sb = GetHelpHeader(topic);
 
             sb = sb.Concat(topic.RenderHelpBody()).ToList();
@@ -37,7 +37,7 @@ namespace NetMud.Commands.System
             //If it's a command render the syntax help at the bottom
             if (topic.GetType().GetInterfaces().Contains(typeof(ICommand)))
             {
-                var subject = (ICommand)topic;
+                ICommand subject = (ICommand)topic;
                 sb.Add(string.Empty);
                 sb = sb.Concat(subject.RenderSyntaxHelp()).ToList();
             }
@@ -81,12 +81,12 @@ namespace NetMud.Commands.System
         private IList<string> GetHelpHeader(IHelpful subject)
         {
             List<string> sb = new List<string>();
-            var subjectName = subject.GetType().Name;
+            string subjectName = subject.GetType().Name;
             string typeName = "Help";
 
             if (subject.GetType().GetInterfaces().Contains(typeof(ILookupData)))
             {
-                var refSubject = (ILookupData)subject;
+                ILookupData refSubject = (ILookupData)subject;
 
                 subjectName = refSubject.Name;
                 typeName = "Lookup Data";

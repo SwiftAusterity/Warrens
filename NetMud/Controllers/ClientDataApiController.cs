@@ -50,7 +50,7 @@ namespace NetMud.Controllers
         [HttpGet]
         public string GetEntityModelView(long modelId)
         {
-            var model = TemplateCache.Get<IDimensionalModelData>(modelId);
+            IDimensionalModelData model = TemplateCache.Get<IDimensionalModelData>(modelId);
 
             if (model == null)
                 return string.Empty;
@@ -61,7 +61,7 @@ namespace NetMud.Controllers
         [HttpGet]
         public string RenderRoomWithRadius(long id, int radius)
         {
-            var centerRoom = TemplateCache.Get<IRoomTemplate>(id);
+            IRoomTemplate centerRoom = TemplateCache.Get<IRoomTemplate>(id);
 
             if (centerRoom == null || radius < 0)
                 return "Invalid inputs.";
@@ -72,7 +72,7 @@ namespace NetMud.Controllers
         [HttpGet]
         public JsonResult<IUIModule> GetUIModuleContent(string moduleName)
         {
-            var module = TemplateCache.GetByName<IUIModule>(moduleName);
+            IUIModule module = TemplateCache.GetByName<IUIModule>(moduleName);
 
             if (module != null)
                 return Json(module);
@@ -125,27 +125,27 @@ namespace NetMud.Controllers
         [HttpPost]
         public string RemoveUIModuleContent(string moduleName, int location)
         {
-            var user = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser user = UserManager.FindById(User.Identity.GetUserId());
 
-            var account = user.GameAccount;
+            Data.Players.Account account = user.GameAccount;
 
             if (account == null)
             {
                 return "Invalid Account.";
             }
 
-            var modules = account.Config.UIModules.ToList();
+            List<Tuple<IUIModule, int>> modules = account.Config.UIModules.ToList();
             if (moduleName == "**anymodule**" && location != -1)
             {
                 if (modules.Any(mod => mod.Item2.Equals(location)))
                 {
-                    var moduleTuple = modules.FirstOrDefault(mod => mod.Item2.Equals(location));
+                    Tuple<IUIModule, int> moduleTuple = modules.FirstOrDefault(mod => mod.Item2.Equals(location));
                     modules.Remove(moduleTuple);
                 }
             }
             else
             {
-                var module = TemplateCache.GetByName<IUIModule>(moduleName);
+                IUIModule module = TemplateCache.GetByName<IUIModule>(moduleName);
 
                 if (module == null)
                 {
@@ -157,7 +157,7 @@ namespace NetMud.Controllers
                     return "Invalid Location";
                 }
 
-                var moduleTuple = new Tuple<IUIModule, int>(module, location);
+                Tuple<IUIModule, int> moduleTuple = new Tuple<IUIModule, int>(module, location);
 
                 //Remove this module
                 if (modules.Any(mod => mod.Item1.Equals(module) && mod.Item2.Equals(location)))
@@ -173,16 +173,16 @@ namespace NetMud.Controllers
         [HttpPost]
         public string SaveUIModuleContent(string moduleName, int location)
         {
-            var user = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser user = UserManager.FindById(User.Identity.GetUserId());
 
-            var account = user.GameAccount;
+            Data.Players.Account account = user.GameAccount;
 
             if (account == null)
             {
                 return "Invalid Account.";
             }
 
-            var module = TemplateCache.GetByName<IUIModule>(moduleName);
+            IUIModule module = TemplateCache.GetByName<IUIModule>(moduleName);
 
             if (module == null)
             {
@@ -194,8 +194,8 @@ namespace NetMud.Controllers
                 return "Invalid Location";
             }
 
-            var modules = account.Config.UIModules.ToList();
-            var moduleTuple = new Tuple<IUIModule, int>(module, location);
+            List<Tuple<IUIModule, int>> modules = account.Config.UIModules.ToList();
+            Tuple<IUIModule, int> moduleTuple = new Tuple<IUIModule, int>(module, location);
 
             //Remove this module
             if (modules.Any(mod => mod.Item1.Equals(module)))
@@ -218,9 +218,9 @@ namespace NetMud.Controllers
         [HttpGet]
         public JsonResult<IEnumerable<Tuple<IUIModule, int>>> LoadUIModules()
         {
-            var user = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser user = UserManager.FindById(User.Identity.GetUserId());
 
-            var account = user.GameAccount;
+            Data.Players.Account account = user.GameAccount;
 
             if (account == null)
             {
@@ -234,16 +234,16 @@ namespace NetMud.Controllers
         [Route("api/ClientDataApi/GetUIModuleNames", Name = "ClientDataAPI_GetUIModuleNames")]
         public JsonResult<string[]> GetUIModuleNames(string term)
         {
-            var user = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser user = UserManager.FindById(User.Identity.GetUserId());
 
-            var account = user.GameAccount;
+            Data.Players.Account account = user.GameAccount;
 
             if (account == null)
             {
                 return Json(new string[0]);
             }
 
-            var modules = TemplateCache.GetAll<IUIModule>(true).Where(uim => uim.Name.Contains(term));
+            IEnumerable<IUIModule> modules = TemplateCache.GetAll<IUIModule>(true).Where(uim => uim.Name.Contains(term));
 
             return Json(modules.Select(mod => mod.Name).ToArray());
         }

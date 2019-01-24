@@ -103,9 +103,9 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <returns>the contained entities</returns>
         public IEnumerable<T> GetContents<T>()
         {
-            var implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
+            IEnumerable<global::System.Type> implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
 
-            var contents = new List<T>();
+            List<T> contents = new List<T>();
 
             if (implimentedTypes.Contains(typeof(IMobile)))
                 contents.AddRange(MobilesInside.EntitiesContained().Select(ent => (T)ent));
@@ -124,9 +124,9 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <param name="containerName">the name of the container</param>
         public IEnumerable<T> GetContents<T>(string containerName)
         {
-            var implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
+            IEnumerable<global::System.Type> implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
 
-            var contents = new List<T>();
+            List<T> contents = new List<T>();
 
             if (implimentedTypes.Contains(typeof(IMobile)))
                 contents.AddRange(MobilesInside.EntitiesContained(containerName).Select(ent => (T)ent));
@@ -157,11 +157,11 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <returns>errors</returns>
         public string MoveInto<T>(T thing, string containerName)
         {
-            var implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
+            IEnumerable<global::System.Type> implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
 
             if (implimentedTypes.Contains(typeof(IInanimate)))
             {
-                var obj = (IInanimate)thing;
+                IInanimate obj = (IInanimate)thing;
 
                 if (Contents.Contains(obj, containerName))
                     return "That is already in the container";
@@ -178,7 +178,7 @@ namespace NetMud.Data.Architectural.EntityBase
 
             if (implimentedTypes.Contains(typeof(IMobile)))
             {
-                var obj = (IMobile)thing;
+                IMobile obj = (IMobile)thing;
 
                 if (MobilesInside.Contains(obj, containerName))
                     return "That is already in the container";
@@ -216,11 +216,11 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <returns>errors</returns>
         public string MoveFrom<T>(T thing, string containerName)
         {
-            var implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
+            IEnumerable<global::System.Type> implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
 
             if (implimentedTypes.Contains(typeof(IInanimate)))
             {
-                var obj = (IInanimate)thing;
+                IInanimate obj = (IInanimate)thing;
 
                 if (!Contents.Contains(obj, containerName))
                     return "That is not in the container";
@@ -234,7 +234,7 @@ namespace NetMud.Data.Architectural.EntityBase
 
             if (implimentedTypes.Contains(typeof(IMobile)))
             {
-                var obj = (IMobile)thing;
+                IMobile obj = (IMobile)thing;
 
                 if (!MobilesInside.Contains(obj, containerName))
                     return "That is not in the container";
@@ -264,17 +264,17 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <returns>list of valid surrounding locations</returns>
         public virtual IEnumerable<ILocation> GetSurroundings(int strength)
         {
-            var radiusLocations = new List<ILocation>();
-            var paths = GetPathways();
+            List<ILocation> radiusLocations = new List<ILocation>();
+            IEnumerable<IPathway> paths = GetPathways();
 
             //If we don't have any paths out what can we even do
             if (paths.Count() == 0)
                 return radiusLocations;
 
-            var currentRadius = 0;
+            int currentRadius = 0;
             while (currentRadius <= strength && paths.Count() > 0)
             {
-                var currentLocsSet = paths.Select(path => path.Destination);
+                IEnumerable<ILocation> currentLocsSet = paths.Select(path => path.Destination);
 
                 if (currentLocsSet.Count() == 0)
                     break;

@@ -11,6 +11,7 @@ using NetMud.DataStructure.Zone;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Script.Serialization;
 
@@ -55,6 +56,8 @@ namespace NetMud.Data.Locale
         /// <summary>
         /// Is this zone discoverable?
         /// </summary>
+        [Display(Name = "Always Discovered", Description = "Is this locale automatically known to players?")]
+        [UIHint("Boolean")]
         public bool AlwaysDiscovered { get; set; }
 
         /// <summary>
@@ -108,8 +111,8 @@ namespace NetMud.Data.Locale
         /// </summary>
         public void RemapInterior()
         {
-            var remainingRooms = Rooms();
-            var returnMap = Cartographer.GenerateMapFromRoom(CentralRoom(), remainingRooms.Count() / 2, new HashSet<IRoomTemplate>(remainingRooms), true);
+            IEnumerable<IRoomTemplate> remainingRooms = Rooms();
+            long[,,] returnMap = Cartographer.GenerateMapFromRoom(CentralRoom(), remainingRooms.Count() / 2, new HashSet<IRoomTemplate>(remainingRooms), true);
 
             Interior = new Map(returnMap, false);
         }
@@ -121,7 +124,7 @@ namespace NetMud.Data.Locale
         /// <returns>The room that is in the center of the Z plane</returns>
         public IRoomTemplate CentralRoom(int zIndex = -1)
         {
-            var roomsPlane = Rooms().Where(room => zIndex == -1 || (room.Coordinates != null && room.Coordinates.Z == zIndex));
+            IEnumerable<IRoomTemplate> roomsPlane = Rooms().Where(room => zIndex == -1 || (room.Coordinates != null && room.Coordinates.Z == zIndex));
 
             //TODO 
             return roomsPlane.FirstOrDefault();

@@ -41,7 +41,7 @@ namespace NetMud.Controllers.GameAdmin
         [Route(@"Player/SelectCharacter/{id}")]
         public JsonResult SelectCharacter(long id)
         {
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             if (authedUser != null && id >= 0)
             {
@@ -56,9 +56,9 @@ namespace NetMud.Controllers.GameAdmin
         [Authorize(Roles = "Admin")]
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
+            RoleManager<IdentityRole> roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
 
-            var vModel = new ManagePlayersViewModel(UserManager.Users)
+            ManagePlayersViewModel vModel = new ManagePlayersViewModel(UserManager.Users)
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -82,9 +82,9 @@ namespace NetMud.Controllers.GameAdmin
 
             if (!string.IsNullOrWhiteSpace(authorizeRemove) && removeId.ToString().Equals(authorizeRemove))
             {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = Account.GetByHandle(removeId);
+                DataStructure.Player.IAccount obj = Account.GetByHandle(removeId);
 
                 if (obj == null)
                     message = "That does not exist";

@@ -11,7 +11,7 @@ namespace NetMud.DataStructure.Architectural.PropertyBinding
                 return null;
 
             long[,] coordinateGrouping = new long[100,100];
-            var inputArray = input as IEnumerable<string>;
+            IEnumerable<string> inputArray = input as IEnumerable<string>;
             int maxNodes = inputArray.Count() - 1;
             short x = 0;
             short y = 99;

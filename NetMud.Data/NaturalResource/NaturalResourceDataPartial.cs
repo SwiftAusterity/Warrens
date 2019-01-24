@@ -122,7 +122,7 @@ namespace NetMud.Data.NaturalResource
         /// <returns>a bunch of text saying how awful your data is</returns>
         public override IList<string> FitnessReport()
         {
-            var dataProblems = base.FitnessReport();
+            IList<string> dataProblems = base.FitnessReport();
 
             //Tuples must be handled individually
             if (ElevationRange.Low < 0 || ElevationRange.High < ElevationRange.Low)
@@ -143,7 +143,7 @@ namespace NetMud.Data.NaturalResource
         /// <returns>A list of strings</returns>
         public override IDictionary<string, string> SignificantDetails()
         {
-            var returnList = base.SignificantDetails();
+            IDictionary<string, string> returnList = base.SignificantDetails();
 
             returnList.Add("Amount Multiplier", AmountMultiplier.ToString());
             returnList.Add("Rarity", Rarity.ToString());
@@ -152,7 +152,7 @@ namespace NetMud.Data.NaturalResource
             returnList.Add("Temperature", string.Format("{0} - {1}", TemperatureRange.Low, TemperatureRange.High));
             returnList.Add("Humidity", string.Format("{0} - {1}", HumidityRange.Low, HumidityRange.High));
 
-            foreach (var occur in OccursIn)
+            foreach (Biome occur in OccursIn)
                 returnList.Add("Occurs In", occur.ToString());
 
             return returnList;
@@ -187,7 +187,7 @@ namespace NetMud.Data.NaturalResource
 
             //Self becomes the first sense in the list
             ISensoryEvent self = null;
-            foreach (var sense in sensoryTypes)
+            foreach (MessagingType sense in sensoryTypes)
             {
                 switch (sense)
                 {
@@ -258,7 +258,7 @@ namespace NetMud.Data.NaturalResource
         /// <returns>the output strings</returns>
         public virtual ISensoryEvent GetImmediateDescription(IEntity viewer, MessagingType sense)
         {
-            var me = GetSelf(sense);
+            ISensoryEvent me = GetSelf(sense);
             switch (sense)
             {
                 case MessagingType.Audible:
@@ -334,8 +334,8 @@ namespace NetMud.Data.NaturalResource
         /// <returns>If this is visible</returns>
         public virtual bool IsVisibleTo(IEntity viewer)
         {
-            var value = 0;
-            var range = viewer.GetVisualRange();
+            int value = 0;
+            ValueRange<float> range = viewer.GetVisualRange();
 
             return value >= range.Low && value <= range.High;
         }
@@ -399,8 +399,8 @@ namespace NetMud.Data.NaturalResource
         /// <returns>If this is observable</returns>
         public virtual bool IsAudibleTo(IEntity viewer)
         {
-            var value = 0;
-            var range = viewer.GetAuditoryRange();
+            int value = 0;
+            ValueRange<float> range = viewer.GetAuditoryRange();
 
             return value >= range.Low && value <= range.High;
         }
@@ -415,9 +415,9 @@ namespace NetMud.Data.NaturalResource
             if (!IsAudibleTo(viewer))
                 return null;
 
-            var self = GetSelf(MessagingType.Audible);
+            ISensoryEvent self = GetSelf(MessagingType.Audible);
 
-            foreach (var descriptive in GetAudibleDescriptives(viewer))
+            foreach (ISensoryEvent descriptive in GetAudibleDescriptives(viewer))
                 self.Event.TryModify(descriptive.Event);
 
             return self;
@@ -441,8 +441,8 @@ namespace NetMud.Data.NaturalResource
         /// <returns>If this is observable</returns>
         public virtual bool IsSensibleTo(IEntity viewer)
         {
-            var value = 0;
-            var range = viewer.GetPsychicRange();
+            int value = 0;
+            ValueRange<float> range = viewer.GetPsychicRange();
 
             return value >= range.Low && value <= range.High;
         }
@@ -457,9 +457,9 @@ namespace NetMud.Data.NaturalResource
             if (!IsSensibleTo(viewer))
                 return null;
 
-            var self = GetSelf(MessagingType.Psychic);
+            ISensoryEvent self = GetSelf(MessagingType.Psychic);
 
-            foreach (var descriptive in GetPsychicDescriptives(viewer))
+            foreach (ISensoryEvent descriptive in GetPsychicDescriptives(viewer))
                 self.Event.TryModify(descriptive.Event);
 
             return self;
@@ -483,8 +483,8 @@ namespace NetMud.Data.NaturalResource
         /// <returns>If this is observable</returns>
         public virtual bool IsTastableTo(IEntity viewer)
         {
-            var value = 0;
-            var range = viewer.GetTasteRange();
+            int value = 0;
+            ValueRange<float> range = viewer.GetTasteRange();
 
             return value >= range.Low && value <= range.High;
         }
@@ -499,9 +499,9 @@ namespace NetMud.Data.NaturalResource
             if (!IsTastableTo(viewer))
                 return null;
 
-            var self = GetSelf(MessagingType.Taste);
+            ISensoryEvent self = GetSelf(MessagingType.Taste);
 
-            foreach (var descriptive in GetTasteDescriptives(viewer))
+            foreach (ISensoryEvent descriptive in GetTasteDescriptives(viewer))
                 self.Event.TryModify(descriptive.Event);
 
             return self;
@@ -525,8 +525,8 @@ namespace NetMud.Data.NaturalResource
         /// <returns>If this is observable</returns>
         public virtual bool IsSmellableTo(IEntity viewer)
         {
-            var value = 0;
-            var range = viewer.GetOlefactoryRange();
+            int value = 0;
+            ValueRange<float> range = viewer.GetOlefactoryRange();
 
             return value >= range.Low && value <= range.High;
         }
@@ -541,9 +541,9 @@ namespace NetMud.Data.NaturalResource
             if (!IsSmellableTo(viewer))
                 return null;
 
-            var self = GetSelf(MessagingType.Olefactory);
+            ISensoryEvent self = GetSelf(MessagingType.Olefactory);
 
-            foreach (var descriptive in GetSmellableDescriptives(viewer))
+            foreach (ISensoryEvent descriptive in GetSmellableDescriptives(viewer))
                 self.Event.TryModify(descriptive.Event);
 
             return self;
@@ -567,8 +567,8 @@ namespace NetMud.Data.NaturalResource
         /// <returns>If this is observable</returns>
         public virtual bool IsTouchableTo(IEntity viewer)
         {
-            var value = 0;
-            var range = viewer.GetTactileRange();
+            int value = 0;
+            ValueRange<float> range = viewer.GetTactileRange();
 
             return value >= range.Low && value <= range.High;
         }
@@ -583,9 +583,9 @@ namespace NetMud.Data.NaturalResource
             if (!IsTouchableTo(viewer))
                 return null;
 
-            var self = GetSelf(MessagingType.Tactile);
+            ISensoryEvent self = GetSelf(MessagingType.Tactile);
 
-            foreach (var descriptive in GetTouchDescriptives(viewer))
+            foreach (ISensoryEvent descriptive in GetTouchDescriptives(viewer))
                 self.Event.TryModify(descriptive.Event);
 
             return self;
@@ -613,7 +613,7 @@ namespace NetMud.Data.NaturalResource
                 sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
 
             //Add the existential modifiers
-            var me = GetImmediateDescription(viewer, sensoryTypes[0]);
+            ISensoryEvent me = GetImmediateDescription(viewer, sensoryTypes[0]);
             me.TryModify(LexicalType.Conjunction, GrammaticalType.Verb, "is")
                 .TryModify(LexicalType.Noun, GrammaticalType.DirectObject, "ground")
                     .TryModify(
@@ -628,7 +628,7 @@ namespace NetMud.Data.NaturalResource
 
         public virtual ISensoryEvent RenderResourceCollection(IEntity viewer, int amount)
         {
-            var me = GetImmediateDescription(viewer, MessagingType.Visible);
+            ISensoryEvent me = GetImmediateDescription(viewer, MessagingType.Visible);
             me.Event.TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, amount.ToString()));
 
             return me;

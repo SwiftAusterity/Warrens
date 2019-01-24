@@ -12,7 +12,7 @@ namespace NetMud.Communication.Lexical
         {
             //TODO: figure out google credentials
             TranslationClient client = TranslationClient.Create();
-            var response = client.TranslateText(phrase, targetLanguage.GoogleLanguageCode);
+            TranslationResult response = client.TranslateText(phrase, targetLanguage.GoogleLanguageCode);
 
             return response.TranslatedText;
         }

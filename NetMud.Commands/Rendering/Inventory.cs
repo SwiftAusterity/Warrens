@@ -29,9 +29,9 @@ namespace NetMud.Commands.Rendering
         /// </summary>
         public override void Execute()
         {
-            var sb = new List<string>();
-            var chr = (IMobile)Actor;
-            var toActor = new List<IMessage>
+            List<string> sb = new List<string>();
+            IMobile chr = (IMobile)Actor;
+            List<IMessage> toActor = new List<IMessage>
             {
                 new Message(MessagingType.Visible, new SensoryEvent() { Strength = 9999 })
                 {
@@ -39,15 +39,15 @@ namespace NetMud.Commands.Rendering
                 }
             };
 
-            foreach (var thing in chr.Inventory.EntitiesContained())
+            foreach (DataStructure.Inanimate.IInanimate thing in chr.Inventory.EntitiesContained())
                 toActor.Add(new Message(MessagingType.Visible, thing.RenderAsContents(chr, new[] { MessagingType.Visible })));
 
-            var toOrigin = new Message(MessagingType.Visible, new SensoryEvent() { Strength = 30 })
+            Message toOrigin = new Message(MessagingType.Visible, new SensoryEvent() { Strength = 30 })
             {
                 Override = new string[] { "$A$ sifts through $G$ belongings." }
             };
 
-            var messagingObject = new MessageCluster(toActor)
+            MessageCluster messagingObject = new MessageCluster(toActor)
             {
                 ToOrigin = new List<IMessage> { toOrigin }
             };
@@ -61,7 +61,7 @@ namespace NetMud.Commands.Rendering
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            var sb = new List<string>
+            List<string> sb = new List<string>
             {
                 "Valid Syntax: inventory",
                 "inv".PadWithString(14, "&nbsp;", true)

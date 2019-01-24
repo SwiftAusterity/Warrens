@@ -77,7 +77,7 @@ namespace NetMud.DataAccess.Cache
         /// <returns>the key's hash</returns>
         public string KeyHash()
         {
-            var typeName = ObjectType.Name;
+            string typeName = ObjectType.Name;
 
             //Normalize interfaces versus classnames
             if (ObjectType.IsInterface)

@@ -191,7 +191,7 @@ namespace NetMud.Data.Zone
 
             //Self becomes the first sense in the list
             ISensoryEvent me = null;
-            foreach (var sense in sensoryTypes)
+            foreach (MessagingType sense in sensoryTypes)
             {
                 switch (sense)
                 {
@@ -202,18 +202,18 @@ namespace NetMud.Data.Zone
                         if (me == null)
                             me = GetSelf(sense);
 
-                        var aDescs = GetAudibleDescriptives(viewer);
+                        IEnumerable<ISensoryEvent> aDescs = GetAudibleDescriptives(viewer);
 
                         me.TryModify(aDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
 
-                        var collectiveSounds = new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you");
+                        Lexica collectiveSounds = new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you");
 
-                        var uberSounds = collectiveSounds.TryModify(LexicalType.Verb, GrammaticalType.Verb, "hear");
+                        ILexica uberSounds = collectiveSounds.TryModify(LexicalType.Verb, GrammaticalType.Verb, "hear");
                         uberSounds.TryModify(aDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
 
-                        foreach (var desc in aDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
+                        foreach (ISensoryEvent desc in aDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
                         {
-                            var newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase);
+                            Lexica newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase);
                             newDesc.TryModify(desc.Event.Modifiers);
 
                             newDesc.TryModify(LexicalType.Noun, GrammaticalType.IndirectObject, "distance")
@@ -233,18 +233,18 @@ namespace NetMud.Data.Zone
                         if (me == null)
                             me = GetSelf(sense);
 
-                        var oDescs = GetSmellableDescriptives(viewer);
+                        IEnumerable<ISensoryEvent> oDescs = GetSmellableDescriptives(viewer);
 
                         me.TryModify(oDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
 
-                        var collectiveSmells = new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you");
+                        Lexica collectiveSmells = new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you");
 
-                        var uberSmells = collectiveSmells.TryModify(LexicalType.Verb, GrammaticalType.Verb, "smell");
+                        ILexica uberSmells = collectiveSmells.TryModify(LexicalType.Verb, GrammaticalType.Verb, "smell");
                         uberSmells.TryModify(oDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
 
-                        foreach (var desc in oDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
+                        foreach (ISensoryEvent desc in oDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
                         {
-                            var newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase);
+                            Lexica newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase);
                             newDesc.TryModify(desc.Event.Modifiers);
 
                             newDesc.TryModify(LexicalType.Noun, GrammaticalType.IndirectObject, "air")
@@ -264,18 +264,18 @@ namespace NetMud.Data.Zone
                         if (me == null)
                             me = GetSelf(sense);
 
-                        var pDescs = GetPsychicDescriptives(viewer);
+                        IEnumerable<ISensoryEvent> pDescs = GetPsychicDescriptives(viewer);
 
                         me.TryModify(pDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
 
-                        var collectivePsy = new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you");
+                        Lexica collectivePsy = new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you");
 
-                        var uberPsy = collectivePsy.TryModify(LexicalType.Verb, GrammaticalType.Verb, "sense");
+                        ILexica uberPsy = collectivePsy.TryModify(LexicalType.Verb, GrammaticalType.Verb, "sense");
                         uberPsy.TryModify(pDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
 
-                        foreach (var desc in pDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
+                        foreach (ISensoryEvent desc in pDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
                         {
-                            var newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase);
+                            Lexica newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase);
                             newDesc.TryModify(desc.Event.Modifiers);
 
                             newDesc.TryModify(LexicalType.Noun, GrammaticalType.IndirectObject, "area")
@@ -298,18 +298,18 @@ namespace NetMud.Data.Zone
                         if (me == null)
                             me = GetSelf(sense);
 
-                        var vDescs = GetVisibleDescriptives(viewer);
+                        IEnumerable<ISensoryEvent> vDescs = GetVisibleDescriptives(viewer);
 
                         me.TryModify(vDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
 
-                        var collectiveSight = new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you");
+                        Lexica collectiveSight = new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you");
 
-                        var uberSight = collectiveSight.TryModify(LexicalType.Verb, GrammaticalType.Verb, "see");
+                        ILexica uberSight = collectiveSight.TryModify(LexicalType.Verb, GrammaticalType.Verb, "see");
                         uberSight.TryModify(vDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
 
-                        foreach (var desc in vDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
+                        foreach (ISensoryEvent desc in vDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
                         {
-                            var newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase);
+                            Lexica newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase);
                             newDesc.TryModify(desc.Event.Modifiers);
 
                             newDesc.TryModify(LexicalType.Noun, GrammaticalType.IndirectObject, "distance")
@@ -329,22 +329,22 @@ namespace NetMud.Data.Zone
             if (me == null)
                 return new SensoryEvent(sensoryTypes[0]);
 
-            foreach (var celestial in GetVisibileCelestials(viewer))
+            foreach (ICelestial celestial in GetVisibileCelestials(viewer))
                 me.TryModify(celestial.RenderAsContents(viewer, sensoryTypes).Event);
 
             //TODO: different way of rendering natural resources
             if (NaturalResources != null)
-                foreach (var resource in NaturalResources)
+                foreach (KeyValuePair<DataStructure.NaturalResource.INaturalResource, int> resource in NaturalResources)
                     me.TryModify(resource.Key.RenderResourceCollection(viewer, resource.Value).Event);
 
             //render our locales out
-            foreach (var locale in LiveCache.GetAll<ILocale>().Where(loc => loc.CurrentLocation.CurrentZone.Equals(this)))
+            foreach (ILocale locale in LiveCache.GetAll<ILocale>().Where(loc => loc.CurrentLocation.CurrentZone.Equals(this)))
                 me.TryModify(locale.GetFullDescription(viewer, sensoryTypes));
 
             //Describe the size and population of this zone
-            var zoneSize = GeographicalUtilities.ConvertSizeToType(GetModelDimensions(), GetType());
+            DimensionalSizeDescription zoneSize = GeographicalUtilities.ConvertSizeToType(GetModelDimensions(), GetType());
 
-            var area = new Lexica(LexicalType.Noun, GrammaticalType.Subject, "space");
+            Lexica area = new Lexica(LexicalType.Noun, GrammaticalType.Subject, "space");
             area.TryModify(LexicalType.Conjunction, GrammaticalType.Descriptive, "this");
             area.TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, zoneSize.ToString());
 
@@ -355,9 +355,9 @@ namespace NetMud.Data.Zone
             });
 
             //Render people in the zone
-            var populationSize = GeographicalUtilities.GetCrowdSize(GetContents<IMobile>().Count());
+            CrowdSizeDescription populationSize = GeographicalUtilities.GetCrowdSize(GetContents<IMobile>().Count());
 
-            var crowdSize = "abandoned";
+            string crowdSize = "abandoned";
             if ((short)populationSize > (short)zoneSize)
                 crowdSize = "crowded";
             else if (populationSize > CrowdSizeDescription.Intimate)

@@ -1,13 +1,15 @@
 ﻿@model NetMud.Models.AsciiMapViewModel
 
 <div class="roomAsciiMap">
-    <p>
-        <a id="TravelUp" name="TravelUp" class="Up" title="Up"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></a>
-        <span id="levelIndicator" style="font-size:larger; color: blue;">Level @Model.ZIndex</span>
-        <a id="TravelDown" name="TravelDown" class="Down" title="Down"><span class="glyphicon glyphicon-download" aria-hidden="true"></span></a>
-    </p>
-    <div>
-        <a id="renderModeSelector" name="renderModeSelector" class="Normal renderModeSelector" title="Toggle Render Mode" data-renderMode="normal"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></a>
+    <div class="zLevelControls">
+        <a id="renderModeSelector" name="renderModeSelector" class="Normal renderModeSelector" title="Toggle Render Mode" data-renderMode="normal"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
+        <div>
+            <a id="TravelUp" name="TravelUp" class="Up" title="Up"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></a>
+            <span id="levelIndicator" class="levelIndicator">Level @Model.ZIndex</span>
+            <a id="TravelDown" name="TravelDown" class="Down" title="Down"><span class="glyphicon glyphicon-download" aria-hidden="true"></span></a>
+        </div>
+    </div>
+    <div class="map">
         <pre id="expandedModelContainer" class="asciiMap" data-id="@Model.DataID" data-zindex="@Model.ZIndex"></pre>
     </div>
 </div>
@@ -50,12 +52,12 @@
             $this.removeClass('Normal');
             $this.children().removeClass('glyphicon-upload');
             $this.children().removeClass('glyphicon-download');
-            $this.children().removeClass('glyphicon-asterisk');
+            $this.children().removeClass('glyphicon-eye-open');
 
             if ($this.attr('data-renderMode') == 'up') {
                 $this.attr('data-renderMode', 'normal');
                 $this.addClass('Normal');
-                $this.children().addClass('glyphicon-asterisk');
+                $this.children().addClass('glyphicon-eye-open');
 
             } else if ($this.attr('data-renderMode') == 'normal') {
                 $this.attr('data-renderMode', 'down');

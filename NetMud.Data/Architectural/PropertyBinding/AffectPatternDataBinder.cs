@@ -14,14 +14,14 @@ namespace NetMud.Data.Architectural.PropertyBinding
             if (input == null)
                 return null;
 
-            var coordinateGrouping = input as IEnumerable<string>;
-            var returnList = new HashSet<Coordinate>();
+            IEnumerable<string> coordinateGrouping = input as IEnumerable<string>;
+            HashSet<Coordinate> returnList = new HashSet<Coordinate>();
 
-            for (var y = 10; y >= 0; y--)
+            for (int y = 10; y >= 0; y--)
             {
-                for(var x = 0; x <= 10; x++)
+                for(int x = 0; x <= 10; x++)
                 {
-                    var isChecked = coordinateGrouping.ElementAt(y).Split(",", StringSplitOptions.RemoveEmptyEntries)[x] == "1";
+                    bool isChecked = coordinateGrouping.ElementAt(y).Split(",", StringSplitOptions.RemoveEmptyEntries)[x] == "1";
 
                     if (isChecked)
                         returnList.Add(new Coordinate(x, y, -1));

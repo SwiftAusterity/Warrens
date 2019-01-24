@@ -126,14 +126,14 @@ namespace NetMud.Data.NaturalResource
         /// <returns>A list of strings</returns>
         public override IDictionary<string, string> SignificantDetails()
         {
-            var returnList = base.SignificantDetails();
+            IDictionary<string, string> returnList = base.SignificantDetails();
 
             returnList.Add("Solubility", Solubility.ToString());
             returnList.Add("Fertility", Fertility.ToString());
             returnList.Add("Rock", Rock.Name);
             returnList.Add("Dirt", Dirt.ToString());
 
-            foreach(var ore in Ores)
+            foreach(IMineral ore in Ores)
                 returnList.Add("Ore", ore.Name);
 
             return returnList;
@@ -141,14 +141,14 @@ namespace NetMud.Data.NaturalResource
 
         public override bool CanSpawnIn(IGlobalPosition location)
         {
-            var returnValue = true;
+            bool returnValue = true;
 
             return base.CanSpawnIn(location) && returnValue;
         }
 
         public override bool ShouldSpawnIn(IGlobalPosition location)
         {
-            var returnValue = true;
+            bool returnValue = true;
 
             return base.ShouldSpawnIn(location) && returnValue;
         }

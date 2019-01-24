@@ -43,7 +43,7 @@ namespace NetMud.Commands.EntityManipulation
             //Do the list
             if (Target.GetType() == typeof(string))
             {
-                var listings = trainer.RenderInstructionList(Actor);
+                string listings = trainer.RenderInstructionList(Actor);
 
                 MessageCluster listingMessage = new MessageCluster(new Message(listings));
 
@@ -57,7 +57,7 @@ namespace NetMud.Commands.EntityManipulation
             //We have an ability
             if (Target is IQuality proficency)
             {
-                var profLevel = Actor.GetQuality(proficency.Name);
+                int profLevel = Actor.GetQuality(proficency.Name);
 
                 if (profLevel >= 0)
                 {

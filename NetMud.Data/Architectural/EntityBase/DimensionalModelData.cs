@@ -73,7 +73,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <returns>a bunch of text saying how awful your data is</returns>
         public override IList<string> FitnessReport()
         {
-            var dataProblems = base.FitnessReport();
+            IList<string> dataProblems = base.FitnessReport();
 
             if (ModelPlanes == null || !ModelPlanes.Any() 
                 || ModelPlanes.Any(m => m == null || string.IsNullOrWhiteSpace(m.TagName) || !m.ModelNodes.Any()))
@@ -105,7 +105,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <returns>the node</returns>
         public IDimensionalModelNode GetNode(short xAxis, short yAxis)
         {
-            var plane = ModelPlanes.FirstOrDefault(pl => pl.YAxis.Equals(yAxis));
+            IDimensionalModelPlane plane = ModelPlanes.FirstOrDefault(pl => pl.YAxis.Equals(yAxis));
 
             if (plane != null)
                 return plane.GetNode(xAxis);
@@ -143,20 +143,20 @@ namespace NetMud.Data.Architectural.EntityBase
             try
             {
                 short yCount = 21;
-                foreach (var myString in delimitedPlanes.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+                foreach (string myString in delimitedPlanes.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    var newPlane = new DimensionalModelPlane();
-                    var currentLineNodes = myString.Split(new char[] { ',' });
+                    DimensionalModelPlane newPlane = new DimensionalModelPlane();
+                    string[] currentLineNodes = myString.Split(new char[] { ',' });
 
                     //Name is first
                     newPlane.TagName = currentLineNodes[0];
                     newPlane.YAxis = yCount;
 
                     short xCount = 1;
-                    foreach (var nodeString in currentLineNodes.Skip(1))
+                    foreach (string nodeString in currentLineNodes.Skip(1))
                     {
-                        var newNode = new DimensionalModelNode();
-                        var nodeStringComponents = nodeString.Split(new char[] { '|' });
+                        DimensionalModelNode newNode = new DimensionalModelNode();
+                        string[] nodeStringComponents = nodeString.Split(new char[] { '|' });
 
                         newNode.XAxis = xCount;
                         newNode.YAxis = yCount;
@@ -191,7 +191,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <returns>A list of strings</returns>
         public override IDictionary<string, string> SignificantDetails()
         {
-            var returnList = base.SignificantDetails();
+            IDictionary<string, string> returnList = base.SignificantDetails();
 
             returnList.Add("Vacuity", Vacuity.ToString());
             returnList.Add("Model", ViewFlattenedModel(true));

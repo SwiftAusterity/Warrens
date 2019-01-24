@@ -94,7 +94,7 @@ namespace NetMud.Controllers
             {
                 case SignInStatus.Success:
                     //Check for a valid character, zone and account
-                    var account = potentialUser.GameAccount;
+                    Account account = potentialUser.GameAccount;
 
                     if(account == null)
                     {
@@ -104,8 +104,8 @@ namespace NetMud.Controllers
 
                     if(!account.Characters.Any())
                     {
-                        var rand = new Random();
-                        var newChar = CreateAccountPlayerAndConfig(account, "Rabbit", rand.Next(10000, 99999).ToString(), "Unspecified");
+                        Random rand = new Random();
+                        IPlayerTemplate newChar = CreateAccountPlayerAndConfig(account, "Rabbit", rand.Next(10000, 99999).ToString(), "Unspecified");
 
                         newChar.SystemSave();
                     }
@@ -154,10 +154,10 @@ namespace NetMud.Controllers
                 IdentityResult result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    var newCharacter = CreateAccountPlayerAndConfig(newGameAccount, model.Name, model.SurName, model.Gender);
-                    var uiModules = TemplateCache.GetAll<IUIModule>().Where(uim => uim.SystemDefault > 0);
+                    IPlayerTemplate newCharacter = CreateAccountPlayerAndConfig(newGameAccount, model.Name, model.SurName, model.Gender);
+                    System.Collections.Generic.IEnumerable<IUIModule> uiModules = TemplateCache.GetAll<IUIModule>().Where(uim => uim.SystemDefault > 0);
 
-                    foreach(var module in uiModules)
+                    foreach(IUIModule module in uiModules)
                         newGameAccount.Config.UIModules = uiModules.Select(uim => new Tuple<IUIModule, int>(uim, uim.SystemDefault));
 
                     await UserManager.AddToRoleAsync(user.Id, "Player");

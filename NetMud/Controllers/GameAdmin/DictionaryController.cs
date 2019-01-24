@@ -42,7 +42,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageDictionaryViewModel(ConfigDataCache.GetAll<IDictata>())
+            ManageDictionaryViewModel vModel = new ManageDictionaryViewModel(ConfigDataCache.GetAll<IDictata>())
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -63,9 +63,9 @@ namespace NetMud.Controllers.GameAdmin
 
             if (!string.IsNullOrWhiteSpace(authorizeRemove) && removeId.ToString().Equals(authorizeRemove))
             {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = ConfigDataCache.Get<IDictata>(removeId);
+                IDictata obj = ConfigDataCache.Get<IDictata>(removeId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -86,7 +86,7 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add()
         {
-            var vModel = new AddEditDictionaryViewModel
+            AddEditDictionaryViewModel vModel = new AddEditDictionaryViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
                 ValidWords = ConfigDataCache.GetAll<IDictata>(),
@@ -101,9 +101,9 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Add(AddEditDictionaryViewModel vModel)
         {
             string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var newObj = vModel.DataObject;
+            IDictata newObj = vModel.DataObject;
 
             if (newObj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                 message = "Error; Creation failed.";
@@ -121,7 +121,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             string message = string.Empty;
 
-            var obj = ConfigDataCache.Get<IDictata>(new ConfigDataCacheKey(typeof(IDictata), id, ConfigDataType.Dictionary));
+            IDictata obj = ConfigDataCache.Get<IDictata>(new ConfigDataCacheKey(typeof(IDictata), id, ConfigDataType.Dictionary));
 
             if (obj == null)
             {
@@ -129,7 +129,7 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = message });
             }
 
-            var vModel = new AddEditDictionaryViewModel
+            AddEditDictionaryViewModel vModel = new AddEditDictionaryViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
                 ValidWords = ConfigDataCache.GetAll<IDictata>().Where(word => word.UniqueKey != obj.UniqueKey),
@@ -144,9 +144,9 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(string id, AddEditDictionaryViewModel vModel)
         {
             string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = ConfigDataCache.Get<IDictata>(new ConfigDataCacheKey(typeof(IDictata), id, ConfigDataType.Dictionary));
+            IDictata obj = ConfigDataCache.Get<IDictata>(new ConfigDataCacheKey(typeof(IDictata), id, ConfigDataType.Dictionary));
             if (obj == null)
             {
                 message = "That does not exist";

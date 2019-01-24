@@ -46,7 +46,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageFaunaViewModel(TemplateCache.GetAll<IFauna>())
+            ManageFaunaViewModel vModel = new ManageFaunaViewModel(TemplateCache.GetAll<IFauna>())
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -67,9 +67,9 @@ namespace NetMud.Controllers.GameAdmin
 
             if (!string.IsNullOrWhiteSpace(authorizeRemove) && removeId.ToString().Equals(authorizeRemove))
             {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = TemplateCache.Get<IFauna>(removeId);
+                IFauna obj = TemplateCache.Get<IFauna>(removeId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -83,9 +83,9 @@ namespace NetMud.Controllers.GameAdmin
             }
             else if (!string.IsNullOrWhiteSpace(authorizeUnapprove) && unapproveId.ToString().Equals(authorizeUnapprove))
             {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = TemplateCache.Get<IFauna>(unapproveId);
+                IFauna obj = TemplateCache.Get<IFauna>(unapproveId);
 
                 if (obj == null)
                     message = "That does not exist";
@@ -106,7 +106,7 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add()
         {
-            var vModel = new AddEditFaunaViewModel
+            AddEditFaunaViewModel vModel = new AddEditFaunaViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
                 ValidMaterials = TemplateCache.GetAll<IMaterial>(),
@@ -123,9 +123,9 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Add(AddEditFaunaViewModel vModel)
         {
             string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var newObj = vModel.DataObject;
+            IFauna newObj = vModel.DataObject;
 
             if (string.IsNullOrWhiteSpace(message))
             {
@@ -145,7 +145,7 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(long id)
         {
             string message = string.Empty;
-            var vModel = new AddEditFaunaViewModel
+            AddEditFaunaViewModel vModel = new AddEditFaunaViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
                 ValidMaterials = TemplateCache.GetAll<IMaterial>(),
@@ -153,7 +153,7 @@ namespace NetMud.Controllers.GameAdmin
                 ValidRaces = TemplateCache.GetAll<IRace>()
             };
 
-            var obj = TemplateCache.Get<IFauna>(id);
+            IFauna obj = TemplateCache.Get<IFauna>(id);
 
             if (obj == null)
             {
@@ -171,9 +171,9 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(long id, AddEditFaunaViewModel vModel)
         {
             string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = TemplateCache.Get<IFauna>(id);
+            IFauna obj = TemplateCache.Get<IFauna>(id);
             if (obj == null)
             {
                 message = "That does not exist";

@@ -78,7 +78,7 @@ namespace NetMud.Data.NaturalResource
         /// <returns>A list of strings</returns>
         public override IDictionary<string, string> SignificantDetails()
         {
-            var returnList = base.SignificantDetails();
+            IDictionary<string, string> returnList = base.SignificantDetails();
 
             returnList.Add("Race", Race.Name);
             returnList.Add("Female Ratio", FemaleRatio.ToString());
@@ -99,8 +99,8 @@ namespace NetMud.Data.NaturalResource
             if (!IsVisibleTo(viewer))
                 return null;
 
-            var me = GetSelf(MessagingType.Visible);
-            var collectiveNoun = new Lexica(LexicalType.Noun, GrammaticalType.Descriptive, Race.CollectiveNoun);
+            ISensoryEvent me = GetSelf(MessagingType.Visible);
+            Lexica collectiveNoun = new Lexica(LexicalType.Noun, GrammaticalType.Descriptive, Race.CollectiveNoun);
             collectiveNoun.TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, amount.ToString()));
             me.Event.TryModify(collectiveNoun);
 

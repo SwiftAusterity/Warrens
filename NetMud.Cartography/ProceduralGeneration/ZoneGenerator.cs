@@ -115,7 +115,7 @@ namespace NetMud.Cartography.ProceduralGeneration
             VerifyLocale(locale);
             VerifyDimensions(width, length, elevation, depth);
 
-            var rand = new Random();
+            Random rand = new Random();
             _randomizer = new Random(Seed);
 
             Seed = rand.Next(10000);
@@ -134,23 +134,23 @@ namespace NetMud.Cartography.ProceduralGeneration
         public void FillMap()
         {
             //We'll build the potential rooms first just using strings
-            var prototypeMap = new string[Width * 3 + 1, Length * 3 + 1, (Elevation + Depth) * 3 + 1];
-            var center = new Tuple<int, int, int>(Width * 3 / 2 + 1, Length * 3 / 2 + 1, (Elevation + Depth) * 3 / 2 + 1);
+            string[,,] prototypeMap = new string[Width * 3 + 1, Length * 3 + 1, (Elevation + Depth) * 3 + 1];
+            Tuple<int, int, int> center = new Tuple<int, int, int>(Width * 3 / 2 + 1, Length * 3 / 2 + 1, (Elevation + Depth) * 3 / 2 + 1);
 
             //Find the absolute max boundings
-            var maxX = prototypeMap.GetUpperBound(0);
-            var maxY = prototypeMap.GetUpperBound(1);
-            var maxZ = prototypeMap.GetUpperBound(2);
+            int maxX = prototypeMap.GetUpperBound(0);
+            int maxY = prototypeMap.GetUpperBound(1);
+            int maxZ = prototypeMap.GetUpperBound(2);
 
             //Set up center room
             prototypeMap[center.Item1, center.Item2, center.Item3] = roomSymbol;
 
-            var currentX = center.Item1;
-            var currentY = center.Item2;
-            var currentZ = center.Item3;
+            int currentX = center.Item1;
+            int currentY = center.Item2;
+            int currentZ = center.Item3;
 
             //Do 4 point cardinal directions for the initial layer
-            for (var variance = 1; currentX < maxX || currentY < maxY; variance++)
+            for (int variance = 1; currentX < maxX || currentY < maxY; variance++)
             {
                 //Room or pathway?
                 bool isRoom = variance % 3 == 0;
@@ -158,7 +158,7 @@ namespace NetMud.Cartography.ProceduralGeneration
                 //Do X, don't do it if we're at or over max bounding for X specifically
                 if(currentX + 1 < maxX)
                 {
-                    var roll = _randomizer.Next(1, 100);
+                    int roll = _randomizer.Next(1, 100);
 
                     if(isRoom && roll >= 25)
                     {
@@ -181,7 +181,7 @@ namespace NetMud.Cartography.ProceduralGeneration
                 //Do Y
                 if (currentY + 1 < maxY)
                 {
-                    var roll = _randomizer.Next(1, 100);
+                    int roll = _randomizer.Next(1, 100);
 
                     if (isRoom && roll >= 25)
                     {

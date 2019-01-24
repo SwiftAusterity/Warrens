@@ -54,7 +54,7 @@ namespace NetMud.Controllers
                 validEntries = TemplateCache.GetAll<IJournalEntry>().Where(blog => blog.IsPublished() && blog.Public);
             }
 
-            var allTags = validEntries.SelectMany(blog => blog.Tags).Distinct();
+            System.Collections.Generic.IEnumerable<string> allTags = validEntries.SelectMany(blog => blog.Tags).Distinct();
             if (includedTags != null && includedTags.Count() > 0)
             {
                 validEntries = validEntries.Where(blog => blog.Tags.Any(tag => includedTags.Contains(tag)));

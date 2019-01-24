@@ -100,7 +100,7 @@ namespace NetMud.Data.Linguistic
         /// <returns>Whether or not it succeeded</returns>
         public void TryModify(ILexica[] modifier)
         {
-            foreach (var mod in modifier)
+            foreach (ILexica mod in modifier)
                 TryModify(mod);
         }
 
@@ -111,7 +111,7 @@ namespace NetMud.Data.Linguistic
         /// <returns>Whether or not it succeeded</returns>
         public void TryModify(IEnumerable<ILexica> modifier)
         {
-            foreach (var mod in modifier)
+            foreach (ILexica mod in modifier)
                 TryModify(mod);
         }
 
@@ -122,7 +122,7 @@ namespace NetMud.Data.Linguistic
         /// <returns>Whether or not it succeeded</returns>
         public ILexica TryModify(LexicalType type, GrammaticalType role, string phrase, bool passthru = false)
         {
-            var modifier = new Lexica(type, role, phrase);
+            Lexica modifier = new Lexica(type, role, phrase);
             if (!Modifiers.Contains(modifier))
                 Modifiers.Add(modifier);
 
@@ -146,7 +146,7 @@ namespace NetMud.Data.Linguistic
         /// <returns>Whether or not it succeeded</returns>
         public void TryModify(Tuple<LexicalType, GrammaticalType, string>[] modifier)
         {
-            foreach (var mod in modifier)
+            foreach (Tuple<LexicalType, GrammaticalType, string> mod in modifier)
                 TryModify(mod);
         }
 
@@ -162,7 +162,7 @@ namespace NetMud.Data.Linguistic
         public string Describe(NarrativeNormalization normalization, int verbosity, LexicalTense chronology = LexicalTense.Present,
             NarrativePerspective perspective = NarrativePerspective.SecondPerson, bool omitName = true)
         {
-            var sentences = GetSentences(this, normalization, verbosity, chronology, perspective, omitName);
+            IEnumerable<Tuple<SentenceType, ILexica>> sentences = GetSentences(this, normalization, verbosity, chronology, perspective, omitName);
 
             if (normalization == NarrativeNormalization.Runon)
             {
@@ -170,11 +170,11 @@ namespace NetMud.Data.Linguistic
             }
 
             //join the sentences together with a space and add punctuation
-            var finalOutput = new List<string>();
-            foreach (var sentence in sentences)
+            List<string> finalOutput = new List<string>();
+            foreach (Tuple<SentenceType, ILexica> sentence in sentences)
             {
                 //Ensure every sentence starts with a caps letter
-                var sentenceText = sentence.Item2.ToString().CapsFirstLetter(true) + LexicalProcessor.GetPunctuationMark(sentence.Item1);
+                string sentenceText = sentence.Item2.ToString().CapsFirstLetter(true) + LexicalProcessor.GetPunctuationMark(sentence.Item1);
 
                 finalOutput.Add(sentenceText);
             }
@@ -185,7 +185,7 @@ namespace NetMud.Data.Linguistic
         private IEnumerable<Tuple<SentenceType, ILexica>> GetSentences(ILexica me, NarrativeNormalization normalization, 
                                                                         int verbosity, LexicalTense chronology, NarrativePerspective perspective, bool omitName)
         {
-            var sentences = new List<Tuple<SentenceType, ILexica>>();
+            List<Tuple<SentenceType, ILexica>> sentences = new List<Tuple<SentenceType, ILexica>>();
 
             //TODO: make a get pronoun thing in the thesaurus
             if (omitName)
@@ -196,16 +196,16 @@ namespace NetMud.Data.Linguistic
                 };
             }
 
-            var subjects = new List<ILexica>
+            List<ILexica> subjects = new List<ILexica>
             {
                 me
             };
             subjects.AddRange(Modifiers.Where(mod => mod.Role == GrammaticalType.Subject));
 
-            var isMe = true;
-            foreach (var subject in subjects)
+            bool isMe = true;
+            foreach (ILexica subject in subjects)
             {
-                var lexicas = new List<ILexica>();
+                List<ILexica> lexicas = new List<ILexica>();
                 switch (normalization)
                 {
                     case NarrativeNormalization.Hemmingway:
@@ -224,8 +224,8 @@ namespace NetMud.Data.Linguistic
                             lexicas.Add(subject);
 
                         //We do pronoun replacement after the first instance
-                        var first = isMe;
-                        foreach (var adj in subject.Modifiers.Where(mod => mod.Role == GrammaticalType.Descriptive))
+                        bool first = isMe;
+                        foreach (ILexica adj in subject.Modifiers.Where(mod => mod.Role == GrammaticalType.Descriptive))
                         {
                             Lexica newSplitSubject = null;
                             if (omitName || !first)
@@ -254,14 +254,14 @@ namespace NetMud.Data.Linguistic
                         break;
                 }
 
-                foreach (var lex in lexicas)
+                foreach (ILexica lex in lexicas)
                 {
                     if (lex.Modifiers.Any(mod => mod.Role == GrammaticalType.Subject))
                     {
                         sentences.Add(new Tuple<SentenceType, ILexica>(SentenceType.Partial, lex));
 
                         //fragment sentences
-                        foreach (var subLex in lex.Modifiers.Where(mod => mod.Role == GrammaticalType.Subject))
+                        foreach (ILexica subLex in lex.Modifiers.Where(mod => mod.Role == GrammaticalType.Subject))
                             sentences.Add(new Tuple<SentenceType, ILexica>(SentenceType.Statement, subLex));
                     }
                     else
@@ -284,8 +284,8 @@ namespace NetMud.Data.Linguistic
             if (string.IsNullOrWhiteSpace(Phrase))
                 return string.Empty;
 
-            var sb = new StringBuilder();
-            var adjectives = Modifiers.Where(mod => mod.Role == GrammaticalType.Descriptive);
+            StringBuilder sb = new StringBuilder();
+            IEnumerable<ILexica> adjectives = Modifiers.Where(mod => mod.Role == GrammaticalType.Descriptive);
 
             //up-caps all the proper nouns
             if (Type == LexicalType.ProperNoun)
@@ -322,11 +322,11 @@ namespace NetMud.Data.Linguistic
                     if ((Type == LexicalType.Noun || Type == LexicalType.ProperNoun) && !Modifiers.Any(mod => mod.Type == LexicalType.Conjunction))
                         TryModify(LexicalType.Conjunction, GrammaticalType.Descriptive, "a"); //TODO: make an a/an/the thing
 
-                    var describedNoun = AppendDescriptors(adjectives, Phrase);
+                    string describedNoun = AppendDescriptors(adjectives, Phrase);
 
                     if (Modifiers.Any(mod => mod.Role == GrammaticalType.IndirectObject || mod.Role == GrammaticalType.Descriptive))
                     {
-                        var iObj = Modifiers.Where(mod => mod.Role == GrammaticalType.IndirectObject)
+                        string iObj = Modifiers.Where(mod => mod.Role == GrammaticalType.IndirectObject)
                                             .Select(mod => mod.ToString()).CommaList(RenderUtility.SplitListType.AllAnd);
 
                         sb.AppendFormat("{0} {1}", iObj, describedNoun);
@@ -336,15 +336,15 @@ namespace NetMud.Data.Linguistic
 
                     break;
                 case GrammaticalType.Verb:
-                    var adverbString = adjectives.Where(adj => adj.Type == LexicalType.Adverb)
+                    string adverbString = adjectives.Where(adj => adj.Type == LexicalType.Adverb)
                                  .Select(adj => adj.ToString()).CommaList(RenderUtility.SplitListType.AllComma);
 
-                    var adjectiveString = adjectives.Where(adj => adj.Type == LexicalType.Adjective)
+                    string adjectiveString = adjectives.Where(adj => adj.Type == LexicalType.Adjective)
                                      .Select(adj => adj.ToString()).CommaList(RenderUtility.SplitListType.OxfordComma);
 
                     if (Modifiers.Any(mod => mod.Role == GrammaticalType.DirectObject))
                     {
-                        var dObj = Modifiers.Where(mod => mod.Role == GrammaticalType.DirectObject)
+                        string dObj = Modifiers.Where(mod => mod.Role == GrammaticalType.DirectObject)
                                             .Select(mod => mod.ToString()).CommaList(RenderUtility.SplitListType.OxfordComma);
 
                         sb.AppendFormat("{2} {0} {1} {3}", Phrase, dObj, adverbString, adjectiveString);
@@ -356,11 +356,11 @@ namespace NetMud.Data.Linguistic
                     if ((Type == LexicalType.Noun || Type == LexicalType.ProperNoun) && !Modifiers.Any(mod => mod.Type == LexicalType.Conjunction))
                         TryModify(LexicalType.Conjunction, GrammaticalType.Descriptive, "the"); //TODO: make an a/an/the thing
 
-                    var describedSubject = AppendDescriptors(adjectives, Phrase);
+                    string describedSubject = AppendDescriptors(adjectives, Phrase);
 
                     if (Modifiers.Any(mod => mod.Role == GrammaticalType.Verb))
                     {
-                        var vObj = Modifiers.Where(mod => mod.Role == GrammaticalType.Verb)
+                        string vObj = Modifiers.Where(mod => mod.Role == GrammaticalType.Verb)
                                             .Select(mod => mod.ToString()).CommaList(RenderUtility.SplitListType.AllAnd);
 
                         sb.AppendFormat("{0} {1}", describedSubject, vObj);
@@ -375,15 +375,15 @@ namespace NetMud.Data.Linguistic
 
         private string AppendDescriptors(IEnumerable<ILexica> adjectives, string phrase)
         {
-            var described = phrase;
+            string described = phrase;
 
             if (adjectives.Count() > 0)
             {
-                var decorativeString = adjectives.Where(adj => adj.Type != LexicalType.Conjunction && adj.Type != LexicalType.Interjection)
+                string decorativeString = adjectives.Where(adj => adj.Type != LexicalType.Conjunction && adj.Type != LexicalType.Interjection)
                                                  .Select(adj => adj.ToString()).CommaList(RenderUtility.SplitListType.AllComma);
 
-                var conjunctive = adjectives.FirstOrDefault(adj => adj.Type == LexicalType.Conjunction || adj.Type == LexicalType.Interjection);
-                var conjunctiveString = conjunctive != null ? conjunctive.ToString() + " " : string.Empty;
+                ILexica conjunctive = adjectives.FirstOrDefault(adj => adj.Type == LexicalType.Conjunction || adj.Type == LexicalType.Interjection);
+                string conjunctiveString = conjunctive != null ? conjunctive.ToString() + " " : string.Empty;
 
                 described = string.Format("{1}{2} {0}", phrase, conjunctiveString, decorativeString);
             }

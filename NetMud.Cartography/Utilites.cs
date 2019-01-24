@@ -25,11 +25,11 @@ namespace NetMud.Cartography
             if (origin == null || direction == MovementDirectionType.None)
                 return null;
 
-            var oppositeDirection = ReverseDirection(direction);
+            MovementDirectionType oppositeDirection = ReverseDirection(direction);
 
-            var paths = TemplateCache.GetAll<IPathwayTemplate>();
+            System.Collections.Generic.IEnumerable<IPathwayTemplate> paths = TemplateCache.GetAll<IPathwayTemplate>();
 
-            var ourPath = paths.FirstOrDefault(pt => origin.Equals(pt.Destination) 
+            IPathwayTemplate ourPath = paths.FirstOrDefault(pt => origin.Equals(pt.Destination) 
                                             && pt.DirectionType == oppositeDirection);
 
             if(ourPath != null)
@@ -73,7 +73,7 @@ namespace NetMud.Cartography
         /// <returns>translated text</returns>
         public static MovementDirectionType TranslateToDirection(int degreesFromNorth, int inclineGrade = 0, bool reverse = false)
         {
-            var trueDegrees = degreesFromNorth;
+            int trueDegrees = degreesFromNorth;
 
             if (trueDegrees < 0)
                 return MovementDirectionType.None;

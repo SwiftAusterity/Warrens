@@ -52,10 +52,10 @@ namespace NetMud.DataAccess
             if (!beQuiet)
             {
                 //write to people in game
-                var peeps = LiveCache.GetAll<IPlayer>().Where(peep => peep.Template<IPlayerTemplate>() != null && peep.Template<IPlayerTemplate>().Account != null && 
+                IEnumerable<IPlayer> peeps = LiveCache.GetAll<IPlayer>().Where(peep => peep.Template<IPlayerTemplate>() != null && peep.Template<IPlayerTemplate>().Account != null && 
                                                                         peep.Template<IPlayerTemplate>().Account.LogChannelSubscriptions.Contains(channel));
 
-                foreach (var peep in peeps)
+                foreach (IPlayer peep in peeps)
                     peep.WriteTo(new string[] { content });
             }
         }

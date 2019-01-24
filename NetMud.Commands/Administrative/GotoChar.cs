@@ -33,12 +33,12 @@ namespace NetMud.Commands.Administrative
         /// </summary>
         public override void Execute()
         {
-            var moveToPerson = (IEntity)Subject;
+            IEntity moveToPerson = (IEntity)Subject;
 
             if (moveToPerson.CurrentLocation == null)
                 throw new Exception("Invalid goto target.");
 
-            var moveTo = (IGlobalPosition)moveToPerson.CurrentLocation.Clone();
+            IGlobalPosition moveTo = (IGlobalPosition)moveToPerson.CurrentLocation.Clone();
 
             List<string> sb = new List<string>
             {

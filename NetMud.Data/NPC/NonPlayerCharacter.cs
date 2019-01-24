@@ -345,7 +345,7 @@ namespace NetMud.Data.NPC
 
             if (item != null)
             {
-                var template = item.Template<IInanimateTemplate>();
+                IInanimateTemplate template = item.Template<IInanimateTemplate>();
                 if (WillPurchase.Any(merch => merch.Item.Id == item.TemplateId))
                 {
                     DataStructure.Gaia.IEconomy theEconomy = CurrentLocation.CurrentZone.GetWorld().Macroeconomy;
@@ -434,7 +434,7 @@ namespace NetMud.Data.NPC
             sb.AppendLine("Current Stock:");
             foreach (IMerchandise merchandise in WillPurchase)
             {
-                var valuation = theEconomy.MakeValuation(merchandise.Item);
+                decimal valuation = theEconomy.MakeValuation(merchandise.Item);
                 int price = (int)Math.Truncate(valuation + valuation * merchandise.MarkRate);
 
                 if (price < 0)
@@ -538,7 +538,7 @@ namespace NetMud.Data.NPC
         public int InstructionPriceCheck(string qualityName, int level)
         {
             decimal value = -1;
-            var quality = TeachableProficencies.FirstOrDefault(qual => qual.Name.Equals(qualityName, StringComparison.InvariantCultureIgnoreCase) && qual.Value > level);
+            IQuality quality = TeachableProficencies.FirstOrDefault(qual => qual.Name.Equals(qualityName, StringComparison.InvariantCultureIgnoreCase) && qual.Value > level);
 
             //If we need it in stock but don't have it it's sell price is invalid
             if (quality != null)
@@ -619,7 +619,7 @@ namespace NetMud.Data.NPC
                 return "Invalid customer";
             }
 
-            var quality = TeachableProficencies.FirstOrDefault(qual => qual.Name.Equals(qualityName, StringComparison.InvariantCultureIgnoreCase) && qual.Value > level);
+            IQuality quality = TeachableProficencies.FirstOrDefault(qual => qual.Name.Equals(qualityName, StringComparison.InvariantCultureIgnoreCase) && qual.Value > level);
             if (quality == null)
             {
                 return "I can't teach that proficency to you.";
@@ -725,9 +725,9 @@ namespace NetMud.Data.NPC
         /// <returns>the contained entities</returns>
         public IEnumerable<T> GetContents<T>()
         {
-            var implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
+            IEnumerable<Type> implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
 
-            var contents = new List<T>();
+            List<T> contents = new List<T>();
 
             if (implimentedTypes.Contains(typeof(IMobile)))
                 contents.AddRange(MobilesInside.EntitiesContained().Select(ent => (T)ent));
@@ -746,9 +746,9 @@ namespace NetMud.Data.NPC
         /// <param name="containerName">the name of the container</param>
         public IEnumerable<T> GetContents<T>(string containerName)
         {
-            var implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
+            IEnumerable<Type> implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
 
-            var contents = new List<T>();
+            List<T> contents = new List<T>();
 
             if (implimentedTypes.Contains(typeof(IMobile)))
                 contents.AddRange(MobilesInside.EntitiesContained(containerName).Select(ent => (T)ent));
@@ -779,11 +779,11 @@ namespace NetMud.Data.NPC
         /// <returns>errors</returns>
         public string MoveInto<T>(T thing, string containerName)
         {
-            var implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
+            IEnumerable<Type> implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
 
             if (implimentedTypes.Contains(typeof(IInanimate)))
             {
-                var obj = (IInanimate)thing;
+                IInanimate obj = (IInanimate)thing;
 
                 if (Inventory.Contains(obj, containerName))
                     return "That is already in the container";
@@ -800,7 +800,7 @@ namespace NetMud.Data.NPC
 
             if (implimentedTypes.Contains(typeof(IMobile)))
             {
-                var obj = (IMobile)thing;
+                IMobile obj = (IMobile)thing;
 
                 if (MobilesInside.Contains(obj, containerName))
                     return "That is already in the container";
@@ -838,11 +838,11 @@ namespace NetMud.Data.NPC
         /// <returns>errors</returns>
         public string MoveFrom<T>(T thing, string containerName)
         {
-            var implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
+            IEnumerable<Type> implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
 
             if (implimentedTypes.Contains(typeof(IInanimate)))
             {
-                var obj = (IInanimate)thing;
+                IInanimate obj = (IInanimate)thing;
 
                 if (!Inventory.Contains(obj, containerName))
                     return "That is not in the container";
@@ -856,7 +856,7 @@ namespace NetMud.Data.NPC
 
             if (implimentedTypes.Contains(typeof(IMobile)))
             {
-                var obj = (IMobile)thing;
+                IMobile obj = (IMobile)thing;
 
                 if (!MobilesInside.Contains(obj, containerName))
                     return "That is not in the container";
@@ -885,9 +885,9 @@ namespace NetMud.Data.NPC
         /// <returns>height, length, width</returns>
         public override Dimensions GetModelDimensions()
         {
-            var height = Race.Head.Model.Height + Race.Torso.Model.Height + Race.Legs.Item.Model.Height;
-            var length = Race.Torso.Model.Length;
-            var width = Race.Torso.Model.Width;
+            int height = Race.Head.Model.Height + Race.Torso.Model.Height + Race.Legs.Item.Model.Height;
+            int length = Race.Torso.Model.Length;
+            int width = Race.Torso.Model.Width;
 
             return new Dimensions(height, length, width);
         }

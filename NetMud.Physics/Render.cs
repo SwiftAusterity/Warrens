@@ -118,7 +118,7 @@ namespace NetMud.Physics
         /// <returns>the damage type</returns>
         public static DamageType CharacterToDamageType(string chr)
         {
-            var returnValue = DamageType.None;
+            DamageType returnValue = DamageType.None;
 
             switch (chr)
             {
@@ -176,7 +176,7 @@ namespace NetMud.Physics
 
         private static string FlattenFlatModel(IDimensionalModelData model, bool forWeb = false)
         {
-            var flattenedModel = new StringBuilder();
+            StringBuilder flattenedModel = new StringBuilder();
 
             //load the plane up with blanks
             List<string[]> flattenedPlane = new List<string[]>
@@ -212,9 +212,9 @@ namespace NetMud.Physics
                     short xIs = (short)(xI + 1);
                     short yIs = (short)(yI + 1);
 
-                    var node = model.GetNode(xIs, yIs);
+                    IDimensionalModelNode node = model.GetNode(xIs, yIs);
 
-                    var nodeString = string.Empty;
+                    string nodeString = string.Empty;
 
                     if (node != null)
                     {
@@ -235,7 +235,7 @@ namespace NetMud.Physics
             flattenedModel.AppendLine();
 
             //Write out the flattened view to the string builder with line terminators
-            foreach (var nodes in flattenedPlane)
+            foreach (string[] nodes in flattenedPlane)
                 flattenedModel.AppendLine(string.Join("", nodes));
 
             flattenedModel.AppendLine();

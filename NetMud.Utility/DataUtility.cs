@@ -381,7 +381,7 @@ namespace NetMud.Utility
 
             if (thingType.IsInterface)
             {
-                var concreteClassType = thingConcreteAssembly.GetTypes().FirstOrDefault(ty => ty.GetInterfaces().Contains(thingType));
+                Type concreteClassType = thingConcreteAssembly.GetTypes().FirstOrDefault(ty => ty.GetInterfaces().Contains(thingType));
 
                 if (concreteClassType != null)
                 {
@@ -391,7 +391,7 @@ namespace NetMud.Utility
             else if (thingType.IsArray 
                 || (!typeof(string).Equals(thingType) && typeof(IEnumerable).IsAssignableFrom(thingType)))
             {
-                var underlyingTypes = thingType.GenericTypeArguments;
+                Type[] underlyingTypes = thingType.GenericTypeArguments;
                 thing = (T)Activator.CreateInstance(thingType, underlyingTypes.Select(typ => InstantiateSingleThing(typ, thingConcreteAssembly, fillAtWill)));
             }
             else if(!typeof(string).Equals(thingType))
@@ -405,11 +405,11 @@ namespace NetMud.Utility
         internal static object InstantiateSingleThing(Type thingType, Assembly thingConcreteAssembly, bool fillAtWill)
         {
             object thing = null;
-            var thingAssembly = thingType.Assembly;
+            Assembly thingAssembly = thingType.Assembly;
 
             if (thingType.IsInterface)
             {
-                var concreteClassType = thingAssembly.GetTypes().FirstOrDefault(ty => ty.GetInterfaces().Contains(thingType));
+                Type concreteClassType = thingAssembly.GetTypes().FirstOrDefault(ty => ty.GetInterfaces().Contains(thingType));
 
                 if (concreteClassType != null)
                 {
@@ -419,7 +419,7 @@ namespace NetMud.Utility
             else if (thingType.IsArray
                 || (!typeof(string).Equals(thingType) && typeof(IEnumerable).IsAssignableFrom(thingType)))
             {
-                var underlyingTypes = thingType.GenericTypeArguments;
+                Type[] underlyingTypes = thingType.GenericTypeArguments;
                 thing = Activator.CreateInstance(thingType, underlyingTypes.Select(typ => InstantiateSingleThing(typ, thingConcreteAssembly, fillAtWill)));
             }
             else

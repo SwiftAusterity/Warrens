@@ -13,9 +13,9 @@ namespace NetMud.Data.Architectural.PropertyBinding
             if (input == null)
                 return null;
 
-            var valueCollection = input as IEnumerable<string>;
+            IEnumerable<string> valueCollection = input as IEnumerable<string>;
 
-            var collective = new HashSet<IDictata>(valueCollection.Select(str => ConfigDataCache.Get<IDictata>(str)));
+            HashSet<IDictata> collective = new HashSet<IDictata>(valueCollection.Select(str => ConfigDataCache.Get<IDictata>(str)));
 
             return collective;
         }

@@ -45,7 +45,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            var vModel = new ManageCelestialsViewModel(TemplateCache.GetAll<ICelestial>())
+            ManageCelestialsViewModel vModel = new ManageCelestialsViewModel(TemplateCache.GetAll<ICelestial>())
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -66,9 +66,9 @@ namespace NetMud.Controllers.GameAdmin
 
             if (!string.IsNullOrWhiteSpace(authorizeRemove) && removeId.ToString().Equals(authorizeRemove))
             {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = TemplateCache.Get<ICelestial>(removeId);
+                ICelestial obj = TemplateCache.Get<ICelestial>(removeId);
 
                 if (obj == null)
                 {
@@ -86,9 +86,9 @@ namespace NetMud.Controllers.GameAdmin
             }
             else if (!string.IsNullOrWhiteSpace(authorizeUnapprove) && unapproveId.ToString().Equals(authorizeUnapprove))
             {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                var obj = TemplateCache.Get<ICelestial>(unapproveId);
+                ICelestial obj = TemplateCache.Get<ICelestial>(unapproveId);
 
                 if (obj == null)
                 {
@@ -115,7 +115,7 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add()
         {
-            var vModel = new AddEditCelestialViewModel
+            AddEditCelestialViewModel vModel = new AddEditCelestialViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
                 ValidMaterials = TemplateCache.GetAll<IMaterial>(true),
@@ -132,8 +132,8 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Add(AddEditCelestialViewModel vModel)
         {
             string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
-            var newObj = vModel.DataObject;
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ICelestial newObj = vModel.DataObject;
 
             if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
             {
@@ -152,7 +152,7 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(long id)
         {
             string message = string.Empty;
-            var vModel = new AddEditCelestialViewModel
+            AddEditCelestialViewModel vModel = new AddEditCelestialViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
                 ValidMaterials = TemplateCache.GetAll<IMaterial>(true),
@@ -160,7 +160,7 @@ namespace NetMud.Controllers.GameAdmin
                 ValidTemplateBases = TemplateCache.GetAll<ICelestial>(true)
             };
 
-            var obj = TemplateCache.Get<ICelestial>(id);
+            ICelestial obj = TemplateCache.Get<ICelestial>(id);
 
             if (obj == null)
             {
@@ -178,9 +178,9 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(long id, AddEditCelestialViewModel vModel)
         {
             string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = TemplateCache.Get<ICelestial>(id);
+            ICelestial obj = TemplateCache.Get<ICelestial>(id);
             if (obj == null)
             {
                 message = "That does not exist";
@@ -221,14 +221,14 @@ namespace NetMud.Controllers.GameAdmin
         {
             string message = string.Empty;
 
-            var obj = TemplateCache.Get<ICelestial>(id);
+            ICelestial obj = TemplateCache.Get<ICelestial>(id);
             if (obj == null)
             {
                 message = "That does not exist";
                 return RedirectToRoute("ModalErrorOrClose", new { Message = message });
             }
 
-            var vModel = new OccurrenceViewModel
+            OccurrenceViewModel vModel = new OccurrenceViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
                 DataObject = obj
@@ -236,7 +236,7 @@ namespace NetMud.Controllers.GameAdmin
 
             if (descriptiveType > -1)
             {
-                var grammaticalType = (GrammaticalType)descriptiveType;
+                GrammaticalType grammaticalType = (GrammaticalType)descriptiveType;
                 vModel.SensoryEventDataObject = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType
                                                                                         && occurrence.Event.Phrase.Equals(phrase, StringComparison.InvariantCultureIgnoreCase));
             }
@@ -254,23 +254,23 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult AddEditDescriptive(long id, OccurrenceViewModel vModel)
         {
             string message = string.Empty;
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var obj = TemplateCache.Get<ICelestial>(id);
+            ICelestial obj = TemplateCache.Get<ICelestial>(id);
             if (obj == null)
             {
                 message = "That does not exist";
                 return RedirectToRoute("ModalErrorOrClose", new { Message = message });
             }
 
-            var existingOccurrence = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == vModel.SensoryEventDataObject.Event.Role
+            ISensoryEvent existingOccurrence = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == vModel.SensoryEventDataObject.Event.Role
                                                                                 && occurrence.Event.Phrase.Equals(vModel.SensoryEventDataObject.Event.Phrase, StringComparison.InvariantCultureIgnoreCase));
 
             if (existingOccurrence == null)
             {
                 existingOccurrence = new SensoryEvent();
             }
-            var existingEvent = existingOccurrence.Event;
+            ILexica existingEvent = existingOccurrence.Event;
 
             if (existingEvent == null)
             {
@@ -305,8 +305,8 @@ namespace NetMud.Controllers.GameAdmin
             }
             else
             {
-                var authedUser = UserManager.FindById(User.Identity.GetUserId());
-                var values = authorize.Split(new string[] { "|||" }, StringSplitOptions.RemoveEmptyEntries);
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+                string[] values = authorize.Split(new string[] { "|||" }, StringSplitOptions.RemoveEmptyEntries);
 
                 if (values.Count() != 2)
                 {
@@ -314,10 +314,10 @@ namespace NetMud.Controllers.GameAdmin
                 }
                 else
                 {
-                    var type = short.Parse(values[0]);
-                    var phrase = values[1];
+                    short type = short.Parse(values[0]);
+                    string phrase = values[1];
 
-                    var obj = TemplateCache.Get<ICelestial>(id);
+                    ICelestial obj = TemplateCache.Get<ICelestial>(id);
 
                     if (obj == null)
                     {
@@ -325,8 +325,8 @@ namespace NetMud.Controllers.GameAdmin
                     }
                     else
                     {
-                        var grammaticalType = (GrammaticalType)type;
-                        var existingOccurrence = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType
+                        GrammaticalType grammaticalType = (GrammaticalType)type;
+                        ISensoryEvent existingOccurrence = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType
                                                                                             && occurrence.Event.Phrase.Equals(phrase, StringComparison.InvariantCultureIgnoreCase));
 
                         if (existingOccurrence != null)

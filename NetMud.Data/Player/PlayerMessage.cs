@@ -145,7 +145,7 @@ namespace NetMud.Data.Players
                 if (string.IsNullOrWhiteSpace(RecipientName))
                     return null;
 
-                var characters = PlayerDataCache.GetAllForAccountHandle(Name);
+                global::System.Collections.Generic.IEnumerable<IPlayerTemplate> characters = PlayerDataCache.GetAllForAccountHandle(Name);
 
                 //TODO: Maybe get a character by name in cache
                 return characters.FirstOrDefault(ch => ch.Name.Equals(RecipientName, StringComparison.InvariantCultureIgnoreCase));

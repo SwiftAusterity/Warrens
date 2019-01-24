@@ -48,7 +48,7 @@ namespace NetMud.Data.Architectural.EntityBase
         {
             ModelNodes = new HashSet<IDimensionalModelNode>();
 
-            for (var i = 0; i < 21; i++)
+            for (int i = 0; i < 21; i++)
             {
                 ModelNodes.Add(new DimensionalModelNode());
             }
