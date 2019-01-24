@@ -1,0 +1,14 @@
+﻿@using NetMud.Data.Room
+
+@model PathwayTemplate
+
+<h5>Destination: Model.Destination.Name</h5>
+
+<h4>Details</h4>
+<div class="form-group row">
+    @Html.EditorFor(m => m.Name)
+    @Html.EditorFor(m => m.InclineGrade)
+</div>
+
+<h4>Dimensional Model</h4>
+@Html.EditorFor(m => m.Model)

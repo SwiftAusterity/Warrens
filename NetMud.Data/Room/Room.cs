@@ -505,6 +505,8 @@ namespace NetMud.Data.Room
             //We can't even try this until we know if the data is there
             var bS = Template<IRoomTemplate>() ?? throw new InvalidOperationException("Missing backing data store on room spawn event.");
 
+            ParentLocation = bS.ParentLocation.GetLiveInstance();
+
             Keywords = new string[] { bS.Name.ToLower() };
 
             if (NaturalResources == null)
@@ -520,7 +522,6 @@ namespace NetMud.Data.Room
                 spawnTo = new GlobalPosition(this);
 
             CurrentLocation = spawnTo;
-            ParentLocation = bS.ParentLocation.GetLiveInstance();
             Model = bS.Model;
 
             UpsertToLiveWorldCache(true);

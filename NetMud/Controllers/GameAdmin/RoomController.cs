@@ -2,7 +2,6 @@
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
 using NetMud.Communication.Lexical;
-using NetMud.Data.Architectural.EntityBase;
 using NetMud.Data.Linguistic;
 using NetMud.Data.Room;
 using NetMud.DataAccess;
@@ -131,11 +130,21 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add(long localeId)
         {
+            var myLocale = TemplateCache.Get<ILocaleTemplate>(localeId);
+
+            if (myLocale == null)
+            {
+                return RedirectToAction("Index", new { Message = "Invalid Locale" });
+            }
+
             var vModel = new AddEditRoomTemplateViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
                 ValidMaterials = TemplateCache.GetAll<IMaterial>(),
-                Locale = TemplateCache.Get<ILocaleTemplate>(localeId)
+                ValidModels = TemplateCache.GetAll<IDimensionalModelData>(),
+                ValidZones = TemplateCache.GetAll<IZoneTemplate>(),
+                ZonePathway = new PathwayTemplate() { Destination = myLocale.ParentLocation },
+                DataObject = new RoomTemplate() { ParentLocation = myLocale }
             };
 
             return View("~/Views/GameAdmin/Room/Add.cshtml", "_chromelessLayout", vModel);
@@ -149,32 +158,37 @@ namespace NetMud.Controllers.GameAdmin
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
             var locale = TemplateCache.Get<ILocaleTemplate>(localeId);
 
-            var newObj = new RoomTemplate
+            var newObj = vModel.DataObject;
+            newObj.ParentLocation = locale;
+            newObj.Coordinates = new Coordinate(0, 0, 0); //TODO: fix this
+
+            PathwayTemplate zoneDestination = null;
+            if (vModel.ZonePathway?.Destination != null)
             {
-                Name = vModel.Name
-            };
+                var destination = TemplateCache.Get<IZoneTemplate>(vModel.ZonePathway.Destination.Id);
+                zoneDestination = new PathwayTemplate()
+                {
+                    DegreesFromNorth = -1,
+                    Name = vModel.ZonePathway.Name,
+                    Origin = newObj,
+                    Destination = destination,
+                    InclineGrade = vModel.ZonePathway.InclineGrade,
+                    Model = vModel.ZonePathway.Model
+                };
+            }
 
-            var mediumId = vModel.Medium;
-            var medium = TemplateCache.Get<IMaterial>(mediumId);
-
-            if (medium != null)
+            if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
             {
-                newObj.Medium = medium;
-                newObj.ParentLocation = locale;
-                newObj.Coordinates = new Coordinate(0, 0, 0); //TODO: fix this
+                if (zoneDestination != null)
+                {
+                    zoneDestination.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
+                }
 
-                if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
-                {
-                    message = "Error; Creation failed.";
-                }
-                else
-                {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddRoomTemplate[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                }
+                message = "Error; Creation failed.";
             }
             else
             {
-                message = "You must include a valid Medium material.";
+                LoggingUtility.LogAdminCommandUsage("*WEB* - AddRoomTemplate[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
             }
 
             return RedirectToRoute("ModalErrorOrClose", new { Message = message });
@@ -189,6 +203,7 @@ namespace NetMud.Controllers.GameAdmin
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
                 ValidMaterials = TemplateCache.GetAll<IMaterial>(),
                 ValidZones = TemplateCache.GetAll<IZoneTemplate>(),
+                ValidModels = TemplateCache.GetAll<IDimensionalModelData>()
             };
 
             var obj = TemplateCache.Get<IRoomTemplate>(id);
@@ -199,26 +214,13 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToRoute("ErrorOrClose", new { Message = message });
             }
 
-            vModel.Locale = obj.ParentLocation;
             vModel.DataObject = obj;
-            vModel.Name = obj.Name;
 
             var zoneDestination = obj.GetZonePathways().FirstOrDefault();
 
             if (zoneDestination != null)
             {
                 vModel.ZonePathway = zoneDestination;
-                vModel.ZoneDestinationId = zoneDestination.Destination.Id;
-                vModel.ZonePathwayName = zoneDestination.Name;
-                vModel.ZoneDimensionalModelHeight = zoneDestination.Model.Height;
-                vModel.ZoneDimensionalModelLength = zoneDestination.Model.Length;
-                vModel.ZoneDimensionalModelWidth = zoneDestination.Model.Width;
-                vModel.ZoneDimensionalModelCavitation = zoneDestination.Model.SurfaceCavitation;
-                vModel.ZoneDimensionalModelVacuity = zoneDestination.Model.Vacuity;
-            }
-            else
-            {
-                vModel.ZoneDestinationId = -1;
             }
 
             return View("~/Views/GameAdmin/Room/Edit.cshtml", "_chromelessLayout", vModel);
@@ -239,62 +241,53 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToRoute("ModalErrorOrClose", new { Message = message });
             }
 
-            var mediumId = vModel.Medium;
-            var medium = TemplateCache.Get<IMaterial>(mediumId);
+            var mediumId = vModel.DataObject.Medium;
+            obj.Name = vModel.DataObject.Name;
 
-            if (medium != null)
+            var destination = TemplateCache.Get<IZoneTemplate>(vModel.ZonePathway.Destination.Id);
+            if (vModel.ZonePathway?.Destination != null)
             {
-                obj.Name = vModel.Name;
-                obj.Medium = medium;
+                zoneDestination = obj.GetZonePathways().FirstOrDefault();
 
-                var destination = TemplateCache.Get<IZoneTemplate>(vModel.ZoneDestinationId);
-                if (destination != null)
+                if (zoneDestination == null)
                 {
-                    zoneDestination = obj.GetZonePathways().FirstOrDefault();
-
-                    if (zoneDestination == null)
+                    zoneDestination = new PathwayTemplate()
                     {
-                        zoneDestination = new PathwayTemplate(new DimensionalModel(vModel.ZoneDimensionalModelLength, vModel.ZoneDimensionalModelHeight, vModel.ZoneDimensionalModelWidth,
-                                                                                vModel.ZoneDimensionalModelVacuity, vModel.ZoneDimensionalModelCavitation))
-                        {
-                            DegreesFromNorth = -1,
-                            Name = vModel.ZonePathwayName,
-                            Origin = obj,
-                            Destination = destination
-                        };
-                    }
-                    else
-                    {
-                        zoneDestination.Model = new DimensionalModel(vModel.ZoneDimensionalModelLength, vModel.ZoneDimensionalModelHeight, vModel.ZoneDimensionalModelWidth,
-                                                    vModel.ZoneDimensionalModelVacuity, vModel.ZoneDimensionalModelCavitation);
-                        zoneDestination.Name = vModel.ZonePathwayName;
-
-                        //We switched zones, this makes things more complicated
-                        if (zoneDestination.Id != vModel.ZoneDestinationId)
-                        {
-                            zoneDestination.Destination = destination;
-                        }
-                    }
-
-                }
-
-                if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
-                {
-                    if (zoneDestination != null)
-                    {
-                        zoneDestination.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
-                    }
-
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - EditRoomTemplate[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                        DegreesFromNorth = -1,
+                        Name = vModel.ZonePathway.Name,
+                        Origin = obj,
+                        Destination = destination,
+                        InclineGrade = vModel.ZonePathway.InclineGrade,
+                        Model = vModel.ZonePathway.Model
+                    };
                 }
                 else
                 {
-                    message = "Error; Edit failed.";
+                    zoneDestination.Model = vModel.ZonePathway.Model;
+                    zoneDestination.Name = vModel.ZonePathway.Name;
+                    zoneDestination.InclineGrade = vModel.ZonePathway.InclineGrade;
+
+                    //We switched zones, this makes things more complicated
+                    if (zoneDestination.Id != vModel.ZonePathway.Destination.Id)
+                    {
+                        zoneDestination.Destination = destination;
+                    }
                 }
+
+            }
+
+            if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+            {
+                if (zoneDestination != null)
+                {
+                    zoneDestination.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
+                }
+
+                LoggingUtility.LogAdminCommandUsage("*WEB* - EditRoomTemplate[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
             }
             else
             {
-                message = "You must include a valid Medium material.";
+                message = "Error; Edit failed.";
             }
 
             return RedirectToRoute("ModalErrorOrClose");

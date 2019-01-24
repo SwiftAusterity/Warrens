@@ -2,31 +2,16 @@
 
 @model RoomTemplate
 
+<h4>Parent Locale</h4>
+<div class="form-group row">
+    @Html.EditorFor(m => m.ParentLocation)
+</div>
+
 <h4>Details</h4>
 <div class="form-group row">
-    <label for="Locale" class="col-sm-2 col-form-label">Locale</label>
-    <input type="text" id="Locale" name="Locale" disabled="disabled" title="Locale" value="@Model.ParentLocation.Name" class="col-md-10" />
     @Html.EditorFor(m => m.Name)
     @Html.EditorFor(m => m.Medium, new { validItems = ViewData["ValidMaterials"] })
 </div>
 
 <h4>Dimensional Model</h4>
 @Html.EditorFor(m => m.Model)
-
-<h3>Pathway to Zone</h3>
-<div class="form-group row">
-    @Html.EditorFor(model => model.ZonePathwayName)
-    <label id="lblDestination" class="col-sm-1 col-form-label">&nbsp;</label>
-    @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("ZoneDestinationId", "Destination Zone", ViewData["ValidZones"], Model.ParentLocation.ParentLocation.Id))
-</div>
-
-<h4>Dimensional Properties</h4>
-<div class="form-group row">
-    @Html.EditorFor(m => m.ZoneDimensionalModelHeight)
-    @Html.EditorFor(m => m.ZoneDimensionalModelWidth)
-    @Html.EditorFor(m => m.ZoneDimensionalModelLength)
-</div>
-<div class="form-group row">
-    @Html.EditorFor(m => m.ZoneDimensionalModelVacuity)
-    @Html.EditorFor(m => m.ZoneDimensionalModelCavitation)
-</div>

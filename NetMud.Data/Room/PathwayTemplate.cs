@@ -84,6 +84,9 @@ namespace NetMud.Data.Room
         /// <summary>
         /// -100 to 100 (negative being a decline) % grade of up and down
         /// </summary>
+        [Range(-100, 100, ErrorMessage = "The {0} must be between {2} and {1}. -1 is for non-cardinal exits.")]
+        [Display(Name = "Incline Grade", Description = "-100 to 100 (negative being a decline) % grade of elevation change.")]
+        [DataType(DataType.Text)]
         public int InclineGrade { get; set; }
 
         [JsonProperty("Destination")]
@@ -138,6 +141,7 @@ namespace NetMud.Data.Room
         /// Framework for the physics model of an entity
         /// </summary>
         [NonNullableDataIntegrity("Physical Model is invalid.")]
+        [UIHint("TwoDimensionalModel")]
         public IDimensionalModel Model { get; set; }
 
         /// <summary>
@@ -145,6 +149,7 @@ namespace NetMud.Data.Room
         /// </summary>
         public PathwayTemplate()
         {
+            Model = new DimensionalModel();
         }
 
         /// <summary>

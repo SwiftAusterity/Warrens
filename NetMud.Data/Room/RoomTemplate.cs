@@ -1,6 +1,7 @@
 ﻿using NetMud.Communication.Lexical;
 using NetMud.Data.Architectural.DataIntegrity;
 using NetMud.Data.Architectural.EntityBase;
+using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.Data.Linguistic;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
@@ -64,6 +65,7 @@ namespace NetMud.Data.Room
         /// Framework for the physics model of an entity
         /// </summary>
         [NonNullableDataIntegrity("Physical Model is invalid.")]
+        [UIHint("TwoDimensionalModel")]
         public IDimensionalModel Model { get; set; }
 
         [JsonProperty("Medium")]
@@ -76,7 +78,8 @@ namespace NetMud.Data.Room
         [JsonIgnore]
         [NonNullableDataIntegrity("Medium material is invalid.")]
         [Display(Name = "Medium", Description = "What the 'empty' space of the room is made of. (likely AIR, sometimes stone or dirt)")]
-        [DataType(DataType.Text)]
+        [UIHint("MaterialList")]
+        [MaterialDataBinder]
         public IMaterial Medium
         {
             get
@@ -99,6 +102,8 @@ namespace NetMud.Data.Room
         [ScriptIgnore]
         [JsonIgnore]
         [NonNullableDataIntegrity("Parent Location is invalid.")]
+        [Display(Name = "Parent Locale", Description = "The locale this room belongs to.")]
+        [UIHint("LocaleRoomDisplay")]
         public ILocaleTemplate ParentLocation
         {
             get
@@ -124,6 +129,7 @@ namespace NetMud.Data.Room
         /// </summary>
         public RoomTemplate()
         {
+            Model = new DimensionalModel();
         }
 
         /// <summary>

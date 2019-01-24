@@ -190,9 +190,9 @@ namespace NetMud.Data.Architectural
         public GlobalPosition(IContains currentContainer)
         {
             CurrentContainer = currentContainer;
-            CurrentZone = currentContainer.CurrentLocation.CurrentZone;
-            CurrentLocale = currentContainer.CurrentLocation.CurrentLocale;
-            CurrentRoom = currentContainer.CurrentLocation.CurrentRoom;
+            CurrentZone = currentContainer.CurrentLocation?.CurrentZone;
+            CurrentLocale = currentContainer.CurrentLocation?.CurrentLocale;
+            CurrentRoom = currentContainer.CurrentLocation?.CurrentRoom;
         }
 
         /// <summary>
