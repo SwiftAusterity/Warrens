@@ -46,6 +46,7 @@ namespace NetMud.Data.NaturalResource
         [ScriptIgnore]
         [NonNullableDataIntegrity("Rock must have a value.")]
         [Display(Name = "Rock", Description = "What object is used to refer to this in rock form.")]
+        [UIHint("MaterialList")]
         [MaterialDataBinder]
         public IMaterial Rock
         {
@@ -69,6 +70,7 @@ namespace NetMud.Data.NaturalResource
         [ScriptIgnore]
         [NonNullableDataIntegrity("Dirt must have a value.")]
         [Display(Name = "Dirt", Description = "What object is used to refer to this in dirt form.")]
+        [UIHint("MaterialList")]
         [MaterialDataBinder]
         public IMaterial Dirt
         {

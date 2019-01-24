@@ -23,6 +23,7 @@ namespace NetMud.Data.NaturalResource
         /// <summary>
         /// How much sunlight does this need to spawn
         /// </summary>
+        [Display(Name = "Sunlight", Description = "How much sunlight does this need to spawn.")]
         [DataType(DataType.Text)]
         public int SunlightPreference { get; set; }
 
@@ -43,6 +44,7 @@ namespace NetMud.Data.NaturalResource
         [ScriptIgnore]
         [NonNullableDataIntegrity("Wood must have a value.")]
         [Display(Name = "Wood/Bark", Description = "Bulk material of plant. Stem, trunk, etc.")]
+        [UIHint("MaterialList")]
         [MaterialDataBinder]
         public IMaterial Wood
         { 
@@ -65,6 +67,7 @@ namespace NetMud.Data.NaturalResource
         [JsonIgnore]
         [ScriptIgnore]
         [Display(Name = "Flower", Description = "Flowering element of plant")]
+        [UIHint("InanimateTemplateList")]
         [InanimateTemplateDataBinder]
         public IInanimateTemplate Flower
         { 
@@ -87,6 +90,7 @@ namespace NetMud.Data.NaturalResource
         [JsonIgnore]
         [ScriptIgnore]
         [Display(Name = "Leaves", Description = "Leaves of the plant.")]
+        [UIHint("InanimateTemplateList")]
         [InanimateTemplateDataBinder]
         public IInanimateTemplate Leaf 
         { 
@@ -109,6 +113,7 @@ namespace NetMud.Data.NaturalResource
         [JsonIgnore]
         [ScriptIgnore]
         [Display(Name = "Fruit", Description = "Fruit of the plant, can be inedible like a pinecone")]
+        [UIHint("InanimateTemplateList")]
         [InanimateTemplateDataBinder]
         public IInanimateTemplate Fruit
         { 
@@ -131,6 +136,7 @@ namespace NetMud.Data.NaturalResource
         [JsonIgnore]
         [ScriptIgnore]
         [Display(Name = "Seed", Description = "Seed of the plant.")]
+        [UIHint("InanimateTemplateList")]
         [InanimateTemplateDataBinder]
         public IInanimateTemplate Seed 
         { 

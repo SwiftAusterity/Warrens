@@ -1,4 +1,5 @@
 ﻿using NetMud.Data.Architectural.DataIntegrity;
+using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.Data.Inanimate;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
@@ -53,6 +54,7 @@ namespace NetMud.Data.Architectural.ActorBase
         [NonNullableDataIntegrity("Torso is invalid.")]
         [Display(Name = "Torso Object", Description = "The # of and object that this thing's torso is made of.")]
         [UIHint("InanimateTemplateList")]
+        [InanimateTemplateDataBinder]
         public IInanimateTemplate Torso
         {
             get
@@ -76,6 +78,7 @@ namespace NetMud.Data.Architectural.ActorBase
         [NonNullableDataIntegrity("Head is invalid.")]
         [Display(Name = "Head Object", Description = "The object that this thing's head is made of.")]
         [UIHint("InanimateTemplateList")]
+        [InanimateTemplateDataBinder]
         public IInanimateTemplate Head
         {
             get
@@ -113,6 +116,7 @@ namespace NetMud.Data.Architectural.ActorBase
         [NonNullableDataIntegrity("Blood material is invalid.")]
         [Display(Name = "Blood Type", Description = "The material this thing's blood is composed of.")]
         [UIHint("MaterialList")]
+        [MaterialDataBinder]
         public IMaterial SanguinaryMaterial
         {
             get
@@ -175,6 +179,7 @@ namespace NetMud.Data.Architectural.ActorBase
         [NonNullableDataIntegrity("Starting Location is invalid.")]
         [Display(Name = "Starting Zone", Description = "The zone this begins in when made as a player.")]
         [UIHint("ZoneTemplateList")]
+        [ZoneTemplateDataBinder]
         public IZoneTemplate StartingLocation
         {
             get
@@ -199,6 +204,7 @@ namespace NetMud.Data.Architectural.ActorBase
         [Display(Name = "Recall Zone", Description = "The 'emergency' zone this shows up in when the system can't figure out where else to put it. (post-newbie zone for players)")]
         [DataType(DataType.Text)]
         [UIHint("ZoneTemplateList")]
+        [ZoneTemplateDataBinder]
         public IZoneTemplate EmergencyLocation
         {
             get

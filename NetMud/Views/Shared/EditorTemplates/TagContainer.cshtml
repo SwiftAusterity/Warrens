@@ -7,7 +7,7 @@
     <div class="addRowContainer">
         <div class="col-sm-1">
             @Html.DescriptionFor(m => m)
-            <a href="#" class="addRow btn" onclick="javascript: $('#@rowsName').append(newMerchandiseRow); return false;"><span class="addWord">Add Tag</span></a>
+            <a href="#" class="addRow btn" onclick="javascript: $('#@rowsName').append(newTagRow); return false;"><span class="addWord">Add Tag</span></a>
         </div>
     </div>
     @if (currentCount > 0)
@@ -16,5 +16,5 @@
     }
 </div>
 <script type="text/javascript">
-    var newMerchandiseRow = decodeHtml('@Html.EmptyEditorForMany(m => m, null, currentCount, "TagItem")');
+    var newTagRow = decodeHtml('@Html.EmptyEditorForMany(m => m, null, currentCount, "TagItem")');
 </script>

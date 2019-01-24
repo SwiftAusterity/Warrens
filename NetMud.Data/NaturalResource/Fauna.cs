@@ -59,6 +59,7 @@ namespace NetMud.Data.NaturalResource
         [ScriptIgnore]
         [NonNullableDataIntegrity("Race must be set.")]
         [Display(Name = "Race", Description = "What race this herd is composed of. Non-sentient races only.")]
+        [UIHint("RaceList")]
         [RaceDataBinder]
         public IRace Race
         {

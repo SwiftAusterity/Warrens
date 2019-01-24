@@ -14,7 +14,7 @@
 
 <h4>Anatomy</h4>
 <div class="form-group row">
-    @Html.EditorFor(m => m.Wood, new { validItems = ViewData["ValidItems"] })
+    @Html.EditorFor(m => m.Wood, new { validItems = ViewData["ValidMaterials"] })
     @Html.EditorFor(m => m.Leaf, new { validItems = ViewData["ValidItems"] })
     @Html.EditorFor(m => m.Flower, new { validItems = ViewData["ValidItems"] })
     @Html.EditorFor(m => m.Fruit, new { validItems = ViewData["ValidItems"] })

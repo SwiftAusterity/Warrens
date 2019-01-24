@@ -1,8 +1,10 @@
 ﻿@model NetMud.Models.Logging.DashboardViewModel
 
+@{
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Live Log View", new string[] { "Dashboard", "Logs" }, new string[] { "/GameAdmin", "/Logging" });
+}
+
 <div style="padding-bottom: 25px;">
-    <h4>Live Channels</h4>
-    <hr />
     <div class="form-group row">
         @using (Html.BeginForm("Index", "Logging", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
@@ -25,8 +27,8 @@
         {
             <input type="hidden" name="SelectedLog" value="@Model.SelectedLog" />
             <textarea id="logContent" name="logContent" readonly="readonly" class="logDisplay">@Model.SelectedLogContent</textarea>
-            <br/>
-            <input type="submit" value="Rollover" class="btn btn-default" style="margin-top: 15px; color: orangered;"/>
+            <br />
+            <input type="submit" value="Rollover" class="btn btn-default" style="margin-top: 15px; color: orangered;" />
         }
     }
 </div>

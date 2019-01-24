@@ -11,15 +11,15 @@
     <div class="addRowContainer">
         <div class="col-sm-1">
             @Html.DescriptionFor(m => m)
-            <a href="#" class="addRow btn" onclick="javascript:  $('#@rowsName').append(newInanimateComponent); return false;"><span class="addWord">Add Row</span></a>
+            <a href="#" class="addRow btn" onclick="javascript: $('#@rowsName').append(newBodyPart); return false;"><span class="addWord">Add Row</span></a>
         </div>
     </div>
-    @if (Model.Count() > 0)
+    @if (currentCount > 0)
     {
         @Html.EditorForMany(m => m, null, 0, "BodyPart")
     }
 </div>
 
 <script type="text/javascript">
-    var newInanimateComponent = decodeHtml('@Html.EmptyEditorForMany(m => m, null, currentCount, "BodyPart")');
+    var newBodyPart = decodeHtml('@Html.EmptyEditorForMany(m => m, null, currentCount, "BodyPart")');
 </script>
