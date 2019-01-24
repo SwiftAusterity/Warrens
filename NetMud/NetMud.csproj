@@ -406,7 +406,6 @@
     <Content Include="Scripts\tooltip.js" />
     <Content Include="Scripts\ClientHelpers.js" />
     <Content Include="Views\GameAdmin\Pathway\OccurrenceList.cshtml" />
-    <Content Include="Views\GameAdmin\Room\OccurrenceList.cshtml" />
     <Content Include="Views\GameAdmin\Inanimate\SensoryEventList.cshtml" />
     <Content Include="Views\GameAdmin\Inanimate\SensoryEvent.cshtml" />
     <Content Include="Views\GameClient\DockerSettings.cshtml" />
@@ -563,6 +562,9 @@
     <Content Include="Views\GameAdmin\Zone\SensoryEventList.cshtml" />
     <Content Include="Views\GameAdmin\Zone\SensoryEvent.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\LocaleTemplate.cshtml" />
+    <Content Include="Views\GameAdmin\Room\SensoryEvent.cshtml" />
+    <Content Include="Views\GameAdmin\Room\SensoryEventList.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\RoomTemplate.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />

@@ -39,9 +39,8 @@
                             <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                         }
                     </dd>
-                    <dt>Locales [@Html.ActionLink(Model.Locales.Count().ToString(), "Index", "Locale", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" })]</dt>
+                    <dt>Locales [@Model.Locales.Count().ToString()]</dt>
                     <dd>
-                        @Html.ActionLink(" ", "Add", "Locale", null, htmlAttributes: new { @class = "glyphicon-plus-sign glyphicon", @style = "color: green;", @title = "Add New" })
                         @if (Model.Locales.Any(r => r.FitnessProblems))
                         {
                             <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
@@ -51,9 +50,8 @@
                             <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                         }
                     </dd>
-                    <dt>Rooms [@Html.ActionLink(Model.Rooms.Count().ToString(), "Index", "Room", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" })]</dt>
+                    <dt>Rooms [@Model.Rooms.Count().ToString()]</dt>
                     <dd>
-                        @Html.ActionLink(" ", "Add", "Room", null, htmlAttributes: new { @class = "glyphicon-plus-sign glyphicon", @style = "color: green;", @title = "Add New" })
                         @if (Model.Rooms.Any(r => r.FitnessProblems))
                         {
                             <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>

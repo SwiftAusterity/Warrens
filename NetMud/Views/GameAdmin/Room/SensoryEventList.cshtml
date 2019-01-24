@@ -1,4 +1,6 @@
-﻿@model NetMud.DataStructure.Room.IRoomTemplate
+﻿@using NetMud.DataStructure.Room
+
+@model IRoomTemplate
 
 @{
     var tableColumns = new Dictionary<string, Func<dynamic, string>>();
@@ -10,32 +12,23 @@
     tableColumns.Add("DELETE", obj =>
     string.Format("<div></div>"
                + "<button type='submit' name='id' id='id' class='removeData' value='{0}' title='Delete this'><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></button>"
-               + "<input type='radio' name='authorize' value='{1}|||{2}' style='margin-left: 15px;' />", Model.Id, obj.Event.Type.ToString(), obj.Event.Phrase));
+               + "<input type='radio' name='authorize' value='{1}|||{2}' style='margin-left: 15px;' />", Model.Id, obj.Event.Role.ToString(), obj.Event.Phrase));
 }
 
-<div class="clearfix"></div>
 <h3>Descriptive Features</h3>
-<hr />
-<div>
-    <a href="#" class="addNew">Add New Descriptive</a>
-</div>
-
-@using (Html.BeginForm("RemoveDescriptive", "Room"))
-{
-    @Html.AntiForgeryToken()
-    @Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Name = "", Columns = tableColumns, Values = Model.Descriptives, IncludeDelete = false, IncludeUnapprove = false })
-}
+<a href="#" class="addNewDescriptive">Add New Descriptive</a>
+@Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { IncludeAddLink = false, IncludeBasicPagingandSearch = false, EntityTypeName = "Zone/SensoryEvent", Columns = tableColumns, Values = Model.Descriptives, IncludeDelete = false, IncludeUnapprove = false })
 
 <script>
         $(document).ready(function () {
-            $('.addNew').click(function () {
-                openFrameless(1400, 900, 0, 0, "/GameAdmin/Room/AddEditDescriptive/" + @Model.Id + '/-1', 'Add Descriptive', true);
+            $('.addNewDescriptive').click(function () {
+                openFrameless(1400, 900, 0, 0, "/GameAdmin/Zone/AddEditDescriptive/" + @Model.Id + '/-1', 'Add Descriptive', true);
 
                 return false;
             });
 
             $('.editDescriptive').click(function () {
-                openFrameless(1400, 900, 0, 0, "/GameAdmin/Room/AddEditDescriptive/" + @Model.Id
+                openFrameless(1400, 900, 0, 0, "/GameAdmin/Zone/AddEditDescriptive/" + @Model.Id
                     + '/' + $(this).attr('data-descriptive-type')
                     + '/' + $(this).attr('data-descriptive-phrase'), 'Edit Descriptive', true);
 

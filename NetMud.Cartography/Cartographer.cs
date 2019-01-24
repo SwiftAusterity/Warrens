@@ -117,7 +117,9 @@ namespace NetMud.Cartography
         public static long[,,] GenerateMapFromRoom(IRoomTemplate room, int radius, HashSet<IRoomTemplate> roomPool, bool shrink = false)
         {
             if (room == null || radius < 0)
-                throw new InvalidOperationException("Invalid inputs.");
+            {
+                return new long[0,0,0];
+            }
 
             var diameter = radius * 2;
             var center = radius;

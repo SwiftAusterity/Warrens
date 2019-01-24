@@ -4,57 +4,16 @@
     @using (Html.BeginForm("Edit", "Room", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {
         @Html.AntiForgeryToken()
-        <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <input type="hidden" name="id" id="id" value="@Model.DataObject.Id" />
 
-        <div class="form-group row">
-            <label for="Locale" class="col-sm-2 col-form-label">Locale</label>
-            <input type="text" id="Locale" name="Locale" disabled="disabled" title="Locale" value="@Model.Locale.Name" class="col-md-10" />
-        </div>
-        <div class="form-group row">
-            @Html.EditorFor(m => m.Name, new { columnCount = 2 })
-            @Html.DescriptiveLabelFor(m => m.Medium, new { @class = "col-sm-1 col-form-label" })
-            <div class="col-md-4">
-                @Html.DropDownList("Medium", Model.ValidMaterials.Select(rl =>
-                         new SelectListItem() { Text = rl.Name, Value = rl.Id.ToString(), Selected = rl.Id.Equals(Model.DataObject.Medium.Id) })
-                         , "Select One", htmlAttributes: new { id = "Medium", @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.Medium, "", new { @class = "text-danger" })
-            </div>
-        </div>
+        @Html.EditorFor(m => m.DataObject, new { ValidMaterials = Model.ValidMaterials, ValidZones = Model.ValidZones })
 
-        <div class="clearfix"></div>
-        <h4>Dimensional Properties</h4>
-        @Html.Partial("DimensionalEntityEditor", Model)
-
-        <div class="clearfix"></div>
-        @Html.Partial("~/Views/GameAdmin/Room/OccurrenceList.cshtml", Model.DataObject)
-
-        <div class="clearfix"></div>
-        <hr />
-        <h3>Pathway to Zone</h3>
-
-        <div class="form-group row">
-            @Html.EditorFor(model => model.ZonePathwayName, new { columnCount = 2 })
-            <label id="lblDestination" class="col-sm-1 col-form-label">&nbsp;</label>
-            @Html.Partial("BackingDataDropdown", new NetMud.Models.Admin.ReferenceDataDropdownModel("ZoneDestinationId", "Destination Zone", Model.ValidZones, Model.ZoneDestinationId))
-        </div>
-
-        <h4>Dimensional Properties</h4>
-        <div class="form-group row">
-            @Html.EditorFor(m => m.ZoneDimensionalModelHeight, new { columnCount = 3 })
-            @Html.EditorFor(m => m.ZoneDimensionalModelWidth, new { columnCount = 3 })
-            @Html.EditorFor(m => m.ZoneDimensionalModelLength, new { columnCount = 3 })
-        </div>
-        <div class="form-group row">
-            @Html.EditorFor(m => m.ZoneDimensionalModelVacuity, new { columnCount = 3 })
-            @Html.EditorFor(m => m.ZoneDimensionalModelCavitation, new { columnCount = 3 })
-        </div>
-
-        <div class="clearfix"></div>
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ModalWindow = true })
     }
 </section>
+
+@Html.Partial("~/Views/GameAdmin/Room/SensoryEventList.cshtml", Model.DataObject)
 
 <div id="zonePathway">
     @Html.Partial("~/Views/GameAdmin/Pathway/OccurrenceList.cshtml", Model.ZonePathway)
@@ -63,7 +22,7 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 
-    <script type="text/javascript">     
+    <script type="text/javascript">
         $(document).ready(function () {
 
             //Changing the destination ID really messes up the pathway stuff.
