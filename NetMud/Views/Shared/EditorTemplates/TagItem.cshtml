@@ -9,6 +9,7 @@
     var forceOptional = ViewData["forceOptional"] != null;
     var forceBlankValue = Model == null || Model.GetType().IsArray ? true : false;
     var value = Model;
+    var strippedNaked = ViewData["strippedNaked"] != null;
 
     if (ViewData["disabled"] != null)
     {
@@ -34,9 +35,17 @@
         value = "";
     }
 }
-<div class="form-group row">
-    <a href="#" class="removeRow col-form-label" title="Remove this" onclick="javascript: $(this).parent().remove(); return false;">X</a>
-    <div class="col-sm-@columnInputValue">
-        @Html.TextBox("", value, htmlAttributes)
+
+@if (strippedNaked)
+{
+    @Html.TextBox("", value, htmlAttributes)
+}
+else
+{
+    <div class="form-group row">
+        <a href="#" class="removeRow col-form-label" title="Remove this" onclick="javascript: $(this).parent().remove(); return false;">X</a>
+        <div class="col-sm-@columnInputValue">
+            @Html.TextBox("", value, htmlAttributes)
+        </div>
     </div>
-</div>
+}

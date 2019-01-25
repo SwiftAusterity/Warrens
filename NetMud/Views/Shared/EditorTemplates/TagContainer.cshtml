@@ -7,7 +7,7 @@
     <div class="addRowContainer">
         <div class="col-sm-1">
             @Html.DescriptionFor(m => m)
-            <a href="#" class="addRow btn" onclick="javascript: $('#@rowsName').append(newTagRow); return false;"><span class="addWord">Add Tag</span></a>
+            <a href="#" class="addRow btn" data-current-row="@currentCount" onclick="javascript: replacePart(this, newTagRow, @currentCount, '@rowsName'); return false;"><span class="addWord">Add Tag</span></a>
         </div>
     </div>
     @if (currentCount > 0)

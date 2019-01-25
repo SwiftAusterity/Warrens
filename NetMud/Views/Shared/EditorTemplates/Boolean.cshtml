@@ -11,6 +11,7 @@
     var noValidation = ViewData["noValidation"] != null;
     var modelValue = Model == null || Model.GetType() != typeof(bool) ? false : (bool)Model;
     var archivedValue = ViewData["archivedValue"] == null ? "" : ViewData["archivedValue"].ToString();
+    var strippedNaked = ViewData["strippedNaked"] != null;
 
     if (ViewData["forceChecked"] != null)
     {
@@ -36,23 +37,37 @@
         }
     }
 }
-<div class="col-sm-@columnInputValue" style="display: inline-flex;">
-    @Html.DescriptionFor(m => m)
 
+@if (strippedNaked)
+{
+    @Html.DescriptionFor(m => m)
     <div class="pretty p-switch p-fill">
-        @Html.CheckBox("", modelValue, htmlAttributes)    
+        @Html.CheckBox("", modelValue, htmlAttributes)
         <div class="state">
             @Html.LabelFor(m => m, new { @class = "col-form-label" })
         </div>
     </div>
+}
+else
+{
+    <div class="col-sm-@columnInputValue" style="display: inline-flex;">
+        @Html.DescriptionFor(m => m)
 
-    @if (!string.IsNullOrWhiteSpace(archivedValue))
-    {
-        <span class="archive">Archived Value: @archivedValue</span>
-        <span title="apply value to field" class="glyphicon glyphicon-plus archiveApply" onclick="javascript: $('#@ViewData.ModelMetadata.PropertyName').val('@archivedValue');"></span>
-    }
-    @if (!noValidation)
-    {
-        @Html.ValidationMessageFor(m => m, "", new { @class = "text-danger" })
-    }
-</div>
+        <div class="pretty p-switch p-fill">
+            @Html.CheckBox("", modelValue, htmlAttributes)
+            <div class="state">
+                @Html.LabelFor(m => m, new { @class = "col-form-label" })
+            </div>
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(archivedValue))
+        {
+            <span class="archive">Archived Value: @archivedValue</span>
+            <span title="apply value to field" class="glyphicon glyphicon-plus archiveApply" onclick="javascript: $('#@ViewData.ModelMetadata.PropertyName').val('@archivedValue');"></span>
+        }
+        @if (!noValidation)
+        {
+            @Html.ValidationMessageFor(m => m, "", new { @class = "text-danger" })
+        }
+    </div>
+}

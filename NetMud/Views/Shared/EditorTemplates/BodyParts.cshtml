@@ -1,15 +1,18 @@
 ﻿@using NetMud.Models
 @using NetMud.DataStructure.Inanimate
+
 @model HashSet<BodyPart>
+
 @{
     var currentCount = Model.Count();
     var rowsName = ViewData.ModelMetadata.PropertyName + "Rows";
 }
+
 <div id="@rowsName" class="iterativeContainer">
     <div class="addRowContainer">
         <div class="col-sm-1">
             @Html.DescriptionFor(m => m)
-            <a href="#" class="addRow btn" onclick="javascript: replacePart(); return false;"><span class="addWord">Add Row</span></a>
+            <a href="#" class="addRow btn" data-current-row="@currentCount" onclick="javascript: replacePart(this, newBodyPart, @currentCount, '@rowsName'); return false;"><span class="addWord">Add Row</span></a>
         </div>
     </div>
     @if (currentCount > 0)
@@ -17,23 +20,7 @@
         @Html.EditorForMany(m => m, null, 0, "BodyPart")
     }
 </div>
+
 <script type="text/javascript">
-    var i = @currentCount.ToString();
-    var firstRun = true;;
-
     var newBodyPart = decodeHtml('@Html.EmptyEditorForMany(m => m, null, currentCount, "BodyPart")');
-
-    function replacePart() {
-        if (!firstRun) {
-            var newI = i + 1;
-            newBodyPart = newBodyPart.replaceAll('[' + i + ']', '[' + newI + ']').replace('_' + i + '_', '_' + newI + '_');
-
-            $('#@rowsName').append(newBodyPart);
-            i = newI;
-        }
-        else {
-            $('#@rowsName').append(newBodyPart);
-            firstRun = false;
-        }
-    }
 </script>

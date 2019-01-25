@@ -49,6 +49,20 @@ function initModal() {
     });
 }
 
+
+function replacePart(me, newHtml, firstCount, rowsName) {
+    var $me = $(me);
+
+    var rI = parseInt($me.attr('data-current-row'));
+
+    if (rI !== parseInt(firstCount)) {
+        newHtml = newHtml.replaceAll('[' + firstCount + ']', '[' + rI + ']').replaceAll('_' + firstCount + '_', '_' + rI + '_');
+    }
+
+    $('#' + rowsName).append(newHtml);
+   $me.attr('data-current-row', rI + 1);
+}
+
 String.prototype.replaceAll = function (search, replacement) {
     var target = this;
     return target.split(search).join(replacement);

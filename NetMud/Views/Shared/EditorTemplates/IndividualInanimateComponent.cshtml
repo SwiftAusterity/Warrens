@@ -11,10 +11,9 @@
     var cssClass = ViewData["cssClass"] == null ? "form-control" : ViewData["cssClass"];
     var forceOptional = ViewData["forceOptional"] != null;
     var forceBlankValue = Model == null || Model.GetType().IsArray ? true : false;
-    var noValidation = ViewData["noValidation"] != null;
-    var archivedValue = ViewData["archivedValue"] == null ? "" : ViewData["archivedValue"].ToString();
-
     var ghostNameClass = "ghostNameTip";
+    var strippedNaked = ViewData["strippedNaked"] != null;
+
     if (ViewData.ModelMetadata.IsRequired && !forceOptional)
     {
         ghostNameClass += " ghostRequired";
@@ -45,23 +44,25 @@
         htmlAttributes.Add("Value", "");
     }
 
+    ViewData.Add("strippedNaked", "true");
+
     var itemList = ((IEnumerable<IInanimateTemplate>)ViewData["validItems"]).Select(item => new SelectListItem() { Text = item.Name, Value = item.Id.ToString(), Selected = Model != null && Model.Item != null && item.Id == Model.Item.Id });
 }
-<div class="col-sm-@columnInputValue">
-    <span class="@ghostNameClass">@ViewData.ModelMetadata.DisplayName</span>
+
+@if (strippedNaked)
+{
     @Html.DescriptionFor(m => m)
     <div style="display: inline-flex;">
-        @Html.TextBoxFor(m => m.Amount, htmlAttributes)<span style="padding: 5px;">of</span>@Html.DropDownListFor(m => m.Item, itemList, optionLabel: "Select One", htmlAttributes: htmlAttributes)
+        @Html.EditorFor(m => m.Amount, htmlAttributes)<span class="multiBoxUnit">of</span>@Html.EditorFor(m => m.Item, htmlAttributes)
     </div>
-    @if (!string.IsNullOrWhiteSpace(archivedValue))
-    {
-        <span class="archive">Archived Value: @archivedValue</span>
-        <span title="apply value to field" class="glyphicon glyphicon-plus archiveApply" onclick="javascript: $('#@ViewData.ModelMetadata.PropertyName').val('@archivedValue');"></span>
-    }
-    @if (!noValidation)
-    {
-        @Html.ValidationMessageFor(m => m, "", new { @class = "text-danger" })
-    }
-</div>
-
-
+}
+else
+{
+    <div class="col-sm-@columnInputValue">
+        <span class="@ghostNameClass">@ViewData.ModelMetadata.DisplayName</span>
+        @Html.DescriptionFor(m => m)
+        <div style="display: inline-flex;">
+            @Html.EditorFor(m => m.Amount, htmlAttributes)<span class="multiBoxUnit">of</span>@Html.EditorFor(m => m.Item, htmlAttributes)
+        </div>
+    </div>
+}

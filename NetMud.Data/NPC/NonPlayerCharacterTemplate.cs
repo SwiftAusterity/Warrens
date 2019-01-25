@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Script.Serialization;
 using NetMud.Data.Architectural.PropertyBinding;
+using NetMud.DataStructure.Linguistic;
 
 namespace NetMud.Data.NPC
 {
@@ -82,15 +83,29 @@ namespace NetMud.Data.NPC
         [Required]
         public string SurName { get; set; }
 
+        [JsonProperty("Race")]
+        private TemplateCacheKey _race { get; set; }
+
         /// <summary>
-        /// NPC's race data
+        /// What we're spawning
         /// </summary>
-        [NonNullableDataIntegrity("Invalid racial data.")]
-        [UIHint("RaceList")]
+        [JsonIgnore]
+        [ScriptIgnore]
+        [NonNullableDataIntegrity("Race must be set.")]
         [Display(Name = "Race", Description = "The NPC's Race")]
-        [RaceValidator]
+        [UIHint("RaceList")]
         [RaceDataBinder]
-        public IRace Race { get; set; }
+        public IRace Race
+        {
+            get
+            {
+                return TemplateCache.Get<IRace>(_race);
+            }
+            set
+            {
+                _race = new TemplateCacheKey(value);
+            }
+        }
 
         /// <summary>
         /// Max health for this
@@ -119,6 +134,7 @@ namespace NetMud.Data.NPC
             TeachableProficencies = new HashSet<IQuality>();
             Personality = new Personality();
             Race = new Race();
+            Descriptives = new HashSet<ISensoryEvent>();
         }
 
         /// <summary>
@@ -162,14 +178,14 @@ namespace NetMud.Data.NPC
         /// What this merchant is willing to purchase
         /// </summary>
         [Display(Name = "Purchase List", Description = "The item types the merchant is willing to purchase.")]
-        [UIHint("MerchandiseList")]
+        [UIHint("BuyList")]
         public HashSet<IMerchandise> WillPurchase { get; set; }
 
         /// <summary>
         /// What this merchant is willing to sell
         /// </summary>
         [Display(Name = "Sell List", Description = "The item types the merchant is willing to sell out of their inventory.")]
-        [UIHint("MerchandiseList")]
+        [UIHint("SellList")]
         public HashSet<IMerchandise> WillSell { get; set; }
 
         /// <summary>

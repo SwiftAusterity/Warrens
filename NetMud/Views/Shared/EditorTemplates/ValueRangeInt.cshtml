@@ -13,8 +13,9 @@
     var forceBlankValue = Model == null || Model.GetType().IsArray ? true : false;
     var noValidation = ViewData["noValidation"] != null;
     var archivedValue = ViewData["archivedValue"] == null ? "" : ViewData["archivedValue"].ToString();
-
     var ghostNameClass = "ghostNameTip";
+    var strippedNaked = ViewData["strippedNaked"] != null;
+
     if (ViewData.ModelMetadata.IsRequired && !forceOptional)
     {
         ghostNameClass += " ghostRequired";
@@ -44,27 +45,36 @@
     {
         htmlAttributes.Add("Value", "");
     }
+
+    ViewData.Add("strippedNaked", "true");
 }
 
-<div class="col-sm-@columnInputValue">
-    <span class="@ghostNameClass">@ViewData.ModelMetadata.DisplayName</span>
-
+@if (strippedNaked)
+{
     @Html.DescriptionFor(m => m)
     <div style="display: inline-flex;">
-        @Html.TextBoxFor(m => m.Low, htmlAttributes)<span style="padding: 5px;">to</span>@Html.TextBoxFor(m => m.High, htmlAttributes)
+        @Html.TextBoxFor(m => m.Low, htmlAttributes)<span class="multiBoxUnit">to</span>@Html.TextBoxFor(m => m.High, htmlAttributes)
     </div>
+}
+else
+{
+    <div class="col-sm-@columnInputValue">
+        <span class="@ghostNameClass">@ViewData.ModelMetadata.DisplayName</span>
 
-    @if (!string.IsNullOrWhiteSpace(archivedValue))
-    {
-        <span class="archive">Archived Value: @archivedValue</span>
-        <span title="apply value to field" class="glyphicon glyphicon-plus archiveApply" onclick="javascript: $('#@ViewData.ModelMetadata.PropertyName').val('@archivedValue');"></span>
-    }
+        @Html.DescriptionFor(m => m)
+        <div style="display: inline-flex;">
+            @Html.EditorFor(m => m.Low, htmlAttributes)<span class="multiBoxUnit">to</span>@Html.EditorFor(m => m.High, htmlAttributes)
+        </div>
 
-    @if (!noValidation)
-    {
-        @Html.ValidationMessageFor(m => m, "", new { @class = "text-danger" })
-    }
-</div>
+        @if (!string.IsNullOrWhiteSpace(archivedValue))
+        {
+            <span class="archive">Archived Value: @archivedValue</span>
+            <span title="apply value to field" class="glyphicon glyphicon-plus archiveApply" onclick="javascript: $('#@ViewData.ModelMetadata.PropertyName').val('@archivedValue');"></span>
+        }
 
-
-
+        @if (!noValidation)
+        {
+            @Html.ValidationMessageFor(m => m, "", new { @class = "text-danger" })
+        }
+    </div>
+}

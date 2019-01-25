@@ -27,7 +27,7 @@
                 offset: 5,
                 popperOptions: {
                     removeOnDestroy: true,
-                    placements: 'auto',
+                    placements: 'auto'
                 }
             };
 
@@ -48,7 +48,7 @@ function HelpTipTutorial(parent, text) {
         template: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>',
         offset: 5,
         popperOptions: {
-            placements: 'auto',
+            placements: 'auto'
         }
     };
 
@@ -60,7 +60,7 @@ function openFrameless(width, height, fromLeft, fromTop, targetUrl, windowTitle)
     var styles = '';
     var scripts = '';
 
-    if (windowTitle == '') {
+    if (windowTitle === '') {
         windowTitle = 'adminModal';
     }
 

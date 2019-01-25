@@ -1,7 +1,7 @@
 ﻿@using NetMud.Models
 @using NetMud.DataStructure.NPC
 
-@model HashSet<MerchandiseStock>
+@model HashSet<IMerchandise>
 
 @{
     var currentCount = Model.Count();
@@ -12,15 +12,15 @@
     <div class="addRowContainer">
         <div class="col-sm-1">
             @Html.DescriptionFor(m => m)
-            <a href="#" class="addRow btn" data-current-row="@currentCount" onclick="javascript: replacePart(this, newRestockControl, @currentCount, '@rowsName'); return false;"><span class="addWord">Add Row</span></a>
+            <a href="#" class="addRow btn" data-current-row="@currentCount" onclick="javascript: replacePart(this, newMerchSellRow, @currentCount, '@rowsName'); return false;"><span class="addWord">Add Row</span></a>
         </div>
     </div>
     @if (currentCount > 0)
     {
-        @Html.EditorForMany(m => m, null, 0, "RestockControl")
+        @Html.EditorForMany(m => m, null, 0, "MerchandiseItem")
     }
 </div>
 
 <script type="text/javascript">
-    var newRestockControl = decodeHtml('@Html.EmptyEditorForMany(m => m, null, currentCount, "RestockControl")');
+    var newMerchSellRow = decodeHtml('@Html.EmptyEditorForMany(m => m, null, currentCount, "MerchandiseItem")');
 </script>

@@ -44,14 +44,6 @@ namespace NetMud.Data.NaturalResource
         [JsonProperty("Race")]
         private TemplateCacheKey _race { get; set; }
 
-        public Fauna()
-        {
-            OccursIn = new HashSet<Biome>();
-            ElevationRange = new ValueRange<int>();
-            TemperatureRange = new ValueRange<int>();
-            HumidityRange = new ValueRange<int>();
-        }
-
         /// <summary>
         /// What we're spawning
         /// </summary>
@@ -71,6 +63,14 @@ namespace NetMud.Data.NaturalResource
             {
                 _race = new TemplateCacheKey(value);
             }
+        }
+
+        public Fauna()
+        {
+            OccursIn = new HashSet<Biome>();
+            ElevationRange = new ValueRange<int>();
+            TemperatureRange = new ValueRange<int>();
+            HumidityRange = new ValueRange<int>();
         }
 
         /// <summary>

@@ -487,7 +487,7 @@
     <Content Include="Views\Shared\EditorTemplates\QualityList.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Race.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\JournalEntry.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\MerchandiseList.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\SellList.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\NonPlayerCharacterTemplate.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\NonPlayerCharacterTemplateList.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\QualityValue.cshtml" />
@@ -568,6 +568,9 @@
     <Content Include="Views\Shared\EditorTemplates\RoomToZonePathwayTemplate.cshtml" />
     <Content Include="Views\GameAdmin\Pathway\SensoryEvent.cshtml" />
     <Content Include="Views\GameAdmin\Pathway\SensoryEventList.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\BuyList.cshtml" />
+    <Content Include="Views\GameAdmin\NPC\SensoryEventList.cshtml" />
+    <Content Include="Views\GameAdmin\NPC\SensoryEvent.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />
