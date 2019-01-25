@@ -1,5 +1,8 @@
 ﻿using NetMud.Communication.Lexical;
 using NetMud.Data.Architectural.EntityBase;
+using NetMud.Data.Room;
+using NetMud.Data.Zone;
+using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Architectural.PropertyBinding;
 using System;
 using System.Collections;
@@ -18,11 +21,27 @@ namespace NetMud.Models
                 //Convert the interface to the concrete class by finding a concrete class that impls this interface
                 if (!modelType.IsGenericType)
                 {
-                    Type type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(modelType));
+                    Type type = null;
 
-                    if(type == null)
+                    if (modelType == typeof(ILocationData))
                     {
-                        type = typeof(SensoryEvent).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(modelType));
+                        if (bindingContext.ModelName.Contains("Zone"))
+                        {
+                            type = typeof(ZoneTemplate);
+                        }
+                        else if (bindingContext.ModelName.Contains("Room"))
+                        {
+                            type = typeof(RoomTemplate);
+                        }
+                    }
+                    else
+                    {
+                        type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(modelType));
+
+                        if (type == null)
+                        {
+                            type = typeof(SensoryEvent).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(modelType));
+                        }
                     }
 
                     if (type == null)
@@ -80,7 +99,7 @@ namespace NetMud.Models
 
                     propertyDescriptor.SetValue(bindingContext.Model, propertyBinderAttribute.Convert(values));
                 }
-                else 
+                else
                 {
                     ValueProviderResult value = bindingContext.ValueProvider.GetValue(keyName);
 

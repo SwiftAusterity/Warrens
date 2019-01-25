@@ -5,58 +5,25 @@
     {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group row">
-            @Html.HiddenFor(m => m.OriginID)
-            @Html.EditorFor(model => model.Name)
-        </div>
+        @Html.HiddenFor(m => m.OriginID)
+
         <div class="form-group row">
             <label id="lblOrigin" class="col-sm-1 col-form-label">Origin:</label>
-            <div class="col-sm-3">@Model.Origin.Name</div>
+            <h4 class="col-sm-2">@Model.Origin.Name</h4>
             <label id="lblDestination" class="col-sm-1 col-form-label">Destination:</label>
-            <div class="col-sm-3">NEW ROOM</div>
-        </div>
-        <div class="form-group row">
-            @Html.EditorFor(model => model.DegreesFromNorth)
-            @Html.EditorFor(model => model.CreateReciprocalPath)
+            <h4 class="col-sm-2">NEW ROOM</h4>
         </div>
 
-        @Html.Partial("TwoDimensionalEntityEditor", Model)
-
-        <div class="clearfix"></div>
-        @Html.Partial("~/Views/Shared/Occurrences.cshtml", Model)
-
-        <div class="clearfix"></div>
-        <h3>New Room</h3>
+        <h3>Room</h3>
         <hr />
-        <div class="form-group row">
-            @Html.HiddenFor(m => m.LocaleId)
-            <label for="Locale" class="col-sm-1 col-form-label">Locale</label>
-            <div class="col-md-9">
-                <input type="text" id="Locale" name="Locale" disabled="disabled" title="Locale" value="@Model.Locale.Name" />
-            </div>
-        </div>
-        <div class="form-group row">
-            @Html.EditorFor(m => m.RoomName, new { columnCount = 3 })
-            @Html.DescriptiveLabelFor(m => m.Medium, new { @class = "col-sm-1 col-form-label" })
-            <div class="col-md-4">
-                @Html.DropDownList("Medium", Model.ValidMaterials.Select(rl => new SelectListItem() { Text = rl.Name, Value = rl.Id.ToString() })
-                  , "Select One", htmlAttributes: new { id = "Medium", @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.Medium, "", new { @class = "text-danger" })
-            </div>
-        </div>
+        @Html.EditorFor(m => m.Destination, new { ValidMaterials = Model.ValidMaterials, ValidModels = Model.ValidModels, ValidRooms = Model.ValidRooms })
 
-        <h4>Dimensional Properties</h4>
+        <h3>Pathway</h3>
+        <div class="form-group row">
+            @Html.EditorFor(m => m.CreateReciprocalPath)
+        </div>
         <hr />
-        <div class="form-group row">
-            @Html.EditorFor(m => m.RoomDimensionalModelHeight, new { columnCount = 3 })
-            @Html.EditorFor(m => m.RoomDimensionalModelWidth, new { columnCount = 3 })
-            @Html.EditorFor(m => m.RoomDimensionalModelLength, new { columnCount = 3 })
-        </div>
-        <div class="form-group row">
-            @Html.EditorFor(m => m.RoomDimensionalModelVacuity, new { columnCount = 3 })
-            @Html.EditorFor(m => m.RoomDimensionalModelCavitation, new { columnCount = 3 })
-        </div>
-        <div class="clearfix"></div>
+        @Html.EditorFor(m => m.DataObject, "PathwayWithNewRoom", new { ValidMaterials = Model.ValidMaterials, ValidModels = Model.ValidModels, ValidRooms = Model.ValidRooms })
 
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Zone", ModalWindow = true })
     }

@@ -9,8 +9,9 @@
 
         @Html.EditorFor(m => m.DataObject, new { ValidMaterials = Model.ValidMaterials, ValidZones = Model.ValidZones, ValidModels = Model.ValidModels })
 
-        <h3>Pathway to Zone</h3>
-        @Html.EditorFor(m => m.ZonePathway, new { ValidMaterials = Model.ValidMaterials, ValidZones = Model.ValidZones, ValidModels = Model.ValidModels })
+        <div id="zonePathway">
+            @Html.EditorFor(m => m.ZonePathway, new { ValidMaterials = Model.ValidMaterials, ValidZones = Model.ValidZones, ValidModels = Model.ValidModels })
+        </div>
 
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ModalWindow = true })
     }
@@ -18,10 +19,14 @@
 
 @Html.Partial("~/Views/GameAdmin/Room/SensoryEventList.cshtml", Model.DataObject)
 
-<div id="zonePathway">
-    @Html.Partial("~/Views/GameAdmin/Pathway/OccurrenceList.cshtml", Model.ZonePathway)
-</div>
-
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        $(function () {
+            $("#zonePathway").accordion({
+                collapsible: true,
+                active: false
+            });
+        });
+    </script>
 }

@@ -130,6 +130,7 @@ namespace NetMud.Data.Room
         public RoomTemplate()
         {
             Model = new DimensionalModel();
+            Descriptives = new HashSet<ISensoryEvent>();
         }
 
         /// <summary>
@@ -139,6 +140,7 @@ namespace NetMud.Data.Room
         public RoomTemplate(DimensionalModel model)
         {
             Model = model;
+            Descriptives = new HashSet<ISensoryEvent>();
         }
 
         /// <summary>

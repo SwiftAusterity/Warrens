@@ -245,19 +245,20 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToRoute("ModalErrorOrClose", new { Message = message });
             }
 
-            IMaterial mediumId = vModel.DataObject.Medium;
             obj.Name = vModel.DataObject.Name;
+            obj.Medium = vModel.DataObject.Medium;
+            obj.Qualities = vModel.DataObject.Qualities;
 
-            IZoneTemplate destination = TemplateCache.Get<IZoneTemplate>(vModel.ZonePathway.Destination.Id);
-            if (vModel.ZonePathway?.Destination != null)
+            if (vModel.ZonePathway?.Destination != null && !string.IsNullOrWhiteSpace(vModel.ZonePathway.Name))
             {
+                IZoneTemplate destination = TemplateCache.Get<IZoneTemplate>(vModel.ZonePathway.Destination.Id);
                 zoneDestination = obj.GetZonePathways().FirstOrDefault();
 
                 if (zoneDestination == null)
                 {
                     zoneDestination = new PathwayTemplate()
                     {
-                        DegreesFromNorth = -1,
+                        DegreesFromNorth = vModel.ZonePathway.DegreesFromNorth,
                         Name = vModel.ZonePathway.Name,
                         Origin = obj,
                         Destination = destination,
@@ -277,7 +278,6 @@ namespace NetMud.Controllers.GameAdmin
                         zoneDestination.Destination = destination;
                     }
                 }
-
             }
 
             if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
@@ -319,7 +319,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 GrammaticalType grammaticalType = (GrammaticalType)descriptiveType;
                 vModel.SensoryEventDataObject = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType
-                                                                                        && occurrence.Event.Phrase.Equals(phrase, System.StringComparison.InvariantCultureIgnoreCase));
+                                                                                        && occurrence.Event.Phrase.Equals(phrase, StringComparison.InvariantCultureIgnoreCase));
             }
 
             if (vModel.SensoryEventDataObject != null)

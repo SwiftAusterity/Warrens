@@ -1,0 +1,14 @@
+﻿@using NetMud.Data.Room
+
+@model PathwayTemplate
+
+<h4>Details</h4>
+<div class="form-group row">
+    @Html.EditorFor(m => m.Name)
+    @Html.EditorFor(m => m.Destination, "RoomTemplateList", new { validItems = ViewData["ValidRooms"] })
+    @Html.EditorFor(m => m.InclineGrade)
+    @Html.EditorFor(m => m.DegreesFromNorth)
+</div>
+
+<h4>Dimensional Model</h4>
+@Html.EditorFor(m => m.Model)

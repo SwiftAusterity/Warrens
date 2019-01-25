@@ -2,7 +2,6 @@
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
 using NetMud.Communication.Lexical;
-using NetMud.Data.Architectural.EntityBase;
 using NetMud.Data.Linguistic;
 using NetMud.Data.Room;
 using NetMud.DataAccess;
@@ -10,7 +9,6 @@ using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Linguistic;
-using NetMud.DataStructure.Locale;
 using NetMud.DataStructure.Room;
 using NetMud.Models.Admin;
 using System;
@@ -119,15 +117,11 @@ namespace NetMud.Controllers.GameAdmin
                     ValidMaterials = TemplateCache.GetAll<IMaterial>(),
                     ValidModels = TemplateCache.GetAll<IDimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat),
                     ValidRooms = TemplateCache.GetAll<IRoomTemplate>().Where(rm => !rm.Id.Equals(originRoomId)),
-
-                    Origin = TemplateCache.Get<IRoomTemplate>(originRoomId),
                     OriginID = originRoomId,
-
-                    DegreesFromNorth = degreesFromNorth
+                    Origin = TemplateCache.Get<IRoomTemplate>(originRoomId),
+                    DataObject = new PathwayTemplate() { DegreesFromNorth = degreesFromNorth, InclineGrade = 0 },
+                    Destination = new RoomTemplate()
                 };
-
-                vModel.Locale = vModel.Origin.ParentLocation;
-                vModel.LocaleId = vModel.Origin.ParentLocation.Id;
 
                 return View("~/Views/GameAdmin/Pathway/AddWithRoom.cshtml", "_chromelessLayout", vModel);
             }
@@ -159,86 +153,50 @@ namespace NetMud.Controllers.GameAdmin
         {
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
+            var origin = TemplateCache.Get<IRoomTemplate>(vModel.OriginID);
+
             string roomMessage = string.Empty;
-            RoomTemplate newRoom = new RoomTemplate
+            IRoomTemplate newRoom = vModel.Destination;
+            newRoom.ParentLocation = origin.ParentLocation;
+
+            string message = string.Empty;
+            IPathwayTemplate newObj = vModel.DataObject;
+            newObj.Origin = origin;
+
+            if (newRoom.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) != null)
             {
-                Name = vModel.RoomName,
-                Model = new DimensionalModel(vModel.RoomDimensionalModelHeight, vModel.RoomDimensionalModelLength, vModel.RoomDimensionalModelWidth
-                                , vModel.RoomDimensionalModelVacuity, vModel.RoomDimensionalModelCavitation)
-            };
+                newObj.Destination = newRoom;
 
-            long mediumId = vModel.Medium;
-            IMaterial medium = TemplateCache.Get<IMaterial>(mediumId);
-
-            if (medium != null)
-            {
-                newRoom.Medium = medium;
-
-                ILocaleTemplate locale = TemplateCache.Get<ILocaleTemplate>(vModel.LocaleId);
-
-                if (locale != null)
+                if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
                 {
-                    newRoom.ParentLocation = locale;
-
-                    if (newRoom.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
-                    {
-                        roomMessage = "Error; Creation failed.";
-                    }
-                    else
-                    {
-                        LoggingUtility.LogAdminCommandUsage("*WEB* - AddRoomTemplateWithPathway[" + newRoom.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                    }
+                    message = "Error; Creation failed.";
                 }
                 else
                 {
-                    roomMessage = "You must include a valid Locale.";
+                    if (vModel.CreateReciprocalPath)
+                    {
+                        PathwayTemplate reversePath = new PathwayTemplate
+                        {
+                            Name = newObj.Name,
+                            DegreesFromNorth = newObj.DegreesFromNorth,
+                            Origin = newObj.Destination,
+                            Destination = newObj.Origin,
+                            Model = newObj.Model
+                        };
+
+                        if (reversePath.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
+                        {
+                            message = "Reverse Path creation FAILED. Origin path creation SUCCESS.";
+                        }
+                    }
+
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddPathwayWithRoom[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 }
             }
             else
-            {
-                roomMessage = "You must include a valid Medium material.";
-            }
-
-            if (!string.IsNullOrWhiteSpace(roomMessage))
-            {
-                return RedirectToRoute("ModalErrorOrClose", new { Message = roomMessage });
-            }
-
-            string message = string.Empty;
-            PathwayTemplate newObj = new PathwayTemplate
-            {
-                Name = vModel.Name,
-                DegreesFromNorth = vModel.DegreesFromNorth,
-                Origin = TemplateCache.Get<IRoomTemplate>(vModel.OriginID),
-                Destination = newRoom
-            };
-
-            if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
             {
                 message = "Error; Creation failed.";
             }
-            else
-            {
-                if (vModel.CreateReciprocalPath)
-                {
-                    PathwayTemplate reversePath = new PathwayTemplate
-                    {
-                        Name = newObj.Name,
-                        DegreesFromNorth = newObj.DegreesFromNorth,
-                        Origin = newObj.Destination,
-                        Destination = newObj.Origin,
-                        Model = newObj.Model
-                    };
-
-                    if (reversePath.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
-                    {
-                        message = "Reverse Path creation FAILED. Origin path creation SUCCESS.";
-                    }
-                }
-
-                LoggingUtility.LogAdminCommandUsage("*WEB* - AddPathwayWithRoom[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-            }
-
             return RedirectToRoute("ModalErrorOrClose", new { Message = message });
         }
 
@@ -356,7 +314,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 GrammaticalType grammaticalType = (GrammaticalType)descriptiveType;
                 vModel.SensoryEventDataObject = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType
-                                                                                        && occurrence.Event.Phrase.Equals(phrase, System.StringComparison.InvariantCultureIgnoreCase));
+                                                                                        && occurrence.Event.Phrase.Equals(phrase, StringComparison.InvariantCultureIgnoreCase));
             }
 
             if (vModel.SensoryEventDataObject != null)
@@ -384,7 +342,7 @@ namespace NetMud.Controllers.GameAdmin
             GrammaticalType grammaticalType = vModel.SensoryEventDataObject.Event.Role;
             string phraseF = vModel.SensoryEventDataObject.Event.Phrase;
             ISensoryEvent existingOccurrence = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType
-                                                                                && occurrence.Event.Phrase.Equals(phraseF, System.StringComparison.InvariantCultureIgnoreCase));
+                                                                                && occurrence.Event.Phrase.Equals(phraseF, StringComparison.InvariantCultureIgnoreCase));
 
             if (existingOccurrence == null)
             {
