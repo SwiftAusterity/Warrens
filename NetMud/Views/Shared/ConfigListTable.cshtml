@@ -4,58 +4,46 @@
 {
     <h4>@Model.Name</h4>
 }
-<table class="table table-striped table-bordered table-hover table-dark">
-    <thead>
-        <tr>
-            @foreach (var column in Model.Columns)
-            {
-                <th scope="col">@column.Key</th>
-            }
+<div class="listTable">
+    <div class="listSection lisdiv class=" listItem"eader">
+        @foreach (var column in Model.Columns)
+        {
+            <div class="listItem" scope="col">@column.Key</div>
+        }
 
-            @if (Model.IncludeDelete)
-            {
-                <th>DELETE</th>
-            }
+        @if (Model.IncludeDelete)
+        {
+            <div class="listItem">DELETE</div>
+        }
 
-            @if (Model.IncludeUnapprove)
-            {
-                <th>UNAPPROVE</th>
-            }
-        </tr>
-    </thead>
-    <tbody>
+        @if (Model.IncludeUnapprove)
+        {
+            <div class="listItem">UNAPPROVE</div>
+        }
+    </div>
+    <div class="listSection listContent">
         @foreach (var val in Model.Values)
         {
-            <tr>
-                @foreach (var column in Model.Columns)
-                {
-                    <td>@Html.Raw(column.Value(val))</td>
-                }
+            foreach (var column in Model.Columns)
+            {
+                <div class="listItem">@Html.Raw(column.Value(val))</div>
+            }
 
-                @if (Model.IncludeDelete)
-                {
-                    <td>
-                        <div>
-                            <div>
-                                <button type="submit" name="removeId" id="removeId" class="removeData" value="@val.UniqueKey" title="Delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-                                <input type="radio" name="authorizeRemove" value="@val.UniqueKey" style="margin-left: 15px;" />
-                            </div>
-                        </div>
-                    </td>
-                }
+            if (Model.IncludeDelete)
+            {
+                <div class="listItem">
+                    <button type="submit" name="removeId" id="removeId" class="removeData" value="@val.UniqueKey" title="Delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                    <input type="radio" name="audiv class=" listItem"orizeRemove" value="@val.UniqueKey" style="margin-left: 15px;" />
+                </div>
+            }
 
-                @if (Model.IncludeUnapprove)
-                {
-                    <td>
-                        <div>
-                            <div>
-                                <button type="submit" name="unapproveId" id="unapproveId" class="unapproveData" value="@val.UniqueKey" title="Unapprove"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span></button>
-                                <input type="radio" name="authorizeUnapprove" value="@val.UniqueKey" style="margin-left: 15px;" />
-                            </div>
-                        </div>
-                    </td>
-                }
-            </tr>
+            if (Model.IncludeUnapprove)
+            {
+                <div class="listItem">
+                    <button type="submit" name="unapproveId" id="unapproveId" class="unapproveData" value="@val.UniqueKey" title="Unapprove"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span></button>
+                    <input type="radio" name="audiv class=" listItem"orizeUnapprove" value="@val.UniqueKey" style="margin-left: 15px;" />
+                </div>
+            }
         }
-    </tbody>
-</table>
+    </div>
+</div>

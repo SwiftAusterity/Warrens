@@ -1,28 +1,25 @@
 ﻿@model Tuple<NetMud.Models.IPagedDataModel, string>
-
 @{
-    var prevPageState = Model.Item1.CurrentPageNumber > 1 ? String.Empty : "disabled";
-    var nextPageState = Model.Item1.CurrentPageNumber < Model.Item1.NumberOfPages ? String.Empty : "disabled";
+    var prevPageState = Model.Item1.CurrentPageNumber > 1 ? "pager" : "pager disabled";
+    var nextPageState = Model.Item1.CurrentPageNumber < Model.Item1.NumberOfPages ? String.Empty : "pager disabled";
 }
-<div style="float: right;">
+<div>
     @using (Html.BeginForm("Index", Model.Item2, FormMethod.Post, new { id = "paginationForm" }))
     {
         @Html.AntiForgeryToken()
-        <div class="form-group row">
-            @Html.EditorFor(m => m.Item1.SearchTerms, new { columnCount = 1, forceOptional = true, htmlAttributes = new Dictionary<string, object>() { { "onchange", "paginationForm.submit();" }, { "name", "SearchTerms" }, { "id", "SearchTerms" } } })
-            @Html.EditorFor(m => m.Item1.ItemsPerPage, new { columnCount = 4, forceOptional = true, htmlAttributes = new Dictionary<string, object>() { { "onchange", "paginationForm.submit();" }, { "name", "ItemsPerPage" }, { "id", "ItemsPerPage" } } })
-        </div>
-        <div class="listPagination row">
+        @Html.EditorFor(m => m.Item1.SearchTerms, new { columnCount = 1, forceOptional = true, htmlAttributes = new Dictionary<string, object>() { { "onchange", "paginationForm.submit();" }, { "name", "SearchTerms" }, { "id", "SearchTerms" } } })
+        @Html.EditorFor(m => m.Item1.ItemsPerPage, new { columnCount = 4, forceOptional = true, htmlAttributes = new Dictionary<string, object>() { { "onchange", "paginationForm.submit();" }, { "name", "ItemsPerPage" }, { "id", "ItemsPerPage" } } })
+        <div class="listPagination">
             <div class="@prevPageState">
                 <button class="pagingArrow" aria-label="Previous" value="@(Model.Item1.CurrentPageNumber - 1)" title="Previous" name="CurrentPageNumber"><span aria-hidden="true">&laquo;</span></button>
             </div>
             @for (var i = 1; i <= Model.Item1.NumberOfPages; i++)
             {
                 if (Model.Item1.NumberOfPages > 5
-                        && i != 1
-                        && i != Model.Item1.NumberOfPages
-                        && i > (Model.Item1.NumberOfPages / 2 + 1)
-                        && i < (Model.Item1.NumberOfPages / 2 - 1))
+                && i != 1
+                && i != Model.Item1.NumberOfPages
+                && i > (Model.Item1.NumberOfPages / 2 + 1)
+                && i < (Model.Item1.NumberOfPages / 2 - 1))
                 {
                     continue;
                 }

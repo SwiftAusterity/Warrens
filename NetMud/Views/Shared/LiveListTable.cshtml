@@ -1,56 +1,43 @@
 ﻿@model NetMud.Models.ListTableViewModel
-
 @if (!string.IsNullOrWhiteSpace(Model.Name))
 {
     <h4>@Model.Name</h4>
 }
-
 <div class="searchCriteria">
     @if (Model.IncludeBasicPagingandSearch && Model.PagingModel != null && !string.IsNullOrWhiteSpace(Model.EntityTypeName))
     {
         @Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model.PagingModel, Model.EntityTypeName))
     }
 </div>
-
 @using (Html.BeginForm("Remove", Model.EntityTypeName))
 {
     @Html.AntiForgeryToken()
-    <table class="table table-striped table-bordered table-hover table-dark">
-        <thead>
-            <tr>
-                @foreach (var column in Model.Columns)
-                {
-                    <th scope="col">@column.Key</th>
-                }
-
-                @if (Model.IncludeDelete)
-                {
-                    <th>REMOVE PERMENANTLY</th>
-                }
-            </tr>
-        </thead>
-        <tbody>
+    <div class="listTable">
+        <div class="listSection listHeader">
+            @foreach (var column in Model.Columns)
+            {
+                <div scope="col" class="listItem">@column.Key</div>
+            }
+            @if (Model.IncludeDelete)
+            {
+                <div class="listItem">REMOVE PERMENANTLY</div>
+            }
+        </div>
+        <div class="listSection listContent">
             @foreach (var val in Model.Values)
             {
-                <tr>
-                    @foreach (var column in Model.Columns)
-                    {
-                        <td>@Html.Raw(column.Value(val))</td>
-                    }
-
-                    @if (Model.IncludeDelete)
-                    {
-                        <td>
-                            <div>
-                                <div>
-                                    <button type="submit" name="removeId" id="removeId" class="removeData" value="@val.BirthMark" title="Delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-                                    <input type="radio" name="authorizeRemove" value="@val.BirthMark" style="margin-left: 15px;" />
-                                </div>
-                            </div>
-                        </td>
-                    }
-                </tr>
+                foreach (var column in Model.Columns)
+                {
+                    <div class="listItem">@Html.Raw(column.Value(val))</div>
+                }
+                if (Model.IncludeDelete)
+                {
+                    <div class="listItem">
+                        <button type="submit" name="removeId" id="removeId" class="removeData" value="@val.BirthMark" title="Delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                        <input type="radio" name="authorizeRemove" value="@val.BirthMark" style="margin-left: 15px;" />
+                    </div>
+                }
             }
-        </tbody>
-    </table>
+        </div>
+    </div>
 }

@@ -68,7 +68,7 @@ input[type=checkbox].form-control {
 }
 
 a.addNew {
-    margin-top: 30px;
+    margin: 10px 0 10px 0;
 }
 
 a.addRow {
@@ -281,10 +281,23 @@ div.roomAsciiMap {
 }
 
 .searchCriteria {
-    width: 100%;
     height: 70px;
-    padding-bottom: 5px;
 }
+
+    .searchCriteria div {
+        display: flex;
+        margin: 0 0 0 auto;
+        width: fit-content;
+    }
+
+        .searchCriteria div div {
+            flex: 1 1 auto;
+            margin: 10px;
+        }
+
+            .searchCriteria div div.pager {
+                margin: 10px 0 10px 0;
+            }
 
 .helpTip {
     position: absolute;
@@ -401,7 +414,7 @@ div.roomAsciiMap {
         flex: 0 0 auto;
     }
 
-        .iterativeContainer .form-group input, 
+        .iterativeContainer .form-group input,
         .iterativeContainer .form-group select {
             min-width: 125px;
         }
@@ -454,6 +467,9 @@ div.roomAsciiMap {
     padding: 15px;
     text-align: center;
     margin: 15px;
+    flex: 1 1 100%;
+    border: 1px solid lightgray;
+    box-shadow: 2px 2px 4px 2px lightgrey;
 }
 
     .helpItem hr {
@@ -461,17 +477,21 @@ div.roomAsciiMap {
         margin-right: 25px;
     }
 
-.itemsTable .itemsTableSidebar {
-    width: 20%;
-    float: right;
+.itemsTable {
+    display: flex;
+    flex-wrap: wrap;
 }
 
-.itemsTable .itemsTableList {
-    width: 80%;
-    padding: 5px;
-    float: left;
-    display: inline-block;
-}
+    .itemsTable .itemsTableSidebar {
+        flex: 0 0 20%;
+    }
+
+    .itemsTable .itemsTableList {
+        flex: 1 1 80%;
+        padding: 5px;
+        flex-wrap: wrap;
+        display: flex;
+    }
 
 .entityDataInfoCard {
     background-color: white;
@@ -479,10 +499,9 @@ div.roomAsciiMap {
     border-radius: 9px;
     padding: 5px;
     margin: 10px;
-    width: 30%;
-    min-height: 350px;
-    text-align: left;
-    float: left;
+    flex: 0 1 auto;
+    border: 1px solid lightgray;
+    box-shadow: 2px 2px 4px 2px lightgrey;
 }
 
     .entityDataInfoCard h4 {
@@ -492,6 +511,8 @@ div.roomAsciiMap {
 
     .entityDataInfoCard div {
         margin: 5px;
+        min-width: 200px;
+        width: fit-content;
     }
 
     .entityDataInfoCard span:first-of-type {
@@ -516,13 +537,19 @@ div.roomAsciiMap {
     }
 
 .sideBarFilter {
-    background-color: white;
     color: black;
     border-radius: 9px;
-    padding: 15px;
-    text-align: center;
+    border: 1px solid black;
     margin: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px;
 }
+
+    .sideBarFilter .row {
+        margin: 0 auto;
+        padding-bottom: 15px;
+    }
 
 .listPagination {
     display: inline-flex;
@@ -655,4 +682,43 @@ div.roomAsciiMap {
     box-shadow: 0px 1px 3px 0px cornflowerblue;
     padding: 2px;
     margin: 2px;
+}
+
+.listTable {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.listSection {
+    flex: 1 1 100%;
+    display: flex;
+    margin: 5px 0 5px 0;
+}
+
+.listHeader {
+    border-bottom: 1px solid cornflowerblue;
+    color: forestgreen;
+}
+
+.listContent {
+    color: black;
+}
+
+    .listContent .listItem {
+        background: content-box whitesmoke;
+        margin: 0 3px 0 3px;
+        padding: 2px;
+        box-shadow: 1px 1px 0 0 lightgrey;
+    }
+
+.listRow {
+    display: flex;
+    flex-wrap: wrap;
+    flex: 1 1 100%;
+}
+
+.listItem {
+    flex: 1 0;
+    overflow: hidden;
+    list-style: none;
 }

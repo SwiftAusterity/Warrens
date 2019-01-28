@@ -1,68 +1,56 @@
 ﻿@model NetMud.Models.Admin.ManageContentApprovalsViewModel
 
-@Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model, "ContentApproval"))
+<h3>Content Approval and Preview</h3>
+<div class="searchCriteria">
+    @Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model, "ContentApproval"))
+</div>
 
-<!--can't use the partial for list table here, we need a custom one-->
+<h4>Approvals</h4>
 @using (Html.BeginForm("ApproveDeny", "ContentApproval"))
 {
     @Html.AntiForgeryToken()
-    <h4>Approvals</h4>
-    <table class="table table-striped table-bordered table-hover table-dark">
-        <thead>
-            <tr>
-                <th scope="col">Type</th>
-                <th scope="col">Id</th>
-                <th scope="col">Name</th>
-                <th scope="col">Preview</th>
-                <th>APPROVE</th>
-                <th>DENY</th>
-            </tr>
-        </thead>
-        <tbody>
+    <div class="listTable">
+        <div class="listSection listHeader">
+            <div class="listItem" scope="col">Type</div>
+            <div class="listItem" scope="col">Id</div>
+            <div class="listItem" scope="col">Name</div>
+            <div class="listItem" scope="col">Preview</div>
+            <div class="listItem">APPROVE</div>
+            <div class="listItem">DENY</div>
+        </div>
+        <div class="listSection listContent">
             @foreach (var val in Model.Items)
             {
-                <tr>
-                    <td>@val.GetType().Name</td>
-                    <td>@val.Id</td>
-                    <td>@val.Name</td>
-                    <td>
-                        <div class='contentPreview'>
+                <div class="listRow">
+                    <div class="listItem">@val.GetType().Name</div>
+                    <div class="listItem">@val.Id</div>
+                    <div class="listItem">@val.Name</div>
+                    <div class="listItem">
+                        <div class="accordionWrapper">
                             <h5>Fields</h5>
                             <div>
                                 <pre class="contentPreviewFields">
                                     @foreach (var detail in val.SignificantDetails())
                                     {
-                                        <span style="float: left;">@detail.Key</span><span style="float: right;">@detail.Value</span>
+                                <span style="float: left;">@detail.Key</span><span style="float: right;">@detail.Value</span>
                                     }
                                 </pre>
                             </div>
                         </div>
-                    </td>
-                    <td>
-                        <div>
-                            <button type="submit" name="approvalId" id="approvalId" class="approveData" value="@val.Id" title="Approve"><span class="glyphicon glyphicon-play-circle" aria-hidden="true"></span></button>
-                            <input type="radio" name="authorizeApproval" value="@val.Id|||@val.GetType().AssemblyQualifiedName" style="margin-left: 15px;" />
-                        </div>
-                    </td>
-                    <td>
-                        <div>
-                            <button type="submit" name="denialId" id="denialId" class="unapproveData" value="@val.Id" title="Deny"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span></button>
-                            <input type="radio" name="authorizeDenial" value="@val.Id|||@val.GetType().AssemblyQualifiedName" style="margin-left: 15px;" />
-                        </div>
-                    </td>
-                </tr>
+                    </div>
+                    <div class="listItem">
+                        <button type="submit" name="approvalId" id="approvalId" class="approveData" value="@val.Id" title="Approve"><span class="glyphicon glyphicon-play-circle" aria-hidden="true"></span></button>
+                        <input type="radio" name="audiv class=" listItem"orizeApproval" value="@val.Id|||@val.GetType().AssemblyQualifiedName" style="margin-left: 15px;" />
+                    </div>
+                    <div class="listItem">
+                        <button type="submit" name="denialId" id="denialId" class="unapproveData" value="@val.Id" title="Deny"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span></button>
+                        <input type="radio" name="audiv class=" listItem"orizeDenial" value="@val.Id|||@val.GetType().AssemblyQualifiedName" style="margin-left: 15px;" />
+                    </div>
+                </div>
             }
-        </tbody>
-    </table>
+        </div>
+    </div>
 }
-
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-    <script type="text/javascript">
-        $(function () {
-            $(".contentPreview").accordion({
-                collapsible: true,
-                active: false
-            });
-        });</script>
 }
