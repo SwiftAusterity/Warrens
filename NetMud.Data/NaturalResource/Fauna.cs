@@ -98,7 +98,9 @@ namespace NetMud.Data.NaturalResource
         public override ISensoryEvent RenderResourceCollection(IEntity viewer, int amount)
         {
             if (!IsVisibleTo(viewer))
+            {
                 return null;
+            }
 
             ISensoryEvent me = GetSelf(MessagingType.Visible);
             Lexica collectiveNoun = new Lexica(LexicalType.Noun, GrammaticalType.Descriptive, Race.CollectiveNoun);

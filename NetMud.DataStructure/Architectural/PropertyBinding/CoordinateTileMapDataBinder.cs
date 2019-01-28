@@ -8,7 +8,9 @@ namespace NetMud.DataStructure.Architectural.PropertyBinding
         public override object Convert(object input)
         {
             if (input == null)
+            {
                 return null;
+            }
 
             long[,] coordinateGrouping = new long[100,100];
             IEnumerable<string> inputArray = input as IEnumerable<string>;
@@ -28,7 +30,9 @@ namespace NetMud.DataStructure.Architectural.PropertyBinding
                 }
 
                 if (y < 0)
+                {
                     break;
+                }
             }
 
             return coordinateGrouping;

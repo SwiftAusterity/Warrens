@@ -77,10 +77,14 @@ namespace NetMud.Data.Architectural.EntityBase
 
             if (ModelPlanes == null || !ModelPlanes.Any() 
                 || ModelPlanes.Any(m => m == null || string.IsNullOrWhiteSpace(m.TagName) || !m.ModelNodes.Any()))
+            {
                 dataProblems.Add("Model Planes are invalid.");
+            }
 
             if (!IsModelValid())
+            {
                 dataProblems.Add("Model is invalid entirely.");
+            }
 
             return dataProblems;
         }
@@ -92,7 +96,9 @@ namespace NetMud.Data.Architectural.EntityBase
         public string ViewFlattenedModel(bool forWeb = false)
         {
             if(forWeb)
+            {
                 return Render.FlattenModelForWeb(this);
+            }
 
             return Render.FlattenModel(this);        
         }
@@ -108,7 +114,9 @@ namespace NetMud.Data.Architectural.EntityBase
             IDimensionalModelPlane plane = ModelPlanes.FirstOrDefault(pl => pl.YAxis.Equals(yAxis));
 
             if (plane != null)
+            {
                 return plane.GetNode(xAxis);
+            }
 
             return null;
         }
@@ -138,7 +146,9 @@ namespace NetMud.Data.Architectural.EntityBase
         {
             //don't need to serialize nothing
             if (ModelType == DimensionalModelType.None)
+            {
                 return;
+            }
 
             try
             {
@@ -167,7 +177,9 @@ namespace NetMud.Data.Architectural.EntityBase
 
                         //May not always indicate material id
                         if (nodeStringComponents.Count() > 1 && string.IsNullOrWhiteSpace(nodeStringComponents[1]))
+                        {
                             newNode.Composition = TemplateCache.Get<IMaterial>(long.Parse(nodeStringComponents[1]));
+                        }
 
                         newPlane.ModelNodes.Add(newNode);
                         xCount++;

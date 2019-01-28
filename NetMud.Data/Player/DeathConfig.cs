@@ -35,14 +35,18 @@ namespace NetMud.Data.Players
             get
             {
                 if (_deathRecallZone == null)
+                {
                     return null;
+                }
 
                 return TemplateCache.Get<IZoneTemplate>(_deathRecallZone);
             }
             set
             {
                 if (value == null)
+                {
                     return;
+                }
 
                 _deathRecallZone = new TemplateCacheKey(value);
             }

@@ -81,7 +81,9 @@ namespace NetMud.Data.Players
             get
             {
                 if (_sender == null && !string.IsNullOrWhiteSpace(SenderName))
+                {
                     _sender = Account.GetByHandle(SenderName);
+                }
 
                 return _sender;
             }
@@ -112,7 +114,9 @@ namespace NetMud.Data.Players
             get
             {
                 if (_recipientAccount == null && !string.IsNullOrWhiteSpace(Name))
+                {
                     _recipientAccount = Account.GetByHandle(Name);
+                }
 
                 return _recipientAccount;
             }
@@ -143,7 +147,9 @@ namespace NetMud.Data.Players
             get
             {
                 if (string.IsNullOrWhiteSpace(RecipientName))
+                {
                     return null;
+                }
 
                 global::System.Collections.Generic.IEnumerable<IPlayerTemplate> characters = PlayerDataCache.GetAllForAccountHandle(Name);
 
@@ -153,7 +159,9 @@ namespace NetMud.Data.Players
             set
             {
                 if (value != null)
+                {
                     RecipientName = value.Name;
+                }
             }
         }
 

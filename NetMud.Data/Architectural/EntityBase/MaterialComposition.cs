@@ -34,14 +34,18 @@ namespace NetMud.Data.Architectural.EntityBase
             get
             {
                 if (_material != null)
+                {
                     return TemplateCache.Get<IMaterial>(_material);
+                }
 
                 return null;
             }
             set
             {
                 if (value == null)
+                {
                     return;
+                }
 
                 _material = new TemplateCacheKey(value);
             }

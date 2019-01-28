@@ -68,17 +68,23 @@ namespace NetMud.Controllers.GameAdmin
                 IDictata obj = ConfigDataCache.Get<IDictata>(removeId);
 
                 if (obj == null)
+                {
                     message = "That does not exist";
+                }
                 else if (obj.Remove(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                 {
                     LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveConstants[" + removeId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Delete Successful.";
                 }
                 else
+                {
                     message = "Error; Removal failed.";
+                }
             }
             else
+            {
                 message = "You must check the proper remove or unapprove authorization radio button first.";
+            }
 
             return RedirectToAction("Index", new { Message = message });
         }
@@ -106,7 +112,9 @@ namespace NetMud.Controllers.GameAdmin
             IDictata newObj = vModel.DataObject;
 
             if (newObj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+            {
                 message = "Error; Creation failed.";
+            }
             else
             {
                 LoggingUtility.LogAdminCommandUsage("*WEB* - AddDictata[" + newObj.UniqueKey + "]", authedUser.GameAccount.GlobalIdentityHandle);
@@ -166,7 +174,9 @@ namespace NetMud.Controllers.GameAdmin
                 message = "Edit Successful.";
             }
             else
+            {
                 message = "Error; Edit failed.";
+            }
 
             return RedirectToAction("Index", new { Message = message });
         }

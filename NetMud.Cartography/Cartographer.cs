@@ -24,7 +24,9 @@ namespace NetMud.Cartography
         {
             //We can't find none directions on a map
             if (origin == null || direction == MovementDirectionType.None)
+            {
                 return null;
+            }
 
             long[,,] worldMap = origin.ParentLocation.Interior.CoordinatePlane;
 
@@ -35,10 +37,14 @@ namespace NetMud.Cartography
 
             //out of bounds
             if (Utilities.IsOutOfBounds(new Coordinate(newX, newY, newZ), worldMap))
+            {
                 return null;
+            }
 
             if (worldMap[newX, newY, newZ] > -1)
+            {
                 return TemplateCache.Get<IRoomTemplate>(worldMap[newX, newY, newZ]);
+            }
 
             return null;
         }
@@ -51,14 +57,20 @@ namespace NetMud.Cartography
         public static long[,] GetSinglePlane(long[,,] fullMap, int zIndex)
         {
             if (zIndex > fullMap.GetUpperBound(2) || zIndex < 0)
+            {
                 throw new InvalidOperationException("Requested zIndex greater than upper Z bound of map.");
+            }
 
             long[,] flatMap = new long[fullMap.GetUpperBound(0) + 1, fullMap.GetUpperBound(1) + 1];
 
             int x, y;
             for (x = 0; x <= fullMap.GetUpperBound(0); x++)
+            {
                 for (y = 0; y <= fullMap.GetUpperBound(1); y++)
+                {
                     flatMap[x, y] = fullMap[x, y, zIndex];
+                }
+            }
 
             return flatMap;
         }
@@ -77,29 +89,43 @@ namespace NetMud.Cartography
             int x, y, z, xLowest = 0, yLowest = 0, zLowest = 0;
 
             for (x = 0; x <= fullMap.GetUpperBound(0); x++)
+            {
                 for (y = 0; y <= fullMap.GetUpperBound(1); y++)
+                {
                     for (z = 0; z <= fullMap.GetUpperBound(2); z++)
                     {
                         IRoomTemplate room = TemplateCache.Get<IRoomTemplate>(fullMap[x, y, z]);
 
                         if (room == null || room.ParentLocation == null || !room.ParentLocation.Id.Equals(localeId))
+                        {
                             continue;
+                        }
 
                         newMap[x, y, z] = fullMap[x, y, z];
 
                         if (xLowest > x)
+                        {
                             xLowest = x;
+                        }
 
                         if (yLowest > y)
+                        {
                             yLowest = y;
+                        }
 
                         if (zLowest > z)
+                        {
                             zLowest = z;
+                        }
                     }
+                }
+            }
 
             //Maps were the same size or we didnt want to shrink
             if (!false || (xLowest <= 0 && yLowest <= 0 && zLowest <= 0))
+            {
                 return newMap;
+            }
 
             return ShrinkMap(newMap, xLowest, yLowest, zLowest
                 , new Tuple<int, int>(newMap.GetLowerBound(0), newMap.GetUpperBound(0))
@@ -135,7 +161,9 @@ namespace NetMud.Cartography
             returnMap = AddFullRoomToMap(returnMap, room, diameter, center, center, center, roomPool);
 
             if (shrink)
+            {
                 returnMap = ShrinkMap(returnMap);
+            }
 
             FillRoomDimensions(returnMap);
 
@@ -146,23 +174,33 @@ namespace NetMud.Cartography
         private static void FillRoomDimensions(long[,,] coordinatePlane)
         {
             if (coordinatePlane == null)
+            {
                 return;
+            }
 
             int x, y, z;
             for (x = 0; x <= coordinatePlane.GetUpperBound(0); x++)
+            {
                 for (y = 0; y <= coordinatePlane.GetUpperBound(1); y++)
+                {
                     for (z = 0; z <= coordinatePlane.GetUpperBound(2); z++)
                     {
                         if (coordinatePlane[x, y, z] < 0)
+                        {
                             continue;
+                        }
 
                         IRoomTemplate room = TemplateCache.Get<IRoomTemplate>(coordinatePlane[x, y, z]);
 
                         if (room == null)
+                        {
                             continue;
+                        }
 
                         room.Coordinates = new Coordinate(x, y, z);
                     }
+                }
+            }
         }
 
 
@@ -197,27 +235,45 @@ namespace NetMud.Cartography
             int x, y, z, xLowest = -1, yLowest = -1, zLowest = -1;
 
             for (x = 0; x <= map.GetUpperBound(0); x++)
+            {
                 if (x <= xBounds.Item2 && x >= xBounds.Item1)
+                {
                     for (y = 0; y <= map.GetUpperBound(1); y++)
+                    {
                         if (y <= yBounds.Item2 && y >= yBounds.Item1)
+                        {
                             for (z = 0; z <= map.GetUpperBound(2); z++)
+                            {
                                 if (z <= zBounds.Item2 && z >= zBounds.Item1 && map[x, y, z] >= 0)
                                 {
                                     newMap[x, y, z] = map[x, y, z];
 
                                     if (xLowest == -1 || xLowest > x)
+                                    {
                                         xLowest = x;
+                                    }
 
                                     if (yLowest == -1 || yLowest > y)
+                                    {
                                         yLowest = y;
+                                    }
 
                                     if (zLowest == -1 || zLowest > z)
+                                    {
                                         zLowest = z;
+                                    }
                                 }
+                            }
+                        }
+                    }
+                }
+            }
 
             //Maps were the same size or we didnt want to shrink
             if (!shrink || (xLowest <= 0 && yLowest <= 0 && zLowest <= 0))
+            {
                 return newMap;
+            }
 
             return ShrinkMap(newMap, xLowest, yLowest, zLowest, xBounds, yBounds, zBounds);
         }
@@ -235,7 +291,9 @@ namespace NetMud.Cartography
 
             //If we want a specific z index thats fine, otherwise we find the middle Z
             if (zIndex == -1)
+            {
                 zCenter = (map.GetUpperBound(2) - map.GetLowerBound(2)) / 2 + map.GetLowerBound(2);
+            }
 
             int xCenter = (map.GetUpperBound(0) - map.GetLowerBound(0)) / 2 + map.GetLowerBound(0);
             int yCenter = (map.GetUpperBound(1) - map.GetLowerBound(1)) / 2 + map.GetLowerBound(1);
@@ -251,24 +309,42 @@ namespace NetMud.Cartography
                 {
                     //Check around it
                     if (map[xCenter - variance, yCenter, zCenter] >= 0)
+                    {
                         roomId = map[xCenter - variance, yCenter, zCenter];
+                    }
                     else if (map[xCenter + variance, yCenter, zCenter] >= 0)
+                    {
                         roomId = map[xCenter + variance, yCenter, zCenter];
+                    }
                     else if (map[xCenter, yCenter - variance, zCenter] >= 0)
+                    {
                         roomId = map[xCenter, yCenter - variance, zCenter];
+                    }
                     else if (map[xCenter, yCenter + variance, zCenter] >= 0)
+                    {
                         roomId = map[xCenter, yCenter + variance, zCenter];
+                    }
                     else if (map[xCenter - variance, yCenter - variance, zCenter] >= 0)
+                    {
                         roomId = map[xCenter - variance, yCenter - variance, zCenter];
+                    }
                     else if (map[xCenter - variance, yCenter + variance, zCenter] >= 0)
+                    {
                         roomId = map[xCenter - variance, yCenter + variance, zCenter];
+                    }
                     else if (map[xCenter + variance, yCenter - variance, zCenter] >= 0)
+                    {
                         roomId = map[xCenter + variance, yCenter - variance, zCenter];
+                    }
                     else if (map[xCenter + variance, yCenter + variance, zCenter] >= 0)
+                    {
                         roomId = map[xCenter + variance, yCenter + variance, zCenter];
+                    }
 
                     if (roomId >= 0)
+                    {
                         break;
+                    }
                 }
             }
 
@@ -284,12 +360,16 @@ namespace NetMud.Cartography
                     returnRoom = FindCenterOfMap(map, zCenter - variance);
 
                     if (returnRoom != null)
+                    {
                         break;
+                    }
 
                     returnRoom = FindCenterOfMap(map, zCenter + variance);
 
                     if (returnRoom != null)
+                    {
                         break;
+                    }
                 }
 
                 return returnRoom;
@@ -302,7 +382,9 @@ namespace NetMud.Cartography
         private static long[,,] AddFullRoomToMap(long[,,] dataMap, IRoomTemplate origin, int diameter, int centerX, int centerY, int centerZ, HashSet<IRoomTemplate> roomPool)
         {
             if (roomPool != null && roomPool.Count > 0 && roomPool.Contains(origin))
+            {
                 roomPool.Remove(origin);
+            }
 
             //Render the room itself
             dataMap[centerX - 1, centerY - 1, centerZ - 1] = origin.Id;
@@ -362,7 +444,9 @@ namespace NetMud.Cartography
                     long locId = thisPath.Destination.Id;
 
                     if (thisPath.Destination.Id.Equals(origin.Id))
+                    {
                         locId = thisPath.Origin.Id;
+                    }
 
                     IRoomTemplate passdownOrigin = TemplateCache.Get<IRoomTemplate>(locId);
 
@@ -381,17 +465,29 @@ namespace NetMud.Cartography
         {
             //Maps were the same size
             if (xLowest <= 0 && yLowest <= 0 && zLowest <= 0)
+            {
                 return fullMap;
+            }
 
             long[,,] shrunkMap = new long[fullMap.GetUpperBound(0) + 1 - xLowest, fullMap.GetUpperBound(1) + 1 - yLowest, fullMap.GetUpperBound(2) + 1 - zLowest];
 
             int x, y, z;
             for (x = 0; x <= shrunkMap.GetUpperBound(0); x++)
+            {
                 if (x <= xBounds.Item2 && x >= xBounds.Item1)
+                {
                     for (y = 0; y <= shrunkMap.GetUpperBound(1); y++)
+                    {
                         if (y <= yBounds.Item2 && y >= yBounds.Item1)
+                        {
                             for (z = 0; z <= shrunkMap.GetUpperBound(2); z++)
+                            {
                                 shrunkMap[x, y, z] = fullMap[x + xLowest, y + yLowest, z + zLowest];
+                            }
+                        }
+                    }
+                }
+            }
 
             return shrunkMap;
         }

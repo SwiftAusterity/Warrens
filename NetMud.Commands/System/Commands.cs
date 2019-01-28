@@ -28,7 +28,9 @@ namespace NetMud.Commands.System
         {
             //NPCs dont need to use this
             if (!Actor.GetType().GetInterfaces().Contains(typeof(IPlayer)))
+            {
                 return;
+            }
 
             List<string> returnStrings = new List<string>();
             StringBuilder sb = new StringBuilder();
@@ -45,17 +47,25 @@ namespace NetMud.Commands.System
             foreach (global::System.Type command in loadedCommands)
             {
                 foreach(CommandKeywordAttribute commandName in command.GetCustomAttributes<CommandKeywordAttribute>().Where(key => key.DisplayInHelpAndCommands))
-                    if(!commandNames.Contains(commandName.Keyword))
+                {
+                    if (!commandNames.Contains(commandName.Keyword))
+                    {
                         commandNames.Add(commandName.Keyword);
+                    }
+                }
 
                 if (!commandNames.Contains(command.Name) && command.GetCustomAttribute<CommandSuppressName>() == null)
+                {
                     commandNames.Add(command.Name);
+                }
             }
 
             sb.AppendLine(string.Join(", ", commandNames.Select(cmd => cmd.ToLower()).Distinct()));
 
             if(sb.Length > 0)
+            {
                 sb.Length -= 2;
+            }
 
             returnStrings.Add(sb.ToString());
 

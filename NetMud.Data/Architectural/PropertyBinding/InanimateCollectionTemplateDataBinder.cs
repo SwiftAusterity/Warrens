@@ -11,7 +11,9 @@ namespace NetMud.Data.Architectural.PropertyBinding
         public override object Convert(object input)
         {
             if (input == null)
+            {
                 return null;
+            }
 
             IEnumerable<string> valueCollection = input as IEnumerable<string>;
 

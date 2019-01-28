@@ -60,7 +60,9 @@ namespace NetMud.Backup
                                                                             type == typeof(RoomTemplate) ? 3 :
                                                                             type == typeof(PathwayTemplate) ? 2 :
                                                                             type.GetInterfaces().Contains(typeof(ILookupData)) ? 1 : 0))
+            {
                 LoadAllToCache(t);
+            }
 
             return true;
         }
@@ -73,7 +75,9 @@ namespace NetMud.Backup
         public static bool LoadAllToCache(Type objectType)
         {
             if (!objectType.GetInterfaces().Contains(typeof(IKeyedData)))
+            {
                 return false;
+            }
 
             TemplateData fileAccessor = new TemplateData();
             string typeDirectory = fileAccessor.BaseDirectory + fileAccessor.CurrentDirectoryName + objectType.Name + "/";
@@ -92,7 +96,9 @@ namespace NetMud.Backup
                     IKeyedData entity = fileAccessor.ReadEntity(file, objectType);
 
                     if (entity != null)
+                    {
                         entity.PersistToCache();
+                    }
                 }
                 catch (Exception ex)
                 {

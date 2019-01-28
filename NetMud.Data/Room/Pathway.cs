@@ -83,14 +83,18 @@ namespace NetMud.Data.Room
             get
             {
                 if (_currentDestinationBirthmark != null)
+                {
                     return (ILocation)LiveCache.Get(_currentDestinationBirthmark);
+                }
 
                 return null;
             }
             set
             {
                 if (value == null)
+                {
                     return;
+                }
 
                 _currentDestinationBirthmark = new LiveCacheKey(value);
             }
@@ -115,14 +119,18 @@ namespace NetMud.Data.Room
             get
             {
                 if (_currentOriginBirthmark != null)
+                {
                     return (ILocation)LiveCache.Get(_currentOriginBirthmark);
+                }
 
                 return null;
             }
             set
             {
                 if (value == null)
+                {
                     return;
+                }
 
                 _currentOriginBirthmark = new LiveCacheKey(value);
             }
@@ -190,7 +198,9 @@ namespace NetMud.Data.Room
 
             //Isn't in the world currently
             if (me == default(Pathway))
+            {
                 SpawnNewInWorld();
+            }
             else
             {
                 BirthMark = me.BirthMark;
@@ -255,7 +265,9 @@ namespace NetMud.Data.Room
         public override ISensoryEvent RenderToLook(IEntity viewer)
         {
             if (!IsVisibleTo(viewer))
+            {
                 return null;
+            }
 
             IPathwayTemplate bS = Template<IPathwayTemplate>();
             ISensoryEvent me = GetSelf(MessagingType.Visible);
@@ -263,7 +275,9 @@ namespace NetMud.Data.Room
             if (bS.Descriptives.Any())
             {
                 foreach (ISensoryEvent desc in bS.Descriptives)
+                {
                     me.Event.TryModify(desc.Event);
+                }
             }
             else
             {

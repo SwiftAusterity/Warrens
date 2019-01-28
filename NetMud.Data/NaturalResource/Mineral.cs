@@ -100,7 +100,9 @@ namespace NetMud.Data.NaturalResource
             get
             {
                 if (_ores == null)
+                {
                     _ores = new HashSet<TemplateCacheKey>();
+                }
 
                 return new HashSet<IMineral>(TemplateCache.GetMany<IMineral>(_ores));
             }
@@ -136,7 +138,9 @@ namespace NetMud.Data.NaturalResource
             returnList.Add("Dirt", Dirt.ToString());
 
             foreach(IMineral ore in Ores)
+            {
                 returnList.Add("Ore", ore.Name);
+            }
 
             return returnList;
         }

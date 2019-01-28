@@ -253,10 +253,14 @@ namespace NetMud.Data.Architectural.ActorBase
             }
 
             if (Head != null)
+            {
                 anatomy.Add(new BodyPart(new InanimateComponent(Head, 1), "Head"));
+            }
 
             if (Torso != null)
+            {
                 anatomy.Add(new BodyPart(new InanimateComponent(Torso, 1), "Torso"));
+            }
 
             foreach (BodyPart bit in BodyParts)
             {
@@ -280,7 +284,9 @@ namespace NetMud.Data.Architectural.ActorBase
             List<string> stringList = new List<string>();
 
             if (Head != null)
+            {
                 stringList.Add(Head.Model.ModelTemplate.ViewFlattenedModel(forWeb));
+            }
 
             if (Arms != null)
             {
@@ -293,7 +299,9 @@ namespace NetMud.Data.Architectural.ActorBase
             }
 
             if (Head != null)
+            {
                 stringList.Add(Torso.Model.ModelTemplate.ViewFlattenedModel(forWeb));
+            }
 
             if (Legs != null)
             {
@@ -308,9 +316,11 @@ namespace NetMud.Data.Architectural.ActorBase
             foreach (BodyPart bit in BodyParts)
             {
                 if (bit.Part == null)
+                {
                     continue;
+                }
 
-                for(int i = 0; i < bit.Part.Amount; i++)
+                for (int i = 0; i < bit.Part.Amount; i++)
                 {
                     int legCount = 0;
                     while (legCount < Legs.Amount)
@@ -334,19 +344,29 @@ namespace NetMud.Data.Architectural.ActorBase
 
             //Gotta keep most of these in due to the tuple thing
             if (Arms == null || Arms.Item == null || Arms.Amount < 0)
+            {
                 TemplateProblems.Add("Arms are invalid.");
+            }
 
             if (Legs == null || Legs.Item == null || Legs.Amount < 0)
+            {
                 TemplateProblems.Add("Legs are invalid.");
+            }
 
             if (BodyParts != null && BodyParts.Any(a => a.Part == null || a.Part.Amount == 0 || string.IsNullOrWhiteSpace(a.Name)))
+            {
                 TemplateProblems.Add("BodyParts are invalid.");
+            }
 
             if (VisionRange == null || VisionRange.Low >= VisionRange.High)
+            {
                 TemplateProblems.Add("Vision range is invalid.");
+            }
 
             if (TemperatureTolerance == null || TemperatureTolerance.Low >= TemperatureTolerance.High)
+            {
                 TemplateProblems.Add("Temperature tolerance is invalid.");
+            }
 
             return TemplateProblems;
         }
@@ -375,7 +395,9 @@ namespace NetMud.Data.Architectural.ActorBase
             returnList.Add("Temperature Tolerance", string.Format("{0} - {1}", TemperatureTolerance.Low, TemperatureTolerance.High));
 
             foreach (BodyPart part in BodyParts)
+            {
                 returnList.Add("Body Parts", string.Format("{0} - {1} ({2})", part.Part.Amount.ToString(), part.Part.Item.Name, part.Name));
+            }
 
             return returnList;
         }

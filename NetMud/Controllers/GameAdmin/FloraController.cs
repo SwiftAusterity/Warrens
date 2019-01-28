@@ -71,14 +71,18 @@ namespace NetMud.Controllers.GameAdmin
                 IFlora obj = TemplateCache.Get<IFlora>(removeId);
 
                 if (obj == null)
+                {
                     message = "That does not exist";
+                }
                 else if (obj.Remove(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                 {
                     LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveFlora[" + removeId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Delete Successful.";
                 }
                 else
+                {
                     message = "Error; Removal failed.";
+                }
             }
             else if (!string.IsNullOrWhiteSpace(authorizeUnapprove) && unapproveId.ToString().Equals(authorizeUnapprove))
             {
@@ -87,17 +91,23 @@ namespace NetMud.Controllers.GameAdmin
                 IFlora obj = TemplateCache.Get<IFlora>(unapproveId);
 
                 if (obj == null)
+                {
                     message = "That does not exist";
+                }
                 else if (obj.ChangeApprovalStatus(authedUser.GameAccount, authedUser.GetStaffRank(User), ApprovalState.Returned))
                 {
                     LoggingUtility.LogAdminCommandUsage("*WEB* - UnapproveFlora[" + unapproveId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Unapproval Successful.";
                 }
                 else
+                {
                     message = "Error; Unapproval failed.";
+                }
             }
             else
+            {
                 message = "You must check the proper remove or unapprove authorization radio button first.";
+            }
 
             return RedirectToAction("Index", new { Message = message });
         }
@@ -126,12 +136,16 @@ namespace NetMud.Controllers.GameAdmin
             IFlora newObj = vModel.DataObject;
 
             if (newObj.Wood == null && newObj.Flower == null && newObj.Seed == null && newObj.Leaf == null && newObj.Fruit == null)
+            {
                 message = "At least one of the parts of this plant must be valid.";
+            }
 
             if (string.IsNullOrWhiteSpace(message))
             {
                 if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
+                {
                     message = "Error; Creation failed.";
+                }
                 else
                 {
                     LoggingUtility.LogAdminCommandUsage("*WEB* - AddFlora[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
@@ -198,7 +212,9 @@ namespace NetMud.Controllers.GameAdmin
             obj.OccursIn = vModel.DataObject.OccursIn;
 
             if (obj.Wood == null && obj.Flower == null && obj.Seed == null && obj.Leaf == null && obj.Fruit == null)
+            {
                 message = "At least one of the parts of this plant must be valid.";
+            }
 
             if (string.IsNullOrWhiteSpace(message))
             {
@@ -208,7 +224,9 @@ namespace NetMud.Controllers.GameAdmin
                     message = "Edit Successful.";
                 }
                 else
+                {
                     message = "Error; Edit failed.";
+                }
             }
 
             return RedirectToAction("Index", new { Message = message });

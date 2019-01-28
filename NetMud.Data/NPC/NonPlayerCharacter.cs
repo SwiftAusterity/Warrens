@@ -730,10 +730,14 @@ namespace NetMud.Data.NPC
             List<T> contents = new List<T>();
 
             if (implimentedTypes.Contains(typeof(IMobile)))
+            {
                 contents.AddRange(MobilesInside.EntitiesContained().Select(ent => (T)ent));
+            }
 
             if (implimentedTypes.Contains(typeof(IInanimate)))
+            {
                 contents.AddRange(Inventory.EntitiesContained().Select(ent => (T)ent));
+            }
 
             return contents;
         }
@@ -751,10 +755,14 @@ namespace NetMud.Data.NPC
             List<T> contents = new List<T>();
 
             if (implimentedTypes.Contains(typeof(IMobile)))
+            {
                 contents.AddRange(MobilesInside.EntitiesContained(containerName).Select(ent => (T)ent));
+            }
 
             if (implimentedTypes.Contains(typeof(IInanimate)))
+            {
                 contents.AddRange(Inventory.EntitiesContained(containerName).Select(ent => (T)ent));
+            }
 
             return contents;
         }
@@ -786,11 +794,15 @@ namespace NetMud.Data.NPC
                 IInanimate obj = (IInanimate)thing;
 
                 if (Inventory.Contains(obj, containerName))
+                {
                     return "That is already in the container";
+                }
 
                 string moveError = MoveInto(obj);
                 if (!string.IsNullOrWhiteSpace(moveError))
+                {
                     return moveError;
+                }
 
                 Inventory.Add(obj, containerName);
                 UpsertToLiveWorldCache();
@@ -803,11 +815,15 @@ namespace NetMud.Data.NPC
                 IMobile obj = (IMobile)thing;
 
                 if (MobilesInside.Contains(obj, containerName))
+                {
                     return "That is already in the container";
+                }
 
                 string moveError = MoveInto(obj);
                 if (!string.IsNullOrWhiteSpace(moveError))
+                {
                     return moveError;
+                }
 
                 MobilesInside.Add(obj, containerName);
                 UpsertToLiveWorldCache();
@@ -845,7 +861,9 @@ namespace NetMud.Data.NPC
                 IInanimate obj = (IInanimate)thing;
 
                 if (!Inventory.Contains(obj, containerName))
+                {
                     return "That is not in the container";
+                }
 
                 obj.TryMoveTo(null);
                 Inventory.Remove(obj, containerName);
@@ -859,7 +877,9 @@ namespace NetMud.Data.NPC
                 IMobile obj = (IMobile)thing;
 
                 if (!MobilesInside.Contains(obj, containerName))
+                {
                     return "That is not in the container";
+                }
 
                 obj.TryMoveTo(null);
                 MobilesInside.Remove(obj, containerName);

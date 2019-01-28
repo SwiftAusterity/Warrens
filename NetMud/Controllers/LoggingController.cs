@@ -59,7 +59,9 @@ namespace NetMud.Controllers
             if (!string.IsNullOrWhiteSpace(selectedLog))
             {
                 if (!LoggingUtility.RolloverLog(selectedLog))
+                {
                     message = "Error rolling over log.";
+                }
                 else
                 {
                     LoggingUtility.LogAdminCommandUsage("*WEB* - RolloverLog[" + selectedLog + "]", authedUser.GameAccount.GlobalIdentityHandle);
@@ -67,7 +69,9 @@ namespace NetMud.Controllers
                 }
             }
             else
+            {
                 message = "No log selected to rollover";
+            }
 
             return RedirectToAction("Index", new { Message = message });
 

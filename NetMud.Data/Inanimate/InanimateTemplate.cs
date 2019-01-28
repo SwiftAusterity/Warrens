@@ -120,7 +120,9 @@ namespace NetMud.Data.Inanimate
             string returnValue = string.Empty;
 
             if (!(crafter is IContains crafterContainer))
+            {
                 return "Crafter is invalid.";
+            }
 
             if (Produces <= 0 || Components.Count() <= 0)
             {
@@ -136,7 +138,9 @@ namespace NetMud.Data.Inanimate
                 int inventoryCount = crafterInventory.Count(item => item.TemplateId.Equals(component.Item.Id));
 
                 if (inventoryCount < component.Amount)
+                {
                     return string.Format("You need at least {0} {1}s to craft {2}.", component.Amount, component.Item.Name, Name);
+                }
 
                 itemsToUse.AddRange(crafterInventory.Where(item => item.TemplateId.Equals(component.Item.Id))
                                                     .Take(component.Amount));

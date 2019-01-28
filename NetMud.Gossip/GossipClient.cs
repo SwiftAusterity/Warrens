@@ -90,14 +90,18 @@ namespace NetMud.Gossip
         private async void ReconnectLoop(double suspendMultiplier = 1)
         {
             if (MyClient != null && MyClient.IsAlive || suspendMultiplier > ConfigSettings.SuspendMultiplierMaximum)
+            {
                 return;
+            }
 
             DoLog("Gossip Server Reconnect Loop Pulse x" + suspendMultiplier.ToString());
 
             try
             {
                 if (MyClient == null)
+                {
                     GetNewSocket();
+                }
 
                 MyClient.Connect();
 
@@ -136,7 +140,9 @@ namespace NetMud.Gossip
         private void OnMessage(object sender, MessageEventArgs e)
         {
             if(e == null || e.Data == null)
+            {
                 return;
+            }
 
             TransportMessage newReply = DeSerialize(e.Data);
 
@@ -176,7 +182,10 @@ namespace NetMud.Gossip
                     Member validPlayer = UserList().FirstOrDefault(user => user.Name.Equals(myName, StringComparison.InvariantCultureIgnoreCase));
 
                     if (validPlayer != null)
+                    {
                         validPlayer.WriteTo(string.Format("{0} gossip-tells you, '{1}'", fullName, messageBody));
+                    }
+
                     break;
                 case "channels/broadcast":
                     string messageText = newReply.Payload.message.Value;
@@ -187,7 +196,9 @@ namespace NetMud.Gossip
                     if (!string.IsNullOrWhiteSpace(messageText))
                     {
                         foreach (Member user in UserList().Where(usr => !usr.BlockedMembers.Contains(messageSender)))
+                        {
                             user.WriteTo(string.Format("{0}@{1} {3}s, '{2}'", messageSender, source, messageText, channel));
+                        }
                     }
                     break;
                 case "players/sign-in":
@@ -197,7 +208,9 @@ namespace NetMud.Gossip
                         string fullSignInName = string.Format("{0}@{1}", newReply.Payload.game.Value, newReply.Payload.name.Value);
 
                         foreach (Member user in UserList().Where(usr => usr.Friends.Contains(fullSignInName)))
+                        {
                             user.WriteTo(string.Format("{0} has logged into GOSSIP.", fullSignInName));
+                        }
                     }
                     else
                     {
@@ -211,7 +224,9 @@ namespace NetMud.Gossip
                         string fullSignoutName = string.Format("{0}@{1}", newReply.Payload.game.Value, newReply.Payload.name.Value);
 
                         foreach (Member user in UserList().Where(usr => usr.Friends.Contains(fullSignoutName)))
+                        {
                             user.WriteTo(string.Format("{0} has logged out of GOSSIP.", fullSignoutName));
+                        }
                     }
                     else
                     {
@@ -324,7 +339,9 @@ namespace NetMud.Gossip
         public void Shutdown()
         {
             if (MyClient != null)
+            {
                 MyClient.Close();
+            }
         }
 
         /// <summary>
@@ -371,7 +388,9 @@ namespace NetMud.Gossip
         private void DoLog(string toLog)
         {
             if (ActivityLogger == null)
+            {
                 return;
+            }
 
             ActivityLogger(toLog);
         }
@@ -379,7 +398,9 @@ namespace NetMud.Gossip
         private void DoLog(Exception ex)
         {
             if (ExceptionLogger == null)
+            {
                 return;
+            }
 
             ExceptionLogger(ex);
         }

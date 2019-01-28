@@ -54,7 +54,9 @@ namespace NetMud.Data.Room
             get
             {
                 if (_keywords == null || _keywords.Length == 0)
+                {
                     _keywords = new string[] { Name.ToLower() };
+                }
 
                 return _keywords;
             }
@@ -89,7 +91,9 @@ namespace NetMud.Data.Room
             set
             {
                 if (value != null)
+                {
                     _medium = new TemplateCacheKey(value);
+                }
             }
         }
 
@@ -113,7 +117,9 @@ namespace NetMud.Data.Room
             set
             {
                 if (value != null)
+                {
                     _parentLocation = new TemplateCacheKey(value);
+                }
             }
         }
 
@@ -152,7 +158,9 @@ namespace NetMud.Data.Room
             IList<string> dataProblems = base.FitnessReport();
 
             if (Coordinates?.X < 0 || Coordinates?.Y < 0 || Coordinates?.Z < 0)
+            {
                 dataProblems.Add("Coordinates are invalid.");
+            }
 
             return dataProblems;
         }
@@ -206,7 +214,9 @@ namespace NetMud.Data.Room
             returnList.Add("Medium", Medium.Name);
 
             foreach (ISensoryEvent desc in Descriptives)
+            {
                 returnList.Add("Descriptives", string.Format("{0} ({1}): {2}", desc.SensoryType, desc.Strength, desc.Event.ToString()));
+            }
 
             return returnList;
         }
@@ -226,7 +236,9 @@ namespace NetMud.Data.Room
                 dictatas.AddRange(Descriptives.Select(desc => desc.Event.GetDictata()));
 
                 foreach (IDictata dictata in dictatas)
+                {
                     LexicalProcessor.VerifyDictata(dictata);
+                }
 
                 TemplateCache.Add(this);
             }

@@ -36,7 +36,9 @@ namespace NetMud.Commands.GossipServer
             IPlayer playerActor = Actor.GetType().GetInterfaces().Contains(typeof(IPlayer)) ? Actor as IPlayer : null;
 
             if (playerActor != null && !playerActor.Template<IPlayerTemplate>().Account.Config.GossipSubscriber)
+            {
                 sb.Add(string.Format("You have disabled the Gossip network.", Subject));
+            }
             else
             {
                 string directTarget = string.Empty;
@@ -62,7 +64,9 @@ namespace NetMud.Commands.GossipServer
                 string userName = Actor.TemplateName;
 
                 if (playerActor != null)
+                {
                     userName = playerActor.AccountHandle;
+                }
 
                 if (!string.IsNullOrWhiteSpace(directTarget) && !string.IsNullOrWhiteSpace(directTargetGame))
                 {

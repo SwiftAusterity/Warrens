@@ -296,14 +296,18 @@ namespace NetMud.Websock
                         && player.Template<IPlayerTemplate>().Account.Config.WantsNotification(_currentPlayer.AccountHandle, false, AcquaintenceNotifications.LeaveGame));
 
             foreach (IPlayer player in validPlayers)
+            {
                 player.WriteTo(new string[] { string.Format("{0} has left the game.", _currentPlayer.AccountHandle) });
+            }
 
             if (_currentPlayer != null && _currentPlayer.Template<IPlayerTemplate>().Account.Config.GossipSubscriber)
             {
                 IGossipClient gossipClient = LiveCache.Get<IGossipClient>("GossipWebClient");
 
                 if (gossipClient != null)
+                {
                     gossipClient.SendNotification(_currentPlayer.AccountHandle, AcquaintenceNotifications.LeaveGame);
+                }
             }
 
             base.OnClose();
@@ -342,7 +346,9 @@ namespace NetMud.Websock
 
             //It only sends the errors
             if (errors.Any(str => !string.IsNullOrWhiteSpace(str)))
+            {
                 SendOutput(errors);
+            }
         }
 
         /// <summary>
@@ -401,7 +407,9 @@ namespace NetMud.Websock
 
             //else new them up
             if (_currentPlayer == null)
+            {
                 _currentPlayer = new Player(currentCharacter);
+            }
 
             _currentPlayer.Descriptor = this;
 
@@ -423,14 +431,18 @@ namespace NetMud.Websock
                 && player.Template<IPlayerTemplate>().Account.Config.WantsNotification(_currentPlayer.AccountHandle, false, AcquaintenceNotifications.EnterGame));
 
                 foreach (IPlayer player in validPlayers)
+                {
                     player.WriteTo(new string[] { string.Format("{0} has entered the game.", _currentPlayer.AccountHandle) });
+                }
 
                 if (authedUser.GameAccount.Config.GossipSubscriber)
                 {
                     IGossipClient gossipClient = LiveCache.Get<IGossipClient>("GossipWebClient");
 
                     if (gossipClient != null)
+                    {
                         gossipClient.SendNotification(authedUser.GlobalIdentityHandle, AcquaintenceNotifications.EnterGame);
+                    }
                 }
             }
             catch (Exception ex)
@@ -449,7 +461,9 @@ namespace NetMud.Websock
 
             int padding = 3 - ((authTicketValue.Length + 3) % 4);
             if (padding != 0)
+            {
                 authTicketValue = authTicketValue + new string('=', padding);
+            }
 
             byte[] bytes = Convert.FromBase64String(authTicketValue);
 
@@ -518,10 +532,14 @@ namespace NetMud.Websock
                 try
                 {
                     if (other.GetType() != GetType())
+                    {
                         return -1;
+                    }
 
                     if (other.BirthMark.Equals(BirthMark))
+                    {
                         return 1;
+                    }
 
                     return 0;
                 }

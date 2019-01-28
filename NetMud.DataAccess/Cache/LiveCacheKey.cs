@@ -76,10 +76,14 @@ namespace NetMud.DataAccess.Cache
                 try
                 {
                     if (other.GetType() != GetType())
+                    {
                         return -1;
+                    }
 
                     if (other.KeyHash().Equals(KeyHash()))
+                    {
                         return 1;
+                    }
 
                     return 0;
                 }

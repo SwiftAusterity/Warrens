@@ -60,24 +60,39 @@ namespace NetMud.Physics
                     break;
                 case DamageType.Sharp:
                     if (leftOfCenter)
+                    {
                         returnString = "/";
+                    }
                     else
+                    {
                         returnString = @"\";
+                    }
+
                     break;
                 case DamageType.Pierce:
                     returnString = "^";
                     break;
                 case DamageType.Shred:
                     if (leftOfCenter)
+                    {
                         returnString = "<";
+                    }
                     else
+                    {
                         returnString = ">";
+                    }
+
                     break;
                 case DamageType.Chop:
                     if (leftOfCenter)
+                    {
                         returnString = "{";
+                    }
                     else
+                    {
                         returnString = "}";
+                    }
+
                     break;
                 case DamageType.Acidic:
                     returnString = "A";
@@ -221,12 +236,16 @@ namespace NetMud.Physics
                         nodeString = DamageTypeToCharacter(node.Style, xI < 5);
 
                         if (forWeb)
+                        {
                             nodeString = string.Format("<a title='{0}'>{1}</a>"
                                 , node.Composition == null ? string.Empty : node.Composition.Name
                                 , nodeString);
+                        }
                     }
                     else if (forWeb)
+                    {
                         nodeString = "<a title=''> </a>";
+                    }
 
                     flattenedPlane[yI][xI] = nodeString;
                 }
@@ -236,7 +255,9 @@ namespace NetMud.Physics
 
             //Write out the flattened view to the string builder with line terminators
             foreach (string[] nodes in flattenedPlane)
+            {
                 flattenedModel.AppendLine(string.Join("", nodes));
+            }
 
             flattenedModel.AppendLine();
 

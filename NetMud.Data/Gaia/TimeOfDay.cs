@@ -66,12 +66,16 @@ namespace NetMud.Data.Gaia
         public string MonthName()
         {
             if (BaseChronology?.Months == null)
+            {
                 return "Month";
+            }
 
             string monthName = BaseChronology.Months.FirstOrDefault();
 
             if (Month <= BaseChronology.Months.Count())
+            {
                 monthName = BaseChronology.Months.ElementAt(Month);
+            }
 
             return monthName;
         }
@@ -114,16 +118,24 @@ namespace NetMud.Data.Gaia
             Hour = hour;
 
             if (Hour > BaseChronology.HoursPerDay || Hour <= 0)
+            {
                 Hour = 1;
+            }
 
             if (Day > BaseChronology.DaysPerMonth || Day <= 0)
+            {
                 Day = 1;
+            }
 
             if (Month > BaseChronology.Months.Count() || Month <= 0)
+            {
                 Month = 1;
+            }
 
             if (Year < BaseChronology.StartingYear)
+            {
                 Year = BaseChronology.StartingYear;
+            }
         }
     }
 }

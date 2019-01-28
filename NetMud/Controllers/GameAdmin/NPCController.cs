@@ -72,14 +72,18 @@ namespace NetMud.Controllers.GameAdmin
                 INonPlayerCharacterTemplate obj = TemplateCache.Get<INonPlayerCharacterTemplate>(removeId);
 
                 if (obj == null)
+                {
                     message = "That does not exist";
+                }
                 else if (obj.Remove(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                 {
                     LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveNPC[" + removeId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Delete Successful.";
                 }
                 else
+                {
                     message = "Error; Removal failed.";
+                }
             }
             else if (!string.IsNullOrWhiteSpace(authorizeUnapprove) && unapproveId.ToString().Equals(authorizeUnapprove))
             {
@@ -88,17 +92,23 @@ namespace NetMud.Controllers.GameAdmin
                 INonPlayerCharacterTemplate obj = TemplateCache.Get<INonPlayerCharacterTemplate>(unapproveId);
 
                 if (obj == null)
+                {
                     message = "That does not exist";
+                }
                 else if (obj.ChangeApprovalStatus(authedUser.GameAccount, authedUser.GetStaffRank(User), ApprovalState.Returned))
                 {
                     LoggingUtility.LogAdminCommandUsage("*WEB* - UnapproveNPC[" + unapproveId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Unapproval Successful.";
                 }
                 else
+                {
                     message = "Error; Unapproval failed.";
+                }
             }
             else
+            {
                 message = "You must check the proper remove or unapprove authorization radio button first.";
+            }
 
             return RedirectToAction("Index", new { Message = message });
         }
@@ -127,7 +137,9 @@ namespace NetMud.Controllers.GameAdmin
             INonPlayerCharacterTemplate newObj = vModel.DataObject;
 
             if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
+            {
                 message = "Error; Creation failed.";
+            }
             else
             {
                 LoggingUtility.LogAdminCommandUsage("*WEB* - AddNPCData[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
@@ -192,7 +204,9 @@ namespace NetMud.Controllers.GameAdmin
                 message = "Edit Successful.";
             }
             else
+            {
                 message = "Error; Edit failed.";
+            }
 
             return RedirectToAction("Index", new { Message = message });
         }
@@ -250,12 +264,16 @@ namespace NetMud.Controllers.GameAdmin
                                                                                 && occurrence.Event.Phrase.Equals(phraseF, StringComparison.InvariantCultureIgnoreCase));
 
             if (existingOccurrence == null)
+            {
                 existingOccurrence = new SensoryEvent();
+            }
 
             ILexica existingEvent = existingOccurrence.Event;
 
             if (existingEvent == null)
+            {
                 existingEvent = new Lexica();
+            }
 
             existingEvent.Role = grammaticalType;
 
@@ -270,7 +288,9 @@ namespace NetMud.Controllers.GameAdmin
                 LoggingUtility.LogAdminCommandUsage("*WEB* - Zone AddEditDescriptive[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
             }
             else
+            {
                 message = "Error; Edit failed.";
+            }
 
             return RedirectToRoute("ModalErrorOrClose", new { Message = message });
         }
@@ -282,14 +302,18 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
 
             if (string.IsNullOrWhiteSpace(authorize))
+            {
                 message = "You must check the proper authorize radio button first.";
+            }
             else
             {
                 ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
                 string[] values = authorize.Split(new string[] { "|||" }, StringSplitOptions.RemoveEmptyEntries);
 
                 if (values.Count() != 2)
+                {
                     message = "You must check the proper authorize radio button first.";
+                }
                 else
                 {
                     short type = short.Parse(values[0]);
@@ -298,7 +322,9 @@ namespace NetMud.Controllers.GameAdmin
                     INonPlayerCharacterTemplate obj = TemplateCache.Get<INonPlayerCharacterTemplate>(id);
 
                     if (obj == null)
+                    {
                         message = "That does not exist";
+                    }
                     else
                     {
                         GrammaticalType grammaticalType = (GrammaticalType)type;
@@ -315,10 +341,14 @@ namespace NetMud.Controllers.GameAdmin
                                 message = "Delete Successful.";
                             }
                             else
+                            {
                                 message = "Error; Removal failed.";
+                            }
                         }
                         else
+                        {
                             message = "That does not exist";
+                        }
                     }
                 }
             }

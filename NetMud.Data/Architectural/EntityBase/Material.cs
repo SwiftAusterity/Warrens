@@ -146,14 +146,20 @@ namespace NetMud.Data.Architectural.EntityBase
             IList<string> dataProblems = base.FitnessReport();
 
             if (SolidPoint >= GasPoint)
+            {
                 dataProblems.Add("Solidification point must be lower than gaseous point.");
+            }
 
             //Specific interior value checking
             if (Resistance == null || !Resistance.Any() || Resistance.Any(r => r.Resistance == 0))
+            {
                 dataProblems.Add("Resistances are invalid.");
+            }
 
             if (Composition == null || Composition.Any(r => r.Material == null || r.PercentageOfComposition == 0))
+            {
                 dataProblems.Add("Compositions are invalid.");
+            }
 
             return dataProblems;
         }
@@ -179,7 +185,9 @@ namespace NetMud.Data.Architectural.EntityBase
             returnList.Add("Temperature Retention", TemperatureRetention.ToString());
 
             foreach (ISensoryEvent desc in Descriptives)
+            {
                 returnList.Add("Descriptives", string.Format("{0} ({1}): {2}", desc.SensoryType, desc.Strength, desc.Event.ToString()));
+            }
 
             return returnList;
         }

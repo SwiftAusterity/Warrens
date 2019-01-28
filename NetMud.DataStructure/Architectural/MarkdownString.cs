@@ -713,10 +713,14 @@ namespace NetMud.DataStructure.Architectural
                 try
                 {
                     if (other.GetType() != GetType())
+                    {
                         return -1;
+                    }
 
                     if (other.Value.Equals(Value))
+                    {
                         return 1;
+                    }
 
                     return 0;
                 }
@@ -788,10 +792,14 @@ namespace NetMud.DataStructure.Architectural
                 try
                 {
                     if (other.GetType() != GetType())
+                    {
                         return -1;
+                    }
 
                     if (other.Equals(Value))
+                    {
                         return 1;
+                    }
 
                     return 0;
                 }
@@ -854,10 +862,14 @@ namespace NetMud.DataStructure.Architectural
                 try
                 {
                     if (other.GetType() != GetType())
+                    {
                         return -1;
+                    }
 
                     if (other.Equals(Value))
+                    {
                         return 1;
+                    }
 
                     return 0;
                 }

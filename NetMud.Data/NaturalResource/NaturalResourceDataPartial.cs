@@ -126,13 +126,19 @@ namespace NetMud.Data.NaturalResource
 
             //Tuples must be handled individually
             if (ElevationRange.Low < 0 || ElevationRange.High < ElevationRange.Low)
+            {
                 dataProblems.Add("Elevation Range is incorrect.");
+            }
 
             if (TemperatureRange.Low < 0 || TemperatureRange.High < TemperatureRange.Low)
+            {
                 dataProblems.Add("Temperature Range is incorrect.");
+            }
 
             if (HumidityRange.Low < 0 || HumidityRange.High < HumidityRange.Low)
+            {
                 dataProblems.Add("Humidity Range is incorrect.");
+            }
 
             return dataProblems;
         }
@@ -153,7 +159,9 @@ namespace NetMud.Data.NaturalResource
             returnList.Add("Humidity", string.Format("{0} - {1}", HumidityRange.Low, HumidityRange.High));
 
             foreach (Biome occur in OccursIn)
+            {
                 returnList.Add("Occurs In", occur.ToString());
+            }
 
             return returnList;
         }
@@ -183,7 +191,9 @@ namespace NetMud.Data.NaturalResource
         public virtual ISensoryEvent GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes)
         {
             if (sensoryTypes == null || sensoryTypes.Count() == 0)
+            {
                 sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
+            }
 
             //Self becomes the first sense in the list
             ISensoryEvent self = null;
@@ -193,55 +203,79 @@ namespace NetMud.Data.NaturalResource
                 {
                     case MessagingType.Audible:
                         if (!IsAudibleTo(viewer))
+                        {
                             continue;
+                        }
 
                         if (self == null)
+                        {
                             self = GetSelf(sense);
+                        }
 
                         self.TryModify(GetAudibleDescriptives(viewer));
                         break;
                     case MessagingType.Olefactory:
                         if (!IsSmellableTo(viewer))
+                        {
                             continue;
+                        }
 
                         if (self == null)
+                        {
                             self = GetSelf(sense);
+                        }
 
                         self.TryModify(GetSmellableDescriptives(viewer));
                         break;
                     case MessagingType.Psychic:
                         if (!IsSensibleTo(viewer))
+                        {
                             continue;
+                        }
 
                         if (self == null)
+                        {
                             self = GetSelf(sense);
+                        }
 
                         self.TryModify(GetPsychicDescriptives(viewer));
                         break;
                     case MessagingType.Tactile:
                         if (!IsTouchableTo(viewer))
+                        {
                             continue;
+                        }
 
                         if (self == null)
+                        {
                             self = GetSelf(sense);
+                        }
 
                         self.TryModify(GetTouchDescriptives(viewer));
                         break;
                     case MessagingType.Taste:
                         if (!IsTastableTo(viewer))
+                        {
                             continue;
+                        }
 
                         if (self == null)
+                        {
                             self = GetSelf(sense);
+                        }
 
                         self.TryModify(GetTasteDescriptives(viewer));
                         break;
                     case MessagingType.Visible:
                         if (!IsVisibleTo(viewer))
+                        {
                             continue;
+                        }
 
                         if (self == null)
+                        {
                             self = GetSelf(sense);
+                        }
 
                         self.TryModify(GetVisibleDescriptives(viewer));
                         break;
@@ -263,37 +297,49 @@ namespace NetMud.Data.NaturalResource
             {
                 case MessagingType.Audible:
                     if (!IsAudibleTo(viewer))
+                    {
                         return new SensoryEvent(sense);
+                    }
 
                     me.TryModify(GetAudibleDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
                 case MessagingType.Olefactory:
                     if (!IsSmellableTo(viewer))
+                    {
                         return new SensoryEvent(sense);
+                    }
 
                     me.TryModify(GetSmellableDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
                 case MessagingType.Psychic:
                     if (!IsSensibleTo(viewer))
+                    {
                         return new SensoryEvent(sense);
+                    }
 
                     me.TryModify(GetPsychicDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
                 case MessagingType.Tactile:
                     if (!IsTouchableTo(viewer))
+                    {
                         return new SensoryEvent(sense);
+                    }
 
                     me.TryModify(GetTouchDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
                 case MessagingType.Taste:
                     if (!IsTastableTo(viewer))
+                    {
                         return new SensoryEvent(sense);
+                    }
 
                     me.TryModify(GetTasteDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
                 case MessagingType.Visible:
                     if (!IsVisibleTo(viewer))
+                    {
                         return new SensoryEvent(sense);
+                    }
 
                     me.TryModify(GetVisibleDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
@@ -310,7 +356,9 @@ namespace NetMud.Data.NaturalResource
         public virtual string GetDescribableName(IEntity viewer)
         {
             if (!IsVisibleTo(viewer))
+            {
                 return string.Empty;
+            }
 
             return GetSelf(MessagingType.Visible).ToString();
         }
@@ -348,7 +396,9 @@ namespace NetMud.Data.NaturalResource
         public virtual ISensoryEvent RenderToLook(IEntity viewer)
         {
             if (!IsVisibleTo(viewer))
+            {
                 return null;
+            }
 
             return GetFullDescription(viewer, new[] { MessagingType.Visible });
         }
@@ -362,7 +412,9 @@ namespace NetMud.Data.NaturalResource
         {
             //TODO: Make this half power
             if (!IsVisibleTo(viewer))
+            {
                 return null;
+            }
 
             return GetImmediateDescription(viewer, MessagingType.Visible);
         }
@@ -376,7 +428,9 @@ namespace NetMud.Data.NaturalResource
         {
             //TODO: Make this double power
             if (!IsVisibleTo(viewer))
+            {
                 return null;
+            }
 
             return GetFullDescription(viewer, new[] { MessagingType.Visible });
         }
@@ -413,12 +467,16 @@ namespace NetMud.Data.NaturalResource
         public virtual ISensoryEvent RenderToAudible(IEntity viewer)
         {
             if (!IsAudibleTo(viewer))
+            {
                 return null;
+            }
 
             ISensoryEvent self = GetSelf(MessagingType.Audible);
 
             foreach (ISensoryEvent descriptive in GetAudibleDescriptives(viewer))
+            {
                 self.Event.TryModify(descriptive.Event);
+            }
 
             return self;
         }
@@ -455,12 +513,16 @@ namespace NetMud.Data.NaturalResource
         public virtual ISensoryEvent RenderToSense(IEntity viewer)
         {
             if (!IsSensibleTo(viewer))
+            {
                 return null;
+            }
 
             ISensoryEvent self = GetSelf(MessagingType.Psychic);
 
             foreach (ISensoryEvent descriptive in GetPsychicDescriptives(viewer))
+            {
                 self.Event.TryModify(descriptive.Event);
+            }
 
             return self;
         }
@@ -497,12 +559,16 @@ namespace NetMud.Data.NaturalResource
         public virtual ISensoryEvent RenderToTaste(IEntity viewer)
         {
             if (!IsTastableTo(viewer))
+            {
                 return null;
+            }
 
             ISensoryEvent self = GetSelf(MessagingType.Taste);
 
             foreach (ISensoryEvent descriptive in GetTasteDescriptives(viewer))
+            {
                 self.Event.TryModify(descriptive.Event);
+            }
 
             return self;
         }
@@ -539,12 +605,16 @@ namespace NetMud.Data.NaturalResource
         public virtual ISensoryEvent RenderToSmell(IEntity viewer)
         {
             if (!IsSmellableTo(viewer))
+            {
                 return null;
+            }
 
             ISensoryEvent self = GetSelf(MessagingType.Olefactory);
 
             foreach (ISensoryEvent descriptive in GetSmellableDescriptives(viewer))
+            {
                 self.Event.TryModify(descriptive.Event);
+            }
 
             return self;
         }
@@ -581,12 +651,16 @@ namespace NetMud.Data.NaturalResource
         public virtual ISensoryEvent RenderToTouch(IEntity viewer)
         {
             if (!IsTouchableTo(viewer))
+            {
                 return null;
+            }
 
             ISensoryEvent self = GetSelf(MessagingType.Tactile);
 
             foreach (ISensoryEvent descriptive in GetTouchDescriptives(viewer))
+            {
                 self.Event.TryModify(descriptive.Event);
+            }
 
             return self;
         }
@@ -610,7 +684,9 @@ namespace NetMud.Data.NaturalResource
         public virtual ISensoryEvent RenderAsContents(IEntity viewer, MessagingType[] sensoryTypes)
         {
             if (sensoryTypes == null || sensoryTypes.Count() == 0)
+            {
                 sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
+            }
 
             //Add the existential modifiers
             ISensoryEvent me = GetImmediateDescription(viewer, sensoryTypes[0]);

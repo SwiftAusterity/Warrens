@@ -65,7 +65,9 @@ namespace NetMud.Data.Architectural.EntityBase
         {
             //-1 volume means infinite
             if (CapacityVolume < 0)
+            {
                 return true;
+            }
 
             //TODO: Entity dimensions
             return true;

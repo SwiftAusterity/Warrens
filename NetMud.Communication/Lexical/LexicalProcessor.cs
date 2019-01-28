@@ -16,7 +16,9 @@ namespace NetMud.Communication.Lexical
         public static void VerifyDictata(ILexica lexica)
         {
             if (string.IsNullOrWhiteSpace(lexica.Phrase))
+            {
                 return;
+            }
 
             //Experiment: make new everything
             if (!VerifyDictata(lexica.GetDictata()))
@@ -33,7 +35,9 @@ namespace NetMud.Communication.Lexical
         public static bool VerifyDictata(IDictata dictata)
         {
             if (dictata == null || string.IsNullOrWhiteSpace(dictata.Name))
+            {
                 return false;
+            }
 
             ConfigDataCacheKey cacheKey = new ConfigDataCacheKey(dictata);
 
@@ -42,7 +46,9 @@ namespace NetMud.Communication.Lexical
             if (maybeDictata != null)
             {
                 if (maybeDictata.Language != null)
+                {
                     return true;
+                }
 
                 dictata = maybeDictata;
             }
@@ -54,7 +60,9 @@ namespace NetMud.Communication.Lexical
                 ILanguage baseLanguage = ConfigDataCache.GetAll<ILanguage>().FirstOrDefault(lang => lang.SuitableForUse);
 
                 if (baseLanguage != null)
+                {
                     dictata.Language = baseLanguage;
+                }
             }
 
             dictata.SystemSave();

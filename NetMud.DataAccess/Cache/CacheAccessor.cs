@@ -65,7 +65,9 @@ namespace NetMud.DataAccess.Cache
         public void Add(object objectToCache, string cacheKey)
         {
             if (Exists(cacheKey))
+            {
                 Remove(cacheKey);
+            }
 
             _globalCache.Add(cacheKey, objectToCache, _globalPolicy);
         }

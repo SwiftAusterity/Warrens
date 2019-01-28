@@ -31,8 +31,10 @@ namespace NetMud.Data.Architectural.DataIntegrity
         public BaseDataIntegrity(string errorMessage, bool warning = false)
         {
             if (string.IsNullOrWhiteSpace(errorMessage))
+            {
                 throw (new ArgumentNullException(string.Format("{0} data integrity error message blank on implimentation.", GetType().ToString())));
-            
+            }
+
             ErrorMessage = errorMessage;
             Warning = warning;
         }

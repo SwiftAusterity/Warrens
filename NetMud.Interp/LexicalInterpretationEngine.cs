@@ -37,11 +37,15 @@ namespace NetMud.Interp
 
                 //can't parse nothing
                 if (words.Count == 0)
+                {
                     return returnList;
+                }
 
                 //Get rid of the imperative self declaration
                 if (words.First().Item1.Equals("i") || words.First().Item1.Equals("me"))
+                {
                     words.RemoveAt(0);
+                }
 
                 returnList = ParseAction(actor, words, push);
             }
@@ -78,7 +82,9 @@ namespace NetMud.Interp
                                 returnContext.Add(item);
                             }
                             else
+                            {
                                 returnContext.Add(currentContext);
+                            }
                         }
                         else
                         {
@@ -88,7 +94,9 @@ namespace NetMud.Interp
                     }
                 }
                 else
+                {
                     returnContext.Add(item);
+                }
             }
 
             return returnContext;
@@ -122,7 +130,9 @@ namespace NetMud.Interp
                 brandedWords[verbWord] = currentVerb;
             }
             else
+            {
                 currentVerb = brandedWords.FirstOrDefault(ctx => ctx.Value?.WordType == LexicalType.Verb).Value;
+            }
 
             //We might have nouns already
             if (!brandedWords.Any(ctx => ctx.Value?.WordType == LexicalType.Noun || ctx.Value?.WordType == LexicalType.ProperNoun))
@@ -131,9 +141,13 @@ namespace NetMud.Interp
 
                 //No valid nouns to make the target? Pick the last one
                 if (!brandedWords.Any(ctx => ctx.Value == null))
+                {
                     targetWord = brandedWords.LastOrDefault().Key;
+                }
                 else
+                {
                     targetWord = brandedWords.LastOrDefault(ctx => ctx.Value == null).Key;
+                }
 
                 brandedWords[targetWord] = new Dictata() { Name = targetWord, WordType = LexicalType.Noun };
             }
@@ -183,9 +197,13 @@ namespace NetMud.Interp
 
             //No valid nouns to make the target? Pick the last one
             if (!brandedWords.Any(ctx => ctx.Value == null))
+            {
                 targetWord = brandedWords.LastOrDefault().Key;
+            }
             else
+            {
                 targetWord = brandedWords.LastOrDefault(ctx => ctx.Value == null).Key;
+            }
 
             brandedWords.Remove(targetWord);
 
@@ -193,9 +211,13 @@ namespace NetMud.Interp
             foreach (KeyValuePair<string, IDictata> adjective in brandedWords.Where(ctx => ctx.Value == null || ctx.Value?.WordType == LexicalType.Adjective || ctx.Value?.WordType == LexicalType.Adverb))
             {
                 if (adjective.Value != null)
+                {
                     descriptors.Add(adjective.Value);
+                }
                 else
+                {
                     descriptors.Add(new Dictata() { Name = adjective.Key, WordType = LexicalType.Adjective });
+                }
             }
 
             returnList.AddRange(descriptors);
@@ -211,7 +233,9 @@ namespace NetMud.Interp
             foreach (Tuple<string, bool> word in words.Distinct())
             {
                 if (brandedWords.ContainsKey(word.Item1))
+                {
                     continue;
+                }
 
                 //We have a comma/and list
                 if (word.Item2)
@@ -222,19 +246,27 @@ namespace NetMud.Interp
                     foreach (string listWord in listWords)
                     {
                         if (listMeaning != null)
+                        {
                             break;
+                        }
 
                         if (brandedWords.ContainsKey(listWord))
+                        {
                             listMeaning = brandedWords[listWord];
+                        }
 
                         if (listMeaning == null)
+                        {
                             listMeaning = GetExistingMeaning(listWord, actor, currentPlace);
+                        }
                     }
 
                     foreach (string listWord in listWords)
                     {
                         if (brandedWords.ContainsKey(listWord))
+                        {
                             continue;
+                        }
 
                         brandedWords.Add(listWord, listMeaning);
                     }
@@ -325,7 +357,9 @@ namespace NetMud.Interp
                     returnStrings.Add(foundStrings[i]);
                 }
                 else
+                {
                     returnStrings.Add(new Tuple<string, bool>(returnString, false));
+                }
             }
 
             return returnStrings;
@@ -363,7 +397,9 @@ namespace NetMud.Interp
                 Match currentMatch = cccMatches[i];
 
                 if (currentMatch == null || !currentMatch.Success)
+                {
                     continue;
+                }
 
                 CaptureCollection cccCaptures = currentMatch.Captures;
                 for (int iC = 0; iC < cccCaptures.Count; iC++)
@@ -371,7 +407,9 @@ namespace NetMud.Interp
                     Capture currentCapture = cccCaptures[iC];
 
                     if (currentCapture == null || currentCapture.Length == 0)
+                    {
                         continue;
+                    }
 
                     string commaList = currentCapture.Value;
 
@@ -433,7 +471,9 @@ namespace NetMud.Interp
 
                 //What? Why would this even happen
                 if (firstQuoteIndex < 0)
+                {
                     break;
+                }
 
                 //Only one means let's just kill the stupid quotemark and move on
                 if (secondQuoteIndex < 0)
@@ -470,7 +510,9 @@ namespace NetMud.Interp
             }
 
             if (sentences.Count > 1)
+            {
                 return sentences;
+            }
 
             //Fall back to just the initial sentence because we couldn't find multiple full sentences.
             return new List<string>() { input };

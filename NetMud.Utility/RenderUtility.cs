@@ -19,7 +19,9 @@ namespace NetMud.Utility
         public static string ProperCaps(this string value)
         {
             if (string.IsNullOrWhiteSpace(value))
+            {
                 return value;
+            }
 
             string[] words = value.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
@@ -35,10 +37,14 @@ namespace NetMud.Utility
         public static string CapsFirstLetter(this string value, bool onlyFirstLetter = false)
         {
             if (string.IsNullOrWhiteSpace(value))
+            {
                 return value;
+            }
 
             if (value.Length == 1)
+            {
                 return value.ToUpperInvariant();
+            }
 
             string firstLetter = value.Substring(0, 1).ToUpperInvariant();
             string wordRemainder = onlyFirstLetter ? value.Substring(1) : value.Substring(1).ToLowerInvariant();
@@ -77,9 +83,15 @@ namespace NetMud.Utility
         public static T[,,] Populate<T>(this T[,,] arr, T value)
         {
             for (int x = 0; x < arr.GetLength(0); x++)
+            {
                 for (int y = 0; y < arr.GetLength(1); y++)
+                {
                     for (int z = 0; z < arr.GetLength(2); z++)
+                    {
                         arr[x, y, z] = value;
+                    }
+                }
+            }
 
             return arr;
         }
@@ -93,8 +105,12 @@ namespace NetMud.Utility
         public static T[,] Populate<T>(this T[,] arr, T value)
         {
             for (int x = 0; x < arr.GetLength(0); x++)
+            {
                 for (int y = 0; y < arr.GetLength(1); y++)
+                {
                     arr[x, y] = value;
+                }
+            }
 
             return arr;
         }
@@ -108,7 +124,9 @@ namespace NetMud.Utility
         public static T[] Populate<T>(this T[] arr, T value)
         {
             for (int x = 0; x < arr.Length; x++)
+            {
                 arr[x] = value;
+            }
 
             return arr;
         }
@@ -126,9 +144,13 @@ namespace NetMud.Utility
             while (padAmount > 0)
             {
                 if (toTheLeft)
+                {
                     str = padString + str;
+                }
                 else
+                {
                     str = str + padString;
+                }
 
                 padAmount--;
             }
@@ -154,10 +176,14 @@ namespace NetMud.Utility
         public static string ParagraphList(this string[] stringList)
         {
             if (stringList.Length == 0)
+            {
                 return string.Empty;
+            }
 
             if (stringList.Length == 1)
+            {
                 return stringList[0];
+            }
 
             //Remove any prior punctuated things
             return string.Join(". ", stringList).Replace(".. ", ". ").Replace("?. ", "? ").Replace("!. ", "! ");
@@ -183,10 +209,14 @@ namespace NetMud.Utility
         public static string CommaList(this string[] stringList, SplitListType mode)
         {
             if (stringList.Length == 0)
+            {
                 return string.Empty;
+            }
 
             if (stringList.Length == 1)
+            {
                 return stringList[0];
+            }
 
             string returnString = string.Empty;
             switch (mode)
@@ -255,147 +285,267 @@ namespace NetMud.Utility
             {
                 case 1:
                     if (specialCharacter)
+                    {
                         returnValue = "alpha";
+                    }
                     else
+                    {
                         returnValue = "α";
+                    }
+
                     break;
                 case 2:
                     if (specialCharacter)
+                    {
                         returnValue = "beta";
+                    }
                     else
+                    {
                         returnValue = "β";
+                    }
+
                     break;
                 case 3:
                     if (specialCharacter)
+                    {
                         returnValue = "gamma";
+                    }
                     else
+                    {
                         returnValue = "γ";
+                    }
+
                     break;
                 case 4:
                     if (specialCharacter)
+                    {
                         returnValue = "delta";
+                    }
                     else
+                    {
                         returnValue = "δ";
+                    }
+
                     break;
                 case 5:
                     if (specialCharacter)
+                    {
                         returnValue = "epsilon";
+                    }
                     else
+                    {
                         returnValue = "ε";
+                    }
+
                     break;
                 case 6:
                     if (specialCharacter)
+                    {
                         returnValue = "zeta";
+                    }
                     else
+                    {
                         returnValue = "ζ";
+                    }
+
                     break;
                 case 7:
                     if (specialCharacter)
+                    {
                         returnValue = "eta";
+                    }
                     else
+                    {
                         returnValue = "η";
+                    }
+
                     break;
                 case 8:
                     if (specialCharacter)
+                    {
                         returnValue = "theta";
+                    }
                     else
+                    {
                         returnValue = "θ";
+                    }
+
                     break;
                 case 9:
                     if (specialCharacter)
+                    {
                         returnValue = "iota";
+                    }
                     else
+                    {
                         returnValue = "ι";
+                    }
+
                     break;
                 case 10:
                     if (specialCharacter)
+                    {
                         returnValue = "kappa";
+                    }
                     else
+                    {
                         returnValue = "κ";
+                    }
+
                     break;
                 case 11:
                     if (specialCharacter)
+                    {
                         returnValue = "lamda";
+                    }
                     else
+                    {
                         returnValue = "λ";
+                    }
+
                     break;
                 case 12:
                     if (specialCharacter)
+                    {
                         returnValue = "mu";
+                    }
                     else
+                    {
                         returnValue = "μ";
+                    }
+
                     break;
                 case 13:
                     if (specialCharacter)
+                    {
                         returnValue = "nu";
+                    }
                     else
+                    {
                         returnValue = "ν";
+                    }
+
                     break;
                 case 14:
                     if (specialCharacter)
+                    {
                         returnValue = "xi";
+                    }
                     else
+                    {
                         returnValue = "ξ";
+                    }
+
                     break;
                 case 15:
                     if (specialCharacter)
+                    {
                         returnValue = "omicron";
+                    }
                     else
+                    {
                         returnValue = "ο";
+                    }
+
                     break;
                 case 16:
                     if (specialCharacter)
+                    {
                         returnValue = "pi";
+                    }
                     else
+                    {
                         returnValue = "π";
+                    }
+
                     break;
                 case 17:
                     if (specialCharacter)
+                    {
                         returnValue = "rho";
+                    }
                     else
+                    {
                         returnValue = "ρ";
+                    }
+
                     break;
                 case 18:
                     if (specialCharacter)
+                    {
                         returnValue = "sigma";
+                    }
                     else
+                    {
                         returnValue = "σ";
+                    }
+
                     break;
                 case 19:
                     if (specialCharacter)
+                    {
                         returnValue = "tau";
+                    }
                     else
+                    {
                         returnValue = "τ";
+                    }
+
                     break;
                 case 20:
                     if (specialCharacter)
+                    {
                         returnValue = "upsilon";
+                    }
                     else
+                    {
                         returnValue = "υ";
+                    }
+
                     break;
                 case 21:
                     if (specialCharacter)
+                    {
                         returnValue = "phi";
+                    }
                     else
+                    {
                         returnValue = "φ";
+                    }
+
                     break;
                 case 22:
                     if (specialCharacter)
+                    {
                         returnValue = "chi";
+                    }
                     else
+                    {
                         returnValue = "χ";
+                    }
+
                     break;
                 case 23:
                     if (specialCharacter)
+                    {
                         returnValue = "psi";
+                    }
                     else
+                    {
                         returnValue = "ψ";
+                    }
+
                     break;
                 case 24:
                     if (specialCharacter)
+                    {
                         returnValue = "omega";
+                    }
                     else
+                    {
                         returnValue = "ω";
+                    }
+
                     break;
             }
 

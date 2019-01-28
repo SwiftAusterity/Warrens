@@ -109,9 +109,13 @@ namespace NetMud.Backup
                     IEntity entityThing = Activator.CreateInstance(implimentingEntityClass, new object[] { (T)thing }) as IEntity;
 
                     if(typeof(T).GetInterfaces().Contains(typeof(ISpawnAsMultiple)))
+                    {
                         entityThing.SpawnNewInWorld();
+                    }
                     else
+                    {
                         ((ISpawnAsSingleton<T>)entityThing).GetFromWorldOrSpawn();
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -164,7 +168,9 @@ namespace NetMud.Backup
                 IEnumerable<IPlayer> entities = LiveCache.GetAll<IPlayer>();
 
                 foreach (IPlayer entity in entities)
+                {
                     playerAccessor.WriteOnePlayer(entity);
+                }
 
                 LoggingUtility.Log("All players written.", LogChannels.Backup, true);
             }
@@ -189,7 +195,9 @@ namespace NetMud.Backup
 
             //No backup directory? No live data.
             if (!Directory.Exists(currentBackupDirectory))
+            {
                 return false;
+            }
 
             LoggingUtility.Log("World restored from current live INITIATED.", LogChannels.Backup, false);
 
@@ -205,12 +213,16 @@ namespace NetMud.Backup
                 foreach (Type type in implimentedTypes)
                 {
                     if (!Directory.Exists(currentBackupDirectory + type.Name))
+                    {
                         continue;
+                    }
 
                     DirectoryInfo entityFilesDirectory = new DirectoryInfo(currentBackupDirectory + type.Name);
 
                     foreach (FileInfo file in entityFilesDirectory.EnumerateFiles())
+                    {
                         entitiesToLoad.Add(liveDataAccessor.ReadEntity(file, type));
+                    }
                 }
 
                 //Shove them all into the live system first
@@ -221,10 +233,14 @@ namespace NetMud.Backup
 
                 //Check we found actual data
                 if (!entitiesToLoad.Any(ent => ent.GetType() == typeof(Gaia)))
+                {
                     throw new Exception("No Worlds found, failover.");
+                }
 
                 if (!entitiesToLoad.Any(ent => ent.GetType() == typeof(Zone)))
+                {
                     throw new Exception("No zones found, failover.");
+                }
 
                 //We need to pick up any places that aren't already live from the file system incase someone added them during the last session\
                 foreach (IGaiaTemplate thing in TemplateCache.GetAll<IGaiaTemplate>().Where(dt => !entitiesToLoad.Any(ent => ent.TemplateId.Equals(dt.Id))))
@@ -331,7 +347,9 @@ namespace NetMud.Backup
             //var roomPool = new HashSet<IRoomTemplate>(TemplateCache.GetAll<IRoomTemplate>());
 
             foreach (ILocaleTemplate locale in localePool)
+            {
                 locale.RemapInterior();
+            }
 
             //This will cycle through every room building massive (in theory) maps and spitting out the remaining items to make more worlds from.
             //If your world is highly disconnected you will end up with a ton of world maps
@@ -359,7 +377,9 @@ namespace NetMud.Backup
         private void GenerateWorld(IRoomTemplate startingRoom, HashSet<IRoomTemplate> remainingRooms)
         {
             if (startingRoom == null || remainingRooms.Count() == 0)
+            {
                 throw new InvalidOperationException("Invalid inputs.");
+            }
 
             startingRoom.Coordinates = new Coordinate(0, 0, 0);
 

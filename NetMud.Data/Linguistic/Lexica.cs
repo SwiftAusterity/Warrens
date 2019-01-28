@@ -88,7 +88,9 @@ namespace NetMud.Data.Linguistic
         public ILexica TryModify(ILexica modifier, bool passthru = false)
         {
             if (!Modifiers.Contains(modifier))
+            {
                 Modifiers.Add(modifier);
+            }
 
             return passthru ? this : modifier;
         }
@@ -101,7 +103,9 @@ namespace NetMud.Data.Linguistic
         public void TryModify(ILexica[] modifier)
         {
             foreach (ILexica mod in modifier)
+            {
                 TryModify(mod);
+            }
         }
 
         /// <summary>
@@ -112,7 +116,9 @@ namespace NetMud.Data.Linguistic
         public void TryModify(IEnumerable<ILexica> modifier)
         {
             foreach (ILexica mod in modifier)
+            {
                 TryModify(mod);
+            }
         }
 
         /// <summary>
@@ -124,7 +130,9 @@ namespace NetMud.Data.Linguistic
         {
             Lexica modifier = new Lexica(type, role, phrase);
             if (!Modifiers.Contains(modifier))
+            {
                 Modifiers.Add(modifier);
+            }
 
             return passthru ? this : modifier;
         }
@@ -147,7 +155,9 @@ namespace NetMud.Data.Linguistic
         public void TryModify(Tuple<LexicalType, GrammaticalType, string>[] modifier)
         {
             foreach (Tuple<LexicalType, GrammaticalType, string> mod in modifier)
+            {
                 TryModify(mod);
+            }
         }
 
         /// <summary>
@@ -221,7 +231,9 @@ namespace NetMud.Data.Linguistic
                             }
                         }
                         else
+                        {
                             lexicas.Add(subject);
+                        }
 
                         //We do pronoun replacement after the first instance
                         bool first = isMe;
@@ -229,9 +241,13 @@ namespace NetMud.Data.Linguistic
                         {
                             Lexica newSplitSubject = null;
                             if (omitName || !first)
+                            {
                                 newSplitSubject = new Lexica(LexicalType.Pronoun, subject.Role, "it"); //TODO: make a get pronoun thing in the thesaurus
+                            }
                             else
+                            {
                                 newSplitSubject = new Lexica(subject.Type, subject.Role, subject.Phrase);
+                            }
 
                             newSplitSubject.TryModify(LexicalType.Conjunction, GrammaticalType.Verb, "is").TryModify(adj);
                             lexicas.Add(newSplitSubject);
@@ -250,7 +266,10 @@ namespace NetMud.Data.Linguistic
                             lexicas.Add(newSubject);
                         }
                         else if (subject.Modifiers.Any())
+                        {
                             lexicas.Add(subject);
+                        }
+
                         break;
                 }
 
@@ -262,10 +281,14 @@ namespace NetMud.Data.Linguistic
 
                         //fragment sentences
                         foreach (ILexica subLex in lex.Modifiers.Where(mod => mod.Role == GrammaticalType.Subject))
+                        {
                             sentences.Add(new Tuple<SentenceType, ILexica>(SentenceType.Statement, subLex));
+                        }
                     }
                     else
+                    {
                         sentences.Add(new Tuple<SentenceType, ILexica>(SentenceType.Statement, lex));
+                    }
                 }
 
                 isMe = false;
@@ -282,16 +305,22 @@ namespace NetMud.Data.Linguistic
         {
             //short circuit empty lexica
             if (string.IsNullOrWhiteSpace(Phrase))
+            {
                 return string.Empty;
+            }
 
             StringBuilder sb = new StringBuilder();
             IEnumerable<ILexica> adjectives = Modifiers.Where(mod => mod.Role == GrammaticalType.Descriptive);
 
             //up-caps all the proper nouns
             if (Type == LexicalType.ProperNoun)
+            {
                 Phrase = Phrase.ProperCaps();
+            }
             else
+            {
                 Phrase = Phrase.ToLower();
+            }
 
             switch (Role)
             {
@@ -314,13 +343,17 @@ namespace NetMud.Data.Linguistic
                     break;
                 case GrammaticalType.IndirectObject:
                     if ((Type == LexicalType.Noun || Type == LexicalType.ProperNoun) && !Modifiers.Any(mod => mod.Type == LexicalType.Conjunction))
+                    {
                         TryModify(LexicalType.Conjunction, GrammaticalType.Descriptive, "a"); //TODO: make an a/an/the thing
+                    }
 
                     sb.Append(AppendDescriptors(adjectives, Phrase));
                     break;
                 case GrammaticalType.DirectObject:
                     if ((Type == LexicalType.Noun || Type == LexicalType.ProperNoun) && !Modifiers.Any(mod => mod.Type == LexicalType.Conjunction))
+                    {
                         TryModify(LexicalType.Conjunction, GrammaticalType.Descriptive, "a"); //TODO: make an a/an/the thing
+                    }
 
                     string describedNoun = AppendDescriptors(adjectives, Phrase);
 
@@ -332,7 +365,9 @@ namespace NetMud.Data.Linguistic
                         sb.AppendFormat("{0} {1}", iObj, describedNoun);
                     }
                     else
+                    {
                         sb.Append(describedNoun);
+                    }
 
                     break;
                 case GrammaticalType.Verb:
@@ -350,11 +385,16 @@ namespace NetMud.Data.Linguistic
                         sb.AppendFormat("{2} {0} {1} {3}", Phrase, dObj, adverbString, adjectiveString);
                     }
                     else
+                    {
                         sb.AppendFormat("{1} {0} {2}", Phrase, adverbString, adjectiveString);
+                    }
+
                     break;
                 case GrammaticalType.Subject:
                     if ((Type == LexicalType.Noun || Type == LexicalType.ProperNoun) && !Modifiers.Any(mod => mod.Type == LexicalType.Conjunction))
+                    {
                         TryModify(LexicalType.Conjunction, GrammaticalType.Descriptive, "the"); //TODO: make an a/an/the thing
+                    }
 
                     string describedSubject = AppendDescriptors(adjectives, Phrase);
 
@@ -366,7 +406,10 @@ namespace NetMud.Data.Linguistic
                         sb.AppendFormat("{0} {1}", describedSubject, vObj);
                     }
                     else
+                    {
                         sb.Append(describedSubject);
+                    }
+
                     break;
             }
 
@@ -429,10 +472,14 @@ namespace NetMud.Data.Linguistic
                 try
                 {
                     if (other.GetType() != GetType())
+                    {
                         return -1;
+                    }
 
                     if (other.Phrase.Equals(Phrase) && other.Type == Type)
+                    {
                         return 1;
+                    }
 
                     return 0;
                 }

@@ -19,7 +19,9 @@ namespace NetMud.DataStructure.Architectural.PropertyValidation
             IMerchandise item = value as IMerchandise;
 
             if (item == null)
+            {
                 return !Optional;
+            }
 
             return item.Item != null && item.QualityRange.Low <= item.QualityRange.High;
         }

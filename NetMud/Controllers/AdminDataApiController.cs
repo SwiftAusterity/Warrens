@@ -40,7 +40,9 @@ namespace NetMud.Controllers
             IDimensionalModelData model = TemplateCache.Get<IDimensionalModelData>(modelId);
 
             if (model == null)
+            {
                 return string.Empty;
+            }
 
             return Render.FlattenModelForWeb(model);
         }
@@ -51,7 +53,9 @@ namespace NetMud.Controllers
             IDimensionalModelData model = TemplateCache.Get<IDimensionalModelData>(id);
 
             if (model == null)
+            {
                 return new string[0];
+            }
 
             return model.ModelPlanes.Select(plane => plane.TagName).Distinct().ToArray();
         }
@@ -63,7 +67,9 @@ namespace NetMud.Controllers
             IRoomTemplate centerRoom = TemplateCache.Get<IRoomTemplate>(id);
 
             if (centerRoom == null || radius < 0)
+            {
                 return "Invalid inputs.";
+            }
 
             return Rendering.RenderRadiusMap(centerRoom, radius);
         }
@@ -75,7 +81,9 @@ namespace NetMud.Controllers
             ILocaleTemplate locale = TemplateCache.Get<ILocaleTemplate>(id);
 
             if (locale == null)
+            {
                 return new string[] { "Invalid inputs." };
+            }
 
             System.Tuple<string, string, string> maps = Rendering.RenderRadiusMap(locale, 10, zIndex);
 
@@ -106,18 +114,24 @@ namespace NetMud.Controllers
             if (userRole != StaffRank.Admin)
             {
                 if (string.IsNullOrWhiteSpace(accountName) || account.GlobalIdentityHandle.Equals(accountName) || role >= (short)user.GetStaffRank(User))
+                {
                     return "failure";
+                }
             }
 
             ApplicationUser userToModify = UserManager.FindByName(accountName);
 
             if (userToModify == null)
+            {
                 return "failure";
+            }
 
             System.Collections.Generic.List<string> rolesToRemove = userToModify.Roles.Select(rol => validRoles.First(vR => vR.Id.Equals(rol.RoleId)).Name).ToList();
 
             foreach (string currentRole in rolesToRemove)
+            {
                 UserManager.RemoveFromRole(userToModify.Id, currentRole);
+            }
 
             UserManager.AddToRole(userToModify.Id, ((StaffRank)role).ToString());
 

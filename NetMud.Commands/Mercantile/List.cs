@@ -55,7 +55,9 @@ namespace NetMud.Commands.EntityManipulation
             }
 
             if (!string.IsNullOrWhiteSpace(errorMessage))
+            {
                 RenderError(errorMessage);
+            }
         }
 
         /// <summary>

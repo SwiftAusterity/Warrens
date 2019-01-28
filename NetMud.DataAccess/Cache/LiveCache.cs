@@ -141,7 +141,9 @@ namespace NetMud.DataAccess.Cache
                 IEnumerable<T> dataCluster = GetAll<T>();
 
                 if (dataCluster.Any(p => ((IEntity)p).TemplateId.Equals(id)))
+                {
                     return dataCluster.First(p => ((IEntity)p).TemplateId.Equals(id));
+                }
             }
             catch (Exception ex)
             {
@@ -167,7 +169,9 @@ namespace NetMud.DataAccess.Cache
                 IEnumerable<T> dataCluster = GetAll<T>().Where(thing => thing.GetType() == backingData.EntityClass);
 
                 if (dataCluster.Any(p => ((IEntity)p).TemplateId.Equals(id)))
+                {
                     return dataCluster.First(p => ((IEntity)p).TemplateId.Equals(id));
+                }
             }
             catch (Exception ex)
             {

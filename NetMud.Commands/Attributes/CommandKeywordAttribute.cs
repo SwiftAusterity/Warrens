@@ -45,7 +45,9 @@ namespace NetMud.Commands.Attributes
         {
             //Way easier just to load them all into lowercase so we don't have to move the cost to runtime
             if (string.IsNullOrWhiteSpace(keyword))
+            {
                 throw (new ArgumentNullException(string.Format("{0} Command accessor keyword blank on implimentation.", GetType().ToString())));
+            }
 
             Keyword = keyword.ToLower();
             IsAlsoSubject = isAlsoSubject;
@@ -68,7 +70,9 @@ namespace NetMud.Commands.Attributes
         {
             //Way easier just to load them all into lowercase so we don't have to move the cost to runtime
             if (string.IsNullOrWhiteSpace(keyword))
+            {
                 throw (new ArgumentNullException(string.Format("{0} Command accessor keyword blank on implimentation.", GetType().ToString())));
+            }
 
             Keyword = keyword.ToLower();
             IsAlsoSubject = isAlsoSubject;
@@ -87,7 +91,9 @@ namespace NetMud.Commands.Attributes
         {
             //Way easier just to load them all into lowercase so we don't have to move the cost to runtime
             if (string.IsNullOrWhiteSpace(keyword))
+            {
                 throw (new ArgumentNullException(string.Format("{0} Command accessor keyword blank on implimentation.", GetType().ToString())));
+            }
 
             Keyword = keyword.ToLower();
             IsAlsoSubject = isAlsoSubject;

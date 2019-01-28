@@ -53,7 +53,9 @@ namespace NetMud.Controllers
             IDimensionalModelData model = TemplateCache.Get<IDimensionalModelData>(modelId);
 
             if (model == null)
+            {
                 return string.Empty;
+            }
 
             return Render.FlattenModelForWeb(model);
         }
@@ -64,7 +66,9 @@ namespace NetMud.Controllers
             IRoomTemplate centerRoom = TemplateCache.Get<IRoomTemplate>(id);
 
             if (centerRoom == null || radius < 0)
+            {
                 return "Invalid inputs.";
+            }
 
             return Rendering.RenderRadiusMap(centerRoom, radius, false);
         }
@@ -75,7 +79,9 @@ namespace NetMud.Controllers
             IUIModule module = TemplateCache.GetByName<IUIModule>(moduleName);
 
             if (module != null)
+            {
                 return Json(module);
+            }
 
             return null;
         }
@@ -161,7 +167,9 @@ namespace NetMud.Controllers
 
                 //Remove this module
                 if (modules.Any(mod => mod.Item1.Equals(module) && mod.Item2.Equals(location)))
+                {
                     modules.Remove(moduleTuple);
+                }
             }
 
             account.Config.UIModules = modules;
@@ -199,11 +207,15 @@ namespace NetMud.Controllers
 
             //Remove this module
             if (modules.Any(mod => mod.Item1.Equals(module)))
+            {
                 modules.Remove(moduleTuple);
+            }
 
             //Remove the module in its place
             if (location != -1 && modules.Any(mod => mod.Item2.Equals(location)))
+            {
                 modules.RemoveAll(mod => mod.Item2.Equals(location));
+            }
 
             //Add it finally
             modules.Add(moduleTuple);

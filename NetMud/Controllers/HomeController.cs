@@ -85,7 +85,9 @@ namespace NetMud.Controllers
         public ActionResult ReportBug(string body)
         {
             if (!string.IsNullOrWhiteSpace(body))
+            {
                 LoggingUtility.Log(body, LogChannels.BugReport, true);
+            }
 
             return RedirectToRoute("ModalErrorOrClose", new { Message = "" });
         }

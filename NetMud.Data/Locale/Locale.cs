@@ -80,7 +80,9 @@ namespace NetMud.Data.Locale
             set
             {
                 if (value != null)
+                {
                     _parentLocation = new LiveCacheKey(value);
+                }
             }
         }
 
@@ -119,7 +121,9 @@ namespace NetMud.Data.Locale
         public bool IsDiscovered(IEntity discoverer)
         {
             if (Template<ILocaleTemplate>().AlwaysDiscovered)
+            {
                 return true;
+            }
 
             //TODO
 
@@ -214,7 +218,9 @@ namespace NetMud.Data.Locale
 
             //Isn't in the world currently
             if (me == default(ILocale))
+            {
                 SpawnNewInWorld();
+            }
             else
             {
                 BirthMark = me.BirthMark;
@@ -257,14 +263,18 @@ namespace NetMud.Data.Locale
 
             //If we don't have any paths out what can we even do
             if (paths.Count() == 0)
+            {
                 return radiusLocations;
+            }
 
             while (paths.Count() > 0)
             {
                 IEnumerable<ILocation> currentLocsSet = paths.Select(path => path.Destination);
 
                 if (currentLocsSet.Count() == 0)
+                {
                     break;
+                }
 
                 radiusLocations.AddRange(currentLocsSet);
                 paths = currentLocsSet.SelectMany(ro => ro.GetPathways());

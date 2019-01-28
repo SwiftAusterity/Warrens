@@ -48,7 +48,9 @@ namespace NetMud.Data.Zone
             get
             {
                 if (_keywords == null || _keywords.Length == 0)
+                {
                     _keywords = new string[] { Name.ToLower() };
+                }
 
                 return _keywords;
             }
@@ -113,14 +115,18 @@ namespace NetMud.Data.Zone
             get
             {
                 if (_world == null)
+                {
                     return null;
+                }
 
                 return TemplateCache.Get<IGaiaTemplate>(_world);
             }
             set
             {
                 if (value != null)
+                {
                     _world = new TemplateCacheKey(value);
+                }
             }
         }
 
@@ -142,14 +148,18 @@ namespace NetMud.Data.Zone
             get
             {
                 if (_templates != null)
+                {
                     return new HashSet<IAdventureTemplate>(TemplateCache.GetMany<IAdventureTemplate>(_templates));
+                }
 
                 return null;
             }
             set
             {
                 if (value == null)
+                {
                     return;
+                }
 
                 _templates = new HashSet<TemplateCacheKey>(value.Select(k => new TemplateCacheKey(k)));
             }
@@ -217,7 +227,9 @@ namespace NetMud.Data.Zone
         {
             HashSet<IPathway> pathways = new HashSet<IPathway>();
             foreach (IPathway pathway in Pathways)
+            {
                 pathways.Add((IPathway)pathway.Clone());
+            }
 
             return new ZoneTemplate
             {

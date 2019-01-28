@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
+using NetMud.Cartography;
 using NetMud.Communication.Lexical;
 using NetMud.Data.Linguistic;
 using NetMud.Data.Room;
@@ -178,7 +179,7 @@ namespace NetMud.Controllers.GameAdmin
                         PathwayTemplate reversePath = new PathwayTemplate
                         {
                             Name = newObj.Name,
-                            DegreesFromNorth = newObj.DegreesFromNorth,
+                            DegreesFromNorth = Utilities.ReverseDirection(newObj.DegreesFromNorth),
                             Origin = newObj.Destination,
                             Destination = newObj.Origin,
                             Model = newObj.Model

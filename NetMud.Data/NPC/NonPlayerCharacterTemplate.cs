@@ -155,7 +155,9 @@ namespace NetMud.Data.NPC
             try
             {
                 if (Race == null)
+                {
                     return new Dimensions(0, 0, 0);
+                }
 
                 int height = (Race?.Head?.Model != null ? Race.Head.Model.Height : 0)
                             + (Race?.Torso?.Model != null ? Race.Torso.Model.Height : 0)

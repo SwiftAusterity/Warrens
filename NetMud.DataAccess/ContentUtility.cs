@@ -23,7 +23,9 @@ namespace NetMud.DataAccess
             IEnumerable<string> names = Enumerable.Empty<string>();
 
             if (VerifyDirectory(BaseMusicDirectoryName))
+            {
                 names = Directory.EnumerateFiles(HostingEnvironment.MapPath(BaseMusicDirectoryName), "*.mp3", SearchOption.TopDirectoryOnly);
+            }
 
             Dictionary<string, string> returnValues = new Dictionary<string, string>();
 
@@ -48,7 +50,9 @@ namespace NetMud.DataAccess
             string mappedName = directoryName;
 
             if (!mappedName.EndsWith("/"))
+            {
                 mappedName = mappedName + "/";
+            }
 
             try
             {

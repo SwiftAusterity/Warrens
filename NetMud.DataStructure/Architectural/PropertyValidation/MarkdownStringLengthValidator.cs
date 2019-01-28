@@ -17,7 +17,9 @@ namespace NetMud.DataStructure.Architectural.PropertyValidation
         public override bool IsValid(object value)
         {
             if (value == null)
+            {
                 return !Optional;
+            }
 
             MarkdownString mdString = (MarkdownString)value;
 

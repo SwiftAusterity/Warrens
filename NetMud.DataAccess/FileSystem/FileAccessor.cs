@@ -71,11 +71,13 @@ namespace NetMud.DataAccess.FileSystem
             if (VerifyDirectory(BaseDirectory)
                 || VerifyDirectory(BaseDirectory + CurrentDirectoryName)
                 || File.Exists(BaseDirectory + CurrentDirectoryName + fileName))
+            {
                 using (FileStream stream = File.Open(filePath, FileMode.Open))
                 {
                     bytes = new byte[stream.Length];
                     stream.Read(bytes, 0, (int)stream.Length);
                 }
+            }
 
             return bytes;
         }
@@ -109,22 +111,32 @@ namespace NetMud.DataAccess.FileSystem
             string mappedName = directoryName;
 
             if (!directoryName.Contains(BaseDirectory))
+            {
                 mappedName = string.Format("{0}{1}", BaseDirectory, directoryName);
+            }
 
-            if(!mappedName.EndsWith("/"))
+            if (!mappedName.EndsWith("/"))
+            {
                 mappedName = mappedName + "/";
+            }
 
             try
             {
                 //always create the base dir
                 if (!Directory.Exists(BaseDirectory))
+                {
                     Directory.CreateDirectory(BaseDirectory);
+                }
 
                 if (Directory.Exists(mappedName))
+                {
                     return true;
+                }
 
                 if (createIfMissing)
+                {
                     return Directory.CreateDirectory(mappedName) != null;
+                }
             }
             catch (Exception ex)
             {
@@ -150,9 +162,13 @@ namespace NetMud.DataAccess.FileSystem
             try
             {
                 if (File.Exists(fullFileName))
+                {
                     entityFile = File.Open(fullFileName, writeMode);
+                }
                 else
+                {
                     entityFile = File.Create(fullFileName);
+                }
 
                 entityFile.Write(bytes, 0, bytes.Length);
 
@@ -172,7 +188,9 @@ namespace NetMud.DataAccess.FileSystem
             finally
             {
                 if (entityFile != null)
+                {
                     entityFile.Dispose();
+                }
             }
 
             return success;
@@ -193,7 +211,9 @@ namespace NetMud.DataAccess.FileSystem
             if (!VerifyDirectory(BaseDirectory + CurrentDirectoryName)
                 || !VerifyDirectory(BaseDirectory + ArchiveDirectoryName)
                 || !File.Exists(currentFileName))
+            {
                 return false;
+            }
 
             CullDirectoryCount(BaseDirectory + ArchiveDirectoryName);
 
@@ -211,7 +231,9 @@ namespace NetMud.DataAccess.FileSystem
         public bool ArchiveDatedFile(string fileName, string dateFormattedDirectory = "")
         {
             if (string.IsNullOrWhiteSpace(dateFormattedDirectory))
+            {
                 dateFormattedDirectory = DatedBackupDirectory;
+            }
 
             string currentFileName = string.Format("{0}{1}{2}", BaseDirectory, CurrentDirectoryName, fileName);
             string archiveFileName = string.Format("{0}{1}", dateFormattedDirectory, fileName);
@@ -220,7 +242,9 @@ namespace NetMud.DataAccess.FileSystem
             if (!VerifyDirectory(BaseDirectory + CurrentDirectoryName)
                 || !VerifyDirectory(BaseDirectory + ArchiveDirectoryName)
                 || !File.Exists(currentFileName))
+            {
                 return false;
+            }
 
             CullDirectoryCount(BaseDirectory + ArchiveDirectoryName);
 

@@ -46,11 +46,17 @@ namespace NetMud.Authentication
             StaffRank rank = StaffRank.Player;
 
             if (identity.IsInRole("Admin"))
+            {
                 rank = StaffRank.Admin;
+            }
             else if (identity.IsInRole("Builder"))
+            {
                 rank = StaffRank.Builder;
+            }
             else if (identity.IsInRole("Guest"))
+            {
                 rank = StaffRank.Guest;
+            }
 
             return rank;
         }

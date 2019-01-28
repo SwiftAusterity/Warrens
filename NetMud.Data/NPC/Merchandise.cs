@@ -34,14 +34,18 @@ namespace NetMud.Data.NPC
             get
             {
                 if (_item == null)
+                {
                     return null;
+                }
 
                 return TemplateCache.Get<IInanimateTemplate>(_item);
             }
             set
             {
                 if (value != null)
+                {
                     _item = new TemplateCacheKey(value);
+                }
             }
         }
 

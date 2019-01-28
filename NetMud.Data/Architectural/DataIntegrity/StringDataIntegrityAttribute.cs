@@ -31,10 +31,14 @@ namespace NetMud.Data.Architectural.DataIntegrity
                 MarkdownString mdString = Utility.DataUtility.TryConvert<MarkdownString>(val);
 
                 if(!MarkdownString.IsNullOrWhiteSpace(mdString))
+                {
                     compareValue = mdString.Value;
+                }
             }
             else
+            {
                 compareValue = Utility.DataUtility.TryConvert<string>(val);
+            }
 
             return !string.IsNullOrWhiteSpace(compareValue) && compareValue.Length >= MinimumLength && compareValue.Length <= MaximumLength;
         }

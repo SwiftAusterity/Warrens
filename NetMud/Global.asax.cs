@@ -43,7 +43,10 @@ namespace NetMud
 
         private static void _SetupRefreshJob()
         {
-            if (HttpContext.Current == null) return;
+            if (HttpContext.Current == null)
+            {
+                return;
+            }
 
             //remove a previous job
             Action remove = HttpContext.Current.Cache["Refresh"] as Action;

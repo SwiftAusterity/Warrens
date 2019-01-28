@@ -187,7 +187,9 @@ namespace NetMud.Data.Zone
         public override ISensoryEvent GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes)
         {
             if (sensoryTypes == null || sensoryTypes.Count() == 0)
+            {
                 sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
+            }
 
             //Self becomes the first sense in the list
             ISensoryEvent me = null;
@@ -197,10 +199,14 @@ namespace NetMud.Data.Zone
                 {
                     case MessagingType.Audible:
                         if (!IsAudibleTo(viewer))
+                        {
                             continue;
+                        }
 
                         if (me == null)
+                        {
                             me = GetSelf(sense);
+                        }
 
                         IEnumerable<ISensoryEvent> aDescs = GetAudibleDescriptives(viewer);
 
@@ -224,14 +230,21 @@ namespace NetMud.Data.Zone
                         }
 
                         if (uberSounds.Modifiers.Any(mod => mod.Role == GrammaticalType.DirectObject))
+                        {
                             me.TryModify(collectiveSounds);
+                        }
+
                         break;
                     case MessagingType.Olefactory:
                         if (!IsSmellableTo(viewer))
+                        {
                             continue;
+                        }
 
                         if (me == null)
+                        {
                             me = GetSelf(sense);
+                        }
 
                         IEnumerable<ISensoryEvent> oDescs = GetSmellableDescriptives(viewer);
 
@@ -255,14 +268,21 @@ namespace NetMud.Data.Zone
                         }
 
                         if (uberSmells.Modifiers.Any(mod => mod.Role == GrammaticalType.DirectObject))
+                        {
                             me.TryModify(collectiveSmells);
+                        }
+
                         break;
                     case MessagingType.Psychic:
                         if (!IsSensibleTo(viewer))
+                        {
                             continue;
+                        }
 
                         if (me == null)
+                        {
                             me = GetSelf(sense);
+                        }
 
                         IEnumerable<ISensoryEvent> pDescs = GetPsychicDescriptives(viewer);
 
@@ -286,17 +306,24 @@ namespace NetMud.Data.Zone
                         }
 
                         if (uberPsy.Modifiers.Any(mod => mod.Role == GrammaticalType.DirectObject))
+                        {
                             me.TryModify(collectivePsy);
+                        }
+
                         break;
                     case MessagingType.Taste:
                     case MessagingType.Tactile:
                         continue;
                     case MessagingType.Visible:
                         if (!IsVisibleTo(viewer))
+                        {
                             continue;
+                        }
 
                         if (me == null)
+                        {
                             me = GetSelf(sense);
+                        }
 
                         IEnumerable<ISensoryEvent> vDescs = GetVisibleDescriptives(viewer);
 
@@ -320,26 +347,39 @@ namespace NetMud.Data.Zone
                         }
 
                         if (uberSight.Modifiers.Any(mod => mod.Role == GrammaticalType.DirectObject))
+                        {
                             me.TryModify(collectiveSight);
+                        }
+
                         break;
                 }
             }
 
             //If we get through that and me is still null it means we can't detect anything at all
             if (me == null)
+            {
                 return new SensoryEvent(sensoryTypes[0]);
+            }
 
             foreach (ICelestial celestial in GetVisibileCelestials(viewer))
+            {
                 me.TryModify(celestial.RenderAsContents(viewer, sensoryTypes).Event);
+            }
 
             //TODO: different way of rendering natural resources
             if (NaturalResources != null)
+            {
                 foreach (KeyValuePair<DataStructure.NaturalResource.INaturalResource, int> resource in NaturalResources)
+                {
                     me.TryModify(resource.Key.RenderResourceCollection(viewer, resource.Value).Event);
+                }
+            }
 
             //render our locales out
             foreach (ILocale locale in LiveCache.GetAll<ILocale>().Where(loc => loc.CurrentLocation.CurrentZone.Equals(this)))
+            {
                 me.TryModify(locale.GetFullDescription(viewer, sensoryTypes));
+            }
 
             //Describe the size and population of this zone
             DimensionalSizeDescription zoneSize = GeographicalUtilities.ConvertSizeToType(GetModelDimensions(), GetType());
@@ -359,9 +399,13 @@ namespace NetMud.Data.Zone
 
             string crowdSize = "abandoned";
             if ((short)populationSize > (short)zoneSize)
+            {
                 crowdSize = "crowded";
+            }
             else if (populationSize > CrowdSizeDescription.Intimate)
+            {
                 crowdSize = "sparsely populated";
+            }
 
             area.TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, crowdSize);
 
@@ -399,7 +443,9 @@ namespace NetMud.Data.Zone
         public bool IsDiscovered(IEntity discoverer)
         {
             if (Template<IZoneTemplate>().AlwaysDiscovered)
+            {
                 return true;
+            }
 
             //TODO
 

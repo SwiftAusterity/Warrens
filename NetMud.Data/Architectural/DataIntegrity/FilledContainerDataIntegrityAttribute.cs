@@ -23,7 +23,9 @@ namespace NetMud.Data.Architectural.DataIntegrity
 
             //return true on non-collections unless they're null
             if (!valueType.IsArray && (typeof(string).Equals(valueType) || !typeof(IEnumerable).IsAssignableFrom(valueType)))
+            {
                 return val != null;
+            }
 
             try
             {
@@ -36,7 +38,9 @@ namespace NetMud.Data.Architectural.DataIntegrity
                     valueContainer.MoveNext();
 
                     if (valueContainer.Current == null)
+                    {
                         return false;
+                    }
 
                     iterator++;
                 }

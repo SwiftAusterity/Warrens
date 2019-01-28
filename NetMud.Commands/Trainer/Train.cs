@@ -66,7 +66,9 @@ namespace NetMud.Commands.EntityManipulation
             }
 
             if (!string.IsNullOrWhiteSpace(errorMessage))
+            {
                 RenderError(errorMessage);
+            }
 
             Message toArea = new Message("$A$ trains with $S$.");
 

@@ -70,7 +70,9 @@ namespace NetMud.Communication
         {
             //If the origin string or formatting is blank just return the orginal string
             if (string.IsNullOrWhiteSpace(originalString))
+            {
                 return false;
+            }
 
             //It's all blank anyways
             originalString = originalString.Replace(formatToReplace, string.Empty);

@@ -83,31 +83,43 @@ namespace NetMud.Controllers.GameAdmin
                 }
 
                 if (obj == null)
+                {
                     message = "That does not exist";
+                }
                 else
                 {
                     if(approve)
                     {
                         if (obj.ChangeApprovalStatus(authedUser.GameAccount, authedUser.GetStaffRank(User), ApprovalState.Approved))
+                        {
                             message = "Approve Successful.";
+                        }
                         else
+                        {
                             message = "Error; Approve failed.";
+                        }
 
                         LoggingUtility.LogAdminCommandUsage("*WEB* - Approve Content[" + authorizeApproval + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     }
                     else
                     {
                         if (obj.ChangeApprovalStatus(authedUser.GameAccount, authedUser.GetStaffRank(User), ApprovalState.Unapproved))
+                        {
                             message = "Deny Successful.";
+                        }
                         else
+                        {
                             message = "Error; Deny failed.";
+                        }
 
                         LoggingUtility.LogAdminCommandUsage("*WEB* - Deny Content[" + authorizeDenial + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     }
                 }
             }
             else
+            {
                 message = "You must check the proper radio button first.";
+            }
 
             return RedirectToAction("Index", new { Message = message });
         }

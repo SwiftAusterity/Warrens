@@ -41,9 +41,13 @@ namespace NetMud.Commands.System
 
             //No target = spawn to room you're in
             if (Target != null)
+            {
                 spawnTo = (IGlobalPosition)Target;
+            }
             else
+            {
                 spawnTo = OriginLocation;
+            }
 
             INonPlayerCharacter entityObject = Activator.CreateInstance(newObject.EntityClass, new object[] { newObject, spawnTo }) as INonPlayerCharacter;
 

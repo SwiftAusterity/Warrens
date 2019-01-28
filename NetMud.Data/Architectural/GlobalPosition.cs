@@ -40,7 +40,9 @@ namespace NetMud.Data.Architectural
             set
             {
                 if (value == null)
+                {
                     return;
+                }
 
                 _currentZone = new LiveCacheKey(value);
             }
@@ -71,7 +73,9 @@ namespace NetMud.Data.Architectural
             set
             {
                 if (value == null)
+                {
                     return;
+                }
 
                 _currentLocale = new LiveCacheKey(value);
             }
@@ -102,7 +106,9 @@ namespace NetMud.Data.Architectural
             set
             {
                 if (value == null)
+                {
                     return;
+                }
 
                 _currentRoom = new LiveCacheKey(value);
             }
@@ -133,7 +139,9 @@ namespace NetMud.Data.Architectural
             set
             {
                 if (value == null)
+                {
                     return;
+                }
 
                 _currentContainer = new LiveCacheKey(value);
             }
@@ -223,7 +231,9 @@ namespace NetMud.Data.Architectural
         public string MoveFrom(IEntity thing)
         {
             if (CurrentContainer != null)
+            {
                 return CurrentContainer.MoveFrom(thing);
+            }
             else if (CurrentZone != null)
             {
                 thing.CurrentLocation.CurrentZone = null;
@@ -245,9 +255,13 @@ namespace NetMud.Data.Architectural
         public string MoveInto(IEntity thing)
         {
             if (CurrentContainer != null)
+            {
                 return CurrentContainer.MoveInto(thing);
+            }
             else if (CurrentZone != null)
+            {
                 thing.TryMoveTo(this);
+            }
 
             return string.Empty;
         }

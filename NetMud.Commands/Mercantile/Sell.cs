@@ -57,7 +57,9 @@ namespace NetMud.Commands.EntityManipulation
             string errorMessage = merchant.MakePurchase((IMobile)Actor, thing, price);
 
             if (!string.IsNullOrWhiteSpace(errorMessage))
+            {
                 RenderError(errorMessage);
+            }
 
             List<string> sb = new List<string>
             {

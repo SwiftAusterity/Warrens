@@ -49,7 +49,9 @@ namespace NetMud.Data.Players
             get
             {
                 if (_account == null && !string.IsNullOrWhiteSpace(Name))
+                {
                     _account = Players.Account.GetByHandle(Name);
+                }
 
                 return _account;
             }
@@ -106,14 +108,18 @@ namespace NetMud.Data.Players
             get
             {
                 if (_notifications == null)
+                {
                     _notifications = new HashSet<ConfigDataCacheKey>();
+                }
 
                 return ConfigDataCache.GetMany<IPlayerMessage>(_notifications);
             }
             set
             {
                 if (value != null)
+                {
                     _notifications = new HashSet<ConfigDataCacheKey>(value.Select(note => new ConfigDataCacheKey(note)));
+                }
             }
         }
 
@@ -130,14 +136,18 @@ namespace NetMud.Data.Players
             get
             {
                 if (_UIModules == null)
+                {
                     _UIModules = new List<Tuple<TemplateCacheKey, int>>();
+                }
 
                 return _UIModules.Select(k => new Tuple<IUIModule, int>(TemplateCache.Get<IUIModule>(k.Item1), k.Item2));
             }
             set
             {
                 if (value == null)
+                {
                     return;
+                }
 
                 _UIModules = value.Select(k => new Tuple<TemplateCacheKey, int>(new TemplateCacheKey(k.Item1), k.Item2)).ToList();
             }
@@ -162,7 +172,9 @@ namespace NetMud.Data.Players
             UIModules = Enumerable.Empty<Tuple<IUIModule, int>>();
 
             if (string.IsNullOrWhiteSpace(Name))
+            {
                 Name = _account.GlobalIdentityHandle;
+            }
         }
 
         /// <summary>
@@ -197,10 +209,14 @@ namespace NetMud.Data.Players
         public bool RestoreConfig(IAccount account)
         {
             if (account == null)
+            {
                 return false;
+            }
 
             if (_account == null)
+            {
                 _account = account;
+            }
 
             DataAccess.FileSystem.ConfigData configData = new DataAccess.FileSystem.ConfigData();
 
@@ -214,7 +230,9 @@ namespace NetMud.Data.Players
                 FileInfo file = charDirectory.EnumerateFiles("*.AccountConfig", SearchOption.TopDirectoryOnly).FirstOrDefault();
 
                 if (file == null)
+                {
                     return false;
+                }
 
                 newConfig = (IAccountConfig)configData.ReadEntity(file, GetType());
             }
@@ -232,14 +250,22 @@ namespace NetMud.Data.Players
                 GetNotifications(configData, charDirectory);
 
                 if (newConfig.Playlists == null)
+                {
                     Playlists = new HashSet<IPlaylist>();
+                }
                 else
+                {
                     Playlists = newConfig.Playlists;
+                }
 
                 if (newConfig.Acquaintences == null)
+                {
                     Acquaintences = Enumerable.Empty<IAcquaintence>();
+                }
                 else
+                {
                     Acquaintences = newConfig.Acquaintences;
+                }
 
                 ConfigDataCache.Add(this);
 
@@ -259,7 +285,9 @@ namespace NetMud.Data.Players
                 foreach (FileInfo file in files)
                 {
                     if (file == null)
+                    {
                         continue;
+                    }
 
                     IPlayerMessage newMessage = (IPlayerMessage)dataAccessor.ReadEntity(file, typeof(IPlayerMessage));
 

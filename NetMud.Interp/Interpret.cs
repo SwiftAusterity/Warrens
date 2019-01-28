@@ -38,7 +38,9 @@ namespace NetMud.Interp
 
                 //Derp, we had an error with accessing the command somehow, usually to do with parameter collection or access permissions
                 if (commandContext.AccessErrors.Count() > 0)
+                {
                     return commandContext.AccessErrors;
+                }
 
                 commandContext.Command.Execute();
             }

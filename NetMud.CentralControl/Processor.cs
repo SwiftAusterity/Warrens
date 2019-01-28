@@ -46,12 +46,16 @@ namespace NetMud.CentralControl
                         IList<Tuple<Func<bool>, int>> subList = GetAllCurrentSubscribers(subArgs.Designation, subArgs.CurrentPulse, fireOnce);
 
                         foreach (Tuple<Func<bool>, int> pulsar in subList)
+                        {
                             pulsar.Item1.Invoke();
+                        }
 
                         subArgs.CurrentPulse++;
 
                         if (subArgs.CurrentPulse == _maxPulseCount)
+                        {
                             subArgs.CurrentPulse = 0;
+                        }
 
                         await Task.Delay(10000);
                     }
@@ -84,7 +88,9 @@ namespace NetMud.CentralControl
             CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
 
             if (maxDuration > 0)
+            {
                 cancelTokenSource.CancelAfter(maxDuration * 1000); //seconds * 1000 for miliseconds
+            }
 
             StoreCancellationToken(designator, cancelTokenSource);
 
@@ -104,7 +110,9 @@ namespace NetMud.CentralControl
                 RemoveCancellationToken(designator);
 
                 if (!previousTask.IsFaulted && !previousTask.IsCanceled && previousTask.IsCompleted)
+                {
                     StartSingeltonChainedLoop(designator, rampupDelay, cooldownDelay, maxDuration, workProcess);
+                }
             });
 
             newLoop.Start();
@@ -126,7 +134,9 @@ namespace NetMud.CentralControl
             CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
 
             if (maxDuration > 0)
+            {
                 cancelTokenSource.CancelAfter(maxDuration * 1000); //seconds * 1000 for miliseconds
+            }
 
             StoreCancellationToken(designator, cancelTokenSource);
 
@@ -143,9 +153,13 @@ namespace NetMud.CentralControl
                 await Task.Delay(cooldownDelay * 1000);
 
                 if (previousTask.IsFaulted && failedTailProcess != null)
+                {
                     failedTailProcess.Invoke();
+                }
                 else if (successTailProcess != null)
+                {
                     successTailProcess.Invoke();
+                }
 
                 RemoveCancellationToken(designator);
             });
@@ -176,10 +190,14 @@ namespace NetMud.CentralControl
             CancellationTokenSource cancelToken = GetCancellationToken(designator);
 
             if (cancelToken != null && cancelToken.Token.CanBeCanceled)
+            {
                 cancelToken.CancelAfter(shutdownDelay * 1000);
+            }
 
             if (!string.IsNullOrWhiteSpace(shutdownAnnouncement))
+            {
                 SystemCommunicationsUtility.BroadcastToAll(string.Format(shutdownAnnouncement, shutdownDelay));
+            }
 
             if (shutdownAnnouncementFrequency > 0)
             {
@@ -196,7 +214,9 @@ namespace NetMud.CentralControl
         {
             Dictionary<string, CancellationTokenSource> returnDict = new Dictionary<string, CancellationTokenSource>();
             foreach (KeyValuePair<string, object> kvp in globalCache.Where(kvp => kvp.Value.GetType() == typeof(CancellationTokenSource)))
+            {
                 returnDict.Add(kvp.Key.Replace("AsyncCancellationToken.", string.Empty), (CancellationTokenSource)kvp.Value);
+            }
 
             return returnDict;
         }
@@ -215,11 +235,15 @@ namespace NetMud.CentralControl
             foreach (CancellationTokenSource token in tokens.Where(tk => !tk.IsCancellationRequested && tk.Token.CanBeCanceled))
             {
                 if (token != null)
+                {
                     token.CancelAfter(shutdownDelay * 1000);
+                }
             }
 
             if (!string.IsNullOrWhiteSpace(shutdownAnnouncement))
+            {
                 SystemCommunicationsUtility.BroadcastToAll(string.Format(shutdownAnnouncement, shutdownDelay));
+            }
 
             if (shutdownAnnouncementFrequency > 0)
             {
@@ -292,7 +316,9 @@ namespace NetMud.CentralControl
             string taskKey = string.Format(subscriptionLoopCacheKeyFormat, designator);
 
             if (!(globalCache.Get(taskKey) is IList<Tuple<Func<bool>, int>> taskList))
+            {
                 taskList = new List<Tuple<Func<bool>, int>>();
+            }
 
             taskList.Add(new Tuple<Func<bool>, int>(subscriber, pulseCount));
 
@@ -306,7 +332,9 @@ namespace NetMud.CentralControl
         private static IList<Tuple<Func<bool>, int>> GetAllCurrentSubscribers(string designator, int pulseCount, bool fireOnce)
         {
             if (pulseCount == 0)
+            {
                 return new List<Tuple<Func<bool>, int>>();
+            }
 
             return GetLoopSubscribers(designator).Where(ls => (fireOnce && ls.Item2.Equals(pulseCount)) || ls.Item2 % pulseCount == 0).ToList();
         }
@@ -323,7 +351,9 @@ namespace NetMud.CentralControl
             try
             {
                 if (!(globalCache.Get(taskKey) is IList<Tuple<Func<bool>, int>> subscriberList))
+                {
                     subscriberList = new List<Tuple<Func<bool>, int>>();
+                }
 
                 return subscriberList;
             }

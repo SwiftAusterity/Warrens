@@ -28,9 +28,13 @@ namespace NetMud.DataAccess
         public static void LogError(Exception ex, bool nonImportant = true)
         {
             if(nonImportant)
+            {
                 LogError(ex, LogChannels.SystemWarnings);
+            }
             else
+            {
                 LogError(ex, LogChannels.SystemErrors, false);
+            }
         }
 
         /// <summary>

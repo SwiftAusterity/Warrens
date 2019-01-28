@@ -54,7 +54,9 @@ namespace NetMud
 
             //Our live data restore failed, reload the entire world from backing data
             if (!hotBack.RestoreLiveBackup())
+            {
                 hotBack.NewWorldFallback();
+            }
 
             if (gossipConfig.GossipActive)
             {
@@ -101,7 +103,9 @@ namespace NetMud
                 System.Collections.Generic.IEnumerable<string> commandVerbs = comm.GetCustomAttributes<CommandKeywordAttribute>().Where(att => !att.PreventBecomingAVerb).Select(att => att.Keyword);
 
                 foreach (string verb in commandVerbs)
+                {
                     LexicalProcessor.VerifyDictata(new Dictata() { WordType = LexicalType.Verb, Name = verb, Elegance = 1, Severity = 1, Quality = 1, Tense = LexicalTense.Present });
+                }
             }
 
         }

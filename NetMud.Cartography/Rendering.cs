@@ -61,7 +61,9 @@ namespace NetMud.Cartography
             {
                 //Don't show "add room" to non admins, if we're not requesting this for a locale and if the locale has actual rooms
                 if (!forAdmin || locale == null || locale.Rooms().Count() > 0)
+                {
                     return string.Empty;
+                }
 
                 return string.Format("<a href='#' class='addData pathway AdminAddInitialRoom' localeId='{0}' title='New Room'>Add Initial Room</a>", locale.Id);
             }
@@ -105,9 +107,13 @@ namespace NetMud.Cartography
                         IRoomTemplate RoomTemplate = TemplateCache.Get<IRoomTemplate>(map[x, y]);
 
                         if (RoomTemplate != null)
+                        {
                             rowString += RenderRoomToAscii(RoomTemplate, RoomTemplate.GetZonePathways().Any(), forAdmin);
+                        }
                         else
+                        {
                             rowString += "&nbsp;";
+                        }
                     }
 
                     sb.AppendLine(rowString);
@@ -125,7 +131,9 @@ namespace NetMud.Cartography
                         IRoomTemplate RoomTemplate = TemplateCache.Get<IRoomTemplate>(map[x, y]);
 
                         if (RoomTemplate != null)
+                        {
                             expandedMap = RenderRoomAndPathwaysForMapNode(x, y, RoomTemplate, centerRoom, expandedMap, forAdmin, renderMode);
+                        }
                     }
                 }
 
@@ -133,7 +141,9 @@ namespace NetMud.Cartography
                 {
                     string rowString = string.Empty;
                     for (x = 0; x <= expandedMap.GetUpperBound(0); x++)
+                    {
                         rowString += expandedMap[x, y];
+                    }
 
                     sb.AppendLine(rowString);
                 }
@@ -279,7 +289,9 @@ namespace NetMud.Cartography
             string asciiCharacter = Utilities.TranslateDirectionToAsciiCharacter(directionType);
 
             if (path != null)
+            {
                 destination = (IRoomTemplate)path.Destination;
+            }
 
             long destinationId = -1;
             string destinationName = string.Empty;
@@ -301,14 +313,18 @@ namespace NetMud.Cartography
                     string roomString = string.Format("Add - {0} path and room", directionType.ToString());
 
                     if (!string.IsNullOrWhiteSpace(destinationName))
+                    {
                         roomString = string.Format("Add {0} path to {1}", directionType.ToString(), destinationName);
+                    }
 
                     returnValue = string.Format("<a href='#' class='addData pathway AdminAddPathway' pathwayId='-1' fromRoom='{0}' toRoom='{3}' data-direction='{1}' title='{2}'>+</a>",
                         originId, Utilities.TranslateDirectionToDegrees(directionType).Item1, roomString, destinationId);
                 }
             }
             else if (path != null)
+            {
                 return asciiCharacter;
+            }
 
             return returnValue;
         }
@@ -318,9 +334,13 @@ namespace NetMud.Cartography
             string character = hasZoneExits ? "@" : "O";
 
             if (forAdmin)
+            {
                 return string.Format("<a href='#' class='editData AdminEditRoom' roomId='{0}' title='Edit - {2}'>{1}</a>", destination.Id, character, destination.Name);
+            }
             else
+            {
                 return character;
+            }
         }
 
     }

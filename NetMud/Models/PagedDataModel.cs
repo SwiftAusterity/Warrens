@@ -38,13 +38,17 @@ namespace NetMud.Models
             get
             {
                 if(Items == null || Items.Count() == 0)
+                {
                     return Enumerable.Empty<T>();
+                }
 
                 int skip = (CurrentPageNumber - 1) * ItemsPerPage;
                 int take = Math.Abs(Items.Count() - skip) >= ItemsPerPage ? ItemsPerPage : Math.Abs(Items.Count() - skip);
 
                 if(!string.IsNullOrWhiteSpace(SearchTerms))
+                {
                     return Items.Where(item => SearchFilter(item)).Skip(skip).Take(take);
+                }
 
                 return Items.Skip(skip).Take(take);
             }

@@ -111,7 +111,9 @@ namespace NetMud.Data.Gaia
         public void BroadcastEvent(string message, IEntity sender = null, IEntity subject = null, IEntity target = null)
         {
             foreach (IZone zone in GetZones())
+            {
                 zone.BroadcastEvent(message, sender, subject, target);
+            }
         }
 
         /// <summary>
@@ -130,7 +132,9 @@ namespace NetMud.Data.Gaia
 
             //Isn't in the world currently
             if (me == default(IGaia))
+            {
                 SpawnNewInWorld();
+            }
             else
             {
                 BirthMark = me.BirthMark;
@@ -218,7 +222,9 @@ namespace NetMud.Data.Gaia
                 List<ICelestialPosition> celestials = new List<ICelestialPosition>();
 
                 foreach (ICelestial body in bS.CelestialBodies)
+                {
                     celestials.Add(new CelestialPosition(body, 0));
+                }
 
                 CelestialPositions = celestials;
             }
@@ -403,7 +409,9 @@ namespace NetMud.Data.Gaia
                 OrbitalPosition += orbitalChange;
 
                 if (OrbitalPosition >= maxOrbit)
+                {
                     OrbitalPosition = OrbitalPosition - maxOrbit;
+                }
             }
 
             Save();
@@ -448,7 +456,9 @@ namespace NetMud.Data.Gaia
                             cloud.Strength -= cloud.Drain;
 
                             if (cloud.Strength > 0)
+                            {
                                 zoneEventList.Add(cloud);
+                            }
                         }
 
                         //Spawn new weather event?
@@ -529,7 +539,9 @@ namespace NetMud.Data.Gaia
 
                 //There are 
                 if (newPosition > fullOrbitDistance)
+                {
                     newPosition = Math.Abs(fullOrbitDistance - (fullOrbitDistance - newPosition));
+                }
 
                 newCelestials.Add(new CelestialPosition(celestial.CelestialObject, newPosition));
             }

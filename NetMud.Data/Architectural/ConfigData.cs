@@ -92,16 +92,22 @@ namespace NetMud.Data.Architectural
             get
             {
                 if (_creator == null && !string.IsNullOrWhiteSpace(CreatorHandle))
+                {
                     _creator = Account.GetByHandle(CreatorHandle);
+                }
 
                 return _creator;
             }
             set
             {
                 if (value != null)
+                {
                     CreatorHandle = value.GlobalIdentityHandle;
+                }
                 else
+                {
                     CreatorHandle = string.Empty;
+                }
 
                 _creator = value;
             }
@@ -131,16 +137,22 @@ namespace NetMud.Data.Architectural
             get
             {
                 if (_approvedBy == null && !string.IsNullOrWhiteSpace(ApproverHandle))
+                {
                     _approvedBy = Account.GetByHandle(ApproverHandle);
+                }
 
                 return _approvedBy;
             }
             set
             {
                 if (value != null)
+                {
                     ApproverHandle = value.GlobalIdentityHandle;
+                }
                 else
+                {
                     ApproverHandle = string.Empty;
+                }
 
                 _approvedBy = value;
             }
@@ -164,7 +176,9 @@ namespace NetMud.Data.Architectural
         {
             //Can't approve/deny your own stuff
             if (rank < StaffRank.Admin && Creator.Equals(approver))
+            {
                 return false;
+            }
 
             DataAccess.FileSystem.ConfigData accessor = new DataAccess.FileSystem.ConfigData();
             ApproveMe(approver, rank, newState);
@@ -289,7 +303,10 @@ namespace NetMud.Data.Architectural
                             break;
                         case ContentApprovalType.Leader:
                             if (rank == StaffRank.Builder)
+                            {
                                 ApproveMe(editor, rank);
+                            }
+
                             break;
                     }
                 }
@@ -328,11 +345,15 @@ namespace NetMud.Data.Architectural
             try
             {
                 if (string.IsNullOrWhiteSpace(CreatorHandle))
+                {
                     CreatorHandle = DataHelpers.SystemUserHandle;
+                }
 
                 //only able to edit its own crap
                 if (CreatorHandle != DataHelpers.SystemUserHandle)
+                {
                     return false;
+                }
 
                 State = ApprovalState.Approved;
                 ApproverHandle = DataHelpers.SystemUserHandle;

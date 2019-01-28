@@ -78,7 +78,9 @@ namespace NetMud.Data.Architectural
                     BaseDataIntegrity integrityCheck = (BaseDataIntegrity)checker;
 
                     if (!integrityCheck.Verify(property.GetValue(this)))
+                    {
                         dataProblems.Add(integrityCheck.ErrorMessage);
+                    }
                 }
             }
 
@@ -164,16 +166,22 @@ namespace NetMud.Data.Architectural
             get
             {
                 if (_creator == null && !string.IsNullOrWhiteSpace(CreatorHandle))
+                {
                     _creator = Account.GetByHandle(CreatorHandle);
+                }
 
                 return _creator;
             }
             set
             {
                 if (value != null)
+                {
                     CreatorHandle = value.GlobalIdentityHandle;
+                }
                 else
+                {
                     CreatorHandle = string.Empty;
+                }
 
                 _creator = value;
             }
@@ -203,16 +211,22 @@ namespace NetMud.Data.Architectural
             get
             {
                 if (_approvedBy == null && !string.IsNullOrWhiteSpace(ApproverHandle))
+                {
                     _approvedBy = Account.GetByHandle(ApproverHandle);
+                }
 
                 return _approvedBy;
             }
             set
             {
                 if (value != null)
+                {
                     ApproverHandle = value.GlobalIdentityHandle;
+                }
                 else
+                {
                     ApproverHandle = string.Empty;
+                }
 
                 _approvedBy = value;
             }
@@ -236,7 +250,9 @@ namespace NetMud.Data.Architectural
         {
             //Can't approve/deny your own stuff
             if (rank < StaffRank.Admin && Creator.Equals(approver))
+            {
                 return false;
+            }
 
             DataAccess.FileSystem.TemplateData accessor = new DataAccess.FileSystem.TemplateData();
             ApproveMe(approver, rank, newState);
@@ -287,7 +303,9 @@ namespace NetMud.Data.Architectural
             try
             {
                 if (Created != DateTime.MinValue)
+                {
                     Save(creator, rank);
+                }
                 else
                 {
 
@@ -307,7 +325,10 @@ namespace NetMud.Data.Architectural
                                 break;
                             case ContentApprovalType.Leader:
                                 if (rank == StaffRank.Builder)
+                                {
                                     ApproveMe(creator, rank);
+                                }
+
                                 break;
                         }
                     }
@@ -336,7 +357,9 @@ namespace NetMud.Data.Architectural
             try
             {
                 if (Created != DateTime.MinValue)
+                {
                     SystemSave();
+                }
                 else
                 {
 
@@ -407,7 +430,9 @@ namespace NetMud.Data.Architectural
             try
             {
                 if (Created == DateTime.MinValue)
+                {
                     Create(editor, rank);
+                }
                 else
                 {
                     //Not allowed to edit stuff you didn't make unless you're an admin, TODO: Make this more nuanced for guilds
@@ -431,7 +456,10 @@ namespace NetMud.Data.Architectural
                                 break;
                             case ContentApprovalType.Leader:
                                 if (rank == StaffRank.Builder)
+                                {
                                     ApproveMe(editor, rank);
+                                }
+
                                 break;
                         }
                     }
@@ -467,12 +495,16 @@ namespace NetMud.Data.Architectural
             try
             {
                 if (Created == DateTime.MinValue)
+                {
                     SystemCreate();
+                }
                 else
                 {
                     //only able to edit its own crap
                     if (CreatorHandle != DataHelpers.SystemUserHandle)
+                    {
                         return false;
+                    }
 
                     State = ApprovalState.Approved;
                     ApproverHandle = DataHelpers.SystemUserHandle;
@@ -527,9 +559,13 @@ namespace NetMud.Data.Architectural
 
             //Zero ordered list
             if (allOfMe.Count() > 0)
+            {
                 Id = allOfMe.Max(dp => dp.Id) + 1;
+            }
             else
+            {
                 Id = 0;
+            }
         }
         #endregion
 
@@ -549,10 +585,14 @@ namespace NetMud.Data.Architectural
                 try
                 {
                     if (other.GetType() != GetType())
+                    {
                         return -1;
+                    }
 
                     if (other.Id.Equals(Id))
+                    {
                         return 1;
+                    }
 
                     return 0;
                 }

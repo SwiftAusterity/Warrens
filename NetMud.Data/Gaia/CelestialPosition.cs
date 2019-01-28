@@ -27,14 +27,18 @@ namespace NetMud.DataStructure.Gaia
             get
             {
                 if (_celestialObject == null)
+                {
                     return null;
+                }
 
                 return TemplateCache.Get<ICelestial>(_celestialObject);
             }
             set
             {
                 if (value == null)
+                {
                     return;
+                }
 
                 _celestialObject = new TemplateCacheKey(value);
             }

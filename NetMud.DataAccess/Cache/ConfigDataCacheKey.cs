@@ -68,7 +68,9 @@ namespace NetMud.DataAccess.Cache
 
             //Normalize interfaces versus classnames
             if (ObjectType.IsInterface)
+            {
                 typeName = typeName.Substring(1);
+            }
 
             return string.Format("{0}_{1}_{2}", CacheType.ToString(), typeName, BirthMark.ToString());
         }
@@ -89,10 +91,14 @@ namespace NetMud.DataAccess.Cache
                 try
                 {
                     if (other.GetType() != GetType())
+                    {
                         return -1;
+                    }
 
                     if (other.KeyHash().Equals(KeyHash()))
+                    {
                         return 1;
+                    }
 
                     return 0;
                 }

@@ -62,26 +62,34 @@ namespace NetMud.Websock
         {
             //If the origin string or formatting is blank just return the orginal string
             if (string.IsNullOrWhiteSpace(originalString) || string.IsNullOrWhiteSpace(formatToReplace))
+            {
                 return false;
+            }
 
             string styleElement = SupportedColorTranslations[styleType];
 
             //If the destination string is blank, just remove them all since they'd come back empty anyways
             if (string.IsNullOrWhiteSpace(styleElement))
+            {
                 originalString = originalString.Replace(formatToReplace, string.Empty);
+            }
             else
             {
                 int firstIndex = originalString.IndexOf(formatToReplace);
 
                 if (firstIndex < 0)
+                {
                     return false;
+                }
                 else
                 {
                     int secondIndex = originalString.IndexOf(formatToReplace, firstIndex + formatToReplace.Length);
 
                     //Yes 1st instance but no second instance? replace them all with empty string to scrub the string.
                     if (secondIndex < 0)
+                    {
                         originalString = originalString.Replace(formatToReplace, string.Empty);
+                    }
                     else
                     {
                         int lengthToSkip = formatToReplace.Length;
@@ -108,7 +116,9 @@ namespace NetMud.Websock
             StringBuilder returnString = new StringBuilder();
 
             foreach (string line in lines)
+            {
                 returnString.AppendFormat(EncapsulateOutput(line));
+            }
 
             return returnString.ToString();
         }
@@ -121,9 +131,13 @@ namespace NetMud.Websock
         public string EncapsulateOutput(string str)
         {
             if (!string.IsNullOrWhiteSpace(str))
+            {
                 return string.Format("<{0}>{1}</{0}>", EncapsulationElement, str);
+            }
             else
+            {
                 return BumperElement; //blank strings mean carriage returns
+            }
         }
     }
 }

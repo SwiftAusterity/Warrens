@@ -27,14 +27,18 @@ namespace NetMud.DataStructure.Zone
             get
             {
                 if (_resource != null)
+                {
                     return TemplateCache.Get<INaturalResource>(_resource);
+                }
 
                 return null;
             }
             set
             {
                 if (value == null)
+                {
                     return;
+                }
 
                 _resource = new TemplateCacheKey(value);
             }

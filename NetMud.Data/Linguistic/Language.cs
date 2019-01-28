@@ -98,10 +98,14 @@ namespace NetMud.Data.Linguistic
                 try
                 {
                     if (other.GetType() != GetType())
+                    {
                         return -1;
+                    }
 
                     if (other.Name.Equals(Name, StringComparison.InvariantCultureIgnoreCase))
+                    {
                         return 1;
+                    }
 
                     return 0;
                 }

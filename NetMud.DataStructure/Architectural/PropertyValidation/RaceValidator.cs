@@ -19,7 +19,9 @@ namespace NetMud.DataStructure.Architectural.PropertyValidation
             IRace item = value as IRace;
 
             if (item == null)
+            {
                 return !Optional;
+            }
 
             return !string.IsNullOrWhiteSpace(item.CollectiveNoun) 
                 && !string.IsNullOrWhiteSpace(item.Name);

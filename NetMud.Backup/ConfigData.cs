@@ -51,7 +51,9 @@ namespace NetMud.Backup
                                                                                 && !ty.GetCustomAttributes<IgnoreAutomatedBackupAttribute>().Any());
 
             foreach (Type t in implimentedTypes.OrderByDescending(type => type == typeof(Dictata) ? 5 : 0))
+            {
                 LoadAllToCache(t);
+            }
 
             return true;
         }
@@ -64,7 +66,9 @@ namespace NetMud.Backup
         public static bool LoadAllToCache(Type objectType)
         {
             if (!objectType.GetInterfaces().Contains(typeof(IConfigData)))
+            {
                 return false;
+            }
 
             DataAccess.FileSystem.ConfigData fileAccessor = new DataAccess.FileSystem.ConfigData();
             string typeDirectory = fileAccessor.GetCurrentDirectoryForType(objectType);

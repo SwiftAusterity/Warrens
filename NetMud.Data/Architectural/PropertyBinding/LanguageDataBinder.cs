@@ -10,7 +10,9 @@ namespace NetMud.Data.Architectural.PropertyBinding
         {
             string stringInput = input.ToString();
             if (string.IsNullOrWhiteSpace(stringInput))
+            {
                 return null;
+            }
 
             return ConfigDataCache.Get<ILanguage>(stringInput);
         }

@@ -40,7 +40,9 @@ namespace NetMud.Commands.Rendering
             };
 
             foreach (DataStructure.Inanimate.IInanimate thing in chr.Inventory.EntitiesContained())
+            {
                 toActor.Add(new Message(MessagingType.Visible, thing.RenderAsContents(chr, new[] { MessagingType.Visible })));
+            }
 
             Message toOrigin = new Message(MessagingType.Visible, new SensoryEvent() { Strength = 30 })
             {

@@ -124,7 +124,7 @@
                             <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                         }
                     </dd>
-                    <dt>Dictata (words) [@Html.ActionLink(Model.DictionaryWords.Count().ToString(), "Index", "Dictionary", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" })]</dt>
+                    <dt>Dictata [@Html.ActionLink(Model.DictionaryWords.Count().ToString(), "Index", "Dictionary", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" })]</dt>
                     <dd>
                         @Html.ActionLink(" ", "Add", "Dictionary", null, htmlAttributes: new { @class = "glyphicon-plus-sign glyphicon", @style = "color: green;", @title = "Add New" })
                         @if (Model.DictionaryWords.Any(r => r.State != ApprovalState.Approved))
@@ -173,7 +173,7 @@
                             <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                         }
                     </dd>
-                    <dt>Dimensional Models [@Html.ActionLink(Model.DimensionalModels.Count().ToString(), "Index", "DimensionalModel", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" })]</dt>
+                    <dt>2D Models [@Html.ActionLink(Model.DimensionalModels.Count().ToString(), "Index", "DimensionalModel", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" })]</dt>
                     <dd>
                         @Html.ActionLink(" ", "Add", "DimensionalModel", null, htmlAttributes: new { @class = "glyphicon-plus-sign glyphicon", @style = "color: green;", @title = "Add New" })
                         @if (Model.DimensionalModels.Any(r => r.FitnessProblems))

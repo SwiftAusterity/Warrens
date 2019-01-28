@@ -33,7 +33,9 @@ namespace NetMud.DataAccess.FileSystem
             string dirName = BaseDirectory + CurrentDirectoryName + baseTypeName;
 
             if (!VerifyDirectory(dirName))
+            {
                 throw new Exception("Unable to locate or create base live data directory.");
+            }
 
             WriteSpecificEntity(new DirectoryInfo(dirName), entity);
         }
@@ -48,7 +50,9 @@ namespace NetMud.DataAccess.FileSystem
             string entityFileName = GetEntityFilename(entity);
 
             if (string.IsNullOrWhiteSpace(entityFileName))
+            {
                 return;
+            }
 
             string fullFileName = dir.FullName + "/" + entityFileName;
 
@@ -90,7 +94,9 @@ namespace NetMud.DataAccess.FileSystem
 
             //something very wrong is happening, it'll get logged
             if (!VerifyDirectory(CurrentDirectoryName))
+            {
                 throw new Exception("Can not locate or verify current live data directory.");
+            }
         }
 
         /// <summary>

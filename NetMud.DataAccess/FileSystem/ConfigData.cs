@@ -55,12 +55,16 @@ namespace NetMud.DataAccess.FileSystem
                 string dirName = GetCurrentDirectoryForEntity(entity);
 
                 if (!VerifyDirectory(dirName))
+                {
                     throw new Exception("Unable to locate or create base backing data directory.");
+                }
 
                 string entityFileName = GetEntityFilename(entity);
 
                 if (string.IsNullOrWhiteSpace(entityFileName))
+                {
                     return;
+                }
 
                 string fullFileName = dirName + entityFileName;
 
@@ -82,12 +86,16 @@ namespace NetMud.DataAccess.FileSystem
             string dirName = GetCurrentDirectoryForEntity(entity);
 
             if (!VerifyDirectory(dirName))
+            {
                 throw new Exception("Unable to locate or create base live data directory.");
+            }
 
             string entityFileName = GetEntityFilename(entity);
 
             if (string.IsNullOrWhiteSpace(entityFileName))
+            {
                 return;
+            }
 
             string fullFileName = dirName + entityFileName;
             string archiveFileDirectory = GetArchiveDirectoryForEntity(entity);
@@ -159,12 +167,16 @@ namespace NetMud.DataAccess.FileSystem
         private void RollingArchiveFile(string currentFile, string archiveFile, string archiveDirectory)
         {
             if (!File.Exists(currentFile))
+            {
                 return;
+            }
 
             VerifyDirectory(archiveDirectory);
 
             if (File.Exists(archiveFile))
+            {
                 File.Delete(archiveFile);
+            }
 
             File.Copy(currentFile, archiveFile, true);
         }

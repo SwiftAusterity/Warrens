@@ -11,7 +11,9 @@ namespace NetMud.Gaia.Geographical
         {
             //wtf nonono
             if (celestial.Apogee == 0 || celestial.Perigree == 0)
+            {
                 return 0;
+            }
 
             //TODO: This only works for things orbiting the world (or heliocentric) right now
             float distanceFromWorld = (float)celestial.Apogee;
@@ -23,7 +25,9 @@ namespace NetMud.Gaia.Geographical
                 distanceFromWorld = Math.Min(celestial.Perigree, (fullOrbitDistance / celestialOrbitPosition) * orbitalRadius);
             }
             else //in fixedPosition world orbits you! This is sort of a hack to force the multiplier against rotational position to = 1
+            {
                 celestialOrbitPosition = fullOrbitDistance;
+            }
 
             /*
             * So we're taking the planetary rotation to mean some things here:

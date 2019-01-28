@@ -24,7 +24,9 @@ namespace NetMud.Data.Inanimate
             get
             {
                 if (_item == null)
+                {
                     return null;
+                }
 
                 return TemplateCache.Get<IInanimateTemplate>(_item);
             }

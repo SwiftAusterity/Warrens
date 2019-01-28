@@ -139,7 +139,9 @@ namespace NetMud.Data.Administrative
             returnList.Add("Minimum Read Level", MinimumReadLevel.ToString());
 
             foreach (string tag in Tags)
+            {
                 returnList.Add("Tag", tag);
+            }
 
             return returnList;
         }

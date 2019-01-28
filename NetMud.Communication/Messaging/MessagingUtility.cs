@@ -47,7 +47,9 @@ namespace NetMud.Communication.Messaging
         {
             int i = 0;
             for (i = 0; i < messages.Length; i++)
+            {
                 messages[i] = TranslateColorVariables(messages[i], recipient);
+            }
 
             return messages;
         }
@@ -81,7 +83,9 @@ namespace NetMud.Communication.Messaging
         public static IEnumerable<string> TranslateEntityVariables(string[] messages, Dictionary<MessagingTargetType, IEntity[]> entities)
         {
             for(int i = 0; i < messages.Length; i++)
+            {
                 messages[i] = TranslateEntityVariables(messages[i], entities);
+            }
 
             return messages;
         }
@@ -100,7 +104,9 @@ namespace NetMud.Communication.Messaging
                 if (kvp.Value.Length.Equals(1))
                 {
                     if (kvp.Value[0] == null)
+                    {
                         continue;
+                    }
 
                     thing = kvp.Value[0];
                 }
@@ -124,7 +130,9 @@ namespace NetMud.Communication.Messaging
                         break;
                     case MessagingTargetType.GenderPronoun:
                         if (!thing.GetType().GetInterfaces().Contains(typeof(IGender)))
+                        {
                             break;
+                        }
 
                         IGender chr = (IGender)thing;
                         message = message.Replace("$G$", chr.Gender);

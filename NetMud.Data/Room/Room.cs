@@ -81,7 +81,9 @@ namespace NetMud.Data.Room
             set
             {
                 if (value != null)
+                {
                     _parentLocation = new LiveCacheKey(value);
+                }
             }
         }
 
@@ -108,7 +110,9 @@ namespace NetMud.Data.Room
             set
             {
                 if (value != null)
+                {
                     _medium = new TemplateCacheKey(value);
+                }
             }
         }
 
@@ -187,10 +191,14 @@ namespace NetMud.Data.Room
             float lumins = zone.GetCurrentLuminosity();
 
             foreach (IMobile dude in MobilesInside.EntitiesContained())
+            {
                 lumins += dude.GetCurrentLuminosity();
+            }
 
             foreach (IInanimate thing in Contents.EntitiesContained())
+            {
                 lumins += thing.GetCurrentLuminosity();
+            }
 
             return lumins;
         }
@@ -227,7 +235,9 @@ namespace NetMud.Data.Room
         public override ISensoryEvent GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes)
         {
             if (sensoryTypes == null || sensoryTypes.Count() == 0)
+            {
                 sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
+            }
 
             //Self becomes the first sense in the list
             ISensoryEvent me = null;
@@ -237,10 +247,14 @@ namespace NetMud.Data.Room
                 {
                     case MessagingType.Audible:
                         if (!IsAudibleTo(viewer))
+                        {
                             continue;
+                        }
 
                         if (me == null)
+                        {
                             me = GetSelf(sense);
+                        }
 
                         IEnumerable<ISensoryEvent> aDescs = GetAudibleDescriptives(viewer);
 
@@ -260,14 +274,21 @@ namespace NetMud.Data.Room
                         }
 
                         if (uberSounds.Modifiers.Any(mod => mod.Role == GrammaticalType.DirectObject))
+                        {
                             me.TryModify(collectiveSounds);
+                        }
+
                         break;
                     case MessagingType.Olefactory:
                         if (!IsSmellableTo(viewer))
+                        {
                             continue;
+                        }
 
                         if (me == null)
+                        {
                             me = GetSelf(sense);
+                        }
 
                         IEnumerable<ISensoryEvent> oDescs = GetSmellableDescriptives(viewer);
 
@@ -287,14 +308,21 @@ namespace NetMud.Data.Room
                         }
 
                         if (uberSmells.Modifiers.Any(mod => mod.Role == GrammaticalType.DirectObject))
+                        {
                             me.TryModify(collectiveSmells);
+                        }
+
                         break;
                     case MessagingType.Psychic:
                         if (!IsSensibleTo(viewer))
+                        {
                             continue;
+                        }
 
                         if (me == null)
+                        {
                             me = GetSelf(sense);
+                        }
 
                         IEnumerable<ISensoryEvent> pDescs = GetPsychicDescriptives(viewer);
 
@@ -314,14 +342,21 @@ namespace NetMud.Data.Room
                         }
 
                         if (uberPsy.Modifiers.Any(mod => mod.Role == GrammaticalType.DirectObject))
+                        {
                             me.TryModify(collectivePsy);
+                        }
+
                         break;
                     case MessagingType.Taste:
                         if (!IsTastableTo(viewer))
+                        {
                             continue;
+                        }
 
                         if (me == null)
+                        {
                             me = GetSelf(sense);
+                        }
 
                         IEnumerable<ISensoryEvent> taDescs = GetPsychicDescriptives(viewer);
 
@@ -341,14 +376,21 @@ namespace NetMud.Data.Room
                         }
 
                         if (uberTaste.Modifiers.Any(mod => mod.Role == GrammaticalType.DirectObject))
+                        {
                             me.TryModify(collectiveTaste);
+                        }
+
                         break;
                     case MessagingType.Tactile:
                         if (!IsTouchableTo(viewer))
+                        {
                             continue;
+                        }
 
                         if (me == null)
+                        {
                             me = GetSelf(sense);
+                        }
 
                         IEnumerable<ISensoryEvent> tDescs = GetTouchDescriptives(viewer);
 
@@ -368,14 +410,21 @@ namespace NetMud.Data.Room
                         }
 
                         if (uberTouch.Modifiers.Any(mod => mod.Role == GrammaticalType.DirectObject))
+                        {
                             me.TryModify(collectiveTouch);
+                        }
+
                         break;
                     case MessagingType.Visible:
                         if (!IsVisibleTo(viewer))
+                        {
                             continue;
+                        }
 
                         if (me == null)
+                        {
                             me = GetSelf(sense);
+                        }
 
                         IEnumerable<ISensoryEvent> vDescs = GetVisibleDescriptives(viewer);
 
@@ -395,30 +444,47 @@ namespace NetMud.Data.Room
                         }
 
                         if (uberSight.Modifiers.Any(mod => mod.Role == GrammaticalType.DirectObject))
+                        {
                             me.TryModify(collectiveSight);
+                        }
+
                         break;
                 }
             }
 
             //If we get through that and me is still null it means we can't detect anything at all
             if (me == null)
+            {
                 return new SensoryEvent(sensoryTypes[0]);
+            }
 
             foreach (ICelestial celestial in GetVisibileCelestials(viewer))
+            {
                 me.TryModify(celestial.RenderAsContents(viewer, sensoryTypes).Event);
+            }
 
             if (NaturalResources != null)
+            {
                 foreach (KeyValuePair<INaturalResource, int> resource in NaturalResources)
+                {
                     me.TryModify(resource.Key.RenderResourceCollection(viewer, resource.Value).Event);
+                }
+            }
 
             foreach (IPathway path in GetPathways())
+            {
                 me.TryModify(path.RenderAsContents(viewer, sensoryTypes).Event);
+            }
 
             foreach (IInanimate obj in GetContents<IInanimate>())
+            {
                 me.TryModify(obj.RenderAsContents(viewer, sensoryTypes).Event);
+            }
 
             foreach (IMobile mob in GetContents<IMobile>().Where(player => !player.Equals(viewer)))
+            {
                 me.TryModify(mob.RenderAsContents(viewer, sensoryTypes).Event);
+            }
 
             //Describe the size and population of this zone
             DimensionalSizeDescription roomSize = GeographicalUtilities.ConvertSizeToType(GetModelDimensions(), GetType());
@@ -438,9 +504,13 @@ namespace NetMud.Data.Room
 
             string crowdSize = "lonely";
             if ((short)populationSize > (short)roomSize)
+            {
                 crowdSize = "crowded";
+            }
             else if (populationSize > CrowdSizeDescription.Intimate)
+            {
                 crowdSize = "sparsely populated";
+            }
 
             area.TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, crowdSize);
 
@@ -472,7 +542,9 @@ namespace NetMud.Data.Room
 
             //Isn't in the world currently
             if (me == default(IRoom))
+            {
                 SpawnNewInWorld();
+            }
             else
             {
                 BirthMark = me.BirthMark;
@@ -510,7 +582,9 @@ namespace NetMud.Data.Room
             Keywords = new string[] { bS.Name.ToLower() };
 
             if (NaturalResources == null)
+            {
                 NaturalResources = new Dictionary<INaturalResource, int>();
+            }
 
             if (string.IsNullOrWhiteSpace(BirthMark))
             {
@@ -519,7 +593,9 @@ namespace NetMud.Data.Room
             }
 
             if (spawnTo?.CurrentLocale == null)
+            {
                 spawnTo = new GlobalPosition(this);
+            }
 
             CurrentLocation = spawnTo;
             Model = bS.Model;

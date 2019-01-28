@@ -80,7 +80,9 @@ namespace NetMud.DataAccess.Cache
         {
             //No shenanigans
             if(string.IsNullOrWhiteSpace(accountHandle))
+            {
                 return Enumerable.Empty<IPlayerTemplate>();
+            }
 
             IEnumerable<IPlayerTemplate> chars = GetAll().Where(ch => ch.AccountHandle.Equals(accountHandle, StringComparison.InvariantCultureIgnoreCase));
 

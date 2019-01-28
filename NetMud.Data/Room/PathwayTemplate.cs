@@ -53,7 +53,9 @@ namespace NetMud.Data.Room
             get
             {
                 if (_keywords == null || _keywords.Length == 0)
+                {
                     _keywords = new string[] { Name.ToLower() };
+                }
 
                 return _keywords;
             }
@@ -109,7 +111,9 @@ namespace NetMud.Data.Room
             set
             {
                 if (value != null)
+                {
                     _destination = new TemplateCacheKey(value);
+                }
             }
         }
 
@@ -133,7 +137,9 @@ namespace NetMud.Data.Room
             set
             {
                 if (value != null)
+                {
                     _origin = new TemplateCacheKey(value);
+                }
             }
         }
 
@@ -190,7 +196,9 @@ namespace NetMud.Data.Room
             IDictionary<string, string> returnList = base.SignificantDetails();
 
             foreach (ISensoryEvent desc in Descriptives)
+            {
                 returnList.Add("Descriptives", string.Format("{0} ({1}): {2}", desc.SensoryType, desc.Strength, desc.Event.ToString()));
+            }
 
             return returnList;
         }
@@ -210,7 +218,9 @@ namespace NetMud.Data.Room
                 dictatas.AddRange(Descriptives.Select(desc => desc.Event.GetDictata()));
 
                 foreach (IDictata dictata in dictatas)
+                {
                     LexicalProcessor.VerifyDictata(dictata);
+                }
 
                 TemplateCache.Add(this);
             }

@@ -119,7 +119,9 @@ namespace NetMud.Interp
             StaffRank effectiveRank = StaffRank.Player;
 
             if (Actor.GetType().GetInterfaces().Contains(typeof(IPlayer)))
+            {
                 effectiveRank = Actor.Template<IPlayerTemplate>().GamePermissionsRank;
+            }
 
             LoadedCommands = LoadedCommands.Where(comm => comm.GetCustomAttributes<CommandPermissionAttribute>().Any(att => att.MinimumRank <= effectiveRank));
 
@@ -144,7 +146,9 @@ namespace NetMud.Interp
 
                 //Log people using and even attempting to use admin commands in game
                 if (currentCommand.CommandType.GetCustomAttributes<CommandPermissionAttribute>().Any(att => att.MinimumRank == StaffRank.Admin))
+                {
                     LoggingUtility.LogAdminCommandUsage(OriginalCommandString, Actor.Template<IPlayerTemplate>().AccountHandle);
+                }
 
                 try
                 {
@@ -155,11 +159,15 @@ namespace NetMud.Interp
 
                     //why bother if we have no parms to find?
                     if (currentCommand.InputRemainder.Count() > 0)
+                    {
                         ParseParamaters(currentCommand, parmList, hasContainer);
+                    }
 
                     //Did we get errors from the parameter parser? if so bail
                     if (AccessErrors.Count > 0)
+                    {
                         continue;
+                    }
 
                     ICommand command = Activator.CreateInstance(currentCommand.CommandType) as ICommand;
 
@@ -183,9 +191,13 @@ namespace NetMud.Interp
                     {
                         ICollection<IEntity> collection = (ICollection<IEntity>)Subject;
                         if (collection.Count() == 1)
+                        {
                             Subject = collection.First();
+                        }
                         else
+                        {
                             continue;
+                        }
                     }
 
                     command.CommandWord = currentCommand.CommandPhrase;
@@ -215,7 +227,10 @@ namespace NetMud.Interp
                 AccessErrors.Add(string.Format("There are {0} potential commands with that name and parameter structure.", validCommands.Count()));
 
                 foreach (ICommand currentCommand in validCommands)
+                {
                     AccessErrors.AddRange(currentCommand.RenderSyntaxHelp());
+                }
+
                 return;
             }
 
@@ -246,7 +261,9 @@ namespace NetMud.Interp
                 {
                     //Distinct this stuff
                     if (commands.Any(com => com.CommandType == commandType))
+                    {
                         continue;
+                    }
 
                     CommandKeywordAttribute keywordAttribute = commandType.GetCustomAttributes<CommandKeywordAttribute>().Single(att => att.Aliases.Any(alias =>
                                                             alias.Equals(currentCommandString, StringComparison.InvariantCultureIgnoreCase)));
@@ -259,9 +276,13 @@ namespace NetMud.Interp
 
                     //Kinda janky but we need a way to tell the system "north" is both the command and the target
                     if (!keywordAttribute.IsAlsoSubject)
+                    {
                         newCommand.InputRemainder = parsedWords.Skip(commandWords);
+                    }
                     else
+                    {
                         newCommand.InputRemainder = parsedWords;
+                    }
 
                     commands.Add(newCommand);
                 }
@@ -284,7 +305,9 @@ namespace NetMud.Interp
             {
                 //why continue if we ran out of stuff
                 if (command.InputRemainder.Count() == 0)
+                {
                     break;
+                }
 
                 //Short circuit the process if we lack something we need
                 if (currentNeededParm.RequiresPreviousParameter)
@@ -293,11 +316,17 @@ namespace NetMud.Interp
                     {
                         case CommandUsage.Supporting:
                             if (Target == null)
+                            {
                                 return;
+                            }
+
                             break;
                         case CommandUsage.Target:
                             if (Subject == null)
+                            {
                                 return;
+                            }
+
                             break;
                     }
                 }
@@ -618,7 +647,9 @@ namespace NetMud.Interp
                 {
                     //Skip everything up to the right guy and then take the one we want so we don't have to horribly alter the following logic flows
                     if (disambiguator > -1 && validObjects.Count() > 1)
+                    {
                         validObjects = validObjects.Skip(disambiguator - 1).Take(1).ToList();
+                    }
 
                     if (validObjects.Count() > 1)
                     {
@@ -738,9 +769,13 @@ namespace NetMud.Interp
 
                 long parmID = -1;
                 if(!long.TryParse(currentParmString, out parmID))
+                {
                     validObject = TemplateCache.GetByKeywords<T>(currentParmString);
+                }
                 else
+                {
                     validObject = TemplateCache.Get<T>(parmID);
+                }
 
                 if (validObject != null && !validObject.Equals(default(T)) && validObject.State == ApprovalState.Approved)
                 {
@@ -775,7 +810,9 @@ namespace NetMud.Interp
         {
             //Borked it here, we found nothing viable earlier
             if (Subject == null || !((ICollection<IEntity>)Subject).Any())
+            {
                 return;
+            }
 
             ICollection<IEntity> subjectCollection = (ICollection<IEntity>)Subject;
 
@@ -810,7 +847,9 @@ namespace NetMud.Interp
                 {
                     //Skip everything up to the right guy and then take the one we want so we don't have to horribly alter the following logic flows
                     if (disambiguator > -1 && validObjects.Count() > 1)
+                    {
                         validObjects = validObjects.Skip(disambiguator - 1).Take(1).ToList();
+                    }
 
                     if (validObjects.Count() > 1)
                     {
@@ -862,10 +901,14 @@ namespace NetMud.Interp
 
                             int iterator = 1;
                             foreach (IEntity obj in validSubjects)
+                            {
                                 AccessErrors.Add(string.Format("{0}.{1}", iterator++, obj.TemplateName));
+                            }
                         }
                         else if (validObjects.Count() == 1)
+                        {
                             Subject = validSubjects.First();
+                        }
 
                         return;
                     }
@@ -886,7 +929,9 @@ namespace NetMud.Interp
         {
             //Borked it here, we found nothing viable earlier
             if (Actor == null || Subject == null)
+            {
                 return;
+            }
 
             INonPlayerCharacter merchant = (INonPlayerCharacter)Subject;
 
@@ -928,7 +973,9 @@ namespace NetMud.Interp
                 {
                     //Skip everything up to the right guy and then take the one we want so we don't have to horribly alter the following logic flows
                     if (disambiguator > -1 && validObjects.Count() > 1)
+                    {
                         validObjects = validObjects.Skip(disambiguator - 1).Take(1).ToList();
+                    }
 
                     if (validObjects.Count() > 1)
                     {
@@ -984,7 +1031,9 @@ namespace NetMud.Interp
         {
             //Borked it here, we found nothing viable earlier
             if (Actor == null || Subject == null)
+            {
                 return;
+            }
 
             INonPlayerCharacter trainer = (INonPlayerCharacter)Subject;
 
@@ -1028,7 +1077,9 @@ namespace NetMud.Interp
                 {
                     //Skip everything up to the right guy and then take the one we want so we don't have to horribly alter the following logic flows
                     if (disambiguator > -1 && validObjects.Count() > 1)
+                    {
                         validObjects = validObjects.Skip(disambiguator - 1).Take(1).ToList();
+                    }
 
                     if (validObjects.Count() > 1)
                     {
@@ -1133,7 +1184,9 @@ namespace NetMud.Interp
 
                 //What? Why would this even happen
                 if (firstQuoteIndex < 0)
+                {
                     break;
+                }
 
                 //Only one means let's just kill the stupid quotemark and move on
                 if (secondQuoteIndex < 0)
@@ -1152,7 +1205,9 @@ namespace NetMud.Interp
             originalStrings.AddRange(baseString.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
 
             if (foundStringIterator == 0)
+            {
                 return originalStrings;
+            }
 
             //Either add the modified one or add the normal one
             int iterator = 0;
@@ -1160,7 +1215,9 @@ namespace NetMud.Interp
             foreach (string returnString in originalStrings)
             {
                 if (iterator >= originalStrings.Count)
+                {
                     break;
+                }
 
                 if (returnString.Contains("%%" + iterator.ToString() + "%%"))
                 {
@@ -1168,7 +1225,9 @@ namespace NetMud.Interp
                     iterator++;
                 }
                 else
+                {
                     returnStrings.Add(returnString);
+                }
             }
 
             return returnStrings;

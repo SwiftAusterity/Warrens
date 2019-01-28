@@ -254,10 +254,14 @@ namespace NetMud.Controllers.GameAdmin
                     if (!string.IsNullOrWhiteSpace(quality))
                     {
                         if (vModel.QualityChangeValue.Count() <= icIndex)
+                        {
                             break;
+                        }
 
                         if (vModel.QualityChangeValue[icIndex] != 0)
+                        {
                             qualities.Add(new QualityValue(quality, vModel.QualityChangeValue[icIndex]));
+                        }
                     }
 
                     icIndex++;
@@ -273,7 +277,9 @@ namespace NetMud.Controllers.GameAdmin
                 message = "Edit Successful.";
             }
             else
+            {
                 message = "Error; Edit failed.";
+            }
 
             return RedirectToAction("Index", new { Message = message });
         }
@@ -301,7 +307,9 @@ namespace NetMud.Controllers.GameAdmin
                 message = "Edit Successful.";
             }
             else
+            {
                 message = "Error; Edit failed.";
+            }
 
             return RedirectToAction("Index", new { Message = message });
         }

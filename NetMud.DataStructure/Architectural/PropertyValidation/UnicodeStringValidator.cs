@@ -18,14 +18,18 @@ namespace NetMud.DataStructure.Architectural.PropertyValidation
         public override bool IsValid(object value)
         {
             if (value == null)
+            {
                 return !Optional;
+            }
 
             bool returnValue = true;
 
             byte[] bytes = Encoding.UTF32.GetBytes(value.ToString());
 
             if (bytes.Length > 4)
+            {
                 returnValue = false;
+            }
 
             return returnValue;
         }

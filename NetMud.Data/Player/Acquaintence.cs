@@ -34,14 +34,18 @@ namespace NetMud.Data.Players
             {
                 //Name = PersonHandle
                 if (_person == null && !string.IsNullOrWhiteSpace(PersonHandle))
+                {
                     _person = Account.GetByHandle(PersonHandle);
+                }
 
                 return _person;
             }
             set
             {
                 if (value != null)
+                {
                     PersonHandle = value.GlobalIdentityHandle;
+                }
             }
         }
 

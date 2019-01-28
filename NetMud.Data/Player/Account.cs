@@ -56,9 +56,13 @@ namespace NetMud.Data.Players
             GlobalIdentityHandle = handle;
 
             if (!string.IsNullOrEmpty(logSubscriptions))
+            {
                 LogChannelSubscriptions = logSubscriptions.Split('|');
+            }
             else
+            {
                 LogChannelSubscriptions = new List<string>();
+            }
 
             IAccountConfig forceLoad = Config;
         }
@@ -99,7 +103,9 @@ namespace NetMud.Data.Players
 
                 //Cause there are none
                 if (_characters == null)
+                {
                     _characters = new HashSet<IPlayerTemplate>();
+                }
 
                 return _characters;
             }
@@ -154,7 +160,9 @@ namespace NetMud.Data.Players
             IEnumerable<IPlayerTemplate> systemChars = PlayerDataCache.GetAll();
 
             if (systemChars.Any(ch => ch.Name.Equals(newChar.Name, StringComparison.InvariantCultureIgnoreCase) && newChar.SurName.Equals(newChar.SurName, StringComparison.InvariantCultureIgnoreCase)))
+            {
                 return "A character with that name already exists, please choose another.";
+            }
 
             newChar.AccountHandle = GlobalIdentityHandle;
             newChar.Create(this, StaffRank.Player); //characters dont need approval yet but your rank is ALWAYS player here
@@ -186,7 +194,9 @@ namespace NetMud.Data.Players
                 if (ds.Rows != null)
                 {
                     foreach (DataRow dr in ds.Rows)
+                    {
                         account = Fill(dr);
+                    }
                 }
             }
             catch (Exception ex)
@@ -208,7 +218,9 @@ namespace NetMud.Data.Players
         {
             //No one but Admin can delete player accounts
             if (removerRank < StaffRank.Admin)
+            {
                 return false;
+            }
 
             Dictionary<string, object> parms = new Dictionary<string, object>();
 
@@ -258,10 +270,14 @@ namespace NetMud.Data.Players
                 try
                 {
                     if (other.GetType() != GetType())
+                    {
                         return -1;
+                    }
 
                     if (other.GlobalIdentityHandle.Equals(GlobalIdentityHandle))
+                    {
                         return 1;
+                    }
 
                     return 0;
                 }

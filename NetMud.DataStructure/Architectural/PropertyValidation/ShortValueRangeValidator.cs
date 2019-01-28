@@ -18,7 +18,9 @@ namespace NetMud.DataStructure.Architectural.PropertyValidation
             ValueRange<short> item = value as ValueRange<short>;
 
             if (item == null)
+            {
                 return !Optional;
+            }
 
             return item.Low <= item.High;
         }

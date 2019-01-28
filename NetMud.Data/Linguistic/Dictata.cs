@@ -91,14 +91,18 @@ namespace NetMud.Data.Linguistic
             get
             {
                 if (_language == null)
+                {
                     return null;
+                }
 
                 return ConfigDataCache.Get<ILanguage>(_language);
             }
             set
             {
                 if (value == null)
+                {
                     _language = null;
+                }
 
                 _language = new ConfigDataCacheKey(value);
             }
@@ -120,14 +124,18 @@ namespace NetMud.Data.Linguistic
             get
             {
                 if (_synonyms == null)
+                {
                     _synonyms = new HashSet<ConfigDataCacheKey>();
+                }
 
                 return new HashSet<IDictata>(_synonyms.Select(k => ConfigDataCache.Get<IDictata>(k)));
             }
             set
             {
                 if (value == null)
+                {
                     return;
+                }
 
                 _synonyms = new HashSet<ConfigDataCacheKey>(value.Select(k => new ConfigDataCacheKey(k)));
             }
@@ -149,14 +157,18 @@ namespace NetMud.Data.Linguistic
             get
             {
                 if (_antonyms == null)
+                {
                     _antonyms = new HashSet<ConfigDataCacheKey>();
+                }
 
                 return new HashSet<IDictata>(_antonyms.Select(k => ConfigDataCache.Get<IDictata>(k)));
             }
             set
             {
                 if (value == null)
+                {
                     return;
+                }
 
                 _antonyms = new HashSet<ConfigDataCacheKey>(value.Select(k => new ConfigDataCacheKey(k)));
             }
@@ -244,10 +256,14 @@ namespace NetMud.Data.Linguistic
                 try
                 {
                     if (other.GetType() != GetType())
+                    {
                         return -1;
+                    }
 
                     if (other.Name.Equals(Name, StringComparison.InvariantCultureIgnoreCase) && other.WordType == WordType)
+                    {
                         return 1;
+                    }
 
                     return 0;
                 }

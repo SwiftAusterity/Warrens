@@ -56,7 +56,9 @@ namespace NetMud.DataAccess
                                                                         peep.Template<IPlayerTemplate>().Account.LogChannelSubscriptions.Contains(channel));
 
                 foreach (IPlayer peep in peeps)
+                {
                     peep.WriteTo(new string[] { content });
+                }
             }
         }
 
@@ -69,7 +71,9 @@ namespace NetMud.DataAccess
             IEnumerable<string> names = Enumerable.Empty<string>();
 
             if (VerifyDirectory(CurrentDirectoryName, false))
+            {
                 names = Directory.EnumerateFiles(BaseDirectory + "Current/", "*.txt", SearchOption.TopDirectoryOnly);
+            }
 
             return names.Select(nm => nm.Substring(nm.LastIndexOf('/') + 1, nm.Length - nm.LastIndexOf('/') - 5));
         }
@@ -105,7 +109,9 @@ namespace NetMud.DataAccess
             byte[] bytes = ReadCurrentFileByPath(channel + ".txt");
 
             if(bytes.Length > 0)
+            {
                 content = Encoding.UTF8.GetString(bytes);
+            }
 
             return content;
         }
@@ -120,7 +126,9 @@ namespace NetMud.DataAccess
             string dirName = BaseDirectory + CurrentDirectoryName;
 
             if (!VerifyDirectory(CurrentDirectoryName))
+            {
                 throw new Exception("Unable to locate or create base live logs directory.");
+            }
 
             string fileName = channel + ".txt";
             string timeStamp = string.Format("[{0:0000}/{1:00}/{2:00} {3:00}:{4:00}:{5:00}]:  ", DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);

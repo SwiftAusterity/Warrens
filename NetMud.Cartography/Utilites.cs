@@ -23,17 +23,21 @@ namespace NetMud.Cartography
         {
             //There is no opposite of none directionals
             if (origin == null || direction == MovementDirectionType.None)
+            {
                 return null;
+            }
 
             MovementDirectionType oppositeDirection = ReverseDirection(direction);
 
             System.Collections.Generic.IEnumerable<IPathwayTemplate> paths = TemplateCache.GetAll<IPathwayTemplate>();
 
-            IPathwayTemplate ourPath = paths.FirstOrDefault(pt => origin.Equals(pt.Destination) 
+            IPathwayTemplate ourPath = paths.FirstOrDefault(pt => origin.Equals(pt.Destination)
                                             && pt.DirectionType == oppositeDirection);
 
-            if(ourPath != null)
+            if (ourPath != null)
+            {
                 return (IRoomTemplate)ourPath.Destination;
+            }
 
             return null;
         }
@@ -76,17 +80,25 @@ namespace NetMud.Cartography
             int trueDegrees = degreesFromNorth;
 
             if (trueDegrees < 0)
+            {
                 return MovementDirectionType.None;
+            }
 
             if (reverse)
+            {
                 trueDegrees = degreesFromNorth < 180 ? degreesFromNorth + 180 : degreesFromNorth - 180;
+            }
 
             if (trueDegrees > 22 && trueDegrees < 67)
             {
                 if (inclineGrade > 0)
+                {
                     return MovementDirectionType.UpNorthEast;
+                }
                 else if (inclineGrade < 0)
+                {
                     return MovementDirectionType.DownNorthEast;
+                }
 
                 return MovementDirectionType.NorthEast;
             }
@@ -94,9 +106,13 @@ namespace NetMud.Cartography
             if (trueDegrees > 66 && trueDegrees < 111)
             {
                 if (inclineGrade > 0)
+                {
                     return MovementDirectionType.UpEast;
+                }
                 else if (inclineGrade < 0)
+                {
                     return MovementDirectionType.DownEast;
+                }
 
                 return MovementDirectionType.East;
             }
@@ -104,9 +120,13 @@ namespace NetMud.Cartography
             if (trueDegrees > 110 && trueDegrees < 155)
             {
                 if (inclineGrade > 0)
+                {
                     return MovementDirectionType.UpSouthEast;
+                }
                 else if (inclineGrade < 0)
+                {
                     return MovementDirectionType.DownSouthEast;
+                }
 
                 return MovementDirectionType.SouthEast;
             }
@@ -114,9 +134,13 @@ namespace NetMud.Cartography
             if (trueDegrees > 154 && trueDegrees < 199)
             {
                 if (inclineGrade > 0)
+                {
                     return MovementDirectionType.UpSouth;
+                }
                 else if (inclineGrade < 0)
+                {
                     return MovementDirectionType.DownSouth;
+                }
 
                 return MovementDirectionType.South;
             }
@@ -124,9 +148,13 @@ namespace NetMud.Cartography
             if (trueDegrees > 198 && trueDegrees < 243)
             {
                 if (inclineGrade > 0)
+                {
                     return MovementDirectionType.UpSouthWest;
+                }
                 else if (inclineGrade < 0)
+                {
                     return MovementDirectionType.DownSouthWest;
+                }
 
                 return MovementDirectionType.SouthWest;
             }
@@ -134,9 +162,13 @@ namespace NetMud.Cartography
             if (trueDegrees > 242 && trueDegrees < 287)
             {
                 if (inclineGrade > 0)
+                {
                     return MovementDirectionType.UpWest;
+                }
                 else if (inclineGrade < 0)
+                {
                     return MovementDirectionType.DownWest;
+                }
 
                 return MovementDirectionType.West;
             }
@@ -144,17 +176,25 @@ namespace NetMud.Cartography
             if (trueDegrees > 286 && trueDegrees < 331)
             {
                 if (inclineGrade > 0)
+                {
                     return MovementDirectionType.UpNorthWest;
+                }
                 else if (inclineGrade < 0)
+                {
                     return MovementDirectionType.DownNorthWest;
+                }
 
                 return MovementDirectionType.NorthWest;
             }
 
             if (inclineGrade > 0)
+            {
                 return MovementDirectionType.UpNorth;
+            }
             else if (inclineGrade < 0)
+            {
                 return MovementDirectionType.DownNorth;
+            }
 
             return MovementDirectionType.North;
         }
@@ -164,16 +204,16 @@ namespace NetMud.Cartography
         /// </summary>
         /// <param name="direction">the value to translate</param>
         /// <returns>degrees from north, incline grade</returns>
-        public static Tuple<int,int> TranslateDirectionToDegrees(MovementDirectionType direction)
+        public static Tuple<int, int> TranslateDirectionToDegrees(MovementDirectionType direction)
         {
             switch (direction)
             {
                 case MovementDirectionType.East:
-                    return new Tuple<int, int>(90, 0); 
+                    return new Tuple<int, int>(90, 0);
                 case MovementDirectionType.North:
                     return new Tuple<int, int>(0, 0);
                 case MovementDirectionType.NorthEast:
-                    return new Tuple<int, int>(45, 0); 
+                    return new Tuple<int, int>(45, 0);
                 case MovementDirectionType.NorthWest:
                     return new Tuple<int, int>(315, 0);
                 case MovementDirectionType.South:
@@ -224,6 +264,16 @@ namespace NetMud.Cartography
 
             //return none, neutral for anything not counted
             return new Tuple<int, int>(-1, 0);
+        }
+
+        public static int ReverseDirection(int degrees)
+        {
+            if (degrees < 0)
+            {
+                return -1;
+            }
+
+            return degrees < 180 ? degrees + 180 : degrees - 180;
         }
 
         public static MovementDirectionType ReverseDirection(MovementDirectionType direction)

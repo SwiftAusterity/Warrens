@@ -47,7 +47,9 @@ namespace NetMud.Data.Gaia
             get
             {
                 if (_keywords == null || _keywords.Length == 0)
+                {
                     _keywords = new string[] { Name.ToLower() };
+                }
 
                 return _keywords;
             }
@@ -70,14 +72,18 @@ namespace NetMud.Data.Gaia
             get
             {
                 if (_celestialBodies == null)
+                {
                     _celestialBodies = new HashSet<TemplateCacheKey>();
+                }
 
                 return new HashSet<ICelestial>(_celestialBodies.Select(cp => TemplateCache.Get<ICelestial>(cp)));
             }
             set
             {
                 if (value == null)
+                {
                     return;
+                }
 
                 _celestialBodies = new HashSet<TemplateCacheKey>(value.Where(cp => cp != null).Select(cp => new TemplateCacheKey(cp)));
             }
@@ -142,10 +148,14 @@ namespace NetMud.Data.Gaia
             returnList.Add("Starting Year", ChronologicalSystem.StartingYear.ToString());
 
             foreach (string month in ChronologicalSystem.Months)
+            {
                 returnList.Add("Months-" + month, month);
+            }
 
             foreach (ICelestial celestial in CelestialBodies)
+            {
                 returnList.Add("Celestials-" + celestial.Name, celestial.Name);
+            }
 
             return returnList;
         }

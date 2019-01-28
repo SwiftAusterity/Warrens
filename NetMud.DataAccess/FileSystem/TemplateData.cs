@@ -53,17 +53,23 @@ namespace NetMud.DataAccess.FileSystem
             try
             {
                 if (entity.FitnessProblems)
+                {
                     throw new Exception("Attempt to write bad entity.");
+                }
 
                 string dirName = BaseDirectory + CurrentDirectoryName + entity.GetType().Name + "/";
 
                 if (!VerifyDirectory(dirName))
+                {
                     throw new Exception("Unable to locate or create base backing data directory.");
+                }
 
                 string entityFileName = GetEntityFilename(entity);
 
                 if (string.IsNullOrWhiteSpace(entityFileName))
+                {
                     return;
+                }
 
                 string fullFileName = dirName + entityFileName;
 
@@ -85,12 +91,16 @@ namespace NetMud.DataAccess.FileSystem
             string dirName = BaseDirectory + CurrentDirectoryName + entity.GetType().Name + "/";
 
             if (!VerifyDirectory(dirName))
+            {
                 throw new Exception("Unable to locate or create base live data directory.");
+            }
 
             string entityFileName = GetEntityFilename(entity);
 
             if (string.IsNullOrWhiteSpace(entityFileName))
+            {
                 return;
+            }
 
             string fullFileName = dirName + entityFileName;
             string archiveFileDirectory = BaseDirectory + DatedBackupDirectory + entity.GetType().Name + "/";
@@ -116,12 +126,16 @@ namespace NetMud.DataAccess.FileSystem
         private void RollingArchiveFile(string currentFile, string archiveFile, string archiveDirectory)
         {
             if (!File.Exists(currentFile))
+            {
                 return;
+            }
 
             VerifyDirectory(archiveDirectory);
 
             if (File.Exists(archiveFile))
+            {
                 File.Delete(archiveFile);
+            }
 
             File.Copy(currentFile, archiveFile, true);
         }
@@ -143,7 +157,9 @@ namespace NetMud.DataAccess.FileSystem
 
             //something very wrong is happening, it'll get logged
             if (!VerifyDirectory(BaseDirectory + CurrentDirectoryName))
+            {
                 throw new Exception("Can not locate or verify current data directory.");
+            }
         }
 
         /// <summary>

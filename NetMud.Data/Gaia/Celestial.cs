@@ -97,7 +97,9 @@ namespace NetMud.Data.Gaia
         public ISensoryEvent GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes)
         {
             if (!IsVisibleTo(viewer))
+            {
                 return new SensoryEvent(MessagingType.Visible);
+            }
 
             return RenderToLook(viewer);
         }
@@ -120,7 +122,9 @@ namespace NetMud.Data.Gaia
         public string GetDescribableName(IEntity viewer)
         {
             if (!IsVisibleTo(viewer))
+            {
                 return string.Empty;
+            }
 
             return string.Empty;
         }
@@ -167,7 +171,9 @@ namespace NetMud.Data.Gaia
         public ISensoryEvent RenderToLook(IEntity viewer)
         {
             if (!IsVisibleTo(viewer))
+            {
                 return new SensoryEvent(MessagingType.Visible);
+            }
 
             return GetFullDescription(viewer, new MessagingType[] { MessagingType.Visible });
         }

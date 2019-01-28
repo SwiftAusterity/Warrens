@@ -144,7 +144,9 @@ namespace NetMud.Controllers
         {
             //dupe handles
             if (Account.GetByHandle(model.GlobalUserHandle) != null)
+            {
                 ModelState.AddModelError("GlobalUserHandle", "That handle already exists in the system. Please choose another.");
+            }
 
             if (ModelState.IsValid)
             {
@@ -158,7 +160,9 @@ namespace NetMud.Controllers
                     System.Collections.Generic.IEnumerable<IUIModule> uiModules = TemplateCache.GetAll<IUIModule>().Where(uim => uim.SystemDefault > 0);
 
                     foreach(IUIModule module in uiModules)
+                    {
                         newGameAccount.Config.UIModules = uiModules.Select(uim => new Tuple<IUIModule, int>(uim, uim.SystemDefault));
+                    }
 
                     await UserManager.AddToRoleAsync(user.Id, "Player");
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
@@ -333,7 +337,9 @@ namespace NetMud.Controllers
         private ActionResult RedirectToLocal(string returnUrl)
         {
             if (Url.IsLocalUrl(returnUrl))
+            {
                 return Redirect(returnUrl);
+            }
 
             return RedirectToAction("Index", "Home");
         }

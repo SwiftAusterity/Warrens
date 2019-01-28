@@ -170,7 +170,9 @@ namespace NetMud.Data.NaturalResource
             IList<string> dataProblems = base.FitnessReport();
 
             if (Flower == null && Seed == null && Leaf == null && Fruit == null)
+            {
                 dataProblems.Add("At least one part of this plant must have a value.");
+            }
 
             return dataProblems;
         }

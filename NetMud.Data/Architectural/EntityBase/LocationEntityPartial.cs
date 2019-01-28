@@ -70,14 +70,18 @@ namespace NetMud.Data.Architectural.EntityBase
             get
             {
                 if (_naturalResources != null)
+                {
                     return _naturalResources.ToDictionary(k => TemplateCache.Get<INaturalResource>(k.Key), k => k.Value);
+                }
 
                 return null;
             }
             set
             {
                 if (value == null)
+                {
                     return;
+                }
 
                 _naturalResources = value.ToDictionary(k => new TemplateCacheKey(k.Key), k => k.Value);
             }
@@ -108,10 +112,14 @@ namespace NetMud.Data.Architectural.EntityBase
             List<T> contents = new List<T>();
 
             if (implimentedTypes.Contains(typeof(IMobile)))
+            {
                 contents.AddRange(MobilesInside.EntitiesContained().Select(ent => (T)ent));
+            }
 
             if (implimentedTypes.Contains(typeof(IInanimate)))
+            {
                 contents.AddRange(Contents.EntitiesContained().Select(ent => (T)ent));
+            }
 
             return contents;
         }
@@ -129,10 +137,14 @@ namespace NetMud.Data.Architectural.EntityBase
             List<T> contents = new List<T>();
 
             if (implimentedTypes.Contains(typeof(IMobile)))
+            {
                 contents.AddRange(MobilesInside.EntitiesContained(containerName).Select(ent => (T)ent));
+            }
 
             if (implimentedTypes.Contains(typeof(IInanimate)))
+            {
                 contents.AddRange(Contents.EntitiesContained(containerName).Select(ent => (T)ent));
+            }
 
             return contents;
         }
@@ -164,11 +176,15 @@ namespace NetMud.Data.Architectural.EntityBase
                 IInanimate obj = (IInanimate)thing;
 
                 if (Contents.Contains(obj, containerName))
+                {
                     return "That is already in the container";
+                }
 
                 string moveError = MoveInto(obj);
                 if (!string.IsNullOrWhiteSpace(moveError))
+                {
                     return moveError;
+                }
 
                 Contents.Add(obj, containerName);
                 UpsertToLiveWorldCache();
@@ -181,11 +197,15 @@ namespace NetMud.Data.Architectural.EntityBase
                 IMobile obj = (IMobile)thing;
 
                 if (MobilesInside.Contains(obj, containerName))
+                {
                     return "That is already in the container";
+                }
 
                 string moveError = MoveInto(obj);
                 if (!string.IsNullOrWhiteSpace(moveError))
+                {
                     return moveError;
+                }
 
                 MobilesInside.Add(obj, containerName);
                 UpsertToLiveWorldCache();
@@ -223,7 +243,9 @@ namespace NetMud.Data.Architectural.EntityBase
                 IInanimate obj = (IInanimate)thing;
 
                 if (!Contents.Contains(obj, containerName))
+                {
                     return "That is not in the container";
+                }
 
                 obj.TryMoveTo(null);
                 Contents.Remove(obj, containerName);
@@ -237,7 +259,9 @@ namespace NetMud.Data.Architectural.EntityBase
                 IMobile obj = (IMobile)thing;
 
                 if (!MobilesInside.Contains(obj, containerName))
+                {
                     return "That is not in the container";
+                }
 
                 obj.TryMoveTo(null);
                 MobilesInside.Remove(obj, containerName);
@@ -269,7 +293,9 @@ namespace NetMud.Data.Architectural.EntityBase
 
             //If we don't have any paths out what can we even do
             if (paths.Count() == 0)
+            {
                 return radiusLocations;
+            }
 
             int currentRadius = 0;
             while (currentRadius <= strength && paths.Count() > 0)
@@ -277,7 +303,9 @@ namespace NetMud.Data.Architectural.EntityBase
                 IEnumerable<ILocation> currentLocsSet = paths.Select(path => path.Destination);
 
                 if (currentLocsSet.Count() == 0)
+                {
                     break;
+                }
 
                 radiusLocations.AddRange(currentLocsSet);
                 paths = currentLocsSet.SelectMany(ro => ro.GetPathways());

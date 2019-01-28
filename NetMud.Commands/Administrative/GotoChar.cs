@@ -36,7 +36,9 @@ namespace NetMud.Commands.Administrative
             IEntity moveToPerson = (IEntity)Subject;
 
             if (moveToPerson.CurrentLocation == null)
+            {
                 throw new Exception("Invalid goto target.");
+            }
 
             IGlobalPosition moveTo = (IGlobalPosition)moveToPerson.CurrentLocation.Clone();
 

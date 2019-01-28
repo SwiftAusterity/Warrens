@@ -97,7 +97,9 @@ namespace NetMud.Controllers
             obj.Config.SoundMuted = vModel.PermanentlyMuteSound;
 
             if (vModel.LogChannels != null)
+            {
                 obj.LogChannelSubscriptions = vModel.LogChannels;
+            }
 
             UserManager.UpdateAsync(authedUser);
 
@@ -107,7 +109,9 @@ namespace NetMud.Controllers
                 message = "Edit Successful.";
             }
             else
+            {
                 message = "Error; edit failed.";
+            }
 
             return RedirectToAction("Index", new { Message = message });
         }
@@ -152,7 +156,9 @@ namespace NetMud.Controllers
             };
 
             if (User.IsInRole("Admin"))
+            {
                 newChar.GamePermissionsRank = vModel.NewCharacter.GamePermissionsRank;
+            }
 
             message = model.authedUser.GameAccount.AddCharacter(newChar);
 
@@ -193,7 +199,9 @@ namespace NetMud.Controllers
             obj.Race = vModel.DataObject.Race;
             
             if (obj == null)
+            {
                 message = "That character does not exist";
+            }
             else
             {
                 if(obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
@@ -202,7 +210,9 @@ namespace NetMud.Controllers
                     message = "Edit Successful.";
                 }
                 else
+                {
                     message = "Error; edit failed.";
+                }
             }
 
             return RedirectToAction("ManageCharacters", new { Message = message });
@@ -215,7 +225,9 @@ namespace NetMud.Controllers
             string message = string.Empty;
 
             if (string.IsNullOrWhiteSpace(authorize) || !ID.ToString().Equals(authorize))
+            {
                 message = "You must check the proper authorize radio button first.";
+            }
             else
             {
 
@@ -228,11 +240,17 @@ namespace NetMud.Controllers
                 IPlayerTemplate character = model.authedUser.GameAccount.Characters.FirstOrDefault(ch => ch.Id.Equals(ID));
 
                 if (character == null)
+                {
                     message = "That character does not exist";
+                }
                 else if (character.Remove(model.authedUser.GameAccount, model.authedUser.GetStaffRank(User)))
+                {
                     message = "Character successfully deleted.";
+                }
                 else
+                {
                     message = "Error. Character not removed.";
+                }
             }
 
             return RedirectToAction("ManageCharacters", new { Message = message });
@@ -294,17 +312,23 @@ namespace NetMud.Controllers
             try
             {
                 if (string.IsNullOrWhiteSpace(vModel.Body) || string.IsNullOrWhiteSpace(vModel.Subject))
+                {
                     message = "You must include a valid body and subject.";
+                }
                 else
                 {
                     if (string.IsNullOrWhiteSpace(vModel.RecipientAccount))
+                    {
                         message = "You must include a valid recipient.";
+                    }
                     else
                     {
                         IAccount recipient = Account.GetByHandle(vModel.RecipientAccount);
 
                         if (recipient == null || recipient.Config.Acquaintences.Any(acq => acq.IsFriend == false && acq.PersonHandle.Equals(authedUser.GameAccount.GlobalIdentityHandle)))
+                        {
                             message = "You must include a valid recipient.";
+                        }
                         else
                         {
                             PlayerMessage newMessage = new PlayerMessage
@@ -318,7 +342,9 @@ namespace NetMud.Controllers
                             IPlayerTemplate recipientCharacter = TemplateCache.GetByName<IPlayerTemplate>(vModel.Recipient);
 
                             if (recipientCharacter != null)
+                            {
                                 newMessage.Recipient = recipientCharacter;
+                            }
 
                             //messages come from players always here
                             if (newMessage.Save(authedUser.GameAccount, StaffRank.Player))
@@ -362,7 +388,9 @@ namespace NetMud.Controllers
                     }
                 }
                 else
+                {
                     message = "Invalid message.";
+                }
             }
             catch (Exception ex)
             {
@@ -379,7 +407,9 @@ namespace NetMud.Controllers
             string message = string.Empty;
 
             if (string.IsNullOrWhiteSpace(authorize) || !ID.ToString().Equals(authorize))
+            {
                 message = "You must check the proper authorize radio button first.";
+            }
             else
             {
 
@@ -389,11 +419,17 @@ namespace NetMud.Controllers
                 IPlayerMessage notification = authedUser.GameAccount.Config.Notifications.FirstOrDefault(ch => ch.UniqueKey.Equals(ID));
 
                 if (notification == null)
+                {
                     message = "That message does not exist";
+                }
                 else if (notification.Remove(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+                {
                     message = "Message successfully deleted.";
+                }
                 else
+                {
                     message = "Error. Message not removed.";
+                }
             }
 
             return RedirectToAction("Notifications", new { Message = message });
@@ -453,15 +489,21 @@ namespace NetMud.Controllers
                 List<IAcquaintence> acquaintences = authedUser.GameAccount.Config.Acquaintences.ToList();
 
                 if (acquaintences.Contains(newAcq))
+                {
                     acquaintences.Remove(newAcq);
+                }
 
                 acquaintences.Add(newAcq);
                 authedUser.GameAccount.Config.Acquaintences = acquaintences;
 
                 if (authedUser.GameAccount.Config.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+                {
                     message = "Acquaintence successfully added.";
+                }
                 else
+                {
                     message = "Error. Acquaintence not added.";
+                }
             }
 
             return RedirectToAction("Acquaintences", new { Message = message });
@@ -475,7 +517,9 @@ namespace NetMud.Controllers
             string message = string.Empty;
 
             if (string.IsNullOrWhiteSpace(authorize) || !ID.ToString().Equals(authorize))
+            {
                 message = "You must check the proper authorize radio button first.";
+            }
             else
             {
 
@@ -485,7 +529,9 @@ namespace NetMud.Controllers
                 IAcquaintence acquaintence = authedUser.GameAccount.Config.Acquaintences.FirstOrDefault(ch => ch.PersonHandle.Equals(ID));
 
                 if (acquaintence == null)
+                {
                     message = "That Acquaintence does not exist";
+                }
                 else
                 {
                     List<IAcquaintence> acquaintences = authedUser.GameAccount.Config.Acquaintences.ToList();
@@ -493,9 +539,13 @@ namespace NetMud.Controllers
                     acquaintences.Remove(acquaintence);
 
                     if (authedUser.GameAccount.Config.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+                    {
                         message = "Acquaintence successfully deleted.";
+                    }
                     else
+                    {
                         message = "Error. Acquaintence not removed.";
+                    }
                 }
             }
 
@@ -526,7 +576,9 @@ namespace NetMud.Controllers
             string message = string.Empty;
 
             if (string.IsNullOrWhiteSpace(authorize) || !ID.ToString().Equals(authorize))
+            {
                 message = "You must check the proper authorize radio button first.";
+            }
             else
             {
                 ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
@@ -534,14 +586,18 @@ namespace NetMud.Controllers
                 IUIModule obj = TemplateCache.Get<IUIModule>(ID);
 
                 if (obj == null)
+                {
                     message = "That does not exist";
+                }
                 else if (obj.Remove(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                 {
                     LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveUIModule[" + ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Delete Successful.";
                 }
                 else
+                {
                     message = "Error; Removal failed.";
+                }
             }
 
             return RedirectToAction("UIModules", new { Message = message });
@@ -575,7 +631,9 @@ namespace NetMud.Controllers
             };
 
             if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
+            {
                 message = "Error; Creation failed.";
+            }
             else
             {
                 LoggingUtility.LogAdminCommandUsage("*WEB* - AddUIModule[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
@@ -638,7 +696,9 @@ namespace NetMud.Controllers
                 message = "Edit Successful.";
             }
             else
+            {
                 message = "Error; Edit failed.";
+            }
 
             return RedirectToAction("UIModules", new { Message = message });
         }

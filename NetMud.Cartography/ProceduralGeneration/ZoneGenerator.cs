@@ -165,14 +165,18 @@ namespace NetMud.Cartography.ProceduralGeneration
                         prototypeMap[center.Item1 + variance, currentY, currentZ] = roomSymbol;
 
                         if(roll >= 50)
+                        {
                             prototypeMap[center.Item1 - variance, currentY, currentZ] = roomSymbol;
+                        }
                     }
                     else if(roll >= 50)
                     {
                         prototypeMap[center.Item1 + variance, currentY, currentZ] = "-";
 
                         if (roll >= 75)
+                        {
                             prototypeMap[center.Item1 - variance, currentY, currentZ] = "-";
+                        }
                     }
 
                     currentX++;
@@ -188,14 +192,18 @@ namespace NetMud.Cartography.ProceduralGeneration
                         prototypeMap[center.Item1, currentY + variance, currentZ] = roomSymbol;
 
                         if (roll >= 50)
+                        {
                             prototypeMap[center.Item1, currentY - variance, currentZ] = roomSymbol;
+                        }
                     }
                     else if (roll >= 50)
                     {
                         prototypeMap[center.Item1, currentY + variance, currentZ] = "|";
 
                         if (roll >= 75)
+                        {
                             prototypeMap[center.Item1, currentY - variance, currentZ] = "|";
+                        }
                     }
 
                     currentY++;
@@ -213,7 +221,9 @@ namespace NetMud.Cartography.ProceduralGeneration
         public void ExecuteMap()
         {
             if (!Primed)
+            {
                 throw new AccessViolationException("Map is not primed yet.");
+            }
 
             //Create rooms and pathways
         }
@@ -224,22 +234,32 @@ namespace NetMud.Cartography.ProceduralGeneration
         private void VerifyLocale(ILocale locale)
         {
             if (locale == null)
+            {
                 throw new ArgumentNullException("Locale must not be null.");
+            }
 
             if (locale.Rooms().Any())
+            {
                 throw new ArgumentOutOfRangeException("Locale must be devoid of rooms.");
+            }
 
             if (locale.Template<ILocaleTemplate>().FitnessProblems)
+            {
                 throw new ArgumentOutOfRangeException("Zone must have data integrity.");
+            }
         }
 
         private void VerifyDimensions(int width, int length, int elevation, int depth)
         {
             if (width < 1 || length < 1 || elevation + depth < 0)
+            {
                 throw new ArgumentOutOfRangeException("Width and length must be at least 1 and elevation + depth must be at least zero.");
+            }
 
             if (width > 100 || length > 100 || elevation > 100 || depth > 100)
+            {
                 throw new ArgumentOutOfRangeException("None of the dimensions can be greater than 100.");
+            }
         }
     }
 }

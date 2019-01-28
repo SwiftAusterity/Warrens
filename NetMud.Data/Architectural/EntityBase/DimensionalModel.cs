@@ -71,7 +71,9 @@ namespace NetMud.Data.Architectural.EntityBase
             get
             {
                 if (_modelTemplate != null)
+                {
                     return TemplateCache.Get<IDimensionalModelData>(_modelTemplate);
+                }
                 else
                 {
                     // 0d models don't have real values
@@ -86,7 +88,9 @@ namespace NetMud.Data.Architectural.EntityBase
             set
             {
                 if (value == null)
+                {
                     return;
+                }
 
                 _modelTemplate = new TemplateCacheKey(value);
             }

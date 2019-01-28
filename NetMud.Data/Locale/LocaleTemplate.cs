@@ -46,7 +46,9 @@ namespace NetMud.Data.Locale
             get
             {
                 if (_keywords == null || _keywords.Length == 0)
+                {
                     _keywords = new string[] { Name.ToLower() };
+                }
 
                 return _keywords;
             }
@@ -90,7 +92,9 @@ namespace NetMud.Data.Locale
             set
             {
                 if (value != null)
+                {
                     _parentLocation = new TemplateCacheKey(value);
+                }
             }
         }
 

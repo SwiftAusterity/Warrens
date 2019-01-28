@@ -60,7 +60,9 @@ namespace NetMud.Data.Architectural.EntityBase
             IQuality currentQuality = Qualities.FirstOrDefault(qual => qual.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
 
             if (currentQuality == null)
+            {
                 return 0;
+            }
 
             return currentQuality.Value;
         }
@@ -89,9 +91,13 @@ namespace NetMud.Data.Architectural.EntityBase
             }
 
             if (additive)
+            {
                 currentQuality.Value += value;
+            }
             else
+            {
                 currentQuality.Value = value;
+            }
 
             return value;
         }
@@ -111,7 +117,9 @@ namespace NetMud.Data.Architectural.EntityBase
             IList<string> dataProblems = base.FitnessReport();
 
             if (EntityClass == null || EntityClass.GetInterface("IEntity", true) == null)
+            {
                 dataProblems.Add("Entity Class type reference is broken.");
+            }
 
             return dataProblems;
         }

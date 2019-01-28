@@ -59,7 +59,9 @@ namespace NetMud.Data.Gaia
             IEconomicBasis basi = Bases.FirstOrDefault(bas => bas.ItemType == basis);
 
             if (basi != null)
+            {
                 return basi.Basis * basi.Adjustment;
+            }
 
             int newBaseValue = basis.Name.Length;
 
@@ -91,7 +93,9 @@ namespace NetMud.Data.Gaia
             IEconomicTrend trnd = Trends.FirstOrDefault(bas => bas.Quality.Equals(trend));
 
             if (trnd != null)
+            {
                 return trnd.Basis * trnd.Adjustment;
+            }
 
             int newBaseValue = trend.Length;
 
@@ -132,9 +136,13 @@ namespace NetMud.Data.Gaia
                 basi.Adjustment *= movement;
 
                 if (movement > 1)
+                {
                     basi.Trend += 1;
+                }
                 else if (movement < 1)
+                {
                     basi.Trend -= 1;
+                }
             }
         }
 
@@ -150,9 +158,13 @@ namespace NetMud.Data.Gaia
                 trnd.Adjustment *= movement;
 
                 if (movement > 1)
+                {
                     trnd.Trend += 1;
+                }
                 else if (movement < 1)
+                {
                     trnd.Trend -= 1;
+                }
             }
         }
     }

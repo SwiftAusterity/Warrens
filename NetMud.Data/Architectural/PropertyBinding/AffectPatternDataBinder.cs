@@ -12,7 +12,9 @@ namespace NetMud.Data.Architectural.PropertyBinding
         public override object Convert(object input)
         {
             if (input == null)
+            {
                 return null;
+            }
 
             IEnumerable<string> coordinateGrouping = input as IEnumerable<string>;
             HashSet<Coordinate> returnList = new HashSet<Coordinate>();
@@ -24,7 +26,9 @@ namespace NetMud.Data.Architectural.PropertyBinding
                     bool isChecked = coordinateGrouping.ElementAt(y).Split(",", StringSplitOptions.RemoveEmptyEntries)[x] == "1";
 
                     if (isChecked)
+                    {
                         returnList.Add(new Coordinate(x, y, -1));
+                    }
                 }
             }
 
