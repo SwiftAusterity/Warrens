@@ -5,6 +5,7 @@ using NetMud.Data.Zone;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.Locale;
 using NetMud.DataStructure.Room;
 using NetMud.DataStructure.Zone;
@@ -100,6 +101,7 @@ namespace NetMud.Data.Locale
 
         public LocaleTemplate()
         {
+            Descriptives = new HashSet<ISensoryEvent>();
         }
 
         /// <summary>

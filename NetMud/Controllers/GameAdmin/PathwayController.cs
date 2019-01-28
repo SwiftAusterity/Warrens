@@ -124,6 +124,8 @@ namespace NetMud.Controllers.GameAdmin
                     Destination = new RoomTemplate()
                 };
 
+                vModel.Destination.ParentLocation = vModel.Origin.ParentLocation;
+
                 return View("~/Views/GameAdmin/Pathway/AddWithRoom.cshtml", "_chromelessLayout", vModel);
             }
             else
@@ -213,7 +215,7 @@ namespace NetMud.Controllers.GameAdmin
                 Name = vModel.Name,
                 DegreesFromNorth = vModel.DegreesFromNorth,
                 Origin = TemplateCache.Get<IRoomTemplate>(vModel.OriginID),
-                Destination = TemplateCache.Get<IRoomTemplate>(vModel.DestinationID),
+                Destination = TemplateCache.Get<IRoomTemplate>(vModel.DestinationID)
             };
 
             if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
@@ -237,7 +239,8 @@ namespace NetMud.Controllers.GameAdmin
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
                 ValidMaterials = TemplateCache.GetAll<IMaterial>(),
-                ValidModels = TemplateCache.GetAll<IDimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat)
+                ValidModels = TemplateCache.GetAll<IDimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat),
+                ValidRooms = TemplateCache.GetAll<IRoomTemplate>()
             };
 
             PathwayTemplate obj = TemplateCache.Get<PathwayTemplate>(id);
@@ -247,8 +250,6 @@ namespace NetMud.Controllers.GameAdmin
                 message = "That does not exist";
                 return RedirectToAction("Index", "Room", new { Message = message });
             }
-
-            vModel.ValidRooms = TemplateCache.GetAll<IRoomTemplate>().Where(rm => !rm.Equals(obj.Origin) && !rm.Equals(obj.Destination));
 
             vModel.DataObject = obj;
             vModel.Name = obj.Name;

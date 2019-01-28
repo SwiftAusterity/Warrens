@@ -14,10 +14,8 @@
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryui")
-
     <script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.8.2/umd/popper.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.8.2/umd/popper-utils.js"></script>
-
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/Scripts/tooltip.js")
     @Scripts.Render("~/Scripts/HtmlUtilities.js")
@@ -97,10 +95,18 @@
                 HelpTipTutorial($(this), $(this).attr('title'));
             });
 
+            $(function () {
+                $("div.accordionWrapper").accordion({
+                    collapsible: true,
+                    active: false,
+                    heightStyle: "content"
+                });
+            });
+
             $('.topNavCollapser').click(function () {
-                $('.navbar-top').toggleClass('accordion-collapsed');
-                $('.topNavCollapser span').toggleClass('glyphicon-chevron-up');
-                $('.topNavCollapser span').toggleClass('glyphicon-chevron-down');
+            $('.navbar-top').toggleClass('accordion-collapsed');
+            $('.topNavCollapser span').toggleClass('glyphicon-chevron-up');
+            $('.topNavCollapser span').toggleClass('glyphicon-chevron-down');
             });
         });
     </script>

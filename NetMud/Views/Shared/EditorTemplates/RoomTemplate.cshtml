@@ -2,16 +2,14 @@
 
 @model RoomTemplate
 
-<h4>Parent Locale</h4>
-<div class="form-group row">
-    @Html.EditorFor(m => m.ParentLocation)
-</div>
+<h3 title="Parent Locale">Locale - @Model.ParentLocation.Name</h3>
+<hr />
+@Html.HiddenFor(m => m.ParentLocation)
 
-<h4>Details</h4>
+<h4>Room Details</h4>
 <div class="form-group row">
     @Html.EditorFor(m => m.Name)
     @Html.EditorFor(m => m.Medium, new { validItems = ViewData["ValidMaterials"] })
 </div>
 
-<h4>Dimensional Model</h4>
 @Html.EditorFor(m => m.Model)

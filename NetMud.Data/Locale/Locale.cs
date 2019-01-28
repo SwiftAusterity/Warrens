@@ -5,12 +5,14 @@ using NetMud.Data.Architectural.EntityBase;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.Locale;
 using NetMud.DataStructure.Room;
 using NetMud.DataStructure.Zone;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Script.Serialization;
 
@@ -56,6 +58,13 @@ namespace NetMud.Data.Locale
         }
 
         /// <summary>
+        /// Is this zone discoverable?
+        /// </summary>
+        [Display(Name = "Always Discovered", Description = "Is this locale automatically known to players?")]
+        [UIHint("Boolean")]
+        public bool AlwaysDiscovered { get; set; }
+
+        /// <summary>
         /// The interior map of the locale
         /// </summary>
         [JsonIgnore]
@@ -92,6 +101,7 @@ namespace NetMud.Data.Locale
         /// </summary>
         public Locale()
         {
+            Descriptives = new HashSet<ISensoryEvent>();
         }
 
         /// <summary>
@@ -120,17 +130,8 @@ namespace NetMud.Data.Locale
         /// <returns>If this is known to the discoverer</returns>
         public bool IsDiscovered(IEntity discoverer)
         {
-            if (Template<ILocaleTemplate>().AlwaysDiscovered)
-            {
-                return true;
-            }
-
             //TODO
-
-            //discoverer.HasAccomplishment(DiscoveryName);
-
-            //For now
-            return true;
+            return AlwaysDiscovered; // || discoverer.HasAccomplishment(DiscoveryName);
         }
 
         /// <summary>
@@ -204,6 +205,8 @@ namespace NetMud.Data.Locale
             }
 
             CurrentLocation = spawnTo;
+            AlwaysDiscovered = bS.AlwaysDiscovered;
+            Descriptives = bS.Descriptives;
 
             UpsertToLiveWorldCache(true);
         }

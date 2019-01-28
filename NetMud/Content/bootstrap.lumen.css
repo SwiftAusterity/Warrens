@@ -2667,7 +2667,7 @@ th {
 }
 
 .table-bordered {
-    border: 1px solid #dddddd;
+    border: 1px solid cornflowerblue;
 }
 
     .table-bordered > thead > tr > th,

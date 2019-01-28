@@ -129,7 +129,6 @@ div.form-group a.removeRow {
     color: red;
     border: none;
     padding: 10px;
-    padding-left: 30px;
     background-color: inherit;
     float: left;
 }
@@ -310,6 +309,14 @@ div.roomAsciiMap {
     color: red;
 }
 
+.accordionWrapper h5 {
+    font-weight: 700;
+}
+
+.accordionWrapper.ghostRequired h5 {
+    color: red;
+}
+
 .contentPreviewFields div:nth-child(even) {
     background-color: lightcyan;
     margin: -15px 0 -15px 0;
@@ -375,24 +382,15 @@ div.roomAsciiMap {
 .iterativeContainer {
     border: black 1px dotted;
     min-height: 60px;
+    display: flex;
+    flex-wrap: wrap;
 }
-
-    .iterativeContainer .iterativeContainer {
-        margin-top: 15px;
-        margin-left: 5%;
-        width: 90%;
-        padding-bottom: 15px;
-        border: black 1px solid;
-    }
-
-        .iterativeContainer .iterativeContainer .form-group {
-            background-color: slategray;
-        }
 
     .iterativeContainer .addRowContainer {
         margin-top: 5px;
         width: 100%;
         padding-bottom: 15px;
+        flex: 0 0 100%;
     }
 
     .iterativeContainer .form-group {
@@ -400,11 +398,22 @@ div.roomAsciiMap {
         padding: 15px 0 15px 0;
         border-radius: 9px;
         margin: 9px 15px 9px 15px;
+        flex: 0 0 auto;
     }
+
+        .iterativeContainer .form-group input, 
+        .iterativeContainer .form-group select {
+            min-width: 125px;
+        }
 
         .iterativeContainer .form-group .row {
             margin: 9px 15px 9px 50px;
             padding: 15px 0 15px 0;
+        }
+
+        .iterativeContainer .form-group div {
+            width: auto;
+            padding-right: 10px;
         }
 
 .descriptiveSection {

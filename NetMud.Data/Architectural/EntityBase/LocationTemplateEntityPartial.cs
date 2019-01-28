@@ -1,6 +1,7 @@
 ﻿using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Room;
+using NetMud.DataStructure.Zone;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -37,7 +38,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <returns>the valid pathways</returns>      
         public IEnumerable<IPathwayTemplate> GetZonePathways(bool withReturn = false)
         {
-            return GetPathways(withReturn).Where(path => path.Destination.GetType().GetInterfaces().Contains(typeof(IRoomTemplate)));
+            return GetPathways(withReturn).Where(path => path.Destination.GetType().GetInterfaces().Contains(typeof(IZoneTemplate)));
         }
     }
 }

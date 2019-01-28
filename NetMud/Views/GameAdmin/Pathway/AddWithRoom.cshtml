@@ -14,16 +14,14 @@
             <h4 class="col-sm-2">NEW ROOM</h4>
         </div>
 
-        <h3>Room</h3>
-        <hr />
-        @Html.EditorFor(m => m.Destination, new { ValidMaterials = Model.ValidMaterials, ValidModels = Model.ValidModels, ValidRooms = Model.ValidRooms })
-
-        <h3>Pathway</h3>
         <div class="form-group row">
+            <h3>Pathway</h3>
             @Html.EditorFor(m => m.CreateReciprocalPath)
         </div>
         <hr />
         @Html.EditorFor(m => m.DataObject, "PathwayWithNewRoom", new { ValidMaterials = Model.ValidMaterials, ValidModels = Model.ValidModels, ValidRooms = Model.ValidRooms })
+
+        @Html.EditorFor(m => m.Destination, new { ValidMaterials = Model.ValidMaterials, ValidModels = Model.ValidModels, ValidRooms = Model.ValidRooms })
 
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Zone", ModalWindow = true })
     }

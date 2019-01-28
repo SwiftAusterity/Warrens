@@ -23,7 +23,7 @@
     @RenderSection("styles", required: false)
 </head>
 <body>
-    <div>
+    <div style="padding: 15px;">
         <p id="statusMessage" name="statusMessage" class="text-success">@ViewBag.StatusMessage</p>
         @RenderBody()
     </div>
@@ -35,6 +35,14 @@
 
             $('.helpTip').each(function () {
                 HelpTipTutorial($(this), $(this).attr('title'));
+            });
+
+            $(function () {
+                $("div.accordionWrapper").accordion({
+                    collapsible: true,
+                    active: false,
+                    heightStyle: "content"
+                });
             });
         });
     </script>

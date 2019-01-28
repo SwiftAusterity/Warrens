@@ -1,4 +1,5 @@
 ﻿using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Zone;
 
 namespace NetMud.DataStructure.Locale
@@ -6,7 +7,7 @@ namespace NetMud.DataStructure.Locale
     /// <summary>
     /// Collector of rooms, used for weather patterning
     /// </summary>
-    public interface ILocaleFramework : IDiscoverableData, ISingleton<ILocale>
+    public interface ILocaleFramework : IDiscoverableData, IDescribable, ISingleton<ILocale>
     {
         /// <summary>
         /// The map of the rooms inside

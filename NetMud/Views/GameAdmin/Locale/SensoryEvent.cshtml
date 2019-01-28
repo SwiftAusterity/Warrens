@@ -1,0 +1,12 @@
+﻿@model NetMud.Models.Admin.OccurrenceViewModel
+
+<section id="addDescriptiveSection" style="padding: 15px;">
+    @using (Html.BeginForm("AddEditDescriptive", Model.AdminTypeName, new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.EditorFor(m => m.SensoryEventDataObject)
+
+        @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = Model.AdminTypeName, ModalWindow = true })
+    }
+</section>

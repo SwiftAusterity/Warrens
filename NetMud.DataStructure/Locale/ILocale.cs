@@ -9,7 +9,7 @@ namespace NetMud.DataStructure.Locale
     /// <summary>
     /// Collection of rooms in a zone
     /// </summary>
-    public interface ILocale : IEntity, IDiscoverable, ISpawnAsSingleton<ILocale>
+    public interface ILocale : ILocaleFramework, IEntity, IDiscoverable, ISpawnAsSingleton<ILocale>
     {
         /// <summary>
         /// The zone this lives in

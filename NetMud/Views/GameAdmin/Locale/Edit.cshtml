@@ -17,6 +17,10 @@
     }
 </section>
 
+@Html.Partial("~/Views/GameAdmin/Locale/SensoryEventList.cshtml", Model.DataObject)
+
+<h3>Map of Rooms</h3>
+<hr/>
 <div class="clearfix"></div>
 @Html.Partial("AsciiMap", new NetMud.Models.AsciiMapViewModel("RenderLocaleMapForEdit", Model.DataObject.Id, 0))
 
