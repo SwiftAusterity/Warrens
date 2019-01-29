@@ -123,8 +123,9 @@
     function BindRoomsAndPaths() {
         $('.AdminAddPathway').click(function () {
             var degress = $(this).attr("data-direction");
+            var incline = $(this).attr("data-incline");
 
-            openFrameless(1400, 900, 0, 0, "/GameAdmin/Pathway/Add/" + $(this).attr('pathwayid') + '/' + $(this).attr('fromroom') + '/' + $(this).attr('toroom') + '/' + degress, 'Add Pathway', true);
+            openFrameless(1400, 900, 0, 0, "/GameAdmin/Pathway/Add/" + $(this).attr('pathwayid') + '/' + $(this).attr('fromroom') + '/' + $(this).attr('toroom') + '/' + degress + '/' + incline, 'Add Pathway', true);
 
             return false;
         });

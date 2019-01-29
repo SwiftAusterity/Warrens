@@ -317,8 +317,8 @@ namespace NetMud.Cartography
                         roomString = string.Format("Add {0} path to {1}", directionType.ToString(), destinationName);
                     }
 
-                    returnValue = string.Format("<a href='#' class='addData pathway AdminAddPathway' pathwayId='-1' fromRoom='{0}' toRoom='{3}' data-direction='{1}' title='{2}'>+</a>",
-                        originId, Utilities.TranslateDirectionToDegrees(directionType).Item1, roomString, destinationId);
+                    returnValue = string.Format("<a href='#' class='addData pathway AdminAddPathway' pathwayId='-1' fromRoom='{0}' toRoom='{4}' data-direction='{1}' data-incline='{2}' title='{3}'>+</a>",
+                        originId, Utilities.TranslateDirectionToDegrees(directionType).Item1, Utilities.GetBaseInclineGrade(directionType), roomString, destinationId);
                 }
             }
             else if (path != null)

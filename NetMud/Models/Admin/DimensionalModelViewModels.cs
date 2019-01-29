@@ -47,8 +47,5 @@ namespace NetMud.Models.Admin
     {
         public IEnumerable<IDimensionalModelData> ValidModels { get; set; }
         public IEnumerable<IMaterial> ValidMaterials { get; set; }
-
-        [UIHint("TwoDimensionalModel")]
-        public IDimensionalModel ModelDataObject { get; set; }
     }
 }

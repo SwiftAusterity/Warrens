@@ -81,12 +81,22 @@ namespace NetMud.Cartography
 
             if (trueDegrees < 0)
             {
+                if (inclineGrade > 0)
+                {
+                    return MovementDirectionType.Up;
+                }
+                else if (inclineGrade < 0)
+                {
+                    return MovementDirectionType.Down;
+                }
+
                 return MovementDirectionType.None;
             }
 
             if (reverse)
             {
                 trueDegrees = degreesFromNorth < 180 ? degreesFromNorth + 180 : degreesFromNorth - 180;
+                inclineGrade *= -1;
             }
 
             if (trueDegrees > 22 && trueDegrees < 67)
@@ -197,6 +207,37 @@ namespace NetMud.Cartography
             }
 
             return MovementDirectionType.North;
+        }
+
+        public static double GetBaseInclineGrade(MovementDirectionType direction)
+        {
+            switch (direction)
+            {
+                case MovementDirectionType.Up:
+                    return 1;
+                case MovementDirectionType.Down:
+                    return -1;
+                case MovementDirectionType.UpEast:
+                case MovementDirectionType.UpNorth:
+                case MovementDirectionType.UpNorthEast:
+                case MovementDirectionType.UpNorthWest:
+                case MovementDirectionType.UpSouth:
+                case MovementDirectionType.UpSouthEast:
+                case MovementDirectionType.UpSouthWest:
+                case MovementDirectionType.UpWest:
+                    return 0.5;
+                case MovementDirectionType.DownEast:
+                case MovementDirectionType.DownNorth:
+                case MovementDirectionType.DownNorthEast:
+                case MovementDirectionType.DownNorthWest:
+                case MovementDirectionType.DownSouth:
+                case MovementDirectionType.DownSouthEast:
+                case MovementDirectionType.DownSouthWest:
+                case MovementDirectionType.DownWest:
+                    return -0.5;
+            }
+
+            return 0;
         }
 
         /// <summary>

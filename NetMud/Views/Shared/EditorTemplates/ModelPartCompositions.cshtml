@@ -11,7 +11,7 @@
     <div class="addRowContainer">
         <div class="col-sm-1">
             @Html.DescriptionFor(m => m)
-            <a href="#" class="addRow btn" data-current-row="@currentCount" onclick="javascript: replacePart(this, newModelComposition, @currentCount, '@rowsName'); return false;"><span class="addWord">Add Row</span></a>
+            <!-- no add button here for specific reasons. This list is statically maintained. -->
         </div>
     </div>
     @if (Model.Count() > 0)

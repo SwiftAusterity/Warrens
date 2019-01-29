@@ -106,22 +106,23 @@ namespace NetMud.Controllers.GameAdmin
 
 
         [HttpGet]
-        public ActionResult Add(long id, long originRoomId, long destinationRoomId, int degreesFromNorth = 0)
+        public ActionResult Add(long id, long originRoomId, long destinationRoomId, int degreesFromNorth = 0, int incline = 0)
         {
             //New room or existing room
             if (destinationRoomId.Equals(-1))
             {
+                var origin = TemplateCache.Get<IRoomTemplate>(originRoomId);
+
                 AddPathwayWithRoomTemplateViewModel vModel = new AddPathwayWithRoomTemplateViewModel
                 {
                     authedUser = UserManager.FindById(User.Identity.GetUserId()),
 
                     ValidMaterials = TemplateCache.GetAll<IMaterial>(),
                     ValidModels = TemplateCache.GetAll<IDimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat),
-                    ValidRooms = TemplateCache.GetAll<IRoomTemplate>().Where(rm => !rm.Id.Equals(originRoomId)),
-                    OriginID = originRoomId,
-                    Origin = TemplateCache.Get<IRoomTemplate>(originRoomId),
-                    DataObject = new PathwayTemplate() { DegreesFromNorth = degreesFromNorth, InclineGrade = 0 },
-                    Destination = new RoomTemplate()
+                    ValidRooms = TemplateCache.GetAll<IRoomTemplate>(),
+                    Origin = origin,
+                    DataObject = new PathwayTemplate() { DegreesFromNorth = degreesFromNorth, InclineGrade = incline },
+                    Destination = new RoomTemplate() { ParentLocation = origin.ParentLocation }
                 };
 
                 vModel.Destination.ParentLocation = vModel.Origin.ParentLocation;
@@ -130,6 +131,15 @@ namespace NetMud.Controllers.GameAdmin
             }
             else
             {
+                var origin = TemplateCache.Get<IRoomTemplate>(originRoomId);
+                var destination = TemplateCache.Get<IRoomTemplate>(destinationRoomId);
+                var pathwayTemplate = TemplateCache.Get<IPathwayTemplate>(id);
+
+                if(pathwayTemplate == null)
+                {
+                    pathwayTemplate = new PathwayTemplate() { Origin = origin, Destination = destination, DegreesFromNorth = degreesFromNorth, InclineGrade = incline };
+                }
+
                 AddEditPathwayTemplateViewModel vModel = new AddEditPathwayTemplateViewModel
                 {
                     authedUser = UserManager.FindById(User.Identity.GetUserId()),
@@ -137,13 +147,7 @@ namespace NetMud.Controllers.GameAdmin
                     ValidMaterials = TemplateCache.GetAll<IMaterial>(),
                     ValidModels = TemplateCache.GetAll<IDimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat),
                     ValidRooms = TemplateCache.GetAll<IRoomTemplate>().Where(rm => !rm.Id.Equals(originRoomId)),
-
-                    Origin = TemplateCache.Get<IRoomTemplate>(originRoomId),
-                    OriginID = originRoomId,
-
-                    DegreesFromNorth = degreesFromNorth,
-                    DestinationID = destinationRoomId,
-                    Destination = TemplateCache.Get<IRoomTemplate>(destinationRoomId)
+                    DataObject = pathwayTemplate
                 };
 
                 return View("~/Views/GameAdmin/Pathway/AddEdit.cshtml", "_chromelessLayout", vModel);
@@ -156,19 +160,19 @@ namespace NetMud.Controllers.GameAdmin
         {
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var origin = TemplateCache.Get<IRoomTemplate>(vModel.OriginID);
+            var origin = TemplateCache.Get<IRoomTemplate>(vModel.Origin.Id);
 
             string roomMessage = string.Empty;
             IRoomTemplate newRoom = vModel.Destination;
             newRoom.ParentLocation = origin.ParentLocation;
 
             string message = string.Empty;
-            IPathwayTemplate newObj = vModel.DataObject;
-            newObj.Origin = origin;
 
             if (newRoom.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) != null)
             {
+                IPathwayTemplate newObj = vModel.DataObject;
                 newObj.Destination = newRoom;
+                newObj.Origin = origin;
 
                 if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
                 {
@@ -184,7 +188,8 @@ namespace NetMud.Controllers.GameAdmin
                             DegreesFromNorth = Utilities.ReverseDirection(newObj.DegreesFromNorth),
                             Origin = newObj.Destination,
                             Destination = newObj.Origin,
-                            Model = newObj.Model
+                            Model = newObj.Model,
+                            InclineGrade = newObj.InclineGrade * -1
                         };
 
                         if (reversePath.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
@@ -210,13 +215,7 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            PathwayTemplate newObj = new PathwayTemplate
-            {
-                Name = vModel.Name,
-                DegreesFromNorth = vModel.DegreesFromNorth,
-                Origin = TemplateCache.Get<IRoomTemplate>(vModel.OriginID),
-                Destination = TemplateCache.Get<IRoomTemplate>(vModel.DestinationID)
-            };
+            IPathwayTemplate newObj = vModel.DataObject;
 
             if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
             {
@@ -252,13 +251,6 @@ namespace NetMud.Controllers.GameAdmin
             }
 
             vModel.DataObject = obj;
-            vModel.Name = obj.Name;
-
-            vModel.DegreesFromNorth = obj.DegreesFromNorth;
-            vModel.Destination = (IRoomTemplate)obj.Destination;
-            vModel.Origin = (IRoomTemplate)obj.Origin;
-
-            vModel.ModelDataObject = obj.Model;
 
             return View("~/Views/GameAdmin/Pathway/AddEdit.cshtml", "_chromelessLayout", vModel);
         }
@@ -277,10 +269,11 @@ namespace NetMud.Controllers.GameAdmin
                 return View("~/Views/GameAdmin/Pathway/AddEdit.cshtml", vModel);
             }
 
-            obj.Name = vModel.Name;
-            obj.DegreesFromNorth = vModel.DegreesFromNorth;
-            obj.Origin = TemplateCache.Get<IRoomTemplate>(vModel.OriginID);
-            obj.Destination = TemplateCache.Get<IRoomTemplate>(vModel.DestinationID);
+            obj.Name = vModel.DataObject.Name;
+            obj.DegreesFromNorth = vModel.DataObject.DegreesFromNorth;
+            obj.InclineGrade = vModel.DataObject.InclineGrade;
+            obj.Origin = vModel.DataObject.Origin;
+            obj.Destination = vModel.DataObject.Destination;
 
             if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {

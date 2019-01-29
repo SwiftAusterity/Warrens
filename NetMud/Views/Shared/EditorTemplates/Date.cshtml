@@ -21,7 +21,7 @@
     var htmlAttributes = new Dictionary<string, object>() { { "class", cssClass }, { "placeholder", ViewData.ModelMetadata.DisplayName }, { "title", ViewData.ModelMetadata.DisplayName } };
     if (ViewData["disabled"] != null)
     {
-        htmlAttributes.Add("disabled", true);
+        htmlAttributes.Add("readonly", true);
     }
 
     if (ViewData["htmlAttributes"] != null)

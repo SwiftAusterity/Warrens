@@ -39,8 +39,8 @@ namespace NetMud
 
             routes.MapRoute(
                 name: "Pathway Add Modal",
-                url: "GameAdmin/Pathway/Add/{id}/{originRoomId}/{destinationRoomId}/{degreesFromNorth}",
-                defaults: new { controller = "Pathway", action = "Add", degreesFromNorth = UrlParameter.Optional },
+                url: "GameAdmin/Pathway/Add/{id}/{originRoomId}/{destinationRoomId}/{degreesFromNorth}/{incline}",
+                defaults: new { controller = "Pathway", action = "Add", degreesFromNorth = UrlParameter.Optional, incline = UrlParameter.Optional },
                 namespaces: new string[] { "NetMud.Controllers.GameAdmin" }
             );
 

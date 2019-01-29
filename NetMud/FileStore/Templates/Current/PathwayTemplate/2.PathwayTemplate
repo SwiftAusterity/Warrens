@@ -1,0 +1,72 @@
+{
+  "DegreesFromNorth": -1,
+  "InclineGrade": 1,
+  "Destination": {
+    "ObjectType": "NetMud.Data.Room.RoomTemplate, NetMud.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "BirthMark": 4
+  },
+  "Origin": {
+    "ObjectType": "NetMud.Data.Room.RoomTemplate, NetMud.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "BirthMark": 0
+  },
+  "Model": {
+    "$type": "NetMud.Data.Architectural.EntityBase.DimensionalModel, NetMud.Data",
+    "Length": 2,
+    "Height": 2,
+    "Width": 2,
+    "Vacuity": 0,
+    "SurfaceCavitation": 0,
+    "ModelTemplate": {
+      "ObjectType": "NetMud.Data.Architectural.EntityBase.DimensionalModelData, NetMud.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "BirthMark": 0
+    },
+    "Composition": [
+      {
+        "$type": "NetMud.Data.Architectural.EntityBase.ModelPartComposition, NetMud.Data",
+        "PartName": "Tip",
+        "Material": {
+          "ObjectType": "NetMud.Data.Architectural.EntityBase.Material, NetMud.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+          "BirthMark": 0
+        }
+      },
+      {
+        "$type": "NetMud.Data.Architectural.EntityBase.ModelPartComposition, NetMud.Data",
+        "PartName": "Blade",
+        "Material": {
+          "ObjectType": "NetMud.Data.Architectural.EntityBase.Material, NetMud.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+          "BirthMark": 0
+        }
+      },
+      {
+        "$type": "NetMud.Data.Architectural.EntityBase.ModelPartComposition, NetMud.Data",
+        "PartName": "Guard",
+        "Material": {
+          "ObjectType": "NetMud.Data.Architectural.EntityBase.Material, NetMud.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+          "BirthMark": 0
+        }
+      },
+      {
+        "$type": "NetMud.Data.Architectural.EntityBase.ModelPartComposition, NetMud.Data",
+        "PartName": "Hilt",
+        "Material": {
+          "ObjectType": "NetMud.Data.Architectural.EntityBase.Material, NetMud.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+          "BirthMark": 0
+        }
+      }
+    ]
+  },
+  "Descriptives": [],
+  "Qualities": null,
+  "Id": 2,
+  "Created": "2019-01-29T11:53:23.4366944-06:00",
+  "LastRevised": "0001-01-01T00:00:00",
+  "Name": "Road",
+  "CachingType": 1,
+  "SuitableForUse": false,
+  "State": 0,
+  "ApprovedOn": "0001-01-01T00:00:00",
+  "CreatorHandle": "SwiftAusterity",
+  "CreatorRank": 3,
+  "ApproverHandle": null,
+  "ApproverRank": 0
+}

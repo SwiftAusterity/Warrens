@@ -5,12 +5,10 @@
     {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(m => m.OriginID)
 
         <div class="form-group row">
-            <label id="lblOrigin" class="col-sm-1 col-form-label">Origin:</label>
-            <h4 class="col-sm-2">@Model.Origin.Name</h4>
-            <label id="lblDestination" class="col-sm-1 col-form-label">Destination:</label>
+            @Html.EditorFor(m => m.Origin, new { validItems = Model.ValidRooms, disabled = true })
+            <label id="lblDestination" class="col-sm-1 col-form-label">to</label>
             <h4 class="col-sm-2">NEW ROOM</h4>
         </div>
 

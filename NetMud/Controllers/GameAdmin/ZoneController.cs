@@ -250,9 +250,6 @@ namespace NetMud.Controllers.GameAdmin
                 vModel.Name = existingPathway.Name;
                 vModel.Destination = (IRoomTemplate)existingPathway.Destination;
                 vModel.DestinationID = existingPathway.Destination.Id;
-
-                vModel.ModelDataObject = existingPathway.Model;
-
                 vModel.DataObject = existingPathway;
             }
 
