@@ -142,10 +142,21 @@ namespace NetMud.Cartography
                     string rowString = string.Empty;
                     for (x = 0; x <= expandedMap.GetUpperBound(0); x++)
                     {
-                        rowString += expandedMap[x, y];
+                        var xString = expandedMap[x, y];
+                        if (string.IsNullOrWhiteSpace(xString))
+                        {
+                            rowString += "&nbsp;";
+                        }
+                        else
+                        {
+                            rowString += expandedMap[x, y];
+                        }
                     }
 
-                    sb.AppendLine(rowString);
+                    if (!string.IsNullOrWhiteSpace(rowString.Replace("&nbsp;", "")))
+                    {
+                        sb.AppendLine(rowString);
+                    }
                 }
             }
 

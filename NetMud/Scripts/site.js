@@ -57,8 +57,6 @@ function HelpTipTutorial(parent, text) {
 
 function openFrameless(width, height, fromLeft, fromTop, targetUrl, windowTitle) {
     var s = 'menubar=no, toolbar=no, location=no, resizable=no, scrollbars=yes, status=no, width = ' + width + ', height = ' + height;
-    var styles = '';
-    var scripts = '';
 
     if (windowTitle === '') {
         windowTitle = 'adminModal';

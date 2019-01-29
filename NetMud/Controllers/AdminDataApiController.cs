@@ -3,7 +3,10 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
 using NetMud.Cartography;
+using NetMud.Data.Architectural.EntityBase;
 using NetMud.Data.Players;
+using NetMud.Data.Room;
+using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural.EntityBase;
@@ -18,7 +21,7 @@ using System.Web.Http.Results;
 
 namespace NetMud.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Builder")]
     public class AdminDataApiController : ApiController
     {
         private ApplicationUserManager _userManager;
@@ -137,5 +140,95 @@ namespace NetMud.Controllers
 
             return "success";
         }
+
+        [HttpPost]
+        [Route("api/AdminDataApi/Quickbuild/{originId}/{destinationId}/{direction}/{incline}", Name = "AdminAPI_Quickbuild")]
+        public string Quickbuild(long originId, long destinationId, int direction, int incline)
+        {
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            var origin = TemplateCache.Get<IRoomTemplate>(originId);
+            var destination = TemplateCache.Get<IRoomTemplate>(destinationId);
+
+            string message = string.Empty;
+
+            if (destination == null)
+            {
+                destination = new RoomTemplate
+                {
+                    Name = "Room",
+                    Medium = origin.Medium,
+                    ParentLocation = origin.ParentLocation,
+                    Model = new DimensionalModel()
+                    {
+                        ModelTemplate = origin.Model.ModelTemplate,
+                        Composition = origin.Model.Composition,
+                        Height = origin.Model.Height,
+                        Length = origin.Model.Length,
+                        Width = origin.Model.Width,
+                        SurfaceCavitation = origin.Model.SurfaceCavitation,
+                        Vacuity = origin.Model.Vacuity
+                    }
+                };
+
+                destination = (IRoomTemplate)destination.Create(authedUser.GameAccount, authedUser.GetStaffRank(User));
+            }
+
+
+            if (destination != null)
+            {
+                IPathwayTemplate newObj = new PathwayTemplate
+                {
+                    Name = "Pathway",
+                    Destination = destination,
+                    Origin = origin,
+                    InclineGrade = incline,
+                    DegreesFromNorth = direction,
+                    Model = new DimensionalModel()
+                    {
+                        ModelTemplate = origin.Model.ModelTemplate,
+                        Composition = origin.Model.Composition,
+                        Height = origin.Model.Height,
+                        Length = origin.Model.Length,
+                        Width = origin.Model.Width,
+                        SurfaceCavitation = origin.Model.SurfaceCavitation,
+                        Vacuity = origin.Model.Vacuity
+                    }
+                };
+
+                if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
+                {
+                    message = "Error; Creation failed.";
+                }
+                else
+                {
+                    PathwayTemplate reversePath = new PathwayTemplate
+                    {
+                        Name = newObj.Name,
+                        DegreesFromNorth = Utilities.ReverseDirection(newObj.DegreesFromNorth),
+                        Origin = newObj.Destination,
+                        Destination = newObj.Origin,
+                        Model = newObj.Model,
+                        InclineGrade = newObj.InclineGrade * -1
+                    };
+
+                    if (reversePath.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
+                    {
+                        message = "Reverse Path creation FAILED. Origin path creation SUCCESS.";
+                    }
+
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - Quickbuild[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                }
+            }
+            else
+            {
+                message = "Error; Creation failed.";
+            }
+
+            return message;
+        }
+
+
+
     }
 }

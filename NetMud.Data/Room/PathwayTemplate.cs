@@ -9,6 +9,7 @@ using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Linguistic;
+using NetMud.DataStructure.Player;
 using NetMud.DataStructure.Room;
 using NetMud.DataStructure.System;
 using Newtonsoft.Json;
@@ -201,6 +202,25 @@ namespace NetMud.Data.Room
             }
 
             return returnList;
+        }
+
+
+        public override IKeyedData Create(IAccount creator, StaffRank rank)
+        {
+            //approval will be handled inside the base call
+            IKeyedData obj = base.Create(creator, rank);
+
+            if (Origin?.GetType() == typeof(RoomTemplate))
+            {
+                ((IRoomTemplate)Origin).ParentLocation.RemapInterior();
+            }
+
+            if (Destination?.GetType() == typeof(RoomTemplate))
+            {
+                ((IRoomTemplate)Destination).ParentLocation.RemapInterior();
+            }
+
+            return obj;
         }
 
         /// <summary>

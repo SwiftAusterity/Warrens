@@ -1,6 +1,12 @@
 ﻿@model NetMud.Models.AsciiMapViewModel
 
 <div class="roomAsciiMap">
+    <div class="pretty p-switch p-fill">
+        @Html.CheckBox("Quickbuild", false)
+        <div class="state">
+            @Html.Label("Quickbuild", new { @class = "col -form-label" })
+        </div>
+    </div>
     <div class="zLevelControls">
         <a id="renderModeSelector" name="renderModeSelector" class="Normal renderModeSelector" title="Toggle Render Mode" data-renderMode="normal"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
         <div>
@@ -87,7 +93,6 @@
 
             $.get('/api/AdminDataApi/' + mapRenderType + '/' + dataId + '/' + radius, function (data) {
                 $exModelContainer.html(data);
-                $exModelContainer.css({ 'height': data.length * 6 + 'pc' });
 
                 BindRoomsAndPaths();
             });
@@ -104,7 +109,6 @@
                 }
 
                 $exModelContainer.html(data[renderMode]);
-                $exModelContainer.css({ 'height': data.length * 6 + 'pc' });
 
                 BindRoomsAndPaths();
             });
@@ -113,7 +117,6 @@
 
             $.get('/api/AdminDataApi/' + mapRenderType + '/' + dataId + '/' + zIndex, function (data) {
                 $exModelContainer.html(data);
-                $exModelContainer.css({ 'height': data.length * 6 + 'pc' });
 
                 BindRoomsAndPaths();
             });
@@ -125,7 +128,14 @@
             var degress = $(this).attr("data-direction");
             var incline = $(this).attr("data-incline");
 
-            openFrameless(1400, 900, 0, 0, "/GameAdmin/Pathway/Add/" + $(this).attr('pathwayid') + '/' + $(this).attr('fromroom') + '/' + $(this).attr('toroom') + '/' + degress + '/' + incline, 'Add Pathway', true);
+            if ($('#Quickbuild').is(':checked')) {
+                $.post('/api/AdminDataApi/Quickbuild/' + $(this).attr('fromroom') + '/' + $(this).attr('toroom') + '/' + degress + '/' + incline, function (data) {
+                    GetMap();
+                });
+
+            } else {
+                openFrameless(1400, 900, 0, 0, "/GameAdmin/Pathway/Add/" + $(this).attr('pathwayid') + '/' + $(this).attr('fromroom') + '/' + $(this).attr('toroom') + '/' + degress + '/' + incline, 'Add Pathway', true);
+            }
 
             return false;
         });
