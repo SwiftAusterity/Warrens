@@ -2,49 +2,47 @@
 
 @model NetMud.Models.Admin.ManagePlayersViewModel
 
-@{ 
+@{
     ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Players", new string[] { "Dashboard" }, new string[] { "/GameAdmin" });
 }
 
-@Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model, "Player"))
+<div class="searchCriteria">
+    @Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model, "Player"))
+</div>
 
 @using (Html.BeginForm("Remove", "Player"))
 {
     @Html.AntiForgeryToken()
     <h4>Approvals</h4>
-    <table class="table table-striped table-bordered table-hover table-dark">
-        <thead>
-            <tr>
-                <th scope="col">Id</th>
-                <th scope="col">Global Handle</th>
-                <th scope="col">Email</th>
-                <th scope="col">Role</th>
-                <th>DELETE</th>
-            </tr>
-        </thead>
-        <tbody>
+    <div class="listTable">
+        <div class="listSection listHeader">
+            <div class="listItem" scope="col">Id</div>
+            <div class="listItem" scope="col">Global Handle</div>
+            <div class="listItem" scope="col">Email</div>
+            <div class="listItem" scope="col">Role</div>
+            <div class="listItem">DELETE</div>
+        </div>
+        <div class="listSection listContent">
             @foreach (var val in Model.Items)
             {
-                <tr>
-                    <td>@val.Id.ToString()</td>
-                    <td>@val.GameAccount.GlobalIdentityHandle</td>
-                    <td>@val.Email</td>
-                    <td>
+                <div class="listRow">
+                    <div class="listItem">@val.Id.ToString()</div>
+                    <div class="listItem">@val.GameAccount.GlobalIdentityHandle</div>
+                    <div class="listItem">@val.Email</div>
+                    <div class="listItem">
                         @Html.DropDownList("Role", Enum.GetNames(typeof(StaffRank)).Select(rl =>
                                                                         new SelectListItem() { Text = rl, Value = ((short)Enum.Parse(typeof(StaffRank), rl)).ToString(),
                                                                             Selected = ((NetMud.Authentication.ApplicationUser)val).Roles.Select(rol => Model.ValidRoles.First(vR => vR.Id.Equals(rol.RoleId)).Name).Contains(rl) })
                                                                         , "Select One", htmlAttributes: new { id = "Role", @class = "staffRole" })
-                    </td>
-                    <td>
-                        <div>
-                            <button type="submit" name="removeId" id="removeId" class="removeData" value="@val.GlobalIdentityHandle" title="Delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-                            <input type="radio" name="authorizeRemove" value="@val.GlobalIdentityHandle" style="margin-left: 15px;" />
-                        </div>
-                    </td>
-                </tr>
+                    </div>
+                    <div class="listItem">
+                        <button type="submit" name="removeId" id="removeId" class="removeData" value="@val.GlobalIdentityHandle" title="Delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                        <input type="radio" name="authorizeRemove" value="@val.GlobalIdentityHandle" />
+                    </div>
+                </div>
             }
-        </tbody>
-    </table>
+        </div>
+    </div>
 }
 
 @section Scripts {
