@@ -5,7 +5,6 @@
     @Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model, "ContentApproval"))
 </div>
 
-<h4>Approvals</h4>
 @using (Html.BeginForm("ApproveDeny", "ContentApproval"))
 {
     @Html.AntiForgeryToken()
@@ -28,23 +27,24 @@
                     <div class="listItem">
                         <div class="accordionWrapper">
                             <h5>Fields</h5>
-                            <div>
-                                <pre class="contentPreviewFields">
-                                    @foreach (var detail in val.SignificantDetails())
-                                    {
-                                <span style="float: left;">@detail.Key</span><span style="float: right;">@detail.Value</span>
-                                    }
-                                </pre>
+                            <div class="significantFields">
+                                @foreach (var detail in val.SignificantDetails())
+                                {
+                                    <div>
+                                        <span>@detail.Key</span>
+                                        <span>@detail.Value</span>
+                                    </div>
+                                }
                             </div>
                         </div>
                     </div>
                     <div class="listItem">
                         <button type="submit" name="approvalId" id="approvalId" class="approveData" value="@val.Id" title="Approve"><span class="glyphicon glyphicon-play-circle" aria-hidden="true"></span></button>
-                        <input type="radio" name="audiv class=" listItem"orizeApproval" value="@val.Id|||@val.GetType().AssemblyQualifiedName" style="margin-left: 15px;" />
+                        <input type="radio" name="authorizeDenial" value="@val.Id|||@val.GetType().AssemblyQualifiedName" />
                     </div>
                     <div class="listItem">
                         <button type="submit" name="denialId" id="denialId" class="unapproveData" value="@val.Id" title="Deny"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span></button>
-                        <input type="radio" name="audiv class=" listItem"orizeDenial" value="@val.Id|||@val.GetType().AssemblyQualifiedName" style="margin-left: 15px;" />
+                        <input type="radio" name="authorizeDenial" value="@val.Id|||@val.GetType().AssemblyQualifiedName" />
                     </div>
                 </div>
             }

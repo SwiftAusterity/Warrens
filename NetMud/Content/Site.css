@@ -166,29 +166,26 @@ div.form-group a.removeRow {
 
 .adminDashboard {
     padding: 10px;
-    display: inline-table;
+    display: flex;
+    flex-wrap: wrap;
 }
 
     .adminDashboard div {
-        margin: 10px;
+        flex: 1 1 auto;
+        margin: 15px;
+        padding: 5px;
+    }
+
+
+    .adminDashboard .dashboardItem dt {
+        float: right;
+    }
+
+    .adminDashboard .dashboardItem dd {
+        margin-right: 10px;
+        margin-left: 0;
         float: left;
-        min-width: 200px;
     }
-
-    .adminDashboard .dashboardItem {
-        min-width: 150px;
-    }
-
-        .adminDashboard .dashboardItem dt {
-            width: unset;
-            float: right;
-        }
-
-        .adminDashboard .dashboardItem dd {
-            margin-right: 10px;
-            margin-left: 0;
-            float: left;
-        }
 
 
 /* Ascii maps for object dim models and room maps */
@@ -693,6 +690,7 @@ div.roomAsciiMap {
     flex: 1 1 100%;
     display: flex;
     margin: 5px 0 5px 0;
+    flex-wrap: wrap;
 }
 
 .listHeader {
@@ -704,17 +702,20 @@ div.roomAsciiMap {
     color: black;
 }
 
-    .listContent .listItem {
-        background: content-box whitesmoke;
-        margin: 0 3px 0 3px;
-        padding: 2px;
-        box-shadow: 1px 1px 0 0 lightgrey;
-    }
+.listRow:nth-child(even) {
+    background-color: whitesmoke;
+}
 
-.listRow {
+.listContent .listRow {
     display: flex;
-    flex-wrap: wrap;
     flex: 1 1 100%;
+    margin: 3px;
+    height: fit-content;
+}
+
+.listContent div .listItem {
+    margin: 0 3px 0 3px;
+    padding: 2px;
 }
 
 .listItem {
@@ -722,3 +723,28 @@ div.roomAsciiMap {
     overflow: hidden;
     list-style: none;
 }
+
+    .listItem input[type=radio] {
+        margin: 3px 15px 0px 15px;
+    }
+
+.significantFields {
+    background-color: white;
+    color: black;
+    padding: 5px !important;
+    border: 1px solid lightgray;
+    flex: 0 1 auto;
+}
+
+    .significantFields div {
+        margin: 5px;
+        min-width: 200px;
+    }
+
+        .significantFields div span:first-of-type {
+            font-weight: 600;
+        }
+
+        .significantFields div span:last-of-type {
+            float: right;
+        }

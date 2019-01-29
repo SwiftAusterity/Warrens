@@ -41,24 +41,26 @@
         <div class="listSection listContent">
             @foreach (var val in Model.Values)
             {
-                foreach (var column in Model.Columns)
-                {
+                <div class="listRow">
+                    @foreach (var column in Model.Columns)
+                    {
                     <div class="listItem">@Html.Raw(column.Value(val))</div>
-                }
+                    }
 
-                if (Model.IncludeDelete)
-                {
+                    @if (Model.IncludeDelete)
+                    {
                     <div class="listItem">
                         @Html.Partial("RemoveDataItem", (long)val.Id)
                     </div>
-                }
+                    }
 
-                if (Model.IncludeUnapprove)
-                {
+                    @if (Model.IncludeUnapprove)
+                    {
                     <div class="listItem">
                         @Html.Partial("UnapproveDataItem", (long)val.Id)
                     </div>
-                }
+                    }
+                </div>
             }
         </div>
     </div>

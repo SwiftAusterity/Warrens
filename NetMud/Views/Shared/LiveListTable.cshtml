@@ -26,17 +26,20 @@
         <div class="listSection listContent">
             @foreach (var val in Model.Values)
             {
-                foreach (var column in Model.Columns)
-                {
+                <div class="listRow">
+                    @foreach (var column in Model.Columns)
+                    {
                     <div class="listItem">@Html.Raw(column.Value(val))</div>
-                }
-                if (Model.IncludeDelete)
-                {
+                    }
+
+                    @if (Model.IncludeDelete)
+                    {
                     <div class="listItem">
                         <button type="submit" name="removeId" id="removeId" class="removeData" value="@val.BirthMark" title="Delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-                        <input type="radio" name="authorizeRemove" value="@val.BirthMark" style="margin-left: 15px;" />
+                        <input type="radio" name="authorizeRemove" value="@val.BirthMark" />
                     </div>
-                }
+                    }
+                </div>
             }
         </div>
     </div>
