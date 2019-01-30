@@ -2,7 +2,15 @@
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var formTarget = Model.DestinationID == -1 ? "AddLocalePathway" : "EditLocalePathway";
+
+    var formTarget = "AddLocalePathway";
+    var id = Model.DataObject.Origin.Id;
+
+    if (Model.DestinationRoom != null)
+    {
+        formTarget = "EditLocalePathway";
+        id = Model.DataObject.Id;
+    }
 }
 
 <section id="newPathwayWithRoomForm">
@@ -10,8 +18,18 @@
     {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <input type="hidden" name="id" id="id" value="@id" />
 
-        @Html.EditorFor(m => m.DataObject, "ZonePathToLocaleRoom", new { ValidRooms = Model.ValidRooms, ValidMaterials = Model.ValidMaterials, ValidModels = Model.ValidModels })
+        <div style="display: inline-flex;">
+            <h3>
+                From Zone: <span style="font-weight: 700;">@Model.DataObject.Origin.Name</span>
+            </h3>
+
+            <div style="padding: 5px;">@Html.EditorFor(m => m.DestinationRoom, new { validItems = Model.ValidRooms, strippedNaked = true })</div>
+        </div>
+
+
+        @Html.EditorFor(m => m.DataObject, "ZonePathToLocaleRoom", new { ValidMaterials = Model.ValidMaterials, ValidModels = Model.ValidModels })
 
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Edit",
                                                                                 ReturnRouteValues = new { controller = "Zone", id = Model.DataObject.Id } })

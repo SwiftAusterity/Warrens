@@ -85,7 +85,7 @@ namespace NetMud.Models
             PropertyBinderAttribute propertyBinderAttribute = TryFindPropertyBinderAttribute(propertyDescriptor);
             if (propertyBinderAttribute != null)
             {
-                string keyName = string.Format("{0}.{1}", bindingContext.ModelName, propertyDescriptor.Name);
+                string keyName = string.Format("{0}{2}{1}", bindingContext.ModelName, propertyDescriptor.Name, string.IsNullOrWhiteSpace(bindingContext.ModelName) ? "" : ".");
 
                 //Is this a collection of other things?
                 if (propertyDescriptor.PropertyType.IsArray || (!typeof(string).Equals(propertyDescriptor.PropertyType) && typeof(IEnumerable).IsAssignableFrom(propertyDescriptor.PropertyType)))
@@ -103,8 +103,14 @@ namespace NetMud.Models
                 {
                     ValueProviderResult value = bindingContext.ValueProvider.GetValue(keyName);
 
-                    if (value != null)
+                    //Bound values *on* the view model tend to double their names due to stupidity
+                    if (value == null)
                     {
+                        value = bindingContext.ValueProvider.GetValue(string.Format("{0}.{0}", keyName));
+                    }
+
+                    if (value != null)
+                    { 
                         //If we got the value we're good just set it
                         propertyDescriptor.SetValue(bindingContext.Model, propertyBinderAttribute.Convert(value.AttemptedValue));
                     }

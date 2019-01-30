@@ -299,7 +299,7 @@ namespace NetMud.Cartography
             string returnValue = string.Empty;
             string asciiCharacter = Utilities.TranslateDirectionToAsciiCharacter(directionType);
 
-            if (path != null)
+            if (path != null && path.Destination.GetType() == typeof(IRoomTemplate))
             {
                 destination = (IRoomTemplate)path.Destination;
             }

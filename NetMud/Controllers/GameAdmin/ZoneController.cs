@@ -16,6 +16,7 @@ using NetMud.DataStructure.Room;
 using NetMud.DataStructure.Zone;
 using NetMud.Models.Admin;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -217,14 +218,14 @@ namespace NetMud.Controllers.GameAdmin
 
             if (locale == null)
             {
-                return RedirectToAction("Edit", new { Message = "Locale has no rooms", id });
+                return RedirectToAction("Edit", new { Message = "Locale is invalid.", id });
             }
 
-            System.Collections.Generic.IEnumerable<IRoomTemplate> validRooms = TemplateCache.GetAll<IRoomTemplate>().Where(rm => rm.ParentLocation.Equals(locale));
+            IEnumerable<IRoomTemplate> validRooms = TemplateCache.GetAll<IRoomTemplate>().Where(rm => rm.ParentLocation.Equals(locale));
 
             if (validRooms.Count() == 0)
             {
-                return RedirectToAction("Edit", new { Message = "Locale has no rooms", id });
+                return RedirectToAction("Edit", new { Message = "Locale has no rooms.", id });
             }
 
             IZoneTemplate origin = TemplateCache.Get<IZoneTemplate>(id);
@@ -238,19 +239,16 @@ namespace NetMud.Controllers.GameAdmin
                 ValidMaterials = TemplateCache.GetAll<IMaterial>(),
                 ValidModels = TemplateCache.GetAll<IDimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat),
                 ValidRooms = validRooms,
-
-                Origin = origin,
-                OriginID = id,
-
-                DestinationID = -1
             };
 
             if (existingPathway != null)
             {
-                vModel.Name = existingPathway.Name;
-                vModel.Destination = (IRoomTemplate)existingPathway.Destination;
-                vModel.DestinationID = existingPathway.Destination.Id;
                 vModel.DataObject = existingPathway;
+                vModel.DestinationRoom = (IRoomTemplate)existingPathway.Destination;
+            }
+            else
+            {
+                vModel.DataObject = new PathwayTemplate() { Origin = origin };
             }
 
             return View("~/Views/GameAdmin/Zone/AddEditLocalePath.cshtml", vModel);
@@ -263,13 +261,11 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            PathwayTemplate newObj = new PathwayTemplate
-            {
-                Name = vModel.Name,
-                DegreesFromNorth = -1,
-                Origin = TemplateCache.Get<IZoneTemplate>(vModel.OriginID),
-                Destination = TemplateCache.Get<IRoomTemplate>(vModel.DestinationID),
-            };
+            IZoneTemplate obj = TemplateCache.Get<IZoneTemplate>(id);
+            IPathwayTemplate newObj = vModel.DataObject;
+
+            newObj.Destination = TemplateCache.Get<IRoomTemplate>(vModel.DestinationRoom.Id);
+            newObj.Origin = obj;
 
             if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
             {
@@ -289,7 +285,6 @@ namespace NetMud.Controllers.GameAdmin
         {
             string message = string.Empty;
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
-            vModel.ValidRooms = TemplateCache.GetAll<IRoomTemplate>();
 
             IPathwayTemplate obj = TemplateCache.Get<IPathwayTemplate>(id);
             if (obj == null)
@@ -298,8 +293,10 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Edit", new { Message = message, id });
             }
 
-            obj.Name = vModel.Name;
-            obj.Destination = TemplateCache.Get<IRoomTemplate>(vModel.DestinationID);
+            obj.Name = vModel.DataObject.Name;
+            obj.DegreesFromNorth = vModel.DataObject.DegreesFromNorth;
+            obj.InclineGrade = vModel.DataObject.InclineGrade;
+            obj.Destination = TemplateCache.Get<IRoomTemplate>(vModel.DestinationRoom.Id);
 
             if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {
@@ -310,7 +307,7 @@ namespace NetMud.Controllers.GameAdmin
                 message = "Error; Edit failed.";
             }
 
-            return RedirectToAction("Edit", new { Message = message, id });
+            return RedirectToAction("Edit", new { Message = message, obj.Origin.Id });
         }
 
         [HttpGet]

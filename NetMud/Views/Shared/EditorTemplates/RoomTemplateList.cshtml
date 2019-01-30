@@ -1,7 +1,5 @@
 ﻿@using NetMud.DataStructure.Room
-
 @model IRoomTemplate
-
 @{
     double columnCount = ViewData["columnCount"] == null ? 5 : (int)ViewData["columnCount"];
     bool disabled = ViewData["disabled"] != null;
@@ -49,7 +47,6 @@
 
     var itemList = ((IEnumerable<IRoomTemplate>)ViewData["validItems"]).Select(item => new SelectListItem() { Text = item.Name, Value = item.Id.ToString(), Selected = Model != null && item.Id == Model.Id });
 }
-
 @if (strippedNaked)
 {
     @Html.DescriptionFor(m => m)
@@ -61,7 +58,6 @@ else
         <span class="@ghostNameClass">@ViewData.ModelMetadata.DisplayName</span>
         @Html.DescriptionFor(m => m)
         @Html.DropDownList(ViewData.ModelMetadata.PropertyName, itemList, optionLabel: "Select One", htmlAttributes: htmlAttributes)
-
         @if (!string.IsNullOrWhiteSpace(archivedValue))
         {
             <span class="archive">Archived Value: @archivedValue</span>
