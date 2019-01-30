@@ -28,7 +28,9 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <returns>the valid pathways</returns>       
         public IEnumerable<IPathwayTemplate> GetLocalePathways(bool withReturn = false)
         {
-            return GetPathways(withReturn).Where(path => path.Destination.GetType().GetInterfaces().Contains(typeof(IRoomTemplate)));
+            return GetPathways(withReturn).Where(path => path.Destination.GetType().GetInterfaces().Contains(typeof(IRoomTemplate))
+                                                        && (GetType().GetInterfaces().Contains(typeof(IZoneTemplate))
+                                                            || ((IRoomTemplate)path.Destination).ParentLocation.Id != ((IRoomTemplate)this).ParentLocation.Id));
         }
 
         /// <summary>

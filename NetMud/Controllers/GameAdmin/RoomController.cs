@@ -3,6 +3,7 @@ using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
 using NetMud.Communication.Lexical;
 using NetMud.Data.Linguistic;
+using NetMud.Data.Locale;
 using NetMud.Data.Room;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
@@ -143,7 +144,11 @@ namespace NetMud.Controllers.GameAdmin
                 ValidMaterials = TemplateCache.GetAll<IMaterial>(),
                 ValidModels = TemplateCache.GetAll<IDimensionalModelData>(),
                 ValidZones = TemplateCache.GetAll<IZoneTemplate>(),
+                ValidRooms = TemplateCache.GetAll<IRoomTemplate>(),
+                ValidLocales = TemplateCache.GetAll<ILocaleTemplate>().Where(locale => locale.Id != localeId),
                 ZonePathway = new PathwayTemplate() { Destination = myLocale.ParentLocation },
+                LocaleRoomPathway = new PathwayTemplate(),
+                LocaleRoomPathwayDestinationLocale = new LocaleTemplate(),
                 DataObject = new RoomTemplate() { ParentLocation = myLocale }
             };
 
@@ -162,8 +167,8 @@ namespace NetMud.Controllers.GameAdmin
             newObj.ParentLocation = locale;
             newObj.Coordinates = new Coordinate(0, 0, 0); //TODO: fix this
 
-            PathwayTemplate zoneDestination = null;
-            if (vModel.ZonePathway?.Destination != null)
+            IPathwayTemplate zoneDestination = null;
+            if (vModel.ZonePathway?.Destination != null && !string.IsNullOrWhiteSpace(vModel.ZonePathway.Name))
             {
                 IZoneTemplate destination = TemplateCache.Get<IZoneTemplate>(vModel.ZonePathway.Destination.Id);
                 zoneDestination = new PathwayTemplate()
@@ -177,11 +182,32 @@ namespace NetMud.Controllers.GameAdmin
                 };
             }
 
+            IPathwayTemplate localeRoomPathway = null;
+            if (vModel.LocaleRoomPathwayDestination != null && !string.IsNullOrWhiteSpace(vModel.LocaleRoomPathwayDestination.Name))
+            {
+                IRoomTemplate destination = TemplateCache.Get<IRoomTemplate>(vModel.LocaleRoomPathwayDestination.Id);
+                localeRoomPathway = new PathwayTemplate()
+                {
+                    DegreesFromNorth = vModel.LocaleRoomPathway.DegreesFromNorth,
+                    Name = vModel.LocaleRoomPathway.Name,
+                    Origin = newObj,
+                    Destination = destination,
+                    InclineGrade = vModel.LocaleRoomPathway.InclineGrade,
+                    Model = vModel.LocaleRoomPathway.Model
+                };
+            }
+
+
             if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
             {
                 if (zoneDestination != null)
                 {
                     zoneDestination.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
+                }
+
+                if (localeRoomPathway != null)
+                {
+                    localeRoomPathway.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
                 }
 
                 message = "Error; Creation failed.";
@@ -198,14 +224,6 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(int id)
         {
             string message = string.Empty;
-            AddEditRoomTemplateViewModel vModel = new AddEditRoomTemplateViewModel
-            {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidMaterials = TemplateCache.GetAll<IMaterial>(),
-                ValidZones = TemplateCache.GetAll<IZoneTemplate>(),
-                ValidModels = TemplateCache.GetAll<IDimensionalModelData>()
-            };
-
             IRoomTemplate obj = TemplateCache.Get<IRoomTemplate>(id);
 
             if (obj == null)
@@ -214,18 +232,40 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToRoute("ErrorOrClose", new { Message = message });
             }
 
-            vModel.DataObject = obj;
+            AddEditRoomTemplateViewModel vModel = new AddEditRoomTemplateViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                ValidMaterials = TemplateCache.GetAll<IMaterial>(),
+                ValidZones = TemplateCache.GetAll<IZoneTemplate>(),
+                ValidLocales = TemplateCache.GetAll<ILocaleTemplate>().Where(locale => locale.Id != obj.ParentLocation.Id),
+                ValidRooms = TemplateCache.GetAll<IRoomTemplate>().Where(room => room.Id != obj.Id),
+                ValidModels = TemplateCache.GetAll<IDimensionalModelData>(),
+                DataObject = obj
+            };
 
             IPathwayTemplate zoneDestination = obj.GetZonePathways().FirstOrDefault();
-
             if (zoneDestination != null)
             {
                 vModel.ZonePathway = zoneDestination;
             }
             else
             {
-                vModel.ZonePathway = new PathwayTemplate() { Destination = obj.ParentLocation.ParentLocation };
+                vModel.ZonePathway = new PathwayTemplate() { Destination = obj.ParentLocation.ParentLocation, Origin = obj };
             }
+
+            IPathwayTemplate localeRoomPathway = obj.GetLocalePathways().FirstOrDefault();
+            if (localeRoomPathway != null)
+            {
+                vModel.LocaleRoomPathway = localeRoomPathway;
+                vModel.LocaleRoomPathwayDestinationLocale = ((IRoomTemplate)localeRoomPathway.Destination).ParentLocation;
+                vModel.ValidLocaleRooms = TemplateCache.GetAll<IRoomTemplate>().Where(room => localeRoomPathway.Id == room.ParentLocation.Id);
+            }
+            else
+            {
+                vModel.LocaleRoomPathway = new PathwayTemplate() { Origin = obj };
+                vModel.LocaleRoomPathwayDestinationLocale = new LocaleTemplate();
+            }
+
 
             return View("~/Views/GameAdmin/Room/Edit.cshtml", "_chromelessLayout", vModel);
         }
@@ -237,6 +277,7 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
             IPathwayTemplate zoneDestination = null;
+            IPathwayTemplate localeRoomPathway = null;
 
             IRoomTemplate obj = TemplateCache.Get<IRoomTemplate>(id);
             if (obj == null)
@@ -280,11 +321,42 @@ namespace NetMud.Controllers.GameAdmin
                 }
             }
 
+            if (vModel.LocaleRoomPathwayDestination != null && !string.IsNullOrWhiteSpace(vModel.LocaleRoomPathwayDestination.Name))
+            {
+                IRoomTemplate destination = TemplateCache.Get<IRoomTemplate>(vModel.LocaleRoomPathwayDestination.Id);
+                localeRoomPathway = obj.GetLocalePathways().FirstOrDefault();
+
+                if (localeRoomPathway == null)
+                {
+                    localeRoomPathway = new PathwayTemplate()
+                    {
+                        DegreesFromNorth = vModel.LocaleRoomPathway.DegreesFromNorth,
+                        Name = vModel.LocaleRoomPathway.Name,
+                        Origin = obj,
+                        Destination = destination,
+                        InclineGrade = vModel.LocaleRoomPathway.InclineGrade,
+                        Model = vModel.LocaleRoomPathway.Model
+                    };
+                }
+                else
+                {
+                    localeRoomPathway.Model = vModel.LocaleRoomPathway.Model;
+                    localeRoomPathway.Name = vModel.LocaleRoomPathway.Name;
+                    localeRoomPathway.InclineGrade = vModel.LocaleRoomPathway.InclineGrade;
+                    localeRoomPathway.Destination = destination;
+                }
+            }
+
             if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {
                 if (zoneDestination != null)
                 {
                     zoneDestination.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
+                }
+
+                if (localeRoomPathway != null)
+                {
+                    localeRoomPathway.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
                 }
 
                 LoggingUtility.LogAdminCommandUsage("*WEB* - EditRoomTemplate[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);

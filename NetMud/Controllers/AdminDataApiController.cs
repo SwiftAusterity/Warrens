@@ -14,6 +14,7 @@ using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.Locale;
 using NetMud.DataStructure.Room;
 using NetMud.Physics;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
@@ -98,9 +99,18 @@ namespace NetMud.Controllers
         [Route("api/AdminDataApi/GetDictata/{wordType}", Name = "AdminAPI_GetDictata")]
         public JsonResult<string[]> GetDictata(LexicalType wordType, string term)
         {
-            System.Collections.Generic.IEnumerable<IDictata> words = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.WordType == wordType && dict.Name.Contains(term));
+            IEnumerable<IDictata> words = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.WordType == wordType && dict.Name.Contains(term));
 
             return Json(words.Select(word => word.Name).ToArray());
+        }
+
+        [HttpGet]
+        [Route("api/AdminDataApi/GetRoomsOfLocale/{localeId}", Name = "AdminAPI_GetRoomsOfLocale")]
+        public JsonResult<Dictionary<long, string>> GetRoomsOfLocale(int localeId)
+        {
+            IEnumerable<IRoomTemplate> rooms = ConfigDataCache.GetAll<IRoomTemplate>().Where(room => room.ParentLocation.Id == localeId);
+
+            return Json(rooms.ToDictionary(room => room.Id, room => room.Name));
         }
 
         [HttpPost]
@@ -108,7 +118,7 @@ namespace NetMud.Controllers
         public string ChangeAccountRole(string accountName, short role)
         {
             RoleManager<IdentityRole> roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
-            System.Collections.Generic.List<IdentityRole> validRoles = roleManager.Roles.ToList();
+            List<IdentityRole> validRoles = roleManager.Roles.ToList();
 
             ApplicationUser user = UserManager.FindById(User.Identity.GetUserId());
             Account account = user.GameAccount;
@@ -129,7 +139,7 @@ namespace NetMud.Controllers
                 return "failure";
             }
 
-            System.Collections.Generic.List<string> rolesToRemove = userToModify.Roles.Select(rol => validRoles.First(vR => vR.Id.Equals(rol.RoleId)).Name).ToList();
+            List<string> rolesToRemove = userToModify.Roles.Select(rol => validRoles.First(vR => vR.Id.Equals(rol.RoleId)).Name).ToList();
 
             foreach (string currentRole in rolesToRemove)
             {

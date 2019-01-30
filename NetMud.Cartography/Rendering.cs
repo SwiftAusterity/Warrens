@@ -108,7 +108,7 @@ namespace NetMud.Cartography
 
                         if (RoomTemplate != null)
                         {
-                            rowString += RenderRoomToAscii(RoomTemplate, RoomTemplate.GetZonePathways().Any(), forAdmin);
+                            rowString += RenderRoomToAscii(RoomTemplate, RoomTemplate.GetZonePathways().Any(), RoomTemplate.GetLocalePathways().Any(), forAdmin);
                         }
                         else
                         {
@@ -182,7 +182,7 @@ namespace NetMud.Cartography
                     IPathwayTemplate wPath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.West);
 
                     //The room
-                    expandedMap[expandedRoomX, expandedRoomY] = RenderRoomToAscii(RoomTemplate, RoomTemplate.GetZonePathways().Any(), forAdmin);
+                    expandedMap[expandedRoomX, expandedRoomY] = RenderRoomToAscii(RoomTemplate, RoomTemplate.GetZonePathways().Any(), RoomTemplate.GetLocalePathways().Any(), forAdmin);
 
                     expandedMap[expandedRoomX - 1, expandedRoomY + 1] = RenderPathwayToAsciiForModals(nwPath, RoomTemplate.Id, MovementDirectionType.NorthWest
                                                                                         , Cartographer.GetRoomInDirection(RoomTemplate, MovementDirectionType.NorthWest), forAdmin);
@@ -340,9 +340,22 @@ namespace NetMud.Cartography
             return returnValue;
         }
 
-        private static string RenderRoomToAscii(IRoomTemplate destination, bool hasZoneExits, bool forAdmin = false)
+        private static string RenderRoomToAscii(IRoomTemplate destination, bool hasZoneExits, bool hasLocaleExits, bool forAdmin = false)
         {
-            string character = hasZoneExits ? "@" : "O";
+            string character = "O";
+
+            if(hasZoneExits && hasLocaleExits)
+            {
+                character = "@";
+            }
+            else if(hasZoneExits)
+            {
+                character = "Z";
+            }
+            else if(hasLocaleExits)
+            {
+                character = "L";
+            }
 
             if (forAdmin)
             {
