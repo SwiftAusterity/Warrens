@@ -203,6 +203,8 @@ namespace NetMud.Controllers.GameAdmin
             obj.EmergencyLocation = vModel.DataObject.EmergencyLocation;
             obj.SanguinaryMaterial = vModel.DataObject.SanguinaryMaterial;
             obj.BodyParts = vModel.DataObject.BodyParts;
+            obj.DeathNoticeBody = vModel.DataObject.DeathNoticeBody;
+            obj.DeathQualityChanges = vModel.DataObject.DeathQualityChanges;
 
             if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {

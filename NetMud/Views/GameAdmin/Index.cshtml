@@ -1,6 +1,9 @@
 ﻿@using NetMud.DataStructure.Administrative
 
 @model NetMud.Models.Admin.DashboardViewModel
+@{
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Admin Dashboard", new string[] { }, new string[] { });
+}
 
 <div id="tabs">
     <ul>
@@ -342,23 +345,9 @@
                 @Html.AntiForgeryToken()
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 <div class="form-group row">
-                    @Html.EditorFor(m => m.WebsocketPortalActive)
-                    @Html.EditorFor(m => m.UserCreationActive)
-                    @Html.EditorFor(m => m.AdminsOnly)
-                </div>
-                <h4>Death Recall Settings</h4>
-                <div class="form-group row">
-                    @Html.EditorFor(m => m.DeathRecallZone, new { validItems = Model.ValidZones })
-                    @Html.EditorFor(m => m.DeathRecallCoordinateX)
-                    @Html.EditorFor(m => m.DeathRecallCoordinateY)
-                </div>
-                <h4>Death Notice Settings</h4>
-                <div class="form-group row">
-                    @Html.EditorFor(m => m.DeathNoticeFrom)
-                    @Html.EditorFor(m => m.DeathNoticeSubject)
-                </div>
-                <div class="form-group row">
-                    @Html.EditorFor(m => m.DeathNoticeBody)
+                    @Html.EditorFor(m => m.WebsocketPortalActive, new { columnCount = 3 })
+                    @Html.EditorFor(m => m.UserCreationActive, new { columnCount = 3 })
+                    @Html.EditorFor(m => m.AdminsOnly, new { columnCount = 3 })
                 </div>
 
                 @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "GameAdmin", IncludeCancel = false })
@@ -366,7 +355,6 @@
         </section>
     </div>
 </div>
-
 <script type="text/javascript">
     $(document).ready(function () {
         $("#tabs").tabs();

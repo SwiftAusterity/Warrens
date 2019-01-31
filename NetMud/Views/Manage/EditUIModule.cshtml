@@ -1,5 +1,9 @@
 ﻿@model NetMud.Models.Admin.AddEditUIModuleViewModel
 
+@{
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Edit UI Module", new string[] { "Dashboard", "UIModules" }, new string[] { "/Manage", "/Manage/UIModules" });
+}
+
 <section id="newCharacterForm">
     @using (Html.BeginForm("EditUIModule", "Manage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {

@@ -37,7 +37,6 @@
         }
     }
 }
-
 @if (strippedNaked)
 {
     @Html.DescriptionFor(m => m)
@@ -52,14 +51,12 @@ else
 {
     <div class="col-sm-@columnInputValue" style="display: inline-flex;">
         @Html.DescriptionFor(m => m)
-
         <div class="pretty p-switch p-fill">
             @Html.CheckBox("", modelValue, htmlAttributes)
             <div class="state">
                 @Html.LabelFor(m => m, new { @class = "col-form-label" })
             </div>
         </div>
-
         @if (!string.IsNullOrWhiteSpace(archivedValue))
         {
             <span class="archive">Archived Value: @archivedValue</span>

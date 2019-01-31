@@ -101,12 +101,6 @@ namespace NetMud.Controllers.GameAdmin
                 AdminsOnly = globalConfig.AdminsOnly,
                 UserCreationActive = globalConfig.UserCreationActive,
 
-                DeathRecallZone = globalConfig.DeathSettings.DeathRecallZone == null ? -1 : globalConfig.DeathSettings.DeathRecallZone.Id,
-                DeathRecallCoordinateX = globalConfig.DeathSettings.DeathRecallCoordinates.X,
-                DeathRecallCoordinateY = globalConfig.DeathSettings.DeathRecallCoordinates.Y,
-                DeathNoticeSubject = globalConfig.DeathSettings.DeathNoticeSubject,
-                DeathNoticeFrom = globalConfig.DeathSettings.DeathNoticeFrom,
-                DeathNoticeBody = globalConfig.DeathSettings.DeathNoticeBody.Value,
                 QualityChange = new string[0],
                 QualityChangeValue = new int[0],
 
@@ -235,41 +229,6 @@ namespace NetMud.Controllers.GameAdmin
             globalConfig.WebsocketPortalActive = vModel.WebsocketPortalActive;
             globalConfig.AdminsOnly = vModel.AdminsOnly;
             globalConfig.UserCreationActive = vModel.UserCreationActive;
-
-            DeathConfig deathSettings = new DeathConfig
-            {
-                DeathRecallZone = TemplateCache.Get<IZoneTemplate>(vModel.DeathRecallZone),
-                DeathRecallCoordinates = new Coordinate(vModel.DeathRecallCoordinateX, vModel.DeathRecallCoordinateY, 0),
-                DeathNoticeSubject = vModel.DeathNoticeSubject,
-                DeathNoticeFrom = vModel.DeathNoticeFrom,
-                DeathNoticeBody = vModel.DeathNoticeBody
-            };
-
-            HashSet<QualityValue> qualities = new HashSet<QualityValue>();
-            if (vModel.QualityChange != null)
-            {
-                int icIndex = 0;
-                foreach (string quality in vModel.QualityChange)
-                {
-                    if (!string.IsNullOrWhiteSpace(quality))
-                    {
-                        if (vModel.QualityChangeValue.Count() <= icIndex)
-                        {
-                            break;
-                        }
-
-                        if (vModel.QualityChangeValue[icIndex] != 0)
-                        {
-                            qualities.Add(new QualityValue(quality, vModel.QualityChangeValue[icIndex]));
-                        }
-                    }
-
-                    icIndex++;
-                }
-            }
-            deathSettings.QualityChanges = qualities;
-
-            globalConfig.DeathSettings = deathSettings;
 
             if (globalConfig.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {

@@ -72,6 +72,7 @@ namespace NetMud.Controllers
                 DataObject = account,
                 GlobalIdentityHandle = account.GlobalIdentityHandle,
                 UIModuleCount = TemplateCache.GetAll<IUIModule>(true).Count(uimod => uimod.CreatorHandle.Equals(account.GlobalIdentityHandle)),
+                NotificationCount = ConfigDataCache.GetAll<IPlayerMessage>().Count(msg => msg.RecipientAccount == account),
                 UITutorialMode = account.Config.UITutorialMode,
                 GossipSubscriber = account.Config.GossipSubscriber,
                 PermanentlyMuteMusic = account.Config.MusicMuted,
@@ -176,7 +177,8 @@ namespace NetMud.Controllers
             AddEditCharacterViewModel model = new AddEditCharacterViewModel
             {
                 authedUser  = user,
-                DataObject = obj
+                DataObject = obj,
+                ValidRaces = TemplateCache.GetAll<IRace>()
             };
 
             return View(model);
@@ -703,6 +705,175 @@ namespace NetMud.Controllers
             return RedirectToAction("UIModules", new { Message = message });
         }
 
+        #endregion
+
+        #region Playlists
+        [HttpGet]
+        public ActionResult Playlists(string message)
+        {
+            ViewBag.StatusMessage = message;
+
+            string userId = User.Identity.GetUserId();
+            ApplicationUser authedUser = UserManager.FindById(userId);
+
+            HashSet<IPlaylist> lists = authedUser.GameAccount.Config.Playlists;
+
+            ManagePlaylistsViewModel model = new ManagePlaylistsViewModel(lists)
+            {
+                authedUser = authedUser
+            };
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public ActionResult AddPlaylist()
+        {
+            string message = string.Empty;
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            var currentCharacter = authedUser.GameAccount.Characters.FirstOrDefault(chr => chr.Id == authedUser.GameAccount.CurrentlySelectedCharacter);
+
+            AddEditPlaylistViewModel vModel = new AddEditPlaylistViewModel
+            {
+                authedUser = authedUser,
+                ValidSongs = ContentUtility.GetMusicTracksForZone(currentCharacter?.CurrentLocation?.CurrentZone)
+            };
+
+            return View(vModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddPlaylist(AddEditPlaylistViewModel vModel)
+        {
+            string message = string.Empty;
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+            HashSet<IPlaylist> existingPlaylists = authedUser.GameAccount.Config.Playlists;
+
+            if (existingPlaylists.Any(list => list.Name.Equals(vModel.Name)))
+                message = "A playlist by that name already exists.";
+            else if (vModel.SongList == null || vModel.SongList.Length == 0)
+                message = "Your playlist needs at least one song in it.";
+            else
+            {
+                Playlist playlist = new Playlist()
+                {
+                    Name = vModel.Name,
+                    Songs = new HashSet<string>(vModel.SongList)
+                };
+
+                authedUser.GameAccount.Config.Playlists.Add(playlist);
+
+                if (!authedUser.GameAccount.Config.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+                    message = "Error; Creation failed.";
+                else
+                {
+                    LoggingUtility.Log("*WEB* - AddPlaylist[" + vModel.Name + "]", LogChannels.AccountActivity);
+                }
+            }
+
+            return RedirectToAction("Playlists", new { Message = message });
+        }
+
+        [HttpGet]
+        public ActionResult EditPlaylist(string name)
+        {
+            string message = string.Empty;
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+            HashSet<IPlaylist> existingPlaylists = authedUser.GameAccount.Config.Playlists;
+            IPlaylist obj = existingPlaylists.FirstOrDefault(list => list.Name.Equals(name));
+
+            if (obj == null)
+            {
+                return RedirectToAction("Playlists", new { Message = "That playlist does not exist." });
+            }
+
+            var currentCharacter = authedUser.GameAccount.Characters.FirstOrDefault(chr => chr.Id == authedUser.GameAccount.CurrentlySelectedCharacter);
+            AddEditPlaylistViewModel vModel = new AddEditPlaylistViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                Name = obj.Name,
+                DataObject = obj,
+                ValidSongs = ContentUtility.GetMusicTracksForZone(currentCharacter?.CurrentLocation?.CurrentZone)
+            };
+
+            return View(vModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditPlaylist(AddEditPlaylistViewModel vModel)
+        {
+            string message = string.Empty;
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+            HashSet<IPlaylist> existingPlaylists = authedUser.GameAccount.Config.Playlists;
+            IPlaylist obj = existingPlaylists.FirstOrDefault(list => list.Name.Equals(vModel.Name));
+
+            if (obj == null)
+            {
+                return RedirectToAction("Playlists", new { Message = "That playlist does not exist." });
+            }
+
+            authedUser.GameAccount.Config.Playlists.Remove(obj);
+
+            Playlist playlist = new Playlist()
+            {
+                Name = vModel.Name,
+                Songs = new HashSet<string>(vModel.SongList)
+            };
+
+            authedUser.GameAccount.Config.Playlists.Add(playlist);
+
+            if (!authedUser.GameAccount.Config.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+                message = "Error; Edit failed.";
+            else
+            {
+                LoggingUtility.Log("*WEB* - EditPlaylist[" + vModel.Name + "]", LogChannels.AccountActivity);
+            }
+
+            return RedirectToAction("Playlists", new { Message = message });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route(@"Manage/RemovePlaylist/{ID?}/{authorize?}")]
+        public ActionResult RemovePlaylist(string removePlaylistName = "", string authorizeRemovePlaylist = "")
+        {
+            string message = string.Empty;
+
+            if (string.IsNullOrWhiteSpace(authorizeRemovePlaylist))
+                message = "You must check the proper authorize radio button first.";
+            else
+            {
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+                string[] values = authorizeRemovePlaylist.Split(new string[] { "|||" }, StringSplitOptions.RemoveEmptyEntries);
+
+                if (values.Count() != 2)
+                    message = "You must check the proper authorize radio button first.";
+                else
+                {
+                    IPlaylist origin = authedUser.GameAccount.Config.Playlists.FirstOrDefault(list => list.Name.Equals(removePlaylistName));
+
+                    if (origin == null)
+                        message = "That playlist does not exist";
+                    else
+                    {
+                        authedUser.GameAccount.Config.Playlists = new HashSet<IPlaylist>(authedUser.GameAccount.Config.Playlists.Where(list => !list.Name.Equals(removePlaylistName)));
+
+                        if (authedUser.GameAccount.Config.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+                        {
+                            LoggingUtility.Log("*WEB* - RemoveZonePath[" + removePlaylistName + "]", LogChannels.AccountActivity);
+                            message = "Delete Successful.";
+                        }
+                        else
+                            message = "Error; Removal failed.";
+                    }
+                }
+            }
+
+            return RedirectToAction("Playlists", new { Message = message });
+        }
         #endregion
 
         #region AuthStuff

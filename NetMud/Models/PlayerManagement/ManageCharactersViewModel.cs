@@ -27,6 +27,7 @@ namespace NetMud.Models.PlayerManagement
 
         [UIHint("PlayerTemplate")]
         public IPlayerTemplate DataObject { get; set; }
+        public IEnumerable<IRace> ValidRaces { get; set; }
     }
 
 }

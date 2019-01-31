@@ -22,10 +22,5 @@ namespace NetMud.DataStructure.System
         /// Are only admins allowed to log in - noone at StaffRank.Player
         /// </summary>
         bool AdminsOnly { get; set; }
-
-        /// <summary>
-        /// Config to handle player death
-        /// </summary>
-        IDeathConfig DeathSettings { get; set; }
     }
 }

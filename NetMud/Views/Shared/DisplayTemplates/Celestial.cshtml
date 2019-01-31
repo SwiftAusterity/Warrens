@@ -1,0 +1,32 @@
+﻿@model NetMud.Data.Gaia.Celestial
+
+<div class="entityDataInfoCard">
+    <h4>@Model.Name</h4>
+    <hr />
+    <div>
+        <span>Luminosity</span>
+        <span>@Model.Luminosity</span>
+    </div>
+    <div>
+        <span>Orientation</span>
+        <span>@Model.OrientationType</span>
+    </div>
+    <div>
+        <span>Perigree</span>
+        <span>@Model.Perigree</span>
+    </div>
+    <div>
+        <span>Apogee</span>
+        <span>@Model.Apogee</span>
+    </div>
+    <div>
+        <span>Velocity</span>
+        <span>@Model.Velocity</span>
+    </div>
+    <div class='dimensionalModel'>
+        <h5>Physical Model</h5>
+        <div>
+            <pre id='modelContainer' class='twoDModel' data-id='@Model.Id'>@Html.Raw(Model.Model.ModelTemplate.ViewFlattenedModel(true))</pre>
+        </div>
+    </div>
+</div>

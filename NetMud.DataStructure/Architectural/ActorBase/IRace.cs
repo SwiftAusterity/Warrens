@@ -91,6 +91,18 @@ namespace NetMud.DataStructure.Architectural.ActorBase
         /// <returns>List of strings as rows for rendering</returns>
         IEnumerable<string> RenderAnatomy(bool forWeb);
 
+        /* Death Configuration */
+
+        /// <summary>
+        /// The body of the death notice
+        /// </summary>
+        MarkdownString DeathNoticeBody { get; set; }
+
+        /// <summary>
+        /// Should any qualities of the player change on death (like money removal)
+        /// </summary>
+        HashSet<QualityValue> DeathQualityChanges { get; set; }
+
         //TODO: Poison glands
     }
 }

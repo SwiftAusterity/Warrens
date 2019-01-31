@@ -1,9 +1,6 @@
-﻿
-using NetMud.Data.Architectural;
-using NetMud.Data.Players;
+﻿using NetMud.Data.Architectural;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
-using NetMud.DataStructure.Player;
 using NetMud.DataStructure.System;
 using Newtonsoft.Json;
 using System;
@@ -47,16 +44,8 @@ namespace NetMud.Data.System
         [UIHint("Boolean")]
         public bool AdminsOnly { get; set; }
 
-        /// <summary>
-        /// Config to handle player death
-        /// </summary>
-        [Display(Name = "Death", Description = "What happens when players die.")]
-        public IDeathConfig DeathSettings { get; set; }
-
         public GlobalConfig()
         {
-            DeathSettings = new DeathConfig();
-
             Name = "LiveSettings";
             WebsocketPortalActive = true;
             AdminsOnly = false;
@@ -75,7 +64,6 @@ namespace NetMud.Data.System
                 WebsocketPortalActive = WebsocketPortalActive,
                 UserCreationActive = UserCreationActive,
                 AdminsOnly = AdminsOnly,
-                DeathSettings = DeathSettings,
             };
         }
     }

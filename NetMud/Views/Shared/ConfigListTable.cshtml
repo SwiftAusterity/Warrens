@@ -5,7 +5,7 @@
     <h4>@Model.Name</h4>
 }
 <div class="listTable">
-    <div class="listSection lisdiv class=" listItem"eader">
+    <div class="listSection listHeader">
         @foreach (var column in Model.Columns)
         {
             <div class="listItem" scope="col">@column.Key</div>
@@ -24,26 +24,29 @@
     <div class="listSection listContent">
         @foreach (var val in Model.Values)
         {
-            foreach (var column in Model.Columns)
-            {
-                <div class="listItem">@Html.Raw(column.Value(val))</div>
-            }
+            <div class="listRow">
 
-            if (Model.IncludeDelete)
-            {
-                <div class="listItem">
-                    <button type="submit" name="removeId" id="removeId" class="removeData" value="@val.UniqueKey" title="Delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-                    <input type="radio" name="audiv class=" listItem"orizeRemove" value="@val.UniqueKey" style="margin-left: 15px;" />
-                </div>
-            }
+                @foreach (var column in Model.Columns)
+                {
+                    <div class="listItem">@Html.Raw(column.Value(val))</div>
+                }
 
-            if (Model.IncludeUnapprove)
-            {
-                <div class="listItem">
-                    <button type="submit" name="unapproveId" id="unapproveId" class="unapproveData" value="@val.UniqueKey" title="Unapprove"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span></button>
-                    <input type="radio" name="audiv class=" listItem"orizeUnapprove" value="@val.UniqueKey" style="margin-left: 15px;" />
-                </div>
-            }
+                @if (Model.IncludeDelete)
+                {
+                    <div class="listItem">
+                        <button type="submit" name="removeId" id="removeId" class="removeData" value="@val.UniqueKey" title="Delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                        <input type="radio" name="audiv class=" listItem"orizeRemove" value="@val.UniqueKey" style="margin-left: 15px;" />
+                    </div>
+                }
+
+                @if (Model.IncludeUnapprove)
+                {
+                    <div class="listItem">
+                        <button type="submit" name="unapproveId" id="unapproveId" class="unapproveData" value="@val.UniqueKey" title="Unapprove"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span></button>
+                        <input type="radio" name="audiv class=" listItem"orizeUnapprove" value="@val.UniqueKey" style="margin-left: 15px;" />
+                    </div>
+                }
+            </div>
         }
     </div>
 </div>

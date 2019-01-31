@@ -1,13 +1,12 @@
 ﻿@using System.Linq
 @using NetMud.DataStructure.Player
-
 @model NetMud.Models.PlayerManagement.ManageAcquaintencesViewModel
-
 @{
-    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]> ("Friends and Enemies", new string[] { "Dashboard" }, new string[] { "/Manage" });
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Friends and Enemies", new string[] { "Dashboard" }, new string[] { "/Manage" });
 }
-
-@Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model, "Acquaintences"))
+<div class="searchCriteria">
+    @Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model, "Acquaintences"))
+</div>
 
 @using (Html.BeginForm("RemoveAcquaintence", "Manage"))
 {
@@ -43,33 +42,33 @@
         </tbody>
     </table>
 }
-    <section id="newAcquaintenceForm">
-        @using (Html.BeginForm("AddAcquaintence", "Manage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-        {
-            @Html.AntiForgeryToken()
-            <h4>New Friend/Enemy</h4>
-            <hr />
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            <div class="form-group row">
-                @Html.EditorFor(m => m.AcquaintenceName, new { columnCount = 3 })
-                @Html.EditorFor(m => m.IsFriend, new { columnCount = 3 })
-                @Html.EditorFor(m => m.GossipSystem, new { columnCount = 3 })
+<section id="newAcquaintenceForm">
+    @using (Html.BeginForm("AddAcquaintence", "Manage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        <h4>New Friend/Enemy</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group row">
+            @Html.EditorFor(m => m.AcquaintenceName, new { columnCount = 3 })
+            @Html.EditorFor(m => m.IsFriend, new { columnCount = 3 })
+            @Html.EditorFor(m => m.GossipSystem, new { columnCount = 3 })
+        </div>
+
+        <h4>Notification Subscriptions</h4>
+        <div class="form-group row">
+            @Html.HiddenFor(m => m.Notifications)
+            <div class="col-md-2">
+                <input type="text" id="addNotifications" class="notificationList" /><span class="glyphicon glyphicon-plus-sign addWord"></span>
             </div>
-
-            <h4>Notification Subscriptions</h4>
-            <div class="form-group row">
-                @Html.HiddenFor(m => m.Notifications)
-                <div class="col-md-2">
-                    <input type="text" id="addNotifications" class="notificationList" /><span class="glyphicon glyphicon-plus-sign addWord"></span>
-                </div>
-                <div class="col-md-10" id="NotificationsContainer" style="margin-top: 10px;">
-                </div>
+            <div class="col-md-10" id="NotificationsContainer" style="margin-top: 10px;">
             </div>
+        </div>
 
 
-            @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Add", CancelName = "Cancel", ReturnAction = "Acquaintences", ReturnController = "Manage", IncludeCancel = false })
-        }
-    </section>
+        @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Add", CancelName = "Cancel", ReturnAction = "Acquaintences", ReturnController = "Manage", IncludeCancel = false })
+    }
+</section>
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script type="text/javascript">

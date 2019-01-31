@@ -202,7 +202,6 @@ namespace NetMud.Data.Architectural.ActorBase
         [JsonIgnore]
         [NonNullableDataIntegrity("Emergency Location is invalid.")]
         [Display(Name = "Recall Zone", Description = "The 'emergency' zone this shows up in when the system can't figure out where else to put it. (post-newbie zone for players)")]
-        [DataType(DataType.Text)]
         [UIHint("ZoneTemplateList")]
         [ZoneTemplateDataBinder]
         public IZoneTemplate EmergencyLocation
@@ -216,6 +215,20 @@ namespace NetMud.Data.Architectural.ActorBase
                 _emergencyLocation = new TemplateCacheKey(value);
             }
         }
+
+        /// <summary>
+        /// The body of the death notice
+        /// </summary>
+        [Display(Name = "Death Notice", Description = "The text that goes into the death notice per race.")]
+        [UIHint("Markdown")]
+        public MarkdownString DeathNoticeBody { get; set; }
+
+        /// <summary>
+        /// Should any qualities of the player change on death (like money removal)
+        /// </summary>
+        [Display(Name = "Death Changes", Description = "The qualities that are changed when someone dies. Typically physical losses.")]
+        [UIHint("QualityValueList")]
+        public HashSet<QualityValue> DeathQualityChanges { get; set; }
 
         /// <summary>
         /// Make a new blank race

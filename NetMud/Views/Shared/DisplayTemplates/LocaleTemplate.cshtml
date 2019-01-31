@@ -1,0 +1,14 @@
+﻿@model NetMud.Data.Locale.LocaleTemplate
+
+<div class="entityDataInfoCard">
+    <h4>@Model.Name (of @Model.ParentLocation.Name)</h4>
+    <hr />
+    <div>
+        <span># of rooms</span>
+        <span>@Model.Rooms().Count()</span>
+    </div>
+    @foreach (var quality in Model.Qualities)
+    {
+        @Html.DisplayFor(m => quality)
+    }
+</div>

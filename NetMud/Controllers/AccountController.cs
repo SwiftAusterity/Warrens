@@ -102,14 +102,6 @@ namespace NetMud.Controllers
                         return View(model);
                     }
 
-                    if(!account.Characters.Any())
-                    {
-                        Random rand = new Random();
-                        IPlayerTemplate newChar = CreateAccountPlayerAndConfig(account, "Rabbit", rand.Next(10000, 99999).ToString(), "Unspecified");
-
-                        newChar.SystemSave();
-                    }
-
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");

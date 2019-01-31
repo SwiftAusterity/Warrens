@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@using (Html.BeginForm("Items", "Features", FormMethod.Post, new { id = "paginationForm" }))
+@using (Html.BeginForm("NPCs", "Features", FormMethod.Post, new { id = "paginationForm" }))
 {
     <div class="itemsTable">
         <div class="itemsTableList">
@@ -22,43 +22,4 @@
             </div>
         </div>
     </div>
-}
-
-@section Styles {
-    <style>
-        body {
-            background-image: url(/Content/images/farmBkg.jpg);
-            background-size: cover;
-            background-attachment: fixed;
-            color: white;
-        }
-
-        hr {
-            border-color: white;
-        }
-
-        h3 {
-            color: white;
-        }
-
-        /* unvisited link */
-        footer a:link {
-            color: blueviolet;
-        }
-
-        /* visited link */
-        footer a:visited {
-            color: white;
-        }
-
-        /* mouse over link */
-        footer a:hover {
-            color: hotpink;
-        }
-
-        /* selected link */
-        footer a:active {
-            color: red;
-        }
-    </style>
 }

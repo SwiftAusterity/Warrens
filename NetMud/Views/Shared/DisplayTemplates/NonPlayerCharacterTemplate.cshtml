@@ -1,28 +1,11 @@
-﻿@model NetMud.DataStructure.NPC.INonPlayerCharacterTemplate
-
-@{
-    var tolerancesString = string.Format("Temp Range: {0} - {1}",
-        Model.Race.TemperatureTolerance.Low, Model.Race.TemperatureTolerance.High);
-}
+﻿@model NetMud.Data.NPC.NonPlayerCharacterTemplate
 
 <div class="entityDataInfoCard">
     <h4>@Model.FullName() - @Model.Gender</h4>
     <hr />
     <div>
-        <span>Stats</span>
-        <span>@Model.TotalHealth / @Model.TotalStamina</span>
-    </div>
-    <div>
         <span>Race</span>
         <span>@Model.Race.Name (of @Model.Race.CollectiveNoun)</span>
-    </div>
-    <div>
-        <span>Habitat</span>
-        <span>@tolerancesString</span>
-    </div>
-    <div>
-        <span>Dietary Needs</span>
-        <span>@Model.Race.DietaryNeeds</span>
     </div>
     @foreach (var quality in Model.Qualities)
     {

@@ -1,6 +1,8 @@
-﻿@using NetMud.DataStructure.System
+﻿@model NetMud.Models.Admin.AddEditUIModuleViewModel
 
-@model NetMud.Models.Admin.AddEditUIModuleViewModel
+@{
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Add UI Module", new string[] { "Dashboard", "UIModules" }, new string[] { "/Manage", "/Manage/UIModules" });
+}
 
 <section id="newConstantsForm">
     @using (Html.BeginForm("AddUIModule", "Manage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))

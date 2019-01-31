@@ -1,53 +1,59 @@
 ﻿@model NetMud.Models.PlayerManagement.ManageAccountViewModel
+
 @{
     Model.UITutorialMode = Model.DataObject.Config.UITutorialMode;
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Dashboard", new string[] { }, new string[] { });
 }
 
 <div class="adminDashboard">
     <div>
-        <dl class="dl-horizontal">
-            <dt>Password:</dt>
+        <h4>Account</h4>
+        <dl class="dl-horizontal dashboardItem">
+            <dt>&nbsp;</dt>
             <dd>
-                [ @Html.ActionLink("Change your password", "ChangePassword") ]
+                @Html.ActionLink("Change your password", "ChangePassword", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Change Password" })
+            </dd>
+        </dl>
+        <dl class="dl-horizontal dashboardItem">
+            <dt>&nbsp;</dt>
+            <dd>
+                Characters [@Html.ActionLink(Model.authedUser.GameAccount.Characters.Count().ToString(), "ManageCharacters", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" })]
             </dd>
         </dl>
     </div>
-    <div>
-        <dl class="dl-horizontal">
-            <dt>Registered Characters:</dt>
-            <dd>
-                @Model.authedUser.GameAccount.Characters.Count() [
-                @Html.ActionLink("Manage", "ManageCharacters") ]
-            </dd>
-            <dt>Notifications and Mail:</dt>
-            <dd>
-                @Model.authedUser.GameAccount.Config.Notifications.Count() [
-                @Html.ActionLink("Manage", "Notifications") ]
-            </dd>
 
-            <dt>Acquaintences:</dt>
+    <div>
+        <h4>Acquaintences</h4>
+        <dl class="dl-horizontal dashboardItem">
+            <dt>&nbsp;</dt>
             <dd>
-                @Model.authedUser.GameAccount.Config.Acquaintences.Count() [
-                @Html.ActionLink("Manage", "Acquaintences") ]
+                Inbox [@Html.ActionLink(Model.NotificationCount.ToString(), "Notifications", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Mail and Notifications" })]
+            </dd>
+        </dl>
+        <dl class="dl-horizontal dashboardItem">
+            <dt>&nbsp;</dt>
+            <dd>
+                Friends [@Html.ActionLink(Model.authedUser.GameAccount.Config.Acquaintences.Count().ToString(), "Acquaintences", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Acquaintences" })]
             </dd>
         </dl>
     </div>
+
     <div>
-        <dl class="dl-horizontal">
-            <dt>Background Music Playlists:</dt>
+        <h4>Game Features</h4>
+        <dl class="dl-horizontal dashboardItem">
+            <dt>&nbsp;</dt>
             <dd>
-                @Model.authedUser.GameAccount.Config.Playlists.Count() [
-                @Html.ActionLink("Manage", "Playlists") ]
+                Music Playlists: [@Html.ActionLink(Model.authedUser.GameAccount.Config.Playlists.Count().ToString(), "Playlists", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Music Playlists" })]
             </dd>
-            <dt>Client UI Configuration:</dt>
+        </dl>
+        <dl class="dl-horizontal dashboardItem">
+            <dt>&nbsp;</dt>
             <dd>
-                @Model.UIModuleCount [
-                @Html.ActionLink("Manage", "UIModules") ]
+                UI Configuration: [@Html.ActionLink(Model.UIModuleCount.ToString(), "UIModules", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "UI Modules" })]
             </dd>
         </dl>
     </div>
 </div>
-<div class="clearfix"></div>
 
 <h3>Account Config</h3>
 <section id="accountConfig">

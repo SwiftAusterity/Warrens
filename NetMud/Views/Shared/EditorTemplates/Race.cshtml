@@ -32,4 +32,13 @@
     @Html.EditorFor(m => m.Legs, new { validItems = ViewData["ValidItems"] })
 </div>
 
+<h4>Extra Body Parts</h4>
 @Html.EditorFor(m => m.BodyParts, new { validItems = ViewData["ValidItems"] })
+
+<h4>Death Config</h4>
+<div class="form-group row">
+    @Html.EditorFor(m => m.DeathNoticeBody)
+</div>
+
+<h4>On-Death Quality Changes</h4>
+@Html.EditorFor(m => m.DeathQualityChanges)

@@ -1,0 +1,38 @@
+﻿@model NetMud.Data.NaturalResource.Fauna
+
+<div class="entityDataInfoCard">
+    <h4>@Model.Name (of @Model.Race.Name)</h4>
+    <hr />
+    <div>
+        <span>Female Ratio</span>
+        <span>@Html.DisplayFor(m => m.FemaleRatio)</span>
+    </div>
+    <div>
+        <span>Puissance Variance</span>
+        <span>@Html.DisplayFor(m => m.PuissanceVariance)</span>
+    </div>
+    <div>
+        <span>Rarity</span>
+        <span>@Html.DisplayFor(m => m.Rarity)</span>
+    </div>
+    <div>
+        <span>Population Hard Cap</span>
+        <span>@Html.DisplayFor(m => m.PopulationHardCap)</span>
+    </div>
+    <div>
+        <span>Elevation Range</span>
+        <span>@Html.DisplayFor(m => m.ElevationRange)</span>
+    </div>
+    <div>
+        <span>Humidity Range</span>
+        <span>@Html.DisplayFor(m => m.HumidityRange)</span>
+    </div>
+    <div>
+        <span>Temperature Range</span>
+        <span>@Html.DisplayFor(m => m.TemperatureRange)</span>
+    </div>
+    <div>
+        <span>Ecology</span>
+        <span>@string.Join(",", Model.OccursIn)</span>
+    </div>
+</div>

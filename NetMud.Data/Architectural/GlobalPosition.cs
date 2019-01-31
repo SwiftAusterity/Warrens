@@ -51,7 +51,7 @@ namespace NetMud.Data.Architectural
         /// <summary>
         /// Birthmark for current live location of this
         /// </summary>
-        [JsonProperty("CurrentZone")]
+        [JsonProperty("CurrentLocale")]
         private LiveCacheKey _currentLocale { get; set; }
 
         /// <summary>

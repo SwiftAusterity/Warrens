@@ -217,7 +217,6 @@
     <Compile Include="Player\IAccount.cs" />
     <Compile Include="Player\IAccountConfig.cs" />
     <Compile Include="Player\IAcquaintence.cs" />
-    <Compile Include="Player\IDeathConfig.cs" />
     <Compile Include="NPC\IFaction.cs" />
     <Compile Include="Player\IPlayer.cs" />
     <Compile Include="Player\IPlayerFramework.cs" />

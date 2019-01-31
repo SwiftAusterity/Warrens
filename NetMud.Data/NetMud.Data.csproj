@@ -200,7 +200,6 @@
     <Compile Include="Player\Account.cs" />
     <Compile Include="Player\AccountConfig.cs" />
     <Compile Include="Player\Acquaintence.cs" />
-    <Compile Include="Player\DeathConfig.cs" />
     <Compile Include="Player\Player.cs" />
     <Compile Include="Player\PlayerMessage.cs" />
     <Compile Include="Player\PlayerTemplate.cs" />

@@ -15,5 +15,6 @@
 </div>
 @if (User.IsInRole("Admin") || User.IsInRole("Builder") || User.IsInRole("Guest"))
 {
+    <h4>Super Senses</h4>
     @Html.EditorFor(m => m.SuperSenses)
 }

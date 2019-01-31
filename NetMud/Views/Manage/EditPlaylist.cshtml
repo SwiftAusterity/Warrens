@@ -4,7 +4,6 @@
     ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Edit Playlist", new string[] { "Dashboard", "Playlists" }, new string[] { "/Manage", "/Manage/Playlists" });
 }
 
-
 <section id="newNotificationForm">
     @using (Html.BeginForm("EditPlaylist", "Manage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {

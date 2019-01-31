@@ -1,4 +1,4 @@
-﻿@model NetMud.DataStructure.Inanimate.IInanimateTemplate
+﻿@model NetMud.Data.Inanimate.InanimateTemplate
 
 <div class="entityDataInfoCard">
     <h4>@Model.Name</h4>
@@ -7,8 +7,14 @@
         <span>Accumulation Cap:</span>
         <span>@Model.AccumulationCap</span>
     </div>
-    @foreach(var quality in Model.Qualities)
+    @foreach (var quality in Model.Qualities)
     {
         @Html.DisplayFor(m => quality)
     }
+    <div class='dimensionalModel'>
+        <h5>Physical Model</h5>
+        <div>
+            <pre id='modelContainer' class='twoDModel' data-id='@Model.Id'>@Html.Raw(Model.Model.ModelTemplate.ViewFlattenedModel(true))</pre>
+        </div>
+    </div>
 </div>

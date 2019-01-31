@@ -14,7 +14,7 @@
 <div>
     @if (Model.IncludeAddLink)
     {
-        @Html.ActionLink(" ", "Add", Model.EntityTypeName, htmlAttributes: new { @class = "glyphicon-plus-sign glyphicon addNew", @style = "color: green;", @title = "Add New" })
+        @Html.ActionLink(" ", string.IsNullOrWhiteSpace(Model.AddMethodName) ? "Add" : Model.AddMethodName, Model.EntityTypeName, htmlAttributes: new { @class = "glyphicon-plus-sign glyphicon addNew", @style = "color: green;", @title = "Add New" })
     }
 </div>
 

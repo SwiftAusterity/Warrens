@@ -34,6 +34,7 @@ namespace NetMud.Models.PlayerManagement
         public string GlobalIdentityHandle { get; set; }
 
         public int UIModuleCount { get; set; }
+        public int NotificationCount { get; set; }
 
         [Display(Name = "Chosen Role", Description = "The administrative role.")]
         [UIHint("EnumDropDownList")]

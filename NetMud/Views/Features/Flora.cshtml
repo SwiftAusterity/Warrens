@@ -1,12 +1,23 @@
-﻿@model IEnumerable<NetMud.DataStructure.NaturalResource.IFlora>
-
+﻿@model NetMud.Models.Features.FloraViewModel
 @{
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Flora", new string[] { "Home" }, new string[] { "/" });
     Layout = "~/Views/Shared/_Layout.cshtml";
-
-    var tableColumns = new Dictionary<string, Func<dynamic, string>>();
-    tableColumns.Add("Name", obj => obj.Name);
-    tableColumns.Add("Sunlight Preference", obj => obj.SunlightPreference.ToString());
-    tableColumns.Add("Coniferous", obj => obj.Coniferous.ToString());
 }
-
-@Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Name = "", Columns = tableColumns, Values = Model.OrderBy(obj => obj.Name), IncludeDelete = false, IncludeUnapprove = false })
+@using (Html.BeginForm("Flora", "Features", FormMethod.Post, new { id = "paginationForm" }))
+{
+    <div class="itemsTable">
+        <div class="itemsTableList">
+            @Html.DisplayFor(m => m.Items)
+        </div>
+        <div class="itemsTableSidebar">
+            <div class="sideBarFilter">
+                <div class="form-group row">
+                    @Html.EditorFor(m => m.SearchTerm, new { columnCount = 1 })
+                </div>
+                <div class="form-group row submitButtons">
+                    <input type="submit" value="Search" class="btn btn-default save" />
+                </div>
+            </div>
+        </div>
+    </div>
+}

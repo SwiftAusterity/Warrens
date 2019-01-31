@@ -1,0 +1,30 @@
+﻿@model NetMud.Data.Zone.ZoneTemplate
+
+<div class="entityDataInfoCard">
+    <h4>@Model.Name</h4>
+    <hr />
+    <div>
+        <span>Biome</span>
+        <span>@Html.DisplayFor(m => m.BaseBiome)</span>
+    </div>
+    <div>
+        <span>Elevation</span>
+        <span>@Html.DisplayFor(m => m.BaseElevation)</span>
+    </div>
+    <div>
+        <span>Hemisphere</span>
+        <span>@Html.DisplayFor(m => m.Hemisphere)</span>
+    </div>
+    <div>
+        <span>Meterological Variance</span>
+        <span>@Html.DisplayFor(m => m.PressureCoefficient)</span>
+    </div>
+    <div>
+        <span>Temperature Variance</span>
+        <span>@Html.DisplayFor(m => m.TemperatureCoefficient)</span>
+    </div>
+    @foreach (var quality in Model.Qualities)
+    {
+        @Html.DisplayFor(m => quality)
+    }
+</div>
