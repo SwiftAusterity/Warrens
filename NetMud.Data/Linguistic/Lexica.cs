@@ -197,6 +197,9 @@ namespace NetMud.Data.Linguistic
         {
             List<Tuple<SentenceType, ILexica>> sentences = new List<Tuple<SentenceType, ILexica>>();
 
+            //why is this happening
+            Modifiers.RemoveWhere(mod => mod == null);
+
             //TODO: make a get pronoun thing in the thesaurus
             if (omitName)
             {

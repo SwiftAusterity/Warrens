@@ -187,8 +187,13 @@ namespace NetMud.Data.Room
         /// <returns>The current Luminosity</returns>
         public override float GetCurrentLuminosity()
         {
+            float lumins = 0;
+
             IZone zone = CurrentLocation.CurrentZone;
-            float lumins = zone.GetCurrentLuminosity();
+            if (zone != null)
+            {
+                zone.GetCurrentLuminosity();
+            }
 
             foreach (IMobile dude in MobilesInside.EntitiesContained())
             {

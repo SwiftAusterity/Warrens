@@ -167,9 +167,32 @@ namespace NetMud.Websock
             IGaia currentWorld = currentZone.GetWorld();
             DataStructure.Room.IRoom currentRoom = currentLocation.CurrentRoom;
 
-            IEnumerable<string> pathways = ((ILocation)currentContainer).GetPathways().Select(data => data.GetDescribableName(_currentPlayer).ToString());
-            IEnumerable<string> inventory = currentContainer.GetContents<IInanimate>().Select(data => data.GetDescribableName(_currentPlayer).ToString());
-            IEnumerable<string> populace = currentContainer.GetContents<IMobile>().Where(player => !player.Equals(_currentPlayer)).Select(data => data.GetDescribableName(_currentPlayer).ToString());
+            IEnumerable<string> pathways = Enumerable.Empty<string>();
+            IEnumerable<string> inventory = Enumerable.Empty<string>();
+            IEnumerable<string> populace = Enumerable.Empty<string>();
+            string locationDescription = string.Empty;
+
+            if (currentContainer != null)
+            {
+                pathways = ((ILocation)currentContainer).GetPathways().Select(data => data.GetDescribableName(_currentPlayer).ToString());
+                inventory = currentContainer.GetContents<IInanimate>().Select(data => data.GetDescribableName(_currentPlayer).ToString());
+                populace = currentContainer.GetContents<IMobile>().Where(player => !player.Equals(_currentPlayer)).Select(data => data.GetDescribableName(_currentPlayer).ToString());
+                locationDescription = currentContainer.RenderToLook(_currentPlayer).Describe(NarrativeNormalization.Normal, 1);
+            }
+            else if(currentRoom != null)
+            {
+                pathways = currentRoom.GetPathways().Select(data => data.GetDescribableName(_currentPlayer).ToString());
+                inventory = currentRoom.GetContents<IInanimate>().Select(data => data.GetDescribableName(_currentPlayer).ToString());
+                populace = currentRoom.GetContents<IMobile>().Where(player => !player.Equals(_currentPlayer)).Select(data => data.GetDescribableName(_currentPlayer).ToString());
+                locationDescription = currentRoom.RenderToLook(_currentPlayer).Describe(NarrativeNormalization.Normal, 1);
+            }
+            else if (currentZone != null)
+            {
+                pathways = currentZone.GetPathways().Select(data => data.GetDescribableName(_currentPlayer).ToString());
+                inventory = currentZone.GetContents<IInanimate>().Select(data => data.GetDescribableName(_currentPlayer).ToString());
+                populace = currentZone.GetContents<IMobile>().Where(player => !player.Equals(_currentPlayer)).Select(data => data.GetDescribableName(_currentPlayer).ToString());
+                locationDescription = currentZone.RenderToLook(_currentPlayer).Describe(NarrativeNormalization.Normal, 1);
+            }
 
             LocalStatus local = new LocalStatus
             {
@@ -179,7 +202,7 @@ namespace NetMud.Websock
                 Inventory = inventory.ToArray(),
                 Populace = populace.ToArray(),
                 Exits = pathways.ToArray(),
-                LocationDescriptive = currentLocation.CurrentRoom.RenderToLook(_currentPlayer).Describe(NarrativeNormalization.Normal, 1)
+                LocationDescriptive = locationDescription
             };
 
             //The next two are mostly hard coded, TODO, also fix how we get the map as that's an admin thing
