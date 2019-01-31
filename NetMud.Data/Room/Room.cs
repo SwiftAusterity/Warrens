@@ -169,7 +169,7 @@ namespace NetMud.Data.Room
         public override IEnumerable<ICelestial> GetVisibileCelestials(IEntity viewer)
         {
             IRoomTemplate dT = Template<IRoomTemplate>();
-            IZone zone = AbsolutePosition().CurrentZone;
+            IZone zone = CurrentLocation.CurrentZone;
 
             bool canSeeSky = GeographicalUtilities.IsOutside(GetBiome()) 
                             && dT.Coordinates.Z >= zone.Template<IZoneTemplate>().BaseElevation;
@@ -187,7 +187,7 @@ namespace NetMud.Data.Room
         /// <returns>The current Luminosity</returns>
         public override float GetCurrentLuminosity()
         {
-            IZone zone = AbsolutePosition().CurrentZone;
+            IZone zone = CurrentLocation.CurrentZone;
             float lumins = zone.GetCurrentLuminosity();
 
             foreach (IMobile dude in MobilesInside.EntitiesContained())

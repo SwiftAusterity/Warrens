@@ -213,7 +213,7 @@ namespace NetMud.Data.Architectural
             {
                 if(CurrentRoom == null)
                 {
-                    return (ILocation)CurrentZone;
+                    return CurrentZone;
                 }
 
                 return CurrentRoom;

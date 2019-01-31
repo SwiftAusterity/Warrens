@@ -171,17 +171,6 @@ namespace NetMud.Data.Architectural.EntityBase
         [JsonConverter(typeof(ConcreteTypeConverter<GlobalPosition>))]
         public IGlobalPosition CurrentLocation { get; set; }
 
-        public virtual IGlobalPosition AbsolutePosition()
-        {
-            //TODO: Default to emergency location
-            if (CurrentLocation?.CurrentZone == null)
-            {
-                return null;
-            }
-
-            return CurrentLocation;
-        }
-
         /// <summary>
         /// Check for a quality
         /// </summary>

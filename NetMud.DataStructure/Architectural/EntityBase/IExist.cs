@@ -6,12 +6,6 @@
     public interface IExist : IHavePositioning, ILookable, IInspectable, IHaveInfo, IHaveQualities
     {
         /// <summary>
-        /// Handles returning container's position if inside of something
-        /// </summary>
-        /// <returns>positional coordinates</returns>
-        IGlobalPosition AbsolutePosition();
-
-        /// <summary>
         /// Spawns a new instance of this entity in the live world into a default position
         /// </summary>
         void SpawnNewInWorld();
