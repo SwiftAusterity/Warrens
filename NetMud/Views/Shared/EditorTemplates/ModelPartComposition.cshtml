@@ -3,11 +3,10 @@
 @model ModelPartComposition
 
 @{
-    var removeName = "remove" + ViewData.ModelMetadata.PropertyName + "Row";
+    //No removal of parts
 }
 
 <div class="form-group row">
-    <a href="#" class="removeRow col-form-label" title="Remove this" onclick="javascript: $(this).parent().remove(); return false;">X</a>
     <div class="col-sm-10">
         @Html.EditorFor(m => m.PartName)
         @Html.EditorFor(m => m.Material, new { validItems = ViewData["ValidMaterials"] })
