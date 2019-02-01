@@ -151,6 +151,15 @@ namespace NetMud.Data.Players
         }
 
         /// <summary>
+        /// Get the current character for someone
+        /// </summary>
+        /// <returns></returns>
+        public IPlayerTemplate GetCurrentlySelectedCharacter()
+        {
+            return Characters.FirstOrDefault(chars => chars.Id == CurrentlySelectedCharacter);
+        }
+
+        /// <summary>
         /// Add a character to this account
         /// </summary>
         /// <param name="newChar">the character data to add</param>

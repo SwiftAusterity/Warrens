@@ -1,41 +1,115 @@
 ﻿@model NetMud.Models.GameContextModel
-
+<div class="keyLegend entityDataInfoCard">
+    <div>
+        <span>KEY</span>
+        <span>FUNCTION</span>
+    </div>
+    <div>
+        <span>enter</span>
+        <span>Submit/Focus</span>
+    </div>
+    <div>
+        <span>esc</span>
+        <span>Clear Input</span>
+    </div>
+    <div>
+        <span>Page Up/Down</span>
+        <span>Output Scroll Page</span>
+    </div>
+    <div>
+        <span>End/Home</span>
+        <span>Output Scroll Max</span>
+    </div>
+    <div>
+        <span>Up/Down Arrow</span>
+        <span>Command History</span>
+    </div>
+    <div>
+        <span>Numpad Arrows</span>
+        <span>Character Movement</span>
+    </div>
+</div>
 <div class="parserClientTop">
     <div class="statusIndicators">
-        <div output-data-binding="Environment.Sun" title="Sun">
+        <div output-binding="Environment.Sun" title="Sun">
         </div>
-        <div output-data-binding="Environment.Moon" title="Moon">
+        <div output-binding="Environment.Moon" title="Moon">
         </div>
-        <div output-data-binding="Environment.Weather">
+        <div output-binding="Environment.Weather">
         </div>
-        <div output-data-binding="Environment.Visibility" title="Brightness">
+        <div output-binding="Environment.Visibility" title="Brightness">
         </div>
     </div>
-    <div id="locationBreadcrumbs">
-        <span class="contentContainer" output-data-binding="Local.ZoneName"></span>
-        <span class="contentContainer" output-eval-key="Local.LocaleName" output-eval-code="if(data.length === 0) { element.css({'display': 'none'}); } else { element.css({'display' : 'block'}); }">&nbsp;>&nbsp;<span output-data-binding="Local.LocaleName"></span></span>
-        <span class="contentContainer" output-eval-key="Local.RoomName" output-eval-code="if(data.length === 0) { element.css({'display': 'none'}); } else { element.css({'display' : 'block'}); }">&nbsp;>&nbsp;<span output-data-binding="Local.RoomName"></span></span>
+    <div style="width: 70%;">
+        <div id="locationBreadcrumbs">
+            <span class="contentContainer" output-data-binding="Local.ZoneName"></span>
+            <span class="contentContainer" output-eval-key="Local.LocaleName" output-eval-code="if(data.length === 0) { element.css({'display': 'none'}); } else { element.css({'display' : 'block'}); }">&nbsp;>&nbsp;<span output-data-binding="Local.LocaleName"></span></span>
+            <span class="contentContainer" output-eval-key="Local.RoomName" output-eval-code="if(data.length === 0) { element.css({'display': 'none'}); } else { element.css({'display' : 'block'}); }">&nbsp;>&nbsp;<span output-data-binding="Local.RoomName"></span></span>
+        </div>
+        <div id="locationDescription">
+            <div class="contentContainer" output-data-binding="Environment.TimeOfDay"></div>
+            <div class="contentContainer" output-data-binding="Local.LocationDescriptive"></div>
+        </div>
     </div>
-    <div id="locationDescription">
-        <div class="contentContainer" output-data-binding="Environment.TimeOfDay"></div>
-        <div class="contentContainer" output-data-binding="Local.LocationDescriptive"></div>
-    </div>
-    <div class="rightNav" style="float: right;">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-th-list" title="Client Settings"></span></a>
-        <ul class="dropdown-menu dropdown-menu-left" role="menu" aria-labelledby="dropdownMenu">
-            <li class="dropdown-header" style="color: mediumvioletred">Global UI Settings</li>
-            <li><a href="#" id="clientReload" class="moduleMenuItem"><span class="glyphicon glyphicon-refresh"></span>Reload Client</a></li>
-            <li>
-                <a href="#" class="openModulePopup moduleMenuItem" data-origin-quadrant="@Model"><span class="glyphicon glyphicon-open"></span>Popup Module</a>
-                <input id="loadModulePopupName" title="Module Name?" class="moduleNameFinder" />
-            </li>
-            <li class="divider"></li>
-            <li><a href="#" id="saveAllModules" class="moduleMenuItem"><span class="glyphicon glyphicon-upload"></span>Save All Modules</a></li>
-            <li><a href="#" id="reloadAllModules" class="moduleMenuItem"><span class="glyphicon glyphicon-download"></span>Load UI From Config</a></li>
-            <li><a href="#" id="wipeUI" class="moduleMenuItem"><span class="glyphicon glyphicon-remove"></span>Wipe UI</a></li>
-            <li class="divider"></li>
-            <li><a href="#" id="disconnect" class="moduleMenuItem"><span class="glyphicon glyphicon-remove-sign"></span>Disconnect From Server</a></li>
-        </ul>
+    <div class="rightNav" id="userControls">
+        <div>
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-th-list" title="Client Settings"></span></a>
+            <ul class="dropdown-menu dropdown-menu-left" role="menu" aria-labelledby="dropdownMenu">
+                <li class="dropdown-header" style="color: mediumvioletred;">Client</li>
+                <li><a href="#" id="keyMap" class="moduleMenuItem"><span class="glyphicon glyphicon-new-window"></span>Key Legend</a></li>
+                <li><a href="#" id="clientReload" class="moduleMenuItem"><span class="glyphicon glyphicon-refresh"></span>Reload UI</a></li>
+                <li>
+                    <a href="#" class="openModulePopup moduleMenuItem" data-origin-quadrant="@Model"><span class="glyphicon glyphicon-open"></span>Popup Module</a>
+                    <input id="loadModulePopupName" title="Module Name?" class="moduleNameFinder" />
+                </li>
+                <li class="divider"></li>
+                <li><a href="#" id="saveAllModules" class="moduleMenuItem"><span class="glyphicon glyphicon-upload"></span>Save All Modules</a></li>
+                <li><a href="#" id="reloadAllModules" class="moduleMenuItem"><span class="glyphicon glyphicon-download"></span>Load UI From Config</a></li>
+                <li><a href="#" id="wipeUI" class="moduleMenuItem"><span class="glyphicon glyphicon-remove"></span>Wipe UI</a></li>
+                <li class="divider"></li>
+                <li><a href="#" id="disconnect" class="moduleMenuItem"><span class="glyphicon glyphicon-remove-sign"></span>Disconnect From Server</a></li>
+                <li class="dropdown-header" style="color: mediumvioletred;">Account Config</li>
+                @if (@Model.authedUser.GameAccount.Config.UITutorialMode)
+                {
+                    <li><a href="#" id="tutorialModeSwap" class="moduleMenuItem" onclick="javascript: changeTutorialMode(this);"><span class="glyphicon glyphicon-info-sign" style="color:green;"></span>: Tutorial Mode</a></li>
+                }
+                else
+                {
+                    <li><a href="#" id="tutorialModeSwap" class="moduleMenuItem" onclick="javascript: changeTutorialMode(this);"><span class="glyphicon glyphicon-info-sign" style="color:red;"></span>: Tutorial Mode</a></li>
+                }
+                @if (@Model.authedUser.GameAccount.Config.GossipSubscriber)
+                {
+                    <li><a href="#" id="gossipSwap" class="moduleMenuItem" onclick="javascript: changeGossipMode(this);"><span class="glyphicon glyphicon-globe" style="color:green;"></span>: Gossip Network</a></li>
+                }
+                else
+                {
+                    <li><a href="#" id="gossipSwap" class="moduleMenuItem" onclick="javascript: changeGossipMode(this);"><span class="glyphicon glyphicon-globe" style="color:red;"></span>: Gossip Network</a></li>
+                }
+            </ul>
+        </div>
+        <div>
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#" style="padding-right: 15px;"><span class="glyphicon glyphicon-volume-up" title="Sound & Music"></span></a>
+            <ul class="dropdown-menu dropdown-menu-left" role="menu" aria-labelledby="dropdownMenu">
+                <li class="dropdown-header" style="color: mediumvioletred">Volume Control</li>
+                <li><a href="#" id="muteSounds" class="moduleMenuItem"><span class="glyphicon glyphicon-volume-up" style="color: green;"></span>: Sound</a></li>
+                <li><a href="#" id="muteMusic" class="moduleMenuItem"><span class="glyphicon glyphicon-volume-up" style="color: green;"></span>: Music</a></li>
+                <li><a href="#" id="loopTracks" class="moduleMenuItem"><span class="glyphicon glyphicon-repeat" style="color: red;"></span>: Loop Track</a></li>
+                @if (Model.MusicPlaylists?.Count() > 0)
+                {
+                    <li class="dropdown-header" style="color: mediumvioletred">Your Playlists</li>
+                    for (var i = 0; i < Model.MusicPlaylists.Count(); i++)
+                    {
+                        <li><a href="#" class="moduleMenuItem playlistSelector" data-playlist-index="@i" onclick="javascript: changePlaylist(this);"><span class="glyphicon glyphicon-volume-off songSelection" style="color: red;"></span>@Model.MusicPlaylists.ElementAt(i).Name</a></li>
+                    }
+                }
+                <li class="dropdown-header" style="color: mediumvioletred">Sounds of the Zone</li>
+                @for (var i = 0; i < Model.MusicTracks.Count(); i++)
+                {
+                    var songPair = Model.MusicTracks.ElementAt(i);
+                    <li><a href="#" class="moduleMenuItem audioTrackSelector" data-playlist-index="@i" data-song-uri="@songPair.Value" onclick="javascript: changeTrack(this);"><span class="glyphicon glyphicon-volume-off songSelection" style="color: red;"></span>@songPair.Key</a></li>
+                }
+            </ul>
+        </div>
     </div>
 </div>
 <div class="parserClient">
@@ -47,6 +121,9 @@
             @Html.Partial("DockerSettings", 2)
         </div>
     </div>
+    <div class="textParserClient">
+        <div id="OutputArea" class="parserOutput"></div>
+    </div>
     <div class="parserClientRight sidebar">
         <div id="quadrant-3" data-module-name="" quadrant-number="3" class="quadrant">
             @Html.Partial("DockerSettings", 3)
@@ -55,12 +132,11 @@
             @Html.Partial("DockerSettings", 4)
         </div>
     </div>
-    <div class="textParserClient">
-        <div id="OutputArea" class="parserOutput"></div>
-        <input type="text" id="input" name="input" class="parserInput" />
-    </div>
 </div>
-
+<div class="inputContainer">
+    <input type="text" id="input" name="input" class="parserInput" />
+</div>
+<audio id="backgroundMusic" name="backgroundMusic"></audio>
 
 @section styles {
     @Styles.Render("~/Content/GameClient.css")
@@ -70,9 +146,35 @@
 @section scripts {
     @Scripts.Render("~/Scripts/ClientHelpers.js")
     @Scripts.Render("~/Scripts/WebSocketsClient.js")
-}
 
-<script type="text/javascript">
+    <script type="text/javascript">
+        window.connection;
+        window.soundMuted = '@Model.authedUser.GameAccount.Config.SoundMuted' === 'True';
+        window.musicMuted = '@Model.authedUser.GameAccount.Config.MusicMuted' === 'True';
+        window.tutorialMode = '@Model.authedUser.GameAccount.Config.UITutorialMode' === 'True';
+        window.gossipMode = '@Model.authedUser.GameAccount.Config.GossipSubscriber' === 'True';
+        window.loopTrack = false;
+        window.currentPlaylist = 0;
+        window.currentPlaylistTrack = 0;
+        window.currentTrack = 0;
+        window.tooltips = [];
+        window.stopToggle = false;
+        window.selectedInventoryItem = -1;
+
+        window.commandArray = ['look'];
+        window.commandPointer = 0;
+        window.lastOutput = '';
+        window.openedWindows = [];
+        window.UILoading = true;
+        window.BatmanMode = false;
+
+        window.playlists = [
+            @foreach(var playlist in Model.MusicPlaylists)
+            {
+                @Html.Raw(string.Format("{{ \"name\" : \"{0}\", songs : [ {1} ]}}", playlist.Name, string.Join(",", playlist.Songs.Select(song => "'" + song + "'"))))
+            }
+        ];
+
     $(document).ready(function () {
         $('input#loadModuleName').hide();
         $('input#loadModulePopupName').hide();
@@ -333,7 +435,7 @@
                 var obj = data[i];
                 var quadrant = obj.Item2;
                 var module = obj.Item1;
-            
+
                 var moduleContent = module.BodyHtml.Value;
 
                 if (moduleContent != '') {
@@ -357,4 +459,5 @@
             ReloadUI();
         });
     }
-</script>
+    </script>
+}

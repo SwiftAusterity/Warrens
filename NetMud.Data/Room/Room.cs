@@ -583,6 +583,8 @@ namespace NetMud.Data.Room
             IRoomTemplate bS = Template<IRoomTemplate>() ?? throw new InvalidOperationException("Missing backing data store on room spawn event.");
 
             ParentLocation = bS.ParentLocation.GetLiveInstance();
+            spawnTo.CurrentLocale = ParentLocation;
+            spawnTo.CurrentZone = ParentLocation.ParentLocation;
 
             Keywords = new string[] { bS.Name.ToLower() };
 
@@ -597,7 +599,7 @@ namespace NetMud.Data.Room
                 Birthdate = DateTime.Now;
             }
 
-            if (spawnTo?.CurrentLocale == null)
+            if (spawnTo?.CurrentLocale == null || spawnTo?.CurrentZone == null)
             {
                 spawnTo = new GlobalPosition(this);
             }

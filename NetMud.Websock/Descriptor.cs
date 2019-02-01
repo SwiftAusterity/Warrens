@@ -13,6 +13,7 @@ using NetMud.DataStructure.Gossip;
 using NetMud.DataStructure.Inanimate;
 using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.Player;
+using NetMud.DataStructure.Room;
 using NetMud.DataStructure.System;
 using NetMud.DataStructure.Zone;
 using NetMud.Gaia.Geographical;
@@ -162,10 +163,10 @@ namespace NetMud.Websock
             };
 
             IGlobalPosition currentLocation = _currentPlayer.CurrentLocation;
-            IContains currentContainer = currentLocation.CurrentContainer;
-            IZone currentZone = currentLocation.CurrentZone;
+            IContains currentContainer = currentLocation.CurrentLocation();
+            IZone currentZone = currentContainer.CurrentLocation.CurrentZone;
             IGaia currentWorld = currentZone.GetWorld();
-            DataStructure.Room.IRoom currentRoom = currentLocation.CurrentRoom;
+            IRoom currentRoom = currentContainer.CurrentLocation.CurrentRoom;
 
             IEnumerable<string> pathways = Enumerable.Empty<string>();
             IEnumerable<string> inventory = Enumerable.Empty<string>();
@@ -178,20 +179,6 @@ namespace NetMud.Websock
                 inventory = currentContainer.GetContents<IInanimate>().Select(data => data.GetDescribableName(_currentPlayer).ToString());
                 populace = currentContainer.GetContents<IMobile>().Where(player => !player.Equals(_currentPlayer)).Select(data => data.GetDescribableName(_currentPlayer).ToString());
                 locationDescription = currentContainer.RenderToLook(_currentPlayer).Describe(NarrativeNormalization.Normal, 1);
-            }
-            else if(currentRoom != null)
-            {
-                pathways = currentRoom.GetPathways().Select(data => data.GetDescribableName(_currentPlayer).ToString());
-                inventory = currentRoom.GetContents<IInanimate>().Select(data => data.GetDescribableName(_currentPlayer).ToString());
-                populace = currentRoom.GetContents<IMobile>().Where(player => !player.Equals(_currentPlayer)).Select(data => data.GetDescribableName(_currentPlayer).ToString());
-                locationDescription = currentRoom.RenderToLook(_currentPlayer).Describe(NarrativeNormalization.Normal, 1);
-            }
-            else if (currentZone != null)
-            {
-                pathways = currentZone.GetPathways().Select(data => data.GetDescribableName(_currentPlayer).ToString());
-                inventory = currentZone.GetContents<IInanimate>().Select(data => data.GetDescribableName(_currentPlayer).ToString());
-                populace = currentZone.GetContents<IMobile>().Where(player => !player.Equals(_currentPlayer)).Select(data => data.GetDescribableName(_currentPlayer).ToString());
-                locationDescription = currentZone.RenderToLook(_currentPlayer).Describe(NarrativeNormalization.Normal, 1);
             }
 
             LocalStatus local = new LocalStatus

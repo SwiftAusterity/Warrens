@@ -201,7 +201,7 @@ namespace NetMud.Data.Locale
 
             if (spawnTo?.CurrentZone == null)
             {
-                spawnTo = new GlobalPosition(ParentLocation);
+                spawnTo = new GlobalPosition(ParentLocation, this);
             }
 
             CurrentLocation = spawnTo;

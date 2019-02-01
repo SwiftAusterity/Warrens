@@ -348,7 +348,7 @@ namespace NetMud.Utility
         /// <returns>all types that touch the input type</returns>
         public static IEnumerable<Type> GetAllImplimentingedTypes(Type t)
         {
-            IEnumerable<Type> implimentedTypes = t.Assembly.GetTypes().Where(ty => ty.GetInterfaces().Contains(t) || ty == t);
+            IEnumerable<Type> implimentedTypes = t.Assembly.GetTypes().Where(ty => ty == t || ty.GetInterfaces().Contains(t) );
             return implimentedTypes.Concat(t.GetInterfaces());
         }
 

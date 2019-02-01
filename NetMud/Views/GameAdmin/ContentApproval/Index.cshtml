@@ -1,9 +1,13 @@
 ﻿@model NetMud.Models.Admin.ManageContentApprovalsViewModel
-
 <h3>Content Approval and Preview</h3>
 <div class="searchCriteria">
     @Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model, "ContentApproval"))
 </div>
+@using (Html.BeginForm("ApproveAll", "ContentApproval"))
+{
+    @Html.AntiForgeryToken()
+    <input type="submit" value="Approve All" class="btn btn-default save" />
+}
 
 @using (Html.BeginForm("ApproveDeny", "ContentApproval"))
 {
@@ -40,7 +44,7 @@
                     </div>
                     <div class="listItem">
                         <button type="submit" name="approvalId" id="approvalId" class="approveData" value="@val.Id" title="Approve"><span class="glyphicon glyphicon-play-circle" aria-hidden="true"></span></button>
-                        <input type="radio" name="authorizeDenial" value="@val.Id|||@val.GetType().AssemblyQualifiedName" />
+                        <input type="radio" name="authorizeApproval" value="@val.Id|||@val.GetType().AssemblyQualifiedName" />
                     </div>
                     <div class="listItem">
                         <button type="submit" name="denialId" id="denialId" class="unapproveData" value="@val.Id" title="Deny"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span></button>

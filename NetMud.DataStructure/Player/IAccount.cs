@@ -35,6 +35,12 @@ namespace NetMud.DataStructure.Player
         long CurrentlySelectedCharacter { get; set; }
 
         /// <summary>
+        /// Get the current character for someone
+        /// </summary>
+        /// <returns></returns>
+        IPlayerTemplate GetCurrentlySelectedCharacter();
+
+        /// <summary>
         /// Add a character to this user
         /// </summary>
         /// <param name="newCharacter">the character to add</param>

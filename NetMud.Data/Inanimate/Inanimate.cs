@@ -179,17 +179,17 @@ namespace NetMud.Data.Inanimate
         {
             string error = string.Empty;
 
-            if (CurrentLocation?.CurrentContainer != null)
+            if (CurrentLocation?.CurrentLocation() != null)
             {
-                error = CurrentLocation.CurrentContainer.MoveFrom(this);
+                error = CurrentLocation.CurrentLocation().MoveFrom(this);
             }
 
             //validate position
             if (newPosition != null && string.IsNullOrEmpty(error))
             {
-                if (newPosition.CurrentContainer != null)
+                if (newPosition.CurrentLocation() != null)
                 {
-                    error = newPosition.CurrentContainer.MoveInto(this);
+                    error = newPosition.CurrentLocation().MoveInto(this);
                 }
 
                 if (string.IsNullOrEmpty(error))

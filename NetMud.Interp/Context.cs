@@ -494,6 +494,91 @@ namespace NetMud.Interp
         }
 
         /// <summary>
+        /// Find a parameter target in the live world (entity)
+        /// </summary>
+        /// <typeparam name="T">the system type of the entity</typeparam>
+        /// <param name="commandType">the system type of the command</param>
+        /// <param name="currentNeededParm">the conditions for the parameter we're after</param>
+        /// <param name="hasContainer">does the command need a container to look for things in</param>
+        /// <param name="seekRange">how far we can look</param>
+        public void SeekInPathway<T>(CommandPackage command, CommandParameterAttribute currentNeededParm, CommandRangeAttribute seekRange, bool hasContainer)
+        {
+            List<string> internalCommandString = command.InputRemainder.ToList();
+            int disambiguator = -1;
+            int parmWords = internalCommandString.Count();
+
+            while (parmWords > 0)
+            {
+                string currentParmString = string.Join(" ", RemoveGrammaticalNiceities(internalCommandString.Take(parmWords))).ToLower();
+
+                //We have disambiguation here, we need to pick the first object we get back in the list
+                if (Regex.IsMatch(currentParmString, LiveWorldDisambiguationSyntax))
+                {
+                    disambiguator = int.Parse(currentParmString.Substring(0, currentParmString.IndexOf(".")));
+                    currentParmString = currentParmString.Substring(currentParmString.IndexOf(".") + 1);
+                }
+
+                if (!currentNeededParm.MatchesPattern(currentParmString))
+                {
+                    parmWords--;
+                    continue;
+                }
+
+                List<IPathway> validPaths = new List<IPathway>();
+
+                validPaths.AddRange(Actor.CurrentLocation.CurrentLocation().GetPathways().Where(dest => dest.TemplateName.Equals(currentParmString, StringComparison.InvariantCultureIgnoreCase)));
+
+                if (validPaths.Count() > 0)
+                {
+                    //Skip everything up to the right guy and then take the one we want so we don't have to horribly alter the following logic flows
+                    if (disambiguator > -1 && validPaths.Count() > 1)
+                        validPaths = validPaths.Skip(disambiguator - 1).Take(1).ToList();
+
+                    if (validPaths.Count() > 1)
+                    {
+                        AccessErrors.Add(string.Format("There are {0} potential targets with that name for the {1} command. Try using one of the following disambiguators:", validPaths.Count(), command.CommandPhrase));
+
+                        int iterator = 1;
+                        foreach (IPathway obj in validPaths)
+                        {
+                            IEntity entityObject = obj;
+
+                            AccessErrors.Add(string.Format("{0}.{1}", iterator++, entityObject.TemplateName));
+                        }
+
+                        break;
+                    }
+                    else if (validPaths.Count() == 1)
+                    {
+                        IPathway parm = validPaths.First();
+
+                        if (parm != null)
+                        {
+                            switch (currentNeededParm.Usage)
+                            {
+                                case CommandUsage.Supporting:
+                                    Supporting = parm;
+                                    break;
+                                case CommandUsage.Subject:
+                                    Subject = parm;
+                                    break;
+                                case CommandUsage.Target:
+                                    Target = parm;
+                                    break;
+                            }
+                        }
+
+                        command.InputRemainder = command.InputRemainder.Skip(parmWords);
+                        return;
+                    }
+                }
+
+                parmWords--;
+            }
+
+        }
+
+        /// <summary>
         /// Find a paramater's target in code (methods)
         /// </summary>
         /// <param name="commandType">the system type of the command</param>

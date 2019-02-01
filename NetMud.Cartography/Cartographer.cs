@@ -381,7 +381,7 @@ namespace NetMud.Cartography
         //It's just easier to pass the ints we already calculated along instead of doing the math every single time, this cascades each direction fully because it calls itself for existant rooms
         private static long[,,] AddFullRoomToMap(long[,,] dataMap, IRoomTemplate origin, int diameter, int centerX, int centerY, int centerZ, HashSet<IRoomTemplate> roomPool)
         {
-            if (roomPool != null && roomPool.Count > 0 && roomPool.Contains(origin))
+            if (roomPool != null && roomPool.Count > 0 && roomPool.Any(room => room.Id == origin.Id))
             {
                 roomPool.Remove(origin);
             }

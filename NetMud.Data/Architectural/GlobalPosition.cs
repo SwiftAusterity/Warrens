@@ -32,7 +32,7 @@ namespace NetMud.Data.Architectural
             {
                 if (!string.IsNullOrWhiteSpace(_currentZone?.BirthMark))
                 {
-                    return (IZone)LiveCache.Get(_currentZone);
+                    return LiveCache.Get<IZone>(_currentZone);
                 }
 
                 return null;
@@ -65,7 +65,7 @@ namespace NetMud.Data.Architectural
             {
                 if (!string.IsNullOrWhiteSpace(_currentLocale?.BirthMark))
                 {
-                    return (ILocale)LiveCache.Get(_currentLocale);
+                    return LiveCache.Get<ILocale>(_currentLocale);
                 }
 
                 return null;
@@ -98,7 +98,7 @@ namespace NetMud.Data.Architectural
             {
                 if (!string.IsNullOrWhiteSpace(_currentRoom?.BirthMark))
                 {
-                    return (IRoom)LiveCache.Get(_currentRoom);
+                    return LiveCache.Get<IRoom>(_currentRoom);
                 }
 
                 return null;

@@ -289,7 +289,7 @@ div.roomAsciiMap {
 
         .searchCriteria div div {
             flex: 1 1 auto;
-            margin: 10px;
+            margin: 7px 3px;
         }
 
             .searchCriteria div div.pager {

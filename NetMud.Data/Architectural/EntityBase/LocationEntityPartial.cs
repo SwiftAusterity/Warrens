@@ -8,6 +8,7 @@ using NetMud.DataStructure.Room;
 using NetMud.DataStructure.Zone;
 using NetMud.Utility;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -107,7 +108,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <returns>the contained entities</returns>
         public IEnumerable<T> GetContents<T>()
         {
-            IEnumerable<global::System.Type> implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
+            IEnumerable<Type> implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
 
             List<T> contents = new List<T>();
 
@@ -132,7 +133,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <param name="containerName">the name of the container</param>
         public IEnumerable<T> GetContents<T>(string containerName)
         {
-            IEnumerable<global::System.Type> implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
+            IEnumerable<Type> implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
 
             List<T> contents = new List<T>();
 
@@ -169,7 +170,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <returns>errors</returns>
         public string MoveInto<T>(T thing, string containerName)
         {
-            IEnumerable<global::System.Type> implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
+            IEnumerable<Type> implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
 
             if (implimentedTypes.Contains(typeof(IInanimate)))
             {
@@ -178,12 +179,6 @@ namespace NetMud.Data.Architectural.EntityBase
                 if (Contents.Contains(obj, containerName))
                 {
                     return "That is already in the container";
-                }
-
-                string moveError = MoveInto(obj);
-                if (!string.IsNullOrWhiteSpace(moveError))
-                {
-                    return moveError;
                 }
 
                 Contents.Add(obj, containerName);
@@ -199,12 +194,6 @@ namespace NetMud.Data.Architectural.EntityBase
                 if (MobilesInside.Contains(obj, containerName))
                 {
                     return "That is already in the container";
-                }
-
-                string moveError = MoveInto(obj);
-                if (!string.IsNullOrWhiteSpace(moveError))
-                {
-                    return moveError;
                 }
 
                 MobilesInside.Add(obj, containerName);
@@ -236,7 +225,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <returns>errors</returns>
         public string MoveFrom<T>(T thing, string containerName)
         {
-            IEnumerable<global::System.Type> implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
+            IEnumerable<Type> implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
 
             if (implimentedTypes.Contains(typeof(IInanimate)))
             {
@@ -247,7 +236,6 @@ namespace NetMud.Data.Architectural.EntityBase
                     return "That is not in the container";
                 }
 
-                obj.TryMoveTo(null);
                 Contents.Remove(obj, containerName);
                 UpsertToLiveWorldCache();
 
@@ -263,7 +251,6 @@ namespace NetMud.Data.Architectural.EntityBase
                     return "That is not in the container";
                 }
 
-                obj.TryMoveTo(null);
                 MobilesInside.Remove(obj, containerName);
                 UpsertToLiveWorldCache();
 

@@ -54,6 +54,26 @@ namespace NetMud.Controllers.GameAdmin
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        public ActionResult ApproveAll()
+        {
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            IOrderedEnumerable<IKeyedData> newList = TemplateCache.GetAll().Where(item => item.GetType().GetInterfaces().Contains(typeof(INeedApproval))
+                                                                && item.GetType().GetInterfaces().Contains(typeof(IKeyedData))
+                                                                && !item.SuitableForUse && item.CanIBeApprovedBy(authedUser.GetStaffRank(User), authedUser.GameAccount)).OrderBy(item => item.GetType().Name);
+
+            foreach(var thing in newList)
+            {
+                thing.ChangeApprovalStatus(authedUser.GameAccount, authedUser.GetStaffRank(User), ApprovalState.Approved);
+
+                LoggingUtility.LogAdminCommandUsage("*WEB* - Approve (all) Content[" + thing.Id + "]", authedUser.GameAccount.GlobalIdentityHandle);
+            }
+
+            return RedirectToAction("Index", new { Message = "All have been approved." });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult ApproveDeny(long? approvalId, string authorizeApproval, long? denialId, string authorizeDenial)
         {
             string message = string.Empty;
@@ -88,7 +108,7 @@ namespace NetMud.Controllers.GameAdmin
                 }
                 else
                 {
-                    if(approve)
+                    if (approve)
                     {
                         if (obj.ChangeApprovalStatus(authedUser.GameAccount, authedUser.GetStaffRank(User), ApprovalState.Approved))
                         {

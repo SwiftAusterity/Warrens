@@ -490,7 +490,7 @@ namespace NetMud.Controllers
 
                 List<IAcquaintence> acquaintences = authedUser.GameAccount.Config.Acquaintences.ToList();
 
-                if (acquaintences.Contains(newAcq))
+                if (acquaintences.Any(aq => aq.PersonHandle == newAcq.PersonHandle))
                 {
                     acquaintences.Remove(newAcq);
                 }

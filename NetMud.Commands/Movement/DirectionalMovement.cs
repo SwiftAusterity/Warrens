@@ -38,7 +38,8 @@ namespace NetMud.Commands.Movement
     [CommandKeyword("downsoutheast", true, false, true)]
     [CommandKeyword("downwest", true, false, true)]
     [CommandPermission(StaffRank.Player)]
-    [CommandParameter(CommandUsage.Subject, typeof(IPathway), new CacheReferenceType[] { CacheReferenceType.Entity }, "[a-zA-z]+", true)]
+    [CommandParameter(CommandUsage.Subject, typeof(IPathway), new CacheReferenceType[] { CacheReferenceType.Pathway }, "[a-zA-z]+", true)]
+    [CommandParameter(CommandUsage.Subject, typeof(IPathway), new CacheReferenceType[] { CacheReferenceType.Direction }, "[a-zA-z]+", true)]
     [CommandRange(CommandRangeType.Touch, 0)]
     public class DirectionalMovement : CommandPartial
     {
@@ -58,7 +59,7 @@ namespace NetMud.Commands.Movement
             List<string> sb = new List<string>();
             IPathway targetPath = (IPathway)Subject;
 
-            Actor.TryMoveTo(targetPath.Destination.CurrentLocation);
+            Actor.TryMoveTo(targetPath.Destination.GetContainerAsLocation());
 
             targetPath.Enter.ExecuteMessaging(Actor, targetPath, null, targetPath.Origin, targetPath.Destination);
 

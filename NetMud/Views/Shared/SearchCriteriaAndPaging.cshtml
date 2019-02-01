@@ -1,7 +1,7 @@
 ﻿@model Tuple<NetMud.Models.IPagedDataModel, string>
 @{
     var prevPageState = Model.Item1.CurrentPageNumber > 1 ? "pager" : "pager disabled";
-    var nextPageState = Model.Item1.CurrentPageNumber < Model.Item1.NumberOfPages ? String.Empty : "pager disabled";
+    var nextPageState = Model.Item1.CurrentPageNumber < Model.Item1.NumberOfPages ? "pager" : "pager disabled";
 }
 <div>
     @using (Html.BeginForm("Index", Model.Item2, FormMethod.Post, new { id = "paginationForm" }))

@@ -1,19 +1,105 @@
 ﻿$(document).ready(function () {
-    window.connection;
-    window.commandArray = ['look'];
-    window.commandPointer = 0;
-    window.lastOutput = '';
-    window.openedWindows = [];
-    window.UILoading = true;
-
-    TestBrowser();
-
     submitCharacter();
 
     //bind the change event of the currently selected character dropdown to call the ajax thingy to set the player's character
     $('#currentCharacter').change(function () {
         submitCharacter();
     });
+    
+    if (window.soundMuted) {
+        $("#muteSounds").children().attr('class', 'glyphicon glyphicon-volume-off');
+        $("#muteSounds").children().attr('style', 'color: red;');
+    }
+    else {
+        $("#muteSounds").children().attr('class', 'glyphicon glyphicon-volume-up');
+        $("#muteSounds").children().attr('style', 'color: green;');
+    }
+
+    if (window.musicMuted) {
+        $("#muteMusic").children().attr('class', 'glyphicon glyphicon-volume-off');
+        $("#muteMusic").children().attr('style', 'color: red;');
+    }
+    else {
+        $("#muteMusic").children().attr('class', 'glyphicon glyphicon-volume-up');
+        $("#muteMusic").children().attr('style', 'color: green;');
+    }
+
+    if ($('.audioTrackSelector') !== undefined && $('.audioTrackSelector').length > 0) {
+        changeTrack($('.audioTrackSelector')[0]);
+    }
+
+    Tutorial($('#locationBreadcrumbs'), "This is where you are in the world.", window.tutorialMode);
+    Tutorial($('.statusIndicators'), "The current level of illumination in the area as well as weather conditions and sun/moon cycle indicators.", window.tutorialMode);
+    Tutorial($('.inputContainer'), "This is where you type commands. Use the INTERACT command to interact with things.", window.tutorialMode);
+    Tutorial($('#userControls'), "Music tracks (and muting controls) in addition to disconnect/reconnect can be found here.", window.tutorialMode);
+    Tutorial($('#healthBars'), "Health and stamina levels are shown here.", window.tutorialMode);
+    Tutorial($('#inventoryContainers'), "Your inventory will show up here.", window.tutorialMode);
+
+    $('#disconnect').click(function (e) {
+        $('#input').val('');
+        $("#parserClientOutput").html('');
+        $("#parserClientOutput")[0].scrollTop = $("#parserClientOutput")[0].scrollHeight;
+
+        AppendTextToOutput('Connection TERMINATED.');
+        window.connection.close();
+
+        $('disconnect').off('click');
+        return false;
+    });
+
+    $("#clientReload").click(function (e) {
+        ReloadUI();
+        return false;
+    });
+
+    $("#keyMap").click(function (e) {
+        $('.keyLegend').toggleClass('expanded');
+        return false;
+    });
+
+    $('#loopTracks').click(function () {
+        changeLoopTrackMode(this);
+        return false;
+    });
+
+
+    $("#muteSounds").click(function (e) {
+        window.soundMuted = !soundMuted;
+
+        $.post('/api/ClientDataApi/ToggleSoundMute');
+
+        if (window.soundMuted) {
+            $(this).children().attr('class', 'glyphicon glyphicon-volume-off');
+            $(this).children().attr('style', 'color: red;');
+        }
+        else {
+            $(this).children().attr('class', 'glyphicon glyphicon-volume-up');
+            $(this).children().attr('style', 'color: green;');
+        }
+
+        return false;
+    });
+
+    $("#muteMusic").click(function (e) {
+        window.musicMuted = !musicMuted;
+
+        $.post('/api/ClientDataApi/ToggleMusicMute');
+
+        if (window.musicMuted) {
+            $('#backgroundMusic')[0].pause();
+            $(this).children().attr('class', 'glyphicon glyphicon-volume-off');
+            $(this).children().attr('style', 'color: red;');
+        }
+        else {
+            $('#backgroundMusic')[0].play();
+            $(this).children().attr('class', 'glyphicon glyphicon-volume-up');
+            $(this).children().attr('style', 'color: green;');
+        }
+
+        return false;
+    });
+
+    TestBrowser();
 });
 
 function submitCharacter() {
