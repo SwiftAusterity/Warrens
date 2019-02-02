@@ -179,10 +179,35 @@
         $('input#loadModuleName').hide();
         $('input#loadModulePopupName').hide();
 
-        var tutorialMode = '@Model.authedUser.GameAccount.Config.UITutorialMode' === 'True';
-        Tutorial($('#locationBreadcrumbs'), "This is where you are in the world.", tutorialMode);
-        Tutorial($('#input'), "This is where you type commands. The UP and DOWN arrow keys will cycle through prior input. Hit ENTER to submit commands.", tutorialMode);
         LoadUIModules();
+        submitCharacter();
+
+        if (window.soundMuted) {
+            $("#muteSounds").children().attr('class', 'glyphicon glyphicon-volume-off');
+            $("#muteSounds").children().attr('style', 'color: red;');
+        }
+        else {
+            $("#muteSounds").children().attr('class', 'glyphicon glyphicon-volume-up');
+            $("#muteSounds").children().attr('style', 'color: green;');
+        }
+
+        if (window.musicMuted) {
+            $("#muteMusic").children().attr('class', 'glyphicon glyphicon-volume-off');
+            $("#muteMusic").children().attr('style', 'color: red;');
+        }
+        else {
+            $("#muteMusic").children().attr('class', 'glyphicon glyphicon-volume-up');
+            $("#muteMusic").children().attr('style', 'color: green;');
+        }
+
+        if ($('.audioTrackSelector') !== undefined && $('.audioTrackSelector').length > 0) {
+            changeTrack($('.audioTrackSelector')[0]);
+        }
+
+        Tutorial($('.statusIndicators'), "The current level of illumination in the area as well as weather conditions and sun/moon cycle indicators.", window.tutorialMode);
+        Tutorial($('.inputContainer'), "This is where you type commands. The UP and DOWN arrow keys will cycle through prior input. Hit ENTER to submit commands.", window.tutorialMode);
+        Tutorial($('#userControls'), "Music tracks (and muting controls) in addition to disconnect/reconnect can be found here.", window.tutorialMode);
+        Tutorial($('#locationBreadcrumbs'), "This is where you are in the world.", window.tutorialMode);
 
         $('#disconnect').click(function (e) {
             $('#input').val('');
@@ -244,8 +269,6 @@
         });
 
         $(".quadrantLoad").click(function (e) {
-            var $this = $(this);
-
             $('input#loadModuleName').show().focus();
             $(this).hide();
 
@@ -270,8 +293,6 @@
         });
 
         $(".openModulePopup").click(function (e) {
-            var $this = $(this);
-
             $('input#loadModulePopupName').show().focus();
             $(this).hide();
 
@@ -326,11 +347,6 @@
             return false;
         });
 
-        $("#clientReload").click(function (e) {
-            ReloadUI();
-            return false;
-       });
-
         $("#reloadAllModules").click(function (e) {
             LoadUIModules();
             return false;
@@ -342,16 +358,19 @@
         });
 
         $("#saveAllModules").click(function (e) {
-            SaveUIModule(1);
-            SaveUIModule(2);
-            SaveUIModule(3);
-            SaveUIModule(4);
+            SaveUIModule(1, function () {
+                SaveUIModule(2, function () {
+                    SaveUIModule(3, function () {
+                        SaveUIModule(4, null)
+                    })
+                })
+            });
 
             window.openedWindows.forEach(function (win) {
-                var wTest = window.open("", win.name);
+                var wTest = window.open("", win.Window.name);
 
                 if (wTest.document.querySelector('#contentArea') != undefined) {
-                    var contentArea = win.window.document.querySelector('#contentArea');
+                    var contentArea = win.Window.document.querySelector('#contentArea');
 
                     var moduleName = $(contentArea).attr('data-module-name');
                     $.post('/api/ClientDataApi/SaveUIModuleContent/' + moduleName + '/-1');
@@ -375,89 +394,77 @@
                 $(".quadrantLoad").show();
             }
         });
-    });
 
-    function GetModuleUI(originNumber, moduleName) {
-        $.get('/api/ClientDataApi/GetUIModuleContent/' + moduleName, function (data) {
-            var newContent = data.BodyHtml;
+        $('#disconnect').click(function (e) {
+            $('#input').val('');
+            $("#parserClientOutput").html('');
+            $("#parserClientOutput")[0].scrollTop = $("#parserClientOutput")[0].scrollHeight;
 
-            if (newContent != '') {
-                var $origin = $('div#quadrant-' + originNumber + '.quadrant');
-                $origin.attr('data-module-name', data.Name);
-                $origin.children('ul').children('li#quadrantName').text(data.Name);
+            AppendTextToOutput('Connection TERMINATED.');
+            window.connection.close();
 
-                var myContent = $origin.children('.contentContainer');
-
-                myContent.detach();
-
-                $(newContent).appendTo($origin);
-
-                ReloadUI();
-            }
-        });
-    }
-
-    function WipeUI() {
-        $('.quadrant').each(function () {
-            var $quad = $(this);
-
-            var quadNumber = $quad.attr('quadrant-number');
-            $quad.attr('data-module-name', 'Quadrant ' + quadNumber);
-            $quad.children('ul').children('li#quadrantName').text('Quadrant ' + quadNumber);
-
-            var myContent = $quad.children('.contentContainer');
-
-            myContent.detach();
+            $('disconnect').off('click');
+            return false;
         });
 
-        window.openedWindows.forEach(function (win) {
-            win.close();
+        //bind the change event of the currently selected character dropdown to call the ajax thingy to set the player's character
+        $('#currentCharacter').change(function () {
+            submitCharacter();
         });
-    }
 
-    function SaveUIModule(originNumber) {
-        var $origin = $('div#quadrant-' + originNumber + '.quadrant');
-        var moduleName = $origin.attr('data-module-name');
-
-        if (moduleName != '') {
-            $.post('/api/ClientDataApi/SaveUIModuleContent/' + moduleName + '/' + originNumber);
-        } else {
-            //remove it
-            $.post('/api/ClientDataApi/RemoveUIModuleContent/**anymodule**/' + originNumber);
-        }
-    }
-
-    function LoadUIModules() {
-        window.UILoading = true;
-
-        $.get('/api/ClientDataApi/LoadUIModules', function (data) {
-            for (var i = 0; i < data.length; i++) {
-                var obj = data[i];
-                var quadrant = obj.Item2;
-                var module = obj.Item1;
-
-                var moduleContent = module.BodyHtml.Value;
-
-                if (moduleContent != '') {
-                    var $origin = $('div#quadrant-' + quadrant + '.quadrant');
-
-                    $origin.children('.contentContainer').detach();
-
-                    if (quadrant == -1) {
-                        openModularUI(500, 500, module.Name, moduleContent);
-                    } else {
-                        $origin.attr('data-module-name', module.Name);
-                        $origin.children('ul').children('li#quadrantName').text(module.Name);
-
-                        $(moduleContent).appendTo($origin);
-                    }
-                }
-            }
-
-            window.UILoading = false;
-
+        $("#clientReload").click(function (e) {
             ReloadUI();
+            return false;
         });
-    }
+
+        $("#keyMap").click(function (e) {
+            $('.keyLegend').toggleClass('expanded');
+            return false;
+        });
+
+        $('#loopTracks').click(function () {
+            changeLoopTrackMode(this);
+            return false;
+        });
+
+
+        $("#muteSounds").click(function (e) {
+            window.soundMuted = !soundMuted;
+
+            $.post('/api/ClientDataApi/ToggleSoundMute');
+
+            if (window.soundMuted) {
+                $(this).children().attr('class', 'glyphicon glyphicon-volume-off');
+                $(this).children().attr('style', 'color: red;');
+            }
+            else {
+                $(this).children().attr('class', 'glyphicon glyphicon-volume-up');
+                $(this).children().attr('style', 'color: green;');
+            }
+
+            return false;
+        });
+
+        $("#muteMusic").click(function (e) {
+            window.musicMuted = !musicMuted;
+
+            $.post('/api/ClientDataApi/ToggleMusicMute');
+
+            if (window.musicMuted) {
+                $('#backgroundMusic')[0].pause();
+                $(this).children().attr('class', 'glyphicon glyphicon-volume-off');
+                $(this).children().attr('style', 'color: red;');
+            }
+            else {
+                $('#backgroundMusic')[0].play();
+                $(this).children().attr('class', 'glyphicon glyphicon-volume-up');
+                $(this).children().attr('style', 'color: green;');
+            }
+
+            return false;
+        });
+
+        TestBrowser();
+    });
     </script>
 }

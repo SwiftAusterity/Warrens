@@ -329,6 +329,7 @@
     <Compile Include="Models\PlayerManagement\PlaylistViewModels.cs" />
     <Compile Include="Models\PlayerManagement\SetPasswordViewModel.cs" />
     <Compile Include="Models\SubmitButtonModel.cs" />
+    <Compile Include="Models\UnicodeStringValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="WebSocketService.ashx.cs">

@@ -246,6 +246,8 @@ namespace NetMud.Data.Players
             {
                 UITutorialMode = newConfig.UITutorialMode;
                 GossipSubscriber = newConfig.GossipSubscriber;
+                SoundMuted = newConfig.SoundMuted;
+                MusicMuted = newConfig.MusicMuted;
 
                 GetNotifications(configData, charDirectory);
 
@@ -265,6 +267,15 @@ namespace NetMud.Data.Players
                 else
                 {
                     Acquaintences = newConfig.Acquaintences;
+                }
+
+                if (newConfig.UIModules == null)
+                {
+                    UIModules = Enumerable.Empty<Tuple<IUIModule, int>>();
+                }
+                else
+                {
+                    UIModules = newConfig.UIModules;
                 }
 
                 ConfigDataCache.Add(this);

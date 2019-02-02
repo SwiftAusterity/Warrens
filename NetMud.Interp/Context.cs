@@ -222,7 +222,7 @@ namespace NetMud.Interp
                 AccessErrors.Add("Unknown Command."); //TODO: Add generic errors class for rando error messages
                 return;
             }
-            else if(validCount > 1)
+            else if (validCount > 1)
             {
                 AccessErrors.Add(string.Format("There are {0} potential commands with that name and parameter structure.", validCommands.Count()));
 
@@ -257,7 +257,7 @@ namespace NetMud.Interp
                 IEnumerable<Type> validCommands = LoadedCommands.Where(comm => comm.GetCustomAttributes<CommandKeywordAttribute>()
                                             .Any(att => att.Aliases.Any(alias => alias.Equals(currentCommandString, StringComparison.InvariantCultureIgnoreCase))));
 
-                foreach(Type commandType in validCommands)
+                foreach (Type commandType in validCommands)
                 {
                     //Distinct this stuff
                     if (commands.Any(com => com.CommandType == commandType))
@@ -430,6 +430,14 @@ namespace NetMud.Interp
             while (parmDirWords > 0)
             {
                 string currentParmString = string.Join(" ", RemoveGrammaticalNiceities(internalDirectionCommandString.Take(parmDirWords))).ToLower();
+                int disambiguator = -1;
+
+                //We have disambiguation here, we need to pick the first object we get back in the list
+                if (Regex.IsMatch(currentParmString, LiveWorldDisambiguationSyntax))
+                {
+                    disambiguator = int.Parse(currentParmString.Substring(0, currentParmString.IndexOf(".")));
+                    currentParmString = currentParmString.Substring(currentParmString.IndexOf(".") + 1);
+                }
 
                 if (!Enum.TryParse(currentParmString, true, out MovementDirectionType dirType))
                 {
@@ -437,7 +445,49 @@ namespace NetMud.Interp
                     continue;
                 }
 
-                object thing = dirType;
+                object thing = null;
+
+                if (paramType == typeof(IPathway))
+                {
+                    var validPaths = Actor.CurrentLocation.CurrentLocation().GetPathways().Where(dest => dest.DirectionType == dirType);
+
+                    if (validPaths.Count() > 0)
+                    {
+                        //Skip everything up to the right guy and then take the one we want so we don't have to horribly alter the following logic flows
+                        if (disambiguator > -1 && validPaths.Count() > 1)
+                            validPaths = validPaths.Skip(disambiguator - 1).Take(1).ToList();
+
+                        if (validPaths.Count() > 1)
+                        {
+                            AccessErrors.Add(string.Format("There are {0} potential targets with that name for the {1} command. Try using one of the following disambiguators:", validPaths.Count(), command.CommandPhrase));
+
+                            int iterator = 1;
+                            foreach (IPathway obj in validPaths)
+                            {
+                                IEntity entityObject = obj;
+
+                                AccessErrors.Add(string.Format("{0}.{1}", iterator++, entityObject.TemplateName));
+                            }
+
+                            break;
+                        }
+                        else if (validPaths.Count() == 1)
+                        {
+                            thing = validPaths.First();
+                        }
+                    }
+
+                }
+                else
+                {
+                    thing = dirType;
+                }
+
+                if(thing == null)
+                {
+                    parmDirWords--;
+                    continue;
+                }
 
                 switch (currentNeededParm.Usage)
                 {
@@ -684,7 +734,7 @@ namespace NetMud.Interp
                         validObjects.AddRange(Position.CurrentLocation().GetContents<T>().Where(ent => ((IEntity)ent).Keywords.Any(key => key.Contains(currentParmString))));
 
                         //Add the pathways
-                        if(DataUtility.GetAllImplimentingedTypes(typeof(IPathway)).Contains(typeof(T)) && Position.CurrentLocation().GetType().GetInterfaces().Contains(typeof(ILocation)))
+                        if (DataUtility.GetAllImplimentingedTypes(typeof(IPathway)).Contains(typeof(T)) && Position.CurrentLocation().GetType().GetInterfaces().Contains(typeof(ILocation)))
                         {
                             ILocation location = Position.CurrentLocation();
                             IEnumerable<IPathway> validPathways = location.GetPathways();
@@ -853,7 +903,7 @@ namespace NetMud.Interp
                 T validObject = default(T);
 
                 long parmID = -1;
-                if(!long.TryParse(currentParmString, out parmID))
+                if (!long.TryParse(currentParmString, out parmID))
                 {
                     validObject = TemplateCache.GetByKeywords<T>(currentParmString);
                 }

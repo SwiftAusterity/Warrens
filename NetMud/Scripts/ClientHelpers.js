@@ -1,5 +1,5 @@
 ﻿function AppendTextToOutput(output) {
-    if (output === '' || output == undefined) {
+    if (output === '' || output === undefined) {
         return;
     }
 
@@ -7,11 +7,11 @@
 
     $outputArea.append('<div>' + output + '</div>');
     $outputArea[0].scrollTop = $outputArea[0].scrollHeight;
-};
+}
 
 
 function PlaySound(foleyUri) {
-    if (foleyUri === '' || foleyUri == undefined || window.soundMuted) {
+    if (foleyUri === '' || foleyUri === undefined || window.soundMuted) {
         return;
     }
 
@@ -30,8 +30,8 @@ function AppendOutput(output, UIOnly) {
         var sourceKey = $this.attr('output-data-binding');
         var dataToAppend = getObjects(output, sourceKey, 0);
 
-        if (dataToAppend != undefined && dataToAppend.length > 0) {
-            $this.html(dataToAppend)
+        if (dataToAppend !== undefined && dataToAppend.length > 0) {
+            $this.html(dataToAppend);
         }
     });
 
@@ -52,8 +52,8 @@ function AppendOutput(output, UIOnly) {
             var sourceKey = $this.attr('output-data-binding');
             var dataToAppend = getObjects(output, sourceKey, 0);
 
-            if (dataToAppend != undefined && dataToAppend.length > 0) {
-                $this.html(dataToAppend)
+            if (dataToAppend !== undefined && dataToAppend.length > 0) {
+                $this.html(dataToAppend);
             }
         });
 
@@ -76,7 +76,7 @@ function AppendOutput(output, UIOnly) {
             var value = output.Environment.Visibility;
 
             this.style.opacity = Math.max(1, value / 5);
-            if ($this.attr('data-generated') == undefined) {
+            if ($this.attr('data-generated') === undefined) {
                 MakeTooltip($this, "Brightness");
                 LoadSVG("feather_see", this, true);
                 $this.attr('data-generated', 'true');
@@ -89,7 +89,7 @@ function AppendOutput(output, UIOnly) {
 
             this.style.opacity = value;
 
-            if ($this.attr('data-generated') == undefined) {
+            if ($this.attr('data-generated') === undefined) {
                 $this.attr('title', "Solar Position");
                 MakeTooltip($this, "Solar Position");
                 LoadSVG("feather_radiate", this, true);
@@ -103,7 +103,7 @@ function AppendOutput(output, UIOnly) {
 
             this.style.opacity = value;
 
-            if ($this.attr('data-generated') == undefined) {
+            if ($this.attr('data-generated') === undefined) {
                 $this.attr('title', "Lunar Position");
                 MakeTooltip($this, "Lunar Position");
                 LoadSVG("feather_glow", this, true);
@@ -117,15 +117,15 @@ function AppendOutput(output, UIOnly) {
             var tempString = output.Environment.Temperature;
             var humidityString = output.Environment.Humidity;
 
-            if (tempString != undefined && tempString.length > 0) {
+            if (tempString !== undefined && tempString.length > 0) {
                 timeString += ' (' + tempString + ' C)';
             }
 
-            if (humidityString != undefined && humidityString.length > 0) {
+            if (humidityString !== undefined && humidityString.length > 0) {
                 timeString += ' (' + humidityString + ' bar)';
             }
 
-            if (timeString != undefined && timeString.length > 0) {
+            if (timeString !== undefined && timeString.length > 0) {
                 $this.html(timeString);
             }
         });
@@ -140,7 +140,7 @@ function AppendOutput(output, UIOnly) {
             var weatherIcon = '';
             var fill = 'blue';
 
-            if (rainType != undefined) {
+            if (rainType !== undefined) {
                 switch (rainType) {
                     case 'Clear':
                         weatherIcon = '';
@@ -168,7 +168,7 @@ function AppendOutput(output, UIOnly) {
                 }
             }
 
-            if (rainAmount != undefined) {
+            if (rainAmount !== undefined) {
                 weatherIcon = 'feather_rain';
 
                 switch (rainAmount) {
@@ -191,9 +191,9 @@ function AppendOutput(output, UIOnly) {
                 }
             }
 
-            if (weatherFlags != undefined && weatherFlags.length > 0) {
-                weatherFlags.forEach(function (value, index) {
-                    if (titleString != "Conditions: ") {
+            if (weatherFlags !== undefined && weatherFlags.length > 0) {
+                weatherFlags.forEach(function (value) {
+                    if (titleString !== "Conditions: ") {
                         titleString += ', ';
                     }
 
@@ -208,7 +208,7 @@ function AppendOutput(output, UIOnly) {
                 LoadSVG(weatherIcon, this, true);
             }
 
-            if (fill != '') {
+            if (fill !== '') {
                 $this.css('fill', fill);
             }
         });
@@ -218,12 +218,14 @@ function AppendOutput(output, UIOnly) {
     if (!UIOnly) {
         AppendTextToOutput(output.Occurrence);
 
-        PlaySound(output.SoundToPlay);
+        if (output.SoundToPlay !== undefined && output.SoundToPlay !== '' && output.SoundToPlay !== null) {
+            PlaySound(output.SoundToPlay);
+        }
     }
 }
 
 function waitForUI() {
-    if (window.UILoading == true) {
+    if (window.UILoading === true) {
         window.setTimeout(waitForUI, 100); /* this checks the flag every 100 milliseconds*/
     } 
 }
@@ -231,11 +233,11 @@ function waitForUI() {
 function getObjects(collection, key, depth) {
     var objects = [];
 
-    if (key != undefined) {
+    if (key !== undefined) {
         var keyHierarchy = key.split('.');
 
-        if (collection != undefined && collection[keyHierarchy[depth]] != undefined) {
-            if (depth == keyHierarchy.length - 1) {
+        if (collection !== undefined && collection[keyHierarchy[depth]] !== undefined) {
+            if (depth === keyHierarchy.length - 1) {
                 objects.push(collection[keyHierarchy[depth]]);
             }
             else {
@@ -262,7 +264,7 @@ function openModularUI(width, height, windowTitle, content) {
 
     var NFW = window.open('/GameClient/ModularWindow', windowTitle, s, true);
 
-    if (NFW != null) {
+    if (NFW !== null) {
         NFW.addEventListener('load', function () {
             var contentArea = this.document.querySelector('#contentArea');
 
@@ -276,8 +278,8 @@ function openModularUI(width, height, windowTitle, content) {
                 var sourceKey = $this.attr('output-data-binding');
                 var dataToAppend = getObjects(window.lastOutput, sourceKey, 0);
 
-                if (dataToAppend != undefined && dataToAppend.length > 0) {
-                    $this.html(dataToAppend)
+                if (dataToAppend !== undefined && dataToAppend.length > 0) {
+                    $this.html(dataToAppend);
                 }
             });
 
@@ -308,7 +310,7 @@ function openModularUI(width, height, windowTitle, content) {
 }
 
 function LoadSVG(fileName, containerElement, removeInner) {
-    if (fileName === '' || fileName == undefined) {
+    if (fileName === '' || fileName === undefined) {
         return;
     }
 
@@ -333,7 +335,7 @@ function LoadSVG(fileName, containerElement, removeInner) {
 
                 var svgXml = xhr.responseXML.documentElement;
 
-                if (svgXml == null) {
+                if (svgXml === null) {
                     return;
                 }
 
@@ -378,7 +380,7 @@ function MakeTipper($this, tipInfo, tipElement) {
         positionFixed: true,
         position: 'auto',
         removeOnDestroy: true
-    }
+    };
 
     $this.append(decodeHtml(tipInfo));
 
@@ -400,7 +402,7 @@ function GetEntityInfo(type, key) {
                 onCreate: function (data) {
                     $(data.instance.popper).click(function () { $(this).hide(); });
                 }
-            }
+            };
             var pop = new Popper(this, decodeHtml(tipInfo), poptions);
             pop.show();
         });

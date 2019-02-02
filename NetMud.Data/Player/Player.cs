@@ -162,6 +162,8 @@ namespace NetMud.Data.Players
         {
             Inventory = new EntityContainer<IInanimate>();
             Qualities = new HashSet<IQuality>();
+            MobilesInside = new EntityContainer<IMobile>();
+            Inventory = new EntityContainer<IInanimate>();
         }
 
         /// <summary>
@@ -171,6 +173,7 @@ namespace NetMud.Data.Players
         public Player(IPlayerTemplate character)
         {
             Qualities = new HashSet<IQuality>();
+            MobilesInside = new EntityContainer<IMobile>();
             Inventory = new EntityContainer<IInanimate>();
             TemplateId = character.Id;
             AccountHandle = character.AccountHandle;

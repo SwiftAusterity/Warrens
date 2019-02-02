@@ -108,7 +108,7 @@ namespace NetMud.Cartography
 
                         if (RoomTemplate != null)
                         {
-                            rowString += RenderRoomToAscii(RoomTemplate, RoomTemplate.GetZonePathways().Any(), RoomTemplate.GetLocalePathways().Any(), forAdmin);
+                            rowString += RenderRoomToAscii(RoomTemplate, RoomTemplate.GetZonePathways().Any(), RoomTemplate.GetLocalePathways().Any(), !forAdmin && RoomTemplate.Id == centerRoom.Id, forAdmin);
                         }
                         else
                         {
@@ -132,7 +132,7 @@ namespace NetMud.Cartography
 
                         if (RoomTemplate != null)
                         {
-                            expandedMap = RenderRoomAndPathwaysForMapNode(x, y, RoomTemplate, centerRoom, expandedMap, forAdmin, renderMode);
+                            expandedMap = RenderRoomAndPathwaysForMapNode(x, y, RoomTemplate, centerRoom, expandedMap, RoomTemplate.Id == centerRoom.Id, forAdmin, renderMode);
                         }
                     }
                 }
@@ -163,7 +163,7 @@ namespace NetMud.Cartography
             return sb.ToString();
         }
 
-        private static string[,] RenderRoomAndPathwaysForMapNode(int x, int y, IRoomTemplate RoomTemplate, IRoomTemplate centerRoom, string[,] expandedMap, bool forAdmin, MapRenderMode renderMode)
+        private static string[,] RenderRoomAndPathwaysForMapNode(int x, int y, IRoomTemplate RoomTemplate, IRoomTemplate centerRoom, string[,] expandedMap, bool currentRoom, bool forAdmin, MapRenderMode renderMode)
         {
             System.Collections.Generic.IEnumerable<IPathwayTemplate> pathways = RoomTemplate.GetPathways();
             int expandedRoomX = x * 3 + 1;
@@ -182,7 +182,8 @@ namespace NetMud.Cartography
                     IPathwayTemplate wPath = pathways.FirstOrDefault(path => path.DirectionType == MovementDirectionType.West);
 
                     //The room
-                    expandedMap[expandedRoomX, expandedRoomY] = RenderRoomToAscii(RoomTemplate, RoomTemplate.GetZonePathways().Any(), RoomTemplate.GetLocalePathways().Any(), forAdmin);
+                    expandedMap[expandedRoomX, expandedRoomY] = RenderRoomToAscii(RoomTemplate, RoomTemplate.GetZonePathways().Any(), RoomTemplate.GetLocalePathways().Any()
+                                                                                    , !forAdmin && currentRoom, forAdmin);
 
                     expandedMap[expandedRoomX - 1, expandedRoomY + 1] = RenderPathwayToAsciiForModals(nwPath, RoomTemplate.Id, MovementDirectionType.NorthWest
                                                                                         , Cartographer.GetRoomInDirection(RoomTemplate, MovementDirectionType.NorthWest), forAdmin);
@@ -340,7 +341,7 @@ namespace NetMud.Cartography
             return returnValue;
         }
 
-        private static string RenderRoomToAscii(IRoomTemplate destination, bool hasZoneExits, bool hasLocaleExits, bool forAdmin = false)
+        private static string RenderRoomToAscii(IRoomTemplate destination, bool hasZoneExits, bool hasLocaleExits, bool isCurrentLocation, bool forAdmin = false)
         {
             string character = "O";
 
@@ -355,6 +356,11 @@ namespace NetMud.Cartography
             else if(hasLocaleExits)
             {
                 character = "L";
+            }
+
+            if(isCurrentLocation)
+            {
+                character = "$";
             }
 
             if (forAdmin)

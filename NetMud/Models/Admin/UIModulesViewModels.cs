@@ -1,4 +1,7 @@
 ﻿using NetMud.Authentication;
+using NetMud.Data.Architectural.PropertyBinding;
+using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Architectural.PropertyValidation;
 using NetMud.DataStructure.Player;
 using System;
 using System.Collections.Generic;
@@ -40,10 +43,11 @@ namespace NetMud.Models.Admin
         [DataType(DataType.Text)]
         public string Name { get; set; }
 
-        [StringLength(2000, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 20)]
+        [MarkdownStringLengthValidator(ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 20)]
         [DataType("Markdown")]
         [Display(Name = "Help Text", Description = "Descriptive text shown on the UI Modules list page.")]
-        public string HelpText { get; set; }
+        [MarkdownBinder]
+        public MarkdownString HelpText { get; set; }
 
         [StringLength(8000, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 20)]
         [Display(Name = "Body Content (HTML)", Description = "HTML, css and javascript which drives your module.")]

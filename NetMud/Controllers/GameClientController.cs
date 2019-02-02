@@ -40,7 +40,7 @@ namespace Controllers
                 authedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
-            model.MusicTracks = ContentUtility.GetMusicTracksForZone(model.authedUser.GameAccount.GetCurrentlySelectedCharacter()?.CurrentLocation.CurrentZone);
+            model.MusicTracks = ContentUtility.GetMusicTracksForZone(model.authedUser.GameAccount.GetCurrentlySelectedCharacter()?.CurrentLocation?.CurrentZone);
             model.MusicPlaylists = model.authedUser.GameAccount.Config.Playlists;
             return View(model);
         }

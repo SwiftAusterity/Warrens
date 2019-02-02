@@ -561,9 +561,7 @@ div.roomAsciiMap {
         border-radius: 15px;
         background-color: cornflowerblue;
         padding: 1px 5px;
-        text-align: center;
         color: white;
-        box-shadow: 1px 1px 1px 1px dodgerblue;
     }
 
         .listPagination button.pagingArrow {
@@ -616,6 +614,7 @@ div.roomAsciiMap {
     color: yellow;
     z-index: 1001;
     margin: auto;
+    flex: unset !important;
 }
 
 .tutorialModal {
