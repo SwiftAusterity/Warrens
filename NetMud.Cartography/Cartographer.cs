@@ -140,15 +140,15 @@ namespace NetMud.Cartography
         /// <param name="radius">the radius of rooms to go out to. -1 means "generate the entire world"</param>
         /// <param name="recenter">find the center node of the array and return an array with that node at absolute center</param>
         /// <returns>a 3d array of rooms</returns>
-        public static long[,,] GenerateMapFromRoom(IRoomTemplate room, int radius, HashSet<IRoomTemplate> roomPool, bool shrink = false)
+        public static long[,,] GenerateMapFromRoom(IRoomTemplate room, HashSet<IRoomTemplate> roomPool, bool shrink = false)
         {
-            if (room == null || radius < 0)
+            if (room == null)
             {
                 return new long[0,0,0];
             }
 
-            int diameter = radius * 2;
-            int center = radius;
+            int diameter = 50;
+            int center = 25;
 
             //+1 for center room
             diameter++;

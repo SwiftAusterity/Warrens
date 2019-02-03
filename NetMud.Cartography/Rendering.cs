@@ -19,9 +19,9 @@ namespace NetMud.Cartography
         /// <param name="room">the room to render the radius around</param>
         /// <param name="radius">the radius around the room to render</param>
         /// <returns>a single string that is an ascii map</returns>
-        public static string RenderRadiusMap(IRoom room, int radius)
+        public static string RenderRadiusMap(IRoom room, int radius, bool visibleOnly = false)
         {
-            return RenderRadiusMap(room.Template<IRoomTemplate>(), radius, false);
+            return RenderRadiusMap(room.Template<IRoomTemplate>(), radius, visibleOnly, false);
         }
 
         /// <summary>
@@ -37,9 +37,9 @@ namespace NetMud.Cartography
         {
             IRoomTemplate centerRoom = locale.CentralRoom(zIndex);
 
-            string over = RenderRadiusMap(centerRoom, radius, forAdmin, withPathways, locale, MapRenderMode.Upwards);
-            string here = RenderRadiusMap(centerRoom, radius, forAdmin, withPathways, locale, MapRenderMode.Normal);
-            string under = RenderRadiusMap(centerRoom, radius, forAdmin, withPathways, locale, MapRenderMode.Downwards);
+            string over = RenderRadiusMap(centerRoom, radius, false, forAdmin, withPathways, locale, MapRenderMode.Upwards);
+            string here = RenderRadiusMap(centerRoom, radius, false, forAdmin, withPathways, locale, MapRenderMode.Normal);
+            string under = RenderRadiusMap(centerRoom, radius, false, forAdmin, withPathways, locale, MapRenderMode.Downwards);
 
             return new Tuple<string, string, string>(over, here, under);
         }
@@ -52,7 +52,7 @@ namespace NetMud.Cartography
         /// <param name="forAdmin">include edit links for paths and rooms?</param>
         /// <param name="withPathways">include paths at all?</param>
         /// <returns>a single string that is an ascii map</returns>
-        public static string RenderRadiusMap(IRoomTemplate room, int radius, bool forAdmin = true, bool withPathways = true, ILocaleTemplate locale = null, MapRenderMode renderMode = MapRenderMode.Normal)
+        public static string RenderRadiusMap(IRoomTemplate room, int radius, bool visibleOnly = false, bool forAdmin = true, bool withPathways = true, ILocaleTemplate locale = null, MapRenderMode renderMode = MapRenderMode.Normal)
         {
             StringBuilder asciiMap = new StringBuilder();
 
@@ -81,7 +81,7 @@ namespace NetMud.Cartography
             long[,] flattenedMap = Cartographer.GetSinglePlane(map, room.Coordinates.Z);
 
             //4. Render slice of room
-            return RenderMap(flattenedMap, forAdmin, withPathways, room, renderMode);
+            return RenderMap(flattenedMap, visibleOnly, forAdmin, withPathways, room, renderMode);
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace NetMud.Cartography
         /// <param name="withPathways">include pathway symbols</param>
         /// <param name="centerRoom">the room considered "center"</param>
         /// <returns>the rendered map</returns>
-        public static string RenderMap(long[,] map, bool forAdmin, bool withPathways, IRoomTemplate centerRoom, MapRenderMode renderMode = MapRenderMode.Normal)
+        public static string RenderMap(long[,] map, bool visibileOnly, bool forAdmin, bool withPathways, IRoomTemplate centerRoom, MapRenderMode renderMode = MapRenderMode.Normal)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -335,7 +335,7 @@ namespace NetMud.Cartography
             }
             else if (path != null)
             {
-                return asciiCharacter;
+                returnValue = string.Format("<a href='#' class='pathway nonAdminPathway' title='{3}{6}: {1}{4} to {2}{5}'>{0}</a>", asciiCharacter, directionType, destinationName, path.Name, originId, destinationId, path.Id);
             }
 
             return returnValue;
@@ -369,7 +369,7 @@ namespace NetMud.Cartography
             }
             else
             {
-                return character;
+                return string.Format("<a href='#' class='room nonAdminRoom' title='{1}{2}'>{0}</a>", character, destination.Name, destination.Id);
             }
         }
 

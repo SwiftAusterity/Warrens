@@ -119,7 +119,7 @@ namespace NetMud.Data.Locale
         public void RemapInterior()
         {
             IEnumerable<IRoomTemplate> remainingRooms = Rooms();
-            long[,,] returnMap = Cartographer.GenerateMapFromRoom(CentralRoom(), remainingRooms.Count() / 2, new HashSet<IRoomTemplate>(remainingRooms), true);
+            long[,,] returnMap = Cartographer.GenerateMapFromRoom(CentralRoom(), new HashSet<IRoomTemplate>(remainingRooms), true);
 
             Interior = new Map(returnMap, false);
         }

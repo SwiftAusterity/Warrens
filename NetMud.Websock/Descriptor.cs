@@ -12,6 +12,7 @@ using NetMud.DataStructure.Gaia;
 using NetMud.DataStructure.Gossip;
 using NetMud.DataStructure.Inanimate;
 using NetMud.DataStructure.Linguistic;
+using NetMud.DataStructure.Locale;
 using NetMud.DataStructure.Player;
 using NetMud.DataStructure.Room;
 using NetMud.DataStructure.System;
@@ -165,8 +166,9 @@ namespace NetMud.Websock
             IGlobalPosition currentLocation = _currentPlayer.CurrentLocation;
             IContains currentContainer = currentLocation.CurrentLocation();
             IZone currentZone = currentContainer.CurrentLocation.CurrentZone;
+            ILocale currentLocale = currentLocation.CurrentLocale;
+            IRoom currentRoom = currentLocation.CurrentRoom;
             IGaia currentWorld = currentZone.GetWorld();
-            IRoom currentRoom = currentContainer.CurrentLocation.CurrentRoom;
 
             IEnumerable<string> pathways = Enumerable.Empty<string>();
             IEnumerable<string> inventory = Enumerable.Empty<string>();
@@ -183,8 +185,8 @@ namespace NetMud.Websock
 
             LocalStatus local = new LocalStatus
             {
-                ZoneName = currentZone.TemplateName,
-                LocaleName = currentLocation.CurrentLocale?.TemplateName,
+                ZoneName = currentZone?.TemplateName,
+                LocaleName = currentLocale?.TemplateName,
                 RoomName = currentRoom?.TemplateName,
                 Inventory = inventory.ToArray(),
                 Populace = populace.ToArray(),

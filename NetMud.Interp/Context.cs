@@ -439,7 +439,7 @@ namespace NetMud.Interp
                     currentParmString = currentParmString.Substring(currentParmString.IndexOf(".") + 1);
                 }
 
-                if (!Enum.TryParse(currentParmString, true, out MovementDirectionType dirType))
+                if (!Enum.TryParse(currentParmString, true, out MovementDirectionType dirType) && !Enum.TryParse(command.CommandPhrase, true, out dirType))
                 {
                     parmDirWords--;
                     continue;

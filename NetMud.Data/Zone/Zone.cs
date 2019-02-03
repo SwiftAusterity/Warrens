@@ -376,7 +376,7 @@ namespace NetMud.Data.Zone
             }
 
             //render our locales out
-            foreach (ILocale locale in LiveCache.GetAll<ILocale>().Where(loc => loc.CurrentLocation.CurrentZone.Equals(this)))
+            foreach (ILocale locale in LiveCache.GetAll<ILocale>().Where(loc => loc.ParentLocation?.TemplateId == TemplateId))
             {
                 me.TryModify(locale.GetFullDescription(viewer, sensoryTypes));
             }
@@ -655,13 +655,14 @@ namespace NetMud.Data.Zone
 
             WeatherEvents = Enumerable.Empty<IWeatherEvent>();
 
-            CurrentLocation = new GlobalPosition(this, null, null);
-
             PopulateMap();
 
             UpsertToLiveWorldCache(true);
 
             KickoffProcesses();
+
+            CurrentLocation = new GlobalPosition(this, null, null);
+            UpsertToLiveWorldCache(true);
         }
 
         /// <summary>
@@ -724,7 +725,7 @@ namespace NetMud.Data.Zone
 
         public override IGlobalPosition GetContainerAsLocation()
         {
-            return new GlobalPosition((IZone)this);
+            return new GlobalPosition(this);
         }
 
 

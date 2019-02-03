@@ -9,8 +9,6 @@ namespace NetMud.Data.Architectural.EntityBase
 {
     public abstract class LocationTemplateEntityPartial : EntityTemplatePartial, ILocationData
     {
-        public abstract ILocation GetLiveInstance();
-
         /// <summary>
         /// What pathways are affiliated with this room data (what it spawns with)
         /// </summary>

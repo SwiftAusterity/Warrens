@@ -1,5 +1,6 @@
 ﻿using NetMud.Cartography;
 using NetMud.Communication.Messaging;
+using NetMud.Data.Architectural;
 using NetMud.Data.Architectural.DataIntegrity;
 using NetMud.Data.Architectural.EntityBase;
 using NetMud.Data.Linguistic;
@@ -9,6 +10,7 @@ using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.Room;
 using NetMud.DataStructure.System;
+using NetMud.DataStructure.Zone;
 using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -62,7 +64,7 @@ namespace NetMud.Data.Room
         /// <summary>
         /// Cardinality direction this points towards
         /// </summary>
-        public MovementDirectionType MovementDirection { get; set; }
+        public MovementDirectionType DirectionType { get; set; }
 
         /// <summary>
         /// Birthmark of live location this points into
@@ -136,8 +138,6 @@ namespace NetMud.Data.Room
             }
         }
 
-        public MovementDirectionType DirectionType { get; set; }
-
         [Range(-1, 360, ErrorMessage = "The {0} must be between {2} and {1}. -1 is for non-cardinal exits.")]
         [Display(Name = "Degrees From North", Description = "The direction on a 360 plane. 360 and 0 are both directional north. 90 is east, 180 is south, 270 is west.")]
         [DataType(DataType.Text)]
@@ -161,7 +161,7 @@ namespace NetMud.Data.Room
         {
             Enter = new MessageCluster();
             TemplateId = backingStore.Id;
-            MovementDirection = Utilities.TranslateToDirection(backingStore.DegreesFromNorth, backingStore.InclineGrade);
+            DirectionType = Utilities.TranslateToDirection(backingStore.DegreesFromNorth, backingStore.InclineGrade);
             GetFromWorldOrSpawn();
         }
 
@@ -211,7 +211,7 @@ namespace NetMud.Data.Room
                 Origin = me.Origin;
                 Destination = me.Destination;
                 Enter = me.Enter;
-                MovementDirection = me.MovementDirection;
+                DirectionType = me.DirectionType;
                 Model = me.Model;
             }
         }
@@ -233,7 +233,7 @@ namespace NetMud.Data.Room
             //We can't even try this until we know if the data is there
             IPathwayTemplate bS = Template<IPathwayTemplate>() ?? throw new InvalidOperationException("Missing backing data store on pathway spawn event.");
 
-            Keywords = new string[] { bS.Name.ToLower(), MovementDirection.ToString().ToLower() };
+            Keywords = new string[] { bS.Name.ToLower(), DirectionType.ToString().ToLower() };
 
             if (string.IsNullOrWhiteSpace(BirthMark))
             {
@@ -241,13 +241,31 @@ namespace NetMud.Data.Room
                 Birthdate = DateTime.Now;
             }
 
-            MovementDirection = Utilities.TranslateToDirection(bS.DegreesFromNorth, bS.InclineGrade);
+            DegreesFromNorth = bS.DegreesFromNorth;
+            InclineGrade = bS.InclineGrade;
+            DirectionType = Utilities.TranslateToDirection(DegreesFromNorth, InclineGrade);
 
             //paths need two locations
-            Origin = bS.Origin.GetLiveInstance();
-            Destination = bS.Destination.GetLiveInstance();
+            if (bS.Origin.GetType() == typeof(RoomTemplate))
+            {
+                Origin = ((IRoomTemplate)bS.Origin).GetLiveInstance();
+            }
+            else
+            {
+                Origin = ((IZoneTemplate)bS.Origin).GetLiveInstance();
+            }
 
-            CurrentLocation = Origin.CurrentLocation;
+            if (bS.Destination.GetType() == typeof(RoomTemplate))
+            {
+                Destination = ((IRoomTemplate)bS.Destination).GetLiveInstance();
+            }
+            else
+            {
+                Destination = ((IZoneTemplate)bS.Destination).GetLiveInstance();
+            }
+
+
+            CurrentLocation = (IGlobalPosition)Origin.CurrentLocation.Clone();
             Model = bS.Model;
 
             //Enter = new MessageCluster(new string[] { bS.MessageToActor }, new string[] { "$A$ enters you" }, new string[] { }, new string[] { bS.MessageToOrigin }, new string[] { bS.MessageToDestination });
@@ -284,7 +302,7 @@ namespace NetMud.Data.Room
                 Lexica verb = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "leads");
 
                 //Fallback to using names
-                if (MovementDirection == MovementDirectionType.None)
+                if (DirectionType == MovementDirectionType.None)
                 {
                     Lexica origin = new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, Origin.TemplateName);
                     origin.TryModify(new Lexica(LexicalType.Noun, GrammaticalType.IndirectObject, Destination.TemplateName));
@@ -292,7 +310,7 @@ namespace NetMud.Data.Room
                 }
                 else
                 {
-                    Lexica direction = new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, MovementDirection.ToString());
+                    Lexica direction = new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, DirectionType.ToString());
                     Lexica origin = new Lexica(LexicalType.Noun, GrammaticalType.IndirectObject, Origin.TemplateName);
                     origin.TryModify(new Lexica(LexicalType.Noun, GrammaticalType.IndirectObject, Destination.TemplateName));
                     direction.TryModify(origin);

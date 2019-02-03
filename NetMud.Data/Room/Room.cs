@@ -87,8 +87,31 @@ namespace NetMud.Data.Room
             }
         }
 
-        public Coordinate Coordinates { get; set; }
+        [ScriptIgnore]
+        [JsonIgnore]
+        private Coordinate _coordinates { get; set; }
 
+        [ScriptIgnore]
+        [JsonIgnore]
+        public Coordinate Coordinates
+        {
+            get
+            {
+                return _coordinates;
+            }
+            set
+            {
+                _coordinates = value;
+
+                var dt = Template<IRoomTemplate>();
+                if (dt != null)
+                {
+                    dt.Coordinates = _coordinates;
+                    dt.PersistToCache();
+                }
+                
+            }
+        }
 
         [JsonProperty("Medium")]
         private TemplateCacheKey _medium { get; set; }
@@ -132,6 +155,7 @@ namespace NetMud.Data.Room
         {
             Contents = new EntityContainer<IInanimate>();
             MobilesInside = new EntityContainer<IMobile>();
+            Coordinates = new Coordinate(-1, -1, -1);
         }
 
         /// <summary>
@@ -142,6 +166,7 @@ namespace NetMud.Data.Room
         {
             Contents = new EntityContainer<IInanimate>();
             MobilesInside = new EntityContainer<IMobile>();
+            Coordinates = new Coordinate(-1, -1, -1);
 
             TemplateId = room.Id;
 
@@ -532,7 +557,7 @@ namespace NetMud.Data.Room
         public string RenderCenteredMap(int radius, bool visibleOnly)
         {
             //TODO: fix visibility
-            return Cartography.Rendering.RenderRadiusMap(this, 3);
+            return Cartography.Rendering.RenderRadiusMap(this, 3, visibleOnly);
         }
         #endregion
 
@@ -582,11 +607,8 @@ namespace NetMud.Data.Room
             //We can't even try this until we know if the data is there
             IRoomTemplate bS = Template<IRoomTemplate>() ?? throw new InvalidOperationException("Missing backing data store on room spawn event.");
 
-            ParentLocation = bS.ParentLocation.GetLiveInstance();
-            spawnTo.CurrentLocale = ParentLocation;
-            spawnTo.CurrentZone = ParentLocation.ParentLocation;
-
             Keywords = new string[] { bS.Name.ToLower() };
+            Model = bS.Model;
 
             if (NaturalResources == null)
             {
@@ -599,13 +621,18 @@ namespace NetMud.Data.Room
                 Birthdate = DateTime.Now;
             }
 
+            UpsertToLiveWorldCache(true);
+
+            ParentLocation = LiveCache.Get<ILocale>(bS.ParentLocation.Id);
+            spawnTo.CurrentLocale = ParentLocation;
+            spawnTo.CurrentZone = ParentLocation.ParentLocation;
+
             if (spawnTo?.CurrentLocale == null || spawnTo?.CurrentZone == null)
             {
                 spawnTo = new GlobalPosition(this);
             }
 
             CurrentLocation = spawnTo;
-            Model = bS.Model;
 
             UpsertToLiveWorldCache(true);
         }

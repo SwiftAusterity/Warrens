@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Architectural.EntityBase
 {
-    public interface ILocationData : ITemplate, ISingleton<ILocation>
+    public interface ILocationData : ITemplate
     {
         /// <summary>
         /// What pathways are affiliated with this (what it spawns with)

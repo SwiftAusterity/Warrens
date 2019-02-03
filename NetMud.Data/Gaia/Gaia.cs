@@ -395,7 +395,6 @@ namespace NetMud.Data.Gaia
         private bool AdvanceTime()
         {
             CurrentTimeOfDay.AdvanceByHour();
-            BroadcastEvent("Tick.");
             IChronology chronoSystem = Template<IGaiaTemplate>().ChronologicalSystem;
 
             if (CelestialPositions.Any(cp => cp.CelestialObject.OrientationType == CelestialOrientation.SolarBody))

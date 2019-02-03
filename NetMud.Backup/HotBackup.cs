@@ -67,7 +67,7 @@ namespace NetMud.Backup
             {
                 ILocale entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as ILocale;
 
-                entityThing.ParentLocation = entityThing.ParentLocation.GetLiveInstance();
+                entityThing.ParentLocation = entityThing.Template<ILocaleTemplate>().ParentLocation.GetLiveInstance();
                 entityThing.GetFromWorldOrSpawn();
             }
 
@@ -342,57 +342,12 @@ namespace NetMud.Backup
 
         private void ParseDimension()
         {
-            //var zonePool = new HashSet<IZoneTemplate>(TemplateCache.GetAll<IZoneTemplate>());
             HashSet<ILocaleTemplate> localePool = new HashSet<ILocaleTemplate>(TemplateCache.GetAll<ILocaleTemplate>());
-            //var roomPool = new HashSet<IRoomTemplate>(TemplateCache.GetAll<IRoomTemplate>());
 
             foreach (ILocaleTemplate locale in localePool)
             {
                 locale.RemapInterior();
             }
-
-            //This will cycle through every room building massive (in theory) maps and spitting out the remaining items to make more worlds from.
-            //If your world is highly disconnected you will end up with a ton of world maps
-            //while (roomPool.Count() > 0)
-            //{
-            //    var currentRoom = roomPool.FirstOrDefault();
-
-            //    if (currentRoom == null)
-            //        continue;
-
-            //    GenerateWorld(currentRoom, roomPool);
-
-            //    //TemplateCache.Add(newWorld);
-            //}
-        }
-
-        //TODO: a method that takes a room, 
-        //Would need to both recenter and shrink before the end otherwise we'll have gigantic arrays
-        /// <summary>
-        /// Builds the entire connected world out of the starting room 
-        /// </summary>
-        /// <param name="startingRoom">The room to start with</param>
-        /// <param name="remainingRooms">The list of remaining rooms to work against (will remove used rooms from this)</param>
-        /// <returns>A whole new world</returns>
-        private void GenerateWorld(IRoomTemplate startingRoom, HashSet<IRoomTemplate> remainingRooms)
-        {
-            if (startingRoom == null || remainingRooms.Count() == 0)
-            {
-                throw new InvalidOperationException("Invalid inputs.");
-            }
-
-            startingRoom.Coordinates = new Coordinate(0, 0, 0);
-
-            //We're kind of faking array size for radius, it will be shrunk later
-            long[,,] returnMap = Cartographer.GenerateMapFromRoom(startingRoom, remainingRooms.Count() / 2, remainingRooms, true);
-
-            startingRoom.ParentLocation.Interior = new Map(returnMap, false);
-
-            //This zone gets to choose the world name if any
-            //var world = new World(new Map(returnMap, false), startingRoom.ZoneAffiliation.WorldName);
-
-            //if (String.IsNullOrWhiteSpace(world.Name))
-            //    world.Name = "Dimension " + world.Id.ToString();
         }
     }
 }

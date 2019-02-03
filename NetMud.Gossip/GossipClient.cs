@@ -253,7 +253,7 @@ namespace NetMud.Gossip
 
         private void GetNewSocket()
         {
-            MyClient = new WebSocket("wss://gossip.haus/socket");
+            MyClient = new WebSocket("wss://grapevine.haus/socket");
 
             MyClient.Log.Level = LogLevel.Error;
             MyClient.Log.Output = (data, eventing) => DoLog(data.Message);

@@ -190,12 +190,16 @@ namespace NetMud.Data.Locale
             ILocaleTemplate bS = Template<ILocaleTemplate>() ?? throw new InvalidOperationException("Missing backing data store on locale spawn event.");
 
             Keywords = new string[] { bS.Name.ToLower() };
+            AlwaysDiscovered = bS.AlwaysDiscovered;
+            Descriptives = bS.Descriptives;
 
             if (string.IsNullOrWhiteSpace(BirthMark))
             {
                 BirthMark = LiveCache.GetUniqueIdentifier(bS);
                 Birthdate = DateTime.Now;
             }
+
+            UpsertToLiveWorldCache(true);
 
             ParentLocation = LiveCache.Get<IZone>(bS.ParentLocation.Id);
 
@@ -205,8 +209,6 @@ namespace NetMud.Data.Locale
             }
 
             CurrentLocation = spawnTo;
-            AlwaysDiscovered = bS.AlwaysDiscovered;
-            Descriptives = bS.Descriptives;
 
             UpsertToLiveWorldCache(true);
         }

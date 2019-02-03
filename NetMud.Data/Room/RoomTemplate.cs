@@ -188,7 +188,7 @@ namespace NetMud.Data.Room
         /// Get the live version of this in the world
         /// </summary>
         /// <returns>The live data</returns>
-        public override ILocation GetLiveInstance()
+        public IRoom GetLiveInstance()
         {
             return LiveCache.Get<IRoom>(Id);
         }

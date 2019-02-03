@@ -149,7 +149,7 @@ namespace NetMud.Data.Architectural.EntityBase
                 return false;
             }
 
-            return Birthmarks[genericCollectionLabel].Remove(newKey);
+            return Birthmarks[genericCollectionLabel].RemoveWhere(key => key.BirthMark == newKey.BirthMark) > 0;
         }
 
         /// <summary>
@@ -159,14 +159,14 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <returns>success status</returns>
         public bool Remove(ICacheKey cacheKey)
         {
-            LiveCacheKey key = (LiveCacheKey)cacheKey;
+            LiveCacheKey newKey = (LiveCacheKey)cacheKey;
 
-            if (!Birthmarks[genericCollectionLabel].Any(mark => mark.KeyHash().Equals(key.KeyHash())))
+            if (!Birthmarks[genericCollectionLabel].Any(mark => mark.KeyHash().Equals(newKey.KeyHash())))
             {
                 return false;
             }
 
-            return Birthmarks[genericCollectionLabel].Remove(key);
+            return Birthmarks[genericCollectionLabel].RemoveWhere(key => key.BirthMark == newKey.BirthMark) > 0;
         }
 
         /// <summary>

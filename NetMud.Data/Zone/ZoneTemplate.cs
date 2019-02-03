@@ -249,12 +249,7 @@ namespace NetMud.Data.Zone
             return new Dimensions(1, 1, 1);
         }
 
-        public override ILocation GetLiveInstance()
-        {
-            return (ILocation)LiveCache.Get<IZone>(Id);
-        }
-
-        IZone ISingleton<IZone>.GetLiveInstance()
+        public IZone GetLiveInstance()
         {
             return LiveCache.Get<IZone>(Id);
         }

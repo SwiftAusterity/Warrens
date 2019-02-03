@@ -238,9 +238,10 @@ namespace NetMud.Controllers.GameAdmin
                 ValidMaterials = TemplateCache.GetAll<IMaterial>(),
                 ValidZones = TemplateCache.GetAll<IZoneTemplate>(),
                 ValidLocales = TemplateCache.GetAll<ILocaleTemplate>().Where(locale => locale.Id != obj.ParentLocation.Id),
+                ValidLocaleRooms = TemplateCache.GetAll<IRoomTemplate>().Where(room => room.Id != obj.Id && room.ParentLocation.Id == obj.ParentLocation.Id),
                 ValidRooms = TemplateCache.GetAll<IRoomTemplate>().Where(room => room.Id != obj.Id),
                 ValidModels = TemplateCache.GetAll<IDimensionalModelData>(),
-                DataObject = obj
+                DataObject = obj,
             };
 
             IPathwayTemplate zoneDestination = obj.GetZonePathways().FirstOrDefault();
