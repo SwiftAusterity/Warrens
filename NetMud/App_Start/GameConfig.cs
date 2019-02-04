@@ -14,9 +14,11 @@ using NetMud.DataStructure.Player;
 using NetMud.DataStructure.System;
 using NetMud.Gossip;
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace NetMud
 {
@@ -38,14 +40,22 @@ namespace NetMud
             }
 
             IGossipConfig gossipConfig = ConfigDataCache.Get<IGossipConfig>(new ConfigDataCacheKey(typeof(IGossipConfig), "GossipSettings", ConfigDataType.GameWorld));
+            var instance = HttpContext.Current.ApplicationInstance;
+            Assembly asm = instance.GetType().BaseType.Assembly;
+            Version v = asm.GetName().Version;
 
             //We dont move forward without a global config
             if (gossipConfig == null)
             {
-                gossipConfig = new GossipConfig();
-
-                gossipConfig.SystemSave();
+                gossipConfig = new GossipConfig
+                {
+                    ClientName = "Warrens: White Sands"
+                };
             }
+
+            //Update version
+            gossipConfig.Version = string.Format(CultureInfo.InvariantCulture, @"{0}.{1}.{2} (r{3})", v.Major, v.Minor, v.Build, v.Revision);
+            gossipConfig.SystemSave();
 
             //Load structural data next
             Templates.LoadEverythingToCache();

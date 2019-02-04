@@ -58,18 +58,7 @@ namespace NetMud.Data.Gossip
         /// </summary>
         [JsonIgnore]
         [ScriptIgnore]
-        public string Version
-        {
-            get
-            {
-                Version v = Assembly.GetExecutingAssembly().GetName().Version;
-                return string.Format(CultureInfo.InvariantCulture, @"{0}.{1}.{2} (r{3})", v.Major, v.Minor, v.Build, v.Revision);
-            }
-            set
-            {
-                throw new NotImplementedException("Can't set version.");
-            }
-        }
+        public string Version { get; set; }
 
         /// <summary>
         /// The useragent the client sends the gossip server
@@ -123,7 +112,10 @@ namespace NetMud.Data.Gossip
         /// </summary>
         public GossipConfig()
         {
-            string clientName = "Warrens: Leaf Green";
+            string clientName = "Warrens: White Sands";
+
+            Version v = Assembly.GetExecutingAssembly().GetName().Version;
+            Version = string.Format(CultureInfo.InvariantCulture, @"{0}.{1}.{2} (r{3})", v.Major, v.Minor, v.Build, v.Revision);
 
             Name = "GossipSettings";
             GossipActive = true;

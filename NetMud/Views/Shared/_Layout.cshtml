@@ -1,7 +1,10 @@
 ﻿<!DOCTYPE html>
 <html>
 @{
-    Version v = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+    var instance = HttpContext.Current.ApplicationInstance;
+    System.Reflection.Assembly asm = instance.GetType().BaseType.Assembly;
+    System.Version v = asm.GetName().Version;
+
     var assemblyVersion = string.Format(System.Globalization.CultureInfo.InvariantCulture, @"Warrens: v{0}.{1}.{2} (r{3})", v.Major, v.Minor, v.Build, v.Revision);
 }
 <head>
@@ -62,7 +65,6 @@
                                 <li>@Html.ActionLink("Flora", "Flora", "Features", routeValues: null, htmlAttributes: new { title = "Flora" })</li>
                                 <li>@Html.ActionLink("Fauna", "Fauna", "Features", routeValues: null, htmlAttributes: new { title = "Fauna" })</li>
                                 <li>@Html.ActionLink("Minerals", "Minerals", "Features", routeValues: null, htmlAttributes: new { title = "Minerals" })</li>
-                                <li>@Html.ActionLink("Models", "DimensionalModels", "Features", routeValues: null, htmlAttributes: new { title = "Dimensional Models" })</li>
                                 <li>@Html.ActionLink("Materials", "Materials", "Features", routeValues: null, htmlAttributes: new { title = "Materials" })</li>
                                 <li>@Html.ActionLink("Languages", "Languages", "Features", routeValues: null, htmlAttributes: new { title = "Languages" })</li>
                             </ul>

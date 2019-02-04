@@ -12,6 +12,7 @@ using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.Player;
 using NetMud.DataStructure.Room;
 using NetMud.DataStructure.System;
+using NetMud.DataStructure.Zone;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -150,6 +151,79 @@ namespace NetMud.Data.Room
         [NonNullableDataIntegrity("Physical Model is invalid.")]
         [UIHint("TwoDimensionalModel")]
         public IDimensionalModel Model { get; set; }
+
+        /// <summary>
+        /// What type of path is this? (rooms, zones, locales, etc)
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public PathwayType Type
+        {
+            get
+            {
+                if (Origin != null && Destination != null)
+                {
+                    var originIsZone = Origin.GetType().GetInterfaces().Contains(typeof(IZoneTemplate)) ? true : false;
+                    var destinationIsZone = Destination.GetType().GetInterfaces().Contains(typeof(IZoneTemplate)) ? true : false;
+
+                    if (originIsZone && destinationIsZone)
+                    {
+                        return PathwayType.Zones;
+                    }
+
+                    if (!originIsZone && !destinationIsZone)
+                    {
+                        if(((IRoomTemplate)Destination).ParentLocation.Id != ((IRoomTemplate)Origin).ParentLocation.Id)
+                        {
+                            return PathwayType.Locale;
+                        }
+
+                        return PathwayType.Rooms;
+                    }
+
+                    if(originIsZone)
+                    {
+                        return PathwayType.FromZone;
+                    }
+
+                    return PathwayType.ToZone;
+                }
+
+                return PathwayType.None;
+            }
+        }
+
+        /// <summary>
+        /// What pathways are affiliated with this room data (what it spawns with)
+        /// </summary>
+        /// <param name="withReturn">includes paths into this room as well</param>
+        /// <returns>the valid pathways</returns>
+        public virtual IEnumerable<IPathwayTemplate> GetPathways(bool withReturn = false)
+        {
+            return TemplateCache.GetAll<IPathwayTemplate>().Where(path => path.Origin.Equals(this) || (withReturn && path.Destination.Equals(this)));
+        }
+
+        /// <summary>
+        /// What pathways are affiliated with this room data (what it spawns with)
+        /// </summary>
+        /// <param name="withReturn">includes paths into this room as well</param>
+        /// <returns>the valid pathways</returns>       
+        public IEnumerable<IPathwayTemplate> GetLocalePathways(bool withReturn = false)
+        {
+            return GetPathways(withReturn).Where(path => path.Destination.GetType().GetInterfaces().Contains(typeof(IRoomTemplate))
+                                                        && (GetType().GetInterfaces().Contains(typeof(IZoneTemplate))
+                                                            || ((IRoomTemplate)path.Destination).ParentLocation.Id != ((IRoomTemplate)this).ParentLocation.Id));
+        }
+
+        /// <summary>
+        /// What pathways are affiliated with this room data (what it spawns with)
+        /// </summary>
+        /// <param name="withReturn">includes paths into this room as well</param>
+        /// <returns>the valid pathways</returns>      
+        public IEnumerable<IPathwayTemplate> GetZonePathways(bool withReturn = false)
+        {
+            return GetPathways(withReturn).Where(path => path.Destination.GetType().GetInterfaces().Contains(typeof(IZoneTemplate)));
+        }
 
         /// <summary>
         /// Blank constructor

@@ -115,7 +115,7 @@ namespace NetMud.Interp
              * kick the large red can
              */
             List<IDictata> returnList = new List<IDictata>();
-            ILocation currentPlace = actor.CurrentLocation.CurrentRoom;
+            ILocation currentPlace = actor.CurrentLocation.CurrentLocation();
 
             Dictionary<string, IDictata> brandedWords = BrandWords(actor, words, currentPlace);
 
@@ -189,7 +189,7 @@ namespace NetMud.Interp
              */
             List<IDictata> returnList = new List<IDictata>();
 
-            DataStructure.Room.IRoom currentPlace = actor.CurrentLocation.CurrentRoom;
+            var currentPlace = actor.CurrentLocation.CurrentLocation();
 
             Dictionary<string, IDictata> brandedWords = BrandWords(actor, words, currentPlace);
 
@@ -428,9 +428,9 @@ namespace NetMud.Interp
             List<string> allContext = new List<string>();
 
             //Get all local nouns
-            allContext.AddRange(actor.CurrentLocation.CurrentRoom.GetContents<IInanimate>().SelectMany(thing => thing.Keywords));
-            allContext.AddRange(actor.CurrentLocation.CurrentRoom.GetContents<IMobile>().SelectMany(thing => thing.Keywords));
-            allContext.AddRange(actor.CurrentLocation.CurrentRoom.Keywords);
+            allContext.AddRange(actor.CurrentLocation.CurrentLocation().GetContents<IInanimate>().SelectMany(thing => thing.Keywords));
+            allContext.AddRange(actor.CurrentLocation.CurrentLocation().GetContents<IMobile>().SelectMany(thing => thing.Keywords));
+            allContext.AddRange(actor.CurrentLocation.CurrentLocation().Keywords);
             allContext.AddRange(actor.Keywords);
 
             //Brand all the words with their current meaning

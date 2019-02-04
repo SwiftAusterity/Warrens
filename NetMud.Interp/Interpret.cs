@@ -26,12 +26,18 @@ namespace NetMud.Interp
                 if(commandString.StartsWith("lexicaltest "))
                 {
                     LexicalInterpretationEngine lexicalInterp = new LexicalInterpretationEngine();
-                    return lexicalInterp.Parse(actor, commandString.Replace("lexicaltest ", "")).Select(dict => string.Format("{0} : {1}", dict.Name, dict.WordType));
+                    var parsed = lexicalInterp.Parse(actor, commandString.Replace("lexicaltest ", "")).Select(dict => string.Format("{0} : {1}", dict.Name, dict.WordType));
+                    parsed.Append(commandString);
+
+                    return parsed;
                 }
                 else if(commandString.StartsWith("lexicalpush "))
                 {
                     LexicalInterpretationEngine lexicalInterp = new LexicalInterpretationEngine();
-                    return lexicalInterp.Parse(actor, commandString.Replace("lexicaltest ", ""), true).Select(dict => string.Format("{0} : {1}", dict.Name, dict.WordType));
+                    var parsed = lexicalInterp.Parse(actor, commandString.Replace("lexicalpush ", ""), true).Select(dict => string.Format("{0} : {1}", dict.Name, dict.WordType));
+                    parsed.Append(commandString);
+
+                    return parsed;
                 }
 
                 IContext commandContext = new Context(commandString, actor);

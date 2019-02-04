@@ -28,5 +28,10 @@ namespace NetMud.DataStructure.Room
         /// The current physical model for this entity
         /// </summary>
         IDimensionalModel Model { get; set; }
+
+        /// <summary>
+        /// What type of path is this? (rooms, zones, locales, etc)
+        /// </summary>
+        PathwayType Type { get; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Room;
 using NetMud.DataStructure.System;
 using NetMud.Utility;
@@ -20,7 +21,7 @@ namespace NetMud.Cartography
         /// <param name="origin">The room we're starting in</param>
         /// <param name="direction">The direction we're moving in</param>
         /// <returns>null or a RoomTemplate</returns>
-        public static IRoomTemplate GetRoomInDirection(IRoomTemplate origin, MovementDirectionType direction)
+        public static ILocationData GetLocationInDirection(ILocationData origin, MovementDirectionType direction)
         {
             //We can't find none directions on a map
             if (origin == null || direction == MovementDirectionType.None)
@@ -28,23 +29,11 @@ namespace NetMud.Cartography
                 return null;
             }
 
-            long[,,] worldMap = origin.ParentLocation.Interior.CoordinatePlane;
+            var paths = origin.GetPathways();
+            var dirPath = paths.FirstOrDefault(path => path.DirectionType == direction);
 
-            Tuple<int, int, int> steps = Utilities.GetDirectionStep(direction);
-            int newX = origin.Coordinates.X + steps.Item1;
-            int newY = origin.Coordinates.Y + steps.Item2;
-            int newZ = origin.Coordinates.Z + steps.Item3;
-
-            //out of bounds
-            if (Utilities.IsOutOfBounds(new Coordinate(newX, newY, newZ), worldMap))
-            {
-                return null;
-            }
-
-            if (worldMap[newX, newY, newZ] > -1)
-            {
-                return TemplateCache.Get<IRoomTemplate>(worldMap[newX, newY, newZ]);
-            }
+            if (dirPath != null)
+                return dirPath.Destination;
 
             return null;
         }

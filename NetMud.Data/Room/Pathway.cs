@@ -1,6 +1,5 @@
 ﻿using NetMud.Cartography;
 using NetMud.Communication.Messaging;
-using NetMud.Data.Architectural;
 using NetMud.Data.Architectural.DataIntegrity;
 using NetMud.Data.Architectural.EntityBase;
 using NetMud.Data.Linguistic;
@@ -143,7 +142,51 @@ namespace NetMud.Data.Room
         [DataType(DataType.Text)]
         public int DegreesFromNorth { get; set; }
 
+        [Range(-100, 100, ErrorMessage = "The {0} must be between {2} and {1}. -1 is for non-cardinal exits.")]
+        [Display(Name = "Incline Grade", Description = "-100 to 100 (negative being a decline) % grade of elevation change.")]
+        [DataType(DataType.Text)]
         public int InclineGrade { get; set; }
+
+        /// <summary>
+        /// What type of path is this? (rooms, zones, locales, etc)
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public PathwayType Type
+        {
+            get
+            {
+                if (Origin != null && Destination != null)
+                {
+                    var originIsZone = Origin.GetType().GetInterfaces().Contains(typeof(IZone)) ? true : false;
+                    var destinationIsZone = Destination.GetType().GetInterfaces().Contains(typeof(IZone)) ? true : false;
+
+                    if (originIsZone && destinationIsZone)
+                    {
+                        return PathwayType.Zones;
+                    }
+
+                    if (!originIsZone && !destinationIsZone)
+                    {
+                        if (((IRoom)Destination).ParentLocation.BirthMark != ((IRoom)Origin).ParentLocation.BirthMark)
+                        {
+                            return PathwayType.Locale;
+                        }
+
+                        return PathwayType.Rooms;
+                    }
+
+                    if (originIsZone)
+                    {
+                        return PathwayType.FromZone;
+                    }
+
+                    return PathwayType.ToZone;
+                }
+
+                return PathwayType.None;
+            }
+        }
 
         /// <summary>
         /// News up an empty entity

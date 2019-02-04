@@ -219,36 +219,32 @@ namespace NetMud.Physics
                 new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " }
             };
 
-            short xI, yI;
+            short yI;
             for (yI = 0; yI < 21; yI++)
             {
-                for (xI = 0; xI < 21; xI++)
-                {
-                    short xIs = (short)(xI + 1);
-                    short yIs = (short)(yI + 1);
+                short xI = 0;
 
-                    IDimensionalModelNode node = model.GetNode(xIs, yIs);
-
-                    string nodeString = string.Empty;
-
-                    if (node != null)
-                    {
-                        nodeString = DamageTypeToCharacter(node.Style, xI < 5);
-
-                        if (forWeb)
-                        {
-                            nodeString = string.Format("<a title='{0}'>{1}</a>"
-                                , node.Composition == null ? string.Empty : node.Composition.Name
-                                , nodeString);
-                        }
-                    }
-                    else if (forWeb)
-                    {
-                        nodeString = "<a title=''> </a>";
-                    }
-
-                    flattenedPlane[yI][xI] = nodeString;
-                }
+                flattenedPlane[yI][xI] = GetNodeString(xI, yI, model, forWeb);
+                flattenedPlane[yI][xI + 1] = GetNodeString(xI + 1, yI, model, forWeb);
+                flattenedPlane[yI][xI + 2] = GetNodeString(xI + 2, yI, model, forWeb);
+                flattenedPlane[yI][xI + 3] = GetNodeString(xI + 3, yI, model, forWeb);
+                flattenedPlane[yI][xI + 4] = GetNodeString(xI + 4, yI, model, forWeb);
+                flattenedPlane[yI][xI + 5] = GetNodeString(xI + 5, yI, model, forWeb);
+                flattenedPlane[yI][xI + 6] = GetNodeString(xI + 6, yI, model, forWeb);
+                flattenedPlane[yI][xI + 7] = GetNodeString(xI + 7, yI, model, forWeb);
+                flattenedPlane[yI][xI + 8] = GetNodeString(xI + 8, yI, model, forWeb);
+                flattenedPlane[yI][xI + 9] = GetNodeString(xI + 9, yI, model, forWeb);
+                flattenedPlane[yI][xI + 10] = GetNodeString(xI + 10, yI, model, forWeb);
+                flattenedPlane[yI][xI + 11] = GetNodeString(xI + 11, yI, model, forWeb);
+                flattenedPlane[yI][xI + 12] = GetNodeString(xI + 12, yI, model, forWeb);
+                flattenedPlane[yI][xI + 13] = GetNodeString(xI + 13, yI, model, forWeb);
+                flattenedPlane[yI][xI + 14] = GetNodeString(xI + 14, yI, model, forWeb);
+                flattenedPlane[yI][xI + 15] = GetNodeString(xI + 15, yI, model, forWeb);
+                flattenedPlane[yI][xI + 16] = GetNodeString(xI + 16, yI, model, forWeb);
+                flattenedPlane[yI][xI + 17] = GetNodeString(xI + 17, yI, model, forWeb);
+                flattenedPlane[yI][xI + 18] = GetNodeString(xI + 18, yI, model, forWeb);
+                flattenedPlane[yI][xI + 19] = GetNodeString(xI + 19, yI, model, forWeb);
+                flattenedPlane[yI][xI + 20] = GetNodeString(xI + 20, yI, model, forWeb);
             }
 
             flattenedModel.AppendLine();
@@ -262,6 +258,31 @@ namespace NetMud.Physics
             flattenedModel.AppendLine();
 
             return flattenedModel.ToString();
+        }
+
+        private static string GetNodeString(int x, short y, IDimensionalModelData model, bool forWeb)
+        {
+            IDimensionalModelNode node = model.GetNode((short)(x + 1), (short)(y + 1));
+
+            string nodeString = string.Empty;
+
+            if (node != null)
+            {
+                nodeString = DamageTypeToCharacter(node.Style, x < 5);
+
+                if (forWeb)
+                {
+                    nodeString = string.Format("<a title='{0}'>{1}</a>"
+                        , node.Composition == null ? string.Empty : node.Composition.Name
+                        , nodeString);
+                }
+            }
+            else if (forWeb)
+            {
+                nodeString = "<a title=''> </a>";
+            }
+
+            return nodeString;
         }
     }
 }

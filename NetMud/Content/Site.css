@@ -188,6 +188,26 @@ div.form-group a.removeRow {
     }
 
 
+.room {
+    color: lightyellow;
+}
+
+.room.isHere {
+    color: indianred;
+}
+
+.pathway {
+    color: lightgoldenrodyellow;
+}
+
+.pathway.zone {
+    color: dodgerblue;
+}
+
+.pathway.locale {
+    color: forestgreen;
+}
+
 /* Ascii maps for object dim models and room maps */
 .asciiMap {
     font-family: Courier New, Courier, monospace;

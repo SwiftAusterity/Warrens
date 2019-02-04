@@ -236,6 +236,7 @@
     <Compile Include="Room\IRoom.cs" />
     <Compile Include="Room\IRoomFramework.cs" />
     <Compile Include="Room\IRoomTemplate.cs" />
+    <Compile Include="Room\PathwayType.cs" />
     <Compile Include="System\ConnectionType.cs" />
     <Compile Include="System\IChannelType.cs" />
     <Compile Include="System\ICommand.cs" />
