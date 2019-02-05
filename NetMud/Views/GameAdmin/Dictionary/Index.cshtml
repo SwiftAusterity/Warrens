@@ -8,9 +8,15 @@
     tableColumns.Add("Phrase", obj => obj.Name);
     tableColumns.Add("Type", obj => obj.WordType.ToString());
 }
-
+@if (User.IsInRole("Admin"))
+{
+    using (Html.BeginForm("Purge", "Dictionary"))
+    {
+        @Html.AntiForgeryToken()
+        <input type="submit" value="PURGE" class="btn btn-default caution" />
+    }
+}
 @Html.Partial("ConfigListTable", new NetMud.Models.ListTableViewModel() { EntityTypeName = "Dictionary", Columns = tableColumns, PagingModel = Model, Values = Model.CurrentPageOfItems.OrderBy(obj => obj.UniqueKey), IncludeUnapprove = false, IncludeDelete = true })
-
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

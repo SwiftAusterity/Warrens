@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
+using NetMud.Backup;
+using NetMud.Commands.Attributes;
+using NetMud.Communication.Lexical;
 using NetMud.Data.Linguistic;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
@@ -10,8 +13,10 @@ using NetMud.Models.Admin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
+using System.Windows.Input;
 
 namespace NetMud.Controllers.GameAdmin
 {
@@ -87,6 +92,21 @@ namespace NetMud.Controllers.GameAdmin
             }
 
             return RedirectToAction("Index", new { Message = message });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        public ActionResult Purge()
+        {
+            var dictionary = ConfigDataCache.GetAll<IDictata>();
+
+            foreach(var dict in dictionary)
+            {
+                dict.SystemRemove();
+            }
+
+            return RedirectToAction("Index", new { Message = "By fire, it is purged." });
         }
 
         [HttpGet]

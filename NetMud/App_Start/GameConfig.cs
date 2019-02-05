@@ -117,7 +117,6 @@ namespace NetMud
                     LexicalProcessor.VerifyDictata(new Dictata() { WordType = LexicalType.Verb, Name = verb, Elegance = 1, Severity = 1, Quality = 1, Tense = LexicalTense.Present });
                 }
             }
-
         }
     }
 }
