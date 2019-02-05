@@ -43,7 +43,7 @@ namespace NetMud.Data.Architectural
         [Display(Name = "Name", Description = "The Name of the data type.")]
         [DataType(DataType.Text)]
         [Required]
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
 
         #region Approval System
         /// <summary>

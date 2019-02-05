@@ -12,6 +12,7 @@
         Adverb = 4,
         Conjunction = 5,
         Interjection = 6,
-        ProperNoun = 7
+        ProperNoun = 7,
+        Article = 8
     }
 }

@@ -18,7 +18,9 @@ namespace NetMud.Interp
     /// </summary>
     public class LexicalInterpretationEngine
     {
-        IEnumerable<IDictata> _currentDictionary => ConfigDataCache.GetAll<IDictata>();
+        private IEnumerable<IDictata> _currentDictionary => ConfigDataCache.GetAll<IDictata>();
+        private ILocation _currentPlace;
+        private IEntity _actor;
 
         /// <summary>
         /// Initial experience, takes in an observance and emits the new contexts related to it. Merge and Convey will merge new contexts into existing ones
@@ -28,20 +30,86 @@ namespace NetMud.Interp
         /// <returns>A list of the new contexts generated</returns>
         public IEnumerable<IDictata> Parse(IEntity actor, string action, bool push = false)
         {
-            IEnumerable<IDictata> returnList = Enumerable.Empty<IDictata>();
-            IEnumerable<string> sentences = IsolateSentences(action);
+            List<IDictata> returnList = new List<IDictata>();
+            _currentPlace = actor.CurrentLocation.CurrentLocation();
+            _actor = actor;
+
+            var spaceSplit = action.Split(new char[] { ' ', ',', ':' }, StringSplitOptions.RemoveEmptyEntries);
+
+            Dictionary<string, IDictata> brandedWords = BrandWords(spaceSplit);
+
+            List<string> sentences = new List<string>();
+
+            if (brandedWords.Count(bWord => bWord.Value?.WordType == LexicalType.Verb) > 1)
+            {
+                //multiple verbs means multiple sentences
+                var punctuationSentences = IsolateSentences(action);
+
+                foreach (var sentence in punctuationSentences)
+                {
+                    var innerSplit = sentence.Split(new char[] { ' ', ',', ':' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    Dictionary<string, IDictata> innerBrands = BrandWords(innerSplit);
+
+                    if (!innerBrands.Any(inWord => inWord.Value?.WordType == LexicalType.Conjunction))
+                    {
+                        sentences.Add(sentence);
+                        continue;
+                    }
+
+                    var found = false;
+                    foreach (var innerVerb in innerBrands.Select((value, i) => (value, i)))
+                    {
+                        var value = innerVerb.value;
+                        var index = innerVerb.i;
+
+                        if(value.Value?.WordType != LexicalType.Verb)
+                        {
+                            continue;
+                        }
+
+                        found = true;
+                        if (index > 0 && index < innerBrands.Count() - 1)
+                        {
+                            var wordBefore = innerBrands.ElementAt(index - 1).Value;
+
+                            if(wordBefore.WordType == LexicalType.Conjunction)
+                            {
+                                var splitIndex = innerBrands.Take(index - 1).Sum(brand => brand.Key.Length + 1);
+
+                                var bumpCount = sentence.Substring(0, splitIndex - 1).Count(ch => ch == ',' || ch == ':');
+
+                                var sentenceOne = sentence.Substring(0, splitIndex - 1 + bumpCount);
+                                var sentenceTwo = sentence.Substring(splitIndex + wordBefore.Name.Length + bumpCount);
+
+                                sentences.Add(sentenceOne);
+                                sentences.Add(sentenceTwo);
+                            }
+                        }
+                    }
+
+                    if(!found)
+                    {
+                        sentences.Add(sentence);
+                    }
+                }
+            }
+            else
+            {
+                sentences.Add(action);
+            }
 
             foreach (string sentence in sentences)
             {
-                IList<Tuple<string, bool>> words = IsolateIndividuals(sentence, actor);
+                IList<Tuple<string, bool>> words = IsolateIndividuals(sentence);
 
                 //can't parse nothing
                 if (words.Count == 0)
                 {
-                    return returnList;
+                    continue;
                 }
 
-                returnList = ParseAction(actor, words, push);
+                returnList.AddRange(ParseAction(words, push));
             }
 
             return returnList;
@@ -99,7 +167,7 @@ namespace NetMud.Interp
         /*
          * TODO: Wow this is inefficient, maybe clean up how many loops we do
          */
-        private IEnumerable<IDictata> ParseAction(IEntity actor, IList<Tuple<string, bool>> words, bool push)
+        private IEnumerable<IDictata> ParseAction(IList<Tuple<string, bool>> words, bool push)
         {
             /*
              * I kick the can 
@@ -109,9 +177,8 @@ namespace NetMud.Interp
              * kick the large red can
              */
             List<IDictata> returnList = new List<IDictata>();
-            ILocation currentPlace = actor.CurrentLocation.CurrentLocation();
 
-            Dictionary<string, IDictata> brandedWords = BrandWords(actor, words, currentPlace);
+            Dictionary<string, IDictata> brandedWords = BrandWords(words);
 
             IDictata currentVerb = null;
 
@@ -132,7 +199,7 @@ namespace NetMud.Interp
                         continue;
                     }
 
-                    if ((wordBefore?.WordType == LexicalType.Adjective || wordBefore?.WordType == LexicalType.Conjunction)
+                    if ((wordBefore?.WordType == LexicalType.Adjective || wordBefore?.WordType == LexicalType.Article)
                         && (wordAfter?.WordType == LexicalType.Noun || wordAfter?.WordType == LexicalType.ProperNoun))
                     {
                         brandedWords[value.Key] = new Dictata() { Name = value.Key, WordType = LexicalType.Adjective };
@@ -163,7 +230,7 @@ namespace NetMud.Interp
                 {
                     var wordBefore = brandedWords.ElementAt(index - 1).Value;
 
-                    if (wordBefore?.WordType == LexicalType.Conjunction || wordBefore?.WordType == LexicalType.Adjective)
+                    if (wordBefore?.WordType == LexicalType.Article || wordBefore?.WordType == LexicalType.Adjective)
                     {
                         brandedWords[value.Key] = new Dictata() { Name = value.Key, WordType = LexicalType.Noun };
                         continue;
@@ -226,7 +293,7 @@ namespace NetMud.Interp
 
                     if (wordAfter?.WordType == LexicalType.Pronoun)
                     {
-                        wordType = LexicalType.Conjunction;
+                        wordType = LexicalType.Article;
                     }
                 }
 
@@ -253,7 +320,7 @@ namespace NetMud.Interp
          * Second pass: search for places in the world to make links
          * Third pass: More robust logic to avoid extra merging later
          */
-        private IEnumerable<IDictata> ParseSpeech(IEntity actor, IList<Tuple<string, bool>> words)
+        private IEnumerable<IDictata> ParseSpeech(IList<Tuple<string, bool>> words)
         {
             /*
              * hello
@@ -264,9 +331,9 @@ namespace NetMud.Interp
              */
             List<IDictata> returnList = new List<IDictata>();
 
-            var currentPlace = actor.CurrentLocation.CurrentLocation();
+            var currentPlace = _actor.CurrentLocation.CurrentLocation();
 
-            Dictionary<string, IDictata> brandedWords = BrandWords(actor, words, currentPlace);
+            Dictionary<string, IDictata> brandedWords = BrandWords(words);
 
             string targetWord = string.Empty;
 
@@ -300,7 +367,16 @@ namespace NetMud.Interp
             return returnList;
         }
 
-        private Dictionary<string, IDictata> BrandWords(IEntity actor, IList<Tuple<string, bool>> words, IContains currentPlace)
+        private Dictionary<string, IDictata> BrandWords(string [] words)
+        {
+            var blankSlate = new List<Tuple<string, bool>>();
+
+            blankSlate.AddRange(words.Select(word => new Tuple<string, bool>(word, false)));
+
+            return BrandWords(blankSlate);
+        }
+
+        private Dictionary<string, IDictata> BrandWords(IList<Tuple<string, bool>> words)
         {
             Dictionary<string, IDictata> brandedWords = new Dictionary<string, IDictata>();
 
@@ -332,7 +408,7 @@ namespace NetMud.Interp
 
                         if (listMeaning == null)
                         {
-                            listMeaning = GetExistingMeaning(listWord, actor, currentPlace);
+                            listMeaning = GetExistingMeaning(listWord);
                         }
                     }
 
@@ -355,21 +431,21 @@ namespace NetMud.Interp
                     continue;
                 }
 
-                brandedWords.Add(word.Item1, GetExistingMeaning(word.Item1, actor, currentPlace));
+                brandedWords.Add(word.Item1, GetExistingMeaning(word.Item1));
             }
 
             return brandedWords;
         }
 
-        private IDictata GetExistingMeaning(string word, IEntity actor, IContains currentPlace)
+        private IDictata GetExistingMeaning(string word)
         {
             List<string> allContext = new List<string>();
 
             //Get all local nouns
-            allContext.AddRange(currentPlace.GetContents<IInanimate>().SelectMany(thing => thing.Keywords));
-            allContext.AddRange(currentPlace.GetContents<IMobile>().SelectMany(thing => thing.Keywords));
-            allContext.AddRange(currentPlace.Keywords);
-            allContext.AddRange(actor.Keywords);
+            allContext.AddRange(_currentPlace.GetContents<IInanimate>().SelectMany(thing => thing.Keywords));
+            allContext.AddRange(_currentPlace.GetContents<IMobile>().SelectMany(thing => thing.Keywords));
+            allContext.AddRange(_currentPlace.Keywords);
+            allContext.AddRange(_actor.Keywords);
 
             IDictata existingMeaning = null;
 
@@ -390,14 +466,14 @@ namespace NetMud.Interp
             return existingMeaning;
         }
 
-        private IList<Tuple<string, bool>> IsolateIndividuals(string baseString, IEntity actor)
+        private IList<Tuple<string, bool>> IsolateIndividuals(string baseString)
         {
             int iterator = 0;
             baseString = baseString.ToLower();
 
             List<Tuple<string, bool>> foundStrings = ParseQuotesOut(ref baseString, ref iterator);
 
-            foundStrings.AddRange(ParseEntitiesOut(actor, ref iterator, ref baseString));
+            foundStrings.AddRange(ParseEntitiesOut(ref iterator, ref baseString));
 
             foundStrings.AddRange(ParseCommaListsOut(ref iterator, ref baseString));
 
@@ -503,16 +579,16 @@ namespace NetMud.Interp
             return foundStrings;
         }
 
-        private IList<Tuple<string, bool>> ParseEntitiesOut(IEntity actor, ref int iterator, ref string baseString)
+        private IList<Tuple<string, bool>> ParseEntitiesOut(ref int iterator, ref string baseString)
         {
             List<Tuple<string, bool>> foundStrings = new List<Tuple<string, bool>>();
             List<string> allContext = new List<string>();
 
             //Get all local nouns
-            allContext.AddRange(actor.CurrentLocation.CurrentLocation().GetContents<IInanimate>().SelectMany(thing => thing.Keywords));
-            allContext.AddRange(actor.CurrentLocation.CurrentLocation().GetContents<IMobile>().SelectMany(thing => thing.Keywords));
-            allContext.AddRange(actor.CurrentLocation.CurrentLocation().Keywords);
-            allContext.AddRange(actor.Keywords);
+            allContext.AddRange(_actor.CurrentLocation.CurrentLocation().GetContents<IInanimate>().SelectMany(thing => thing.Keywords));
+            allContext.AddRange(_actor.CurrentLocation.CurrentLocation().GetContents<IMobile>().SelectMany(thing => thing.Keywords));
+            allContext.AddRange(_actor.CurrentLocation.CurrentLocation().Keywords);
+            allContext.AddRange(_actor.Keywords);
 
             //Brand all the words with their current meaning
             foreach (string word in allContext.Distinct())

@@ -39,6 +39,15 @@ namespace NetMud.Data.Linguistic
         public override ConfigDataType Type => ConfigDataType.Dictionary;
 
         /// <summary>
+        /// The unique name of this configuration data
+        /// </summary>
+        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 1)]
+        [Display(Name = "Word", Description = "The actual word or phrase at hand.")]
+        [DataType(DataType.Text)]
+        [Required]
+        public override string Name { get; set; }
+
+        /// <summary>
         /// The type of word this is in general
         /// </summary>
         [Display(Name = "Type", Description = "The type of word this is.")]

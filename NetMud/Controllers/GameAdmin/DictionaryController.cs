@@ -113,12 +113,12 @@ namespace NetMud.Controllers.GameAdmin
 
             if (newObj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {
-                message = "Error; Creation failed.";
+                LoggingUtility.LogAdminCommandUsage("*WEB* - AddDictata[" + newObj.UniqueKey + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                message = "Creation Successful.";
             }
             else
             {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - AddDictata[" + newObj.UniqueKey + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                message = "Creation Successful.";
+                message = "Error; Creation failed.";
             }
 
             return RedirectToAction("Index", new { Message = message });
