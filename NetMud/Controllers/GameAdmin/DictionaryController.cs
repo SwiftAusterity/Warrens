@@ -56,16 +56,16 @@ namespace NetMud.Controllers.GameAdmin
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route(@"Dictionary/Remove/{removeId}/{authorizeRemove}")]
-        public ActionResult Remove(string removeId, string authorizeRemove)
+        [Route(@"Dictionary/Remove/{removeId?}/{authorizeRemove?}")]
+        public ActionResult Remove(string removeId = "", string authorizeRemove = "")
         {
             string message = string.Empty;
 
-            if (!string.IsNullOrWhiteSpace(authorizeRemove) && removeId.ToString().Equals(authorizeRemove))
+            if (!string.IsNullOrWhiteSpace(authorizeRemove) && removeId.Equals(authorizeRemove))
             {
                 ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                IDictata obj = ConfigDataCache.Get<IDictata>(removeId);
+                IDictata obj = ConfigDataCache.Get<IDictata>(new ConfigDataCacheKey(typeof(IDictata), removeId, ConfigDataType.Dictionary));
 
                 if (obj == null)
                 {
@@ -73,7 +73,7 @@ namespace NetMud.Controllers.GameAdmin
                 }
                 else if (obj.Remove(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                 {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveConstants[" + removeId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveConstants[" + removeId + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Delete Successful.";
                 }
                 else

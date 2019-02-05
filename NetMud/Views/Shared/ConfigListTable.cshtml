@@ -4,49 +4,67 @@
 {
     <h4>@Model.Name</h4>
 }
-<div class="listTable">
-    <div class="listSection listHeader">
-        @foreach (var column in Model.Columns)
-        {
-            <div class="listItem" scope="col">@column.Key</div>
-        }
-
-        @if (Model.IncludeDelete)
-        {
-            <div class="listItem">DELETE</div>
-        }
-
-        @if (Model.IncludeUnapprove)
-        {
-            <div class="listItem">UNAPPROVE</div>
-        }
+@if (Model.IncludeBasicPagingandSearch && Model.PagingModel != null && !string.IsNullOrWhiteSpace(Model.EntityTypeName))
+{
+    <div class="searchCriteria">
+        @Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model.PagingModel, Model.EntityTypeName))
     </div>
-    <div class="listSection listContent">
-        @foreach (var val in Model.Values)
-        {
-            <div class="listRow">
+}
 
-                @foreach (var column in Model.Columns)
-                {
-                    <div class="listItem">@Html.Raw(column.Value(val))</div>
-                }
-
-                @if (Model.IncludeDelete)
-                {
-                    <div class="listItem">
-                        <button type="submit" name="removeId" id="removeId" class="removeData" value="@val.UniqueKey" title="Delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-                        <input type="radio" name="audiv class=" listItem"orizeRemove" value="@val.UniqueKey" style="margin-left: 15px;" />
-                    </div>
-                }
-
-                @if (Model.IncludeUnapprove)
-                {
-                    <div class="listItem">
-                        <button type="submit" name="unapproveId" id="unapproveId" class="unapproveData" value="@val.UniqueKey" title="Unapprove"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span></button>
-                        <input type="radio" name="audiv class=" listItem"orizeUnapprove" value="@val.UniqueKey" style="margin-left: 15px;" />
-                    </div>
-                }
-            </div>
-        }
-    </div>
+<div>
+    @if (Model.IncludeAddLink)
+    {
+        @Html.ActionLink(" ", string.IsNullOrWhiteSpace(Model.AddMethodName) ? "Add" : Model.AddMethodName, Model.EntityTypeName, htmlAttributes: new { @class = "glyphicon-plus-sign glyphicon addNew", @style = "color: green;", @title = "Add New" })
+    }
 </div>
+
+@using (Html.BeginForm("Remove", Model.EntityTypeName))
+{
+    @Html.AntiForgeryToken()
+    <div class="listTable">
+        <div class="listSection listHeader">
+            @foreach (var column in Model.Columns)
+            {
+                <div class="listItem" scope="col">@column.Key</div>
+            }
+
+            @if (Model.IncludeDelete)
+            {
+                <div class="listItem">DELETE</div>
+            }
+
+            @if (Model.IncludeUnapprove)
+            {
+                <div class="listItem">UNAPPROVE</div>
+            }
+        </div>
+        <div class="listSection listContent">
+            @foreach (var val in Model.Values)
+            {
+                <div class="listRow">
+
+                    @foreach (var column in Model.Columns)
+                    {
+                        <div class="listItem">@Html.Raw(column.Value(val))</div>
+                    }
+
+                    @if (Model.IncludeDelete)
+                    {
+                        <div class="listItem">
+                            <button type="submit" name="removeId" id="removeId" class="removeData" value="@val.UniqueKey" title="Delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                            <input type="radio" name="authorizeRemove" value="@val.UniqueKey" style="margin-left: 15px;" />
+                        </div>
+                    }
+
+                    @if (Model.IncludeUnapprove)
+                    {
+                        <div class="listItem">
+                            <button type="submit" name="unapproveId" id="unapproveId" class="unapproveData" value="@val.UniqueKey" title="Unapprove"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span></button>
+                            <input type="radio" name="authorizeUnapprove" value="@val.UniqueKey" style="margin-left: 15px;" />
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+}

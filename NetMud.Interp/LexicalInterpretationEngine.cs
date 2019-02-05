@@ -41,12 +41,6 @@ namespace NetMud.Interp
                     return returnList;
                 }
 
-                //Get rid of the imperative self declaration
-                if (words.First().Item1.Equals("i") || words.First().Item1.Equals("me"))
-                {
-                    words.RemoveAt(0);
-                }
-
                 returnList = ParseAction(actor, words, push);
             }
 
@@ -121,6 +115,68 @@ namespace NetMud.Interp
 
             IDictata currentVerb = null;
 
+            //Find unknown nouns potentially with conjunctions
+            foreach (var item in brandedWords.Where(ctx => ctx.Value == null).Select((value, i) => (value, i)).OrderByDescending(keypair => keypair.i))
+            {
+                var value = item.value;
+                var index = item.i;
+
+                if (index < brandedWords.Count() - 1 && index > 0)
+                {
+                    var wordAfter = brandedWords.ElementAt(index + 1).Value;
+                    var wordBefore = brandedWords.ElementAt(index - 1).Value;
+
+                    if (wordBefore?.WordType == LexicalType.Adverb && wordAfter?.WordType == LexicalType.Verb)
+                    {
+                        brandedWords[value.Key] = new Dictata() { Name = value.Key, WordType = LexicalType.Adverb };
+                        continue;
+                    }
+
+                    if ((wordBefore?.WordType == LexicalType.Adjective || wordBefore?.WordType == LexicalType.Conjunction)
+                        && (wordAfter?.WordType == LexicalType.Noun || wordAfter?.WordType == LexicalType.ProperNoun))
+                    {
+                        brandedWords[value.Key] = new Dictata() { Name = value.Key, WordType = LexicalType.Adjective };
+                        continue;
+                    }
+
+                    continue;
+                }
+
+                if (index < brandedWords.Count() - 1)
+                {
+                    var wordAfter = brandedWords.ElementAt(index + 1).Value;
+
+                    if (wordAfter?.WordType == LexicalType.Noun)
+                    {
+                        brandedWords[value.Key] = new Dictata() { Name = value.Key, WordType = LexicalType.Adjective };
+                        continue;
+                    }
+
+                    if (wordAfter?.WordType == LexicalType.Verb)
+                    {
+                        brandedWords[value.Key] = new Dictata() { Name = value.Key, WordType = LexicalType.Adverb };
+                        continue;
+                    }
+                }
+
+                if (index > 0)
+                {
+                    var wordBefore = brandedWords.ElementAt(index - 1).Value;
+
+                    if (wordBefore?.WordType == LexicalType.Conjunction || wordBefore?.WordType == LexicalType.Adjective)
+                    {
+                        brandedWords[value.Key] = new Dictata() { Name = value.Key, WordType = LexicalType.Noun };
+                        continue;
+                    }
+
+                    if (wordBefore?.WordType == LexicalType.Adverb)
+                    {
+                        brandedWords[value.Key] = new Dictata() { Name = value.Key, WordType = LexicalType.Verb };
+                        continue;
+                    }
+                }
+            }
+
             //No verb?
             if (!brandedWords.Any(ctx => ctx.Value?.WordType == LexicalType.Verb))
             {
@@ -153,9 +209,28 @@ namespace NetMud.Interp
             }
 
             List<IDictata> descriptors = new List<IDictata>();
-            foreach (KeyValuePair<string, IDictata> adjective in brandedWords.Where(ctx => ctx.Value == null))
+            foreach (var item in brandedWords.Where(ctx => ctx.Value == null).Select((value, i) => (value, i)))
             {
-                descriptors.Add(new Dictata() { Name = adjective.Key, WordType = LexicalType.Adjective });
+                var value = item.value;
+                var index = item.i;
+
+                var wordType = LexicalType.Adjective;
+                if (index == brandedWords.Count() - 1)
+                {
+                    var wordAfter = brandedWords.ElementAt(index + 1).Value;
+
+                    if (wordAfter?.WordType == LexicalType.Verb)
+                    {
+                        wordType = LexicalType.Adverb;
+                    }
+
+                    if (wordAfter?.WordType == LexicalType.Pronoun)
+                    {
+                        wordType = LexicalType.Conjunction;
+                    }
+                }
+
+                descriptors.Add(new Dictata() { Name = value.Key, WordType = wordType });
             }
 
             //Add the nonadjectives and the adjectives
@@ -268,7 +343,13 @@ namespace NetMud.Interp
                             continue;
                         }
 
-                        brandedWords.Add(listWord, listMeaning);
+                        var meaning = new Dictata()
+                        {
+                            Name = listWord,
+                            WordType = listMeaning.WordType
+                        };
+
+                        brandedWords.Add(listWord, meaning);
                     }
 
                     continue;
@@ -321,7 +402,7 @@ namespace NetMud.Interp
             foundStrings.AddRange(ParseCommaListsOut(ref iterator, ref baseString));
 
             List<string> originalStrings = new List<string>();
-            originalStrings.AddRange(RemoveGrammaticalNiceities(baseString.Split(new char[] { ' ', ',', ':' }, StringSplitOptions.RemoveEmptyEntries)));
+            originalStrings.AddRange(baseString.Split(new char[] { ' ', ',', ':' }, StringSplitOptions.RemoveEmptyEntries));
 
             //So thanks to the commalist puller potentially adding replacement strings to the found collection we have to do a pass there first
             List<Tuple<int, string>> cleanerList = new List<Tuple<int, string>>();

@@ -42,6 +42,7 @@ namespace NetMud.Controllers
             if(user != null)
             {
                 user.GameAccount.Config.UITutorialMode = !user.GameAccount.Config.UITutorialMode;
+                user.GameAccount.Config.Save(user.GameAccount, StaffRank.Admin);
             }
 
             return Json(user.GameAccount.Config.UITutorialMode);
@@ -95,6 +96,7 @@ namespace NetMud.Controllers
             if (user != null)
             {
                 user.GameAccount.Config.SoundMuted = !user.GameAccount.Config.SoundMuted;
+                user.GameAccount.Config.Save(user.GameAccount, StaffRank.Admin);
             }
 
             return Json(user.GameAccount.Config.SoundMuted);
@@ -109,6 +111,7 @@ namespace NetMud.Controllers
             if (user != null)
             {
                 user.GameAccount.Config.MusicMuted = !user.GameAccount.Config.MusicMuted;
+                user.GameAccount.Config.Save(user.GameAccount, StaffRank.Admin);
             }
 
             return Json(user.GameAccount.Config.MusicMuted);
@@ -123,6 +126,7 @@ namespace NetMud.Controllers
             if (user != null)
             {
                 user.GameAccount.Config.GossipSubscriber = !user.GameAccount.Config.GossipSubscriber;
+                user.GameAccount.Config.Save(user.GameAccount, StaffRank.Admin);
             }
 
             return Json(user.GameAccount.Config.GossipSubscriber);
@@ -275,7 +279,7 @@ namespace NetMud.Controllers
         {
             ApplicationUser user = UserManager.FindById(User.Identity.GetUserId());
 
-            System.Collections.Generic.IEnumerable<IPlayerTemplate> characters = PlayerDataCache.GetAll().Where(chr => chr.AccountHandle.Equals(user.GlobalIdentityHandle) && chr.Name.Contains(term));
+            IEnumerable<IPlayerTemplate> characters = PlayerDataCache.GetAll().Where(chr => chr.AccountHandle.Equals(user.GlobalIdentityHandle) && chr.Name.Contains(term));
 
             return Json(characters.Select(chr => chr.Name).ToArray());
         }

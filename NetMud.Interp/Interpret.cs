@@ -23,18 +23,18 @@ namespace NetMud.Interp
             try
             {
                 //kind of cheaty for now
-                if(commandString.StartsWith("lexicaltest "))
+                if(commandString.StartsWith("lext "))
                 {
                     LexicalInterpretationEngine lexicalInterp = new LexicalInterpretationEngine();
-                    var parsed = lexicalInterp.Parse(actor, commandString.Replace("lexicaltest ", "")).Select(dict => string.Format("{0} : {1}", dict.Name, dict.WordType));
+                    var parsed = lexicalInterp.Parse(actor, commandString.Replace("lext ", "")).Select(dict => string.Format("{0} : {1}", dict.Name, dict.WordType));
                     parsed.Append(commandString);
 
                     return parsed;
                 }
-                else if(commandString.StartsWith("lexicalpush "))
+                else if(commandString.StartsWith("lexp "))
                 {
                     LexicalInterpretationEngine lexicalInterp = new LexicalInterpretationEngine();
-                    var parsed = lexicalInterp.Parse(actor, commandString.Replace("lexicalpush ", ""), true).Select(dict => string.Format("{0} : {1}", dict.Name, dict.WordType));
+                    var parsed = lexicalInterp.Parse(actor, commandString.Replace("lexp ", ""), true).Select(dict => string.Format("{0} : {1}", dict.Name, dict.WordType));
                     parsed.Append(commandString);
 
                     return parsed;
