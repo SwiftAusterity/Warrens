@@ -1,8 +1,12 @@
 ﻿@model NetMud.Models.Admin.ManageContentApprovalsViewModel
 <h3>Content Approval and Preview</h3>
+@{
+    Model.ModelEntityType = "ContentApproval";
+}
 <div class="searchCriteria">
-    @Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model, "ContentApproval"))
+    @Html.Partial("SearchCriteriaAndPaging", Model)
 </div>
+
 @if (User.IsInRole("Admin"))
 {
     using (Html.BeginForm("ApproveAll", "ContentApproval"))
@@ -11,7 +15,6 @@
         <input type="submit" value="Approve All" class="btn btn-default save" />
     }
 }
-
 @using (Html.BeginForm("ApproveDeny", "ContentApproval"))
 {
     @Html.AntiForgeryToken()

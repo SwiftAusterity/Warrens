@@ -4,6 +4,8 @@ namespace NetMud.Models
 {
     public interface IPagedDataModel
     {
+        string ModelEntityType { get; set; }
+
         [Display(Name = "Current Page", Description = "The current page you are on")]
         [DataType(DataType.Text)]
         int CurrentPageNumber { get; set; }

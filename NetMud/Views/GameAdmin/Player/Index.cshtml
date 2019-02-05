@@ -1,13 +1,11 @@
 ﻿@using NetMud.DataStructure.Administrative
-
 @model NetMud.Models.Admin.ManagePlayersViewModel
-
 @{
     ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Players", new string[] { "Dashboard" }, new string[] { "/GameAdmin" });
+    Model.ModelEntityType = "Player";
 }
-
 <div class="searchCriteria">
-    @Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model, "Player"))
+    @Html.Partial("SearchCriteriaAndPaging", Model)
 </div>
 
 @using (Html.BeginForm("Remove", "Player"))
@@ -44,11 +42,9 @@
         </div>
     </div>
 }
-
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-    <script type="text/javascript">
-        $(document).ready(function () {
+    <script type="text/javascript">$(document).ready(function () {
             $('.staffRole').change(function () {
                 var $this = $(this);
 
@@ -59,6 +55,5 @@
                     window.location = window.location;
                 });
             });
-        });
-    </script>
+        });</script>
 }

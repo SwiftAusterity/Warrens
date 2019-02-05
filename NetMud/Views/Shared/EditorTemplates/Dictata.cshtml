@@ -7,13 +7,15 @@
     @if (Model.ApprovedBy != null)
     {
         @Html.EditorFor(m => m.Name, new { disabled = true })
+        @Html.EditorFor(m => m.Language, new { disabled = true, validItems = ViewData["ValidLanguages"] })
+        @Html.EditorFor(m => m.WordType, new { disabled = true })
     }
     else
     {
         @Html.EditorFor(m => m.Name)
+        @Html.EditorFor(m => m.Language, new { validItems = ViewData["ValidLanguages"] })
+        @Html.EditorFor(m => m.WordType)
     }
-
-    @Html.EditorFor(m => m.WordType)
     @Html.EditorFor(m => m.Tense)
 </div>
 <div class="form-group row">

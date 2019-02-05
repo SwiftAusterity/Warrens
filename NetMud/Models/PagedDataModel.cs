@@ -14,6 +14,8 @@ namespace NetMud.Models
             Items = items;
         }
 
+        public string ModelEntityType { get; set; }
+
         [Range(1, 10000, ErrorMessage = "Page number must be at least 1.")]
         [RegularExpression("[0-9]+")]
         [Display(Name = "Page Number", Description = "Your current page number.")]

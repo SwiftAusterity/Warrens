@@ -6,7 +6,10 @@
 <div class="searchCriteria">
     @if (Model.IncludeBasicPagingandSearch && Model.PagingModel != null && !string.IsNullOrWhiteSpace(Model.EntityTypeName))
     {
-        @Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model.PagingModel, Model.EntityTypeName))
+        Model.PagingModel.ModelEntityType = Model.EntityTypeName;
+        <div class="searchCriteria">
+            @Html.Partial("SearchCriteriaAndPaging", Model.PagingModel)
+        </div>
     }
 </div>
 @using (Html.BeginForm("Remove", Model.EntityTypeName))
@@ -29,15 +32,14 @@
                 <div class="listRow">
                     @foreach (var column in Model.Columns)
                     {
-                    <div class="listItem">@Html.Raw(column.Value(val))</div>
+                        <div class="listItem">@Html.Raw(column.Value(val))</div>
                     }
-
                     @if (Model.IncludeDelete)
                     {
-                    <div class="listItem">
-                        <button type="submit" name="removeId" id="removeId" class="removeData" value="@val.BirthMark" title="Delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-                        <input type="radio" name="authorizeRemove" value="@val.BirthMark" />
-                    </div>
+                        <div class="listItem">
+                            <button type="submit" name="removeId" id="removeId" class="removeData" value="@val.BirthMark" title="Delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                            <input type="radio" name="authorizeRemove" value="@val.BirthMark" />
+                        </div>
                     }
                 </div>
             }

@@ -1,23 +1,21 @@
 ﻿@model NetMud.Models.ListTableViewModel
-
 @if (!string.IsNullOrWhiteSpace(Model.Name))
 {
     <h4>@Model.Name</h4>
 }
 @if (Model.IncludeBasicPagingandSearch && Model.PagingModel != null && !string.IsNullOrWhiteSpace(Model.EntityTypeName))
 {
+    Model.PagingModel.ModelEntityType = Model.EntityTypeName;
     <div class="searchCriteria">
-        @Html.Partial("SearchCriteriaAndPaging", new Tuple<NetMud.Models.IPagedDataModel, string>(Model.PagingModel, Model.EntityTypeName))
+        @Html.Partial("SearchCriteriaAndPaging", Model.PagingModel)
     </div>
 }
-
 <div>
     @if (Model.IncludeAddLink)
     {
         @Html.ActionLink(" ", string.IsNullOrWhiteSpace(Model.AddMethodName) ? "Add" : Model.AddMethodName, Model.EntityTypeName, htmlAttributes: new { @class = "glyphicon-plus-sign glyphicon addNew", @style = "color: green;", @title = "Add New" })
     }
 </div>
-
 @using (Html.BeginForm("Remove", Model.EntityTypeName))
 {
     @Html.AntiForgeryToken()
@@ -27,12 +25,10 @@
             {
                 <div class="listItem" scope="col">@column.Key</div>
             }
-
             @if (Model.IncludeDelete)
             {
                 <div class="listItem">DELETE</div>
             }
-
             @if (Model.IncludeUnapprove)
             {
                 <div class="listItem">UNAPPROVE</div>
@@ -42,12 +38,10 @@
             @foreach (var val in Model.Values)
             {
                 <div class="listRow">
-
                     @foreach (var column in Model.Columns)
                     {
                         <div class="listItem">@Html.Raw(column.Value(val))</div>
                     }
-
                     @if (Model.IncludeDelete)
                     {
                         <div class="listItem">
@@ -55,7 +49,6 @@
                             <input type="radio" name="authorizeRemove" value="@val.UniqueKey" style="margin-left: 15px;" />
                         </div>
                     }
-
                     @if (Model.IncludeUnapprove)
                     {
                         <div class="listItem">

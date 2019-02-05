@@ -167,6 +167,8 @@ namespace NetMud.Controllers.GameAdmin
             obj.Tense = vModel.DataObject.Tense;
             obj.Synonyms = vModel.DataObject.Synonyms;
             obj.Antonyms = vModel.DataObject.Antonyms;
+            obj.Language = vModel.DataObject.Language;
+            obj.WordType = vModel.DataObject.WordType;
 
             if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {

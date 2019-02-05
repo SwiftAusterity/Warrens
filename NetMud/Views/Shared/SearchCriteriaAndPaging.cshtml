@@ -1,25 +1,25 @@
-﻿@model Tuple<NetMud.Models.IPagedDataModel, string>
+﻿@model NetMud.Models.IPagedDataModel
 @{
-    var prevPageState = Model.Item1.CurrentPageNumber > 1 ? "pager" : "pager disabled";
-    var nextPageState = Model.Item1.CurrentPageNumber < Model.Item1.NumberOfPages ? "pager" : "pager disabled";
+    var prevPageState = Model.CurrentPageNumber > 1 ? "pager" : "pager disabled";
+    var nextPageState = Model.CurrentPageNumber < Model.NumberOfPages ? "pager" : "pager disabled";
 }
 <div>
-    @using (Html.BeginForm("Index", Model.Item2, FormMethod.Post, new { id = "paginationForm" }))
+    @using (Html.BeginForm("Index", Model.ModelEntityType, FormMethod.Post, new { id = "paginationForm" }))
     {
         @Html.AntiForgeryToken()
-        @Html.EditorFor(m => m.Item1.SearchTerms, new { columnCount = 1, forceOptional = true, htmlAttributes = new Dictionary<string, object>() { { "onchange", "paginationForm.submit();" }, { "name", "SearchTerms" }, { "id", "SearchTerms" } } })
-        @Html.EditorFor(m => m.Item1.ItemsPerPage, new { columnCount = 4, forceOptional = true, htmlAttributes = new Dictionary<string, object>() { { "onchange", "paginationForm.submit();" }, { "name", "ItemsPerPage" }, { "id", "ItemsPerPage" } } })
+        @Html.EditorFor(m => m.SearchTerms, new { columnCount = 1, forceOptional = true, htmlAttributes = new Dictionary<string, object>() { { "onchange", "paginationForm.submit();" }, { "name", "SearchTerms" }, { "id", "SearchTerms" } } })
+        @Html.EditorFor(m => m.ItemsPerPage, new { columnCount = 4, forceOptional = true, htmlAttributes = new Dictionary<string, object>() { { "onchange", "paginationForm.submit();" }, { "name", "ItemsPerPage" }, { "id", "ItemsPerPage" } } })
         <div class="listPagination">
             <div class="@prevPageState">
-                <button class="pagingArrow" aria-label="Previous" value="@(Model.Item1.CurrentPageNumber - 1)" title="Previous" name="CurrentPageNumber"><span aria-hidden="true">&laquo;</span></button>
+                <button class="pagingArrow" aria-label="Previous" value="@(Model.CurrentPageNumber - 1)" title="Previous" name="CurrentPageNumber"><span aria-hidden="true">&laquo;</span></button>
             </div>
-            @for (var i = 1; i <= Model.Item1.NumberOfPages; i++)
+            @for (var i = 1; i <= Model.NumberOfPages; i++)
             {
-                if (Model.Item1.NumberOfPages > 5
+                if (Model.NumberOfPages > 5
                 && i != 1
-                && i != Model.Item1.NumberOfPages
-                && i > (Model.Item1.NumberOfPages / 2 + 1)
-                && i < (Model.Item1.NumberOfPages / 2 - 1))
+                && i != Model.NumberOfPages
+                && i > (Model.NumberOfPages / 2 + 1)
+                && i < (Model.NumberOfPages / 2 - 1))
                 {
                     continue;
                 }
@@ -29,7 +29,7 @@
                 </div>
             }
             <div class="@nextPageState">
-                <button class="pagingArrow" aria-label="Next" value="@(Model.Item1.CurrentPageNumber + 1)" title="Next" name="CurrentPageNumber"><span aria-hidden="true">&raquo;</span></button>
+                <button class="pagingArrow" aria-label="Next" value="@(Model.CurrentPageNumber + 1)" title="Next" name="CurrentPageNumber"><span aria-hidden="true">&raquo;</span></button>
             </div>
         </div>
     }

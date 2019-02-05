@@ -52,6 +52,7 @@ namespace NetMud.Data.Linguistic
         /// </summary>
         [Display(Name = "Type", Description = "The type of word this is.")]
         [UIHint("EnumDropDownList")]
+        [Required]
         public LexicalType WordType { get; set; }
 
         /// <summary>
@@ -59,6 +60,7 @@ namespace NetMud.Data.Linguistic
         /// </summary>
         [Display(Name = "Tense", Description = "Chronological tense (past, present, future)")]
         [UIHint("EnumDropDownList")]
+        [Required]
         public LexicalTense Tense { get; set; }
 
         /// <summary>
@@ -111,6 +113,7 @@ namespace NetMud.Data.Linguistic
                 if (value == null)
                 {
                     _language = null;
+                    return;
                 }
 
                 _language = new ConfigDataCacheKey(value);
@@ -339,7 +342,18 @@ namespace NetMud.Data.Linguistic
 
         public override object Clone()
         {
-            throw new NotImplementedException();
+            return new Dictata
+            {
+                Antonyms = Antonyms,
+                Elegance = Elegance,
+                Language = Language,
+                Name = Name,
+                Severity = Severity,
+                Synonyms = Synonyms,
+                Tense = Tense,
+                WordType = WordType,
+                Quality = Quality
+            };
         }
         #endregion
     }

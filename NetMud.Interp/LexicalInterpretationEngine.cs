@@ -99,6 +99,7 @@ namespace NetMud.Interp
                 sentences.Add(action);
             }
 
+            IDictata currentSubject = null;
             foreach (string sentence in sentences)
             {
                 IList<Tuple<string, bool>> words = IsolateIndividuals(sentence);
@@ -109,65 +110,19 @@ namespace NetMud.Interp
                     continue;
                 }
 
-                returnList.AddRange(ParseAction(words, push));
+                var fullCommand = ParseAction(words, push, currentSubject);
+                currentSubject = fullCommand.LastOrDefault(word => word.WordType == LexicalType.Noun || word.WordType == LexicalType.ProperNoun); 
+
+                returnList.AddRange(fullCommand);
             }
 
             return returnList;
         }
 
-        /// <summary>
-        /// Merges a new set of contexts into the existing set
-        /// </summary>
-        /// <param name="originContext">The existing context</param>
-        /// <param name="newContext">The new context</param>
-        public IEnumerable<IDictata> Merge(IEnumerable<IDictata> originContext, IEnumerable<IDictata> newContext)
-        {
-            List<IDictata> returnContext = new List<IDictata>(originContext);
-
-            foreach (IDictata item in newContext)
-            {
-                item.Severity++;
-
-                if (originContext.Any(ctx => ctx.Name.Equals(item.Name)))
-                {
-                    foreach (IDictata currentContext in originContext.Where(ctx => ctx.Name.Equals(item.Name)))
-                    {
-                        returnContext.Remove(currentContext);
-
-                        if (currentContext.GetType() != item.GetType())
-                        {
-                            currentContext.Severity--;
-
-                            if (currentContext.Severity <= 0)
-                            {
-                                item.Severity = 1;
-                                returnContext.Add(item);
-                            }
-                            else
-                            {
-                                returnContext.Add(currentContext);
-                            }
-                        }
-                        else
-                        {
-                            item.Severity += currentContext.Severity;
-                            returnContext.Add(item);
-                        }
-                    }
-                }
-                else
-                {
-                    returnContext.Add(item);
-                }
-            }
-
-            return returnContext;
-        }
-
         /*
          * TODO: Wow this is inefficient, maybe clean up how many loops we do
          */
-        private IEnumerable<IDictata> ParseAction(IList<Tuple<string, bool>> words, bool push)
+        private IEnumerable<IDictata> ParseAction(IList<Tuple<string, bool>> words, bool push, IDictata lastSubject)
         {
             /*
              * I kick the can 
@@ -260,19 +215,38 @@ namespace NetMud.Interp
             //We might have nouns already
             if (!brandedWords.Any(ctx => ctx.Value?.WordType == LexicalType.Noun || ctx.Value?.WordType == LexicalType.ProperNoun))
             {
-                string targetWord = string.Empty;
-
-                //No valid nouns to make the target? Pick the last one
-                if (!brandedWords.Any(ctx => ctx.Value == null))
+                var lastSubjectReplaced = false;
+                if (lastSubject != null)
                 {
-                    targetWord = brandedWords.LastOrDefault().Key;
-                }
-                else
-                {
-                    targetWord = brandedWords.LastOrDefault(ctx => ctx.Value == null).Key;
+                    var keyList = new List<string>();
+                    foreach(var word in brandedWords.Where(ctx => ctx.Value?.WordType == LexicalType.Pronoun))
+                    {
+                        keyList.Add(word.Key);
+                        lastSubjectReplaced = true;
+                    }
+
+                    foreach(var key in keyList)
+                    {
+                        brandedWords[key] = (IDictata)lastSubject.Clone();
+                    }
                 }
 
-                brandedWords[targetWord] = new Dictata() { Name = targetWord, WordType = LexicalType.Noun };
+                if (!lastSubjectReplaced)
+                {
+                    string targetWord = string.Empty;
+
+                    //No valid nouns to make the target? Pick the last one
+                    if (!brandedWords.Any(ctx => ctx.Value == null))
+                    {
+                        targetWord = brandedWords.LastOrDefault().Key;
+                    }
+                    else
+                    {
+                        targetWord = brandedWords.LastOrDefault(ctx => ctx.Value == null).Key;
+                    }
+
+                    brandedWords[targetWord] = new Dictata() { Name = targetWord, WordType = LexicalType.Noun };
+                }
             }
 
             List<IDictata> descriptors = new List<IDictata>();

@@ -75,7 +75,7 @@ function AppendOutput(output, UIOnly) {
             var $this = $(this);
             var value = output.Environment.Visibility;
 
-            this.style.opacity = Math.max(1, value / 5);
+            this.style.opacity = Math.min(1, value / 5);
             if ($this.attr('data-generated') === undefined) {
                 MakeTooltip($this, "Brightness");
                 LoadSVG("feather_see", this, true);
