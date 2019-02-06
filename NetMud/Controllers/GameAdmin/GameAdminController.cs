@@ -100,11 +100,13 @@ namespace NetMud.Controllers.GameAdmin
                 WebsocketPortalActive = globalConfig.WebsocketPortalActive,
                 AdminsOnly = globalConfig.AdminsOnly,
                 UserCreationActive = globalConfig.UserCreationActive,
+                BaseLanguage = globalConfig.BaseLanguage,
 
                 QualityChange = new string[0],
                 QualityChangeValue = new int[0],
 
                 ValidZones = TemplateCache.GetAll<IZoneTemplate>(true),
+                ValidLanguages = ConfigDataCache.GetAll<ILanguage>(),
 
                 GossipConfigDataObject = gossipConfig,
                 GossipActive = gossipConfig.GossipActive,
@@ -229,6 +231,7 @@ namespace NetMud.Controllers.GameAdmin
             globalConfig.WebsocketPortalActive = vModel.WebsocketPortalActive;
             globalConfig.AdminsOnly = vModel.AdminsOnly;
             globalConfig.UserCreationActive = vModel.UserCreationActive;
+            globalConfig.BaseLanguage = vModel.BaseLanguage;
 
             if (globalConfig.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {

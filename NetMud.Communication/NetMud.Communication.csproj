@@ -126,7 +126,7 @@
   <ItemGroup>
     <Compile Include="InternalChannel.cs" />
     <Compile Include="Lexical\LexicalProcessor.cs" />
-    <Compile Include="Lexical\Occurrence.cs" />
+    <Compile Include="Lexical\SensoryEvent.cs" />
     <Compile Include="Lexical\Thesaurus.cs" />
     <Compile Include="Messaging\Message.cs" />
     <Compile Include="Messaging\MessageCluster.cs" />

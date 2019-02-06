@@ -1,6 +1,9 @@
 ﻿using NetMud.Data.Architectural;
+using NetMud.Data.Architectural.PropertyBinding;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.System;
 using Newtonsoft.Json;
 using System;
@@ -43,6 +46,43 @@ namespace NetMud.Data.System
         [Display(Name = "Admins Only", Description = "Are only admins allowed to log in - noone at StaffRank.Player?")]
         [UIHint("Boolean")]
         public bool AdminsOnly { get; set; }
+
+        /// <summary>
+        /// The base language for the system
+        /// </summary>
+        [JsonProperty("BaseLanguage")]
+        private ConfigDataCacheKey _baseLanguage { get; set; }
+
+        /// <summary>
+        /// The language this is derived from
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        [Display(Name = "Base Language", Description = "The base language for the system.")]
+        [UIHint("LanguageList")]
+        [LanguageDataBinder]
+        public ILanguage BaseLanguage
+        {
+            get
+            {
+                if (_baseLanguage == null)
+                {
+                    return null;
+                }
+
+                return ConfigDataCache.Get<ILanguage>(_baseLanguage);
+            }
+            set
+            {
+                if (value == null)
+                {
+                    _baseLanguage = null;
+                    return;
+                }
+
+                _baseLanguage = new ConfigDataCacheKey(value);
+            }
+        }
 
         public GlobalConfig()
         {

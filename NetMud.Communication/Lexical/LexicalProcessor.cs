@@ -1,5 +1,7 @@
 ﻿using NetMud.DataAccess.Cache;
+using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Linguistic;
+using NetMud.DataStructure.System;
 using System.Linq;
 
 namespace NetMud.Communication.Lexical
@@ -56,12 +58,11 @@ namespace NetMud.Communication.Lexical
             //Set the language to default if it is absent and save it, if it has a language it already exists
             if (dictata.Language == null)
             {
-                //TODO: WorldConfig so base language can be set
-                ILanguage baseLanguage = ConfigDataCache.GetAll<ILanguage>().FirstOrDefault(lang => lang.SuitableForUse);
+                IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
 
-                if (baseLanguage != null)
+                if (globalConfig.BaseLanguage != null)
                 {
-                    dictata.Language = baseLanguage;
+                    dictata.Language = globalConfig.BaseLanguage;
                 }
             }
 

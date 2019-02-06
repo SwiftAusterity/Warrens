@@ -1,4 +1,5 @@
 ﻿using NetMud.Authentication;
+using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Architectural.EntityBase;
@@ -106,6 +107,11 @@ namespace NetMud.Models.Admin
         [Display(Name = "Admins Only", Description = "Are only admins allowed to log in - noone at StaffRank.Player?")]
         [UIHint("Boolean")]
         public bool AdminsOnly { get; set; }
+
+        [Display(Name = "Base Language", Description = "The base language for the system.")]
+        [UIHint("LanguageList")]
+        [LanguageDataBinder]
+        public ILanguage BaseLanguage { get; set; }
 
         [Display(Name = "Death Recall", Description = "The zone you return to on death.")]
         [UIHint("BackingDataDropdown")]

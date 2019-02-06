@@ -1,4 +1,5 @@
 ﻿using NetMud.DataAccess.Cache;
+using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.PropertyBinding;
 using NetMud.DataStructure.Linguistic;
 
@@ -14,7 +15,7 @@ namespace NetMud.Data.Architectural.PropertyBinding
                 return null;
             }
 
-            return ConfigDataCache.Get<ILanguage>(stringInput);
+            return ConfigDataCache.Get<ILanguage>(new ConfigDataCacheKey(typeof(ILanguage), stringInput, ConfigDataType.Language));
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using NetMud.DataStructure.Architectural;
-using NetMud.DataStructure.Player;
+using NetMud.DataStructure.Linguistic;
 
 namespace NetMud.DataStructure.System
 {
@@ -22,5 +22,10 @@ namespace NetMud.DataStructure.System
         /// Are only admins allowed to log in - noone at StaffRank.Player
         /// </summary>
         bool AdminsOnly { get; set; }
+
+        /// <summary>
+        /// The base language for the system
+        /// </summary>
+        ILanguage BaseLanguage { get; set; }
     }
 }

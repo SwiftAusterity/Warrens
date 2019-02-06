@@ -344,11 +344,12 @@
             {
                 @Html.AntiForgeryToken()
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                <div class="form-group row">
-                    @Html.EditorFor(m => m.WebsocketPortalActive, new { columnCount = 3 })
-                    @Html.EditorFor(m => m.UserCreationActive, new { columnCount = 3 })
-                    @Html.EditorFor(m => m.AdminsOnly, new { columnCount = 3 })
-                </div>
+            <div class="form-group row">
+                @Html.EditorFor(m => m.WebsocketPortalActive, new { columnCount = 4 })
+                @Html.EditorFor(m => m.UserCreationActive, new { columnCount = 4 })
+                @Html.EditorFor(m => m.AdminsOnly, new { columnCount = 4 })
+                @Html.EditorFor(m => m.BaseLanguage, new { columnCount = 4, validItems = Model.ValidLanguages })
+            </div>
 
                 @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "GameAdmin", IncludeCancel = false })
             }

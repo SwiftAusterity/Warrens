@@ -14,7 +14,7 @@ namespace NetMud.Commands.System
     /// <summary>
     /// Spawns a new NPC into the world. Missing target parameter = container you're standing in
     /// </summary>
-    [CommandKeyword("SpawnNewNPC", false, "mspawn")]
+    [CommandKeyword("SpawnNewNPC", false, "mspawn", true)]
     [CommandPermission(StaffRank.Admin)]
     [CommandParameter(CommandUsage.Subject, typeof(INonPlayerCharacterTemplate), CacheReferenceType.Data, "[0-9]+", false)] //for IDs
     [CommandParameter(CommandUsage.Subject, typeof(INonPlayerCharacterTemplate), CacheReferenceType.Data, "[a-zA-z]+", false)] //for names
