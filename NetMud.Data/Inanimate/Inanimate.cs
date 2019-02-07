@@ -271,7 +271,7 @@ namespace NetMud.Data.Inanimate
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public override ISensoryEvent GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes)
+        public override ISensoryEvent GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes = null)
         {
             if (sensoryTypes == null || sensoryTypes.Count() == 0)
             {

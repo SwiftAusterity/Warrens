@@ -49,6 +49,7 @@ namespace NetMud.Communication.Lexical
             {
                 if (maybeDictata.Language != null)
                 {
+                    maybeDictata.FillLanguages();
                     return true;
                 }
 
@@ -67,6 +68,7 @@ namespace NetMud.Communication.Lexical
             }
 
             dictata.SystemSave();
+            dictata.FillLanguages();
 
             return true;
         }

@@ -382,7 +382,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public virtual ISensoryEvent GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes)
+        public virtual ISensoryEvent GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes = null)
         {
             if (sensoryTypes == null || sensoryTypes.Count() == 0)
             {
@@ -604,7 +604,7 @@ namespace NetMud.Data.Architectural.EntityBase
                 return new SensoryEvent(MessagingType.Visible);
             }
 
-            return GetFullDescription(viewer, new[] { MessagingType.Visible });
+            return GetFullDescription(viewer);
         }
 
         /// <summary>
@@ -636,7 +636,7 @@ namespace NetMud.Data.Architectural.EntityBase
                 return new SensoryEvent(MessagingType.Visible);
             }
 
-            return GetFullDescription(viewer, new[] { MessagingType.Visible });
+            return GetFullDescription(viewer);
         }
 
         /// <summary>

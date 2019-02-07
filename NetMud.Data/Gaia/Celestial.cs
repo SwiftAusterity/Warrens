@@ -94,7 +94,7 @@ namespace NetMud.Data.Gaia
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public ISensoryEvent GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes)
+        public ISensoryEvent GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes = null)
         {
             if (!IsVisibleTo(viewer))
             {

@@ -188,7 +188,7 @@ namespace NetMud.Data.NaturalResource
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public virtual ISensoryEvent GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes)
+        public virtual ISensoryEvent GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes = null)
         {
             if (sensoryTypes == null || sensoryTypes.Count() == 0)
             {
@@ -400,7 +400,7 @@ namespace NetMud.Data.NaturalResource
                 return null;
             }
 
-            return GetFullDescription(viewer, new[] { MessagingType.Visible });
+            return GetFullDescription(viewer, new[] { MessagingType.Visible, MessagingType.Psychic, MessagingType.Olefactory });
         }
 
         /// <summary>
@@ -432,7 +432,7 @@ namespace NetMud.Data.NaturalResource
                 return null;
             }
 
-            return GetFullDescription(viewer, new[] { MessagingType.Visible });
+            return GetFullDescription(viewer);
         }
 
         /// <summary>

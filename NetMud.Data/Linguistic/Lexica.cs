@@ -264,7 +264,8 @@ namespace NetMud.Data.Linguistic
                         {
                             Lexica newSubject = new Lexica(subject.Type, subject.Role, subject.Phrase);
                             newSubject.TryModify(subject.Modifiers.Where(mod => mod.Type == LexicalType.Conjunction || mod.Role != GrammaticalType.Descriptive));
-                            newSubject.TryModify(LexicalType.Conjunction, GrammaticalType.Verb, "is").TryModify(subject.Modifiers.Where(mod => mod.Role == GrammaticalType.Descriptive).ToArray());
+                            newSubject.TryModify(LexicalType.Conjunction, GrammaticalType.Verb, "is")
+                                        .TryModify(subject.Modifiers.Where(mod => mod.Role == GrammaticalType.Descriptive).ToArray());
 
                             lexicas.Add(newSubject);
                         }

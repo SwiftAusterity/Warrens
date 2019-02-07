@@ -44,5 +44,10 @@ namespace NetMud.DataStructure.Linguistic
         /// Things this is specifically opposite of mostly
         /// </summary>
         HashSet<IDictata> Antonyms { get; set; }
+
+        /// <summary>
+        /// Add language translations for this
+        /// </summary>
+        void FillLanguages();
     }
 }

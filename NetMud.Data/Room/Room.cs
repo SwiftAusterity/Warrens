@@ -254,7 +254,7 @@ namespace NetMud.Data.Room
         /// <returns>the output strings</returns>
         public override ISensoryEvent RenderToLook(IEntity viewer)
         {
-            return GetFullDescription(viewer, new[] { MessagingType.Visible });
+            return GetFullDescription(viewer);
         }
 
         /// <summary>
@@ -262,7 +262,7 @@ namespace NetMud.Data.Room
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public override ISensoryEvent GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes)
+        public override ISensoryEvent GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes = null)
         {
             if (sensoryTypes == null || sensoryTypes.Count() == 0)
             {

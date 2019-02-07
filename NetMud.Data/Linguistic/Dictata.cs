@@ -1,4 +1,5 @@
-﻿using NetMud.Data.Architectural;
+﻿using NetMud.Communication.Lexical;
+using NetMud.Data.Architectural;
 using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
@@ -215,6 +216,37 @@ namespace NetMud.Data.Linguistic
         public ILexica GetLexica()
         {
             return new Lexica(WordType, GrammaticalType.Subject, Name);
+        }
+
+        /// <summary>
+        /// Add language translations for this
+        /// </summary>
+        public void FillLanguages()
+        {
+            //Don't do that
+            if(!Language.UIOnly || !Language.SuitableForUse)
+            {
+                return;
+            }
+
+            var otherLanguages = ConfigDataCache.GetAll<ILanguage>().Where(lang => lang != Language && lang.SuitableForUse && lang.UIOnly);
+
+            foreach (var language in otherLanguages)
+            {
+                var translatedWord = Thesaurus.GetSynonym(this, 0, 0, 0);
+
+                //no linguistic synonym
+                if (translatedWord == this)
+                {
+                    var newWord = Thesaurus.GetTranslatedWord(Name, Language, language);
+
+                    if (!string.IsNullOrWhiteSpace(newWord))
+                    {
+                        var newDictata = new Dictata() { Language = language, Name = newWord, Elegance = Elegance, Severity = Severity, Quality = Quality };
+                        newDictata.SystemSave();
+                    }
+                }
+            }
         }
 
         /// <summary>
