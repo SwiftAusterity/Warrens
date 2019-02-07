@@ -172,7 +172,21 @@ namespace NetMud.Models
                             //Interface shenanigans again
                             if (propertyDescriptor.PropertyType.IsInterface)
                             {
-                                Type type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(propertyDescriptor.PropertyType));
+                                Type type = null;
+
+                                if (propertyDescriptor.PropertyType == typeof(ILocationData))
+                                {
+                                    type = typeof(RoomTemplate);
+                                }
+                                else
+                                {
+                                    type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(propertyDescriptor.PropertyType));
+
+                                    if (type == null)
+                                    {
+                                        type = typeof(SensoryEvent).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(propertyDescriptor.PropertyType));
+                                    }
+                                }
 
                                 if (type == null)
                                 {

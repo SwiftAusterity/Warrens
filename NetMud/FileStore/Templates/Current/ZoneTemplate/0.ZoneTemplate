@@ -1,1 +1,49 @@
-{"Hemisphere":0,"TemperatureCoefficient":2,"PressureCoefficient":3,"BaseElevation":0,"BaseBiome":6,"AlwaysDiscovered":false,"World":{"ObjectType":"NetMud.Data.Gaia.GaiaTemplate, NetMud.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null","BirthMark":0},"Pathways":[],"Templates":[],"Descriptives":[{"$type":"NetMud.Communication.Lexical.SensoryEvent, NetMud.Communication","Event":{"$type":"NetMud.Data.Linguistic.Lexica, NetMud.Data","Role":4,"Type":3,"Phrase":"Fishy","Modifiers":[{"$type":"NetMud.Data.Linguistic.Lexica, NetMud.Data","Role":0,"Type":0,"Phrase":"Pungent","Modifiers":[]}]},"Strength":30,"SensoryType":0}],"Qualities":[],"Id":0,"Created":"2019-01-23T10:13:37.9167422-06:00","LastRevised":"2019-01-23T13:51:44.3581136-06:00","Name":"The Void","CachingType":1,"SuitableForUse":true,"State":3,"ApprovedOn":"2019-01-23T13:51:44.3581136-06:00","CreatorHandle":"SwiftAusterity","CreatorRank":3,"ApproverHandle":"SwiftAusterity","ApproverRank":3}
+{
+  "Hemisphere": 0,
+  "TemperatureCoefficient": 2,
+  "PressureCoefficient": 3,
+  "BaseElevation": 0,
+  "BaseBiome": 6,
+  "AlwaysDiscovered": false,
+  "World": {
+    "ObjectType": "NetMud.Data.Gaia.GaiaTemplate, NetMud.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "BirthMark": 0
+  },
+  "Pathways": [],
+  "Templates": [],
+  "Descriptives": [
+    {
+      "$type": "NetMud.Communication.Lexical.SensoryEvent, NetMud.Communication",
+      "Event": {
+        "$type": "NetMud.Data.Linguistic.Lexica, NetMud.Data",
+        "Role": 4,
+        "Type": 3,
+        "Phrase": "Fishy",
+        "Modifiers": [
+          {
+            "$type": "NetMud.Data.Linguistic.Lexica, NetMud.Data",
+            "Role": 0,
+            "Type": 0,
+            "Phrase": "Pungent",
+            "Modifiers": []
+          }
+        ]
+      },
+      "Strength": 30,
+      "SensoryType": 0
+    }
+  ],
+  "Qualities": [],
+  "Id": 0,
+  "Created": "2019-01-23T10:13:37.9167422-06:00",
+  "LastRevised": "2019-02-07T11:15:15.3706496-06:00",
+  "Name": "The Void",
+  "CachingType": 1,
+  "SuitableForUse": true,
+  "State": 3,
+  "ApprovedOn": "2019-02-07T11:15:15.3706496-06:00",
+  "CreatorHandle": "SwiftAusterity",
+  "CreatorRank": 3,
+  "ApproverHandle": "SwiftAusterity",
+  "ApproverRank": 3
+}

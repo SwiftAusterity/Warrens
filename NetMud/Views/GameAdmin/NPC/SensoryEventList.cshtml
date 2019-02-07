@@ -17,18 +17,18 @@
 
 <h3>Descriptive Features</h3>
 <a href="#" class="addNewDescriptive">Add New Descriptive</a>
-@Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { IncludeAddLink = false, IncludeBasicPagingandSearch = false, EntityTypeName = "Zone/SensoryEvent", Columns = tableColumns, Values = Model.Descriptives, IncludeDelete = false, IncludeUnapprove = false })
+@Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { IncludeAddLink = false, IncludeBasicPagingandSearch = false, EntityTypeName = "NPC/SensoryEvent", Columns = tableColumns, Values = Model.Descriptives, IncludeDelete = false, IncludeUnapprove = false })
 
 <script>
         $(document).ready(function () {
             $('.addNewDescriptive').click(function () {
-                openFrameless(1400, 900, 0, 0, "/GameAdmin/Zone/AddEditDescriptive/" + @Model.Id + '/-1', 'Add Descriptive', true);
+                openFrameless(1400, 900, 0, 0, "/GameAdmin/NPC/AddEditDescriptive/" + @Model.Id + '/-1', 'Add Descriptive', true);
 
                 return false;
             });
 
             $('.editDescriptive').click(function () {
-                openFrameless(1400, 900, 0, 0, "/GameAdmin/Zone/AddEditDescriptive/" + @Model.Id
+                openFrameless(1400, 900, 0, 0, "/GameAdmin/NPC/AddEditDescriptive/" + @Model.Id
                     + '/' + $(this).attr('data-descriptive-type')
                     + '/' + $(this).attr('data-descriptive-phrase'), 'Edit Descriptive', true);
 

@@ -31,13 +31,6 @@ namespace NetMud
             );
 
             routes.MapRoute(
-                name: "Pathway Add Edit Descriptive Modal",
-                url: "GameAdmin/Pathway/AddEditDescriptive/{id}/{descriptiveType}/{phrase}",
-                defaults: new { controller = "Pathway", action = "AddEditDescriptive", phrase = "" },
-                namespaces: new string[] { "NetMud.Controllers.GameAdmin" }
-            );
-
-            routes.MapRoute(
                 name: "Pathway Add Modal",
                 url: "GameAdmin/Pathway/Add/{id}/{originRoomId}/{destinationRoomId}/{degreesFromNorth}/{incline}",
                 defaults: new { controller = "Pathway", action = "Add", degreesFromNorth = UrlParameter.Optional, incline = UrlParameter.Optional },
@@ -48,6 +41,13 @@ namespace NetMud
                 name: "Pathway Edit Modal",
                 url: "GameAdmin/Pathway/Edit/{id}/{originRoomId}/{destinationRoomId}",
                 defaults: new { controller = "Pathway", action = "Edit" },
+                namespaces: new string[] { "NetMud.Controllers.GameAdmin" }
+            );
+
+            routes.MapRoute(
+                name: "Pathway Add Edit Descriptive Modal",
+                url: "GameAdmin/Pathway/AddEditDescriptive/{id}/{descriptiveType}/{phrase}",
+                defaults: new { controller = "Pathway", action = "AddEditDescriptive", phrase = "" },
                 namespaces: new string[] { "NetMud.Controllers.GameAdmin" }
             );
 
@@ -76,6 +76,13 @@ namespace NetMud
                 name: "Inanimate Add Edit Descriptive Modal",
                 url: "GameAdmin/Inanimate/AddEditDescriptive/{id}/{descriptiveType}/{phrase}",
                 defaults: new { controller = "Inanimate", action = "AddEditDescriptive", phrase = "" },
+                namespaces: new string[] { "NetMud.Controllers.GameAdmin" }
+            );
+
+            routes.MapRoute(
+                name: "Locale Add Edit Descriptive Modal",
+                url: "GameAdmin/Locale/AddEditDescriptive/{id}/{descriptiveType}/{phrase}",
+                defaults: new { controller = "Locale", action = "AddEditDescriptive", phrase = "" },
                 namespaces: new string[] { "NetMud.Controllers.GameAdmin" }
             );
 

@@ -1,13 +1,18 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
+using NetMud.Communication.Lexical;
+using NetMud.Data.Linguistic;
 using NetMud.Data.Locale;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.Locale;
 using NetMud.DataStructure.Zone;
 using NetMud.Models.Admin;
+using System;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
@@ -212,5 +217,170 @@ namespace NetMud.Controllers.GameAdmin
 
             return RedirectToAction("Index", "Zone", new { Id = zoneId, Message = message });
         }
+
+        #region Descriptives
+        [HttpGet]
+        public ActionResult AddEditDescriptive(long id, short descriptiveType, string phrase)
+        {
+            string message = string.Empty;
+
+            ILocaleTemplate obj = TemplateCache.Get<ILocaleTemplate>(id);
+            if (obj == null)
+            {
+                message = "That does not exist";
+                return RedirectToRoute("ModalErrorOrClose", new { Message = message });
+            }
+
+            OccurrenceViewModel vModel = new OccurrenceViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                DataObject = obj,
+                AdminTypeName = "Locale"
+            };
+
+            if (descriptiveType > -1)
+            {
+                GrammaticalType grammaticalType = (GrammaticalType)descriptiveType;
+                vModel.SensoryEventDataObject = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType
+                                                                                        && occurrence.Event.Phrase.Equals(phrase, StringComparison.InvariantCultureIgnoreCase));
+            }
+
+            if (vModel.SensoryEventDataObject != null)
+            {
+                vModel.LexicaDataObject = vModel.SensoryEventDataObject.Event;
+            }
+            else
+            {
+                vModel.SensoryEventDataObject = new SensoryEvent
+                {
+                    Event = new Lexica()
+                };
+            }
+
+            return View("~/Views/GameAdmin/Locale/SensoryEvent.cshtml", "_chromelessLayout", vModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddEditDescriptive(long id, OccurrenceViewModel vModel)
+        {
+            string message = string.Empty;
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            ILocaleTemplate obj = TemplateCache.Get<ILocaleTemplate>(id);
+            if (obj == null)
+            {
+                message = "That does not exist";
+                return RedirectToRoute("ModalErrorOrClose", new { Message = message });
+            }
+
+            ISensoryEvent existingOccurrence = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == vModel.SensoryEventDataObject.Event.Role
+                                                                                && occurrence.Event.Phrase.Equals(vModel.SensoryEventDataObject.Event.Phrase, StringComparison.InvariantCultureIgnoreCase));
+
+            if (existingOccurrence == null)
+            {
+                existingOccurrence = new SensoryEvent(vModel.SensoryEventDataObject.SensoryType)
+                {
+                    Strength = vModel.SensoryEventDataObject.Strength,
+                    Event = new Lexica(vModel.SensoryEventDataObject.Event.Type,
+                                        vModel.SensoryEventDataObject.Event.Role,
+                                        vModel.SensoryEventDataObject.Event.Phrase)
+                    {
+                        Modifiers = vModel.SensoryEventDataObject.Event.Modifiers
+                    }
+                };
+            }
+            else
+            {
+                existingOccurrence.Strength = vModel.SensoryEventDataObject.Strength;
+                existingOccurrence.SensoryType = vModel.SensoryEventDataObject.SensoryType;
+                existingOccurrence.Event = new Lexica(vModel.SensoryEventDataObject.Event.Type,
+                                                        vModel.SensoryEventDataObject.Event.Role,
+                                                        vModel.SensoryEventDataObject.Event.Phrase)
+                {
+                    Modifiers = vModel.SensoryEventDataObject.Event.Modifiers
+                };
+            }
+
+            obj.Descriptives.RemoveWhere(occurrence => occurrence.Event.Role == vModel.SensoryEventDataObject.Event.Role
+                                                && occurrence.Event.Phrase.Equals(vModel.SensoryEventDataObject.Event.Phrase, StringComparison.InvariantCultureIgnoreCase));
+
+            obj.Descriptives.Add(existingOccurrence);
+
+            if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+            {
+                LoggingUtility.LogAdminCommandUsage("*WEB* - Locale AddEditDescriptive[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+            }
+            else
+            {
+                message = "Error; Edit failed.";
+            }
+
+            return RedirectToRoute("ModalErrorOrClose", new { Message = message });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route(@"Locale/SensoryEvent/Remove/{id?}/{authorize?}", Name = "RemoveLocaleDescriptive")]
+        public ActionResult RemoveDescriptive(long id = -1, string authorize = "")
+        {
+            string message = string.Empty;
+
+            if (string.IsNullOrWhiteSpace(authorize))
+            {
+                message = "You must check the proper authorize radio button first.";
+            }
+            else
+            {
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+                string[] values = authorize.Split(new string[] { "|||" }, StringSplitOptions.RemoveEmptyEntries);
+
+                if (values.Count() != 2)
+                {
+                    message = "You must check the proper authorize radio button first.";
+                }
+                else
+                {
+                    string type = values[0];
+                    string phrase = values[1];
+
+                    ILocaleTemplate obj = TemplateCache.Get<ILocaleTemplate>(id);
+
+                    if (obj == null)
+                    {
+                        message = "That does not exist";
+                    }
+                    else
+                    {
+                        GrammaticalType grammaticalType = (GrammaticalType)Enum.Parse(typeof(GrammaticalType), type);
+                        ISensoryEvent existingOccurrence = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType
+                                                                                            && occurrence.Event.Phrase.Equals(phrase, StringComparison.InvariantCultureIgnoreCase));
+
+                        if (existingOccurrence != null)
+                        {
+                            obj.Descriptives.Remove(existingOccurrence);
+
+                            if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+                            {
+                                LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveDescriptive[" + id.ToString() + "|" + type.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                                message = "Delete Successful.";
+                            }
+                            else
+                            {
+                                message = "Error; Removal failed.";
+                            }
+                        }
+                        else
+                        {
+                            message = "That does not exist";
+                        }
+                    }
+                }
+            }
+
+            return RedirectToRoute("ModalErrorOrClose", new { Message = message });
+        }
+        #endregion
+
     }
 }

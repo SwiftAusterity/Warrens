@@ -287,6 +287,7 @@ namespace NetMud.Controllers.GameAdmin
             return RedirectToRoute("ModalErrorOrClose", new { Message = message });
         }
 
+        #region Descriptives
         [HttpGet]
         public ActionResult AddEditDescriptive(long id, short descriptiveType, string phrase)
         {
@@ -302,7 +303,8 @@ namespace NetMud.Controllers.GameAdmin
             OccurrenceViewModel vModel = new OccurrenceViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                DataObject = obj
+                DataObject = obj,
+                AdminTypeName = "Pathway"
             };
 
             if (descriptiveType > -1)
@@ -316,8 +318,15 @@ namespace NetMud.Controllers.GameAdmin
             {
                 vModel.LexicaDataObject = vModel.SensoryEventDataObject.Event;
             }
+            else
+            {
+                vModel.SensoryEventDataObject = new SensoryEvent
+                {
+                    Event = new Lexica()
+                };
+            }
 
-            return View("~/Views/Shared/SensoryEvent.cshtml", "_chromelessLayout", vModel);
+            return View("~/Views/GameAdmin/Pathway/SensoryEvent.cshtml", "_chromelessLayout", vModel);
         }
 
         [HttpPost]
@@ -330,38 +339,46 @@ namespace NetMud.Controllers.GameAdmin
             IPathwayTemplate obj = TemplateCache.Get<IPathwayTemplate>(id);
             if (obj == null)
             {
-                message = "That pathway does not exist";
+                message = "That does not exist";
                 return RedirectToRoute("ModalErrorOrClose", new { Message = message });
             }
 
-            GrammaticalType grammaticalType = vModel.SensoryEventDataObject.Event.Role;
-            string phraseF = vModel.SensoryEventDataObject.Event.Phrase;
-            ISensoryEvent existingOccurrence = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType
-                                                                                && occurrence.Event.Phrase.Equals(phraseF, StringComparison.InvariantCultureIgnoreCase));
+            ISensoryEvent existingOccurrence = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == vModel.SensoryEventDataObject.Event.Role
+                                                                                && occurrence.Event.Phrase.Equals(vModel.SensoryEventDataObject.Event.Phrase, StringComparison.InvariantCultureIgnoreCase));
 
             if (existingOccurrence == null)
             {
-                existingOccurrence = new SensoryEvent();
+                existingOccurrence = new SensoryEvent(vModel.SensoryEventDataObject.SensoryType)
+                {
+                    Strength = vModel.SensoryEventDataObject.Strength,
+                    Event = new Lexica(vModel.SensoryEventDataObject.Event.Type,
+                                        vModel.SensoryEventDataObject.Event.Role,
+                                        vModel.SensoryEventDataObject.Event.Phrase)
+                    {
+                        Modifiers = vModel.SensoryEventDataObject.Event.Modifiers
+                    }
+                };
             }
-
-            ILexica existingEvent = existingOccurrence.Event;
-
-            if (existingEvent == null)
+            else
             {
-                existingEvent = new Lexica();
+                existingOccurrence.Strength = vModel.SensoryEventDataObject.Strength;
+                existingOccurrence.SensoryType = vModel.SensoryEventDataObject.SensoryType;
+                existingOccurrence.Event = new Lexica(vModel.SensoryEventDataObject.Event.Type,
+                                                        vModel.SensoryEventDataObject.Event.Role,
+                                                        vModel.SensoryEventDataObject.Event.Phrase)
+                {
+                    Modifiers = vModel.SensoryEventDataObject.Event.Modifiers
+                };
             }
 
-            existingEvent.Role = grammaticalType;
+            obj.Descriptives.RemoveWhere(occurrence => occurrence.Event.Role == vModel.SensoryEventDataObject.Event.Role
+                                                && occurrence.Event.Phrase.Equals(vModel.SensoryEventDataObject.Event.Phrase, StringComparison.InvariantCultureIgnoreCase));
 
-            existingOccurrence.Event = existingEvent;
-
-            obj.Descriptives.RemoveWhere(occ => occ.Event.Role == grammaticalType
-                                                    && occ.Event.Phrase.Equals(phraseF, StringComparison.InvariantCultureIgnoreCase));
             obj.Descriptives.Add(existingOccurrence);
 
             if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - AddEditDescriptive[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                LoggingUtility.LogAdminCommandUsage("*WEB* - Pathway AddEditDescriptive[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
             }
             else
             {
@@ -431,5 +448,7 @@ namespace NetMud.Controllers.GameAdmin
 
             return RedirectToRoute("ModalErrorOrClose", new { Message = message });
         }
+        #endregion
+
     }
 }

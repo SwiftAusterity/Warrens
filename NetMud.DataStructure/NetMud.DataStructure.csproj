@@ -72,7 +72,7 @@
     <Compile Include="Architectural\ActorBase\ICanTouch.cs" />
     <Compile Include="Architectural\ActorBase\ICanWear.cs" />
     <Compile Include="Architectural\ActorBase\IEat.cs" />
-    <Compile Include="Architectural\ActorBase\IGender.cs" />
+    <Compile Include="Architectural\ActorBase\Gender.cs" />
     <Compile Include="Architectural\ActorBase\IGetTired.cs" />
     <Compile Include="Architectural\ActorBase\IHaveHealth.cs" />
     <Compile Include="Architectural\ActorBase\IHaveStamina.cs" />

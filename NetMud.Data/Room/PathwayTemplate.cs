@@ -2,6 +2,7 @@
 using NetMud.Communication.Lexical;
 using NetMud.Data.Architectural.DataIntegrity;
 using NetMud.Data.Architectural.EntityBase;
+using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.Data.Linguistic;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
@@ -104,6 +105,7 @@ namespace NetMud.Data.Room
         [NonNullableDataIntegrity("Destination is invalid.")]
         [Display(Name = "To Room", Description = "The room this leads to.")]
         [DataType(DataType.Text)]
+        [RoomTemplateDataBinder] //Use the room one for the base
         public ILocationData Destination
         {
             get
@@ -130,6 +132,7 @@ namespace NetMud.Data.Room
         [NonNullableDataIntegrity("Origin is invalid.")]
         [Display(Name = "From Room", Description = "The room this originates from.")]
         [DataType(DataType.Text)]
+        [RoomTemplateDataBinder] //Use the room one for the base
         public ILocationData Origin
         {
             get

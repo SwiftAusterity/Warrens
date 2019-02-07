@@ -310,6 +310,7 @@ namespace NetMud.Controllers.GameAdmin
             return RedirectToAction("Edit", new { Message = message, obj.Origin.Id });
         }
 
+        #region Descriptives
         [HttpGet]
         public ActionResult AddEditDescriptive(long id, short descriptiveType, string phrase)
         {
@@ -416,6 +417,7 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult RemoveDescriptive(long id = -1, string authorize = "")
         {
             string message = string.Empty;
+            long zoneId = -1;
 
             if (string.IsNullOrWhiteSpace(authorize))
             {
@@ -446,6 +448,7 @@ namespace NetMud.Controllers.GameAdmin
                         GrammaticalType grammaticalType = (GrammaticalType)Enum.Parse(typeof(GrammaticalType), type);
                         ISensoryEvent existingOccurrence = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType
                                                                                             && occurrence.Event.Phrase.Equals(phrase, StringComparison.InvariantCultureIgnoreCase));
+                        zoneId = obj.Id;
 
                         if (existingOccurrence != null)
                         {
@@ -469,8 +472,8 @@ namespace NetMud.Controllers.GameAdmin
                 }
             }
 
-            return RedirectToRoute("ModalErrorOrClose", new { Message = message });
+            return RedirectToAction("Edit", new { Message = message, id = zoneId });
         }
-
+        #endregion
     }
 }

@@ -214,6 +214,7 @@ namespace NetMud.Controllers.GameAdmin
             return RedirectToAction("Index", new { Message = message });
         }
 
+        #region Descriptives
         [HttpGet]
         public ActionResult AddEditDescriptive(long id, short descriptiveType, string phrase)
         {
@@ -375,5 +376,7 @@ namespace NetMud.Controllers.GameAdmin
 
             return RedirectToRoute("ModalErrorOrClose", new { Message = message });
         }
+        #endregion
+
     }
 }
