@@ -28,6 +28,23 @@ namespace NetMud.Models.Admin
                 return item => item.Name.ToLower().Contains(SearchTerms.ToLower());
             }
         }
+
+        internal override Func<IFauna, object> OrderPrimary
+        {
+            get
+            {
+                return item => item.Name;
+            }
+        }
+
+
+        internal override Func<IFauna, object> OrderSecondary
+        {
+            get
+            {
+                return null;
+            }
+        }
     }
 
     public class AddEditFaunaViewModel : IBaseViewModel

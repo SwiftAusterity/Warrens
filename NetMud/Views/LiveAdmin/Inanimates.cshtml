@@ -10,7 +10,7 @@
     tableColumns.Add("Location", obj => obj.CurrentLocation.CurrentContainer == null ? "World" : "Container");
 }
 
-@Html.Partial("LiveListTable", new NetMud.Models.ListTableViewModel() { Columns = tableColumns, Values = Model.CurrentPageOfItems.OrderBy(obj => obj.Birthdate), PagingModel = Model, EntityTypeName = "Inanimate" })
+@Html.Partial("LiveListTable", new NetMud.Models.ListTableViewModel() { Columns = tableColumns, Values = Model.CurrentPageOfItems, PagingModel = Model, EntityTypeName = "Inanimate" })
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

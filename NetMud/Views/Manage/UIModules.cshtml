@@ -11,7 +11,7 @@
     tableColumns.Add("State", obj => obj.State.ToString());
 }
     
-@Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { AddMethodName = "AddUIModule", EntityTypeName = "UIModule", Name = "UIModules", Columns = tableColumns, Values = Model.CurrentPageOfItems.OrderBy(obj => obj.Id) })
+@Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { AddMethodName = "AddUIModule", EntityTypeName = "UIModule", Name = "UIModules", Columns = tableColumns, Values = Model.CurrentPageOfItems })
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

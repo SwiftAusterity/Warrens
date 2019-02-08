@@ -17,7 +17,7 @@
         <input type="submit" value="PURGE" class="btn btn-default caution" />
     }
 }
-@Html.Partial("ConfigListTable", new NetMud.Models.ListTableViewModel() { EntityTypeName = "Dictionary", Columns = tableColumns, PagingModel = Model, Values = Model.CurrentPageOfItems.OrderBy(obj => obj.Language.Name).ThenBy(obj => obj.UniqueKey), IncludeUnapprove = false, IncludeDelete = true })
+@Html.Partial("ConfigListTable", new NetMud.Models.ListTableViewModel() { EntityTypeName = "Dictionary", Columns = tableColumns, PagingModel = Model, Values = Model.CurrentPageOfItems, IncludeUnapprove = false, IncludeDelete = true })
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

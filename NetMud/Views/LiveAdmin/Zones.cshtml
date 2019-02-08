@@ -8,7 +8,7 @@
     tableColumns.Add("Birth", obj => obj.Birthdate.ToString());
 }
 
-@Html.Partial("LiveListTable", new NetMud.Models.ListTableViewModel() { Columns = tableColumns, Values = Model.CurrentPageOfItems.OrderBy(obj => obj.Birthdate), PagingModel = Model, EntityTypeName = "Zone" })
+@Html.Partial("LiveListTable", new NetMud.Models.ListTableViewModel() { Columns = tableColumns, Values = Model.CurrentPageOfItems, PagingModel = Model, EntityTypeName = "Zone" })
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

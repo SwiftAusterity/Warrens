@@ -27,6 +27,23 @@ namespace NetMud.Models.Admin
                 return item => item.Name.ToLower().Contains(SearchTerms.ToLower());
             }
         }
+
+        internal override Func<IMineral, object> OrderPrimary
+        {
+            get
+            {
+                return item => item.Name;
+            }
+        }
+
+
+        internal override Func<IMineral, object> OrderSecondary
+        {
+            get
+            {
+                return null;
+            }
+        }
     }
 
     public class AddEditMineralsViewModel : IBaseViewModel

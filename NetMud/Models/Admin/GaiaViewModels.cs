@@ -2,7 +2,6 @@
 using NetMud.DataStructure.Gaia;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.Models.Admin
 {
@@ -25,6 +24,22 @@ namespace NetMud.Models.Admin
             }
         }
 
+        internal override Func<IGaiaTemplate, object> OrderPrimary
+        {
+            get
+            {
+                return item => item.Name;
+            }
+        }
+
+
+        internal override Func<IGaiaTemplate, object> OrderSecondary
+        {
+            get
+            {
+                return null;
+            }
+        }
     }
 
     public class AddEditGaiaViewModel : IBaseViewModel

@@ -31,6 +31,23 @@ namespace NetMud.Models.Admin
             }
         }
 
+
+        internal override Func<IGaia, object> OrderPrimary
+        {
+            get
+            {
+                return item => item.TemplateName;
+            }
+        }
+
+        internal override Func<IGaia, object> OrderSecondary
+        {
+            get
+            {
+                return null;
+            }
+        }
+
         public IEnumerable<IGaia> ValidEntities { get; set; }
     }
 
@@ -70,6 +87,24 @@ namespace NetMud.Models.Admin
             }
         }
 
+
+        internal override Func<IZone, object> OrderPrimary
+        {
+            get
+            {
+                return item => item.TemplateName;
+            }
+        }
+
+
+        internal override Func<IZone, object> OrderSecondary
+        {
+            get
+            {
+                return null;
+            }
+        }
+
         public IEnumerable<IZone> ValidEntities { get; set; }
     }
 
@@ -99,6 +134,23 @@ namespace NetMud.Models.Admin
             CurrentPageNumber = 1;
             ItemsPerPage = 20;
             ValidEntities = Enumerable.Empty<IInanimate>();
+        }
+
+        internal override Func<IInanimate, object> OrderPrimary
+        {
+            get
+            {
+                return item => item.TemplateName;
+            }
+        }
+
+
+        internal override Func<IInanimate, object> OrderSecondary
+        {
+            get
+            {
+                return null;
+            }
         }
 
         internal override Func<IInanimate, bool> SearchFilter
@@ -138,6 +190,23 @@ namespace NetMud.Models.Admin
             CurrentPageNumber = 1;
             ItemsPerPage = 20;
             ValidEntities = Enumerable.Empty<INonPlayerCharacter>();
+        }
+
+        internal override Func<INonPlayerCharacter, object> OrderPrimary
+        {
+            get
+            {
+                return item => item.TemplateName;
+            }
+        }
+
+
+        internal override Func<INonPlayerCharacter, object> OrderSecondary
+        {
+            get
+            {
+                return null;
+            }
         }
 
         internal override Func<INonPlayerCharacter, bool> SearchFilter

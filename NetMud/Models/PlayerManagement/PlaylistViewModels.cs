@@ -24,6 +24,23 @@ namespace NetMud.Models.PlayerManagement
                 return item => item.Name.ToLower().Contains(SearchTerms.ToLower());
             }
         }
+
+        internal override Func<IPlaylist, object> OrderPrimary
+        {
+            get
+            {
+                return item => item.Name;
+            }
+        }
+
+
+        internal override Func<IPlaylist, object> OrderSecondary
+        {
+            get
+            {
+                return item => item.Songs.Count;
+            }
+        }
     }
 
     public class AddEditPlaylistViewModel : IBaseViewModel

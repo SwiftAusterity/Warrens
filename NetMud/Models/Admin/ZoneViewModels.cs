@@ -30,6 +30,23 @@ namespace NetMud.Models.Admin
                 return item => item.Name.ToLower().Contains(SearchTerms.ToLower());
             }
         }
+
+        internal override Func<IZoneTemplate, object> OrderPrimary
+        {
+            get
+            {
+                return item => item.World.Name;
+            }
+        }
+
+
+        internal override Func<IZoneTemplate, object> OrderSecondary
+        {
+            get
+            {
+                return item => item.Name;
+            }
+        }
     }
 
     public class AddEditZoneTemplateViewModel : PagedDataModel<ILocaleTemplate>, IBaseViewModel
@@ -42,6 +59,23 @@ namespace NetMud.Models.Admin
             get
             {
                 return item => item.Name.ToLower().Contains(SearchTerms.ToLower());
+            }
+        }
+
+        internal override Func<ILocaleTemplate, object> OrderPrimary
+        {
+            get
+            {
+                return item => item.Name;
+            }
+        }
+
+
+        internal override Func<ILocaleTemplate, object> OrderSecondary
+        {
+            get
+            {
+                return null;
             }
         }
 

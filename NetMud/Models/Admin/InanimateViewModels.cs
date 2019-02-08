@@ -27,6 +27,23 @@ namespace NetMud.Models.Admin
                 return item => item.Name.ToLower().Contains(SearchTerms.ToLower());
             }
         }
+
+        internal override Func<IInanimateTemplate, object> OrderPrimary
+        {
+            get
+            {
+                return item => item.Name;
+            }
+        }
+
+
+        internal override Func<IInanimateTemplate, object> OrderSecondary
+        {
+            get
+            {
+                return null;
+            }
+        }
     }
 
     public class AddEditInanimateTemplateViewModel : TwoDimensionalEntityEditViewModel

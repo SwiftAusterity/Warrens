@@ -2,7 +2,6 @@
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.System;
-using System.Linq;
 
 namespace NetMud.Communication.Lexical
 {

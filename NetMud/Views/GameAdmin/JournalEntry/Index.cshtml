@@ -15,7 +15,7 @@
     tableColumns.Add("Expired On", obj => obj.ExpireDate.ToShortDateString());
 }
 
-@Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Columns = tableColumns, Values = Model.CurrentPageOfItems.OrderBy(obj => obj.Id), PagingModel = Model, EntityTypeName = "JournalEntry" })
+@Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Columns = tableColumns, Values = Model.CurrentPageOfItems, PagingModel = Model, EntityTypeName = "JournalEntry" })
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

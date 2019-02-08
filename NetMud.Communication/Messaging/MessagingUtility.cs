@@ -2,7 +2,6 @@
 using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace NetMud.Communication.Messaging

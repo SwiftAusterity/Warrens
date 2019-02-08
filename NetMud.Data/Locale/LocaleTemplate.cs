@@ -7,7 +7,6 @@ using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.Locale;
-using NetMud.DataStructure.Player;
 using NetMud.DataStructure.Room;
 using NetMud.DataStructure.Zone;
 using Newtonsoft.Json;

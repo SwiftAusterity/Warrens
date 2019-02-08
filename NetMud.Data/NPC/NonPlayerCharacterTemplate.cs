@@ -7,7 +7,6 @@ using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Architectural.EntityBase;
-using NetMud.DataStructure.Architectural.PropertyValidation;
 using NetMud.DataStructure.NPC;
 using NetMud.DataStructure.NPC.IntelligenceControl;
 using NetMud.Data.Architectural.ActorBase;

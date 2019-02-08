@@ -19,7 +19,7 @@
 
 <h3>Locales</h3>
 @Html.ActionLink("Add New Locale", "Add", "Locale", new { zoneId = Model.DataObject.Id }, new { @class = "addNew" })
-@Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { EntityTypeName = "Locale", IncludeAddLink = false, Columns = tableColumns, Values = Model.CurrentPageOfItems.OrderBy(obj => obj.Id) })
+@Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { EntityTypeName = "Locale", IncludeAddLink = false, Columns = tableColumns, Values = Model.CurrentPageOfItems })
 
 
 @section Scripts {

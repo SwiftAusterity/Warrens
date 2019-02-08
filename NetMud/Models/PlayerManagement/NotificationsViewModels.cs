@@ -24,6 +24,23 @@ namespace NetMud.Models.Admin
                 return item => item.Name.ToLower().Contains(SearchTerms.ToLower());
             }
         }
+
+        internal override Func<IPlayerMessage, object> OrderPrimary
+        {
+            get
+            {
+                return item => item.Read ? 1 : 0;
+            }
+        }
+
+
+        internal override Func<IPlayerMessage, object> OrderSecondary
+        {
+            get
+            {
+                return item => item.Sent;
+            }
+        }
     }
 
     public class AddViewNotificationViewModel : IBaseViewModel

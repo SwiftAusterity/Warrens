@@ -34,6 +34,8 @@ namespace NetMud.Models
         public IEnumerable<T> Items { get; private set; }
 
         internal abstract Func<T, bool> SearchFilter { get; }
+        internal abstract Func<T, object> OrderPrimary { get; }
+        internal abstract Func<T, object> OrderSecondary { get; }
 
         public IEnumerable<T> CurrentPageOfItems 
         {
@@ -47,12 +49,25 @@ namespace NetMud.Models
                 int skip = (CurrentPageNumber - 1) * ItemsPerPage;
                 int take = Math.Abs(Items.Count() - skip) >= ItemsPerPage ? ItemsPerPage : Math.Abs(Items.Count() - skip);
 
-                if(!string.IsNullOrWhiteSpace(SearchTerms))
+                var filteredItems = Items;
+                if (!string.IsNullOrWhiteSpace(SearchTerms))
                 {
-                    return Items.Where(item => SearchFilter(item)).Skip(skip).Take(take);
+                    filteredItems = filteredItems.Where(item => SearchFilter(item));
                 }
 
-                return Items.Skip(skip).Take(take);
+                if (OrderPrimary != null)
+                {
+                    if (OrderSecondary != null)
+                    {
+                        filteredItems = filteredItems.OrderBy(OrderPrimary).ThenBy(OrderSecondary);
+                    }
+                    else
+                    {
+                        filteredItems = filteredItems.OrderBy(OrderPrimary);
+                    }
+                }
+
+                return filteredItems.Skip(skip).Take(take);
             }
         }
 

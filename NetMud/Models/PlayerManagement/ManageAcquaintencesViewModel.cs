@@ -25,6 +25,23 @@ namespace NetMud.Models.PlayerManagement
             }
         }
 
+        internal override Func<IAcquaintence, object> OrderPrimary
+        {
+            get
+            {
+                return item => item.IsFriend;
+            }
+        }
+
+
+        internal override Func<IAcquaintence, object> OrderSecondary
+        {
+            get
+            {
+                return item => item.PersonHandle;
+            }
+        }
+
         [Display(Name = "Account Name", Description = "Account (or gossip user) name for the new acquaintence")]
         [DataType(DataType.Text)]
         public string AcquaintenceName { get; set; }

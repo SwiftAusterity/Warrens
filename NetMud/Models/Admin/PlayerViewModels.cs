@@ -27,6 +27,23 @@ namespace NetMud.Models.Admin
             }
         }
 
+        internal override Func<ApplicationUser, object> OrderPrimary
+        {
+            get
+            {
+                return item => item.GameAccount.GlobalIdentityHandle;
+            }
+        }
+
+
+        internal override Func<ApplicationUser, object> OrderSecondary
+        {
+            get
+            {
+                return null;
+            }
+        }
+
         public IEnumerable<IdentityRole> ValidRoles { get; set; }
     }
 }

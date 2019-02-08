@@ -2,7 +2,6 @@
 using NetMud.DataStructure.Linguistic;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.Models.Admin
 {
@@ -22,6 +21,23 @@ namespace NetMud.Models.Admin
             get
             {
                 return item => item.Name.ToLower().Contains(SearchTerms.ToLower());
+            }
+        }
+
+        internal override Func<IDictata, object> OrderPrimary
+        {
+            get
+            {
+                return item => item.Language.Name;
+            }
+        }
+
+
+        internal override Func<IDictata, object> OrderSecondary
+        {
+            get
+            {
+                return item => item.Name;
             }
         }
     }

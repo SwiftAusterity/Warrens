@@ -27,6 +27,22 @@ namespace NetMud.Models.Admin
             }
         }
 
+        internal override Func<INonPlayerCharacterTemplate, object> OrderPrimary
+        {
+            get
+            {
+                return item => item.Name;
+            }
+        }
+
+
+        internal override Func<INonPlayerCharacterTemplate, object> OrderSecondary
+        {
+            get
+            {
+                return null;
+            }
+        }
     }
 
     public class AddEditNPCDataViewModel : IBaseViewModel

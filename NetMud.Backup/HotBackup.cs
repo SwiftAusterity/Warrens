@@ -1,5 +1,4 @@
-﻿using NetMud.Cartography;
-using NetMud.Data.Architectural.EntityBase;
+﻿using NetMud.Data.Architectural.EntityBase;
 using NetMud.Data.Gaia;
 using NetMud.Data.Inanimate;
 using NetMud.Data.NPC;

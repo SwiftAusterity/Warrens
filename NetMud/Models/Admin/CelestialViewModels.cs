@@ -27,6 +27,22 @@ namespace NetMud.Models.Admin
             }
         }
 
+        internal override Func<ICelestial, object> OrderPrimary
+        {
+            get
+            {
+                return item => item.Name;
+            }
+        }
+
+
+        internal override Func<ICelestial, object> OrderSecondary
+        {
+            get
+            {
+                return null;
+            }
+        }
     }
 
     public class AddEditCelestialViewModel : AddContentModel<ICelestial>, IBaseViewModel

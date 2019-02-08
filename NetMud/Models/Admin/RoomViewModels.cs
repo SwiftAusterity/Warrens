@@ -28,6 +28,23 @@ namespace NetMud.Models.Admin
                 return item => item.Name.ToLower().Contains(SearchTerms.ToLower());
             }
         }
+
+        internal override Func<IRoomTemplate, object> OrderPrimary
+        {
+            get
+            {
+                return item => item.ParentLocation.Name;
+            }
+        }
+
+
+        internal override Func<IRoomTemplate, object> OrderSecondary
+        {
+            get
+            {
+                return item => item.Name;
+            }
+        }
     }
 
     public class AddEditRoomTemplateViewModel : DimensionalEntityEditViewModel

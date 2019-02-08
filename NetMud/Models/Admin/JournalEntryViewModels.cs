@@ -25,6 +25,22 @@ namespace NetMud.Models.Admin
             }
         }
 
+        internal override Func<IJournalEntry, object> OrderPrimary
+        {
+            get
+            {
+                return item => item.Expired ? 0 : 1;
+            }
+        }
+
+
+        internal override Func<IJournalEntry, object> OrderSecondary
+        {
+            get
+            {
+                return item => item.PublishDate;
+            }
+        }
     }
 
     public class AddEditJournalEntryViewModel : IBaseViewModel

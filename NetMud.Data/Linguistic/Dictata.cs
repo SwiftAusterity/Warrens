@@ -5,7 +5,6 @@ using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
-using NetMud.DataStructure.Gossip;
 using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.System;
 using Newtonsoft.Json;
