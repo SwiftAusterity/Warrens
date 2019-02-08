@@ -68,6 +68,7 @@ namespace NetMud.Communication.Lexical
             }
 
             dictata.SystemSave();
+            dictata.PersistToCache();
             dictata.FillLanguages();
 
             return true;

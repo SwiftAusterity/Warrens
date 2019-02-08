@@ -7,10 +7,6 @@ namespace NetMud.DataStructure.Architectural.ActorBase
     /// </summary>
     public interface IActor : IEntity
     {
-        /// <summary>
-        /// Returns whether or not this is a player object
-        /// </summary>
-        /// <returns>if it is a player object</returns>
-        bool IsPlayer();
+
     }
 }

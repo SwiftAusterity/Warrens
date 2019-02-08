@@ -30,11 +30,6 @@ namespace NetMud.Data.NPC
     public class NonPlayerCharacter : EntityPartial, INonPlayerCharacter
     {
         #region Template and Framework Values
-        public bool IsPlayer()
-        {
-            return false;
-        }
-
         /// <summary>
         /// The name of the object in the data template
         /// </summary>

@@ -108,6 +108,14 @@ namespace NetMud.Models.Admin
         [UIHint("Boolean")]
         public bool AdminsOnly { get; set; }
 
+        [Display(Name = "Live Translation", Description = "Do new Dictata get translated to the UI languages?")]
+        [UIHint("Boolean")]
+        public bool TranslationActive { get; set; }
+
+        [Display(Name = "Azure API Key", Description = "The API key for your azure translation service.")]
+        [DataType(DataType.Text)]
+        public string AzureTranslationKey { get; set; }
+
         [Display(Name = "Base Language", Description = "The base language for the system.")]
         [UIHint("LanguageList")]
         [LanguageDataBinder]

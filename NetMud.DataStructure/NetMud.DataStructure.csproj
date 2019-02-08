@@ -181,7 +181,7 @@
     <Compile Include="Inanimate\IRenderAsWorn.cs" />
     <Compile Include="Inanimate\IRenderAsHeld.cs" />
     <Compile Include="Linguistic\ILanguage.cs" />
-    <Compile Include="Linguistic\IOccurrence.cs" />
+    <Compile Include="Linguistic\ISensoryEvent.cs" />
     <Compile Include="Linguistic\NarrativeNormalization.cs" />
     <Compile Include="Linguistic\NarrativePerspective.cs" />
     <Compile Include="Linguistic\SentenceType.cs" />

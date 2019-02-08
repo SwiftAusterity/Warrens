@@ -116,6 +116,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
                 ValidWords = ConfigDataCache.GetAll<IDictata>(),
+                ValidLanguages = ConfigDataCache.GetAll<ILanguage>(),
                 DataObject = new Dictata()
             };
 
@@ -161,6 +162,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
                 ValidWords = ConfigDataCache.GetAll<IDictata>().Where(word => word.UniqueKey != obj.UniqueKey),
+                ValidLanguages = ConfigDataCache.GetAll<ILanguage>(),
                 DataObject = obj
             };
 

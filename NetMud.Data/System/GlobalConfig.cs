@@ -8,6 +8,7 @@ using NetMud.DataStructure.System;
 using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.System
@@ -46,6 +47,20 @@ namespace NetMud.Data.System
         [Display(Name = "Admins Only", Description = "Are only admins allowed to log in - noone at StaffRank.Player?")]
         [UIHint("Boolean")]
         public bool AdminsOnly { get; set; }
+
+        /// <summary>
+        /// Is live translation active?
+        /// </summary>
+        [Display(Name = "Live Translation", Description = "Do new Dictata get translated to the UI languages?")]
+        [UIHint("Boolean")]
+        public bool TranslationActive { get; set; }
+
+        /// <summary>
+        /// The API key for your azure translation service
+        /// </summary>
+        [Display(Name = "Azure API Key", Description = "The API key for your azure translation service.")]
+        [DataType(DataType.Text)]
+        public string AzureTranslationKey { get; set; }
 
         /// <summary>
         /// The base language for the system
@@ -90,6 +105,8 @@ namespace NetMud.Data.System
             WebsocketPortalActive = true;
             AdminsOnly = false;
             UserCreationActive = true;
+
+            BaseLanguage = ConfigDataCache.GetAll<ILanguage>().FirstOrDefault();
         }
 
         /// <summary>

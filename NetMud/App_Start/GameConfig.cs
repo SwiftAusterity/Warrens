@@ -14,6 +14,7 @@ using NetMud.DataStructure.Player;
 using NetMud.DataStructure.System;
 using NetMud.Gossip;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -35,6 +36,8 @@ namespace NetMud
             if (globalConfig == null)
             {
                 globalConfig = new GlobalConfig();
+
+                ILanguage baseLanguage = ConfigDataCache.GetAll<ILanguage>().FirstOrDefault();
 
                 globalConfig.SystemSave();
             }
@@ -106,11 +109,11 @@ namespace NetMud
         private static void ProcessSystemVerbs()
         {
             Assembly commandsAssembly = Assembly.GetAssembly(typeof(CommandParameterAttribute));
-            System.Collections.Generic.IEnumerable<Type> loadedCommands = commandsAssembly.GetTypes().Where(t => t.GetInterfaces().Contains(typeof(ICommand)));
+            IEnumerable<Type> loadedCommands = commandsAssembly.GetTypes().Where(t => t.GetInterfaces().Contains(typeof(ICommand)));
 
             foreach (Type comm in loadedCommands)
             {
-                System.Collections.Generic.IEnumerable<string> commandVerbs = comm.GetCustomAttributes<CommandKeywordAttribute>().Where(att => !att.PreventBecomingAVerb).Select(att => att.Keyword);
+                IEnumerable<string> commandVerbs = comm.GetCustomAttributes<CommandKeywordAttribute>().Where(att => !att.PreventBecomingAVerb).Select(att => att.Keyword);
 
                 foreach (string verb in commandVerbs)
                 {

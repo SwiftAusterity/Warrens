@@ -11,6 +11,12 @@ namespace NetMud.DataStructure.Architectural.EntityBase
     public interface IEntity : IExist, ICanSee, ICanSmell, ICanHear, ICanSense, ICanSpeak, ICanTaste, ICanTouch, IFileStored, ILiveData, IAmOwned, IDescribable
     {
         /// <summary>
+        /// Returns whether or not this is a player object
+        /// </summary>
+        /// <returns>if it is a player object</returns>
+        bool IsPlayer();
+
+        /// <summary>
         /// Keywords this entity can be found with in command parsing
         /// </summary>
         string[] Keywords { get; set; }

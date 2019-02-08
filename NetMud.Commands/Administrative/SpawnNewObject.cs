@@ -15,7 +15,7 @@ namespace NetMud.Commands.System
     /// <summary>
     /// Spawns a new inanimate into the world.  Missing target parameter = container you're standing in
     /// </summary>
-    [CommandKeyword("SpawnNewObject", false, "ospawn", true)]
+    [CommandKeyword("SpawnNewObject", false, "ospawn", false, true)]
     [CommandPermission(StaffRank.Admin)]
     [CommandParameter(CommandUsage.Subject, typeof(IInanimateTemplate), CacheReferenceType.Data, "[0-9]+", false)] //for IDs
     [CommandParameter(CommandUsage.Subject, typeof(IInanimateTemplate), CacheReferenceType.Data, "[a-zA-z]+", false)] //for names

@@ -165,7 +165,7 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = message });
             }
 
-            System.Collections.Generic.IEnumerable<ILocaleTemplate> locales = TemplateCache.GetAll<ILocaleTemplate>().Where(locale => locale.ParentLocation.Equals(obj));
+            IEnumerable<ILocaleTemplate> locales = TemplateCache.GetAll<ILocaleTemplate>().Where(locale => locale.ParentLocation.Equals(obj));
 
             AddEditZoneTemplateViewModel vModel = new AddEditZoneTemplateViewModel(locales)
             {

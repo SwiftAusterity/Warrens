@@ -32,11 +32,6 @@ namespace NetMud.Data.Zone
     public class Zone : LocationEntityPartial, IZone
     {
         #region Template and Framework Values
-        public bool IsPlayer()
-        {
-            return false;
-        }
-
         /// <summary>
         /// The name of the object in the data template
         /// </summary>
@@ -223,8 +218,8 @@ namespace NetMud.Data.Zone
                             newDesc.TryModify(desc.Event.Modifiers);
 
                             newDesc.TryModify(LexicalType.Noun, GrammaticalType.IndirectObject, "distance")
-                                        .TryModify(LexicalType.Conjunction, GrammaticalType.Descriptive, "in")
-                                            .TryModify(LexicalType.Conjunction, GrammaticalType.Descriptive, "the");
+                                        .TryModify(LexicalType.Article, GrammaticalType.Descriptive, "in")
+                                            .TryModify(LexicalType.Article, GrammaticalType.Descriptive, "the");
 
                             uberSounds.TryModify(newDesc);
                         }
@@ -261,8 +256,8 @@ namespace NetMud.Data.Zone
                             newDesc.TryModify(desc.Event.Modifiers);
 
                             newDesc.TryModify(LexicalType.Noun, GrammaticalType.IndirectObject, "air")
-                                        .TryModify(LexicalType.Conjunction, GrammaticalType.Descriptive, "in")
-                                            .TryModify(LexicalType.Conjunction, GrammaticalType.Descriptive, "the");
+                                        .TryModify(LexicalType.Article, GrammaticalType.Descriptive, "in")
+                                            .TryModify(LexicalType.Article, GrammaticalType.Descriptive, "the");
 
                             uberSmells.TryModify(newDesc);
                         }
@@ -299,8 +294,8 @@ namespace NetMud.Data.Zone
                             newDesc.TryModify(desc.Event.Modifiers);
 
                             newDesc.TryModify(LexicalType.Noun, GrammaticalType.IndirectObject, "area")
-                                        .TryModify(LexicalType.Conjunction, GrammaticalType.Descriptive, "in")
-                                            .TryModify(LexicalType.Conjunction, GrammaticalType.Descriptive, "the");
+                                        .TryModify(LexicalType.Article, GrammaticalType.Descriptive, "in")
+                                            .TryModify(LexicalType.Article, GrammaticalType.Descriptive, "the");
 
                             uberPsy.TryModify(newDesc);
                         }
@@ -340,8 +335,8 @@ namespace NetMud.Data.Zone
                             newDesc.TryModify(desc.Event.Modifiers);
 
                             newDesc.TryModify(LexicalType.Noun, GrammaticalType.IndirectObject, "distance")
-                                        .TryModify(LexicalType.Conjunction, GrammaticalType.Descriptive, "in")
-                                            .TryModify(LexicalType.Conjunction, GrammaticalType.Descriptive, "the");
+                                        .TryModify(LexicalType.Article, GrammaticalType.Descriptive, "in")
+                                            .TryModify(LexicalType.Article, GrammaticalType.Descriptive, "the");
 
                             uberSight.TryModify(newDesc);
                         }
@@ -385,7 +380,7 @@ namespace NetMud.Data.Zone
             DimensionalSizeDescription zoneSize = GeographicalUtilities.ConvertSizeToType(GetModelDimensions(), GetType());
 
             Lexica area = new Lexica(LexicalType.Noun, GrammaticalType.Subject, "space");
-            area.TryModify(LexicalType.Conjunction, GrammaticalType.Descriptive, "this");
+            area.TryModify(LexicalType.Article, GrammaticalType.Descriptive, "this");
             area.TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, zoneSize.ToString());
 
             //Add the temperature

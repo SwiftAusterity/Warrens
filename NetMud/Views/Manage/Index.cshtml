@@ -63,6 +63,7 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group row">
+            @Html.EditorFor(m => m.UILanguage, new { validItems = Model.ValidLanguages })
             @Html.EditorFor(m => m.UITutorialMode)
             @Html.EditorFor(m => m.GossipSubscriber)
             @Html.EditorFor(m => m.PermanentlyMuteMusic)

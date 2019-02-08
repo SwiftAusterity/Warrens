@@ -152,10 +152,10 @@ namespace NetMud.Communication.Lexical
         /// <param name="perspective">The personage of the sentence structure</param>
         /// <param name="omitName">Should we omit the proper name of the initial subject entirely (and only resort to pronouns)</param>
         /// <returns>A long description</returns>
-        public string Describe(NarrativeNormalization normalization, int verbosity, LexicalTense chronology = LexicalTense.Present,
+        public string Describe(ILanguage language, NarrativeNormalization normalization, int verbosity, LexicalTense chronology = LexicalTense.Present,
             NarrativePerspective perspective = NarrativePerspective.SecondPerson, bool omitName = true)
         {
-            return Event.Describe(normalization, verbosity, chronology, perspective, omitName);
+            return Event.Describe(language, normalization, verbosity, chronology, perspective, omitName);
         }
 
         /// <summary>

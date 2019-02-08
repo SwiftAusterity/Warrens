@@ -24,11 +24,6 @@ namespace NetMud.Data.Room
     [Serializable]
     public class Pathway : EntityPartial, IPathway
     {
-        public bool IsPlayer()
-        {
-            return false;
-        }
-
         /// <summary>
         /// The name of the object in the data template
         /// </summary>

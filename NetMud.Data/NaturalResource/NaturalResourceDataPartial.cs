@@ -690,12 +690,12 @@ namespace NetMud.Data.NaturalResource
 
             //Add the existential modifiers
             ISensoryEvent me = GetImmediateDescription(viewer, sensoryTypes[0]);
-            me.TryModify(LexicalType.Conjunction, GrammaticalType.Verb, "is")
+            me.TryModify(LexicalType.Article, GrammaticalType.Verb, "is")
                 .TryModify(LexicalType.Noun, GrammaticalType.DirectObject, "ground")
                     .TryModify(
                         new Tuple<LexicalType, GrammaticalType, string>[] {
-                                new Tuple<LexicalType, GrammaticalType, string>(LexicalType.Conjunction, GrammaticalType.Descriptive, "the"),
-                                new Tuple<LexicalType, GrammaticalType, string>(LexicalType.Conjunction, GrammaticalType.IndirectObject, "in")
+                                new Tuple<LexicalType, GrammaticalType, string>(LexicalType.Article, GrammaticalType.Descriptive, "the"),
+                                new Tuple<LexicalType, GrammaticalType, string>(LexicalType.Article, GrammaticalType.IndirectObject, "in")
                             }
                         );
 

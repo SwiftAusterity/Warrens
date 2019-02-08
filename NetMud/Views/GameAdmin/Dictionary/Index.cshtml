@@ -5,6 +5,7 @@
     var linkText = Html.ActionLink("99999999", "Edit", new { id = 99999999 }).ToString();
     var tableColumns = new Dictionary<string, Func<dynamic, string>>();
     tableColumns.Add("Unique Key", obj => linkText.Replace("99999999", obj.UniqueKey));
+    tableColumns.Add("Language", obj => obj.Language.Name);
     tableColumns.Add("Phrase", obj => obj.Name);
     tableColumns.Add("Type", obj => obj.WordType.ToString());
 }
@@ -16,7 +17,7 @@
         <input type="submit" value="PURGE" class="btn btn-default caution" />
     }
 }
-@Html.Partial("ConfigListTable", new NetMud.Models.ListTableViewModel() { EntityTypeName = "Dictionary", Columns = tableColumns, PagingModel = Model, Values = Model.CurrentPageOfItems.OrderBy(obj => obj.UniqueKey), IncludeUnapprove = false, IncludeDelete = true })
+@Html.Partial("ConfigListTable", new NetMud.Models.ListTableViewModel() { EntityTypeName = "Dictionary", Columns = tableColumns, PagingModel = Model, Values = Model.CurrentPageOfItems.OrderBy(obj => obj.Language.Name).ThenBy(obj => obj.UniqueKey), IncludeUnapprove = false, IncludeDelete = true })
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

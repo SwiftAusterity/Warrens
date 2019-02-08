@@ -29,7 +29,7 @@ namespace NetMud.Data.Players
     public class Player : EntityPartial, IPlayer
     {
         #region Template and Framework Values
-        public bool IsPlayer()
+        public override bool IsPlayer()
         {
             return true;
         }
@@ -111,7 +111,7 @@ namespace NetMud.Data.Players
             {
                 if (_descriptorKey == null)
                 {
-                    return default(IDescriptor);
+                    return default;
                 }
 
                 return LiveCache.Get<IDescriptor>(_descriptorKey);

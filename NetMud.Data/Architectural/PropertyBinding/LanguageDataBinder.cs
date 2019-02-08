@@ -15,7 +15,9 @@ namespace NetMud.Data.Architectural.PropertyBinding
                 return null;
             }
 
-            return ConfigDataCache.Get<ILanguage>(new ConfigDataCacheKey(typeof(ILanguage), stringInput, ConfigDataType.Language));
+            var returnValue = ConfigDataCache.Get<ILanguage>(new ConfigDataCacheKey(typeof(ILanguage), stringInput, ConfigDataType.Language));
+
+            return returnValue;
         }
     }
 }

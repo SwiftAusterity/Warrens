@@ -5,7 +5,9 @@ using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Gossip;
 using NetMud.DataStructure.Linguistic;
+using NetMud.DataStructure.System;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -96,8 +98,10 @@ namespace NetMud.Data.Linguistic
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
+        [Display(Name = "Language", Description = "The language this is in.")]
         [UIHint("LanguageList")]
         [LanguageDataBinder]
+        [Required]
         public ILanguage Language
         {
             get
@@ -130,7 +134,7 @@ namespace NetMud.Data.Linguistic
         [ScriptIgnore]
         [JsonIgnore]
         [Display(Name = "Synonyms", Description = "The synonyms (similar) of this word/phrase.")]
-        [UIHint("CollectionDictataList")]
+        [UIHint("CollectionSynonymList")]
         [DictataCollectionDataBinder]
         public HashSet<IDictata> Synonyms
         {
@@ -147,6 +151,7 @@ namespace NetMud.Data.Linguistic
             {
                 if (value == null)
                 {
+                    _synonyms = new HashSet<ConfigDataCacheKey>();
                     return;
                 }
 
@@ -180,6 +185,7 @@ namespace NetMud.Data.Linguistic
             {
                 if (value == null)
                 {
+                    _antonyms = new HashSet<ConfigDataCacheKey>();
                     return;
                 }
 
@@ -223,8 +229,10 @@ namespace NetMud.Data.Linguistic
         /// </summary>
         public void FillLanguages()
         {
-            //Don't do that
-            if(!Language.UIOnly || !Language.SuitableForUse)
+            IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
+
+            if (globalConfig == null || !globalConfig.TranslationActive || string.IsNullOrWhiteSpace(globalConfig.AzureTranslationKey) 
+                || !Language.UIOnly || !Language.SuitableForUse || WordType == LexicalType.ProperNoun)
             {
                 return;
             }
@@ -233,20 +241,27 @@ namespace NetMud.Data.Linguistic
 
             foreach (var language in otherLanguages)
             {
-                var translatedWord = Thesaurus.GetSynonym(this, 0, 0, 0);
+                var translatedWord = Thesaurus.GetSynonym(this, 0, 0, 0, language);
 
                 //no linguistic synonym
                 if (translatedWord == this)
                 {
-                    var newWord = Thesaurus.GetTranslatedWord(Name, Language, language);
+                    var newWord = Thesaurus.GetTranslatedWord(globalConfig.AzureTranslationKey, Name, Language, language);
 
                     if (!string.IsNullOrWhiteSpace(newWord))
                     {
                         var newDictata = new Dictata() { Language = language, Name = newWord, Elegance = Elegance, Severity = Severity, Quality = Quality };
+                        newDictata.Synonyms = new HashSet<IDictata>() { this };
                         newDictata.SystemSave();
+                        newDictata.PersistToCache();
+
+                        Synonyms = new HashSet<IDictata>(Synonyms) { newDictata };
                     }
                 }
             }
+
+            SystemSave();
+            PersistToCache();
         }
 
         /// <summary>

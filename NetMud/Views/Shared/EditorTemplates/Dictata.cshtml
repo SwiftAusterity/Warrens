@@ -7,8 +7,8 @@
     @if (Model.ApprovedBy != null)
     {
         @Html.EditorFor(m => m.Name, new { disabled = true })
-        @Html.EditorFor(m => m.Language, new { disabled = true, validItems = ViewData["ValidLanguages"] })
-        @Html.EditorFor(m => m.WordType, new { disabled = true })
+        @Html.EditorFor(m => m.Language, new { validItems = ViewData["ValidLanguages"] })
+        @Html.EditorFor(m => m.WordType)
     }
     else
     {

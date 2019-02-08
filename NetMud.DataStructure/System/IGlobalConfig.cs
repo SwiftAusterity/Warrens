@@ -24,6 +24,16 @@ namespace NetMud.DataStructure.System
         bool AdminsOnly { get; set; }
 
         /// <summary>
+        /// Is live translation active?
+        /// </summary>
+        bool TranslationActive { get; set; }
+
+        /// <summary>
+        /// The API key for your azure translation service
+        /// </summary>
+        string AzureTranslationKey { get; set; }
+
+        /// <summary>
         /// The base language for the system
         /// </summary>
         ILanguage BaseLanguage { get; set; }

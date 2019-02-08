@@ -1,5 +1,6 @@
 ﻿using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Linguistic;
+using NetMud.DataStructure.Player;
 using NetMud.DataStructure.System;
 using System;
 using System.Collections.Generic;
@@ -118,7 +119,8 @@ namespace NetMud.Communication.Messaging
                 }
                 else
                 {
-                    Actor.WriteTo(TranslateOutput(ToActor.Select(msg => msg.Occurrence?.Event?.Describe(NarrativeNormalization.Normal, 1, LexicalTense.Present, NarrativePerspective.FirstPerson, false)), entities));
+                    var language = Actor.IsPlayer() ? ((IPlayer)Actor).Template<IPlayerTemplate>().Account.Config.UILanguage : null;
+                    Actor.WriteTo(TranslateOutput(ToActor.Select(msg => msg.Occurrence?.Event?.Describe(language, NarrativeNormalization.Normal, 1, LexicalTense.Present, NarrativePerspective.FirstPerson, false)), entities));
                 }
             }
 
@@ -130,19 +132,21 @@ namespace NetMud.Communication.Messaging
                 }
                 else
                 {
-                    Subject.WriteTo(TranslateOutput(ToSubject.Select(msg => msg.Occurrence?.Event?.Describe(NarrativeNormalization.Normal, 1, LexicalTense.Present, NarrativePerspective.SecondPerson, false)), entities));
+                    var language = Subject.IsPlayer() ? ((IPlayer)Subject).Template<IPlayerTemplate>().Account.Config.UILanguage : null;
+                    Subject.WriteTo(TranslateOutput(ToSubject.Select(msg => msg.Occurrence?.Event?.Describe(language, NarrativeNormalization.Normal, 1, LexicalTense.Present, NarrativePerspective.SecondPerson, false)), entities));
                 }
             }
 
             if (Target != null && ToTarget.Any())
             {
+                var language = Target.IsPlayer() ? ((IPlayer)Target).Template<IPlayerTemplate>().Account.Config.UILanguage : null;
                 if (ToTarget.SelectMany(msg => msg.Override).Any(str => !string.IsNullOrEmpty(str)))
                 {
                     Target.WriteTo(TranslateOutput(ToTarget.SelectMany(msg => msg.Override), entities));
                 }
                 else
                 {
-                    Target.WriteTo(TranslateOutput(ToTarget.Select(msg => msg.Occurrence?.Event?.Describe(NarrativeNormalization.Normal, 1, LexicalTense.Present, NarrativePerspective.SecondPerson, false)), entities));
+                    Target.WriteTo(TranslateOutput(ToTarget.Select(msg => msg.Occurrence?.Event?.Describe(language, NarrativeNormalization.Normal, 1, LexicalTense.Present, NarrativePerspective.SecondPerson, false)), entities));
                 }
             }
 
@@ -161,7 +165,8 @@ namespace NetMud.Communication.Messaging
                     }
                     else
                     {
-                        dude.WriteTo(TranslateOutput(ToOrigin.Select(msg => msg.Occurrence?.Event?.Describe(NarrativeNormalization.Normal, 1, LexicalTense.Present, NarrativePerspective.ThirdPerson, false)), entities));
+                        var language = dude.IsPlayer() ? ((IPlayer)dude).Template<IPlayerTemplate>().Account.Config.UILanguage : null;
+                        dude.WriteTo(TranslateOutput(ToOrigin.Select(msg => msg.Occurrence?.Event?.Describe(language, NarrativeNormalization.Normal, 1, LexicalTense.Present, NarrativePerspective.ThirdPerson, false)), entities));
                     }
                 }
             }
@@ -179,7 +184,8 @@ namespace NetMud.Communication.Messaging
                     }
                     else
                     {
-                        dude.WriteTo(TranslateOutput(ToDestination.Select(msg => msg.Occurrence?.Event?.Describe(NarrativeNormalization.Normal, 1, LexicalTense.Present, NarrativePerspective.ThirdPerson, false)), entities));
+                        var language = dude.IsPlayer() ? ((IPlayer)dude).Template<IPlayerTemplate>().Account.Config.UILanguage : null;
+                        dude.WriteTo(TranslateOutput(ToDestination.Select(msg => msg.Occurrence?.Event?.Describe(language, NarrativeNormalization.Normal, 1, LexicalTense.Present, NarrativePerspective.ThirdPerson, false)), entities));
                     }
                 }
             }

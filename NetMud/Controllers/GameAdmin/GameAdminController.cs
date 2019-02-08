@@ -3,7 +3,6 @@ using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
 using NetMud.Backup;
 using NetMud.CentralControl;
-using NetMud.Data.Players;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
@@ -101,6 +100,8 @@ namespace NetMud.Controllers.GameAdmin
                 AdminsOnly = globalConfig.AdminsOnly,
                 UserCreationActive = globalConfig.UserCreationActive,
                 BaseLanguage = globalConfig.BaseLanguage,
+                AzureTranslationKey = globalConfig.AzureTranslationKey,
+                TranslationActive = globalConfig.TranslationActive,
 
                 QualityChange = new string[0],
                 QualityChangeValue = new int[0],
@@ -232,6 +233,8 @@ namespace NetMud.Controllers.GameAdmin
             globalConfig.AdminsOnly = vModel.AdminsOnly;
             globalConfig.UserCreationActive = vModel.UserCreationActive;
             globalConfig.BaseLanguage = vModel.BaseLanguage;
+            globalConfig.AzureTranslationKey = vModel.AzureTranslationKey;
+            globalConfig.TranslationActive = vModel.TranslationActive;
 
             if (globalConfig.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {

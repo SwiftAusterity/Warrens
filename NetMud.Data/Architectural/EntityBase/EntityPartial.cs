@@ -64,6 +64,11 @@ namespace NetMud.Data.Architectural.EntityBase
         /// </summary>
         public abstract T Template<T>() where T : IKeyedData;
 
+        public virtual bool IsPlayer()
+        {
+            return false;
+        }
+
         /// <summary>
         /// keywords this entity is referrable by in the world by the parser
         /// </summary>

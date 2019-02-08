@@ -8,6 +8,7 @@ using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural.ActorBase;
+using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.Player;
 using NetMud.Models.Admin;
 using NetMud.Models.PlayerManagement;
@@ -77,8 +78,10 @@ namespace NetMud.Controllers
                 GossipSubscriber = account.Config.GossipSubscriber,
                 PermanentlyMuteMusic = account.Config.MusicMuted,
                 PermanentlyMuteSound = account.Config.SoundMuted,
+                UILanguage = account.Config.UILanguage,
                 ChosenRole = user.GetStaffRank(User),
-                ValidRoles = (StaffRank[])Enum.GetValues(typeof(StaffRank))
+                ValidRoles = (StaffRank[])Enum.GetValues(typeof(StaffRank)),
+                ValidLanguages = ConfigDataCache.GetAll<ILanguage>().Where(lang => lang.SuitableForUse && lang.UIOnly)
             };
 
             return View(model);
@@ -96,6 +99,7 @@ namespace NetMud.Controllers
             obj.Config.GossipSubscriber = vModel.GossipSubscriber;
             obj.Config.MusicMuted = vModel.PermanentlyMuteMusic;
             obj.Config.SoundMuted = vModel.PermanentlyMuteSound;
+            obj.Config.UILanguage = vModel.UILanguage;
 
             if (vModel.LogChannels != null)
             {

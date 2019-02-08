@@ -106,7 +106,12 @@ namespace NetMud.Models
                     //Bound values *on* the view model tend to double their names due to stupidity
                     if (value == null)
                     {
-                        value = bindingContext.ValueProvider.GetValue(string.Format("{0}.{0}", keyName));
+                        value = bindingContext.ValueProvider.GetValue(string.Format("{0}.{0}", propertyDescriptor.Name));
+                    }
+
+                    if (value == null)
+                    {
+                        value = bindingContext.ValueProvider.GetValue(string.Format("{0}.{1}.{1}", bindingContext.ModelName, propertyDescriptor.Name));
                     }
 
                     if (value != null)

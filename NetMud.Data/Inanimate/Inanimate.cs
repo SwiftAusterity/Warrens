@@ -310,8 +310,8 @@ namespace NetMud.Data.Inanimate
                             newDesc.TryModify(desc.Event.Modifiers);
 
                             newDesc.TryModify(LexicalType.Pronoun, GrammaticalType.IndirectObject, "it")
-                                        .TryModify(LexicalType.Conjunction, GrammaticalType.Descriptive, "emanating")
-                                            .TryModify(LexicalType.Conjunction, GrammaticalType.Descriptive, "from");
+                                        .TryModify(LexicalType.Verb, GrammaticalType.Descriptive, "emanating")
+                                            .TryModify(LexicalType.Article, GrammaticalType.Descriptive, "from");
 
                             uberSounds.TryModify(newDesc);
                         }
@@ -383,7 +383,7 @@ namespace NetMud.Data.Inanimate
                             newDesc.TryModify(desc.Event.Modifiers);
 
                             newDesc.TryModify(LexicalType.Pronoun, GrammaticalType.IndirectObject, "it")
-                                        .TryModify(LexicalType.Conjunction, GrammaticalType.Descriptive, "from");
+                                        .TryModify(LexicalType.Article, GrammaticalType.Descriptive, "from");
 
                             uberPsy.TryModify(newDesc);
                         }
@@ -529,10 +529,5 @@ namespace NetMud.Data.Inanimate
             return Enumerable.Empty<ICelestial>();
         }
         #endregion
-
-        public bool IsPlayer()
-        {
-             return false;
-        }
     }
 }

@@ -32,11 +32,6 @@ namespace NetMud.Data.Room
     [Serializable]
     public class Room : LocationEntityPartial, IRoom
     {
-        public bool IsPlayer()
-        {
-            return false;
-        }
-
         /// <summary>
         /// The name of the object in the data template
         /// </summary>
@@ -520,7 +515,7 @@ namespace NetMud.Data.Room
             DimensionalSizeDescription roomSize = GeographicalUtilities.ConvertSizeToType(GetModelDimensions(), GetType());
 
             Lexica area = new Lexica(LexicalType.Noun, GrammaticalType.Subject, "space");
-            area.TryModify(LexicalType.Conjunction, GrammaticalType.Descriptive, "this");
+            area.TryModify(LexicalType.Article, GrammaticalType.Descriptive, "this");
             area.TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, roomSize.ToString());
 
             //Add the temperature

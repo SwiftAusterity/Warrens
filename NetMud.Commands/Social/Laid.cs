@@ -7,7 +7,7 @@ using System.Text;
 
 namespace NetMud.Commands.Social
 {
-    [CommandKeyword("laid", false, new string[] { "fucked", "fapfapfap" }, false)]
+    [CommandKeyword("laid", false, new string[] { "fucked", "fapfapfap" }, false, true)]
     [CommandPermission(StaffRank.Player)]
     [CommandRange(CommandRangeType.Touch, 0)]
     public class Laid : CommandPartial

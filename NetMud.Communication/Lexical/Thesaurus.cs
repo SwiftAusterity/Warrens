@@ -14,7 +14,7 @@ namespace NetMud.Communication.Lexical
     /// </summary>
     public static class Thesaurus
     {
-        public static string GetTranslatedWord(string phrase, ILanguage sourceLanguage, ILanguage targetLanguage)
+        public static string GetTranslatedWord(string azureKey, string phrase, ILanguage sourceLanguage, ILanguage targetLanguage)
         {
             if (string.IsNullOrWhiteSpace(targetLanguage.GoogleLanguageCode) || string.IsNullOrWhiteSpace(sourceLanguage.GoogleLanguageCode))
             {
@@ -24,9 +24,8 @@ namespace NetMud.Communication.Lexical
             // return string.Empty;
 
             string host = "https://api.cognitive.microsofttranslator.com";
-            //string host = "https://api.cognitive.microsoft.com/sts/v1.0/issuetoken";
             string route = string.Format("/translate?api-version=3.0&to={0}", targetLanguage.GoogleLanguageCode);
-            string subscriptionKey = "";
+            string subscriptionKey = azureKey;
 
             try
             {
@@ -54,7 +53,7 @@ namespace NetMud.Communication.Lexical
 
                     dynamic result = JsonConvert.DeserializeObject(jsonResponse);
 
-                    return result.translations[0].text;
+                    return result[0].translations[0].text;
 
                     //[
                     //  {
@@ -86,6 +85,9 @@ namespace NetMud.Communication.Lexical
 
         public static IDictata GetSynonym(IDictata baseWord, int severityModifier, int eleganceModifier, int qualityModifier, ILanguage language = null)
         {
+            if (baseWord == null)
+                return baseWord;
+
             var possibleWords = baseWord.Synonyms.AsEnumerable();
 
             if (language != null)

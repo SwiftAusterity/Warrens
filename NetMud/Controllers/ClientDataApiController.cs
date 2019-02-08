@@ -4,7 +4,9 @@ using NetMud.Authentication;
 using NetMud.Cartography;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.Player;
 using NetMud.DataStructure.Room;
 using NetMud.Physics;
@@ -47,7 +49,24 @@ namespace NetMud.Controllers
 
             return Json(user.GameAccount.Config.UITutorialMode);
         }
-		
+
+        [HttpPost]
+        [Route("api/ClientDataApi/ToggleTutorialMode/{language}", Name = "ClientDataAPI_ChangeLanguage")]
+        public JsonResult<bool> ChangeUILanguage(string language)
+        {
+            ApplicationUser user = UserManager.FindById(User.Identity.GetUserId());
+
+            var lang = ConfigDataCache.Get<ILanguage>(new ConfigDataCacheKey(typeof(ILanguage), language, ConfigDataType.Language));
+
+            if (user != null && lang != null)
+            {
+                user.GameAccount.Config.UILanguage = lang;
+                user.GameAccount.Config.Save(user.GameAccount, StaffRank.Admin);
+            }
+
+            return Json(user.GameAccount.Config.UITutorialMode);
+        }
+
         [HttpGet]
         public string GetEntityModelView(long modelId)
         {
