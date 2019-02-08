@@ -20,6 +20,8 @@ using System.Text;
 using System.Web.Script.Serialization;
 using System.ComponentModel.DataAnnotations;
 using NetMud.DataStructure.Architectural.PropertyValidation;
+using NetMud.Data.Architectural.PropertyBinding;
+using NetMud.Data.Architectural.DataIntegrity;
 
 namespace NetMud.Data.NPC
 {
@@ -61,14 +63,30 @@ namespace NetMud.Data.NPC
         /// </summary>
         public int TotalHealth { get; set; }
 
+        [JsonProperty("Gender")]
+        private TemplateCacheKey _gender { get; set; }
+
         /// <summary>
-        /// Gender data string for NPCs
+        /// Gender data string for player characters
         /// </summary>
-        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
-        [Display(Name = "Gender", Description = "The gender of the NPC. You can use an existing gender or select free text. Non-approved gender groups will get it/they/them pronouns.")]
-        [DataType(DataType.Text)]
+        [ScriptIgnore]
+        [JsonIgnore]
+        [NonNullableDataIntegrity("Gender is required.")]
+        [Display(Name = "Gender", Description = "Your gender. You can submit new gender matrices on the dashboard.")]
+        [DataType("GenderList")]
+        [GenderDataBinder]
         [Required]
-        public string Gender { get; set; }
+        public IGender Gender
+        {
+            get
+            {
+                return TemplateCache.Get<IGender>(_gender);
+            }
+            set
+            {
+                _gender = new TemplateCacheKey(value);
+            }
+        }
 
         /// <summary>
         /// "family name" for NPCs

@@ -1,6 +1,8 @@
 ﻿using NetMud.Communication.Messaging;
 using NetMud.Data.Architectural;
+using NetMud.Data.Architectural.DataIntegrity;
 using NetMud.Data.Architectural.EntityBase;
+using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.DataAccess.Cache;
 using NetMud.DataAccess.FileSystem;
 using NetMud.DataStructure.Administrative;
@@ -55,10 +57,30 @@ namespace NetMud.Data.Players
             return (T)PlayerDataCache.Get(new PlayerDataCacheKey(typeof(IPlayerTemplate), AccountHandle, TemplateId));
         }
 
+        [JsonProperty("Gender")]
+        private TemplateCacheKey _gender { get; set; }
+
         /// <summary>
         /// Gender data string for player characters
         /// </summary>
-        public string Gender { get; set; }
+        [ScriptIgnore]
+        [JsonIgnore]
+        [NonNullableDataIntegrity("Gender is required.")]
+        [Display(Name = "Gender", Description = "Your gender. You can submit new gender matrices on the dashboard.")]
+        [DataType("GenderList")]
+        [GenderDataBinder]
+        [Required]
+        public IGender Gender
+        {
+            get
+            {
+                return TemplateCache.Get<IGender>(_gender);
+            }
+            set
+            {
+                _gender = new TemplateCacheKey(value);
+            }
+        }
 
         /// <summary>
         /// "family name" for player character

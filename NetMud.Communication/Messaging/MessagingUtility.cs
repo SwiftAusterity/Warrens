@@ -129,12 +129,12 @@ namespace NetMud.Communication.Messaging
                         message = message.Replace("$T$", thing.TemplateName);
                         break;
                     case MessagingTargetType.GenderPronoun:
-                        if (thing.GetType() != typeof(Gender))
+                        if (thing.GetType() != typeof(IGender))
                         {
                             break;
                         }
 
-                        Gender chr = (Gender)thing;
+                        IGender chr = (IGender)thing;
                         message = message.Replace("$G$", chr.Base);
                         break;
                     case MessagingTargetType.AmountOfSubject:

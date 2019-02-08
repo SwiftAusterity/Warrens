@@ -11,7 +11,7 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <input type="hidden" name="id" id="id" value="@Model.DataObject.Id" />
 
-        @Html.EditorFor(m => m.DataObject, new { ValidRaces = Model.ValidRaces, ValidItems = Model.ValidItems })
+        @Html.EditorFor(m => m.DataObject, new { ValidRaces = Model.ValidRaces, ValidItems = Model.ValidItems, ValidGenders = Model.ValidGenders })
 
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "NPC", IncludeCancel = true })
     }

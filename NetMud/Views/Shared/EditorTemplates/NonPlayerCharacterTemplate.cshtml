@@ -6,7 +6,7 @@
 <div class="form-group row">
     @Html.EditorFor(m => m.Name)
     @Html.EditorFor(m => m.SurName)
-    @Html.EditorFor(m => m.Gender)
+    @Html.EditorFor(m => m.Gender, new { validItems = ViewData["ValidGenders"] })
     @Html.EditorFor(m => m.Race, new { validItems = ViewData["ValidRaces"] })
 </div>
 

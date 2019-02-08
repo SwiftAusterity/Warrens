@@ -17,7 +17,7 @@ namespace NetMud.DataStructure.NPC
         /// <summary>
         /// Gender of the npc
         /// </summary>
-        string Gender { get; set; }
+        IGender Gender { get; set; }
 
         /// <summary>
         /// The race daya for this npc, not its own data structure

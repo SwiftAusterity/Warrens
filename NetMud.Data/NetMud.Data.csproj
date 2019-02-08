@@ -81,6 +81,7 @@
   <ItemGroup>
     <Compile Include="Administrative\Help.cs" />
     <Compile Include="Administrative\JournalEntry.cs" />
+    <Compile Include="Architectural\ActorBase\Gender.cs" />
     <Compile Include="Architectural\ActorBase\Race.cs" />
     <Compile Include="Architectural\ConfigData.cs" />
     <Compile Include="Architectural\DataHelpers.cs" />
@@ -118,6 +119,7 @@
     <Compile Include="Architectural\PropertyBinding\PathwayTemplateDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\LocaleTemplateDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\MarkdownBinder.cs" />
+    <Compile Include="Architectural\PropertyBinding\GenderDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\RoomTemplateDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\MaterialDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\DimensionalModelNodeDataBinder.cs" />

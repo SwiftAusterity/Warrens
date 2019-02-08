@@ -10,7 +10,7 @@
     tableColumns.Add("ID", obj => linkText.Replace("99999999", obj.Id.ToString()));
     tableColumns.Add("Name", obj => obj.FullName());
     tableColumns.Add("Race", obj => obj.Race == null ? "" : obj.Race.Name);
-    tableColumns.Add("Gender", obj => obj.Gender);
+    tableColumns.Add("Gender", obj => obj.Gender.Name);
     tableColumns.Add("N00b", obj => obj.StillANoob.ToString());
     tableColumns.Add("Permissions", obj => obj.GamePermissionsRank.ToString());
 }
@@ -25,7 +25,7 @@
 
         <h3>New Character</h3>
         <hr/>
-        @Html.EditorFor(m => m.NewCharacter, new { ValidRaces = Model.ValidRaces })
+        @Html.EditorFor(m => m.NewCharacter, new { ValidRaces = Model.ValidRaces, ValidGenders = Model.ValidGenders })
 
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Create", CancelName = "Cancel", ReturnAction = "ManageCharacters", ReturnController = "Manage", IncludeCancel = true })
     }

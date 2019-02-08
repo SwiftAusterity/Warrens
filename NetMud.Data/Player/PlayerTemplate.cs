@@ -62,14 +62,30 @@ namespace NetMud.Data.Players
             set { _keywords = value; }
         }
 
+        [JsonProperty("Gender")]
+        private TemplateCacheKey _gender { get; set; }
+
         /// <summary>
         /// Gender data string for player characters
         /// </summary>
-        [StringDataIntegrity("Gender is required.")]
-        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
-        [Display(Name = "Gender", Description = "Your gender. You can use an existing gender or select free text. Non-approved gender groups will get it/they/them pronouns.")]
-        [DataType(DataType.Text)]
-        public string Gender { get; set; }
+        [ScriptIgnore]
+        [JsonIgnore]
+        [NonNullableDataIntegrity("Gender is required.")]
+        [Display(Name = "Gender", Description = "Your gender. You can submit new gender matrices on the dashboard.")]
+        [DataType("GenderList")]
+        [GenderDataBinder]
+        [Required]
+        public IGender Gender
+        {
+            get
+            {
+                return TemplateCache.Get<IGender>(_gender);
+            }
+            set
+            {
+                _gender = new TemplateCacheKey(value);
+            }
+        }
 
         /// <summary>
         /// "family name" for player character

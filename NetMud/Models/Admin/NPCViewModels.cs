@@ -37,6 +37,7 @@ namespace NetMud.Models.Admin
         {
         }
 
+        public IEnumerable<IGender> ValidGenders { get; set; }
         public IEnumerable<IRace> ValidRaces { get; set; }
         public IEnumerable<IInanimateTemplate> ValidItems { get; set; }
 

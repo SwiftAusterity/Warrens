@@ -11,6 +11,7 @@ namespace NetMud.Models.PlayerManagement
         public ApplicationUser authedUser { get; set; }
 
         public IEnumerable<IRace> ValidRaces { get; set; }
+        public IEnumerable<IGender> ValidGenders { get; set; }
 
         [UIHint("PlayerTemplate")]
         public IPlayerTemplate NewCharacter { get; set; }
@@ -28,6 +29,7 @@ namespace NetMud.Models.PlayerManagement
         [UIHint("PlayerTemplate")]
         public IPlayerTemplate DataObject { get; set; }
         public IEnumerable<IRace> ValidRaces { get; set; }
+        public IEnumerable<IGender> ValidGenders { get; set; }
     }
 
 }

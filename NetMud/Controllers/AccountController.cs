@@ -6,6 +6,7 @@ using NetMud.Data.Players;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Player;
 using NetMud.DataStructure.System;
 using NetMud.Models;
@@ -126,6 +127,8 @@ namespace NetMud.Controllers
                 vModel.NewUserLocked = true;
             }
 
+            vModel.ValidGenders = TemplateCache.GetAll<IGender>(true);
+
             return View(vModel);
         }
 
@@ -175,7 +178,7 @@ namespace NetMud.Controllers
             return View(model);
         }
 
-        private IPlayerTemplate CreateAccountPlayerAndConfig(IAccount account, string name, string surName, string gender)
+        private IPlayerTemplate CreateAccountPlayerAndConfig(IAccount account, string name, string surName, IGender gender)
         {
             if (account.Config == null)
             {

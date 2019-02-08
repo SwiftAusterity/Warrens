@@ -245,6 +245,7 @@
     <Compile Include="Controllers\GameAdmin\GameAdminController.cs" />
     <Compile Include="Controllers\GameAdmin\FaunaController.cs" />
     <Compile Include="Controllers\GameAdmin\LocaleController.cs" />
+    <Compile Include="Controllers\GameAdmin\GenderController.cs" />
     <Compile Include="Controllers\GameAdmin\UIModulesController.cs" />
     <Compile Include="Controllers\GameAdmin\ZoneController.cs" />
     <Compile Include="Controllers\GameAdmin\RoomController.cs" />
@@ -272,6 +273,7 @@
     <Compile Include="Models\Admin\CelestialViewModels.cs" />
     <Compile Include="Models\Admin\GaiaViewModels.cs" />
     <Compile Include="Models\Admin\LiveDataModels.cs" />
+    <Compile Include="Models\Admin\GenderViewModels.cs" />
     <Compile Include="Models\Admin\UIModulesViewModels.cs" />
     <Compile Include="Models\Admin\LexicalViewModels.cs" />
     <Compile Include="Models\Admin\FloraViewModels.cs" />
@@ -612,6 +614,11 @@
     <Content Include="Views\Features\Materials.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Boolean.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\CollectionSynonymList.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Gender.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\GenderList.cshtml" />
+    <Content Include="Views\GameAdmin\Gender\Add.cshtml" />
+    <Content Include="Views\GameAdmin\Gender\Edit.cshtml" />
+    <Content Include="Views\GameAdmin\Gender\Index.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />

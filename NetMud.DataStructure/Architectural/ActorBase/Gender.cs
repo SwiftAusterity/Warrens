@@ -3,36 +3,31 @@
     /// <summary>
     /// Framework for entities having a gender
     /// </summary>
-    public class Gender
+    public interface IGender : ILookupData
     {
-        /// <summary>
-        /// Freeform string for entity gender
-        /// </summary>      
-        public string Name { get; set; }
-
         /// <summary>
         /// Collective pronoun
         /// </summary>
-        public string Collective { get; set; }
+        string Collective { get; set; }
 
         /// <summary>
         /// Possessive pronoun
         /// </summary>
-        public string Possessive { get; set; }
+        string Possessive { get; set; }
 
         /// <summary>
         /// Basic pronoun
         /// </summary>
-        public string Base { get; set; }
+        string Base { get; set; }
 
         /// <summary>
         /// Adult generalized noun "woman", "man"
         /// </summary>
-        public string Adult { get; set; }
+        string Adult { get; set; }
 
         /// <summary>
         /// Child generalized noun "girl", "boy"
         /// </summary>
-        public string Child { get; set; }
+        string Child { get; set; }
     }
 }

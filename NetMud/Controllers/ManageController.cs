@@ -131,7 +131,8 @@ namespace NetMud.Controllers
             ManageCharactersViewModel model = new ManageCharactersViewModel
             {
                 authedUser = UserManager.FindById(userId),
-                NewCharacter = new PlayerTemplate()
+                NewCharacter = new PlayerTemplate(),
+                ValidGenders = TemplateCache.GetAll<IGender>()
             };
 
             model.ValidRaces = TemplateCache.GetAll<IRace>();
@@ -147,7 +148,8 @@ namespace NetMud.Controllers
             string userId = User.Identity.GetUserId();
             ManageCharactersViewModel model = new ManageCharactersViewModel
             {
-                authedUser = UserManager.FindById(userId)
+                authedUser = UserManager.FindById(userId),
+                ValidGenders = TemplateCache.GetAll<IGender>()
             };
 
             PlayerTemplate newChar = new PlayerTemplate
@@ -182,7 +184,8 @@ namespace NetMud.Controllers
             {
                 authedUser  = user,
                 DataObject = obj,
-                ValidRaces = TemplateCache.GetAll<IRace>()
+                ValidRaces = TemplateCache.GetAll<IRace>(),
+                ValidGenders = TemplateCache.GetAll<IGender>()
             };
 
             return View(model);

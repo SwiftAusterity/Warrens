@@ -1,4 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using NetMud.Data.Architectural.PropertyBinding;
+using NetMud.DataStructure.Architectural.ActorBase;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.Models
 {
@@ -64,11 +67,13 @@ namespace NetMud.Models
         [DataType(DataType.Text)]
         public string SurName { get; set; }
 
-        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
-        [Display(Name = "Gender", Description = "Your gender. You can use an existing gender or select free text. Non-approved gender groups will get it/they/them pronouns.")]
-        [DataType(DataType.Text)]
-        public string Gender { get; set; }
+        [Display(Name = "Gender", Description = "Your gender. You can submit new gender matrices on the account dashboard after you register.")]
+        [DataType("GenderList")]
+        [GenderDataBinder]
+        [Required]
+        public IGender Gender { get; set; }
 
+        public IEnumerable<IGender> ValidGenders { get; set; }
         public bool NewUserLocked { get; set; }
     }
 
