@@ -5,6 +5,7 @@
     /// </summary>
     public enum SentenceType : short
     {
+        None = -1,
         Partial = 0,
         Statement = 1,
         Question = 2,

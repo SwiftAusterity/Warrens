@@ -43,7 +43,6 @@ input[type=checkbox].form-control {
     box-shadow: none;
     background: none;
     width: 20px;
-    height: inherit;
 }
 
 .multiBoxUnit {
@@ -131,6 +130,7 @@ div.form-group a.removeRow {
     padding: 10px;
     background-color: inherit;
     float: left;
+    height: 100%;
 }
 
 .dimModelPlane {
@@ -429,6 +429,7 @@ div.roomAsciiMap {
         border-radius: 9px;
         margin: 9px 15px 9px 15px;
         flex: 0 0 auto;
+        width: 97%;
     }
 
         .iterativeContainer .form-group input,
@@ -442,8 +443,9 @@ div.roomAsciiMap {
         }
 
         .iterativeContainer .form-group div {
-            width: auto;
+            /* width: auto; */
             padding-right: 10px;
+            margin: 10px 0;
         }
 
 .descriptiveSection {

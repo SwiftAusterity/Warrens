@@ -5,6 +5,7 @@
     /// </summary>
     public enum LexicalType : short
     {
+        None = -1,
         Noun = 0,
         Pronoun = 1,
         Verb = 2,

@@ -111,6 +111,7 @@
     <Compile Include="Architectural\PropertyBinding\CelestialCollectionDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\DimensionalModelDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\DictataCollectionDataBinder.cs" />
+    <Compile Include="Architectural\PropertyBinding\DictataDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\MineralCollectionDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\LanguageDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\MineralDataBinder.cs" />
@@ -154,6 +155,7 @@
     <Compile Include="Inanimate\InanimateTemplate.cs" />
     <Compile Include="Inanimate\ItemStack.cs" />
     <Compile Include="Linguistic\Dictata.cs" />
+    <Compile Include="Linguistic\GrammarRule.cs" />
     <Compile Include="Linguistic\Language.cs" />
     <Compile Include="Linguistic\Lexica.cs" />
     <Compile Include="Locale\Locale.cs" />

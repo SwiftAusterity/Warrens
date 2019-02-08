@@ -6,6 +6,9 @@
     var tableColumns = new Dictionary<string, Func<dynamic, string>>();
     tableColumns.Add("Name", obj => linkText.Replace("99999999", obj.Name));
     tableColumns.Add("UIOnly", obj => obj.UIOnly.ToString());
+    tableColumns.Add("Gendered", obj => obj.Gendered.ToString());
+    tableColumns.Add("Precedent", obj => obj.PrecedentPunctuation.ToString());
+    tableColumns.Add("Antecendent", obj => obj.AntecendentPunctuation.ToString());
     tableColumns.Add("State", obj => obj.State.ToString());
 }
 

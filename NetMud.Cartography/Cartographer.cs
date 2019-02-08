@@ -74,6 +74,7 @@ namespace NetMud.Cartography
         public static long[,,] GetLocaleMap(long[,,] fullMap, long localeId, bool recenter = false)
         {
             long[,,] newMap = new long[fullMap.GetUpperBound(0) + 1, fullMap.GetUpperBound(1) + 1, fullMap.GetUpperBound(2) + 1];
+            newMap.Populate(-1);
 
             int x, y, z, xLowest = 0, yLowest = 0, zLowest = 0;
 
@@ -459,6 +460,7 @@ namespace NetMud.Cartography
             }
 
             long[,,] shrunkMap = new long[fullMap.GetUpperBound(0) + 1 - xLowest, fullMap.GetUpperBound(1) + 1 - yLowest, fullMap.GetUpperBound(2) + 1 - zLowest];
+            shrunkMap.Populate(-1);
 
             int x, y, z;
             for (x = 0; x <= shrunkMap.GetUpperBound(0); x++)

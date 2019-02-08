@@ -5,6 +5,7 @@
     /// </summary>
     public enum NarrativePerspective : short
     {
+        None = -1,
         FirstPerson = 0,
         SecondPerson = 1,
         ThirdPerson = 2

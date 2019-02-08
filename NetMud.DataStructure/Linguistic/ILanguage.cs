@@ -1,4 +1,5 @@
 ﻿using NetMud.DataStructure.Architectural;
+using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Linguistic
 {
@@ -8,13 +9,33 @@ namespace NetMud.DataStructure.Linguistic
     public interface ILanguage : IConfigData
     {
         /// <summary>
-        /// Languages only used for input and output translation
+        /// Google's name From a language From the translation service
+        /// </summary>
+        string GoogleLanguageCode { get; set; }
+
+        /// <summary>
+        /// Languages only used From input and output translation, RW languages
         /// </summary>
         bool UIOnly { get; set; }
 
         /// <summary>
-        /// Google's name for a language for the translation service
+        /// Does this language have gendered grammar (like most latin based)
         /// </summary>
-        string GoogleLanguageCode { get; set; }
+        bool Gendered { get; set; }
+
+        /// <summary>
+        /// Does punctuation come at the beginning of a sentence? (spanish)
+        /// </summary>
+        bool PrecedentPunctuation { get; set; }
+
+        /// <summary>
+        /// Does punctuation come at the end of a sentence?
+        /// </summary>
+        bool AntecendentPunctuation { get; set; }
+
+        /// <summary>
+        /// List of grammatical rules to use in sentence construction
+        /// </summary>
+        HashSet<IGrammarRule> Rules { get; set; }
     }
 }

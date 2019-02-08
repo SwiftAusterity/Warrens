@@ -117,7 +117,10 @@ namespace NetMud.Cartography
                         }
                     }
 
-                    sb.AppendLine(rowString);
+                    if (!string.IsNullOrWhiteSpace(rowString.Replace("&nbsp;", "")))
+                    {
+                        sb.AppendLine(rowString);
+                    }
                 }
             }
             else
@@ -125,6 +128,7 @@ namespace NetMud.Cartography
                 string[,] expandedMap = new string[(map.GetUpperBound(0) + 1) * 3 + 1, (map.GetUpperBound(1) + 1) * 3 + 1];
 
                 int x, y;
+                int xMax = 0;
                 for (y = map.GetUpperBound(1); y >= 0; y--)
                 {
                     for (x = 0; x <= map.GetUpperBound(0); x++)
@@ -133,9 +137,20 @@ namespace NetMud.Cartography
 
                         if (RoomTemplate != null)
                         {
+                            if(x > xMax)
+                            {
+                                xMax = x;
+                            }
+
                             expandedMap = RenderRoomAndPathwaysForMapNode(x, y, RoomTemplate, centerRoom, expandedMap, RoomTemplate.Id == centerRoom.Id, forAdmin, renderMode);
                         }
                     }
+                }
+
+                //3 for inflation
+                if (withPathways)
+                {
+                    xMax += 3;
                 }
 
                 for (y = expandedMap.GetUpperBound(1); y >= 0; y--)
@@ -146,7 +161,10 @@ namespace NetMud.Cartography
                         var xString = expandedMap[x, y];
                         if (string.IsNullOrWhiteSpace(xString))
                         {
-                            rowString += "&nbsp;";
+                            if (!forAdmin || x <= xMax)
+                            {
+                                rowString += "&nbsp;";
+                            }
                         }
                         else
                         {

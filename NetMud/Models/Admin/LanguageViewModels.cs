@@ -51,6 +51,7 @@ namespace NetMud.Models.Admin
         {
         }
 
+        public IEnumerable<IDictata> ValidWords { get; set; }
         public ILanguage DataObject { get; set; }
     }
 }

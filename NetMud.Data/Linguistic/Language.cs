@@ -29,6 +29,13 @@ namespace NetMud.Data.Linguistic
         public override ConfigDataType Type => ConfigDataType.Language;
 
         /// <summary>
+        /// The code google translate uses to identify this language
+        /// </summary>
+        [Display(Name = "Language Code", Description = "The language code Google Translate uses to identify this language.")]
+        [DataType(DataType.Text)]
+        public string GoogleLanguageCode { get; set; }
+
+        /// <summary>
         /// Languages only used for input and output translation
         /// </summary>
         [Display(Name = "UI Only", Description = "Only for use in translating the input/output, not an 'in game' language.")]
@@ -36,15 +43,36 @@ namespace NetMud.Data.Linguistic
         public bool UIOnly { get; set; }
 
         /// <summary>
-        /// The code google translate uses to identify this language
+        /// Does this language have gendered grammar (like most latin based)
         /// </summary>
-        [Display(Name = "Language Code", Description = "The language code Google Translate uses to identify this language.")]
-        [DataType(DataType.Text)]
-        public string GoogleLanguageCode { get; set; }
+        [Display(Name = "Gendered", Description = "Does this language have gendered grammar (like most latin based).")]
+        [UIHint("Boolean")]
+        public bool Gendered { get; set; }
+
+        /// <summary>
+        /// Does punctuation come at the beginning of a sentence? (spanish)
+        /// </summary>
+        [Display(Name = "Precedent Punctuation", Description = "Does punctuation come at the beginning of a sentence? (spanish)")]
+        [UIHint("Boolean")]
+        public bool PrecedentPunctuation { get; set; }
+
+        /// <summary>
+        /// Does punctuation come at the end of a sentence?
+        /// </summary>
+        [Display(Name = "Antecendent Punctuation", Description = "Does punctuation come at the end of a sentence?")]
+        [UIHint("Boolean")]
+        public bool AntecendentPunctuation { get; set; }
+
+        /// <summary>
+        /// List of grammatical rules to use in sentence construction
+        /// </summary>
+        [UIHint("GrammarRules")]
+        public HashSet<IGrammarRule> Rules { get; set; }
 
         public Language()
         {
             Name = string.Empty;
+            Rules = new HashSet<IGrammarRule>();
         }
 
         /// <summary>
@@ -56,6 +84,8 @@ namespace NetMud.Data.Linguistic
             IDictionary<string, string> returnList = base.SignificantDetails();
 
             returnList.Add("UIOnly", UIOnly.ToString());
+            returnList.Add("PrecedentPunctuation", PrecedentPunctuation.ToString());
+            returnList.Add("AntecendentPunctuation", AntecendentPunctuation.ToString());
 
             return returnList;
         }

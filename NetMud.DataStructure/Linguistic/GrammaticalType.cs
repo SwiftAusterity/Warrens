@@ -5,6 +5,7 @@
     /// </summary>
     public enum GrammaticalType : short
     {
+        None = -1,
         Subject = 0,
         DirectObject = 1,
         IndirectObject = 2,

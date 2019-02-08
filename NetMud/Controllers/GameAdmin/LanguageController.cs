@@ -8,6 +8,7 @@ using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Linguistic;
 using NetMud.Models.Admin;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
@@ -113,7 +114,8 @@ namespace NetMud.Controllers.GameAdmin
             AddEditLanguageViewModel vModel = new AddEditLanguageViewModel
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                DataObject = new Language()
+                DataObject = new Language(),
+                ValidWords = ConfigDataCache.GetAll<IDictata>()
             };
 
             return View("~/Views/GameAdmin/Language/Add.cshtml", vModel);
@@ -145,10 +147,6 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(string id)
         {
             string message = string.Empty;
-            AddEditLanguageViewModel vModel = new AddEditLanguageViewModel
-            {
-                authedUser = UserManager.FindById(User.Identity.GetUserId())
-            };
 
             ILanguage obj = ConfigDataCache.Get<ILanguage>(new ConfigDataCacheKey(typeof(ILanguage), id, ConfigDataType.Language));
 
@@ -158,7 +156,12 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = message });
             }
 
-            vModel.DataObject = obj;
+            AddEditLanguageViewModel vModel = new AddEditLanguageViewModel
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                ValidWords = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.Language == obj),
+                DataObject = obj
+            };
 
             return View("~/Views/GameAdmin/Language/Edit.cshtml", vModel);
         }
@@ -180,6 +183,10 @@ namespace NetMud.Controllers.GameAdmin
             obj.Name = vModel.DataObject.Name;
             obj.UIOnly = vModel.DataObject.UIOnly;
             obj.GoogleLanguageCode = vModel.DataObject.GoogleLanguageCode;
+            obj.AntecendentPunctuation = vModel.DataObject.AntecendentPunctuation;
+            obj.Gendered = vModel.DataObject.Gendered;
+            obj.PrecedentPunctuation = vModel.DataObject.PrecedentPunctuation;
+            obj.Rules = vModel.DataObject.Rules;
 
             if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {
