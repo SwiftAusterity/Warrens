@@ -1,0 +1,100 @@
+﻿@using NetMud.Models
+@using NetMud.DataStructure.System
+@model object
+@{
+    double columnCount = ViewData["columnCount"] == null ? 5 : (int)ViewData["columnCount"];
+    bool disabled = ViewData["disabled"] != null;
+    var columnLabelValue = columnCount > 2 ? 1 : 2;
+    var columnInputValue = (int)Math.Round(10 / columnCount);
+    var cssClass = ViewData["cssClass"] == null ? "form-control" : ViewData["cssClass"];
+    var forceOptional = ViewData["forceOptional"] != null;
+    var forceBlankValue = Model == null || Model.GetType().IsArray ? true : false;
+    var noValidation = ViewData["noValidation"] != null;
+    var archivedValue = ViewData["archivedValue"] == null ? "" : ViewData["archivedValue"].ToString();
+    var ghostNameClass = "ghostNameTip";
+    var strippedNaked = ViewData["strippedNaked"] != null;
+
+    if (ViewData.ModelMetadata.IsRequired && !forceOptional)
+    {
+        ghostNameClass += " ghostRequired";
+    }
+
+    var htmlAttributes = new Dictionary<string, object>() { { "class", cssClass }, { "placeholder", ViewData.ModelMetadata.DisplayName }, { "title", ViewData.ModelMetadata.DisplayName } };
+
+    if (ViewData["disabled"] != null)
+    {
+        htmlAttributes.Add("readonly", true);
+    }
+
+    if (ViewData["htmlAttributes"] != null)
+    {
+        var additionalAttribs = ViewData["htmlAttributes"] as IDictionary<string, object>;
+
+        if (additionalAttribs != null)
+        {
+            foreach (var kvp in additionalAttribs)
+            {
+                htmlAttributes.Add(kvp.Key, kvp.Value);
+            }
+        }
+    }
+
+    if (forceBlankValue && !htmlAttributes.ContainsKey("Value"))
+    {
+        htmlAttributes.Add("Value", "");
+    }
+}
+@if (strippedNaked)
+{
+    @Html.DescriptionFor(m => m)
+    <div style="display: inline-flex;">
+        @Html.TextBoxFor(m => m, htmlAttributes)
+        <select id="dirNameSelector" class="@cssClass" title="ViewData.ModelMetadata.DisplayName">
+            @foreach (var directionName in Enum.GetNames(typeof(MovementDirectionType)))
+            {
+                var selected = NetMud.Cartography.Utilities.TranslateToDirection((int)Model).ToString() == directionName ? "selected='selected'" : "";
+                var dirValue = NetMud.Cartography.Utilities.TranslateDirectionToDegrees((MovementDirectionType)Enum.Parse(typeof(MovementDirectionType), directionName)).Item1;
+
+                <option @selected value="@dirValue">@directionName</option>
+            }
+        </select>
+    </div>
+}
+else
+{
+    <div class="col-sm-@columnInputValue">
+        <span class="@ghostNameClass">@ViewData.ModelMetadata.DisplayName</span>
+        @Html.DescriptionFor(m => m)
+        <div style="display: inline-flex;">
+            @Html.TextBoxFor(m => m, htmlAttributes)
+            <select id="dirNameSelector"class="@cssClass" title="ViewData.ModelMetadata.DisplayName">
+                @foreach (var directionName in Enum.GetNames(typeof(MovementDirectionType)))
+                {
+                    var selected = NetMud.Cartography.Utilities.TranslateToDirection((int)Model).ToString() == directionName ? "selected='selected'" : "";
+                    var dirValue = NetMud.Cartography.Utilities.TranslateDirectionToDegrees((MovementDirectionType)Enum.Parse(typeof(MovementDirectionType), directionName)).Item1;
+
+                    <option @selected value="@dirValue">@directionName</option>
+                }
+            </select>
+        </div>
+        @if (!string.IsNullOrWhiteSpace(archivedValue))
+        {
+            <span class="archive">Archived Value: @archivedValue</span>
+            <span title="apply value to field" class="glyphicon glyphicon-plus archiveApply" onclick="javascript: $('#@ViewData.ModelMetadata.PropertyName').val('@archivedValue');"></span>
+        }
+        @if (!noValidation)
+        {
+            @Html.ValidationMessageFor(m => m, "", new { @class = "text-danger" })
+        }
+    </div>
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#dirNameSelector").change(function () {
+            $this = $(this);
+
+            $this.prev().val($this.val());
+        });
+    });
+</script>

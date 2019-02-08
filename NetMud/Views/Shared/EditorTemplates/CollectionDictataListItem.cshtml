@@ -36,7 +36,7 @@
         ViewData.Model = (IDictata)selectedItemOverride;
     }
 
-    var itemList = ((IEnumerable<IDictata>)ViewData["validItems"]).Select(item => new SelectListItem() { Text = item.Name, Value = item.UniqueKey, Selected = item.UniqueKey == Model.UniqueKey });
+    var itemList = ((IEnumerable<IDictata>)ViewData["validItems"]).Select(item => new SelectListItem() { Text = string.Format("({0}) {1}", item.Language.GoogleLanguageCode, item.Name), Value = item.UniqueKey, Selected = item.UniqueKey == Model.UniqueKey });
 }
 
 <div class="form-group row">

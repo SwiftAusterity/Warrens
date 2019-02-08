@@ -79,11 +79,11 @@ namespace NetMud.Data.Room
         }
 
         /// <summary>
-        /// 0->360 degrees with 0 being absolute north (meaning 90 is west, 180 south, etc) -1 means no cardinality
+        /// 0->360 degrees with 0 being absolute north (meaning 90 is east, 180 south, etc) -1 means no cardinality
         /// </summary>
         [Range(-1, 360, ErrorMessage = "The {0} must be between {2} and {1}. -1 is for non-cardinal exits.")]
         [Display(Name = "Degrees From North", Description = "The direction on a 360 plane. 360 and 0 are both directional north. 90 is east, 180 is south, 270 is west.")]
-        [DataType(DataType.Text)]
+        [UIHint("DirectionalPath")]
         public int DegreesFromNorth { get; set; }
 
         /// <summary>
