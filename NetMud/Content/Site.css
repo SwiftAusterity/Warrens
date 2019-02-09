@@ -127,10 +127,10 @@ button[type=submit].unapproveData {
 div.form-group a.removeRow {
     color: red;
     border: none;
-    padding: 10px;
+    padding: 0px 10px 0 10px;
     background-color: inherit;
     float: left;
-    height: 100%;
+    height: 90%;
 }
 
 .dimModelPlane {
@@ -419,17 +419,16 @@ div.roomAsciiMap {
     .iterativeContainer .addRowContainer {
         margin-top: 5px;
         width: 100%;
-        padding-bottom: 15px;
         flex: 0 0 100%;
     }
 
     .iterativeContainer .form-group {
         background-color: lightgrey;
-        padding: 15px 0 15px 0;
+        padding: 20px 0 0 0;
         border-radius: 9px;
         margin: 9px 15px 9px 15px;
         flex: 0 0 auto;
-        width: 97%;
+        max-width: 97%;
     }
 
         .iterativeContainer .form-group input,
@@ -443,9 +442,9 @@ div.roomAsciiMap {
         }
 
         .iterativeContainer .form-group div {
-            /* width: auto; */
             padding-right: 10px;
-            margin: 10px 0;
+            margin: 0px 0 5px 0;
+            width: auto;
         }
 
 .descriptiveSection {

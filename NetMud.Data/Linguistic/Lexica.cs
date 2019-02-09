@@ -1,14 +1,18 @@
 ﻿using NetMud.Communication.Lexical;
+using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Linguistic;
+using NetMud.DataStructure.System;
 using NetMud.Utility;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Linguistic
 {
@@ -47,16 +51,58 @@ namespace NetMud.Data.Linguistic
         [UIHint("LexicalModifiers")]
         public HashSet<ILexica> Modifiers { get; set; }
 
+        [JsonProperty("Language")]
+        private ConfigDataCacheKey _language { get; set; }
+
+        /// <summary>
+        /// The language this is derived from
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        [Display(Name = "Language", Description = "The language this is in.")]
+        [UIHint("LanguageList")]
+        [LanguageDataBinder]
+        [Required]
+        public ILanguage Language
+        {
+            get
+            {
+                if (_language == null)
+                {
+                    return null;
+                }
+
+                return ConfigDataCache.Get<ILanguage>(_language);
+            }
+            set
+            {
+                if (value == null)
+                {
+                    _language = null;
+                    return;
+                }
+
+                _language = new ConfigDataCacheKey(value);
+            }
+        }
+
         public Lexica()
         {
             Modifiers = new HashSet<ILexica>();
         }
 
-        public Lexica(LexicalType type, GrammaticalType role, string phrase)
+        public Lexica(LexicalType type, GrammaticalType role, string phrase, ILanguage language = null)
         {
             Type = type;
             Phrase = phrase;
             Role = role;
+            Language = language;
+
+            if(language == null)
+            {
+                IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
+                Language = globalConfig.BaseLanguage;
+            }
 
             Modifiers = new HashSet<ILexica>();
 
@@ -129,7 +175,7 @@ namespace NetMud.Data.Linguistic
         /// <returns>Whether or not it succeeded</returns>
         public ILexica TryModify(LexicalType type, GrammaticalType role, string phrase, bool passthru = false)
         {
-            Lexica modifier = new Lexica(type, role, phrase);
+            Lexica modifier = new Lexica(type, role, phrase, Language);
             if (!Modifiers.Contains(modifier))
             {
                 Modifiers.Add(modifier);
@@ -171,14 +217,14 @@ namespace NetMud.Data.Linguistic
         /// <returns>the new lex</returns>
         public ILexica Mutate(ILanguage language, int severity, int eloquence, int quality)
         {
-            Lexica newLexica = new Lexica(Type, Role, Phrase);
+            Lexica newLexica = new Lexica(Type, Role, Phrase, language);
             var dict = GetDictata();
 
             if (Type != LexicalType.ProperNoun && dict != null && (severity + eloquence + quality > 0 || language != dict.Language))
             {
 
                 var newDict = Thesaurus.GetSynonym(dict, severity, eloquence, quality, language);
-                newLexica = new Lexica(Type, Role, newDict.Name);
+                newLexica = new Lexica(Type, Role, newDict.Name, language);
             }
 
             if (Modifiers != null)
@@ -260,7 +306,7 @@ namespace NetMud.Data.Linguistic
                             //Don't just add the name in as its own sentence that's cray, doesn't need to be run on present objects as those are handled by the "is here" thing
                             if (subject.Modifiers.Any(mod => mod.Role != GrammaticalType.Descriptive && mod.Role != GrammaticalType.Subject))
                             {
-                                lexicas.Add(new Lexica(subject.Type, subject.Role, subject.Phrase)
+                                lexicas.Add(new Lexica(subject.Type, subject.Role, subject.Phrase, me.Language)
                                 {
                                     Modifiers = new HashSet<ILexica>(subject.Modifiers.Where(mod => mod.Role != GrammaticalType.Descriptive))
                                 });
@@ -282,7 +328,7 @@ namespace NetMud.Data.Linguistic
                             }
                             else
                             {
-                                newSplitSubject = new Lexica(subject.Type, subject.Role, subject.Phrase);
+                                newSplitSubject = new Lexica(subject.Type, subject.Role, subject.Phrase, me.Language);
                             }
 
                             newSplitSubject.TryModify(LexicalType.Article, GrammaticalType.Verb, "is").TryModify(adj);
@@ -295,7 +341,7 @@ namespace NetMud.Data.Linguistic
                         //This is to catch directly described entities
                         if (subject.Modifiers.Any(mod => mod.Role == GrammaticalType.Descriptive) && !subject.Modifiers.Any(mod => mod.Role == GrammaticalType.Verb))
                         {
-                            Lexica newSubject = new Lexica(subject.Type, subject.Role, subject.Phrase);
+                            Lexica newSubject = new Lexica(subject.Type, subject.Role, subject.Phrase, me.Language);
                             newSubject.TryModify(subject.Modifiers.Where(mod => mod.Type == LexicalType.Article || mod.Role != GrammaticalType.Descriptive));
                             newSubject.TryModify(LexicalType.Article, GrammaticalType.Verb, "is")
                                         .TryModify(subject.Modifiers.Where(mod => mod.Role == GrammaticalType.Descriptive).ToArray());

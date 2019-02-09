@@ -231,7 +231,7 @@ namespace NetMud.Data.Room
             {
                 List<IDictata> dictatas = new List<IDictata>
                 {
-                    new Dictata(new Lexica(LexicalType.Noun, GrammaticalType.Subject, Name))
+                    new Dictata(new Lexica(LexicalType.ProperNoun, GrammaticalType.Subject, Name))
                 };
                 dictatas.AddRange(Descriptives.Select(desc => desc.Event.GetDictata()));
 

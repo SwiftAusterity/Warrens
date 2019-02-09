@@ -212,6 +212,7 @@ namespace NetMud.Data.Linguistic
 
             Name = lexica.Phrase;
             WordType = lexica.Type;
+            Language = lexica.Language;
         }
 
         /// <summary>
@@ -220,7 +221,7 @@ namespace NetMud.Data.Linguistic
         /// <returns>A Lexica with the same values</returns>
         public ILexica GetLexica()
         {
-            return new Lexica(WordType, GrammaticalType.Subject, Name);
+            return new Lexica(WordType, GrammaticalType.Subject, Name, Language);
         }
 
         /// <summary>
@@ -230,8 +231,10 @@ namespace NetMud.Data.Linguistic
         {
             IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
 
+            //Don't do this if: we have no config, translation is turned off or lacking in the azure key, the language is not a human-ui language
+            //it isn't an approved language, the word is a proper noun or the language isnt the base language at all
             if (globalConfig == null || !globalConfig.TranslationActive || string.IsNullOrWhiteSpace(globalConfig.AzureTranslationKey) 
-                || !Language.UIOnly || !Language.SuitableForUse || WordType == LexicalType.ProperNoun)
+                || !Language.UIOnly || !Language.SuitableForUse || WordType == LexicalType.ProperNoun || Language != globalConfig.BaseLanguage)
             {
                 return;
             }

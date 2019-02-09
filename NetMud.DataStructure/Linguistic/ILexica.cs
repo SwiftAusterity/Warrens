@@ -9,6 +9,11 @@ namespace NetMud.DataStructure.Linguistic
     public interface ILexica : IComparable<ILexica>, IEquatable<ILexica>
     {
         /// <summary>
+        /// The language this is derived from
+        /// </summary>
+        ILanguage Language { get; set; }
+
+        /// <summary>
         /// The type of word this is to the sentence
         /// </summary>
         GrammaticalType Role { get; set; }
