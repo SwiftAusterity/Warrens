@@ -181,7 +181,7 @@
     <Compile Include="Inanimate\IItemStack.cs" />
     <Compile Include="Inanimate\IRenderAsWorn.cs" />
     <Compile Include="Inanimate\IRenderAsHeld.cs" />
-    <Compile Include="Linguistic\GrammarRule.cs" />
+    <Compile Include="Linguistic\IGrammarRule.cs" />
     <Compile Include="Linguistic\ILanguage.cs" />
     <Compile Include="Linguistic\ISensoryEvent.cs" />
     <Compile Include="Linguistic\LexicalContext.cs" />

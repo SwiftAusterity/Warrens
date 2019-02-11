@@ -1,1 +1,31 @@
-{"GoogleLanguageCode":"en-us","UIOnly":true,"Gendered":false,"PrecedentPunctuation":false,"AntecendentPunctuation":true,"Rules":[{"$type":"NetMud.Data.Linguistic.GrammarRule, NetMud.Data","Tense":1,"Perspective":0,"SpecificWord":null,"FromType":2,"FromRole":3,"ToType":4,"ToRole":4,"Listable":true,"Precedes":true,"AltersSentence":0}],"Name":"English","SuitableForUse":true,"State":3,"ApprovedOn":"2019-02-08T16:20:54.0157399-06:00","CreatorHandle":"SwiftAusterity","CreatorRank":3,"ApproverHandle":"SwiftAusterity","ApproverRank":3,"CachingType":4}
+{
+  "GoogleLanguageCode": "en-us",
+  "UIOnly": true,
+  "Gendered": false,
+  "PrecedentPunctuation": false,
+  "AntecendentPunctuation": true,
+  "Rules": [
+    {
+      "$type": "NetMud.Data.Linguistic.GrammarRule, NetMud.Data",
+      "Tense": 1,
+      "Perspective": 0,
+      "SpecificWord": null,
+      "FromType": 2,
+      "FromRole": 3,
+      "ToType": 4,
+      "ToRole": 4,
+      "Listable": true,
+      "ModificationOrder": -1,
+      "AltersSentence": 0
+    }
+  ],
+  "Name": "English",
+  "SuitableForUse": true,
+  "State": 3,
+  "ApprovedOn": "2019-02-08T16:20:54.0157399-06:00",
+  "CreatorHandle": "SwiftAusterity",
+  "CreatorRank": 3,
+  "ApproverHandle": "SwiftAusterity",
+  "ApproverRank": 3,
+  "CachingType": 4
+}

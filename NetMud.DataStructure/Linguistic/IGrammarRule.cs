@@ -46,9 +46,14 @@
         bool Listable { get; set; }
 
         /// <summary>
-        /// Place the "to" word before the From word, false means after
+        /// Where does the To word fit around the From word? (the from word == 0)
         /// </summary>
-        bool Precedes { get; set; }
+        int ModificationOrder { get; set; }
+
+        /// <summary>
+        /// Does this word require an Article added (like nouns preceeding or verbs anteceding)
+        /// </summary>
+        bool NeedsArticle { get; set; }
 
         /// <summary>
         /// The presence of these criteria changes the sentence type

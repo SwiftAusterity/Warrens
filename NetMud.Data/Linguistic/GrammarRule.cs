@@ -99,11 +99,18 @@ namespace NetMud.Data.Linguistic
         public bool Listable { get; set; }
 
         /// <summary>
-        /// Place the "to" word before the From word, false means after
+        /// Where does the To word fit around the From word? (the from word == 0)
         /// </summary>
-        [Display(Name = "Precedes", Description = "Place the to word before the From word, false means after.")]
+        [Display(Name = "Descriptive Order", Description = "Where does the To word fit around the From word? (the from word == 0)")]
+        [DataType(DataType.Text)]
+        public int ModificationOrder { get; set; }
+
+        /// <summary>
+        /// Does this word require an Article added (like nouns preceeding or verbs anteceding)
+        /// </summary>
+        [Display(Name = "Add Article", Description = "Does this word require an Article added? (like nouns preceeding or verbs anteceding)")]
         [UIHint("Boolean")]
-        public bool Precedes { get; set; }
+        public bool NeedsArticle { get; set; }
 
         /// <summary>
         /// The presence of these criteria changes the sentence type
