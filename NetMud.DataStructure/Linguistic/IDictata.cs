@@ -21,6 +21,11 @@ namespace NetMud.DataStructure.Linguistic
         LexicalTense Tense { get; set; }
 
         /// <summary>
+        /// Is this a feminine or masculine word (not related to actual genders but gendered languages)
+        /// </summary>
+        bool Feminine { get; set; }
+
+        /// <summary>
         /// Strength rating of word in relation to synonyms
         /// </summary>
         int Severity { get; set; }

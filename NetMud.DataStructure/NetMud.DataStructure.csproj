@@ -73,7 +73,7 @@
     <Compile Include="Architectural\ActorBase\ICanTouch.cs" />
     <Compile Include="Architectural\ActorBase\ICanWear.cs" />
     <Compile Include="Architectural\ActorBase\IEat.cs" />
-    <Compile Include="Architectural\ActorBase\Gender.cs" />
+    <Compile Include="Architectural\ActorBase\IGender.cs" />
     <Compile Include="Architectural\ActorBase\IGetTired.cs" />
     <Compile Include="Architectural\ActorBase\IHaveHealth.cs" />
     <Compile Include="Architectural\ActorBase\IHaveStamina.cs" />
@@ -184,6 +184,7 @@
     <Compile Include="Linguistic\GrammarRule.cs" />
     <Compile Include="Linguistic\ILanguage.cs" />
     <Compile Include="Linguistic\ISensoryEvent.cs" />
+    <Compile Include="Linguistic\LexicalContext.cs" />
     <Compile Include="Linguistic\NarrativeNormalization.cs" />
     <Compile Include="Linguistic\NarrativePerspective.cs" />
     <Compile Include="Linguistic\SentenceType.cs" />

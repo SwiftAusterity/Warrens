@@ -2,13 +2,19 @@
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.Inanimate;
 using NetMud.DataStructure.Linguistic;
+using NetMud.DataStructure.NPC;
+using NetMud.DataStructure.Player;
 using NetMud.Utility;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Linguistic
 {
@@ -47,9 +53,23 @@ namespace NetMud.Data.Linguistic
         [UIHint("LexicalModifiers")]
         public HashSet<ILexica> Modifiers { get; set; }
 
+        /// <summary>
+        /// Context used to help describe events. Does not get saved in the data.
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public LexicalContext EventingContext { get; set; }
+
         public Lexica()
         {
             Modifiers = new HashSet<ILexica>();
+
+            var context = new LexicalContext
+            {
+                Strength = 30,
+                Plural = false,
+                Determinant = true
+            };
         }
 
         public Lexica(LexicalType type, GrammaticalType role, string phrase)
@@ -61,6 +81,64 @@ namespace NetMud.Data.Linguistic
             Modifiers = new HashSet<ILexica>();
 
             LexicalProcessor.VerifyDictata(this);
+
+            var context = new LexicalContext
+            {
+                Strength = 30,
+                Plural = false,
+                Determinant = true
+            };
+        }
+
+        public Lexica(LexicalType type, GrammaticalType role, string phrase, IEntity context, int strength, bool plural)
+        {
+            Type = type;
+            Phrase = phrase;
+            Role = role;
+
+            Modifiers = new HashSet<ILexica>();
+
+            LexicalProcessor.VerifyDictata(this);
+            BuildContext(context, strength, plural);
+        }
+
+        /// <summary>
+        /// Build out the context object
+        /// </summary>
+        /// <param name="entity">the subject</param>
+        public void BuildContext(IEntity entity, int strength = 30, bool plural = false)
+        {
+            var context = new LexicalContext
+            {
+                Strength = strength,
+                Plural = plural
+            };
+
+            var specific = true;
+            var entityLocation = entity.CurrentLocation?.CurrentLocation();
+            if (entityLocation != null)
+            {
+                var type = entity.GetType();
+
+                //We're looking for more things with the same template id (ie based on the same thing, like more than one wolf or sword)
+                if (type == typeof(IInanimate))
+                {
+                    specific = !entityLocation.GetContents<IInanimate>().Any(item => item != entity && item.TemplateId == entity.TemplateId);
+                }
+                else if (type == typeof(INonPlayerCharacter))
+                {
+                    specific = !entityLocation.GetContents<INonPlayerCharacter>().Any(item => item != entity && item.TemplateId == entity.TemplateId);
+                    context.GenderForm = ((INonPlayerCharacter)entity).Gender;
+                }
+                else if(type == typeof(IPlayer))
+                {
+                    context.GenderForm = ((IPlayer)entity).Gender;
+                }
+            }
+
+            context.Determinant = specific;
+
+            EventingContext = context;
         }
 
         /// <summary>
@@ -227,7 +305,7 @@ namespace NetMud.Data.Linguistic
             return string.Join(" ", finalOutput);
         }
 
-        private IEnumerable<Tuple<SentenceType, ILexica>> GetSentences(ILexica me, NarrativeNormalization normalization, 
+        private IEnumerable<Tuple<SentenceType, ILexica>> GetSentences(ILexica me, NarrativeNormalization normalization,
                                                                         int verbosity, LexicalTense chronology, NarrativePerspective perspective, bool omitName)
         {
             List<Tuple<SentenceType, ILexica>> sentences = new List<Tuple<SentenceType, ILexica>>();

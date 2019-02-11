@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NetMud.DataStructure.Architectural.EntityBase;
+using System;
 using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Linguistic
@@ -27,6 +28,11 @@ namespace NetMud.DataStructure.Linguistic
         /// Modifiers for this lexica. (Modifier, Conjunction)
         /// </summary>
         HashSet<ILexica> Modifiers { get; set; }
+
+        /// <summary>
+        /// Context used to help describe events
+        /// </summary>
+        LexicalContext EventingContext { get; set; }
 
         /// <summary>
         /// Try to add a modifier to a lexica
@@ -103,5 +109,11 @@ namespace NetMud.DataStructure.Linguistic
         /// </summary>
         /// <returns>success</returns>
         bool GenerateDictata();
+
+        /// <summary>
+        /// Build out the context object
+        /// </summary>
+        /// <param name="entity">the subject</param>
+        void BuildContext(IEntity entity, int strength, bool plural);
     }
 }
