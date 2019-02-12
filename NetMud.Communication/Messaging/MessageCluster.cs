@@ -120,7 +120,7 @@ namespace NetMud.Communication.Messaging
                 else
                 {
                     var language = Actor.IsPlayer() ? ((IPlayer)Actor).Template<IPlayerTemplate>().Account.Config.UILanguage : null;
-                    Actor.WriteTo(TranslateOutput(ToActor.Select(msg => msg.Occurrence?.Event?.Unpack(language, 0, 0, 0, NarrativeNormalization.Normal, 1, LexicalTense.Present, NarrativePerspective.FirstPerson, false)), entities));
+                    Actor.WriteTo(TranslateOutput(ToActor.Select(msg => msg.Occurrence?.Event?.Unpack(language, 0, 0, 0, NarrativeNormalization.Normal, false, false, false, true, LexicalPosition.None, LexicalTense.Present, NarrativePerspective.FirstPerson, false)), entities));
                 }
             }
 
@@ -133,7 +133,7 @@ namespace NetMud.Communication.Messaging
                 else
                 {
                     var language = Subject.IsPlayer() ? ((IPlayer)Subject).Template<IPlayerTemplate>().Account.Config.UILanguage : null;
-                    Subject.WriteTo(TranslateOutput(ToSubject.Select(msg => msg.Occurrence?.Event?.Unpack(language, 0, 0, 0, NarrativeNormalization.Normal, 1, LexicalTense.Present, NarrativePerspective.SecondPerson, false)), entities));
+                    Subject.WriteTo(TranslateOutput(ToSubject.Select(msg => msg.Occurrence?.Event?.Unpack(language, 0, 0, 0, NarrativeNormalization.Normal, false, false, false, true, LexicalPosition.None, LexicalTense.Present, NarrativePerspective.SecondPerson, false)), entities));
                 }
             }
 
@@ -146,7 +146,7 @@ namespace NetMud.Communication.Messaging
                 }
                 else
                 {
-                    Target.WriteTo(TranslateOutput(ToTarget.Select(msg => msg.Occurrence?.Event?.Unpack(language, 0, 0, 0, NarrativeNormalization.Normal, 1, LexicalTense.Present, NarrativePerspective.SecondPerson, false)), entities));
+                    Target.WriteTo(TranslateOutput(ToTarget.Select(msg => msg.Occurrence?.Event?.Unpack(language, 0, 0, 0, NarrativeNormalization.Normal, false, false, false, true, LexicalPosition.None, LexicalTense.Present, NarrativePerspective.SecondPerson, false)), entities));
                 }
             }
 
@@ -166,7 +166,7 @@ namespace NetMud.Communication.Messaging
                     else
                     {
                         var language = dude.IsPlayer() ? ((IPlayer)dude).Template<IPlayerTemplate>().Account.Config.UILanguage : null;
-                        dude.WriteTo(TranslateOutput(ToOrigin.Select(msg => msg.Occurrence?.Event?.Unpack(language, 0, 0, 0, NarrativeNormalization.Normal, 1, LexicalTense.Present, NarrativePerspective.ThirdPerson, false)), entities));
+                        dude.WriteTo(TranslateOutput(ToOrigin.Select(msg => msg.Occurrence?.Event?.Unpack(language, 0, 0, 0, NarrativeNormalization.Normal, false, false, false, true, LexicalPosition.None, LexicalTense.Present, NarrativePerspective.ThirdPerson, false)), entities));
                     }
                 }
             }
@@ -185,7 +185,7 @@ namespace NetMud.Communication.Messaging
                     else
                     {
                         var language = dude.IsPlayer() ? ((IPlayer)dude).Template<IPlayerTemplate>().Account.Config.UILanguage : null;
-                        dude.WriteTo(TranslateOutput(ToDestination.Select(msg => msg.Occurrence?.Event?.Unpack(language, 0, 0, 0, NarrativeNormalization.Normal, 1, LexicalTense.Present, NarrativePerspective.ThirdPerson, false)), entities));
+                        dude.WriteTo(TranslateOutput(ToDestination.Select(msg => msg.Occurrence?.Event?.Unpack(language, 0, 0, 0, NarrativeNormalization.Normal, false, false, false, true, LexicalPosition.None, LexicalTense.Present, NarrativePerspective.ThirdPerson, false)), entities));
                     }
                 }
             }

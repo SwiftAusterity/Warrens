@@ -10,11 +10,6 @@ namespace NetMud.DataStructure.Linguistic
     public interface ILexica : IComparable<ILexica>, IEquatable<ILexica>
     {
         /// <summary>
-        /// The language this is derived from
-        /// </summary>
-        ILanguage Language { get; set; }
-
-        /// <summary>
         /// The type of word this is to the sentence
         /// </summary>
         GrammaticalType Role { get; set; }
@@ -101,14 +96,15 @@ namespace NetMud.DataStructure.Linguistic
         /// <param name="perspective">The personage of the sentence structure</param>
         /// <param name="omitName">Should we omit the proper name of the initial subject entirely (and only resort to pronouns)</param>
         /// <returns>A long description</returns>
-        string Unpack(ILanguage language, int severity, int eloquence, int quality, NarrativeNormalization normalization, int verbosity, 
-            LexicalTense chronology = LexicalTense.Present, NarrativePerspective perspective = NarrativePerspective.SecondPerson, bool omitName = true);
+        string Unpack(ILanguage language, int severity, int eloquence, int quality, NarrativeNormalization normalization, bool possessive, bool feminine, bool plural, bool determinant,
+            LexicalPosition positioning, LexicalTense tense, NarrativePerspective perspective, bool omitName = true);
 
         /// <summary>
         /// Describe the lexica
         /// </summary>
         /// <returns></returns>
-        string Describe(ILanguage language, int severity, int eloquence, int quality);
+        string Describe(ILanguage language, int severity, int eloquence, int quality, bool possessive, bool feminine, bool plural, bool determinant,
+            LexicalPosition positioning, LexicalTense tense, NarrativePerspective perspective);
 
         /// <summary>
         /// Alter the lex entirely including all of its sublex
@@ -118,7 +114,8 @@ namespace NetMud.DataStructure.Linguistic
         /// <param name="eloquence">the eloquence delta</param>
         /// <param name="quality">the quality delta</param>
         /// <returns>the new lex</returns>
-        ILexica Mutate(ILanguage language, int severity, int eloquence, int quality);
+        ILexica Mutate(ILanguage language, int severity, int eloquence, int quality, bool possessive, bool feminine, bool plural, bool determinant, 
+            LexicalPosition positioning, LexicalTense tense, NarrativePerspective perspective);
 
         /// <summary>
         /// Build out the context object

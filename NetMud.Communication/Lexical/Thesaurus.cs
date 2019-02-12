@@ -75,7 +75,7 @@ namespace NetMud.Communication.Lexical
                     //]
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 LoggingUtility.LogError(ex);
             }
@@ -83,7 +83,42 @@ namespace NetMud.Communication.Lexical
             return string.Empty;
         }
 
-        public static IDictata GetSynonym(IDictata baseWord, int severityModifier, int eleganceModifier, int qualityModifier, ILanguage language = null)
+        public static IDictata GetAntonym(IDictata baseWord, int severityModifier, int eleganceModifier, int qualityModifier,
+            bool possessive, bool feminine, bool plural, bool determinant, LexicalPosition positioning, LexicalTense tense, NarrativePerspective perspective, ILanguage language = null)
+        {
+            if (baseWord == null)
+                return baseWord;
+
+            var possibleWords = baseWord.Antonyms.AsEnumerable();
+
+            if (language != null)
+            {
+                possibleWords = possibleWords.Where(word => word.Language == language);
+            }
+
+            possibleWords = possibleWords.Where(word => word.Possessive == possessive
+                                                            && word.Feminine == feminine
+                                                            && word.Plural == plural
+                                                            && word.Determinant == determinant
+                                                            && (positioning == LexicalPosition.None || word.Positional == positioning)
+                                                            && (tense == LexicalTense.None || word.Tense == tense)
+                                                            && (perspective == NarrativePerspective.None || word.Perspective == perspective)
+                                                            && word.SuitableForUse);
+
+            if (!possibleWords.Any() ||
+                (severityModifier + eleganceModifier + qualityModifier == 0 && baseWord.Language == language && baseWord.Possessive == possessive
+                    && baseWord.Feminine == feminine && baseWord.Plural == plural && baseWord.Determinant == determinant)
+                )
+            {
+                return baseWord;
+            }
+
+            return GetRelatedWord(baseWord, severityModifier, eleganceModifier, qualityModifier, language, possibleWords);
+        }
+
+
+        public static IDictata GetSynonym(IDictata baseWord, int severityModifier, int eleganceModifier, int qualityModifier,
+            bool possessive, bool feminine, bool plural, bool determinant, LexicalPosition positioning, LexicalTense tense, NarrativePerspective perspective, ILanguage language = null)
         {
             if (baseWord == null)
                 return baseWord;
@@ -95,19 +130,36 @@ namespace NetMud.Communication.Lexical
                 possibleWords = possibleWords.Where(word => word.Language == language);
             }
 
-            if (!possibleWords.Any())
+            possibleWords = possibleWords.Where(word => word.Possessive == possessive
+                                                            && word.Feminine == feminine
+                                                            && word.Plural == plural
+                                                            && word.Determinant == determinant
+                                                            && (positioning == LexicalPosition.None || word.Positional == positioning)
+                                                            && (tense == LexicalTense.None || word.Tense == tense)
+                                                            && (perspective == NarrativePerspective.None || word.Perspective == perspective)
+                                                            && word.SuitableForUse);
+
+            if (!possibleWords.Any() ||
+                (severityModifier + eleganceModifier + qualityModifier == 0 && baseWord.Language == language && baseWord.Possessive == possessive
+                    && baseWord.Feminine == feminine && baseWord.Plural == plural && baseWord.Determinant == determinant)
+                )
             {
                 return baseWord;
             }
 
+            return GetRelatedWord(baseWord, severityModifier, eleganceModifier, qualityModifier, language, possibleWords);
+        }
+
+        private static IDictata GetRelatedWord(IDictata baseWord, int severityModifier, int eleganceModifier, int qualityModifier, ILanguage language, IEnumerable<IDictata> possibleWords)
+        {
             var rankedWords = new Dictionary<IDictata, int>();
             foreach (var word in possibleWords)
             {
                 int rating = 0;
 
-                rating += Math.Abs((baseWord.Severity + severityModifier) - word.Severity);
-                rating += Math.Abs((baseWord.Elegance + eleganceModifier) - word.Elegance);
-                rating += Math.Abs((baseWord.Quality + qualityModifier) - word.Quality);
+                rating += Math.Abs(baseWord.Severity + severityModifier - word.Severity);
+                rating += Math.Abs(baseWord.Elegance + eleganceModifier - word.Elegance);
+                rating += Math.Abs(baseWord.Quality + qualityModifier - word.Quality);
 
                 rankedWords.Add(word, rating);
             }

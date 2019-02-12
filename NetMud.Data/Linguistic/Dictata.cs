@@ -66,11 +66,48 @@ namespace NetMud.Data.Linguistic
         public LexicalTense Tense { get; set; }
 
         /// <summary>
+        /// Does this indicate some sort of relational positioning
+        /// </summary>
+        [Display(Name = "Positional", Description = "Does this indicate some sort of relational positioning")]
+        [UIHint("EnumDropDownList")]
+        [Required]
+        public LexicalPosition Positional { get; set; }
+
+        /// <summary>
+        /// Personage of the word
+        /// </summary>
+        [Display(Name = "Perspective", Description = "Narrative personage for the word.")]
+        [UIHint("EnumDropDownList")]
+        [Required]
+        public NarrativePerspective Perspective { get; set; }
+
+        /// <summary>
         /// Is this a feminine or masculine word
         /// </summary>
         [Display(Name = "Feminine Form", Description = "Is this a feminine or masculine word? (only applies to gendered languages)")]
         [UIHint("Boolean")]
         public bool Feminine { get; set; }
+
+        /// <summary>
+        /// Is this an determinant form or not (usually true)
+        /// </summary>
+        [Display(Name = "Determinant", Description = "Is this an determinant form or not? (usually true)")]
+        [UIHint("Boolean")]
+        public bool Determinant { get; set; }
+
+        /// <summary>
+        /// Is this a plural form
+        /// </summary>
+        [Display(Name = "Plural", Description = "Is this a plural form?")]
+        [UIHint("Boolean")]
+        public bool Plural { get; set; }
+
+        /// <summary>
+        /// Is this a possessive form
+        /// </summary>
+        [Display(Name = "Possessive", Description = "Is this a possessive form?")]
+        [UIHint("Boolean")]
+        public bool Possessive { get; set; }
 
         /// <summary>
         /// Strength rating of word in relation to synonyms
@@ -219,7 +256,6 @@ namespace NetMud.Data.Linguistic
 
             Name = lexica.Phrase;
             WordType = lexica.Type;
-            Language = lexica.Language;
         }
 
         /// <summary>
@@ -228,7 +264,7 @@ namespace NetMud.Data.Linguistic
         /// <returns>A Lexica with the same values</returns>
         public ILexica GetLexica()
         {
-            return new Lexica(WordType, GrammaticalType.Subject, Name, Language);
+            return new Lexica(WordType, GrammaticalType.Subject, Name);
         }
 
         /// <summary>
@@ -250,7 +286,7 @@ namespace NetMud.Data.Linguistic
 
             foreach (var language in otherLanguages)
             {
-                var translatedWord = Thesaurus.GetSynonym(this, 0, 0, 0, language);
+                var translatedWord = Thesaurus.GetSynonym(this, 0, 0, 0, Possessive, Feminine, Plural, Determinant, Positional, Tense, Perspective, language);
 
                 //no linguistic synonym
                 if (translatedWord == this)

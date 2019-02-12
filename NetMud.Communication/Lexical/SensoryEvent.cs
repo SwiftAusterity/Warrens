@@ -156,19 +156,20 @@ namespace NetMud.Communication.Lexical
         /// <param name="perspective">The personage of the sentence structure</param>
         /// <param name="omitName">Should we omit the proper name of the initial subject entirely (and only resort to pronouns)</param>
         /// <returns>A long description</returns>
-        public string Unpack(ILanguage language, int severity, int eloquence, int quality, NarrativeNormalization normalization, int verbosity,
-            LexicalTense chronology = LexicalTense.Present, NarrativePerspective perspective = NarrativePerspective.SecondPerson, bool omitName = true)
+        public string Unpack(ILanguage language, int severity, int eloquence, int quality, NarrativeNormalization normalization, bool possessive, bool feminine, bool plural, bool determinant,
+            LexicalPosition positioning, LexicalTense tense, NarrativePerspective perspective, bool omitName = true)
         {
-            return Event.Unpack(language, severity, eloquence, quality, normalization, verbosity, chronology, perspective, omitName);
+            return Event.Unpack(language, severity, eloquence, quality, normalization, possessive, feminine, plural, determinant, positioning, tense, perspective, omitName);
         }
 
         /// <summary>
         /// Render this lexica to a sentence fragment (or whole sentence if it's a Subject role)
         /// </summary>
         /// <returns>a sentence fragment</returns>
-        public string Describe(ILanguage language, int severity, int eloquence, int quality)
+        public string Describe(ILanguage language, int severity, int eloquence, int quality, bool possessive, bool feminine, bool plural, bool determinant,
+            LexicalPosition positioning, LexicalTense tense, NarrativePerspective perspective)
         {
-            return Event.Describe(language, severity, eloquence, quality);
+            return Event.Describe(language, severity, eloquence, quality, possessive, feminine, plural, determinant, positioning, tense, perspective);
         }
     }
 }

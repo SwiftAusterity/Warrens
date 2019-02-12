@@ -83,12 +83,7 @@ namespace NetMud.Data.Linguistic
 
             LexicalProcessor.VerifyDictata(this);
 
-            var context = new LexicalContext
-            {
-                Strength = 30,
-                Plural = false,
-                Determinant = true
-            };
+            var context = new LexicalContext();
         }
 
         public Lexica(LexicalType type, GrammaticalType role, string phrase, IEntity context, int strength, bool plural)
@@ -281,14 +276,16 @@ namespace NetMud.Data.Linguistic
         /// <param name="perspective">The personage of the sentence structure</param>
         /// <param name="omitName">Should we omit the proper name of the initial subject entirely (and only resort to pronouns)</param>
         /// <returns>A long description</returns>
-        public string Unpack(ILanguage language, int severity, int eloquence, int quality, NarrativeNormalization normalization, int verbosity,
-            LexicalTense chronology = LexicalTense.Present, NarrativePerspective perspective = NarrativePerspective.SecondPerson, bool omitName = true)
+        public string Unpack(ILanguage language, int severity, int eloquence, int quality, NarrativeNormalization normalization, bool possessive, bool feminine, bool plural, bool determinant,
+            LexicalPosition positioning, LexicalTense tense, NarrativePerspective perspective, bool omitName = true)
         {
-            IEnumerable<Tuple<SentenceType, ILexica>> sentences = GetSentences(this, normalization, verbosity, chronology, perspective, omitName);
+            IEnumerable<Tuple<SentenceType, ILexica>> sentences = GetSentences(this, normalization, tense, perspective, omitName);
 
             if (normalization == NarrativeNormalization.Runon)
             {
-                return string.Join(" and ", sentences.Select(sentence => sentence.Item2.Describe(language, severity, eloquence, quality))).CapsFirstLetter() + LexicalProcessor.GetPunctuationMark(sentences.First().Item1);
+                return string.Join(" and ", sentences.Select(sentence => 
+                    sentence.Item2.Describe(language, severity, eloquence, quality, possessive, feminine, plural, determinant, positioning, tense, perspective))).CapsFirstLetter() 
+                    + LexicalProcessor.GetPunctuationMark(sentences.First().Item1);
             }
 
             //join the sentences together with a space and add punctuation
@@ -296,7 +293,8 @@ namespace NetMud.Data.Linguistic
             foreach (Tuple<SentenceType, ILexica> sentence in sentences)
             {
                 //Ensure every sentence starts with a caps letter
-                string sentenceText = sentence.Item2.Describe(language, severity, eloquence, quality).CapsFirstLetter(true) + LexicalProcessor.GetPunctuationMark(sentence.Item1);
+                string sentenceText = sentence.Item2.Describe(language, severity, eloquence, quality, possessive, feminine, plural, determinant, positioning, tense, perspective).CapsFirstLetter(true) 
+                    + LexicalProcessor.GetPunctuationMark(sentence.Item1);
 
                 finalOutput.Add(sentenceText);
             }
@@ -308,9 +306,12 @@ namespace NetMud.Data.Linguistic
         /// Render this lexica to a sentence fragment (or whole sentence if it's a Subject role)
         /// </summary>
         /// <returns>a sentence fragment</returns>
-        public string Describe(ILanguage language, int severity, int eloquence, int quality)
+        public string Describe(ILanguage language, int severity, int eloquence, int quality, bool possessive, bool feminine, bool plural, bool determinant,
+            LexicalPosition positioning, LexicalTense tense, NarrativePerspective perspective)
         {
-            var lex = language == null && (severity + eloquence + quality == 0) ? this : Mutate(language, severity, eloquence, quality);
+            var lex = language == null && (severity + eloquence + quality == 0) 
+                    ? this 
+                    : Mutate(language, severity, eloquence, quality, possessive, feminine, plural, determinant, positioning, tense, perspective);
 
             //short circuit empty lexica
             if (string.IsNullOrWhiteSpace(lex.Phrase))
@@ -343,7 +344,10 @@ namespace NetMud.Data.Linguistic
             foreach (var rule in language.Rules.Where(rul => rul.ToRole == GrammaticalType.None && rul.ToType == LexicalType.None &&
                                                         (rul.SpecificWord == lex.GetDictata() || (rul.FromRole == lex.Role && rul.FromType == lex.Type))))
             {
-
+                if(rule.NeedsArticle && !lex.Modifiers.Any(mod => mod.Type == LexicalType.Article))
+                {
+                    lex.TryModify(new Lexica(LexicalType.Article, GrammaticalType.Descriptive, "the"));
+                }
             }
 
             //modifier rules
@@ -359,9 +363,24 @@ namespace NetMud.Data.Linguistic
                 }
             }
 
-            return sb.ToString().Trim();
+            modifierList.Add(new Tuple<ILexica, bool, int>(lex, false, 0));
+
+            foreach (var grouping in modifierList.OrderBy(mod => mod.Item3))
+            {
+                if (grouping.Item1 == lex)
+                {
+                    sb.Append(grouping.Item1.Phrase + " ");
+                }
+                else
+                {
+                    sb.Append(grouping.Item1.Describe(language, severity, eloquence, quality, possessive, feminine, plural, determinant, positioning, tense, perspective));
+                }
+            }
+
+            return sb.ToString();
         }
 
+        /*
         private string OldDescribe(ILanguage language, int severity, int eloquence, int quality)
         {
             var lex = language == null && (severity + eloquence + quality == 0) ? this : Mutate(language, severity, eloquence, quality);
@@ -479,6 +498,7 @@ namespace NetMud.Data.Linguistic
 
             return sb.ToString().Trim();
         }
+        */
 
         /// <summary>
         /// Alter the lex entirely including all of its sublex
@@ -487,16 +507,27 @@ namespace NetMud.Data.Linguistic
         /// <param name="severity">the severity delta</param>
         /// <param name="eloquence">the eloquence delta</param>
         /// <param name="quality">the quality delta</param>
+        /// <param name="possessive"></param>
+        /// <param name="feminine"></param>
+        /// <param name="plural"></param>
+        /// <param name="determinant"></param>
+        /// <param name="positioning"></param>
+        /// <param name="tense"></param>
         /// <returns>the new lex</returns>
-        public ILexica Mutate(ILanguage language, int severity, int eloquence, int quality)
+        public ILexica Mutate(ILanguage language, int severity, int eloquence, int quality, bool possessive, bool feminine, bool plural, bool determinant, 
+            LexicalPosition positioning, LexicalTense tense, NarrativePerspective perspective)
         {
-            Lexica newLexica = new Lexica(Type, Role, Phrase);
+            Lexica newLexica = new Lexica(Type, Role, Phrase)
+            {
+                EventingContext = EventingContext
+            };
+
             var dict = GetDictata();
 
             if (Type != LexicalType.ProperNoun && dict != null && (severity + eloquence + quality > 0 || language != dict.Language))
             {
+                var newDict = Thesaurus.GetSynonym(dict, severity, eloquence, quality, possessive, feminine, plural, determinant, positioning, tense, perspective, language);
 
-                var newDict = Thesaurus.GetSynonym(dict, severity, eloquence, quality, language);
                 newLexica = new Lexica(Type, Role, newDict.Name)
                 {
                     EventingContext = EventingContext
@@ -508,8 +539,7 @@ namespace NetMud.Data.Linguistic
             return newLexica;
         }
 
-        private IEnumerable<Tuple<SentenceType, ILexica>> GetSentences(ILexica me, NarrativeNormalization normalization,
-                                                                        int verbosity, LexicalTense chronology, NarrativePerspective perspective, bool omitName)
+        private IEnumerable<Tuple<SentenceType, ILexica>> GetSentences(ILexica me, NarrativeNormalization normalization, LexicalTense chronology, NarrativePerspective perspective, bool omitName)
         {
             List<Tuple<SentenceType, ILexica>> sentences = new List<Tuple<SentenceType, ILexica>>();
 
@@ -615,17 +645,21 @@ namespace NetMud.Data.Linguistic
             return sentences;
         }
 
-        private string AppendDescriptors(IEnumerable<ILexica> adjectives, string phrase, ILanguage language, int severity, int eloquence, int quality)
+        private string AppendDescriptors(IEnumerable<ILexica> adjectives, string phrase, ILanguage language, int severity, int eloquence, int quality, 
+            bool possessive, bool feminine, bool plural, bool determinant, LexicalPosition positioning, LexicalTense tense, NarrativePerspective perspective)
         {
             string described = phrase;
 
             if (adjectives.Count() > 0)
             {
                 string decorativeString = adjectives.Where(adj => adj.Type != LexicalType.Article && adj.Type != LexicalType.Interjection)
-                                                 .Select(adj => adj.Describe(language, severity, eloquence, quality)).CommaList(RenderUtility.SplitListType.AllComma);
+                        .Select(adj => adj.Describe(language, severity, eloquence, quality, possessive, feminine, plural, determinant, positioning, tense, perspective))
+                        .CommaList(RenderUtility.SplitListType.AllComma);
 
                 ILexica conjunctive = adjectives.FirstOrDefault(adj => adj.Type == LexicalType.Article || adj.Type == LexicalType.Interjection);
-                string conjunctiveString = conjunctive != null ? conjunctive.Describe(language, severity, eloquence, quality) + " " : string.Empty;
+                string conjunctiveString = conjunctive != null 
+                    ? conjunctive.Describe(language, severity, eloquence, quality, possessive, feminine, plural, determinant, positioning, tense, perspective) + " " 
+                    : string.Empty;
 
                 described = string.Format("{1}{2} {0}", phrase, conjunctiveString, decorativeString);
             }

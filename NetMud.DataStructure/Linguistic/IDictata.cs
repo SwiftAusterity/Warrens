@@ -21,9 +21,34 @@ namespace NetMud.DataStructure.Linguistic
         LexicalTense Tense { get; set; }
 
         /// <summary>
+        /// Does this indicate some sort of relational positioning
+        /// </summary>
+        LexicalPosition Positional { get; set; }
+
+        /// <summary>
+        /// Personage of the word
+        /// </summary>
+        NarrativePerspective Perspective { get; set; }
+
+        /// <summary>
         /// Is this a feminine or masculine word (not related to actual genders but gendered languages)
         /// </summary>
         bool Feminine { get; set; }
+
+        /// <summary>
+        /// Is this an determinant form or not (usually true)
+        /// </summary>
+        bool Determinant { get; set; }
+
+        /// <summary>
+        /// Is this a plural form
+        /// </summary>
+        bool Plural { get; set; }
+
+        /// <summary>
+        /// Is this a possessive form
+        /// </summary>
+        bool Possessive { get; set; }
 
         /// <summary>
         /// Strength rating of word in relation to synonyms

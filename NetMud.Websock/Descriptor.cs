@@ -180,7 +180,7 @@ namespace NetMud.Websock
                 pathways = ((ILocation)currentContainer).GetPathways().Select(data => data.GetDescribableName(_currentPlayer));
                 inventory = currentContainer.GetContents<IInanimate>().Select(data => data.GetDescribableName(_currentPlayer));
                 populace = currentContainer.GetContents<IMobile>().Where(player => !player.Equals(_currentPlayer)).Select(data => data.GetDescribableName(_currentPlayer));
-                locationDescription = currentContainer.RenderToLook(_currentPlayer).Unpack(_currentPlayer.Template<IPlayerTemplate>().Account.Config.UILanguage, 0, 0, 0, NarrativeNormalization.Normal, 1);
+                locationDescription = currentContainer.RenderToLook(_currentPlayer).Unpack(_currentPlayer.Template<IPlayerTemplate>().Account.Config.UILanguage, 0, 0, 0, NarrativeNormalization.Normal, false, false, false, true, LexicalPosition.None, LexicalTense.Present, NarrativePerspective.SecondPerson, true);
             }
 
             LocalStatus local = new LocalStatus

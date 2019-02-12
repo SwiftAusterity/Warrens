@@ -100,13 +100,14 @@ namespace NetMud.DataStructure.Linguistic
         /// <param name="perspective">The personage of the sentence structure</param>
         /// <param name="omitName">Should we omit the proper name of the initial subject entirely (and only resort to pronouns)</param>
         /// <returns>A long description</returns>
-        string Unpack(ILanguage language, int severity, int eloquence, int quality, NarrativeNormalization normalization, int verbosity,
-            LexicalTense chronology = LexicalTense.Present, NarrativePerspective perspective = NarrativePerspective.SecondPerson, bool omitName = true);
+        string Unpack(ILanguage language, int severity, int eloquence, int quality, NarrativeNormalization normalization, bool possessive, bool feminine, bool plural, bool determinant,
+            LexicalPosition positioning, LexicalTense tense, NarrativePerspective perspective, bool omitName = true);
 
         /// <summary>
         /// Describe the lexica
         /// </summary>
         /// <returns></returns>
-        string Describe(ILanguage language, int severity, int eloquence, int quality);
+        string Describe(ILanguage language, int severity, int eloquence, int quality, bool possessive, bool feminine, bool plural, bool determinant,
+            LexicalPosition positioning, LexicalTense tense, NarrativePerspective perspective);
     }
 }
