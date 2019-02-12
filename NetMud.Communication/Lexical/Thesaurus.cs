@@ -117,37 +117,36 @@ namespace NetMud.Communication.Lexical
         }
 
 
-        public static IDictata GetSynonym(IDictata baseWord, int severityModifier, int eleganceModifier, int qualityModifier,
-            bool possessive, bool feminine, bool plural, bool determinant, LexicalPosition positioning, LexicalTense tense, NarrativePerspective perspective, ILanguage language = null)
+        public static IDictata GetSynonym(IDictata baseWord, LexicalContext context)
         {
             if (baseWord == null)
                 return baseWord;
 
             var possibleWords = baseWord.Synonyms.AsEnumerable();
 
-            if (language != null)
+            if (context.Language != null)
             {
-                possibleWords = possibleWords.Where(word => word.Language == language);
+                possibleWords = possibleWords.Where(word => word.Language == context.Language);
             }
 
-            possibleWords = possibleWords.Where(word => word.Possessive == possessive
-                                                            && word.Feminine == feminine
-                                                            && word.Plural == plural
-                                                            && word.Determinant == determinant
-                                                            && (positioning == LexicalPosition.None || word.Positional == positioning)
-                                                            && (tense == LexicalTense.None || word.Tense == tense)
-                                                            && (perspective == NarrativePerspective.None || word.Perspective == perspective)
+            possibleWords = possibleWords.Where(word => word.Possessive == context.Possessive
+                                                            && word.Feminine == context.GenderForm?.Feminine
+                                                            && word.Plural == context.Plural
+                                                            && word.Determinant == context.Determinant
+                                                            && (context.Position == LexicalPosition.None || word.Positional == context.Position)
+                                                            && (context.Tense == LexicalTense.None || word.Tense == context.Tense)
+                                                            && (context.Perspective == NarrativePerspective.None || word.Perspective == context.Perspective)
                                                             && word.SuitableForUse);
 
             if (!possibleWords.Any() ||
-                (severityModifier + eleganceModifier + qualityModifier == 0 && baseWord.Language == language && baseWord.Possessive == possessive
-                    && baseWord.Feminine == feminine && baseWord.Plural == plural && baseWord.Determinant == determinant)
+                (context.Severity + context.Elegance + context.Quality == 0 && baseWord.Language == context.Language && baseWord.Possessive == context.Possessive
+                    && baseWord.Feminine == context.GenderForm?.Feminine && baseWord.Plural == context.Plural && baseWord.Determinant == context.Determinant)
                 )
             {
                 return baseWord;
             }
 
-            return GetRelatedWord(baseWord, severityModifier, eleganceModifier, qualityModifier, language, possibleWords);
+            return GetRelatedWord(baseWord, context.Severity, context.Elegance, context.Quality, context.Language, possibleWords);
         }
 
         private static IDictata GetRelatedWord(IDictata baseWord, int severityModifier, int eleganceModifier, int qualityModifier, ILanguage language, IEnumerable<IDictata> possibleWords)

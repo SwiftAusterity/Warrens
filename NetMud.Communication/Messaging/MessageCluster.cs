@@ -120,7 +120,9 @@ namespace NetMud.Communication.Messaging
                 else
                 {
                     var language = Actor.IsPlayer() ? ((IPlayer)Actor).Template<IPlayerTemplate>().Account.Config.UILanguage : null;
-                    Actor.WriteTo(TranslateOutput(ToActor.Select(msg => msg.Occurrence?.Event?.Unpack(language, 0, 0, 0, NarrativeNormalization.Normal, false, false, false, true, LexicalPosition.None, LexicalTense.Present, NarrativePerspective.FirstPerson, false)), entities));
+                    var context = new LexicalContext() { Language = language };
+
+                    Actor.WriteTo(TranslateOutput(ToActor.Select(msg => msg.Occurrence?.Event?.Unpack(context, NarrativeNormalization.Normal)), entities));
                 }
             }
 
@@ -133,7 +135,8 @@ namespace NetMud.Communication.Messaging
                 else
                 {
                     var language = Subject.IsPlayer() ? ((IPlayer)Subject).Template<IPlayerTemplate>().Account.Config.UILanguage : null;
-                    Subject.WriteTo(TranslateOutput(ToSubject.Select(msg => msg.Occurrence?.Event?.Unpack(language, 0, 0, 0, NarrativeNormalization.Normal, false, false, false, true, LexicalPosition.None, LexicalTense.Present, NarrativePerspective.SecondPerson, false)), entities));
+                    var context = new LexicalContext() { Language = language, Perspective = NarrativePerspective.SecondPerson };
+                    Subject.WriteTo(TranslateOutput(ToSubject.Select(msg => msg.Occurrence?.Event?.Unpack(context, NarrativeNormalization.Normal)), entities));
                 }
             }
 
@@ -146,7 +149,8 @@ namespace NetMud.Communication.Messaging
                 }
                 else
                 {
-                    Target.WriteTo(TranslateOutput(ToTarget.Select(msg => msg.Occurrence?.Event?.Unpack(language, 0, 0, 0, NarrativeNormalization.Normal, false, false, false, true, LexicalPosition.None, LexicalTense.Present, NarrativePerspective.SecondPerson, false)), entities));
+                    var context = new LexicalContext() { Language = language, Perspective = NarrativePerspective.SecondPerson };
+                    Target.WriteTo(TranslateOutput(ToTarget.Select(msg => msg.Occurrence?.Event?.Unpack(context, NarrativeNormalization.Normal)), entities));
                 }
             }
 
@@ -166,7 +170,8 @@ namespace NetMud.Communication.Messaging
                     else
                     {
                         var language = dude.IsPlayer() ? ((IPlayer)dude).Template<IPlayerTemplate>().Account.Config.UILanguage : null;
-                        dude.WriteTo(TranslateOutput(ToOrigin.Select(msg => msg.Occurrence?.Event?.Unpack(language, 0, 0, 0, NarrativeNormalization.Normal, false, false, false, true, LexicalPosition.None, LexicalTense.Present, NarrativePerspective.ThirdPerson, false)), entities));
+                        var context = new LexicalContext() { Language = language, Perspective = NarrativePerspective.ThirdPerson };
+                        dude.WriteTo(TranslateOutput(ToOrigin.Select(msg => msg.Occurrence?.Event?.Unpack(context, NarrativeNormalization.Normal)), entities));
                     }
                 }
             }
@@ -185,7 +190,8 @@ namespace NetMud.Communication.Messaging
                     else
                     {
                         var language = dude.IsPlayer() ? ((IPlayer)dude).Template<IPlayerTemplate>().Account.Config.UILanguage : null;
-                        dude.WriteTo(TranslateOutput(ToDestination.Select(msg => msg.Occurrence?.Event?.Unpack(language, 0, 0, 0, NarrativeNormalization.Normal, false, false, false, true, LexicalPosition.None, LexicalTense.Present, NarrativePerspective.ThirdPerson, false)), entities));
+                        var context = new LexicalContext() { Language = language, Perspective = NarrativePerspective.ThirdPerson };
+                        dude.WriteTo(TranslateOutput(ToDestination.Select(msg => msg.Occurrence?.Event?.Unpack(context, NarrativeNormalization.Normal)), entities));
                     }
                 }
             }

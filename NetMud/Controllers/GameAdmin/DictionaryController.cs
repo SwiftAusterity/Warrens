@@ -176,6 +176,7 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = message });
             }
 
+            obj.Name = vModel.DataObject.Name;
             obj.Severity = vModel.DataObject.Severity;
             obj.Quality = vModel.DataObject.Quality;
             obj.Elegance = vModel.DataObject.Elegance;
@@ -190,6 +191,7 @@ namespace NetMud.Controllers.GameAdmin
             obj.Determinant = vModel.DataObject.Determinant;
             obj.Positional = vModel.DataObject.Positional;
             obj.Perspective = vModel.DataObject.Perspective;
+            obj.Semantics = vModel.DataObject.Semantics;
 
             if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {

@@ -1,5 +1,6 @@
 ﻿using NetMud.Communication.Lexical;
 using NetMud.Data.Architectural;
+using NetMud.Data.Architectural.ActorBase;
 using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
@@ -80,6 +81,13 @@ namespace NetMud.Data.Linguistic
         [UIHint("EnumDropDownList")]
         [Required]
         public NarrativePerspective Perspective { get; set; }
+
+        /// <summary>
+        /// Tags that describe the purpose/meaning of the words
+        /// </summary>
+        [Display(Name = "Semantic Tags", Description = "Tags that describe the purpose/meaning of the word. (like Food or Positional)")]
+        [UIHint("TagContainer")]
+        public HashSet<string> Semantics { get; set; }
 
         /// <summary>
         /// Is this a feminine or masculine word
@@ -286,7 +294,18 @@ namespace NetMud.Data.Linguistic
 
             foreach (var language in otherLanguages)
             {
-                var translatedWord = Thesaurus.GetSynonym(this, 0, 0, 0, Possessive, Feminine, Plural, Determinant, Positional, Tense, Perspective, language);
+                var context = new LexicalContext() {
+                    Language = language,
+                    Perspective = Perspective,
+                    Tense = Tense,
+                    Position = Positional,
+                    Determinant = Determinant,
+                    Plural = Plural,
+                    Possessive = Possessive,
+                    GenderForm = new Gender() { Feminine = true }
+                };
+
+                var translatedWord = Thesaurus.GetSynonym(this, context);
 
                 //no linguistic synonym
                 if (translatedWord == this)

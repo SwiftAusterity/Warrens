@@ -30,11 +30,6 @@ namespace NetMud.DataStructure.Linguistic
         HashSet<ILexica> Modifiers { get; set; }
 
         /// <summary>
-        /// Context used to help describe events
-        /// </summary>
-        LexicalContext EventingContext { get; set; }
-
-        /// <summary>
         /// Try to add a modifier to a lexica
         /// </summary>
         /// <param name="modifier">the lexica that is the modifier</param>
@@ -96,15 +91,13 @@ namespace NetMud.DataStructure.Linguistic
         /// <param name="perspective">The personage of the sentence structure</param>
         /// <param name="omitName">Should we omit the proper name of the initial subject entirely (and only resort to pronouns)</param>
         /// <returns>A long description</returns>
-        string Unpack(ILanguage language, int severity, int eloquence, int quality, NarrativeNormalization normalization, bool possessive, bool feminine, bool plural, bool determinant,
-            LexicalPosition positioning, LexicalTense tense, NarrativePerspective perspective, bool omitName = true);
+        string Unpack(LexicalContext context, NarrativeNormalization normalization, bool omitName = true);
 
         /// <summary>
         /// Describe the lexica
         /// </summary>
         /// <returns></returns>
-        string Describe(ILanguage language, int severity, int eloquence, int quality, bool possessive, bool feminine, bool plural, bool determinant,
-            LexicalPosition positioning, LexicalTense tense, NarrativePerspective perspective);
+        string Describe(LexicalContext context);
 
         /// <summary>
         /// Alter the lex entirely including all of its sublex
@@ -114,14 +107,13 @@ namespace NetMud.DataStructure.Linguistic
         /// <param name="eloquence">the eloquence delta</param>
         /// <param name="quality">the quality delta</param>
         /// <returns>the new lex</returns>
-        ILexica Mutate(ILanguage language, int severity, int eloquence, int quality, bool possessive, bool feminine, bool plural, bool determinant, 
-            LexicalPosition positioning, LexicalTense tense, NarrativePerspective perspective);
+        ILexica Mutate(LexicalContext context);
 
         /// <summary>
         /// Build out the context object
         /// </summary>
         /// <param name="entity">the subject</param>
-        void BuildContext(IEntity entity, int strength, bool plural);
+        LexicalContext BuildContext(IEntity entity);
 
         /// <summary>
         /// Get the dictata from this lexica

@@ -51,6 +51,11 @@ namespace NetMud.DataStructure.Linguistic
         bool Possessive { get; set; }
 
         /// <summary>
+        /// Tags that describe the purpose/meaning of the words
+        /// </summary>
+        HashSet<string> Semantics { get; set; }
+
+        /// <summary>
         /// Strength rating of word in relation to synonyms
         /// </summary>
         int Severity { get; set; }

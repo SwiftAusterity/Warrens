@@ -4,18 +4,9 @@
 
 <h4>Details</h4>
 <div class="form-group row">
-    @if (Model.ApprovedBy != null)
-    {
-        @Html.EditorFor(m => m.Name, new { disabled = true })
-        @Html.EditorFor(m => m.Language, new { validItems = ViewData["ValidLanguages"] })
-        @Html.EditorFor(m => m.WordType)
-    }
-    else
-    {
-        @Html.EditorFor(m => m.Name)
-        @Html.EditorFor(m => m.Language, new { validItems = ViewData["ValidLanguages"] })
-        @Html.EditorFor(m => m.WordType)
-    }
+    @Html.EditorFor(m => m.Name)
+    @Html.EditorFor(m => m.Language, new { validItems = ViewData["ValidLanguages"] })
+    @Html.EditorFor(m => m.WordType)
     @Html.EditorFor(m => m.Tense)
     @Html.EditorFor(m => m.Perspective)
 </div>
@@ -31,6 +22,9 @@
     @Html.EditorFor(m => m.Plural)
     @Html.EditorFor(m => m.Feminine)
 </div>
+
+<h4>Semantic Tags</h4>
+@Html.EditorFor(m => m.Semantics)
 
 <h4>Synonyms</h4>
 @Html.EditorFor(m => m.Synonyms, new { validItems = ViewData["ValidWords"] })
