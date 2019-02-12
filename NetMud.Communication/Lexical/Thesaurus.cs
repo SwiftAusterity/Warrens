@@ -1,5 +1,8 @@
 ﻿using NetMud.DataAccess;
+using NetMud.DataAccess.Cache;
+using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Linguistic;
+using NetMud.DataStructure.System;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -14,6 +17,29 @@ namespace NetMud.Communication.Lexical
     /// </summary>
     public static class Thesaurus
     {
+        public static IDictata GetWord(LexicalContext context)
+        {
+            if(context.Language == null)
+            {
+                IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
+
+                context.Language = globalConfig.BaseLanguage;
+            }
+
+            var possibleWords = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.Language == context.Language);
+
+            possibleWords = possibleWords.Where(word => word.Possessive == context.Possessive
+                                                            && word.Feminine == context.GenderForm?.Feminine
+                                                            && word.Plural == context.Plural
+                                                            && word.Determinant == context.Determinant
+                                                            && (context.Position == LexicalPosition.None || word.Positional == context.Position)
+                                                            && (context.Tense == LexicalTense.None || word.Tense == context.Tense)
+                                                            && (context.Perspective == NarrativePerspective.None || word.Perspective == context.Perspective)
+                                                            && word.SuitableForUse);
+
+            return possibleWords.FirstOrDefault();
+        }
+
         public static string GetTranslatedWord(string azureKey, string phrase, ILanguage sourceLanguage, ILanguage targetLanguage)
         {
             if (string.IsNullOrWhiteSpace(targetLanguage.GoogleLanguageCode) || string.IsNullOrWhiteSpace(sourceLanguage.GoogleLanguageCode))
