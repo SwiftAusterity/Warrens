@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NetMud.DataStructure.Architectural.EntityBase;
+using System;
 using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Linguistic
@@ -34,6 +35,11 @@ namespace NetMud.DataStructure.Linguistic
         HashSet<ILexica> Modifiers { get; set; }
 
         /// <summary>
+        /// Context used to help describe events
+        /// </summary>
+        LexicalContext EventingContext { get; set; }
+
+        /// <summary>
         /// Try to add a modifier to a lexica
         /// </summary>
         /// <param name="modifier">the lexica that is the modifier</param>
@@ -45,14 +51,21 @@ namespace NetMud.DataStructure.Linguistic
         /// </summary>
         /// <param name="modifier">the lexica that is the modifier</param>
         /// <returns>Whether or not it succeeded</returns>
-        void TryModify(ILexica[] modifier);
+        void TryModify(ILexica[] modifiers);
 
         /// <summary>
         /// Try to add a modifier to a lexica
         /// </summary>
         /// <param name="modifier">the lexica that is the modifier</param>
         /// <returns>Whether or not it succeeded</returns>
-        void TryModify(IEnumerable<ILexica> modifier);
+        void TryModify(IEnumerable<ILexica> modifiers);
+
+        /// <summary>
+        /// Try to add a modifier to a lexica
+        /// </summary>
+        /// <param name="modifier">the lexica that is the modifier</param>
+        /// <returns>Whether or not it succeeded</returns>
+        void TryModify(HashSet<ILexica> modifiers);
 
         /// <summary>
         /// Try to add a modifier to a lexica
@@ -78,14 +91,24 @@ namespace NetMud.DataStructure.Linguistic
         /// <summary>
         /// Create a narrative description from this
         /// </summary>
+        /// <param name="language">What language this should output in</param>
+        /// <param name="severity">Severity delta modifier to find synonyms with</param>
+        /// <param name="eloquence">eloquence delta modifier to find synonyms with</param>
+        /// <param name="quality">quality delta modifier to find synonyms with</param>
         /// <param name="normalization">How much sentence splitting should be done</param>
         /// <param name="verbosity">A measure of how much flourish should be added as well as how far words get synonym-upgraded by "finesse". (0 to 100)</param>
         /// <param name="chronology">The time tensing of the sentence structure</param>
         /// <param name="perspective">The personage of the sentence structure</param>
         /// <param name="omitName">Should we omit the proper name of the initial subject entirely (and only resort to pronouns)</param>
         /// <returns>A long description</returns>
-        string Describe(ILanguage language, NarrativeNormalization normalization, int verbosity, LexicalTense chronology = LexicalTense.Present,
-            NarrativePerspective perspective = NarrativePerspective.SecondPerson, bool omitName = true);
+        string Unpack(ILanguage language, int severity, int eloquence, int quality, NarrativeNormalization normalization, int verbosity, 
+            LexicalTense chronology = LexicalTense.Present, NarrativePerspective perspective = NarrativePerspective.SecondPerson, bool omitName = true);
+
+        /// <summary>
+        /// Describe the lexica
+        /// </summary>
+        /// <returns></returns>
+        string Describe(ILanguage language, int severity, int eloquence, int quality);
 
         /// <summary>
         /// Alter the lex entirely including all of its sublex
@@ -96,6 +119,12 @@ namespace NetMud.DataStructure.Linguistic
         /// <param name="quality">the quality delta</param>
         /// <returns>the new lex</returns>
         ILexica Mutate(ILanguage language, int severity, int eloquence, int quality);
+
+        /// <summary>
+        /// Build out the context object
+        /// </summary>
+        /// <param name="entity">the subject</param>
+        void BuildContext(IEntity entity, int strength, bool plural);
 
         /// <summary>
         /// Get the dictata from this lexica

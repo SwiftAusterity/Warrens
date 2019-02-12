@@ -184,6 +184,7 @@ namespace NetMud.Controllers.GameAdmin
             obj.Antonyms = vModel.DataObject.Antonyms;
             obj.Language = vModel.DataObject.Language;
             obj.WordType = vModel.DataObject.WordType;
+            obj.Feminine = vModel.DataObject.Feminine;
 
             if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {

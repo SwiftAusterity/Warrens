@@ -184,6 +184,7 @@ namespace NetMud.Controllers.GameAdmin
             obj.Collective = vModel.DataObject.Collective;
             obj.Possessive = vModel.DataObject.Possessive;
             obj.Base = vModel.DataObject.Base;
+            obj.Feminine = vModel.DataObject.Feminine;
 
             if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {

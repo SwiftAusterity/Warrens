@@ -146,25 +146,29 @@ namespace NetMud.Communication.Lexical
         /// <summary>
         /// Create a narrative description from this
         /// </summary>
+        /// <param name="language">What language this should output in</param>
+        /// <param name="severity">Severity delta modifier to find synonyms with</param>
+        /// <param name="eloquence">eloquence delta modifier to find synonyms with</param>
+        /// <param name="quality">quality delta modifier to find synonyms with</param>
         /// <param name="normalization">How much sentence splitting should be done</param>
         /// <param name="verbosity">A measure of how much flourish should be added as well as how far words get synonym-upgraded by "finesse". (0 to 100)</param>
         /// <param name="chronology">The time tensing of the sentence structure</param>
         /// <param name="perspective">The personage of the sentence structure</param>
         /// <param name="omitName">Should we omit the proper name of the initial subject entirely (and only resort to pronouns)</param>
         /// <returns>A long description</returns>
-        public string Describe(ILanguage language, NarrativeNormalization normalization, int verbosity, LexicalTense chronology = LexicalTense.Present,
-            NarrativePerspective perspective = NarrativePerspective.SecondPerson, bool omitName = true)
+        public string Unpack(ILanguage language, int severity, int eloquence, int quality, NarrativeNormalization normalization, int verbosity,
+            LexicalTense chronology = LexicalTense.Present, NarrativePerspective perspective = NarrativePerspective.SecondPerson, bool omitName = true)
         {
-            return Event.Describe(language, normalization, verbosity, chronology, perspective, omitName);
+            return Event.Unpack(language, severity, eloquence, quality, normalization, verbosity, chronology, perspective, omitName);
         }
 
         /// <summary>
         /// Render this lexica to a sentence fragment (or whole sentence if it's a Subject role)
         /// </summary>
         /// <returns>a sentence fragment</returns>
-        public override string ToString()
+        public string Describe(ILanguage language, int severity, int eloquence, int quality)
         {
-            return Event.ToString();
+            return Event.Describe(language, severity, eloquence, quality);
         }
     }
 }

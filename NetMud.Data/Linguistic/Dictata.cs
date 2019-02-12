@@ -66,6 +66,13 @@ namespace NetMud.Data.Linguistic
         public LexicalTense Tense { get; set; }
 
         /// <summary>
+        /// Is this a feminine or masculine word
+        /// </summary>
+        [Display(Name = "Feminine Form", Description = "Is this a feminine or masculine word? (only applies to gendered languages)")]
+        [UIHint("Boolean")]
+        public bool Feminine { get; set; }
+
+        /// <summary>
         /// Strength rating of word in relation to synonyms
         /// </summary>
         [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]

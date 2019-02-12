@@ -16,6 +16,14 @@ namespace NetMud.Data.Architectural.ActorBase
         public override ContentApprovalType ApprovalType { get { return ContentApprovalType.Admin; } }
 
         /// <summary>
+        /// Is this a feminine gender for gramatical purposes
+        /// </summary>
+        [Display(Name = "Feminine", Description = "Is this a feminine gender for gramatical purposes?")]
+        [DataType(DataType.Text)]
+        [Required]
+        public bool Feminine { get; set; }
+
+        /// <summary>
         /// Collective pronoun
         /// </summary>
         [StringDataIntegrity("Pluralization is blank")]

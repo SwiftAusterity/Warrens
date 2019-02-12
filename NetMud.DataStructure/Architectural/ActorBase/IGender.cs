@@ -6,6 +6,11 @@
     public interface IGender : ILookupData
     {
         /// <summary>
+        /// Is this a feminine gender for gramatical purposes
+        /// </summary>
+        bool Feminine { get; set; }
+
+        /// <summary>
         /// Collective pronoun
         /// </summary>
         string Collective { get; set; }
