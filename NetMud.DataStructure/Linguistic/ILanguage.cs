@@ -34,6 +34,11 @@ namespace NetMud.DataStructure.Linguistic
         bool AntecendentPunctuation { get; set; }
 
         /// <summary>
+        /// Rules for sentence construction
+        /// </summary>
+        HashSet<SentenceGrammarRule> SentenceRules { get; set; }
+
+        /// <summary>
         /// List of grammatical rules to use in sentence construction
         /// </summary>
         HashSet<IGrammarRule> Rules { get; set; }

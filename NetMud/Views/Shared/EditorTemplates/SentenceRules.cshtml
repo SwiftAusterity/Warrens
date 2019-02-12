@@ -1,0 +1,26 @@
+﻿@using NetMud.Models
+@using NetMud.DataStructure.Linguistic
+
+@model HashSet<SentenceGrammarRule>
+
+@{
+    var currentCount = Model.Count();
+    var rowsName = ViewData.ModelMetadata.PropertyName + "Rows";
+}
+
+<div id="@rowsName" class="iterativeContainer">
+    <div class="addRowContainer">
+        <div class="col-sm-1">
+            @Html.DescriptionFor(m => m)
+            <a href="#" class="addRow btn" data-current-row="@currentCount" onclick="javascript: replacePart(this, newSentenceGrammarRuleList, @currentCount, '@rowsName'); return false;"><span class="addWord">Add Row</span></a>
+        </div>
+    </div>
+    @if (Model.Count() > 0)
+    {
+        @Html.EditorForMany(m => m, null, 0, "SentenceRule")
+    }
+</div>
+
+<script type="text/javascript">
+    var newSentenceGrammarRuleList = decodeHtml('@Html.EmptyEditorForMany(m => m, null, currentCount, "SentenceRule")');
+</script>

@@ -187,6 +187,7 @@ namespace NetMud.Controllers.GameAdmin
             obj.Gendered = vModel.DataObject.Gendered;
             obj.PrecedentPunctuation = vModel.DataObject.PrecedentPunctuation;
             obj.Rules = vModel.DataObject.Rules;
+            obj.SentenceRules = vModel.DataObject.SentenceRules;
 
             if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {

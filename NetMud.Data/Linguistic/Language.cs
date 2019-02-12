@@ -69,6 +69,12 @@ namespace NetMud.Data.Linguistic
         [UIHint("GrammarRules")]
         public HashSet<IGrammarRule> Rules { get; set; }
 
+        /// <summary>
+        /// Rules for sentence construction
+        /// </summary>
+        [UIHint("SentenceRules")]
+        public HashSet<SentenceGrammarRule> SentenceRules { get; set; }
+
         public Language()
         {
             Name = string.Empty;

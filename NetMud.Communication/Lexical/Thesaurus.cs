@@ -86,7 +86,7 @@ namespace NetMud.Communication.Lexical
             return string.Empty;
         }
 
-        public static IDictata GetWord(LexicalContext context)
+        public static IDictata GetWord(LexicalContext context, LexicalType type)
         {
             if (context.Language == null)
             {
@@ -95,10 +95,10 @@ namespace NetMud.Communication.Lexical
                 context.Language = globalConfig.BaseLanguage;
             }
 
-            var possibleWords = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.Language == context.Language);
+            var possibleWords = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.Language == context.Language && dict.WordType == type);
 
             possibleWords = possibleWords.Where(word => word.Possessive == context.Possessive
-                                                            && word.Feminine == context.GenderForm?.Feminine
+                                                            && (context.GenderForm == null || word.Feminine == context.GenderForm?.Feminine)
                                                             && word.Plural == context.Plural
                                                             && word.Determinant == context.Determinant
                                                             && !context.Semantics.Any() || word.Semantics.All(wrd => context.Semantics.Contains(wrd))

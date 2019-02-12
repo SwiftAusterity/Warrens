@@ -1,0 +1,10 @@
+﻿@using NetMud.DataStructure.Linguistic
+
+@model SentenceGrammarRule
+
+<div class="form-group row">
+    <a href="#" class="removeRow col-form-label" title="Remove this" onclick="javascript: $(this).parent().remove(); return false;">X</a>
+    @Html.EditorFor(m => m.Type)
+    @Html.EditorFor(m => m.Fragment)
+    @Html.EditorFor(m => m.ModificationOrder)
+</div>

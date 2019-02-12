@@ -122,7 +122,7 @@ namespace NetMud.Communication.Messaging
                     var language = Actor.IsPlayer() ? ((IPlayer)Actor).Template<IPlayerTemplate>().Account.Config.UILanguage : null;
                     var context = new LexicalContext() { Language = language };
 
-                    Actor.WriteTo(TranslateOutput(ToActor.Select(msg => msg.Occurrence?.Event?.Unpack(context, NarrativeNormalization.Normal)), entities));
+                    Actor.WriteTo(TranslateOutput(ToActor.Select(msg => msg.Occurrence?.Event?.Unpack(context)), entities));
                 }
             }
 
@@ -136,7 +136,7 @@ namespace NetMud.Communication.Messaging
                 {
                     var language = Subject.IsPlayer() ? ((IPlayer)Subject).Template<IPlayerTemplate>().Account.Config.UILanguage : null;
                     var context = new LexicalContext() { Language = language, Perspective = NarrativePerspective.SecondPerson };
-                    Subject.WriteTo(TranslateOutput(ToSubject.Select(msg => msg.Occurrence?.Event?.Unpack(context, NarrativeNormalization.Normal)), entities));
+                    Subject.WriteTo(TranslateOutput(ToSubject.Select(msg => msg.Occurrence?.Event?.Unpack(context)), entities));
                 }
             }
 
@@ -150,7 +150,7 @@ namespace NetMud.Communication.Messaging
                 else
                 {
                     var context = new LexicalContext() { Language = language, Perspective = NarrativePerspective.SecondPerson };
-                    Target.WriteTo(TranslateOutput(ToTarget.Select(msg => msg.Occurrence?.Event?.Unpack(context, NarrativeNormalization.Normal)), entities));
+                    Target.WriteTo(TranslateOutput(ToTarget.Select(msg => msg.Occurrence?.Event?.Unpack(context)), entities));
                 }
             }
 
@@ -171,7 +171,7 @@ namespace NetMud.Communication.Messaging
                     {
                         var language = dude.IsPlayer() ? ((IPlayer)dude).Template<IPlayerTemplate>().Account.Config.UILanguage : null;
                         var context = new LexicalContext() { Language = language, Perspective = NarrativePerspective.ThirdPerson };
-                        dude.WriteTo(TranslateOutput(ToOrigin.Select(msg => msg.Occurrence?.Event?.Unpack(context, NarrativeNormalization.Normal)), entities));
+                        dude.WriteTo(TranslateOutput(ToOrigin.Select(msg => msg.Occurrence?.Event?.Unpack(context)), entities));
                     }
                 }
             }
@@ -191,7 +191,7 @@ namespace NetMud.Communication.Messaging
                     {
                         var language = dude.IsPlayer() ? ((IPlayer)dude).Template<IPlayerTemplate>().Account.Config.UILanguage : null;
                         var context = new LexicalContext() { Language = language, Perspective = NarrativePerspective.ThirdPerson };
-                        dude.WriteTo(TranslateOutput(ToDestination.Select(msg => msg.Occurrence?.Event?.Unpack(context, NarrativeNormalization.Normal)), entities));
+                        dude.WriteTo(TranslateOutput(ToDestination.Select(msg => msg.Occurrence?.Event?.Unpack(context)), entities));
                     }
                 }
             }

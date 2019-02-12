@@ -10,6 +10,7 @@
         DirectObject = 1,
         IndirectObject = 2,
         Verb = 3,
-        Descriptive = 4
+        Descriptive = 4,
+        ConjugatedVerb = 5
     }
 }

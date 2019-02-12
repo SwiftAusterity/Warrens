@@ -100,7 +100,7 @@ namespace NetMud.DataStructure.Linguistic
         /// <param name="perspective">The personage of the sentence structure</param>
         /// <param name="omitName">Should we omit the proper name of the initial subject entirely (and only resort to pronouns)</param>
         /// <returns>A long description</returns>
-        string Unpack(LexicalContext context, NarrativeNormalization normalization, bool omitName = true);
+        string Unpack(LexicalContext context, bool omitName = true);
 
         /// <summary>
         /// Describe the lexica

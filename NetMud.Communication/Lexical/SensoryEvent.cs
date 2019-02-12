@@ -156,9 +156,9 @@ namespace NetMud.Communication.Lexical
         /// <param name="perspective">The personage of the sentence structure</param>
         /// <param name="omitName">Should we omit the proper name of the initial subject entirely (and only resort to pronouns)</param>
         /// <returns>A long description</returns>
-        public string Unpack(LexicalContext context, NarrativeNormalization normalization, bool omitName = true)
+        public string Unpack(LexicalContext context, bool omitName = true)
         {
-            return Event.Unpack(context, normalization, omitName);
+            return Event.Unpack(context, omitName);
         }
 
         /// <summary>

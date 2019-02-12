@@ -443,7 +443,9 @@ div.roomAsciiMap {
 
         .iterativeContainer .form-group div {
             margin: 5px 5px 15px 5px;
-            width: 18%;
+            min-width: 18%;
+            padding-right: 1px;
+            width: unset;
         }
 
 .descriptiveSection {
