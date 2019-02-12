@@ -78,6 +78,13 @@ namespace NetMud.Data.Linguistic
         public GrammaticalType FromRole { get; set; }
 
         /// <summary>
+        /// When the origin word has this semantic tag
+        /// </summary>
+        [Display(Name = "From Semantic", Description = "When the origin word has this semantic tag.")]
+        [DataType(DataType.Text)]
+        public string FromSemantics { get; set; }
+
+        /// <summary>
         /// Applies when we're trying to figure out where to put this type of word
         /// </summary>
         [Display(Name = "To Type", Description = "Applies when we're trying to figure out where to put this type of word.")]
@@ -90,6 +97,13 @@ namespace NetMud.Data.Linguistic
         [Display(Name = "To Role", Description = "This rule applies when the adjunct word is this role.")]
         [UIHint("EnumDropDownList")]
         public GrammaticalType ToRole { get; set; }
+
+        /// <summary>
+        /// When the modifying word has this semantic tag
+        /// </summary>
+        [Display(Name = "To Semantic", Description = "When the modifying word has this semantic tag.")]
+        [DataType(DataType.Text)]
+        public string ToSemantics { get; set; }
 
         /// <summary>
         /// Can be made into a list

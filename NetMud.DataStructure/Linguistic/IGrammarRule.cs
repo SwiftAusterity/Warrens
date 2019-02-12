@@ -31,6 +31,11 @@
         GrammaticalType FromRole { get; set; }
 
         /// <summary>
+        /// When the origin word has this semantic tag
+        /// </summary>
+        string FromSemantics { get; set; }
+
+        /// <summary>
         /// Applies when we're trying to figure out where to put this type of word
         /// </summary>
         LexicalType ToType { get; set; }
@@ -39,6 +44,11 @@
         /// This rule applies when the adjunct word is this role
         /// </summary>
         GrammaticalType ToRole { get; set; }
+
+        /// <summary>
+        /// When the modifying word has this semantic tag
+        /// </summary>
+        string ToSemantics { get; set; }
 
         /// <summary>
         /// Can be made into a list
