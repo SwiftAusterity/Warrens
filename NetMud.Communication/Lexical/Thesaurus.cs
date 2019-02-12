@@ -17,29 +17,6 @@ namespace NetMud.Communication.Lexical
     /// </summary>
     public static class Thesaurus
     {
-        public static IDictata GetWord(LexicalContext context)
-        {
-            if(context.Language == null)
-            {
-                IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
-
-                context.Language = globalConfig.BaseLanguage;
-            }
-
-            var possibleWords = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.Language == context.Language);
-
-            possibleWords = possibleWords.Where(word => word.Possessive == context.Possessive
-                                                            && word.Feminine == context.GenderForm?.Feminine
-                                                            && word.Plural == context.Plural
-                                                            && word.Determinant == context.Determinant
-                                                            && (context.Position == LexicalPosition.None || word.Positional == context.Position)
-                                                            && (context.Tense == LexicalTense.None || word.Tense == context.Tense)
-                                                            && (context.Perspective == NarrativePerspective.None || word.Perspective == context.Perspective)
-                                                            && word.SuitableForUse);
-
-            return possibleWords.FirstOrDefault();
-        }
-
         public static string GetTranslatedWord(string azureKey, string phrase, ILanguage sourceLanguage, ILanguage targetLanguage)
         {
             if (string.IsNullOrWhiteSpace(targetLanguage.GoogleLanguageCode) || string.IsNullOrWhiteSpace(sourceLanguage.GoogleLanguageCode))
@@ -109,47 +86,48 @@ namespace NetMud.Communication.Lexical
             return string.Empty;
         }
 
-        public static IDictata GetAntonym(IDictata baseWord, int severityModifier, int eleganceModifier, int qualityModifier,
-            bool possessive, bool feminine, bool plural, bool determinant, LexicalPosition positioning, LexicalTense tense, NarrativePerspective perspective, ILanguage language = null)
+        public static IDictata GetWord(LexicalContext context)
+        {
+            if (context.Language == null)
+            {
+                IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
+
+                context.Language = globalConfig.BaseLanguage;
+            }
+
+            var possibleWords = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.Language == context.Language);
+
+            possibleWords = possibleWords.Where(word => word.Possessive == context.Possessive
+                                                            && word.Feminine == context.GenderForm?.Feminine
+                                                            && word.Plural == context.Plural
+                                                            && word.Determinant == context.Determinant
+                                                            && !context.Semantics.Any() || word.Semantics.All(wrd => context.Semantics.Contains(wrd))
+                                                            && (context.Position == LexicalPosition.None || word.Positional == context.Position)
+                                                            && (context.Tense == LexicalTense.None || word.Tense == context.Tense)
+                                                            && (context.Perspective == NarrativePerspective.None || word.Perspective == context.Perspective)
+                                                            && word.SuitableForUse);
+
+            return possibleWords.FirstOrDefault();
+        }
+
+        public static IDictata GetAntonym(IDictata baseWord, LexicalContext context)
         {
             if (baseWord == null)
                 return baseWord;
 
-            var possibleWords = baseWord.Antonyms.AsEnumerable();
-
-            if (language != null)
-            {
-                possibleWords = possibleWords.Where(word => word.Language == language);
-            }
-
-            possibleWords = possibleWords.Where(word => word.Possessive == possessive
-                                                            && word.Feminine == feminine
-                                                            && word.Plural == plural
-                                                            && word.Determinant == determinant
-                                                            && (positioning == LexicalPosition.None || word.Positional == positioning)
-                                                            && (tense == LexicalTense.None || word.Tense == tense)
-                                                            && (perspective == NarrativePerspective.None || word.Perspective == perspective)
-                                                            && word.SuitableForUse);
-
-            if (!possibleWords.Any() ||
-                (severityModifier + eleganceModifier + qualityModifier == 0 && baseWord.Language == language && baseWord.Possessive == possessive
-                    && baseWord.Feminine == feminine && baseWord.Plural == plural && baseWord.Determinant == determinant)
-                )
-            {
-                return baseWord;
-            }
-
-            return GetRelatedWord(baseWord, severityModifier, eleganceModifier, qualityModifier, language, possibleWords);
+            return FocusFindWord(baseWord.Antonyms.AsEnumerable(), context, baseWord);
         }
-
 
         public static IDictata GetSynonym(IDictata baseWord, LexicalContext context)
         {
             if (baseWord == null)
                 return baseWord;
 
-            var possibleWords = baseWord.Synonyms.AsEnumerable();
+            return FocusFindWord(baseWord.Synonyms.AsEnumerable(), context, baseWord);
+        }
 
+        private static IDictata FocusFindWord(IEnumerable<IDictata> possibleWords, LexicalContext context, IDictata baseWord)
+        {
             if (context.Language != null)
             {
                 possibleWords = possibleWords.Where(word => word.Language == context.Language);
@@ -159,6 +137,7 @@ namespace NetMud.Communication.Lexical
                                                             && word.Feminine == context.GenderForm?.Feminine
                                                             && word.Plural == context.Plural
                                                             && word.Determinant == context.Determinant
+                                                            && !context.Semantics.Any() || word.Semantics.All(wrd => context.Semantics.Contains(wrd))
                                                             && (context.Position == LexicalPosition.None || word.Positional == context.Position)
                                                             && (context.Tense == LexicalTense.None || word.Tense == context.Tense)
                                                             && (context.Perspective == NarrativePerspective.None || word.Perspective == context.Perspective)
