@@ -102,9 +102,27 @@ namespace NetMud.Data.NaturalResource
                 return null;
             }
 
+            var collectiveContext = new LexicalContext()
+            {
+                Determinant = true,
+                Perspective = NarrativePerspective.SecondPerson,
+                Plural = false,
+                Position = LexicalPosition.Around,
+                Tense = LexicalTense.Present
+            };
+
+            var discreteContext = new LexicalContext()
+            {
+                Determinant = true,
+                Perspective = NarrativePerspective.ThirdPerson,
+                Plural = false,
+                Position = LexicalPosition.Attached,
+                Tense = LexicalTense.Present
+            };
+
             ISensoryEvent me = GetSelf(MessagingType.Visible);
-            Lexica collectiveNoun = new Lexica(LexicalType.Noun, GrammaticalType.Descriptive, Race.CollectiveNoun);
-            collectiveNoun.TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, amount.ToString()));
+            Lexica collectiveNoun = new Lexica(LexicalType.Noun, GrammaticalType.Descriptive, Race.CollectiveNoun, collectiveContext);
+            collectiveNoun.TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, amount.ToString(), discreteContext));
             me.Event.TryModify(collectiveNoun);
 
             return me;

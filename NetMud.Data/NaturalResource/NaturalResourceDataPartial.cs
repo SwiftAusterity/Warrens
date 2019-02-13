@@ -704,8 +704,17 @@ namespace NetMud.Data.NaturalResource
 
         public virtual ISensoryEvent RenderResourceCollection(IEntity viewer, int amount)
         {
+            var collectiveContext = new LexicalContext()
+            {
+                Determinant = true,
+                Perspective = NarrativePerspective.SecondPerson,
+                Plural = false,
+                Position = LexicalPosition.Around,
+                Tense = LexicalTense.Present
+            };
+
             ISensoryEvent me = GetImmediateDescription(viewer, MessagingType.Visible);
-            me.Event.TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, amount.ToString()));
+            me.Event.TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, amount.ToString(), collectiveContext));
 
             return me;
         }

@@ -337,20 +337,38 @@ namespace NetMud.Data.Room
             }
             else
             {
-                Lexica verb = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "leads");
+                var collectiveContext = new LexicalContext()
+                {
+                    Determinant = true,
+                    Perspective = NarrativePerspective.SecondPerson,
+                    Plural = false,
+                    Position = LexicalPosition.Near,
+                    Tense = LexicalTense.Present
+                };
+
+                var discreteContext = new LexicalContext()
+                {
+                    Determinant = true,
+                    Perspective = NarrativePerspective.ThirdPerson,
+                    Plural = false,
+                    Position = LexicalPosition.Attached,
+                    Tense = LexicalTense.Present
+                };
+
+                Lexica verb = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "leads", collectiveContext);
 
                 //Fallback to using names
                 if (DirectionType == MovementDirectionType.None)
                 {
-                    Lexica origin = new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, Origin.TemplateName);
-                    origin.TryModify(new Lexica(LexicalType.Noun, GrammaticalType.IndirectObject, Destination.TemplateName));
+                    Lexica origin = new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, Origin.TemplateName, discreteContext);
+                    origin.TryModify(new Lexica(LexicalType.Noun, GrammaticalType.IndirectObject, Destination.TemplateName, discreteContext));
                     verb.TryModify(origin);
                 }
                 else
                 {
-                    Lexica direction = new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, DirectionType.ToString());
-                    Lexica origin = new Lexica(LexicalType.Noun, GrammaticalType.IndirectObject, Origin.TemplateName);
-                    origin.TryModify(new Lexica(LexicalType.Noun, GrammaticalType.IndirectObject, Destination.TemplateName));
+                    Lexica direction = new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, DirectionType.ToString(), discreteContext);
+                    Lexica origin = new Lexica(LexicalType.Noun, GrammaticalType.IndirectObject, Origin.TemplateName, discreteContext);
+                    origin.TryModify(new Lexica(LexicalType.Noun, GrammaticalType.IndirectObject, Destination.TemplateName, discreteContext));
                     direction.TryModify(origin);
                 }
 

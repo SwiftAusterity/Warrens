@@ -278,6 +278,24 @@ namespace NetMud.Data.Inanimate
                 sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
             }
 
+            var collectiveContext = new LexicalContext()
+            {
+                Determinant = true,
+                Perspective = NarrativePerspective.SecondPerson,
+                Plural = false,
+                Position = LexicalPosition.Around,
+                Tense = LexicalTense.Present
+            };
+
+            var discreteContext = new LexicalContext()
+            {
+                Determinant = true,
+                Perspective = NarrativePerspective.ThirdPerson,
+                Plural = false,
+                Position = LexicalPosition.Attached,
+                Tense = LexicalTense.Present
+            };
+
             //Self becomes the first sense in the list
             ISensoryEvent me = null;
             foreach (MessagingType sense in sensoryTypes)
@@ -299,26 +317,20 @@ namespace NetMud.Data.Inanimate
 
                         me.TryModify(aDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
 
-                        Lexica collectiveSounds = new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you");
-
-                        ILexica uberSounds = collectiveSounds.TryModify(LexicalType.Verb, GrammaticalType.Verb, "hear");
+                        ILexica uberSounds = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "hear", collectiveContext);
                         uberSounds.TryModify(aDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
 
                         foreach (ISensoryEvent desc in aDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
                         {
-                            Lexica newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase);
+                            Lexica newDesc = new Lexica(desc.Event.Type, GrammaticalType.Subject, desc.Event.Phrase, discreteContext);
                             newDesc.TryModify(desc.Event.Modifiers);
 
-                            newDesc.TryModify(LexicalType.Pronoun, GrammaticalType.IndirectObject, "it")
-                                        .TryModify(LexicalType.Verb, GrammaticalType.Descriptive, "emanating")
-                                            .TryModify(LexicalType.Article, GrammaticalType.Descriptive, "from");
-
-                            uberSounds.TryModify(newDesc);
+                            me.TryModify(newDesc);
                         }
 
-                        if (uberSounds.Modifiers.Any(mod => mod.Role == GrammaticalType.DirectObject))
+                        if (uberSounds.Modifiers.Any(mod => mod.Role == GrammaticalType.Subject))
                         {
-                            me.TryModify(collectiveSounds);
+                            me.TryModify(uberSounds);
                         }
 
                         break;
@@ -337,21 +349,18 @@ namespace NetMud.Data.Inanimate
 
                         me.TryModify(oDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
 
-                        Lexica uberSmells = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "smell");
+                        Lexica uberSmells = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "smell", collectiveContext);
                         uberSmells.TryModify(oDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
 
                         foreach (ISensoryEvent desc in oDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
                         {
-                            Lexica newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase);
+                            Lexica newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
                             newDesc.TryModify(desc.Event.Modifiers);
-
-                            newDesc.TryModify(LexicalType.Pronoun, GrammaticalType.IndirectObject, "it")
-                                        .TryModify(LexicalType.Conjunction, GrammaticalType.Descriptive, "from");
 
                             uberSmells.TryModify(newDesc);
                         }
 
-                        if (uberSmells.Modifiers.Any(mod => mod.Role == GrammaticalType.DirectObject))
+                        if (uberSmells.Modifiers.Any(mod => mod.Role == GrammaticalType.Subject))
                         {
                             me.TryModify(uberSmells);
                         }
@@ -372,23 +381,20 @@ namespace NetMud.Data.Inanimate
 
                         me.TryModify(pDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
 
-                        Lexica collectivePsy = new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you");
+                        Lexica collectivePsy = new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you", collectiveContext);
 
                         ILexica uberPsy = collectivePsy.TryModify(LexicalType.Verb, GrammaticalType.Verb, "sense");
                         uberPsy.TryModify(pDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
 
                         foreach (ISensoryEvent desc in pDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
                         {
-                            Lexica newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase);
+                            Lexica newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
                             newDesc.TryModify(desc.Event.Modifiers);
-
-                            newDesc.TryModify(LexicalType.Pronoun, GrammaticalType.IndirectObject, "it")
-                                        .TryModify(LexicalType.Article, GrammaticalType.Descriptive, "from");
 
                             uberPsy.TryModify(newDesc);
                         }
 
-                        if (uberPsy.Modifiers.Any(mod => mod.Role == GrammaticalType.DirectObject))
+                        if (uberPsy.Modifiers.Any(mod => mod.Role == GrammaticalType.Subject))
                         {
                             me.TryModify(collectivePsy);
                         }
@@ -409,20 +415,18 @@ namespace NetMud.Data.Inanimate
 
                         me.TryModify(taDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
 
-                        Lexica uberTaste = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "taste");
+                        Lexica uberTaste = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "taste", collectiveContext);
                         uberTaste.TryModify(taDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
 
                         foreach (ISensoryEvent desc in taDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
                         {
-                            Lexica newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase);
+                            Lexica newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
                             newDesc.TryModify(desc.Event.Modifiers);
-
-                            newDesc.TryModify(LexicalType.Pronoun, GrammaticalType.IndirectObject, "it");
 
                             uberTaste.TryModify(newDesc);
                         }
 
-                        if (uberTaste.Modifiers.Any(mod => mod.Role == GrammaticalType.DirectObject))
+                        if (uberTaste.Modifiers.Any(mod => mod.Role == GrammaticalType.Subject))
                         {
                             me.TryModify(uberTaste);
                         }
@@ -443,20 +447,18 @@ namespace NetMud.Data.Inanimate
 
                         me.TryModify(tDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
 
-                        Lexica uberTouch = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "feel");
+                        Lexica uberTouch = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "feel", collectiveContext);
                         uberTouch.TryModify(tDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
 
                         foreach (ISensoryEvent desc in tDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
                         {
-                            Lexica newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase);
+                            Lexica newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
                             newDesc.TryModify(desc.Event.Modifiers);
-
-                            newDesc.TryModify(LexicalType.Pronoun, GrammaticalType.IndirectObject, "it");
 
                             uberTouch.TryModify(newDesc);
                         }
 
-                        if (uberTouch.Modifiers.Any(mod => mod.Role == GrammaticalType.DirectObject))
+                        if (uberTouch.Modifiers.Any(mod => mod.Role == GrammaticalType.Subject))
                         {
                             me.TryModify(uberTouch);
                         }
@@ -477,20 +479,18 @@ namespace NetMud.Data.Inanimate
 
                         me.TryModify(vDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
 
-                        Lexica uberSight = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "appears");
+                        Lexica uberSight = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "appears", collectiveContext);
                         uberSight.TryModify(vDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
 
                         foreach (ISensoryEvent desc in vDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
                         {
-                            Lexica newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase);
+                            Lexica newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
                             newDesc.TryModify(desc.Event.Modifiers);
-
-                            newDesc.TryModify(LexicalType.Pronoun, GrammaticalType.IndirectObject, "it");
 
                             uberSight.TryModify(newDesc);
                         }
 
-                        if (uberSight.Modifiers.Any(mod => mod.Role == GrammaticalType.DirectObject))
+                        if (uberSight.Modifiers.Any(mod => mod.Role == GrammaticalType.Subject))
                         {
                             me.TryModify(uberSight);
                         }

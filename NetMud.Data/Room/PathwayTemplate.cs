@@ -308,9 +308,18 @@ namespace NetMud.Data.Room
         {
             try
             {
+                var collectiveContext = new LexicalContext()
+                {
+                    Determinant = true,
+                    Perspective = NarrativePerspective.ThirdPerson,
+                    Plural = false,
+                    Position = LexicalPosition.None,
+                    Tense = LexicalTense.Present
+                };
+
                 List<IDictata> dictatas = new List<IDictata>
                 {
-                    new Dictata(new Lexica(LexicalType.ProperNoun, GrammaticalType.Subject, Name))
+                    new Dictata(new Lexica(LexicalType.ProperNoun, GrammaticalType.Subject, Name, collectiveContext))
                 };
                 dictatas.AddRange(Descriptives.Select(desc => desc.Event.GetDictata()));
 

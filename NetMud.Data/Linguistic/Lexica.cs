@@ -9,11 +9,13 @@ using NetMud.DataStructure.NPC;
 using NetMud.DataStructure.Player;
 using NetMud.DataStructure.System;
 using NetMud.Utility;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Linguistic
 {
@@ -52,12 +54,20 @@ namespace NetMud.Data.Linguistic
         [UIHint("LexicalModifiers")]
         public HashSet<ILexica> Modifiers { get; set; }
 
+        /// <summary>
+        /// The context for this, which gets passed downards to anything modifying it
+        /// </summary>
+        [JsonIgnore]
+        [ScriptIgnore]
+        public LexicalContext Context { get; set; }
+
         public Lexica()
         {
             Modifiers = new HashSet<ILexica>();
+            Context = new LexicalContext();
         }
 
-        public Lexica(LexicalType type, GrammaticalType role, string phrase)
+        public Lexica(LexicalType type, GrammaticalType role, string phrase, LexicalContext context)
         {
             Type = type;
             Phrase = phrase;
@@ -66,11 +76,10 @@ namespace NetMud.Data.Linguistic
             Modifiers = new HashSet<ILexica>();
 
             LexicalProcessor.VerifyDictata(this);
-
-            var context = new LexicalContext();
+            Context = context;
         }
 
-        public Lexica(LexicalType type, GrammaticalType role, string phrase, IEntity context)
+        public Lexica(LexicalType type, GrammaticalType role, string phrase, IEntity origin)
         {
             Type = type;
             Phrase = phrase;
@@ -79,42 +88,7 @@ namespace NetMud.Data.Linguistic
             Modifiers = new HashSet<ILexica>();
 
             LexicalProcessor.VerifyDictata(this);
-            BuildContext(context);
-        }
-
-        /// <summary>
-        /// Build out the context object
-        /// </summary>
-        /// <param name="entity">the subject</param>
-        public LexicalContext BuildContext(IEntity entity)
-        {
-            var context = new LexicalContext();
-
-            var specific = true;
-            var entityLocation = entity.CurrentLocation?.CurrentLocation();
-            if (entityLocation != null)
-            {
-                var type = entity.GetType();
-
-                //We're looking for more things with the same template id (ie based on the same thing, like more than one wolf or sword)
-                if (type == typeof(IInanimate))
-                {
-                    specific = !entityLocation.GetContents<IInanimate>().Any(item => item != entity && item.TemplateId == entity.TemplateId);
-                }
-                else if (type == typeof(INonPlayerCharacter))
-                {
-                    specific = !entityLocation.GetContents<INonPlayerCharacter>().Any(item => item != entity && item.TemplateId == entity.TemplateId);
-                    context.GenderForm = ((INonPlayerCharacter)entity).Gender;
-                }
-                else if (type == typeof(IPlayer))
-                {
-                    context.GenderForm = ((IPlayer)entity).Gender;
-                }
-            }
-
-            context.Determinant = specific;
-
-            return context;
+            Context = BuildContext(origin);
         }
 
         /// <summary>
@@ -211,7 +185,7 @@ namespace NetMud.Data.Linguistic
         /// <returns>Whether or not it succeeded</returns>
         public ILexica TryModify(LexicalType type, GrammaticalType role, string phrase, bool passthru = false)
         {
-            Lexica modifier = new Lexica(type, role, phrase);
+            Lexica modifier = new Lexica(type, role, phrase, Context);
             if (!Modifiers.Contains(modifier))
             {
                 Modifiers.Add(modifier);
@@ -251,25 +225,9 @@ namespace NetMud.Data.Linguistic
         /// <returns>A long description</returns>
         public string Unpack(LexicalContext context, bool omitName = true)
         {
-            IEnumerable<Tuple<SentenceType, ILexica>> sentences = GetSentences(this, context, omitName);
+            IEnumerable<LexicalSentence> sentences = GetSentences(omitName);
 
-            //join the sentences together with a space and add punctuation
-            List<string> finalOutput = new List<string>();
-            foreach (Tuple<SentenceType, ILexica> sentence in sentences)
-            {
-                var punctuation = LexicalProcessor.GetPunctuationMark(sentence.Item1);
-
-                //Ensure every sentence starts with a caps letter
-                string sentenceText = sentence.Item2.Describe(context).CapsFirstLetter(true).Trim();
-
-                string.Format("{1}{0}{2}", sentenceText,
-                    context.Language.PrecedentPunctuation ? punctuation : "",
-                    context.Language.AntecendentPunctuation ? punctuation : "");
-
-                finalOutput.Add(sentenceText);
-            }
-
-            return string.Join(" ", finalOutput).Trim();
+            return string.Join(" ", sentences.Select(sent => sent.Describe())).Trim();
         }
 
         /// <summary>
@@ -499,10 +457,11 @@ namespace NetMud.Data.Linguistic
         /// Alter the lex entirely including all of its sublex
         /// </summary>
         /// <param name="context">Contextual nature of the request.</param>
+        /// <param name="obfuscationLevel">% level of obfuscating this thing (0 to 100).</param>
         /// <returns>the new lex</returns>
-        public ILexica Mutate(LexicalContext context)
+        public ILexica Mutate(LexicalContext context, int obfuscationLevel = 0)
         {
-            Lexica newLexica = new Lexica(Type, Role, Phrase);
+            Lexica newLexica = new Lexica(Type, Role, Phrase, context);
 
             var dict = GetDictata();
 
@@ -510,7 +469,7 @@ namespace NetMud.Data.Linguistic
             {
                 var newDict = Thesaurus.GetSynonym(dict, context);
 
-                newLexica = new Lexica(Type, Role, newDict.Name);
+                newLexica = new Lexica(Type, Role, newDict.Name, context);
             }
 
             newLexica.TryModify(Modifiers);
@@ -518,24 +477,24 @@ namespace NetMud.Data.Linguistic
             return newLexica;
         }
 
-        private IEnumerable<Tuple<SentenceType, ILexica>> GetSentences(ILexica me, LexicalContext context, bool omitName)
+        private IEnumerable<LexicalSentence> GetSentences(bool omitName)
         {
-            List<Tuple<SentenceType, ILexica>> sentences = new List<Tuple<SentenceType, ILexica>>();
+            var me = new Lexica(Type, Role, Phrase, Context);
+            me.TryModify(Modifiers.Where(mod => mod != null));
 
-            //why is this happening
-            me.Modifiers.RemoveWhere(mod => mod == null);
+            List<LexicalSentence> sentences = new List<LexicalSentence>();
 
-            //TODO: make a get pronoun thing in the thesaurus
             if (omitName)
             {
-                var pronounContext = context;
+                var pronounContext = Context;
                 pronounContext.Perspective = NarrativePerspective.None;
                 pronounContext.Position = LexicalPosition.None;
                 pronounContext.Tense = LexicalTense.None;
                 pronounContext.Semantics = new HashSet<string>();
 
                 var pronoun = Thesaurus.GetWord(pronounContext, LexicalType.Pronoun);
-                me = new Lexica() { Type = pronoun.WordType, Phrase = pronoun.Name, Modifiers = me.Modifiers, Role = me.Role };
+                me = new Lexica(pronoun.WordType, me.Role, pronoun.Name, me.Context);
+                me.TryModify(me.Modifiers);
             }
 
             List<ILexica> subjects = new List<ILexica>
@@ -546,47 +505,74 @@ namespace NetMud.Data.Linguistic
 
             foreach (ILexica subject in subjects)
             {
-                List<ILexica> lexicas = new List<ILexica>();
-
-                //This is to catch directly described entities
+                var newLex = subject;
+                //This is to catch directly described entities, we have to add a verb to it for it to make sense.
                 if (subject.Modifiers.Any(mod => mod.Role == GrammaticalType.Descriptive) && !subject.Modifiers.Any(mod => mod.Role == GrammaticalType.Verb))
                 {
-                    Lexica newSubject = new Lexica(subject.Type, subject.Role, subject.Phrase);
+                    Lexica newSubject = new Lexica(subject.Type, subject.Role, subject.Phrase, subject.Context);
                     newSubject.TryModify(subject.Modifiers);
 
-                    var verbContext = context;
+                    var verbContext = subject.Context;
                     verbContext.Semantics = new HashSet<string> { "Existential" };
-                    var verb = Thesaurus.GetWord(context, LexicalType.Article);
+                    var verb = Thesaurus.GetWord(subject.Context, LexicalType.Article);
 
                     newSubject.TryModify(LexicalType.Article, GrammaticalType.Verb, verb.Name);
 
-                    lexicas.Add(newSubject);
-                }
-                else if (subject.Modifiers.Any())
-                {
-                    lexicas.Add(subject);
+                    newLex = newSubject;
                 }
 
-                foreach (ILexica lex in lexicas)
+                if (newLex.Modifiers.Any(mod => mod.Role == GrammaticalType.Subject))
                 {
-                    if (lex.Modifiers.Any(mod => mod.Role == GrammaticalType.Subject))
-                    {
-                        sentences.Add(new Tuple<SentenceType, ILexica>(SentenceType.Partial, lex));
+                    sentences.Add(new LexicalSentence(newLex) { Type = SentenceType.Partial });
 
-                        //fragment sentences
-                        foreach (ILexica subLex in lex.Modifiers.Where(mod => mod.Role == GrammaticalType.Subject))
-                        {
-                            sentences.Add(new Tuple<SentenceType, ILexica>(SentenceType.Statement, subLex));
-                        }
-                    }
-                    else
+                    //fragment sentences
+                    foreach (ILexica subLex in newLex.Modifiers.Where(mod => mod.Role == GrammaticalType.Subject))
                     {
-                        sentences.Add(new Tuple<SentenceType, ILexica>(SentenceType.Statement, lex));
+                        sentences.Add(new LexicalSentence(subLex) { Type = SentenceType.Statement });
                     }
+                }
+                else
+                {
+                    sentences.Add(new LexicalSentence(newLex) { Type = SentenceType.Statement });
                 }
             }
 
             return sentences;
+        }
+
+        /// <summary>
+        /// Build out the context object
+        /// </summary>
+        /// <param name="entity">the subject</param>
+        private LexicalContext BuildContext(IEntity entity)
+        {
+            var context = new LexicalContext();
+
+            var specific = true;
+            var entityLocation = entity.CurrentLocation?.CurrentLocation();
+            if (entityLocation != null)
+            {
+                var type = entity.GetType();
+
+                //We're looking for more things with the same template id (ie based on the same thing, like more than one wolf or sword)
+                if (type == typeof(IInanimate))
+                {
+                    specific = !entityLocation.GetContents<IInanimate>().Any(item => item != entity && item.TemplateId == entity.TemplateId);
+                }
+                else if (type == typeof(INonPlayerCharacter))
+                {
+                    specific = !entityLocation.GetContents<INonPlayerCharacter>().Any(item => item != entity && item.TemplateId == entity.TemplateId);
+                    context.GenderForm = ((INonPlayerCharacter)entity).Gender;
+                }
+                else if (type == typeof(IPlayer))
+                {
+                    context.GenderForm = ((IPlayer)entity).Gender;
+                }
+            }
+
+            context.Determinant = specific;
+
+            return context;
         }
 
         #region Equality Functions

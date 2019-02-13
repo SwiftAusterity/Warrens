@@ -30,6 +30,11 @@ namespace NetMud.DataStructure.Linguistic
         HashSet<ILexica> Modifiers { get; set; }
 
         /// <summary>
+        /// The context for this, which gets passed downards to anything modifying it
+        /// </summary>
+        LexicalContext Context { get; set; }
+
+        /// <summary>
         /// Try to add a modifier to a lexica
         /// </summary>
         /// <param name="modifier">the lexica that is the modifier</param>
@@ -81,14 +86,7 @@ namespace NetMud.DataStructure.Linguistic
         /// <summary>
         /// Create a narrative description from this
         /// </summary>
-        /// <param name="language">What language this should output in</param>
-        /// <param name="severity">Severity delta modifier to find synonyms with</param>
-        /// <param name="eloquence">eloquence delta modifier to find synonyms with</param>
-        /// <param name="quality">quality delta modifier to find synonyms with</param>
-        /// <param name="normalization">How much sentence splitting should be done</param>
-        /// <param name="verbosity">A measure of how much flourish should be added as well as how far words get synonym-upgraded by "finesse". (0 to 100)</param>
-        /// <param name="chronology">The time tensing of the sentence structure</param>
-        /// <param name="perspective">The personage of the sentence structure</param>
+        /// <param name="context">The full lexical context</param>
         /// <param name="omitName">Should we omit the proper name of the initial subject entirely (and only resort to pronouns)</param>
         /// <returns>A long description</returns>
         string Unpack(LexicalContext context, bool omitName = true);
@@ -96,24 +94,17 @@ namespace NetMud.DataStructure.Linguistic
         /// <summary>
         /// Describe the lexica
         /// </summary>
+        /// <param name="context">The full lexical context</param>
         /// <returns></returns>
         string Describe(LexicalContext context);
 
         /// <summary>
         /// Alter the lex entirely including all of its sublex
         /// </summary>
-        /// <param name="language">the new language</param>
-        /// <param name="severity">the severity delta</param>
-        /// <param name="eloquence">the eloquence delta</param>
-        /// <param name="quality">the quality delta</param>
+        /// <param name="context">The full lexical context</param>
+        /// <param name="obfuscationLevel">how much we should obscure the actual description</param>
         /// <returns>the new lex</returns>
-        ILexica Mutate(LexicalContext context);
-
-        /// <summary>
-        /// Build out the context object
-        /// </summary>
-        /// <param name="entity">the subject</param>
-        LexicalContext BuildContext(IEntity entity);
+        ILexica Mutate(LexicalContext context, int obfuscationLevel);
 
         /// <summary>
         /// Get the dictata from this lexica

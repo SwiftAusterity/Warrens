@@ -17,9 +17,16 @@ namespace NetMud.DataStructure.Linguistic
         /// <summary>
         /// Where does the To word fit around the From word? (the from word == 0)
         /// </summary>
-        [Display(Name = "Placement Order", Description = " Where in the sentence does this fit? (starts with 0).")]
+        [Display(Name = "Placement Order", Description = " Where in the sentence section does this fit? (starts with 0).")]
         [DataType(DataType.Text)]
-        public int ModificationOrder { get; set; }
+        public short ModificationOrder { get; set; }
+
+        /// <summary>
+        /// Subject vs Predicate
+        /// </summary>
+        [Display(Name = "Subject", Description = "Does this fit in the sentence Subject (true) or Predicate (false).")]
+        [UIHint("Boolean")]
+        public bool SubjectPredicate { get; set; }
 
         /// <summary>
         /// For this sentence type

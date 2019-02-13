@@ -267,15 +267,6 @@ namespace NetMud.Data.Linguistic
         }
 
         /// <summary>
-        /// Get this in lexica form
-        /// </summary>
-        /// <returns>A Lexica with the same values</returns>
-        public ILexica GetLexica()
-        {
-            return new Lexica(WordType, GrammaticalType.Subject, Name);
-        }
-
-        /// <summary>
         /// Add language translations for this
         /// </summary>
         public void FillLanguages()

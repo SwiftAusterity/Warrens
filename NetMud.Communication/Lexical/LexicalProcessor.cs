@@ -91,6 +91,7 @@ namespace NetMud.Communication.Lexical
                     punctuation = "?";
                     break;
                 case SentenceType.Statement:
+                case SentenceType.None:
                     punctuation = ".";
                     break;
             }
