@@ -1,5 +1,4 @@
-﻿
-using NetMud.DataStructure.Linguistic;
+﻿using NetMud.DataStructure.System;
 
 namespace NetMud.DataStructure.Architectural.EntityBase
 {
@@ -13,7 +12,7 @@ namespace NetMud.DataStructure.Architectural.EntityBase
         /// </summary>
         /// <param name="viewer">entity initiating the command</param>
         /// <returns>the output</returns>
-        OutputEvent RenderToLook(IEntity viewer);
+        IMessageCluster RenderToLook(IEntity viewer);
 
         /// <summary>
         /// Is this thing sensible to the entity

@@ -602,14 +602,19 @@ namespace NetMud.Data.Architectural.EntityBase
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public virtual ISensoryEvent RenderToLook(IEntity viewer)
+        public virtual IMessageCluster RenderToLook(IEntity viewer)
         {
+            var cluster = new MessageCluster();
             if (!IsVisibleTo(viewer))
             {
-                return new SensoryEvent(MessagingType.Visible);
+                cluster.ToActor = new Message[] { new Message(MessagingType.Visible, new SensoryEvent(MessagingType.Visible)) };
+            }
+            else
+            {
+                cluster.ToActor = new Message[] { new Message(MessagingType.Visible, GetFullDescription(viewer)) };
             }
 
-            return GetFullDescription(viewer);
+            return cluster;
         }
 
         /// <summary>

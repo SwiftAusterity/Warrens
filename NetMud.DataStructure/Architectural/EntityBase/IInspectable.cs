@@ -1,5 +1,4 @@
-﻿
-using NetMud.DataStructure.Linguistic;
+﻿using NetMud.DataStructure.System;
 
 namespace NetMud.DataStructure.Architectural.EntityBase
 {
@@ -13,6 +12,6 @@ namespace NetMud.DataStructure.Architectural.EntityBase
         /// </summary>
         /// <param name="viewer">entity initiating the command</param>
         /// <returns>the scan output</returns>
-        OutputEvent RenderToInspect(IEntity viewer);
+        IMessageCluster RenderToInspect(IEntity viewer);
     }
 }

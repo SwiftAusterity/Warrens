@@ -1,5 +1,4 @@
 ﻿using NetMud.DataStructure.Architectural.EntityBase;
-using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.Player;
 using NetMud.DataStructure.System;
 using System;
