@@ -13,7 +13,7 @@ namespace NetMud.DataStructure.Architectural.EntityBase
         /// </summary>
         /// <param name="viewer">entity initiating the command</param>
         /// <returns>the output</returns>
-        ISensoryEvent RenderToLook(IEntity viewer);
+        OutputEvent RenderToLook(IEntity viewer);
 
         /// <summary>
         /// Is this thing sensible to the entity

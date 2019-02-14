@@ -188,6 +188,7 @@
     <Compile Include="Linguistic\LexicalContext.cs" />
     <Compile Include="Linguistic\LexicalPosition.cs" />
     <Compile Include="Linguistic\NarrativePerspective.cs" />
+    <Compile Include="Linguistic\OutputEvent.cs" />
     <Compile Include="Linguistic\SentenceGrammarRule.cs" />
     <Compile Include="Linguistic\SentenceType.cs" />
     <Compile Include="Locale\ILocale.cs" />

@@ -39,6 +39,7 @@ namespace NutMud.Commands.Rendering
             {
                 //sb.AddRange(OriginLocation.CurrentLocation.RenderToLook(Actor));
 
+                ///Need to do like HMR with a simple "update UI" pipeline TODO
                 MessageCluster blankMessenger = new MessageCluster(new Message(MessagingType.Visible, new SensoryEvent() { Strength = 999 }) { Override = new string[] { "You observe your surroundings." } });
 
                 blankMessenger.ExecuteMessaging(Actor, (IEntity)Subject, null, OriginLocation.CurrentRoom, null);
