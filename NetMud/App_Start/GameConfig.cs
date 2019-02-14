@@ -63,8 +63,6 @@ namespace NetMud
             //Load structural data next
             Templates.LoadEverythingToCache();
 
-            EnsureBaseFunctionalData(globalConfig.BaseLanguage);
-
             HotBackup hotBack = new HotBackup();
 
             //Our live data restore failed, reload the entire world from backing data
@@ -137,122 +135,6 @@ namespace NetMud
                     LexicalProcessor.VerifyDictata(newVerb);
                 }
             }
-        }
-
-        /// <summary>
-        /// Add the words the system needs, if base language changes you may need to change the names of these
-        /// </summary>
-        private static void EnsureBaseFunctionalData(ILanguage language)
-        {
-            //Agnostic articles for Verbs
-            var singularExistentialArticle = new Dictata()
-            {
-                Name = "is",
-                Determinant = false,
-                Feminine = false,
-                Plural = false,
-                Positional = LexicalPosition.None,
-                Perspective = NarrativePerspective.None,
-                Possessive = false,
-                Tense = LexicalTense.None,
-                Semantics = new HashSet<string>() { "existential" },
-                WordType = LexicalType.Article,
-                Language = language
-            };
-
-            var sea = LexicalProcessor.VerifyDictata(singularExistentialArticle);
-
-            var pluralExistentialArticle = new Dictata()
-            {
-                Name = "are",
-                Determinant = false,
-                Feminine = false,
-                Plural = true,
-                Positional = LexicalPosition.None,
-                Perspective = NarrativePerspective.None,
-                Possessive = false,
-                Tense = LexicalTense.None,
-                Semantics = new HashSet<string>() { "existential" },
-                Synonyms = new HashSet<IDictata>() { sea },
-                WordType = LexicalType.Article,
-                Language = language
-            };
-
-            var pea = LexicalProcessor.VerifyDictata(pluralExistentialArticle);
-
-            //Articles for Nouns
-            var singularNounArticle = new Dictata()
-            {
-                Name = "the",
-                Determinant = true,
-                Feminine = false,
-                Plural = false,
-                Positional = LexicalPosition.None,
-                Perspective = NarrativePerspective.None,
-                Possessive = false,
-                Tense = LexicalTense.None,
-                WordType = LexicalType.Article,
-                Language = language
-            };
-
-            var sna = LexicalProcessor.VerifyDictata(singularNounArticle);
-
-            var pluralNounArticle = new Dictata()
-            {
-                Name = "a",
-                Determinant = false,
-                Feminine = false,
-                Plural = false,
-                Positional = LexicalPosition.None,
-                Perspective = NarrativePerspective.None,
-                Possessive = false,
-                Tense = LexicalTense.None,
-                WordType = LexicalType.Article,
-                Language = language
-            };
-
-            var pna = LexicalProcessor.VerifyDictata(pluralNounArticle);
-
-            var pluralVowelNounArticle = new Dictata()
-            {
-                Name = "an",
-                Determinant = false,
-                Feminine = false,
-                Plural = false,
-                Positional = LexicalPosition.None,
-                Perspective = NarrativePerspective.None,
-                Possessive = false,
-                Tense = LexicalTense.None,
-                Synonyms = new HashSet<IDictata>() { sna, pna },
-                WordType = LexicalType.Article,
-                Language = language
-            };
-
-            var pvna = LexicalProcessor.VerifyDictata(pluralVowelNounArticle);
-
-            sna.Synonyms = new HashSet<IDictata>() { pna, pvna };
-            sna.SystemSave();
-
-            pna.Synonyms = new HashSet<IDictata>() { sna, pvna };
-            pna.SystemSave();
-
-            //A single neutral pronoun
-            var neutralPronoun = new Dictata()
-            {
-                Name = "it",
-                Determinant = false,
-                Feminine = false,
-                Plural = false,
-                Positional = LexicalPosition.None,
-                Perspective = NarrativePerspective.None,
-                Possessive = false,
-                Tense = LexicalTense.None,
-                Semantics = new HashSet<string>() { "gender" },
-                WordType = LexicalType.Pronoun,
-                Language = language
-            };
-
-            var np = LexicalProcessor.VerifyDictata(neutralPronoun);
         }
     }
 }
