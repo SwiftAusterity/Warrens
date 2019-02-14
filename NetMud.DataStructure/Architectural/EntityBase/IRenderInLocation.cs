@@ -15,7 +15,7 @@ namespace NetMud.DataStructure.Architectural.EntityBase
         /// <param name="viewer">entity initiating the command</param>
         /// <param name="sensoryTypes">What senses to include. </param>
         /// <returns>the output</returns>
-        ISensoryEvent RenderAsContents(IEntity viewer, MessagingType[] sensoryTypes);
+        IMessageCluster RenderAsContents(IEntity viewer, MessagingType[] sensoryTypes);
 
         /// <summary>
         /// A fully described short description (includes adjectives)
@@ -23,7 +23,7 @@ namespace NetMud.DataStructure.Architectural.EntityBase
         /// <param name="viewer">entity initiating the command</param>
         /// <param name="sensoryTypes">What senses to include. EMPTY/NULL = ALL</param>
         /// <returns>the output</returns>
-        ISensoryEvent GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes);
+        IMessageCluster GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes);
 
         /// <summary>
         /// A fully described short description (includes adjectives)
@@ -31,7 +31,7 @@ namespace NetMud.DataStructure.Architectural.EntityBase
         /// <param name="viewer">entity initiating the command</param>
         /// <param name="sensoryTypes">What senses to include. EMPTY/NULL = ALL</param>
         /// <returns>the output</returns>
-        ISensoryEvent GetImmediateDescription(IEntity viewer, MessagingType sensoryType);
+        IMessage GetImmediateDescription(IEntity viewer, MessagingType sensoryType);
 
         /// <summary>
         /// The name of a thing based on visual description
