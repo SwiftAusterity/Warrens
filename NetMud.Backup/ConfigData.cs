@@ -50,7 +50,8 @@ namespace NetMud.Backup
                                                                                 && !ty.IsAbstract
                                                                                 && !ty.GetCustomAttributes<IgnoreAutomatedBackupAttribute>().Any());
 
-            foreach (Type t in implimentedTypes.OrderByDescending(type => type == typeof(Dictata) ? 5 : 0))
+            foreach (Type t in implimentedTypes.OrderByDescending(type => type == typeof(Language) ? 5 :
+                                                            type == typeof(Dictata) ? 4 : 0))
             {
                 LoadAllToCache(t);
             }
@@ -84,7 +85,7 @@ namespace NetMud.Backup
             {
                 try
                 {
-                     ConfigDataCache.Add(fileAccessor.ReadEntity(file, objectType));
+                    ConfigDataCache.Add(fileAccessor.ReadEntity(file, objectType));
                 }
                 catch (Exception ex)
                 {

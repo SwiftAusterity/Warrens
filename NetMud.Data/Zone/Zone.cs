@@ -216,12 +216,17 @@ namespace NetMud.Data.Zone
                             continue;
                         }
 
+                        IEnumerable<ISensoryEvent> aDescs = GetAudibleDescriptives(viewer);
+
+                        if(aDescs.Count() == 0)
+                        {
+                            continue;
+                        }
+
                         if (me == null)
                         {
                             me = GetSelf(sense);
                         }
-
-                        IEnumerable<ISensoryEvent> aDescs = GetAudibleDescriptives(viewer);
 
                         me.TryModify(aDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
 
@@ -236,7 +241,7 @@ namespace NetMud.Data.Zone
                             uberSounds.TryModify(newDesc);
                         }
 
-                        if (uberSounds.Modifiers.Any(mod => mod.Role == GrammaticalType.Subject))
+                        if (uberSounds.Modifiers.Any())
                         {
                             me.TryModify(uberSounds);
                         }
@@ -248,12 +253,17 @@ namespace NetMud.Data.Zone
                             continue;
                         }
 
+                        IEnumerable<ISensoryEvent> oDescs = GetSmellableDescriptives(viewer);
+
+                        if (oDescs.Count() == 0)
+                        {
+                            continue;
+                        }
+
                         if (me == null)
                         {
                             me = GetSelf(sense);
                         }
-
-                        IEnumerable<ISensoryEvent> oDescs = GetSmellableDescriptives(viewer);
 
                         me.TryModify(oDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
 
@@ -268,7 +278,7 @@ namespace NetMud.Data.Zone
                             uberSmells.TryModify(newDesc);
                         }
 
-                        if (uberSmells.Modifiers.Any(mod => mod.Role == GrammaticalType.Subject))
+                        if (uberSmells.Modifiers.Any())
                         {
                             me.TryModify(uberSmells);
                         }
@@ -280,12 +290,18 @@ namespace NetMud.Data.Zone
                             continue;
                         }
 
+                        IEnumerable<ISensoryEvent> pDescs = GetPsychicDescriptives(viewer);
+
+                        if (pDescs.Count() == 0)
+                        {
+                            continue;
+                        }
+
                         if (me == null)
                         {
                             me = GetSelf(sense);
                         }
 
-                        IEnumerable<ISensoryEvent> pDescs = GetPsychicDescriptives(viewer);
 
                         me.TryModify(pDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
 
@@ -302,7 +318,7 @@ namespace NetMud.Data.Zone
                             uberPsy.TryModify(newDesc);
                         }
 
-                        if (uberPsy.Modifiers.Any(mod => mod.Role == GrammaticalType.Subject))
+                        if (uberPsy.Modifiers.Any())
                         {
                             me.TryModify(collectivePsy);
                         }
@@ -317,12 +333,17 @@ namespace NetMud.Data.Zone
                             continue;
                         }
 
+                        IEnumerable<ISensoryEvent> vDescs = GetVisibleDescriptives(viewer);
+
+                        if (vDescs.Count() == 0)
+                        {
+                            continue;
+                        }
+
                         if (me == null)
                         {
                             me = GetSelf(sense);
                         }
-
-                        IEnumerable<ISensoryEvent> vDescs = GetVisibleDescriptives(viewer);
 
                         me.TryModify(vDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
 
@@ -339,7 +360,7 @@ namespace NetMud.Data.Zone
                             uberSight.TryModify(newDesc);
                         }
 
-                        if (uberSight.Modifiers.Any(mod => mod.Role == GrammaticalType.Subject))
+                        if (uberSight.Modifiers.Any())
                         {
                             me.TryModify(collectiveSight);
                         }
@@ -348,10 +369,10 @@ namespace NetMud.Data.Zone
                 }
             }
 
-            //If we get through that and me is still null it means we can't detect anything at all
+            //If we get through that and me is still null it means we can't detect anything at alland need to make one for visual
             if (me == null)
             {
-                return new SensoryEvent(sensoryTypes[0]);
+                me = GetSelf(MessagingType.Visible);
             }
 
             foreach (ICelestial celestial in GetVisibileCelestials(viewer))

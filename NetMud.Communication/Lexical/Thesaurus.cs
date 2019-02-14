@@ -95,19 +95,19 @@ namespace NetMud.Communication.Lexical
                 context.Language = globalConfig.BaseLanguage;
             }
 
-            var possibleWords = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.Language == context.Language && dict.WordType == type);
-
-            possibleWords = possibleWords.Where(word => word.Possessive == context.Possessive
-                                                            && (context.GenderForm == null || word.Feminine == context.GenderForm?.Feminine)
-                                                            && word.Plural == context.Plural
-                                                            && word.Determinant == context.Determinant
-                                                            && (!context.Semantics.Any() || word.Semantics.All(wrd => context.Semantics.Contains(wrd)))
-                                                            && word.SuitableForUse);
+            var possibleWords = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.Language == context.Language && dict.WordType == type && dict.SuitableForUse);
 
             return possibleWords.OrderByDescending(word => (context.Position == LexicalPosition.None || word.Positional == context.Position ? 1 : 0) + 
                                                            (context.Tense == LexicalTense.None || word.Tense == context.Tense ? 1 : 0) + 
-                                                           (context.Perspective == NarrativePerspective.None || word.Perspective == context.Perspective ? 1 : 0))
-                                .FirstOrDefault();
+                                                           (context.Perspective == NarrativePerspective.None || word.Perspective == context.Perspective ? 1 : 0) +
+                                                           (word.Possessive == context.Possessive ? 2 : 0) +
+                                                           ((context.GenderForm == null || word.Feminine == context.GenderForm?.Feminine) ? 2 : 0) +
+                                                           (word.Plural == context.Plural ? 2 : 0) +
+                                                           (word.Determinant == context.Determinant ? 2 : 0) +
+                                                           (context.Semantics.Any() ? word.Semantics.Count(wrd => context.Semantics.Contains(wrd)) * 3 : 0)
+                                                  ).FirstOrDefault();
+
+            //3x weight for meeting the semantics
         }
 
         public static IDictata GetAntonym(IDictata baseWord, LexicalContext context)
@@ -130,7 +130,7 @@ namespace NetMud.Communication.Lexical
         {
             if (context.Language != null)
             {
-                possibleWords = possibleWords.Where(word => word != null && word.Language == context.Language);
+                possibleWords = possibleWords.Where(word => word != null && word.Language == context.Language && word.SuitableForUse);
             }
 
             possibleWords = possibleWords.Where(word => word.Possessive == context.Possessive
@@ -140,8 +140,7 @@ namespace NetMud.Communication.Lexical
                                                             && !context.Semantics.Any() || word.Semantics.All(wrd => context.Semantics.Contains(wrd))
                                                             && (context.Position == LexicalPosition.None || word.Positional == context.Position)
                                                             && (context.Tense == LexicalTense.None || word.Tense == context.Tense)
-                                                            && (context.Perspective == NarrativePerspective.None || word.Perspective == context.Perspective)
-                                                            && word.SuitableForUse);
+                                                            && (context.Perspective == NarrativePerspective.None || word.Perspective == context.Perspective));
 
             if (!possibleWords.Any() ||
                 (context.Severity + context.Elegance + context.Quality == 0 && baseWord.Language == context.Language && baseWord.Possessive == context.Possessive

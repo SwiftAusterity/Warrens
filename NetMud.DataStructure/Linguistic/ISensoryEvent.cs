@@ -90,17 +90,10 @@ namespace NetMud.DataStructure.Linguistic
         /// <summary>
         /// Create a narrative description from this
         /// </summary>
-        /// <param name="language">What language this should output in</param>
-        /// <param name="severity">Severity delta modifier to find synonyms with</param>
-        /// <param name="eloquence">eloquence delta modifier to find synonyms with</param>
-        /// <param name="quality">quality delta modifier to find synonyms with</param>
-        /// <param name="normalization">How much sentence splitting should be done</param>
-        /// <param name="verbosity">A measure of how much flourish should be added as well as how far words get synonym-upgraded by "finesse". (0 to 100)</param>
-        /// <param name="chronology">The time tensing of the sentence structure</param>
-        /// <param name="perspective">The personage of the sentence structure</param>
+        /// <param name="overridingContext">Context to override the lexica with</param>
         /// <param name="omitName">Should we omit the proper name of the initial subject entirely (and only resort to pronouns)</param>
         /// <returns>A long description</returns>
-        string Unpack(bool omitName = true);
+        string Unpack(LexicalContext overridingContext = null, bool omitName = true);
 
         /// <summary>
         /// Describe the lexica

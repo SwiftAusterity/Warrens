@@ -223,8 +223,13 @@ namespace NetMud.Data.Linguistic
         /// <param name="context">Contextual nature of the request.</param>
         /// <param name="omitName">Should we omit the proper name of the initial subject entirely (and only resort to pronouns)</param>
         /// <returns>A long description</returns>
-        public string Unpack(bool omitName = true)
+        public string Unpack(LexicalContext overridingContext = null, bool omitName = true)
         {
+            if(overridingContext != null)
+            {
+                Context = overridingContext;
+            }
+
             IEnumerable<LexicalSentence> sentences = GetSentences(omitName);
 
             return string.Join(" ", sentences.Select(sent => sent.Describe())).Trim();
@@ -488,7 +493,7 @@ namespace NetMud.Data.Linguistic
             if (omitName)
             {
                 var pronounContext = Context;
-                pronounContext.Perspective = NarrativePerspective.None;
+                pronounContext.Perspective = NarrativePerspective.SecondPerson;
                 pronounContext.Position = LexicalPosition.None;
                 pronounContext.Tense = LexicalTense.None;
                 pronounContext.Determinant = false;
@@ -521,9 +526,10 @@ namespace NetMud.Data.Linguistic
 
                     var verbContext = subject.Context;
                     verbContext.Semantics = new HashSet<string> { "Existential" };
-                    var verb = Thesaurus.GetWord(subject.Context, LexicalType.Article);
+                    verbContext.Determinant = false;
+                    var verb = Thesaurus.GetWord(subject.Context, LexicalType.Verb);
 
-                    newSubject.TryModify(LexicalType.Article, GrammaticalType.Verb, verb.Name);
+                    newSubject.TryModify(LexicalType.Verb, GrammaticalType.ConjugatedVerb, verb.Name);
 
                     newLex = newSubject;
                 }

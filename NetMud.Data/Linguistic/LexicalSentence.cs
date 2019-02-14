@@ -99,7 +99,7 @@ namespace NetMud.Data.Linguistic
             }
             else
             {
-                Modifiers.Add(new Tuple<ILexica, short>(lex, rule.ModificationOrder));
+                Modifiers.Add(new Tuple<ILexica, short>(lex, 99));
             }
 
             if(recursive)
@@ -123,6 +123,18 @@ namespace NetMud.Data.Linguistic
 
             //Subject
             foreach(var lex in Subject.OrderBy(pair => pair.Item2))
+            {
+                sb.AppendFormat("{0} ", lex.Item1.Describe());
+            }
+
+            //Predicate
+            foreach (var lex in Predicate.OrderBy(pair => pair.Item2))
+            {
+                sb.AppendFormat("{0} ", lex.Item1.Describe());
+            }
+
+            //Modifiers
+            foreach (var lex in Modifiers.OrderBy(pair => pair.Item2))
             {
                 sb.AppendFormat("{0} ", lex.Item1.Describe());
             }
