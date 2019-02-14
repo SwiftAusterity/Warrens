@@ -104,7 +104,7 @@ namespace NetMud.Data.Linguistic
         /// Generate a new dictata from this
         /// </summary>
         /// <returns></returns>
-        public bool GenerateDictata()
+        public IDictata GenerateDictata()
         {
             return LexicalProcessor.VerifyDictata(new Dictata(this));
         }
@@ -223,7 +223,7 @@ namespace NetMud.Data.Linguistic
         /// <param name="context">Contextual nature of the request.</param>
         /// <param name="omitName">Should we omit the proper name of the initial subject entirely (and only resort to pronouns)</param>
         /// <returns>A long description</returns>
-        public string Unpack(LexicalContext context, bool omitName = true)
+        public string Unpack(bool omitName = true)
         {
             IEnumerable<LexicalSentence> sentences = GetSentences(omitName);
 
@@ -235,11 +235,11 @@ namespace NetMud.Data.Linguistic
         /// </summary>
         /// <param name="context">Contextual nature of the request.</param>
         /// <returns>a sentence fragment</returns>
-        public string Describe(LexicalContext context)
+        public string Describe()
         {
-            var lex = context.Language == null && (context.Severity + context.Elegance + context.Quality == 0)
+            var lex = Context.Language == null && (Context.Severity + Context.Elegance + Context.Quality == 0)
                     ? this
-                    : Mutate(context);
+                    : Mutate();
 
             //short circuit empty lexica
             if (string.IsNullOrWhiteSpace(lex.Phrase))
@@ -260,24 +260,25 @@ namespace NetMud.Data.Linguistic
             IEnumerable<ILexica> adjectives = lex.Modifiers.Where(mod => mod.Role == GrammaticalType.Descriptive);
 
             //Language rules engine, default to base language if we have an empty language
-            if (context.Language.Rules?.Count == 0)
+            if (Context.Language == null || Context.Language?.Rules?.Count == 0)
             {
                 IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
 
-                context.Language = globalConfig.BaseLanguage;
+                Context.Language = globalConfig.BaseLanguage;
             }
 
             //solitaire rules
-            foreach (var rule in context.Language.Rules.Where(rul => rul.ToRole == GrammaticalType.None && rul.ToType == LexicalType.None &&
-                                                        (rul.SpecificWord == lex.GetDictata() || (rul.FromRole == lex.Role && rul.FromType == lex.Type))))
+            foreach (var rule in Context.Language.Rules.Where(rul => rul.ToRole == GrammaticalType.None && rul.ToType == LexicalType.None &&
+                                                        ((rul.SpecificWord != null && rul.SpecificWord == lex.GetDictata()) 
+                                                            || (rul.FromRole == lex.Role && rul.FromType == lex.Type))))
             {
                 if (rule.NeedsArticle && !lex.Modifiers.Any(mod => mod.Type == LexicalType.Article))
                 {
-                    var articleContext = context;
-                    articleContext.Determinant = !context.Plural;
-                    var article = Thesaurus.GetWord(context, LexicalType.Article);
+                    var articleContext = Context;
+                    articleContext.Determinant = !Context.Plural;
+                    var article = Thesaurus.GetWord(Context, LexicalType.Article);
 
-                    lex.TryModify(LexicalType.Article, GrammaticalType.Descriptive, article.Name);
+                    lex.TryModify(LexicalType.Article, GrammaticalType.Descriptive, article.Name, false);
                 }
             }
 
@@ -285,8 +286,9 @@ namespace NetMud.Data.Linguistic
             var modifierList = new List<Tuple<ILexica, bool, int>>();
             foreach (var modifier in lex.Modifiers)
             {
-                var rule = context.Language.Rules.FirstOrDefault(rul => rul.ToRole == modifier.Role && rul.ToType == modifier.Type &&
-                                                                (rul.SpecificWord == lex.GetDictata() || (rul.FromRole == lex.Role && rul.FromType == lex.Type)));
+                var rule = Context.Language.Rules.FirstOrDefault(rul => rul.ToRole == modifier.Role && rul.ToType == modifier.Type &&
+                                                                ((rul.SpecificWord != null && rul.SpecificWord == lex.GetDictata()) 
+                                                                    || (rul.FromRole == lex.Role && rul.FromType == lex.Type)));
 
                 if (rule != null)
                 {
@@ -305,7 +307,7 @@ namespace NetMud.Data.Linguistic
                 }
                 else
                 {
-                    sb.Append(grouping.Item1.Describe(context) + " ");
+                    sb.Append(grouping.Item1.Describe() + " ");
                 }
             }
 
@@ -459,17 +461,17 @@ namespace NetMud.Data.Linguistic
         /// <param name="context">Contextual nature of the request.</param>
         /// <param name="obfuscationLevel">% level of obfuscating this thing (0 to 100).</param>
         /// <returns>the new lex</returns>
-        public ILexica Mutate(LexicalContext context, int obfuscationLevel = 0)
+        public ILexica Mutate(int obfuscationLevel = 0)
         {
-            Lexica newLexica = new Lexica(Type, Role, Phrase, context);
+            Lexica newLexica = new Lexica(Type, Role, Phrase, Context);
 
             var dict = GetDictata();
 
-            if (Type != LexicalType.ProperNoun && dict != null && (context.Severity + context.Elegance + context.Quality > 0 || context.Language != dict.Language))
+            if (Type != LexicalType.ProperNoun && dict != null && (Context.Severity + Context.Elegance + Context.Quality > 0 || Context.Language != dict.Language))
             {
-                var newDict = Thesaurus.GetSynonym(dict, context);
+                var newDict = Thesaurus.GetSynonym(dict, Context);
 
-                newLexica = new Lexica(Type, Role, newDict.Name, context);
+                newLexica = new Lexica(Type, Role, newDict.Name, Context);
             }
 
             newLexica.TryModify(Modifiers);
@@ -479,8 +481,7 @@ namespace NetMud.Data.Linguistic
 
         private IEnumerable<LexicalSentence> GetSentences(bool omitName)
         {
-            var me = new Lexica(Type, Role, Phrase, Context);
-            me.TryModify(Modifiers.Where(mod => mod != null));
+            ILexica me;
 
             List<LexicalSentence> sentences = new List<LexicalSentence>();
 
@@ -490,18 +491,24 @@ namespace NetMud.Data.Linguistic
                 pronounContext.Perspective = NarrativePerspective.None;
                 pronounContext.Position = LexicalPosition.None;
                 pronounContext.Tense = LexicalTense.None;
+                pronounContext.Determinant = false;
                 pronounContext.Semantics = new HashSet<string>();
 
                 var pronoun = Thesaurus.GetWord(pronounContext, LexicalType.Pronoun);
-                me = new Lexica(pronoun.WordType, me.Role, pronoun.Name, me.Context);
-                me.TryModify(me.Modifiers);
+                me = new Lexica(pronoun.WordType, Role, pronoun.Name, Context);
+                me.TryModify(Modifiers.Where(mod => mod != null && mod.Role != GrammaticalType.Subject));
+            }
+            else
+            {
+                me = new Lexica(Type, Role, Phrase, Context);
+                me.TryModify(Modifiers.Where(mod => mod != null && mod.Role != GrammaticalType.Subject));
             }
 
             List<ILexica> subjects = new List<ILexica>
             {
                 me
             };
-            subjects.AddRange(me.Modifiers.Where(mod => mod.Role == GrammaticalType.Subject));
+            subjects.AddRange(Modifiers.Where(mod => mod != null && mod.Role == GrammaticalType.Subject));
 
             foreach (ILexica subject in subjects)
             {

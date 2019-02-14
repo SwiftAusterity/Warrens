@@ -1,5 +1,4 @@
-﻿using NetMud.DataStructure.Architectural.EntityBase;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Linguistic
@@ -39,7 +38,7 @@ namespace NetMud.DataStructure.Linguistic
         /// </summary>
         /// <param name="modifier">the lexica that is the modifier</param>
         /// <returns>Whether or not it succeeded</returns>
-        ILexica TryModify(ILexica modifier, bool passthru = false);
+        ILexica TryModify(ILexica modifier, bool passthru = true);
 
         /// <summary>
         /// Try to add a modifier to a lexica
@@ -67,14 +66,14 @@ namespace NetMud.DataStructure.Linguistic
         /// </summary>
         /// <param name="modifier">the lexica that is the modifier</param>
         /// <returns>Whether or not it succeeded</returns>
-        ILexica TryModify(LexicalType type, GrammaticalType role, string phrase, bool passthru = false);
+        ILexica TryModify(LexicalType type, GrammaticalType role, string phrase, bool passthru = true);
 
         /// <summary>
         /// Try to add a modifier to a lexica
         /// </summary>
         /// <param name="modifier">the lexica that is the modifier</param>
         /// <returns>Whether or not it succeeded</returns>
-        ILexica TryModify(Tuple<LexicalType, GrammaticalType, string> modifier, bool passthru = false);
+        ILexica TryModify(Tuple<LexicalType, GrammaticalType, string> modifier, bool passthru = true);
 
         /// <summary>
         /// Try to add a modifier to a lexica
@@ -89,14 +88,14 @@ namespace NetMud.DataStructure.Linguistic
         /// <param name="context">The full lexical context</param>
         /// <param name="omitName">Should we omit the proper name of the initial subject entirely (and only resort to pronouns)</param>
         /// <returns>A long description</returns>
-        string Unpack(LexicalContext context, bool omitName = true);
+        string Unpack(bool omitName = true);
 
         /// <summary>
         /// Describe the lexica
         /// </summary>
         /// <param name="context">The full lexical context</param>
         /// <returns></returns>
-        string Describe(LexicalContext context);
+        string Describe();
 
         /// <summary>
         /// Alter the lex entirely including all of its sublex
@@ -104,7 +103,7 @@ namespace NetMud.DataStructure.Linguistic
         /// <param name="context">The full lexical context</param>
         /// <param name="obfuscationLevel">how much we should obscure the actual description</param>
         /// <returns>the new lex</returns>
-        ILexica Mutate(LexicalContext context, int obfuscationLevel);
+        ILexica Mutate(int obfuscationLevel = 0);
 
         /// <summary>
         /// Get the dictata from this lexica
@@ -115,7 +114,7 @@ namespace NetMud.DataStructure.Linguistic
         /// <summary>
         /// Generates a new dictata
         /// </summary>
-        /// <returns>success</returns>
-        bool GenerateDictata();
+        /// <returns>the dictata</returns>
+        IDictata GenerateDictata();
     }
 }

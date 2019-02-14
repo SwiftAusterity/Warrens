@@ -124,15 +124,13 @@ namespace NetMud.Data.Linguistic
             //Subject
             foreach(var lex in Subject.OrderBy(pair => pair.Item2))
             {
-                //sb.AppendFormat("{0} ", lex.Item1.Describe());
-
+                sb.AppendFormat("{0} ", lex.Item1.Describe());
             }
 
             //Ensure every sentence starts with a caps letter
-            string sentenceText = sb.ToString().CapsFirstLetter(true).Trim();
-
             //Do punctuation
-            string.Format("{1}{0}{2}", sentenceText,
+            string sentenceText = string.Format("{1}{0}{2}",
+                sb.ToString().CapsFirstLetter(true).Trim(),
                 Language.PrecedentPunctuation ? PunctuationMark : "",
                 Language.AntecendentPunctuation ? PunctuationMark : "");
 

@@ -79,6 +79,8 @@ namespace NetMud.DataStructure.Linguistic
             Severity = 0;
             Elegance = 0;
             Quality = 0;
+
+            Semantics = new HashSet<string>();
         }
     }
 }

@@ -32,7 +32,7 @@ namespace NetMud.Data.Linguistic
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
-        public override string UniqueKey => string.Format("{0}_{1}", WordType.ToString(), Name);
+        public override string UniqueKey => string.Format("{0}_{1}_{2}", Language.Name, WordType.ToString(), Name);
 
         /// <summary>
         /// Type of configuation data this is
@@ -249,7 +249,19 @@ namespace NetMud.Data.Linguistic
         {
             Antonyms = new HashSet<IDictata>();
             Synonyms = new HashSet<IDictata>();
+            Semantics = new HashSet<string>();
             Name = string.Empty;
+
+            IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
+
+            if (globalConfig?.BaseLanguage == null)
+            {
+                Language = ConfigDataCache.GetAll<ILanguage>().FirstOrDefault();
+            }
+            else
+            {
+                Language = globalConfig.BaseLanguage;
+            }
         }
 
 
@@ -261,9 +273,25 @@ namespace NetMud.Data.Linguistic
         {
             Antonyms = new HashSet<IDictata>();
             Synonyms = new HashSet<IDictata>();
+            Semantics = new HashSet<string>();
 
             Name = lexica.Phrase;
             WordType = lexica.Type;
+            Language = lexica.Context?.Language;
+
+            if (Language == null)
+            {
+                IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
+
+                if (globalConfig?.BaseLanguage == null)
+                {
+                    Language = ConfigDataCache.GetAll<ILanguage>().FirstOrDefault();
+                }
+                else
+                {
+                    Language = globalConfig.BaseLanguage;
+                }
+            }
         }
 
         /// <summary>
@@ -275,7 +303,7 @@ namespace NetMud.Data.Linguistic
 
             //Don't do this if: we have no config, translation is turned off or lacking in the azure key, the language is not a human-ui language
             //it isn't an approved language, the word is a proper noun or the language isnt the base language at all
-            if (globalConfig == null || !globalConfig.TranslationActive || string.IsNullOrWhiteSpace(globalConfig.AzureTranslationKey) 
+            if (globalConfig == null || !globalConfig.TranslationActive || string.IsNullOrWhiteSpace(globalConfig.AzureTranslationKey)
                 || !Language.UIOnly || !Language.SuitableForUse || WordType == LexicalType.ProperNoun || Language != globalConfig.BaseLanguage)
             {
                 return;
@@ -285,7 +313,8 @@ namespace NetMud.Data.Linguistic
 
             foreach (var language in otherLanguages)
             {
-                var context = new LexicalContext() {
+                var context = new LexicalContext()
+                {
                     Language = language,
                     Perspective = Perspective,
                     Tense = Tense,
@@ -293,6 +322,10 @@ namespace NetMud.Data.Linguistic
                     Determinant = Determinant,
                     Plural = Plural,
                     Possessive = Possessive,
+                    Elegance = Elegance,
+                    Quality = Quality,
+                    Semantics = Semantics,
+                    Severity = Severity,
                     GenderForm = new Gender() { Feminine = true }
                 };
 
@@ -305,8 +338,27 @@ namespace NetMud.Data.Linguistic
 
                     if (!string.IsNullOrWhiteSpace(newWord))
                     {
-                        var newDictata = new Dictata() { Language = language, Name = newWord, Elegance = Elegance, Severity = Severity, Quality = Quality };
-                        newDictata.Synonyms = new HashSet<IDictata>() { this };
+                        var newDictata = new Dictata()
+                        {
+                            Language = language,
+                            Name = newWord,
+                            Elegance = Elegance,
+                            Severity = Severity,
+                            Quality = Quality,
+                            Determinant = Determinant,
+                            Plural = Plural,
+                            Perspective = Perspective,
+                            Feminine = Feminine,
+                            Positional = Positional,
+                            Possessive = Possessive,
+                            Semantics = Semantics,
+                            Antonyms = Antonyms,
+                            Synonyms = Synonyms,
+                            Tense = Tense,
+                            WordType = WordType
+                        };
+
+                        newDictata.Synonyms = new HashSet<IDictata>(Synonyms) { this };
                         newDictata.SystemSave();
                         newDictata.PersistToCache();
 

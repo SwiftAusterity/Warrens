@@ -101,13 +101,13 @@ namespace NetMud.Communication.Lexical
                                                             && (context.GenderForm == null || word.Feminine == context.GenderForm?.Feminine)
                                                             && word.Plural == context.Plural
                                                             && word.Determinant == context.Determinant
-                                                            && !context.Semantics.Any() || word.Semantics.All(wrd => context.Semantics.Contains(wrd))
-                                                            && (context.Position == LexicalPosition.None || word.Positional == context.Position)
-                                                            && (context.Tense == LexicalTense.None || word.Tense == context.Tense)
-                                                            && (context.Perspective == NarrativePerspective.None || word.Perspective == context.Perspective)
+                                                            && (!context.Semantics.Any() || word.Semantics.All(wrd => context.Semantics.Contains(wrd)))
                                                             && word.SuitableForUse);
 
-            return possibleWords.FirstOrDefault();
+            return possibleWords.OrderByDescending(word => (context.Position == LexicalPosition.None || word.Positional == context.Position ? 1 : 0) + 
+                                                           (context.Tense == LexicalTense.None || word.Tense == context.Tense ? 1 : 0) + 
+                                                           (context.Perspective == NarrativePerspective.None || word.Perspective == context.Perspective ? 1 : 0))
+                                .FirstOrDefault();
         }
 
         public static IDictata GetAntonym(IDictata baseWord, LexicalContext context)
@@ -130,7 +130,7 @@ namespace NetMud.Communication.Lexical
         {
             if (context.Language != null)
             {
-                possibleWords = possibleWords.Where(word => word.Language == context.Language);
+                possibleWords = possibleWords.Where(word => word != null && word.Language == context.Language);
             }
 
             possibleWords = possibleWords.Where(word => word.Possessive == context.Possessive

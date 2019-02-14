@@ -1,4 +1,5 @@
 ﻿using NetMud.DataAccess.Cache;
+using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.PropertyBinding;
 using NetMud.DataStructure.Linguistic;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace NetMud.Data.Architectural.PropertyBinding
 
             IEnumerable<string> valueCollection = input as IEnumerable<string>;
 
-            HashSet<IDictata> collective = new HashSet<IDictata>(valueCollection.Select(str => ConfigDataCache.Get<IDictata>(str)));
+            HashSet<IDictata> collective = new HashSet<IDictata>(valueCollection.Select(str => ConfigDataCache.Get<IDictata>(new ConfigDataCacheKey(typeof(IDictata), str, ConfigDataType.Dictionary))));
 
             return collective;
         }

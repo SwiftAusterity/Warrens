@@ -22,7 +22,7 @@ namespace NetMud.Communication.Lexical
             }
 
             //Experiment: make new everything
-            if (!VerifyDictata(lexica.GetDictata()))
+            if (VerifyDictata(lexica.GetDictata()) != null)
             {
                 //make a new one
                 lexica.GenerateDictata();
@@ -33,11 +33,11 @@ namespace NetMud.Communication.Lexical
         /// Verify the dictionary has this word already
         /// </summary>
         /// <param name="dictata">dictata to check</param>
-        public static bool VerifyDictata(IDictata dictata)
+        public static IDictata VerifyDictata(IDictata dictata)
         {
             if (dictata == null || string.IsNullOrWhiteSpace(dictata.Name))
             {
-                return false;
+                return null;
             }
 
             ConfigDataCacheKey cacheKey = new ConfigDataCacheKey(dictata);
@@ -49,7 +49,7 @@ namespace NetMud.Communication.Lexical
                 if (maybeDictata.Language != null)
                 {
                     maybeDictata.FillLanguages();
-                    return true;
+                    return dictata;
                 }
 
                 dictata = maybeDictata;
@@ -70,7 +70,7 @@ namespace NetMud.Communication.Lexical
             dictata.PersistToCache();
             dictata.FillLanguages();
 
-            return true;
+            return dictata;
         }
 
         public static string GetPunctuationMark(SentenceType type)

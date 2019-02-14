@@ -156,18 +156,18 @@ namespace NetMud.Communication.Lexical
         /// <param name="perspective">The personage of the sentence structure</param>
         /// <param name="omitName">Should we omit the proper name of the initial subject entirely (and only resort to pronouns)</param>
         /// <returns>A long description</returns>
-        public string Unpack(LexicalContext context, bool omitName = true)
+        public string Unpack(bool omitName = true)
         {
-            return Event.Unpack(context, omitName);
+            return Event.Unpack(omitName);
         }
 
         /// <summary>
         /// Render this lexica to a sentence fragment (or whole sentence if it's a Subject role)
         /// </summary>
         /// <returns>a sentence fragment</returns>
-        public string Describe(LexicalContext context)
+        public string Describe()
         {
-            return Event.Describe(context);
+            return Event.Describe();
         }
     }
 }

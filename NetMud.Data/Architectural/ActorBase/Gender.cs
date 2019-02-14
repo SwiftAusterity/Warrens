@@ -1,6 +1,12 @@
-﻿using NetMud.Data.Architectural.DataIntegrity;
+﻿using NetMud.Communication.Lexical;
+using NetMud.Data.Architectural.DataIntegrity;
+using NetMud.Data.Linguistic;
 using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.ActorBase;
+using NetMud.DataStructure.Linguistic;
+using NetMud.DataStructure.Player;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.Data.Architectural.ActorBase
@@ -19,7 +25,6 @@ namespace NetMud.Data.Architectural.ActorBase
         /// Is this a feminine gender for gramatical purposes
         /// </summary>
         [Display(Name = "Feminine", Description = "Is this a feminine gender for gramatical purposes?")]
-        [DataType(DataType.Text)]
         [Required]
         public bool Feminine { get; set; }
 
@@ -72,5 +77,126 @@ namespace NetMud.Data.Architectural.ActorBase
         [DataType(DataType.Text)]
         [Required]
         public string Child { get; set; }
+
+        #region Data persistence functions
+        /// <summary>
+        /// Add it to the cache and save it to the file system
+        /// </summary>
+        /// <returns>the object with Id and other db fields set</returns>
+        public override IKeyedData Create(IAccount creator, StaffRank rank)
+        {
+            EnsureDictionary();
+            return base.Create(creator, rank);
+        }
+
+        /// <summary>
+        /// Add it to the cache and save it to the file system made by SYSTEM
+        /// </summary>
+        /// <returns>the object with Id and other db fields set</returns>
+        public override IKeyedData SystemCreate()
+        {
+            EnsureDictionary();
+            return base.SystemCreate();
+        }
+
+        /// <summary>
+        /// Update the field data for this object to the db
+        /// </summary>
+        /// <returns>success status</returns>
+        public override bool Save(IAccount editor, StaffRank rank)
+        {
+            EnsureDictionary();
+            return base.Save(editor, rank);
+        }
+
+        /// <summary>
+        /// Update the field data for this object to the db
+        /// </summary>
+        /// <returns>success status</returns>
+        public override bool SystemSave()
+        {
+            EnsureDictionary();
+            return base.SystemSave();
+        }
+
+        private void EnsureDictionary()
+        {
+            var collective = new Dictata()
+            {
+                Name = Collective,
+                Determinant = false,
+                Feminine = Feminine,
+                Plural = true,
+                Positional = LexicalPosition.None,
+                Perspective = NarrativePerspective.None,
+                Possessive = false,
+                Tense = LexicalTense.None,
+                Semantics = new HashSet<string>() { "gender" },
+                WordType = LexicalType.Pronoun
+            };
+
+            var possessive = new Dictata()
+            {
+                Name = Possessive,
+                Determinant = false,
+                Feminine = Feminine,
+                Plural = false,
+                Positional = LexicalPosition.None,
+                Perspective = NarrativePerspective.None,
+                Possessive = true,
+                Tense = LexicalTense.None,
+                Semantics = new HashSet<string>() { "gender" },
+                WordType = LexicalType.Pronoun
+            };
+
+            var baseWord = new Dictata()
+            {
+                Name = Base,
+                Determinant = false,
+                Feminine = Feminine,
+                Plural = false,
+                Positional = LexicalPosition.None,
+                Perspective = NarrativePerspective.None,
+                Possessive = false,
+                Tense = LexicalTense.None,
+                Semantics = new HashSet<string>() { "gender" },
+                WordType = LexicalType.Pronoun
+            };
+
+            var adult = new Dictata()
+            {
+                Name = Adult,
+                Determinant = false,
+                Feminine = Feminine,
+                Plural = false,
+                Positional = LexicalPosition.None,
+                Perspective = NarrativePerspective.None,
+                Semantics = new HashSet<string>() { "adult", "gender" },
+                Possessive = false,
+                Tense = LexicalTense.None,
+                WordType = LexicalType.Noun
+            };
+
+            var child = new Dictata()
+            {
+                Name = Child,
+                Determinant = false,
+                Feminine = Feminine,
+                Plural = false,
+                Positional = LexicalPosition.None,
+                Perspective = NarrativePerspective.None,
+                Semantics = new HashSet<string>() { "child", "gender" },
+                Possessive = false,
+                Tense = LexicalTense.None,
+                WordType = LexicalType.Noun
+            };
+
+            LexicalProcessor.VerifyDictata(child);
+            LexicalProcessor.VerifyDictata(adult);
+            LexicalProcessor.VerifyDictata(baseWord);
+            LexicalProcessor.VerifyDictata(possessive);
+            LexicalProcessor.VerifyDictata(collective);
+        }
+        #endregion
     }
 }
