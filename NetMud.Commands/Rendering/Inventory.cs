@@ -4,6 +4,7 @@ using NetMud.Communication.Messaging;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.ActorBase;
+using NetMud.DataStructure.Inanimate;
 using NetMud.DataStructure.System;
 using NetMud.Utility;
 using System.Collections.Generic;
@@ -39,9 +40,9 @@ namespace NetMud.Commands.Rendering
                 }
             };
 
-            foreach (DataStructure.Inanimate.IInanimate thing in chr.Inventory.EntitiesContained())
+            foreach (IInanimate thing in chr.Inventory.EntitiesContained())
             {
-                toActor.Add(new Message(MessagingType.Visible, thing.RenderAsContents(chr, new[] { MessagingType.Visible })));
+                toActor.AddRange(thing.RenderAsContents(chr, new[] { MessagingType.Visible }));
             }
 
             Message toOrigin = new Message(MessagingType.Visible, new SensoryEvent() { Strength = 30 })

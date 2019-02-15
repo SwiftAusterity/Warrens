@@ -7,6 +7,7 @@ using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.System;
 using NetMud.Utility;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NutMud.Commands.Rendering
 {
@@ -48,11 +49,6 @@ namespace NutMud.Commands.Rendering
 
             ILookable lookTarget = (ILookable)Subject;
 
-            Message toActor = new Message(MessagingType.Visible, lookTarget.RenderToLook(Actor))
-            {
-                Override = sb
-            };
-
             Message toOrigin = new Message(MessagingType.Visible, new SensoryEvent() { Strength = 5 })
             {
                 Override = new string[] { "$A$ looks at $T$." }
@@ -63,7 +59,7 @@ namespace NutMud.Commands.Rendering
                 Override = new string[] { "$A$ looks at $T$." }
             };
 
-            MessageCluster messagingObject = new MessageCluster(toActor)
+            MessageCluster messagingObject = new MessageCluster(lookTarget.RenderToLook(Actor).ToList())
             {
                 ToOrigin = new List<IMessage> { toOrigin },
                 ToSubject = new List<IMessage> { toSubject }

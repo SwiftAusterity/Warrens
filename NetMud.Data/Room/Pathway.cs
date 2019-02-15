@@ -12,6 +12,7 @@ using NetMud.DataStructure.System;
 using NetMud.DataStructure.Zone;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Script.Serialization;
@@ -318,7 +319,7 @@ namespace NetMud.Data.Room
         /// Render this to a look command (what something sees when it 'look's at this
         /// </summary>
         /// <returns>the output strings</returns>
-        public override ISensoryEvent RenderToLook(IEntity viewer)
+        public override IEnumerable<IMessage> RenderToLook(IEntity viewer)
         {
             if (!IsVisibleTo(viewer))
             {
@@ -375,7 +376,7 @@ namespace NetMud.Data.Room
                 me.Event.TryModify(verb);
             }
 
-            return me;
+            return new IMessage[] { new Message(MessagingType.Visible, me) };
         }
 
         /// <summary>

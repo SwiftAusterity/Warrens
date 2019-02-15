@@ -1,8 +1,8 @@
 ﻿using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.EntityBase;
-using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.Zone;
 using System.Collections.Generic;
+using NetMud.DataStructure.System;
 
 namespace NetMud.DataStructure.NaturalResource
 {
@@ -71,6 +71,6 @@ namespace NetMud.DataStructure.NaturalResource
         /// <param name="viewer">the entity looking</param>
         /// <param name="amount">How much of it there is</param>
         /// <returns>a view string</returns>
-        ISensoryEvent RenderResourceCollection(IEntity viewer, int amount);
+        IEnumerable<IMessage> RenderResourceCollection(IEntity viewer, int amount);
     }
 }

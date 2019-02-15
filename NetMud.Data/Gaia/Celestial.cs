@@ -1,4 +1,5 @@
 ﻿using NetMud.Communication.Lexical;
+using NetMud.Communication.Messaging;
 using NetMud.Data.Architectural;
 using NetMud.Data.Architectural.DataIntegrity;
 using NetMud.Data.Architectural.EntityBase;
@@ -94,11 +95,11 @@ namespace NetMud.Data.Gaia
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public ISensoryEvent GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes = null)
+        public IEnumerable<IMessage> GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes = null)
         {
             if (!IsVisibleTo(viewer))
             {
-                return new SensoryEvent(MessagingType.Visible);
+                return new IMessage[] { new Message(MessagingType.Visible, new SensoryEvent(MessagingType.Visible)) };
             }
 
             return RenderToLook(viewer);
@@ -109,9 +110,9 @@ namespace NetMud.Data.Gaia
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public ISensoryEvent GetImmediateDescription(IEntity viewer, MessagingType sensoryType)
+        public IMessage GetImmediateDescription(IEntity viewer, MessagingType sensoryType)
         {
-            return new SensoryEvent(sensoryType);
+            return new Message(sensoryType, new SensoryEvent(sensoryType));
         }
 
         /// <summary>
@@ -134,9 +135,9 @@ namespace NetMud.Data.Gaia
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public ISensoryEvent RenderAsContents(IEntity viewer, MessagingType[] sensoryTypes)
+        public IEnumerable<IMessage> RenderAsContents(IEntity viewer, MessagingType[] sensoryTypes)
         {
-            return GetImmediateDescription(viewer, sensoryTypes[0]);
+            return new IMessage[] { GetImmediateDescription(viewer, sensoryTypes[0]) };
         }
 
         #region Visual Rendering
@@ -168,11 +169,11 @@ namespace NetMud.Data.Gaia
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public ISensoryEvent RenderToLook(IEntity viewer)
+        public IEnumerable<IMessage> RenderToLook(IEntity viewer)
         {
             if (!IsVisibleTo(viewer))
             {
-                return new SensoryEvent(MessagingType.Visible);
+                return new IMessage[] { new Message(MessagingType.Visible, new SensoryEvent(MessagingType.Visible)) };
             }
 
             return GetFullDescription(viewer, new MessagingType[] { MessagingType.Visible });

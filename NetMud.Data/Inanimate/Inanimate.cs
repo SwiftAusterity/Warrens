@@ -1,4 +1,5 @@
 ﻿using NetMud.Communication.Lexical;
+using NetMud.Communication.Messaging;
 using NetMud.Data.Architectural;
 using NetMud.Data.Architectural.EntityBase;
 using NetMud.Data.Linguistic;
@@ -222,13 +223,13 @@ namespace NetMud.Data.Inanimate
         #endregion
 
         #region rendering
-        public override ISensoryEvent RenderAsWorn(IEntity viewer, IEntity wearer)
+        public override IMessage RenderAsWorn(IEntity viewer, IEntity wearer)
         {
             //TODO: Worn position
             return GetImmediateDescription(viewer, MessagingType.Visible);
         }
 
-        public override ISensoryEvent RenderAsHeld(IEntity viewer, IEntity holder)
+        public override IMessage RenderAsHeld(IEntity viewer, IEntity holder)
         {
             //TODO: Worn position
             return GetImmediateDescription(viewer, MessagingType.Visible);
@@ -271,7 +272,7 @@ namespace NetMud.Data.Inanimate
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public override ISensoryEvent GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes = null)
+        public override IEnumerable<IMessage> GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes = null)
         {
             if (sensoryTypes == null || sensoryTypes.Count() == 0)
             {
@@ -297,20 +298,17 @@ namespace NetMud.Data.Inanimate
             };
 
             //Self becomes the first sense in the list
-            ISensoryEvent me = null;
+            List<IMessage> messages = new List<IMessage>();
             foreach (MessagingType sense in sensoryTypes)
             {
+                var me = GetSelf(sense);
+
                 switch (sense)
                 {
                     case MessagingType.Audible:
                         if (!IsAudibleTo(viewer))
                         {
                             continue;
-                        }
-
-                        if (me == null)
-                        {
-                            me = GetSelf(sense);
                         }
 
                         IEnumerable<ISensoryEvent> aDescs = GetAudibleDescriptives(viewer);
@@ -340,11 +338,6 @@ namespace NetMud.Data.Inanimate
                             continue;
                         }
 
-                        if (me == null)
-                        {
-                            me = GetSelf(sense);
-                        }
-
                         IEnumerable<ISensoryEvent> oDescs = GetSmellableDescriptives(viewer);
 
                         me.TryModify(oDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
@@ -370,11 +363,6 @@ namespace NetMud.Data.Inanimate
                         if (!IsSensibleTo(viewer))
                         {
                             continue;
-                        }
-
-                        if (me == null)
-                        {
-                            me = GetSelf(sense);
                         }
 
                         IEnumerable<ISensoryEvent> pDescs = GetPsychicDescriptives(viewer);
@@ -406,11 +394,6 @@ namespace NetMud.Data.Inanimate
                             continue;
                         }
 
-                        if (me == null)
-                        {
-                            me = GetSelf(sense);
-                        }
-
                         IEnumerable<ISensoryEvent> taDescs = GetTasteDescriptives(viewer);
 
                         me.TryModify(taDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
@@ -436,11 +419,6 @@ namespace NetMud.Data.Inanimate
                         if (!IsTouchableTo(viewer))
                         {
                             continue;
-                        }
-
-                        if (me == null)
-                        {
-                            me = GetSelf(sense);
                         }
 
                         IEnumerable<ISensoryEvent> tDescs = GetSmellableDescriptives(viewer);
@@ -470,11 +448,6 @@ namespace NetMud.Data.Inanimate
                             continue;
                         }
 
-                        if (me == null)
-                        {
-                            me = GetSelf(sense);
-                        }
-
                         IEnumerable<ISensoryEvent> vDescs = GetVisibleDescriptives(viewer);
 
                         me.TryModify(vDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
@@ -495,27 +468,23 @@ namespace NetMud.Data.Inanimate
                             me.TryModify(uberSight);
                         }
 
+                        //Describe the size and population of this zone
+                        DimensionalSizeDescription objectSize = GeographicalUtilities.ConvertSizeToType(GetModelDimensions(), GetType());
+
+                        me.TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, objectSize.ToString());
+
+                        //Render people in the zone
+                        ObjectContainmentSizeDescription bulgeSizeAdjective = GeographicalUtilities.GetObjectContainmentSize(GetContents<IInanimate>().Sum(obj => obj.GetModelVolume()), GetModelVolume());
+
+                        me.TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, bulgeSizeAdjective.ToString());
+
                         break;
                 }
+
+                messages.Add(new Message(sense, me));
             }
 
-            //If we get through that and me is still null it means we can't detect anything at all
-            if (me == null)
-            {
-                return new SensoryEvent(sensoryTypes[0]);
-            }
-
-            //Describe the size and population of this zone
-            DimensionalSizeDescription objectSize = GeographicalUtilities.ConvertSizeToType(GetModelDimensions(), GetType());
-
-            me.TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, objectSize.ToString());
-
-            //Render people in the zone
-            ObjectContainmentSizeDescription bulgeSizeAdjective = GeographicalUtilities.GetObjectContainmentSize(GetContents<IInanimate>().Sum(obj => obj.GetModelVolume()), GetModelVolume());
-
-            me.TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, bulgeSizeAdjective.ToString());
-
-            return me;
+            return messages;
         }
 
         /// <summary>

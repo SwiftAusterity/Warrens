@@ -1,6 +1,5 @@
-﻿
-using NetMud.DataStructure.Linguistic;
-using NetMud.DataStructure.System;
+﻿using NetMud.DataStructure.System;
+using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Architectural.EntityBase
 {
@@ -15,7 +14,7 @@ namespace NetMud.DataStructure.Architectural.EntityBase
         /// <param name="viewer">entity initiating the command</param>
         /// <param name="sensoryTypes">What senses to include. </param>
         /// <returns>the output</returns>
-        IMessageCluster RenderAsContents(IEntity viewer, MessagingType[] sensoryTypes);
+        IEnumerable<IMessage> RenderAsContents(IEntity viewer, MessagingType[] sensoryTypes);
 
         /// <summary>
         /// A fully described short description (includes adjectives)
@@ -23,7 +22,7 @@ namespace NetMud.DataStructure.Architectural.EntityBase
         /// <param name="viewer">entity initiating the command</param>
         /// <param name="sensoryTypes">What senses to include. EMPTY/NULL = ALL</param>
         /// <returns>the output</returns>
-        IMessageCluster GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes);
+        IEnumerable<IMessage> GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes);
 
         /// <summary>
         /// A fully described short description (includes adjectives)

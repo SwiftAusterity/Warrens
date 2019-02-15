@@ -1,5 +1,5 @@
 ﻿using NetMud.DataStructure.Architectural.EntityBase;
-using NetMud.DataStructure.Linguistic;
+using NetMud.DataStructure.System;
 
 namespace NetMud.DataStructure.Inanimate
 {
@@ -14,6 +14,6 @@ namespace NetMud.DataStructure.Inanimate
         /// <param name="viewer">entity initiating the command</param>
         /// <param name="holder">entity holding the thing</param>
         /// <returns>the output</returns>
-        ISensoryEvent RenderAsWorn(IEntity viewer, IEntity holder);
+        IMessage RenderAsWorn(IEntity viewer, IEntity holder);
     }
 }

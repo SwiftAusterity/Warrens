@@ -1,5 +1,6 @@
-﻿using NetMud.DataStructure.Linguistic;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using NetMud.DataStructure.Linguistic;
+using NetMud.DataStructure.System;
 
 namespace NetMud.DataStructure.Architectural.EntityBase
 {
@@ -13,7 +14,7 @@ namespace NetMud.DataStructure.Architectural.EntityBase
         /// </summary>
         /// <param name="actor">entity initiating the command</param>
         /// <returns>the output</returns>
-        ISensoryEvent RenderToSmell(IEntity actor);
+        IMessage RenderToSmell(IEntity actor);
 
         /// <summary>
         /// Retrieve all of the descriptors that are tagged as Olefactory output

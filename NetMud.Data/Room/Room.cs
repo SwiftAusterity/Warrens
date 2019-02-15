@@ -1,4 +1,5 @@
 ﻿using NetMud.Communication.Lexical;
+using NetMud.Communication.Messaging;
 using NetMud.Data.Architectural;
 using NetMud.Data.Architectural.DataIntegrity;
 using NetMud.Data.Architectural.EntityBase;
@@ -104,7 +105,7 @@ namespace NetMud.Data.Room
                     dt.Coordinates = _coordinates;
                     dt.PersistToCache();
                 }
-                
+
             }
         }
 
@@ -191,7 +192,7 @@ namespace NetMud.Data.Room
             IRoomTemplate dT = Template<IRoomTemplate>();
             IZone zone = CurrentLocation.CurrentZone;
 
-            bool canSeeSky = GeographicalUtilities.IsOutside(GetBiome()) 
+            bool canSeeSky = GeographicalUtilities.IsOutside(GetBiome())
                             && dT.Coordinates.Z >= zone.Template<IZoneTemplate>().BaseElevation;
 
             //if (!canSeeSky)
@@ -247,7 +248,7 @@ namespace NetMud.Data.Room
         /// Render this to a look command (what something sees when it 'look's at this
         /// </summary>
         /// <returns>the output strings</returns>
-        public override ISensoryEvent RenderToLook(IEntity viewer)
+        public override IEnumerable<IMessage> RenderToLook(IEntity viewer)
         {
             return GetFullDescription(viewer);
         }
@@ -257,7 +258,7 @@ namespace NetMud.Data.Room
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public override ISensoryEvent GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes = null)
+        public override IEnumerable<IMessage> GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes = null)
         {
             if (sensoryTypes == null || sensoryTypes.Count() == 0)
             {
@@ -283,20 +284,17 @@ namespace NetMud.Data.Room
             };
 
             //Self becomes the first sense in the list
-            ISensoryEvent me = null;
+            List<IMessage> sensoryOutput = new List<IMessage>();
             foreach (MessagingType sense in sensoryTypes)
             {
+                var me = GetSelf(sense);
+
                 switch (sense)
                 {
                     case MessagingType.Audible:
                         if (!IsAudibleTo(viewer))
                         {
                             continue;
-                        }
-
-                        if (me == null)
-                        {
-                            me = GetSelf(sense);
                         }
 
                         IEnumerable<ISensoryEvent> aDescs = GetAudibleDescriptives(viewer);
@@ -326,11 +324,6 @@ namespace NetMud.Data.Room
                             continue;
                         }
 
-                        if (me == null)
-                        {
-                            me = GetSelf(sense);
-                        }
-
                         IEnumerable<ISensoryEvent> oDescs = GetSmellableDescriptives(viewer);
 
                         me.TryModify(oDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
@@ -356,11 +349,6 @@ namespace NetMud.Data.Room
                         if (!IsSensibleTo(viewer))
                         {
                             continue;
-                        }
-
-                        if (me == null)
-                        {
-                            me = GetSelf(sense);
                         }
 
                         IEnumerable<ISensoryEvent> pDescs = GetPsychicDescriptives(viewer);
@@ -392,11 +380,6 @@ namespace NetMud.Data.Room
                             continue;
                         }
 
-                        if (me == null)
-                        {
-                            me = GetSelf(sense);
-                        }
-
                         IEnumerable<ISensoryEvent> taDescs = GetPsychicDescriptives(viewer);
 
                         me.TryModify(taDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
@@ -424,11 +407,6 @@ namespace NetMud.Data.Room
                             continue;
                         }
 
-                        if (me == null)
-                        {
-                            me = GetSelf(sense);
-                        }
-
                         IEnumerable<ISensoryEvent> tDescs = GetTouchDescriptives(viewer);
 
                         me.TryModify(tDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
@@ -449,16 +427,17 @@ namespace NetMud.Data.Room
                             me.TryModify(uberTouch);
                         }
 
+                        //Add the temperature
+                        me.TryModify(LexicalType.Verb, GrammaticalType.Verb, "feels").TryModify(new Lexica[] {
+                            new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, MeteorologicalUtilities.ConvertHumidityToType(EffectiveHumidity()).ToString(), collectiveContext),
+                            new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, MeteorologicalUtilities.ConvertTemperatureToType(EffectiveTemperature()).ToString(), collectiveContext)
+                        });
+
                         break;
                     case MessagingType.Visible:
                         if (!IsVisibleTo(viewer))
                         {
                             continue;
-                        }
-
-                        if (me == null)
-                        {
-                            me = GetSelf(sense);
                         }
 
                         IEnumerable<ISensoryEvent> vDescs = GetVisibleDescriptives(viewer);
@@ -481,74 +460,64 @@ namespace NetMud.Data.Room
                             me.TryModify(uberSight);
                         }
 
+                        //Describe the size and population of this zone
+                        DimensionalSizeDescription roomSize = GeographicalUtilities.ConvertSizeToType(GetModelDimensions(), GetType());
+
+                        me.TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, roomSize.ToString());
+
+                        //Render people in the zone
+                        CrowdSizeDescription populationSize = GeographicalUtilities.GetCrowdSize(GetContents<IMobile>().Count());
+
+                        string crowdSize = "lonely";
+                        if ((short)populationSize > (short)roomSize)
+                        {
+                            crowdSize = "crowded";
+                        }
+                        else if (populationSize > CrowdSizeDescription.Intimate)
+                        {
+                            crowdSize = "sparsely populated";
+                        }
+
+                        me.TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, crowdSize);
+
                         break;
                 }
-            }
 
-            //If we get through that and me is still null it means we can't detect anything at all
-            if (me == null)
-            {
-                return new SensoryEvent(sensoryTypes[0]);
+                if (me != null)
+                {
+                    sensoryOutput.Add(new Message(sense, me));
+                }
             }
 
             foreach (ICelestial celestial in GetVisibileCelestials(viewer))
             {
-                me.TryModify(celestial.RenderAsContents(viewer, sensoryTypes).Event);
+                sensoryOutput.AddRange(celestial.RenderAsContents(viewer, sensoryTypes));
             }
 
             if (NaturalResources != null)
             {
                 foreach (KeyValuePair<INaturalResource, int> resource in NaturalResources)
                 {
-                    me.TryModify(resource.Key.RenderResourceCollection(viewer, resource.Value).Event);
+                    sensoryOutput.AddRange(resource.Key.RenderResourceCollection(viewer, resource.Value));
                 }
             }
 
             foreach (IPathway path in GetPathways())
             {
-                me.TryModify(path.RenderAsContents(viewer, sensoryTypes).Event);
+                sensoryOutput.AddRange(path.RenderAsContents(viewer, sensoryTypes));
             }
 
             foreach (IInanimate obj in GetContents<IInanimate>())
             {
-                me.TryModify(obj.RenderAsContents(viewer, sensoryTypes).Event);
+                sensoryOutput.AddRange(obj.RenderAsContents(viewer, sensoryTypes));
             }
 
             foreach (IMobile mob in GetContents<IMobile>().Where(player => !player.Equals(viewer)))
             {
-                me.TryModify(mob.RenderAsContents(viewer, sensoryTypes).Event);
+                sensoryOutput.AddRange(mob.RenderAsContents(viewer, sensoryTypes));
             }
 
-            //Describe the size and population of this zone
-            DimensionalSizeDescription roomSize = GeographicalUtilities.ConvertSizeToType(GetModelDimensions(), GetType());
-
-            Lexica area = new Lexica(LexicalType.Noun, GrammaticalType.Subject, "space", collectiveContext);
-            area.TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, roomSize.ToString());
-
-            //Add the temperature
-            area.TryModify(LexicalType.Verb, GrammaticalType.Verb, "feels").TryModify(new Lexica[] {
-                new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, MeteorologicalUtilities.ConvertHumidityToType(EffectiveHumidity()).ToString(), collectiveContext),
-                new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, MeteorologicalUtilities.ConvertTemperatureToType(EffectiveTemperature()).ToString(), collectiveContext)
-            });
-
-            //Render people in the zone
-            CrowdSizeDescription populationSize = GeographicalUtilities.GetCrowdSize(GetContents<IMobile>().Count());
-
-            string crowdSize = "lonely";
-            if ((short)populationSize > (short)roomSize)
-            {
-                crowdSize = "crowded";
-            }
-            else if (populationSize > CrowdSizeDescription.Intimate)
-            {
-                crowdSize = "sparsely populated";
-            }
-
-            area.TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, crowdSize);
-
-            me.TryModify(area);
-
-            return me;
+            return sensoryOutput;
         }
 
         /// <summary>

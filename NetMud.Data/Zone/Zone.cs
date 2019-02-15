@@ -178,7 +178,7 @@ namespace NetMud.Data.Zone
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public override ISensoryEvent GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes = null)
+        public override IEnumerable<IMessage> GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes = null)
         {
             if (sensoryTypes == null || sensoryTypes.Count() == 0)
             {
@@ -204,9 +204,10 @@ namespace NetMud.Data.Zone
             };
 
             //Self becomes the first sense in the list
-            ISensoryEvent me = null;
+            List<IMessage> sensoryOutput = new List<IMessage>();
             foreach (MessagingType sense in sensoryTypes)
             {
+                var me = GetSelf(sense);
                 switch (sense)
                 {
                     case MessagingType.Audible:
@@ -220,11 +221,6 @@ namespace NetMud.Data.Zone
                         if(aDescs.Count() == 0)
                         {
                             continue;
-                        }
-
-                        if (me == null)
-                        {
-                            me = GetSelf(sense);
                         }
 
                         me.TryModify(aDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
@@ -259,11 +255,6 @@ namespace NetMud.Data.Zone
                             continue;
                         }
 
-                        if (me == null)
-                        {
-                            me = GetSelf(sense);
-                        }
-
                         me.TryModify(oDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
 
                         ILexica uberSmells = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "smell", collectiveContext);
@@ -296,12 +287,6 @@ namespace NetMud.Data.Zone
                             continue;
                         }
 
-                        if (me == null)
-                        {
-                            me = GetSelf(sense);
-                        }
-
-
                         me.TryModify(pDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
 
                         Lexica collectivePsy = new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you", collectiveContext);
@@ -324,8 +309,15 @@ namespace NetMud.Data.Zone
 
                         break;
                     case MessagingType.Taste:
-                    case MessagingType.Tactile:
                         continue;
+                    case MessagingType.Tactile:
+                        //Add the temperature
+                        me.TryModify(LexicalType.Verb, GrammaticalType.Verb, "feels").TryModify(new Lexica[] {
+                            new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, MeteorologicalUtilities.ConvertHumidityToType(EffectiveHumidity()).ToString(), collectiveContext),
+                            new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, MeteorologicalUtilities.ConvertTemperatureToType(EffectiveTemperature()).ToString(), collectiveContext)
+                        });
+
+                        break;
                     case MessagingType.Visible:
                         if (!IsVisibleTo(viewer))
                         {
@@ -337,11 +329,6 @@ namespace NetMud.Data.Zone
                         if (vDescs.Count() == 0)
                         {
                             continue;
-                        }
-
-                        if (me == null)
-                        {
-                            me = GetSelf(sense);
                         }
 
                         me.TryModify(vDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
@@ -364,19 +351,38 @@ namespace NetMud.Data.Zone
                             me.TryModify(collectiveSight);
                         }
 
+                        //Describe the size and population of this zone
+                        DimensionalSizeDescription zoneSize = GeographicalUtilities.ConvertSizeToType(GetModelDimensions(), GetType());
+
+                        me.TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, zoneSize.ToString());
+
+                        //Render people in the zone
+                        CrowdSizeDescription populationSize = GeographicalUtilities.GetCrowdSize(GetContents<IMobile>().Count());
+
+                        string crowdSize = "abandoned";
+                        if ((short)populationSize > (short)zoneSize)
+                        {
+                            crowdSize = "crowded";
+                        }
+                        else if (populationSize > CrowdSizeDescription.Intimate)
+                        {
+                            crowdSize = "sparsely populated";
+                        }
+
+                        me.TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, crowdSize);
+
                         break;
                 }
-            }
 
-            //If we get through that and me is still null it means we can't detect anything at alland need to make one for visual
-            if (me == null)
-            {
-                me = GetSelf(MessagingType.Visible);
+                if (me != null)
+                {
+                    sensoryOutput.Add(new Message(sense, me));
+                }
             }
 
             foreach (ICelestial celestial in GetVisibileCelestials(viewer))
             {
-                me.TryModify(celestial.RenderAsContents(viewer, sensoryTypes).Event);
+                sensoryOutput.AddRange(celestial.RenderAsContents(viewer, sensoryTypes));
             }
 
             //TODO: different way of rendering natural resources
@@ -384,46 +390,17 @@ namespace NetMud.Data.Zone
             {
                 foreach (KeyValuePair<DataStructure.NaturalResource.INaturalResource, int> resource in NaturalResources)
                 {
-                    me.TryModify(resource.Key.RenderResourceCollection(viewer, resource.Value).Event);
+                    sensoryOutput.AddRange(resource.Key.RenderResourceCollection(viewer, resource.Value));
                 }
             }
 
             //render our locales out
             foreach (ILocale locale in LiveCache.GetAll<ILocale>().Where(loc => loc.ParentLocation?.TemplateId == TemplateId))
             {
-                me.TryModify(locale.GetFullDescription(viewer, sensoryTypes));
+                sensoryOutput.AddRange(locale.GetFullDescription(viewer, sensoryTypes));
             }
 
-            //Describe the size and population of this zone
-            DimensionalSizeDescription zoneSize = GeographicalUtilities.ConvertSizeToType(GetModelDimensions(), GetType());
-
-            Lexica area = new Lexica(LexicalType.Noun, GrammaticalType.Subject, "space", collectiveContext);
-            area.TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, zoneSize.ToString());
-
-            //Add the temperature
-            area.TryModify(LexicalType.Verb, GrammaticalType.Verb, "feels").TryModify(new Lexica[] {
-                new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, MeteorologicalUtilities.ConvertHumidityToType(EffectiveHumidity()).ToString(), collectiveContext),
-                new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, MeteorologicalUtilities.ConvertTemperatureToType(EffectiveTemperature()).ToString(), collectiveContext)
-            });
-
-            //Render people in the zone
-            CrowdSizeDescription populationSize = GeographicalUtilities.GetCrowdSize(GetContents<IMobile>().Count());
-
-            string crowdSize = "abandoned";
-            if ((short)populationSize > (short)zoneSize)
-            {
-                crowdSize = "crowded";
-            }
-            else if (populationSize > CrowdSizeDescription.Intimate)
-            {
-                crowdSize = "sparsely populated";
-            }
-
-            area.TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, crowdSize);
-
-            me.TryModify(area);
-
-            return me;
+            return sensoryOutput;
         }
 
         /// <summary>
