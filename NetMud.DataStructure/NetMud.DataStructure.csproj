@@ -258,6 +258,7 @@
     <Compile Include="System\MessagingType.cs" />
     <Compile Include="System\MovementDirectionType.cs" />
     <Compile Include="System\SupportedColors.cs" />
+    <Compile Include="System\TargetEntity.cs" />
     <Compile Include="Zone\Biome.cs" />
     <Compile Include="Zone\HemispherePlacement.cs" />
     <Compile Include="Zone\IAdventureTemplate.cs" />

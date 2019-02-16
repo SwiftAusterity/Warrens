@@ -1,4 +1,5 @@
 ﻿using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.Player;
 using NetMud.DataStructure.System;
 using System;
@@ -65,7 +66,7 @@ namespace NetMud.Communication.Messaging
         /// <summary>
         /// New up a clister with just toactor for system messages
         /// </summary>
-        public MessageCluster(List<IMessage> toActor)
+        public MessageCluster(IEnumerable<IMessage> toActor)
         {
             ToActor = toActor;
             ToSubject = Enumerable.Empty<IMessage>();
@@ -184,6 +185,28 @@ namespace NetMud.Communication.Messaging
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Get the string version of all the contained messages
+        /// </summary>
+        /// <param name="target">The entity type to select the messages of</param>
+        /// <returns>Everything unpacked</returns>
+        public string Unpack(TargetEntity target, LexicalContext overridingContext = null)
+        {
+            switch(target)
+            {
+                case TargetEntity.Destination:
+                    return string.Join(" ", ToDestination.Select(msg => msg.Occurrence?.Event?.Unpack(overridingContext)));
+                case TargetEntity.Origin:
+                    return string.Join(" ", ToOrigin.Select(msg => msg.Occurrence?.Event?.Unpack(overridingContext)));
+                case TargetEntity.Subject:
+                    return string.Join(" ", ToSubject.Select(msg => msg.Occurrence?.Event?.Unpack(overridingContext)));
+                case TargetEntity.Target:
+                    return string.Join(" ", ToTarget.Select(msg => msg.Occurrence?.Event?.Unpack(overridingContext)));
+            }
+
+            return string.Join(" ", ToActor.Select(msg => msg.Occurrence?.Event?.Unpack(overridingContext)));
         }
 
         /// <summary>

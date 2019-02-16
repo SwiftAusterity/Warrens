@@ -104,10 +104,14 @@ namespace NetMud.Data.Linguistic
 
             if(recursive)
             {
-                foreach(var mod in lex.Modifiers.Where(mod => mod.Role != GrammaticalType.Descriptive &&  mod.Role != GrammaticalType.None))
+                var newMods = new HashSet<ILexica>();
+                foreach (var mod in lex.Modifiers.Where(mod => mod.Role != GrammaticalType.Descriptive &&  mod.Role != GrammaticalType.None))
                 {
                     AddLexica(mod);
+                    newMods.Add(mod);
                 }
+
+                lex.Modifiers.RemoveWhere(modi => newMods.Any(mods => mods == modi));
             }
 
             return this;
@@ -119,6 +123,11 @@ namespace NetMud.Data.Linguistic
         /// <returns>The sentence in full string form.</returns>
         public string Describe()
         {
+            if(Subject.Count + Predicate.Count <= 1)
+            {
+                return string.Empty;
+            }
+
             StringBuilder sb = new StringBuilder();
 
             //Subject
@@ -141,12 +150,10 @@ namespace NetMud.Data.Linguistic
 
             //Ensure every sentence starts with a caps letter
             //Do punctuation
-            string sentenceText = string.Format("{1}{0}{2}",
+            return string.Format("{1}{0}{2}",
                 sb.ToString().CapsFirstLetter(true).Trim(),
                 Language.PrecedentPunctuation ? PunctuationMark : "",
                 Language.AntecendentPunctuation ? PunctuationMark : "");
-
-            return sb.ToString();
         }
     }
 }

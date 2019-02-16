@@ -1,4 +1,5 @@
 ﻿using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.Linguistic;
 using System.Collections.Generic;
 
 namespace NetMud.DataStructure.System
@@ -39,5 +40,12 @@ namespace NetMud.DataStructure.System
         /// <param name="OriginLocation">The location the acting entity acted in</param>
         /// <param name="DestinationLocation">The location the command is targetting</param>
         void ExecuteMessaging(IEntity Actor, IEntity Subject, IEntity Target, IEntity OriginLocation, IEntity DestinationLocation);
+
+        /// <summary>
+        /// Get the string version of all the contained messages
+        /// </summary>
+        /// <param name="target">The entity type to select the messages of</param>
+        /// <returns>Everything unpacked</returns>
+        string Unpack(TargetEntity target, LexicalContext overridingContext = null);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using NetMud.Authentication;
+using NetMud.Communication.Messaging;
 using NetMud.Data.Players;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
@@ -182,12 +183,14 @@ namespace NetMud.Websock
                 Position = LexicalPosition.Near
             };
 
+            var toCluster = new MessageCluster(currentContainer.RenderToLook(_currentPlayer));
+
             if (currentContainer != null)
             {
                 pathways = ((ILocation)currentContainer).GetPathways().Select(data => data.GetDescribableName(_currentPlayer));
                 inventory = currentContainer.GetContents<IInanimate>().Select(data => data.GetDescribableName(_currentPlayer));
                 populace = currentContainer.GetContents<IMobile>().Where(player => !player.Equals(_currentPlayer)).Select(data => data.GetDescribableName(_currentPlayer));
-                locationDescription = currentContainer.RenderToLook(_currentPlayer).Unpack(lexicalContext);
+                locationDescription = toCluster.Unpack(TargetEntity.Actor, lexicalContext);
             }
 
             LocalStatus local = new LocalStatus
