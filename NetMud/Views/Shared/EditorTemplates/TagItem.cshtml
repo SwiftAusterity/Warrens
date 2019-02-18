@@ -1,9 +1,9 @@
 ﻿@model string
 @{
-    double columnCount = ViewData["columnCount"] == null ? 5 : (int)ViewData["columnCount"];
+
     bool disabled = ViewData["disabled"] != null;
-    var columnLabelValue = columnCount > 2 ? 1 : 2;
-    var columnInputValue = (int)Math.Round(10 / columnCount);
+
+
     var cssClass = ViewData["cssClass"] == null ? "form-control" : ViewData["cssClass"];
     var htmlAttributes = new Dictionary<string, object>() { { "class", cssClass }, { "placeholder", ViewData.ModelMetadata.DisplayName }, { "title", ViewData.ModelMetadata.DisplayName } };
     var forceOptional = ViewData["forceOptional"] != null;
@@ -44,7 +44,7 @@ else
 {
     <div class="form-group row">
         <a href="#" class="removeRow col-form-label" title="Remove this" onclick="javascript: $(this).parent().remove(); return false;">X</a>
-        <div class="col-sm-@columnInputValue">
+        <div>
             @Html.TextBox("", value, htmlAttributes)
         </div>
     </div>

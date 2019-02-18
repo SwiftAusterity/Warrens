@@ -272,10 +272,10 @@ namespace NetMud.Data.Linguistic
                 Context.Language = globalConfig.BaseLanguage;
             }
 
-            //solitaire rules
+            //solitaire rules ordered by specificity
             foreach (var rule in Context.Language.Rules.Where(rul => rul.ToRole == GrammaticalType.None && rul.ToType == LexicalType.None &&
                                                         ((rul.SpecificWord != null && rul.SpecificWord == lex.GetDictata()) 
-                                                            || (rul.FromRole == lex.Role && rul.FromType == lex.Type))))
+                                                            || (rul.FromRole == lex.Role && rul.FromType == lex.Type))).OrderByDescending(rul => rul.RuleSpecificity()))
             {
                 if (rule.NeedsArticle && !lex.Modifiers.Any(mod => mod.Type == LexicalType.Article))
                 {
@@ -291,9 +291,11 @@ namespace NetMud.Data.Linguistic
             var modifierList = new List<Tuple<ILexica[], int>>();
             foreach (var modifierPair in lex.Modifiers.GroupBy(lexi => new { lexi.Role, lexi.Type } ))
             {
-                var rule = Context.Language.Rules.FirstOrDefault(rul => rul.ToRole == modifierPair.Key.Role && rul.ToType == modifierPair.Key.Type &&
-                                                                ((rul.SpecificWord != null && rul.SpecificWord == lex.GetDictata()) 
-                                                                    || (rul.FromRole == lex.Role && rul.FromType == lex.Type)));
+                var rule = Context.Language.Rules.OrderByDescending(rul => rul.RuleSpecificity())
+                                                 .FirstOrDefault(rul => rul.ToRole == modifierPair.Key.Role 
+                                                                     && rul.ToType == modifierPair.Key.Type 
+                                                                     && ((rul.SpecificWord != null && rul.SpecificWord == lex.GetDictata()) 
+                                                                            || (rul.FromRole == lex.Role && rul.FromType == lex.Type)));
 
                 if (rule != null)
                 {

@@ -1,8 +1,5 @@
 ﻿@model object
 @{
-    double columnCount = ViewData["columnCount"] == null ? 5 : (int)ViewData["columnCount"];
-    var columnLabelValue = columnCount > 2 ? 1 : 2;
-    var columnInputValue = (int)Math.Round(10 / columnCount);
     bool disabled = ViewData["disabled"] != null;
     var cssClass = ViewData["cssClass"] == null ? "form-control" : ViewData["cssClass"];
     var htmlAttributes = new Dictionary<string, object>() { { "class", cssClass }, { "placeholder", ViewData.ModelMetadata.DisplayName }, { "title", ViewData.ModelMetadata.DisplayName } };
@@ -49,7 +46,7 @@
 }
 else
 {
-    <div class="col-sm-@columnInputValue" style="display: inline-flex;">
+    <div style="display: inline-flex;">
         @Html.DescriptionFor(m => m)
         <div class="pretty p-switch p-fill">
             @Html.CheckBox("", modelValue, htmlAttributes)

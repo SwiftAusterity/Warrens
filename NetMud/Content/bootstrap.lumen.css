@@ -2993,7 +2993,6 @@ output {
     }
 
 textarea.form-control {
-    max-width: 97%;
     height: 200px;
 }
 

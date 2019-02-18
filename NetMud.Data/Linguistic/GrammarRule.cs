@@ -64,6 +64,48 @@ namespace NetMud.Data.Linguistic
         }
 
         /// <summary>
+        /// Only when the word ends with
+        /// </summary>
+        [Display(Name = "When Ends With", Description = "Only when the word ends with this string.")]
+        [DataType(DataType.Text)]
+        public string WhenEndsWith { get; set; }
+
+        /// <summary>
+        /// Only when the word begins with
+        /// </summary>
+        [Display(Name = "When Begins With", Description = "Only when the word begins with this string.")]
+        [DataType(DataType.Text)]
+        public string WhenBeginsWith { get; set; }
+
+        /// <summary>
+        /// Only applies when the context is possessive
+        /// </summary>
+        [Display(Name = "When Possessive", Description = "Only when the word is possessive form.")]
+        [UIHint("Boolean")]
+        public bool WhenPossessive { get; set; }
+
+        /// <summary>
+        /// Only applies when the context is plural
+        /// </summary>
+        [Display(Name = "When Plural", Description = "Only when the word is pluralized.")]
+        [UIHint("Boolean")]
+        public bool WhenPlural { get; set; }
+
+        /// <summary>
+        /// Add this prefix
+        /// </summary>
+        [Display(Name = "Add Prefix", Description = " Add this prefix to the word.")]
+        [DataType(DataType.Text)]
+        public string AddPrefix { get; set; }
+
+        /// <summary>
+        /// Add this suffix
+        /// </summary>
+        [Display(Name = "Add Suffix", Description = " Add this suffix to the word.")]
+        [DataType(DataType.Text)]
+        public string AddSuffix { get; set; }
+
+        /// <summary>
         /// Applies when this type of word is the primary one
         /// </summary>
         [Display(Name = "From Type", Description = "Applies when this type of word is the primary one.")]
@@ -132,5 +174,24 @@ namespace NetMud.Data.Linguistic
         [Display(Name = "Alters Sentence Type", Description = "The presence of these criteria changes the sentence type.")]
         [UIHint("EnumDropDownList")]
         public SentenceType AltersSentence { get; set; }
+
+        /// <summary>
+        /// Rate this rule on how specific it is so we can run the more specific rules first
+        /// </summary>
+        /// <returns>Specificity rating, higher = more specific</returns>
+        public int RuleSpecificity()
+        {
+            return (string.IsNullOrWhiteSpace(ToSemantics) ? 0 : 1) +
+                    (string.IsNullOrWhiteSpace(FromSemantics) ? 0 : 1) +
+                    (string.IsNullOrWhiteSpace(WhenEndsWith) ? 0 : 3) +
+                    (string.IsNullOrWhiteSpace(WhenBeginsWith) ? 0 : 3) +
+                    (SpecificWord == null ? 0 : 99) +
+                    (Tense == LexicalTense.None ? 0 : 2) +
+                    (Perspective == NarrativePerspective.None ? 0 : 2) +
+                    (ToType == LexicalType.None ? 0 : 1) +
+                    (ToRole == GrammaticalType.None ? 0 : 1) +
+                    (FromType == LexicalType.None ? 0 : 3) +
+                    (FromRole == GrammaticalType.None ? 0 : 3);
+        }
     }
 }

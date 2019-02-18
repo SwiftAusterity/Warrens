@@ -21,6 +21,36 @@
         IDictata SpecificWord { get; set; }
 
         /// <summary>
+        /// Only when the word ends with
+        /// </summary>
+        string WhenEndsWith { get; set; }
+
+        /// <summary>
+        /// Only when the word begins with
+        /// </summary>
+        string WhenBeginsWith { get; set; }
+
+        /// <summary>
+        /// Only applies when the context is possessive
+        /// </summary>
+        bool WhenPossessive { get; set; }
+
+        /// <summary>
+        /// Only applies when the context is plural
+        /// </summary>
+        bool WhenPlural { get; set; }
+
+        /// <summary>
+        /// Add this prefix
+        /// </summary>
+        string AddPrefix { get; set; }
+
+        /// <summary>
+        /// Add this suffix
+        /// </summary>
+        string AddSuffix { get; set; }
+
+        /// <summary>
         /// Applies when this type of word is the primary one
         /// </summary>
         LexicalType FromType { get; set; }
@@ -61,7 +91,7 @@
         int ModificationOrder { get; set; }
 
         /// <summary>
-        /// Does this word require an Article added (like nouns preceeding or verbs anteceding)
+        /// Does this word require an Article added (like nouns preceeding or verbs anteceding, or non-english honorifics/possessive conjugations)
         /// </summary>
         bool NeedsArticle { get; set; }
 
@@ -69,5 +99,11 @@
         /// The presence of these criteria changes the sentence type
         /// </summary>
         SentenceType AltersSentence { get; set; }
+
+        /// <summary>
+        /// Rate this rule on how specific it is so we can run the more specific rules first
+        /// </summary>
+        /// <returns>Specificity rating, higher = more specific</returns>
+        int RuleSpecificity();
     }
 }

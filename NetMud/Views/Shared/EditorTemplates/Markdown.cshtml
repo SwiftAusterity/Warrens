@@ -3,10 +3,7 @@
 
 @model MarkdownString
 @{
-    double columnCount = ViewData["columnCount"] == null ? 5 : (int)ViewData["columnCount"];
     bool disabled = ViewData["disabled"] != null;
-    var columnLabelValue = columnCount > 2 ? 1 : 2;
-    var columnInputValue = (int)Math.Round(10 / columnCount);
     var cssClass = ViewData["cssClass"] == null ? "form-control" : ViewData["cssClass"];
     var forceOptional = ViewData["forceOptional"] != null;
     var noValidation = ViewData["noValidation"] != null;
@@ -46,7 +43,7 @@
 }
 else
 {
-    <div class="col-sm-10">
+    <div style="width: 85%;">
         <span class="@ghostNameClass">@ViewData.ModelMetadata.DisplayName</span>
 
         @Html.DescriptionFor(m => m)
