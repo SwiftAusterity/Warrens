@@ -309,7 +309,14 @@ namespace NetMud.Data.Zone
 
                         break;
                     case MessagingType.Taste:
-                        continue;
+                        //TODO: Trial purposes only
+
+                        me.TryModify(LexicalType.Verb, GrammaticalType.Verb, "is").TryModify(new Lexica[] {
+                            new Lexica(LexicalType.Adverb, GrammaticalType.Descriptive, "not", collectiveContext),
+                            new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "sunny", collectiveContext)
+                        });
+
+                        break;
                     case MessagingType.Tactile:
                         //Add the temperature
                         me.TryModify(LexicalType.Verb, GrammaticalType.Verb, "feels").TryModify(new Lexica[] {

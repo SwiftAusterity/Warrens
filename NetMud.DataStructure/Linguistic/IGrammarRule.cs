@@ -21,6 +21,11 @@
         IDictata SpecificWord { get; set; }
 
         /// <summary>
+        /// When the additional word (like the article) should be this explicitely
+        /// </summary>
+        IDictata SpecificAddition { get; set; }
+
+        /// <summary>
         /// Only when the word ends with
         /// </summary>
         string WhenEndsWith { get; set; }
@@ -105,5 +110,12 @@
         /// </summary>
         /// <returns>Specificity rating, higher = more specific</returns>
         int RuleSpecificity();
+
+        /// <summary>
+        /// Does this lexica match the rule
+        /// </summary>
+        /// <param name="word">The lex</param>
+        /// <returns>if it matches</returns>
+        bool Matches(ILexica word, GrammaticalType toRole = GrammaticalType.None, LexicalType toType = LexicalType.None);
     }
 }

@@ -97,7 +97,7 @@ namespace NetMud.Data.Linguistic
         /// <returns>A dictata</returns>
         public IDictata GetDictata()
         {
-            return ConfigDataCache.Get<IDictata>(new ConfigDataCacheKey(typeof(IDictata), string.Format("{0}_{1}", Type.ToString(), Phrase), ConfigDataType.Dictionary));
+            return ConfigDataCache.Get<IDictata>(new ConfigDataCacheKey(typeof(IDictata), string.Format("{0}_{1}_{2}", Context?.Language?.Name, Type.ToString(), Phrase), ConfigDataType.Dictionary));
         }
 
         /// <summary>
@@ -225,7 +225,7 @@ namespace NetMud.Data.Linguistic
         /// <returns>A long description</returns>
         public string Unpack(LexicalContext overridingContext = null, bool omitName = true)
         {
-            if(overridingContext != null)
+            if (overridingContext != null)
             {
                 Context = overridingContext;
             }
@@ -273,29 +273,61 @@ namespace NetMud.Data.Linguistic
             }
 
             //solitaire rules ordered by specificity
-            foreach (var rule in Context.Language.Rules.Where(rul => rul.ToRole == GrammaticalType.None && rul.ToType == LexicalType.None &&
-                                                        ((rul.SpecificWord != null && rul.SpecificWord == lex.GetDictata()) 
-                                                            || (rul.FromRole == lex.Role && rul.FromType == lex.Type))).OrderByDescending(rul => rul.RuleSpecificity()))
+            foreach (var rule in Context.Language.Rules.Where(rul => rul.Matches(lex) && rul.FromRole == GrammaticalType.None && rul.FromType == LexicalType.None)
+                                                       .OrderByDescending(rul => rul.RuleSpecificity()))
             {
                 if (rule.NeedsArticle && !lex.Modifiers.Any(mod => mod.Type == LexicalType.Article))
                 {
                     var articleContext = Context;
                     articleContext.Determinant = !Context.Plural;
-                    var article = Thesaurus.GetWord(Context, LexicalType.Article);
 
-                    lex.TryModify(LexicalType.Article, GrammaticalType.Descriptive, article.Name, false);
+                    IDictata article = null;
+                    if (rule.SpecificAddition != null)
+                    {
+                        article = rule.SpecificAddition;
+                    }
+                    else
+                    {
+                        article = Thesaurus.GetWord(Context, LexicalType.Article);
+                    }
+
+                    if (article != null)
+                    {
+                        lex.TryModify(LexicalType.Article, GrammaticalType.Descriptive, article.Name, false);
+                    }
                 }
+
+                if (string.IsNullOrWhiteSpace(rule.AddPrefix))
+                {
+                    lex.Phrase = string.Format("{0}{1}", rule.AddPrefix, lex.Phrase.Trim());
+                }
+
+                if (string.IsNullOrWhiteSpace(rule.AddSuffix))
+                {
+                    lex.Phrase = string.Format("{1}{0}", rule.AddSuffix, lex.Phrase.Trim());
+                }
+            }
+
+            //Contractive rules
+            var lexDict = lex.GetDictata();
+            foreach (var rule in Context.Language.ContractionRules.Where(rul => rul.First == lexDict || rul.Second == lexDict))
+            {
+                if(!lex.Modifiers.Any(mod => mod.GetDictata() == rule.First || mod.GetDictata() == rule.Second))
+                {
+                    continue;
+                }
+
+                lex.Modifiers.RemoveWhere(mod => mod.GetDictata() == rule.First || mod.GetDictata() == rule.Second);
+
+                lex.Phrase = rule.Contraction.Name;
             }
 
             //modifier rules
             var modifierList = new List<Tuple<ILexica[], int>>();
-            foreach (var modifierPair in lex.Modifiers.GroupBy(lexi => new { lexi.Role, lexi.Type } ))
+            foreach (var modifierPair in lex.Modifiers.GroupBy(lexi => new { lexi.Role, lexi.Type }))
             {
                 var rule = Context.Language.Rules.OrderByDescending(rul => rul.RuleSpecificity())
-                                                 .FirstOrDefault(rul => rul.ToRole == modifierPair.Key.Role 
-                                                                     && rul.ToType == modifierPair.Key.Type 
-                                                                     && ((rul.SpecificWord != null && rul.SpecificWord == lex.GetDictata()) 
-                                                                            || (rul.FromRole == lex.Role && rul.FromType == lex.Type)));
+                                                 .FirstOrDefault(rul => rul.Matches(lex, modifierPair.Key.Role, modifierPair.Key.Type));
 
                 if (rule != null)
                 {

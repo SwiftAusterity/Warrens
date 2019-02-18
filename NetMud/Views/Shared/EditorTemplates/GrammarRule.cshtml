@@ -23,4 +23,5 @@
     @Html.EditorFor(m => m.AddSuffix)
     @Html.EditorFor(m => m.Listable)
     @Html.EditorFor(m => m.NeedsArticle)
+    @Html.EditorFor(m => m.SpecificAddition, new { validItems = ViewData["ValidWords"] })
 </div>

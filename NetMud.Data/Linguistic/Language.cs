@@ -72,6 +72,12 @@ namespace NetMud.Data.Linguistic
         public HashSet<IGrammarRule> Rules { get; set; }
 
         /// <summary>
+        /// List of grammatical rules to use in sentence construction
+        /// </summary>
+        [UIHint("ContractionRules")]
+        public HashSet<IContractionRule> ContractionRules { get; set; }
+
+        /// <summary>
         /// Rules for sentence construction
         /// </summary>
         [UIHint("SentenceRules")]

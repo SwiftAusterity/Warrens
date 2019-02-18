@@ -26,14 +26,11 @@ namespace NetMud.Data.Linguistic
         [UIHint("EnumDropDownList")]
         public NarrativePerspective Perspective { get; set; }
 
-        /// <summary>
-        /// The UI language for output purposes
-        /// </summary>
         [JsonProperty("SpecificWord")]
         private ConfigDataCacheKey _specificWord { get; set; }
 
         /// <summary>
-        /// The UI language for output purposes
+        /// When the from word is specifically this
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
@@ -60,6 +57,40 @@ namespace NetMud.Data.Linguistic
                 }
 
                 _specificWord = new ConfigDataCacheKey(value);
+            }
+        }
+
+        [JsonProperty("SpecificAddition")]
+        private ConfigDataCacheKey _specificAddition { get; set; }
+
+        /// <summary>
+        /// When the additional word (like the article) should be this explicitely
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        [Display(Name = "Specific Addition", Description = "When the additional word (like the article being added) should be this explicitely.")]
+        [UIHint("DictataList")]
+        [DictataDataBinder]
+        public IDictata SpecificAddition
+        {
+            get
+            {
+                if (_specificAddition == null)
+                {
+                    return null;
+                }
+
+                return ConfigDataCache.Get<IDictata>(_specificAddition);
+            }
+            set
+            {
+                if (value == null)
+                {
+                    _specificAddition = null;
+                    return;
+                }
+
+                _specificAddition = new ConfigDataCacheKey(value);
             }
         }
 
@@ -175,6 +206,26 @@ namespace NetMud.Data.Linguistic
         [UIHint("EnumDropDownList")]
         public SentenceType AltersSentence { get; set; }
 
+        public GrammarRule()
+        {
+            AltersSentence = SentenceType.None;
+            NeedsArticle = false;
+            WhenPlural = false;
+            WhenPossessive = false;
+            SpecificAddition = null;
+            SpecificWord = null;
+            Tense = LexicalTense.None;
+            Perspective = NarrativePerspective.None;
+            ToType = LexicalType.None;
+            ToRole = GrammaticalType.None;
+            FromType = LexicalType.None;
+            FromRole = GrammaticalType.None;
+            ToSemantics = string.Empty;
+            FromSemantics = string.Empty;
+            WhenBeginsWith = string.Empty;
+            WhenEndsWith = string.Empty;
+        }
+
         /// <summary>
         /// Rate this rule on how specific it is so we can run the more specific rules first
         /// </summary>
@@ -192,6 +243,135 @@ namespace NetMud.Data.Linguistic
                     (ToRole == GrammaticalType.None ? 0 : 1) +
                     (FromType == LexicalType.None ? 0 : 3) +
                     (FromRole == GrammaticalType.None ? 0 : 3);
+        }
+
+        /// <summary>
+        /// Does this lexica match the rule
+        /// </summary>
+        /// <param name="word">The lex</param>
+        /// <returns>if it matches</returns>
+        public bool Matches(ILexica lex, GrammaticalType toRole = GrammaticalType.None, LexicalType toType = LexicalType.None)
+        {
+            return (ToRole == GrammaticalType.None || ToRole == toRole)
+                    && (ToType == LexicalType.None || ToType == toType)
+                    && (string.IsNullOrWhiteSpace(WhenBeginsWith) || lex.Phrase.StartsWith(WhenBeginsWith))
+                    && (string.IsNullOrWhiteSpace(WhenEndsWith) || lex.Phrase.EndsWith(WhenEndsWith))
+                    && (Tense == LexicalTense.None || lex.Context.Tense == Tense)
+                    && (Perspective == NarrativePerspective.None || lex.Context.Perspective == Perspective)
+                    && (Tense == LexicalTense.None || lex.Context.Tense == Tense)
+                    && (!WhenPlural || lex.Context.Plural)
+                    && (!WhenPossessive || lex.Context.Possessive)
+                    && ((SpecificWord != null && SpecificWord == lex.GetDictata())
+                    || (FromRole == lex.Role && FromType == lex.Type));
+
+        }
+    }
+
+    /// <summary>
+    /// Rules that identify contractions
+    /// </summary>
+    public class ContractionRule : IContractionRule
+    {
+        [JsonProperty("First")]
+        private ConfigDataCacheKey _first { get; set; }
+
+        /// <summary>
+        /// One of the words in the contraction (not an indicator of order)
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        [Display(Name = "First", Description = "One of the words in the contraction (not an indicator of order).")]
+        [UIHint("DictataList")]
+        [DictataDataBinder]
+        public IDictata First
+        {
+            get
+            {
+                if (_first == null)
+                {
+                    return null;
+                }
+
+                return ConfigDataCache.Get<IDictata>(_first);
+            }
+            set
+            {
+                if (value == null)
+                {
+                    _first = null;
+                    return;
+                }
+
+                _first = new ConfigDataCacheKey(value);
+            }
+        }
+
+        [JsonProperty("Second")]
+        private ConfigDataCacheKey _second { get; set; }
+
+        /// <summary>
+        /// One of the words in the contraction (not an indicator of order)
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        [Display(Name = "Second", Description = "One of the words in the contraction (not an indicator of order).")]
+        [UIHint("DictataList")]
+        [DictataDataBinder]
+        public IDictata Second
+        {
+            get
+            {
+                if (_second == null)
+                {
+                    return null;
+                }
+
+                return ConfigDataCache.Get<IDictata>(_second);
+            }
+            set
+            {
+                if (value == null)
+                {
+                    _second = null;
+                    return;
+                }
+
+                _second = new ConfigDataCacheKey(value);
+            }
+        }
+
+        [JsonProperty("Contraction")]
+        private ConfigDataCacheKey _contraction { get; set; }
+
+        /// <summary>
+        /// The contraction this turns into
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        [Display(Name = "Contraction", Description = "The contraction this turns into.")]
+        [UIHint("DictataList")]
+        [DictataDataBinder]
+        public IDictata Contraction
+        {
+            get
+            {
+                if (_contraction == null)
+                {
+                    return null;
+                }
+
+                return ConfigDataCache.Get<IDictata>(_contraction);
+            }
+            set
+            {
+                if (value == null)
+                {
+                    _contraction = null;
+                    return;
+                }
+
+                _contraction = new ConfigDataCacheKey(value);
+            }
         }
     }
 }
