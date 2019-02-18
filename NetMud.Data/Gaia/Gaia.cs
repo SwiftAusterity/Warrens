@@ -1,4 +1,5 @@
 ﻿using NetMud.CentralControl;
+using NetMud.Data.Architectural;
 using NetMud.Data.Architectural.EntityBase;
 using NetMud.Data.Zone;
 using NetMud.DataAccess.Cache;
@@ -150,6 +151,7 @@ namespace NetMud.Data.Gaia
 
                 Qualities = me.Qualities;
 
+                CurrentLocation = null;
                 KickoffProcesses();
             }
         }
@@ -249,7 +251,12 @@ namespace NetMud.Data.Gaia
 
             UpsertToLiveWorldCache(true);
 
+            CurrentLocation = new GlobalPosition(null, null, null);
             KickoffProcesses();
+
+            UpsertToLiveWorldCache(true);
+
+            Save();
         }
 
         private IEnumerable<MeterologicalFront> AddFronts()

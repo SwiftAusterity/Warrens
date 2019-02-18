@@ -226,15 +226,6 @@ namespace NetMud.Data.Locale
             {
                 SpawnNewInWorld();
             }
-            else
-            {
-                BirthMark = me.BirthMark;
-                Birthdate = me.Birthdate;
-                TemplateId = me.TemplateId;
-                Keywords = me.Keywords;
-                CurrentLocation = me.CurrentLocation;
-                ParentLocation = me.ParentLocation;
-            }
         }
 
         /// <summary>

@@ -546,18 +546,6 @@ namespace NetMud.Data.Room
             {
                 SpawnNewInWorld();
             }
-            else
-            {
-                BirthMark = me.BirthMark;
-                Birthdate = me.Birthdate;
-                TemplateId = me.TemplateId;
-                Contents = me.Contents;
-                MobilesInside = me.MobilesInside;
-                Keywords = me.Keywords;
-                NaturalResources = me.NaturalResources;
-                ParentLocation = me.ParentLocation;
-                Model = me.Model;
-            }
         }
 
         /// <summary>
@@ -606,6 +594,8 @@ namespace NetMud.Data.Room
             CurrentLocation = spawnTo;
 
             UpsertToLiveWorldCache(true);
+
+            Save();
         }
 
         public override string TryMoveTo(IGlobalPosition newPosition)

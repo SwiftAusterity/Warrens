@@ -240,19 +240,6 @@ namespace NetMud.Data.Room
             {
                 SpawnNewInWorld();
             }
-            else
-            {
-                BirthMark = me.BirthMark;
-                Keywords = me.Keywords;
-                Birthdate = me.Birthdate;
-                CurrentLocation = me.CurrentLocation;
-                TemplateId = me.Template<IPathwayTemplate>().Id;
-                Origin = me.Origin;
-                Destination = me.Destination;
-                Enter = me.Enter;
-                DirectionType = me.DirectionType;
-                Model = me.Model;
-            }
         }
 
         /// <summary>
@@ -312,6 +299,8 @@ namespace NetMud.Data.Room
             //Enter.ToSurrounding.Add(MessagingType.Audible, new Tuple<int, IEnumerable<string>>(bS.AudibleStrength, new string[] { bS.AudibleToSurroundings }));
 
             UpsertToLiveWorldCache(true);
+
+            Save();
         }
         #endregion
 

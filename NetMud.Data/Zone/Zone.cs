@@ -652,6 +652,8 @@ namespace NetMud.Data.Zone
 
             CurrentLocation = new GlobalPosition(this, null, null);
             UpsertToLiveWorldCache(true);
+
+            Save();
         }
 
         /// <summary>
@@ -677,6 +679,7 @@ namespace NetMud.Data.Zone
 
                 Qualities = me.Qualities;
                 PopulateMap();
+                KickoffProcesses();
             }
         }
 

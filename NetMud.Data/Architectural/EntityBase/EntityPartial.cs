@@ -316,7 +316,7 @@ namespace NetMud.Data.Architectural.EntityBase
             try
             {
                 //Dont save player inventories
-                if (CurrentLocation.CurrentContainer != null && CurrentLocation.CurrentContainer.ImplementsType<IPlayer>())
+                if (CurrentLocation?.CurrentContainer != null && CurrentLocation.CurrentContainer.ImplementsType<IPlayer>())
                 {
                     return true;
                 }

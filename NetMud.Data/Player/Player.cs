@@ -706,6 +706,8 @@ namespace NetMud.Data.Players
             UpsertToLiveWorldCache(true);
 
             KickoffProcesses();
+
+            Save();
         }
 
         public override string TryMoveTo(IGlobalPosition newPosition)

@@ -1,6 +1,7 @@
 ﻿using NetMud.Data.Architectural.EntityBase;
 using NetMud.Data.Gaia;
 using NetMud.Data.Inanimate;
+using NetMud.Data.Locale;
 using NetMud.Data.NPC;
 using NetMud.Data.Room;
 using NetMud.Data.Zone;
@@ -209,7 +210,11 @@ namespace NetMud.Backup
                                                                                                 && !ty.IsAbstract
                                                                                                 && !ty.GetCustomAttributes<IgnoreAutomatedBackupAttribute>().Any());
 
-                foreach (Type type in implimentedTypes)
+                foreach (Type type in implimentedTypes.OrderByDescending(type => type == typeof(Gaia) ? 6 :
+                                                                                type == typeof(Zone) ? 5 :
+                                                                                type == typeof(Locale) ? 3 :
+                                                                                type == typeof(Room) ? 3 :
+                                                                                type == typeof(Pathway) ? 2 : 0))
                 {
                     if (!Directory.Exists(currentBackupDirectory + type.Name))
                     {
@@ -261,7 +266,7 @@ namespace NetMud.Backup
                     ILocale entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as ILocale;
 
                     entityThing.ParentLocation = entityThing.ParentLocation.GetLiveInstance();
-                    entityThing.UpsertToLiveWorldCache();
+                    entityThing.GetFromWorldOrSpawn();
                 }
 
                 foreach (IRoomTemplate thing in TemplateCache.GetAll<IRoomTemplate>().Where(dt => !entitiesToLoad.Any(ent => ent.TemplateId.Equals(dt.Id))))
