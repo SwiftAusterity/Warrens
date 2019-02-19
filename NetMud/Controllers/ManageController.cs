@@ -229,11 +229,11 @@ namespace NetMud.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult RemoveCharacter(long ID, string authorize)
+        public ActionResult RemoveCharacter(long removeId, string authorizeRemove)
         {
             string message = string.Empty;
 
-            if (string.IsNullOrWhiteSpace(authorize) || !ID.ToString().Equals(authorize))
+            if (string.IsNullOrWhiteSpace(authorizeRemove) || !removeId.ToString().Equals(authorizeRemove))
             {
                 message = "You must check the proper authorize radio button first.";
             }
@@ -246,7 +246,7 @@ namespace NetMud.Controllers
                     authedUser = UserManager.FindById(userId)
                 };
 
-                IPlayerTemplate character = model.authedUser.GameAccount.Characters.FirstOrDefault(ch => ch.Id.Equals(ID));
+                IPlayerTemplate character = model.authedUser.GameAccount.Characters.FirstOrDefault(ch => ch.Id.Equals(removeId));
 
                 if (character == null)
                 {

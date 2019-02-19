@@ -1,41 +1,15 @@
 ﻿@using NetMud.Data.Linguistic
-
 @model Lexica
+<div class="accordionWrapper">
+    <h5>@Model.Phrase : @Model.Role.ToString() : @Model.Type.ToString()</h5>
+    <div>
 
-@{
-
-    bool disabled = ViewData["disabled"] != null;
-
-
-    var cssClass = ViewData["cssClass"] == null ? "form-control" : ViewData["cssClass"];
-    var htmlAttributes = new Dictionary<string, object>() { { "class", cssClass }, { "placeholder", ViewData.ModelMetadata.DisplayName }, { "title", ViewData.ModelMetadata.DisplayName } };
-    var archivedValue = ViewData["archivedValue"] == null ? "" : ViewData["archivedValue"].ToString();
-
-    if (ViewData["disabled"] != null)
-    {
-        htmlAttributes.Add("readonly", true);
-    }
-
-    if (ViewData["htmlAttributes"] != null)
-    {
-        var additionalAttribs = ViewData["htmlAttributes"] as IDictionary<string, object>;
-        if (additionalAttribs != null)
-        {
-            foreach (var kvp in additionalAttribs)
-            {
-                htmlAttributes.Add(kvp.Key, kvp.Value);
-            }
-        }
-    }
-
-    var removeName = "remove" + ViewData.ModelMetadata.PropertyName + "Row";
-}
-
-<div class="form-group row">
-    <a href="#" class="removeRow col-form-label" title="Remove this" onclick="javascript: $(this).parent().remove(); return false;">X</a>
-    @Html.EditorFor(m => m.Phrase)
-    @Html.HiddenFor(m => m.Role)
-    @Html.HiddenFor(m => m.Type)
-
-    @Html.ValidationMessageFor(m => m, "", new { @class = "text-danger" })
+        <div class="form-group row">
+            <a href="#" class="removeRow col-form-label" title="Remove this" onclick="javascript: $(this).parent().parent().parent().remove(); return false;">X</a>
+            @Html.EditorFor(m => m.Phrase)
+            @Html.HiddenFor(m => m.Role)
+            @Html.HiddenFor(m => m.Type)
+            @Html.ValidationMessageFor(m => m, "", new { @class = "text-danger" })
+        </div>
+    </div>
 </div>

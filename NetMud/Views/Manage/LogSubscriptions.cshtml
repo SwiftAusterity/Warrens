@@ -21,7 +21,7 @@
     @foreach (var subscription in Model.DataObject.LogChannelSubscriptions)
     {
         <div class="form-group row">
-            <a href="#" class="removeRow col-form-label" title="Remove this" onclick="javascript: $(this).parent().remove(); return false;">X</a>
+            <a href="#" class="removeRow col-form-label" title="Remove this" onclick="javascript: $(this).parent().parent().parent().remove(); return false;">X</a>
             <div class="col-md-2">
                 @Html.DropDownList("LogChannels", Enum.GetNames(typeof(LogChannels))
                     .Select(name => new SelectListItem() {  Text = name, Value = name, Selected = name.Equals(subscription, StringComparison.InvariantCultureIgnoreCase) })
@@ -38,6 +38,6 @@
 
     var newLogSubRow =
         '<div class="form-group row">' +
-        '<a href="#" class="removeRow col-form-label" title="Remove this" onclick="javascript: $(this).parent().remove(); return false;">X</a>' +
+        '<a href="#" class="removeRow col-form-label" title="Remove this" onclick="javascript: $(this).parent().parent().parent().remove(); return false;">X</a>' +
         '<div class="col-md-2">' + newLogSubDropdown + '</div></div>';
 </script>

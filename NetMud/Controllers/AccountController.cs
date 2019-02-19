@@ -127,8 +127,6 @@ namespace NetMud.Controllers
                 vModel.NewUserLocked = true;
             }
 
-            vModel.ValidGenders = TemplateCache.GetAll<IGender>(true);
-
             return View(vModel);
         }
 
@@ -151,13 +149,7 @@ namespace NetMud.Controllers
                 IdentityResult result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    IPlayerTemplate newCharacter = CreateAccountPlayerAndConfig(newGameAccount, model.Name, model.SurName, model.Gender);
-                    System.Collections.Generic.IEnumerable<IUIModule> uiModules = TemplateCache.GetAll<IUIModule>().Where(uim => uim.SystemDefault > 0);
-
-                    foreach(IUIModule module in uiModules)
-                    {
-                        newGameAccount.Config.UIModules = uiModules.Select(uim => new Tuple<IUIModule, int>(uim, uim.SystemDefault));
-                    }
+                    CreateAccountPlayerAndConfig(newGameAccount);
 
                     await UserManager.AddToRoleAsync(user.Id, "Player");
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
@@ -178,7 +170,7 @@ namespace NetMud.Controllers
             return View(model);
         }
 
-        private IPlayerTemplate CreateAccountPlayerAndConfig(IAccount account, string name, string surName, IGender gender)
+        private void CreateAccountPlayerAndConfig(IAccount account)
         {
             if (account.Config == null)
             {
@@ -189,35 +181,18 @@ namespace NetMud.Controllers
                     GossipSubscriber = true
                 };
 
+                System.Collections.Generic.IEnumerable<IUIModule> uiModules = TemplateCache.GetAll<IUIModule>().Where(uim => uim.SystemDefault > 0);
+
+                foreach (IUIModule module in uiModules)
+                {
+                    newAccountConfig.UIModules = uiModules.Select(uim => new Tuple<IUIModule, int>(uim, uim.SystemDefault));
+                }
+
                 //Save the new config
                 newAccountConfig.Save(account, StaffRank.Player);
             }
-
-            IPlayerTemplate currentCharacter = null;
-            if (!account.Characters.Any())
-            {
-                PlayerTemplate newCharacter = new PlayerTemplate
-                {
-                    Name = name,
-                    SurName = surName,
-                    Gender = gender,
-                    AccountHandle = account.GlobalIdentityHandle,
-                    StillANoob = true,
-                    GamePermissionsRank = StaffRank.Player,
-                    TotalHealth = 100,
-                    TotalStamina = 100
-                };
-
-                //Save the new character
-                newCharacter.Create(account, StaffRank.Player);
-
-                account.AddCharacter(newCharacter);
-
-                currentCharacter = newCharacter;
-            }
-
-            return currentCharacter;
         }
+
         [AllowAnonymous]
         public async Task<ActionResult> ConfirmEmail(string userId, string code)
         {

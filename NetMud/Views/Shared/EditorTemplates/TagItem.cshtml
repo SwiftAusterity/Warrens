@@ -1,9 +1,6 @@
 ﻿@model string
 @{
-
     bool disabled = ViewData["disabled"] != null;
-
-
     var cssClass = ViewData["cssClass"] == null ? "form-control" : ViewData["cssClass"];
     var htmlAttributes = new Dictionary<string, object>() { { "class", cssClass }, { "placeholder", ViewData.ModelMetadata.DisplayName }, { "title", ViewData.ModelMetadata.DisplayName } };
     var forceOptional = ViewData["forceOptional"] != null;
@@ -35,17 +32,21 @@
         value = "";
     }
 }
-
 @if (strippedNaked)
 {
     @Html.TextBox("", value, htmlAttributes)
 }
 else
 {
-    <div class="form-group row">
-        <a href="#" class="removeRow col-form-label" title="Remove this" onclick="javascript: $(this).parent().remove(); return false;">X</a>
+    <div class="accordionWrapper">
+        <h5>@Model</h5>
         <div>
-            @Html.TextBox("", value, htmlAttributes)
+            <div class="form-group row">
+                <a href="#" class="removeRow col-form-label" title="Remove this" onclick="javascript: $(this).parent().parent().parent().remove(); return false;">X</a>
+                <div>
+                    @Html.TextBox("", value, htmlAttributes)
+                </div>
+            </div>
         </div>
     </div>
 }

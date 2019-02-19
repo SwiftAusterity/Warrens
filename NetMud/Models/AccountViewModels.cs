@@ -57,23 +57,6 @@ namespace NetMud.Models
         [DataType(DataType.Text)]
         public string GlobalUserHandle { get; set; }
 
-        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
-        [Display(Name = "Character Name", Description = "First name for you in-game.")]
-        [DataType(DataType.Text)]
-        public string Name { get; set; }
-
-        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
-        [Display(Name = "Family Name", Description = "Last Name for you in-game.")]
-        [DataType(DataType.Text)]
-        public string SurName { get; set; }
-
-        [Display(Name = "Gender", Description = "Your gender. You can submit new gender matrices on the account dashboard after you register.")]
-        [DataType("GenderList")]
-        [GenderDataBinder]
-        [Required]
-        public IGender Gender { get; set; }
-
-        public IEnumerable<IGender> ValidGenders { get; set; }
         public bool NewUserLocked { get; set; }
     }
 

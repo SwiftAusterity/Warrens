@@ -2,9 +2,20 @@
 
 @model ContractionRule
 
-<div class="form-group row">
-    <a href="#" class="removeRow col-form-label" title="Remove this" onclick="javascript: $(this).parent().remove(); return false;">X</a>
-    @Html.EditorFor(m => m.First, new { validItems = ViewData["ValidWords"] })
-    @Html.EditorFor(m => m.Second, new { validItems = ViewData["ValidWords"] })
-    @Html.EditorFor(m => m.Contraction, new { validItems = ViewData["ValidWords"] })
+@{ 
+    var firstName = Model.First == null ? "" : Model.First.Name;
+    var secondName = Model.Second == null ? "" : Model.Second.Name;
+    var contName = Model.Contraction == null ? "" : Model.Contraction.Name;
+}
+
+<div class="accordionWrapper">
+    <h5>@firstName|@secondName : @contName</h5>
+    <div>
+        <div class="form-group row">
+            <a href="#" class="removeRow col-form-label" title="Remove this" onclick="javascript: $(this).parent().parent().parent().remove(); return false;">X</a>
+            @Html.EditorFor(m => m.First, new { validItems = ViewData["ValidWords"] })
+            @Html.EditorFor(m => m.Second, new { validItems = ViewData["ValidWords"] })
+            @Html.EditorFor(m => m.Contraction, new { validItems = ViewData["ValidWords"] })
+        </div>
+    </div>
 </div>

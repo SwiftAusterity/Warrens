@@ -13,6 +13,7 @@ namespace NetMud.Models
         public IPagedDataModel PagingModel { get; set; }
         public string EntityTypeName { get; set; }
         public string AddMethodName { get; set; }
+        public string RemoveMethodName { get; set; }
 
         public bool IncludeDelete { get; set; }
         public bool IncludeUnapprove { get; set; }

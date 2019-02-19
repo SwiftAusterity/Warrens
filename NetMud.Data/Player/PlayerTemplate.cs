@@ -442,15 +442,6 @@ namespace NetMud.Data.Players
         }
 
         /// <summary>
-        /// Grabs the next Id in the chain of all objects of this type.
-        /// </summary>
-        internal override void GetNextId()
-        {
-            //Only one character anymore so it's always 0
-            Id = 0;
-        }
-
-        /// <summary>
         /// Make a copy of this
         /// </summary>
         /// <returns>A copy</returns>

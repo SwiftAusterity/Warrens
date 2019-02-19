@@ -1,5 +1,8 @@
 ﻿@model NetMud.Models.Admin.AddEditMaterialViewModel
 
+@{ 
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Edit Material", new string[] { "Dashboard", "Materials" }, new string[] { "/GameAdmin", "/Material" });
+}
 <section id="newCharacterForm">
     @using (Html.BeginForm("Edit", "Material", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {

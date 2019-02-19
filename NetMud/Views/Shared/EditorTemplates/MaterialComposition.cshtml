@@ -2,12 +2,18 @@
 
 @model MaterialComposition
 
-@{
-    var removeName = "remove" + ViewData.ModelMetadata.PropertyName + "Row";
+@{ 
+    var name = Model?.Material == null ? "" : Model.Material.Name;
+    var comp = Model == null ? "" : Model.PercentageOfComposition.ToString();
 }
 
-<div class="form-group row">
-    <a href="#" class="removeRow col-form-label" title="Remove this" onclick="javascript: $(this).parent().remove(); return false;">X</a>
-    @Html.EditorFor(m => m.Material, new { validItems = ViewData["ValidMaterials"] })
-    @Html.EditorFor(m => m.PercentageOfComposition)
+<div class="accordionWrapper">
+    <h5>@name : @comp%</h5>
+    <div>
+        <div class="form-group row">
+            <a href="#" class="removeRow col-form-label" title="Remove this" onclick="javascript: $(this).parent().parent().parent().remove(); return false;">X</a>
+            @Html.EditorFor(m => m.Material, new { validItems = ViewData["ValidMaterials"] })
+            @Html.EditorFor(m => m.PercentageOfComposition)
+        </div>
+    </div>
 </div>

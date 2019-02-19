@@ -166,7 +166,7 @@ namespace NetMud.Data.Players
         /// <returns>errors or Empty if successful</returns>
         public string AddCharacter(IPlayerTemplate newChar)
         {
-            IEnumerable<IPlayerTemplate> systemChars = PlayerDataCache.GetAll();
+            HashSet<IPlayerTemplate> systemChars = new HashSet<IPlayerTemplate>(PlayerDataCache.GetAll());
 
             if (systemChars.Any(ch => ch.Name.Equals(newChar.Name, StringComparison.InvariantCultureIgnoreCase) && newChar.SurName.Equals(newChar.SurName, StringComparison.InvariantCultureIgnoreCase)))
             {
@@ -175,8 +175,9 @@ namespace NetMud.Data.Players
 
             newChar.AccountHandle = GlobalIdentityHandle;
             newChar.Create(this, StaffRank.Player); //characters dont need approval yet but your rank is ALWAYS player here
+            systemChars.Add(newChar);
 
-            Characters.Add(newChar);
+            Characters = systemChars;
 
             return string.Empty;
         }

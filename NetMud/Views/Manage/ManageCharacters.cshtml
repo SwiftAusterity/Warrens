@@ -6,16 +6,15 @@
 
 @{
     var tableColumns = new Dictionary<string, Func<dynamic, string>>();
-    var linkText = Html.ActionLink("99999999", "EditCharacter", new { id = 99999999 }).ToString();
-    tableColumns.Add("ID", obj => linkText.Replace("99999999", obj.Id.ToString()));
-    tableColumns.Add("Name", obj => obj.FullName());
+    var linkText = Html.ActionLink("99999999", "EditCharacter", new { id = 88888888 }).ToString();
+    tableColumns.Add("Name", obj => linkText.Replace("99999999", obj.FullName()).Replace("88888888", obj.Id.ToString()));
     tableColumns.Add("Race", obj => obj.Race == null ? "" : obj.Race.Name);
     tableColumns.Add("Gender", obj => obj.Gender.Name);
     tableColumns.Add("N00b", obj => obj.StillANoob.ToString());
     tableColumns.Add("Permissions", obj => obj.GamePermissionsRank.ToString());
 }
 
-@Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Name = " ", Columns = tableColumns, Values = Model.authedUser.GameAccount.Characters, IncludeUnapprove = false })
+@Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { EntityTypeName = "Manage", RemoveMethodName = "RemoveCharacter", Name = " ", Columns = tableColumns, Values = Model.authedUser.GameAccount.Characters, IncludeUnapprove = false })
 
 <section id="newCharacterForm">
     @using (Html.BeginForm("AddCharacter", "Manage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))

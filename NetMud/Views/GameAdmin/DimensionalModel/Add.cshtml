@@ -1,5 +1,9 @@
 ﻿@model NetMud.Models.Admin.AddEditDimensionalModelDataViewModel
 
+@{
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Add Model", new string[] { "Dashboard", "Dimensional Models" }, new string[] { "/GameAdmin", "/DimensionalModel" });
+}
+
 <section id="newCharacterForm">
     @using (Html.BeginForm("Add", "DimensionalModel", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
     {
