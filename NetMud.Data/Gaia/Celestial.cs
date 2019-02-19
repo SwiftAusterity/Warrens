@@ -3,6 +3,7 @@ using NetMud.Communication.Messaging;
 using NetMud.Data.Architectural;
 using NetMud.Data.Architectural.DataIntegrity;
 using NetMud.Data.Architectural.EntityBase;
+using NetMud.Data.Linguistic;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.EntityBase;
@@ -13,6 +14,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Gaia
@@ -97,12 +99,41 @@ namespace NetMud.Data.Gaia
         /// <returns>the output strings</returns>
         public IEnumerable<IMessage> GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes = null)
         {
-            if (!IsVisibleTo(viewer))
+            if (sensoryTypes == null || sensoryTypes.Count() == 0)
             {
-                return new IMessage[] { new Message(MessagingType.Visible, new SensoryEvent(MessagingType.Visible)) };
+                sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
             }
 
-            return RenderToLook(viewer);
+            IList<IMessage> Messages = new List<IMessage>();
+            //Self becomes the first sense in the list
+            foreach (MessagingType sense in sensoryTypes)
+            {
+                ISensoryEvent self = GetSelf(sense);
+
+                switch (sense)
+                {
+                    case MessagingType.Audible:
+                    case MessagingType.Olefactory:
+                    case MessagingType.Psychic:
+                    case MessagingType.Tactile:
+                    case MessagingType.Taste:
+                    case MessagingType.Visible:
+                        if (!IsVisibleTo(viewer))
+                        {
+                            continue;
+                        }
+
+                        self.TryModify(GetVisibleDescriptives(viewer));
+                        break;
+                }
+
+                if (self.Event.Modifiers.Count() > 0)
+                {
+                    Messages.Add(new Message(sense, self));
+                }
+            }
+
+            return Messages;
         }
 
         /// <summary>
@@ -112,6 +143,28 @@ namespace NetMud.Data.Gaia
         /// <returns>the output strings</returns>
         public IMessage GetImmediateDescription(IEntity viewer, MessagingType sensoryType)
         {
+            ISensoryEvent me = GetSelf(sensoryType);
+            switch (sensoryType)
+            {
+                case MessagingType.Audible:
+                case MessagingType.Olefactory:
+                case MessagingType.Psychic:
+                case MessagingType.Tactile:
+                case MessagingType.Taste:
+                    break;
+                case MessagingType.Visible:
+                    if (IsVisibleTo(viewer))
+                    {
+                        me.TryModify(GetVisibleDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
+                    }
+                    break;
+            }
+
+            if (me.Event.Modifiers.Any())
+            {
+                return new Message(sensoryType, me);
+            }
+
             return new Message(sensoryType, new SensoryEvent(sensoryType));
         }
 
@@ -127,7 +180,31 @@ namespace NetMud.Data.Gaia
                 return string.Empty;
             }
 
-            return string.Empty;
+            return GetSelf(MessagingType.Visible).ToString();
+        }
+
+        internal ISensoryEvent GetSelf(MessagingType type, int strength = 100)
+        {
+            return new SensoryEvent()
+            {
+                SensoryType = type,
+                Strength = strength,
+                Event = new Lexica() { Phrase = Name, Type = LexicalType.ProperNoun, Role = GrammaticalType.Subject }
+            };
+        }
+
+        /// <summary>
+        /// Retrieve all of the descriptors that are tagged as visible output
+        /// </summary>
+        /// <returns>A collection of the descriptors</returns>
+        public IEnumerable<ISensoryEvent> GetVisibleDescriptives(IEntity viewer)
+        {
+            if (Descriptives == null)
+            {
+                return Enumerable.Empty<ISensoryEvent>();
+            }
+
+            return Descriptives.Where(desc => desc.SensoryType == MessagingType.Visible);
         }
 
         /// <summary>
@@ -137,7 +214,63 @@ namespace NetMud.Data.Gaia
         /// <returns>the output strings</returns>
         public IEnumerable<IMessage> RenderAsContents(IEntity viewer, MessagingType[] sensoryTypes)
         {
-            return new IMessage[] { GetImmediateDescription(viewer, sensoryTypes[0]) };
+            if (sensoryTypes == null || sensoryTypes.Count() == 0)
+            {
+                sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
+            }
+
+            IList<IMessage> Messages = new List<IMessage>();
+            //Self becomes the first sense in the list
+            foreach (MessagingType sense in sensoryTypes)
+            {
+                ISensoryEvent me = GetSelf(sense);
+                switch (sense)
+                {
+                    case MessagingType.Audible:
+                    case MessagingType.Olefactory:
+                    case MessagingType.Psychic:
+                    case MessagingType.Tactile:
+                    case MessagingType.Taste:
+                        break;
+                    case MessagingType.Visible:
+                        if (!IsVisibleTo(viewer))
+                        {
+                            continue;
+                        }
+
+                        me.TryModify(GetVisibleDescriptives(viewer));
+
+                        var discreteContext = new LexicalContext()
+                        {
+                            Determinant = true,
+                            Perspective = NarrativePerspective.None,
+                            Plural = false,
+                            Position = LexicalPosition.InsideOf,
+                            Tense = LexicalTense.Present
+                        };
+
+                        var skyContext = new LexicalContext()
+                        {
+                            Determinant = true,
+                            Perspective = NarrativePerspective.None,
+                            Plural = false,
+                            Position = LexicalPosition.None,
+                            Tense = LexicalTense.Present
+                        };
+
+                        me.TryModify(new Lexica(LexicalType.Verb, GrammaticalType.Verb, "is", discreteContext)).TryModify(new Lexica[] {
+                            new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, "sky", skyContext)
+                        });
+                        break;
+                }
+
+                if (me.Event.Modifiers.Count() > 0)
+                {
+                    Messages.Add(new Message(sense, me));
+                }
+            }
+
+            return Messages;
         }
 
         #region Visual Rendering

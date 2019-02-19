@@ -258,11 +258,10 @@ namespace NetMud.Data.Linguistic
                     && (string.IsNullOrWhiteSpace(WhenEndsWith) || lex.Phrase.EndsWith(WhenEndsWith))
                     && (Tense == LexicalTense.None || lex.Context.Tense == Tense)
                     && (Perspective == NarrativePerspective.None || lex.Context.Perspective == Perspective)
-                    && (Tense == LexicalTense.None || lex.Context.Tense == Tense)
                     && (!WhenPlural || lex.Context.Plural)
                     && (!WhenPossessive || lex.Context.Possessive)
                     && ((SpecificWord != null && SpecificWord == lex.GetDictata())
-                    || (FromRole == lex.Role && FromType == lex.Type));
+                    || ((FromRole == GrammaticalType.None || FromRole == lex.Role) && (FromType == LexicalType.None || FromType == lex.Type)));
 
         }
     }

@@ -218,7 +218,7 @@ namespace NetMud.Data.Zone
 
                         IEnumerable<ISensoryEvent> aDescs = GetAudibleDescriptives(viewer);
 
-                        if(aDescs.Count() == 0)
+                        if (aDescs.Count() == 0)
                         {
                             continue;
                         }
@@ -309,14 +309,7 @@ namespace NetMud.Data.Zone
 
                         break;
                     case MessagingType.Taste:
-                        //TODO: Trial purposes only
-
-                        me.TryModify(LexicalType.Verb, GrammaticalType.Verb, "is").TryModify(new Lexica[] {
-                            new Lexica(LexicalType.Adverb, GrammaticalType.Descriptive, "not", collectiveContext),
-                            new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "sunny", collectiveContext)
-                        });
-
-                        break;
+                        continue;
                     case MessagingType.Tactile:
                         //Add the temperature
                         me.TryModify(LexicalType.Verb, GrammaticalType.Verb, "feels").TryModify(new Lexica[] {
@@ -333,29 +326,28 @@ namespace NetMud.Data.Zone
 
                         IEnumerable<ISensoryEvent> vDescs = GetVisibleDescriptives(viewer);
 
-                        if (vDescs.Count() == 0)
+                        if (vDescs.Count() > 0)
                         {
-                            continue;
-                        }
 
-                        me.TryModify(vDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
+                            me.TryModify(vDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
 
-                        Lexica collectiveSight = new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you", collectiveContext);
+                            Lexica collectiveSight = new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you", collectiveContext);
 
-                        ILexica uberSight = collectiveSight.TryModify(LexicalType.Verb, GrammaticalType.Verb, "see");
-                        uberSight.TryModify(vDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
+                            ILexica uberSight = collectiveSight.TryModify(LexicalType.Verb, GrammaticalType.Verb, "see");
+                            uberSight.TryModify(vDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
 
-                        foreach (ISensoryEvent desc in vDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
-                        {
-                            Lexica newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
-                            newDesc.TryModify(desc.Event.Modifiers);
+                            foreach (ISensoryEvent desc in vDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
+                            {
+                                Lexica newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
+                                newDesc.TryModify(desc.Event.Modifiers);
 
-                            uberSight.TryModify(newDesc);
-                        }
+                                uberSight.TryModify(newDesc);
+                            }
 
-                        if (uberSight.Modifiers.Any())
-                        {
-                            me.TryModify(collectiveSight);
+                            if (uberSight.Modifiers.Any())
+                            {
+                                me.TryModify(collectiveSight);
+                            }
                         }
 
                         //Describe the size and population of this zone

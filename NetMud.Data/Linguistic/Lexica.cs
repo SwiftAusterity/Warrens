@@ -118,6 +118,11 @@ namespace NetMud.Data.Linguistic
         {
             if (!Modifiers.Contains(modifier))
             {
+                if(modifier.Context == null)
+                {
+                    modifier.Context = Context;
+                }
+
                 Modifiers.Add(modifier);
             }
 
@@ -185,11 +190,9 @@ namespace NetMud.Data.Linguistic
         /// <returns>Whether or not it succeeded</returns>
         public ILexica TryModify(LexicalType type, GrammaticalType role, string phrase, bool passthru = false)
         {
-            Lexica modifier = new Lexica(type, role, phrase, Context);
-            if (!Modifiers.Contains(modifier))
-            {
-                Modifiers.Add(modifier);
-            }
+            ILexica modifier = new Lexica(type, role, phrase, Context);
+
+            modifier = TryModify(modifier);
 
             return passthru ? this : modifier;
         }
@@ -223,7 +226,7 @@ namespace NetMud.Data.Linguistic
         /// <param name="context">Contextual nature of the request.</param>
         /// <param name="omitName">Should we omit the proper name of the initial subject entirely (and only resort to pronouns)</param>
         /// <returns>A long description</returns>
-        public string Unpack(LexicalContext overridingContext = null, bool omitName = true)
+        public string Unpack(LexicalContext overridingContext = null, bool omitName = false)
         {
             if (overridingContext != null)
             {
@@ -273,7 +276,7 @@ namespace NetMud.Data.Linguistic
             }
 
             //solitaire rules ordered by specificity
-            foreach (var rule in Context.Language.Rules.Where(rul => rul.Matches(lex) && rul.FromRole == GrammaticalType.None && rul.FromType == LexicalType.None)
+            foreach (var rule in Context.Language.Rules.Where(rul => rul.Matches(lex) && rul.ToRole == GrammaticalType.None && rul.ToType == LexicalType.None)
                                                        .OrderByDescending(rul => rul.RuleSpecificity()))
             {
                 if (rule.NeedsArticle && !lex.Modifiers.Any(mod => mod.Type == LexicalType.Article))
@@ -288,7 +291,7 @@ namespace NetMud.Data.Linguistic
                     }
                     else
                     {
-                        article = Thesaurus.GetWord(Context, LexicalType.Article);
+                        article = Thesaurus.GetWord(articleContext, LexicalType.Article);
                     }
 
                     if (article != null)

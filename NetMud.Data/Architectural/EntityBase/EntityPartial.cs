@@ -452,7 +452,10 @@ namespace NetMud.Data.Architectural.EntityBase
                         break;
                 }
 
-                Messages.Add(new Message(sense, self));
+                if (self.Event.Modifiers.Count() > 0)
+                {
+                    Messages.Add(new Message(sense, self));
+                }
             }
 
             return Messages;

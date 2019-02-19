@@ -294,6 +294,7 @@ div.roomAsciiMap {
         .searchCriteria div div {
             flex: 1 1 auto;
             margin: 7px 3px;
+            min-width: unset !important;
         }
 
             .searchCriteria div div.pager {
