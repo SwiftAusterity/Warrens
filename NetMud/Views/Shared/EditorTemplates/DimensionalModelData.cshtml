@@ -15,7 +15,7 @@
 
 <div class="form-group row" style="display: inline-flex;">
     <label class="col-sm-2 col-form-label">Type Selector</label>
-    <div >
+    <div>
         @Html.DropDownList("PaintbrushSymbol", Enum.GetNames(typeof(DamageType)).Select(rl =>
                new SelectListItem() { Text = ((DamageType)Enum.Parse(typeof(DamageType), rl)).GetDescription(), Value = ((short)Enum.Parse(typeof(DamageType), rl)).ToString() })
                             , htmlAttributes: new { id = "PaintbrushSymbol", @class = "form-control" })

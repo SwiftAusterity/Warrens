@@ -4,8 +4,6 @@
 
 <div class="form-group row">
     <a href="#" class="removeRow col-form-label" title="Remove this" onclick="javascript: $(this).parent().remove(); return false;">X</a>
-    <div >
-        @Html.EditorFor(m => m.Name)
-        @Html.EditorFor(m => m.Value)
-    </div>
+    @Html.EditorFor(m => m.Name)
+    @Html.EditorFor(m => m.Value)
 </div>

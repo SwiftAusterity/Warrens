@@ -7,8 +7,6 @@
 }
 
 <div class="form-group row">
-    <div >
-        @Html.EditorFor(m => m.PartName)
-        @Html.EditorFor(m => m.Material, new { validItems = ViewData["ValidMaterials"] })
-    </div>
+    @Html.EditorFor(m => m.PartName)
+    @Html.EditorFor(m => m.Material, new { validItems = ViewData["ValidMaterials"] })
 </div>

@@ -723,7 +723,6 @@ div.roomAsciiMap {
 
 .listItem {
     flex: 1 0;
-    overflow: hidden;
     list-style: none;
     margin: 0 3px 0 3px;
     padding: 2px;
