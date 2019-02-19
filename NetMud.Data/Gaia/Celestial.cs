@@ -240,7 +240,7 @@ namespace NetMud.Data.Gaia
 
                         me.TryModify(GetVisibleDescriptives(viewer));
 
-                        var discreteContext = new LexicalContext()
+                        me.Event.Context = new LexicalContext()
                         {
                             Determinant = true,
                             Perspective = NarrativePerspective.None,
@@ -258,9 +258,7 @@ namespace NetMud.Data.Gaia
                             Tense = LexicalTense.Present
                         };
 
-                        me.TryModify(new Lexica(LexicalType.Verb, GrammaticalType.Verb, "is", discreteContext)).TryModify(new Lexica[] {
-                            new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, "sky", skyContext)
-                        });
+                        me.TryModify(new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, "sky", skyContext));
                         break;
                 }
 

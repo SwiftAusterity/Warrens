@@ -104,7 +104,7 @@ namespace NetMud.Communication.Lexical
                                                            ((context.GenderForm == null || word.Feminine == context.GenderForm?.Feminine) ? 10 : 0) +
                                                            (word.Plural == context.Plural ? 2 : 0) +
                                                            (word.Determinant == context.Determinant ? 2 : 0) +
-                                                           (context.Semantics.Any() ? word.Semantics.Count(wrd => context.Semantics.Contains(wrd)) * 3 : 0)
+                                                           (context.Semantics.Any() ? word.Semantics.Count(wrd => context.Semantics.Contains(wrd)) * 10 : 0)
                                                   ).FirstOrDefault();
 
             //3x weight for meeting the semantics

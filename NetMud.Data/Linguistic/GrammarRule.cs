@@ -3,6 +3,7 @@ using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Linguistic;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Linguistic
@@ -252,6 +253,12 @@ namespace NetMud.Data.Linguistic
         /// <returns>if it matches</returns>
         public bool Matches(ILexica lex, GrammaticalType toRole = GrammaticalType.None, LexicalType toType = LexicalType.None)
         {
+            if(toRole == GrammaticalType.None && toType == LexicalType.None && lex.Modifiers.Any(mod => mod.Role == ToRole && mod.Type == ToType))
+            {
+                toRole = ToRole;
+                toType = ToType;
+            }
+
             return (ToRole == GrammaticalType.None || ToRole == toRole)
                     && (ToType == LexicalType.None || ToType == toType)
                     && (string.IsNullOrWhiteSpace(WhenBeginsWith) || lex.Phrase.StartsWith(WhenBeginsWith))
@@ -262,7 +269,6 @@ namespace NetMud.Data.Linguistic
                     && (!WhenPossessive || lex.Context.Possessive)
                     && ((SpecificWord != null && SpecificWord == lex.GetDictata())
                     || ((FromRole == GrammaticalType.None || FromRole == lex.Role) && (FromType == LexicalType.None || FromType == lex.Type)));
-
         }
     }
 

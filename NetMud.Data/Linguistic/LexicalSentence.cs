@@ -83,6 +83,42 @@ namespace NetMud.Data.Linguistic
         /// <returns></returns>
         public LexicalSentence AddLexica(ILexica lex, bool recursive = true)
         {
+            //modification rules ordered by specificity
+            foreach (var wordRule in Language.Rules.Where(rul => rul.Matches(lex))
+                                                               .OrderByDescending(rul => rul.RuleSpecificity()))
+            {
+                if (wordRule.NeedsArticle && !lex.Modifiers.Any(mod => mod.Type == LexicalType.Article))
+                {
+                    var articleContext = lex.Context;
+                    articleContext.Determinant = !lex.Context.Plural;
+
+                    IDictata article = null;
+                    if (wordRule.SpecificAddition != null)
+                    {
+                        article = wordRule.SpecificAddition;
+                    }
+                    else
+                    {
+                        article = Thesaurus.GetWord(articleContext, LexicalType.Article);
+                    }
+
+                    if (article != null)
+                    {
+                        lex.TryModify(LexicalType.Article, GrammaticalType.Descriptive, article.Name, false);
+                    }
+                }
+
+                if (string.IsNullOrWhiteSpace(wordRule.AddPrefix))
+                {
+                    lex.Phrase = string.Format("{0}{1}", wordRule.AddPrefix, lex.Phrase.Trim());
+                }
+
+                if (string.IsNullOrWhiteSpace(wordRule.AddSuffix))
+                {
+                    lex.Phrase = string.Format("{1}{0}", wordRule.AddSuffix, lex.Phrase.Trim());
+                }
+            }
+
             var rule = Language.SentenceRules.FirstOrDefault(rul => rul.Type == Type && rul.Fragment == lex.Role);
 
             if(rule != null)

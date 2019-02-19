@@ -116,11 +116,23 @@ namespace NetMud.Data.Linguistic
         /// <returns>Whether or not it succeeded</returns>
         public ILexica TryModify(ILexica modifier, bool passthru = false)
         {
+            if(Modifiers == null)
+            {
+                Modifiers = new HashSet<ILexica>();
+            }
+
             if (!Modifiers.Contains(modifier))
             {
                 if(modifier.Context == null)
                 {
                     modifier.Context = Context;
+                }
+                else
+                {
+                    //Sentence must maintain the same language, tense and personage
+                    modifier.Context.Language = Context.Language;
+                    modifier.Context.Tense = Context.Tense;
+                    modifier.Context.Perspective = Context.Perspective;
                 }
 
                 Modifiers.Add(modifier);
@@ -230,7 +242,10 @@ namespace NetMud.Data.Linguistic
         {
             if (overridingContext != null)
             {
-                Context = overridingContext;
+                //Sentence must maintain the same language, tense and personage
+                Context.Language = overridingContext.Language;
+                Context.Tense = overridingContext.Tense;
+                Context.Perspective = overridingContext.Perspective;
             }
 
             IEnumerable<LexicalSentence> sentences = GetSentences(omitName);
@@ -255,18 +270,6 @@ namespace NetMud.Data.Linguistic
                 return string.Empty;
             }
 
-            //up-caps all the proper nouns
-            if (lex.Type == LexicalType.ProperNoun)
-            {
-                lex.Phrase = lex.Phrase.ProperCaps();
-            }
-            else
-            {
-                lex.Phrase = lex.Phrase.ToLower();
-            }
-
-            IEnumerable<ILexica> adjectives = lex.Modifiers.Where(mod => mod.Role == GrammaticalType.Descriptive);
-
             //Language rules engine, default to base language if we have an empty language
             if (Context.Language == null || Context.Language?.Rules?.Count == 0)
             {
@@ -275,40 +278,14 @@ namespace NetMud.Data.Linguistic
                 Context.Language = globalConfig.BaseLanguage;
             }
 
-            //solitaire rules ordered by specificity
-            foreach (var rule in Context.Language.Rules.Where(rul => rul.Matches(lex) && rul.ToRole == GrammaticalType.None && rul.ToType == LexicalType.None)
-                                                       .OrderByDescending(rul => rul.RuleSpecificity()))
+            //up-caps all the proper nouns
+            if (lex.Type == LexicalType.ProperNoun)
             {
-                if (rule.NeedsArticle && !lex.Modifiers.Any(mod => mod.Type == LexicalType.Article))
-                {
-                    var articleContext = Context;
-                    articleContext.Determinant = !Context.Plural;
-
-                    IDictata article = null;
-                    if (rule.SpecificAddition != null)
-                    {
-                        article = rule.SpecificAddition;
-                    }
-                    else
-                    {
-                        article = Thesaurus.GetWord(articleContext, LexicalType.Article);
-                    }
-
-                    if (article != null)
-                    {
-                        lex.TryModify(LexicalType.Article, GrammaticalType.Descriptive, article.Name, false);
-                    }
-                }
-
-                if (string.IsNullOrWhiteSpace(rule.AddPrefix))
-                {
-                    lex.Phrase = string.Format("{0}{1}", rule.AddPrefix, lex.Phrase.Trim());
-                }
-
-                if (string.IsNullOrWhiteSpace(rule.AddSuffix))
-                {
-                    lex.Phrase = string.Format("{1}{0}", rule.AddSuffix, lex.Phrase.Trim());
-                }
+                lex.Phrase = lex.Phrase.ProperCaps();
+            }
+            else
+            {
+                lex.Phrase = lex.Phrase.ToLower();
             }
 
             //Contractive rules
@@ -325,7 +302,7 @@ namespace NetMud.Data.Linguistic
                 lex.Phrase = rule.Contraction.Name;
             }
 
-            //modifier rules
+            //Listable pass rules
             var modifierList = new List<Tuple<ILexica[], int>>();
             foreach (var modifierPair in lex.Modifiers.GroupBy(lexi => new { lexi.Role, lexi.Type }))
             {
@@ -432,19 +409,31 @@ namespace NetMud.Data.Linguistic
 
             foreach (ILexica subject in subjects)
             {
+                //Language rules engine, default to base language if we have an empty language
+                if (subject.Context.Language == null || subject.Context.Language?.Rules?.Count == 0)
+                {
+                    IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
+
+                    subject.Context.Language = globalConfig.BaseLanguage;
+                }
+
                 var newLex = subject;
                 //This is to catch directly described entities, we have to add a verb to it for it to make sense.
-                if (subject.Modifiers.Any(mod => mod.Role == GrammaticalType.Descriptive) && !subject.Modifiers.Any(mod => mod.Role == GrammaticalType.Verb))
+                if (subject.Modifiers.Any() && !subject.Modifiers.Any(mod => mod.Role == GrammaticalType.Verb))
                 {
                     Lexica newSubject = new Lexica(subject.Type, subject.Role, subject.Phrase, subject.Context);
                     newSubject.TryModify(subject.Modifiers);
 
                     var verbContext = subject.Context;
-                    verbContext.Semantics = new HashSet<string> { "Existential" };
+                    verbContext.Semantics = new HashSet<string> { "existential" };
                     verbContext.Determinant = false;
                     var verb = Thesaurus.GetWord(subject.Context, LexicalType.Verb);
 
-                    newSubject.TryModify(LexicalType.Verb, GrammaticalType.ConjugatedVerb, verb.Name);
+                    var verbLex = new Lexica(LexicalType.Verb, GrammaticalType.Verb, verb.Name, verbContext);
+                    verbLex.TryModify(newSubject.Modifiers);
+
+                    newSubject.Modifiers = null;
+                    newSubject.TryModify(verbLex);
 
                     newLex = newSubject;
                 }
