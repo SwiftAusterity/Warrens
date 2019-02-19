@@ -1,13 +1,10 @@
 ﻿@using NetMud.Models
 @using NetMud.DataStructure.Linguistic
-
 @model HashSet<IGrammarRule>
-
 @{
     var currentCount = Model.Count();
     var rowsName = ViewData.ModelMetadata.PropertyName + "Rows";
 }
-
 <div id="@rowsName" class="iterativeContainer">
     <div class="addRowContainer">
         <div class="col-sm-1">
@@ -20,7 +17,14 @@
         @Html.EditorForMany(m => m, null, 0, "GrammarRule")
     }
 </div>
-
 <script type="text/javascript">
     var newGrammarRuleList = decodeHtml('@Html.EmptyEditorForMany(m => m, null, currentCount, "GrammarRule")');
+
+    $(document).ready(function () {
+        $("div.accordionWrapper").accordion({
+            collapsible: true,
+            active: false,
+            heightStyle: "content"
+        });
+    });
 </script>

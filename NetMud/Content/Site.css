@@ -332,6 +332,12 @@ div.roomAsciiMap {
     color: red;
 }
 
+.iterativeContainer .accordionWrapper .ui-accordion-header-collapsed {
+    margin: 2px;
+    background: lightgray;
+    border: 1px solid black;
+}
+
 .contentPreviewFields div:nth-child(even) {
     background-color: lightcyan;
     margin: -15px 0 -15px 0;
@@ -427,10 +433,12 @@ div.roomAsciiMap {
     .form-group a.removeRow {
         color: red;
         border: none;
-        padding: 0px 10px 0 10px;
         background-color: inherit;
         float: left;
-        height: 90%;
+        position: relative;
+        top: -15px;
+        left: 5px;
+        margin: 0 -5px 0 0;
     }
 
     .form-group .row {
