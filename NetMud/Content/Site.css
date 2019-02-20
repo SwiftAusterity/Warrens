@@ -37,6 +37,21 @@ input[type=checkbox].form-control {
     width: 20px;
 }
 
+.multiBox-3 {
+    width: 40% !important;
+}
+
+.multiBox-2 {
+    width: 20% !important;
+}
+
+    .multiBox > div {
+        display: inline-flex;
+        border: 1px solid dodgerblue;
+        background: cornflowerblue;
+        border-radius: 2px;
+    }
+
 .multiBoxUnit {
     margin: 5px;
     font-weight: 700;

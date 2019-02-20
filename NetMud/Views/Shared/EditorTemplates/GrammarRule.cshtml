@@ -8,7 +8,6 @@
         <div class="form-group row">
             <a href="#" class="removeRow col-form-label" title="Remove this" onclick="javascript: $(this).parent().parent().parent().remove(); return false;">X</a>
             @Html.EditorFor(m => m.ModificationOrder)
-            @Html.EditorFor(m => m.AltersSentence)
             @Html.EditorFor(m => m.SpecificWord, new { validItems = ViewData["ValidWords"] })
             @Html.EditorFor(m => m.WhenBeginsWith)
             @Html.EditorFor(m => m.WhenEndsWith)
@@ -27,6 +26,7 @@
             @Html.EditorFor(m => m.Listable)
             @Html.EditorFor(m => m.NeedsArticle)
             @Html.EditorFor(m => m.SpecificAddition, new { validItems = ViewData["ValidWords"] })
+            @Html.EditorFor(m => m.AltersSentence)
         </div>
     </div>
 </div>

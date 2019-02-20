@@ -4,14 +4,14 @@
     ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Edit Language", new string[] { "Dashboard", "Language" }, new string[] { "/GameAdmin", "/Language" });
 }
 
-<section id="newForm">
+<section id="editLanguageForm">
     @using (Html.BeginForm("Edit", "Language", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <input type="hidden" name="id" id="id" value="@Model.DataObject.UniqueKey" />
 
-        @Html.EditorFor(m => m.DataObject, new { ValidWords = Model.ValidWords })
+        @Html.EditorFor(m => m.DataObject, new { ValidWords = Model.ValidWords, ValidLanguages = Model.ValidLanguages })
 
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Language", IncludeCancel = true })
     }

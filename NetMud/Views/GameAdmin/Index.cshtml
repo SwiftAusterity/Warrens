@@ -370,15 +370,15 @@
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
                 <div class="form-group row">
-                    @Html.EditorFor(m => m.WebsocketPortalActive, new { columnCount = 3 })
-                    @Html.EditorFor(m => m.UserCreationActive, new { columnCount = 3 })
-                    @Html.EditorFor(m => m.AdminsOnly, new { columnCount  =3 })
+                    @Html.EditorFor(m => m.WebsocketPortalActive)
+                    @Html.EditorFor(m => m.UserCreationActive)
+                    @Html.EditorFor(m => m.AdminsOnly)
                 </div>
 
                 <div class="form-group row">
-                    @Html.EditorFor(m => m.BaseLanguage, new { columnCount = 3, validItems = Model.ValidLanguages })
-                    @Html.EditorFor(m => m.TranslationActive, new { columnCount = 3 })
-                    @Html.EditorFor(m => m.AzureTranslationKey, new { columnCount = 3 })
+                    @Html.EditorFor(m => m.BaseLanguage, new { validItems = Model.ValidLanguages })
+                    @Html.EditorFor(m => m.TranslationActive)
+                    @Html.EditorFor(m => m.AzureTranslationKey)
                 </div>
 
 

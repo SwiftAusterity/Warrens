@@ -1,8 +1,6 @@
 ﻿@using NetMud.Data.Inanimate
 @using NetMud.DataStructure.Inanimate
-
 @model InanimateComponent
-
 @{
 
     bool disabled = ViewData["disabled"] != null;
@@ -48,7 +46,6 @@
 
     var itemList = ((IEnumerable<IInanimateTemplate>)ViewData["validItems"]).Select(item => new SelectListItem() { Text = item.Name, Value = item.Id.ToString(), Selected = Model != null && Model.Item != null && item.Id == Model.Item.Id });
 }
-
 @if (strippedNaked)
 {
     @Html.DescriptionFor(m => m)
@@ -58,10 +55,10 @@
 }
 else
 {
-    <div>
+    <div class="multiBox multiBox-2">
         <span class="@ghostNameClass">@ViewData.ModelMetadata.DisplayName</span>
         @Html.DescriptionFor(m => m)
-        <div style="display: inline-flex;">
+        <div>
             @Html.EditorFor(m => m.Amount, htmlAttributes)<span class="multiBoxUnit">of</span>@Html.EditorFor(m => m.Item, htmlAttributes)
         </div>
     </div>

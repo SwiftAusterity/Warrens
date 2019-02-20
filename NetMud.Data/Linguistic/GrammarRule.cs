@@ -36,7 +36,7 @@ namespace NetMud.Data.Linguistic
         [ScriptIgnore]
         [JsonIgnore]
         [Display(Name = "Specific Word", Description = "When the From word is this or a synonym of this (only native synonyms) this rule applies.")]
-        [UIHint("DictataList")]
+        [UIHint("DictataSmartList")]
         [DictataDataBinder]
         public IDictata SpecificWord
         {

@@ -96,10 +96,10 @@ namespace NetMud.Controllers
 
 
         [HttpGet]
-        [Route("api/AdminDataApi/GetDictata/{wordType}", Name = "AdminAPI_GetDictata")]
-        public JsonResult<string[]> GetDictata(LexicalType wordType, string term)
+        [Route("api/AdminDataApi/GetDictata/{languageCode}/{wordType}/{term}", Name = "AdminAPI_GetDictata")]
+        public JsonResult<string[]> GetDictata(string languageCode, LexicalType wordType, string term)
         {
-            IEnumerable<IDictata> words = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.WordType == wordType && dict.Name.Contains(term));
+            IEnumerable<IDictata> words = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.WordType == wordType && dict.Name.Contains(term) && dict.Language.GoogleLanguageCode.Equals(languageCode));
 
             return Json(words.Select(word => word.Name).ToArray());
         }
@@ -237,8 +237,5 @@ namespace NetMud.Controllers
 
             return message;
         }
-
-
-
     }
 }

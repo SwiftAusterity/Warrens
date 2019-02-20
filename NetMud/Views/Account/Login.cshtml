@@ -10,11 +10,7 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group row">
             @Html.EditorFor(m => m.Email)
-        </div>
-        <div class="form-group row">
             @Html.EditorFor(m => m.Password)
-        </div>
-        <div class="form-group row">
             @Html.EditorFor(m => m.RememberMe)
         </div>
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Login", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Home", IncludeCancel = false })

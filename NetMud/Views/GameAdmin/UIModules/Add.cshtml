@@ -21,10 +21,10 @@
             @Html.EditorFor(m => m.Width)
         </div>
         <div class="form-group row">
-            @Html.EditorFor(m => m.BodyHtml, new { columnCount = 1 })
+            @Html.EditorFor(m => m.BodyHtml)
         </div>
         <div class="form-group row">
-            @Html.EditorFor(m => m.HelpText, new { columnCount = 1 })
+            @Html.EditorFor(m => m.HelpText)
         </div>
 
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Create", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "UIModules", IncludeCancel = true })

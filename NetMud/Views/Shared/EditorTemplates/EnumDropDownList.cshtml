@@ -1,10 +1,7 @@
 ﻿@model Enum
 
 @{
-
     bool disabled = ViewData["disabled"] != null;
-
-
     var cssClass = ViewData["cssClass"] == null ? "form-control" : ViewData["cssClass"];
     var forceOptional = ViewData["forceOptional"] != null;
     var noValidation = ViewData["noValidation"] != null;

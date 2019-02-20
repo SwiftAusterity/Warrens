@@ -115,7 +115,8 @@ namespace NetMud.Controllers.GameAdmin
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
                 DataObject = new Language(),
-                ValidWords = ConfigDataCache.GetAll<IDictata>()
+                ValidWords = ConfigDataCache.GetAll<IDictata>(),
+                ValidLanguages = ConfigDataCache.GetAll<ILanguage>()
             };
 
             return View("~/Views/GameAdmin/Language/Add.cshtml", vModel);
@@ -160,6 +161,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
                 ValidWords = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.Language == obj),
+                ValidLanguages = ConfigDataCache.GetAll<ILanguage>(),
                 DataObject = obj
             };
 

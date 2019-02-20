@@ -55,11 +55,11 @@
 }
 else
 {
-    <div>
+    <div class="multiBox multiBox-2">
         <span class="@ghostNameClass">@ViewData.ModelMetadata.DisplayName</span>
 
         @Html.DescriptionFor(m => m)
-        <div style="display: inline-flex;">
+        <div>
             @Html.EditorFor(m => m.Low, htmlAttributes)<span class="multiBoxUnit">to</span>@Html.EditorFor(m => m.High, htmlAttributes)
         </div>
 

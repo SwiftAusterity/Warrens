@@ -7,8 +7,8 @@
     @using (Html.BeginForm("Index", Model.ModelEntityType, FormMethod.Post, new { id = "paginationForm" }))
     {
         @Html.AntiForgeryToken()
-        @Html.EditorFor(m => m.SearchTerms, new { columnCount = 1, forceOptional = true, htmlAttributes = new Dictionary<string, object>() { { "onchange", "paginationForm.submit();" }, { "name", "SearchTerms" }, { "id", "SearchTerms" } } })
-        @Html.EditorFor(m => m.ItemsPerPage, new { columnCount = 4, forceOptional = true, htmlAttributes = new Dictionary<string, object>() { { "onchange", "paginationForm.submit();" }, { "name", "ItemsPerPage" }, { "id", "ItemsPerPage" } } })
+        @Html.EditorFor(m => m.SearchTerms, new { forceOptional = true, htmlAttributes = new Dictionary<string, object>() { { "onchange", "paginationForm.submit();" }, { "name", "SearchTerms" }, { "id", "SearchTerms" } } })
+        @Html.EditorFor(m => m.ItemsPerPage, new { forceOptional = true, htmlAttributes = new Dictionary<string, object>() { { "onchange", "paginationForm.submit();" }, { "name", "ItemsPerPage" }, { "id", "ItemsPerPage" } } })
         <div class="listPagination">
             <div class="@prevPageState">
                 <button class="pagingArrow" aria-label="Previous" value="@(Model.CurrentPageNumber - 1)" title="Previous" name="CurrentPageNumber"><span aria-hidden="true">&laquo;</span></button>
