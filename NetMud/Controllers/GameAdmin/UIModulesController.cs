@@ -7,6 +7,7 @@ using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Player;
 using NetMud.Models.Admin;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -200,8 +201,6 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = message });
             }
 
-            System.Collections.Generic.IEnumerable<IUIModule> uiModules = TemplateCache.GetAll<IUIModule>().Where(uim => vModel.SystemDefault > 0 && uim.SystemDefault == vModel.SystemDefault);
-
             obj.Name = vModel.Name;
             obj.BodyHtml = vModel.BodyHtml;
             obj.Height = vModel.Height;
@@ -211,6 +210,9 @@ namespace NetMud.Controllers.GameAdmin
 
             if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {
+                IEnumerable<IUIModule> uiModules = TemplateCache.GetAll<IUIModule>().Where(uim => vModel.SystemDefault > 0 
+                    && uim.SystemDefault == vModel.SystemDefault && uim != obj);
+
                 if (uiModules.Count() > 0)
                 {
                     IUIModule revertModule = uiModules.First();

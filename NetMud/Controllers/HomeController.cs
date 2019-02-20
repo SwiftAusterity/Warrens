@@ -39,26 +39,32 @@ namespace NetMud.Controllers
         public ActionResult Index()
         {
             ApplicationUser user = null;
+            HomeViewModel vModel = new HomeViewModel();
 
-            IEnumerable<IJournalEntry> validEntries;
-
-            if (User.Identity.IsAuthenticated)
+            try
             {
-                user = UserManager.FindById(User.Identity.GetUserId());
-                StaffRank userRank = user.GetStaffRank(User);
-                validEntries = TemplateCache.GetAll<IJournalEntry>().Where(blog => blog.IsPublished() && (blog.Public || blog.MinimumReadLevel <= userRank));
+                IEnumerable<IJournalEntry> validEntries;
+                if (User.Identity.IsAuthenticated)
+                {
+                    user = UserManager.FindById(User.Identity.GetUserId());
+                    StaffRank userRank = user.GetStaffRank(User);
+                    validEntries = TemplateCache.GetAll<IJournalEntry>().Where(blog => blog.IsPublished() && (blog.Public || blog.MinimumReadLevel <= userRank));
+                }
+                else
+                {
+                    validEntries = TemplateCache.GetAll<IJournalEntry>().Where(blog => blog.IsPublished() && blog.Public);
+                }
+
+                vModel.authedUser = user;
+                vModel.LatestNews = validEntries.Where(blog => !blog.HasTag("Patch Notes")).OrderByDescending(blog => blog.PublishDate).Take(3);
+                vModel.LatestPatchNotes = validEntries.OrderByDescending(blog => blog.PublishDate).FirstOrDefault(blog => blog.HasTag("Patch Notes"));
             }
-            else
+            catch
             {
-                validEntries = TemplateCache.GetAll<IJournalEntry>().Where(blog => blog.IsPublished() && blog.Public);
+                vModel.authedUser = user;
+                vModel.LatestNews = Enumerable.Empty<IJournalEntry>();
+                vModel.LatestPatchNotes = null;
             }
-
-            HomeViewModel vModel = new HomeViewModel()
-            {
-                authedUser = user,
-                LatestNews = validEntries.Where(blog => !blog.HasTag("Patch Notes")).OrderByDescending(blog => blog.PublishDate).Take(3),
-                LatestPatchNotes = validEntries.OrderByDescending(blog => blog.PublishDate).FirstOrDefault(blog => blog.HasTag("Patch Notes"))
-            };
 
             return View(vModel);
         }

@@ -227,6 +227,11 @@ namespace NetMud.Data.Players
             {
                 UILanguage = globalConfig.BaseLanguage;
             }
+
+            UITutorialMode = true;
+            MusicMuted = true;
+            GossipSubscriber = true;
+
         }
 
         /// <summary>

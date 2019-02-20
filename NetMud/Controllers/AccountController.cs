@@ -6,11 +6,11 @@ using NetMud.Data.Players;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
-using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Player;
 using NetMud.DataStructure.System;
 using NetMud.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -172,25 +172,17 @@ namespace NetMud.Controllers
 
         private void CreateAccountPlayerAndConfig(IAccount account)
         {
-            if (account.Config == null)
+            AccountConfig newAccountConfig = new AccountConfig(account);
+
+            IEnumerable<IUIModule> uiModules = TemplateCache.GetAll<IUIModule>().Where(uim => uim.SystemDefault > 0);
+
+            foreach (IUIModule module in uiModules)
             {
-                AccountConfig newAccountConfig = new AccountConfig(account)
-                {
-                    UITutorialMode = true,
-                    MusicMuted = true,
-                    GossipSubscriber = true
-                };
-
-                System.Collections.Generic.IEnumerable<IUIModule> uiModules = TemplateCache.GetAll<IUIModule>().Where(uim => uim.SystemDefault > 0);
-
-                foreach (IUIModule module in uiModules)
-                {
-                    newAccountConfig.UIModules = uiModules.Select(uim => new Tuple<IUIModule, int>(uim, uim.SystemDefault));
-                }
-
-                //Save the new config
-                newAccountConfig.Save(account, StaffRank.Player);
+                newAccountConfig.UIModules = uiModules.Select(uim => new Tuple<IUIModule, int>(uim, uim.SystemDefault));
             }
+
+            //Save the new config
+            newAccountConfig.Save(account, StaffRank.Player);
         }
 
         [AllowAnonymous]
