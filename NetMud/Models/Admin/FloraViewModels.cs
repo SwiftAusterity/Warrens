@@ -1,9 +1,12 @@
 ﻿using NetMud.Authentication;
+using NetMud.Data.Architectural.PropertyBinding;
+using NetMud.Data.NaturalResource;
 using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Inanimate;
 using NetMud.DataStructure.NaturalResource;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 
@@ -46,14 +49,48 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditFloraViewModel : IBaseViewModel
+    public class AddEditFloraViewModel : AddContentModel<IFlora>, IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
-        public AddEditFloraViewModel()
+        [Display(Name = "Apply Existing Template", Description = "Apply an existing object's data to this new data.")]
+        [UIHint("FloraList")]
+        [FloraDataBinder]
+        public override IFlora Template { get; set; }
+
+        public AddEditFloraViewModel() : base(-1)
         {
             ValidInanimateTemplates = Enumerable.Empty<IInanimateTemplate>();
             ValidMaterials = Enumerable.Empty<IMaterial>();
+            DataObject = new Flora();
+        }
+
+        public AddEditFloraViewModel(long templateId) : base(templateId)
+        {
+            ValidInanimateTemplates = Enumerable.Empty<IInanimateTemplate>();
+            ValidMaterials = Enumerable.Empty<IMaterial>();
+            DataObject = new Flora();
+
+            //apply template
+            if (DataTemplate != null)
+            {
+                DataObject.AmountMultiplier = DataTemplate.AmountMultiplier;
+                DataObject.CanSpawnInSystemAreas = DataTemplate.CanSpawnInSystemAreas;
+                DataObject.ElevationRange = DataTemplate.ElevationRange;
+                DataObject.HumidityRange = DataTemplate.HumidityRange;
+                DataObject.OccursIn = DataTemplate.OccursIn;
+                DataObject.PuissanceVariance = DataTemplate.PuissanceVariance;
+                DataObject.Rarity = DataTemplate.Rarity;
+                DataObject.TemperatureRange = DataTemplate.TemperatureRange;
+
+                DataObject.Coniferous = DataTemplate.Coniferous;
+                DataObject.Flower = DataTemplate.Flower;
+                DataObject.Fruit = DataTemplate.Fruit;
+                DataObject.Leaf = DataTemplate.Leaf;
+                DataObject.Seed = DataTemplate.Seed;
+                DataObject.SunlightPreference = DataTemplate.SunlightPreference;
+                DataObject.Wood = DataTemplate.Wood;
+            }
         }
 
         public IEnumerable<IInanimateTemplate> ValidInanimateTemplates { get; set; }

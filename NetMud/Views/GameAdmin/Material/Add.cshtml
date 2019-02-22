@@ -3,7 +3,19 @@
 @{ 
     ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Add Material", new string[] { "Dashboard", "Materials" }, new string[] { "/GameAdmin", "/Material" });
 }
-<section id="newCharacterForm">
+
+<div class="accordionWrapper">
+    <h5>Use Existing Template</h5>
+    @using (Html.BeginForm("Add", "Material", FormMethod.Get, new { @class = "form-horizontal", role = "form", @name = "applyTemplateForm", @id = "applyTemplateForm" }))
+    {
+        <div class="form-group row">
+            @Html.EditorFor(m => m.Template, new { validItems = Model.ValidTemplateBases })
+            <input type="submit" value="Apply" class="btn btn-default save" , style="margin-left: 25px;" />
+        </div>
+    }
+</div>
+
+<section id="newMaterialForm">
     @using (Html.BeginForm("Add", "Material", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {
         @Html.AntiForgeryToken()

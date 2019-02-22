@@ -4,7 +4,7 @@
     ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Edit Zone", new string[] { "Dashboard", "Zone" }, new string[] { "/GameAdmin", "/Zone" });
 }
 
-<section id="newCharacterForm">
+<section id="newZoneForm">
     @using (Html.BeginForm("Add", "Zone", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {
         @Html.AntiForgeryToken()

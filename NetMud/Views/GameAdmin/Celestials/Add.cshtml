@@ -1,10 +1,10 @@
 ﻿@model NetMud.Models.Admin.AddEditCelestialViewModel
-
 @{
     ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("New Celestial Body", new string[] { "Dashboard", "Celestial Bodies" }, new string[] { "/GameAdmin", "/Celestials" });
 }
 
-<section id="templateApply" class="template">
+<div class="accordionWrapper">
+    <h5>Use Existing Template</h5>
     @using (Html.BeginForm("Add", "Celestials", FormMethod.Get, new { @class = "form-horizontal", role = "form", @name = "applyTemplateForm", @id = "applyTemplateForm" }))
     {
         <div class="form-group row">
@@ -12,7 +12,7 @@
             <input type="submit" value="Apply" class="btn btn-default save" , style="margin-left: 25px;" />
         </div>
     }
-</section>
+</div>
 
 <section id="newCelestialForm">
     @using (Html.BeginForm("Add", "Celestials", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
@@ -25,7 +25,6 @@
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Create", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Celestials", IncludeCancel = true })
     }
 </section>
-
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

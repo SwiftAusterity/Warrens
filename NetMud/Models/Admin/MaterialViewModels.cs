@@ -1,7 +1,10 @@
 ﻿using NetMud.Authentication;
+using NetMud.Data.Architectural.EntityBase;
+using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.DataStructure.Architectural.EntityBase;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 
@@ -44,13 +47,44 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditMaterialViewModel : IBaseViewModel
+    public class AddEditMaterialViewModel : AddContentModel<IMaterial>, IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
-        public AddEditMaterialViewModel()
+        [Display(Name = "Apply Existing Template", Description = "Apply an existing object's data to this new data.")]
+        [UIHint("MaterialList")]
+        [MaterialDataBinder]
+        public override IMaterial Template { get; set; }
+
+        public AddEditMaterialViewModel() : base(-1)
         {
             ValidMaterials = Enumerable.Empty<IMaterial>();
+            DataObject = new Material();
+        }
+
+        public AddEditMaterialViewModel(long templateId) : base(templateId)
+        {
+            ValidMaterials = Enumerable.Empty<IMaterial>();
+            DataObject = new Material();
+
+            //apply template
+            if (DataTemplate != null)
+            {
+                DataObject.AccumulationCap = DataTemplate.AccumulationCap;
+                DataObject.Composition = DataTemplate.Composition;
+                DataObject.Conductive = DataTemplate.Conductive;
+                DataObject.Density = DataTemplate.Density;
+                DataObject.Ductility = DataTemplate.Ductility;
+                DataObject.Flammable = DataTemplate.Flammable;
+                DataObject.GasPoint = DataTemplate.GasPoint;
+                DataObject.Magnetic = DataTemplate.Magnetic;
+                DataObject.Mallebility = DataTemplate.Mallebility;
+                DataObject.Porosity = DataTemplate.Porosity;
+                DataObject.Resistance = DataTemplate.Resistance;
+                DataObject.SolidPoint = DataTemplate.SolidPoint;
+                DataObject.TemperatureRetention = DataTemplate.TemperatureRetention;
+                DataObject.Viscosity = DataTemplate.Viscosity;
+            }
         }
 
         public IEnumerable<IMaterial> ValidMaterials { get; set; }

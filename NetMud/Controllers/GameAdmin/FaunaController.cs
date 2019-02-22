@@ -114,11 +114,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             AddEditFaunaViewModel vModel = new AddEditFaunaViewModel
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidMaterials = TemplateCache.GetAll<IMaterial>(),
-                ValidInanimateTemplates = TemplateCache.GetAll<IInanimateTemplate>(),
-                ValidRaces = TemplateCache.GetAll<IRace>(),
-                DataObject = new Fauna()
+                authedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             return View("~/Views/GameAdmin/Fauna/Add.cshtml", vModel);

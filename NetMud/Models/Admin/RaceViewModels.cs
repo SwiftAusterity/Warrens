@@ -1,10 +1,14 @@
 ﻿using NetMud.Authentication;
+using NetMud.Data.Architectural.ActorBase;
+using NetMud.Data.Architectural.PropertyBinding;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Inanimate;
 using NetMud.DataStructure.Zone;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace NetMud.Models.Admin
@@ -46,14 +50,49 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditRaceViewModel : IBaseViewModel
+    public class AddEditRaceViewModel : AddContentModel<IRace>, IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
-        public AddEditRaceViewModel()
+        [Display(Name = "Apply Existing Template", Description = "Apply an existing object's data to this new data.")]
+        [UIHint("RaceList")]
+        [RaceDataBinder]
+        public override IRace Template { get; set; }
+
+        public AddEditRaceViewModel() : base(-1)
         {
             ValidMaterials = Enumerable.Empty<IMaterial>();
             ValidItems = Enumerable.Empty<IInanimateTemplate>();
+            ValidZones = TemplateCache.GetAll<IZoneTemplate>();
+            DataObject = new Race();
+        }
+
+        public AddEditRaceViewModel(long templateId) : base(templateId)
+        {
+            ValidMaterials = Enumerable.Empty<IMaterial>();
+            ValidItems = Enumerable.Empty<IInanimateTemplate>();
+            ValidZones = TemplateCache.GetAll<IZoneTemplate>();
+            DataObject = new Race();
+
+            //apply template
+            if (DataTemplate != null)
+            {
+                DataObject.Arms = DataTemplate.Arms;
+                DataObject.BodyParts = DataTemplate.BodyParts;
+                DataObject.Breathes = DataTemplate.Breathes;
+                DataObject.DeathNoticeBody = DataTemplate.DeathNoticeBody;
+                DataObject.DeathQualityChanges = DataTemplate.DeathQualityChanges;
+                DataObject.DietaryNeeds = DataTemplate.DietaryNeeds;
+                DataObject.EmergencyLocation = DataTemplate.EmergencyLocation;
+                DataObject.Head = DataTemplate.Head;
+                DataObject.Legs = DataTemplate.Legs;
+                DataObject.SanguinaryMaterial = DataTemplate.SanguinaryMaterial;
+                DataObject.StartingLocation = DataTemplate.StartingLocation;
+                DataObject.TeethType = DataTemplate.TeethType;
+                DataObject.TemperatureTolerance = DataTemplate.TemperatureTolerance;
+                DataObject.Torso = DataTemplate.Torso;
+                DataObject.VisionRange = DataTemplate.VisionRange;
+            }
         }
 
         public IEnumerable<IZoneTemplate> ValidZones { get; set; }

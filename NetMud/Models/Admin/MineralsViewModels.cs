@@ -1,9 +1,12 @@
 ﻿using NetMud.Authentication;
+using NetMud.Data.Architectural.PropertyBinding;
+using NetMud.Data.NaturalResource;
 using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Inanimate;
 using NetMud.DataStructure.NaturalResource;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 
@@ -46,15 +49,47 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditMineralsViewModel : IBaseViewModel
+    public class AddEditMineralsViewModel : AddContentModel<IMineral>, IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
-        public AddEditMineralsViewModel()
+        [Display(Name = "Apply Existing Template", Description = "Apply an existing object's data to this new data.")]
+        [UIHint("MineralList")]
+        [MineralDataBinder]
+        public override IMineral Template { get; set; }
+
+        public AddEditMineralsViewModel() : base(-1)
         {
             ValidInanimateTemplates = Enumerable.Empty<IInanimateTemplate>();
             ValidMaterials = Enumerable.Empty<IMaterial>();
             ValidMinerals = Enumerable.Empty<IMineral>();
+            DataObject = new Mineral();
+        }
+
+        public AddEditMineralsViewModel(long templateId) : base(templateId)
+        {
+            ValidInanimateTemplates = Enumerable.Empty<IInanimateTemplate>();
+            ValidMaterials = Enumerable.Empty<IMaterial>();
+            ValidMinerals = Enumerable.Empty<IMineral>();
+            DataObject = new Mineral();
+
+            //apply template
+            if (DataTemplate != null)
+            {
+                DataObject.AmountMultiplier = DataTemplate.AmountMultiplier;
+                DataObject.CanSpawnInSystemAreas = DataTemplate.CanSpawnInSystemAreas;
+                DataObject.ElevationRange = DataTemplate.ElevationRange;
+                DataObject.HumidityRange = DataTemplate.HumidityRange;
+                DataObject.OccursIn = DataTemplate.OccursIn;
+                DataObject.PuissanceVariance = DataTemplate.PuissanceVariance;
+                DataObject.Rarity = DataTemplate.Rarity;
+                DataObject.TemperatureRange = DataTemplate.TemperatureRange;
+                DataObject.Dirt = DataTemplate.Dirt;
+                DataObject.Fertility = DataTemplate.Fertility;
+                DataObject.Ores = DataTemplate.Ores;
+                DataObject.Rock = DataTemplate.Rock;
+                DataObject.Solubility = DataObject.Solubility;
+            }
         }
 
         public IEnumerable<IInanimateTemplate> ValidInanimateTemplates { get; set; }

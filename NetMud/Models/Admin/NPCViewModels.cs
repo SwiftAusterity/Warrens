@@ -1,10 +1,13 @@
 ﻿using NetMud.Authentication;
+using NetMud.Data.Architectural.PropertyBinding;
+using NetMud.Data.NPC;
 using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Inanimate;
 using NetMud.DataStructure.NPC;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace NetMud.Models.Admin
 {
@@ -45,12 +48,44 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditNPCDataViewModel : IBaseViewModel
+    public class AddEditNPCDataViewModel : AddContentModel<INonPlayerCharacterTemplate>, IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
-        public AddEditNPCDataViewModel()
+        [Display(Name = "Apply Existing Template", Description = "Apply an existing object's data to this new data.")]
+        [UIHint("NonPlayerCharacterTemplateList")]
+        [NonPlayerCharacterTemplateDataBinder]
+        public override INonPlayerCharacterTemplate Template { get; set; }
+
+        public AddEditNPCDataViewModel() : base(-1)
         {
+            ValidItems = Enumerable.Empty<IInanimateTemplate>();
+            ValidRaces = Enumerable.Empty<IRace>();
+            ValidGenders = Enumerable.Empty<IGender>();
+            DataObject = new NonPlayerCharacterTemplate();
+        }
+
+        public AddEditNPCDataViewModel(long templateId) : base(templateId)
+        {
+            ValidItems = Enumerable.Empty<IInanimateTemplate>();
+            ValidRaces = Enumerable.Empty<IRace>();
+            ValidGenders = Enumerable.Empty<IGender>();
+            DataObject = new NonPlayerCharacterTemplate();
+
+            //apply template
+            if (DataTemplate != null)
+            {
+                DataObject.Gender = DataTemplate.Gender;
+                DataObject.InventoryRestock = DataTemplate.InventoryRestock;
+                DataObject.Personality = DataTemplate.Personality;
+                DataObject.Qualities = DataTemplate.Qualities;
+                DataObject.Race = DataTemplate.Race;
+                DataObject.TeachableProficencies = DataTemplate.TeachableProficencies;
+                DataObject.TotalHealth = DataTemplate.TotalHealth;
+                DataObject.TotalStamina = DataTemplate.TotalStamina;
+                DataObject.WillPurchase = DataTemplate.WillPurchase;
+                DataObject.WillSell = DataTemplate.WillSell;
+            }
         }
 
         public IEnumerable<IGender> ValidGenders { get; set; }

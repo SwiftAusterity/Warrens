@@ -117,11 +117,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             AddEditCelestialViewModel vModel = new AddEditCelestialViewModel
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidMaterials = TemplateCache.GetAll<IMaterial>(true),
-                ValidModels = TemplateCache.GetAll<IDimensionalModelData>(true),
-                ValidTemplateBases = TemplateCache.GetAll<ICelestial>(true),
-                DataObject = new Celestial()
+                authedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             return View("~/Views/GameAdmin/Celestials/Add.cshtml", vModel);

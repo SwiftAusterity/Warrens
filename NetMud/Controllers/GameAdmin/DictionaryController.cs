@@ -205,5 +205,69 @@ namespace NetMud.Controllers.GameAdmin
 
             return RedirectToAction("Index", new { Message = message });
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddRelatedWord(string id, AddEditDictionaryViewModel vModel)
+        {
+            string message = string.Empty;
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            IDictata obj = ConfigDataCache.Get<IDictata>(new ConfigDataCacheKey(typeof(IDictata), id, ConfigDataType.Dictionary));
+            if (obj == null)
+            {
+                message = "That does not exist";
+                return RedirectToAction("Index", new { Message = message });
+            }
+
+            var relatedWord = new Dictata
+            {
+                Name = vModel.Word,
+                Severity = obj.Severity + vModel.Severity,
+                Quality = obj.Quality + vModel.Quality,
+                Elegance = obj.Elegance + vModel.Elegance,
+                Tense = obj.Tense,
+                Synonyms = vModel.Synonym ? obj.Synonyms : obj.Antonyms,
+                Antonyms = vModel.Synonym ? obj.Antonyms : obj.Synonyms,
+                Language = obj.Language,
+                WordType = obj.WordType,
+                Feminine = obj.Feminine,
+                Possessive = obj.Possessive,
+                Plural = obj.Plural,
+                Determinant = obj.Determinant,
+                Positional = obj.Positional,
+                Perspective = obj.Perspective,
+                Semantics = obj.Semantics
+            };
+
+            if (relatedWord.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+            {
+                if(vModel.Synonym)
+                {
+                    var synonyms = obj.Synonyms;
+                    synonyms.Add(relatedWord);
+
+                    obj.Synonyms = synonyms;
+                }
+                else
+                {
+                    var antonyms = obj.Antonyms;
+                    antonyms.Add(relatedWord);
+
+                    obj.Antonyms = antonyms;
+                }
+
+                obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
+
+                LoggingUtility.LogAdminCommandUsage("*WEB* - EditDictata[" + obj.UniqueKey + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                message = "Edit Successful.";
+            }
+            else
+            {
+                message = "Error; Edit failed.";
+            }
+
+            return RedirectToAction("Index", new { Message = message });
+        }
     }
 }

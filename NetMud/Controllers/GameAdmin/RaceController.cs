@@ -115,11 +115,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             AddEditRaceViewModel vModel = new AddEditRaceViewModel
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidMaterials = TemplateCache.GetAll<IMaterial>(),
-                ValidItems = TemplateCache.GetAll<IInanimateTemplate>(),
-                ValidZones = TemplateCache.GetAll<IZoneTemplate>(),
-                DataObject = new Race()
+                authedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             return View("~/Views/GameAdmin/Race/Add.cshtml", vModel);

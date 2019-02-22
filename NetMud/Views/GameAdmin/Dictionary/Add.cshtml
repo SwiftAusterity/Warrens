@@ -4,7 +4,7 @@
     ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Add Word", new string[] { "Dashboard", "Dictionary" }, new string[] { "/GameAdmin", "/Dictionary" });
 }
 
-<section id="newForm">
+<section id="newDictataForm">
     @using (Html.BeginForm("Add", "Dictionary", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {
         @Html.AntiForgeryToken()

@@ -1,5 +1,7 @@
 ﻿using NetMud.Authentication;
 using NetMud.Data.Architectural.PropertyBinding;
+using NetMud.Data.Gaia;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Gaia;
 using System;
@@ -56,18 +58,25 @@ namespace NetMud.Models.Admin
 
         public AddEditCelestialViewModel() : base(-1)
         {
-
-        }
+            ValidMaterials = TemplateCache.GetAll<IMaterial>(true);
+            ValidModels = TemplateCache.GetAll<IDimensionalModelData>(true);
+    }
 
         public AddEditCelestialViewModel(long templateId) : base(templateId)
         {
+            ValidMaterials = TemplateCache.GetAll<IMaterial>(true);
+            ValidModels = TemplateCache.GetAll<IDimensionalModelData>(true);
+            DataObject = new Celestial();
+
             //apply template
-            if (DataTemplate == null)
+            if (DataTemplate != null)
             {
-                //set defaults
-            }
-            else
-            {
+                DataObject.Apogee = DataTemplate.Apogee;
+                DataObject.Perigree = DataTemplate.Apogee;
+                DataObject.Velocity = DataTemplate.Velocity;
+                DataObject.Luminosity = DataTemplate.Luminosity;
+                DataObject.Model = DataTemplate.Model;
+                DataObject.OrientationType = DataTemplate.OrientationType;
             }
         }
 

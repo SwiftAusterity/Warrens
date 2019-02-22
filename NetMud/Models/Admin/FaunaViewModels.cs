@@ -1,10 +1,14 @@
 ﻿using NetMud.Authentication;
+using NetMud.Data.Architectural.PropertyBinding;
+using NetMud.Data.NaturalResource;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Inanimate;
 using NetMud.DataStructure.NaturalResource;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 
@@ -47,15 +51,45 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditFaunaViewModel : IBaseViewModel
+    public class AddEditFaunaViewModel : AddContentModel<IFauna>, IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
-        public AddEditFaunaViewModel()
+        [Display(Name = "Apply Existing Template", Description = "Apply an existing object's data to this new data.")]
+        [UIHint("FaunaList")]
+        [FaunaDataBinder]
+        public override IFauna Template { get; set; }
+
+        public AddEditFaunaViewModel() : base(-1)
         {
             ValidInanimateTemplates = Enumerable.Empty<IInanimateTemplate>();
             ValidMaterials = Enumerable.Empty<IMaterial>();
             ValidRaces = Enumerable.Empty<IRace>();
+            DataObject = new Fauna();
+        }
+
+        public AddEditFaunaViewModel(long templateId) : base(templateId)
+        {
+            ValidInanimateTemplates = Enumerable.Empty<IInanimateTemplate>();
+            ValidMaterials = Enumerable.Empty<IMaterial>();
+            ValidRaces = Enumerable.Empty<IRace>();
+            DataObject = new Fauna();
+
+            //apply template
+            if (DataTemplate != null)
+            {
+                DataObject.AmountMultiplier = DataTemplate.AmountMultiplier;
+                DataObject.CanSpawnInSystemAreas = DataTemplate.CanSpawnInSystemAreas;
+                DataObject.ElevationRange = DataTemplate.ElevationRange;
+                DataObject.FemaleRatio = DataTemplate.FemaleRatio;
+                DataObject.HumidityRange = DataTemplate.HumidityRange;
+                DataObject.OccursIn = DataTemplate.OccursIn;
+                DataObject.PopulationHardCap = DataTemplate.PopulationHardCap;
+                DataObject.PuissanceVariance = DataTemplate.PuissanceVariance;
+                DataObject.Rarity = DataTemplate.Rarity;
+                DataObject.Race = DataTemplate.Race;
+                DataObject.TemperatureRange = DataTemplate.TemperatureRange;
+            }
         }
 
         public IEnumerable<IRace> ValidRaces { get; set; }

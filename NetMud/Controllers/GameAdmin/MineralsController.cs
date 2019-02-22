@@ -114,11 +114,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             AddEditMineralsViewModel vModel = new AddEditMineralsViewModel
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidMaterials = TemplateCache.GetAll<IMaterial>(),
-                ValidInanimateTemplates = TemplateCache.GetAll<IInanimateTemplate>(),
-                ValidMinerals = TemplateCache.GetAll<IMineral>(),
-                DataObject = new Mineral()
+                authedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             return View("~/Views/GameAdmin/Minerals/Add.cshtml", vModel);

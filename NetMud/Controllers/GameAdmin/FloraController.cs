@@ -113,10 +113,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             AddEditFloraViewModel vModel = new AddEditFloraViewModel
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidMaterials = TemplateCache.GetAll<IMaterial>(),
-                ValidInanimateTemplates = TemplateCache.GetAll<IInanimateTemplate>(),
-                DataObject = new Flora()
+                authedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             return View("~/Views/GameAdmin/Flora/Add.cshtml", vModel);

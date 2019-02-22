@@ -118,11 +118,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             AddEditNPCDataViewModel vModel = new AddEditNPCDataViewModel
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidGenders = TemplateCache.GetAll<IGender>(),
-                ValidRaces = TemplateCache.GetAll<IRace>(),
-                ValidItems = TemplateCache.GetAll<IInanimateTemplate>(),
-                DataObject = new NonPlayerCharacterTemplate()
+                authedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             return View("~/Views/GameAdmin/NPC/Add.cshtml", vModel);
