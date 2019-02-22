@@ -1,5 +1,4 @@
-﻿using NetMud.Communication.Lexical;
-using NetMud.Communication.Messaging;
+﻿using NetMud.Communication.Messaging;
 using NetMud.Data.Architectural;
 using NetMud.Data.Architectural.DataIntegrity;
 using NetMud.Data.Architectural.EntityBase;

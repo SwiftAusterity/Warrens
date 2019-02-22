@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
-using NetMud.Data.NaturalResource;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
@@ -109,9 +108,9 @@ namespace NetMud.Controllers.GameAdmin
         }
 
         [HttpGet]
-        public ActionResult Add()
+        public ActionResult Add(long Template = -1)
         {
-            AddEditFloraViewModel vModel = new AddEditFloraViewModel
+            AddEditFloraViewModel vModel = new AddEditFloraViewModel(Template)
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId())
             };

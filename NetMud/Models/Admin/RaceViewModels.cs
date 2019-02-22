@@ -61,16 +61,16 @@ namespace NetMud.Models.Admin
 
         public AddEditRaceViewModel() : base(-1)
         {
-            ValidMaterials = Enumerable.Empty<IMaterial>();
-            ValidItems = Enumerable.Empty<IInanimateTemplate>();
+            ValidMaterials = TemplateCache.GetAll<IMaterial>();
+            ValidItems = TemplateCache.GetAll<IInanimateTemplate>();
             ValidZones = TemplateCache.GetAll<IZoneTemplate>();
             DataObject = new Race();
         }
 
         public AddEditRaceViewModel(long templateId) : base(templateId)
         {
-            ValidMaterials = Enumerable.Empty<IMaterial>();
-            ValidItems = Enumerable.Empty<IInanimateTemplate>();
+            ValidMaterials = TemplateCache.GetAll<IMaterial>();
+            ValidItems = TemplateCache.GetAll<IInanimateTemplate>();
             ValidZones = TemplateCache.GetAll<IZoneTemplate>();
             DataObject = new Race();
 

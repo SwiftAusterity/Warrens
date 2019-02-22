@@ -1,6 +1,7 @@
 ﻿using NetMud.Authentication;
 using NetMud.Data.Architectural.EntityBase;
 using NetMud.Data.Architectural.PropertyBinding;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural.EntityBase;
 using System;
 using System.Collections.Generic;
@@ -58,13 +59,13 @@ namespace NetMud.Models.Admin
 
         public AddEditMaterialViewModel() : base(-1)
         {
-            ValidMaterials = Enumerable.Empty<IMaterial>();
+            ValidMaterials = TemplateCache.GetAll<IMaterial>();
             DataObject = new Material();
         }
 
         public AddEditMaterialViewModel(long templateId) : base(templateId)
         {
-            ValidMaterials = Enumerable.Empty<IMaterial>();
+            ValidMaterials = TemplateCache.GetAll<IMaterial>();
             DataObject = new Material();
 
             //apply template

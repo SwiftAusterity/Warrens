@@ -62,17 +62,17 @@ namespace NetMud.Models.Admin
 
         public AddEditFaunaViewModel() : base(-1)
         {
-            ValidInanimateTemplates = Enumerable.Empty<IInanimateTemplate>();
-            ValidMaterials = Enumerable.Empty<IMaterial>();
-            ValidRaces = Enumerable.Empty<IRace>();
+            ValidInanimateTemplates = TemplateCache.GetAll<IInanimateTemplate>();
+            ValidMaterials = TemplateCache.GetAll<IMaterial>();
+            ValidRaces = TemplateCache.GetAll<IRace>();
             DataObject = new Fauna();
         }
 
         public AddEditFaunaViewModel(long templateId) : base(templateId)
         {
-            ValidInanimateTemplates = Enumerable.Empty<IInanimateTemplate>();
-            ValidMaterials = Enumerable.Empty<IMaterial>();
-            ValidRaces = Enumerable.Empty<IRace>();
+            ValidInanimateTemplates = TemplateCache.GetAll<IInanimateTemplate>();
+            ValidMaterials = TemplateCache.GetAll<IMaterial>();
+            ValidRaces = TemplateCache.GetAll<IRace>();
             DataObject = new Fauna();
 
             //apply template

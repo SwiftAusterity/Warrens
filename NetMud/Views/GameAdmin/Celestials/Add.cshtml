@@ -8,7 +8,7 @@
     @using (Html.BeginForm("Add", "Celestials", FormMethod.Get, new { @class = "form-horizontal", role = "form", @name = "applyTemplateForm", @id = "applyTemplateForm" }))
     {
         <div class="form-group row">
-            @Html.EditorFor(m => m.Template, new { validItems = Model.ValidTemplateBases })
+            @Html.EditorFor(m => m.Template, "CelestialList", "", new { validItems = Model.ValidTemplateBases })
             <input type="submit" value="Apply" class="btn btn-default save" , style="margin-left: 25px;" />
         </div>
     }

@@ -107,9 +107,9 @@ namespace NetMud.Controllers.GameAdmin
         }
 
         [HttpGet]
-        public ActionResult Add()
+        public ActionResult Add(long Template = -1)
         {
-            AddEditMaterialViewModel vModel = new AddEditMaterialViewModel
+            AddEditMaterialViewModel vModel = new AddEditMaterialViewModel(Template)
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId())
             };

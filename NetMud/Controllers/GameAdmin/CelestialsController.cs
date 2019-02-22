@@ -2,7 +2,6 @@
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
 using NetMud.Communication.Lexical;
-using NetMud.Data.Gaia;
 using NetMud.Data.Linguistic;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
@@ -113,9 +112,9 @@ namespace NetMud.Controllers.GameAdmin
         }
 
         [HttpGet]
-        public ActionResult Add()
+        public ActionResult Add(long Template = -1)
         {
-            AddEditCelestialViewModel vModel = new AddEditCelestialViewModel
+            AddEditCelestialViewModel vModel = new AddEditCelestialViewModel(Template)
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId())
             };

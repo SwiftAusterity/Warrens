@@ -9,7 +9,6 @@ using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Inanimate;
 using NetMud.DataStructure.Zone;
 using NetMud.Models.Admin;
-using NetMud.Data.Architectural.ActorBase;
 using System.Web;
 using System.Web.Mvc;
 
@@ -111,9 +110,9 @@ namespace NetMud.Controllers.GameAdmin
 
 
         [HttpGet]
-        public ActionResult Add()
+        public ActionResult Add(long Template = -1)
         {
-            AddEditRaceViewModel vModel = new AddEditRaceViewModel
+            AddEditRaceViewModel vModel = new AddEditRaceViewModel(Template)
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId())
             };

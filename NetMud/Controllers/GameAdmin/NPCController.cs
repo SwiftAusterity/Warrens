@@ -3,7 +3,6 @@ using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
 using NetMud.Communication.Lexical;
 using NetMud.Data.Linguistic;
-using NetMud.Data.NPC;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
@@ -114,9 +113,9 @@ namespace NetMud.Controllers.GameAdmin
         }
 
         [HttpGet]
-        public ActionResult Add()
+        public ActionResult Add(long Template = -1)
         {
-            AddEditNPCDataViewModel vModel = new AddEditNPCDataViewModel
+            AddEditNPCDataViewModel vModel = new AddEditNPCDataViewModel(Template)
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId())
             };

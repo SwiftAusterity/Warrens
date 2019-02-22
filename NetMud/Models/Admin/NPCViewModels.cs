@@ -1,6 +1,7 @@
 ﻿using NetMud.Authentication;
 using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.Data.NPC;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Inanimate;
 using NetMud.DataStructure.NPC;
@@ -59,17 +60,17 @@ namespace NetMud.Models.Admin
 
         public AddEditNPCDataViewModel() : base(-1)
         {
-            ValidItems = Enumerable.Empty<IInanimateTemplate>();
-            ValidRaces = Enumerable.Empty<IRace>();
-            ValidGenders = Enumerable.Empty<IGender>();
+            ValidItems = TemplateCache.GetAll<IInanimateTemplate>();
+            ValidRaces = TemplateCache.GetAll<IRace>();
+            ValidGenders = TemplateCache.GetAll<IGender>();
             DataObject = new NonPlayerCharacterTemplate();
         }
 
         public AddEditNPCDataViewModel(long templateId) : base(templateId)
         {
-            ValidItems = Enumerable.Empty<IInanimateTemplate>();
-            ValidRaces = Enumerable.Empty<IRace>();
-            ValidGenders = Enumerable.Empty<IGender>();
+            ValidItems = TemplateCache.GetAll<IInanimateTemplate>();
+            ValidRaces = TemplateCache.GetAll<IRace>();
+            ValidGenders = TemplateCache.GetAll<IGender>();
             DataObject = new NonPlayerCharacterTemplate();
 
             //apply template

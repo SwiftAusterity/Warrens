@@ -1,5 +1,4 @@
-﻿using NetMud.Communication.Messaging;
-using NetMud.Data.Architectural.DataIntegrity;
+﻿using NetMud.Data.Architectural.DataIntegrity;
 using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.Data.Linguistic;
 using NetMud.DataAccess.Cache;

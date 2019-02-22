@@ -1,6 +1,7 @@
 ﻿using NetMud.Authentication;
 using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.Data.NaturalResource;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Inanimate;
 using NetMud.DataStructure.NaturalResource;
@@ -60,17 +61,17 @@ namespace NetMud.Models.Admin
 
         public AddEditMineralsViewModel() : base(-1)
         {
-            ValidInanimateTemplates = Enumerable.Empty<IInanimateTemplate>();
-            ValidMaterials = Enumerable.Empty<IMaterial>();
-            ValidMinerals = Enumerable.Empty<IMineral>();
+            ValidInanimateTemplates = TemplateCache.GetAll<IInanimateTemplate>();
+            ValidMaterials = TemplateCache.GetAll<IMaterial>();
+            ValidMinerals = TemplateCache.GetAll<IMineral>();
             DataObject = new Mineral();
         }
 
         public AddEditMineralsViewModel(long templateId) : base(templateId)
         {
-            ValidInanimateTemplates = Enumerable.Empty<IInanimateTemplate>();
-            ValidMaterials = Enumerable.Empty<IMaterial>();
-            ValidMinerals = Enumerable.Empty<IMineral>();
+            ValidInanimateTemplates = TemplateCache.GetAll<IInanimateTemplate>();
+            ValidMaterials = TemplateCache.GetAll<IMaterial>();
+            ValidMinerals = TemplateCache.GetAll<IMineral>();
             DataObject = new Mineral();
 
             //apply template
