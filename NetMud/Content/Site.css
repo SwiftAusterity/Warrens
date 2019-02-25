@@ -341,6 +341,9 @@ div.roomAsciiMap {
 
 .accordionWrapper h5 {
     font-weight: 700;
+    border-radius: 9px;
+    background-color: lightblue;
+    box-shadow: 1px 1px 3px cornflowerblue;
 }
 
 .accordionWrapper.ghostRequired h5 {
@@ -416,10 +419,11 @@ div.roomAsciiMap {
 }
 
 .iterativeContainer {
-    border: black 1px dotted;
+    border: dodgerblue 1px dotted;
     min-height: 60px;
     display: flex;
     flex-wrap: wrap;
+    border-radius: 9px;
 }
 
     .iterativeContainer .addRowContainer {
