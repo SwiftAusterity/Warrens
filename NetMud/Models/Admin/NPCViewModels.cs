@@ -8,7 +8,6 @@ using NetMud.DataStructure.NPC;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 
 namespace NetMud.Models.Admin
 {
@@ -87,6 +86,14 @@ namespace NetMud.Models.Admin
                 DataObject.WillPurchase = DataTemplate.WillPurchase;
                 DataObject.WillSell = DataTemplate.WillSell;
             }
+        }
+
+        public AddEditNPCDataViewModel(string archivePath, INonPlayerCharacterTemplate item) : base(archivePath, item)
+        {
+            ValidItems = TemplateCache.GetAll<IInanimateTemplate>();
+            ValidRaces = TemplateCache.GetAll<IRace>();
+            ValidGenders = TemplateCache.GetAll<IGender>();
+            DataObject = item;
         }
 
         public IEnumerable<IGender> ValidGenders { get; set; }

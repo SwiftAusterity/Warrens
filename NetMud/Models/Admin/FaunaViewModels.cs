@@ -9,7 +9,6 @@ using NetMud.DataStructure.NaturalResource;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 
 
 namespace NetMud.Models.Admin
@@ -90,6 +89,14 @@ namespace NetMud.Models.Admin
                 DataObject.Race = DataTemplate.Race;
                 DataObject.TemperatureRange = DataTemplate.TemperatureRange;
             }
+        }
+
+        public AddEditFaunaViewModel(string archivePath, IFauna item) : base(archivePath, item)
+        {
+            ValidInanimateTemplates = TemplateCache.GetAll<IInanimateTemplate>();
+            ValidMaterials = TemplateCache.GetAll<IMaterial>();
+            ValidRaces = TemplateCache.GetAll<IRace>();
+            DataObject = item;
         }
 
         public IEnumerable<IRace> ValidRaces { get; set; }

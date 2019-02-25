@@ -80,6 +80,13 @@ namespace NetMud.Models.Admin
             }
         }
 
+        public AddEditCelestialViewModel(string archivePath, ICelestial item) : base(archivePath, item)
+        {
+            ValidMaterials = TemplateCache.GetAll<IMaterial>(true);
+            ValidModels = TemplateCache.GetAll<IDimensionalModelData>(true);
+            DataObject = item;
+        }
+
         public IEnumerable<IDimensionalModelData> ValidModels { get; set; }
         public IEnumerable<IMaterial> ValidMaterials { get; set; }
 

@@ -1,30 +1,28 @@
 ﻿@using NetMud.Data.NPC
-
 @model NonPlayerCharacterTemplate
+
+@{
+    var archivedTemplate = ViewData["ArchiveTemplate"] as NonPlayerCharacterTemplate;
+}
 
 <h4>Details</h4>
 <div class="form-group row">
-    @Html.EditorFor(m => m.Name)
-    @Html.EditorFor(m => m.SurName)
-    @Html.EditorFor(m => m.Gender, new { validItems = ViewData["ValidGenders"] })
-    @Html.EditorFor(m => m.Race, new { validItems = ViewData["ValidRaces"] })
+    @Html.EditorFor(m => m.Name, new { archivedValue = archivedTemplate?.Name ?? "" })
+    @Html.EditorFor(m => m.SurName, new { archivedValue = archivedTemplate?.SurName ?? "" })
+    @Html.EditorFor(m => m.Gender, new { validItems = ViewData["ValidGenders"], archivedValue = archivedTemplate?.Gender?.Name ?? "" })
+    @Html.EditorFor(m => m.Race, new { validItems = ViewData["ValidRaces"], archivedValue = archivedTemplate?.Race?.Name ?? "" })
 </div>
-
 <h3>Personality</h3>
 <hr />
 @Html.EditorFor(m => m.Personality)
-
 <h3>Merchant Settings</h3>
 <hr />
 <h4>Restock</h4>
 @Html.EditorFor(m => m.InventoryRestock)
-
 <h4>Selling</h4>
 @Html.EditorFor(m => m.WillSell)
-
 <h4>Buying</h4>
 @Html.EditorFor(m => m.WillPurchase)
-
 <h3>Trainer Settings</h3>
 <hr />
 <h4>Proficencies</h4>

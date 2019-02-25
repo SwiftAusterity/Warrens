@@ -8,7 +8,6 @@ using NetMud.DataStructure.NaturalResource;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 
 
 namespace NetMud.Models.Admin
@@ -92,6 +91,13 @@ namespace NetMud.Models.Admin
                 DataObject.SunlightPreference = DataTemplate.SunlightPreference;
                 DataObject.Wood = DataTemplate.Wood;
             }
+        }
+
+        public AddEditFloraViewModel(string archivePath, IFlora item) : base(archivePath, item)
+        {
+            ValidInanimateTemplates = TemplateCache.GetAll<IInanimateTemplate>();
+            ValidMaterials = TemplateCache.GetAll<IMaterial>();
+            DataObject = item;
         }
 
         public IEnumerable<IInanimateTemplate> ValidInanimateTemplates { get; set; }

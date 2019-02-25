@@ -146,26 +146,19 @@ namespace NetMud.Controllers.GameAdmin
         }
 
         [HttpGet]
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int id, string ArchivePath = "")
         {
-            string message = string.Empty;
-            AddEditNPCDataViewModel vModel = new AddEditNPCDataViewModel
-            {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidGenders = TemplateCache.GetAll<IGender>(),
-                ValidRaces = TemplateCache.GetAll<IRace>(),
-                ValidItems = TemplateCache.GetAll<IInanimateTemplate>()
-            };
-
             INonPlayerCharacterTemplate obj = TemplateCache.Get<INonPlayerCharacterTemplate>(id);
 
             if (obj == null)
             {
-                message = "That does not exist";
-                return RedirectToAction("Index", new { Message = message });
+                return RedirectToAction("Index", new { Message = "That does not exist" });
             }
 
-            vModel.DataObject = obj;
+            AddEditNPCDataViewModel vModel = new AddEditNPCDataViewModel(ArchivePath, obj)
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId())
+            };
 
             return View("~/Views/GameAdmin/NPC/Edit.cshtml", vModel);
         }

@@ -149,25 +149,19 @@ namespace NetMud.Controllers.GameAdmin
         }
 
         [HttpGet]
-        public ActionResult Edit(long id)
+        public ActionResult Edit(long id, string ArchivePath = "")
         {
-            string message = string.Empty;
-            AddEditFloraViewModel vModel = new AddEditFloraViewModel
-            {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidMaterials = TemplateCache.GetAll<IMaterial>(),
-                ValidInanimateTemplates = TemplateCache.GetAll<IInanimateTemplate>()
-            };
-
             IFlora obj = TemplateCache.Get<IFlora>(id);
 
             if (obj == null)
             {
-                message = "That does not exist";
-                return RedirectToAction("Index", new { Message = message });
+                return RedirectToAction("Index", new { Message = "That does not exist" });
             }
 
-            vModel.DataObject = obj;
+            AddEditFloraViewModel vModel = new AddEditFloraViewModel(ArchivePath, obj)
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId())
+            };
 
             return View("~/Views/GameAdmin/Flora/Edit.cshtml", vModel);
         }

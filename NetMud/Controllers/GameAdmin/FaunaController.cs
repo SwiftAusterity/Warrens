@@ -145,26 +145,19 @@ namespace NetMud.Controllers.GameAdmin
         }
 
         [HttpGet]
-        public ActionResult Edit(long id)
+        public ActionResult Edit(long id, string ArchivePath = "")
         {
-            string message = string.Empty;
-            AddEditFaunaViewModel vModel = new AddEditFaunaViewModel
-            {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidMaterials = TemplateCache.GetAll<IMaterial>(),
-                ValidInanimateTemplates = TemplateCache.GetAll<IInanimateTemplate>(),
-                ValidRaces = TemplateCache.GetAll<IRace>()
-            };
-
             IFauna obj = TemplateCache.Get<IFauna>(id);
 
             if (obj == null)
             {
-                message = "That does not exist";
-                return RedirectToAction("Index", new { Message = message });
+                return RedirectToAction("Index", new { Message = "That does not exist" });
             }
 
-            vModel.DataObject = obj;
+            AddEditFaunaViewModel vModel = new AddEditFaunaViewModel(ArchivePath, obj)
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId())
+            };
 
             return View("~/Views/GameAdmin/Fauna/Edit.cshtml", vModel);
         }

@@ -144,26 +144,19 @@ namespace NetMud.Controllers.GameAdmin
         }
 
         [HttpGet]
-        public ActionResult Edit(long id)
+        public ActionResult Edit(long id, string ArchivePath = "")
         {
-            string message = string.Empty;
-            AddEditCelestialViewModel vModel = new AddEditCelestialViewModel
-            {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidMaterials = TemplateCache.GetAll<IMaterial>(true),
-                ValidModels = TemplateCache.GetAll<IDimensionalModelData>(true),
-                ValidTemplateBases = TemplateCache.GetAll<ICelestial>(true)
-            };
-
             ICelestial obj = TemplateCache.Get<ICelestial>(id);
 
             if (obj == null)
             {
-                message = "That does not exist";
-                return RedirectToAction("Index", new { Message = message });
+                return RedirectToAction("Index", new { Message = "That does not exist" });
             }
 
-            vModel.DataObject = obj;
+            AddEditCelestialViewModel vModel = new AddEditCelestialViewModel(ArchivePath, obj)
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId())
+            };
 
             return View("~/Views/GameAdmin/Celestials/Edit.cshtml", vModel);
         }

@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-
 namespace NetMud.Models.Admin
 {
     public class ManageMineralsViewModel : PagedDataModel<IMineral>, IBaseViewModel
@@ -91,6 +90,14 @@ namespace NetMud.Models.Admin
                 DataObject.Rock = DataTemplate.Rock;
                 DataObject.Solubility = DataObject.Solubility;
             }
+        }
+
+        public AddEditMineralsViewModel(string archivePath, IMineral item) : base(archivePath, item)
+        {
+            ValidInanimateTemplates = TemplateCache.GetAll<IInanimateTemplate>();
+            ValidMaterials = TemplateCache.GetAll<IMaterial>();
+            ValidMinerals = TemplateCache.GetAll<IMineral>().Where(m => m.Id != item.Id);
+            DataObject = item;
         }
 
         public IEnumerable<IInanimateTemplate> ValidInanimateTemplates { get; set; }

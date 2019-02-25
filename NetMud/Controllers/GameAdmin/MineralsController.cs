@@ -145,26 +145,19 @@ namespace NetMud.Controllers.GameAdmin
         }
 
         [HttpGet]
-        public ActionResult Edit(long id)
+        public ActionResult Edit(long id, string ArchivePath = "")
         {
-            string message = string.Empty;
-            AddEditMineralsViewModel vModel = new AddEditMineralsViewModel
-            {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidMaterials = TemplateCache.GetAll<IMaterial>(),
-                ValidMinerals = TemplateCache.GetAll<IMineral>().Where(m => m.Id != id),
-                ValidInanimateTemplates = TemplateCache.GetAll<IInanimateTemplate>()
-            };
-
             IMineral obj = TemplateCache.Get<IMineral>(id);
 
             if (obj == null)
             {
-                message = "That does not exist";
-                return RedirectToAction("Index", new { Message = message });
+                return RedirectToAction("Index", new { Message = "That does not exist" });
             }
 
-            vModel.DataObject = obj;
+            AddEditMineralsViewModel vModel = new AddEditMineralsViewModel(ArchivePath, obj)
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId())
+            };
 
             return View("~/Views/GameAdmin/Minerals/Edit.cshtml", vModel);
         }
