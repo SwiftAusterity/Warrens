@@ -1,4 +1,7 @@
 ﻿using NetMud.Authentication;
+using NetMud.Data.Architectural.PropertyBinding;
+using NetMud.Data.Inanimate;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Inanimate;
 using System;
@@ -46,17 +49,49 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditInanimateTemplateViewModel : TwoDimensionalEntityEditViewModel
+    public class AddEditInanimateTemplateViewModel : AddContentModel<IInanimateTemplate>, IBaseViewModel
     {
-        public AddEditInanimateTemplateViewModel()
+        public ApplicationUser authedUser { get; set; }
+
+        [Display(Name = "Apply Existing Template", Description = "Apply an existing object's data to this new data.")]
+        [UIHint("NonPlayerCharacterTemplateList")]
+        [InanimateTemplateDataBinder]
+        public override IInanimateTemplate Template { get; set; }
+
+        public AddEditInanimateTemplateViewModel() : base(-1)
         {
-            ValidModels = Enumerable.Empty<IDimensionalModelData>();
-            ValidMaterials = Enumerable.Empty<IMaterial>();
+            ValidMaterials = TemplateCache.GetAll<IMaterial>();
+            ValidModels = TemplateCache.GetAll<IDimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat);
+            ValidInanimateTemplates = TemplateCache.GetAll<IInanimateTemplate>();
+            DataObject = new InanimateTemplate();
+        }
+
+        public AddEditInanimateTemplateViewModel(long templateId) : base(templateId)
+        {
+            ValidMaterials = TemplateCache.GetAll<IMaterial>();
+            ValidModels = TemplateCache.GetAll<IDimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat);
+            ValidInanimateTemplates = TemplateCache.GetAll<IInanimateTemplate>();
+            DataObject = new InanimateTemplate();
+
+            //apply template
+            if (DataTemplate != null)
+            {
+                DataObject.AccumulationCap = DataTemplate.AccumulationCap;
+                DataObject.Components = DataTemplate.Components;
+                DataObject.MobileContainers = DataTemplate.MobileContainers;
+                DataObject.InanimateContainers = DataTemplate.InanimateContainers;
+                DataObject.Qualities = DataTemplate.Qualities;
+                DataObject.Model = DataTemplate.Model;
+                DataObject.Produces = DataTemplate.Produces;
+                DataObject.SkillRequirements = DataTemplate.SkillRequirements;
+            }
         }
 
         public IEnumerable<IInanimateTemplate> ValidInanimateTemplates { get; set; }
 
         [UIHint("InanimateTemplate")]
         public IInanimateTemplate DataObject { get; set; }
+        public IEnumerable<IDimensionalModelData> ValidModels { get; set; }
+        public IEnumerable<IMaterial> ValidMaterials { get; set; }
     }
 }

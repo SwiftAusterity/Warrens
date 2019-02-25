@@ -25,7 +25,7 @@
 </div>
 
 <h4>Components</h4>
-@Html.EditorFor(m => m.Components)
+@Html.EditorFor(m => m.Components, new { validItems = ViewData["ValidInanimateTemplates"] })
 
 <h4>Skill Requirements</h4>
 @Html.EditorFor(m => m.SkillRequirements)

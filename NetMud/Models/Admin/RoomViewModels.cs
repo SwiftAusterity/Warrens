@@ -47,8 +47,10 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditRoomTemplateViewModel : DimensionalEntityEditViewModel
+    public class AddEditRoomTemplateViewModel : IBaseViewModel
     {
+        public ApplicationUser authedUser { get; set; }
+
         public AddEditRoomTemplateViewModel()
         {
         }

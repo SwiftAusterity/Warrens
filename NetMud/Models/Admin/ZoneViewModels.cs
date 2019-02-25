@@ -96,8 +96,10 @@ namespace NetMud.Models.Admin
         public IZoneTemplate DataObject { get; set; }
     }
 
-    public class AddEditZonePathwayTemplateViewModel : TwoDimensionalEntityEditViewModel, IBaseViewModel
+    public class AddEditZonePathwayTemplateViewModel : IBaseViewModel
     {
+        public ApplicationUser authedUser { get; set; }
+
         public AddEditZonePathwayTemplateViewModel()
         {
             ValidModels = Enumerable.Empty<IDimensionalModelData>();
@@ -113,5 +115,7 @@ namespace NetMud.Models.Admin
         public IRoomTemplate DestinationRoom { get; set; }
 
         public IPathwayTemplate DataObject { get; set; }
+        public IEnumerable<IDimensionalModelData> ValidModels { get; set; }
+        public IEnumerable<IMaterial> ValidMaterials { get; set; }
     }
 }

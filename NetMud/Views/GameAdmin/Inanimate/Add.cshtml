@@ -1,8 +1,17 @@
 ﻿@model NetMud.Models.Admin.AddEditInanimateTemplateViewModel
-
 @{
     ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Add Item", new string[] { "Dashboard", "Inanimate" }, new string[] { "/GameAdmin", "/Inanimate" });
 }
+<div class="accordionWrapper">
+    <h5>Use Existing Template</h5>
+    @using (Html.BeginForm("Add", "Inanimate", FormMethod.Get, new { @class = "form-horizontal", role = "form", @name = "applyTemplateForm", @id = "applyTemplateForm" }))
+    {
+        <div class="form-group row">
+            @Html.EditorFor(m => m.Template, "InanimateTemplateList", "", new { validItems = Model.ValidTemplateBases })
+            <input type="submit" value="Apply" class="btn btn-default save" , style="margin-left: 25px;" />
+        </div>
+    }
+</div>
 
 <section id="newInanimateForm">
     @using (Html.BeginForm("Add", "Inanimate", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
@@ -15,7 +24,6 @@
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Create", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Inanimate", IncludeCancel = true })
     }
 </section>
-
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

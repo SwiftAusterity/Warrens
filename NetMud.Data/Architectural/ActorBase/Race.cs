@@ -236,6 +236,7 @@ namespace NetMud.Data.Architectural.ActorBase
         public Race()
         {
             BodyParts = new HashSet<BodyPart>();
+            DeathQualityChanges = new HashSet<QualityValue>();
         }
 
         /// <summary>

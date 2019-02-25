@@ -1,4 +1,5 @@
-﻿using NetMud.Data.Architectural.PropertyBinding;
+﻿using NetMud.Authentication;
+using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Room;
 using System.Collections.Generic;
@@ -7,8 +8,10 @@ using System.Linq;
 
 namespace NetMud.Models.Admin
 {
-    public class AddEditPathwayTemplateViewModel : TwoDimensionalEntityEditViewModel, IBaseViewModel
+    public class AddEditPathwayTemplateViewModel : IBaseViewModel
     {
+        public ApplicationUser authedUser { get; set; }
+
         public AddEditPathwayTemplateViewModel()
         {
             ValidModels = Enumerable.Empty<IDimensionalModelData>();
@@ -18,10 +21,14 @@ namespace NetMud.Models.Admin
 
         public IEnumerable<IRoomTemplate> ValidRooms { get; set; }
         public IPathwayTemplate DataObject { get; set; }
+        public IEnumerable<IDimensionalModelData> ValidModels { get; set; }
+        public IEnumerable<IMaterial> ValidMaterials { get; set; }
     }
 
-    public class AddPathwayWithRoomTemplateViewModel : TwoDimensionalEntityEditViewModel, IBaseViewModel
+    public class AddPathwayWithRoomTemplateViewModel : IBaseViewModel
     {
+        public ApplicationUser authedUser { get; set; }
+
         public AddPathwayWithRoomTemplateViewModel()
         {
             ValidModels = Enumerable.Empty<IDimensionalModelData>();
@@ -41,5 +48,7 @@ namespace NetMud.Models.Admin
 
         public IRoomTemplate Destination { get; set; }
         public IPathwayTemplate DataObject { get; set; }
+        public IEnumerable<IDimensionalModelData> ValidModels { get; set; }
+        public IEnumerable<IMaterial> ValidMaterials { get; set; }
     }
 }

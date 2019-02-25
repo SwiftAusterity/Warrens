@@ -54,15 +54,4 @@ namespace NetMud.Models.Admin
         [UIHint("DimensionalModelData")]
         public IDimensionalModelData DataObject { get; set; }
     }
-
-    public class DimensionalEntityEditViewModel : IBaseViewModel
-    {
-        public ApplicationUser authedUser { get; set; }
-    }
-
-    public class TwoDimensionalEntityEditViewModel : DimensionalEntityEditViewModel
-    {
-        public IEnumerable<IDimensionalModelData> ValidModels { get; set; }
-        public IEnumerable<IMaterial> ValidMaterials { get; set; }
-    }
 }

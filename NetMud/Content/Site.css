@@ -38,11 +38,11 @@ input[type=checkbox].form-control {
 }
 
 .multiBox-3 {
-    width: 40% !important;
+    min-width: 54% !important;
 }
 
 .multiBox-2 {
-    width: 20% !important;
+    min-width: 36% !important;
 }
 
     .multiBox > div {

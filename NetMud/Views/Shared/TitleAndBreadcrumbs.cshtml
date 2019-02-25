@@ -1,5 +1,4 @@
 ﻿@model System.Tuple<string, string[], string[]>
-
 @{
     if (Model != null)
     {
@@ -7,16 +6,20 @@
         var breadcrumbs = string.Empty;
         var linkCount = Model.Item3?.Count();
 
+        if (!string.IsNullOrWhiteSpace(title))
+        {
+            <h3>@title</h3>
+        }
+
         if (Model.Item2 != null && Model.Item2.Count() > 0)
         {
-            breadcrumbs = string.Join("<span class='glyphicon glyphicon-chevron-right'></span>", Model.Item2.Select((str, i) => Model.Item3 != null && linkCount > i 
+            breadcrumbs = string.Join("<span class='glyphicon glyphicon-chevron-right'></span>", Model.Item2.Select((str, i) => Model.Item3 != null && linkCount > i
             ? string.Format("<a href='{1}' title='{0}' class='breadcrumb-item'>{0}</a>", Model.Item2[i], Model.Item3[i])
             : string.Format("<span class='breadcrumb-item'>{0}</span>", Model.Item2[i])));
 
             breadcrumbs += string.Format("<span class='glyphicon glyphicon-chevron-right'></span><span class='breadcrumb-item'>{0}</span>", title);
-        }
 
-        <h3>@title</h3>
-        <div class="breadcrumb">@Html.Raw(breadcrumbs)</div>
+            <div class="breadcrumb">@Html.Raw(breadcrumbs)</div>
+        }
     }
 }

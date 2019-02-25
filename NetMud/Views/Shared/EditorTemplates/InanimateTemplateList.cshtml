@@ -53,7 +53,7 @@
 @if (strippedNaked)
 {
     @Html.DescriptionFor(m => m)
-    @Html.DropDownList("", itemList, optionLabel: "Select One", htmlAttributes: htmlAttributes)
+    @Html.DropDownList(ViewData.ModelMetadata.PropertyName, itemList, optionLabel: "Select One", htmlAttributes: htmlAttributes)
 }
 else
 {
@@ -61,7 +61,7 @@ else
         <span class="@ghostNameClass">@ViewData.ModelMetadata.DisplayName</span>
 
         @Html.DescriptionFor(m => m)
-        @Html.DropDownList("", itemList, optionLabel: "Select One", htmlAttributes: htmlAttributes)
+        @Html.DropDownList(ViewData.ModelMetadata.PropertyName, itemList, optionLabel: "Select One", htmlAttributes: htmlAttributes)
 
         @if (!string.IsNullOrWhiteSpace(archivedValue))
         {

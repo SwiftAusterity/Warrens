@@ -114,15 +114,11 @@ namespace NetMud.Controllers.GameAdmin
         }
 
         [HttpGet]
-        public ActionResult Add()
+        public ActionResult Add(long Template = -1)
         {
-            AddEditInanimateTemplateViewModel vModel = new AddEditInanimateTemplateViewModel
+            AddEditInanimateTemplateViewModel vModel = new AddEditInanimateTemplateViewModel(Template)
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidMaterials = TemplateCache.GetAll<Material>(),
-                ValidModels = TemplateCache.GetAll<DimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat),
-                ValidInanimateTemplates = TemplateCache.GetAll<IInanimateTemplate>(),
-                DataObject = new InanimateTemplate()
             };
 
             return View("~/Views/GameAdmin/Inanimate/Add.cshtml", vModel);
@@ -157,10 +153,7 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             AddEditInanimateTemplateViewModel vModel = new AddEditInanimateTemplateViewModel
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidMaterials = TemplateCache.GetAll<Material>(),
-                ValidModels = TemplateCache.GetAll<DimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat),
-                ValidInanimateTemplates = TemplateCache.GetAll<InanimateTemplate>()
+                authedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             InanimateTemplate obj = TemplateCache.Get<InanimateTemplate>(id);
