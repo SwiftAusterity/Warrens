@@ -107,13 +107,11 @@ namespace NetMud.Controllers.GameAdmin
         }
 
         [HttpGet]
-        public ActionResult Add()
+        public ActionResult Add(long Template = -1)
         {
-            AddEditGaiaViewModel vModel = new AddEditGaiaViewModel
+            AddEditGaiaViewModel vModel = new AddEditGaiaViewModel(Template)
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidCelestials = TemplateCache.GetAll<ICelestial>(true),
-                DataObject = new GaiaTemplate()
+                authedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             return View("~/Views/GameAdmin/Gaia/Add.cshtml", vModel);
@@ -141,24 +139,19 @@ namespace NetMud.Controllers.GameAdmin
         }
 
         [HttpGet]
-        public ActionResult Edit(long id)
+        public ActionResult Edit(long id, string ArchivePath = "")
         {
-            string message = string.Empty;
-            AddEditGaiaViewModel vModel = new AddEditGaiaViewModel
-            {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidCelestials = TemplateCache.GetAll<ICelestial>(true)
-            };
-
             IGaiaTemplate obj = TemplateCache.Get<IGaiaTemplate>(id);
 
             if (obj == null)
             {
-                message = "That does not exist";
-                return RedirectToAction("Index", new { Message = message });
+                return RedirectToAction("Index", new { Message = "That does not exist" });
             }
 
-            vModel.DataObject = obj;
+            AddEditGaiaViewModel vModel = new AddEditGaiaViewModel(ArchivePath, obj)
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId())
+            };
 
             return View("~/Views/GameAdmin/Gaia/Edit.cshtml", vModel);
         }

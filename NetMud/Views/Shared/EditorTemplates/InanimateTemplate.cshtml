@@ -3,7 +3,7 @@
 @model InanimateTemplate
 
 @{ 
-    InanimateTemplate archivedTemplate = ViewData["ArchiveTemplate"] as InanimateTemplate;
+    var archivedTemplate = ViewData["ArchiveTemplate"] as InanimateTemplate;
 }
 
 <h4>Details</h4>

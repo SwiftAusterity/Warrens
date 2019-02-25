@@ -108,12 +108,11 @@ namespace NetMud.Controllers.GameAdmin
 
 
         [HttpGet]
-        public ActionResult Add()
+        public ActionResult Add(long Template = -1)
         {
-            AddEditGenderViewModel vModel = new AddEditGenderViewModel
+            AddEditGenderViewModel vModel = new AddEditGenderViewModel(Template)
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                DataObject = new Gender()
+                authedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             return View("~/Views/GameAdmin/Gender/Add.cshtml", vModel);

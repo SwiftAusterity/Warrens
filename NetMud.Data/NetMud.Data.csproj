@@ -112,6 +112,7 @@
     <Compile Include="Architectural\PropertyBinding\DimensionalModelDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\DictataCollectionDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\DictataDataBinder.cs" />
+    <Compile Include="Architectural\PropertyBinding\HelpDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\MineralCollectionDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\LanguageDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\MineralDataBinder.cs" />

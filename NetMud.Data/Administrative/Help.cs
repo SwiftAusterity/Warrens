@@ -21,8 +21,8 @@ namespace NetMud.Data.Administrative
         public Help()
         {
             Id = -1;
-            Name = "NotImpl";
-            HelpText = "NotImpl";
+            Name = "";
+            HelpText = "";
         }
 
         /// <summary>

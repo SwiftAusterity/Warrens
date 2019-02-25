@@ -106,12 +106,11 @@ namespace NetMud.Controllers.GameAdmin
         }
 
         [HttpGet]
-        public ActionResult Add()
+        public ActionResult Add(long Template = -1)
         {
-            AddEditHelpDataViewModel vModel = new AddEditHelpDataViewModel
+            AddEditHelpDataViewModel vModel = new AddEditHelpDataViewModel(Template)
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                DataObject = new Help()
+                authedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             return View("~/Views/GameAdmin/Help/Add.cshtml", vModel);
@@ -124,11 +123,7 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            Help newObj = new Help
-            {
-                Name = vModel.DataObject.Name,
-                HelpText = vModel.DataObject.HelpText
-            };
+            IHelp newObj = vModel.DataObject;
 
             if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
             {
@@ -144,23 +139,19 @@ namespace NetMud.Controllers.GameAdmin
         }
 
         [HttpGet]
-        public ActionResult Edit(long id)
+        public ActionResult Edit(long id, string ArchivePath = "")
         {
-            string message = string.Empty;
-            AddEditHelpDataViewModel vModel = new AddEditHelpDataViewModel
-            {
-                authedUser = UserManager.FindById(User.Identity.GetUserId())
-            };
-
             IHelp obj = TemplateCache.Get<IHelp>(id);
 
             if (obj == null)
             {
-                message = "That does not exist";
-                return RedirectToAction("Index", new { Message = message });
+                return RedirectToAction("Index", new { Message = "That does not exist" });
             }
 
-            vModel.DataObject = obj;
+            AddEditHelpDataViewModel vModel = new AddEditHelpDataViewModel(ArchivePath, obj)
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId())
+            };
 
             return View("~/Views/GameAdmin/Help/Edit.cshtml", vModel);
         }

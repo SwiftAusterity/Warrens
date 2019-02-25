@@ -630,6 +630,7 @@
     <Content Include="Views\Shared\EditorTemplates\ContractionRule.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\DictataSmartList.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\SimpleDropdown.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\HelpList.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />

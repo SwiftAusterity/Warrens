@@ -155,14 +155,11 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Edit(long id)
         {
-            string message = string.Empty;
-
             IZoneTemplate obj = TemplateCache.Get<IZoneTemplate>(id);
 
             if (obj == null)
             {
-                message = "That does not exist";
-                return RedirectToAction("Index", new { Message = message });
+                return RedirectToAction("Index", new { Message = "That does not exist" });
             }
 
             IEnumerable<ILocaleTemplate> locales = TemplateCache.GetAll<ILocaleTemplate>().Where(locale => locale.ParentLocation.Equals(obj));
@@ -170,8 +167,7 @@ namespace NetMud.Controllers.GameAdmin
             AddEditZoneTemplateViewModel vModel = new AddEditZoneTemplateViewModel(locales)
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                DataObject = obj,
-                ValidWorlds = TemplateCache.GetAll<IGaiaTemplate>(true),
+                DataObject = obj
             };
 
             return View("~/Views/GameAdmin/Zone/Edit.cshtml", vModel);
