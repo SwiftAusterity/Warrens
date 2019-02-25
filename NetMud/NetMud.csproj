@@ -265,7 +265,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\AddContentModel.cs" />
+    <Compile Include="Models\AddEditConfigDataModel.cs" />
+    <Compile Include="Models\AddEditTemplateModel.cs" />
     <Compile Include="Models\Admin\JournalEntryViewModels.cs" />
     <Compile Include="Models\Admin\LanguageViewModels.cs" />
     <Compile Include="Models\Admin\DictionaryViewModels.cs" />
