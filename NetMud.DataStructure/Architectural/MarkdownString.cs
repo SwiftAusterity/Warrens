@@ -889,7 +889,7 @@ namespace NetMud.DataStructure.Architectural
         /// <returns>true if the same object</returns>
         public bool Equals(string other)
         {
-            if (other != default(string))
+            if (other != default)
             {
                 try
                 {

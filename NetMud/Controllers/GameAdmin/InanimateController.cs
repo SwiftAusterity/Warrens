@@ -2,13 +2,11 @@
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
 using NetMud.Communication.Lexical;
-using NetMud.Data.Architectural.EntityBase;
 using NetMud.Data.Inanimate;
 using NetMud.Data.Linguistic;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
-using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Inanimate;
 using NetMud.DataStructure.Linguistic;
 using NetMud.Models.Admin;
@@ -161,7 +159,6 @@ namespace NetMud.Controllers.GameAdmin
             {
                 authedUser = UserManager.FindById(User.Identity.GetUserId())
             };
-
 
             return View("~/Views/GameAdmin/Inanimate/Edit.cshtml", vModel);
         }

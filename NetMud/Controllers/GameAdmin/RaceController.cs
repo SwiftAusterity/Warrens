@@ -144,26 +144,19 @@ namespace NetMud.Controllers.GameAdmin
         }
 
         [HttpGet]
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int id, string ArchivePath = "")
         {
-            string message = string.Empty;
-            AddEditRaceViewModel vModel = new AddEditRaceViewModel
-            {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidMaterials = TemplateCache.GetAll<IMaterial>(),
-                ValidItems = TemplateCache.GetAll<IInanimateTemplate>(),
-                ValidZones = TemplateCache.GetAll<IZoneTemplate>()
-            };
-
             IRace obj = TemplateCache.Get<IRace>(id);
 
             if (obj == null)
             {
-                message = "That does not exist";
-                return RedirectToAction("Index", new { Message = message });
+                return RedirectToAction("Index", new { Message = "That does not exist" });
             }
 
-            vModel.DataObject = obj;
+            AddEditRaceViewModel vModel = new AddEditRaceViewModel(ArchivePath, obj)
+            {
+                authedUser = UserManager.FindById(User.Identity.GetUserId())
+            };
 
             return View("~/Views/GameAdmin/Race/Edit.cshtml", vModel);
         }

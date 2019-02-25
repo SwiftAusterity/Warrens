@@ -57,21 +57,18 @@
     }
 else
 {
-    <div>
-        <span class="@ghostNameClass">@ViewData.ModelMetadata.DisplayName</span>
-
-        @Html.DescriptionFor(m => m)
-        @Html.TextBoxFor(m => m, htmlAttributes)
-
-        @if (!string.IsNullOrWhiteSpace(archivedValue))
-        {
-            <span class="archive">Archived Value: <span>@archivedValue</span></span>
-            <span title="apply value to field" class="glyphicon glyphicon-arrow-up archiveApply" onclick="javascript: $('#@ViewData.ModelMetadata.PropertyName').val('@archivedValue');"></span>
-        }
-
-        @if (!noValidation)
-        {
-            @Html.ValidationMessageFor(m => m, "", new { @class = "text-danger" })
-        }
-    </div>
+<div>
+    <span class="@ghostNameClass">@ViewData.ModelMetadata.DisplayName</span>
+    @Html.DescriptionFor(m => m)
+    @Html.TextBoxFor(m => m, htmlAttributes)
+    @if (!string.IsNullOrWhiteSpace(archivedValue))
+    {
+        <span class="archive">Archived Value: <span>@archivedValue</span></span>
+        <span title="apply value to field" class="glyphicon glyphicon-arrow-up archiveApply" onclick="javascript: $('#@ViewData.ModelMetadata.PropertyName').val('@archivedValue');"></span>
+    }
+    @if (!noValidation)
+    {
+        @Html.ValidationMessageFor(m => m, "", new { @class = "text-danger" })
+    }
+</div>
 }

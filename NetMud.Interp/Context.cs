@@ -900,7 +900,7 @@ namespace NetMud.Interp
                     continue;
                 }
 
-                T validObject = default(T);
+                T validObject = default;
 
                 long parmID = -1;
                 if (!long.TryParse(currentParmString, out parmID))

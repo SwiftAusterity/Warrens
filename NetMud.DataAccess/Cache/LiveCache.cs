@@ -150,7 +150,7 @@ namespace NetMud.DataAccess.Cache
                 LoggingUtility.LogError(ex);
             }
 
-            return default(T);
+            return default;
         }
 
         /// <summary>
@@ -178,7 +178,7 @@ namespace NetMud.DataAccess.Cache
                 LoggingUtility.LogError(ex);
             }
 
-            return default(T);
+            return default;
         }
 
         /// <summary>

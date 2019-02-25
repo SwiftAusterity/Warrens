@@ -2,27 +2,31 @@
 
 @model Material
 
+@{
+    var archivedTemplate = ViewData["ArchiveTemplate"] as Material;
+}
+
 <h4>Details</h4>
 <div class="form-group row">
-    @Html.EditorFor(m => m.Name)
-    @Html.EditorFor(m => m.Conductive)
-    @Html.EditorFor(m => m.Magnetic)
-    @Html.EditorFor(m => m.Flammable)
+    @Html.EditorFor(m => m.Name, new { archivedValue = archivedTemplate?.Name ?? "" })
+    @Html.EditorFor(m => m.Conductive, new { archivedValue = archivedTemplate?.Conductive.ToString() ?? "" })
+    @Html.EditorFor(m => m.Magnetic, new { archivedValue = archivedTemplate?.Magnetic.ToString() ?? "" })
+    @Html.EditorFor(m => m.Flammable, new { archivedValue = archivedTemplate?.Flammable.ToString() ?? "" })
 </div>
 <div class="form-group row">
-    @Html.EditorFor(m => m.Viscosity)
-    @Html.EditorFor(m => m.Density)
-    @Html.EditorFor(m => m.Mallebility)
-    @Html.EditorFor(m => m.Ductility)
-    @Html.EditorFor(m => m.Porosity)
+    @Html.EditorFor(m => m.Viscosity, new { archivedValue = archivedTemplate?.Viscosity.ToString() ?? "" })
+    @Html.EditorFor(m => m.Density, new { archivedValue = archivedTemplate?.Density.ToString() ?? "" })
+    @Html.EditorFor(m => m.Mallebility, new { archivedValue = archivedTemplate?.Mallebility.ToString() ?? "" })
+    @Html.EditorFor(m => m.Ductility, new { archivedValue = archivedTemplate?.Ductility.ToString() ?? "" })
+    @Html.EditorFor(m => m.Porosity, new { archivedValue = archivedTemplate?.Porosity.ToString() ?? "" })
 </div>
 <div class="form-group row">
-    @Html.EditorFor(m => m.SolidPoint)
-    @Html.EditorFor(m => m.GasPoint)
-    @Html.EditorFor(m => m.TemperatureRetention)
+    @Html.EditorFor(m => m.SolidPoint, new { archivedValue = archivedTemplate?.SolidPoint.ToString() ?? "" })
+    @Html.EditorFor(m => m.GasPoint, new { archivedValue = archivedTemplate?.GasPoint.ToString() ?? "" })
+    @Html.EditorFor(m => m.TemperatureRetention, new { archivedValue = archivedTemplate?.TemperatureRetention.ToString() ?? "" })
 </div>
 <div class="form-group row">
-    @Html.EditorFor(m => m.HelpText)
+    @Html.EditorFor(m => m.HelpText, new { archivedValue = archivedTemplate?.HelpText?.ToString() ?? "" })
 </div>
 
 <h4>Damage Resistances</h4>

@@ -25,7 +25,7 @@
 <h3>Crafting Blueprint</h3>
 <hr />
 <div class="form-group row">
-    @Html.EditorFor(m => m.Produces)
+    @Html.EditorFor(m => m.Produces, new { archivedValue = archivedTemplate?.Produces.ToString() ?? "" })
 </div>
 
 <h4>Components</h4>

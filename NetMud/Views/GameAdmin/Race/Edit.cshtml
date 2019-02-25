@@ -4,14 +4,25 @@
     ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Edit Race", new string[] { "Dashboard", "Races" }, new string[] { "/GameAdmin", "/Race" });
 }
 
-<section id="newCharacterForm">
+<div class="accordionWrapper">
+    <h5>Load Archival View</h5>
+    @using (Html.BeginForm("Edit", "Race", FormMethod.Get, new { @class = "form-horizontal", role = "form", @name = "applyTemplateForm", @id = "applyTemplateForm" }))
+    {
+        <div class="form-group row">
+            @Html.EditorFor(m => m.ArchivePath, "SimpleDropdown", "", new { validItems = Model.Archives })
+            <input type="submit" value="Apply" class="btn btn-default save" , style="margin-left: 25px;" />
+        </div>
+    }
+</div>
+
+<section id="editRaceForm">
     @using (Html.BeginForm("Edit", "Race", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <input type="hidden" name="id" id="id" value="@Model.DataObject.Id" />
 
-        @Html.EditorFor(m => m.DataObject, new { ValidZones = Model.ValidZones, ValidMaterials = Model.ValidMaterials, ValidItems = Model.ValidItems })
+        @Html.EditorFor(m => m.DataObject, new { ArchiveTemplate = Model.DataTemplate, ValidZones = Model.ValidZones, ValidMaterials = Model.ValidMaterials, ValidItems = Model.ValidItems })
 
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Race", IncludeCancel = true })
     }

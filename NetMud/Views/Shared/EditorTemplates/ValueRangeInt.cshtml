@@ -73,7 +73,7 @@ else
         @if (!string.IsNullOrWhiteSpace(archivedValue))
         {
             <span class="archive">Archived Value: <span>@archivedValue</span></span>
-            <span title="apply value to field" class="glyphicon glyphicon-arrow-up archiveApply" onclick="javascript: $('#@ViewData.ModelMetadata.PropertyName').val('@archivedValue');"></span>
+
         }
 
         @if (!noValidation)

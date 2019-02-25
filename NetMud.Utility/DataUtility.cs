@@ -308,7 +308,7 @@ namespace NetMud.Utility
             catch
             {
                 //dont error on tryconvert, it's called tryconvert for a reason
-                newThing = default(T);
+                newThing = default;
             }
 
             return false;
@@ -323,7 +323,7 @@ namespace NetMud.Utility
         /// <returns>success status</returns>
         public static T TryConvert<T>(object thing)
         {
-            T newThing = default(T);
+            T newThing = default;
 
             try
             {
@@ -335,7 +335,7 @@ namespace NetMud.Utility
             catch
             {
                 //dont error on tryconvert, it's called tryconvert for a reason
-                newThing = default(T);
+                newThing = default;
             }
 
             return newThing;
@@ -377,7 +377,7 @@ namespace NetMud.Utility
         public static T InsantiateThing<T>(Assembly thingConcreteAssembly, bool fillAtWill = true)
         {
             Type thingType = typeof(T);
-            T thing = default(T);
+            T thing = default;
 
             if (thingType.IsInterface)
             {
@@ -442,7 +442,7 @@ namespace NetMud.Utility
         /// <returns>success status</returns>
         public static T GetFromDataRow<T>(DataRow dr, string columnName)
         {
-            T thing = default(T);
+            T thing = default;
 
             try
             {
@@ -456,7 +456,7 @@ namespace NetMud.Utility
             catch
             {
                 //dont error on this, it is supposed to be safe
-                thing = default(T);
+                thing = default;
             }
 
             return thing;
@@ -473,7 +473,7 @@ namespace NetMud.Utility
         /// <returns>the value or default(T)</returns>
         public static T GetSafeElementValue<T>(this XContainer element, string xName)
         {
-            T returnValue = default(T);
+            T returnValue = default;
 
             try
             {
@@ -481,7 +481,7 @@ namespace NetMud.Utility
                 {
                     if (!TryConvert(element.Element(xName).Value, ref returnValue))
                     {
-                        returnValue = default(T);
+                        returnValue = default;
                     }
                 }
             }
@@ -527,7 +527,7 @@ namespace NetMud.Utility
         /// <returns>the value or default(T)</returns>
         public static T GetSafeAttributeValue<T>(this XElement element, string xName)
         {
-            T returnValue = default(T);
+            T returnValue = default;
 
             try
             {
@@ -535,7 +535,7 @@ namespace NetMud.Utility
                 {
                     if (!TryConvert(element.Attribute(xName).Value, ref returnValue))
                     {
-                        returnValue = default(T);
+                        returnValue = default;
                     }
                 }
             }

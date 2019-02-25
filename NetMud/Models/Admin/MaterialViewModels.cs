@@ -88,6 +88,12 @@ namespace NetMud.Models.Admin
             }
         }
 
+        public AddEditMaterialViewModel(string archivePath, IMaterial item) : base(archivePath, item)
+        {
+            ValidMaterials = TemplateCache.GetAll<IMaterial>();
+            DataObject = item;
+        }
+
         public IEnumerable<IMaterial> ValidMaterials { get; set; }
         public IMaterial DataObject { get; set; }
     }

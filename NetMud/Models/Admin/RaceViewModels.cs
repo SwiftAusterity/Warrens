@@ -95,6 +95,15 @@ namespace NetMud.Models.Admin
             }
         }
 
+
+        public AddEditRaceViewModel(string archivePath, IRace item) : base(archivePath, item)
+        {
+            ValidMaterials = TemplateCache.GetAll<IMaterial>();
+            ValidItems = TemplateCache.GetAll<IInanimateTemplate>();
+            ValidZones = TemplateCache.GetAll<IZoneTemplate>();
+            DataObject = item;
+        }
+
         public IEnumerable<IZoneTemplate> ValidZones { get; set; }
         public IEnumerable<IInanimateTemplate> ValidItems { get; set; }
         public IEnumerable<IMaterial> ValidMaterials { get; set; }

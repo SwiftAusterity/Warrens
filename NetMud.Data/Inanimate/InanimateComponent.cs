@@ -50,5 +50,10 @@ namespace NetMud.Data.Inanimate
             Amount = amount;
             Item = item;
         }
+
+        public override string ToString()
+        {
+            return string.Format("{0} of {1}", Amount, Item.Name);
+        }
     }
 }

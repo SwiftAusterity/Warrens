@@ -12,14 +12,19 @@ namespace NetMud.DataStructure.Architectural
 
         public ValueRange()
         {
-            Low = default(T);
-            High = default(T);
+            Low = default;
+            High = default;
         }
 
         public ValueRange(T low, T high)
         {
             Low = low;
             High = high;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0} to {1}", Low, High);
         }
     }
 }
