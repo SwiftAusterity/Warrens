@@ -50,7 +50,7 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditMineralsViewModel : AddContentModel<IMineral>, IBaseViewModel
+    public class AddEditMineralsViewModel : AddEditTemplateModel<IMineral>, IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 

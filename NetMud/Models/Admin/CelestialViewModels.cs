@@ -47,7 +47,7 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditCelestialViewModel : AddContentModel<ICelestial>, IBaseViewModel
+    public class AddEditCelestialViewModel : AddEditTemplateModel<ICelestial>, IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 

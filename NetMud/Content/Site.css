@@ -659,17 +659,21 @@ div.roomAsciiMap {
 }
 
 .archive {
-    color: orangered;
+    color: forestgreen;
     font-size: 10px;
     font-style: italic;
     z-index: 101;
     margin-left: 5px;
 }
 
+    .archive span {
+        font-weight: 700;
+        font-size: 12px;
+    }
+
 .archiveApply {
-    font-size: 10px;
-    margin-left: 3px;
-    color: orangered;
+    font-size: 11px;
+    color: forestgreen;
     cursor: pointer;
 }
 

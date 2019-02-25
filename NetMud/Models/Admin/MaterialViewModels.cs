@@ -48,7 +48,7 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditMaterialViewModel : AddContentModel<IMaterial>, IBaseViewModel
+    public class AddEditMaterialViewModel : AddEditTemplateModel<IMaterial>, IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 

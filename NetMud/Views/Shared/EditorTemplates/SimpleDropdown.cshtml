@@ -1,10 +1,7 @@
-﻿@using NetMud.DataStructure.NPC
-@model INonPlayerCharacterTemplate
+﻿@model string
+
 @{
-
     bool disabled = ViewData["disabled"] != null;
-
-
     var cssClass = ViewData["cssClass"] == null ? "form-control" : ViewData["cssClass"];
     var forceOptional = ViewData["forceOptional"] != null;
     var noValidation = ViewData["noValidation"] != null;
@@ -47,10 +44,10 @@
 
     if (selectedItemOverride != null)
     {
-        ViewData.Model = (INonPlayerCharacterTemplate)selectedItemOverride;
+        ViewData.Model = (string)selectedItemOverride;
     }
 
-    var itemList = ((IEnumerable<INonPlayerCharacterTemplate>)ViewData["validItems"]).Select(item => new SelectListItem() { Text = item.Name, Value = item.Id.ToString(), Selected = Model != null && item.Id == Model.Id });
+    var itemList = ((IEnumerable<string>)ViewData["validItems"]).Select(item => new SelectListItem() { Text = item, Value = item, Selected = Model != null && item == Model });
 }
 
 @if (strippedNaked)
@@ -62,6 +59,7 @@ else
 {
     <div>
         <span class="@ghostNameClass">@ViewData.ModelMetadata.DisplayName</span>
+
         @Html.DescriptionFor(m => m)
         @Html.DropDownList(ViewData.ModelMetadata.PropertyName, itemList, optionLabel: "Select One", htmlAttributes: htmlAttributes)
 

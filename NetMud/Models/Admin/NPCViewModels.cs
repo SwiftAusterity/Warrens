@@ -49,7 +49,7 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditNPCDataViewModel : AddContentModel<INonPlayerCharacterTemplate>, IBaseViewModel
+    public class AddEditNPCDataViewModel : AddEditTemplateModel<INonPlayerCharacterTemplate>, IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 

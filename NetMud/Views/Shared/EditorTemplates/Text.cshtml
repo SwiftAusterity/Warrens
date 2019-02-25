@@ -17,7 +17,7 @@
         ghostNameClass += " ghostRequired";
     }
 
-    var htmlAttributes = new Dictionary<string, object>() { { "class", cssClass }, { "placeholder", ViewData.ModelMetadata.DisplayName }, { "title", ViewData.ModelMetadata.DisplayName } };
+    var htmlAttributes = new Dictionary<string, object>() { { "id", ViewData.ModelMetadata.PropertyName }, { "class", cssClass }, { "placeholder", ViewData.ModelMetadata.DisplayName }, { "title", ViewData.ModelMetadata.DisplayName } };
 
     if (ViewData["disabled"] != null)
     {
@@ -32,7 +32,14 @@
         {
             foreach (var kvp in additionalAttribs)
             {
-                htmlAttributes.Add(kvp.Key, kvp.Value);
+                if (htmlAttributes.Any(att => att.Key == kvp.Key))
+                {
+                    htmlAttributes[kvp.Key] = kvp.Value;
+                }
+                else
+                {
+                    htmlAttributes.Add(kvp.Key, kvp.Value);
+                }
             }
         }
     }
@@ -43,11 +50,11 @@
     }
 }
 
-@if (strippedNaked)
-{
-    @Html.DescriptionFor(m => m)
-    @Html.TextBoxFor(m => m, htmlAttributes)
-}
+    @if (strippedNaked)
+    {
+        @Html.DescriptionFor(m => m)
+        @Html.TextBoxFor(m => m, htmlAttributes)
+    }
 else
 {
     <div>
@@ -58,8 +65,8 @@ else
 
         @if (!string.IsNullOrWhiteSpace(archivedValue))
         {
-            <span class="archive">Archived Value: @archivedValue</span>
-            <span title="apply value to field" class="glyphicon glyphicon-plus archiveApply" onclick="javascript: $('#@ViewData.ModelMetadata.PropertyName').val('@archivedValue');"></span>
+            <span class="archive">Archived Value: <span>@archivedValue</span></span>
+            <span title="apply value to field" class="glyphicon glyphicon-arrow-up archiveApply" onclick="javascript: $('#@ViewData.ModelMetadata.PropertyName').val('@archivedValue');"></span>
         }
 
         @if (!noValidation)

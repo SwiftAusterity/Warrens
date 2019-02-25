@@ -50,7 +50,7 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditFloraViewModel : AddContentModel<IFlora>, IBaseViewModel
+    public class AddEditFloraViewModel : AddEditTemplateModel<IFlora>, IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 

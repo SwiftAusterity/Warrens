@@ -30,7 +30,14 @@
         {
             foreach (var kvp in additionalAttribs)
             {
-                htmlAttributes.Add(kvp.Key, kvp.Value);
+                if (htmlAttributes.Any(att => att.Key == kvp.Key))
+                {
+                    htmlAttributes[kvp.Key] = kvp.Value;
+                }
+                else
+                {
+                    htmlAttributes.Add(kvp.Key, kvp.Value);
+                }
             }
         }
     }
@@ -51,8 +58,8 @@ else
 
         @if (!string.IsNullOrWhiteSpace(archivedValue))
         {
-            <span class="archive">Archived Value: @archivedValue</span>
-            <span title="apply value to field" class="glyphicon glyphicon-plus archiveApply" onclick="javascript: $('#@ViewData.ModelMetadata.PropertyName').val('@archivedValue');"></span>
+            <span class="archive">Archived Value: <span>@archivedValue</span></span>
+            <span title="apply value to field" class="glyphicon glyphicon-arrow-up archiveApply" onclick="javascript: $('#@ViewData.ModelMetadata.PropertyName').val('@archivedValue');"></span>
         }
 
         @if (!noValidation)

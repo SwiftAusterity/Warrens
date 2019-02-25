@@ -123,11 +123,6 @@ namespace NetMud.Models.Admin
         [LanguageDataBinder]
         public ILanguage BaseLanguage { get; set; }
 
-        [Display(Name = "Death Recall", Description = "The zone you return to on death.")]
-        [UIHint("BackingDataDropdown")]
-        [Required]
-        public long DeathRecallZone { get; set; }
-
         [Display(Name = "Death Coordinate X", Description = "The coordinates you recall to on death.")]
         [DataType(DataType.Text)]
         [Required]

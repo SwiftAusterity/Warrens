@@ -49,7 +49,7 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditInanimateTemplateViewModel : AddContentModel<IInanimateTemplate>, IBaseViewModel
+    public class AddEditInanimateTemplateViewModel : AddEditTemplateModel<IInanimateTemplate>, IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 
@@ -85,6 +85,14 @@ namespace NetMud.Models.Admin
                 DataObject.Produces = DataTemplate.Produces;
                 DataObject.SkillRequirements = DataTemplate.SkillRequirements;
             }
+        }
+
+        public AddEditInanimateTemplateViewModel(string archivePath, IInanimateTemplate item) : base(archivePath, item)
+        {
+            ValidMaterials = TemplateCache.GetAll<IMaterial>();
+            ValidModels = TemplateCache.GetAll<IDimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat);
+            ValidInanimateTemplates = TemplateCache.GetAll<IInanimateTemplate>();
+            DataObject = item;
         }
 
         public IEnumerable<IInanimateTemplate> ValidInanimateTemplates { get; set; }

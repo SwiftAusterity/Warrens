@@ -50,7 +50,7 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditRaceViewModel : AddContentModel<IRace>, IBaseViewModel
+    public class AddEditRaceViewModel : AddEditTemplateModel<IRace>, IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 

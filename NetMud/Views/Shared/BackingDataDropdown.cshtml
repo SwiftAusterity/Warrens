@@ -1,7 +1,0 @@
-﻿@model NetMud.Models.Admin.ReferenceDataDropdownModel
-
-<label id="lbl-@Model.Label" name="lbl-@Model.Label" for="@Model.ControlName" class="col-sm-1 col-form-label">@Model.Label</label>
-<div class="col-sm-3">
-    @Html.DropDownList(Model.ControlName, new SelectList(Model.ValidList, "Id", "Name", Model.SelectedItemId)
-                            , "Select One", htmlAttributes: new { id = Model.ControlName, @class = "form-control" })
-</div>

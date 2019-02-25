@@ -51,7 +51,7 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditFaunaViewModel : AddContentModel<IFauna>, IBaseViewModel
+    public class AddEditFaunaViewModel : AddEditTemplateModel<IFauna>, IBaseViewModel
     {
         public ApplicationUser authedUser { get; set; }
 

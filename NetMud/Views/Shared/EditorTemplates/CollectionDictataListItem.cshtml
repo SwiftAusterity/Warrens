@@ -3,7 +3,7 @@
 @{
     bool disabled = ViewData["disabled"] != null;
     var cssClass = ViewData["cssClass"] == null ? "form-control" : ViewData["cssClass"];
-    var htmlAttributes = new Dictionary<string, object>() { { "class", cssClass }, { "placeholder", ViewData.ModelMetadata.DisplayName }, { "title", ViewData.ModelMetadata.DisplayName } };
+    var htmlAttributes = new Dictionary<string, object>() { { "id", ViewData.ModelMetadata.PropertyName }, { "class", cssClass }, { "placeholder", ViewData.ModelMetadata.DisplayName }, { "title", ViewData.ModelMetadata.DisplayName } };
     var archivedValue = ViewData["archivedValue"] == null ? "" : ViewData["archivedValue"].ToString();
     var strippedNaked = ViewData["strippedNaked"] != null;
 
@@ -19,7 +19,14 @@
         {
             foreach (var kvp in additionalAttribs)
             {
-                htmlAttributes.Add(kvp.Key, kvp.Value);
+                if (htmlAttributes.Any(att => att.Key == kvp.Key))
+                {
+                    htmlAttributes[kvp.Key] = kvp.Value;
+                }
+                else
+                {
+                    htmlAttributes.Add(kvp.Key, kvp.Value);
+                }
             }
         }
     }
