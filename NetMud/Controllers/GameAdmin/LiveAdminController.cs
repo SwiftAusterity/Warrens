@@ -53,7 +53,7 @@ namespace NetMud.Controllers.GameAdmin
         }
 
         [HttpGet]
-        [Route(@"LiveAdmin/World/{birthMark}")]
+        [Route(@"LiveAdmin/World")]
         public ActionResult World(string birthMark)
         {
             ViewGaiaViewModel vModel = new ViewGaiaViewModel(birthMark)
@@ -79,7 +79,7 @@ namespace NetMud.Controllers.GameAdmin
         }
 
         [HttpGet]
-        [Route(@"LiveAdmin/Zone/{birthMark}")]
+        [Route(@"LiveAdmin/Zone")]
         public ActionResult Zone(string birthMark)
         {
             ViewZoneViewModel vModel = new ViewZoneViewModel(birthMark)
@@ -105,7 +105,7 @@ namespace NetMud.Controllers.GameAdmin
         }
 
         [HttpGet]
-        [Route(@"LiveAdmin/Inanimate/{birthMark}")]
+        [Route(@"LiveAdmin/Inanimate")]
         public ActionResult Inanimate(string birthMark)
         {
             ViewInanimateViewModel vModel = new ViewInanimateViewModel(birthMark)
@@ -131,7 +131,7 @@ namespace NetMud.Controllers.GameAdmin
         }
 
         [HttpGet]
-        [Route(@"LiveAdmin/NPC/{birthMark}")]
+        [Route(@"LiveAdmin/NPC")]
         public ActionResult NPC(string birthMark)
         {
             ViewIntelligenceViewModel vModel = new ViewIntelligenceViewModel(birthMark)
