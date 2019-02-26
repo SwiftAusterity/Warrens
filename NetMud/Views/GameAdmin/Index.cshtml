@@ -1,17 +1,16 @@
 ﻿@using NetMud.DataStructure.Administrative
-
 @model NetMud.Models.Admin.DashboardViewModel
 @{
     ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Admin Dashboard", new string[] { }, new string[] { });
 }
-
 <div id="tabs">
     <ul>
         <li><a href="#tabs-1">Templates</a></li>
         <li><a href="#tabs-2">Live Data</a></li>
         <li><a href="#tabs-3">Gossip</a></li>
         <li><a href="#tabs-4">Processes</a></li>
-        <li><a href="#tabs-5">Global Configuration</a></li>
+        <li><a href="#tabs-5">Data Archives</a></li>
+        <li><a href="#tabs-6">Global Configuration</a></li>
     </ul>
     <div id="tabs-1" data-tabNumber="1">
         <div class="adminDashboard">
@@ -325,43 +324,40 @@
         </section>
     </div>
     <div id="tabs-4" data-tabNumber="4">
+        <h4>Live Processes</h4>
         <div>
-            <h4>World State</h4>
-            <dl class="dl-horizontal">
-                <dt>Data Systems</dt>
-                <dd>
-                    @Html.ActionLink("Backup World", "BackupWorld", "GameAdmin", new { @class = "btn btn-default save" })
-                    @Html.ActionLink("Suspend and Restore World", "RestoreWorld", "GameAdmin", new { @class = "btn btn-default caution" })
-                </dd>
-            </dl>
+            @Html.ActionLink("Stop All", "StopAllRunningProcess", "GameAdmin", new { @class = "btn btn-default caution" })
+            @Html.ActionLink("Suspend and Restore World", "RestoreWorld", "GameAdmin", new { @class = "btn btn-default caution" })
         </div>
-        <div>
-            <h4>Live Processes</h4>
-            <div>
-                <div>
-                    @Html.ActionLink("Stop All", "StopAllRunningProcess", "GameAdmin", new { @class = "btn btn-default caution" })
-                </div>
-                <div class="liveProcess">
-                    @foreach (var token in Model.LiveTaskTokens)
-                    {
-                        if (token.Value.IsCancellationRequested)
-                        {
-                            <div class="liveControls stop">
-                                <span>Stopping @token.Key</span>
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="liveControls go">
-                                @Html.ActionLink("Stop " + @token.Key, "StopRunningProcess", "GameAdmin", new { processName = token.Key }, new { @class = "btn btn-default stop" })
-                            </div>
-                        }
-                    }
-                </div>
-            </div>
+        <div class="liveProcess">
+            @foreach (var token in Model.LiveTaskTokens)
+            {
+                if (token.Value.IsCancellationRequested)
+                {
+                    <div class="liveControls stop">
+                        <span>Stopping @token.Key</span>
+                    </div>
+                }
+                else
+                {
+                    <div class="liveControls go">
+                        @Html.ActionLink("Stop " + @token.Key, "StopRunningProcess", "GameAdmin", new { processName = token.Key }, new { @class = "btn btn-default stop" })
+                    </div>
+                }
+            }
         </div>
     </div>
     <div id="tabs-5" data-tabNumber="5">
+        <h4>Data Systems</h4>
+        @using (Html.BeginForm("BackupWorld", "GameAdmin", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            <div class="form-group row">
+                @Html.EditorFor(m => m.BackupName)
+            </div>
+            @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Backup World", ReturnAction = "Index", ReturnController = "GameAdmin", IncludeCancel = false })
+        }
+    </div>
+    <div id="tabs-6" data-tabNumber="6">
         <h4>Settings</h4>
         <section id="globalConfig">
             @using (Html.BeginForm("GlobalConfig", "GameAdmin", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))

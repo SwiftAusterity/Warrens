@@ -143,7 +143,7 @@ namespace NetMud.DataAccess.FileSystem
         /// <summary>
         /// Archives everything
         /// </summary>
-        public void ArchiveFull()
+        public void ArchiveFull(string backupName = "")
         {
             //wth, no current directory? Noithing to move then
             if (VerifyDirectory(BaseDirectory + CurrentDirectoryName, false) && VerifyDirectory(BaseDirectory + ArchiveDirectoryName))
@@ -152,7 +152,13 @@ namespace NetMud.DataAccess.FileSystem
 
                 DirectoryInfo currentRoot = new DirectoryInfo(BaseDirectory + CurrentDirectoryName);
 
-                currentRoot.CopyTo(BaseDirectory + DatedBackupDirectory);
+                var backupDir = BaseDirectory + DatedBackupDirectory;
+                if (!string.IsNullOrWhiteSpace(backupName))
+                {
+                    backupDir = string.Format("{0}{1}{2}/", BaseDirectory, ArchiveDirectoryName, backupName);
+                }
+
+                currentRoot.CopyTo(backupDir);
             }
 
             //something very wrong is happening, it'll get logged

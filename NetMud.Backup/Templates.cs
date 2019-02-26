@@ -24,13 +24,22 @@ namespace NetMud.Backup
         /// <returns>full or partial success</returns>
         public static bool WriteFullBackup()
         {
+            return WriteFullBackup("");
+        }
+
+        /// <summary>
+        /// Writes everything in the cache back to the file system
+        /// </summary>
+        /// <returns>full or partial success</returns>
+        public static bool WriteFullBackup(string backupName)
+        {
             TemplateData fileAccessor = new TemplateData();
 
             try
             {
                 LoggingUtility.Log("World BackingData backup to current INITIATED.", LogChannels.Backup, true);
 
-                fileAccessor.ArchiveFull();
+                fileAccessor.ArchiveFull(backupName);
 
                 LoggingUtility.Log("Entire backing data set archived.", LogChannels.Backup, true);
             }

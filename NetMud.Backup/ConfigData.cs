@@ -3,6 +3,7 @@ using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -18,15 +19,16 @@ namespace NetMud.Backup
         /// Writes everything in the cache back to the file system
         /// </summary>
         /// <returns>full or partial success</returns>
-        public static bool WriteFullBackup()
+        public static bool WriteFullBackup(string backupName = "")
         {
-            DataAccess.FileSystem.TemplateData fileAccessor = new DataAccess.FileSystem.TemplateData();
+            DataAccess.FileSystem.ConfigData fileAccessor = new DataAccess.FileSystem.ConfigData();
 
             try
             {
                 LoggingUtility.Log("World BackingData backup to current INITIATED.", LogChannels.Backup, true);
 
-                fileAccessor.ArchiveFull();
+                fileAccessor.ArchiveFull(ConfigDataType.Dictionary, backupName);
+                fileAccessor.ArchiveFull(ConfigDataType.Language, backupName);
 
                 LoggingUtility.Log("Entire backing data set archived.", LogChannels.Backup, true);
             }
@@ -45,7 +47,7 @@ namespace NetMud.Backup
         /// <returns>full or partial success</returns>
         public static bool LoadEverythingToCache()
         {
-            System.Collections.Generic.IEnumerable<Type> implimentedTypes = typeof(Data.Architectural.ConfigData).Assembly.GetTypes().Where(ty => ty.GetInterfaces().Contains(typeof(IConfigData))
+            IEnumerable<Type> implimentedTypes = typeof(Data.Architectural.ConfigData).Assembly.GetTypes().Where(ty => ty.GetInterfaces().Contains(typeof(IConfigData))
                                                                                 && ty.IsClass
                                                                                 && !ty.IsAbstract
                                                                                 && !ty.GetCustomAttributes<IgnoreAutomatedBackupAttribute>().Any());

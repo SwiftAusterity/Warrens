@@ -126,12 +126,20 @@ namespace NetMud.Backup
             return true;
         }
 
-
         /// <summary>
         /// Writes the current live world content (entities, positions, etc) to the Current backup; archives whatever was already considered current
         /// </summary>
         /// <returns>Success state</returns>
         public bool WriteLiveBackup()
+        {
+            return WriteLiveBackup("");
+        }
+
+        /// <summary>
+        /// Writes the current live world content (entities, positions, etc) to the Current backup; archives whatever was already considered current
+        /// </summary>
+        /// <returns>Success state</returns>
+        public bool WriteLiveBackup(string backupName)
         {
             LiveData liveDataAccessor = new LiveData();
 
@@ -139,7 +147,7 @@ namespace NetMud.Backup
             {
                 LoggingUtility.Log("World backup to current INITIATED.", LogChannels.Backup, true);
 
-                liveDataAccessor.ArchiveFull();
+                liveDataAccessor.ArchiveFull(backupName);
 
                 LoggingUtility.Log("Current live world written to archive.", LogChannels.Backup, true);
 

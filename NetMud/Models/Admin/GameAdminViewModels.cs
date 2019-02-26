@@ -192,6 +192,10 @@ namespace NetMud.Models.Admin
         [DataType(DataType.Text)]
         public double SuspendMultiplier { get; set; }
 
+        [Display(Name = "Backup Name", Description = "Include a name for this backup to make it a permenant archival point.")]
+        [DataType(DataType.Text)]
+        public string BackupName { get; set; }
+
         public IGossipConfig GossipConfigDataObject { get; set; }
         public IEnumerable<ILanguage> ValidLanguages { get; set; }
         public IEnumerable<IZoneTemplate> ValidZones { get; set; }

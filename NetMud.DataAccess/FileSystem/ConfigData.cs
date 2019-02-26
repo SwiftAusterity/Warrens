@@ -1,4 +1,5 @@
 ﻿using NetMud.DataStructure.Architectural;
+using NetMud.Utility;
 using System;
 using System.IO;
 using System.Web.Hosting;
@@ -157,6 +158,47 @@ namespace NetMud.DataAccess.FileSystem
             return dirName;
         }
 
+        /// <summary>
+        /// Archives everything
+        /// </summary>
+        public void ArchiveFull(ConfigDataType type, string backupName = "")
+        {
+            string dirName = BaseDirectory;
+
+            switch (type)
+            {
+                default:
+                    dirName += type.ToString();
+                    break;
+                case ConfigDataType.Player:
+                    return; //we don't do players here, ever
+            }
+
+            var currentDirName = dirName + "/" + CurrentDirectoryName;
+            var archivedDirName = dirName + "/" + ArchiveDirectoryName;
+
+            //wth, no current directory? Noithing to move then
+            if (VerifyDirectory(currentDirName, false) && VerifyDirectory(archivedDirName))
+            {
+                CullDirectoryCount(archivedDirName);
+
+                DirectoryInfo currentRoot = new DirectoryInfo(currentDirName);
+
+                var backupDir = archivedDirName + DatedBackupDirectory;
+                if (!string.IsNullOrWhiteSpace(backupName))
+                {
+                    backupDir = string.Format("{0}{1}/", archivedDirName, backupName);
+                }
+
+                currentRoot.CopyTo(backupDir);
+            }
+
+            //something very wrong is happening, it'll get logged
+            if (!VerifyDirectory(currentDirName))
+            {
+                throw new Exception("Can not locate or verify current data directory.");
+            }
+        }
 
         /// <summary>
         /// Creates rolling files since backing data is dated by minute

@@ -256,7 +256,7 @@ namespace NetMud.DataAccess.FileSystem
         {
             try
             {
-                string[] backupDirs = Directory.GetDirectories(baseDirectoryPath);
+                var backupDirs = Directory.GetDirectories(baseDirectoryPath).Where(dir => !dir.Any(chr => char.IsLetter(chr))).OrderByDescending(dirName => dirName);
 
                 //TODO: Make this a system setting
                 if (backupDirs.Count() >= 10)

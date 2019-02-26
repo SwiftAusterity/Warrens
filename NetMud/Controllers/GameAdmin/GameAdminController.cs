@@ -162,12 +162,13 @@ namespace NetMud.Controllers.GameAdmin
 
         #region Running Data
         [Authorize(Roles = "Admin")]
-        public ActionResult BackupWorld()
+        public ActionResult BackupWorld(string BackupName = "")
         {
             HotBackup hotBack = new HotBackup();
 
-            hotBack.WriteLiveBackup();
-            Templates.WriteFullBackup();
+            hotBack.WriteLiveBackup(BackupName);
+            Templates.WriteFullBackup(BackupName);
+            ConfigData.WriteFullBackup(BackupName);
 
             return RedirectToAction("Index", new { Message = "Backup Started" });
         }
