@@ -289,10 +289,16 @@ namespace NetMud.Data.Gaia
         /// <returns>If this is visible</returns>
         public bool IsVisibleTo(IEntity viewer)
         {
-            int value = Luminosity;
-            ValueRange<float> range = viewer.GetVisualRange();
+            if (viewer != null)
+            {
 
-            return value >= range.Low && value <= range.High;
+                int value = Luminosity;
+                ValueRange<float> range = viewer.GetVisualRange();
+
+                return value >= range.Low && value <= range.High;
+            }
+
+            return true;
         }
 
         /// <summary>

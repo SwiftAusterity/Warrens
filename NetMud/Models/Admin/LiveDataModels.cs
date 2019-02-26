@@ -2,7 +2,9 @@
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Gaia;
 using NetMud.DataStructure.Inanimate;
+using NetMud.DataStructure.Locale;
 using NetMud.DataStructure.NPC;
+using NetMud.DataStructure.Room;
 using NetMud.DataStructure.Zone;
 using System;
 using System.Collections.Generic;
@@ -226,5 +228,113 @@ namespace NetMud.Models.Admin
         }
 
         public INonPlayerCharacter DataObject { get; set; }
+    }
+
+    public class LiveRoomsViewModel : PagedDataModel<IRoom>
+    {
+        public LiveRoomsViewModel(IEnumerable<IRoom> items)
+            : base(items)
+        {
+            CurrentPageNumber = 1;
+            ItemsPerPage = 20;
+            ValidEntities = Enumerable.Empty<IRoom>();
+        }
+
+        internal override Func<IRoom, object> OrderPrimary
+        {
+            get
+            {
+                return item => item.TemplateName;
+            }
+        }
+
+
+        internal override Func<IRoom, object> OrderSecondary
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        internal override Func<IRoom, bool> SearchFilter
+        {
+            get
+            {
+                return item => SearchTerms.ToLower().Contains(item.TemplateName);
+            }
+        }
+
+        public IEnumerable<IRoom> ValidEntities { get; set; }
+    }
+
+    public class ViewRoomViewModel : IBaseViewModel
+    {
+        public ApplicationUser AuthedUser { get; set; }
+
+        public ViewRoomViewModel()
+        {
+        }
+
+        public ViewRoomViewModel(string birthMark)
+        {
+            DataObject = LiveCache.Get<IRoom>(new LiveCacheKey(typeof(IRoom), birthMark));
+        }
+
+        public IRoom DataObject { get; set; }
+    }
+
+    public class LiveLocalesViewModel : PagedDataModel<ILocale>
+    {
+        public LiveLocalesViewModel(IEnumerable<ILocale> items)
+            : base(items)
+        {
+            CurrentPageNumber = 1;
+            ItemsPerPage = 20;
+            ValidEntities = Enumerable.Empty<ILocale>();
+        }
+
+        internal override Func<ILocale, object> OrderPrimary
+        {
+            get
+            {
+                return item => item.TemplateName;
+            }
+        }
+
+
+        internal override Func<ILocale, object> OrderSecondary
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        internal override Func<ILocale, bool> SearchFilter
+        {
+            get
+            {
+                return item => SearchTerms.ToLower().Contains(item.TemplateName);
+            }
+        }
+
+        public IEnumerable<ILocale> ValidEntities { get; set; }
+    }
+
+    public class ViewLocaleViewModel : IBaseViewModel
+    {
+        public ApplicationUser AuthedUser { get; set; }
+
+        public ViewLocaleViewModel()
+        {
+        }
+
+        public ViewLocaleViewModel(string birthMark)
+        {
+            DataObject = LiveCache.Get<ILocale>(new LiveCacheKey(typeof(ILocale), birthMark));
+        }
+
+        public ILocale DataObject { get; set; }
     }
 }

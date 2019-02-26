@@ -1,10 +1,12 @@
 ﻿@model NetMud.Models.Admin.ViewInanimateViewModel
 @{
     ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("View Inanimate", new string[] { "Dashboard", "Inanimates" }, new string[] { "/GameAdmin", "/LiveAdmin/Inanimates" });
+    var longDesc = new NetMud.Communication.Messaging.MessageCluster(Model.DataObject.RenderToLook(null)).Unpack(NetMud.DataStructure.System.TargetEntity.Actor);
 }
-
 <h3>@Model.DataObject.TemplateName</h3>
-
+<div>
+    @longDesc
+</div>
 <div id="tabs">
     <ul>
         <li><a href="#tabs-1">Edit</a></li>
@@ -16,14 +18,11 @@
         @Html.Partial("ShowLiveEntity", Model.DataObject)
     </div>
 </div>
-
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-
     <script type="text/javascript">
         $(document).ready(function () {
             $("#tabs").tabs();
         });
     </script>
 }
-

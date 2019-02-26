@@ -1,10 +1,12 @@
 ﻿@model NetMud.Models.Admin.ViewZoneViewModel
 @{
     ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("View Zone", new string[] { "Dashboard", "Zones" }, new string[] { "/GameAdmin", "/LiveAdmin/Zones" });
+    var longDesc = new NetMud.Communication.Messaging.MessageCluster(Model.DataObject.RenderToLook(null)).Unpack(NetMud.DataStructure.System.TargetEntity.Actor);
 }
-
 <h3>@Model.DataObject.TemplateName</h3>
-
+<div>
+    @longDesc
+</div>
 <div id="tabs">
     <ul>
         <li><a href="#tabs-1">Edit</a></li>
@@ -15,14 +17,11 @@
     <div id="tabs-2" data-tabNumber="2">
     </div>
 </div>
-
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-
     <script type="text/javascript">
         $(document).ready(function () {
             $("#tabs").tabs();
         });
     </script>
 }
-

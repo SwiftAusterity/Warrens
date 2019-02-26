@@ -1,6 +1,6 @@
-﻿@model NetMud.Models.Admin.ViewIntelligenceViewModel
+﻿@model NetMud.Models.Admin.ViewRoomViewModel
 @{
-    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("View NPC", new string[] { "Dashboard", "NPCs" }, new string[] { "/GameAdmin", "/LiveAdmin/NPCs" });
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("View Room", new string[] { "Dashboard", "Rooms" }, new string[] { "/GameAdmin", "/LiveAdmin/Rooms" });
     var longDesc = new NetMud.Communication.Messaging.MessageCluster(Model.DataObject.RenderToLook(null)).Unpack(NetMud.DataStructure.System.TargetEntity.Actor);
 }
 <h3>@Model.DataObject.TemplateName</h3>
@@ -10,12 +10,11 @@
 <div id="tabs">
     <ul>
         <li><a href="#tabs-1">Edit</a></li>
-        <li><a href="#tabs-2">Find</a></li>
+        <li><a href="#tabs-2">Map</a></li>
     </ul>
     <div id="tabs-1" data-tabNumber="1">
     </div>
     <div id="tabs-2" data-tabNumber="2">
-        @Html.Partial("ShowLiveEntity", Model.DataObject)
     </div>
 </div>
 @section Scripts {

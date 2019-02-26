@@ -568,10 +568,15 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <returns>If this is visible</returns>
         public virtual bool IsVisibleTo(IEntity viewer)
         {
-            float value = GetCurrentLuminosity();
-            ValueRange<float> range = viewer.GetVisualRange();
+            if (viewer != null)
+            {
+                float value = GetCurrentLuminosity();
+                ValueRange<float> range = viewer.GetVisualRange();
 
-            return value >= range.Low && value <= range.High;
+                return value >= range.Low && value <= range.High;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -655,10 +660,15 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <returns>If this is observable</returns>
         public virtual bool IsAudibleTo(IEntity viewer)
         {
-            int value = 0;
-            ValueRange<float> range = viewer.GetAuditoryRange();
+            if (viewer != null)
+            {
+                int value = 0;
+                ValueRange<float> range = viewer.GetAuditoryRange();
 
-            return value >= range.Low && value <= range.High;
+                return value >= range.Low && value <= range.High;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -716,10 +726,16 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <returns>If this is observable</returns>
         public virtual bool IsSensibleTo(IEntity viewer)
         {
-            int value = 0;
-            ValueRange<float> range = viewer.GetPsychicRange();
+            if (viewer != null)
+            {
 
-            return value >= range.Low && value <= range.High;
+                int value = 0;
+                ValueRange<float> range = viewer.GetPsychicRange();
+
+                return value >= range.Low && value <= range.High;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -777,10 +793,15 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <returns>If this is observable</returns>
         public virtual bool IsTastableTo(IEntity viewer)
         {
-            int value = 0;
-            ValueRange<float> range = viewer.GetTasteRange();
+            if (viewer != null)
+            {
+                int value = 0;
+                ValueRange<float> range = viewer.GetTasteRange();
 
-            return value >= range.Low && value <= range.High;
+                return value >= range.Low && value <= range.High;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -838,10 +859,15 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <returns>If this is observable</returns>
         public virtual bool IsSmellableTo(IEntity viewer)
         {
-            int value = 0;
-            ValueRange<float> range = viewer.GetOlefactoryRange();
+            if (viewer != null)
+            {
+                int value = 0;
+                ValueRange<float> range = viewer.GetOlefactoryRange();
 
-            return value >= range.Low && value <= range.High;
+                return value >= range.Low && value <= range.High;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -899,10 +925,16 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <returns>If this is observable</returns>
         public virtual bool IsTouchableTo(IEntity viewer)
         {
-            int value = 0;
-            ValueRange<float> range = viewer.GetTactileRange();
+            if (viewer != null)
+            {
 
-            return value >= range.Low && value <= range.High;
+                int value = 0;
+                ValueRange<float> range = viewer.GetTactileRange();
+
+                return value >= range.Low && value <= range.High;
+            }
+
+            return true;
         }
 
         /// <summary>

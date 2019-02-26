@@ -6,13 +6,18 @@
                                                                    , Model.DataObject.CurrentTimeOfDay.Day
                                                                    , Model.DataObject.CurrentTimeOfDay.MonthName()
                                                                    , Model.DataObject.CurrentTimeOfDay.Year);
+
+    var longDesc = new NetMud.Communication.Messaging.MessageCluster(Model.DataObject.RenderToLook(null)).Unpack(NetMud.DataStructure.System.TargetEntity.Actor);
 }
+<h3>@Model.DataObject.TemplateName</h3>
+<div>
+    @longDesc
+</div>
 
 <h4>Time</h4>
 <div class="form-group row">
     <div>@timeOfDayString</div>
 </div>
-
 <h4>Space - @Model.DataObject.OrbitalPosition / @Model.DataObject.PlanetaryRotation</h4>
 @foreach (var celestial in Model.DataObject.CelestialPositions)
 {
@@ -20,7 +25,6 @@
         <span>@celestial.CelestialObject.Name - @celestial.Position</span>
     </div>
 }
-
 @if (Model.DataObject.Macroeconomy.Bases.Count() > 0)
 {
     <h4>Economic Basis</h4>
@@ -31,7 +35,6 @@
         </div>
     }
 }
-
 @if (Model.DataObject.Macroeconomy.Trends.Count() > 0)
 {
 
@@ -43,7 +46,6 @@
         </div>
     }
 }
-
 @if (Model.DataObject.MeterologicalFronts.Count() > 0)
 {
     <h4>Pressure Systems</h4>
@@ -54,8 +56,6 @@
         </div>
     }
 }
-
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
-
