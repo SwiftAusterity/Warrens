@@ -10,10 +10,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageMaterialDataViewModel : PagedDataModel<IMaterial>, IBaseViewModel
+    public class ManageMaterialDataViewModel : PagedDataModel<IMaterial>
     {
-        public ApplicationUser authedUser { get; set; }
-
         public ManageMaterialDataViewModel(IEnumerable<IMaterial> items)
             : base(items)
         {
@@ -47,10 +45,8 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditMaterialViewModel : AddEditTemplateModel<IMaterial>, IBaseViewModel
+    public class AddEditMaterialViewModel : AddEditTemplateModel<IMaterial>
     {
-        public ApplicationUser authedUser { get; set; }
-
         [Display(Name = "Apply Existing Template", Description = "Apply an existing object's data to this new data.")]
         [UIHint("MaterialList")]
         [MaterialDataBinder]

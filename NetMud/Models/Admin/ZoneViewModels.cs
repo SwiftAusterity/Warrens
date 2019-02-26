@@ -12,10 +12,8 @@ using System.Linq;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageZoneTemplateViewModel : PagedDataModel<IZoneTemplate>, IBaseViewModel
+    public class ManageZoneTemplateViewModel : PagedDataModel<IZoneTemplate>
     {
-        public ApplicationUser authedUser { get; set; }
-
         public ManageZoneTemplateViewModel(IEnumerable<IZoneTemplate> items)
             : base(items)
         {
@@ -49,11 +47,8 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditZoneTemplateViewModel : PagedDataModel<ILocaleTemplate>, IBaseViewModel
+    public class AddEditZoneTemplateViewModel : PagedDataModel<ILocaleTemplate>
     {
-        public ApplicationUser authedUser { get; set; }
-
-
         internal override Func<ILocaleTemplate, bool> SearchFilter
         {
             get
@@ -98,7 +93,7 @@ namespace NetMud.Models.Admin
 
     public class AddEditZonePathwayTemplateViewModel : IBaseViewModel
     {
-        public ApplicationUser authedUser { get; set; }
+        public ApplicationUser AuthedUser { get; set; }
 
         public AddEditZonePathwayTemplateViewModel()
         {

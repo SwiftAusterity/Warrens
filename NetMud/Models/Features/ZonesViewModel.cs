@@ -7,7 +7,7 @@ namespace NetMud.Models.Features
 {
     public class ZonesViewModel : IBaseViewModel
     {
-        public ApplicationUser authedUser { get; set; }
+        public ApplicationUser AuthedUser { get; set; }
 
         public IEnumerable<IZoneTemplate> Items { get; set; }
 

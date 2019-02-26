@@ -1,4 +1,5 @@
-﻿using NetMud.Data.Architectural.EntityBase;
+﻿using NetMud.Authentication;
+using NetMud.Data.Architectural.EntityBase;
 using NetMud.DataAccess.Cache;
 using NetMud.DataAccess.FileSystem;
 using NetMud.DataStructure.Architectural;
@@ -9,8 +10,10 @@ using System.Linq;
 
 namespace NetMud.Models
 {
-    public abstract class AddEditTemplateModel<T> where T : IKeyedData
+    public abstract class AddEditTemplateModel<T> : IBaseViewModel where T : IKeyedData
     {
+        public ApplicationUser AuthedUser { get; set; }
+
         public T DataTemplate { get; set; }
         public IEnumerable<T> ValidTemplateBases { get; set; }
 

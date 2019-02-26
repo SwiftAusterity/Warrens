@@ -65,7 +65,7 @@ namespace NetMud.Controllers.GameAdmin
 
             DashboardViewModel dashboardModel = new DashboardViewModel
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
                 Inanimates = TemplateCache.GetAll<IInanimateTemplate>(),
                 NPCs = TemplateCache.GetAll<INonPlayerCharacterTemplate>(),

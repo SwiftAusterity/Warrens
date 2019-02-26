@@ -11,10 +11,8 @@ using System.Linq;
 
 namespace NetMud.Models.Admin
 {
-    public class LiveWorldsViewModel : PagedDataModel<IGaia>, IBaseViewModel
+    public class LiveWorldsViewModel : PagedDataModel<IGaia>
     {
-        public ApplicationUser authedUser { get; set; }
-
         public LiveWorldsViewModel(IEnumerable<IGaia> items)
             : base(items)
         {
@@ -53,7 +51,7 @@ namespace NetMud.Models.Admin
 
     public class ViewGaiaViewModel : IBaseViewModel
     {
-        public ApplicationUser authedUser { get; set; }
+        public ApplicationUser AuthedUser { get; set; }
 
         public ViewGaiaViewModel()
         {
@@ -67,10 +65,8 @@ namespace NetMud.Models.Admin
         public IGaia DataObject { get; set; }
     }
 
-    public class LiveZonesViewModel : PagedDataModel<IZone>, IBaseViewModel
+    public class LiveZonesViewModel : PagedDataModel<IZone>
     {
-        public ApplicationUser authedUser { get; set; }
-
         public LiveZonesViewModel(IEnumerable<IZone> items)
             : base(items)
         {
@@ -110,7 +106,7 @@ namespace NetMud.Models.Admin
 
     public class ViewZoneViewModel : IBaseViewModel
     {
-        public ApplicationUser authedUser { get; set; }
+        public ApplicationUser AuthedUser { get; set; }
 
         public ViewZoneViewModel()
         {
@@ -124,10 +120,8 @@ namespace NetMud.Models.Admin
         public IZone DataObject { get; set; }
     }
 
-    public class LiveInanimatesViewModel : PagedDataModel<IInanimate>, IBaseViewModel
+    public class LiveInanimatesViewModel : PagedDataModel<IInanimate>
     {
-        public ApplicationUser authedUser { get; set; }
-
         public LiveInanimatesViewModel(IEnumerable<IInanimate> items)
             : base(items)
         {
@@ -166,7 +160,7 @@ namespace NetMud.Models.Admin
 
     public class ViewInanimateViewModel : IBaseViewModel
     {
-        public ApplicationUser authedUser { get; set; }
+        public ApplicationUser AuthedUser { get; set; }
 
         public ViewInanimateViewModel()
         {
@@ -180,10 +174,8 @@ namespace NetMud.Models.Admin
         public IInanimate DataObject { get; set; }
     }
 
-    public class LiveNPCsViewModel : PagedDataModel<INonPlayerCharacter>, IBaseViewModel
+    public class LiveNPCsViewModel : PagedDataModel<INonPlayerCharacter>
     {
-        public ApplicationUser authedUser { get; set; }
-
         public LiveNPCsViewModel(IEnumerable<INonPlayerCharacter> items)
             : base(items)
         {
@@ -222,7 +214,7 @@ namespace NetMud.Models.Admin
 
     public class ViewIntelligenceViewModel : IBaseViewModel
     {
-        public ApplicationUser authedUser { get; set; }
+        public ApplicationUser AuthedUser { get; set; }
 
         public ViewIntelligenceViewModel()
         {

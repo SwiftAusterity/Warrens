@@ -43,7 +43,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             ManageLanguageDataViewModel vModel = new ManageLanguageDataViewModel(ConfigDataCache.GetAll<ILanguage>())
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
                 CurrentPageNumber = CurrentPageNumber,
                 ItemsPerPage = ItemsPerPage,
@@ -109,14 +109,11 @@ namespace NetMud.Controllers.GameAdmin
         }
 
         [HttpGet]
-        public ActionResult Add()
+        public ActionResult Add(string Template = "")
         {
-            AddEditLanguageViewModel vModel = new AddEditLanguageViewModel
+            AddEditLanguageViewModel vModel = new AddEditLanguageViewModel(Template)
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                DataObject = new Language(),
-                ValidWords = ConfigDataCache.GetAll<IDictata>(),
-                ValidLanguages = ConfigDataCache.GetAll<ILanguage>()
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             return View("~/Views/GameAdmin/Language/Add.cshtml", vModel);
@@ -145,7 +142,7 @@ namespace NetMud.Controllers.GameAdmin
         }
 
         [HttpGet]
-        public ActionResult Edit(string id)
+        public ActionResult Edit(string id, string ArchivePath = "")
         {
             string message = string.Empty;
 
@@ -157,12 +154,9 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = message });
             }
 
-            AddEditLanguageViewModel vModel = new AddEditLanguageViewModel
+            AddEditLanguageViewModel vModel = new AddEditLanguageViewModel(ArchivePath, obj)
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidWords = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.Language == obj),
-                ValidLanguages = ConfigDataCache.GetAll<ILanguage>(),
-                DataObject = obj
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             return View("~/Views/GameAdmin/Language/Edit.cshtml", vModel);

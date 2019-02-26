@@ -81,7 +81,7 @@ namespace NetMud.Controllers
 
             BlogViewModel vModel = new BlogViewModel(filteredEntries.OrderByDescending(obj => obj.PublishDate))
              {
-                authedUser = user,
+                AuthedUser = user,
                 MonthYearPairs = validEntries.Select(blog => new Tuple<string, int>(blog.PublishDate.ToString("MMMM", CultureInfo.InvariantCulture), blog.PublishDate.Year)).Distinct(),
                 IncludeTags = includedTags?.Where(tag => tag != "false").ToArray() ?? (new string[0]),
                 AllTags = allTags.ToArray()

@@ -5,9 +5,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.Models.Admin
 {
-    public partial class OccurrenceViewModel : LexicaViewModel, IBaseViewModel
+    public partial class OccurrenceViewModel : LexicaViewModel
     {
-        public ApplicationUser authedUser { get; set; }
+        public ApplicationUser AuthedUser { get; set; }
 
         public string AdminTypeName { get; set; }
         public string DataUnitTitle { get; set; }

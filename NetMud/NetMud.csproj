@@ -312,7 +312,7 @@
     <Compile Include="Models\Features\WorldsViewModel.cs" />
     <Compile Include="Models\Features\ZonesViewModel.cs" />
     <Compile Include="Models\GameContextModel.cs" />
-    <Compile Include="Models\BaseViewModel.cs" />
+    <Compile Include="Models\IBaseViewModel.cs" />
     <Compile Include="Models\HomeViewModel.cs" />
     <Compile Include="Models\HtmlHelpers.cs" />
     <Compile Include="Models\InterfaceModelBinder.cs" />

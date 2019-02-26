@@ -7,10 +7,8 @@ using System.Linq;
 
 namespace NetMud.Models.Admin
 {
-    public class ManagePlayersViewModel : PagedDataModel<ApplicationUser>, IBaseViewModel
+    public class ManagePlayersViewModel : PagedDataModel<ApplicationUser>
     {
-        public ApplicationUser authedUser { get; set; }
-
         public ManagePlayersViewModel(IEnumerable<ApplicationUser> items)
             : base(items)
         {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NetMud.Authentication;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -7,6 +8,8 @@ namespace NetMud.Models
 {
     public abstract class PagedDataModel<T> : IPagedDataModel
     {
+        public ApplicationUser AuthedUser { get; set; }
+
         public PagedDataModel(IEnumerable<T> items)
         {
             CurrentPageNumber = 1;

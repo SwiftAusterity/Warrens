@@ -68,7 +68,7 @@ namespace NetMud.Controllers
 
                 NPCsViewModel vModel = new NPCsViewModel(validEntries.Where(item => item.Name.ToLower().Contains(searcher)))
                 {
-                    authedUser = user,
+                    AuthedUser = user,
                     SearchTerm = SearchTerm,
                 };
 
@@ -99,7 +99,7 @@ namespace NetMud.Controllers
 
                 ItemsViewModel vModel = new ItemsViewModel(validEntries.Where(item => item.Name.ToLower().Contains(searcher)))
                 {
-                    authedUser = user,
+                    AuthedUser = user,
                     SearchTerm = SearchTerm,
                 };
 
@@ -130,7 +130,7 @@ namespace NetMud.Controllers
 
                 FloraViewModel vModel = new FloraViewModel(validEntries.Where(item => item.Name.ToLower().Contains(searcher)))
                 {
-                    authedUser = user,
+                    AuthedUser = user,
                     SearchTerm = SearchTerm,
                 };
 
@@ -161,7 +161,7 @@ namespace NetMud.Controllers
 
                 FaunaViewModel vModel = new FaunaViewModel(validEntries.Where(item => item.Name.ToLower().Contains(searcher)))
                 {
-                    authedUser = user,
+                    AuthedUser = user,
                     SearchTerm = SearchTerm,
                 };
 
@@ -192,7 +192,7 @@ namespace NetMud.Controllers
 
                 MineralsViewModel vModel = new MineralsViewModel(validEntries.Where(item => item.Name.ToLower().Contains(searcher)))
                 {
-                    authedUser = user,
+                    AuthedUser = user,
                     SearchTerm = SearchTerm,
                 };
 
@@ -223,7 +223,7 @@ namespace NetMud.Controllers
 
                 RacesViewModel vModel = new RacesViewModel(validEntries.Where(item => item.Name.ToLower().Contains(searcher)))
                 {
-                    authedUser = user,
+                    AuthedUser = user,
                     SearchTerm = SearchTerm,
                 };
 
@@ -254,7 +254,7 @@ namespace NetMud.Controllers
 
                 WorldsViewModel vModel = new WorldsViewModel(validEntries.Where(item => item.Name.ToLower().Contains(searcher)))
                 {
-                    authedUser = user,
+                    AuthedUser = user,
                     SearchTerm = SearchTerm,
                 };
 
@@ -285,7 +285,7 @@ namespace NetMud.Controllers
 
                 ZonesViewModel vModel = new ZonesViewModel(validEntries.Where(item => item.Name.ToLower().Contains(searcher)))
                 {
-                    authedUser = user,
+                    AuthedUser = user,
                     SearchTerm = SearchTerm,
                 };
 
@@ -316,7 +316,7 @@ namespace NetMud.Controllers
 
                 LocalesViewModel vModel = new LocalesViewModel(validEntries.Where(item => item.Name.ToLower().Contains(searcher)))
                 {
-                    authedUser = user,
+                    AuthedUser = user,
                     SearchTerm = SearchTerm,
                 };
 
@@ -347,7 +347,7 @@ namespace NetMud.Controllers
 
                 CelestialsViewModel vModel = new CelestialsViewModel(validEntries.Where(item => item.Name.ToLower().Contains(searcher)))
                 {
-                    authedUser = user,
+                    AuthedUser = user,
                     SearchTerm = SearchTerm,
                 };
 
@@ -378,7 +378,7 @@ namespace NetMud.Controllers
 
                 LanguagesViewModel vModel = new LanguagesViewModel(validEntries.Where(item => item.Name.ToLower().Contains(searcher)))
                 {
-                    authedUser = user,
+                    AuthedUser = user,
                     SearchTerm = SearchTerm,
                 };
 
@@ -409,7 +409,7 @@ namespace NetMud.Controllers
 
                 MaterialsViewModel vModel = new MaterialsViewModel(validEntries.Where(item => item.Name.ToLower().Contains(searcher)))
                 {
-                    authedUser = user,
+                    AuthedUser = user,
                     SearchTerm = SearchTerm,
                 };
 
@@ -458,7 +458,7 @@ namespace NetMud.Controllers
 
             HelpViewModel vModel = new HelpViewModel(validEntries.Where(help => help.HelpText.ToLower().Contains(searcher) || help.Name.ToLower().Contains(searcher)))
             {
-                authedUser = user,
+                AuthedUser = user,
                 SearchTerm = SearchTerm,
                 IncludeInGame = IncludeInGame
             };

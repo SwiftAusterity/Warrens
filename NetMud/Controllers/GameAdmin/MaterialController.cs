@@ -41,7 +41,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             ManageMaterialDataViewModel vModel = new ManageMaterialDataViewModel(TemplateCache.GetAll<Material>())
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
                 CurrentPageNumber = CurrentPageNumber,
                 ItemsPerPage = ItemsPerPage,
@@ -111,7 +111,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             AddEditMaterialViewModel vModel = new AddEditMaterialViewModel(Template)
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId())
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             return View("~/Views/GameAdmin/Material/Add.cshtml", vModel);
@@ -152,7 +152,7 @@ namespace NetMud.Controllers.GameAdmin
 
             AddEditMaterialViewModel vModel = new AddEditMaterialViewModel(ArchivePath, obj)
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId())
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             return View("~/Views/GameAdmin/Material/Edit.cshtml", vModel);

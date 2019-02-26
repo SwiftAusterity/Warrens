@@ -10,10 +10,8 @@ using System.Web.Mvc;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageUIModulesViewModel : PagedDataModel<IUIModule>, IBaseViewModel
+    public class ManageUIModulesViewModel : PagedDataModel<IUIModule>
     {
-        public ApplicationUser authedUser { get; set; }
-
         public ManageUIModulesViewModel(IEnumerable<IUIModule> items)
             : base(items)
         {
@@ -49,7 +47,7 @@ namespace NetMud.Models.Admin
 
     public class AddEditUIModuleViewModel : IBaseViewModel
     {
-        public ApplicationUser authedUser { get; set; }
+        public ApplicationUser AuthedUser { get; set; }
 
         public AddEditUIModuleViewModel()
         {

@@ -9,10 +9,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageGaiaViewModel : PagedDataModel<IGaiaTemplate>, IBaseViewModel
+    public class ManageGaiaViewModel : PagedDataModel<IGaiaTemplate>
     {
-        public ApplicationUser authedUser { get; set; }
-
         public ManageGaiaViewModel(IEnumerable<IGaiaTemplate> items)
             : base(items)
         {
@@ -46,10 +44,8 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditGaiaViewModel : AddEditTemplateModel<IGaiaTemplate>, IBaseViewModel
+    public class AddEditGaiaViewModel : AddEditTemplateModel<IGaiaTemplate>
     {
-        public ApplicationUser authedUser { get; set; }
-
         [Display(Name = "Apply Existing Template", Description = "Apply an existing object's data to this new data.")]
         [UIHint("NonPlayerCharacterTemplateList")]
         [GaiaTemplateDataBinder]

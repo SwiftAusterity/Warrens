@@ -43,7 +43,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             ManageFaunaViewModel vModel = new ManageFaunaViewModel(TemplateCache.GetAll<IFauna>())
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
                 CurrentPageNumber = CurrentPageNumber,
                 ItemsPerPage = ItemsPerPage,
@@ -113,7 +113,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             AddEditFaunaViewModel vModel = new AddEditFaunaViewModel(Template)
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId())
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             return View("~/Views/GameAdmin/Fauna/Add.cshtml", vModel);
@@ -156,7 +156,7 @@ namespace NetMud.Controllers.GameAdmin
 
             AddEditFaunaViewModel vModel = new AddEditFaunaViewModel(ArchivePath, obj)
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId())
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             return View("~/Views/GameAdmin/Fauna/Edit.cshtml", vModel);

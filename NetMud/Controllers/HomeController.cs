@@ -55,13 +55,13 @@ namespace NetMud.Controllers
                     validEntries = TemplateCache.GetAll<IJournalEntry>().Where(blog => blog.IsPublished() && blog.Public);
                 }
 
-                vModel.authedUser = user;
+                vModel.AuthedUser = user;
                 vModel.LatestNews = validEntries.Where(blog => !blog.HasTag("Patch Notes")).OrderByDescending(blog => blog.PublishDate).Take(3);
                 vModel.LatestPatchNotes = validEntries.OrderByDescending(blog => blog.PublishDate).FirstOrDefault(blog => blog.HasTag("Patch Notes"));
             }
             catch
             {
-                vModel.authedUser = user;
+                vModel.AuthedUser = user;
                 vModel.LatestNews = Enumerable.Empty<IJournalEntry>();
                 vModel.LatestPatchNotes = null;
             }

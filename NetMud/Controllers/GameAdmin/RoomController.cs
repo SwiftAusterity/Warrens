@@ -51,7 +51,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             ManageRoomTemplateViewModel vModel = new ManageRoomTemplateViewModel(TemplateCache.GetAll<IRoomTemplate>())
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
                 CurrentPageNumber = CurrentPageNumber,
                 ItemsPerPage = ItemsPerPage,
@@ -140,7 +140,7 @@ namespace NetMud.Controllers.GameAdmin
 
             AddEditRoomTemplateViewModel vModel = new AddEditRoomTemplateViewModel
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 ValidMaterials = TemplateCache.GetAll<IMaterial>(),
                 ValidModels = TemplateCache.GetAll<IDimensionalModelData>(),
                 ValidZones = TemplateCache.GetAll<IZoneTemplate>(),
@@ -234,7 +234,7 @@ namespace NetMud.Controllers.GameAdmin
 
             AddEditRoomTemplateViewModel vModel = new AddEditRoomTemplateViewModel
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 ValidMaterials = TemplateCache.GetAll<IMaterial>(),
                 ValidZones = TemplateCache.GetAll<IZoneTemplate>(),
                 ValidLocales = TemplateCache.GetAll<ILocaleTemplate>().Where(locale => locale.Id != obj.ParentLocation.Id),
@@ -385,7 +385,7 @@ namespace NetMud.Controllers.GameAdmin
 
             OccurrenceViewModel vModel = new OccurrenceViewModel
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 DataObject = obj,
                 AdminTypeName = "Room"
             };

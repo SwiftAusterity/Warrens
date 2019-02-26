@@ -43,7 +43,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             ManageMineralsViewModel vModel = new ManageMineralsViewModel(TemplateCache.GetAll<IMineral>())
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
                 CurrentPageNumber = CurrentPageNumber,
                 ItemsPerPage = ItemsPerPage,
@@ -113,7 +113,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             AddEditMineralsViewModel vModel = new AddEditMineralsViewModel(Template)
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId())
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             return View("~/Views/GameAdmin/Minerals/Add.cshtml", vModel);
@@ -156,7 +156,7 @@ namespace NetMud.Controllers.GameAdmin
 
             AddEditMineralsViewModel vModel = new AddEditMineralsViewModel(ArchivePath, obj)
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId())
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             return View("~/Views/GameAdmin/Minerals/Edit.cshtml", vModel);

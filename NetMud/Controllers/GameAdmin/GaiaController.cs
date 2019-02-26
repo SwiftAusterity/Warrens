@@ -41,7 +41,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             ManageGaiaViewModel vModel = new ManageGaiaViewModel(TemplateCache.GetAll<IGaiaTemplate>())
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
                 CurrentPageNumber = CurrentPageNumber,
                 ItemsPerPage = ItemsPerPage,
@@ -111,7 +111,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             AddEditGaiaViewModel vModel = new AddEditGaiaViewModel(Template)
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId())
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             return View("~/Views/GameAdmin/Gaia/Add.cshtml", vModel);
@@ -150,7 +150,7 @@ namespace NetMud.Controllers.GameAdmin
 
             AddEditGaiaViewModel vModel = new AddEditGaiaViewModel(ArchivePath, obj)
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId())
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             return View("~/Views/GameAdmin/Gaia/Edit.cshtml", vModel);

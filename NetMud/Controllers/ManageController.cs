@@ -69,7 +69,7 @@ namespace NetMud.Controllers
 
             ManageAccountViewModel model = new ManageAccountViewModel
             {
-                authedUser = user,
+                AuthedUser = user,
                 DataObject = account,
                 GlobalIdentityHandle = account.GlobalIdentityHandle,
                 UIModuleCount = TemplateCache.GetAll<IUIModule>(true).Count(uimod => uimod.CreatorHandle.Equals(account.GlobalIdentityHandle)),
@@ -130,7 +130,7 @@ namespace NetMud.Controllers
             string userId = User.Identity.GetUserId();
             ManageCharactersViewModel model = new ManageCharactersViewModel
             {
-                authedUser = UserManager.FindById(userId),
+                AuthedUser = UserManager.FindById(userId),
                 NewCharacter = new PlayerTemplate(),
                 ValidGenders = TemplateCache.GetAll<IGender>()
             };
@@ -148,7 +148,7 @@ namespace NetMud.Controllers
             string userId = User.Identity.GetUserId();
             ManageCharactersViewModel model = new ManageCharactersViewModel
             {
-                authedUser = UserManager.FindById(userId),
+                AuthedUser = UserManager.FindById(userId),
                 ValidGenders = TemplateCache.GetAll<IGender>()
             };
 
@@ -167,7 +167,7 @@ namespace NetMud.Controllers
                 newChar.GamePermissionsRank = vModel.NewCharacter.GamePermissionsRank;
             }
 
-            message = model.authedUser.GameAccount.AddCharacter(newChar);
+            message = model.AuthedUser.GameAccount.AddCharacter(newChar);
 
             return RedirectToAction("ManageCharacters", new { Message = message });
         }
@@ -182,7 +182,7 @@ namespace NetMud.Controllers
             IPlayerTemplate obj = PlayerDataCache.Get(new PlayerDataCacheKey(typeof(IPlayerTemplate), user.GlobalIdentityHandle, id));
             AddEditCharacterViewModel model = new AddEditCharacterViewModel
             {
-                authedUser  = user,
+                AuthedUser  = user,
                 DataObject = obj,
                 ValidRaces = TemplateCache.GetAll<IRace>(),
                 ValidGenders = TemplateCache.GetAll<IGender>()
@@ -243,16 +243,16 @@ namespace NetMud.Controllers
                 string userId = User.Identity.GetUserId();
                 ManageCharactersViewModel model = new ManageCharactersViewModel
                 {
-                    authedUser = UserManager.FindById(userId)
+                    AuthedUser = UserManager.FindById(userId)
                 };
 
-                IPlayerTemplate character = model.authedUser.GameAccount.Characters.FirstOrDefault(ch => ch.Id.Equals(removeId));
+                IPlayerTemplate character = model.AuthedUser.GameAccount.Characters.FirstOrDefault(ch => ch.Id.Equals(removeId));
 
                 if (character == null)
                 {
                     message = "That character does not exist";
                 }
-                else if (character.Remove(model.authedUser.GameAccount, model.authedUser.GetStaffRank(User)))
+                else if (character.Remove(model.AuthedUser.GameAccount, model.AuthedUser.GetStaffRank(User)))
                 {
                     message = "Character successfully deleted.";
                 }
@@ -279,7 +279,7 @@ namespace NetMud.Controllers
 
             ManageNotificationsViewModel model = new ManageNotificationsViewModel(notifications)
             {
-                authedUser = authedUser
+                AuthedUser = authedUser
             };
 
             return View(model);
@@ -291,7 +291,7 @@ namespace NetMud.Controllers
             string userId = User.Identity.GetUserId();
             AddViewNotificationViewModel model = new AddViewNotificationViewModel
             {
-                authedUser = UserManager.FindById(userId)
+                AuthedUser = UserManager.FindById(userId)
             };
 
             if (!string.IsNullOrWhiteSpace(id))
@@ -458,7 +458,7 @@ namespace NetMud.Controllers
 
             ManageAcquaintencesViewModel model = new ManageAcquaintencesViewModel(acquaintences)
             {
-                authedUser = authedUser
+                AuthedUser = authedUser
             };
 
             return View(model);
@@ -569,7 +569,7 @@ namespace NetMud.Controllers
 
             ManageUIModulesViewModel vModel = new ManageUIModulesViewModel(TemplateCache.GetAll<IUIModule>().Where(uimod => uimod.CreatorHandle.Equals(user.GameAccount.GlobalIdentityHandle)))
             {
-                authedUser = user,
+                AuthedUser = user,
                 CurrentPageNumber = CurrentPageNumber,
                 ItemsPerPage = ItemsPerPage,
                 SearchTerms = SearchTerms
@@ -617,7 +617,7 @@ namespace NetMud.Controllers
         {
             AddEditUIModuleViewModel vModel = new AddEditUIModuleViewModel
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId())
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             return View("AddUIModule", vModel);
@@ -658,7 +658,7 @@ namespace NetMud.Controllers
             string message = string.Empty;
             AddEditUIModuleViewModel vModel = new AddEditUIModuleViewModel
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId())
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             IUIModule obj = TemplateCache.Get<IUIModule>(id);
@@ -727,7 +727,7 @@ namespace NetMud.Controllers
 
             ManagePlaylistsViewModel model = new ManagePlaylistsViewModel(lists)
             {
-                authedUser = authedUser
+                AuthedUser = authedUser
             };
 
             return View(model);
@@ -743,7 +743,7 @@ namespace NetMud.Controllers
 
             AddEditPlaylistViewModel vModel = new AddEditPlaylistViewModel
             {
-                authedUser = authedUser,
+                AuthedUser = authedUser,
                 ValidSongs = ContentUtility.GetMusicTracksForZone(currentCharacter?.CurrentLocation?.CurrentZone)
             };
 
@@ -799,7 +799,7 @@ namespace NetMud.Controllers
             var currentCharacter = authedUser.GameAccount.Characters.FirstOrDefault(chr => chr.Id == authedUser.GameAccount.CurrentlySelectedCharacter);
             AddEditPlaylistViewModel vModel = new AddEditPlaylistViewModel
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 Name = obj.Name,
                 DataObject = obj,
                 ValidSongs = ContentUtility.GetMusicTracksForZone(currentCharacter?.CurrentLocation?.CurrentZone)

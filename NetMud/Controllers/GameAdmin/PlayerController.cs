@@ -60,7 +60,7 @@ namespace NetMud.Controllers.GameAdmin
 
             ManagePlayersViewModel vModel = new ManagePlayersViewModel(UserManager.Users)
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
                 CurrentPageNumber = CurrentPageNumber,
                 ItemsPerPage = ItemsPerPage,

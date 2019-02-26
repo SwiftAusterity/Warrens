@@ -7,7 +7,7 @@ namespace NetMud.Models.Features
 {
     public class CelestialsViewModel : IBaseViewModel
     {
-        public ApplicationUser authedUser { get; set; }
+        public ApplicationUser AuthedUser { get; set; }
 
         public IEnumerable<ICelestial> Items { get; set; }
 

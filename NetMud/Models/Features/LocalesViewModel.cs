@@ -7,7 +7,7 @@ namespace NetMud.Models.Features
 {
     public class LocalesViewModel : IBaseViewModel
     {
-        public ApplicationUser authedUser { get; set; }
+        public ApplicationUser AuthedUser { get; set; }
 
         public IEnumerable<ILocaleTemplate> Items { get; set; }
 

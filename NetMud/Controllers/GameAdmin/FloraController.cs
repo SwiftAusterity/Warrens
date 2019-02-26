@@ -42,7 +42,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             ManageFloraViewModel vModel = new ManageFloraViewModel(TemplateCache.GetAll<IFlora>())
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
                 CurrentPageNumber = CurrentPageNumber,
                 ItemsPerPage = ItemsPerPage,
@@ -112,7 +112,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             AddEditFloraViewModel vModel = new AddEditFloraViewModel(Template)
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId())
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             return View("~/Views/GameAdmin/Flora/Add.cshtml", vModel);
@@ -160,7 +160,7 @@ namespace NetMud.Controllers.GameAdmin
 
             AddEditFloraViewModel vModel = new AddEditFloraViewModel(ArchivePath, obj)
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId())
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             return View("~/Views/GameAdmin/Flora/Edit.cshtml", vModel);

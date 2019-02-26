@@ -11,10 +11,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageNPCDataViewModel : PagedDataModel<INonPlayerCharacterTemplate>, IBaseViewModel
+    public class ManageNPCDataViewModel : PagedDataModel<INonPlayerCharacterTemplate>
     {
-        public ApplicationUser authedUser { get; set; }
-
         public ManageNPCDataViewModel(IEnumerable<INonPlayerCharacterTemplate> items)
             : base(items)
         {
@@ -48,10 +46,8 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditNPCDataViewModel : AddEditTemplateModel<INonPlayerCharacterTemplate>, IBaseViewModel
+    public class AddEditNPCDataViewModel : AddEditTemplateModel<INonPlayerCharacterTemplate>
     {
-        public ApplicationUser authedUser { get; set; }
-
         [Display(Name = "Apply Existing Template", Description = "Apply an existing object's data to this new data.")]
         [UIHint("NonPlayerCharacterTemplateList")]
         [NonPlayerCharacterTemplateDataBinder]

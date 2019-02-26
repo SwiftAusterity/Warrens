@@ -46,7 +46,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             ManageCelestialsViewModel vModel = new ManageCelestialsViewModel(TemplateCache.GetAll<ICelestial>())
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
                 CurrentPageNumber = CurrentPageNumber,
                 ItemsPerPage = ItemsPerPage,
@@ -116,7 +116,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             AddEditCelestialViewModel vModel = new AddEditCelestialViewModel(Template)
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId())
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             return View("~/Views/GameAdmin/Celestials/Add.cshtml", vModel);
@@ -155,7 +155,7 @@ namespace NetMud.Controllers.GameAdmin
 
             AddEditCelestialViewModel vModel = new AddEditCelestialViewModel(ArchivePath, obj)
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId())
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             return View("~/Views/GameAdmin/Celestials/Edit.cshtml", vModel);
@@ -219,7 +219,7 @@ namespace NetMud.Controllers.GameAdmin
 
             OccurrenceViewModel vModel = new OccurrenceViewModel
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 DataObject = obj,
                 AdminTypeName = "Celestial"
             };

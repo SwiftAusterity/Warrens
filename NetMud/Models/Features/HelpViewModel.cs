@@ -7,7 +7,7 @@ namespace NetMud.Models.Features
 {
     public class HelpViewModel : IBaseViewModel
     {
-        public ApplicationUser authedUser { get; set; }
+        public ApplicationUser AuthedUser { get; set; }
 
         public IEnumerable<IHelp> Items { get; set; }
 

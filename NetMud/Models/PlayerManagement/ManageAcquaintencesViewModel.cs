@@ -6,10 +6,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.Models.PlayerManagement
 {
-    public class ManageAcquaintencesViewModel : PagedDataModel<IAcquaintence>, IBaseViewModel
+    public class ManageAcquaintencesViewModel : PagedDataModel<IAcquaintence>
     {
-        public ApplicationUser authedUser { get; set; }
-
         public ManageAcquaintencesViewModel(IEnumerable<IAcquaintence> items)
             : base(items)
         {

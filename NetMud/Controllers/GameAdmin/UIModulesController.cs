@@ -43,7 +43,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             ManageUIModulesViewModel vModel = new ManageUIModulesViewModel(TemplateCache.GetAll<IUIModule>())
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
                 CurrentPageNumber = CurrentPageNumber,
                 ItemsPerPage = ItemsPerPage,
@@ -114,7 +114,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             AddEditUIModuleViewModel vModel = new AddEditUIModuleViewModel
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId())
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             return View("~/Views/GameAdmin/UIModules/Add.cshtml", vModel);
@@ -165,7 +165,7 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             AddEditUIModuleViewModel vModel = new AddEditUIModuleViewModel
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId())
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             IUIModule obj = TemplateCache.Get<IUIModule>(id);

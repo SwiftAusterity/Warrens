@@ -10,7 +10,7 @@ namespace NetMud.Models.Admin
 {
     public class AddEditPathwayTemplateViewModel : IBaseViewModel
     {
-        public ApplicationUser authedUser { get; set; }
+        public ApplicationUser AuthedUser { get; set; }
 
         public AddEditPathwayTemplateViewModel()
         {
@@ -27,7 +27,7 @@ namespace NetMud.Models.Admin
 
     public class AddPathwayWithRoomTemplateViewModel : IBaseViewModel
     {
-        public ApplicationUser authedUser { get; set; }
+        public ApplicationUser AuthedUser { get; set; }
 
         public AddPathwayWithRoomTemplateViewModel()
         {

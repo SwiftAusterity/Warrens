@@ -37,11 +37,11 @@ namespace Controllers
         {
             GameContextModel model = new GameContextModel
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId())
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
-            model.MusicTracks = ContentUtility.GetMusicTracksForZone(model.authedUser.GameAccount.GetCurrentlySelectedCharacter()?.CurrentLocation?.CurrentZone);
-            model.MusicPlaylists = model.authedUser.GameAccount.Config.Playlists;
+            model.MusicTracks = ContentUtility.GetMusicTracksForZone(model.AuthedUser.GameAccount.GetCurrentlySelectedCharacter()?.CurrentLocation?.CurrentZone);
+            model.MusicPlaylists = model.AuthedUser.GameAccount.Config.Playlists;
             return View(model);
         }
 

@@ -17,7 +17,7 @@
         <dl class="dl-horizontal dashboardItem">
             <dt>&nbsp;</dt>
             <dd>
-                Characters [@Html.ActionLink(Model.authedUser.GameAccount.Characters.Count().ToString(), "ManageCharacters", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" })]
+                Characters [@Html.ActionLink(Model.AuthedUser.GameAccount.Characters.Count().ToString(), "ManageCharacters", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" })]
             </dd>
         </dl>
     </div>
@@ -33,7 +33,7 @@
         <dl class="dl-horizontal dashboardItem">
             <dt>&nbsp;</dt>
             <dd>
-                Friends [@Html.ActionLink(Model.authedUser.GameAccount.Config.Acquaintences.Count().ToString(), "Acquaintences", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Acquaintences" })]
+                Friends [@Html.ActionLink(Model.AuthedUser.GameAccount.Config.Acquaintences.Count().ToString(), "Acquaintences", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Acquaintences" })]
             </dd>
         </dl>
     </div>
@@ -43,7 +43,7 @@
         <dl class="dl-horizontal dashboardItem">
             <dt>&nbsp;</dt>
             <dd>
-                Music Playlists: [@Html.ActionLink(Model.authedUser.GameAccount.Config.Playlists.Count().ToString(), "Playlists", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Music Playlists" })]
+                Music Playlists: [@Html.ActionLink(Model.AuthedUser.GameAccount.Config.Playlists.Count().ToString(), "Playlists", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Music Playlists" })]
             </dd>
         </dl>
         <dl class="dl-horizontal dashboardItem">

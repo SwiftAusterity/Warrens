@@ -1,15 +1,17 @@
 ﻿using NetMud.Authentication;
+using NetMud.Data.Architectural.PropertyBinding;
+using NetMud.Data.Linguistic;
+using NetMud.DataAccess.Cache;
+using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Linguistic;
 using System;
 using System.Collections.Generic;
-
+using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageLanguageDataViewModel : PagedDataModel<ILanguage>, IBaseViewModel
+    public class ManageLanguageDataViewModel : PagedDataModel<ILanguage>
     {
-        public ApplicationUser authedUser { get; set; }
-
         public ManageLanguageDataViewModel(IEnumerable<ILanguage> items)
             : base(items)
         {
@@ -43,14 +45,46 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditLanguageViewModel : IBaseViewModel
+    public class AddEditLanguageViewModel : AddEditConfigDataModel<ILanguage>
     {
-        public ApplicationUser authedUser { get; set; }
+        [Display(Name = "Apply Existing Template", Description = "Apply an existing object's data to this new data.")]
+        [UIHint("LanguageList")]
+        [LanguageDataBinder]
+        public override ILanguage Template { get; set; }
 
-        public AddEditLanguageViewModel()
+        public AddEditLanguageViewModel() : base("", ConfigDataType.Language)
         {
+            ValidWords = ConfigDataCache.GetAll<IDictata>();
+            ValidLanguages = ConfigDataCache.GetAll<ILanguage>();
+            DataObject = new Language();
         }
 
+        public AddEditLanguageViewModel(string uniqueKey) : base(uniqueKey, ConfigDataType.Language)
+        {
+            ValidWords = ConfigDataCache.GetAll<IDictata>();
+            ValidLanguages = ConfigDataCache.GetAll<ILanguage>();
+            DataObject = new Language();
+
+            //apply template
+            if (DataTemplate != null)
+            {
+                DataObject.AntecendentPunctuation = DataTemplate.AntecendentPunctuation;
+                DataObject.BaseWords = DataTemplate.BaseWords;
+                DataObject.ContractionRules = DataTemplate.ContractionRules;
+                DataObject.Gendered = DataTemplate.Gendered;
+                DataObject.PrecedentPunctuation = DataTemplate.PrecedentPunctuation;
+                DataObject.Rules = DataTemplate.Rules;
+                DataObject.SentenceRules = DataTemplate.SentenceRules;
+                DataObject.UIOnly = DataTemplate.UIOnly;
+            }
+        }
+
+        public AddEditLanguageViewModel(string archivePath, ILanguage item) : base(archivePath, ConfigDataType.Language, item)
+        {
+            ValidWords = ConfigDataCache.GetAll<IDictata>();
+            ValidLanguages = ConfigDataCache.GetAll<ILanguage>();
+            DataObject = item;
+        }
         public IEnumerable<ILanguage> ValidLanguages { get; set; }
         public IEnumerable<IDictata> ValidWords { get; set; }
         public ILanguage DataObject { get; set; }

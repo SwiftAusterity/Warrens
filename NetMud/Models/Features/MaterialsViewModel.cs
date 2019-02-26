@@ -7,7 +7,7 @@ namespace NetMud.Models.Features
 {
     public class MaterialsViewModel : IBaseViewModel
     {
-        public ApplicationUser authedUser { get; set; }
+        public ApplicationUser AuthedUser { get; set; }
 
         public IEnumerable<IMaterial> Items { get; set; }
 

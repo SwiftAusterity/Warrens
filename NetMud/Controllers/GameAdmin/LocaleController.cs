@@ -110,7 +110,7 @@ namespace NetMud.Controllers.GameAdmin
 
             AddEditLocaleTemplateViewModel vModel = new AddEditLocaleTemplateViewModel
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 ZoneId = zoneId,
                 DataObject = new LocaleTemplate()
             };
@@ -165,7 +165,7 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             AddEditLocaleTemplateViewModel vModel = new AddEditLocaleTemplateViewModel
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId())
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             ILocaleTemplate obj = TemplateCache.Get<ILocaleTemplate>(id);
@@ -233,7 +233,7 @@ namespace NetMud.Controllers.GameAdmin
 
             OccurrenceViewModel vModel = new OccurrenceViewModel
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 DataObject = obj,
                 AdminTypeName = "Locale"
             };

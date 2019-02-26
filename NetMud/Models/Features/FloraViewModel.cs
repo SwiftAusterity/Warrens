@@ -7,7 +7,7 @@ namespace NetMud.Models.Features
 {
     public class FloraViewModel : IBaseViewModel
     {
-        public ApplicationUser authedUser { get; set; }
+        public ApplicationUser AuthedUser { get; set; }
 
         public IEnumerable<IFlora> Items { get; set; }
 

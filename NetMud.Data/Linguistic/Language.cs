@@ -93,6 +93,8 @@ namespace NetMud.Data.Linguistic
         {
             Name = string.Empty;
             Rules = new HashSet<IGrammarRule>();
+            ContractionRules = new HashSet<IContractionRule>();
+            SentenceRules = new HashSet<SentenceGrammarRule>();
             BaseWords = new BaseLanguageMembers();
         }
 

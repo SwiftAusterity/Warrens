@@ -10,7 +10,7 @@ namespace NetMud.Models.PlayerManagement
 {
     public class ManageAccountViewModel : IBaseViewModel
     {
-        public ApplicationUser authedUser { get; set; }
+        public ApplicationUser AuthedUser { get; set; }
 
         [Display(Name = "Tutorial Mode", Description = "Toggle the Game Client UI Tutorial mode off to remove tip popups permenantly.")]
         public bool UITutorialMode { get; set; }

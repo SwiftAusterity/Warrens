@@ -1,4 +1,5 @@
-﻿using NetMud.Data.Architectural.EntityBase;
+﻿using NetMud.Authentication;
+using NetMud.Data.Architectural.EntityBase;
 using NetMud.DataAccess.Cache;
 using NetMud.DataAccess.FileSystem;
 using NetMud.DataStructure.Architectural;
@@ -9,8 +10,10 @@ using System.Linq;
 
 namespace NetMud.Models
 {
-    public abstract class AddEditConfigDataModel<T> where T : IConfigData
+    public abstract class AddEditConfigDataModel<T> : IBaseViewModel where T : IConfigData
     {
+        public ApplicationUser AuthedUser { get; set; }
+
         public T DataTemplate { get; set; }
         public IEnumerable<T> ValidTemplateBases { get; set; }
 
@@ -19,41 +22,41 @@ namespace NetMud.Models
         public string ArchivePath { get; set; }
         public string[] Archives { get; set; }
 
-        public AddEditConfigDataModel(string uniqueKey)
+        public AddEditConfigDataModel(string uniqueKey, ConfigDataType type)
         {
-            DataTemplate = ConfigDataCache.Get<T>(uniqueKey);
+            DataTemplate = ConfigDataCache.Get<T>(new ConfigDataCacheKey(typeof(T), uniqueKey, type));
             ValidTemplateBases = ConfigDataCache.GetAll<T>();
             Archives = new string[0];
         }
 
-        public AddEditConfigDataModel(string archivePath, T item)
+        public AddEditConfigDataModel(string archivePath, ConfigDataType type, T item)
         {
             ConfigData fileAccessor = new ConfigData();
 
             DataTemplate = default;
             ValidTemplateBases = ConfigDataCache.GetAll<T>();
-            Archives = GetArchiveNames(fileAccessor);
+            Archives = GetArchiveNames(fileAccessor, type, item.UniqueKey);
 
             ArchivePath = archivePath;
 
             if (!string.IsNullOrWhiteSpace(ArchivePath))
             {
-                GetArchivedTemplate(fileAccessor, item);
+                GetArchivedTemplate(fileAccessor, type, item);
             }
         }
 
-        internal void GetArchivedTemplate(ConfigData fileAccessor, T item)
+        internal void GetArchivedTemplate(ConfigData fileAccessor, ConfigDataType type, T item)
         {
-            var typeName = typeof(T).Name;
             Type templateType = typeof(T);
+            var typeName = templateType.Name;
 
-            if (typeof(T).IsInterface)
+            if (templateType.IsInterface)
             {
                 typeName = typeName.Substring(1);
-                templateType = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(typeof(T)));
+                templateType = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(templateType));
             }
 
-            DirectoryInfo archiveDir = new DirectoryInfo(fileAccessor.BaseDirectory + fileAccessor.ArchiveDirectoryName + ArchivePath + "/");
+            DirectoryInfo archiveDir = new DirectoryInfo(fileAccessor.BaseDirectory + type.ToString() + "/" + fileAccessor.ArchiveDirectoryName + ArchivePath + "/");
 
             var potentialFiles = archiveDir.GetFiles(item.UniqueKey + "." + typeName);
 
@@ -63,10 +66,8 @@ namespace NetMud.Models
             }
         }
 
-        internal string[] GetArchiveNames(ConfigData fileAccessor)
+        internal string[] GetArchiveNames(ConfigData fileAccessor, ConfigDataType type, string itemName)
         {
-            DirectoryInfo filesDirectory = new DirectoryInfo(fileAccessor.BaseDirectory + fileAccessor.ArchiveDirectoryName);
-
             var typeName = typeof(T).Name;
 
             if (typeof(T).IsInterface)
@@ -74,7 +75,9 @@ namespace NetMud.Models
                 typeName = typeName.Substring(1);
             }
 
-            return filesDirectory.EnumerateDirectories().Where(dir => dir.GetFiles("*." + typeName, SearchOption.TopDirectoryOnly).Any())
+            DirectoryInfo filesDirectory = new DirectoryInfo(fileAccessor.BaseDirectory + type.ToString() + "/" + fileAccessor.ArchiveDirectoryName);
+
+            return filesDirectory.EnumerateDirectories().Where(dir => dir.GetFiles(itemName + "." + typeName, SearchOption.TopDirectoryOnly).Any())
                                                         .Select(dir => dir.Name).ToArray();
         }
     }

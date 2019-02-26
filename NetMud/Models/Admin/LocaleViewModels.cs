@@ -6,10 +6,8 @@ using System.Collections.Generic;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageLocaleTemplateViewModel : PagedDataModel<ILocaleTemplate>, IBaseViewModel
+    public class ManageLocaleTemplateViewModel : PagedDataModel<ILocaleTemplate>
     {
-        public ApplicationUser authedUser { get; set; }
-
         public ManageLocaleTemplateViewModel(IEnumerable<ILocaleTemplate> items)
             : base(items)
         {
@@ -45,7 +43,7 @@ namespace NetMud.Models.Admin
 
     public class AddEditLocaleTemplateViewModel : IBaseViewModel
     {
-        public ApplicationUser authedUser { get; set; }
+        public ApplicationUser AuthedUser { get; set; }
         public long ZoneId { get; set; }
 
         public AddEditLocaleTemplateViewModel()

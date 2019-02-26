@@ -42,7 +42,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             ManageDimensionalModelDataViewModel vModel = new ManageDimensionalModelDataViewModel(TemplateCache.GetAll<DimensionalModelData>())
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
                 CurrentPageNumber = CurrentPageNumber,
                 ItemsPerPage = ItemsPerPage,
@@ -112,7 +112,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             AddEditDimensionalModelDataViewModel vModel = new AddEditDimensionalModelDataViewModel
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 DataObject = new DimensionalModelData()
             };
 
@@ -171,7 +171,7 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             AddEditDimensionalModelDataViewModel vModel = new AddEditDimensionalModelDataViewModel
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId())
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             IDimensionalModelData obj = TemplateCache.Get<IDimensionalModelData>(id);

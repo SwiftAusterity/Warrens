@@ -52,7 +52,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             ManageZoneTemplateViewModel vModel = new ManageZoneTemplateViewModel(TemplateCache.GetAll<IZoneTemplate>())
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
                 CurrentPageNumber = CurrentPageNumber,
                 ItemsPerPage = ItemsPerPage,
@@ -122,7 +122,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             AddEditZoneTemplateViewModel vModel = new AddEditZoneTemplateViewModel()
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 ValidWorlds = TemplateCache.GetAll<IGaiaTemplate>(true),
                 DataObject = new ZoneTemplate()
             };
@@ -166,7 +166,7 @@ namespace NetMud.Controllers.GameAdmin
 
             AddEditZoneTemplateViewModel vModel = new AddEditZoneTemplateViewModel(locales)
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 DataObject = obj
             };
 
@@ -230,7 +230,7 @@ namespace NetMud.Controllers.GameAdmin
 
             AddEditZonePathwayTemplateViewModel vModel = new AddEditZonePathwayTemplateViewModel
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
                 ValidMaterials = TemplateCache.GetAll<IMaterial>(),
                 ValidModels = TemplateCache.GetAll<IDimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat),
@@ -321,7 +321,7 @@ namespace NetMud.Controllers.GameAdmin
 
             OccurrenceViewModel vModel = new OccurrenceViewModel
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 DataObject = obj,
                 AdminTypeName = "Zone"
             };

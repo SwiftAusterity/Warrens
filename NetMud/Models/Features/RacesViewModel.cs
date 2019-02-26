@@ -7,7 +7,7 @@ namespace NetMud.Models.Features
 {
     public class RacesViewModel : IBaseViewModel
     {
-        public ApplicationUser authedUser { get; set; }
+        public ApplicationUser AuthedUser { get; set; }
 
         public IEnumerable<IRace> Items { get; set; }
 

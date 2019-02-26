@@ -51,9 +51,9 @@
 }
 else
 {
-    <div style="display: inline-flex;">
+    <div>
         @Html.DescriptionFor(m => m)
-        <div class="pretty p-switch p-fill">
+        <div class="pretty p-switch p-fill" style="width: 100%;">
             @Html.CheckBox("", modelValue, htmlAttributes)
             <div class="state">
                 @Html.LabelFor(m => m, new { @class = "col-form-label" })

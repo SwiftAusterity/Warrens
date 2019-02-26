@@ -37,7 +37,7 @@ namespace NetMud.Controllers
         {
             DashboardViewModel dashboardModel = new DashboardViewModel
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
                 ChannelNames = LoggingUtility.GetCurrentLogNames()
             };

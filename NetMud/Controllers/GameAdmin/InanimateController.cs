@@ -46,7 +46,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             ManageInanimateTemplateViewModel vModel = new ManageInanimateTemplateViewModel(TemplateCache.GetAll<IInanimateTemplate>())
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
                 CurrentPageNumber = CurrentPageNumber,
                 ItemsPerPage = ItemsPerPage,
@@ -116,7 +116,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             AddEditInanimateTemplateViewModel vModel = new AddEditInanimateTemplateViewModel(Template)
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
             };
 
             return View("~/Views/GameAdmin/Inanimate/Add.cshtml", vModel);
@@ -157,7 +157,7 @@ namespace NetMud.Controllers.GameAdmin
 
             AddEditInanimateTemplateViewModel vModel = new AddEditInanimateTemplateViewModel(ArchivePath, obj)
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId())
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             return View("~/Views/GameAdmin/Inanimate/Edit.cshtml", vModel);
@@ -216,7 +216,7 @@ namespace NetMud.Controllers.GameAdmin
 
             OccurrenceViewModel vModel = new OccurrenceViewModel
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 DataObject = obj,
                 AdminTypeName = "Inanimate"
             };

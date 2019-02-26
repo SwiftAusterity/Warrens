@@ -8,10 +8,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageGenderDataViewModel : PagedDataModel<IGender>, IBaseViewModel
+    public class ManageGenderDataViewModel : PagedDataModel<IGender>
     {
-        public ApplicationUser authedUser { get; set; }
-
         public ManageGenderDataViewModel(IEnumerable<IGender> items)
             : base(items)
         {
@@ -45,10 +43,8 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditGenderViewModel : AddEditTemplateModel<IGender>, IBaseViewModel
+    public class AddEditGenderViewModel : AddEditTemplateModel<IGender>
     {
-        public ApplicationUser authedUser { get; set; }
-
         [Display(Name = "Apply Existing Template", Description = "Apply an existing object's data to this new data.")]
         [UIHint("NonPlayerCharacterTemplateList")]
         [GenderDataBinder]

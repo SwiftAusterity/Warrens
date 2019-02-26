@@ -40,7 +40,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             ManageHelpDataViewModel vModel = new ManageHelpDataViewModel(TemplateCache.GetAll<IHelp>())
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
                 CurrentPageNumber = CurrentPageNumber,
                 ItemsPerPage = ItemsPerPage,
@@ -110,7 +110,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             AddEditHelpDataViewModel vModel = new AddEditHelpDataViewModel(Template)
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId())
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             return View("~/Views/GameAdmin/Help/Add.cshtml", vModel);
@@ -150,7 +150,7 @@ namespace NetMud.Controllers.GameAdmin
 
             AddEditHelpDataViewModel vModel = new AddEditHelpDataViewModel(ArchivePath, obj)
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId())
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             return View("~/Views/GameAdmin/Help/Edit.cshtml", vModel);

@@ -51,7 +51,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             AddEditPathwayTemplateViewModel vModel = new AddEditPathwayTemplateViewModel
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId())
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             string message = string.Empty;
@@ -115,7 +115,7 @@ namespace NetMud.Controllers.GameAdmin
 
                 AddPathwayWithRoomTemplateViewModel vModel = new AddPathwayWithRoomTemplateViewModel
                 {
-                    authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                    AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
                     ValidMaterials = TemplateCache.GetAll<IMaterial>(),
                     ValidModels = TemplateCache.GetAll<IDimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat),
@@ -142,7 +142,7 @@ namespace NetMud.Controllers.GameAdmin
 
                 AddEditPathwayTemplateViewModel vModel = new AddEditPathwayTemplateViewModel
                 {
-                    authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                    AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
                     ValidMaterials = TemplateCache.GetAll<IMaterial>(),
                     ValidModels = TemplateCache.GetAll<IDimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat),
@@ -235,7 +235,7 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             AddEditPathwayTemplateViewModel vModel = new AddEditPathwayTemplateViewModel
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
                 ValidMaterials = TemplateCache.GetAll<IMaterial>(),
                 ValidModels = TemplateCache.GetAll<IDimensionalModelData>().Where(model => model.ModelType == DimensionalModelType.Flat),
@@ -302,7 +302,7 @@ namespace NetMud.Controllers.GameAdmin
 
             OccurrenceViewModel vModel = new OccurrenceViewModel
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 DataObject = obj,
                 AdminTypeName = "Pathway"
             };

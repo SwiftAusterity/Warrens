@@ -7,7 +7,7 @@ namespace NetMud.Models.Features
 {
     public class FaunaViewModel : IBaseViewModel
     {
-        public ApplicationUser authedUser { get; set; }
+        public ApplicationUser AuthedUser { get; set; }
 
         public IEnumerable<IFauna> Items { get; set; }
 

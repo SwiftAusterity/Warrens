@@ -12,10 +12,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageRaceDataViewModel : PagedDataModel<IRace>, IBaseViewModel
+    public class ManageRaceDataViewModel : PagedDataModel<IRace>
     {
-        public ApplicationUser authedUser { get; set; }
-
         public ManageRaceDataViewModel(IEnumerable<IRace> items)
             : base(items)
         {
@@ -49,10 +47,8 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditRaceViewModel : AddEditTemplateModel<IRace>, IBaseViewModel
+    public class AddEditRaceViewModel : AddEditTemplateModel<IRace>
     {
-        public ApplicationUser authedUser { get; set; }
-
         [Display(Name = "Apply Existing Template", Description = "Apply an existing object's data to this new data.")]
         [UIHint("RaceList")]
         [RaceDataBinder]

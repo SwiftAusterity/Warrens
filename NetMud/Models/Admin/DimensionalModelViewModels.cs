@@ -6,10 +6,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageDimensionalModelDataViewModel : PagedDataModel<IDimensionalModelData>, IBaseViewModel
+    public class ManageDimensionalModelDataViewModel : PagedDataModel<IDimensionalModelData>
     {
-        public ApplicationUser authedUser { get; set; }
-
         public ManageDimensionalModelDataViewModel(IEnumerable<IDimensionalModelData> items)
             : base(items)
         {
@@ -45,7 +43,7 @@ namespace NetMud.Models.Admin
 
     public class AddEditDimensionalModelDataViewModel : IBaseViewModel
     {
-        public ApplicationUser authedUser { get; set; }
+        public ApplicationUser AuthedUser { get; set; }
 
         public AddEditDimensionalModelDataViewModel()
         {

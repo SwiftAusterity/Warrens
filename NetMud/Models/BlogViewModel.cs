@@ -7,7 +7,7 @@ namespace NetMud.Models
 {
     public class BlogViewModel : IBaseViewModel
     {
-        public ApplicationUser authedUser { get; set; }
+        public ApplicationUser AuthedUser { get; set; }
         public IEnumerable<IJournalEntry> Items { get; set; }
         public IEnumerable<Tuple<string, int>> MonthYearPairs { get; set; }
         public string[] IncludeTags { get; set; }

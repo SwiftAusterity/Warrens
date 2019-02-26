@@ -7,7 +7,7 @@ namespace NetMud.Models.Features
 {
     public class DimensionalModelsViewData : IBaseViewModel
     {
-        public ApplicationUser authedUser { get; set; }
+        public ApplicationUser AuthedUser { get; set; }
 
         public IEnumerable<IDimensionalModel> Items { get; set; }
 

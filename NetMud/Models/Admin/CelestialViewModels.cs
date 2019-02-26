@@ -10,10 +10,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageCelestialsViewModel : PagedDataModel<ICelestial>, IBaseViewModel
+    public class ManageCelestialsViewModel : PagedDataModel<ICelestial>
     {
-        public ApplicationUser authedUser { get; set; }
-
         public ManageCelestialsViewModel(IEnumerable<ICelestial> items)
             : base(items)
         {
@@ -47,10 +45,8 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditCelestialViewModel : AddEditTemplateModel<ICelestial>, IBaseViewModel
+    public class AddEditCelestialViewModel : AddEditTemplateModel<ICelestial>
     {
-        public ApplicationUser authedUser { get; set; }
-
         [Display(Name = "Apply Existing Template", Description = "Apply an existing object's data to this new data.")]
         [UIHint("CelestialList")]
         [CelestialDataBinder]

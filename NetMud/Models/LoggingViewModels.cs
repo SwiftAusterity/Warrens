@@ -6,7 +6,7 @@ namespace NetMud.Models.Logging
 {
     public class DashboardViewModel : IBaseViewModel
     {
-        public ApplicationUser authedUser { get; set; }
+        public ApplicationUser AuthedUser { get; set; }
 
         public IEnumerable<string> ChannelNames { get; set; }
         public string SelectedLogContent { get; set; }

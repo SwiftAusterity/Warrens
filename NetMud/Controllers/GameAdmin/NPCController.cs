@@ -47,7 +47,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             ManageNPCDataViewModel vModel = new ManageNPCDataViewModel(TemplateCache.GetAll<INonPlayerCharacterTemplate>())
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
                 CurrentPageNumber = CurrentPageNumber,
                 ItemsPerPage = ItemsPerPage,
@@ -117,7 +117,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             AddEditNPCDataViewModel vModel = new AddEditNPCDataViewModel(Template)
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId())
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             return View("~/Views/GameAdmin/NPC/Add.cshtml", vModel);
@@ -157,7 +157,7 @@ namespace NetMud.Controllers.GameAdmin
 
             AddEditNPCDataViewModel vModel = new AddEditNPCDataViewModel(ArchivePath, obj)
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId())
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             return View("~/Views/GameAdmin/NPC/Edit.cshtml", vModel);
@@ -216,7 +216,7 @@ namespace NetMud.Controllers.GameAdmin
 
             OccurrenceViewModel vModel = new OccurrenceViewModel
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 DataObject = obj,
                 AdminTypeName = "NPC"
             };

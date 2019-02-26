@@ -7,7 +7,7 @@ namespace NetMud.Models.Features
 {
     public class LanguagesViewModel : IBaseViewModel
     {
-        public ApplicationUser authedUser { get; set; }
+        public ApplicationUser AuthedUser { get; set; }
 
         public IEnumerable<ILanguage> Items { get; set; }
 

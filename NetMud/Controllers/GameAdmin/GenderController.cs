@@ -41,7 +41,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             ManageGenderDataViewModel vModel = new ManageGenderDataViewModel(TemplateCache.GetAll<IGender>())
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
                 CurrentPageNumber = CurrentPageNumber,
                 ItemsPerPage = ItemsPerPage,
@@ -112,7 +112,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             AddEditGenderViewModel vModel = new AddEditGenderViewModel(Template)
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId())
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             return View("~/Views/GameAdmin/Gender/Add.cshtml", vModel);
@@ -147,7 +147,7 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             AddEditGenderViewModel vModel = new AddEditGenderViewModel
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId())
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             IGender obj = TemplateCache.Get<IGender>(id);

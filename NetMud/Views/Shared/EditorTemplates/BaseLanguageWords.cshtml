@@ -1,22 +1,25 @@
 ﻿@using NetMud.DataStructure.Linguistic
+@using NetMud.Data.Linguistic
 
 @model BaseLanguageMembers
-
+@{
+    var archivedTemplate = ViewData["ArchiveTemplate"] as Language;
+}
 <div class="form-group row">
-    @Html.EditorFor(m => m.ArticleDeterminant)
-    @Html.EditorFor(m => m.ArticleNonDeterminant)
-    @Html.EditorFor(m => m.Conjunction)
-    @Html.EditorFor(m => m.VerbExistentialPlural)
-    @Html.EditorFor(m => m.VerbExistentialSingular)
-    @Html.EditorFor(m => m.NeutralPronounFirstPersonPossessive)
-    @Html.EditorFor(m => m.NeutralPronounFirstPersonSingular)
-    @Html.EditorFor(m => m.NeutralPronounSecondPersonPlural)
-    @Html.EditorFor(m => m.NeutralPronounSecondPersonPossessive)
-    @Html.EditorFor(m => m.NeutralPronounSecondPersonSingular)
-    @Html.EditorFor(m => m.VerbArticlePositionalInside)
-    @Html.EditorFor(m => m.VerbArticlePositionalNear)
-    @Html.EditorFor(m => m.VerbArticlePositionalOn)
-    @Html.EditorFor(m => m.VerbArticlePositionalAround)
-    @Html.EditorFor(m => m.VerbArticlePositionalAttached)
-    @Html.EditorFor(m => m.VerbArticlePositionalFar)
+    @Html.EditorFor(m => m.ArticleDeterminant, new { archivedValue = archivedTemplate?.BaseWords.ArticleDeterminant ?? "" })
+    @Html.EditorFor(m => m.ArticleNonDeterminant, new { archivedValue = archivedTemplate?.BaseWords.ArticleNonDeterminant ?? "" })
+    @Html.EditorFor(m => m.Conjunction, new { archivedValue = archivedTemplate?.BaseWords.Conjunction ?? "" })
+    @Html.EditorFor(m => m.VerbExistentialPlural, new { archivedValue = archivedTemplate?.BaseWords.VerbExistentialPlural ?? "" })
+    @Html.EditorFor(m => m.VerbExistentialSingular, new { archivedValue = archivedTemplate?.BaseWords.VerbExistentialSingular ?? "" })
+    @Html.EditorFor(m => m.NeutralPronounFirstPersonPossessive, new { archivedValue = archivedTemplate?.BaseWords.NeutralPronounFirstPersonPossessive ?? "" })
+    @Html.EditorFor(m => m.NeutralPronounFirstPersonSingular, new { archivedValue = archivedTemplate?.BaseWords.NeutralPronounFirstPersonSingular ?? "" })
+    @Html.EditorFor(m => m.NeutralPronounSecondPersonPlural, new { archivedValue = archivedTemplate?.BaseWords.NeutralPronounSecondPersonPlural ?? "" })
+    @Html.EditorFor(m => m.NeutralPronounSecondPersonPossessive, new { archivedValue = archivedTemplate?.BaseWords.NeutralPronounSecondPersonPossessive ?? "" })
+    @Html.EditorFor(m => m.NeutralPronounSecondPersonSingular, new { archivedValue = archivedTemplate?.BaseWords.NeutralPronounSecondPersonSingular ?? "" })
+    @Html.EditorFor(m => m.VerbArticlePositionalInside, new { archivedValue = archivedTemplate?.BaseWords.VerbArticlePositionalInside ?? "" })
+    @Html.EditorFor(m => m.VerbArticlePositionalNear, new { archivedValue = archivedTemplate?.BaseWords.VerbArticlePositionalNear ?? "" })
+    @Html.EditorFor(m => m.VerbArticlePositionalOn, new { archivedValue = archivedTemplate?.BaseWords.VerbArticlePositionalOn ?? "" })
+    @Html.EditorFor(m => m.VerbArticlePositionalAround, new { archivedValue = archivedTemplate?.BaseWords.VerbArticlePositionalAround ?? "" })
+    @Html.EditorFor(m => m.VerbArticlePositionalAttached, new { archivedValue = archivedTemplate?.BaseWords.VerbArticlePositionalAttached ?? "" })
+    @Html.EditorFor(m => m.VerbArticlePositionalFar, new { archivedValue = archivedTemplate?.BaseWords.VerbArticlePositionalFar ?? "" })
 </div>

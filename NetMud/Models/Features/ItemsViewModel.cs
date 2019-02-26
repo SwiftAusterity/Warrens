@@ -7,7 +7,7 @@ namespace NetMud.Models.Features
 {
     public class ItemsViewModel : IBaseViewModel
     {
-        public ApplicationUser authedUser { get; set; }
+        public ApplicationUser AuthedUser { get; set; }
 
         public IEnumerable<IInanimateTemplate> Items { get; set; }
 

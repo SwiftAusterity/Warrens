@@ -6,10 +6,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.Models.PlayerManagement
 {
-    public class ManagePlaylistsViewModel : PagedDataModel<IPlaylist>, IBaseViewModel
+    public class ManagePlaylistsViewModel : PagedDataModel<IPlaylist>
     {
-        public ApplicationUser authedUser { get; set; }
-
         public ManagePlaylistsViewModel(IEnumerable<IPlaylist> items)
             : base(items)
         {
@@ -45,7 +43,7 @@ namespace NetMud.Models.PlayerManagement
 
     public class AddEditPlaylistViewModel : IBaseViewModel
     {
-        public ApplicationUser authedUser { get; set; }
+        public ApplicationUser AuthedUser { get; set; }
 
         public AddEditPlaylistViewModel()
         {

@@ -6,10 +6,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageJournalEntriesViewModel : PagedDataModel<IJournalEntry>, IBaseViewModel
+    public class ManageJournalEntriesViewModel : PagedDataModel<IJournalEntry>
     {
-        public ApplicationUser authedUser { get; set; }
-
         public ManageJournalEntriesViewModel(IEnumerable<IJournalEntry> items)
             : base(items)
         {
@@ -45,7 +43,7 @@ namespace NetMud.Models.Admin
 
     public class AddEditJournalEntryViewModel : IBaseViewModel
     {
-        public ApplicationUser authedUser { get; set; }
+        public ApplicationUser AuthedUser { get; set; }
 
         public AddEditJournalEntryViewModel()
         {

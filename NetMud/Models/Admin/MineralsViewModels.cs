@@ -12,10 +12,8 @@ using System.Linq;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageMineralsViewModel : PagedDataModel<IMineral>, IBaseViewModel
+    public class ManageMineralsViewModel : PagedDataModel<IMineral>
     {
-        public ApplicationUser authedUser { get; set; }
-
         public ManageMineralsViewModel(IEnumerable<IMineral> items)
             : base(items)
         {
@@ -49,10 +47,8 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditMineralsViewModel : AddEditTemplateModel<IMineral>, IBaseViewModel
+    public class AddEditMineralsViewModel : AddEditTemplateModel<IMineral>
     {
-        public ApplicationUser authedUser { get; set; }
-
         [Display(Name = "Apply Existing Template", Description = "Apply an existing object's data to this new data.")]
         [UIHint("MineralList")]
         [MineralDataBinder]

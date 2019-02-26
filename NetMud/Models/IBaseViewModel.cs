@@ -4,6 +4,6 @@ namespace NetMud.Models
 {
     public interface IBaseViewModel
     {
-        ApplicationUser authedUser { get; set; }
+        ApplicationUser AuthedUser { get; set; }
     }
 }

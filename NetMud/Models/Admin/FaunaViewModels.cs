@@ -13,10 +13,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageFaunaViewModel : PagedDataModel<IFauna>, IBaseViewModel
+    public class ManageFaunaViewModel : PagedDataModel<IFauna>
     {
-        public ApplicationUser authedUser { get; set; }
-
         public ManageFaunaViewModel(IEnumerable<IFauna> items)
             : base(items)
         {
@@ -50,10 +48,8 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditFaunaViewModel : AddEditTemplateModel<IFauna>, IBaseViewModel
+    public class AddEditFaunaViewModel : AddEditTemplateModel<IFauna>
     {
-        public ApplicationUser authedUser { get; set; }
-
         [Display(Name = "Apply Existing Template", Description = "Apply an existing object's data to this new data.")]
         [UIHint("FaunaList")]
         [FaunaDataBinder]

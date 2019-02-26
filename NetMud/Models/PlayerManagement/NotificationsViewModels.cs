@@ -6,10 +6,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageNotificationsViewModel : PagedDataModel<IPlayerMessage>, IBaseViewModel
+    public class ManageNotificationsViewModel : PagedDataModel<IPlayerMessage>
     {
-        public ApplicationUser authedUser { get; set; }
-
         public ManageNotificationsViewModel(IEnumerable<IPlayerMessage> items)
             : base(items)
         {
@@ -45,7 +43,7 @@ namespace NetMud.Models.Admin
 
     public class AddViewNotificationViewModel : IBaseViewModel
     {
-        public ApplicationUser authedUser { get; set; }
+        public ApplicationUser AuthedUser { get; set; }
 
         public AddViewNotificationViewModel()
         {

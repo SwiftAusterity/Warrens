@@ -42,7 +42,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             ManageDictionaryViewModel vModel = new ManageDictionaryViewModel(ConfigDataCache.GetAll<IDictata>())
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
                 CurrentPageNumber = CurrentPageNumber,
                 ItemsPerPage = ItemsPerPage,
@@ -103,14 +103,11 @@ namespace NetMud.Controllers.GameAdmin
         }
 
         [HttpGet]
-        public ActionResult Add()
+        public ActionResult Add(string Template = "")
         {
-            AddEditDictionaryViewModel vModel = new AddEditDictionaryViewModel
+            AddEditDictionaryViewModel vModel = new AddEditDictionaryViewModel(Template)
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidWords = ConfigDataCache.GetAll<IDictata>(),
-                ValidLanguages = ConfigDataCache.GetAll<ILanguage>(),
-                DataObject = new Dictata()
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             return View("~/Views/GameAdmin/Dictionary/Add.cshtml", vModel);
@@ -139,7 +136,7 @@ namespace NetMud.Controllers.GameAdmin
         }
 
         [HttpGet]
-        public ActionResult Edit(string id)
+        public ActionResult Edit(string id, string ArchivePath = "")
         {
             string message = string.Empty;
 
@@ -151,12 +148,9 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = message });
             }
 
-            AddEditDictionaryViewModel vModel = new AddEditDictionaryViewModel
+            AddEditDictionaryViewModel vModel = new AddEditDictionaryViewModel(ArchivePath, obj)
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidWords = ConfigDataCache.GetAll<IDictata>().Where(word => word.UniqueKey != obj.UniqueKey),
-                ValidLanguages = ConfigDataCache.GetAll<ILanguage>(),
-                DataObject = obj
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             return View("~/Views/GameAdmin/Dictionary/Edit.cshtml", vModel);

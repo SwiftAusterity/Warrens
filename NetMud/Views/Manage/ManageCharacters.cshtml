@@ -14,7 +14,7 @@
     tableColumns.Add("Permissions", obj => obj.GamePermissionsRank.ToString());
 }
 
-@Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { EntityTypeName = "Manage", RemoveMethodName = "RemoveCharacter", Name = " ", Columns = tableColumns, Values = Model.authedUser.GameAccount.Characters, IncludeUnapprove = false })
+@Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { EntityTypeName = "Manage", RemoveMethodName = "RemoveCharacter", Name = " ", Columns = tableColumns, Values = Model.AuthedUser.GameAccount.Characters, IncludeUnapprove = false })
 
 <section id="newCharacterForm">
     @using (Html.BeginForm("AddCharacter", "Manage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))

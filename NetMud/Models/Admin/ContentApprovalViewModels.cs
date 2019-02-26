@@ -5,10 +5,8 @@ using System.Collections.Generic;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageContentApprovalsViewModel : PagedDataModel<IKeyedData>, IBaseViewModel
+    public class ManageContentApprovalsViewModel : PagedDataModel<IKeyedData>
     {
-        public ApplicationUser authedUser { get; set; }
-
         public ManageContentApprovalsViewModel(IEnumerable<IKeyedData> items)
             : base(items)
         {

@@ -3,6 +3,16 @@
 @{
     ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Add Language", new string[] { "Dashboard", "Language" }, new string[] { "/GameAdmin", "/Language" });
 }
+<div class="accordionWrapper">
+    <h5>Use Existing Template</h5>
+    @using (Html.BeginForm("Add", "Language", FormMethod.Get, new { @class = "form-horizontal", role = "form", @name = "applyTemplateForm", @id = "applyTemplateForm" }))
+    {
+        <div class="form-group row">
+            @Html.EditorFor(m => m.Template, "LanguageList", "", new { validItems = Model.ValidTemplateBases })
+            <input type="submit" value="Apply" class="btn btn-default save" , style="margin-left: 25px;" />
+        </div>
+    }
+</div>
 
 <section id="newLanguageForm">
     @using (Html.BeginForm("Add", "Language", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))

@@ -40,7 +40,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             ManageRaceDataViewModel vModel = new ManageRaceDataViewModel(TemplateCache.GetAll<IRace>())
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
                 CurrentPageNumber = CurrentPageNumber,
                 ItemsPerPage = ItemsPerPage,
@@ -111,7 +111,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             AddEditRaceViewModel vModel = new AddEditRaceViewModel(Template)
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId())
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             return View("~/Views/GameAdmin/Race/Add.cshtml", vModel);
@@ -152,7 +152,7 @@ namespace NetMud.Controllers.GameAdmin
 
             AddEditRaceViewModel vModel = new AddEditRaceViewModel(ArchivePath, obj)
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId())
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             return View("~/Views/GameAdmin/Race/Edit.cshtml", vModel);

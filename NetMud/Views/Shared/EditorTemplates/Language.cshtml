@@ -1,15 +1,17 @@
 ﻿@using NetMud.Data.Linguistic
 
 @model Language
-
+@{
+    var archivedTemplate = ViewData["ArchiveTemplate"] as Language;
+}
 <h4>Details</h4>
 <div class="form-group row">
-    @Html.EditorFor(m => m.Name)
-    @Html.EditorFor(m => m.GoogleLanguageCode)
-    @Html.EditorFor(m => m.UIOnly)
-    @Html.EditorFor(m => m.Gendered)
-    @Html.EditorFor(m => m.PrecedentPunctuation)
-    @Html.EditorFor(m => m.AntecendentPunctuation)
+    @Html.EditorFor(m => m.Name, new { archivedValue = archivedTemplate?.Name ?? "" })
+    @Html.EditorFor(m => m.GoogleLanguageCode, new { archivedValue = archivedTemplate?.GoogleLanguageCode ?? "" })
+    @Html.EditorFor(m => m.UIOnly, new { archivedValue = archivedTemplate?.UIOnly.ToString() ?? "" })
+    @Html.EditorFor(m => m.Gendered, new { archivedValue = archivedTemplate?.Gendered.ToString() ?? "" })
+    @Html.EditorFor(m => m.PrecedentPunctuation, new { archivedValue = archivedTemplate?.PrecedentPunctuation.ToString() ?? "" })
+    @Html.EditorFor(m => m.AntecendentPunctuation, new { archivedValue = archivedTemplate?.AntecendentPunctuation.ToString() ?? "" })
 </div>
 
 <h4>Base Structural Words</h4>

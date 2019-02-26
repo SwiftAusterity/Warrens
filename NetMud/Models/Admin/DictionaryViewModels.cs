@@ -1,4 +1,7 @@
-﻿using NetMud.Authentication;
+﻿using NetMud.Data.Architectural.PropertyBinding;
+using NetMud.Data.Linguistic;
+using NetMud.DataAccess.Cache;
+using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Linguistic;
 using System;
 using System.Collections.Generic;
@@ -6,10 +9,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageDictionaryViewModel : PagedDataModel<IDictata>, IBaseViewModel
+    public class ManageDictionaryViewModel : PagedDataModel<IDictata>
     {
-        public ApplicationUser authedUser { get; set; }
-
         public ManageDictionaryViewModel(IEnumerable<IDictata> items)
             : base(items)
         {
@@ -43,12 +44,52 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditDictionaryViewModel : IBaseViewModel
+    public class AddEditDictionaryViewModel : AddEditConfigDataModel<IDictata>
     {
-        public ApplicationUser authedUser { get; set; }
+        [Display(Name = "Apply Existing Template", Description = "Apply an existing object's data to this new data.")]
+        [UIHint("DictataList")]
+        [DictataDataBinder]
+        public override IDictata Template { get; set; }
 
-        public AddEditDictionaryViewModel()
+        public AddEditDictionaryViewModel() : base("", ConfigDataType.Dictionary)
         {
+            ValidWords = ConfigDataCache.GetAll<IDictata>();
+            ValidLanguages = ConfigDataCache.GetAll<ILanguage>();
+            DataObject = new Dictata();
+        }
+
+        public AddEditDictionaryViewModel(string uniqueKey) : base(uniqueKey, ConfigDataType.Dictionary)
+        {
+            ValidWords = ConfigDataCache.GetAll<IDictata>();
+            ValidLanguages = ConfigDataCache.GetAll<ILanguage>();
+            DataObject = new Dictata();
+
+            //apply template
+            if (DataTemplate != null)
+            {
+                DataObject.Antonyms = DataTemplate.Antonyms;
+                DataObject.Determinant = DataTemplate.Determinant;
+                DataObject.Elegance = DataTemplate.Elegance;
+                DataObject.Feminine = DataTemplate.Feminine;
+                DataObject.Language = DataTemplate.Language;
+                DataObject.Perspective = DataTemplate.Perspective;
+                DataObject.Plural = DataTemplate.Plural;
+                DataObject.Positional = DataTemplate.Positional;
+                DataObject.Possessive = DataTemplate.Possessive;
+                DataObject.Quality = DataTemplate.Quality;
+                DataObject.Semantics = DataTemplate.Semantics;
+                DataObject.Severity = DataTemplate.Severity;
+                DataObject.Synonyms = DataTemplate.Synonyms;
+                DataObject.Tense = DataTemplate.Tense;
+                DataObject.WordType = DataTemplate.WordType;
+            }
+        }
+
+        public AddEditDictionaryViewModel(string archivePath, IDictata item) : base(archivePath, ConfigDataType.Dictionary, item)
+        {
+            ValidWords = ConfigDataCache.GetAll<IDictata>();
+            ValidLanguages = ConfigDataCache.GetAll<ILanguage>();
+            DataObject = item;
         }
 
         [Display(Name = "Word", Description = "The new word's name/spelling.")]

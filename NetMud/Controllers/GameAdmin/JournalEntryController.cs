@@ -40,7 +40,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             ManageJournalEntriesViewModel vModel = new ManageJournalEntriesViewModel(TemplateCache.GetAll<IJournalEntry>())
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
                 CurrentPageNumber = CurrentPageNumber,
                 ItemsPerPage = ItemsPerPage,
@@ -110,7 +110,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             AddEditJournalEntryViewModel vModel = new AddEditJournalEntryViewModel
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 DataObject = new JournalEntry()
             };
 
@@ -155,7 +155,7 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             AddEditJournalEntryViewModel vModel = new AddEditJournalEntryViewModel
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId())
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             IJournalEntry obj = TemplateCache.Get<IJournalEntry>(id);

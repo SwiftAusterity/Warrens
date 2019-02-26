@@ -10,10 +10,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageRoomTemplateViewModel : PagedDataModel<IRoomTemplate>, IBaseViewModel
+    public class ManageRoomTemplateViewModel : PagedDataModel<IRoomTemplate>
     {
-        public ApplicationUser authedUser { get; set; }
-
         public ManageRoomTemplateViewModel(IEnumerable<IRoomTemplate> items)
             : base(items)
         {
@@ -49,7 +47,7 @@ namespace NetMud.Models.Admin
 
     public class AddEditRoomTemplateViewModel : IBaseViewModel
     {
-        public ApplicationUser authedUser { get; set; }
+        public ApplicationUser AuthedUser { get; set; }
 
         public AddEditRoomTemplateViewModel()
         {
@@ -83,7 +81,7 @@ namespace NetMud.Models.Admin
 
     public class RoomMapViewModel : IBaseViewModel
     {
-        public ApplicationUser authedUser { get; set; }
+        public ApplicationUser AuthedUser { get; set; }
 
         public RoomMapViewModel()
         {

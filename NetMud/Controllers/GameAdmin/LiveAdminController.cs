@@ -43,7 +43,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             LiveWorldsViewModel vModel = new LiveWorldsViewModel(LiveCache.GetAll<IGaia>())
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 CurrentPageNumber = CurrentPageNumber,
                 ItemsPerPage = ItemsPerPage,
                 SearchTerms = SearchTerms
@@ -58,7 +58,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             ViewGaiaViewModel vModel = new ViewGaiaViewModel(birthMark)
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId())
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             return View(vModel);
@@ -69,7 +69,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             LiveZonesViewModel vModel = new LiveZonesViewModel(LiveCache.GetAll<IZone>())
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 CurrentPageNumber = CurrentPageNumber,
                 ItemsPerPage = ItemsPerPage,
                 SearchTerms = SearchTerms
@@ -84,7 +84,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             ViewZoneViewModel vModel = new ViewZoneViewModel(birthMark)
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId())
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             return View(vModel);
@@ -95,7 +95,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             LiveInanimatesViewModel vModel = new LiveInanimatesViewModel(LiveCache.GetAll<IInanimate>())
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 CurrentPageNumber = CurrentPageNumber,
                 ItemsPerPage = ItemsPerPage,
                 SearchTerms = SearchTerms
@@ -110,7 +110,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             ViewInanimateViewModel vModel = new ViewInanimateViewModel(birthMark)
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId())
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             return View(vModel);
@@ -121,7 +121,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             LiveNPCsViewModel vModel = new LiveNPCsViewModel(LiveCache.GetAll<INonPlayerCharacter>())
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId()),
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 CurrentPageNumber = CurrentPageNumber,
                 ItemsPerPage = ItemsPerPage,
                 SearchTerms = SearchTerms
@@ -136,7 +136,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             ViewIntelligenceViewModel vModel = new ViewIntelligenceViewModel(birthMark)
             {
-                authedUser = UserManager.FindById(User.Identity.GetUserId())
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
             return View(vModel);
