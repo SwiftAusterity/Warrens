@@ -13,6 +13,20 @@
         <li><a href="#tabs-2">Map</a></li>
     </ul>
     <div id="tabs-1" data-tabNumber="1">
+        <section id="editZoneForm">
+            @using (Html.BeginForm("EditZone", "LiveAdmin", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <input type="hidden" name="birthMark" id="birthMark" value="@Model.DataObject.BirthMark" />
+
+                @Html.EditorFor(m => m.DataObject)
+
+                @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Zone", IncludeCancel = true })
+            }
+        </section>
+
+        @Html.Partial("~/Views/LiveAdmin/Zone/SensoryEventList.cshtml", Model.DataObject)
     </div>
     <div id="tabs-2" data-tabNumber="2">
     </div>

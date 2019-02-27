@@ -8,6 +8,7 @@ using NetMud.DataStructure.Room;
 using NetMud.DataStructure.Zone;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 
@@ -119,6 +120,7 @@ namespace NetMud.Models.Admin
             DataObject = LiveCache.Get<IZone>(new LiveCacheKey(typeof(IZone), birthMark));
         }
 
+        [UIHint("Zone")]
         public IZone DataObject { get; set; }
     }
 
