@@ -14,48 +14,76 @@
     @longDesc
 </div>
 
-<h4>Time</h4>
-<div class="form-group row">
-    <div>@timeOfDayString</div>
-</div>
-<h4>Space - @Model.DataObject.OrbitalPosition / @Model.DataObject.PlanetaryRotation</h4>
-@foreach (var celestial in Model.DataObject.CelestialPositions)
-{
-    <div class="form-group row">
-        <span>@celestial.CelestialObject.Name - @celestial.Position</span>
-    </div>
-}
-@if (Model.DataObject.Macroeconomy.Bases.Count() > 0)
-{
-    <h4>Economic Basis</h4>
-    foreach (var product in Model.DataObject.Macroeconomy.Bases)
-    {
+<div id="tabs">
+    <ul>
+        <li><a href="#tabs-1">View</a></li>
+        <li><a href="#tabs-2">Edit</a></li>
+        <li><a href="#tabs-3">Map</a></li>
+    </ul>
+    <div id="tabs-1" data-tabNumber="1">
+        <h4>Time</h4>
         <div class="form-group row">
-            <span> (@product.Trend) @product.ItemType.Name : @product.Basis * @product.Adjustment</span>
+            <div>@timeOfDayString</div>
         </div>
-    }
-}
-@if (Model.DataObject.Macroeconomy.Trends.Count() > 0)
-{
+        <h4>Space - @Model.DataObject.OrbitalPosition / @Model.DataObject.PlanetaryRotation</h4>
+        @foreach (var celestial in Model.DataObject.CelestialPositions)
+        {
+            <div class="form-group row">
+                <span>@celestial.CelestialObject.Name - @celestial.Position</span>
+            </div>
+        }
+        @if (Model.DataObject.Macroeconomy.Bases.Count() > 0)
+        {
+            <h4>Economic Basis</h4>
+            foreach (var product in Model.DataObject.Macroeconomy.Bases)
+            {
+                <div class="form-group row">
+                    <span> (@product.Trend) @product.ItemType.Name : @product.Basis * @product.Adjustment</span>
+                </div>
+            }
+        }
+        @if (Model.DataObject.Macroeconomy.Trends.Count() > 0)
+        {
 
-    <h4>Economic Trend</h4>
-    foreach (var trend in Model.DataObject.Macroeconomy.Trends)
-    {
-        <div class="form-group row">
-            <span> (@trend.Trend) @trend.Quality : @trend.Basis * @trend.Adjustment</span>
-        </div>
-    }
-}
-@if (Model.DataObject.MeterologicalFronts.Count() > 0)
-{
-    <h4>Pressure Systems</h4>
-    foreach (var weatherEvent in Model.DataObject.MeterologicalFronts)
-    {
-        <div class="form-group row">
-            <span>(@weatherEvent.Event.Size/@weatherEvent.Event.Strength) @weatherEvent.Event.Pressure: @weatherEvent.Event.Direction (@weatherEvent.Event.Angle) @weatherEvent.Event.Speed</span>
-        </div>
-    }
-}
+            <h4>Economic Trend</h4>
+            foreach (var trend in Model.DataObject.Macroeconomy.Trends)
+            {
+                <div class="form-group row">
+                    <span> (@trend.Trend) @trend.Quality : @trend.Basis * @trend.Adjustment</span>
+                </div>
+            }
+        }
+        @if (Model.DataObject.MeterologicalFronts.Count() > 0)
+        {
+            <h4>Pressure Systems</h4>
+            foreach (var weatherEvent in Model.DataObject.MeterologicalFronts)
+            {
+                <div class="form-group row">
+                    <span>(@weatherEvent.Event.Size/@weatherEvent.Event.Strength) @weatherEvent.Event.Pressure: @weatherEvent.Event.Direction (@weatherEvent.Event.Angle) @weatherEvent.Event.Speed</span>
+                </div>
+            }
+        }
+    </div>
+    <div id="tabs-2" data-tabNumber="2">
+        <section id="editZoneForm">
+            @using (Html.BeginForm("EditWorld", "LiveAdmin", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <input type="hidden" name="birthMark" id="birthMark" value="@Model.DataObject.BirthMark" />
+
+                @Html.EditorFor(m => m.DataObject)
+
+                @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Zone", IncludeCancel = true })
+            }
+        </section>
+
+        @Html.Partial("~/Views/LiveAdmin/World/SensoryEventList.cshtml", Model.DataObject)
+    </div>
+    <div id="tabs-3" data-tabNumber="3">
+    </div>
+</div>
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

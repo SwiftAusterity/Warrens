@@ -2,6 +2,7 @@
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
 using NetMud.Communication.Lexical;
+using NetMud.Data.Gaia;
 using NetMud.Data.Linguistic;
 using NetMud.Data.Zone;
 using NetMud.DataAccess;
@@ -44,33 +45,6 @@ namespace NetMud.Controllers.GameAdmin
         public LiveAdminController(ApplicationUserManager userManager)
         {
             UserManager = userManager;
-        }
-
-        #region Indexes
-        [HttpGet]
-        public ActionResult Worlds(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
-        {
-            LiveWorldsViewModel vModel = new LiveWorldsViewModel(LiveCache.GetAll<IGaia>())
-            {
-                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
-                CurrentPageNumber = CurrentPageNumber,
-                ItemsPerPage = ItemsPerPage,
-                SearchTerms = SearchTerms
-            };
-
-            return View(vModel);
-        }
-
-        [HttpGet]
-        [Route(@"LiveAdmin/World")]
-        public ActionResult World(string birthMark)
-        {
-            ViewGaiaViewModel vModel = new ViewGaiaViewModel(birthMark)
-            {
-                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
-            };
-
-            return View(vModel);
         }
 
         #region Zone
@@ -136,10 +110,9 @@ namespace NetMud.Controllers.GameAdmin
             return RedirectToAction("Zone", new { Message = message, birthMark });
         }
 
-        #region Descriptives
         [HttpGet]
         [Route(@"LiveAdmin/Zone/AddEditDescriptive")]
-        public ActionResult AddEditDescriptive(string birthMark, short descriptiveType, string phrase)
+        public ActionResult AddEditZoneDescriptive(string birthMark, short descriptiveType, string phrase)
         {
             string message = string.Empty;
 
@@ -182,7 +155,7 @@ namespace NetMud.Controllers.GameAdmin
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route(@"LiveAdmin/Zone/AddEditDescriptive")]
-        public ActionResult AddEditDescriptive(string birthMark, LiveOccurrenceViewModel vModel)
+        public ActionResult AddEditZoneDescriptive(string birthMark, LiveOccurrenceViewModel vModel)
         {
             string message = string.Empty;
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
@@ -242,7 +215,7 @@ namespace NetMud.Controllers.GameAdmin
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route(@"LiveAdmin/Zone/SensoryEvent/Remove/{id?}/{authorize?}")]
-        public ActionResult RemoveDescriptive(string id = "", string authorize = "")
+        public ActionResult RemoveZoneDescriptive(string id = "", string authorize = "")
         {
             string message = string.Empty;
             long zoneId = -1;
@@ -304,8 +277,72 @@ namespace NetMud.Controllers.GameAdmin
         }
         #endregion
 
+        #region World
+        [HttpGet]
+        public ActionResult Worlds(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
+        {
+            LiveWorldsViewModel vModel = new LiveWorldsViewModel(LiveCache.GetAll<IGaia>())
+            {
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
+                CurrentPageNumber = CurrentPageNumber,
+                ItemsPerPage = ItemsPerPage,
+                SearchTerms = SearchTerms
+            };
+
+            return View(vModel);
+        }
+
+        [HttpGet]
+        [Route(@"LiveAdmin/World")]
+        public ActionResult World(string birthMark)
+        {
+            ViewGaiaViewModel vModel = new ViewGaiaViewModel(birthMark)
+            {
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
+            };
+
+            return View(vModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route(@"LiveAdmin/EditWorld")]
+        public ActionResult EditWorld(string birthMark, ViewGaiaViewModel vModel)
+        {
+            string message = string.Empty;
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            IGaia obj = LiveCache.Get<IGaia>(new LiveCacheKey(typeof(Gaia), birthMark));
+            if (obj == null)
+            {
+                message = "That does not exist";
+                return RedirectToAction("Index", new { Message = message });
+            }
+
+            obj.RotationalAngle = vModel.DataObject.RotationalAngle;
+            obj.OrbitalPosition = vModel.DataObject.OrbitalPosition;
+            obj.Macroeconomy = vModel.DataObject.Macroeconomy;
+            obj.CelestialPositions = vModel.DataObject.CelestialPositions;
+            obj.MeterologicalFronts = vModel.DataObject.MeterologicalFronts;
+            obj.CurrentTimeOfDay = vModel.DataObject.CurrentTimeOfDay;
+
+            obj.Qualities = vModel.DataObject.Qualities;
+
+            if (obj.Save())
+            {
+                LoggingUtility.LogAdminCommandUsage("*WEB* - LIVE DATA - EditGaia[" + obj.BirthMark + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                message = "Edit Successful.";
+            }
+            else
+            {
+                message = "Error; Edit failed.";
+            }
+
+            return RedirectToAction("World", new { Message = message, birthMark });
+        }
         #endregion
 
+        #region items
         [HttpGet]
         public ActionResult Inanimates(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
@@ -331,7 +368,9 @@ namespace NetMud.Controllers.GameAdmin
 
             return View(vModel);
         }
+        #endregion
 
+        #region NPC
         [HttpGet]
         public ActionResult NPCs(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
@@ -357,7 +396,9 @@ namespace NetMud.Controllers.GameAdmin
 
             return View(vModel);
         }
+        #endregion
 
+        #region Room
         [HttpGet]
         public ActionResult Rooms(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
@@ -383,7 +424,9 @@ namespace NetMud.Controllers.GameAdmin
 
             return View(vModel);
         }
+        #endregion
 
+        #region Locale
         [HttpGet]
         public ActionResult Locales(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {

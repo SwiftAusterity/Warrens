@@ -9,10 +9,13 @@
 </div>
 <div id="tabs">
     <ul>
-        <li><a href="#tabs-1">Edit</a></li>
-        <li><a href="#tabs-2">Map</a></li>
+        <li><a href="#tabs-1">View</a></li>
+        <li><a href="#tabs-2">Edit</a></li>
+        <li><a href="#tabs-3">Map</a></li>
     </ul>
     <div id="tabs-1" data-tabNumber="1">
+    </div>
+    <div id="tabs-2" data-tabNumber="2">
         <section id="editZoneForm">
             @using (Html.BeginForm("EditZone", "LiveAdmin", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
@@ -28,14 +31,9 @@
 
         @Html.Partial("~/Views/LiveAdmin/Zone/SensoryEventList.cshtml", Model.DataObject)
     </div>
-    <div id="tabs-2" data-tabNumber="2">
+    <div id="tabs-3" data-tabNumber="3">
     </div>
 </div>
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#tabs").tabs();
-        });
-    </script>
 }

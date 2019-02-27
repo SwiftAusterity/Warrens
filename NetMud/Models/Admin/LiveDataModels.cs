@@ -65,6 +65,7 @@ namespace NetMud.Models.Admin
             DataObject = LiveCache.Get<IGaia>(new LiveCacheKey(typeof(IGaia), birthMark));
         }
 
+        [UIHint("Gaia")]
         public IGaia DataObject { get; set; }
     }
 
@@ -175,6 +176,7 @@ namespace NetMud.Models.Admin
             DataObject = LiveCache.Get<IInanimate>(new LiveCacheKey(typeof(IInanimate), birthMark));
         }
 
+        [UIHint("Inanimate")]
         public IInanimate DataObject { get; set; }
     }
 
@@ -229,6 +231,7 @@ namespace NetMud.Models.Admin
             DataObject = LiveCache.Get<INonPlayerCharacter>(new LiveCacheKey(typeof(INonPlayerCharacter), birthMark));
         }
 
+        [UIHint("NonPlayerCharacter")]
         public INonPlayerCharacter DataObject { get; set; }
     }
 
@@ -283,6 +286,7 @@ namespace NetMud.Models.Admin
             DataObject = LiveCache.Get<IRoom>(new LiveCacheKey(typeof(IRoom), birthMark));
         }
 
+        [UIHint("Room")]
         public IRoom DataObject { get; set; }
     }
 
@@ -337,6 +341,7 @@ namespace NetMud.Models.Admin
             DataObject = LiveCache.Get<ILocale>(new LiveCacheKey(typeof(ILocale), birthMark));
         }
 
+        [UIHint("Locale")]
         public ILocale DataObject { get; set; }
     }
 }

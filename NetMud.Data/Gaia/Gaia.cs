@@ -51,38 +51,46 @@ namespace NetMud.Data.Gaia
         [Range(0, 359, ErrorMessage = "The {0} must be between {2} and {1}.")]
         [Display(Name = "Rotational Angle", Description = "The angle at which this world rotates in space. Irrelevant for fixed objects.")]
         [DataType(DataType.Text)]
-        [Required]
         public float RotationalAngle { get; set; }
         #endregion
 
         /// <summary>
         /// The current time of day (and month and year)
         /// </summary>
+        [UIHint("TimeOfDay")]
         public ITimeOfDay CurrentTimeOfDay { get; set; }
 
         /// <summary>
         /// Where the planet is rotationally
         /// </summary>
+        [Range(0, 359, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Display(Name = "Planetary Rotation", Description = "Where the planet is in its rotational movement right now.")]
+        [DataType(DataType.Text)]
         public float PlanetaryRotation { get; set; }
 
         /// <summary>
         /// Where the planet is in its orbit
         /// </summary>
+        [Display(Name = "Orbital Position", Description = "Where the planet is in its orbit.")]
+        [DataType(DataType.Text)]
         public float OrbitalPosition { get; set; }
 
         /// <summary>
         /// Collection of weather patterns for this world
         /// </summary>
+        [UIHint("MeterologicalFrontCollection")]
         public IEnumerable<MeterologicalFront> MeterologicalFronts { get; set; }
 
         /// <summary>
         /// Economic controller for this world
         /// </summary>
+        [UIHint("Economy")]
         public IEconomy Macroeconomy { get; set; }
 
         /// <summary>
         /// Where the various celestial bodies are along their paths
         /// </summary>
+        [UIHint("CelestialPositionCollection")]
         public IEnumerable<ICelestialPosition> CelestialPositions { get; set; }
 
         public Gaia()
