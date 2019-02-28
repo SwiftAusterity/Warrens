@@ -6,8 +6,6 @@ using NetMud.Data.Linguistic;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
-using NetMud.DataStructure.Architectural.ActorBase;
-using NetMud.DataStructure.Inanimate;
 using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.NPC;
 using NetMud.Models.Admin;

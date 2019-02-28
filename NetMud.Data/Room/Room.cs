@@ -2,6 +2,7 @@
 using NetMud.Data.Architectural;
 using NetMud.Data.Architectural.DataIntegrity;
 using NetMud.Data.Architectural.EntityBase;
+using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.Data.Linguistic;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural;
@@ -11,7 +12,6 @@ using NetMud.DataStructure.Gaia;
 using NetMud.DataStructure.Inanimate;
 using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.Locale;
-using NetMud.DataStructure.NaturalResource;
 using NetMud.DataStructure.Room;
 using NetMud.DataStructure.System;
 using NetMud.DataStructure.Zone;
@@ -56,6 +56,7 @@ namespace NetMud.Data.Room
         /// <summary>
         /// Framework for the physics model of an entity
         /// </summary>
+        [UIHint("TwoDimensionalModel")]
         public IDimensionalModel Model { get; set; }
 
         [JsonProperty("ParentLocation")]
@@ -88,6 +89,7 @@ namespace NetMud.Data.Room
 
         [ScriptIgnore]
         [JsonIgnore]
+        [UIHint("Coordinate")]
         public Coordinate Coordinates
         {
             get
@@ -118,7 +120,8 @@ namespace NetMud.Data.Room
         [JsonIgnore]
         [NonNullableDataIntegrity("Medium material is invalid.")]
         [Display(Name = "Medium", Description = "What the 'empty' space of the room is made of. (likely AIR, sometimes stone or dirt)")]
-        [DataType(DataType.Text)]
+        [UIHint("MaterialList")]
+        [MaterialDataBinder]
         public IMaterial Medium
         {
             get
@@ -495,9 +498,9 @@ namespace NetMud.Data.Room
 
             if (NaturalResources != null)
             {
-                foreach (KeyValuePair<INaturalResource, int> resource in NaturalResources)
+                foreach (var resource in NaturalResources)
                 {
-                    sensoryOutput.AddRange(resource.Key.RenderResourceCollection(viewer, resource.Value));
+                    sensoryOutput.AddRange(resource.Resource.RenderResourceCollection(viewer, resource.RateFactor));
                 }
             }
 
@@ -570,7 +573,7 @@ namespace NetMud.Data.Room
 
             if (NaturalResources == null)
             {
-                NaturalResources = new Dictionary<INaturalResource, int>();
+                NaturalResources = new HashSet<INaturalResourceSpawn>();
             }
 
             if (string.IsNullOrWhiteSpace(BirthMark))

@@ -1,4 +1,5 @@
-﻿using NetMud.DataStructure.Gaia;
+﻿using NetMud.Data.Architectural.PropertyBinding;
+using NetMud.DataStructure.Gaia;
 using NetMud.DataStructure.Inanimate;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -15,6 +16,7 @@ namespace NetMud.Data.Gaia
         /// The item template this is for
         /// </summary>
         [UIHint("InanimateTemplateList")]
+        [InanimateTemplateDataBinder]
         public IInanimateTemplate ItemType { get; set; }
 
         /// <summary>

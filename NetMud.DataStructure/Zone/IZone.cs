@@ -40,6 +40,12 @@ namespace NetMud.DataStructure.Zone
         IGaia GetWorld();
 
         /// <summary>
+        /// Gets the locales in this zone
+        /// </summary>
+        /// <returns>Locales</returns>
+        IEnumerable<ILocale> GetLocales();
+
+        /// <summary>
         /// Create a new randomized locale based on the template requested
         /// </summary>
         /// <param name="name">The name of the template requested, blank = use random</param>

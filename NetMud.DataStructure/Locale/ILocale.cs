@@ -12,6 +12,11 @@ namespace NetMud.DataStructure.Locale
     public interface ILocale : ILocaleFramework, IEntity, IDiscoverable, ISpawnAsSingleton<ILocale>
     {
         /// <summary>
+        /// The map of the rooms inside
+        /// </summary>
+        ILiveMap Interior { get; set; }
+
+        /// <summary>
         /// The zone this lives in
         /// </summary>
         IZone ParentLocation { get; set; }

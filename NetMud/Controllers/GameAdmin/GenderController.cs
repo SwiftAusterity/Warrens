@@ -6,7 +6,6 @@ using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.Models.Admin;
-using NetMud.Data.Architectural.ActorBase;
 using System.Web;
 using System.Web.Mvc;
 

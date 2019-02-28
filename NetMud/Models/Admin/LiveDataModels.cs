@@ -1,5 +1,6 @@
 ﻿using NetMud.Authentication;
 using NetMud.DataAccess.Cache;
+using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Gaia;
 using NetMud.DataStructure.Inanimate;
 using NetMud.DataStructure.Locale;
@@ -58,12 +59,19 @@ namespace NetMud.Models.Admin
 
         public ViewGaiaViewModel()
         {
+            ValidCelestials = TemplateCache.GetAll<ICelestial>(true);
+            ValidInanimateTemplates = TemplateCache.GetAll<IInanimateTemplate>(true);
         }
 
         public ViewGaiaViewModel(string birthMark)
         {
             DataObject = LiveCache.Get<IGaia>(new LiveCacheKey(typeof(IGaia), birthMark));
+            ValidCelestials = TemplateCache.GetAll<ICelestial>(true);
+            ValidInanimateTemplates = TemplateCache.GetAll<IInanimateTemplate>(true);
         }
+
+        public IEnumerable<ICelestial> ValidCelestials { get; set; }
+        public IEnumerable<IInanimateTemplate> ValidInanimateTemplates { get; set; }
 
         [UIHint("Gaia")]
         public IGaia DataObject { get; set; }
@@ -169,12 +177,19 @@ namespace NetMud.Models.Admin
 
         public ViewInanimateViewModel()
         {
+            ValidMaterials = TemplateCache.GetAll<IMaterial>(true);
+            ValidModels = TemplateCache.GetAll<IDimensionalModelData>();
         }
 
         public ViewInanimateViewModel(string birthMark)
         {
             DataObject = LiveCache.Get<IInanimate>(new LiveCacheKey(typeof(IInanimate), birthMark));
+            ValidMaterials = TemplateCache.GetAll<IMaterial>(true);
+            ValidModels = TemplateCache.GetAll<IDimensionalModelData>();
         }
+
+        public IEnumerable<IMaterial> ValidMaterials { get; set; }
+        public IEnumerable<IDimensionalModelData> ValidModels { get; set; }
 
         [UIHint("Inanimate")]
         public IInanimate DataObject { get; set; }
@@ -279,12 +294,19 @@ namespace NetMud.Models.Admin
 
         public ViewRoomViewModel()
         {
+            ValidMaterials = TemplateCache.GetAll<IMaterial>(true);
+            ValidModels = TemplateCache.GetAll<IDimensionalModelData>();
         }
 
         public ViewRoomViewModel(string birthMark)
         {
             DataObject = LiveCache.Get<IRoom>(new LiveCacheKey(typeof(IRoom), birthMark));
+            ValidMaterials = TemplateCache.GetAll<IMaterial>(true);
+            ValidModels = TemplateCache.GetAll<IDimensionalModelData>();
         }
+
+        public IEnumerable<IMaterial> ValidMaterials { get; set; }
+        public IEnumerable<IDimensionalModelData> ValidModels { get; set; }
 
         [UIHint("Room")]
         public IRoom DataObject { get; set; }

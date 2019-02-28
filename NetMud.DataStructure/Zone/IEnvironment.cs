@@ -1,6 +1,5 @@
 ﻿using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Gaia;
-using NetMud.DataStructure.NaturalResource;
 using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Zone
@@ -47,7 +46,7 @@ namespace NetMud.DataStructure.Zone
         /// <summary>
         /// Natural resources spawned to this location currently
         /// </summary>
-        IDictionary<INaturalResource, int> NaturalResources { get; set; }
+        HashSet<INaturalResourceSpawn> NaturalResources { get; set; }
 
         /// <summary>
         /// Get the visibile celestials. Depends on luminosity, viewer perception and celestial positioning

@@ -65,12 +65,12 @@ input[type=checkbox].form-control {
 }
 
 .addData {
-    color: green;
+    color: green !important;
     cursor: pointer;
 }
 
 .editData {
-    color: yellow;
+    color: yellow !important;
     cursor: pointer;
 }
 
@@ -189,23 +189,23 @@ button[type=submit].unapproveData {
 
 
 .room {
-    color: lightyellow;
+    color: lightyellow !important;
 }
 
     .room.isHere {
-        color: indianred;
+        color: indianred !important;
     }
 
 .pathway {
-    color: lightgoldenrodyellow;
+    color: lightgoldenrodyellow !important;
 }
 
     .pathway.zone {
-        color: dodgerblue;
+        color: dodgerblue !important;
     }
 
     .pathway.locale {
-        color: forestgreen;
+        color: forestgreen !important;
     }
 
 /* Ascii maps for object dim models and room maps */
@@ -558,7 +558,7 @@ div.roomAsciiMap {
     }
 
     .entityDataInfoCard div {
-        margin: 5px;
+        margin: auto;
         min-width: 200px;
         width: fit-content;
     }

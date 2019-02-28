@@ -1,10 +1,11 @@
 ﻿using NetMud.DataAccess.Cache;
+using NetMud.DataStructure.Gaia;
 using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Script.Serialization;
 
-namespace NetMud.DataStructure.Gaia
+namespace NetMud.Data.Gaia
 {
     /// <summary>
     /// Where the various celestial bodies are along their paths

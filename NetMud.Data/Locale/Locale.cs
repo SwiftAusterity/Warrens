@@ -2,6 +2,7 @@
 using NetMud.Data.Architectural;
 using NetMud.Data.Architectural.DataIntegrity;
 using NetMud.Data.Architectural.EntityBase;
+using NetMud.Data.Zone;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.EntityBase;
@@ -69,7 +70,7 @@ namespace NetMud.Data.Locale
         /// </summary>
         [JsonIgnore]
         [ScriptIgnore]
-        public IMap Interior { get; set; }
+        public ILiveMap Interior { get; set; }
 
         [JsonProperty("ParentLocation")]
         private LiveCacheKey _parentLocation { get; set; }
@@ -141,7 +142,10 @@ namespace NetMud.Data.Locale
         /// <returns>The central room</returns>
         public IRoom CentralRoom(int zIndex = -1)
         {
-            return (IRoom)Cartographer.FindCenterOfMap(Template<ILocaleTemplate>().Interior.CoordinatePlane, zIndex).GetLiveInstance();
+            if (Interior == null)
+                return Rooms().FirstOrDefault();
+
+            return Cartographer.FindCenterOfMap(Interior.CoordinatePlane, zIndex);
         }
 
         /// <summary>
@@ -245,7 +249,17 @@ namespace NetMud.Data.Locale
         /// <returns>The rendered flat map</returns>
         public string RenderMap(int zIndex, bool forAdmin = false)
         {
-            return Template<ILocaleTemplate>().RenderMap(zIndex, forAdmin);
+            return Rendering.RenderRadiusMap(this, 10, zIndex, forAdmin).Item2;
+        }
+
+        /// <summary>
+        /// Regenerate the internal map for the locale; try not to do this often
+        /// </summary>
+        public void RemapInterior()
+        {
+            string[,,] returnMap = Cartographer.GenerateMapFromRoom(CentralRoom(), new HashSet<IRoom>(Rooms()), true);
+
+            Interior = new LiveMap(returnMap, false);
         }
 
         /// <summary>

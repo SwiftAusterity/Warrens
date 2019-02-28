@@ -1,5 +1,4 @@
-﻿using NetMud.Authentication;
-using NetMud.DataStructure.Architectural;
+﻿using NetMud.DataStructure.Architectural;
 using System;
 using System.Collections.Generic;
 

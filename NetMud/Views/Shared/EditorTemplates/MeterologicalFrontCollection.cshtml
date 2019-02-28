@@ -1,0 +1,13 @@
+﻿@using NetMud.Models
+@using NetMud.DataStructure.Gaia
+@model HashSet<MeterologicalFront>
+@{
+    var currentCount = Model.Count();
+    var rowsName = ViewData.ModelMetadata.PropertyName + "Rows";
+}
+<div id="@rowsName" class="iterativeContainer">
+    @if (currentCount > 0)
+    {
+        @Html.EditorForMany(m => m, null, 0, "MeterologicalFront")
+    }
+</div>

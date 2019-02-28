@@ -1,0 +1,153 @@
+﻿@model NetMud.Models.LiveAsciiMapViewModel
+
+<div class="roomAsciiMap">
+    <div class="zLevelControls">
+        <a id="renderModeSelector" name="renderModeSelector" class="Normal renderModeSelector" title="Toggle Render Mode" data-renderMode="normal"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
+        <div>
+            <a id="TravelUp" name="TravelUp" class="Up" title="Up"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></a>
+            <span id="levelIndicator" class="levelIndicator">Level @Model.ZIndex</span>
+            <a id="TravelDown" name="TravelDown" class="Down" title="Down"><span class="glyphicon glyphicon-download" aria-hidden="true"></span></a>
+        </div>
+    </div>
+    <div class="map">
+        <pre id="expandedModelContainer" class="asciiMap" data-id="@Model.BirthMark" data-zindex="@Model.ZIndex"></pre>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        GetMap();
+
+        $('#TravelUp').click(function () {
+            var $exModelContainer = $("#expandedModelContainer");
+            var currentZ = parseInt($exModelContainer.attr('data-zIndex'));
+            var newZ = currentZ + 1;
+
+            $exModelContainer.attr('data-zIndex', newZ);
+            $('#levelIndicator').html('Level ' + newZ);
+
+            GetMap();
+        });
+
+        $('#TravelDown').click(function () {
+            var $exModelContainer = $("#expandedModelContainer");
+            var currentZ = parseInt($exModelContainer.attr('data-zIndex'));
+            var newZ = currentZ - 1;
+
+            if (currentZ == 0) {
+                return false;
+            }
+
+            $exModelContainer.attr('data-zIndex', newZ);
+            $('#levelIndicator').html('Level ' + newZ);
+
+            GetMap();
+        });
+
+        $('#renderModeSelector').click(function () {
+            var $this = $(this);
+
+            $this.removeClass('Up');
+            $this.removeClass('Down');
+            $this.removeClass('Normal');
+            $this.children().removeClass('glyphicon-upload');
+            $this.children().removeClass('glyphicon-download');
+            $this.children().removeClass('glyphicon-eye-open');
+
+            if ($this.attr('data-renderMode') == 'up') {
+                $this.attr('data-renderMode', 'normal');
+                $this.addClass('Normal');
+                $this.children().addClass('glyphicon-eye-open');
+
+            } else if ($this.attr('data-renderMode') == 'normal') {
+                $this.attr('data-renderMode', 'down');
+                $this.addClass('Down');
+                $this.children().addClass('glyphicon-download');
+            } else {
+                $this.attr('data-renderMode', 'up');
+                $this.addClass('Up');
+                $this.children().addClass('glyphicon-upload');
+            }
+
+            GetMap();
+        });
+    });
+
+    //RenderRoomForEditWithRadius, RenderWorldMap, RenderZoneMap
+    function GetMap() {
+        initModal();
+
+        var $exModelContainer = $("#expandedModelContainer");
+        var dataId = $exModelContainer.attr("data-id");
+        var mapRenderType = '@Model.MapRenderType';
+        var radius = @Model.Radius;
+
+        if (mapRenderType == 'RenderLiveRoomForEditWithRadius') {
+            $.get('/api/AdminDataApi/' + mapRenderType + '/' + radius + '?birthMark=' + dataId, function (data) {
+                $exModelContainer.html(data);
+
+                BindRoomsAndPaths();
+            });
+        } else if (mapRenderType == 'RenderLiveLocaleMapForEdit') {
+            var zIndex = $exModelContainer.attr("data-zindex");
+
+            $.get('/api/AdminDataApi/' + mapRenderType + '/' + zIndex + '?birthMark=' + dataId, function (data) {
+                var renderMode = 1;
+
+                if ($('#renderModeSelector').attr('data-renderMode') == 'up') {
+                    renderMode = 0;
+                } else if ($('#renderModeSelector').attr('data-renderMode') == 'down') {
+                    renderMode = 2;
+                }
+
+                $exModelContainer.html(data[renderMode]);
+
+                BindRoomsAndPaths();
+            });
+        } else {
+            var zIndex = $exModelContainer.attr("data-zindex");
+
+            $.get('/api/AdminDataApi/' + mapRenderType + '/' + dataId + '/' + zIndex, function (data) {
+                $exModelContainer.html(data);
+
+                BindRoomsAndPaths();
+            });
+        }
+    };
+
+    function BindRoomsAndPaths() {
+        $('.AdminAddPathway').click(function () {
+            var degress = $(this).attr("data-direction");
+            var incline = $(this).attr("data-incline");
+
+            if ($('#Quickbuild').is(':checked')) {
+                $.post('/api/AdminDataApi/Quickbuild/' + $(this).attr('fromroom') + '/' + $(this).attr('toroom') + '/' + degress + '/' + incline, function (data) {
+                    GetMap();
+                });
+
+            } else {
+                openFrameless(1400, 900, 0, 0, "/GameAdmin/Pathway/Add/" + $(this).attr('pathwayid') + '/' + $(this).attr('fromroom') + '/' + $(this).attr('toroom') + '/' + degress + '/' + incline, 'Add Pathway', true);
+            }
+
+            return false;
+        });
+
+        $('.AdminEditPathway').click(function () {
+            openFrameless(1400, 900, 0, 0, "/GameAdmin/Pathway/Edit/" + $(this).attr('pathwayid') + '/' + $(this).attr('fromroom') + '/' + $(this).attr('toroom'), 'Edit Pathway', true);
+
+            return false;
+        });
+
+        $('.AdminEditRoom').click(function () {
+            openFrameless(1400, 900, 0, 0, "/GameAdmin/Room/Edit/" + $(this).attr('roomid'), 'Edit Room', true);
+
+            return false;
+        });
+
+        $('.AdminAddInitialRoom').click(function () {
+            openFrameless(1400, 900, 0, 0, "/GameAdmin/Room/Add/" + $(this).attr('localeid'), 'Add Initial Room', true);
+
+            return false;
+        });
+    };
+</script>

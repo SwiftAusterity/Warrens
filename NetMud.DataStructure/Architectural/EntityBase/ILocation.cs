@@ -17,6 +17,16 @@ namespace NetMud.DataStructure.Architectural.EntityBase
         IEnumerable<IPathway> GetPathways(bool inward = false);
 
         /// <summary>
+        /// Pathways leading out of (or into) this
+        /// </summary>
+        IEnumerable<IPathway> GetZonePathways(bool inward = false);
+
+        /// <summary>
+        /// Pathways leading out of (or into) this
+        /// </summary>
+        IEnumerable<IPathway> GetLocalePathways(bool inward = false);
+
+        /// <summary>
         /// Mobiles (NPC, Players) in the room
         /// </summary>
         IEntityContainer<IMobile> MobilesInside { get; set; }

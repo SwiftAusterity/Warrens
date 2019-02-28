@@ -29,7 +29,7 @@ namespace NetMud.DataStructure.Gaia
         /// <summary>
         /// Collection of weather patterns for this world
         /// </summary>
-        IEnumerable<MeterologicalFront> MeterologicalFronts { get; set; }
+        HashSet<MeterologicalFront> MeterologicalFronts { get; set; }
 
         /// <summary>
         /// Economic controller for this world
@@ -39,7 +39,7 @@ namespace NetMud.DataStructure.Gaia
         /// <summary>
         /// Where the various celestial bodies are along their paths
         /// </summary>
-        IEnumerable<ICelestialPosition> CelestialPositions { get; set; }
+        HashSet<ICelestialPosition> CelestialPositions { get; set; }
 
         /// <summary>
         /// Broadcast an event to the entire zone

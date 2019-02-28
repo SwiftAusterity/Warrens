@@ -14,6 +14,45 @@
         <li><a href="#tabs-3">Map</a></li>
     </ul>
     <div id="tabs-1" data-tabNumber="1">
+        <div class="entityDataInfoCard">
+            <h4>Biology</h4>
+            <hr />
+            <div>
+                <span>Race</span>
+                <span>@Model.DataObject.Race.Name</span>
+            </div>
+            <div>
+                <span>Gender</span>
+                <span>@Model.DataObject.Gender</span>
+            </div>
+
+            <h4>Will Buy</h4>
+            <hr />
+            @foreach (var resource in Model.DataObject.WillPurchase)
+            {
+                <div>
+                    <span>@resource.Item.Name</span>
+                    <span>(@resource.MarkRate) @resource.Quality (@resource.QualityRange.Low-@resource.QualityRange.High)</span>
+                </div>
+            }
+
+            <h4>Will Sell</h4>
+            <hr />
+            @foreach (var resource in Model.DataObject.WillSell)
+            {
+                <div>
+                    <span>@resource.Item.Name</span>
+                    <span>(@resource.MarkRate) @resource.Quality (@resource.QualityRange.Low-@resource.QualityRange.High)</span>
+                </div>
+            }
+
+            <h4>Qualities</h4>
+            <hr />
+            @foreach (var quality in Model.DataObject.Qualities)
+            {
+                @Html.DisplayFor(m => quality)
+            }
+        </div>
     </div>
     <div id="tabs-2" data-tabNumber="2">
         <section id="editZoneForm">

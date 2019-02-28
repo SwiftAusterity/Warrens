@@ -3,6 +3,7 @@ using NetMud.DataStructure.Gaia;
 using NetMud.DataStructure.Inanimate;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace NetMud.Data.Gaia
@@ -16,11 +17,13 @@ namespace NetMud.Data.Gaia
         /// <summary>
         /// Item type basises
         /// </summary>
+        [UIHint("EconomicBasisCollection")]
         public HashSet<IEconomicBasis> Bases { get; set; }
 
         /// <summary>
         /// Quality valuation trends
         /// </summary>
+        [UIHint("EconomicTrendCollection")]
         public HashSet<IEconomicTrend> Trends { get; set; }
 
         public Economy()

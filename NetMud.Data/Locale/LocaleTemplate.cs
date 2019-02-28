@@ -117,8 +117,7 @@ namespace NetMud.Data.Locale
         /// </summary>
         public void RemapInterior()
         {
-            IEnumerable<IRoomTemplate> remainingRooms = Rooms();
-            long[,,] returnMap = Cartographer.GenerateMapFromRoom(CentralRoom(), new HashSet<IRoomTemplate>(remainingRooms), true);
+            long[,,] returnMap = Cartographer.GenerateMapFromRoom(CentralRoom(), new HashSet<IRoomTemplate>(Rooms()), true);
 
             Interior = new Map(returnMap, false);
         }
@@ -130,10 +129,10 @@ namespace NetMud.Data.Locale
         /// <returns>The room that is in the center of the Z plane</returns>
         public IRoomTemplate CentralRoom(int zIndex = -1)
         {
-            IEnumerable<IRoomTemplate> roomsPlane = Rooms().Where(room => zIndex == -1 || (room.Coordinates != null && room.Coordinates.Z == zIndex));
+            if (Interior == null)
+                return Rooms().FirstOrDefault();
 
-            //TODO 
-            return roomsPlane.FirstOrDefault();
+            return Cartographer.FindCenterOfMap(Interior.CoordinatePlane, zIndex);
         }
 
         /// <summary>

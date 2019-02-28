@@ -94,6 +94,36 @@ namespace NetMud.Controllers
             return new string[] { maps.Item1, maps.Item2, maps.Item3 };
         }
 
+        [HttpGet]
+        [Route("api/AdminDataApi/RenderLiveRoomForEditWithRadius/{radius}")]
+        public string RenderLiveRoomForEditWithRadius(string birthMark, int radius)
+        {
+            IRoom centerRoom = LiveCache.Get<IRoom>(new LiveCacheKey(typeof(IRoom), birthMark));
+
+            if (centerRoom == null || radius < 0)
+            {
+                return "Invalid inputs.";
+            }
+
+            return Rendering.RenderRadiusMap(centerRoom, radius);
+        }
+
+        [HttpGet]
+        [Route("api/AdminDataApi/RenderLiveLocaleMapForEdit/{zIndex}")]
+        public string[] RenderLiveLocaleMapForEdit(string birthMark, int zIndex)
+        {
+            ILocale locale = LiveCache.Get<ILocale>(new LiveCacheKey(typeof(ILocale), birthMark));
+
+            if (locale == null)
+            {
+                return new string[] { "Invalid inputs." };
+            }
+
+            System.Tuple<string, string, string> maps = Rendering.RenderRadiusMap(locale, 10, zIndex);
+
+            return new string[] { maps.Item1, maps.Item2, maps.Item3 };
+        }
+
 
         [HttpGet]
         [Route("api/AdminDataApi/GetDictata/{languageCode}/{wordType}/{term}", Name = "AdminAPI_GetDictata")]

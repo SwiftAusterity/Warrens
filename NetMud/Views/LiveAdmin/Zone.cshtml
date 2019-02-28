@@ -10,12 +10,83 @@
 <div id="tabs">
     <ul>
         <li><a href="#tabs-1">View</a></li>
-        <li><a href="#tabs-2">Edit</a></li>
-        <li><a href="#tabs-3">Map</a></li>
+        <li><a href="#tabs-2">Contents</a></li>
+        <li><a href="#tabs-3">Edit</a></li>
+        <li><a href="#tabs-4">Locales</a></li>
     </ul>
     <div id="tabs-1" data-tabNumber="1">
+        <div class="entityDataInfoCard">
+            <h4>Environmental</h4>
+            <hr />
+            <div>
+                <span>Elevation</span>
+                <span>@Model.DataObject.BaseElevation</span>
+            </div>
+            <div>
+                <span>Hemisphere</span>
+                <span>@Model.DataObject.Hemisphere</span>
+            </div>
+            <div>
+                <span>Humidity</span>
+                <span>@Model.DataObject.EffectiveHumidity()</span>
+            </div>
+            <div>
+                <span>Temperature Variance</span>
+                <span>@Model.DataObject.EffectiveTemperature()</span>
+            </div>
+
+            <h4>Natural Resources</h4>
+            <hr />
+            @foreach (var resource in Model.DataObject.NaturalResources)
+            {
+                <div>
+                    <span>@resource.Resource.Name</span>
+                    <span>@resource.RateFactor</span>
+                </div>
+            }
+
+            <h4>Weather Events</h4>
+            <hr />
+            @foreach (var wEvent in Model.DataObject.WeatherEvents)
+            {
+                <div>
+                    <span>@wEvent.Type</span>
+                    <span>@wEvent.Strength-@wEvent.PrecipitationAmount</span>
+                </div>
+            }
+
+            <h4>Qualities</h4>
+            <hr />
+            @foreach (var quality in Model.DataObject.Qualities)
+            {
+                @Html.DisplayFor(m => quality)
+            }
+        </div>
     </div>
     <div id="tabs-2" data-tabNumber="2">
+        <div class="entityDataInfoCard">
+            <h4>Players</h4>
+            <hr />
+            @foreach (var content in Model.DataObject.MobilesInside.EntitiesContained().Where(cont => cont.IsPlayer()))
+            {
+                <div>
+                    <span>@content.TemplateName</span>
+                    <span>@content.CurrentHealth</span>
+                </div>
+            }
+
+            <h4>NPCs</h4>
+            <hr />
+            @foreach (var content in Model.DataObject.MobilesInside.EntitiesContained().Where(cont => !cont.IsPlayer()))
+            {
+                <div>
+                    <span>@content.TemplateName</span>
+                    <span>@content.CurrentHealth</span>
+                </div>
+            }
+        </div>
+    </div>
+    <div id="tabs-3" data-tabNumber="3">
         <section id="editZoneForm">
             @using (Html.BeginForm("EditZone", "LiveAdmin", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
@@ -31,7 +102,16 @@
 
         @Html.Partial("~/Views/LiveAdmin/Zone/SensoryEventList.cshtml", Model.DataObject)
     </div>
-    <div id="tabs-3" data-tabNumber="3">
+    <div id="tabs-4" data-tabNumber="4">
+        @{
+            var linkText = Html.ActionLink("99999999", "Locale", "LiveAdmin", new { birthMark = 88888888 }, null).ToString();
+
+            var tableColumns = new Dictionary<string, Func<dynamic, string>>();
+            tableColumns.Add("Name", obj => linkText.Replace("99999999", obj.TemplateName).Replace("88888888", obj.BirthMark));
+            tableColumns.Add("Birth", obj => obj.Birthdate.ToString());
+        }
+
+        @Html.Partial("LiveListTable", new NetMud.Models.ListTableViewModel() { Columns = tableColumns, Values = Model.DataObject.GetLocales(), EntityTypeName = "Locale", IncludeAddLink = false, IncludeDelete = false, IncludeBasicPagingandSearch = false, IncludeUnapprove = false })
     </div>
 </div>
 @section Scripts {

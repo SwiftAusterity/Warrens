@@ -187,6 +187,7 @@
     <Compile Include="Room\Room.cs" />
     <Compile Include="Room\RoomTemplate.cs" />
     <Compile Include="System\GlobalConfig.cs" />
+    <Compile Include="Zone\LiveMap.cs" />
     <Compile Include="Zone\Map.cs" />
     <Compile Include="Zone\NaturalResourceSpawn.cs" />
     <Compile Include="Zone\WeatherEvent.cs" />

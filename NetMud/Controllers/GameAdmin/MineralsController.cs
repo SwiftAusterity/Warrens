@@ -4,11 +4,8 @@ using NetMud.Authentication;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
-using NetMud.DataStructure.Architectural.EntityBase;
-using NetMud.DataStructure.Inanimate;
 using NetMud.DataStructure.NaturalResource;
 using NetMud.Models.Admin;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 

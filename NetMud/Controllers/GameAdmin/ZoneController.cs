@@ -167,7 +167,8 @@ namespace NetMud.Controllers.GameAdmin
             AddEditZoneTemplateViewModel vModel = new AddEditZoneTemplateViewModel(locales)
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
-                DataObject = obj
+                DataObject = obj,
+                ValidWorlds = TemplateCache.GetAll<IGaiaTemplate>(true)
             };
 
             return View("~/Views/GameAdmin/Zone/Edit.cshtml", vModel);

@@ -89,8 +89,6 @@
         var radius = '@Model.Radius';
 
         if (mapRenderType == 'RenderRoomForEditWithRadius') {
-            var radius = $exModelContainer.attr("data-zindex");
-
             $.get('/api/AdminDataApi/' + mapRenderType + '/' + dataId + '/' + radius, function (data) {
                 $exModelContainer.html(data);
 

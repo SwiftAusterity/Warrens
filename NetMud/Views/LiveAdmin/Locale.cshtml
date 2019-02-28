@@ -14,9 +14,28 @@
         <li><a href="#tabs-3">Map</a></li>
     </ul>
     <div id="tabs-1" data-tabNumber="1">
+        <div class="entityDataInfoCard">
+            <h4>Discovery Basis</h4>
+            <hr />
+            <div>
+                <span>Always Discovered</span>
+                <span>@Model.DataObject.AlwaysDiscovered</span>
+            </div>
+            <div>
+                <span>Discovery Name</span>
+                <span>@Model.DataObject.DiscoveryName</span>
+            </div>
+
+            <h4>Qualities</h4>
+            <hr />
+            @foreach (var quality in Model.DataObject.Qualities)
+            {
+                @Html.DisplayFor(m => quality)
+            }
+        </div>
     </div>
     <div id="tabs-2" data-tabNumber="2">
-        <section id="editZoneForm">
+        <section id="editLocaleForm">
             @using (Html.BeginForm("EditLocale", "LiveAdmin", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
                 @Html.AntiForgeryToken()
@@ -32,6 +51,8 @@
         @Html.Partial("~/Views/LiveAdmin/Locale/SensoryEventList.cshtml", Model.DataObject)
     </div>
     <div id="tabs-3" data-tabNumber="3">
+        <div class="clearfix"></div>
+        @Html.Partial("LiveAsciiMap", new NetMud.Models.LiveAsciiMapViewModel("RenderLiveLocaleMapForEdit", Model.DataObject.BirthMark, 0))
     </div>
 </div>
 @section Scripts {

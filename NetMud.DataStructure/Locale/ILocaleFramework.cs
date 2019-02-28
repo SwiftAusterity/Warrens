@@ -10,11 +10,6 @@ namespace NetMud.DataStructure.Locale
     public interface ILocaleFramework : IDiscoverableData, IDescribable, ISingleton<ILocale>
     {
         /// <summary>
-        /// The map of the rooms inside
-        /// </summary>
-        IMap Interior { get; set; }
-
-        /// <summary>
         /// Get the basic map render for the zone
         /// </summary>
         /// <returns>the zone map in ascii</returns>
@@ -31,5 +26,10 @@ namespace NetMud.DataStructure.Locale
         /// </summary>
         /// <returns>the dimensions of the zone in inches</returns>
         Dimensions FullDimensions();
+
+        /// <summary>
+        /// Regenerate the internal map for the locale
+        /// </summary>
+        void RemapInterior();
     }
 }

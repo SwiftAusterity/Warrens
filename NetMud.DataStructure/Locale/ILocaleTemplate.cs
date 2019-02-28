@@ -13,6 +13,11 @@ namespace NetMud.DataStructure.Locale
     public interface ILocaleTemplate : ILocaleFramework, ITemplate, IDiscoverableData, ISingleton<ILocale>
     {
         /// <summary>
+        /// The map of the rooms inside
+        /// </summary>
+        IMap Interior { get; set; }
+
+        /// <summary>
         /// When this locale dies off, MinValue = never
         /// </summary>
         DateTime RollingExpiration { get; set; }
@@ -21,11 +26,6 @@ namespace NetMud.DataStructure.Locale
         /// The zone this belongs to
         /// </summary>
         IZoneTemplate ParentLocation { get; set; }
-
-        /// <summary>
-        /// Regenerate the internal map for the locale
-        /// </summary>
-        void RemapInterior();
 
         /// <summary>
         /// The rooms contained within the locale should it need to regenerate from nothing

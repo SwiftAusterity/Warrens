@@ -1,5 +1,4 @@
-﻿using NetMud.Authentication;
-using NetMud.Data.Architectural.PropertyBinding;
+﻿using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.Data.Linguistic;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural;

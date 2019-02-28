@@ -63,6 +63,7 @@ namespace NetMud.Data.Inanimate
         /// <summary>
         /// Framework for the physics model of an entity
         /// </summary>
+        [UIHint("TwoDimensionalModel")]
         public IDimensionalModel Model { get; set; }
         #endregion
 

@@ -107,6 +107,7 @@ namespace NetMud.Data.Zone
             WeatherEvents = Enumerable.Empty<IWeatherEvent>();
             MobilesInside = new EntityContainer<IMobile>();
             Contents = new EntityContainer<IInanimate>();
+            NaturalResources = new HashSet<INaturalResourceSpawn>();
         }
 
         /// <summary>
@@ -120,6 +121,7 @@ namespace NetMud.Data.Zone
             WeatherEvents = Enumerable.Empty<IWeatherEvent>();
             MobilesInside = new EntityContainer<IMobile>();
             Contents = new EntityContainer<IInanimate>();
+            NaturalResources = new HashSet<INaturalResourceSpawn>();
 
             GetFromWorldOrSpawn();
         }
@@ -160,6 +162,16 @@ namespace NetMud.Data.Zone
             }
 
             return null;
+        }
+
+
+        /// <summary>
+        /// Gets the locales in this zone
+        /// </summary>
+        /// <returns>Locales</returns>
+        public IEnumerable<ILocale> GetLocales()
+        {
+            return LiveCache.GetAll<ILocale>().Where(locale => locale.ParentLocation == this);
         }
 
         /// <summary>
@@ -387,9 +399,9 @@ namespace NetMud.Data.Zone
             //TODO: different way of rendering natural resources
             if (NaturalResources != null)
             {
-                foreach (KeyValuePair<DataStructure.NaturalResource.INaturalResource, int> resource in NaturalResources)
+                foreach (var resource in NaturalResources)
                 {
-                    sensoryOutput.AddRange(resource.Key.RenderResourceCollection(viewer, resource.Value));
+                    sensoryOutput.AddRange(resource.Resource.RenderResourceCollection(viewer, resource.RateFactor));
                 }
             }
 

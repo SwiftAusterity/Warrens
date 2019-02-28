@@ -48,7 +48,15 @@ namespace NetMud.Backup
                 DirectoryInfo currentDir = new DirectoryInfo(currentLiveDirectory);
 
                 LoggingUtility.Log("Current Live directory deleted during New World Fallback Procedures.", LogChannels.Backup, true);
-                currentDir.Delete(true);
+
+                try
+                {
+                    currentDir.Delete(true);
+                }
+                catch
+                {
+                    //occasionally will be pissy in an async situation
+                }
             }
 
             //Only load in stuff that is static and spawns as singleton
@@ -359,6 +367,7 @@ namespace NetMud.Backup
             foreach (ILocaleTemplate locale in localePool)
             {
                 locale.RemapInterior();
+                locale.GetLiveInstance().RemapInterior();
             }
         }
     }

@@ -3,7 +3,6 @@ using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Gaia;
 using NetMud.DataStructure.Inanimate;
-using NetMud.DataStructure.NaturalResource;
 using NetMud.DataStructure.Room;
 using NetMud.DataStructure.Zone;
 using NetMud.Utility;
@@ -58,35 +57,11 @@ namespace NetMud.Data.Architectural.EntityBase
         [DataType(DataType.Text)]
         public virtual int Temperature { get; set; }
 
-        [JsonProperty("NaturalResources")]
-        private IDictionary<TemplateCacheKey, int> _naturalResources { get; set; }
-
         /// <summary>
         /// Collection of model section name to material composition mappings
         /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        public IDictionary<INaturalResource, int> NaturalResources
-        {
-            get
-            {
-                if (_naturalResources != null)
-                {
-                    return _naturalResources.ToDictionary(k => TemplateCache.Get<INaturalResource>(k.Key), k => k.Value);
-                }
-
-                return null;
-            }
-            set
-            {
-                if (value == null)
-                {
-                    return;
-                }
-
-                _naturalResources = value.ToDictionary(k => new TemplateCacheKey(k.Key), k => k.Value);
-            }
-        }
+        [UIHint("NaturalResourceSpawnCollection")]
+        public HashSet<INaturalResourceSpawn> NaturalResources { get; set; }
 
         #region Container
         /// <summary>
@@ -266,6 +241,25 @@ namespace NetMud.Data.Architectural.EntityBase
             return LiveCache.GetAll<IPathway>().Where(path => path.Destination != null
                                                             && path.Origin != null
                                                             && (path.Origin.Equals(this) || (inward && path.Destination.Equals(this))));
+        }
+
+        /// <summary>
+        /// Pathways leading out of (or into) this that are a zone
+        /// </summary>
+        public IEnumerable<IPathway> GetZonePathways(bool inward = false)
+        {
+            return GetPathways(inward).Where(path => path.Destination.GetType().GetInterfaces().Contains(typeof(IZone))
+                                                  || (inward && path.Origin.GetType().GetInterfaces().Contains(typeof(IZone)) && path.Origin != this));
+        }
+
+        /// <summary>
+        /// Pathways leading out of (or into) this that are from a different locale
+        /// </summary>
+        public IEnumerable<IPathway> GetLocalePathways(bool inward = false)
+        {
+            return GetPathways(inward).Where(path => path.Destination.GetType().GetInterfaces().Contains(typeof(IRoom))
+                                            && (GetType().GetInterfaces().Contains(typeof(IZone))
+                                                || ((IRoom)path.Destination).ParentLocation.BirthMark != ((IRoom)this).ParentLocation.BirthMark));
         }
 
         /// <summary>

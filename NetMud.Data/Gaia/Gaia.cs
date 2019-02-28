@@ -79,7 +79,7 @@ namespace NetMud.Data.Gaia
         /// Collection of weather patterns for this world
         /// </summary>
         [UIHint("MeterologicalFrontCollection")]
-        public IEnumerable<MeterologicalFront> MeterologicalFronts { get; set; }
+        public HashSet<MeterologicalFront> MeterologicalFronts { get; set; }
 
         /// <summary>
         /// Economic controller for this world
@@ -91,11 +91,14 @@ namespace NetMud.Data.Gaia
         /// Where the various celestial bodies are along their paths
         /// </summary>
         [UIHint("CelestialPositionCollection")]
-        public IEnumerable<ICelestialPosition> CelestialPositions { get; set; }
+        public HashSet<ICelestialPosition> CelestialPositions { get; set; }
 
         public Gaia()
         {
             Qualities = new HashSet<IQuality>();
+            MeterologicalFronts = new HashSet<MeterologicalFront>();
+            Macroeconomy = new Economy();
+            CelestialPositions = new HashSet<ICelestialPosition>();
         }
 
         /// <summary>
@@ -106,6 +109,9 @@ namespace NetMud.Data.Gaia
         {
             TemplateId = world.Id;
             Qualities = new HashSet<IQuality>();
+            MeterologicalFronts = new HashSet<MeterologicalFront>();
+            Macroeconomy = new Economy();
+            CelestialPositions = new HashSet<ICelestialPosition>();
 
             GetFromWorldOrSpawn();
         }
@@ -229,7 +235,7 @@ namespace NetMud.Data.Gaia
 
             if (CelestialPositions == null || CelestialPositions.Count() == 0)
             {
-                List<ICelestialPosition> celestials = new List<ICelestialPosition>();
+                HashSet<ICelestialPosition> celestials = new HashSet<ICelestialPosition>();
 
                 foreach (ICelestial body in bS.CelestialBodies)
                 {
@@ -267,7 +273,7 @@ namespace NetMud.Data.Gaia
             Save();
         }
 
-        private IEnumerable<MeterologicalFront> AddFronts()
+        private HashSet<MeterologicalFront> AddFronts()
         {
             Random rander = new Random();
 
@@ -351,7 +357,7 @@ namespace NetMud.Data.Gaia
                 Strength = rander.Next(1, 100)
             };
 
-            return new List<MeterologicalFront>
+            return new HashSet<MeterologicalFront>
             {
                 new MeterologicalFront(neLow, 0),
                 new MeterologicalFront(neHigh, 0),
@@ -436,7 +442,7 @@ namespace NetMud.Data.Gaia
         private bool AdvanceWeather()
         {
             Random rander = new Random();
-            List<MeterologicalFront> newFronts = new List<MeterologicalFront>();
+            HashSet<MeterologicalFront> newFronts = new HashSet<MeterologicalFront>();
             foreach (MeterologicalFront front in MeterologicalFronts)
             {
                 //TODO: Fix my bullshit math and switch weather event cloud types as they shift and fix altitude
@@ -537,7 +543,7 @@ namespace NetMud.Data.Gaia
 
         private bool AdvanceCelestials()
         {
-            List<ICelestialPosition> newCelestials = new List<ICelestialPosition>();
+            HashSet<ICelestialPosition> newCelestials = new HashSet<ICelestialPosition>();
             foreach (ICelestialPosition celestial in CelestialPositions)
             {
                 if (celestial.CelestialObject.OrientationType == CelestialOrientation.SolarBody || celestial.CelestialObject.OrientationType == CelestialOrientation.ExtraSolar)

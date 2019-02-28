@@ -1,0 +1,10 @@
+﻿@using NetMud.Data.Gaia
+
+@model TimeOfDay
+
+<div class="form-group row">
+    @Html.EditorFor(m => m.Hour)
+    @Html.EditorFor(m => m.Day)
+    @Html.EditorFor(m => m.Month)
+    @Html.EditorFor(m => m.Year)
+</div>

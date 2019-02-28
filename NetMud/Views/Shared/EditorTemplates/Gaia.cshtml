@@ -8,14 +8,13 @@
     @Html.EditorFor(m => m.OrbitalPosition)
 </div>
 
-<h4>Economy</h4>
+<h4>Chronology</h4>
+@Html.EditorFor(m => m.CurrentTimeOfDay)
+
 @Html.EditorFor(m => m.Macroeconomy)
 
 <h4>Weather</h4>
 @Html.EditorFor(m => m.MeterologicalFronts)
-
-<h4>Chronology</h4>
-@Html.EditorFor(m => m.CurrentTimeOfDay)
 
 <h4>Celestial Positions</h4>
 @Html.EditorFor(m => m.CelestialPositions, new { validItems = ViewData["ValidCelestials"] })
