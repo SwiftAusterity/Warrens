@@ -436,7 +436,7 @@ namespace NetMud.Controllers.GameAdmin
                     Strength = vModel.SensoryEventDataObject.Strength,
                     Event = new Lexica(vModel.SensoryEventDataObject.Event.Type,
                                         vModel.SensoryEventDataObject.Event.Role,
-                                        vModel.SensoryEventDataObject.Event.Phrase, new LexicalContext())
+                                        vModel.SensoryEventDataObject.Event.Phrase, new LexicalContext(null))
                     {
                         Modifiers = vModel.SensoryEventDataObject.Event.Modifiers
                     }
@@ -448,7 +448,7 @@ namespace NetMud.Controllers.GameAdmin
                 existingOccurrence.SensoryType = vModel.SensoryEventDataObject.SensoryType;
                 existingOccurrence.Event = new Lexica(vModel.SensoryEventDataObject.Event.Type,
                                                         vModel.SensoryEventDataObject.Event.Role,
-                                                        vModel.SensoryEventDataObject.Event.Phrase, new LexicalContext())
+                                                        vModel.SensoryEventDataObject.Event.Phrase, new LexicalContext(null))
                 {
                     Modifiers = vModel.SensoryEventDataObject.Event.Modifiers
                 };

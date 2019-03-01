@@ -26,7 +26,7 @@ namespace NetMud.DataStructure.Architectural.EntityBase
         /// Is this thing sensible to the entity
         /// </summary>
         /// <param name="actor">the observing entity</param>
-        /// <returns>If this is observeable</returns>
-        bool IsTouchableTo(IEntity actor);
+        /// <returns>0 = observable, negative = too low to detect, positive = too high to detect</returns>
+        short IsTouchableTo(IEntity actor);
     }
 }

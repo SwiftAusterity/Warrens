@@ -197,7 +197,7 @@ namespace NetMud.Data.Zone
                 sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
             }
 
-            var collectiveContext = new LexicalContext()
+            var collectiveContext = new LexicalContext(viewer)
             {
                 Determinant = true,
                 Perspective = NarrativePerspective.SecondPerson,
@@ -206,7 +206,7 @@ namespace NetMud.Data.Zone
                 Tense = LexicalTense.Present
             };
 
-            var discreteContext = new LexicalContext()
+            var discreteContext = new LexicalContext(viewer)
             {
                 Determinant = true,
                 Perspective = NarrativePerspective.ThirdPerson,
@@ -223,7 +223,7 @@ namespace NetMud.Data.Zone
                 switch (sense)
                 {
                     case MessagingType.Audible:
-                        if (!IsAudibleTo(viewer))
+                        if (IsAudibleTo(viewer) != 0)
                         {
                             continue;
                         }
@@ -255,7 +255,7 @@ namespace NetMud.Data.Zone
 
                         break;
                     case MessagingType.Olefactory:
-                        if (!IsSmellableTo(viewer))
+                        if (IsSmellableTo(viewer) != 0)
                         {
                             continue;
                         }
@@ -287,7 +287,7 @@ namespace NetMud.Data.Zone
 
                         break;
                     case MessagingType.Psychic:
-                        if (!IsSensibleTo(viewer))
+                        if (IsSensibleTo(viewer) != 0)
                         {
                             continue;
                         }
@@ -331,7 +331,7 @@ namespace NetMud.Data.Zone
 
                         break;
                     case MessagingType.Visible:
-                        if (!IsVisibleTo(viewer))
+                        if (IsVisibleTo(viewer) != 0)
                         {
                             continue;
                         }

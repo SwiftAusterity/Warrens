@@ -64,7 +64,7 @@ namespace NetMud.Data.Linguistic
         public Lexica()
         {
             Modifiers = new HashSet<ILexica>();
-            Context = new LexicalContext();
+            Context = new LexicalContext(null);
         }
 
         public Lexica(LexicalType type, GrammaticalType role, string phrase, LexicalContext context)
@@ -79,7 +79,7 @@ namespace NetMud.Data.Linguistic
             Context = context;
         }
 
-        public Lexica(LexicalType type, GrammaticalType role, string phrase, IEntity origin)
+        public Lexica(LexicalType type, GrammaticalType role, string phrase, IEntity origin, IEntity observer)
         {
             Type = type;
             Phrase = phrase;
@@ -88,7 +88,7 @@ namespace NetMud.Data.Linguistic
             Modifiers = new HashSet<ILexica>();
 
             LexicalProcessor.VerifyDictata(this);
-            Context = BuildContext(origin);
+            Context = BuildContext(origin, observer);
         }
 
         /// <summary>
@@ -129,10 +129,11 @@ namespace NetMud.Data.Linguistic
                 }
                 else
                 {
-                    //Sentence must maintain the same language, tense and personage
+                    //Sentence must maintain the same observer, language, tense and personage
                     modifier.Context.Language = Context.Language;
                     modifier.Context.Tense = Context.Tense;
                     modifier.Context.Perspective = Context.Perspective;
+                    modifier.Context.Observer = Context.Observer;
                 }
 
                 Modifiers.Add(modifier);
@@ -461,9 +462,9 @@ namespace NetMud.Data.Linguistic
         /// Build out the context object
         /// </summary>
         /// <param name="entity">the subject</param>
-        private LexicalContext BuildContext(IEntity entity)
+        private LexicalContext BuildContext(IEntity entity, IEntity observer)
         {
-            var context = new LexicalContext();
+            var context = new LexicalContext(observer);
 
             var specific = true;
             var entityLocation = entity.CurrentLocation?.CurrentLocation();

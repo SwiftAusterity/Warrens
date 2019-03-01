@@ -19,7 +19,7 @@ namespace NetMud.Communication.Lexical
         /// <summary>
         /// The perceptive strength (higher = easier to see and greater distance noticed)
         /// </summary>
-        [Range(-1, 1000, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Range(-1000, 1000, ErrorMessage = "The {0} must be between {2} and {1}.")]
         [DataType(DataType.Text)]
         [Display(Name = "Strength", Description = "How easy is this to sense. Stronger means it can be detected more easily and from a greater distance.")]
         public int Strength { get; set; }

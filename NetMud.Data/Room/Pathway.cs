@@ -310,7 +310,7 @@ namespace NetMud.Data.Room
         /// <returns>the output strings</returns>
         public override IEnumerable<IMessage> RenderToLook(IEntity viewer)
         {
-            if (!IsVisibleTo(viewer))
+            if (IsVisibleTo(viewer) != 0)
             {
                 return null;
             }
@@ -327,7 +327,7 @@ namespace NetMud.Data.Room
             }
             else
             {
-                var collectiveContext = new LexicalContext()
+                var collectiveContext = new LexicalContext(viewer)
                 {
                     Determinant = true,
                     Perspective = NarrativePerspective.SecondPerson,
@@ -336,7 +336,7 @@ namespace NetMud.Data.Room
                     Tense = LexicalTense.Present
                 };
 
-                var discreteContext = new LexicalContext()
+                var discreteContext = new LexicalContext(viewer)
                 {
                     Determinant = true,
                     Perspective = NarrativePerspective.ThirdPerson,

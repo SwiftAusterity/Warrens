@@ -97,12 +97,12 @@ namespace NetMud.Data.NaturalResource
         /// <returns>a view string</returns>
         public override IEnumerable<IMessage> RenderResourceCollection(IEntity viewer, int amount)
         {
-            if (!IsVisibleTo(viewer))
+            if (IsVisibleTo(viewer) != 0)
             {
                 return null;
             }
 
-            var collectiveContext = new LexicalContext()
+            var collectiveContext = new LexicalContext(viewer)
             {
                 Determinant = true,
                 Perspective = NarrativePerspective.SecondPerson,
@@ -111,7 +111,7 @@ namespace NetMud.Data.NaturalResource
                 Tense = LexicalTense.Present
             };
 
-            var discreteContext = new LexicalContext()
+            var discreteContext = new LexicalContext(viewer)
             {
                 Determinant = true,
                 Perspective = NarrativePerspective.ThirdPerson,

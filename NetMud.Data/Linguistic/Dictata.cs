@@ -313,7 +313,7 @@ namespace NetMud.Data.Linguistic
 
             foreach (var language in otherLanguages)
             {
-                var context = new LexicalContext()
+                var context = new LexicalContext(null)
                 {
                     Language = language,
                     Perspective = Perspective,

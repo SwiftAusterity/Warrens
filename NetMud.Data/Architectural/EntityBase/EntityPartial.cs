@@ -405,7 +405,7 @@ namespace NetMud.Data.Architectural.EntityBase
                 switch (sense)
                 {
                     case MessagingType.Audible:
-                        if (!IsAudibleTo(viewer))
+                        if (IsAudibleTo(viewer) != 0)
                         {
                             continue;
                         }
@@ -413,7 +413,7 @@ namespace NetMud.Data.Architectural.EntityBase
                         self.TryModify(GetAudibleDescriptives(viewer));
                         break;
                     case MessagingType.Olefactory:
-                        if (!IsSmellableTo(viewer))
+                        if (IsSmellableTo(viewer) != 0)
                         {
                             continue;
                         }
@@ -421,7 +421,7 @@ namespace NetMud.Data.Architectural.EntityBase
                         self.TryModify(GetSmellableDescriptives(viewer));
                         break;
                     case MessagingType.Psychic:
-                        if (!IsSensibleTo(viewer))
+                        if (IsSensibleTo(viewer) != 0)
                         {
                             continue;
                         }
@@ -429,7 +429,7 @@ namespace NetMud.Data.Architectural.EntityBase
                         self.TryModify(GetPsychicDescriptives(viewer));
                         break;
                     case MessagingType.Tactile:
-                        if (!IsTouchableTo(viewer))
+                        if (IsTouchableTo(viewer) != 0)
                         {
                             continue;
                         }
@@ -437,7 +437,7 @@ namespace NetMud.Data.Architectural.EntityBase
                         self.TryModify(GetTouchDescriptives(viewer));
                         break;
                     case MessagingType.Taste:
-                        if (!IsTastableTo(viewer))
+                        if (IsTastableTo(viewer) != 0)
                         {
                             continue;
                         }
@@ -445,7 +445,7 @@ namespace NetMud.Data.Architectural.EntityBase
                         self.TryModify(GetTasteDescriptives(viewer));
                         break;
                     case MessagingType.Visible:
-                        if (!IsVisibleTo(viewer))
+                        if (IsVisibleTo(viewer) != 0)
                         {
                             continue;
                         }
@@ -474,7 +474,7 @@ namespace NetMud.Data.Architectural.EntityBase
             switch (sense)
             {
                 case MessagingType.Audible:
-                    if (!IsAudibleTo(viewer))
+                    if (IsAudibleTo(viewer) != 0)
                     {
                         return new Message(sense, new SensoryEvent(sense));
                     }
@@ -482,7 +482,7 @@ namespace NetMud.Data.Architectural.EntityBase
                     me.TryModify(GetAudibleDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
                 case MessagingType.Olefactory:
-                    if (!IsSmellableTo(viewer))
+                    if (IsSmellableTo(viewer) != 0)
                     {
                         return new Message(sense, new SensoryEvent(sense));
                     }
@@ -490,7 +490,7 @@ namespace NetMud.Data.Architectural.EntityBase
                     me.TryModify(GetSmellableDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
                 case MessagingType.Psychic:
-                    if (!IsSensibleTo(viewer))
+                    if (IsSensibleTo(viewer) != 0)
                     {
                         return new Message(sense, new SensoryEvent(sense));
                     }
@@ -498,7 +498,7 @@ namespace NetMud.Data.Architectural.EntityBase
                     me.TryModify(GetPsychicDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
                 case MessagingType.Tactile:
-                    if (!IsTouchableTo(viewer))
+                    if (IsTouchableTo(viewer) != 0)
                     {
                         return new Message(sense, new SensoryEvent(sense));
                     }
@@ -506,7 +506,7 @@ namespace NetMud.Data.Architectural.EntityBase
                     me.TryModify(GetTouchDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
                 case MessagingType.Taste:
-                    if (!IsTastableTo(viewer))
+                    if (IsTastableTo(viewer) != 0)
                     {
                         return new Message(sense, new SensoryEvent(sense));
                     }
@@ -514,7 +514,7 @@ namespace NetMud.Data.Architectural.EntityBase
                     me.TryModify(GetTasteDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
                 case MessagingType.Visible:
-                    if (!IsVisibleTo(viewer))
+                    if (IsVisibleTo(viewer) != 0)
                     {
                         return new Message(sense, new SensoryEvent(sense));
                     }
@@ -533,7 +533,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <returns>the output strings</returns>
         public virtual string GetDescribableName(IEntity viewer)
         {
-            if (!IsVisibleTo(viewer))
+            if (IsVisibleTo(viewer) != 0)
             {
                 return string.Empty;
             }
@@ -541,7 +541,7 @@ namespace NetMud.Data.Architectural.EntityBase
             return GetSelf(MessagingType.Visible).ToString();
         }
 
-        internal ISensoryEvent GetSelf(MessagingType type, int strength = 100)
+        internal ISensoryEvent GetSelf(MessagingType type, int strength = 30)
         {
             return new SensoryEvent()
             {
@@ -567,18 +567,20 @@ namespace NetMud.Data.Architectural.EntityBase
         /// Is this visible to the viewer
         /// </summary>
         /// <param name="viewer">the viewing entity</param>
-        /// <returns>If this is visible</returns>
-        public virtual bool IsVisibleTo(IEntity viewer)
+        /// <returns>0 = observable, negative = too low to detect, positive = too high to detect</returns>
+        public virtual short IsVisibleTo(IEntity viewer)
         {
             if (viewer != null)
             {
                 float value = GetCurrentLuminosity();
                 ValueRange<float> range = viewer.GetVisualRange();
 
-                return value >= range.Low && value <= range.High;
+                return value < range.Low ? (short)(value - range.Low)
+                    : value > range.High ? (short)(value - range.High)
+                    : (short)0;
             }
 
-            return true;
+            return 0;
         }
 
         /// <summary>
@@ -588,10 +590,37 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <returns>the output strings</returns>
         public virtual IEnumerable<IMessage> RenderToLook(IEntity viewer)
         {
-            var cluster = new List<IMessage>();
-            if (!IsVisibleTo(viewer))
+            var range = IsVisibleTo(viewer);
+            if (range < 0)
             {
-                return new Message[] { new Message(MessagingType.Visible, new SensoryEvent(MessagingType.Visible)) };
+                var context = new LexicalContext(viewer)
+                {
+                    Determinant = false,
+                    Perspective = NarrativePerspective.FirstPerson,
+                    Position = LexicalPosition.Around,
+                    Plural = true
+                };
+
+                var darkMessage = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "see", viewer, viewer)
+                                        .TryModify(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "shadows", context));
+
+                return new Message[] { new Message(MessagingType.Visible, new SensoryEvent(darkMessage, Math.Abs(range), MessagingType.Visible)) };
+            }
+            else if (range > 0)
+            {
+                var context = new LexicalContext(viewer)
+                {
+                    Determinant = false,
+                    Perspective = NarrativePerspective.FirstPerson,
+                    Position = LexicalPosition.Around,
+                    Plural = true
+                };
+
+                var brightMessage = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "see", viewer, viewer)
+                                        .TryModify(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "lights", context))
+                                        .TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "blinding", context));
+
+                return new Message[] { new Message(MessagingType.Visible, new SensoryEvent(brightMessage, Math.Abs(range), MessagingType.Visible)) };
             }
 
             return GetFullDescription(viewer);
@@ -605,7 +634,7 @@ namespace NetMud.Data.Architectural.EntityBase
         public virtual IMessage RenderToScan(IEntity viewer)
         {
             //TODO: Make this half power
-            if (!IsVisibleTo(viewer))
+            if (IsVisibleTo(viewer) != 0)
             {
                 return new Message(MessagingType.Visible, new SensoryEvent(MessagingType.Visible));
             }
@@ -621,7 +650,7 @@ namespace NetMud.Data.Architectural.EntityBase
         public virtual IEnumerable<IMessage> RenderToInspect(IEntity viewer)
         {
             //TODO: Make this double power
-            if (!IsVisibleTo(viewer))
+            if (IsVisibleTo(viewer) != 0)
             {
                 return new IMessage[] { new Message(MessagingType.Visible, new SensoryEvent(MessagingType.Visible)) };
             }
@@ -659,18 +688,20 @@ namespace NetMud.Data.Architectural.EntityBase
         /// Is this detectable to the viewer
         /// </summary>
         /// <param name="viewer">the observing entity</param>
-        /// <returns>If this is observable</returns>
-        public virtual bool IsAudibleTo(IEntity viewer)
+        /// <returns>0 = observable, negative = too low to detect, positive = too high to detect</returns>
+        public virtual short IsAudibleTo(IEntity viewer)
         {
             if (viewer != null)
             {
                 int value = 0;
                 ValueRange<float> range = viewer.GetAuditoryRange();
 
-                return value >= range.Low && value <= range.High;
+                return value < range.Low ? (short)(value - range.Low)
+                    : value > range.High ? (short)(value - range.High)
+                    : (short)0;
             }
 
-            return true;
+            return 0;
         }
 
         /// <summary>
@@ -680,12 +711,8 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <returns>the output strings</returns>
         public virtual IMessage RenderToAudible(IEntity viewer)
         {
-            if (!IsAudibleTo(viewer))
-            {
-                return new Message(MessagingType.Audible, new SensoryEvent(MessagingType.Audible));
-            }
-
-            ISensoryEvent self = GetSelf(MessagingType.Audible);
+            var range = IsAudibleTo(viewer);
+            ISensoryEvent self = GetSelf(MessagingType.Audible, 30 + (range * 30));
 
             foreach (ISensoryEvent descriptive in GetAudibleDescriptives(viewer))
             {
@@ -725,8 +752,8 @@ namespace NetMud.Data.Architectural.EntityBase
         /// Is this detectable to the viewer
         /// </summary>
         /// <param name="viewer">the observing entity</param>
-        /// <returns>If this is observable</returns>
-        public virtual bool IsSensibleTo(IEntity viewer)
+        /// <returns>0 = observable, negative = too low to detect, positive = too high to detect</returns>
+        public virtual short IsSensibleTo(IEntity viewer)
         {
             if (viewer != null)
             {
@@ -734,10 +761,12 @@ namespace NetMud.Data.Architectural.EntityBase
                 int value = 0;
                 ValueRange<float> range = viewer.GetPsychicRange();
 
-                return value >= range.Low && value <= range.High;
+                return value < range.Low ? (short)(value - range.Low)
+                    : value > range.High ? (short)(value - range.High)
+                    : (short)0;
             }
 
-            return true;
+            return 0;
         }
 
         /// <summary>
@@ -747,7 +776,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <returns>the output strings</returns>
         public virtual IMessage RenderToSense(IEntity viewer)
         {
-            if (!IsSensibleTo(viewer))
+            if (IsSensibleTo(viewer) != 0)
             {
                 return new Message(MessagingType.Psychic, new SensoryEvent(MessagingType.Psychic));
             }
@@ -792,18 +821,20 @@ namespace NetMud.Data.Architectural.EntityBase
         /// Is this detectable to the viewer
         /// </summary>
         /// <param name="viewer">the observing entity</param>
-        /// <returns>If this is observable</returns>
-        public virtual bool IsTastableTo(IEntity viewer)
+        /// <returns>0 = observable, negative = too low to detect, positive = too high to detect</returns>
+        public virtual short IsTastableTo(IEntity viewer)
         {
             if (viewer != null)
             {
                 int value = 0;
                 ValueRange<float> range = viewer.GetTasteRange();
 
-                return value >= range.Low && value <= range.High;
+                return value < range.Low ? (short)(value - range.Low)
+                    : value > range.High ? (short)(value - range.High)
+                    : (short)0;
             }
 
-            return true;
+            return 0;
         }
 
         /// <summary>
@@ -813,7 +844,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <returns>the output strings</returns>
         public virtual IMessage RenderToTaste(IEntity viewer)
         {
-            if (!IsTastableTo(viewer))
+            if (IsTastableTo(viewer) != 0)
             {
                 return new Message(MessagingType.Taste, new SensoryEvent(MessagingType.Taste));
             }
@@ -858,18 +889,20 @@ namespace NetMud.Data.Architectural.EntityBase
         /// Is this detectable to the viewer
         /// </summary>
         /// <param name="viewer">the observing entity</param>
-        /// <returns>If this is observable</returns>
-        public virtual bool IsSmellableTo(IEntity viewer)
+        /// <returns>0 = observable, negative = too low to detect, positive = too high to detect</returns>
+        public virtual short IsSmellableTo(IEntity viewer)
         {
             if (viewer != null)
             {
                 int value = 0;
                 ValueRange<float> range = viewer.GetOlefactoryRange();
 
-                return value >= range.Low && value <= range.High;
+                return value < range.Low ? (short)(value - range.Low)
+                    : value > range.High ? (short)(value - range.High)
+                    : (short)0;
             }
 
-            return true;
+            return 0;
         }
 
         /// <summary>
@@ -879,7 +912,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <returns>the output strings</returns>
         public virtual IMessage RenderToSmell(IEntity viewer)
         {
-            if (!IsSmellableTo(viewer))
+            if (IsSmellableTo(viewer) != 0)
             {
                 return new Message(MessagingType.Olefactory, new SensoryEvent(MessagingType.Olefactory));
             }
@@ -924,8 +957,8 @@ namespace NetMud.Data.Architectural.EntityBase
         /// Is this detectable to the viewer
         /// </summary>
         /// <param name="viewer">the observing entity</param>
-        /// <returns>If this is observable</returns>
-        public virtual bool IsTouchableTo(IEntity viewer)
+        /// <returns>0 = observable, negative = too low to detect, positive = too high to detect</returns>
+        public virtual short IsTouchableTo(IEntity viewer)
         {
             if (viewer != null)
             {
@@ -933,10 +966,12 @@ namespace NetMud.Data.Architectural.EntityBase
                 int value = 0;
                 ValueRange<float> range = viewer.GetTactileRange();
 
-                return value >= range.Low && value <= range.High;
+                return value < range.Low ? (short)(value - range.Low)
+                    : value > range.High ? (short)(value - range.High)
+                    : (short)0;
             }
 
-            return true;
+            return 0;
         }
 
         /// <summary>
@@ -946,7 +981,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <returns>the output strings</returns>
         public virtual IMessage RenderToTouch(IEntity viewer)
         {
-            if (!IsTouchableTo(viewer))
+            if (IsTouchableTo(viewer) != 0)
             {
                 return new Message(MessagingType.Tactile, new SensoryEvent(MessagingType.Tactile));
             }

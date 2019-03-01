@@ -204,7 +204,7 @@ namespace NetMud.Data.NaturalResource
                 switch (sense)
                 {
                     case MessagingType.Audible:
-                        if (!IsAudibleTo(viewer))
+                        if (IsAudibleTo(viewer) != 0)
                         {
                             continue;
                         }
@@ -212,7 +212,7 @@ namespace NetMud.Data.NaturalResource
                         self.Occurrence.TryModify(GetAudibleDescriptives(viewer));
                         break;
                     case MessagingType.Olefactory:
-                        if (!IsSmellableTo(viewer))
+                        if (IsSmellableTo(viewer) != 0)
                         {
                             continue;
                         }
@@ -220,7 +220,7 @@ namespace NetMud.Data.NaturalResource
                         self.Occurrence.TryModify(GetSmellableDescriptives(viewer));
                         break;
                     case MessagingType.Psychic:
-                        if (!IsSensibleTo(viewer))
+                        if (IsSensibleTo(viewer) != 0)
                         {
                             continue;
                         }
@@ -228,7 +228,7 @@ namespace NetMud.Data.NaturalResource
                         self.Occurrence.TryModify(GetPsychicDescriptives(viewer));
                         break;
                     case MessagingType.Tactile:
-                        if (!IsTouchableTo(viewer))
+                        if (IsTouchableTo(viewer) != 0)
                         {
                             continue;
                         }
@@ -236,7 +236,7 @@ namespace NetMud.Data.NaturalResource
                         self.Occurrence.TryModify(GetTouchDescriptives(viewer));
                         break;
                     case MessagingType.Taste:
-                        if (!IsTastableTo(viewer))
+                        if (IsTastableTo(viewer) != 0)
                         {
                             continue;
                         }
@@ -244,7 +244,7 @@ namespace NetMud.Data.NaturalResource
                         self.Occurrence.TryModify(GetTasteDescriptives(viewer));
                         break;
                     case MessagingType.Visible:
-                        if (!IsVisibleTo(viewer))
+                        if (IsVisibleTo(viewer) != 0)
                         {
                             continue;
                         }
@@ -270,7 +270,7 @@ namespace NetMud.Data.NaturalResource
             switch (sense)
             {
                 case MessagingType.Audible:
-                    if (!IsAudibleTo(viewer))
+                    if (IsAudibleTo(viewer) != 0)
                     {
                         return new Message(sense, new SensoryEvent(sense));
                     }
@@ -278,7 +278,7 @@ namespace NetMud.Data.NaturalResource
                     me.Occurrence.TryModify(GetAudibleDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
                 case MessagingType.Olefactory:
-                    if (!IsSmellableTo(viewer))
+                    if (IsSmellableTo(viewer) != 0)
                     {
                         return new Message(sense, new SensoryEvent(sense));
                     }
@@ -286,7 +286,7 @@ namespace NetMud.Data.NaturalResource
                     me.Occurrence.TryModify(GetSmellableDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
                 case MessagingType.Psychic:
-                    if (!IsSensibleTo(viewer))
+                    if (IsSensibleTo(viewer) != 0)
                     {
                         return new Message(sense, new SensoryEvent(sense));
                     }
@@ -294,7 +294,7 @@ namespace NetMud.Data.NaturalResource
                     me.Occurrence.TryModify(GetPsychicDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
                 case MessagingType.Tactile:
-                    if (!IsTouchableTo(viewer))
+                    if (IsTouchableTo(viewer) != 0)
                     {
                         return new Message(sense, new SensoryEvent(sense));
                     }
@@ -302,7 +302,7 @@ namespace NetMud.Data.NaturalResource
                     me.Occurrence.TryModify(GetTouchDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
                 case MessagingType.Taste:
-                    if (!IsTastableTo(viewer))
+                    if (IsTastableTo(viewer) != 0)
                     {
                         return new Message(sense, new SensoryEvent(sense));
                     }
@@ -310,7 +310,7 @@ namespace NetMud.Data.NaturalResource
                     me.Occurrence.TryModify(GetTasteDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
                 case MessagingType.Visible:
-                    if (!IsVisibleTo(viewer))
+                    if (IsVisibleTo(viewer) != 0)
                     {
                         return new Message(sense, new SensoryEvent(sense));
                     }
@@ -329,7 +329,7 @@ namespace NetMud.Data.NaturalResource
         /// <returns>the output strings</returns>
         public virtual string GetDescribableName(IEntity viewer)
         {
-            if (!IsVisibleTo(viewer))
+            if (IsVisibleTo(viewer) != 0)
             {
                 return string.Empty;
             }
@@ -337,7 +337,7 @@ namespace NetMud.Data.NaturalResource
             return GetSelf(MessagingType.Visible).ToString();
         }
 
-        internal IMessage GetSelf(MessagingType type, int strength = 100)
+        internal IMessage GetSelf(MessagingType type, int strength = 30)
         {
             return new Message(type, new SensoryEvent()
             {
@@ -354,17 +354,19 @@ namespace NetMud.Data.NaturalResource
         /// </summary>
         /// <param name="viewer">the viewing entity</param>
         /// <returns>If this is visible</returns>
-        public virtual bool IsVisibleTo(IEntity viewer)
+        public virtual short IsVisibleTo(IEntity viewer)
         {
             if (viewer != null)
             {
                 int value = 0;
                 ValueRange<float> range = viewer.GetVisualRange();
 
-                return value >= range.Low && value <= range.High;
+                return value < range.Low ? (short)(value - range.Low)
+                    : value > range.High ? (short)(value - range.High)
+                    : (short)0;
             }
 
-            return true;
+            return 0;
         }
 
         /// <summary>
@@ -374,7 +376,7 @@ namespace NetMud.Data.NaturalResource
         /// <returns>the output strings</returns>
         public virtual IEnumerable<IMessage> RenderToLook(IEntity viewer)
         {
-            if (!IsVisibleTo(viewer))
+            if (IsVisibleTo(viewer) != 0)
             {
                 return null;
             }
@@ -390,7 +392,7 @@ namespace NetMud.Data.NaturalResource
         public virtual IMessage RenderToScan(IEntity viewer)
         {
             //TODO: Make this half power
-            if (!IsVisibleTo(viewer))
+            if (IsVisibleTo(viewer) != 0)
             {
                 return null;
             }
@@ -406,7 +408,7 @@ namespace NetMud.Data.NaturalResource
         public virtual IEnumerable<IMessage> RenderToInspect(IEntity viewer)
         {
             //TODO: Make this double power
-            if (!IsVisibleTo(viewer))
+            if (IsVisibleTo(viewer) != 0)
             {
                 return null;
             }
@@ -430,17 +432,19 @@ namespace NetMud.Data.NaturalResource
         /// </summary>
         /// <param name="viewer">the observing entity</param>
         /// <returns>If this is observable</returns>
-        public virtual bool IsAudibleTo(IEntity viewer)
+        public virtual short IsAudibleTo(IEntity viewer)
         {
             if (viewer != null)
             {
                 int value = 0;
                 ValueRange<float> range = viewer.GetAuditoryRange();
 
-                return value >= range.Low && value <= range.High;
+                return value < range.Low ? (short)(value - range.Low)
+                    : value > range.High ? (short)(value - range.High)
+                    : (short)0;
             }
 
-            return true;
+            return 0;
         }
 
         /// <summary>
@@ -450,7 +454,7 @@ namespace NetMud.Data.NaturalResource
         /// <returns>the output strings</returns>
         public virtual IMessage RenderToAudible(IEntity viewer)
         {
-            if (!IsAudibleTo(viewer))
+            if (IsAudibleTo(viewer) != 0)
             {
                 return null;
             }
@@ -481,17 +485,19 @@ namespace NetMud.Data.NaturalResource
         /// </summary>
         /// <param name="viewer">the observing entity</param>
         /// <returns>If this is observable</returns>
-        public virtual bool IsSensibleTo(IEntity viewer)
+        public virtual short IsSensibleTo(IEntity viewer)
         {
             if (viewer != null)
             {
                 int value = 0;
                 ValueRange<float> range = viewer.GetPsychicRange();
 
-                return value >= range.Low && value <= range.High;
+                return value < range.Low ? (short)(value - range.Low)
+                    : value > range.High ? (short)(value - range.High)
+                    : (short)0;
             }
 
-            return true;
+            return 0;
         }
 
         /// <summary>
@@ -501,7 +507,7 @@ namespace NetMud.Data.NaturalResource
         /// <returns>the output strings</returns>
         public virtual IMessage RenderToSense(IEntity viewer)
         {
-            if (!IsSensibleTo(viewer))
+            if (IsSensibleTo(viewer) != 0)
             {
                 return null;
             }
@@ -532,17 +538,19 @@ namespace NetMud.Data.NaturalResource
         /// </summary>
         /// <param name="viewer">the observing entity</param>
         /// <returns>If this is observable</returns>
-        public virtual bool IsTastableTo(IEntity viewer)
+        public virtual short IsTastableTo(IEntity viewer)
         {
             if (viewer != null)
             {
                 int value = 0;
                 ValueRange<float> range = viewer.GetTasteRange();
 
-                return value >= range.Low && value <= range.High;
+                return value < range.Low ? (short)(value - range.Low)
+                    : value > range.High ? (short)(value - range.High)
+                    : (short)0;
             }
 
-            return true;
+            return 0;
         }
 
         /// <summary>
@@ -552,7 +560,7 @@ namespace NetMud.Data.NaturalResource
         /// <returns>the output strings</returns>
         public virtual IMessage RenderToTaste(IEntity viewer)
         {
-            if (!IsTastableTo(viewer))
+            if (IsTastableTo(viewer) != 0)
             {
                 return null;
             }
@@ -583,17 +591,19 @@ namespace NetMud.Data.NaturalResource
         /// </summary>
         /// <param name="viewer">the observing entity</param>
         /// <returns>If this is observable</returns>
-        public virtual bool IsSmellableTo(IEntity viewer)
+        public virtual short IsSmellableTo(IEntity viewer)
         {
             if (viewer != null)
             {
                 int value = 0;
                 ValueRange<float> range = viewer.GetOlefactoryRange();
 
-                return value >= range.Low && value <= range.High;
+                return value < range.Low ? (short)(value - range.Low)
+                    : value > range.High ? (short)(value - range.High)
+                    : (short)0;
             }
 
-            return true;
+            return 0;
         }
 
         /// <summary>
@@ -603,7 +613,7 @@ namespace NetMud.Data.NaturalResource
         /// <returns>the output strings</returns>
         public virtual IMessage RenderToSmell(IEntity viewer)
         {
-            if (!IsSmellableTo(viewer))
+            if (IsSmellableTo(viewer) != 0)
             {
                 return null;
             }
@@ -634,17 +644,19 @@ namespace NetMud.Data.NaturalResource
         /// </summary>
         /// <param name="viewer">the observing entity</param>
         /// <returns>If this is observable</returns>
-        public virtual bool IsTouchableTo(IEntity viewer)
+        public virtual short IsTouchableTo(IEntity viewer)
         {
             if (viewer != null)
             {
                 int value = 0;
                 ValueRange<float> range = viewer.GetTactileRange();
 
-                return value >= range.Low && value <= range.High;
+                return value < range.Low ? (short)(value - range.Low)
+                    : value > range.High ? (short)(value - range.High)
+                    : (short)0;
             }
 
-            return true;
+            return 0;
         }
 
         /// <summary>
@@ -654,7 +666,7 @@ namespace NetMud.Data.NaturalResource
         /// <returns>the output strings</returns>
         public virtual IMessage RenderToTouch(IEntity viewer)
         {
-            if (!IsTouchableTo(viewer))
+            if (IsTouchableTo(viewer) != 0)
             {
                 return null;
             }
@@ -706,7 +718,7 @@ namespace NetMud.Data.NaturalResource
 
         public virtual IEnumerable<IMessage> RenderResourceCollection(IEntity viewer, int amount)
         {
-            var collectiveContext = new LexicalContext()
+            var collectiveContext = new LexicalContext(viewer)
             {
                 Determinant = true,
                 Perspective = NarrativePerspective.SecondPerson,

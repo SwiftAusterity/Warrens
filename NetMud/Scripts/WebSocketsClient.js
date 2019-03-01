@@ -1,6 +1,10 @@
 ﻿function submitCharacter() {
     var cscVal = $('#currentCharacter').val();
 
+    if (cscVal === undefined || cscVal === null || cscVal === '-1' || cscVal === '') {
+        return;
+    }
+
     $.post("Player/SelectCharacter/" + cscVal, function (data) {
     });
 }
@@ -107,6 +111,14 @@ function LoadUIModules() {
 }
 
 function TestBrowser() {
+    var cscVal = $('#currentCharacter').val();
+
+    if (cscVal === undefined || cscVal === null || cscVal === '-1' || cscVal === '') {
+        AppendTextToOutput('Please create a character first and select it above.');
+
+        return;
+    }
+
     if ('WebSocket' in window) {
         var protocol = window.location.protocol.replace('http', 'ws');
 

@@ -1,4 +1,5 @@
-﻿using NetMud.DataStructure.System;
+﻿using NetMud.DataStructure.Linguistic;
+using NetMud.DataStructure.System;
 using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Architectural.EntityBase
@@ -16,10 +17,16 @@ namespace NetMud.DataStructure.Architectural.EntityBase
         IEnumerable<IMessage> RenderToLook(IEntity viewer);
 
         /// <summary>
+        /// Retrieve all of the descriptors that are tagged as Tactile output
+        /// </summary>
+        /// <returns>A collection of the descriptors</returns>
+        IEnumerable<ISensoryEvent> GetVisibleDescriptives(IEntity viewer);
+
+        /// <summary>
         /// Is this thing sensible to the entity
         /// </summary>
         /// <param name="actor">the observing entity</param>
-        /// <returns>If this is observeable</returns>
-        bool IsVisibleTo(IEntity actor);
+        /// <returns>0 = observable, negative = too low to detect, positive = too high to detect</returns>
+        short IsVisibleTo(IEntity actor);
     }
 }

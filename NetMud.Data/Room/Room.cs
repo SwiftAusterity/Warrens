@@ -267,7 +267,7 @@ namespace NetMud.Data.Room
                 sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
             }
 
-            var collectiveContext = new LexicalContext()
+            var collectiveContext = new LexicalContext(viewer)
             {
                 Determinant = true,
                 Perspective = NarrativePerspective.SecondPerson,
@@ -276,7 +276,7 @@ namespace NetMud.Data.Room
                 Tense = LexicalTense.Present
             };
 
-            var discreteContext = new LexicalContext()
+            var discreteContext = new LexicalContext(viewer)
             {
                 Determinant = true,
                 Perspective = NarrativePerspective.ThirdPerson,
@@ -294,7 +294,7 @@ namespace NetMud.Data.Room
                 switch (sense)
                 {
                     case MessagingType.Audible:
-                        if (!IsAudibleTo(viewer))
+                        if (IsAudibleTo(viewer) != 0)
                         {
                             continue;
                         }
@@ -321,7 +321,7 @@ namespace NetMud.Data.Room
 
                         break;
                     case MessagingType.Olefactory:
-                        if (!IsSmellableTo(viewer))
+                        if (IsSmellableTo(viewer) != 0)
                         {
                             continue;
                         }
@@ -348,7 +348,7 @@ namespace NetMud.Data.Room
 
                         break;
                     case MessagingType.Psychic:
-                        if (!IsSensibleTo(viewer))
+                        if (IsSensibleTo(viewer) != 0)
                         {
                             continue;
                         }
@@ -377,7 +377,7 @@ namespace NetMud.Data.Room
 
                         break;
                     case MessagingType.Taste:
-                        if (!IsTastableTo(viewer))
+                        if (IsTastableTo(viewer) != 0)
                         {
                             continue;
                         }
@@ -404,7 +404,7 @@ namespace NetMud.Data.Room
 
                         break;
                     case MessagingType.Tactile:
-                        if (!IsTouchableTo(viewer))
+                        if (IsTouchableTo(viewer) != 0)
                         {
                             continue;
                         }
@@ -437,7 +437,7 @@ namespace NetMud.Data.Room
 
                         break;
                     case MessagingType.Visible:
-                        if (!IsVisibleTo(viewer))
+                        if (IsVisibleTo(viewer) != 0)
                         {
                             continue;
                         }

@@ -36,9 +36,9 @@ namespace NetMud.Gaia.Geographical
             * 
             */
 
-            float portionalModifier = (float)Math.Max(.001, (celestialOrbitPosition / fullOrbitDistance)) * (rotationalPosition / 90);
+            float portionalModifier = (float)Math.Max(.001, celestialOrbitPosition / fullOrbitDistance) * (1 + rotationalPosition / 90);
 
-            return portionalModifier * (10000 / distanceFromWorld);
+            return portionalModifier * (1000 / distanceFromWorld);
         }
     }
 }

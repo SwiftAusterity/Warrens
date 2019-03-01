@@ -229,7 +229,7 @@ namespace NetMud.Data.Room
         {
             try
             {
-                var collectiveContext = new LexicalContext()
+                var collectiveContext = new LexicalContext(null)
                 {
                     Determinant = true,
                     Perspective = NarrativePerspective.ThirdPerson,

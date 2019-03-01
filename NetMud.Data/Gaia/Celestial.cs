@@ -118,7 +118,7 @@ namespace NetMud.Data.Gaia
                     case MessagingType.Tactile:
                     case MessagingType.Taste:
                     case MessagingType.Visible:
-                        if (!IsVisibleTo(viewer))
+                        if (IsVisibleTo(viewer) != 0)
                         {
                             continue;
                         }
@@ -153,7 +153,7 @@ namespace NetMud.Data.Gaia
                 case MessagingType.Taste:
                     break;
                 case MessagingType.Visible:
-                    if (IsVisibleTo(viewer))
+                    if (IsVisibleTo(viewer) == 0)
                     {
                         me.TryModify(GetVisibleDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     }
@@ -175,7 +175,7 @@ namespace NetMud.Data.Gaia
         /// <returns>the output strings</returns>
         public string GetDescribableName(IEntity viewer)
         {
-            if (!IsVisibleTo(viewer))
+            if (IsVisibleTo(viewer) != 0)
             {
                 return string.Empty;
             }
@@ -183,7 +183,7 @@ namespace NetMud.Data.Gaia
             return GetSelf(MessagingType.Visible).ToString();
         }
 
-        internal ISensoryEvent GetSelf(MessagingType type, int strength = 100)
+        internal ISensoryEvent GetSelf(MessagingType type, int strength = 30)
         {
             return new SensoryEvent()
             {
@@ -233,14 +233,14 @@ namespace NetMud.Data.Gaia
                     case MessagingType.Taste:
                         break;
                     case MessagingType.Visible:
-                        if (!IsVisibleTo(viewer))
+                        if (IsVisibleTo(viewer) != 0)
                         {
                             continue;
                         }
 
                         me.TryModify(GetVisibleDescriptives(viewer));
 
-                        me.Event.Context = new LexicalContext()
+                        me.Event.Context = new LexicalContext(viewer)
                         {
                             Determinant = true,
                             Perspective = NarrativePerspective.None,
@@ -249,7 +249,7 @@ namespace NetMud.Data.Gaia
                             Tense = LexicalTense.Present
                         };
 
-                        var skyContext = new LexicalContext()
+                        var skyContext = new LexicalContext(viewer)
                         {
                             Determinant = true,
                             Perspective = NarrativePerspective.None,
@@ -287,7 +287,7 @@ namespace NetMud.Data.Gaia
         /// </summary>
         /// <param name="viewer">the viewing entity</param>
         /// <returns>If this is visible</returns>
-        public bool IsVisibleTo(IEntity viewer)
+        public short IsVisibleTo(IEntity viewer)
         {
             if (viewer != null)
             {
@@ -295,10 +295,12 @@ namespace NetMud.Data.Gaia
                 int value = Luminosity;
                 ValueRange<float> range = viewer.GetVisualRange();
 
-                return value >= range.Low && value <= range.High;
+                return value < range.Low ? (short)(value - range.Low)
+                    : value > range.High ? (short)(value - range.High)
+                    : (short)0;
             }
 
-            return true;
+            return 0;
         }
 
         /// <summary>
@@ -308,7 +310,7 @@ namespace NetMud.Data.Gaia
         /// <returns>the output strings</returns>
         public IEnumerable<IMessage> RenderToLook(IEntity viewer)
         {
-            if (!IsVisibleTo(viewer))
+            if (IsVisibleTo(viewer) != 0)
             {
                 return new IMessage[] { new Message(MessagingType.Visible, new SensoryEvent(MessagingType.Visible)) };
             }

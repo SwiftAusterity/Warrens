@@ -176,7 +176,7 @@ namespace NetMud.Websock
             IEnumerable<string> populace = Enumerable.Empty<string>();
             string locationDescription = string.Empty;
 
-            var lexicalContext = new LexicalContext()
+            var lexicalContext = new LexicalContext(_currentPlayer)
             {
                 Language = _currentPlayer.Template<IPlayerTemplate>().Account.Config.UILanguage,
                 Perspective = NarrativePerspective.SecondPerson,

@@ -1,4 +1,5 @@
 ﻿using NetMud.DataStructure.Architectural.ActorBase;
+using NetMud.DataStructure.Architectural.EntityBase;
 using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Linguistic
@@ -8,6 +9,11 @@ namespace NetMud.DataStructure.Linguistic
     /// </summary>
     public class LexicalContext
     {
+        /// <summary>
+        /// The person/thing observing this
+        /// </summary>
+        public IEntity Observer { get; set; }
+
         /// <summary>
         /// The language this is derived from
         /// </summary>
@@ -68,7 +74,7 @@ namespace NetMud.DataStructure.Linguistic
         /// </summary>
         public int Quality { get; set; }
 
-        public LexicalContext()
+        public LexicalContext(IEntity observer)
         {
             Tense = LexicalTense.Present;
             Position = LexicalPosition.Near;
@@ -79,6 +85,7 @@ namespace NetMud.DataStructure.Linguistic
             Severity = 0;
             Elegance = 0;
             Quality = 0;
+            Observer = observer;
 
             Semantics = new HashSet<string>();
         }
