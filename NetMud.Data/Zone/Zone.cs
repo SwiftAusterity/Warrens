@@ -223,10 +223,7 @@ namespace NetMud.Data.Zone
                 switch (sense)
                 {
                     case MessagingType.Audible:
-                        if (IsAudibleTo(viewer) != 0)
-                        {
-                            continue;
-                        }
+                        me.Strength = 30 + (GetAudibleDelta(viewer) * 30);
 
                         IEnumerable<ISensoryEvent> aDescs = GetAudibleDescriptives(viewer);
 
@@ -255,10 +252,7 @@ namespace NetMud.Data.Zone
 
                         break;
                     case MessagingType.Olefactory:
-                        if (IsSmellableTo(viewer) != 0)
-                        {
-                            continue;
-                        }
+                        me.Strength = 30 + (GetSmellDelta(viewer) * 30);
 
                         IEnumerable<ISensoryEvent> oDescs = GetSmellableDescriptives(viewer);
 
@@ -287,10 +281,7 @@ namespace NetMud.Data.Zone
 
                         break;
                     case MessagingType.Psychic:
-                        if (IsSensibleTo(viewer) != 0)
-                        {
-                            continue;
-                        }
+                        me.Strength = 30 + (GetPsychicDelta(viewer) * 30);
 
                         IEnumerable<ISensoryEvent> pDescs = GetPsychicDescriptives(viewer);
 
@@ -323,6 +314,8 @@ namespace NetMud.Data.Zone
                     case MessagingType.Taste:
                         continue;
                     case MessagingType.Tactile:
+                        me.Strength = 30 + (GetTactileDelta(viewer) * 30);
+
                         //Add the temperature
                         me.TryModify(LexicalType.Verb, GrammaticalType.Verb, "feels").TryModify(new Lexica[] {
                             new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, MeteorologicalUtilities.ConvertHumidityToType(EffectiveHumidity()).ToString(), collectiveContext),
@@ -331,16 +324,12 @@ namespace NetMud.Data.Zone
 
                         break;
                     case MessagingType.Visible:
-                        if (IsVisibleTo(viewer) != 0)
-                        {
-                            continue;
-                        }
+                        me.Strength = 30 + (GetVisibleDelta(viewer) * 30);
 
                         IEnumerable<ISensoryEvent> vDescs = GetVisibleDescriptives(viewer);
 
                         if (vDescs.Count() > 0)
                         {
-
                             me.TryModify(vDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
 
                             Lexica collectiveSight = new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you", collectiveContext);

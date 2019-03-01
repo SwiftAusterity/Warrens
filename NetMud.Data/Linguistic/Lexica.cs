@@ -1,4 +1,5 @@
 ﻿using NetMud.Communication.Lexical;
+using NetMud.Communication.Messaging;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural;
@@ -492,6 +493,120 @@ namespace NetMud.Data.Linguistic
 
             return context;
         }
+
+
+        private Message GetObscura(MessagingType sensoryType, IEntity observer, bool under, int range)
+        {
+            ILexica message = null;
+
+            var context = new LexicalContext(observer)
+            {
+                Determinant = true,
+                Perspective = NarrativePerspective.FirstPerson,
+                Position = LexicalPosition.Around
+            };
+
+            switch (sensoryType)
+            {
+                case MessagingType.Audible:
+                    if (under)
+                    {
+                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "hear", observer, observer)
+                                                        .TryModify(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "sounds", context))
+                                                        .TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "soft", context));
+
+                    }
+                    else
+                    {
+                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "hear", observer, observer)
+                                                        .TryModify(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "sounds", context))
+                                                        .TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "loud", context));
+                    }
+                    break;
+                case MessagingType.Olefactory:
+                    if (under)
+                    {
+                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "smell", observer, observer)
+                                                        .TryModify(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "something", context))
+                                                        .TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "subtle", context));
+
+                    }
+                    else
+                    {
+                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "smell", observer, observer)
+                                                        .TryModify(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "something", context))
+                                                        .TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "pungent", context));
+                    }
+                    break;
+                case MessagingType.Psychic:
+                    if (under)
+                    {
+                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "sense", observer, observer)
+                                                        .TryModify(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "presence", context))
+                                                        .TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "vague", context));
+
+                    }
+                    else
+                    {
+                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "sense", observer, observer)
+                                                        .TryModify(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "presence", context))
+                                                        .TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "disturbing", context));
+                    }
+                    break;
+                case MessagingType.Tactile:
+                    context.Position = LexicalPosition.Attached;
+                    if (under)
+                    {
+                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "brushes", observer, observer)
+                                                        .TryModify(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "skin", context))
+                                                        .TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "lightly", context));
+
+                    }
+                    else
+                    {
+                        context.Elegance = -5;
+                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "rubs", observer, observer)
+                                                        .TryModify(new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you", context));
+                    }
+                    break;
+                case MessagingType.Taste:
+                    context.Position = LexicalPosition.InsideOf;
+
+                    if (under)
+                    {
+                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "taste", observer, observer)
+                                                        .TryModify(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "something", context))
+                                                        .TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "subtle", context));
+
+                    }
+                    else
+                    {
+                        context.Elegance = -5;
+                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "taste", observer, observer)
+                                                        .TryModify(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "something", context))
+                                                        .TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "offensive", context));
+                    }
+                    break;
+                case MessagingType.Visible:
+                    context.Plural = true;
+
+                    if (under)
+                    {
+                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "see", observer, observer)
+                                                .TryModify(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "shadows", context));
+                    }
+                    else
+                    {
+                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "see", observer, observer)
+                                                .TryModify(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "lights", context))
+                                                .TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "blinding", context));
+                    }
+                    break;
+            }
+
+            return new Message(MessagingType.Audible, new SensoryEvent(message, Math.Abs(range), sensoryType));
+        }
+
 
         #region Equality Functions
         /// <summary>

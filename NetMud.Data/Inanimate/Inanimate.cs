@@ -306,10 +306,7 @@ namespace NetMud.Data.Inanimate
                 switch (sense)
                 {
                     case MessagingType.Audible:
-                        if (IsAudibleTo(viewer) != 0)
-                        {
-                            continue;
-                        }
+                        me.Strength = 30 + (GetAudibleDelta(viewer) * 30);
 
                         IEnumerable<ISensoryEvent> aDescs = GetAudibleDescriptives(viewer);
 
@@ -333,10 +330,7 @@ namespace NetMud.Data.Inanimate
 
                         break;
                     case MessagingType.Olefactory:
-                        if (IsSmellableTo(viewer) != 0)
-                        {
-                            continue;
-                        }
+                        me.Strength = 30 + (GetSmellDelta(viewer) * 30);
 
                         IEnumerable<ISensoryEvent> oDescs = GetSmellableDescriptives(viewer);
 
@@ -360,10 +354,7 @@ namespace NetMud.Data.Inanimate
 
                         break;
                     case MessagingType.Psychic:
-                        if (IsSensibleTo(viewer) != 0)
-                        {
-                            continue;
-                        }
+                        me.Strength = 30 + (GetPsychicDelta(viewer) * 30);
 
                         IEnumerable<ISensoryEvent> pDescs = GetPsychicDescriptives(viewer);
 
@@ -389,10 +380,7 @@ namespace NetMud.Data.Inanimate
 
                         break;
                     case MessagingType.Taste:
-                        if (IsTastableTo(viewer) != 0)
-                        {
-                            continue;
-                        }
+                        me.Strength = 30 + (GetTasteDelta(viewer) * 30);
 
                         IEnumerable<ISensoryEvent> taDescs = GetTasteDescriptives(viewer);
 
@@ -416,10 +404,7 @@ namespace NetMud.Data.Inanimate
 
                         break;
                     case MessagingType.Tactile:
-                        if (IsTouchableTo(viewer) != 0)
-                        {
-                            continue;
-                        }
+                        me.Strength = 30 + (GetTactileDelta(viewer) * 30);
 
                         IEnumerable<ISensoryEvent> tDescs = GetSmellableDescriptives(viewer);
 
@@ -443,10 +428,7 @@ namespace NetMud.Data.Inanimate
 
                         break;
                     case MessagingType.Visible:
-                        if (IsVisibleTo(viewer) != 0)
-                        {
-                            continue;
-                        }
+                        me.Strength = 30 + (GetVisibleDelta(viewer) * 30);
 
                         IEnumerable<ISensoryEvent> vDescs = GetVisibleDescriptives(viewer);
 

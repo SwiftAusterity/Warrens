@@ -310,13 +310,10 @@ namespace NetMud.Data.Room
         /// <returns>the output strings</returns>
         public override IEnumerable<IMessage> RenderToLook(IEntity viewer)
         {
-            if (IsVisibleTo(viewer) != 0)
-            {
-                return null;
-            }
+            var strength = 30 + (GetVisibleDelta(viewer) * 30);
 
             IPathwayTemplate bS = Template<IPathwayTemplate>();
-            ISensoryEvent me = GetSelf(MessagingType.Visible);
+            ISensoryEvent me = GetSelf(MessagingType.Visible, strength);
 
             if (bS.Descriptives.Any())
             {

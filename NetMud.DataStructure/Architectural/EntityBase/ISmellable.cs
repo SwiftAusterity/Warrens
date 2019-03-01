@@ -27,6 +27,6 @@ namespace NetMud.DataStructure.Architectural.EntityBase
         /// </summary>
         /// <param name="actor">the observing entity</param>
         /// <returns>0 = observable, negative = too low to detect, positive = too high to detect</returns>
-        short IsSmellableTo(IEntity actor);
+        short GetSmellDelta(IEntity actor);
     }
 }

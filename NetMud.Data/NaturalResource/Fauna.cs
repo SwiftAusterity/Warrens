@@ -1,4 +1,5 @@
-﻿using NetMud.Data.Architectural.DataIntegrity;
+﻿using NetMud.Communication.Messaging;
+using NetMud.Data.Architectural.DataIntegrity;
 using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.Data.Linguistic;
 using NetMud.DataAccess.Cache;
@@ -97,11 +98,6 @@ namespace NetMud.Data.NaturalResource
         /// <returns>a view string</returns>
         public override IEnumerable<IMessage> RenderResourceCollection(IEntity viewer, int amount)
         {
-            if (IsVisibleTo(viewer) != 0)
-            {
-                return null;
-            }
-
             var collectiveContext = new LexicalContext(viewer)
             {
                 Determinant = true,
@@ -120,12 +116,12 @@ namespace NetMud.Data.NaturalResource
                 Tense = LexicalTense.Present
             };
 
-            var me = GetSelf(MessagingType.Visible);
+            var me = GetSelf(MessagingType.Visible, 30 + (GetVisibleDelta(viewer) * 30));
             Lexica collectiveNoun = new Lexica(LexicalType.Noun, GrammaticalType.Descriptive, Race.CollectiveNoun, collectiveContext);
             collectiveNoun.TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, amount.ToString(), discreteContext));
-            me.Occurrence.TryModify(collectiveNoun);
+            me.TryModify(collectiveNoun);
 
-            return new IMessage[] { me };
+            return new IMessage[] { new Message(MessagingType.Visible, me) };
         }
         #endregion
     }
