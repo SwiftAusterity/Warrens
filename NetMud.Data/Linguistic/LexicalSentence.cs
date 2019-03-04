@@ -87,10 +87,21 @@ namespace NetMud.Data.Linguistic
             foreach (var wordRule in Language.Rules.Where(rul => rul.Matches(lex))
                                                                .OrderByDescending(rul => rul.RuleSpecificity()))
             {
-                if (wordRule.NeedsArticle && !lex.Modifiers.Any(mod => mod.Type == LexicalType.Article))
+                if (wordRule.NeedsArticle && !lex.Modifiers.Any(mod => mod.Type == LexicalType.Article)
+                    && (!wordRule.WhenPositional || lex.Context.Position != LexicalPosition.None))
                 {
-                    var articleContext = lex.Context;
-                    articleContext.Determinant = !lex.Context.Plural;
+                    var articleContext = lex.Context.Clone();
+
+                    //Make it determinant if the word is plural
+                    articleContext.Determinant = lex.Context.Plural || articleContext.Determinant;
+
+                    //If we have position and it's the subject we have to short circuit this
+                    if(lex.Role != GrammaticalType.Verb)
+                    {
+                        articleContext.Position = LexicalPosition.None;
+                        articleContext.Perspective = NarrativePerspective.None;
+                        articleContext.Tense = LexicalTense.None;
+                    }
 
                     IDictata article = null;
                     if (wordRule.SpecificAddition != null)
@@ -117,6 +128,14 @@ namespace NetMud.Data.Linguistic
                 {
                     lex.Phrase = string.Format("{1}{0}", wordRule.AddSuffix, lex.Phrase.Trim());
                 }
+            }
+
+            //Positional object modifier
+            if(lex.Role == GrammaticalType.DirectObject && lex.Context.Position != LexicalPosition.None && !lex.Modifiers.Any(mod => mod.Role == GrammaticalType.IndirectObject))
+            {
+                var positionalWord = Thesaurus.GetWord(lex.Context, LexicalType.Article);
+
+                lex.TryModify(new Lexica(LexicalType.Noun, GrammaticalType.IndirectObject, positionalWord.Name, lex.Context));
             }
 
             var rule = Language.SentenceRules.FirstOrDefault(rul => rul.Type == Type && rul.Fragment == lex.Role);

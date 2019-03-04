@@ -49,6 +49,11 @@ namespace NetMud.DataStructure.Linguistic
         HashSet<IContractionRule> ContractionRules { get; set; }
 
         /// <summary>
+        /// Word transformational rules
+        /// </summary>
+        HashSet<IDictataTransformationRule> TransformationRules { get; set; }
+
+        /// <summary>
         /// The base needed words for a language to function
         /// </summary>
         BaseLanguageMembers BaseWords { get; set; }

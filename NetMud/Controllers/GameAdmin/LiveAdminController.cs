@@ -218,7 +218,7 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult RemoveZoneDescriptive(string id = "", string authorize = "")
         {
             string message = string.Empty;
-            long zoneId = -1;
+            string zoneId = "";
 
             if (string.IsNullOrWhiteSpace(authorize))
             {
@@ -238,7 +238,7 @@ namespace NetMud.Controllers.GameAdmin
                     string type = values[0];
                     string phrase = values[1];
 
-                    IZoneTemplate obj = TemplateCache.Get<IZoneTemplate>(id);
+                    var obj = LiveCache.Get<IZone>(new LiveCacheKey(typeof(IZone), id));
 
                     if (obj == null)
                     {
@@ -249,13 +249,13 @@ namespace NetMud.Controllers.GameAdmin
                         GrammaticalType grammaticalType = (GrammaticalType)Enum.Parse(typeof(GrammaticalType), type);
                         ISensoryEvent existingOccurrence = obj.Descriptives.FirstOrDefault(occurrence => occurrence.Event.Role == grammaticalType
                                                                                             && occurrence.Event.Phrase.Equals(phrase, StringComparison.InvariantCultureIgnoreCase));
-                        zoneId = obj.Id;
+                        zoneId = obj.BirthMark;
 
                         if (existingOccurrence != null)
                         {
                             obj.Descriptives.Remove(existingOccurrence);
 
-                            if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+                            if (obj.Save())
                             {
                                 LoggingUtility.LogAdminCommandUsage("*WEB* - LIVE DATA - RemoveDescriptive[" + id.ToString() + "|" + type.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                                 message = "Delete Successful.";

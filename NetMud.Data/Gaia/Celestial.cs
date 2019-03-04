@@ -223,7 +223,7 @@ namespace NetMud.Data.Gaia
                     case MessagingType.Psychic:
                     case MessagingType.Tactile:
                     case MessagingType.Taste:
-                        break;
+                        continue;
                     case MessagingType.Visible:
                         me.Strength = 30 + (GetVisibleDelta(viewer) * 30);
 

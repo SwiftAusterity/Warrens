@@ -231,7 +231,69 @@ namespace NetMud.Models
 
         PropertyBinderAttribute TryFindPropertyBinderAttribute(PropertyDescriptor propertyDescriptor)
         {
-            return propertyDescriptor.Attributes.OfType<PropertyBinderAttribute>().FirstOrDefault();
+            var binder = propertyDescriptor.Attributes.OfType<PropertyBinderAttribute>().FirstOrDefault();
+
+            if(binder == null && propertyDescriptor.ComponentType.IsInterface && !propertyDescriptor.PropertyType.IsValueType)
+            {
+                var componentType = propertyDescriptor.ComponentType;
+
+                //Convert the interface to the concrete class by finding a concrete class that impls this interface
+                if (!componentType.IsGenericType)
+                {
+                    Type type = null;
+
+                    if (componentType == typeof(ILocationData))
+                    {
+                        if (componentType.Name.Contains("Zone"))
+                        {
+                            type = typeof(ZoneTemplate);
+                        }
+                        else if (componentType.Name.Contains("Room"))
+                        {
+                            type = typeof(RoomTemplate);
+                        }
+                    }
+                    else
+                    {
+                        type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(componentType));
+
+                        if (type == null)
+                        {
+                            type = typeof(SensoryEvent).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(componentType));
+                        }
+                    }
+
+                    if (type == null)
+                    {
+                        return null;
+                    }
+
+                    var typeProps = type.GetProperties();
+                    var myProp = typeProps.FirstOrDefault(prop => prop.Name == propertyDescriptor.Name && prop.PropertyType == propertyDescriptor.PropertyType);
+
+                    return (PropertyBinderAttribute)myProp.GetCustomAttributes(typeof(PropertyBinderAttribute), true).FirstOrDefault();
+                }
+                else
+                {
+                    //Our interface involves generics so go find the concrete class by type name match so we can build it out using the correct type for the generic parameter
+                    string genericName = componentType.Name.Substring(1);
+                    Type type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.IsGenericType && x.Name.Equals(genericName));
+
+                    if (type == null)
+                    {
+                        return null;
+                    }
+
+                    Type genericType = type.MakeGenericType(componentType.GenericTypeArguments);
+
+                    var typeProps = genericType.GetProperties();
+                    var myProp = typeProps.FirstOrDefault(prop => prop.Name == propertyDescriptor.Name && prop.PropertyType == propertyDescriptor.PropertyType);
+
+                    return myProp.CustomAttributes.OfType<PropertyBinderAttribute>().FirstOrDefault();
+                }
+            }
+
+            return binder;
         }
     }
 }

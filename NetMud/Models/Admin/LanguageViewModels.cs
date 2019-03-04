@@ -6,6 +6,7 @@ using NetMud.DataStructure.Linguistic;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace NetMud.Models.Admin
 {
@@ -70,6 +71,7 @@ namespace NetMud.Models.Admin
                 DataObject.AntecendentPunctuation = DataTemplate.AntecendentPunctuation;
                 DataObject.BaseWords = DataTemplate.BaseWords;
                 DataObject.ContractionRules = DataTemplate.ContractionRules;
+                DataObject.TransformationRules = DataTemplate.TransformationRules;
                 DataObject.Gendered = DataTemplate.Gendered;
                 DataObject.PrecedentPunctuation = DataTemplate.PrecedentPunctuation;
                 DataObject.Rules = DataTemplate.Rules;
@@ -80,12 +82,12 @@ namespace NetMud.Models.Admin
 
         public AddEditLanguageViewModel(string archivePath, ILanguage item) : base(archivePath, ConfigDataType.Language, item)
         {
-            ValidWords = ConfigDataCache.GetAll<IDictata>();
+            ValidWords = ConfigDataCache.GetAll<IDictata>().Where(word => word.Language == item).OrderBy(word => word.Name);
             ValidLanguages = ConfigDataCache.GetAll<ILanguage>();
-            DataObject = item;
+            DataObject = (Language)item;
         }
         public IEnumerable<ILanguage> ValidLanguages { get; set; }
         public IEnumerable<IDictata> ValidWords { get; set; }
-        public ILanguage DataObject { get; set; }
+        public Language DataObject { get; set; }
     }
 }

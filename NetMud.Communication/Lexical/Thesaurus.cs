@@ -97,9 +97,9 @@ namespace NetMud.Communication.Lexical
 
             var possibleWords = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.Language == context.Language && dict.WordType == type && dict.SuitableForUse);
 
-            return possibleWords.OrderByDescending(word => (context.Position == LexicalPosition.None || word.Positional == context.Position ? 5 : 0) + 
-                                                           (context.Tense == LexicalTense.None || word.Tense == context.Tense ? 5 : 0) + 
-                                                           (context.Perspective == NarrativePerspective.None || word.Perspective == context.Perspective ? 5 : 0) +
+            return possibleWords.OrderByDescending(word => (word.Positional == context.Position ? 5 : 0) + 
+                                                           (word.Tense == context.Tense ? 5 : 0) + 
+                                                           (word.Perspective == context.Perspective ? 5 : 0) +
                                                            (word.Possessive == context.Possessive ? 7 : 0) +
                                                            ((context.GenderForm == null || word.Feminine == context.GenderForm?.Feminine) ? 10 : 0) +
                                                            (word.Plural == context.Plural ? 2 : 0) +

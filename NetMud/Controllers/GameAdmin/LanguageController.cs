@@ -184,6 +184,7 @@ namespace NetMud.Controllers.GameAdmin
             obj.SentenceRules = vModel.DataObject.SentenceRules;
             obj.BaseWords = vModel.DataObject.BaseWords;
             obj.ContractionRules = vModel.DataObject.ContractionRules;
+            obj.TransformationRules = vModel.DataObject.TransformationRules;
 
             if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {

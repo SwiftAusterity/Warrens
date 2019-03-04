@@ -77,7 +77,7 @@ namespace NetMud.DataStructure.Linguistic
         public LexicalContext(IEntity observer)
         {
             Tense = LexicalTense.Present;
-            Position = LexicalPosition.Near;
+            Position = LexicalPosition.None;
             Perspective = NarrativePerspective.FirstPerson;
             Determinant = true;
             Possessive = false;
@@ -88,6 +88,25 @@ namespace NetMud.DataStructure.Linguistic
             Observer = observer;
 
             Semantics = new HashSet<string>();
+        }
+
+        public LexicalContext Clone()
+        {
+            return new LexicalContext(Observer)
+            {
+                Tense = Tense,
+                Position = Position,
+                Perspective = Perspective,
+                Determinant = Determinant,
+                Possessive = Possessive,
+                Plural = Plural,
+                Severity = Severity,
+                Elegance = Elegance,
+                Quality = Quality,
+                Semantics = Semantics,
+                Language = Language,
+                GenderForm = GenderForm
+            };
         }
     }
 }

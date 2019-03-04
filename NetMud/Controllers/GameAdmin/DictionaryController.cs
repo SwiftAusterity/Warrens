@@ -7,6 +7,7 @@ using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Linguistic;
 using NetMud.Models.Admin;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
@@ -188,6 +189,30 @@ namespace NetMud.Controllers.GameAdmin
 
             if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {
+                foreach(var syn in obj.Synonyms)
+                {
+                    if(!syn.Synonyms.Any(dict => dict == obj))
+                    {
+                        var synonyms = syn.Synonyms;
+                        synonyms.Add(obj);
+
+                        syn.Synonyms = synonyms;
+                        syn.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
+                    }
+                }
+
+                foreach (var ant in obj.Antonyms)
+                {
+                    if (!ant.Antonyms.Any(dict => dict == obj))
+                    {
+                        var antonyms = ant.Antonyms;
+                        antonyms.Add(obj);
+
+                        ant.Antonyms = antonyms;
+                        ant.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
+                    }
+                }
+
                 LoggingUtility.LogAdminCommandUsage("*WEB* - EditDictata[" + obj.UniqueKey + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 message = "Edit Successful.";
             }
@@ -220,8 +245,6 @@ namespace NetMud.Controllers.GameAdmin
                 Quality = obj.Quality + vModel.Quality,
                 Elegance = obj.Elegance + vModel.Elegance,
                 Tense = obj.Tense,
-                Synonyms = vModel.Synonym ? obj.Synonyms : obj.Antonyms,
-                Antonyms = vModel.Synonym ? obj.Antonyms : obj.Synonyms,
                 Language = obj.Language,
                 WordType = obj.WordType,
                 Feminine = obj.Feminine,
@@ -233,14 +256,28 @@ namespace NetMud.Controllers.GameAdmin
                 Semantics = obj.Semantics
             };
 
+            var synonyms = obj.Synonyms;
+            synonyms.Add(obj);
+
+            if (vModel.Synonym)
+            {
+                relatedWord.Synonyms = synonyms;
+                relatedWord.Antonyms = obj.Antonyms;
+            }
+            else
+            {
+                relatedWord.Synonyms = obj.Antonyms;
+                relatedWord.Antonyms = synonyms;
+            }
+
             if (relatedWord.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {
                 if(vModel.Synonym)
                 {
-                    var synonyms = obj.Synonyms;
-                    synonyms.Add(relatedWord);
+                    var mySynonyms = obj.Synonyms;
+                    mySynonyms.Add(relatedWord);
 
-                    obj.Synonyms = synonyms;
+                    obj.Synonyms = mySynonyms;
                 }
                 else
                 {
@@ -251,6 +288,7 @@ namespace NetMud.Controllers.GameAdmin
                 }
 
                 obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
+                relatedWord.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
 
                 LoggingUtility.LogAdminCommandUsage("*WEB* - EditDictata[" + obj.UniqueKey + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 message = "Edit Successful.";

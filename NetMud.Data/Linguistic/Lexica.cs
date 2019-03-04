@@ -77,7 +77,7 @@ namespace NetMud.Data.Linguistic
             Modifiers = new HashSet<ILexica>();
 
             LexicalProcessor.VerifyDictata(this);
-            Context = context;
+            Context = context.Clone();
         }
 
         public Lexica(LexicalType type, GrammaticalType role, string phrase, IEntity origin, IEntity observer)
@@ -126,7 +126,7 @@ namespace NetMud.Data.Linguistic
             {
                 if(modifier.Context == null)
                 {
-                    modifier.Context = Context;
+                    modifier.Context = Context.Clone();
                 }
                 else
                 {
@@ -426,10 +426,10 @@ namespace NetMud.Data.Linguistic
                     Lexica newSubject = new Lexica(subject.Type, subject.Role, subject.Phrase, subject.Context);
                     newSubject.TryModify(subject.Modifiers);
 
-                    var verbContext = subject.Context;
+                    var verbContext = subject.Context.Clone();
                     verbContext.Semantics = new HashSet<string> { "existential" };
                     verbContext.Determinant = false;
-                    var verb = Thesaurus.GetWord(subject.Context, LexicalType.Verb);
+                    var verb = Thesaurus.GetWord(verbContext, LexicalType.Verb);
 
                     var verbLex = new Lexica(LexicalType.Verb, GrammaticalType.Verb, verb.Name, verbContext);
                     verbLex.TryModify(newSubject.Modifiers);

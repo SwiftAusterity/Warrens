@@ -89,7 +89,7 @@ namespace NetMud.Models.Admin
         {
             ValidWords = ConfigDataCache.GetAll<IDictata>();
             ValidLanguages = ConfigDataCache.GetAll<ILanguage>();
-            DataObject = item;
+            DataObject = (Dictata)item;
         }
 
         [Display(Name = "Word", Description = "The new word's name/spelling.")]
@@ -113,6 +113,6 @@ namespace NetMud.Models.Admin
 
         public IEnumerable<ILanguage> ValidLanguages { get; set; }
         public IEnumerable<IDictata> ValidWords { get; set; }
-        public IDictata DataObject { get; set; }
+        public Dictata DataObject { get; set; }
     }
 }

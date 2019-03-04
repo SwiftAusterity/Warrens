@@ -78,6 +78,12 @@ namespace NetMud.Data.Linguistic
         public HashSet<IContractionRule> ContractionRules { get; set; }
 
         /// <summary>
+        /// Word transformational rules
+        /// </summary>
+        [UIHint("DictataTransformationRules")]
+        public HashSet<IDictataTransformationRule> TransformationRules { get; set; }
+
+        /// <summary>
         /// Rules for sentence construction
         /// </summary>
         [UIHint("SentenceRules")]
@@ -96,6 +102,7 @@ namespace NetMud.Data.Linguistic
             ContractionRules = new HashSet<IContractionRule>();
             SentenceRules = new HashSet<SentenceGrammarRule>();
             BaseWords = new BaseLanguageMembers();
+            TransformationRules = new HashSet<IDictataTransformationRule>();
         }
 
         #region Data persistence functions

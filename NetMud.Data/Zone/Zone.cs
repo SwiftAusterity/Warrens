@@ -202,13 +202,13 @@ namespace NetMud.Data.Zone
                 Determinant = true,
                 Perspective = NarrativePerspective.SecondPerson,
                 Plural = false,
-                Position = LexicalPosition.Around,
+                Position = LexicalPosition.None,
                 Tense = LexicalTense.Present
             };
 
             var discreteContext = new LexicalContext(viewer)
             {
-                Determinant = true,
+                Determinant = false,
                 Perspective = NarrativePerspective.ThirdPerson,
                 Plural = false,
                 Position = LexicalPosition.Far,

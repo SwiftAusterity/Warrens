@@ -26,16 +26,6 @@
         IDictata SpecificAddition { get; set; }
 
         /// <summary>
-        /// Only when the word ends with
-        /// </summary>
-        string WhenEndsWith { get; set; }
-
-        /// <summary>
-        /// Only when the word begins with
-        /// </summary>
-        string WhenBeginsWith { get; set; }
-
-        /// <summary>
         /// Only applies when the context is possessive
         /// </summary>
         bool WhenPossessive { get; set; }
@@ -44,6 +34,11 @@
         /// Only applies when the context is plural
         /// </summary>
         bool WhenPlural { get; set; }
+
+        /// <summary>
+        /// Only applies when the context has a position
+        /// </summary>
+        bool WhenPositional { get; set; }
 
         /// <summary>
         /// Add this prefix
@@ -69,6 +64,16 @@
         /// When the origin word has this semantic tag
         /// </summary>
         string FromSemantics { get; set; }
+
+        /// <summary>
+        /// Only when the word ends with
+        /// </summary>
+        string FromEndsWith { get; set; }
+
+        /// <summary>
+        /// Only when the word begins with
+        /// </summary>
+        string FromBeginsWith { get; set; }
 
         /// <summary>
         /// Applies when we're trying to figure out where to put this type of word

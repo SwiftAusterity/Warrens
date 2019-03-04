@@ -96,20 +96,6 @@ namespace NetMud.Data.Linguistic
         }
 
         /// <summary>
-        /// Only when the word ends with
-        /// </summary>
-        [Display(Name = "When Ends With", Description = "Only when the word ends with this string.")]
-        [DataType(DataType.Text)]
-        public string WhenEndsWith { get; set; }
-
-        /// <summary>
-        /// Only when the word begins with
-        /// </summary>
-        [Display(Name = "When Begins With", Description = "Only when the word begins with this string.")]
-        [DataType(DataType.Text)]
-        public string WhenBeginsWith { get; set; }
-
-        /// <summary>
         /// Only applies when the context is possessive
         /// </summary>
         [Display(Name = "When Possessive", Description = "Only when the word is possessive form.")]
@@ -122,6 +108,13 @@ namespace NetMud.Data.Linguistic
         [Display(Name = "When Plural", Description = "Only when the word is pluralized.")]
         [UIHint("Boolean")]
         public bool WhenPlural { get; set; }
+
+        /// <summary>
+        /// Only applies when the context has a position
+        /// </summary>
+        [Display(Name = "When Positional", Description = "Only when the word indicates relative position.")]
+        [UIHint("Boolean")]
+        public bool WhenPositional { get; set; }
 
         /// <summary>
         /// Add this prefix
@@ -157,6 +150,20 @@ namespace NetMud.Data.Linguistic
         [Display(Name = "From Semantic", Description = "When the origin word has this semantic tag.")]
         [DataType(DataType.Text)]
         public string FromSemantics { get; set; }
+
+        /// <summary>
+        /// Only when the word ends with
+        /// </summary>
+        [Display(Name = "From Ends With", Description = "Only when the origin word ends with this string.")]
+        [DataType(DataType.Text)]
+        public string FromEndsWith { get; set; }
+
+        /// <summary>
+        /// Only when the word begins with
+        /// </summary>
+        [Display(Name = "From Begins With", Description = "Only when the origin word begins with this string.")]
+        [DataType(DataType.Text)]
+        public string FromBeginsWith { get; set; }
 
         /// <summary>
         /// Applies when we're trying to figure out where to put this type of word
@@ -223,8 +230,8 @@ namespace NetMud.Data.Linguistic
             FromRole = GrammaticalType.None;
             ToSemantics = string.Empty;
             FromSemantics = string.Empty;
-            WhenBeginsWith = string.Empty;
-            WhenEndsWith = string.Empty;
+            FromBeginsWith = string.Empty;
+            FromEndsWith = string.Empty;
         }
 
         /// <summary>
@@ -235,8 +242,8 @@ namespace NetMud.Data.Linguistic
         {
             return (string.IsNullOrWhiteSpace(ToSemantics) ? 0 : 1) +
                     (string.IsNullOrWhiteSpace(FromSemantics) ? 0 : 1) +
-                    (string.IsNullOrWhiteSpace(WhenEndsWith) ? 0 : 3) +
-                    (string.IsNullOrWhiteSpace(WhenBeginsWith) ? 0 : 3) +
+                    (string.IsNullOrWhiteSpace(FromEndsWith) ? 0 : 3) +
+                    (string.IsNullOrWhiteSpace(FromBeginsWith) ? 0 : 3) +
                     (SpecificWord == null ? 0 : 99) +
                     (Tense == LexicalTense.None ? 0 : 2) +
                     (Perspective == NarrativePerspective.None ? 0 : 2) +
@@ -261,122 +268,14 @@ namespace NetMud.Data.Linguistic
 
             return (ToRole == GrammaticalType.None || ToRole == toRole)
                     && (ToType == LexicalType.None || ToType == toType)
-                    && (string.IsNullOrWhiteSpace(WhenBeginsWith) || lex.Phrase.StartsWith(WhenBeginsWith))
-                    && (string.IsNullOrWhiteSpace(WhenEndsWith) || lex.Phrase.EndsWith(WhenEndsWith))
+                    && (string.IsNullOrWhiteSpace(FromBeginsWith) || lex.Phrase.StartsWith(FromBeginsWith))
+                    && (string.IsNullOrWhiteSpace(FromEndsWith) || lex.Phrase.EndsWith(FromEndsWith))
                     && (Tense == LexicalTense.None || lex.Context.Tense == Tense)
                     && (Perspective == NarrativePerspective.None || lex.Context.Perspective == Perspective)
                     && (!WhenPlural || lex.Context.Plural)
                     && (!WhenPossessive || lex.Context.Possessive)
                     && ((SpecificWord != null && SpecificWord == lex.GetDictata())
                     || ((FromRole == GrammaticalType.None || FromRole == lex.Role) && (FromType == LexicalType.None || FromType == lex.Type)));
-        }
-    }
-
-    /// <summary>
-    /// Rules that identify contractions
-    /// </summary>
-    public class ContractionRule : IContractionRule
-    {
-        [JsonProperty("First")]
-        private ConfigDataCacheKey _first { get; set; }
-
-        /// <summary>
-        /// One of the words in the contraction (not an indicator of order)
-        /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        [Display(Name = "First", Description = "One of the words in the contraction (not an indicator of order).")]
-        [UIHint("DictataList")]
-        [DictataDataBinder]
-        public IDictata First
-        {
-            get
-            {
-                if (_first == null)
-                {
-                    return null;
-                }
-
-                return ConfigDataCache.Get<IDictata>(_first);
-            }
-            set
-            {
-                if (value == null)
-                {
-                    _first = null;
-                    return;
-                }
-
-                _first = new ConfigDataCacheKey(value);
-            }
-        }
-
-        [JsonProperty("Second")]
-        private ConfigDataCacheKey _second { get; set; }
-
-        /// <summary>
-        /// One of the words in the contraction (not an indicator of order)
-        /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        [Display(Name = "Second", Description = "One of the words in the contraction (not an indicator of order).")]
-        [UIHint("DictataList")]
-        [DictataDataBinder]
-        public IDictata Second
-        {
-            get
-            {
-                if (_second == null)
-                {
-                    return null;
-                }
-
-                return ConfigDataCache.Get<IDictata>(_second);
-            }
-            set
-            {
-                if (value == null)
-                {
-                    _second = null;
-                    return;
-                }
-
-                _second = new ConfigDataCacheKey(value);
-            }
-        }
-
-        [JsonProperty("Contraction")]
-        private ConfigDataCacheKey _contraction { get; set; }
-
-        /// <summary>
-        /// The contraction this turns into
-        /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        [Display(Name = "Contraction", Description = "The contraction this turns into.")]
-        [UIHint("DictataList")]
-        [DictataDataBinder]
-        public IDictata Contraction
-        {
-            get
-            {
-                if (_contraction == null)
-                {
-                    return null;
-                }
-
-                return ConfigDataCache.Get<IDictata>(_contraction);
-            }
-            set
-            {
-                if (value == null)
-                {
-                    _contraction = null;
-                    return;
-                }
-
-                _contraction = new ConfigDataCacheKey(value);
-            }
         }
     }
 }

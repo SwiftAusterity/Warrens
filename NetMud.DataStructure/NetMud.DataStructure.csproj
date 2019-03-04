@@ -183,6 +183,7 @@
     <Compile Include="Inanimate\IRenderAsHeld.cs" />
     <Compile Include="Linguistic\BaseLanguageMembers.cs" />
     <Compile Include="Linguistic\IContractionRule.cs" />
+    <Compile Include="Linguistic\IDictataTransformationRule.cs" />
     <Compile Include="Linguistic\IGrammarRule.cs" />
     <Compile Include="Linguistic\ILanguage.cs" />
     <Compile Include="Linguistic\ISensoryEvent.cs" />

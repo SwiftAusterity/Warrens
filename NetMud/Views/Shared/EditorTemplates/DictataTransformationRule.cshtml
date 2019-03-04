@@ -1,0 +1,22 @@
+﻿@using NetMud.Data.Linguistic
+
+@model DictataTransformationRule
+
+@{ 
+    var firstName = Model?.Origin == null ? "" : Model.Origin.Name;
+    var secondName = Model?.TransformedWord == null ? "" : Model.TransformedWord.Name;
+}
+
+<div class="accordionWrapper">
+    <h5>@firstName => @secondName</h5>
+    <div>
+        <div class="form-group row">
+            <a href="#" class="removeRow col-form-label" title="Remove this" onclick="javascript: $(this).parent().parent().parent().remove(); return false;">X</a>
+            @Html.EditorFor(m => m.Origin, new { validItems = ViewData["ValidWords"] })
+            @Html.EditorFor(m => m.SpecificFollowing, new { validItems = ViewData["ValidWords"] })
+            @Html.EditorFor(m => m.BeginsWith)
+            @Html.EditorFor(m => m.EndsWith)
+            @Html.EditorFor(m => m.TransformedWord, new { validItems = ViewData["ValidWords"] })
+        </div>
+    </div>
+</div>
