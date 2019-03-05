@@ -86,14 +86,14 @@ namespace NetMud.Data.Linguistic
         /// <summary>
         /// Only when the following word ends with this string
         /// </summary>
-        [Display(Name = "Ends With", Description = "Only when the following word ends with this string.")]
+        [Display(Name = "Ends With", Description = "Only when the following word ends with this string. Can be | delimited.")]
         [DataType(DataType.Text)]
         public string EndsWith { get; set; }
 
         /// <summary>
         /// Only when the following word begins with this string
         /// </summary>
-        [Display(Name = "Begins With", Description = "Only when the following word begins with this string.")]
+        [Display(Name = "Begins With", Description = "Only when the following word begins with this string. Can be | delimited.")]
         [DataType(DataType.Text)]
         public string BeginsWith { get; set; }
 

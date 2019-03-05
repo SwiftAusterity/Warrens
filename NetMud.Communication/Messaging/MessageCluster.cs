@@ -209,6 +209,8 @@ namespace NetMud.Communication.Messaging
             return string.Join(" ", ToActor.Select(msg => msg.Occurrence?.Event?.Unpack(overridingContext)));
         }
 
+        //TODO: Sentence combinatory logic for lexica output
+
         /// <summary>
         /// Translates output text with color codes and entity variables
         /// </summary>

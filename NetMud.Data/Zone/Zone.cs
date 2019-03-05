@@ -397,7 +397,7 @@ namespace NetMud.Data.Zone
             //render our locales out
             foreach (ILocale locale in LiveCache.GetAll<ILocale>().Where(loc => loc.ParentLocation?.TemplateId == TemplateId))
             {
-                sensoryOutput.AddRange(locale.GetFullDescription(viewer, sensoryTypes));
+                sensoryOutput.AddRange(locale.RenderAsContents(viewer, sensoryTypes));
             }
 
             return sensoryOutput;

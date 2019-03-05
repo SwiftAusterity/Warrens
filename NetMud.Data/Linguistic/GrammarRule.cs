@@ -1,7 +1,9 @@
 ﻿using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Linguistic;
+using NetMud.Utility;
 using Newtonsoft.Json;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Script.Serialization;
@@ -147,21 +149,21 @@ namespace NetMud.Data.Linguistic
         /// <summary>
         /// When the origin word has this semantic tag
         /// </summary>
-        [Display(Name = "From Semantic", Description = "When the origin word has this semantic tag.")]
+        [Display(Name = "From Semantic", Description = "When the origin word has this semantic tag. Can be | delimited. (All are required to match.)")]
         [DataType(DataType.Text)]
         public string FromSemantics { get; set; }
 
         /// <summary>
         /// Only when the word ends with
         /// </summary>
-        [Display(Name = "From Ends With", Description = "Only when the origin word ends with this string.")]
+        [Display(Name = "From Ends With", Description = "Only when the origin word ends with this string. Can be | delimited.")]
         [DataType(DataType.Text)]
         public string FromEndsWith { get; set; }
 
         /// <summary>
         /// Only when the word begins with
         /// </summary>
-        [Display(Name = "From Begins With", Description = "Only when the origin word begins with this string.")]
+        [Display(Name = "From Begins With", Description = "Only when the origin word begins with this string. Can be | delimited.")]
         [DataType(DataType.Text)]
         public string FromBeginsWith { get; set; }
 
@@ -182,7 +184,7 @@ namespace NetMud.Data.Linguistic
         /// <summary>
         /// When the modifying word has this semantic tag
         /// </summary>
-        [Display(Name = "To Semantic", Description = "When the modifying word has this semantic tag.")]
+        [Display(Name = "To Semantic", Description = "When the modifying word has this semantic tag. Can be | delimited. (all are required to match)")]
         [DataType(DataType.Text)]
         public string ToSemantics { get; set; }
 
@@ -240,10 +242,10 @@ namespace NetMud.Data.Linguistic
         /// <returns>Specificity rating, higher = more specific</returns>
         public int RuleSpecificity()
         {
-            return (string.IsNullOrWhiteSpace(ToSemantics) ? 0 : 1) +
-                    (string.IsNullOrWhiteSpace(FromSemantics) ? 0 : 1) +
-                    (string.IsNullOrWhiteSpace(FromEndsWith) ? 0 : 3) +
-                    (string.IsNullOrWhiteSpace(FromBeginsWith) ? 0 : 3) +
+            return (string.IsNullOrWhiteSpace(ToSemantics) ? 0 : ToSemantics.Count(ch => ch == '|') * 3 + 1) +
+                    (string.IsNullOrWhiteSpace(FromSemantics) ? 0 : FromSemantics.Count(ch => ch == '|') * 3 + 1) +
+                    (string.IsNullOrWhiteSpace(FromEndsWith) ? 0 : FromEndsWith.Count(ch => ch == '|') + 3) +
+                    (string.IsNullOrWhiteSpace(FromBeginsWith) ? 0 : FromBeginsWith.Count(ch => ch == '|') + 3) +
                     (SpecificWord == null ? 0 : 99) +
                     (Tense == LexicalTense.None ? 0 : 2) +
                     (Perspective == NarrativePerspective.None ? 0 : 2) +
@@ -266,10 +268,13 @@ namespace NetMud.Data.Linguistic
                 toType = ToType;
             }
 
+            var fromBegins = FromBeginsWith.Split('|', StringSplitOptions.RemoveEmptyEntries);
+            var fromEnds = FromEndsWith.Split('|', StringSplitOptions.RemoveEmptyEntries);
+
             return (ToRole == GrammaticalType.None || ToRole == toRole)
                     && (ToType == LexicalType.None || ToType == toType)
-                    && (string.IsNullOrWhiteSpace(FromBeginsWith) || lex.Phrase.StartsWith(FromBeginsWith))
-                    && (string.IsNullOrWhiteSpace(FromEndsWith) || lex.Phrase.EndsWith(FromEndsWith))
+                    && (fromBegins.Count() == 0 || fromBegins.Any(bw => lex.Phrase.StartsWith(bw)))
+                    && (fromEnds.Count() == 0 || fromEnds.Any(bw => lex.Phrase.EndsWith(bw)))
                     && (Tense == LexicalTense.None || lex.Context.Tense == Tense)
                     && (Perspective == NarrativePerspective.None || lex.Context.Perspective == Perspective)
                     && (!WhenPlural || lex.Context.Plural)

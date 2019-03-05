@@ -60,6 +60,11 @@ namespace NetMud.Utility
         /// <returns>a string array</returns>
         public static string[] Split(this string value, string delimiter, StringSplitOptions splitOpts)
         {
+            if (value == null)
+            {
+                return new string[0];
+            }
+
             return value.Split(new string[] { delimiter }, splitOpts);
         }
 
@@ -71,6 +76,11 @@ namespace NetMud.Utility
         /// <returns>a string array</returns>
         public static string[] Split(this string value, char delimiter, StringSplitOptions splitOpts)
         {
+            if(value == null)
+            {
+                return new string[0];
+            }
+
             return value.Split(new char[] { delimiter }, splitOpts);
         }
 

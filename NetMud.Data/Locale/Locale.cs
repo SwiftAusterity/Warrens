@@ -9,6 +9,7 @@ using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.Locale;
 using NetMud.DataStructure.Room;
+using NetMud.DataStructure.System;
 using NetMud.DataStructure.Zone;
 using Newtonsoft.Json;
 using System;
@@ -291,6 +292,22 @@ namespace NetMud.Data.Locale
             }
 
             return radiusLocations;
+        }
+
+        /// <summary>
+        /// Render this as being show inside a container
+        /// </summary>
+        /// <param name="viewer">The entity looking</param>
+        /// <returns>the output strings</returns>
+        public override IEnumerable<IMessage> RenderAsContents(IEntity viewer, MessagingType[] sensoryTypes)
+        {
+            if (sensoryTypes == null || sensoryTypes.Count() == 0)
+            {
+                sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
+            }
+
+            //Add the existential modifiers
+            return new IMessage[] { GetImmediateDescription(viewer, sensoryTypes[0]) };
         }
 
         /// <summary>

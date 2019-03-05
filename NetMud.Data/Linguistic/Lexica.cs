@@ -304,6 +304,24 @@ namespace NetMud.Data.Linguistic
                 lex.Phrase = rule.Contraction.Name;
             }
 
+            //Transformational word pair rules
+            foreach (var rule in Context.Language.TransformationRules.Where(rul => rul.TransformedWord != null && rul.Origin == lexDict))
+            {
+                var beginsWith = rule.BeginsWith.Split('|', StringSplitOptions.RemoveEmptyEntries);
+                var endsWith = rule.EndsWith.Split('|', StringSplitOptions.RemoveEmptyEntries);
+
+                var modifiers = lex.Modifiers.Where(mod => (rule.SpecificFollowing == null || mod.GetDictata() == rule.SpecificFollowing)
+                                           && (beginsWith.Count() == 0 || beginsWith.Any(bw => mod.Phrase.StartsWith(bw)))
+                                           && (endsWith.Count() == 0 || endsWith.Any(ew => mod.Phrase.EndsWith(ew))));
+
+                if(modifiers.Count() == 0)
+                {
+                    continue;
+                }
+
+                lex.Phrase = rule.TransformedWord.Name;
+            }
+
             //Listable pass rules
             var modifierList = new List<Tuple<ILexica[], int>>();
             foreach (var modifierPair in lex.Modifiers.GroupBy(lexi => new { lexi.Role, lexi.Type }))
