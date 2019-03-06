@@ -91,9 +91,9 @@ namespace NetMud.DataStructure.Linguistic
         /// Create a narrative description from this
         /// </summary>
         /// <param name="overridingContext">Context to override the lexica with</param>
-        /// <param name="omitName">Should we omit the proper name of the initial subject entirely (and only resort to pronouns)</param>
+        /// <param name="anonymize">Should we omit the proper name of the initial subject entirely (and only resort to pronouns)</param>
         /// <returns>A long description</returns>
-        string Unpack(LexicalContext overridingContext = null, bool omitName = true);
+        string Unpack(LexicalContext overridingContext = null, bool anonymize = false);
 
         /// <summary>
         /// Describe the lexica

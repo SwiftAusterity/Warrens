@@ -161,6 +161,7 @@
     <Compile Include="Linguistic\DictataTransformationRule.cs" />
     <Compile Include="Linguistic\Language.cs" />
     <Compile Include="Linguistic\Lexica.cs" />
+    <Compile Include="Linguistic\LexicalParagraph.cs" />
     <Compile Include="Linguistic\LexicalSentence.cs" />
     <Compile Include="Locale\Locale.cs" />
     <Compile Include="Locale\LocaleTemplate.cs" />
