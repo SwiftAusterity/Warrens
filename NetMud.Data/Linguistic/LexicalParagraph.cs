@@ -6,19 +6,19 @@ namespace NetMud.Data.Linguistic
 {
     public class LexicalParagraph
     {
-        public IList<ISensoryEvent> SensoryEvents { get; set; }
+        public IList<ISensoryEvent> Events { get; set; }
 
         internal IList<LexicalSentence> Sentences { get; set; }
 
         public LexicalParagraph()
         {
-            SensoryEvents = new List<ISensoryEvent>();
+            Events = new List<ISensoryEvent>();
             Sentences = new List<LexicalSentence>();
         }
 
         public LexicalParagraph AddEvent(ISensoryEvent newEvent)
         {
-            SensoryEvents.Add(newEvent);
+            Events.Add(newEvent);
 
             return this;
         }
@@ -32,7 +32,10 @@ namespace NetMud.Data.Linguistic
             //Clean them out
             Sentences = new List<LexicalSentence>();
 
-
+            foreach(var sensoryEvent in Events)
+            {
+                Sentences.Add(new LexicalSentence(sensoryEvent));
+            }
         }
 
         /// <summary>
@@ -47,6 +50,13 @@ namespace NetMud.Data.Linguistic
             {
                 Unpack();
             }
+
+            foreach(var sentence in Sentences)
+            {
+                sb.Append(sentence.Describe() + " ");
+            }
+
+            sb.Length -= 1;
 
             return sb.ToString();
         }

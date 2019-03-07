@@ -24,22 +24,27 @@ namespace NetMud.Data.Linguistic
         /// <summary>
         /// Modifiers of the sentence, prefix or suffix to the sentence is decided by the describe function.
         /// </summary>
-        public IList<Tuple<ILexica, short>> Modifiers { get; set; }
+        public IList<Tuple<ISensoryEvent, short>> Modifiers { get; set; }
 
         /// <summary>
         /// The first half of the sentence
         /// </summary>
-        public IList<Tuple<ILexica, short>> Subject { get; set; }
+        public IList<Tuple<ISensoryEvent, short>> Subject { get; set; }
 
         /// <summary>
         /// The second half of the sentence
         /// </summary>
-        public IList<Tuple<ILexica, short>> Predicate { get; set; }
+        public IList<Tuple<ISensoryEvent, short>> Predicate { get; set; }
 
         /// <summary>
         /// The language this sentence is in
         /// </summary>
         public ILanguage Language { get; set; }
+
+        /// <summary>
+        /// The type of sense this is
+        /// </summary>
+        public MessagingType SensoryType { get; set; }
 
         /// <summary>
         /// The mark for punctation based on sentence type
@@ -54,12 +59,26 @@ namespace NetMud.Data.Linguistic
 
         public LexicalSentence(ILexica lex)
         {
-            Modifiers = new List<Tuple<ILexica, short>>();
-            Subject = new List<Tuple<ILexica, short>>();
-            Predicate = new List<Tuple<ILexica, short>>();
+            Modifiers = new List<Tuple<ISensoryEvent, short>>();
+            Subject = new List<Tuple<ISensoryEvent, short>>();
+            Predicate = new List<Tuple<ISensoryEvent, short>>();
             Type = SentenceType.Statement;
+
+            SensoryType = MessagingType.Visible;
             SetLanguage(lex.Context?.Language);
-            AddLexica(lex);
+            AddEvent(new SensoryEvent(lex, 30, SensoryType));
+        }
+
+        public LexicalSentence(ISensoryEvent lex)
+        {
+            Modifiers = new List<Tuple<ISensoryEvent, short>>();
+            Subject = new List<Tuple<ISensoryEvent, short>>();
+            Predicate = new List<Tuple<ISensoryEvent, short>>();
+            Type = SentenceType.Statement;
+
+            SensoryType = lex.SensoryType;
+            SetLanguage(lex.Event.Context?.Language);
+            AddEvent(lex);
         }
 
         private void SetLanguage(ILanguage language)
@@ -81,22 +100,22 @@ namespace NetMud.Data.Linguistic
         /// </summary>
         /// <param name="lex"></param>
         /// <returns></returns>
-        public LexicalSentence AddLexica(ILexica lex, bool recursive = true)
+        public LexicalSentence AddEvent(ISensoryEvent lex, bool recursive = true)
         {
             //modification rules ordered by specificity
-            foreach (var wordRule in Language.Rules.Where(rul => rul.Matches(lex))
+            foreach (var wordRule in Language.Rules.Where(rul => rul.Matches(lex.Event))
                                                                .OrderByDescending(rul => rul.RuleSpecificity()))
             {
-                if (wordRule.NeedsArticle && !lex.Modifiers.Any(mod => mod.Type == LexicalType.Article)
-                    && (!wordRule.WhenPositional || lex.Context.Position != LexicalPosition.None))
+                if (wordRule.NeedsArticle && !lex.Event.Modifiers.Any(mod => mod.Type == LexicalType.Article)
+                    && (!wordRule.WhenPositional || lex.Event.Context.Position != LexicalPosition.None))
                 {
-                    var articleContext = lex.Context.Clone();
+                    var articleContext = lex.Event.Context.Clone();
 
                     //Make it determinant if the word is plural
-                    articleContext.Determinant = lex.Context.Plural || articleContext.Determinant;
+                    articleContext.Determinant = lex.Event.Context.Plural || articleContext.Determinant;
 
                     //If we have position and it's the subject we have to short circuit this
-                    if(lex.Role != GrammaticalType.Verb)
+                    if(lex.Event.Role != GrammaticalType.Verb)
                     {
                         articleContext.Position = LexicalPosition.None;
                         articleContext.Perspective = NarrativePerspective.None;
@@ -121,55 +140,105 @@ namespace NetMud.Data.Linguistic
 
                 if (string.IsNullOrWhiteSpace(wordRule.AddPrefix))
                 {
-                    lex.Phrase = string.Format("{0}{1}", wordRule.AddPrefix, lex.Phrase.Trim());
+                    lex.Event.Phrase = string.Format("{0}{1}", wordRule.AddPrefix, lex.Event.Phrase.Trim());
                 }
 
                 if (string.IsNullOrWhiteSpace(wordRule.AddSuffix))
                 {
-                    lex.Phrase = string.Format("{1}{0}", wordRule.AddSuffix, lex.Phrase.Trim());
+                    lex.Event.Phrase = string.Format("{1}{0}", wordRule.AddSuffix, lex.Event.Phrase.Trim());
                 }
             }
 
             //Positional object modifier
-            if(lex.Role == GrammaticalType.DirectObject && lex.Context.Position != LexicalPosition.None && !lex.Modifiers.Any(mod => mod.Role == GrammaticalType.IndirectObject))
+            if(lex.Event.Role == GrammaticalType.DirectObject && lex.Event.Context.Position != LexicalPosition.None && !lex.Event.Modifiers.Any(mod => mod.Role == GrammaticalType.IndirectObject))
             {
-                var positionalWord = Thesaurus.GetWord(lex.Context, LexicalType.Article);
+                var positionalWord = Thesaurus.GetWord(lex.Event.Context, LexicalType.Article);
 
-                lex.TryModify(new Lexica(LexicalType.Noun, GrammaticalType.IndirectObject, positionalWord.Name, lex.Context));
+                lex.TryModify(new Lexica(LexicalType.Noun, GrammaticalType.IndirectObject, positionalWord.Name, lex.Event.Context));
             }
 
-            var rule = Language.SentenceRules.FirstOrDefault(rul => rul.Type == Type && rul.Fragment == lex.Role);
+            var rule = Language.SentenceRules.FirstOrDefault(rul => rul.Type == Type && rul.Fragment == lex.Event.Role);
 
             if(rule != null)
             {
                 //subject
                 if(rule.SubjectPredicate)
                 {
-                    Subject.Add(new Tuple<ILexica, short>(lex, rule.ModificationOrder));
+                    Subject.Add(new Tuple<ISensoryEvent, short>(lex, rule.ModificationOrder));
                 }
                 else
                 {
-                    Predicate.Add(new Tuple<ILexica, short>(lex, rule.ModificationOrder));
+                    Predicate.Add(new Tuple<ISensoryEvent, short>(lex, rule.ModificationOrder));
                 }
             }
             else
             {
-                Modifiers.Add(new Tuple<ILexica, short>(lex, 99));
+                Modifiers.Add(new Tuple<ISensoryEvent, short>(lex, 99));
             }
 
             if(recursive)
             {
                 var newMods = new HashSet<ILexica>();
-                foreach (var mod in lex.Modifiers.Where(mod => mod.Role != GrammaticalType.Descriptive &&  mod.Role != GrammaticalType.None))
+                foreach (var mod in lex.Event.Modifiers.Where(mod => mod.Role != GrammaticalType.Descriptive && mod.Role != GrammaticalType.None))
                 {
-                    AddLexica(mod);
+                    AddEvent(new SensoryEvent(mod, lex.Strength, lex.SensoryType));
                     newMods.Add(mod);
                 }
 
-                lex.Modifiers.RemoveWhere(modi => newMods.Any(mods => mods == modi));
+                lex.Event.Modifiers.RemoveWhere(modi => newMods.Any(mods => mods == modi));
             }
 
             return this;
+        }
+
+        /// <summary>
+        /// Unpack the lexica
+        /// </summary>
+        /// <param name="overridingContext">Context to override the lexica with</param>
+        public void Unpack(LexicalContext overridingContext = null)
+        {
+            var newSubject = new List<Tuple<ISensoryEvent, short>>();
+            //Subject
+            foreach (var lex in Subject.OrderBy(pair => pair.Item2))
+            {
+                var lexes = lex.Item1.Event.Unpack(lex.Item1.Strength, overridingContext);
+
+                var i = lex.Item2;
+                foreach (var subLex in lexes)
+                {
+                    newSubject.Add(new Tuple<ISensoryEvent, short>(new SensoryEvent(subLex, lex.Item1.Strength, lex.Item1.SensoryType), i++));
+                }
+            }
+
+            var newPredicate = new List<Tuple<ISensoryEvent, short>>();
+            //Predicate
+            foreach (var lex in Predicate.OrderBy(pair => pair.Item2))
+            {
+                var lexes = lex.Item1.Event.Unpack(lex.Item1.Strength, overridingContext);
+
+                var i = lex.Item2;
+                foreach (var subLex in lexes)
+                {
+                    newPredicate.Add(new Tuple<ISensoryEvent, short>(new SensoryEvent(subLex, lex.Item1.Strength, lex.Item1.SensoryType), i++));
+                }
+            }
+
+            var newModifiers = new List<Tuple<ISensoryEvent, short>>();
+            //Modifiers
+            foreach (var lex in Modifiers.OrderBy(pair => pair.Item2))
+            {
+                var lexes = lex.Item1.Event.Unpack(lex.Item1.Strength, overridingContext);
+
+                var i = lex.Item2;
+                foreach(var subLex in lexes)
+                {
+                    newModifiers.Add(new Tuple<ISensoryEvent, short>(new SensoryEvent(subLex, lex.Item1.Strength, lex.Item1.SensoryType), i++));
+                }
+            }
+
+            Subject = newSubject;
+            Predicate = newPredicate;
+            Modifiers = newModifiers;
         }
 
         /// <summary>

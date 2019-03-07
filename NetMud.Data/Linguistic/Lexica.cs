@@ -235,6 +235,28 @@ namespace NetMud.Data.Linguistic
         }
 
         /// <summary>
+        /// Unpacks this applying language rules to expand and add articles/verbs where needed
+        /// </summary>
+        /// <param name="overridingContext">The full lexical context</param>
+        /// <returns>A long description</returns>
+        public IEnumerable<ILexica> Unpack(int strength, LexicalContext overridingContext = null)
+        {
+            if (overridingContext != null)
+            {
+                //Sentence must maintain the same language, tense and personage
+                Context.Language = overridingContext.Language;
+                Context.Tense = overridingContext.Tense;
+                Context.Perspective = overridingContext.Perspective;
+            }
+
+            var lexList = new List<ILexica>();
+
+
+
+            return lexList;
+        }
+
+        /// <summary>
         /// Create a narrative description from this
         /// </summary>
         /// <param name="context">Contextual nature of the request.</param>
@@ -380,7 +402,7 @@ namespace NetMud.Data.Linguistic
         /// <returns>the new lex</returns>
         public ILexica Mutate(int obfuscationLevel = 0)
         {
-            Lexica newLexica = new Lexica(Type, Role, Phrase, Context);
+            Lexica newLexica;
 
             var dict = GetDictata();
 
@@ -389,11 +411,13 @@ namespace NetMud.Data.Linguistic
                 var newDict = Thesaurus.GetSynonym(dict, Context);
 
                 newLexica = new Lexica(Type, Role, newDict.Name, Context);
+
+                newLexica.TryModify(Modifiers);
+
+                return newLexica;
             }
 
-            newLexica.TryModify(Modifiers);
-
-            return newLexica;
+            return this;
         }
 
         private IEnumerable<LexicalSentence> GetSentences(bool omitName)
@@ -404,7 +428,7 @@ namespace NetMud.Data.Linguistic
 
             if (omitName)
             {
-                var pronounContext = Context;
+                var pronounContext = Context.Clone();
                 pronounContext.Perspective = NarrativePerspective.SecondPerson;
                 pronounContext.Position = LexicalPosition.None;
                 pronounContext.Tense = LexicalTense.None;
@@ -513,7 +537,7 @@ namespace NetMud.Data.Linguistic
         }
 
 
-        private Message GetObscura(MessagingType sensoryType, IEntity observer, bool under, int range)
+        private ISensoryEvent GetObscura(MessagingType sensoryType, IEntity observer, bool under, int range)
         {
             ILexica message = null;
 
@@ -622,7 +646,7 @@ namespace NetMud.Data.Linguistic
                     break;
             }
 
-            return new Message(MessagingType.Audible, new SensoryEvent(message, Math.Abs(range), sensoryType));
+            return new SensoryEvent(message, Math.Abs(range), sensoryType);
         }
 
 

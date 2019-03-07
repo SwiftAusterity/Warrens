@@ -10,6 +10,11 @@ namespace NetMud.DataStructure.Linguistic
     public class LexicalContext
     {
         /// <summary>
+        /// Render any subjects (proper nouns) into pronouns
+        /// </summary>
+        public bool Anonymize { get; set; }
+
+        /// <summary>
         /// The person/thing observing this
         /// </summary>
         public IEntity Observer { get; set; }
@@ -86,6 +91,7 @@ namespace NetMud.DataStructure.Linguistic
             Elegance = 0;
             Quality = 0;
             Observer = observer;
+            Anonymize = false;
 
             Semantics = new HashSet<string>();
         }
@@ -105,7 +111,8 @@ namespace NetMud.DataStructure.Linguistic
                 Quality = Quality,
                 Semantics = Semantics,
                 Language = Language,
-                GenderForm = GenderForm
+                GenderForm = GenderForm,
+                Anonymize = Anonymize
             };
         }
     }
