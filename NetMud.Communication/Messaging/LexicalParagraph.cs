@@ -68,7 +68,7 @@ namespace NetMud.Communication.Messaging
             //Clean them out
             var sentences = new List<ILexicalSentence>();
 
-            foreach(var sensoryEvent in Events)
+            foreach (var sensoryEvent in Events)
             {
                 sentences.AddRange(sensoryEvent.Unpack(overridingContext));
             }
@@ -83,16 +83,18 @@ namespace NetMud.Communication.Messaging
         public string Describe(LexicalContext overridingContext = null)
         {
             if (!string.IsNullOrWhiteSpace(Override))
+            {
                 return Override;
+            }
 
             var sb = new StringBuilder();
 
-            if(Sentences.Count == 0 || overridingContext != null)
+            if (Sentences.Count == 0 || overridingContext != null)
             {
                 Unpack(overridingContext);
             }
 
-            foreach(var sentence in Sentences)
+            foreach (var sentence in Sentences)
             {
                 sb.Append(sentence.Describe() + " ");
             }

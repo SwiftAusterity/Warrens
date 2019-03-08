@@ -336,5 +336,17 @@ namespace NetMud.Data.Linguistic
 
             return wordList.OrderBy(words => words.Item2).Select(words => words.Item1);
         }
+
+        /// <summary>
+        /// Grab the specific event from the sentence that represents the specific role
+        /// </summary>
+        /// <param name="eventType">the lexical role to grab</param>
+        /// <returns>the role event</returns>
+        public ISensoryEvent GetSpecificEvent(GrammaticalType eventType)
+        {
+            var events = Unpack();
+
+            return events.FirstOrDefault(ev => ev.Event.Role == eventType);
+        }
     }
 }

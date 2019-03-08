@@ -62,5 +62,12 @@ namespace NetMud.DataStructure.Linguistic
         /// </summary>
         /// <returns>a pile of lexica</returns>
         IEnumerable<ISensoryEvent> Unpack();
+
+        /// <summary>
+        /// Grab the specific event from the sentence that represents the specific role
+        /// </summary>
+        /// <param name="eventType">the lexical role to grab</param>
+        /// <returns>the role event</returns>
+        ISensoryEvent GetSpecificEvent(GrammaticalType eventType);
     }
 }
