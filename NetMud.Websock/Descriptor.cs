@@ -183,7 +183,7 @@ namespace NetMud.Websock
                 Position = LexicalPosition.Near
             };
 
-            var toCluster = new MessageCluster(currentContainer.RenderToLook(_currentPlayer));
+            var toCluster = new Message(currentContainer.RenderToLook(_currentPlayer));
 
             if (currentContainer != null)
             {

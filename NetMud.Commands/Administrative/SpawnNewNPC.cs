@@ -3,6 +3,7 @@ using NetMud.Communication.Messaging;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.NPC;
 using NetMud.DataStructure.System;
 using NetMud.Utility;
@@ -54,25 +55,16 @@ namespace NetMud.Commands.System
             //TODO: keywords is janky, location should have its own identifier name somehow for output purposes - DISPLAY short/long NAME
             sb.Add(string.Format("{0} spawned to {1}", entityObject.TemplateName, spawnTo.CurrentZone.Keywords[0]));
 
-            Message toActor = new Message()
-            {
-                Override = sb
-            };
+            ILexicalParagraph toActor = new LexicalParagraph(sb.ToString());
 
-            Message toOrigin = new Message()
-            {
-                Override = new string[] { "$S$ appears suddenly." }
-            };
+            ILexicalParagraph toOrigin = new LexicalParagraph("$S$ appears suddenly.");
 
-            Message toSubject = new Message()
-            {
-                Override = new string[] { "You are ALIVE" }
-            };
+            ILexicalParagraph toSubject = new LexicalParagraph("You are ALIVE");
 
-            MessageCluster messagingObject = new MessageCluster(toActor)
+            IMessage messagingObject = new Message(toActor)
             {
-                ToOrigin = new List<IMessage> { toOrigin },
-                ToSubject = new List<IMessage> { toSubject }
+                ToOrigin = new List<ILexicalParagraph> { toOrigin },
+                ToSubject = new List<ILexicalParagraph> { toSubject }
             };
 
             messagingObject.ExecuteMessaging(Actor, entityObject, spawnTo.CurrentZone, OriginLocation.CurrentZone, null);

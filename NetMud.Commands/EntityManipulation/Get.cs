@@ -4,6 +4,7 @@ using NetMud.Communication.Messaging;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.System;
 using NetMud.Utility;
 using System.Collections.Generic;
@@ -53,19 +54,13 @@ namespace NetMud.Commands.EntityManipulation
             place.MoveFrom(thing);
             actor.MoveInto(thing);
 
-            Message toActor = new Message(MessagingType.Visible, new SensoryEvent() { Strength = 1 })
-            {
-                Override = sb
-            };
+            ILexicalParagraph toActor = new LexicalParagraph(sb.ToString());
 
-            Message toOrigin = new Message(MessagingType.Visible, new SensoryEvent() { Strength = 30 })
-            {
-                Override = new string[] { toRoomMessage }
-            };
+            ILexicalParagraph toOrigin = new LexicalParagraph(toRoomMessage);
 
-            MessageCluster messagingObject = new MessageCluster(toActor)
+            Message messagingObject = new Message(toActor)
             {
-                ToOrigin = new List<IMessage> { toOrigin }
+                ToOrigin = new List<ILexicalParagraph> { toOrigin }
             };
 
             messagingObject.ExecuteMessaging(Actor, thing, (IEntity)Target, OriginLocation.CurrentRoom, null);

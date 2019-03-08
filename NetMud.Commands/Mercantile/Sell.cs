@@ -4,8 +4,8 @@ using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Inanimate;
+using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.NPC;
-using NetMud.DataStructure.System;
 using System.Collections.Generic;
 
 namespace NetMud.Commands.EntityManipulation
@@ -61,27 +61,14 @@ namespace NetMud.Commands.EntityManipulation
                 RenderError(errorMessage);
             }
 
-            List<string> sb = new List<string>
-            {
-                string.Format("You sell a $T$ to $S$ for {0}blz.", price)
-            };
+            ILexicalParagraph toActor = new LexicalParagraph(string.Format("You sell a $T$ to $S$ for {0}blz.", price));
 
-            Message toActor = new Message()
-            {
-                Override = sb
-            };
-
-            string[] areaString = new string[] { "$A$ sells an item to $S$." };
-
-            Message toArea = new Message()
-            {
-                Override = areaString
-            };
+            ILexicalParagraph toArea = new LexicalParagraph("$A$ sells an item to $S$.");
 
             //TODO: language outputs
-            MessageCluster messagingObject = new MessageCluster(toActor)
+            Message messagingObject = new Message(toActor)
             {
-                ToOrigin = new List<IMessage> { toArea }
+                ToOrigin = new List<ILexicalParagraph> { toArea }
             };
 
             messagingObject.ExecuteMessaging(Actor, merchant, thing, OriginLocation.CurrentZone, null);

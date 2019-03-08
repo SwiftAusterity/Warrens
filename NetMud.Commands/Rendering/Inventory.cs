@@ -5,6 +5,7 @@ using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Inanimate;
+using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.System;
 using NetMud.Utility;
 using System.Collections.Generic;
@@ -32,27 +33,21 @@ namespace NetMud.Commands.Rendering
         {
             List<string> sb = new List<string>();
             IMobile chr = (IMobile)Actor;
-            List<IMessage> toActor = new List<IMessage>
+            List<ILexicalParagraph> toActor = new List<ILexicalParagraph>
             {
-                new Message(MessagingType.Visible, new SensoryEvent() { Strength = 9999 })
-                {
-                    Override = new string[] { "You look through your belongings." }
-                }
+                new LexicalParagraph("You look through your belongings.")
             };
 
             foreach (IInanimate thing in chr.Inventory.EntitiesContained())
             {
-                toActor.AddRange(thing.RenderAsContents(chr, new[] { MessagingType.Visible }));
+                toActor.Add(thing.RenderAsContents(chr, new[] { MessagingType.Visible }));
             }
 
-            Message toOrigin = new Message(MessagingType.Visible, new SensoryEvent() { Strength = 30 })
-            {
-                Override = new string[] { "$A$ sifts through $G$ belongings." }
-            };
+            ILexicalParagraph toOrigin = new LexicalParagraph("$A$ sifts through $G$ belongings.");
 
-            MessageCluster messagingObject = new MessageCluster(toActor)
+            Message messagingObject = new Message(toActor)
             {
-                ToOrigin = new List<IMessage> { toOrigin }
+                ToOrigin = new List<ILexicalParagraph> { toOrigin }
             };
 
             messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation.CurrentRoom, null);

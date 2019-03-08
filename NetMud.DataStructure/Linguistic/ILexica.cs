@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NetMud.DataStructure.System;
+using System;
 using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Linguistic
@@ -87,7 +88,7 @@ namespace NetMud.DataStructure.Linguistic
         /// </summary>
         /// <param name="overridingContext">The full lexical context</param>
         /// <returns>A long description</returns>
-        IEnumerable<ILexica> Unpack(int strength, LexicalContext overridingContext = null);
+        IEnumerable<ILexica> Unpack(MessagingType sensoryType, int strength, LexicalContext overridingContext = null);
 
         /// <summary>
         /// Describe the lexica
@@ -97,12 +98,11 @@ namespace NetMud.DataStructure.Linguistic
         string Describe();
 
         /// <summary>
-        /// Alter the lex entirely including all of its sublex
+        /// Make a sentence out of this
         /// </summary>
-        /// <param name="context">The full lexical context</param>
-        /// <param name="obfuscationLevel">how much we should obscure the actual description</param>
-        /// <returns>the new lex</returns>
-        ILexica Mutate(int obfuscationLevel = 0);
+        /// <param name="type">the sentence type</param>
+        /// <returns>the sentence</returns>
+        ILexicalSentence MakeSentence(SentenceType type);
 
         /// <summary>
         /// Get the dictata from this lexica

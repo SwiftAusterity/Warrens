@@ -13,7 +13,7 @@ namespace NetMud.DataStructure.Room
         /// <summary>
         /// Message cluster for entities entering
         /// </summary>
-        IMessageCluster Enter { get; set; }
+        IMessage Enter { get; set; }
 
         /// <summary>
         /// The container this points into

@@ -1,4 +1,6 @@
-﻿using NetMud.DataStructure.Linguistic;
+﻿using NetMud.DataAccess.Cache;
+using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.System;
 using System;
 using System.Collections.Generic;
@@ -146,19 +148,92 @@ namespace NetMud.Communication.Lexical
         /// <summary>
         /// Create a narrative description from this
         /// </summary>
-        /// <param name="language">What language this should output in</param>
-        /// <param name="severity">Severity delta modifier to find synonyms with</param>
-        /// <param name="eloquence">eloquence delta modifier to find synonyms with</param>
-        /// <param name="quality">quality delta modifier to find synonyms with</param>
-        /// <param name="normalization">How much sentence splitting should be done</param>
-        /// <param name="verbosity">A measure of how much flourish should be added as well as how far words get synonym-upgraded by "finesse". (0 to 100)</param>
-        /// <param name="chronology">The time tensing of the sentence structure</param>
-        /// <param name="perspective">The personage of the sentence structure</param>
-        /// <param name="omitName">Should we omit the proper name of the initial subject entirely (and only resort to pronouns)</param>
+        /// <param name="overridingContext">Context to override the lexica with</param>
+        /// <param name="anonymize">Should we omit the proper name of the initial subject entirely (and only resort to pronouns)</param>
         /// <returns>A long description</returns>
-        public string Unpack(LexicalContext overridingContext = null, bool omitName = true)
+        public IEnumerable<ILexicalSentence> Unpack(LexicalContext overridingContext = null, bool anonymize = false)
         {
-            return Event.Unpack(overridingContext, omitName);
+            List<ILexicalSentence> sentences = new List<ILexicalSentence>();
+
+            //short circuit empty lexica
+            if (string.IsNullOrWhiteSpace(Event?.Phrase))
+            {
+                return sentences;
+            }
+
+            if (overridingContext != null)
+            {
+                //Sentence must maintain the same language, tense and personage
+                Event.Context.Language = overridingContext.Language;
+                Event.Context.Tense = overridingContext.Tense;
+                Event.Context.Perspective = overridingContext.Perspective;
+            }
+
+            //Language rules engine, default to base language if we have an empty language
+            if (Event.Context.Language == null || Event.Context.Language?.Rules?.Count == 0)
+            {
+                IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
+
+                Event.Context.Language = globalConfig.BaseLanguage;
+            }
+
+            //Anonymizer
+            if (anonymize)
+            {
+                var pronounContext = Event.Context.Clone();
+                pronounContext.Perspective = NarrativePerspective.SecondPerson;
+                pronounContext.Position = LexicalPosition.None;
+                pronounContext.Tense = LexicalTense.None;
+                pronounContext.Determinant = false;
+                pronounContext.Semantics = new HashSet<string>();
+
+                var pronoun = Thesaurus.GetWord(pronounContext, LexicalType.Pronoun);
+                Event.Phrase = pronoun.Name;
+                Event.Type = pronoun.WordType;
+            }
+
+            List<ILexica> subjects = new List<ILexica>
+            {
+                Event
+            };
+            subjects.AddRange(Event.Modifiers.Where(mod => mod != null && mod.Role == GrammaticalType.Subject));
+
+            Event.Modifiers.RemoveWhere(mod => mod == null || mod.Role == GrammaticalType.Subject);
+
+            foreach (ILexica subject in subjects)
+            {
+                //This is to catch directly described entities, we have to add a verb to it for it to make sense. "Complete sentence rule"
+                if (subject.Modifiers.Any() && !subject.Modifiers.Any(mod => mod.Role == GrammaticalType.Verb))
+                {
+                    var verbContext = subject.Context.Clone();
+                    verbContext.Semantics = new HashSet<string> { "existential" };
+                    verbContext.Determinant = false;
+                    var verb = Thesaurus.GetWord(verbContext, LexicalType.Verb);
+
+                    var verbLex = verb.GetLexica(GrammaticalType.Verb, LexicalType.Verb, verbContext);
+                    verbLex.TryModify(subject.Modifiers);
+
+                    subject.Modifiers = new HashSet<ILexica>();
+                    subject.TryModify(verbLex);
+                }
+
+                if (subject.Modifiers.Any(mod => mod.Role == GrammaticalType.Subject))
+                {
+                    sentences.Add(subject.MakeSentence(SentenceType.Partial));
+
+                    //fragment sentences
+                    foreach (ILexica subLex in subject.Modifiers.Where(mod => mod.Role == GrammaticalType.Subject))
+                    {
+                        sentences.Add(subLex.MakeSentence(SentenceType.Statement));
+                    }
+                }
+                else
+                {
+                    sentences.Add(subject.MakeSentence(SentenceType.Statement));
+                }
+            }
+
+            return sentences;
         }
 
         /// <summary>

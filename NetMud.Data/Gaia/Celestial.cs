@@ -97,14 +97,14 @@ namespace NetMud.Data.Gaia
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public IEnumerable<IMessage> GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes = null)
+        public ILexicalParagraph GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes = null)
         {
             if (sensoryTypes == null || sensoryTypes.Count() == 0)
             {
                 sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
             }
 
-            IList<IMessage> Messages = new List<IMessage>();
+            IList<ISensoryEvent> Messages = new List<ISensoryEvent>();
             //Self becomes the first sense in the list
             foreach (MessagingType sense in sensoryTypes)
             {
@@ -126,11 +126,11 @@ namespace NetMud.Data.Gaia
 
                 if (self.Event.Modifiers.Count() > 0)
                 {
-                    Messages.Add(new Message(sense, self));
+                    Messages.Add(self);
                 }
             }
 
-            return Messages;
+            return new LexicalParagraph(Messages);
         }
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace NetMud.Data.Gaia
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public IMessage GetImmediateDescription(IEntity viewer, MessagingType sensoryType)
+        public ISensoryEvent GetImmediateDescription(IEntity viewer, MessagingType sensoryType)
         {
             ISensoryEvent me = GetSelf(sensoryType);
             switch (sensoryType)
@@ -157,10 +157,10 @@ namespace NetMud.Data.Gaia
 
             if (me.Event.Modifiers.Any())
             {
-                return new Message(sensoryType, me);
+                return me;
             }
 
-            return new Message(sensoryType, new SensoryEvent(sensoryType));
+            return new SensoryEvent(sensoryType);
         }
 
         /// <summary>
@@ -204,14 +204,14 @@ namespace NetMud.Data.Gaia
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public IEnumerable<IMessage> RenderAsContents(IEntity viewer, MessagingType[] sensoryTypes)
+        public ILexicalParagraph RenderAsContents(IEntity viewer, MessagingType[] sensoryTypes)
         {
             if (sensoryTypes == null || sensoryTypes.Count() == 0)
             {
                 sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
             }
 
-            IList<IMessage> Messages = new List<IMessage>();
+            IList<ISensoryEvent> Messages = new List<ISensoryEvent>();
             //Self becomes the first sense in the list
             foreach (MessagingType sense in sensoryTypes)
             {
@@ -253,11 +253,11 @@ namespace NetMud.Data.Gaia
 
                 if (me.Event.Modifiers.Count() > 0)
                 {
-                    Messages.Add(new Message(sense, me));
+                    Messages.Add(me);
                 }
             }
 
-            return Messages;
+            return new LexicalParagraph(Messages);
         }
 
         #region Visual Rendering
@@ -297,7 +297,7 @@ namespace NetMud.Data.Gaia
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public IEnumerable<IMessage> RenderToLook(IEntity viewer)
+        public ILexicalParagraph RenderToLook(IEntity viewer)
         {
             return GetFullDescription(viewer, new MessagingType[] { MessagingType.Visible });
         }

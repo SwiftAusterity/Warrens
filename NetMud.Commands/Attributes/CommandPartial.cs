@@ -2,6 +2,7 @@
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.System;
 using System.Collections.Generic;
 
@@ -65,12 +66,9 @@ namespace NetMud.Commands.Attributes
 
         public virtual void RenderError(string error)
         {
-            Message toActor = new Message()
-            {
-                Override = new string[] { error }
-            };
+            ILexicalParagraph toActor = new LexicalParagraph(error);
 
-            MessageCluster messagingObject = new MessageCluster(toActor);
+            Message messagingObject = new Message(toActor);
 
             messagingObject.ExecuteMessaging(Actor, null, null, null, null);
         }

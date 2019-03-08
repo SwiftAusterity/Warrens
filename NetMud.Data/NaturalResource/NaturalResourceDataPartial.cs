@@ -178,7 +178,7 @@ namespace NetMud.Data.NaturalResource
         /// </summary>
         /// <param name="actor">entity initiating the command</param>
         /// <returns>the output</returns>
-        public virtual IMessage RenderToTrack(IEntity actor)
+        public virtual ILexicalParagraph RenderToTrack(IEntity actor)
         {
             //Default for "tracking" is null
             return null;
@@ -189,14 +189,14 @@ namespace NetMud.Data.NaturalResource
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public virtual IEnumerable<IMessage> GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes = null)
+        public virtual ILexicalParagraph GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes = null)
         {
             if (sensoryTypes == null || sensoryTypes.Count() == 0)
             {
                 sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
             }
 
-            IList<IMessage> Messages = new List<IMessage>();
+            IList<ISensoryEvent> Messages = new List<ISensoryEvent>();
             //Self becomes the first sense in the list
             foreach (MessagingType sense in sensoryTypes)
             {
@@ -238,11 +238,11 @@ namespace NetMud.Data.NaturalResource
 
                 if (self.Event.Modifiers.Count() > 0)
                 {
-                    Messages.Add(new Message(sense, self));
+                    Messages.Add(self);
                 }
             }
 
-            return Messages;
+            return new LexicalParagraph(Messages);
         }
 
         /// <summary>
@@ -250,7 +250,7 @@ namespace NetMud.Data.NaturalResource
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public virtual IMessage GetImmediateDescription(IEntity viewer, MessagingType sense)
+        public virtual ISensoryEvent GetImmediateDescription(IEntity viewer, MessagingType sense)
         {
             var self = GetSelf(sense);
             switch (sense)
@@ -287,7 +287,7 @@ namespace NetMud.Data.NaturalResource
                     break;
             }
 
-            return new Message(sense, self);
+            return self;
         }
 
         /// <summary>
@@ -342,7 +342,7 @@ namespace NetMud.Data.NaturalResource
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public virtual IEnumerable<IMessage> RenderToLook(IEntity viewer)
+        public virtual ILexicalParagraph RenderToLook(IEntity viewer)
         {
             return GetFullDescription(viewer, new[] { MessagingType.Visible, MessagingType.Psychic, MessagingType.Olefactory });
         }
@@ -352,9 +352,9 @@ namespace NetMud.Data.NaturalResource
         /// </summary>
         /// <param name="viewer">entity initiating the command</param>
         /// <returns>the scan output</returns>
-        public virtual IMessage RenderToScan(IEntity viewer)
+        public virtual ILexicalParagraph RenderToScan(IEntity viewer)
         {
-            return GetImmediateDescription(viewer, MessagingType.Visible);
+            return new LexicalParagraph(GetImmediateDescription(viewer, MessagingType.Visible));
         }
 
         /// <summary>
@@ -362,7 +362,7 @@ namespace NetMud.Data.NaturalResource
         /// </summary>
         /// <param name="viewer">entity initiating the command</param>
         /// <returns>the scan output</returns>
-        public virtual IEnumerable<IMessage> RenderToInspect(IEntity viewer)
+        public virtual ILexicalParagraph RenderToInspect(IEntity viewer)
         {
             return GetFullDescription(viewer);
         }
@@ -403,13 +403,13 @@ namespace NetMud.Data.NaturalResource
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public virtual IMessage RenderToAudible(IEntity viewer)
+        public virtual ILexicalParagraph RenderToAudible(IEntity viewer)
         {
             ISensoryEvent self = GetSelf(MessagingType.Audible);
             self.Strength = 30 + (GetAudibleDelta(viewer) * 30);
             self.TryModify(GetAudibleDescriptives(viewer));
 
-            return new Message(MessagingType.Audible, self);
+            return new LexicalParagraph(self);
         }
 
         /// <summary>
@@ -448,13 +448,13 @@ namespace NetMud.Data.NaturalResource
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public virtual IMessage RenderToSense(IEntity viewer)
+        public virtual ILexicalParagraph RenderToSense(IEntity viewer)
         {
             ISensoryEvent self = GetSelf(MessagingType.Psychic);
             self.Strength = 30 + (GetPsychicDelta(viewer) * 30);
             self.TryModify(GetPsychicDescriptives(viewer));
 
-            return new Message(MessagingType.Psychic, self);
+            return new LexicalParagraph(self);
         }
 
         /// <summary>
@@ -493,14 +493,14 @@ namespace NetMud.Data.NaturalResource
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public virtual IMessage RenderToTaste(IEntity viewer)
+        public virtual ILexicalParagraph RenderToTaste(IEntity viewer)
         {
             ISensoryEvent self = GetSelf(MessagingType.Taste);
             self.Strength = 30 + (GetTasteDelta(viewer) * 30);
 
             self.TryModify(GetTasteDescriptives(viewer));
 
-            return new Message(MessagingType.Taste, self);
+            return new LexicalParagraph(self);
         }
 
         /// <summary>
@@ -539,13 +539,13 @@ namespace NetMud.Data.NaturalResource
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public virtual IMessage RenderToSmell(IEntity viewer)
+        public virtual ILexicalParagraph RenderToSmell(IEntity viewer)
         {
             ISensoryEvent self = GetSelf(MessagingType.Olefactory);
             self.Strength = 30 + (GetSmellDelta(viewer) * 30);
             self.TryModify(GetSmellableDescriptives(viewer));
 
-            return new Message(MessagingType.Olefactory, self);
+            return new LexicalParagraph(self);
         }
 
         /// <summary>
@@ -584,13 +584,13 @@ namespace NetMud.Data.NaturalResource
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public virtual IMessage RenderToTouch(IEntity viewer)
+        public virtual ILexicalParagraph RenderToTouch(IEntity viewer)
         {
             ISensoryEvent self = GetSelf(MessagingType.Tactile);
             self.Strength = 30 + (GetTactileDelta(viewer) * 30);
             self.TryModify(GetTouchDescriptives(viewer));
 
-            return new Message(MessagingType.Tactile, self);
+            return new LexicalParagraph(self);
         }
 
         /// <summary>
@@ -609,7 +609,7 @@ namespace NetMud.Data.NaturalResource
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public virtual IEnumerable<IMessage> RenderAsContents(IEntity viewer, MessagingType[] sensoryTypes)
+        public virtual ILexicalParagraph RenderAsContents(IEntity viewer, MessagingType[] sensoryTypes)
         {
             if (sensoryTypes == null || sensoryTypes.Count() == 0)
             {
@@ -618,17 +618,17 @@ namespace NetMud.Data.NaturalResource
 
             //Add the existential modifiers
             var me = GetImmediateDescription(viewer, sensoryTypes[0]);
-            me.Occurrence.TryModify(LexicalType.Noun, GrammaticalType.DirectObject, "ground")
+            me.TryModify(LexicalType.Noun, GrammaticalType.DirectObject, "ground")
                 .TryModify(
                     new Tuple<LexicalType, GrammaticalType, string>[] {
                                 new Tuple<LexicalType, GrammaticalType, string>(LexicalType.Article, GrammaticalType.IndirectObject, "in")
                         }
                     );
 
-            return new IMessage[] { me };
+            return new LexicalParagraph(me);
         }
 
-        public virtual IEnumerable<IMessage> RenderResourceCollection(IEntity viewer, int amount)
+        public virtual ILexicalParagraph RenderResourceCollection(IEntity viewer, int amount)
         {
             var collectiveContext = new LexicalContext(viewer)
             {
@@ -640,9 +640,9 @@ namespace NetMud.Data.NaturalResource
             };
 
             var me = GetImmediateDescription(viewer, MessagingType.Visible);
-            me.Occurrence.TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, amount.ToString(), collectiveContext));
+            me.TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, amount.ToString(), collectiveContext));
 
-            return new IMessage[] { me };
+            return new LexicalParagraph(me);
         }
         #endregion
     }

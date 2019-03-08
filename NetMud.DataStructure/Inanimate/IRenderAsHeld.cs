@@ -1,5 +1,5 @@
 ﻿using NetMud.DataStructure.Architectural.EntityBase;
-using NetMud.DataStructure.System;
+using NetMud.DataStructure.Linguistic;
 
 namespace NetMud.DataStructure.Inanimate
 {
@@ -14,6 +14,6 @@ namespace NetMud.DataStructure.Inanimate
         /// <param name="viewer">entity initiating the command</param>
         /// <param name="holder">entity holding the thing</param>
         /// <returns>the output</returns>
-        IMessage RenderAsHeld(IEntity viewer, IEntity holder);
+        ILexicalParagraph RenderAsHeld(IEntity viewer, IEntity holder);
     }
 }

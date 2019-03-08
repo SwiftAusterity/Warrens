@@ -223,16 +223,16 @@ namespace NetMud.Data.Inanimate
         #endregion
 
         #region rendering
-        public override IMessage RenderAsWorn(IEntity viewer, IEntity wearer)
+        public override ILexicalParagraph RenderAsWorn(IEntity viewer, IEntity wearer)
         {
             //TODO: Worn position
-            return GetImmediateDescription(viewer, MessagingType.Visible);
+            return new LexicalParagraph(GetImmediateDescription(viewer, MessagingType.Visible));
         }
 
-        public override IMessage RenderAsHeld(IEntity viewer, IEntity holder)
+        public override ILexicalParagraph RenderAsHeld(IEntity viewer, IEntity holder)
         {
             //TODO: Worn position
-            return GetImmediateDescription(viewer, MessagingType.Visible);
+            return new LexicalParagraph(GetImmediateDescription(viewer, MessagingType.Visible));
         }
 
         /// <summary>
@@ -272,7 +272,7 @@ namespace NetMud.Data.Inanimate
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public override IEnumerable<IMessage> GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes = null)
+        public override ILexicalParagraph GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes = null)
         {
             if (sensoryTypes == null || sensoryTypes.Count() == 0)
             {
@@ -298,7 +298,7 @@ namespace NetMud.Data.Inanimate
             };
 
             //Self becomes the first sense in the list
-            List<IMessage> messages = new List<IMessage>();
+            List<ISensoryEvent> messages = new List<ISensoryEvent>();
             foreach (MessagingType sense in sensoryTypes)
             {
                 var me = GetSelf(sense);
@@ -463,10 +463,10 @@ namespace NetMud.Data.Inanimate
                         break;
                 }
 
-                messages.Add(new Message(sense, me));
+                messages.Add(me);
             }
 
-            return messages;
+            return new LexicalParagraph(messages);
         }
 
         /// <summary>

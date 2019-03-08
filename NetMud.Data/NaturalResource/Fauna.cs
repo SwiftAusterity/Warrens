@@ -96,7 +96,7 @@ namespace NetMud.Data.NaturalResource
         /// <param name="viewer">the entity looking</param>
         /// <param name="amount">How much of it there is</param>
         /// <returns>a view string</returns>
-        public override IEnumerable<IMessage> RenderResourceCollection(IEntity viewer, int amount)
+        public override ILexicalParagraph RenderResourceCollection(IEntity viewer, int amount)
         {
             var collectiveContext = new LexicalContext(viewer)
             {
@@ -121,7 +121,7 @@ namespace NetMud.Data.NaturalResource
             collectiveNoun.TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, amount.ToString(), discreteContext));
             me.TryModify(collectiveNoun);
 
-            return new IMessage[] { new Message(MessagingType.Visible, me) };
+            return new LexicalParagraph(me);
         }
         #endregion
     }

@@ -135,15 +135,15 @@ namespace NetMud.Data.Zone
         /// <param name="target">the target</param>
         public void BroadcastEvent(string message, IEntity sender = null, IEntity subject = null, IEntity target = null)
         {
-            MessageCluster mc = new MessageCluster
+            Message mc = new Message
             {
-                ToOrigin = new List<IMessage>() { new Message(message) }
+                ToOrigin = new List<ILexicalParagraph>() { new LexicalParagraph(message) }
             };
 
             BroadcastEvent(mc, sender, subject, target);
         }
 
-        private void BroadcastEvent(IMessageCluster message, IEntity sender = null, IEntity subject = null, IEntity target = null)
+        private void BroadcastEvent(IMessage message, IEntity sender = null, IEntity subject = null, IEntity target = null)
         {
             message.ExecuteMessaging(sender, subject, target, this, null);
         }
@@ -190,7 +190,7 @@ namespace NetMud.Data.Zone
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public override IEnumerable<IMessage> GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes = null)
+        public override ILexicalParagraph GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes = null)
         {
             if (sensoryTypes == null || sensoryTypes.Count() == 0)
             {
@@ -216,7 +216,7 @@ namespace NetMud.Data.Zone
             };
 
             //Self becomes the first sense in the list
-            List<IMessage> sensoryOutput = new List<IMessage>();
+            List<ISensoryEvent> sensoryOutput = new List<ISensoryEvent>();
             foreach (MessagingType sense in sensoryTypes)
             {
                 var me = GetSelf(sense);
@@ -376,13 +376,13 @@ namespace NetMud.Data.Zone
 
                 if (me != null)
                 {
-                    sensoryOutput.Add(new Message(sense, me));
+                    sensoryOutput.Add(me);
                 }
             }
 
             foreach (ICelestial celestial in GetVisibileCelestials(viewer))
             {
-                sensoryOutput.AddRange(celestial.RenderAsContents(viewer, sensoryTypes));
+                sensoryOutput.AddRange(celestial.RenderAsContents(viewer, sensoryTypes).Events);
             }
 
             //TODO: different way of rendering natural resources
@@ -390,17 +390,17 @@ namespace NetMud.Data.Zone
             {
                 foreach (var resource in NaturalResources)
                 {
-                    sensoryOutput.AddRange(resource.Resource.RenderResourceCollection(viewer, resource.RateFactor));
+                    sensoryOutput.AddRange(resource.Resource.RenderResourceCollection(viewer, resource.RateFactor).Events);
                 }
             }
 
             //render our locales out
             foreach (ILocale locale in LiveCache.GetAll<ILocale>().Where(loc => loc.ParentLocation?.TemplateId == TemplateId))
             {
-                sensoryOutput.AddRange(locale.RenderAsContents(viewer, sensoryTypes));
+                sensoryOutput.AddRange(locale.RenderAsContents(viewer, sensoryTypes).Events);
             }
 
-            return sensoryOutput;
+            return new LexicalParagraph(sensoryOutput);
         }
 
         /// <summary>

@@ -372,6 +372,15 @@ namespace NetMud.Data.Linguistic
         }
 
         /// <summary>
+        /// Create a lexica from this
+        /// </summary>
+        /// <returns></returns>
+        public ILexica GetLexica(GrammaticalType role, LexicalType type, LexicalContext context)
+        {
+            return new Lexica(type, role, Name, context);
+        }
+
+        /// <summary>
         /// Get the significant details of what needs approval
         /// </summary>
         /// <returns>A list of strings</returns>

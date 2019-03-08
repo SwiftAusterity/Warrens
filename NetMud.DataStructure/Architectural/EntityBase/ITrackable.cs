@@ -1,4 +1,4 @@
-﻿using NetMud.DataStructure.System;
+﻿using NetMud.DataStructure.Linguistic;
 
 namespace NetMud.DataStructure.Architectural.EntityBase
 {
@@ -12,6 +12,6 @@ namespace NetMud.DataStructure.Architectural.EntityBase
         /// </summary>
         /// <param name="actor">entity initiating the command</param>
         /// <returns>the output</returns>
-        IMessage RenderToTrack(IEntity actor);
+        ILexicalParagraph RenderToTrack(IEntity actor);
     }
 }

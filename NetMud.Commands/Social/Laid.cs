@@ -2,6 +2,7 @@
 using NetMud.Communication.Messaging;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Linguistic;
 using System.Collections.Generic;
 using System.Text;
 
@@ -22,17 +23,7 @@ namespace NetMud.Commands.Social
 
         public override void Execute()
         {
-            List<string> returnStrings = new List<string>();
-            StringBuilder sb = new StringBuilder();
-
-            returnStrings.Add("You get laid, fucked, fapfapfap.");
-
-            Message toActor = new Message()
-            {
-                Override = returnStrings
-            };
-
-            MessageCluster messagingObject = new MessageCluster(toActor);
+            Message messagingObject = new Message(new LexicalParagraph("You get laid, fucked, fapfapfap."));
 
             messagingObject.ExecuteMessaging(Actor, null, null, null, null);
         }

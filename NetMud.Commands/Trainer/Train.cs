@@ -4,8 +4,8 @@ using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.NPC;
-using NetMud.DataStructure.System;
 using NetMud.Utility;
 using System.Collections.Generic;
 
@@ -45,7 +45,7 @@ namespace NetMud.Commands.EntityManipulation
             {
                 string listings = trainer.RenderInstructionList(Actor);
 
-                MessageCluster listingMessage = new MessageCluster(new Message(listings));
+                Message listingMessage = new Message(new LexicalParagraph(listings));
 
                 listingMessage.ExecuteMessaging(Actor, null, null, null, null);
             }
@@ -70,12 +70,12 @@ namespace NetMud.Commands.EntityManipulation
                 RenderError(errorMessage);
             }
 
-            Message toArea = new Message("$A$ trains with $S$.");
+            ILexicalParagraph toArea = new LexicalParagraph("$A$ trains with $S$.");
 
             //TODO: language outputs
-            MessageCluster messagingObject = new MessageCluster(new Message(string.Format("You learn from $S$ for {0}blz.", price)))
+            Message messagingObject = new Message(new LexicalParagraph(string.Format("You learn from $S$ for {0}blz.", price)))
             {
-                ToOrigin = new List<IMessage> { toArea }
+                ToOrigin = new List<ILexicalParagraph> { toArea }
             };
 
             messagingObject.ExecuteMessaging(Actor, trainer, null, OriginLocation.CurrentZone, null);

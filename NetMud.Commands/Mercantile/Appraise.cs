@@ -3,8 +3,8 @@ using NetMud.Communication.Messaging;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Inanimate;
+using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.NPC;
-using NetMud.DataStructure.System;
 using System.Collections.Generic;
 
 namespace NetMud.Commands.EntityManipulation
@@ -55,27 +55,14 @@ namespace NetMud.Commands.EntityManipulation
                 return;
             }
 
-            List<string> sb = new List<string>
-            {
-                string.Format("The merchant appraises your {0} at {1}blz.", thing.GetDescribableName(Actor), price)
-            };
+            ILexicalParagraph toActor = new LexicalParagraph(string.Format("The merchant appraises your {0} at {1}blz.", thing.GetDescribableName(Actor), price));
 
-            Message toActor = new Message()
-            {
-                Override = sb
-            };
-
-            string[] areaString = new string[] { "$T$ looks very closely at $A$'s $S$." };
-
-            Message toArea = new Message()
-            {
-                Override = areaString
-            };
+            ILexicalParagraph toArea = new LexicalParagraph("$T$ looks very closely at $A$'s $S$.");
 
             //TODO: language outputs
-            MessageCluster messagingObject = new MessageCluster(toActor)
+            Message messagingObject = new Message(toActor)
             {
-                ToOrigin = new List<IMessage> { toArea }
+                ToOrigin = new List<ILexicalParagraph> { toArea }
             };
 
             messagingObject.ExecuteMessaging(Actor, thing, merchant, OriginLocation.CurrentZone, null);

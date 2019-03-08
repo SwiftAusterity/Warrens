@@ -1,4 +1,5 @@
 ﻿using NetMud.Cartography;
+using NetMud.Communication.Messaging;
 using NetMud.Data.Architectural;
 using NetMud.Data.Architectural.DataIntegrity;
 using NetMud.Data.Architectural.EntityBase;
@@ -299,7 +300,7 @@ namespace NetMud.Data.Locale
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public override IEnumerable<IMessage> RenderAsContents(IEntity viewer, MessagingType[] sensoryTypes)
+        public override ILexicalParagraph RenderAsContents(IEntity viewer, MessagingType[] sensoryTypes)
         {
             if (sensoryTypes == null || sensoryTypes.Count() == 0)
             {
@@ -307,7 +308,7 @@ namespace NetMud.Data.Locale
             }
 
             //Add the existential modifiers
-            return new IMessage[] { GetImmediateDescription(viewer, sensoryTypes[0]) };
+            return new LexicalParagraph(GetImmediateDescription(viewer, sensoryTypes[0]));
         }
 
         /// <summary>

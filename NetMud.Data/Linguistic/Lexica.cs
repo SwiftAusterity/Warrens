@@ -1,5 +1,4 @@
 ﻿using NetMud.Communication.Lexical;
-using NetMud.Communication.Messaging;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural;
@@ -117,14 +116,14 @@ namespace NetMud.Data.Linguistic
         /// <returns>Whether or not it succeeded</returns>
         public ILexica TryModify(ILexica modifier, bool passthru = false)
         {
-            if(Modifiers == null)
+            if (Modifiers == null)
             {
                 Modifiers = new HashSet<ILexica>();
             }
 
             if (!Modifiers.Contains(modifier))
             {
-                if(modifier.Context == null)
+                if (modifier.Context == null)
                 {
                     modifier.Context = Context.Clone();
                 }
@@ -239,7 +238,7 @@ namespace NetMud.Data.Linguistic
         /// </summary>
         /// <param name="overridingContext">The full lexical context</param>
         /// <returns>A long description</returns>
-        public IEnumerable<ILexica> Unpack(int strength, LexicalContext overridingContext = null)
+        public IEnumerable<ILexica> Unpack(MessagingType sensoryType, int strength, LexicalContext overridingContext = null)
         {
             if (overridingContext != null)
             {
@@ -251,30 +250,31 @@ namespace NetMud.Data.Linguistic
 
             var lexList = new List<ILexica>();
 
+            var obfuscationLevel = Math.Max(0, Math.Min(100, 30 - strength));
+            var newLex = Mutate(sensoryType, strength, obfuscationLevel);
 
-
-            return lexList;
-        }
-
-        /// <summary>
-        /// Create a narrative description from this
-        /// </summary>
-        /// <param name="context">Contextual nature of the request.</param>
-        /// <param name="omitName">Should we omit the proper name of the initial subject entirely (and only resort to pronouns)</param>
-        /// <returns>A long description</returns>
-        public string Unpack(LexicalContext overridingContext = null, bool omitName = false)
-        {
-            if (overridingContext != null)
+            //Listable pass rules
+            var modifierList = new List<Tuple<ILexica, int>>
             {
-                //Sentence must maintain the same language, tense and personage
-                Context.Language = overridingContext.Language;
-                Context.Tense = overridingContext.Tense;
-                Context.Perspective = overridingContext.Perspective;
+                new Tuple<ILexica, int>(newLex, 0)
+            };
+            foreach (var modifierPair in Modifiers.GroupBy(lexi => new { lexi.Role, lexi.Type }))
+            {
+                var rule = Context.Language.Rules.OrderByDescending(rul => rul.RuleSpecificity())
+                                                 .FirstOrDefault(rul => rul.Matches(this, modifierPair.Key.Role, modifierPair.Key.Type));
+
+                if (rule != null)
+                {
+                    foreach (var modifier in modifierPair)
+                    {
+                        modifierList.Add(new Tuple<ILexica, int>(modifier, rule.ModificationOrder));
+                    }
+                }
             }
 
-            IEnumerable<LexicalSentence> sentences = GetSentences(omitName);
+            newLex.Modifiers = new HashSet<ILexica>();
 
-            return string.Join(" ", sentences.Select(sent => sent.Describe())).Trim();
+            return modifierList.OrderBy(tup => tup.Item2).Select(tup => tup.Item1);
         }
 
         /// <summary>
@@ -284,114 +284,23 @@ namespace NetMud.Data.Linguistic
         /// <returns>a sentence fragment</returns>
         public string Describe()
         {
-            var lex = Context.Language == null && (Context.Severity + Context.Elegance + Context.Quality == 0)
-                    ? this
-                    : Mutate();
-
             //short circuit empty lexica
-            if (string.IsNullOrWhiteSpace(lex.Phrase))
+            if (string.IsNullOrWhiteSpace(Phrase))
             {
                 return string.Empty;
             }
 
-            //Language rules engine, default to base language if we have an empty language
-            if (Context.Language == null || Context.Language?.Rules?.Count == 0)
-            {
-                IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
-
-                Context.Language = globalConfig.BaseLanguage;
-            }
-
             //up-caps all the proper nouns
-            if (lex.Type == LexicalType.ProperNoun)
+            if (Type == LexicalType.ProperNoun)
             {
-                lex.Phrase = lex.Phrase.ProperCaps();
+                Phrase = Phrase.ProperCaps();
             }
             else
             {
-                lex.Phrase = lex.Phrase.ToLower();
+                Phrase = Phrase.ToLower();
             }
 
-            //Contractive rules
-            var lexDict = lex.GetDictata();
-            foreach (var rule in Context.Language.ContractionRules.Where(rul => rul.First == lexDict || rul.Second == lexDict))
-            {
-                if(!lex.Modifiers.Any(mod => mod.GetDictata() == rule.First || mod.GetDictata() == rule.Second))
-                {
-                    continue;
-                }
-
-                lex.Modifiers.RemoveWhere(mod => mod.GetDictata() == rule.First || mod.GetDictata() == rule.Second);
-
-                lex.Phrase = rule.Contraction.Name;
-            }
-
-            //Transformational word pair rules
-            foreach (var rule in Context.Language.TransformationRules.Where(rul => rul.TransformedWord != null && rul.Origin == lexDict))
-            {
-                var beginsWith = rule.BeginsWith.Split('|', StringSplitOptions.RemoveEmptyEntries);
-                var endsWith = rule.EndsWith.Split('|', StringSplitOptions.RemoveEmptyEntries);
-
-                var modifiers = lex.Modifiers.Where(mod => (rule.SpecificFollowing == null || mod.GetDictata() == rule.SpecificFollowing)
-                                           && (beginsWith.Count() == 0 || beginsWith.Any(bw => mod.Phrase.StartsWith(bw)))
-                                           && (endsWith.Count() == 0 || endsWith.Any(ew => mod.Phrase.EndsWith(ew))));
-
-                if(modifiers.Count() == 0)
-                {
-                    continue;
-                }
-
-                lex.Phrase = rule.TransformedWord.Name;
-            }
-
-            //Listable pass rules
-            var modifierList = new List<Tuple<ILexica[], int>>();
-            foreach (var modifierPair in lex.Modifiers.GroupBy(lexi => new { lexi.Role, lexi.Type }))
-            {
-                var rule = Context.Language.Rules.OrderByDescending(rul => rul.RuleSpecificity())
-                                                 .FirstOrDefault(rul => rul.Matches(lex, modifierPair.Key.Role, modifierPair.Key.Type));
-
-                if (rule != null)
-                {
-                    if (rule.Listable)
-                    {
-                        modifierList.Add(new Tuple<ILexica[], int>(modifierPair.ToArray(), rule.ModificationOrder));
-                    }
-                    else
-                    {
-                        foreach (var modifier in modifierPair)
-                        {
-                            modifierList.Add(new Tuple<ILexica[], int>(new ILexica[] { modifier }, rule.ModificationOrder));
-                        }
-                    }
-                }
-            }
-
-            modifierList.Add(new Tuple<ILexica[], int>(new ILexica[] { lex }, 0));
-
-            StringBuilder sb = new StringBuilder();
-            foreach (var grouping in modifierList.OrderBy(mod => mod.Item2))
-            {
-                if (grouping.Item1.Length > 1)
-                {
-                    sb.Append(grouping.Item1.Select(lexi => lexi.Describe()).CommaList(RenderUtility.SplitListType.CommaWithAnd));
-                }
-                else
-                {
-                    ILexica item = grouping.Item1[0];
-
-                    if (item == lex)
-                    {
-                        sb.Append(item.Phrase + " ");
-                    }
-                    else
-                    {
-                        sb.Append(item.Describe() + " ");
-                    }
-                }
-            }
-
-            return sb.ToString();
+            return Phrase;
         }
 
         /// <summary>
@@ -400,105 +309,36 @@ namespace NetMud.Data.Linguistic
         /// <param name="context">Contextual nature of the request.</param>
         /// <param name="obfuscationLevel">% level of obfuscating this thing (0 to 100).</param>
         /// <returns>the new lex</returns>
-        public ILexica Mutate(int obfuscationLevel = 0)
+        private ILexica Mutate(MessagingType sensoryType, int strength, int obfuscationLevel = 0)
         {
-            Lexica newLexica;
-
+            var rand = new Random();
             var dict = GetDictata();
-
             if (Type != LexicalType.ProperNoun && dict != null && (Context.Severity + Context.Elegance + Context.Quality > 0 || Context.Language != dict.Language))
             {
                 var newDict = Thesaurus.GetSynonym(dict, Context);
 
-                newLexica = new Lexica(Type, Role, newDict.Name, Context);
+                Phrase = newDict.Name;
+            }
 
-                newLexica.TryModify(Modifiers);
+            if (obfuscationLevel < 0 || obfuscationLevel > rand.Next(0, 100))
+            {
+                var lex = RunObscura(sensoryType, Context.Observer, obfuscationLevel >= 100);
+                lex.Modifiers.RemoveWhere(mod => mod.Role == GrammaticalType.Descriptive);
 
-                return newLexica;
+                return lex;
             }
 
             return this;
         }
 
-        private IEnumerable<LexicalSentence> GetSentences(bool omitName)
+        /// <summary>
+        /// Make a sentence out of this
+        /// </summary>
+        /// <param name="type">the sentence type</param>
+        /// <returns>the sentence</returns>
+        public ILexicalSentence MakeSentence(SentenceType type)
         {
-            ILexica me;
-
-            List<LexicalSentence> sentences = new List<LexicalSentence>();
-
-            if (omitName)
-            {
-                var pronounContext = Context.Clone();
-                pronounContext.Perspective = NarrativePerspective.SecondPerson;
-                pronounContext.Position = LexicalPosition.None;
-                pronounContext.Tense = LexicalTense.None;
-                pronounContext.Determinant = false;
-                pronounContext.Semantics = new HashSet<string>();
-
-                var pronoun = Thesaurus.GetWord(pronounContext, LexicalType.Pronoun);
-                me = new Lexica(pronoun.WordType, Role, pronoun.Name, Context);
-                me.TryModify(Modifiers.Where(mod => mod != null && mod.Role != GrammaticalType.Subject));
-            }
-            else
-            {
-                me = new Lexica(Type, Role, Phrase, Context);
-                me.TryModify(Modifiers.Where(mod => mod != null && mod.Role != GrammaticalType.Subject));
-            }
-
-            List<ILexica> subjects = new List<ILexica>
-            {
-                me
-            };
-            subjects.AddRange(Modifiers.Where(mod => mod != null && mod.Role == GrammaticalType.Subject));
-
-            foreach (ILexica subject in subjects)
-            {
-                //Language rules engine, default to base language if we have an empty language
-                if (subject.Context.Language == null || subject.Context.Language?.Rules?.Count == 0)
-                {
-                    IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
-
-                    subject.Context.Language = globalConfig.BaseLanguage;
-                }
-
-                var newLex = subject;
-                //This is to catch directly described entities, we have to add a verb to it for it to make sense.
-                if (subject.Modifiers.Any() && !subject.Modifiers.Any(mod => mod.Role == GrammaticalType.Verb))
-                {
-                    Lexica newSubject = new Lexica(subject.Type, subject.Role, subject.Phrase, subject.Context);
-                    newSubject.TryModify(subject.Modifiers);
-
-                    var verbContext = subject.Context.Clone();
-                    verbContext.Semantics = new HashSet<string> { "existential" };
-                    verbContext.Determinant = false;
-                    var verb = Thesaurus.GetWord(verbContext, LexicalType.Verb);
-
-                    var verbLex = new Lexica(LexicalType.Verb, GrammaticalType.Verb, verb.Name, verbContext);
-                    verbLex.TryModify(newSubject.Modifiers);
-
-                    newSubject.Modifiers = null;
-                    newSubject.TryModify(verbLex);
-
-                    newLex = newSubject;
-                }
-
-                if (newLex.Modifiers.Any(mod => mod.Role == GrammaticalType.Subject))
-                {
-                    sentences.Add(new LexicalSentence(newLex) { Type = SentenceType.Partial });
-
-                    //fragment sentences
-                    foreach (ILexica subLex in newLex.Modifiers.Where(mod => mod.Role == GrammaticalType.Subject))
-                    {
-                        sentences.Add(new LexicalSentence(subLex) { Type = SentenceType.Statement });
-                    }
-                }
-                else
-                {
-                    sentences.Add(new LexicalSentence(newLex) { Type = SentenceType.Statement });
-                }
-            }
-
-            return sentences;
+            return new LexicalSentence(this) { Type = type };
         }
 
         /// <summary>
@@ -510,7 +350,7 @@ namespace NetMud.Data.Linguistic
             var context = new LexicalContext(observer);
 
             var specific = true;
-            var entityLocation = entity.CurrentLocation?.CurrentLocation();
+            var entityLocation = entity?.CurrentLocation?.CurrentLocation();
             if (entityLocation != null)
             {
                 var type = entity.GetType();
@@ -536,8 +376,7 @@ namespace NetMud.Data.Linguistic
             return context;
         }
 
-
-        private ISensoryEvent GetObscura(MessagingType sensoryType, IEntity observer, bool under, int range)
+        private ILexica RunObscura(MessagingType sensoryType, IEntity observer, bool over)
         {
             ILexica message = null;
 
@@ -551,7 +390,7 @@ namespace NetMud.Data.Linguistic
             switch (sensoryType)
             {
                 case MessagingType.Audible:
-                    if (under)
+                    if (!over)
                     {
                         message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "hear", observer, observer)
                                                         .TryModify(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "sounds", context))
@@ -566,7 +405,7 @@ namespace NetMud.Data.Linguistic
                     }
                     break;
                 case MessagingType.Olefactory:
-                    if (under)
+                    if (!over)
                     {
                         message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "smell", observer, observer)
                                                         .TryModify(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "something", context))
@@ -581,7 +420,7 @@ namespace NetMud.Data.Linguistic
                     }
                     break;
                 case MessagingType.Psychic:
-                    if (under)
+                    if (!over)
                     {
                         message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "sense", observer, observer)
                                                         .TryModify(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "presence", context))
@@ -597,7 +436,7 @@ namespace NetMud.Data.Linguistic
                     break;
                 case MessagingType.Tactile:
                     context.Position = LexicalPosition.Attached;
-                    if (under)
+                    if (!over)
                     {
                         message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "brushes", observer, observer)
                                                         .TryModify(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "skin", context))
@@ -614,7 +453,7 @@ namespace NetMud.Data.Linguistic
                 case MessagingType.Taste:
                     context.Position = LexicalPosition.InsideOf;
 
-                    if (under)
+                    if (!over)
                     {
                         message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "taste", observer, observer)
                                                         .TryModify(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "something", context))
@@ -632,7 +471,7 @@ namespace NetMud.Data.Linguistic
                 case MessagingType.Visible:
                     context.Plural = true;
 
-                    if (under)
+                    if (!over)
                     {
                         message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "see", observer, observer)
                                                 .TryModify(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "shadows", context));
@@ -646,9 +485,8 @@ namespace NetMud.Data.Linguistic
                     break;
             }
 
-            return new SensoryEvent(message, Math.Abs(range), sensoryType);
+            return message;
         }
-
 
         #region Equality Functions
         /// <summary>

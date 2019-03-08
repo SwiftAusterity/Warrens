@@ -3,8 +3,8 @@ using NetMud.Communication.Messaging;
 using NetMud.DataAccess.FileSystem;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.Player;
-using NetMud.DataStructure.System;
 using NetMud.Utility;
 using System.Collections.Generic;
 
@@ -35,23 +35,14 @@ namespace NetMud.Commands.System
             List<string> sb = new List<string>();
 
             IPlayer player = (IPlayer)Actor;
+            ILexicalParagraph toActor = new LexicalParagraph("You exit this reality.");
 
-            sb.Add("You exit this reality.");
+            ILexicalParagraph toOrigin = new LexicalParagraph("$A$ exits this reality.");
 
-            Message toActor = new Message()
+
+            Message messagingObject = new Message(toActor)
             {
-                Override = sb
-            };
-
-            Message toOrigin = new Message()
-            {
-                Override = new string[] { "$A$ exits this reality." }
-            };
-
-
-            MessageCluster messagingObject = new MessageCluster(toActor)
-            {
-                ToOrigin = new List<IMessage> { toOrigin }
+                ToOrigin = new List<ILexicalParagraph> { toOrigin }
             };
 
             messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation.CurrentZone, null);

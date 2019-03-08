@@ -3,6 +3,7 @@ using NetMud.Communication.Messaging;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.Player;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,12 +27,9 @@ namespace NetMud.Commands.Comm
         {
             IEnumerable<IPlayer> whoList = LiveCache.GetAll<IPlayer>().Where(player => player.Descriptor != null);
 
-            Message toActor = new Message()
-            {
-                Override = new string[] { string.Join(",", whoList.Select(who => who.GetDescribableName(Actor))) }
-            };
+            ILexicalParagraph toActor = new LexicalParagraph(string.Join(",", whoList.Select(who => who.GetDescribableName(Actor))));
 
-            MessageCluster messagingObject = new MessageCluster(toActor);
+            Message messagingObject = new Message(toActor);
 
             messagingObject.ExecuteMessaging(Actor, null, null, null, null);
         }

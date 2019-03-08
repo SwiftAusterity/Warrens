@@ -5,7 +5,7 @@ using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Inanimate;
-using NetMud.DataStructure.System;
+using NetMud.DataStructure.Linguistic;
 using NetMud.Utility;
 using System;
 using System.Collections.Generic;
@@ -56,31 +56,19 @@ namespace NetMud.Commands.System
 
             //TODO: keywords is janky, location should have its own identifier name somehow for output purposes - DISPLAY short/long NAME
 
-            Message toActor = new Message()
-            {
-                Override = sb
-            };
+            ILexicalParagraph toActor = new LexicalParagraph(sb.ToString());
 
-            Message toOrigin = new Message()
-            {
-                Override = new string[] { "$S$ appears in the $T$." }
-            };
+            ILexicalParagraph toOrigin = new LexicalParagraph("$S$ appears in the $T$.");
 
-            Message toSubject = new Message()
-            {
-                Override = new string[] { "You are ALIVE" }
-            };
+            ILexicalParagraph toSubject = new LexicalParagraph("You are ALIVE");
 
-            Message toTarget = new Message()
-            {
-                Override = new string[] { "You have been given $S$" }
-            };
+            ILexicalParagraph toTarget = new LexicalParagraph("You have been given $S$");
 
-            MessageCluster messagingObject = new MessageCluster(toActor)
+            Message messagingObject = new Message(toActor)
             {
-                ToOrigin = new List<IMessage> { toOrigin },
-                ToSubject = new List<IMessage> { toSubject },
-                ToTarget = new List<IMessage> { toTarget }
+                ToOrigin = new List<ILexicalParagraph> { toOrigin },
+                ToSubject = new List<ILexicalParagraph> { toSubject },
+                ToTarget = new List<ILexicalParagraph> { toTarget }
             };
 
             messagingObject.ExecuteMessaging(Actor, entityObject, OriginLocation.CurrentZone, OriginLocation.CurrentZone, null);

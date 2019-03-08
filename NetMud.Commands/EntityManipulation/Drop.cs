@@ -4,6 +4,7 @@ using NetMud.Communication.Messaging;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.System;
 using System.Collections.Generic;
 
@@ -28,7 +29,6 @@ namespace NetMud.Commands.EntityManipulation
         /// </summary>
         public override void Execute()
         {
-            List<string> sb = new List<string>();
             IEntity thing = (IEntity)Subject;
             IContains actor = (IContains)Actor;
             IContains place = (IContains)OriginLocation;
@@ -36,21 +36,13 @@ namespace NetMud.Commands.EntityManipulation
             actor.MoveFrom(thing);
             place.MoveInto(thing);
 
-            sb.Add("You drop $S$.");
+            ILexicalParagraph toActor = new LexicalParagraph("You drop $S$.");
 
-            Message toActor = new Message(MessagingType.Visible, new SensoryEvent() { Strength = 1 })
-            {
-                Override = sb
-            };
+            ILexicalParagraph toOrigin = new LexicalParagraph("$A$ drops $S$.");
 
-            Message toOrigin = new Message(MessagingType.Visible, new SensoryEvent() { Strength = 30 })
+            IMessage messagingObject = new Message(toActor)
             {
-                Override = new string[] { "$A$ drops $S$." }
-            };
-
-            MessageCluster messagingObject = new MessageCluster(toActor)
-            {
-                ToOrigin = new List<IMessage> { toOrigin }
+                ToOrigin = new List<ILexicalParagraph> { toOrigin }
             };
 
             messagingObject.ExecuteMessaging(Actor, thing, null, OriginLocation.CurrentRoom, null);

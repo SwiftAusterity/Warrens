@@ -54,7 +54,7 @@ namespace NetMud.Data.Room
         /// <summary>
         /// Movement messages trigger when moved through
         /// </summary>
-        public IMessageCluster Enter { get; set; }
+        public IMessage Enter { get; set; }
 
         /// <summary>
         /// Cardinality direction this points towards
@@ -189,7 +189,7 @@ namespace NetMud.Data.Room
         /// </summary>
         public Pathway()
         {
-            Enter = new MessageCluster();
+            Enter = new Message();
         }
 
         /// <summary>
@@ -198,7 +198,7 @@ namespace NetMud.Data.Room
         /// <param name="backingStore">the backing data</param>
         public Pathway(IPathwayTemplate backingStore)
         {
-            Enter = new MessageCluster();
+            Enter = new Message();
             TemplateId = backingStore.Id;
             DirectionType = Utilities.TranslateToDirection(backingStore.DegreesFromNorth, backingStore.InclineGrade);
             GetFromWorldOrSpawn();
@@ -294,7 +294,7 @@ namespace NetMud.Data.Room
             CurrentLocation = (IGlobalPosition)Origin.CurrentLocation.Clone();
             Model = bS.Model;
 
-            //Enter = new MessageCluster(new string[] { bS.MessageToActor }, new string[] { "$A$ enters you" }, new string[] { }, new string[] { bS.MessageToOrigin }, new string[] { bS.MessageToDestination });
+            //Enter = new Message(new string[] { bS.MessageToActor }, new string[] { "$A$ enters you" }, new string[] { }, new string[] { bS.MessageToOrigin }, new string[] { bS.MessageToDestination });
             //Enter.ToSurrounding.Add(MessagingType.Visible, new Tuple<int, IEnumerable<string>>(bS.VisibleStrength, new string[] { bS.VisibleToSurroundings }));
             //Enter.ToSurrounding.Add(MessagingType.Audible, new Tuple<int, IEnumerable<string>>(bS.AudibleStrength, new string[] { bS.AudibleToSurroundings }));
 
@@ -308,7 +308,7 @@ namespace NetMud.Data.Room
         /// Render this to a look command (what something sees when it 'look's at this
         /// </summary>
         /// <returns>the output strings</returns>
-        public override IEnumerable<IMessage> RenderToLook(IEntity viewer)
+        public override ILexicalParagraph RenderToLook(IEntity viewer)
         {
             var strength = 30 + (GetVisibleDelta(viewer) * 30);
 
@@ -362,7 +362,7 @@ namespace NetMud.Data.Room
                 me.Event.TryModify(verb);
             }
 
-            return new IMessage[] { new Message(MessagingType.Visible, me) };
+            return new LexicalParagraph(me);
         }
 
         /// <summary>

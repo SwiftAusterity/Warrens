@@ -102,8 +102,8 @@
     <Compile Include="Lexical\LexicalProcessor.cs" />
     <Compile Include="Lexical\SensoryEvent.cs" />
     <Compile Include="Lexical\Thesaurus.cs" />
+    <Compile Include="Messaging\LexicalParagraph.cs" />
     <Compile Include="Messaging\Message.cs" />
-    <Compile Include="Messaging\MessageCluster.cs" />
     <Compile Include="Messaging\MessagingUtility.cs" />
     <Compile Include="SystemComm.cs" />
     <Compile Include="IServer.cs" />

@@ -1,5 +1,4 @@
 ﻿using NetMud.DataStructure.Linguistic;
-using NetMud.DataStructure.System;
 using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Architectural.EntityBase
@@ -14,7 +13,7 @@ namespace NetMud.DataStructure.Architectural.EntityBase
         /// </summary>
         /// <param name="viewer">entity initiating the command</param>
         /// <returns>the output</returns>
-        IEnumerable<IMessage> RenderToLook(IEntity viewer);
+        ILexicalParagraph RenderToLook(IEntity viewer);
 
         /// <summary>
         /// Retrieve all of the descriptors that are tagged as Tactile output

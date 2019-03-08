@@ -5,7 +5,7 @@ using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Inanimate;
-using NetMud.DataStructure.System;
+using NetMud.DataStructure.Linguistic;
 using NetMud.Utility;
 using System.Collections.Generic;
 using System.Linq;
@@ -69,12 +69,9 @@ namespace NetMud.Commands.EntityManipulation
                     }
                 }
 
-                Message toActor = new Message()
-                {
-                    Override = sb
-                };
+                ILexicalParagraph toActor = new LexicalParagraph(sb.ToString());
 
-                MessageCluster messagingObject = new MessageCluster(toActor);
+                Message messagingObject = new Message(toActor);
 
                 messagingObject.ExecuteMessaging(Actor, null, null, null, null);
 
@@ -93,19 +90,13 @@ namespace NetMud.Commands.EntityManipulation
             {
                 sb.Add(string.Format("You craft {0} {1}{2}.", itemToMake.Produces, itemToMake.Name, itemToMake.Produces > 1 ? "s" : ""));
 
-                Message toActor = new Message()
-                {
-                    Override = sb
-                };
+                ILexicalParagraph toActor = new LexicalParagraph(sb.ToString());
 
-                Message toOrigin = new Message()
-                {
-                    Override = new string[] { string.Format("$A$ crafts {0} {1}{2}.", itemToMake.Produces, itemToMake.Name, itemToMake.Produces > 1 ? "s" : "") }
-                };
+                ILexicalParagraph toOrigin = new LexicalParagraph(string.Format("$A$ crafts {0} {1}{2}.", itemToMake.Produces, itemToMake.Name, itemToMake.Produces > 1 ? "s" : ""));
 
-                MessageCluster messagingObject = new MessageCluster(toActor)
+                Message messagingObject = new Message(toActor)
                 {
-                    ToOrigin = new List<IMessage> { toOrigin }
+                    ToOrigin = new List<ILexicalParagraph> { toOrigin }
                 };
 
                 messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation.CurrentZone, null);

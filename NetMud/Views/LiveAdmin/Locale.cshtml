@@ -1,7 +1,7 @@
 ﻿@model NetMud.Models.Admin.ViewLocaleViewModel
 @{
     ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("View Locale", new string[] { "Dashboard", "Locales" }, new string[] { "/GameAdmin", "/LiveAdmin/Locales" });
-    var longDesc = new NetMud.Communication.Messaging.MessageCluster(Model.DataObject.RenderToLook(null)).Unpack(NetMud.DataStructure.System.TargetEntity.Actor);
+    var longDesc = new NetMud.Communication.Messaging.Message(Model.DataObject.RenderToLook(null)).Unpack(NetMud.DataStructure.System.TargetEntity.Actor);
 }
 <h3>@Model.DataObject.TemplateName</h3>
 <h4>

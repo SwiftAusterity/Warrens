@@ -2,7 +2,7 @@
 using NetMud.Communication.Messaging;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
-using NetMud.DataStructure.System;
+using NetMud.DataStructure.Linguistic;
 using NetMud.Utility;
 using System.Collections.Generic;
 
@@ -27,27 +27,14 @@ namespace NetMud.Commands.Comm
         /// </summary>
         public override void Execute()
         {
-            List<string> sb = new List<string>
-            {
-                string.Format("You shout '{0}'", Subject)
-            };
+            ILexicalParagraph toActor = new LexicalParagraph(string.Format("You shout '{0}'", Subject));
 
-            Message toActor = new Message()
-            {
-                Override = sb
-            };
-
-            string[] areaString = new string[] { string.Format("$A$ shouts '{0}'", Subject) };
-
-            Message toArea = new Message()
-            {
-                Override = areaString
-            };
+            ILexicalParagraph toArea = new LexicalParagraph(string.Format("$A$ shouts '{0}'", Subject));
 
             //TODO: language outputs
-            MessageCluster messagingObject = new MessageCluster(toActor)
+            Message messagingObject = new Message(toActor)
             {
-                ToOrigin = new List<IMessage> { toArea }
+                ToOrigin = new List<ILexicalParagraph> { toArea }
             };
 
             messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation.CurrentZone, null);

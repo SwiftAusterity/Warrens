@@ -84,5 +84,11 @@ namespace NetMud.DataStructure.Linguistic
         /// Add language translations for this
         /// </summary>
         void FillLanguages();
+
+        /// <summary>
+        /// Create a lexica from this
+        /// </summary>
+        /// <returns></returns>
+        ILexica GetLexica(GrammaticalType role, LexicalType type, LexicalContext context);
     }
 }

@@ -3,7 +3,7 @@ using NetMud.Communication.Messaging;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.EntityBase;
-using NetMud.DataStructure.System;
+using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.Zone;
 using System;
 using System.Collections.Generic;
@@ -33,30 +33,26 @@ namespace NetMud.Commands.Administrative
         public override void Execute()
         {
             IZone moveTo = (IZone)Subject;
-            List<string> sb = new List<string>
+
+            LexicalParagraph toActor = new LexicalParagraph()
             {
-                "You teleport."
+                Override = "You teleport."
             };
 
-            Message toActor = new Message()
+            LexicalParagraph toOrigin = new LexicalParagraph()
             {
-                Override = sb
+                Override = "$A$ disappears in a puff of smoke."
             };
 
-            Message toOrigin = new Message()
+            LexicalParagraph toDest = new LexicalParagraph()
             {
-                Override = new string[] { "$A$ disappears in a puff of smoke." }
+                Override = "$A$ appears out of nowhere."
             };
 
-            Message toDest = new Message()
+            Message messagingObject = new Message(toActor)
             {
-                Override = new string[] { "$A$ appears out of nowhere." }
-            };
-
-            MessageCluster messagingObject = new MessageCluster(toActor)
-            {
-                ToOrigin = new List<IMessage> { toOrigin },
-                ToDestination = new List<IMessage> { toDest }
+                ToOrigin = new List<ILexicalParagraph> { toOrigin },
+                ToDestination = new List<ILexicalParagraph> { toDest }
             };
 
             messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation.CurrentZone, null);

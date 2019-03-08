@@ -250,7 +250,7 @@ namespace NetMud.Data.Room
         /// Render this to a look command (what something sees when it 'look's at this
         /// </summary>
         /// <returns>the output strings</returns>
-        public override IEnumerable<IMessage> RenderToLook(IEntity viewer)
+        public override ILexicalParagraph RenderToLook(IEntity viewer)
         {
             return GetFullDescription(viewer);
         }
@@ -260,7 +260,7 @@ namespace NetMud.Data.Room
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public override IEnumerable<IMessage> GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes = null)
+        public override ILexicalParagraph GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes = null)
         {
             if (sensoryTypes == null || sensoryTypes.Count() == 0)
             {
@@ -286,7 +286,7 @@ namespace NetMud.Data.Room
             };
 
             //Self becomes the first sense in the list
-            List<IMessage> sensoryOutput = new List<IMessage>();
+            List<ISensoryEvent> sensoryOutput = new List<ISensoryEvent>();
             foreach (MessagingType sense in sensoryTypes)
             {
                 var me = GetSelf(sense);
@@ -469,39 +469,39 @@ namespace NetMud.Data.Room
 
                 if (me != null)
                 {
-                    sensoryOutput.Add(new Message(sense, me));
+                    sensoryOutput.Add(me);
                 }
             }
 
             foreach (ICelestial celestial in GetVisibileCelestials(viewer))
             {
-                sensoryOutput.AddRange(celestial.RenderAsContents(viewer, sensoryTypes));
+                sensoryOutput.AddRange(celestial.RenderAsContents(viewer, sensoryTypes).Events);
             }
 
             if (NaturalResources != null)
             {
                 foreach (var resource in NaturalResources)
                 {
-                    sensoryOutput.AddRange(resource.Resource.RenderResourceCollection(viewer, resource.RateFactor));
+                    sensoryOutput.AddRange(resource.Resource.RenderResourceCollection(viewer, resource.RateFactor).Events);
                 }
             }
 
             foreach (IPathway path in GetPathways())
             {
-                sensoryOutput.AddRange(path.RenderAsContents(viewer, sensoryTypes));
+                sensoryOutput.AddRange(path.RenderAsContents(viewer, sensoryTypes).Events);
             }
 
             foreach (IInanimate obj in GetContents<IInanimate>())
             {
-                sensoryOutput.AddRange(obj.RenderAsContents(viewer, sensoryTypes));
+                sensoryOutput.AddRange(obj.RenderAsContents(viewer, sensoryTypes).Events);
             }
 
             foreach (IMobile mob in GetContents<IMobile>().Where(player => !player.Equals(viewer)))
             {
-                sensoryOutput.AddRange(mob.RenderAsContents(viewer, sensoryTypes));
+                sensoryOutput.AddRange(mob.RenderAsContents(viewer, sensoryTypes).Events);
             }
 
-            return sensoryOutput;
+            return new LexicalParagraph(sensoryOutput);
         }
 
         /// <summary>

@@ -3,6 +3,7 @@ using NetMud.Communication.Messaging;
 using NetMud.DataAccess.FileSystem;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.Player;
 using System.Collections.Generic;
 
@@ -33,14 +34,9 @@ namespace NetMud.Commands.System
 
             IPlayer player = (IPlayer)Actor;
 
-            sb.Add("You save your life.");
+            ILexicalParagraph toActor = new LexicalParagraph("You save your life.");
 
-            Message toActor = new Message()
-            {
-                Override = sb
-            };
-
-            MessageCluster messagingObject = new MessageCluster(toActor);
+            Message messagingObject = new Message(toActor);
 
             messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation.CurrentZone, null);
 

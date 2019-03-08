@@ -3,6 +3,7 @@ using NetMud.Communication.Messaging;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.Player;
 using NetMud.Gossip;
 using NetMud.Utility;
@@ -88,13 +89,10 @@ namespace NetMud.Commands.GossipServer
                 }
             }
 
-            Message toActor = new Message()
-            {
-                Override = sb
-            };
+            ILexicalParagraph toActor = new LexicalParagraph(sb.ToString());
 
             //TODO: language outputs
-            MessageCluster messagingObject = new MessageCluster(toActor);
+            Message messagingObject = new Message(toActor);
 
             messagingObject.ExecuteMessaging(Actor, null, null, null, null);
         }

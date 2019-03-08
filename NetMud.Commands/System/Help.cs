@@ -2,6 +2,7 @@
 using NetMud.Communication.Messaging;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,12 +43,9 @@ namespace NetMud.Commands.System
                 sb = sb.Concat(subject.RenderSyntaxHelp()).ToList();
             }
 
-            Message toActor = new Message()
-            {
-                Override = sb
-            };
+            ILexicalParagraph toActor = new LexicalParagraph(sb.ToString());
 
-            MessageCluster messagingObject = new MessageCluster(toActor);
+            Message messagingObject = new Message(toActor);
 
             messagingObject.ExecuteMessaging(Actor, null, null, null, null);
         }

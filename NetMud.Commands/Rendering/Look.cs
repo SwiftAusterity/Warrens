@@ -4,6 +4,7 @@ using NetMud.Communication.Messaging;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.System;
 using NetMud.Utility;
 using System.Collections.Generic;
@@ -41,7 +42,7 @@ namespace NutMud.Commands.Rendering
                 //sb.AddRange(OriginLocation.CurrentLocation.RenderToLook(Actor));
 
                 ///Need to do like HMR with a simple "update UI" pipeline TODO
-                MessageCluster blankMessenger = new MessageCluster(new Message(MessagingType.Visible, new SensoryEvent() { Strength = 999 }) { Override = new string[] { "You observe your surroundings." } });
+                Message blankMessenger = new Message(new LexicalParagraph("You observe your surroundings."));
 
                 blankMessenger.ExecuteMessaging(Actor, (IEntity)Subject, null, OriginLocation.CurrentRoom, null);
                 return;
@@ -49,20 +50,14 @@ namespace NutMud.Commands.Rendering
 
             ILookable lookTarget = (ILookable)Subject;
 
-            Message toOrigin = new Message(MessagingType.Visible, new SensoryEvent() { Strength = 5 })
-            {
-                Override = new string[] { "$A$ looks at $T$." }
-            };
+            ILexicalParagraph toOrigin = new LexicalParagraph("$A$ looks at $T$.");
 
-            Message toSubject = new Message(MessagingType.Visible, new SensoryEvent() { Strength = 1 })
-            {
-                Override = new string[] { "$A$ looks at $T$." }
-            };
+            ILexicalParagraph toSubject = new LexicalParagraph("$A$ looks at YOU.");
 
-            MessageCluster messagingObject = new MessageCluster(lookTarget.RenderToLook(Actor).ToList())
+            Message messagingObject = new Message(lookTarget.RenderToLook(Actor))
             {
-                ToOrigin = new List<IMessage> { toOrigin },
-                ToSubject = new List<IMessage> { toSubject }
+                ToOrigin = new List<ILexicalParagraph> { toOrigin },
+                ToSubject = new List<ILexicalParagraph> { toSubject }
             };
 
             messagingObject.ExecuteMessaging(Actor, (IEntity)Subject, null, OriginLocation.CurrentRoom, null);
