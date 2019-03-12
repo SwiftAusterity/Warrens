@@ -278,15 +278,37 @@ namespace NetMud.Models
                 {
                     var containedType = propertyDescriptor.PropertyType.GetGenericArguments().First();
 
+                    if (containedType.IsInterface)
+                    {
+                        Type type = null;
+
+                        if (propertyDescriptor.PropertyType == typeof(ILocationData))
+                        {
+                            type = typeof(RoomTemplate);
+                        }
+                        else
+                        {
+                            type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(containedType));
+
+                            if (type == null)
+                            {
+                                type = typeof(SensoryEvent).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(containedType));
+                            }
+                        }
+
+                        containedType = type ?? throw new Exception("Invalid Binding Interface");
+                    }
+
                     if ((containedType.IsInterface || containedType.IsClass) && !typeof(string).Equals(containedType))
                     {
                         var properties = containedType.GetProperties();
-                        object[] props = new object[properties.Length];
                         FormValueProvider formValueProvider = (FormValueProvider)((ValueProviderCollection)bindingContext.ValueProvider).FirstOrDefault(vp => vp.GetType() == typeof(FormValueProvider));
 
+                        HashSet<object> valueArray = new HashSet<object>();
                         foreach (var baseKey in formValueProvider.GetKeysFromPrefix(keyName))
                         {
                             int propIterator = 0;
+                            object newItem = Activator.CreateInstance(containedType, false);
 
                             //Do we have a class or interface? We want top parse ALL the submitted values in the post and try to fill that one class object up with its props
                             foreach (var prop in properties)
@@ -313,7 +335,7 @@ namespace NetMud.Models
                                     if (keys.Count > 0)
                                     {
                                         IEnumerable<string> values = keys.Select(kvp => bindingContext.ValueProvider.GetValue(kvp).AttemptedValue);
-                                        props[propIterator] = values;
+                                        prop.SetValue(newItem, values);
                                     }
                                 }
                                 else
@@ -323,73 +345,21 @@ namespace NetMud.Models
 
                                     if (childValue != null)
                                     {
-                                        props[propIterator] = childValue.AttemptedValue;
+                                        prop.SetValue(newItem, childValue.AttemptedValue);
                                     }
                                 }
 
                                 propIterator++;
                             }
 
-                            //Did we actually find the properties for the class?
-                            if (!props.Any(prop => prop == null))
+                            if(newItem != null)
                             {
-                                //Interface shenanigans again
-                                if (propertyDescriptor.PropertyType.IsInterface)
-                                {
-                                    Type type = null;
-
-                                    if (propertyDescriptor.PropertyType == typeof(ILocationData))
-                                    {
-                                        type = typeof(RoomTemplate);
-                                    }
-                                    else
-                                    {
-                                        type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(propertyDescriptor.PropertyType));
-
-                                        if (type == null)
-                                        {
-                                            type = typeof(SensoryEvent).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(propertyDescriptor.PropertyType));
-                                        }
-                                    }
-
-                                    if (type == null)
-                                    {
-                                        throw new Exception("Invalid Binding Interface");
-                                    }
-
-                                    object concreteInstance = Activator.CreateInstance(type, props);
-
-                                    if (concreteInstance != null)
-                                    {
-                                        propertyDescriptor.SetValue(bindingContext.Model, concreteInstance);
-                                    }
-                                }
-                                else
-                                {
-                                    try
-                                    {
-                                        object newItem = Activator.CreateInstance(containedType, false);
-
-                                        if (newItem != null)
-                                        {
-
-
-                                            propertyDescriptor.SetValue(bindingContext.Model, newItem);
-                                            return;
-                                        }
-                                    }
-                                    catch
-                                    {
-                                        //TODO ???
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                //I guess we didnt actually want the entire class, just the ID so we can find it in the cache (eg. we had a dropdown of "select a class" as a prop)
-                                base.BindProperty(controllerContext, bindingContext, propertyDescriptor);
+                                valueArray.Add(newItem);
                             }
                         }
+
+                        propertyDescriptor.SetValue(bindingContext.Model, valueArray);
+                        return;
                     }
                 }
             }
