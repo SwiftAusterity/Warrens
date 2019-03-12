@@ -11,9 +11,9 @@ using System.Web.Script.Serialization;
 namespace NetMud.Data.Linguistic
 {
     /// <summary>
-    /// Relational rule From sentence construction
+    /// Relational word pair rule for sentence construction
     /// </summary>
-    public class GrammarRule : IGrammarRule
+    public class WordPairRule : IWordPairRule
     {
         /// <summary>
         /// Rule applies when sentence is in this tense
@@ -189,13 +189,6 @@ namespace NetMud.Data.Linguistic
         public string ToSemantics { get; set; }
 
         /// <summary>
-        /// Can be made into a list
-        /// </summary>
-        [Display(Name = "Listable", Description = "Can be made into a list.")]
-        [UIHint("Boolean")]
-        public bool Listable { get; set; }
-
-        /// <summary>
         /// Where does the To word fit around the From word? (the from word == 0)
         /// </summary>
         [Display(Name = "Descriptive Order", Description = "Where does the To word fit around the From word? (the from word == 0)")]
@@ -216,7 +209,7 @@ namespace NetMud.Data.Linguistic
         [UIHint("EnumDropDownList")]
         public SentenceType AltersSentence { get; set; }
 
-        public GrammarRule()
+        public WordPairRule()
         {
             AltersSentence = SentenceType.None;
             NeedsArticle = false;

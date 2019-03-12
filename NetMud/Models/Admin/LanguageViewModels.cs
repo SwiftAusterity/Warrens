@@ -74,7 +74,8 @@ namespace NetMud.Models.Admin
                 DataObject.TransformationRules = DataTemplate.TransformationRules;
                 DataObject.Gendered = DataTemplate.Gendered;
                 DataObject.PrecedentPunctuation = DataTemplate.PrecedentPunctuation;
-                DataObject.Rules = DataTemplate.Rules;
+                DataObject.WordPairRules = DataTemplate.WordPairRules;
+                DataObject.WordRules = DataTemplate.WordRules;
                 DataObject.SentenceRules = DataTemplate.SentenceRules;
                 DataObject.UIOnly = DataTemplate.UIOnly;
             }

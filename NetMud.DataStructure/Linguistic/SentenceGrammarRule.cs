@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.DataStructure.Linguistic
 {
@@ -34,5 +35,21 @@ namespace NetMud.DataStructure.Linguistic
         [Display(Name = "Grammatical Role", Description = "For this sentence type specifically.")]
         [UIHint("EnumDropDownList")]
         public SentenceType Type { get; set; }
+
+        public SentenceGrammarRule()
+        {
+            SubjectPredicate = false;
+            ModificationOrder = 0;
+            Fragment = GrammaticalType.None;
+            Type = SentenceType.None;
+        }
+
+        public SentenceGrammarRule(GrammaticalType fragment, short modificationOrder, bool subjectPredicate, SentenceType type)
+        {
+            SubjectPredicate = subjectPredicate;
+            ModificationOrder = modificationOrder;
+            Fragment = fragment;
+            Type = type;
+        }
     }
 }

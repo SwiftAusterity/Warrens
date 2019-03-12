@@ -184,9 +184,10 @@
     <Compile Include="Linguistic\BaseLanguageMembers.cs" />
     <Compile Include="Linguistic\IContractionRule.cs" />
     <Compile Include="Linguistic\IDictataTransformationRule.cs" />
-    <Compile Include="Linguistic\IGrammarRule.cs" />
+    <Compile Include="Linguistic\IWordPairRule.cs" />
     <Compile Include="Linguistic\ILanguage.cs" />
     <Compile Include="Linguistic\ISensoryEvent.cs" />
+    <Compile Include="Linguistic\IWordRule.cs" />
     <Compile Include="Linguistic\LexicalContext.cs" />
     <Compile Include="Linguistic\ILexicalParagraph.cs" />
     <Compile Include="Linguistic\LexicalPosition.cs" />

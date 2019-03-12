@@ -1,9 +1,9 @@
 ﻿namespace NetMud.DataStructure.Linguistic
 {
     /// <summary>
-    /// Relational rule From sentence construction
+    /// Solo word rules for sentence construction
     /// </summary>
-    public interface IGrammarRule
+    public interface IWordRule
     {
         /// <summary>
         /// Rule applies when sentence is in this tense
@@ -76,21 +76,6 @@
         string FromBeginsWith { get; set; }
 
         /// <summary>
-        /// Applies when we're trying to figure out where to put this type of word
-        /// </summary>
-        LexicalType ToType { get; set; }
-
-        /// <summary>
-        /// This rule applies when the adjunct word is this role
-        /// </summary>
-        GrammaticalType ToRole { get; set; }
-
-        /// <summary>
-        /// When the modifying word has this semantic tag
-        /// </summary>
-        string ToSemantics { get; set; }
-
-        /// <summary>
         /// Can be made into a list
         /// </summary>
         bool Listable { get; set; }
@@ -121,6 +106,6 @@
         /// </summary>
         /// <param name="word">The lex</param>
         /// <returns>if it matches</returns>
-        bool Matches(ILexica word, GrammaticalType toRole = GrammaticalType.None, LexicalType toType = LexicalType.None);
+        bool Matches(ILexica word);
     }
 }

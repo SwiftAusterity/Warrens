@@ -108,6 +108,7 @@
     <Compile Include="Architectural\EntityBase\Quality.cs" />
     <Compile Include="Architectural\GlobalPosition.cs" />
     <Compile Include="Architectural\LookupDataPartial.cs" />
+    <Compile Include="Architectural\PropertyBinding\WordPairRuleCollectionDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\CelestialCollectionDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\DimensionalModelDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\DictataCollectionDataBinder.cs" />
@@ -157,11 +158,12 @@
     <Compile Include="Inanimate\ItemStack.cs" />
     <Compile Include="Linguistic\ContractionRule.cs" />
     <Compile Include="Linguistic\Dictata.cs" />
-    <Compile Include="Linguistic\GrammarRule.cs" />
+    <Compile Include="Linguistic\WordPairRule.cs" />
     <Compile Include="Linguistic\DictataTransformationRule.cs" />
     <Compile Include="Linguistic\Language.cs" />
     <Compile Include="Linguistic\Lexica.cs" />
     <Compile Include="Linguistic\LexicalSentence.cs" />
+    <Compile Include="Linguistic\WordRule.cs" />
     <Compile Include="Locale\Locale.cs" />
     <Compile Include="Locale\LocaleTemplate.cs" />
     <Compile Include="NaturalResource\Fauna.cs" />

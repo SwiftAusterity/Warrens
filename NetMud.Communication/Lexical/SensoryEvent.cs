@@ -170,7 +170,7 @@ namespace NetMud.Communication.Lexical
             }
 
             //Language rules engine, default to base language if we have an empty language
-            if (Event.Context.Language == null || Event.Context.Language?.Rules?.Count == 0)
+            if (Event.Context.Language == null || (Event.Context.Language?.WordPairRules?.Count == 0 && Event.Context.Language?.WordRules?.Count == 0))
             {
                 IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
 

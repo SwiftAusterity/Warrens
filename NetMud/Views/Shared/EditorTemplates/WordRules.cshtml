@@ -1,7 +1,7 @@
 ﻿@using NetMud.Models
 @using NetMud.DataStructure.Linguistic
 
-@model HashSet<IGrammarRule>
+@model HashSet<IWordRule>
 
 @{
     var currentCount = Model.Count();
@@ -17,10 +17,10 @@
     </div>
     @if (currentCount > 0)
     {
-        @Html.EditorForMany(m => m, null, 0, "GrammarRule")
+        @Html.EditorForMany(m => m, null, 0, "WordRule")
     }
 </div>
 
 <script type="text/javascript">
-    var newGrammarRuleList = decodeHtml('@Html.EmptyEditorForMany(m => m, null, currentCount, "GrammarRule")');
+    var newGrammarRuleList = decodeHtml('@Html.EmptyEditorForMany(m => m, null, currentCount, "WordRule")');
 </script>

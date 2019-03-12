@@ -41,7 +41,12 @@ namespace NetMud.DataStructure.Linguistic
         /// <summary>
         /// List of grammatical rules to use in sentence construction
         /// </summary>
-        HashSet<IGrammarRule> Rules { get; set; }
+        HashSet<IWordRule> WordRules { get; set; }
+
+        /// <summary>
+        /// List of grammatical rules to use in sentence construction
+        /// </summary>
+        HashSet<IWordPairRule> WordPairRules { get; set; }
 
         /// <summary>
         /// List of grammatical rules to use in sentence construction

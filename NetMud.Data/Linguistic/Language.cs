@@ -1,5 +1,6 @@
 ﻿using NetMud.Communication.Lexical;
 using NetMud.Data.Architectural;
+using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.DataAccess;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
@@ -68,8 +69,14 @@ namespace NetMud.Data.Linguistic
         /// <summary>
         /// List of grammatical rules to use in sentence construction
         /// </summary>
-        [UIHint("GrammarRules")]
-        public HashSet<IGrammarRule> Rules { get; set; }
+        [UIHint("WordRules")]
+        public HashSet<IWordRule> WordRules { get; set; }
+
+        /// <summary>
+        /// List of grammatical rules to use in sentence construction
+        /// </summary>
+        [UIHint("WordPairRules")]
+        public HashSet<IWordPairRule> WordPairRules { get; set; }
 
         /// <summary>
         /// List of grammatical rules to use in sentence construction
@@ -98,7 +105,8 @@ namespace NetMud.Data.Linguistic
         public Language()
         {
             Name = string.Empty;
-            Rules = new HashSet<IGrammarRule>();
+            WordRules = new HashSet<IWordRule>();
+            WordPairRules = new HashSet<IWordPairRule>();
             ContractionRules = new HashSet<IContractionRule>();
             SentenceRules = new HashSet<SentenceGrammarRule>();
             BaseWords = new BaseLanguageMembers();

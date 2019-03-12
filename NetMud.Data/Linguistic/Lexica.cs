@@ -260,7 +260,7 @@ namespace NetMud.Data.Linguistic
             };
             foreach (var modifierPair in Modifiers.GroupBy(lexi => new { lexi.Role, lexi.Type }))
             {
-                var rule = Context.Language.Rules.OrderByDescending(rul => rul.RuleSpecificity())
+                var rule = Context.Language.WordPairRules.OrderByDescending(rul => rul.RuleSpecificity())
                                                  .FirstOrDefault(rul => rul.Matches(this, modifierPair.Key.Role, modifierPair.Key.Type));
 
                 if (rule != null)

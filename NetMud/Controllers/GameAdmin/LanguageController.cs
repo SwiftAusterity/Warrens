@@ -7,6 +7,7 @@ using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Linguistic;
 using NetMud.Models.Admin;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
@@ -180,7 +181,8 @@ namespace NetMud.Controllers.GameAdmin
             obj.AntecendentPunctuation = vModel.DataObject.AntecendentPunctuation;
             obj.Gendered = vModel.DataObject.Gendered;
             obj.PrecedentPunctuation = vModel.DataObject.PrecedentPunctuation;
-            obj.Rules = vModel.DataObject.Rules;
+            obj.WordRules = vModel.DataObject.WordRules;
+            obj.WordPairRules = vModel.DataObject.WordPairRules;
             obj.SentenceRules = vModel.DataObject.SentenceRules;
             obj.BaseWords = vModel.DataObject.BaseWords;
             obj.ContractionRules = vModel.DataObject.ContractionRules;

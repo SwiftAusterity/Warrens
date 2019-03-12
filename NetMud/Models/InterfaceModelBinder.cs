@@ -6,6 +6,7 @@ using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Architectural.PropertyBinding;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Web.Mvc;
@@ -93,9 +94,20 @@ namespace NetMud.Models
                     FormValueProvider formValueProvider = (FormValueProvider)((ValueProviderCollection)bindingContext.ValueProvider).FirstOrDefault(vp => vp.GetType() == typeof(FormValueProvider));
 
                     //We have to get the keys from the valid provider that match the pattern razor is feeding us "type.type.type[#].type[#] potentially"
-                    System.Collections.Generic.IDictionary<string, string> keys = formValueProvider.GetKeysFromPrefix(keyName);
+                    IList<string> keys = new List<string>();
 
-                    System.Collections.Generic.IEnumerable<string> values = keys.Select(kvp => bindingContext.ValueProvider.GetValue(kvp.Value).AttemptedValue);
+                    var i = 0;
+                    foreach(var key in formValueProvider.GetKeysFromPrefix(keyName))
+                    {
+                        var oldKey = key.Value;
+                        var reKeyedKey = string.Format("{1}[{0}]{2}", i, oldKey.Substring(0, oldKey.IndexOf('[')), oldKey.Substring(oldKey.IndexOf(']') + 1));
+
+                        keys.Add(reKeyedKey);
+
+                        i++;
+                    }
+
+                    IEnumerable<string> values = keys.Select(kvp => bindingContext.ValueProvider.GetValue(kvp).AttemptedValue);
 
                     propertyDescriptor.SetValue(bindingContext.Model, propertyBinderAttribute.Convert(values));
                 }
@@ -135,10 +147,23 @@ namespace NetMud.Models
                             {
                                 FormValueProvider formValueProvider = (FormValueProvider)((ValueProviderCollection)bindingContext.ValueProvider).FirstOrDefault(vp => vp.GetType() == typeof(FormValueProvider));
 
-                                System.Collections.Generic.IDictionary<string, string> keys = formValueProvider.GetKeysFromPrefix(childKeyName);
+                                //We have to get the keys from the valid provider that match the pattern razor is feeding us "type.type.type[#].type[#] potentially"
+                                IList<string> keys = new List<string>();
+
+                                var index = 0;
+                                foreach (var key in formValueProvider.GetKeysFromPrefix(childKeyName))
+                                {
+                                    var oldKey = key.Value;
+                                    var reKeyedKey = string.Format("{1}[{0}]{2}", index, oldKey.Substring(0, oldKey.IndexOf('[')), oldKey.Substring(oldKey.IndexOf(']') + 1));
+
+                                    keys.Add(reKeyedKey);
+
+                                    index++;
+                                }
+
                                 if (keys.Count > 0)
                                 {
-                                    System.Collections.Generic.IEnumerable<string> values = keys.Select(kvp => bindingContext.ValueProvider.GetValue(kvp.Value).AttemptedValue);
+                                    IEnumerable<string> values = keys.Select(kvp => bindingContext.ValueProvider.GetValue(kvp).AttemptedValue);
 
                                     if (childBinder != null)
                                     {
@@ -224,6 +249,149 @@ namespace NetMud.Models
                 }
 
                 return;
+            }
+            else if (propertyDescriptor.PropertyType.IsArray || 
+                        (!typeof(string).Equals(propertyDescriptor.PropertyType) && typeof(IEnumerable).IsAssignableFrom(propertyDescriptor.PropertyType)))
+            {
+                string keyName = string.Format("{0}{2}{1}", bindingContext.ModelName, propertyDescriptor.Name, string.IsNullOrWhiteSpace(bindingContext.ModelName) ? "" : ".");
+
+                ValueProviderResult value = bindingContext.ValueProvider.GetValue(keyName);
+
+                //Bound values *on* the view model tend to double their names due to stupidity
+                if (value == null)
+                {
+                    value = bindingContext.ValueProvider.GetValue(string.Format("{0}.{0}", propertyDescriptor.Name));
+                }
+
+                if (value == null)
+                {
+                    value = bindingContext.ValueProvider.GetValue(string.Format("{0}.{1}.{1}", bindingContext.ModelName, propertyDescriptor.Name));
+                }
+
+                if (value != null)
+                {
+                    //If we got the value we're good just set it
+                    propertyDescriptor.SetValue(bindingContext.Model, propertyBinderAttribute.Convert(value.AttemptedValue));
+                    return;
+                }
+                else if (!string.IsNullOrWhiteSpace(bindingContext.ModelName))
+                {
+                    var containedType = propertyDescriptor.PropertyType.GetGenericArguments().First();
+
+                    if ((containedType.IsInterface || containedType.IsClass) && !typeof(string).Equals(containedType))
+                    {
+                        var properties = containedType.GetProperties();
+                        object[] props = new object[properties.Length];
+                        FormValueProvider formValueProvider = (FormValueProvider)((ValueProviderCollection)bindingContext.ValueProvider).FirstOrDefault(vp => vp.GetType() == typeof(FormValueProvider));
+
+                        foreach (var baseKey in formValueProvider.GetKeysFromPrefix(keyName))
+                        {
+                            int propIterator = 0;
+
+                            //Do we have a class or interface? We want top parse ALL the submitted values in the post and try to fill that one class object up with its props
+                            foreach (var prop in properties)
+                            {
+                                string childKeyName = string.Format("{0}.{1}", baseKey.Value, prop.Name);
+
+                                //Collection shenanigans, we need to create the right collection and put it back on the post value collection so a later call to this can fill it correctly
+                                if (prop.PropertyType.IsArray || (!typeof(string).Equals(prop.PropertyType) && typeof(IEnumerable).IsAssignableFrom(prop.PropertyType)))
+                                {
+                                    //We have to get the keys from the valid provider that match the pattern razor is feeding us "type.type.type[#].type[#] potentially"
+                                    IList<string> keys = new List<string>();
+
+                                    var index = 0;
+                                    foreach (var key in formValueProvider.GetKeysFromPrefix(childKeyName))
+                                    {
+                                        var oldKey = key.Value;
+                                        var reKeyedKey = string.Format("{1}[{0}]{2}", index, oldKey.Substring(0, oldKey.IndexOf('[')), oldKey.Substring(oldKey.IndexOf(']') + 1));
+
+                                        keys.Add(reKeyedKey);
+
+                                        index++;
+                                    }
+
+                                    if (keys.Count > 0)
+                                    {
+                                        IEnumerable<string> values = keys.Select(kvp => bindingContext.ValueProvider.GetValue(kvp).AttemptedValue);
+                                        props[propIterator] = values;
+                                    }
+                                }
+                                else
+                                {
+                                    //I guess we didnt have a class so just try and use the modelbinder to convert the value correctly
+                                    ValueProviderResult childValue = bindingContext.ValueProvider.GetValue(childKeyName);
+
+                                    if (childValue != null)
+                                    {
+                                        props[propIterator] = childValue.AttemptedValue;
+                                    }
+                                }
+
+                                propIterator++;
+                            }
+
+                            //Did we actually find the properties for the class?
+                            if (!props.Any(prop => prop == null))
+                            {
+                                //Interface shenanigans again
+                                if (propertyDescriptor.PropertyType.IsInterface)
+                                {
+                                    Type type = null;
+
+                                    if (propertyDescriptor.PropertyType == typeof(ILocationData))
+                                    {
+                                        type = typeof(RoomTemplate);
+                                    }
+                                    else
+                                    {
+                                        type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(propertyDescriptor.PropertyType));
+
+                                        if (type == null)
+                                        {
+                                            type = typeof(SensoryEvent).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(propertyDescriptor.PropertyType));
+                                        }
+                                    }
+
+                                    if (type == null)
+                                    {
+                                        throw new Exception("Invalid Binding Interface");
+                                    }
+
+                                    object concreteInstance = Activator.CreateInstance(type, props);
+
+                                    if (concreteInstance != null)
+                                    {
+                                        propertyDescriptor.SetValue(bindingContext.Model, concreteInstance);
+                                    }
+                                }
+                                else
+                                {
+                                    try
+                                    {
+                                        object newItem = Activator.CreateInstance(containedType, false);
+
+                                        if (newItem != null)
+                                        {
+
+
+                                            propertyDescriptor.SetValue(bindingContext.Model, newItem);
+                                            return;
+                                        }
+                                    }
+                                    catch
+                                    {
+                                        //TODO ???
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                //I guess we didnt actually want the entire class, just the ID so we can find it in the cache (eg. we had a dropdown of "select a class" as a prop)
+                                base.BindProperty(controllerContext, bindingContext, propertyDescriptor);
+                            }
+                        }
+                    }
+                }
             }
 
             base.BindProperty(controllerContext, bindingContext, propertyDescriptor);

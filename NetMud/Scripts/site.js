@@ -85,3 +85,22 @@ function openFrameless(width, height, fromLeft, fromTop, targetUrl, windowTitle)
 function submitFrameless(baseDocument) {
     baseDocument.location.reload(false);
 }
+
+function renumberControlArray(wrapperParent) {
+    var $wrapperParent = $(wrapperParent);
+
+    var inputChild = $wrapperParent.find('input')[0];
+
+    var bracketIndex = inputChild.name.indexOf("[");
+    var nameValue = Number.parseInt(inputChild.name.substr(bracketIndex + 1, 1));
+
+    $wrapperParent.nextAll().find('input').each(function (index) {
+        var nameFirstHalf = this.name.substr(0, this.name.indexOf("[") + 1);
+        var nameSecondHalf = this.name.substr(this.name.indexOf("[") + 2);
+
+        this.name = nameFirstHalf + (nameValue + index) + nameSecondHalf;
+    });
+
+    //Get rid of the element
+    $wrapperParent.remove();
+}

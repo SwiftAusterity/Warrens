@@ -1,6 +1,6 @@
 ﻿@using NetMud.Data.Linguistic
 
-@model GrammarRule
+@model WordPairRule
 
 <div class="accordionWrapper">
     <h5>@Model.FromType.ToString()|@Model.FromRole.ToString() : @Model.ToType.ToString()|@Model.ToRole.ToString()</h5>
@@ -20,7 +20,6 @@
             @Html.EditorFor(m => m.ToType)
             @Html.EditorFor(m => m.ToRole)
             @Html.EditorFor(m => m.ToSemantics)
-            @Html.EditorFor(m => m.Listable)
             @Html.EditorFor(m => m.NeedsArticle)
             @Html.EditorFor(m => m.WhenPositional)
             @Html.EditorFor(m => m.WhenPossessive)

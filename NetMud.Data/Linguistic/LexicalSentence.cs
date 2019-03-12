@@ -105,7 +105,7 @@ namespace NetMud.Data.Linguistic
             lex.Event.Context.Language = Language;
 
             //modification rules ordered by specificity
-            foreach (var wordRule in Language.Rules.Where(rul => rul.Matches(lex.Event))
+            foreach (var wordRule in Language.WordPairRules.Where(rul => rul.Matches(lex.Event))
                                                                .OrderByDescending(rul => rul.RuleSpecificity()))
             {
                 if (wordRule.NeedsArticle && !lex.Event.Modifiers.Any(mod => mod.Type == LexicalType.Article)
@@ -227,8 +227,8 @@ namespace NetMud.Data.Linguistic
             var i = 0;
             foreach (var lexPair in lexes.GroupBy(lexi => new { lexi.Event.Role, lexi.Event.Type }))
             {
-                var rule = Language.Rules.OrderByDescending(rul => rul.RuleSpecificity())
-                                                 .FirstOrDefault(rul => rul.Matches(lexPair.First().Event, lexPair.Key.Role, lexPair.Key.Type));
+                var rule = Language.WordRules.OrderByDescending(rul => rul.RuleSpecificity())
+                                                 .FirstOrDefault(rul => rul.Matches(lexPair.First().Event));
 
                 if (rule != null && rule.Listable)
                 {
