@@ -341,9 +341,14 @@ namespace NetMud.Data.Locale
                     case MessagingType.Audible:
                         me.Strength = 30 + (GetAudibleDelta(viewer) * 30);
 
-                        senseVerb = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "hear", discreteContext);
+                        senseVerb = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "hear", collectiveContext);
 
                         var audibleDescs = GetAudibleDescriptives(viewer);
+
+                        if (audibleDescs.Count() == 0)
+                        {
+                            continue;
+                        }
 
                         ISensoryEvent audibleNoun = null;
                         if (!audibleDescs.Any(desc => desc.Event.Role == GrammaticalType.DirectObject))
@@ -361,9 +366,14 @@ namespace NetMud.Data.Locale
                     case MessagingType.Olefactory:
                         me.Strength = 30 + (GetSmellDelta(viewer) * 30);
 
-                        senseVerb = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "smell", discreteContext);
+                        senseVerb = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "smell", collectiveContext);
 
                         var smellDescs = GetSmellableDescriptives(viewer);
+
+                        if (smellDescs.Count() == 0)
+                        {
+                            continue;
+                        }
 
                         ISensoryEvent smellNoun = null;
                         if (!smellDescs.Any(desc => desc.Event.Role == GrammaticalType.DirectObject))
@@ -381,9 +391,14 @@ namespace NetMud.Data.Locale
                     case MessagingType.Psychic:
                         me.Strength = 30 + (GetPsychicDelta(viewer) * 30);
 
-                        senseVerb = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "sense", discreteContext);
+                        senseVerb = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "sense", collectiveContext);
 
                         var psyDescs = GetPsychicDescriptives(viewer);
+
+                        if (psyDescs.Count() == 0)
+                        {
+                            continue;
+                        }
 
                         ISensoryEvent psyNoun = null;
                         if (!psyDescs.Any(desc => desc.Event.Role == GrammaticalType.DirectObject))
@@ -404,9 +419,14 @@ namespace NetMud.Data.Locale
                     case MessagingType.Visible:
                         me.Strength = 30 + (GetVisibleDelta(viewer) * 30);
 
-                        senseVerb = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "see", discreteContext);
+                        senseVerb = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "see", collectiveContext);
 
                         var seeDescs = GetVisibleDescriptives(viewer);
+
+                        if (seeDescs.Count() == 0)
+                        {
+                            continue;
+                        }
 
                         ISensoryEvent seeNoun = null;
                         if (!seeDescs.Any(desc => desc.Event.Role == GrammaticalType.DirectObject))

@@ -196,7 +196,7 @@ namespace NetMud.Data.Linguistic
             if (recursive)
             {
                 var newMods = new HashSet<ILexica>();
-                foreach (var mod in lex.Event.Modifiers.Where(mod => mod.Role != GrammaticalType.Descriptive && mod.Role != GrammaticalType.None))
+                foreach (var mod in lex.Event.Modifiers.Where(mod => mod.Role != GrammaticalType.None))
                 {
                     AddEvent(new SensoryEvent(mod, lex.Strength, lex.SensoryType));
                     newMods.Add(mod);
