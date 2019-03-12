@@ -279,8 +279,10 @@ namespace NetMud.Data.Linguistic
                     && (Perspective == NarrativePerspective.None || lex.Context.Perspective == Perspective)
                     && (!WhenPlural || lex.Context.Plural)
                     && (!WhenPossessive || lex.Context.Possessive)
-                    && ((SpecificWord != null && SpecificWord == lex.GetDictata())
-                    || ((FromRole == GrammaticalType.None || FromRole == lex.Role) && (FromType == LexicalType.None || FromType == lex.Type)));
+                    && (
+                        (SpecificWord != null && SpecificWord == lex.GetDictata())
+                        || ((FromRole == GrammaticalType.None || FromRole == lex.Role) && (FromType == LexicalType.None || FromType == lex.Type))
+                       );
         }
     }
 }

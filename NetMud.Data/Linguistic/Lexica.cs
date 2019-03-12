@@ -253,7 +253,7 @@ namespace NetMud.Data.Linguistic
             var obfuscationLevel = Math.Max(0, Math.Min(100, 30 - strength));
             var newLex = Mutate(sensoryType, strength, obfuscationLevel);
 
-            //Listable pass rules
+            //Placement ordering
             var modifierList = new List<Tuple<ILexica, int>>
             {
                 new Tuple<ILexica, int>(newLex, 0)

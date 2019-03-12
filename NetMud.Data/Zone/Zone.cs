@@ -108,6 +108,7 @@ namespace NetMud.Data.Zone
             MobilesInside = new EntityContainer<IMobile>();
             Contents = new EntityContainer<IInanimate>();
             NaturalResources = new HashSet<INaturalResourceSpawn>();
+            Descriptives = new HashSet<ISensoryEvent>();
         }
 
         /// <summary>
@@ -122,6 +123,7 @@ namespace NetMud.Data.Zone
             MobilesInside = new EntityContainer<IMobile>();
             Contents = new EntityContainer<IInanimate>();
             NaturalResources = new HashSet<INaturalResourceSpawn>();
+            Descriptives = new HashSet<ISensoryEvent>();
 
             GetFromWorldOrSpawn();
         }
