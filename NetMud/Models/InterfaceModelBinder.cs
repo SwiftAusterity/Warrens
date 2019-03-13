@@ -188,7 +188,7 @@ namespace NetMud.Models
                                     }
                                     else
                                     {
-                                        props[i] = childValue;
+                                        props[i] = childValue.AttemptedValue;
                                     }
                                 }
                             }
@@ -276,13 +276,14 @@ namespace NetMud.Models
                 }
                 else if (!string.IsNullOrWhiteSpace(bindingContext.ModelName))
                 {
-                    var containedType = propertyDescriptor.PropertyType.GetGenericArguments().First();
+                    var itemType = propertyDescriptor.PropertyType.GetGenericArguments().First();
+                    var containedType = itemType;
 
                     if (containedType.IsInterface)
                     {
                         Type type = null;
 
-                        if (propertyDescriptor.PropertyType == typeof(ILocationData))
+                        if (containedType == typeof(ILocationData))
                         {
                             type = typeof(RoomTemplate);
                         }
@@ -299,20 +300,23 @@ namespace NetMud.Models
                         containedType = type ?? throw new Exception("Invalid Binding Interface");
                     }
 
-                    if ((containedType.IsInterface || containedType.IsClass) && !typeof(string).Equals(containedType))
+                    if (containedType.IsClass && !typeof(string).Equals(containedType))
                     {
                         var properties = containedType.GetProperties();
                         FormValueProvider formValueProvider = (FormValueProvider)((ValueProviderCollection)bindingContext.ValueProvider).FirstOrDefault(vp => vp.GetType() == typeof(FormValueProvider));
 
-                        HashSet<object> valueArray = new HashSet<object>();
+                        //HashSet<object> valueArray = new HashSet<object>();
+                        dynamic valueArray = Activator.CreateInstance(propertyDescriptor.PropertyType, false);
                         foreach (var baseKey in formValueProvider.GetKeysFromPrefix(keyName))
                         {
                             int propIterator = 0;
-                            object newItem = Activator.CreateInstance(containedType, false);
+                            dynamic newItem = Activator.CreateInstance(containedType, false);
 
                             //Do we have a class or interface? We want top parse ALL the submitted values in the post and try to fill that one class object up with its props
                             foreach (var prop in properties)
                             {
+                                var propertyBinder = (PropertyBinderAttribute)prop.GetCustomAttributes(typeof(PropertyBinderAttribute), true).FirstOrDefault();
+
                                 string childKeyName = string.Format("{0}.{1}", baseKey.Value, prop.Name);
 
                                 //Collection shenanigans, we need to create the right collection and put it back on the post value collection so a later call to this can fill it correctly
@@ -343,9 +347,26 @@ namespace NetMud.Models
                                     //I guess we didnt have a class so just try and use the modelbinder to convert the value correctly
                                     ValueProviderResult childValue = bindingContext.ValueProvider.GetValue(childKeyName);
 
+                                    if (childValue == null)
+                                    {
+                                        childValue = bindingContext.ValueProvider.GetValue(string.Format("{0}.{0}", prop.Name));
+                                    }
+
+                                    if (childValue == null)
+                                    {
+                                        childValue = bindingContext.ValueProvider.GetValue(string.Format("{0}.{1}.{1}", baseKey.Value, prop.Name));
+                                    }
+
                                     if (childValue != null)
                                     {
-                                        prop.SetValue(newItem, childValue.AttemptedValue);
+                                        if (propertyBinder != null)
+                                        {
+                                            prop.SetValue(newItem, propertyBinder.Convert(childValue.AttemptedValue));
+                                        }
+                                        else
+                                        {
+                                            prop.SetValue(newItem, childValue.ConvertTo(prop.PropertyType));
+                                        }
                                     }
                                 }
 
@@ -354,7 +375,14 @@ namespace NetMud.Models
 
                             if(newItem != null)
                             {
-                                valueArray.Add(newItem);
+                                if (itemType != containedType)
+                                {
+                                    valueArray.Add(newItem);
+                                }
+                                else
+                                {
+                                    valueArray.Add(newItem);
+                                }
                             }
                         }
 
