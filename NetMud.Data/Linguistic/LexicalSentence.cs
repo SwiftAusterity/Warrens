@@ -139,6 +139,10 @@ namespace NetMud.Data.Linguistic
                         lex.TryModify(LexicalType.Article, GrammaticalType.Descriptive, article.Name, false);
                     }
                 }
+                else if (wordRule.SpecificAddition != null)
+                {
+                    lex.TryModify(wordRule.SpecificAddition.WordType, GrammaticalType.Descriptive, wordRule.SpecificAddition.Name);
+                }
 
                 if (string.IsNullOrWhiteSpace(wordRule.AddPrefix))
                 {

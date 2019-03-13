@@ -14,7 +14,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Linguistic
@@ -252,6 +251,57 @@ namespace NetMud.Data.Linguistic
 
             var obfuscationLevel = Math.Max(0, Math.Min(100, 30 - strength));
             var newLex = Mutate(sensoryType, strength, obfuscationLevel);
+
+            foreach (var wordRule in Context.Language.WordRules.Where(rul => rul.Matches(newLex))
+                                                   .OrderByDescending(rul => rul.RuleSpecificity()))
+            {
+
+                if (wordRule.NeedsArticle && !newLex.Modifiers.Any(mod => mod.Type == LexicalType.Article)
+                && (!wordRule.WhenPositional || newLex.Context.Position != LexicalPosition.None))
+                {
+                    var articleContext = newLex.Context.Clone();
+
+                    //Make it determinant if the word is plural
+                    articleContext.Determinant = newLex.Context.Plural || articleContext.Determinant;
+
+                    //If we have position and it's the subject we have to short circuit this
+                    if (newLex.Role != GrammaticalType.Verb)
+                    {
+                        articleContext.Position = LexicalPosition.None;
+                        articleContext.Perspective = NarrativePerspective.None;
+                        articleContext.Tense = LexicalTense.None;
+                    }
+
+                    IDictata article = null;
+                    if (wordRule.SpecificAddition != null)
+                    {
+                        article = wordRule.SpecificAddition;
+                    }
+                    else
+                    {
+                        article = Thesaurus.GetWord(articleContext, LexicalType.Article);
+                    }
+
+                    if (article != null)
+                    {
+                        newLex.TryModify(LexicalType.Article, GrammaticalType.Descriptive, article.Name);
+                    }
+                }
+                else if (wordRule.SpecificAddition != null)
+                {
+                    newLex.TryModify(wordRule.SpecificAddition.WordType, GrammaticalType.Descriptive, wordRule.SpecificAddition.Name);
+                }
+
+                if (string.IsNullOrWhiteSpace(wordRule.AddPrefix))
+                {
+                    newLex.Phrase = string.Format("{0}{1}", wordRule.AddPrefix, newLex.Phrase.Trim());
+                }
+
+                if (string.IsNullOrWhiteSpace(wordRule.AddSuffix))
+                {
+                    newLex.Phrase = string.Format("{1}{0}", wordRule.AddSuffix, newLex.Phrase.Trim());
+                }
+            }
 
             //Placement ordering
             var modifierList = new List<Tuple<ILexica, int>>
