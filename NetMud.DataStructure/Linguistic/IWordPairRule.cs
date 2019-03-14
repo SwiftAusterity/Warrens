@@ -116,6 +116,6 @@
         /// </summary>
         /// <param name="word">The lex</param>
         /// <returns>if it matches</returns>
-        bool Matches(ILexica word, GrammaticalType toRole = GrammaticalType.None, LexicalType toType = LexicalType.None);
+        bool Matches(ILexica word, ILexica pairedWord);
     }
 }

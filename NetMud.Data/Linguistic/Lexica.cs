@@ -256,8 +256,11 @@ namespace NetMud.Data.Linguistic
                                                    .OrderByDescending(rul => rul.RuleSpecificity()))
             {
 
-                if (wordRule.NeedsArticle && !newLex.Modifiers.Any(mod => mod.Type == LexicalType.Article)
-                && (!wordRule.WhenPositional || newLex.Context.Position != LexicalPosition.None))
+                if (wordRule.NeedsArticle
+                    && !newLex.Modifiers.Any(mod => mod.Type == LexicalType.Article
+                                                 && ((wordRule.WhenPositional && mod.Context.Position != LexicalPosition.None)
+                                                     || (!wordRule.WhenPositional && mod.Context.Position == LexicalPosition.None)))
+                    && (!wordRule.WhenPositional || newLex.Context.Position != LexicalPosition.None))
                 {
                     var articleContext = newLex.Context.Clone();
 
@@ -284,7 +287,12 @@ namespace NetMud.Data.Linguistic
 
                     if (article != null)
                     {
-                        newLex.TryModify(LexicalType.Article, GrammaticalType.Descriptive, article.Name);
+                        var newArticle = newLex.TryModify(LexicalType.Article, GrammaticalType.Descriptive, article.Name, false);
+
+                        if (!wordRule.WhenPositional)
+                        {
+                            newArticle.Context.Position = LexicalPosition.None;
+                        }
                     }
                 }
                 else if (wordRule.SpecificAddition != null)
@@ -308,16 +316,78 @@ namespace NetMud.Data.Linguistic
             {
                 new Tuple<ILexica, int>(newLex, 0)
             };
-            foreach (var modifierPair in Modifiers.GroupBy(lexi => new { lexi.Role, lexi.Type }))
+
+            var currentModifiers = new List<ILexica>(newLex.Modifiers);
+            //modification rules ordered by specificity
+            foreach (var modifier in currentModifiers)
             {
-                var rule = Context.Language.WordPairRules.OrderByDescending(rul => rul.RuleSpecificity())
-                                                 .FirstOrDefault(rul => rul.Matches(this, modifierPair.Key.Role, modifierPair.Key.Type));
+                foreach (var wordRule in Context.Language.WordPairRules.Where(rul => rul.Matches(newLex, modifier))
+                                                               .OrderByDescending(rul => rul.RuleSpecificity()))
+                {
+                    if (wordRule.NeedsArticle && !newLex.Modifiers.Any(mod => mod.Type == LexicalType.Article)
+                        && (!wordRule.WhenPositional || newLex.Context.Position != LexicalPosition.None))
+                    {
+                        var articleContext = newLex.Context.Clone();
+
+                        //Make it determinant if the word is plural
+                        articleContext.Determinant = newLex.Context.Plural || articleContext.Determinant;
+
+                        //If we have position and it's the subject we have to short circuit this
+                        if (newLex.Role != GrammaticalType.Verb)
+                        {
+                            articleContext.Position = LexicalPosition.None;
+                            articleContext.Perspective = NarrativePerspective.None;
+                            articleContext.Tense = LexicalTense.None;
+                        }
+
+                        IDictata article = null;
+                        if (wordRule.SpecificAddition != null)
+                        {
+                            article = wordRule.SpecificAddition;
+                        }
+                        else
+                        {
+                            article = Thesaurus.GetWord(articleContext, LexicalType.Article);
+                        }
+
+                        if (article != null)
+                        {
+                            var newArticle = newLex.TryModify(LexicalType.Article, GrammaticalType.Descriptive, article.Name, false);
+
+                            if(!wordRule.WhenPositional)
+                            {
+                                newArticle.Context.Position = LexicalPosition.None;
+                            }
+                        }
+                    }
+                    else if (wordRule.SpecificAddition != null)
+                    {
+                        newLex.TryModify(wordRule.SpecificAddition.WordType, GrammaticalType.Descriptive, wordRule.SpecificAddition.Name);
+                    }
+
+                    if (string.IsNullOrWhiteSpace(wordRule.AddPrefix))
+                    {
+                        newLex.Phrase = string.Format("{0}{1}", wordRule.AddPrefix, newLex.Phrase.Trim());
+                    }
+
+                    if (string.IsNullOrWhiteSpace(wordRule.AddSuffix))
+                    {
+                        newLex.Phrase = string.Format("{1}{0}", wordRule.AddSuffix, newLex.Phrase.Trim());
+                    }
+                }
+            }
+
+            foreach (var modifier in newLex.Modifiers)
+            {
+                var rule = newLex.Context.Language.WordPairRules.OrderByDescending(rul => rul.RuleSpecificity())
+                                                 .FirstOrDefault(rul => rul.Matches(newLex, modifier));
 
                 if (rule != null)
                 {
-                    foreach (var modifier in modifierPair)
+                    var i = 0;
+                    foreach (var subModifier in modifier.Unpack(sensoryType, strength, overridingContext ?? Context))
                     {
-                        modifierList.Add(new Tuple<ILexica, int>(modifier, rule.ModificationOrder));
+                        modifierList.Add(new Tuple<ILexica, int>(subModifier, rule.ModificationOrder + i++));
                     }
                 }
             }

@@ -271,7 +271,15 @@ namespace NetMud.Models
                 if (value != null)
                 {
                     //If we got the value we're good just set it
-                    propertyDescriptor.SetValue(bindingContext.Model, propertyBinderAttribute.Convert(value.AttemptedValue));
+                    if(propertyBinderAttribute == null)
+                    {
+                        base.BindProperty(controllerContext, bindingContext, propertyDescriptor);
+                    }
+                    else
+                    {
+                        propertyDescriptor.SetValue(bindingContext.Model, propertyBinderAttribute.Convert(value.AttemptedValue));
+                    }
+
                     return;
                 }
                 else if (!string.IsNullOrWhiteSpace(bindingContext.ModelName))

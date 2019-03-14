@@ -242,10 +242,13 @@ namespace NetMud.Data.Linguistic
                     (SpecificWord == null ? 0 : 99) +
                     (Tense == LexicalTense.None ? 0 : 2) +
                     (Perspective == NarrativePerspective.None ? 0 : 2) +
-                    (ToType == LexicalType.None ? 0 : 1) +
-                    (ToRole == GrammaticalType.None ? 0 : 1) +
+                    (ToType == LexicalType.None ? 0 : 3) +
+                    (ToRole == GrammaticalType.None ? 0 : 3) +
                     (FromType == LexicalType.None ? 0 : 3) +
-                    (FromRole == GrammaticalType.None ? 0 : 3);
+                    (FromRole == GrammaticalType.None ? 0 : 3) +
+                    (WhenPlural ? 5 : 0) +
+                    (WhenPositional ? 10 : 0) +
+                    (WhenPossessive ? 5 : 0);
         }
 
         /// <summary>
@@ -253,26 +256,21 @@ namespace NetMud.Data.Linguistic
         /// </summary>
         /// <param name="word">The lex</param>
         /// <returns>if it matches</returns>
-        public bool Matches(ILexica lex, GrammaticalType toRole = GrammaticalType.None, LexicalType toType = LexicalType.None)
+        public bool Matches(ILexica lex, ILexica pairedWord)
         {
-            if(toRole == GrammaticalType.None && toType == LexicalType.None && lex.Modifiers.Any(mod => mod.Role == ToRole && mod.Type == ToType))
-            {
-                toRole = ToRole;
-                toType = ToType;
-            }
-
             var fromBegins = FromBeginsWith.Split('|', StringSplitOptions.RemoveEmptyEntries);
             var fromEnds = FromEndsWith.Split('|', StringSplitOptions.RemoveEmptyEntries);
 
-            return (ToRole == GrammaticalType.None || ToRole == toRole)
-                    && (ToType == LexicalType.None || ToType == toType)
+            return (ToRole == GrammaticalType.None || ToRole == pairedWord.Role)
+                    && (ToType == LexicalType.None || ToType == pairedWord.Type)
                     && (fromBegins.Count() == 0 || fromBegins.Any(bw => lex.Phrase.StartsWith(bw)))
                     && (fromEnds.Count() == 0 || fromEnds.Any(bw => lex.Phrase.EndsWith(bw)))
                     && (Tense == LexicalTense.None || lex.Context.Tense == Tense)
                     && (Perspective == NarrativePerspective.None || lex.Context.Perspective == Perspective)
                     && (!WhenPlural || lex.Context.Plural)
                     && (!WhenPossessive || lex.Context.Possessive)
-                    && (SpecificWord == null || SpecificWord == lex.GetDictata())
+                    && (!WhenPositional || pairedWord.Context.Position != LexicalPosition.None)
+                    && (SpecificWord == null || SpecificWord.Equals(lex.GetDictata()))
                     && (SpecificWord != null || ((FromRole == GrammaticalType.None || FromRole == lex.Role) && (FromType == LexicalType.None || FromType == lex.Type)));
         }
     }

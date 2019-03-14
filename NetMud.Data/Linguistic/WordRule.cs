@@ -225,7 +225,10 @@ namespace NetMud.Data.Linguistic
                     (Tense == LexicalTense.None ? 0 : 2) +
                     (Perspective == NarrativePerspective.None ? 0 : 2) +
                     (FromType == LexicalType.None ? 0 : 3) +
-                    (FromRole == GrammaticalType.None ? 0 : 3);
+                    (FromRole == GrammaticalType.None ? 0 : 3) +
+                    (WhenPlural ? 2 : 0) +
+                    (WhenPositional ? 6 : 0) +
+                    (WhenPossessive ? 2 : 0);
         }
 
         /// <summary>
@@ -244,7 +247,7 @@ namespace NetMud.Data.Linguistic
                     && (Perspective == NarrativePerspective.None || lex.Context.Perspective == Perspective)
                     && (!WhenPlural || lex.Context.Plural)
                     && (!WhenPossessive || lex.Context.Possessive)
-                    && (SpecificWord == null || SpecificWord == lex.GetDictata())
+                    && (SpecificWord == null || SpecificWord.Equals(lex.GetDictata()))
                     && (SpecificWord != null || ((FromRole == GrammaticalType.None || FromRole == lex.Role) && (FromType == LexicalType.None || FromType == lex.Type)));
         }
     }

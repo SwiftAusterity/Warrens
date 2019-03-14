@@ -104,75 +104,24 @@ namespace NetMud.Data.Linguistic
         {
             lex.Event.Context.Language = Language;
 
-            //modification rules ordered by specificity
-            foreach (var wordRule in Language.WordPairRules.Where(rul => rul.Matches(lex.Event))
-                                                               .OrderByDescending(rul => rul.RuleSpecificity()))
-            {
-                if (wordRule.NeedsArticle && !lex.Event.Modifiers.Any(mod => mod.Type == LexicalType.Article)
-                    && (!wordRule.WhenPositional || lex.Event.Context.Position != LexicalPosition.None))
-                {
-                    var articleContext = lex.Event.Context.Clone();
-
-                    //Make it determinant if the word is plural
-                    articleContext.Determinant = lex.Event.Context.Plural || articleContext.Determinant;
-
-                    //If we have position and it's the subject we have to short circuit this
-                    if (lex.Event.Role != GrammaticalType.Verb)
-                    {
-                        articleContext.Position = LexicalPosition.None;
-                        articleContext.Perspective = NarrativePerspective.None;
-                        articleContext.Tense = LexicalTense.None;
-                    }
-
-                    IDictata article = null;
-                    if (wordRule.SpecificAddition != null)
-                    {
-                        article = wordRule.SpecificAddition;
-                    }
-                    else
-                    {
-                        article = Thesaurus.GetWord(articleContext, LexicalType.Article);
-                    }
-
-                    if (article != null)
-                    {
-                        lex.TryModify(LexicalType.Article, GrammaticalType.Descriptive, article.Name, false);
-                    }
-                }
-                else if (wordRule.SpecificAddition != null)
-                {
-                    lex.TryModify(wordRule.SpecificAddition.WordType, GrammaticalType.Descriptive, wordRule.SpecificAddition.Name);
-                }
-
-                if (string.IsNullOrWhiteSpace(wordRule.AddPrefix))
-                {
-                    lex.Event.Phrase = string.Format("{0}{1}", wordRule.AddPrefix, lex.Event.Phrase.Trim());
-                }
-
-                if (string.IsNullOrWhiteSpace(wordRule.AddSuffix))
-                {
-                    lex.Event.Phrase = string.Format("{1}{0}", wordRule.AddSuffix, lex.Event.Phrase.Trim());
-                }
-            }
-
             //Positional object modifier
             if (lex.Event.Role == GrammaticalType.DirectObject && lex.Event.Context.Position != LexicalPosition.None && !lex.Event.Modifiers.Any(mod => mod.Role == GrammaticalType.IndirectObject))
             {
                 var positionalWord = Thesaurus.GetWord(lex.Event.Context, LexicalType.Article);
 
-                lex.TryModify(new Lexica(LexicalType.Noun, GrammaticalType.IndirectObject, positionalWord.Name, lex.Event.Context));
+                lex.TryModify(new Lexica(LexicalType.Article, GrammaticalType.Descriptive, positionalWord.Name, lex.Event.Context));
             }
 
             //Contractive rules
             var lexDict = lex.Event.GetDictata();
             foreach (var contractionRule in Language.ContractionRules.Where(rul => rul.First == lexDict || rul.Second == lexDict))
             {
-                if (!lex.Event.Modifiers.Any(mod => mod.GetDictata() == contractionRule.First || mod.GetDictata() == contractionRule.Second))
+                if (!lex.Event.Modifiers.Any(mod => contractionRule.First.Equals(mod.GetDictata()) || contractionRule.Second.Equals(mod.GetDictata())))
                 {
                     continue;
                 }
 
-                lex.Event.Modifiers.RemoveWhere(mod => mod.GetDictata() == contractionRule.First || mod.GetDictata() == contractionRule.Second);
+                lex.Event.Modifiers.RemoveWhere(mod => contractionRule.First.Equals(mod.GetDictata()) || contractionRule.Second.Equals(mod.GetDictata()));
 
                 lex.Event.Phrase = contractionRule.Contraction.Name;
             }
@@ -200,13 +149,13 @@ namespace NetMud.Data.Linguistic
             if (recursive)
             {
                 var newMods = new HashSet<ILexica>();
-                foreach (var mod in lex.Event.Modifiers.Where(mod => mod.Role != GrammaticalType.None))
+                foreach (var mod in lex.Event.Modifiers.Where(mod => mod.Role != GrammaticalType.None && mod.Role != GrammaticalType.Descriptive))
                 {
                     AddEvent(new SensoryEvent(mod, lex.Strength, lex.SensoryType));
                     newMods.Add(mod);
                 }
 
-                lex.Event.Modifiers.RemoveWhere(modi => newMods.Any(mods => mods == modi));
+                lex.Event.Modifiers.RemoveWhere(modi => newMods.Any(mods => mods.Equals(modi)));
             }
 
             return this;
@@ -229,7 +178,7 @@ namespace NetMud.Data.Linguistic
             //Listable pass rules
             var lexList = new List<Tuple<ISensoryEvent[], int>>();
             var i = 0;
-            foreach (var lexPair in lexes.GroupBy(lexi => new { lexi.Event.Role, lexi.Event.Type }))
+            foreach (var lexPair in lexes.GroupBy(lexi => new { lexi.Event.Role, lexi.Event.Type, lexi.Event.Context.Position }))
             {
                 var rule = Language.WordRules.OrderByDescending(rul => rul.RuleSpecificity())
                                                  .FirstOrDefault(rul => rul.Matches(lexPair.First().Event));
@@ -313,12 +262,12 @@ namespace NetMud.Data.Linguistic
             }
 
             //Transformational word pair rules
-            foreach (var rule in Language.TransformationRules.Where(rul => rul.TransformedWord != null && wordList.Any(pair => pair.Item1.Event == rul.Origin)))
+            foreach (var rule in Language.TransformationRules.Where(rul => rul.TransformedWord != null && wordList.Any(pair => rul.Origin.Equals(pair.Item1.Event.GetDictata()))))
             {
                 var beginsWith = rule.BeginsWith.Split('|', StringSplitOptions.RemoveEmptyEntries);
                 var endsWith = rule.EndsWith.Split('|', StringSplitOptions.RemoveEmptyEntries);
 
-                foreach (var lexPair in wordList.Where(pair => pair.Item1.Event == rule.Origin))
+                foreach (var lexPair in wordList.Where(pair => rule.Origin.Equals(pair.Item1.Event.GetDictata())))
                 {
                     var lex = lexPair.Item1.Event;
                     var nextEvent = wordList.OrderBy(word => word.Item2).FirstOrDefault(word => word.Item2 > lexPair.Item2);
@@ -329,7 +278,7 @@ namespace NetMud.Data.Linguistic
                     }
 
                     var nextLex = nextEvent.Item1.Event;
-                    if ((rule.SpecificFollowing != null && nextLex.GetDictata() == rule.SpecificFollowing)
+                    if ((rule.SpecificFollowing != null && nextLex.GetDictata().Equals(rule.SpecificFollowing))
                         || (beginsWith.Count() == 0 || beginsWith.Any(bw => nextLex.Phrase.StartsWith(bw)))
                         || (endsWith.Count() == 0 || endsWith.Any(ew => nextLex.Phrase.EndsWith(ew))))
                     {
