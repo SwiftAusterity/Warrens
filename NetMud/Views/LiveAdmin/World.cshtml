@@ -1,6 +1,6 @@
 ﻿@model NetMud.Models.Admin.ViewGaiaViewModel
 @{
-    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>(Model.DataObject.TemplateName, new string[] { "Dashboard", "Worlds" }, new string[] { "/GameAdmin", "/LiveAdmin/Worlds" });
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>(Model.DataObject.TemplateName, new string[] { "Dashboard", "Worlds" }, new string[] { "/GameAdmin#tabs-2", "/LiveAdmin/Worlds" });
 
     var timeOfDayString = string.Format("The hour of {0} in the day of {1} in {2} in the year of {3}", Model.DataObject.CurrentTimeOfDay.Hour
                                                                    , Model.DataObject.CurrentTimeOfDay.Day
@@ -10,10 +10,26 @@
     var longDesc = new NetMud.Communication.Messaging.Message(Model.DataObject.RenderToLook(null)).Unpack(NetMud.DataStructure.System.TargetEntity.Actor);
 }
 <h3>@Model.DataObject.TemplateName</h3>
-<h4>
-    @longDesc
-</h4>
-
+<div class="accordionWrapper">
+    <h5>Description</h5>
+    <div>
+        <h4>
+            @longDesc
+        </h4>
+        @using (Html.BeginForm("World", "LiveAdmin", FormMethod.Get, new { id = "descriptionModifier" }))
+        {
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="birthMark" id="birthMark" value="@Model.DataObject.BirthMark" />
+            <div class="form-group row">
+                @Html.EditorFor(m => m.Language, new { validItems = Model.ValidLanguages })
+                @Html.EditorFor(m => m.Quality)
+                @Html.EditorFor(m => m.Severity)
+                @Html.EditorFor(m => m.Elegance)
+            </div>
+            @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "ReDescribe", ReturnAction = "World", ReturnController = "LiveAdmin", IncludeCancel = false })
+        }
+    </div>
+</div>
 <div id="tabs">
     <ul>
         <li><a href="#tabs-1">View</a></li>

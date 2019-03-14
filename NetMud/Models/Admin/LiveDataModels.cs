@@ -1,8 +1,10 @@
 ﻿using NetMud.Authentication;
+using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Gaia;
 using NetMud.DataStructure.Inanimate;
+using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.Locale;
 using NetMud.DataStructure.NPC;
 using NetMud.DataStructure.Room;
@@ -15,6 +17,35 @@ using System.Linq;
 
 namespace NetMud.Models.Admin
 {
+    public abstract class LiveEntityViewModel : IBaseViewModel
+    {
+        public ApplicationUser AuthedUser { get; set; }
+
+        [Display(Name = "Game UI Language", Description = "The language the game will output to you while playing.")]
+        [UIHint("LanguageList")]
+        [LanguageDataBinder]
+        public ILanguage Language { get; set; }
+
+        [Display(Name = "Elegance", Description = "The quality Delta against the current word.")]
+        [DataType(DataType.Text)]
+        public int Elegance { get; set; }
+
+        [Display(Name = "Severity", Description = "The quality Delta against the current word.")]
+        [DataType(DataType.Text)]
+        public int Severity { get; set; }
+
+        [Display(Name = "Quality", Description = "The quality Delta against the current word.")]
+        [DataType(DataType.Text)]
+        public int Quality { get; set; }
+
+        public IEnumerable<ILanguage> ValidLanguages { get; set; }
+
+        public LiveEntityViewModel()
+        {
+            ValidLanguages = ConfigDataCache.GetAll<ILanguage>();
+        }
+    }
+
     public class LiveWorldsViewModel : PagedDataModel<IGaia>
     {
         public LiveWorldsViewModel(IEnumerable<IGaia> items)
@@ -53,10 +84,8 @@ namespace NetMud.Models.Admin
         public IEnumerable<IGaia> ValidEntities { get; set; }
     }
 
-    public class ViewGaiaViewModel : IBaseViewModel
+    public class ViewGaiaViewModel : LiveEntityViewModel
     {
-        public ApplicationUser AuthedUser { get; set; }
-
         public ViewGaiaViewModel()
         {
             ValidCelestials = TemplateCache.GetAll<ICelestial>(true);
@@ -116,10 +145,8 @@ namespace NetMud.Models.Admin
         public IEnumerable<IZone> ValidEntities { get; set; }
     }
 
-    public class ViewZoneViewModel : IBaseViewModel
+    public class ViewZoneViewModel : LiveEntityViewModel
     {
-        public ApplicationUser AuthedUser { get; set; }
-
         public ViewZoneViewModel()
         {
         }
@@ -171,10 +198,8 @@ namespace NetMud.Models.Admin
         public IEnumerable<IInanimate> ValidEntities { get; set; }
     }
 
-    public class ViewInanimateViewModel : IBaseViewModel
+    public class ViewInanimateViewModel : LiveEntityViewModel
     {
-        public ApplicationUser AuthedUser { get; set; }
-
         public ViewInanimateViewModel()
         {
             ValidMaterials = TemplateCache.GetAll<IMaterial>(true);
@@ -233,10 +258,8 @@ namespace NetMud.Models.Admin
         public IEnumerable<INonPlayerCharacter> ValidEntities { get; set; }
     }
 
-    public class ViewIntelligenceViewModel : IBaseViewModel
+    public class ViewIntelligenceViewModel : LiveEntityViewModel
     {
-        public ApplicationUser AuthedUser { get; set; }
-
         public ViewIntelligenceViewModel()
         {
         }
@@ -288,10 +311,8 @@ namespace NetMud.Models.Admin
         public IEnumerable<IRoom> ValidEntities { get; set; }
     }
 
-    public class ViewRoomViewModel : IBaseViewModel
+    public class ViewRoomViewModel : LiveEntityViewModel
     {
-        public ApplicationUser AuthedUser { get; set; }
-
         public ViewRoomViewModel()
         {
             ValidMaterials = TemplateCache.GetAll<IMaterial>(true);
@@ -350,10 +371,8 @@ namespace NetMud.Models.Admin
         public IEnumerable<ILocale> ValidEntities { get; set; }
     }
 
-    public class ViewLocaleViewModel : IBaseViewModel
+    public class ViewLocaleViewModel : LiveEntityViewModel
     {
-        public ApplicationUser AuthedUser { get; set; }
-
         public ViewLocaleViewModel()
         {
         }
