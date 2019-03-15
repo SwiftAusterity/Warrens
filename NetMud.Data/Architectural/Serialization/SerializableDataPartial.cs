@@ -48,7 +48,19 @@ namespace NetMud.Data.Architectural.Serialization
         /// <returns>binary stream</returns>
         public virtual byte[] ToBytes()
         {
-            return Encoding.ASCII.GetBytes(Serialize());
+            return Encoding.Unicode.GetBytes(Serialize());
+        }
+
+        private string GetStringFromBytes(byte[] bytes)
+        {
+            var returnString = Encoding.ASCII.GetString(bytes);
+
+            if (string.IsNullOrWhiteSpace(returnString) || returnString.Substring(1, 1) == "\0")
+            {
+                return Encoding.Unicode.GetString(bytes);
+            }
+
+            return returnString;
         }
 
         /// <summary>
@@ -58,7 +70,7 @@ namespace NetMud.Data.Architectural.Serialization
         /// <returns>the entity</returns>
         public virtual IFileStored FromBytes(byte[] bytes)
         {
-            string strData = Encoding.ASCII.GetString(bytes);
+            string strData = GetStringFromBytes(bytes);
 
             IFileStored obj = DeSerialize(strData);
 
