@@ -14,6 +14,7 @@
         Conjunction = 5,
         Interjection = 6,
         ProperNoun = 7,
-        Article = 8
+        Article = 8,
+        Preposition = 9
     }
 }

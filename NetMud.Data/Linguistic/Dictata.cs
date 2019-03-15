@@ -7,6 +7,7 @@ using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Linguistic;
+using NetMud.DataStructure.Player;
 using NetMud.DataStructure.System;
 using Newtonsoft.Json;
 using System;
@@ -517,6 +518,100 @@ namespace NetMud.Data.Linguistic
                 WordType = WordType,
                 Quality = Quality
             };
+        }
+        #endregion
+
+        #region Data persistence functions
+        /// <summary>
+        /// Remove this object from the db permenantly
+        /// </summary>
+        /// <returns>success status</returns>
+        public override bool Remove(IAccount remover, StaffRank rank)
+        {
+            var synonyms = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.Synonyms.Any(syn => syn.Equals(this)));
+            var antonyms = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.Antonyms.Any(ant => ant.Equals(this)));
+            var removalState = base.Remove(remover, rank);
+
+            if(removalState)
+            {
+                foreach(var word in synonyms)
+                {
+                    var syns = new HashSet<IDictata>(word.Synonyms);
+                    syns.RemoveWhere(syn => syn.Equals(this));
+                    word.Synonyms = syns;
+                }
+
+                foreach (var word in antonyms)
+                {
+                    var ants = new HashSet<IDictata>(word.Antonyms);
+                    ants.RemoveWhere(syn => syn.Equals(this));
+                    word.Antonyms = ants;
+                }
+            }
+
+            return removalState;
+        }
+
+        /// <summary>
+        /// Update the field data for this object to the db
+        /// </summary>
+        /// <returns>success status</returns>
+        public override bool Save(IAccount editor, StaffRank rank)
+        {
+            var removalState = base.Remove(editor, rank);
+
+            if (removalState)
+            {
+                return base.Save(editor, rank);
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Update the field data for this object to the db
+        /// </summary>
+        /// <returns>success status</returns>
+        public override bool SystemSave()
+        {
+            var removalState = base.SystemRemove();
+
+            if (removalState)
+            {
+                return base.SystemSave();
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Remove this object from the db permenantly
+        /// </summary>
+        /// <returns>success status</returns>
+        public override bool SystemRemove()
+        {
+            var synonyms = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.Synonyms.Any(syn => syn.Equals(this)));
+            var antonyms = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.Antonyms.Any(ant => ant.Equals(this)));
+            var removalState = base.SystemRemove();
+
+            if (removalState)
+            {
+                foreach (var word in synonyms)
+                {
+                    var syns = new HashSet<IDictata>(word.Synonyms);
+                    syns.RemoveWhere(syn => syn.Equals(this));
+                    word.Synonyms = syns;
+                }
+
+                foreach (var word in antonyms)
+                {
+                    var ants = new HashSet<IDictata>(word.Antonyms);
+                    ants.RemoveWhere(syn => syn.Equals(this));
+                    word.Antonyms = ants;
+                }
+            }
+
+            return removalState;
         }
         #endregion
     }

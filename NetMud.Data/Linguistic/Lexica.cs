@@ -305,12 +305,12 @@ namespace NetMud.Data.Linguistic
                     newLex.TryModify(wordRule.SpecificAddition.WordType, GrammaticalType.Descriptive, wordRule.SpecificAddition.Name);
                 }
 
-                if (string.IsNullOrWhiteSpace(wordRule.AddPrefix) && !newLex.Phrase.StartsWith(wordRule.AddPrefix))
+                if (!string.IsNullOrWhiteSpace(wordRule.AddPrefix) && !newLex.Phrase.StartsWith(wordRule.AddPrefix))
                 {
                     newLex.Phrase = string.Format("{0}{1}", wordRule.AddPrefix, newLex.Phrase.Trim());
                 }
 
-                if (string.IsNullOrWhiteSpace(wordRule.AddSuffix) && !newLex.Phrase.EndsWith(wordRule.AddSuffix))
+                if (!string.IsNullOrWhiteSpace(wordRule.AddSuffix) && !newLex.Phrase.EndsWith(wordRule.AddSuffix))
                 {
                     newLex.Phrase = string.Format("{1}{0}", wordRule.AddSuffix, newLex.Phrase.Trim());
                 }
@@ -370,12 +370,13 @@ namespace NetMud.Data.Linguistic
                         newLex.TryModify(wordRule.SpecificAddition.WordType, GrammaticalType.Descriptive, wordRule.SpecificAddition.Name);
                     }
 
-                    if (string.IsNullOrWhiteSpace(wordRule.AddPrefix))
+
+                    if (!string.IsNullOrWhiteSpace(wordRule.AddPrefix) && !newLex.Phrase.StartsWith(wordRule.AddPrefix))
                     {
                         newLex.Phrase = string.Format("{0}{1}", wordRule.AddPrefix, newLex.Phrase.Trim());
                     }
 
-                    if (string.IsNullOrWhiteSpace(wordRule.AddSuffix))
+                    if (!string.IsNullOrWhiteSpace(wordRule.AddSuffix) && !newLex.Phrase.EndsWith(wordRule.AddSuffix))
                     {
                         newLex.Phrase = string.Format("{1}{0}", wordRule.AddSuffix, newLex.Phrase.Trim());
                     }

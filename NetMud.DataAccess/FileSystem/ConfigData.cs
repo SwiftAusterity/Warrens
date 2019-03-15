@@ -113,6 +113,17 @@ namespace NetMud.DataAccess.FileSystem
             }
         }
 
+        /// <summary>
+        /// Removes a entity from the system and files
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public bool RemoveEntity(IConfigData entity)
+        {
+            string fileName = GetEntityFilename(entity);
+            return ArchiveFile(fileName, fileName);
+        }
+
         public string GetCurrentDirectoryForEntity(IConfigData entity)
         {
             string dirName = BaseDirectory;

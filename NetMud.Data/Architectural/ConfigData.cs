@@ -261,7 +261,7 @@ namespace NetMud.Data.Architectural
                 ConfigDataCache.Remove(new ConfigDataCacheKey(this));
 
                 //Remove it from the file system.
-                accessor.ArchiveEntity(this);
+                accessor.RemoveEntity(this);
             }
             catch (Exception ex)
             {
@@ -386,7 +386,7 @@ namespace NetMud.Data.Architectural
                 ConfigDataCache.Remove(new ConfigDataCacheKey(this));
 
                 //Remove it from the file system.
-                accessor.ArchiveEntity(this);
+                accessor.RemoveEntity(this);
             }
             catch (Exception ex)
             {
@@ -396,7 +396,6 @@ namespace NetMud.Data.Architectural
 
             return true;
         }
-
         #endregion
 
         public abstract object Clone();
