@@ -4,7 +4,7 @@ using NetMud.DataStructure.NaturalResource;
 
 namespace NetMud.Data.Architectural.PropertyBinding
 {
-    public class NaturalResourceDataBinder : PropertyBinderAttribute
+    public class FloraResourceBinder : PropertyBinderAttribute
     {
         public override object Convert(object input)
         {
@@ -14,7 +14,9 @@ namespace NetMud.Data.Architectural.PropertyBinding
                 return null;
             }
 
-            return TemplateCache.Get<INaturalResource>(long.Parse(stringInput));
+            var id = long.Parse(stringInput);
+
+            return TemplateCache.Get<IFlora>(id);
         }
     }
 }

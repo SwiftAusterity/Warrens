@@ -1,10 +1,15 @@
-﻿using NetMud.Data.Architectural.DataIntegrity;
+﻿using NetMud.Communication.Lexical;
+using NetMud.Communication.Messaging;
+using NetMud.Data.Architectural.DataIntegrity;
 using NetMud.Data.Architectural.PropertyBinding;
+using NetMud.Data.Linguistic;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Inanimate;
+using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.NaturalResource;
+using NetMud.DataStructure.System;
 using NetMud.DataStructure.Zone;
 using Newtonsoft.Json;
 using System;
@@ -195,5 +200,70 @@ namespace NetMud.Data.NaturalResource
 
             return returnList;
         }
+
+        #region Rendering
+        /// <summary>
+        /// Render a natural resource collection to a viewer
+        /// </summary>
+        /// <param name="viewer">the entity looking</param>
+        /// <param name="amount">How much of it there is</param>
+        /// <returns>a view string</returns>
+        public override ILexicalParagraph RenderResourceCollection(IEntity viewer, int amount)
+        {
+            if (amount <= 0)
+            {
+                return new LexicalParagraph();
+            }
+
+            var collectiveContext = new LexicalContext(viewer)
+            {
+                Determinant = true,
+                Perspective = NarrativePerspective.SecondPerson,
+                Plural = false,
+                Position = LexicalPosition.Around,
+                Tense = LexicalTense.Present
+            };
+
+            var discreteContext = new LexicalContext(viewer)
+            {
+                Determinant = true,
+                Perspective = NarrativePerspective.ThirdPerson,
+                Plural = false,
+                Position = LexicalPosition.Attached,
+                Tense = LexicalTense.Present
+            };
+
+            var me = GetSelf(MessagingType.Visible, 30 + (GetVisibleDelta(viewer) * 30));
+
+            var sizeWord = "large";
+            if (amount < 20)
+            {
+                sizeWord = "sparse";
+            }
+            else if (amount < 50)
+            {
+                sizeWord = "small";
+            }
+            else if (amount < 200)
+            {
+                sizeWord = "";
+            }
+            else
+            {
+                sizeWord = "vast";
+            }
+
+            var collectiveNoun = new SensoryEvent(new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, "forest", collectiveContext),
+                                                30 + (GetVisibleDelta(viewer) * 30), MessagingType.Visible);
+            collectiveNoun.TryModify(me);
+
+            if (!string.IsNullOrWhiteSpace(sizeWord))
+            {
+                collectiveNoun.TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, sizeWord, discreteContext));
+            }
+
+            return new LexicalParagraph(collectiveNoun);
+        }
+        #endregion
     }
 }

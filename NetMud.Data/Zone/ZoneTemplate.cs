@@ -6,6 +6,7 @@ using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Gaia;
 using NetMud.DataStructure.Linguistic;
+using NetMud.DataStructure.NaturalResource;
 using NetMud.DataStructure.Room;
 using NetMud.DataStructure.Zone;
 using Newtonsoft.Json;
@@ -167,11 +168,23 @@ namespace NetMud.Data.Zone
         /// <summary>
         /// Collection of model section name to material composition mappings
         /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        [Display(Name = "Natural Resource Spawn", Description = "Spawn rates for natural resources.")]
-        [UIHint("NaturalResourceSpawnList")]
-        public HashSet<INaturalResourceSpawn> NaturalResourceSpawn { get; set; }
+        [Display(Name = "Flora Resource Spawn", Description = "Spawn rates for flora.")]
+        [UIHint("FloraResourceSpawnList")]
+        public HashSet<INaturalResourceSpawn<IFlora>> FloraResourceSpawn { get; set; }
+
+        /// <summary>
+        /// Collection of model section name to material composition mappings
+        /// </summary>
+        [Display(Name = "Fauna Resource Spawn", Description = "Spawn rates for fauna.")]
+        [UIHint("FaunaResourceSpawnList")]
+        public HashSet<INaturalResourceSpawn<IFauna>> FaunaResourceSpawn { get; set; }
+
+        /// <summary>
+        /// Collection of model section name to material composition mappings
+        /// </summary>
+        [Display(Name = "Mineral Resource Spawn", Description = "Spawn rates for minerals.")]
+        [UIHint("MineralResourceSpawnList")]
+        public HashSet<INaturalResourceSpawn<IMineral>> MineralResourceSpawn { get; set; }
 
         /// <summary>
         /// Blank constructor
@@ -179,7 +192,9 @@ namespace NetMud.Data.Zone
         public ZoneTemplate()
         {
             Templates = new HashSet<IAdventureTemplate>();
-            NaturalResourceSpawn = new HashSet<INaturalResourceSpawn>();
+            FloraResourceSpawn = new HashSet<INaturalResourceSpawn<IFlora>>();
+            FaunaResourceSpawn = new HashSet<INaturalResourceSpawn<IFauna>>();
+            MineralResourceSpawn = new HashSet<INaturalResourceSpawn<IMineral>>();
             Descriptives = new HashSet<ISensoryEvent>();
         }
 

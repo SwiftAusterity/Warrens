@@ -1,4 +1,5 @@
-﻿using NetMud.Communication.Messaging;
+﻿using NetMud.Communication.Lexical;
+using NetMud.Communication.Messaging;
 using NetMud.Data.Architectural.DataIntegrity;
 using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.Data.Linguistic;
@@ -98,6 +99,11 @@ namespace NetMud.Data.NaturalResource
         /// <returns>a view string</returns>
         public override ILexicalParagraph RenderResourceCollection(IEntity viewer, int amount)
         {
+            if(amount <= 0)
+            {
+                return new LexicalParagraph();
+            }
+
             var collectiveContext = new LexicalContext(viewer)
             {
                 Determinant = true,
@@ -117,11 +123,38 @@ namespace NetMud.Data.NaturalResource
             };
 
             var me = GetSelf(MessagingType.Visible, 30 + (GetVisibleDelta(viewer) * 30));
-            Lexica collectiveNoun = new Lexica(LexicalType.Noun, GrammaticalType.Descriptive, Race.CollectiveNoun, collectiveContext);
-            collectiveNoun.TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, amount.ToString(), discreteContext));
-            me.TryModify(collectiveNoun);
 
-            return new LexicalParagraph(me);
+            var sizeWord = "large";
+            if(amount < 20)
+            {
+                sizeWord = "sparse";
+            }
+            else if (amount < 50)
+            {
+                sizeWord = "small";
+            }
+            else if (amount < 200)
+            {
+                sizeWord = "";
+            }
+            else 
+            {
+                sizeWord = "large";
+            }
+
+            var collectiveNoun = new SensoryEvent(new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, Race.CollectiveNoun, collectiveContext), 
+                                                30 + (GetVisibleDelta(viewer) * 30), MessagingType.Visible);
+
+            collectiveNoun.TryModify(me);
+
+            if (!string.IsNullOrWhiteSpace(sizeWord))
+            {
+                collectiveNoun.TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, sizeWord, discreteContext));
+            }
+
+            collectiveNoun.TryModify(new Lexica(LexicalType.Verb, GrammaticalType.Verb, "roams", collectiveContext));
+
+            return new LexicalParagraph(collectiveNoun);
         }
         #endregion
     }

@@ -1,15 +1,16 @@
 ﻿using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.NaturalResource;
+using NetMud.DataStructure.Zone;
 using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Script.Serialization;
 
-namespace NetMud.DataStructure.Zone
+namespace NetMud.Data.Zone
 {
     [Serializable]
-    public class NaturalResourceSpawn : INaturalResourceSpawn
+    public class FaunaResourceSpawn : INaturalResourceSpawn<IFauna>
     {
         [JsonProperty("Resource")]
         private TemplateCacheKey _resource { get; set; }
@@ -20,15 +21,15 @@ namespace NetMud.DataStructure.Zone
         [ScriptIgnore]
         [JsonIgnore]
         [Display(Name = "Resource", Description = "The resource that will spawn.")]
-        [UIHint("NaturalResourceSpawnList")]
-        [NaturalResourceDataBinder]
-        public INaturalResource Resource
+        [UIHint("FaunaResourceList")]
+        [FaunaResourceBinder]
+        public IFauna Resource
         {
             get
             {
                 if (_resource != null)
                 {
-                    return TemplateCache.Get<INaturalResource>(_resource);
+                    return TemplateCache.Get<IFauna>(_resource);
                 }
 
                 return null;

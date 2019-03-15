@@ -3,6 +3,7 @@ using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Gaia;
 using NetMud.DataStructure.Inanimate;
+using NetMud.DataStructure.NaturalResource;
 using NetMud.DataStructure.Room;
 using NetMud.DataStructure.Zone;
 using NetMud.Utility;
@@ -60,8 +61,20 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <summary>
         /// Collection of model section name to material composition mappings
         /// </summary>
-        [UIHint("NaturalResourceSpawnCollection")]
-        public HashSet<INaturalResourceSpawn> NaturalResources { get; set; }
+        [UIHint("FaunaResourceSpawnCollection")]
+        public HashSet<INaturalResourceSpawn<IFauna>> FaunaNaturalResources { get; set; }
+
+        /// <summary>
+        /// Collection of model section name to material composition mappings
+        /// </summary>
+        [UIHint("FloraResourceSpawnCollection")]
+        public HashSet<INaturalResourceSpawn<IFlora>> FloraNaturalResources { get; set; }
+
+        /// <summary>
+        /// Collection of model section name to material composition mappings
+        /// </summary>
+        [UIHint("MineralResourceSpawnCollection")]
+        public HashSet<INaturalResourceSpawn<IMineral>> MineralNaturalResources { get; set; }
 
         #region Container
         /// <summary>

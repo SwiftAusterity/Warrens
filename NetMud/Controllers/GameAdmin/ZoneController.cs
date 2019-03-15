@@ -12,6 +12,7 @@ using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Gaia;
 using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.Locale;
+using NetMud.DataStructure.NaturalResource;
 using NetMud.DataStructure.Room;
 using NetMud.DataStructure.Zone;
 using NetMud.Models.Admin;
@@ -127,6 +128,10 @@ namespace NetMud.Controllers.GameAdmin
                 DataObject = new ZoneTemplate()
             };
 
+            vModel.FloraNaturalResources = TemplateCache.GetAll<IFlora>(true);
+            vModel.FaunaNaturalResources = TemplateCache.GetAll<IFauna>(true);
+            vModel.MineralNaturalResources = TemplateCache.GetAll<IMineral>(true);
+
             return View("~/Views/GameAdmin/Zone/Add.cshtml", vModel);
         }
 
@@ -171,6 +176,10 @@ namespace NetMud.Controllers.GameAdmin
                 ValidWorlds = TemplateCache.GetAll<IGaiaTemplate>(true)
             };
 
+            vModel.FloraNaturalResources = TemplateCache.GetAll<IFlora>(true);
+            vModel.FaunaNaturalResources = TemplateCache.GetAll<IFauna>(true);
+            vModel.MineralNaturalResources = TemplateCache.GetAll<IMineral>(true);
+
             return View("~/Views/GameAdmin/Zone/Edit.cshtml", vModel);
         }
 
@@ -194,6 +203,9 @@ namespace NetMud.Controllers.GameAdmin
             obj.TemperatureCoefficient = vModel.DataObject.TemperatureCoefficient;
             obj.Hemisphere = vModel.DataObject.Hemisphere;
             obj.World = vModel.DataObject.World;
+            obj.FloraResourceSpawn = vModel.DataObject.FloraResourceSpawn;
+            obj.FaunaResourceSpawn = vModel.DataObject.FaunaResourceSpawn;
+            obj.MineralResourceSpawn = vModel.DataObject.MineralResourceSpawn;
 
             if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {

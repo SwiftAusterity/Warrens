@@ -108,6 +108,8 @@
     <Compile Include="Architectural\EntityBase\Quality.cs" />
     <Compile Include="Architectural\GlobalPosition.cs" />
     <Compile Include="Architectural\LookupDataPartial.cs" />
+    <Compile Include="Architectural\PropertyBinding\FaunaResourceBinder.cs" />
+    <Compile Include="Architectural\PropertyBinding\MineralResourceBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\WordPairRuleCollectionDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\CelestialCollectionDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\DimensionalModelDataBinder.cs" />
@@ -132,7 +134,7 @@
     <Compile Include="Architectural\PropertyBinding\CelestialDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\GaiaTemplateDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\InanimateCollectionTemplateDataBinder.cs" />
-    <Compile Include="Architectural\PropertyBinding\NaturalResourceDataBinder.cs" />
+    <Compile Include="Architectural\PropertyBinding\FloraResourceDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\InanimateTemplateDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\NonPlayerCharacterTemplateDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\ZoneTemplateDataBinder.cs" />
@@ -191,9 +193,12 @@
     <Compile Include="Room\Room.cs" />
     <Compile Include="Room\RoomTemplate.cs" />
     <Compile Include="System\GlobalConfig.cs" />
+    <Compile Include="Zone\AdventureTemplate.cs" />
+    <Compile Include="Zone\FaunaResourceSpawn.cs" />
+    <Compile Include="Zone\FloraResourceSpawn.cs" />
     <Compile Include="Zone\LiveMap.cs" />
     <Compile Include="Zone\Map.cs" />
-    <Compile Include="Zone\NaturalResourceSpawn.cs" />
+    <Compile Include="Zone\MineralResourceSpawn.cs" />
     <Compile Include="Zone\WeatherEvent.cs" />
     <Compile Include="Zone\Zone.cs" />
     <Compile Include="Zone\ZoneTemplate.cs" />

@@ -97,7 +97,7 @@ namespace NetMud.Models
                     IList<string> keys = new List<string>();
 
                     var i = 0;
-                    foreach(var key in formValueProvider.GetKeysFromPrefix(keyName))
+                    foreach (var key in formValueProvider.GetKeysFromPrefix(keyName))
                     {
                         var oldKey = key.Value;
                         var reKeyedKey = string.Format("{1}[{0}]{2}", i, oldKey.Substring(0, oldKey.IndexOf('[')), oldKey.Substring(oldKey.IndexOf(']') + 1));
@@ -127,7 +127,7 @@ namespace NetMud.Models
                     }
 
                     if (value != null)
-                    { 
+                    {
                         //If we got the value we're good just set it
                         propertyDescriptor.SetValue(bindingContext.Model, propertyBinderAttribute.Convert(value.AttemptedValue));
                     }
@@ -250,7 +250,7 @@ namespace NetMud.Models
 
                 return;
             }
-            else if (propertyDescriptor.PropertyType.IsArray || 
+            else if (propertyDescriptor.PropertyType.IsArray ||
                         (!typeof(string).Equals(propertyDescriptor.PropertyType) && typeof(IEnumerable).IsAssignableFrom(propertyDescriptor.PropertyType)))
             {
                 string keyName = string.Format("{0}{2}{1}", bindingContext.ModelName, propertyDescriptor.Name, string.IsNullOrWhiteSpace(bindingContext.ModelName) ? "" : ".");
@@ -271,7 +271,7 @@ namespace NetMud.Models
                 if (value != null)
                 {
                     //If we got the value we're good just set it
-                    if(propertyBinderAttribute == null)
+                    if (propertyBinderAttribute == null)
                     {
                         base.BindProperty(controllerContext, bindingContext, propertyDescriptor);
                     }
@@ -284,8 +284,19 @@ namespace NetMud.Models
                 }
                 else if (!string.IsNullOrWhiteSpace(bindingContext.ModelName))
                 {
-                    var itemType = propertyDescriptor.PropertyType.GetGenericArguments().First();
-                    var containedType = itemType;
+                    Type containedType = null;
+                    Type itemType = null;
+
+                    if (propertyDescriptor.PropertyType.IsArray)
+                    {
+                        itemType = propertyDescriptor.PropertyType.GetElementType();
+                        containedType = itemType;
+                    }
+                    else
+                    {
+                        itemType = propertyDescriptor.PropertyType.GetGenericArguments().First();
+                        containedType = itemType;
+                    }
 
                     if (containedType.IsInterface)
                     {
@@ -381,7 +392,7 @@ namespace NetMud.Models
                                 propIterator++;
                             }
 
-                            if(newItem != null)
+                            if (newItem != null)
                             {
                                 if (itemType != containedType)
                                 {
@@ -407,7 +418,7 @@ namespace NetMud.Models
         {
             var binder = propertyDescriptor.Attributes.OfType<PropertyBinderAttribute>().FirstOrDefault();
 
-            if(binder == null && propertyDescriptor.ComponentType.IsInterface && !propertyDescriptor.PropertyType.IsValueType)
+            if (binder == null && propertyDescriptor.ComponentType.IsInterface && !propertyDescriptor.PropertyType.IsValueType)
             {
                 var componentType = propertyDescriptor.ComponentType;
 

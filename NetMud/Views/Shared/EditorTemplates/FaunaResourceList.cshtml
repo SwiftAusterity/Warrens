@@ -1,7 +1,6 @@
-﻿@using NetMud.DataStructure.Architectural.ActorBase
+﻿@using NetMud.DataStructure.NaturalResource
 
-@model IGender
-
+@model IFauna
 @{
     bool disabled = ViewData["disabled"] != null;
     var cssClass = ViewData["cssClass"] == null ? "form-control" : ViewData["cssClass"];
@@ -46,12 +45,11 @@
 
     if (selectedItemOverride != null)
     {
-        ViewData.Model = (IGender)selectedItemOverride;
+        ViewData.Model = (IFauna)selectedItemOverride;
     }
 
-    var itemList = ((IEnumerable<IGender>)ViewData["validItems"]).Select(item => new SelectListItem() { Text = item.Name, Value = item.Id.ToString(), Selected = Model != null && item.Id == Model.Id });
+    var itemList = ((IEnumerable<IFauna>)ViewData["validItems"]).Select(item => new SelectListItem() { Text = item.Name, Value = item.Id.ToString(), Selected = Model != null && item.Id == Model.Id });
 }
-
 @if (strippedNaked)
 {
     @Html.DescriptionFor(m => m)
@@ -63,7 +61,6 @@ else
         <span class="@ghostNameClass">@ViewData.ModelMetadata.DisplayName</span>
         @Html.DescriptionFor(m => m)
         @Html.DropDownList(ViewData.ModelMetadata.PropertyName, itemList, optionLabel: "Select One", htmlAttributes: htmlAttributes)
-
         @if (!string.IsNullOrWhiteSpace(archivedValue))
         {
             <span class="archive">Archived Value: <span>@archivedValue</span></span>

@@ -12,6 +12,7 @@ using NetMud.DataStructure.Gaia;
 using NetMud.DataStructure.Inanimate;
 using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.Locale;
+using NetMud.DataStructure.NaturalResource;
 using NetMud.DataStructure.Room;
 using NetMud.DataStructure.System;
 using NetMud.DataStructure.Zone;
@@ -478,12 +479,19 @@ namespace NetMud.Data.Room
                 sensoryOutput.AddRange(celestial.RenderAsContents(viewer, sensoryTypes).Events);
             }
 
-            if (NaturalResources != null)
+            foreach (var resource in FaunaNaturalResources)
             {
-                foreach (var resource in NaturalResources)
-                {
-                    sensoryOutput.AddRange(resource.Resource.RenderResourceCollection(viewer, resource.RateFactor).Events);
-                }
+                sensoryOutput.AddRange(resource.Resource.RenderResourceCollection(viewer, resource.RateFactor).Events);
+            }
+
+            foreach (var resource in FloraNaturalResources)
+            {
+                sensoryOutput.AddRange(resource.Resource.RenderResourceCollection(viewer, resource.RateFactor).Events);
+            }
+
+            foreach (var resource in MineralNaturalResources)
+            {
+                sensoryOutput.AddRange(resource.Resource.RenderResourceCollection(viewer, resource.RateFactor).Events);
             }
 
             foreach (IPathway path in GetPathways())
@@ -555,9 +563,19 @@ namespace NetMud.Data.Room
             Descriptives = bS.Descriptives;
             Qualities = bS.Qualities;
 
-            if (NaturalResources == null)
+            if (FloraNaturalResources == null)
             {
-                NaturalResources = new HashSet<INaturalResourceSpawn>();
+                FloraNaturalResources = new HashSet<INaturalResourceSpawn<IFlora>>();
+            }
+
+            if (FaunaNaturalResources == null)
+            {
+                FaunaNaturalResources = new HashSet<INaturalResourceSpawn<IFauna>>();
+            }
+
+            if (MineralNaturalResources == null)
+            {
+                MineralNaturalResources = new HashSet<INaturalResourceSpawn<IMineral>>();
             }
 
             if (string.IsNullOrWhiteSpace(BirthMark))

@@ -3,6 +3,7 @@ using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Gaia;
 using NetMud.DataStructure.Locale;
+using NetMud.DataStructure.NaturalResource;
 using NetMud.DataStructure.Room;
 using NetMud.DataStructure.Zone;
 using System;
@@ -88,6 +89,9 @@ namespace NetMud.Models.Admin
         }
 
         public IEnumerable<IGaiaTemplate> ValidWorlds { get; set; }
+        public IEnumerable<IFauna> FaunaNaturalResources { get; set; }
+        public IEnumerable<IFlora> FloraNaturalResources { get; set; }
+        public IEnumerable<IMineral> MineralNaturalResources { get; set; }
         public IZoneTemplate DataObject { get; set; }
     }
 

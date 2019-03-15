@@ -60,7 +60,21 @@
 
             <h4>Natural Resources</h4>
             <hr />
-            @foreach (var resource in Model.DataObject.NaturalResources)
+            @foreach (var resource in Model.DataObject.FloraNaturalResources)
+            {
+                <div>
+                    <span>@resource.Resource.Name</span>
+                    <span>@resource.RateFactor</span>
+                </div>
+            }
+            @foreach (var resource in Model.DataObject.MineralNaturalResources)
+            {
+                <div>
+                    <span>@resource.Resource.Name</span>
+                    <span>@resource.RateFactor</span>
+                </div>
+            }
+            @foreach (var resource in Model.DataObject.FaunaNaturalResources)
             {
                 <div>
                     <span>@resource.Resource.Name</span>

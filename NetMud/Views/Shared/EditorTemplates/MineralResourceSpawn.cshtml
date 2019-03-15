@@ -1,0 +1,18 @@
+﻿@using NetMud.Data.Zone
+
+@model MineralResourceSpawn
+
+@{
+    var titleName = Model.Resource == null ? "New" : Model.Resource.Name;
+}
+
+<div class="accordionWrapper">
+    <h5>@titleName</h5>
+    <div>
+        <div class="form-group row">
+            <a href="#" class="removeRow col-form-label" title="Remove this" onclick="javascript: $(this).parent().parent().parent().remove(); return false;">X</a>
+            @Html.EditorFor(m => m.Resource, new { validItems = ViewData["MineralNaturalResources"] })
+            @Html.EditorFor(m => m.RateFactor)
+        </div>
+    </div>
+</div>

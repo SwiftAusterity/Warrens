@@ -1,4 +1,5 @@
-﻿using NetMud.Communication.Messaging;
+﻿using NetMud.CentralControl;
+using NetMud.Communication.Messaging;
 using NetMud.Data.Architectural;
 using NetMud.Data.Architectural.EntityBase;
 using NetMud.Data.Linguistic;
@@ -10,6 +11,7 @@ using NetMud.DataStructure.Gaia;
 using NetMud.DataStructure.Inanimate;
 using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.Locale;
+using NetMud.DataStructure.NaturalResource;
 using NetMud.DataStructure.Room;
 using NetMud.DataStructure.System;
 using NetMud.DataStructure.Zone;
@@ -107,7 +109,9 @@ namespace NetMud.Data.Zone
             WeatherEvents = Enumerable.Empty<IWeatherEvent>();
             MobilesInside = new EntityContainer<IMobile>();
             Contents = new EntityContainer<IInanimate>();
-            NaturalResources = new HashSet<INaturalResourceSpawn>();
+            FloraNaturalResources = new HashSet<INaturalResourceSpawn<IFlora>>();
+            FaunaNaturalResources = new HashSet<INaturalResourceSpawn<IFauna>>();
+            MineralNaturalResources = new HashSet<INaturalResourceSpawn<IMineral>>();
             Descriptives = new HashSet<ISensoryEvent>();
         }
 
@@ -122,7 +126,9 @@ namespace NetMud.Data.Zone
             WeatherEvents = Enumerable.Empty<IWeatherEvent>();
             MobilesInside = new EntityContainer<IMobile>();
             Contents = new EntityContainer<IInanimate>();
-            NaturalResources = new HashSet<INaturalResourceSpawn>();
+            FloraNaturalResources = new HashSet<INaturalResourceSpawn<IFlora>>();
+            FaunaNaturalResources = new HashSet<INaturalResourceSpawn<IFauna>>();
+            MineralNaturalResources = new HashSet<INaturalResourceSpawn<IMineral>>();
             Descriptives = new HashSet<ISensoryEvent>();
 
             GetFromWorldOrSpawn();
@@ -387,13 +393,19 @@ namespace NetMud.Data.Zone
                 sensoryOutput.AddRange(celestial.RenderAsContents(viewer, sensoryTypes).Events);
             }
 
-            //TODO: different way of rendering natural resources
-            if (NaturalResources != null)
+            foreach (var resource in FloraNaturalResources)
             {
-                foreach (var resource in NaturalResources)
-                {
-                    sensoryOutput.AddRange(resource.Resource.RenderResourceCollection(viewer, resource.RateFactor).Events);
-                }
+                sensoryOutput.AddRange(resource.Resource.RenderResourceCollection(viewer, resource.RateFactor).Events);
+            }
+
+            foreach (var resource in FaunaNaturalResources)
+            {
+                sensoryOutput.AddRange(resource.Resource.RenderResourceCollection(viewer, resource.RateFactor).Events);
+            }
+
+            foreach (var resource in MineralNaturalResources)
+            {
+                sensoryOutput.AddRange(resource.Resource.RenderResourceCollection(viewer, resource.RateFactor).Events);
             }
 
             //render our locales out
@@ -652,6 +664,9 @@ namespace NetMud.Data.Zone
             Descriptives = bS.Descriptives;
 
             WeatherEvents = Enumerable.Empty<IWeatherEvent>();
+            FloraNaturalResources = new HashSet<INaturalResourceSpawn<IFlora>>();
+            FaunaNaturalResources = new HashSet<INaturalResourceSpawn<IFauna>>();
+            MineralNaturalResources = new HashSet<INaturalResourceSpawn<IMineral>>();
 
             PopulateMap();
 
@@ -745,8 +760,86 @@ namespace NetMud.Data.Zone
         internal override void KickoffProcesses()
         {
             //Start decay eventing for this zone
+            Processor.StartSubscriptionLoop("NaturalResourceGeneration", () => AdvanceResources(), 30 * 60, false);
             base.KickoffProcesses();
         }
+
+        private bool AdvanceResources()
+        {
+            var rand = new Random();
+            var bS = Template<IZoneTemplate>();
+
+            if (FloraNaturalResources.Count() == 0 && bS.FloraResourceSpawn.Count() != 0)
+            {
+                foreach (INaturalResourceSpawn<IFlora> population in bS.FloraResourceSpawn)
+                {
+                    FloraNaturalResources.Add(new FloraResourceSpawn() { RateFactor = population.RateFactor, Resource = population.Resource });
+                }
+            }
+            else
+            {
+                foreach (INaturalResourceSpawn<IFlora> population in FloraNaturalResources)
+                {
+                    var baseRate = bS.FloraResourceSpawn.FirstOrDefault(spawn => spawn.Resource.Equals(population.Resource));
+
+                    if (baseRate == null || population.RateFactor > 100 * baseRate.RateFactor)
+                    {
+                        continue;
+                    }
+
+                    population.RateFactor = Math.Min(100 * baseRate.RateFactor, baseRate.RateFactor * rand.Next(1, 3) + population.RateFactor);
+                }
+            }
+
+            if (MineralNaturalResources.Count() == 0 && bS.MineralResourceSpawn.Count() != 0)
+            {
+                foreach (INaturalResourceSpawn<IMineral> population in bS.MineralResourceSpawn)
+                {
+                    MineralNaturalResources.Add(new MineralResourceSpawn() { RateFactor = population.RateFactor, Resource = population.Resource });
+                }
+            }
+            else
+            {
+                foreach (INaturalResourceSpawn<IMineral> population in MineralNaturalResources)
+                {
+                    var baseRate = bS.MineralResourceSpawn.FirstOrDefault(spawn => spawn.Resource.Equals(population.Resource));
+
+                    if (baseRate == null || population.RateFactor > 25 * baseRate.RateFactor)
+                    {
+                        continue;
+                    }
+
+                    population.RateFactor = Math.Min(100 * baseRate.RateFactor, baseRate.RateFactor + population.RateFactor);
+                }
+            }
+
+            if (FaunaNaturalResources.Count() == 0 && bS.FaunaResourceSpawn.Count() != 0)
+            {
+                foreach (INaturalResourceSpawn<IFauna> population in bS.FaunaResourceSpawn)
+                {
+                    FaunaNaturalResources.Add(new FaunaResourceSpawn() { RateFactor = population.RateFactor, Resource = population.Resource });
+                }
+            }
+            else
+            {
+                foreach (INaturalResourceSpawn<IFauna> population in FaunaNaturalResources)
+                {
+                    var baseRate = bS.FaunaResourceSpawn.FirstOrDefault(spawn => spawn.Resource.Equals(population.Resource));
+
+                    if (baseRate == null || population.RateFactor > 1000 * baseRate.RateFactor)
+                    {
+                        continue;
+                    }
+
+                    population.RateFactor = Math.Min(100 * baseRate.RateFactor, baseRate.RateFactor * population.Resource.FemaleRatio * 5 + population.RateFactor);
+                }
+            }
+
+            Save();
+
+            return true;
+        }
+
         #endregion
 
         /// <summary>

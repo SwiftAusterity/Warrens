@@ -2,12 +2,12 @@
 
 namespace NetMud.DataStructure.Zone
 {
-    public interface INaturalResourceSpawn
+    public interface INaturalResourceSpawn<T> where T : INaturalResource
     {
         /// <summary>
         /// The resource at hand
         /// </summary>
-        INaturalResource Resource { get; set; }
+        T Resource { get; set; }
 
         /// <summary>
         /// The factor in how much and how frequently these respawn on their own
