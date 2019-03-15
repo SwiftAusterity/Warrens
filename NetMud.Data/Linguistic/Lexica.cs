@@ -96,7 +96,14 @@ namespace NetMud.Data.Linguistic
         /// <returns>A dictata</returns>
         public IDictata GetDictata()
         {
-            return ConfigDataCache.Get<IDictata>(new ConfigDataCacheKey(typeof(IDictata), string.Format("{0}_{1}_{2}", Context?.Language?.Name, Type.ToString(), Phrase), ConfigDataType.Dictionary));
+            var dict = ConfigDataCache.Get<IDictata>(new ConfigDataCacheKey(typeof(IDictata), string.Format("{0}_{1}_{2}", Context?.Language?.Name, Type.ToString(), Phrase), ConfigDataType.Dictionary));
+
+            if(dict == null)
+            {
+                dict = GenerateDictata();
+            }
+
+            return dict;
         }
 
         /// <summary>
@@ -115,12 +122,9 @@ namespace NetMud.Data.Linguistic
         /// <returns>Whether or not it succeeded</returns>
         public ILexica TryModify(ILexica modifier, bool passthru = false)
         {
-            if (Modifiers == null)
-            {
-                Modifiers = new HashSet<ILexica>();
-            }
+            var newModifiers = new HashSet<ILexica>(Modifiers);
 
-            if (!Modifiers.Contains(modifier))
+            if (!newModifiers.Contains(modifier))
             {
                 if (modifier.Context == null)
                 {
@@ -135,7 +139,8 @@ namespace NetMud.Data.Linguistic
                     modifier.Context.Observer = Context.Observer;
                 }
 
-                Modifiers.Add(modifier);
+                newModifiers.Add(modifier);
+                Modifiers = newModifiers;
             }
 
             return passthru ? this : modifier;
@@ -285,7 +290,7 @@ namespace NetMud.Data.Linguistic
                         article = Thesaurus.GetWord(articleContext, LexicalType.Article);
                     }
 
-                    if (article != null)
+                    if (article != null && !newLex.Modifiers.Any(lx => article.Equals(lx.GetDictata())))
                     {
                         var newArticle = newLex.TryModify(LexicalType.Article, GrammaticalType.Descriptive, article.Name, false);
 
@@ -295,17 +300,17 @@ namespace NetMud.Data.Linguistic
                         }
                     }
                 }
-                else if (wordRule.SpecificAddition != null)
+                else if (wordRule.SpecificAddition != null && !newLex.Modifiers.Any(lx => wordRule.SpecificAddition.Equals(lx.GetDictata())))
                 {
                     newLex.TryModify(wordRule.SpecificAddition.WordType, GrammaticalType.Descriptive, wordRule.SpecificAddition.Name);
                 }
 
-                if (string.IsNullOrWhiteSpace(wordRule.AddPrefix))
+                if (string.IsNullOrWhiteSpace(wordRule.AddPrefix) && !newLex.Phrase.StartsWith(wordRule.AddPrefix))
                 {
                     newLex.Phrase = string.Format("{0}{1}", wordRule.AddPrefix, newLex.Phrase.Trim());
                 }
 
-                if (string.IsNullOrWhiteSpace(wordRule.AddSuffix))
+                if (string.IsNullOrWhiteSpace(wordRule.AddSuffix) && !newLex.Phrase.EndsWith(wordRule.AddSuffix))
                 {
                     newLex.Phrase = string.Format("{1}{0}", wordRule.AddSuffix, newLex.Phrase.Trim());
                 }
@@ -317,8 +322,8 @@ namespace NetMud.Data.Linguistic
                 new Tuple<ILexica, int>(newLex, 0)
             };
 
-            var currentModifiers = new List<ILexica>(newLex.Modifiers);
             //modification rules ordered by specificity
+            var currentModifiers = new List<ILexica>(newLex.Modifiers);
             foreach (var modifier in currentModifiers)
             {
                 foreach (var wordRule in Context.Language.WordPairRules.Where(rul => rul.Matches(newLex, modifier))
@@ -350,7 +355,7 @@ namespace NetMud.Data.Linguistic
                             article = Thesaurus.GetWord(articleContext, LexicalType.Article);
                         }
 
-                        if (article != null)
+                        if (article != null && !newLex.Modifiers.Any(lx => article.Equals(lx.GetDictata())))
                         {
                             var newArticle = newLex.TryModify(LexicalType.Article, GrammaticalType.Descriptive, article.Name, false);
 
@@ -360,7 +365,7 @@ namespace NetMud.Data.Linguistic
                             }
                         }
                     }
-                    else if (wordRule.SpecificAddition != null)
+                    else if (wordRule.SpecificAddition != null && !newLex.Modifiers.Any(lx => wordRule.SpecificAddition.Equals(lx.GetDictata())))
                     {
                         newLex.TryModify(wordRule.SpecificAddition.WordType, GrammaticalType.Descriptive, wordRule.SpecificAddition.Name);
                     }
@@ -391,8 +396,6 @@ namespace NetMud.Data.Linguistic
                     }
                 }
             }
-
-            newLex.Modifiers = new HashSet<ILexica>();
 
             return modifierList.OrderBy(tup => tup.Item2).Select(tup => tup.Item1);
         }

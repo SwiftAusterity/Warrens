@@ -552,6 +552,8 @@ namespace NetMud.Data.Room
 
             Keywords = new string[] { bS.Name.ToLower() };
             Model = bS.Model;
+            Descriptives = bS.Descriptives;
+            Qualities = bS.Qualities;
 
             if (NaturalResources == null)
             {

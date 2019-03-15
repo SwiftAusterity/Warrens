@@ -402,6 +402,12 @@ namespace NetMud.Data.Zone
                 sensoryOutput.AddRange(locale.RenderAsContents(viewer, sensoryTypes).Events);
             }
 
+            //render our locales out
+            foreach (var path in GetPathways())
+            {
+                sensoryOutput.AddRange(path.RenderAsContents(viewer, sensoryTypes).Events);
+            }
+
             return new LexicalParagraph(sensoryOutput);
         }
 
@@ -643,6 +649,7 @@ namespace NetMud.Data.Zone
             }
 
             Qualities = bS.Qualities;
+            Descriptives = bS.Descriptives;
 
             WeatherEvents = Enumerable.Empty<IWeatherEvent>();
 
@@ -678,6 +685,7 @@ namespace NetMud.Data.Zone
                 TemplateId = me.TemplateId;
                 Keywords = me.Keywords;
                 CurrentLocation = new GlobalPosition(this, null, null);
+                Descriptives = me.Descriptives;
 
                 Qualities = me.Qualities;
                 PopulateMap();

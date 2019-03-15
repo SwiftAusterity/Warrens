@@ -246,6 +246,7 @@ namespace NetMud.Data.Gaia
             }
 
             RotationalAngle = bS.RotationalAngle;
+            Qualities = bS.Qualities;
 
             //gotta spawn 2 per hemisphere
             if (MeterologicalFronts == null || MeterologicalFronts.Count() == 0)

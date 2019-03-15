@@ -200,7 +200,7 @@ namespace NetMud.Data.Linguistic
             {
                 if (grouping.Item1.Length > 1)
                 {
-                    sb.Append(grouping.Item1.Select(lexi => lexi.Describe()).CommaList(RenderUtility.SplitListType.CommaWithAnd));
+                    sb.Append(grouping.Item1.Select(lexi => lexi.Describe()).CommaList(RenderUtility.SplitListType.OxfordComma) + " ");
                 }
                 else
                 {

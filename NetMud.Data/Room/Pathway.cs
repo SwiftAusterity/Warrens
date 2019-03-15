@@ -1,4 +1,5 @@
 ﻿using NetMud.Cartography;
+using NetMud.Communication.Lexical;
 using NetMud.Communication.Messaging;
 using NetMud.Data.Architectural.DataIntegrity;
 using NetMud.Data.Architectural.EntityBase;
@@ -270,6 +271,7 @@ namespace NetMud.Data.Room
             DegreesFromNorth = bS.DegreesFromNorth;
             InclineGrade = bS.InclineGrade;
             DirectionType = Utilities.TranslateToDirection(DegreesFromNorth, InclineGrade);
+            Descriptives = bS.Descriptives;
 
             //paths need two locations
             if (bS.Origin.GetType() == typeof(RoomTemplate))
@@ -363,6 +365,168 @@ namespace NetMud.Data.Room
             }
 
             return new LexicalParagraph(me);
+        }
+
+        /// <summary>
+        /// Render this as being show inside a container
+        /// </summary>
+        /// <param name="viewer">The entity looking</param>
+        /// <returns>the output strings</returns>
+        public override ILexicalParagraph RenderAsContents(IEntity viewer, MessagingType[] sensoryTypes)
+        {
+            if (sensoryTypes == null || sensoryTypes.Count() == 0)
+            {
+                sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
+            }
+
+            var collectiveContext = new LexicalContext(viewer)
+            {
+                Determinant = true,
+                Perspective = NarrativePerspective.SecondPerson,
+                Plural = false,
+                Position = LexicalPosition.None,
+                Tense = LexicalTense.Present
+            };
+
+            var discreteContext = new LexicalContext(viewer)
+            {
+                Determinant = false,
+                Perspective = NarrativePerspective.ThirdPerson,
+                Plural = false,
+                Position = LexicalPosition.Near,
+                Tense = LexicalTense.Present
+            };
+
+            List<ISensoryEvent> sensoryOutput = new List<ISensoryEvent>();
+            foreach (var sense in sensoryTypes)
+            {
+                var me = new SensoryEvent(new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you", collectiveContext), 0, sense);
+                ILexica senseVerb = null;
+                IEnumerable<ISensoryEvent> senseDescs = Enumerable.Empty<ISensoryEvent>();
+
+                switch (sense)
+                {
+                    case MessagingType.Audible:
+                        me.Strength = 30 + (GetAudibleDelta(viewer) * 30);
+
+                        senseVerb = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "hear", collectiveContext);
+
+                        var audibleDescs = GetAudibleDescriptives(viewer);
+
+                        if (audibleDescs.Count() == 0)
+                        {
+                            continue;
+                        }
+
+                        ISensoryEvent audibleNoun = null;
+                        if (!audibleDescs.Any(desc => desc.Event.Role == GrammaticalType.DirectObject))
+                        {
+                            audibleNoun = new SensoryEvent(new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, "noise", discreteContext), me.Strength, sense);
+                        }
+                        else
+                        {
+                            audibleNoun = audibleDescs.FirstOrDefault(desc => desc.Event.Role == GrammaticalType.DirectObject);
+                        }
+
+                        audibleNoun.TryModify(audibleDescs.Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
+                        senseDescs = new List<ISensoryEvent>() { audibleNoun };
+                        break;
+                    case MessagingType.Olefactory:
+                        me.Strength = 30 + (GetSmellDelta(viewer) * 30);
+
+                        senseVerb = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "smell", collectiveContext);
+
+                        var smellDescs = GetSmellableDescriptives(viewer);
+
+                        if (smellDescs.Count() == 0)
+                        {
+                            continue;
+                        }
+
+                        ISensoryEvent smellNoun = null;
+                        if (!smellDescs.Any(desc => desc.Event.Role == GrammaticalType.DirectObject))
+                        {
+                            smellNoun = new SensoryEvent(new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, "odor", discreteContext), me.Strength, sense);
+                        }
+                        else
+                        {
+                            smellNoun = smellDescs.FirstOrDefault(desc => desc.Event.Role == GrammaticalType.DirectObject);
+                        }
+
+                        smellNoun.TryModify(smellDescs.Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
+                        senseDescs = new List<ISensoryEvent>() { smellNoun };
+                        break;
+                    case MessagingType.Psychic:
+                        me.Strength = 30 + (GetPsychicDelta(viewer) * 30);
+
+                        senseVerb = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "sense", collectiveContext);
+
+                        var psyDescs = GetPsychicDescriptives(viewer);
+
+                        if (psyDescs.Count() == 0)
+                        {
+                            continue;
+                        }
+
+                        ISensoryEvent psyNoun = null;
+                        if (!psyDescs.Any(desc => desc.Event.Role == GrammaticalType.DirectObject))
+                        {
+                            psyNoun = new SensoryEvent(new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, "presence", discreteContext), me.Strength, sense);
+                        }
+                        else
+                        {
+                            psyNoun = psyDescs.FirstOrDefault(desc => desc.Event.Role == GrammaticalType.DirectObject);
+                        }
+
+                        psyNoun.TryModify(psyDescs.Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
+                        senseDescs = new List<ISensoryEvent>() { psyNoun };
+                        break;
+                    case MessagingType.Tactile:
+                    case MessagingType.Taste:
+                        continue;
+                    case MessagingType.Visible:
+                        me.Strength = 30 + (GetVisibleDelta(viewer) * 30);
+
+                        senseVerb = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "see", collectiveContext);
+
+                        var seeDescs = GetVisibleDescriptives(viewer);
+
+                        if (seeDescs.Count() == 0)
+                        {
+                            continue;
+                        }
+
+                        ISensoryEvent seeNoun = null;
+                        if (!seeDescs.Any(desc => desc.Event.Role == GrammaticalType.DirectObject))
+                        {
+                            seeNoun = new SensoryEvent(new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, "thing", discreteContext), me.Strength, sense);
+                        }
+                        else
+                        {
+                            seeNoun = seeDescs.FirstOrDefault(desc => desc.Event.Role == GrammaticalType.DirectObject);
+                        }
+
+                        seeNoun.TryModify(seeDescs.Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
+                        senseDescs = new List<ISensoryEvent>() { seeNoun };
+                        break;
+                }
+
+                if (senseVerb != null && senseDescs.Count() > 0)
+                {
+                    var senseEvents = senseDescs.Select(desc => desc.Event);
+
+                    foreach (var evt in senseEvents)
+                    {
+                        evt.Context = discreteContext;
+                        senseVerb.TryModify(evt);
+                    }
+
+                    me.TryModify(senseVerb);
+                    sensoryOutput.Add(me);
+                }
+            }
+
+            return new LexicalParagraph(sensoryOutput);
         }
 
         /// <summary>

@@ -245,12 +245,6 @@ namespace NetMud.Backup
                     }
                 }
 
-                //Shove them all into the live system first
-                foreach (IEntity entity in entitiesToLoad.OrderBy(ent => ent.Birthdate))
-                {
-                    entity.UpsertToLiveWorldCache();
-                }
-
                 //Check we found actual data
                 if (!entitiesToLoad.Any(ent => ent.GetType() == typeof(Gaia)))
                 {
@@ -262,42 +256,48 @@ namespace NetMud.Backup
                     throw new Exception("No zones found, failover.");
                 }
 
+                //Shove them all into the live system first
+                foreach (IEntity entity in entitiesToLoad.OrderBy(ent => ent.Birthdate))
+                {
+                    entity.UpsertToLiveWorldCache();
+                }
+
                 //We need to pick up any places that aren't already live from the file system incase someone added them during the last session\
-                foreach (IGaiaTemplate thing in TemplateCache.GetAll<IGaiaTemplate>().Where(dt => !entitiesToLoad.Any(ent => ent.TemplateId.Equals(dt.Id))))
+                foreach (IGaiaTemplate thing in TemplateCache.GetAll<IGaiaTemplate>().Where(dt => !entitiesToLoad.Any(ent => ent.TemplateId.Equals(dt.Id) && ent.Birthdate >= dt.LastRevised)))
                 {
                     IGaia entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IGaia;
 
-                    entityThing.GetFromWorldOrSpawn();
+                    entityThing.SpawnNewInWorld();
                 }
 
-                foreach (IZoneTemplate thing in TemplateCache.GetAll<IZoneTemplate>().Where(dt => !entitiesToLoad.Any(ent => ent.TemplateId.Equals(dt.Id))))
+                foreach (IZoneTemplate thing in TemplateCache.GetAll<IZoneTemplate>().Where(dt => !entitiesToLoad.Any(ent => ent.TemplateId.Equals(dt.Id) && ent.Birthdate >= dt.LastRevised)))
                 {
                     IZone entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IZone;
 
-                    entityThing.GetFromWorldOrSpawn();
+                    entityThing.SpawnNewInWorld();
                 }
 
-                foreach (ILocaleTemplate thing in TemplateCache.GetAll<ILocaleTemplate>().Where(dt => !entitiesToLoad.Any(ent => ent.TemplateId.Equals(dt.Id))))
+                foreach (ILocaleTemplate thing in TemplateCache.GetAll<ILocaleTemplate>().Where(dt => !entitiesToLoad.Any(ent => ent.TemplateId.Equals(dt.Id) && ent.Birthdate >= dt.LastRevised)))
                 {
                     ILocale entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as ILocale;
 
                     entityThing.ParentLocation = entityThing.ParentLocation.GetLiveInstance();
-                    entityThing.GetFromWorldOrSpawn();
+                    entityThing.SpawnNewInWorld();
                 }
 
-                foreach (IRoomTemplate thing in TemplateCache.GetAll<IRoomTemplate>().Where(dt => !entitiesToLoad.Any(ent => ent.TemplateId.Equals(dt.Id))))
+                foreach (IRoomTemplate thing in TemplateCache.GetAll<IRoomTemplate>().Where(dt => !entitiesToLoad.Any(ent => ent.TemplateId.Equals(dt.Id) && ent.Birthdate >= dt.LastRevised)))
                 {
                     IRoom entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IRoom;
 
                     entityThing.ParentLocation = entityThing.Template<IRoomTemplate>().ParentLocation.GetLiveInstance();
-                    entityThing.GetFromWorldOrSpawn();
+                    entityThing.SpawnNewInWorld();
                 }
 
-                foreach (IPathwayTemplate thing in TemplateCache.GetAll<IPathwayTemplate>().Where(dt => !entitiesToLoad.Any(ent => ent.TemplateId.Equals(dt.Id))))
+                foreach (IPathwayTemplate thing in TemplateCache.GetAll<IPathwayTemplate>().Where(dt => !entitiesToLoad.Any(ent => ent.TemplateId.Equals(dt.Id) && ent.Birthdate >= dt.LastRevised)))
                 {
                     IPathway entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IPathway;
 
-                    entityThing.GetFromWorldOrSpawn();
+                    entityThing.SpawnNewInWorld();
                 }
 
                 //We have the containers contents and the birthmarks from the deserial
