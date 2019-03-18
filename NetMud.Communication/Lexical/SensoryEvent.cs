@@ -189,7 +189,7 @@ namespace NetMud.Communication.Lexical
 
                 var pronoun = Thesaurus.GetWord(pronounContext, LexicalType.Pronoun);
                 Event.Phrase = pronoun.Name;
-                Event.Type = pronoun.WordType;
+                Event.Type = LexicalType.Pronoun;
             }
 
             List<ILexica> subjects = new List<ILexica>

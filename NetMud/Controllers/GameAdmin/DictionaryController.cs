@@ -178,7 +178,7 @@ namespace NetMud.Controllers.GameAdmin
             obj.Synonyms = vModel.DataObject.Synonyms;
             obj.Antonyms = vModel.DataObject.Antonyms;
             obj.Language = vModel.DataObject.Language;
-            obj.WordType = vModel.DataObject.WordType;
+            obj.WordTypes = vModel.DataObject.WordTypes;
             obj.Feminine = vModel.DataObject.Feminine;
             obj.Possessive = vModel.DataObject.Possessive;
             obj.Plural = vModel.DataObject.Plural;
@@ -246,7 +246,7 @@ namespace NetMud.Controllers.GameAdmin
                 Elegance = obj.Elegance + vModel.Elegance,
                 Tense = obj.Tense,
                 Language = obj.Language,
-                WordType = obj.WordType,
+                WordTypes = obj.WordTypes,
                 Feminine = obj.Feminine,
                 Possessive = obj.Possessive,
                 Plural = obj.Plural,

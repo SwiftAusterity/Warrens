@@ -2,6 +2,7 @@
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.System;
+using NetMud.Utility;
 
 namespace NetMud.Communication.Lexical
 {
@@ -16,8 +17,9 @@ namespace NetMud.Communication.Lexical
         /// <param name="lexica">lexica to check</param>
         public static void VerifyDictata(ILexica lexica)
         {
-            if (string.IsNullOrWhiteSpace(lexica.Phrase))
+            if (string.IsNullOrWhiteSpace(lexica.Phrase) || lexica.Phrase.IsNumeric())
             {
+                //we dont want numbers getting in the dict, thats bananas
                 return;
             }
 
@@ -35,9 +37,20 @@ namespace NetMud.Communication.Lexical
         /// <param name="dictata">dictata to check</param>
         public static IDictata VerifyDictata(IDictata dictata)
         {
-            if (dictata == null || string.IsNullOrWhiteSpace(dictata.Name))
+            if (dictata == null || string.IsNullOrWhiteSpace(dictata.Name) || dictata.Name.IsNumeric())
             {
                 return null;
+            }
+
+            //Set the language to default if it is absent and save it, if it has a language it already exists
+            if (dictata.Language == null)
+            {
+                IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
+
+                if (globalConfig.BaseLanguage != null)
+                {
+                    dictata.Language = globalConfig.BaseLanguage;
+                }
             }
 
             ConfigDataCacheKey cacheKey = new ConfigDataCacheKey(dictata);
@@ -53,17 +66,6 @@ namespace NetMud.Communication.Lexical
                 }
 
                 dictata = maybeDictata;
-            }
-
-            //Set the language to default if it is absent and save it, if it has a language it already exists
-            if (dictata.Language == null)
-            {
-                IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
-
-                if (globalConfig.BaseLanguage != null)
-                {
-                    dictata.Language = globalConfig.BaseLanguage;
-                }
             }
 
             dictata.SystemSave();

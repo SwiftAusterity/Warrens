@@ -7,7 +7,6 @@
 <div class="form-group row">
     @Html.EditorFor(m => m.Name, new { archivedValue = archivedTemplate?.Name ?? "" })
     @Html.EditorFor(m => m.Language, new { validItems = ViewData["ValidLanguages"], archivedValue = archivedTemplate?.Language?.Name ?? "" })
-    @Html.EditorFor(m => m.WordType, new { archivedValue = archivedTemplate?.WordType.ToString() ?? "" })
     @Html.EditorFor(m => m.Tense, new { archivedValue = archivedTemplate?.Tense.ToString() ?? "" })
     @Html.EditorFor(m => m.Perspective, new { archivedValue = archivedTemplate?.Perspective.ToString() ?? "" })
 </div>
@@ -23,6 +22,8 @@
     @Html.EditorFor(m => m.Plural, new { archivedValue = archivedTemplate?.Plural.ToString() ?? "" })
     @Html.EditorFor(m => m.Feminine, new { archivedValue = archivedTemplate?.Feminine.ToString() ?? "" })
 </div>
+<h4>Word Types</h4>
+@Html.EditorFor(m => m.WordTypes)
 <h4>Semantic Tags</h4>
 @Html.EditorFor(m => m.Semantics)
 <h4>Synonyms</h4>

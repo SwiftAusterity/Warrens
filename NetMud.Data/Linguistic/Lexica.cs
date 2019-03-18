@@ -287,12 +287,13 @@ namespace NetMud.Data.Linguistic
                     }
                     else
                     {
-                        article = Thesaurus.GetWord(articleContext, LexicalType.Article);
+                        article = Thesaurus.GetWord(articleContext, wordRule.WhenPositional ? LexicalType.Preposition : LexicalType.Article);
                     }
 
                     if (article != null && !newLex.Modifiers.Any(lx => article.Equals(lx.GetDictata())))
                     {
-                        var newArticle = newLex.TryModify(LexicalType.Article, GrammaticalType.Descriptive, article.Name, false);
+                        var newArticle = newLex.TryModify(wordRule.WhenPositional ? LexicalType.Preposition : LexicalType.Article
+                                                        , GrammaticalType.Descriptive, article.Name, false);
 
                         if (!wordRule.WhenPositional)
                         {
@@ -302,7 +303,7 @@ namespace NetMud.Data.Linguistic
                 }
                 else if (wordRule.SpecificAddition != null && !newLex.Modifiers.Any(lx => wordRule.SpecificAddition.Equals(lx.GetDictata())))
                 {
-                    newLex.TryModify(wordRule.SpecificAddition.WordType, GrammaticalType.Descriptive, wordRule.SpecificAddition.Name);
+                    newLex.TryModify(wordRule.SpecificAddition.WordTypes.FirstOrDefault(), GrammaticalType.Descriptive, wordRule.SpecificAddition.Name);
                 }
 
                 if (!string.IsNullOrWhiteSpace(wordRule.AddPrefix) && !newLex.Phrase.StartsWith(wordRule.AddPrefix))
@@ -352,12 +353,13 @@ namespace NetMud.Data.Linguistic
                         }
                         else
                         {
-                            article = Thesaurus.GetWord(articleContext, LexicalType.Article);
+                            article = Thesaurus.GetWord(articleContext, wordRule.WhenPositional ? LexicalType.Preposition : LexicalType.Article);
                         }
 
                         if (article != null && !newLex.Modifiers.Any(lx => article.Equals(lx.GetDictata())))
                         {
-                            var newArticle = newLex.TryModify(LexicalType.Article, GrammaticalType.Descriptive, article.Name, false);
+                            var newArticle = newLex.TryModify(wordRule.WhenPositional ? LexicalType.Preposition : LexicalType.Article
+                                                            , GrammaticalType.Descriptive, article.Name, false);
 
                             if(!wordRule.WhenPositional)
                             {
@@ -367,7 +369,7 @@ namespace NetMud.Data.Linguistic
                     }
                     else if (wordRule.SpecificAddition != null && !newLex.Modifiers.Any(lx => wordRule.SpecificAddition.Equals(lx.GetDictata())))
                     {
-                        newLex.TryModify(wordRule.SpecificAddition.WordType, GrammaticalType.Descriptive, wordRule.SpecificAddition.Name);
+                        newLex.TryModify(wordRule.SpecificAddition.WordTypes.FirstOrDefault(), GrammaticalType.Descriptive, wordRule.SpecificAddition.Name);
                     }
 
 

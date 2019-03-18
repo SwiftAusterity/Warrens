@@ -132,7 +132,7 @@ namespace NetMud.Data.Architectural.ActorBase
                 Possessive = false,
                 Tense = LexicalTense.None,
                 Semantics = new HashSet<string>() { "gender" },
-                WordType = LexicalType.Pronoun
+                WordTypes = new HashSet<LexicalType>() { LexicalType.Pronoun }
             };
 
             var possessive = new Dictata()
@@ -146,7 +146,7 @@ namespace NetMud.Data.Architectural.ActorBase
                 Possessive = true,
                 Tense = LexicalTense.None,
                 Semantics = new HashSet<string>() { "gender" },
-                WordType = LexicalType.Pronoun
+                WordTypes = new HashSet<LexicalType>() { LexicalType.Pronoun }
             };
 
             var baseWord = new Dictata()
@@ -160,7 +160,7 @@ namespace NetMud.Data.Architectural.ActorBase
                 Possessive = false,
                 Tense = LexicalTense.None,
                 Semantics = new HashSet<string>() { "gender" },
-                WordType = LexicalType.Pronoun
+                WordTypes = new HashSet<LexicalType>() { LexicalType.Pronoun }
             };
 
             var adult = new Dictata()
@@ -174,7 +174,7 @@ namespace NetMud.Data.Architectural.ActorBase
                 Semantics = new HashSet<string>() { "adult", "gender" },
                 Possessive = false,
                 Tense = LexicalTense.None,
-                WordType = LexicalType.Noun
+                WordTypes = new HashSet<LexicalType>() { LexicalType.Noun }
             };
 
             var child = new Dictata()
@@ -188,7 +188,7 @@ namespace NetMud.Data.Architectural.ActorBase
                 Semantics = new HashSet<string>() { "child", "gender" },
                 Possessive = false,
                 Tense = LexicalTense.None,
-                WordType = LexicalType.Noun
+                WordTypes = new HashSet<LexicalType>() { LexicalType.Noun }
             };
 
             LexicalProcessor.VerifyDictata(child);

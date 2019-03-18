@@ -13,7 +13,7 @@ namespace NetMud.DataStructure.Linguistic
         /// <summary>
         /// The type of word this is in general
         /// </summary>
-        LexicalType WordType { get; set; }
+        HashSet<LexicalType> WordTypes { get; set; }
 
         /// <summary>
         /// Chronological tense of word

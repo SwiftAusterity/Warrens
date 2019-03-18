@@ -37,8 +37,31 @@ namespace NetMud
             {
                 globalConfig = new GlobalConfig();
 
+                globalConfig.SystemSave();
+            }
+
+            if (globalConfig.BaseLanguage == null)
+            {
                 ILanguage baseLanguage = ConfigDataCache.GetAll<ILanguage>().FirstOrDefault();
 
+                if (baseLanguage == null)
+                {
+                    LoggingUtility.Log("There are no valid languages. Generating new base language.", LogChannels.SystemErrors, true);
+
+                    baseLanguage = new Language()
+                    {
+                        Name = "English",
+                        GoogleLanguageCode = "en-us",
+                        AntecendentPunctuation = true,
+                        PrecedentPunctuation = false,
+                        Gendered = false,
+                        UIOnly = true
+                    };
+
+                    baseLanguage.SystemSave();
+                }
+
+                globalConfig.BaseLanguage = baseLanguage;
                 globalConfig.SystemSave();
             }
 
@@ -128,7 +151,7 @@ namespace NetMud
                         Possessive = false,
                         Tense = LexicalTense.Present,
                         Semantics = new HashSet<string>() { "system_command" },
-                        WordType = LexicalType.Verb,
+                        WordTypes = new HashSet<LexicalType>() { LexicalType.Verb },
                         Language = language
                     };
 

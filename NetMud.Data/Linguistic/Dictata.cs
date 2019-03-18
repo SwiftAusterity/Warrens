@@ -33,7 +33,7 @@ namespace NetMud.Data.Linguistic
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
-        public override string UniqueKey => string.Format("{0}_{1}_{2}", Language.Name, WordType.ToString(), Name);
+        public override string UniqueKey => string.Format("{0}_{1}", Language.Name, Name);
 
         /// <summary>
         /// Type of configuation data this is
@@ -55,9 +55,9 @@ namespace NetMud.Data.Linguistic
         /// The type of word this is in general
         /// </summary>
         [Display(Name = "Type", Description = "The type of word this is.")]
-        [UIHint("EnumDropDownList")]
+        [UIHint("WordTypeCollection")]
         [Required]
-        public LexicalType WordType { get; set; }
+        public HashSet<LexicalType> WordTypes { get; set; }
 
         /// <summary>
         /// Chronological tense of word
@@ -248,6 +248,7 @@ namespace NetMud.Data.Linguistic
         [JsonConstructor]
         public Dictata()
         {
+            WordTypes = new HashSet<LexicalType>();
             Antonyms = new HashSet<IDictata>();
             Synonyms = new HashSet<IDictata>();
             Semantics = new HashSet<string>();
@@ -272,13 +273,10 @@ namespace NetMud.Data.Linguistic
         /// <param name="lexica">the incoming lexica phrase</param>
         public Dictata(ILexica lexica)
         {
+            WordTypes = new HashSet<LexicalType>();
             Antonyms = new HashSet<IDictata>();
             Synonyms = new HashSet<IDictata>();
             Semantics = new HashSet<string>();
-
-            Name = lexica.Phrase;
-            WordType = lexica.Type;
-            Language = lexica.Context?.Language;
 
             if (Language == null)
             {
@@ -293,6 +291,35 @@ namespace NetMud.Data.Linguistic
                     Language = globalConfig.BaseLanguage;
                 }
             }
+
+            var maybeDict = ConfigDataCache.Get<IDictata>(
+                new ConfigDataCacheKey(typeof(IDictata), string.Format("{0}_{1}", Language.Name, lexica.Phrase), ConfigDataType.Dictionary));
+
+            if (maybeDict == null)
+            {
+                Name = lexica.Phrase;
+                WordTypes.Add(lexica.Type);
+                Language = lexica.Context?.Language;
+            }
+            else
+            {
+                Name = maybeDict.Name;
+                WordTypes = maybeDict.WordTypes;
+                Language = maybeDict.Language;
+                Synonyms = maybeDict.Synonyms;
+                Antonyms = maybeDict.Antonyms;
+                Determinant = maybeDict.Determinant;
+                Elegance = maybeDict.Elegance;
+                Feminine = maybeDict.Feminine;
+                Perspective = maybeDict.Perspective;
+                Plural = maybeDict.Plural;
+                Positional = maybeDict.Positional;
+                Possessive = maybeDict.Possessive;
+                Quality = maybeDict.Quality;
+                Semantics = maybeDict.Semantics;
+                Severity = maybeDict.Severity;
+                Tense = maybeDict.Tense;
+            }
         }
 
         /// <summary>
@@ -305,7 +332,7 @@ namespace NetMud.Data.Linguistic
             //Don't do this if: we have no config, translation is turned off or lacking in the azure key, the language is not a human-ui language
             //it isn't an approved language, the word is a proper noun or the language isnt the base language at all
             if (globalConfig == null || !globalConfig.TranslationActive || string.IsNullOrWhiteSpace(globalConfig.AzureTranslationKey)
-                || !Language.UIOnly || !Language.SuitableForUse || WordType == LexicalType.ProperNoun || Language != globalConfig.BaseLanguage)
+                || !Language.UIOnly || !Language.SuitableForUse || WordTypes.Contains(LexicalType.ProperNoun) || Language != globalConfig.BaseLanguage)
             {
                 return;
             }
@@ -356,7 +383,7 @@ namespace NetMud.Data.Linguistic
                             Antonyms = Antonyms,
                             Synonyms = Synonyms,
                             Tense = Tense,
-                            WordType = WordType
+                            WordTypes = WordTypes
                         };
 
                         newDictata.Synonyms = new HashSet<IDictata>(Synonyms) { this };
@@ -389,7 +416,7 @@ namespace NetMud.Data.Linguistic
         {
             IDictionary<string, string> returnList = base.SignificantDetails();
 
-            returnList.Add("WordType", WordType.ToString());
+            returnList.Add("WordTypes", string.Join(", ", WordTypes));
 
             return returnList;
         }
@@ -436,7 +463,7 @@ namespace NetMud.Data.Linguistic
                         return -1;
                     }
 
-                    if (other.Name.Equals(Name, StringComparison.InvariantCultureIgnoreCase) && other.WordType == WordType)
+                    if (other.Name.Equals(Name, StringComparison.InvariantCultureIgnoreCase) && other.WordTypes.All(wordType => WordTypes.Contains(wordType)))
                     {
                         return 1;
                     }
@@ -463,7 +490,7 @@ namespace NetMud.Data.Linguistic
             {
                 try
                 {
-                    return other.Name.Equals(Name, StringComparison.InvariantCultureIgnoreCase) && other.WordType == WordType;
+                    return other.Name.Equals(Name, StringComparison.InvariantCultureIgnoreCase) && other.WordTypes.All(wordType => WordTypes.Contains(wordType));
                 }
                 catch (Exception ex)
                 {
@@ -492,7 +519,7 @@ namespace NetMud.Data.Linguistic
         /// <returns>the hash code</returns>
         public int GetHashCode(IDictata obj)
         {
-            return obj.GetType().GetHashCode() + obj.WordType.GetHashCode() + obj.Name.GetHashCode();
+            return obj.GetType().GetHashCode() + obj.Language.Name.GetHashCode() + obj.Name.GetHashCode();
         }
 
         /// <summary>
@@ -501,7 +528,7 @@ namespace NetMud.Data.Linguistic
         /// <returns>the hash code</returns>
         public override int GetHashCode()
         {
-            return GetType().GetHashCode() + WordType.GetHashCode() + Name.GetHashCode();
+            return GetType().GetHashCode() + Language.Name.GetHashCode() + Name.GetHashCode();
         }
 
         public override object Clone()
@@ -515,7 +542,7 @@ namespace NetMud.Data.Linguistic
                 Severity = Severity,
                 Synonyms = Synonyms,
                 Tense = Tense,
-                WordType = WordType,
+                WordTypes = WordTypes,
                 Quality = Quality
             };
         }
