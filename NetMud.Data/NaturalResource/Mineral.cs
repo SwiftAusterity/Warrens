@@ -180,23 +180,21 @@ namespace NetMud.Data.NaturalResource
 
             var collectiveContext = new LexicalContext(viewer)
             {
-                Determinant = true,
+                Determinant = false,
                 Perspective = NarrativePerspective.SecondPerson,
                 Plural = false,
-                Position = LexicalPosition.Around,
+                Position = LexicalPosition.None,
                 Tense = LexicalTense.Present
             };
 
             var discreteContext = new LexicalContext(viewer)
             {
-                Determinant = true,
+                Determinant = false,
                 Perspective = NarrativePerspective.ThirdPerson,
                 Plural = false,
                 Position = LexicalPosition.Attached,
                 Tense = LexicalTense.Present
             };
-
-            var me = GetSelf(MessagingType.Visible, 30 + (GetVisibleDelta(viewer) * 30));
 
             var sizeWord = "large";
             if (amount < 20)
@@ -216,16 +214,30 @@ namespace NetMud.Data.NaturalResource
                 sizeWord = "enormous";
             }
 
+            var observer = new SensoryEvent(new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you", collectiveContext), 0, MessagingType.Visible)
+            {
+                Strength = 30 + (GetVisibleDelta(viewer) * 30)
+            };
+
             var collectiveNoun = new SensoryEvent(new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, "outcropping", collectiveContext),
                                                 30 + (GetVisibleDelta(viewer) * 30), MessagingType.Visible);
+
+            var me = GetSelf(MessagingType.Visible, 30 + (GetVisibleDelta(viewer) * 30));
+            me.Event.Role = GrammaticalType.IndirectObject;
+
             collectiveNoun.TryModify(me);
+
+            var senseVerb = new SensoryEvent(new Lexica(LexicalType.Verb, GrammaticalType.Verb, "see", collectiveContext), me.Strength, MessagingType.Visible);
 
             if (!string.IsNullOrWhiteSpace(sizeWord))
             {
                 collectiveNoun.TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, sizeWord, discreteContext));
             }
 
-            return new LexicalParagraph(collectiveNoun);
+            senseVerb.TryModify(collectiveNoun);
+            observer.TryModify(senseVerb);
+
+            return new LexicalParagraph(observer);
         }
         #endregion
     }

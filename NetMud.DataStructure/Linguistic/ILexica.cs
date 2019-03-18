@@ -115,5 +115,11 @@ namespace NetMud.DataStructure.Linguistic
         /// </summary>
         /// <returns>the dictata</returns>
         IDictata GenerateDictata();
+
+        /// <summary>
+        /// Make a copy of this object
+        /// </summary>
+        /// <returns>A copy of the object</returns>
+        ILexica Clone();
     }
 }
