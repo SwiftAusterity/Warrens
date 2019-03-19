@@ -145,6 +145,14 @@ namespace NetMud.DataStructure.Linguistic
         [Display(Name = "Preposition Around", Description = "A base word, the name says it all.")]
         [Required]
         public string PrepositionAround { get; set; }
+
+        /// <summary>
+        /// A base word, the name says it all
+        /// </summary>
+        [DataType(DataType.Text)]
+        [Display(Name = "Preposition Of", Description = "A base word, the name says it all.")]
+        [Required]
+        public string PrepositionOf { get; set; }
         #endregion
     }
 }

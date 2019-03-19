@@ -104,7 +104,7 @@ namespace NetMud.Data.NaturalResource
                 return new LexicalParagraph();
             }
 
-            var collectiveContext = new LexicalContext(viewer)
+            var personalContext = new LexicalContext(viewer)
             {
                 Determinant = false,
                 Perspective = NarrativePerspective.SecondPerson,
@@ -119,6 +119,15 @@ namespace NetMud.Data.NaturalResource
                 Perspective = NarrativePerspective.ThirdPerson,
                 Plural = false,
                 Position = LexicalPosition.None,
+                Tense = LexicalTense.Present
+            };
+
+            var collectiveContext = new LexicalContext(viewer)
+            {
+                Determinant = false,
+                Perspective = NarrativePerspective.ThirdPerson,
+                Plural = false,
+                Position = LexicalPosition.PartOf,
                 Tense = LexicalTense.Present
             };
 
@@ -144,7 +153,8 @@ namespace NetMud.Data.NaturalResource
                                                 30 + (GetVisibleDelta(viewer) * 30), MessagingType.Visible);
 
             var me = GetSelf(MessagingType.Visible, 30 + (GetVisibleDelta(viewer) * 30));
-            me.Event.Role = GrammaticalType.IndirectObject;
+            me.Event.Role = GrammaticalType.Descriptive;
+            me.Event.Context = collectiveContext;
 
             collectiveNoun.TryModify(me);
 
@@ -153,9 +163,9 @@ namespace NetMud.Data.NaturalResource
                 collectiveNoun.TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, sizeWord, discreteContext));
             }
 
-            var observer = new Lexica(LexicalType.Pronoun, GrammaticalType.DirectObject, "you", collectiveContext);
+            var observer = new Lexica(LexicalType.Pronoun, GrammaticalType.DirectObject, "you", personalContext);
 
-            collectiveNoun.TryModify(new Lexica(LexicalType.Verb, GrammaticalType.Verb, "roams", collectiveContext).TryModify(observer, true));
+            collectiveNoun.TryModify(new Lexica(LexicalType.Verb, GrammaticalType.Verb, "roams", personalContext).TryModify(observer, true));
 
             return new LexicalParagraph(collectiveNoun);
         }

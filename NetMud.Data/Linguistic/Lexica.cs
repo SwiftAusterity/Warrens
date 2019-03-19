@@ -304,12 +304,6 @@ namespace NetMud.Data.Linguistic
                 }
             }
 
-            //Placement ordering
-            var modifierList = new List<Tuple<ILexica, int>>
-            {
-                new Tuple<ILexica, int>(newLex, 0)
-            };
-
             //modification rules ordered by specificity
             var currentModifiers = new List<ILexica>(newLex.Modifiers);
             foreach (var modifier in currentModifiers)
@@ -365,6 +359,12 @@ namespace NetMud.Data.Linguistic
                     }
                 }
             }
+
+            //Placement ordering
+            var modifierList = new List<Tuple<ILexica, int>>
+            {
+                new Tuple<ILexica, int>(newLex, 0)
+            };
 
             foreach (var modifier in newLex.Modifiers)
             {

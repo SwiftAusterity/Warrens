@@ -47,6 +47,8 @@ namespace NetMud.Data.Gaia
             Day = 1;
             Month = 1;
             Year = 1;
+
+            BaseChronology = new Chronology();
         }
 
         public TimeOfDay(IChronology baseChronology)
