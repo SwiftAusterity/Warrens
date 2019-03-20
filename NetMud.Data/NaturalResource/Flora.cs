@@ -253,7 +253,7 @@ namespace NetMud.Data.NaturalResource
                 sizeWord = "vast";
             }
 
-            var collectiveNoun = new SensoryEvent(new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, "forest", collectiveContext),
+            var collectiveNoun = new SensoryEvent(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "forest", collectiveContext),
                                                 30 + (GetVisibleDelta(viewer) * 30), MessagingType.Visible);
             collectiveNoun.TryModify(me);
 

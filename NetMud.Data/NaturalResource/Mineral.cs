@@ -216,7 +216,7 @@ namespace NetMud.Data.NaturalResource
                 sizeWord = "enormous";
             }
 
-            var collectiveNoun = new SensoryEvent(new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, "outcropping", collectiveContext),
+            var collectiveNoun = new SensoryEvent(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "outcropping", collectiveContext),
                                                 30 + (GetVisibleDelta(viewer) * 30), MessagingType.Visible);
             collectiveNoun.TryModify(me);
 
