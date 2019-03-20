@@ -978,7 +978,7 @@ namespace NetMud.Data.Architectural.EntityBase
         public abstract float GetCurrentLuminosity();
 
         #region Processes
-        internal virtual void KickoffProcesses()
+        public virtual void KickoffProcesses()
         {
         }
         #endregion

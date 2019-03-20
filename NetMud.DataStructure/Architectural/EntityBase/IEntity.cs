@@ -82,5 +82,10 @@ namespace NetMud.DataStructure.Architectural.EntityBase
         /// </summary>
         /// <returns>success status</returns>
         bool Remove();
+
+        /// <summary>
+        /// Kickoff any internal timers that need to happen
+        /// </summary>
+        void KickoffProcesses();
     }
 }

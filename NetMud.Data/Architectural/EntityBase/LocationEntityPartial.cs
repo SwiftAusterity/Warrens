@@ -6,6 +6,7 @@ using NetMud.DataStructure.Inanimate;
 using NetMud.DataStructure.NaturalResource;
 using NetMud.DataStructure.Room;
 using NetMud.DataStructure.Zone;
+using NetMud.Gaia.Geographical;
 using NetMud.Utility;
 using Newtonsoft.Json;
 using System;
@@ -343,7 +344,8 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <returns>if we are outside</returns>
         public virtual bool IsOutside()
         {
-            return false;
+            //TODO: make this work
+            return true;// GeographicalUtilities.IsOutside(GetBiome());
         }
 
         /// <summary>

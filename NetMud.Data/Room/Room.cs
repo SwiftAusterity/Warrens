@@ -195,11 +195,10 @@ namespace NetMud.Data.Room
             IRoomTemplate dT = Template<IRoomTemplate>();
             IZone zone = CurrentLocation.CurrentZone;
 
-            bool canSeeSky = GeographicalUtilities.IsOutside(GetBiome())
-                            && dT.Coordinates.Z >= zone.Template<IZoneTemplate>().BaseElevation;
+            bool canSeeSky = IsOutside() && dT.Coordinates.Z >= zone.Template<IZoneTemplate>().BaseElevation;
 
-            //if (!canSeeSky)
-            //    return Enumerable.Empty<ICelestial>();
+            if (!canSeeSky)
+                return Enumerable.Empty<ICelestial>();
 
             //The zone knows about the celestial positioning
             return zone.GetVisibileCelestials(viewer);

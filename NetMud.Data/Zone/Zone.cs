@@ -472,12 +472,12 @@ namespace NetMud.Data.Zone
         public override IEnumerable<ICelestial> GetVisibileCelestials(IEntity viewer)
         {
             IZoneTemplate zD = Template<IZoneTemplate>();
-            bool canSeeSky = GeographicalUtilities.IsOutside(GetBiome());
+            bool canSeeSky = IsOutside(); //TODO: cloud cover
 
             List<ICelestial> returnList = new List<ICelestial>();
 
-            //if (!canSeeSky)
-            //  return returnList;
+            if (!canSeeSky)
+                return returnList;
 
             IGaia world = GetWorld();
             IEnumerable<ICelestialPosition> celestials = world.CelestialPositions;
@@ -610,27 +610,27 @@ namespace NetMud.Data.Zone
         {
             IZoneTemplate zD = Template<IZoneTemplate>();
             float lumins = 0;
-            bool canSeeSky = GeographicalUtilities.IsOutside(GetBiome());
+            bool canSeeSky = IsOutside();
 
             //TODO: Add cloud cover. Commented out for testing purposes ATM
-            //if (canSeeSky)
-            //{
-            IGaia world = GetWorld();
-            if (world != null)
+            if (canSeeSky)
             {
-                IEnumerable<ICelestialPosition> celestials = world.CelestialPositions;
-                float rotationalPosition = world.PlanetaryRotation;
-                float orbitalPosition = world.OrbitalPosition;
-
-                foreach (ICelestialPosition celestial in celestials)
+                IGaia world = GetWorld();
+                if (world != null)
                 {
-                    float celestialAffectModifier = AstronomicalUtilities.GetCelestialLuminosityModifier(celestial.CelestialObject, celestial.Position, rotationalPosition, orbitalPosition
-                                                                                                        , zD.Hemisphere, world.Template<IGaiaTemplate>().RotationalAngle);
+                    IEnumerable<ICelestialPosition> celestials = world.CelestialPositions;
+                    float rotationalPosition = world.PlanetaryRotation;
+                    float orbitalPosition = world.OrbitalPosition;
 
-                    lumins += celestial.CelestialObject.Luminosity * celestialAffectModifier;
+                    foreach (ICelestialPosition celestial in celestials)
+                    {
+                        float celestialAffectModifier = AstronomicalUtilities.GetCelestialLuminosityModifier(celestial.CelestialObject, celestial.Position, rotationalPosition, orbitalPosition
+                                                                                                            , zD.Hemisphere, world.Template<IGaiaTemplate>().RotationalAngle);
+
+                        lumins += celestial.CelestialObject.Luminosity * celestialAffectModifier;
+                    }
                 }
             }
-            //}
 
             return lumins;
         }
@@ -757,7 +757,7 @@ namespace NetMud.Data.Zone
         }
 
         #region Processes
-        internal override void KickoffProcesses()
+        public override void KickoffProcesses()
         {
             //Start decay eventing for this zone
             Processor.StartSubscriptionLoop("NaturalResourceGeneration", () => AdvanceResources(), 30 * 60, false);

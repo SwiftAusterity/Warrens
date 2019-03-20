@@ -1032,7 +1032,7 @@ namespace NetMud.Data.NPC
         #endregion
 
         #region Processes
-        internal override void KickoffProcesses()
+        public override void KickoffProcesses()
         {
             //Start decay eventing for this zone
             base.KickoffProcesses();

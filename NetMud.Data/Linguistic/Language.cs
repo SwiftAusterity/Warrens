@@ -410,6 +410,23 @@ namespace NetMud.Data.Linguistic
                     Language = this
                 });
             }
+
+            if (!string.IsNullOrWhiteSpace(BaseWords.PrepositionOf))
+            {
+                LexicalProcessor.VerifyDictata(new Dictata()
+                {
+                    Name = BaseWords.PrepositionOf,
+                    Determinant = false,
+                    Feminine = false,
+                    Plural = false,
+                    Positional = LexicalPosition.PartOf,
+                    Perspective = NarrativePerspective.None,
+                    Possessive = false,
+                    Tense = LexicalTense.None,
+                    WordTypes = new HashSet<LexicalType>() { LexicalType.Preposition },
+                    Language = this
+                });
+            }
         }
         #endregion
 

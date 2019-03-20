@@ -260,7 +260,7 @@ namespace NetMud.Data.NaturalResource
                                                 30 + (GetVisibleDelta(viewer) * 30), MessagingType.Visible);
 
             var me = GetSelf(MessagingType.Visible, 30 + (GetVisibleDelta(viewer) * 30));
-            me.Event.Role = GrammaticalType.IndirectObject;
+            me.Event.Role = GrammaticalType.Descriptive;
 
             collectiveNoun.TryModify(me);
 

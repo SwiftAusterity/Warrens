@@ -5,6 +5,8 @@
     /// </summary>
     public interface ITimeOfDay
     {
+        IChronology BaseChronology { get; set; }
+
         /// <summary>
         /// Current month
         /// </summary>
