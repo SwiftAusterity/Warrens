@@ -247,7 +247,14 @@ namespace NetMud.Utility
                     returnString = string.Join(", ", stringList);
                     int lastOxfordComma = returnString.LastIndexOf(',');
 
-                    returnString = string.Format("{0}, and {1}", returnString.Substring(0, lastOxfordComma), returnString.Substring(lastOxfordComma + 1));
+                    if (stringList.Count() == 2)
+                    {
+                        returnString = string.Format("{0} and {1}", returnString.Substring(0, lastOxfordComma), returnString.Substring(lastOxfordComma + 1));
+                    }
+                    else
+                    {
+                        returnString = string.Format("{0}, and {1}", returnString.Substring(0, lastOxfordComma), returnString.Substring(lastOxfordComma + 1));
+                    }
                     break;
             }
 

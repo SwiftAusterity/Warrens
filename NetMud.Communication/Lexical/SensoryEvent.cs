@@ -219,17 +219,17 @@ namespace NetMud.Communication.Lexical
 
                 if (subject.Modifiers.Any(mod => mod.Role == GrammaticalType.Subject))
                 {
-                    sentences.Add(subject.MakeSentence(SentenceType.Partial));
+                    sentences.Add(subject.MakeSentence(SentenceType.Partial, SensoryType));
 
                     //fragment sentences
                     foreach (ILexica subLex in subject.Modifiers.Where(mod => mod.Role == GrammaticalType.Subject))
                     {
-                        sentences.Add(subLex.MakeSentence(SentenceType.Statement));
+                        sentences.Add(subLex.MakeSentence(SentenceType.Statement, SensoryType));
                     }
                 }
                 else
                 {
-                    sentences.Add(subject.MakeSentence(SentenceType.Statement));
+                    sentences.Add(subject.MakeSentence(SentenceType.Statement, SensoryType));
                 }
             }
 

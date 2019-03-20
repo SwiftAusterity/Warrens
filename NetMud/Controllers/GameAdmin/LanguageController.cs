@@ -184,6 +184,7 @@ namespace NetMud.Controllers.GameAdmin
             obj.WordRules = vModel.DataObject.WordRules;
             obj.WordPairRules = vModel.DataObject.WordPairRules;
             obj.SentenceRules = vModel.DataObject.SentenceRules;
+            obj.ComplexityRules = vModel.DataObject.ComplexityRules;
             obj.BaseWords = vModel.DataObject.BaseWords;
             obj.ContractionRules = vModel.DataObject.ContractionRules;
             obj.TransformationRules = vModel.DataObject.TransformationRules;

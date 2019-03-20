@@ -102,7 +102,7 @@ namespace NetMud.DataStructure.Linguistic
         /// </summary>
         /// <param name="type">the sentence type</param>
         /// <returns>the sentence</returns>
-        ILexicalSentence MakeSentence(SentenceType type);
+        ILexicalSentence MakeSentence(SentenceType type, MessagingType sensoryType);
 
         /// <summary>
         /// Get the dictata from this lexica

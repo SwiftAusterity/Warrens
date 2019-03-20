@@ -2,7 +2,9 @@
 
 @model Language
 @{
-    var archivedTemplate = ViewData["ArchiveTemplate"] as Language;
+                /**/
+
+                var archivedTemplate = ViewData["ArchiveTemplate"] as Language;
 }
 <h4>Details</h4>
 <div class="form-group row">
@@ -31,3 +33,6 @@
 
 <h4>Sentence Rules</h4>
 @Html.EditorFor(m => m.SentenceRules)
+
+<h4>Sentence Complexity Rules</h4>
+@Html.EditorFor(m => m.ComplexityRules)

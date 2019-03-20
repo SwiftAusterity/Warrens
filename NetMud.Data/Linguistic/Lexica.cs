@@ -444,9 +444,9 @@ namespace NetMud.Data.Linguistic
         /// </summary>
         /// <param name="type">the sentence type</param>
         /// <returns>the sentence</returns>
-        public ILexicalSentence MakeSentence(SentenceType type)
+        public ILexicalSentence MakeSentence(SentenceType type, MessagingType sensoryType)
         {
-            return new LexicalSentence(this) { Type = type };
+            return new LexicalSentence(this) { Type = type, SensoryType = sensoryType };
         }
 
         /// <summary>

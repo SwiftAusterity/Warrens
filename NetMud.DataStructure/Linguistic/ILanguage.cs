@@ -39,6 +39,11 @@ namespace NetMud.DataStructure.Linguistic
         HashSet<SentenceGrammarRule> SentenceRules { get; set; }
 
         /// <summary>
+        /// Rules for sentence combination
+        /// </summary>
+        HashSet<SentenceComplexityRule> ComplexityRules { get; set; }
+
+        /// <summary>
         /// List of grammatical rules to use in sentence construction
         /// </summary>
         HashSet<IWordRule> WordRules { get; set; }
