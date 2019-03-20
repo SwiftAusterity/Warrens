@@ -86,6 +86,81 @@ namespace NetMud.Utility
         {
             return sb.AppendLine(string.Format(format, arg0, arg1));
         }
+
+        /// <summary>
+        /// Is this any number (including negative/decimal/floats)
+        /// </summary>
+        /// <param name="str">the string in question</param>
+        /// <returns>is it a number</returns>
+        public static bool IsNumeric(this string str)
+        {
+            return !string.IsNullOrWhiteSpace(str) && decimal.TryParse(str, out decimal junk);
+        }
+
+        /// <summary>
+        /// Is this any number of a specific type
+        /// </summary>
+        /// <typeparam name="T">the number type</typeparam>
+        /// <param name="str">the string in question</param>
+        /// <returns>is it a number</returns>
+        public static bool IsNumeric<T>(this string str)
+        {
+            var tType = typeof(T);
+            if (!string.IsNullOrWhiteSpace(str))
+            {
+                if (tType == typeof(byte))
+                {
+                    return byte.TryParse(str, out byte junk);
+                }
+
+                if (tType == typeof(short))
+                {
+                    return short.TryParse(str, out short junk);
+                }
+
+                if (tType == typeof(ushort))
+                {
+                    return ushort.TryParse(str, out ushort junk);
+                }
+
+                if (tType == typeof(int))
+                {
+                    return int.TryParse(str, out int junk);
+                }
+
+                if (tType == typeof(uint))
+                {
+                    return uint.TryParse(str, out uint junk);
+                }
+
+                if (tType == typeof(long))
+                {
+                    return long.TryParse(str, out long junk);
+                }
+
+                if (tType == typeof(ulong))
+                {
+                    return ulong.TryParse(str, out ulong junk);
+                }
+
+                if (tType == typeof(double))
+                {
+                    return double.TryParse(str, out double junk);
+                }
+
+                if (tType == typeof(float))
+                {
+                    return float.TryParse(str, out float junk);
+                }
+
+                if (tType == typeof(decimal))
+                {
+                    return decimal.TryParse(str, out decimal junk);
+                }
+            }
+
+            return false;
+        }
         #endregion
 
         #region TypeManipulation

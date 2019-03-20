@@ -75,7 +75,14 @@ namespace NetMud.Models
                 typeName = typeName.Substring(1);
             }
 
-            DirectoryInfo filesDirectory = new DirectoryInfo(fileAccessor.BaseDirectory + type.ToString() + "/" + fileAccessor.ArchiveDirectoryName);
+            var archiveDirName = fileAccessor.BaseDirectory + type.ToString() + "/" + fileAccessor.ArchiveDirectoryName;
+
+            if (!fileAccessor.VerifyDirectory(archiveDirName))
+            {
+                return new string[0];
+            }
+
+            DirectoryInfo filesDirectory = new DirectoryInfo(archiveDirName);
 
             return filesDirectory.EnumerateDirectories().Where(dir => dir.GetFiles(itemName + "." + typeName, SearchOption.TopDirectoryOnly).Any())
                                                         .Select(dir => dir.Name).ToArray();

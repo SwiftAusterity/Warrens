@@ -149,7 +149,7 @@ namespace NetMud.Data.Linguistic
                     Perspective = NarrativePerspective.None,
                     Possessive = false,
                     Tense = LexicalTense.None,
-                    WordType = LexicalType.Article,
+                    WordTypes = new HashSet<LexicalType>() { LexicalType.Article },
                     Language = this
                 });
             }
@@ -166,7 +166,7 @@ namespace NetMud.Data.Linguistic
                     Perspective = NarrativePerspective.None,
                     Possessive = false,
                     Tense = LexicalTense.None,
-                    WordType = LexicalType.Article,
+                    WordTypes = new HashSet<LexicalType>() { LexicalType.Article },
                     Language = this
                 });
             }
@@ -183,7 +183,7 @@ namespace NetMud.Data.Linguistic
                     Perspective = NarrativePerspective.None,
                     Possessive = false,
                     Tense = LexicalTense.None,
-                    WordType = LexicalType.Conjunction,
+                    WordTypes = new HashSet<LexicalType>() { LexicalType.Conjunction },
                     Language = this
                 });
             }
@@ -200,7 +200,7 @@ namespace NetMud.Data.Linguistic
                     Perspective = NarrativePerspective.FirstPerson,
                     Possessive = true,
                     Tense = LexicalTense.None,
-                    WordType = LexicalType.Pronoun,
+                    WordTypes = new HashSet<LexicalType>() { LexicalType.Pronoun },
                     Language = this
                 });
             }
@@ -217,7 +217,7 @@ namespace NetMud.Data.Linguistic
                     Perspective = NarrativePerspective.FirstPerson,
                     Possessive = false,
                     Tense = LexicalTense.None,
-                    WordType = LexicalType.Pronoun,
+                    WordTypes = new HashSet<LexicalType>() { LexicalType.Pronoun },
                     Language = this
                 });
             }
@@ -234,7 +234,7 @@ namespace NetMud.Data.Linguistic
                     Perspective = NarrativePerspective.SecondPerson,
                     Possessive = false,
                     Tense = LexicalTense.None,
-                    WordType = LexicalType.Pronoun,
+                    WordTypes = new HashSet<LexicalType>() { LexicalType.Pronoun },
                     Language = this
                 });
             }
@@ -251,7 +251,7 @@ namespace NetMud.Data.Linguistic
                     Perspective = NarrativePerspective.SecondPerson,
                     Possessive = true,
                     Tense = LexicalTense.None,
-                    WordType = LexicalType.Pronoun,
+                    WordTypes = new HashSet<LexicalType>() { LexicalType.Pronoun },
                     Language = this
                 });
             }
@@ -268,7 +268,7 @@ namespace NetMud.Data.Linguistic
                     Perspective = NarrativePerspective.SecondPerson,
                     Possessive = false,
                     Tense = LexicalTense.None,
-                    WordType = LexicalType.Pronoun,
+                    WordTypes = new HashSet<LexicalType>() { LexicalType.Pronoun },
                     Language = this
                 });
             }
@@ -286,7 +286,7 @@ namespace NetMud.Data.Linguistic
                     Possessive = false,
                     Semantics = new HashSet<string>() { "existential" },
                     Tense = LexicalTense.Present,
-                    WordType = LexicalType.Verb,
+                    WordTypes = new HashSet<LexicalType>() { LexicalType.Verb },
                     Language = this
                 });
             }
@@ -304,33 +304,33 @@ namespace NetMud.Data.Linguistic
                     Possessive = false,
                     Semantics = new HashSet<string>() { "existential" },
                     Tense = LexicalTense.Present,
-                    WordType = LexicalType.Verb,
+                    WordTypes = new HashSet<LexicalType>() { LexicalType.Verb },
                     Language = this
                 });
             }
 
-            if (!string.IsNullOrWhiteSpace(BaseWords.VerbArticlePositionalAround))
+            if (!string.IsNullOrWhiteSpace(BaseWords.PrepositionAround))
             {
                 LexicalProcessor.VerifyDictata(new Dictata()
                 {
-                    Name = BaseWords.VerbArticlePositionalAround,
+                    Name = BaseWords.PrepositionAround,
                     Determinant = false,
                     Feminine = false,
                     Plural = false,
                     Positional = LexicalPosition.Around,
                     Perspective = NarrativePerspective.None,
                     Possessive = false,
+                    WordTypes = new HashSet<LexicalType>() { LexicalType.Preposition },
                     Tense = LexicalTense.None,
-                    WordType = LexicalType.Article,
                     Language = this
                 });
             }
 
-            if (!string.IsNullOrWhiteSpace(BaseWords.VerbArticlePositionalAttached))
+            if (!string.IsNullOrWhiteSpace(BaseWords.PrepositionAttached))
             {
                 LexicalProcessor.VerifyDictata(new Dictata()
                 {
-                    Name = BaseWords.VerbArticlePositionalAttached,
+                    Name = BaseWords.PrepositionAttached,
                     Determinant = false,
                     Feminine = false,
                     Plural = false,
@@ -338,16 +338,16 @@ namespace NetMud.Data.Linguistic
                     Perspective = NarrativePerspective.None,
                     Possessive = false,
                     Tense = LexicalTense.None,
-                    WordType = LexicalType.Article,
+                    WordTypes = new HashSet<LexicalType>() { LexicalType.Preposition },
                     Language = this
                 });
             }
 
-            if (!string.IsNullOrWhiteSpace(BaseWords.VerbArticlePositionalFar))
+            if (!string.IsNullOrWhiteSpace(BaseWords.PrepositionFar))
             {
                 LexicalProcessor.VerifyDictata(new Dictata()
                 {
-                    Name = BaseWords.VerbArticlePositionalFar,
+                    Name = BaseWords.PrepositionFar,
                     Determinant = false,
                     Feminine = false,
                     Plural = false,
@@ -355,16 +355,16 @@ namespace NetMud.Data.Linguistic
                     Perspective = NarrativePerspective.None,
                     Possessive = false,
                     Tense = LexicalTense.None,
-                    WordType = LexicalType.Article,
+                    WordTypes = new HashSet<LexicalType>() { LexicalType.Preposition },
                     Language = this
                 });
             }
 
-            if (!string.IsNullOrWhiteSpace(BaseWords.VerbArticlePositionalInside))
+            if (!string.IsNullOrWhiteSpace(BaseWords.PrepositionInside))
             {
                 LexicalProcessor.VerifyDictata(new Dictata()
                 {
-                    Name = BaseWords.VerbArticlePositionalInside,
+                    Name = BaseWords.PrepositionInside,
                     Determinant = false,
                     Feminine = false,
                     Plural = false,
@@ -372,16 +372,16 @@ namespace NetMud.Data.Linguistic
                     Perspective = NarrativePerspective.None,
                     Possessive = false,
                     Tense = LexicalTense.None,
-                    WordType = LexicalType.Article,
+                    WordTypes = new HashSet<LexicalType>() { LexicalType.Preposition },
                     Language = this
                 });
             }
 
-            if (!string.IsNullOrWhiteSpace(BaseWords.VerbArticlePositionalNear))
+            if (!string.IsNullOrWhiteSpace(BaseWords.PrepositionNear))
             {
                 LexicalProcessor.VerifyDictata(new Dictata()
                 {
-                    Name = BaseWords.VerbArticlePositionalNear,
+                    Name = BaseWords.PrepositionNear,
                     Determinant = false,
                     Feminine = false,
                     Plural = false,
@@ -389,16 +389,16 @@ namespace NetMud.Data.Linguistic
                     Perspective = NarrativePerspective.None,
                     Possessive = false,
                     Tense = LexicalTense.None,
-                    WordType = LexicalType.Article,
+                    WordTypes = new HashSet<LexicalType>() { LexicalType.Preposition },
                     Language = this
                 });
             }
 
-            if (!string.IsNullOrWhiteSpace(BaseWords.VerbArticlePositionalOn))
+            if (!string.IsNullOrWhiteSpace(BaseWords.PrepositionOn))
             {
                 LexicalProcessor.VerifyDictata(new Dictata()
                 {
-                    Name = BaseWords.VerbArticlePositionalOn,
+                    Name = BaseWords.PrepositionOn,
                     Determinant = false,
                     Feminine = false,
                     Plural = false,
@@ -406,7 +406,7 @@ namespace NetMud.Data.Linguistic
                     Perspective = NarrativePerspective.None,
                     Possessive = false,
                     Tense = LexicalTense.None,
-                    WordType = LexicalType.Article,
+                    WordTypes = new HashSet<LexicalType>() { LexicalType.Preposition },
                     Language = this
                 });
             }

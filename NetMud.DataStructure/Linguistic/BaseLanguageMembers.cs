@@ -97,54 +97,54 @@ namespace NetMud.DataStructure.Linguistic
         public string VerbExistentialPlural { get; set; }
         #endregion
 
-        #region Verb articles positional far, near, attached, on, inside, around
+        #region Verb prepositions far, near, attached, on, inside, around
         /// <summary>
         /// A base word, the name says it all
         /// </summary>
         [DataType(DataType.Text)]
-        [Display(Name = "Verb Article Positional Far", Description = "A base word, the name says it all.")]
+        [Display(Name = "Preposition Far", Description = "A base word, the name says it all.")]
         [Required]
-        public string VerbArticlePositionalFar { get; set; }
+        public string PrepositionFar { get; set; }
 
         /// <summary>
         /// A base word, the name says it all
         /// </summary>
         [DataType(DataType.Text)]
-        [Display(Name = "Verb Article Positional Near", Description = "A base word, the name says it all.")]
+        [Display(Name = "Preposition Near", Description = "A base word, the name says it all.")]
         [Required]
-        public string VerbArticlePositionalNear { get; set; }
+        public string PrepositionNear { get; set; }
 
         /// <summary>
         /// A base word, the name says it all
         /// </summary>
         [DataType(DataType.Text)]
-        [Display(Name = "Verb Article Positional Attached", Description = "A base word, the name says it all.")]
+        [Display(Name = "Preposition Attached", Description = "A base word, the name says it all.")]
         [Required]
-        public string VerbArticlePositionalAttached { get; set; }
+        public string PrepositionAttached { get; set; }
 
         /// <summary>
         /// A base word, the name says it all
         /// </summary>
         [DataType(DataType.Text)]
-        [Display(Name = "Verb Article Positional On", Description = "A base word, the name says it all.")]
+        [Display(Name = "Preposition On", Description = "A base word, the name says it all.")]
         [Required]
-        public string VerbArticlePositionalOn { get; set; }
+        public string PrepositionOn { get; set; }
 
         /// <summary>
         /// A base word, the name says it all
         /// </summary>
         [DataType(DataType.Text)]
-        [Display(Name = "Verb Article Positional Inside", Description = "A base word, the name says it all.")]
+        [Display(Name = "Preposition Inside", Description = "A base word, the name says it all.")]
         [Required]
-        public string VerbArticlePositionalInside { get; set; }
+        public string PrepositionInside { get; set; }
 
         /// <summary>
         /// A base word, the name says it all
         /// </summary>
         [DataType(DataType.Text)]
-        [Display(Name = "Verb Article Positional Around", Description = "A base word, the name says it all.")]
+        [Display(Name = "Preposition Around", Description = "A base word, the name says it all.")]
         [Required]
-        public string VerbArticlePositionalAround { get; set; }
+        public string PrepositionAround { get; set; }
         #endregion
     }
 }

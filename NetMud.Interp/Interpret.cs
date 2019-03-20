@@ -26,7 +26,7 @@ namespace NetMud.Interp
                 if(commandString.StartsWith("lext "))
                 {
                     LexicalInterpretationEngine lexicalInterp = new LexicalInterpretationEngine();
-                    var parsed = lexicalInterp.Parse(actor, commandString.Replace("lext ", "")).Select(dict => string.Format("{0} : {1}", dict.Name, dict.WordType));
+                    var parsed = lexicalInterp.Parse(actor, commandString.Replace("lext ", "")).Select(dict => string.Format("{0} : {1}", dict.Name, dict.WordTypes));
                     parsed.Append(commandString);
 
                     return parsed;
@@ -34,7 +34,7 @@ namespace NetMud.Interp
                 else if(commandString.StartsWith("lexp "))
                 {
                     LexicalInterpretationEngine lexicalInterp = new LexicalInterpretationEngine();
-                    var parsed = lexicalInterp.Parse(actor, commandString.Replace("lexp ", ""), true).Select(dict => string.Format("{0} : {1}", dict.Name, dict.WordType));
+                    var parsed = lexicalInterp.Parse(actor, commandString.Replace("lexp ", ""), true).Select(dict => string.Format("{0} : {1}", dict.Name, dict.WordTypes));
                     parsed.Append(commandString);
 
                     return parsed;

@@ -104,14 +104,6 @@ namespace NetMud.Data.Linguistic
         {
             lex.Event.Context.Language = Language;
 
-            //Positional object modifier
-            if (lex.Event.Role == GrammaticalType.DirectObject && lex.Event.Context.Position != LexicalPosition.None && !lex.Event.Modifiers.Any(mod => mod.Role == GrammaticalType.IndirectObject))
-            {
-                var positionalWord = Thesaurus.GetWord(lex.Event.Context, LexicalType.Article);
-
-                lex.TryModify(new Lexica(LexicalType.Article, GrammaticalType.Descriptive, positionalWord.Name, lex.Event.Context));
-            }
-
             //Contractive rules
             var lexDict = lex.Event.GetDictata();
             foreach (var contractionRule in Language.ContractionRules.Where(rul => rul.First == lexDict || rul.Second == lexDict))

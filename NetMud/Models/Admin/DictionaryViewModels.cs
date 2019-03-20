@@ -81,7 +81,7 @@ namespace NetMud.Models.Admin
                 DataObject.Severity = DataTemplate.Severity;
                 DataObject.Synonyms = DataTemplate.Synonyms;
                 DataObject.Tense = DataTemplate.Tense;
-                DataObject.WordType = DataTemplate.WordType;
+                DataObject.WordTypes = DataTemplate.WordTypes;
             }
         }
 

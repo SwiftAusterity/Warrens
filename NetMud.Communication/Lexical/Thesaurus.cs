@@ -95,7 +95,7 @@ namespace NetMud.Communication.Lexical
                 context.Language = globalConfig.BaseLanguage;
             }
 
-            var possibleWords = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.Language == context.Language && dict.WordType == type && dict.SuitableForUse);
+            var possibleWords = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.Language == context.Language && dict.WordTypes.Contains(type) && dict.SuitableForUse);
 
             return possibleWords.OrderByDescending(word => (word.Positional == context.Position ? 5 : 0) + 
                                                            (word.Tense == context.Tense ? 5 : 0) + 
