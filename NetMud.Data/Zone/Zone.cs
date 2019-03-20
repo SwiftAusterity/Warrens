@@ -393,6 +393,11 @@ namespace NetMud.Data.Zone
                 sensoryOutput.AddRange(celestial.RenderAsContents(viewer, sensoryTypes).Events);
             }
 
+            foreach (IWeatherEvent wEvent in WeatherEvents)
+            {
+                sensoryOutput.AddRange(wEvent.RenderAsContents(viewer, sensoryTypes).Events);
+            }
+
             foreach (var resource in FloraNaturalResources)
             {
                 sensoryOutput.AddRange(resource.Resource.RenderResourceCollection(viewer, resource.RateFactor).Events);

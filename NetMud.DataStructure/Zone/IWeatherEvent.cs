@@ -1,9 +1,11 @@
-﻿namespace NetMud.DataStructure.Zone
+﻿using NetMud.DataStructure.Architectural.EntityBase;
+
+namespace NetMud.DataStructure.Zone
 {
     /// <summary>
     /// Individual weather events
     /// </summary>
-    public interface IWeatherEvent
+    public interface IWeatherEvent : ILookable, IVisible, ITouchable, ISmellable, IAudible, IRenderInLocation
     {
         /// <summary>
         /// The event type

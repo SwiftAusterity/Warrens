@@ -488,7 +488,7 @@ namespace NetMud.Data.Gaia
                         }
 
                         //Spawn new weather event?
-                        if (zoneVariance > 10)
+                        if (zoneVariance < 10)
                         {
                             zoneEventList.Add(new WeatherEvent()
                             {
