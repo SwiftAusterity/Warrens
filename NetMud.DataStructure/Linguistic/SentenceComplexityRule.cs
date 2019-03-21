@@ -98,7 +98,7 @@ namespace NetMud.DataStructure.Linguistic
             }
 
             if (CheckPivotValidity(firstPredicatePivot?.Item1?.Event, secondSubjectPivot?.Item1?.Event) 
-                && CheckNonPivotValidity(second, first))
+                && CheckNonPivotValidity(first, second))
             {
                 return 2;
             }

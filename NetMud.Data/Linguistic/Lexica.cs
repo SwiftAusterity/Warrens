@@ -429,7 +429,15 @@ namespace NetMud.Data.Linguistic
 
             var newLex = Clone();
             var dict = GetDictata();
-            if (dict != null && Type != LexicalType.ProperNoun && (Context.Severity + Context.Elegance + Context.Quality > 0 || Context.Language != dict.Language))
+            if (dict != null && Type != LexicalType.ProperNoun 
+                && (Context.Severity + Context.Elegance + Context.Quality > 0 
+                    || Context.Language != dict.Language
+                    || Context.Plural != dict.Plural
+                    || Context.Possessive != dict.Possessive
+                    || Context.Tense != dict.Tense
+                    || Context.Perspective != dict.Perspective
+                    || Context.Determinant != dict.Determinant
+                    || Context.GenderForm.Feminine != dict.Feminine))
             {
                 var newDict = Thesaurus.GetSynonym(dict, Context);
 

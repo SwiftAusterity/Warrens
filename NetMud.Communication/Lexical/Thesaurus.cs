@@ -97,15 +97,7 @@ namespace NetMud.Communication.Lexical
 
             var possibleWords = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.Language == context.Language && dict.WordTypes.Contains(type) && dict.SuitableForUse);
 
-            return possibleWords.OrderByDescending(word => (word.Positional == context.Position ? 5 : 0) + 
-                                                           (word.Tense == context.Tense ? 5 : 0) + 
-                                                           (word.Perspective == context.Perspective ? 5 : 0) +
-                                                           (word.Possessive == context.Possessive ? 7 : 0) +
-                                                           ((context.GenderForm == null || word.Feminine == context.GenderForm?.Feminine) ? 10 : 0) +
-                                                           (word.Plural == context.Plural ? 2 : 0) +
-                                                           (word.Determinant == context.Determinant ? 2 : 0) +
-                                                           (context.Semantics.Any() ? word.Semantics.Count(wrd => context.Semantics.Contains(wrd)) * 10 : 0)
-                                                  ).FirstOrDefault();
+            return possibleWords.OrderByDescending(word => GetSynonymRanking(word, context)).FirstOrDefault();
 
             //3x weight for meeting the semantics
         }
@@ -115,7 +107,7 @@ namespace NetMud.Communication.Lexical
             if (baseWord == null)
                 return baseWord;
 
-            return FocusFindWord(baseWord.Antonyms.AsEnumerable(), context, baseWord);
+            return FocusFindWord(baseWord.Antonyms.ToList(), context, baseWord);
         }
 
         public static IDictata GetSynonym(IDictata baseWord, LexicalContext context)
@@ -123,37 +115,43 @@ namespace NetMud.Communication.Lexical
             if (baseWord == null)
                 return baseWord;
 
-            return FocusFindWord(baseWord.Synonyms.AsEnumerable(), context, baseWord);
+            return FocusFindWord(baseWord.Synonyms.ToList(), context, baseWord);
         }
 
         private static IDictata FocusFindWord(IEnumerable<IDictata> possibleWords, LexicalContext context, IDictata baseWord)
         {
-            if (context.Language != null)
+            var rankedWords = new List<Tuple<IDictata, int>>();
+            if (context.Language == null)
             {
-                possibleWords = possibleWords.Where(word => word != null && word.Language == context.Language && word.SuitableForUse);
+                context.Language = baseWord.Language;
             }
 
-            possibleWords = possibleWords.Where(word => word.Possessive == context.Possessive
-                                                            && word.Feminine == context.GenderForm?.Feminine
-                                                            && word.Plural == context.Plural
-                                                            && word.Determinant == context.Determinant
-                                                            && !context.Semantics.Any() || word.Semantics.All(wrd => context.Semantics.Contains(wrd))
-                                                            && (context.Position == LexicalPosition.None || word.Positional == context.Position)
-                                                            && (context.Tense == LexicalTense.None || word.Tense == context.Tense)
-                                                            && (context.Perspective == NarrativePerspective.None || word.Perspective == context.Perspective));
+            possibleWords = possibleWords.Where(word => word != null && word.Language == context.Language && word.SuitableForUse);
 
-            if (!possibleWords.Any() ||
-                (context.Severity + context.Elegance + context.Quality == 0 && baseWord.Language == context.Language && baseWord.Possessive == context.Possessive
-                    && baseWord.Feminine == context.GenderForm?.Feminine && baseWord.Plural == context.Plural && baseWord.Determinant == context.Determinant)
-                )
+            if (context.Severity + context.Elegance + context.Quality == 0)
             {
-                return baseWord;
+                rankedWords.Add(new Tuple<IDictata, int>(baseWord, GetSynonymRanking(baseWord, context)));
+                rankedWords.AddRange(possibleWords.Select(word => new Tuple<IDictata, int>(word, GetSynonymRanking(word, context))));
+
+                return rankedWords.OrderByDescending(pair => pair.Item2).Select(pair => pair.Item1).FirstOrDefault();
             }
 
-            return GetRelatedWord(baseWord, context.Severity, context.Elegance, context.Quality, context.Language, possibleWords);
+            return GetRelatedWord(baseWord, possibleWords, context.Severity, context.Elegance, context.Quality);
         }
 
-        private static IDictata GetRelatedWord(IDictata baseWord, int severityModifier, int eleganceModifier, int qualityModifier, ILanguage language, IEnumerable<IDictata> possibleWords)
+        private static int GetSynonymRanking(IDictata word, LexicalContext context)
+        {
+            return  (word.Positional == context.Position ? 5 : 0) +
+                    (word.Tense == context.Tense ? 5 : 0) +
+                    (word.Perspective == context.Perspective ? 5 : 0) +
+                    (word.Possessive == context.Possessive ? 7 : 0) +
+                    ((context.GenderForm == null || word.Feminine == context.GenderForm?.Feminine) ? 10 : 0) +
+                    (word.Plural == context.Plural ? 2 : 0) +
+                    (word.Determinant == context.Determinant ? 2 : 0) +
+                    (context.Semantics.Any() ? word.Semantics.Count(wrd => context.Semantics.Contains(wrd)) * 10 : 0);
+        }
+
+        private static IDictata GetRelatedWord(IDictata baseWord, IEnumerable<IDictata> possibleWords, int severityModifier, int eleganceModifier, int qualityModifier)
         {
             var rankedWords = new Dictionary<IDictata, int>();
             foreach (var word in possibleWords)

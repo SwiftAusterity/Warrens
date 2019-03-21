@@ -156,7 +156,6 @@ namespace NetMud.Communication.Messaging
             /// 0 = no match
             /// 1 = subject/predicate match
             /// 2 = predicate/subject match</returns>
-
             switch (matchBasis)
             {
                 case 1:
@@ -168,9 +167,14 @@ namespace NetMud.Communication.Messaging
                 case -1:
                     var newSubjects = new List<Tuple<ISensoryEvent, short>>();
                     newSubjects.AddRange(first.Subject);
-                    newSubjects.AddRange(second.Subject);
+                    newSubjects.AddRange(second.Subject.Where(sub => !newSubjects.Any(nSub => nSub.Item1.Event.Phrase.Equals(sub.Item1.Event.Phrase, StringComparison.InvariantCultureIgnoreCase))));
 
-                    foreach(var sub in newSubjects.Where(pre => pre.Item1.Event.Role == GrammaticalType.Descriptive))
+                    foreach (var sub in newSubjects.SelectMany(subj => subj.Item1.Event.Modifiers).Where(pre => pre.Role == GrammaticalType.Descriptive))
+                    {
+                        sub.Context.Plural = true;
+                    }
+
+                    foreach (var sub in newSubjects.Where(pre => pre.Item1.Event.Role == GrammaticalType.Verb || pre.Item1.Event.Role == GrammaticalType.ConjugatedVerb))
                     {
                         sub.Item1.Event.Context.Plural = true;
                     }
@@ -180,9 +184,14 @@ namespace NetMud.Communication.Messaging
                 case -2:
                     var newPredicates = new List<Tuple<ISensoryEvent, short>>();
                     newPredicates.AddRange(first.Predicate);
-                    newPredicates.AddRange(second.Predicate);
+                    newPredicates.AddRange(second.Predicate.Where(sub => !newPredicates.Any(nSub => nSub.Item1.Event.Phrase.Equals(sub.Item1.Event.Phrase, StringComparison.InvariantCultureIgnoreCase))));
 
-                    foreach (var pred in newPredicates.Where(pre => pre.Item1.Event.Role == GrammaticalType.Descriptive))
+                    foreach (var pred in newPredicates.SelectMany(subj => subj.Item1.Event.Modifiers).Where(pre => pre.Role == GrammaticalType.Descriptive))
+                    {
+                        pred.Context.Plural = true;
+                    }
+
+                    foreach (var pred in newPredicates.Where(pre => pre.Item1.Event.Role == GrammaticalType.Verb || pre.Item1.Event.Role == GrammaticalType.ConjugatedVerb))
                     {
                         pred.Item1.Event.Context.Plural = true;
                     }

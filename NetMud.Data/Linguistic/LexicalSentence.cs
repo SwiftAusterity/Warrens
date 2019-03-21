@@ -222,7 +222,7 @@ namespace NetMud.Data.Linguistic
             {
                 var lexes = lex.Item1.Event.Unpack(lex.Item1.SensoryType, lex.Item1.Strength);
 
-                int i = lex.Item2 + -100000;
+                int i = (lex.Item2 * 100) + -10000;
                 foreach (var subLex in lexes)
                 {
                     wordList.Add(new Tuple<ISensoryEvent, int>(new SensoryEvent(subLex, lex.Item1.Strength, lex.Item1.SensoryType), i++));
@@ -234,7 +234,7 @@ namespace NetMud.Data.Linguistic
             {
                 var lexes = lex.Item1.Event.Unpack(lex.Item1.SensoryType, lex.Item1.Strength);
 
-                var i = lex.Item2;
+                var i = (lex.Item2 + 1) * 100;
                 foreach (var subLex in lexes)
                 {
                     wordList.Add(new Tuple<ISensoryEvent, int>(new SensoryEvent(subLex, lex.Item1.Strength, lex.Item1.SensoryType), i++));
@@ -246,7 +246,7 @@ namespace NetMud.Data.Linguistic
             {
                 var lexes = lex.Item1.Event.Unpack(lex.Item1.SensoryType, lex.Item1.Strength);
 
-                var i = lex.Item2 + 100000;
+                var i = (lex.Item2 * 100) + 10000;
                 foreach (var subLex in lexes)
                 {
                     wordList.Add(new Tuple<ISensoryEvent, int>(new SensoryEvent(subLex, lex.Item1.Strength, lex.Item1.SensoryType), i++));
@@ -270,9 +270,9 @@ namespace NetMud.Data.Linguistic
                     }
 
                     var nextLex = nextEvent.Item1.Event;
-                    if ((rule.SpecificFollowing != null && nextLex.GetDictata().Equals(rule.SpecificFollowing))
-                        || (beginsWith.Count() == 0 || beginsWith.Any(bw => nextLex.Phrase.StartsWith(bw)))
-                        || (endsWith.Count() == 0 || endsWith.Any(ew => nextLex.Phrase.EndsWith(ew))))
+                    if ((rule.SpecificFollowing == null || nextLex.GetDictata().Equals(rule.SpecificFollowing))
+                        && (beginsWith.Count() == 0 || beginsWith.Any(bw => nextLex.Phrase.StartsWith(bw)))
+                        && (endsWith.Count() == 0 || endsWith.Any(ew => nextLex.Phrase.EndsWith(ew))))
                     {
                         lex.Phrase = rule.TransformedWord.Name;
                     }
