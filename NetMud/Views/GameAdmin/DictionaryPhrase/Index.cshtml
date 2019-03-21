@@ -1,0 +1,23 @@
+﻿@model NetMud.Models.Admin.ManageDictionaryPhraseViewModel
+@{
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("DictionaryPhrase", new string[] { "Dashboard" }, new string[] { "/GameAdmin" });
+
+    var linkText = Html.ActionLink("99999999", "Edit", new { id = 99999999 }).ToString();
+    var tableColumns = new Dictionary<string, Func<dynamic, string>>();
+    tableColumns.Add("Unique Key", obj => linkText.Replace("99999999", obj.UniqueKey));
+    tableColumns.Add("Language", obj => obj.Language.Name);
+    tableColumns.Add("Phrase", obj => obj.Name);
+    tableColumns.Add("Types", obj => string.Join(", ", obj.WordTypes));
+}
+@if (User.IsInRole("Admin"))
+{
+    using (Html.BeginForm("Purge", "DictionaryPhrase"))
+    {
+        @Html.AntiForgeryToken()
+        <input type="submit" value="PURGE" class="btn btn-default caution" />
+    }
+}
+@Html.Partial("ConfigListTable", new NetMud.Models.ListTableViewModel() { EntityTypeName = "DictionaryPhrase", Columns = tableColumns, PagingModel = Model, Values = Model.CurrentPageOfItems, IncludeUnapprove = false, IncludeDelete = true })
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

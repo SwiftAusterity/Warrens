@@ -234,6 +234,7 @@
     <Compile Include="Controllers\ClientDataApiController.cs" />
     <Compile Include="Controllers\FeaturesController.cs" />
     <Compile Include="Controllers\GameAdmin\CelestialsController.cs" />
+    <Compile Include="Controllers\GameAdmin\DictionaryPhraseController.cs" />
     <Compile Include="Controllers\GameAdmin\GaiaController.cs" />
     <Compile Include="Controllers\GameAdmin\JournalEntryController.cs" />
     <Compile Include="Controllers\GameAdmin\LanguageController.cs" />
@@ -267,6 +268,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AddEditConfigDataModel.cs" />
     <Compile Include="Models\AddEditTemplateModel.cs" />
+    <Compile Include="Models\Admin\DictionaryPhraseViewModels.cs" />
     <Compile Include="Models\Admin\JournalEntryViewModels.cs" />
     <Compile Include="Models\Admin\LanguageViewModels.cs" />
     <Compile Include="Models\Admin\DictionaryViewModels.cs" />
@@ -681,6 +683,11 @@
     <Content Include="Views\Shared\EditorTemplates\WordTypeCollection.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\SentenceComplexityRules.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\SentenceComplexityRule.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\DictataPhraseList.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\DictataPhrase.cshtml" />
+    <Content Include="Views\GameAdmin\DictionaryPhrase\Add.cshtml" />
+    <Content Include="Views\GameAdmin\DictionaryPhrase\Edit.cshtml" />
+    <Content Include="Views\GameAdmin\DictionaryPhrase\Index.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />

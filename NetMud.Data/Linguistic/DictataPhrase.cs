@@ -61,7 +61,7 @@ namespace NetMud.Data.Linguistic
             }
             set
             {
-                throw new NotImplementedException();
+                //nothing
             }
         }
 
@@ -102,27 +102,6 @@ namespace NetMud.Data.Linguistic
         [Display(Name = "Feminine Form", Description = "Is this a feminine or masculine word? (only applies to gendered languages)")]
         [UIHint("Boolean")]
         public bool Feminine { get; set; }
-
-        /// <summary>
-        /// Is this an determinant form or not (usually true)
-        /// </summary>
-        [Display(Name = "Determinant", Description = "Is this an determinant form or not? (usually true)")]
-        [UIHint("Boolean")]
-        public bool Determinant { get; set; }
-
-        /// <summary>
-        /// Is this a plural form
-        /// </summary>
-        [Display(Name = "Plural", Description = "Is this a plural form?")]
-        [UIHint("Boolean")]
-        public bool Plural { get; set; }
-
-        /// <summary>
-        /// Is this a possessive form
-        /// </summary>
-        [Display(Name = "Possessive", Description = "Is this a possessive form?")]
-        [UIHint("Boolean")]
-        public bool Possessive { get; set; }
 
         /// <summary>
         /// Strength rating of word in relation to synonyms

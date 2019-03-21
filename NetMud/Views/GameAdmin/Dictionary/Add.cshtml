@@ -19,7 +19,7 @@
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-        @Html.EditorFor(m => m.DataObject, new { ValidWords = Model.ValidWords, ValidLanguages = Model.ValidLanguages })
+        @Html.EditorFor(m => m.DataObject, new { ValidWords = Model.ValidWords, ValidLanguages = Model.ValidLanguages, ValidPhrases = Model.ValidPhrases })
 
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Create", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Dictionary", IncludeCancel = true })
     }

@@ -47,6 +47,7 @@ namespace NetMud.Models.Admin
             Genders = Enumerable.Empty<IGender>();
 
             DictionaryWords = Enumerable.Empty<IDictata>();
+            DictionaryPhrases = Enumerable.Empty<IDictataPhrase>();
             Languages = Enumerable.Empty<ILanguage>();
 
             LiveWorlds = 0;
@@ -82,6 +83,7 @@ namespace NetMud.Models.Admin
 
         //Config Data
         public IEnumerable<IDictata> DictionaryWords { get; set; }
+        public IEnumerable<IDictataPhrase> DictionaryPhrases { get; set; }
         public IEnumerable<ILanguage> Languages { get; set; }
 
         //Running Data

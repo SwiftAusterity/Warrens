@@ -14,7 +14,7 @@ using System.Web.Mvc;
 namespace NetMud.Controllers.GameAdmin
 {
     [Authorize(Roles = "Admin,Builder")]
-    public class DictionaryController : Controller
+    public class DictionaryPhraseController : Controller
     {
         private ApplicationUserManager _userManager;
         public ApplicationUserManager UserManager
@@ -29,18 +29,18 @@ namespace NetMud.Controllers.GameAdmin
             }
         }
 
-        public DictionaryController()
+        public DictionaryPhraseController()
         {
         }
 
-        public DictionaryController(ApplicationUserManager userManager)
+        public DictionaryPhraseController(ApplicationUserManager userManager)
         {
             UserManager = userManager;
         }
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            ManageDictionaryViewModel vModel = new ManageDictionaryViewModel(ConfigDataCache.GetAll<IDictata>())
+            ManageDictionaryPhraseViewModel vModel = new ManageDictionaryPhraseViewModel(ConfigDataCache.GetAll<IDictataPhrase>())
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -49,12 +49,12 @@ namespace NetMud.Controllers.GameAdmin
                 SearchTerms = SearchTerms
             };
 
-            return View("~/Views/GameAdmin/Dictionary/Index.cshtml", vModel);
+            return View("~/Views/GameAdmin/DictionaryPhrase/Index.cshtml", vModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route(@"Dictionary/Remove/{removeId?}/{authorizeRemove?}")]
+        [Route(@"DictionaryPhrase/Remove/{removeId?}/{authorizeRemove?}")]
         public ActionResult Remove(string removeId = "", string authorizeRemove = "")
         {
             string message = string.Empty;
@@ -63,7 +63,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                IDictata obj = ConfigDataCache.Get<IDictata>(new ConfigDataCacheKey(typeof(IDictata), removeId, ConfigDataType.Dictionary));
+                IDictataPhrase obj = ConfigDataCache.Get<IDictataPhrase>(new ConfigDataCacheKey(typeof(IDictataPhrase), removeId, ConfigDataType.Dictionary));
 
                 if (obj == null)
                 {
@@ -92,7 +92,7 @@ namespace NetMud.Controllers.GameAdmin
         [Authorize(Roles = "Admin")]
         public ActionResult Purge()
         {
-            var dictionary = ConfigDataCache.GetAll<IDictata>();
+            var dictionary = ConfigDataCache.GetAll<IDictataPhrase>();
 
             foreach(var dict in dictionary)
             {
@@ -105,26 +105,26 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add(string Template = "")
         {
-            AddEditDictionaryViewModel vModel = new AddEditDictionaryViewModel(Template)
+            AddEditDictionaryPhraseViewModel vModel = new AddEditDictionaryPhraseViewModel(Template)
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
-            return View("~/Views/GameAdmin/Dictionary/Add.cshtml", vModel);
+            return View("~/Views/GameAdmin/DictionaryPhrase/Add.cshtml", vModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Add(AddEditDictionaryViewModel vModel)
+        public ActionResult Add(AddEditDictionaryPhraseViewModel vModel)
         {
             string message = string.Empty;
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            IDictata newObj = vModel.DataObject;
+            IDictataPhrase newObj = vModel.DataObject;
 
             if (newObj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - AddDictata[" + newObj.UniqueKey + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                LoggingUtility.LogAdminCommandUsage("*WEB* - AddDictataPhrase[" + newObj.UniqueKey + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 message = "Creation Successful.";
             }
             else
@@ -140,7 +140,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             string message = string.Empty;
 
-            IDictata obj = ConfigDataCache.Get<IDictata>(new ConfigDataCacheKey(typeof(IDictata), id, ConfigDataType.Dictionary));
+            IDictataPhrase obj = ConfigDataCache.Get<IDictataPhrase>(new ConfigDataCacheKey(typeof(IDictataPhrase), id, ConfigDataType.Dictionary));
 
             if (obj == null)
             {
@@ -148,29 +148,28 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = message });
             }
 
-            AddEditDictionaryViewModel vModel = new AddEditDictionaryViewModel(ArchivePath, obj)
+            AddEditDictionaryPhraseViewModel vModel = new AddEditDictionaryPhraseViewModel(ArchivePath, obj)
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
-            return View("~/Views/GameAdmin/Dictionary/Edit.cshtml", vModel);
+            return View("~/Views/GameAdmin/DictionaryPhrase/Edit.cshtml", vModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(string id, AddEditDictionaryViewModel vModel)
+        public ActionResult Edit(string id, AddEditDictionaryPhraseViewModel vModel)
         {
             string message = string.Empty;
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            IDictata obj = ConfigDataCache.Get<IDictata>(new ConfigDataCacheKey(typeof(IDictata), id, ConfigDataType.Dictionary));
+            IDictataPhrase obj = ConfigDataCache.Get<IDictataPhrase>(new ConfigDataCacheKey(typeof(IDictataPhrase), id, ConfigDataType.Dictionary));
             if (obj == null)
             {
                 message = "That does not exist";
                 return RedirectToAction("Index", new { Message = message });
             }
 
-            obj.Name = vModel.DataObject.Name;
             obj.Severity = vModel.DataObject.Severity;
             obj.Quality = vModel.DataObject.Quality;
             obj.Elegance = vModel.DataObject.Elegance;
@@ -180,11 +179,8 @@ namespace NetMud.Controllers.GameAdmin
             obj.PhraseSynonyms = vModel.DataObject.PhraseSynonyms;
             obj.PhraseAntonyms = vModel.DataObject.PhraseAntonyms;
             obj.Language = vModel.DataObject.Language;
-            obj.WordTypes = vModel.DataObject.WordTypes;
+            obj.Words = vModel.DataObject.Words;
             obj.Feminine = vModel.DataObject.Feminine;
-            obj.Possessive = vModel.DataObject.Possessive;
-            obj.Plural = vModel.DataObject.Plural;
-            obj.Determinant = vModel.DataObject.Determinant;
             obj.Positional = vModel.DataObject.Positional;
             obj.Perspective = vModel.DataObject.Perspective;
             obj.Semantics = vModel.DataObject.Semantics;
@@ -193,134 +189,53 @@ namespace NetMud.Controllers.GameAdmin
             {
                 foreach(var syn in obj.Synonyms)
                 {
-                    if(!syn.Synonyms.Any(dict => dict == obj))
+                    if(!syn.PhraseSynonyms.Any(dict => dict == obj))
                     {
-                        var synonyms = syn.Synonyms;
+                        var synonyms = syn.PhraseSynonyms;
                         synonyms.Add(obj);
 
-                        syn.Synonyms = synonyms;
+                        syn.PhraseSynonyms = synonyms;
                         syn.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
                     }
                 }
 
                 foreach (var ant in obj.Antonyms)
                 {
-                    if (!ant.Antonyms.Any(dict => dict == obj))
+                    if (!ant.PhraseAntonyms.Any(dict => dict == obj))
                     {
-                        var antonyms = ant.Antonyms;
+                        var antonyms = ant.PhraseAntonyms;
                         antonyms.Add(obj);
 
-                        ant.Antonyms = antonyms;
+                        ant.PhraseAntonyms = antonyms;
                         ant.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
                     }
                 }
 
                 foreach (var syn in obj.PhraseSynonyms)
                 {
-                    if (!syn.Synonyms.Any(dict => dict == obj))
+                    if (!syn.PhraseSynonyms.Any(dict => dict == obj))
                     {
-                        var synonyms = syn.Synonyms;
+                        var synonyms = syn.PhraseSynonyms;
                         synonyms.Add(obj);
 
-                        syn.Synonyms = synonyms;
+                        syn.PhraseSynonyms = synonyms;
                         syn.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
                     }
                 }
 
                 foreach (var ant in obj.PhraseAntonyms)
                 {
-                    if (!ant.Antonyms.Any(dict => dict == obj))
+                    if (!ant.PhraseAntonyms.Any(dict => dict == obj))
                     {
-                        var antonyms = ant.Antonyms;
+                        var antonyms = ant.PhraseAntonyms;
                         antonyms.Add(obj);
 
-                        ant.Antonyms = antonyms;
+                        ant.PhraseAntonyms = antonyms;
                         ant.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
                     }
                 }
 
-                LoggingUtility.LogAdminCommandUsage("*WEB* - EditDictata[" + obj.UniqueKey + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                message = "Edit Successful.";
-            }
-            else
-            {
-                message = "Error; Edit failed.";
-            }
-
-            return RedirectToAction("Index", new { Message = message });
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult AddRelatedWord(string id, AddEditDictionaryViewModel vModel)
-        {
-            string message = string.Empty;
-            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
-
-            IDictata obj = ConfigDataCache.Get<IDictata>(new ConfigDataCacheKey(typeof(IDictata), id, ConfigDataType.Dictionary));
-            if (obj == null)
-            {
-                message = "That does not exist";
-                return RedirectToAction("Index", new { Message = message });
-            }
-
-            var relatedWord = new Dictata
-            {
-                Name = vModel.Word,
-                Severity = obj.Severity + vModel.Severity,
-                Quality = obj.Quality + vModel.Quality,
-                Elegance = obj.Elegance + vModel.Elegance,
-                Tense = obj.Tense,
-                Language = obj.Language,
-                WordTypes = obj.WordTypes,
-                Feminine = obj.Feminine,
-                Possessive = obj.Possessive,
-                Plural = obj.Plural,
-                Determinant = obj.Determinant,
-                Positional = obj.Positional,
-                Perspective = obj.Perspective,
-                Semantics = obj.Semantics
-            };
-
-            var synonyms = obj.Synonyms;
-            synonyms.Add(obj);
-
-            if (vModel.Synonym)
-            {
-                relatedWord.Synonyms = synonyms;
-                relatedWord.Antonyms = obj.Antonyms;
-                relatedWord.PhraseSynonyms = obj.PhraseSynonyms;
-                relatedWord.PhraseAntonyms = obj.PhraseAntonyms;
-            }
-            else
-            {
-                relatedWord.Synonyms = obj.Antonyms;
-                relatedWord.Antonyms = synonyms;
-                relatedWord.PhraseSynonyms = obj.PhraseAntonyms;
-                relatedWord.PhraseAntonyms = obj.PhraseSynonyms;
-            }
-
-            if (relatedWord.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
-            {
-                if(vModel.Synonym)
-                {
-                    var mySynonyms = obj.Synonyms;
-                    mySynonyms.Add(relatedWord);
-
-                    obj.Synonyms = mySynonyms;
-                }
-                else
-                {
-                    var antonyms = obj.Antonyms;
-                    antonyms.Add(relatedWord);
-
-                    obj.Antonyms = antonyms;
-                }
-
-                obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
-                relatedWord.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
-
-                LoggingUtility.LogAdminCommandUsage("*WEB* - EditDictata[" + obj.UniqueKey + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                LoggingUtility.LogAdminCommandUsage("*WEB* - EditDictataPhrase[" + obj.UniqueKey + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 message = "Edit Successful.";
             }
             else

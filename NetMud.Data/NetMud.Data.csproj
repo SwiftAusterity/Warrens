@@ -108,6 +108,8 @@
     <Compile Include="Architectural\EntityBase\Quality.cs" />
     <Compile Include="Architectural\GlobalPosition.cs" />
     <Compile Include="Architectural\LookupDataPartial.cs" />
+    <Compile Include="Architectural\PropertyBinding\DictataPhraseCollectionDataBinder.cs" />
+    <Compile Include="Architectural\PropertyBinding\DictataPhraseDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\FaunaResourceBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\MineralResourceBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\WordPairRuleCollectionDataBinder.cs" />
