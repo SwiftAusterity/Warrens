@@ -163,10 +163,13 @@ namespace NetMud.Communication.Lexical
 
             if (overridingContext != null)
             {
-                //Sentence must maintain the same language, tense and personage
+                //Sentence must maintain the same language, tense and personage as well as the weight values
                 Event.Context.Language = overridingContext.Language;
                 Event.Context.Tense = overridingContext.Tense;
                 Event.Context.Perspective = overridingContext.Perspective;
+                Event.Context.Elegance = overridingContext.Elegance;
+                Event.Context.Severity = overridingContext.Severity;
+                Event.Context.Quality = overridingContext.Quality;
             }
 
             //Language rules engine, default to base language if we have an empty language

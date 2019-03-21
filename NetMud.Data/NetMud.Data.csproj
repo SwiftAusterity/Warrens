@@ -159,6 +159,7 @@
     <Compile Include="Inanimate\InanimateTemplate.cs" />
     <Compile Include="Inanimate\ItemStack.cs" />
     <Compile Include="Linguistic\ContractionRule.cs" />
+    <Compile Include="Linguistic\DictataPhrase.cs" />
     <Compile Include="Linguistic\Dictata.cs" />
     <Compile Include="Linguistic\WordPairRule.cs" />
     <Compile Include="Linguistic\DictataTransformationRule.cs" />

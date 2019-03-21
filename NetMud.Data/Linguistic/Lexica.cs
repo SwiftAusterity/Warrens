@@ -250,6 +250,9 @@ namespace NetMud.Data.Linguistic
                 Context.Language = overridingContext.Language;
                 Context.Tense = overridingContext.Tense;
                 Context.Perspective = overridingContext.Perspective;
+                Context.Elegance = overridingContext.Elegance;
+                Context.Severity = overridingContext.Severity;
+                Context.Quality = overridingContext.Quality;
             }
 
             var obfuscationLevel = Math.Max(0, Math.Min(100, 30 - strength));

@@ -53,7 +53,8 @@ namespace NetMud.Backup
                                                                                 && !ty.GetCustomAttributes<IgnoreAutomatedBackupAttribute>().Any());
 
             foreach (Type t in implimentedTypes.OrderByDescending(type => type == typeof(Language) ? 5 :
-                                                            type == typeof(Dictata) ? 4 : 0))
+                                                                            type == typeof(Dictata) ? 4 : 
+                                                                            type == typeof(DictataPhrase) ? 3 : 0))
             {
                 LoadAllToCache(t);
             }

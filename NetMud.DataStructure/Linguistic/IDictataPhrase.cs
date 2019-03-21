@@ -3,17 +3,17 @@ using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Linguistic
 {
-    public interface IDictata : IConfigData
+    public interface IDictataPhrase : IConfigData
     {
+        /// <summary>
+        /// Things this is the same as mostly
+        /// </summary>
+        HashSet<IDictata> Words { get; set; }
+
         /// <summary>
         /// The language this is derived from
         /// </summary>
         ILanguage Language { get; set; }
-
-        /// <summary>
-        /// The type of word this is in general
-        /// </summary>
-        HashSet<LexicalType> WordTypes { get; set; }
 
         /// <summary>
         /// Chronological tense of word
@@ -34,21 +34,6 @@ namespace NetMud.DataStructure.Linguistic
         /// Is this a feminine or masculine word (not related to actual genders but gendered languages)
         /// </summary>
         bool Feminine { get; set; }
-
-        /// <summary>
-        /// Is this an determinant form or not (usually true)
-        /// </summary>
-        bool Determinant { get; set; }
-
-        /// <summary>
-        /// Is this a plural form
-        /// </summary>
-        bool Plural { get; set; }
-
-        /// <summary>
-        /// Is this a possessive form
-        /// </summary>
-        bool Possessive { get; set; }
 
         /// <summary>
         /// Tags that describe the purpose/meaning of the words
@@ -89,16 +74,5 @@ namespace NetMud.DataStructure.Linguistic
         /// Things this is specifically opposite of mostly
         /// </summary>
         HashSet<IDictataPhrase> PhraseAntonyms { get; set; }
-
-        /// <summary>
-        /// Add language translations for this
-        /// </summary>
-        void FillLanguages();
-
-        /// <summary>
-        /// Create a lexica from this
-        /// </summary>
-        /// <returns></returns>
-        ILexica GetLexica(GrammaticalType role, LexicalType type, LexicalContext context);
     }
 }
