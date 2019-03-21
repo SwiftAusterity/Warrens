@@ -84,7 +84,7 @@ namespace NetMud.Backup
 
             DirectoryInfo filesDirectory = new DirectoryInfo(typeDirectory);
 
-            foreach (FileInfo file in filesDirectory.EnumerateFiles())
+            foreach (FileInfo file in filesDirectory.EnumerateFiles("*." + objectType.Name))
             {
                 try
                 {

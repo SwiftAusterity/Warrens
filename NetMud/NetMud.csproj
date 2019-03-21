@@ -688,6 +688,10 @@
     <Content Include="Views\GameAdmin\DictionaryPhrase\Add.cshtml" />
     <Content Include="Views\GameAdmin\DictionaryPhrase\Edit.cshtml" />
     <Content Include="Views\GameAdmin\DictionaryPhrase\Index.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\CollectionPhraseWordsList.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\CollectionDictataPhraseListItem.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\CollectionPhraseSynonymList.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\CollectionPhraseAntonymList.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />

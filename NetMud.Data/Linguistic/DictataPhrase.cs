@@ -274,7 +274,7 @@ namespace NetMud.Data.Linguistic
         [JsonIgnore]
         [Display(Name = "Phrase Synonyms", Description = "The synonyms (similar) of this phrase.")]
         [UIHint("CollectionPhraseSynonymList")]
-        [DictataCollectionDataBinder]
+        [DictataPhraseCollectionDataBinder]
         public HashSet<IDictataPhrase> PhraseSynonyms
         {
             get
@@ -308,7 +308,7 @@ namespace NetMud.Data.Linguistic
         [JsonIgnore]
         [Display(Name = "Phrase Antonyms", Description = "The antonyms (opposite) of this phrase.")]
         [UIHint("CollectionPhraseAntonymList")]
-        [DictataCollectionDataBinder]
+        [DictataPhraseCollectionDataBinder]
         public HashSet<IDictataPhrase> PhraseAntonyms
         {
             get

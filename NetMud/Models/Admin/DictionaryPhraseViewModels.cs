@@ -53,7 +53,7 @@ namespace NetMud.Models.Admin
 
         public AddEditDictionaryPhraseViewModel() : base("", ConfigDataType.Dictionary)
         {
-            ValidWords = ConfigDataCache.GetAll<IDictataPhrase>();
+            ValidWords = ConfigDataCache.GetAll<IDictata>();
             ValidPhrases = ConfigDataCache.GetAll<IDictataPhrase>();
             ValidLanguages = ConfigDataCache.GetAll<ILanguage>();
             DataObject = new DictataPhrase();
@@ -61,7 +61,7 @@ namespace NetMud.Models.Admin
 
         public AddEditDictionaryPhraseViewModel(string uniqueKey) : base(uniqueKey, ConfigDataType.Dictionary)
         {
-            ValidWords = ConfigDataCache.GetAll<IDictataPhrase>();
+            ValidWords = ConfigDataCache.GetAll<IDictata>();
             ValidPhrases = ConfigDataCache.GetAll<IDictataPhrase>();
             ValidLanguages = ConfigDataCache.GetAll<ILanguage>();
             DataObject = new DictataPhrase();
@@ -85,14 +85,14 @@ namespace NetMud.Models.Admin
 
         public AddEditDictionaryPhraseViewModel(string archivePath, IDictataPhrase item) : base(archivePath, ConfigDataType.Dictionary, item)
         {
-            ValidWords = ConfigDataCache.GetAll<IDictataPhrase>();
+            ValidWords = ConfigDataCache.GetAll<IDictata>();
             ValidPhrases = ConfigDataCache.GetAll<IDictataPhrase>();
             ValidLanguages = ConfigDataCache.GetAll<ILanguage>();
             DataObject = (DictataPhrase)item;
         }
 
         public IEnumerable<ILanguage> ValidLanguages { get; set; }
-        public IEnumerable<IDictataPhrase> ValidWords { get; set; }
+        public IEnumerable<IDictata> ValidWords { get; set; }
         public IEnumerable<IDictataPhrase> ValidPhrases { get; set; }
         public DictataPhrase DataObject { get; set; }
     }
