@@ -1,5 +1,6 @@
 ﻿using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.System;
 using System;
@@ -180,7 +181,6 @@ namespace NetMud.Communication.Lexical
                 Event.Context.Language = globalConfig.BaseLanguage;
             }
 
-            //Anonymizer
             if (anonymize)
             {
                 var pronounContext = Event.Context.Clone();
@@ -203,6 +203,7 @@ namespace NetMud.Communication.Lexical
 
             Event.Modifiers.RemoveWhere(mod => mod == null || mod.Role == GrammaticalType.Subject);
 
+            var rand = new Random();
             foreach (ILexica subject in subjects)
             {
                 //This is to catch directly described entities, we have to add a verb to it for it to make sense. "Complete sentence rule"
@@ -220,18 +221,27 @@ namespace NetMud.Communication.Lexical
                     subject.TryModify(verbLex);
                 }
 
+                var obfuscationLevel = Math.Max(0, Math.Min(100, 30 - Strength));
                 if (subject.Modifiers.Any(mod => mod.Role == GrammaticalType.Subject))
                 {
-                    sentences.Add(subject.MakeSentence(SentenceType.Partial, SensoryType));
+                    sentences.Add(subject.MakeSentence(SentenceType.Partial, SensoryType, Strength));
 
                     //fragment sentences
                     foreach (ILexica subLex in subject.Modifiers.Where(mod => mod.Role == GrammaticalType.Subject))
                     {
-                        sentences.Add(subLex.MakeSentence(SentenceType.Statement, SensoryType));
+                        sentences.Add(subLex.MakeSentence(SentenceType.Statement, SensoryType, Strength));
                     }
                 }
                 else
                 {
+                    if (obfuscationLevel < 0 || obfuscationLevel > rand.Next(0, 100))
+                    {
+                        var lex = RunObscura(SensoryType, subject, subject.Context.Observer, obfuscationLevel >= 100);
+
+                        sentences.Add(lex.MakeSentence(SentenceType.Statement, SensoryType, Strength));
+                    }
+
+
                     sentences.Add(subject.MakeSentence(SentenceType.Statement, SensoryType, Strength));
                 }
             }
@@ -246,6 +256,117 @@ namespace NetMud.Communication.Lexical
         public string Describe()
         {
             return Event.Describe();
+        }
+
+        private ILexica RunObscura(MessagingType sensoryType, ILexica subject, IEntity observer, bool over)
+        {
+            var context = new LexicalContext(observer)
+            {
+                Determinant = true,
+                Perspective = NarrativePerspective.FirstPerson,
+                Position = LexicalPosition.Around
+            };
+
+            subject.Modifiers = new HashSet<ILexica>();
+            subject.Type = LexicalType.Verb;
+            subject.Role = GrammaticalType.Verb;
+            subject.Context = context;
+
+            switch (sensoryType)
+            {
+                case MessagingType.Audible:
+                    subject.Phrase = "hear";
+
+                    if (!over)
+                    {
+                        subject.TryModify(LexicalType.Noun, GrammaticalType.Subject, "sounds")
+                                .TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, "soft");
+
+                    }
+                    else
+                    {
+                        subject.TryModify(LexicalType.Noun, GrammaticalType.Subject, "sounds")
+                                .TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, "loud");
+                    }
+                    break;
+                case MessagingType.Olefactory:
+                    subject.Phrase = "smell";
+                    if (!over)
+                    {
+                        subject.TryModify(LexicalType.Noun, GrammaticalType.Subject, "something")
+                                                        .TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, "subtle");
+
+                    }
+                    else
+                    {
+                        subject.TryModify(LexicalType.Noun, GrammaticalType.Subject, "something")
+                                                        .TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, "pungent");
+                    }
+                    break;
+                case MessagingType.Psychic:
+                    subject.Phrase = "sense";
+                    if (!over)
+                    {
+                        subject.TryModify(LexicalType.Noun, GrammaticalType.Subject, "presence")
+                                                        .TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, "vague");
+
+                    }
+                    else
+                    {
+                        subject.TryModify(LexicalType.Noun, GrammaticalType.Subject, "presence")
+                                                        .TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, "disturbing");
+                    }
+                    break;
+                case MessagingType.Tactile:
+                    subject.Phrase = "brushes";
+                    context.Position = LexicalPosition.Attached;
+                    if (!over)
+                    {
+                        subject.TryModify(LexicalType.Noun, GrammaticalType.Subject, "skin")
+                                                        .TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, "lightly");
+
+                    }
+                    else
+                    {
+                        subject.Phrase = "rubs";
+                        context.Elegance = -5;
+                        subject.TryModify(LexicalType.Pronoun, GrammaticalType.Subject, "you");
+                    }
+                    break;
+                case MessagingType.Taste:
+                    subject.Phrase = "taste";
+                    context.Position = LexicalPosition.InsideOf;
+
+                    if (!over)
+                    {
+                        subject.TryModify(LexicalType.Noun, GrammaticalType.Subject, "something")
+                                                        .TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, "subtle");
+
+                    }
+                    else
+                    {
+                        context.Elegance = -5;
+                        subject.TryModify(LexicalType.Noun, GrammaticalType.Subject, "something")
+                                                        .TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, "offensive");
+                    }
+                    break;
+                case MessagingType.Visible:
+                    subject.Phrase = "see";
+                    context.Plural = true;
+
+                    if (!over)
+                    {
+                        subject.TryModify(LexicalType.Noun, GrammaticalType.Subject, "shadows");
+                    }
+                    else
+                    {
+                        subject.TryModify(LexicalType.Noun, GrammaticalType.Subject, "lights")
+                                                .TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, "blinding");
+                    }
+                    break;
+            }
+
+            return subject;
         }
     }
 }

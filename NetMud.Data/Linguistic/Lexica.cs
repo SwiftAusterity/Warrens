@@ -432,14 +432,14 @@ namespace NetMud.Data.Linguistic
         /// <returns>the new lex</returns>
         private ILexica Mutate(MessagingType sensoryType, int strength, int obfuscationLevel = 0)
         {
-            var rand = new Random();
-            if (obfuscationLevel < 0 || obfuscationLevel > rand.Next(0, 100))
-            {
-                var lex = RunObscura(sensoryType, Context.Observer, obfuscationLevel >= 100);
-                lex.Context = Context;
+            //var rand = new Random();
+            //if (obfuscationLevel < 0 || obfuscationLevel > rand.Next(0, 100))
+            //{
+            //    var lex = RunObscura(sensoryType, Context.Observer, obfuscationLevel >= 100);
+            //    lex.Context = Context;
 
-                return lex;
-            }
+            //    return lex;
+            //}
 
             var newLex = Clone();
             var dict = GetDictata();
