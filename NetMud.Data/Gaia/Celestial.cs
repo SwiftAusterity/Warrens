@@ -118,7 +118,7 @@ namespace NetMud.Data.Gaia
                     case MessagingType.Tactile:
                     case MessagingType.Taste:
                     case MessagingType.Visible:
-                        self.Strength = 30 + (GetVisibleDelta(viewer) * 30);
+                        self.Strength = (GetVisibleDelta(viewer) * 30);
 
                         self.TryModify(GetVisibleDescriptives(viewer));
                         break;
@@ -150,7 +150,7 @@ namespace NetMud.Data.Gaia
                 case MessagingType.Taste:
                     break;
                 case MessagingType.Visible:
-                    me.Strength = 30 + (GetVisibleDelta(viewer) * 30);
+                    me.Strength = (GetVisibleDelta(viewer) * 30);
                     me.TryModify(GetVisibleDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
             }
@@ -170,7 +170,7 @@ namespace NetMud.Data.Gaia
         /// <returns>the output strings</returns>
         public string GetDescribableName(IEntity viewer)
         {
-            var strength = 30 + (GetVisibleDelta(viewer) * 30);
+            var strength = (GetVisibleDelta(viewer) * 30);
 
             return GetSelf(MessagingType.Visible, strength).ToString();
         }
@@ -225,7 +225,7 @@ namespace NetMud.Data.Gaia
                     case MessagingType.Taste:
                         continue;
                     case MessagingType.Visible:
-                        me.Strength = 30 + (GetVisibleDelta(viewer) * 30);
+                        me.Strength = (GetVisibleDelta(viewer) * 30);
 
                         me.TryModify(GetVisibleDescriptives(viewer));
 

@@ -205,32 +205,32 @@ namespace NetMud.Data.NaturalResource
                 switch (sense)
                 {
                     case MessagingType.Audible:
-                        self.Strength = 30 + (GetAudibleDelta(viewer) * 30);
+                        self.Strength = (GetAudibleDelta(viewer) * 30);
 
                         self.TryModify(GetAudibleDescriptives(viewer));
                         break;
                     case MessagingType.Olefactory:
-                        self.Strength = 30 + (GetSmellDelta(viewer) * 30);
+                        self.Strength = (GetSmellDelta(viewer) * 30);
 
                         self.TryModify(GetSmellableDescriptives(viewer));
                         break;
                     case MessagingType.Psychic:
-                        self.Strength = 30 + (GetPsychicDelta(viewer) * 30);
+                        self.Strength = (GetPsychicDelta(viewer) * 30);
 
                         self.TryModify(GetPsychicDescriptives(viewer));
                         break;
                     case MessagingType.Tactile:
-                        self.Strength = 30 + (GetTactileDelta(viewer) * 30);
+                        self.Strength = (GetTactileDelta(viewer) * 30);
 
                         self.TryModify(GetTouchDescriptives(viewer));
                         break;
                     case MessagingType.Taste:
-                        self.Strength = 30 + (GetTasteDelta(viewer) * 30);
+                        self.Strength = (GetTasteDelta(viewer) * 30);
 
                         self.TryModify(GetTasteDescriptives(viewer));
                         break;
                     case MessagingType.Visible:
-                        self.Strength = 30 + (GetVisibleDelta(viewer) * 30);
+                        self.Strength = (GetVisibleDelta(viewer) * 30);
 
                         self.TryModify(GetVisibleDescriptives(viewer));
                         break;
@@ -256,32 +256,32 @@ namespace NetMud.Data.NaturalResource
             switch (sense)
             {
                 case MessagingType.Audible:
-                    self.Strength = 30 + (GetAudibleDelta(viewer) * 30);
+                    self.Strength = (GetAudibleDelta(viewer) * 30);
 
                     self.TryModify(GetAudibleDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
                 case MessagingType.Olefactory:
-                    self.Strength = 30 + (GetSmellDelta(viewer) * 30);
+                    self.Strength = (GetSmellDelta(viewer) * 30);
 
                     self.TryModify(GetSmellableDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
                 case MessagingType.Psychic:
-                    self.Strength = 30 + (GetPsychicDelta(viewer) * 30);
+                    self.Strength = (GetPsychicDelta(viewer) * 30);
 
                     self.TryModify(GetPsychicDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
                 case MessagingType.Tactile:
-                    self.Strength = 30 + (GetTactileDelta(viewer) * 30);
+                    self.Strength = (GetTactileDelta(viewer) * 30);
 
                     self.TryModify(GetTouchDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
                 case MessagingType.Taste:
-                    self.Strength = 30 + (GetTasteDelta(viewer) * 30);
+                    self.Strength = (GetTasteDelta(viewer) * 30);
 
                     self.TryModify(GetTasteDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
                 case MessagingType.Visible:
-                    self.Strength = 30 + (GetVisibleDelta(viewer) * 30);
+                    self.Strength = (GetVisibleDelta(viewer) * 30);
 
                     self.TryModify(GetVisibleDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
@@ -406,7 +406,7 @@ namespace NetMud.Data.NaturalResource
         public virtual ILexicalParagraph RenderToAudible(IEntity viewer)
         {
             ISensoryEvent self = GetSelf(MessagingType.Audible);
-            self.Strength = 30 + (GetAudibleDelta(viewer) * 30);
+            self.Strength = (GetAudibleDelta(viewer) * 30);
             self.TryModify(GetAudibleDescriptives(viewer));
 
             return new LexicalParagraph(self);
@@ -451,7 +451,7 @@ namespace NetMud.Data.NaturalResource
         public virtual ILexicalParagraph RenderToSense(IEntity viewer)
         {
             ISensoryEvent self = GetSelf(MessagingType.Psychic);
-            self.Strength = 30 + (GetPsychicDelta(viewer) * 30);
+            self.Strength = (GetPsychicDelta(viewer) * 30);
             self.TryModify(GetPsychicDescriptives(viewer));
 
             return new LexicalParagraph(self);
@@ -496,7 +496,7 @@ namespace NetMud.Data.NaturalResource
         public virtual ILexicalParagraph RenderToTaste(IEntity viewer)
         {
             ISensoryEvent self = GetSelf(MessagingType.Taste);
-            self.Strength = 30 + (GetTasteDelta(viewer) * 30);
+            self.Strength = (GetTasteDelta(viewer) * 30);
 
             self.TryModify(GetTasteDescriptives(viewer));
 
@@ -542,7 +542,7 @@ namespace NetMud.Data.NaturalResource
         public virtual ILexicalParagraph RenderToSmell(IEntity viewer)
         {
             ISensoryEvent self = GetSelf(MessagingType.Olefactory);
-            self.Strength = 30 + (GetSmellDelta(viewer) * 30);
+            self.Strength = (GetSmellDelta(viewer) * 30);
             self.TryModify(GetSmellableDescriptives(viewer));
 
             return new LexicalParagraph(self);
@@ -587,7 +587,7 @@ namespace NetMud.Data.NaturalResource
         public virtual ILexicalParagraph RenderToTouch(IEntity viewer)
         {
             ISensoryEvent self = GetSelf(MessagingType.Tactile);
-            self.Strength = 30 + (GetTactileDelta(viewer) * 30);
+            self.Strength = (GetTactileDelta(viewer) * 30);
             self.TryModify(GetTouchDescriptives(viewer));
 
             return new LexicalParagraph(self);

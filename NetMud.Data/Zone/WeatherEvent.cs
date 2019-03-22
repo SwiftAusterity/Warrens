@@ -147,7 +147,7 @@ namespace NetMud.Data.Zone
         public virtual ILexicalParagraph RenderToAudible(IEntity viewer)
         {
             ISensoryEvent self = GetSelf(MessagingType.Audible);
-            self.Strength = 30 + (GetAudibleDelta(viewer) * 30);
+            self.Strength = (GetAudibleDelta(viewer) * 30);
             self.TryModify(GetAudibleDescriptives(viewer));
 
             return new LexicalParagraph(self);
@@ -206,7 +206,7 @@ namespace NetMud.Data.Zone
         public virtual ILexicalParagraph RenderToSmell(IEntity viewer)
         {
             ISensoryEvent self = GetSelf(MessagingType.Olefactory);
-            self.Strength = 30 + (GetSmellDelta(viewer) * 30);
+            self.Strength = (GetSmellDelta(viewer) * 30);
             self.TryModify(GetSmellableDescriptives(viewer));
 
             return new LexicalParagraph(self);
@@ -267,7 +267,7 @@ namespace NetMud.Data.Zone
         public virtual ILexicalParagraph RenderToTouch(IEntity viewer)
         {
             ISensoryEvent self = GetSelf(MessagingType.Tactile);
-            self.Strength = 30 + (GetTactileDelta(viewer) * 30);
+            self.Strength = (GetTactileDelta(viewer) * 30);
             self.TryModify(GetTouchDescriptives(viewer));
 
             return new LexicalParagraph(self);
@@ -300,7 +300,7 @@ namespace NetMud.Data.Zone
         /// <returns>the output strings</returns>
         public ILexicalParagraph RenderToLook(IEntity viewer)
         {
-            var strength = 30 + (GetVisibleDelta(viewer) * 30);
+            var strength = (GetVisibleDelta(viewer) * 30);
 
             ISensoryEvent me = GetSelf(MessagingType.Visible, strength);
 
@@ -374,7 +374,7 @@ namespace NetMud.Data.Zone
                             continue;
                         }
 
-                        me.Strength = 30 + (GetAudibleDelta(viewer) * 30);
+                        me.Strength = (GetAudibleDelta(viewer) * 30);
 
                         me.TryModify(audibleDescs);
 
@@ -388,7 +388,7 @@ namespace NetMud.Data.Zone
                             continue;
                         }
 
-                        me.Strength = 30 + (GetSmellDelta(viewer) * 30);
+                        me.Strength = (GetSmellDelta(viewer) * 30);
 
                         me.TryModify(smellDescs);
 
@@ -401,7 +401,7 @@ namespace NetMud.Data.Zone
                         {
                             continue;
                         }
-                        me.Strength = 30 + (GetTactileDelta(viewer) * 30);
+                        me.Strength = (GetTactileDelta(viewer) * 30);
 
                         me.TryModify(touchDescs);
 
@@ -411,7 +411,7 @@ namespace NetMud.Data.Zone
                     case MessagingType.Taste:
                         continue;
                     case MessagingType.Visible:
-                        me.Strength = 30 + (GetVisibleDelta(viewer) * 30);
+                        me.Strength = (GetVisibleDelta(viewer) * 30);
 
                         me.TryModify(GetVisibleDescriptives(viewer));
 
@@ -449,12 +449,12 @@ namespace NetMud.Data.Zone
                 switch (sense)
                 {
                     case MessagingType.Audible:
-                        self.Strength = 30 + (GetAudibleDelta(viewer) * 30);
+                        self.Strength = (GetAudibleDelta(viewer) * 30);
 
                         self.TryModify(GetAudibleDescriptives(viewer));
                         break;
                     case MessagingType.Olefactory:
-                        self.Strength = 30 + (GetSmellDelta(viewer) * 30);
+                        self.Strength = (GetSmellDelta(viewer) * 30);
 
                         self.TryModify(GetSmellableDescriptives(viewer));
                         break;
@@ -462,12 +462,12 @@ namespace NetMud.Data.Zone
                     case MessagingType.Taste:
                         break;
                     case MessagingType.Tactile:
-                        self.Strength = 30 + (GetTactileDelta(viewer) * 30);
+                        self.Strength = (GetTactileDelta(viewer) * 30);
 
                         self.TryModify(GetTouchDescriptives(viewer));
                         break;
                     case MessagingType.Visible:
-                        self.Strength = 30 + (GetVisibleDelta(viewer) * 30);
+                        self.Strength = (GetVisibleDelta(viewer) * 30);
 
                         self.TryModify(GetVisibleDescriptives(viewer));
                         break;
@@ -493,12 +493,12 @@ namespace NetMud.Data.Zone
             switch (sense)
             {
                 case MessagingType.Audible:
-                    me.Strength = 30 + (GetAudibleDelta(viewer) * 30);
+                    me.Strength = (GetAudibleDelta(viewer) * 30);
 
                     me.TryModify(GetAudibleDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
                 case MessagingType.Olefactory:
-                    me.Strength = 30 + (GetSmellDelta(viewer) * 30);
+                    me.Strength = (GetSmellDelta(viewer) * 30);
 
                     me.TryModify(GetSmellableDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
@@ -506,12 +506,12 @@ namespace NetMud.Data.Zone
                 case MessagingType.Psychic:
                     break;
                 case MessagingType.Tactile:
-                    me.Strength = 30 + (GetTactileDelta(viewer) * 30);
+                    me.Strength = (GetTactileDelta(viewer) * 30);
 
                     me.TryModify(GetTouchDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
                 case MessagingType.Visible:
-                    me.Strength = 30 + (GetVisibleDelta(viewer) * 30);
+                    me.Strength = (GetVisibleDelta(viewer) * 30);
 
                     me.TryModify(GetVisibleDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
@@ -527,7 +527,7 @@ namespace NetMud.Data.Zone
         /// <returns>the output strings</returns>
         public string GetDescribableName(IEntity viewer)
         {
-            var strength = 30 + (GetVisibleDelta(viewer) * 30);
+            var strength = (GetVisibleDelta(viewer) * 30);
 
             return GetSelf(MessagingType.Visible, strength).ToString();
         }

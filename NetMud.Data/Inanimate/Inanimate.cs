@@ -306,7 +306,7 @@ namespace NetMud.Data.Inanimate
                 switch (sense)
                 {
                     case MessagingType.Audible:
-                        me.Strength = 30 + (GetAudibleDelta(viewer) * 30);
+                        me.Strength = (GetAudibleDelta(viewer) * 30);
 
                         IEnumerable<ISensoryEvent> aDescs = GetAudibleDescriptives(viewer);
 
@@ -330,7 +330,7 @@ namespace NetMud.Data.Inanimate
 
                         break;
                     case MessagingType.Olefactory:
-                        me.Strength = 30 + (GetSmellDelta(viewer) * 30);
+                        me.Strength = (GetSmellDelta(viewer) * 30);
 
                         IEnumerable<ISensoryEvent> oDescs = GetSmellableDescriptives(viewer);
 
@@ -354,7 +354,7 @@ namespace NetMud.Data.Inanimate
 
                         break;
                     case MessagingType.Psychic:
-                        me.Strength = 30 + (GetPsychicDelta(viewer) * 30);
+                        me.Strength = (GetPsychicDelta(viewer) * 30);
 
                         IEnumerable<ISensoryEvent> pDescs = GetPsychicDescriptives(viewer);
 
@@ -380,7 +380,7 @@ namespace NetMud.Data.Inanimate
 
                         break;
                     case MessagingType.Taste:
-                        me.Strength = 30 + (GetTasteDelta(viewer) * 30);
+                        me.Strength = (GetTasteDelta(viewer) * 30);
 
                         IEnumerable<ISensoryEvent> taDescs = GetTasteDescriptives(viewer);
 
@@ -404,7 +404,7 @@ namespace NetMud.Data.Inanimate
 
                         break;
                     case MessagingType.Tactile:
-                        me.Strength = 30 + (GetTactileDelta(viewer) * 30);
+                        me.Strength = (GetTactileDelta(viewer) * 30);
 
                         IEnumerable<ISensoryEvent> tDescs = GetSmellableDescriptives(viewer);
 
@@ -428,7 +428,7 @@ namespace NetMud.Data.Inanimate
 
                         break;
                     case MessagingType.Visible:
-                        me.Strength = 30 + (GetVisibleDelta(viewer) * 30);
+                        me.Strength = (GetVisibleDelta(viewer) * 30);
 
                         IEnumerable<ISensoryEvent> vDescs = GetVisibleDescriptives(viewer);
 

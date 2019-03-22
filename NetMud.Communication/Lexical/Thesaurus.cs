@@ -24,8 +24,6 @@ namespace NetMud.Communication.Lexical
                 return string.Empty;
             }
 
-            // return string.Empty;
-
             string host = "https://api.cognitive.microsofttranslator.com";
             string route = string.Format("/translate?api-version=3.0&to={0}", targetLanguage.GoogleLanguageCode);
             string subscriptionKey = azureKey;
@@ -86,6 +84,7 @@ namespace NetMud.Communication.Lexical
             return string.Empty;
         }
 
+        #region word to word
         public static IDictata GetWord(LexicalContext context, LexicalType type)
         {
             if (context.Language == null)
@@ -98,8 +97,6 @@ namespace NetMud.Communication.Lexical
             var possibleWords = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.Language == context.Language && dict.WordTypes.Contains(type) && dict.SuitableForUse);
 
             return possibleWords.OrderByDescending(word => GetSynonymRanking(word, context)).FirstOrDefault();
-
-            //3x weight for meeting the semantics
         }
 
         public static IDictata GetAntonym(IDictata baseWord, LexicalContext context)
@@ -120,7 +117,6 @@ namespace NetMud.Communication.Lexical
 
         private static IDictata FocusFindWord(IEnumerable<IDictata> possibleWords, LexicalContext context, IDictata baseWord)
         {
-            var rankedWords = new List<Tuple<IDictata, int>>();
             if (context.Language == null)
             {
                 context.Language = baseWord.Language;
@@ -130,13 +126,44 @@ namespace NetMud.Communication.Lexical
 
             if (context.Severity + context.Elegance + context.Quality == 0)
             {
-                rankedWords.Add(new Tuple<IDictata, int>(baseWord, GetSynonymRanking(baseWord, context)));
+                var rankedWords = new List<Tuple<IDictata, int>>
+                {
+                    new Tuple<IDictata, int>(baseWord, GetSynonymRanking(baseWord, context))
+                };
+
                 rankedWords.AddRange(possibleWords.Select(word => new Tuple<IDictata, int>(word, GetSynonymRanking(word, context))));
 
                 return rankedWords.OrderByDescending(pair => pair.Item2).Select(pair => pair.Item1).FirstOrDefault();
             }
 
             return GetRelatedWord(baseWord, possibleWords, context.Severity, context.Elegance, context.Quality);
+        }
+
+        private static IDictata FocusFindWord(IEnumerable<IDictata> possibleWords, LexicalContext context, IDictataPhrase basePhrase)
+        {
+            if (context.Language == null)
+            {
+                context.Language = basePhrase.Language;
+            }
+
+            possibleWords = possibleWords.Where(word => word != null && word.Language == context.Language && word.SuitableForUse);
+
+            if (context.Severity + context.Elegance + context.Quality == 0)
+            {
+                var rankedWords = new List<Tuple<IDictata, int>>();
+                var baseRanking = GetSynonymRanking(basePhrase, context);
+
+                rankedWords.AddRange(possibleWords.Select(word => new Tuple<IDictata, int>(word, GetSynonymRanking(word, context))));
+
+                if (baseRanking > rankedWords.Max(phrase => phrase.Item2))
+                {
+                    return null;
+                }
+
+                return rankedWords.OrderByDescending(pair => pair.Item2).Select(pair => pair.Item1).FirstOrDefault();
+            }
+
+            return GetRelatedWord(basePhrase, possibleWords, context.Severity, context.Elegance, context.Quality);
         }
 
         private static int GetSynonymRanking(IDictata word, LexicalContext context)
@@ -169,5 +196,187 @@ namespace NetMud.Communication.Lexical
 
             return closestWord.Key ?? baseWord;
         }
+
+        private static IDictata GetRelatedWord(IDictataPhrase basePhrase, IEnumerable<IDictata> possibleWords, int severityModifier, int eleganceModifier, int qualityModifier)
+        {
+            var rankedWords = new Dictionary<IDictata, int>();
+            foreach (var word in possibleWords)
+            {
+                int rating = 0;
+
+                rating += Math.Abs(basePhrase.Severity + severityModifier - word.Severity);
+                rating += Math.Abs(basePhrase.Elegance + eleganceModifier - word.Elegance);
+                rating += Math.Abs(basePhrase.Quality + qualityModifier - word.Quality);
+
+                rankedWords.Add(word, rating);
+            }
+
+            var closestWord = rankedWords.OrderBy(pair => pair.Value).FirstOrDefault();
+
+            return closestWord.Key;
+        }
+        #endregion
+
+        #region Phrases
+        public static IDictataPhrase GetPhrase(LexicalContext context)
+        {
+            if (context.Language == null)
+            {
+                IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
+
+                context.Language = globalConfig.BaseLanguage;
+            }
+
+            var possibleWords = ConfigDataCache.GetAll<IDictataPhrase>().Where(dict => dict.Language == context.Language && dict.SuitableForUse);
+
+            return possibleWords.OrderByDescending(word => GetSynonymRanking(word, context)).FirstOrDefault();
+        }
+
+        public static IDictata GetAntonym(IDictataPhrase basePhrase, LexicalContext context)
+        {
+            if (basePhrase == null)
+                return null;
+
+            return FocusFindWord(basePhrase.Antonyms.ToList(), context, basePhrase);
+        }
+
+        public static IDictata GetSynonym(IDictataPhrase basePhrase, LexicalContext context)
+        {
+            if (basePhrase == null)
+                return null;
+
+            return FocusFindWord(basePhrase.Synonyms.ToList(), context, basePhrase);
+        }
+
+        public static IDictataPhrase GetAntonymPhrase(IDictata baseWord, LexicalContext context)
+        {
+            if (baseWord == null)
+                return null;
+
+            return FocusFindPhrase(baseWord.PhraseAntonyms.ToList(), context, baseWord);
+        }
+
+        public static IDictataPhrase GetSynonymPhrase(IDictata baseWord, LexicalContext context)
+        {
+            if (baseWord == null)
+                return null;
+
+            return FocusFindPhrase(baseWord.PhraseSynonyms.ToList(), context, baseWord);
+        }
+
+        public static IDictataPhrase GetAntonymPhrase(IDictataPhrase basePhrase, LexicalContext context)
+        {
+            if (basePhrase == null)
+                return basePhrase;
+
+            return FocusFindPhrase(basePhrase.PhraseAntonyms.ToList(), context, basePhrase);
+        }
+
+        public static IDictataPhrase GetSynonymPhrase(IDictataPhrase basePhrase, LexicalContext context)
+        {
+            if (basePhrase == null)
+                return basePhrase;
+
+            return FocusFindPhrase(basePhrase.PhraseSynonyms.ToList(), context, basePhrase);
+        }
+
+        private static IDictataPhrase FocusFindPhrase(IEnumerable<IDictataPhrase> possiblePhrases, LexicalContext context, IDictata baseWord)
+        {
+            if (context.Language == null)
+            {
+                context.Language = baseWord.Language;
+            }
+
+            possiblePhrases = possiblePhrases.Where(phrase => phrase != null && phrase.Language == context.Language && phrase.SuitableForUse);
+
+            if (context.Severity + context.Elegance + context.Quality == 0)
+            {
+                var rankedPhrases = new List<Tuple<IDictataPhrase, int>>();
+                var baseRanking = GetSynonymRanking(baseWord, context);
+
+                rankedPhrases.AddRange(possiblePhrases.Select(phrase => new Tuple<IDictataPhrase, int>(phrase, GetSynonymRanking(phrase, context))));
+
+                if(baseRanking > rankedPhrases.Max(phrase => phrase.Item2))
+                {
+                    return null;
+                }
+
+                return rankedPhrases.OrderByDescending(pair => pair.Item2).Select(pair => pair.Item1).FirstOrDefault();
+            }
+
+            return GetRelatedPhrase(baseWord, possiblePhrases, context.Severity, context.Elegance, context.Quality);
+        }
+
+        private static IDictataPhrase FocusFindPhrase(IEnumerable<IDictataPhrase> possiblePhrases, LexicalContext context, IDictataPhrase basePhrase)
+        {
+            if (context.Language == null)
+            {
+                context.Language = basePhrase.Language;
+            }
+
+            possiblePhrases = possiblePhrases.Where(phrase => phrase != null && phrase.Language == context.Language && phrase.SuitableForUse);
+
+            if (context.Severity + context.Elegance + context.Quality == 0)
+            {
+                var rankedPhrases = new List<Tuple<IDictataPhrase, int>>
+                {
+                    new Tuple<IDictataPhrase, int>(basePhrase, GetSynonymRanking(basePhrase, context))
+                };
+
+                rankedPhrases.AddRange(possiblePhrases.Select(phrase => new Tuple<IDictataPhrase, int>(phrase, GetSynonymRanking(phrase, context))));
+
+                return rankedPhrases.OrderByDescending(pair => pair.Item2).Select(pair => pair.Item1).FirstOrDefault();
+            }
+
+            return GetRelatedPhrase(basePhrase, possiblePhrases, context.Severity, context.Elegance, context.Quality);
+        }
+
+        private static int GetSynonymRanking(IDictataPhrase word, LexicalContext context)
+        {
+            return (word.Positional == context.Position ? 5 : 0) +
+                    (word.Tense == context.Tense ? 5 : 0) +
+                    (word.Perspective == context.Perspective ? 5 : 0) +
+                    ((context.GenderForm == null || word.Feminine == context.GenderForm?.Feminine) ? 10 : 0) +
+                    (context.Semantics.Any() ? word.Semantics.Count(wrd => context.Semantics.Contains(wrd)) * 10 : 0);
+        }
+
+        private static IDictataPhrase GetRelatedPhrase(IDictata baseWord, IEnumerable<IDictataPhrase> possibleWords, int severityModifier, int eleganceModifier, int qualityModifier)
+        {
+            var rankedPhrasess = new Dictionary<IDictataPhrase, int>();
+            foreach (var word in possibleWords)
+            {
+                int rating = 0;
+
+                rating += Math.Abs(baseWord.Severity + severityModifier - word.Severity);
+                rating += Math.Abs(baseWord.Elegance + eleganceModifier - word.Elegance);
+                rating += Math.Abs(baseWord.Quality + qualityModifier - word.Quality);
+
+                rankedPhrasess.Add(word, rating);
+            }
+
+            var closestPhrase = rankedPhrasess.OrderBy(pair => pair.Value).FirstOrDefault();
+
+            return closestPhrase.Key;
+        }
+
+        private static IDictataPhrase GetRelatedPhrase(IDictataPhrase basePhrase, IEnumerable<IDictataPhrase> possibleWords, int severityModifier, int eleganceModifier, int qualityModifier)
+        {
+            var rankedPhrasess = new Dictionary<IDictataPhrase, int>();
+            foreach (var word in possibleWords)
+            {
+                int rating = 0;
+
+                rating += Math.Abs(basePhrase.Severity + severityModifier - word.Severity);
+                rating += Math.Abs(basePhrase.Elegance + eleganceModifier - word.Elegance);
+                rating += Math.Abs(basePhrase.Quality + qualityModifier - word.Quality);
+
+                rankedPhrasess.Add(word, rating);
+            }
+
+            var closestPhrase = rankedPhrasess.OrderBy(pair => pair.Value).FirstOrDefault();
+
+            return closestPhrase.Key ?? basePhrase;
+        }
+        #endregion
     }
 }

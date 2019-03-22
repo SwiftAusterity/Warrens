@@ -246,8 +246,10 @@ namespace NetMud.Data.Linguistic
         {
             if (overridingContext != null)
             {
+                IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
+
                 //Sentence must maintain the same language, tense and personage
-                Context.Language = overridingContext.Language;
+                Context.Language = overridingContext.Language ?? Context.Language ?? globalConfig.BaseLanguage;
                 Context.Tense = overridingContext.Tense;
                 Context.Perspective = overridingContext.Perspective;
                 Context.Elegance = overridingContext.Elegance;
@@ -258,8 +260,8 @@ namespace NetMud.Data.Linguistic
             var obfuscationLevel = Math.Max(0, Math.Min(100, 30 - strength));
             var newLex = Mutate(sensoryType, strength, obfuscationLevel);
 
-            foreach (var wordRule in Context.Language.WordRules.Where(rul => rul.Matches(newLex))
-                                                   .OrderByDescending(rul => rul.RuleSpecificity()))
+            foreach (var wordRule in newLex.Context.Language.WordRules.Where(rul => rul.Matches(newLex))
+                                                    .OrderByDescending(rul => rul.RuleSpecificity()))
             {
                 if (wordRule.NeedsArticle && (!wordRule.WhenPositional || newLex.Context.Position != LexicalPosition.None)
                  && !newLex.Modifiers.Any(mod => (mod.Type == LexicalType.Article && !wordRule.WhenPositional && mod.Context.Position == LexicalPosition.None) 
@@ -317,7 +319,7 @@ namespace NetMud.Data.Linguistic
             var currentModifiers = new List<ILexica>(newLex.Modifiers);
             foreach (var modifier in currentModifiers)
             {
-                foreach (var wordRule in Context.Language.WordPairRules.Where(rul => rul.Matches(newLex, modifier))
+                foreach (var wordRule in newLex.Context.Language.WordPairRules.Where(rul => rul.Matches(newLex, modifier))
                                                                .OrderByDescending(rul => rul.RuleSpecificity()))
                 {
 
@@ -434,7 +436,7 @@ namespace NetMud.Data.Linguistic
             if (obfuscationLevel < 0 || obfuscationLevel > rand.Next(0, 100))
             {
                 var lex = RunObscura(sensoryType, Context.Observer, obfuscationLevel >= 100);
-                lex.Modifiers.RemoveWhere(mod => mod.Role == GrammaticalType.Descriptive);
+                lex.Context = Context;
 
                 return lex;
             }
@@ -464,9 +466,9 @@ namespace NetMud.Data.Linguistic
         /// </summary>
         /// <param name="type">the sentence type</param>
         /// <returns>the sentence</returns>
-        public ILexicalSentence MakeSentence(SentenceType type, MessagingType sensoryType)
+        public ILexicalSentence MakeSentence(SentenceType type, MessagingType sensoryType, int strength = 30)
         {
-            return new LexicalSentence(this) { Type = type, SensoryType = sensoryType };
+            return new LexicalSentence(new SensoryEvent(this, strength, sensoryType));
         }
 
         /// <summary>
@@ -629,9 +631,9 @@ namespace NetMud.Data.Linguistic
 
                 var newPhrase = new DictataPhrase()
                 {
-                    Elegance = (int)Math.Truncate(preposition.Elegance * 1.2),
-                    Quality = (int)Math.Truncate(preposition.Quality * 1.2),
-                    Severity = (int)Math.Truncate(preposition.Severity * 1.2),
+                    Elegance = (int)Math.Truncate((preposition.Elegance + 1) * 1.2),
+                    Quality = (int)Math.Truncate((preposition.Quality + 1) * 1.2),
+                    Severity = (int)Math.Truncate((preposition.Severity + 1) * 1.2),
                     Antonyms = preposition.Antonyms,
                     PhraseAntonyms = preposition.PhraseAntonyms,
                     Synonyms = preposition.Synonyms,

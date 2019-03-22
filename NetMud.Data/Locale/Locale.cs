@@ -339,7 +339,7 @@ namespace NetMud.Data.Locale
                 switch (sense)
                 {
                     case MessagingType.Audible:
-                        me.Strength = 30 + (GetAudibleDelta(viewer) * 30);
+                        me.Strength = (GetAudibleDelta(viewer) * 30);
 
                         senseVerb = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "hear", collectiveContext);
 
@@ -364,7 +364,7 @@ namespace NetMud.Data.Locale
                         senseDescs = new List<ISensoryEvent>() { audibleNoun };
                         break;
                     case MessagingType.Olefactory:
-                        me.Strength = 30 + (GetSmellDelta(viewer) * 30);
+                        me.Strength = (GetSmellDelta(viewer) * 30);
 
                         senseVerb = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "smell", collectiveContext);
 
@@ -389,7 +389,7 @@ namespace NetMud.Data.Locale
                         senseDescs = new List<ISensoryEvent>() { smellNoun };
                         break;
                     case MessagingType.Psychic:
-                        me.Strength = 30 + (GetPsychicDelta(viewer) * 30);
+                        me.Strength = (GetPsychicDelta(viewer) * 30);
 
                         senseVerb = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "sense", collectiveContext);
 
@@ -417,7 +417,7 @@ namespace NetMud.Data.Locale
                     case MessagingType.Taste:
                         continue;
                     case MessagingType.Visible:
-                        me.Strength = 30 + (GetVisibleDelta(viewer) * 30);
+                        me.Strength = (GetVisibleDelta(viewer) * 30);
 
                         senseVerb = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "see", collectiveContext);
 

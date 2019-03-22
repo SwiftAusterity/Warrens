@@ -232,7 +232,7 @@ namespace NetMud.Communication.Lexical
                 }
                 else
                 {
-                    sentences.Add(subject.MakeSentence(SentenceType.Statement, SensoryType));
+                    sentences.Add(subject.MakeSentence(SentenceType.Statement, SensoryType, Strength));
                 }
             }
 

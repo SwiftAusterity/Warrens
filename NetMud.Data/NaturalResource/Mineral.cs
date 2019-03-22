@@ -225,7 +225,7 @@ namespace NetMud.Data.NaturalResource
 
             var observer = new SensoryEvent(new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you", personalContext), 0, MessagingType.Visible)
             {
-                Strength = 30 + (GetVisibleDelta(viewer) * 30)
+                Strength = (GetVisibleDelta(viewer) * 30)
             };
 
             var collectiveNoun = new SensoryEvent(new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, "outcropping", personalContext),
