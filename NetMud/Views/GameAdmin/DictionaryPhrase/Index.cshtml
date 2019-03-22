@@ -1,6 +1,6 @@
 ﻿@model NetMud.Models.Admin.ManageDictionaryPhraseViewModel
 @{
-    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("DictionaryPhrase", new string[] { "Dashboard" }, new string[] { "/GameAdmin" });
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Dictionary Phrase", new string[] { "Dashboard" }, new string[] { "/GameAdmin" });
 
     var linkText = Html.ActionLink("99999999", "Edit", new { id = 99999999 }).ToString();
     var tableColumns = new Dictionary<string, Func<dynamic, string>>();
