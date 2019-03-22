@@ -54,14 +54,14 @@ namespace NetMud.Models.Admin
 
         public AddEditLanguageViewModel() : base("", ConfigDataType.Language)
         {
-            ValidWords = ConfigDataCache.GetAll<IDictata>();
+            ValidWords = ConfigDataCache.GetAll<IDictata>().OrderBy(word => word.Language.Name).ThenBy(word => word.Name);
             ValidLanguages = ConfigDataCache.GetAll<ILanguage>();
             DataObject = new Language();
         }
 
         public AddEditLanguageViewModel(string uniqueKey) : base(uniqueKey, ConfigDataType.Language)
         {
-            ValidWords = ConfigDataCache.GetAll<IDictata>();
+            ValidWords = ConfigDataCache.GetAll<IDictata>().OrderBy(word => word.Language.Name).ThenBy(word => word.Name);
             ValidLanguages = ConfigDataCache.GetAll<ILanguage>();
             DataObject = new Language();
 

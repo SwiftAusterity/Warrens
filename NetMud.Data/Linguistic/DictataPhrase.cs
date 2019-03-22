@@ -57,7 +57,7 @@ namespace NetMud.Data.Linguistic
                     return string.Empty;
                 }
 
-                return string.Join(" ", Words.Select(word => word.Name));
+                return string.Join("_", Words.Select(word => word.Name));
             }
             set
             {

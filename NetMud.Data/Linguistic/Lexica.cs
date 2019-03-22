@@ -369,6 +369,15 @@ namespace NetMud.Data.Linguistic
                 }
             }
 
+            //Phrase detection
+            if (newLex.Modifiers.Count() > 0)
+            {
+                List<ILexica> phraseLexes = new List<ILexica>() { newLex };
+                phraseLexes.AddRange(newLex.Modifiers);
+
+                ParsePhrase(phraseLexes);
+            }
+
             foreach (var modifier in newLex.Modifiers)
             {
                 var rule = newLex.Context.Language.WordPairRules.OrderByDescending(rul => rul.RuleSpecificity())
@@ -605,6 +614,51 @@ namespace NetMud.Data.Linguistic
             }
 
             return message;
+        }
+
+        private void ParsePhrase(IEnumerable<ILexica> lexes)
+        {
+            var preps = lexes.Where(lex => lex.Type == LexicalType.Preposition || lex.Type == LexicalType.Article);
+            var nounVerbs = lexes.Where(lex => lex.Type == LexicalType.Noun || lex.Type == LexicalType.Verb || lex.Type == LexicalType.Pronoun);
+
+            //Prepositional position phrase
+            if (preps.Count() > 1 && nounVerbs.Count() == 0)
+            {
+                var validWordTypes = new LexicalType[] { LexicalType.Article, LexicalType.Conjunction, LexicalType.Preposition };
+                var preposition = preps.First().GetDictata();
+
+                var newPhrase = new DictataPhrase()
+                {
+                    Elegance = (int)Math.Truncate(preposition.Elegance * 1.2),
+                    Quality = (int)Math.Truncate(preposition.Quality * 1.2),
+                    Severity = (int)Math.Truncate(preposition.Severity * 1.2),
+                    Antonyms = preposition.Antonyms,
+                    PhraseAntonyms = preposition.PhraseAntonyms,
+                    Synonyms = preposition.Synonyms,
+                    PhraseSynonyms = preposition.PhraseSynonyms,
+                    Feminine = preposition.Feminine,
+                    Language = preposition.Language,
+                    Perspective = preposition.Perspective,
+                    Positional = preposition.Positional,
+                    Semantics = preposition.Semantics,
+                    Tense = preposition.Tense,
+                    Words = new HashSet<IDictata>(lexes.Where(lex => lex?.GetDictata() != null && validWordTypes.Contains(lex.Type)).Select(lex => lex.GetDictata()))
+                };
+
+                if (!CheckForExistingPhrase(newPhrase))
+                {
+                    newPhrase.SystemSave();
+                }
+
+                return;
+            }
+        }
+
+        private bool CheckForExistingPhrase(IDictataPhrase newPhrase)
+        {
+            //Check for existing phrases with the same word set
+            var maybePhrases = ConfigDataCache.GetAll<IDictataPhrase>();
+            return maybePhrases.Any(phrase => phrase.Words.All(word => newPhrase.Words.Any(newWord => newWord.Equals(word))));
         }
 
         #region Equality Functions

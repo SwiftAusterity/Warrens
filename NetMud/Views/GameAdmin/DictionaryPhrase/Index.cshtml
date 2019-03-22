@@ -7,7 +7,6 @@
     tableColumns.Add("Unique Key", obj => linkText.Replace("99999999", obj.UniqueKey));
     tableColumns.Add("Language", obj => obj.Language.Name);
     tableColumns.Add("Phrase", obj => obj.Name);
-    tableColumns.Add("Types", obj => string.Join(", ", obj.WordTypes));
 }
 @if (User.IsInRole("Admin"))
 {

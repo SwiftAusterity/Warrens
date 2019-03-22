@@ -6,6 +6,7 @@ using NetMud.DataStructure.Linguistic;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace NetMud.Models.Admin
 {
@@ -53,16 +54,16 @@ namespace NetMud.Models.Admin
 
         public AddEditDictionaryPhraseViewModel() : base("", ConfigDataType.Dictionary)
         {
-            ValidWords = ConfigDataCache.GetAll<IDictata>();
-            ValidPhrases = ConfigDataCache.GetAll<IDictataPhrase>();
+            ValidWords = ConfigDataCache.GetAll<IDictata>().OrderBy(word => word.Language.Name).ThenBy(word => word.Name);
+            ValidPhrases = ConfigDataCache.GetAll<IDictataPhrase>().OrderBy(word => word.Language.Name).ThenBy(word => word.Name);
             ValidLanguages = ConfigDataCache.GetAll<ILanguage>();
             DataObject = new DictataPhrase();
         }
 
         public AddEditDictionaryPhraseViewModel(string uniqueKey) : base(uniqueKey, ConfigDataType.Dictionary)
         {
-            ValidWords = ConfigDataCache.GetAll<IDictata>();
-            ValidPhrases = ConfigDataCache.GetAll<IDictataPhrase>();
+            ValidWords = ConfigDataCache.GetAll<IDictata>().OrderBy(word => word.Language.Name).ThenBy(word => word.Name);
+            ValidPhrases = ConfigDataCache.GetAll<IDictataPhrase>().OrderBy(word => word.Language.Name).ThenBy(word => word.Name);
             ValidLanguages = ConfigDataCache.GetAll<ILanguage>();
             DataObject = new DictataPhrase();
 
@@ -85,8 +86,8 @@ namespace NetMud.Models.Admin
 
         public AddEditDictionaryPhraseViewModel(string archivePath, IDictataPhrase item) : base(archivePath, ConfigDataType.Dictionary, item)
         {
-            ValidWords = ConfigDataCache.GetAll<IDictata>();
-            ValidPhrases = ConfigDataCache.GetAll<IDictataPhrase>();
+            ValidWords = ConfigDataCache.GetAll<IDictata>().OrderBy(word => word.Language.Name).ThenBy(word => word.Name);
+            ValidPhrases = ConfigDataCache.GetAll<IDictataPhrase>().OrderBy(word => word.Language.Name).ThenBy(word => word.Name);
             ValidLanguages = ConfigDataCache.GetAll<ILanguage>();
             DataObject = (DictataPhrase)item;
         }
