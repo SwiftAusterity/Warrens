@@ -98,7 +98,7 @@ namespace NetMud.Data.Linguistic
         {
             var dict = ConfigDataCache.Get<IDictata>(new ConfigDataCacheKey(typeof(IDictata), string.Format("{0}_{1}", Context?.Language?.Name, Phrase), ConfigDataType.Dictionary));
 
-            if(dict == null)
+            if (dict == null)
             {
                 dict = GenerateDictata();
             }
@@ -264,7 +264,7 @@ namespace NetMud.Data.Linguistic
                                                     .OrderByDescending(rul => rul.RuleSpecificity()))
             {
                 if (wordRule.NeedsArticle && (!wordRule.WhenPositional || newLex.Context.Position != LexicalPosition.None)
-                 && !newLex.Modifiers.Any(mod => (mod.Type == LexicalType.Article && !wordRule.WhenPositional && mod.Context.Position == LexicalPosition.None) 
+                 && !newLex.Modifiers.Any(mod => (mod.Type == LexicalType.Article && !wordRule.WhenPositional && mod.Context.Position == LexicalPosition.None)
                                               || (mod.Type == LexicalType.Preposition && wordRule.WhenPositional && mod.Context.Position != LexicalPosition.None)))
                 {
                     var articleContext = newLex.Context.Clone();
@@ -347,7 +347,7 @@ namespace NetMud.Data.Linguistic
                             var newArticle = newLex.TryModify(wordRule.WhenPositional ? LexicalType.Preposition : LexicalType.Article
                                                             , GrammaticalType.Descriptive, article.Name, false);
 
-                            if(!wordRule.WhenPositional)
+                            if (!wordRule.WhenPositional)
                             {
                                 newArticle.Context.Position = LexicalPosition.None;
                             }
@@ -377,7 +377,7 @@ namespace NetMud.Data.Linguistic
                 List<ILexica> phraseLexes = new List<ILexica>() { newLex };
                 phraseLexes.AddRange(newLex.Modifiers);
 
-                ParsePhrase(phraseLexes);
+                ParsePhrase(phraseLexes, newLex.Context.Language);
             }
 
             foreach (var modifier in newLex.Modifiers)
@@ -443,8 +443,8 @@ namespace NetMud.Data.Linguistic
 
             var newLex = Clone();
             var dict = GetDictata();
-            if (dict != null && Type != LexicalType.ProperNoun 
-                && (Context.Severity + Context.Elegance + Context.Quality > 0 
+            if (dict != null && Type != LexicalType.ProperNoun
+                && (Context.Severity + Context.Elegance + Context.Quality > 0
                     || Context.Language != dict.Language
                     || Context.Plural != dict.Plural
                     || Context.Possessive != dict.Possessive
@@ -618,41 +618,60 @@ namespace NetMud.Data.Linguistic
             return message;
         }
 
-        private void ParsePhrase(IEnumerable<ILexica> lexes)
+        private void ParsePhrase(IEnumerable<ILexica> lexes, ILanguage language)
         {
-            var preps = lexes.Where(lex => lex.Type == LexicalType.Preposition || lex.Type == LexicalType.Article);
-            var nounVerbs = lexes.Where(lex => lex.Type == LexicalType.Noun || lex.Type == LexicalType.Verb || lex.Type == LexicalType.Pronoun);
-
-            //Prepositional position phrase
-            if (preps.Count() > 1 && nounVerbs.Count() == 0)
+            if (language?.PhraseRules != null && language.PhraseRules.Count() > 0)
             {
-                var validWordTypes = new LexicalType[] { LexicalType.Article, LexicalType.Conjunction, LexicalType.Preposition };
-                var preposition = preps.First().GetDictata();
-
-                var newPhrase = new DictataPhrase()
+                foreach (var phraseRule in language.PhraseRules)
                 {
-                    Elegance = (int)Math.Truncate((preposition.Elegance + 1) * 1.2),
-                    Quality = (int)Math.Truncate((preposition.Quality + 1) * 1.2),
-                    Severity = (int)Math.Truncate((preposition.Severity + 1) * 1.2),
-                    Antonyms = preposition.Antonyms,
-                    PhraseAntonyms = preposition.PhraseAntonyms,
-                    Synonyms = preposition.Synonyms,
-                    PhraseSynonyms = preposition.PhraseSynonyms,
-                    Feminine = preposition.Feminine,
-                    Language = preposition.Language,
-                    Perspective = preposition.Perspective,
-                    Positional = preposition.Positional,
-                    Semantics = preposition.Semantics,
-                    Tense = preposition.Tense,
-                    Words = new HashSet<IDictata>(lexes.Where(lex => lex?.GetDictata() != null && validWordTypes.Contains(lex.Type)).Select(lex => lex.GetDictata()))
-                };
+                    var validCount = 0;
+                    foreach (var lexGroup in lexes.GroupBy(lex => lex.Type))
+                    {
+                        var minCount = phraseRule.Elements.FirstOrDefault(rule => rule.WordType == lexGroup.Key)?.MinimumNumber ?? 0;
 
-                if (!CheckForExistingPhrase(newPhrase))
-                {
-                    newPhrase.SystemSave();
+                        if (minCount == -1
+                            || (minCount == 0 && lexGroup.Count() == 0)
+                            || (minCount > 0 && lexGroup.Count() >= minCount))
+                        {
+                            validCount++;
+                        }
+                    }
+
+                    //Prepositional position phrase
+                    if (validCount == Enum.GetNames(typeof(LexicalType)).Count())
+                    {
+                        var primaryType = phraseRule.Elements.FirstOrDefault(ruleLex => ruleLex.Primary)?.WordType ?? LexicalType.Preposition;
+                        var primaryWord = lexes.FirstOrDefault(lex => lex.Type == primaryType)?.GetDictata();
+
+                        if (primaryWord == null)
+                        {
+                            primaryWord = lexes.FirstOrDefault().GetDictata();
+                        }
+
+                        var newPhrase = new DictataPhrase()
+                        {
+                            Elegance = (int)Math.Truncate((primaryWord.Elegance + 1) * 1.2),
+                            Quality = (int)Math.Truncate((primaryWord.Quality + 1) * 1.2),
+                            Severity = (int)Math.Truncate((primaryWord.Severity + 1) * 1.2),
+                            Antonyms = primaryWord.Antonyms,
+                            PhraseAntonyms = primaryWord.PhraseAntonyms,
+                            Synonyms = primaryWord.Synonyms,
+                            PhraseSynonyms = primaryWord.PhraseSynonyms,
+                            Feminine = primaryWord.Feminine,
+                            Language = primaryWord.Language,
+                            Perspective = primaryWord.Perspective,
+                            Positional = primaryWord.Positional,
+                            Semantics = primaryWord.Semantics,
+                            Tense = primaryWord.Tense,
+                            Words = new HashSet<IDictata>(lexes.Select(lex => lex.GetDictata()))
+                        };
+
+                        if (!CheckForExistingPhrase(newPhrase))
+                        {
+                            newPhrase.SystemSave();
+                        }
+                    }
                 }
-
-                return;
             }
         }
 

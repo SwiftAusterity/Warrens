@@ -681,7 +681,7 @@
     <Content Include="Views\Shared\EditorTemplates\MineralResourceSpawn.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\MineralResourceSpawnList.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\WordTypeCollection.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\SentenceComplexityRules.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\DictataPhraseRuleElements.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\SentenceComplexityRule.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\DictataPhraseList.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\DictataPhrase.cshtml" />
@@ -692,6 +692,10 @@
     <Content Include="Views\Shared\EditorTemplates\CollectionDictataPhraseListItem.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\CollectionPhraseSynonymList.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\CollectionPhraseAntonymList.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\SentenceComplexityRules.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\DictataPhraseRuleElement.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\DictataPhraseRules.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\DictataPhraseRule.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />

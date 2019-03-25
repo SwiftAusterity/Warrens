@@ -1,0 +1,15 @@
+﻿@using NetMud.DataStructure.Linguistic
+
+@model DictataPhraseRule
+
+@{
+    var titleName = string.Format("Primary: {0}", Model?.Elements?.FirstOrDefault(rule => rule.Primary) != null ? Model.Elements.FirstOrDefault(rule => rule.Primary).WordType.ToString() : "NONE");
+}
+
+<div class="accordionWrapper">
+    <h5>@titleName</h5>
+    <div class="iterativeContainerOuter">
+        <a href="#" class="removeRow col-form-label" title="Remove this" onclick="javascript: $(this).parent().parent().remove(); return false;">X</a>
+        @Html.EditorFor(m => m.Elements)
+    </div>
+</div>

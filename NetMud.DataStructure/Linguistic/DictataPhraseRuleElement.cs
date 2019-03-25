@@ -30,8 +30,15 @@ namespace NetMud.DataStructure.Linguistic
 
         public DictataPhraseRuleElement()
         {
-            MinimumNumber = 0;
+            MinimumNumber = -1;
             WordType = LexicalType.None;
+            Primary = false;
+        }
+
+        public DictataPhraseRuleElement(LexicalType wordType)
+        {
+            MinimumNumber = -1;
+            WordType = wordType;
             Primary = false;
         }
     }

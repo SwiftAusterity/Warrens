@@ -3,6 +3,8 @@ using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.System;
 using NetMud.Utility;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace NetMud.Communication.Lexical
 {
@@ -59,10 +61,29 @@ namespace NetMud.Communication.Lexical
 
             if (maybeDictata != null)
             {
+                if (dictata.WordTypes.Any(mWord => !maybeDictata.WordTypes.Contains(mWord)))
+                {
+                    var wordTypes = new HashSet<LexicalType>();
+                    foreach (var wordType in dictata.WordTypes)
+                    {
+                        wordTypes.Add(wordType);
+                    }
+
+                    foreach (var wordType in maybeDictata.WordTypes.Where(mWord => !dictata.WordTypes.Contains(mWord)))
+                    {
+                        wordTypes.Add(wordType);
+                    }
+
+                    maybeDictata.WordTypes = wordTypes;
+                }
+
                 if (maybeDictata.Language != null)
                 {
                     maybeDictata.FillLanguages();
-                    return dictata;
+                    maybeDictata.SystemSave();
+                    maybeDictata.PersistToCache();
+
+                    return maybeDictata;
                 }
 
                 dictata = maybeDictata;

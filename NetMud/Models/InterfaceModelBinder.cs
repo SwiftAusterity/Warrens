@@ -334,12 +334,13 @@ namespace NetMud.Models
                             //Do we have a class or interface? We want top parse ALL the submitted values in the post and try to fill that one class object up with its props
                             foreach (var prop in properties)
                             {
+                                var propType = prop.PropertyType;
                                 var propertyBinder = (PropertyBinderAttribute)prop.GetCustomAttributes(typeof(PropertyBinderAttribute), true).FirstOrDefault();
 
                                 string childKeyName = string.Format("{0}.{1}", baseKey.Value, prop.Name);
 
                                 //Collection shenanigans, we need to create the right collection and put it back on the post value collection so a later call to this can fill it correctly
-                                if (prop.PropertyType.IsArray || (!typeof(string).Equals(prop.PropertyType) && typeof(IEnumerable).IsAssignableFrom(prop.PropertyType)))
+                                if (propType.IsArray || (!typeof(string).Equals(propType) && typeof(IEnumerable).IsAssignableFrom(propType)))
                                 {
                                     //We have to get the keys from the valid provider that match the pattern razor is feeding us "type.type.type[#].type[#] potentially"
                                     IList<string> keys = new List<string>();
@@ -348,17 +349,162 @@ namespace NetMud.Models
                                     foreach (var key in formValueProvider.GetKeysFromPrefix(childKeyName))
                                     {
                                         var oldKey = key.Value;
-                                        var reKeyedKey = string.Format("{1}[{0}]{2}", index, oldKey.Substring(0, oldKey.IndexOf('[')), oldKey.Substring(oldKey.IndexOf(']') + 1));
+                                        var reKeyedKey = string.Format("{1}[{0}]{2}", index, oldKey.Substring(0, oldKey.LastIndexOf('[')), oldKey.Substring(oldKey.LastIndexOf(']') + 1));
 
                                         keys.Add(reKeyedKey);
 
                                         index++;
                                     }
 
+                                    Type innerContainedType = null;
+                                    Type innerItemType = null;
+
+                                    if (propType.IsArray)
+                                    {
+                                        innerItemType = propType.GetElementType();
+                                        innerContainedType = innerItemType;
+                                    }
+                                    else
+                                    {
+                                        innerItemType = propType.GetGenericArguments().First();
+                                        innerContainedType = innerItemType;
+                                    }
+
+                                    if (innerContainedType.IsInterface)
+                                    {
+                                        Type type = null;
+
+                                        if (innerContainedType == typeof(ILocationData))
+                                        {
+                                            type = typeof(RoomTemplate);
+                                        }
+                                        else
+                                        {
+                                            type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(innerContainedType));
+
+                                            if (type == null)
+                                            {
+                                                type = typeof(SensoryEvent).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(innerContainedType));
+                                            }
+                                        }
+
+                                        innerContainedType = type ?? throw new Exception("Invalid Binding Interface");
+                                    }
+
                                     if (keys.Count > 0)
                                     {
-                                        IEnumerable<string> values = keys.Select(kvp => bindingContext.ValueProvider.GetValue(kvp).AttemptedValue);
-                                        prop.SetValue(newItem, values);
+                                        if (innerContainedType.IsClass && !typeof(string).Equals(innerContainedType))
+                                        {
+                                            var innerProperties = innerContainedType.GetProperties();
+                                            dynamic innerValueArray = Activator.CreateInstance(propType, false);
+
+                                            foreach (var innerBaseKey in keys)
+                                            {
+                                                dynamic innerNewItem = Activator.CreateInstance(innerContainedType, false);
+
+                                                //Do we have a class or interface? We want top parse ALL the submitted values in the post and try to fill that one class object up with its props
+                                                foreach (var innerProp in innerProperties)
+                                                {
+                                                    var innerPropType = innerProp.PropertyType;
+                                                    var innerPropertyBinder = (PropertyBinderAttribute)innerProp.GetCustomAttributes(typeof(PropertyBinderAttribute), true).FirstOrDefault();
+
+                                                    string innerChildKeyName = string.Format("{0}.{1}", innerBaseKey, innerProp.Name);
+
+                                                    //Collection shenanigans, we need to create the right collection and put it back on the post value collection so a later call to this can fill it correctly
+                                                    if (innerProp.PropertyType.IsArray || (!typeof(string).Equals(innerProp.PropertyType) && typeof(IEnumerable).IsAssignableFrom(innerProp.PropertyType)))
+                                                    {
+                                                        //We have to get the keys from the valid provider that match the pattern razor is feeding us "type.type.type[#].type[#] potentially"
+                                                        IList<string> innerKeys = new List<string>();
+
+                                                        var innerIndex = 0;
+                                                        foreach (var key in formValueProvider.GetKeysFromPrefix(innerChildKeyName))
+                                                        {
+                                                            var oldKey = key.Value;
+                                                            var reKeyedKey = string.Format("{1}[{0}]{2}", innerIndex, oldKey.Substring(0, oldKey.IndexOf('[')), oldKey.Substring(oldKey.IndexOf(']') + 1));
+
+                                                            innerKeys.Add(reKeyedKey);
+
+                                                            innerIndex++;
+                                                        }
+
+                                                        if (innerKeys.Count > 0)
+                                                        {
+                                                            IList<object> values = new List<object>();
+                                                            if (propertyBinder != null)
+                                                            {
+                                                                foreach (var key in innerKeys)
+                                                                {
+                                                                    values.Add(propertyBinder.Convert(bindingContext.ValueProvider.GetValue(key)));
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                foreach (var key in innerKeys)
+                                                                {
+                                                                    values.Add(bindingContext.ValueProvider.GetValue(key).AttemptedValue);
+                                                                }
+                                                            }
+
+                                                            innerProp.SetValue(innerNewItem, values);
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        //I guess we didnt have a class so just try and use the modelbinder to convert the value correctly
+                                                        ValueProviderResult childValue = bindingContext.ValueProvider.GetValue(innerChildKeyName);
+
+                                                        if (childValue == null)
+                                                        {
+                                                            childValue = bindingContext.ValueProvider.GetValue(string.Format("{0}.{0}", innerProp.Name));
+                                                        }
+
+                                                        if (childValue == null)
+                                                        {
+                                                            childValue = bindingContext.ValueProvider.GetValue(string.Format("{0}.{1}.{1}", innerBaseKey, innerProp.Name));
+                                                        }
+
+                                                        if (childValue != null)
+                                                        {
+                                                            if (propertyBinder != null)
+                                                            {
+                                                                innerProp.SetValue(innerNewItem, propertyBinder.Convert(childValue.AttemptedValue));
+                                                            }
+                                                            else
+                                                            {
+                                                                innerProp.SetValue(innerNewItem, childValue.ConvertTo(innerProp.PropertyType));
+                                                            }
+                                                        }
+                                                    }
+                                                }
+
+                                                if (innerNewItem != null)
+                                                {
+                                                    innerValueArray.Add(innerNewItem);
+                                                }
+                                            }
+
+                                            prop.SetValue(newItem, innerValueArray);
+                                        }
+                                        else
+                                        {
+                                            IList<object> values = new List<object>();
+                                            if (propertyBinder != null)
+                                            {
+                                                foreach (var key in keys)
+                                                {
+                                                    values.Add(propertyBinder.Convert(bindingContext.ValueProvider.GetValue(key)));
+                                                }
+                                            }
+                                            else
+                                            {
+                                                foreach (var key in keys)
+                                                {
+                                                    values.Add(bindingContext.ValueProvider.GetValue(key).AttemptedValue);
+                                                }
+                                            }
+
+                                            prop.SetValue(newItem, values);
+                                        }
                                     }
                                 }
                                 else

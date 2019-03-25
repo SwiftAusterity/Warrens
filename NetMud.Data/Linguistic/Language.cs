@@ -102,6 +102,12 @@ namespace NetMud.Data.Linguistic
         public HashSet<SentenceComplexityRule> ComplexityRules { get; set; }
 
         /// <summary>
+        /// Rules for phrase detection
+        /// </summary>
+        [UIHint("DictataPhraseRules")]
+        public HashSet<DictataPhraseRule> PhraseRules { get; set; }
+
+        /// <summary>
         /// The base needed words for a language to function
         /// </summary>
         [UIHint("BaseLanguageWords")]
@@ -117,6 +123,7 @@ namespace NetMud.Data.Linguistic
             ComplexityRules = new HashSet<SentenceComplexityRule>();
             BaseWords = new BaseLanguageMembers();
             TransformationRules = new HashSet<IDictataTransformationRule>();
+            PhraseRules = new HashSet<DictataPhraseRule>();
         }
 
         #region Data persistence functions

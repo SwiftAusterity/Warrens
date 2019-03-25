@@ -64,6 +64,11 @@ namespace NetMud.DataStructure.Linguistic
         HashSet<IDictataTransformationRule> TransformationRules { get; set; }
 
         /// <summary>
+        /// Rules for phrase detection
+        /// </summary>
+        HashSet<DictataPhraseRule> PhraseRules { get; set; }
+
+        /// <summary>
         /// The base needed words for a language to function
         /// </summary>
         BaseLanguageMembers BaseWords { get; set; }

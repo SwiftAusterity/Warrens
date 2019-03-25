@@ -419,6 +419,34 @@ div.roomAsciiMap {
     margin-top: 5px;
 }
 
+.iterativeContainerOuter {
+    border: yellow 1px solid;
+    min-height: 60px;
+    display: flex;
+    flex-wrap: wrap;
+    border-radius: 9px;
+    background-color: darkgray;
+}
+
+    .iterativeContainerOuter a.removeRow {
+        color: red;
+        border: none;
+        background-color: inherit;
+        float: left;
+        position: relative;
+        left: 5px;
+        margin: 0 -5px 0 0;
+    }
+
+.iterativeContainer .form-group {
+    padding: 10px 0 0 0;
+    border-radius: 9px;
+    margin: 1px 15px;
+    flex: 0 0 auto;
+    max-width: 97%;
+    max-height: 65px;
+}
+
 .iterativeContainer {
     border: dodgerblue 1px dotted;
     min-height: 60px;
