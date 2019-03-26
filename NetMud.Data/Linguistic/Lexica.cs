@@ -242,7 +242,7 @@ namespace NetMud.Data.Linguistic
         /// </summary>
         /// <param name="overridingContext">The full lexical context</param>
         /// <returns>A long description</returns>
-        public IEnumerable<ILexica> Unpack(MessagingType sensoryType, int strength, LexicalContext overridingContext = null)
+        public IEnumerable<ILexica> Unpack(MessagingType sensoryType, short strength, LexicalContext overridingContext = null)
         {
             if (overridingContext != null)
             {
@@ -257,8 +257,7 @@ namespace NetMud.Data.Linguistic
                 Context.Quality = overridingContext.Quality;
             }
 
-            var obfuscationLevel = Math.Max(0, Math.Min(100, 30 - strength));
-            var newLex = Mutate(sensoryType, strength, obfuscationLevel);
+            var newLex = Mutate(sensoryType, strength);
 
             foreach (var wordRule in newLex.Context.Language.WordRules.Where(rul => rul.Matches(newLex))
                                                     .OrderByDescending(rul => rul.RuleSpecificity()))
@@ -428,34 +427,37 @@ namespace NetMud.Data.Linguistic
         /// Alter the lex entirely including all of its sublex
         /// </summary>
         /// <param name="context">Contextual nature of the request.</param>
-        /// <param name="obfuscationLevel">% level of obfuscating this thing (0 to 100).</param>
+        /// <param name="obfuscationLevel">-100 to 100 range.</param>
         /// <returns>the new lex</returns>
-        private ILexica Mutate(MessagingType sensoryType, int strength, int obfuscationLevel = 0)
+        private ILexica Mutate(MessagingType sensoryType, short obfuscationLevel = 0)
         {
-            //var rand = new Random();
-            //if (obfuscationLevel < 0 || obfuscationLevel > rand.Next(0, 100))
-            //{
-            //    var lex = RunObscura(sensoryType, Context.Observer, obfuscationLevel >= 100);
-            //    lex.Context = Context;
-
-            //    return lex;
-            //}
-
-            var newLex = Clone();
             var dict = GetDictata();
-            if (dict != null && Type != LexicalType.ProperNoun
-                && (Context.Severity + Context.Elegance + Context.Quality > 0
-                    || Context.Language != dict.Language
-                    || Context.Plural != dict.Plural
-                    || Context.Possessive != dict.Possessive
-                    || Context.Tense != dict.Tense
-                    || Context.Perspective != dict.Perspective
-                    || Context.Determinant != dict.Determinant
-                    || Context.GenderForm.Feminine != dict.Feminine))
-            {
-                var newDict = Thesaurus.GetSynonym(dict, Context);
+            var newLex = Clone();
 
-                newLex.Phrase = newDict.Name;
+            if (dict != null)
+            {
+                IDictata newDict = null;
+                if (obfuscationLevel != 0)
+                {
+                    newDict = Thesaurus.ObscureWord(dict, obfuscationLevel);
+                }
+                else if (Type != LexicalType.ProperNoun
+                    && (Context.Severity + Context.Elegance + Context.Quality > 0
+                        || Context.Language != dict.Language
+                        || Context.Plural != dict.Plural
+                        || Context.Possessive != dict.Possessive
+                        || Context.Tense != dict.Tense
+                        || Context.Perspective != dict.Perspective
+                        || Context.Determinant != dict.Determinant
+                        || Context.GenderForm.Feminine != dict.Feminine))
+                {
+                    newDict = Thesaurus.GetSynonym(dict, Context);
+                }
+
+                if(newDict != null)
+                {
+                    newLex.Phrase = newDict.Name;
+                }
             }
 
             return newLex;

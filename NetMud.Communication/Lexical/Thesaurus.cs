@@ -85,6 +85,22 @@ namespace NetMud.Communication.Lexical
         }
 
         #region word to word
+        public static IDictata ObscureWord(IDictata word, short obscureStrength)
+        {
+            if (word.Language == null)
+            {
+                IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
+
+                word.Language = globalConfig.BaseLanguage;
+            }
+
+            var possibleWords = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.SuitableForUse 
+                                                                                && dict.Language == word.Language 
+                                                                                && dict.WordTypes.Any(wordType => word.WordTypes.Contains(wordType)));
+
+            return GetObscuredWord(word, possibleWords, obscureStrength);
+        }
+
         public static IDictata GetWord(LexicalContext context, LexicalType type)
         {
             if (context.Language == null)
@@ -102,7 +118,9 @@ namespace NetMud.Communication.Lexical
         public static IDictata GetAntonym(IDictata baseWord, LexicalContext context)
         {
             if (baseWord == null)
+            {
                 return baseWord;
+            }
 
             return FocusFindWord(baseWord.Antonyms.ToList(), context, baseWord);
         }
@@ -110,7 +128,9 @@ namespace NetMud.Communication.Lexical
         public static IDictata GetSynonym(IDictata baseWord, LexicalContext context)
         {
             if (baseWord == null)
+            {
                 return baseWord;
+            }
 
             return FocusFindWord(baseWord.Synonyms.ToList(), context, baseWord);
         }
@@ -168,7 +188,7 @@ namespace NetMud.Communication.Lexical
 
         private static int GetSynonymRanking(IDictata word, LexicalContext context)
         {
-            return  (word.Positional == context.Position ? 5 : 0) +
+            return (word.Positional == context.Position ? 5 : 0) +
                     (word.Tense == context.Tense ? 5 : 0) +
                     (word.Perspective == context.Perspective ? 5 : 0) +
                     (word.Possessive == context.Possessive ? 7 : 0) +
@@ -215,6 +235,67 @@ namespace NetMud.Communication.Lexical
 
             return closestWord.Key;
         }
+
+        private static IDictata GetObscuredWord(IDictata word, IEnumerable<IDictata> possibleWords, short obscureStrength)
+        {
+            if (word == null || possibleWords.Count() == 0 || obscureStrength == 0)
+            {
+                return word;
+            }
+
+            //try to downgrade word
+            var rankedWords = new Dictionary<IDictata, int>();
+            foreach (var possibleWord in possibleWords)
+            {
+                int rating = Math.Abs(word.Quality + (Math.Abs(obscureStrength) * -1) - possibleWord.Quality);
+
+                rankedWords.Add(possibleWord, rating);
+            }
+
+            var closestWord = rankedWords.OrderBy(pair => pair.Value).FirstOrDefault();
+            var newWord = closestWord.Key;
+
+            var descriptiveWordTypes = new LexicalType[] { LexicalType.Adjective, LexicalType.Adverb };
+            var remainderWordTypes = new LexicalType[] { LexicalType.Verb, LexicalType.Preposition, LexicalType.Conjunction, LexicalType.Article };
+            if (newWord != null)
+            {
+                //Adjectives/adverbs/articles get eaten
+                if (newWord.WordTypes.Any(wordType => descriptiveWordTypes.Contains(wordType)))
+                {
+                    newWord = null;
+                }
+
+                //if it's a verb or preposition or structural leave it alone
+                if (newWord.WordTypes.Any(wordType => remainderWordTypes.Contains(wordType)))
+                {
+                    newWord = word;
+                }
+
+                //pronouns become "it"
+                if (newWord.WordTypes.Any(wordType => wordType == LexicalType.Pronoun || wordType == LexicalType.ProperNoun || wordType == LexicalType.Noun))
+                {
+                    var itContext = new LexicalContext(null)
+                    {
+                        Determinant = false,
+                        Plural = false,
+                        Possessive = false,
+                        Tense = LexicalTense.None,
+                        Language = word.Language,
+                        Perspective = NarrativePerspective.None
+                    };
+
+                    newWord = GetWord(itContext, LexicalType.Pronoun);
+                }
+
+                //TODO: if it's a noun try to downgrade it to a shape or single aspect
+            }
+            else
+            {
+                newWord = word;
+            }
+
+            return newWord;
+        }
         #endregion
 
         #region Phrases
@@ -235,7 +316,9 @@ namespace NetMud.Communication.Lexical
         public static IDictata GetAntonym(IDictataPhrase basePhrase, LexicalContext context)
         {
             if (basePhrase == null)
+            {
                 return null;
+            }
 
             return FocusFindWord(basePhrase.Antonyms.ToList(), context, basePhrase);
         }
@@ -243,7 +326,9 @@ namespace NetMud.Communication.Lexical
         public static IDictata GetSynonym(IDictataPhrase basePhrase, LexicalContext context)
         {
             if (basePhrase == null)
+            {
                 return null;
+            }
 
             return FocusFindWord(basePhrase.Synonyms.ToList(), context, basePhrase);
         }
@@ -251,7 +336,9 @@ namespace NetMud.Communication.Lexical
         public static IDictataPhrase GetAntonymPhrase(IDictata baseWord, LexicalContext context)
         {
             if (baseWord == null)
+            {
                 return null;
+            }
 
             return FocusFindPhrase(baseWord.PhraseAntonyms.ToList(), context, baseWord);
         }
@@ -259,7 +346,9 @@ namespace NetMud.Communication.Lexical
         public static IDictataPhrase GetSynonymPhrase(IDictata baseWord, LexicalContext context)
         {
             if (baseWord == null)
+            {
                 return null;
+            }
 
             return FocusFindPhrase(baseWord.PhraseSynonyms.ToList(), context, baseWord);
         }
@@ -267,7 +356,9 @@ namespace NetMud.Communication.Lexical
         public static IDictataPhrase GetAntonymPhrase(IDictataPhrase basePhrase, LexicalContext context)
         {
             if (basePhrase == null)
+            {
                 return basePhrase;
+            }
 
             return FocusFindPhrase(basePhrase.PhraseAntonyms.ToList(), context, basePhrase);
         }
@@ -275,7 +366,9 @@ namespace NetMud.Communication.Lexical
         public static IDictataPhrase GetSynonymPhrase(IDictataPhrase basePhrase, LexicalContext context)
         {
             if (basePhrase == null)
+            {
                 return basePhrase;
+            }
 
             return FocusFindPhrase(basePhrase.PhraseSynonyms.ToList(), context, basePhrase);
         }
@@ -296,7 +389,7 @@ namespace NetMud.Communication.Lexical
 
                 rankedPhrases.AddRange(possiblePhrases.Select(phrase => new Tuple<IDictataPhrase, int>(phrase, GetSynonymRanking(phrase, context))));
 
-                if(baseRanking > rankedPhrases.Max(phrase => phrase.Item2))
+                if (baseRanking > rankedPhrases.Max(phrase => phrase.Item2))
                 {
                     return null;
                 }
@@ -361,7 +454,7 @@ namespace NetMud.Communication.Lexical
 
         private static IDictataPhrase GetRelatedPhrase(IDictataPhrase basePhrase, IEnumerable<IDictataPhrase> possibleWords, int severityModifier, int eleganceModifier, int qualityModifier)
         {
-            var rankedPhrasess = new Dictionary<IDictataPhrase, int>();
+            var rankedPhrases = new Dictionary<IDictataPhrase, int>();
             foreach (var word in possibleWords)
             {
                 int rating = 0;
@@ -370,10 +463,10 @@ namespace NetMud.Communication.Lexical
                 rating += Math.Abs(basePhrase.Elegance + eleganceModifier - word.Elegance);
                 rating += Math.Abs(basePhrase.Quality + qualityModifier - word.Quality);
 
-                rankedPhrasess.Add(word, rating);
+                rankedPhrases.Add(word, rating);
             }
 
-            var closestPhrase = rankedPhrasess.OrderBy(pair => pair.Value).FirstOrDefault();
+            var closestPhrase = rankedPhrases.OrderBy(pair => pair.Value).FirstOrDefault();
 
             return closestPhrase.Key ?? basePhrase;
         }

@@ -203,7 +203,6 @@ namespace NetMud.Communication.Lexical
 
             Event.Modifiers.RemoveWhere(mod => mod == null || mod.Role == GrammaticalType.Subject);
 
-            var rand = new Random();
             foreach (ILexica subject in subjects)
             {
                 //This is to catch directly described entities, we have to add a verb to it for it to make sense. "Complete sentence rule"
@@ -221,7 +220,6 @@ namespace NetMud.Communication.Lexical
                     subject.TryModify(verbLex);
                 }
 
-                var obfuscationLevel = Math.Max(0, Math.Min(100, 30 - Strength));
                 if (subject.Modifiers.Any(mod => mod.Role == GrammaticalType.Subject))
                 {
                     sentences.Add(subject.MakeSentence(SentenceType.Partial, SensoryType, Strength));
@@ -234,15 +232,17 @@ namespace NetMud.Communication.Lexical
                 }
                 else
                 {
-                    if (obfuscationLevel < 0 || obfuscationLevel > rand.Next(0, 100))
+                    //full obfuscation happens at 100 only
+                    if (Strength <= -100 || Strength >= 100)
                     {
-                        var lex = RunObscura(SensoryType, subject, subject.Context.Observer, obfuscationLevel >= 100);
+                        var lex = RunObscura(SensoryType, subject, subject.Context.Observer, Strength > 0);
 
                         sentences.Add(lex.MakeSentence(SentenceType.Statement, SensoryType, Strength));
                     }
-
-
-                    sentences.Add(subject.MakeSentence(SentenceType.Statement, SensoryType, Strength));
+                    else
+                    {
+                        sentences.Add(subject.MakeSentence(SentenceType.Statement, SensoryType, Strength));
+                    }
                 }
             }
 

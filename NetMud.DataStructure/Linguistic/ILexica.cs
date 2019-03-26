@@ -88,7 +88,7 @@ namespace NetMud.DataStructure.Linguistic
         /// </summary>
         /// <param name="overridingContext">The full lexical context</param>
         /// <returns>A long description</returns>
-        IEnumerable<ILexica> Unpack(MessagingType sensoryType, int strength, LexicalContext overridingContext = null);
+        IEnumerable<ILexica> Unpack(MessagingType sensoryType, short strength, LexicalContext overridingContext = null);
 
         /// <summary>
         /// Describe the lexica
