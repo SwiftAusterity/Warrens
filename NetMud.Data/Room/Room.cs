@@ -250,7 +250,7 @@ namespace NetMud.Data.Room
         /// Render this to a look command (what something sees when it 'look's at this
         /// </summary>
         /// <returns>the output strings</returns>
-        public override ILexicalParagraph RenderToLook(IEntity viewer)
+        public override ILexicalParagraph RenderToVisible(IEntity viewer)
         {
             return GetFullDescription(viewer);
         }
@@ -294,7 +294,7 @@ namespace NetMud.Data.Room
                 switch (sense)
                 {
                     case MessagingType.Audible:
-                        me.Strength = (GetAudibleDelta(viewer) * 30);
+                        me.Strength = GetAudibleDelta(viewer);
 
                         IEnumerable<ISensoryEvent> aDescs = GetAudibleDescriptives(viewer);
 
@@ -318,9 +318,9 @@ namespace NetMud.Data.Room
 
                         break;
                     case MessagingType.Olefactory:
-                        me.Strength = (GetSmellDelta(viewer) * 30);
+                        me.Strength = GetOlefactoryDelta(viewer);
 
-                        IEnumerable<ISensoryEvent> oDescs = GetSmellableDescriptives(viewer);
+                        IEnumerable<ISensoryEvent> oDescs = GetOlefactoryDescriptives(viewer);
 
                         me.TryModify(oDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
 
@@ -342,7 +342,7 @@ namespace NetMud.Data.Room
 
                         break;
                     case MessagingType.Psychic:
-                        me.Strength = (GetPsychicDelta(viewer) * 30);
+                        me.Strength = GetPsychicDelta(viewer);
 
                         IEnumerable<ISensoryEvent> pDescs = GetPsychicDescriptives(viewer);
 
@@ -368,7 +368,7 @@ namespace NetMud.Data.Room
 
                         break;
                     case MessagingType.Taste:
-                        me.Strength = (GetTasteDelta(viewer) * 30);
+                        me.Strength = GetTasteDelta(viewer);
 
                         IEnumerable<ISensoryEvent> taDescs = GetPsychicDescriptives(viewer);
 
@@ -392,7 +392,7 @@ namespace NetMud.Data.Room
 
                         break;
                     case MessagingType.Tactile:
-                        me.Strength = (GetTactileDelta(viewer) * 30);
+                        me.Strength = GetTactileDelta(viewer);
 
                         IEnumerable<ISensoryEvent> tDescs = GetTouchDescriptives(viewer);
 
@@ -422,7 +422,7 @@ namespace NetMud.Data.Room
 
                         break;
                     case MessagingType.Visible:
-                        me.Strength = (GetVisibleDelta(viewer) * 30);
+                        me.Strength = GetVisibleDelta(viewer);
 
                         IEnumerable<ISensoryEvent> vDescs = GetVisibleDescriptives(viewer);
 

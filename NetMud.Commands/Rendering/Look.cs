@@ -13,7 +13,7 @@ using System.Linq;
 namespace NutMud.Commands.Rendering
 {
     /// <summary>
-    /// Invokes the current container's RenderToLook
+    /// Invokes the current container's RenderToVisible
     /// </summary>
     [CommandKeyword("look", false)]
     [CommandPermission(StaffRank.Player)]
@@ -39,7 +39,7 @@ namespace NutMud.Commands.Rendering
             //Just do a blank execution as the channel will handle doing the room updates
             if (Subject == null)
             {
-                //sb.AddRange(OriginLocation.CurrentLocation.RenderToLook(Actor));
+                //sb.AddRange(OriginLocation.CurrentLocation.RenderToVisible(Actor));
 
                 ///Need to do like HMR with a simple "update UI" pipeline TODO
                 Message blankMessenger = new Message(new LexicalParagraph("You observe your surroundings."));
@@ -54,7 +54,7 @@ namespace NutMud.Commands.Rendering
 
             ILexicalParagraph toSubject = new LexicalParagraph("$A$ looks at YOU.");
 
-            Message messagingObject = new Message(lookTarget.RenderToLook(Actor))
+            Message messagingObject = new Message(lookTarget.RenderToVisible(Actor))
             {
                 ToOrigin = new List<ILexicalParagraph> { toOrigin },
                 ToSubject = new List<ILexicalParagraph> { toSubject }

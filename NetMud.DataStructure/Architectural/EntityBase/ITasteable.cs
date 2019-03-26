@@ -25,7 +25,7 @@ namespace NetMud.DataStructure.Architectural.EntityBase
         /// Is this thing sensible to the entity
         /// </summary>
         /// <param name="actor">the observing entity</param>
-        /// <returns>0 = observable, negative = too low to detect, positive = too high to detect</returns>
-        short GetTasteDelta(IEntity actor);
+        /// <returns>(-100) to 100 rating of how well this can be detected. 0 is full detection. negative is too "low", over 0 is too "intense"</returns>
+        short GetTasteDelta(IEntity actor, short modifier = 0);
     }
 }

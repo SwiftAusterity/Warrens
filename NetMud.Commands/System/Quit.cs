@@ -11,7 +11,7 @@ using System.Collections.Generic;
 namespace NetMud.Commands.System
 {
     /// <summary>
-    /// Invokes the current container's RenderToLook
+    /// Invokes the current container's RenderToVisible
     /// </summary>
     [CommandKeyword("quit", false)]
     [CommandKeyword("exit", false)]

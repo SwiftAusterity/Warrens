@@ -466,7 +466,7 @@ namespace NetMud.Data.Linguistic
         /// </summary>
         /// <param name="type">the sentence type</param>
         /// <returns>the sentence</returns>
-        public ILexicalSentence MakeSentence(SentenceType type, MessagingType sensoryType, int strength = 30)
+        public ILexicalSentence MakeSentence(SentenceType type, MessagingType sensoryType, short strength = 30)
         {
             return new LexicalSentence(new SensoryEvent(this, strength, sensoryType));
         }

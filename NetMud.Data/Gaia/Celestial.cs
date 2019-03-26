@@ -118,7 +118,7 @@ namespace NetMud.Data.Gaia
                     case MessagingType.Tactile:
                     case MessagingType.Taste:
                     case MessagingType.Visible:
-                        self.Strength = (GetVisibleDelta(viewer) * 30);
+                        self.Strength = GetVisibleDelta(viewer);
 
                         self.TryModify(GetVisibleDescriptives(viewer));
                         break;
@@ -150,7 +150,7 @@ namespace NetMud.Data.Gaia
                 case MessagingType.Taste:
                     break;
                 case MessagingType.Visible:
-                    me.Strength = (GetVisibleDelta(viewer) * 30);
+                    me.Strength = GetVisibleDelta(viewer);
                     me.TryModify(GetVisibleDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
             }
@@ -170,12 +170,12 @@ namespace NetMud.Data.Gaia
         /// <returns>the output strings</returns>
         public string GetDescribableName(IEntity viewer)
         {
-            var strength = (GetVisibleDelta(viewer) * 30);
+            var strength = GetVisibleDelta(viewer);
 
             return GetSelf(MessagingType.Visible, strength).ToString();
         }
 
-        internal ISensoryEvent GetSelf(MessagingType type, int strength = 30)
+        internal ISensoryEvent GetSelf(MessagingType type, short strength = 30)
         {
             return new SensoryEvent()
             {
@@ -225,7 +225,7 @@ namespace NetMud.Data.Gaia
                     case MessagingType.Taste:
                         continue;
                     case MessagingType.Visible:
-                        me.Strength = (GetVisibleDelta(viewer) * 30);
+                        me.Strength = GetVisibleDelta(viewer);
 
                         me.TryModify(GetVisibleDescriptives(viewer));
 
@@ -276,17 +276,25 @@ namespace NetMud.Data.Gaia
         /// </summary>
         /// <param name="viewer">the viewing entity</param>
         /// <returns>If this is visible</returns>
-        public short GetVisibleDelta(IEntity viewer)
+        public short GetVisibleDelta(IEntity viewer, short modifier = 0)
         {
             if (viewer != null)
             {
-
-                int value = Luminosity;
+                float value = Luminosity; //TODO: make this based on outside conditions
                 ValueRange<float> range = viewer.GetVisualRange();
 
-                return value < range.Low ? (short)(value - range.Low)
-                    : value > range.High ? (short)(value - range.High)
-                    : (short)0;
+                var lowDelta = value - (range.Low - modifier);
+                var highDelta = (range.High + modifier) - value;
+
+                if (lowDelta < 0)
+                {
+                    return (short)Math.Max(-100, lowDelta);
+                }
+
+                if (highDelta < 0)
+                {
+                    return (short)Math.Min(100, Math.Abs(highDelta));
+                }
             }
 
             return 0;
@@ -297,7 +305,7 @@ namespace NetMud.Data.Gaia
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public ILexicalParagraph RenderToLook(IEntity viewer)
+        public ILexicalParagraph RenderToVisible(IEntity viewer)
         {
             return GetFullDescription(viewer, new MessagingType[] { MessagingType.Visible });
         }

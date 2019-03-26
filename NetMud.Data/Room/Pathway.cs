@@ -310,9 +310,9 @@ namespace NetMud.Data.Room
         /// Render this to a look command (what something sees when it 'look's at this
         /// </summary>
         /// <returns>the output strings</returns>
-        public override ILexicalParagraph RenderToLook(IEntity viewer)
+        public override ILexicalParagraph RenderToVisible(IEntity viewer)
         {
-            var strength = (GetVisibleDelta(viewer) * 30);
+            var strength = GetVisibleDelta(viewer);
 
             IPathwayTemplate bS = Template<IPathwayTemplate>();
             ISensoryEvent me = GetSelf(MessagingType.Visible, strength);
@@ -407,7 +407,7 @@ namespace NetMud.Data.Room
                 switch (sense)
                 {
                     case MessagingType.Audible:
-                        me.Strength = (GetAudibleDelta(viewer) * 30);
+                        me.Strength = GetAudibleDelta(viewer);
 
                         senseVerb = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "hear", collectiveContext);
 
@@ -432,11 +432,11 @@ namespace NetMud.Data.Room
                         senseDescs = new List<ISensoryEvent>() { audibleNoun };
                         break;
                     case MessagingType.Olefactory:
-                        me.Strength = (GetSmellDelta(viewer) * 30);
+                        me.Strength = GetOlefactoryDelta(viewer);
 
                         senseVerb = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "smell", collectiveContext);
 
-                        var smellDescs = GetSmellableDescriptives(viewer);
+                        var smellDescs = GetOlefactoryDescriptives(viewer);
 
                         if (smellDescs.Count() == 0)
                         {
@@ -457,7 +457,7 @@ namespace NetMud.Data.Room
                         senseDescs = new List<ISensoryEvent>() { smellNoun };
                         break;
                     case MessagingType.Psychic:
-                        me.Strength = (GetPsychicDelta(viewer) * 30);
+                        me.Strength = GetPsychicDelta(viewer);
 
                         senseVerb = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "sense", collectiveContext);
 
@@ -485,7 +485,7 @@ namespace NetMud.Data.Room
                     case MessagingType.Taste:
                         continue;
                     case MessagingType.Visible:
-                        me.Strength = (GetVisibleDelta(viewer) * 30);
+                        me.Strength = GetVisibleDelta(viewer);
 
                         senseVerb = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "see", collectiveContext);
 

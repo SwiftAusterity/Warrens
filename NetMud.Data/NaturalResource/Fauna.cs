@@ -150,9 +150,9 @@ namespace NetMud.Data.NaturalResource
             }
 
             var collectiveNoun = new SensoryEvent(new Lexica(LexicalType.Noun, GrammaticalType.Subject, Race.CollectiveNoun, discreteContext), 
-                                                30 + (GetVisibleDelta(viewer) * 30), MessagingType.Visible);
+                                                GetVisibleDelta(viewer), MessagingType.Visible);
 
-            var me = GetSelf(MessagingType.Visible, 30 + (GetVisibleDelta(viewer) * 30));
+            var me = GetSelf(MessagingType.Visible, GetVisibleDelta(viewer));
             me.Event.Role = GrammaticalType.Descriptive;
             me.Event.Context = collectiveContext;
 

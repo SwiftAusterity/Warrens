@@ -205,32 +205,32 @@ namespace NetMud.Data.NaturalResource
                 switch (sense)
                 {
                     case MessagingType.Audible:
-                        self.Strength = (GetAudibleDelta(viewer) * 30);
+                        self.Strength = GetAudibleDelta(viewer);
 
                         self.TryModify(GetAudibleDescriptives(viewer));
                         break;
                     case MessagingType.Olefactory:
-                        self.Strength = (GetSmellDelta(viewer) * 30);
+                        self.Strength = GetOlefactoryDelta(viewer);
 
-                        self.TryModify(GetSmellableDescriptives(viewer));
+                        self.TryModify(GetOlefactoryDescriptives(viewer));
                         break;
                     case MessagingType.Psychic:
-                        self.Strength = (GetPsychicDelta(viewer) * 30);
+                        self.Strength = GetPsychicDelta(viewer);
 
                         self.TryModify(GetPsychicDescriptives(viewer));
                         break;
                     case MessagingType.Tactile:
-                        self.Strength = (GetTactileDelta(viewer) * 30);
+                        self.Strength = GetTactileDelta(viewer);
 
                         self.TryModify(GetTouchDescriptives(viewer));
                         break;
                     case MessagingType.Taste:
-                        self.Strength = (GetTasteDelta(viewer) * 30);
+                        self.Strength = GetTasteDelta(viewer);
 
                         self.TryModify(GetTasteDescriptives(viewer));
                         break;
                     case MessagingType.Visible:
-                        self.Strength = (GetVisibleDelta(viewer) * 30);
+                        self.Strength = GetVisibleDelta(viewer);
 
                         self.TryModify(GetVisibleDescriptives(viewer));
                         break;
@@ -256,32 +256,32 @@ namespace NetMud.Data.NaturalResource
             switch (sense)
             {
                 case MessagingType.Audible:
-                    self.Strength = (GetAudibleDelta(viewer) * 30);
+                    self.Strength = GetAudibleDelta(viewer);
 
                     self.TryModify(GetAudibleDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
                 case MessagingType.Olefactory:
-                    self.Strength = (GetSmellDelta(viewer) * 30);
+                    self.Strength = GetOlefactoryDelta(viewer);
 
-                    self.TryModify(GetSmellableDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
+                    self.TryModify(GetOlefactoryDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
                 case MessagingType.Psychic:
-                    self.Strength = (GetPsychicDelta(viewer) * 30);
+                    self.Strength = GetPsychicDelta(viewer);
 
                     self.TryModify(GetPsychicDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
                 case MessagingType.Tactile:
-                    self.Strength = (GetTactileDelta(viewer) * 30);
+                    self.Strength = GetTactileDelta(viewer);
 
                     self.TryModify(GetTouchDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
                 case MessagingType.Taste:
-                    self.Strength = (GetTasteDelta(viewer) * 30);
+                    self.Strength = GetTasteDelta(viewer);
 
                     self.TryModify(GetTasteDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
                 case MessagingType.Visible:
-                    self.Strength = (GetVisibleDelta(viewer) * 30);
+                    self.Strength = GetVisibleDelta(viewer);
 
                     self.TryModify(GetVisibleDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
@@ -305,7 +305,7 @@ namespace NetMud.Data.NaturalResource
             return GetSelf(MessagingType.Visible).ToString();
         }
 
-        internal ISensoryEvent GetSelf(MessagingType type, int strength = 30)
+        internal ISensoryEvent GetSelf(MessagingType type, short strength = 30)
         {
             return new SensoryEvent()
             {
@@ -322,16 +322,25 @@ namespace NetMud.Data.NaturalResource
         /// </summary>
         /// <param name="viewer">the viewing entity</param>
         /// <returns>If this is visible</returns>
-        public virtual short GetVisibleDelta(IEntity viewer)
+        public virtual short GetVisibleDelta(IEntity viewer, short modifier = 0)
         {
             if (viewer != null)
             {
-                int value = 0;
+                float value = 30; 
                 ValueRange<float> range = viewer.GetVisualRange();
 
-                return value < range.Low ? (short)(value - range.Low)
-                    : value > range.High ? (short)(value - range.High)
-                    : (short)0;
+                var lowDelta = value - (range.Low - modifier);
+                var highDelta = (range.High + modifier) - value;
+
+                if (lowDelta < 0)
+                {
+                    return (short)Math.Max(-100, lowDelta);
+                }
+
+                if (highDelta < 0)
+                {
+                    return (short)Math.Min(100, Math.Abs(highDelta));
+                }
             }
 
             return 0;
@@ -342,7 +351,7 @@ namespace NetMud.Data.NaturalResource
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public virtual ILexicalParagraph RenderToLook(IEntity viewer)
+        public virtual ILexicalParagraph RenderToVisible(IEntity viewer)
         {
             return GetFullDescription(viewer, new[] { MessagingType.Visible, MessagingType.Psychic, MessagingType.Olefactory });
         }
@@ -383,16 +392,25 @@ namespace NetMud.Data.NaturalResource
         /// </summary>
         /// <param name="viewer">the observing entity</param>
         /// <returns>If this is observable</returns>
-        public virtual short GetAudibleDelta(IEntity viewer)
+        public virtual short GetAudibleDelta(IEntity viewer, short modifier = 0)
         {
             if (viewer != null)
             {
-                int value = 0;
+                float value = 30;
                 ValueRange<float> range = viewer.GetAuditoryRange();
 
-                return value < range.Low ? (short)(value - range.Low)
-                    : value > range.High ? (short)(value - range.High)
-                    : (short)0;
+                var lowDelta = value - (range.Low - modifier);
+                var highDelta = (range.High + modifier) - value;
+
+                if (lowDelta < 0)
+                {
+                    return (short)Math.Max(-100, lowDelta);
+                }
+
+                if (highDelta < 0)
+                {
+                    return (short)Math.Min(100, Math.Abs(highDelta));
+                }
             }
 
             return 0;
@@ -406,7 +424,7 @@ namespace NetMud.Data.NaturalResource
         public virtual ILexicalParagraph RenderToAudible(IEntity viewer)
         {
             ISensoryEvent self = GetSelf(MessagingType.Audible);
-            self.Strength = (GetAudibleDelta(viewer) * 30);
+            self.Strength = GetAudibleDelta(viewer);
             self.TryModify(GetAudibleDescriptives(viewer));
 
             return new LexicalParagraph(self);
@@ -428,16 +446,25 @@ namespace NetMud.Data.NaturalResource
         /// </summary>
         /// <param name="viewer">the observing entity</param>
         /// <returns>If this is observable</returns>
-        public virtual short GetPsychicDelta(IEntity viewer)
+        public virtual short GetPsychicDelta(IEntity viewer, short modifier = 0)
         {
             if (viewer != null)
             {
-                int value = 0;
+                float value = 30;
                 ValueRange<float> range = viewer.GetPsychicRange();
 
-                return value < range.Low ? (short)(value - range.Low)
-                    : value > range.High ? (short)(value - range.High)
-                    : (short)0;
+                var lowDelta = value - (range.Low - modifier);
+                var highDelta = (range.High + modifier) - value;
+
+                if (lowDelta < 0)
+                {
+                    return (short)Math.Max(-100, lowDelta);
+                }
+
+                if (highDelta < 0)
+                {
+                    return (short)Math.Min(100, Math.Abs(highDelta));
+                }
             }
 
             return 0;
@@ -448,10 +475,10 @@ namespace NetMud.Data.NaturalResource
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public virtual ILexicalParagraph RenderToSense(IEntity viewer)
+        public virtual ILexicalParagraph RenderToPsychic(IEntity viewer)
         {
             ISensoryEvent self = GetSelf(MessagingType.Psychic);
-            self.Strength = (GetPsychicDelta(viewer) * 30);
+            self.Strength = GetPsychicDelta(viewer);
             self.TryModify(GetPsychicDescriptives(viewer));
 
             return new LexicalParagraph(self);
@@ -473,16 +500,25 @@ namespace NetMud.Data.NaturalResource
         /// </summary>
         /// <param name="viewer">the observing entity</param>
         /// <returns>If this is observable</returns>
-        public virtual short GetTasteDelta(IEntity viewer)
+        public virtual short GetTasteDelta(IEntity viewer, short modifier = 0)
         {
             if (viewer != null)
             {
-                int value = 0;
+                float value = 30;
                 ValueRange<float> range = viewer.GetTasteRange();
 
-                return value < range.Low ? (short)(value - range.Low)
-                    : value > range.High ? (short)(value - range.High)
-                    : (short)0;
+                var lowDelta = value - (range.Low - modifier);
+                var highDelta = (range.High + modifier) - value;
+
+                if (lowDelta < 0)
+                {
+                    return (short)Math.Max(-100, lowDelta);
+                }
+
+                if (highDelta < 0)
+                {
+                    return (short)Math.Min(100, Math.Abs(highDelta));
+                }
             }
 
             return 0;
@@ -496,7 +532,7 @@ namespace NetMud.Data.NaturalResource
         public virtual ILexicalParagraph RenderToTaste(IEntity viewer)
         {
             ISensoryEvent self = GetSelf(MessagingType.Taste);
-            self.Strength = (GetTasteDelta(viewer) * 30);
+            self.Strength = GetTasteDelta(viewer);
 
             self.TryModify(GetTasteDescriptives(viewer));
 
@@ -519,16 +555,25 @@ namespace NetMud.Data.NaturalResource
         /// </summary>
         /// <param name="viewer">the observing entity</param>
         /// <returns>If this is observable</returns>
-        public virtual short GetSmellDelta(IEntity viewer)
+        public virtual short GetOlefactoryDelta(IEntity viewer, short modifier = 0)
         {
             if (viewer != null)
             {
-                int value = 0;
+                float value = 30;
                 ValueRange<float> range = viewer.GetOlefactoryRange();
 
-                return value < range.Low ? (short)(value - range.Low)
-                    : value > range.High ? (short)(value - range.High)
-                    : (short)0;
+                var lowDelta = value - (range.Low - modifier);
+                var highDelta = (range.High + modifier) - value;
+
+                if (lowDelta < 0)
+                {
+                    return (short)Math.Max(-100, lowDelta);
+                }
+
+                if (highDelta < 0)
+                {
+                    return (short)Math.Min(100, Math.Abs(highDelta));
+                }
             }
 
             return 0;
@@ -539,11 +584,11 @@ namespace NetMud.Data.NaturalResource
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public virtual ILexicalParagraph RenderToSmell(IEntity viewer)
+        public virtual ILexicalParagraph RenderToOlefactory(IEntity viewer)
         {
             ISensoryEvent self = GetSelf(MessagingType.Olefactory);
-            self.Strength = (GetSmellDelta(viewer) * 30);
-            self.TryModify(GetSmellableDescriptives(viewer));
+            self.Strength = GetOlefactoryDelta(viewer);
+            self.TryModify(GetOlefactoryDescriptives(viewer));
 
             return new LexicalParagraph(self);
         }
@@ -552,7 +597,7 @@ namespace NetMud.Data.NaturalResource
         /// Retrieve all of the descriptors that are tagged
         /// </summary>
         /// <returns>A collection of the descriptors</returns>
-        public virtual IEnumerable<ISensoryEvent> GetSmellableDescriptives(IEntity viewer)
+        public virtual IEnumerable<ISensoryEvent> GetOlefactoryDescriptives(IEntity viewer)
         {
             return Descriptives.Where(desc => desc.SensoryType == MessagingType.Olefactory);
         }
@@ -564,16 +609,25 @@ namespace NetMud.Data.NaturalResource
         /// </summary>
         /// <param name="viewer">the observing entity</param>
         /// <returns>If this is observable</returns>
-        public virtual short GetTactileDelta(IEntity viewer)
+        public virtual short GetTactileDelta(IEntity viewer, short modifier = 0)
         {
             if (viewer != null)
             {
-                int value = 0;
+                float value = 30;
                 ValueRange<float> range = viewer.GetTactileRange();
 
-                return value < range.Low ? (short)(value - range.Low)
-                    : value > range.High ? (short)(value - range.High)
-                    : (short)0;
+                var lowDelta = value - (range.Low - modifier);
+                var highDelta = (range.High + modifier) - value;
+
+                if (lowDelta < 0)
+                {
+                    return (short)Math.Max(-100, lowDelta);
+                }
+
+                if (highDelta < 0)
+                {
+                    return (short)Math.Min(100, Math.Abs(highDelta));
+                }
             }
 
             return 0;
@@ -587,7 +641,7 @@ namespace NetMud.Data.NaturalResource
         public virtual ILexicalParagraph RenderToTouch(IEntity viewer)
         {
             ISensoryEvent self = GetSelf(MessagingType.Tactile);
-            self.Strength = (GetTactileDelta(viewer) * 30);
+            self.Strength = GetTactileDelta(viewer);
             self.TryModify(GetTouchDescriptives(viewer));
 
             return new LexicalParagraph(self);

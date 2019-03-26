@@ -22,10 +22,10 @@ namespace NetMud.Communication.Lexical
         /// <summary>
         /// The perceptive strength (higher = easier to see and greater distance noticed)
         /// </summary>
-        [Range(-1000, 1000, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Range(-100, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
         [DataType(DataType.Text)]
         [Display(Name = "Strength", Description = "How easy is this to sense. Stronger means it can be detected more easily and from a greater distance.")]
-        public int Strength { get; set; }
+        public short Strength { get; set; }
 
         /// <summary>
         /// The type of sense used to detect this
@@ -40,7 +40,7 @@ namespace NetMud.Communication.Lexical
             Strength = 30;
         }
 
-        public SensoryEvent(ILexica happening, int strength, MessagingType sensoryType)
+        public SensoryEvent(ILexica happening, short strength, MessagingType sensoryType)
         {
             Event = happening;
             Strength = strength;

@@ -231,7 +231,7 @@ namespace NetMud.Data.Zone
                 switch (sense)
                 {
                     case MessagingType.Audible:
-                        me.Strength = (GetAudibleDelta(viewer) * 30);
+                        me.Strength = GetAudibleDelta(viewer);
 
                         IEnumerable<ISensoryEvent> aDescs = GetAudibleDescriptives(viewer);
 
@@ -260,9 +260,9 @@ namespace NetMud.Data.Zone
 
                         break;
                     case MessagingType.Olefactory:
-                        me.Strength = (GetSmellDelta(viewer) * 30);
+                        me.Strength = GetOlefactoryDelta(viewer);
 
-                        IEnumerable<ISensoryEvent> oDescs = GetSmellableDescriptives(viewer);
+                        IEnumerable<ISensoryEvent> oDescs = GetOlefactoryDescriptives(viewer);
 
                         if (oDescs.Count() == 0)
                         {
@@ -289,7 +289,7 @@ namespace NetMud.Data.Zone
 
                         break;
                     case MessagingType.Psychic:
-                        me.Strength = (GetPsychicDelta(viewer) * 30);
+                        me.Strength = GetPsychicDelta(viewer);
 
                         IEnumerable<ISensoryEvent> pDescs = GetPsychicDescriptives(viewer);
 
@@ -322,7 +322,7 @@ namespace NetMud.Data.Zone
                     case MessagingType.Taste:
                         continue;
                     case MessagingType.Tactile:
-                        me.Strength = (GetTactileDelta(viewer) * 30);
+                        me.Strength = GetTactileDelta(viewer);
 
                         //Add the temperature
                         me.TryModify(LexicalType.Verb, GrammaticalType.Verb, "feels").TryModify(new Lexica[] {
@@ -332,7 +332,7 @@ namespace NetMud.Data.Zone
 
                         break;
                     case MessagingType.Visible:
-                        me.Strength = (GetVisibleDelta(viewer) * 30);
+                        me.Strength = GetVisibleDelta(viewer);
 
                         IEnumerable<ISensoryEvent> vDescs = GetVisibleDescriptives(viewer);
 

@@ -13,19 +13,19 @@ namespace NetMud.DataStructure.Architectural.EntityBase
         /// </summary>
         /// <param name="actor">entity initiating the command</param>
         /// <returns>the output</returns>
-        ILexicalParagraph RenderToSmell(IEntity actor);
+        ILexicalParagraph RenderToOlefactory(IEntity actor);
 
         /// <summary>
         /// Retrieve all of the descriptors that are tagged as Olefactory output
         /// </summary>
         /// <returns>A collection of the descriptors</returns>
-        IEnumerable<ISensoryEvent> GetSmellableDescriptives(IEntity viewer);
+        IEnumerable<ISensoryEvent> GetOlefactoryDescriptives(IEntity viewer);
 
         /// <summary>
         /// Is this thing sensible to the entity
         /// </summary>
         /// <param name="actor">the observing entity</param>
-        /// <returns>0 = observable, negative = too low to detect, positive = too high to detect</returns>
-        short GetSmellDelta(IEntity actor);
+        /// <returns>(-100) to 100 rating of how well this can be detected. 0 is full detection. negative is too "low", over 0 is too "intense"</returns>
+        short GetOlefactoryDelta(IEntity actor, short modifier = 0);
     }
 }
