@@ -10,6 +10,7 @@ using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.Player;
 using NetMud.DataStructure.System;
 using Newtonsoft.Json;
+using Syn.WordNet;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -141,6 +142,32 @@ namespace NetMud.Data.Linguistic
         [Display(Name = "Quality", Description = "Finesse synonym rating; quality of execution of form or function.")]
         [DataType(DataType.Text)]
         public int Quality { get; set; }
+
+        [ScriptIgnore]
+        [JsonIgnore]
+        private SynSet _synSet;
+
+        /// <summary>
+        /// the wordnet version of this word
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public SynSet SynSet
+        {
+            get
+            {
+                if(_synSet == null)
+                {
+                    _synSet = LexicalProcessor.GetSynSet(this, WordTypes.FirstOrDefault());
+                }
+
+                return _synSet;
+            }
+            private set
+            {
+                _synSet = value;
+            }
+        }
 
         [JsonProperty("Language")]
         private ConfigDataCacheKey _language { get; set; }

@@ -65,7 +65,7 @@ namespace NetMud
                 globalConfig.SystemSave();
             }
 
-            LexicalProcessor.IntegrateWordNet();
+            LexicalProcessor.LoadWordnet();
 
             IGossipConfig gossipConfig = ConfigDataCache.Get<IGossipConfig>(new ConfigDataCacheKey(typeof(IGossipConfig), "GossipSettings", ConfigDataType.GameWorld));
             var instance = HttpContext.Current.ApplicationInstance;

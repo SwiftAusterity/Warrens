@@ -1,4 +1,5 @@
 ﻿using NetMud.DataStructure.Architectural;
+using Syn.WordNet;
 using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Linguistic
@@ -69,6 +70,11 @@ namespace NetMud.DataStructure.Linguistic
         /// Finesse synonym rating; execution of form
         /// </summary>
         int Quality { get; set; }
+
+        /// <summary>
+        /// the wordnet version of this word
+        /// </summary>
+        SynSet SynSet { get; }
 
         /// <summary>
         /// Things this is the same as mostly

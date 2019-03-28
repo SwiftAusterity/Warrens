@@ -23,7 +23,7 @@ namespace NetMud.Communication.Lexical
         {
             get
             {
-                if(_wordNet == null)
+                if (_wordNet == null)
                 {
                     LoadWordnet();
                 }
@@ -41,14 +41,14 @@ namespace NetMud.Communication.Lexical
             SynSet synSet = null;
 
             var synType = MapLexicalTypes(specificType);
-            if(synType == PartOfSpeech.None)
+            if (synType == PartOfSpeech.None || dictata?.Language == null || !dictata.Language.SuitableForUse)
             {
                 return synSet;
             }
 
             synSet = WordNet.GetMostCommonSynSet(dictata.Name, synType);
 
-            if(synSet != null && !dictata.WordTypes.Contains(specificType))
+            if (synSet != null && !dictata.WordTypes.Contains(specificType))
             {
                 var wordTypes = new HashSet<LexicalType>(dictata.WordTypes)
                 {
@@ -193,7 +193,7 @@ namespace NetMud.Communication.Lexical
 
                 _wordNet.Load();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 LoggingUtility.LogError(ex);
                 _wordNet = null;
@@ -202,7 +202,7 @@ namespace NetMud.Communication.Lexical
 
         public static LexicalType MapLexicalTypes(PartOfSpeech pos)
         {
-            switch(pos)
+            switch (pos)
             {
                 case PartOfSpeech.Adjective:
                     return LexicalType.Adjective;
