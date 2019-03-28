@@ -1,10 +1,15 @@
-﻿using NetMud.DataAccess.Cache;
+﻿using NetMud.DataAccess;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.System;
 using NetMud.Utility;
+using Syn.WordNet;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Web;
 
 namespace NetMud.Communication.Lexical
 {
@@ -13,6 +18,52 @@ namespace NetMud.Communication.Lexical
     /// </summary>
     public static class LexicalProcessor
     {
+        private static WordNetEngine _wordNet;
+        internal static WordNetEngine WordNet
+        {
+            get
+            {
+                if(_wordNet == null)
+                {
+                    LoadWordnet();
+                }
+
+                return _wordNet;
+            }
+            set
+            {
+                _wordNet = value;
+            }
+        }
+
+        public static SynSet GetSynSet(IDictata dictata, LexicalType specificType)
+        {
+            SynSet synSet = null;
+
+            var synType = MapLexicalTypes(specificType);
+            if(synType == PartOfSpeech.None)
+            {
+                return synSet;
+            }
+
+            synSet = WordNet.GetMostCommonSynSet(dictata.Name, synType);
+
+            if(synSet != null && !dictata.WordTypes.Contains(specificType))
+            {
+                var wordTypes = new HashSet<LexicalType>(dictata.WordTypes)
+                {
+                    specificType
+                };
+
+                dictata.WordTypes = wordTypes;
+                dictata.SystemSave();
+                dictata.PersistToCache();
+                dictata.FillLanguages();
+            }
+
+            return synSet;
+        }
+
         /// <summary>
         /// Verify the dictionary has this word already
         /// </summary>
@@ -96,22 +147,22 @@ namespace NetMud.Communication.Lexical
             return dictata;
         }
 
-        public static string GetPunctuationMark(SentenceType type)
+        public static string GetPunctuationMark(SentenceType type, bool upsideDown = false)
         {
             string punctuation = string.Empty;
             switch (type)
             {
                 case SentenceType.Exclamation:
-                    punctuation = "!";
+                    punctuation = upsideDown ? "!" : "!";
                     break;
                 case SentenceType.ExclamitoryQuestion:
-                    punctuation = "?!";
+                    punctuation = upsideDown ? "?!" : "?!";
                     break;
                 case SentenceType.Partial:
                     punctuation = ";";
                     break;
                 case SentenceType.Question:
-                    punctuation = "?";
+                    punctuation = upsideDown ? "?" : "?";
                     break;
                 case SentenceType.Statement:
                 case SentenceType.None:
@@ -120,6 +171,67 @@ namespace NetMud.Communication.Lexical
             }
 
             return punctuation;
+        }
+
+        public static void LoadWordnet()
+        {
+            var _wordNet = new WordNetEngine();
+
+            try
+            {
+                var directory = HttpContext.Current.Server.MapPath("/FileStore/wordnet/");
+
+                _wordNet.AddDataSource(new StreamReader(Path.Combine(directory, "data.adj")), PartOfSpeech.Adjective);
+                _wordNet.AddDataSource(new StreamReader(Path.Combine(directory, "data.adv")), PartOfSpeech.Adverb);
+                _wordNet.AddDataSource(new StreamReader(Path.Combine(directory, "data.noun")), PartOfSpeech.Noun);
+                _wordNet.AddDataSource(new StreamReader(Path.Combine(directory, "data.verb")), PartOfSpeech.Verb);
+
+                _wordNet.AddIndexSource(new StreamReader(Path.Combine(directory, "index.adj")), PartOfSpeech.Adjective);
+                _wordNet.AddIndexSource(new StreamReader(Path.Combine(directory, "index.adv")), PartOfSpeech.Adverb);
+                _wordNet.AddIndexSource(new StreamReader(Path.Combine(directory, "index.noun")), PartOfSpeech.Noun);
+                _wordNet.AddIndexSource(new StreamReader(Path.Combine(directory, "index.verb")), PartOfSpeech.Verb);
+
+                _wordNet.Load();
+            }
+            catch(Exception ex)
+            {
+                LoggingUtility.LogError(ex);
+                _wordNet = null;
+            }
+        }
+
+        public static LexicalType MapLexicalTypes(PartOfSpeech pos)
+        {
+            switch(pos)
+            {
+                case PartOfSpeech.Adjective:
+                    return LexicalType.Adjective;
+                case PartOfSpeech.Adverb:
+                    return LexicalType.Adverb;
+                case PartOfSpeech.Noun:
+                    return LexicalType.Noun;
+                case PartOfSpeech.Verb:
+                    return LexicalType.Verb;
+            }
+
+            return LexicalType.None;
+        }
+
+        public static PartOfSpeech MapLexicalTypes(LexicalType pos)
+        {
+            switch (pos)
+            {
+                case LexicalType.Adjective:
+                    return PartOfSpeech.Adjective;
+                case LexicalType.Adverb:
+                    return PartOfSpeech.Adverb;
+                case LexicalType.Noun:
+                    return PartOfSpeech.Noun;
+                case LexicalType.Verb:
+                    return PartOfSpeech.Verb;
+            }
+
+            return PartOfSpeech.None;
         }
     }
 }
