@@ -37,7 +37,7 @@ namespace WordNet.Net.Searching
         public int sce;   // which word in source synset
         public int dst;   // which word in target synset
         public int off; // target offset
-        public SynSet target; // cached version of off
+        public SynonymSet target; // cached version of off
 
         private Pointer()
         {

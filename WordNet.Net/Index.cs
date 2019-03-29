@@ -38,7 +38,7 @@ namespace WordNet.Net
 		public PointerType[] ptruse = null; /* pointer data in index file */
 		public int tagsense_cnt = 0;	/* number senses that are tagged */
 		public int[] offs = null;		/* synset offsets */
-		public SynSet[] syns = null;   /* cached */
+		public SynonymSet[] syns = null;   /* cached */
 		public Index next = null;
 
 		/* From search.c:
@@ -110,7 +110,7 @@ namespace WordNet.Net
 
             for (int i = 0; i < offs.Length; i++)
 			{
-				SynSet s = new SynSet(offs[i], PartOfSpeech.Of("noun"), "", search, 0);
+				SynonymSet s = new SynonymSet(offs[i], PartOfSpeech.Of("noun"), "", search, 0);
 
 				if (s.Has(pbase) || s.Has(pbase + 1) || s.Has(pbase + 2))
                 {

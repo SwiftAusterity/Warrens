@@ -108,7 +108,7 @@ namespace WordNet.Net
                 }
 
                 // check morphs
-                MorphStr morphs = new MorphStr(word, PartOfSpeech.Of(pos));
+                Morph morphs = new Morph(word, PartOfSpeech.Of(pos));
 				string morph = "";
 				while ((morph = morphs.Next()) != null)
 				{
@@ -141,7 +141,7 @@ namespace WordNet.Net
 			for (int s = 0; s < index.offs.Length; s++)
 			{
 				// read in the word and its pointers
-				SynSet synset = new SynSet(index.offs[s], index.pos, index.wd, null, s);
+				SynonymSet synset = new SynonymSet(index.offs[s], index.pos, index.wd, null, s);
 
 				// build a string out of the words
 				for (int i = 0; i < synset.words.Length; i++)
@@ -241,7 +241,7 @@ namespace WordNet.Net
                 }
 
                 // generate morph list
-                MorphStr morphs = new MorphStr(word, PartOfSpeech.Of(pos));
+                Morph morphs = new Morph(word, PartOfSpeech.Of(pos));
 				string morph = "";
 				while ((morph = morphs.Next()) != null)
 				{

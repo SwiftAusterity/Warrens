@@ -34,7 +34,7 @@ namespace WordNet.Net
 		public string word;  // word in synset
 		public int uniq;     // unique id in lexicographer file
 		public int wnsns;    // sense number in wordnet: filled in during search
-		public SemCor semcor; // information from sense.index
+		public SemanticCorrelation semcor; // information from sense.index
 
 		public Lexeme()
 		{

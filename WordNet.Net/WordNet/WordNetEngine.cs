@@ -44,7 +44,7 @@ namespace WordNet.Net
         {
             PartOfSpeech pos = PartOfSpeech.Of(p);
             SearchSet ss = WordNetData.Is_defined(t, pos);
-            MorphStr ms = new MorphStr(t, pos);
+            Morph ms = new Morph(t, pos);
             hasmatch = AddSearchFor(t, pos, list); 
             //TODO: if this isn't reset then morphs aren't checked on subsequent searches - check for side effects of resetting this manually
 

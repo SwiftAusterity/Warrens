@@ -71,6 +71,7 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="BitSet.cs" />
+    <Compile Include="Exceptions.cs" />
     <Compile Include="Option.cs" />
     <Compile Include="Searching\Usage.cs" />
     <Compile Include="Searching\Indexes.cs" />
@@ -94,9 +95,9 @@
     <Compile Include="Lexeme.cs" />
     <Compile Include="Lexicon.cs" />
     <Compile Include="Morph.cs" />
-    <Compile Include="SemCor.cs" />
+    <Compile Include="SemanticCorrelation.cs" />
     <Compile Include="Synonym.cs" />
-    <Compile Include="SynSet.cs" />
+    <Compile Include="SynonymSet.cs" />
     <Compile Include="WordNetHelp.cs" />
     <Compile Include="WordNet\WordNetEngine.cs" />
     <None Include="app.config" />

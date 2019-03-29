@@ -1,11 +1,15 @@
-﻿using NetMud.DataAccess.Cache;
+﻿using NetMud.DataAccess;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.System;
 using NetMud.Utility;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.Caching;
+using System.Web;
+using WordNet.Net;
 using WordNet.Net.Searching;
 
 namespace NetMud.Communication.Lexical
@@ -18,6 +22,18 @@ namespace NetMud.Communication.Lexical
         private static readonly ObjectCache globalCache = MemoryCache.Default;
         private static readonly CacheItemPolicy globalPolicy = new CacheItemPolicy();
         private static readonly string tokenCacheKey = "WordNetEngine";
+
+        internal static WordNetEngine WordNet
+        {
+            get
+            {
+                return (WordNetEngine)globalCache[tokenCacheKey];
+            }
+            set
+            {
+                globalCache.AddOrGetExisting(tokenCacheKey, value, globalPolicy);
+            }
+        }
 
         public static void GetSynSet(IDictata dictata, LexicalType specificType)
         {
@@ -136,7 +152,15 @@ namespace NetMud.Communication.Lexical
 
         public static void LoadWordnet()
         {
+            var wordNetPath = HttpContext.Current.Server.MapPath("/FileStore/wordnet/");
 
+            if(!Directory.Exists(wordNetPath))
+            {
+                LoggingUtility.LogError(new FileNotFoundException("WordNet data not found."));
+                return;
+            }
+
+            WordNet = new WordNetEngine("wordNetPath");
         }
 
         public static LexicalType MapLexicalTypes(PartsOfSpeech pos)

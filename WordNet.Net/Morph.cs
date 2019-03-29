@@ -28,10 +28,10 @@ using WordNet.Net.Searching;
 
 namespace WordNet.Net
 {
-	/// <summary>
-	/// WordNet search code morphology functions
-	/// </summary>
-	public class MorphStr
+    /// <summary>
+    /// WordNet search code morphology functions
+    /// </summary>
+    public class Morph
 	{
         private static readonly string[] sufx = {
 								   /* Noun suffixes */
@@ -64,12 +64,12 @@ namespace WordNet.Net
         private bool firsttime;
         private readonly int cnt;
 
-		public MorphStr(string s, string p)
+		public Morph(string s, string p)
 			: this(s, PartOfSpeech.Of(p))
 		{
 		}
 
-		public MorphStr(string s, PartOfSpeech p)
+		public Morph(string s, PartOfSpeech p)
 		{
 			string origstr = s;
 			pos = p;
@@ -383,67 +383,6 @@ namespace WordNet.Net
             }
 
             return word;
-		}
-	}
-
-	public class Exceptions
-	{
-        // exception list files
-        private static Hashtable excfps = new Hashtable();
-
-		static Exceptions()
-		{
-			IDictionaryEnumerator d = PartOfSpeech.parts.GetEnumerator();
-			while (d.MoveNext())
-			{
-				PartOfSpeech p = (PartOfSpeech)d.Value;
-				if (!excfps.ContainsKey(p.Key))
-                {
-                    excfps[p.Key] = WordNetData.GetStreamReader(WordNetData.ExcFile(p));
-                }
-            }
-		}
-
-        private string line = null;
-        private int beglp = 0, endlp = -1;
-
-		public Exceptions(string word, string p)
-			: this(word, PartOfSpeech.Of(p))
-		{
-		}
-
-		public Exceptions(string word, PartOfSpeech pos)
-		{
-			line = WordNetData.BinSearch(word, (StreamReader)excfps[pos.Key]);
-			if (line != null)
-            {
-                endlp = line.IndexOf(' ');
-            }
-        }
-
-		public string Next()
-		{
-			if (endlp >= 0 && endlp + 1 < line.Length)
-			{
-				beglp = endlp + 1;
-				while (beglp < line.Length && line[beglp] == ' ')
-                {
-                    beglp++;
-                }
-
-                endlp = beglp;
-				while (endlp < line.Length && line[endlp] != ' ' && line[endlp] != '\n')
-                {
-                    endlp++;
-                }
-
-                if (endlp != beglp)
-                {
-                    return line.Substring(beglp, endlp - beglp);
-                }
-            }
-			endlp = -1;
-			return null;
 		}
 	}
 }
