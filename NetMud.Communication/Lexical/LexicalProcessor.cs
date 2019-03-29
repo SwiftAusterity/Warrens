@@ -1,15 +1,12 @@
-﻿using NetMud.DataAccess;
-using NetMud.DataAccess.Cache;
+﻿using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.System;
 using NetMud.Utility;
-using Syn.WordNet;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Web;
+using System.Runtime.Caching;
+using WordNet.Net.Searching;
 
 namespace NetMud.Communication.Lexical
 {
@@ -18,50 +15,12 @@ namespace NetMud.Communication.Lexical
     /// </summary>
     public static class LexicalProcessor
     {
-        private static WordNetEngine _wordNet;
-        internal static WordNetEngine WordNet
+        private static readonly ObjectCache globalCache = MemoryCache.Default;
+        private static readonly CacheItemPolicy globalPolicy = new CacheItemPolicy();
+        private static readonly string tokenCacheKey = "WordNetEngine";
+
+        public static void GetSynSet(IDictata dictata, LexicalType specificType)
         {
-            get
-            {
-                if (_wordNet == null)
-                {
-                    LoadWordnet();
-                }
-
-                return _wordNet;
-            }
-            set
-            {
-                _wordNet = value;
-            }
-        }
-
-        public static SynSet GetSynSet(IDictata dictata, LexicalType specificType)
-        {
-            SynSet synSet = null;
-
-            var synType = MapLexicalTypes(specificType);
-            if (synType == PartOfSpeech.None || dictata?.Language == null || !dictata.Language.SuitableForUse)
-            {
-                return synSet;
-            }
-
-            synSet = WordNet.GetMostCommonSynSet(dictata.Name, synType);
-
-            if (synSet != null && !dictata.WordTypes.Contains(specificType))
-            {
-                var wordTypes = new HashSet<LexicalType>(dictata.WordTypes)
-                {
-                    specificType
-                };
-
-                dictata.WordTypes = wordTypes;
-                dictata.SystemSave();
-                dictata.PersistToCache();
-                dictata.FillLanguages();
-            }
-
-            return synSet;
         }
 
         /// <summary>
@@ -130,6 +89,7 @@ namespace NetMud.Communication.Lexical
 
                 if (maybeDictata.Language != null)
                 {
+                    dictata.MapSynNet();
                     maybeDictata.FillLanguages();
                     maybeDictata.SystemSave();
                     maybeDictata.PersistToCache();
@@ -140,6 +100,7 @@ namespace NetMud.Communication.Lexical
                 dictata = maybeDictata;
             }
 
+            dictata.MapSynNet();
             dictata.SystemSave();
             dictata.PersistToCache();
             dictata.FillLanguages();
@@ -175,63 +136,41 @@ namespace NetMud.Communication.Lexical
 
         public static void LoadWordnet()
         {
-            var _wordNet = new WordNetEngine();
 
-            try
-            {
-                var directory = HttpContext.Current.Server.MapPath("/FileStore/wordnet/");
-
-                _wordNet.AddDataSource(new StreamReader(Path.Combine(directory, "data.adj")), PartOfSpeech.Adjective);
-                _wordNet.AddDataSource(new StreamReader(Path.Combine(directory, "data.adv")), PartOfSpeech.Adverb);
-                _wordNet.AddDataSource(new StreamReader(Path.Combine(directory, "data.noun")), PartOfSpeech.Noun);
-                _wordNet.AddDataSource(new StreamReader(Path.Combine(directory, "data.verb")), PartOfSpeech.Verb);
-
-                _wordNet.AddIndexSource(new StreamReader(Path.Combine(directory, "index.adj")), PartOfSpeech.Adjective);
-                _wordNet.AddIndexSource(new StreamReader(Path.Combine(directory, "index.adv")), PartOfSpeech.Adverb);
-                _wordNet.AddIndexSource(new StreamReader(Path.Combine(directory, "index.noun")), PartOfSpeech.Noun);
-                _wordNet.AddIndexSource(new StreamReader(Path.Combine(directory, "index.verb")), PartOfSpeech.Verb);
-
-                _wordNet.Load();
-            }
-            catch (Exception ex)
-            {
-                LoggingUtility.LogError(ex);
-                _wordNet = null;
-            }
         }
 
-        public static LexicalType MapLexicalTypes(PartOfSpeech pos)
+        public static LexicalType MapLexicalTypes(PartsOfSpeech pos)
         {
             switch (pos)
             {
-                case PartOfSpeech.Adjective:
+                case PartsOfSpeech.Adjective:
                     return LexicalType.Adjective;
-                case PartOfSpeech.Adverb:
+                case PartsOfSpeech.Adverb:
                     return LexicalType.Adverb;
-                case PartOfSpeech.Noun:
+                case PartsOfSpeech.Noun:
                     return LexicalType.Noun;
-                case PartOfSpeech.Verb:
+                case PartsOfSpeech.Verb:
                     return LexicalType.Verb;
             }
 
             return LexicalType.None;
         }
 
-        public static PartOfSpeech MapLexicalTypes(LexicalType pos)
+        public static PartsOfSpeech MapLexicalTypes(LexicalType pos)
         {
             switch (pos)
             {
                 case LexicalType.Adjective:
-                    return PartOfSpeech.Adjective;
+                    return PartsOfSpeech.Adjective;
                 case LexicalType.Adverb:
-                    return PartOfSpeech.Adverb;
+                    return PartsOfSpeech.Adverb;
                 case LexicalType.Noun:
-                    return PartOfSpeech.Noun;
+                    return PartsOfSpeech.Noun;
                 case LexicalType.Verb:
-                    return PartOfSpeech.Verb;
+                    return PartsOfSpeech.Verb;
             }
 
-            return PartOfSpeech.None;
+            return PartsOfSpeech.None;
         }
     }
 }

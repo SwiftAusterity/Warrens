@@ -10,7 +10,6 @@ using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.Player;
 using NetMud.DataStructure.System;
 using Newtonsoft.Json;
-using Syn.WordNet;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -143,31 +142,12 @@ namespace NetMud.Data.Linguistic
         [DataType(DataType.Text)]
         public int Quality { get; set; }
 
-        [ScriptIgnore]
-        [JsonIgnore]
-        private SynSet _synSet;
-
         /// <summary>
-        /// the wordnet version of this word
+        /// Has this been mapped by the synset already
         /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        public SynSet SynSet
-        {
-            get
-            {
-                if(_synSet == null)
-                {
-                    _synSet = LexicalProcessor.GetSynSet(this, WordTypes.FirstOrDefault());
-                }
-
-                return _synSet;
-            }
-            private set
-            {
-                _synSet = value;
-            }
-        }
+        [Display(Name = "Mapped", Description = "Has this word been SynSet mapped? (changing this can be damagaing to the synonym network)")]
+        [UIHint("Boolean")]
+        public bool IsSynMapped { get; set; }
 
         [JsonProperty("Language")]
         private ConfigDataCacheKey _language { get; set; }
@@ -509,6 +489,23 @@ namespace NetMud.Data.Linguistic
         public ILexica GetLexica(GrammaticalType role, LexicalType type, LexicalContext context)
         {
             return new Lexica(type, role, Name, context);
+        }
+
+        /// <summary>
+        /// Map the synnet of this word
+        /// </summary>
+        public void MapSynNet(bool cascade = false)
+        {
+            //Not a whole lot of point here
+            if(IsSynMapped)
+            {
+
+            }
+
+            //We've been mapped, set it and save the state
+            //IsSynMapped = true;
+            //PersistToCache();
+            // SystemSave();
         }
 
         /// <summary>

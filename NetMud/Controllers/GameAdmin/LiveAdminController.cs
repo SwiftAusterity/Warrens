@@ -7,7 +7,6 @@ using NetMud.Data.Linguistic;
 using NetMud.Data.Zone;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Gaia;
 using NetMud.DataStructure.Inanimate;
 using NetMud.DataStructure.Linguistic;

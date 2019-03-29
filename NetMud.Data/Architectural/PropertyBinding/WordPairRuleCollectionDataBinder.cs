@@ -1,9 +1,6 @@
-﻿using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Architectural.PropertyBinding;
-using NetMud.DataStructure.Gaia;
+﻿using NetMud.DataStructure.Architectural.PropertyBinding;
 using NetMud.DataStructure.Linguistic;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace NetMud.Data.Architectural.PropertyBinding
 {

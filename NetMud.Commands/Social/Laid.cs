@@ -2,9 +2,7 @@
 using NetMud.Communication.Messaging;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
-using NetMud.DataStructure.Linguistic;
 using System.Collections.Generic;
-using System.Text;
 
 namespace NetMud.Commands.Social
 {

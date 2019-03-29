@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using NetMud.DataStructure.Linguistic;
+﻿using NetMud.DataStructure.Linguistic;
 
 namespace NetMud.DataStructure.Architectural.EntityBase
 {

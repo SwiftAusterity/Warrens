@@ -1,5 +1,4 @@
 ﻿using NetMud.DataStructure.Architectural;
-using Syn.WordNet;
 using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Linguistic
@@ -72,9 +71,9 @@ namespace NetMud.DataStructure.Linguistic
         int Quality { get; set; }
 
         /// <summary>
-        /// the wordnet version of this word
+        /// Has this been mapped by the synset already
         /// </summary>
-        SynSet SynSet { get; }
+        bool IsSynMapped { get; set; }
 
         /// <summary>
         /// Things this is the same as mostly
@@ -100,6 +99,11 @@ namespace NetMud.DataStructure.Linguistic
         /// Add language translations for this
         /// </summary>
         void FillLanguages();
+
+        /// <summary>
+        /// Map the synnet of this word
+        /// </summary>
+        void MapSynNet(bool cascade = false);
 
         /// <summary>
         /// Create a lexica from this

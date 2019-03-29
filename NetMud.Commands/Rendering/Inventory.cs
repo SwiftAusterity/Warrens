@@ -1,5 +1,4 @@
 ﻿using NetMud.Commands.Attributes;
-using NetMud.Communication.Lexical;
 using NetMud.Communication.Messaging;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;

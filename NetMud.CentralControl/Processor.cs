@@ -15,10 +15,10 @@ namespace NetMud.CentralControl
     public static class Processor
     {
         private static ObjectCache globalCache = MemoryCache.Default;
-        private static CacheItemPolicy globalPolicy = new CacheItemPolicy();
+        private static readonly CacheItemPolicy globalPolicy = new CacheItemPolicy();
         private static readonly string cancellationTokenCacheKeyFormat = "AsyncCancellationToken.{0}";
         private static readonly string subscriptionLoopCacheKeyFormat = "SubscriptionLoop.{0}";
-        private static int _maxPulseCount = 18000; //half an hour
+        private static readonly int _maxPulseCount = 18000; //half an hour
 
         /// <summary>
         /// Starts a brand new Loop

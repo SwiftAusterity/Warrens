@@ -44,9 +44,6 @@
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="Syn.WordNet, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Syn.WordNet.1.0.5\lib\net46\Syn.WordNet.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -129,6 +126,10 @@
     <ProjectReference Include="..\NetMud.Utility\NetMud.Utility.csproj">
       <Project>{9F3CAEC0-73DC-463C-8EF7-13B83BC8FB12}</Project>
       <Name>NetMud.Utility</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WordNet.Net\WordNet.Net.csproj">
+      <Project>{F12805B0-D74A-4E5B-A482-7C7CCB69D572}</Project>
+      <Name>WordNet.Net</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

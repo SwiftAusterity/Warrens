@@ -1,11 +1,9 @@
 ﻿using NetMud.Commands.Attributes;
-using NetMud.Communication.Lexical;
 using NetMud.Communication.Messaging;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Linguistic;
-using NetMud.DataStructure.System;
 using NetMud.Utility;
 using System.Collections.Generic;
 
