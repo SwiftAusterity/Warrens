@@ -54,14 +54,16 @@ namespace WordNet.Net.WordNet
         public int taggedSenses;
         public const int ALLSENSES = 0;
         private CustomGrep customgrep = null;
+        private WordNetData netData;
+        private int lastholomero = 0;
 
-        public Search(string theWord, bool doMorphs, string thePartOfSpeech, string theSearchType, int sn)
-            : this(theWord, doMorphs, PartOfSpeech.Of(thePartOfSpeech), new SearchType(theSearchType), sn)
+        public Search(string theWord, bool doMorphs, string thePartOfSpeech, string theSearchType, int sn, WordNetData netdata)
+            : this(theWord, doMorphs, PartOfSpeech.Of(thePartOfSpeech), new SearchType(theSearchType), sn, netdata)
         {
         }
 
-        public Search(string w, bool doMorphs, PartOfSpeech p, SearchType s, int sn)
-            : this(w, p, s, sn)
+        public Search(string w, bool doMorphs, PartOfSpeech p, SearchType s, int sn, WordNetData netdata)
+            : this(w, p, s, sn, netdata)
         {
             if (p != null)
             {
@@ -69,8 +71,8 @@ namespace WordNet.Net.WordNet
             }
         }
 
-        public Search(string w, bool doMorphs, PartOfSpeech p, SearchType s, int sn, CustomGrep cg)
-            : this(w, p, s, sn)
+        public Search(string w, bool doMorphs, PartOfSpeech p, SearchType s, int sn, CustomGrep cg, WordNetData netdata)
+            : this(w, p, s, sn, netdata)
         {
             customgrep = cg;
             if (p != null)
@@ -79,15 +81,14 @@ namespace WordNet.Net.WordNet
             }
         }
 
-        internal Search(string w, PartOfSpeech p, SearchType s, int sn)
+        internal Search(string w, PartOfSpeech p, SearchType s, int sn, WordNetData netdata)
         {
+            netData = netdata;
             word = w;
             pos = p;
             sch = s;
             whichsense = sn;
         }
-
-        private int lastholomero = 0;
 
         internal void Mark()
         {
@@ -112,7 +113,7 @@ namespace WordNet.Net.WordNet
                 parts = new Hashtable();
             }
 
-            Search s = new Search(word, PartOfSpeech.Of(thePartOfSpeech), sch, whichsense);
+            Search s = new Search(word, PartOfSpeech.Of(thePartOfSpeech), sch, whichsense, netData);
             s.Do_search(doMorphs);
             parts[thePartOfSpeech] = s;
             buf += s.buf;
@@ -141,7 +142,7 @@ namespace WordNet.Net.WordNet
             }
 
             morphs = new Hashtable();
-            Morph st = new Morph(word, pos);
+            Morph st = new Morph(word, pos, netData);
             string morphword;
 
             // if there are morphs then perform iterative searches
@@ -149,7 +150,7 @@ namespace WordNet.Net.WordNet
             // object.
             while ((morphword = st.Next()) != null)
             {
-                Search s = new Search(morphword, pos, sch, whichsense);
+                Search s = new Search(morphword, pos, sch, whichsense, netData);
                 s.Do_search(false);
 
                 // Fill the morphlist - eg. if verb relations of 'drunk' are requested, none are directly 
@@ -169,7 +170,7 @@ namespace WordNet.Net.WordNet
         private void Findtheinfo()
         {
             SynonymSet cursyn = null;
-            Indexes ixs = new Indexes(word, pos);
+            Indexes ixs = new Indexes(word, pos, netData);
             Index idx = null;
             int depth = sch.rec ? 1 : 0;
             senses = new List<SynonymSet>();
@@ -197,7 +198,7 @@ namespace WordNet.Net.WordNet
                     }
                     else
                     {
-                        strings = WordNetData.Wngrep(word, pos);
+                        strings = netData.Wngrep(word, pos);
                     }
 
                     for (int wi = 0; wi < strings.Count; wi++)
@@ -246,7 +247,7 @@ namespace WordNet.Net.WordNet
 
                                 if (!skipToEnd)
                                 {
-                                    cursyn = new SynonymSet(idx, sense, this);
+                                    cursyn = new SynonymSet(idx, sense, this, netData);
 
                                     //TODO: moved senses.add(cursyn) from here to each case and handled it differently according to search - this handling needs to be verified to ensure the filter is not to limiting
                                     switch (sch.ptp.Mnemonic)
@@ -437,7 +438,7 @@ namespace WordNet.Net.WordNet
             /* Read all senses */
             for (i = 0; i < idx.offs.Length; i++)
             {
-                SynonymSet synset = new SynonymSet(idx.offs[i], pos, idx.wd, this, i);
+                SynonymSet synset = new SynonymSet(idx.offs[i], pos, idx.wd, this, i, netData);
                 /* Look for VERBGROUP ptr(s) for this sense.  If found,
 				   create group for senses, or add to existing group. */
                 for (j = 0; j < synset.ptrs.Length; j++)
@@ -510,7 +511,7 @@ namespace WordNet.Net.WordNet
                     if (rel.senses[i] && !outsenses[i])
                     {
                         flag = true;
-                        synptr = new SynonymSet(idx.offs[i], pos, "", this, i);
+                        synptr = new SynonymSet(idx.offs[i], pos, "", this, i, netData);
                         synptr.Strsns(i + 1);
                         synptr.TracePtrs(PointerType.Of("HYPERPTR"), pos, 0);
                         synptr.frames.Clear(); // TDMS 03 Jul 2006 - frames get added in wordnet.cs after filtering
@@ -529,7 +530,7 @@ namespace WordNet.Net.WordNet
             {
                 if (!outsenses[i])
                 {
-                    synptr = new SynonymSet(idx.offs[i], pos, "", this, i);
+                    synptr = new SynonymSet(idx.offs[i], pos, "", this, i, netData);
                     synptr.Strsns(i + 1);
                     synptr.TracePtrs(PointerType.Of("HYPERPTR"), pos, 0);
                     synptr.frames.Clear(); // TDMS 03 Jul 2006 - frames get added in wordnet.cs after filtering
@@ -545,7 +546,7 @@ namespace WordNet.Net.WordNet
             Index idx;
             //senses = new ArrayList();
             senses = new List<SynonymSet>();
-            Indexes ixs = new Indexes(word, pos);
+            Indexes ixs = new Indexes(word, pos, netData);
             while ((idx = ixs.Next()) != null)
             {
                 buf += "\n";
@@ -565,7 +566,7 @@ namespace WordNet.Net.WordNet
                     }
                     if (!skipToEnd)
                     {
-                        SynonymSet cursyn = new SynonymSet(idx, sens, this);
+                        SynonymSet cursyn = new SynonymSet(idx, sens, this, netData);
 
                         bool svdflag = WordNetOption.Opt("-g").flag;
                         WordNetOption.Opt("-g").flag = true;

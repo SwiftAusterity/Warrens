@@ -46,7 +46,6 @@ namespace WordNet.Net.Searching
 
         private PartOfSpeech()
         {
-            // empty constructor for serialization
         }
 
         private PartOfSpeech(string s, string n, string c, PartsOfSpeech f)
@@ -57,7 +56,8 @@ namespace WordNet.Net.Searching
             Flag = f;
             Ident = uniq++;
             parts[s] = this;
-            if (c == "")
+
+            if (string.IsNullOrWhiteSpace(c))
             {
                 parts[Key] = this;
             }
@@ -75,29 +75,22 @@ namespace WordNet.Net.Searching
                 Classinit();
             }
 
-            return (PartOfSpeech)parts[s];
+            return (PartOfSpeech)parts[s.ToLower()];
         }
 
         public static PartOfSpeech Of(PartsOfSpeech f)
         {
-            if (f == PartsOfSpeech.Noun)
+            switch(f)
             {
-                return Of("noun");
-            }
+                case PartsOfSpeech.Adjective:
+                    return Of("adj");
+                case PartsOfSpeech.Adverb:
+                    return Of("adv");
+                case PartsOfSpeech.Noun:
+                    return Of("noun");
+                case PartsOfSpeech.Verb:
+                    return Of("verb");
 
-            if (f == PartsOfSpeech.Verb)
-            {
-                return Of("verb");
-            }
-
-            if (f == PartsOfSpeech.Adjective)
-            {
-                return Of("adj");
-            }
-
-            if (f == PartsOfSpeech.Adverb)
-            {
-                return Of("adv");
             }
 
             return null;            // unknown or not unique

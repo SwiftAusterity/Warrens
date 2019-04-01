@@ -35,21 +35,22 @@ namespace WordNet.Net
     public class SemanticCorrelation
     {
         public int semcor = 0;
+        private WordNetData netData;
 
-        public SemanticCorrelation()
+        public SemanticCorrelation(WordNetData netdata)
         {
-            // empty constructor for serialization
+            netData = netdata;
         }
 
-        public SemanticCorrelation(Lexeme lex, int hereiam)
+        public SemanticCorrelation(Lexeme lex, int hereiam, WordNetData netdata) : this(netdata)
         {
             // left-pad the integer with 0's into a string
             string key = hereiam.ToString("d8") + " " + lex.wnsns;
 
-            using (StreamReader indexFile = WordNetData.GetStreamReader(WordNetData.path + @"\index.sense"))
+            using (StreamReader indexFile = netData.GetStreamReader(netData.path + @"\index.sense"))
             {
                 // locate our word and key via a binary search
-                string[] lexinfo = WordNetData.BinSearchSemCor(key, lex.word, indexFile).Split(' ');
+                string[] lexinfo = netData.BinSearchSemCor(key, lex.word, indexFile).Split(' ');
 
                 semcor = Convert.ToInt16(lexinfo[lexinfo.GetUpperBound(0)]);
             }

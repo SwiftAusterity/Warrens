@@ -105,26 +105,29 @@ namespace WordNet.Net
 		public ArrayList frames = new ArrayList(); /* of SynSetFrame */
 		public string defn;		/* synset gloss (definition) */
 		public AdjMarker adj_marker;
+        private WordNetData netData;
 
-		public SynonymSet()
+		public SynonymSet(WordNetData netdata)
 		{
-		} // for serialization
+            netData = netdata;
 
-		public SynonymSet(int offset, PartOfSpeech p, string wd, Search sch, int sens)
+        } 
+
+		public SynonymSet(int offset, PartOfSpeech p, string wd, Search sch, int sens, WordNetData netdata) : this(netdata)
 		{
-			pos = p;
+            pos = p;
 			hereiam = offset;
 			search = sch;
 			sense = sens;
-			StreamReader f = WordNetData.Data(p);
+			StreamReader f = netdata.Data(p);
 			f.DiscardBufferedData();
 			f.BaseStream.Position = offset;
 			string rec = f.ReadLine();
 			if (!rec.StartsWith(offset.ToString("D8")))
 			{
 				Console.WriteLine("Error reading " + p.Key + " file! " + offset + ": " + rec);
-				WordNetData.Reopen(p);
-				f = WordNetData.Data(p);
+                netData.Reopen(p);
+				f = netData.Data(p);
 				f.DiscardBufferedData();
 				f.BaseStream.Position = offset;
 				rec = f.ReadLine();
@@ -132,18 +135,18 @@ namespace WordNet.Net
 			Parse(rec, pos, wd);
 		}
 
-		public SynonymSet(int off, PartOfSpeech p, string wd, SynonymSet fr)
-			: this(off, p, wd, fr.search, fr.sense)
+		public SynonymSet(int off, PartOfSpeech p, string wd, SynonymSet fr, WordNetData netdata)
+			: this (off, p, wd, fr.search, fr.sense, netdata)
 		{
 		}
 
-		public SynonymSet(Index idx, int sens, Search sch)
-			: this(idx.offs[sens], idx.pos, idx.wd, sch, sens)
+		public SynonymSet(Index idx, int sens, Search sch, WordNetData netdata)
+			: this(idx.offs[sens], idx.pos, idx.wd, sch, sens, netdata)
 		{
 		}
 
-		public SynonymSet(int off, PartOfSpeech p, SynonymSet fr)
-			: this(off, p, "", fr)
+		public SynonymSet(int off, PartOfSpeech p, SynonymSet fr, WordNetData netdata)
+			: this(off, p, "", fr, netdata)
 		{
 		}
 
@@ -330,7 +333,7 @@ namespace WordNet.Net
 					}
 
 					/* Read synset pointed to */
-					cursyn = new SynonymSet(pt.off, pt.pos, this);
+					cursyn = new SynonymSet(pt.off, pt.pos, this, netData);
 					search.WordsFrom(cursyn);
 
 					// TDMS 6 Oct 2005 - build hierarchical results
@@ -411,7 +414,7 @@ namespace WordNet.Net
 						search.prflag = true;
 					}
 					Spaces("TRACEC", depth);
-					SynonymSet cursyn = new SynonymSet(pt.off, pt.pos, this);
+					SynonymSet cursyn = new SynonymSet(pt.off, pt.pos, this, netData);
 					search.WordsFrom(cursyn);
 					cursyn.Str("-> ", "\n", 1, 0, 0, 1);
 					cursyn.TracePtrs(ptp, cursyn.pos, depth);
@@ -482,7 +485,7 @@ namespace WordNet.Net
 						search.prflag = true;
 					}
 
-					SynonymSet cursyn = new SynonymSet(pt.off, pt.pos, this);
+					SynonymSet cursyn = new SynonymSet(pt.off, pt.pos, this, netData);
 					// TDMS 6 Oct 2005 - build hierarchical results
 					// TODO: verify this
 					if (senses == null)
@@ -557,7 +560,7 @@ namespace WordNet.Net
 						search.prflag = true;
 					}
 					Spaces("TRACEP", 0);
-					SynonymSet cursyn = new SynonymSet(pt.off, pt.pos, this);
+					SynonymSet cursyn = new SynonymSet(pt.off, pt.pos, this, netData);
 					search.WordsFrom(cursyn);
 					cursyn.Str("RELATED TO-> ", "\n", 0, 0, 0, 0);
 					// TDMS 6 Oct 2005 - build hierarchical results
@@ -589,7 +592,7 @@ namespace WordNet.Net
 				if (pt.ptp.Ident == HYPERPTR && (pt.sce == 0 || pt.sce == whichword))
 				{
 					Spaces("TRACEI", depth);
-					SynonymSet cursyn = new SynonymSet(pt.off, pt.pos, this);
+					SynonymSet cursyn = new SynonymSet(pt.off, pt.pos, this, netData);
 					search.WordsFrom(cursyn);
 					cursyn.Str("=> ", "\n", 1, 0, 0, 1);
 					// TDMS 6 Oct 2005 - build hierarchical results
@@ -645,7 +648,7 @@ namespace WordNet.Net
                         i++;
                     }
 
-                    newsynptr = new SynonymSet(ptrs[i].off, PartOfSpeech.Of("adj"), this);
+                    newsynptr = new SynonymSet(ptrs[i].off, PartOfSpeech.Of("adj"), this, netData);
 				}
 				else
                 {
@@ -660,7 +663,7 @@ namespace WordNet.Net
 						anttype == AdjSynSetType.IndirectAnt))
 					{
 						/* read the antonym's synset and print it.  if a direct antonym, print it's satellites. */
-						antptr = new SynonymSet(newsynptr.ptrs[i].off, PartOfSpeech.Of("adj"), this);
+						antptr = new SynonymSet(newsynptr.ptrs[i].off, PartOfSpeech.Of("adj"), this, netData);
 						search.WordsFrom(antptr);
 						// TDMS 6 Oct 2005 - build hierarchical results
 						if (senses == null)
@@ -677,7 +680,7 @@ namespace WordNet.Net
                             {
                                 if (antptr.ptrs[j].ptp.Ident == SIMPTR) // TDMS 11 JUL 2006 - changed to INT //.mnemonic=="SIMPTR")
 								{
-									simptr = new SynonymSet(antptr.ptrs[j].off, PartOfSpeech.Of("adj"), this);
+									simptr = new SynonymSet(antptr.ptrs[j].off, PartOfSpeech.Of("adj"), this, netData);
 									search.WordsFrom(simptr);
 									simptr.Str(similar, "\n", 1, 0, 0, 1);
 									// TDMS 6 Oct 2005 - build hierarchical results
@@ -759,7 +762,7 @@ namespace WordNet.Net
             search.prlexid = WordNetOption.Opt("-a").flag;
             if (search.prlexid)
 			{
-				search.buf += "<" + WordNetData.lexfiles[fnum] + "> ";
+				search.buf += "<" + netData.lexfiles[fnum] + "> ";
 			}
 
             if (wdnum > 0)
@@ -802,7 +805,7 @@ namespace WordNet.Net
             search.prlexid = WordNetOption.Opt("-a").flag;
             if (search.prlexid)
 			{
-				search.buf += "<" + WordNetData.lexfiles[fnum] + "> ";
+				search.buf += "<" + netData.lexfiles[fnum] + "> ";
 				search.prlexid = true;
 			}
 
@@ -895,7 +898,7 @@ namespace WordNet.Net
 				Pointer pt = ptrs[i];
 				if (pt.ptp.Ident == ANTPTR && pt.sce == wdnum)
 				{
-					SynonymSet psyn = new SynonymSet(pt.off, pos, this);
+					SynonymSet psyn = new SynonymSet(pt.off, pos, this, netData);
 					for (j = 0; j < psyn.ptrs.Length; j++)
 					{
 						Pointer ppt = psyn.ptrs[j];
@@ -974,7 +977,7 @@ namespace WordNet.Net
 			/* Append lexicographer filename after Sense # if flag is set. */
 			if (WordNetOption.Opt("-a").flag)
             {
-                search.buf += "\nSense " + sense + " in file \"" + WordNetData.lexfiles[fnum] + "\"\n";
+                search.buf += "\nSense " + sense + " in file \"" + netData.lexfiles[fnum] + "\"\n";
             }
             else
             {
@@ -1051,12 +1054,12 @@ namespace WordNet.Net
         private bool FindExample()
 		{
 			bool retval = false;
-			StreamReader fp = WordNetData.GetStreamReader(WordNetData.path + "SENTIDX.VRB");
+			StreamReader fp = netData.GetStreamReader(netData.path + "SENTIDX.VRB");
 
 			int wdnum = whichword - 1;
 			Lexeme lx = words[wdnum];
 			string tbuf = lx.word + "%" + pos.Ident + ":" + fnum + ":" + lx.uniq + "::";
-			string str = WordNetData.BinSearch(tbuf, fp);
+			string str = netData.BinSearch(tbuf, fp);
 
 			if (str != null)
 			{
@@ -1078,8 +1081,8 @@ namespace WordNet.Net
 
         private void GetExample(string off, string wd)
 		{
-			StreamReader fp = WordNetData.GetStreamReader(WordNetData.path + "SENTS.VRB");
-			string line = WordNetData.BinSearch(off, fp);
+			StreamReader fp = netData.GetStreamReader(netData.path + "SENTS.VRB");
+			string line = netData.BinSearch(off, fp);
 			line = line.Substring(line.IndexOf(' ') + 1);
 			search.buf += "         EX: " + line.Replace("%s", wd);
 			fp.Close();
@@ -1093,7 +1096,7 @@ namespace WordNet.Net
 		{
 			int i;
 			string wdbuf = words[which - 1].word.Replace(' ', '_').ToLower();
-			Index idx = Index.Lookup(wdbuf, pos);
+			Index idx = new Index(wdbuf, pos, netData);
 			if (idx != null)
             {
                 for (i = 0; i < idx.offs.Length; i++)
@@ -1129,7 +1132,7 @@ namespace WordNet.Net
 				if (p.ptp.Ident == SEEALSOPTR &&
 					(p.sce == 0 || (p.sce == whichword)))
 				{
-					SynonymSet cursyn = new SynonymSet(p.off, p.pos, "", this);
+					SynonymSet cursyn = new SynonymSet(p.off, p.pos, "", this, netData);
 					bool svwnsnsflag = WordNetOption.Opt("-s").flag;
 					WordNetOption.Opt("-s").flag = true;
 					cursyn.Str(prefix, "", 0, (p.dst == 0) ? 0 : p.dst, 0, 0);

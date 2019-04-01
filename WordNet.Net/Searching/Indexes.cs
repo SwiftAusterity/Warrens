@@ -37,9 +37,9 @@ namespace WordNet.Net.Searching
         private static int stringscount = 7;
         private readonly Index[] offsets = new Index[stringscount]; // of Index
         private int offset = 0;
-        private readonly PartOfSpeech fpos;
+        private PartOfSpeech fpos;
 
-        public Indexes(string str, PartOfSpeech pos)
+        public Indexes(string str, PartOfSpeech pos, WordNetData netdata)
         {
             string[] strings = new string[stringscount];
             str = str.ToLower();
@@ -54,14 +54,14 @@ namespace WordNet.Net.Searching
             // transformation no result would be found
             strings[5] = str.Replace(' ', '-');
             strings[6] = str.Replace(' ', '_');
-            offsets[0] = Index.Lookup(str, pos);
+            offsets[0] = new Index(str, pos, netdata);
             // TDMS - 14 Aug 2005 - changed 5 to 7 to allow for two
             // new possibilities
             for (int i = 1; i < stringscount; i++)
             {
                 if (str != strings[i])
                 {
-                    offsets[i] = Index.Lookup(strings[i], pos);
+                    offsets[i] = new Index(strings[i], pos, netdata);
                 }
             }
 

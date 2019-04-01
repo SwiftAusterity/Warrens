@@ -31,17 +31,19 @@ namespace WordNet.Net
     public class Exceptions
 	{
         // exception list files
-        private static Hashtable excfps = new Hashtable();
+        private Hashtable excfps = new Hashtable();
+        private WordNetData netData;
 
-		static Exceptions()
+		public Exceptions(WordNetData netdata)
 		{
-			IDictionaryEnumerator d = PartOfSpeech.parts.GetEnumerator();
+            netData = netdata;
+            IDictionaryEnumerator d = PartOfSpeech.parts.GetEnumerator();
 			while (d.MoveNext())
 			{
 				PartOfSpeech p = (PartOfSpeech)d.Value;
 				if (!excfps.ContainsKey(p.Key))
                 {
-                    excfps[p.Key] = WordNetData.GetStreamReader(WordNetData.ExcFile(p));
+                    excfps[p.Key] = netData.GetStreamReader(netData.ExcFile(p));
                 }
             }
 		}
@@ -49,14 +51,16 @@ namespace WordNet.Net
         private string line = null;
         private int beglp = 0, endlp = -1;
 
-		public Exceptions(string word, string p)
-			: this(word, PartOfSpeech.Of(p))
+		public Exceptions(string word, string p, WordNetData netdata)
+			: this(word, PartOfSpeech.Of(p), netdata)
 		{
 		}
 
-		public Exceptions(string word, PartOfSpeech pos)
+		public Exceptions(string word, PartOfSpeech pos, WordNetData netdata)
 		{
-			line = WordNetData.BinSearch(word, (StreamReader)excfps[pos.Key]);
+            netData = netdata;
+
+            line = netData.BinSearch(word, (StreamReader)excfps[pos.Key]);
 			if (line != null)
             {
                 endlp = line.IndexOf(' ');

@@ -45,111 +45,116 @@ namespace WordNet.Net
     /// </p>
     /// </remarks>
     public class Lexicon
-	{
-		/*-------------
+    {
+        /*-------------
 		 * Data Members
 		 *-------------*/
 
-		/// <summary>This gets used a lot, so I decided to cache it in static memory.</summary>
-		private static PartsOfSpeech[] enums =
-			(PartsOfSpeech[])Enum.GetValues(typeof(PartsOfSpeech));
+        /// <summary>This gets used a lot, so I decided to cache it in memory.</summary>
+        private PartsOfSpeech[] enums =
+            (PartsOfSpeech[])Enum.GetValues(typeof(PartsOfSpeech));
+        private WordNetData netData;
 
-		/*--------
+        /*--------
 		 * Methods
 		 *--------*/
+        public Lexicon(WordNetData netdata)
+        {
+            netData = netdata;
+        }
 
-		/// <summary>Finds the part of speech for a given single word</summary>
-		/// <param name="word">the word</param>
-		/// <param name="includeMorphs">include morphology? (fuzzy matching)</param>
-		/// <returns>a structure containing information about the word</returns>
-		/// <remarks>
-		/// This function is designed to determine the part of speech of a word. Since all
-		/// of the WordNet search functions require the part of speech, this function will be useful
-		/// in cases when the part of speech of a word is not known. It is not 100% correct
-		/// because WordNet was most likely not intended to be used this way. However, it is
-		/// accurate enough for most applications.
-		/// </remarks>
-		public static WordInfo FindWordInfo(string word, bool includeMorphs)
-		{
-			word = word.ToLower();
-			WordInfo wordinfo = LookupWord(word);
+        /// <summary>Finds the part of speech for a given single word</summary>
+        /// <param name="word">the word</param>
+        /// <param name="includeMorphs">include morphology? (fuzzy matching)</param>
+        /// <returns>a structure containing information about the word</returns>
+        /// <remarks>
+        /// This function is designed to determine the part of speech of a word. Since all
+        /// of the WordNet search functions require the part of speech, this function will be useful
+        /// in cases when the part of speech of a word is not known. It is not 100% correct
+        /// because WordNet was most likely not intended to be used this way. However, it is
+        /// accurate enough for most applications.
+        /// </remarks>
+        public WordInfo FindWordInfo(string word, bool includeMorphs)
+        {
+            word = word.ToLower();
+            WordInfo wordinfo = LookupWord(word);
 
-			// include morphology if nothing was found on the original word
-			if (wordinfo.Strength == 0 && includeMorphs)
+            // include morphology if nothing was found on the original word
+            if (wordinfo.Strength == 0 && includeMorphs)
             {
                 wordinfo = LookupWordMorphs(word);
             }
 
             return wordinfo;
-		}
+        }
 
-		/// <summary>Returns a list of Synonyms for a given word</summary>
-		/// <param name="word">the word</param>
-		/// <param name="pos">The Part of speech of a word</param>
-		/// <param name="includeMorphs">include morphology? (fuzzy matching)</param>
-		/// <returns>An array of strings containing the synonyms found</returns>
-		/// <remarks>
-		/// Note that my usage of 'Synonyms' here is not the same as hypernyms as defined by
-		/// WordNet. Synonyms in this sense are merely words in the same SynSet as the given
-		/// word. Hypernyms are found by tracing the pointers in a given synset.
-		/// </remarks>
-		public static string[] FindSynonyms(string word, PartsOfSpeech pos, bool includeMorphs)
-		{
-			// get an index to a synset collection
-			word = word.ToLower();
-			Index index = Index.Lookup(word, PartOfSpeech.Of(pos));
+        /// <summary>Returns a list of Synonyms for a given word</summary>
+        /// <param name="word">the word</param>
+        /// <param name="pos">The Part of speech of a word</param>
+        /// <param name="includeMorphs">include morphology? (fuzzy matching)</param>
+        /// <returns>An array of strings containing the synonyms found</returns>
+        /// <remarks>
+        /// Note that my usage of 'Synonyms' here is not the same as hypernyms as defined by
+        /// WordNet. Synonyms in this sense are merely words in the same SynSet as the given
+        /// word. Hypernyms are found by tracing the pointers in a given synset.
+        /// </remarks>
+        public string[] FindSynonyms(string word, PartsOfSpeech pos, bool includeMorphs)
+        {
+            // get an index to a synset collection
+            word = word.ToLower();
+            Index index = new Index(word, PartOfSpeech.Of(pos), netData);
 
-			// none found?
-			if (index == null)
-			{
-				if (!includeMorphs)
+            // none found?
+            if (index == null)
+            {
+                if (!includeMorphs)
                 {
                     return null;
                 }
 
                 // check morphs
-                Morph morphs = new Morph(word, PartOfSpeech.Of(pos));
-				string morph = "";
-				while ((morph = morphs.Next()) != null)
-				{
-					index = Index.Lookup(morph, PartOfSpeech.Of(pos));
-					if (index != null)
+                Morph morphs = new Morph(word, PartOfSpeech.Of(pos), netData);
+                string morph = "";
+                while ((morph = morphs.Next()) != null)
+                {
+                    index = new Index(morph, PartOfSpeech.Of(pos), netData);
+                    if (index != null)
                     {
                         break;
                     }
                 }
-			}
+            }
 
-			// still none found?
-			if (index == null)
+            // still none found?
+            if (index == null)
             {
                 return null;
             }
 
             // at this point we will always have a valid index
             return LookupSynonyms(index);
-		}
+        }
 
-		private static string[] LookupSynonyms(Index index)
-		{
-			// OVERVIEW: For each sense, grab the synset associated with our index.
-			//           Then, add the lexemes in the synset to a list.
+        private string[] LookupSynonyms(Index index)
+        {
+            // OVERVIEW: For each sense, grab the synset associated with our index.
+            //           Then, add the lexemes in the synset to a list.
 
-			ArrayList synonyms = new ArrayList(10);
+            ArrayList synonyms = new ArrayList(10);
 
-			// for each sense...
-			for (int s = 0; s < index.offs.Length; s++)
-			{
-				// read in the word and its pointers
-				SynonymSet synset = new SynonymSet(index.offs[s], index.pos, index.wd, null, s);
+            // for each sense...
+            for (int s = 0; s < index.offs.Length; s++)
+            {
+                // read in the word and its pointers
+                SynonymSet synset = new SynonymSet(index.offs[s], index.pos, index.wd, null, s, netData);
 
-				// build a string out of the words
-				for (int i = 0; i < synset.words.Length; i++)
-				{
-					string word = synset.words[i].word.Replace("_", " ");
+                // build a string out of the words
+                for (int i = 0; i < synset.words.Length; i++)
+                {
+                    string word = synset.words[i].word.Replace("_", " ");
 
-					// if the word is capitalized, that means it's a proper noun. We don't want those.
-					if (word[0] <= 'Z')
+                    // if the word is capitalized, that means it's a proper noun. We don't want those.
+                    if (word[0] <= 'Z')
                     {
                         continue;
                     }
@@ -160,28 +165,28 @@ namespace WordNet.Net
                         synonyms.Add(word);
                     }
                 }
-			}
+            }
 
-			return (string[])synonyms.ToArray(typeof(string));
-		}
+            return (string[])synonyms.ToArray(typeof(string));
+        }
 
-		private static WordInfo LookupWord(string word)
-		{
-			// OVERVIEW: For each part of speech, look for the word.
-			//           Compare relative strengths of the synsets in each category
-			//			 to determine the most probable part of speech.
-			//
-			// PROBLEM:  Word definitions are often context-based. It would be better
-			//           to find a way to search in-context in stead of just singling
-			//           out an individual word.
-			//
-			// SOLUTION: Modify FindPartOfSpeech to include a second argument, string
-			//           context. The pass the entire sentence as the context for part
-			//           of speech determination.
-			//
-			// PROBLEM:  That's difficult to do so I'm going to keep this simple for now.
+        private WordInfo LookupWord(string word)
+        {
+            // OVERVIEW: For each part of speech, look for the word.
+            //           Compare relative strengths of the synsets in each category
+            //			 to determine the most probable part of speech.
+            //
+            // PROBLEM:  Word definitions are often context-based. It would be better
+            //           to find a way to search in-context in stead of just singling
+            //           out an individual word.
+            //
+            // SOLUTION: Modify FindPartOfSpeech to include a second argument, string
+            //           context. The pass the entire sentence as the context for part
+            //           of speech determination.
+            //
+            // PROBLEM:  That's difficult to do so I'm going to keep this simple for now.
 
-			int maxCount = 0;
+            int maxCount = 0;
             WordInfo wordinfo = new WordInfo
             {
                 partOfSpeech = PartsOfSpeech.None
@@ -189,119 +194,119 @@ namespace WordNet.Net
 
             // for each part of speech...
             PartsOfSpeech[] enums = (PartsOfSpeech[])Enum.GetValues(typeof(PartsOfSpeech));
-			wordinfo.senseCounts = new int[enums.Length];
-			for (int i = 0; i < enums.Length; i++)
-			{
-				// get a valid part of speech
-				PartsOfSpeech pos = enums[i];
-				if (pos == PartsOfSpeech.None)
+            wordinfo.senseCounts = new int[enums.Length];
+            for (int i = 0; i < enums.Length; i++)
+            {
+                // get a valid part of speech
+                PartsOfSpeech pos = enums[i];
+                if (pos == PartsOfSpeech.None)
                 {
                     continue;
                 }
 
                 // get an index to a synset collection
-                Index index = Index.Lookup(word, PartOfSpeech.Of(pos));
+                Index index = new Index(word, PartOfSpeech.Of(pos), netData);
 
-				// none found?
-				if (index == null)
+                // none found?
+                if (index == null)
                 {
                     continue;
                 }
 
                 // does this part of speech have a higher sense count?
                 wordinfo.senseCounts[i] = index.sense_cnt;
-				if (wordinfo.senseCounts[i] > maxCount)
-				{
-					maxCount = wordinfo.senseCounts[i];
-					wordinfo.partOfSpeech = pos;
-				}
-			}
+                if (wordinfo.senseCounts[i] > maxCount)
+                {
+                    maxCount = wordinfo.senseCounts[i];
+                    wordinfo.partOfSpeech = pos;
+                }
+            }
 
-			return wordinfo;
-		}
+            return wordinfo;
+        }
 
-		private static WordInfo LookupWordMorphs(string word)
-		{
-			// OVERVIEW: This functions only gets called when the word was not found with
-			//           an exact match. So, enumerate all the parts of speech, then enumerate
-			//           all of the word's morphs in each category. Perform a lookup on each
-			//           morph and save the morph/strength/part-of-speech data sets. Finally,
-			//           loop over all the data sets and then pick the strongest one.
+        private WordInfo LookupWordMorphs(string word)
+        {
+            // OVERVIEW: This functions only gets called when the word was not found with
+            //           an exact match. So, enumerate all the parts of speech, then enumerate
+            //           all of the word's morphs in each category. Perform a lookup on each
+            //           morph and save the morph/strength/part-of-speech data sets. Finally,
+            //           loop over all the data sets and then pick the strongest one.
 
-			ArrayList wordinfos = new ArrayList();
+            ArrayList wordinfos = new ArrayList();
 
-			// for each part of speech...
-			for (int i = 0; i < enums.Length; i++)
-			{
-				// get a valid part of speech
-				PartsOfSpeech pos = enums[i];
-				if (pos == PartsOfSpeech.None)
+            // for each part of speech...
+            for (int i = 0; i < enums.Length; i++)
+            {
+                // get a valid part of speech
+                PartsOfSpeech pos = enums[i];
+                if (pos == PartsOfSpeech.None)
                 {
                     continue;
                 }
 
                 // generate morph list
-                Morph morphs = new Morph(word, PartOfSpeech.Of(pos));
-				string morph = "";
-				while ((morph = morphs.Next()) != null)
-				{
-					// get an index to a synset collection
-					Index index = Index.Lookup(morph, PartOfSpeech.Of(pos));
+                Morph morphs = new Morph(word, PartOfSpeech.Of(pos), netData);
+                string morph = "";
+                while ((morph = morphs.Next()) != null)
+                {
+                    // get an index to a synset collection
+                    Index index = new Index(morph, PartOfSpeech.Of(pos), netData);
 
-					// none found?
-					if (index == null)
+                    // none found?
+                    if (index == null)
                     {
                         continue;
                     }
 
                     // save the wordinfo
                     WordInfo wordinfo = GetMorphInfo(wordinfos, morph);
-					wordinfo.senseCounts[i] = index.sense_cnt;
-				}
-			}
+                    wordinfo.senseCounts[i] = index.sense_cnt;
+                }
+            }
 
-			// search the wordinfo list for the best match
-			WordInfo bestWordInfo = new WordInfo();
-			int maxStrength = 0;
-			foreach (WordInfo wordinfo in wordinfos)
-			{
-				// for each part of speech...
-				int maxSenseCount = 0;
-				int strength = 0;
-				for (int i = 0; i < enums.Length; i++)
-				{
-					// get a valid part of speech
-					PartsOfSpeech pos = enums[i];
-					if (pos == PartsOfSpeech.None)
+            // search the wordinfo list for the best match
+            WordInfo bestWordInfo = new WordInfo();
+            int maxStrength = 0;
+            foreach (WordInfo wordinfo in wordinfos)
+            {
+                // for each part of speech...
+                int maxSenseCount = 0;
+                int strength = 0;
+                for (int i = 0; i < enums.Length; i++)
+                {
+                    // get a valid part of speech
+                    PartsOfSpeech pos = enums[i];
+                    if (pos == PartsOfSpeech.None)
                     {
                         continue;
                     }
 
                     // determine part of speech and strength
                     strength += wordinfo.senseCounts[i];
-					if (wordinfo.senseCounts[i] > maxSenseCount)
-					{
-						maxSenseCount = wordinfo.senseCounts[i];
-						wordinfo.partOfSpeech = pos;
-					}
-				}
+                    if (wordinfo.senseCounts[i] > maxSenseCount)
+                    {
+                        maxSenseCount = wordinfo.senseCounts[i];
+                        wordinfo.partOfSpeech = pos;
+                    }
+                }
 
-				// best match?
-				if (strength > maxStrength)
-				{
-					maxStrength = strength;
-					bestWordInfo = wordinfo;
-				}
-			}
+                // best match?
+                if (strength > maxStrength)
+                {
+                    maxStrength = strength;
+                    bestWordInfo = wordinfo;
+                }
+            }
 
-			return bestWordInfo;
-		}
+            return bestWordInfo;
+        }
 
-		private static WordInfo GetMorphInfo(ArrayList morphinfos, string morph)
-		{
-			// Attempt to find the morph string in the list.
-			// NOTE: Since the list should never get very large, a selection search will work just fine
-			foreach (WordInfo morphinfo in morphinfos)
+        private WordInfo GetMorphInfo(ArrayList morphinfos, string morph)
+        {
+            // Attempt to find the morph string in the list.
+            // NOTE: Since the list should never get very large, a selection search will work just fine
+            foreach (WordInfo morphinfo in morphinfos)
             {
                 if (morphinfo.text == morph)
                 {
@@ -316,6 +321,6 @@ namespace WordNet.Net
                 senseCounts = new int[enums.Length]
             };
             return (WordInfo)morphinfos[morphinfos.Add(wordinfo)];
-		}
-	}
+        }
+    }
 }

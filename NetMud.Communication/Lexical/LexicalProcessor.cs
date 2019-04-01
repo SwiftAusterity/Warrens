@@ -4,6 +4,8 @@ using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.System;
 using NetMud.Utility;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -35,8 +37,31 @@ namespace NetMud.Communication.Lexical
             }
         }
 
-        public static void GetSynSet(IDictata dictata, LexicalType specificType)
+        public static bool GetSynSet(IDictata dictata, LexicalType? specificType)
         {
+            try
+            {
+                if (specificType.HasValue && MapLexicalTypes(specificType.Value) != PartsOfSpeech.None)
+                {
+                    var exists = true;
+                    SearchSet searchSet = null;
+                    ArrayList results = new ArrayList();
+                    WordNet.OverviewFor(dictata.Name, MapLexicalTypes(specificType.Value).ToString(), ref exists, ref searchSet, results);
+
+                    if (exists)
+                    {
+                        //TODO: Do something with the results
+                        return true;
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                LoggingUtility.LogError(ex);
+                //don't barf on this
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -160,7 +185,7 @@ namespace NetMud.Communication.Lexical
                 return;
             }
 
-            WordNet = new WordNetEngine("wordNetPath");
+            WordNet = new WordNetEngine(wordNetPath);
         }
 
         public static LexicalType MapLexicalTypes(PartsOfSpeech pos)

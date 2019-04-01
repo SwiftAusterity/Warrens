@@ -22,7 +22,6 @@
  */
 
 using System.Collections;
-using WordNet.Net;
 using WordNet.Net.Searching;
 using WordNet.Net.WordNet;
 
@@ -33,21 +32,22 @@ namespace WordNet.Net
     /// </summary>
     public class WordNetEngine
     {
-        public static bool hasmatch = false; // determines whether morphs are considered
+        public bool hasmatch = false; // determines whether morphs are considered
+        private WordNetData netData;
 
-        public WordNetEngine(string dictpath)
+        public WordNetEngine(string dictPath)
         {
-            WNCommon.Path = dictpath;
+            netData = new WordNetData(dictPath);
         }
 
         public void OverviewFor(string t, string p, ref bool b, ref SearchSet obj, ArrayList list)
         {
             PartOfSpeech pos = PartOfSpeech.Of(p);
-            SearchSet ss = WordNetData.Is_defined(t, pos);
-            Morph ms = new Morph(t, pos);
+            SearchSet ss = netData.Is_defined(t, pos);
+            Morph ms = new Morph(t, pos, netData);
             hasmatch = AddSearchFor(t, pos, list); 
-            //TODO: if this isn't reset then morphs aren't checked on subsequent searches - check for side effects of resetting this manually
 
+            //TODO: if this isn't reset then morphs aren't checked on subsequent searches - check for side effects of resetting this manually
             if (!hasmatch)
             {
                 string m;
@@ -56,7 +56,7 @@ namespace WordNet.Net
                 {
                     if (m != t)
                     {
-                        ss = ss + WordNetData.Is_defined(m, pos);
+                        ss = ss + netData.Is_defined(m, pos);
                         AddSearchFor(m, pos, list);
                     }
                 }
@@ -68,7 +68,7 @@ namespace WordNet.Net
 
         private bool AddSearchFor(string s, PartOfSpeech pos, ArrayList list)
         {
-            Search se = new Search(s, false, pos, new SearchType(false, "OVERVIEW"), 0);
+            Search se = new Search(s, false, pos, new SearchType(false, "OVERVIEW"), 0, netData);
             if (se.lexemes.Count > 0)
             {
                 list.Add(se);

@@ -40,55 +40,58 @@ namespace WordNet.Net
 		public int[] offs = null;		/* synset offsets */
 		public SynonymSet[] syns = null;   /* cached */
 		public Index next = null;
+        private WordNetData netData;
 
 		/* From search.c:
 		 * Find word in index file and return parsed entry in data structure.
-		   Input word must be exact match of string in database. */
+		 * Input word must be exact match of string in database. 
+         */
+
+        public Index(WordNetData netdata)
+        {
+            netData = netdata;
+        }
 
 		// From the WordNet Manual (http://wordnet.princeton.edu/man/wnsearch.3WN.html)
 		// index_lookup() finds searchstr in the index file for pos and returns a pointer 
 		// to the parsed entry in an Index data structure. searchstr must exactly match the 
 		// form of the word (lower case only, hyphens and underscores in the same places) in 
 		// the index file. NULL is returned if a match is not found.
-		public static Index Lookup(string word, PartOfSpeech pos)
+		public Index(string word, PartOfSpeech partOfSpeech, WordNetData netdata)
 		{
-			int j;
+            netData = netdata;
+            int j;
 			if (word == "" || (!char.IsLetter(word[0]) && !char.IsNumber(word[0])))
             {
-                return null;
+                return;
             }
 
-            string line = WordNetData.BinSearch(word, pos);
+            string line = netData.BinSearch(word, partOfSpeech);
 			if (line == null)
             {
-                return null;
+                return;
             }
 
             var st = line.Split(new char[0], StringSplitOptions.RemoveEmptyEntries);
             var stI = 0;
-            Index idx = new Index
-            {
-                wd = st[stI++], /* the word */
-                pos = PartOfSpeech.Of(st[stI++]), /* the part of speech */
-                sense_cnt = int.Parse(st[stI++]) /* collins count */
-            };
+            wd = st[stI++]; /* the word */
+            pos = PartOfSpeech.Of(st[stI++]); /* the part of speech */
+            sense_cnt = int.Parse(st[stI++]); /* collins count */
 
             int ptruse_cnt = int.Parse(st[stI++]); /* number of pointers types */
-			idx.ptruse = new PointerType[ptruse_cnt];
+			ptruse = new PointerType[ptruse_cnt];
 			for (j = 0; j < ptruse_cnt; j++)
             {
-                idx.ptruse[j] = PointerType.Of(st[stI++]);
+                ptruse[j] = PointerType.Of(st[stI++]);
             }
 
             int off_cnt = int.Parse(st[stI++]);
-			idx.offs = new int[off_cnt];
-			idx.tagsense_cnt = int.Parse(st[stI++]);
+			offs = new int[off_cnt];
+			tagsense_cnt = int.Parse(st[stI++]);
 			for (j = 0; j < off_cnt; j++)
             {
-                idx.offs[j] = int.Parse(st[stI++]);
+                offs[j] = int.Parse(st[stI++]);
             }
-
-            return idx;
 		}
 
 		public bool HasHoloMero(string s, Search search)
@@ -110,7 +113,7 @@ namespace WordNet.Net
 
             for (int i = 0; i < offs.Length; i++)
 			{
-				SynonymSet s = new SynonymSet(offs[i], PartOfSpeech.Of("noun"), "", search, 0);
+				SynonymSet s = new SynonymSet(offs[i], PartOfSpeech.Of("noun"), "", search, 0, netData);
 
 				if (s.Has(pbase) || s.Has(pbase + 1) || s.Has(pbase + 2))
                 {

@@ -63,15 +63,18 @@ namespace WordNet.Net
         private Exceptions e;
         private bool firsttime;
         private readonly int cnt;
+        private WordNetData netData;
 
-		public Morph(string s, string p)
-			: this(s, PartOfSpeech.Of(p))
+		public Morph(string s, string p, WordNetData netdata)
+			: this(s, PartOfSpeech.Of(p), netdata)
 		{
 		}
 
-		public Morph(string s, PartOfSpeech p)
+		public Morph(string s, PartOfSpeech p, WordNetData netdata)
 		{
-			string origstr = s;
+            netData = netdata;
+
+            string origstr = s;
 			pos = p;
 			if (pos.Clss == "SATELLITE")
             {
@@ -99,7 +102,7 @@ namespace WordNet.Net
 				svprep = 0;
 
 				/* first try exception list */
-				e = new Exceptions(str, pos);
+				e = new Exceptions(str, pos, netData);
 				if ((tmp = e.Next()) != null && tmp != str)
 				{
 					svcnt = 1; /* force next time to pass NULL */
@@ -174,7 +177,7 @@ namespace WordNet.Net
                         searchstr += word;
                     }
 
-                    if (searchstr != str && WordNetData.Is_defined(searchstr, pos).NonEmpty)
+                    if (searchstr != str && netData.Is_defined(searchstr, pos).NonEmpty)
                     {
                         return searchstr;
                     }
@@ -198,7 +201,7 @@ namespace WordNet.Net
                 else
 				{
 					svcnt = 1;
-					e = new Exceptions(str, pos);
+					e = new Exceptions(str, pos, netData);
 					if ((tmp = e.Next()) != null && tmp != str)
                     {
                         return tmp;
@@ -218,7 +221,7 @@ namespace WordNet.Net
                 return null;
             }
 
-            Exceptions e = new Exceptions(word, pos);
+            Exceptions e = new Exceptions(word, pos, netData);
 			string tmp = e.Next();
 			if (tmp != null)
             {
@@ -256,7 +259,7 @@ namespace WordNet.Net
 					// TDMS 11 Oct 2005 - bug fix - "word" substituted with "tmpbuf" as per
 					// wordnet code morph.c
 					string retval = tmpbuf.Substring(0, tmpbuf.Length - sufx[i + offset].Length) + addr[i + offset];
-					if (WordNetData.Is_defined(retval, pos).NonEmpty)
+					if (netData.Is_defined(retval, pos).NonEmpty)
                     {
                         return retval + end;
                     }
@@ -321,18 +324,18 @@ namespace WordNet.Net
             offset = offsets[PartOfSpeech.Of("verb").Ident];
 			cnt = cnts[PartOfSpeech.Of("verb").Ident];
 			/* First try to find the verb in the exception list */
-			Exceptions e = new Exceptions(word, PartOfSpeech.Of("verb"));
+			Exceptions e = new Exceptions(word, PartOfSpeech.Of("verb"), netData);
 			while ((excWord = e.Next()) != null && excWord != word)
 			{
 				retval = excWord + s.Substring(rest);
-				if (WordNetData.Is_defined(retval, PartOfSpeech.Of("verb")).NonEmpty)
+				if (netData.Is_defined(retval, PartOfSpeech.Of("verb")).NonEmpty)
                 {
                     return retval;
                 }
                 else if (lastwd != null)
 				{
 					retval = excWord + end;
-					if (WordNetData.Is_defined(retval, PartOfSpeech.Of("verb")).NonEmpty)
+					if (netData.Is_defined(retval, PartOfSpeech.Of("verb")).NonEmpty)
                     {
                         return retval;
                     }
@@ -343,14 +346,14 @@ namespace WordNet.Net
                 if ((excWord = Wordbase(word, i + offset)) != null && excWord != word) // ending is different
 				{
 					retval = excWord + s.Substring(rest);
-					if (WordNetData.Is_defined(retval, PartOfSpeech.Of("verb")).NonEmpty)
+					if (netData.Is_defined(retval, PartOfSpeech.Of("verb")).NonEmpty)
                     {
                         return retval;
                     }
                     else if (lastwd != null)
 					{
 						retval = excWord + end;
-						if (WordNetData.Is_defined(retval, PartOfSpeech.Of("verb")).NonEmpty)
+						if (netData.Is_defined(retval, PartOfSpeech.Of("verb")).NonEmpty)
                         {
                             return retval;
                         }

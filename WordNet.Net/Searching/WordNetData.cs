@@ -29,15 +29,16 @@ using WordNet.Net.WordNet;
 
 namespace WordNet.Net.Searching
 {
-
     public class WordNetData
     {
-        public static string path = WNCommon.Path; // set from WNCommon FIRST
-        private static Hashtable indexfps = new Hashtable();
-        private static Hashtable datafps = new Hashtable();
+        public string path;
+        private Hashtable indexfps = new Hashtable();
+        private Hashtable datafps = new Hashtable();
 
-        static WordNetData()
+        public WordNetData(string dictPath)
         {
+            path = dictPath;
+            PartOfSpeech.Of(PartsOfSpeech.Noun);
             IDictionaryEnumerator d = PartOfSpeech.parts.GetEnumerator();
             while (d.MoveNext())
             {
@@ -54,7 +55,7 @@ namespace WordNet.Net.Searching
             }
         }
 
-        public static StreamReader GetStreamReader(string filePath)
+        public StreamReader GetStreamReader(string filePath)
         {
             // copy file to memory stream
             MemoryStream ms = new MemoryStream();
@@ -68,17 +69,17 @@ namespace WordNet.Net.Searching
             return new StreamReader(ms, Encoding.ASCII, false, 128);
         }
 
-        public static StreamReader Index(PartOfSpeech p)
+        public StreamReader Index(PartOfSpeech p)
         {
             return (StreamReader)indexfps[p.Key];
         }
 
-        public static StreamReader Data(PartOfSpeech p)
+        public StreamReader Data(PartOfSpeech p)
         {
             return (StreamReader)datafps[p.Key];
         }
 
-        public static void Reopen(PartOfSpeech p)
+        public void Reopen(PartOfSpeech p)
         {
             Index(p).Close();
             Data(p).Close();
@@ -86,7 +87,7 @@ namespace WordNet.Net.Searching
             datafps[p.Key] = GetStreamReader(DataFile(p));
         }
 
-        public static string[] lexfiles =
+        public string[] lexfiles =
         {
             "adj.all",			    /* 0 */
 			"adj.pert",			    /* 1 */
@@ -135,22 +136,22 @@ namespace WordNet.Net.Searching
 			"adj.ppl",			    /* 44 */
 		};
 
-        internal static string ExcFile(PartOfSpeech n)
+        internal string ExcFile(PartOfSpeech n)
         {
             return path + n.Key + ".exc";
         }
 
-        internal static string IndexFile(PartOfSpeech n)
+        internal string IndexFile(PartOfSpeech n)
         {
             return path + "index." + n.Key; // WN2.1 - TDMS
         }
 
-        internal static string DataFile(PartOfSpeech n)
+        internal string DataFile(PartOfSpeech n)
         {
             return path + "data." + n.Key; // WN2.1 - TDMS
         }
 
-        public static string BinSearch(string searchKey, char marker, StreamReader fp)
+        public string BinSearch(string searchKey, char marker, StreamReader fp)
         {
             long bot = fp.BaseStream.Seek(0, SeekOrigin.End);
             long top = 0;
@@ -170,7 +171,7 @@ namespace WordNet.Net.Searching
                 }
 
                 line = fp.ReadLine();
-                if (line == null) 
+                if (line == null)
                 {
                     return null;
                 }
@@ -205,17 +206,17 @@ namespace WordNet.Net.Searching
             return null;
         }
 
-        public static string BinSearch(string searchKey, StreamReader fp)
+        public string BinSearch(string searchKey, StreamReader fp)
         {
             return BinSearch(searchKey, ' ', fp);
         }
 
-        public static string BinSearch(string word, PartOfSpeech pos)
+        public string BinSearch(string word, PartOfSpeech pos)
         {
             return BinSearch(word, Index(pos));
         }
 
-        public static string BinSearchSemCor(string uniqueid, string searchKey, StreamReader fp)
+        public string BinSearchSemCor(string uniqueid, string searchKey, StreamReader fp)
         {
             int n;
             searchKey = searchKey.ToLower(); // for some reason some WordNet words are stored with a capitalised first letter, whilst all words in the sense index are lowercase
@@ -290,20 +291,20 @@ namespace WordNet.Net.Searching
         /// <param name="searchstr">The word to search for</param>
         /// <param name="fpos">Part of Speech (noun, verb, adjective, adverb)</param>
         /// <returns>A SearchSet or null if the word does not exist in the dictionary</returns>
-        public static SearchSet Is_defined(string searchstr, PartOfSpeech fpos)
+        public SearchSet Is_defined(string searchstr, PartOfSpeech fpos)
         {
-            Indexes ixs = new Indexes(searchstr, fpos);
+            Indexes ixs = new Indexes(searchstr, fpos, this);
             Index index;
             int i;
             int CLASS = 22; /* - */
             int LASTTYPE = CLASS;
 
-            Search s = new Search(searchstr, fpos, new SearchType(false, "FREQ"), 0);
+            Search s = new Search(searchstr, fpos, new SearchType(false, "FREQ"), 0, this);
             SearchSet retval = new SearchSet();
             while ((index = ixs.Next()) != null)
             {
                 retval = retval + "SIMPTR" + "FREQ" + "SYNS" + "WNGREP" + "OVERVIEW"; // added WNGREP - TDMS
-                for (i = 0; i < index.ptruse.Length; i++)
+                for (i = 0; index.ptruse != null && i < index.ptruse.Length; i++)
                 {
                     PointerType pt = index.ptruse[i];
 
@@ -367,7 +368,7 @@ namespace WordNet.Net.Searching
             return retval;
         }
 
-        internal static ArrayList Wngrep(string wordPassed, PartOfSpeech pos)
+        internal ArrayList Wngrep(string wordPassed, PartOfSpeech pos)
         {
             ArrayList r = new ArrayList();
             StreamReader fp = Index(pos);

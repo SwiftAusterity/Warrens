@@ -499,8 +499,10 @@ namespace NetMud.Data.Linguistic
             //Not a whole lot of point here
             if(IsSynMapped)
             {
-
+                return;
             }
+
+            LexicalProcessor.GetSynSet(this, WordTypes.FirstOrDefault());
 
             //We've been mapped, set it and save the state
             //IsSynMapped = true;
