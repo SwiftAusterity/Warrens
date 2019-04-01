@@ -163,6 +163,7 @@
     <Compile Include="Linguistic\ContractionRule.cs" />
     <Compile Include="Linguistic\DictataPhrase.cs" />
     <Compile Include="Linguistic\Dictata.cs" />
+    <Compile Include="Linguistic\Lexeme.cs" />
     <Compile Include="Linguistic\WordPairRule.cs" />
     <Compile Include="Linguistic\DictataTransformationRule.cs" />
     <Compile Include="Linguistic\Language.cs" />

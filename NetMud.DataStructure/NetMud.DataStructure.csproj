@@ -186,6 +186,7 @@
     <Compile Include="Linguistic\IContractionRule.cs" />
     <Compile Include="Linguistic\IDictataPhrase.cs" />
     <Compile Include="Linguistic\IDictataTransformationRule.cs" />
+    <Compile Include="Linguistic\ILexeme.cs" />
     <Compile Include="Linguistic\IWordPairRule.cs" />
     <Compile Include="Linguistic\ILanguage.cs" />
     <Compile Include="Linguistic\ISensoryEvent.cs" />

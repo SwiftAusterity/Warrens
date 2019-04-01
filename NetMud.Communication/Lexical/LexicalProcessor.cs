@@ -37,16 +37,16 @@ namespace NetMud.Communication.Lexical
             }
         }
 
-        public static bool GetSynSet(IDictata dictata, LexicalType? specificType)
+        public static bool GetSynSet(IDictata dictata)
         {
             try
             {
-                if (specificType.HasValue && MapLexicalTypes(specificType.Value) != PartsOfSpeech.None)
+                if (MapLexicalTypes(dictata.WordType) != PartsOfSpeech.None)
                 {
                     var exists = true;
                     SearchSet searchSet = null;
                     ArrayList results = new ArrayList();
-                    WordNet.OverviewFor(dictata.Name, MapLexicalTypes(specificType.Value).ToString(), ref exists, ref searchSet, results);
+                    WordNet.OverviewFor(dictata.Name, MapLexicalTypes(dictata.WordType).ToString(), ref exists, ref searchSet, results);
 
                     if (exists)
                     {

@@ -1,14 +1,8 @@
-﻿using NetMud.Communication.Lexical;
-using NetMud.Data.Architectural;
-using NetMud.Data.Architectural.ActorBase;
-using NetMud.Data.Architectural.PropertyBinding;
+﻿using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Linguistic;
-using NetMud.DataStructure.Player;
-using NetMud.DataStructure.System;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -22,42 +16,20 @@ namespace NetMud.Data.Linguistic
     /// Sort of a partial class of Lexica so it can get stored more easily and work for the processor
     /// </summary>
     [Serializable]
-    public class Dictata : ConfigData, IDictata, IComparable<IDictata>, IEquatable<IDictata>, IEqualityComparer<IDictata>
+    public class Dictata : IDictata, IComparable<IDictata>, IEquatable<IDictata>, IEqualityComparer<IDictata>
     {
-        [ScriptIgnore]
-        [JsonIgnore]
-        public override ContentApprovalType ApprovalType => ContentApprovalType.ReviewOnly;
-
         /// <summary>
-        /// The unique key used to identify, store and retrieve data
+        /// The text of the word
         /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        public override string UniqueKey => string.Format("{0}_{1}", Language.Name, Name);
-
-        /// <summary>
-        /// Type of configuation data this is
-        /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        public override ConfigDataType Type => ConfigDataType.Dictionary;
-
-        /// <summary>
-        /// The unique name of this configuration data
-        /// </summary>
-        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 1)]
-        [Display(Name = "Word", Description = "The actual word or phrase at hand.")]
-        [DataType(DataType.Text)]
-        [Required]
-        public override string Name { get; set; }
+        public string Name { get; }
 
         /// <summary>
         /// The type of word this is in general
         /// </summary>
         [Display(Name = "Type", Description = "The type of word this is.")]
-        [UIHint("WordTypeCollection")]
+        [UIHint("EnumDropDownList")]
         [Required]
-        public HashSet<LexicalType> WordTypes { get; set; }
+        public LexicalType WordType { get; set; }
 
         /// <summary>
         /// Chronological tense of word
@@ -142,50 +114,8 @@ namespace NetMud.Data.Linguistic
         [DataType(DataType.Text)]
         public int Quality { get; set; }
 
-        /// <summary>
-        /// Has this been mapped by the synset already
-        /// </summary>
-        [Display(Name = "Mapped", Description = "Has this word been SynSet mapped? (changing this can be damagaing to the synonym network)")]
-        [UIHint("Boolean")]
-        public bool IsSynMapped { get; set; }
-
-        [JsonProperty("Language")]
-        private ConfigDataCacheKey _language { get; set; }
-
-        /// <summary>
-        /// The language this is derived from
-        /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        [Display(Name = "Language", Description = "The language this is in.")]
-        [UIHint("LanguageList")]
-        [LanguageDataBinder]
-        [Required]
-        public ILanguage Language
-        {
-            get
-            {
-                if (_language == null)
-                {
-                    return null;
-                }
-
-                return ConfigDataCache.Get<ILanguage>(_language);
-            }
-            set
-            {
-                if (value == null)
-                {
-                    _language = null;
-                    return;
-                }
-
-                _language = new ConfigDataCacheKey(value);
-            }
-        }
-
         [JsonProperty("Synonyms")]
-        private HashSet<ConfigDataCacheKey> _synonyms { get; set; }
+        private HashSet<Tuple<string, string>> _synonyms { get; set; }
 
         /// <summary>
         /// Things this is the same as mostly
@@ -201,7 +131,7 @@ namespace NetMud.Data.Linguistic
             {
                 if (_synonyms == null)
                 {
-                    _synonyms = new HashSet<ConfigDataCacheKey>();
+                    _synonyms = new HashSet<Tuple<string, string>>();
                 }
 
                 return new HashSet<IDictata>(_synonyms.Select(k => ConfigDataCache.Get<IDictata>(k)));
@@ -210,11 +140,11 @@ namespace NetMud.Data.Linguistic
             {
                 if (value == null)
                 {
-                    _synonyms = new HashSet<ConfigDataCacheKey>();
+                    _synonyms = new HashSet<Tuple<string, string>>();
                     return;
                 }
 
-                _synonyms = new HashSet<ConfigDataCacheKey>(value.Select(k => new ConfigDataCacheKey(k)));
+                _synonyms = new HashSet<Tuple<string, string>>(value.Select(k => new ConfigDataCacheKey(k)));
             }
         }
 
@@ -323,26 +253,24 @@ namespace NetMud.Data.Linguistic
         [JsonConstructor]
         public Dictata()
         {
-            WordTypes = new HashSet<LexicalType>();
+            WordType = LexicalType.None;
             Antonyms = new HashSet<IDictata>();
             Synonyms = new HashSet<IDictata>();
             PhraseAntonyms = new HashSet<IDictataPhrase>();
             PhraseSynonyms = new HashSet<IDictataPhrase>();
             Semantics = new HashSet<string>();
-            Name = string.Empty;
-
-            IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
-
-            if (globalConfig?.BaseLanguage == null)
-            {
-                Language = ConfigDataCache.GetAll<ILanguage>().FirstOrDefault();
-            }
-            else
-            {
-                Language = globalConfig.BaseLanguage;
-            }
         }
 
+        public Dictata(string name)
+        {
+            Name = name;
+            WordType = LexicalType.None;
+            Antonyms = new HashSet<IDictata>();
+            Synonyms = new HashSet<IDictata>();
+            PhraseAntonyms = new HashSet<IDictataPhrase>();
+            PhraseSynonyms = new HashSet<IDictataPhrase>();
+            Semantics = new HashSet<string>();
+        }
 
         /// <summary>
         /// Make a dictata from a lexica
@@ -350,136 +278,41 @@ namespace NetMud.Data.Linguistic
         /// <param name="lexica">the incoming lexica phrase</param>
         public Dictata(ILexica lexica)
         {
-            WordTypes = new HashSet<LexicalType>();
             Antonyms = new HashSet<IDictata>();
             Synonyms = new HashSet<IDictata>();
             PhraseAntonyms = new HashSet<IDictataPhrase>();
             PhraseSynonyms = new HashSet<IDictataPhrase>();
             Semantics = new HashSet<string>();
 
-            if (Language == null)
-            {
-                IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
+            var maybeLex = ConfigDataCache.Get<ILexeme>(
+                new ConfigDataCacheKey(typeof(ILexeme), string.Format("{0}_{1}", lexica.Context.Language.Name, lexica.Phrase), ConfigDataType.Dictionary));
 
-                if (globalConfig?.BaseLanguage == null)
-                {
-                    Language = ConfigDataCache.GetAll<ILanguage>().FirstOrDefault();
-                }
-                else
-                {
-                    Language = globalConfig.BaseLanguage;
-                }
-            }
-
-            var maybeDict = ConfigDataCache.Get<IDictata>(
-                new ConfigDataCacheKey(typeof(IDictata), string.Format("{0}_{1}", Language.Name, lexica.Phrase), ConfigDataType.Dictionary));
-
-            if (maybeDict == null)
+            if (maybeLex == null)
             {
                 Name = lexica.Phrase;
-                WordTypes.Add(lexica.Type);
-                Language = lexica.Context?.Language;
+                WordType = lexica.Type;
             }
-            else
+            else if (maybeLex.WordForms.Any(form => form.WordType == lexica.Type))
             {
-                Name = maybeDict.Name;
-                WordTypes = maybeDict.WordTypes;
-                Language = maybeDict.Language;
-                Synonyms = maybeDict.Synonyms;
-                Antonyms = maybeDict.Antonyms;
-                PhraseSynonyms = maybeDict.PhraseSynonyms;
-                PhraseAntonyms = maybeDict.PhraseAntonyms;
-                Determinant = maybeDict.Determinant;
-                Elegance = maybeDict.Elegance;
-                Feminine = maybeDict.Feminine;
-                Perspective = maybeDict.Perspective;
-                Plural = maybeDict.Plural;
-                Positional = maybeDict.Positional;
-                Possessive = maybeDict.Possessive;
-                Quality = maybeDict.Quality;
-                Semantics = maybeDict.Semantics;
-                Severity = maybeDict.Severity;
-                Tense = maybeDict.Tense;
+                var wordForm = maybeLex.WordForms.FirstOrDefault(form => form.WordType == lexica.Type);
+
+                WordType = lexica.Type;
+                Synonyms = wordForm.Synonyms;
+                Antonyms = wordForm.Antonyms;
+                PhraseSynonyms = wordForm.PhraseSynonyms;
+                PhraseAntonyms = wordForm.PhraseAntonyms;
+                Determinant = wordForm.Determinant;
+                Elegance = wordForm.Elegance;
+                Feminine = wordForm.Feminine;
+                Perspective = wordForm.Perspective;
+                Plural = wordForm.Plural;
+                Positional = wordForm.Positional;
+                Possessive = wordForm.Possessive;
+                Quality = wordForm.Quality;
+                Semantics = wordForm.Semantics;
+                Severity = wordForm.Severity;
+                Tense = wordForm.Tense;
             }
-        }
-
-        /// <summary>
-        /// Add language translations for this
-        /// </summary>
-        public void FillLanguages()
-        {
-            IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
-
-            //Don't do this if: we have no config, translation is turned off or lacking in the azure key, the language is not a human-ui language
-            //it isn't an approved language, the word is a proper noun or the language isnt the base language at all
-            if (globalConfig == null || !globalConfig.TranslationActive || string.IsNullOrWhiteSpace(globalConfig.AzureTranslationKey)
-                || !Language.UIOnly || !Language.SuitableForUse || WordTypes.Contains(LexicalType.ProperNoun) || Language != globalConfig.BaseLanguage)
-            {
-                return;
-            }
-
-            var otherLanguages = ConfigDataCache.GetAll<ILanguage>().Where(lang => lang != Language && lang.SuitableForUse && lang.UIOnly);
-
-            foreach (var language in otherLanguages)
-            {
-                var context = new LexicalContext(null)
-                {
-                    Language = language,
-                    Perspective = Perspective,
-                    Tense = Tense,
-                    Position = Positional,
-                    Determinant = Determinant,
-                    Plural = Plural,
-                    Possessive = Possessive,
-                    Elegance = Elegance,
-                    Quality = Quality,
-                    Semantics = Semantics,
-                    Severity = Severity,
-                    GenderForm = new Gender() { Feminine = true }
-                };
-
-                var translatedWord = Thesaurus.GetSynonym(this, context);
-
-                //no linguistic synonym
-                if (translatedWord == this)
-                {
-                    var newWord = Thesaurus.GetTranslatedWord(globalConfig.AzureTranslationKey, Name, Language, language);
-
-                    if (!string.IsNullOrWhiteSpace(newWord))
-                    {
-                        var newDictata = new Dictata()
-                        {
-                            Language = language,
-                            Name = newWord,
-                            Elegance = Elegance,
-                            Severity = Severity,
-                            Quality = Quality,
-                            Determinant = Determinant,
-                            Plural = Plural,
-                            Perspective = Perspective,
-                            Feminine = Feminine,
-                            Positional = Positional,
-                            Possessive = Possessive,
-                            Semantics = Semantics,
-                            Antonyms = Antonyms,
-                            Synonyms = Synonyms,
-                            PhraseAntonyms = PhraseAntonyms,
-                            PhraseSynonyms = PhraseSynonyms,
-                            Tense = Tense,
-                            WordTypes = WordTypes
-                        };
-
-                        newDictata.Synonyms = new HashSet<IDictata>(Synonyms) { this };
-                        newDictata.SystemSave();
-                        newDictata.PersistToCache();
-
-                        Synonyms = new HashSet<IDictata>(Synonyms) { newDictata };
-                    }
-                }
-            }
-
-            SystemSave();
-            PersistToCache();
         }
 
         /// <summary>
@@ -489,38 +322,6 @@ namespace NetMud.Data.Linguistic
         public ILexica GetLexica(GrammaticalType role, LexicalType type, LexicalContext context)
         {
             return new Lexica(type, role, Name, context);
-        }
-
-        /// <summary>
-        /// Map the synnet of this word
-        /// </summary>
-        public void MapSynNet(bool cascade = false)
-        {
-            //Not a whole lot of point here
-            if(IsSynMapped)
-            {
-                return;
-            }
-
-            LexicalProcessor.GetSynSet(this, WordTypes.FirstOrDefault());
-
-            //We've been mapped, set it and save the state
-            //IsSynMapped = true;
-            //PersistToCache();
-            // SystemSave();
-        }
-
-        /// <summary>
-        /// Get the significant details of what needs approval
-        /// </summary>
-        /// <returns>A list of strings</returns>
-        public override IDictionary<string, string> SignificantDetails()
-        {
-            IDictionary<string, string> returnList = base.SignificantDetails();
-
-            returnList.Add("WordTypes", string.Join(", ", WordTypes));
-
-            return returnList;
         }
 
         #region Equality Functions
@@ -565,7 +366,7 @@ namespace NetMud.Data.Linguistic
                         return -1;
                     }
 
-                    if (other.Name.Equals(Name, StringComparison.InvariantCultureIgnoreCase) && other.WordTypes.All(wordType => WordTypes.Contains(wordType)))
+                    if (other.Name.Equals(Name, StringComparison.InvariantCultureIgnoreCase) && other.WordType == WordType)
                     {
                         return 1;
                     }
@@ -592,7 +393,7 @@ namespace NetMud.Data.Linguistic
             {
                 try
                 {
-                    return other.Name.Equals(Name, StringComparison.InvariantCultureIgnoreCase) && other.WordTypes.All(wordType => WordTypes.Contains(wordType));
+                    return other.Name.Equals(Name, StringComparison.InvariantCultureIgnoreCase) && other.WordType == WordType;
                 }
                 catch (Exception ex)
                 {
@@ -621,7 +422,7 @@ namespace NetMud.Data.Linguistic
         /// <returns>the hash code</returns>
         public int GetHashCode(IDictata obj)
         {
-            return obj.GetType().GetHashCode() + obj.Language.Name.GetHashCode() + obj.Name.GetHashCode();
+            return obj.GetType().GetHashCode() + obj.Name.GetHashCode() + obj.WordType.GetHashCode();
         }
 
         /// <summary>
@@ -630,176 +431,23 @@ namespace NetMud.Data.Linguistic
         /// <returns>the hash code</returns>
         public override int GetHashCode()
         {
-            return GetType().GetHashCode() + Language.Name.GetHashCode() + Name.GetHashCode();
+            return GetType().GetHashCode() + Name.GetHashCode() + WordType.GetHashCode();
         }
 
-        public override object Clone()
+        public IDictata Clone()
         {
             return new Dictata
             {
                 Elegance = Elegance,
-                Language = Language,
-                Name = Name,
                 Severity = Severity,
                 Antonyms = Antonyms,
                 Synonyms = Synonyms,
                 PhraseAntonyms = PhraseAntonyms,
                 PhraseSynonyms = PhraseSynonyms,
                 Tense = Tense,
-                WordTypes = WordTypes,
+                WordType = WordType,
                 Quality = Quality
             };
-        }
-        #endregion
-
-        #region Data persistence functions
-        /// <summary>
-        /// Remove this object from the db permenantly
-        /// </summary>
-        /// <returns>success status</returns>
-        public override bool Remove(IAccount remover, StaffRank rank)
-        {
-            var removalState = base.Remove(remover, rank);
-
-            if(removalState)
-            {
-                var synonyms = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.Synonyms.Any(syn => syn.Equals(this)));
-                var antonyms = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.Antonyms.Any(ant => ant.Equals(this)));
-
-                foreach (var word in synonyms)
-                {
-                    var syns = new HashSet<IDictata>(word.Synonyms);
-                    syns.RemoveWhere(syn => syn.Equals(this));
-                    word.Synonyms = syns;
-                    word.Save(remover, rank);
-                }
-
-                foreach (var word in antonyms)
-                {
-                    var ants = new HashSet<IDictata>(word.Antonyms);
-                    ants.RemoveWhere(syn => syn.Equals(this));
-                    word.Antonyms = ants;
-                    word.Save(remover, rank);
-                }
-
-                var synonymPhrases = ConfigDataCache.GetAll<IDictataPhrase>().Where(dict => dict.Synonyms.Any(syn => syn.Equals(this)));
-                var antonymPhrases = ConfigDataCache.GetAll<IDictataPhrase>().Where(dict => dict.Antonyms.Any(ant => ant.Equals(this)));
-
-                foreach (var phrase in synonymPhrases)
-                {
-                    var syns = new HashSet<IDictata>(phrase.Synonyms);
-                    syns.RemoveWhere(syn => syn.Equals(this));
-                    phrase.Synonyms = syns;
-                    phrase.Save(remover, rank);
-                }
-
-                foreach (var phrase in antonymPhrases)
-                {
-                    var ants = new HashSet<IDictata>(phrase.Antonyms);
-                    ants.RemoveWhere(syn => syn.Equals(this));
-                    phrase.Antonyms = ants;
-                    phrase.Save(remover, rank);
-                }
-
-                var containedPhrases = ConfigDataCache.GetAll<IDictataPhrase>().Where(dict => dict.Words.Any(syn => syn.Equals(this)));
-
-                foreach (var phrase in containedPhrases)
-                {
-                    phrase.Remove(remover, rank);
-                }
-            }
-
-            return removalState;
-        }
-
-        /// <summary>
-        /// Update the field data for this object to the db
-        /// </summary>
-        /// <returns>success status</returns>
-        public override bool Save(IAccount editor, StaffRank rank)
-        {
-            var removalState = base.Remove(editor, rank);
-
-            if (removalState)
-            {
-                return base.Save(editor, rank);
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Update the field data for this object to the db
-        /// </summary>
-        /// <returns>success status</returns>
-        public override bool SystemSave()
-        {
-            var removalState = base.SystemRemove();
-
-            if (removalState)
-            {
-                return base.SystemSave();
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Remove this object from the db permenantly
-        /// </summary>
-        /// <returns>success status</returns>
-        public override bool SystemRemove()
-        {
-            var removalState = base.SystemRemove();
-
-            if (removalState)
-            {
-                var synonyms = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.Synonyms.Any(syn => syn.Equals(this)));
-                var antonyms = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.Antonyms.Any(ant => ant.Equals(this)));
-                foreach (var word in synonyms)
-                {
-                    var syns = new HashSet<IDictata>(word.Synonyms);
-                    syns.RemoveWhere(syn => syn.Equals(this));
-                    word.Synonyms = syns;
-                    word.SystemSave();
-                }
-
-                foreach (var word in antonyms)
-                {
-                    var ants = new HashSet<IDictata>(word.Antonyms);
-                    ants.RemoveWhere(syn => syn.Equals(this));
-                    word.Antonyms = ants;
-                    word.SystemSave();
-                }
-
-                var synonymPhrases = ConfigDataCache.GetAll<IDictataPhrase>().Where(dict => dict.Synonyms.Any(syn => syn.Equals(this)));
-                var antonymPhrases = ConfigDataCache.GetAll<IDictataPhrase>().Where(dict => dict.Antonyms.Any(ant => ant.Equals(this)));
-
-                foreach (var phrase in synonymPhrases)
-                {
-                    var syns = new HashSet<IDictata>(phrase.Synonyms);
-                    syns.RemoveWhere(syn => syn.Equals(this));
-                    phrase.Synonyms = syns;
-                    phrase.SystemSave();
-                }
-
-                foreach (var phrase in antonymPhrases)
-                {
-                    var ants = new HashSet<IDictata>(phrase.Antonyms);
-                    ants.RemoveWhere(syn => syn.Equals(this));
-                    phrase.Antonyms = ants;
-                    phrase.SystemSave();
-                }
-
-                var containedPhrases = ConfigDataCache.GetAll<IDictataPhrase>().Where(dict => dict.Words.Any(syn => syn.Equals(this)));
-
-                foreach (var phrase in containedPhrases)
-                {
-                    phrase.SystemRemove();
-                }
-            }
-
-            return removalState;
         }
         #endregion
     }

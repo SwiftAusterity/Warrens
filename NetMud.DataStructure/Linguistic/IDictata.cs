@@ -1,19 +1,18 @@
-﻿using NetMud.DataStructure.Architectural;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Linguistic
 {
-    public interface IDictata : IConfigData
+    public interface IDictata
     {
         /// <summary>
-        /// The language this is derived from
+        /// The text of the word
         /// </summary>
-        ILanguage Language { get; set; }
+        string Name { get; }
 
         /// <summary>
-        /// The type of word this is in general
+        /// The wordform
         /// </summary>
-        HashSet<LexicalType> WordTypes { get; set; }
+        LexicalType WordType { get; set; }
 
         /// <summary>
         /// Chronological tense of word
@@ -71,11 +70,6 @@ namespace NetMud.DataStructure.Linguistic
         int Quality { get; set; }
 
         /// <summary>
-        /// Has this been mapped by the synset already
-        /// </summary>
-        bool IsSynMapped { get; set; }
-
-        /// <summary>
         /// Things this is the same as mostly
         /// </summary>
         HashSet<IDictata> Synonyms { get; set; }
@@ -96,19 +90,15 @@ namespace NetMud.DataStructure.Linguistic
         HashSet<IDictataPhrase> PhraseAntonyms { get; set; }
 
         /// <summary>
-        /// Add language translations for this
-        /// </summary>
-        void FillLanguages();
-
-        /// <summary>
-        /// Map the synnet of this word
-        /// </summary>
-        void MapSynNet(bool cascade = false);
-
-        /// <summary>
         /// Create a lexica from this
         /// </summary>
         /// <returns></returns>
         ILexica GetLexica(GrammaticalType role, LexicalType type, LexicalContext context);
+
+        /// <summary>
+        /// Make a shallow copy of this
+        /// </summary>
+        /// <returns></returns>
+        IDictata Clone();
     }
 }
