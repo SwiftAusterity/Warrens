@@ -35,5 +35,27 @@ namespace NetMud.DataStructure.Linguistic
         /// Map the synnet of this word
         /// </summary>
         void MapSynNet(bool cascade = false);
+
+        /// <summary>
+        /// Add a new word form to this lexeme
+        /// </summary>
+        /// <param name="newWord">The word</param>
+        /// <returns>the word with changes</returns>
+        IDictata AddNewForm(IDictata newWord);
+
+        /// <summary>
+        /// Get a wordform by grouping id
+        /// </summary>
+        /// <param name="formGroup">the form grouping id</param>
+        /// <returns>the word</returns>
+        IDictata GetForm(short formGroup);
+
+        /// <summary>
+        /// Get a wordform by grouping id
+        /// </summary>
+        /// <param name="wordType">the lexical type of the word</param>
+        /// <param name="formGroup">the form grouping id</param>
+        /// <returns>the word</returns>
+        IDictata GetForm(LexicalType wordType, short formGroup = -1);
     }
 }

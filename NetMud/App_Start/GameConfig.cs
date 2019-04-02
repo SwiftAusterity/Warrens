@@ -153,11 +153,11 @@ namespace NetMud
                         Possessive = false,
                         Tense = LexicalTense.Present,
                         Semantics = new HashSet<string>() { "system_command" },
-                        WordTypes = new HashSet<LexicalType>() { LexicalType.Verb },
+                        WordType = LexicalType.Verb,
                         Language = language
                     };
 
-                    LexicalProcessor.VerifyDictata(newVerb);
+                    LexicalProcessor.VerifyLexeme(newVerb.GetLexeme());
                 }
             }
         }

@@ -5,9 +5,24 @@ namespace NetMud.DataStructure.Linguistic
     public interface IDictata
     {
         /// <summary>
+        /// The unique key language_name_id
+        /// </summary>
+        string UniqueKey { get; }
+
+        /// <summary>
+        /// Language for this word
+        /// </summary>
+        ILanguage Language { get; set; }
+
+        /// <summary>
         /// The text of the word
         /// </summary>
-        string Name { get; }
+        string Name { get; set; }
+
+        /// <summary>
+        /// The grouping value for synonym tracking
+        /// </summary>
+        short FormGroup { get; set; }
 
         /// <summary>
         /// The wordform
@@ -90,10 +105,16 @@ namespace NetMud.DataStructure.Linguistic
         HashSet<IDictataPhrase> PhraseAntonyms { get; set; }
 
         /// <summary>
+        /// Get the lexeme for this word
+        /// </summary>
+        /// <returns>the lexeme</returns>
+        ILexeme GetLexeme();
+
+        /// <summary>
         /// Create a lexica from this
         /// </summary>
         /// <returns></returns>
-        ILexica GetLexica(GrammaticalType role, LexicalType type, LexicalContext context);
+        ILexica GetLexica(GrammaticalType role, LexicalContext context);
 
         /// <summary>
         /// Make a shallow copy of this

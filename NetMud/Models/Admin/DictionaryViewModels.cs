@@ -10,16 +10,16 @@ using System.Linq;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageDictionaryViewModel : PagedDataModel<IDictata>
+    public class ManageDictionaryViewModel : PagedDataModel<ILexeme>
     {
-        public ManageDictionaryViewModel(IEnumerable<IDictata> items)
+        public ManageDictionaryViewModel(IEnumerable<ILexeme> items)
             : base(items)
         {
             CurrentPageNumber = 1;
             ItemsPerPage = 20;
         }
 
-        internal override Func<IDictata, bool> SearchFilter
+        internal override Func<ILexeme, bool> SearchFilter
         {
             get
             {
@@ -27,7 +27,7 @@ namespace NetMud.Models.Admin
             }
         }
 
-        internal override Func<IDictata, object> OrderPrimary
+        internal override Func<ILexeme, object> OrderPrimary
         {
             get
             {
@@ -36,7 +36,7 @@ namespace NetMud.Models.Admin
         }
 
 
-        internal override Func<IDictata, object> OrderSecondary
+        internal override Func<ILexeme, object> OrderSecondary
         {
             get
             {
@@ -45,55 +45,41 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditDictionaryViewModel : AddEditConfigDataModel<IDictata>
+    public class AddEditDictionaryViewModel : AddEditConfigDataModel<ILexeme>
     {
         [Display(Name = "Apply Existing Template", Description = "Apply an existing object's data to this new data.")]
         [UIHint("DictataList")]
         [DictataDataBinder]
-        public override IDictata Template { get; set; }
+        public override ILexeme Template { get; set; }
 
         public AddEditDictionaryViewModel() : base("", ConfigDataType.Dictionary)
         {
-            ValidWords = ConfigDataCache.GetAll<IDictata>();
+            ValidWords = ConfigDataCache.GetAll<ILexeme>();
             ValidPhrases = ConfigDataCache.GetAll<IDictataPhrase>();
             ValidLanguages = ConfigDataCache.GetAll<ILanguage>();
-            DataObject = new Dictata();
+            DataObject = new Lexeme();
         }
 
         public AddEditDictionaryViewModel(string uniqueKey) : base(uniqueKey, ConfigDataType.Dictionary)
         {
-            ValidWords = ConfigDataCache.GetAll<IDictata>().OrderBy(word => word.Language.Name).ThenBy(word => word.Name);
+            ValidWords = ConfigDataCache.GetAll<ILexeme>().OrderBy(word => word.Language.Name).ThenBy(word => word.Name);
             ValidPhrases = ConfigDataCache.GetAll<IDictataPhrase>().OrderBy(word => word.Language.Name).ThenBy(word => word.Name);
             ValidLanguages = ConfigDataCache.GetAll<ILanguage>();
-            DataObject = new Dictata();
+            DataObject = new Lexeme();
 
             //apply template
             if (DataTemplate != null)
             {
-                DataObject.Antonyms = DataTemplate.Antonyms;
-                DataObject.Determinant = DataTemplate.Determinant;
-                DataObject.Elegance = DataTemplate.Elegance;
-                DataObject.Feminine = DataTemplate.Feminine;
                 DataObject.Language = DataTemplate.Language;
-                DataObject.Perspective = DataTemplate.Perspective;
-                DataObject.Plural = DataTemplate.Plural;
-                DataObject.Positional = DataTemplate.Positional;
-                DataObject.Possessive = DataTemplate.Possessive;
-                DataObject.Quality = DataTemplate.Quality;
-                DataObject.Semantics = DataTemplate.Semantics;
-                DataObject.Severity = DataTemplate.Severity;
-                DataObject.Synonyms = DataTemplate.Synonyms;
-                DataObject.Tense = DataTemplate.Tense;
-                DataObject.WordTypes = DataTemplate.WordTypes;
             }
         }
 
-        public AddEditDictionaryViewModel(string archivePath, IDictata item) : base(archivePath, ConfigDataType.Dictionary, item)
+        public AddEditDictionaryViewModel(string archivePath, ILexeme item) : base(archivePath, ConfigDataType.Dictionary, item)
         {
-            ValidWords = ConfigDataCache.GetAll<IDictata>().OrderBy(word => word.Language.Name).ThenBy(word => word.Name);
+            ValidWords = ConfigDataCache.GetAll<ILexeme>().OrderBy(word => word.Language.Name).ThenBy(word => word.Name);
             ValidPhrases = ConfigDataCache.GetAll<IDictataPhrase>().OrderBy(word => word.Language.Name).ThenBy(word => word.Name);
             ValidLanguages = ConfigDataCache.GetAll<ILanguage>();
-            DataObject = (Dictata)item;
+            DataObject = (Lexeme)item;
         }
 
         [Display(Name = "Word", Description = "The new word's name/spelling.")]
@@ -116,8 +102,8 @@ namespace NetMud.Models.Admin
         public int Quality { get; set; }
 
         public IEnumerable<ILanguage> ValidLanguages { get; set; }
-        public IEnumerable<IDictata> ValidWords { get; set; }
+        public IEnumerable<ILexeme> ValidWords { get; set; }
         public IEnumerable<IDictataPhrase> ValidPhrases { get; set; }
-        public Dictata DataObject { get; set; }
+        public Lexeme DataObject { get; set; }
     }
 }

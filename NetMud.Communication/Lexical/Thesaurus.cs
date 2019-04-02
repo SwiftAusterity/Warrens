@@ -94,9 +94,9 @@ namespace NetMud.Communication.Lexical
                 word.Language = globalConfig.BaseLanguage;
             }
 
-            var possibleWords = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.SuitableForUse 
+            var possibleWords = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.GetLexeme().SuitableForUse 
                                                                                 && dict.Language == word.Language 
-                                                                                && dict.WordTypes.Any(wordType => word.WordTypes.Contains(wordType)));
+                                                                                && dict.WordType == word.WordType);
 
             return GetObscuredWord(word, possibleWords, obscureStrength);
         }
@@ -110,7 +110,7 @@ namespace NetMud.Communication.Lexical
                 context.Language = globalConfig.BaseLanguage;
             }
 
-            var possibleWords = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.Language == context.Language && dict.WordTypes.Contains(type) && dict.SuitableForUse);
+            var possibleWords = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.Language == context.Language && dict.WordType == type && dict.GetLexeme().SuitableForUse);
 
             return possibleWords.OrderByDescending(word => GetSynonymRanking(word, context)).FirstOrDefault();
         }
@@ -142,7 +142,7 @@ namespace NetMud.Communication.Lexical
                 context.Language = baseWord.Language;
             }
 
-            possibleWords = possibleWords.Where(word => word != null && word.Language == context.Language && word.SuitableForUse);
+            possibleWords = possibleWords.Where(word => word != null && word.Language == context.Language && word.GetLexeme().SuitableForUse);
 
             if (context.Severity + context.Elegance + context.Quality == 0)
             {
@@ -166,7 +166,7 @@ namespace NetMud.Communication.Lexical
                 context.Language = basePhrase.Language;
             }
 
-            possibleWords = possibleWords.Where(word => word != null && word.Language == context.Language && word.SuitableForUse);
+            possibleWords = possibleWords.Where(word => word != null && word.Language == context.Language && word.GetLexeme().SuitableForUse);
 
             if (context.Severity + context.Elegance + context.Quality == 0)
             {
@@ -257,22 +257,23 @@ namespace NetMud.Communication.Lexical
 
             var descriptiveWordTypes = new LexicalType[] { LexicalType.Adjective, LexicalType.Adverb };
             var remainderWordTypes = new LexicalType[] { LexicalType.Verb, LexicalType.Preposition, LexicalType.Conjunction, LexicalType.Article };
+            var nounWordTypes = new LexicalType[] { LexicalType.Pronoun, LexicalType.ProperNoun, LexicalType.Noun };
             if (newWord != null)
             {
                 //Adjectives/adverbs/articles get eaten
-                if (newWord.WordTypes.Any(wordType => descriptiveWordTypes.Contains(wordType)))
+                if (descriptiveWordTypes.Contains(newWord.WordType))
                 {
                     newWord = null;
                 }
 
                 //if it's a verb or preposition or structural leave it alone
-                if (newWord.WordTypes.Any(wordType => remainderWordTypes.Contains(wordType)))
+                if (remainderWordTypes.Contains(newWord.WordType))
                 {
                     newWord = word;
                 }
 
                 //pronouns become "it"
-                if (newWord.WordTypes.Any(wordType => wordType == LexicalType.Pronoun || wordType == LexicalType.ProperNoun || wordType == LexicalType.Noun))
+                if (nounWordTypes.Contains(newWord.WordType))
                 {
                     var itContext = new LexicalContext(null)
                     {

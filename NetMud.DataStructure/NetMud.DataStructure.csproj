@@ -182,6 +182,7 @@
     <Compile Include="Inanimate\IRenderAsWorn.cs" />
     <Compile Include="Inanimate\IRenderAsHeld.cs" />
     <Compile Include="Linguistic\BaseLanguageMembers.cs" />
+    <Compile Include="Linguistic\DictataKey.cs" />
     <Compile Include="Linguistic\DictataPhraseRuleElement.cs" />
     <Compile Include="Linguistic\IContractionRule.cs" />
     <Compile Include="Linguistic\IDictataPhrase.cs" />

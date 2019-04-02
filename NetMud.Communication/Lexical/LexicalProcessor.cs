@@ -68,7 +68,7 @@ namespace NetMud.Communication.Lexical
         /// Verify the dictionary has this word already
         /// </summary>
         /// <param name="lexica">lexica to check</param>
-        public static void VerifyDictata(ILexica lexica)
+        public static void VerifyLexeme(ILexica lexica)
         {
             if (string.IsNullOrWhiteSpace(lexica.Phrase) || lexica.Phrase.IsNumeric())
             {
@@ -77,7 +77,7 @@ namespace NetMud.Communication.Lexical
             }
 
             //Experiment: make new everything
-            if (VerifyDictata(lexica.GetDictata()) != null)
+            if (VerifyLexeme(lexica.GetDictata().GetLexeme()) != null)
             {
                 //make a new one
                 lexica.GenerateDictata();
@@ -87,66 +87,40 @@ namespace NetMud.Communication.Lexical
         /// <summary>
         /// Verify the dictionary has this word already
         /// </summary>
-        /// <param name="dictata">dictata to check</param>
-        public static IDictata VerifyDictata(IDictata dictata)
+        /// <param name="lexeme">dictata to check</param>
+        public static ILexeme VerifyLexeme(ILexeme lexeme)
         {
-            if (dictata == null || string.IsNullOrWhiteSpace(dictata.Name) || dictata.Name.IsNumeric())
+            if (lexeme == null || string.IsNullOrWhiteSpace(lexeme.Name) || lexeme.Name.IsNumeric())
             {
                 return null;
             }
 
             //Set the language to default if it is absent and save it, if it has a language it already exists
-            if (dictata.Language == null)
+            if (lexeme.Language == null)
             {
                 IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
 
                 if (globalConfig.BaseLanguage != null)
                 {
-                    dictata.Language = globalConfig.BaseLanguage;
+                    lexeme.Language = globalConfig.BaseLanguage;
                 }
             }
 
-            ConfigDataCacheKey cacheKey = new ConfigDataCacheKey(dictata);
+            ConfigDataCacheKey cacheKey = new ConfigDataCacheKey(lexeme);
 
-            IDictata maybeDictata = ConfigDataCache.Get<IDictata>(cacheKey);
+            ILexeme maybeLexeme = ConfigDataCache.Get<ILexeme>(cacheKey);
 
-            if (maybeDictata != null)
+            if (maybeLexeme != null)
             {
-                if (dictata.WordTypes.Any(mWord => !maybeDictata.WordTypes.Contains(mWord)))
-                {
-                    var wordTypes = new HashSet<LexicalType>();
-                    foreach (var wordType in dictata.WordTypes)
-                    {
-                        wordTypes.Add(wordType);
-                    }
-
-                    foreach (var wordType in maybeDictata.WordTypes.Where(mWord => !dictata.WordTypes.Contains(mWord)))
-                    {
-                        wordTypes.Add(wordType);
-                    }
-
-                    maybeDictata.WordTypes = wordTypes;
-                }
-
-                if (maybeDictata.Language != null)
-                {
-                    dictata.MapSynNet();
-                    maybeDictata.FillLanguages();
-                    maybeDictata.SystemSave();
-                    maybeDictata.PersistToCache();
-
-                    return maybeDictata;
-                }
-
-                dictata = maybeDictata;
+                lexeme = maybeLexeme;
             }
 
-            dictata.MapSynNet();
-            dictata.SystemSave();
-            dictata.PersistToCache();
-            dictata.FillLanguages();
+            lexeme.MapSynNet();
+            lexeme.SystemSave();
+            lexeme.PersistToCache();
+            lexeme.FillLanguages();
 
-            return dictata;
+            return lexeme;
         }
 
         public static string GetPunctuationMark(SentenceType type, bool upsideDown = false)

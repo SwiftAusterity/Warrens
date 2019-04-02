@@ -74,7 +74,7 @@ namespace NetMud.Data.Linguistic
 
             Modifiers = new HashSet<ILexica>();
 
-            LexicalProcessor.VerifyDictata(this);
+            LexicalProcessor.VerifyLexeme(this);
             Context = context.Clone();
         }
 
@@ -86,7 +86,7 @@ namespace NetMud.Data.Linguistic
 
             Modifiers = new HashSet<ILexica>();
 
-            LexicalProcessor.VerifyDictata(this);
+            LexicalProcessor.VerifyLexeme(this);
             Context = BuildContext(origin, observer);
         }
 
@@ -96,7 +96,8 @@ namespace NetMud.Data.Linguistic
         /// <returns>A dictata</returns>
         public IDictata GetDictata()
         {
-            var dict = ConfigDataCache.Get<IDictata>(new ConfigDataCacheKey(typeof(IDictata), string.Format("{0}_{1}", Context?.Language?.Name, Phrase), ConfigDataType.Dictionary));
+            var lex = ConfigDataCache.Get<ILexeme>(new ConfigDataCacheKey(typeof(ILexeme), string.Format("{0}_{1}", Context?.Language?.Name, Phrase), ConfigDataType.Dictionary));
+            var dict = lex.GetForm(Type);
 
             if (dict == null)
             {
@@ -112,7 +113,19 @@ namespace NetMud.Data.Linguistic
         /// <returns></returns>
         public IDictata GenerateDictata()
         {
-            return LexicalProcessor.VerifyDictata(new Dictata(this));
+            var dict = new Dictata(this);
+
+            var lex = new Lexeme()
+            {
+                Name = Phrase,
+                Language = Context.Language
+            };
+
+            lex.AddNewForm(dict);
+
+            LexicalProcessor.VerifyLexeme(lex);
+
+            return dict;
         }
 
         /// <summary>
@@ -294,7 +307,7 @@ namespace NetMud.Data.Linguistic
                 }
                 else if (wordRule.SpecificAddition != null && !newLex.Modifiers.Any(lx => wordRule.SpecificAddition.Equals(lx.GetDictata())))
                 {
-                    newLex.TryModify(wordRule.SpecificAddition.WordTypes.FirstOrDefault(), GrammaticalType.Descriptive, wordRule.SpecificAddition.Name);
+                    newLex.TryModify(wordRule.SpecificAddition.WordType, GrammaticalType.Descriptive, wordRule.SpecificAddition.Name);
                 }
 
                 if (!string.IsNullOrWhiteSpace(wordRule.AddPrefix) && !newLex.Phrase.StartsWith(wordRule.AddPrefix))
@@ -354,7 +367,7 @@ namespace NetMud.Data.Linguistic
                     }
                     else if (wordRule.SpecificAddition != null && !newLex.Modifiers.Any(lx => wordRule.SpecificAddition.Equals(lx.GetDictata())))
                     {
-                        newLex.TryModify(wordRule.SpecificAddition.WordTypes.FirstOrDefault(), GrammaticalType.Descriptive, wordRule.SpecificAddition.Name);
+                        newLex.TryModify(wordRule.SpecificAddition.WordType, GrammaticalType.Descriptive, wordRule.SpecificAddition.Name);
                     }
 
 

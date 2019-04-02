@@ -83,7 +83,7 @@ namespace NetMud.Controllers.GameAdmin
                 Fauna = TemplateCache.GetAll<IFauna>(),
                 Minerals = TemplateCache.GetAll<IMineral>(),
                 Materials = TemplateCache.GetAll<IMaterial>(),
-                DictionaryWords = ConfigDataCache.GetAll<IDictata>(),
+                DictionaryWords = ConfigDataCache.GetAll<ILexeme>(),
                 DictionaryPhrases = ConfigDataCache.GetAll<IDictataPhrase>(),
                 Languages = ConfigDataCache.GetAll<ILanguage>(),
                 Genders = TemplateCache.GetAll<IGender>(),

@@ -18,7 +18,7 @@ namespace NetMud.Data.Architectural.PropertyBinding
 
             IEnumerable<string> valueCollection = input as IEnumerable<string>;
 
-            HashSet<IDictata> collective = new HashSet<IDictata>(valueCollection.Select(str => ConfigDataCache.Get<IDictata>(new ConfigDataCacheKey(typeof(IDictata), str, ConfigDataType.Dictionary))));
+            HashSet<IDictata> collective = new HashSet<IDictata>(valueCollection.Select(str => ConfigDataCache.Get<ILexeme>(new ConfigDataCacheKey(typeof(ILexeme), str, ConfigDataType.Dictionary))?.WordForms.FirstOrDefault()));
 
             return collective;
         }

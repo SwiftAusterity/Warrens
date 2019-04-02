@@ -138,7 +138,7 @@
                             <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                         }
                     </dd>
-                    <dt>Dictata [@Html.ActionLink(Model.DictionaryWords.Count().ToString(), "Index", "Dictionary", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" })]</dt>
+                    <dt>Lexemes [@Html.ActionLink(Model.DictionaryWords.Count().ToString(), "Index", "Dictionary", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" })]</dt>
                     <dd>
                         @Html.ActionLink(" ", "Add", "Dictionary", null, htmlAttributes: new { @class = "glyphicon-plus-sign glyphicon", @style = "color: green;", @title = "Add New" })
                         @if (Model.DictionaryWords.Any(r => r.State != ApprovalState.Approved))

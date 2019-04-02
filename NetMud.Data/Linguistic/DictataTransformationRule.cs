@@ -16,7 +16,7 @@ namespace NetMud.Data.Linguistic
         /// The word to be transformed
         /// </summary>
         [JsonProperty("Origin")]
-        private ConfigDataCacheKey _origin { get; set; }
+        private DictataKey _origin { get; set; }
 
         /// <summary>
         /// When the from word is specifically this
@@ -35,7 +35,7 @@ namespace NetMud.Data.Linguistic
                     return null;
                 }
 
-                return ConfigDataCache.Get<IDictata>(_origin);
+                return ConfigDataCache.Get<ILexeme>(_origin.LexemeKey)?.GetForm(_origin.FormId);
             }
             set
             {
@@ -45,12 +45,12 @@ namespace NetMud.Data.Linguistic
                     return;
                 }
 
-                _origin = new ConfigDataCacheKey(value);
+                _origin = new DictataKey(new ConfigDataCacheKey(value.GetLexeme()).BirthMark, value.FormGroup);
             }
         }
 
         [JsonProperty("SpecificFollowing")]
-        private ConfigDataCacheKey _specificFollowing { get; set; }
+        private DictataKey _specificFollowing { get; set; }
 
         /// <summary>
         /// When the from word is specifically this
@@ -69,7 +69,7 @@ namespace NetMud.Data.Linguistic
                     return null;
                 }
 
-                return ConfigDataCache.Get<IDictata>(_specificFollowing);
+                return ConfigDataCache.Get<ILexeme>(_specificFollowing.LexemeKey)?.GetForm(_specificFollowing.FormId);
             }
             set
             {
@@ -79,7 +79,7 @@ namespace NetMud.Data.Linguistic
                     return;
                 }
 
-                _specificFollowing = new ConfigDataCacheKey(value);
+                _specificFollowing = new DictataKey(new ConfigDataCacheKey(value.GetLexeme()).BirthMark, value.FormGroup);
             }
         }
 
@@ -101,7 +101,7 @@ namespace NetMud.Data.Linguistic
         /// The word this turns into
         /// </summary>
         [JsonProperty("TransformedWord")]
-        private ConfigDataCacheKey _transformedWord { get; set; }
+        private DictataKey _transformedWord { get; set; }
 
         /// <summary>
         /// The word this turns into
@@ -120,7 +120,7 @@ namespace NetMud.Data.Linguistic
                     return null;
                 }
 
-                return ConfigDataCache.Get<IDictata>(_transformedWord);
+                return ConfigDataCache.Get<ILexeme>(_transformedWord.LexemeKey)?.GetForm(_transformedWord.FormId);
             }
             set
             {
@@ -130,7 +130,7 @@ namespace NetMud.Data.Linguistic
                     return;
                 }
 
-                _transformedWord = new ConfigDataCacheKey(value);
+                _transformedWord = new DictataKey(new ConfigDataCacheKey(value.GetLexeme()).BirthMark, value.FormGroup);
             }
         }
 

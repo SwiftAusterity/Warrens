@@ -163,7 +163,7 @@ namespace NetMud.Data.Linguistic
         }
 
         [JsonProperty("Words")]
-        private HashSet<ConfigDataCacheKey> _words { get; set; }
+        private HashSet<DictataKey> _words { get; set; }
 
         /// <summary>
         /// Things this is the same as mostly
@@ -179,25 +179,26 @@ namespace NetMud.Data.Linguistic
             {
                 if (_words == null)
                 {
-                    _words = new HashSet<ConfigDataCacheKey>();
+                    _words = new HashSet<DictataKey>();
                 }
 
-                return new HashSet<IDictata>(_words.Select(k => ConfigDataCache.Get<IDictata>(k)));
+                return new HashSet<IDictata>(_words.Select(k => ConfigDataCache.Get<ILexeme>(k.LexemeKey)?.GetForm(k.FormId)));
             }
             set
             {
                 if (value == null)
                 {
-                    _words = new HashSet<ConfigDataCacheKey>();
+                    _words = new HashSet<DictataKey>();
                     return;
                 }
 
-                _words = new HashSet<ConfigDataCacheKey>(value.Select(k => new ConfigDataCacheKey(k)));
+                _words = new HashSet<DictataKey>(
+                    value.Select(k => new DictataKey(new ConfigDataCacheKey(k.GetLexeme()).BirthMark, k.FormGroup)));
             }
         }
 
         [JsonProperty("Synonyms")]
-        private HashSet<ConfigDataCacheKey> _synonyms { get; set; }
+        private HashSet<DictataKey> _synonyms { get; set; }
 
         /// <summary>
         /// Things this is the same as mostly
@@ -213,25 +214,26 @@ namespace NetMud.Data.Linguistic
             {
                 if (_synonyms == null)
                 {
-                    _synonyms = new HashSet<ConfigDataCacheKey>();
+                    _synonyms = new HashSet<DictataKey>();
                 }
 
-                return new HashSet<IDictata>(_synonyms.Select(k => ConfigDataCache.Get<IDictata>(k)));
+                return new HashSet<IDictata>(_synonyms.Select(k => ConfigDataCache.Get<ILexeme>(k.LexemeKey)?.GetForm(k.FormId)));
             }
             set
             {
                 if (value == null)
                 {
-                    _synonyms = new HashSet<ConfigDataCacheKey>();
+                    _synonyms = new HashSet<DictataKey>();
                     return;
                 }
 
-                _synonyms = new HashSet<ConfigDataCacheKey>(value.Select(k => new ConfigDataCacheKey(k)));
+                _synonyms = new HashSet<DictataKey>(
+                    value.Select(k => new DictataKey(new ConfigDataCacheKey(k.GetLexeme()).BirthMark, k.FormGroup)));
             }
         }
 
         [JsonProperty("Antonyms")]
-        private HashSet<ConfigDataCacheKey> _antonyms { get; set; }
+        private HashSet<DictataKey> _antonyms { get; set; }
 
         /// <summary>
         /// Things this is specifically opposite of mostly
@@ -247,20 +249,21 @@ namespace NetMud.Data.Linguistic
             {
                 if (_antonyms == null)
                 {
-                    _antonyms = new HashSet<ConfigDataCacheKey>();
+                    _antonyms = new HashSet<DictataKey>();
                 }
 
-                return new HashSet<IDictata>(_antonyms.Select(k => ConfigDataCache.Get<IDictata>(k)));
+                return new HashSet<IDictata>(_antonyms.Select(k => ConfigDataCache.Get<ILexeme>(k.LexemeKey)?.GetForm(k.FormId)));
             }
             set
             {
                 if (value == null)
                 {
-                    _antonyms = new HashSet<ConfigDataCacheKey>();
+                    _antonyms = new HashSet<DictataKey>();
                     return;
                 }
 
-                _antonyms = new HashSet<ConfigDataCacheKey>(value.Select(k => new ConfigDataCacheKey(k)));
+                _antonyms = new HashSet<DictataKey>(
+                    value.Select(k => new DictataKey(new ConfigDataCacheKey(k.GetLexeme()).BirthMark, k.FormGroup)));
             }
         }
 
@@ -515,7 +518,7 @@ namespace NetMud.Data.Linguistic
                     var syns = new HashSet<IDictataPhrase>(word.PhraseSynonyms);
                     syns.RemoveWhere(syn => syn.Equals(this));
                     word.PhraseSynonyms = syns;
-                    word.Save(remover, rank);
+                    word.GetLexeme().Save(remover, rank);
                 }
 
                 foreach (var word in antonyms)
@@ -523,7 +526,7 @@ namespace NetMud.Data.Linguistic
                     var ants = new HashSet<IDictataPhrase>(word.PhraseAntonyms);
                     ants.RemoveWhere(syn => syn.Equals(this));
                     word.PhraseAntonyms = ants;
-                    word.Save(remover, rank);
+                    word.GetLexeme().Save(remover, rank);
                 }
 
                 foreach (var phrase in synonymPhrases)
@@ -598,7 +601,7 @@ namespace NetMud.Data.Linguistic
                     var syns = new HashSet<IDictataPhrase>(word.PhraseSynonyms);
                     syns.RemoveWhere(syn => syn.Equals(this));
                     word.PhraseSynonyms = syns;
-                    word.SystemSave();
+                    word.GetLexeme().SystemSave();
                 }
 
                 foreach (var word in antonyms)
@@ -606,7 +609,7 @@ namespace NetMud.Data.Linguistic
                     var ants = new HashSet<IDictataPhrase>(word.PhraseAntonyms);
                     ants.RemoveWhere(syn => syn.Equals(this));
                     word.PhraseAntonyms = ants;
-                    word.SystemSave();
+                    word.GetLexeme().SystemSave();
                 }
 
                 foreach (var phrase in synonymPhrases)

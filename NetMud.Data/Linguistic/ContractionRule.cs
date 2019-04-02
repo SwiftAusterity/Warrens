@@ -13,7 +13,7 @@ namespace NetMud.Data.Linguistic
     public class ContractionRule : IContractionRule
     {
         [JsonProperty("First")]
-        private ConfigDataCacheKey _first { get; set; }
+        private DictataKey _first { get; set; }
 
         /// <summary>
         /// One of the words in the contraction (not an indicator of order)
@@ -32,7 +32,7 @@ namespace NetMud.Data.Linguistic
                     return null;
                 }
 
-                return ConfigDataCache.Get<IDictata>(_first);
+                return ConfigDataCache.Get<ILexeme>(_first.LexemeKey)?.GetForm(_first.FormId);
             }
             set
             {
@@ -42,12 +42,12 @@ namespace NetMud.Data.Linguistic
                     return;
                 }
 
-                _first = new ConfigDataCacheKey(value);
+                _first = new DictataKey(new ConfigDataCacheKey(value.GetLexeme()).BirthMark, value.FormGroup);
             }
         }
 
         [JsonProperty("Second")]
-        private ConfigDataCacheKey _second { get; set; }
+        private DictataKey _second { get; set; }
 
         /// <summary>
         /// One of the words in the contraction (not an indicator of order)
@@ -66,7 +66,7 @@ namespace NetMud.Data.Linguistic
                     return null;
                 }
 
-                return ConfigDataCache.Get<IDictata>(_second);
+                return ConfigDataCache.Get<ILexeme>(_first.LexemeKey)?.GetForm(_second.FormId);
             }
             set
             {
@@ -76,12 +76,12 @@ namespace NetMud.Data.Linguistic
                     return;
                 }
 
-                _second = new ConfigDataCacheKey(value);
+                _second = new DictataKey(new ConfigDataCacheKey(value.GetLexeme()).BirthMark, value.FormGroup);
             }
         }
 
         [JsonProperty("Contraction")]
-        private ConfigDataCacheKey _contraction { get; set; }
+        private DictataKey _contraction { get; set; }
 
         /// <summary>
         /// The contraction this turns into
@@ -100,7 +100,7 @@ namespace NetMud.Data.Linguistic
                     return null;
                 }
 
-                return ConfigDataCache.Get<IDictata>(_contraction);
+                return ConfigDataCache.Get<ILexeme>(_contraction.LexemeKey)?.GetForm(_contraction.FormId);
             }
             set
             {
@@ -110,7 +110,7 @@ namespace NetMud.Data.Linguistic
                     return;
                 }
 
-                _contraction = new ConfigDataCacheKey(value);
+                _contraction = new DictataKey(new ConfigDataCacheKey(value.GetLexeme()).BirthMark, value.FormGroup);
             }
         }
     }

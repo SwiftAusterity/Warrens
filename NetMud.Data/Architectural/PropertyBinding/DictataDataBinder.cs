@@ -2,6 +2,7 @@
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.PropertyBinding;
 using NetMud.DataStructure.Linguistic;
+using System.Linq;
 
 namespace NetMud.Data.Architectural.PropertyBinding
 {
@@ -15,7 +16,7 @@ namespace NetMud.Data.Architectural.PropertyBinding
                 return null;
             }
 
-            var returnValue = ConfigDataCache.Get<IDictata>(new ConfigDataCacheKey(typeof(IDictata), stringInput, ConfigDataType.Dictionary));
+            var returnValue = ConfigDataCache.Get<ILexeme>(new ConfigDataCacheKey(typeof(ILexeme), stringInput, ConfigDataType.Dictionary))?.WordForms.FirstOrDefault();
 
             return returnValue;
         }

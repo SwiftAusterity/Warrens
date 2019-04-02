@@ -122,6 +122,39 @@ namespace NetMud.Data.Linguistic
             return WordForms.Select(form => form.WordType).Distinct();
         }
 
+
+        /// <summary>
+        /// Add a new word form to this lexeme
+        /// </summary>
+        /// <param name="newWord">The word</param>
+        /// <returns>the word with changes</returns>
+        public IDictata AddNewForm(IDictata newWord)
+        {
+            var existingWords = WordForms;
+
+            //Easy way - we dont have one with this type at all
+            //Hard way - reject if our semantics are similar by count and the semantics lists match
+            if (!existingWords.Any(form => form.WordType == newWord.WordType) 
+             || (newWord.Semantics.Count() > 0 && !existingWords.Where(form => form.WordType == newWord.WordType)
+                            .Any(form => form.Semantics.Count() == newWord.Semantics.Count() && form.Semantics.All(semantic => newWord.Semantics.Contains(semantic)))))
+            {
+                var maxForm = 0;
+
+                if (existingWords.Any())
+                {
+                    maxForm = existingWords.Max(form => form.FormGroup);
+                }
+
+                newWord.FormGroup = (short)(maxForm + 1);
+                existingWords.Add(newWord);
+                WordForms = existingWords;
+                SystemSave();
+                PersistToCache();
+            }
+
+            return newWord;
+        }
+
         /// <summary>
         /// Add language translations for this
         /// </summary>
@@ -141,8 +174,14 @@ namespace NetMud.Data.Linguistic
 
             foreach (var language in otherLanguages)
             {
-                var newWords = new HashSet<IDictata>();
+                short formGrouping = -1;
                 var newName = string.Empty;
+
+                var newLexeme = new Lexeme()
+                {
+                    Language = language
+                };
+
                 foreach (var word in WordForms)
                 {
                     var context = new LexicalContext(null)
@@ -171,8 +210,9 @@ namespace NetMud.Data.Linguistic
                         if (!string.IsNullOrWhiteSpace(newWord))
                         {
                             newName = newWord;
+                            newLexeme.Name = newName;
 
-                            var newDictata = new Dictata(newWord)
+                            var newDictata = new Dictata(newWord, formGrouping++)
                             {
                                 Elegance = word.Elegance,
                                 Severity = word.Severity,
@@ -193,21 +233,14 @@ namespace NetMud.Data.Linguistic
                             };
 
                             newDictata.Synonyms = new HashSet<IDictata>(word.Synonyms) { word };
-                            newWords.Add(newDictata);
                             word.Synonyms = new HashSet<IDictata>(word.Synonyms) { newDictata };
+                            newLexeme.AddNewForm(newDictata);
                         }
                     }
                 }
 
-                if(newWords.Count() > 0)
+                if(newLexeme.WordForms.Count() > 0)
                 {
-                    var newLexeme = new Lexeme()
-                    {
-                        WordForms = newWords,
-                        Language = language,
-                        Name = newName
-                    };
-
                     newLexeme.SystemSave();
                     newLexeme.PersistToCache();
                 }
@@ -215,6 +248,28 @@ namespace NetMud.Data.Linguistic
 
             SystemSave();
             PersistToCache();
+        }
+
+
+        /// <summary>
+        /// Get a wordform by grouping id
+        /// </summary>
+        /// <param name="formGroup">the form grouping id</param>
+        /// <returns>the word</returns>
+        public IDictata GetForm(short formGroup)
+        {
+            return WordForms.FirstOrDefault(form => form.FormGroup == formGroup);
+        }
+
+        /// <summary>
+        /// Get a wordform by grouping id
+        /// </summary>
+        /// <param name="wordType">the lexical type of the word</param>
+        /// <param name="formGroup">the form grouping id</param>
+        /// <returns>the word</returns>
+        public IDictata GetForm(LexicalType wordType, short formGroup = -1)
+        {
+            return WordForms.FirstOrDefault(form => form.WordType == wordType && (formGroup < 0 || form.FormGroup == formGroup));
         }
 
         /// <summary>

@@ -213,7 +213,7 @@ namespace NetMud.Communication.Lexical
                     verbContext.Determinant = false;
                     var verb = Thesaurus.GetWord(verbContext, LexicalType.Verb);
 
-                    var verbLex = verb.GetLexica(GrammaticalType.Verb, LexicalType.Verb, verbContext);
+                    var verbLex = verb.GetLexica(GrammaticalType.Verb, verbContext);
                     verbLex.TryModify(subject.Modifiers);
 
                     subject.Modifiers = new HashSet<ILexica>();

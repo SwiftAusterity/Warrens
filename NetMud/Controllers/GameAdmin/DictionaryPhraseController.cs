@@ -194,7 +194,7 @@ namespace NetMud.Controllers.GameAdmin
                         synonyms.Add(obj);
 
                         syn.PhraseSynonyms = synonyms;
-                        syn.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
+                        syn.GetLexeme().Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
                     }
                 }
 
@@ -206,7 +206,7 @@ namespace NetMud.Controllers.GameAdmin
                         antonyms.Add(obj);
 
                         ant.PhraseAntonyms = antonyms;
-                        ant.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
+                        ant.GetLexeme().Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
                     }
                 }
 
